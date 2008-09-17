@@ -1,0 +1,121 @@
+<?xml version = '1.0'?>
+<!-- 
+ The list of messages
+  
+ @author Marco Meschieri
+ @version $Id: messagesList.jspx,v 1.4 2006/09/03 16:24:38 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:xkin="/WEB-INF/tld/xkins.tld"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	styleClass="messagesForm">
+
+		<div id="toolbar">
+			<table cellpadding="0" cellspacing="2" border="0">
+				<tr>
+					<td>
+						<ice:commandLink action="#{messagesRecordsManager.addMessage}"
+							title="#{msgs['db.createmessage']}">
+							<ice:graphicImage value="#{styleBean.imagesPath}/editmessage.png"
+								style="border: 0px solid;" />
+						</ice:commandLink>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<!-- Basic table -->
+		<ice:panelGroup styleClass="formBorderHighlight"
+			rendered="#{messagesRecordsManager.count > 0}">
+			<ice:dataTable id="messagesList"
+				value="#{messagesRecordsManager.messages}" var="messageRecord"
+				cellpadding="0" rows="10" styleClass="center"
+				columnClasses="docSelectionColumn,docNameColumn,docMenuColumn,docDateColumn,docSelectionColumn">
+
+				<!-- Priority -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['msg.jsp.prio']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:graphicImage
+							value="#{styleBean.imagesPath}/#{messageRecord.prio}.gif"
+							style="border: 0px solid;" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Subject -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['msg.jsp.subject']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:panelGroup rendered="#{messageRecord.read==0}">
+							<ice:commandLink action="#{messagesRecordsManager.selectMessage}">
+								<ice:outputText style="font-weight: bold"
+									value="#{messageRecord.subject}" />
+							</ice:commandLink>
+						</ice:panelGroup>
+						<ice:panelGroup rendered="#{messageRecord.read!=0}">
+							<ice:commandLink action="#{messagesRecordsManager.selectMessage}"
+								value="#{messageRecord.subject}" />
+						</ice:panelGroup>
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Author -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['msg.jsp.from']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:outputText value="#{messageRecord.author}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Date -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['msg.jsp.sent']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:outputText value="#{messageRecord.sentDateAsDate}">
+							<f:convertDateTime pattern="#{loc.dateFormatShort}" />
+						</ice:outputText>
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Delete -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['msg.jsp.foldercontent.delete']}" />
+					</f:facet>
+					<ice:panelGroup style="text-align: center;">
+						<ice:commandLink action="#{messagesRecordsManager.deleteMessage}"
+							onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;">
+							<ice:graphicImage value="#{styleBean.imagesPath}/delete.png"
+								style="border: 0px solid;" />
+						</ice:commandLink>
+					</ice:panelGroup>
+				</ice:column>
+			</ice:dataTable>
+
+			<ice:panelGroup>
+				<ldoc:paginator table="messagesList"
+					label="#{msgs['message.paginator']}" />
+				<br />
+			</ice:panelGroup>
+		</ice:panelGroup>
+
+		<ice:panelGroup styleClass="formBorderHighlight"
+			rendered="#{messagesRecordsManager.count &lt; 1}">
+			<ice:outputText value="#{msgs['noelements']}" />
+		</ice:panelGroup>
+</jsp:root>

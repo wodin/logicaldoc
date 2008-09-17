@@ -1,0 +1,101 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page lists articles of a document
+  
+ @author Marco Meschieri
+ @version $Id: articles.jspx,v 1.5 2006/09/03 16:24:37 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ice="http://www.icesoft.com/icefaces/component"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+    styleClass="formBorderHighlight">
+        <h3>
+            <ice:outputText
+                value="#{msgs['msg.jsp.discuss']} - #{articlesRecordsManager.selectedDocument.docName}" />
+            <br />
+            <br />
+        </h3>
+        <ice:messages globalOnly="true"/>
+        <f:subview id="w-articles">
+            <ice:form>
+                <ice:panelGroup
+                    rendered="#{empty (articlesRecordsManager.selectedArticle)}">
+                    <!-- articles -->
+                    <ice:panelGroup>
+                        <ice:dataTable id="articles"
+                            value="#{articlesRecordsManager.articles}" var="article"
+                            cellpadding="0" width="100%" rows="10">
+
+                            <!-- author column -->
+                            <ice:column>
+                                <f:facet name="header">
+                                    <ice:outputText value="#{msgs['msg.jsp.author']}" />
+                                </f:facet>
+                                <ice:panelGroup>
+                                    <ice:outputText value="#{article.username}" />
+                                </ice:panelGroup>
+                            </ice:column>
+
+                            <!-- title column -->
+                            <ice:column>
+                                <f:facet name="header">
+                                    <ice:outputText value="#{msgs['msg.jsp.title']}" />
+                                </f:facet>
+                                <ice:panelGroup>
+                                    <ice:commandLink action="#{article.select}">
+                                        <ice:outputText value="#{article.subject}" />
+                                    </ice:commandLink>
+                                </ice:panelGroup>
+                            </ice:column>
+
+                            <!-- date column -->
+                            <ice:column>
+                                <f:facet name="header">
+                                    <ice:outputText value="#{msgs['msg.jsp.date']}" />
+                                </f:facet>
+                                <ice:panelGroup>
+                                    <ice:outputText value="#{article.date}">
+                                        <f:convertDateTime pattern="#{loc.dateFormatShort}" />
+                                    </ice:outputText>
+                                </ice:panelGroup>
+                            </ice:column>
+                        </ice:dataTable>
+
+                        <ice:panelGroup>
+                            <ldoc:paginator table="articles"
+                                label="#{msgs['article.paginator']}" />
+                            <br />
+                        </ice:panelGroup>
+                    </ice:panelGroup>
+                </ice:panelGroup>
+            </ice:form>
+        </f:subview>
+
+        <ice:panelGroup
+            rendered="#{!empty (articlesRecordsManager.selectedArticle)}">
+            <f:subview id="article">
+                <ui:include src="/templates/document/article.jspx" />
+            </f:subview>
+        </ice:panelGroup>
+
+        <br />
+        <ice:form>
+            <ice:panelGroup styleClass="commands">
+                <ice:commandButton value="&lt;&lt; #{msgs['msg.jsp.back']}"
+                    immediate="true"
+                    partialSubmit="true" action="#{articlesRecordsManager.back}" />
+                <ice:commandButton value="#{msgs['save']}"
+                    action="#{articlesRecordsManager.save}"
+                    rendered="#{articlesRecordsManager.editing}" />
+                <ice:commandButton value="#{msgs['msg.jsp.addarticle']}"
+                    action="#{articlesRecordsManager.add}"
+                    rendered="#{empty (articlesRecordsManager.selectedArticle)}" />
+            </ice:panelGroup>
+        </ice:form>
+</jsp:root>

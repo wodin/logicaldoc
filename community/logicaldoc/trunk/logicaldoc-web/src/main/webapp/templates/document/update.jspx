@@ -1,0 +1,170 @@
+<?xml version = '1.0'?>
+<!--
+ Document's update form
+  
+ @author Marco Meschieri
+ @version $Id: update.jspx,v 1.6 2006/08/29 16:33:45 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ice="http://www.icesoft.com/icefaces/component"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
+        <!-- Core data -->
+        <ice:panelGroup>
+            <h3>
+                <ice:outputText value="#{msgs['msg.jsp.editdoc']}" /> - 
+                <ice:outputText value="#{documentForm.record.displayDescription}" />
+                <br />
+                <br />
+            </h3>
+            <!-- Read only data -->
+            <ice:panelGroup style="float:right; valign:top;">
+                <ice:panelGrid columns="2">
+                    <ice:panelGroup styleClass="outputLabel">
+                        <ice:outputLabel value="#{msgs['msg.jsp.version']}" />
+                    </ice:panelGroup>
+                    <ice:panelGroup>
+                        <ice:outputText value="#{documentForm.record.document.docVersion}" style="font-weight: bold"/>
+                    </ice:panelGroup>
+
+                    <ice:panelGroup styleClass="outputLabel">
+                        <ice:outputLabel value="#{msgs['msg.jsp.publishedon']}" />
+                    </ice:panelGroup>
+                    <ice:panelGroup>
+                        <ice:outputText value="#{documentForm.menu.date}" style="font-weight: bold">
+                            <f:convertDateTime pattern="#{loc.dateFormatShort}" />
+                        </ice:outputText>
+                    </ice:panelGroup>
+
+                    <ice:panelGroup styleClass="outputLabel">
+                        <ice:outputLabel value="#{msgs['msg.jsp.publishedby']}" />
+                    </ice:panelGroup>
+                    <ice:panelGroup>
+                        <ice:outputText
+                            value="#{documentForm.record.document.docPublisher}" style="font-weight: bold" />
+                    </ice:panelGroup>
+                </ice:panelGrid>
+            </ice:panelGroup>
+
+            <ice:panelGrid columns="2">
+                <ice:panelGroup styleClass="outputLabel">
+                    <ice:outputLabel for="docName" value="#{msgs['msg.jsp.docname']}*" />
+                </ice:panelGroup>
+                <ice:panelGroup>
+                    <ice:inputText id="docName"
+                        label="#{msgs['errors.header.alert.key']}"
+                        tabindex="1"
+                        value="#{documentForm.docName}"
+                        maxlength="255" size="40"
+                        onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+                        required="true"
+                        disabled="#{documentForm.readOnly}" immediate="true" />
+                    <br />
+                    <ice:message for="docName" />
+                </ice:panelGroup>
+                <ice:panelGroup styleClass="outputLabel">
+                    <ice:outputLabel for="keywords"
+                        value="#{msgs['msg.jsp.keywords']}" />
+                </ice:panelGroup>
+                <ice:panelGroup id="keywords">
+                    <ice:inputTextarea value="#{documentForm.keywords}"
+                        tabindex="1"
+                        cols="40" rows="3"
+                        disabled="#{documentForm.readOnly}" />
+                </ice:panelGroup>
+            </ice:panelGrid>
+        </ice:panelGroup>
+
+        <!-- Source data -->
+        <ice:panelGroup>
+            <hr />
+            <h3>
+                <ice:outputText value="#{msgs['msg.jsp.sourcedata']}" />
+                <br />
+                <br />
+            </h3>
+            <ice:panelGrid columns="5">
+                <ice:panelGroup styleClass="outputLabel">
+                    <ice:outputLabel for="source" value="#{msgs['msg.jsp.source']}*" />
+                </ice:panelGroup>
+                <ice:panelGroup>
+                    <ice:inputText id="source"
+                        label="#{msgs['errors.header.alert.key']}"
+                        tabindex="1"
+                        value="#{documentForm.source}"
+                        maxlength="255"
+                        onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+                        required="true"
+                        disabled="#{documentForm.readOnly}" />
+                    <br />
+                    <ice:message for="source" />
+                </ice:panelGroup>
+                <ice:panelGroup style="width:20px" />
+                <ice:panelGroup styleClass="outputLabel">
+                    <ice:outputLabel for="sourceAuthor"
+                        value="#{msgs['msg.jsp.author']}" />
+                </ice:panelGroup>
+                <ice:panelGroup styleClass="outputLabel">
+                    <ice:inputText id="sourceAuthor"
+                        tabindex="1"
+                        value="#{documentForm.sourceAuthor}" maxlength="255"
+                        disabled="#{documentForm.readOnly}" />
+                </ice:panelGroup>
+
+                <ice:panelGroup styleClass="outputLabel">
+                    <ice:outputLabel for="coverage"
+                        value="#{msgs['msg.jsp.coverage']}" />
+                </ice:panelGroup>
+                <ice:panelGroup>
+                    <ice:inputText id="coverage"
+                        tabindex="1"
+                        value="#{documentForm.coverage}"
+                        maxlength="255" disabled="#{documentForm.readOnly}" />
+                </ice:panelGroup>
+                <ice:panelGroup style="width:20px" />
+                <ice:panelGroup styleClass="outputLabel">
+                    <ice:outputLabel for="sourceType"
+                        value="#{msgs['msg.jsp.sourcetype']}" />
+                </ice:panelGroup>
+                <ice:panelGroup>
+                    <ice:inputText id="sourceType"
+                        tabindex="1"
+                        value="#{documentForm.sourceType}"
+                        maxlength="255" disabled="#{documentForm.readOnly}" />
+                </ice:panelGroup>
+
+                <ice:panelGroup styleClass="outputLabel">
+                    <ice:outputLabel for="sourceDate"
+                        value="#{msgs['msg.jsp.date']}" />
+                </ice:panelGroup>
+                <ice:panelGroup>
+                    <ice:selectInputDate id="sourceDate"
+                        tabindex="1"
+                        popupDateFormat="#{loc.dateFormatShort}"
+                        value="#{documentForm.sourceDate}" renderAsPopup="true"
+                        rendered="#{!documentForm.readOnly}">
+                        <f:convertDateTime pattern="#{loc.dateFormatShort}" timeZone="#{timezone}"/>
+                    </ice:selectInputDate>
+                    <br />
+                    <ice:message for="sourceDate" />
+                </ice:panelGroup>
+                <ice:panelGroup style="width:20px" />
+                <ice:panelGroup styleClass="outputLabel">
+                    <ice:outputLabel for="language"
+                        value="#{msgs['msg.jsp.login.language']}" />
+                </ice:panelGroup>
+                <ice:panelGroup>
+                    <ice:selectOneMenu styleClass="selectTagMenu"
+                        tabindex="1"
+                        value="#{documentForm.language}" disabled="#{documentForm.readOnly}">
+                        <f:selectItems value="#{selectionTags.languages}" />
+                    </ice:selectOneMenu>
+                </ice:panelGroup>
+            </ice:panelGrid>
+        </ice:panelGroup>
+</jsp:root>

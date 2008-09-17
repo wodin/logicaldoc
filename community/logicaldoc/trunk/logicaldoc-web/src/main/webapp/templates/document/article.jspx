@@ -1,0 +1,64 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page lists articles of a document
+  
+ @author Marco Meschieri
+ @version $Id: article.jspx,v 1.3 2006/08/29 16:33:46 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ice="http://www.icesoft.com/icefaces/component"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+    id="articleForm">
+    <ice:panelGroup>
+        <ice:panelGrid columns="2">
+            <ice:panelGroup styleClass="outputLabel">
+                <ice:outputLabel for="author" value="#{msgs['msg.jsp.author']}*" />
+            </ice:panelGroup>
+            <ice:panelGroup rendered="false">
+                <ice:inputText id="author"
+                    label="#{msgs['errors.header.alert.key']}"
+                    value="#{articlesRecordsManager.selectedArticle.username}"
+                    maxlength="255"
+                    required="true"
+                    disabled="true" />
+                <br />
+                <ice:message for="author" />
+            </ice:panelGroup>
+            <ice:panelGroup rendered="true">
+                <ice:outputText value=" #{articlesRecordsManager.selectedArticle.username}" style="font-weight:bold" />
+            </ice:panelGroup>
+            
+            <ice:panelGroup styleClass="outputLabel">
+                <ice:outputLabel for="author" value="#{msgs['msg.jsp.title']}*" />
+            </ice:panelGroup>
+            <ice:panelGroup>
+                <ice:inputText id="title"
+                    label="#{msgs['errors.header.alert.key']}"
+                    tabindex="1"
+                    value="#{articlesRecordsManager.selectedArticle.subject}"
+                    maxlength="255"
+                    onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+                    required="true" />
+                <br />
+                <ice:message for="title" />
+            </ice:panelGroup>
+            <ice:panelGroup styleClass="outputLabel">
+                <ice:outputLabel for="text" value="#{msgs['msg.jsp.text']}" />
+            </ice:panelGroup>
+            <ice:panelGroup>
+                <ice:inputTextarea id="text"
+                    tabindex="1"
+                    value="#{articlesRecordsManager.selectedArticle.message}"
+                    cols="40" rows="3"
+                    onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+                    />
+            </ice:panelGroup>
+        </ice:panelGrid>
+    </ice:panelGroup>
+</jsp:root>

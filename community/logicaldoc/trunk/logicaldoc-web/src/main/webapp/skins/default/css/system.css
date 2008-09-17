@@ -1,0 +1,43 @@
+/*
+---------- System error pages -------
+*/
+.system_bg {
+	background-color: #6699CB;
+}
+
+.system_top {
+	height: 140px;
+	background-color: #003366;
+	padding-left: 92px;
+	padding-top: 74px;
+	padding-bottom: 27px;
+}
+
+.system_logo {
+	padding-left: 92px;
+	padding-right: 57px;
+	padding-top: 5px;
+	vertical-align: top;
+}
+
+.system_info {
+	font-family: Verdana;
+	font-size: 11px;
+	color: #ffffff;
+	vertical-align: top;
+	padding-left: 7px;
+	padding-top: 16px;
+}
+
+.system_arrow {
+	vertical-align: top;
+	padding-top: 19px;
+}
+
+A.system_link{
+	font-family: Verdana;
+	font-size: 11px;
+	padding-left: 7px;
+	color: #ffffff;
+	text-decoration: none;
+}

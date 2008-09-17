@@ -1,0 +1,137 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page allows user to setup sheduling poilicies
+  
+ @author Marco Meschieri
+ @version $Id: user.jspx,v 1.1 2007/10/16 16:12:10 marco Exp $
+ @since 3.5
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form" id="userForm">
+
+	<ice:panelGroup styleClass="center formBorderHighlight"
+		style="width: 600px;">
+		<ice:panelGroup>
+			<!-- Login data -->
+			<ice:panelGroup>
+				<h3>
+					<ice:outputText value="#{msgs['task.scheduling']}" />
+					<br />
+					<br />
+				</h3>
+
+				<ice:panelGrid columns="3">
+					<ice:panelGroup style="text-align:right">
+						<ice:outputLabel for="seconds"
+							value="#{msgs['task.scheduling.seconds']}*:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="seconds"
+							value="#{taskForm.task.scheduling.seconds}" required="true"/>
+						<br />
+						<ice:message for="seconds" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{msgs['task.scheduling.seconds.syntax']}" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right">
+						<ice:outputLabel for="minutes"
+							value="#{msgs['task.scheduling.minutes']}*:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="minutes"
+							value="#{taskForm.task.scheduling.minutes}" required="true"/>
+						<br />
+						<ice:message for="minutes" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{msgs['task.scheduling.minutes.syntax']}" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right">
+						<ice:outputLabel for="hours"
+							value="#{msgs['task.scheduling.hours']}*:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="hours"
+							value="#{taskForm.task.scheduling.hours}" required="true" />
+						<br />
+						<ice:message for="hours" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{msgs['task.scheduling.hours.syntax']}" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right">
+						<ice:outputLabel for="monthDay"
+							value="#{msgs['task.scheduling.monthDay']}*:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="monthDay"
+							value="#{taskForm.task.scheduling.dayOfMonth}" required="true" />
+						<br />
+						<ice:message for="monthDay" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{msgs['task.scheduling.monthDay.syntax']}" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right">
+						<ice:outputLabel for="month"
+							value="#{msgs['task.scheduling.month']}*:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="month"
+							value="#{taskForm.task.scheduling.month}" required="true" />
+						<br />
+						<ice:message for="month" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{msgs['task.scheduling.month.syntax']}" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right">
+						<ice:outputLabel for="weekDay"
+							value="#{msgs['task.scheduling.weekDay']}*:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="weekDay"
+							value="#{taskForm.task.scheduling.dayOfWeek}" required="true" />
+						<br />
+						<ice:message for="weekDay" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{msgs['task.scheduling.weekDay.syntax']}" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right">
+						<ice:outputLabel for="maxLength"
+							value="#{msgs['task.scheduling.maxlength']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:selectOneMenu styleClass="selectTagMenu"
+							value="#{taskForm.task.scheduling.maxLength}">
+							<f:selectItems value="#{selectionTags.taskMaxLengths}" />
+						</ice:selectOneMenu>
+					</ice:panelGroup>
+					<ice:panelGroup />
+				</ice:panelGrid>
+			</ice:panelGroup>
+		</ice:panelGroup>
+
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['abort']}"
+				action="#{tasksRecordsManager.list}" partialSubmit="true" />
+			<ice:commandButton value="#{msgs['save']}" action="#{taskForm.save}"
+				id="save" />
+		</ice:panelGroup>
+	</ice:panelGroup>
+
+</jsp:root>

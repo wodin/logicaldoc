@@ -1,0 +1,61 @@
+<?xml version = '1.0'?>
+<!-- 
+ The navigation menu
+  
+ @author Marco Meschieri
+ @version $Id: quickSearch.jspx,v 1.8 2006/08/29 16:33:46 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+	styleClass="quickSearch">
+	<script type="text/javascript">
+function clearSearch(element, label) {
+	if (element.value == label) {
+		element.value = '';
+	}
+};
+</script>
+	<ice:form id="quickSearchForm"
+		onkeypress="return submitOnEnter('quickSearchForm:quickSearch', event);">
+		<table id="headerSearch" border="0" cellpadding="0" cellspacing="0">
+			<tbody>
+				<tr>
+					<td class="boxSearch">
+						<ice:inputText id="query" value="#{searchForm.query}"
+							maxlength="100" size="35" styleClass="searchField"
+							onclick="javascript:clearSearch(this,'#{msgs.search}...');" />
+						<ice:commandButton id="quickSearch"
+							image="#{styleBean.imagesPath}/spacer.gif"
+							action="#{searchForm.quickSearch}" styleClass="submitImage" />
+					</td>
+					<td class="tdLinks" rowspan="2">
+						<ice:commandLink value="#{msgs['search.advanced']}"
+							styleClass="searchLink" action="#{searchForm.advanced}" />
+						<br />
+						<ice:commandLink value="#{msgs['search.last']}"
+							styleClass="searchLink" action="#{searchForm.search}" />
+					</td>
+				</tr>
+				<tr>
+					<td nowrap="nowrap" class="searchOptionsTD">
+						<ice:selectOneRadio value="#{searchForm.language}"
+							styleClass="searchOptions">
+							<f:selectItem
+								itemLabel="#{msgs['msg.jsp.search.onlyCurrentLang']}"
+								itemValue="#{language}"/>
+							<f:selectItem itemLabel="#{msgs['msg.jsp.search.allDocuments']}"
+								itemValue="all"/>
+						</ice:selectOneRadio>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</ice:form>
+</jsp:root>
