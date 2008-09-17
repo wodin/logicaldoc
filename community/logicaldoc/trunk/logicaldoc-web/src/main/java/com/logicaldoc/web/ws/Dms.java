@@ -22,6 +22,7 @@ import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.Version;
@@ -37,7 +38,6 @@ import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
-
 import com.logicaldoc.web.util.SnippetStripper;
 
 /**
@@ -55,13 +55,16 @@ public class Dms {
 	 * 
 	 * @param username
 	 * @param password
-	 * @param name Name of the folder
-	 * @param parent Parent identifier
+	 * @param name
+	 *            Name of the folder
+	 * @param parent
+	 *            Parent identifier
 	 * @return 'error' if error occurred, the folder identifier if it was
 	 *         created
 	 * @throws Exception
 	 */
-	public String createFolder(String username, String password, String name, int parent) throws Exception {
+	public String createFolder(String username, String password, String name,
+			int parent) throws Exception {
 		checkCredentials(username, password);
 
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -98,12 +101,14 @@ public class Dms {
 	 * 
 	 * @param username
 	 * @param password
-	 * @param folder Folder identifier
+	 * @param folder
+	 *            Folder identifier
 	 * @return A return code('ok' if all went ok, 'error' if some errors
 	 *         occurred)
 	 * @throws Exception
 	 */
-	public String deleteFolder(String username, String password, int folder) throws Exception {
+	public String deleteFolder(String username, String password, int folder)
+			throws Exception {
 		checkCredentials(username, password);
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -115,7 +120,8 @@ public class Dms {
 
 		checkWriteEnable(username, folder);
 
-		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		DocumentManager documentManager = (DocumentManager) Context
+				.getInstance().getBean(DocumentManager.class);
 
 		try {
 			documentManager.delete(folder, username);
@@ -126,9 +132,11 @@ public class Dms {
 		}
 	}
 
-	public String createDocument(String username, String password, int parent, String docName, String source,
-			String sourceDate, String author, String sourceType, String coverage, String language, String keywords,
-			String versionDesc, String filename, String groups) throws Exception {
+	public String createDocument(String username, String password, int parent,
+			String docName, String source, String sourceDate, String author,
+			String sourceType, String coverage, String language,
+			String keywords, String versionDesc, String filename, String groups)
+			throws Exception {
 		checkCredentials(username, password);
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -153,7 +161,8 @@ public class Dms {
 			grps.add(mg);
 		}
 
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(
+				DocumentDAO.class);
 		Set<String> kwds = ddao.toKeywords(keywords);
 
 		Date date = null;
@@ -162,20 +171,24 @@ public class Dms {
 			date = df.parse(sourceDate);
 
 		// We can obtain the request (incoming) MessageContext as follows
-		MessageContext inMessageContext = MessageContext.getCurrentMessageContext();
+		MessageContext inMessageContext = MessageContext
+				.getCurrentMessageContext();
 
 		// Now we can access the 'document' attachment in the response
-		DataHandler handler = inMessageContext.getAttachmentMap().getDataHandler("document");
+		DataHandler handler = inMessageContext.getAttachmentMap()
+				.getDataHandler("document");
 
 		// Get file to upload inputStream
 		InputStream stream = handler.getInputStream();
 
-		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		DocumentManager documentManager = (DocumentManager) Context
+				.getInstance().getBean(DocumentManager.class);
 
 		try {
-			documentManager.create(stream, filename, parentMenu, username, language, null, date, source, author,
-					sourceType, coverage, versionDesc, kwds, grps);
-			return "ok";
+			Document doc = documentManager.create(stream, filename, parentMenu,
+					username, language, null, date, source, author, sourceType,
+					coverage, versionDesc, kwds, grps);
+			return String.valueOf(doc.getMenuId());
 		} catch (Exception e) {
 			return "error";
 		} finally {
@@ -186,12 +199,14 @@ public class Dms {
 	/**
 	 * Parses a comma-separated list of group names checking the existence
 	 * 
-	 * @param groups The list of comma-separated group names
+	 * @param groups
+	 *            The list of comma-separated group names
 	 * @return The array of existing groups
 	 */
 	private String[] parseGroups(String groups) {
 		ArrayList<String> array = new ArrayList<String>();
-		GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+		GroupDAO gdao = (GroupDAO) Context.getInstance()
+				.getBean(GroupDAO.class);
 
 		StringTokenizer st = new StringTokenizer(groups, ",", false);
 		while (st.hasMoreTokens()) {
@@ -208,19 +223,24 @@ public class Dms {
 	 * 
 	 * @param username
 	 * @param password
-	 * @param id The document menu id
-	 * @param version The specific version(it can be empty)
+	 * @param id
+	 *            The document menu id
+	 * @param version
+	 *            The specific version(it can be empty)
 	 * @return A return code('ok' if all went ok)
 	 * @throws Exception
 	 */
-	public String downloadDocument(String username, String password, int id, String version) throws Exception {
+	public String downloadDocument(String username, String password, int id,
+			String version) throws Exception {
 		checkCredentials(username, password);
 		checkReadEnable(username, id);
 
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(
+				DocumentDAO.class);
 		Document doc = docDao.findByMenuId(id);
 
-		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		DocumentManager documentManager = (DocumentManager) Context
+				.getInstance().getBean(DocumentManager.class);
 		File file = documentManager.getDocumentFile(doc);
 
 		if (!file.exists()) {
@@ -230,14 +250,17 @@ public class Dms {
 		log.debug("Attach file " + file.getPath());
 
 		// We can obtain the request (incoming) MessageContext as follows
-		MessageContext inMessageContext = MessageContext.getCurrentMessageContext();
+		MessageContext inMessageContext = MessageContext
+				.getCurrentMessageContext();
 
 		// We can obtain the operation context from the request message context
-		OperationContext operationContext = inMessageContext.getOperationContext();
+		OperationContext operationContext = inMessageContext
+				.getOperationContext();
 
 		// Now we can obtain the response (outgoing) message context from the
 		// operation context
-		MessageContext outMessageContext = operationContext.getMessageContext(WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
+		MessageContext outMessageContext = operationContext
+				.getMessageContext(WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
 
 		// Now we can append the 'document' attachment to the response
 		DataHandler handler = new DataHandler(new FileDataSource(file));
@@ -251,18 +274,22 @@ public class Dms {
 	 * 
 	 * @param username
 	 * @param password
-	 * @param id The document menu id
+	 * @param id
+	 *            The document menu id
 	 * @return
 	 * @throws Exception
 	 */
-	public DocumentInfo downloadDocumentInfo(String username, String password, int id) throws Exception {
+	public DocumentInfo downloadDocumentInfo(String username, String password,
+			int id) throws Exception {
 		checkCredentials(username, password);
 
 		checkReadEnable(username, id);
 
 		// Retrieve the document
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		MenuDAO menuDao = (MenuDAO) Context.getInstance()
+				.getBean(MenuDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(
+				DocumentDAO.class);
 		Document doc = docDao.findByMenuId(id);
 		Menu menu = doc.getMenu();
 		Menu parentMenu = menuDao.findByPrimaryKey(menu.getMenuParent());
@@ -277,11 +304,12 @@ public class Dms {
 		info.setParentId(menu.getMenuParent());
 		info.setParentName(parentMenu.getMenuText());
 		info.setSource(doc.getSource());
-		info.setType(doc.getSourceType());
+		info.setType(doc.getDocType());
 		info.setUploadDate(convertDateToXML(doc.getDocDate()));
 		info.setWriteable(menuDao.isMenuWriteable(id, username));
 		info.setUploadUser(doc.getDocPublisher());
 		info.setCoverage(doc.getCoverage());
+		info.setFilename(doc.getMenu().getMenuRef());
 
 		Set<Version> versions = doc.getVersions();
 		for (Version version : versions) {
@@ -300,11 +328,13 @@ public class Dms {
 	 * 
 	 * @param username
 	 * @param password
-	 * @param folder The folder identifier
+	 * @param folder
+	 *            The folder identifier
 	 * @return The folder metadata
 	 * @throws Exception
 	 */
-	public FolderContent downloadFolderContent(String username, String password, int folder) throws Exception {
+	public FolderContent downloadFolderContent(String username,
+			String password, int folder) throws Exception {
 		FolderContent folderContent = new FolderContent();
 
 		checkCredentials(username, password);
@@ -327,7 +357,9 @@ public class Dms {
 			Content content = new Content();
 			content.setId(menu.getMenuId());
 			content.setName(menu.getMenuText());
-			content.setWriteable(mdao.isReadEnable(menu.getMenuId(), username) ? 1 : 0);
+			content
+					.setWriteable(mdao.isReadEnable(menu.getMenuId(), username) ? 1
+							: 0);
 
 			if (menu.getMenuType() == Menu.MENUTYPE_FILE)
 				folderContent.addDocument(content);
@@ -343,16 +375,19 @@ public class Dms {
 	 * 
 	 * @param username
 	 * @param password
-	 * @param id The document menu id
+	 * @param id
+	 *            The document menu id
 	 * @return A return code('ok' if all went ok)
 	 * @throws Exception
 	 */
-	public String deleteDocument(String username, String password, int id) throws Exception {
+	public String deleteDocument(String username, String password, int id)
+			throws Exception {
 		checkCredentials(username, password);
 
 		checkWriteEnable(username, id);
 
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(
+				DocumentDAO.class);
 		docDao.deleteByMenuId(id);
 
 		return "ok";
@@ -363,14 +398,17 @@ public class Dms {
 	 * 
 	 * @param username
 	 * @param password
-	 * @param id The document menu id
+	 * @param id
+	 *            The document menu id
 	 * @return A return code('ok' if all went ok)
 	 * @throws Exception
 	 */
-	public String checkout(String username, String password, int id) throws Exception {
+	public String checkout(String username, String password, int id)
+			throws Exception {
 		checkCredentials(username, password);
 		checkWriteEnable(username, id);
-		DocumentManager DocumentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		DocumentManager DocumentManager = (DocumentManager) Context
+				.getInstance().getBean(DocumentManager.class);
 		try {
 			DocumentManager.checkout(id, username);
 			return "ok";
@@ -391,13 +429,14 @@ public class Dms {
 	 * @return ok if all went right
 	 * @throws Exception
 	 */
-	public String checkin(String username, String password, int id, String filename, String description, String type)
-			throws Exception {
+	public String checkin(String username, String password, int id,
+			String filename, String description, String type) throws Exception {
 		checkCredentials(username, password);
 
 		checkWriteEnable(username, id);
 
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(
+				DocumentDAO.class);
 		Document document = ddao.findByMenuId(id);
 
 		if (document.getDocStatus() == Document.DOC_CHECKED_OUT) {
@@ -415,20 +454,23 @@ public class Dms {
 			try {
 				// We can obtain the request (incoming) MessageContext as
 				// follows
-				MessageContext inMessageContext = MessageContext.getCurrentMessageContext();
+				MessageContext inMessageContext = MessageContext
+						.getCurrentMessageContext();
 
 				// Now we can access the 'document' attachment in the
 				// response
-				DataHandler handler = inMessageContext.getAttachmentMap().getDataHandler("document");
+				DataHandler handler = inMessageContext.getAttachmentMap()
+						.getDataHandler("document");
 
 				// Get file to upload inputStream
 				InputStream stream = handler.getInputStream();
 
 				// checkin the document; throws an exception if
 				// something goes wrong
-				DocumentManager documentManager = (DocumentManager) Context.getInstance()
-						.getBean(DocumentManager.class);
-				documentManager.checkin(document.getDocId(), stream, filename, username, versionType, description);
+				DocumentManager documentManager = (DocumentManager) Context
+						.getInstance().getBean(DocumentManager.class);
+				documentManager.checkin(document.getDocId(), stream, filename,
+						username, versionType, description);
 
 				/* create positive log message */
 				log.info("Document " + id + " checked in");
@@ -447,16 +489,20 @@ public class Dms {
 	 * 
 	 * @param username
 	 * @param password
-	 * @param query The query string
-	 * @param indexLanguage The index language, if null all indexes are
-	 *        considered
-	 * @param queryLanguage The language in which the query is expressed
-	 * @param maxHits The maximum number of hits to be returned
+	 * @param query
+	 *            The query string
+	 * @param indexLanguage
+	 *            The index language, if null all indexes are considered
+	 * @param queryLanguage
+	 *            The language in which the query is expressed
+	 * @param maxHits
+	 *            The maximum number of hits to be returned
 	 * @return The objects representing the search result
 	 * @throws Exception
 	 */
-	public SearchResult search(String username, String password, String query, String indexLanguage,
-			String queryLanguage, int maxHits) throws Exception {
+	public SearchResult search(String username, String password, String query,
+			String indexLanguage, String queryLanguage, int maxHits)
+			throws Exception {
 		checkCredentials(username, password);
 
 		SearchResult searchResult = new SearchResult();
@@ -472,7 +518,8 @@ public class Dms {
 
 		ArrayList<String> languages = new ArrayList<String>();
 		if (StringUtils.isEmpty(indexLanguage)) {
-			Collection<Language> langs = LanguageManager.getInstance().getLanguages();
+			Collection<Language> langs = LanguageManager.getInstance()
+					.getLanguages();
 			for (Language language : langs) {
 				languages.add(language.getLanguage());
 			}
@@ -480,7 +527,8 @@ public class Dms {
 			languages.add(indexLanguage);
 		}
 
-		String[] langs = (String[]) languages.toArray(new String[languages.size()]);
+		String[] langs = (String[]) languages.toArray(new String[languages
+				.size()]);
 		opt.setLanguages(langs);
 		opt.setQueryStr(query);
 		opt.setUsername(username);
@@ -508,7 +556,8 @@ public class Dms {
 
 		searchResult.setTotalHits(result.size());
 		searchResult.setResult(result.toArray(new Result[] {}));
-		searchResult.setEstimatedHitsNumber(lastSearch.getEstimatedHitsNumber());
+		searchResult
+				.setEstimatedHitsNumber(lastSearch.getEstimatedHitsNumber());
 		searchResult.setTime(lastSearch.getExecTime());
 		searchResult.setMoreHits(lastSearch.isMoreHitsPresent() ? 1 : 0);
 
@@ -521,12 +570,17 @@ public class Dms {
 	/**
 	 * Check provided credentials
 	 * 
-	 * @param username The username
-	 * @param password The password
-	 * @throws Exception Raised if the user is not authenticated
+	 * @param username
+	 *            The username
+	 * @param password
+	 *            The password
+	 * @throws Exception
+	 *             Raised if the user is not authenticated
 	 */
-	private void checkCredentials(String username, String password) throws Exception {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+	private void checkCredentials(String username, String password)
+			throws Exception {
+		UserDAO userDao = (UserDAO) Context.getInstance()
+				.getBean(UserDAO.class);
 
 		if (!userDao.validateUser(username, password)) {
 			log.error("Invalid credentials " + username + "/" + password);
@@ -551,14 +605,15 @@ public class Dms {
 	}
 
 	/**
-	 * converts a date from logicaldoc's internal representation to a valid XML
+	 * converts a date from contineo's internal representation to a valid XML
 	 * string
 	 */
 	protected String convertDateToXML(String date) {
 		if (date.length() < 9) {
 			return DateBean.convertDate("yyyyMMdd", "yyyy-MM-dd", date);
 		} else {
-			return DateBean.convertDate("yyyyMMdd HHmmss", "yyyy-MM-dd HH:mm:ss", date);
+			return DateBean.convertDate("yyyyMMdd HHmmss",
+					"yyyy-MM-dd HH:mm:ss", date);
 		}
 	}
 }

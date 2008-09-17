@@ -87,26 +87,22 @@
 							style="text-decoration: underline;" />
 					</ice:commandSortHeader>
 				</f:facet>
-				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}">
-					<ice:panelGroup menuPopup="pop">
-						<ice:graphicImage
-							value="#{styleBean.imagesPath}/#{documentRecord.icon}"
-							style="float:left;" title="#{msgs['msg.jsp.popup']}"/>
-					</ice:panelGroup>
-					<ice:panelGroup menuPopup="pop"
-						style="margin-left: 5px;float:left;">
-						<ice:outputLink value="download?menuId=#{documentRecord.menuId}"
-							target="_blank" title="#{msgs['msg.jsp.popup']}">
-							<ice:outputText value=" #{documentRecord.displayDescription}" />
-						</ice:outputLink>
-						<ice:menuPopup id="pop" value="#{documentRecord.menuId}"
-							rendered="#{documentRecord.documentFound}">
-							<ice:menuItems value="#{documentRecord.model}" />
-						</ice:menuPopup>
-					</ice:panelGroup>
-					<ice:graphicImage style="margin-left: 5px;float:left;"
+				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}" menuPopup="pop">
+				    <ice:graphicImage
+                        value="#{styleBean.imagesPath}/#{documentRecord.icon}"
+                        style="border: 0px solid;" />
+                    <ice:outputLink value="download?menuId=#{documentRecord.menuId}"
+                        target="_blank" title="#{msgs['msg.jsp.popup']}">
+                        <ice:outputText value=" #{documentRecord.displayDescription}" />
+                    </ice:outputLink>
+                    <ice:graphicImage style="margin-left: 5px;float:left;"
 						rendered="#{documentRecord.checkedOut}"
 						value="#{styleBean.imagesPath}/lock.png" />
+                   <ice:menuPopup id="pop" value="#{documentRecord.menuId}"
+                        orientation="vertical"
+                        rendered="#{documentRecord.documentFound}">
+                        <ice:menuItems value="#{documentRecord.model}" />
+                    </ice:menuPopup>
 				</ice:panelGroup>
 			</ice:column>
 

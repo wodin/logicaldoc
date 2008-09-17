@@ -18,7 +18,7 @@
         <ice:panelGroup>
             <h3>
                 <ice:outputText value="#{msgs['msg.jsp.editdoc']}" /> - 
-                <ice:outputText value="#{documentForm.record.displayDescription}" />
+                <ice:outputText value="#{documentForm.record.displayFilename}" />
                 <br />
                 <br />
             </h3>

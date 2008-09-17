@@ -62,14 +62,14 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 	 */
 	public DmsStub(org.apache.axis2.context.ConfigurationContext configurationContext)
 			throws org.apache.axis2.AxisFault {
-		this(configurationContext, "http://localhost:8080/logicaldoc/services/Dms");
+		this(configurationContext, "http://localhost:8080/contineo/services/Dms");
 	}
 
 	/**
 	 * Default Constructor
 	 */
 	public DmsStub() throws org.apache.axis2.AxisFault {
-		this("http://localhost:8080/logicaldoc/services/Dms");
+		this("http://localhost:8080/contineo/services/Dms");
 	}
 
 	/**
@@ -90,70 +90,70 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		__operation = new org.apache.axis2.description.OutInAxisOperation();
 
-		__operation.setName(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "checkin"));
+		__operation.setName(new javax.xml.namespace.QName("http://ws.web.contineo.org", "checkin"));
 		_service.addOperation(__operation);
 
 		_operations[0] = __operation;
 
 		__operation = new org.apache.axis2.description.OutInAxisOperation();
 
-		__operation.setName(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "createDocument"));
+		__operation.setName(new javax.xml.namespace.QName("http://ws.web.contineo.org", "createDocument"));
 		_service.addOperation(__operation);
 
 		_operations[1] = __operation;
 
 		__operation = new org.apache.axis2.description.OutInAxisOperation();
 
-		__operation.setName(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "search"));
+		__operation.setName(new javax.xml.namespace.QName("http://ws.web.contineo.org", "search"));
 		_service.addOperation(__operation);
 
 		_operations[2] = __operation;
 
 		__operation = new org.apache.axis2.description.OutInAxisOperation();
 
-		__operation.setName(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "downloadDocumentInfo"));
+		__operation.setName(new javax.xml.namespace.QName("http://ws.web.contineo.org", "downloadDocumentInfo"));
 		_service.addOperation(__operation);
 
 		_operations[3] = __operation;
 
 		__operation = new org.apache.axis2.description.OutInAxisOperation();
 
-		__operation.setName(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "deleteFolder"));
+		__operation.setName(new javax.xml.namespace.QName("http://ws.web.contineo.org", "deleteFolder"));
 		_service.addOperation(__operation);
 
 		_operations[4] = __operation;
 
 		__operation = new org.apache.axis2.description.OutInAxisOperation();
 
-		__operation.setName(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "downloadDocument"));
+		__operation.setName(new javax.xml.namespace.QName("http://ws.web.contineo.org", "downloadDocument"));
 		_service.addOperation(__operation);
 
 		_operations[5] = __operation;
 
 		__operation = new org.apache.axis2.description.OutInAxisOperation();
 
-		__operation.setName(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "deleteDocument"));
+		__operation.setName(new javax.xml.namespace.QName("http://ws.web.contineo.org", "deleteDocument"));
 		_service.addOperation(__operation);
 
 		_operations[6] = __operation;
 
 		__operation = new org.apache.axis2.description.OutInAxisOperation();
 
-		__operation.setName(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "createFolder"));
+		__operation.setName(new javax.xml.namespace.QName("http://ws.web.contineo.org", "createFolder"));
 		_service.addOperation(__operation);
 
 		_operations[7] = __operation;
 
 		__operation = new org.apache.axis2.description.OutInAxisOperation();
 
-		__operation.setName(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "checkout"));
+		__operation.setName(new javax.xml.namespace.QName("http://ws.web.contineo.org", "checkout"));
 		_service.addOperation(__operation);
 
 		_operations[8] = __operation;
 
 		__operation = new org.apache.axis2.description.OutInAxisOperation();
 
-		__operation.setName(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "downloadFolderContent"));
+		__operation.setName(new javax.xml.namespace.QName("http://ws.web.contineo.org", "downloadFolderContent"));
 		_service.addOperation(__operation);
 
 		_operations[9] = __operation;
@@ -161,74 +161,74 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 	// populates the faults
 	private void populateFaults() {
-		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.DmsStub$Exception0");
 
-		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.DmsStub$Exception0");
 
-		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.DmsStub$Exception0");
 
-		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.DmsStub$Exception0");
 
-		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.DmsStub$Exception0");
 
-		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.DmsStub$Exception0");
 
-		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.DmsStub$Exception0");
 
-		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.DmsStub$Exception0");
 
-		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.DmsStub$Exception0");
 
-		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultExceptionClassNameMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.ExceptionException0");
-		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+		faultMessageMap.put(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 				"com.logicaldoc.web.ws.DmsStub$Exception0");
 	}
 
@@ -256,7 +256,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			org.apache.axiom.soap.SOAPEnvelope env = null;
 
 			env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), checkin0,
-					optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "checkin")));
+					optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "checkin")));
 
 			// adding SOAP soap_headers
 			_serviceClient.addHeadersToEnvelope(env);
@@ -359,7 +359,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		// Style is Doc.
 		env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), checkin0,
-				optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "checkin")));
+				optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "checkin")));
 
 		// adding SOAP soap_headers
 		_serviceClient.addHeadersToEnvelope(env);
@@ -499,7 +499,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			org.apache.axiom.soap.SOAPEnvelope env = null;
 
 			env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), createDocument2,
-					optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "createDocument")));
+					optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "createDocument")));
 
 			// adding SOAP soap_headers
 			_serviceClient.addHeadersToEnvelope(env);
@@ -602,7 +602,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		// Style is Doc.
 		env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), createDocument2,
-				optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "createDocument")));
+				optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "createDocument")));
 
 		// adding SOAP soap_headers
 		_serviceClient.addHeadersToEnvelope(env);
@@ -741,7 +741,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			org.apache.axiom.soap.SOAPEnvelope env = null;
 
 			env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), search4,
-					optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "search")));
+					optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "search")));
 
 			// adding SOAP soap_headers
 			_serviceClient.addHeadersToEnvelope(env);
@@ -844,7 +844,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		// Style is Doc.
 		env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), search4,
-				optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "search")));
+				optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "search")));
 
 		// adding SOAP soap_headers
 		_serviceClient.addHeadersToEnvelope(env);
@@ -986,7 +986,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			env = toEnvelope(
 					getFactory(_operationClient.getOptions().getSoapVersionURI()),
 					downloadDocumentInfo6,
-					optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "downloadDocumentInfo")));
+					optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "downloadDocumentInfo")));
 
 			// adding SOAP soap_headers
 			_serviceClient.addHeadersToEnvelope(env);
@@ -1089,7 +1089,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		// Style is Doc.
 		env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), downloadDocumentInfo6,
-				optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "downloadDocumentInfo")));
+				optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "downloadDocumentInfo")));
 
 		// adding SOAP soap_headers
 		_serviceClient.addHeadersToEnvelope(env);
@@ -1233,7 +1233,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			org.apache.axiom.soap.SOAPEnvelope env = null;
 
 			env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), deleteFolder8,
-					optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "deleteFolder")));
+					optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "deleteFolder")));
 
 			// adding SOAP soap_headers
 			_serviceClient.addHeadersToEnvelope(env);
@@ -1336,7 +1336,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		// Style is Doc.
 		env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), deleteFolder8,
-				optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "deleteFolder")));
+				optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "deleteFolder")));
 
 		// adding SOAP soap_headers
 		_serviceClient.addHeadersToEnvelope(env);
@@ -1476,7 +1476,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			org.apache.axiom.soap.SOAPEnvelope env = null;
 
 			env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), downloadDocument10,
-					optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "downloadDocument")));
+					optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "downloadDocument")));
 
 			// adding SOAP soap_headers
 			_serviceClient.addHeadersToEnvelope(env);
@@ -1579,7 +1579,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		// Style is Doc.
 		env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), downloadDocument10,
-				optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "downloadDocument")));
+				optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "downloadDocument")));
 
 		// adding SOAP soap_headers
 		_serviceClient.addHeadersToEnvelope(env);
@@ -1722,7 +1722,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			org.apache.axiom.soap.SOAPEnvelope env = null;
 
 			env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), deleteDocument12,
-					optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "deleteDocument")));
+					optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "deleteDocument")));
 
 			// adding SOAP soap_headers
 			_serviceClient.addHeadersToEnvelope(env);
@@ -1825,7 +1825,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		// Style is Doc.
 		env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), deleteDocument12,
-				optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "deleteDocument")));
+				optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "deleteDocument")));
 
 		// adding SOAP soap_headers
 		_serviceClient.addHeadersToEnvelope(env);
@@ -1965,7 +1965,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			org.apache.axiom.soap.SOAPEnvelope env = null;
 
 			env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), createFolder14,
-					optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "createFolder")));
+					optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "createFolder")));
 
 			// adding SOAP soap_headers
 			_serviceClient.addHeadersToEnvelope(env);
@@ -2068,7 +2068,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		// Style is Doc.
 		env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), createFolder14,
-				optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "createFolder")));
+				optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "createFolder")));
 
 		// adding SOAP soap_headers
 		_serviceClient.addHeadersToEnvelope(env);
@@ -2207,7 +2207,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			org.apache.axiom.soap.SOAPEnvelope env = null;
 
 			env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), checkout16,
-					optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "checkout")));
+					optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "checkout")));
 
 			// adding SOAP soap_headers
 			_serviceClient.addHeadersToEnvelope(env);
@@ -2310,7 +2310,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		// Style is Doc.
 		env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), checkout16,
-				optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "checkout")));
+				optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "checkout")));
 
 		// adding SOAP soap_headers
 		_serviceClient.addHeadersToEnvelope(env);
@@ -2452,7 +2452,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			env = toEnvelope(
 					getFactory(_operationClient.getOptions().getSoapVersionURI()),
 					downloadFolderContent18,
-					optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "downloadFolderContent")));
+					optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "downloadFolderContent")));
 
 			// adding SOAP soap_headers
 			_serviceClient.addHeadersToEnvelope(env);
@@ -2555,7 +2555,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		// Style is Doc.
 		env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()), downloadFolderContent18,
-				optimizeContent(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "downloadFolderContent")));
+				optimizeContent(new javax.xml.namespace.QName("http://ws.web.contineo.org", "downloadFolderContent")));
 
 		// adding SOAP soap_headers
 		_serviceClient.addHeadersToEnvelope(env);
@@ -3208,7 +3208,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		return null;
 	}
 
-	// http://localhost:8080/logicaldoc/services/Dms
+	// http://localhost:8080/contineo/services/Dms
 	public static class Exception implements org.apache.axis2.databinding.ADBBean {
 		/**
 		 * 
@@ -3229,11 +3229,11 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		/*
 		 * This type was generated from the piece of schema that had name =
-		 * Exception Namespace URI = http://ws.web.logicaldoc.com Namespace Prefix =
+		 * Exception Namespace URI = http://ws.web.contineo.org Namespace Prefix =
 		 * ns1
 		 */
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -3332,7 +3332,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			if (localExceptionTracker) {
 				if (localException != null) {
 					// write null attribute
-					java.lang.String namespace2 = "http://ws.web.logicaldoc.com";
+					java.lang.String namespace2 = "http://ws.web.contineo.org";
 
 					if (!namespace2.equals("")) {
 						java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -3354,7 +3354,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 					xmlWriter.writeEndElement();
 				} else {
 					// write null attribute
-					java.lang.String namespace2 = "http://ws.web.logicaldoc.com";
+					java.lang.String namespace2 = "http://ws.web.contineo.org";
 
 					if (!namespace2.equals("")) {
 						java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -3539,7 +3539,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localExceptionTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"));
 
 				elementList.add((localException == null) ? null : localException);
 			}
@@ -3609,11 +3609,11 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception").equals(reader
 									.getName())) {
 						boolean loopDone1 = false;
 						javax.xml.namespace.QName startQname1 = new javax.xml.namespace.QName(
-								"http://ws.web.logicaldoc.com", "Exception");
+								"http://ws.web.contineo.org", "Exception");
 
 						while (!loopDone1) {
 							if (reader.isStartElement() && startQname1.equals(reader.getName())) {
@@ -3704,11 +3704,11 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		/*
 		 * This type was generated from the piece of schema that had name =
-		 * Content Namespace URI = http://ws.web.logicaldoc.com/xsd Namespace
+		 * Content Namespace URI = http://ws.web.contineo.org/xsd Namespace
 		 * Prefix = ns2
 		 */
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com/xsd")) {
+			if (namespace.equals("http://ws.web.contineo.org/xsd")) {
 				return "ns2";
 			}
 
@@ -3855,7 +3855,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localIdTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -3884,7 +3884,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localNameTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -3913,7 +3913,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localWriteableTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -4102,20 +4102,20 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localIdTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "id"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "id"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localId));
 			}
 
 			if (localNameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "name"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "name"));
 
 				elementList.add((localName == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localName));
 			}
 
 			if (localWriteableTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "writeable"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "writeable"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localWriteable));
 			}
@@ -4185,7 +4185,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "id").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "id").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -4202,7 +4202,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "name").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "name").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -4225,7 +4225,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "writeable")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "writeable")
 									.equals(reader.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -4269,7 +4269,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = 6972509635452343117L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "search", "ns1");
+				"http://ws.web.contineo.org", "search", "ns1");
 
 		/**
 		 * field for Username
@@ -4344,7 +4344,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean localMaxHitsTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -4565,7 +4565,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localUsernameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -4594,7 +4594,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localPasswordTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -4623,7 +4623,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localQueryTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -4652,7 +4652,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localIndexLanguageTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -4681,7 +4681,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localQueryLanguageTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -4710,7 +4710,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localMaxHitsTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -4899,42 +4899,42 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localUsernameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "username"));
 
 				elementList.add((localUsername == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localUsername));
 			}
 
 			if (localPasswordTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "password"));
 
 				elementList.add((localPassword == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localPassword));
 			}
 
 			if (localQueryTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "query"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "query"));
 
 				elementList.add((localQuery == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localQuery));
 			}
 
 			if (localIndexLanguageTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "indexLanguage"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "indexLanguage"));
 
 				elementList.add((localIndexLanguage == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localIndexLanguage));
 			}
 
 			if (localQueryLanguageTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "queryLanguage"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "queryLanguage"));
 
 				elementList.add((localQueryLanguage == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localQueryLanguage));
 			}
 
 			if (localMaxHitsTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "maxHits"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "maxHits"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localMaxHits));
 			}
@@ -5004,7 +5004,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "username").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -5028,7 +5028,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "password").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -5052,7 +5052,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "query").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "query").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -5075,7 +5075,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "indexLanguage")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "indexLanguage")
 									.equals(reader.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -5099,7 +5099,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "queryLanguage")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "queryLanguage")
 									.equals(reader.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -5123,7 +5123,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "maxHits").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "maxHits").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -5167,7 +5167,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = -535684767122632306L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "createDocumentResponse", "ns1");
+				"http://ws.web.contineo.org", "createDocumentResponse", "ns1");
 
 		/**
 		 * field for _return
@@ -5182,7 +5182,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean local_returnTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -5278,7 +5278,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (local_returnTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -5467,7 +5467,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (local_returnTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "return"));
 
 				elementList.add((local_return == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(local_return));
@@ -5539,7 +5539,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "return").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -5591,7 +5591,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = 4071340936496389148L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "createDocument", "ns1");
+				"http://ws.web.contineo.org", "createDocument", "ns1");
 
 		/**
 		 * field for Username
@@ -5762,7 +5762,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean localGroupsTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -6183,7 +6183,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localUsernameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6212,7 +6212,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localPasswordTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6241,7 +6241,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localParentTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6270,7 +6270,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localDocNameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6299,7 +6299,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localSourceTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6328,7 +6328,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localSourceDateTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6357,7 +6357,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localAuthorTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6386,7 +6386,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localSourceTypeTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6415,7 +6415,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localCoverageTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6444,7 +6444,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localLanguageTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6473,7 +6473,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localKeywordsTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6502,7 +6502,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localVersionDescTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6531,7 +6531,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localFilenameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6560,7 +6560,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localGroupsTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -6749,97 +6749,97 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localUsernameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "username"));
 
 				elementList.add((localUsername == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localUsername));
 			}
 
 			if (localPasswordTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "password"));
 
 				elementList.add((localPassword == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localPassword));
 			}
 
 			if (localParentTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "parent"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "parent"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localParent));
 			}
 
 			if (localDocNameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "docName"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "docName"));
 
 				elementList.add((localDocName == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localDocName));
 			}
 
 			if (localSourceTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "source"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "source"));
 
 				elementList.add((localSource == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localSource));
 			}
 
 			if (localSourceDateTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "sourceDate"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "sourceDate"));
 
 				elementList.add((localSourceDate == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localSourceDate));
 			}
 
 			if (localAuthorTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "author"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "author"));
 
 				elementList.add((localAuthor == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localAuthor));
 			}
 
 			if (localSourceTypeTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "sourceType"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "sourceType"));
 
 				elementList.add((localSourceType == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localSourceType));
 			}
 
 			if (localCoverageTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "coverage"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "coverage"));
 
 				elementList.add((localCoverage == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localCoverage));
 			}
 
 			if (localLanguageTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "language"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "language"));
 
 				elementList.add((localLanguage == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localLanguage));
 			}
 
 			if (localKeywordsTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "keywords"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "keywords"));
 
 				elementList.add((localKeywords == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localKeywords));
 			}
 
 			if (localVersionDescTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "versionDesc"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "versionDesc"));
 
 				elementList.add((localVersionDesc == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localVersionDesc));
 			}
 
 			if (localFilenameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "filename"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "filename"));
 
 				elementList.add((localFilename == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localFilename));
 			}
 
 			if (localGroupsTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "groups"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "groups"));
 
 				elementList.add((localGroups == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localGroups));
@@ -6910,7 +6910,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "username").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -6934,7 +6934,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "password").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -6958,7 +6958,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "parent").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "parent").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -6975,7 +6975,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "docName").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "docName").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -7000,7 +7000,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "source").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "source").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -7023,7 +7023,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "sourceDate").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "sourceDate").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -7047,7 +7047,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "author").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "author").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -7070,7 +7070,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "sourceType").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "sourceType").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -7094,7 +7094,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "coverage").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "coverage").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -7118,7 +7118,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "language").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "language").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -7142,7 +7142,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "keywords").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "keywords").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -7166,7 +7166,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "versionDesc").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "versionDesc").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -7190,7 +7190,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "filename").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "filename").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -7214,7 +7214,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "groups").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "groups").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -7264,7 +7264,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = 8472888487051047869L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "downloadFolderContentResponse", "ns1");
+				"http://ws.web.contineo.org", "downloadFolderContentResponse", "ns1");
 
 		/**
 		 * field for _return
@@ -7279,7 +7279,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean local_returnTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -7376,7 +7376,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 			if (local_returnTracker) {
 				if (local_return == null) {
-					java.lang.String namespace2 = "http://ws.web.logicaldoc.com";
+					java.lang.String namespace2 = "http://ws.web.contineo.org";
 
 					if (!namespace2.equals("")) {
 						java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -7398,7 +7398,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 					writeAttribute("xsi", "http://www.w3.org/2001/XMLSchema-instance", "nil", "1", xmlWriter);
 					xmlWriter.writeEndElement();
 				} else {
-					local_return.serialize(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return"),
+					local_return.serialize(new javax.xml.namespace.QName("http://ws.web.contineo.org", "return"),
 							factory, xmlWriter);
 				}
 			}
@@ -7564,7 +7564,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (local_returnTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "return"));
 
 				elementList.add((local_return == null) ? null : local_return);
 			}
@@ -7636,7 +7636,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "return").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -7747,11 +7747,11 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		/*
 		 * This type was generated from the piece of schema that had name =
-		 * SearchResult Namespace URI = http://ws.web.logicaldoc.com/xsd Namespace
+		 * SearchResult Namespace URI = http://ws.web.contineo.org/xsd Namespace
 		 * Prefix = ns2
 		 */
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com/xsd")) {
+			if (namespace.equals("http://ws.web.contineo.org/xsd")) {
 				return "ns2";
 			}
 
@@ -7974,7 +7974,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localEstimatedHitsNumberTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -8003,7 +8003,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localMoreHitsTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -8035,11 +8035,11 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 				if (localResult != null) {
 					for (int i = 0; i < localResult.length; i++) {
 						if (localResult[i] != null) {
-							localResult[i].serialize(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd",
+							localResult[i].serialize(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd",
 									"result"), factory, xmlWriter);
 						} else {
 							// write null attribute
-							java.lang.String namespace2 = "http://ws.web.logicaldoc.com/xsd";
+							java.lang.String namespace2 = "http://ws.web.contineo.org/xsd";
 
 							if (!namespace2.equals("")) {
 								java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -8064,7 +8064,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 					}
 				} else {
 					// write null attribute
-					java.lang.String namespace2 = "http://ws.web.logicaldoc.com/xsd";
+					java.lang.String namespace2 = "http://ws.web.contineo.org/xsd";
 
 					if (!namespace2.equals("")) {
 						java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -8089,7 +8089,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localTimeTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -8118,7 +8118,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localTotalHitsTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -8307,14 +8307,14 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localEstimatedHitsNumberTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "estimatedHitsNumber"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "estimatedHitsNumber"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localEstimatedHitsNumber));
 			}
 
 			if (localMoreHitsTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "moreHits"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "moreHits"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localMoreHits));
 			}
@@ -8323,27 +8323,27 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 				if (localResult != null) {
 					for (int i = 0; i < localResult.length; i++) {
 						if (localResult[i] != null) {
-							elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "result"));
+							elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "result"));
 							elementList.add(localResult[i]);
 						} else {
-							elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "result"));
+							elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "result"));
 							elementList.add(null);
 						}
 					}
 				} else {
-					elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "result"));
+					elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "result"));
 					elementList.add(localResult);
 				}
 			}
 
 			if (localTimeTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "time"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "time"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localTime));
 			}
 
 			if (localTotalHitsTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "totalHits"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "totalHits"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localTotalHits));
 			}
@@ -8415,7 +8415,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "estimatedHitsNumber")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "estimatedHitsNumber")
 									.equals(reader.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -8433,7 +8433,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "moreHits")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "moreHits")
 									.equals(reader.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -8450,7 +8450,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "result").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "result").equals(reader
 									.getName())) {
 						// Process the array and step past its final element's
 						// end.
@@ -8484,7 +8484,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 								// exiting the xml structure
 								loopDone3 = true;
 							} else {
-								if (new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "result")
+								if (new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "result")
 										.equals(reader.getName())) {
 									nillableValue = reader.getAttributeValue(
 											"http://www.w3.org/2001/XMLSchema-instance", "nil");
@@ -8514,7 +8514,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "time").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "time").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -8531,7 +8531,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "totalHits")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "totalHits")
 									.equals(reader.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -8575,7 +8575,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = 1029316200130084919L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "Exception", "ns1");
+				"http://ws.web.contineo.org", "Exception", "ns1");
 
 		/**
 		 * field for Exception
@@ -8590,7 +8590,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean localExceptionTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -8687,7 +8687,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 			if (localExceptionTracker) {
 				if (localException == null) {
-					java.lang.String namespace2 = "http://ws.web.logicaldoc.com";
+					java.lang.String namespace2 = "http://ws.web.contineo.org";
 
 					if (!namespace2.equals("")) {
 						java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -8709,7 +8709,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 					writeAttribute("xsi", "http://www.w3.org/2001/XMLSchema-instance", "nil", "1", xmlWriter);
 					xmlWriter.writeEndElement();
 				} else {
-					localException.serialize(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"),
+					localException.serialize(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"),
 							factory, xmlWriter);
 				}
 			}
@@ -8875,7 +8875,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localExceptionTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception"));
 
 				elementList.add((localException == null) ? null : localException);
 			}
@@ -8956,7 +8956,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "Exception").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "Exception").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -9006,7 +9006,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = -5967083756182501546L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "createFolderResponse", "ns1");
+				"http://ws.web.contineo.org", "createFolderResponse", "ns1");
 
 		/**
 		 * field for _return
@@ -9021,7 +9021,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean local_returnTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -9117,7 +9117,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (local_returnTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -9306,7 +9306,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (local_returnTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "return"));
 
 				elementList.add((local_return == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(local_return));
@@ -9378,7 +9378,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "return").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -9430,7 +9430,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = 3392368870344048464L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "deleteDocument", "ns1");
+				"http://ws.web.contineo.org", "deleteDocument", "ns1");
 
 		/**
 		 * field for Username
@@ -9469,7 +9469,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean localIdTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -9615,7 +9615,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localUsernameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -9644,7 +9644,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localPasswordTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -9673,7 +9673,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localIdTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -9862,21 +9862,21 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localUsernameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "username"));
 
 				elementList.add((localUsername == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localUsername));
 			}
 
 			if (localPasswordTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "password"));
 
 				elementList.add((localPassword == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localPassword));
 			}
 
 			if (localIdTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "id"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "id"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localId));
 			}
@@ -9946,7 +9946,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "username").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -9970,7 +9970,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "password").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -9994,7 +9994,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "id").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "id").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -10038,7 +10038,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = 703087067869594571L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "downloadDocumentInfoResponse", "ns1");
+				"http://ws.web.contineo.org", "downloadDocumentInfoResponse", "ns1");
 
 		/**
 		 * field for _return
@@ -10053,7 +10053,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean local_returnTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -10150,7 +10150,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 			if (local_returnTracker) {
 				if (local_return == null) {
-					java.lang.String namespace2 = "http://ws.web.logicaldoc.com";
+					java.lang.String namespace2 = "http://ws.web.contineo.org";
 
 					if (!namespace2.equals("")) {
 						java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -10172,7 +10172,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 					writeAttribute("xsi", "http://www.w3.org/2001/XMLSchema-instance", "nil", "1", xmlWriter);
 					xmlWriter.writeEndElement();
 				} else {
-					local_return.serialize(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return"),
+					local_return.serialize(new javax.xml.namespace.QName("http://ws.web.contineo.org", "return"),
 							factory, xmlWriter);
 				}
 			}
@@ -10338,7 +10338,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (local_returnTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "return"));
 
 				elementList.add((local_return == null) ? null : local_return);
 			}
@@ -10410,7 +10410,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "return").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -10460,7 +10460,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = 9173146056345642113L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "searchResponse", "ns1");
+				"http://ws.web.contineo.org", "searchResponse", "ns1");
 
 		/**
 		 * field for _return
@@ -10475,7 +10475,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean local_returnTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -10572,7 +10572,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 			if (local_returnTracker) {
 				if (local_return == null) {
-					java.lang.String namespace2 = "http://ws.web.logicaldoc.com";
+					java.lang.String namespace2 = "http://ws.web.contineo.org";
 
 					if (!namespace2.equals("")) {
 						java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -10594,7 +10594,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 					writeAttribute("xsi", "http://www.w3.org/2001/XMLSchema-instance", "nil", "1", xmlWriter);
 					xmlWriter.writeEndElement();
 				} else {
-					local_return.serialize(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return"),
+					local_return.serialize(new javax.xml.namespace.QName("http://ws.web.contineo.org", "return"),
 							factory, xmlWriter);
 				}
 			}
@@ -10760,7 +10760,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (local_returnTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "return"));
 
 				elementList.add((local_return == null) ? null : local_return);
 			}
@@ -10830,7 +10830,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "return").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -10880,7 +10880,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = 2457073840230625539L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "checkoutResponse", "ns1");
+				"http://ws.web.contineo.org", "checkoutResponse", "ns1");
 
 		/**
 		 * field for _return
@@ -10895,7 +10895,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean local_returnTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -10991,7 +10991,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (local_returnTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -11180,7 +11180,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (local_returnTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "return"));
 
 				elementList.add((local_return == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(local_return));
@@ -11251,7 +11251,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "return").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -11299,31 +11299,31 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 	public static class ExtensionMapper {
 		public static java.lang.Object getTypeObject(java.lang.String namespaceURI, java.lang.String typeName,
 				javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception {
-			if ("http://ws.web.logicaldoc.com/xsd".equals(namespaceURI) && "Content".equals(typeName)) {
+			if ("http://ws.web.contineo.org/xsd".equals(namespaceURI) && "Content".equals(typeName)) {
 				return Content.Factory.parse(reader);
 			}
 
-			if ("http://ws.web.logicaldoc.com".equals(namespaceURI) && "Exception".equals(typeName)) {
+			if ("http://ws.web.contineo.org".equals(namespaceURI) && "Exception".equals(typeName)) {
 				return Exception.Factory.parse(reader);
 			}
 
-			if ("http://ws.web.logicaldoc.com/xsd".equals(namespaceURI) && "DocumentInfo".equals(typeName)) {
+			if ("http://ws.web.contineo.org/xsd".equals(namespaceURI) && "DocumentInfo".equals(typeName)) {
 				return DocumentInfo.Factory.parse(reader);
 			}
 
-			if ("http://ws.web.logicaldoc.com/xsd".equals(namespaceURI) && "VersionInfo".equals(typeName)) {
+			if ("http://ws.web.contineo.org/xsd".equals(namespaceURI) && "VersionInfo".equals(typeName)) {
 				return VersionInfo.Factory.parse(reader);
 			}
 
-			if ("http://ws.web.logicaldoc.com/xsd".equals(namespaceURI) && "SearchResult".equals(typeName)) {
+			if ("http://ws.web.contineo.org/xsd".equals(namespaceURI) && "SearchResult".equals(typeName)) {
 				return SearchResult.Factory.parse(reader);
 			}
 
-			if ("http://ws.web.logicaldoc.com/xsd".equals(namespaceURI) && "ResultImpl".equals(typeName)) {
+			if ("http://ws.web.contineo.org/xsd".equals(namespaceURI) && "ResultImpl".equals(typeName)) {
 				return Result.Factory.parse(reader);
 			}
 
-			if ("http://ws.web.logicaldoc.com/xsd".equals(namespaceURI) && "FolderContent".equals(typeName)) {
+			if ("http://ws.web.contineo.org/xsd".equals(namespaceURI) && "FolderContent".equals(typeName)) {
 				return FolderContent.Factory.parse(reader);
 			}
 
@@ -11338,7 +11338,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = -7637924850687063604L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "checkinResponse", "ns1");
+				"http://ws.web.contineo.org", "checkinResponse", "ns1");
 
 		/**
 		 * field for _return
@@ -11353,7 +11353,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean local_returnTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -11449,7 +11449,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (local_returnTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -11638,7 +11638,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (local_returnTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "return"));
 
 				elementList.add((local_return == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(local_return));
@@ -11709,7 +11709,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "return").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -11761,7 +11761,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = 3630567111591491841L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "checkin", "ns1");
+				"http://ws.web.contineo.org", "checkin", "ns1");
 
 		/**
 		 * field for Username
@@ -11836,7 +11836,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean localTypeTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -12057,7 +12057,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localUsernameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -12086,7 +12086,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localPasswordTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -12115,7 +12115,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localIdTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -12144,7 +12144,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localFilenameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -12173,7 +12173,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localDescriptionTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -12202,7 +12202,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localTypeTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -12391,41 +12391,41 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localUsernameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "username"));
 
 				elementList.add((localUsername == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localUsername));
 			}
 
 			if (localPasswordTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "password"));
 
 				elementList.add((localPassword == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localPassword));
 			}
 
 			if (localIdTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "id"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "id"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localId));
 			}
 
 			if (localFilenameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "filename"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "filename"));
 
 				elementList.add((localFilename == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localFilename));
 			}
 
 			if (localDescriptionTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "description"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "description"));
 
 				elementList.add((localDescription == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localDescription));
 			}
 
 			if (localTypeTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "type"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "type"));
 
 				elementList.add((localType == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localType));
@@ -12496,7 +12496,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "username").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -12520,7 +12520,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "password").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -12544,7 +12544,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "id").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "id").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -12561,7 +12561,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "filename").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "filename").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -12585,7 +12585,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "description").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "description").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -12609,7 +12609,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "type").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "type").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -12659,7 +12659,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = 5917014854157088788L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "downloadDocument", "ns1");
+				"http://ws.web.contineo.org", "downloadDocument", "ns1");
 
 		/**
 		 * field for Username
@@ -12710,7 +12710,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean localVersionTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -12881,7 +12881,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localUsernameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -12910,7 +12910,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localPasswordTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -12939,7 +12939,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localIdTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -12968,7 +12968,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localVersionTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -13157,27 +13157,27 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localUsernameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "username"));
 
 				elementList.add((localUsername == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localUsername));
 			}
 
 			if (localPasswordTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "password"));
 
 				elementList.add((localPassword == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localPassword));
 			}
 
 			if (localIdTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "id"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "id"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localId));
 			}
 
 			if (localVersionTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "version"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "version"));
 
 				elementList.add((localVersion == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localVersion));
@@ -13248,7 +13248,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "username").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -13272,7 +13272,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "password").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -13296,7 +13296,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "id").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "id").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -13313,7 +13313,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "version").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "version").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -13450,11 +13450,11 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		/*
 		 * This type was generated from the piece of schema that had name =
-		 * FolderContent Namespace URI = http://ws.web.logicaldoc.com/xsd
+		 * FolderContent Namespace URI = http://ws.web.contineo.org/xsd
 		 * Namespace Prefix = ns2
 		 */
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com/xsd")) {
+			if (namespace.equals("http://ws.web.contineo.org/xsd")) {
 				return "ns2";
 			}
 
@@ -13756,11 +13756,11 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 				if (localDocument != null) {
 					for (int i = 0; i < localDocument.length; i++) {
 						if (localDocument[i] != null) {
-							localDocument[i].serialize(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd",
+							localDocument[i].serialize(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd",
 									"document"), factory, xmlWriter);
 						} else {
 							// write null attribute
-							java.lang.String namespace2 = "http://ws.web.logicaldoc.com/xsd";
+							java.lang.String namespace2 = "http://ws.web.contineo.org/xsd";
 
 							if (!namespace2.equals("")) {
 								java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -13785,7 +13785,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 					}
 				} else {
 					// write null attribute
-					java.lang.String namespace2 = "http://ws.web.logicaldoc.com/xsd";
+					java.lang.String namespace2 = "http://ws.web.contineo.org/xsd";
 
 					if (!namespace2.equals("")) {
 						java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -13813,11 +13813,11 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 				if (localFolder != null) {
 					for (int i = 0; i < localFolder.length; i++) {
 						if (localFolder[i] != null) {
-							localFolder[i].serialize(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd",
+							localFolder[i].serialize(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd",
 									"folder"), factory, xmlWriter);
 						} else {
 							// write null attribute
-							java.lang.String namespace2 = "http://ws.web.logicaldoc.com/xsd";
+							java.lang.String namespace2 = "http://ws.web.contineo.org/xsd";
 
 							if (!namespace2.equals("")) {
 								java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -13842,7 +13842,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 					}
 				} else {
 					// write null attribute
-					java.lang.String namespace2 = "http://ws.web.logicaldoc.com/xsd";
+					java.lang.String namespace2 = "http://ws.web.contineo.org/xsd";
 
 					if (!namespace2.equals("")) {
 						java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -13867,7 +13867,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localIdTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -13896,7 +13896,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localNameTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -13925,7 +13925,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localParentIdTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -13954,7 +13954,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localParentNameTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -13983,7 +13983,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localWriteableTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -14176,16 +14176,16 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 					for (int i = 0; i < localDocument.length; i++) {
 						if (localDocument[i] != null) {
 							elementList
-									.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "document"));
+									.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "document"));
 							elementList.add(localDocument[i]);
 						} else {
 							elementList
-									.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "document"));
+									.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "document"));
 							elementList.add(null);
 						}
 					}
 				} else {
-					elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "document"));
+					elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "document"));
 					elementList.add(localDocument);
 				}
 			}
@@ -14194,47 +14194,47 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 				if (localFolder != null) {
 					for (int i = 0; i < localFolder.length; i++) {
 						if (localFolder[i] != null) {
-							elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "folder"));
+							elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "folder"));
 							elementList.add(localFolder[i]);
 						} else {
-							elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "folder"));
+							elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "folder"));
 							elementList.add(null);
 						}
 					}
 				} else {
-					elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "folder"));
+					elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "folder"));
 					elementList.add(localFolder);
 				}
 			}
 
 			if (localIdTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "id"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "id"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localId));
 			}
 
 			if (localNameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "name"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "name"));
 
 				elementList.add((localName == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localName));
 			}
 
 			if (localParentIdTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "parentId"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "parentId"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localParentId));
 			}
 
 			if (localParentNameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "parentName"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "parentName"));
 
 				elementList.add((localParentName == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localParentName));
 			}
 
 			if (localWriteableTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "writeable"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "writeable"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localWriteable));
 			}
@@ -14308,7 +14308,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "document")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "document")
 									.equals(reader.getName())) {
 						// Process the array and step past its final element's
 						// end.
@@ -14342,7 +14342,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 								// exiting the xml structure
 								loopDone1 = true;
 							} else {
-								if (new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "document")
+								if (new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "document")
 										.equals(reader.getName())) {
 									nillableValue = reader.getAttributeValue(
 											"http://www.w3.org/2001/XMLSchema-instance", "nil");
@@ -14372,7 +14372,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "folder").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "folder").equals(reader
 									.getName())) {
 						// Process the array and step past its final element's
 						// end.
@@ -14406,7 +14406,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 								// exiting the xml structure
 								loopDone2 = true;
 							} else {
-								if (new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "folder")
+								if (new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "folder")
 										.equals(reader.getName())) {
 									nillableValue = reader.getAttributeValue(
 											"http://www.w3.org/2001/XMLSchema-instance", "nil");
@@ -14436,7 +14436,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "id").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "id").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -14453,7 +14453,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "name").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "name").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -14476,7 +14476,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "parentId")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "parentId")
 									.equals(reader.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -14493,7 +14493,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "parentName")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "parentName")
 									.equals(reader.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -14517,7 +14517,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "writeable")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "writeable")
 									.equals(reader.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -14561,7 +14561,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = -3195851804011688588L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "downloadDocumentInfo", "ns1");
+				"http://ws.web.contineo.org", "downloadDocumentInfo", "ns1");
 
 		/**
 		 * field for Username
@@ -14600,7 +14600,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean localIdTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -14746,7 +14746,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localUsernameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -14775,7 +14775,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localPasswordTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -14804,7 +14804,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localIdTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -14993,21 +14993,21 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localUsernameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "username"));
 
 				elementList.add((localUsername == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localUsername));
 			}
 
 			if (localPasswordTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "password"));
 
 				elementList.add((localPassword == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localPassword));
 			}
 
 			if (localIdTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "id"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "id"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localId));
 			}
@@ -15078,7 +15078,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "username").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -15102,7 +15102,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "password").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -15126,7 +15126,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "id").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "id").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -15170,7 +15170,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = -7984463484729004838L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "deleteFolderResponse", "ns1");
+				"http://ws.web.contineo.org", "deleteFolderResponse", "ns1");
 
 		/**
 		 * field for _return
@@ -15185,7 +15185,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean local_returnTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -15281,7 +15281,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (local_returnTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -15470,7 +15470,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (local_returnTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "return"));
 
 				elementList.add((local_return == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(local_return));
@@ -15542,7 +15542,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "return").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -15594,7 +15594,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = -5029098027424058654L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "checkout", "ns1");
+				"http://ws.web.contineo.org", "checkout", "ns1");
 
 		/**
 		 * field for Username
@@ -15633,7 +15633,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean localIdTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -15779,7 +15779,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localUsernameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -15808,7 +15808,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localPasswordTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -15837,7 +15837,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localIdTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -16026,21 +16026,21 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localUsernameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "username"));
 
 				elementList.add((localUsername == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localUsername));
 			}
 
 			if (localPasswordTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "password"));
 
 				elementList.add((localPassword == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localPassword));
 			}
 
 			if (localIdTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "id"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "id"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localId));
 			}
@@ -16110,7 +16110,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "username").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -16134,7 +16134,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "password").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -16158,7 +16158,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "id").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "id").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -16371,11 +16371,11 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		/*
 		 * This type was generated from the piece of schema that had name =
-		 * DocumentInfo Namespace URI = http://ws.web.logicaldoc.com/xsd Namespace
+		 * DocumentInfo Namespace URI = http://ws.web.contineo.org/xsd Namespace
 		 * Prefix = ns2
 		 */
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com/xsd")) {
+			if (namespace.equals("http://ws.web.contineo.org/xsd")) {
 				return "ns2";
 			}
 
@@ -16823,7 +16823,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localAuthorTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -16852,7 +16852,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localCoverageTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -16881,7 +16881,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localIdTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -16910,7 +16910,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localLanguageTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -16939,7 +16939,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localNameTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -16968,7 +16968,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localParentIdTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -16997,7 +16997,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localParentNameTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -17026,7 +17026,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localSourceTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -17055,7 +17055,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localSourceDateTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -17084,7 +17084,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localTypeTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -17113,7 +17113,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localUploadDateTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -17142,7 +17142,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localUploadUserTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -17174,11 +17174,11 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 				if (localVersion != null) {
 					for (int i = 0; i < localVersion.length; i++) {
 						if (localVersion[i] != null) {
-							localVersion[i].serialize(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd",
+							localVersion[i].serialize(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd",
 									"version"), factory, xmlWriter);
 						} else {
 							// write null attribute
-							java.lang.String namespace2 = "http://ws.web.logicaldoc.com/xsd";
+							java.lang.String namespace2 = "http://ws.web.contineo.org/xsd";
 
 							if (!namespace2.equals("")) {
 								java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -17203,7 +17203,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 					}
 				} else {
 					// write null attribute
-					java.lang.String namespace2 = "http://ws.web.logicaldoc.com/xsd";
+					java.lang.String namespace2 = "http://ws.web.contineo.org/xsd";
 
 					if (!namespace2.equals("")) {
 						java.lang.String prefix2 = xmlWriter.getPrefix(namespace2);
@@ -17228,7 +17228,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localWriteableTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -17417,82 +17417,82 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localAuthorTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "author"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "author"));
 
 				elementList.add((localAuthor == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localAuthor));
 			}
 
 			if (localCoverageTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "coverage"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "coverage"));
 
 				elementList.add((localCoverage == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localCoverage));
 			}
 
 			if (localIdTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "id"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "id"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localId));
 			}
 
 			if (localLanguageTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "language"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "language"));
 
 				elementList.add((localLanguage == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localLanguage));
 			}
 
 			if (localNameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "name"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "name"));
 
 				elementList.add((localName == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localName));
 			}
 
 			if (localParentIdTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "parentId"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "parentId"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localParentId));
 			}
 
 			if (localParentNameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "parentName"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "parentName"));
 
 				elementList.add((localParentName == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localParentName));
 			}
 
 			if (localSourceTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "source"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "source"));
 
 				elementList.add((localSource == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localSource));
 			}
 
 			if (localSourceDateTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "sourceDate"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "sourceDate"));
 
 				elementList.add((localSourceDate == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localSourceDate));
 			}
 
 			if (localTypeTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "type"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "type"));
 
 				elementList.add((localType == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localType));
 			}
 
 			if (localUploadDateTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "uploadDate"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "uploadDate"));
 
 				elementList.add((localUploadDate == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localUploadDate));
 			}
 
 			if (localUploadUserTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "uploadUser"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "uploadUser"));
 
 				elementList.add((localUploadUser == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localUploadUser));
@@ -17502,21 +17502,21 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 				if (localVersion != null) {
 					for (int i = 0; i < localVersion.length; i++) {
 						if (localVersion[i] != null) {
-							elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "version"));
+							elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "version"));
 							elementList.add(localVersion[i]);
 						} else {
-							elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "version"));
+							elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "version"));
 							elementList.add(null);
 						}
 					}
 				} else {
-					elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "version"));
+					elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "version"));
 					elementList.add(localVersion);
 				}
 			}
 
 			if (localWriteableTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "writeable"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "writeable"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localWriteable));
 			}
@@ -17588,7 +17588,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "author").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "author").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -17611,7 +17611,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "coverage")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "coverage")
 									.equals(reader.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -17635,7 +17635,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "id").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "id").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -17652,7 +17652,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "language")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "language")
 									.equals(reader.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -17676,7 +17676,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "name").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "name").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -17699,7 +17699,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "parentId")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "parentId")
 									.equals(reader.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -17716,7 +17716,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "parentName")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "parentName")
 									.equals(reader.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -17740,7 +17740,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "source").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "source").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -17763,7 +17763,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "sourceDate")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "sourceDate")
 									.equals(reader.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -17787,7 +17787,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "type").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "type").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -17810,7 +17810,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "uploadDate")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "uploadDate")
 									.equals(reader.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -17834,7 +17834,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "uploadUser")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "uploadUser")
 									.equals(reader.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -17858,7 +17858,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "version").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "version").equals(reader
 									.getName())) {
 						// Process the array and step past its final element's
 						// end.
@@ -17892,7 +17892,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 								// exiting the xml structure
 								loopDone13 = true;
 							} else {
-								if (new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "version")
+								if (new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "version")
 										.equals(reader.getName())) {
 									nillableValue = reader.getAttributeValue(
 											"http://www.w3.org/2001/XMLSchema-instance", "nil");
@@ -17922,7 +17922,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "writeable")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "writeable")
 									.equals(reader.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -18015,11 +18015,11 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		/*
 		 * This type was generated from the piece of schema that had name =
-		 * VersionInfo Namespace URI = http://ws.web.logicaldoc.com/xsd Namespace
+		 * VersionInfo Namespace URI = http://ws.web.contineo.org/xsd Namespace
 		 * Prefix = ns2
 		 */
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com/xsd")) {
+			if (namespace.equals("http://ws.web.contineo.org/xsd")) {
 				return "ns2";
 			}
 
@@ -18191,7 +18191,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localDateTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -18220,7 +18220,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localDescriptionTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -18249,7 +18249,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localIdTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -18278,7 +18278,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localUploadUserTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -18467,28 +18467,28 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localDateTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "date"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "date"));
 
 				elementList.add((localDate == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localDate));
 			}
 
 			if (localDescriptionTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "description"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "description"));
 
 				elementList.add((localDescription == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localDescription));
 			}
 
 			if (localIdTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "id"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "id"));
 
 				elementList.add((localId == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localId));
 			}
 
 			if (localUploadUserTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "uploadUser"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "uploadUser"));
 
 				elementList.add((localUploadUser == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localUploadUser));
@@ -18559,7 +18559,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "date").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "date").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -18582,7 +18582,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "description")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "description")
 									.equals(reader.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -18606,7 +18606,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "id").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "id").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -18629,7 +18629,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "uploadUser")
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "uploadUser")
 									.equals(reader.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -18680,7 +18680,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = 6175170069026968933L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "deleteFolder", "ns1");
+				"http://ws.web.contineo.org", "deleteFolder", "ns1");
 
 		/**
 		 * field for Username
@@ -18719,7 +18719,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean localFolderTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -18865,7 +18865,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localUsernameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -18894,7 +18894,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localPasswordTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -18923,7 +18923,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localFolderTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -19112,21 +19112,21 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localUsernameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "username"));
 
 				elementList.add((localUsername == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localUsername));
 			}
 
 			if (localPasswordTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "password"));
 
 				elementList.add((localPassword == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localPassword));
 			}
 
 			if (localFolderTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "folder"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "folder"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localFolder));
 			}
@@ -19196,7 +19196,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "username").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -19220,7 +19220,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "password").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -19244,7 +19244,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "folder").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "folder").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -19288,7 +19288,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = 2855849036940414441L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "deleteDocumentResponse", "ns1");
+				"http://ws.web.contineo.org", "deleteDocumentResponse", "ns1");
 
 		/**
 		 * field for _return
@@ -19303,7 +19303,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean local_returnTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -19399,7 +19399,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (local_returnTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -19588,7 +19588,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (local_returnTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "return"));
 
 				elementList.add((local_return == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(local_return));
@@ -19660,7 +19660,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "return").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -19712,7 +19712,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = -8511794473399212132L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "downloadDocumentResponse", "ns1");
+				"http://ws.web.contineo.org", "downloadDocumentResponse", "ns1");
 
 		/**
 		 * field for _return
@@ -19727,7 +19727,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean local_returnTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -19823,7 +19823,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (local_returnTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -20012,7 +20012,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (local_returnTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "return"));
 
 				elementList.add((local_return == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(local_return));
@@ -20084,7 +20084,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "return").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "return").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -20136,7 +20136,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = 6425207802413822970L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "downloadFolderContent", "ns1");
+				"http://ws.web.contineo.org", "downloadFolderContent", "ns1");
 
 		/**
 		 * field for Username
@@ -20175,7 +20175,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean localFolderTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -20321,7 +20321,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localUsernameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -20350,7 +20350,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localPasswordTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -20379,7 +20379,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localFolderTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -20568,21 +20568,21 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localUsernameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "username"));
 
 				elementList.add((localUsername == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localUsername));
 			}
 
 			if (localPasswordTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "password"));
 
 				elementList.add((localPassword == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localPassword));
 			}
 
 			if (localFolderTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "folder"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "folder"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localFolder));
 			}
@@ -20653,7 +20653,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "username").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -20677,7 +20677,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "password").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -20701,7 +20701,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "folder").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "folder").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -20745,7 +20745,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		private static final long serialVersionUID = -4796251361636869589L;
 
 		public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-				"http://ws.web.logicaldoc.com", "createFolder", "ns1");
+				"http://ws.web.contineo.org", "createFolder", "ns1");
 
 		/**
 		 * field for Username
@@ -20796,7 +20796,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 		protected boolean localParentTracker = false;
 
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com")) {
+			if (namespace.equals("http://ws.web.contineo.org")) {
 				return "ns1";
 			}
 
@@ -20967,7 +20967,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localUsernameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -20996,7 +20996,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localPasswordTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -21025,7 +21025,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localNameTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -21054,7 +21054,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localParentTracker) {
-				namespace = "http://ws.web.logicaldoc.com";
+				namespace = "http://ws.web.contineo.org";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -21243,28 +21243,28 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localUsernameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "username"));
 
 				elementList.add((localUsername == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localUsername));
 			}
 
 			if (localPasswordTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "password"));
 
 				elementList.add((localPassword == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localPassword));
 			}
 
 			if (localNameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "name"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "name"));
 
 				elementList.add((localName == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localName));
 			}
 
 			if (localParentTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "parent"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org", "parent"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localParent));
 			}
@@ -21334,7 +21334,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "username").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "username").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -21358,7 +21358,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "password").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "password").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -21382,7 +21382,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "name").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "name").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -21405,7 +21405,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com", "parent").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org", "parent").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -21534,11 +21534,11 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 
 		/*
 		 * This type was generated from the piece of schema that had name =
-		 * ResultImpl Namespace URI = http://ws.web.logicaldoc.com/xsd Namespace
+		 * ResultImpl Namespace URI = http://ws.web.contineo.org/xsd Namespace
 		 * Prefix = ns2
 		 */
 		private static java.lang.String generatePrefix(java.lang.String namespace) {
-			if (namespace.equals("http://ws.web.logicaldoc.com/xsd")) {
+			if (namespace.equals("http://ws.web.contineo.org/xsd")) {
 				return "ns2";
 			}
 
@@ -21785,7 +21785,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localDateTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -21814,7 +21814,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localIdTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -21843,7 +21843,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localLengthTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -21872,7 +21872,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localNameTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -21901,7 +21901,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localSummaryTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -21930,7 +21930,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			}
 
 			if (localTypeTracker) {
-				namespace = "http://ws.web.logicaldoc.com/xsd";
+				namespace = "http://ws.web.contineo.org/xsd";
 
 				if (!namespace.equals("")) {
 					prefix = xmlWriter.getPrefix(namespace);
@@ -22119,46 +22119,46 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 			java.util.ArrayList attribList = new java.util.ArrayList();
 
 			if (localDateTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "date"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "date"));
 
 				elementList.add((localDate == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localDate));
 			}
 
 			if (localIdTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "id"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "id"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localId));
 			}
 
 			if (localLengthTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "length"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "length"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localLength));
 			}
 
 			if (localNameTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "name"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "name"));
 
 				elementList.add((localName == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localName));
 			}
 
 			if (localScoreTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "score"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "score"));
 
 				elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localScore));
 			}
 
 			if (localSummaryTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "summary"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "summary"));
 
 				elementList.add((localSummary == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localSummary));
 			}
 
 			if (localTypeTracker) {
-				elementList.add(new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "type"));
+				elementList.add(new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "type"));
 
 				elementList.add((localType == null) ? null : org.apache.axis2.databinding.utils.ConverterUtil
 						.convertToString(localType));
@@ -22229,7 +22229,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "date").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "date").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -22252,7 +22252,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "id").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "id").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -22269,7 +22269,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "length").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "length").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -22286,7 +22286,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "name").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "name").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -22309,7 +22309,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "score").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "score").equals(reader
 									.getName())) {
 						java.lang.String content = reader.getElementText();
 
@@ -22326,7 +22326,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "summary").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "summary").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
@@ -22351,7 +22351,7 @@ public class DmsStub extends org.apache.axis2.client.Stub {
 						reader.next();
 
 					if (reader.isStartElement()
-							&& new javax.xml.namespace.QName("http://ws.web.logicaldoc.com/xsd", "type").equals(reader
+							&& new javax.xml.namespace.QName("http://ws.web.contineo.org/xsd", "type").equals(reader
 									.getName())) {
 						nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
 

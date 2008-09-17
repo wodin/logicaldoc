@@ -66,9 +66,9 @@
                                     <ice:messages />
                                     <ice:panelGrid columns="2" style="width: 100%">
                                         <ice:graphicImage url="#{styleBean.imagesPath}/logo.gif"
-                                            alt="LogicalDOC" />
+                                            alt="Contineo" />
                                         <div class="loginStatus">
-                                            <ice:outputConnectionStatus showPopupOnDisconnect="true" />
+                                            <ice:outputConnectionStatus />
                                         </div>
                                     </ice:panelGrid>
 

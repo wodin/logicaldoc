@@ -53,29 +53,39 @@ public class DmsClient {
 	private String password;
 
 	public static void main(String[] args) throws Exception {
-		CommandLineOptionParser optionsParser = new CommandLineOptionParser(args);
+		CommandLineOptionParser optionsParser = new CommandLineOptionParser(
+				args);
 
 		Map optionsMap = optionsParser.getAllOptions();
-		CommandLineOption endpointOption = (CommandLineOption) optionsMap.get("endpoint");
-		CommandLineOption usernameOption = (CommandLineOption) optionsMap.get("username");
-		CommandLineOption passwordOption = (CommandLineOption) optionsMap.get("password");
-		CommandLineOption operationOption = (CommandLineOption) optionsMap.get("operation");
+		CommandLineOption endpointOption = (CommandLineOption) optionsMap
+				.get("endpoint");
+		CommandLineOption usernameOption = (CommandLineOption) optionsMap
+				.get("username");
+		CommandLineOption passwordOption = (CommandLineOption) optionsMap
+				.get("password");
+		CommandLineOption operationOption = (CommandLineOption) optionsMap
+				.get("operation");
 
-		if (endpointOption == null || usernameOption == null || passwordOption == null || operationOption == null) {
+		if (endpointOption == null || usernameOption == null
+				|| passwordOption == null || operationOption == null) {
 			printUsage();
 			System.out.println("Invalid Parameters.");
 			return;
 		}
 
-		DmsClient client = new DmsClient(endpointOption.getOptionValue(), usernameOption.getOptionValue(),
-				passwordOption.getOptionValue());
+		DmsClient client = new DmsClient(endpointOption.getOptionValue(),
+				usernameOption.getOptionValue(), passwordOption
+						.getOptionValue());
 		if ("downloadDocument".equals(operationOption.getOptionValue())) {
-			CommandLineOption idOption = (CommandLineOption) optionsMap.get("id");
-			CommandLineOption versionOption = (CommandLineOption) optionsMap.get("version");
+			CommandLineOption idOption = (CommandLineOption) optionsMap
+					.get("id");
+			CommandLineOption versionOption = (CommandLineOption) optionsMap
+					.get("version");
 			String version = "";
 			if (versionOption != null)
 				version = versionOption.getOptionValue();
-			CommandLineOption fileOption = (CommandLineOption) optionsMap.get("file");
+			CommandLineOption fileOption = (CommandLineOption) optionsMap
+					.get("file");
 
 			if (idOption == null || fileOption == null) {
 				printUsage();
@@ -83,11 +93,14 @@ public class DmsClient {
 				return;
 			}
 
-			System.out.println(client.downloadDocument(Integer.parseInt(idOption.getOptionValue()), version,
+			System.out.println(client.downloadDocument(Integer
+					.parseInt(idOption.getOptionValue()), version,
 					new FileOutputStream(fileOption.getOptionValue())));
 		} else if ("createFolder".equals(operationOption.getOptionValue())) {
-			CommandLineOption parentOption = (CommandLineOption) optionsMap.get("parent");
-			CommandLineOption nameOption = (CommandLineOption) optionsMap.get("name");
+			CommandLineOption parentOption = (CommandLineOption) optionsMap
+					.get("parent");
+			CommandLineOption nameOption = (CommandLineOption) optionsMap
+					.get("name");
 
 			if (parentOption == null || nameOption == null) {
 				printUsage();
@@ -95,10 +108,11 @@ public class DmsClient {
 				return;
 			}
 
-			System.out.println(client.createFolder(nameOption.getOptionValue(), Integer.parseInt(parentOption
-					.getOptionValue())));
+			System.out.println(client.createFolder(nameOption.getOptionValue(),
+					Integer.parseInt(parentOption.getOptionValue())));
 		} else if ("deleteFolder".equals(operationOption.getOptionValue())) {
-			CommandLineOption folderOption = (CommandLineOption) optionsMap.get("folder");
+			CommandLineOption folderOption = (CommandLineOption) optionsMap
+					.get("folder");
 
 			if (folderOption == null) {
 				printUsage();
@@ -106,9 +120,12 @@ public class DmsClient {
 				return;
 			}
 
-			System.out.println(client.deleteFolder(Integer.parseInt(folderOption.getOptionValue())));
-		} else if ("downloadFolderContent".equals(operationOption.getOptionValue())) {
-			CommandLineOption folderOption = (CommandLineOption) optionsMap.get("folder");
+			System.out.println(client.deleteFolder(Integer
+					.parseInt(folderOption.getOptionValue())));
+		} else if ("downloadFolderContent".equals(operationOption
+				.getOptionValue())) {
+			CommandLineOption folderOption = (CommandLineOption) optionsMap
+					.get("folder");
 
 			if (folderOption == null) {
 				printUsage();
@@ -116,26 +133,33 @@ public class DmsClient {
 				return;
 			}
 
-			FolderContent folderContent = client.downloadFolderContent(Integer.parseInt(folderOption.getOptionValue()));
-			System.out.println("Folder: " + folderContent.getId() + " - " + folderContent.getName() + "   "
+			FolderContent folderContent = client.downloadFolderContent(Integer
+					.parseInt(folderOption.getOptionValue()));
+			System.out.println("Folder: " + folderContent.getId() + " - "
+					+ folderContent.getName() + "   "
 					+ (folderContent.getWriteable() > 0 ? "writeable" : ""));
-			System.out.println("Parent: " + folderContent.getParentId() + " - " + folderContent.getParentName());
+			System.out.println("Parent: " + folderContent.getParentId() + " - "
+					+ folderContent.getParentName());
 
 			System.out.println("\nSub-Folders:");
 			for (int i = 0; i < folderContent.getFolder().length; i++) {
 				Content content = folderContent.getFolder()[i];
-				System.out.println(content.getId() + " - " + content.getName() + "   "
+				System.out.println(content.getId() + " - " + content.getName()
+						+ "   "
 						+ (content.getWriteable() > 0 ? "writeable" : ""));
 			}
 
 			System.out.println("\nDocuments:");
 			for (int i = 0; i < folderContent.getDocument().length; i++) {
 				Content content = folderContent.getDocument()[i];
-				System.out.println(content.getId() + " - " + content.getName() + "   "
+				System.out.println(content.getId() + " - " + content.getName()
+						+ "   "
 						+ (content.getWriteable() > 0 ? "writeable" : ""));
 			}
-		} else if ("downloadDocumentInfo".equals(operationOption.getOptionValue())) {
-			CommandLineOption idOption = (CommandLineOption) optionsMap.get("id");
+		} else if ("downloadDocumentInfo".equals(operationOption
+				.getOptionValue())) {
+			CommandLineOption idOption = (CommandLineOption) optionsMap
+					.get("id");
 
 			if (idOption == null) {
 				printUsage();
@@ -143,10 +167,13 @@ public class DmsClient {
 				return;
 			}
 
-			DocumentInfo info = client.downloadDocumentInfo(Integer.parseInt(idOption.getOptionValue()));
-			System.out.println("Document: " + info.getId() + " - " + info.getName() + "   "
+			DocumentInfo info = client.downloadDocumentInfo(Integer
+					.parseInt(idOption.getOptionValue()));
+			System.out.println("Document: " + info.getId() + " - "
+					+ info.getName() + "   "
 					+ (info.getWriteable() > 0 ? "writeable" : ""));
-			System.out.println("Parent: " + info.getParentId() + " - " + info.getParentName());
+			System.out.println("Parent: " + info.getParentId() + " - "
+					+ info.getParentName());
 			System.out.println("Author: " + info.getAuthor());
 			System.out.println("Coverage: " + info.getCoverage());
 			System.out.println("Language: " + info.getLanguage());
@@ -159,11 +186,13 @@ public class DmsClient {
 			System.out.println("\nVersions:");
 			for (int i = 0; i < info.getVersion().length; i++) {
 				VersionInfo content = info.getVersion()[i];
-				System.out.println(content.getId() + " - " + content.getUploadUser() + " -  "
+				System.out.println(content.getId() + " - "
+						+ content.getUploadUser() + " -  "
 						+ content.getDescription());
 			}
 		} else if ("deleteDocument".equals(operationOption.getOptionValue())) {
-			CommandLineOption idOption = (CommandLineOption) optionsMap.get("id");
+			CommandLineOption idOption = (CommandLineOption) optionsMap
+					.get("id");
 
 			if (idOption == null) {
 				printUsage();
@@ -171,45 +200,77 @@ public class DmsClient {
 				return;
 			}
 
-			System.out.println(client.deleteDocument(Integer.parseInt(idOption.getOptionValue())));
+			System.out.println(client.deleteDocument(Integer.parseInt(idOption
+					.getOptionValue())));
 		} else if ("createDocument".equals(operationOption.getOptionValue())) {
-			CommandLineOption parentOption = (CommandLineOption) optionsMap.get("parent");
-			CommandLineOption docNameOption = (CommandLineOption) optionsMap.get("docName");
-			CommandLineOption sourceOption = (CommandLineOption) optionsMap.get("source");
-			CommandLineOption sourceDateOption = (CommandLineOption) optionsMap.get("sourceDate");
-			CommandLineOption sourceTypeOption = (CommandLineOption) optionsMap.get("sourceType");
-			CommandLineOption authorOption = (CommandLineOption) optionsMap.get("author");
-			CommandLineOption coverageOption = (CommandLineOption) optionsMap.get("coverage");
-			CommandLineOption languageOption = (CommandLineOption) optionsMap.get("language");
-			CommandLineOption keywordsOption = (CommandLineOption) optionsMap.get("keywords");
-			CommandLineOption versionDescOption = (CommandLineOption) optionsMap.get("versionDesc");
-			CommandLineOption filenameOption = (CommandLineOption) optionsMap.get("filename");
-			CommandLineOption groupsOption = (CommandLineOption) optionsMap.get("groups");
-			CommandLineOption fileOption = (CommandLineOption) optionsMap.get("file");
+			CommandLineOption parentOption = (CommandLineOption) optionsMap
+					.get("parent");
+			CommandLineOption docNameOption = (CommandLineOption) optionsMap
+					.get("docName");
+			CommandLineOption sourceOption = (CommandLineOption) optionsMap
+					.get("source");
+			CommandLineOption sourceDateOption = (CommandLineOption) optionsMap
+					.get("sourceDate");
+			CommandLineOption sourceTypeOption = (CommandLineOption) optionsMap
+					.get("sourceType");
+			CommandLineOption authorOption = (CommandLineOption) optionsMap
+					.get("author");
+			CommandLineOption coverageOption = (CommandLineOption) optionsMap
+					.get("coverage");
+			CommandLineOption languageOption = (CommandLineOption) optionsMap
+					.get("language");
+			CommandLineOption keywordsOption = (CommandLineOption) optionsMap
+					.get("keywords");
+			CommandLineOption versionDescOption = (CommandLineOption) optionsMap
+					.get("versionDesc");
+			CommandLineOption filenameOption = (CommandLineOption) optionsMap
+					.get("filename");
+			CommandLineOption groupsOption = (CommandLineOption) optionsMap
+					.get("groups");
+			CommandLineOption fileOption = (CommandLineOption) optionsMap
+					.get("file");
 
-			if (parentOption == null || docNameOption == null || languageOption == null || filenameOption == null
+			if (parentOption == null || docNameOption == null
+					|| languageOption == null || filenameOption == null
 					|| fileOption == null || groupsOption == null) {
 				printUsage();
 				System.out.println("Invalid Parameters.");
 				return;
 			}
 
-			System.out.println(client.createDocument(Integer.parseInt(parentOption.getOptionValue()), docNameOption
-					.getOptionValue(), sourceOption != null ? sourceOption.getOptionValue() : null,
-					sourceDateOption != null ? sourceDateOption.getOptionValue() : null,
-					authorOption != null ? authorOption.getOptionValue() : null,
-					sourceTypeOption != null ? sourceTypeOption.getOptionValue() : null,
-					coverageOption != null ? coverageOption.getOptionValue() : null, languageOption.getOptionValue(),
-					keywordsOption != null ? keywordsOption.getOptionValue() : null,
-					versionDescOption != null ? versionDescOption.getOptionValue() : null, filenameOption
-							.getOptionValue(), groupsOption.getOptionValue(), new File(fileOption.getOptionValue())));
+			System.out.println(client
+					.createDocument(Integer.parseInt(parentOption
+							.getOptionValue()), docNameOption.getOptionValue(),
+							sourceOption != null ? sourceOption
+									.getOptionValue() : null,
+							sourceDateOption != null ? sourceDateOption
+									.getOptionValue() : null,
+							authorOption != null ? authorOption
+									.getOptionValue() : null,
+							sourceTypeOption != null ? sourceTypeOption
+									.getOptionValue() : null,
+							coverageOption != null ? coverageOption
+									.getOptionValue() : null, languageOption
+									.getOptionValue(),
+							keywordsOption != null ? keywordsOption
+									.getOptionValue() : null,
+							versionDescOption != null ? versionDescOption
+									.getOptionValue() : null, filenameOption
+									.getOptionValue(), groupsOption
+									.getOptionValue(), new File(fileOption
+									.getOptionValue())));
 		} else if ("search".equals(operationOption.getOptionValue())) {
-			CommandLineOption queryOption = (CommandLineOption) optionsMap.get("query");
-			CommandLineOption queryLanguageOption = (CommandLineOption) optionsMap.get("queryLanguage");
-			CommandLineOption indexLanguageOption = (CommandLineOption) optionsMap.get("indexLanguage");
-			CommandLineOption maxHitsOption = (CommandLineOption) optionsMap.get("maxHits");
+			CommandLineOption queryOption = (CommandLineOption) optionsMap
+					.get("query");
+			CommandLineOption queryLanguageOption = (CommandLineOption) optionsMap
+					.get("queryLanguage");
+			CommandLineOption indexLanguageOption = (CommandLineOption) optionsMap
+					.get("indexLanguage");
+			CommandLineOption maxHitsOption = (CommandLineOption) optionsMap
+					.get("maxHits");
 
-			if (queryOption == null || queryLanguageOption == null || maxHitsOption == null) {
+			if (queryOption == null || queryLanguageOption == null
+					|| maxHitsOption == null) {
 				printUsage();
 				System.out.println("Invalid Parameters.");
 				return;
@@ -227,16 +288,19 @@ public class DmsClient {
 			if (indexLanguageOption != null)
 				indexLanguage = indexLanguageOption.getOptionValue();
 
-			SearchResult response = client.search(queryOption.getOptionValue(), queryLanguageOption.getOptionValue(),
-					indexLanguage, Integer.parseInt(maxHitsOption.getOptionValue()));
-			System.out.println("Query returned " + response.getTotalHits() + " hits in " + response.getTime() + "ms");
+			SearchResult response = client.search(queryOption.getOptionValue(),
+					queryLanguageOption.getOptionValue(), indexLanguage,
+					Integer.parseInt(maxHitsOption.getOptionValue()));
+			System.out.println("Query returned " + response.getTotalHits()
+					+ " hits in " + response.getTime() + "ms");
 			for (int i = 0; i < response.getTotalHits(); i++) {
 				Result result = response.getResult()[i];
 				System.out.println(result.getId() + " - " + result.getName());
 				System.out.println(result.getSummary() + "\n");
 			}
 		} else if ("checkout".equals(operationOption.getOptionValue())) {
-			CommandLineOption idOption = (CommandLineOption) optionsMap.get("id");
+			CommandLineOption idOption = (CommandLineOption) optionsMap
+					.get("id");
 
 			if (idOption == null) {
 				printUsage();
@@ -244,13 +308,19 @@ public class DmsClient {
 				return;
 			}
 
-			System.out.println(client.checkout(Integer.parseInt(idOption.getOptionValue())));
+			System.out.println(client.checkout(Integer.parseInt(idOption
+					.getOptionValue())));
 		} else if ("checkin".equals(operationOption.getOptionValue())) {
-			CommandLineOption idOption = (CommandLineOption) optionsMap.get("id");
-			CommandLineOption descriptionOption = (CommandLineOption) optionsMap.get("description");
-			CommandLineOption typeOption = (CommandLineOption) optionsMap.get("type");
-			CommandLineOption filenameOption = (CommandLineOption) optionsMap.get("filename");
-			CommandLineOption fileOption = (CommandLineOption) optionsMap.get("file");
+			CommandLineOption idOption = (CommandLineOption) optionsMap
+					.get("id");
+			CommandLineOption descriptionOption = (CommandLineOption) optionsMap
+					.get("description");
+			CommandLineOption typeOption = (CommandLineOption) optionsMap
+					.get("type");
+			CommandLineOption filenameOption = (CommandLineOption) optionsMap
+					.get("filename");
+			CommandLineOption fileOption = (CommandLineOption) optionsMap
+					.get("file");
 
 			if (idOption == null || fileOption == null) {
 				printUsage();
@@ -260,10 +330,13 @@ public class DmsClient {
 
 			File file = new File(fileOption.getOptionValue());
 
-			System.out.println(client.checkin(Integer.parseInt(idOption.getOptionValue()),
-					descriptionOption != null ? descriptionOption.getOptionValue() : "",
-					typeOption != null ? typeOption.getOptionValue() : "", filenameOption != null ? filenameOption
-							.getOptionValue() : file.getName(), file));
+			System.out.println(client.checkin(Integer.parseInt(idOption
+					.getOptionValue()),
+					descriptionOption != null ? descriptionOption
+							.getOptionValue() : "",
+					typeOption != null ? typeOption.getOptionValue() : "",
+					filenameOption != null ? filenameOption.getOptionValue()
+							: file.getName(), file));
 		}
 	}
 
@@ -271,12 +344,15 @@ public class DmsClient {
 		System.out.println("Usage is:");
 	}
 
-	public DmsClient(String endpoint, String username, String password) throws IOException {
+	public DmsClient(String endpoint, String username, String password)
+			throws IOException {
 		stub = new DmsStubWA(endpoint);
 
 		// Enable MTOM and SwA in the client side
-		stub._getServiceClient().getOptions().setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-		stub._getServiceClient().getOptions().setProperty(Constants.Configuration.ENABLE_SWA, Constants.VALUE_TRUE);
+		stub._getServiceClient().getOptions().setProperty(
+				Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+		stub._getServiceClient().getOptions().setProperty(
+				Constants.Configuration.ENABLE_SWA, Constants.VALUE_TRUE);
 		// Increase the time out when sending large attachments
 		stub._getServiceClient().getOptions().setTimeOutInMilliSeconds(10000);
 
@@ -284,7 +360,8 @@ public class DmsClient {
 		this.password = password;
 	}
 
-	public String downloadDocument(int id, String version, OutputStream out) throws ExceptionException0, IOException {
+	public String downloadDocument(int id, String version, OutputStream out)
+			throws ExceptionException0, IOException {
 		// Prepare the request
 		DmsStubWA.DownloadDocument downloadDocument = new DmsStubWA.DownloadDocument();
 		downloadDocument.setId(id);
@@ -293,11 +370,13 @@ public class DmsClient {
 		downloadDocument.setVersion(version);
 
 		// Execute remote invocation
-		DownloadDocumentResponse response = stub.downloadDocument(downloadDocument);
+		DownloadDocumentResponse response = stub
+				.downloadDocument(downloadDocument);
 
 		// Retrieve the attachment and save it
-		MessageContext messageContext = stub._getServiceClient().getLastOperationContext().getMessageContext(
-				WSDLConstants.MESSAGE_LABEL_IN_VALUE);
+		MessageContext messageContext = stub._getServiceClient()
+				.getLastOperationContext().getMessageContext(
+						WSDLConstants.MESSAGE_LABEL_IN_VALUE);
 		DataHandler dataHandler = messageContext.getAttachment("document");
 		dataHandler.writeTo(out);
 		out.flush();
@@ -305,7 +384,8 @@ public class DmsClient {
 		return response.get_return();
 	}
 
-	public String createFolder(String name, int parent) throws ExceptionException0, IOException {
+	public String createFolder(String name, int parent)
+			throws ExceptionException0, IOException {
 		// Prepare the request
 		DmsStub.CreateFolder createFolder = new DmsStub.CreateFolder();
 		createFolder.setParent(parent);
@@ -319,7 +399,8 @@ public class DmsClient {
 		return response.get_return();
 	}
 
-	public String deleteFolder(int folder) throws ExceptionException0, IOException {
+	public String deleteFolder(int folder) throws ExceptionException0,
+			IOException {
 		// Prepare the request
 		DmsStub.DeleteFolder deleteFolder = new DmsStub.DeleteFolder();
 		deleteFolder.setUsername(username);
@@ -332,7 +413,8 @@ public class DmsClient {
 		return response.get_return();
 	}
 
-	public String deleteDocument(int id) throws ExceptionException0, IOException {
+	public String deleteDocument(int id) throws ExceptionException0,
+			IOException {
 		// Prepare the request
 		DmsStub.DeleteDocument deleteDocument = new DmsStub.DeleteDocument();
 		deleteDocument.setUsername(username);
@@ -359,8 +441,8 @@ public class DmsClient {
 		return response.get_return();
 	}
 
-	public String checkin(int id, String description, String type, String filename, File file)
-			throws ExceptionException0, IOException {
+	public String checkin(int id, String description, String type,
+			String filename, File file) throws ExceptionException0, IOException {
 
 		// Prepare the request
 		DmsStub.Checkin checkin = new DmsStub.Checkin();
@@ -377,7 +459,8 @@ public class DmsClient {
 		return response.get_return();
 	}
 
-	public FolderContent downloadFolderContent(int folder) throws ExceptionException0, IOException {
+	public FolderContent downloadFolderContent(int folder)
+			throws ExceptionException0, IOException {
 		// Prepare the request
 		DmsStub.DownloadFolderContent request = new DmsStub.DownloadFolderContent();
 		request.setUsername(username);
@@ -385,12 +468,14 @@ public class DmsClient {
 		request.setFolder(folder);
 
 		// Execute remote invocation
-		DownloadFolderContentResponse response = stub.downloadFolderContent(request);
+		DownloadFolderContentResponse response = stub
+				.downloadFolderContent(request);
 
 		return response.get_return();
 	}
 
-	public DocumentInfo downloadDocumentInfo(int id) throws ExceptionException0, IOException {
+	public DocumentInfo downloadDocumentInfo(int id)
+			throws ExceptionException0, IOException {
 		// Prepare the request
 		DmsStub.DownloadDocumentInfo request = new DmsStub.DownloadDocumentInfo();
 		request.setUsername(username);
@@ -398,13 +483,16 @@ public class DmsClient {
 		request.setId(id);
 
 		// Execute remote invocation
-		DownloadDocumentInfoResponse response = stub.downloadDocumentInfo(request);
+		DownloadDocumentInfoResponse response = stub
+				.downloadDocumentInfo(request);
 		return response.get_return();
 	}
 
-	public String createDocument(int parent, String docName, String source, String sourceDate, String author,
-			String sourceType, String coverage, String language, String keywords, String versionDesc, String filename,
-			String groups, File file) throws RemoteException, ExceptionException0 {
+	public String createDocument(int parent, String docName, String source,
+			String sourceDate, String author, String sourceType,
+			String coverage, String language, String keywords,
+			String versionDesc, String filename, String groups, File file)
+			throws RemoteException, ExceptionException0 {
 
 		// Prepare the request
 		DmsStub.CreateDocument request = new DmsStub.CreateDocument();
@@ -429,8 +517,9 @@ public class DmsClient {
 
 	}
 
-	public SearchResult search(String query, String queryLanguage, String indexLanguage, int maxHits)
-			throws RemoteException, ExceptionException0 {
+	public SearchResult search(String query, String queryLanguage,
+			String indexLanguage, int maxHits) throws RemoteException,
+			ExceptionException0 {
 
 		// Prepare the request
 		Search request = new Search();

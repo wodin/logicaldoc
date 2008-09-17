@@ -33,6 +33,8 @@ public class DocumentInfo {
 	private String sourceDate;
 
 	private String coverage;
+	
+	private String filename;
 
 	private VersionInfo[] version = new VersionInfo[] {};
 
@@ -155,5 +157,13 @@ public class DocumentInfo {
 			newVersionInfo[i] = version[i];
 		newVersionInfo[version.length] = versionInfo;
 		version = newVersionInfo;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String fileName) {
+		this.filename = fileName;
 	}
 }
