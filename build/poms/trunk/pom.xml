@@ -314,8 +314,8 @@
     </repository>
     <repository>
       <id>contineo</id>
-      <name>Contineo Repository</name>
-      <url>http://contineo.sourceforge.net/maven</url>
+      <name>LogicalDOC Repository</name>
+      <url>http://logicaldoc.sourceforge.net/maven</url>
     </repository>
     <repository>
       <id>jboss</id>
@@ -323,4 +323,14 @@
       <url>http://repository.jboss.com/maven2</url>
     </repository>
   </repositories>
+	<distributionManagement>
+		<repository>
+			<id>logicaldoc-community</id>
+			<url>scp://shell.sourceforge.net/home/groups/l/lo/logicaldoc/htdocs/maven</url>
+		</repository>
+		<site>
+			<id>logicaldoc-community</id>
+			<url>scp://shell.sourceforge.net/home/groups/l/lo/logicaldoc/htdocs/maven</url>
+		</site>
+	</distributionManagement>
 </project>
