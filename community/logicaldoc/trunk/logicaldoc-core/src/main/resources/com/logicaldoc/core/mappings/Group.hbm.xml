@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="com.logicaldoc.core.security.Group" table="co_groups">
+		<cache usage="read-write" />
+		<id name="groupName" type="string" column="co_groupname" />
+		<property name="groupDesc" type="string" column="co_groupdesc" length="255" />
+        <set name="users" table="co_usergroup" lazy="false">
+             <key column="co_groupname"/>
+             <many-to-many column="co_username" class="com.logicaldoc.core.security.User" />
+        </set>
+	</class>
+</hibernate-mapping>

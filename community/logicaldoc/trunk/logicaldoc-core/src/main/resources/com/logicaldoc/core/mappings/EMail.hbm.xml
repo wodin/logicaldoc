@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="com.logicaldoc.core.communication.EMail" table="co_email">
+		<cache usage="read-write" />
+		<id name="messageId" type="int" column="co_messageid" unsaved-value="0">
+			<generator class="increment" />
+		</id>
+        <property name="accountId" type="int" column="co_accountid" />
+        <property name="emailId" type="string" column="co_emailid" />
+		<property name="messageText" type="string" column="co_messageText" length="255" />
+		<property name="author" type="string" column="co_author" length="30" />
+		<property name="subject" type="string" column="co_subject" length="255" />
+		<property name="sentDate" type="string" column="co_sentdate" length="20" />
+		<property name="read" type="int" column="co_red" />
+		<property name="authorAddress" type="string" column="co_authoraddress" length="255" />
+		<property name="userName" type="string" column="co_username" length="30" />
+		<property name="folder" type="string" column="co_folder" length="30" />
+
+		<map name="attachments" lazy="false" table="co_attachment" cascade="all">
+			<key column="co_messageid" />
+			<map-key column="co_partid" type="int" />
+			<composite-element class="com.logicaldoc.core.communication.Attachment">
+				<property name="filename" type="string" column="co_filename" length="255" />
+				<property name="icon" type="string" column="co_icon" length="255" />
+				<property name="mimeType" type="string" column="co_mimetype" length="255" />
+			</composite-element>
+		</map>
+
+		<set name="recipients" table="co_recipient" lazy="false" cascade="all">
+			<key column="co_messageid" />
+			<composite-element class="com.logicaldoc.core.communication.Recipient">
+				<property name="address" type="string" column="co_address" length="255" not-null="true" />
+				<property name="name" type="string" column="co_name" length="255" />
+			</composite-element>
+		</set>
+	</class>
+</hibernate-mapping>

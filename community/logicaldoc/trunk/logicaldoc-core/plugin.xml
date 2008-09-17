@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="logicaldoc-core" version="3.6.0" class="com.logicaldoc.core.CorePlugin">
+	<runtime>
+		<library id="core" path="classes/" type="code">
+		    <!-- 
+			<doc caption="API documentation">
+				<doc-ref path="api/index.html" caption="javadoc" />
+			</doc>
+			-->
+			<export prefix="*" />
+		</library>
+		<library id="lucene-core" path="lib/lucene-core-2.3.2.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="lucene-highlighter" path="lib/lucene-highlighter-2.3.2.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="lucene-misc" path="lib/lucene-misc-2.3.2.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="lucene-snowball" path="lib/lucene-snowball-2.3.2.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="pdfbox" path="lib/pdfbox-0.7.3.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="jempbox" path="lib/jempbox-0.2.0.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="itext" path="lib/itext-2.1.2.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="fontbox" path="lib/fontbox-0.1.0.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="bcprov" path="lib/bcprov-jdk16-139.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="bcmail" path="lib/bcmail-jdk16-139.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="poi" path="lib/poi-3.0.2-FINAL.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="poi-scratchpad" path="lib/poi-scratchpad-3.0.2-FINAL.jar" type="code">
+			<export prefix="*" />
+		</library>
+	</runtime>
+	<extension-point id="DbInit">
+        <parameter-def id="name" />
+		<parameter-def id="sqlFile" />
+        <parameter-def id="position" />
+	</extension-point>
+    <extension-point id="Parser">
+        <parameter-def id="extension" />
+        <parameter-def id="class" />
+    </extension-point>
+    <extension-point id="Language">
+        <parameter-def id="languageKey" />
+        <parameter-def id="stopWordsFile" />
+    </extension-point>
+    <extension-point id="Task">
+        <parameter-def id="name" />
+    </extension-point>
+</plugin>

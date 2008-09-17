@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="com.logicaldoc.core.communication.EMailAccount" table="co_account">
+		<cache usage="read-write" />
+		<id name="accountId" type="int" column="co_accountid" unsaved-value="0">
+			<generator class="increment" />
+		</id>
+		<property name="userName" type="string" column="co_username" />
+		<property name="mailAddress" type="string" column="co_mailaddress" />
+		<property name="provider" type="string" column="co_provider" />
+		<property name="host" type="string" column="co_host" />
+		<property name="port" type="string" column="co_port" />
+		<property name="accountUser" type="string" column="co_accountuser" />
+		<property name="accountPassword" type="string" column="co_accountpassword" />
+		<property name="allowedTypes" type="string" column="co_allowedtypes" />
+		<property name="deleteFromMailbox" type="integer" column="co_deletefrommailbox" />
+		<property name="language" type="string" column="co_language" />
+		<property name="enabled" type="integer" column="co_enabled" />
+		<many-to-one name="targetFolder" class="com.logicaldoc.core.security.Menu" column="co_targetfolder" />
+	</class>
+</hibernate-mapping>
