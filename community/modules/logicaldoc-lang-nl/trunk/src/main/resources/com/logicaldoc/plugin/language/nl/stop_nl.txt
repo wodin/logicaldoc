@@ -1,0 +1,60 @@
+
+ | A Portuguese stop word list. Comments begin with vertical bar. Each stop
+ | word is at the start of a line.
+
+
+ | The following is a ranked list (commonest to rarest) of stopwords
+ | deriving from a large sample of text.
+
+ | Extra words have been added at the end.
+
+aan
+
+af
+
+al
+als
+bij
+dan
+dat
+die
+dit
+een
+en
+er
+had
+heb
+hem
+het
+hij
+hoe
+hun
+ik
+in
+is
+je
+kan
+me
+men
+met
+mij
+nog
+nu
+of
+ons
+ook
+te
+tot
+uit
+van
+was
+wat
+we
+wel
+wij
+zal
+ze
+zei
+zij
+zo
+zou
