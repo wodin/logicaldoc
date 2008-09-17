@@ -1,5 +1,6 @@
 <project name="logicaldoc-web" default="deploy" basedir="." xmlns:artifact="urn:maven-artifact-ant">
-    <import file="../../build/ant/build.xml" />
+	<property file="${user.home}/logicaldoc-dev.properties" />
+	<import file="${logicaldoc.devroot}/build/ant/build.xml" />
 		
 	<target name="deploy" depends="init-all" description="Updates a deployed webapp">
 		<property environment="env" />
