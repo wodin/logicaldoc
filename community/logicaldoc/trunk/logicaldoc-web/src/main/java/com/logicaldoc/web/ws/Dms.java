@@ -605,7 +605,7 @@ public class Dms {
 	}
 
 	/**
-	 * converts a date from contineo's internal representation to a valid XML
+	 * converts a date from logicaldoc's internal representation to a valid XML
 	 * string
 	 */
 	protected String convertDateToXML(String date) {

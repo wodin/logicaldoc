@@ -338,7 +338,7 @@ public class DocumentRecord extends MenuBarBean {
 	/**
 	 * Creates the context menu associated with this record
 	 * 
-	 * @see org.contineo.web.navigation.MenuBarBean#createMenuItems()
+	 * @see com.logicaldoc.web.navigation.MenuBarBean#createMenuItems()
 	 */
 	protected void createMenuItems() {
 		model.clear();
