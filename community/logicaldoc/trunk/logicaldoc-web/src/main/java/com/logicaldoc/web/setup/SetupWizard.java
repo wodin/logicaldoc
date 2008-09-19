@@ -83,16 +83,16 @@ public class SetupWizard implements TabChangeListener {
 			pbean.setProperty("conf.backupdir", backupDir);
 			pbean.write();
 
-			// Save the LOGICALDOC_HOME property
+			// Save the LOGICALDOC_REPOSITORY property
 			SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 			String logicaldocHome = FilenameUtils.separatorsToSystem(workingDir);
-			conf.setValue(SystemProperty.LOGICALDOC_HOME, logicaldocHome);
-			SystemProperty.setProperty(SystemProperty.LOGICALDOC_HOME, logicaldocHome);
+			conf.setValue(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
+			SystemProperty.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
 
 			ServletContext servletContext = (ServletContext) ((ServletExternalContext) FacesContext
 					.getCurrentInstance().getExternalContext()).getContext();
 			Properties boot = ApplicationInitializer.loadBootProperties(servletContext);
-			boot.setProperty(SystemProperty.LOGICALDOC_HOME, logicaldocHome);
+			boot.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
 			ApplicationInitializer.saveBootProperties(boot, servletContext);
 
 			// Refresh the current logging location

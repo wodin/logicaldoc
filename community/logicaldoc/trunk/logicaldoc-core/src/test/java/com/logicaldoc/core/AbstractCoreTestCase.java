@@ -47,7 +47,7 @@ public abstract class AbstractCoreTestCase extends TestCase {
 	private String userHome;
 
 	static {
-		System.setProperty("LOGICALDOC_HOME", "target");
+		System.setProperty("LOGICALDOC_REPOSITORY", "target");
 	}
 
 	/**

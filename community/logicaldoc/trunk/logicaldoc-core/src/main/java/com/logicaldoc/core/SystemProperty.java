@@ -14,12 +14,15 @@ public final class SystemProperty {
 
 	private static Properties properties = System.getProperties();
 
-	public static final String LOGICALDOC_HOME = "LOGICALDOC_HOME";
+	public static final String LOGICALDOC_REPOSITORY = "logicaldoc.repository";
 
 	public static final String LOGICALDOC_APP_ROOTDIR = "logicaldoc.app.rootdir";
 	
-	public static final String LOGICALDOC_PLUGINSDIR = "logicaldoc.app.pluginsdir";
+	public static final String LOGICALDOC_APP_PLUGINSDIR = "logicaldoc.app.pluginsdir";
 
+	public static final String LOGICALDOC_PLUGINSREGISTRY = "contineo.pluginsregistry";
+	
+	
 	/**
 	 * Utility class, don't instantiate.
 	 */
@@ -61,8 +64,8 @@ public final class SystemProperty {
 	/**
 	 * The home directory of the application, where the data are stored
 	 */
-	public static String getApplicationHome() {
-		return getProperty(LOGICALDOC_HOME);
+	public static String getRepository() {
+		return getProperty(LOGICALDOC_REPOSITORY);
 	}
 
 	/**
@@ -76,6 +79,13 @@ public final class SystemProperty {
 	 * The directory where all pugins are placed
 	 */
 	public static String getPluginsDir() {
-		return getProperty(LOGICALDOC_PLUGINSDIR);
+		return getProperty(LOGICALDOC_APP_PLUGINSDIR);
+	}
+	
+	/**
+	 * The plugins registry implementation
+	 */
+	public static String getPluginsRegistry() {
+		return getProperty(LOGICALDOC_PLUGINSREGISTRY);
 	}
 }

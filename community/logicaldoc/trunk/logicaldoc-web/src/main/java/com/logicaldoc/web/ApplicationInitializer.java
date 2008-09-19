@@ -14,120 +14,124 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.springframework.util.Log4jConfigurer;
 
+import com.logicaldoc.core.SystemProperty;
 
 /**
  * Listener that initialises relevant system stuffs during application startup
- *
+ * 
  * @author Alessandro Gasparini
  * @version $Id:$
  * @since 3.0
  */
 public class ApplicationInitializer implements ServletContextListener {
-    private static final String LOGICALDOC_APP_PLUGINSDIR = "logicaldoc.app.pluginsdir";
-    private static final String LOGICALDOC_APP_ROOTDIR = "logicaldoc.app.rootdir";
-    private static final String LOGICALDOC_HOME = "LOGICALDOC_HOME";
-    private static final String LOGICALDOC_APP_PLUGINREGISTRY = "logicaldoc.app.pluginregistry";
-    private static final String WEB_INF_BOOT_PROPERTIES = "WEB-INF/boot.properties";
+	private static final String WEB_INF_BOOT_PROPERTIES = "WEB-INF/boot.properties";
 
-    /**
-     * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
-     */
-    public void contextDestroyed(ServletContextEvent sce) {
-        Log4jConfigurer.shutdownLogging();
-    }
+	/**
+	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
+	 */
+	public void contextDestroyed(ServletContextEvent sce) {
+		Log4jConfigurer.shutdownLogging();
+	}
 
-    public static Properties loadBootProperties(ServletContext context) {
-        Properties boot = new Properties();
+	public static Properties loadBootProperties(ServletContext context) {
+		Properties boot = new Properties();
 
-        try {
-            boot.load(new FileInputStream(context.getRealPath(
-                        WEB_INF_BOOT_PROPERTIES)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		try {
+			boot.load(new FileInputStream(context
+					.getRealPath(WEB_INF_BOOT_PROPERTIES)));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        return boot;
-    }
+		return boot;
+	}
 
-    /**
-     * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
-     */
-    public void contextInitialized(ServletContextEvent sce) {
-        ServletContext context = sce.getServletContext();
-        Properties boot = loadBootProperties(context);
-        String logicaldocHome = boot.getProperty(LOGICALDOC_HOME);
+	/**
+	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+	 */
+	public void contextInitialized(ServletContextEvent sce) {
+		ServletContext context = sce.getServletContext();
+		Properties boot = loadBootProperties(context);
+		String repository = boot
+				.getProperty(SystemProperty.LOGICALDOC_REPOSITORY);
 
-        // replace system properties
-        if (logicaldocHome.indexOf("$") != -1) {
-            logicaldocHome = StrSubstitutor.replaceSystemProperties(logicaldocHome);
-        }
+		// replace system properties
+		if (repository.indexOf("$") != -1) {
+			repository = StrSubstitutor.replaceSystemProperties(repository);
+		}
 
-        boot.setProperty(LOGICALDOC_HOME, initLogicalDOCHomePath(logicaldocHome));
-        boot.setProperty(LOGICALDOC_APP_ROOTDIR, initRootPath(context));
-        boot.setProperty(LOGICALDOC_APP_PLUGINSDIR, initPluginsPath(context));
-        boot.setProperty(LOGICALDOC_APP_PLUGINREGISTRY, initPluginRegistry());
+		boot.setProperty(SystemProperty.LOGICALDOC_REPOSITORY,
+				initRepositoryPath(repository));
+		boot.setProperty(SystemProperty.LOGICALDOC_APP_ROOTDIR,
+				initRootPath(context));
+		boot.setProperty(SystemProperty.LOGICALDOC_APP_PLUGINSDIR,
+				initPluginsPath(context));
+		boot.setProperty(SystemProperty.LOGICALDOC_PLUGINSREGISTRY,
+				initPluginRegistry());
 
-        try {
-            String log4jPath = context.getRealPath("/WEB-INF/classes/log4j.xml");
-            System.out.println("log4jPath = " + log4jPath);
-            Log4jConfigurer.initLogging(log4jPath);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+		try {
+			String log4jPath = context
+					.getRealPath("/WEB-INF/classes/log4j.xml");
+			System.out.println("log4jPath = " + log4jPath);
+			Log4jConfigurer.initLogging(log4jPath);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 
-        saveBootProperties(boot, context);
-        
-        // Initialize plugins
-        com.logicaldoc.util.PluginRegistry.getInstance().init();
-    }
+		saveBootProperties(boot, context);
 
-    private String initPluginRegistry() {
-        System.setProperty(LOGICALDOC_APP_PLUGINREGISTRY,
-            "com.logicaldoc.web.PluginRegistry");
+		// Initialize plugins
+		com.logicaldoc.util.PluginRegistry.getInstance().init();
+	}
 
-        return "com.logicaldoc.web.PluginRegistry";
-    }
+	private String initPluginRegistry() {
+		System.setProperty(SystemProperty.LOGICALDOC_PLUGINSREGISTRY,
+				"com.logicaldoc.web.PluginRegistry");
 
-    public static void saveBootProperties(Properties boot,
-        ServletContext context) {
-        // Save properties for the next bootstrap
-        try {
-            boot.store(new FileOutputStream(context.getRealPath(
-                        WEB_INF_BOOT_PROPERTIES)), "");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+		return "com.logicaldoc.web.PluginRegistry";
+	}
 
-    protected String initLogicalDOCHomePath(String logicaldocHome) {
-        String homePath = StringUtils.replace(logicaldocHome, "\\", "/");
-        homePath = StringUtils.removeEnd(homePath, "/");
-        System.err.println("LOGICALDOC_HOME = " + homePath);
-        System.setProperty(LOGICALDOC_HOME, homePath);
+	public static void saveBootProperties(Properties boot,
+			ServletContext context) {
+		// Save properties for the next bootstrap
+		try {
+			boot.store(new FileOutputStream(context
+					.getRealPath(WEB_INF_BOOT_PROPERTIES)), "");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-        return homePath;
-    }
+	protected String initRepositoryPath(String logicaldocHome) {
+		String homePath = StringUtils.replace(logicaldocHome, "\\", "/");
+		homePath = StringUtils.removeEnd(homePath, "/");
+		System.err.println("LOGICALDOC_REPOSITORY = " + homePath);
+		System.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, homePath);
 
-    protected String initRootPath(final ServletContext context) {
-        String rootPath = StringUtils.replace(context.getRealPath(
-                    StringUtils.EMPTY), "\\", "/");
-        rootPath = StringUtils.removeEnd(rootPath, "/");
-        System.setProperty(LOGICALDOC_APP_ROOTDIR, rootPath);
+		return homePath;
+	}
 
-        return rootPath;
-    }
+	protected String initRootPath(final ServletContext context) {
+		String rootPath = StringUtils.replace(context
+				.getRealPath(StringUtils.EMPTY), "\\", "/");
+		rootPath = StringUtils.removeEnd(rootPath, "/");
+		System.setProperty(SystemProperty.LOGICALDOC_APP_ROOTDIR, rootPath);
 
-    protected String initPluginsPath(final ServletContext context) {
-        String pluginsPath = StringUtils.replace(context.getRealPath(
-                    StringUtils.EMPTY), "\\", "/");
-        pluginsPath = StringUtils.removeEnd(pluginsPath, "/");
-        pluginsPath += "/WEB-INF/plugins";
+		return rootPath;
+	}
 
-        File dir = new File(pluginsPath);
-        dir.mkdirs();
-        dir.mkdir();
-        System.setProperty(LOGICALDOC_APP_PLUGINSDIR, pluginsPath);
+	protected String initPluginsPath(final ServletContext context) {
+		String pluginsPath = StringUtils.replace(context
+				.getRealPath(StringUtils.EMPTY), "\\", "/");
+		pluginsPath = StringUtils.removeEnd(pluginsPath, "/");
+		pluginsPath += "/WEB-INF/plugins";
 
-        return pluginsPath;
-    }
+		File dir = new File(pluginsPath);
+		dir.mkdirs();
+		dir.mkdir();
+		System.setProperty(SystemProperty.LOGICALDOC_APP_PLUGINSDIR,
+				pluginsPath);
+
+		return pluginsPath;
+	}
 }

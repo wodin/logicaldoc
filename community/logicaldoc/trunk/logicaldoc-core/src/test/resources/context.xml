@@ -24,8 +24,8 @@
 		lazy-init="default" autowire="default" dependency-check="default">
 		<property name="settings">
 			<props>
-				<prop key="LOGICALDOC_HOME">${user.home}/logicaldoc</prop>
-				<prop key="LOGICALDOC_HOME.category">directory</prop>
+				<prop key="LOGICALDOC_REPOSITORY">${user.home}/logicaldoc</prop>
+				<prop key="LOGICALDOC_REPOSITORY.category">directory</prop>
 				<prop key="docdir">
 					${user.home}/logicaldoc/data/docs/
 				</prop>
