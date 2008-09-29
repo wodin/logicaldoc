@@ -20,7 +20,7 @@ public final class SystemProperty {
 	
 	public static final String LOGICALDOC_APP_PLUGINSDIR = "logicaldoc.app.pluginsdir";
 
-	public static final String LOGICALDOC_PLUGINSREGISTRY = "contineo.pluginsregistry";
+	public static final String LOGICALDOC_PLUGINSREGISTRY = "logicaldoc.pluginsregistry";
 	
 	
 	/**
