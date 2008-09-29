@@ -128,7 +128,7 @@
 	<distributionManagement>
 		<repository>
 			<id>logicaldoc-community</id>
-			<name>Contineo Distribution Site</name>
+			<name>LogicalDOC Distribution Site</name>
 			<url>scp://shell.sourceforge.net/home/groups/l/lo/logicaldoc/htdocs/maven</url>
 		</repository>
 		<site>
