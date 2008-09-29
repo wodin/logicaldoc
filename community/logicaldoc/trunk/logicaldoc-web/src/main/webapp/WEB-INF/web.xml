@@ -209,6 +209,10 @@
 		<servlet-name>uploadServlet</servlet-name>
 		<url-pattern>/uploadHtml</url-pattern>
 	</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>uploadServlet</servlet-name>
+        <url-pattern>/license/uploadHtml</url-pattern>
+    </servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Persistent Faces Servlet</servlet-name>
 		<url-pattern>*.jspx</url-pattern>
