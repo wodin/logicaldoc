@@ -3,7 +3,7 @@
 	<import file="${logicaldoc.devroot}/build/ant/build.xml" />
 
 	<target name="deploy" depends="init-all" description="Updates a deployed webapp">
-		<echo message="Deploying core to webapp" />
+		<echo message="Deploying ${pom.artifactId} to webapp" />
 		<artifact:pom file="pom.xml" id="pom" />
 		<property name="pluginDir" value="${logicaldoc.webroot}/WEB-INF/.plugins/${pom.artifactId}@${pom.version}" />
 		<copy todir="${pluginDir}/classes">
@@ -11,7 +11,7 @@
 				<include name="**/*" />
 			</fileset>
 		</copy>
-		<echo message="core is deployed" />
+		<echo message="${pom.artifactId} is deployed" />
 	</target>
 
 	<target name="schema-export" depends="init-all" description="Sql schema creation from Hibernate mappings">
