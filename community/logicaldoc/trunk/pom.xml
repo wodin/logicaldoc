@@ -39,7 +39,7 @@
 	<developers>
 		<developer>
 			<name>Marco Meschieri</name>
-			<email>car031@users.sourceforge.net</email>
+			<email>m.meschieri@logicalobjects.it</email>
 			<id>marco</id>
 			<organization>Logical Objects</organization>
 			<organizationUrl>http://www.logicalobjects.it</organizationUrl>
@@ -51,12 +51,23 @@
 		</developer>
 		<developer>
 			<name>Alessandro Gasparini</name>
-			<email>blucecio@users.sourceforge.net</email>
+			<email>a.gasparini@logicalobjects.it</email>
 			<id>alessandro</id>
 			<organization>Logical Objects</organization>
 			<organizationUrl>http://www.logicalobjects.it</organizationUrl>
 			<roles>
 				<role>designer</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+    <developer>
+			<name>Matteo Caruso</name>
+			<email>m.caruso@logicalobjects.it</email>
+			<id>matteo</id>
+			<organization>Logical Objects</organization>
+			<organizationUrl>http://www.logicalobjects.it</organizationUrl>
+			<roles>
 				<role>developer</role>
 			</roles>
 			<timezone>+1</timezone>
