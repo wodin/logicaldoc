@@ -33,7 +33,7 @@ import org.java.plugin.util.ExtendedProperties;
 public abstract class PluginRegistry {
 
 	// System property containing the plugin registry implementation to be used
-	public static final String LOGICALDOC_APP_PLUGINREGISTRY = "logicaldoc.app.pluginregistry";
+	public static final String LOGICALDOC_PLUGINSREGISTRY = "logicaldoc.pluginsregistry";
 
 	protected PluginManager manager = null;
 
@@ -41,7 +41,7 @@ public abstract class PluginRegistry {
 
 	public static PluginRegistry getInstance() {
 		if (instance == null) {
-			String pluginregistry = System.getProperty(LOGICALDOC_APP_PLUGINREGISTRY);
+			String pluginregistry = System.getProperty(LOGICALDOC_PLUGINSREGISTRY);
 			if (StringUtils.isEmpty(pluginregistry)) {
 				pluginregistry = "com.logicaldoc.util.DefaultPluginRegistry";
 			}
