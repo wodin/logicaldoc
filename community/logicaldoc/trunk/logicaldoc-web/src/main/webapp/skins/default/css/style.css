@@ -1269,21 +1269,25 @@ em { /*font-size:14px;*/
 --------------- Progress bar small
 */
 .iceOutProgSmall {
-    margin: 10px;
+	margin: 10px;
 }
+
 .iceOutProgSmallBg {
-    border: 1px solid #ABABAB;
-    width: 100px;
-    height: 13px;
+	border: 1px solid #ABABAB;
+	width: 100px;
+	height: 13px;
 }
+
 .iceOutProgSmallFill {
-    background-color: #026AFF; /* background-image:url(./css-images/window_top.gif);*/
-    background-position: top left;
-    background-repeat: repeat-x;
-    display: block;
+	background-color: #026AFF;
+	/* background-image:url(./css-images/window_top.gif);*/
+	background-position: top left;
+	background-repeat: repeat-x;
+	display: block;
 }
+
 .iceOutProgSmallTxt {
-    color: black;
+	color: black;
 }
 
 /*
@@ -1299,9 +1303,11 @@ em { /*font-size:14px;*/
 }
 
 .headerTop {
-	height: 70px;
+	height: 60px;
 	width: 100%;
-	background: url(images/header-bkg.gif);
+	background-image: url(images/header-bg.jpg);
+	background-repeat: repeat-x;
+	background-position: top left
 }
 
 .navigationTop {
@@ -1318,8 +1324,15 @@ em { /*font-size:14px;*/
 }
 
 .headerInfoText {
-	color: #DDDDDD;
+	color: #AAAAAA;
 	font-size: 12px;
+}
+
+.headerLogo {
+	margin-left: 4px;
+	margin-top: 4px;
+	border: 0px solid;
+	float: left;
 }
 
 #logout {
@@ -1385,7 +1398,7 @@ em { /*font-size:14px;*/
 .searchOptions {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 11px;
-	color: #DDDDDD;
+	color: #AAAAAA;
 	text-align: left;
 	vertical-align: top;
 	border: none;
@@ -1410,7 +1423,7 @@ em { /*font-size:14px;*/
 }
 
 .searchLink {
-	color: #DDDDDD;
+	color: #AAAAAA;
 }
 
 .resultTable,.similarTable {
@@ -1518,63 +1531,91 @@ em { /*font-size:14px;*/
 ---------- Various Adjustements for display correctly the Document context menu when document selected -------
 */
 .cntDocumentMenu .iceMnuItm a:hover {
-    color: black;
-    background-color: #2A6CC2;
+	color: black;
+	background-color: #2A6CC2;
 }
 
 .cntDocumentMenu .iceMnuItm a {
-    color: black;
-    background-color: #EFEFEF;
+	color: black;
+	background-color: #EFEFEF;
 }
 
 .iceRowSelSelectedMouseOver .cntDocumentMenu span {
-    color: black;
+	color: black;
 }
 
 /*
 --- Home Page -----
 */
 .homeLayoutRootTable {
-    table-layout: fixed;
+	table-layout: fixed;
 }
 
 .homeLayoutRootTableCol1 {
-    vertical-align: top;
+	vertical-align: top;
 }
 
 .homeLayoutRootTableCol2 {
-    vertical-align: top;
+	vertical-align: top;
 }
-
 
 /*
   Collapsible panel Styles
 */
 .pnlClpsbl {
-    background-color: white;
+	background-color: white;
 }
 
 .pnlClpsblCnt {
-    background-color: white;
-    border: 1px solid #cccccc;
-    border-top: 1px solid #ffffff;
+	background-color: white;
+	border: 1px solid #cccccc;
+	border-top: 1px solid #ffffff;
 }
 
 .cntDatTblNone {
-    border: 0px;
+	border: 0px;
 }
 
-.cntDatTblNoneCol, .cntDatTblNoneCol1, .cntDatTblNoneCol2 {
-    border: 0px;
+.cntDatTblNoneCol,.cntDatTblNoneCol1,.cntDatTblNoneCol2 {
+	border: 0px;
 }
 
-.cloud1 { font-size: 1.00em; }
-.cloud2 { font-size: 1.10em; }
-.cloud3 { font-size: 1.20em; }
-.cloud4 { font-size: 1.30em; }
-.cloud5 { font-size: 1.40em; }
-.cloud6 { font-size: 1.50em; }
-.cloud7 { font-size: 1.60em; }
-.cloud8 { font-size: 1.70em; }
-.cloud9 { font-size: 1.80em; }
-.cloud10 { font-size: 1.90em; }
+.cloud1 {
+	font-size: 1.00em;
+}
+
+.cloud2 {
+	font-size: 1.10em;
+}
+
+.cloud3 {
+	font-size: 1.20em;
+}
+
+.cloud4 {
+	font-size: 1.30em;
+}
+
+.cloud5 {
+	font-size: 1.40em;
+}
+
+.cloud6 {
+	font-size: 1.50em;
+}
+
+.cloud7 {
+	font-size: 1.60em;
+}
+
+.cloud8 {
+	font-size: 1.70em;
+}
+
+.cloud9 {
+	font-size: 1.80em;
+}
+
+.cloud10 {
+	font-size: 1.90em;
+}

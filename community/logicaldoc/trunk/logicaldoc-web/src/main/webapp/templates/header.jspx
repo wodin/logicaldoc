@@ -15,9 +15,9 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
 
-	<ice:panelGroup styleClass="headerTop"> 
-		<ice:graphicImage value="#{styleBean.imagesPath}/header-logo.gif"
-			style="border: 0px solid; float:left" />
+	<ice:panelGroup styleClass="headerTop">
+		<ice:graphicImage value="#{styleBean.imagesPath}/logicaldoc-logo.png"
+			styleClass="headerLogo" />
 		<ui:include src="/templates/quickSearch.jspx" />
 		<ui:include src="/templates/headerInfo.jspx" />
 		<ui:include src="/templates/logout.jspx" />
