@@ -5,7 +5,6 @@
     <groupId>com.logicaldoc</groupId>
     <artifactId>logicaldoc</artifactId>
     <version>3.6.0</version>
-    <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>logicaldoc-lang-pt</artifactId>
   <version>1.0.0</version>
