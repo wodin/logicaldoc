@@ -21,39 +21,32 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-			<title>#{context['product.name']}  #{context['product.release']}</title>
+			<title>#{context['product.name']}
+				#{context['product.release']}</title>
 			<ice:outputText style="padding-top:0px; padding-bottom:0px;"
 				value="#{styleBean.style}" escape="false" />
 			<ice:outputStyle href="#{styleBean.cssPath}/system.css" />
 		</head>
-		<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" bottommargin="0">
-			<table class="system_bg" border="0" cellpadding="0" cellspacing="0"
-				height="100%" width="100%">
-				<tbody>
-					<tr>
-						<td class="system_top" colspan="3">
-							<ice:graphicImage value="#{styleBean.imagesPath}/logo-error.gif" />
-						</td>
-					</tr>
-					<tr>
-						<td class="system_logo">
-							<!--  img src="test_files/system_logo.gif" alt="" border="0"
-								height="15" width="113" /-->
-						</td>
-						<td class="system_arrow" width="21">
-							<!-- img src="test_files/system_arrow.gif" alt="" border="0"
-								height="21" width="21" /-->
-						</td>
-						<td class="system_info" width="100%">
-							<br />
-							<ice:outputText styleClass="system_info" value="#{msgs['connection.lost']}"/>
-							<br />
-							<br />
-							<b><ice:outputLink styleClass="system_link" value="#{facesContext.externalContext.requestContextPath}">#{msgs['connection.reload']}</ice:outputLink></b> 
-						</td>
-					</tr>
-				</tbody>
-			</table>
+		<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0"
+			bottommargin="0">
+			<div class="system_top">
+				<ice:graphicImage
+					value="#{styleBean.imagesPath}/logicaldoc-logo.png"
+					styleClass="error_logo" />
+			</div>
+
+			<div class="system_bg">
+				<div class="system_info">
+					<br />
+					<ice:outputText styleClass="system_info"
+						value="#{msgs['connection.lost']}" />
+					<br />
+					<br />
+					<b><ice:outputLink styleClass="system_link"
+							value="#{facesContext.externalContext.requestContextPath}">#{msgs['connection.reload']}</ice:outputLink>
+					</b>
+				</div>
+			</div>
 		</body>
 	</html>
 </jsp:root>

@@ -1,16 +1,28 @@
 /*
 ---------- System error pages -------
 */
-.system_bg {
-	background-color: #6699CB;
-}
 
 .system_top {
+	position: absolute;
+	top: 0px;
+	left: 0px;
 	height: 140px;
-	background-color: #003366;
-	padding-left: 92px;
-	padding-top: 74px;
-	padding-bottom: 27px;
+	width: 100%;
+    background-color : #EEEEEE;
+}
+
+.system_bg {
+	background-color: #6699CB;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	top: 140px;
+	left: 0px;
+}
+
+.error_logo {
+    padding-top: 40px;
+    padding-left: 100px;
 }
 
 .system_logo {
@@ -34,7 +46,7 @@
 	padding-top: 19px;
 }
 
-A.system_link{
+A.system_link {
 	font-family: Verdana;
 	font-size: 11px;
 	padding-left: 7px;

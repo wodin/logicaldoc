@@ -93,7 +93,7 @@
                         <ice:panelGrid styleClass="navConnectionStatus"
                             columnClasses="statusLeft, statusRight" columns="2">
                             <!-- Connection Status -->
-                            <ice:outputConnectionStatus showPopupOnDisconnect="true" />
+                            <ice:outputConnectionStatus />
                         </ice:panelGrid>
 
                         <ice:form rendered="#{navigation.historySize>1}">
