@@ -319,7 +319,7 @@
       <layout>legacy</layout>
     </repository>
     <repository>
-      <id>contineo</id>
+      <id>logicaldoc</id>
       <name>LogicalDOC Repository</name>
       <url>http://logicaldoc.sourceforge.net/maven</url>
     </repository>
