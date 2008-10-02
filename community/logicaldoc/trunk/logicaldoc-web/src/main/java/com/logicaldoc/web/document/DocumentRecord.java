@@ -271,7 +271,7 @@ public class DocumentRecord extends MenuBarBean {
 	}
 
 	public boolean isCheckedOut() {
-		return StringUtils.isNotEmpty(document.getCheckoutUser());
+		return getDocument().getDocStatus() == Document.DOC_CHECKED_OUT;
 	}
 
 	public void setSelected(boolean selected) {
@@ -348,16 +348,17 @@ public class DocumentRecord extends MenuBarBean {
 		String username = (String) session.get(Constants.AUTH_USERNAME);
 
 		Menu menu = getMenu();
+		Document document = getDocument();
 
 		if (menu.isWriteable()) {
-			if ((menu.getDocStatus() == Document.DOC_CHECKED_OUT)
-					&& menu.getCheckoutUser().equals(username)) {
+			if ((document.getDocStatus() == Document.DOC_CHECKED_OUT)
+					&& username.equals(document.getCheckoutUser())) {
 				model.add(createMenuItem(" "
 						+ Messages.getMessage("msg.jsp.checkin"), "checkin-"
 						+ menu.getMenuId(), null, "#{documentRecord.checkin}",
 						null, StyleBean.getImagePath("checkin.png"), true,
 						null, null));
-			} else if (menu.getDocStatus() == Document.DOC_CHECKED_IN) {
+			} else if (document.getDocStatus() == Document.DOC_CHECKED_IN) {
 				model.add(createMenuItem(" "
 						+ Messages.getMessage("msg.jsp.checkout"), "checkout-"
 						+ menu.getMenuId(), null, "#{documentRecord.checkout}",

@@ -41,13 +41,15 @@
 				<f:facet name="header">
 					<ice:panelGroup>
 						<ice:commandLink action="#{documentsRecordsManager.selectAll}"
-							rendered="#{!documentsRecordsManager.selectedAll}" title="Select all">
+							rendered="#{!documentsRecordsManager.selectedAll}"
+							title="Select all">
 							<ice:graphicImage
 								value="#{styleBean.imagesPath}/checkbox_empty.gif"
 								style="border: 0px solid;" title="Select all" />
 						</ice:commandLink>
 						<ice:commandLink action="#{documentsRecordsManager.unselectAll}"
-							rendered="#{documentsRecordsManager.selectedAll}" title="Unselect all">
+							rendered="#{documentsRecordsManager.selectedAll}"
+							title="Unselect all">
 							<ice:graphicImage value="#{styleBean.imagesPath}/checkbox.gif"
 								style="border: 0px solid;" title="Unselect all" />
 						</ice:commandLink>
@@ -87,22 +89,23 @@
 							style="text-decoration: underline;" />
 					</ice:commandSortHeader>
 				</f:facet>
-				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}" menuPopup="pop">
-				    <ice:graphicImage
-                        value="#{styleBean.imagesPath}/#{documentRecord.icon}"
-                        style="border: 0px solid;" />
-                    <ice:outputLink value="download?menuId=#{documentRecord.menuId}"
-                        target="_blank" title="#{msgs['msg.jsp.popup']}">
-                        <ice:outputText value=" #{documentRecord.displayDescription}" />
-                    </ice:outputLink>
-                    <ice:graphicImage style="margin-left: 5px;"
+				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
+					menuPopup="pop">
+					<ice:graphicImage
+						value="#{styleBean.imagesPath}/#{documentRecord.icon}"
+						style="border: 0px solid;" />
+					<ice:outputLink value="download?menuId=#{documentRecord.menuId}"
+						target="_blank" title="#{msgs['msg.jsp.popup']}">
+						<ice:outputText value=" #{documentRecord.displayDescription}" />
+					</ice:outputLink>
+					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
-						value="#{styleBean.imagesPath}/lock.png" />
-                   <ice:menuPopup id="pop" value="#{documentRecord.menuId}"
-                        orientation="vertical"
-                        rendered="#{documentRecord.documentFound}">
-                        <ice:menuItems value="#{documentRecord.model}" />
-                    </ice:menuPopup>
+						value="#{styleBean.imagesPath}/lock.png"
+						alt="#{documentRecord.document.checkoutUser}" />+#{documentRecord.menu.docStatus}+
+					<ice:menuPopup id="pop" value="#{documentRecord.menuId}"
+						orientation="vertical" rendered="#{documentRecord.documentFound}">
+						<ice:menuItems value="#{documentRecord.model}" />
+					</ice:menuPopup>
 				</ice:panelGroup>
 			</ice:column>
 
