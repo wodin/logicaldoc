@@ -1,6 +1,6 @@
 <service name="Dms">
 	<description>This service is to give acces to the DMS archive</description>
-	<parameter name="ServiceClasscom.logicaldoc.webeb.ws.Dms</parameter>
+	<parameter name="ServiceClass">com.logicaldoc.web.ws.Dms</parameter>
 	<operation name="createFolder">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
