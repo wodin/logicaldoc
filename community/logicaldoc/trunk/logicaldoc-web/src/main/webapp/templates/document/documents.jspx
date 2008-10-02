@@ -101,7 +101,7 @@
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
 						value="#{styleBean.imagesPath}/lock.png"
-						alt="#{documentRecord.document.checkoutUser}" />+#{documentRecord.menu.docStatus}+
+						alt="#{documentRecord.document.checkoutUser}" />
 					<ice:menuPopup id="pop" value="#{documentRecord.menuId}"
 						orientation="vertical" rendered="#{documentRecord.documentFound}">
 						<ice:menuItems value="#{documentRecord.model}" />
