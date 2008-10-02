@@ -64,15 +64,6 @@ public class Menu {
 	// Not persistent
 	protected boolean writeable = false;
 
-	// Not persistent
-	protected int docStatus;
-
-	// Not persistent
-	protected String checkoutUser;
-
-	// Not persistent
-	protected String docName;
-
 	// Not pesistent
 	protected Date date;
 
@@ -212,13 +203,15 @@ public class Menu {
 
 			if (menus.length > 0) {
 				if (menus[0].length() > 0) {
-					MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+					MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(
+							MenuDAO.class);
 					Menu home = menuDao.findByPrimaryKey(Menu.MENUID_HOME);
 					coll.add(home);
 
 					for (int i = 1; i < menus.length; i++) {
 						try {
-							Menu menu = menuDao.findByPrimaryKey(Integer.parseInt(menus[i]));
+							Menu menu = menuDao.findByPrimaryKey(Integer
+									.parseInt(menus[i]));
 							coll.add(menu);
 						} catch (NumberFormatException nfe) {
 							;
@@ -271,30 +264,6 @@ public class Menu {
 
 	public void setWriteable(boolean writeable) {
 		this.writeable = writeable;
-	}
-
-	public int getDocStatus() {
-		return docStatus;
-	}
-
-	public void setDocStatus(int docStatus) {
-		this.docStatus = docStatus;
-	}
-
-	public String getCheckoutUser() {
-		return checkoutUser;
-	}
-
-	public void setCheckoutUser(String checkoutUser) {
-		this.checkoutUser = checkoutUser;
-	}
-
-	public String getDocName() {
-		return docName;
-	}
-
-	public void setDocName(String docName) {
-		this.docName = docName;
 	}
 
 	public Date getDate() {

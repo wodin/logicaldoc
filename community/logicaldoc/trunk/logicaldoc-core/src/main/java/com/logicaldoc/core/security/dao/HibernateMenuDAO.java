@@ -15,6 +15,8 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
 import com.logicaldoc.core.FileBean;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -26,7 +28,6 @@ import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * Hibernate implementation of <code>MenuDAO</code>
@@ -100,8 +101,9 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 
 		try {
 			if (menu.getMenuType() == Menu.MENUTYPE_FILE) {
-				long size = FileBean.getSize(settings.getValue("docdir") + "/" + menu.getMenuPath() + "/"
-						+ menu.getMenuId() + "/" + menu.getMenuRef());
+				long size = FileBean.getSize(settings.getValue("docdir") + "/"
+						+ menu.getMenuPath() + "/" + menu.getMenuId() + "/"
+						+ menu.getMenuRef());
 				menu.setMenuSize(size);
 			}
 			getHibernateTemplate().saveOrUpdate(menu);
@@ -178,7 +180,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 					first = false;
 				}
 				query.append(")");
-				coll = (Collection<Menu>) getHibernateTemplate().find(query.toString());
+				coll = (Collection<Menu>) getHibernateTemplate().find(
+						query.toString());
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -192,7 +195,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 *      java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Menu> findByUserNameAndKeyword(String username, String keyword) {
+	public Collection<Menu> findByUserNameAndKeyword(String username,
+			String keyword) {
 		Collection<Menu> coll = new ArrayList<Menu>();
 		try {
 			User user = userDAO.findByPrimaryKey(username);
@@ -201,7 +205,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			if (precoll.isEmpty())
 				return coll;
 
-			StringBuffer query = new StringBuffer("select distinct(_menu) from com.logicaldoc.core.security.Menu _menu  ");
+			StringBuffer query = new StringBuffer(
+					"select distinct(_menu) from com.logicaldoc.core.security.Menu _menu  ");
 			query.append(" left outer join _menu.menuGroups as _group ");
 			query.append(" where _group.groupName in (");
 
@@ -215,7 +220,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			}
 			query.append(")");
 
-			DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			DocumentDAO documentDAO = (DocumentDAO) Context.getInstance()
+					.getBean(DocumentDAO.class);
 			Collection<Integer> ids = documentDAO.findMenuIdByKeyword(keyword);
 			iter = ids.iterator();
 			if (ids.isEmpty())
@@ -230,7 +236,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			}
 			query.append(")");
 
-			coll = (Collection<Menu>) getHibernateTemplate().find(query.toString());
+			coll = (Collection<Menu>) getHibernateTemplate().find(
+					query.toString());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -243,7 +250,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 *      java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Menu> findMenuIdByUserNameAndKeyword(String username, String keyword) {
+	public Collection<Menu> findMenuIdByUserNameAndKeyword(String username,
+			String keyword) {
 		Collection<Menu> coll = new ArrayList<Menu>();
 		try {
 			User user = userDAO.findByPrimaryKey(username);
@@ -252,7 +260,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			if (precoll.isEmpty())
 				return coll;
 
-			StringBuffer query = new StringBuffer("select distinct(_menu) from com.logicaldoc.core.security.Menu _menu  ");
+			StringBuffer query = new StringBuffer(
+					"select distinct(_menu) from com.logicaldoc.core.security.Menu _menu  ");
 			query.append(" left outer join _menu.menuGroups as _group ");
 			query.append(" where _group.groupName in (");
 
@@ -266,7 +275,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			}
 			query.append(")");
 
-			DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			DocumentDAO documentDAO = (DocumentDAO) Context.getInstance()
+					.getBean(DocumentDAO.class);
 			Collection<Integer> ids = documentDAO.findMenuIdByKeyword(keyword);
 			iter = ids.iterator();
 			if (ids.isEmpty())
@@ -281,7 +291,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			}
 			query.append(")");
 
-			coll = (Collection<Menu>) getHibernateTemplate().find(query.toString());
+			coll = (Collection<Menu>) getHibernateTemplate().find(
+					query.toString());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -302,7 +313,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 *      int, type)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Menu> findByUserName(String username, int parentId, Integer type) {
+	public Collection<Menu> findByUserName(String username, int parentId,
+			Integer type) {
 		Collection<Menu> coll = new ArrayList<Menu>();
 
 		try {
@@ -312,7 +324,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			if (precoll.isEmpty())
 				return coll;
 
-			StringBuffer query = new StringBuffer("select  distinct(_menu) from com.logicaldoc.core.security.Menu _menu ");
+			StringBuffer query = new StringBuffer(
+					"select  distinct(_menu) from com.logicaldoc.core.security.Menu _menu ");
 			query.append(" left outer join _menu.menuGroups as _group");
 			query.append(" where _group.groupName in (");
 
@@ -327,9 +340,11 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			query.append(") and _menu.menuParent = ?");
 			if (type != null)
 				query.append(" and _menu.menuType = " + type.toString());
-			query.append(" order by _menu.menuType, _menu.menuSort, _menu.menuText");
+			query
+					.append(" order by _menu.menuType, _menu.menuSort, _menu.menuText");
 
-			coll = (Collection<Menu>) getHibernateTemplate().find(query.toString(), parentId);
+			coll = (Collection<Menu>) getHibernateTemplate().find(
+					query.toString(), parentId);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -366,7 +381,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			query.append(") and _menu.menuParent = ?");
 			if (type != null)
 				query.append(" and _menu.menuType = " + type.toString());
-			count = ((Long) getHibernateTemplate().find(query.toString(), parentId).get(0)).intValue();
+			count = ((Long) getHibernateTemplate().find(query.toString(),
+					parentId).get(0)).intValue();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -382,8 +398,10 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		Collection<Menu> coll = null;
 
 		try {
-			coll = (Collection<Menu>) getHibernateTemplate().find(
-					"from com.logicaldoc.core.security.Menu _menu where _menu.menuParent = ?", new Object[] { parentId });
+			coll = (Collection<Menu>) getHibernateTemplate()
+					.find(
+							"from com.logicaldoc.core.security.Menu _menu where _menu.menuParent = ?",
+							new Object[] { parentId });
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -428,7 +446,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 				return false;
 			Iterator iter = Groups.iterator();
 
-			StringBuffer query = new StringBuffer("select distinct(_menu) from com.logicaldoc.core.security.Menu _menu  ");
+			StringBuffer query = new StringBuffer(
+					"select distinct(_menu) from com.logicaldoc.core.security.Menu _menu  ");
 			query.append(" left outer join _menu.menuGroups as _group ");
 			query.append(" where _group.groupName in (");
 
@@ -442,8 +461,9 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			}
 			query.append(") and _group.writeEnable=1 and _menu.menuId=?");
 
-			Collection<MenuGroup> coll = (Collection<MenuGroup>) getHibernateTemplate().find(query.toString(),
-					new Object[] { new Integer(menuId) });
+			Collection<MenuGroup> coll = (Collection<MenuGroup>) getHibernateTemplate()
+					.find(query.toString(),
+							new Object[] { new Integer(menuId) });
 
 			result = coll.size() > 0;
 		} catch (Exception e) {
@@ -485,8 +505,9 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 				}
 				query.append(") and _menu.menuId=?");
 
-				Collection<MenuGroup> coll = (Collection<MenuGroup>) getHibernateTemplate().find(query.toString(),
-						new Object[] { new Integer(menuId) });
+				Collection<MenuGroup> coll = (Collection<MenuGroup>) getHibernateTemplate()
+						.find(query.toString(),
+								new Object[] { new Integer(menuId) });
 				result = coll.size() > 0;
 			} catch (Exception e) {
 				if (log.isErrorEnabled())
@@ -523,8 +544,9 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			Iterator iter = precoll.iterator();
 
 			if (!precoll.isEmpty()) {
-				StringBuffer query = new StringBuffer("select distinct(A.co_menuid) from co_menugroup A "
-						+ " where A.co_groupname in (");
+				StringBuffer query = new StringBuffer(
+						"select distinct(A.co_menuid) from co_menugroup A "
+								+ " where A.co_groupname in (");
 				boolean first = true;
 				while (iter.hasNext()) {
 					if (!first)
@@ -571,7 +593,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		Iterator<Menu> iter = coll.iterator();
 		String docpath = settings.getValue("docdir");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HHmmss");
-		DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean(
+				DocumentDAO.class);
 
 		while (iter.hasNext()) {
 			Menu menu = (Menu) iter.next();
@@ -585,8 +608,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 					 * The menu is a file and the size was not already computed,
 					 * so calculate it now.
 					 */
-					size = FileBean.getSize(docpath + "/" + menu.getMenuPath() + "/" + menu.getMenuId() + "/"
-							+ menu.getMenuRef());
+					size = FileBean.getSize(docpath + "/" + menu.getMenuPath()
+							+ "/" + menu.getMenuId() + "/" + menu.getMenuRef());
 					menu.setMenuSize(size);
 				}
 				size = size / 1024;
@@ -611,10 +634,6 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 				Document doc = documentDAO.findByMenuId(menu.getMenuId());
 
 				if (doc != null) {
-					menu.setDocStatus(doc.getDocStatus());
-					menu.setCheckoutUser(doc.getCheckoutUser());
-					menu.setDocName(doc.getDocName());
-
 					try {
 						Date date = dateFormat.parse(doc.getDocDate());
 						menu.setDate(date);
@@ -673,11 +692,13 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		Collection<Menu> coll = new ArrayList<Menu>();
 
 		try {
-			StringBuffer query = new StringBuffer("select distinct(_menu) from com.logicaldoc.core.security.Menu _menu  ");
+			StringBuffer query = new StringBuffer(
+					"select distinct(_menu) from com.logicaldoc.core.security.Menu _menu  ");
 			query.append(" left outer join _menu.menuGroups as _group ");
 			query.append(" where _group.groupName = ?");
 
-			coll = (Collection<Menu>) getHibernateTemplate().find(query.toString(), groupName);
+			coll = (Collection<Menu>) getHibernateTemplate().find(
+					query.toString(), groupName);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -689,7 +710,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findLastDownloadsByUserName(java.lang.String,
 	 *      int)
 	 */
-	public Collection<Menu> findLastDownloadsByUserName(String username, int maxResults) {
+	public Collection<Menu> findLastDownloadsByUserName(String username,
+			int maxResults) {
 		Collection<Menu> coll = new ArrayList<Menu>();
 
 		try {
@@ -698,7 +720,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			query.append(" where _userdoc.id.userName = ?");
 			query.append(" order by _userdoc.timeStamp desc");
 
-			Collection<Integer> results = (Collection<Integer>) getHibernateTemplate().find(query.toString(), username);
+			Collection<Integer> results = (Collection<Integer>) getHibernateTemplate()
+					.find(query.toString(), username);
 			ArrayList<Integer> tmpal = new ArrayList<Integer>(results);
 			List<Integer> menuIds = tmpal;
 
@@ -709,7 +732,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 				tmpal.subList(0, maxResults - 1);
 			}
 
-			query = new StringBuffer("from com.logicaldoc.core.security.Menu _menu  ");
+			query = new StringBuffer(
+					"from com.logicaldoc.core.security.Menu _menu  ");
 			query.append(" where _menu.menuId in (");
 
 			for (int i = 0; i < menuIds.size(); i++) {
@@ -721,7 +745,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			query.append(")");
 
 			// execute the query
-			Collection<Menu> unorderdColl = (Collection<Menu>) getHibernateTemplate().find(query.toString());
+			Collection<Menu> unorderdColl = (Collection<Menu>) getHibernateTemplate()
+					.find(query.toString());
 
 			// put all elements in a map
 			HashMap<Integer, Menu> hm = new HashMap<Integer, Menu>();
@@ -747,7 +772,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findMenuIdByUserNameAndParent(java.lang.String,
 	 *      int, java.lang.Integer)
 	 */
-	public Set<Integer> findMenuIdByUserName(String username, int parentId, Integer type) {
+	public Set<Integer> findMenuIdByUserName(String username, int parentId,
+			Integer type) {
 		Set<Integer> ids = new HashSet<Integer>();
 		try {
 			User user = userDAO.findByPrimaryKey(username);
@@ -755,9 +781,11 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			Iterator iter = precoll.iterator();
 
 			if (!precoll.isEmpty()) {
-				StringBuffer query = new StringBuffer("select distinct(A.co_menuid) from co_menugroup A, co_menus B "
-						+ " where A.co_menuid=B.co_menuid " + " AND B.co_menuparent=" + parentId
-						+ " AND A.co_groupname in (");
+				StringBuffer query = new StringBuffer(
+						"select distinct(A.co_menuid) from co_menugroup A, co_menus B "
+								+ " where A.co_menuid=B.co_menuid "
+								+ " AND B.co_menuparent=" + parentId
+								+ " AND A.co_groupname in (");
 				boolean first = true;
 				while (iter.hasNext()) {
 					if (!first)
@@ -800,7 +828,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findMenuIdByUsernameAndKeyword(java.lang.String,
 	 *      java.lang.String)
 	 */
-	public Set<Integer> findMenuIdByUsernameAndKeyword(String username, String keyword) {
+	public Set<Integer> findMenuIdByUsernameAndKeyword(String username,
+			String keyword) {
 		Set<Integer> ids = new HashSet<Integer>();
 		try {
 			User user = userDAO.findByPrimaryKey(username);
@@ -858,20 +887,24 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByMenuText(com.logicaldoc.core.security.Menu, java.lang.String, java.lang.Integer)
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByMenuText(com.logicaldoc.core.security.Menu,
+	 *      java.lang.String, java.lang.Integer)
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<Menu> findByMenuText(Menu parent, String menutext, Integer type) {
+	public Collection<Menu> findByMenuText(Menu parent, String menutext,
+			Integer type) {
 		Collection<Menu> coll = new ArrayList<Menu>();
-		StringBuffer query = new StringBuffer("from com.logicaldoc.core.security.Menu _menu where _menu.menuText = ? ");
+		StringBuffer query = new StringBuffer(
+				"from com.logicaldoc.core.security.Menu _menu where _menu.menuText = ? ");
 		if (parent != null)
 			query.append(" AND _menu.menuParent = " + parent.getMenuId());
 		if (type != null)
 			query.append(" AND _menu.menuType = " + type.intValue());
 
 		try {
-			coll = (Collection<Menu>) getHibernateTemplate().find(query.toString(), new Object[] { menutext });
+			coll = (Collection<Menu>) getHibernateTemplate().find(
+					query.toString(), new Object[] { menutext });
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
