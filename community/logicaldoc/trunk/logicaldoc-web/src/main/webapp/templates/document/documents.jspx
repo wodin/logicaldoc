@@ -95,7 +95,7 @@
                         target="_blank" title="#{msgs['msg.jsp.popup']}">
                         <ice:outputText value=" #{documentRecord.displayDescription}" />
                     </ice:outputLink>
-                    <ice:graphicImage style="margin-left: 5px;float:left;"
+                    <ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
 						value="#{styleBean.imagesPath}/lock.png" />
                    <ice:menuPopup id="pop" value="#{documentRecord.menuId}"
