@@ -71,7 +71,7 @@
 					<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
 						action="#{documentNavigation.openInFolder}">
 						<ice:graphicImage value="#{styleBean.imagesPath}/folder.png"
-							styleClass="iconSmall" />
+							styleClass="iconSmall" alt="#{msgs['msg.jsp.openinfolder']}" />
 					</ice:commandLink>
 
 					<ice:outputText value="&amp;nbsp;&amp;nbsp;" escape="false" />
@@ -80,7 +80,7 @@
 						value="#{styleBean.imagesPath}/#{entry.menu.menuIcon}"
 						style="border: 0px solid;" />
 					<ice:outputLink value="download?menuId=#{entry.menuId}"
-						target="_blank">
+						target="_blank" >
 						<ice:outputText value="#{entry.displayDescription}" />
 					</ice:outputLink>
 				</ice:panelGroup>

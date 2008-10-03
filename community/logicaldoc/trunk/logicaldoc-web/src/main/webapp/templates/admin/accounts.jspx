@@ -24,7 +24,7 @@
           <tr>
             <td><ice:commandLink action="#{accountsRecordsManager.addAccount}"
               onclick="buttonSave='w-account:accountForm:save'" title="#{msgs['msg.jsp.addaccount']}">
-              <ice:graphicImage value="#{styleBean.imagesPath}/mailbox_add.png" style="border: 0px solid;" />
+              <ice:graphicImage value="#{styleBean.imagesPath}/mailbox_add.png" style="border: 0px solid;" alt="#{msgs['msg.jsp.addaccount']}"/>
             </ice:commandLink></td>
           </tr>
         </table>

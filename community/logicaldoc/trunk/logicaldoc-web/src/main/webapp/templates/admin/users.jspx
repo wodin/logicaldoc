@@ -27,8 +27,7 @@
                                 <ice:commandLink action="#{usersRecordsManager.addUser}"
                                     title="#{msgs['msg.jsp.createuser']}">
                                     <ice:graphicImage value="#{styleBean.imagesPath}/newuser.png"
-                                        style="border: 0px solid;" />
-                                </ice:commandLink>
+                                        style="border: 0px solid;" alt="#{msgs['msg.jsp.createuser']}"/>                                </ice:commandLink>
                             </td>
                         </tr>
                     </table>

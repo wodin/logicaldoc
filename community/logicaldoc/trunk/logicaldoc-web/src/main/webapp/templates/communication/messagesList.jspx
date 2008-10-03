@@ -24,7 +24,7 @@
 						<ice:commandLink action="#{messagesRecordsManager.addMessage}"
 							title="#{msgs['db.createmessage']}">
 							<ice:graphicImage value="#{styleBean.imagesPath}/editmessage.png"
-								style="border: 0px solid;" />
+								style="border: 0px solid;" alt="#{msgs['db.createmessage']}"/>
 						</ice:commandLink>
 					</td>
 				</tr>

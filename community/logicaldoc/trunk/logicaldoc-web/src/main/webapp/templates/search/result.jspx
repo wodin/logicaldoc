@@ -61,9 +61,10 @@
 				<ice:panelGroup menuPopup="pop">
 					<ice:outputLink value="download?menuId=#{entry.menuId}"
 						target="_blank"
-						style="color: #333399; text-decoration: underline;">
+						style="color: #333399; text-decoration: underline;" 
+						title="#{msgs['msg.jsp.popup']}" >
 						<ice:graphicImage value="#{styleBean.imagesPath}/#{entry.icon}"
-							styleClass="iconSmall" />
+							styleClass="iconSmall" title="#{msgs['msg.jsp.popup']}"/>
 						<ice:outputText value=" " />
 						<ice:outputText value="#{entry.name}" style="color: #333399;" />
 					</ice:outputLink>

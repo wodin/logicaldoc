@@ -26,7 +26,7 @@
                             <ice:commandLink action="#{groupsRecordsManager.addGroup}"
                                 title="#{msgs['msg.jsp.creategroup']}">
                                 <ice:graphicImage value="#{styleBean.imagesPath}/newgroup.png"
-                                    style="border: 0px solid;" />
+                                    style="border: 0px solid;" alt="#{msgs['msg.jsp.creategroup']}"/>
                             </ice:commandLink>
                         </td>
                     </tr>

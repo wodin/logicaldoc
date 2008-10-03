@@ -100,7 +100,7 @@
                             <ice:commandLink action="#{navigation.back}"
                                 title="#{msgs['msg.jsp.back']}" style="float: left;">
                                 <ice:graphicImage value="#{styleBean.imagesPath}/upper.gif"
-                                    style="border: 0px solid;" />
+                                    style="border: 0px solid;" alt="#{msgs['msg.jsp.back']}" />
                             </ice:commandLink>
                         </ice:form>
 
