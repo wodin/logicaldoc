@@ -25,7 +25,7 @@
 
         <ice:panelGrid columns="5">
             <ice:panelGroup styleClass="outputLabel">
-                <ice:outputLabel for="docName" value="#{msgs['msg.jsp.docname']}*" />
+                <ice:outputLabel for="docName" value="#{msgs['doctitle']}*" />
             </ice:panelGroup>
             <ice:panelGroup>
                 <ice:inputText id="docName"
