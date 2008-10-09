@@ -6,7 +6,6 @@ import javax.faces.context.FacesContext;
 
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.i18n.DateBean;
-
 import com.logicaldoc.web.util.FacesUtil;
 
 /**

@@ -6,20 +6,20 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.searchengine.Result;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
-
+import com.logicaldoc.util.SnippetStripper;
 import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.document.DocumentRecord;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.NavigationBean;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.FacesUtil;
-import com.logicaldoc.web.util.SnippetStripper;
 
 /**
  * A result entry usable by the GUI.
