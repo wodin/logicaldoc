@@ -36,7 +36,7 @@
                         <ice:outputLabel value="#{msgs['msg.jsp.publishedon']}" />
                     </ice:panelGroup>
                     <ice:panelGroup>
-                        <ice:outputText value="#{documentForm.menu.date}" style="font-weight: bold">
+                        <ice:outputText value="#{documentForm.docDate}" style="font-weight: bold">
                             <f:convertDateTime pattern="#{loc.dateFormatShort}" />
                         </ice:outputText>
                     </ice:panelGroup>
