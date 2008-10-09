@@ -21,27 +21,19 @@ public class WebConfigurator extends XMLBean {
 	 * Adds a new servlet mapping to the deployment descriptor. If the mapping
 	 * already exists no modifications are committed.
 	 * 
-	 * @param name
-	 *            The servlet name
-	 * @param clazz
-	 *            The servlet class fully qualified name
+	 * @param name The servlet name
+	 * @param clazz The servlet class fully qualified name
 	 */
 	@SuppressWarnings("unchecked")
 	public void addServlet(String name, String clazz) {
 		// Search for the specified servlet
-		List servlets = getRootElement().getChildren("servlet",
-				getRootElement().getNamespace());
+		List servlets = getRootElement().getChildren("servlet", getRootElement().getNamespace());
 		for (Iterator iterator = servlets.iterator(); iterator.hasNext();) {
 			Element elem = (Element) iterator.next();
-			Element servletName = elem.getChild("servlet-name", elem
-					.getNamespace());
-			if (servletName.getText().equals(name)) {
-				Element url = elem.getChild("servlet-class", elem
-						.getNamespace());
-				if (url.getText().equals(clazz)) {
-					// The mapping already exists
-					return;
-				}
+			Element servletName = elem.getChild("servlet-name", elem.getNamespace());
+			if (servletName.getText().trim().equals(name)) {
+				// The servlet already exists
+				return;
 			}
 		}
 
@@ -54,13 +46,10 @@ public class WebConfigurator extends XMLBean {
 		int index = children.indexOf(lastServlet);
 
 		// Prepare the new mapping
-		Element servlet = new Element("servlet", getRootElement()
-				.getNamespace());
-		Element servletNameElement = new Element("servlet-name",
-				getRootElement().getNamespace());
+		Element servlet = new Element("servlet", getRootElement().getNamespace());
+		Element servletNameElement = new Element("servlet-name", getRootElement().getNamespace());
 		servletNameElement.setText(name);
-		Element servletClass = new Element("servlet-class", getRootElement()
-				.getNamespace());
+		Element servletClass = new Element("servlet-class", getRootElement().getNamespace());
 		servletClass.setText(clazz);
 		servlet.addContent("\n ");
 		servlet.addContent(servletNameElement);
@@ -74,31 +63,23 @@ public class WebConfigurator extends XMLBean {
 		writeXMLDoc();
 	}
 
-	
 	/**
 	 * Adds a new servlet mapping to the deployment descriptor. If the mapping
 	 * already exists no modifications are committed.
 	 * 
-	 * @param servlet
-	 *            The name of the servlet
-	 * @param pattern
-	 *            The mapping pattern
+	 * @param servlet The name of the servlet
+	 * @param pattern The mapping pattern
 	 */
 	@SuppressWarnings("unchecked")
 	public void addServletMapping(String servlet, String pattern) {
 		// Search for the specified mapping
-		List mappings = getRootElement().getChildren("servlet-mapping",
-				getRootElement().getNamespace());
+		List mappings = getRootElement().getChildren("servlet-mapping", getRootElement().getNamespace());
 		for (Iterator iterator = mappings.iterator(); iterator.hasNext();) {
 			Element elem = (Element) iterator.next();
-			Element servletName = elem.getChild("servlet-name", elem
-					.getNamespace());
-			if (servletName.getText().equals(servlet)) {
-				Element url = elem.getChild("url-pattern", elem.getNamespace());
-				if (url.getText().equals(pattern)) {
-					// The mapping already exists
-					return;
-				}
+			Element servletName = elem.getChild("servlet-name", elem.getNamespace());
+			if (servletName.getText().trim().equals(servlet)) {
+				// The mapping already exists
+				return;
 			}
 		}
 
@@ -110,13 +91,10 @@ public class WebConfigurator extends XMLBean {
 		int index = children.indexOf(lastMapping);
 
 		// Prepare the new mapping
-		Element servletMapping = new Element("servlet-mapping",
-				getRootElement().getNamespace());
-		Element servletName = new Element("servlet-name", getRootElement()
-				.getNamespace());
+		Element servletMapping = new Element("servlet-mapping", getRootElement().getNamespace());
+		Element servletName = new Element("servlet-name", getRootElement().getNamespace());
 		servletName.setText(servlet);
-		Element servletPattern = new Element("url-pattern", getRootElement()
-				.getNamespace());
+		Element servletPattern = new Element("url-pattern", getRootElement().getNamespace());
 		servletPattern.setText(pattern);
 		servletMapping.addContent("\n ");
 		servletMapping.addContent(servletName);
@@ -132,23 +110,20 @@ public class WebConfigurator extends XMLBean {
 
 	public void setDisplayName(String displayName) {
 		// Retrieve the <display-name> element
-		Element element = getRootElement().getChild("display-name",
-				getRootElement().getNamespace());
+		Element element = getRootElement().getChild("display-name", getRootElement().getNamespace());
 		element.setText(displayName);
 		writeXMLDoc();
 	}
 
 	public String getDisplayName() {
 		// Retrieve the <display-name> element
-		Element element = getRootElement().getChild("display-name",
-				getRootElement().getNamespace());
+		Element element = getRootElement().getChild("display-name", getRootElement().getNamespace());
 		return element.getText();
 	}
 
 	public void setDescription(String description) {
 		// Retrieve the <display-name> element
-		Element element = getRootElement().getChild("description",
-				getRootElement().getNamespace());
+		Element element = getRootElement().getChild("description", getRootElement().getNamespace());
 		element.setText(description);
 		writeXMLDoc();
 	}
