@@ -9,10 +9,11 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.core.text.analyze.Stopwords;
-import com.logicaldoc.util.PluginRegistry;
 import org.java.plugin.registry.Extension;
 import org.java.plugin.registry.Extension.Parameter;
+
+import com.logicaldoc.core.text.analyze.Stopwords;
+import com.logicaldoc.util.PluginRegistry;
 
 /**
  * A manager for all supported languages. It's internals are initialized frrom
@@ -50,8 +51,14 @@ public class LanguageManager {
 		PluginRegistry registry = PluginRegistry.getInstance();
 		if (registry == null)
 			return;
-		Collection<Extension> extensions = registry.getExtensions("logicaldoc-core", "Language");
-
+		
+		Collection<Extension> extensions=new ArrayList<Extension>();
+		try {
+			extensions = registry.getExtensions("logicaldoc-core", "Language");
+		} catch (Throwable e) {
+			log.error(e.getMessage());
+		}
+		
 		for (Extension ext : extensions) {
 			String languageKey = ext.getParameter("languageKey").valueAsString();
 
