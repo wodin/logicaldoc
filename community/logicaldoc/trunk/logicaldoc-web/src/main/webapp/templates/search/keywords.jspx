@@ -65,7 +65,7 @@
 			<!-- Name -->
 			<ice:column>
 				<f:facet name="header">
-					<ice:outputText value="#{msgs['msg.jsp.docname']}" />
+					<ice:outputText value="#{msgs['doctitle']}" />
 				</f:facet>
 				<ice:panelGroup>
 					<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
