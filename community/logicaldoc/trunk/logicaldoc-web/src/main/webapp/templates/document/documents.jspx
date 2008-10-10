@@ -98,6 +98,13 @@
 						target="_blank" title="#{msgs['msg.jsp.popup']}">
 						<ice:outputText value=" #{documentRecord.displayDescription}" />
 					</ice:outputLink>
+					<ice:outputLink
+						value="download?menuId=#{documentRecord.menuId}&amp;downloadText=true"
+						target="_blank" title="txt">
+						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
+							value="#{styleBean.imagesPath}/txt-icon.png"
+							alt="txt" />
+					</ice:outputLink>
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
 						value="#{styleBean.imagesPath}/lock.png"
