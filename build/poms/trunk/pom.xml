@@ -332,11 +332,11 @@
   <distributionManagement>
     <repository>
       <id>logicaldoc-community</id>
-      <url>scp://shell.sourceforge.net/home/groups/l/lo/logicaldoc/htdocs/maven</url>
+      <url>sftp://web.sourceforge.net/home/groups/l/lo/logicaldoc/htdocs/maven</url>
     </repository>
     <site>
       <id>logicaldoc-community</id>
-      <url>scp://shell.sourceforge.net/home/groups/l/lo/logicaldoc/htdocs/maven</url>
+      <url>sftp://web.sourceforge.net/home/groups/l/lo/logicaldoc/htdocs/maven</url>
     </site>
   </distributionManagement>
 </project>
