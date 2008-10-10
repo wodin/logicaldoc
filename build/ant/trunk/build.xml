@@ -29,19 +29,6 @@
         <echo>${error}</echo>
       </catch>
     </trycatch>
-    <path id="axis.classpath">
-      <fileset dir="${logicaldoc.axis.home}">
-        <include name="**/*.jar" />
-      </fileset>
-    </path>
-    <trycatch  property="error" reference="exception">
-      <try>
-        <taskdef name="wscodegen" classname="org.apache.axis2.tool.ant.AntCodegenTask" classpathref="axis.classpath" />
-      </try>
-      <catch>
-        <echo>${error}</echo>
-      </catch>
-    </trycatch>
   </target>
   <target name="init-all" depends="task-definitions">
     <trycatch property="error" reference="exception">
