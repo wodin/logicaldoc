@@ -1,0 +1,124 @@
+<?xml version = '1.0'?>
+<!-- 
+ Vocabulary of all stored keywords
+  
+ @author Marco Meschieri
+ @version $Id: keywords.jspx,v 1.5 2006/09/03 16:24:37 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="keywordsForm">
+	<ice:panelGroup style="text-align: center;">
+		<br />
+		<ice:panelSeries var="letter" value="#{keywords.letters}">
+				&amp;nbsp;&amp;nbsp;
+				<ice:commandLink action="#{letter.select}">
+				<ice:outputText value="#{letter.letter}" style="font-weight: bold;" />
+			</ice:commandLink>
+     			&amp;nbsp;&amp;nbsp;
+			</ice:panelSeries>
+	</ice:panelGroup>
+
+	<br />
+
+	<!-- Words table -->
+	<ice:panelGroup rendered="#{keywords.keywordsCount > 0}">
+		<!-- Table with results -->
+		<ice:dataTable id="words" value="#{keywords.keywords}" var="keyword"
+			cellpadding="0" rows="99999" styleClass="center">
+			<ice:column>
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['msg.jsp.keywords']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:commandLink action="#{keyword.select}">
+						<ice:outputText value="#{keyword.word}" />
+					</ice:commandLink>
+				</ice:panelGroup>
+			</ice:column>
+
+			<ice:column>
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['msg.jsp.documentcount']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:outputText value="#{keyword.count}" />
+				</ice:panelGroup>
+			</ice:column>
+		</ice:dataTable>
+	</ice:panelGroup>
+
+	<!-- Documents table -->
+	<ice:panelGroup rendered="#{keywords.documentsCount > 0}">
+		<ice:panelGroup style="text-align: center;"><h3><ice:outputText value="#{msgs['keyword']}" /> &amp;nbsp; '#{keywords.selectedWord}'</h3></ice:panelGroup>
+		<ice:dataTable id="documentsList" styleClass="center"
+			value="#{keywords.documents}" var="entry" cellpadding="0" rows="10"
+			columnClasses="docNameColumn,docDateColumn,docSizeColumn">
+
+			<!-- Name -->
+			<ice:column>
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['doctitle']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
+						action="#{documentNavigation.openInFolder}">
+						<ice:graphicImage value="#{styleBean.imagesPath}/folder.png"
+							styleClass="iconSmall" alt="#{msgs['msg.jsp.openinfolder']}" />
+					</ice:commandLink>
+
+					<ice:outputText value="&amp;nbsp;&amp;nbsp;" escape="false" />
+
+					<ice:graphicImage
+						value="#{styleBean.imagesPath}/#{entry.menu.menuIcon}"
+						style="border: 0px solid;" />
+					<ice:outputLink value="download?menuId=#{entry.menuId}"
+						target="_blank" >
+						<ice:outputText value="#{entry.displayDescription}" />
+					</ice:outputLink>
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- Date -->
+			<ice:column>
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['msg.jsp.sourcedate']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:outputText value="#{entry.sourceDate}">
+						<f:convertDateTime pattern="#{loc.dateFormatShort}" />
+					</ice:outputText>
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- Size -->
+			<ice:column>
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['msg.jsp.foldercontent.size']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:outputText value="#{entry.size} KB" />
+				</ice:panelGroup>
+			</ice:column>
+		</ice:dataTable>
+
+		<ice:panelGroup styleClass="center" style="width:600px;">
+			<ldoc:paginator table="documentsList"
+				label="#{msgs['document.paginator']}" />
+		</ice:panelGroup>
+	</ice:panelGroup>
+
+	<ice:panelGroup
+		rendered="#{(keywords.keywordsCount == 0) and (keywords.documentsCount == 0)}"
+		style="text-align: center;">
+		<ice:outputText value="#{msgs['keywords.nodocs']}" />
+	</ice:panelGroup>
+	<br />
+</jsp:root>

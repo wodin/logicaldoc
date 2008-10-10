@@ -1,0 +1,44 @@
+<?xml version = '1.0'?>
+<!-- 
+ Messages list/edit page
+  
+ @author Marco Meschieri
+ @version $Id: messages.jspx,v 1.2 2006/08/31 15:31:18 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ice="http://www.icesoft.com/icefaces/component"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:xkin="/WEB-INF/tld/xkins.tld"
+    xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+    styleClass="messagesPanel">
+
+    <ice:panelStack styleClass="componentContentPanelStack"
+        selectedPanel="#{messagesRecordsManager.selectedPanel.contentName}">
+
+        <ice:panelGroup id="list">
+            <ice:messages globalOnly="true"/>
+            <f:subview id="messagesList">
+                <ui:include src="/templates/communication/messagesList.jspx" />
+            </f:subview>
+        </ice:panelGroup>
+
+        <ice:panelGroup id="view">
+            <ice:messages globalOnly="true" />
+            <f:subview id="view-message">
+                <ui:include src="/templates/communication/message.jspx" />
+            </f:subview>
+        </ice:panelGroup>
+
+        <ice:panelGroup id="insert">
+            <ice:messages globalOnly="true" />
+            <f:subview id="insert-message">
+                <ui:include src="/templates/communication/message.jspx" />
+            </f:subview>
+        </ice:panelGroup>
+    </ice:panelStack>
+</jsp:root>

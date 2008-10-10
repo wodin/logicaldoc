@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="com.logicaldoc.core.document.History" table="co_history">
+		<cache usage="read-write" />
+		<id name="historyId" type="int" column="co_historyid" unsaved-value="0">
+			<generator class="increment"/>
+		</id>
+		<property name="docId" type="int" column="co_docid" />
+		<property name="date" type="string" column="co_date" length="20" />
+		<property name="username" type="string" column="co_username" length="30" />
+		<property name="event" type="string" column="co_event" length="255" />
+	</class>
+</hibernate-mapping>

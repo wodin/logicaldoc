@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="com.logicaldoc.core.communication.SystemMessage" table="co_systemmessage">
+		<cache usage="read-write" />
+		<id name="messageId" type="int" column="co_messageid" unsaved-value="0">
+          <generator class="increment" />
+		</id>
+		<property name="author" type="string" column="co_author" length="100" />
+		<property name="recipient" type="string" column="co_recipient" length="100" />
+		<property name="messageText" type="string" column="co_messagetext" length="2000" />
+		<property name="subject" type="string" column="co_subject" length="255" />
+		<property name="sentDate" type="string" column="co_sentdate" length="20" not-null="true" />
+		<property name="dateScope" type="int" column="co_datescope" />
+		<property name="prio" type="int" column="co_prio" />
+		<property name="confirmation" type="int" column="co_confirmation" />
+        <property name="read" type="int" column="co_red" not-null="true"/>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,106 @@
+<?xml version = '1.0'?>
+<!-- 
+ Groups listing
+  
+ @author Marco Meschieri
+ @version $Id: users.jspx,v 1.2 2007/10/16 16:12:10 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ice="http://www.icesoft.com/icefaces/component"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+    styleClass="center" style="width: 80%">
+    <ice:messages globalOnly="true" />
+    <ice:panelGroup id="list"
+        rendered="#{groupsRecordsManager.selectedPanel=='list'}">
+        <ice:form id="groupsForm">
+            <div id="toolbar">
+                <table cellpadding="0" cellspacing="2" border="0">
+                    <tr>
+                        <td>
+                            <ice:commandLink action="#{groupsRecordsManager.addGroup}"
+                                title="#{msgs['msg.jsp.creategroup']}">
+                                <ice:graphicImage value="#{styleBean.imagesPath}/newgroup.png"
+                                    style="border: 0px solid;" alt="#{msgs['msg.jsp.creategroup']}"/>
+                            </ice:commandLink>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Basic table -->
+            <ice:panelGroup styleClass="formBorderHighlight"
+                rendered="#{groupsRecordsManager.count > 0}">
+                <ice:dataTable id="groupsList"
+                    value="#{groupsRecordsManager.groups}" var="group" cellpadding="0"
+                    rows="15"
+                    columnClasses="docNameColumn,docNameColumn,docMenuColumn,docMenuColumn">
+
+                    <!-- Name -->
+                    <ice:column>
+                        <f:facet name="header">
+                            <ice:outputText value="#{msgs['msg.jsp.groupname']}" />
+                        </f:facet>
+                        <ice:panelGroup>
+                            <ice:outputText value="#{group.groupName}" />
+                        </ice:panelGroup>
+                    </ice:column>
+
+                    <!-- Description -->
+                    <ice:column>
+                        <f:facet name="header">
+                            <ice:outputText value="#{msgs['msg.jsp.groupdesc']}" />
+                        </f:facet>
+                        <ice:panelGroup>
+                            <ice:outputText value="#{group.groupDesc}" />
+                        </ice:panelGroup>
+                    </ice:column>
+
+                    <!-- Edit -->
+                    <ice:column>
+                        <ice:commandButton image="#{styleBean.imagesPath}/options.gif"
+                            title="#{msgs['msg.jsp.editgroup']}"
+                            action="#{groupsRecordsManager.edit}" />
+                    </ice:column>
+
+                    <!-- Delete -->
+                    <ice:column>
+                        <ice:panelGroup>
+                            <ice:commandLink action="#{groupsRecordsManager.delete}"
+                                rendered="#{group.groupName != 'admin'}"
+                                onclick="if (!confirm(&quot;#{msgs['msg.question.deletegroup']}&quot;)) return false;">
+                                <ice:graphicImage value="#{styleBean.imagesPath}/delete.gif"
+                                    style="border: 0px solid;" title="#{msgs['msg.jsp.delete']}"/>
+                                <f:param name="groupId" value="#{group.groupName}" />
+                            </ice:commandLink>
+                        </ice:panelGroup>
+                    </ice:column>
+                </ice:dataTable>
+
+                <ice:panelGroup>
+                    <ldoc:paginator table="groupsList"
+                        label="#{msgs['group.paginator']}" />
+                    <br />
+                </ice:panelGroup>
+            </ice:panelGroup>
+
+            <ice:panelGroup styleClass="formBorderHighlight"
+                rendered="#{groupsRecordsManager.count &lt; 1}">
+                <ice:outputText value="#{msgs['noelements']}" />
+            </ice:panelGroup>
+        </ice:form>
+    </ice:panelGroup>
+
+    <ice:panelGroup id="edit"
+        rendered="#{groupsRecordsManager.selectedPanel=='edit' || 
+    groupsRecordsManager.selectedPanel=='create'}">
+        <f:subview id="w-group">
+            <ui:include src="/templates/admin/group.jspx" />
+        </f:subview>
+    </ice:panelGroup>
+</jsp:root>

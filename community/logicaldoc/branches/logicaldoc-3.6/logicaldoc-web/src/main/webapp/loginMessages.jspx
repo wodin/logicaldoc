@@ -1,0 +1,17 @@
+<?xml version = '1.0'?>
+<!-- 
+ Login messages page
+  
+ @author Marco Meschieri
+ @version $Id: login.jspx,v 1.11 2007/10/16 16:12:10 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions" jsfc="ice:panelGroup">
+	<f:loadBundle basename="com.logicaldoc.web.i18n.application" var="msgs" />
+</jsp:root>

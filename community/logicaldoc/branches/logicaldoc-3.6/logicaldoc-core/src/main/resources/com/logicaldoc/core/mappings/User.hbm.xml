@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="com.logicaldoc.core.security.User" table="co_users">
+		<cache usage="read-write" />
+		<id name="userName" type="string" column="co_username" />
+		<property name="password" type="string" column="co_password" length="255" />
+		<property name="name" type="string" column="co_name" length="30" />
+		<property name="firstName" type="string" column="co_firstname" length="30" />
+		<property name="street" type="string" column="co_street" length="100" />
+		<property name="postalcode" type="string" column="co_postalcode" length="10" />
+		<property name="city" type="string" column="co_city" length="30" />
+		<property name="country" type="string" column="co_country" length="30" />
+		<property name="language" type="string" column="co_language" length="10" />
+		<property name="email" type="string" column="co_email" length="255" />
+		<property name="telephone" type="string" column="co_telephone" length="30" />
+		<set name="groups" table="co_usergroup" inverse="true" lazy="false">
+			<key column="co_username" />
+			<many-to-many column="co_groupname" class="com.logicaldoc.core.security.Group" />
+		</set>
+		<!-- set name="userGroup" lazy="false" cascade="all">
+			<key column="co_username" />
+			<one-to-many class="com.logicaldoc.core.security.UserGroup" />
+		</set-->
+	</class>
+</hibernate-mapping>

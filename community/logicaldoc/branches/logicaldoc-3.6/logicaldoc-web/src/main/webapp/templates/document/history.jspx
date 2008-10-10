@@ -1,0 +1,85 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page lists articles of a document
+  
+ @author Marco Meschieri
+ @version $Id: history.jspx,v 1.4 2006/09/03 16:24:37 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+	styleClass="formBorderHighlight">
+	<h3>
+		<ice:outputText
+			value="#{msgs['msg.jsp.history']} - #{historyRecordsManager.selectedDocument.docName}" />
+		<br />
+		<br />
+	</h3>
+
+	<f:subview id="w-history">
+		<ice:form>
+			<ice:panelGroup>
+				<!-- articles -->
+				<ice:panelGroup>
+					<ice:dataTable id="histories"
+						value="#{historyRecordsManager.histories}" var="history"
+						cellpadding="0" width="100%" rows="10">
+
+						<!-- date column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['msg.jsp.date']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{history.decodedDate}">
+									<f:convertDateTime pattern="#{loc.dateFormatShort}" />
+								</ice:outputText>
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- author column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['msg.jsp.author']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{history.username}" />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- event column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['msg.jsp.event']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{msgs[history.event]}" />
+							</ice:panelGroup>
+						</ice:column>
+
+					</ice:dataTable>
+
+					<ice:panelGroup>
+						<ldoc:paginator table="histories"
+							label="#{msgs['document.paginator']}" />
+						<br />
+					</ice:panelGroup>
+				</ice:panelGroup>
+			</ice:panelGroup>
+		</ice:form>
+	</f:subview>
+
+	<br />
+	<ice:form>
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="&lt;&lt; #{msgs['msg.jsp.back']}"
+				partialSubmit="true" action="#{historyRecordsManager.back}" />
+		</ice:panelGroup>
+	</ice:form>
+</jsp:root>

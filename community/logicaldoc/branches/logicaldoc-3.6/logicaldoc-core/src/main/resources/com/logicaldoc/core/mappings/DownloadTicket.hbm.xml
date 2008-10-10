@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="com.logicaldoc.core.document.DownloadTicket" table="co_ticket">
+		<cache usage="read-write" />
+		<id name="ticketId" type="string" column="co_ticketid" />
+		<property name="menuId" type="int" column="co_menuid" />
+		<property name="username" type="string" column="co_username" length="30" />
+	</class>
+</hibernate-mapping>

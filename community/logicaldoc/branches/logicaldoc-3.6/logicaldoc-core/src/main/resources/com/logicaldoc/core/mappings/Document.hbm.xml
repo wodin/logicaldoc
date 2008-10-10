@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="com.logicaldoc.core.document.Document" table="co_document">
+		<cache usage="read-write" />
+		<id name="docId" type="int" column="co_docid" unsaved-value="0">
+			<generator class="increment" />
+		</id>
+		<property name="docName" type="string" column="co_docname" length="255" />
+		<property name="docVersion" type="string" column="co_docversion" length="10" />
+		<property name="docDate" type="string" column="co_docdate" length="20" />
+		<property name="docPublisher" type="string" column="co_docpublisher" length="30" />
+		<property name="docStatus" type="int" column="co_docstatus" />
+		<property name="docType" type="string" column="co_doctype" length="10" />
+		<property name="checkoutUser" type="string" column="co_checkoutuser" length="30" />
+		<property name="source" type="string" column="co_source" length="255" />
+		<property name="sourceAuthor" type="string" column="co_sourceauthor" length="255" />
+		<property name="sourceDate" type="string" column="co_sourcedate" length="20" />
+		<property name="sourceType" type="string" column="co_sourcetype" length="255" />
+		<property name="coverage" type="string" column="co_coverage" length="255" />
+		<property name="language" type="string" column="co_language" length="10" />
+		<many-to-one name="menu" class="com.logicaldoc.core.security.Menu" column="co_menuid" />
+		<set name="versions" table="co_versions" lazy="false" cascade="all">
+			<key column="co_docid" />
+			<composite-element class="com.logicaldoc.core.document.Version">
+				<property name="version" type="string" column="co_version" length="10" />
+				<property name="versionUser" type="string" column="co_versionuser" length="30" />
+				<property name="versionDate" type="string" column="co_versiondate" length="20" />
+				<property name="versionComment" type="string" column="co_versioncomment" length="255" />
+			</composite-element>
+		</set>
+		<set name="keywords" table="co_keywords" lazy="false" cascade="all">
+			<key column="co_docid" />
+			<element type="string" column="co_keyword" length="20" />
+		</set>
+	</class>
+</hibernate-mapping>

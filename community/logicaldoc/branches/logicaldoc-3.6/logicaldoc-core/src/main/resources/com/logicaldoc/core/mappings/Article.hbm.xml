@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="com.logicaldoc.core.document.Article" table="co_article">
+		<cache usage="read-write" />
+		<id name="articleId" type="int" column="co_articleid" unsaved-value="0">
+		  <generator class="increment" />
+		</id>
+		<property name="docId" type="int" column="co_docid" />
+		<property name="subject" type="string" column="co_subject" length="255" />
+		<property name="message" type="string" column="co_message" length="2000" />
+		<property name="articleDate" type="string" column="co_articledate" length="20" />
+		<property name="username" type="string" column="co_username" length="30" />
+	</class>
+</hibernate-mapping>

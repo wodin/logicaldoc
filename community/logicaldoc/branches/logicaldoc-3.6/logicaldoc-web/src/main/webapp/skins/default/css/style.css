@@ -1,0 +1,1621 @@
+/*
+ Permanently enable Scroll Bars for smoother page transitions
+*/
+html {
+	overflow: scroll;
+}
+
+/*
+ Generic site wide changes
+ */
+body {
+	background-color: #FFFFFF;
+	color: #666666;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	margin: 0;
+	padding: 0;
+}
+
+/* controls the appearance of links throughout the application */
+a:link,a:hover,a:visited,a:active {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+h2 {
+	text-align: center;
+	vertical-align: middle;
+	margin-top: 3px;
+	margin-left: 4px;
+	margin-bottom: 3px;
+	font-size: 1.5em;
+}
+
+h2 .iceOutTxt {
+	color: #136baa;
+}
+
+/* description of each component example */
+h3 {
+	font-size: 1em;
+	font-weight: bold;
+	margin: 0;
+}
+
+/* sub-description used directly underneath h3 */
+h4 {
+	margin: 0;
+	margin-bottom: 10px;
+	padding: 0;
+	font-size: 1em;
+	font-weight: normal;
+}
+
+/* table labels in examples */
+h5 {
+	margin: 5px;
+	margin-left: 0;
+	padding: 0;
+	font-weight: normal;
+	font-size: 1em;
+}
+
+/* table header labels */
+h6 {
+	padding: 0;
+	margin: 0;
+	margin-top: 10px;
+	margin-bottom: 2px;
+	font-size: 1em;
+}
+
+li {
+	list-style-type: circle;
+}
+
+.propertyLabel {
+	font-weight: bold; /*font-size:0.9em;*/
+}
+
+.componentPropertySelection td label {
+	vertical-align: middle;
+	padding: 0;
+}
+
+/* backing bean labels */
+.valueHeader {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-right: 2px;
+	font-style: oblique;
+}
+
+.valueText {
+	font-size: x-small;
+}
+
+.commentText {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	font-weight: normal;
+}
+
+em { /*font-size:14px;*/
+	
+}
+
+/* vertical alignment of labels */
+.formBorderHighlight td input {
+	vertical-align: middle;
+}
+
+.formBorderHighlight td label {
+	text-align: right;
+	vertical-align: middle;
+}
+
+/* Component tabset labels */
+.componentPanelTabSetLayout .MiddleMiddle {
+	font-weight: bold;
+	font-size: 12px;
+}
+
+/*
+ Controls the appearance of the header section of the document including the
+ application logo
+*/
+#headerDiv {
+	text-align: left;
+	width: 100%;
+}
+
+/* Direct to DOM logo (top right) */
+#logoD2D {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+/* Application logo */
+#logoApplication {
+	position: absolute;
+	right: 119px;
+	top: 0;
+}
+
+/*
+ Navigation
+*/
+.navTree {
+	overflow: auto;
+	height: 550px;
+	width: 200px;
+	border: 1px solid #dedede;
+	margin: 5px
+}
+
+.navConnectionStatus {
+	position: absolute;
+	top: 60px;
+	right: 0;
+}
+
+.labelSelector {
+	font-size: 12px;
+	text-align: center;
+}
+
+.labelSelector h3 {
+	font-size: 12px;
+}
+
+.themeSelector input {
+	font-size: 12px;
+}
+
+.attributeColumnLabel {
+	vertical-align: middle;
+}
+
+.attributeColumnValue {
+	
+}
+
+.componentContentPanelStack {
+	vertical-align: top;
+	width: 100%;
+}
+
+/* override default panel stack state */
+.icePnlStkRow,.icePnlStkCol {
+	vertical-align: top;
+	width: 100%;
+}
+
+.contentLayoutGridStyle {
+	width: 100%; /* fixed height of content demos*/
+	height: 600px;
+}
+
+.contentLayoutGridStyle td {
+	vertical-align: top;
+}
+
+.componentLayoutRootTable {
+	table-layout: fixed;
+	vertical-align: top;
+}
+
+.contentLayoutGridColumn { /*border: 1px dashed #CCCCCC;*/
+	vertical-align: top;
+}
+
+.iceNavigationtLayout {
+	width: 100%; /*table-layout: fixed;*/
+}
+
+.formBorderHighlight,.treeNodeControlButtonsBorder,.effectsControlsBorder
+	{
+	vertical-align: top; /*width: 100%;*/
+	border: 1px solid #CCCCCC;
+	padding: 10px;
+}
+
+.calBorderHighlight {
+	vertical-align: top;
+	border: 1px solid #CCCCCC;
+	padding: 10px;
+}
+
+/* label alignment */
+.componentPropertySelection td {
+	vertical-align: top;
+}
+
+.componentPropertySelection td {
+	vertical-align: top;
+	padding-right: 5px;
+	padding-bottom: 10px;
+}
+
+.iceMainRightLayout {
+	vertical-align: top;
+}
+
+.iceTabbedPaneCustom {
+	width: 100%;
+}
+
+/* Main border layout for template */
+.mainBorderLayout {
+	border: 0px;
+	vertical-align: top;
+	width: 100%;
+}
+
+.icePnlBrdrNorth {
+	padding: 0px;
+}
+
+/* over ride default theme */
+.icePageNorth {
+	background-color: #FFFFFF;
+	vertical-align: top;
+	text-align: left;
+	margin: 0px;
+	padding: 0px;
+	border-collapse: collapse;
+}
+
+.icePageWest {
+	background-color: #FFFFFF;
+	vertical-align: top;
+	width: 20%;
+}
+
+.icePageCenter {
+	background-color: #FFFFFF;
+	vertical-align: top;
+	width: 80%
+}
+
+.mainWindow { /*clear: right;*/
+	
+}
+
+.mainWindow .icePnlStk {
+	width: 100%;
+}
+
+/* copyright information displayed at end of page */ /*.footer {
+	text-align: center;
+	border-top: 1px solid #dedede;
+	padding-top: 2px;
+}*/
+.footer {
+	text-align: center;
+	border-top: 1px solid #dedede;
+	padding-top: 2px;
+	position: fixed;
+	width: 100%;
+	height: 25px;
+	top: auto;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+/*
+  Tree component style
+ */
+.iceTreeComponentLayout {
+	width: 50%;
+	vertical-align: top;
+	text-align: left;
+}
+
+.treeNodeControlButtonsBorder {
+	width: 100%;
+}
+
+/* encapsulates the folder element and restricts it to the given size */
+.folderContainer {
+	border: 0px solid #dedede;
+	width: 200px;
+	height: 420px;
+	overflow: auto;
+}
+
+.treeContainer_horizontal {
+	border: 1px solid #dedede;
+	width: 400px;
+	height: 280px;
+	overflow: scroll;
+}
+
+.documentsPanel {
+	width: 740px;
+}
+
+.iceMnuItmLabel,.iceMnuBarItemLabel {
+	font-family: Arial, Helvetica, sans-serif;
+	padding-top: 4px;
+	font-size: 14px;
+	display: inline;
+	color: #333333;
+}
+
+/* main layout*/
+.selectionLabelColumn {
+	white-space: nowrap;
+}
+
+.selectionTagsColumn {
+	
+}
+
+.selectTagMenu {
+	width: 130px;
+	font-size: 12px;
+}
+
+.selectManyMenu {
+	width: 130px;
+	height: 90px;
+}
+
+/* IE bugfix - white background on radio and checkboxes */
+.selectionRadioGroup input {
+	background-color: #efefef;
+}
+
+.selectionListBoxGroup select { /*font-size:12px;*/
+	overflow: scroll;
+}
+
+.selectionRadioGroup,.selectionListBoxGroup {
+	background-color: #efefef;
+	text-align: center;
+	border: 1px solid #bbb;
+}
+
+.selectionRadioGroup td {
+	vertical-align: middle;
+	padding: 5px;
+	width: 10%;
+}
+
+.selectionRadioGroup {
+	width: 300px;
+}
+
+.selectionListBoxGroup {
+	vertical-align: top;
+	padding: 5px;
+}
+
+.selectionListBoxGroup select {
+	width: 140px;
+}
+
+.selectionRadioGroup label { /*font-size: 12px;*/
+	
+}
+
+.selectionCheckSelectCombo {
+	width: 100%;
+}
+
+.selectionCheckSelectCombo td {
+	width: 50%;
+}
+
+/*
+  Collapsible panel Styles
+*/
+.pnlClpsblHdr div,.pnlClpsblHdr-dis div,.pnlClpsblColpsdHdr div,.pnlClpsblColpsdHdr-dis div
+	{
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+
+.pnlClpsblHdr div,.pnlClpsblHdr-dis div {
+	background-image: url( "images/arrowDown.gif" );
+}
+
+.pnlClpsblColpsdHdr div,.pnlClpsblColpsdHdr-dis div {
+	background-image: url( "images/arrowCollapsedLeft.gif" );
+}
+
+.pnlClpsblHdr span,.pnlClpsblHdr-dis span,.pnlClpsblColpsdHdr div,.pnlClpsblColpsdHdr-dis div
+	{
+	padding-left: 10px;
+}
+
+/*
+  Calendar Styles
+ */
+.iceCalInput {
+	width: 90px;
+}
+
+.progressBarColumn {
+	vertical-align: top;
+	text-align: left;
+}
+
+/*
+ Data scroller Styles
+*/
+.leftDataControlColumn {
+	text-align: left;
+}
+
+.rightDataControlcolumn {
+	text-align: right;
+}
+
+/*
+ Progress bar component style
+*/
+.iceProgressBarComponentLayout {
+	width: 50%;
+	vertical-align: top;
+	text-align: left;
+}
+
+.progressSelectMenu {
+	width: 120px;
+}
+
+.progressBarText {
+	vertical-align: bottom;
+}
+
+/*
+  Tab Set Panel example
+*/
+.tabPanelControls {
+	border: 1px solid #dedede;
+	width: 225px;
+	margin-bottom: 10px;
+	margin-top: 3px;
+}
+
+/* vertical alignment of labels */
+.tabPanelControls td input,.tabPanelControls td label {
+	vertical-align: middle;
+}
+
+/*
+  Drag and Drop
+*/ /* store and shopping cart list*/
+.shoppingCart {
+	text-align: center;
+	vertical-align: top;
+}
+
+.cartDropZone {
+	border: thin solid rgb(200, 200, 200);
+	padding-top: 5px;
+	height: 80px;
+	width: 120px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.cartDropZonText1 {
+	font-weight: bold;
+	text-align: left;
+}
+
+.cartDropZonText1 {
+	
+}
+
+.dragDropImage {
+	
+}
+
+.dragDropImageSrc {
+	cursor: move;
+	border: solid black 1px;
+}
+
+.dragDropImageSmall {
+	width: 50px;
+	height: 38px;
+}
+
+.docImageColumn,.docNameColumn,.docMenuColumn,.docDateColumn,.docSizeColumn,.triangleColumn,.docSelectionColumn
+	{
+	white-space: nowrap;
+	color: #000000;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	border-left: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	text-align: left;
+}
+
+.triangleColumn {
+	width: 20px;
+}
+
+.docSelectionColumn {
+	width: 20px;
+}
+
+.docNameColumn {
+	width: 600px;
+}
+
+.triangleColumn {
+	width: 20px;
+}
+
+.docImageColumn {
+	width: 20px;
+}
+
+.docDateColumn {
+	width: 45px;
+	text-align: center;
+}
+
+.docSizeColumn {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.docMenuColumn {
+	width: 50px;
+	text-align: left;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+/*
+  List
+*/
+.listItemIcon {
+	vertical-align: top;
+}
+
+/*!*/
+.formBorderHighlight table {
+	border-collapse: collapse;
+}
+
+.listDescriptor table {
+	padding: 0;
+	margin: 0;
+}
+
+.listDescriptor td {
+	background-color: #efefef;
+}
+
+.contentLayoutGridColumn  td {
+	vertical-align: top;
+}
+
+.listReceipt td {
+	width: 90px;
+	text-align: left; /*font-size:12px;*/
+}
+
+/*
+  panelPopup demo
+*/
+.popupButton {
+	text-align: right;
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.popupTitle span {
+	text-align: left;
+	vertical-align: middle;
+	font-weight: bold;
+	padding: 4px;
+	color: #FFFFFF;
+	font-size: 1.10em;
+}
+
+.popupModalBody {
+	margin-top: 15px;
+}
+
+.popupModalBody input {
+	float: right;
+	margin-right: 2px;
+	margin-top: 40px;
+}
+
+.panelPopupHeader .iceOuputtext,.icePanelPopupHeader {
+	text-align: center;
+	vertical-align: middle;
+	font-weight: bold;
+	padding: 4px;
+	color: #FFFFFF;
+	font-size: 1.10em;
+}
+
+.popupControls td {
+	vertical-align: middle;
+}
+
+.popupFolderSelectorBody {
+	padding-top: 0px;
+	margin-top: 0px;
+	background-color: #DDDDDD;
+}
+
+.treeContainer_folders {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #dedede;
+	border-right-color: #dedede;
+	border-bottom-color: #dedede;
+	border-left-color: #dedede;
+	width: 380px;
+	height: 250px;
+	overflow-x: scroll;
+	overflow-y: scroll;
+	background-color: #FFFFFF;
+}
+
+/*
+  Effects demo
+*/ /* label alignment */
+.effectsControlsBorder {
+	height: 130px;
+}
+
+.effectsControlsBorder td {
+	vertical-align: middle;
+}
+
+.specAttributes td {
+	padding: 2px;
+	vertical-align: middle;
+}
+
+.effectsSelectMenu {
+	width: 130px;
+}
+
+.moveModeSelectMenu {
+	width: 90px;
+}
+
+.effectDemoPanelGroup {
+	width: 300px;
+	margin: 2px;
+	padding: 5px;
+	height: 120px;
+	background: #fff;
+	border: 1px solid black;
+	text-align: center;
+}
+
+.effectDemoPanelGroupContainer {
+	width: 310px;
+	height: 150px;
+}
+
+.effectSpecContainer {
+	width: 330px;
+	height: 130px;
+}
+
+.effectSpecContainer td {
+	height: 35px;
+	padding-right: 15px;
+}
+
+/* prevent fade effect from resizing results table */
+.effectDemoResultsTable {
+	width: 450px;
+}
+
+.effectFirstRow {
+	height: 150px;
+}
+
+.effectSecondRow {
+	height: 40px;
+}
+
+.effectThirdRow {
+	height: 40px;
+}
+
+/*
+  Panel Border example
+*/
+.panelBorderDemoLayoutMain {
+	text-align: center;
+	width: 400px;
+}
+
+.panelBorderDemoLayoutMain td {
+	vertical-align: middle;
+	text-align: center;
+	font-weight: normal;
+}
+
+.panelBorderDemoLayoutMain .icePageCenter {
+	background-color: #EAEDE6;
+}
+
+.panelBorderDemoLayoutMain .icePageNorth {
+	height: 40px;
+	background-color: #D7D7D1;
+}
+
+.panelBorderDemoLayoutMain .icePageEast {
+	width: 50px;
+	background-color: #BCE0D9;
+}
+
+.panelBorderDemoLayoutMain .icePageSouth {
+	height: 40px;
+	background-color: #DEE7D5;
+	border-top-width: 0;
+}
+
+.panelBorderDemoLayoutMain .icePageWest {
+	width: 50px;
+	background-color: #F1EED5;
+}
+
+/*
+  Panel stack example style
+ */ /* calendar container */
+.calendarGridColumn {
+	width: 50%;
+	vertical-align: top;
+	text-align: left;
+}
+
+/* Panel Grid examples */
+.panelGridHeader {
+	background-color: #C0C0C0;
+	vertical-align: top;
+}
+
+.panelGridFooter {
+	background-color: #CCCCCC;
+	vertical-align: top;
+}
+
+.panelGridColumn1 {
+	vertical-align: top;
+}
+
+.panelGridColumn2 {
+	vertical-align: bottom;
+}
+
+/*
+  Text Entry, Buttons & Links
+*/ /* label alignment */
+.textFieldNameRow td {
+	padding-bottom: 5px;
+	padding-right: 5px;
+	vertical-align: middle;
+}
+
+.textFieldCommentsRow td {
+	padding-bottom: 5px;
+	padding-right: 5px;
+	vertical-align: top;
+}
+
+/* Data Table sytles*/
+.iceCmdSrtHdr,.iceCmdSrtHdr:hover {
+	text-decoration: underline;
+}
+
+.iceCmdSrtHdr:hover {
+	color: #999999;
+}
+
+.dataScrollerTable {
+	
+}
+
+.dataPaginatorTable {
+	
+}
+
+.sortableHeader {
+	text-align: left;
+}
+
+.firstCol,.lastCol,.phoneCol,.emailCol {
+	color: #000000;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	border-left: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	text-align: left;
+	white-space: nowrap;
+}
+
+.firstCol,.lastCol,.phoneCol {
+	width: 70px;
+}
+
+.emailCol {
+	width: 180px;
+}
+
+.tableCol {
+	color: #000000;
+	white-space: nowrap;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	border-left: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	text-align: left;
+}
+
+.dataPagingBorderHighlight {
+	border: 1px solid silver;
+	width: 100%;
+	border-collapse: collapse;
+	margin-left: 1px;
+}
+
+.dataPagingBorderHighlight td {
+	padding-left: 10px;
+	border-right: 1px solid silver;
+}
+
+.dataPagingBorderHighlight table td {
+	border: 0;
+}
+
+/* Panel stack example */
+.panelGroupColor,.panelGroupFruit,.panelGroupMineral {
+	padding: 10px;
+	border: 1px solid;
+	width: 380px;
+}
+
+/* emphasize child row */
+.childRowStyle { /*font-size:0.8em;*/
+	
+}
+
+/* emphasize parent row */
+.groupRowStyle,.groupRowStyle A {
+	font-weight: bold;
+}
+
+/* Inventory column sytles*/
+.expandColumn {
+	text-align: center;
+}
+
+.descriptionColumn {
+	text-align: left;
+}
+
+.dateColumn {
+	text-align: left;
+}
+
+/* autoComplete table */
+.autoCompleteLayout table {
+	vertical-align: top;
+	border-collapse: collapse;
+}
+
+.autoCompleteLayout table td {
+	padding-left: 0;
+}
+
+.selectInputTextCol {
+	padding-right: 10px;
+}
+
+.beanCol {
+	padding-right: 0;
+}
+
+.cityCol {
+	width: 125px;
+}
+
+.stateCol {
+	width: 125px;
+}
+
+.zipCol {
+	width: 50px;
+}
+
+.iceSelInpRow,.iceSelInpSelRow {
+	height: 15px;
+}
+
+.iceSelInpSelRow {
+	color: #FFFFFF;
+}
+
+.columns1 {
+	white-space: nowrap;
+	color: #000000;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	border-left: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	width: 150px;
+	text-align: center;
+}
+
+.columnsColumn,.columnsNestedColumn,.columnsNestedBoldColumn {
+	white-space: nowrap;
+	color: #000000;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	text-align: center;
+}
+
+.columnsColumn {
+	border-left: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	width: 55px;
+}
+
+.columnsNestedColumn {
+	width: 15px;
+	padding-left: 1px;
+	padding-right: 1px;
+}
+
+.columnsNestedBoldColumn {
+	width: 15px;
+	font-weight: bold;
+}
+
+/* encapsulates the columns dataTable element and restricts it to the given size */
+.columnsContainer {
+	height: 375px;
+	overflow: scroll;
+	border: 1px solid #dedede;
+}
+
+/* positioned Panel demo */
+.startcell {
+	z-index: 1000;
+	background: #fff;
+	padding: 5px;
+}
+
+.starttitle {
+	cursor: move;
+	overflow: hidden;
+	height: 1.5em;
+	line-height: 1.5em;
+	background-color: #f1f8ff;
+	color: #0066cc;
+	font-size: 120%;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.startcolumn {
+	float: left;
+}
+
+.startheader {
+	font-family: arial, sans-serif;
+	font-size: 20px;
+	color: blue;
+}
+
+.droptargethover {
+	background-color: #ffff99;
+}
+
+/* position panels */
+.positionPanelContainer {
+	width: 200px;
+	border-top: 1px solid black;
+}
+
+/* chart component */
+.addPieceColumn {
+	width: 300px;
+}
+
+.removePieceColumn {
+	width: 250px;
+}
+
+/* Accordion Component Example */
+.accordionNavigation {
+	width: 145px;
+}
+
+.accordionContent {
+	
+}
+
+.welcomePanel {
+	border: 1px solid black;
+	width: 500px;
+	height: 400px;
+	background-image: url("../images/accordion/produce.jpg" );
+}
+
+.accordionMenuLink {
+	font-weight: bold;
+}
+
+.contentLayoutGridStyleProduce {
+	height: 375px;
+	width: 100%;
+	/*border: 1px solid #cccccc;*/
+}
+
+.contentLayoutGridStyleProduce td {
+	vertical-align: top;
+}
+
+.contentLayoutGridColumnProduce {
+	vertical-align: top;
+}
+
+.contentLayoutGridStyleProduceLogin {
+	width: 210px;
+	border: 1px solid #cccccc;
+}
+
+.contentLayoutGridStyleProduceLogin td {
+	vertical-align: top;
+}
+
+.contentLayoutGridColumnProduceLogin {
+	width: 210px;
+	vertical-align: top;
+}
+
+.loginForm  td input,.loginForm td label {
+	vertical-align: middle;
+}
+
+.loginForm {
+	border: 1px solid #cccccc;
+	width: 400px;
+}
+
+.loginForm2 {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.loginStatus {
+	float: right;
+}
+
+.loginBorderLayout {
+	margin-top: 100px;
+	width: 400px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.alignRight {
+	text-align: right;
+	margin-right: 0px;
+	padding-right: 0px
+}
+
+/*
+----------- Table Row Selection --------
+*/
+.rowSelSelected {
+	background-color: lightblue;
+}
+
+.rowSelSelected span {
+	color: black;
+}
+
+.rowSelMouseOver {
+	background-color: gray;
+	color: black;
+}
+
+.rowSelMouseOver span {
+	color: black;
+}
+
+/*
+------------ Documents tree ----------
+*/
+.selected-tree-node {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	display: inline;
+	background-color: #FCE19D;
+	text-decoration: none;
+}
+
+.tree-node {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	display: inline;
+	text-decoration: none;
+}
+
+/*
+------------ File Upload ----------
+*/
+.inputFile {
+	border: none;
+	width: 500px;
+	height: 30px;
+	text-align: left;
+}
+
+/*
+------------ Var ----------
+*/
+.iceMsgsError {
+	color: darkred;
+}
+
+.iceMsgError {
+	color: darkred;
+}
+
+.iceMsgsInfo {
+	color: #339966;
+}
+
+.iceMsgsWarn {
+	color: #FF9900;
+}
+
+.commands { /* float: right; */
+	text-align: right;
+	margin-right: 0px;
+	padding-right: 0px;
+}
+
+.commands .iceCmdBtn {
+	background-image: url("images/btngyptn.gif");
+	background-repeat: repeat-x;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	border: 1px solid #949494;
+	margin: 3px;
+	padding-left: 3px;
+	padding-right: 3px;
+	height: 22px;
+}
+
+.command .iceCmdBtn {
+	background-image: url("images/btngyptn.gif");
+	background-repeat: repeat-x;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	border: 1px solid #949494;
+	margin: 3px;
+	padding-left: 3px;
+	padding-right: 3px;
+	height: 22px;
+}
+
+.commands a.iceLink:link,.commands a.iceLink:hover,.commands a.iceLink:visited,.commands a.iceLink:active
+	{
+	color: #C0C0C0;
+	float: right;
+}
+
+.iconSmall {
+	border: 0px;
+	width: 16px;
+	height: 16px;
+}
+
+.iconMedium {
+	border: 0px;
+	width: 16px;
+	height: 16px;
+}
+
+.formButtons {
+	padding-top: 10px;
+	text-align: center;
+}
+
+.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/*
+--------------- Progress bar small
+*/
+.iceOutProgSmall {
+	margin: 10px;
+}
+
+.iceOutProgSmallBg {
+	border: 1px solid #ABABAB;
+	width: 100px;
+	height: 13px;
+}
+
+.iceOutProgSmallFill {
+	background-color: #026AFF;
+	/* background-image:url(./css-images/window_top.gif);*/
+	background-position: top left;
+	background-repeat: repeat-x;
+	display: block;
+}
+
+.iceOutProgSmallTxt {
+	color: black;
+}
+
+/*
+------------ Header ----------
+*/
+#header {
+	color: #DDDDDD;
+	font-size: 12px;
+}
+
+.topShadow {
+	background: url(images/shadow1_new.gif);
+}
+
+.headerTop {
+	height: 60px;
+	width: 100%;
+	background-image: url(images/header-bg.jpg);
+	background-repeat: repeat-x;
+	background-position: top left
+}
+
+.navigationTop {
+	left: 0 px;
+	top: 71px;
+	width: 100%;
+	text-align: left;
+}
+
+#headerInfo {
+	position: absolute;
+	top: 15px;
+	right: 10px;
+}
+
+.headerInfoText {
+	color: #AAAAAA;
+	font-size: 12px;
+}
+
+.headerLogo {
+	margin-left: 4px;
+	margin-top: 4px;
+	border: 0px solid;
+	float: left;
+}
+
+#logout {
+	position: absolute;
+	top: 33px;
+	right: 10px;
+}
+
+.logoutLink {
+	color: #b11a1a;
+	font-size: 12px;
+	font-weight: bold;
+	vertical-align: top;
+}
+
+/*
+------------ Search ----------
+*/
+.quickSearch {
+	position: absolute;
+	top: 5px;
+	left: 400px;
+	height: 40px;
+}
+
+.boxSearch {
+	background-image: url(images/box_search_bg_db.gif);
+	background-repeat: no-repeat;
+	background-position: 0px 5px;
+	padding-left: 10px;
+	padding-top: 5px;
+	/* padding-bottom: 4px; */
+	padding-bottom: 3px;
+	white-space: nowrap;
+	width: 250px;
+}
+
+.searchField {
+	font-size: 11px;
+	color: #666666;
+	width: 200px;
+	border: 1px solid #FFFFFF;
+	vertical-align: top;
+	margin-top: 2px;
+	padding-top: 1px;
+	float: left;
+}
+
+.submitImage {
+	background-image: none;
+	width: 25px;
+	height: 21px;
+	border: none;
+}
+
+.searchOptionsTD {
+	text-align: left;
+	vertical-align: top;
+	border: none;
+	border-width: 0px;
+}
+
+.searchOptions {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #AAAAAA;
+	text-align: left;
+	vertical-align: top;
+	border: none;
+	border-width: 0px;
+}
+
+.searchOptions input {
+	margin: 0px;
+	padding: 0px;
+	width: 1em;
+	height: 1em;
+	vertical-align: middle;
+}
+
+.tdLinks {
+	padding-left: 8px;
+	padding-top: 3px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	text-align: left;
+	vertical-align: top;
+}
+
+.searchLink {
+	color: #AAAAAA;
+}
+
+.resultTable,.similarTable {
+	width: 100%;
+	border: none;
+}
+
+.resultColumn,.similarColumn {
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 5px;
+	padding-bottom: 25px;
+	text-align: left;
+	overflow: auto;
+	border: none;
+}
+
+.resultSnippet,.similarSnippet {
+	padding-top: 5px;
+	padding-bottom: 10px;
+	overflow: auto;
+	display: block;
+}
+
+.resultInfo,.similarInfo {
+	white-space: nowrap;
+}
+
+.result_pager {
+	font-family: arial, sans-serif;
+	background-color: #E5ECF9;
+	border-top: 1px solid #3366CC;
+	text-align: right;
+	padding-right: 6px;
+	padding-bottom: 3px;
+}
+
+/*
+------------ home ----------
+*/
+.welcomePanel {
+	text-align: center;
+	border: 0px solid #CCCCCC;
+	padding: 10px;
+	height: 24px;
+	width: 100%;
+}
+
+.homePanel {
+	vertical-align: top;
+	width: 40%;
+	border: 1px solid #CCCCCC;
+	padding: 10px;
+}
+
+.home {
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+}
+
+.lastdocColumn {
+	color: #666666;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 5px;
+	padding-bottom: 9px;
+	text-align: left;
+	border-bottom: 1px solid #CCCCCC;
+	border-right: 0px solid #CCCCCC;
+}
+
+/*
+------------ messages ----------
+*/
+.messagesPanel {
+	width: 770px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/*
+------------ logs ---------------
+*/
+.logs {
+	width: 100%;
+	height: 400px;
+	overflow: auto;
+}
+
+/*
+---------- Various IceFaces ovverrides -------
+*/
+.iceDatTbl td span.iceOutTxt {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	display: inline;
+	padding-top: 2px;
+	padding-right: 0px;
+	padding-bottom: 2px;
+	padding-left: 0px;
+}
+
+/*
+---------- Various Adjustements for display correctly the Document context menu when document selected -------
+*/
+.cntDocumentMenu .iceMnuItm a:hover {
+	color: black;
+	background-color: #2A6CC2;
+}
+
+.cntDocumentMenu .iceMnuItm a {
+	color: black;
+	background-color: #EFEFEF;
+}
+
+.iceRowSelSelectedMouseOver .cntDocumentMenu span {
+	color: black;
+}
+
+/*
+--- Home Page -----
+*/
+.homeLayoutRootTable {
+	table-layout: fixed;
+}
+
+.homeLayoutRootTableCol1 {
+	vertical-align: top;
+}
+
+.homeLayoutRootTableCol2 {
+	vertical-align: top;
+}
+
+/*
+  Collapsible panel Styles
+*/
+.pnlClpsbl {
+	background-color: white;
+}
+
+.pnlClpsblCnt {
+	background-color: white;
+	border: 1px solid #cccccc;
+	border-top: 1px solid #ffffff;
+}
+
+.cntDatTblNone {
+	border: 0px;
+}
+
+.cntDatTblNoneCol,.cntDatTblNoneCol1,.cntDatTblNoneCol2 {
+	border: 0px;
+}
+
+.cloud1 {
+	font-size: 1.00em;
+}
+
+.cloud2 {
+	font-size: 1.10em;
+}
+
+.cloud3 {
+	font-size: 1.20em;
+}
+
+.cloud4 {
+	font-size: 1.30em;
+}
+
+.cloud5 {
+	font-size: 1.40em;
+}
+
+.cloud6 {
+	font-size: 1.50em;
+}
+
+.cloud7 {
+	font-size: 1.60em;
+}
+
+.cloud8 {
+	font-size: 1.70em;
+}
+
+.cloud9 {
+	font-size: 1.80em;
+}
+
+.cloud10 {
+	font-size: 1.90em;
+}

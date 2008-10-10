@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="com.logicaldoc.core.security.UserDoc" table="co_userdoc">
+		<cache usage="read-write" />
+		<composite-id name="id" class="com.logicaldoc.core.security.UserDocID">
+			<key-property name="menuId" type="int" column="co_menuid" />
+			<key-property name="userName" type="string" column="co_username" />
+		</composite-id>
+		<property name="timeStamp" type="string" column="co_timestamp" length="100" />
+	</class>
+</hibernate-mapping>
