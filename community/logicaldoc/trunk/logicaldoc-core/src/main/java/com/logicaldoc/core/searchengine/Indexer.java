@@ -10,13 +10,20 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.Hits;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Searcher;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
+
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.util.SquareSimilarity;
@@ -53,7 +60,8 @@ public class Indexer {
 	 * @return
 	 * @throws Exception
 	 */
-	public synchronized void addFile(File file, com.logicaldoc.core.document.Document document, String content,
+	public synchronized void addFile(File file,
+			com.logicaldoc.core.document.Document document, String content,
 			String language) throws Exception {
 		String name = file.getName();
 		int testversion = -1;
@@ -77,9 +85,11 @@ public class Indexer {
 			}
 			try {
 				AnalyzeText aText = new AnalyzeText();
-				aText.storeTerms(document.getMenuId(), content.toString(), language);
+				aText.storeTerms(document.getMenuId(), content.toString(),
+						language);
 			} catch (Exception e) {
-				log.error("Exception analyzing File: " + e.getLocalizedMessage(), e);
+				log.error("Exception analyzing File: "
+						+ e.getLocalizedMessage(), e);
 			}
 		}
 	}
@@ -90,7 +100,8 @@ public class Indexer {
 	private void addDocument(Document doc, String iso639_2) {
 		String indexdir = settingsConfig.getValue("indexdir");
 		Language language = LanguageManager.getInstance().getLanguage(iso639_2);
-		Analyzer analyzer = LuceneAnalyzerFactory.getAnalyzer(language.getLanguage());
+		Analyzer analyzer = LuceneAnalyzerFactory.getAnalyzer(language
+				.getLanguage());
 		IndexWriter writer = null;
 		try {
 			File indexPath = new File(indexdir, language.getIndex());
@@ -98,13 +109,15 @@ public class Indexer {
 			writer.setSimilarity(new SquareSimilarity());
 			writer.addDocument(doc);
 		} catch (Exception e) {
-			log.error("Exception adding Document to Lucene index: " + indexdir + ", " + e.getMessage(), e);
+			log.error("Exception adding Document to Lucene index: " + indexdir
+					+ ", " + e.getMessage(), e);
 		} finally {
 			if (writer != null)
 				try {
 					writer.close();
 				} catch (Exception e) {
-					log.error("Error closing index: " + language.getIndex() + ", " + e.getMessage(), e);
+					log.error("Error closing index: " + language.getIndex()
+							+ ", " + e.getMessage(), e);
 				}
 		}
 	}
@@ -112,11 +125,14 @@ public class Indexer {
 	/**
 	 * Adds a new document to the index
 	 * 
-	 * @param file Path of the directory.
-	 * @param doc The document that we want to add
+	 * @param file
+	 *            Path of the directory.
+	 * @param doc
+	 *            The document that we want to add
 	 * @throws Exception
 	 */
-	public synchronized void addDirectory(File file, com.logicaldoc.core.document.Document doc) throws Exception {
+	public synchronized void addDirectory(File file,
+			com.logicaldoc.core.document.Document doc) throws Exception {
 
 		if (file.isDirectory()) {
 			String[] subitems = file.list();
@@ -140,9 +156,12 @@ public class Indexer {
 				}
 
 				if (log.isInfoEnabled()) {
-					log.info("addDirectory " + doc.getDocId() + " " + doc.getDocName() + " " + doc.getDocVersion()
-							+ " " + doc.getDocDate() + " " + doc.getDocPublisher() + " " + doc.getDocStatus() + " "
-							+ doc.getSource() + " " + doc.getSourceAuthor());
+					log.info("addDirectory " + doc.getDocId() + " "
+							+ doc.getDocName() + " " + doc.getDocVersion()
+							+ " " + doc.getDocDate() + " "
+							+ doc.getDocPublisher() + " " + doc.getDocStatus()
+							+ " " + doc.getSource() + " "
+							+ doc.getSourceAuthor());
 				}
 				addFile(file, doc, content, language);
 			} catch (Exception e) {
@@ -157,7 +176,8 @@ public class Indexer {
 	protected synchronized void optimize(Language language) {
 		String indexdir = settingsConfig.getValue("indexdir");
 		try {
-			Analyzer analyzer = LuceneAnalyzerFactory.getAnalyzer(language.getLanguage());
+			Analyzer analyzer = LuceneAnalyzerFactory.getAnalyzer(language
+					.getLanguage());
 			File indexPath = new File(indexdir, language.getIndex());
 			IndexWriter writer = new IndexWriter(indexPath, analyzer, false);
 			writer.optimize();
@@ -175,9 +195,11 @@ public class Indexer {
 		String indexdir = settingsConfig.getValue("indexdir");
 		try {
 			// Get languages from LanguageManager
-			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
+			Collection<Language> languages = LanguageManager.getInstance()
+					.getLanguages();
 			for (Language language : languages) {
-				Analyzer analyzer = LuceneAnalyzerFactory.getAnalyzer(language.getLanguage());
+				Analyzer analyzer = LuceneAnalyzerFactory.getAnalyzer(language
+						.getLanguage());
 				File indexPath = new File(indexdir, language.getIndex());
 				IndexWriter writer = new IndexWriter(indexPath, analyzer, false);
 				writer.optimize();
@@ -193,8 +215,10 @@ public class Indexer {
 	 * Deletes the entries of a document in the index of the search engine then
 	 * launch optimization on the language specific index
 	 * 
-	 * @param menuId - MenuID of the document.
-	 * @param language - Language of the document.
+	 * @param menuId -
+	 *            MenuID of the document.
+	 * @param language -
+	 *            Language of the document.
 	 */
 	public synchronized void deleteFile(String menuId, String iso639_2) {
 		String indexdir = settingsConfig.getValue("indexdir");
@@ -209,6 +233,64 @@ public class Indexer {
 		}
 	}
 
+	public Document getDocument(String docId, String iso639_2) {
+		String indexdir = settingsConfig.getValue("indexdir");
+		Language language = LanguageManager.getInstance().getLanguage(iso639_2);
+		File indexPath = new File(indexdir, language.getIndex());
+		try {
+			IndexReader reader = IndexReader.open(indexPath);
+			Searcher searcher = new IndexSearcher(reader);
+
+			// Compose a query for menuId
+			QueryParser parser = new QueryParser("docid",
+					new KeywordAnalyzer());
+			Query query = parser.parse(docId);
+			Hits hits = searcher.search(query);
+			
+			// Iterate through the results:
+			for (int i = 0; i < hits.length(); i++) {
+				Document hitDoc = hits.doc(i);
+				if (hitDoc.get("docId").equals(docId)) {
+					return hitDoc;
+				}
+			}
+			searcher.search(query);
+			reader.close();
+		} catch (Exception e) {
+			log.error("getDocument " + e.getMessage(), e);
+		}
+		return null;
+	}
+
+	public Document getDocumentByMenuId(String menuId, String iso639_2) {
+		String indexdir = settingsConfig.getValue("indexdir");
+		Language language = LanguageManager.getInstance().getLanguage(iso639_2);
+		File indexPath = new File(indexdir, language.getIndex());
+		try {
+			IndexReader reader = IndexReader.open(indexPath);
+			Searcher searcher = new IndexSearcher(reader);
+
+			// Compose a query for menuId
+			QueryParser parser = new QueryParser("menuId",
+					new KeywordAnalyzer());
+			Query query = parser.parse(menuId);
+			Hits hits = searcher.search(query);
+			
+			// Iterate through the results:
+			for (int i = 0; i < hits.length(); i++) {
+				Document hitDoc = hits.doc(i);
+				if (hitDoc.get("menuId").equals(menuId)) {
+					return hitDoc;
+				}
+			}
+			searcher.search(query);
+			reader.close();
+		} catch (Exception e) {
+			log.error("getDocumentByMenuId " + e.getMessage(), e);
+		}
+		return null;
+	}
+	
 	/**
 	 * This method can unlock a locked index.
 	 */
@@ -216,7 +298,8 @@ public class Indexer {
 		String indexdir = settingsConfig.getValue("indexdir");
 		try {
 			// Get languages from LanguageManager
-			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
+			Collection<Language> languages = LanguageManager.getInstance()
+					.getLanguages();
 			for (Language language : languages) {
 				File indexPath = new File(indexdir, language.getIndex());
 
@@ -241,7 +324,8 @@ public class Indexer {
 
 		try {
 			// Get languages from LanguageManager
-			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
+			Collection<Language> languages = LanguageManager.getInstance()
+					.getLanguages();
 			for (Language language : languages) {
 				File indexPath = new File(indexdir, language.getIndex());
 				FSDirectory fsindexdir = FSDirectory.getDirectory(indexPath);
@@ -274,7 +358,8 @@ public class Indexer {
 
 		try {
 			// Get languages from LanguageManager
-			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
+			Collection<Language> languages = LanguageManager.getInstance()
+					.getLanguages();
 			for (Language language : languages) {
 				File indexPath = new File(indexdir, language.getIndex());
 				IndexReader ir = IndexReader.open(indexPath);
@@ -304,7 +389,8 @@ public class Indexer {
 
 		try {
 			// Get languages from LanguageManager
-			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
+			Collection<Language> languages = LanguageManager.getInstance()
+					.getLanguages();
 			for (Language language : languages) {
 				File indexPath = new File(indexdir, language.getIndex());
 				FileUtils.deleteDirectory(indexPath);
@@ -322,7 +408,8 @@ public class Indexer {
 
 		try {
 			// Get languages from LanguageManager
-			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
+			Collection<Language> languages = LanguageManager.getInstance()
+					.getLanguages();
 			for (Language language : languages) {
 				File indexPath = new File(indexdir, language.getIndex());
 				indexPath.mkdirs();
@@ -334,8 +421,10 @@ public class Indexer {
 		}
 	}
 
-	public static void createIndex(File indexPath, String iso639_2) throws CorruptIndexException,
-			LockObtainFailedException, IOException {
-		new IndexWriter(indexPath, LuceneAnalyzerFactory.getAnalyzer(iso639_2), true);
+	public static void createIndex(File indexPath, String iso639_2)
+			throws CorruptIndexException, LockObtainFailedException,
+			IOException {
+		new IndexWriter(indexPath, LuceneAnalyzerFactory.getAnalyzer(iso639_2),
+				true);
 	}
 }

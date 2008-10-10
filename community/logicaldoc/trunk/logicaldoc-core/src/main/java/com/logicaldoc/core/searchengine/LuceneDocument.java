@@ -51,7 +51,7 @@ public class LuceneDocument {
 	}
 
 	public void setDocId() {
-		doc.add(new Field("docid", String.valueOf(document.getDocId()), Field.Store.YES, Field.Index.NO));
+		doc.add(new Field("docid", String.valueOf(document.getDocId()), Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
 	/**

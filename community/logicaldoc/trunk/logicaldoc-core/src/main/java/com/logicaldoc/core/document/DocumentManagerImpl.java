@@ -15,6 +15,7 @@ import java.util.StringTokenizer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.FileBean;
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -92,8 +93,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void checkin(int docId, File file, String filename, String username, VERSION_TYPE versionType,
-			String versionDesc) throws Exception {
+	public void checkin(int docId, File file, String filename, String username,
+			VERSION_TYPE versionType, String versionDesc) throws Exception {
 		FileInputStream is = new FileInputStream(file);
 		try {
 			checkin(docId, is, filename, username, versionType, versionDesc);
@@ -103,8 +104,9 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void checkin(int docId, InputStream fileInputStream, String filename, String username,
-			VERSION_TYPE versionType, String versionDesc) throws Exception {
+	public void checkin(int docId, InputStream fileInputStream,
+			String filename, String username, VERSION_TYPE versionType,
+			String versionDesc) throws Exception {
 		// identify the document and menu
 		Document document = documentDAO.findByPrimaryKey(docId);
 		int menuId = document.getMenuId();
@@ -116,8 +118,10 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// rename the old current version file to the version name: "quelle.txt"
 		// -> "2.0"
-		if (!document.getDocType().equals("zip") || !document.getDocType().equals("jar")) {
-			FileBean.renameFile(completeDocPath + menu.getMenuRef(), completeDocPath + document.getDocVersion());
+		if (!document.getDocType().equals("zip")
+				|| !document.getDocType().equals("jar")) {
+			FileBean.renameFile(completeDocPath + menu.getMenuRef(),
+					completeDocPath + document.getDocVersion());
 		}
 
 		// extract file extension of the new file and select a file icon based
@@ -128,7 +132,8 @@ public class DocumentManagerImpl implements DocumentManager {
 		menu.setMenuIcon(icon);
 
 		// create new version
-		Version version = createNewVersion(versionType, username, versionDesc, document.getDocVersion());
+		Version version = createNewVersion(versionType, username, versionDesc,
+				document.getDocVersion());
 		String newVersion = version.getVersion();
 
 		// set other properties of the document
@@ -178,20 +183,25 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(File file, Menu parent, String username, String language) throws Exception {
-		return create(file, parent, username, language, "", null, "", "", "", "", "", null, parent.getMenuGroups());
+	public Document create(File file, Menu parent, String username,
+			String language) throws Exception {
+		return create(file, parent, username, language, "", null, "", "", "",
+				"", "", null, parent.getMenuGroups());
 	}
 
 	@Override
-	public Document create(InputStream content, String filename, Menu parent, String username, String language,
-			String name, Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> keywords, Set<MenuGroup> groups) throws Exception {
+	public Document create(InputStream content, String filename, Menu parent,
+			String username, String language, String name, Date sourceDate,
+			String source, String sourceAuthor, String sourceType,
+			String coverage, String versionDesc, Set<String> keywords,
+			Set<MenuGroup> groups) throws Exception {
 		try {
 			Menu menu = new Menu();
 			menu.setMenuParent(parent.getMenuId());
 
 			// Makes menuPath
-			String menupath = new StringBuilder(parent.getMenuPath()).append("/").append(parent.getMenuId()).toString();
+			String menupath = new StringBuilder(parent.getMenuPath()).append(
+					"/").append(parent.getMenuId()).toString();
 			int menuhier = parent.getMenuHier();
 			menu.setMenuPath(menupath);
 			menu.setMenuHier(menuhier++);
@@ -203,7 +213,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			if (StringUtils.isNotEmpty(name)) {
 				menu.setMenuText(name);
 			} else {
-				menu.setMenuText(filename.substring(0, filename.lastIndexOf(".")));
+				menu.setMenuText(filename.substring(0, filename
+						.lastIndexOf(".")));
 			}
 
 			String icon = IconSelector.selectIcon(ext);
@@ -219,10 +230,12 @@ public class DocumentManagerImpl implements DocumentManager {
 			if ((name != null) && !name.equals("")) {
 				doc.setDocName(name);
 			} else {
-				doc.setDocName(filename.substring(0, filename.lastIndexOf(".")));
+				doc
+						.setDocName(filename.substring(0, filename
+								.lastIndexOf(".")));
 			}
 
-			String now=DateBean.toCompactString();
+			String now = DateBean.toCompactString();
 			doc.setDocDate(now);
 			if (sourceDate != null)
 				doc.setSourceDate(DateBean.toCompactString(sourceDate));
@@ -250,8 +263,10 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			documentDAO.store(doc);
 
-			String path = new StringBuilder(settings.getValue("docdir")).append("/").append(menupath).append("/")
-					.append(String.valueOf(menu.getMenuId())).append("/").toString();
+			String path = new StringBuilder(settings.getValue("docdir"))
+					.append("/").append(menupath).append("/").append(
+							String.valueOf(menu.getMenuId())).append("/")
+					.toString();
 
 			/* store the document */
 			store(doc, content, filename, "1.0");
@@ -263,7 +278,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			/* create search index entry */
 			String lang = doc.getLanguage();
-			File file = new File(new StringBuilder(path).append("/").append(menu.getMenuRef()).toString());
+			File file = new File(new StringBuilder(path).append("/").append(
+					menu.getMenuRef()).toString());
 			indexer.addFile(file, doc, getDocumentContent(doc), lang);
 			return doc;
 		} catch (Exception e) {
@@ -273,9 +289,11 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(File file, Menu parent, String username, String language, String name, Date sourceDate,
-			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> keywords, Set<MenuGroup> groups) throws Exception {
+	public Document create(File file, Menu parent, String username,
+			String language, String name, Date sourceDate, String source,
+			String sourceAuthor, String sourceType, String coverage,
+			String versionDesc, Set<String> keywords, Set<MenuGroup> groups)
+			throws Exception {
 		Locale locale = new Locale(language);
 		Parser parser = ParserFactory.getParser(file, locale);
 		String filename = file.getName();
@@ -304,18 +322,21 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		InputStream is = new FileInputStream(file);
 		try {
-			return create(is, file.getName(), parent, username, language, _name, sourceDate, source, _author,
-					sourceType, coverage, versionDesc, _kwds, groups);
+			return create(is, file.getName(), parent, username, language,
+					_name, sourceDate, source, _author, sourceType, coverage,
+					versionDesc, _kwds, groups);
 		} finally {
 			is.close();
 		}
 	}
 
-	private void store(Document doc, InputStream content, String filename, String version) throws IOException {
+	private void store(Document doc, InputStream content, String filename,
+			String version) throws IOException {
 		Menu menu = doc.getMenu();
 
 		// Makes menuPath
-		String mpath = menu.getMenuPath() + "/" + String.valueOf(menu.getMenuId());
+		String mpath = menu.getMenuPath() + "/"
+				+ String.valueOf(menu.getMenuId());
 
 		// Get file to upload inputStream
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
@@ -428,8 +449,10 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void update(Document doc, String username, String name, String source, String sourceAuthor, Date sourceDate,
-			String sourceType, String coverage, String language, Set<String> keywords) throws Exception {
+	public void update(Document doc, String username, String name,
+			String source, String sourceAuthor, Date sourceDate,
+			String sourceType, String coverage, String language,
+			Set<String> keywords) throws Exception {
 		try {
 			Menu menu = menuDAO.findByPrimaryKey(doc.getMenuId());
 			if (StringUtils.isNotEmpty(name)) {
@@ -475,17 +498,22 @@ public class DocumentManagerImpl implements DocumentManager {
 	/**
 	 * Creates a new version object and fills in the provided attributes
 	 * 
-	 * @param versionType either a new release, a new subversion or just the old
-	 *        version
-	 * @param username user creating the new version
-	 * @param description change description
-	 * @param docId version should belong to this document
-	 * @param oldVersionName the previous version name
+	 * @param versionType
+	 *            either a new release, a new subversion or just the old version
+	 * @param username
+	 *            user creating the new version
+	 * @param description
+	 *            change description
+	 * @param docId
+	 *            version should belong to this document
+	 * @param oldVersionName
+	 *            the previous version name
 	 */
-	private Version createNewVersion(Version.VERSION_TYPE versionType, String username, String description,
-			String oldVersionName) {
+	private Version createNewVersion(Version.VERSION_TYPE versionType,
+			String username, String description, String oldVersionName) {
 		Version version = new Version();
-		String newVersionName = version.getNewVersionName(oldVersionName, versionType);
+		String newVersionName = version.getNewVersionName(oldVersionName,
+				versionType);
 
 		version.setVersion(newVersionName);
 		version.setVersionComment(description);
@@ -496,7 +524,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	/** Creates a new search index entry for the given document */
-	private void createIndexEntry(Document document, int menuId, String filename, String path) throws Exception {
+	private void createIndexEntry(Document document, int menuId,
+			String filename, String path) throws Exception {
 		indexer.deleteFile(String.valueOf(menuId), document.getLanguage());
 		indexer.addDirectory(new File(path + filename), document);
 	}
@@ -537,7 +566,8 @@ public class DocumentManagerImpl implements DocumentManager {
 		Menu menu = parent;
 		while (st.hasMoreTokens()) {
 			String name = st.nextToken();
-			Collection<Menu> childs = menuDAO.findByMenuText(menu, name, Menu.MENUTYPE_DIRECTORY);
+			Collection<Menu> childs = menuDAO.findByMenuText(menu, name,
+					Menu.MENUTYPE_DIRECTORY);
 			Menu dir;
 			if (childs.isEmpty())
 				dir = createFolder(menu, name);
@@ -547,5 +577,21 @@ public class DocumentManagerImpl implements DocumentManager {
 			menu = dir;
 		}
 		return menu;
+	}
+
+	@Override
+	public String getDocumentContent(int docId) {
+		Document doc = documentDAO.findByPrimaryKey(docId);
+		org.apache.lucene.document.Document luceneDoc = indexer.getDocument(Integer.toString(docId), doc
+				.getLanguage());
+		//First search the document using it's id
+		if(luceneDoc==null)
+			luceneDoc = indexer.getDocumentByMenuId(Integer.toString(doc.getMenuId()), doc
+					.getLanguage());
+		//If not found, search the document using it's menu id
+		if(luceneDoc!=null)
+			return luceneDoc.get("content");
+		else
+			return "";
 	}
 }
