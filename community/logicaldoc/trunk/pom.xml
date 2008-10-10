@@ -125,16 +125,4 @@
 		<module>logicaldoc-webservice</module>
 		<module>logicaldoc-web</module>
 	</modules>
-
-	<distributionManagement>
-		<repository>
-			<id>logicaldoc-community</id>
-			<name>LogicalDOC Distribution Site</name>
-			<url>scp://shell.sourceforge.net/home/groups/l/lo/logicaldoc/htdocs/maven</url>
-		</repository>
-		<site>
-			<id>logicaldoc-community</id>
-			<url>scp://shell.sourceforge.net/home/groups/l/lo/logicaldoc/htdocs/reports/</url>
-		</site>
-	</distributionManagement>
 </project>
