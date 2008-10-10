@@ -3,4 +3,3 @@ svn checkout --depth=files https://logicaldoc.svn.sourceforge.net/svnroot/logica
 cd modules 
 call checkout.bat
 cd..
-cd..
