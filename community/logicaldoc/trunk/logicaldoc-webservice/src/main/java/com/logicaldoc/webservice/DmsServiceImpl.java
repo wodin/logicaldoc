@@ -123,7 +123,7 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, java.lang.String, java.lang.String,
 	 *      javax.activation.DataHandler)
 	 */
-	public String createDocument(String username, String password, int parent, String docName, String source,
+	public String createDocument(String username, String password, int parent, String docTitle, String source,
 			String sourceDate, String author, String sourceType, String coverage, String language, String keywords,
 			String versionDesc, String filename, String groups, DataHandler content) throws Exception {
 
@@ -301,7 +301,7 @@ public class DmsServiceImpl implements DmsService {
 		// Populate document's metadata
 		DocumentInfo info = new DocumentInfo();
 		info.setId(menu.getMenuId());
-		info.setName(doc.getDocName());
+		info.setTitle(doc.getDocName());
 		info.setAuthor(doc.getSourceAuthor());
 		info.setSourceDate(convertDateToXML(doc.getSourceDate()));
 		info.setLanguage(doc.getLanguage());
@@ -354,7 +354,7 @@ public class DmsServiceImpl implements DmsService {
 		for (Menu menu : children) {
 			Content content = new Content();
 			content.setId(menu.getMenuId());
-			content.setName(menu.getMenuText());
+			content.setTitle(menu.getMenuText());
 			content.setWriteable(mdao.isReadEnable(menu.getMenuId(), username) ? 1 : 0);
 
 			if (menu.getMenuType() == Menu.MENUTYPE_FILE)
@@ -415,7 +415,7 @@ public class DmsServiceImpl implements DmsService {
 			Result newRes = new Result();
 			newRes.setId(res.getMenuId());
 			newRes.setDate(df.format(res.getDate()));
-			newRes.setName(res.getName());
+			newRes.setTitle(res.getName());
 			newRes.setSummary(SnippetStripper.strip(res.getSummary()));
 			newRes.setLength((int) res.getSize());
 			newRes.setType(res.getType());
