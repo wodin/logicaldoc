@@ -82,34 +82,6 @@
 			</roles>
 			<timezone>+0</timezone>
 		</developer>
-		<developer>
-			<name>Sebastian Stein</name>
-			<id>sebastian</id>
-			<organization>Contineo</organization>
-			<roles>
-				<role>designer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<name>Michael Scholz</name>
-			<id>michael</id>
-			<organization>Contineo</organization>
-			<roles>
-				<role>designer</role>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<name>René Peinl</name>
-			<id>rene</id>
-			<organization>Contineo</organization>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+0</timezone>
-		</developer>
 	</developers>
 	
 	<scm>
