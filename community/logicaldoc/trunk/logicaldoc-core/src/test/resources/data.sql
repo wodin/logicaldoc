@@ -28,8 +28,6 @@ VALUES ('sebastian','admin');
 INSERT INTO co_usergroup (co_username,co_groupname) 
 VALUES ('sebastian','author');
 INSERT INTO co_usergroup (co_username,co_groupname) 
-VALUES ('admin','admin');
-INSERT INTO co_usergroup (co_username,co_groupname) 
 VALUES ('author','author');
 INSERT INTO co_usergroup (co_username,co_groupname) 
 VALUES ('test','guest');
@@ -56,8 +54,10 @@ INSERT INTO ld_document(
   LD_SOURCETYPE,
   LD_COVERAGE,
   LD_LANGUAGE,
+  LD_FILENAME,
+  LD_FILESIZE,
   LD_FOLDERID ) 
-VALUES(1,'testDocname','testDocVer','2006-12-19','myself', 1, 'PDF','sebastian', 'source', 'sourceauthor','2008-12-19','sourcetype','coverage','en',103);
+VALUES(1,'testDocname','testDocVer','2006-12-19','myself', 1, 'PDF','sebastian', 'source', 'sourceauthor','2008-12-19','sourcetype','coverage','en','pippo',1356,103);
 INSERT INTO ld_document(
   LD_ID,
   LD_TITLE,
@@ -73,8 +73,10 @@ INSERT INTO ld_document(
   LD_SOURCETYPE,
   LD_COVERAGE,
   LD_LANGUAGE,
+  LD_FILENAME,
+  LD_FILESIZE,
   LD_FOLDERID ) 
-VALUES(2,'testDocname2','testDocVer','2006-12-19','myself', 1, 'PDF','sebastian', 'source', 'sourceauthor','2008-12-19','sourcetype','coverage','en',103);
+VALUES(2,'testDocname2','testDocVer','2006-12-19','myself', 1, 'PDF','sebastian', 'source', 'sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,103);
 
 
 INSERT INTO ld_userdoc (ld_docid,ld_username,ld_date) 

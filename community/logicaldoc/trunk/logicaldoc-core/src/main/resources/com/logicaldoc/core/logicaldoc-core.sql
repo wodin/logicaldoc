@@ -121,6 +121,8 @@ CREATE TABLE LD_DOCUMENT (
   LD_SOURCETYPE   VARCHAR(255),
   LD_COVERAGE     VARCHAR(255),
   LD_LANGUAGE     VARCHAR(10),
+  LD_FILENAME     VARCHAR(255),
+  LD_FILESIZE   BIGINT,
   LD_FOLDERID     INT,
     PRIMARY KEY ( LD_ID ));
 
@@ -602,3 +604,6 @@ INSERT INTO CO_MENUGROUP
 VALUES     (26,
             'guest',
             0);
+
+INSERT INTO co_usergroup (co_username,co_groupname) 
+VALUES ('admin','admin');
