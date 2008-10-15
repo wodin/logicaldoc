@@ -529,7 +529,7 @@ em { /*font-size:14px;*/
 	height: 38px;
 }
 
-.docImageColumn,.docNameColumn,.docMenuColumn,.docDateColumn,.docSizeColumn,.triangleColumn,.docSelectionColumn
+.docImageColumn,.docTitleColumn,.docMenuColumn,.docDateColumn,.docSizeColumn,.triangleColumn,.docSelectionColumn
 	{
 	white-space: nowrap;
 	color: #000000;
@@ -551,7 +551,7 @@ em { /*font-size:14px;*/
 	width: 20px;
 }
 
-.docNameColumn {
+.docTitleColumn {
 	width: 600px;
 }
 

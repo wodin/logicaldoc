@@ -19,7 +19,7 @@
 		<ice:outputText value="#{msgs['msg.jsp.versions']}" />
 		:&amp;nbsp;
 		<ice:outputText
-			value="#{versionsRecordsManager.selectedDocument.docName}" />
+			value="#{versionsRecordsManager.selectedDocument.title}" />
 	</h3>
 
 	<ice:form id="versionsForm">
@@ -29,7 +29,7 @@
 				<ice:dataTable id="versionData"
 					value="#{versionsRecordsManager.versions}" var="versionRecord"
 					cellpadding="0" width="100%" rows="2000"
-					columnClasses="docSelectionColumn,docSelectionColumn,docDateColumn,docNameColumn,docSelectionColumn">
+					columnClasses="docSelectionColumn,docSelectionColumn,docDateColumn,titleColumn,docSelectionColumn">
 
 					<!-- version column -->
 					<ice:column>

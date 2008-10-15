@@ -40,10 +40,6 @@ public class DocumentEditForm {
 
 	private String title;
 
-	private int menuParent;
-
-	private int menuSort = 0;
-
 	private String source;
 
 	private String sourceAuthor;
@@ -76,8 +72,6 @@ public class DocumentEditForm {
 
 	public void reset() {
 		title = "";
-		menuParent = -1;
-		menuSort = 0;
 		source = "";
 		sourceAuthor = "";
 		sourceDate = null;
@@ -110,24 +104,10 @@ public class DocumentEditForm {
 	}
 
 	/**
-	 * @return Returns the docName.
+	 * @return Returns the title.
 	 */
-	public String getDocName() {
+	public String getTitle() {
 		return title;
-	}
-
-	/**
-	 * @return Returns the menuParent.
-	 */
-	public int getMenuParent() {
-		return menuParent;
-	}
-
-	/**
-	 * @return Returns the menuSort.
-	 */
-	public int getMenuSort() {
-		return menuSort;
 	}
 
 	/**
@@ -187,70 +167,64 @@ public class DocumentEditForm {
 	}
 
 	/**
-	 * @param title The docName to set.
+	 * @param title
+	 *            The title to set.
 	 */
-	public void setTitle(String name) {
-		title = name;
+	public void setTitle(String title) {
+		this.title = title;
 	}
-
+	
 	/**
-	 * @param menuParent The menuParent to set.
-	 */
-	public void setMenuParent(int parent) {
-		menuParent = parent;
-	}
-
-	/**
-	 * @param menuSort The menuSort to set.
-	 */
-	public void setMenuSort(int sort) {
-		menuSort = sort;
-	}
-
-	/**
-	 * @param source The source to set.
+	 * @param source
+	 *            The source to set.
 	 */
 	public void setSource(String src) {
 		source = src;
 	}
 
 	/**
-	 * @param sourceAuthor The sourceAuthor to set.
+	 * @param sourceAuthor
+	 *            The sourceAuthor to set.
 	 */
 	public void setSourceAuthor(String author) {
 		sourceAuthor = author;
 	}
 
 	/**
-	 * @param sourceDate The sourceDate to set.
+	 * @param sourceDate
+	 *            The sourceDate to set.
 	 */
 	public void setSourceDate(Date date) {
 		sourceDate = date;
 	}
 
 	/**
-	 * @param sourceType The sourceType to set.
+	 * @param sourceType
+	 *            The sourceType to set.
 	 */
 	public void setSourceType(String type) {
 		sourceType = type;
 	}
 
 	/**
-	 * @param coverage The coverage to set.
+	 * @param coverage
+	 *            The coverage to set.
 	 */
 	public void setCoverage(String cover) {
 		coverage = cover;
 	}
 
 	/**
-	 * @param language The language to set.
+	 * @param language
+	 *            The language to set.
 	 */
 	public void setLanguage(String lang) {
 		language = lang;
 	}
 
 	/**
-	 * @param keywords The keywords to set.
+	 * @param keywords
+	 *            The keywords to set.
 	 */
 	public void setKeywords(String words) {
 		keywords = words;
@@ -264,14 +238,16 @@ public class DocumentEditForm {
 	}
 
 	/**
-	 * @param filename The filename to set.
+	 * @param filename
+	 *            The filename to set.
 	 */
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
 
 	/**
-	 * @param versionDesc The versionDesc to set.
+	 * @param versionDesc
+	 *            The versionDesc to set.
 	 */
 	public void setVersionDesc(String desc) {
 		versionDesc = desc;
@@ -308,9 +284,9 @@ public class DocumentEditForm {
 						FacesContext.getCurrentInstance(), log));
 				File file = inputFile.getFile();
 				String filename = inputFile.getFileName();
-				String name = getDocName();
-				if (StringUtils.isEmpty(name)) {
-					name = filename.substring(0, filename.lastIndexOf("."));
+				String title = getTitle();
+				if (StringUtils.isEmpty(title)) {
+					title = filename.substring(0, filename.lastIndexOf("."));
 				}
 
 				DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -318,7 +294,7 @@ public class DocumentEditForm {
 
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				documentManager.create(file, parent, username, language, name, getSourceDate(), source, sourceAuthor,
+				documentManager.create(file, parent, username, language, title, getSourceDate(), source, sourceAuthor,
 						sourceType, coverage, versionDesc, kwds);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);

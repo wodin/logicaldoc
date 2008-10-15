@@ -19,7 +19,7 @@
         <ice:panelGroup>
             <h3>
                 <ice:outputText
-                    value="#{msgs['msg.jsp.email']} - #{emailForm.selectedDocument.docName}" />
+                    value="#{msgs['msg.jsp.email']} - #{emailForm.selectedDocument.title}" />
                 <br />
                 <br />
             </h3>

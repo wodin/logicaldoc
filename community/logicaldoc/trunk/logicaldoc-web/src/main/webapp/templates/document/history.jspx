@@ -17,7 +17,7 @@
 	styleClass="formBorderHighlight">
 	<h3>
 		<ice:outputText
-			value="#{msgs['msg.jsp.history']} - #{historyRecordsManager.selectedDocument.docName}" />
+			value="#{msgs['msg.jsp.history']} - #{historyRecordsManager.selectedDocument.title}" />
 		<br />
 		<br />
 	</h3>

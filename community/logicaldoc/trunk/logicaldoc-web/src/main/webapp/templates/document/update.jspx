@@ -53,19 +53,19 @@
 
             <ice:panelGrid columns="2">
                 <ice:panelGroup styleClass="outputLabel">
-                    <ice:outputLabel for="docName" value="#{msgs['doctitle']}*" />
+                    <ice:outputLabel for="title" value="#{msgs['doctitle']}*" />
                 </ice:panelGroup>
                 <ice:panelGroup>
-                    <ice:inputText id="docName"
+                    <ice:inputText id="title"
                         label="#{msgs['errors.header.alert.key']}"
                         tabindex="1"
-                        value="#{documentForm.docName}"
+                        value="#{documentForm.title}"
                         maxlength="255" size="40"
                         onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
                         required="true"
                         disabled="#{documentForm.readOnly}" immediate="true" />
                     <br />
-                    <ice:message for="docName" />
+                    <ice:message for="title" />
                 </ice:panelGroup>
                 <ice:panelGroup styleClass="outputLabel">
                     <ice:outputLabel for="keywords"

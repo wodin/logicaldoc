@@ -26,11 +26,11 @@
             <ice:panelGroup>
                 <ice:panelGrid columns="2">
                     <ice:panelGroup styleClass="outputLabel">
-                        <ice:outputLabel value="#{msgs['msg.jsp.docname']}" />
+                        <ice:outputLabel value="#{msgs['msg.jsp.title']}" />
                     </ice:panelGroup>
                     <ice:panelGroup>
                         <ice:outputText
-                            value="#{versionsRecordsManager.selectedDocument.docName}" />
+                            value="#{versionsRecordsManager.selectedDocument.title}" />
                     </ice:panelGroup>
 
                     <ice:panelGroup styleClass="outputLabel">

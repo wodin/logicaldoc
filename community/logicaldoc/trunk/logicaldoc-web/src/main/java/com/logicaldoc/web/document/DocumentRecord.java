@@ -110,8 +110,8 @@ public class DocumentRecord extends MenuBarBean {
 	 * @param indentStyleClass
 	 * @param rowStyleClass
 	 */
-	public DocumentRecord(long docId, List<DocumentRecord> parentDocumentsList, String indentStyleClass,
-			String rowStyleClass) {
+	public DocumentRecord(long docId, List<DocumentRecord> parentDocumentsList,
+			String indentStyleClass, String rowStyleClass) {
 		this.docId = docId;
 		this.parentDocumentsList = parentDocumentsList;
 		if (indentStyleClass != null)
@@ -157,16 +157,6 @@ public class DocumentRecord extends MenuBarBean {
 
 	public String getDisplayFilename() {
 		return StringUtils.abbreviate(getDocument().getFileName(), 68);
-	}
-
-	/**
-	 * Gets the style class name used to define the first column of a document
-	 * record row. This first column is where a expand/contract image is placed.
-	 * 
-	 * @return indent style class as defined in css file
-	 */
-	public String getIndentStyleClass() {
-		return indentStyleClass;
 	}
 
 	/**
@@ -236,7 +226,8 @@ public class DocumentRecord extends MenuBarBean {
 					if (menu.getMenuId() == Menu.MENUID_DOCUMENTS) {
 						// Decoding the root of documents using the resource
 						// boundle
-						String menuText = Messages.getMessage(menu.getMenuText());
+						String menuText = Messages.getMessage(menu
+								.getMenuText());
 						sb.append(menuText);
 					} else {
 						sb.append(menu.getMenuText());
@@ -246,7 +237,8 @@ public class DocumentRecord extends MenuBarBean {
 				documentPath = sb.toString();
 
 			} catch (Throwable th) {
-				logger.warn("Exception getDocumentPath() " + th.getMessage(), th);
+				logger.warn("Exception getDocumentPath() " + th.getMessage(),
+						th);
 			}
 		}
 		return documentPath;
@@ -264,44 +256,70 @@ public class DocumentRecord extends MenuBarBean {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		Map session = facesContext.getExternalContext().getSessionMap();
 		String username = (String) session.get(Constants.AUTH_USERNAME);
+		MenuDAO menuDAO = (MenuDAO) Context.getInstance()
+				.getBean(MenuDAO.class);
 
 		Menu folder = getDocument().getFolder();
 		Document document = getDocument();
-
-		if (folder.isWriteable()) {
-			if ((document.getStatus() == Document.DOC_CHECKED_OUT) && username.equals(document.getCheckoutUser())) {
-				model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.checkin"), "checkin-" + folder.getMenuId(),
-						null, "#{documentRecord.checkin}", null, StyleBean.getImagePath("checkin.png"), true, null,
-						null));
+		if (menuDAO.isWriteEnable(folder.getMenuId(), username)) {
+			if ((document.getStatus() == Document.DOC_CHECKED_OUT)
+					&& username.equals(document.getCheckoutUser())) {
+				model
+						.add(createMenuItem(" "
+								+ Messages.getMessage("msg.jsp.checkin"),
+								"checkin-" + folder.getMenuId(), null,
+								"#{documentRecord.checkin}", null, StyleBean
+										.getImagePath("checkin.png"), true,
+								null, null));
 			} else if (document.getStatus() == Document.DOC_CHECKED_IN) {
-				model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.checkout"), "checkout-"
-						+ folder.getMenuId(), null, "#{documentRecord.checkout}", null, StyleBean
-						.getImagePath("checkout.png"), true, null, null));
+				model
+						.add(createMenuItem(" "
+								+ Messages.getMessage("msg.jsp.checkout"),
+								"checkout-" + folder.getMenuId(), null,
+								"#{documentRecord.checkout}", null, StyleBean
+										.getImagePath("checkout.png"), true,
+								null, null));
 			}
 
-			model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.foldercontent.edit"), "edit-"
-					+ folder.getMenuId(), null, "#{documentRecord.edit}", null, StyleBean
-					.getImagePath("document_edit.png"), true, null, null));
+			model.add(createMenuItem(" "
+					+ Messages.getMessage("msg.jsp.foldercontent.edit"),
+					"edit-" + folder.getMenuId(), null,
+					"#{documentRecord.edit}", null, StyleBean
+							.getImagePath("document_edit.png"), true, null,
+					null));
 		}
 
-		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getMenuId(), null,
-				"#{documentRecord.versions}", null, StyleBean.getImagePath("versions.png"), true, "_blank", null));
-		model
-				.add(createMenuItem(" " + Messages.getMessage("msg.jsp.similardocs"), "similar-" + folder.getMenuId(),
-						null, "#{searchForm.searchSimilar}", null, StyleBean.getImagePath("similar.png"), true,
-						"_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.discuss"), "articles-" + folder.getMenuId(), null,
-				"#{documentRecord.articles}", null, StyleBean.getImagePath("comments.png"), true, "_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getMenuId(),
-				null, "#{documentRecord.sendAsEmail}", null, StyleBean.getImagePath("editmail.png"), true, "_blank",
+		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.versions"),
+				"versions-" + folder.getMenuId(), null,
+				"#{documentRecord.versions}", null, StyleBean
+						.getImagePath("versions.png"), true, "_blank", null));
+		model.add(createMenuItem(" "
+				+ Messages.getMessage("msg.jsp.similardocs"), "similar-"
+				+ folder.getMenuId(), null, "#{searchForm.searchSimilar}",
+				null, StyleBean.getImagePath("similar.png"), true, "_blank",
 				null));
-		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getMenuId(),
-				null, "#{documentRecord.sendAsTicket}", null, StyleBean.getImagePath("ticket.png"), true, "_blank",
+		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.discuss"),
+				"articles-" + folder.getMenuId(), null,
+				"#{documentRecord.articles}", null, StyleBean
+						.getImagePath("comments.png"), true, "_blank", null));
+		model.add(createMenuItem(" "
+				+ Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-"
+				+ folder.getMenuId(), null, "#{documentRecord.sendAsEmail}",
+				null, StyleBean.getImagePath("editmail.png"), true, "_blank",
 				null));
-		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.foldercontent.info"), "info-" + folder.getMenuId(),
-				null, "#{documentRecord.info}", null, StyleBean.getImagePath("info.png"), true, "_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.history"), "history-" + folder.getMenuId(), null,
-				"#{documentRecord.history}", null, StyleBean.getImagePath("history.png"), true, "_blank", null));
+		model.add(createMenuItem(" "
+				+ Messages.getMessage("msg.jsp.sendticket"), "sendticket-"
+				+ folder.getMenuId(), null, "#{documentRecord.sendAsTicket}",
+				null, StyleBean.getImagePath("ticket.png"), true, "_blank",
+				null));
+		model.add(createMenuItem(" "
+				+ Messages.getMessage("msg.jsp.foldercontent.info"), "info-"
+				+ folder.getMenuId(), null, "#{documentRecord.info}", null,
+				StyleBean.getImagePath("info.png"), true, "_blank", null));
+		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.history"),
+				"history-" + folder.getMenuId(), null,
+				"#{documentRecord.history}", null, StyleBean
+						.getImagePath("history.png"), true, "_blank", null));
 	}
 
 	public String noaction() {
@@ -310,17 +328,21 @@ public class DocumentRecord extends MenuBarBean {
 
 	public String edit() {
 		// Show the proper panel
-		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-				"documentNavigation", FacesContext.getCurrentInstance(), log));
-		documentNavigation.setSelectedPanel(new PageContentBean("updateDocument"));
+		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil
+				.accessBeanFromFacesContext("documentNavigation", FacesContext
+						.getCurrentInstance(), log));
+		documentNavigation.setSelectedPanel(new PageContentBean(
+				"updateDocument"));
 
 		// Now initialize the form
-		DocumentEditForm docForm = ((DocumentEditForm) FacesUtil.accessBeanFromFacesContext("documentForm",
-				FacesContext.getCurrentInstance(), log));
+		DocumentEditForm docForm = ((DocumentEditForm) FacesUtil
+				.accessBeanFromFacesContext("documentForm", FacesContext
+						.getCurrentInstance(), log));
 		docForm.reset();
 		docForm.init(this);
 		docForm.setReadOnly(false);
-		JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "window.location.reload();");
+		JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(),
+				"window.location.reload();");
 		return null;
 	}
 
@@ -331,7 +353,8 @@ public class DocumentRecord extends MenuBarBean {
 
 		String username = SessionManagement.getUsername();
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(
+				DocumentDAO.class);
 		Menu folder = getDocument().getFolder();
 
 		if (SessionManagement.isValid()) {
@@ -349,17 +372,23 @@ public class DocumentRecord extends MenuBarBean {
 						history.setUsername(username);
 						history.setEvent(History.CHECKOUT);
 
-						HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+						HistoryDAO historyDAO = (HistoryDAO) Context
+								.getInstance().getBean(HistoryDAO.class);
 						historyDAO.store(history);
 
-						JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "alert('"
-								+ Messages.getMessage("msg.checkout.alert") + "');");
+						JavascriptContext.addJavascriptCall(FacesContext
+								.getCurrentInstance(), "alert('"
+								+ Messages.getMessage("msg.checkout.alert")
+								+ "');");
 
 						try {
 							// create a new menu to replace the checkout
-							MenuItem checkinMenuItem = createMenuItem(Messages.getMessage("msg.jsp.checkin"),
-									"checkin-" + document.getId(), null, "#{documentRecord.checkin}", null, StyleBean
-											.getImagePath("checkin.png"), true, null, null);
+							MenuItem checkinMenuItem = createMenuItem(Messages
+									.getMessage("msg.jsp.checkin"), "checkin-"
+									+ document.getId(), null,
+									"#{documentRecord.checkin}", null,
+									StyleBean.getImagePath("checkin.png"),
+									true, null, null);
 							// replacing the old menu at the same index
 							model.set(0, checkinMenuItem);
 						} catch (Throwable e) {
@@ -389,19 +418,23 @@ public class DocumentRecord extends MenuBarBean {
 	public String checkin() {
 		if (SessionManagement.isValid()) {
 			// Show the proper panel
-			Application application = FacesContext.getCurrentInstance().getApplication();
-			DocumentNavigation documentNavigation = ((DocumentNavigation) application.createValueBinding(
-					"#{documentNavigation}").getValue(FacesContext.getCurrentInstance()));
+			Application application = FacesContext.getCurrentInstance()
+					.getApplication();
+			DocumentNavigation documentNavigation = ((DocumentNavigation) application
+					.createValueBinding("#{documentNavigation}").getValue(
+							FacesContext.getCurrentInstance()));
 			documentNavigation.setSelectedPanel(new PageContentBean("checkin"));
 
 			// Now initialize the edit form
-			DocumentEditForm docForm = ((DocumentEditForm) application.createValueBinding("#{documentForm}").getValue(
-					FacesContext.getCurrentInstance()));
+			DocumentEditForm docForm = ((DocumentEditForm) application
+					.createValueBinding("#{documentForm}").getValue(
+							FacesContext.getCurrentInstance()));
 			docForm.reset();
 			docForm.init(this);
 
-			InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
-					FacesContext.getCurrentInstance()));
+			InputFileBean fileForm = ((InputFileBean) application
+					.createValueBinding("#{inputFile}").getValue(
+							FacesContext.getCurrentInstance()));
 			fileForm.reset();
 		} else {
 			return "login";
@@ -422,13 +455,16 @@ public class DocumentRecord extends MenuBarBean {
 			try {
 				if (mdao.isWriteEnable(folder.getMenuId(), username)) {
 					VersionsRecordsManager versionsManager = ((VersionsRecordsManager) FacesUtil
-							.accessBeanFromFacesContext("versionsRecordsManager", FacesContext.getCurrentInstance(),
-									log));
+							.accessBeanFromFacesContext(
+									"versionsRecordsManager", FacesContext
+											.getCurrentInstance(), log));
 					versionsManager.selectDocument(document);
 
-					DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-							"documentNavigation", FacesContext.getCurrentInstance(), log));
-					documentNavigation.setSelectedPanel(new PageContentBean("versions"));
+					DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil
+							.accessBeanFromFacesContext("documentNavigation",
+									FacesContext.getCurrentInstance(), log));
+					documentNavigation.setSelectedPanel(new PageContentBean(
+							"versions"));
 				} else {
 					Messages.addError(Messages.getMessage("errors.noaccess"));
 				}
@@ -451,12 +487,15 @@ public class DocumentRecord extends MenuBarBean {
 			try {
 
 				ArticlesRecordsManager articlesManager = ((ArticlesRecordsManager) FacesUtil
-						.accessBeanFromFacesContext("articlesRecordsManager", FacesContext.getCurrentInstance(), log));
+						.accessBeanFromFacesContext("articlesRecordsManager",
+								FacesContext.getCurrentInstance(), log));
 				articlesManager.selectDocument(document);
 
-				DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-						"documentNavigation", FacesContext.getCurrentInstance(), log));
-				documentNavigation.setSelectedPanel(new PageContentBean("articles"));
+				DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil
+						.accessBeanFromFacesContext("documentNavigation",
+								FacesContext.getCurrentInstance(), log));
+				documentNavigation.setSelectedPanel(new PageContentBean(
+						"articles"));
 			} catch (Exception ex) {
 				log.error(ex.getMessage(), ex);
 				Messages.addError(Messages.getMessage("errors.error"));
@@ -474,12 +513,14 @@ public class DocumentRecord extends MenuBarBean {
 	public String history() {
 		if (SessionManagement.isValid()) {
 
-			DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-					"documentNavigation", FacesContext.getCurrentInstance(), log));
+			DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil
+					.accessBeanFromFacesContext("documentNavigation",
+							FacesContext.getCurrentInstance(), log));
 			documentNavigation.setSelectedPanel(new PageContentBean("history"));
 
-			HistoryRecordsManager manager = ((HistoryRecordsManager) FacesUtil.accessBeanFromFacesContext(
-					"historyRecordsManager", FacesContext.getCurrentInstance(), log));
+			HistoryRecordsManager manager = ((HistoryRecordsManager) FacesUtil
+					.accessBeanFromFacesContext("historyRecordsManager",
+							FacesContext.getCurrentInstance(), log));
 			manager.selectDocument(this.getDocument());
 		} else {
 			return "login";
@@ -494,8 +535,9 @@ public class DocumentRecord extends MenuBarBean {
 
 		// Now initialize the form
 
-		DocumentEditForm docForm = ((DocumentEditForm) FacesUtil.accessBeanFromFacesContext("documentForm",
-				FacesContext.getCurrentInstance(), log));
+		DocumentEditForm docForm = ((DocumentEditForm) FacesUtil
+				.accessBeanFromFacesContext("documentForm", FacesContext
+						.getCurrentInstance(), log));
 		docForm.init(this);
 		docForm.setReadOnly(true);
 
@@ -504,13 +546,15 @@ public class DocumentRecord extends MenuBarBean {
 
 	public String sendAsEmail() {
 		// Show the proper panel
-		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-				"documentNavigation", FacesContext.getCurrentInstance(), log));
+		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil
+				.accessBeanFromFacesContext("documentNavigation", FacesContext
+						.getCurrentInstance(), log));
 		documentNavigation.setSelectedPanel(new PageContentBean("email"));
 
 		// Now initialize the form
-		EMailForm emailForm = ((EMailForm) FacesUtil.accessBeanFromFacesContext("emailForm", FacesContext
-				.getCurrentInstance(), log));
+		EMailForm emailForm = ((EMailForm) FacesUtil
+				.accessBeanFromFacesContext("emailForm", FacesContext
+						.getCurrentInstance(), log));
 		emailForm.reset();
 		emailForm.setSelectedDocument(getDocument());
 
@@ -525,13 +569,15 @@ public class DocumentRecord extends MenuBarBean {
 	public String sendAsTicket() {
 		// Show the proper panel
 
-		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-				"documentNavigation", FacesContext.getCurrentInstance(), log));
+		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil
+				.accessBeanFromFacesContext("documentNavigation", FacesContext
+						.getCurrentInstance(), log));
 		documentNavigation.setSelectedPanel(new PageContentBean("email"));
 
 		// Now initialize the form
-		EMailForm emailForm = ((EMailForm) FacesUtil.accessBeanFromFacesContext("emailForm", FacesContext
-				.getCurrentInstance(), log));
+		EMailForm emailForm = ((EMailForm) FacesUtil
+				.accessBeanFromFacesContext("emailForm", FacesContext
+						.getCurrentInstance(), log));
 		emailForm.reset();
 		emailForm.setSelectedDocument(getDocument());
 		emailForm.setAuthor(SessionManagement.getUser().getEmail());
@@ -545,11 +591,12 @@ public class DocumentRecord extends MenuBarBean {
 		ticket.setDocId(docId);
 		ticket.setUsername(username);
 
-		DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance().getBean(DownloadTicketDAO.class);
+		DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance()
+				.getBean(DownloadTicketDAO.class);
 		ticketDao.store(ticket);
 
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
-				.getRequest();
+		HttpServletRequest request = (HttpServletRequest) FacesContext
+				.getCurrentInstance().getExternalContext().getRequest();
 		request.getRequestURL();
 
 		String address = "http://";
@@ -566,7 +613,8 @@ public class DocumentRecord extends MenuBarBean {
 	 * Utility method used by document lazy loading
 	 */
 	protected void loadDocument() {
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(
+				DocumentDAO.class);
 		this.document = docDao.findByPrimaryKey(docId);
 	}
 }

@@ -13,12 +13,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
-
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.util.Constants;
 
@@ -31,6 +28,7 @@ import com.logicaldoc.web.util.Constants;
  * @since 2.6
  */
 public class DocumentDownload extends HttpServlet {
+	public static final String DOC_ID = "docId";
 	/**
 	 * 
 	 */
@@ -69,17 +67,17 @@ public class DocumentDownload extends HttpServlet {
 			username = (String) request.getParameter("username");
 		String password = (String) request.getParameter("password");
 
-		String id = request.getParameter("menuId");
+		String id = request.getParameter(DOC_ID);
 
 		// Flag indicating to download only indexed text
 		String downloadText = request.getParameter("downloadText");
 
 		if (StringUtils.isEmpty(id)) {
-			id = (String) request.getAttribute("menuId");
+			id = (String) request.getAttribute(DOC_ID);
 		}
 
 		if (StringUtils.isEmpty(id)) {
-			id = (String) session.getAttribute("menuId");
+			id = (String) session.getAttribute(DOC_ID);
 		}
 
 		if (StringUtils.isEmpty(downloadText)) {
@@ -103,9 +101,9 @@ public class DocumentDownload extends HttpServlet {
 				// if we have access to the document, return it
 				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
 						MenuDAO.class);
-				
+
 				if (mdao.isReadEnable(Integer.parseInt(id), username)) {
-					if ("true".equals(downloadText)) {					
+					if ("true".equals(downloadText)) {
 						DownloadDocUtil.downloadDocumentText(response, Integer
 								.parseInt(id));
 					} else {

@@ -34,7 +34,7 @@
 			sortColumn="#{documentsRecordsManager.sortColumn}"
 			sortAscending="#{documentsRecordsManager.ascending}" cellpadding="0"
 			rows="#{documentsRecordsManager.displayedRows}"
-			columnClasses="docSelectionColumn,triangleColumn,docNameColumn,docDateColumn,docSizeColumn">
+			columnClasses="docSelectionColumn,titleColumn,docDateColumn,docSizeColumn">
 
 			<!-- selection column -->
 			<ice:column>
@@ -65,22 +65,6 @@
 				</ice:panelGroup>
 			</ice:column>
 
-			<!-- contract/expand column -->
-			<ice:column>
-				<ice:panelGroup styleClass="#{documentRecord.indentStyleClass}">
-					<!-- This is required to trigger the children's loading -->
-					<span style="display: none">#{documentRecord.childrenCount}</span>
-
-					<!-- Render the expand/contract if there is an image -->
-					<ice:commandLink
-						actionListener="#{documentRecord.toggleSubGroupAction}">
-						<ice:graphicImage
-							value="#{styleBean.imagesPath}/#{documentRecord.expandContractImage}"
-							title="#{msgs['msg.jsp.popup']}" style="border: 0px solid;" />
-					</ice:commandLink>
-				</ice:panelGroup>
-			</ice:column>
-
 			<!-- Name -->
 			<ice:column>
 				<f:facet name="header">
@@ -94,12 +78,12 @@
 					<ice:graphicImage
 						value="#{styleBean.imagesPath}/#{documentRecord.icon}"
 						style="border: 0px solid;" />
-					<ice:outputLink value="download?menuId=#{documentRecord.menuId}"
+					<ice:outputLink value="download?docId=#{documentRecord.docId}"
 						target="_blank" title="#{msgs['msg.jsp.popup']}">
 						<ice:outputText value=" #{documentRecord.displayDescription}" />
 					</ice:outputLink>
 					<ice:outputLink
-						value="download?menuId=#{documentRecord.menuId}&amp;downloadText=true"
+						value="download?docId=#{documentRecord.docId}&amp;downloadText=true"
 						target="_blank" title="txt">
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
 							value="#{styleBean.imagesPath}/txt-icon.png"
@@ -109,7 +93,7 @@
 						rendered="#{documentRecord.checkedOut}"
 						value="#{styleBean.imagesPath}/lock.png"
 						alt="#{documentRecord.document.checkoutUser}" />
-					<ice:menuPopup id="pop" value="#{documentRecord.menuId}"
+					<ice:menuPopup id="pop" value="#{documentRecord.docId}"
 						orientation="vertical" rendered="#{documentRecord.documentFound}">
 						<ice:menuItems value="#{documentRecord.model}" />
 					</ice:menuPopup>

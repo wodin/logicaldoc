@@ -10,6 +10,8 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.text.AnalyzeText;
@@ -17,10 +19,6 @@ import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
-
-import sun.security.action.GetLongAction;
-
-import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
@@ -48,12 +46,15 @@ public class NewDocWizard {
 	 * Starts the upload process
 	 */
 	public String start() {
-		documentNavigation.setSelectedPanel(new PageContentBean("uploadDocument"));
+		documentNavigation.setSelectedPanel(new PageContentBean(
+				"uploadDocument"));
 
 		// Remove the uploaded file, if one was uploaded
-		Application application = FacesContext.getCurrentInstance().getApplication();
-		InputFileBean inputFile = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
-				FacesContext.getCurrentInstance()));
+		Application application = FacesContext.getCurrentInstance()
+				.getApplication();
+		InputFileBean inputFile = ((InputFileBean) application
+				.createValueBinding("#{inputFile}").getValue(
+						FacesContext.getCurrentInstance()));
 		inputFile.deleteUploadDir();
 		inputFile.reset();
 		showUpload = true;
@@ -71,11 +72,14 @@ public class NewDocWizard {
 		showUpload = false;
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		Application application = FacesContext.getCurrentInstance().getApplication();
-		InputFileBean inputFile = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
-				FacesContext.getCurrentInstance()));
-		DocumentEditForm docForm = ((DocumentEditForm) application.createValueBinding("#{documentForm}").getValue(
-				FacesContext.getCurrentInstance()));
+		Application application = FacesContext.getCurrentInstance()
+				.getApplication();
+		InputFileBean inputFile = ((InputFileBean) application
+				.createValueBinding("#{inputFile}").getValue(
+						FacesContext.getCurrentInstance()));
+		DocumentEditForm docForm = ((DocumentEditForm) application
+				.createValueBinding("#{documentForm}").getValue(
+						FacesContext.getCurrentInstance()));
 		docForm.reset();
 
 		String[] groups = SessionManagement.getUser().getGroupNames();
@@ -100,12 +104,13 @@ public class NewDocWizard {
 				String documentLanguage = inputFile.getLanguage();
 
 				// Get menuParent that called AddDocAction
-				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
+						MenuDAO.class);
 				Menu parent = documentNavigation.getSelectedDir().getMenu();
 
 				// Makes menuPath
-				String menupath = new StringBuilder(parent.getMenuPath()).append("/").append(parent.getMenuId())
-						.toString();
+				String menupath = new StringBuilder(parent.getMenuPath())
+						.append("/").append(parent.getMenuId()).toString();
 				int menuhier = parent.getMenuHier();
 
 				// Makes new Menu
@@ -118,11 +123,12 @@ public class NewDocWizard {
 				String filename = file.getName();
 
 				// Stores the document in the repository
-				SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
+				SettingsConfig settings = (SettingsConfig) Context
+						.getInstance().getBean(SettingsConfig.class);
 
 				// Parses the file where it is already stored
-				Locale locale=new Locale(inputFile.getLanguage());
-				Parser parser = ParserFactory.getParser(file,locale);
+				Locale locale = new Locale(inputFile.getLanguage());
+				Parser parser = ParserFactory.getParser(file, locale);
 				String content = null;
 				String name = "";
 				String author = "";
@@ -143,7 +149,8 @@ public class NewDocWizard {
 
 				// source field got from web.xml.
 				// This field is required for Lucene to work properly
-				String source = (String) facesContext.getExternalContext().getApplicationMap().get("store");
+				String source = (String) facesContext.getExternalContext()
+						.getApplicationMap().get("store");
 
 				if (source == null) {
 					source = settings.getValue("defaultSource");
@@ -161,8 +168,6 @@ public class NewDocWizard {
 						docForm.setTitle(filename);
 					}
 				}
-
-				docForm.setMenuParent(parent.getMenuId());
 				docForm.setSource(source);
 
 				if (author != null) {
@@ -177,7 +182,8 @@ public class NewDocWizard {
 						docForm.setKeywords(keywords);
 					} else {
 						AnalyzeText analyzer = new AnalyzeText();
-						docForm.setKeywords(analyzer.getTerms(5, content.toString(), documentLanguage));
+						docForm.setKeywords(analyzer.getTerms(5, content
+								.toString(), documentLanguage));
 					}
 				}
 
@@ -185,7 +191,8 @@ public class NewDocWizard {
 			} catch (Exception e) {
 				String message = Messages.getMessage("errors.action.savedoc");
 				log.error(message, e);
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, message, message);
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, message,
+						message);
 				showUpload = true;
 			} finally {
 
@@ -193,7 +200,8 @@ public class NewDocWizard {
 
 			// sometimes IE7 freezes the page and in these cases a refresh
 			// solves the problem
-			JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "window.location.reload(false);");
+			JavascriptContext.addJavascriptCall(FacesContext
+					.getCurrentInstance(), "window.location.reload(false);");
 
 			return null;
 		} else {
@@ -205,17 +213,21 @@ public class NewDocWizard {
 		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
 
 		// Remove the uploaded file, if one was uploaded
-		Application application = FacesContext.getCurrentInstance().getApplication();
-		InputFileBean inputFile = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
-				FacesContext.getCurrentInstance()));
+		Application application = FacesContext.getCurrentInstance()
+				.getApplication();
+		InputFileBean inputFile = ((InputFileBean) application
+				.createValueBinding("#{inputFile}").getValue(
+						FacesContext.getCurrentInstance()));
 		inputFile.deleteUploadDir();
 		return null;
 	}
 
 	public String save() {
-		Application application = FacesContext.getCurrentInstance().getApplication();
-		DocumentEditForm documentForm = ((DocumentEditForm) application.createValueBinding("#{documentForm}").getValue(
-				FacesContext.getCurrentInstance()));
+		Application application = FacesContext.getCurrentInstance()
+				.getApplication();
+		DocumentEditForm documentForm = ((DocumentEditForm) application
+				.createValueBinding("#{documentForm}").getValue(
+						FacesContext.getCurrentInstance()));
 
 		documentForm.save();
 		documentNavigation.selectDirectory(documentNavigation.getSelectedDir());
