@@ -48,4 +48,50 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
+	
+	  <reporting>
+    <plugins>
+      <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-javadoc-plugin</artifactId>
+    </plugin>
+    <!--  				
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-jxr-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-pmd-plugin</artifactId>
+      <configuration>
+        <linkXref>true</linkXref>
+        <sourceEncoding>utf-8</sourceEncoding>
+        <minimumTokens>100</minimumTokens>
+        <targetJdk>1.5</targetJdk>
+      </configuration>
+    </plugin>-->
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-dependency-plugin</artifactId>
+      <version>2.0</version>
+    </plugin>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-project-info-reports-plugin</artifactId>
+      <reportSets>
+        <reportSet>
+          <reports>
+            <report>dependencies</report>
+            <!--  								<report>project-team</report>
+          <report>mailing-list</report>
+          <report>cim</report>
+          <report>issue-tracking</report>
+          <report>license</report>
+          <report>scm</report>--></reports>
+      </reportSet>
+    </reportSets>
+  </plugin>
+</plugins>
+</reporting>
 </project>
