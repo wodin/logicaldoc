@@ -7,12 +7,14 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.FileBean;
 import com.logicaldoc.core.ZipBean;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.text.AnalyzeText;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
@@ -86,9 +88,9 @@ public class ZipImport {
 	}
 
 	/**
-	 * Stores a file in the repository of logicaldoc and inserts some information
-	 * in the database of logicaldoc (menu, document, version, history,
-	 * searchdocument).
+	 * Stores a file in the repository of logicaldoc and inserts some
+	 * information in the database of logicaldoc (menu, document, version,
+	 * history, searchdocument).
 	 * 
 	 * @param file
 	 * @param parent
@@ -96,10 +98,10 @@ public class ZipImport {
 	 */
 	protected void addEntry(File file, Menu parent) {
 		try {
-			DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+			MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			String menuName = file.getName();
 			if (file.isDirectory()) { // creates a logicaldoc folder
-				Menu menu = documentManager.createFolder(parent, menuName);
+				Menu menu = dao.createFolder(parent, menuName);
 
 				File[] files = file.listFiles();
 
@@ -107,8 +109,9 @@ public class ZipImport {
 					addEntry(files[i], menu);
 				}
 			} else {
-				// creates a logicaldoc document
-				Document document = documentManager.create(file, parent, username, language);
+				// creates a document
+				DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+				Document document = docManager.create(file, parent, username, language);
 
 				if (extractKeywords) {
 					// also extract keywords and save on document

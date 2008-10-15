@@ -6,14 +6,13 @@ import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
-
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 
@@ -96,17 +95,16 @@ public class IndexInfo {
 			Runnable task = new Runnable() {
 				public void run() {
 					try {
-						MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 						DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-						Collection documents = documentDao.findAll();
-						Iterator iter = documents.iterator();
+						Collection<Document> documents = documentDao.findAll();
+						Iterator<Document> iter = documents.iterator();
 						Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 
 						while (iter.hasNext()) {
-							Document document = (Document) iter.next();
-							Menu menu = menuDao.findByPrimaryKey(document.getMenuId());
+							Document document = iter.next();
+							Menu folder = document.getFolder();
 							String dir = conf.getValue("docdir") + "/";
-							dir += (menu.getMenuPath() + "/" + menu.getMenuId());
+							dir += (folder.getMenuPath() + "/" + document.getId());
 							indexer.addDirectory(new File(dir), document);
 						}
 					} catch (Exception e) {

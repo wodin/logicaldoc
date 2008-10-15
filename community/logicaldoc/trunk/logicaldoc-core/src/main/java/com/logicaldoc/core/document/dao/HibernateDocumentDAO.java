@@ -15,13 +15,17 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import com.logicaldoc.core.FileBean;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import com.logicaldoc.core.security.dao.UserDocDAO;
+import com.logicaldoc.util.config.SettingsConfig;
 
 /**
  * Hibernate implementation of <code>DocumentDAO</code>
@@ -41,8 +45,26 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	private MenuDAO menuDAO;
 
 	private UserDAO userDAO;
-	
+
+	private UserDocDAO userDocDAO;
+
+	private TermDAO termDAO;
+
+	private SettingsConfig settings;
+
 	private HibernateDocumentDAO() {
+	}
+
+	public void setUserDocDAO(UserDocDAO userDocDAO) {
+		this.userDocDAO = userDocDAO;
+	}
+
+	public void setTermDAO(TermDAO termDAO) {
+		this.termDAO = termDAO;
+	}
+
+	public void setSettings(SettingsConfig settings) {
+		this.settings = settings;
 	}
 
 	public MenuDAO getMenuDAO() {
@@ -53,24 +75,12 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		this.menuDAO = menuDAO;
 	}
 
-	public ArticleDAO getArticleDAO() {
-		return articleDAO;
-	}
-
 	public void setArticleDAO(ArticleDAO articleDAO) {
 		this.articleDAO = articleDAO;
 	}
 
-	public UserDAO getUserDAO() {
-		return userDAO;
-	}
-
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
-	}
-
-	public HistoryDAO getHistoryDAO() {
-		return historyDAO;
 	}
 
 	public void setHistoryDAO(HistoryDAO historyDAO) {
@@ -80,39 +90,28 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	/**
 	 * @see com.logicaldoc.core.document.dao.DocumentDAO#delete(int)
 	 */
-	public boolean delete(int docId) {
+	public boolean delete(long docId) {
 		boolean result = true;
-
 		try {
 			Document doc = (Document) getHibernateTemplate().get(Document.class, docId);
 			if (doc != null) {
 				getHibernateTemplate().deleteAll(articleDAO.findByDocId(docId));
 				getHibernateTemplate().deleteAll(historyDAO.findByDocId(docId));
-				Menu menu = doc.getMenu();
+				userDocDAO.delete(docId);
+				termDAO.delete(docId);
 				doc.getVersions().clear();
 				doc.getKeywords().clear();
-				doc.setMenu(null);
+				doc.setFolder(null);
 				getHibernateTemplate().delete(doc);
-				menuDAO.delete(menu.getMenuId());
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 			result = false;
 		}
 
 		return result;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.document.dao.DocumentDAO#deleteByMenuId(int)
-	 */
-	public boolean deleteByMenuId(int menuId) {
-		Document doc = findByMenuId(menuId);
-		if (doc != null)
-			return delete(doc.getDocId());
-		else
-			return true;
 	}
 
 	/**
@@ -133,30 +132,9 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findByMenuId(int)
-	 */
-	@SuppressWarnings("unchecked")
-	public Document findByMenuId(int menuId) {
-		Document doc = null;
-
-		try {
-			Collection<Document> coll = (Collection<Document>) getHibernateTemplate().find(
-					"from com.logicaldoc.core.document.Document _doc where _doc.menu.menuId = ?",
-					new Object[] { new Integer(menuId) });
-			if (!coll.isEmpty())
-				doc = coll.iterator().next();
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
-
-		return doc;
-	}
-
-	/**
 	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findByPrimaryKey(int)
 	 */
-	public Document findByPrimaryKey(int docId) {
+	public Document findByPrimaryKey(long docId) {
 		Document doc = null;
 
 		try {
@@ -173,16 +151,17 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findByUserName(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Integer> findByUserName(String username) {
-		Collection<Integer> coll = new ArrayList<Integer>();
+	public Collection<Long> findByUserName(String username) {
+		Collection<Long> coll = new ArrayList<Long>();
 
 		try {
 			Collection<Menu> menus = menuDAO.findByUserName(username);
 			if (menus.isEmpty())
 				return coll;
 
-			StringBuffer query = new StringBuffer("select docId from com.logicaldoc.core.document.Document _doc where ");
-			query.append("_doc.menu.menuId in (");
+			StringBuffer query = new StringBuffer(
+					"select _doc.id from com.logicaldoc.core.document.Document _doc where ");
+			query.append("_doc.folder.menuId in (");
 			boolean first = true;
 			for (Menu menu : menus) {
 				if (!first)
@@ -192,7 +171,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			}
 			query.append(")");
 
-			coll = (Collection<Integer>) getHibernateTemplate().find(query.toString());
+			coll = (Collection<Long>) getHibernateTemplate().find(query.toString());
 
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -220,18 +199,18 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findMenuIdByKeyword(java.lang.String)
+	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findDocIdByKeyword(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Integer> findMenuIdByKeyword(String keyword) {
-		Collection<Integer> coll = new ArrayList<Integer>();
+	public Collection<Long> findDocIdByKeyword(String keyword) {
+		Collection<Long> coll = new ArrayList<Long>();
 
 		try {
 			StringBuilder query = new StringBuilder(
-					"select menu.menuId from com.logicaldoc.core.document.Document _doc where ");
+					"select _doc.id from com.logicaldoc.core.document.Document _doc where ");
 			query.append("'" + keyword + "'");
 			query.append(" in elements(_doc.keywords) ");
-			coll = (Collection<Integer>) getHibernateTemplate().find(query.toString());
+			coll = (Collection<Long>) getHibernateTemplate().find(query.toString());
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -253,14 +232,19 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				Set<String> dst = new HashSet<String>();
 				for (String str : src) {
 					String s = str;
-					if (str.length() > 20) {
-						s = str.substring(0, 20);
+					if (str.length() > 255) {
+						s = str.substring(0, 255);
 					}
 					if (!dst.contains(s))
 						dst.add(s);
 				}
 				doc.setKeywords(dst);
 			}
+
+			long size = FileBean.getSize(settings.getValue("docdir") + "/" + doc.getFolder().getMenuPath() + "/"
+					+ doc.getId() + "/" + doc.getFileName());
+			doc.setFileSize(size);
+
 			getHibernateTemplate().saveOrUpdate(doc);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -295,7 +279,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		return coll;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( { "unchecked", "deprecation" })
 	public Collection<String> findKeywords(String firstLetter, String username) {
 		Collection<String> coll = new ArrayList<String>();
 
@@ -306,8 +290,8 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 			if (!precoll.isEmpty()) {
 				StringBuffer query = new StringBuffer(
-						"select B.co_keyword from co_document A, co_keywords B, co_menugroup C "
-								+ " where A.co_docid = B.co_docid and A.co_menuid=C.co_menuid and C.co_groupname in (");
+						"select B.ld_keyword from ld_document A, ld_keyword B, co_menugroup C "
+								+ " where A.ld_id = B.ld_docid and A.ld_folderid=C.co_menuid and C.co_groupname in (");
 				boolean first = true;
 				while (iter.hasNext()) {
 					if (!first)
@@ -316,7 +300,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 					query.append("'" + ug.getGroupName() + "'");
 					first = false;
 				}
-				query.append(") and lower(B.co_keyword) like '");
+				query.append(") and lower(B.ld_keyword) like '");
 				query.append(firstLetter.toLowerCase()).append("%' ");
 
 				Connection con = null;
@@ -348,8 +332,8 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<Document> findLastModifiedByUserName(String username, int maxElements) {
-		Collection<Document> coll = new ArrayList<Document>();
+	public List<Document> findLastModifiedByUserName(String username, int maxElements) {
+		List<Document> coll = new ArrayList<Document>();
 
 		try {
 			StringBuilder query = new StringBuilder(
@@ -357,12 +341,12 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			query.append(" WHERE _history.username = '" + username + "' ");
 			query.append(" ORDER BY _history.date DESC");
 
-			Collection<Integer> results = (Collection<Integer>) getHibernateTemplate().find(query.toString());
-			for (Integer docid : results) {
+			Collection<Long> results = (Collection<Long>) getHibernateTemplate().find(query.toString());
+			for (Long docid : results) {
 				if (coll.size() >= maxElements)
 					break;
 				Document document = findByPrimaryKey(docid);
-				if (menuDAO.isReadEnable(document.getMenuId(), username))
+				if (menuDAO.isReadEnable(document.getFolder().getMenuId(), username))
 					coll.add(document);
 			}
 		} catch (Exception e) {
@@ -373,13 +357,15 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		return coll;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Integer> findAllKeywords() {
 
 		Map<String, Integer> map = new HashMap<String, Integer>();
 
 		try {
 			StringBuilder query = new StringBuilder("SELECT COUNT(keyword), keyword");
-			query.append(" FROM com.logicaldoc.core.document.Document _doc JOIN _doc.keywords keyword GROUP BY keyword");
+			query
+					.append(" FROM com.logicaldoc.core.document.Document _doc JOIN _doc.keywords keyword GROUP BY keyword");
 
 			List ssss = getHibernateTemplate().find(query.toString());
 			for (Iterator iter = ssss.iterator(); iter.hasNext();) {
@@ -395,5 +381,177 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		}
 		return map;
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Collection<Document> findByUserNameAndKeyword(String username, String keyword) {
+		Collection<Document> coll = new ArrayList<Document>();
+		try {
+			User user = userDAO.findByPrimaryKey(username);
+			Collection<Group> precoll = user.getGroups();
+			Iterator<Group> iter = precoll.iterator();
+			if (precoll.isEmpty())
+				return coll;
+
+			StringBuffer query = new StringBuffer("select distinct(_doc) from Document _doc  ");
+			query.append(" left outer join _menu.menuGroups as _group ");
+			query.append(" where _group.groupName in (");
+
+			boolean first = true;
+			while (iter.hasNext()) {
+				if (!first)
+					query.append(",");
+				Group ug = (Group) iter.next();
+				query.append("'" + ug.getGroupName() + "'");
+				first = false;
+			}
+			query.append(")");
+
+			Collection<Long> ids = findDocIdByUsernameAndKeyword(username, keyword);
+			Iterator<Long> iter2 = ids.iterator();
+			if (ids.isEmpty())
+				return coll;
+			query.append("and _doc.id in (");
+			first = true;
+			while (iter2.hasNext()) {
+				if (!first)
+					query.append(",");
+				query.append("'" + iter.next() + "'");
+				first = false;
+			}
+			query.append(")");
+			coll = (Collection<Document>) getHibernateTemplate().find(query.toString());
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+
+		return coll;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Set<Long> findDocIdByUsernameAndKeyword(String username, String keyword) {
+		Set<Long> ids = new HashSet<Long>();
+		try {
+			User user = userDAO.findByPrimaryKey(username);
+			Collection<Group> precoll = user.getGroups();
+			Iterator<Group> iter = precoll.iterator();
+
+			if (!precoll.isEmpty()) {
+				StringBuffer query = new StringBuffer(
+						"select distinct(C.ld_id) from co_menugroup A, co_menus B, ld_document C, ld_keyword D "
+								+ " where A.co_menuid=B.co_menuid AND B.co_menuid=C.ld_folderid AND C.ld_id=D.ld_docid"
+								+ " AND A.co_groupname in (");
+				boolean first = true;
+				while (iter.hasNext()) {
+					if (!first)
+						query.append(",");
+					Group ug = (Group) iter.next();
+					query.append("'" + ug.getGroupName() + "'");
+					first = false;
+				}
+				query.append(")");
+				query.append(" AND B.co_menutype=" + Menu.MENUTYPE_DIRECTORY);
+				query.append(" AND lower(D.ld_keyword)='" + keyword + "'");
+
+				Connection con = null;
+				Statement stmt = null;
+				ResultSet rs = null;
+
+				try {
+					con = getSession().connection();
+					stmt = con.createStatement();
+					rs = stmt.executeQuery(query.toString());
+					while (rs.next()) {
+						ids.add(new Long(rs.getLong(1)));
+					}
+				} finally {
+					if (rs != null)
+						rs.close();
+					if (stmt != null)
+						stmt.close();
+					if (con != null)
+						con.close();
+				}
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return ids;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Document> findLastDownloadsByUserName(String username, int maxResults) {
+		List<Document> coll = new ArrayList<Document>();
+
+		try {
+			StringBuffer query = new StringBuffer("select _userdoc.id.docId from UserDoc _userdoc");
+			query.append(" where _userdoc.id.userName = ?");
+			query.append(" order by _userdoc.date desc");
+
+			Collection<Long> results = (Collection<Long>) getHibernateTemplate().find(query.toString(), username);
+			ArrayList<Long> tmpal = new ArrayList<Long>(results);
+			List<Long> docIds = tmpal;
+
+			if (docIds.isEmpty())
+				return coll;
+
+			if (docIds.size() > maxResults) {
+				tmpal.subList(0, maxResults - 1);
+			}
+
+			query = new StringBuffer("from Document _doc  ");
+			query.append(" where _doc.id in (");
+
+			for (int i = 0; i < docIds.size(); i++) {
+				Long docId = docIds.get(i);
+				if (i > 0)
+					query.append(",");
+				query.append(docId);
+			}
+			query.append(")");
+
+			// execute the query
+			Collection<Document> unorderdColl = (Collection<Document>) getHibernateTemplate().find(query.toString());
+
+			// put all elements in a map
+			HashMap<Long, Document> hm = new HashMap<Long, Document>();
+			for (Document doc : unorderdColl) {
+				hm.put(doc.getId(), doc);
+			}
+
+			// Access the map using the menuIds
+			// if a match is found, put it in the original list
+			for (Long docId : docIds) {
+				Document myDoc = hm.get(docId);
+				if (myDoc != null)
+					coll.add(myDoc);
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+
+		return coll;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Collection<Long> findByFolder(int folderId) {
+		Collection<Long> coll = new ArrayList<Long>();
+
+		try {
+			StringBuffer query = new StringBuffer(
+					"select _doc.id from com.logicaldoc.core.document.Document _doc where ");
+			query.append("_doc.folder.menuId = ");
+			query.append(Integer.toString(folderId));
+
+			coll = (Collection<Long>) getHibernateTemplate().find(query.toString());
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+
+		return coll;
+	}
 }

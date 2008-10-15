@@ -3,55 +3,47 @@ package com.logicaldoc.core.searchengine.util;
 /**
  * Created on 15.11.2004
  */
-public class Edge
-{
-    private int thickness;
-    private int id;
+public class Edge {
+	private int thickness;
 
-    /**
-     *
-     */
-    public Edge()
-    {
-    } // end ctor Edge
+	private long id;
 
-    public Edge(
-        int thick,
-        int i)
-    {
-        thickness = thick;
-        id = i;
-    } // end ctor Edge
+	/**
+	 * 
+	 */
+	public Edge() {
+	}
 
-    /**
-     * @return  Returns the id.
-     */
-    public int getId()
-    {
-        return id;
-    } // end method getId
+	public Edge(int thick, long i) {
+		thickness = thick;
+		id = i;
+	}
 
-    /**
-     * @param id  The id to set.
-     */
-    public void setId(int id)
-    {
-        this.id = id;
-    } // end method setId
+	/**
+	 * @return Returns the id.
+	 */
+	public long getId() {
+		return id;
+	}
 
-    /**
-     * @return  Returns the thickness.
-     */
-    public int getThickness()
-    {
-        return thickness;
-    } // end method getThickness
+	/**
+	 * @param id The id to set.
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param thickness  The thickness to set.
-     */
-    public void setThickness(int thickness)
-    {
-        this.thickness = thickness;
-    } // end method setThickness
-} // end class Edge
+	/**
+	 * @return Returns the thickness.
+	 */
+	public int getThickness() {
+		return thickness;
+	}
+
+	/**
+	 * @param thickness The thickness to set.
+	 */
+	public void setThickness(int thickness) {
+		this.thickness = thickness;
+	}
+}

@@ -15,23 +15,23 @@ public class UserDocID implements Serializable {
 
 	private String userName;
 
-	private int menuId;
+	private long docId;
 
 	public UserDocID() {
 	}
 
-	public UserDocID(int menuId, String userName) {
+	public UserDocID(long docId, String userName) {
 		super();
 		this.userName = userName;
-		this.menuId = menuId;
+		this.docId = docId;
 	}
 
-	public int getMenuId() {
-		return menuId;
+	public long getDocId() {
+		return docId;
 	}
 
-	public void setMenuId(int menuId) {
-		this.menuId = menuId;
+	public void setDocId(long docId) {
+		this.docId = docId;
 	}
 
 	public String getUserName() {
@@ -48,13 +48,13 @@ public class UserDocID implements Serializable {
 			return false;
 
 		UserDocID other = (UserDocID) obj;
-		if (other.getMenuId() != this.getMenuId())
+		if (other.getDocId() != this.getDocId())
 			return false;
 		return other.getUserName().equals(this.getUserName());
 	}
 
 	@Override
 	public int hashCode() {
-		return (getUserName() + getMenuId()).hashCode();
+		return (getUserName() + getDocId()).hashCode();
 	}
 }

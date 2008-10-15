@@ -50,8 +50,8 @@ public interface DmsService {
 
 	public String createDocument(@WebParam(name = "username")
 	String username, @WebParam(name = "password")
-	String password, @WebParam(name = "parent")
-	int parent, @WebParam(name = "docTitle")
+	String password, @WebParam(name = "folder")
+	int folder, @WebParam(name = "docTitle")
 	String docTitle, @WebParam(name = "source")
 	String source, @WebParam(name = "sourceDate")
 	String sourceDate, @WebParam(name = "author")
@@ -61,8 +61,7 @@ public interface DmsService {
 	String language, @WebParam(name = "keywords")
 	String keywords, @WebParam(name = "versionDesc")
 	String versionDesc, @WebParam(name = "filename")
-	String filename, @WebParam(name = "groups")
-	String groups, @WebParam(name = "content")
+	String filename, @WebParam(name = "content")
 	DataHandler content) throws Exception;
 
 	/**
@@ -79,7 +78,7 @@ public interface DmsService {
 	public DataHandler downloadDocument(@WebParam(name = "username")
 	String username, @WebParam(name = "password")
 	String password, @WebParam(name = "id")
-	int id, @WebParam(name = "version")
+	long id, @WebParam(name = "version")
 	String version) throws Exception;
 
 	/**
@@ -94,7 +93,7 @@ public interface DmsService {
 	public DocumentInfo downloadDocumentInfo(@WebParam(name = "username")
 	String username, @WebParam(name = "password")
 	String password, @WebParam(name = "id")
-	int id) throws Exception;
+	long id) throws Exception;
 
 	/**
 	 * Downloads folder metadata
@@ -122,7 +121,7 @@ public interface DmsService {
 	public String deleteDocument(@WebParam(name = "username")
 	String username, @WebParam(name = "password")
 	String password, @WebParam(name = "id")
-	int id) throws Exception;
+	long id) throws Exception;
 
 	/**
 	 * Marks the document as checked out
@@ -136,7 +135,7 @@ public interface DmsService {
 	public String checkout(@WebParam(name = "username")
 	String username, @WebParam(name = "password")
 	String password, @WebParam(name = "id")
-	int id) throws Exception;
+	long id) throws Exception;
 
 	/**
 	 * Uploads a new version of an already checked out document
@@ -154,7 +153,7 @@ public interface DmsService {
 	public String checkin(@WebParam(name = "username")
 	String username, @WebParam(name = "password")
 	String password, @WebParam(name = "id")
-	int id, @WebParam(name = "filename")
+	long id, @WebParam(name = "filename")
 	String filename, @WebParam(name = "description")
 	String description, @WebParam(name = "type")
 	String type, @WebParam(name = "content")

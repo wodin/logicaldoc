@@ -1,103 +1,99 @@
 package com.logicaldoc.web.document;
 
-import com.logicaldoc.core.document.Article;
-
 import java.util.Date;
 
+import com.logicaldoc.core.document.Article;
 
 /**
  * Utility class suitable for template display
- *
+ * 
  * @author Marco Meschieri - Logical Objects
  * @version $Id: ArticleRecord.java,v 1.2 2007/10/16 16:10:34 marco Exp $
  * @since 3.0
  */
 public class ArticleRecord extends Article {
-    private static final long serialVersionUID = 1L;
-    private Article wrappedArticle;
-    private ArticlesRecordsManager manager;
+	private static final long serialVersionUID = 1L;
 
-    public ArticleRecord(Article wrappedArticle, ArticlesRecordsManager manager) {
-        super();
-        this.wrappedArticle = wrappedArticle;
-        this.manager = manager;
-    }
+	private Article wrappedArticle;
 
-    public boolean equals(Object obj) {
-        return wrappedArticle.equals(obj);
-    }
+	private ArticlesRecordsManager manager;
 
-    public String getArticleDate() {
-        return wrappedArticle.getArticleDate();
-    }
+	public ArticleRecord(Article wrappedArticle, ArticlesRecordsManager manager) {
+		super();
+		this.wrappedArticle = wrappedArticle;
+		this.manager = manager;
+	}
 
-    public int getArticleId() {
-        return wrappedArticle.getArticleId();
-    }
+	public boolean equals(Object obj) {
+		return wrappedArticle.equals(obj);
+	}
 
-    public Date getDate() {
-        return wrappedArticle.getDate();
-    }
+	public int getArticleId() {
+		return wrappedArticle.getArticleId();
+	}
 
-    public int getDocId() {
-        return wrappedArticle.getDocId();
-    }
+	public Date getDate() {
+		return wrappedArticle.getDate();
+	}
 
-    public String getMessage() {
-        return wrappedArticle.getMessage();
-    }
+	public long getDocId() {
+		return wrappedArticle.getDocId();
+	}
 
-    public String getSubject() {
-        return wrappedArticle.getSubject();
-    }
+	public String getMessage() {
+		return wrappedArticle.getMessage();
+	}
 
-    public String getUsername() {
-        return wrappedArticle.getUsername();
-    }
+	public String getSubject() {
+		return wrappedArticle.getSubject();
+	}
 
-    public int hashCode() {
-        return wrappedArticle.hashCode();
-    }
+	public String getUsername() {
+		return wrappedArticle.getUsername();
+	}
 
-    public void setArticleDate(String articleDate) {
-        wrappedArticle.setArticleDate(articleDate);
-    }
+	public int hashCode() {
+		return wrappedArticle.hashCode();
+	}
 
-    public void setArticleId(int articleId) {
-        wrappedArticle.setArticleId(articleId);
-    }
+	public void reset() {
+		wrappedArticle.reset();
+	}
 
-    public void setDate(Date date) {
-        wrappedArticle.setDate(date);
-    }
+	public void setArticleId(int articleId) {
+		wrappedArticle.setArticleId(articleId);
+	}
 
-    public void setDocId(int docId) {
-        wrappedArticle.setDocId(docId);
-    }
+	public void setDate(Date date) {
+		wrappedArticle.setDate(date);
+	}
 
-    public void setMessage(String message) {
-        wrappedArticle.setMessage(message);
-    }
+	public void setDocId(long docId) {
+		wrappedArticle.setDocId(docId);
+	}
 
-    public void setSubject(String subject) {
-        wrappedArticle.setSubject(subject);
-    }
+	public void setMessage(String message) {
+		wrappedArticle.setMessage(message);
+	}
 
-    public void setUsername(String username) {
-        wrappedArticle.setUsername(username);
-    }
+	public void setSubject(String subject) {
+		wrappedArticle.setSubject(subject);
+	}
 
-    public String toString() {
-        return wrappedArticle.toString();
-    }
+	public void setUsername(String username) {
+		wrappedArticle.setUsername(username);
+	}
 
-    public String select() {
+	public String toString() {
+		return wrappedArticle.toString();
+	}
+
+	public String select() {
         manager.setSelectedArticle(this);
-
         return null;
     }
 
-    public Article getWrappedArticle() {
-        return wrappedArticle;
-    }
+	public Article getWrappedArticle() {
+		return wrappedArticle;
+	}
 }

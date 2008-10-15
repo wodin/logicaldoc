@@ -2,7 +2,6 @@ package com.logicaldoc.core.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,8 +28,6 @@ public class Menu {
 	public static final int MENUID_EDITME = 19;
 
 	public static final int MENUTYPE_DIRECTORY = 3;
-
-	public static final int MENUTYPE_FILE = 5;
 
 	public static final int MENUTYPE_ACTION = 1;
 
@@ -63,9 +60,6 @@ public class Menu {
 
 	// Not persistent
 	protected boolean writeable = false;
-
-	// Not pesistent
-	protected Date date;
 
 	public Menu() {
 	}
@@ -203,15 +197,13 @@ public class Menu {
 
 			if (menus.length > 0) {
 				if (menus[0].length() > 0) {
-					MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(
-							MenuDAO.class);
+					MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 					Menu home = menuDao.findByPrimaryKey(Menu.MENUID_HOME);
 					coll.add(home);
 
 					for (int i = 1; i < menus.length; i++) {
 						try {
-							Menu menu = menuDao.findByPrimaryKey(Integer
-									.parseInt(menus[i]));
+							Menu menu = menuDao.findByPrimaryKey(Integer.parseInt(menus[i]));
 							coll.add(menu);
 						} catch (NumberFormatException nfe) {
 							;
@@ -264,13 +256,5 @@ public class Menu {
 
 	public void setWriteable(boolean writeable) {
 		this.writeable = writeable;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
 	}
 }

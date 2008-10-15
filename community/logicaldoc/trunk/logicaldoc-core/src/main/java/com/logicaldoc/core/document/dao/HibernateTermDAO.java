@@ -2,12 +2,14 @@ package com.logicaldoc.core.document.dao;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
 import com.logicaldoc.core.document.Term;
 import com.logicaldoc.core.document.TermID;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * Hibernate implementation of <code>TermDAO</code>
@@ -24,16 +26,16 @@ public class HibernateTermDAO extends HibernateDaoSupport implements TermDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.TermDAO#delete(int)
+	 * @see com.logicaldoc.core.document.dao.TermDAO#delete(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean delete(int menuId) {
+	public boolean delete(long docId) {
 		boolean result = true;
 
 		try {
 			Collection<Term> coll = (Collection<Term>) getHibernateTemplate().find(
-					"from com.logicaldoc.core.document.Term _term where _term.id.menuId = ?",
-					new Object[] { new Integer(menuId) });
+					"from com.logicaldoc.core.document.Term _term where _term.id.docId = ?",
+					new Object[] { new Long(docId) });
 			getHibernateTemplate().deleteAll(coll);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -45,16 +47,16 @@ public class HibernateTermDAO extends HibernateDaoSupport implements TermDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.TermDAO#findByMenuId(int)
+	 * @see com.logicaldoc.core.document.dao.TermDAO#findByDocId(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Term> findByMenuId(int menuId) {
+	public Collection<Term> findByDocId(long docId) {
 		Collection<Term> result = new ArrayList<Term>();
 
 		try {
 			result = (Collection<Term>) getHibernateTemplate().find(
-					"from com.logicaldoc.core.document.Term _term where _term.id.menuId = ?",
-					new Object[] { new Integer(menuId) });
+					"from com.logicaldoc.core.document.Term _term where _term.id.docId = ?",
+					new Object[] { new Long(docId) });
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
@@ -71,17 +73,16 @@ public class HibernateTermDAO extends HibernateDaoSupport implements TermDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.TermDAO#findByStem(int)
+	 * @see com.logicaldoc.core.document.dao.TermDAO#findByStem(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Term> findByStem(int menuId, int maxResults) {
-		Collection<Term> result = new ArrayList<Term>();
+	public List<Term> findByStem(long docId, int maxResults) {
+		List<Term> result = new ArrayList<Term>();
 
 		try {
 			StringBuffer query = new StringBuffer(
-					"select _term.id.menuId, _term.id.stem from com.logicaldoc.core.document.Term _term where _term.id.menuId != ? ");
-			Collection<Term> coll = findByMenuId(menuId);
-
+					"select _term.id.docId, _term.id.stem from com.logicaldoc.core.document.Term _term where _term.id.docId != ? ");
+			Collection<Term> coll = findByDocId(docId);
 			if (!coll.isEmpty()) {
 				query.append("and _term.id.stem in (");
 				boolean first = true;
@@ -94,22 +95,18 @@ public class HibernateTermDAO extends HibernateDaoSupport implements TermDAO {
 				query.append(") ");
 			}
 
-			query.append("order by id.menuId, id.stem, value, wordCount, originWord");
+			query.append("order by id.docId, id.stem, value, wordCount, originWord");
 
 			Collection<Object[]> tmp = (Collection<Object[]>) getHibernateTemplate().find(query.toString(),
-					new Object[] { new Integer(menuId) });
+					new Object[] { new Long(docId) });
 			int i = 0;
 			for (Object[] entry : tmp) {
 				if (i >= maxResults)
 					break;
-				TermID id = new TermID((Integer) entry[0], (String) entry[1]);
+				TermID id = new TermID((Long) entry[0], (String) entry[1]);
 				result.add(findById(id));
 				i++;
 			}
-
-			// result = (Collection<Term>)
-			// getHibernateTemplate().find(query.toString(),
-			// new Object[] { new Integer(menuId) });
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);

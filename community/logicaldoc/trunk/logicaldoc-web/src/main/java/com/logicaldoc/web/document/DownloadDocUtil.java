@@ -33,12 +33,12 @@ public class DownloadDocUtil {
 	 * 
 	 * @param userName
 	 *            the username of the user accessing the file
-	 * @param menuId
-	 *            id of the menu the user accessed
+	 * @param docId
+	 *            id of the document the user accessed
 	 */
-	public static void addToRecentFiles(String userName, int menuId) {
+	public static void addToRecentFiles(String userName, long docId) {
 		UserDoc userdoc = new UserDoc();
-		userdoc.setMenuId(menuId);
+		userdoc.setDocId(docId);
 		userdoc.setUserName(userName);
 
 		UserDocDAO uddao = (UserDocDAO) Context.getInstance().getBean(
@@ -49,13 +49,13 @@ public class DownloadDocUtil {
 	/**
 	 * extracts the mimetype of the document
 	 */
-	public static String getMimeType(Menu docId) {
-		if (docId == null) {
+	public static String getMimeType(Document document) {
+		if (document == null) {
 			return null;
 		}
 
-		String extension = docId.getMenuRef().substring(
-				docId.getMenuRef().lastIndexOf(".") + 1);
+		String extension = document.getFileName().substring(
+				document.getFileName().lastIndexOf(".") + 1);
 		MimeTypeConfig mtc = (MimeTypeConfig) Context.getInstance().getBean(
 				MimeTypeConfig.class);
 		String mimetype = mtc.getMimeApp(extension);
@@ -79,21 +79,18 @@ public class DownloadDocUtil {
 	 *            name of the version; if null the latest version will returned
 	 */
 	public static void downloadDocument(HttpServletResponse response,
-			int docId, String docVerId) throws FileNotFoundException,
+			long docId, String docVerId) throws FileNotFoundException,
 			IOException {
-		// get menu and document
-		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu menu = mdao.findByPrimaryKey(docId);
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(
 				DocumentDAO.class);
-		Document doc = ddao.findByMenuId(docId);
+		Document doc = ddao.findByPrimaryKey(docId);
 
-		if ((menu == null) || (doc == null)) {
+		if (doc == null) {
 			throw new FileNotFoundException();
 		}
 
 		// get the mimetype
-		String mimetype = DownloadDocUtil.getMimeType(menu);
+		String mimetype = DownloadDocUtil.getMimeType(doc);
 		DocumentManager documentManager = (DocumentManager) Context
 				.getInstance().getBean(DocumentManager.class);
 		File file = documentManager.getDocumentFile(doc, docVerId);
@@ -105,7 +102,7 @@ public class DownloadDocUtil {
 		// response object
 		response.setContentType(mimetype);
 		response.setHeader("Content-Disposition", "attachment; filename=\""
-				+ doc.getMenu().getMenuRef() + "\"");
+				+ doc.getFileName() + "\"");
 
 		// Headers required by Internet Explorer
 		response.setHeader("Pragma", "public");
@@ -142,15 +139,13 @@ public class DownloadDocUtil {
 	 *            name of the version; if null the latest version will returned
 	 */
 	public static void downloadDocumentText(HttpServletResponse response,
-			int docId) throws FileNotFoundException, IOException {
-		// get menu and document
-		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu menu = mdao.findByPrimaryKey(docId);
+			long docId) throws FileNotFoundException, IOException {
+		// get document
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(
 				DocumentDAO.class);
-		Document doc = ddao.findByMenuId(docId);
+		Document doc = ddao.findByPrimaryKey(docId);
 
-		if ((menu == null) || (doc == null)) {
+		if (doc == null) {
 			throw new FileNotFoundException();
 		}
 
@@ -160,7 +155,7 @@ public class DownloadDocUtil {
 		// response object
 		response.setContentType(mimetype);
 		response.setHeader("Content-Disposition", "attachment; filename=\""
-				+ doc.getMenu().getMenuRef() + ".txt" + "\"");
+				+ doc.getFileName() + ".txt" + "\"");
 
 		// Headers required by Internet Explorer
 		response.setHeader("Pragma", "public");
@@ -170,7 +165,7 @@ public class DownloadDocUtil {
 
 		DocumentManager manager = (DocumentManager) Context.getInstance()
 				.getBean(DocumentManager.class);
-		String content = manager.getDocumentContent(doc.getDocId());
+		String content = manager.getDocumentContent(doc.getId());
 
 		InputStream is = new StringInputStream(content);
 		OutputStream os;

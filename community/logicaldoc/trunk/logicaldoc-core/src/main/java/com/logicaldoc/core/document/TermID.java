@@ -13,24 +13,24 @@ public class TermID implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int menuId;
+	private long docId;
 
 	private String stem = "";
 
-	public TermID(int menuId, String stem) {
-		this.menuId = menuId;
+	public TermID(long docId, String stem) {
+		this.docId = docId;
 		this.stem = stem;
 	}
 
 	public TermID() {
 	}
 
-	public int getMenuId() {
-		return menuId;
+	public long getDocId() {
+		return docId;
 	}
 
-	public void setMenuId(int menuId) {
-		this.menuId = menuId;
+	public void setDocId(long docId) {
+		this.docId = docId;
 	}
 
 	public String getStem() {
@@ -47,18 +47,18 @@ public class TermID implements Serializable {
 			return false;
 
 		TermID other = (TermID) obj;
-		if (other.getMenuId() != this.getMenuId())
+		if (other.getDocId() != this.getDocId())
 			return false;
 		return other.getStem().equals(this.getStem());
 	}
 
 	@Override
 	public int hashCode() {
-		return (menuId + stem).hashCode();
+		return (docId + stem).hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return menuId+","+stem;
+		return docId + "," + stem;
 	}
 }

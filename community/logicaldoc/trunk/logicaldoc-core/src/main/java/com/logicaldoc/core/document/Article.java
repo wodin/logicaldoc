@@ -12,27 +12,17 @@ public class Article {
 
 	private int articleId = 0;
 
-	private int docId = 0;
+	private long docId = 0;
 
 	private String subject = "";
 
 	private String message = "";
-
-	private String articleDate = "";
 
 	private Date date = new Date();
 
 	private String username = "";
 
 	public Article() {
-	}
-
-	public String getArticleDate() {
-		return articleDate;
-	}
-
-	public void setArticleDate(String articleDate) {
-		this.articleDate = articleDate;
 	}
 
 	public int getArticleId() {
@@ -43,11 +33,11 @@ public class Article {
 		this.articleId = articleId;
 	}
 
-	public int getDocId() {
+	public long getDocId() {
 		return docId;
 	}
 
-	public void setDocId(int docId) {
+	public void setDocId(long docId) {
 		this.docId = docId;
 	}
 
@@ -80,20 +70,11 @@ public class Article {
 		docId = 0;
 		subject = "";
 		message = "";
-		articleDate = "";
 		username = "";
 		date = new Date();
 	}
 
 	public Date getDate() {
-		if (articleDate != "") {
-			try {
-				date.setTime(Long.parseLong(articleDate));
-			} catch (Exception e) {
-				date = new Date();
-			}
-		}
-
 		return date;
 	}
 

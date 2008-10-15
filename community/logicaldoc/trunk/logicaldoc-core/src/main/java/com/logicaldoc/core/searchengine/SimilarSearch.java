@@ -9,7 +9,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Term;
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.TermDAO;
 import com.logicaldoc.core.searchengine.util.ResultComparator;
 import com.logicaldoc.core.security.Menu;
@@ -35,38 +37,41 @@ public class SimilarSearch {
 	 * @param minScore - Minimum score value (between 0 and 1)
 	 * @return Collection of similar documents sorted by score value.
 	 */
-	public Collection findSimilarDocuments(int menuId, double minScore, String username) {
+	public Collection findSimilarDocuments(long docId, double minScore, String username) {
 		TermDAO termsDao = (TermDAO) Context.getInstance().getBean(TermDAO.class);
-		Collection<Term> basicTerms = termsDao.findByMenuId(menuId);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Collection<Term> basicTerms = termsDao.findByDocId(docId);
 
 		// select all documents having a keyword a the basic document
-		Collection<Term> terms = termsDao.findByStem(menuId, 1000);
+		Collection<Term> terms = termsDao.findByStem(docId, 1000);
 		Collection<Result> result = new ArrayList<Result>();
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Set<Integer> cache=new HashSet<Integer>();
+		Set<Long> cache=new HashSet<Long>();
 		Iterator<Term> iter = terms.iterator();
 		while (iter.hasNext()) {
 			// calculate the score for ranking
 			Term term = (Term) iter.next();
-			if (!cache.contains(term.getMenuId()) && mdao.isReadEnable(term.getMenuId(), username)) {
-				Collection<Term> docTerms = termsDao.findByMenuId(term.getMenuId());
+			Document doc=docDao.findByPrimaryKey(docId);
+			Menu folder=doc.getFolder();
+			if (!cache.contains(term.getDocId()) && mdao.isReadEnable(folder.getMenuId(), username)) {
+				Collection<Term> docTerms = termsDao.findByDocId(term.getDocId());
 				float score = calculateScore(basicTerms, docTerms);
 
 				if (score >= minScore) {
 					Result res = new ResultImpl();
-					Menu menu = mdao.findByPrimaryKey(term.getMenuId());
 					res.createScore(score);
-					res.setIcon(menu.getMenuIcon());
-					res.setMenuId(menu.getMenuId());
-					res.setName(menu.getMenuText());
-					res.setPath(menu.getMenuPath());
+					res.setIcon(doc.getIcon());
+					res.setDocId(doc.getId());
+					res.setTitle(doc.getTitle());
+					res.setSourceDate(doc.getSourceDate());
+					res.setDate(doc.getDate());
 					if (!result.contains(res))
 						result.add(res);
 				}
 			}
-			if(!cache.contains(term.getMenuId()))
-				cache.add(term.getMenuId());
+			if(!cache.contains(term.getDocId()))
+				cache.add(term.getDocId());
 		}
 
 		Collections.sort((List<Result>) result, new ResultComparator());

@@ -28,7 +28,7 @@ public class TermSelector
     } // end ctor TermSelector
 
     /**
-     * Selects n terms the mostly occured in all document being in a given search result.
+     * Selects n terms the mostly occurred in all document being in a given search result.
      * @param searchResult
      * @param count Count of terms to be returned.
      * @return
@@ -43,7 +43,7 @@ public class TermSelector
         while (iter.hasNext()) {
             Result rs = (Result) iter.next();
             Collection termcoll =
-                termDao.findByMenuId(rs.getMenuId());
+                termDao.findByDocId(rs.getDocId());
             Iterator termiter = termcoll.iterator();
 
             while (termiter.hasNext()) {
@@ -52,8 +52,6 @@ public class TermSelector
                 if (terms.containsKey(term.getStem())) {
                     TermEntry entry = (TermEntry) terms.get(term.getStem());
 
-                    //entry.setValue(entry.getValue() + (term.getValue() / term.getWordCount()));
-                    //entry.setWordCount(entry.getWordCount() + term.getWordCount());
                     entry.setValue(entry.getValue() + term.getValue());
 
                     if (term.getOriginWord().length()
@@ -72,7 +70,7 @@ public class TermSelector
                         edge.setThickness(1);
                     }
 
-                    edge.setId(term.getMenuId());
+                    edge.setId(term.getDocId());
                     entry.addDocument(edge);
                 } else {
                     TermEntry entry = new TermEntry();
@@ -94,7 +92,7 @@ public class TermSelector
                         edge.setThickness(1);
                     }
 
-                    edge.setId(term.getMenuId());
+                    edge.setId(term.getDocId());
                     entry.addDocument(edge);
                     terms.put(term.getStem(), entry);
                 }

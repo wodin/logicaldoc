@@ -8,20 +8,20 @@ package com.logicaldoc.webservice;
  * @since 3.0
  */
 public class VersionInfo {
-	private String id;
+	private String version;
 
 	private String date;
 
-	private String description;
+	private String comment;
 
-	private String uploadUser;
+	private String user;
 
-	public String getId() {
-		return id;
+	public String getVersion() {
+		return version;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	public String getDate() {
@@ -32,19 +32,19 @@ public class VersionInfo {
 		this.date = date;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
-	public String getUploadUser() {
-		return uploadUser;
+	public String getUser() {
+		return user;
 	}
 
-	public void setUploadUser(String uploadUser) {
-		this.uploadUser = uploadUser;
+	public void setUser(String user) {
+		this.user = user;
 	}
 }

@@ -8,17 +8,17 @@ package com.logicaldoc.webservice;
  * @since 3.0
  */
 public class Content {
-	private int id;
+	private long id;
 
 	private String title = "";
 
 	private int writeable = 0;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

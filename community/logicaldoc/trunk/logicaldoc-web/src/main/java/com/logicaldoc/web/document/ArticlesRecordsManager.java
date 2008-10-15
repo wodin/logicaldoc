@@ -58,12 +58,11 @@ public class ArticlesRecordsManager {
 		}
 
 		try {
-			int menuId = selectedDocument.getMenuId();
-			int docId = selectedDocument.getDocId();
+			long docId = selectedDocument.getId();
 
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			Document document = docDao.findByMenuId(menuId);
-			docId = document.getDocId();
+			Document document = docDao.findByPrimaryKey(docId);
+			docId = document.getId();
 
 			ArticleDAO artDao = (ArticleDAO) Context.getInstance().getBean(ArticleDAO.class);
 			Collection<Article> coll = artDao.findByDocId(docId);
@@ -110,9 +109,9 @@ public class ArticlesRecordsManager {
 	public String save() {
 		if (SessionManagement.isValid()) {
 			try {
-				int docId = selectedDocument.getDocId();
+				long docId = selectedDocument.getId();
 				String username = SessionManagement.getUsername();
-				selectedArticle.setArticleDate(String.valueOf(new Date().getTime()));
+				selectedArticle.setDate(new Date());
 				selectedArticle.setUsername(username);
 				selectedArticle.setDocId(docId);
 

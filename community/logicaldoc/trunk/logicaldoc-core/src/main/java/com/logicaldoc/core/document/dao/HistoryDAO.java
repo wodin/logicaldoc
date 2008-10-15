@@ -32,7 +32,7 @@ public interface HistoryDAO {
      * 
      * @param docId - ID of the document.
      */
-    public Collection<History> findByDocId(int docId); 
+    public Collection<History> findByDocId(long docId); 
 
     /**
      * This method selects all histories of a given username.

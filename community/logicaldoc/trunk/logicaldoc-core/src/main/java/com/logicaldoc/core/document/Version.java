@@ -1,5 +1,7 @@
 package com.logicaldoc.core.document;
 
+import java.util.Date;
+
 /**
  * This class represents versions.
  * 
@@ -7,7 +9,6 @@ package com.logicaldoc.core.document;
  * @version 1.0
  */
 public class Version implements Comparable<Version> {
-
 	/**
 	 * specifies different version types
 	 */
@@ -17,53 +18,74 @@ public class Version implements Comparable<Version> {
 
 	private String version;
 
-	private String versionUser = "";
+	private String user;
 
-	private String versionDate = "";
+	private Date date;
 
-	private String versionComment = "";
+	private String comment;
 
 	public Version() {
 	}
 
+	/**
+	 * @see Version#getVersion()
+	 */
 	public String getVersion() {
 		return version;
 	}
 
-	public String getVersionUser() {
-		return versionUser;
+	/**
+	 * @see Version#getUser()
+	 */
+	public String getUser() {
+		return user;
 	}
 
-	public String getVersionDate() {
-		return versionDate;
+	/**
+	 * @see Version#getDate()
+	 */
+	public Date getDate() {
+		return date;
 	}
 
-	public String getVersionComment() {
-		return versionComment;
+	/**
+	 * @see Version#getComment()
+	 */
+	public String getComment() {
+		return comment;
 	}
 
+	/**
+	 * @see Version#setVersion(java.lang.String)
+	 */
 	public void setVersion(String version) {
 		this.version = version;
 	}
 
-	public void setVersionUser(String vuser) {
-		versionUser = vuser;
-	}
-
-	public void setVersionDate(String date) {
-		versionDate = date;
-	}
-
-	public void setVersionComment(String comment) {
-		versionComment = comment;
+	/**
+	 * @see Version#setUser(java.lang.String)
+	 */
+	public void setUser(String user) {
+		this.user = user;
 	}
 
 	/**
-	 * returns a new version name
-	 * 
-	 * @param oldVersionName name of the old version, e.g. 1.5
-	 * @param versionType what kind of version, so if it should be 1.6, 2.0 or
-	 *        remain 1.5
+	 * @see Version#setDate(java.lang.String)
+	 */
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	/**
+	 * @see Version#setComment(java.lang.String)
+	 */
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	/**
+	 * @see Version#getNewVersionName(java.lang.String,
+	 *      VersionImpl.VERSION_TYPE)
 	 */
 	public String getNewVersionName(String oldVersionName, VERSION_TYPE versionType) {
 		String release = oldVersionName.substring(0, oldVersionName.indexOf("."));
@@ -107,6 +129,6 @@ public class Version implements Comparable<Version> {
 
 	@Override
 	public String toString() {
-		return version.toString();
+		return version.toString()+"-"+comment;
 	}
 }

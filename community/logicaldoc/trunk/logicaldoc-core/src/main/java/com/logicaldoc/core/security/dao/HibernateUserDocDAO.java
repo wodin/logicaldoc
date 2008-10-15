@@ -3,12 +3,14 @@ package com.logicaldoc.core.security.dao;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
 import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.UserDocID;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * Hibernate implementation of <code>UserDocDAO</code>
@@ -27,11 +29,11 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	/**
 	 * @see com.logicaldoc.core.security.dao.UserDocDAO#delete(java.lang.String, int)
 	 */
-	public boolean delete(String username, int menuId) {
+	public boolean delete(String username, long docId) {
 		boolean result = true;
 
 		try {
-			UserDocID id = new UserDocID(menuId, username);
+			UserDocID id = new UserDocID(docId, username);
 			UserDoc ud = (UserDoc) getHibernateTemplate().get(UserDoc.class, id);
 			if (ud != null)
 				getHibernateTemplate().delete(ud);
@@ -47,11 +49,11 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	/**
 	 * @see com.logicaldoc.core.security.dao.UserDocDAO#exists(int, java.lang.String)
 	 */
-	public boolean exists(int menuId, String username) {
+	public boolean exists(long docId, String username) {
 		boolean result = false;
 
 		try {
-			UserDocID id = new UserDocID(menuId, username);
+			UserDocID id = new UserDocID(docId, username);
 			UserDoc ud = (UserDoc) getHibernateTemplate().get(UserDoc.class, id);
 			result = ud != null;
 		} catch (Exception e) {
@@ -63,9 +65,9 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByMinTimeStamp(java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByMinDate(java.lang.String)
 	 */
-	public UserDoc findByMinTimeStamp(String username) {
+	public UserDoc findByMinDate(String username) {
 		UserDoc userdoc = null;
 		Collection<UserDoc> coll = findByUserName(username);
 		Iterator<UserDoc> iter = coll.iterator();
@@ -81,13 +83,13 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByUserName(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<UserDoc> findByUserName(String username) {
-		Collection<UserDoc> coll = new ArrayList<UserDoc>();
+	public List<UserDoc> findByUserName(String username) {
+		List<UserDoc> coll = new ArrayList<UserDoc>();
 
 		try {
-			coll = (Collection<UserDoc>) getHibernateTemplate()
+			coll = (List<UserDoc>) getHibernateTemplate()
 					.find(
-							"from com.logicaldoc.core.security.UserDoc _userdoc where _userdoc.id.userName = ? order by _userdoc.timeStamp desc",
+							"from com.logicaldoc.core.security.UserDoc _userdoc where _userdoc.id.userName = ? order by _userdoc.date desc",
 							new Object[] { username });
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -115,13 +117,13 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 		try {
 			count = getCount(userdoc.getUserName());
 
-			boolean exists = exists(userdoc.getMenuId(), userdoc.getUserName());
+			boolean exists = exists(userdoc.getDocId(), userdoc.getUserName());
 
 			// if the count of userdocs for the user is greater than 5, delete
 			// the oldest userdoc
 			if ((count >= 5) && !exists) {
-				UserDoc temp = findByMinTimeStamp(userdoc.getUserName());
-				delete(temp.getUserName(), temp.getMenuId());
+				UserDoc temp = findByMinDate(userdoc.getUserName());
+				delete(temp.getUserName(), temp.getDocId());
                 getHibernateTemplate().flush();
                 getHibernateTemplate().evict(temp);
                 getHibernateTemplate().evict(temp.getId());
@@ -145,13 +147,13 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	}
 
     /**
-     * @see com.logicaldoc.core.security.dao.UserDocDAO#delete(int)
+     * @see com.logicaldoc.core.security.dao.UserDocDAO#delete(long)
      */
-    public boolean delete(int menuId) {
+    public boolean delete(long docId) {
         boolean result = true;
 
         try {
-            getHibernateTemplate().deleteAll(findByMenuId(menuId));
+            getHibernateTemplate().deleteAll(findByDocId(docId));
         } catch (Exception e) {
             if (log.isErrorEnabled())
                 log.error(e.getMessage());
@@ -162,17 +164,17 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
     }
 
     /**
-     * @see com.logicaldoc.core.security.dao.UserDocDAO#findByMenuId(int)
+     * @see com.logicaldoc.core.security.dao.UserDocDAO#findByDocId(long)
      */
     @SuppressWarnings("unchecked")
-    public Collection<UserDoc> findByMenuId(int menuId) {
-        Collection<UserDoc> coll = new ArrayList<UserDoc>();
+    public List<UserDoc> findByDocId(long docId) {
+    	List<UserDoc> coll = new ArrayList<UserDoc>();
 
         try {
-            coll = (Collection<UserDoc>) getHibernateTemplate()
+            coll = (List<UserDoc>) getHibernateTemplate()
                     .find(
-                            "from com.logicaldoc.core.security.UserDoc _userdoc where _userdoc.id.menuId = ? order by _userdoc.timeStamp desc",
-                            new Object[] { menuId });
+                            "from com.logicaldoc.core.security.UserDoc _userdoc where _userdoc.id.docId = ? order by _userdoc.date desc",
+                            new Object[] { docId });
         } catch (Exception e) {
             if (log.isErrorEnabled())
                 log.error(e.getMessage());

@@ -45,14 +45,14 @@ public class HibernateArticleDAO extends HibernateDaoSupport implements ArticleD
 	 * @see com.logicaldoc.core.document.dao.ArticleDAO#findByDocId(int)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Article> findByDocId(int docId) {
+	public Collection<Article> findByDocId(long docId) {
 		Collection<Article> coll = new ArrayList<Article>();
 
 		try {
 			coll = (Collection<Article>) getHibernateTemplate()
 					.find(
-							"from com.logicaldoc.core.document.Article _article where _article.docId = ? order by _article.articleDate",
-							new Object[] { new Integer(docId) });
+							"from com.logicaldoc.core.document.Article _article where _article.docId = ? order by _article.date",
+							new Object[] { new Long(docId) });
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
@@ -105,7 +105,7 @@ public class HibernateArticleDAO extends HibernateDaoSupport implements ArticleD
 		try {
 			coll = (Collection<Article>) getHibernateTemplate()
 					.find(
-							"from com.logicaldoc.core.document.Article _article where _article.username = ? order by _article.articleDate",
+							"from com.logicaldoc.core.document.Article _article where _article.username = ? order by _article.date",
 							new Object[] { username });
 		} catch (Exception e) {
 			if (log.isErrorEnabled())

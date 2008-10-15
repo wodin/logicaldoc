@@ -1,6 +1,5 @@
 package com.logicaldoc.core.document;
 
-
 /**
  * Represents a download ticket.
  * 
@@ -9,7 +8,7 @@ package com.logicaldoc.core.document;
 public class DownloadTicket {
 	private String ticketId = "";
 
-	private int menuId = 0;
+	private long docId = 0;
 
 	private String username = "";
 
@@ -17,18 +16,12 @@ public class DownloadTicket {
 
 	}
 
-	/**
-	 * @return Returns the menuId.
-	 */
-	public int getMenuId() {
-		return menuId;
+	public long getDocId() {
+		return docId;
 	}
 
-	/**
-	 * @param menuId The menuId to set.
-	 */
-	public void setMenuId(int menuId) {
-		this.menuId = menuId;
+	public void setDocId(long docId) {
+		this.docId = docId;
 	}
 
 	/**

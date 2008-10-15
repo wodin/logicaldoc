@@ -9,10 +9,9 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.security.dao.MenuDAO;
-import com.logicaldoc.util.Context;
 
+import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.document.DocumentRecord;
 
@@ -69,7 +68,7 @@ public class KeywordsBean {
 	public String getSelectedWord() {
 		return selectedWord;
 	}
-	
+
 	/**
 	 * Set selectedWord and show documents marked with that word.
 	 * 
@@ -187,12 +186,12 @@ public class KeywordsBean {
 					selectedWord = word;
 
 					String username = SessionManagement.getUsername();
-					MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-					Set<Integer> menuIds = menuDao.findMenuIdByUsernameAndKeyword(username, word);
+					DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+					Set<Long> docIds = docDao.findDocIdByUsernameAndKeyword(username, word);
 					documents.clear();
 					keywords.clear();
 
-					for (Integer id : menuIds) {
+					for (Long id : docIds) {
 						DocumentRecord record;
 
 						record = new DocumentRecord(id, null, null, null);

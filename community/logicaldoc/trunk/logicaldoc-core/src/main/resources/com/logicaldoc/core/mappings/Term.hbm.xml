@@ -2,14 +2,14 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-lazy="false">
-	<class name="com.logicaldoc.core.document.Term" table="co_terms">
+	<class name="com.logicaldoc.core.document.Term" table="ld_term">
 		<cache usage="read-write" />
 		<composite-id name="id" class="com.logicaldoc.core.document.TermID">
-			<key-property name="menuId" type="int" column="co_menuid" />
-			<key-property name="stem" type="string" column="co_stem" />
+			<key-property name="docId" type="long" column="ld_docid" />
+			<key-property name="stem" type="string" column="ld_stem" />
 		</composite-id>
-		<property name="value" type="double" column="co_value"  />
-		<property name="wordCount" type="int" column="co_wordcount" />
-		<property name="originWord" type="string" column="co_word" length="70"/>
+		<property name="value" type="double" column="ld_value"  />
+		<property name="wordCount" type="int" column="ld_wordcount" />
+		<property name="originWord" type="string" column="ld_word" length="255"/>
 	</class>
 </hibernate-mapping>

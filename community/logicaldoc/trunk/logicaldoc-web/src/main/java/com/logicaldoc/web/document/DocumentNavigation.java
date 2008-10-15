@@ -11,15 +11,14 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.document.Article;
 import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.searchengine.Result;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
-
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.i18n.Messages;
@@ -210,32 +209,25 @@ public class DocumentNavigation extends NavigationBean {
 
 		int menuId = Menu.MENUID_DOCUMENTS;
 
+		long docId = 0;
+
 		if (entry instanceof Result) {
-			menuId = ((Result) entry).getMenuId();
+			docId = ((Result) entry).getDocId();
 		} else if (entry instanceof DocumentRecord) {
-			menuId = ((DocumentRecord) entry).getMenuId();
+			docId = ((DocumentRecord) entry).getDocId();
 		}
 
-		// Get the parent directory
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu menu = menuDao.findByPrimaryKey(menuId);
-
-		// Patch for nested documents
-		Menu menuParent = menuDao.findByPrimaryKey(menu.getMenuParent());
-
-		int directoryId = menu.getMenuParent();
-		if (menuParent != null && menuParent.getMenuType() == Menu.MENUTYPE_FILE) {
-			directoryId = menuParent.getMenuParent();
-		}
-
-		selectDirectory(directoryId);
-
-		highlightDocument(menu.getMenuId());
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document document = docDao.findByPrimaryKey(docId);
+		Menu folder = document.getFolder();
+		selectDirectory(folder.getMenuId());
+		highlightDocument(docId);
 		setSelectedPanel(new PageContentBean("documents"));
 
 		// Show the documents browsing panel
 		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
 				.getCurrentInstance(), log));
+		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu documentsMenu = menuDao.findByPrimaryKey(Menu.MENUID_DOCUMENTS);
 
 		PageContentBean panel = new PageContentBean("m-" + documentsMenu.getMenuId(), "document/browse");
@@ -255,30 +247,14 @@ public class DocumentNavigation extends NavigationBean {
 		Object entry = (Object) map.get("article");
 
 		Article article = (Article) entry;
-		log.info(article);
-
 		DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-
 		Document document = docdao.findByPrimaryKey(article.getDocId());
-		log.info(document);
 
-		int menuId = Menu.MENUID_DOCUMENTS;
-
-		Menu menu = document.getMenu();
-		log.info(menu);
-		menuId = menu.getMenuParent();
-		log.info(menuId);
-
-		// Patch for nested documents
-		Menu menuParent = menuDao.findByPrimaryKey(menu.getMenuParent());
-
-		int directoryId = menu.getMenuParent();
-		if (menuParent != null && menuParent.getMenuType() == Menu.MENUTYPE_FILE) {
-			directoryId = menuParent.getMenuParent();
-		}
-
-		selectDirectory(directoryId);
+		int folderId = Menu.MENUID_DOCUMENTS;
+		Menu folder = document.getFolder();
+		folderId = folder.getMenuId();
+		selectDirectory(folderId);
 
 		setSelectedPanel(new PageContentBean("documents"));
 
@@ -306,23 +282,22 @@ public class DocumentNavigation extends NavigationBean {
 		return null;
 	}
 
-	private void highlightDocument(int menuId) {
+	private void highlightDocument(long docId) {
 		// Notify the records manager
 		DocumentsRecordsManager recordsManager = ((DocumentsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"documentsRecordsManager", FacesContext.getCurrentInstance(), log));
-		recordsManager.selectHighlightedDocument(menuId);
+		recordsManager.selectHighlightedDocument(docId);
 	}
 
 	public String delete() {
-		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		try {
-			documentManager.delete(selectedDir.getMenuId(), SessionManagement.getUsername());
+			menuDao.delete(selectedDir.getMenuId());
 			Messages.addLocalizedInfo("msg.action.deleteitem");
 		} catch (Exception e) {
 			Messages.addLocalizedError("errors.action.deleteitem");
 		}
 
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Directory parent = new Directory(menuDao.findByPrimaryKey(getSelectedDir().getMenu().getMenuParent()));
 		selectDirectory(parent);
 		setSelectedPanel(new PageContentBean("documents"));

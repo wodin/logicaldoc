@@ -94,8 +94,6 @@ public class NewDocWizard {
 			groups = tmp;
 		}
 
-		docForm.setMenuGroup(groups);
-
 		if (SessionManagement.isValid()) {
 			try {
 				File file = inputFile.getFile();
@@ -153,14 +151,14 @@ public class NewDocWizard {
 
 				// fills needed fields
 				if ((name != null) && (name.length() > 0)) {
-					docForm.setDocName(name);
+					docForm.setTitle(name);
 				} else {
 					int tmpInt = filename.lastIndexOf(".");
 
 					if (tmpInt != -1) {
-						docForm.setDocName(filename.substring(0, tmpInt));
+						docForm.setTitle(filename.substring(0, tmpInt));
 					} else {
-						docForm.setDocName(filename);
+						docForm.setTitle(filename);
 					}
 				}
 
@@ -184,7 +182,6 @@ public class NewDocWizard {
 				}
 
 				docForm.setFilename(filename);
-				docForm.setMenu(menu);
 			} catch (Exception e) {
 				String message = Messages.getMessage("errors.action.savedoc");
 				log.error(message, e);

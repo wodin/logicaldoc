@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.FileBean;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.dao.EMailDAO;
@@ -24,7 +25,6 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
-
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.components.SortableList;
 import com.logicaldoc.web.i18n.Messages;
@@ -184,12 +184,11 @@ public class UsersRecordsManager extends SortableList {
 				int adminsFound = 0;
 
 				if (isAdmin) {
-					Collection allUsers = dao.findAll();
-					Iterator userIter = allUsers.iterator(); // get all
+					Collection<User> allUsers = dao.findAll();
+					Iterator<User> userIter = allUsers.iterator(); // get all
 					// users
-
 					while (userIter.hasNext()) {
-						User currUser = (User) userIter.next();
+						User currUser = userIter.next();
 						currUser.initGroupNames(); // we always to call
 						// this before accessing
 						// the groups
@@ -231,21 +230,21 @@ public class UsersRecordsManager extends SortableList {
 
 					// delete user doc entries (recently accessed files)
 					UserDocDAO userDocDao = (UserDocDAO) Context.getInstance().getBean(UserDocDAO.class);
-					Collection userDocColl = userDocDao.findByUserName(user.getUserName());
-					Iterator userDocIter = userDocColl.iterator();
+					Collection<UserDoc> userDocColl = userDocDao.findByUserName(user.getUserName());
+					Iterator<UserDoc> userDocIter = userDocColl.iterator();
 
 					while (userDocIter.hasNext()) {
-						UserDoc userDoc = (UserDoc) userDocIter.next();
-						userDocDao.delete(user.getUserName(), userDoc.getMenuId());
+						UserDoc userDoc = userDocIter.next();
+						userDocDao.delete(user.getUserName(), userDoc.getDocId());
 					}
 
 					// delete all history entries connected to this user
 					HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-					Collection historyColl = historyDAO.findByUsername(user.getUserName());
-					Iterator historyIter = historyColl.iterator();
+					Collection<History> historyColl = historyDAO.findByUsername(user.getUserName());
+					Iterator<History> historyIter = historyColl.iterator();
 
 					while (historyIter.hasNext()) {
-						History history = (History) historyIter.next();
+						History history = historyIter.next();
 						historyDAO.delete(history.getHistoryId());
 					}
 

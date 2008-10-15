@@ -1,6 +1,7 @@
 package com.logicaldoc.core.document.dao;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,14 +28,7 @@ public interface DocumentDAO {
 	 * 
 	 * @param docId DocID of the document which should be delete.
 	 */
-	public boolean delete(int docId);
-
-	/**
-	 * This method deletes a document.
-	 * 
-	 * @param menuId of the document which should be deleted.
-	 */
-	public boolean deleteByMenuId(int menuId);
+	public boolean delete(long docId);
 
 	/**
 	 * This method finds a document by primarykey.
@@ -42,15 +36,7 @@ public interface DocumentDAO {
 	 * @param docId Primarykey of the document.
 	 * @return Document with given primarykey.
 	 */
-	public Document findByPrimaryKey(int docId);
-
-	/**
-	 * This method finds a document by its menuId.
-	 * 
-	 * @param menuId MenuId of the document.
-	 * @return Document with specified menuId.
-	 */
-	public Document findByMenuId(int menuId);
+	public Document findByPrimaryKey(long docId);
 
 	/**
 	 * This method selects all documents.
@@ -63,7 +49,15 @@ public interface DocumentDAO {
 	 * @param username Name of the user.
 	 * @return Collection of all documentId required for the specified user.
 	 */
-	public Collection<Integer> findByUserName(String username);
+	public Collection<Long> findByUserName(String username);
+
+	/**
+	 * Finds all documents inside the given folder.
+	 * 
+	 * @param folderId Folder identifier
+	 * @return Collection of all documentId required for the specified user.
+	 */
+	public Collection<Long> findByFolder(int folderId);
 	
 	/**
 	 * Finds all documents checked-out for an user.
@@ -72,24 +66,32 @@ public interface DocumentDAO {
 	 * @return Collection of all Documents checked out by the specified user.
 	 */
 	public Collection<Document> findCheckoutByUserName(String username);
-	
-	
+
 	/**
 	 * Finds a max number of documents last modified by an user.
 	 * 
 	 * @param username Name of the user.
-	 * @return Collection of the latests Documents changed by the specified user.
+	 * @return Collection of the last documents changed by the specified user.
 	 */
-	public Collection<Document> findLastModifiedByUserName(String username, int maxElements);
+	public List<Document> findLastModifiedByUserName(String username, int maxResults);
 
 	/**
-	 * This method finds all MenuIds by a keyword.
+	 * Finds the last downloaded documents by the given user
+	 * 
+	 * @param username login of the user
+	 * @param maxResults maximum number of returned elements
+	 * @return
+	 */
+	public List<Document> findLastDownloadsByUserName(String username, int maxResults);
+
+	/**
+	 * This method finds all Doc Ids by a keyword.
 	 * 
 	 * @param keyword Keyword of the document.
 	 * @return Document with specified keyword.
 	 */
-	public Collection<Integer> findMenuIdByKeyword(String keyword);
-	
+	public Collection<Long> findDocIdByKeyword(String keyword);
+
 	/**
 	 * Converts the passed string into a collection of keywords
 	 * 
@@ -97,16 +99,34 @@ public interface DocumentDAO {
 	 * @return The resulting keywords collection
 	 */
 	public Set<String> toKeywords(String words);
-	
+
 	/**
 	 * This method selects all keywords starting with a specified letter.
 	 * 
 	 * @param letter - First letter of the wanted keywords.
 	 */
 	public Collection<String> findKeywords(String firstLetter, String username);
-	
+
 	/**
 	 * This method selects all keywords and counts the occurrences.
 	 */
-	public Map<String, Integer> findAllKeywords();	
+	public Map<String, Integer> findAllKeywords();
+
+	/**
+	 * Finds authorized documents for a user having a specified keyword.
+	 * 
+	 * @param username Name of the user.
+	 * @param keyword Keyword of the document
+	 * @return Collection of found menus.
+	 */
+	public Collection<Document> findByUserNameAndKeyword(String username, String keyword);
+
+	/**
+	 * Finds authorized documents ids for a user having a specified keyword.
+	 * 
+	 * @param username Name of the user.
+	 * @param keyword Keyword of the document
+	 * @return Set of found ids.
+	 */
+	public Set<Long> findDocIdByUsernameAndKeyword(String username, String keyword);
 }

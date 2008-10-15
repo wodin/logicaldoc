@@ -14,12 +14,12 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 public class UserDoc implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String timeStamp;
+	private Date date;
 
 	private UserDocID id = new UserDocID(0, "");
 
 	public UserDoc() {
-		timeStamp = String.valueOf(new Date().getTime());
+		date = new Date();
 	}
 
 	public String getUserName() {
@@ -34,24 +34,24 @@ public class UserDoc implements Serializable {
 		this.id = id;
 	}
 
-	public int getMenuId() {
-		return id.getMenuId();
+	public long getDocId() {
+		return id.getDocId();
 	}
 
-	public String getTimeStamp() {
-		return timeStamp;
+	public Date getDate() {
+		return date;
 	}
 
 	public void setUserName(String uname) {
 		id.setUserName(uname);
 	}
 
-	public void setMenuId(int id) {
-		this.id.setMenuId(id);
+	public void setDocId(long id) {
+		this.id.setDocId(id);
 	}
 
-	public void setTimeStamp(String time) {
-		timeStamp = time;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public String toString() {

@@ -27,6 +27,8 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
+
+import com.logicaldoc.core.i18n.DateBean;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.util.SquareSimilarity;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -165,21 +167,16 @@ public class Search {
 					}
 
 					Result result = new ResultImpl();
-					result.setMenuId(Integer.parseInt(doc.get("menuId")));
-					result.setName(doc.get("name"));
+					result.setDocId(Long.parseLong(doc.get("docId")));
+					result.setTitle(doc.get("name"));
 					result.setSize(Integer.parseInt(size));
-					result.setDate(new Date(Long.parseLong(doc.get("date"))));
-
+					result.setDate(DateBean.dateFromCompactString(doc.get("date")));
+					result.setSourceDate(DateBean.dateFromCompactString(doc.get("sourceDate")));
 					result.setType(doc.get("type"));
 					result.setSummary(summary);
 					result.createScore(hits.score(i));
-					result.setPath(doc.get("path"));
-
-					String sourceDate = null;
-					if (options.getSourceDateFrom() != null || options.getSourceDateTo() != null)
-						sourceDate = doc.get("sourceDate");
-
-					if (result.isRelevant(options, sourceDate)) {
+					
+					if (result.isRelevant(options)) {
 						results.add(result);
 					}
 				}

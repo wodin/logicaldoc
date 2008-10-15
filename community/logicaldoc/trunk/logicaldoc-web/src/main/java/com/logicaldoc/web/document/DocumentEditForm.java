@@ -3,7 +3,6 @@ package com.logicaldoc.web.document;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.faces.application.Application;
@@ -14,17 +13,15 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.i18n.DateBean;
 import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
-
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
@@ -41,7 +38,7 @@ import com.logicaldoc.web.util.FacesUtil;
 public class DocumentEditForm {
 	protected static Log log = LogFactory.getLog(DocumentEditForm.class);
 
-	private String docName;
+	private String title;
 
 	private int menuParent;
 
@@ -67,10 +64,6 @@ public class DocumentEditForm {
 
 	private String filename;
 
-	private Menu menu;
-
-	private String[] menuGroup;
-
 	private DocumentRecord record;
 
 	private boolean readOnly = false;
@@ -82,7 +75,7 @@ public class DocumentEditForm {
 	}
 
 	public void reset() {
-		docName = "";
+		title = "";
 		menuParent = -1;
 		menuSort = 0;
 		source = "";
@@ -95,47 +88,32 @@ public class DocumentEditForm {
 		keywords = "";
 		versionDesc = "";
 		filename = "";
-		menu = null;
-		menuGroup = null;
 	}
 
 	public void init(DocumentRecord record) {
 		this.record = record;
-		this.menu = record.getMenu();
 
 		Document doc = record.getDocument();
-		setDocName(doc.getDocName());
-
-		setMenuParent(doc.getMenu().getMenuParent());
+		setTitle(doc.getTitle());
 		setSource(doc.getSource());
 		if (StringUtils.isEmpty(doc.getSource())) {
 			SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 			setSource(settings.getValue("defaultSource"));
 		}
 		setSourceAuthor(doc.getSourceAuthor());
-
-		if (StringUtils.isNotEmpty(doc.getSourceDate())) {
-			setSourceDate(DateBean.dateFromCompactString(doc.getSourceDate()));
-		}
-
-		if (StringUtils.isNotEmpty(doc.getDocDate())) {
-			setDocDate(DateBean.dateFromCompactString(doc.getDocDate()));
-		}
-
+		setSourceDate(doc.getSourceDate());
+		setDocDate(doc.getDate());
 		setLanguage(doc.getLanguage());
 		setKeywords(doc.getKeywordsString());
 		setCoverage(doc.getCoverage());
 		setSourceType(doc.getSourceType());
-
-		String[] groupNames = record.getMenu().getMenuGroupNames();
-		setMenuGroup(groupNames);
 	}
 
 	/**
 	 * @return Returns the docName.
 	 */
 	public String getDocName() {
-		return docName;
+		return title;
 	}
 
 	/**
@@ -209,17 +187,10 @@ public class DocumentEditForm {
 	}
 
 	/**
-	 * @return Returns the menuGroup.
+	 * @param title The docName to set.
 	 */
-	public String[] getMenuGroup() {
-		return menuGroup;
-	}
-
-	/**
-	 * @param docName The docName to set.
-	 */
-	public void setDocName(String name) {
-		docName = name;
+	public void setTitle(String name) {
+		title = name;
 	}
 
 	/**
@@ -300,31 +271,10 @@ public class DocumentEditForm {
 	}
 
 	/**
-	 * @return Returns the menu.
-	 */
-	public Menu getMenu() {
-		return menu;
-	}
-
-	/**
-	 * @param menu The menu to set.
-	 */
-	public void setMenu(Menu menu) {
-		this.menu = menu;
-	}
-
-	/**
 	 * @param versionDesc The versionDesc to set.
 	 */
 	public void setVersionDesc(String desc) {
 		versionDesc = desc;
-	}
-
-	/**
-	 * @param menuGroups The menuGroup to set.
-	 */
-	public void setMenuGroup(String[] group) {
-		menuGroup = group;
 	}
 
 	public Date getDocDate() {
@@ -363,21 +313,13 @@ public class DocumentEditForm {
 					name = filename.substring(0, filename.lastIndexOf("."));
 				}
 
-				String[] docGroup = getMenuGroup();
-				Set<MenuGroup> groups = new HashSet<MenuGroup>();
-				for (int i = 0; i < docGroup.length; i++) {
-					MenuGroup mg = new MenuGroup();
-					mg.setGroupName(docGroup[i]);
-					mg.setWriteEnable(1);
-					groups.add(mg);
-				}
 				DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 				Set<String> kwds = ddao.toKeywords(keywords);
 
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				Document doc = documentManager.create(file, parent, username, language, name, getSourceDate(), source,
-						sourceAuthor, sourceType, coverage, versionDesc, kwds, groups);
+				documentManager.create(file, parent, username, language, name, getSourceDate(), source, sourceAuthor,
+						sourceType, coverage, versionDesc, kwds);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, "errors.action.savedoc", "errors.action.savedoc");
@@ -407,7 +349,7 @@ public class DocumentEditForm {
 				Document doc = record.getDocument();
 				String username = SessionManagement.getUsername();
 				Set<String> keywords = ddao.toKeywords(getKeywords());
-				documentManager.update(doc, username, docName, source, sourceAuthor, sourceDate, sourceType, coverage,
+				documentManager.update(doc, username, title, source, sourceAuthor, sourceDate, sourceType, coverage,
 						language, keywords);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -426,6 +368,7 @@ public class DocumentEditForm {
 	/**
 	 * Executes a document's checkin creating a new version
 	 */
+	@SuppressWarnings("deprecation")
 	public String checkin() {
 		Application application = FacesContext.getCurrentInstance().getApplication();
 		InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
@@ -436,7 +379,7 @@ public class DocumentEditForm {
 			Document document = record.getDocument();
 			File file = fileForm.getFile();
 
-			if (document.getDocStatus() == Document.DOC_CHECKED_OUT) {
+			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
 				if (file != null) {
 					// check that we have a valid file for storing as new
 					// version
@@ -459,7 +402,7 @@ public class DocumentEditForm {
 						// something goes wrong
 						DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 								DocumentManager.class);
-						documentManager.checkin(document.getDocId(), new FileInputStream(file), fileName, username,
+						documentManager.checkin(document.getId(), new FileInputStream(file), fileName, username,
 								versionType, versionDesc);
 
 						/* create positive log message */

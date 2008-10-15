@@ -18,18 +18,18 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.icesoft.faces.component.ext.RowSelectorEvent;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.MenuManager;
 import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.transfer.ZipImport;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
-
-import com.icesoft.faces.component.ext.RowSelectorEvent;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.components.SortableList;
 import com.logicaldoc.web.i18n.Messages;
@@ -116,15 +116,12 @@ public class DocumentsRecordsManager extends SortableList {
 			documents = new ArrayList<DocumentRecord>(10);
 		}
 
-		String username = SessionManagement.getUsername();
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Collection<Integer> menuIds = menuDao.findMenuIdByUserName(username, directoryId, Menu.MENUTYPE_FILE);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Collection<Long> docIds = docDao.findByFolder(directoryId);
 
-		for (Integer id : menuIds) {
+		for (Long id : docIds) {
 			DocumentRecord record;
-
 			record = new DocumentRecord(id, documents, CHILD_INDENT_STYLE_CLASS, CHILD_ROW_STYLE_CLASS);
-
 			if (!documents.contains(record)) {
 				documents.add(record);
 			}
@@ -190,12 +187,10 @@ public class DocumentsRecordsManager extends SortableList {
 	public String deleteSelected() {
 		if (SessionManagement.isValid()) {
 			if (!selection.isEmpty()) {
-				MenuManager manager = (MenuManager) Context.getInstance().getBean(MenuManager.class);
-
-				String username = SessionManagement.getUsername();
+				DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 				for (DocumentRecord record : selection) {
 					try {
-						manager.deleteMenu(record.getMenu(), username);
+						manager.delete(record.getDocId());
 						Messages.addLocalizedInfo("msg.action.deleteitem");
 					} catch (AccessControlException e) {
 						Messages.addLocalizedError("document.write.nopermission");
@@ -203,7 +198,6 @@ public class DocumentsRecordsManager extends SortableList {
 						Messages.addLocalizedInfo("errors.action.deleteitem");
 					}
 				}
-
 				refresh();
 			} else {
 				Messages.addLocalizedWarn("noselection");
@@ -247,44 +241,36 @@ public class DocumentsRecordsManager extends SortableList {
 			if (!clipboard.isEmpty()) {
 				String username = SessionManagement.getUsername();
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+				Menu selectedMenuFolder = menuDao.findByPrimaryKey(selectedDirectory);
+				DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 
 				SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 
 				if (menuDao.isWriteEnable(selectedDirectory, username)) {
 					try {
-						DocumentNavigation navigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-								"documentNavigation", FacesContext.getCurrentInstance(), log));
-
 						for (DocumentRecord record : clipboard) {
-							Menu menu = menuDao.findByPrimaryKey(record.getMenuId());
+							// TODO isolate this code in a method of
+							// DocumentManager
 
-							if (!menuDao.isWriteEnable(menu.getMenuId(), username)) {
-								throw new AccessControlException("");
-							}
+							Document doc = record.getDocument();
 
 							// Get original document directory path
-							Menu dir = menuDao.findByPrimaryKey(menu.getMenuParent());
-							String path = settings.getValue("docdir") + "/" + menu.getMenuPath() + "/"
-									+ menu.getMenuId();
+							Menu folder = doc.getFolder();
+							String path = settings.getValue("docdir") + "/" + folder.getMenuPath() + "/" + doc.getId();
 							File originalDocDir = new File(path);
 
-							menu.setMenuParent(selectedDirectory);
-							dir = menuDao.findByPrimaryKey(selectedDirectory);
-							menu.setMenuPath(dir.getMenuPath() + "/" + dir.getMenuId());
-							menuDao.store(menu);
+							doc.setFolder(selectedMenuFolder);
+							folder = menuDao.findByPrimaryKey(selectedDirectory);
+							docDao.store(doc);
 
 							// Update the FS
-							path = settings.getValue("docdir") + "/" + menu.getMenuPath() + "/" + menu.getMenuId();
+							path = settings.getValue("docdir") + "/" + folder.getMenuPath() + "/" + doc.getId();
 							File newDocDir = new File(path);
 
 							FileUtils.copyDirectory(originalDocDir, newDocDir);
 							FileUtils.forceDelete(originalDocDir);
 
-							// Update field path on the Lucene record
-							Document doc = record.getDocument();
-							doc.setMenu(menu);
-							DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
-									DocumentManager.class);
+							// TODO Update field path on the Lucene record
 						}
 					} catch (AccessControlException e) {
 						Messages.addLocalizedWarn("document.write.nopermission");
@@ -292,7 +278,6 @@ public class DocumentsRecordsManager extends SortableList {
 						Messages.addLocalizedInfo("errors.action.movedocument");
 						log.error("Exception moving document: " + e.getMessage(), e);
 					}
-
 					clipboard.clear();
 				} else {
 					Messages.addLocalizedWarn("document.write.nopermission");
@@ -437,14 +422,12 @@ public class DocumentsRecordsManager extends SortableList {
 			try {
 				String username = SessionManagement.getUsername();
 				UserDocDAO uddao = (UserDocDAO) Context.getInstance().getBean(UserDocDAO.class);
-				Collection userdocs = uddao.findByUserName(username);
-				Iterator iter = userdocs.iterator();
-				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+				Collection<UserDoc> userdocs = uddao.findByUserName(username);
+				Iterator<UserDoc> iter = userdocs.iterator();
 
 				while (iter.hasNext()) {
-					UserDoc userdoc = (UserDoc) iter.next();
-					Menu m = mdao.findByPrimaryKey(userdoc.getMenuId());
-					lastdocs.add(new DocumentRecord(userdoc.getMenuId(), null, GROUP_INDENT_STYLE_CLASS,
+					UserDoc userdoc = iter.next();
+					lastdocs.add(new DocumentRecord(userdoc.getDocId(), null, GROUP_INDENT_STYLE_CLASS,
 							GROUP_ROW_STYLE_CLASS));
 				}
 			} catch (Exception e) {
@@ -455,28 +438,16 @@ public class DocumentsRecordsManager extends SortableList {
 		return lastdocs;
 	}
 
-	protected void selectHighlightedDocument(int menuId) {
-		DocumentRecord myFatherDocument = null;
+	protected void selectHighlightedDocument(long docId) {
 		selection.clear();
 
 		// Iterate of the the list of documents in selected folder, when i find
 		// the one I put it on the list of those selected
 		for (DocumentRecord document : documents) {
-			if (document.getMenu().getMenuId() == menuId) {
+			if (document.getDocId() == docId) {
 				document.setSelected(true);
 				selection.add(document);
 				break;
-			}
-			// iterate on the list of the children of the document
-			for (DocumentRecord childDocument : document.getChildRecords()) {
-				if (childDocument.getMenu().getMenuId() == menuId) {
-					myFatherDocument = document;
-					// imposto la selezione sul padre e sul figlio
-					document.setSelected(true);
-					childDocument.setSelected(true);
-					selection.add(childDocument);
-					break;
-				}
 			}
 		}
 
@@ -485,32 +456,13 @@ public class DocumentsRecordsManager extends SortableList {
 			DocumentRecord selectedDoc = selection.iterator().next();
 			documents.remove(selectedDoc);
 			documents.add(0, selectedDoc);
-
-			// after sorting can expand the father
-			if (myFatherDocument != null) {
-				myFatherDocument.setSelected(false);
-				myFatherDocument.setExpanded(true);
-			}
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private void sortDocumentsBySelected() {
-		Collections.sort(documents, drsc);
-		Collections.reverse(documents);
-	}
-
 	public String selectAll() {
-
 		for (DocumentRecord document : documents) {
 			document.setSelected(true);
 			selection.add(document);
-
-			// iterate on the list of the children of the document
-			for (DocumentRecord childDocument : document.getChildRecords()) {
-				// imposto la selezione sul padre e sul figlio
-				childDocument.setSelected(true);
-			}
 		}
 		selectedAll = true;
 
@@ -521,12 +473,6 @@ public class DocumentsRecordsManager extends SortableList {
 
 		for (DocumentRecord document : documents) {
 			document.setSelected(false);
-
-			// iterate on the list of the children of the document
-			for (DocumentRecord childDocument : document.getChildRecords()) {
-				// imposto la selezione sul padre e sul figlio
-				childDocument.setSelected(false);
-			}
 		}
 		if (selection != null)
 			selection.clear();
@@ -593,8 +539,8 @@ public class DocumentsRecordsManager extends SortableList {
 					Date d2 = c2.getSourceDate() != null ? c2.getSourceDate() : new Date(0);
 					return ascending ? d1.compareTo(d2) : d2.compareTo(d1);
 				} else if (column.equals("size")) {
-					Long s1 = new Long(c1.getMenu().getMenuSize());
-					Long s2 = new Long(c2.getMenu().getMenuSize());
+					Long s1 = new Long(c1.getDocument().getFileSize());
+					Long s2 = new Long(c2.getDocument().getFileSize());
 					return ascending ? s1.compareTo(s2) : s2.compareTo(s1);
 				} else
 					return 0;

@@ -83,14 +83,15 @@ public class ZipExport implements Export {
         if (!allLevel && (level > 1)) {
             return;
         } else {
-            if (menu.getMenuType() == Menu.MENUTYPE_FILE) {
+            //TODO reimplement since now documents doesn't have associated menu
+        	
                 String menupath = menu.getMenuPath();
                 SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
                 String filepath = settings.getValue("docdir");
                 filepath += menupath + "/" + String.valueOf(menu.getMenuId()) + "/";
                 filepath += menu.getMenuRef();
                 addFile(menu, filepath);
-            }
+            
 
             MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
             Collection children = menuDao.findByUserName(username, menu.getMenuId());

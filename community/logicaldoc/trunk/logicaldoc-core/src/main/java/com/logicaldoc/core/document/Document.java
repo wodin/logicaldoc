@@ -1,128 +1,258 @@
 package com.logicaldoc.core.document;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.util.IconSelector;
 
 /**
- * This class represents documents.
+ * The Document is the central entity of LogicalDOC. A Document is a persistent
+ * business object and represents metadata over a single file stored into the
+ * DMS.
+ * <p>
+ * Each document has one or more Versions. The most recent version is the one
+ * used as default when we refer to a Document, but all previous versions are
+ * accessible from the history even if the are not indexed.
+ * <p>
+ * A Document is written in a single language, this language defines the
+ * full-text index in which the document's content will be stored.
  * 
- * @author Michael Scholz
  * @author Marco Meschieri
- * @version 1.0
+ * @version $Id:$
+ * @since 1.0
  */
-public class Document {
+public class Document extends PersistentObject {
 	public static final int DOC_CHECKED_IN = 0;
 
 	public static final int DOC_CHECKED_OUT = 1;
 
-	private int docId = 0;
-
-	private String docName = "";
-
-	private String docVersion = "";
-
-	private String docDate = "";
-
-	private String docPublisher = "";
+	private long fileSize = 0;
 
 	/**
-	 * Whether document is checked in or out;
+	 * Whether document is checked in or out
 	 * 
 	 * @see Document#DOC_CHECKED_IN
 	 * @see Document#DOC_CHECKED_OUT
 	 */
-	private int docStatus = DOC_CHECKED_IN;
+	private int status = DOC_CHECKED_IN;
 
-	private String docType = "";
+	private String title;
 
-	private String checkoutUser = "";
+	private String version;
 
-	private String source = "";
+	private Date date;
 
-	private String sourceAuthor = "";
+	private String publisher;
 
-	private String sourceDate = "";
+	private String type;
 
-	private String sourceType = "";
+	private String checkoutUser;
 
-	private String coverage = "";
+	private String source;
 
-	private String language = "";
+	private String sourceAuthor;
+
+	private Date sourceDate;
+
+	private String sourceType;
+
+	private String coverage;
+
+	private String language;
+
+	private String fileName;
 
 	private Set<String> keywords = new HashSet<String>();
 
 	private Set<Version> versions = new HashSet<Version>();
 
-	private Menu menu;
+	private Menu folder;
 
 	public Document() {
 	}
 
-	public int getDocId() {
-		return docId;
+	/**
+	 * The document status
+	 * 
+	 * @see Document#DOC_CHECKED_IN
+	 * @see Document#DOC_CHECKED_OUT
+	 */
+	public int getStatus() {
+		return status;
 	}
 
-	public String getDocName() {
-		return docName;
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
-	public String getDocVersion() {
-		return docVersion;
+	/**
+	 * In general a document has a title. This is not the file name, but
+	 * sometimes the filename is used as title.
+	 */
+	public String getTitle() {
+		return title;
 	}
 
-	public String getDocDate() {
-		return docDate;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public String getDocPublisher() {
-		return docPublisher;
+	/**
+	 * The working version (the most recent version)
+	 */
+	public String getVersion() {
+		return version;
 	}
 
-	public int getDocStatus() {
-		return docStatus;
+	/**
+	 * Iterates over the versions searching for the specified id
+	 * 
+	 * @param id The version id
+	 * @return The found version
+	 */
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
-	public int getMenuId() {
-		return getMenu().getMenuId();
+	/**
+	 * The document creation date
+	 */
+	public Date getDate() {
+		return date;
 	}
 
-	public String getDocType() {
-		return docType;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
+	/**
+	 * The username that published this document
+	 */
+	public String getPublisher() {
+		return publisher;
+	}
+
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
+	}
+
+	/**
+	 * The document type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	/**
+	 * The username that checked-out this document and that currently locks it
+	 */
 	public String getCheckoutUser() {
 		return checkoutUser;
 	}
 
+	public void setCheckoutUser(String checkoutUser) {
+		this.checkoutUser = checkoutUser;
+	}
+
+	/**
+	 * Indication of the document's source
+	 */
 	public String getSource() {
 		return source;
 	}
 
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	/**
+	 * The author of the document (form document's metadata)
+	 */
 	public String getSourceAuthor() {
 		return sourceAuthor;
 	}
 
-	public String getSourceDate() {
+	public void setSourceAuthor(String sourceAuthor) {
+		this.sourceAuthor = sourceAuthor;
+	}
+
+	/**
+	 * The date of the document (form document's metadata)
+	 */
+	public Date getSourceDate() {
 		return sourceDate;
 	}
 
+	public void setSourceDate(Date sourceDate) {
+		this.sourceDate = sourceDate;
+	}
+
+	/**
+	 * The type of the document (form document's metadata)
+	 */
 	public String getSourceType() {
 		return sourceType;
 	}
 
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
+	}
+
+	/**
+	 * The coverage of the document (form document's metadata)
+	 */
 	public String getCoverage() {
 		return coverage;
 	}
 
+	public void setCoverage(String coverage) {
+		this.coverage = coverage;
+	}
+
+	/**
+	 * The document's language. This attribute is very important because of it
+	 * is used to select the right full-text index.
+	 */
 	public String getLanguage() {
 		return language;
 	}
 
+	/**
+	 * @see Document#setLanguage(java.lang.String)
+	 */
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	/**
+	 * The set of keywords for this document. Each keyword is a tag on this
+	 * document.
+	 */
 	public Set<String> getKeywords() {
 		return keywords;
+	}
+
+	public void setKeywords(Set<String> keywords) {
+		this.keywords = keywords;
+	}
+
+	/**
+	 * The set of all Versions
+	 */
+	public Set<Version> getVersions() {
+		return versions;
+	}
+
+	public void setVersions(Set<Version> versions) {
+		this.versions = versions;
 	}
 
 	public String getKeywordsString() {
@@ -145,84 +275,58 @@ public class Document {
 		return sb.toString();
 	}
 
-	public Set<Version> getVersions() {
-		return versions;
+	public Version getVersion(String id) {
+		for (Version version : versions) {
+			if (version.getVersion().equals(id))
+				return version;
+		}
+		return null;
 	}
 
-	public Menu getMenu() {
-		return menu;
+	/**
+	 * The original file name
+	 */
+	public String getFileName() {
+		return fileName;
 	}
 
-	public void setDocId(int id) {
-		docId = id;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
-	public void setDocName(String name) {
-		docName = name;
+	/**
+	 * The icon for this document, it may be kept from file name extension
+	 */
+	public String getIcon() {
+		String icon = IconSelector.selectIcon("");
+		try {
+			String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+			icon = IconSelector.selectIcon(extension);
+		} catch (Exception e) {
+		}
+		return icon;
 	}
 
-	public void setDocVersion(String version) {
-		docVersion = version;
+	/**
+	 * The document's file size expressed in bytes
+	 */
+	public long getFileSize() {
+		return fileSize;
 	}
 
-	public void setDocDate(String date) {
-		docDate = date;
+	public void setFileSize(long fileSize) {
+		this.fileSize = fileSize;
 	}
 
-	public void setDocPublisher(String publisher) {
-		docPublisher = publisher;
+	/**
+	 * Retrieve the folder owning this document
+	 */
+	public Menu getFolder() {
+		return folder;
 	}
 
-	public void setDocStatus(int status) {
-		docStatus = status;
-	}
-
-	public void setDocType(String type) {
-		docType = type;
-	}
-
-	public void setCheckoutUser(String user) {
-		checkoutUser = user;
-	}
-
-	public void setSource(String src) {
-		source = src;
-	}
-
-	public void setSourceAuthor(String author) {
-		sourceAuthor = author;
-	}
-
-	public void setSourceDate(String date) {
-		sourceDate = date;
-	}
-
-	public void setSourceType(String type) {
-		sourceType = type;
-	}
-
-	public void setCoverage(String cover) {
-		coverage = cover;
-	}
-
-	public void setLanguage(String lang) {
-		language = lang;
-	}
-
-	public void clearKeywords() {
-		keywords.clear();
-	}
-
-	public void setKeywords(Set<String> words) {
-		keywords = words;
-	}
-
-	public void setVersions(Set<Version> vers) {
-		versions = vers;
-	}
-
-	public void setMenu(Menu m) {
-		menu = m;
+	public void setFolder(Menu folder) {
+		this.folder = folder;
 	}
 
 	public void addKeyword(String word) {
@@ -233,36 +337,13 @@ public class Document {
 		versions.add(vers);
 	}
 
-	/**
-	 * Iterates over the versions searching for the specified id
-	 * 
-	 * @param id The version id
-	 * @return The found version
-	 */
-	public Version getVersion(String id) {
-		for (Version version : versions) {
-			if (version.getVersion().equals(id))
-				return version;
-		}
-		return null;
+	public void clearKeywords() {
+		keywords.clear();
+		keywords = new HashSet<String>();
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Document))
-			return false;
-
-		Document other = (Document) obj;
-		return other.getDocId() == this.getDocId();
-	}
-
-	@Override
-	public int hashCode() {
-		return new Integer(docId).hashCode();
-	}
-
-	@Override
-	public String toString() {
-		return Integer.toString(docId);
+	public void clearVersions() {
+		versions.clear();
+		versions = new HashSet<Version>();
 	}
 }

@@ -1,6 +1,6 @@
 package com.logicaldoc.core.security.dao;
 
-import java.util.Collection;
+import java.util.List;
 
 import com.logicaldoc.core.security.UserDoc;
 
@@ -25,34 +25,34 @@ public interface UserDocDAO {
 	/**
 	 * This method deletes an userdoc by the primary key.
 	 */
-	public boolean delete(String username, int menuId);
+	public boolean delete(String username, long docId);
 
     /**
      * This method deletes all userdocs by the menu id.
      */
-    public boolean delete(int menuId);
+    public boolean delete(long docId);
     
 	/**
 	 * Selects all userdocs for a given user.
 	 */
-	public Collection<UserDoc> findByUserName(String username);
+	public List<UserDoc> findByUserName(String username);
     
     /**
      * Selects all userdocs for a given menu.
      */
-    public Collection<UserDoc> findByMenuId(int menuId);
+    public List<UserDoc> findByDocId(long docId);
     
 
 	/**
 	 * Selects the oldest userdoc for a given user.
 	 */
-	public UserDoc findByMinTimeStamp(String username);
+	public UserDoc findByMinDate(String username);
 
 	/**
 	 * Check if an userdoc exists.
 	 * 
-	 * @param menuId MenuId of the userdoc
+	 * @param docId ID of the document
 	 * @param username
 	 */
-	public boolean exists(int menuId, String username);
+	public boolean exists(long docId, String username);
 }

@@ -28,9 +28,9 @@ public interface DownloadTicketDAO {
 	/**
 	 * This method deletes all tickets of the specified menu.
 	 * 
-	 * @param menuId ID of the menu
+	 * @param docId ID of the menu
 	 */
-	public boolean deleteByMenuId(int menuId);
+	public boolean deleteByDocId(long docId);
 
 	/**
 	 * This method finds a download ticket by its primarykey.

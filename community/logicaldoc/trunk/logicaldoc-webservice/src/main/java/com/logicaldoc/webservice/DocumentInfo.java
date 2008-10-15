@@ -8,17 +8,15 @@ package com.logicaldoc.webservice;
  * @since 3.0
  */
 public class DocumentInfo {
-	private int id;
+	private long id;
 
 	private String title;
 
-	private int writeable = 0;
+	private int folderId;
 
-	private int parentId;
+	private String folderName;
 
-	private String parentName;
-
-	private String uploadUser;
+	private String publisher;
 
 	private String uploadDate;
 
@@ -33,16 +31,16 @@ public class DocumentInfo {
 	private String sourceDate;
 
 	private String coverage;
-	
+
 	private String filename;
 
 	private VersionInfo[] version = new VersionInfo[] {};
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -53,7 +51,7 @@ public class DocumentInfo {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	
+
 	public String getSourceDate() {
 		return sourceDate;
 	}
@@ -78,36 +76,28 @@ public class DocumentInfo {
 		this.title = title;
 	}
 
-	public int getWriteable() {
-		return writeable;
+	public int getFolderId() {
+		return folderId;
 	}
 
-	public void setWriteable(int writeable) {
-		this.writeable = writeable;
+	public void setFolderId(int folderId) {
+		this.folderId = folderId;
 	}
 
-	public int getParentId() {
-		return parentId;
+	public String getFolderName() {
+		return folderName;
 	}
 
-	public void setParentId(int parentId) {
-		this.parentId = parentId;
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
 	}
 
-	public String getParentName() {
-		return parentName;
+	public String getPublisher() {
+		return publisher;
 	}
 
-	public void setParentName(String parentName) {
-		this.parentName = parentName;
-	}
-
-	public String getUploadUser() {
-		return uploadUser;
-	}
-
-	public void setUploadUser(String uploadUser) {
-		this.uploadUser = uploadUser;
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
 	}
 
 	public String getUploadDate() {
@@ -150,7 +140,6 @@ public class DocumentInfo {
 		this.version = versionInfo;
 	}
 
-	
 	public void addVersion(VersionInfo versionInfo) {
 		VersionInfo[] newVersionInfo = new VersionInfo[version.length + 1];
 		for (int i = 0; i < version.length; i++)

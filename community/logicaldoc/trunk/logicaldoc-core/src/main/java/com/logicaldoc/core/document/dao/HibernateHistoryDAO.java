@@ -66,12 +66,12 @@ public class HibernateHistoryDAO extends HibernateDaoSupport implements HistoryD
 	 * @see com.logicaldoc.core.document.dao.HistoryDAO#findByDocId(int)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<History> findByDocId(int docId) {
+	public Collection<History> findByDocId(long docId) {
 		Collection<History> coll = new ArrayList<History>();
 
 		try {
 			DetachedCriteria dt = DetachedCriteria.forClass(History.class);
-			dt.add(Property.forName("docId").eq(new Integer(docId)));
+			dt.add(Property.forName("docId").eq(new Long(docId)));
 			dt.addOrder(Order.asc("date"));
 
 			coll = (Collection<History>) getHibernateTemplate().findByCriteria(dt);

@@ -65,24 +65,6 @@ public interface MenuDAO {
 	public Collection<Menu> findByUserName(String username);
 
 	/**
-	 * Finds authorized menus for a user having a specified keyword.
-	 * 
-	 * @param username Name of the user.
-	 * @param keyword Keyword of the document bind with the menu.
-	 * @return Collection of found menus.
-	 */
-	public Collection<Menu> findByUserNameAndKeyword(String username, String keyword);
-
-	/**
-	 * Finds authorized menu ids for a user having a specified keyword.
-	 * 
-	 * @param username Name of the user.
-	 * @param keyword Keyword of the document bind with the menu.
-	 * @return Collection of found ids.
-	 */
-	public Set<Integer> findMenuIdByUsernameAndKeyword(String username, String keyword);
-
-	/**
 	 * Finds direct children of a menu.
 	 * 
 	 * @param parentId MenuId of the menu which children are wanted.
@@ -194,14 +176,24 @@ public interface MenuDAO {
 	 * @return The collection of menues
 	 */
 	public Collection<Menu> findByGroupName(String groupName);
+	
+	/**
+	 * Creates a new folder in the parent menu
+	 * 
+	 * @param parent The parent menu
+	 * @param name The folder name
+	 * @return The newly created folder
+	 */
+	public Menu createFolder(Menu parent, String name);
 
 	/**
-	 * Finds all menues of the latests documents downloaded by the specified
-	 * user
+	 * Creates the folder for the specified path. All unexisting nodes specified
+	 * in the path will be created.
 	 * 
-	 * @param username Name of the user.
-	 * @return Collection of found menus.
+	 * @param parent The parent menu
+	 * @param path The folder path(for example /dog/cat/mouse)
+	 * 
+	 * @return The created folder
 	 */
-	public Collection<Menu> findLastDownloadsByUserName(String username, int maxResults);
-
+	public Menu createFolders(Menu parent, String path);
 }

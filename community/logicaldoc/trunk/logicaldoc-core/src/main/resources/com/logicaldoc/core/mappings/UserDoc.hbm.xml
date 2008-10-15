@@ -2,12 +2,12 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-lazy="false">
-	<class name="com.logicaldoc.core.security.UserDoc" table="co_userdoc">
+	<class name="com.logicaldoc.core.security.UserDoc" table="ld_userdoc">
 		<cache usage="read-write" />
 		<composite-id name="id" class="com.logicaldoc.core.security.UserDocID">
-			<key-property name="menuId" type="int" column="co_menuid" />
-			<key-property name="userName" type="string" column="co_username" />
+			<key-property name="docId" type="long" column="ld_docid" />
+			<key-property name="userName" type="string" column="ld_username" />
 		</composite-id>
-		<property name="timeStamp" type="string" column="co_timestamp" length="100" />
+		<property name="date" type="timestamp" column="ld_date" />
 	</class>
 </hibernate-mapping>

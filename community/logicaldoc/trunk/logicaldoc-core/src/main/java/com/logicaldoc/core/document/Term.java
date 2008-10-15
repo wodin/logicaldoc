@@ -41,12 +41,12 @@ public class Term {
 		value = d;
 	}
 
-	public int getMenuId() {
-		return getId().getMenuId();
+	public long getDocId() {
+		return getId().getDocId();
 	}
 
-	public void setMenuId(int i) {
-		getId().setMenuId(i);
+	public void setDocId(long i) {
+		getId().setDocId(i);
 	}
 
 	public int getWordCount() {

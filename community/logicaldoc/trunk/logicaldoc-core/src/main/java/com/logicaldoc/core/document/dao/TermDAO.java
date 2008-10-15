@@ -1,6 +1,7 @@
 package com.logicaldoc.core.document.dao;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.logicaldoc.core.document.Term;
 import com.logicaldoc.core.document.TermID;
@@ -23,10 +24,10 @@ public interface TermDAO {
 	/**
 	 * This method deletes all terms of a document.
 	 * 
-	 * @param menuId - Id of the document.
+	 * @param docId - Id of the document.
 	 * @return
 	 */
-	public boolean delete(int menuId);
+	public boolean delete(long docId);
 
 	/**
 	 * This method selects one term of a document which has a same stem like a
@@ -36,7 +37,7 @@ public interface TermDAO {
 	 * @param maxResults - The maximum number of results
 	 * @return
 	 */
-	public Collection<Term> findByStem(int menuId, int maxResults);
+	public List<Term> findByStem(long docId, int maxResults);
 
 	/**
 	 * Finds all term entries of a document.
@@ -44,7 +45,7 @@ public interface TermDAO {
 	 * @param docId ID of the document
 	 * @return
 	 */
-	public Collection<Term> findByMenuId(int menuId);
+	public Collection<Term> findByDocId(long docId);
 
 	/**
 	 * Finds the instance given it's primary key.

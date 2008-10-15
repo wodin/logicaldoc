@@ -3,9 +3,6 @@ package com.logicaldoc.core.searchengine;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
-import com.logicaldoc.core.i18n.DateBean;
-
 /**
  * Basic implementation of a <code>Result</code>
  * 
@@ -14,15 +11,11 @@ import com.logicaldoc.core.i18n.DateBean;
 public class ResultImpl implements Serializable, Result {
 	private static final long serialVersionUID = 1L;
 
-	private Integer docId = new Integer(0);
+	private Long docId = new Long(0);
 
-	private String name = "";
+	private String title = "";
 
 	private String summary = "";
-
-	private String path = "";
-
-	private int menuId = -1;
 
 	private String type = "";
 
@@ -46,11 +39,11 @@ public class ResultImpl implements Serializable, Result {
 	/**
 	 * @see com.logicaldoc.core.searchengine.search.Result#getDocId()
 	 */
-	public Integer getDocId() {
+	public long getDocId() {
 		return docId;
 	}
 
-	public void setDocid(Integer docId) {
+	public void setDocid(long docId) {
 		this.docId = docId;
 	}
 
@@ -58,7 +51,7 @@ public class ResultImpl implements Serializable, Result {
 	 * @see com.logicaldoc.core.searchengine.search.Result#getName()
 	 */
 	public String getName() {
-		return name;
+		return title;
 	}
 
 	/**
@@ -66,20 +59,6 @@ public class ResultImpl implements Serializable, Result {
 	 */
 	public String getSummary() {
 		return summary;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getPath()
-	 */
-	public String getPath() {
-		return path;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getMenuId()
-	 */
-	public int getMenuId() {
-		return menuId;
 	}
 
 	/**
@@ -117,20 +96,16 @@ public class ResultImpl implements Serializable, Result {
 		return red;
 	}
 
-	public void setName(String nme) {
-		name = nme;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public void setSummary(String summ) {
 		summary = summ;
 	}
 
-	public void setPath(String pth) {
-		path = pth;
-	}
-
-	public void setMenuId(int id) {
-		menuId = id;
+	public void setDocId(long docId) {
+		this.docId = docId;
 	}
 
 	public void setType(String typ) {
@@ -186,9 +161,9 @@ public class ResultImpl implements Serializable, Result {
 
 	/**
 	 * @see com.logicaldoc.core.searchengine.search.Result#isRelevant(com.logicaldoc.core.searchengine.search.SearchOptions,
-	 *      java.lang.String)
+	 *      java.util.Date)
 	 */
-	public boolean isRelevant(SearchOptions opt, String sourceDate) {
+	public boolean isRelevant(SearchOptions opt) {
 		boolean result = true;
 
 		if ((opt.getFormat() != null) && !opt.getFormat().equals("all")) {
@@ -215,17 +190,13 @@ public class ResultImpl implements Serializable, Result {
 				result = false;
 		}
 
-		Date srcDate = null;
-		if (StringUtils.isNotEmpty(sourceDate))
-			srcDate = DateBean.dateFromCompactString(sourceDate);
-
-		if (opt.getSourceDateFrom() != null && srcDate != null) {
-			if (srcDate.before(opt.getSourceDateFrom()))
+		if (opt.getSourceDateFrom() != null && sourceDate != null) {
+			if (sourceDate.before(opt.getSourceDateFrom()))
 				result = false;
 		}
 
-		if (opt.getSourceDateTo() != null && srcDate != null) {
-			if (srcDate.after(opt.getSourceDateTo()))
+		if (opt.getSourceDateTo() != null && sourceDate != null) {
+			if (sourceDate.after(opt.getSourceDateTo()))
 				result = false;
 		}
 
@@ -306,7 +277,7 @@ public class ResultImpl implements Serializable, Result {
 		this.sourceDate = sourceDate;
 	}
 
-	/** 
+	/**
 	 * @see com.logicaldoc.core.searchengine.search.Result#getDocType()
 	 */
 	public int getDocType() {

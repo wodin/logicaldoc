@@ -5,6 +5,8 @@ import java.io.File;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
+import com.logicaldoc.core.i18n.DateBean;
+
 /**
  * A document inside the full-text index
  * 
@@ -38,20 +40,19 @@ public class LuceneDocument {
 		file = f;
 		doc = new Document();
 		setDocId();
-		setName();
+		setTitle();
 		setSize();
-		setPath();
 		setDocData();
 		setType();
-		setDate();
 		setContent(content);
 		setSummary();
 		setKeywords();
+		setPath();
 		return doc;
 	}
 
 	public void setDocId() {
-		doc.add(new Field("docid", String.valueOf(document.getDocId()), Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field("docId", String.valueOf(document.getId()), Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
 	/**
@@ -63,22 +64,13 @@ public class LuceneDocument {
 		return content;
 	}
 
-	protected void setName() {
-		doc.add(new Field("name", document.getDocName(), Field.Store.YES, Field.Index.TOKENIZED));
+	protected void setTitle() {
+		doc.add(new Field("title", document.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
 	}
 
 	protected void setSize() {
 		String size = String.valueOf(file.length() / 1024);
 		doc.add(new Field("size", size, Field.Store.YES, Field.Index.UN_TOKENIZED));
-	}
-
-	protected void setPath() {
-		String menuId = String.valueOf(document.getMenuId());
-		// String path = "download?menuId=" + menuId;
-		String path = document.getMenu().getMenuPath();
-		doc.add(new Field("menuId", menuId, Field.Store.YES, Field.Index.UN_TOKENIZED));
-		// doc.add(new Field("path", path, Field.Store.YES, Field.Index.NO));
-		doc.add(new Field("path", path, Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
 	protected void setDocData() {
@@ -90,8 +82,17 @@ public class LuceneDocument {
 				Field.Store.NO, Field.Index.TOKENIZED));
 		doc.add(new Field("coverage", document.getCoverage() != null ? document.getCoverage() : "", Field.Store.NO,
 				Field.Index.TOKENIZED));
-		doc.add(new Field("sourceDate", document.getSourceDate() != null ? document.getSourceDate() : "",
+		doc.add(new Field("sourceDate", document.getSourceDate() != null ? DateBean.toCompactString(document
+				.getSourceDate()) : "", Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field("date", document.getDate() != null ? DateBean.toCompactString(document.getDate()) : "",
 				Field.Store.YES, Field.Index.UN_TOKENIZED));
+	}
+	
+	protected void setPath() {
+		String folderId = String.valueOf(document.getFolder().getMenuId());
+		String path = document.getFolder().getMenuPath();
+		doc.add(new Field("folderId", folderId, Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field("path", path, Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
 	protected void setType() {
@@ -99,11 +100,6 @@ public class LuceneDocument {
 		String type = file.getName().substring(point + 1);
 		type = type.toUpperCase();
 		doc.add(new Field("type", type, Field.Store.YES, Field.Index.UN_TOKENIZED));
-	}
-
-	protected void setDate() {
-		long date = file.lastModified();
-		doc.add(new Field("date", String.valueOf(date), Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
 	protected void setContent(String content) {

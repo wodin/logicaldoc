@@ -8,7 +8,7 @@ import javax.faces.application.FacesMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.core.document.Document;
+
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.GroupRule;
 import com.logicaldoc.core.security.Menu;
@@ -16,7 +16,6 @@ import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
-
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
@@ -32,8 +31,6 @@ public class RightsRecordsManager {
 	protected static Log log = LogFactory.getLog(RightsRecordsManager.class);
 
 	private ArrayList<GroupRule> rules = new ArrayList<GroupRule>();
-
-	private Document selectedDocument;
 
 	private Directory selectedDirectory;
 
@@ -56,23 +53,9 @@ public class RightsRecordsManager {
 	 */
 	public void selectDirectory(Directory dir) {
 		recursive = false;
-		selectedDocument = null;
 		selectedDirectory = dir;
 
 		initRights(dir.getMenuId());
-	}
-
-	/**
-	 * Changes the currently selected document and updates the rules list.
-	 * 
-	 * @param doc
-	 */
-	public void selectDocument(Document doc) {
-		recursive = false;
-		selectedDocument = doc;
-		selectedDirectory = null;
-
-		initRights(doc.getMenuId());
 	}
 
 	/**
@@ -153,7 +136,7 @@ public class RightsRecordsManager {
 	}
 
 	public String save() {
-		int id = (selectedDocument != null) ? selectedDocument.getMenuId() : selectedDirectory.getMenuId();
+		int id = selectedDirectory.getMenuId();
 		String username = SessionManagement.getUsername();
 		saveRules(id, username);
 
@@ -231,14 +214,6 @@ public class RightsRecordsManager {
 				saveRules(submenu.getMenuId(), username);
 			}
 		}
-	}
-
-	public Document getSelectedDocument() {
-		return selectedDocument;
-	}
-
-	public void setSelectedDocument(Document selectedDocument) {
-		this.selectedDocument = selectedDocument;
 	}
 
 	public Directory getSelectedDirectory() {

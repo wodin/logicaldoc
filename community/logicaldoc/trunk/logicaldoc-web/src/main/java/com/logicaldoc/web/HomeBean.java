@@ -9,14 +9,12 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.document.Article;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.ArticleDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
-
 import com.logicaldoc.web.document.DocumentRecord;
 import com.logicaldoc.web.document.DocumentsRecordsManager;
 
@@ -59,7 +57,7 @@ public class HomeBean {
 				DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 				Collection<Document> documents = (Collection<Document>) docdao.findLastModifiedByUserName(username, 10);
 				for (Document document : documents) {
-					lastModified.add(new DocumentRecord(document.getMenuId(), null,
+					lastModified.add(new DocumentRecord(document.getId(), null,
 							DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
 							DocumentsRecordsManager.GROUP_ROW_STYLE_CLASS));
 				}
@@ -81,11 +79,11 @@ public class HomeBean {
 		if (SessionManagement.isValid()) {
 			try {
 				String username = SessionManagement.getUsername();
-				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+				DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 
-				Collection<Menu> menuColl = mdao.findLastDownloadsByUserName(username, 10);
-				for (Menu m : menuColl) {
-					lastDownloads.add(new DocumentRecord(m.getMenuId(), null,
+				Collection<Document> docColl = docDao.findLastDownloadsByUserName(username, 10);
+				for (Document doc : docColl) {
+					lastDownloads.add(new DocumentRecord(doc.getId(), null,
 							DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
 							DocumentsRecordsManager.GROUP_ROW_STYLE_CLASS));
 				}
@@ -136,7 +134,7 @@ public class HomeBean {
 				DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 				Collection<Document> documents = (Collection<Document>) docdao.findCheckoutByUserName(username);
 				for (Document document : documents) {
-					lastdocs.add(new DocumentRecord(document.getMenuId(), null,
+					lastdocs.add(new DocumentRecord(document.getId(), null,
 							DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
 							DocumentsRecordsManager.GROUP_ROW_STYLE_CLASS));
 				}

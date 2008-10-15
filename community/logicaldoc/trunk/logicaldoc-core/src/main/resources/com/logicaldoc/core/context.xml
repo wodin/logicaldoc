@@ -59,20 +59,8 @@
 				<property name="sessionFactory">
 					<ref bean="SessionFactory" />
 				</property>
-				<property name="settings">
-					<ref bean="SettingsConfig" />
-				</property>
 				<property name="userDAO">
 					<ref bean="UserDAO" />
-				</property>
-				<property name="ticketDAO">
-					<ref bean="DownloadTicketDAO" />
-				</property>
-				<property name="termDAO">
-					<ref bean="TermDAO" />
-				</property>
-				<property name="userDocDAO">
-					<ref bean="UserDocDAO" />
 				</property>
 			</bean>
 		</property>
@@ -194,6 +182,15 @@
 				<property name="userDAO">
 					<ref bean="UserDAO" />
 				</property>
+                <property name="termDAO">
+                    <ref bean="TermDAO" />
+                </property>
+				<property name="userDocDAO">
+                    <ref bean="UserDocDAO" />
+                </property>
+                <property name="settings">
+                    <ref bean="SettingsConfig" />
+                </property>
 			</bean>
 		</property>
 	</bean>
@@ -284,20 +281,11 @@
 		dependency-check="default">
 		<property name="target">
 			<bean class="com.logicaldoc.core.document.DocumentManagerImpl">
-				<property name="menuDAO">
-					<ref bean="MenuDAO" />
-				</property>
 				<property name="documentDAO">
 					<ref bean="DocumentDAO" />
 				</property>
-				<property name="userDocDAO">
-					<ref bean="UserDocDAO" />
-				</property>
 				<property name="historyDAO">
 					<ref bean="HistoryDAO" />
-				</property>
-				<property name="termDAO">
-					<ref bean="TermDAO" />
 				</property>
 				<property name="settings">
 					<ref bean="SettingsConfig" />
@@ -307,35 +295,6 @@
 				</property>
 				<property name="indexer">
 					<ref bean="Indexer" />
-				</property>
-			</bean>
-		</property>
-	</bean>
-
-	<bean id="MenuManager" parent="ApplicationBaseTransactionProxy"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
-		<property name="target">
-			<bean class="com.logicaldoc.core.security.MenuManagerImpl"
-				abstract="false" lazy-init="default" autowire="default"
-				dependency-check="default">
-				<property name="menuDao">
-					<ref bean="MenuDAO" />
-				</property>
-				<property name="documentDao">
-					<ref bean="DocumentDAO" />
-				</property>
-				<property name="termDao">
-					<ref bean="TermDAO" />
-				</property>
-				<property name="indexer">
-					<ref bean="Indexer" />
-				</property>
-				<property name="storer">
-					<ref bean="Storer" />
-				</property>
-				<property name="userDocDao">
-					<ref bean="UserDocDAO" />
 				</property>
 			</bean>
 		</property>

@@ -8,11 +8,11 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.util.Context;
-
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.FacesUtil;
@@ -48,7 +48,7 @@ public class HistoryRecordsManager {
 
 		try {
 			HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-			histories = historyDAO.findByDocId(doc.getDocId());
+			histories = historyDAO.findByDocId(doc.getId());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());

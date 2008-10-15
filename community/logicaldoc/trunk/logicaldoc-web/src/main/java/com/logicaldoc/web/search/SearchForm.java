@@ -353,14 +353,14 @@ public class SearchForm {
 	}
 
 	/**
-	 * Returns the results as a map, the key is menuId.
+	 * Returns the results as a map, the key is docId.
 	 * 
 	 * @return
 	 */
 	public Map<String, Result> getResultMap() {
 		Map<String, Result> map = new HashMap<String, Result>();
 		for (Result result : lastSearch.getResults()) {
-			map.put(Long.toString(result.getMenuId()), result);
+			map.put(Long.toString(result.getDocId()), result);
 		}
 		return map;
 	}
@@ -533,25 +533,26 @@ public class SearchForm {
 	/**
 	 * Search for similar documents.
 	 */
+	@SuppressWarnings("unchecked")
 	public String searchSimilar() {
 
 		if (SessionManagement.isValid()) {
 			Map map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
-			int menuId;
+			long docId;
 
 			if (map.containsKey("entry")) {
 				Result entry = (Result) map.get("entry");
-				menuId = entry.getMenuId();
+				docId = entry.getDocId();
 			} else {
 				DocumentRecord entry = (DocumentRecord) map.get("documentRecord");
-				menuId = entry.getMenuId();
+				docId = entry.getDocId();
 			}
 
 			String username = SessionManagement.getUsername();
 
 			try {
 				SimilarSearch searcher = new SimilarSearch();
-				similar = searcher.findSimilarDocuments(menuId, 0.0d, username);
+				similar = searcher.findSimilarDocuments(docId, 0.0d, username);
 
 				PageContentBean page = new PageContentBean("similar", "search/similar");
 				page.setContentTitle(Messages.getMessage("msg.jsp.similardocs"));

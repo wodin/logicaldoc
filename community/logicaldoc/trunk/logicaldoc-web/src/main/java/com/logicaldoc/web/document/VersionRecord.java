@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.faces.context.FacesContext;
 
 import com.logicaldoc.core.document.Version;
-import com.logicaldoc.core.i18n.DateBean;
 import com.logicaldoc.web.util.FacesUtil;
 
 /**
@@ -23,62 +22,6 @@ public class VersionRecord extends Version {
 	public VersionRecord(Version version) {
 		super();
 		this.wrappedVersion = version;
-	}
-
-	public Date getDate() {
-		return DateBean.dateFromCompactString(getVersionDate());
-	}
-
-	public int compareTo(Version other) {
-		return wrappedVersion.compareTo(other);
-	}
-
-	public boolean equals(Object obj) {
-		return wrappedVersion.equals(obj);
-	}
-
-	public String getNewVersionName(String oldVersionName, VERSION_TYPE versionType) {
-		return wrappedVersion.getNewVersionName(oldVersionName, versionType);
-	}
-
-	public String getVersion() {
-		return wrappedVersion.getVersion();
-	}
-
-	public String getVersionComment() {
-		return wrappedVersion.getVersionComment();
-	}
-
-	public String getVersionDate() {
-		return wrappedVersion.getVersionDate();
-	}
-
-	public String getVersionUser() {
-		return wrappedVersion.getVersionUser();
-	}
-
-	public int hashCode() {
-		return wrappedVersion.hashCode();
-	}
-
-	public void setVersion(String version) {
-		wrappedVersion.setVersion(version);
-	}
-
-	public void setVersionComment(String comment) {
-		wrappedVersion.setVersionComment(comment);
-	}
-
-	public void setVersionDate(String date) {
-		wrappedVersion.setVersionDate(date);
-	}
-
-	public void setVersionUser(String vuser) {
-		wrappedVersion.setVersionUser(vuser);
-	}
-
-	public String toString() {
-		return wrappedVersion.toString();
 	}
 
 	public boolean isCurrentVersion() {
@@ -104,5 +47,57 @@ public class VersionRecord extends Version {
 		versionForm.init(this);
 
 		return null;
+	}
+
+	public int compareTo(Version other) {
+		return wrappedVersion.compareTo(other);
+	}
+
+	public boolean equals(Object obj) {
+		return wrappedVersion.equals(obj);
+	}
+
+	public String getComment() {
+		return wrappedVersion.getComment();
+	}
+
+	public Date getDate() {
+		return wrappedVersion.getDate();
+	}
+
+	public String getNewVersionName(String oldVersionName, VERSION_TYPE versionType) {
+		return wrappedVersion.getNewVersionName(oldVersionName, versionType);
+	}
+
+	public String getUser() {
+		return wrappedVersion.getUser();
+	}
+
+	public String getVersion() {
+		return wrappedVersion.getVersion();
+	}
+
+	public int hashCode() {
+		return wrappedVersion.hashCode();
+	}
+
+	public void setComment(String comment) {
+		wrappedVersion.setComment(comment);
+	}
+
+	public void setDate(Date date) {
+		wrappedVersion.setDate(date);
+	}
+
+	public void setUser(String user) {
+		wrappedVersion.setUser(user);
+	}
+
+	public void setVersion(String version) {
+		wrappedVersion.setVersion(version);
+	}
+
+	public String toString() {
+		return wrappedVersion.toString();
 	}
 }

@@ -25,12 +25,12 @@ public class AnalyzeText {
 	 * This method selects 20 keywords of a given text in a specified language
 	 * and stores these keywords in a database.
 	 * 
-	 * @param menuId MenuId of the document the text is from.
+	 * @param docId The document id the text is from.
 	 * @param text Text of a document.
 	 * @param language Identified language of the text.
 	 * @throws Exception
 	 */
-	public void storeTerms(int menuId, String text, String language) throws Exception {
+	public void storeTerms(long docId, String text, String language) throws Exception {
 		TermDAO termDao = (TermDAO) Context.getInstance().getBean(TermDAO.class);
 		Analyzer analyzer = AnalyzerFactory.getAnalyzer(language);
 		analyzer.analyze(text);
@@ -42,7 +42,7 @@ public class AnalyzeText {
 		while (iter.hasNext()) {
 			Entry entry = (Entry) iter.next();
 			Term term = new Term();
-			term.setMenuId(menuId);
+			term.setDocId(docId);
 			term.setStem(entry.getWord());
 			term.setValue(entry.getNumber() * 1000 / words);
 			term.setWordCount(entry.getNumber());

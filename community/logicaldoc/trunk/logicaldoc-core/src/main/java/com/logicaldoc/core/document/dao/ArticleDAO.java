@@ -40,7 +40,7 @@ public interface ArticleDAO {
 	 * 
 	 * @param docId - ID of the document.
 	 */
-	public Collection<Article> findByDocId(int docId);
+	public Collection<Article> findByDocId(long docId);
 	
 	/**
 	 * This method selects all articles of the given user.

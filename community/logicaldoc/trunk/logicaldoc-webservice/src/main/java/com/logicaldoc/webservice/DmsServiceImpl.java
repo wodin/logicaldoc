@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -25,13 +24,11 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.i18n.DateBean;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -52,19 +49,19 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#checkin(java.lang.String,
-	 *      java.lang.String, int, java.lang.String, java.lang.String,
+	 *      java.lang.String, long, java.lang.String, java.lang.String,
 	 *      java.lang.String, javax.activation.DataHandler)
 	 */
-	public String checkin(String username, String password, int id, String filename, String description, String type,
+	public String checkin(String username, String password, long id, String filename, String description, String type,
 			DataHandler content) throws Exception {
-		checkCredentials(username, password);
-
-		checkWriteEnable(username, id);
-
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document document = ddao.findByMenuId(id);
+		Document document = ddao.findByPrimaryKey(id);
+		Menu folder = document.getFolder();
 
-		if (document.getDocStatus() == Document.DOC_CHECKED_OUT) {
+		checkCredentials(username, password);
+		checkWriteEnable(username, folder.getMenuId());
+
+		if (document.getStatus() == Document.DOC_CHECKED_OUT) {
 			// determines the kind of version to create
 			Version.VERSION_TYPE versionType;
 
@@ -85,7 +82,7 @@ public class DmsServiceImpl implements DmsService {
 				// something goes wrong
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				documentManager.checkin(document.getDocId(), stream, filename, username, versionType, description);
+				documentManager.checkin(document.getId(), stream, filename, username, versionType, description);
 
 				/* create positive log message */
 				log.info("Document " + id + " checked in");
@@ -101,11 +98,13 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#checkout(java.lang.String,
-	 *      java.lang.String, int)
+	 *      java.lang.String, long)
 	 */
-	public String checkout(String username, String password, int id) throws Exception {
+	public String checkout(String username, String password, long id) throws Exception {
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document doc = docDao.findByPrimaryKey(id);
 		checkCredentials(username, password);
-		checkWriteEnable(username, id);
+		checkWriteEnable(username, doc.getFolder().getMenuId());
 		DocumentManager DocumentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		try {
 			DocumentManager.checkout(id, username);
@@ -120,12 +119,11 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, int, java.lang.String, java.lang.String,
 	 *      java.lang.String, java.lang.String, java.lang.String,
 	 *      java.lang.String, java.lang.String, java.lang.String,
-	 *      java.lang.String, java.lang.String, java.lang.String,
-	 *      javax.activation.DataHandler)
+	 *      java.lang.String, java.lang.String, javax.activation.DataHandler)
 	 */
 	public String createDocument(String username, String password, int parent, String docTitle, String source,
 			String sourceDate, String author, String sourceType, String coverage, String language, String keywords,
-			String versionDesc, String filename, String groups, DataHandler content) throws Exception {
+			String versionDesc, String filename, DataHandler content) throws Exception {
 
 		checkCredentials(username, password);
 
@@ -137,19 +135,7 @@ public class DmsServiceImpl implements DmsService {
 			return "error - parent not found";
 		}
 
-		String[] groupNames = parseGroups(groups);
-		if (groupNames.length < 1)
-			return "error - no valid groups";
-
 		checkWriteEnable(username, parent);
-
-		Set<MenuGroup> grps = new HashSet<MenuGroup>();
-		for (int i = 0; i < groupNames.length; i++) {
-			MenuGroup mg = new MenuGroup();
-			mg.setGroupName(groupNames[i]);
-			mg.setWriteEnable(1);
-			grps.add(mg);
-		}
 
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Set<String> kwds = ddao.toKeywords(keywords);
@@ -166,8 +152,8 @@ public class DmsServiceImpl implements DmsService {
 
 		try {
 			Document doc = documentManager.create(stream, filename, parentMenu, username, language, null, date, source,
-					author, sourceType, coverage, versionDesc, kwds, grps);
-			return String.valueOf(doc.getMenuId());
+					author, sourceType, coverage, versionDesc, kwds);
+			return String.valueOf(doc.getId());
 		} catch (Exception e) {
 			return "error";
 		} finally {
@@ -213,16 +199,14 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#deleteDocument(java.lang.String,
-	 *      java.lang.String, int)
+	 *      java.lang.String, long)
 	 */
-	public String deleteDocument(String username, String password, int id) throws Exception {
-
-		checkCredentials(username, password);
-		checkWriteEnable(username, id);
-
+	public String deleteDocument(String username, String password, long id) throws Exception {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		docDao.deleteByMenuId(id);
-
+		Document doc = docDao.findByPrimaryKey(id);
+		checkCredentials(username, password);
+		checkWriteEnable(username, doc.getFolder().getMenuId());
+		docDao.delete(id);
 		return "ok";
 	}
 
@@ -231,22 +215,11 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, int)
 	 */
 	public String deleteFolder(String username, String password, int folder) throws Exception {
-
 		checkCredentials(username, password);
-
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu menu = mdao.findByPrimaryKey(folder);
-		if (menu == null || menu.getMenuType() != Menu.MENUTYPE_DIRECTORY) {
-			log.error("Folder " + folder + " not found");
-			return "error";
-		}
-
 		checkWriteEnable(username, folder);
-
-		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-
 		try {
-			documentManager.delete(folder, username);
+			mdao.delete(folder);
 			return "ok";
 		} catch (Exception e) {
 			log.error("Some elements were not deleted");
@@ -256,15 +229,13 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#downloadDocument(java.lang.String,
-	 *      java.lang.String, java.lang.String, int, java.lang.String)
+	 *      java.lang.String, java.lang.String, long, java.lang.String)
 	 */
-	public DataHandler downloadDocument(String username, String password, int id, String version) throws Exception {
-
-		checkCredentials(username, password);
-		checkReadEnable(username, id);
-
+	public DataHandler downloadDocument(String username, String password, long id, String version) throws Exception {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findByMenuId(id);
+		Document doc = docDao.findByPrimaryKey(id);
+		checkCredentials(username, password);
+		checkReadEnable(username, doc.getFolder().getMenuId());
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		File file = documentManager.getDocumentFile(doc);
@@ -283,44 +254,39 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#downloadDocumentInfo(java.lang.String,
-	 *      java.lang.String, int)
+	 *      java.lang.String, long)
 	 */
-	public DocumentInfo downloadDocumentInfo(String username, String password, int id) throws Exception {
-
+	public DocumentInfo downloadDocumentInfo(String username, String password, long id) throws Exception {
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document doc = docDao.findByPrimaryKey(id);
 		checkCredentials(username, password);
-
-		checkReadEnable(username, id);
+		checkReadEnable(username, doc.getFolder().getMenuId());
 
 		// Retrieve the document
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findByMenuId(id);
-		Menu menu = doc.getMenu();
-		Menu parentMenu = menuDao.findByPrimaryKey(menu.getMenuParent());
 
 		// Populate document's metadata
 		DocumentInfo info = new DocumentInfo();
-		info.setId(menu.getMenuId());
-		info.setTitle(doc.getDocName());
+		info.setId(doc.getId());
+		info.setTitle(doc.getTitle());
 		info.setAuthor(doc.getSourceAuthor());
 		info.setSourceDate(convertDateToXML(doc.getSourceDate()));
 		info.setLanguage(doc.getLanguage());
-		info.setParentId(menu.getMenuParent());
-		info.setParentName(parentMenu.getMenuText());
+		info.setFolderId(doc.getFolder().getMenuId());
+		info.setFolderName(doc.getFolder().getMenuText());
 		info.setSource(doc.getSource());
-		info.setType(doc.getDocType());
-		info.setUploadDate(convertDateToXML(doc.getDocDate()));
-		info.setWriteable(menuDao.isMenuWriteable(id, username));
-		info.setUploadUser(doc.getDocPublisher());
+		info.setType(doc.getType());
+		info.setUploadDate(convertDateToXML(doc.getDate()));
+		info.setPublisher(doc.getPublisher());
 		info.setCoverage(doc.getCoverage());
-		info.setFilename(doc.getMenu().getMenuRef());
+		info.setFilename(doc.getFileName());
 
 		Set<Version> versions = doc.getVersions();
 		for (Version version : versions) {
 			VersionInfo vInfo = new VersionInfo();
-			vInfo.setDate(convertDateToXML(version.getVersionDate()));
-			vInfo.setDescription(version.getVersionComment());
-			vInfo.setId(version.getVersion());
+			vInfo.setDate(convertDateToXML(version.getDate()));
+			vInfo.setComment(version.getComment());
+			vInfo.setVersion(version.getVersion());
 			info.addVersion(vInfo);
 		}
 
@@ -356,12 +322,11 @@ public class DmsServiceImpl implements DmsService {
 			content.setId(menu.getMenuId());
 			content.setTitle(menu.getMenuText());
 			content.setWriteable(mdao.isReadEnable(menu.getMenuId(), username) ? 1 : 0);
-
-			if (menu.getMenuType() == Menu.MENUTYPE_FILE)
-				folderContent.addDocument(content);
-			else if (menu.getMenuType() == Menu.MENUTYPE_DIRECTORY)
+			if (menu.getMenuType() == Menu.MENUTYPE_DIRECTORY)
 				folderContent.addFolder(content);
 		}
+
+		// TODO Search for documents also
 
 		return folderContent;
 	}
@@ -413,7 +378,7 @@ public class DmsServiceImpl implements DmsService {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		for (com.logicaldoc.core.searchengine.Result res : tmp) {
 			Result newRes = new Result();
-			newRes.setId(res.getMenuId());
+			newRes.setId(res.getDocId());
 			newRes.setDate(df.format(res.getDate()));
 			newRes.setTitle(res.getName());
 			newRes.setSummary(SnippetStripper.strip(res.getSummary()));
@@ -468,15 +433,11 @@ public class DmsServiceImpl implements DmsService {
 	}
 
 	/**
-	 * converts a date from logicaldoc's internal representation to a valid XML
-	 * string
+	 * Converts a dateO to a valid XML string
 	 */
-	protected String convertDateToXML(String date) {
-		if (date.length() < 9) {
-			return DateBean.convertDate("yyyyMMdd", "yyyy-MM-dd", date);
-		} else {
-			return DateBean.convertDate("yyyyMMdd HHmmss", "yyyy-MM-dd HH:mm:ss", date);
-		}
+	protected String convertDateToXML(Date date) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return df.format(date);
 	}
 
 	/**

@@ -73,16 +73,16 @@ public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements D
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#deleteByMenuId(int)
+	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#deleteByDocId(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean deleteByMenuId(int menuId) {
+	public boolean deleteByDocId(long docId) {
 		boolean result = true;
 
 		try {
 			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) getHibernateTemplate().find(
-					"from com.logicaldoc.core.document.DownloadTicket _ticket where _ticket.menuId = ?",
-					new Object[] { new Integer(menuId) });
+					"from com.logicaldoc.core.document.DownloadTicket _ticket where _ticket.docId = ?",
+					new Object[] { new Long(docId) });
 			getHibernateTemplate().deleteAll(coll);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
