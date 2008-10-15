@@ -29,7 +29,7 @@
                         <ice:outputLabel value="#{msgs['msg.jsp.version']}" />
                     </ice:panelGroup>
                     <ice:panelGroup>
-                        <ice:outputText value="#{documentForm.record.document.docVersion}" style="font-weight: bold"/>
+                        <ice:outputText value="#{documentForm.record.document.version}" style="font-weight: bold"/>
                     </ice:panelGroup>
 
                     <ice:panelGroup styleClass="outputLabel">
@@ -46,7 +46,7 @@
                     </ice:panelGroup>
                     <ice:panelGroup>
                         <ice:outputText
-                            value="#{documentForm.record.document.docPublisher}" style="font-weight: bold" />
+                            value="#{documentForm.record.document.publisher}" style="font-weight: bold" />
                     </ice:panelGroup>
                 </ice:panelGrid>
             </ice:panelGroup>
