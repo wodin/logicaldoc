@@ -13,11 +13,11 @@ import javax.servlet.ServletContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
-
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.i18n.Messages;
@@ -134,14 +134,14 @@ public class MenuBarBean {
 		page.setDisplayText(Messages.getMessage("home"));
 		page.setIcon(StyleBean.getImagePath("home.png"));
 
-		MenuItem item = createMenuItem(" " + Messages.getMessage("home"), null, "#{menuBar.primaryListener}", null, null, StyleBean
-				.getImagePath("home.png"), false, null, page);
+		MenuItem item = createMenuItem(" " + Messages.getMessage("home"), null, "#{menuBar.primaryListener}", null,
+				null, StyleBean.getImagePath("home.png"), false, null, page);
 		model.add(item);
 
 		try {
 			if (username != null) {
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-				Collection<Menu> menus = menuDao.findByUserName(username, 1);
+				Collection<Menu> menus = menuDao.findByUserName(username, 1, Menu.MENUTYPE_ACTION);
 
 				for (Menu menu : menus) {
 					createMenuStructure(menu, null);
@@ -151,15 +151,17 @@ public class MenuBarBean {
 			logger.error(t.getMessage(), t);
 		}
 
-		MenuItem helpMenu = createMenuItem(" " + Messages.getMessage("help"), "m-help", "#{menuBar.primaryListener}", null, null, StyleBean
-				.getImagePath("help.png"), false, null, null);
+		MenuItem helpMenu = createMenuItem(" " + Messages.getMessage("help"), "m-help", "#{menuBar.primaryListener}",
+				null, null, StyleBean.getImagePath("help.png"), false, null, null);
 
-		String lang=SessionManagement.getLanguage();
-		//check if the help for the language exists, if not use the en version
-		ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-		File helpIndex=new File(servletContext.getRealPath(StyleBean.getPath("help") + "/" + SessionManagement.getLanguage() + "/index.html"));
-		if(!helpIndex.exists())
-			lang="en";
+		String lang = SessionManagement.getLanguage();
+		// check if the help for the language exists, if not use the en version
+		ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext()
+				.getContext();
+		File helpIndex = new File(servletContext.getRealPath(StyleBean.getPath("help") + "/"
+				+ SessionManagement.getLanguage() + "/index.html"));
+		if (!helpIndex.exists())
+			lang = "en";
 		String url = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath()
 				+ StyleBean.getPath("help") + "/" + lang + "/index.html";
 		helpMenu.getChildren().add(
@@ -168,22 +170,23 @@ public class MenuBarBean {
 
 		PageContentBean infoPage = new PageContentBean("info", "info");
 		infoPage.setContentTitle(Messages.getMessage("msg.jsp.info"));
-		
-		String product="";
+
+		String product = "";
 		try {
 			PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
-			product=pbean.getProperty("product.name");
+			product = pbean.getProperty("product.name");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		helpMenu.getChildren().add(
-				createMenuItem(" " + Messages.getMessage("about")+" "+product, "m-about", "#{menuBar.primaryListener}", null, null, StyleBean
-						.getImagePath("about.png"), false, null, infoPage));
+				createMenuItem(" " + Messages.getMessage("about") + " " + product, "m-about",
+						"#{menuBar.primaryListener}", null, null, StyleBean.getImagePath("about.png"), false, null,
+						infoPage));
 		model.add(helpMenu);
 	}
 
 	private void createMenuStructure(Menu menu, MenuItem parent) {
-		
+
 		PageContentBean page;
 		MenuItem item;
 		page = new PageContentBean("m-" + Integer.toString(menu.getMenuId()));
