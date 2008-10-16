@@ -119,22 +119,22 @@ public class Indexer {
 	/**
 	 * Adds a new document to the index
 	 * 
-	 * @param file Path of the directory.
+	 * @param directory Path of the directory.
 	 * @param doc The document that we want to add
 	 * @throws Exception
 	 */
-	public synchronized void addDirectory(File file, com.logicaldoc.core.document.Document doc) throws Exception {
+	public synchronized void addDirectory(File directory, com.logicaldoc.core.document.Document doc) throws Exception {
 
-		if (file.isDirectory()) {
-			String[] subitems = file.list();
+		if (directory.isDirectory()) {
+			String[] subitems = directory.list();
 
 			for (int i = 0; i < subitems.length; i++) {
-				addDirectory(new File(file, subitems[i]), doc);
+				addDirectory(new File(directory, subitems[i]), doc);
 			}
 		} else {
 			try {
 				Locale locale = new Locale(doc.getLanguage());
-				Parser parser = ParserFactory.getParser(file, locale);
+				Parser parser = ParserFactory.getParser(directory, locale);
 				if (parser == null) {
 					return;
 				}
@@ -151,7 +151,7 @@ public class Indexer {
 							+ doc.getPublisher() + " " + doc.getStatus() + " " + doc.getSource() + " "
 							+ doc.getSourceAuthor());
 				}
-				addFile(file, doc, content, language);
+				addFile(directory, doc, content, language);
 			} catch (Exception e) {
 				log.error("addDirectory " + e.getMessage(), e);
 			}
