@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.searchengine.Indexer;
-import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.SessionManagement;
@@ -31,14 +30,16 @@ public class IndexInfo {
 	}
 
 	public String getIndexDir() {
-		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
+		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(
+				SettingsConfig.class);
 		return conf.getValue("indexdir");
 	}
 
 	public String unlock() {
 		if (SessionManagement.isValid()) {
 			try {
-				Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
+				Indexer indexer = (Indexer) Context.getInstance().getBean(
+						Indexer.class);
 				indexer.unlock();
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -59,7 +60,8 @@ public class IndexInfo {
 	public String optimize() {
 		if (SessionManagement.isValid()) {
 			try {
-				Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
+				Indexer indexer = (Indexer) Context.getInstance().getBean(
+						Indexer.class);
 				indexer.optimize();
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -77,15 +79,11 @@ public class IndexInfo {
 	 */
 	public String recreate() {
 		if (SessionManagement.isValid()) {
-			final SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
+			final SettingsConfig conf = (SettingsConfig) Context.getInstance()
+					.getBean(SettingsConfig.class);
 			try {
-				String path = conf.getValue("indexdir");
-
-				if (!path.endsWith(File.pathSeparator)) {
-					path += "/";
-				}
-
-				Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
+				Indexer indexer = (Indexer) Context.getInstance().getBean(
+						Indexer.class);
 				indexer.recreateIndexes();
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -95,16 +93,17 @@ public class IndexInfo {
 			Runnable task = new Runnable() {
 				public void run() {
 					try {
-						DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+						DocumentDAO documentDao = (DocumentDAO) Context
+								.getInstance().getBean(DocumentDAO.class);
 						Collection<Document> documents = documentDao.findAll();
 						Iterator<Document> iter = documents.iterator();
-						Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
+						Indexer indexer = (Indexer) Context.getInstance()
+								.getBean(Indexer.class);
 
 						while (iter.hasNext()) {
 							Document document = iter.next();
-							Menu folder = document.getFolder();
 							String dir = conf.getValue("docdir") + "/";
-							dir += (folder.getPath() + "/" + document.getId());
+							dir += document.getPath();
 							indexer.addDirectory(new File(dir), document);
 						}
 					} catch (Exception e) {
