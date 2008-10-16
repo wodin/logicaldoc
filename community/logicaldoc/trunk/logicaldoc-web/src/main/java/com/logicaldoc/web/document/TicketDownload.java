@@ -67,7 +67,7 @@ public class TicketDownload extends HttpServlet {
 
 		try {
 			DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance().getBean(DownloadTicketDAO.class);
-			DownloadTicket ticket = ticketDao.findByPrimaryKey(ticketId);
+			DownloadTicket ticket = ticketDao.findByTicketId(ticketId);
 
 			if ((ticket != null) && (ticket.getDocId() != 0)) {
 				DownloadDocUtil.downloadDocument(response, ticket.getDocId(), null);

@@ -26,6 +26,7 @@ public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements D
 	/**
 	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#deleteByTicketId(java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean deleteByTicketId(String ticketid) {
 		boolean result = true;
 

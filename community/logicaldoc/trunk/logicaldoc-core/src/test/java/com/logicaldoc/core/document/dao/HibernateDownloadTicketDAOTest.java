@@ -50,13 +50,23 @@ public class HibernateDownloadTicketDAOTest extends AbstractCoreTestCase {
 		assertNull(ticket);
 	}
 
-	public void testFindByPrimaryKey() {
+	public void testFindByTicketId() {
 		DownloadTicket ticket = dao.findByTicketId("1");
 		assertNotNull(ticket);
 		assertEquals("admin", ticket.getUsername());
 		assertEquals(1, ticket.getDocId());
 
 		ticket = dao.findByTicketId("99");
+		assertNull(ticket);
+	}
+
+	public void testFindByPrimaryKey() {
+		DownloadTicket ticket = dao.findByPrimaryKey(1);
+		assertNotNull(ticket);
+		assertEquals("admin", ticket.getUsername());
+		assertEquals(1, ticket.getDocId());
+
+		ticket = dao.findByPrimaryKey(99);
 		assertNull(ticket);
 	}
 
