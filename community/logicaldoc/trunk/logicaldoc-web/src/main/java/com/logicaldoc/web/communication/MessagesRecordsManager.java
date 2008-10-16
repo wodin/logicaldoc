@@ -39,176 +39,170 @@ import com.logicaldoc.web.util.FacesUtil;
  * @since 3.0
  */
 public class MessagesRecordsManager {
-    protected static Log log = LogFactory.getLog(MessagesRecordsManager.class);
-    private List<SystemMessage> messages = new ArrayList<SystemMessage>();
-    private PageContentBean selectedPanel = new PageContentBean("list");
-    private NavigationBean navigation;
-    private MessageForm form;
+	protected static Log log = LogFactory.getLog(MessagesRecordsManager.class);
 
-    public MessagesRecordsManager() {
-        messages.clear();
-    }
+	private List<SystemMessage> messages = new ArrayList<SystemMessage>();
 
-    public PageContentBean getSelectedPanel() {
-        return selectedPanel;
-    }
+	private PageContentBean selectedPanel = new PageContentBean("list");
 
-    public void setSelectedPanel(PageContentBean panel) {
-        this.selectedPanel = panel;
-    }
+	private NavigationBean navigation;
 
-    /**
-     * Reloads the messages list
-     */
-    public String listMessages() {
-        SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance()
-                .getBean(SystemMessageDAO.class);
-        messages = smdao.findByRecipient(SessionManagement.getUsername());
-        smdao.deleteExpiredMessages(SessionManagement.getUsername());
+	private MessageForm form;
 
-        PageContentBean content = new PageContentBean("messages",
-                "communication/messages");
-        content.setContentTitle(Messages.getMessage("db.readmessages"));
-        content.setIcon(StyleBean.getImagePath("message.png"));
-        navigation.setSelectedPanel(content);
+	public MessagesRecordsManager() {
+		messages.clear();
+	}
 
-        setSelectedPanel(new PageContentBean("list"));
+	public PageContentBean getSelectedPanel() {
+		return selectedPanel;
+	}
 
-        return null;
-    }
+	public void setSelectedPanel(PageContentBean panel) {
+		this.selectedPanel = panel;
+	}
 
-    /**
-     * Shows the message insert form
-     */
-    public String addMessage() {
-         NavigationBean navigation = ((NavigationBean) FacesUtil
-                .accessBeanFromFacesContext("navigation", FacesContext
-                        .getCurrentInstance(), log));
+	/**
+	 * Reloads the messages list
+	 */
+	public String listMessages() {
+		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+		messages = smdao.findByRecipient(SessionManagement.getUsername());
+		smdao.deleteExpiredMessages(SessionManagement.getUsername());
 
-        PageContentBean content = new PageContentBean("message",
-                "communication/messages");
-        content.setContentTitle(Messages.getMessage("db.createmessage"));
-        content.setIcon(StyleBean.getImagePath("message.png"));
-        navigation.setSelectedPanel(content);
+		PageContentBean content = new PageContentBean("messages", "communication/messages");
+		content.setContentTitle(Messages.getMessage("db.readmessages"));
+		content.setIcon(StyleBean.getImagePath("message.png"));
+		navigation.setSelectedPanel(content);
 
-        // Initialize the form
-        form.setReadOnly(false);
-        form.setMessage(new SystemMessage());
+		setSelectedPanel(new PageContentBean("list"));
 
-        setSelectedPanel(new PageContentBean("insert"));
+		return null;
+	}
 
-        return null;
-    }
+	/**
+	 * Shows the message insert form
+	 */
+	public String addMessage() {
+		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
+				.getCurrentInstance(), log));
 
-    /**
-     * Cleans up the resources used by this class. This method could be called
-     * when a session destroyed event is called.
-     */
-    public void dispose() {
-        messages.clear();
-    }
+		PageContentBean content = new PageContentBean("message", "communication/messages");
+		content.setContentTitle(Messages.getMessage("db.createmessage"));
+		content.setIcon(StyleBean.getImagePath("message.png"));
+		navigation.setSelectedPanel(content);
 
-    /**
-     * Gets the list of SystemMessages which will be used by the ice:dataTable
-     * component.
-     */
-    public Collection<SystemMessage> getMessages() {
-        if (messages.size() == 0) {
-            listMessages();
-        }
+		// Initialize the form
+		form.setReadOnly(false);
+		form.setMessage(new SystemMessage());
 
-        return messages;
-    }
+		setSelectedPanel(new PageContentBean("insert"));
 
-    public String selectMessage() {
-        Map map = FacesContext.getCurrentInstance().getExternalContext()
-                .getRequestMap();
-        SystemMessage record = (SystemMessage) map.get("messageRecord");
-        SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance()
-                .getBean(SystemMessageDAO.class);
+		return null;
+	}
 
-        if (record.getRead() == 0) {
-            record.setRead(1);
-            smdao.store(record);
+	/**
+	 * Cleans up the resources used by this class. This method could be called
+	 * when a session destroyed event is called.
+	 */
+	public void dispose() {
+		messages.clear();
+	}
 
-            if (record.getConfirmation() == 1) {
-                Date date = new Date();
-                SystemMessage sysmess = new SystemMessage();
-                sysmess.setAuthor("SYSTEM");
-                sysmess.setRecipient(record.getAuthor());
-                sysmess.setSubject("Confirmation");
-                sysmess.setMessageText("To: " + record.getRecipient()
-                        + "\nMessage: " + record.getMessageText());
-                sysmess.setSentDate(String.valueOf(date.getTime()));
-                sysmess.setRead(0);
-                sysmess.setConfirmation(0);
-                sysmess.setPrio(record.getPrio());
-                sysmess.setDateScope(record.getDateScope());
-                smdao.store(sysmess);
-            }
-        }
+	/**
+	 * Gets the list of SystemMessages which will be used by the ice:dataTable
+	 * component.
+	 */
+	public Collection<SystemMessage> getMessages() {
+		if (messages.size() == 0) {
+			listMessages();
+		}
 
-        // Initialize the form
-         MessageForm form = ((MessageForm) FacesUtil.accessBeanFromFacesContext(
-                "messageForm", FacesContext.getCurrentInstance(), log));
-        form.setReadOnly(true);
-        form.setMessage(record);
+		return messages;
+	}
 
-        selectedPanel = new PageContentBean("view");
+	public String selectMessage() {
+		Map map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+		SystemMessage record = (SystemMessage) map.get("messageRecord");
+		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
 
-        return null;
-    }
+		if (record.getRead() == 0) {
+			record.setRead(1);
+			smdao.store(record);
 
-    public String deleteMessage() {
-        Map map = FacesContext.getCurrentInstance().getExternalContext()
-                .getRequestMap();
-        SystemMessage record = (SystemMessage) map.get("messageRecord");
+			if (record.getConfirmation() == 1) {
+				Date date = new Date();
+				SystemMessage sysmess = new SystemMessage();
+				sysmess.setAuthor("SYSTEM");
+				sysmess.setRecipient(record.getAuthor());
+				sysmess.setSubject("Confirmation");
+				sysmess.setMessageText("To: " + record.getRecipient() + "\nMessage: " + record.getMessageText());
+				sysmess.setSentDate(String.valueOf(date.getTime()));
+				sysmess.setRead(0);
+				sysmess.setConfirmation(0);
+				sysmess.setPrio(record.getPrio());
+				sysmess.setDateScope(record.getDateScope());
+				smdao.store(sysmess);
+			}
+		}
 
-        if (SessionManagement.isValid()) {
-            try {
-                SystemMessageDAO smDao = (SystemMessageDAO) Context
-                        .getInstance().getBean(SystemMessageDAO.class);
-                boolean deleted = smDao.delete(record.getMessageId());
+		// Initialize the form
+		MessageForm form = ((MessageForm) FacesUtil.accessBeanFromFacesContext("messageForm", FacesContext
+				.getCurrentInstance(), log));
+		form.setReadOnly(true);
+		form.setMessage(record);
 
-                if (!deleted) {
-                    Messages.addLocalizedError("errors.action.deletesysmess");
-                } else {
-                    Messages.addLocalizedInfo("msg.action.deletesysmess");
-                }
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                Messages.addLocalizedError("errors.action.deletesysmess");
-            }
-        } else {
-            return "login";
-        }
+		selectedPanel = new PageContentBean("view");
 
-        listMessages();
+		return null;
+	}
 
-        return null;
-    }
+	public String deleteMessage() {
+		Map map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+		SystemMessage record = (SystemMessage) map.get("messageRecord");
 
-    public int getToBeReadCount() {
-        SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance()
-                .getBean(SystemMessageDAO.class);
-        int smcount = smdao.getCount(SessionManagement.getUsername());
+		if (SessionManagement.isValid()) {
+			try {
+				SystemMessageDAO smDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+				boolean deleted = smDao.delete(record.getId());
 
-        return smcount;
-    }
+				if (!deleted) {
+					Messages.addLocalizedError("errors.action.deletesysmess");
+				} else {
+					Messages.addLocalizedInfo("msg.action.deletesysmess");
+				}
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				Messages.addLocalizedError("errors.action.deletesysmess");
+			}
+		} else {
+			return "login";
+		}
 
-    public int getCount() {
-        if (messages.size() == 0) {
-            listMessages();
-        }
+		listMessages();
 
-        return messages.size();
-    }
+		return null;
+	}
 
-    public void setNavigation(NavigationBean navigation) {
-        this.navigation = navigation;
-    }
+	public int getToBeReadCount() {
+		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+		int smcount = smdao.getCount(SessionManagement.getUsername());
 
-    public void setForm(MessageForm form) {
-        this.form = form;
-    }
+		return smcount;
+	}
+
+	public int getCount() {
+		if (messages.size() == 0) {
+			listMessages();
+		}
+
+		return messages.size();
+	}
+
+	public void setNavigation(NavigationBean navigation) {
+		this.navigation = navigation;
+	}
+
+	public void setForm(MessageForm form) {
+		this.form = form;
+	}
 }

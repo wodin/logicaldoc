@@ -314,7 +314,7 @@ public class EMailReceiver extends Task {
 		
 		
 		String mailsdir = settingsConfig.getValue("userdir") + "/mails/";
-		File mailDir = new File(FilenameUtils.normalize(mailsdir + "/" + email.getMessageId()));
+		File mailDir = new File(FilenameUtils.normalize(mailsdir + "/" + email.getId()));
 		FileUtils.forceMkdir(mailDir);
 
 //		if (p.isMimeType("multipart/*")) {

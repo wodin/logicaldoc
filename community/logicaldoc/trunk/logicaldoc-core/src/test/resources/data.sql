@@ -109,14 +109,14 @@ INSERT INTO ld_article values(3,1,'subject3','message3','2008-10-11','sebastian'
 INSERT INTO co_account values(1,'admin','author@logicaldoc.sf.net','Aruba','pcalle','port','author@logicaldoc.sf.net','authorPSWD','pdf,doc',0,'it',1,1);
 INSERT INTO co_account values(2,'author','admin@logicaldoc.sf.net','Aruba','pcalle','port','admin@logicaldoc.sf.net','adminPSWD','doc,txt',1,'en',0,1);
 
-INSERT INTO co_email values(17,1,'id1','messageText','Morven Macauley','Re: maintenanc','12/14/2006 04:49 AM',1,'sprou@l2r9f8.varberg.net','admin','Junk');
-INSERT INTO co_email values(18,1,'id2','messageText','Nels Keough','Re: overgil','12/18/2006 10:23 PM',1,'woodsoy@obacom.com','author','Junk');
-INSERT INTO co_email values(19,2,'id1','messageText','Nels Keough','Re: overgil','12/18/2006 10:23 PM',1,'woodsoy@obacom.com','author','Junk');
+INSERT INTO ld_email values(17,1,'id1','messageText','Morven Macauley','Re: maintenanc','12/14/2006 04:49 AM',1,'sprou@l2r9f8.varberg.net','admin','Junk');
+INSERT INTO ld_email values(18,1,'id2','messageText','Nels Keough','Re: overgil','12/18/2006 10:23 PM',1,'woodsoy@obacom.com','author','Junk');
+INSERT INTO ld_email values(19,2,'id1','messageText','Nels Keough','Re: overgil','12/18/2006 10:23 PM',1,'woodsoy@obacom.com','author','Junk');
 
     
-INSERT INTO co_attachment values(17,'holiday06_1.gif','gif.png','image/gif',54);
-INSERT INTO co_attachment values(18,'hibernate.log','log.png','application/octet-stream',1);
+INSERT INTO ld_attachment values(17,'holiday06_1.gif','gif.png','image/gif',54);
+INSERT INTO ld_attachment values(18,'hibernate.log','log.png','application/octet-stream',1);
 
-INSERT INTO co_systemmessage values(1,'admin','sebastian','message text1','subject1','1111999999999999999',5,3,1,0);
-INSERT INTO co_systemmessage values(2,'admin','sebastian','message text2','subject2','11119999',5,3,1,1);
-INSERT INTO co_systemmessage values(3,'sebastian','admin','message text3','subject3','1111999999999999999',5,3,1,1);
+INSERT INTO ld_systemmessage values(1,'admin','sebastian','message text1','subject1','1111999999999999999',5,3,1,0);
+INSERT INTO ld_systemmessage values(2,'admin','sebastian','message text2','subject2','11119999',5,3,1,1);
+INSERT INTO ld_systemmessage values(3,'sebastian','admin','message text3','subject3','1111999999999999999',5,3,1,1);

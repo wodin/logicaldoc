@@ -225,7 +225,7 @@ public class UsersRecordsManager extends SortableList {
 
 					while (iter.hasNext()) {
 						EMail email = (EMail) iter.next();
-						emailDao.delete(email.getMessageId());
+						emailDao.delete(email.getId());
 					}
 
 					// delete user doc entries (recently accessed files)

@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.communication.SystemMessage;
-import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 
 /**
  * Test case for <code>HibernateSystemMessageDAO</code>
@@ -38,7 +37,7 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTestCase {
 	public void testFindByPrimaryKey() {
 		SystemMessage message = dao.findByPrimaryKey(1);
 		assertNotNull(message);
-		assertEquals(1, message.getMessageId());
+		assertEquals(1, message.getId());
 		assertEquals("message text1", message.getMessageText());
 
 		// Try with unexisting message
@@ -57,14 +56,14 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, coll.size());
 	}
 
-	public void testDeleteExpiredMessages(){
+	public void testDeleteExpiredMessages() {
 		dao.deleteExpiredMessages("sebastian");
 		assertNotNull(dao.findByPrimaryKey(2));
 	}
-	
+
 	public void testGetCount() {
-		assertEquals(1,dao.getCount("sebastian"));
-		assertEquals(0,dao.getCount("admin"));
+		assertEquals(1, dao.getCount("sebastian"));
+		assertEquals(0, dao.getCount("admin"));
 	}
 
 	public void testStore() {
@@ -74,7 +73,7 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTestCase {
 		message.setRecipient("test");
 		message.setMessageText("text");
 		assertTrue(dao.store(message));
-		assertEquals(4, message.getMessageId());
+		assertEquals(4, message.getId());
 		message = dao.findByPrimaryKey(4);
 		assertNotNull(message);
 

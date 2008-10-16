@@ -8,17 +8,19 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.core.communication.SystemMessage;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.logicaldoc.core.communication.SystemMessage;
+
 /**
  * Hibernate implementation of <code>EMailAccount</code>
  * 
  * @author Marco Meschieri
- * @version $Id: HibernateSystemMessageDAO.java,v 1.2 2006/08/29 16:33:46 marco Exp $
+ * @version $Id: HibernateSystemMessageDAO.java,v 1.2 2006/08/29 16:33:46 marco
+ *          Exp $
  * @since 3.0
  */
 public class HibernateSystemMessageDAO extends HibernateDaoSupport implements SystemMessageDAO {
@@ -29,14 +31,14 @@ public class HibernateSystemMessageDAO extends HibernateDaoSupport implements Sy
 	}
 
 	/**
-	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#delete(int)
+	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#delete(long)
 	 */
-	public boolean delete(int messageid) {
+	public boolean delete(long messageId) {
 		boolean result = true;
 
 		try {
-			SystemMessage message = (SystemMessage) getHibernateTemplate().get(SystemMessage.class,
-					new Integer(messageid));
+			SystemMessage message = (SystemMessage) getHibernateTemplate()
+					.get(SystemMessage.class, new Long(messageId));
 			if (message != null)
 				getHibernateTemplate().delete(message);
 		} catch (Exception e) {
@@ -49,18 +51,17 @@ public class HibernateSystemMessageDAO extends HibernateDaoSupport implements Sy
 	}
 
 	/**
-	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#findByPrimaryKey(int)
+	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#findByPrimaryKey(long)
 	 */
-	public SystemMessage findByPrimaryKey(int messageid) {
+	public SystemMessage findByPrimaryKey(long messageId) {
 		SystemMessage sysmess = null;
 
 		try {
-			sysmess = (SystemMessage) getHibernateTemplate().get(SystemMessage.class, new Integer(messageid));
+			sysmess = (SystemMessage) getHibernateTemplate().get(SystemMessage.class, new Long(messageId));
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
 		}
-
 		return sysmess;
 	}
 
@@ -139,7 +140,7 @@ public class HibernateSystemMessageDAO extends HibernateDaoSupport implements Sy
 	protected List<SystemMessage> collectGarbage(Collection<SystemMessage> coll, boolean removeExpired) {
 		List<SystemMessage> out = new ArrayList<SystemMessage>();
 		try {
-			Iterator iter = coll.iterator();
+			Iterator<SystemMessage> iter = coll.iterator();
 			Date date = new Date();
 			long time = date.getTime();
 
@@ -152,7 +153,7 @@ public class HibernateSystemMessageDAO extends HibernateDaoSupport implements Sy
 
 				if (time >= sentdate) {
 					if (removeExpired)
-						delete(sm.getMessageId());
+						delete(sm.getId());
 				} else {
 					out.add(sm);
 				}

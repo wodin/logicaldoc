@@ -6,11 +6,12 @@ import java.util.HashSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.core.communication.EMail;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import com.logicaldoc.core.communication.EMail;
 
 /**
  * Hibernate implementation of <code>EMailDAO</code>
@@ -44,9 +45,9 @@ public class HibernateEMailDAO extends HibernateDaoSupport implements EMailDAO {
     }
 
     /**
-     * @see com.logicaldoc.core.communication.dao.EMailDAO#delete(int)
+     * @see com.logicaldoc.core.communication.dao.EMailDAO#delete(long)
      */
-    public boolean delete(int messageId) {
+    public boolean delete(long messageId) {
         boolean result = true;
 
         try {
@@ -63,13 +64,13 @@ public class HibernateEMailDAO extends HibernateDaoSupport implements EMailDAO {
     }
 
     /**
-     * @see com.logicaldoc.core.communication.dao.EMailDAO#findByPrimaryKey(int)
+     * @see com.logicaldoc.core.communication.dao.EMailDAO#findByPrimaryKey(long)
      */
-    public EMail findByPrimaryKey(int messageId) {
+    public EMail findByPrimaryKey(long messageId) {
         EMail email = null;
 
         try {
-            email = (EMail) getHibernateTemplate().get(EMail.class, new Integer(messageId));
+            email = (EMail) getHibernateTemplate().get(EMail.class, new Long(messageId));
         } catch (Exception e) {
             if (log.isErrorEnabled())
                 log.error(e.getMessage(), e);

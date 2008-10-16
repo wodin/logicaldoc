@@ -107,7 +107,7 @@ public class EMailSender {
 		if (email.getAttachmentCount() > 0) {
 			SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 			String userdir = conf.getValue("userdir");
-			String filename = userdir + "/mails/" + email.getMessageId() + "/";
+			String filename = userdir + "/mails/" + email.getId() + "/";
 			MimeBodyPart body = new MimeBodyPart();
 			body.setContent(email.getMessageText(), "text/plain");
 

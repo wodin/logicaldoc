@@ -6,7 +6,6 @@ import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.communication.Attachment;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.Recipient;
-import com.logicaldoc.core.communication.dao.EMailDAO;
 
 public class HibernateEMailDAOTest extends AbstractCoreTestCase {
 
@@ -56,7 +55,7 @@ public class HibernateEMailDAOTest extends AbstractCoreTestCase {
         message.addAttachment(4, attachment);
 
         assertTrue(dao.store(message));
-        assertEquals(20, message.getMessageId());
+        assertEquals(20, message.getId());
 
         message = dao.findByPrimaryKey(20);
         assertNotNull(message);
@@ -108,7 +107,7 @@ public class HibernateEMailDAOTest extends AbstractCoreTestCase {
         Collection<EMail> emails = dao.findByUserName("admin");
         assertNotNull(emails);
         assertEquals(1, emails.size());
-        assertEquals(17, emails.iterator().next().getMessageId());
+        assertEquals(17, emails.iterator().next().getId());
 
         // Try with a user without documents
         emails = dao.findByUserName("test");
@@ -120,7 +119,7 @@ public class HibernateEMailDAOTest extends AbstractCoreTestCase {
         Collection<EMail> emails = dao.findByUserName("author", "Junk");
         assertNotNull(emails);
         assertEquals(2, emails.size());
-        assertEquals(18, emails.iterator().next().getMessageId());
+        assertEquals(18, emails.iterator().next().getId());
 
         // Try with a user without documents
         emails = dao.findByUserName("author", "Trash");
@@ -132,12 +131,12 @@ public class HibernateEMailDAOTest extends AbstractCoreTestCase {
         Collection<EMail> emails = dao.findByAccountId(1);
         assertNotNull(emails);
         assertEquals(2, emails.size());
-        assertEquals(17, emails.iterator().next().getMessageId());
+        assertEquals(17, emails.iterator().next().getId());
 
         dao.findByAccountId(2);
         assertNotNull(emails);
         assertEquals(2, emails.size());
-        assertEquals(17, emails.iterator().next().getMessageId());
+        assertEquals(17, emails.iterator().next().getId());
     }
 
     public void testCollectEmailIds() {

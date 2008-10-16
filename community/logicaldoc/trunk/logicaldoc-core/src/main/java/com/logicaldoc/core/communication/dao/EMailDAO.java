@@ -22,16 +22,16 @@ public interface EMailDAO {
     public boolean store(EMail email);
 
     /**
-     * This method deletes an emailaccount.
+     * This method deletes an email.
      * 
-     * @param emailId AccountId of the emailaccount which should be delete.
+     * @param emailId The email identifier which should be delete.
      */
-    public boolean delete(int emailId);
+    public boolean delete(long emailId);
 
     /**
      * This method finds an email by its id.
      */
-    public EMail findByPrimaryKey(int emailid);
+    public EMail findByPrimaryKey(long emailId);
 
     public Collection<EMail> findByUserName(String username);
 

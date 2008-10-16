@@ -20,14 +20,14 @@ public interface SystemMessageDAO {
 	 */
 	public boolean store(SystemMessage sysmess);
 
-	public boolean delete(int messageid);
+	public boolean delete(long messageId);
 
-	public SystemMessage findByPrimaryKey(int messageid);
+	public SystemMessage findByPrimaryKey(long messageId);
 
 	public List<SystemMessage> findByRecipient(String recipient);
 
 	public int getCount(String recipient);
-	
+
 	/**
 	 * Removes all expired messages for the specified recipient
 	 * 
