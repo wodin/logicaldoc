@@ -1,12 +1,13 @@
 package com.logicaldoc.core.document.dao;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.core.document.Article;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import com.logicaldoc.core.document.Article;
 
 /**
  * Hibernate implementation of <code>ArticleDAO</code>
@@ -23,13 +24,13 @@ public class HibernateArticleDAO extends HibernateDaoSupport implements ArticleD
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.ArticleDAO#delete(int)
+	 * @see com.logicaldoc.core.document.dao.ArticleDAO#delete(long)
 	 */
-	public boolean delete(int articleid) {
+	public boolean delete(long articleId) {
 		boolean result = true;
 
 		try {
-			Article article = (Article) getHibernateTemplate().get(Article.class, new Integer(articleid));
+			Article article = (Article) getHibernateTemplate().get(Article.class, new Long(articleId));
 			if (article != null)
 				getHibernateTemplate().delete(article);
 		} catch (Exception e) {
@@ -42,17 +43,16 @@ public class HibernateArticleDAO extends HibernateDaoSupport implements ArticleD
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.ArticleDAO#findByDocId(int)
+	 * @see com.logicaldoc.core.document.dao.ArticleDAO#findByDocId(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Article> findByDocId(long docId) {
-		Collection<Article> coll = new ArrayList<Article>();
+	public List<Article> findByDocId(long docId) {
+		List<Article> coll = new ArrayList<Article>();
 
 		try {
-			coll = (Collection<Article>) getHibernateTemplate()
-					.find(
-							"from com.logicaldoc.core.document.Article _article where _article.docId = ? order by _article.date",
-							new Object[] { new Long(docId) });
+			coll = (List<Article>) getHibernateTemplate().find(
+					"from Article _article where _article.docId = ? order by _article.date",
+					new Object[] { new Long(docId) });
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
@@ -62,13 +62,13 @@ public class HibernateArticleDAO extends HibernateDaoSupport implements ArticleD
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.ArticleDAO#findByPrimaryKey(int)
+	 * @see com.logicaldoc.core.document.dao.ArticleDAO#findByPrimaryKey(long)
 	 */
-	public Article findByPrimaryKey(int articleid) {
+	public Article findByPrimaryKey(long articleid) {
 		Article article = null;
 
 		try {
-			article = (Article) getHibernateTemplate().get(Article.class, new Integer(articleid));
+			article = (Article) getHibernateTemplate().get(Article.class, new Long(articleid));
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
@@ -99,14 +99,13 @@ public class HibernateArticleDAO extends HibernateDaoSupport implements ArticleD
 	 * @see com.logicaldoc.core.document.dao.ArticleDAO#findByUserName(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Article> findByUserName(String username) {
-		Collection<Article> coll = new ArrayList<Article>();
+	public List<Article> findByUserName(String username) {
+		List<Article> coll = new ArrayList<Article>();
 
 		try {
-			coll = (Collection<Article>) getHibernateTemplate()
-					.find(
-							"from com.logicaldoc.core.document.Article _article where _article.username = ? order by _article.date",
-							new Object[] { username });
+			coll = (List<Article>) getHibernateTemplate().find(
+					"from Article _article where _article.username = ? order by _article.date",
+					new Object[] { username });
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);

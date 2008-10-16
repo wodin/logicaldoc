@@ -80,13 +80,13 @@ CREATE TABLE CO_USERS (
     PRIMARY KEY ( CO_USERNAME ));
 
 CREATE TABLE LD_ARTICLE (
-  LD_ARTICLEID INT   NOT NULL,
-  LD_DOCID     BIGINT,
-  LD_SUBJECT   VARCHAR(255),
-  LD_MESSAGE   VARCHAR(2000),
-  LD_DATE      TIMESTAMP,
-  LD_USERNAME  VARCHAR(30),
-    PRIMARY KEY ( LD_ARTICLEID ));
+  LD_ID       BIGINT   NOT NULL,
+  LD_DOCID    BIGINT,
+  LD_SUBJECT  VARCHAR(255),
+  LD_MESSAGE  VARCHAR(2000),
+  LD_DATE     TIMESTAMP,
+  LD_USERNAME VARCHAR(30),
+    PRIMARY KEY ( LD_ID ));
 
 CREATE TABLE LD_DOCUMENT (
   LD_ID           BIGINT   NOT NULL,
@@ -121,15 +121,15 @@ CREATE TABLE LD_KEYWORD (
   LD_KEYWORD VARCHAR(255));
 
 CREATE TABLE LD_MENU (
-  LD_ID BIGINT   NOT NULL,
-  LD_TEXT   VARCHAR(255),
+  LD_ID       BIGINT   NOT NULL,
+  LD_TEXT     VARCHAR(255),
   LD_PARENTID BIGINT,
-  LD_SORT   INT,
-  LD_ICON   VARCHAR(255),
-  LD_PATH   VARCHAR(255),
-  LD_TYPE   INT,
-  LD_REF    VARCHAR(255),
-  LD_SIZE   BIGINT,
+  LD_SORT     INT,
+  LD_ICON     VARCHAR(255),
+  LD_PATH     VARCHAR(255),
+  LD_TYPE     INT,
+  LD_REF      VARCHAR(255),
+  LD_SIZE     BIGINT,
     PRIMARY KEY ( LD_ID ));
 
 CREATE TABLE LD_MENUGROUP (
@@ -173,6 +173,7 @@ alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folder
 alter table ld_keyword add constraint FK55BBDA227C693DFD foreign key (ld_docid) references ld_document;
 alter table ld_menugroup add constraint FKB4F7F679AA456AD1 foreign key (ld_menuid) references ld_menu;
 alter table ld_version add constraint FK9B3BD9117C693DFD foreign key (ld_docid) references ld_document;
+
 
 
 

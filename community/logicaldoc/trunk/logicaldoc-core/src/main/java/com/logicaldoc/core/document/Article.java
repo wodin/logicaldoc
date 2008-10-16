@@ -2,15 +2,15 @@ package com.logicaldoc.core.document;
 
 import java.util.Date;
 
+import com.logicaldoc.core.PersistentObject;
+
 /**
  * 
  * @author Michael Scholz
  * @author Marco Meschieri
  */
-public class Article {
+public class Article extends PersistentObject {
 	private static final long serialVersionUID = 1L;
-
-	private int articleId = 0;
 
 	private long docId = 0;
 
@@ -23,14 +23,6 @@ public class Article {
 	private String username = "";
 
 	public Article() {
-	}
-
-	public int getArticleId() {
-		return articleId;
-	}
-
-	public void setArticleId(int articleId) {
-		this.articleId = articleId;
 	}
 
 	public long getDocId() {
@@ -66,7 +58,7 @@ public class Article {
 	}
 
 	public void reset() {
-		articleId = 0;
+		setId(0);
 		docId = 0;
 		subject = "";
 		message = "";
@@ -80,20 +72,5 @@ public class Article {
 
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Article))
-			return false;
-
-		Article other = (Article) obj;
-
-		return other.getArticleId() == this.getArticleId();
-	}
-
-	@Override
-	public int hashCode() {
-		return new Integer(articleId).hashCode();
 	}
 }

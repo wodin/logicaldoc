@@ -28,8 +28,8 @@ public class ArticleRecord extends Article {
 		return wrappedArticle.equals(obj);
 	}
 
-	public int getArticleId() {
-		return wrappedArticle.getArticleId();
+	public long getId() {
+		return wrappedArticle.getId();
 	}
 
 	public Date getDate() {
@@ -60,8 +60,8 @@ public class ArticleRecord extends Article {
 		wrappedArticle.reset();
 	}
 
-	public void setArticleId(int articleId) {
-		wrappedArticle.setArticleId(articleId);
+	public void setId(long articleId) {
+		wrappedArticle.setId(articleId);
 	}
 
 	public void setDate(Date date) {
@@ -89,9 +89,9 @@ public class ArticleRecord extends Article {
 	}
 
 	public String select() {
-        manager.setSelectedArticle(this);
-        return null;
-    }
+		manager.setSelectedArticle(this);
+		return null;
+	}
 
 	public Article getWrappedArticle() {
 		return wrappedArticle;

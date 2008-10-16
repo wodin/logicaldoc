@@ -66,7 +66,7 @@ public class HibernateArticleDAOTest extends AbstractCoreTestCase {
 	public void testFindByPrimaryKey() {
 		Article article = dao.findByPrimaryKey(1);
 		assertNotNull(article);
-		assertEquals(1, article.getArticleId());
+		assertEquals(1L, article.getId());
 		assertEquals("subject", article.getSubject());
 
 		// Try with unexisting article
@@ -82,7 +82,7 @@ public class HibernateArticleDAOTest extends AbstractCoreTestCase {
 		article.setMessage("xxxxx");
 		assertTrue(dao.store(article));
 
-		assertEquals(4, article.getArticleId());
+		assertEquals(4L, article.getId());
 
 		// Load an existing article and modify it
 		article = dao.findByPrimaryKey(3);

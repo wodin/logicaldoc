@@ -1,6 +1,7 @@
 package com.logicaldoc.core.document.dao;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.logicaldoc.core.document.Article;
 
@@ -23,29 +24,31 @@ public interface ArticleDAO {
 	/**
 	 * This method deletes an article.
 	 * 
-	 * @param articleid ArticleID of the article which should be delete.
+	 * @param articleId ID of the article which should be deleted.
 	 */
-	public boolean delete(int articleid);
+	public boolean delete(long articleId);
 
 	/**
 	 * This method finds an article by its primarykey.
 	 * 
-	 * @param articleid Primarykey of the article.
+	 * @param articleId Primary key of the article.
 	 * @return Article with given primarykey.
 	 */
-	public Article findByPrimaryKey(int articleid);
+	public Article findByPrimaryKey(long articleId);
 
 	/**
-	 * This method selects all articles of for a given document.
+	 * This method selects all articles of for a given document
 	 * 
 	 * @param docId - ID of the document.
+	 * @return The list of articles ordered by date
 	 */
-	public Collection<Article> findByDocId(long docId);
-	
+	public List<Article> findByDocId(long docId);
+
 	/**
-	 * This method selects all articles of the given user.
+	 * This method selects all articles of the given user
 	 * 
-	 * @param username - ID of the user.
+	 * @param username - ID of the user
+	 *  @return The list of articles ordered by date
 	 */
 	public Collection<Article> findByUserName(String username);
 }

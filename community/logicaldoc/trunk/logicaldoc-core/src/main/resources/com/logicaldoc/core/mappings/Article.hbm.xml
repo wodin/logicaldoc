@@ -4,9 +4,9 @@
 <hibernate-mapping default-lazy="false">
 	<class name="com.logicaldoc.core.document.Article" table="ld_article">
 		<cache usage="read-write" />
-		<id name="articleId" type="int" column="ld_articleid" unsaved-value="0">
-		  <generator class="increment" />
-		</id>
+        <id name="id" type="long" column="ld_id" unsaved-value="0">
+            <generator class="increment" />
+        </id>
 		<property name="docId" type="long" column="ld_docid" />
 		<property name="subject" type="string" column="ld_subject" length="255" />
 		<property name="message" type="string" column="ld_message" length="2000" />
