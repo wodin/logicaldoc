@@ -37,9 +37,9 @@ public class FSStorer implements Storer {
      * @see com.logicaldoc.core.searchengine.store.Storer#store(java.io.InputStream,
      *      java.lang.String, java.lang.String)
      */
-    public boolean store(InputStream stream, String menupath, String filename, String version) {
+    public boolean store(InputStream stream, String docPath, String filename, String version) {
         try {
-            String path = new StringBuilder(settingsConfig.getValue("docdir")).append("/").append(menupath).append(File.separator)
+            String path = new StringBuilder(settingsConfig.getValue("docdir")).append("/").append(docPath).append(File.separator)
                     .toString();
             FileBean.createDir(path);
             FileBean.writeFile(stream, new StringBuilder(path).append(filename).toString());
@@ -51,7 +51,7 @@ public class FSStorer implements Storer {
                 String backupPath = conf.getLocation();
 
                 // store a backup of the document
-                FileBean.copyDir(path, new StringBuilder(backupPath).append(menupath).toString());
+                FileBean.copyDir(path, new StringBuilder(backupPath).append(docPath).toString());
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -66,16 +66,16 @@ public class FSStorer implements Storer {
      * @see com.logicaldoc.core.doxter.Storer#delete(java.lang.String,
      *      java.lang.String)
      */
-    public boolean delete(String menupath) {
+    public boolean delete(String docPath) {
         SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
         String path = settings.getValue("docdir")+"/";
         BackupConfig backup = (BackupConfig) Context.getInstance().getBean(BackupConfig.class);
         String backupPath = backup.getLocation();
-        boolean delOrg = FileBean.deleteDir(new StringBuilder(path).append(menupath).toString());
+        boolean delOrg = FileBean.deleteDir(new StringBuilder(path).append(docPath).toString());
         boolean delBac = true;
 
         if (backup.isEnabled()) {
-            delBac = FileBean.deleteDir(new StringBuilder(backupPath).append(menupath).toString());
+            delBac = FileBean.deleteDir(new StringBuilder(backupPath).append(docPath).toString());
         }
 
         return (delOrg && delBac);

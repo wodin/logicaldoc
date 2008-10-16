@@ -18,7 +18,7 @@ public interface Storer
      *
      * @param stream
      *            Document as InputStream
-     * @param menupath
+     * @param docPath
      *            Path in logicaldoc containing the menuIds of all parent items.
      * @param filename
      *            Name of the document.
@@ -28,18 +28,18 @@ public interface Storer
      */
     boolean store(
         InputStream stream,
-        String      menupath,
+        String      docPath,
         String      filename,
         String      version);
 
     /**
      * Deletes a document from the documentpool and the backuppool.
      *
-     * @param menupath
+     * @param docPath
      *            Path in logicaldoc containing the menuIds of all parent items.
      * @return ResultImpl of the deleting process.
      */
-    boolean delete(String menupath);
+    boolean delete(String docPath);
 
     /**
      * This method regenerates the document repository from the backup.
