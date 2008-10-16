@@ -23,20 +23,28 @@ public interface DownloadTicketDAO {
 	 * 
 	 * @param historyid ID of the ticket which should be delete.
 	 */
-	public boolean delete(String ticketid);
+	public boolean deleteByTicketId(String ticketId);
 
 	/**
-	 * This method deletes all tickets of the specified menu.
+	 * This method deletes all tickets of the specified document.
 	 * 
-	 * @param docId ID of the menu
+	 * @param docId ID of the document
 	 */
 	public boolean deleteByDocId(long docId);
 
 	/**
+	 * This method deletes all tickets of the specified menu.
+	 * 
+	 * @param ticketId The ticket id
+	 * @return DownloadTicket with given ticket id.
+	 */
+	public DownloadTicket findByTicketId(String ticketId);
+
+	/**
 	 * This method finds a download ticket by its primarykey.
 	 * 
-	 * @param ticketid Primarykey of the download ticket.
+	 * @param ticketId Primary key of the download ticket.
 	 * @return DownloadTicket with given primarykey.
 	 */
-	public DownloadTicket findByPrimaryKey(String ticketid);
+	public DownloadTicket findByPrimaryKey(long ticketId);
 }

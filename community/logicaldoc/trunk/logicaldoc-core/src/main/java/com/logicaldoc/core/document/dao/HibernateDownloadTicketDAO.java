@@ -4,14 +4,16 @@ import java.util.Collection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.core.document.DownloadTicket;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import com.logicaldoc.core.document.DownloadTicket;
 
 /**
  * Hibernate implementation of <code>DownloadTicketDAO</code>
  * 
  * @author Marco Meschieri
- * @version $Id: HibernateDownloadTicketDAO.java,v 1.1 2007/06/29 06:28:28 marco Exp $
+ * @version $Id: HibernateDownloadTicketDAO.java,v 1.1 2007/06/29 06:28:28 marco
+ *          Exp $
  * @since 3.0
  */
 public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements DownloadTicketDAO {
@@ -22,35 +24,53 @@ public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements D
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#delete(java.lang.String)
+	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#deleteByTicketId(java.lang.String)
 	 */
-	public boolean delete(String ticketid) {
+	public boolean deleteByTicketId(String ticketid) {
 		boolean result = true;
 
 		try {
-			DownloadTicket ticket = findByPrimaryKey(ticketid);
-			if (ticket != null)
-				getHibernateTemplate().delete(ticket);
+			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) getHibernateTemplate().find(
+					"from DownloadTicket _ticket where _ticket.ticketId = ?", new Object[] { ticketid });
+			getHibernateTemplate().deleteAll(coll);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
-				logger.error(e.getMessage(),e);
-			result = false;
+				logger.error(e.getMessage(), e);
 		}
 
 		return result;
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#findByPrimaryKey(java.lang.String)
+	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#findByTicketId(java.lang.String)
 	 */
-	public DownloadTicket findByPrimaryKey(String ticketid) {
+	@SuppressWarnings("unchecked")
+	public DownloadTicket findByTicketId(String ticketid) {
+		try {
+			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) getHibernateTemplate().find(
+					"from DownloadTicket _ticket where _ticket.ticketId = ?", new Object[] { ticketid });
+			if (!coll.isEmpty())
+				return coll.iterator().next();
+			else
+				return null;
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				logger.error(e.getMessage(), e);
+		}
+		return null;
+	}
+
+	/**
+	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#findByPrimaryKey(long)
+	 */
+	public DownloadTicket findByPrimaryKey(long ticketId) {
 		DownloadTicket ticket = null;
 
 		try {
-			ticket = (DownloadTicket) getHibernateTemplate().get(DownloadTicket.class, ticketid);
+			ticket = (DownloadTicket) getHibernateTemplate().get(DownloadTicket.class, ticketId);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
-				logger.error(e.getMessage(),e);
+				logger.error(e.getMessage(), e);
 		}
 		return ticket;
 	}
@@ -65,7 +85,7 @@ public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements D
 			getHibernateTemplate().saveOrUpdate(ticket);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
-				logger.error(e.getMessage(),e);
+				logger.error(e.getMessage(), e);
 			result = false;
 		}
 
@@ -81,12 +101,11 @@ public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements D
 
 		try {
 			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) getHibernateTemplate().find(
-					"from com.logicaldoc.core.document.DownloadTicket _ticket where _ticket.docId = ?",
-					new Object[] { new Long(docId) });
+					"from DownloadTicket _ticket where _ticket.docId = ?", new Object[] { new Long(docId) });
 			getHibernateTemplate().deleteAll(coll);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
-				logger.error(e.getMessage(),e);
+				logger.error(e.getMessage(), e);
 			result = false;
 		}
 

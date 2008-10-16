@@ -4,7 +4,10 @@
 <hibernate-mapping default-lazy="false">
 	<class name="com.logicaldoc.core.document.DownloadTicket" table="ld_ticket">
 		<cache usage="read-write" />
-		<id name="ticketId" type="string" column="ld_ticketid" />
+        <id name="id" type="long" column="ld_id" unsaved-value="0">
+            <generator class="increment" />
+        </id>
+		<property name="ticketId" type="string" column="ld_ticketid" />
 		<property name="docId" type="long" column="ld_docid" />
 		<property name="username" type="string" column="ld_username" length="30" />
 	</class>

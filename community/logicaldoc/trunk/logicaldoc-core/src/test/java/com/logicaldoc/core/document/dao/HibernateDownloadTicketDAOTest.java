@@ -2,7 +2,6 @@ package com.logicaldoc.core.document.dao;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.DownloadTicket;
-import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 
 /**
  * Test case for <code>HibernateDownloadTicketDAO</code>
@@ -29,35 +28,35 @@ public class HibernateDownloadTicketDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testDelete() {
-		DownloadTicket ticket = dao.findByPrimaryKey("1");
+		DownloadTicket ticket = dao.findByTicketId("1");
 		assertNotNull(ticket);
-		assertTrue(dao.delete("1"));
-		ticket = dao.findByPrimaryKey("1");
+		assertTrue(dao.deleteByTicketId("1"));
+		ticket = dao.findByTicketId("1");
 		assertNull(ticket);
 	}
 
 	public void testDeleteByDocId() {
-		DownloadTicket ticket = dao.findByPrimaryKey("1");
+		DownloadTicket ticket = dao.findByTicketId("1");
 		assertNotNull(ticket);
 		assertEquals(1, ticket.getDocId());
-		ticket = dao.findByPrimaryKey("3");
+		ticket = dao.findByTicketId("3");
 		assertNotNull(ticket);
 		assertEquals(1, ticket.getDocId());
-		
+
 		assertTrue(dao.deleteByDocId(1));
-		ticket = dao.findByPrimaryKey("1");
+		ticket = dao.findByTicketId("1");
 		assertNull(ticket);
-		ticket = dao.findByPrimaryKey("3");
+		ticket = dao.findByTicketId("3");
 		assertNull(ticket);
 	}
-	
+
 	public void testFindByPrimaryKey() {
-		DownloadTicket ticket = dao.findByPrimaryKey("1");
+		DownloadTicket ticket = dao.findByTicketId("1");
 		assertNotNull(ticket);
 		assertEquals("admin", ticket.getUsername());
 		assertEquals(1, ticket.getDocId());
 
-		ticket = dao.findByPrimaryKey("99");
+		ticket = dao.findByTicketId("99");
 		assertNull(ticket);
 	}
 
@@ -68,7 +67,7 @@ public class HibernateDownloadTicketDAOTest extends AbstractCoreTestCase {
 		ticket.setTicketId("5");
 		dao.store(ticket);
 
-		DownloadTicket storedTicket = dao.findByPrimaryKey("5");
+		DownloadTicket storedTicket = dao.findByTicketId("5");
 		assertNotNull(storedTicket);
 		assertEquals(ticket, storedTicket);
 	}

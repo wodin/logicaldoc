@@ -146,10 +146,11 @@ CREATE TABLE LD_TERM (
     PRIMARY KEY ( LD_DOCID,LD_STEM ));
 
 CREATE TABLE LD_TICKET (
-  LD_TICKETID VARCHAR(255)   NOT NULL,
+  LD_ID       BIGINT   NOT NULL,
+  LD_TICKETID VARCHAR(255),
   LD_DOCID    BIGINT,
   LD_USERNAME VARCHAR(30),
-    PRIMARY KEY ( LD_TICKETID ));
+    PRIMARY KEY ( LD_ID ));
 
 CREATE TABLE LD_USERDOC (
   LD_DOCID    BIGINT   NOT NULL,
@@ -173,7 +174,6 @@ alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folder
 alter table ld_keyword add constraint FK55BBDA227C693DFD foreign key (ld_docid) references ld_document;
 alter table ld_menugroup add constraint FKB4F7F679AA456AD1 foreign key (ld_menuid) references ld_menu;
 alter table ld_version add constraint FK9B3BD9117C693DFD foreign key (ld_docid) references ld_document;
-
 
 
 

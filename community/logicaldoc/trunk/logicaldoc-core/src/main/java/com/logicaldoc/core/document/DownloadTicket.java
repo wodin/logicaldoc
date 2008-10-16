@@ -1,11 +1,15 @@
 package com.logicaldoc.core.document;
 
+import com.logicaldoc.core.PersistentObject;
+
 /**
  * Represents a download ticket.
  * 
  * @author Michael Scholz
+ * @author Marco Meschieri
  */
-public class DownloadTicket {
+public class DownloadTicket extends PersistentObject {
+
 	private String ticketId = "";
 
 	private long docId = 0;
@@ -50,18 +54,5 @@ public class DownloadTicket {
 	 */
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof DownloadTicket))
-			return false;
-		DownloadTicket other = (DownloadTicket) obj;
-		return this.getTicketId().equals(other.getTicketId());
-	}
-
-	@Override
-	public int hashCode() {
-		return ticketId.hashCode();
 	}
 }

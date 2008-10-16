@@ -34,9 +34,9 @@ VALUES ('test','guest');
 
 INSERT INTO co_groups VALUES('testGroup','Group for tests');
 
-INSERT INTO ld_ticket VALUES('1',1,'admin');
-INSERT INTO ld_ticket VALUES('2',2,'sebastian');
-INSERT INTO ld_ticket VALUES('3',1,'sebastian');
+INSERT INTO ld_ticket VALUES(1,'1',1,'admin');
+INSERT INTO ld_ticket VALUES(2,'2',2,'sebastian');
+INSERT INTO ld_ticket VALUES(3,'3',1,'sebastian');
 
 INSERT INTO ld_document(
   LD_ID,
