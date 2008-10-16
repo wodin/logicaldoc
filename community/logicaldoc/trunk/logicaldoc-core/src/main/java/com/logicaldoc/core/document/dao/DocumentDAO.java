@@ -52,12 +52,20 @@ public interface DocumentDAO {
 	public Collection<Long> findByUserName(String username);
 
 	/**
+	 * Finds all document ids inside the given folder.
+	 * 
+	 * @param folderId Folder identifier
+	 * @return Collection of all document id in the folder.
+	 */
+	public Collection<Long> findDocIdByFolder(long folderId);
+	
+	/**
 	 * Finds all documents inside the given folder.
 	 * 
 	 * @param folderId Folder identifier
-	 * @return Collection of all documentId required for the specified user.
+	 * @return Collection of all documents in the folder.
 	 */
-	public Collection<Long> findDocIdByFolder(long folderId);
+	public Collection<Document> findByFolder(long folderId);
 	
 	/**
 	 * Finds all documents checked-out for an user.

@@ -83,6 +83,17 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 	}
+
+	public void testFindByFolder() {
+		Collection<Document> docs = dao.findByFolder(103);
+		assertNotNull(docs);
+		assertEquals(2, docs.size());
+		assertTrue(docs.contains(dao.findByPrimaryKey(2)));
+
+		docs = dao.findByFolder(1111);
+		assertNotNull(docs);
+		assertEquals(0, docs.size());
+	}
 	
 	public void testFindLastModifiedByUserName() {
 		Collection<Document> coll = dao.findLastModifiedByUserName("author", 10);

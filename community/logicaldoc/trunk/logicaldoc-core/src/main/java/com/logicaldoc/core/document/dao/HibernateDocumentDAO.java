@@ -159,8 +159,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			if (menus.isEmpty())
 				return coll;
 
-			StringBuffer query = new StringBuffer(
-					"select _doc.id from Document _doc where ");
+			StringBuffer query = new StringBuffer("select _doc.id from Document _doc where ");
 			query.append("_doc.folder.id in (");
 			boolean first = true;
 			for (Menu menu : menus) {
@@ -336,8 +335,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		List<Document> coll = new ArrayList<Document>();
 
 		try {
-			StringBuilder query = new StringBuilder(
-					"SELECT _history.docId from History _history");
+			StringBuilder query = new StringBuilder("SELECT _history.docId from History _history");
 			query.append(" WHERE _history.username = '" + username + "' ");
 			query.append(" ORDER BY _history.date DESC");
 
@@ -541,12 +539,29 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		Collection<Long> coll = new ArrayList<Long>();
 
 		try {
-			StringBuffer query = new StringBuffer(
-					"select _doc.id from com.logicaldoc.core.document.Document _doc where ");
+			StringBuffer query = new StringBuffer("select _doc.id from Document _doc where ");
 			query.append("_doc.folder.id = ");
 			query.append(Long.toString(folderId));
 
 			coll = (Collection<Long>) getHibernateTemplate().find(query.toString());
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+
+		return coll;
+	}
+
+	@Override
+	public Collection<Document> findByFolder(long folderId) {
+		Collection<Document> coll = new ArrayList<Document>();
+
+		try {
+			StringBuffer query = new StringBuffer("select _doc from Document _doc where ");
+			query.append("_doc.folder.id = ");
+			query.append(Long.toString(folderId));
+
+			coll = (Collection<Document>) getHibernateTemplate().find(query.toString());
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
