@@ -20,7 +20,7 @@
 			<ice:panelGroup>
 				<h3>
 					<ice:outputText
-						value="#{msgs['msg.jsp.rights']} - #{rightsRecordsManager.selectedDocument.docName}"
+						value="#{msgs['msg.jsp.rights']} - #{rightsRecordsManager.selectedDocument.title}"
 						rendered="#{!empty (rightsRecordsManager.selectedDocument)}" />
 					<ice:outputText
 						value="#{msgs['msg.jsp.rights']} - #{rightsRecordsManager.selectedDirectory.displayText}"

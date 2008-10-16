@@ -77,9 +77,9 @@
 					<ice:outputText value="&amp;nbsp;&amp;nbsp;" escape="false" />
 
 					<ice:graphicImage
-						value="#{styleBean.imagesPath}/#{entry.menu.menuIcon}"
+						value="#{styleBean.imagesPath}/#{entry.document.icon}"
 						style="border: 0px solid;" />
-					<ice:outputLink value="download?menuId=#{entry.menuId}"
+					<ice:outputLink value="download?docId=#{entry.docId}"
 						target="_blank" >
 						<ice:outputText value="#{entry.displayDescription}" />
 					</ice:outputLink>

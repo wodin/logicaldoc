@@ -37,7 +37,7 @@
 								<ice:outputText value="#{msgs['msg.jsp.date']}" />
 							</f:facet>
 							<ice:panelGroup>
-								<ice:outputText value="#{history.decodedDate}">
+								<ice:outputText value="#{history.date}">
 									<f:convertDateTime pattern="#{loc.dateFormatShort}" />
 								</ice:outputText>
 							</ice:panelGroup>

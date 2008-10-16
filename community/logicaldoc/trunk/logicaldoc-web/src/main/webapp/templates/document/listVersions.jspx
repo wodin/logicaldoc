@@ -38,14 +38,14 @@
 						</f:facet>
 						<ice:panelGroup rendered="#{versionRecord.currentVersion}">
 							<ice:outputLink
-								value="download?menuId=#{versionsRecordsManager.selectedDocument.menuId}"
+								value="download?title=#{versionsRecordsManager.selectedDocument.title}"
 								target="_blank">
 								<ice:outputText value="#{versionRecord.version}" />
 							</ice:outputLink>
 						</ice:panelGroup>
 						<ice:panelGroup rendered="#{!versionRecord.currentVersion}">
 							<ice:outputLink
-								value="download?menuId=#{versionsRecordsManager.selectedDocument.menuId}&amp;versionId=#{versionRecord.version}"
+								value="download?title=#{versionsRecordsManager.selectedDocument.title}&amp;versionId=#{versionRecord.version}"
 								target="_blank">
 								<ice:outputText value="#{versionRecord.version}" />
 							</ice:outputLink>
@@ -70,7 +70,7 @@
 							<ice:outputText value="#{msgs['msg.jsp.publishedby']}" />
 						</f:facet>
 						<ice:panelGroup>
-							<ice:outputText value="#{versionRecord.versionUser}" />
+							<ice:outputText value="#{versionRecord.user}" />
 						</ice:panelGroup>
 					</ice:column>
 
@@ -80,7 +80,7 @@
 							<ice:outputText value="#{msgs['msg.jsp.versioncomment']}" />
 						</f:facet>
 						<ice:panelGroup>
-							<ice:outputText value="#{versionRecord.versionComment}" />
+							<ice:outputText value="#{versionRecord.comment}" />
 						</ice:panelGroup>
 					</ice:column>
 
