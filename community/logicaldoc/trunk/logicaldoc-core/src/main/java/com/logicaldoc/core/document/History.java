@@ -2,11 +2,14 @@ package com.logicaldoc.core.document;
 
 import java.util.Date;
 
+import com.logicaldoc.core.PersistentObject;
+
 /**
  * @author Michael Scholz
  * @author Alessandro Gasparini
+ * @author Marco Meschieri
  */
-public class History {
+public class History extends PersistentObject{
 	public final static String STORED = "msg.jsp.docstored";
 
 	public final static String CHANGED = "msg.jsp.docchanged";
@@ -14,8 +17,6 @@ public class History {
 	public final static String CHECKIN = "msg.jsp.doccheckedin";
 
 	public final static String CHECKOUT = "msg.jsp.doccheckedout";
-
-	private int historyId;
 
 	private long docId;
 
@@ -26,20 +27,6 @@ public class History {
 	private String event = "";
 
 	public History() {
-	}
-
-	/**
-	 * @return Returns the historyId.
-	 */
-	public int getHistoryId() {
-		return historyId;
-	}
-
-	/**
-	 * @param historyId The historyId to set.
-	 */
-	public void setHistoryId(int historyId) {
-		this.historyId = historyId;
 	}
 
 	/**
@@ -96,18 +83,5 @@ public class History {
 	 */
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	@Override
-	public boolean equals(Object arg0) {
-		if (!(arg0 instanceof History))
-			return false;
-		History other = (History) arg0;
-		return other.getHistoryId() == this.getHistoryId();
-	}
-
-	@Override
-	public int hashCode() {
-		return new Integer(historyId).hashCode();
 	}
 }

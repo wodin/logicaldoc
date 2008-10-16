@@ -245,7 +245,7 @@ public class UsersRecordsManager extends SortableList {
 
 					while (historyIter.hasNext()) {
 						History history = historyIter.next();
-						historyDAO.delete(history.getHistoryId());
+						historyDAO.delete(history.getId());
 					}
 
 					manager.removeUserFromAllGroups(toBeDeletedUser);

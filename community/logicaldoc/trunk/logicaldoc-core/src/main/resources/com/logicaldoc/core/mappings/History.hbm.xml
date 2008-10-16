@@ -4,9 +4,9 @@
 <hibernate-mapping default-lazy="false">
 	<class name="com.logicaldoc.core.document.History" table="ld_history">
 		<cache usage="read-write" />
-		<id name="historyId" type="int" column="ld_historyid" unsaved-value="0">
-			<generator class="increment"/>
-		</id>
+        <id name="id" type="long" column="ld_id" unsaved-value="0">
+            <generator class="increment" />
+        </id>
 		<property name="docId" type="long" column="ld_docid" />
 		<property name="date" type="timestamp" column="ld_date" />
 		<property name="username" type="string" column="lo_username" length="30" />

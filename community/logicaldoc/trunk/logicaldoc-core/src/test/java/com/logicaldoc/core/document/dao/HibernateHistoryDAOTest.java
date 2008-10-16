@@ -31,23 +31,21 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		dao = (HistoryDAO) context.getBean("HistoryDAO");
 	}
 
+	@SuppressWarnings("unchecked")
+	public void testDelete() {
+		Collection<History> histories = (Collection<History>) dao.findByUsername("author");
+		assertNotNull(histories);
+		assertEquals(2, histories.size());
 
-    @SuppressWarnings("unchecked")
-    public void testDelete() {
-        Collection<History> histories = (Collection<History>)dao.findByUsername("author");
-        assertNotNull(histories);
-        assertEquals(2, histories.size());
-        
-        for (History history : histories) {
-            boolean result = dao.delete(history.getHistoryId());
-            assertTrue(result);
-        }
-        
-        histories = (Collection<History>)dao.findByUsername("author");
-        assertNotNull(histories);
-        assertEquals(0, histories.size());        
-    }    
-    
+		for (History history : histories) {
+			boolean result = dao.delete(history.getId());
+			assertTrue(result);
+		}
+
+		histories = (Collection<History>) dao.findByUsername("author");
+		assertNotNull(histories);
+		assertEquals(0, histories.size());
+	}
 
 	@SuppressWarnings("unchecked")
 	public void testFindByDocId() {
@@ -56,44 +54,44 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		assertEquals(2, histories.size());
 
 		// Try with unexisting docId
-        histories = dao.findByDocId(99);
+		histories = dao.findByDocId(99);
 		assertNotNull(histories);
-		assertEquals(0, histories.size());        
+		assertEquals(0, histories.size());
 	}
-    
-    @SuppressWarnings("unchecked")
-	public void testFindByUsername() {
-        Collection histories = dao.findByUsername("author");
-        assertNotNull(histories);
-        assertEquals(2, histories.size());
 
-        // Try with unexisting username
-        histories = dao.findByUsername("sss");
-        assertNotNull(histories);
-        assertEquals(0, histories.size());
-    }    
-    
 	@SuppressWarnings("unchecked")
-    public void testStore() {
-        History history = new History();
-        history.setDocId(1);
-        history.setDate(DateBean.dateFromCompactString("20061220"));
-        history.setUsername("sebastian");
-        history.setEvent("test History store");
+	public void testFindByUsername() {
+		Collection histories = dao.findByUsername("author");
+		assertNotNull(histories);
+		assertEquals(2, histories.size());
 
-        assertTrue(dao.store(history));        
+		// Try with unexisting username
+		histories = dao.findByUsername("sss");
+		assertNotNull(histories);
+		assertEquals(0, histories.size());
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testStore() {
+		History history = new History();
+		history.setDocId(1);
+		history.setDate(DateBean.dateFromCompactString("20061220"));
+		history.setUsername("sebastian");
+		history.setEvent("test History store");
+
+		assertTrue(dao.store(history));
 
 		// Test the stored history
-        Collection<History> histories = (Collection<History>)dao.findByUsername("sebastian");
+		Collection<History> histories = (Collection<History>) dao.findByUsername("sebastian");
 		assertNotNull(histories);
-        assertFalse(histories.isEmpty());
-        
-        Iterator<History> itHist = histories.iterator();
-        History hStored = itHist.next();
-        assertTrue(hStored.equals(history));
-        assertEquals(hStored.getDocId(), 1);
-        assertEquals(hStored.getDate().getTime(), DateBean.dateFromCompactString("20061220").getTime());
-        assertEquals(hStored.getUsername(), "sebastian");
-        assertEquals(hStored.getEvent(), "test History store");
+		assertFalse(histories.isEmpty());
+
+		Iterator<History> itHist = histories.iterator();
+		History hStored = itHist.next();
+		assertTrue(hStored.equals(history));
+		assertEquals(hStored.getDocId(), 1);
+		assertEquals(hStored.getDate().getTime(), DateBean.dateFromCompactString("20061220").getTime());
+		assertEquals(hStored.getUsername(), "sebastian");
+		assertEquals(hStored.getEvent(), "test History store");
 	}
 }

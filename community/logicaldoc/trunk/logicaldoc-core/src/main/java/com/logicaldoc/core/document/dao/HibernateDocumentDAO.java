@@ -552,6 +552,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		return coll;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<Document> findByFolder(long folderId) {
 		Collection<Document> coll = new ArrayList<Document>();
