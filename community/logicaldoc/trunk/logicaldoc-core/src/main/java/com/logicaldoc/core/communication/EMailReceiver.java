@@ -193,7 +193,7 @@ public class EMailReceiver extends Task {
 		try {
 			Session session = Session.getInstance(new Properties());
 			store = session.getStore(account.getProvider());
-			store.connect(account.getHost(), account.getAccountUser(), account.getAccountPassword());
+			store.connect(account.getHost(), account.getUser(), account.getPassword());
 			inbox = store.getFolder("INBOX");
 			inbox.open(Folder.READ_ONLY);
 			count = inbox.getMessageCount();
@@ -210,7 +210,7 @@ public class EMailReceiver extends Task {
 		// Get a session. Use a blank Properties object.
 		Session session = Session.getInstance(new Properties());
 		Store store = session.getStore(account.getProvider());
-		store.connect(account.getHost(), account.getAccountUser(), account.getAccountPassword());
+		store.connect(account.getHost(), account.getUser(), account.getPassword());
 		
 //		log.info("account.getProvider(): " + account.getProvider());
 //		log.info("account.getHost(): " + account.getHost());
@@ -246,7 +246,7 @@ public class EMailReceiver extends Task {
 						mailId = message.getFrom()[0] + "." + message.getSentDate().getTime();
 					}
 
-					Collection<String> alreadyRetrievedIds = this.emailDao.collectEmailIds(account.getAccountId());
+					Collection<String> alreadyRetrievedIds = this.emailDao.collectEmailIds(account.getId());
 					if (alreadyRetrievedIds.contains(mailId)) {
 						if (log.isDebugEnabled())
 							log.debug("Skip message " + mailId + " because already fetched from " + account.toString());
@@ -284,7 +284,7 @@ public class EMailReceiver extends Task {
 					else
 						email.setSentDate(String.valueOf(new Date().getTime()));
 					email.setEmailId(mailId);
-					email.setAccountId(account.getAccountId());
+					email.setAccountId(account.getId());
 					getEmailDao().store(email);
 
 					if (log.isDebugEnabled())

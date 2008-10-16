@@ -13,108 +13,108 @@ import javax.mail.internet.InternetAddress;
  */
 public class EMail extends Message {
 
-    private String authorAddress = "";
+	private String authorAddress = "";
 
-    private String userName = "";
+	private String userName = "";
 
-    private String folder = "";
+	private String folder = "";
 
-    // Refers to the original email id
-    private String emailId = "";
+	// Refers to the original email id
+	private String emailId = "";
 
-    // The e-mail account used to fetch this message
-    private int accountId;
-    
-    private Set<Recipient> recipients = new HashSet<Recipient>();
+	// The e-mail account used to fetch this message
+	private long accountId;
 
-    private Map<Integer, Attachment> attachments = new HashMap<Integer, Attachment>();
+	private Set<Recipient> recipients = new HashSet<Recipient>();
 
-    public EMail() {
-    }
+	private Map<Integer, Attachment> attachments = new HashMap<Integer, Attachment>();
 
-    public String getEmailId() {
-        return emailId;
-    }
+	public EMail() {
+	}
 
-    public void setEmailId(String emailId) {
-        this.emailId = emailId;
-    }
-    
-    public int getAccountId() {
-        return accountId;
-    }
+	public String getEmailId() {
+		return emailId;
+	}
 
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
-    }
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
 
-    public String getAuthorAddress() {
-        return authorAddress;
-    }
+	public long getAccountId() {
+		return accountId;
+	}
 
-    public String getUserName() {
-        return userName;
-    }
+	public void setAccountId(long accountId) {
+		this.accountId = accountId;
+	}
 
-    public Set<Recipient> getRecipients() {
-        return recipients;
-    }
+	public String getAuthorAddress() {
+		return authorAddress;
+	}
 
-    public void setAuthorAddress(String address) {
-        authorAddress = address;
-    }
+	public String getUserName() {
+		return userName;
+	}
 
-    public void setUserName(String uname) {
-        userName = uname;
-    }
+	public Set<Recipient> getRecipients() {
+		return recipients;
+	}
 
-    public void addRecipient(Recipient rec) {
-        recipients.add(rec);
-    }
+	public void setAuthorAddress(String address) {
+		authorAddress = address;
+	}
 
-    public String getFolder() {
-        return folder;
-    }
+	public void setUserName(String uname) {
+		userName = uname;
+	}
 
-    public void setFolder(String string) {
-        folder = string;
-    }
+	public void addRecipient(Recipient rec) {
+		recipients.add(rec);
+	}
 
-    public Map<Integer, Attachment> getAttachments() {
-        return attachments;
-    }
+	public String getFolder() {
+		return folder;
+	}
 
-    public Attachment getAttachment(int partId) {
-        return attachments.get(partId);
-    }
+	public void setFolder(String string) {
+		folder = string;
+	}
 
-    public void addAttachment(int partId, Attachment attachment) {
-        attachments.put(partId, attachment);
-    }
+	public Map<Integer, Attachment> getAttachments() {
+		return attachments;
+	}
 
-    public InternetAddress[] getAddresses() throws Exception {
-        InternetAddress[] recs = new InternetAddress[recipients.size()];
-        Iterator iter = recipients.iterator();
-        int i = 0;
+	public Attachment getAttachment(int partId) {
+		return attachments.get(partId);
+	}
 
-        while (iter.hasNext()) {
-            Recipient rec = (Recipient) iter.next();
-            recs[i] = new InternetAddress(rec.getAddress());
-            i++;
-        }
+	public void addAttachment(int partId, Attachment attachment) {
+		attachments.put(partId, attachment);
+	}
 
-        return recs;
-    }
+	public InternetAddress[] getAddresses() throws Exception {
+		InternetAddress[] recs = new InternetAddress[recipients.size()];
+		Iterator<Recipient> iter = recipients.iterator();
+		int i = 0;
 
-    public int getAttachmentCount() {
-        return attachments.size();
-    }
+		while (iter.hasNext()) {
+			Recipient rec = iter.next();
+			recs[i] = new InternetAddress(rec.getAddress());
+			i++;
+		}
 
-    public void setRecipients(Set<Recipient> recipients) {
-        this.recipients = recipients;
-    }
+		return recs;
+	}
 
-    public void setAttachments(Map<Integer, Attachment> attachments) {
-        this.attachments = attachments;
-    }
+	public int getAttachmentCount() {
+		return attachments.size();
+	}
+
+	public void setRecipients(Set<Recipient> recipients) {
+		this.recipients = recipients;
+	}
+
+	public void setAttachments(Map<Integer, Attachment> attachments) {
+		this.attachments = attachments;
+	}
 }

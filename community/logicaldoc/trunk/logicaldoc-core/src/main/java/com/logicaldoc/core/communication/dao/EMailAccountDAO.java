@@ -23,14 +23,14 @@ public interface EMailAccountDAO {
     /**
      * This method deletes an emailaccount.
      * 
-     * @param accountId AccountId of the emailaccount which should be delete.
+     * @param accountId Id of the emailaccount which should be delete.
      */
-    public boolean delete(int accountId); 
+    public boolean delete(long accountId); 
 
     /**
      * This method finds an emailaccount by its accountId.
      */
-    public EMailAccount findByPrimaryKey(int accountId); 
+    public EMailAccount findByPrimaryKey(long accountId); 
 
     /**
      * Loads all accounts

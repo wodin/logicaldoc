@@ -22,137 +22,136 @@ import com.logicaldoc.core.communication.EMail;
  */
 public class HibernateEMailDAO extends HibernateDaoSupport implements EMailDAO {
 
-    protected static Log log = LogFactory.getLog(HibernateEMailDAO.class);
+	protected static Log log = LogFactory.getLog(HibernateEMailDAO.class);
 
-    private HibernateEMailDAO() {
-    }
+	private HibernateEMailDAO() {
+	}
 
-    /**
-     * @see com.logicaldoc.core.communication.dao.EMailDAO#store(com.logicaldoc.core.communication.EMail)
-     */
-    public boolean store(EMail email) {
-        boolean result = true;
+	/**
+	 * @see com.logicaldoc.core.communication.dao.EMailDAO#store(com.logicaldoc.core.communication.EMail)
+	 */
+	public boolean store(EMail email) {
+		boolean result = true;
 
-        try {
-            getHibernateTemplate().saveOrUpdate(email);
-        } catch (Exception e) {
-            if (log.isErrorEnabled())
-                logger.error(e.getMessage(), e);
-            result = false;
-        }
+		try {
+			getHibernateTemplate().saveOrUpdate(email);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				logger.error(e.getMessage(), e);
+			result = false;
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * @see com.logicaldoc.core.communication.dao.EMailDAO#delete(long)
-     */
-    public boolean delete(long messageId) {
-        boolean result = true;
+	/**
+	 * @see com.logicaldoc.core.communication.dao.EMailDAO#delete(long)
+	 */
+	public boolean delete(long messageId) {
+		boolean result = true;
 
-        try {
-            EMail message = findByPrimaryKey(messageId);
-            if (message != null)
-                getHibernateTemplate().delete(message);
-        } catch (Exception e) {
-            if (log.isErrorEnabled())
-                logger.error(e.getMessage(), e);
-            result = false;
-        }
+		try {
+			EMail message = findByPrimaryKey(messageId);
+			if (message != null)
+				getHibernateTemplate().delete(message);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				logger.error(e.getMessage(), e);
+			result = false;
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * @see com.logicaldoc.core.communication.dao.EMailDAO#findByPrimaryKey(long)
-     */
-    public EMail findByPrimaryKey(long messageId) {
-        EMail email = null;
+	/**
+	 * @see com.logicaldoc.core.communication.dao.EMailDAO#findByPrimaryKey(long)
+	 */
+	public EMail findByPrimaryKey(long messageId) {
+		EMail email = null;
 
-        try {
-            email = (EMail) getHibernateTemplate().get(EMail.class, new Long(messageId));
-        } catch (Exception e) {
-            if (log.isErrorEnabled())
-                log.error(e.getMessage(), e);
-        }
+		try {
+			email = (EMail) getHibernateTemplate().get(EMail.class, new Long(messageId));
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
 
-        return email;
-    }
+		return email;
+	}
 
-    /**
-     * @see com.logicaldoc.core.communication.dao.EMailDAO#findByUserName(java.lang.String)
-     */
-    @SuppressWarnings("unchecked")
-    public Collection<EMail> findByUserName(String username) {
-        Collection<EMail> coll = new ArrayList<EMail>();
+	/**
+	 * @see com.logicaldoc.core.communication.dao.EMailDAO#findByUserName(java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	public Collection<EMail> findByUserName(String username) {
+		Collection<EMail> coll = new ArrayList<EMail>();
 
-        try {
-            DetachedCriteria dt = DetachedCriteria.forClass(EMail.class);
-            dt.add(Property.forName("userName").eq(username));
+		try {
+			DetachedCriteria dt = DetachedCriteria.forClass(EMail.class);
+			dt.add(Property.forName("userName").eq(username));
 
-            coll = (Collection<EMail>) getHibernateTemplate().findByCriteria(dt);
-        } catch (Exception e) {
-            if (log.isErrorEnabled())
-                logger.error(e.getMessage(), e);
-        }
+			coll = (Collection<EMail>) getHibernateTemplate().findByCriteria(dt);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				logger.error(e.getMessage(), e);
+		}
 
-        return coll;
-    }
+		return coll;
+	}
 
-    /**
-     * @see com.logicaldoc.core.communication.dao.EMailDAO#findByUserName(java.lang.String,
-     *      java.lang.String)
-     */
-    @SuppressWarnings("unchecked")
-    public Collection<EMail> findByUserName(String username, String folder) {
-        Collection<EMail> coll = new ArrayList<EMail>();
+	/**
+	 * @see com.logicaldoc.core.communication.dao.EMailDAO#findByUserName(java.lang.String,
+	 *      java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	public Collection<EMail> findByUserName(String username, String folder) {
+		Collection<EMail> coll = new ArrayList<EMail>();
 
-        try {
-            DetachedCriteria dt = DetachedCriteria.forClass(EMail.class);
-            dt.add(Property.forName("userName").eq(username));
-            dt.add(Property.forName("folder").eq(folder));
-            dt.addOrder(Order.asc("sentDate"));
+		try {
+			DetachedCriteria dt = DetachedCriteria.forClass(EMail.class);
+			dt.add(Property.forName("userName").eq(username));
+			dt.add(Property.forName("folder").eq(folder));
+			dt.addOrder(Order.asc("sentDate"));
 
-            coll = (Collection<EMail>) getHibernateTemplate().findByCriteria(dt);
-        } catch (Exception e) {
-            if (log.isErrorEnabled())
-                logger.error(e.getMessage(), e);
-        }
+			coll = (Collection<EMail>) getHibernateTemplate().findByCriteria(dt);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				logger.error(e.getMessage(), e);
+		}
 
-        return coll;
-    }
+		return coll;
+	}
 
-    /**
-     * @see com.logicaldoc.core.communication.dao.EMailDAO#findByAccountId(int)
-     */
-    @SuppressWarnings("unchecked")
-    public Collection<EMail> findByAccountId(int accountId) {
-        Collection<EMail> coll = new ArrayList<EMail>();
+	/**
+	 * @see com.logicaldoc.core.communication.dao.EMailDAO#findByAccountId(long)
+	 */
+	@SuppressWarnings("unchecked")
+	public Collection<EMail> findByAccountId(long accountId) {
+		Collection<EMail> coll = new ArrayList<EMail>();
 
-        try {
-            DetachedCriteria dt = DetachedCriteria.forClass(EMail.class);
-            dt.add(Property.forName("accountId").eq(new Integer(accountId)));
-            dt.addOrder(Order.asc("sentDate"));
+		try {
+			DetachedCriteria dt = DetachedCriteria.forClass(EMail.class);
+			dt.add(Property.forName("accountId").eq(new Long(accountId)));
+			dt.addOrder(Order.asc("sentDate"));
+			coll = (Collection<EMail>) getHibernateTemplate().findByCriteria(dt);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				logger.error(e.getMessage(), e);
+		}
 
-            coll = (Collection<EMail>) getHibernateTemplate().findByCriteria(dt);
-        } catch (Exception e) {
-            if (log.isErrorEnabled())
-                logger.error(e.getMessage(), e);
-        }
+		return coll;
+	}
 
-        return coll;
-    }
-
-    /**
-     * @see com.logicaldoc.core.communication.dao.EMailDAO#collectEmailIds(int)
-     */
-    public Collection<String> collectEmailIds(int accountId) {
-        Collection<String> ids = new HashSet<String>();
-        Collection<EMail> coll = findByAccountId(accountId);
-        for (EMail mail : coll) {
-            if (!ids.contains(mail.getEmailId()))
-                ids.add(mail.getEmailId());
-        }
-        return ids;
-    }
+	/**
+	 * @see com.logicaldoc.core.communication.dao.EMailDAO#collectEmailIds(long)
+	 */
+	public Collection<String> collectEmailIds(long accountId) {
+		Collection<String> ids = new HashSet<String>();
+		Collection<EMail> coll = findByAccountId(accountId);
+		for (EMail mail : coll) {
+			if (!ids.contains(mail.getEmailId()))
+				ids.add(mail.getEmailId());
+		}
+		return ids;
+	}
 }

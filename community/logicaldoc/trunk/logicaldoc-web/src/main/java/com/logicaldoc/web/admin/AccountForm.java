@@ -98,7 +98,7 @@ public class AccountForm {
 		this.account = account;
 		this.directoryModel = new DirectoryTreeModel();
 		clear();
-		this.password = account.getAccountPassword();
+		this.password = account.getPassword();
 	}
 
 	public void nodeClicked(ActionEvent event) {
@@ -140,9 +140,9 @@ public class AccountForm {
 				account.setUserName(SessionManagement.getUsername());
 
 				if (StringUtils.isNotEmpty(password)) {
-					account.setAccountPassword(password);
+					account.setPassword(password);
 				} else if (deletePassword) {
-					account.setAccountPassword(null);
+					account.setPassword(null);
 				}
 
 				boolean stored = accountDao.store(account);

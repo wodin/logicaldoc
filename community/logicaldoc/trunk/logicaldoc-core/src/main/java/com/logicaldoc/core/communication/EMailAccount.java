@@ -2,6 +2,7 @@ package com.logicaldoc.core.communication;
 
 import java.util.StringTokenizer;
 
+import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.security.Menu;
 
 /**
@@ -9,10 +10,8 @@ import com.logicaldoc.core.security.Menu;
  * 
  * @author Michael Scholz, Marco Meschieri
  */
-public class EMailAccount {
+public class EMailAccount extends PersistentObject {
 	private static final long serialVersionUID = 1L;
-
-	private int accountId;
 
 	private String userName;
 
@@ -24,9 +23,9 @@ public class EMailAccount {
 
 	private String port;
 
-	private String accountUser;
+	private String user;
 
-	private String accountPassword;
+	private String password;
 
 	private Menu targetFolder;
 
@@ -43,14 +42,13 @@ public class EMailAccount {
 
 	/** Creates a new instance of EMailAccount */
 	public EMailAccount() {
-		accountId = 0;
 		userName = "";
 		mailAddress = "";
 		provider = "";
 		host = "";
 		port = "";
-		accountUser = "";
-		accountPassword = "";
+		user = "";
+		password = "";
 		targetFolder = null;
 		targetFolderId = null;
 	}
@@ -91,10 +89,6 @@ public class EMailAccount {
 		this.targetFolderId = targetFolderId;
 	}
 
-	public int getAccountId() {
-		return accountId;
-	}
-
 	public String getMailAddress() {
 		return mailAddress;
 	}
@@ -111,16 +105,12 @@ public class EMailAccount {
 		return port;
 	}
 
-	public String getAccountUser() {
-		return accountUser;
+	public String getUser() {
+		return user;
 	}
 
-	public String getAccountPassword() {
-		return accountPassword;
-	}
-
-	public void setAccountId(int id) {
-		accountId = id;
+	public String getPassword() {
+		return password;
 	}
 
 	public void setMailAddress(String address) {
@@ -139,12 +129,12 @@ public class EMailAccount {
 		port = prt;
 	}
 
-	public void setAccountUser(String auser) {
-		accountUser = auser;
+	public void setUser(String user) {
+		this.user = user;
 	}
 
-	public void setAccountPassword(String apwd) {
-		accountPassword = apwd;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public Menu getTargetFolder() {
@@ -193,14 +183,13 @@ public class EMailAccount {
 	}
 
 	public void reset() {
-		accountId = 0;
 		mailAddress = "";
 		provider = "";
 		host = "";
 		port = "";
 		userName = "";
-		accountUser = "";
-		accountPassword = "";
+		user = "";
+		password = "";
 		targetFolder = null;
 		targetFolderId = null;
 		language = "";

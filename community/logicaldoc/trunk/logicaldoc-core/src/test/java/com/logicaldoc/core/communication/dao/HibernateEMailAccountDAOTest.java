@@ -28,27 +28,27 @@ public class HibernateEMailAccountDAOTest extends AbstractCoreTestCase {
         account.setMailAddress("author@logicaldoc.sf.net");
         account.setProvider("Aruba");
         account.setHost("pcalle");
-        account.setAccountUser("author@logicaldoc.sf.net");
-        account.setAccountPassword("fghfgh");
+        account.setUser("author@logicaldoc.sf.net");
+        account.setPassword("fghfgh");
         account.setUserName("admin");
         account.setDeleteFromMailbox(0);
         
         assertTrue(dao.store(account));
         
         // Load an existing account and modify it
-        EMailAccount account02 = dao.findByPrimaryKey(account.getAccountId());
+        EMailAccount account02 = dao.findByPrimaryKey(account.getId());
         assertNotNull(account02);
         assertEquals("author@logicaldoc.sf.net", account02.getMailAddress());
         assertEquals("Aruba", account02.getProvider());
         assertEquals("pcalle", account02.getHost());
-        assertEquals("author@logicaldoc.sf.net", account02.getAccountUser());
-        assertEquals("fghfgh", account02.getAccountPassword());
+        assertEquals("author@logicaldoc.sf.net", account02.getUser());
+        assertEquals("fghfgh", account02.getPassword());
                               
         account02.setMailAddress("updated@logicaldoc.sf.net");
         assertTrue(dao.store(account02));
         
         // Verify the stored account
-        account = dao.findByPrimaryKey(account.getAccountId());
+        account = dao.findByPrimaryKey(account.getId());
         assertNotNull(account);
         assertEquals("updated@logicaldoc.sf.net", account.getMailAddress());       
     }
@@ -65,7 +65,7 @@ public class HibernateEMailAccountDAOTest extends AbstractCoreTestCase {
     public void testFindByPrimaryKey() {
         EMailAccount account = dao.findByPrimaryKey(1);
         assertNotNull(account);
-        assertEquals(1, account.getAccountId());
+        assertEquals(1, account.getId());
         assertTrue(account.isAllowed("pdf"));
         assertFalse(account.isAllowed("xxx"));
 

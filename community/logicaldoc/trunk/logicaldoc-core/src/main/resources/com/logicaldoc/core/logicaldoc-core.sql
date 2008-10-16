@@ -1,19 +1,3 @@
-CREATE TABLE CO_ACCOUNT (
-  CO_ACCOUNTID         INT   NOT NULL,
-  CO_USERNAME          VARCHAR(255),
-  CO_MAILADDRESS       VARCHAR(255),
-  CO_PROVIDER          VARCHAR(255),
-  CO_HOST              VARCHAR(255),
-  CO_PORT              VARCHAR(255),
-  CO_ACCOUNTUSER       VARCHAR(255),
-  CO_ACCOUNTPASSWORD   VARCHAR(255),
-  CO_ALLOWEDTYPES      VARCHAR(255),
-  CO_DELETEFROMMAILBOX INT,
-  CO_LANGUAGE          VARCHAR(255),
-  CO_ENABLED           INT,
-  CO_TARGETFOLDER      BIGINT,
-    PRIMARY KEY ( CO_ACCOUNTID ));
-
 CREATE TABLE CO_GROUPS (
   CO_GROUPNAME VARCHAR(255)   NOT NULL,
   CO_GROUPDESC VARCHAR(255),
@@ -77,7 +61,7 @@ CREATE TABLE LD_DOCUMENT (
 
 CREATE TABLE LD_EMAIL (
   LD_ID            BIGINT   NOT NULL,
-  LD_ACCOUNTID     INT,
+  LD_ACCOUNTID     BIGINT,
   LD_EMAILID       VARCHAR(255),
   LD_MESSAGETEXT   VARCHAR(255),
   LD_AUTHOR        VARCHAR(30),
@@ -87,6 +71,22 @@ CREATE TABLE LD_EMAIL (
   LD_AUTHORADDRESS VARCHAR(255),
   LD_USERNAME      VARCHAR(30),
   LD_FOLDER        VARCHAR(30),
+    PRIMARY KEY ( LD_ID ));
+
+CREATE TABLE LD_EMAILACCOUNT (
+  LD_ID                BIGINT   NOT NULL,
+  LD_USERNAME          VARCHAR(255),
+  LD_MAILADDRESS       VARCHAR(255),
+  LD_PROVIDER          VARCHAR(255),
+  LD_HOST              VARCHAR(255),
+  LD_PORT              VARCHAR(255),
+  LD_USER              VARCHAR(255),
+  LD_PASSWORD          VARCHAR(255),
+  LD_ALLOWEDTYPES      VARCHAR(255),
+  LD_DELETEFROMMAILBOX INT,
+  LD_LANGUAGE          VARCHAR(255),
+  LD_ENABLED           INT,
+  LD_TARGETFOLDER      BIGINT,
     PRIMARY KEY ( LD_ID ));
 
 CREATE TABLE LD_HISTORY (
@@ -165,15 +165,16 @@ CREATE TABLE LD_VERSION (
   LD_DATE    TIMESTAMP,
   LD_COMMENT VARCHAR(2000));
 
-alter table co_account add constraint FK876115A59CC15A2 foreign key (co_targetfolder) references ld_menu;
 alter table co_usergroup add constraint FK44CA21819E198925 foreign key (co_username) references co_users;
 alter table co_usergroup add constraint FK44CA2181B6F18C05 foreign key (co_groupname) references co_groups;
 alter table ld_attachment add constraint FK6C81064AAAE036A2 foreign key (ld_messageid) references ld_email;
 alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folderid) references ld_menu;
+alter table ld_emailaccount add constraint FK1013678CDFB2816 foreign key (ld_targetfolder) references ld_menu;
 alter table ld_keyword add constraint FK55BBDA227C693DFD foreign key (ld_docid) references ld_document;
 alter table ld_menugroup add constraint FKB4F7F679AA456AD1 foreign key (ld_menuid) references ld_menu;
 alter table ld_recipient add constraint FK406A0412AAE036A2 foreign key (ld_messageid) references ld_email;
 alter table ld_version add constraint FK9B3BD9117C693DFD foreign key (ld_docid) references ld_document;
+
 
 
 

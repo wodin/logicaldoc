@@ -128,7 +128,7 @@ public class HibernateEMailDAOTest extends AbstractCoreTestCase {
     }
 
     public void testFindByAccountId() {
-        Collection<EMail> emails = dao.findByAccountId(1);
+        Collection<EMail> emails = dao.findByAccountId(1L);
         assertNotNull(emails);
         assertEquals(2, emails.size());
         assertEquals(17, emails.iterator().next().getId());
@@ -140,13 +140,13 @@ public class HibernateEMailDAOTest extends AbstractCoreTestCase {
     }
 
     public void testCollectEmailIds() {
-        Collection<String> emails = dao.collectEmailIds(1);
+        Collection<String> emails = dao.collectEmailIds(1L);
         assertNotNull(emails);
         assertEquals(2, emails.size());
         assertTrue(emails.contains("id1"));
         assertTrue(emails.contains("id2"));
 
-        emails = dao.collectEmailIds(2);
+        emails = dao.collectEmailIds(2L);
         assertNotNull(emails);
         assertEquals(1, emails.size());
         assertTrue(emails.contains("id1"));

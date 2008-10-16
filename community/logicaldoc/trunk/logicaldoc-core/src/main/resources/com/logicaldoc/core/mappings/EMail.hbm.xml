@@ -7,7 +7,7 @@
         <id name="id" type="long" column="ld_id" unsaved-value="0">
             <generator class="increment" />
         </id>
-        <property name="accountId" type="int" column="ld_accountid" />
+        <property name="accountId" type="long" column="ld_accountid" />
         <property name="emailId" type="string" column="ld_emailid" />
 		<property name="messageText" type="string" column="ld_messageText" length="255" />
 		<property name="author" type="string" column="ld_author" length="30" />
