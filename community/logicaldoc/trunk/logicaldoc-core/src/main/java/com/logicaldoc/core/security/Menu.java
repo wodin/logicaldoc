@@ -153,19 +153,6 @@ public class Menu extends PersistentObject {
 		}
 	}
 
-	public Menu copy() {
-		Menu menu = new Menu();
-		menu.setId(this.getId());
-		menu.setText(this.getText());
-		menu.setParentId(this.getParentId());
-		menu.setSort(this.getSort());
-		menu.setIcon(this.getIcon());
-		menu.setPath(this.getPath());
-		menu.setType(this.getType());
-		menu.setMenuGroups(this.getMenuGroups());
-		return menu;
-	}
-
 	public MenuGroup getMenuGroup(String groupName) {
 		for (MenuGroup mg : menuGroups) {
 			if (mg.getGroupName().equals(groupName))
