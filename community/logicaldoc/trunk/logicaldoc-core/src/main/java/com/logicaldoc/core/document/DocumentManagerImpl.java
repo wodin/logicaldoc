@@ -86,21 +86,14 @@ public class DocumentManagerImpl implements DocumentManager {
 		Menu folder = document.getFolder();
 
 		// create some strings containing paths
-		String folderPath = folder.getPath() + "/" + folder.getId() + "/"
-				+ String.valueOf(docId);
-		String completeDocPath = settings.getValue("docdir") + folderPath + "/";
+		String completeDocPath = settings.getValue("docdir")
+				+ document.getPath() + "/";
 
 		// rename the old current version file to the version name: "quelle.txt"
 		// -> "2.0"
-		if (!document.getType().equals("zip")
-				|| !document.getType().equals("jar")) {
-			FileBean.renameFile(completeDocPath + document.getFileName(),
-					completeDocPath + document.getVersion());
-		}
+		FileBean.renameFile(completeDocPath + document.getFileName(),
+				completeDocPath + document.getVersion());
 
-		// extract file extension of the new file and select a file icon based
-		// on the extension
-		String extension = filename.substring(filename.lastIndexOf(".") + 1);
 		document.setFileName(filename);
 
 		// create new version
@@ -112,7 +105,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		document.setDate(new Date());
 		document.setPublisher(username);
 		document.setStatus(Document.DOC_CHECKED_IN);
-		document.setType(extension);
+		document.setType(document.getFileExtension());
 		document.setCheckoutUser("");
 		document.setFolder(folder);
 		document.addVersion(version);
@@ -152,9 +145,9 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(File file, Menu parent, String username,
+	public Document create(File file, Menu folder, String username,
 			String language) throws Exception {
-		return create(file, parent, username, language, "", null, "", "", "",
+		return create(file, folder, username, language, "", null, "", "", "",
 				"", "", null);
 	}
 
@@ -203,12 +196,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			documentDAO.store(doc);
 
-			// Makes menuPath
-			String folderPath = new StringBuilder(folder.getPath()).append("/")
-					.append(folder.getId()).toString();
 			String path = new StringBuilder(settings.getValue("docdir"))
-					.append("/").append(folderPath).append("/").append(
-							Long.toString(doc.getId())).append("/").toString();
+					.append("/").append(doc.getPath()).append("/").toString();
 
 			/* store the document */
 			store(doc, content, filename, "1.0");
@@ -231,7 +220,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(File file, Menu parent, String username,
+	public Document create(File file, Menu folder, String username,
 			String language, String title, Date sourceDate, String source,
 			String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> keywords) throws Exception {
@@ -263,7 +252,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		InputStream is = new FileInputStream(file);
 		try {
-			return create(is, file.getName(), parent, username, language,
+			return create(is, file.getName(), folder, username, language,
 					_title, sourceDate, source, _author, sourceType, coverage,
 					versionDesc, _kwds);
 		} finally {
@@ -273,11 +262,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	private void store(Document doc, InputStream content, String filename,
 			String version) throws IOException {
-		Menu folder = doc.getFolder();
-
 		// Makes path
-		String path = folder.getPath() + "/" + folder.getId() + "/"
-				+ String.valueOf(doc.getId());
+		String path = doc.getPath();
 
 		// Get file to upload inputStream
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
@@ -289,10 +275,10 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public void delete(long docId) throws Exception {
 		Document doc = documentDAO.findByPrimaryKey(docId);
+		deleteDocument(doc);
 		boolean result = documentDAO.delete(docId);
 		if (!result)
-			throw new Exception("Error deleting document");
-		deleteDocument(doc);
+			throw new Exception("Database Error deleting document");
 	}
 
 	/**
@@ -310,12 +296,7 @@ public class DocumentManagerImpl implements DocumentManager {
 								.getLanguage());
 			}
 
-			Menu folder = doc.getFolder();
-			String menupath = folder.getPath() + "/" + folder.getId() + "/"
-					+ String.valueOf(docId);
-
-			// FileBean.deleteDir(path);
-			storer.delete(menupath);
+			storer.delete(doc.getPath());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}

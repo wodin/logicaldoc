@@ -36,10 +36,9 @@ public interface Storer
      * Deletes a document from the documentpool and the backuppool.
      *
      * @param docPath
-     *            Path in logicaldoc containing the menuIds of all parent items.
-     * @return ResultImpl of the deleting process.
+     *            Path in logicaldoc containing the menuIds of all parent folders.
      */
-    boolean delete(String docPath);
+    void delete(String docPath);
 
     /**
      * This method regenerates the document repository from the backup.

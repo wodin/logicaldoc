@@ -191,7 +191,7 @@ INSERT INTO LD_MENU(
             0,
             1,
             'home.png',
-            '',
+            '/',
             0,
             NULL,
             0);
@@ -211,7 +211,7 @@ INSERT INTO LD_MENU(
             1,
             1,
             'administration.png',
-            'ROOT',
+            '/',
             1,
             NULL,
             0);
@@ -231,7 +231,7 @@ INSERT INTO LD_MENU(
             1,
             3,
             'personal.png',
-            'ROOT',
+            '/',
             1,
             NULL,
             0);
@@ -251,7 +251,7 @@ INSERT INTO LD_MENU(
             1,
             4,
             'documents.png',
-            'ROOT',
+            '/',
             1,
             'document/browse',
             0);
@@ -271,7 +271,7 @@ INSERT INTO LD_MENU (
             2,
             1,
             'user.png',
-            'ROOT/2',
+            '/2',
             1,
             'admin/users',
             0);
@@ -291,7 +291,7 @@ INSERT INTO LD_MENU(
             2,
             2,
             'group.png',
-            'ROOT/2',
+            '/2',
             1,
             'admin/groups',
             0);
@@ -311,7 +311,7 @@ INSERT INTO LD_MENU(
             2,
             3,
             'logging.png',
-            'ROOT/2',
+            '/2',
             1,
             'admin/logs',
             0);
@@ -331,7 +331,7 @@ INSERT INTO LD_MENU(
             4,
             1,
             'message.png',
-            'ROOT/4',
+            '/4',
             1,
             'communication/messages',
             0);
@@ -351,7 +351,7 @@ INSERT INTO LD_MENU(
             4,
             3,
             'password.png',
-            'ROOT/4',
+            '/4',
             1,
             'settings/password',
             0);
@@ -371,7 +371,7 @@ INSERT INTO LD_MENU(
             2,
             5,
             'open.png',
-            'ROOT/2',
+            '/2',
             1,
             'admin/folders',
             0);
@@ -391,7 +391,7 @@ INSERT INTO LD_MENU(
             4,
             4,
             'user.png',
-            'ROOT/4',
+            '/4',
             1,
             'settings/personalData',
             0);
@@ -411,7 +411,7 @@ INSERT INTO LD_MENU(
             2,
             4,
             'mail.png',
-            'ROOT/2',
+            '/2',
             1,
             NULL,
             0);
@@ -431,7 +431,7 @@ INSERT INTO LD_MENU(
             20,
             3,
             'mail_preferences.png',
-            'ROOT/2/20',
+            '/2/20',
             1,
             'admin/smtp',
             0);
@@ -451,7 +451,7 @@ INSERT INTO LD_MENU(
             20,
             4,
             'mailbox.png',
-            'ROOT/2/20',
+            '/2/20',
             1,
             'admin/accounts',
             0);
@@ -471,7 +471,7 @@ INSERT INTO LD_MENU(
             2,
             6,
             'search.png',
-            'ROOT/2',
+            '/2',
             1,
             'admin/searchEngine',
             0);
@@ -491,7 +491,7 @@ INSERT INTO LD_MENU(
             1,
             5,
             'keywords.png',
-            'ROOT',
+            '/',
             1,
             'search/keywords',
             0);
@@ -511,7 +511,7 @@ INSERT INTO LD_MENU(
             2,
             7,
             'backup.png',
-            'ROOT/2',
+            '/2',
             1,
             'admin/backup',
             0);
@@ -531,7 +531,7 @@ INSERT INTO LD_MENU(
             2,
             8,
             'thread.png',
-            'ROOT/2',
+            '/2',
             1,
             'admin/tasks',
             0);

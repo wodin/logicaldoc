@@ -60,20 +60,20 @@ public interface DocumentManager {
 	 * Creates a new document in the parent menu
 	 * 
 	 * @param file document's file
-	 * @param parent the parent folder
+	 * @param folder the parent folder
 	 * @param username the current username
 	 * @param language the document's language
 	 * @return The newly created document
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public Document create(File file, Menu parent, String username, String language) throws Exception;
+	public Document create(File file, Menu folder, String username, String language) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
 	 * includes updating the search index for example.
 	 * 
 	 * @param username
-	 * @param parent
+	 * @param folder
 	 * @param title If not provided the filename must be used instead
 	 * @param file
 	 * @param sourceDate
@@ -87,7 +87,7 @@ public interface DocumentManager {
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document create(File file, Menu parent, String username, String language, String title, Date sourceDate,
+	public Document create(File file, Menu folder, String username, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> keywordso) throws Exception;
 
@@ -97,7 +97,7 @@ public interface DocumentManager {
 	 * 
 	 * @param content The document content stream
 	 * @param filename The original document file name
-	 * @param parent
+	 * @param folder
 	 * @param username
 	 * @param language
 	 * @param title If not provided the filename must be used instead
@@ -112,7 +112,7 @@ public interface DocumentManager {
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document create(InputStream content, String filename, Menu parent, String username, String language,
+	public Document create(InputStream content, String filename, Menu folder, String username, String language,
 			String title, Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> keywords) throws Exception;
 

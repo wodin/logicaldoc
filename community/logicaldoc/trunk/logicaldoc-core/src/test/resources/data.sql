@@ -10,11 +10,11 @@ VALUES ('author','d033e22ae348aeb566fc214aec3585c4da997','Author','Author','',''
 INSERT INTO co_users (co_username,co_password,co_name,co_firstname,co_street,co_postalcode,co_city,co_country,co_language,co_email,co_telephone)
 VALUES ('test','d033e22ae348aeb566fc214aec3585c4da997','test','Test','','','','','de','test@acme.com','');
 
-INSERT INTO ld_menu VALUES(99,'db.admin',1,1,'administration.gif','ROOT',5,NULL,0);
-INSERT INTO ld_menu VALUES(100,'db.admin',1,1,'administration.gif','ROOT',3,NULL,0);
-INSERT INTO ld_menu VALUES(101,'text',100,1,'administration.gif','ROOT',3,NULL,0);
-INSERT INTO ld_menu VALUES(102,'db.admin',101,1,'administration.gif','ROOT',5,NULL,0);
-INSERT INTO ld_menu VALUES(103,'db.admin',101,1,'administration.gif','ROOT',3,NULL,0);
+INSERT INTO ld_menu VALUES(99,'db.admin',1,1,'administration.gif','/',5,NULL,0);
+INSERT INTO ld_menu VALUES(100,'db.admin',1,1,'administration.gif','/',3,NULL,0);
+INSERT INTO ld_menu VALUES(101,'text',100,1,'administration.gif','/',3,NULL,0);
+INSERT INTO ld_menu VALUES(102,'db.admin',101,1,'administration.gif','/',5,NULL,0);
+INSERT INTO ld_menu VALUES(103,'db.admin',101,1,'administration.gif','/',3,NULL,0);
 
 INSERT INTO ld_menugroup VALUES(100,'admin',1);
 INSERT INTO ld_menugroup VALUES(100,'guest',1);

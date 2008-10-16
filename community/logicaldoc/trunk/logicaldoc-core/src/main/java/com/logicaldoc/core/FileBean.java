@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.Date;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -28,7 +29,8 @@ public class FileBean {
 	/**
 	 * This method deletes a file.
 	 * 
-	 * @param filename Name of the file to be deleted.
+	 * @param filename
+	 *            Name of the file to be deleted.
 	 * @return Success of delete.
 	 */
 	public static boolean deleteFile(String filename) {
@@ -42,7 +44,7 @@ public class FileBean {
 		}
 
 		return result;
-	} // end method deleteFile
+	}
 
 	public static boolean createDir(String dirname) {
 		File f = new File(dirname);
@@ -55,7 +57,7 @@ public class FileBean {
 		}
 
 		return result;
-	} // end method createDir
+	}
 
 	public static boolean renameFile(String filename, String newfilename) {
 		File f = new File(filename);
@@ -63,13 +65,13 @@ public class FileBean {
 		boolean result = false;
 
 		try {
-			result = f.renameTo(nf);
+			FileUtils.moveFile(f, nf);
 		} catch (Exception ex) {
 			logError(ex.getMessage());
 		}
 
 		return result;
-	} // end method renameFile
+	}
 
 	public static boolean copyFile(String filename, String newfilename) {
 		boolean result = false;
@@ -109,7 +111,7 @@ public class FileBean {
 		}
 
 		return result;
-	} // end method copyFile
+	}
 
 	public static boolean copyDir(String dirname, String newdir) {
 		boolean result = false;
@@ -123,16 +125,21 @@ public class FileBean {
 				String[] files = f.list();
 
 				for (int i = 0; i < files.length; i++) {
-					File file = new File(new StringBuilder(dirname).append(File.separator).append(files[i]).toString());
+					File file = new File(new StringBuilder(dirname).append(
+							File.separator).append(files[i]).toString());
 
 					if (file.isDirectory()) {
-						copyDir(new StringBuilder(f.getAbsolutePath()).append(File.separator).append(files[i])
-								.toString(), new StringBuilder(newdir).append(File.separator).append(files[i])
-								.toString());
+						copyDir(new StringBuilder(f.getAbsolutePath()).append(
+								File.separator).append(files[i]).toString(),
+								new StringBuilder(newdir)
+										.append(File.separator)
+										.append(files[i]).toString());
 					} else {
-						copyFile(new StringBuilder(f.getAbsolutePath()).append(File.separator).append(files[i])
-								.toString(), new StringBuilder(newdir).append(File.separator).append(files[i])
-								.toString());
+						copyFile(new StringBuilder(f.getAbsolutePath()).append(
+								File.separator).append(files[i]).toString(),
+								new StringBuilder(newdir)
+										.append(File.separator)
+										.append(files[i]).toString());
 					}
 				}
 			} else {
@@ -145,7 +152,7 @@ public class FileBean {
 		}
 
 		return result;
-	} // end method copyDir
+	}
 
 	public static boolean deleteDir(String dirname) {
 		try {
@@ -155,7 +162,7 @@ public class FileBean {
 		}
 
 		return false;
-	} // end method deleteDir
+	}
 
 	public static boolean deleteDir(File file) {
 		boolean result = true;
@@ -164,25 +171,16 @@ public class FileBean {
 			if (!file.exists()) {
 				return true;
 			}
-
-			if (file.isDirectory()) {
-				File[] files = file.listFiles();
-
-				for (int i = 0; i < files.length; i++) {
-					result = deleteDir(files[i]);
-				}
-
-				result = file.delete();
-			} else {
-				result = file.delete();
-			}
+			
+			FileUtils.deleteDirectory(file);
+			
 		} catch (Exception ex) {
 			logError(ex.getMessage());
 			result = false;
 		}
 
 		return result;
-	} // end method deleteDir
+	}
 
 	public static boolean exists(String filename) {
 		try {
@@ -192,7 +190,7 @@ public class FileBean {
 			logError(e.getMessage());
 			return false;
 		}
-	} // end method exists
+	}
 
 	public static boolean exists(URI filename) {
 		try {
@@ -202,7 +200,7 @@ public class FileBean {
 			logError(e.getMessage());
 			return false;
 		}
-	} // end method exists
+	}
 
 	public static long getSize(String filename) {
 		File f = new File(filename);
@@ -212,13 +210,13 @@ public class FileBean {
 		} else {
 			return 1024;
 		}
-	} // end method getSize
+	}
 
 	public static Date getLastModified(String filename) {
 		File f = new File(filename);
 
 		return new Date(f.lastModified());
-	} // end method getLastModified
+	}
 
 	public static StringBuffer readFile(String filename) {
 		StringBuffer content = new StringBuffer();
@@ -246,9 +244,10 @@ public class FileBean {
 		}
 
 		return content;
-	} // end method readFile
+	}
 
-	public static void writeFile(InputStream in, String filepath) throws Exception {
+	public static void writeFile(InputStream in, String filepath)
+			throws Exception {
 		OutputStream os = null;
 		try {
 			os = new FileOutputStream(filepath);
@@ -275,7 +274,7 @@ public class FileBean {
 				logError(e.getMessage());
 			}
 		}
-	} // end method writeFile
+	}
 
 	public static void writeFile(String text, String filepath) {
 		BufferedOutputStream bos = null;
@@ -295,7 +294,7 @@ public class FileBean {
 				}
 			}
 		}
-	} // end method writeFile
+	}
 
 	public static void appendFile(String text, String filepath) {
 		OutputStream bos = null;

@@ -111,7 +111,8 @@ public class Document extends PersistentObject {
 	/**
 	 * Iterates over the versions searching for the specified id
 	 * 
-	 * @param id The version id
+	 * @param id
+	 *            The version id
 	 * @return The found version
 	 */
 	public void setVersion(String version) {
@@ -300,7 +301,8 @@ public class Document extends PersistentObject {
 	public String getIcon() {
 		String icon = IconSelector.selectIcon("");
 		try {
-			String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+			String extension = fileName
+					.substring(fileName.lastIndexOf(".") + 1);
 			icon = IconSelector.selectIcon(extension);
 		} catch (Exception e) {
 		}
@@ -345,5 +347,15 @@ public class Document extends PersistentObject {
 	public void clearVersions() {
 		versions.clear();
 		versions = new HashSet<Version>();
+	}
+
+	public String getPath() {
+		return getFolder().getPath()
+				+ (getFolder().getPath().endsWith("/") ? "" : "/")
+				+ getFolder().getId() + "/" + getId();
+	}
+
+	public String getFileExtension() {
+		return getFileName().substring(getFileName().lastIndexOf(".") + 1);
 	}
 }
