@@ -38,14 +38,14 @@
 						</f:facet>
 						<ice:panelGroup rendered="#{versionRecord.currentVersion}">
 							<ice:outputLink
-								value="download?title=#{versionsRecordsManager.selectedDocument.title}"
+								value="download?docId=#{versionsRecordsManager.selectedDocument.id}"
 								target="_blank">
 								<ice:outputText value="#{versionRecord.version}" />
 							</ice:outputLink>
 						</ice:panelGroup>
 						<ice:panelGroup rendered="#{!versionRecord.currentVersion}">
 							<ice:outputLink
-								value="download?title=#{versionsRecordsManager.selectedDocument.title}&amp;versionId=#{versionRecord.version}"
+								value="download?docId=#{versionsRecordsManager.selectedDocument.id}&amp;versionId=#{versionRecord.version}"
 								target="_blank">
 								<ice:outputText value="#{versionRecord.version}" />
 							</ice:outputLink>
