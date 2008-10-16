@@ -207,8 +207,6 @@ public class DocumentNavigation extends NavigationBean {
 
 		Object entry = (Object) map.get("entry");
 
-		long menuId = Menu.MENUID_DOCUMENTS;
-
 		long docId = 0;
 
 		if (entry instanceof Result) {
