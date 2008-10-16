@@ -24,17 +24,17 @@ public abstract class PersistentObject {
 	}
 
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Document))
+		if (!(obj instanceof PersistentObject))
 			return false;
-		Document other = (Document) obj;
+		PersistentObject other = (PersistentObject) obj;
 		return other.getId() == this.getId();
 	}
 
 	public int hashCode() {
-		return new Long(id).hashCode();
+		return new Long(getId()).hashCode();
 	}
 
 	public String toString() {
-		return Long.toString(id);
+		return Long.toString(getId());
 	}
 }
