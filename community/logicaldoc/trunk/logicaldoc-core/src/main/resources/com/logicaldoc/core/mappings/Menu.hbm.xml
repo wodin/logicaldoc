@@ -8,7 +8,7 @@
             <generator class="increment" />
         </id> 
 		<property name="text" type="string" column="ld_text" length="255" />
-		<property name="parent" type="long" column="ld_parent" />
+		<property name="parentId" type="long" column="ld_parentid" />
 		<property name="sort" type="int" column="ld_sort" />
 		<property name="icon" type="string" column="ld_icon" length="255" />
 		<property name="path" type="string" column="ld_path" length="255" />

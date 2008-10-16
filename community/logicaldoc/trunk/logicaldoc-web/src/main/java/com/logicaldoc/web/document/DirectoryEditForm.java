@@ -81,7 +81,7 @@ public class DirectoryEditForm {
 			try {
 				Menu menu = new Menu();
 				menu.setText(getFolderName());
-				menu.setParent(menuparent);
+				menu.setParentId(menuparent);
 				menu.setSort(1);
 				menu.setIcon("folder.png");
 				menu.setPath(documentNavigation.getSelectedDir().getMenu().getPath() + "/" + menuparent);

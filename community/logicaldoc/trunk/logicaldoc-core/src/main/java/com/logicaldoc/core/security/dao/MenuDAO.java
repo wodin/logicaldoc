@@ -1,6 +1,7 @@
 package com.logicaldoc.core.security.dao;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import com.logicaldoc.core.security.Menu;
@@ -16,7 +17,8 @@ public interface MenuDAO {
 	/**
 	 * This method persists the menu object.
 	 * 
-	 * @param menu Menu to be stored.
+	 * @param menu
+	 *            Menu to be stored.
 	 * @return True if successful stored in a database.
 	 */
 	public boolean store(Menu menu);
@@ -24,7 +26,8 @@ public interface MenuDAO {
 	/**
 	 * This method deletes a menu in database.
 	 * 
-	 * @param menuId Menu to be deleted.
+	 * @param menuId
+	 *            Menu to be deleted.
 	 * @return True if successful deleted.
 	 */
 	public boolean delete(long menuId);
@@ -32,7 +35,8 @@ public interface MenuDAO {
 	/**
 	 * Finds a menu by primarykey.
 	 * 
-	 * @param menuId Primarykey of wanted menu.
+	 * @param menuId
+	 *            Primarykey of wanted menu.
 	 * @return Wanted menu or null.
 	 */
 	public Menu findByPrimaryKey(long menuId);
@@ -49,9 +53,12 @@ public interface MenuDAO {
 	 * Finds all menus by menu text, contained in the parent menu and of the
 	 * specified type
 	 * 
-	 * @param parent The parent menu(optional)
-	 * @param text The menutext to search for
-	 * @param type The menu tyle(optional)
+	 * @param parent
+	 *            The parent menu(optional)
+	 * @param text
+	 *            The menutext to search for
+	 * @param type
+	 *            The menu type(optional)
 	 * @return Collection of menus with given menu text.
 	 */
 	public Collection<Menu> findByText(Menu parent, String text, Integer type);
@@ -59,7 +66,8 @@ public interface MenuDAO {
 	/**
 	 * Finds authorized menus for a user.
 	 * 
-	 * @param username Name of the user.
+	 * @param username
+	 *            Name of the user.
 	 * @return Collection of found menus.
 	 */
 	public Collection<Menu> findByUserName(String username);
@@ -67,7 +75,8 @@ public interface MenuDAO {
 	/**
 	 * Finds direct children of a menu.
 	 * 
-	 * @param parentId MenuId of the menu which children are wanted.
+	 * @param parentId
+	 *            MenuId of the menu which children are wanted.
 	 * @return Collection of found menus.
 	 */
 	public Collection<Menu> findByUserName(String username, long parentId);
@@ -75,17 +84,22 @@ public interface MenuDAO {
 	/**
 	 * Finds direct children of a menu.
 	 * 
-	 * @param parentId MenuId of the menu which children are wanted.
-	 * @param type The wanted menu type, can be null
+	 * @param parentId
+	 *            MenuId of the menu which children are wanted.
+	 * @param type
+	 *            The wanted menu type, can be null
 	 * @return Collection of found menus.
 	 */
-	public Collection<Menu> findByUserName(String username, long parentId, Integer type);
+	public Collection<Menu> findByUserName(String username, long parentId,
+			Integer type);
 
 	/**
 	 * Counts direct children of a menu.
 	 * 
-	 * @param parentId MenuId of the menu which children are wanted.
-	 * @param type The wanted menu type, can be null
+	 * @param parentId
+	 *            MenuId of the menu which children are wanted.
+	 * @param type
+	 *            The wanted menu type, can be null
 	 * @return The total number of elements
 	 */
 	public long countByUserName(String username, long parentId, Integer type);
@@ -101,7 +115,8 @@ public interface MenuDAO {
 	/**
 	 * Finds direct children of a menu.
 	 * 
-	 * @param parentId MenuId of the menu which children are wanted.
+	 * @param parentId
+	 *            MenuId of the menu which children are wanted.
 	 * @return Collection of found menus.
 	 */
 	public Collection<Menu> findChildren(long parentId);
@@ -109,8 +124,10 @@ public interface MenuDAO {
 	/**
 	 * This method is looking up for writing rights for a menu and an user.
 	 * 
-	 * @param menuId ID of the menu.
-	 * @param username Name of the user.
+	 * @param menuId
+	 *            ID of the menu.
+	 * @param username
+	 *            Name of the user.
 	 */
 	public boolean isWriteEnable(long menuId, String username);
 
@@ -119,7 +136,8 @@ public interface MenuDAO {
 	/**
 	 * This method selects only the menu text from a menu.
 	 * 
-	 * @param menuId Id of the menu.
+	 * @param menuId
+	 *            Id of the menu.
 	 * @return Selected menu text.
 	 */
 	public String findTextByMenuId(long menuId);
@@ -128,28 +146,35 @@ public interface MenuDAO {
 	 * This method selects only the menuId from the menus for which a user is
 	 * authorized.
 	 * 
-	 * @param username Name of the user.
+	 * @param username
+	 *            Name of the user.
 	 * @return Collection of selected menuId's.
 	 */
 	public Set<Long> findMenuIdByUserName(String username);
 
 	/**
 	 * This method selects only the menuId from the menus for which a user is
-	 * authorized. Only menues direct child of the specified parent are
+	 * authorized. Only menus direct child of the specified parent are
 	 * returned.
 	 * 
-	 * @param username Name of the user.
-	 * @param parentId Parent menu
-	 * @param type The menu type, can be null
+	 * @param username
+	 *            Name of the user.
+	 * @param parentId
+	 *            Parent menu
+	 * @param type
+	 *            The menu type, can be null
 	 * @return Collection of selected menuId's.
 	 */
-	public Set<Long> findMenuIdByUserName(String username, long parentId, Integer type);
+	public Set<Long> findMenuIdByUserName(String username, long parentId,
+			Integer type);
 
 	/**
 	 * returns if a menu is writeable for a user
 	 * 
-	 * @param menuid check this menu
-	 * @param userName privileges for this should be checked
+	 * @param menuid
+	 *            check this menu
+	 * @param userName
+	 *            privileges for this should be checked
 	 * @return a 0 if false, a 1 if true
 	 */
 	public Integer isMenuWriteable(long menuId, String userName);
@@ -162,16 +187,19 @@ public interface MenuDAO {
 	/**
 	 * Finds all menues associated to the passed group
 	 * 
-	 * @param groupName The group name
-	 * @return The collection of menues
+	 * @param groupName
+	 *            The group name
+	 * @return The collection of menus
 	 */
 	public Collection<Menu> findByGroupName(String groupName);
 
 	/**
 	 * Creates a new folder in the parent menu
 	 * 
-	 * @param parent The parent menu
-	 * @param name The folder name
+	 * @param parent
+	 *            The parent menu
+	 * @param name
+	 *            The folder name
 	 * @return The newly created folder
 	 */
 	public Menu createFolder(Menu parent, String name);
@@ -180,10 +208,20 @@ public interface MenuDAO {
 	 * Creates the folder for the specified path. All unexisting nodes specified
 	 * in the path will be created.
 	 * 
-	 * @param parent The parent menu
-	 * @param path The folder path(for example /dog/cat/mouse)
+	 * @param parent
+	 *            The parent menu
+	 * @param path
+	 *            The folder path(for example /dog/cat/mouse)
 	 * 
 	 * @return The created folder
 	 */
 	public Menu createFolders(Menu parent, String path);
+
+	/**
+	 * Returns a Collection of menus being a parent of the given menu. The list
+	 * is ordered starting from the root of menus.
+	 * 
+	 * @param menuId
+	 */
+	public List<Menu> findParents(long menuId);
 }

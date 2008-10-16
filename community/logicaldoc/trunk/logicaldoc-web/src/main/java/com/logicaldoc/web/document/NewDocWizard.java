@@ -106,16 +106,16 @@ public class NewDocWizard {
 				// Get menuParent that called AddDocAction
 				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
 						MenuDAO.class);
-				Menu parent = documentNavigation.getSelectedDir().getMenu();
+				Menu folder = documentNavigation.getSelectedDir().getMenu();
 
-				// Makes menuPath
-				String menupath = new StringBuilder(parent.getPath())
-						.append("/").append(parent.getId()).toString();
+				// Makes path
+				String path = new StringBuilder(folder.getPath())
+						.append("/").append(folder.getId()).toString();
 
 				// Makes new Menu
 				Menu menu = new Menu();
-				menu.setParent(parent.getId());
-				menu.setPath(menupath);
+				menu.setParentId(folder.getId());
+				menu.setPath(path);
 
 				// Gets file to upload name
 				String filename = file.getName();

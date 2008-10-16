@@ -107,7 +107,7 @@ public class DocumentNavigation extends NavigationBean {
 				Directory currentDir = getSelectedDir();
 				while (currentDir.getMenuId() != Menu.MENUID_DOCUMENTS) {
 					breadcrumb.add(currentDir);
-					currentDir = new Directory(menuDao.findByPrimaryKey(currentDir.getMenu().getParent()));
+					currentDir = new Directory(menuDao.findByPrimaryKey(currentDir.getMenu().getParentId()));
 				}
 				Directory rootDir = new Directory(menuDao.findByPrimaryKey(Menu.MENUID_DOCUMENTS));
 				rootDir.setDisplayText(Messages.getMessage(rootDir.getMenu().getText()));
@@ -135,7 +135,7 @@ public class DocumentNavigation extends NavigationBean {
 	protected void createMenuItems() {
 		folderItems.clear();
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Directory parentDir = new Directory(menuDao.findByPrimaryKey(selectedDir.getMenu().getParent()));
+		Directory parentDir = new Directory(menuDao.findByPrimaryKey(selectedDir.getMenu().getParentId()));
 		if (parentDir.getMenuId() == Menu.MENUID_DOCUMENTS)
 			parentDir.setDisplayText(Messages.getMessage(parentDir.getMenu().getText()));
 		MenuItem item = createMenuItem("<< " + parentDir.getDisplayText(), parentDir);
@@ -298,7 +298,7 @@ public class DocumentNavigation extends NavigationBean {
 			Messages.addLocalizedError("errors.action.deleteitem");
 		}
 
-		Directory parent = new Directory(menuDao.findByPrimaryKey(getSelectedDir().getMenu().getParent()));
+		Directory parent = new Directory(menuDao.findByPrimaryKey(getSelectedDir().getMenu().getParentId()));
 		selectDirectory(parent);
 		setSelectedPanel(new PageContentBean("documents"));
 

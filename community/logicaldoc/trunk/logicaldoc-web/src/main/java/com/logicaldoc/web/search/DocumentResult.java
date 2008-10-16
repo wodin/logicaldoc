@@ -41,7 +41,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 		super();
 		this.result = result;
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		this.document = docDao.findByPrimaryKey(result.getDocId());
+		super.document = docDao.findByPrimaryKey(result.getDocId());
 	}
 
 	public Date getDate() {
@@ -72,8 +72,8 @@ public class DocumentResult extends DocumentRecord implements Result {
 		return result.getLengthCategory();
 	}
 
-	public String getName() {
-		return result.getName();
+	public String getTitle() {
+		return result.getTitle();
 	}
 
 	public String getPath() {

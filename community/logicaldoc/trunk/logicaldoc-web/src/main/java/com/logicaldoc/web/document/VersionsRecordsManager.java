@@ -8,7 +8,6 @@ import javax.faces.context.FacesContext;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
-
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.FacesUtil;
 

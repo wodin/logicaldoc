@@ -13,6 +13,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -94,25 +97,27 @@ public class DocumentDownload extends HttpServlet {
 			version = (String) session.getAttribute("versionId");
 		}
 
-		logger.debug("Download document menuId=" + id + " " + version);
+		logger.debug("Download document id=" + id + " " + version);
+
+		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(
+				DocumentDAO.class);
+		Document doc = docDao.findByPrimaryKey(Long.parseLong(id));
+		Menu folder = doc.getFolder();
 
 		if (session != null && SessionManagement.isValid(session)) {
 			try {
 				// if we have access to the document, return it
-				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
-						MenuDAO.class);
-
-				if (mdao.isReadEnable(Integer.parseInt(id), username)) {
+				if (mdao.isReadEnable(folder.getId(), username)) {
 					if ("true".equals(downloadText)) {
-						DownloadDocUtil.downloadDocumentText(response, Integer
-								.parseInt(id));
+						DownloadDocUtil.downloadDocumentText(response, doc
+								.getId());
 					} else {
-						DownloadDocUtil.downloadDocument(response, Integer
-								.parseInt(id), version);
+						DownloadDocUtil.downloadDocument(response, doc.getId(),
+								version);
 
 						// add the file to the recent files of the user
-						DownloadDocUtil.addToRecentFiles(username, Integer
-								.parseInt(id));
+						DownloadDocUtil.addToRecentFiles(username, doc.getId());
 					}
 				}
 			} catch (Exception ex) {
@@ -125,12 +130,9 @@ public class DocumentDownload extends HttpServlet {
 				if (!udao.validateUser(username, password))
 					throw new Exception("Unknown user " + username);
 
-				// if we have access to the document, return it
-				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
-						MenuDAO.class);
-				if (mdao.isReadEnable(Integer.parseInt(id), username)) {
-					DownloadDocUtil.downloadDocument(response, Integer
-							.parseInt(id), version);
+				if (mdao.isReadEnable(folder.getId(), username)) {
+					DownloadDocUtil.downloadDocument(response, doc.getId(),
+							version);
 				}
 			} catch (Exception ex) {
 				logger.error(ex.getMessage(), ex);

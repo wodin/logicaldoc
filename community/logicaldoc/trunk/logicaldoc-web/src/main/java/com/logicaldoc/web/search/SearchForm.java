@@ -18,14 +18,15 @@ import javax.faces.validator.ValidatorException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Result;
 import com.logicaldoc.core.searchengine.ResultImpl;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.searchengine.SimilarSearch;
 import com.logicaldoc.core.security.Menu;
-
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.document.Directory;
@@ -93,7 +94,7 @@ public class SearchForm {
 
 	private boolean coverage = false;
 
-	private boolean name = true;
+	private boolean title = true;
 
 	private boolean searchInSubPath = false;
 
@@ -158,16 +159,16 @@ public class SearchForm {
 		return coverage;
 	}
 
-	public boolean isName() {
-		return name;
+	public boolean isTitle() {
+		return title;
 	}
 
 	public void setCoverage(boolean coverage) {
 		this.coverage = coverage;
 	}
 
-	public void setName(boolean name) {
-		this.name = name;
+	public void setTitle(boolean title) {
+		this.title = title;
 	}
 
 	public String getFormat() {
@@ -383,7 +384,7 @@ public class SearchForm {
 		sourceAuthor = false;
 		sourceType = false;
 		coverage = false;
-		name = true;
+		title = true;
 		creationDateFrom = null;
 		creationDateTo = null;
 		sourceDateFrom = null;
@@ -402,7 +403,6 @@ public class SearchForm {
 	 */
 	public String search() {
 		maxHits = hitsPerBlock;
-
 		return searchHits();
 	}
 
@@ -424,31 +424,31 @@ public class SearchForm {
 				ArrayList<String> fields = new ArrayList<String>();
 
 				if (isContent()) {
-					fields.add("content");
+					fields.add(LuceneDocument.FIELD_CONTENT);
 				}
 
 				if (isKeywords()) {
-					fields.add("keywords");
+					fields.add(LuceneDocument.FIELD_KEYWORDS);
 				}
 
 				if (isSource()) {
-					fields.add("source");
+					fields.add(LuceneDocument.FIELD_SOURCE);
 				}
 
 				if (isSourceAuthor()) {
-					fields.add("sourceauthor");
+					fields.add(LuceneDocument.FIELD_SOURCE_AUTHOR);
 				}
 
 				if (isSourceType()) {
-					fields.add("sourcetype");
+					fields.add(LuceneDocument.FIELD_SOURCE_TYPE);
 				}
 
 				if (isCoverage()) {
-					fields.add("coverage");
+					fields.add(LuceneDocument.FIELD_COVERAGE);
 				}
 
-				if (isName()) {
-					fields.add("name");
+				if (isTitle()) {
+					fields.add(LuceneDocument.FIELD_TITLE);
 				}
 
 				String[] flds = (String[]) fields.toArray(new String[fields.size()]);
@@ -619,7 +619,7 @@ public class SearchForm {
 		sourceAuthor = false;
 		sourceType = false;
 		coverage = false;
-		name = true;
+		title = true;
 		searchInSubPath = false;
 	}
 

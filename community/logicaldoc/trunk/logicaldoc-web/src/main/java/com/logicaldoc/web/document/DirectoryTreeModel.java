@@ -327,21 +327,22 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	 * Opens and selects the specified folder. The algorithm is optimised so
 	 * that the minimal path is explored and database accesses are reduced.
 	 * 
-	 * @param menuId The folder menuId
+	 * @param folderId The folder folder id
 	 */
-	public void openFolder(int menuId) {
+	public void openFolder(long folderId) {
 		// Reset the tree
 		init();
 
 		// Now try to construct the minimal portion of the tree, just to show
 		// opened folder
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu folderMenu = menuDao.findByPrimaryKey(menuId);
-		Collection<Menu> parents = folderMenu.getParents();
+		Menu folderMenu = menuDao.findByPrimaryKey(folderId);
+		Collection<Menu> parents = menuDao.findParents(folderId);
 		DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) getRoot();
 		String username = SessionManagement.getUsername();
 		for (Menu folderParent : parents) {
-			if (folderParent.getId() == Menu.MENUID_HOME || folderParent.getId() == Menu.MENUID_DOCUMENTS)
+			if (folderParent.getId() == Menu.MENUID_HOME
+					|| folderParent.getId() == Menu.MENUID_DOCUMENTS)
 				continue;
 			parentNode = addDir(username, parentNode, folderParent, 0);
 		}

@@ -67,8 +67,7 @@ public class FSStorer implements Storer {
 		return true;
 	}
 
-	/*
-	 * 
+	/**
 	 * @see com.logicaldoc.core.doxter.Storer#delete(java.lang.String,
 	 *      java.lang.String)
 	 */
@@ -80,9 +79,6 @@ public class FSStorer implements Storer {
 				BackupConfig.class);
 		String backupPath = backup.getLocation();
 		try {
-			System.out.println("*** Deleting file " +new File(new StringBuilder(path).append(
-					docPath).toString()).getPath());
-			
 			FileUtils.deleteDirectory(new File(new StringBuilder(path).append(
 					docPath).toString()));
 			if (backup.isEnabled()) {

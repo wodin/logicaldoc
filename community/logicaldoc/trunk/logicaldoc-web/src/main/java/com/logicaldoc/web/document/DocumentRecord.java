@@ -49,43 +49,12 @@ public class DocumentRecord extends MenuBarBean {
 
 	protected static Log log = LogFactory.getLog(DocumentRecord.class);
 
-	public static final String GROUP_INDENT_STYLE_CLASS = "groupRowIndentStyle";
-
 	public static final String GROUP_ROW_STYLE_CLASS = "groupRowStyle";
-
-	public static final String CHILD_INDENT_STYLE_CLASS = "childRowIndentStyle";
 
 	public static final String CHILD_ROW_STYLE_CLASS = "childRowStyle";
 
-	// toggle for expand contract
-	public static final String CONTRACT_IMAGE = "contract.png";
-
-	public static final String EXPAND_IMAGE = "expand.png";
-
-	public static final String SPACER_IMAGE = "spacer.gif";
-
-	// style for column that holds expand/contract image toggle, in the sales
-	// record row.
-	private String indentStyleClass = CHILD_INDENT_STYLE_CLASS;
-
 	// style for all other columns in the sales record row.
 	private String rowStyleClass = CHILD_ROW_STYLE_CLASS;
-
-	// Images used to represent expand/contract, spacer by default
-	private String expandImage = SPACER_IMAGE; // arrow points right
-
-	private String contractImage = SPACER_IMAGE; // arrow point down
-
-	// image which will be drawn to screen
-	private String expandContractImage = SPACER_IMAGE;
-
-	// callback to list which contains all data in the dataTable. This callback
-	// is needed so that a node can be set in the expanded state at construction
-	// time.
-	private List<DocumentRecord> parentDocumentsList;
-
-	// indicates if node is in expanded state.
-	private boolean expanded = false;
 
 	// indicates if node is selected
 	private boolean selected = false;
@@ -113,9 +82,6 @@ public class DocumentRecord extends MenuBarBean {
 	public DocumentRecord(long docId, List<DocumentRecord> parentDocumentsList,
 			String indentStyleClass, String rowStyleClass) {
 		this.docId = docId;
-		this.parentDocumentsList = parentDocumentsList;
-		if (indentStyleClass != null)
-			this.indentStyleClass = indentStyleClass;
 		if (rowStyleClass != null)
 			this.rowStyleClass = rowStyleClass;
 	}
@@ -169,16 +135,6 @@ public class DocumentRecord extends MenuBarBean {
 		return rowStyleClass;
 	}
 
-	/**
-	 * Gets the image which will represent either the expanded or contracted
-	 * state of the <code>DocumentRecord</code>.
-	 * 
-	 * @return name of image to draw
-	 */
-	public String getExpandContractImage() {
-		return expandContractImage;
-	}
-
 	public boolean isSelected() {
 		return selected;
 	}
@@ -209,10 +165,13 @@ public class DocumentRecord extends MenuBarBean {
 	}
 
 	public String getDocumentPath() {
-		if (documentPath == null) {
+		if (StringUtils.isEmpty(documentPath)) {
 			try {
 				Menu folder = getDocument().getFolder();
-				Collection<Menu> parentColl = folder.getParents();
+				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(
+						MenuDAO.class);
+				List<Menu> parentColl = menuDao.findParents(folder.getId());
+				parentColl.add(folder);
 				ArrayList<Menu> parentList = new ArrayList<Menu>(parentColl);
 
 				StringBuilder sb = new StringBuilder();
@@ -225,9 +184,8 @@ public class DocumentRecord extends MenuBarBean {
 						continue;
 					if (menu.getId() == Menu.MENUID_DOCUMENTS) {
 						// Decoding the root of documents using the resource
-						// boundle
-						String menuText = Messages.getMessage(menu
-								.getText());
+						// bundle
+						String menuText = Messages.getMessage(menu.getText());
 						sb.append(menuText);
 					} else {
 						sb.append(menu.getText());
@@ -264,29 +222,24 @@ public class DocumentRecord extends MenuBarBean {
 		if (menuDAO.isWriteEnable(folder.getId(), username)) {
 			if ((document.getStatus() == Document.DOC_CHECKED_OUT)
 					&& username.equals(document.getCheckoutUser())) {
-				model
-						.add(createMenuItem(" "
-								+ Messages.getMessage("msg.jsp.checkin"),
-								"checkin-" + folder.getId(), null,
-								"#{documentRecord.checkin}", null, StyleBean
-										.getImagePath("checkin.png"), true,
-								null, null));
+				model.add(createMenuItem(" "
+						+ Messages.getMessage("msg.jsp.checkin"), "checkin-"
+						+ folder.getId(), null, "#{documentRecord.checkin}",
+						null, StyleBean.getImagePath("checkin.png"), true,
+						null, null));
 			} else if (document.getStatus() == Document.DOC_CHECKED_IN) {
-				model
-						.add(createMenuItem(" "
-								+ Messages.getMessage("msg.jsp.checkout"),
-								"checkout-" + folder.getId(), null,
-								"#{documentRecord.checkout}", null, StyleBean
-										.getImagePath("checkout.png"), true,
-								null, null));
+				model.add(createMenuItem(" "
+						+ Messages.getMessage("msg.jsp.checkout"), "checkout-"
+						+ folder.getId(), null, "#{documentRecord.checkout}",
+						null, StyleBean.getImagePath("checkout.png"), true,
+						null, null));
 			}
 
 			model.add(createMenuItem(" "
 					+ Messages.getMessage("msg.jsp.foldercontent.edit"),
-					"edit-" + folder.getId(), null,
-					"#{documentRecord.edit}", null, StyleBean
-							.getImagePath("document_edit.png"), true, null,
-					null));
+					"edit-" + folder.getId(), null, "#{documentRecord.edit}",
+					null, StyleBean.getImagePath("document_edit.png"), true,
+					null, null));
 		}
 
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.versions"),
@@ -295,31 +248,28 @@ public class DocumentRecord extends MenuBarBean {
 						.getImagePath("versions.png"), true, "_blank", null));
 		model.add(createMenuItem(" "
 				+ Messages.getMessage("msg.jsp.similardocs"), "similar-"
-				+ folder.getId(), null, "#{searchForm.searchSimilar}",
-				null, StyleBean.getImagePath("similar.png"), true, "_blank",
-				null));
+				+ folder.getId(), null, "#{searchForm.searchSimilar}", null,
+				StyleBean.getImagePath("similar.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.discuss"),
 				"articles-" + folder.getId(), null,
 				"#{documentRecord.articles}", null, StyleBean
 						.getImagePath("comments.png"), true, "_blank", null));
 		model.add(createMenuItem(" "
 				+ Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-"
-				+ folder.getId(), null, "#{documentRecord.sendAsEmail}",
-				null, StyleBean.getImagePath("editmail.png"), true, "_blank",
-				null));
+				+ folder.getId(), null, "#{documentRecord.sendAsEmail}", null,
+				StyleBean.getImagePath("editmail.png"), true, "_blank", null));
 		model.add(createMenuItem(" "
 				+ Messages.getMessage("msg.jsp.sendticket"), "sendticket-"
-				+ folder.getId(), null, "#{documentRecord.sendAsTicket}",
-				null, StyleBean.getImagePath("ticket.png"), true, "_blank",
-				null));
+				+ folder.getId(), null, "#{documentRecord.sendAsTicket}", null,
+				StyleBean.getImagePath("ticket.png"), true, "_blank", null));
 		model.add(createMenuItem(" "
 				+ Messages.getMessage("msg.jsp.foldercontent.info"), "info-"
 				+ folder.getId(), null, "#{documentRecord.info}", null,
 				StyleBean.getImagePath("info.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.history"),
-				"history-" + folder.getId(), null,
-				"#{documentRecord.history}", null, StyleBean
-						.getImagePath("history.png"), true, "_blank", null));
+				"history-" + folder.getId(), null, "#{documentRecord.history}",
+				null, StyleBean.getImagePath("history.png"), true, "_blank",
+				null));
 	}
 
 	public String noaction() {
@@ -350,7 +300,6 @@ public class DocumentRecord extends MenuBarBean {
 	 * Executes the checkout and the related document's download
 	 */
 	public String checkout() {
-
 		String username = SessionManagement.getUsername();
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(

@@ -175,7 +175,7 @@ public class DmsServiceImpl implements DmsService {
 
 		Menu menu = new Menu();
 		menu.setText(name);
-		menu.setParent(parent);
+		menu.setParentId(parent);
 		menu.setSort(1);
 		menu.setIcon("folder.png");
 		menu.setType(Menu.MENUTYPE_DIRECTORY);
@@ -310,7 +310,7 @@ public class DmsServiceImpl implements DmsService {
 		Menu folderMenu = mdao.findByPrimaryKey(folder);
 		folderContent.setId(folder);
 		folderContent.setName(folderMenu.getText());
-		folderContent.setParentId(folderMenu.getParent());
+		folderContent.setParentId(folderMenu.getParentId());
 		Menu parenMenu = mdao.findByPrimaryKey(folderContent.getParentId());
 		folderContent.setParentName(parenMenu.getText());
 
@@ -379,7 +379,7 @@ public class DmsServiceImpl implements DmsService {
 			Result newRes = new Result();
 			newRes.setId(res.getDocId());
 			newRes.setDate(df.format(res.getDate()));
-			newRes.setTitle(res.getName());
+			newRes.setTitle(res.getTitle());
 			newRes.setSummary(SnippetStripper.strip(res.getSummary()));
 			newRes.setLength((int) res.getSize());
 			newRes.setType(res.getType());

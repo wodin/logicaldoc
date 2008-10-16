@@ -14,7 +14,7 @@ public interface Result {
 
 	public void setDocId(long docId);
 	
-	public String getName();
+	public String getTitle();
 
 	public String getSummary();
 

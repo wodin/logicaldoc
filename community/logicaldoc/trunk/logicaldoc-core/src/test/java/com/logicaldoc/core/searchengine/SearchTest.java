@@ -51,7 +51,7 @@ public class SearchTest extends AbstractCoreTestCase {
 		log.info(results);
 
 		for (Result result : results) {
-			log.info("result.getName() = " + result.getName());
+			log.info("result.getName() = " + result.getTitle());
 		}
 	}
 }

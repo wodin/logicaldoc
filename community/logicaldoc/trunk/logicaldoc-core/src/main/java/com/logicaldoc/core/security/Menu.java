@@ -1,13 +1,10 @@
 package com.logicaldoc.core.security;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.logicaldoc.core.PersistentObject;
-import com.logicaldoc.core.security.dao.MenuDAO;
-import com.logicaldoc.util.Context;
 
 /**
  * This class represents the key concept of security. A Menu not only models
@@ -41,7 +38,7 @@ public class Menu extends PersistentObject {
 
 	private String text = "";
 
-	private long parent = 0;
+	private long parentId = 0;
 
 	private int sort = 0;
 
@@ -68,8 +65,8 @@ public class Menu extends PersistentObject {
 		return text;
 	}
 
-	public long getParent() {
-		return parent;
+	public long getParentId() {
+		return parentId;
 	}
 
 	public int getSort() {
@@ -108,8 +105,8 @@ public class Menu extends PersistentObject {
 		this.text = text;
 	}
 
-	public void setParent(long parent) {
-		this.parent = parent;
+	public void setParentId(long parentId) {
+		this.parentId = parentId;
 	}
 
 	public void setSort(int sort) {
@@ -160,47 +157,13 @@ public class Menu extends PersistentObject {
 		Menu menu = new Menu();
 		menu.setId(this.getId());
 		menu.setText(this.getText());
-		menu.setParent(this.getParent());
+		menu.setParentId(this.getParentId());
 		menu.setSort(this.getSort());
 		menu.setIcon(this.getIcon());
 		menu.setPath(this.getPath());
 		menu.setType(this.getType());
 		menu.setMenuGroups(this.getMenuGroups());
 		return menu;
-	}
-
-	/**
-	 * Returns a Collection of menus being a parent of the given menu. The
-	 * collection is sorted by the hierarchy level (menuHier) of the menus.
-	 * 
-	 * @return
-	 */
-	public Collection<Menu> getParents() {
-		Collection<Menu> coll = new ArrayList<Menu>();
-
-		try {
-			String[] menus = path.split("/");
-
-			if (menus.length > 0) {
-				if (menus[0].length() > 0) {
-					MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-					Menu home = menuDao.findByPrimaryKey(Menu.MENUID_HOME);
-					coll.add(home);
-
-					for (int i = 1; i < menus.length; i++) {
-						try {
-							Menu menu = menuDao.findByPrimaryKey(Integer.parseInt(menus[i]));
-							coll.add(menu);
-						} catch (NumberFormatException nfe) {
-							;
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			;
-		}
-		return coll;
 	}
 
 	public MenuGroup getMenuGroup(String groupName) {

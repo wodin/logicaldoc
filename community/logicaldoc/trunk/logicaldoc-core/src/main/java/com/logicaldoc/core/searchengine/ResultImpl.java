@@ -48,9 +48,9 @@ public class ResultImpl implements Serializable, Result {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getName()
+	 * @see com.logicaldoc.core.searchengine.search.Result#getTitle()
 	 */
-	public String getName() {
+	public String getTitle() {
 		return title;
 	}
 
