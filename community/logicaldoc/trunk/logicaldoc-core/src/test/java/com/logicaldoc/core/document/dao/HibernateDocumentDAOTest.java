@@ -54,7 +54,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals("testDocname", doc.getTitle());
 		assertEquals(2, doc.getVersions().size());
 		assertNotNull(doc.getFolder());
-		assertEquals(103, doc.getFolder().getMenuId());
+		assertEquals(103, doc.getFolder().getId());
 
 		// Try with unexisting document
 		doc = dao.findByPrimaryKey(99);
@@ -73,13 +73,13 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, ids.size());
 	}
 
-	public void testFindByFolder() {
-		Collection<Long> ids = dao.findByFolder(103);
+	public void testFindDocIdByFolder() {
+		Collection<Long> ids = dao.findDocIdByFolder(103);
 		assertNotNull(ids);
 		assertEquals(2, ids.size());
 		assertTrue(ids.contains(new Long(2)));
 
-		ids = dao.findByFolder(1111);
+		ids = dao.findDocIdByFolder(1111);
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 	}

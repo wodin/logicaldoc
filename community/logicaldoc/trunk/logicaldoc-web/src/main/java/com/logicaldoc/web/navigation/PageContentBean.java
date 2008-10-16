@@ -187,9 +187,9 @@ public class PageContentBean extends IceUserObject {
         return menu;
     }
 
-    public int getMenuId() {
+    public long getMenuId() {
         if (menu != null) {
-            return menu.getMenuId();
+            return menu.getId();
         } else {
             return -1;
         }

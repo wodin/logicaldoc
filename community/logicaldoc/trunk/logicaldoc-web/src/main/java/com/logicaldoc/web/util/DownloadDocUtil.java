@@ -82,7 +82,7 @@ public class DownloadDocUtil {
 
 		// get path correct file name
 		SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-		String path = settings.getValue("docdir") + "/" + doc.getFolder().getMenuPath() + "/" + doc.getId();
+		String path = settings.getValue("docdir") + "/" + doc.getFolder().getPath() + "/" + doc.getId();
 
 		// older versions of a document are stored in the same directory as the
 		// current version,

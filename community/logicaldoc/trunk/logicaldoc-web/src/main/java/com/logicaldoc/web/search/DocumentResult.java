@@ -77,7 +77,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 	}
 
 	public String getPath() {
-		return document.getFolder().getMenuPath();
+		return document.getFolder().getPath();
 	}
 
 	public Integer getRed() {
@@ -115,17 +115,17 @@ public class DocumentResult extends DocumentRecord implements Result {
 	protected void createMenuItems() {
 		model.clear();
 		Menu folder = document.getFolder();
-		model.add(createMenuItem(Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getMenuId(), null,
+		model.add(createMenuItem(Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,
 				"#{entry.versions}", null, StyleBean.getImagePath("versions.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("msg.jsp.discuss"), "articles-" + folder.getMenuId(), null,
+		model.add(createMenuItem(Messages.getMessage("msg.jsp.discuss"), "articles-" + folder.getId(), null,
 				"#{entry.articles}", null, StyleBean.getImagePath("comments.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getMenuId(), null,
+		model.add(createMenuItem(Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getId(), null,
 				"#{entry.sendAsEmail}", null, StyleBean.getImagePath("editmail.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getMenuId(), null,
+		model.add(createMenuItem(Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(), null,
 				"#{entry.sendAsTicket}", null, StyleBean.getImagePath("ticket.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("msg.jsp.foldercontent.info"), "info-" + folder.getMenuId(), null,
+		model.add(createMenuItem(Messages.getMessage("msg.jsp.foldercontent.info"), "info-" + folder.getId(), null,
 				"#{entry.info}", null, StyleBean.getImagePath("info.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("msg.jsp.history"), "history-" + folder.getMenuId(), null,
+		model.add(createMenuItem(Messages.getMessage("msg.jsp.history"), "history-" + folder.getId(), null,
 				"#{entry.history}", null, StyleBean.getImagePath("history.png"), true, "_blank", null));
 	}
 
@@ -142,8 +142,8 @@ public class DocumentResult extends DocumentRecord implements Result {
 				.getCurrentInstance(), log));
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu docMenu = menuDao.findByPrimaryKey(Menu.MENUID_DOCUMENTS);
-		PageContentBean panel = new PageContentBean("m-" + docMenu.getMenuId(), "document/browse");
-		panel.setContentTitle(Messages.getMessage(docMenu.getMenuText()));
+		PageContentBean panel = new PageContentBean("m-" + docMenu.getId(), "document/browse");
+		panel.setContentTitle(Messages.getMessage(docMenu.getText()));
 		navigation.setSelectedPanel(panel);
 	}
 
@@ -201,7 +201,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 	}
 
 	@Override
-	public void setSize(int sze) {
+	public void setSize(long sze) {
 		throw new UnsupportedOperationException("setSize method unsupported");
 	}
 

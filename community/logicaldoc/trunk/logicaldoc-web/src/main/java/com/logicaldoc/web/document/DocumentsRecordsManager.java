@@ -75,9 +75,9 @@ public class DocumentsRecordsManager extends SortableList {
 
 	private boolean multipleSelection = true;
 
-	private int selectedDirectory;
-
-	private int sourceDirectory;
+	private long selectedDirectory;
+	
+	private long sourceDirectory;
 
 	// Set of selected rows
 	private Set<DocumentRecord> selection = new HashSet<DocumentRecord>();
@@ -85,8 +85,6 @@ public class DocumentsRecordsManager extends SortableList {
 	// A clip board of selected documents, used for example in cut&paste
 	// operations
 	private Set<DocumentRecord> clipboard = new HashSet<DocumentRecord>();
-
-	private Comparator drsc = new DocumentRecordSelectedComparator();
 
 	private boolean selectedAll;
 
@@ -105,7 +103,7 @@ public class DocumentsRecordsManager extends SortableList {
 	 * 
 	 * @param directoryId
 	 */
-	public void selectDirectory(int directoryId) {
+	public void selectDirectory(long directoryId) {
 		selectedDirectory = directoryId;
 		selection.clear();
 
@@ -117,7 +115,7 @@ public class DocumentsRecordsManager extends SortableList {
 		}
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Collection<Long> docIds = docDao.findByFolder(directoryId);
+		Collection<Long> docIds = docDao.findDocIdByFolder(directoryId);
 
 		for (Long id : docIds) {
 			DocumentRecord record;
@@ -256,7 +254,7 @@ public class DocumentsRecordsManager extends SortableList {
 
 							// Get original document directory path
 							Menu folder = doc.getFolder();
-							String path = settings.getValue("docdir") + "/" + folder.getMenuPath() + "/" + doc.getId();
+							String path = settings.getValue("docdir") + "/" + folder.getPath() + "/" + doc.getId();
 							File originalDocDir = new File(path);
 
 							doc.setFolder(selectedMenuFolder);
@@ -264,7 +262,7 @@ public class DocumentsRecordsManager extends SortableList {
 							docDao.store(doc);
 
 							// Update the FS
-							path = settings.getValue("docdir") + "/" + folder.getMenuPath() + "/" + doc.getId();
+							path = settings.getValue("docdir") + "/" + folder.getPath() + "/" + doc.getId();
 							File newDocDir = new File(path);
 
 							FileUtils.copyDirectory(originalDocDir, newDocDir);
@@ -315,7 +313,7 @@ public class DocumentsRecordsManager extends SortableList {
 				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 				String username = SessionManagement.getUsername();
 				Directory dir = documentNavigation.getSelectedDir();
-				int parentId = dir.getMenuId();
+				long parentId = dir.getMenuId();
 
 				if (mdao.isWriteEnable(parentId, username)) {
 					log.debug("mdao.isWriteEnabled");
@@ -355,8 +353,8 @@ public class DocumentsRecordsManager extends SortableList {
 
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 				final Menu parent = menuDao.findByPrimaryKey(selectedDirectory);
-				log.debug("parent.getMenuId() = " + parent.getMenuId());
-				log.debug("parent.getMenuPath() = " + parent.getMenuPath());
+				log.debug("parent.getMenuId() = " + parent.getId());
+				log.debug("parent.getMenuPath() = " + parent.getPath());
 
 				SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 				String path = conf.getValue("userdir");

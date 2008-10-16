@@ -107,10 +107,10 @@ public class DocumentNavigation extends NavigationBean {
 				Directory currentDir = getSelectedDir();
 				while (currentDir.getMenuId() != Menu.MENUID_DOCUMENTS) {
 					breadcrumb.add(currentDir);
-					currentDir = new Directory(menuDao.findByPrimaryKey(currentDir.getMenu().getMenuParent()));
+					currentDir = new Directory(menuDao.findByPrimaryKey(currentDir.getMenu().getParent()));
 				}
 				Directory rootDir = new Directory(menuDao.findByPrimaryKey(Menu.MENUID_DOCUMENTS));
-				rootDir.setDisplayText(Messages.getMessage(rootDir.getMenu().getMenuText()));
+				rootDir.setDisplayText(Messages.getMessage(rootDir.getMenu().getText()));
 				breadcrumb.add(rootDir);
 			}
 		} catch (RuntimeException e) {
@@ -135,9 +135,9 @@ public class DocumentNavigation extends NavigationBean {
 	protected void createMenuItems() {
 		folderItems.clear();
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Directory parentDir = new Directory(menuDao.findByPrimaryKey(selectedDir.getMenu().getMenuParent()));
+		Directory parentDir = new Directory(menuDao.findByPrimaryKey(selectedDir.getMenu().getParent()));
 		if (parentDir.getMenuId() == Menu.MENUID_DOCUMENTS)
-			parentDir.setDisplayText(Messages.getMessage(parentDir.getMenu().getMenuText()));
+			parentDir.setDisplayText(Messages.getMessage(parentDir.getMenu().getText()));
 		MenuItem item = createMenuItem("<< " + parentDir.getDisplayText(), parentDir);
 
 		if (parentDir.getMenuId() != Menu.MENUID_HOME) {
@@ -151,11 +151,11 @@ public class DocumentNavigation extends NavigationBean {
 		Collections.sort(menues, new Comparator<Menu>() {
 			@Override
 			public int compare(Menu menu1, Menu menu2) {
-				return menu1.getMenuText().compareTo(menu2.getMenuText());
+				return menu1.getText().compareTo(menu2.getText());
 			}
 		});
 		for (Menu menu : menues) {
-			item = createMenuItem(menu.getMenuText(), new Directory(menu));
+			item = createMenuItem(menu.getText(), new Directory(menu));
 			folderItems.add(item);
 		}
 	}
@@ -190,11 +190,11 @@ public class DocumentNavigation extends NavigationBean {
 		// Notify the records manager
 		DocumentsRecordsManager recordsManager = ((DocumentsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"documentsRecordsManager", FacesContext.getCurrentInstance(), log));
-		recordsManager.selectDirectory(directory.getMenu().getMenuId());
+		recordsManager.selectDirectory(directory.getMenu().getId());
 		setSelectedPanel(new PageContentBean("documents"));
 	}
 
-	public void selectDirectory(int directoryId) {
+	public void selectDirectory(long directoryId) {
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		selectDirectory(new Directory(menuDao.findByPrimaryKey(directoryId)));
 	}
@@ -207,7 +207,7 @@ public class DocumentNavigation extends NavigationBean {
 
 		Object entry = (Object) map.get("entry");
 
-		int menuId = Menu.MENUID_DOCUMENTS;
+		long menuId = Menu.MENUID_DOCUMENTS;
 
 		long docId = 0;
 
@@ -220,7 +220,7 @@ public class DocumentNavigation extends NavigationBean {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document document = docDao.findByPrimaryKey(docId);
 		Menu folder = document.getFolder();
-		selectDirectory(folder.getMenuId());
+		selectDirectory(folder.getId());
 		highlightDocument(docId);
 		setSelectedPanel(new PageContentBean("documents"));
 
@@ -230,8 +230,8 @@ public class DocumentNavigation extends NavigationBean {
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu documentsMenu = menuDao.findByPrimaryKey(Menu.MENUID_DOCUMENTS);
 
-		PageContentBean panel = new PageContentBean("m-" + documentsMenu.getMenuId(), "document/browse");
-		panel.setContentTitle(Messages.getMessage(documentsMenu.getMenuText()));
+		PageContentBean panel = new PageContentBean("m-" + documentsMenu.getId(), "document/browse");
+		panel.setContentTitle(Messages.getMessage(documentsMenu.getText()));
 		navigation.setSelectedPanel(panel);
 
 		return null;
@@ -251,9 +251,9 @@ public class DocumentNavigation extends NavigationBean {
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Document document = docdao.findByPrimaryKey(article.getDocId());
 
-		int folderId = Menu.MENUID_DOCUMENTS;
+		long folderId = Menu.MENUID_DOCUMENTS;
 		Menu folder = document.getFolder();
-		folderId = folder.getMenuId();
+		folderId = folder.getId();
 		selectDirectory(folderId);
 
 		setSelectedPanel(new PageContentBean("documents"));
@@ -264,8 +264,8 @@ public class DocumentNavigation extends NavigationBean {
 
 		Menu documentsMenu = menuDao.findByPrimaryKey(Menu.MENUID_DOCUMENTS);
 
-		PageContentBean panel = new PageContentBean("m-" + documentsMenu.getMenuId(), "document/browse");
-		panel.setContentTitle(Messages.getMessage(documentsMenu.getMenuText()));
+		PageContentBean panel = new PageContentBean("m-" + documentsMenu.getId(), "document/browse");
+		panel.setContentTitle(Messages.getMessage(documentsMenu.getText()));
 		navigation.setSelectedPanel(panel);
 
 		// Show the discussion panel
@@ -298,7 +298,7 @@ public class DocumentNavigation extends NavigationBean {
 			Messages.addLocalizedError("errors.action.deleteitem");
 		}
 
-		Directory parent = new Directory(menuDao.findByPrimaryKey(getSelectedDir().getMenu().getMenuParent()));
+		Directory parent = new Directory(menuDao.findByPrimaryKey(getSelectedDir().getMenu().getParent()));
 		selectDirectory(parent);
 		setSelectedPanel(new PageContentBean("documents"));
 
@@ -337,9 +337,9 @@ public class DocumentNavigation extends NavigationBean {
 
 		Menu currMenu = getSelectedDir().getMenu();
 
-		String menuPath = currMenu.getMenuPath() + "/" + currMenu.getMenuId();
+		String menuPath = currMenu.getPath() + "/" + currMenu.getId();
 		form.setPath(menuPath);
-		form.setParentPathDescr(currMenu.getMenuText());
+		form.setParentPathDescr(currMenu.getText());
 
 		navigation.setSelectedPanel(page);
 		return null;

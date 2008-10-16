@@ -174,7 +174,7 @@ public abstract class AbstractCoreTestCase extends TestCase {
 			sqlFile.execute(con, false);
 
 			// Test the connection
-			ResultSet rs = con.createStatement().executeQuery("select * from co_menus where co_menuid=1");
+			ResultSet rs = con.createStatement().executeQuery("select * from ld_menu where ld_id=1");
 			rs.next();
 
 			assertEquals(1, rs.getInt(1));

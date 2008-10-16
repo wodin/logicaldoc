@@ -54,7 +54,7 @@ public class SimilarSearch {
 			Term term = (Term) iter.next();
 			Document doc=docDao.findByPrimaryKey(docId);
 			Menu folder=doc.getFolder();
-			if (!cache.contains(term.getDocId()) && mdao.isReadEnable(folder.getMenuId(), username)) {
+			if (!cache.contains(term.getDocId()) && mdao.isReadEnable(folder.getId(), username)) {
 				Collection<Term> docTerms = termsDao.findByDocId(term.getDocId());
 				float score = calculateScore(basicTerms, docTerms);
 

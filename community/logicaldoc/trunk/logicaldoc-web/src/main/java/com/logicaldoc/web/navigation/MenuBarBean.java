@@ -189,18 +189,18 @@ public class MenuBarBean {
 
 		PageContentBean page;
 		MenuItem item;
-		page = new PageContentBean("m-" + Integer.toString(menu.getMenuId()));
+		page = new PageContentBean("m-" + Long.toString(menu.getId()));
 
-		if (StringUtils.isNotEmpty(menu.getMenuRef())) {
-			page.setTemplate(menu.getMenuRef());
+		if (StringUtils.isNotEmpty(menu.getRef())) {
+			page.setTemplate(menu.getRef());
 		}
 
-		page.setContentTitle(Messages.getMessage(menu.getMenuText()));
-		page.setIcon(StyleBean.getImagePath(menu.getMenuIcon()));
+		page.setContentTitle(Messages.getMessage(menu.getText()));
+		page.setIcon(StyleBean.getImagePath(menu.getIcon()));
 
-		item = createMenuItem(" " + Messages.getMessage(menu.getMenuText()), "m-" + Integer.toString(menu.getMenuId()),
-				"#{menuBar.primaryListener}", null, null, (menu.getMenuIcon() != null) ? StyleBean.getImagePath(menu
-						.getMenuIcon()) : null, false, null, page);
+		item = createMenuItem(" " + Messages.getMessage(menu.getText()), "m-" + Long.toString(menu.getId()),
+				"#{menuBar.primaryListener}", null, null, (menu.getIcon() != null) ? StyleBean.getImagePath(menu
+						.getIcon()) : null, false, null, page);
 
 		if (parent == null) {
 			model.add(item);
@@ -209,9 +209,9 @@ public class MenuBarBean {
 		}
 
 		// For 'Documents' menu, skip children
-		if (menu.getMenuId() != Menu.MENUID_DOCUMENTS) {
+		if (menu.getId() != Menu.MENUID_DOCUMENTS) {
 			MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			Collection<Menu> children = menuDao.findByUserName(SessionManagement.getUsername(), menu.getMenuId());
+			Collection<Menu> children = menuDao.findByUserName(SessionManagement.getUsername(), menu.getId());
 
 			for (Menu child : children) {
 				createMenuStructure(child, item);

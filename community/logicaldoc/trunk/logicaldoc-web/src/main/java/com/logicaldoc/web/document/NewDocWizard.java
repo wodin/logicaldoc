@@ -109,15 +109,13 @@ public class NewDocWizard {
 				Menu parent = documentNavigation.getSelectedDir().getMenu();
 
 				// Makes menuPath
-				String menupath = new StringBuilder(parent.getMenuPath())
-						.append("/").append(parent.getMenuId()).toString();
-				int menuhier = parent.getMenuHier();
+				String menupath = new StringBuilder(parent.getPath())
+						.append("/").append(parent.getId()).toString();
 
 				// Makes new Menu
 				Menu menu = new Menu();
-				menu.setMenuParent(parent.getMenuId());
-				menu.setMenuPath(menupath);
-				menu.setMenuHier(menuhier++);
+				menu.setParent(parent.getId());
+				menu.setPath(menupath);
 
 				// Gets file to upload name
 				String filename = file.getName();

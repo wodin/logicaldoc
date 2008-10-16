@@ -48,7 +48,7 @@ public interface Result {
 
 	public void setSourceDate(Date date);
 	
-	public void setSize(int sze);
+	public void setSize(long sze);
 
 	public void setType(String typ);
 

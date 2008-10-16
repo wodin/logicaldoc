@@ -30,6 +30,8 @@ import com.logicaldoc.web.navigation.PageContentBean;
 /**
  * This form is used to send emails
  * 
+ * TODO reimplement since now documents don't have associated menu
+ * 
  * @author Michael Scholz, Marco Meschieri
  * @version $Id: EMailForm.java,v 1.2 2006/09/03 16:24:37 marco Exp $
  * @since 1.0
@@ -162,7 +164,7 @@ public class EMailForm {
 				int i = 2;
 
 				for (Menu menu : attachments) {
-					createAttachment(email, menu.getMenuId(), i++);
+					createAttachment(email, menu.getId(), i++);
 				}
 				
 				try {
@@ -191,37 +193,38 @@ public class EMailForm {
 		return null;
 	}
 
-	private void createAttachment(EMail email, int menuId, int partid) {
-		Attachment att = new Attachment();
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu menu = menuDao.findByPrimaryKey(menuId);
-
-		if (menuDao.isReadEnable(menu.getMenuId(), email.getUserName())) {
-			att.setIcon(menu.getMenuIcon());
-			att.setFilename(menu.getMenuRef());
-
-			String extension = menu.getMenuRef().substring(menu.getMenuRef().lastIndexOf(".") + 1);
-			MimeTypeConfig mtc = (MimeTypeConfig) Context.getInstance().getBean(MimeTypeConfig.class);
-			String mimetype = mtc.getMimeApp(extension);
-
-			if ((mimetype == null) || mimetype.equals("")) {
-				mimetype = "application/octet-stream";
-			}
-
-			att.setMimeType(mimetype);
-
-			SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-			String docdir = conf.getValue("docdir");
-			String doc = docdir + "/" + menu.getMenuPath() + "/" + menu.getMenuId() + "/" + menu.getMenuRef();
-			String userdir = conf.getValue("userdir");
-			String mail = userdir + "/mails/" + String.valueOf(email.getMessageId()) + "/";
-			FileBean.createDir(mail);
-			FileBean.copyFile(doc, mail + menu.getMenuRef());
-			
-			if (att != null) {
-				email.addAttachment(partid, att);
-			}
-		}
+	private void createAttachment(EMail email, long menuId, int partid) {
+		//TODO reimplement
+//		Attachment att = new Attachment();
+//		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+//		Menu menu = menuDao.findByPrimaryKey(menuId);
+//
+//		if (menuDao.isReadEnable(menu.getId(), email.getUserName())) {
+//			att.setIcon(menu.getIcon());
+//			att.setFilename(menu.getRef());
+//
+//			String extension = menu.getRef().substring(menu.getRef().lastIndexOf(".") + 1);
+//			MimeTypeConfig mtc = (MimeTypeConfig) Context.getInstance().getBean(MimeTypeConfig.class);
+//			String mimetype = mtc.getMimeApp(extension);
+//
+//			if ((mimetype == null) || mimetype.equals("")) {
+//				mimetype = "application/octet-stream";
+//			}
+//
+//			att.setMimeType(mimetype);
+//
+//			SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
+//			String docdir = conf.getValue("docdir");
+//			String doc = docdir + "/" + menu.getPath() + "/" + menu.getId() + "/" + menu.getRef();
+//			String userdir = conf.getValue("userdir");
+//			String mail = userdir + "/mails/" + String.valueOf(email.getMessageId()) + "/";
+//			FileBean.createDir(mail);
+//			FileBean.copyFile(doc, mail + menu.getRef());
+//			
+//			if (att != null) {
+//				email.addAttachment(partid, att);
+//			}
+//		}
 	}
 
 	public void setDocumentNavigation(DocumentNavigation documentNavigation) {

@@ -27,7 +27,7 @@ public interface MenuDAO {
 	 * @param menuId Menu to be deleted.
 	 * @return True if successful deleted.
 	 */
-	public boolean delete(int menuId);
+	public boolean delete(long menuId);
 
 	/**
 	 * Finds a menu by primarykey.
@@ -35,26 +35,26 @@ public interface MenuDAO {
 	 * @param menuId Primarykey of wanted menu.
 	 * @return Wanted menu or null.
 	 */
-	public Menu findByPrimaryKey(int menuId);
+	public Menu findByPrimaryKey(long menuId);
 
 	/**
-	 * Finds all menus by menutext.
+	 * Finds all menus by menu text.
 	 * 
-	 * @param menutext
-	 * @return Collection of menus with given menutext.
+	 * @param text
+	 * @return Collection of menus with given menu text.
 	 */
-	public Collection<Menu> findByMenuText(String menutext);
+	public Collection<Menu> findByText(String text);
 
 	/**
-	 * Finds all menus by menutext, contained in the parent menu and of the
+	 * Finds all menus by menu text, contained in the parent menu and of the
 	 * specified type
 	 * 
 	 * @param parent The parent menu(optional)
-	 * @param menutext The menutext to search for
+	 * @param text The menutext to search for
 	 * @param type The menu tyle(optional)
-	 * @return Collection of menus with given menutext.
+	 * @return Collection of menus with given menu text.
 	 */
-	public Collection<Menu> findByMenuText(Menu parent, String menutext, Integer type);
+	public Collection<Menu> findByText(Menu parent, String text, Integer type);
 
 	/**
 	 * Finds authorized menus for a user.
@@ -70,7 +70,7 @@ public interface MenuDAO {
 	 * @param parentId MenuId of the menu which children are wanted.
 	 * @return Collection of found menus.
 	 */
-	public Collection<Menu> findByUserName(String username, int parentId);
+	public Collection<Menu> findByUserName(String username, long parentId);
 
 	/**
 	 * Finds direct children of a menu.
@@ -79,7 +79,7 @@ public interface MenuDAO {
 	 * @param type The wanted menu type, can be null
 	 * @return Collection of found menus.
 	 */
-	public Collection<Menu> findByUserName(String username, int parentId, Integer type);
+	public Collection<Menu> findByUserName(String username, long parentId, Integer type);
 
 	/**
 	 * Counts direct children of a menu.
@@ -88,7 +88,7 @@ public interface MenuDAO {
 	 * @param type The wanted menu type, can be null
 	 * @return The total number of elements
 	 */
-	public long countByUserName(String username, int parentId, Integer type);
+	public long countByUserName(String username, long parentId, Integer type);
 
 	/**
 	 * Finds all children(direct and indirect) by parentId
@@ -96,7 +96,7 @@ public interface MenuDAO {
 	 * @param parentId
 	 * @return
 	 */
-	public Collection<Menu> findByParentId(int parentId);
+	public Collection<Menu> findByParentId(long parentId);
 
 	/**
 	 * Finds direct children of a menu.
@@ -104,7 +104,7 @@ public interface MenuDAO {
 	 * @param parentId MenuId of the menu which children are wanted.
 	 * @return Collection of found menus.
 	 */
-	public Collection<Menu> findChildren(int parentId);
+	public Collection<Menu> findChildren(long parentId);
 
 	/**
 	 * This method is looking up for writing rights for a menu and an user.
@@ -112,17 +112,17 @@ public interface MenuDAO {
 	 * @param menuId ID of the menu.
 	 * @param username Name of the user.
 	 */
-	public boolean isWriteEnable(int menuId, String username);
+	public boolean isWriteEnable(long menuId, String username);
 
-	public boolean isReadEnable(int menuId, String username);
+	public boolean isReadEnable(long menuId, String username);
 
 	/**
-	 * This method selects only the menutext from a menu.
+	 * This method selects only the menu text from a menu.
 	 * 
 	 * @param menuId Id of the menu.
-	 * @return Selected menutext.
+	 * @return Selected menu text.
 	 */
-	public String findMenuTextByMenuId(int menuId);
+	public String findTextByMenuId(long menuId);
 
 	/**
 	 * This method selects only the menuId from the menus for which a user is
@@ -131,7 +131,7 @@ public interface MenuDAO {
 	 * @param username Name of the user.
 	 * @return Collection of selected menuId's.
 	 */
-	public Set<Integer> findMenuIdByUserName(String username);
+	public Set<Long> findMenuIdByUserName(String username);
 
 	/**
 	 * This method selects only the menuId from the menus for which a user is
@@ -143,17 +143,7 @@ public interface MenuDAO {
 	 * @param type The menu type, can be null
 	 * @return Collection of selected menuId's.
 	 */
-	public Set<Integer> findMenuIdByUserName(String username, int parentId, Integer type);
-
-	/**
-	 * returns a collection with sub-menus contained in menu with the given id
-	 * 
-	 * @param menuid return all menus in this menu
-	 * @param userName only return those menus the user has at least read access
-	 *        to
-	 * @return a collection containing elements of type {@link Menu}
-	 */
-	public Collection<Menu> getContainedMenus(int menuId, String userName);
+	public Set<Long> findMenuIdByUserName(String username, long parentId, Integer type);
 
 	/**
 	 * returns if a menu is writeable for a user
@@ -162,7 +152,7 @@ public interface MenuDAO {
 	 * @param userName privileges for this should be checked
 	 * @return a 0 if false, a 1 if true
 	 */
-	public Integer isMenuWriteable(int menuId, String userName);
+	public Integer isMenuWriteable(long menuId, String userName);
 
 	/**
 	 * checks that the user has access to the menu and all its sub-items
@@ -176,7 +166,7 @@ public interface MenuDAO {
 	 * @return The collection of menues
 	 */
 	public Collection<Menu> findByGroupName(String groupName);
-	
+
 	/**
 	 * Creates a new folder in the parent menu
 	 * 

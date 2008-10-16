@@ -44,7 +44,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 			if (group != null) {
 				// Delete menu-group assignments
 				getSession().connection().createStatement().execute(
-						"delete from co_menugroup where co_groupname='" + groupname + "'");
+						"delete from ld_menugroup where ld_groupname='" + groupname + "'");
 
 				// Finally delete the found Group
 				getHibernateTemplate().delete(group);
@@ -145,14 +145,15 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 			if (StringUtils.isNotEmpty(parentGroup)) {
 				Collection<Menu> menues = menuDAO.findByGroupName(parentGroup);
 				for (Menu menu : menues) {
-					addMenuGroup(group, menu.getMenuId(), menu.getMenuGroup(parentGroup).getWriteEnable());
+					addMenuGroup(group, menu.getId(), menu.getMenuGroup(parentGroup).getWriteEnable());
 				}
 			} else {
 				// if no parent group was given, the new group will have default
 				// access rights
 				addMenuGroup(group, Menu.MENUID_HOME, 0); // home
 				addMenuGroup(group, Menu.MENUID_PERSONAL, 0); // personal
-				addMenuGroup(group, Menu.MENUID_DOCUMENTS, 1); // root folder for documents
+				addMenuGroup(group, Menu.MENUID_DOCUMENTS, 1); // root folder
+																// for documents
 				addMenuGroup(group, Menu.MENUID_MESSAGES, 0); // messages
 				addMenuGroup(group, Menu.MENUID_EDITME, 0); // edit me
 				addMenuGroup(group, 20, 0); // emails
@@ -176,7 +177,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 	 * @param menuId the menu
 	 * @param writeable the rights to assign (0=read; 1=read/write)
 	 */
-	private void addMenuGroup(Group group, int menuId, int writeable) {
+	private void addMenuGroup(Group group, long menuId, int writeable) {
 		MenuDAO menuDAO = getMenuDAO();
 		Menu menu = menuDAO.findByPrimaryKey(menuId);
 

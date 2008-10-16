@@ -63,7 +63,7 @@ public class RightsRecordsManager {
 	 * 
 	 * @param menuId The menu that must be evaluated
 	 */
-	private void initRights(int menuId) {
+	private void initRights(long menuId) {
 		// initiate the list
 		if (rules != null) {
 			rules.clear();
@@ -136,7 +136,7 @@ public class RightsRecordsManager {
 	}
 
 	public String save() {
-		int id = selectedDirectory.getMenuId();
+		long id = selectedDirectory.getMenuId();
 		String username = SessionManagement.getUsername();
 		saveRules(id, username);
 
@@ -150,7 +150,7 @@ public class RightsRecordsManager {
 	 * @param id
 	 * @param username
 	 */
-	private void saveRules(int id, String username) {
+	private void saveRules(long id, String username) {
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 		if (!mdao.isWriteEnable(id, username)) {
@@ -211,7 +211,7 @@ public class RightsRecordsManager {
 			Collection<Menu> submenues = mdao.findByParentId(id);
 
 			for (Menu submenu : submenues) {
-				saveRules(submenu.getMenuId(), username);
+				saveRules(submenu.getId(), username);
 			}
 		}
 	}

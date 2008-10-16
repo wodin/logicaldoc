@@ -278,7 +278,7 @@ public class DocumentEditForm {
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		String username = SessionManagement.getUsername();
 		Menu parent = documentNavigation.getSelectedDir().getMenu();
-		if (SessionManagement.isValid() && mdao.isWriteEnable(parent.getMenuId(), username)) {
+		if (SessionManagement.isValid() && mdao.isWriteEnable(parent.getId(), username)) {
 			try {
 				InputFileBean inputFile = ((InputFileBean) FacesUtil.accessBeanFromFacesContext("inputFile",
 						FacesContext.getCurrentInstance(), log));

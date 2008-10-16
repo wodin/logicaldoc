@@ -1,6 +1,5 @@
 package com.logicaldoc.webservice;
 
-
 /**
  * Data structure for folder metadata
  * 
@@ -9,17 +8,17 @@ package com.logicaldoc.webservice;
  * @since 3.0
  */
 public class FolderContent {
-	private Content[] folder = new Content[]{};
+	private Content[] folder = new Content[] {};
 
-	private Content[] document = new Content[]{};
+	private Content[] document = new Content[] {};
 
-	private int id;
+	private long id;
 
 	private String name = "";
 
 	private int writeable = 0;
 
-	private int parentId;
+	private long parentId;
 
 	private String parentName = "";
 
@@ -39,11 +38,11 @@ public class FolderContent {
 		this.document = document;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -63,11 +62,11 @@ public class FolderContent {
 		this.writeable = writeable;
 	}
 
-	public int getParentId() {
+	public long getParentId() {
 		return parentId;
 	}
 
-	public void setParentId(int parentId) {
+	public void setParentId(long parentId) {
 		this.parentId = parentId;
 	}
 
@@ -78,20 +77,20 @@ public class FolderContent {
 	public void setParentName(String parentName) {
 		this.parentName = parentName;
 	}
-	
-	public void addFolder(Content content){
-		Content[] newFolders=new Content[folder.length+1];
-		for(int i=0; i<folder.length; i++)
-			newFolders[i]=folder[i];
-		newFolders[folder.length]=content;
-		folder=newFolders;
+
+	public void addFolder(Content content) {
+		Content[] newFolders = new Content[folder.length + 1];
+		for (int i = 0; i < folder.length; i++)
+			newFolders[i] = folder[i];
+		newFolders[folder.length] = content;
+		folder = newFolders;
 	}
-	
-	public void addDocument(Content content){
-		Content[] newDocuments=new Content[document.length+1];
-		for(int i=0; i<document.length; i++)
-			newDocuments[i]=document[i];
-		newDocuments[document.length]=content;
-		document=newDocuments;
+
+	public void addDocument(Content content) {
+		Content[] newDocuments = new Content[document.length + 1];
+		for (int i = 0; i < document.length; i++)
+			newDocuments[i] = document[i];
+		newDocuments[document.length] = content;
+		document = newDocuments;
 	}
 }

@@ -260,7 +260,7 @@ public class AccountForm {
 
 	public String getTargetDirectoryName() {
 		if (account != null && account.getTargetFolder() != null)
-			return account.getTargetFolder().getMenuText();
+			return account.getTargetFolder().getText();
 		else
 			return null;
 	}

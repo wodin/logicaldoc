@@ -135,8 +135,8 @@ public class ResultImpl implements Serializable, Result {
 		}
 	}
 
-	public void setSize(int sze) {
-		size = sze;
+	public void setSize(long size) {
+		this.size = size;
 	}
 
 	public void createScore(float score) {

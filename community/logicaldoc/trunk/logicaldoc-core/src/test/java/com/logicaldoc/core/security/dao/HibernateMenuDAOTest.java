@@ -32,24 +32,24 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 
 	public void testStore() {
 		Menu menu = new Menu();
-		menu.setMenuText("text");
-		menu.setMenuPath("path");
-		menu.setMenuSort(1);
+		menu.setText("text");
+		menu.setPath("path");
+		menu.setSort(1);
 		menu.setMenuGroup(new String[] { "admin", "author" });
 		assertTrue(dao.store(menu));
 		menu = dao.findByPrimaryKey(100);
-		assertEquals("db.admin", menu.getMenuText());
-		assertEquals("ROOT", menu.getMenuPath());
-		assertEquals(1, menu.getMenuSort());
+		assertEquals("db.admin", menu.getText());
+		assertEquals("ROOT", menu.getPath());
+		assertEquals(1, menu.getSort());
 		assertEquals(2, menu.getMenuGroups().size());
 
 		// Load an existing menu and modify it
 		menu = dao.findByPrimaryKey(Menu.MENUID_HOME);
-		assertEquals("db.home", menu.getMenuText());
-		menu.setMenuText("xxxx");
+		assertEquals("db.home", menu.getText());
+		menu.setText("xxxx");
 		assertTrue(dao.store(menu));
 		menu = dao.findByPrimaryKey(Menu.MENUID_HOME);
-		assertEquals("xxxx", menu.getMenuText());
+		assertEquals("xxxx", menu.getText());
 	}
 
 	public void testDelete() {
@@ -73,10 +73,10 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		// Try with a menu id
 		Menu menu = dao.findByPrimaryKey(1);
 		assertNotNull(menu);
-		assertEquals(Menu.MENUID_HOME, menu.getMenuId());
-		assertEquals("db.home", menu.getMenuText());
-		assertEquals("home.png", menu.getMenuIcon());
-		assertEquals(1, menu.getMenuSort());
+		assertEquals(Menu.MENUID_HOME, menu.getId());
+		assertEquals("db.home", menu.getText());
+		assertEquals("home.png", menu.getIcon());
+		assertEquals(1, menu.getSort());
 		assertEquals(3, menu.getMenuGroups().size());
 
 		// Try with unexisting id
@@ -85,29 +85,29 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void testFindByMenuText() {
+	public void testFindByText() {
 		// Try with existing text
-		Collection<Menu> menues = (Collection<Menu>) dao.findByMenuText("db.admin");
+		Collection<Menu> menues = (Collection<Menu>) dao.findByText("db.admin");
 		assertNotNull(menues);
 		assertEquals(5, menues.size());
 		Menu menu = menues.iterator().next();
-		assertEquals("db.admin", menu.getMenuText());
+		assertEquals("db.admin", menu.getText());
 
-		menues = (Collection<Menu>) dao.findByMenuText(null, "db.admin", new Integer(1));
+		menues = (Collection<Menu>) dao.findByText(null, "db.admin", new Integer(1));
 		assertNotNull(menues);
 		assertEquals(1, menues.size());
 
 		Menu parent = dao.findByPrimaryKey(Menu.MENUID_HOME);
-		menues = (Collection<Menu>) dao.findByMenuText(parent, "db.admin", 1);
+		menues = (Collection<Menu>) dao.findByText(parent, "db.admin", 1);
 		assertNotNull(menues);
 		assertEquals(1, menues.size());
 
-		menues = (Collection<Menu>) dao.findByMenuText(null, "db.admin", 3);
+		menues = (Collection<Menu>) dao.findByText(null, "db.admin", 3);
 		assertNotNull(menues);
 		assertEquals(2, menues.size());
 
 		// Try with unexisting text
-		menues = dao.findByMenuText("xxxxx");
+		menues = dao.findByText("xxxxx");
 		assertNotNull(menues);
 		assertTrue(menues.isEmpty());
 	}
@@ -181,7 +181,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindMenuIdByUserName() {
-		Collection<Integer> ids = dao.findMenuIdByUserName("admin");
+		Collection<Long> ids = dao.findMenuIdByUserName("admin");
 		assertNotNull(ids);
 		assertEquals(21, ids.size());
 
@@ -192,10 +192,10 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindMenuIdByUserNameIntInteger() {
-		Collection<Integer> ids = dao.findMenuIdByUserName("admin", 101, null);
+		Collection<Long> ids = dao.findMenuIdByUserName("admin", 101, null);
 		assertNotNull(ids);
 		assertEquals(1, ids.size());
-		assertTrue(ids.contains(103));
+		assertTrue(ids.contains(103L));
 
 		ids = dao.findMenuIdByUserName("admin", 101, Menu.MENUTYPE_DIRECTORY);
 		assertNotNull(ids);
@@ -209,13 +209,6 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		ids = dao.findMenuIdByUserName("xxxx", 101, null);
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
-	}
-
-	public void testGetContainedMenus() {
-		Collection<Menu> coll = dao.getContainedMenus(2, "admin");
-		assertEquals(8, coll.size());
-		coll = dao.getContainedMenus(2, "sebastian");
-		assertEquals(8, coll.size());
 	}
 
 	public void testHasWriteAccess() {
@@ -235,17 +228,17 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	public void testCreateDirectories() throws Exception {
 		Menu docsMenu = dao.findByPrimaryKey(Menu.MENUID_DOCUMENTS);
 		Menu menu = dao.createFolders(docsMenu, "/pippo/pluto/paperino");
-		assertEquals("paperino", menu.getMenuText());
-		menu = dao.findByPrimaryKey(menu.getMenuParent());
-		assertEquals("pluto", menu.getMenuText());
-		menu = dao.findByPrimaryKey(menu.getMenuParent());
-		assertEquals("pippo", menu.getMenuText());
+		assertEquals("paperino", menu.getText());
+		menu = dao.findByPrimaryKey(menu.getParent());
+		assertEquals("pluto", menu.getText());
+		menu = dao.findByPrimaryKey(menu.getParent());
+		assertEquals("pippo", menu.getText());
 
 		menu = dao.createFolders(docsMenu, "/pippo/pluto/paperino");
-		assertEquals("paperino", menu.getMenuText());
-		menu = dao.findByPrimaryKey(menu.getMenuParent());
-		assertEquals("pluto", menu.getMenuText());
-		menu = dao.findByPrimaryKey(menu.getMenuParent());
-		assertEquals("pippo", menu.getMenuText());
+		assertEquals("paperino", menu.getText());
+		menu = dao.findByPrimaryKey(menu.getParent());
+		assertEquals("pluto", menu.getText());
+		menu = dao.findByPrimaryKey(menu.getParent());
+		assertEquals("pippo", menu.getText());
 	}
 }

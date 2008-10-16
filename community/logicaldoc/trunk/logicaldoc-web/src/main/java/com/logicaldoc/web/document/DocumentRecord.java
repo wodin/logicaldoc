@@ -221,16 +221,16 @@ public class DocumentRecord extends MenuBarBean {
 					if (!first)
 						sb.append(" / ");
 
-					if (menu.getMenuId() == Menu.MENUID_HOME)
+					if (menu.getId() == Menu.MENUID_HOME)
 						continue;
-					if (menu.getMenuId() == Menu.MENUID_DOCUMENTS) {
+					if (menu.getId() == Menu.MENUID_DOCUMENTS) {
 						// Decoding the root of documents using the resource
 						// boundle
 						String menuText = Messages.getMessage(menu
-								.getMenuText());
+								.getText());
 						sb.append(menuText);
 					} else {
-						sb.append(menu.getMenuText());
+						sb.append(menu.getText());
 					}
 					first = false;
 				}
@@ -261,13 +261,13 @@ public class DocumentRecord extends MenuBarBean {
 
 		Menu folder = getDocument().getFolder();
 		Document document = getDocument();
-		if (menuDAO.isWriteEnable(folder.getMenuId(), username)) {
+		if (menuDAO.isWriteEnable(folder.getId(), username)) {
 			if ((document.getStatus() == Document.DOC_CHECKED_OUT)
 					&& username.equals(document.getCheckoutUser())) {
 				model
 						.add(createMenuItem(" "
 								+ Messages.getMessage("msg.jsp.checkin"),
-								"checkin-" + folder.getMenuId(), null,
+								"checkin-" + folder.getId(), null,
 								"#{documentRecord.checkin}", null, StyleBean
 										.getImagePath("checkin.png"), true,
 								null, null));
@@ -275,7 +275,7 @@ public class DocumentRecord extends MenuBarBean {
 				model
 						.add(createMenuItem(" "
 								+ Messages.getMessage("msg.jsp.checkout"),
-								"checkout-" + folder.getMenuId(), null,
+								"checkout-" + folder.getId(), null,
 								"#{documentRecord.checkout}", null, StyleBean
 										.getImagePath("checkout.png"), true,
 								null, null));
@@ -283,41 +283,41 @@ public class DocumentRecord extends MenuBarBean {
 
 			model.add(createMenuItem(" "
 					+ Messages.getMessage("msg.jsp.foldercontent.edit"),
-					"edit-" + folder.getMenuId(), null,
+					"edit-" + folder.getId(), null,
 					"#{documentRecord.edit}", null, StyleBean
 							.getImagePath("document_edit.png"), true, null,
 					null));
 		}
 
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.versions"),
-				"versions-" + folder.getMenuId(), null,
+				"versions-" + folder.getId(), null,
 				"#{documentRecord.versions}", null, StyleBean
 						.getImagePath("versions.png"), true, "_blank", null));
 		model.add(createMenuItem(" "
 				+ Messages.getMessage("msg.jsp.similardocs"), "similar-"
-				+ folder.getMenuId(), null, "#{searchForm.searchSimilar}",
+				+ folder.getId(), null, "#{searchForm.searchSimilar}",
 				null, StyleBean.getImagePath("similar.png"), true, "_blank",
 				null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.discuss"),
-				"articles-" + folder.getMenuId(), null,
+				"articles-" + folder.getId(), null,
 				"#{documentRecord.articles}", null, StyleBean
 						.getImagePath("comments.png"), true, "_blank", null));
 		model.add(createMenuItem(" "
 				+ Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-"
-				+ folder.getMenuId(), null, "#{documentRecord.sendAsEmail}",
+				+ folder.getId(), null, "#{documentRecord.sendAsEmail}",
 				null, StyleBean.getImagePath("editmail.png"), true, "_blank",
 				null));
 		model.add(createMenuItem(" "
 				+ Messages.getMessage("msg.jsp.sendticket"), "sendticket-"
-				+ folder.getMenuId(), null, "#{documentRecord.sendAsTicket}",
+				+ folder.getId(), null, "#{documentRecord.sendAsTicket}",
 				null, StyleBean.getImagePath("ticket.png"), true, "_blank",
 				null));
 		model.add(createMenuItem(" "
 				+ Messages.getMessage("msg.jsp.foldercontent.info"), "info-"
-				+ folder.getMenuId(), null, "#{documentRecord.info}", null,
+				+ folder.getId(), null, "#{documentRecord.info}", null,
 				StyleBean.getImagePath("info.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.history"),
-				"history-" + folder.getMenuId(), null,
+				"history-" + folder.getId(), null,
 				"#{documentRecord.history}", null, StyleBean
 						.getImagePath("history.png"), true, "_blank", null));
 	}
@@ -359,7 +359,7 @@ public class DocumentRecord extends MenuBarBean {
 
 		if (SessionManagement.isValid()) {
 			try {
-				if (mdao.isWriteEnable(folder.getMenuId(), username)) {
+				if (mdao.isWriteEnable(folder.getId(), username)) {
 					if (document.getStatus() == Document.DOC_CHECKED_IN) {
 						document.setCheckoutUser(username);
 						document.setStatus(Document.DOC_CHECKED_OUT);
@@ -453,7 +453,7 @@ public class DocumentRecord extends MenuBarBean {
 
 		if (SessionManagement.isValid()) {
 			try {
-				if (mdao.isWriteEnable(folder.getMenuId(), username)) {
+				if (mdao.isWriteEnable(folder.getId(), username)) {
 					VersionsRecordsManager versionsManager = ((VersionsRecordsManager) FacesUtil
 							.accessBeanFromFacesContext(
 									"versionsRecordsManager", FacesContext

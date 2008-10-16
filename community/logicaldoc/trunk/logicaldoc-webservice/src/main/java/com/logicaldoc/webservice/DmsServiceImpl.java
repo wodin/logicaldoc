@@ -59,7 +59,7 @@ public class DmsServiceImpl implements DmsService {
 		Menu folder = document.getFolder();
 
 		checkCredentials(username, password);
-		checkWriteEnable(username, folder.getMenuId());
+		checkWriteEnable(username, folder.getId());
 
 		if (document.getStatus() == Document.DOC_CHECKED_OUT) {
 			// determines the kind of version to create
@@ -104,7 +104,7 @@ public class DmsServiceImpl implements DmsService {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findByPrimaryKey(id);
 		checkCredentials(username, password);
-		checkWriteEnable(username, doc.getFolder().getMenuId());
+		checkWriteEnable(username, doc.getFolder().getId());
 		DocumentManager DocumentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		try {
 			DocumentManager.checkout(id, username);
@@ -174,17 +174,16 @@ public class DmsServiceImpl implements DmsService {
 		checkWriteEnable(username, parent);
 
 		Menu menu = new Menu();
-		menu.setMenuText(name);
-		menu.setMenuParent(parent);
-		menu.setMenuSort(1);
-		menu.setMenuIcon("folder.png");
-		menu.setMenuType(Menu.MENUTYPE_DIRECTORY);
-		menu.setMenuHier(parentMenu.getMenuHier());
-		menu.setMenuRef("");
+		menu.setText(name);
+		menu.setParent(parent);
+		menu.setSort(1);
+		menu.setIcon("folder.png");
+		menu.setType(Menu.MENUTYPE_DIRECTORY);
+		menu.setRef("");
 		menu.setMenuGroup(parentMenu.getMenuGroupNames());
 
 		boolean stored = dao.store(menu);
-		menu.setMenuPath(parentMenu.getMenuPath() + "/" + menu.getMenuId());
+		menu.setPath(parentMenu.getPath() + "/" + menu.getId());
 		stored = dao.store(menu);
 
 		if (!stored) {
@@ -194,7 +193,7 @@ public class DmsServiceImpl implements DmsService {
 			log.info("Created folder " + name);
 		}
 
-		return Integer.toString(menu.getMenuId());
+		return Long.toString(menu.getId());
 	}
 
 	/**
@@ -205,7 +204,7 @@ public class DmsServiceImpl implements DmsService {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findByPrimaryKey(id);
 		checkCredentials(username, password);
-		checkWriteEnable(username, doc.getFolder().getMenuId());
+		checkWriteEnable(username, doc.getFolder().getId());
 		docDao.delete(id);
 		return "ok";
 	}
@@ -235,7 +234,7 @@ public class DmsServiceImpl implements DmsService {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findByPrimaryKey(id);
 		checkCredentials(username, password);
-		checkReadEnable(username, doc.getFolder().getMenuId());
+		checkReadEnable(username, doc.getFolder().getId());
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		File file = documentManager.getDocumentFile(doc);
@@ -260,7 +259,7 @@ public class DmsServiceImpl implements DmsService {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findByPrimaryKey(id);
 		checkCredentials(username, password);
-		checkReadEnable(username, doc.getFolder().getMenuId());
+		checkReadEnable(username, doc.getFolder().getId());
 
 		// Retrieve the document
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -272,8 +271,8 @@ public class DmsServiceImpl implements DmsService {
 		info.setAuthor(doc.getSourceAuthor());
 		info.setSourceDate(convertDateToXML(doc.getSourceDate()));
 		info.setLanguage(doc.getLanguage());
-		info.setFolderId(doc.getFolder().getMenuId());
-		info.setFolderName(doc.getFolder().getMenuText());
+		info.setFolderId(doc.getFolder().getId());
+		info.setFolderName(doc.getFolder().getText());
 		info.setSource(doc.getSource());
 		info.setType(doc.getType());
 		info.setUploadDate(convertDateToXML(doc.getDate()));
@@ -310,19 +309,19 @@ public class DmsServiceImpl implements DmsService {
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu folderMenu = mdao.findByPrimaryKey(folder);
 		folderContent.setId(folder);
-		folderContent.setName(folderMenu.getMenuText());
-		folderContent.setParentId(folderMenu.getMenuParent());
+		folderContent.setName(folderMenu.getText());
+		folderContent.setParentId(folderMenu.getParent());
 		Menu parenMenu = mdao.findByPrimaryKey(folderContent.getParentId());
-		folderContent.setParentName(parenMenu.getMenuText());
+		folderContent.setParentName(parenMenu.getText());
 
 		// Now search for sub-elements
 		Collection<Menu> children = mdao.findChildren(folder);
 		for (Menu menu : children) {
 			Content content = new Content();
-			content.setId(menu.getMenuId());
-			content.setTitle(menu.getMenuText());
-			content.setWriteable(mdao.isReadEnable(menu.getMenuId(), username) ? 1 : 0);
-			if (menu.getMenuType() == Menu.MENUTYPE_DIRECTORY)
+			content.setId(menu.getId());
+			content.setTitle(menu.getText());
+			content.setWriteable(mdao.isReadEnable(menu.getId(), username) ? 1 : 0);
+			if (menu.getType() == Menu.MENUTYPE_DIRECTORY)
 				folderContent.addFolder(content);
 		}
 
@@ -416,7 +415,7 @@ public class DmsServiceImpl implements DmsService {
 		}
 	}
 
-	private void checkWriteEnable(String username, int menuId) throws Exception {
+	private void checkWriteEnable(String username, long menuId) throws Exception {
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		if (!dao.isWriteEnable(menuId, username)) {
 			log.error("User " + username + " cannot write element " + menuId);
@@ -424,7 +423,7 @@ public class DmsServiceImpl implements DmsService {
 		}
 	}
 
-	private void checkReadEnable(String username, int menuId) throws Exception {
+	private void checkReadEnable(String username, long menuId) throws Exception {
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		if (!dao.isReadEnable(menuId, username)) {
 			log.error("User " + username + " cannot read element " + menuId);

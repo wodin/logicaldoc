@@ -33,7 +33,7 @@ public class DirectoryEditForm {
 
 	public void setDirectory(Directory directory) {
 		this.directory = directory;
-		this.folderName = directory.getMenu().getMenuText();
+		this.folderName = directory.getMenu().getText();
 	}
 
 	public String[] getMenuGroup() {
@@ -58,7 +58,7 @@ public class DirectoryEditForm {
 
 			try {
 				directory.setDisplayText(folderName);
-				directory.getMenu().setMenuText(folderName);
+				directory.getMenu().setText(folderName);
 				dao.store(directory.getMenu());
 				documentNavigation.refresh();
 			} catch (Exception e) {
@@ -73,21 +73,19 @@ public class DirectoryEditForm {
 	}
 
 	public String insert() {
-		int menuparent = documentNavigation.getSelectedDir().getMenuId();
+		long menuparent = documentNavigation.getSelectedDir().getMenuId();
 
 		if (SessionManagement.isValid()) {
 			MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 			try {
 				Menu menu = new Menu();
-				menu.setMenuText(getFolderName());
-				menu.setMenuParent(menuparent);
-				menu.setMenuSort(1);
-				menu.setMenuIcon("folder.png");
-				menu.setMenuPath(documentNavigation.getSelectedDir().getMenu().getMenuPath() + "/" + menuparent);
-				menu.setMenuType(Menu.MENUTYPE_DIRECTORY);
-				menu.setMenuHier(menu.getMenuHier());
-				menu.setMenuRef("");
+				menu.setText(getFolderName());
+				menu.setParent(menuparent);
+				menu.setSort(1);
+				menu.setIcon("folder.png");
+				menu.setPath(documentNavigation.getSelectedDir().getMenu().getPath() + "/" + menuparent);
+				menu.setType(Menu.MENUTYPE_DIRECTORY);
 				menu.setMenuGroup(menuGroup);
 
 				boolean stored = dao.store(menu);

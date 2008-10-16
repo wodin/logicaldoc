@@ -13,6 +13,36 @@ import com.logicaldoc.core.i18n.DateBean;
  * @author Michael Scholz, Marco Meschieri
  */
 public class LuceneDocument {
+	public static final String FIELD_KEYWORDS = "keywords";
+
+	public static final String FIELD_SUMMARY = "summary";
+
+	public static final String FIELD_LENGTH = "length";
+
+	public static final String FIELD_CONTENT = "content";
+
+	public static final String FIELD_TYPE = "type";
+
+	public static final String FIELD_PATH = "path";
+
+	public static final String FIELD_SOURCE_TYPE = "sourceType";
+
+	public static final String FIELD_DATE = "date";
+
+	public static final String FIELD_SOURCE_DATE = "sourceDate";
+
+	public static final String FIELD_COVERAGE = "coverage";
+
+	public static final String FIELD_SOURCE_AUTHOR = "sourceAuthor";
+
+	public static final String FIELD_SOURCE = "source";
+
+	public static final String FIELD_SIZE = "size";
+
+	public static final String FIELD_TITLE = "title";
+
+	public static final String FIELD_DOC_ID = "docId";
+
 	private File file = null;
 
 	private Document doc;
@@ -52,7 +82,7 @@ public class LuceneDocument {
 	}
 
 	public void setDocId() {
-		doc.add(new Field("docId", String.valueOf(document.getId()), Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field(FIELD_DOC_ID, String.valueOf(document.getId()), Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
 	/**
@@ -65,55 +95,54 @@ public class LuceneDocument {
 	}
 
 	protected void setTitle() {
-		doc.add(new Field("title", document.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
+		doc.add(new Field(FIELD_TITLE, document.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
 	}
 
 	protected void setSize() {
 		String size = String.valueOf(file.length() / 1024);
-		doc.add(new Field("size", size, Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field(FIELD_SIZE, size, Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
 	protected void setDocData() {
-		doc.add(new Field("source", document.getSource() != null ? document.getSource() : "", Field.Store.NO,
+		doc.add(new Field(FIELD_SOURCE, document.getSource() != null ? document.getSource() : "", Field.Store.NO,
 				Field.Index.TOKENIZED));
-		doc.add(new Field("sourceauthor", document.getSourceAuthor() != null ? document.getSourceAuthor() : "",
+		doc.add(new Field(FIELD_SOURCE_AUTHOR, document.getSourceAuthor() != null ? document.getSourceAuthor() : "",
 				Field.Store.NO, Field.Index.TOKENIZED));
-		doc.add(new Field("sourcetype", document.getSourceType() != null ? document.getSourceType() : "",
+		doc.add(new Field(FIELD_SOURCE_TYPE, document.getSourceType() != null ? document.getSourceType() : "",
 				Field.Store.NO, Field.Index.TOKENIZED));
-		doc.add(new Field("coverage", document.getCoverage() != null ? document.getCoverage() : "", Field.Store.NO,
+		doc.add(new Field(FIELD_COVERAGE, document.getCoverage() != null ? document.getCoverage() : "", Field.Store.NO,
 				Field.Index.TOKENIZED));
-		doc.add(new Field("sourceDate", document.getSourceDate() != null ? DateBean.toCompactString(document
+		doc.add(new Field(FIELD_SOURCE_DATE, document.getSourceDate() != null ? DateBean.toCompactString(document
 				.getSourceDate()) : "", Field.Store.YES, Field.Index.UN_TOKENIZED));
-		doc.add(new Field("date", document.getDate() != null ? DateBean.toCompactString(document.getDate()) : "",
+		doc.add(new Field(FIELD_DATE, document.getDate() != null ? DateBean.toCompactString(document.getDate()) : "",
 				Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
-	
+
 	protected void setPath() {
-		String folderId = String.valueOf(document.getFolder().getMenuId());
-		String path = document.getFolder().getMenuPath();
-		doc.add(new Field("folderId", folderId, Field.Store.YES, Field.Index.UN_TOKENIZED));
-		doc.add(new Field("path", path, Field.Store.YES, Field.Index.UN_TOKENIZED));
+		String folderId = String.valueOf(document.getFolder().getId());
+		String path = document.getFolder().getPath();
+		doc.add(new Field(FIELD_PATH, path + "/" + folderId, Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
 	protected void setType() {
 		int point = file.getName().lastIndexOf(".");
 		String type = file.getName().substring(point + 1);
 		type = type.toUpperCase();
-		doc.add(new Field("type", type, Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field(FIELD_TYPE, type, Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
 	protected void setContent(String content) {
-		doc.add(new Field("content", content, Field.Store.YES, Field.Index.TOKENIZED));
-		doc.add(new Field("length", String.valueOf(content.length()), Field.Store.YES, Field.Index.NO));
+		doc.add(new Field(FIELD_CONTENT, content, Field.Store.YES, Field.Index.TOKENIZED));
+		doc.add(new Field(FIELD_LENGTH, String.valueOf(content.length()), Field.Store.YES, Field.Index.NO));
 	}
 
 	protected void setSummary() {
 		int summarysize = Math.min(content.length(), 500);
 		String summary = content.substring(0, summarysize);
-		doc.add(new Field("summary", summary, Field.Store.YES, Field.Index.TOKENIZED));
+		doc.add(new Field(FIELD_SUMMARY, summary, Field.Store.YES, Field.Index.TOKENIZED));
 	}
 
 	protected void setKeywords() {
-		doc.add(new Field("keywords", document.getKeywordsString(), Field.Store.YES, Field.Index.TOKENIZED));
+		doc.add(new Field(FIELD_KEYWORDS, document.getKeywordsString(), Field.Store.YES, Field.Index.TOKENIZED));
 	}
 }

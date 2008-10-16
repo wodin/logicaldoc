@@ -15,12 +15,12 @@ import javax.swing.tree.DefaultTreeModel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.dao.MenuDAO;
-import com.logicaldoc.util.Context;
 
 import com.icesoft.faces.component.tree.IceUserObject;
 import com.icesoft.faces.component.tree.Tree;
+import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.i18n.Messages;
@@ -38,7 +38,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	protected static Log log = LogFactory.getLog(DirectoryTreeModel.class);
 
 	// Utility map of all directories (key is the menuId)
-	private Map<Integer, Directory> directories = new HashMap<Integer, Directory>();
+	private Map<Long, Directory> directories = new HashMap<Long, Directory>();
 
 	private Directory selectedDir;
 
@@ -78,7 +78,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 				Collections.sort(menus, new Comparator<Menu>() {
 					@Override
 					public int compare(Menu arg0, Menu arg1) {
-						return arg0.getMenuText().compareTo(arg1.getMenuText());
+						return arg0.getText().compareTo(arg1.getText());
 					}
 				});
 
@@ -111,7 +111,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		rootObject.setContentTitle(null);
 		rootObject.setPageContent(true);
 
-		String label = Messages.getMessage(rootMenu.getMenuText());
+		String label = Messages.getMessage(rootMenu.getText());
 		rootObject.setDisplayText(label);
 		rootObject.setContentTitle(label);
 
@@ -119,7 +119,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		rootObject.setWrapper(rootTreeNode);
 		setRoot(rootTreeNode);
 		rootTreeNode.setUserObject(rootObject);
-		directories.put(rootMenu.getMenuId(), rootObject);
+		directories.put(rootMenu.getId(), rootObject);
 		if (countChildren)
 			rootObject.setCount(menuDao.countByUserName(SessionManagement.getUsername(), Menu.MENUID_DOCUMENTS, null));
 	}
@@ -129,11 +129,11 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		reload((DefaultMutableTreeNode) getRoot());
 	}
 
-	public Map<Integer, Directory> getDirectories() {
+	public Map<Long, Directory> getDirectories() {
 		return directories;
 	}
 
-	public Directory getDirectory(int id) {
+	public Directory getDirectory(long id) {
 		return directories.get(id);
 	}
 
@@ -182,10 +182,10 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	 * @param parent The node in which the directory must be searched
 	 * @return The found tree node, null if not found
 	 */
-	private DefaultMutableTreeNode findDirectoryNode(int direcoryId, DefaultMutableTreeNode parent) {
+	private DefaultMutableTreeNode findDirectoryNode(long direcoryId, DefaultMutableTreeNode parent) {
 		Directory dir = (Directory) parent.getUserObject();
 
-		if (dir.getMenu().getMenuId() == direcoryId) {
+		if (dir.getMenu().getId() == direcoryId) {
 			return parent;
 		} else {
 			Enumeration<DefaultMutableTreeNode> enumer = (Enumeration<DefaultMutableTreeNode>) parent.children();
@@ -215,10 +215,10 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	private DefaultMutableTreeNode addDir(String username, DefaultMutableTreeNode parent, Menu dir, int depth) {
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
-		Directory cachedDir = directories.get(dir.getMenuId());
+		Directory cachedDir = directories.get(dir.getId());
 
 		if ((cachedDir != null) && cachedDir.isLoaded()) {
-			DefaultMutableTreeNode node = findDirectoryNode(dir.getMenuId(), parent);
+			DefaultMutableTreeNode node = findDirectoryNode(dir.getId(), parent);
 
 			if (node != null) {
 				return node;
@@ -227,8 +227,8 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 		// Component menu item
 		Directory branchObject = new Directory(dir);
-		branchObject.setDisplayText(dir.getMenuText());
-		branchObject.setContentTitle(dir.getMenuText());
+		branchObject.setDisplayText(dir.getText());
+		branchObject.setContentTitle(dir.getText());
 		branchObject.setIcon(StyleBean.XP_BRANCH_CONTRACTED_ICON);
 
 		DefaultMutableTreeNode branchNode = new DefaultMutableTreeNode(branchObject);
@@ -240,11 +240,11 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 		// Iterate over subdirs
 		if (depth != 0) {
-			List<Menu> children = (List<Menu>)menuDao.findByUserName(username, dir.getMenuId(), Menu.MENUTYPE_DIRECTORY);
-			Collections.sort(children, new Comparator<Menu>(){
+			List<Menu> children = (List<Menu>) menuDao.findByUserName(username, dir.getId(), Menu.MENUTYPE_DIRECTORY);
+			Collections.sort(children, new Comparator<Menu>() {
 				@Override
 				public int compare(Menu menu1, Menu menu2) {
-					return menu1.getMenuText().compareTo(menu2.getMenuText());
+					return menu1.getText().compareTo(menu2.getText());
 				}
 			});
 			for (Menu child : children) {
@@ -257,20 +257,20 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 				}
 			}
 		} else {
-			branchObject.setLeaf(menuDao.countByUserName(username, dir.getMenuId(), Menu.MENUTYPE_DIRECTORY) == 0);
+			branchObject.setLeaf(menuDao.countByUserName(username, dir.getId(), Menu.MENUTYPE_DIRECTORY) == 0);
 		}
 
 		branchObject.setLoaded(true);
-		directories.put(dir.getMenuId(), branchObject);
+		directories.put(dir.getId(), branchObject);
 		parent.add(branchNode);
 		if (countChildren)
-			branchObject.setCount(menuDao.countByUserName(username, dir.getMenuId(), null));
+			branchObject.setCount(menuDao.countByUserName(username, dir.getId(), null));
 		log.debug("added dir " + branchObject.getDisplayText());
 
 		return branchNode;
 	}
 
-	public void selectDirectory(int id) {
+	public void selectDirectory(long id) {
 		selectedDir = directories.get(id);
 		selectDirectory(selectedDir);
 	}
@@ -341,7 +341,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) getRoot();
 		String username = SessionManagement.getUsername();
 		for (Menu folderParent : parents) {
-			if (folderParent.getMenuId() == Menu.MENUID_HOME || folderParent.getMenuId() == Menu.MENUID_DOCUMENTS)
+			if (folderParent.getId() == Menu.MENUID_HOME || folderParent.getId() == Menu.MENUID_DOCUMENTS)
 				continue;
 			parentNode = addDir(username, parentNode, folderParent, 0);
 		}

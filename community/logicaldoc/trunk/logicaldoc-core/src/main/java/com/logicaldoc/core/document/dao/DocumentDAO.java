@@ -57,7 +57,7 @@ public interface DocumentDAO {
 	 * @param folderId Folder identifier
 	 * @return Collection of all documentId required for the specified user.
 	 */
-	public Collection<Long> findByFolder(int folderId);
+	public Collection<Long> findDocIdByFolder(long folderId);
 	
 	/**
 	 * Finds all documents checked-out for an user.

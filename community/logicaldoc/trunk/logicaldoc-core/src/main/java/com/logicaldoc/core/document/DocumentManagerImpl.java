@@ -85,7 +85,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Menu folder = document.getFolder();
 
 		// create some strings containing paths
-		String menuPath = folder.getMenuPath() + "/" + String.valueOf(docId);
+		String menuPath = folder.getPath() + "/" + String.valueOf(docId);
 		String completeDocPath = settings.getValue("docdir") + menuPath + "/";
 
 		// rename the old current version file to the version name: "quelle.txt"
@@ -119,7 +119,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		createHistoryEntry(docId, username, History.CHECKIN);
 
 		// create search index entry
-		createIndexEntry(document, folder.getMenuId(), filename, completeDocPath);
+		createIndexEntry(document, folder.getId(), filename, completeDocPath);
 
 		// store the document in the repository (on the file system)
 		store(document, fileInputStream, filename, newVersion);
@@ -195,7 +195,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(doc);
 
 			// Makes menuPath
-			String menupath = new StringBuilder(parent.getMenuPath()).append("/").append(parent.getMenuId()).toString();
+			String menupath = new StringBuilder(parent.getPath()).append("/").append(parent.getId()).toString();
 			String path = new StringBuilder(settings.getValue("docdir")).append("/").append(menupath).append("/")
 					.append(Long.toString(doc.getId())).append("/").toString();
 
@@ -261,7 +261,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Menu folder = doc.getFolder();
 
 		// Makes menuPath
-		String mpath = folder.getMenuPath() + "/" + String.valueOf(doc.getId());
+		String mpath = folder.getPath() + "/" + String.valueOf(doc.getId());
 
 		// Get file to upload inputStream
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
@@ -293,7 +293,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 
 			Menu folder = doc.getFolder();
-			String menupath = folder.getMenuPath() + "/" + String.valueOf(docId);
+			String menupath = folder.getPath() + "/" + String.valueOf(docId);
 
 			// FileBean.deleteDir(path);
 			storer.delete(menupath);
@@ -311,7 +311,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	public File getDocumentFile(Document doc, String version) {
 		Menu folder = doc.getFolder();
 		String path = settings.getValue("docdir") + "/";
-		path += (folder.getMenuPath() + "/" + doc.getId());
+		path += (folder.getPath() + "/" + doc.getId());
 
 		/*
 		 * Older versions of a document are stored in the same directory as the

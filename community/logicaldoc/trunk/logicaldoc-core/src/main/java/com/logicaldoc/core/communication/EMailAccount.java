@@ -30,8 +30,7 @@ public class EMailAccount {
 
 	private Menu targetFolder;
 
-	// Used only by Struts
-	private Integer targetFolderId;
+	private Long targetFolderId;
 
 	// Comma separated list of allowed extesions
 	private String allowedTypes = "pdf,doc,txt";
@@ -84,11 +83,11 @@ public class EMailAccount {
 		this.language = language;
 	}
 
-	public Integer getTargetFolderId() {
+	public Long getTargetFolderId() {
 		return targetFolderId;
 	}
 
-	public void setTargetFolderId(Integer targetFolderId) {
+	public void setTargetFolderId(Long targetFolderId) {
 		this.targetFolderId = targetFolderId;
 	}
 
@@ -155,7 +154,7 @@ public class EMailAccount {
 	public void setTargetFolder(Menu targetFolder) {
 		this.targetFolder = targetFolder;
 		if (targetFolder != null)
-			this.targetFolderId = targetFolder.getMenuId();
+			this.targetFolderId = targetFolder.getId();
 		else
 			this.targetFolderId = null;
 	}

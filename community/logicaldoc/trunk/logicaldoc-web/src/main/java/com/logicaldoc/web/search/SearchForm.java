@@ -799,9 +799,9 @@ public class SearchForm {
 		Directory dir = directoryModel.getSelectedDir();
 
 		Menu menu = dir.getMenu();
-		String dirPath = menu.getMenuPath() + "/" + menu.getMenuId();
+		String dirPath = menu.getPath() + "/" + menu.getId();
 		setPath(dirPath);
-		parentPathDescr = dir.getMenu().getMenuText();
+		parentPathDescr = dir.getMenu().getText();
 	}
 
 	public String getParentPathDescr() {

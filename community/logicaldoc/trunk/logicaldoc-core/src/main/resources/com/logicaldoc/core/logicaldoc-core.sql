@@ -11,7 +11,7 @@ CREATE TABLE CO_ACCOUNT (
   CO_DELETEFROMMAILBOX INT,
   CO_LANGUAGE          VARCHAR(255),
   CO_ENABLED           INT,
-  CO_TARGETFOLDER      INT,
+  CO_TARGETFOLDER      BIGINT,
     PRIMARY KEY ( CO_ACCOUNTID ));
 
 CREATE TABLE CO_ATTACHMENT (
@@ -40,24 +40,6 @@ CREATE TABLE CO_GROUPS (
   CO_GROUPNAME VARCHAR(255)   NOT NULL,
   CO_GROUPDESC VARCHAR(255),
     PRIMARY KEY ( CO_GROUPNAME ));
-
-CREATE TABLE CO_MENUGROUP (
-  CO_MENUID      INT   NOT NULL,
-  CO_GROUPNAME   VARCHAR(30),
-  CO_WRITEENABLE INT);
-
-CREATE TABLE CO_MENUS (
-  CO_MENUID     INT   NOT NULL,
-  CO_MENUTEXT   VARCHAR(100),
-  CO_MENUPARENT INT,
-  CO_MENUSORT   INT,
-  CO_MENUICON   VARCHAR(255),
-  CO_MENUPATH   VARCHAR(255),
-  CO_MENUTYPE   INT,
-  CO_MENUHIER   INT,
-  CO_MENUREF    VARCHAR(255),
-  CO_MENUSIZE   BIGINT,
-    PRIMARY KEY ( CO_MENUID ));
 
 CREATE TABLE CO_RECIPIENT (
   CO_MESSAGEID INT   NOT NULL,
@@ -98,12 +80,12 @@ CREATE TABLE CO_USERS (
     PRIMARY KEY ( CO_USERNAME ));
 
 CREATE TABLE LD_ARTICLE (
-  LD_ARTICLEID   INT   NOT NULL,
-  LD_DOCID       BIGINT,
-  LD_SUBJECT     VARCHAR(255),
-  LD_MESSAGE     VARCHAR(2000),
-  LD_DATE TIMESTAMP,
-  LD_USERNAME    VARCHAR(30),
+  LD_ARTICLEID INT   NOT NULL,
+  LD_DOCID     BIGINT,
+  LD_SUBJECT   VARCHAR(255),
+  LD_MESSAGE   VARCHAR(2000),
+  LD_DATE      TIMESTAMP,
+  LD_USERNAME  VARCHAR(30),
     PRIMARY KEY ( LD_ARTICLEID ));
 
 CREATE TABLE LD_DOCUMENT (
@@ -122,8 +104,8 @@ CREATE TABLE LD_DOCUMENT (
   LD_COVERAGE     VARCHAR(255),
   LD_LANGUAGE     VARCHAR(10),
   LD_FILENAME     VARCHAR(255),
-  LD_FILESIZE   BIGINT,
-  LD_FOLDERID     INT,
+  LD_FILESIZE     BIGINT,
+  LD_FOLDERID     BIGINT,
     PRIMARY KEY ( LD_ID ));
 
 CREATE TABLE LD_HISTORY (
@@ -137,6 +119,23 @@ CREATE TABLE LD_HISTORY (
 CREATE TABLE LD_KEYWORD (
   LD_DOCID   BIGINT   NOT NULL,
   LD_KEYWORD VARCHAR(255));
+
+CREATE TABLE LD_MENU (
+  LD_ID BIGINT   NOT NULL,
+  LD_TEXT   VARCHAR(255),
+  LD_PARENT BIGINT,
+  LD_SORT   INT,
+  LD_ICON   VARCHAR(255),
+  LD_PATH   VARCHAR(255),
+  LD_TYPE   INT,
+  LD_REF    VARCHAR(255),
+  LD_SIZE   BIGINT,
+    PRIMARY KEY ( LD_ID ));
+
+CREATE TABLE LD_MENUGROUP (
+  LD_MENUID      BIGINT   NOT NULL,
+  LD_GROUPNAME   VARCHAR(255),
+  LD_WRITEENABLE INT);
 
 CREATE TABLE LD_TERM (
   LD_DOCID     BIGINT   NOT NULL,
@@ -163,234 +162,377 @@ CREATE TABLE LD_VERSION (
   LD_VERSION VARCHAR(10),
   LD_USER    VARCHAR(30),
   LD_DATE    TIMESTAMP,
-  LD_COMMENT VARCHAR(255));
+  LD_COMMENT VARCHAR(2000));
 
-alter table co_account add constraint FK876115A59CC15A2 foreign key (co_targetfolder) references co_menus;
+alter table co_account add constraint FK876115A59CC15A2 foreign key (co_targetfolder) references ld_menu;
 alter table co_attachment add constraint FK5E87E6D6CB751496 foreign key (co_messageid) references co_email;
-alter table co_menugroup add constraint FKD58CD46DEA8A715D foreign key (co_menuid) references co_menus;
 alter table co_recipient add constraint FK60FEE206CB751496 foreign key (co_messageid) references co_email;
 alter table co_usergroup add constraint FK44CA21819E198925 foreign key (co_username) references co_users;
 alter table co_usergroup add constraint FK44CA2181B6F18C05 foreign key (co_groupname) references co_groups;
-alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folderid) references co_menus;
-alter table ld_keyword add constraint FK61BF6A917C693DFD foreign key (ld_docid) references ld_document;
-alter table ld_version add constraint FKCC3F49827C693DFD foreign key (ld_docid) references ld_document;
+alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folderid) references ld_menu;
+alter table ld_keyword add constraint FK55BBDA227C693DFD foreign key (ld_docid) references ld_document;
+alter table ld_menugroup add constraint FKB4F7F679AA456AD1 foreign key (ld_menuid) references ld_menu;
+alter table ld_version add constraint FK9B3BD9117C693DFD foreign key (ld_docid) references ld_document;
 
 
 
-
-INSERT INTO CO_MENUS
-VALUES     (1,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE)
+ VALUES  (1,
             'db.home',
             0,
             1,
             'home.png',
             '',
             0,
-            0,
             NULL,
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (2,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (2,
             'db.admin',
             1,
             1,
             'administration.png',
             'ROOT',
             1,
-            1,
             NULL,
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (4,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (4,
             'db.personal',
             1,
             3,
             'personal.png',
             'ROOT',
             1,
-            1,
             NULL,
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (5,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (5,
             'db.projects',
             1,
             4,
             'documents.png',
             'ROOT',
             1,
-            1,
             'document/browse',
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (6,
+INSERT INTO LD_MENU (
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (6,
             'db.user',
             2,
             1,
             'user.png',
             'ROOT/2',
             1,
-            2,
             'admin/users',
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (7,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (7,
             'db.group',
             2,
             2,
             'group.png',
             'ROOT/2',
             1,
-            2,
             'admin/groups',
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (8,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (8,
             'db.logging',
             2,
             3,
             'logging.png',
             'ROOT/2',
             1,
-            2,
             'admin/logs',
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (13,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (13,
             'db.messages',
             4,
             1,
             'message.png',
             'ROOT/4',
             1,
-            2,
             'communication/messages',
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (16,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (16,
             'db.changepassword',
             4,
             3,
             'password.png',
             'ROOT/4',
             1,
-            2,
             'settings/password',
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (17,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (17,
             'directory',
             2,
             5,
             'open.png',
             'ROOT/2',
             1,
-            2,
             'admin/folders',
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (19,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (19,
             'db.editme',
             4,
             4,
             'user.png',
             'ROOT/4',
             1,
-            2,
             'settings/personalData',
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (20,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (20,
             'db.emails',
             2,
             4,
             'mail.png',
             'ROOT/2',
             1,
-            2,
             NULL,
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (23,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (23,
             'smtp',
             20,
             3,
             'mail_preferences.png',
             'ROOT/2/20',
             1,
-            3,
             'admin/smtp',
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (24,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (24,
             'db.emailaccounts',
             20,
             4,
             'mailbox.png',
             'ROOT/2/20',
             1,
-            3,
             'admin/accounts',
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (25,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (25,
             'db.searchengine',
             2,
             6,
             'search.png',
             'ROOT/2',
             1,
-            2,
             'admin/searchEngine',
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (26,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (26,
             'db.keywords',
             1,
             5,
             'keywords.png',
             'ROOT',
             1,
-            1,
             'search/keywords',
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (27,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (27,
             'db.backup',
             2,
             7,
             'backup.png',
             'ROOT/2',
             1,
-            2,
             'admin/backup',
             0);
 
-INSERT INTO CO_MENUS
-VALUES     (14,
+INSERT INTO LD_MENU(
+  LD_ID,
+  LD_TEXT,
+  LD_PARENT,
+  LD_SORT,
+  LD_ICON,
+  LD_PATH,
+  LD_TYPE,
+  LD_REF,
+  LD_SIZE) 
+ VALUES   (14,
             'task.tasks',
             2,
             8,
             'thread.png',
             'ROOT/2',
             1,
-            2,
             'admin/tasks',
             0);
 
@@ -430,177 +572,177 @@ VALUES     ('admin',
             'admin@admin.net',
             '');
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (1,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (2,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (4,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (5,
             'admin',
             1);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (6,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (7,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (8,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (13,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (14,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (16,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (17,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (19,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (20,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (23,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (24,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (25,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (26,
             'admin',
             1);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (27,
             'admin',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (1,
             'author',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (4,
             'author',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (5,
             'author',
             1);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (13,
             'author',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (16,
             'author',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (19,
             'author',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (20,
             'author',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (23,
             'author',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (24,
             'author',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (26,
             'author',
             1);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (1,
             'guest',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (4,
             'guest',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (5,
             'guest',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (13,
             'guest',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (16,
             'guest',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (19,
             'guest',
             0);
 
-INSERT INTO CO_MENUGROUP
+INSERT INTO LD_MENUGROUP
 VALUES     (26,
             'guest',
             0);

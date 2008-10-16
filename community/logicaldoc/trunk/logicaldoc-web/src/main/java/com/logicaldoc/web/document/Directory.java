@@ -36,7 +36,7 @@ public class Directory extends PageContentBean {
     public Directory(Menu menu) {
         super(menu);
         if(menu!=null)
-        	setDisplayText(menu.getMenuText());
+        	setDisplayText(menu.getText());
         else
         	setDisplayText("");
     }

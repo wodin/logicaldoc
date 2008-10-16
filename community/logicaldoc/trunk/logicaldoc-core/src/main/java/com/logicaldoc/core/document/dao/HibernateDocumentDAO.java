@@ -122,7 +122,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		Collection<Document> coll = new ArrayList<Document>();
 
 		try {
-			coll = (Collection<Document>) getHibernateTemplate().find("from com.logicaldoc.core.document.Document");
+			coll = (Collection<Document>) getHibernateTemplate().find("from Document");
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -160,13 +160,13 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				return coll;
 
 			StringBuffer query = new StringBuffer(
-					"select _doc.id from com.logicaldoc.core.document.Document _doc where ");
-			query.append("_doc.folder.menuId in (");
+					"select _doc.id from Document _doc where ");
+			query.append("_doc.folder.id in (");
 			boolean first = true;
 			for (Menu menu : menus) {
 				if (!first)
 					query.append(",");
-				query.append("'" + menu.getMenuId() + "'");
+				query.append("'" + menu.getId() + "'");
 				first = false;
 			}
 			query.append(")");
@@ -241,7 +241,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				doc.setKeywords(dst);
 			}
 
-			long size = FileBean.getSize(settings.getValue("docdir") + "/" + doc.getFolder().getMenuPath() + "/"
+			long size = FileBean.getSize(settings.getValue("docdir") + "/" + doc.getFolder().getPath() + "/"
 					+ doc.getId() + "/" + doc.getFileName());
 			doc.setFileSize(size);
 
@@ -290,8 +290,8 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 			if (!precoll.isEmpty()) {
 				StringBuffer query = new StringBuffer(
-						"select B.ld_keyword from ld_document A, ld_keyword B, co_menugroup C "
-								+ " where A.ld_id = B.ld_docid and A.ld_folderid=C.co_menuid and C.co_groupname in (");
+						"select B.ld_keyword from ld_document A, ld_keyword B, ld_menugroup C "
+								+ " where A.ld_id = B.ld_docid and A.ld_folderid=C.ld_menuid and C.ld_groupname in (");
 				boolean first = true;
 				while (iter.hasNext()) {
 					if (!first)
@@ -337,7 +337,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 		try {
 			StringBuilder query = new StringBuilder(
-					"SELECT _history.docId from com.logicaldoc.core.document.History _history");
+					"SELECT _history.docId from History _history");
 			query.append(" WHERE _history.username = '" + username + "' ");
 			query.append(" ORDER BY _history.date DESC");
 
@@ -346,7 +346,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				if (coll.size() >= maxElements)
 					break;
 				Document document = findByPrimaryKey(docid);
-				if (menuDAO.isReadEnable(document.getFolder().getMenuId(), username))
+				if (menuDAO.isReadEnable(document.getFolder().getId(), username))
 					coll.add(document);
 			}
 		} catch (Exception e) {
@@ -439,9 +439,9 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 			if (!precoll.isEmpty()) {
 				StringBuffer query = new StringBuffer(
-						"select distinct(C.ld_id) from co_menugroup A, co_menus B, ld_document C, ld_keyword D "
-								+ " where A.co_menuid=B.co_menuid AND B.co_menuid=C.ld_folderid AND C.ld_id=D.ld_docid"
-								+ " AND A.co_groupname in (");
+						"select distinct(C.ld_id) from ld_menugroup A, ld_menu B, ld_document C, ld_keyword D "
+								+ " where A.ld_menuid=B.ld_id AND B.ld_id=C.ld_folderid AND C.ld_id=D.ld_docid"
+								+ " AND A.ld_groupname in (");
 				boolean first = true;
 				while (iter.hasNext()) {
 					if (!first)
@@ -451,7 +451,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 					first = false;
 				}
 				query.append(")");
-				query.append(" AND B.co_menutype=" + Menu.MENUTYPE_DIRECTORY);
+				query.append(" AND B.ld_type=" + Menu.MENUTYPE_DIRECTORY);
 				query.append(" AND lower(D.ld_keyword)='" + keyword + "'");
 
 				Connection con = null;
@@ -537,14 +537,14 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Long> findByFolder(int folderId) {
+	public Collection<Long> findDocIdByFolder(long folderId) {
 		Collection<Long> coll = new ArrayList<Long>();
 
 		try {
 			StringBuffer query = new StringBuffer(
 					"select _doc.id from com.logicaldoc.core.document.Document _doc where ");
-			query.append("_doc.folder.menuId = ");
-			query.append(Integer.toString(folderId));
+			query.append("_doc.folder.id = ");
+			query.append(Long.toString(folderId));
 
 			coll = (Collection<Long>) getHibernateTemplate().find(query.toString());
 		} catch (Exception e) {

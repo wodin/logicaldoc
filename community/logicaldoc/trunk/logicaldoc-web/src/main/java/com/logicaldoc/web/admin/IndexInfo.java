@@ -104,7 +104,7 @@ public class IndexInfo {
 							Document document = iter.next();
 							Menu folder = document.getFolder();
 							String dir = conf.getValue("docdir") + "/";
-							dir += (folder.getMenuPath() + "/" + document.getId());
+							dir += (folder.getPath() + "/" + document.getId());
 							indexer.addDirectory(new File(dir), document);
 						}
 					} catch (Exception e) {

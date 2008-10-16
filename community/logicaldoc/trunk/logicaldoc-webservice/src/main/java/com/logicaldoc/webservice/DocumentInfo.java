@@ -12,7 +12,7 @@ public class DocumentInfo {
 
 	private String title;
 
-	private int folderId;
+	private long folderId;
 
 	private String folderName;
 
@@ -76,11 +76,11 @@ public class DocumentInfo {
 		this.title = title;
 	}
 
-	public int getFolderId() {
+	public long getFolderId() {
 		return folderId;
 	}
 
-	public void setFolderId(int folderId) {
+	public void setFolderId(long folderId) {
 		this.folderId = folderId;
 	}
 

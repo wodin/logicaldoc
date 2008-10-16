@@ -5,27 +5,31 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 
 /**
- * This class represents menus.
+ * This class represents the key concept of security. A Menu not only models
+ * menues but also it is used as an element to build hierarchies. With
+ * menugroups you can associate groups to a given menu and grant some
+ * permissions.
  * 
  * @author Michael Scholz
  * @author Marco Meschieri
  * @version 1.0
  */
-public class Menu {
+public class Menu extends PersistentObject {
 
-	public static final int MENUID_HOME = 1;
+	public static final long MENUID_HOME = 1;
 
-	public static final int MENUID_PERSONAL = 4;
+	public static final long MENUID_PERSONAL = 4;
 
-	public static final int MENUID_DOCUMENTS = 5;
+	public static final long MENUID_DOCUMENTS = 5;
 
-	public static final int MENUID_MESSAGES = 13;
+	public static final long MENUID_MESSAGES = 13;
 
-	public static final int MENUID_EDITME = 19;
+	public static final long MENUID_EDITME = 19;
 
 	public static final int MENUTYPE_DIRECTORY = 3;
 
@@ -33,111 +37,95 @@ public class Menu {
 
 	public static final int MENUTYPE_HOME = 0;
 
-	// Special menu for browsing the document archive
-	public static final String MENU_BROWSE = "Browse.do";
+	private long id = 0;
 
-	protected int menuId = 0;
+	private String text = "";
 
-	protected String menuText = "";
+	private long parent = 0;
 
-	protected int menuParent = 0;
+	private int sort = 0;
 
-	protected int menuSort = 0;
+	private String icon = "";
 
-	protected String menuIcon = "";
+	private String path = "";
 
-	protected String menuPath = "";
+	private int type = 2;
 
-	protected int menuType = 2;
+	private long size = 0;
 
-	protected int menuHier = 0;
-
-	protected String menuRef = "";
-
-	protected long menuSize = 0;
+	private String ref = "";
 
 	protected Set<MenuGroup> menuGroups = new HashSet<MenuGroup>();
-
-	// Not persistent
-	protected boolean writeable = false;
 
 	public Menu() {
 	}
 
-	public int getMenuId() {
-		return menuId;
+	public long getId() {
+		return id;
 	}
 
-	public String getMenuText() {
-		return menuText;
+	public String getText() {
+		return text;
 	}
 
-	public int getMenuParent() {
-		return menuParent;
+	public long getParent() {
+		return parent;
 	}
 
-	public int getMenuSort() {
-		return menuSort;
+	public int getSort() {
+		return sort;
 	}
 
-	public String getMenuIcon() {
-		return menuIcon;
+	public String getIcon() {
+		return icon;
 	}
 
-	public String getMenuPath() {
-		return menuPath;
+	public String getPath() {
+		return path;
 	}
 
-	public int getMenuType() {
-		return menuType;
+	public int getType() {
+		return type;
 	}
 
-	public int getMenuHier() {
-		return menuHier;
+	public String getRef() {
+		return ref;
 	}
 
-	public String getMenuRef() {
-		return menuRef;
+	public void setRef(String ref) {
+		this.ref = ref;
 	}
 
 	public Set<MenuGroup> getMenuGroups() {
 		return menuGroups;
 	}
 
-	protected void setMenuId(int id) {
-		menuId = id;
+	public void setId(long id) {
+		this.id = id;
 	}
 
-	public void setMenuText(String text) {
-		menuText = text;
+	public void setText(String text) {
+		this.text = text;
 	}
 
-	public void setMenuParent(int parent) {
-		menuParent = parent;
+	public void setParent(long parent) {
+		this.parent = parent;
 	}
 
-	public void setMenuSort(int sort) {
-		menuSort = sort;
+	public void setSort(int sort) {
+		this.sort = sort;
 	}
 
-	public void setMenuIcon(String icon) {
-		menuIcon = icon;
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 
-	public void setMenuPath(String path) {
-		menuPath = path;
+	public void setPath(String path) {
+		this.path = path;
 	}
 
-	public void setMenuType(int type) {
-		menuType = type;
-	}
-
-	public void setMenuHier(int hier) {
-		menuHier = hier;
-	}
-
-	public void setMenuRef(String ref) {
-		menuRef = ref;
+	public void setType(int type) {
+		this.type = type;
 	}
 
 	public void setMenuGroups(Set<MenuGroup> mgroup) {
@@ -170,15 +158,13 @@ public class Menu {
 
 	public Menu copy() {
 		Menu menu = new Menu();
-		menu.setMenuId(this.getMenuId());
-		menu.setMenuText(this.getMenuText());
-		menu.setMenuParent(this.getMenuParent());
-		menu.setMenuSort(this.getMenuSort());
-		menu.setMenuIcon(this.getMenuIcon());
-		menu.setMenuPath(this.getMenuPath());
-		menu.setMenuType(this.getMenuType());
-		menu.setMenuHier(this.getMenuHier());
-		menu.setMenuRef(this.getMenuRef());
+		menu.setId(this.getId());
+		menu.setText(this.getText());
+		menu.setParent(this.getParent());
+		menu.setSort(this.getSort());
+		menu.setIcon(this.getIcon());
+		menu.setPath(this.getPath());
+		menu.setType(this.getType());
 		menu.setMenuGroups(this.getMenuGroups());
 		return menu;
 	}
@@ -193,7 +179,7 @@ public class Menu {
 		Collection<Menu> coll = new ArrayList<Menu>();
 
 		try {
-			String[] menus = menuPath.split("/");
+			String[] menus = path.split("/");
 
 			if (menus.length > 0) {
 				if (menus[0].length() > 0) {
@@ -214,7 +200,6 @@ public class Menu {
 		} catch (Exception e) {
 			;
 		}
-
 		return coll;
 	}
 
@@ -226,35 +211,11 @@ public class Menu {
 		return null;
 	}
 
-	@Override
-	public boolean equals(Object arg0) {
-		if (!(arg0 instanceof Menu))
-			return false;
-		Menu other = (Menu) arg0;
-		return other.getMenuId() == this.getMenuId();
+	public long getSize() {
+		return size;
 	}
 
-	@Override
-	public int hashCode() {
-		return new Integer(menuId).hashCode();
-	}
-
-	/**
-	 * The size of the file associated to this menu expressed in bytes
-	 */
-	public long getMenuSize() {
-		return menuSize;
-	}
-
-	public void setMenuSize(long size) {
-		this.menuSize = size;
-	}
-
-	public boolean isWriteable() {
-		return writeable;
-	}
-
-	public void setWriteable(boolean writeable) {
-		this.writeable = writeable;
+	public void setSize(long size) {
+		this.size = size;
 	}
 }
