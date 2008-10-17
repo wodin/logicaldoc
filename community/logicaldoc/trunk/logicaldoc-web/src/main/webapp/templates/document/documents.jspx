@@ -128,7 +128,7 @@
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
 					menuPopup="pop">
 					<ice:outputText value="#{documentRecord.size} KB"
-						title="#{msgs['msg.jsp.popup']}" />
+						title="#{msgs['msg.jsp.popup']}" /> 
 				</ice:panelGroup>
 			</ice:column>
 		</ice:dataTable>

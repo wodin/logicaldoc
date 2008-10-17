@@ -201,9 +201,11 @@ public class DocumentManagerImpl implements DocumentManager {
 			/* create search index entry */
 			String lang = doc.getLanguage();
 			File file = new File(new StringBuilder(path).append("/").append(doc.getFileName()).toString());
+			System.out.println("*****"+file.getPath());
 			indexer.addFile(file, doc, getDocumentContent(doc), lang);
 
 			doc.setFileSize(file.length());
+			System.out.println("***** size"+doc.getFileSize());
 			documentDAO.store(doc);
 			return doc;
 		} catch (Exception e) {

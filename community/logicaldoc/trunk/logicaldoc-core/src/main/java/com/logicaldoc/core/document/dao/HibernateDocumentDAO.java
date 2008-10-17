@@ -1,5 +1,6 @@
 package com.logicaldoc.core.document.dao;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -17,7 +18,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import com.logicaldoc.core.FileBean;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
@@ -240,8 +240,8 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				doc.setKeywords(dst);
 			}
 
-			long size = FileBean.getSize(settings.getValue("docdir") + "/" + doc.getFolder().getPath() + "/"
-					+ doc.getId() + "/" + doc.getFileName());
+			long size = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/" + doc.getId() + "/" + doc
+					.getFileName())).length();
 			doc.setFileSize(size);
 
 			getHibernateTemplate().saveOrUpdate(doc);

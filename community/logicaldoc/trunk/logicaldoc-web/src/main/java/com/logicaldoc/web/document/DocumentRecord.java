@@ -101,7 +101,7 @@ public class DocumentRecord extends MenuBarBean {
 	}
 
 	public long getSize() {
-		return getDocument().getFileSize() / 1024;
+		return (long)((double)getDocument().getFileSize() / (double)1024);
 	}
 
 	public long getDocId() {
