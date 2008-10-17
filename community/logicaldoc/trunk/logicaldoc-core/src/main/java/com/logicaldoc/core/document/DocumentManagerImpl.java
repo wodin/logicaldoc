@@ -87,7 +87,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// create some strings containing paths
 		String completeDocPath = settings.getValue("docdir")
-				+ document.getPath() + "/";
+				+ document.getPath() + "/" + docId + "/";
 
 		// rename the old current version file to the version name: "quelle.txt"
 		// -> "2.0"
@@ -197,7 +197,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(doc);
 
 			String path = new StringBuilder(settings.getValue("docdir"))
-					.append("/").append(doc.getPath()).append("/").toString();
+					.append("/").append(doc.getPath()).append("/").append(doc.getId()).toString();
 
 			/* store the document */
 			store(doc, content, filename, "1.0");
@@ -263,7 +263,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	private void store(Document doc, InputStream content, String filename,
 			String version) throws IOException {
 		// Makes path
-		String path = doc.getPath();
+		String path = doc.getPath()+"/"+doc.getId();
 
 		// Get file to upload inputStream
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
@@ -296,7 +296,7 @@ public class DocumentManagerImpl implements DocumentManager {
 								.getLanguage());
 			}
 
-			storer.delete(doc.getPath());
+			storer.delete(doc.getPath()+"/"+doc.getId());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
