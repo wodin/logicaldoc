@@ -39,39 +39,51 @@ public class SecurityManagerImplTest extends AbstractCoreTestCase {
 
 	public void testAssignUsersToGroup() {
 		ArrayList<User> users = new ArrayList<User>();
-		users.add(userDAO.findByPrimaryKey("test"));
-		users.add(userDAO.findByPrimaryKey("admin"));
+		users.add(userDAO.findByUserName("test"));
+		users.add(userDAO.findByUserName("admin"));
 		Group group = groupDAO.findByPrimaryKey("author");
 		manager.assignUsersToGroup(users, group);
-		User user = userDAO.findByPrimaryKey("test");
+		User user = userDAO.findByUserName("test");
 		assertTrue(user.getGroups().contains(group));
-		user = userDAO.findByPrimaryKey("admin");
+		user = userDAO.findByUserName("admin");
 		assertTrue(user.getGroups().contains(group));
 
 		group = groupDAO.findByPrimaryKey("guest");
 		manager.assignUsersToGroup(users, group);
-		user = userDAO.findByPrimaryKey("test");
+		user = userDAO.findByUserName("test");
 		assertTrue(user.getGroups().contains(group));
-		user = userDAO.findByPrimaryKey("admin");
+		user = userDAO.findByUserName("admin");
 		assertTrue(user.getGroups().contains(group));
 	}
 
 	public void testRemoveUsersFromGroup() {
 		ArrayList<User> users = new ArrayList<User>();
-		users.add(userDAO.findByPrimaryKey("test"));
-		users.add(userDAO.findByPrimaryKey("admin"));
+		users.add(userDAO.findByUserName("test"));
+		users.add(userDAO.findByUserName("admin"));
 		Group group = groupDAO.findByPrimaryKey("author");
 		manager.removeUsersFromGroup(users, group);
-		User user = userDAO.findByPrimaryKey("test");
+		User user = userDAO.findByUserName("test");
 		assertFalse(user.getGroups().contains(group));
-		user = userDAO.findByPrimaryKey("admin");
+		user = userDAO.findByUserName("admin");
 		assertFalse(user.getGroups().contains(group));
 
 		group = groupDAO.findByPrimaryKey("guest");
 		manager.removeUsersFromGroup(users, group);
-		user = userDAO.findByPrimaryKey("test");
+		user = userDAO.findByUserName("test");
 		assertFalse(user.getGroups().contains(group));
-		user = userDAO.findByPrimaryKey("admin");
+		user = userDAO.findByUserName("admin");
 		assertFalse(user.getGroups().contains(group));
+	}
+	
+	public void testAssignUserToGroups() {
+		User user = new User();
+		user.setUserName("zzz");
+		user.setDecodedPassword("xxxpwd");
+		userDAO.store(user);
+		manager.assignUserToGroups(user, new String[] { "admin", "author" });
+		assertEquals(2, user.getGroups().size());
+		user = userDAO.findByPrimaryKey(user.getId());
+		assertNotNull(user);
+		assertEquals(2, user.getGroups().size());
 	}
 }

@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import com.logicaldoc.core.CryptBean;
+import com.logicaldoc.core.PersistentObject;
 
 /**
  * This class represents a user.
@@ -15,7 +15,7 @@ import com.logicaldoc.core.CryptBean;
  * @author Marco Meschieri
  * @version 1.0
  */
-public class User implements Serializable {
+public class User extends PersistentObject implements Serializable {
 
 	private static final long serialVersionUID = 8093874904302301982L;
 
@@ -118,7 +118,8 @@ public class User implements Serializable {
 	/**
 	 * Sets the password and encode it
 	 * 
-	 * @param pwd The password in readable format
+	 * @param pwd
+	 *            The password in readable format
 	 */
 	public void setDecodedPassword(String pwd) {
 		if ((pwd != null) && !pwd.trim().equals("")) {
@@ -130,12 +131,12 @@ public class User implements Serializable {
 		return password;
 	}
 
-	public void setName(String nm) {
-		name = nm;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public void setFirstName(String fname) {
-		firstName = fname;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
 	public void setStreet(String str) {
@@ -174,11 +175,11 @@ public class User implements Serializable {
 		try {
 			groupNames = new String[groups.size()];
 
-			Iterator iter = groups.iterator();
+			Iterator<Group> iter = groups.iterator();
 			int i = 0;
 
 			while (iter.hasNext()) {
-				Group ug = (Group) iter.next();
+				Group ug = iter.next();
 				groupNames[i] = ug.getGroupName();
 				i++;
 			}
@@ -204,26 +205,7 @@ public class User implements Serializable {
 	}
 
 	public String toString() {
-		// return ReflectionToStringBuilder.toString(this);
-		return (new ReflectionToStringBuilder(this) {
-			protected boolean accept(java.lang.reflect.Field f) {
-				return super.accept(f);
-			} // end method accept
-		}).toString();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof User))
-			return false;
-
-		User other = (User) obj;
-		return other.getUserName().equals(this.getUserName());
-	}
-
-	@Override
-	public int hashCode() {
-		return userName.hashCode();
+		return getUserName();
 	}
 
 	public Set<Group> getGroups() {

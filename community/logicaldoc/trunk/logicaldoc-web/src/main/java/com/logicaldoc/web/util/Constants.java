@@ -19,6 +19,9 @@ public final class Constants {
 	// The currenly logged user name
 	public static final String AUTH_USERNAME = "authUser";
 
+	// The currenly logged user identifier
+	public static final String AUTH_USERID = "authUserId";
+	
 	// The language of the currently logged user
 	public static final String LANGUAGE = "language";
 

@@ -283,7 +283,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		Collection<String> coll = new ArrayList<String>();
 
 		try {
-			User user = userDAO.findByPrimaryKey(username);
+			User user = userDAO.findByUserName(username);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 
@@ -385,7 +385,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	public Collection<Document> findByUserNameAndKeyword(String username, String keyword) {
 		Collection<Document> coll = new ArrayList<Document>();
 		try {
-			User user = userDAO.findByPrimaryKey(username);
+			User user = userDAO.findByUserName(username);
 			Collection<Group> precoll = user.getGroups();
 			Iterator<Group> iter = precoll.iterator();
 			if (precoll.isEmpty())
@@ -431,7 +431,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	public Set<Long> findDocIdByUsernameAndKeyword(String username, String keyword) {
 		Set<Long> ids = new HashSet<Long>();
 		try {
-			User user = userDAO.findByPrimaryKey(username);
+			User user = userDAO.findByUserName(username);
 			Collection<Group> precoll = user.getGroups();
 			Iterator<Group> iter = precoll.iterator();
 

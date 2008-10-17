@@ -56,6 +56,11 @@ public class Group implements Serializable {
 		users = new HashSet<User>();
 	}
 
+	public void clearUsers() {
+		users.clear();
+		users = new HashSet<User>();
+	}
+
 	public String toString() {
 		// return ReflectionToStringBuilder.toString(this);
 		return (new ReflectionToStringBuilder(this) {

@@ -159,7 +159,7 @@ public class UsersRecordsManager extends SortableList {
 
 				// get the user's groups and check if he is member of
 				// "admin" group
-				User toBeDeletedUser = dao.findByPrimaryKey(user.getUserName());
+				User toBeDeletedUser = dao.findByUserName(user.getUserName());
 				boolean isAdmin = false;
 
 				if (toBeDeletedUser != null) {
@@ -250,7 +250,7 @@ public class UsersRecordsManager extends SortableList {
 
 					manager.removeUserFromAllGroups(toBeDeletedUser);
 
-					boolean deleted = dao.delete(user.getUserName());
+					boolean deleted = dao.delete(user.getId());
 
 					if (!deleted) {
 						Messages.addLocalizedError("errors.action.deleteuser");

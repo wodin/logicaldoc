@@ -6,9 +6,9 @@
 		<cache usage="read-write" />
 		<id name="groupName" type="string" column="co_groupname" />
 		<property name="groupDesc" type="string" column="co_groupdesc" length="255" />
-        <set name="users" table="co_usergroup" lazy="false">
-             <key column="co_groupname"/>
-             <many-to-many column="co_username" class="com.logicaldoc.core.security.User" />
+        <set name="users" table="ld_usergroup" lazy="false">
+             <key column="ld_groupname"/>
+             <many-to-many column="ld_userid" class="com.logicaldoc.core.security.User" />
         </set>
 	</class>
 </hibernate-mapping>

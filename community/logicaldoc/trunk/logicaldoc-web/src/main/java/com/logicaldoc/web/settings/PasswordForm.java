@@ -63,7 +63,7 @@ public class PasswordForm {
                     String username = SessionManagement.getUsername();
                     UserDAO udao = (UserDAO) Context.getInstance()
                                                     .getBean(UserDAO.class);
-                    User user = udao.findByPrimaryKey(username);
+                    User user = udao.findByUserName(username);
                     String opwd = CryptBean.cryptString(oldPassword);
 
                     if (opwd.equals(user.getPassword())) {

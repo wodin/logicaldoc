@@ -4,11 +4,11 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
-
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.admin.UsersRecordsManager;
 import com.logicaldoc.web.i18n.Messages;
@@ -132,7 +132,8 @@ public class PersonalDataForm {
 	public String save() {
 		if (SessionManagement.isValid()) {
 			try {
-				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+				UserDAO dao = (UserDAO) Context.getInstance().getBean(
+						UserDAO.class);
 				User user = SessionManagement.getUser();
 				user.setFirstName(firstName);
 				user.setName(name);
@@ -144,19 +145,22 @@ public class PersonalDataForm {
 				user.setPostalcode(postalCode);
 				user.setTelephone(phone);
 
-				SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
+				SecurityManager manager = (SecurityManager) Context
+						.getInstance().getBean(SecurityManager.class);
 				boolean stored = dao.store(user);
 
 				if (!stored) {
-					Messages.addLocalizedError("errors.action.saveuser.notstored");
+					Messages
+							.addLocalizedError("errors.action.saveuser.notstored");
 				} else {
 					Messages.addLocalizedInfo("msg.action.changeuser");
 				}
 
 				user.initGroupNames();
 
-				UsersRecordsManager recordsManager = ((UsersRecordsManager) FacesUtil.accessBeanFromFacesContext(
-						"usersRecordsManager", FacesContext.getCurrentInstance(), log));
+				UsersRecordsManager recordsManager = ((UsersRecordsManager) FacesUtil
+						.accessBeanFromFacesContext("usersRecordsManager",
+								FacesContext.getCurrentInstance(), log));
 				recordsManager.reload();
 				recordsManager.setSelectedPanel("list");
 			} catch (Exception e) {

@@ -7,8 +7,6 @@ import com.logicaldoc.core.CryptBean;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.dao.GroupDAO;
-import com.logicaldoc.core.security.dao.UserDAO;
 
 /**
  * Test case for <code>HibernateUserDAO</code>
@@ -44,33 +42,28 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 
 	public void testDelete() {
 		// User with history, not deletable
-		User user = dao.findByPrimaryKey("author");
+		User user = dao.findByUserName("author");
 		assertEquals(1, user.getGroups().size());
 		try {
-			dao.delete("author");
+			dao.delete(user.getId());
 			fail("A referenced user was deleted ?!?");
 		} catch (Throwable e) {
 			// All ok, don't worry
 		}
-		user = dao.findByPrimaryKey("author");
+		user = dao.findByUserName("author");
 		assertNotNull(user);
 
 		// Try with a deletable user
-		User testUser = dao.findByPrimaryKey("test");
+		User testUser = dao.findByUserName("test");
 		assertEquals(1, testUser.getGroups().size());
 		manager.removeUserFromAllGroups(testUser);
 		assertEquals(0, testUser.getGroups().size());
-		assertTrue(dao.delete("test"));
-		user = dao.findByPrimaryKey("test");
+		assertTrue(dao.delete(testUser.getId()));
+		user = dao.findByUserName("test");
 		assertNull(user);
 
 		Group group = groupDao.findByPrimaryKey("guest");
 		assertFalse(group.getUsers().contains(testUser));
-	}
-
-	public void testExistsUser() {
-		assertTrue(dao.existsUser("sebastian"));
-		assertFalse(dao.existsUser("xxxx"));
 	}
 
 	public void testFindAll() {
@@ -93,8 +86,8 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, users.size());
 	}
 
-	public void testFindByPrimaryKey() {
-		User user = dao.findByPrimaryKey("admin");
+	public void testFindByUserName() {
+		User user = dao.findByUserName("admin");
 		assertNotNull(user);
 		assertEquals("admin", user.getUserName());
 		user.setDecodedPassword("admin");
@@ -103,26 +96,41 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		assertEquals(1, user.getGroups().size());
 
 		// Try with unexisting username
-		user = dao.findByPrimaryKey("xxxx");
+		user = dao.findByUserName("xxxx");
 		assertNull(user);
 	}
 
-	public void testFindByUserName() {
-		Collection<User> users = dao.findByUserName("admin");
+	public void testFindByLikeUserName() {
+		Collection<User> users = dao.findByLikeUserName("admin");
 		assertNotNull(users);
 		assertEquals(1, users.size());
 		assertEquals("admin", users.iterator().next().getUserName());
 
-		users = dao.findByUserName("adm%");
+		users = dao.findByLikeUserName("adm%");
 		assertNotNull(users);
 		assertEquals(1, users.size());
 		assertEquals("admin", users.iterator().next().getUserName());
 
-		users = dao.findByUserName("xxx%");
+		users = dao.findByLikeUserName("xxx%");
 		assertNotNull(users);
 		assertTrue(users.isEmpty());
 	}
 
+	public void testFindByPrimaryKey() {
+		User user = dao.findByPrimaryKey(1);
+		assertNotNull(user);
+		assertEquals("admin", user.getUserName());
+		user.setDecodedPassword("admin");
+		assertEquals(CryptBean.cryptString("admin"), user.getPassword());
+		assertEquals("admin@admin.net", user.getEmail());
+		assertEquals(1, user.getGroups().size());
+
+		// Try with unexisting id
+		user = dao.findByPrimaryKey(9999);
+		assertNull(user);
+	}
+	
+	
 	public void testFindByUserNameAndName() {
 		Collection<User> users = dao.findByUserNameAndName("boss", "Meschieri");
 		assertNotNull(users);
@@ -143,25 +151,25 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		User user = new User();
 		user.setUserName("xxx");
 		user.setDecodedPassword("xxxpwd");
-		user.setName("calus");
+		user.setName("claus");
 		user.setFirstName("valca");
 		user.setEmail("valca@acme.com");
 		assertTrue(dao.store(user));
 		manager.assignUserToGroups(user, new String[] { "admin" });
 
-		User storedUser = dao.findByPrimaryKey("xxx");
+		User storedUser = dao.findByUserName("xxx");
 		assertNotNull(user);
 		assertEquals(user, storedUser);
 		assertEquals(1, storedUser.getGroups().size());
-		assertEquals(CryptBean.cryptString("xxxpwd"), storedUser.getDecodedPassword());
+		assertEquals(CryptBean.cryptString("xxxpwd"), storedUser
+				.getDecodedPassword());
 
-		user = new User();
-		user.setUserName("admin");
+		user = dao.findByPrimaryKey(1);
 		user.setDecodedPassword("xxxpwd");
 		dao.store(user);
 		manager.assignUserToGroups(user, new String[] { "admin", "author" });
 		assertEquals(2, user.getGroups().size());
-		user = dao.findByPrimaryKey("admin");
+		user = dao.findByPrimaryKey(1);
 		assertNotNull(user);
 		assertEquals(2, user.getGroups().size());
 	}

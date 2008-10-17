@@ -77,7 +77,7 @@ public class UserForm {
                 UserDAO dao = (UserDAO) Context.getInstance().getBean(
                         UserDAO.class);
 
-                User tempuser = dao.findByPrimaryKey(user.getUserName());
+                User tempuser = dao.findByUserName(user.getUserName());
 
                 if ((tempuser != null) && !tempuser.equals(user)) {
                     Messages.addLocalizedError("errors.action.userexists");

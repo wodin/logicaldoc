@@ -1,68 +1,72 @@
 package com.logicaldoc.web;
 
-import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.dao.UserDAO;
-
-import com.logicaldoc.util.Context;
-
-import com.logicaldoc.web.util.Constants;
-
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
-
 import javax.servlet.http.HttpSession;
 
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.util.Context;
+import com.logicaldoc.web.util.Constants;
 
 /**
- *
+ * 
  * @author Michael Scholz
+ * @author Marco Meschieri - Logical Objects
  */
 public class SessionManagement {
-    public static boolean isValid(HttpSession session) {
-        boolean result = true;
-        String username = (String) session.getAttribute(Constants.AUTH_USERNAME);
+	public static boolean isValid(HttpSession session) {
+		boolean result = true;
+		String username = (String) session
+				.getAttribute(Constants.AUTH_USERNAME);
 
-        if ((username == null) || username.equals("")) {
-            result = false;
-        }
+		if ((username == null) || username.equals("")) {
+			result = false;
+		}
 
-        if (session.isNew()) {
-            result = false;
-        }
+		if (session.isNew()) {
+			result = false;
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    public static boolean isValid() {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) facesContext.getExternalContext()
-                                                        .getSession(false);
+	public static boolean isValid() {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		HttpSession session = (HttpSession) facesContext.getExternalContext()
+				.getSession(false);
 
-        return isValid(session);
-    }
+		return isValid(session);
+	}
 
-    public static String getUsername() {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        Map session = facesContext.getExternalContext().getSessionMap();
-        String username = (String) session.get(Constants.AUTH_USERNAME);
+	public static String getUsername() {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		Map session = facesContext.getExternalContext().getSessionMap();
+		String username = (String) session.get(Constants.AUTH_USERNAME);
 
-        return username;
-    }
+		return username;
+	}
 
-    public static User getUser() {
-        String username = getUsername();
-        UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-        User user=dao.findByPrimaryKey(username);
-        user.initGroupNames();
-        return user;
-    }
+	public static long getUserId() {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		Map session = facesContext.getExternalContext().getSessionMap();
+		Long userid = (Long) session.get(Constants.AUTH_USERID);
+		return userid.longValue();
+	}
 
-    public static String getLanguage() {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        Map session = facesContext.getExternalContext().getSessionMap();
-        String language = (String) session.get(Constants.LANGUAGE);
+	public static User getUser() {
+		long userId = getUserId();
+		UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		User user = dao.findByPrimaryKey(userId);
+		user.initGroupNames();
+		return user;
+	}
 
-        return language;
-    }
+	public static String getLanguage() {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		Map session = facesContext.getExternalContext().getSessionMap();
+		String language = (String) session.get(Constants.LANGUAGE);
+		return language;
+	}
 }

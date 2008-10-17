@@ -1,14 +1,14 @@
-INSERT INTO co_users (co_username,co_password,co_name,co_firstname,co_street,co_postalcode,co_city,co_country,co_language,co_email,co_telephone)
-VALUES ('boss','d033e22ae348aeb566fc214aec3585c4da997','Meschieri','Marco','','','','','it','m.meschieri@logicalobjects.it','');
+INSERT INTO ld_user (ld_id,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone)
+VALUES (2,'boss','d033e22ae348aeb566fc214aec3585c4da997','Meschieri','Marco','','','','','it','m.meschieri@logicalobjects.it','');
 
-INSERT INTO co_users (co_username,co_password,co_name,co_firstname,co_street,co_postalcode,co_city,co_country,co_language,co_email,co_telephone)
-VALUES ('sebastian','d033e22ae348aeb566fc214aec3585c4da997','Sebastian','Stein','','','','','de','seb_stein@gmx.de','');
+INSERT INTO ld_user (ld_id,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone)
+VALUES (3,'sebastian','d033e22ae348aeb566fc214aec3585c4da997','Sebastian','Stein','','','','','de','seb_stein@gmx.de','');
 
-INSERT INTO co_users (co_username,co_password,co_name,co_firstname,co_street,co_postalcode,co_city,co_country,co_language,co_email,co_telephone)
-VALUES ('author','d033e22ae348aeb566fc214aec3585c4da997','Author','Author','','','','','de','author@acme.com','');
+INSERT INTO ld_user (ld_id,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone)
+VALUES (4,'author','d033e22ae348aeb566fc214aec3585c4da997','Author','Author','','','','','de','author@acme.com','');
 
-INSERT INTO co_users (co_username,co_password,co_name,co_firstname,co_street,co_postalcode,co_city,co_country,co_language,co_email,co_telephone)
-VALUES ('test','d033e22ae348aeb566fc214aec3585c4da997','test','Test','','','','','de','test@acme.com','');
+INSERT INTO ld_user (ld_id,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone)
+VALUES (5,'test','d033e22ae348aeb566fc214aec3585c4da997','test','Test','','','','','de','test@acme.com','');
 
 INSERT INTO ld_menu VALUES(99,'db.admin',1,1,'administration.gif','/',5,NULL,0);
 INSERT INTO ld_menu VALUES(100,'db.admin',1,1,'administration.gif','/',3,NULL,0);
@@ -22,14 +22,14 @@ INSERT INTO ld_menugroup VALUES(103,'admin',1);
 INSERT INTO ld_menugroup VALUES(103,'author',1);
 INSERT INTO ld_menugroup VALUES(99,'admin',0);
 
-INSERT INTO co_usergroup (co_username,co_groupname) 
-VALUES ('sebastian','admin');
-INSERT INTO co_usergroup (co_username,co_groupname) 
-VALUES ('sebastian','author');
-INSERT INTO co_usergroup (co_username,co_groupname) 
-VALUES ('author','author');
-INSERT INTO co_usergroup (co_username,co_groupname) 
-VALUES ('test','guest');
+INSERT INTO ld_usergroup (ld_userid,ld_groupname) 
+VALUES (3,'admin');
+INSERT INTO ld_usergroup (ld_userid,ld_groupname) 
+VALUES (3,'author');
+INSERT INTO ld_usergroup (ld_userid,ld_groupname) 
+VALUES (4,'author');
+INSERT INTO ld_usergroup (ld_userid,ld_groupname) 
+VALUES (5,'guest');
 
 
 INSERT INTO co_groups VALUES('testGroup','Group for tests');

@@ -5,9 +5,10 @@ import java.util.Collection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
 import com.logicaldoc.core.CryptBean;
 import com.logicaldoc.core.security.User;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * Hibernate implementation of <code>MenuDAO</code>
@@ -34,40 +35,22 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.UserDAO#delete(java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.UserDAO#delete(long)
 	 */
-	public boolean delete(String username) {
+	public boolean delete(long userId) {
 		boolean result = true;
 
 		try {
-			User user = (User) getHibernateTemplate().get(User.class, username);
+			User user = (User) getHibernateTemplate().get(User.class, userId);
 			if (user != null) {
-				getHibernateTemplate().deleteAll(userDocDAO.findByUserName(username));
+				getHibernateTemplate().deleteAll(
+						userDocDAO.findByUserName(user.getUserName()));
 				getHibernateTemplate().delete(user);
 			}
 		} catch (Throwable e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 			result = true;
-		}
-
-		return result;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.security.dao.UserDAO#existsUser(java.lang.String)
-	 */
-	public boolean existsUser(String username) {
-		boolean result = false;
-
-		try {
-			User user = (User) getHibernateTemplate().get(User.class, username);
-
-			if ((user != null) && user.getUserName().equals(username)) {
-				result = true;
-			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
 		}
 
 		return result;
@@ -81,7 +64,7 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 		Collection<User> coll = new ArrayList<User>();
 
 		try {
-			coll = (Collection<User>) getHibernateTemplate().find("from com.logicaldoc.core.security.User");
+			coll = (Collection<User>) getHibernateTemplate().find("from User");
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -99,7 +82,8 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 
 		try {
 			coll = (Collection<User>) getHibernateTemplate().find(
-					"from com.logicaldoc.core.security.User _user where _user.name like ?", new Object[] { name });
+					"from User _user where _user.name like ?",
+					new Object[] { name });
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -109,13 +93,18 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.UserDAO#findByPrimaryKey(java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.UserDAO#findByUserName(java.lang.String)
 	 */
-	public User findByPrimaryKey(String username) {
+	public User findByUserName(String username) {
 		User user = null;
 
 		try {
-			user = (User) getHibernateTemplate().get(User.class, username);
+			Collection<User> coll = (Collection<User>) getHibernateTemplate()
+					.find("from User _user where _user.userName = ?",
+							new Object[] { username });
+			if (coll.size() > 0) {
+				user = coll.iterator().next();
+			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -128,12 +117,13 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 	 * @see com.logicaldoc.core.security.dao.UserDAO#findByUserName(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<User> findByUserName(String username) {
+	public Collection<User> findByLikeUserName(String username) {
 		Collection<User> coll = new ArrayList<User>();
 
 		try {
 			coll = (Collection<User>) getHibernateTemplate().find(
-					"from com.logicaldoc.core.security.User _user where _user.userName like ?", new Object[] { username });
+					"from User _user where _user.userName like ?",
+					new Object[] { username });
 
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -152,9 +142,10 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 		Collection<User> coll = new ArrayList<User>();
 
 		try {
-			coll = (Collection<User>) getHibernateTemplate().find(
-					"from com.logicaldoc.core.security.User _user where _user.name like ? and _user.userName like ?",
-					new Object[] { name, username });
+			coll = (Collection<User>) getHibernateTemplate()
+					.find(
+							"from User _user where _user.name like ? and _user.userName like ?",
+							new Object[] { name, username });
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -189,9 +180,11 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 		boolean result = true;
 
 		try {
-			User user = findByPrimaryKey(username);
+			User user = findByUserName(username);
 
-			if ((user == null) || !user.getPassword().equals(CryptBean.cryptString(password))) {
+			if ((user == null)
+					|| !user.getPassword().equals(
+							CryptBean.cryptString(password))) {
 				result = false;
 			}
 		} catch (Exception e) {
@@ -201,5 +194,19 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 		}
 
 		return result;
+	}
+
+	@Override
+	public User findByPrimaryKey(long userId) {
+		User user = null;
+
+		try {
+			user = (User) getHibernateTemplate().get(User.class, userId);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+
+		return user;
 	}
 }

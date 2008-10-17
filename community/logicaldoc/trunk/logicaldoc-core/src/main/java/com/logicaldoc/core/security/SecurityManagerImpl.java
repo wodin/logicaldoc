@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 
@@ -40,15 +41,21 @@ public class SecurityManagerImpl implements SecurityManager {
 	 *      com.logicaldoc.core.security.Group)
 	 */
 	public void assignUsersToGroup(Collection<User> users, Group group) {
-		for (Iterator iter = users.iterator(); iter.hasNext();) {
-			User user = (User) iter.next();
-        
+		for (Iterator<User> iter = users.iterator(); iter.hasNext();) {
+			User user = iter.next();
 			if (!group.getUsers().contains(user)) {
+				System.out.println("group " + group.getGroupName()
+						+ " not contains " + user.getUserName());
 				group.getUsers().add(user);
 			}
-			if (!user.getGroups().contains(group))
+
+			if (!user.getGroups().contains(group)) {
+				System.out.println("user " + user.getUserName()
+						+ " not contains " + group.getGroupName());
 				user.getGroups().add(group);
+			}
 		}
+
 		groupDAO.store(group);
 
 		if (log.isDebugEnabled())
@@ -81,7 +88,7 @@ public class SecurityManagerImpl implements SecurityManager {
 	public void removeUsersFromGroup(Collection<User> users, Group group) {
 		for (Iterator<User> iter = users.iterator(); iter.hasNext();) {
 			User user = iter.next();
-			if (group.getUsers().contains(user)){
+			if (group.getUsers().contains(user)) {
 				group.getUsers().remove(user);
 				user.getGroups().remove(group);
 			}

@@ -103,7 +103,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	public Collection<Menu> findByUserName(String username) {
 		Collection<Menu> coll = new ArrayList<Menu>();
 		try {
-			User user = userDAO.findByPrimaryKey(username);
+			User user = userDAO.findByUserName(username);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 
@@ -150,7 +150,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		Collection<Menu> coll = new ArrayList<Menu>();
 
 		try {
-			User user = userDAO.findByPrimaryKey(username);
+			User user = userDAO.findByUserName(username);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 			if (precoll.isEmpty())
@@ -191,7 +191,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	public long countByUserName(String username, long parentId, Integer type) {
 		long count = 0;
 		try {
-			User user = userDAO.findByPrimaryKey(username);
+			User user = userDAO.findByUserName(username);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 			if (precoll.isEmpty())
@@ -270,7 +270,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		boolean result = true;
 
 		try {
-			User user = userDAO.findByPrimaryKey(username);
+			User user = userDAO.findByUserName(username);
 			Collection<Group> Groups = user.getGroups();
 			if (Groups.isEmpty())
 				return false;
@@ -313,7 +313,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 
 		try {
 			try {
-				User user = userDAO.findByPrimaryKey(username);
+				User user = userDAO.findByUserName(username);
 				Collection<Group> Groups = user.getGroups();
 				if (Groups.isEmpty())
 					return false;
@@ -369,7 +369,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	public Set<Long> findMenuIdByUserName(String username) {
 		Set<Long> ids = new HashSet<Long>();
 		try {
-			User user = userDAO.findByPrimaryKey(username);
+			User user = userDAO.findByUserName(username);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 
@@ -484,7 +484,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			Integer type) {
 		Set<Long> ids = new HashSet<Long>();
 		try {
-			User user = userDAO.findByPrimaryKey(username);
+			User user = userDAO.findByUserName(username);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 
