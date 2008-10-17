@@ -20,7 +20,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.icesoft.faces.component.ext.RowSelectorEvent;
-import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
@@ -76,7 +75,7 @@ public class DocumentsRecordsManager extends SortableList {
 	private boolean multipleSelection = true;
 
 	private long selectedDirectory;
-	
+
 	private long sourceDirectory;
 
 	// Set of selected rows
@@ -240,35 +239,12 @@ public class DocumentsRecordsManager extends SortableList {
 				String username = SessionManagement.getUsername();
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 				Menu selectedMenuFolder = menuDao.findByPrimaryKey(selectedDirectory);
-				DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-
-				SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
+				DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
 				if (menuDao.isWriteEnable(selectedDirectory, username)) {
 					try {
 						for (DocumentRecord record : clipboard) {
-							// TODO isolate this code in a method of
-							// DocumentManager
-
-							Document doc = record.getDocument();
-
-							// Get original document directory path
-							Menu folder = doc.getFolder();
-							String path = settings.getValue("docdir") + "/" + folder.getPath() + "/" + doc.getId();
-							File originalDocDir = new File(path);
-
-							doc.setFolder(selectedMenuFolder);
-							folder = menuDao.findByPrimaryKey(selectedDirectory);
-							docDao.store(doc);
-
-							// Update the FS
-							path = settings.getValue("docdir") + "/" + folder.getPath() + "/" + doc.getId();
-							File newDocDir = new File(path);
-
-							FileUtils.copyDirectory(originalDocDir, newDocDir);
-							FileUtils.forceDelete(originalDocDir);
-
-							// TODO Update field path on the Lucene record
+							docManager.moveToFolder(record.getDocument(), selectedMenuFolder);
 						}
 					} catch (AccessControlException e) {
 						Messages.addLocalizedWarn("document.write.nopermission");
@@ -530,8 +506,8 @@ public class DocumentsRecordsManager extends SortableList {
 					return 0;
 				}
 				if (column.equals("displayDescription")) {
-					return ascending ? c1.getDisplayTitle().compareTo(c2.getDisplayTitle()) : c2
-							.getDisplayTitle().compareTo(c1.getDisplayTitle());
+					return ascending ? c1.getDisplayTitle().compareTo(c2.getDisplayTitle()) : c2.getDisplayTitle()
+							.compareTo(c1.getDisplayTitle());
 				} else if (column.equals("date")) {
 					Date d1 = c1.getSourceDate() != null ? c1.getSourceDate() : new Date(0);
 					Date d2 = c2.getSourceDate() != null ? c2.getSourceDate() : new Date(0);
