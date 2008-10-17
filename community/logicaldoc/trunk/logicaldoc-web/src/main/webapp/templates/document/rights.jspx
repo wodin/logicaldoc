@@ -20,9 +20,6 @@
 			<ice:panelGroup>
 				<h3>
 					<ice:outputText
-						value="#{msgs['msg.jsp.rights']} - #{rightsRecordsManager.selectedDocument.title}"
-						rendered="#{!empty (rightsRecordsManager.selectedDocument)}" />
-					<ice:outputText
 						value="#{msgs['msg.jsp.rights']} - #{rightsRecordsManager.selectedDirectory.displayText}"
 						rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
 					<br />
@@ -79,7 +76,7 @@
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="&lt;&lt; #{msgs['msg.jsp.back']}"
 				action="#{rightsRecordsManager.back}"
-				rendered="#{!empty (rightsRecordsManager.selectedDocument)}" />
+				rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
 			<ice:commandButton value="#{msgs['abort']}"
 				action="#{rightsRecordsManager.back}"
 				rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
