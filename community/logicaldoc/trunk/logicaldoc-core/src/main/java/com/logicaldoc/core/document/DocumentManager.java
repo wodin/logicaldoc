@@ -116,7 +116,6 @@ public interface DocumentManager {
 			String title, Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> keywords) throws Exception;
 
-
 	/**
 	 * Obtains the document's file
 	 * 
@@ -186,4 +185,14 @@ public interface DocumentManager {
 	 * @throws Exception
 	 */
 	public void delete(long docId) throws Exception;
+
+	/**
+	 * Moves a document to the specified folder. All stores(db, file system,
+	 * index) will be consequently altered.
+	 * 
+	 * @param doc The document to move
+	 * @param folder The target folder
+	 * @throws Exception 
+	 */
+	public void moveToFolder(Document doc, Menu folder) throws Exception;
 }

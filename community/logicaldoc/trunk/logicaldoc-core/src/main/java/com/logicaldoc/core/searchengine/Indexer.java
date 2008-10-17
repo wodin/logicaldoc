@@ -77,7 +77,7 @@ public class Indexer {
 			try {
 				log.info("addFile: " + file.toString());
 				Document doc = lDoc.getDocument(file, content);
-				log.info("doc path: " + doc.getField("path").stringValue());
+				log.info("doc path: " + doc.getField(LuceneDocument.FIELD_PATH).stringValue());
 				addDocument(doc, language);
 			} catch (Exception e) {
 				log.error("Exception addFile: " + e.getLocalizedMessage(), e);
@@ -94,7 +94,7 @@ public class Indexer {
 	/**
 	 * Adds a LuceneDocument to the index.
 	 */
-	private void addDocument(Document doc, String iso639_2) {
+	public void addDocument(Document doc, String iso639_2) {
 		String indexdir = settingsConfig.getValue("indexdir");
 		Language language = LanguageManager.getInstance().getLanguage(iso639_2);
 		Analyzer analyzer = LuceneAnalyzerFactory.getAnalyzer(language.getLanguage());
@@ -209,7 +209,7 @@ public class Indexer {
 		File indexPath = new File(indexdir, language.getIndex());
 		try {
 			IndexReader reader = IndexReader.open(indexPath);
-			reader.deleteDocuments(new Term("docId", docId));
+			reader.deleteDocuments(new Term(LuceneDocument.FIELD_DOC_ID, docId));
 			reader.close();
 		} catch (IOException ioe) {
 			log.error("deleteDocument " + ioe.getMessage(), ioe);
@@ -225,14 +225,14 @@ public class Indexer {
 			Searcher searcher = new IndexSearcher(reader);
 
 			// Compose a query for menuId
-			QueryParser parser = new QueryParser("docId", new KeywordAnalyzer());
+			QueryParser parser = new QueryParser(LuceneDocument.FIELD_DOC_ID, new KeywordAnalyzer());
 			Query query = parser.parse(docId);
 			Hits hits = searcher.search(query);
 
 			// Iterate through the results:
 			for (int i = 0; i < hits.length(); i++) {
 				Document hitDoc = hits.doc(i);
-				if (hitDoc.get("docId").equals(docId)) {
+				if (hitDoc.get(LuceneDocument.FIELD_DOC_ID).equals(docId)) {
 					return hitDoc;
 				}
 			}

@@ -119,9 +119,7 @@ public class LuceneDocument {
 	}
 
 	protected void setPath() {
-		String folderId = String.valueOf(document.getFolder().getId());
-		String path = document.getFolder().getPath();
-		doc.add(new Field(FIELD_PATH, path + "/" + folderId, Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field(FIELD_PATH, document.getPath(), Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
 	protected void setType() {
