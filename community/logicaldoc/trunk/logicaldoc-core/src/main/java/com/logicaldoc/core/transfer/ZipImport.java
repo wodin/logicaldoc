@@ -24,8 +24,8 @@ import com.logicaldoc.util.config.SettingsConfig;
 /**
  * Created on 16.12.2004
  * 
- * @author micha
  * @author Sebastian Stein
+ * @author Matteo Caruso - Logical Objects
  */
 public class ZipImport {
 
@@ -59,11 +59,11 @@ public class ZipImport {
 		SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 		String userpath = settings.getValue("userdir");
 
-		if (!userpath.endsWith(File.pathSeparator)) {
-			userpath += File.pathSeparator;
+		if (!userpath.endsWith("_")) {
+			userpath += "_";
 		}
 
-		userpath += username + File.pathSeparator + "unzip";
+		userpath += username + "_"+ "unzip";
 
 		if (FileBean.exists(userpath)) {
 			FileBean.deleteDir(userpath);

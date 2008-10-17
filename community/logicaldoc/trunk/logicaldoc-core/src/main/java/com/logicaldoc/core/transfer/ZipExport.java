@@ -6,29 +6,32 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.StringTokenizer;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
 
 /**
- * Exports a folder hierarchie and all documents in it as a zip file.
+ * Exports a folder hierarchy and all documents in it as a zip file.
  * 
- * @author Alessandro Gasparini
+ * @author Alessandro Gasparini - Logical Objects
+ * @author Matteo Caruso - Logical Objects
  */
-public class ZipExport implements Export {
+public class ZipExport {
 
-	//TODO reimplement since now documents doesn't have associated menu
-	
 	protected static Log log = LogFactory.getLog(ZipExport.class);
 
 	private ZipOutputStream zos;
@@ -37,38 +40,41 @@ public class ZipExport implements Export {
 
 	private boolean allLevel;
 
-	private long startMenuId;
+	private long startFolderId;
 
 	public ZipExport() {
 		zos = null;
 		username = "";
 		allLevel = false;
-		startMenuId = 0;
+		startFolderId = Menu.MENUID_DOCUMENTS;
 	}
 
 	/**
-	 * @see com.logicaldoc.core.export.Export#process(com.logicaldoc.core.security.Menu,
-	 *      java.lang.String)
+	 * Exports the specified folder content
+	 * 
+	 * @param folderId Identifier of the folder
+	 * @param user Current username
+	 * @return The Stream of the zip archive
 	 */
-	public ByteArrayOutputStream process(Menu menu, String user) throws IOException {
+	public ByteArrayOutputStream process(long folderId, String user) {
+		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		Menu folder = menuDao.findByPrimaryKey(folderId);
 		this.username = user;
-		this.startMenuId = menu.getId();
-
+		this.startFolderId = folder.getId();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		zos = new ZipOutputStream(bos);
-		appendChildren(menu, 0);
-		zos.flush();
-		zos.close();
-		return bos;
-	}
+		try {
+			appendChildren(folder, 0);
+		} finally {
+			try {
+				zos.flush();
+				zos.close();
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
 
-	/**
-	 * @see com.logicaldoc.core.export.Export#process(int, java.lang.String)
-	 */
-	public ByteArrayOutputStream process(int menuId, String user) throws IOException {
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu menu = menuDao.findByPrimaryKey(menuId);
-		return process(menu, user);
+		}
+		return bos;
 	}
 
 	/**
@@ -81,74 +87,97 @@ public class ZipExport implements Export {
 		allLevel = b;
 	}
 
-	protected void appendChildren(Menu menu, int level) {
-
+	/**
+	 * Adds all children of the specified folder up to the given level
+	 * 
+	 * @param folder
+	 * @param level
+	 */
+	protected void appendChildren(Menu folder, int level) {
 		if (!allLevel && (level > 1)) {
 			return;
 		} else {
-			String menupath = menu.getPath();
-			SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-			String filepath = settings.getValue("docdir");
-			filepath += menupath + "/" + String.valueOf(menu.getId()) + "/";
-//			filepath += menu.getRef();
-			addFile(menu, filepath);
-
+			addFolderDocuments(folder);
 			MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			Collection children = menuDao.findByUserName(username, menu.getId());
-			Iterator iter = children.iterator();
+			Collection<Menu> children = menuDao.findByUserName(username, folder.getId(), Menu.MENUTYPE_DIRECTORY);
+			Iterator<Menu> iter = children.iterator();
 
 			while (iter.hasNext()) {
-				appendChildren((Menu) iter.next(), level + 1);
+				appendChildren(iter.next(), level + 1);
 			}
 		}
 	}
 
-	protected void addFile(Menu menu, String filepath) {
-		try {
-			File currentFile = new File(filepath);
-			InputStream is = new FileInputStream(currentFile);
-			BufferedInputStream bis = new BufferedInputStream(is);
+	/**
+	 * Adds all folder's documents
+	 * 
+	 * @param folder
+	 */
+	protected void addFolderDocuments(Menu folder) {
+		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Collection<Document> docs = ddao.findByFolder(folder.getId());
 
-			// Create the path as the user see in logicaldoc
-			String decodedMenuPath = decodeMenuPath(menu.getPath());
-			decodedMenuPath = decodedMenuPath + "/" + currentFile.getName();
-			decodedMenuPath = decodedMenuPath.replaceAll("//", "/");
-			ZipEntry entry = new ZipEntry(decodedMenuPath);
-			zos.putNextEntry(entry);
+		SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
+		String path = settings.getValue("docdir");
+		for (Document document : docs) {
+			File documentFile = new File(path + "/" + document.getPath() + "/" + document.getFileName());
+			InputStream is = null;
+			BufferedInputStream bis = null;
+			try {
+				is = new FileInputStream(documentFile);
+				bis = new BufferedInputStream(is);
 
-			// Transfer bytes from the file to the ZIP file
-			int len;
-			while ((len = bis.read()) != -1) {
-				zos.write(len);
+				ZipEntry entry = new ZipEntry(getZipEntryPath(folder) + document.getFileName());
+				zos.putNextEntry(entry);
+
+				// Transfer bytes from the file to the ZIP file
+				int len;
+				while ((len = bis.read()) != -1) {
+					zos.write(len);
+				}
+			} catch (IOException e) {
+				log.error(e.getMessage());
+			} finally {
+				try {
+					if (bis != null)
+						bis.close();
+					if (is != null)
+						is.close();
+				} catch (IOException e) {
+				}
 			}
-
-			bis.close();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
 		}
 	}
 
-	private String decodeMenuPath(String menuPath) {
-
-		String decodedPath = "";
-
+	/**
+	 * Computes the correct entry path inside the zip archive
+	 * 
+	 * @param folder The folder of the document to be inserted
+	 * @return The full path
+	 */
+	private String getZipEntryPath(Menu folder) {
+		if (folder.getId() == Menu.MENUID_DOCUMENTS)
+			return "";
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		List<Menu> menus = menuDao.findParents(folder.getId());
+		menus.add(folder);
+		Collections.reverse(menus);
 
-		// substring the menuPath with the startMenuId
-		int startIndx = menuPath.indexOf(String.valueOf(startMenuId));
-		menuPath = menuPath.substring(startIndx);
+		List<String> folderNames = new ArrayList<String>();
+		for (int i = 0; i < menus.size(); i++) {
+			Menu menu = menus.get(i);
+			if (menu.getId() == startFolderId)
+				break;
+			folderNames.add(menu.getText());
+		}
+		Collections.reverse(folderNames);
 
-		StringTokenizer st = new StringTokenizer(menuPath, "/");
-
-		while (st.hasMoreTokens()) {
-			String menuId = st.nextToken();
-
-			Menu menu = menuDao.findByPrimaryKey(Integer.parseInt(menuId));
-			if (menu != null)
-				decodedPath += "/" + menu.getText();
+		StringBuffer path = new StringBuffer("");
+		for (String name : folderNames) {
+			path.append(name);
+			path.append("/");
 		}
 
-		return decodedPath;
+		return path.toString();
 	}
-
 }
