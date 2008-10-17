@@ -350,9 +350,9 @@ public class Document extends PersistentObject {
 	}
 
 	public String getPath() {
-		return getFolder().getPath()
+		return (getFolder().getPath()
 				+ (getFolder().getPath().endsWith("/") ? "" : "/")
-				+ getFolder().getId();
+				+ getFolder().getId()).replaceAll("//", "/");
 	}
 
 	public String getFileExtension() {

@@ -570,7 +570,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		menu.setParentId(parent.getId());
 		menu.setSort(0);
 		menu.setIcon("folder.gif");
-		menu.setPath(parent.getPath() + "/" + parent.getId());
+		menu.setPath((parent.getPath() + "/" + parent.getId()).replaceAll("//", "/"));
 		menu.setType(Menu.MENUTYPE_DIRECTORY);
 		for (MenuGroup mg : parent.getMenuGroups()) {
 			menu.getMenuGroups().add(mg);
