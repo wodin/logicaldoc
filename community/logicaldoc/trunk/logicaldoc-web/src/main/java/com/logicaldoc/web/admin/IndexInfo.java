@@ -103,7 +103,7 @@ public class IndexInfo {
 						while (iter.hasNext()) {
 							Document document = iter.next();
 							String dir = conf.getValue("docdir") + "/";
-							dir += document.getPath();
+							dir += document.getPath()+"/"+document.getId();
 							indexer.addDirectory(new File(dir), document);
 						}
 					} catch (Exception e) {
