@@ -352,7 +352,7 @@ public class Document extends PersistentObject {
 	public String getPath() {
 		return getFolder().getPath()
 				+ (getFolder().getPath().endsWith("/") ? "" : "/")
-				+ getFolder().getId() + "/" + getId();
+				+ getFolder().getId();
 	}
 
 	public String getFileExtension() {
