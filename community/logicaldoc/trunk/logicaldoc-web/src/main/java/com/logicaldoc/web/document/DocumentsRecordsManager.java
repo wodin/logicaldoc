@@ -359,10 +359,10 @@ public class DocumentsRecordsManager extends SortableList {
 				SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 				String path = conf.getValue("userdir");
 
-				if (!path.endsWith(File.pathSeparator)) {
-					path += File.pathSeparator;
+				if (!path.endsWith("_")) {
+					path += "_";
 				}
-				path += username + File.pathSeparator + File.separator;
+				path += username + "_" + File.separator;
 				log.debug("path = " + path);
 
 				FileUtils.forceMkdir(new File(path));
@@ -530,8 +530,8 @@ public class DocumentsRecordsManager extends SortableList {
 					return 0;
 				}
 				if (column.equals("displayDescription")) {
-					return ascending ? c1.getDisplayDescription().compareTo(c2.getDisplayDescription()) : c2
-							.getDisplayDescription().compareTo(c1.getDisplayDescription());
+					return ascending ? c1.getDisplayTitle().compareTo(c2.getDisplayTitle()) : c2
+							.getDisplayTitle().compareTo(c1.getDisplayTitle());
 				} else if (column.equals("date")) {
 					Date d1 = c1.getSourceDate() != null ? c1.getSourceDate() : new Date(0);
 					Date d2 = c2.getSourceDate() != null ? c2.getSourceDate() : new Date(0);

@@ -113,11 +113,11 @@ public class DocumentRecord extends MenuBarBean {
 	 * 
 	 * @return description of the record
 	 */
-	public String getDescription() {
+	public String getTitle() {
 		return getDocument().getTitle();
 	}
 
-	public String getDisplayDescription() {
+	public String getDisplayTitle() {
 		return StringUtils.abbreviate(getDocument().getTitle(), 68);
 	}
 

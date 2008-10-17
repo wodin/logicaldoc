@@ -80,7 +80,7 @@
 						style="border: 0px solid;" />
 					<ice:outputLink value="download?docId=#{documentRecord.docId}"
 						target="_blank" title="#{msgs['msg.jsp.popup']}">
-						<ice:outputText value=" #{documentRecord.displayDescription}" />
+						<ice:outputText value=" #{documentRecord.displayTitle}" />
 					</ice:outputLink>
 					<ice:outputLink
 						value="download?docId=#{documentRecord.docId}&amp;downloadText=true"
