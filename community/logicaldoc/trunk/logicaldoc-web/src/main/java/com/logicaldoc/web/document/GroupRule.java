@@ -1,4 +1,4 @@
-package com.logicaldoc.core.security;
+package com.logicaldoc.web.document;
 
 /**
  * A simple bean used to show Access rules
