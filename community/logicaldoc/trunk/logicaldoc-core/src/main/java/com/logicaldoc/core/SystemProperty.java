@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * This class is a utility to handle relevant system properties
  * 
- * @author Alessandro Gasparini
+ * @author Alessandro Gasparini - Logical Objects
  * @version 1.0
  */
 public final class SystemProperty {

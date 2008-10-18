@@ -9,7 +9,7 @@ import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 /**
  * Plugin class for the Core plugin
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @version $Id:$
  * @since 3.5.0
  */

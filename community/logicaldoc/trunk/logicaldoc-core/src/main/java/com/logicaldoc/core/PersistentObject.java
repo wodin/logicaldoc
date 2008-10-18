@@ -4,7 +4,7 @@ package com.logicaldoc.core;
 /**
  * This abstract class defines the minimum requirements of persistent objects.
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @version $Id:$
  * @since 4.0
  */
