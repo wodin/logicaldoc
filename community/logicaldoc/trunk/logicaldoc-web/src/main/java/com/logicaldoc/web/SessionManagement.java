@@ -18,8 +18,7 @@ import com.logicaldoc.web.util.Constants;
 public class SessionManagement {
 	public static boolean isValid(HttpSession session) {
 		boolean result = true;
-		String username = (String) session
-				.getAttribute(Constants.AUTH_USERNAME);
+		String username = (String) session.getAttribute(Constants.AUTH_USERNAME);
 
 		if ((username == null) || username.equals("")) {
 			result = false;
@@ -34,15 +33,14 @@ public class SessionManagement {
 
 	public static boolean isValid() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		HttpSession session = (HttpSession) facesContext.getExternalContext()
-				.getSession(false);
+		HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
 
 		return isValid(session);
 	}
 
 	public static String getUsername() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		Map session = facesContext.getExternalContext().getSessionMap();
+		Map<String, Object> session = facesContext.getExternalContext().getSessionMap();
 		String username = (String) session.get(Constants.AUTH_USERNAME);
 
 		return username;
@@ -50,7 +48,7 @@ public class SessionManagement {
 
 	public static long getUserId() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		Map session = facesContext.getExternalContext().getSessionMap();
+		Map<String, Object> session = facesContext.getExternalContext().getSessionMap();
 		Long userid = (Long) session.get(Constants.AUTH_USERID);
 		return userid.longValue();
 	}
@@ -59,13 +57,13 @@ public class SessionManagement {
 		long userId = getUserId();
 		UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = dao.findByPrimaryKey(userId);
-		user.initGroupNames();
+		user.getGroupIds();
 		return user;
 	}
 
 	public static String getLanguage() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		Map session = facesContext.getExternalContext().getSessionMap();
+		Map<String, Object> session = facesContext.getExternalContext().getSessionMap();
 		String language = (String) session.get(Constants.LANGUAGE);
 		return language;
 	}

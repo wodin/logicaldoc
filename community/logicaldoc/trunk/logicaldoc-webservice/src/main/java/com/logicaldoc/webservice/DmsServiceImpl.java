@@ -180,10 +180,10 @@ public class DmsServiceImpl implements DmsService {
 		menu.setIcon("folder.png");
 		menu.setType(Menu.MENUTYPE_DIRECTORY);
 		menu.setRef("");
-		menu.setMenuGroup(parentMenu.getMenuGroupNames());
+		menu.setMenuGroup(parentMenu.getMenuGroupIds());
 
 		boolean stored = dao.store(menu);
-		menu.setPath(parentMenu.getPath() + "/" + menu.getId());
+		menu.setPath(parentMenu.getPath() + "/" + parentMenu.getId());
 		stored = dao.store(menu);
 
 		if (!stored) {
@@ -260,9 +260,6 @@ public class DmsServiceImpl implements DmsService {
 		Document doc = docDao.findByPrimaryKey(id);
 		checkCredentials(username, password);
 		checkReadEnable(username, doc.getFolder().getId());
-
-		// Retrieve the document
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 		// Populate document's metadata
 		DocumentInfo info = new DocumentInfo();
@@ -452,7 +449,7 @@ public class DmsServiceImpl implements DmsService {
 		StringTokenizer st = new StringTokenizer(groups, ",", false);
 		while (st.hasMoreTokens()) {
 			String token = st.nextToken();
-			if (gdao.findByPrimaryKey(token) != null)
+			if (gdao.findByName(token) != null)
 				array.add(token);
 		}
 		return array.toArray(new String[] {});

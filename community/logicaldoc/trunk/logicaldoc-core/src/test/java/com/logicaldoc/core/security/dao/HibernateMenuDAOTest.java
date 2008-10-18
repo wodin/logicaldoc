@@ -10,7 +10,7 @@ import com.logicaldoc.core.security.Menu;
 /**
  * Test case for <code>HibernateMenuDAOTest</code>
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @version $Id:$
  * @since 3.0
  */
@@ -36,7 +36,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		menu.setText("text");
 		menu.setPath("path");
 		menu.setSort(1);
-		menu.setMenuGroup(new String[] { "admin", "author" });
+		menu.setMenuGroup(new long[] { 1, 2 });
 		assertTrue(dao.store(menu));
 		menu = dao.findByPrimaryKey(100);
 		assertEquals("db.admin", menu.getText());
@@ -48,9 +48,12 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		menu = dao.findByPrimaryKey(Menu.MENUID_HOME);
 		assertEquals("db.home", menu.getText());
 		menu.setText("xxxx");
+		menu.getMenuGroups().remove(menu.getMenuGroup(3));
+		assertEquals(2, menu.getMenuGroups().size());
 		assertTrue(dao.store(menu));
 		menu = dao.findByPrimaryKey(Menu.MENUID_HOME);
 		assertEquals("xxxx", menu.getText());
+		assertEquals(2, menu.getMenuGroups().size());
 	}
 
 	public void testDelete() {
@@ -94,8 +97,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		Menu menu = menus.iterator().next();
 		assertEquals("db.admin", menu.getText());
 
-		menus = (Collection<Menu>) dao.findByText(null, "db.admin",
-				new Integer(1));
+		menus = (Collection<Menu>) dao.findByText(null, "db.admin", new Integer(1));
 		assertNotNull(menus);
 		assertEquals(1, menus.size());
 
@@ -143,8 +145,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertNotNull(menus);
 		assertEquals(0, menus.size());
 
-		menus = dao.findByUserName("admin", Menu.MENUID_HOME,
-				Menu.MENUTYPE_DIRECTORY);
+		menus = dao.findByUserName("admin", Menu.MENUID_HOME, Menu.MENUTYPE_DIRECTORY);
 		assertNotNull(menus);
 		assertEquals(1, menus.size());
 	}
@@ -221,10 +222,10 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertFalse(dao.hasWriteAccess(menu, "test"));
 	}
 
-	public void testFindByGroupName() {
-		Collection<Menu> menus = dao.findByGroupName("admin");
+	public void testFindByGroupId() {
+		Collection<Menu> menus = dao.findByGroupId(1);
 		assertEquals(21, menus.size());
-		menus = dao.findByGroupName("testGroup");
+		menus = dao.findByGroupId(10);
 		assertEquals(0, menus.size());
 	}
 

@@ -26,16 +26,16 @@ import org.apache.commons.logging.LogFactory;
  * @since 0.3.0
  */
 public class StyleBean {
-	
+
 	protected static Log log = LogFactory.getLog(StyleBean.class);
-	
+
 	// folder icons for the respective themes
 	public static final String XP_BRANCH_EXPANDED_ICON = "xmlhttp/css/xp/css-images/tree_folder_open.gif";
 
 	public static final String XP_BRANCH_CONTRACTED_ICON = "xmlhttp/css/xp/css-images/tree_folder_close.gif";
 
 	public static final String XP_SPACER_ICON = "xmlhttp/css/xp/css-images/spacer.gif";
-	
+
 	private static Properties paths = new Properties();
 
 	// possible theme choices
@@ -49,7 +49,7 @@ public class StyleBean {
 	private String tempStyle = XP;
 
 	// available style list
-	private ArrayList styleList;
+	private List<SelectItem> styleList;
 
 	// default theme image directory for selectinputdate and theme.
 	private String imageDirectory = "./xmlhttp/css/xp/css-images/";
@@ -60,22 +60,22 @@ public class StyleBean {
 	public StyleBean() {
 		super();
 		// initialize the style list
-		styleList = new ArrayList();
+		styleList = new ArrayList<SelectItem>();
 		styleList.add(new SelectItem(XP, XP));
 		styleList.add(new SelectItem(ROYALE, ROYALE));
-		
+
 		log.debug("StyleBean initialized");
 	}
 
-    public static Properties getPaths() {
-        return paths;
-    }
+	public static Properties getPaths() {
+		return paths;
+	}
 
-    public void setPaths(Properties newpaths) {
-        paths = newpaths;
-        log.debug("StyleBean: properties loaded");
-        log.debug("StyleBean: properties = " + paths);
-    }	
+	public void setPaths(Properties newpaths) {
+		paths = newpaths;
+		log.debug("StyleBean: properties loaded");
+		log.debug("StyleBean: properties = " + paths);
+	}
 
 	/**
 	 * Gets the current style.
@@ -138,10 +138,10 @@ public class StyleBean {
 	 * 
 	 * @return available theme list
 	 */
-	public List getStyleList() {
+	public List<SelectItem> getStyleList() {
 		return styleList;
 	}
-	
+
 	public static String getPath(String name) {
 		return paths.getProperty(name, "");
 	}

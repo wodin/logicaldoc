@@ -23,7 +23,7 @@ public class DirectoryEditForm {
 
 	private Directory directory;
 
-	private String[] menuGroup;
+	private long[] menuGroup;
 
 	private DocumentNavigation documentNavigation;
 
@@ -36,11 +36,11 @@ public class DirectoryEditForm {
 		this.folderName = directory.getMenu().getText();
 	}
 
-	public String[] getMenuGroup() {
+	public long[] getMenuGroup() {
 		return menuGroup;
 	}
 
-	public void setMenuGroup(String[] menuGroup) {
+	public void setMenuGroup(long[] menuGroup) {
 		this.menuGroup = menuGroup;
 	}
 

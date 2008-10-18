@@ -16,7 +16,9 @@ import com.logicaldoc.core.document.Article;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.searchengine.Result;
+import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
@@ -101,7 +103,6 @@ public class DocumentNavigation extends NavigationBean {
 	public List<Directory> getBreadcrumb() {
 		List<Directory> breadcrumb = new ArrayList<Directory>();
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		String lang = SessionManagement.getLanguage();
 		try {
 			if (getSelectedDir() != null) {
 				Directory currentDir = getSelectedDir();
@@ -146,15 +147,15 @@ public class DocumentNavigation extends NavigationBean {
 		}
 
 		String username = SessionManagement.getUsername();
-		List<Menu> menues = (List<Menu>) menuDao.findByUserName(username, selectedDir.getMenuId(),
+		List<Menu> menus = (List<Menu>) menuDao.findByUserName(username, selectedDir.getMenuId(),
 				Menu.MENUTYPE_DIRECTORY);
-		Collections.sort(menues, new Comparator<Menu>() {
+		Collections.sort(menus, new Comparator<Menu>() {
 			@Override
 			public int compare(Menu menu1, Menu menu2) {
 				return menu1.getText().compareTo(menu2.getText());
 			}
 		});
-		for (Menu menu : menues) {
+		for (Menu menu : menus) {
 			item = createMenuItem(menu.getText(), new Directory(menu));
 			folderItems.add(item);
 		}
@@ -203,7 +204,7 @@ public class DocumentNavigation extends NavigationBean {
 	 * Opens the directory containing the selected search entry
 	 */
 	public String openInFolder() {
-		Map map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
 
 		Object entry = (Object) map.get("entry");
 
@@ -240,7 +241,7 @@ public class DocumentNavigation extends NavigationBean {
 	 */
 	public String showDiscussion() {
 
-		Map map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
 
 		Object entry = (Object) map.get("article");
 
@@ -345,22 +346,23 @@ public class DocumentNavigation extends NavigationBean {
 
 	public String newDirectory() {
 		setSelectedPanel(new PageContentBean("newDir"));
-
 		DirectoryEditForm form = ((DirectoryEditForm) FacesUtil.accessBeanFromFacesContext("directoryForm",
 				FacesContext.getCurrentInstance(), log));
+		GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+		Group adminGroup = gdao.findByName("admin");
 
-		String[] groups = SessionManagement.getUser().getGroupNames();
+		long[] groups = SessionManagement.getUser().getGroupIds();
 		// Add the admin group if not specified
 		boolean found = false;
 		for (int i = 0; i < groups.length; i++) {
-			if (groups[i].equals("admin"))
+			if (groups[i] == adminGroup.getId())
 				found = true;
 		}
 		if (!found) {
-			String[] tmp = new String[groups.length + 1];
+			long[] tmp = new long[groups.length + 1];
 			for (int i = 0; i < groups.length; i++)
 				tmp[i] = groups[i];
-			tmp[groups.length] = "admin";
+			tmp[groups.length] = adminGroup.getId();
 			groups = tmp;
 		}
 

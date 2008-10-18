@@ -43,6 +43,8 @@ public class User extends PersistentObject implements Serializable {
 
 	private Set<Group> groups = new HashSet<Group>();
 
+	private long[] groupIds;
+
 	private String[] groupNames;
 
 	// Only for GUI
@@ -103,7 +105,15 @@ public class User extends PersistentObject implements Serializable {
 		return telephone;
 	}
 
+	public long[] getGroupIds() {
+		if (groupIds == null)
+			initGroupIdsAndNames();
+		return groupIds;
+	}
+
 	public String[] getGroupNames() {
+		if (groupNames == null)
+			initGroupIdsAndNames();
 		return groupNames;
 	}
 
@@ -118,8 +128,7 @@ public class User extends PersistentObject implements Serializable {
 	/**
 	 * Sets the password and encode it
 	 * 
-	 * @param pwd
-	 *            The password in readable format
+	 * @param pwd The password in readable format
 	 */
 	public void setDecodedPassword(String pwd) {
 		if ((pwd != null) && !pwd.trim().equals("")) {
@@ -167,12 +176,9 @@ public class User extends PersistentObject implements Serializable {
 		telephone = phone;
 	}
 
-	public void setGroupNames(String[] grp) {
-		groupNames = grp;
-	}
-
-	public void initGroupNames() {
+	public void initGroupIdsAndNames() {
 		try {
+			groupIds = new long[groups.size()];
 			groupNames = new String[groups.size()];
 
 			Iterator<Group> iter = groups.iterator();
@@ -180,7 +186,8 @@ public class User extends PersistentObject implements Serializable {
 
 			while (iter.hasNext()) {
 				Group ug = iter.next();
-				groupNames[i] = ug.getGroupName();
+				groupIds[i] = ug.getId();
+				groupNames[i] = ug.getName();
 				i++;
 			}
 		} catch (Exception e) {
@@ -201,7 +208,7 @@ public class User extends PersistentObject implements Serializable {
 		email = "";
 		telephone = "";
 		groups = new HashSet<Group>();
-		groupNames = null;
+		groupIds = null;
 	}
 
 	public String toString() {

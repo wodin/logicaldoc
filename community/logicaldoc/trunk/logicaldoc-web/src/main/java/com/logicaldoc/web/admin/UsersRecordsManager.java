@@ -17,9 +17,11 @@ import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.dao.EMailDAO;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.HistoryDAO;
+import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserDoc;
+import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
@@ -72,7 +74,7 @@ public class UsersRecordsManager extends SortableList {
 				users.addAll(tmpusers);
 
 				for (User user : users) {
-					user.initGroupNames();
+					user.getGroupIds();
 				}
 			} else {
 				Messages.addLocalizedError("errors.noaccess");
@@ -155,7 +157,10 @@ public class UsersRecordsManager extends SortableList {
 		if (SessionManagement.isValid()) {
 			try {
 				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+				GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 				SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
+
+				Group adminGroup = gdao.findByName("admin");
 
 				// get the user's groups and check if he is member of
 				// "admin" group
@@ -163,15 +168,14 @@ public class UsersRecordsManager extends SortableList {
 				boolean isAdmin = false;
 
 				if (toBeDeletedUser != null) {
-					toBeDeletedUser.initGroupNames();
+					toBeDeletedUser.getGroupIds();
 
-					String[] userGroups = toBeDeletedUser.getGroupNames();
+					long[] userGroups = toBeDeletedUser.getGroupIds();
 
 					if (userGroups != null) {
 						for (int i = 0; i < userGroups.length; i++) {
-							if (userGroups[i].equals("admin")) {
+							if (userGroups[i] == adminGroup.getId()) {
 								isAdmin = true;
-
 								break;
 							}
 						}
@@ -189,15 +193,11 @@ public class UsersRecordsManager extends SortableList {
 					// users
 					while (userIter.hasNext()) {
 						User currUser = userIter.next();
-						currUser.initGroupNames(); // we always to call
-						// this before accessing
-						// the groups
-
-						String[] groups = currUser.getGroupNames();
+						long[] groups = currUser.getGroupIds();
 
 						if (groups != null) {
 							for (int i = 0; i < groups.length; i++) {
-								if (groups[i].equals("admin")) {
+								if (groups[i] == adminGroup.getId()) {
 									adminsFound++;
 
 									break; // for performance reasons we
@@ -220,11 +220,11 @@ public class UsersRecordsManager extends SortableList {
 				if (!isAdmin || (isAdmin && (adminsFound > 1))) {
 					// delete emails and email accounts
 					EMailDAO emailDao = (EMailDAO) Context.getInstance().getBean(EMailDAO.class);
-					Collection coll = emailDao.findByUserName(user.getUserName());
-					Iterator iter = coll.iterator();
+					Collection<EMail> coll = emailDao.findByUserName(user.getUserName());
+					Iterator<EMail> iter = coll.iterator();
 
 					while (iter.hasNext()) {
-						EMail email = (EMail) iter.next();
+						EMail email = iter.next();
 						emailDao.delete(email.getId());
 					}
 

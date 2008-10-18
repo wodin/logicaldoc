@@ -11,7 +11,6 @@ import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.util.Context;
-
 import com.logicaldoc.web.i18n.Messages;
 
 /**
@@ -74,7 +73,7 @@ public class SelectionTagsBean {
 
 		int i = 0;
 		for (Group group : coll) {
-			items[i++] = new SelectItem(group.getGroupName());
+			items[i++] = new SelectItem(group.getId(), group.getName());
 		}
 
 		return items;

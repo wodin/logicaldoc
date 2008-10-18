@@ -7,7 +7,7 @@
 		<id name="id" type="long" column="ld_id" unsaved-value="0">
 			<generator class="increment" />
 		</id>
-		<property name="userName" type="string" column="ld_username" length="255" />
+		<property name="userName" type="string" column="ld_username" length="255" not-null="true" />
 		<property name="password" type="string" column="ld_password" length="255" />
 		<property name="name" type="string" column="ld_name" length="255" />
 		<property name="firstName" type="string" column="ld_firstname" length="255" />
@@ -20,7 +20,7 @@
 		<property name="telephone" type="string" column="ld_telephone" length="255" />
 		<set name="groups" table="ld_usergroup" inverse="true" lazy="false">
 			<key column="ld_userid" />
-			<many-to-many column="ld_groupname" class="com.logicaldoc.core.security.Group" />
+			<many-to-many column="ld_groupid" class="com.logicaldoc.core.security.Group" />
 		</set>
 	</class>
 </hibernate-mapping>

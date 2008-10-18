@@ -42,7 +42,7 @@ public class GroupsRecordsManager {
 
     private String selectedPanel = "list";
 
-    private String parentGroup = null;
+    private long parentGroup;
 
     private Group selectedGroup = null;
 
@@ -67,11 +67,11 @@ public class GroupsRecordsManager {
     private void setInputData() {
 
         if (groupName != null) {
-            groupName.setSubmittedValue(selectedGroup.getGroupName());
+            groupName.setSubmittedValue(selectedGroup.getName());
         }
 
         if (groupDesc != null) {
-            groupDesc.setSubmittedValue(selectedGroup.getGroupDesc());
+            groupDesc.setSubmittedValue(selectedGroup.getDescription());
         }
     }
 
@@ -132,7 +132,7 @@ public class GroupsRecordsManager {
     }
 
     public String addGroup() {
-        parentGroup = null;
+        parentGroup = -1;
 
         String username = SessionManagement.getUsername();
         MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -151,9 +151,12 @@ public class GroupsRecordsManager {
     }
 
     public String delete() {
-        String groupId = (String) FacesContext.getCurrentInstance()
-            .getExternalContext().getRequestParameterMap().get("groupId");
-
+        long groupId = Long.parseLong((String) FacesContext.getCurrentInstance()
+            .getExternalContext().getRequestParameterMap().get("groupId"));
+        GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(
+        		GroupDAO.class);
+        Group group=gdao.findByPrimaryKey(groupId);
+        
         if (SessionManagement.isValid()) {
 
             try {
@@ -164,13 +167,11 @@ public class GroupsRecordsManager {
                 if (mdao.isReadEnable(7, username)) {
 
                     // we do not allow to delete the initial "admin" group
-                    if (groupId.equals("admin")) {
+                    if (group.getName().equals("admin")) {
                         Messages.addLocalizedError(
                             "errors.action.groupdeleted.admin");
                     } else {
-                        GroupDAO dao = (GroupDAO) Context.getInstance().getBean(
-                                GroupDAO.class);
-                        boolean deleted = dao.delete(groupId);
+                        boolean deleted = gdao.delete(groupId);
 
                         if (!deleted) {
                             Messages.addLocalizedError(
@@ -205,7 +206,7 @@ public class GroupsRecordsManager {
             try {
 
                 if ("create".equals(selectedPanel) &&
-                        dao.exists(selectedGroup.getGroupName())) {
+                        dao.findByPrimaryKey(selectedGroup.getId())!=null) {
                     Messages.addLocalizedError("errors.action.groupexists");
                 } else {
                     boolean stored = false;
@@ -260,11 +261,11 @@ public class GroupsRecordsManager {
         this.selectedGroup = selectedGroup;
     }
 
-    public String getParentGroup() {
+    public long getParentGroup() {
         return parentGroup;
     }
 
-    public void setParentGroup(String group) {
+    public void setParentGroup(long group) {
         this.parentGroup = group;
     }
 

@@ -11,7 +11,7 @@ import com.logicaldoc.core.security.User;
 /**
  * Test case for <code>HibernateUserDAO</code>
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @version $Id:$
  * @since 3.0
  */
@@ -62,7 +62,7 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		user = dao.findByUserName("test");
 		assertNull(user);
 
-		Group group = groupDao.findByPrimaryKey("guest");
+		Group group = groupDao.findByName("guest");
 		assertFalse(group.getUsers().contains(testUser));
 	}
 
@@ -129,8 +129,7 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		user = dao.findByPrimaryKey(9999);
 		assertNull(user);
 	}
-	
-	
+
 	public void testFindByUserNameAndName() {
 		Collection<User> users = dao.findByUserNameAndName("boss", "Meschieri");
 		assertNotNull(users);
@@ -155,19 +154,18 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		user.setFirstName("valca");
 		user.setEmail("valca@acme.com");
 		assertTrue(dao.store(user));
-		manager.assignUserToGroups(user, new String[] { "admin" });
+		manager.assignUserToGroups(user, new long[] { 1 });
 
 		User storedUser = dao.findByUserName("xxx");
 		assertNotNull(user);
 		assertEquals(user, storedUser);
 		assertEquals(1, storedUser.getGroups().size());
-		assertEquals(CryptBean.cryptString("xxxpwd"), storedUser
-				.getDecodedPassword());
+		assertEquals(CryptBean.cryptString("xxxpwd"), storedUser.getDecodedPassword());
 
 		user = dao.findByPrimaryKey(1);
 		user.setDecodedPassword("xxxpwd");
 		dao.store(user);
-		manager.assignUserToGroups(user, new String[] { "admin", "author" });
+		manager.assignUserToGroups(user, new long[] { 1, 2 });
 		assertEquals(2, user.getGroups().size());
 		user = dao.findByPrimaryKey(1);
 		assertNotNull(user);

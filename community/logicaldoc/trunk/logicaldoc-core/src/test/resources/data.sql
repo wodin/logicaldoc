@@ -16,23 +16,23 @@ INSERT INTO ld_menu VALUES(101,'text',100,1,'administration.gif','/',3,NULL,0);
 INSERT INTO ld_menu VALUES(102,'db.admin',101,1,'administration.gif','/',5,NULL,0);
 INSERT INTO ld_menu VALUES(103,'db.admin',101,1,'administration.gif','/',3,NULL,0);
 
-INSERT INTO ld_menugroup VALUES(100,'admin',1);
-INSERT INTO ld_menugroup VALUES(100,'guest',1);
-INSERT INTO ld_menugroup VALUES(103,'admin',1);
-INSERT INTO ld_menugroup VALUES(103,'author',1);
-INSERT INTO ld_menugroup VALUES(99,'admin',0);
+INSERT INTO ld_menugroup VALUES(100,1,1);
+INSERT INTO ld_menugroup VALUES(100,3,1);
+INSERT INTO ld_menugroup VALUES(103,1,1);
+INSERT INTO ld_menugroup VALUES(103,2,1);
+INSERT INTO ld_menugroup VALUES(99,1,0);
 
-INSERT INTO ld_usergroup (ld_userid,ld_groupname) 
-VALUES (3,'admin');
-INSERT INTO ld_usergroup (ld_userid,ld_groupname) 
-VALUES (3,'author');
-INSERT INTO ld_usergroup (ld_userid,ld_groupname) 
-VALUES (4,'author');
-INSERT INTO ld_usergroup (ld_userid,ld_groupname) 
-VALUES (5,'guest');
+INSERT INTO ld_usergroup (ld_userid,ld_groupid) 
+VALUES (3,1);
+INSERT INTO ld_usergroup (ld_userid,ld_groupid) 
+VALUES (3,2);
+INSERT INTO ld_usergroup (ld_userid,ld_groupid) 
+VALUES (4,2);
+INSERT INTO ld_usergroup (ld_userid,ld_groupid) 
+VALUES (5,3);
 
 
-INSERT INTO co_groups VALUES('testGroup','Group for tests');
+INSERT INTO ld_group VALUES(10,'testGroup','Group for tests');
 
 INSERT INTO ld_ticket VALUES(1,'1',1,'admin');
 INSERT INTO ld_ticket VALUES(2,'2',2,'sebastian');

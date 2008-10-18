@@ -290,13 +290,13 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			if (!precoll.isEmpty()) {
 				StringBuffer query = new StringBuffer(
 						"select B.ld_keyword from ld_document A, ld_keyword B, ld_menugroup C "
-								+ " where A.ld_id = B.ld_docid and A.ld_folderid=C.ld_menuid and C.ld_groupname in (");
+								+ " where A.ld_id = B.ld_docid and A.ld_folderid=C.ld_menuid and C.ld_groupid in (");
 				boolean first = true;
 				while (iter.hasNext()) {
 					if (!first)
 						query.append(",");
 					Group ug = (Group) iter.next();
-					query.append("'" + ug.getGroupName() + "'");
+					query.append(Long.toString(ug.getId()));
 					first = false;
 				}
 				query.append(") and lower(B.ld_keyword) like '");
@@ -393,14 +393,14 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 			StringBuffer query = new StringBuffer("select distinct(_doc) from Document _doc  ");
 			query.append(" left outer join _menu.menuGroups as _group ");
-			query.append(" where _group.groupName in (");
+			query.append(" where _group.groupId in (");
 
 			boolean first = true;
 			while (iter.hasNext()) {
 				if (!first)
 					query.append(",");
 				Group ug = (Group) iter.next();
-				query.append("'" + ug.getGroupName() + "'");
+				query.append(Long.toString(ug.getId()));
 				first = false;
 			}
 			query.append(")");
@@ -439,13 +439,13 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				StringBuffer query = new StringBuffer(
 						"select distinct(C.ld_id) from ld_menugroup A, ld_menu B, ld_document C, ld_keyword D "
 								+ " where A.ld_menuid=B.ld_id AND B.ld_id=C.ld_folderid AND C.ld_id=D.ld_docid"
-								+ " AND A.ld_groupname in (");
+								+ " AND A.ld_groupid in (");
 				boolean first = true;
 				while (iter.hasNext()) {
 					if (!first)
 						query.append(",");
 					Group ug = (Group) iter.next();
-					query.append("'" + ug.getGroupName() + "'");
+					query.append(Long.toString(ug.getId()));
 					first = false;
 				}
 				query.append(")");

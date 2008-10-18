@@ -1,176 +1,21 @@
-CREATE TABLE CO_GROUPS (
-  CO_GROUPNAME VARCHAR(255)   NOT NULL,
-  CO_GROUPDESC VARCHAR(255),
-    PRIMARY KEY ( CO_GROUPNAME ));
-
-CREATE TABLE CO_USERGROUP (
-  CO_GROUPNAME VARCHAR(255)   NOT NULL,
-  CO_USERNAME  BIGINT   NOT NULL,
-    PRIMARY KEY ( CO_GROUPNAME,CO_USERNAME ));
-
-CREATE TABLE LD_ARTICLE (
-  LD_ID       BIGINT   NOT NULL,
-  LD_DOCID    BIGINT,
-  LD_SUBJECT  VARCHAR(255),
-  LD_MESSAGE  VARCHAR(2000),
-  LD_DATE     TIMESTAMP,
-  LD_USERNAME VARCHAR(30),
-    PRIMARY KEY ( LD_ID ));
-
-CREATE TABLE LD_ATTACHMENT (
-  LD_MESSAGEID BIGINT   NOT NULL,
-  LD_FILENAME  VARCHAR(255),
-  LD_ICON      VARCHAR(255),
-  LD_MIMETYPE  VARCHAR(255),
-  LD_PARTID    INT   NOT NULL,
-    PRIMARY KEY ( LD_MESSAGEID,LD_PARTID ));
-
-CREATE TABLE LD_DOCUMENT (
-  LD_ID           BIGINT   NOT NULL,
-  LD_TITLE        VARCHAR(255),
-  LD_VERSION      VARCHAR(10),
-  LD_DATE         TIMESTAMP,
-  LD_PUBLISHER    VARCHAR(30),
-  LD_STATUS       INT,
-  LD_TYPE         VARCHAR(255),
-  LD_CHECKOUTUSER VARCHAR(30),
-  LD_SOURCE       VARCHAR(255),
-  LD_SOURCEAUTHOR VARCHAR(255),
-  LD_SOURCEDATE   TIMESTAMP,
-  LD_SOURCETYPE   VARCHAR(255),
-  LD_COVERAGE     VARCHAR(255),
-  LD_LANGUAGE     VARCHAR(10),
-  LD_FILENAME     VARCHAR(255),
-  LD_FILESIZE     BIGINT,
-  LD_FOLDERID     BIGINT,
-    PRIMARY KEY ( LD_ID ));
-
-CREATE TABLE LD_EMAIL (
-  LD_ID            BIGINT   NOT NULL,
-  LD_ACCOUNTID     BIGINT,
-  LD_EMAILID       VARCHAR(255),
-  LD_MESSAGETEXT   VARCHAR(255),
-  LD_AUTHOR        VARCHAR(30),
-  LD_SUBJECT       VARCHAR(255),
-  LD_SENTDATE      VARCHAR(20),
-  LD_RED           INT,
-  LD_AUTHORADDRESS VARCHAR(255),
-  LD_USERNAME      VARCHAR(30),
-  LD_FOLDER        VARCHAR(30),
-    PRIMARY KEY ( LD_ID ));
-
-CREATE TABLE LD_EMAILACCOUNT (
-  LD_ID                BIGINT   NOT NULL,
-  LD_USERNAME          VARCHAR(255),
-  LD_MAILADDRESS       VARCHAR(255),
-  LD_PROVIDER          VARCHAR(255),
-  LD_HOST              VARCHAR(255),
-  LD_PORT              VARCHAR(255),
-  LD_USER              VARCHAR(255),
-  LD_PASSWORD          VARCHAR(255),
-  LD_ALLOWEDTYPES      VARCHAR(255),
-  LD_DELETEFROMMAILBOX INT,
-  LD_LANGUAGE          VARCHAR(255),
-  LD_ENABLED           INT,
-  LD_TARGETFOLDER      BIGINT,
-    PRIMARY KEY ( LD_ID ));
-
-CREATE TABLE LD_HISTORY (
-  LD_ID       BIGINT   NOT NULL,
-  LD_DOCID    BIGINT,
-  LD_DATE     TIMESTAMP,
-  LO_USERNAME VARCHAR(30),
-  LO_EVENT    VARCHAR(255),
-    PRIMARY KEY ( LD_ID ));
-
-CREATE TABLE LD_KEYWORD (
-  LD_DOCID   BIGINT   NOT NULL,
-  LD_KEYWORD VARCHAR(255));
-
-CREATE TABLE LD_MENU (
-  LD_ID       BIGINT   NOT NULL,
-  LD_TEXT     VARCHAR(255),
-  LD_PARENTID BIGINT,
-  LD_SORT     INT,
-  LD_ICON     VARCHAR(255),
-  LD_PATH     VARCHAR(255),
-  LD_TYPE     INT,
-  LD_REF      VARCHAR(255),
-  LD_SIZE     BIGINT,
-    PRIMARY KEY ( LD_ID ));
-
-CREATE TABLE LD_MENUGROUP (
-  LD_MENUID      BIGINT   NOT NULL,
-  LD_GROUPNAME   VARCHAR(255),
-  LD_WRITEENABLE INT);
-
-CREATE TABLE LD_RECIPIENT (
-  LD_MESSAGEID BIGINT   NOT NULL,
-  LD_ADDRESS   VARCHAR(255)   NOT NULL,
-  LD_NAME      VARCHAR(255),
-    PRIMARY KEY ( LD_MESSAGEID,LD_ADDRESS ));
-
-CREATE TABLE LD_SYSTEMMESSAGE (
-  LD_ID           BIGINT   NOT NULL,
-  LD_AUTHOR       VARCHAR(100),
-  LD_RECIPIENT    VARCHAR(100),
-  LD_MESSAGETEXT  VARCHAR(2000),
-  LD_SUBJECT      VARCHAR(255),
-  LD_SENTDATE     VARCHAR(20)   NOT NULL,
-  LD_DATESCOPE    INT,
-  LD_PRIO         INT,
-  LD_CONFIRMATION INT,
-  LD_RED          INT   NOT NULL,
-    PRIMARY KEY ( LD_ID ));
-
-CREATE TABLE LD_TERM (
-  LD_DOCID     BIGINT   NOT NULL,
-  LD_STEM      VARCHAR(255)   NOT NULL,
-  LD_VALUE     FLOAT,
-  LD_WORDCOUNT INT,
-  LD_WORD      VARCHAR(255),
-    PRIMARY KEY ( LD_DOCID,LD_STEM ));
-
-CREATE TABLE LD_TICKET (
-  LD_ID       BIGINT   NOT NULL,
-  LD_TICKETID VARCHAR(255),
-  LD_DOCID    BIGINT,
-  LD_USERNAME VARCHAR(30),
-    PRIMARY KEY ( LD_ID ));
-
-CREATE TABLE LD_USER (
-  LD_ID         BIGINT   NOT NULL,
-  LD_USERNAME   VARCHAR(255),
-  LD_PASSWORD   VARCHAR(255),
-  LD_NAME       VARCHAR(255),
-  LD_FIRSTNAME  VARCHAR(255),
-  LD_STREET     VARCHAR(255),
-  LD_POSTALCODE VARCHAR(255),
-  LD_CITY       VARCHAR(255),
-  LD_COUNTRY    VARCHAR(30),
-  LD_LANGUAGE   VARCHAR(10),
-  LD_EMAIL      VARCHAR(255),
-  LD_TELEPHONE  VARCHAR(255),
-    PRIMARY KEY ( LD_ID ));
-
-CREATE TABLE LD_USERDOC (
-  LD_DOCID    BIGINT   NOT NULL,
-  LD_USERNAME VARCHAR(255)   NOT NULL,
-  LD_DATE     TIMESTAMP,
-    PRIMARY KEY ( LD_DOCID,LD_USERNAME ));
-
-CREATE TABLE LD_USERGROUP (
-  LD_USERID    BIGINT   NOT NULL,
-  LD_GROUPNAME VARCHAR(255)   NOT NULL);
-
-CREATE TABLE LD_VERSION (
-  LD_DOCID   BIGINT   NOT NULL,
-  LD_VERSION VARCHAR(10),
-  LD_USER    VARCHAR(30),
-  LD_DATE    TIMESTAMP,
-  LD_COMMENT VARCHAR(2000));
-
-
+create table ld_article (ld_id bigint not null, ld_docid bigint, ld_subject varchar(255), ld_message varchar(2000), ld_date timestamp, ld_username varchar(30), primary key (ld_id));
+create table ld_attachment (ld_messageid bigint not null, ld_filename varchar(255), ld_icon varchar(255), ld_mimetype varchar(255), ld_partid int not null, primary key (ld_messageid, ld_partid));
+create table ld_document (ld_id bigint not null, ld_title varchar(255), ld_version varchar(10), ld_date timestamp, ld_publisher varchar(30), ld_status int, ld_type varchar(255), ld_checkoutuser varchar(30), ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourcetype varchar(255), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_folderid bigint, primary key (ld_id));
+create table ld_email (ld_id bigint not null, ld_accountid bigint, ld_emailid varchar(255), ld_messageText varchar(255), ld_author varchar(30), ld_subject varchar(255), ld_sentdate varchar(20), ld_red int, ld_authoraddress varchar(255), ld_username varchar(30), ld_folder varchar(30), primary key (ld_id));
+create table ld_emailaccount (ld_id bigint not null, ld_username varchar(255), ld_mailaddress varchar(255), ld_provider varchar(255), ld_host varchar(255), ld_port varchar(255), ld_user varchar(255), ld_password varchar(255), ld_allowedtypes varchar(255), ld_deletefrommailbox int, ld_language varchar(255), ld_enabled int, ld_targetfolder bigint, primary key (ld_id));
+create table ld_group (ld_id bigint not null, ld_name varchar(255) not null, ld_description varchar(255), primary key (ld_id));
+create table ld_history (ld_id bigint not null, ld_docid bigint, ld_date timestamp, lo_username varchar(30), lo_event varchar(255), primary key (ld_id));
+create table ld_keyword (ld_docid bigint not null, ld_keyword varchar(255));
+create table ld_menu (ld_id bigint not null, ld_text varchar(255), ld_parentid bigint, ld_sort int, ld_icon varchar(255), ld_path varchar(255), ld_type int, ld_ref varchar(255), ld_size bigint, primary key (ld_id));
+create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint, ld_writeenable int);
+create table ld_recipient (ld_messageid bigint not null, ld_address varchar(255) not null, ld_name varchar(255), primary key (ld_messageid, ld_address));
+create table ld_systemmessage (ld_id bigint not null, ld_author varchar(100), ld_recipient varchar(100), ld_messagetext varchar(2000), ld_subject varchar(255), ld_sentdate varchar(20) not null, ld_datescope int, ld_prio int, ld_confirmation int, ld_red int not null, primary key (ld_id));
+create table ld_term (ld_docid bigint not null, ld_stem varchar(255) not null, ld_value float, ld_wordcount int, ld_word varchar(255), primary key (ld_docid, ld_stem));
+create table ld_ticket (ld_id bigint not null, ld_ticketid varchar(255), ld_docid bigint, ld_username varchar(30), primary key (ld_id));
+create table ld_user (ld_id bigint not null, ld_username varchar(255) not null, ld_password varchar(255), ld_name varchar(255), ld_firstname varchar(255), ld_street varchar(255), ld_postalcode varchar(255), ld_city varchar(255), ld_country varchar(30), ld_language varchar(10), ld_email varchar(255), ld_telephone varchar(255), primary key (ld_id));
+create table ld_userdoc (ld_docid bigint not null, ld_username varchar(255) not null, ld_date timestamp, primary key (ld_docid, ld_username));
+create table ld_usergroup (ld_groupid bigint not null, ld_userid bigint not null, primary key (ld_groupid, ld_userid));
+create table ld_version (ld_docid bigint not null, ld_version varchar(10), ld_user varchar(30), ld_date timestamp, ld_comment varchar(2000));
 alter table ld_attachment add constraint FK6C81064AAAE036A2 foreign key (ld_messageid) references ld_email;
 alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folderid) references ld_menu;
 alter table ld_emailaccount add constraint FK1013678CDFB2816 foreign key (ld_targetfolder) references ld_menu;
@@ -178,10 +23,8 @@ alter table ld_keyword add constraint FK55BBDA227C693DFD foreign key (ld_docid) 
 alter table ld_menugroup add constraint FKB4F7F679AA456AD1 foreign key (ld_menuid) references ld_menu;
 alter table ld_recipient add constraint FK406A0412AAE036A2 foreign key (ld_messageid) references ld_email;
 alter table ld_usergroup add constraint FK2435438DB8B12CA9 foreign key (ld_userid) references ld_user;
-alter table ld_usergroup add constraint FK2435438D965CAE11 foreign key (ld_groupname) references co_groups;
+alter table ld_usergroup add constraint FK2435438D76F11EA1 foreign key (ld_groupid) references ld_group;
 alter table ld_version add constraint FK9B3BD9117C693DFD foreign key (ld_docid) references ld_document;
-
-
 
 
 
@@ -545,16 +388,16 @@ INSERT INTO LD_MENU(
             'admin/tasks',
             0);
 
-INSERT INTO CO_GROUPS
-VALUES     ('admin',
+INSERT INTO LD_GROUP
+VALUES     (1,'admin',
             'Group of admins');
 
-INSERT INTO CO_GROUPS
-VALUES     ('author',
+INSERT INTO LD_GROUP
+VALUES     (2,'author',
             'Group of authors');
 
-INSERT INTO CO_GROUPS
-VALUES     ('guest',
+INSERT INTO LD_GROUP
+VALUES     (3,'guest',
             'Group of guest');
 
 INSERT INTO LD_USER
@@ -584,178 +427,178 @@ VALUES     (1,'admin',
 
 INSERT INTO LD_MENUGROUP
 VALUES     (1,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (2,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (4,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (5,
-            'admin',
+            1,
             1);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (6,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (7,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (8,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (13,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (14,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (16,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (17,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (19,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (20,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (23,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (24,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (25,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (26,
-            'admin',
+            1,
             1);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (27,
-            'admin',
+            1,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (1,
-            'author',
+            2,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (4,
-            'author',
+            2,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (5,
-            'author',
+            2,
             1);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (13,
-            'author',
+            2,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (16,
-            'author',
+            2,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (19,
-            'author',
+            2,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (20,
-            'author',
+            2,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (23,
-            'author',
+           2,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (24,
-            'author',
+            2,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (26,
-            'author',
+            2,
             1);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (1,
-            'guest',
+            3,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (4,
-            'guest',
+            3,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (5,
-            'guest',
+            3,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (13,
-            'guest',
+            3,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (16,
-            'guest',
+            3,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (19,
-            'guest',
+            3,
             0);
 
 INSERT INTO LD_MENUGROUP
 VALUES     (26,
-            'guest',
+            3,
             0);
 
-INSERT INTO ld_usergroup (ld_userid,ld_groupname) 
-VALUES (1,'admin');
+INSERT INTO ld_usergroup (ld_userid,ld_groupid) 
+VALUES (1,1);

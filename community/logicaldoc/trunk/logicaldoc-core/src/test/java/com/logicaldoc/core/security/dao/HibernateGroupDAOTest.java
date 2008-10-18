@@ -4,20 +4,20 @@ import java.util.Collection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.security.Group;
-import com.logicaldoc.core.security.dao.GroupDAO;
 
 /**
  * Test case for <code>HibernateGroupDAOTest</code>
  * 
- * @author Alessandro Gasparini
+ * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
 public class HibernateGroupDAOTest extends AbstractCoreTestCase {
-    
-    protected static Log log = LogFactory.getLog(HibernateGroupDAOTest.class);
-    
+
+	protected static Log log = LogFactory.getLog(HibernateGroupDAOTest.class);
+
 	// Instance under test
 	private GroupDAO dao;
 
@@ -34,75 +34,77 @@ public class HibernateGroupDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testDelete() {
-		assertTrue(dao.exists("testGroup"));
-        
-		assertTrue(dao.delete("testGroup"));
-		assertFalse(dao.exists("testGroup"));
-        
-        // Delete a BIG group with associated MenuGroups and UserGroups
-        assertTrue(dao.delete("admin"));
-        assertFalse(dao.exists("admin"));
+		assertNotNull(dao.findByPrimaryKey(10));
+
+		assertTrue(dao.delete(10));
+		assertNull(dao.findByPrimaryKey(10));
+
+		// Delete a BIG group with associated MenuGroups and UserGroups
+		assertTrue(dao.delete(1));
+		assertNull(dao.findByPrimaryKey(1));
 	}
 
-	public void testExists() {
-		assertTrue(dao.exists("admin"));
-		assertFalse(dao.exists("unexistent"));
-		assertFalse(dao.exists("xxxxo"));
+	public void testFindByName() {
+		Group group = dao.findByName("admin");
+		assertNotNull(group);
+		assertEquals("admin", group.getName());
+
+		// Try with unexisting name
+		group = dao.findByName("xxxx");
+		assertNull(group);
 	}
 
 	public void testFindByPrimaryKey() {
-        Group group = dao.findByPrimaryKey("admin");
+		Group group = dao.findByPrimaryKey(1);
 		assertNotNull(group);
-		assertEquals("admin", group.getGroupName());
+		assertEquals("admin", group.getName());
 
-		// Try with unexisting username
-        group = dao.findByPrimaryKey("xxxx");
+		// Try with unexisting id
+		group = dao.findByPrimaryKey(999);
 		assertNull(group);
 	}
-    
-    
-    public void testFindAllGroupNames() {
-        Collection groupNames = dao.findAllGroupNames();
-        assertNotNull(groupNames);
-        assertFalse(groupNames.isEmpty());
-        assertTrue(groupNames.contains("admin"));
-        assertTrue(groupNames.contains("testGroup"));
-    }    
+
+	public void testFindAllGroupNames() {
+		Collection<String> groupNames = dao.findAllGroupNames();
+		assertNotNull(groupNames);
+		assertFalse(groupNames.isEmpty());
+		assertTrue(groupNames.contains("admin"));
+		assertTrue(groupNames.contains("testGroup"));
+	}
 
 	public void testStore() {
-        assertFalse(dao.exists("LogicalObjects"));
-        
-        Group group = new Group();
-        group.setGroupName("LogicalObjects");
-        group.setGroupDesc("Test group for store method");
-        
-        boolean result = dao.store(group);        
-        assertTrue(dao.exists("LogicalObjects"));
-        assertTrue(result);
-        
-        Group group2 = dao.findByPrimaryKey("LogicalObjects");
-        assertEquals(group, group2);
+		assertNull(dao.findByName("LogicalObjects"));
+
+		Group group = new Group();
+		group.setName("LogicalObjects");
+		group.setDescription("Test group for store method");
+
+		boolean result = dao.store(group);
+		assertNotNull(dao.findByName("LogicalObjects"));
+		assertTrue(result);
+
+		Group group2 = dao.findByName("LogicalObjects");
+		assertEquals(group, group2);
 	}
-    
-    
-    public void testInsert() {
-        assertFalse(dao.exists("parentNone"));
-        
-        Group group = new Group();
-        group.setGroupName("parentNone");
-        group.setGroupDesc("Test group for insert method parent = none");
-        
-        assertTrue(dao.insert(group,null));
-        assertTrue(dao.exists("parentNone"));
-        
-        // Test with parentGroup Not Empty
-        assertFalse(dao.exists("parentNotEmpty"));
-        
-        group = new Group();
-        group.setGroupName("parentNotEmpty");
-        group.setGroupDesc("Test group for insertX method parentGroup Not Empty");
-        
-        assertTrue(dao.insert(group,"parentNone"));
-        assertTrue(dao.exists("parentNotEmpty"));
-    }    
+
+	public void testInsert() {
+		assertNull(dao.findByName("parentNone"));
+
+		Group group = new Group();
+		group.setName("parentNone");
+		group.setDescription("Test group for insert method parent = none");
+
+		assertTrue(dao.insert(group, 90));
+		assertNotNull(dao.findByName("parentNone"));
+
+		// Test with parentGroup Not Empty
+		assertNull(dao.findByName("parentNotEmpty"));
+
+		group = new Group();
+		group.setName("parentNotEmpty");
+		group.setDescription("Test group for insertX method parentGroup Not Empty");
+
+		assertTrue(dao.insert(group, 90));
+		assertNotNull(dao.findByName("parentNotEmpty"));
+	}
 }

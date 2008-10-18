@@ -17,7 +17,7 @@ public interface SecurityManager {
 	 * @param users The users collection
 	 * @param group The group
 	 */
-	public abstract void assignUsersToGroup(Collection<User> users, Group group);
+	public void assignUsersToGroup(Collection<User> users, Group group);
 
 	/**
 	 * Assign a user to a collection of groups.
@@ -25,15 +25,15 @@ public interface SecurityManager {
 	 * @param user The user to be assigned
 	 * @param groups The groups collection
 	 */
-	public abstract void assignUserToGroups(User user, Collection<Group> groups);
+	public void assignUserToGroups(User user, Collection<Group> groups);
 
 	/**
 	 * Assign a user to a collection of groups.
 	 * 
 	 * @param user The user to be assigned
-	 * @param groupNames Array of group names
+	 * @param groupIds Array of group ids
 	 */
-	public abstract void assignUserToGroups(User user, String[] groupNames);
+	public void assignUserToGroups(User user, long[] groupIds);
 	
 	/**
 	 * Assign a user to a group.
@@ -41,7 +41,7 @@ public interface SecurityManager {
 	 * @param user The user to be assigned
 	 * @param group The group
 	 */
-	public abstract void assignUserToGroup(User user, Group group);
+	public void assignUserToGroup(User user, Group group);
 
 	/**
 	 * Removes the specified users from a group
@@ -49,7 +49,7 @@ public interface SecurityManager {
 	 * @param users The users to be removed
 	 * @param group The group to be updated
 	 */
-	public abstract void removeUsersFromGroup(Collection<User> users, Group group);
+	public void removeUsersFromGroup(Collection<User> users, Group group);
 
 	/**
 	 * Removes the specified user from a group
@@ -57,20 +57,20 @@ public interface SecurityManager {
 	 * @param users The user to be removed
 	 * @param group The group to be updated
 	 */
-	public abstract void removeUserFromGroup(User user, Group group);
+	public void removeUserFromGroup(User user, Group group);
 
 	/**
 	 * Removes the specified user from a all groups
 	 * 
 	 * @param user The user to be removed
 	 */
-	public abstract void removeUserFromAllGroups(User user);
+	public void removeUserFromAllGroups(User user);
 
 	/**
 	 * Removes all users from group
 	 * 
 	 * @param group The group from wich all users must be removed
 	 */
-	public abstract void removeAllUsersFromGroup(Group group);
+	public void removeAllUsersFromGroup(Group group);
 
 }

@@ -18,7 +18,7 @@
 		<set name="menuGroups" table="ld_menugroup" cascade="all">
 			<key column="ld_menuid" />
 			<composite-element class="com.logicaldoc.core.security.MenuGroup">
-               <property name="groupName" type="string" column="ld_groupname" length="255"/>
+               <property name="groupId" type="long" column="ld_groupid" />
 		       <property name="writeEnable" type="int" column="ld_writeenable" />
 			</composite-element>
 		</set>

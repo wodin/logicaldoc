@@ -182,6 +182,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	 * @param parent The node in which the directory must be searched
 	 * @return The found tree node, null if not found
 	 */
+	@SuppressWarnings("unchecked")
 	private DefaultMutableTreeNode findDirectoryNode(long direcoryId, DefaultMutableTreeNode parent) {
 		Directory dir = (Directory) parent.getUserObject();
 
@@ -278,6 +279,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	/**
 	 * Set the selection state for all directories in the tree
 	 */
+	@SuppressWarnings("unchecked")
 	protected void setTreeSelectedState(DefaultMutableTreeNode node) {
 		if ((node.getUserObject() != null) && node.getUserObject() instanceof Directory) {
 			Directory dir = (Directory) node.getUserObject();

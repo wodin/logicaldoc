@@ -52,7 +52,7 @@ public class LoginForm {
 			logger.info("User " + j_username + " logged in.");
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			Map session = facesContext.getExternalContext().getSessionMap();
+			Map<String,Object> session = facesContext.getExternalContext().getSessionMap();
 
 			session.put(Constants.AUTH_USERID, user.getId());
 			session.put(Constants.AUTH_USERNAME, j_username);
@@ -92,6 +92,7 @@ public class LoginForm {
 	 * 
 	 * @return "login" if the user was succesfully logged off
 	 */
+	@SuppressWarnings("unchecked")
 	public String logout() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);

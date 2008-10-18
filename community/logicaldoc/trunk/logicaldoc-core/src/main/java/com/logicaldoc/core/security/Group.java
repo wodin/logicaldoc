@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import com.logicaldoc.core.PersistentObject;
 
 /**
  * This class represents groups.
@@ -13,13 +13,13 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
  * @author Marco Meschieri
  * @version 1.0
  */
-public class Group implements Serializable {
+public class Group extends PersistentObject implements Serializable {
 
 	private static final long serialVersionUID = 2L;
 
-	private String groupName = "";
+	private String name = "";
 
-	private String groupDesc = "";
+	private String descriprion = "";
 
 	private Set<User> users = new HashSet<User>();
 
@@ -34,25 +34,25 @@ public class Group implements Serializable {
 		this.users = users;
 	}
 
-	public String getGroupName() {
-		return groupName;
+	public String getName() {
+		return name;
 	}
 
-	public String getGroupDesc() {
-		return groupDesc;
+	public String getDescription() {
+		return descriprion;
 	}
 
-	public void setGroupName(String name) {
-		groupName = name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public void setGroupDesc(String desc) {
-		groupDesc = desc;
+	public void setDescription(String description) {
+		descriprion = description;
 	}
 
 	public void reset() {
-		groupName = "";
-		groupDesc = "";
+		name = "";
+		descriprion = "";
 		users = new HashSet<User>();
 	}
 
@@ -62,24 +62,6 @@ public class Group implements Serializable {
 	}
 
 	public String toString() {
-		// return ReflectionToStringBuilder.toString(this);
-		return (new ReflectionToStringBuilder(this) {
-			protected boolean accept(java.lang.reflect.Field f) {
-				return super.accept(f);
-			}
-		}).toString();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Group))
-			return false;
-		Group other = (Group) obj;
-		return this.getGroupName().equals(other.getGroupName());
-	}
-
-	@Override
-	public int hashCode() {
-		return groupName.hashCode();
+		return getName();
 	}
 }

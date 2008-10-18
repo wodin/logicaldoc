@@ -44,14 +44,12 @@ public class SecurityManagerImpl implements SecurityManager {
 		for (Iterator<User> iter = users.iterator(); iter.hasNext();) {
 			User user = iter.next();
 			if (!group.getUsers().contains(user)) {
-				System.out.println("group " + group.getGroupName()
-						+ " not contains " + user.getUserName());
+				System.out.println("group " + group.getName() + " not contains " + user.getUserName());
 				group.getUsers().add(user);
 			}
 
 			if (!user.getGroups().contains(group)) {
-				System.out.println("user " + user.getUserName()
-						+ " not contains " + group.getGroupName());
+				System.out.println("user " + user.getUserName() + " not contains " + group.getName());
 				user.getGroups().add(group);
 			}
 		}
@@ -131,14 +129,14 @@ public class SecurityManagerImpl implements SecurityManager {
 
 	/**
 	 * @see com.logicaldoc.core.security.SecurityManager#assignUserToGroups(com.logicaldoc.core.security.User,
-	 *      java.lang.String[])
+	 *      long[])
 	 */
-	public void assignUserToGroups(User user, String[] groupNames) {
-		if (groupNames == null)
+	public void assignUserToGroups(User user, long[] groupIds) {
+		if (groupIds == null)
 			return;
 		ArrayList<Group> groups = new ArrayList<Group>();
-		for (int i = 0; i < groupNames.length; i++)
-			groups.add(groupDAO.findByPrimaryKey(groupNames[i]));
+		for (int i = 0; i < groupIds.length; i++)
+			groups.add(groupDAO.findByPrimaryKey(groupIds[i]));
 		assignUserToGroups(user, groups);
 	}
 }

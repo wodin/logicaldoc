@@ -95,6 +95,7 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 	/**
 	 * @see com.logicaldoc.core.security.dao.UserDAO#findByUserName(java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	public User findByUserName(String username) {
 		User user = null;
 

@@ -196,7 +196,7 @@ public class HomeBean {
 		}
 
 		// order the list by occurrences
-		Comparator compOccurrence = new TagCloudComparatorOccurrence();
+		Comparator<TagCloud> compOccurrence = new TagCloudComparatorOccurrence();
 		Collections.sort(tags, compOccurrence);
 		Collections.reverse(tags);
 
@@ -215,25 +215,21 @@ public class HomeBean {
 		}
 
 		// Sort the tags collection by name
-		Comparator compName = new TagCloudComparatorName();
+		Comparator<TagCloud> compName = new TagCloudComparatorName();
 		Collections.sort(tags, compName);
 
 		return tags;
 	}
 
-	class TagCloudComparatorOccurrence implements Comparator {
-		public int compare(Object arg0, Object arg1) {
-			TagCloud dr0 = (TagCloud) arg0;
-			TagCloud dr1 = (TagCloud) arg1;
-			return dr0.getOccurence().compareTo(dr1.getOccurence());
+	class TagCloudComparatorOccurrence implements Comparator<TagCloud> {
+		public int compare(TagCloud tc0, TagCloud tc1) {
+			return tc0.getOccurence().compareTo(tc1.getOccurence());
 		}
 	}
 
-	class TagCloudComparatorName implements Comparator {
-		public int compare(Object arg0, Object arg1) {
-			TagCloud dr0 = (TagCloud) arg0;
-			TagCloud dr1 = (TagCloud) arg1;
-			return dr0.getKeyword().compareTo(dr1.getKeyword());
+	class TagCloudComparatorName implements Comparator<TagCloud> {
+		public int compare(TagCloud tc0, TagCloud tc1) {
+			return tc0.getKeyword().compareTo(tc1.getKeyword());
 		}
 	}
 

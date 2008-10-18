@@ -23,7 +23,7 @@ import com.logicaldoc.web.navigation.PageContentBean;
 /**
  * Control that allows the user to select access rights
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @version $Id: RightsRecordsManager.java,v 1.4 2006/09/03 16:24:37 marco Exp $
  * @since 3.0
  */
@@ -77,20 +77,19 @@ public class RightsRecordsManager {
 			String username = SessionManagement.getUsername();
 
 			if (mdao.isWriteEnable(menuId, username)) {
-				Collection groups = gdao.findAll();
-				Iterator iter = groups.iterator();
-
+				Collection<Group> groups = gdao.findAll();
+				Iterator<Group> iter = groups.iterator();
 				while (iter.hasNext()) {
 					Group g = (Group) iter.next();
 					GroupRule gr = new GroupRule();
-					gr.setGroupName(g.getGroupName());
+					gr.setGroupName(g.getName());
 
 					gr.setEnabled(true);
 
 					Menu menu = mdao.findByPrimaryKey(menuId);
-					MenuGroup mg = menu.getMenuGroup(g.getGroupName());
+					MenuGroup mg = menu.getMenuGroup(g.getId());
 
-					if ((mg == null) || !mg.getGroupName().equals(g.getGroupName())) {
+					if ((mg == null) || mg.getGroupId() != g.getId()) {
 						gr.setRead(false);
 						gr.setWrite(false);
 					} else {
@@ -139,7 +138,6 @@ public class RightsRecordsManager {
 		long id = selectedDirectory.getMenuId();
 		String username = SessionManagement.getUsername();
 		saveRules(id, username);
-
 		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
 		return null;
 	}
@@ -156,40 +154,36 @@ public class RightsRecordsManager {
 		if (!mdao.isWriteEnable(id, username)) {
 			return;
 		}
-
-		Menu menu = mdao.findByPrimaryKey(id);
-
+		Menu folder = mdao.findByPrimaryKey(id);
 		boolean sqlerrors = false;
-
 		for (GroupRule rule : rules) {
 			boolean read = rule.getRead();
 			boolean write = rule.getWrite();
 
-			MenuGroup mg = menu.getMenuGroup(rule.getGroupName());
-
-			if (read) {
-				if ((mg == null) || !mg.getGroupName().equals(rule.getGroupName())) {
+			MenuGroup mg = folder.getMenuGroup(rule.getGroupId());
+			if (write || read || rule.getGroupName().equals("admin")) {
+				if ((mg == null) || mg.getGroupId() != rule.getGroupId()) {
 					mg = new MenuGroup();
-					mg.setGroupName(rule.getGroupName());
-					menu.getMenuGroups().add(mg);
+					mg.setGroupId(rule.getGroupId());
+					folder.getMenuGroups().add(mg);
 				}
 
-				if (write) {
+				if (write || rule.getGroupName().equals("admin")) {
 					mg.setWriteEnable(1);
 				} else {
 					mg.setWriteEnable(0);
 				}
 
-				boolean stored = mdao.store(menu);
+				boolean stored = mdao.store(folder);
 
 				if (!stored) {
 					sqlerrors = true;
 				}
 			} else {
 				if (mg != null) {
-					menu.getMenuGroups().remove(mg);
+					folder.getMenuGroups().remove(mg);
 
-					boolean deleted = mdao.store(menu);
+					boolean deleted = mdao.store(folder);
 
 					if (!deleted) {
 						sqlerrors = true;
@@ -207,10 +201,9 @@ public class RightsRecordsManager {
 		}
 
 		if (recursive) {
-			// recursively apply permissions to all submenues
-			Collection<Menu> submenues = mdao.findByParentId(id);
-
-			for (Menu submenu : submenues) {
+			// recursively apply permissions to all submenus
+			Collection<Menu> submenus = mdao.findByParentId(id);
+			for (Menu submenu : submenus) {
 				saveRules(submenu.getId(), username);
 			}
 		}

@@ -1,80 +1,71 @@
-/*
- * GroupRules.java
- *
- * Created on 18. November 2003, 19:44
- */
-
 package com.logicaldoc.core.security;
 
 /**
- *
+ * A simple bean used to show Access rules
+ * 
  * @author Michael Scholz
+ * @author Marco Meschieri - Logical Objects
  */
-public class GroupRule
-{
-    private String groupName;
+public class GroupRule {
+	private String groupName;
 
-    private boolean read;
+	private long groupId;
 
-    private boolean write;
+	private boolean read;
 
-    /**
-     * true, if this rule can be changed in a dialog
-     */
-    private boolean enabled;
+	private boolean write;
 
-    /** Creates a new instance of GroupRules */
-    public GroupRule()
-    {
-        groupName = "";
-        read = false;
-        write = false;
-        enabled = false;
-    } // end ctor GroupRule
+	/**
+	 * true, if this rule can be changed in a dialog
+	 */
+	private boolean enabled;
 
-    public String getGroupName()
-    {
-        return groupName;
-    } // end method getGroupName
+	/** Creates a new instance of GroupRules */
+	public GroupRule() {
+		groupId = -1;
+		groupName = "";
+		read = false;
+		write = false;
+		enabled = false;
+	}
 
-    public boolean getRead()
-    {
-        return read;
-    } // end method getRead
+	public long getGroupId() {
+		return groupId;
+	}
 
-    public boolean getWrite()
-    {
-        return write;
-    } // end method getWrite
+	public void setGroupId(long groupId) {
+		this.groupId = groupId;
+	}
 
-    /**
-     * @see GroupRule#enabled
-     */
-    public boolean getEnabled()
-    {
-        return enabled;
-    } // end method getEnabled
+	public String getGroupName() {
+		return groupName;
+	}
 
-    public void setGroupName(String gname)
-    {
-        groupName = gname;
-    } // end method setGroupName
+	public boolean getRead() {
+		return read;
+	}
 
-    public void setRead(boolean r)
-    {
-        read = r;
-    } // end method setRead
+	public boolean getWrite() {
+		return write;
+	}
 
-    public void setWrite(boolean w)
-    {
-        write = w;
-    } // end method setWrite
+	public boolean getEnabled() {
+		return enabled;
+	}
 
-    /**
-     * @see GroupRule#enabled
-     */
-    public void setEnabled(boolean e)
-    {
-        enabled = e;
-    } // end method setEnabled
-} // end class GroupRule
+	public void setGroupName(String gname) {
+		groupName = gname;
+	}
+
+	public void setRead(boolean r) {
+		read = r;
+	}
+
+	public void setWrite(boolean w) {
+		write = w;
+	}
+
+	public void setEnabled(boolean e) {
+		enabled = e;
+	}
+}

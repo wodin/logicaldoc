@@ -2,12 +2,15 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-lazy="false">
-	<class name="com.logicaldoc.core.security.Group" table="co_groups">
+	<class name="com.logicaldoc.core.security.Group" table="ld_group">
 		<cache usage="read-write" />
-		<id name="groupName" type="string" column="co_groupname" />
-		<property name="groupDesc" type="string" column="co_groupdesc" length="255" />
+		<id name="id" type="long" column="ld_id" unsaved-value="0">
+			<generator class="increment" />
+		</id>
+		<property name="name" type="string" column="ld_name" length="255" not-null="true" />
+		<property name="description" type="string" column="ld_description" length="255" />
         <set name="users" table="ld_usergroup" lazy="false">
-             <key column="ld_groupname"/>
+             <key column="ld_groupid"/>
              <many-to-many column="ld_userid" class="com.logicaldoc.core.security.User" />
         </set>
 	</class>

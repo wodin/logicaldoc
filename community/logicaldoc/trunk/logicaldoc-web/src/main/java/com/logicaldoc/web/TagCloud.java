@@ -11,9 +11,9 @@ import com.logicaldoc.web.search.KeywordsBean;
 /**
  * This class is a TagCloud
  * 
- * @author Alessandro Gasparini
+ * @author Alessandro Gasparini - Logical Objects
  * @version $Id:$
- * @since ###release###
+ * @since 3.5
  */
 public class TagCloud {
 

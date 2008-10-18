@@ -7,13 +7,12 @@ import java.util.Collection;
 import java.util.Date;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
-import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.UserDoc;
 
 /**
  * Test case for <code>HibernateUserDocDAO</code>
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @version $Id:$
  * @since 3.0
  */

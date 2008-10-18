@@ -2,15 +2,15 @@ package com.logicaldoc.core.security.dao;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * @author Alessandro Gasparini
@@ -34,17 +34,17 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.GroupDAO#delete(java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.GroupDAO#delete(long)
 	 */
-	public boolean delete(String groupname) {
+	public boolean delete(long groupId) {
 		boolean result = true;
 
 		try {
-			Group group = findByPrimaryKey(groupname);
+			Group group = findByPrimaryKey(groupId);
 			if (group != null) {
 				// Delete menu-group assignments
 				getSession().connection().createStatement().execute(
-						"delete from ld_menugroup where ld_groupname='" + groupname + "'");
+						"delete from ld_menugroup where ld_groupid=" + groupId);
 
 				// Finally delete the found Group
 				getHibernateTemplate().delete(group);
@@ -65,7 +65,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 		boolean result = false;
 
 		try {
-			Group group = findByPrimaryKey(groupname);
+			Group group = findByName(groupname);
 			result = (group != null);
 		} catch (Exception e) {
 			if (log.isWarnEnabled())
@@ -100,11 +100,9 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 		Collection<String> coll = new ArrayList<String>();
 
 		try {
-			Collection coll2 = findAll();
-			Iterator iter = coll2.iterator();
-			while (iter.hasNext()) {
-				Group group = (Group) iter.next();
-				coll.add(group.getGroupName());
+			Collection<Group> coll2 = findAll();
+			for (Group group : coll2) {
+				coll.add(group.getName());
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -115,13 +113,18 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.GroupDAO#findByPrimaryKey(java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.GroupDAO#findByName(java.lang.String)
 	 */
-	public Group findByPrimaryKey(String groupname) {
+	@SuppressWarnings("unchecked")
+	public Group findByName(String name) {
 		Group group = null;
 
 		try {
-			group = (Group) getHibernateTemplate().get(Group.class, groupname);
+			Collection<Group> coll = (Collection<Group>) getHibernateTemplate().find(
+					"from Group _group where _group.name = ?", new Object[] { name });
+			if (coll.size() > 0) {
+				group = coll.iterator().next();
+			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -131,9 +134,9 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.GroupDAO#insert(com.logicaldoc.core.security.Group)
+	 * @see com.logicaldoc.core.security.dao.GroupDAO#insert(com.logicaldoc.core.security.Group, long)
 	 */
-	public boolean insert(Group group, String parentGroup) {
+	public boolean insert(Group group, long parentGroupId) {
 		boolean result = true;
 
 		if (group == null)
@@ -142,10 +145,10 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 		try {
 			getHibernateTemplate().saveOrUpdate(group);
 
-			if (StringUtils.isNotEmpty(parentGroup)) {
-				Collection<Menu> menues = menuDAO.findByGroupName(parentGroup);
-				for (Menu menu : menues) {
-					addMenuGroup(group, menu.getId(), menu.getMenuGroup(parentGroup).getWriteEnable());
+			if (parentGroupId>0) {
+				Collection<Menu> menus = menuDAO.findByGroupId(parentGroupId);
+				for (Menu menu : menus) {
+					addMenuGroup(group, menu.getId(), menu.getMenuGroup(parentGroupId).getWriteEnable());
 				}
 			} else {
 				// if no parent group was given, the new group will have default
@@ -153,7 +156,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 				addMenuGroup(group, Menu.MENUID_HOME, 0); // home
 				addMenuGroup(group, Menu.MENUID_PERSONAL, 0); // personal
 				addMenuGroup(group, Menu.MENUID_DOCUMENTS, 1); // root folder
-																// for documents
+				// for documents
 				addMenuGroup(group, Menu.MENUID_MESSAGES, 0); // messages
 				addMenuGroup(group, Menu.MENUID_EDITME, 0); // edit me
 				addMenuGroup(group, 20, 0); // emails
@@ -182,7 +185,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 		Menu menu = menuDAO.findByPrimaryKey(menuId);
 
 		MenuGroup mgroup = new MenuGroup();
-		mgroup.setGroupName(group.getGroupName());
+		mgroup.setGroupId(group.getId());
 		mgroup.setWriteEnable(writeable);
 		if (!menu.getMenuGroups().contains(mgroup))
 			menu.getMenuGroups().add(mgroup);
@@ -204,5 +207,19 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	@Override
+	public Group findByPrimaryKey(long groupId) {
+		Group group = null;
+
+		try {
+			group = (Group) getHibernateTemplate().get(Group.class, groupId);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+
+		return group;
 	}
 }

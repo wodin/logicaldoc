@@ -10,28 +10,25 @@ public class MenuGroup {
 
 	private int writeEnable = 0;
 
-	private String groupName;
-
+	private long groupId;
 
 	public MenuGroup() {
 	}
 
-	public MenuGroup(String groupName) {
-		this.groupName=groupName;
+	public MenuGroup(long groupId) {
+		this.groupId = groupId;
 	}
 
-
-	public String getGroupName() {
-		return groupName;
+	public long getGroupId() {
+		return groupId;
 	}
 
 	public int getWriteEnable() {
 		return writeEnable;
 	}
 
-
-	public void setGroupName(String gname) {
-		this.groupName = gname;
+	public void setGroupId(long groupId) {
+		this.groupId = groupId;
 	}
 
 	public void setWriteEnable(int enable) {
@@ -47,11 +44,11 @@ public class MenuGroup {
 		if (!(obj instanceof MenuGroup))
 			return false;
 		MenuGroup other = (MenuGroup) obj;
-		return this.getGroupName().equals(other.getGroupName());
+		return this.getGroupId() == other.getGroupId();
 	}
 
 	@Override
 	public int hashCode() {
-		return groupName.hashCode();
+		return new Long(groupId).hashCode();
 	}
 }

@@ -1,6 +1,5 @@
 package com.logicaldoc.core.security;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,9 +7,8 @@ import com.logicaldoc.core.PersistentObject;
 
 /**
  * This class represents the key concept of security. A Menu not only models
- * menues but also it is used as an element to build hierarchies. With
- * menugroups you can associate groups to a given menu and grant some
- * permissions.
+ * menus but also it is used as an element to build hierarchies. With menugroups
+ * you can associate groups to a given menu and grant some permissions.
  * 
  * @author Michael Scholz
  * @author Marco Meschieri
@@ -97,6 +95,11 @@ public class Menu extends PersistentObject {
 		return menuGroups;
 	}
 
+	public void clearMenuGroups() {
+		menuGroups.clear();
+		menuGroups = new HashSet<MenuGroup>();
+	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
@@ -129,33 +132,34 @@ public class Menu extends PersistentObject {
 		menuGroups = mgroup;
 	}
 
-	public String[] getMenuGroupNames() {
-		ArrayList<String> ids = new ArrayList<String>();
+	public long[] getMenuGroupIds() {
+		long[] idsArray = new long[menuGroups.size()];
+		int i = 0;
 		for (MenuGroup mg : menuGroups) {
-			ids.add(mg.getGroupName());
+			idsArray[i++] = mg.getGroupId();
 		}
-		return (String[]) ids.toArray(new String[] {});
+		return idsArray;
 	}
 
 	/**
 	 * Adds MenuGroup object given in a String array to the ArrayList of
 	 * MenuGroups.
 	 * 
-	 * @param groups
+	 * @param groups array of group ids
 	 */
-	public void setMenuGroup(String[] groups) {
+	public void setMenuGroup(long[] groups) {
 		menuGroups.clear();
 		for (int i = 0; i < groups.length; i++) {
 			MenuGroup mg = new MenuGroup();
-			mg.setGroupName(groups[i]);
+			mg.setGroupId(groups[i]);
 			mg.setWriteEnable(1);
 			menuGroups.add(mg);
 		}
 	}
 
-	public MenuGroup getMenuGroup(String groupName) {
+	public MenuGroup getMenuGroup(long groupId) {
 		for (MenuGroup mg : menuGroups) {
-			if (mg.getGroupName().equals(groupName))
+			if (mg.getGroupId() == groupId)
 				return mg;
 		}
 		return null;
