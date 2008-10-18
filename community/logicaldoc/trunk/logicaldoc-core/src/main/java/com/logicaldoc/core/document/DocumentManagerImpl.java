@@ -15,7 +15,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.document.Field;
 
-import com.logicaldoc.core.FileBean;
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
@@ -91,7 +90,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// rename the old current version file to the version name: "quelle.txt"
 		// -> "2.0"
-		FileBean.renameFile(completeDocPath + document.getFileName(), completeDocPath + document.getVersion());
+		FileUtils.moveFile(new File(completeDocPath + document.getFileName()), new File(completeDocPath
+				+ document.getVersion()));
 
 		document.setFileName(filename);
 
@@ -201,11 +201,11 @@ public class DocumentManagerImpl implements DocumentManager {
 			/* create search index entry */
 			String lang = doc.getLanguage();
 			File file = new File(new StringBuilder(path).append("/").append(doc.getFileName()).toString());
-			System.out.println("*****"+file.getPath());
+			System.out.println("*****" + file.getPath());
 			indexer.addFile(file, doc, getDocumentContent(doc), lang);
 
 			doc.setFileSize(file.length());
-			System.out.println("***** size"+doc.getFileSize());
+			System.out.println("***** size" + doc.getFileSize());
 			documentDAO.store(doc);
 			return doc;
 		} catch (Exception e) {

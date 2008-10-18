@@ -1,4 +1,4 @@
-package com.logicaldoc.core;
+package com.logicaldoc.util.io;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -15,13 +15,13 @@ import org.apache.commons.logging.LogFactory;
 /**
  * This class is for handling with jar-files.
  * 
- * @author Michael Scholz
- * @version 1.0
+ * @author Marco Meschieri - Logical Objects
+ * @version 4.0
  */
-public class JarBean {
-	
-	protected static Log log = LogFactory.getLog(JarBean.class);
-	
+public class JarUtil {
+
+	protected static Log log = LogFactory.getLog(JarUtil.class);
+
 	/**
 	 * This method extracts all entries of a jar-file.
 	 * 
@@ -29,6 +29,7 @@ public class JarBean {
 	 * @param target Path of the extracted files.
 	 * @return True if successfully extracted.
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean unjar(String jarsource, String target) {
 		boolean result = true;
 
@@ -53,7 +54,7 @@ public class JarBean {
 		}
 
 		return result;
-	} 
+	}
 
 	/**
 	 * This method extracts one entry of a jar-file.
@@ -64,7 +65,7 @@ public class JarBean {
 	 * @return True if successfully extracted.
 	 */
 	public static boolean unjar(String jarsource, String target, String entry) {
-		
+
 		boolean result = true;
 
 		try {
@@ -74,7 +75,7 @@ public class JarBean {
 			}
 			if (!targetDir.exists()) {
 				FileUtils.forceMkdir(targetDir);
-			} 
+			}
 
 			JarFile jar = new JarFile(jarsource);
 			JarEntry jare = new JarEntry(entry);
@@ -85,10 +86,10 @@ public class JarBean {
 		}
 
 		return result;
-	} 
+	}
 
 	private static void saveEntry(JarFile jar, JarEntry jare, String target) throws Exception {
-		
+
 		File file = new File(target, jare.getName());
 
 		if (jare.isDirectory()) {

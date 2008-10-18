@@ -1,5 +1,6 @@
 package com.logicaldoc.web.admin;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,10 +10,10 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.FileBean;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.dao.EMailDAO;
 import com.logicaldoc.core.document.History;
@@ -258,8 +259,8 @@ public class UsersRecordsManager extends SortableList {
 						Messages.addLocalizedInfo("msg.action.deleteuser");
 
 						SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-						String userdir = conf.getValue("userdir") + "/" + user.getUserName();
-						FileBean.deleteDir(userdir);
+						File userdir = new File(conf.getValue("userdir") + "/" + user.getUserName());
+						FileUtils.deleteDirectory(userdir);
 					}
 				} else if (isAdmin && (adminsFound < 2)) {
 					Messages.addLocalizedInfo("msg.action.deleteuser.admingroup");

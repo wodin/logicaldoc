@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.logicaldoc.core.CryptBean;
 import com.logicaldoc.core.PersistentObject;
+import com.logicaldoc.util.io.CryptUtil;
 
 /**
  * This class represents a user.
@@ -132,7 +132,7 @@ public class User extends PersistentObject implements Serializable {
 	 */
 	public void setDecodedPassword(String pwd) {
 		if ((pwd != null) && !pwd.trim().equals("")) {
-			password = CryptBean.cryptString(pwd);
+			password = CryptUtil.cryptString(pwd);
 		}
 	}
 

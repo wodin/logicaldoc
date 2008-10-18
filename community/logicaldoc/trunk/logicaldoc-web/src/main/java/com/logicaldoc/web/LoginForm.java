@@ -1,5 +1,6 @@
 package com.logicaldoc.web;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -8,10 +9,10 @@ import java.util.Map;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.FileBean;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -100,7 +101,7 @@ public class LoginForm {
 		try {
 			String authUsername = SessionManagement.getUsername();
 			SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-			FileBean.deleteDir(conf.getValue("userdir") + "/" + authUsername + "/temp");
+			FileUtils.deleteDirectory(new File(conf.getValue("userdir") + "/" + authUsername + "/temp"));
 
 			logger.info("User " + authUsername + " logged out.");
 

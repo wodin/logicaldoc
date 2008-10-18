@@ -15,7 +15,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.icesoft.faces.context.effects.JavascriptContext;
-import com.logicaldoc.core.CryptBean;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.History;
@@ -25,6 +24,7 @@ import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.io.CryptUtil;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.i18n.Messages;
@@ -533,7 +533,7 @@ public class DocumentRecord extends MenuBarBean {
 		String username = SessionManagement.getUsername();
 		Date date = new Date();
 		String temp = DateFormat.getDateInstance().format(date) + username;
-		String ticketid = CryptBean.cryptString(temp);
+		String ticketid = CryptUtil.cryptString(temp);
 		DownloadTicket ticket = new DownloadTicket();
 		ticket.setTicketId(ticketid);
 		ticket.setDocId(docId);

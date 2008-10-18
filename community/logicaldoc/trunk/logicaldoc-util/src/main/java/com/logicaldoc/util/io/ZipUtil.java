@@ -1,23 +1,23 @@
-package com.logicaldoc.core;
+package com.logicaldoc.util.io;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Enumeration;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipFile;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipFile;
 
 /**
  * This class is for handling with zip-files.
  * 
- * @author Michael Scholz
- * @version 1.0
+ * @author Marco Meschieri - Logical Objects
+ * @version 4.0
  */
-public class ZipBean {
+public class ZipUtil {
 	/**
 	 * This method extracts all entries of a zip-file.
 	 * 
@@ -25,6 +25,7 @@ public class ZipBean {
 	 * @param target Path of the extracted files.
 	 * @return True if successfully extracted.
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean unzip(String zipsource, String target) {
 		boolean result = true;
 		try {
@@ -106,7 +107,7 @@ public class ZipBean {
 	}
 
 	private static void logError(String message) {
-		Log logger = LogFactory.getLog(ZipBean.class);
+		Log logger = LogFactory.getLog(ZipUtil.class);
 		logger.error(message);
 	}
 }

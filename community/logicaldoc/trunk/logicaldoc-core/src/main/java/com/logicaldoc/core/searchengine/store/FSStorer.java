@@ -8,10 +8,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.FileBean;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.BackupConfig;
 import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.io.FileUtil;
 
 /**
  * This class is an implementation of the Storer interface to persist documents
@@ -39,25 +39,22 @@ public class FSStorer implements Storer {
 	 * @see com.logicaldoc.core.searchengine.store.Storer#store(java.io.InputStream,
 	 *      java.lang.String, java.lang.String)
 	 */
-	public boolean store(InputStream stream, String docPath, String filename,
-			String version) {
+	public boolean store(InputStream stream, String docPath, String filename, String version) {
 		try {
-			String path = new StringBuilder(settingsConfig.getValue("docdir"))
-					.append("/").append(docPath).append("/").toString();
-			FileBean.createDir(path);
-			FileBean.writeFile(stream, new StringBuilder(path).append(filename)
-					.toString());
+			String path = new StringBuilder(settingsConfig.getValue("docdir")).append("/").append(docPath).append("/")
+					.toString();
+			FileUtils.forceMkdir(new File(path));
+			FileUtil.writeFile(stream, new StringBuilder(path).append(filename).toString());
 
 			// File f = new File(path + filename);
-			BackupConfig conf = (BackupConfig) Context.getInstance().getBean(
-					BackupConfig.class);
+			BackupConfig conf = (BackupConfig) Context.getInstance().getBean(BackupConfig.class);
 
 			if (conf.isEnabled()) {
 				String backupPath = conf.getLocation();
 
 				// store a backup of the document
-				FileBean.copyDir(path, new StringBuilder(backupPath).append(
-						docPath).toString());
+				FileUtils.copyDirectory(new File(path), new File(new StringBuilder(backupPath).append(docPath)
+						.toString()));
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -72,19 +69,14 @@ public class FSStorer implements Storer {
 	 *      java.lang.String)
 	 */
 	public void delete(String docPath) {
-		SettingsConfig settings = (SettingsConfig) Context.getInstance()
-				.getBean(SettingsConfig.class);
+		SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 		String path = settings.getValue("docdir") + "/";
-		BackupConfig backup = (BackupConfig) Context.getInstance().getBean(
-				BackupConfig.class);
+		BackupConfig backup = (BackupConfig) Context.getInstance().getBean(BackupConfig.class);
 		String backupPath = backup.getLocation();
 		try {
-			FileUtils.deleteDirectory(new File(new StringBuilder(path).append(
-					docPath).toString()));
+			FileUtils.deleteDirectory(new File(new StringBuilder(path).append(docPath).toString()));
 			if (backup.isEnabled()) {
-				FileUtils.deleteDirectory(new File(
-						new StringBuilder(backupPath).append(docPath)
-								.toString()));
+				FileUtils.deleteDirectory(new File(new StringBuilder(backupPath).append(docPath).toString()));
 			}
 		} catch (IOException e) {
 			log.error(e.getMessage());
@@ -92,17 +84,26 @@ public class FSStorer implements Storer {
 	}
 
 	public boolean restoreAll() {
-		SettingsConfig settings = (SettingsConfig) Context.getInstance()
-				.getBean(SettingsConfig.class);
+		SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 		String path = settings.getValue("docdir") + "/";
-		BackupConfig backup = (BackupConfig) Context.getInstance().getBean(
-				BackupConfig.class);
+		BackupConfig backup = (BackupConfig) Context.getInstance().getBean(BackupConfig.class);
 		String backupPath = backup.getLocation();
 		boolean varBack = false;
-		boolean deleted = FileBean.deleteDir(path);
+		boolean deleted = true;
+
+		try {
+			FileUtils.deleteDirectory(new File(path));
+		} catch (IOException e) {
+			deleted = false;
+		}
 
 		if (deleted) {
-			boolean copied = FileBean.copyDir(backupPath, path);
+			boolean copied = true;
+			try {
+				FileUtils.copyDirectory(new File(backupPath), new File(path));
+			} catch (IOException e) {
+				copied = false;
+			}
 
 			if (copied) {
 				varBack = true;

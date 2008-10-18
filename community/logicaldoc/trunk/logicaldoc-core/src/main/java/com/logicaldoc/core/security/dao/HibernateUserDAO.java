@@ -7,8 +7,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import com.logicaldoc.core.CryptBean;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.util.io.CryptUtil;
 
 /**
  * Hibernate implementation of <code>MenuDAO</code>
@@ -177,7 +177,7 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 		try {
 			User user = findByUserName(username);
 
-			if ((user == null) || !user.getPassword().equals(CryptBean.cryptString(password))) {
+			if ((user == null) || !user.getPassword().equals(CryptUtil.cryptString(password))) {
 				result = false;
 			}
 		} catch (Exception e) {

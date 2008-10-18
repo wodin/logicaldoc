@@ -11,19 +11,12 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ValueChangeEvent;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.core.FileBean;
-import com.logicaldoc.core.SystemProperty;
-import com.logicaldoc.core.dbinit.PluginDbInit;
-import com.logicaldoc.core.searchengine.Indexer;
-import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.DBMSConfigurator;
-import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.util.config.SettingsConfig;
 import org.springframework.util.Log4jConfigurer;
 
 import com.icesoft.faces.component.paneltabset.PanelTab;
@@ -31,6 +24,13 @@ import com.icesoft.faces.component.paneltabset.PanelTabSet;
 import com.icesoft.faces.component.paneltabset.TabChangeEvent;
 import com.icesoft.faces.component.paneltabset.TabChangeListener;
 import com.icesoft.faces.webapp.http.servlet.ServletExternalContext;
+import com.logicaldoc.core.SystemProperty;
+import com.logicaldoc.core.dbinit.PluginDbInit;
+import com.logicaldoc.core.searchengine.Indexer;
+import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.DBMSConfigurator;
+import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.ApplicationInitializer;
 
 /**
@@ -171,7 +171,7 @@ public class SetupWizard implements TabChangeListener {
 					internDBPath += "/";
 				}
 
-				FileBean.createDir(internDBPath);
+				FileUtils.forceMkdir(new File(internDBPath));
 
 				intdata = new ConnectionData();
 				intdata.setClazz("org.hsqldb.jdbcDriver");

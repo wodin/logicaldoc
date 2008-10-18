@@ -3,10 +3,10 @@ package com.logicaldoc.core.security.dao;
 import java.util.Collection;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
-import com.logicaldoc.core.CryptBean;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.util.io.CryptUtil;
 
 /**
  * Test case for <code>HibernateUserDAO</code>
@@ -91,7 +91,7 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		assertNotNull(user);
 		assertEquals("admin", user.getUserName());
 		user.setDecodedPassword("admin");
-		assertEquals(CryptBean.cryptString("admin"), user.getPassword());
+		assertEquals(CryptUtil.cryptString("admin"), user.getPassword());
 		assertEquals("admin@admin.net", user.getEmail());
 		assertEquals(1, user.getGroups().size());
 
@@ -121,7 +121,7 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		assertNotNull(user);
 		assertEquals("admin", user.getUserName());
 		user.setDecodedPassword("admin");
-		assertEquals(CryptBean.cryptString("admin"), user.getPassword());
+		assertEquals(CryptUtil.cryptString("admin"), user.getPassword());
 		assertEquals("admin@admin.net", user.getEmail());
 		assertEquals(1, user.getGroups().size());
 
@@ -160,7 +160,7 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		assertNotNull(user);
 		assertEquals(user, storedUser);
 		assertEquals(1, storedUser.getGroups().size());
-		assertEquals(CryptBean.cryptString("xxxpwd"), storedUser.getDecodedPassword());
+		assertEquals(CryptUtil.cryptString("xxxpwd"), storedUser.getDecodedPassword());
 
 		user = dao.findByPrimaryKey(1);
 		user.setDecodedPassword("xxxpwd");

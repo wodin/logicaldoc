@@ -10,7 +10,6 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.FileBean;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.communication.Recipient;
@@ -20,6 +19,7 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
@@ -154,10 +154,9 @@ public class EMailForm {
 				email.setSubject(getSubject());
 				email.setUserName(user.getUserName());
 
-				maildir = maildir + String.valueOf(email.getId()) + "/";
-
-				FileBean.createDir(maildir);
-				FileBean.writeFile(email.getMessageText(), maildir + "email.mail");
+				File mailDir = new File(maildir + String.valueOf(email.getId()) + "/");
+				FileUtils.forceMkdir(mailDir);				
+				FileUtil.writeFile(email.getMessageText(), maildir + "email.mail");
 				int i = 2;
 
 				for (Menu menu : attachments) {

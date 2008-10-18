@@ -1,4 +1,4 @@
-package com.logicaldoc.core;
+package com.logicaldoc.util.io;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Michael Scholz
  * @version 1.0
  */
-public class CryptBean {
+public class CryptUtil {
 	/**
 	 * This method encodes a given string.
 	 * 
@@ -37,7 +37,7 @@ public class CryptBean {
 	}
 
 	private static void logError(String message) {
-		Log logger = LogFactory.getLog(CryptBean.class);
+		Log logger = LogFactory.getLog(CryptUtil.class);
 		logger.error(message);
 	}
 }

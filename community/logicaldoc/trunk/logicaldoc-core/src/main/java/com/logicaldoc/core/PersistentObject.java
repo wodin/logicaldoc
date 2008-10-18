@@ -1,6 +1,5 @@
 package com.logicaldoc.core;
 
-import com.logicaldoc.core.document.Document;
 
 /**
  * This abstract class defines the minimum requirements of persistent objects.

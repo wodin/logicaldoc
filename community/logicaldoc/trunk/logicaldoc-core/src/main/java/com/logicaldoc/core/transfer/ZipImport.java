@@ -1,15 +1,15 @@
 package com.logicaldoc.core.transfer;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.FileBean;
-import com.logicaldoc.core.ZipBean;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -20,6 +20,7 @@ import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.io.ZipUtil;
 
 /**
  * Created on 16.12.2004
@@ -63,23 +64,32 @@ public class ZipImport {
 			userpath += "_";
 		}
 
-		userpath += username + "_"+ "unzip";
-
-		if (FileBean.exists(userpath)) {
-			FileBean.deleteDir(userpath);
+		userpath += username + "_" + "unzip";
+		File file = new File(userpath);
+		if (file.exists()) {
+			try {
+				FileUtils.deleteDirectory(file);
+			} catch (IOException e) {
+			}
 		}
 
-		FileBean.createDir(userpath);
-		ZipBean.unzip(zipsource.getPath(), userpath);
+		try {
+			FileUtils.forceMkdir(file);
+		} catch (IOException e) {
+		}
+		ZipUtil.unzip(zipsource.getPath(), userpath);
 
-		File file = new File(userpath);
 		File[] files = file.listFiles();
 
 		for (int i = 0; i < files.length; i++) {
 			addEntry(files[i], parent);
 		}
 
-		FileBean.deleteDir(userpath);
+		try {
+			FileUtils.deleteDirectory(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void process(String zipsource, String language, Menu parent, String user) {

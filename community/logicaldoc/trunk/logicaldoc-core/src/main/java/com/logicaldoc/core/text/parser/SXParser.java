@@ -7,9 +7,10 @@ import java.io.InputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.core.JarBean;
+
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.io.JarUtil;
 
 /**
  * @author Michael Scholz
@@ -24,7 +25,7 @@ public class SXParser extends AbstractParser {
 			logger.info("conf = " + conf);
 			
 			logger.info("sxcontent = " + conf.getValue("sxcontent"));
-			JarBean.unjar(file.getAbsolutePath(), conf.getValue("userdir") + "unjar/", conf.getValue("sxcontent"));
+			JarUtil.unjar(file.getAbsolutePath(), conf.getValue("userdir") + "unjar/", conf.getValue("sxcontent"));
 
 			File xmlfile = new File(conf.getValue("userdir") + "unjar/" + conf.getValue("sxcontent"));
 			InputStream in = new FileInputStream(xmlfile);

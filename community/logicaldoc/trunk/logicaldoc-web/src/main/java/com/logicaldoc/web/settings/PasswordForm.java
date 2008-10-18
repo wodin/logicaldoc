@@ -3,12 +3,10 @@ package com.logicaldoc.web.settings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.CryptBean;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
-
 import com.logicaldoc.util.Context;
-
+import com.logicaldoc.util.io.CryptUtil;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 
@@ -64,7 +62,7 @@ public class PasswordForm {
                     UserDAO udao = (UserDAO) Context.getInstance()
                                                     .getBean(UserDAO.class);
                     User user = udao.findByUserName(username);
-                    String opwd = CryptBean.cryptString(oldPassword);
+                    String opwd = CryptUtil.cryptString(oldPassword);
 
                     if (opwd.equals(user.getPassword())) {
                         user.setDecodedPassword(password);

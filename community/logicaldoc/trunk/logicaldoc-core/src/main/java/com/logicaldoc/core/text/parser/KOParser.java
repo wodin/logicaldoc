@@ -7,9 +7,10 @@ import java.io.InputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.core.JarBean;
+
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.io.JarUtil;
 
 /**
  * @author Michael Scholz
@@ -21,7 +22,7 @@ public class KOParser extends AbstractParser {
 		StringBuffer buffer = new StringBuffer();
 		try {
 			SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-			JarBean.unjar(file.getAbsolutePath(), conf.getValue("userdir") + "unjar/", conf.getValue("kocontent"));
+			JarUtil.unjar(file.getAbsolutePath(), conf.getValue("userdir") + "unjar/", conf.getValue("kocontent"));
 
 			File xmlfile = new File(conf.getValue("userdir") + "unjar/" + conf.getValue("kocontent"));
 			InputStream in = new FileInputStream(xmlfile);
