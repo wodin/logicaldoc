@@ -18,7 +18,7 @@ import com.logicaldoc.web.document.DocumentRecord;
 /**
  * Handles documents access by keywords
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @version $Id: KeywordsBean.java,v 1.2 2007/08/22 14:12:20 marco Exp $
  * @since ###release###
  */
@@ -107,11 +107,11 @@ public class KeywordsBean {
 					String username = SessionManagement.getUsername();
 					DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 					Collection<String> coll = ddao.findKeywords(lett, username);
-					Iterator iter = coll.iterator();
+					Iterator<String> iter = coll.iterator();
 					Hashtable<String, Integer> table = new Hashtable<String, Integer>(coll.size());
 
 					while (iter.hasNext()) {
-						String keyword = (String) iter.next();
+						String keyword = iter.next();
 						int count = 1;
 
 						if (table.containsKey(keyword)) {
@@ -127,12 +127,12 @@ public class KeywordsBean {
 					keywords.clear();
 					documents.clear();
 
-					Enumeration enum1 = table.keys();
+					Enumeration<String> enum1 = table.keys();
 
 					while (enum1.hasMoreElements()) {
 						Keyword keyword = new Keyword();
-						String key = (String) enum1.nextElement();
-						Integer value = (Integer) table.get(key);
+						String key = enum1.nextElement();
+						Integer value = table.get(key);
 						keyword.setWord(key);
 						keyword.setCount(value.intValue());
 						keywords.add(keyword);

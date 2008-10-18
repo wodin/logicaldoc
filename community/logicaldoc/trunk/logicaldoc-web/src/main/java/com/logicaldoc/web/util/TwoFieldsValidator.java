@@ -1,9 +1,5 @@
 package com.logicaldoc.web.util;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.logicaldoc.web.i18n.Messages;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -11,70 +7,67 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
+import com.logicaldoc.web.i18n.Messages;
+
 /**
  * A JSF compliant validator that validates 2 fields
  * 
  * @author Jesus Marin - APL software
  * @version $Id: TwoFieldsValidator.java,v 1.1 2006/08/23 16:22:57 jesusapl Exp $
- * @since ###release###
+ * @since 3.0
  */
 public class TwoFieldsValidator implements Validator {
-    /**
-     * 
-     */
-    public TwoFieldsValidator() {
-        super();
-    }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.faces.validator.Validator#validate(javax.faces.context.FacesContext,
-     *      javax.faces.component.UIComponent, java.lang.Object)
-     */
-    public void validate(final FacesContext facesContext, final UIComponent uIComponent, final Object value)
-        throws ValidatorException {
-        // Get the component's contents and cast it to a String
+	public TwoFieldsValidator() {
+		super();
+	}
 
-        if (value == null) {
-            return;
-        }
+	/**
+	 * @see javax.faces.validator.Validator#validate(javax.faces.context.FacesContext,
+	 *      javax.faces.component.UIComponent, java.lang.Object)
+	 */
+	public void validate(final FacesContext facesContext, final UIComponent uIComponent, final Object value)
+			throws ValidatorException {
+		// Get the component's contents and cast it to a String
 
-        Integer upperLimit = null;
-        Integer lowerLimit = null;
-        Long temp = null;
+		if (value == null) {
+			return;
+		}
 
-        temp = (Long) value;
+		Integer upperLimit = null;
+		Integer lowerLimit = null;
+		Long temp = null;
 
-        if (temp != null) {
-            upperLimit = Integer.valueOf(temp.intValue());
-        }
+		temp = (Long) value;
 
-        String lowerId = (String) uIComponent.getAttributes()
-            .get("lowerId");
+		if (temp != null) {
+			upperLimit = Integer.valueOf(temp.intValue());
+		}
 
-        temp = (Long) ((UIInput) FacesUtil.findComponentEndingWithId(lowerId, facesContext)).getValue();
+		String lowerId = (String) uIComponent.getAttributes().get("lowerId");
 
-        if (temp != null) {
-            lowerLimit = Integer.valueOf(temp.intValue());
-        }
+		temp = (Long) ((UIInput) FacesUtil.findComponentEndingWithId(lowerId, facesContext)).getValue();
 
-        if ((upperLimit == 0) && (lowerLimit != 0)) {
-            UIInput thisValue;
-            thisValue = (UIInput) uIComponent;
-            thisValue.setSubmittedValue(lowerLimit.toString());
-            ((UIInput) uIComponent).setSubmittedValue(lowerLimit.toString());
-            ((UIInput) uIComponent).setValue(lowerLimit.toString());
+		if (temp != null) {
+			lowerLimit = Integer.valueOf(temp.intValue());
+		}
 
-            return;
-        }
+		if ((upperLimit == 0) && (lowerLimit != 0)) {
+			UIInput thisValue;
+			thisValue = (UIInput) uIComponent;
+			thisValue.setSubmittedValue(lowerLimit.toString());
+			((UIInput) uIComponent).setSubmittedValue(lowerLimit.toString());
+			((UIInput) uIComponent).setValue(lowerLimit.toString());
 
-        if (lowerLimit.longValue() > upperLimit.longValue()) {
-            FacesMessage message = new FacesMessage();
-            message.setDetail(Messages.getMessage("errors.val.twonumbers"));
-            message.setSummary(Messages.getMessage("errors.val.twonumbers"));
-            message.setSeverity(FacesMessage.SEVERITY_ERROR);
-            throw new ValidatorException(message);
-        }
-    }
+			return;
+		}
+
+		if (lowerLimit.longValue() > upperLimit.longValue()) {
+			FacesMessage message = new FacesMessage();
+			message.setDetail(Messages.getMessage("errors.val.twonumbers"));
+			message.setSummary(Messages.getMessage("errors.val.twonumbers"));
+			message.setSeverity(FacesMessage.SEVERITY_ERROR);
+			throw new ValidatorException(message);
+		}
+	}
 }

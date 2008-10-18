@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import javax.el.ELContext;
 import javax.el.ELResolver;
-import javax.el.MethodExpression;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.ExternalContext;
@@ -72,7 +71,7 @@ public class FacesUtil {
 	}
 
 	/**
-	 * Iterates thru DOM to find Complete id for parameter ending with the id
+	 * Iterates through DOM to find Complete id for parameter ending with the id
 	 * 
 	 * @param id to get
 	 * @param facesContext where search must occur

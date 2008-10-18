@@ -24,7 +24,7 @@ import com.logicaldoc.web.util.FacesUtil;
 /**
  * A result entry usable by the GUI.
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @version $Id:$
  * @since 3.0
  */

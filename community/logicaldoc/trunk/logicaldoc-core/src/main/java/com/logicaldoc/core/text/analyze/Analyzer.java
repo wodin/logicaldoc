@@ -3,6 +3,7 @@ package com.logicaldoc.core.text.analyze;
 import java.lang.reflect.InvocationTargetException;
 import java.text.BreakIterator;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -76,7 +77,7 @@ public class Analyzer extends WordRanker {
 	 * number of stem presence in the text and original word.
 	 */
 	AnalyseResult performAnalysis(BreakIterator boundary,
-			StringBuffer source, Hashtable stopwords, int minlen,
+			StringBuffer source, Map<String, String> stopwords, int minlen,
 			Stemmer stemmer) throws IllegalArgumentException,
 			IllegalAccessException, InvocationTargetException {
 

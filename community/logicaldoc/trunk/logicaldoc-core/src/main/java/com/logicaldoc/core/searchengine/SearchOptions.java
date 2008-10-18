@@ -22,11 +22,11 @@ public class SearchOptions {
 	private String format = "";
 
 	private boolean fuzzy = false;
-	
+
 	private boolean searchInSubPath = false;
 
 	private String username = "";
-	
+
 	private String path = null;
 
 	private String[] fields = null;
@@ -72,11 +72,11 @@ public class SearchOptions {
 	public void setQueryStr(String query, String phrase, String any, String not) {
 		if (fuzzy) {
 			StringParser sp = new StringParser(query);
-			Collection collquery = sp.getWordTable();
-			Iterator iter = collquery.iterator();
+			Collection<String> collquery = sp.getWordTable();
+			Iterator<String> iter = collquery.iterator();
 
 			while (iter.hasNext()) {
-				String word = (String) iter.next();
+				String word = iter.next();
 				queryStr += word + "~ ";
 			}
 		} else {
@@ -90,11 +90,11 @@ public class SearchOptions {
 		if ((any != null) && !any.equals("")) {
 			boolean first = true;
 			StringParser sp = new StringParser(any);
-			Collection collany = sp.getWordTable();
-			Iterator iter = collany.iterator();
+			Collection<String> collany = sp.getWordTable();
+			Iterator<String> iter = collany.iterator();
 
 			while (iter.hasNext()) {
-				String word = (String) iter.next();
+				String word = iter.next();
 
 				if (!first) {
 					queryStr += " OR";

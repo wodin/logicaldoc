@@ -17,6 +17,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.lang.StringUtils;
+
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
 

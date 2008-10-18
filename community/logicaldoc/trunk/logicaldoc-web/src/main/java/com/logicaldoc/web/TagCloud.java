@@ -53,8 +53,8 @@ public class TagCloud {
 	}
 
 	/**
-	 * Handles the selection of this tagcloud. Display the pageContent "search/keywords"
-	 * and set the selected word on KeywordsBean.
+	 * Handles the selection of this tagcloud. Display the pageContent
+	 * "search/keywords" and set the selected word on KeywordsBean.
 	 */
 	public String select() {
 		Application application = FacesContext.getCurrentInstance().getApplication();
@@ -67,10 +67,10 @@ public class TagCloud {
 		content.setIcon(StyleBean.getImagePath("keywords.png"));
 		navigation.setSelectedPanel(content);
 
-		KeywordsBean keywordsBean = ((KeywordsBean) application.createValueBinding("#{keywords}").getValue(FacesContext.getCurrentInstance()));
+		KeywordsBean keywordsBean = ((KeywordsBean) application.createValueBinding("#{keywords}").getValue(
+				FacesContext.getCurrentInstance()));
 		keywordsBean.select(this.keyword);
 
 		return null;
 	}
-
 }

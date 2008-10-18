@@ -26,7 +26,7 @@ import com.logicaldoc.web.upload.InputFileBean;
 /**
  * Wizard that handled the creation of a new document.
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @version $Id: NewDocWizard.java,v 1.9 2006/09/04 15:48:35 marco Exp $
  * @since 3.0
  */

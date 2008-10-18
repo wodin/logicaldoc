@@ -37,7 +37,7 @@ public class SimilarSearch {
 	 * @param minScore - Minimum score value (between 0 and 1)
 	 * @return Collection of similar documents sorted by score value.
 	 */
-	public Collection findSimilarDocuments(long docId, double minScore, String username) {
+	public Collection<Result> findSimilarDocuments(long docId, double minScore, String username) {
 		TermDAO termsDao = (TermDAO) Context.getInstance().getBean(TermDAO.class);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Collection<Term> basicTerms = termsDao.findByDocId(docId);
@@ -78,15 +78,15 @@ public class SimilarSearch {
 		return result;
 	}
 
-	private float calculateScore(Collection refTerms, Collection terms) {
+	private float calculateScore(Collection<Term> refTerms, Collection<Term> terms) {
 		float score = 0.0f;
 		float abs1 = 0.0f;
 		float abs2 = 0.0f;
-		Hashtable table = convert(terms);
-		Iterator iter = refTerms.iterator();
+		Hashtable<String, Double> table = convert(terms);
+		Iterator<Term> iter = refTerms.iterator();
 
 		while (iter.hasNext()) {
-			Term term = (Term) iter.next();
+			Term term = iter.next();
 			abs1 += term.getValue() * term.getValue();
 
 			if (table.containsKey(term.getStem())) {
@@ -99,9 +99,9 @@ public class SimilarSearch {
 		return (2 * score) / (abs1 + abs2);
 	}
 
-	private Hashtable convert(Collection coll) {
+	private Hashtable<String, Double> convert(Collection<Term> coll) {
 		Hashtable<String, Double> table = new Hashtable<String, Double>(coll.size());
-		Iterator iter = coll.iterator();
+		Iterator<Term> iter = coll.iterator();
 
 		while (iter.hasNext()) {
 			Term term = (Term) iter.next();

@@ -471,7 +471,5 @@ public class DocumentManagerImpl implements DocumentManager {
 		indexDocument
 				.add(new Field(LuceneDocument.FIELD_PATH, doc.getPath(), Field.Store.YES, Field.Index.UN_TOKENIZED));
 		indexer.addDocument(indexDocument, doc.getLanguage());
-
-		// TODO Update field path on the Lucene record
 	}
 }

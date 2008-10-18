@@ -22,7 +22,6 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Result;
-import com.logicaldoc.core.searchengine.ResultImpl;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.searchengine.SimilarSearch;
@@ -100,7 +99,7 @@ public class SearchForm {
 
 	private Collection<DocumentResult> documentResult = new ArrayList<DocumentResult>();
 
-	private Collection<ResultImpl> similar = new ArrayList<ResultImpl>();
+	private Collection<Result> similar = new ArrayList<Result>();
 
 	private NavigationBean navigation;
 
@@ -251,7 +250,7 @@ public class SearchForm {
 		this.documentResult = result;
 	}
 
-	public void setSimilar(Collection<ResultImpl> similar) {
+	public void setSimilar(Collection<Result> similar) {
 		this.similar = similar;
 	}
 
@@ -366,7 +365,7 @@ public class SearchForm {
 		return map;
 	}
 
-	public Collection<ResultImpl> getSimilar() {
+	public Collection<Result> getSimilar() {
 		return similar;
 	}
 
@@ -485,12 +484,13 @@ public class SearchForm {
 				opt.setUsername(username);
 
 				if (StringUtils.isNotEmpty(getPath())) {
-					opt.setPath(getPath()); {
-					if (isSearchInSubPath())
-						opt.setSearchInSubPath(true);
+					opt.setPath(getPath());
+					{
+						if (isSearchInSubPath())
+							opt.setSearchInSubPath(true);
 					}
 				}
-				
+
 				String searchLanguage = "all".equals(language) ? SessionManagement.getLanguage() : language;
 				lastSearch = new Search(opt, searchLanguage);
 				lastSearch.setMaxHits(maxHits);
@@ -576,7 +576,7 @@ public class SearchForm {
 	public String showDocumentPath() {
 
 		if (SessionManagement.isValid()) {
-			Map map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+			Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
 
 			if (map.containsKey("entry")) {
 				DocumentResult entry = (DocumentResult) map.get("entry");

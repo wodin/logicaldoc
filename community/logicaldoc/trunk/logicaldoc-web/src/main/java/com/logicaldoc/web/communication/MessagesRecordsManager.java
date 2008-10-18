@@ -10,10 +10,10 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.util.Context;
-
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.i18n.Messages;
@@ -121,7 +121,7 @@ public class MessagesRecordsManager {
 	}
 
 	public String selectMessage() {
-		Map map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
 		SystemMessage record = (SystemMessage) map.get("messageRecord");
 		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
 
@@ -157,7 +157,7 @@ public class MessagesRecordsManager {
 	}
 
 	public String deleteMessage() {
-		Map map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
 		SystemMessage record = (SystemMessage) map.get("messageRecord");
 
 		if (SessionManagement.isValid()) {

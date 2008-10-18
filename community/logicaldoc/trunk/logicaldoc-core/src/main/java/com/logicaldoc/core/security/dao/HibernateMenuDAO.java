@@ -354,7 +354,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 *      is required in order to obtain acceptable performances during
 	 *      searches.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public Set<Long> findMenuIdByUserName(String username) {
 		Set<Long> ids = new HashSet<Long>();
 		try {
@@ -465,7 +465,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 *      direct JDBC query, this is required in order to obtain acceptable
 	 *      performances during searches.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public Set<Long> findMenuIdByUserName(String username, long parentId, Integer type) {
 		Set<Long> ids = new HashSet<Long>();
 		try {

@@ -3,7 +3,6 @@ package com.logicaldoc.core.security.dao;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -36,6 +35,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 	/**
 	 * @see com.logicaldoc.core.security.dao.GroupDAO#delete(long)
 	 */
+	@SuppressWarnings("deprecation")
 	public boolean delete(long groupId) {
 		boolean result = true;
 

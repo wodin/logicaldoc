@@ -4,32 +4,32 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
- * Provides functionality like getting the top most words in a document. 
+ * Provides functionality like getting the top most words in a document.
  * 
  * @author Michael Scholz
  */
 public abstract class WordRanker {
-	protected Hashtable stoptable = new Hashtable();
+	protected Map<String, String> stoptable = new Hashtable<String, String>();
 
-
-	protected Hashtable<String, WordEntry> wordtable = new Hashtable<String, WordEntry>();
+	protected Map<String, WordEntry> wordtable = new Hashtable<String, WordEntry>();
 
 	protected long wordcount = 0;
 
 	protected int minlen = 2;
 
-	protected Entry getTopWord(Hashtable table) {
+	protected Entry getTopWord(Hashtable<String, WordEntry> table) {
 		Entry entry = new Entry();
-		Enumeration enum1 = table.keys();
+		Enumeration<String> enum1 = table.keys();
 		int topvalue = -1;
 		String topword = "";
 		String topOriginWord = "";
 
 		while (enum1.hasMoreElements()) {
-			String key = (String) enum1.nextElement();
-			WordEntry termEntry = (WordEntry) table.get(key);
+			String key = enum1.nextElement();
+			WordEntry termEntry = table.get(key);
 			int val = termEntry.getValue();
 
 			if (val > topvalue) {
@@ -51,8 +51,8 @@ public abstract class WordRanker {
 	 * @param hits - Number of top words to be returned.
 	 * @return
 	 */
-	public Collection getTopWords(int hits) {
-		Hashtable table = new Hashtable<String, WordEntry>(wordtable);
+	public Collection<Entry> getTopWords(int hits) {
+		Hashtable<String, WordEntry> table = new Hashtable<String, WordEntry>(wordtable);
 		Collection<Entry> coll = new ArrayList<Entry>(hits);
 
 		if (hits > table.size()) {

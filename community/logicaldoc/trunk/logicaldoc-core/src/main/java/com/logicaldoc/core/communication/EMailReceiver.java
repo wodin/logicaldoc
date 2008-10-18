@@ -1,8 +1,6 @@
 package com.logicaldoc.core.communication;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Properties;
@@ -11,7 +9,6 @@ import javax.mail.Address;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
@@ -20,8 +17,8 @@ import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.communication.dao.EMailAccountDAO;
 import com.logicaldoc.core.communication.dao.EMailDAO;
 import com.logicaldoc.core.document.Document;

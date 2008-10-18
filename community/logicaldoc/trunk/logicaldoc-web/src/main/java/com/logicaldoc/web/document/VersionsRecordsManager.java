@@ -3,6 +3,7 @@ package com.logicaldoc.web.document;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import javax.faces.context.FacesContext;
 
@@ -14,12 +15,12 @@ import com.logicaldoc.web.util.FacesUtil;
 /**
  * Control that allows the user to navigate document's versions
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @version $Id: VersionsRecordsManager.java,v 1.3 2007/08/20 12:19:37 marco Exp $
  * @since 3.0
  */
 public class VersionsRecordsManager {
-    private ArrayList<Version> versions = new ArrayList<Version>();
+    private List<Version> versions = new ArrayList<Version>();
     private Document selectedDocument;
     private boolean showList = true;
 
@@ -69,7 +70,7 @@ public class VersionsRecordsManager {
      * 
      * @return array list of versions
      */
-    public ArrayList getVersions() {
+    public List<Version> getVersions() {
         return versions;
     }
 

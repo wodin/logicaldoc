@@ -1,11 +1,5 @@
 package com.logicaldoc.web.util;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.logicaldoc.web.i18n.Messages;
-
 import java.util.Iterator;
 
 import javax.faces.application.FacesMessage;
@@ -13,6 +7,12 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.logicaldoc.web.i18n.Messages;
 
 
 public class RequiredConverter implements Converter {
@@ -30,13 +30,13 @@ public class RequiredConverter implements Converter {
         message.setSeverity(FacesMessage.SEVERITY_ERROR);
         facesContext.addMessage(component.getClientId(facesContext), message);
 
-        Iterator iter = facesContext.getMessages();
+        Iterator<FacesMessage> iter = facesContext.getMessages();
         boolean addError = true;
         String strConvert = Messages.getMessage(
                 "javax.faces.component.UIInput.CONVERSION");
 
         while (iter.hasNext()) {
-            FacesMessage str = (FacesMessage) iter.next();
+            FacesMessage str = iter.next();
 
             if (str.getDetail().equals(strConvert)) {
                 addError = false;

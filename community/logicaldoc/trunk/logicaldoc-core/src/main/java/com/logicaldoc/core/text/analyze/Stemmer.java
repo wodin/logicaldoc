@@ -11,7 +11,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Michael Scholz
- * @author Alessandro Gasparini
+ * @author Alessandro Gasparini - Logical Objects
  */
 class Stemmer {
 
@@ -22,7 +22,8 @@ class Stemmer {
 
     private Method stemMethod;
 
-    public Stemmer(String lang) throws SecurityException, NoSuchMethodException {
+    @SuppressWarnings("unchecked")
+	public Stemmer(String lang) throws SecurityException, NoSuchMethodException {
         String language = new Locale(lang).getDisplayLanguage(Locale.ENGLISH);
         try {
 			Class stemClass = Class.forName("net.sf.snowball.ext." + language + "Stemmer");

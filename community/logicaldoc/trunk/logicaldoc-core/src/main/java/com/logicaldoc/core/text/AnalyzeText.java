@@ -11,8 +11,8 @@ import com.logicaldoc.core.text.analyze.Entry;
 import com.logicaldoc.util.Context;
 
 /**
- * Class for analysing texts like extracting keywords from a given text. 
- * Created on 24.03.2004
+ * Class for analysing texts like extracting keywords from a given text. Created
+ * on 24.03.2004
  * 
  * @author Michael Scholz
  */
@@ -36,11 +36,11 @@ public class AnalyzeText {
 		analyzer.analyze(text);
 
 		long words = analyzer.getWordCount();
-		Collection terms = analyzer.getTopWords(20);
-		Iterator iter = terms.iterator();
+		Collection<Entry> terms = analyzer.getTopWords(20);
+		Iterator<Entry> iter = terms.iterator();
 
 		while (iter.hasNext()) {
-			Entry entry = (Entry) iter.next();
+			Entry entry = iter.next();
 			Term term = new Term();
 			term.setDocId(docId);
 			term.setStem(entry.getWord());
@@ -66,12 +66,12 @@ public class AnalyzeText {
 		Analyzer analyzer = AnalyzerFactory.getAnalyzer(language);
 		analyzer.analyze(text);
 
-		Collection terms = analyzer.getTopWords(count);
-		Iterator iter = terms.iterator();
+		Collection<Entry> terms = analyzer.getTopWords(count);
+		Iterator<Entry> iter = terms.iterator();
 		int temp = 0;
 
 		while (iter.hasNext() && (temp < count)) {
-			Entry entry = (Entry) iter.next();
+			Entry entry = iter.next();
 
 			if (temp > 0) {
 				result.append(", ");

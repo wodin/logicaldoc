@@ -14,7 +14,7 @@ import javax.el.ValueExpression;
  * order to mask a ValueExpression with a MethodExpression. Basically this is a
  * wrapper of a MethodExpression.
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @version $Id:$
  * @since 3.5
  */

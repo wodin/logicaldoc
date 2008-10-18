@@ -8,8 +8,9 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.util.PluginRegistry;
 import org.java.plugin.registry.Extension;
+
+import com.logicaldoc.util.PluginRegistry;
 
 /**
  * This is a factory, returning a parser instance for the given file. Created on
