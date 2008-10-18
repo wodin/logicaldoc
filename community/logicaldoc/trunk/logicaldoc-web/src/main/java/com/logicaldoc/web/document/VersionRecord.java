@@ -33,8 +33,6 @@ public class VersionRecord extends Version {
 	}
 
 	public String edit() {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-
 		// Show the proper panel
 		VersionsRecordsManager manager = ((VersionsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"versionsRecordsManager", FacesContext.getCurrentInstance()));

@@ -83,7 +83,7 @@ public class RightsRecordsManager {
 					Group g = (Group) iter.next();
 					GroupRule gr = new GroupRule();
 					gr.setGroupName(g.getName());
-
+					gr.setGroupId(g.getId());
 					gr.setEnabled(true);
 
 					Menu menu = mdao.findByPrimaryKey(menuId);
@@ -124,7 +124,7 @@ public class RightsRecordsManager {
 	 * 
 	 * @return array list of rights
 	 */
-	public ArrayList getRules() {
+	public ArrayList<GroupRule> getRules() {
 		return rules;
 	}
 

@@ -43,8 +43,7 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 		try {
 			User user = (User) getHibernateTemplate().get(User.class, userId);
 			if (user != null) {
-				getHibernateTemplate().deleteAll(
-						userDocDAO.findByUserName(user.getUserName()));
+				getHibernateTemplate().deleteAll(userDocDAO.findByUserName(user.getUserName()));
 				getHibernateTemplate().delete(user);
 			}
 		} catch (Throwable e) {
@@ -81,8 +80,7 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 		Collection<User> coll = new ArrayList<User>();
 
 		try {
-			coll = (Collection<User>) getHibernateTemplate().find(
-					"from User _user where _user.name like ?",
+			coll = (Collection<User>) getHibernateTemplate().find("from User _user where _user.name like ?",
 					new Object[] { name });
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -100,9 +98,8 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 		User user = null;
 
 		try {
-			Collection<User> coll = (Collection<User>) getHibernateTemplate()
-					.find("from User _user where _user.userName = ?",
-							new Object[] { username });
+			Collection<User> coll = (Collection<User>) getHibernateTemplate().find(
+					"from User _user where _user.userName = ?", new Object[] { username });
 			if (coll.size() > 0) {
 				user = coll.iterator().next();
 			}
@@ -122,8 +119,7 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 		Collection<User> coll = new ArrayList<User>();
 
 		try {
-			coll = (Collection<User>) getHibernateTemplate().find(
-					"from User _user where _user.userName like ?",
+			coll = (Collection<User>) getHibernateTemplate().find("from User _user where _user.userName like ?",
 					new Object[] { username });
 
 		} catch (Exception e) {
@@ -143,10 +139,9 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 		Collection<User> coll = new ArrayList<User>();
 
 		try {
-			coll = (Collection<User>) getHibernateTemplate()
-					.find(
-							"from User _user where _user.name like ? and _user.userName like ?",
-							new Object[] { name, username });
+			coll = (Collection<User>) getHibernateTemplate().find(
+					"from User _user where _user.name like ? and _user.userName like ?",
+					new Object[] { name, username });
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -158,7 +153,6 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 	/**
 	 * @see com.logicaldoc.core.security.dao.UserDAO#store(com.logicaldoc.core.security.User)
 	 */
-	@SuppressWarnings("unchecked")
 	public boolean store(User user) {
 		boolean result = true;
 
@@ -183,9 +177,7 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 		try {
 			User user = findByUserName(username);
 
-			if ((user == null)
-					|| !user.getPassword().equals(
-							CryptBean.cryptString(password))) {
+			if ((user == null) || !user.getPassword().equals(CryptBean.cryptString(password))) {
 				result = false;
 			}
 		} catch (Exception e) {
