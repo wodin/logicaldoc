@@ -33,7 +33,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 
 	@SuppressWarnings("unchecked")
 	public void testDelete() {
-		Collection<History> histories = (Collection<History>) dao.findByUsername("author");
+		Collection<History> histories = (Collection<History>) dao.findByUserId(4);
 		assertNotNull(histories);
 		assertEquals(2, histories.size());
 
@@ -42,7 +42,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 			assertTrue(result);
 		}
 
-		histories = (Collection<History>) dao.findByUsername("author");
+		histories = (Collection<History>) dao.findByUserId(4);
 		assertNotNull(histories);
 		assertEquals(0, histories.size());
 	}
@@ -60,13 +60,13 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void testFindByUsername() {
-		Collection histories = dao.findByUsername("author");
+	public void testFindByUserId() {
+		Collection histories = dao.findByUserId(4);
 		assertNotNull(histories);
 		assertEquals(2, histories.size());
 
-		// Try with unexisting username
-		histories = dao.findByUsername("sss");
+		// Try with unexisting user
+		histories = dao.findByUserId(99);
 		assertNotNull(histories);
 		assertEquals(0, histories.size());
 	}
@@ -76,13 +76,14 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		History history = new History();
 		history.setDocId(1);
 		history.setDate(DateBean.dateFromCompactString("20061220"));
-		history.setUsername("sebastian");
+		history.setUserName("sebastian");
+		history.setUserId(3);
 		history.setEvent("test History store");
 
 		assertTrue(dao.store(history));
 
 		// Test the stored history
-		Collection<History> histories = (Collection<History>) dao.findByUsername("sebastian");
+		Collection<History> histories = (Collection<History>) dao.findByUserId(3);
 		assertNotNull(histories);
 		assertFalse(histories.isEmpty());
 
@@ -91,7 +92,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		assertTrue(hStored.equals(history));
 		assertEquals(hStored.getDocId(), 1);
 		assertEquals(hStored.getDate().getTime(), DateBean.dateFromCompactString("20061220").getTime());
-		assertEquals(hStored.getUsername(), "sebastian");
+		assertEquals(hStored.getUserName(), "sebastian");
 		assertEquals(hStored.getEvent(), "test History store");
 	}
 }

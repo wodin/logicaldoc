@@ -331,12 +331,12 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Document> findLastModifiedByUserName(String username, int maxElements) {
+	public List<Document> findLastModifiedByUserId(long userId, int maxElements) {
 		List<Document> coll = new ArrayList<Document>();
 
 		try {
 			StringBuilder query = new StringBuilder("SELECT _history.docId from History _history");
-			query.append(" WHERE _history.username = '" + username + "' ");
+			query.append(" WHERE _history.userId = " + Long.toString(userId) + " ");
 			query.append(" ORDER BY _history.date DESC");
 
 			Collection<Long> results = (Collection<Long>) getHibernateTemplate().find(query.toString());
@@ -344,7 +344,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				if (coll.size() >= maxElements)
 					break;
 				Document document = findByPrimaryKey(docid);
-				if (menuDAO.isReadEnable(document.getFolder().getId(), username))
+				if (menuDAO.isReadEnable(document.getFolder().getId(), userId))
 					coll.add(document);
 			}
 		} catch (Exception e) {
@@ -480,15 +480,15 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findLastDownloadsByUserName(String username, int maxResults) {
+	public List<Document> findLastDownloadsByUserId(long userId, int maxResults) {
 		List<Document> coll = new ArrayList<Document>();
 
 		try {
 			StringBuffer query = new StringBuffer("select _userdoc.id.docId from UserDoc _userdoc");
-			query.append(" where _userdoc.id.userName = ?");
+			query.append(" where _userdoc.id.userId = ?");
 			query.append(" order by _userdoc.date desc");
 
-			Collection<Long> results = (Collection<Long>) getHibernateTemplate().find(query.toString(), username);
+			Collection<Long> results = (Collection<Long>) getHibernateTemplate().find(query.toString(), userId);
 			ArrayList<Long> tmpal = new ArrayList<Long>(results);
 			List<Long> docIds = tmpal;
 

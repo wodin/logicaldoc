@@ -254,15 +254,14 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#isWriteEnable(long,
-	 *      java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#isWriteEnable(long, long)
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean isWriteEnable(long menuId, String username) {
+	public boolean isWriteEnable(long menuId, long userId) {
 		boolean result = true;
 
 		try {
-			User user = userDAO.findByUserName(username);
+			User user = userDAO.findByPrimaryKey(userId);
 			Collection<Group> Groups = user.getGroups();
 			if (Groups.isEmpty())
 				return false;
@@ -295,16 +294,15 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#isReadEnable(long,
-	 *      java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#isReadEnable(long, long)
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean isReadEnable(long menuId, String username) {
+	public boolean isReadEnable(long menuId, long userId) {
 		boolean result = true;
 
 		try {
 			try {
-				User user = userDAO.findByUserName(username);
+				User user = userDAO.findByPrimaryKey(userId);
 				Collection<Group> Groups = user.getGroups();
 				if (Groups.isEmpty())
 					return false;
@@ -354,7 +352,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 *      is required in order to obtain acceptable performances during
 	 *      searches.
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings( { "unchecked", "deprecation" })
 	public Set<Long> findMenuIdByUserName(String username) {
 		Set<Long> ids = new HashSet<Long>();
 		try {
@@ -403,11 +401,10 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#isMenuWriteable(long,
-	 *      java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#isMenuWriteable(long, long)
 	 */
-	public Integer isMenuWriteable(long menuId, String userName) {
-		boolean writePrivilegeBool = isWriteEnable(menuId, userName);
+	public Integer isMenuWriteable(long menuId, long userId) {
+		boolean writePrivilegeBool = isWriteEnable(menuId, userId);
 		int writePrivilegeInt = 0;
 
 		if (writePrivilegeBool) {
@@ -419,10 +416,10 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 
 	/**
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#hasWriteAccess(com.logicaldoc.core.security.Menu,
-	 *      java.lang.String)
+	 *      long)
 	 */
-	public boolean hasWriteAccess(Menu menu, String p_userName) {
-		if (isWriteEnable(menu.getId(), p_userName) == false) {
+	public boolean hasWriteAccess(Menu menu, long userId) {
+		if (isWriteEnable(menu.getId(), userId) == false) {
 			return false;
 		}
 
@@ -430,7 +427,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			Collection<Menu> children = findByParentId(menu.getId());
 
 			for (Menu subMenu : children) {
-				if (!hasWriteAccess(subMenu, p_userName)) {
+				if (!hasWriteAccess(subMenu, userId)) {
 					return false;
 				}
 			}
@@ -465,7 +462,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 *      direct JDBC query, this is required in order to obtain acceptable
 	 *      performances during searches.
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings( { "unchecked", "deprecation" })
 	public Set<Long> findMenuIdByUserName(String username, long parentId, Integer type) {
 		Set<Long> ids = new HashSet<Long>();
 		try {

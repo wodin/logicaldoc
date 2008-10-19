@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.logicaldoc.core.security.UserDoc;
-import com.logicaldoc.core.security.UserDocID;
 
 /**
  * Hibernate implementation of <code>UserDocDAO</code>
@@ -27,16 +26,18 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.UserDocDAO#delete(java.lang.String, int)
+	 * @see com.logicaldoc.core.security.dao.UserDocDAO#delete(long,
+	 *      java.lang.StringO)
 	 */
-	public boolean delete(String username, long docId) {
+	@SuppressWarnings("unchecked")
+	public boolean delete(long docId, long userId) {
 		boolean result = true;
 
 		try {
-			UserDocID id = new UserDocID(docId, username);
-			UserDoc ud = (UserDoc) getHibernateTemplate().get(UserDoc.class, id);
-			if (ud != null)
-				getHibernateTemplate().delete(ud);
+			Collection<UserDoc> coll = (Collection<UserDoc>) getHibernateTemplate().find(
+					"from UserDoc _userdoc where _userdoc.docId = ? and _userdoc.userId = ?",
+					new Object[] { docId, userId });
+			getHibernateTemplate().deleteAll(coll);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage());
@@ -47,15 +48,18 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.UserDocDAO#exists(int, java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.UserDocDAO#exists(int,
+	 *      java.lang.String)
 	 */
-	public boolean exists(long docId, String username) {
+	@SuppressWarnings("unchecked")
+	public boolean exists(long docId, long userId) {
 		boolean result = false;
 
 		try {
-			UserDocID id = new UserDocID(docId, username);
-			UserDoc ud = (UserDoc) getHibernateTemplate().get(UserDoc.class, id);
-			result = ud != null;
+			Collection<UserDoc> coll = (Collection<UserDoc>) getHibernateTemplate().find(
+					"from UserDoc _userdoc where _userdoc.docId = ? and _userdoc.userId = ?",
+					new Object[] { docId, userId });
+			return coll != null && coll.size() > 0;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage());
@@ -65,11 +69,11 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByMinDate(java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByMinDate(long)
 	 */
-	public UserDoc findByMinDate(String username) {
+	public UserDoc findByMinDate(long userId) {
 		UserDoc userdoc = null;
-		Collection<UserDoc> coll = findByUserName(username);
+		Collection<UserDoc> coll = findByUserId(userId);
 		Iterator<UserDoc> iter = coll.iterator();
 
 		while (iter.hasNext()) {
@@ -80,17 +84,16 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByUserName(java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByUserName(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<UserDoc> findByUserName(String username) {
+	public List<UserDoc> findByUserId(long userId) {
 		List<UserDoc> coll = new ArrayList<UserDoc>();
 
 		try {
-			coll = (List<UserDoc>) getHibernateTemplate()
-					.find(
-							"from com.logicaldoc.core.security.UserDoc _userdoc where _userdoc.id.userName = ? order by _userdoc.date desc",
-							new Object[] { username });
+			coll = (List<UserDoc>) getHibernateTemplate().find(
+					"from UserDoc _userdoc where _userdoc.userId = ? order by _userdoc.date desc",
+					new Object[] { userId });
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage());
@@ -100,11 +103,11 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.UserDocDAO#getCount(java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.UserDocDAO#getCount(longo)
 	 */
 	@SuppressWarnings("unchecked")
-	public int getCount(String username) {
-		return findByUserName(username).size();
+	public int getCount(long userId) {
+		return findByUserId(userId).size();
 	}
 
 	/**
@@ -115,22 +118,22 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 		int count = 0;
 
 		try {
-			count = getCount(userdoc.getUserName());
+			count = getCount(userdoc.getUserId());
 
-			boolean exists = exists(userdoc.getDocId(), userdoc.getUserName());
+			boolean exists = exists(userdoc.getDocId(), userdoc.getUserId());
 
 			// if the count of userdocs for the user is greater than 5, delete
 			// the oldest userdoc
 			if ((count >= 5) && !exists) {
-				UserDoc temp = findByMinDate(userdoc.getUserName());
-				delete(temp.getUserName(), temp.getDocId());
-                getHibernateTemplate().flush();
-                getHibernateTemplate().evict(temp);
-                getHibernateTemplate().evict(temp.getId());
+				UserDoc temp = findByMinDate(userdoc.getUserId());
+				delete(temp.getDocId(), temp.getUserId());
+				getHibernateTemplate().flush();
+				getHibernateTemplate().evict(temp);
+				getHibernateTemplate().evict(temp.getId());
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
-				log.error(e.getMessage(),e);
+				log.error(e.getMessage(), e);
 		}
 
 		try {
@@ -138,7 +141,7 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 		} catch (Exception e) {
 
 			if (log.isErrorEnabled())
-				log.error(e.getMessage(),e);
+				log.error(e.getMessage(), e);
 
 			result = false;
 		}
@@ -146,40 +149,39 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 		return result;
 	}
 
-    /**
-     * @see com.logicaldoc.core.security.dao.UserDocDAO#delete(long)
-     */
-    public boolean delete(long docId) {
-        boolean result = true;
+	/**
+	 * @see com.logicaldoc.core.security.dao.UserDocDAO#delete(long)
+	 */
+	public boolean delete(long docId) {
+		boolean result = true;
 
-        try {
-            getHibernateTemplate().deleteAll(findByDocId(docId));
-        } catch (Exception e) {
-            if (log.isErrorEnabled())
-                log.error(e.getMessage());
-            result = false;
-        }
+		try {
+			getHibernateTemplate().deleteAll(findByDocId(docId));
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage());
+			result = false;
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * @see com.logicaldoc.core.security.dao.UserDocDAO#findByDocId(long)
-     */
-    @SuppressWarnings("unchecked")
-    public List<UserDoc> findByDocId(long docId) {
-    	List<UserDoc> coll = new ArrayList<UserDoc>();
+	/**
+	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByDocId(long)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<UserDoc> findByDocId(long docId) {
+		List<UserDoc> coll = new ArrayList<UserDoc>();
 
-        try {
-            coll = (List<UserDoc>) getHibernateTemplate()
-                    .find(
-                            "from com.logicaldoc.core.security.UserDoc _userdoc where _userdoc.id.docId = ? order by _userdoc.date desc",
-                            new Object[] { docId });
-        } catch (Exception e) {
-            if (log.isErrorEnabled())
-                log.error(e.getMessage());
-        }
+		try {
+			coll = (List<UserDoc>) getHibernateTemplate().find(
+					"from UserDoc _userdoc where _userdoc.docId = ? order by _userdoc.date desc",
+					new Object[] { docId });
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage());
+		}
 
-        return coll;
-    }
+		return coll;
+	}
 }

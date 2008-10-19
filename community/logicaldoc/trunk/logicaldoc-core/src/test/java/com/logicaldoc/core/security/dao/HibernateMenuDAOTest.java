@@ -171,17 +171,17 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testIsWriteEnable() {
-		assertFalse(dao.isWriteEnable(Menu.MENUID_HOME, "admin"));
-		assertTrue(dao.isWriteEnable(26, "admin"));
-		assertFalse(dao.isWriteEnable(Menu.MENUID_HOME, "guest"));
-		assertFalse(dao.isWriteEnable(Menu.MENUID_HOME, "xxxx"));
+		assertFalse(dao.isWriteEnable(Menu.MENUID_HOME, 1));
+		assertTrue(dao.isWriteEnable(26, 1));
+		assertFalse(dao.isWriteEnable(Menu.MENUID_HOME, 3));
+		assertFalse(dao.isWriteEnable(Menu.MENUID_HOME, 999));
 	}
 
 	public void testIsReadEnable() {
-		assertTrue(dao.isReadEnable(Menu.MENUID_HOME, "admin"));
-		assertTrue(dao.isReadEnable(26, "admin"));
-		assertFalse(dao.isReadEnable(Menu.MENUID_HOME, "guest"));
-		assertFalse(dao.isReadEnable(Menu.MENUID_HOME, "xxxx"));
+		assertTrue(dao.isReadEnable(Menu.MENUID_HOME, 1));
+		assertTrue(dao.isReadEnable(26, 1));
+		assertFalse(dao.isReadEnable(Menu.MENUID_HOME, 22));
+		assertFalse(dao.isReadEnable(Menu.MENUID_HOME, 999));
 	}
 
 	public void testFindMenuIdByUserName() {
@@ -217,9 +217,9 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 
 	public void testHasWriteAccess() {
 		Menu menu = dao.findByPrimaryKey(103);
-		assertTrue(dao.hasWriteAccess(menu, "admin"));
-		assertTrue(dao.hasWriteAccess(menu, "sebastian"));
-		assertFalse(dao.hasWriteAccess(menu, "test"));
+		assertTrue(dao.hasWriteAccess(menu, 1));
+		assertTrue(dao.hasWriteAccess(menu, 3));
+		assertFalse(dao.hasWriteAccess(menu, 5));
 	}
 
 	public void testFindByGroupId() {

@@ -4,10 +4,11 @@
 <hibernate-mapping default-lazy="false">
 	<class name="com.logicaldoc.core.security.UserDoc" table="ld_userdoc">
 		<cache usage="read-write" />
-		<composite-id name="id" class="com.logicaldoc.core.security.UserDocID">
-			<key-property name="docId" type="long" column="ld_docid" />
-			<key-property name="userName" type="string" column="ld_username" />
-		</composite-id>
+        <id name="id" type="long" column="ld_id" unsaved-value="0">
+            <generator class="increment" />
+        </id>
+        <property name="docId" type="long" column="ld_docid" not-null="true"/>
+        <property name="userId" type="long" column="ld_userid" not-null="true"/>
 		<property name="date" type="timestamp" column="ld_date" />
 	</class>
 </hibernate-mapping>

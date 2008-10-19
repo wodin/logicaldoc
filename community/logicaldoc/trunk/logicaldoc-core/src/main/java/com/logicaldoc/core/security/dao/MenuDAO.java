@@ -111,11 +111,11 @@ public interface MenuDAO {
 	 * This method is looking up for writing rights for a menu and an user.
 	 * 
 	 * @param menuId ID of the menu.
-	 * @param username Name of the user.
+	 * @param userId ID of the user.
 	 */
-	public boolean isWriteEnable(long menuId, String username);
+	public boolean isWriteEnable(long menuId, long userId);
 
-	public boolean isReadEnable(long menuId, String username);
+	public boolean isReadEnable(long menuId, long userId);
 
 	/**
 	 * This method selects only the menu text from a menu.
@@ -148,16 +148,16 @@ public interface MenuDAO {
 	/**
 	 * returns if a menu is writeable for a user
 	 * 
-	 * @param menuid check this menu
-	 * @param userName privileges for this should be checked
+	 * @param menuId check this menu
+	 * @param userId privileges for this should be checked
 	 * @return a 0 if false, a 1 if true
 	 */
-	public Integer isMenuWriteable(long menuId, String userName);
+	public Integer isMenuWriteable(long menuId, long userId);
 
 	/**
 	 * checks that the user has access to the menu and all its sub-items
 	 */
-	public boolean hasWriteAccess(Menu menu, String p_userName);
+	public boolean hasWriteAccess(Menu menu, long userId);
 
 	/**
 	 * Finds all menus associated to the passed group

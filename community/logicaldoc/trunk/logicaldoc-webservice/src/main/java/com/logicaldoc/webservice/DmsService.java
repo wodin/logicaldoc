@@ -46,12 +46,12 @@ public interface DmsService {
 	public String deleteFolder(@WebParam(name = "username")
 	String username, @WebParam(name = "password")
 	String password, @WebParam(name = "folder")
-	int folder) throws Exception;
+	long folder) throws Exception;
 
 	public String createDocument(@WebParam(name = "username")
 	String username, @WebParam(name = "password")
 	String password, @WebParam(name = "folder")
-	int folder, @WebParam(name = "docTitle")
+	long folder, @WebParam(name = "docTitle")
 	String docTitle, @WebParam(name = "source")
 	String source, @WebParam(name = "sourceDate")
 	String sourceDate, @WebParam(name = "author")
@@ -107,7 +107,7 @@ public interface DmsService {
 	public FolderContent downloadFolderContent(@WebParam(name = "username")
 	String username, @WebParam(name = "password")
 	String password, @WebParam(name = "folder")
-	int folder) throws Exception;
+	long folder) throws Exception;
 
 	/**
 	 * Deletes a document

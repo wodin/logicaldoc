@@ -19,6 +19,7 @@ import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
@@ -167,64 +168,56 @@ public class DocumentEditForm {
 	}
 
 	/**
-	 * @param title
-	 *            The title to set.
+	 * @param title The title to set.
 	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+
 	/**
-	 * @param source
-	 *            The source to set.
+	 * @param source The source to set.
 	 */
 	public void setSource(String src) {
 		source = src;
 	}
 
 	/**
-	 * @param sourceAuthor
-	 *            The sourceAuthor to set.
+	 * @param sourceAuthor The sourceAuthor to set.
 	 */
 	public void setSourceAuthor(String author) {
 		sourceAuthor = author;
 	}
 
 	/**
-	 * @param sourceDate
-	 *            The sourceDate to set.
+	 * @param sourceDate The sourceDate to set.
 	 */
 	public void setSourceDate(Date date) {
 		sourceDate = date;
 	}
 
 	/**
-	 * @param sourceType
-	 *            The sourceType to set.
+	 * @param sourceType The sourceType to set.
 	 */
 	public void setSourceType(String type) {
 		sourceType = type;
 	}
 
 	/**
-	 * @param coverage
-	 *            The coverage to set.
+	 * @param coverage The coverage to set.
 	 */
 	public void setCoverage(String cover) {
 		coverage = cover;
 	}
 
 	/**
-	 * @param language
-	 *            The language to set.
+	 * @param language The language to set.
 	 */
 	public void setLanguage(String lang) {
 		language = lang;
 	}
 
 	/**
-	 * @param keywords
-	 *            The keywords to set.
+	 * @param keywords The keywords to set.
 	 */
 	public void setKeywords(String words) {
 		keywords = words;
@@ -238,16 +231,14 @@ public class DocumentEditForm {
 	}
 
 	/**
-	 * @param filename
-	 *            The filename to set.
+	 * @param filename The filename to set.
 	 */
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
 
 	/**
-	 * @param versionDesc
-	 *            The versionDesc to set.
+	 * @param versionDesc The versionDesc to set.
 	 */
 	public void setVersionDesc(String desc) {
 		versionDesc = desc;
@@ -276,9 +267,9 @@ public class DocumentEditForm {
 	 */
 	public String save() {
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		String username = SessionManagement.getUsername();
-		Menu parent = documentNavigation.getSelectedDir().getMenu();
-		if (SessionManagement.isValid() && mdao.isWriteEnable(parent.getId(), username)) {
+		long userId = SessionManagement.getUserId();
+		Menu folder = documentNavigation.getSelectedDir().getMenu();
+		if (SessionManagement.isValid() && mdao.isWriteEnable(folder.getId(), userId)) {
 			try {
 				InputFileBean inputFile = ((InputFileBean) FacesUtil.accessBeanFromFacesContext("inputFile",
 						FacesContext.getCurrentInstance(), log));
@@ -294,8 +285,8 @@ public class DocumentEditForm {
 
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				documentManager.create(file, parent, username, language, title, getSourceDate(), source, sourceAuthor,
-						sourceType, coverage, versionDesc, kwds);
+				documentManager.create(file, folder, SessionManagement.getUser(), language, title, getSourceDate(),
+						source, sourceAuthor, sourceType, coverage, versionDesc, kwds);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, "errors.action.savedoc", "errors.action.savedoc");
@@ -323,9 +314,9 @@ public class DocumentEditForm {
 		if (SessionManagement.isValid()) {
 			try {
 				Document doc = record.getDocument();
-				String username = SessionManagement.getUsername();
+				User user = SessionManagement.getUser();
 				Set<String> keywords = ddao.toKeywords(getKeywords());
-				documentManager.update(doc, username, title, source, sourceAuthor, sourceDate, sourceType, coverage,
+				documentManager.update(doc, user, title, source, sourceAuthor, sourceDate, sourceType, coverage,
 						language, keywords);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -378,8 +369,8 @@ public class DocumentEditForm {
 						// something goes wrong
 						DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 								DocumentManager.class);
-						documentManager.checkin(document.getId(), new FileInputStream(file), fileName, username,
-								versionType, versionDesc);
+						documentManager.checkin(document.getId(), new FileInputStream(file), fileName,
+								SessionManagement.getUser(), versionType, versionDesc);
 
 						/* create positive log message */
 						Messages.addLocalizedInfo("msg.action.savedoc");

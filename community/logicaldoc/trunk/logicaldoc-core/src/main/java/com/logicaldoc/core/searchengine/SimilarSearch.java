@@ -37,7 +37,7 @@ public class SimilarSearch {
 	 * @param minScore - Minimum score value (between 0 and 1)
 	 * @return Collection of similar documents sorted by score value.
 	 */
-	public Collection<Result> findSimilarDocuments(long docId, double minScore, String username) {
+	public Collection<Result> findSimilarDocuments(long docId, double minScore, long userId) {
 		TermDAO termsDao = (TermDAO) Context.getInstance().getBean(TermDAO.class);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Collection<Term> basicTerms = termsDao.findByDocId(docId);
@@ -47,14 +47,14 @@ public class SimilarSearch {
 		Collection<Result> result = new ArrayList<Result>();
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Set<Long> cache=new HashSet<Long>();
+		Set<Long> cache = new HashSet<Long>();
 		Iterator<Term> iter = terms.iterator();
 		while (iter.hasNext()) {
 			// calculate the score for ranking
 			Term term = (Term) iter.next();
-			Document doc=docDao.findByPrimaryKey(docId);
-			Menu folder=doc.getFolder();
-			if (!cache.contains(term.getDocId()) && mdao.isReadEnable(folder.getId(), username)) {
+			Document doc = docDao.findByPrimaryKey(docId);
+			Menu folder = doc.getFolder();
+			if (!cache.contains(term.getDocId()) && mdao.isReadEnable(folder.getId(), userId)) {
 				Collection<Term> docTerms = termsDao.findByDocId(term.getDocId());
 				float score = calculateScore(basicTerms, docTerms);
 
@@ -70,7 +70,7 @@ public class SimilarSearch {
 						result.add(res);
 				}
 			}
-			if(!cache.contains(term.getDocId()))
+			if (!cache.contains(term.getDocId()))
 				cache.add(term.getDocId());
 		}
 

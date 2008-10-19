@@ -6,10 +6,10 @@ import com.logicaldoc.core.PersistentObject;
 
 /**
  * @author Michael Scholz
- * @author Alessandro Gasparini
- * @author Marco Meschieri
+ * @author Alessandro Gasparini - Logical Objects
+ * @author Marco Meschieri - Logical Objects
  */
-public class History extends PersistentObject{
+public class History extends PersistentObject {
 	public final static String STORED = "msg.jsp.docstored";
 
 	public final static String CHANGED = "msg.jsp.docchanged";
@@ -20,13 +20,23 @@ public class History extends PersistentObject{
 
 	private long docId;
 
+	private long userId;
+
 	private Date date = null;
 
-	private String username = "";
+	private String userName = "";
 
 	private String event = "";
 
 	public History() {
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 	/**
@@ -72,16 +82,16 @@ public class History extends PersistentObject{
 	}
 
 	/**
-	 * @return Returns the username.
+	 * @return Returns the userName.
 	 */
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
 
 	/**
-	 * @param username The username to set.
+	 * @param userName The userName to set.
 	 */
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }

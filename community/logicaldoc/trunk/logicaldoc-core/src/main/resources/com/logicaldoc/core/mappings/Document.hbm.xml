@@ -27,7 +27,7 @@
 			<key column="ld_docid" />
 			<composite-element class="com.logicaldoc.core.document.Version">
 				<property name="version" type="string" column="ld_version" length="10" />
-				<property name="user" type="string" column="ld_user" length="30" />
+				<property name="user" type="string" column="ld_user" length="255" />
 				<property name="date" type="timestamp" column="ld_date" />
 				<property name="comment" type="string" column="ld_comment" length="2000" />
 			</composite-element>

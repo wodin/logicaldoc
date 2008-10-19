@@ -20,39 +20,38 @@ public interface UserDocDAO {
 	/**
 	 * Select the count of userdocs for an user.
 	 */
-	public int getCount(String username);
+	public int getCount(long userId);
 
 	/**
-	 * This method deletes an userdoc by the primary key.
+	 * This method deletes an userdoc by the alternate key.
 	 */
-	public boolean delete(String username, long docId);
+	public boolean delete(long docId, long userId);
 
-    /**
-     * This method deletes all userdocs by the menu id.
-     */
-    public boolean delete(long docId);
-    
+	/**
+	 * This method deletes all userdocs by the document id.
+	 */
+	public boolean delete(long docId);
+
 	/**
 	 * Selects all userdocs for a given user.
 	 */
-	public List<UserDoc> findByUserName(String username);
-    
-    /**
-     * Selects all userdocs for a given menu.
-     */
-    public List<UserDoc> findByDocId(long docId);
-    
+	public List<UserDoc> findByUserId(long userId);
+
+	/**
+	 * Selects all userdocs for a given menu.
+	 */
+	public List<UserDoc> findByDocId(long docId);
 
 	/**
 	 * Selects the oldest userdoc for a given user.
 	 */
-	public UserDoc findByMinDate(String username);
+	public UserDoc findByMinDate(long userId);
 
 	/**
 	 * Check if an userdoc exists.
 	 * 
 	 * @param docId ID of the document
-	 * @param username
+	 * @param userId
 	 */
-	public boolean exists(long docId, String username);
+	public boolean exists(long docId, long userId);
 }

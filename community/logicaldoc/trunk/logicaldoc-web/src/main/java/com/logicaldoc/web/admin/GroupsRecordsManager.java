@@ -7,13 +7,13 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.icesoft.faces.component.ext.HtmlInputText;
+import com.icesoft.faces.component.ext.HtmlInputTextarea;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
-
-import com.icesoft.faces.component.ext.HtmlInputText;
-import com.icesoft.faces.component.ext.HtmlInputTextarea;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.util.FacesUtil;
@@ -79,11 +79,11 @@ public class GroupsRecordsManager {
         groups.clear();
 
         try {
-            String username = SessionManagement.getUsername();
+            long userId = SessionManagement.getUserId();
             MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
                     MenuDAO.class);
 
-            if (mdao.isReadEnable(7, username)) {
+            if (mdao.isReadEnable(7, userId)) {
                 GroupDAO dao = (GroupDAO) Context.getInstance().getBean(
                         GroupDAO.class);
                 groups = dao.findAll();
@@ -116,11 +116,10 @@ public class GroupsRecordsManager {
         selectedGroup = (Group) FacesContext.getCurrentInstance()
             .getExternalContext().getRequestMap().get("group");
 
-        String username = SessionManagement.getUsername();
+        long userId = SessionManagement.getUserId();
         MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
-        if (mdao.isReadEnable(7, username)) {
-//            clear();
+        if (mdao.isReadEnable(7, userId)) {
             setInputData();
         } else {
             Messages.addLocalizedError("errors.noaccess");
@@ -134,10 +133,10 @@ public class GroupsRecordsManager {
     public String addGroup() {
         parentGroup = -1;
 
-        String username = SessionManagement.getUsername();
+        long userId = SessionManagement.getUserId();
         MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
-        if (mdao.isReadEnable(7, username)) {
+        if (mdao.isReadEnable(7, userId)) {
             selectedGroup = new Group();
             clear();
             FacesUtil.clearAllMessages();
@@ -160,11 +159,11 @@ public class GroupsRecordsManager {
         if (SessionManagement.isValid()) {
 
             try {
-                String username = SessionManagement.getUsername();
+                long userId = SessionManagement.getUserId();
                 MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
                         MenuDAO.class);
 
-                if (mdao.isReadEnable(7, username)) {
+                if (mdao.isReadEnable(7, userId)) {
 
                     // we do not allow to delete the initial "admin" group
                     if (group.getName().equals("admin")) {

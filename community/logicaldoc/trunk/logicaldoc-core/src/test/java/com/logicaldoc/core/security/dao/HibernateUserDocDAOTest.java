@@ -33,94 +33,92 @@ public class HibernateUserDocDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testDelete() {
-		assertTrue(dao.exists(1, "admin"));
-		dao.delete("admin", 1);
-		assertFalse(dao.exists(1, "admin"));
+		assertTrue(dao.exists(1, 1));
+		dao.delete(1, 1);
+		assertFalse(dao.exists(1, 1));
 	}
 
 	public void testExists() {
-		assertTrue(dao.exists(1, "admin"));
-		assertFalse(dao.exists(99, "admin"));
-		assertFalse(dao.exists(1, "xxxxo"));
+		assertTrue(dao.exists(1, 1));
+		assertFalse(dao.exists(99, 1));
+		assertFalse(dao.exists(1, 99));
 	}
 
 	public void testFindByMinDate() {
-		UserDoc doc = dao.findByMinDate("admin");
+		UserDoc doc = dao.findByMinDate(1);
 		assertNotNull(doc);
 		assertEquals(1, doc.getDocId());
-		assertEquals("admin", doc.getUserName());
+		assertEquals(1, doc.getUserId());
 
 		// Try with unexisting username
-		doc = dao.findByMinDate("xxxx");
+		doc = dao.findByMinDate(99);
 		assertNull(doc);
 	}
 
-	public void testFindByUserName() {
-		Collection<UserDoc> col = dao.findByUserName("admin");
+	public void testFindByUserId() {
+		Collection<UserDoc> col = dao.findByUserId(1);
 		assertNotNull(col);
 		assertEquals(2, col.size());
 
-		// Try with unexisting username
-		col = dao.findByUserName("xxxx");
+		// Try with unexisting user
+		col = dao.findByUserId(99);
 		assertNotNull(col);
 		assertTrue(col.isEmpty());
 	}
 
-    public void testFindByDocID() {
-        Collection<UserDoc> col = dao.findByDocId(1);
-        assertNotNull(col);
-        assertEquals(1, col.size());
+	public void testFindByDocID() {
+		Collection<UserDoc> col = dao.findByDocId(1);
+		assertNotNull(col);
+		assertEquals(1, col.size());
 
-        // Try with unexisting username
-        col = dao.findByDocId(9999);
-        assertNotNull(col);
-        assertTrue(col.isEmpty());
-    }
+		// Try with unexisting document
+		col = dao.findByDocId(9999);
+		assertNotNull(col);
+		assertTrue(col.isEmpty());
+	}
 
-    public void testDeleteLong() {
-        Collection<UserDoc> col = dao.findByDocId(1);
-        assertNotNull(col);
-        assertEquals(1, col.size());
+	public void testDeleteLong() {
+		Collection<UserDoc> col = dao.findByDocId(1);
+		assertNotNull(col);
+		assertEquals(1, col.size());
 
-        assertTrue(dao.delete(1));
-        
-        col = dao.findByDocId(1);
-        assertNotNull(col);
-        assertEquals(0, col.size());
-    }
-    
+		assertTrue(dao.delete(1));
+
+		col = dao.findByDocId(1);
+		assertNotNull(col);
+		assertEquals(0, col.size());
+	}
+
 	public void testGetCount() {
-		assertEquals(2, dao.getCount("admin"));
+		assertEquals(2, dao.getCount(1));
 
-		// Try with unexisting username
-		assertEquals(0, dao.getCount("xxxx"));
+		// Try with unexisting user
+		assertEquals(0, dao.getCount(99));
 	}
 
 	public void testStore() throws ParseException {
-		assertTrue(dao.exists(1, "admin"));
-		assertEquals(2, dao.getCount("admin"));
-		
-		
-		
+		assertTrue(dao.exists(1, 1));
+		assertEquals(2, dao.getCount(1));
+
 		// store 3 more docs
-		DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
-		for(int i=4;i<7;i++){
-			UserDoc doc=new UserDoc();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		for (int i = 4; i < 7; i++) {
+			UserDoc doc = new UserDoc();
 			doc.setDocId(i);
-			doc.setUserName("admin");
-			doc.setDate(df.parse("2007-01-0"+i));
+			doc.setUserId(1);
+			doc.setDate(df.parse("2007-01-0" + i));
 			assertTrue(dao.store(doc));
-			assertTrue(dao.exists(i, "admin"));
+			assertTrue(dao.exists(i, 1));
 		}
-		
-		assertEquals(5, dao.getCount("admin"));
-		
+
+		assertEquals(5, dao.getCount(1));
+
 		// When the fifth doc is stored, the oldest must be deleted
-		UserDoc doc=new UserDoc();
+		UserDoc doc = new UserDoc();
 		doc.setDocId(6);
-		doc.setUserName("admin");
+		doc.setUserId(4);
 		doc.setDate(new Date());
 		dao.store(doc);
-		assertTrue(dao.exists(6, "admin"));
+		assertTrue(dao.exists(6, 4));
 	}
 }

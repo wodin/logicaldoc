@@ -7,9 +7,10 @@
         <id name="id" type="long" column="ld_id" unsaved-value="0">
             <generator class="increment" />
         </id>
-		<property name="docId" type="long" column="ld_docid" />
+		<property name="docId" type="long" column="ld_docid" not-null="true"/>
+		<property name="userId" type="long" column="lo_userid" not-null="true"/>
 		<property name="date" type="timestamp" column="ld_date" />
-		<property name="username" type="string" column="lo_username" length="30" />
+		<property name="userName" type="string" column="lo_username" length="255" />
 		<property name="event" type="string" column="lo_event" length="255" />
 	</class>
 </hibernate-mapping>

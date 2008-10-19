@@ -44,6 +44,7 @@ public class NewDocWizard {
 	/**
 	 * Starts the upload process
 	 */
+	@SuppressWarnings("deprecation")
 	public String start() {
 		documentNavigation.setSelectedPanel(new PageContentBean("uploadDocument"));
 

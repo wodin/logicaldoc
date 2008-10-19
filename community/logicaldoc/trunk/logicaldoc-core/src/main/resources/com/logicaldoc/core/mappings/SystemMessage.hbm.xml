@@ -7,8 +7,8 @@
         <id name="id" type="long" column="ld_id" unsaved-value="0">
             <generator class="increment" />
         </id>
-		<property name="author" type="string" column="ld_author" length="100" />
-		<property name="recipient" type="string" column="ld_recipient" length="100" />
+		<property name="author" type="string" column="ld_author" length="255" />
+		<property name="recipient" type="string" column="ld_recipient" length="255" />
 		<property name="messageText" type="string" column="ld_messagetext" length="2000" />
 		<property name="subject" type="string" column="ld_subject" length="255" />
 		<property name="sentDate" type="string" column="ld_sentdate" length="20" not-null="true" />

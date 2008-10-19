@@ -548,11 +548,11 @@ public class SearchForm {
 				docId = entry.getDocId();
 			}
 
-			String username = SessionManagement.getUsername();
+			long userId = SessionManagement.getUserId();
 
 			try {
 				SimilarSearch searcher = new SimilarSearch();
-				similar = searcher.findSimilarDocuments(docId, 0.0d, username);
+				similar = searcher.findSimilarDocuments(docId, 0.0d, userId);
 
 				PageContentBean page = new PageContentBean("similar", "search/similar");
 				page.setContentTitle(Messages.getMessage("msg.jsp.similardocs"));

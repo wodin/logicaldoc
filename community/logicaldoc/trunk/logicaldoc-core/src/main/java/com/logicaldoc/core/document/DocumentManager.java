@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.User;
 
 /**
  * A general manager for documents handling issues
@@ -23,13 +24,13 @@ public interface DocumentManager {
 	 * @param docId the document to be checked in
 	 * @param fileInputStream input stream pointing to the new document version
 	 * @param filename new filename (can also be the old one)
-	 * @param username user uploading the new document version
+	 * @param user user uploading the new document version
 	 * @param versionType specifies if this is a new release, a subversion or
 	 *        the old version
 	 * @param versionDesc a change description
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public void checkin(long docId, InputStream fileInputStream, String filename, String username,
+	public void checkin(long docId, InputStream fileInputStream, String filename, User user,
 			Version.VERSION_TYPE versionType, String versionDesc) throws Exception;
 
 	/**
@@ -38,41 +39,41 @@ public interface DocumentManager {
 	 * @param docId the document to be checked in
 	 * @param file of the new document version
 	 * @param filename new filename (can also be the old one)
-	 * @param username user uploading the new document version
+	 * @param user user uploading the new document version
 	 * @param versionType specifies if this is a new release, a subversion or
 	 *        the old version
 	 * @param versionDesc a change description
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	void checkin(long docId, File file, String filename, String username, VERSION_TYPE versionType, String versionDesc)
+	void checkin(long docId, File file, String filename, User user, VERSION_TYPE versionType, String versionDesc)
 			throws Exception;
 
 	/**
 	 * Checks out the given document
 	 * 
 	 * @param docId the document to be checked out
-	 * @param username the user downloading the document
+	 * @param user the user downloading the document
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public void checkout(long docId, String username) throws Exception;
+	public void checkout(long docId, User user) throws Exception;
 
 	/**
 	 * Creates a new document in the parent menu
 	 * 
 	 * @param file document's file
 	 * @param folder the parent folder
-	 * @param username the current username
+	 * @param user the current user
 	 * @param language the document's language
 	 * @return The newly created document
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public Document create(File file, Menu folder, String username, String language) throws Exception;
+	public Document create(File file, Menu folder, User user, String language) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
 	 * includes updating the search index for example.
 	 * 
-	 * @param username
+	 * @param user
 	 * @param folder
 	 * @param title If not provided the filename must be used instead
 	 * @param file
@@ -87,7 +88,7 @@ public interface DocumentManager {
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document create(File file, Menu folder, String username, String language, String title, Date sourceDate,
+	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> keywordso) throws Exception;
 
@@ -98,7 +99,7 @@ public interface DocumentManager {
 	 * @param content The document content stream
 	 * @param filename The original document file name
 	 * @param folder
-	 * @param username
+	 * @param user
 	 * @param language
 	 * @param title If not provided the filename must be used instead
 	 * @param sourceDate
@@ -112,7 +113,7 @@ public interface DocumentManager {
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document create(InputStream content, String filename, Menu folder, String username, String language,
+	public Document create(InputStream content, String filename, Menu folder, User user, String language,
 			String title, Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> keywords) throws Exception;
 
@@ -154,7 +155,7 @@ public interface DocumentManager {
 	 * Updates an existing document and reindex it
 	 * 
 	 * @param doc The document to be updated
-	 * @param username
+	 * @param user
 	 * @param title
 	 * @param source
 	 * @param sourceAuthor
@@ -165,7 +166,7 @@ public interface DocumentManager {
 	 * @param keywords
 	 * @throws Exception
 	 */
-	public void update(Document doc, String username, String title, String source, String sourceAuthor,
+	public void update(Document doc, User user, String title, String source, String sourceAuthor,
 			Date sourceDate, String sourceType, String coverage, String language, Set<String> keywords)
 			throws Exception;
 

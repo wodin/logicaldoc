@@ -1,21 +1,21 @@
-create table ld_article (ld_id bigint not null, ld_docid bigint, ld_subject varchar(255), ld_message varchar(2000), ld_date timestamp, ld_username varchar(30), primary key (ld_id));
+create table ld_article (ld_id bigint not null, ld_docid bigint not null, ld_subject varchar(255), ld_message varchar(2000), ld_date timestamp, ld_username varchar(255), primary key (ld_id));
 create table ld_attachment (ld_messageid bigint not null, ld_filename varchar(255), ld_icon varchar(255), ld_mimetype varchar(255), ld_partid int not null, primary key (ld_messageid, ld_partid));
 create table ld_document (ld_id bigint not null, ld_title varchar(255), ld_version varchar(10), ld_date timestamp, ld_publisher varchar(30), ld_status int, ld_type varchar(255), ld_checkoutuser varchar(30), ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourcetype varchar(255), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_folderid bigint, primary key (ld_id));
 create table ld_email (ld_id bigint not null, ld_accountid bigint, ld_emailid varchar(255), ld_messageText varchar(255), ld_author varchar(30), ld_subject varchar(255), ld_sentdate varchar(20), ld_red int, ld_authoraddress varchar(255), ld_username varchar(30), ld_folder varchar(30), primary key (ld_id));
 create table ld_emailaccount (ld_id bigint not null, ld_username varchar(255), ld_mailaddress varchar(255), ld_provider varchar(255), ld_host varchar(255), ld_port varchar(255), ld_user varchar(255), ld_password varchar(255), ld_allowedtypes varchar(255), ld_deletefrommailbox int, ld_language varchar(255), ld_enabled int, ld_targetfolder bigint, primary key (ld_id));
 create table ld_group (ld_id bigint not null, ld_name varchar(255) not null, ld_description varchar(255), primary key (ld_id));
-create table ld_history (ld_id bigint not null, ld_docid bigint, ld_date timestamp, lo_username varchar(30), lo_event varchar(255), primary key (ld_id));
+create table ld_history (ld_id bigint not null, ld_docid bigint not null, lo_userid bigint not null, ld_date timestamp, lo_username varchar(255), lo_event varchar(255), primary key (ld_id));
 create table ld_keyword (ld_docid bigint not null, ld_keyword varchar(255));
 create table ld_menu (ld_id bigint not null, ld_text varchar(255), ld_parentid bigint, ld_sort int, ld_icon varchar(255), ld_path varchar(255), ld_type int, ld_ref varchar(255), ld_size bigint, primary key (ld_id));
 create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint, ld_writeenable int);
 create table ld_recipient (ld_messageid bigint not null, ld_address varchar(255) not null, ld_name varchar(255), primary key (ld_messageid, ld_address));
-create table ld_systemmessage (ld_id bigint not null, ld_author varchar(100), ld_recipient varchar(100), ld_messagetext varchar(2000), ld_subject varchar(255), ld_sentdate varchar(20) not null, ld_datescope int, ld_prio int, ld_confirmation int, ld_red int not null, primary key (ld_id));
+create table ld_systemmessage (ld_id bigint not null, ld_author varchar(255), ld_recipient varchar(255), ld_messagetext varchar(2000), ld_subject varchar(255), ld_sentdate varchar(20) not null, ld_datescope int, ld_prio int, ld_confirmation int, ld_red int not null, primary key (ld_id));
 create table ld_term (ld_docid bigint not null, ld_stem varchar(255) not null, ld_value float, ld_wordcount int, ld_word varchar(255), primary key (ld_docid, ld_stem));
-create table ld_ticket (ld_id bigint not null, ld_ticketid varchar(255), ld_docid bigint, ld_username varchar(30), primary key (ld_id));
+create table ld_ticket (ld_id bigint not null, ld_ticketid varchar(255) not null, ld_docid bigint, ld_username varchar(255), primary key (ld_id));
 create table ld_user (ld_id bigint not null, ld_username varchar(255) not null, ld_password varchar(255), ld_name varchar(255), ld_firstname varchar(255), ld_street varchar(255), ld_postalcode varchar(255), ld_city varchar(255), ld_country varchar(30), ld_language varchar(10), ld_email varchar(255), ld_telephone varchar(255), primary key (ld_id));
-create table ld_userdoc (ld_docid bigint not null, ld_username varchar(255) not null, ld_date timestamp, primary key (ld_docid, ld_username));
+create table ld_userdoc (ld_id bigint not null, ld_docid bigint not null, ld_userid bigint not null, ld_date timestamp, primary key (ld_id));
 create table ld_usergroup (ld_groupid bigint not null, ld_userid bigint not null, primary key (ld_groupid, ld_userid));
-create table ld_version (ld_docid bigint not null, ld_version varchar(10), ld_user varchar(30), ld_date timestamp, ld_comment varchar(2000));
+create table ld_version (ld_docid bigint not null, ld_version varchar(10), ld_user varchar(255), ld_date timestamp, ld_comment varchar(2000));
 alter table ld_attachment add constraint FK6C81064AAAE036A2 foreign key (ld_messageid) references ld_email;
 alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folderid) references ld_menu;
 alter table ld_emailaccount add constraint FK1013678CDFB2816 foreign key (ld_targetfolder) references ld_menu;
@@ -25,6 +25,12 @@ alter table ld_recipient add constraint FK406A0412AAE036A2 foreign key (ld_messa
 alter table ld_usergroup add constraint FK2435438DB8B12CA9 foreign key (ld_userid) references ld_user;
 alter table ld_usergroup add constraint FK2435438D76F11EA1 foreign key (ld_groupid) references ld_group;
 alter table ld_version add constraint FK9B3BD9117C693DFD foreign key (ld_docid) references ld_document;
+
+
+alter table ld_user add constraint AK_USER unique(ld_username);
+alter table ld_group add constraint AK_GROUP unique(ld_name);
+alter table ld_ticket add constraint AK_TICKET unique(ld_ticketid);
+alter table ld_userdoc add constraint AK_USERDOC unique(ld_docid,ld_userid);
 
 
 

@@ -43,7 +43,7 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 		try {
 			User user = (User) getHibernateTemplate().get(User.class, userId);
 			if (user != null) {
-				getHibernateTemplate().deleteAll(userDocDAO.findByUserName(user.getUserName()));
+				getHibernateTemplate().deleteAll(userDocDAO.findByUserId(user.getId()));
 				getHibernateTemplate().delete(user);
 			}
 		} catch (Throwable e) {

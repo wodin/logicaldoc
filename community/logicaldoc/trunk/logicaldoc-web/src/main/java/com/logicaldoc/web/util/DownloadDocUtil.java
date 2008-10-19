@@ -27,13 +27,13 @@ public class DownloadDocUtil {
 	/**
 	 * adds the given document to the recent files entry of the user
 	 * 
-	 * @param userName the username of the user accessing the file
+	 * @param userId the id of the user accessing the file
 	 * @param docId id of the document the user accessed
 	 */
-	public static void addToRecentFiles(String userName, long docId) {
+	public static void addToRecentFiles(long userId, long docId) {
 		UserDoc userdoc = new UserDoc();
 		userdoc.setDocId(docId);
-		userdoc.setUserName(userName);
+		userdoc.setUserId(userId);
 
 		UserDocDAO uddao = (UserDocDAO) Context.getInstance().getBean(UserDocDAO.class);
 		uddao.store(userdoc);

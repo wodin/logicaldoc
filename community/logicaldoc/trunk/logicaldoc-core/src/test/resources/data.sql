@@ -78,10 +78,10 @@ INSERT INTO ld_document(
 VALUES(2,'testDocname2','testDocVer','2006-12-19','myself', 1, 'PDF','sebastian', 'source', 'sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,103);
 
 
-INSERT INTO ld_userdoc (ld_docid,ld_username,ld_date) 
-VALUES (1,'admin','2006-12-17');
-INSERT INTO ld_userdoc (ld_docid,ld_username,ld_date)
-VALUES (2,'admin','2006-12-22');
+INSERT INTO ld_userdoc (ld_id,ld_docid,ld_userid,ld_date) 
+VALUES (1,1,1,'2006-12-17');
+INSERT INTO ld_userdoc (ld_id,ld_docid,ld_userid,ld_date)
+VALUES (2,2,1,'2006-12-22');
 
 INSERT INTO LD_VERSION 
 VALUES(1,'testVersion','testUser','2006-12-19','testComment');
@@ -92,9 +92,9 @@ INSERT INTO ld_keyword VALUES(1,'abc');
 INSERT INTO ld_keyword VALUES(1,'def');
 INSERT INTO ld_keyword VALUES(1,'ghi');
 
-INSERT INTO ld_history VALUES(1,1,'2006-12-20','author','data test 01');
-INSERT INTO ld_history VALUES(2,2,'2006-12-25','author','data test 02');
-INSERT INTO ld_history VALUES(3,1,'2006-12-27','sebastian','data test 03');
+INSERT INTO ld_history VALUES(1,1,4,'2006-12-20','author','data test 01');
+INSERT INTO ld_history VALUES(2,2,4,'2006-12-25','author','data test 02');
+INSERT INTO ld_history VALUES(3,1,3,'2006-12-27','sebastian','data test 03');
 
 INSERT INTO LD_TERM values (1,'a',2.5,50,'test');
 INSERT INTO LD_TERM values (1,'b',0.7,12,'test2');

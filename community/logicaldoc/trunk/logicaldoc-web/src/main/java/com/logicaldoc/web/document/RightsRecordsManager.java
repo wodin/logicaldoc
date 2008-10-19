@@ -73,9 +73,9 @@ public class RightsRecordsManager {
 		try {
 			GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			String username = SessionManagement.getUsername();
+			long userId = SessionManagement.getUserId();
 
-			if (mdao.isWriteEnable(menuId, username)) {
+			if (mdao.isWriteEnable(menuId, userId)) {
 				Collection<Group> groups = gdao.findAll();
 				Iterator<Group> iter = groups.iterator();
 				while (iter.hasNext()) {
@@ -135,8 +135,8 @@ public class RightsRecordsManager {
 
 	public String save() {
 		long id = selectedDirectory.getMenuId();
-		String username = SessionManagement.getUsername();
-		saveRules(id, username);
+		long userId = SessionManagement.getUserId();
+		saveRules(id, userId);
 		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
 		return null;
 	}
@@ -145,12 +145,12 @@ public class RightsRecordsManager {
 	 * Saves the selected rights into the current element
 	 * 
 	 * @param id
-	 * @param username
+	 * @param userId
 	 */
-	private void saveRules(long id, String username) {
+	private void saveRules(long id, long userId) {
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
-		if (!mdao.isWriteEnable(id, username)) {
+		if (!mdao.isWriteEnable(id, userId)) {
 			return;
 		}
 		Menu folder = mdao.findByPrimaryKey(id);
@@ -203,7 +203,7 @@ public class RightsRecordsManager {
 			// recursively apply permissions to all submenus
 			Collection<Menu> submenus = mdao.findByParentId(id);
 			for (Menu submenu : submenus) {
-				saveRules(submenu.getId(), username);
+				saveRules(submenu.getId(), userId);
 			}
 		}
 	}

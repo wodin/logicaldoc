@@ -82,7 +82,7 @@ public class Directory extends PageContentBean {
             MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
                     MenuDAO.class);
             writeable = new Boolean(mdao.isWriteEnable(getMenuId(),
-                    SessionManagement.getUsername()));
+                    SessionManagement.getUserId()));
         }
         return writeable.booleanValue();
     }

@@ -28,7 +28,9 @@ import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.core.searchengine.store.Storer;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
@@ -58,6 +60,8 @@ public class EMailReceiver extends Task {
 
 	private HistoryDAO historyDao;
 
+	private UserDAO userDao;
+
 	private Indexer indexer;
 
 	private int imported = 0;
@@ -71,6 +75,10 @@ public class EMailReceiver extends Task {
 
 	public Indexer getIndexer() {
 		return indexer;
+	}
+
+	public void setUserDao(UserDAO userDao) {
+		this.userDao = userDao;
 	}
 
 	public void setIndexer(Indexer indexer) {
@@ -208,11 +216,12 @@ public class EMailReceiver extends Task {
 		Session session = Session.getInstance(new Properties());
 		Store store = session.getStore(account.getProvider());
 		store.connect(account.getHost(), account.getUser(), account.getPassword());
-		
-//		log.info("account.getProvider(): " + account.getProvider());
-//		log.info("account.getHost(): " + account.getHost());
-//		log.info("account.getAccountUser(): " + account.getAccountUser());
-//		log.info("account.getAccountPassword(): " + account.getAccountPassword());
+
+		// log.info("account.getProvider(): " + account.getProvider());
+		// log.info("account.getHost(): " + account.getHost());
+		// log.info("account.getAccountUser(): " + account.getAccountUser());
+		// log.info("account.getAccountPassword(): " +
+		// account.getAccountPassword());
 
 		// Open Folder INBOX
 		Folder inbox = store.getFolder("INBOX");
@@ -228,15 +237,16 @@ public class EMailReceiver extends Task {
 				EMail email = new EMail();
 				try {
 					javax.mail.Message message = inbox.getMessage(i);
-					message.setFlag(Flags.Flag.DELETED, account.getDeleteFromMailbox() > 0);					
-					
-//					Enumeration myEnum = message.getAllHeaders();
-//					while (myEnum.hasMoreElements()) {
-//						Header element = (Header) myEnum.nextElement();
-//						log.info("header: " + element.getName() + ", " + element.getValue());
-//					}
-										
-                    String mailId;
+					message.setFlag(Flags.Flag.DELETED, account.getDeleteFromMailbox() > 0);
+
+					// Enumeration myEnum = message.getAllHeaders();
+					// while (myEnum.hasMoreElements()) {
+					// Header element = (Header) myEnum.nextElement();
+					// log.info("header: " + element.getName() + ", " +
+					// element.getValue());
+					// }
+
+					String mailId;
 					if (message.getHeader("Message-ID") != null)
 						mailId = message.getHeader("Message-ID")[0];
 					else {
@@ -307,118 +317,124 @@ public class EMailReceiver extends Task {
 
 	private Document dumpPart(Part p, int partCount, EMailAccount account, EMail email, Menu parent)
 			throws MessagingException, Exception {
-		//TODO reimplement using the concept of document link for attachments
-		
-		
+		// TODO reimplement using the concept of document link for attachments
+
 		String mailsdir = settingsConfig.getValue("userdir") + "/mails/";
 		File mailDir = new File(FilenameUtils.normalize(mailsdir + "/" + email.getId()));
 		FileUtils.forceMkdir(mailDir);
 
-//		if (p.isMimeType("multipart/*")) {
-//			Multipart mp = (Multipart) p.getContent();
-//			int count = mp.getCount();
-//
-//			int partId = 0;
-//			boolean textBodyFound = false;
-//
-//			Menu mailMenu = null;
-//
-//			// Search for text mail body
-//			for (int i = 0; i < count; i++) {
-//				Part part = mp.getBodyPart(i);
-//				if (StringUtils.isEmpty(part.getFileName()) && part.getContentType().startsWith("text/plain")) {
-//					mailMenu = dumpPart(mp.getBodyPart(i), partId++, account, email, null);
-//					textBodyFound = true;
-//				}
-//			}
-//
-//			// Search for html mail body
-//			for (int i = 0; i < count && !textBodyFound; i++) {
-//				Part part = mp.getBodyPart(i);
-//				if (StringUtils.isEmpty(part.getFileName()) && part.getContentType().startsWith("text/html")
-//						&& !textBodyFound) {
-//					// This is an HTML-only mail
-//					mailMenu = dumpPart(mp.getBodyPart(i), partId++, account, email, null);
-//				}
-//			}
-//
-//			// Dump other parts skipping not-allowed extensions
-//			for (int i = 0; i < count; i++) {
-//				Part part = mp.getBodyPart(i);
-//				if (!StringUtils.isEmpty(part.getFileName())
-//						&& account.isAllowed(FilenameUtils.getExtension(part.getFileName()))) {
-//					dumpPart(mp.getBodyPart(i), partId++, account, email, mailMenu);
-//				}
-//			}
-//		} else {
-//			Attachment attachment = new Attachment();
-//			String cType = p.getContentType();
-//			String filename = p.getFileName();
-//			String docName = filename;
-//
-//			// Check if this is the email body or an attachment
-//			if (StringUtils.isEmpty(filename)) {
-//				filename = "email";
-//
-//				if (cType.startsWith("text/plain")) {
-//					filename += ".mail";
-//				}
-//
-//				if (cType.startsWith("text/html")) {
-//					filename += ".html";
-//				}
-//				docName = StringUtils.abbreviate(email.getSubject(), 100);
-//			}
-//
-//			int end = cType.indexOf(";");
-//			String mimeType = "";
-//
-//			if (end != -1) {
-//				mimeType = cType.substring(0, cType.indexOf(";"));
-//			} else {
-//				mimeType = cType;
-//			}
-//
-//			InputStream is = p.getInputStream();
-//			File file = new File(mailDir, filename);
-//			FileOutputStream fos = new FileOutputStream(file);
-//			int letter = 0;
-//
-//			while ((letter = is.read()) != -1) {
-//				fos.write(letter);
-//			}
-//
-//			is.close();
-//			fos.close();
-//
-//			String icon = "";
-//			if (mimeType.equals("text/plain") || mimeType.equals("text/rtf") || mimeType.equals("application/msword")
-//					|| mimeType.equals("application/vnd.sun.xml.writer")) {
-//				icon = "textdoc.gif";
-//			} else if (mimeType.equals("application/msexcel") || mimeType.equals("application/vnd.sun.xml.calc")) {
-//				icon = "tabledoc.gif";
-//			} else if (mimeType.equals("application/mspowerpoint")
-//					|| mimeType.equals("application/vnd.sun.xml.impress")) {
-//				icon = "presentdoc.gif";
-//			} else if (mimeType.equals("application/pdf")) {
-//				icon = "pdf.gif";
-//			} else if (mimeType.equals("text/html")) {
-//				icon = "internet.gif";
-//			} else {
-//				icon += "document.gif";
-//			}
-//
-//			attachment.setIcon(icon);
-//			attachment.setMimeType(mimeType);
-//			attachment.setFilename(filename);
-//			email.addAttachment(partCount, attachment);
-//
-//			Menu parentMenu = parent;
-//			if (parentMenu == null)
-//				parentMenu = account.getTargetFolder();
-//
-//			return storeDocument(account, parentMenu, file, docName, email);
-//		}
+		// if (p.isMimeType("multipart/*")) {
+		// Multipart mp = (Multipart) p.getContent();
+		// int count = mp.getCount();
+		//
+		// int partId = 0;
+		// boolean textBodyFound = false;
+		//
+		// Menu mailMenu = null;
+		//
+		// // Search for text mail body
+		// for (int i = 0; i < count; i++) {
+		// Part part = mp.getBodyPart(i);
+		// if (StringUtils.isEmpty(part.getFileName()) &&
+		// part.getContentType().startsWith("text/plain")) {
+		// mailMenu = dumpPart(mp.getBodyPart(i), partId++, account, email,
+		// null);
+		// textBodyFound = true;
+		// }
+		// }
+		//
+		// // Search for html mail body
+		// for (int i = 0; i < count && !textBodyFound; i++) {
+		// Part part = mp.getBodyPart(i);
+		// if (StringUtils.isEmpty(part.getFileName()) &&
+		// part.getContentType().startsWith("text/html")
+		// && !textBodyFound) {
+		// // This is an HTML-only mail
+		// mailMenu = dumpPart(mp.getBodyPart(i), partId++, account, email,
+		// null);
+		// }
+		// }
+		//
+		// // Dump other parts skipping not-allowed extensions
+		// for (int i = 0; i < count; i++) {
+		// Part part = mp.getBodyPart(i);
+		// if (!StringUtils.isEmpty(part.getFileName())
+		// && account.isAllowed(FilenameUtils.getExtension(part.getFileName())))
+		// {
+		// dumpPart(mp.getBodyPart(i), partId++, account, email, mailMenu);
+		// }
+		// }
+		// } else {
+		// Attachment attachment = new Attachment();
+		// String cType = p.getContentType();
+		// String filename = p.getFileName();
+		// String docName = filename;
+		//
+		// // Check if this is the email body or an attachment
+		// if (StringUtils.isEmpty(filename)) {
+		// filename = "email";
+		//
+		// if (cType.startsWith("text/plain")) {
+		// filename += ".mail";
+		// }
+		//
+		// if (cType.startsWith("text/html")) {
+		// filename += ".html";
+		// }
+		// docName = StringUtils.abbreviate(email.getSubject(), 100);
+		// }
+		//
+		// int end = cType.indexOf(";");
+		// String mimeType = "";
+		//
+		// if (end != -1) {
+		// mimeType = cType.substring(0, cType.indexOf(";"));
+		// } else {
+		// mimeType = cType;
+		// }
+		//
+		// InputStream is = p.getInputStream();
+		// File file = new File(mailDir, filename);
+		// FileOutputStream fos = new FileOutputStream(file);
+		// int letter = 0;
+		//
+		// while ((letter = is.read()) != -1) {
+		// fos.write(letter);
+		// }
+		//
+		// is.close();
+		// fos.close();
+		//
+		// String icon = "";
+		// if (mimeType.equals("text/plain") || mimeType.equals("text/rtf") ||
+		// mimeType.equals("application/msword")
+		// || mimeType.equals("application/vnd.sun.xml.writer")) {
+		// icon = "textdoc.gif";
+		// } else if (mimeType.equals("application/msexcel") ||
+		// mimeType.equals("application/vnd.sun.xml.calc")) {
+		// icon = "tabledoc.gif";
+		// } else if (mimeType.equals("application/mspowerpoint")
+		// || mimeType.equals("application/vnd.sun.xml.impress")) {
+		// icon = "presentdoc.gif";
+		// } else if (mimeType.equals("application/pdf")) {
+		// icon = "pdf.gif";
+		// } else if (mimeType.equals("text/html")) {
+		// icon = "internet.gif";
+		// } else {
+		// icon += "document.gif";
+		// }
+		//
+		// attachment.setIcon(icon);
+		// attachment.setMimeType(mimeType);
+		// attachment.setFilename(filename);
+		// email.addAttachment(partCount, attachment);
+		//
+		// Menu parentMenu = parent;
+		// if (parentMenu == null)
+		// parentMenu = account.getTargetFolder();
+		//
+		// return storeDocument(account, parentMenu, file, docName, email);
+		// }
 		return null;
 	}
 
@@ -426,19 +442,18 @@ public class EMailReceiver extends Task {
 	 * Stores a document file in the archive
 	 * 
 	 * @param account
-	 * @param file
-	 *            File to be stored
-	 * @param folder
-	 *            The folder in which the document must be created, if null
-	 *            account target folder is used
-	 * @param docName
-	 *            Name of the document to be created
+	 * @param file File to be stored
+	 * @param folder The folder in which the document must be created, if null
+	 *        account target folder is used
+	 * @param docName Name of the document to be created
 	 * @param srcDate
 	 * @return The newly created document
 	 * @throws Exception
 	 */
 	private Document storeDocument(EMailAccount account, Menu folder, File file, String docName, EMail email)
 			throws Exception {
+
+		User user=userDao.findByUserName(defaultOwner);
 		
 		log.info("Store email document " + file);
 
@@ -448,25 +463,26 @@ public class EMailReceiver extends Task {
 
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		Document doc = null;
-		
+
 		if (file.getName().startsWith("email")) {
 
 			log.info("Insert email document.");
-			
+
 			String srcAuthor = email.getAuthorAddress();
 			if (email.getAuthor() != null) {
 				srcAuthor = email.getAuthor() + " " + email.getAuthorAddress();
 			}
-			
+
 			int fieldLength = 255;
 			if ((srcAuthor != null) && (srcAuthor.length() > 255))
 				srcAuthor = srcAuthor.substring(0, fieldLength);
 
 			Date srcDate = email.getSentDateAsDate();
-			
-            doc = manager.create(file, parent, defaultOwner, account.getLanguage(), docName, srcDate, account.getMailAddress(), srcAuthor, "", "", "", null);
+
+			doc = manager.create(file, parent, user, account.getLanguage(), docName, srcDate, account
+					.getMailAddress(), srcAuthor, "", "", "", null);
 		} else {
-			doc = manager.create(file, parent, defaultOwner, account.getLanguage());
+			doc = manager.create(file, parent, user, account.getLanguage());
 		}
 
 		return doc;

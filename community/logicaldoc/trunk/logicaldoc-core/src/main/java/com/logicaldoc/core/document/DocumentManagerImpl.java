@@ -22,6 +22,7 @@ import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.store.Storer;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;
@@ -68,19 +69,19 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void checkin(long docId, File file, String filename, String username, VERSION_TYPE versionType,
-			String versionDesc) throws Exception {
+	public void checkin(long docId, File file, String filename, User user, VERSION_TYPE versionType, String versionDesc)
+			throws Exception {
 		FileInputStream is = new FileInputStream(file);
 		try {
-			checkin(docId, is, filename, username, versionType, versionDesc);
+			checkin(docId, is, filename, user, versionType, versionDesc);
 		} finally {
 			is.close();
 		}
 	}
 
 	@Override
-	public void checkin(long docId, InputStream fileInputStream, String filename, String username,
-			VERSION_TYPE versionType, String versionDesc) throws Exception {
+	public void checkin(long docId, InputStream fileInputStream, String filename, User user, VERSION_TYPE versionType,
+			String versionDesc) throws Exception {
 		// identify the document and menu
 		Document document = documentDAO.findByPrimaryKey(docId);
 		Menu folder = document.getFolder();
@@ -96,12 +97,12 @@ public class DocumentManagerImpl implements DocumentManager {
 		document.setFileName(filename);
 
 		// create new version
-		Version version = createNewVersion(versionType, username, versionDesc, document.getVersion());
+		Version version = createNewVersion(versionType, user.getUserName(), versionDesc, document.getVersion());
 		String newVersion = version.getVersion();
 
 		// set other properties of the document
 		document.setDate(new Date());
-		document.setPublisher(username);
+		document.setPublisher(user.getUserName());
 		document.setStatus(Document.DOC_CHECKED_IN);
 		document.setType(document.getFileExtension());
 		document.setCheckoutUser("");
@@ -112,7 +113,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			throw new Exception();
 
 		// create history entry for this checkin event
-		createHistoryEntry(docId, username, History.CHECKIN);
+		createHistoryEntry(docId, user.getUserName(), History.CHECKIN);
 
 		// create search index entry
 		createIndexEntry(document, folder.getId(), filename, completeDocPath);
@@ -124,17 +125,17 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void checkout(long docId, String username) throws Exception {
+	public void checkout(long docId, User user) throws Exception {
 		Document document = documentDAO.findByPrimaryKey(docId);
 
 		if (document.getStatus() == Document.DOC_CHECKED_IN) {
-			document.setCheckoutUser(username);
+			document.setCheckoutUser(user.getUserName());
 			document.setStatus(Document.DOC_CHECKED_OUT);
 			document.setFolder(document.getFolder());
 			documentDAO.store(document);
 
 			// create history entry for this checkout event
-			createHistoryEntry(docId, username, History.CHECKOUT);
+			createHistoryEntry(docId, user.getUserName(), History.CHECKOUT);
 
 			log.debug("Checked out document " + docId);
 		} else {
@@ -143,13 +144,13 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(File file, Menu folder, String username, String language) throws Exception {
-		return create(file, folder, username, language, "", null, "", "", "", "", "", null);
+	public Document create(File file, Menu folder, User user, String language) throws Exception {
+		return create(file, folder, user, language, "", null, "", "", "", "", "", null);
 	}
 
 	@Override
-	public Document create(InputStream content, String filename, Menu folder, String username, String language,
-			String title, Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
+	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
+			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> keywords) throws Exception {
 		try {
 			Document doc = new Document();
@@ -168,7 +169,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setSourceDate(sourceDate);
 			else
 				doc.setSourceDate(doc.getDate());
-			doc.setPublisher(username);
+			doc.setPublisher(user.getUserName());
 			doc.setStatus(Document.DOC_CHECKED_IN);
 			doc.setType(filename.substring(filename.lastIndexOf(".") + 1));
 			doc.setVersion("1.0");
@@ -184,7 +185,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			vers.setVersion("1.0");
 			vers.setComment(versionDesc);
 			vers.setDate(doc.getDate());
-			vers.setUser(username);
+			vers.setUser(user.getUserName());
 
 			doc.addVersion(vers);
 
@@ -196,7 +197,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			/* store the document */
 			store(doc, content, filename, "1.0");
 
-			createHistoryEntry(doc.getId(), username, History.STORED);
+			createHistoryEntry(doc.getId(), user.getUserName(), History.STORED);
 
 			/* create search index entry */
 			String lang = doc.getLanguage();
@@ -215,7 +216,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(File file, Menu folder, String username, String language, String title, Date sourceDate,
+	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> keywords) throws Exception {
 		Locale locale = new Locale(language);
@@ -246,8 +247,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		InputStream is = new FileInputStream(file);
 		try {
-			return create(is, file.getName(), folder, username, language, _title, sourceDate, source, _author,
-					sourceType, coverage, versionDesc, _kwds);
+			return create(is, file.getName(), folder, user, language, _title, sourceDate, source, _author, sourceType,
+					coverage, versionDesc, _kwds);
 		} finally {
 			is.close();
 		}
@@ -353,7 +354,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void update(Document doc, String username, String title, String source, String sourceAuthor,
+	public void update(Document doc, User user, String title, String source, String sourceAuthor,
 			Date sourceDate, String sourceType, String coverage, String language, Set<String> keywords)
 			throws Exception {
 		try {
@@ -380,7 +381,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			History history = new History();
 			history.setDocId(doc.getId());
 			history.setDate(new Date());
-			history.setUsername(username);
+			history.setUserName(user.getUserName());
 			history.setEvent(History.CHANGED);
 			historyDAO.store(history);
 
@@ -425,7 +426,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		History history = new History();
 		history.setDocId(docId);
 		history.setDate(new Date());
-		history.setUsername(username);
+		history.setUserName(username);
 		history.setEvent(eventType);
 		historyDAO.store(history);
 	}

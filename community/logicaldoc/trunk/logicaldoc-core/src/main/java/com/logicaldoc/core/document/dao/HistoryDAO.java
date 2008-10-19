@@ -36,10 +36,10 @@ public interface HistoryDAO {
 	public List<History> findByDocId(long docId);
 
 	/**
-	 * This method selects all histories of a given username.
+	 * This method selects all histories of a given user.
 	 * 
-	 * @param username
+	 * @param userId
 	 * @return list of histories ordered by date
 	 */
-	public List<History> findByUsername(String username);
+	public List<History> findByUserId(long userId);
 }

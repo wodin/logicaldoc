@@ -14,7 +14,9 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.text.AnalyzeText;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
@@ -33,6 +35,8 @@ public class ZipImport {
 	private String username;
 
 	private String language;
+
+	private User user;
 
 	protected static Log logger = LogFactory.getLog(ZipImport.class);
 
@@ -56,6 +60,9 @@ public class ZipImport {
 
 		this.username = user;
 		this.language = language;
+
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		this.user = userDao.findByUserName(username);
 
 		SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 		String userpath = settings.getValue("userdir");
@@ -121,7 +128,7 @@ public class ZipImport {
 			} else {
 				// creates a document
 				DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-				Document document = docManager.create(file, parent, username, language);
+				Document document = docManager.create(file, parent, user, language);
 
 				if (extractKeywords) {
 					// also extract keywords and save on document

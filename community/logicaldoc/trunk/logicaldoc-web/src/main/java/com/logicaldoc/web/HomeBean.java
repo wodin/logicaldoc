@@ -52,10 +52,10 @@ public class HomeBean {
 
 		if (SessionManagement.isValid()) {
 			try {
-				String username = SessionManagement.getUsername();
+				long userId = SessionManagement.getUserId();
 
 				DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-				Collection<Document> documents = (Collection<Document>) docdao.findLastModifiedByUserName(username, 10);
+				Collection<Document> documents = (Collection<Document>) docdao.findLastModifiedByUserId(userId, 10);
 				for (Document document : documents) {
 					lastModified.add(new DocumentRecord(document.getId(), null,
 							DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
@@ -78,10 +78,10 @@ public class HomeBean {
 
 		if (SessionManagement.isValid()) {
 			try {
-				String username = SessionManagement.getUsername();
+				long userId = SessionManagement.getUserId();
 				DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 
-				Collection<Document> docColl = docDao.findLastDownloadsByUserName(username, 10);
+				Collection<Document> docColl = docDao.findLastDownloadsByUserId(userId, 10);
 				for (Document doc : docColl) {
 					lastDownloads.add(new DocumentRecord(doc.getId(), null,
 							DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,

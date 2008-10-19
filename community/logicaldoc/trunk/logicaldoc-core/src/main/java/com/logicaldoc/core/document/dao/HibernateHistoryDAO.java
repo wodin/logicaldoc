@@ -85,15 +85,15 @@ public class HibernateHistoryDAO extends HibernateDaoSupport implements HistoryD
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.HistoryDAO#findByUsername(java.lang.String)
+	 * @see com.logicaldoc.core.document.dao.HistoryDAO#findByUsername(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<History> findByUsername(String username) {
+	public List<History> findByUserId(long userId) {
 		List<History> coll = new ArrayList<History>();
 
 		try {
 			DetachedCriteria dt = DetachedCriteria.forClass(History.class);
-			dt.add(Property.forName("username").eq(username));
+			dt.add(Property.forName("userId").eq(userId));
 			dt.addOrder(Order.asc("date"));
 
 			coll = (List<History>) getHibernateTemplate().findByCriteria(dt);

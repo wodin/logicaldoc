@@ -58,7 +58,7 @@ public interface DocumentDAO {
 	 * @return Collection of all document id in the folder.
 	 */
 	public Collection<Long> findDocIdByFolder(long folderId);
-	
+
 	/**
 	 * Finds all documents inside the given folder.
 	 * 
@@ -66,7 +66,7 @@ public interface DocumentDAO {
 	 * @return Collection of all documents in the folder.
 	 */
 	public Collection<Document> findByFolder(long folderId);
-	
+
 	/**
 	 * Finds all documents checked-out for an user.
 	 * 
@@ -78,19 +78,19 @@ public interface DocumentDAO {
 	/**
 	 * Finds a max number of documents last modified by an user.
 	 * 
-	 * @param username Name of the user.
+	 * @param userId ID of the user.
 	 * @return Collection of the last documents changed by the specified user.
 	 */
-	public List<Document> findLastModifiedByUserName(String username, int maxResults);
+	public List<Document> findLastModifiedByUserId(long userId, int maxResults);
 
 	/**
 	 * Finds the last downloaded documents by the given user
 	 * 
-	 * @param username login of the user
+	 * @param userId id of the user
 	 * @param maxResults maximum number of returned elements
 	 * @return
 	 */
-	public List<Document> findLastDownloadsByUserName(String username, int maxResults);
+	public List<Document> findLastDownloadsByUserId(long userId, int maxResults);
 
 	/**
 	 * This method finds all Doc Ids by a keyword.

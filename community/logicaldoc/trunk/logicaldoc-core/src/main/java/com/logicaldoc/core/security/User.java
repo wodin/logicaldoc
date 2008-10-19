@@ -131,7 +131,7 @@ public class User extends PersistentObject implements Serializable {
 	 * @param pwd The password in readable format
 	 */
 	public void setDecodedPassword(String pwd) {
-		if ((pwd != null) && !pwd.trim().equals("")) {
+		if (org.apache.commons.lang.StringUtils.isNotEmpty(pwd)) {
 			password = CryptUtil.cryptString(pwd);
 		}
 	}

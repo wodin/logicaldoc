@@ -236,12 +236,12 @@ public class DocumentsRecordsManager extends SortableList {
 	public String paste() {
 		if (SessionManagement.isValid()) {
 			if (!clipboard.isEmpty()) {
-				String username = SessionManagement.getUsername();
+				long userId = SessionManagement.getUserId();
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 				Menu selectedMenuFolder = menuDao.findByPrimaryKey(selectedDirectory);
 				DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
-				if (menuDao.isWriteEnable(selectedDirectory, username)) {
+				if (menuDao.isWriteEnable(selectedDirectory, userId)) {
 					try {
 						for (DocumentRecord record : clipboard) {
 							docManager.moveToFolder(record.getDocument(), selectedMenuFolder);
@@ -287,11 +287,11 @@ public class DocumentsRecordsManager extends SortableList {
 				}
 
 				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-				String username = SessionManagement.getUsername();
+				long userId = SessionManagement.getUserId();
 				Directory dir = documentNavigation.getSelectedDir();
-				long parentId = dir.getMenuId();
+				long folderId = dir.getMenuId();
 
-				if (mdao.isWriteEnable(parentId, username)) {
+				if (mdao.isWriteEnable(folderId, userId)) {
 					log.debug("mdao.isWriteEnabled");
 					documentNavigation.setSelectedPanel(new PageContentBean("zipImport"));
 				} else {
@@ -394,9 +394,9 @@ public class DocumentsRecordsManager extends SortableList {
 
 		if (SessionManagement.isValid()) {
 			try {
-				String username = SessionManagement.getUsername();
+				long userId = SessionManagement.getUserId();
 				UserDocDAO uddao = (UserDocDAO) Context.getInstance().getBean(UserDocDAO.class);
-				Collection<UserDoc> userdocs = uddao.findByUserName(username);
+				Collection<UserDoc> userdocs = uddao.findByUserId(userId);
 				Iterator<UserDoc> iter = userdocs.iterator();
 
 				while (iter.hasNext()) {
@@ -455,13 +455,9 @@ public class DocumentsRecordsManager extends SortableList {
 		return null;
 	}
 
-	class DocumentRecordSelectedComparator implements Comparator {
-		public int compare(Object arg0, Object arg1) {
-
-			DocumentRecord dr0 = (DocumentRecord) arg0;
-			DocumentRecord dr1 = (DocumentRecord) arg1;
-
-			return new Boolean(dr0.isSelected()).compareTo(new Boolean(dr1.isSelected()));
+	class DocumentRecordSelectedComparator implements Comparator<DocumentRecord> {
+		public int compare(DocumentRecord arg0, DocumentRecord arg1) {
+			return new Boolean(arg0.isSelected()).compareTo(new Boolean(arg1.isSelected()));
 		}
 	}
 

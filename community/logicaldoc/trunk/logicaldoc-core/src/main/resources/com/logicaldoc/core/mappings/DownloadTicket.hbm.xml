@@ -7,8 +7,8 @@
         <id name="id" type="long" column="ld_id" unsaved-value="0">
             <generator class="increment" />
         </id>
-		<property name="ticketId" type="string" column="ld_ticketid" />
+		<property name="ticketId" type="string" column="ld_ticketid" not-null="true" />
 		<property name="docId" type="long" column="ld_docid" />
-		<property name="username" type="string" column="ld_username" length="30" />
+		<property name="username" type="string" column="ld_username" length="255" />
 	</class>
 </hibernate-mapping>

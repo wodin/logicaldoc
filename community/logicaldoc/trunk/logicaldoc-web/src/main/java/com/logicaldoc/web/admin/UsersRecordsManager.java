@@ -67,9 +67,9 @@ public class UsersRecordsManager extends SortableList {
 
 		try {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			String uname = SessionManagement.getUsername();
+			long userId = SessionManagement.getUserId();
 
-			if (mdao.isReadEnable(6, uname)) {
+			if (mdao.isReadEnable(6, userId)) {
 				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 				Collection<User> tmpusers = dao.findAll();
 				users.addAll(tmpusers);
@@ -231,17 +231,17 @@ public class UsersRecordsManager extends SortableList {
 
 					// delete user doc entries (recently accessed files)
 					UserDocDAO userDocDao = (UserDocDAO) Context.getInstance().getBean(UserDocDAO.class);
-					Collection<UserDoc> userDocColl = userDocDao.findByUserName(user.getUserName());
+					Collection<UserDoc> userDocColl = userDocDao.findByUserId(user.getId());
 					Iterator<UserDoc> userDocIter = userDocColl.iterator();
 
 					while (userDocIter.hasNext()) {
 						UserDoc userDoc = userDocIter.next();
-						userDocDao.delete(user.getUserName(), userDoc.getDocId());
+						userDocDao.delete(userDoc.getDocId(), user.getId());
 					}
 
 					// delete all history entries connected to this user
 					HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-					Collection<History> historyColl = historyDAO.findByUsername(user.getUserName());
+					Collection<History> historyColl = historyDAO.findByUserId(user.getId());
 					Iterator<History> historyIter = historyColl.iterator();
 
 					while (historyIter.hasNext()) {

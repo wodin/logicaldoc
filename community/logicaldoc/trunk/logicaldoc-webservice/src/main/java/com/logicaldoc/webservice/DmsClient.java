@@ -38,7 +38,7 @@ public class DmsClient implements DmsService {
 		return client.checkout(username, password, id);
 	}
 
-	public String createDocument(String username, String password, int folder, String docTitle, String source,
+	public String createDocument(String username, String password, long folder, String docTitle, String source,
 			String sourceDate, String author, String sourceType, String coverage, String language, String keywords,
 			String versionDesc, String filename, DataHandler content) throws Exception {
 		return client.createDocument(username, password, folder, docTitle, source, sourceDate, author, sourceType,
@@ -53,7 +53,7 @@ public class DmsClient implements DmsService {
 		return client.deleteDocument(username, password, id);
 	}
 
-	public String deleteFolder(String username, String password, int folder) throws Exception {
+	public String deleteFolder(String username, String password, long folder) throws Exception {
 		return client.deleteFolder(username, password, folder);
 	}
 
@@ -65,7 +65,7 @@ public class DmsClient implements DmsService {
 		return client.downloadDocumentInfo(username, password, id);
 	}
 
-	public FolderContent downloadFolderContent(String username, String password, int folder) throws Exception {
+	public FolderContent downloadFolderContent(String username, String password, long folder) throws Exception {
 		return client.downloadFolderContent(username, password, folder);
 	}
 

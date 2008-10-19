@@ -95,12 +95,12 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, docs.size());
 	}
 	
-	public void testFindLastModifiedByUserName() {
-		Collection<Document> coll = dao.findLastModifiedByUserName("author", 10);
+	public void testFindLastModifiedByUserId() {
+		Collection<Document> coll = dao.findLastModifiedByUserId(4, 10);
 		assertNotNull(coll);
 		assertEquals(2, coll.size());
 
-		coll = dao.findLastModifiedByUserName("sebastian", 10);
+		coll = dao.findLastModifiedByUserId(3, 10);
 		assertNotNull(coll);
 		assertEquals(1, coll.size());
 	}
@@ -208,8 +208,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, ids.size());
 	}
 	
-	public void testFindLastDownloadsByUserName() {
-		Collection<Document> documents = dao.findLastDownloadsByUserName("admin", 10);
+	public void testFindLastDownloadsByUserId() {
+		Collection<Document> documents = dao.findLastDownloadsByUserId(1, 10);
 		assertNotNull(documents);
 		assertEquals(2, documents.size());
 	}
