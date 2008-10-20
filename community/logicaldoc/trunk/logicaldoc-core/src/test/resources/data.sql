@@ -96,11 +96,11 @@ INSERT INTO ld_history VALUES(1,1,4,'2006-12-20','author','data test 01');
 INSERT INTO ld_history VALUES(2,2,4,'2006-12-25','author','data test 02');
 INSERT INTO ld_history VALUES(3,1,3,'2006-12-27','sebastian','data test 03');
 
-INSERT INTO LD_TERM values (1,'a',2.5,50,'test');
-INSERT INTO LD_TERM values (1,'b',0.7,12,'test2');
-INSERT INTO LD_TERM values (2,'a',0.3,12,'test3');
-INSERT INTO LD_TERM values (2,'x',0.14,20,'test4');
-INSERT INTO LD_TERM values (2,'z',0.14,20,'test5');
+INSERT INTO LD_TERM values (1,1,'a',2.5,50,'test');
+INSERT INTO LD_TERM values (2,2,'a',0.7,12,'test2');
+INSERT INTO LD_TERM values (3,2,'a',0.3,12,'test3');
+INSERT INTO LD_TERM values (4,2,'a',0.14,20,'test4');
+INSERT INTO LD_TERM values (5,2,'z',0.14,20,'test5');
 
 INSERT INTO ld_article values(1,1,'subject','message','2008-10-09','admin');
 INSERT INTO ld_article values(2,1,'subject2','message2','2008-10-10','admin');

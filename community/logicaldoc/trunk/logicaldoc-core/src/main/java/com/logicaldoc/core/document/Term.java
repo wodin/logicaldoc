@@ -1,10 +1,12 @@
 package com.logicaldoc.core.document;
 
+import com.logicaldoc.core.PersistentObject;
+
 /**
  * @author Michael Scholz
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  */
-public class Term {
+public class Term extends PersistentObject {
 
 	private double value = 0.0;
 
@@ -12,29 +14,23 @@ public class Term {
 
 	private String originWord = "";
 
-	private TermID id = new TermID();
+	private String stem;
+
+	private long docId;
 
 	public Term() {
 	}
 
-	public TermID getId() {
-		return id;
-	}
-
-	public void setId(TermID id) {
-		this.id = id;
-	}
-
 	public String getStem() {
-		return getId().getStem();
+		return stem;
 	}
 
 	public double getValue() {
 		return value;
 	}
 
-	public void setStem(String string) {
-		getId().setStem(string);
+	public void setStem(String stem) {
+		this.stem = stem;
 	}
 
 	public void setValue(double d) {
@@ -42,11 +38,11 @@ public class Term {
 	}
 
 	public long getDocId() {
-		return getId().getDocId();
+		return docId;
 	}
 
-	public void setDocId(long i) {
-		getId().setDocId(i);
+	public void setDocId(long docId) {
+		this.docId = docId;
 	}
 
 	public int getWordCount() {
@@ -63,24 +59,5 @@ public class Term {
 
 	public void setOriginWord(String originWord) {
 		this.originWord = originWord;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Term))
-			return false;
-
-		Term other = (Term) obj;
-		return other.getId().equals(this.getId());
-	}
-
-	@Override
-	public int hashCode() {
-		return getId().hashCode();
-	}
-
-	@Override
-	public String toString() {
-		return id.toString();
 	}
 }

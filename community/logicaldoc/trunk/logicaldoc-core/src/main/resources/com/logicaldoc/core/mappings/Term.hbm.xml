@@ -4,10 +4,11 @@
 <hibernate-mapping default-lazy="false">
 	<class name="com.logicaldoc.core.document.Term" table="ld_term">
 		<cache usage="read-write" />
-		<composite-id name="id" class="com.logicaldoc.core.document.TermID">
-			<key-property name="docId" type="long" column="ld_docid" />
-			<key-property name="stem" type="string" column="ld_stem" />
-		</composite-id>
+        <id name="id" type="long" column="ld_id" unsaved-value="0">
+            <generator class="increment" />
+        </id>
+        <property name="docId" type="long" column="ld_docid" not-null="true"/>
+        <property name="stem" type="string" column="ld_stem" not-null="true"/>
 		<property name="value" type="double" column="ld_value"  />
 		<property name="wordCount" type="int" column="ld_wordcount" />
 		<property name="originWord" type="string" column="ld_word" length="255"/>

@@ -4,8 +4,6 @@ import java.util.Collection;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.Term;
-import com.logicaldoc.core.document.TermID;
-import com.logicaldoc.core.document.dao.TermDAO;
 import com.logicaldoc.core.security.Menu;
 
 /**
@@ -34,7 +32,7 @@ public class HibernateTermDAOTest extends AbstractCoreTestCase {
 	public void testDelete() {
 		Collection<Term> terms = dao.findByDocId(1);
 		assertNotNull(terms);
-		assertEquals(2, terms.size());
+		assertEquals(1, terms.size());
 
 		assertTrue(dao.delete(1));
 		terms = dao.findByDocId(1);
@@ -42,21 +40,19 @@ public class HibernateTermDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, terms.size());
 	}
 
-	public void findById() {
-		TermID id = new TermID(1, "a");
-		Term term = dao.findById(id);
+	public void findByPrimaryKey() {
+		Term term = dao.findByPrimaryKey(1);
 		assertNotNull(term);
 		assertEquals("a", term.getStem());
 		assertEquals("test", term.getOriginWord());
-		id = new TermID(100, "a");
-		term = dao.findById(id);
+		term = dao.findByPrimaryKey(100);
 		assertNull(term);
 	}
 
 	public void testFindByDocId() {
 		Collection<Term> terms = dao.findByDocId(1);
 		assertNotNull(terms);
-		assertEquals(2, terms.size());
+		assertEquals(1, terms.size());
 
 		terms = dao.findByDocId(9);
 		assertNotNull(terms);
@@ -64,8 +60,8 @@ public class HibernateTermDAOTest extends AbstractCoreTestCase {
 
 		terms = dao.findByDocId(2);
 		assertNotNull(terms);
-		assertEquals(3, terms.size());
-		assertEquals(0.3, terms.iterator().next().getValue());
+		assertEquals(4, terms.size());
+		assertEquals(0.7, terms.iterator().next().getValue());
 
 		terms = dao.findByDocId(999);
 		assertNotNull(terms);
@@ -75,7 +71,7 @@ public class HibernateTermDAOTest extends AbstractCoreTestCase {
 	public void testFindByStem() {
 		Collection<Term> terms = dao.findByStem(1, 100);
 		assertNotNull(terms);
-		assertEquals(1, terms.size());
+		assertEquals(3, terms.size());
 
 		terms = dao.findByStem(2, 100);
 		assertNotNull(terms);

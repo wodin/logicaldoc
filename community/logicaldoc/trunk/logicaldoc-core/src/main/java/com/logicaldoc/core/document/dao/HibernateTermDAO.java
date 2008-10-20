@@ -9,7 +9,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.logicaldoc.core.document.Term;
-import com.logicaldoc.core.document.TermID;
 
 /**
  * Hibernate implementation of <code>TermDAO</code>
@@ -34,8 +33,7 @@ public class HibernateTermDAO extends HibernateDaoSupport implements TermDAO {
 
 		try {
 			Collection<Term> coll = (Collection<Term>) getHibernateTemplate().find(
-					"from com.logicaldoc.core.document.Term _term where _term.id.docId = ?",
-					new Object[] { new Long(docId) });
+					"from Term _term where _term.docId = ?", new Object[] { new Long(docId) });
 			getHibernateTemplate().deleteAll(coll);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -54,8 +52,7 @@ public class HibernateTermDAO extends HibernateDaoSupport implements TermDAO {
 		Collection<Term> result = new ArrayList<Term>();
 
 		try {
-			result = (Collection<Term>) getHibernateTemplate().find(
-					"from com.logicaldoc.core.document.Term _term where _term.id.docId = ?",
+			result = (Collection<Term>) getHibernateTemplate().find("from Term _term where _term.docId = ?",
 					new Object[] { new Long(docId) });
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -66,25 +63,24 @@ public class HibernateTermDAO extends HibernateDaoSupport implements TermDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.TermDAO#findById(com.logicaldoc.core.document.TermID)
+	 * @see com.logicaldoc.core.document.dao.TermDAO#findByPrimaryKey(long)
 	 */
-	public Term findById(TermID termId) {
+	public Term findByPrimaryKey(long termId) {
 		return (Term) getHibernateTemplate().get(Term.class, termId);
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.TermDAO#findByStem(long)
+	 * @see com.logicaldoc.core.document.dao.TermDAO#findByStem(long, int)
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Term> findByStem(long docId, int maxResults) {
 		List<Term> result = new ArrayList<Term>();
 
 		try {
-			StringBuffer query = new StringBuffer(
-					"select _term.id.docId, _term.id.stem from com.logicaldoc.core.document.Term _term where _term.id.docId != ? ");
+			StringBuffer query = new StringBuffer("select _term.id from Term _term where _term.docId != ? ");
 			Collection<Term> coll = findByDocId(docId);
 			if (!coll.isEmpty()) {
-				query.append("and _term.id.stem in (");
+				query.append("and _term.stem in (");
 				boolean first = true;
 				for (Term term : coll) {
 					if (!first)
@@ -97,14 +93,13 @@ public class HibernateTermDAO extends HibernateDaoSupport implements TermDAO {
 
 			query.append("order by id.docId, id.stem, value, wordCount, originWord");
 
-			Collection<Object[]> tmp = (Collection<Object[]>) getHibernateTemplate().find(query.toString(),
+			Collection<Long> tmp = (Collection<Long>) getHibernateTemplate().find(query.toString(),
 					new Object[] { new Long(docId) });
 			int i = 0;
-			for (Object[] entry : tmp) {
+			for (Long termId : tmp) {
 				if (i >= maxResults)
 					break;
-				TermID id = new TermID((Long) entry[0], (String) entry[1]);
-				result.add(findById(id));
+				result.add(findByPrimaryKey(termId.longValue()));
 				i++;
 			}
 		} catch (Exception e) {

@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 
 import com.logicaldoc.core.document.Term;
-import com.logicaldoc.core.document.TermID;
 
 /**
  * DAO for <code>Term</code> handling
@@ -50,5 +49,5 @@ public interface TermDAO {
 	/**
 	 * Finds the instance given it's primary key.
 	 */
-	public Term findById(TermID termId);
+	public Term findByPrimaryKey(long termId);
 }
