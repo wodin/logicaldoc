@@ -147,3 +147,9 @@ values     (2,4,'admin@logicaldoc.sf.net','Aruba','pcalle','port','admin@logical
 
 insert into ld_systemmessage
 values     (1,'admin','sebastian','message text1','subject1','1111999999999999999',5,3,1,0);
+
+
+insert into ld_link(ld_id, ld_docid1, ld_docid2,ld_type)
+values   (1,1,2,'test');
+insert into ld_link(ld_id, ld_docid1, ld_docid2,ld_type)
+values   (2,2,1,null);

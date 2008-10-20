@@ -225,6 +225,22 @@
 		</property>
 	</bean>
 
+	<bean id="DocumentLinkDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.document.dao.HibernateDocumentLinkDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+
 	<!-- Managers -->
 	<bean id="SecurityManager" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
