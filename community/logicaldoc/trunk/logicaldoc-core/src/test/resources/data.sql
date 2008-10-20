@@ -106,8 +106,8 @@ INSERT INTO ld_article values(1,1,'subject','message','2008-10-09','admin');
 INSERT INTO ld_article values(2,1,'subject2','message2','2008-10-10','admin');
 INSERT INTO ld_article values(3,1,'subject3','message3','2008-10-11','sebastian');
 
-INSERT INTO ld_emailaccount values(1,'admin','author@logicaldoc.sf.net','Aruba','pcalle','port','author@logicaldoc.sf.net','authorPSWD','pdf,doc',0,'it',1,1);
-INSERT INTO ld_emailaccount values(2,'author','admin@logicaldoc.sf.net','Aruba','pcalle','port','admin@logicaldoc.sf.net','adminPSWD','doc,txt',1,'en',0,1);
+INSERT INTO ld_emailaccount values(1,1,'author@logicaldoc.sf.net','Aruba','pcalle','port','author@logicaldoc.sf.net','authorPSWD','pdf,doc',0,'it',1,1);
+INSERT INTO ld_emailaccount values(2,4,'admin@logicaldoc.sf.net','Aruba','pcalle','port','admin@logicaldoc.sf.net','adminPSWD','doc,txt',1,'en',0,1);
 
 INSERT INTO ld_email values(17,1,'id1','messageText','Morven Macauley','Re: maintenanc','12/14/2006 04:49 AM',1,'sprou@l2r9f8.varberg.net','admin','Junk');
 INSERT INTO ld_email values(18,1,'id2','messageText','Nels Keough','Re: overgil','12/18/2006 10:23 PM',1,'woodsoy@obacom.com','author','Junk');

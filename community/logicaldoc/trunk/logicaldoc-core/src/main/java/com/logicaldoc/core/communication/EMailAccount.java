@@ -8,12 +8,13 @@ import com.logicaldoc.core.security.Menu;
 /**
  * E-Mail account
  * 
- * @author Michael Scholz, Marco Meschieri
+ * @author Michael Scholz
+ * @author Marco Meschieri - Logical Objects
  */
 public class EMailAccount extends PersistentObject {
 	private static final long serialVersionUID = 1L;
 
-	private String userName;
+	private long userId;
 
 	private String mailAddress;
 
@@ -42,7 +43,7 @@ public class EMailAccount extends PersistentObject {
 
 	/** Creates a new instance of EMailAccount */
 	public EMailAccount() {
-		userName = "";
+		userId = -1;
 		mailAddress = "";
 		provider = "";
 		host = "";
@@ -149,12 +150,12 @@ public class EMailAccount extends PersistentObject {
 			this.targetFolderId = null;
 	}
 
-	public String getUserName() {
-		return userName;
+	public long getUserId() {
+		return userId;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 	public int getEnabled() {
@@ -187,7 +188,7 @@ public class EMailAccount extends PersistentObject {
 		provider = "";
 		host = "";
 		port = "";
-		userName = "";
+		userId = -1;
 		user = "";
 		password = "";
 		targetFolder = null;

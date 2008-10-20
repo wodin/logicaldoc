@@ -101,13 +101,13 @@ public class HibernateEMailAccountDAO extends HibernateDaoSupport implements EMa
 	}
 
 	/**
-	 * @see com.logicaldoc.core.communication.dao.EMailAccountDAO#deleteByUsername(java.lang.String)
+	 * @see com.logicaldoc.core.communication.dao.EMailAccountDAO#deleteByUserId(long)
 	 */
-	public boolean deleteByUsername(String username) {
+	public boolean deleteByUserId(long userId) {
 		boolean result = true;
 
 		try {
-			Collection<EMailAccount> coll = findByUserName(username);
+			Collection<EMailAccount> coll = findByUserId(userId);
 			for (EMailAccount account : coll) {
 				delete(account.getId());
 			}
@@ -121,15 +121,15 @@ public class HibernateEMailAccountDAO extends HibernateDaoSupport implements EMa
 	}
 
 	/**
-	 * @see com.logicaldoc.core.communication.dao.EMailAccountDAO#findByUserName(java.lang.String)
+	 * @see com.logicaldoc.core.communication.dao.EMailAccountDAO#findByUserName(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<EMailAccount> findByUserName(String username) {
+	public Collection<EMailAccount> findByUserId(long userId) {
 		Collection<EMailAccount> result = new ArrayList<EMailAccount>();
 
 		try {
 			DetachedCriteria dt = DetachedCriteria.forClass(EMailAccount.class);
-			dt.add(Property.forName("userName").eq(username));
+			dt.add(Property.forName("userId").eq(userId));
 
 			result = (Collection<EMailAccount>) getHibernateTemplate().findByCriteria(dt);
 		} catch (Exception e) {

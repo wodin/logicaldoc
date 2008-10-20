@@ -9,14 +9,14 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.icesoft.faces.component.tree.IceUserObject;
+import com.icesoft.faces.component.tree.Tree;
 import com.logicaldoc.core.communication.EMailAccount;
 import com.logicaldoc.core.communication.dao.EMailAccountDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
-
-import com.icesoft.faces.component.tree.IceUserObject;
-import com.icesoft.faces.component.tree.Tree;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.document.Directory;
 import com.logicaldoc.web.document.DirectoryTreeModel;
@@ -122,7 +122,7 @@ public class AccountForm {
 	public String save() {
 		if (SessionManagement.isValid()) {
 			try {
-				if(directoryModel.getSelectedDir()!=null){
+				if (directoryModel.getSelectedDir() != null) {
 					account.setTargetFolderId(directoryModel.getSelectedDir().getMenuId());
 					account.setTargetFolder(directoryModel.getSelectedDir().getMenu());
 				}
@@ -137,7 +137,7 @@ public class AccountForm {
 					account.setTargetFolder(null);
 				}
 
-				account.setUserName(SessionManagement.getUsername());
+				account.setUserId(SessionManagement.getUserId());
 
 				if (StringUtils.isNotEmpty(password)) {
 					account.setPassword(password);
