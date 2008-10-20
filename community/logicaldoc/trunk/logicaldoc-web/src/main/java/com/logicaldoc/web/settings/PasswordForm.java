@@ -58,10 +58,10 @@ public class PasswordForm {
         if (SessionManagement.isValid()) {
             try {
                 if (password.equals(repass)) {
-                    String username = SessionManagement.getUsername();
+                    long userId = SessionManagement.getUserId();
                     UserDAO udao = (UserDAO) Context.getInstance()
                                                     .getBean(UserDAO.class);
-                    User user = udao.findByUserName(username);
+                    User user = udao.findById(userId);
                     String opwd = CryptUtil.cryptString(oldPassword);
 
                     if (opwd.equals(user.getPassword())) {

@@ -221,7 +221,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		Collection<Menu> coll = null;
 
 		try {
-			coll = (Collection<Menu>) getHibernateTemplate().find("from Menu _menu where _menu.parentId = ?",
+			coll = (Collection<Menu>) getHibernateTemplate().find("from Menu _menu where _menu.parentId = ? and _menu.id!=_menu.parentId",
 					new Object[] { parentId });
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -582,7 +582,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		Menu menu = findById(menuId);
 		List<Menu> coll = new ArrayList<Menu>();
 		try {
-			while (menu.getId() != Menu.MENUID_DOCUMENTS) {
+			while (menu.getId() != Menu.MENUID_DOCUMENTS && menu.getId() != menu.getParentId()) {
 				menu = findById(menu.getParentId());
 				if (menu != null)
 					coll.add(0, menu);

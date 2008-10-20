@@ -341,7 +341,6 @@ public class DocumentEditForm {
 		InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
 				FacesContext.getCurrentInstance()));
 		if (SessionManagement.isValid()) {
-			String username = SessionManagement.getUsername();
 			String versionDesc = fileForm.getDescription();
 			Document document = record.getDocument();
 			File file = fileForm.getFile();

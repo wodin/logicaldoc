@@ -21,11 +21,6 @@ alter table ld_usergroup add constraint FK2435438DB8B12CA9 foreign key (ld_useri
 alter table ld_usergroup add constraint FK2435438D76F11EA1 foreign key (ld_groupid) references ld_group;
 alter table ld_version add constraint FK9B3BD9117C693DFD foreign key (ld_docid) references ld_document;
 
-
-alter table ld_user add constraint AK_USER unique(ld_username);
-alter table ld_group add constraint AK_GROUP unique(ld_name);
-alter table ld_ticket add constraint AK_TICKET unique(ld_ticketid);
-alter table ld_usergroup add constraint AK_USERGROUP unique(ld_groupid, ld_userid);
 alter table ld_ticket add constraint FK_TICKET_DOC foreign key (ld_docid) references ld_document on delete cascade;
 alter table ld_ticket add constraint FK_TICKET_USER foreign key (ld_userid) references ld_user on delete cascade;
 alter table ld_menugroup add constraint FK_MENUGROUP_GROUP foreign key (ld_groupid) references ld_group on delete cascade;
@@ -33,11 +28,17 @@ alter table ld_term add constraint FK_TERM_DOC foreign key (ld_docid) references
 alter table ld_userdoc add constraint FK_USERDOC_DOC foreign key (ld_docid) references ld_document on delete cascade;
 alter table ld_userdoc add constraint FK_USERDOC_USER foreign key (ld_userid) references ld_user on delete cascade;
 alter table ld_article add constraint FK_ARTICLE_DOC foreign key (ld_docid) references ld_document on delete cascade;
+alter table ld_menu add constraint FK_MENU_PARENT foreign key (ld_parentid) references ld_menu on delete cascade;
+
+create unique index  AK_USER on ld_user (ld_username);
+create unique index  AK_GROUP on ld_group (ld_name);  
+create unique index  AK_TICKET on ld_ticket (ld_ticketid);
+create unique index  AK_USERGROUP on ld_usergroup (ld_groupid, ld_userid);
 
 
 insert into ld_menu
            (ld_id,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (1,'db.home',0,1,'home.png','/',0,null,0);
+values     (1,'db.home',1,1,'home.png','/',0,null,0);
 
 insert into ld_menu
            (ld_id,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)

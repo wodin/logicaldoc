@@ -36,6 +36,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		menu.setText("text");
 		menu.setPath("path");
 		menu.setSort(1);
+		menu.setParentId(1);
 		menu.setMenuGroup(new long[] { 1, 2 });
 		assertTrue(dao.store(menu));
 		menu = dao.findById(100);
@@ -131,10 +132,10 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, menus.size());
 	}
 
-	public void testFindByUserNameStringIntInt() {
+	public void testFindByUserId() {
 		Collection<Menu> menus = dao.findByUserId(1, Menu.MENUID_HOME);
 		assertNotNull(menus);
-		assertEquals(6, menus.size());
+		assertEquals(7, menus.size());
 
 		// Try with unexisting user and menus
 		menus = dao.findByUserId(1, 70);
@@ -150,9 +151,9 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertEquals(1, menus.size());
 	}
 
-	public void testCountByUserNameStringIntInt() {
+	public void testCountByUserId() {
 		long count = dao.countByUserId(1, Menu.MENUID_HOME, null);
-		assertEquals(6, count);
+		assertEquals(7, count);
 
 		// Try with unexisting usernames and menus
 		count = dao.countByUserId(1, 70, null);
