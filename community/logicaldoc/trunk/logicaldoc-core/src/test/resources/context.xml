@@ -143,7 +143,6 @@
 			<value>admin</value>
 		</property>
 		<property name="accountDao" ref="EMailAccountDAO" />
-		<property name="emailDao" ref="EMailDAO" />
 		<property name="menuDao" ref="MenuDAO" />
 		<property name="documentDao" ref="DocumentDAO" />
 		<property name="historyDao" ref="HistoryDAO" />

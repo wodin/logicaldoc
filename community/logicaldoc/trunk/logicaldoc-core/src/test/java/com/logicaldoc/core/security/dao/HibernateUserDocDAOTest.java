@@ -104,21 +104,21 @@ public class HibernateUserDocDAOTest extends AbstractCoreTestCase {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		for (int i = 4; i < 7; i++) {
 			UserDoc doc = new UserDoc();
-			doc.setDocId(i);
+			doc.setDocId(1);
 			doc.setUserId(1);
 			doc.setDate(df.parse("2007-01-0" + i));
 			assertTrue(dao.store(doc));
-			assertTrue(dao.exists(i, 1));
+			assertTrue(dao.exists(1, 1));
 		}
 
 		assertEquals(5, dao.getCount(1));
 
 		// When the fifth doc is stored, the oldest must be deleted
 		UserDoc doc = new UserDoc();
-		doc.setDocId(6);
+		doc.setDocId(2);
 		doc.setUserId(4);
 		doc.setDate(new Date());
 		dao.store(doc);
-		assertTrue(dao.exists(6, 4));
+		assertTrue(dao.exists(2, 4));
 	}
 }

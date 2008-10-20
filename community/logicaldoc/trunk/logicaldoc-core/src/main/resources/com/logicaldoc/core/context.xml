@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--  
 	Context definition of the core plugin
-	@author Alessandro Gasparini
+	@author Alessandro Gasparini - Logical Objects
 	@version $Id:$
-	@since ###release###
+	@since 3.0
 -->
 <!DOCTYPE beans SYSTEM "spring-beans-2.0.dtd">
 <beans default-lazy-init="false" default-autowire="no"
@@ -195,21 +195,6 @@
 		</property>
 	</bean>
 
-	<bean id="EMailDAO" parent="ApplicationBaseTransactionProxy"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
-		<property name="target">
-			<bean
-				class="com.logicaldoc.core.communication.dao.HibernateEMailDAO"
-				abstract="false" lazy-init="default" autowire="default"
-				dependency-check="default">
-				<property name="sessionFactory">
-					<ref bean="SessionFactory" />
-				</property>
-			</bean>
-		</property>
-	</bean>
-
 	<bean id="EMailAccountDAO" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
@@ -336,7 +321,6 @@
 			<value>admin</value>
 		</property>
 		<property name="accountDao" ref="EMailAccountDAO" />
-		<property name="emailDao" ref="EMailDAO" />
 		<property name="menuDao" ref="MenuDAO" />
 		<property name="userDao" ref="UserDAO" />
 		<property name="documentDao" ref="DocumentDAO" />

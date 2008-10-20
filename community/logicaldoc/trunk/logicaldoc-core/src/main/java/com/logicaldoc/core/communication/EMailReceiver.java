@@ -20,7 +20,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.communication.dao.EMailAccountDAO;
-import com.logicaldoc.core.communication.dao.EMailDAO;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -47,8 +46,6 @@ public class EMailReceiver extends Task {
 	private String defaultOwner = "admin";
 
 	private EMailAccountDAO accountDao;
-
-	private EMailDAO emailDao;
 
 	private MenuDAO menuDao;
 
@@ -116,15 +113,7 @@ public class EMailReceiver extends Task {
 	public void setStorer(Storer storer) {
 		this.storer = storer;
 	}
-
-	public EMailDAO getEmailDao() {
-		return emailDao;
-	}
-
-	public void setEmailDao(EMailDAO emailDao) {
-		this.emailDao = emailDao;
-	}
-
+	
 	public EMailAccountDAO getAccountDao() {
 		return accountDao;
 	}
@@ -253,7 +242,8 @@ public class EMailReceiver extends Task {
 						mailId = message.getFrom()[0] + "." + message.getSentDate().getTime();
 					}
 
-					Collection<String> alreadyRetrievedIds = this.emailDao.collectEmailIds(account.getId());
+					//TODO save email ids in a file
+					Collection<String> alreadyRetrievedIds=null;
 					if (alreadyRetrievedIds.contains(mailId)) {
 						if (log.isDebugEnabled())
 							log.debug("Skip message " + mailId + " because already fetched from " + account.toString());
@@ -292,7 +282,9 @@ public class EMailReceiver extends Task {
 						email.setSentDate(String.valueOf(new Date().getTime()));
 					email.setEmailId(mailId);
 					email.setAccountId(account.getId());
-					getEmailDao().store(email);
+					
+					//TODO Save email ids in a file
+					//getEmailDao().store(email);
 
 					if (log.isDebugEnabled())
 						log.debug("Store email " + email.getSubject());

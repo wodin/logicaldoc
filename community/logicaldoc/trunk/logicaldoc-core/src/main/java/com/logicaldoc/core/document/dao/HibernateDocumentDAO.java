@@ -279,11 +279,11 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	}
 
 	@SuppressWarnings( { "unchecked", "deprecation" })
-	public Collection<String> findKeywords(String firstLetter, String username) {
+	public Collection<String> findKeywords(String firstLetter, long userId) {
 		Collection<String> coll = new ArrayList<String>();
 
 		try {
-			User user = userDAO.findByUserName(username);
+			User user = userDAO.findById(userId);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 
@@ -357,7 +357,6 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	@SuppressWarnings("unchecked")
 	public Map<String, Integer> findAllKeywords() {
-
 		Map<String, Integer> map = new HashMap<String, Integer>();
 
 		try {
@@ -382,10 +381,10 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Document> findByUserNameAndKeyword(String username, String keyword) {
+	public Collection<Document> findByUserIdAndKeyword(long userId, String keyword) {
 		Collection<Document> coll = new ArrayList<Document>();
 		try {
-			User user = userDAO.findByUserName(username);
+			User user = userDAO.findById(userId);
 			Collection<Group> precoll = user.getGroups();
 			Iterator<Group> iter = precoll.iterator();
 			if (precoll.isEmpty())
@@ -405,7 +404,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			}
 			query.append(")");
 
-			Collection<Long> ids = findDocIdByUsernameAndKeyword(username, keyword);
+			Collection<Long> ids = findDocIdByUserIdAndKeyword(userId, keyword);
 			Iterator<Long> iter2 = ids.iterator();
 			if (ids.isEmpty())
 				return coll;
@@ -428,10 +427,10 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public Set<Long> findDocIdByUsernameAndKeyword(String username, String keyword) {
+	public Set<Long> findDocIdByUserIdAndKeyword(long userId, String keyword) {
 		Set<Long> ids = new HashSet<Long>();
 		try {
-			User user = userDAO.findByUserName(username);
+			User user = userDAO.findById(userId);
 			Collection<Group> precoll = user.getGroups();
 			Iterator<Group> iter = precoll.iterator();
 

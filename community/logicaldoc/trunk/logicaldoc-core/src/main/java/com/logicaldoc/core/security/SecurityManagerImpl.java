@@ -44,12 +44,10 @@ public class SecurityManagerImpl implements SecurityManager {
 		for (Iterator<User> iter = users.iterator(); iter.hasNext();) {
 			User user = iter.next();
 			if (!group.getUsers().contains(user)) {
-				System.out.println("group " + group.getName() + " not contains " + user.getUserName());
 				group.getUsers().add(user);
 			}
 
 			if (!user.getGroups().contains(group)) {
-				System.out.println("user " + user.getUserName() + " not contains " + group.getName());
 				user.getGroups().add(group);
 			}
 		}

@@ -14,8 +14,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.communication.EMail;
-import com.logicaldoc.core.communication.dao.EMailDAO;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Group;
@@ -219,16 +217,6 @@ public class UsersRecordsManager extends SortableList {
 
 				// now we can try to delete the user
 				if (!isAdmin || (isAdmin && (adminsFound > 1))) {
-					// delete emails and email accounts
-					EMailDAO emailDao = (EMailDAO) Context.getInstance().getBean(EMailDAO.class);
-					Collection<EMail> coll = emailDao.findByUserName(user.getUserName());
-					Iterator<EMail> iter = coll.iterator();
-
-					while (iter.hasNext()) {
-						EMail email = iter.next();
-						emailDao.delete(email.getId());
-					}
-
 					// delete user doc entries (recently accessed files)
 					UserDocDAO userDocDao = (UserDocDAO) Context.getInstance().getBean(UserDocDAO.class);
 					Collection<UserDoc> userDocColl = userDocDao.findByUserId(user.getId());

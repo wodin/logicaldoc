@@ -104,9 +104,9 @@ public class KeywordsBean {
 				try {
 					String lett = new String(new char[] { letter }).toLowerCase();
 
-					String username = SessionManagement.getUsername();
+					long userId = SessionManagement.getUserId();
 					DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-					Collection<String> coll = ddao.findKeywords(lett, username);
+					Collection<String> coll = ddao.findKeywords(lett, userId);
 					Iterator<String> iter = coll.iterator();
 					Hashtable<String, Integer> table = new Hashtable<String, Integer>(coll.size());
 
@@ -185,9 +185,9 @@ public class KeywordsBean {
 				try {
 					selectedWord = word;
 
-					String username = SessionManagement.getUsername();
+					long userId = SessionManagement.getUserId();
 					DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-					Set<Long> docIds = docDao.findDocIdByUsernameAndKeyword(username, word);
+					Set<Long> docIds = docDao.findDocIdByUserIdAndKeyword(userId, word);
 					documents.clear();
 					keywords.clear();
 

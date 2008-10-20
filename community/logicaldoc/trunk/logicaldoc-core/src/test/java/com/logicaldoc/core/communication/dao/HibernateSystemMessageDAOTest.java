@@ -47,9 +47,9 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTestCase {
 
 	public void testFindByRecipient() {
 		Collection<SystemMessage> coll = dao.findByRecipient("sebastian");
-		assertEquals(2, coll.size());
-		coll = dao.findByRecipient("admin");
 		assertEquals(1, coll.size());
+		coll = dao.findByRecipient("admin");
+		assertEquals(0, coll.size());
 		coll = dao.findByRecipient("test");
 		assertEquals(0, coll.size());
 		coll = dao.findByRecipient("xxxx");
@@ -58,7 +58,7 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTestCase {
 
 	public void testDeleteExpiredMessages() {
 		dao.deleteExpiredMessages("sebastian");
-		assertNotNull(dao.findById(2));
+		assertNotNull(dao.findById(1));
 	}
 
 	public void testGetCount() {
@@ -73,8 +73,8 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTestCase {
 		message.setRecipient("test");
 		message.setMessageText("text");
 		assertTrue(dao.store(message));
-		assertEquals(4, message.getId());
-		message = dao.findById(4);
+		assertEquals(2, message.getId());
+		message = dao.findById(2);
 		assertNotNull(message);
 
 		// Update an already existing message

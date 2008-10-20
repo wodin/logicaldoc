@@ -113,7 +113,7 @@ public interface DocumentDAO {
 	 * 
 	 * @param letter - First letter of the wanted keywords.
 	 */
-	public Collection<String> findKeywords(String firstLetter, String username);
+	public Collection<String> findKeywords(String firstLetter, long userId);
 
 	/**
 	 * This method selects all keywords and counts the occurrences.
@@ -123,18 +123,18 @@ public interface DocumentDAO {
 	/**
 	 * Finds authorized documents for a user having a specified keyword.
 	 * 
-	 * @param username Name of the user.
+	 * @param userId ID of the user.
 	 * @param keyword Keyword of the document
 	 * @return Collection of found menus.
 	 */
-	public Collection<Document> findByUserNameAndKeyword(String username, String keyword);
+	public Collection<Document> findByUserIdAndKeyword(long userId, String keyword);
 
 	/**
 	 * Finds authorized documents ids for a user having a specified keyword.
 	 * 
-	 * @param username Name of the user.
+	 * @param userId ID of the user.
 	 * @param keyword Keyword of the document
 	 * @return Set of found ids.
 	 */
-	public Set<Long> findDocIdByUsernameAndKeyword(String username, String keyword);
+	public Set<Long> findDocIdByUserIdAndKeyword(long userId, String keyword);
 }

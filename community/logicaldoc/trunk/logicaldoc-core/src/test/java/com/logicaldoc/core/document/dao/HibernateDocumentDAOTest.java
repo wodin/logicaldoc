@@ -187,23 +187,23 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindKeywords() {
-		Collection<String> keywords = dao.findKeywords("a", "admin");
+		Collection<String> keywords = dao.findKeywords("a", 1);
 		assertNotNull(keywords);
 		assertEquals(1, keywords.size());
 		assertEquals("abc", keywords.iterator().next());
 	}
 
-	public void testFindDocIdByUsernameAndKeyword() {
-		Collection<Long> ids = dao.findDocIdByUsernameAndKeyword("admin", "abc");
+	public void testFindDocIdByUserIdAndKeyword() {
+		Collection<Long> ids = dao.findDocIdByUserIdAndKeyword(1, "abc");
 		assertNotNull(ids);
 		assertEquals(1, ids.size());
 		assertEquals(new Long(1), ids.iterator().next());
 
-		ids = dao.findDocIdByUsernameAndKeyword("admin", "xxx");
+		ids = dao.findDocIdByUserIdAndKeyword(1, "xxx");
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 
-		ids = dao.findDocIdByUsernameAndKeyword("xxx", "abc");
+		ids = dao.findDocIdByUserIdAndKeyword(99, "abc");
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 	}

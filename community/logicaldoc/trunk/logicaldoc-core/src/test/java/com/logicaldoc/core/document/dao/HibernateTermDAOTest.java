@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.Term;
-import com.logicaldoc.core.security.Menu;
 
 /**
  * Test case for <code>HibernateTermDAO</code>
@@ -84,25 +83,26 @@ public class HibernateTermDAOTest extends AbstractCoreTestCase {
 
 	public void testStore() {
 		Term term = new Term();
-		term.setDocId(Menu.MENUID_DOCUMENTS);
+		term.setDocId(1);
 		term.setStem("d");
 		term.setOriginWord("xxx");
 		term.setValue(1.9);
 		term.setWordCount(6);
 		assertTrue(dao.store(term));
 
-		Term storedTerm = dao.findByDocId(Menu.MENUID_DOCUMENTS).iterator().next();
-		assertEquals(term, storedTerm);
-		assertEquals("xxx", storedTerm.getOriginWord());
-		assertEquals(1.9, storedTerm.getValue());
-		assertEquals(6, storedTerm.getWordCount());
+		Collection<Term> terms = dao.findByDocId(1);
+		assertTrue(terms.contains(term));
+		term=dao.findById(term.getId());
+		assertEquals("xxx", term.getOriginWord());
+		assertEquals(1.9, term.getValue());
+		assertEquals(6, term.getWordCount());
 
 		// Load an existing term and modify it
 		term = dao.findByDocId(2).iterator().next();
 		term.setWordCount(11);
 		term.setValue(14.2);
 		assertTrue(dao.store(term));
-		storedTerm = dao.findByDocId(2).iterator().next();
+		Term storedTerm = dao.findByDocId(2).iterator().next();
 		assertEquals(term, storedTerm);
 		assertEquals(11, storedTerm.getWordCount());
 		assertEquals(14.2, storedTerm.getValue());
