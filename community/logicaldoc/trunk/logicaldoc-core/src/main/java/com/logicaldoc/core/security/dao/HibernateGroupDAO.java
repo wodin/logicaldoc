@@ -40,7 +40,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 		boolean result = true;
 
 		try {
-			Group group = findByPrimaryKey(groupId);
+			Group group = findById(groupId);
 			if (group != null) {
 				// Delete menu-group assignments
 				getSession().connection().createStatement().execute(
@@ -182,7 +182,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 	 */
 	private void addMenuGroup(Group group, long menuId, int writeable) {
 		MenuDAO menuDAO = getMenuDAO();
-		Menu menu = menuDAO.findByPrimaryKey(menuId);
+		Menu menu = menuDAO.findById(menuId);
 
 		MenuGroup mgroup = new MenuGroup();
 		mgroup.setGroupId(group.getId());
@@ -210,7 +210,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 	}
 
 	@Override
-	public Group findByPrimaryKey(long groupId) {
+	public Group findById(long groupId) {
 		Group group = null;
 
 		try {

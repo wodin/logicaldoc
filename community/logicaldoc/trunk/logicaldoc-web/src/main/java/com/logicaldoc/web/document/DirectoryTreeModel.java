@@ -103,7 +103,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 		// build root node so that children can be attached
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu rootMenu = menuDao.findByPrimaryKey(Menu.MENUID_DOCUMENTS);
+		Menu rootMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
 		Directory rootObject = new Directory(rootMenu);
 		rootObject.setIcon(StyleBean.XP_BRANCH_CONTRACTED_ICON);
 		rootObject.setDisplayText(null);
@@ -337,7 +337,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		// Now try to construct the minimal portion of the tree, just to show
 		// opened folder
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu folderMenu = menuDao.findByPrimaryKey(folderId);
+		Menu folderMenu = menuDao.findById(folderId);
 		Collection<Menu> parents = menuDao.findParents(folderId);
 		DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) getRoot();
 		long userId = SessionManagement.getUserId();

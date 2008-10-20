@@ -41,7 +41,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 		super();
 		this.result = result;
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		super.document = docDao.findByPrimaryKey(result.getDocId());
+		super.document = docDao.findById(result.getDocId());
 	}
 
 	public Date getDate() {
@@ -141,7 +141,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
 				.getCurrentInstance(), log));
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu docMenu = menuDao.findByPrimaryKey(Menu.MENUID_DOCUMENTS);
+		Menu docMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
 		PageContentBean panel = new PageContentBean("m-" + docMenu.getId(), "document/browse");
 		panel.setContentTitle(Messages.getMessage(docMenu.getText()));
 		navigation.setSelectedPanel(panel);

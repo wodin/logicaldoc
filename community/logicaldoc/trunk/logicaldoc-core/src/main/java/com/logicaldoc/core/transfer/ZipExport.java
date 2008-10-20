@@ -58,7 +58,7 @@ public class ZipExport {
 	 */
 	public ByteArrayOutputStream process(long folderId, long userId) {
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu folder = menuDao.findByPrimaryKey(folderId);
+		Menu folder = menuDao.findById(folderId);
 		this.userId = userId;
 		this.startFolderId = folder.getId();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();

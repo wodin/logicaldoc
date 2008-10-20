@@ -507,6 +507,6 @@ public class DocumentRecord extends MenuBarBean {
 	 */
 	protected void loadDocument() {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		this.document = docDao.findByPrimaryKey(docId);
+		this.document = docDao.findById(docId);
 	}
 }

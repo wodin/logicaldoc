@@ -83,7 +83,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	public void checkin(long docId, InputStream fileInputStream, String filename, User user, VERSION_TYPE versionType,
 			String versionDesc) throws Exception {
 		// identify the document and menu
-		Document document = documentDAO.findByPrimaryKey(docId);
+		Document document = documentDAO.findById(docId);
 		Menu folder = document.getFolder();
 
 		// create some strings containing paths
@@ -126,7 +126,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void checkout(long docId, User user) throws Exception {
-		Document document = documentDAO.findByPrimaryKey(docId);
+		Document document = documentDAO.findById(docId);
 
 		if (document.getStatus() == Document.DOC_CHECKED_IN) {
 			document.setCheckoutUser(user.getUserName());
@@ -267,7 +267,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void delete(long docId) throws Exception {
-		Document doc = documentDAO.findByPrimaryKey(docId);
+		Document doc = documentDAO.findById(docId);
 		deleteDocument(doc);
 		boolean result = documentDAO.delete(docId);
 		if (!result)
@@ -433,7 +433,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public String getDocumentContent(long docId) {
-		Document doc = documentDAO.findByPrimaryKey(docId);
+		Document doc = documentDAO.findById(docId);
 		org.apache.lucene.document.Document luceneDoc = indexer.getDocument(Long.toString(docId), doc.getLanguage());
 		// First search the document using it's id
 		if (luceneDoc == null)

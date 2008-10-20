@@ -154,7 +154,7 @@ public class GroupsRecordsManager {
             .getExternalContext().getRequestParameterMap().get("groupId"));
         GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(
         		GroupDAO.class);
-        Group group=gdao.findByPrimaryKey(groupId);
+        Group group=gdao.findById(groupId);
         
         if (SessionManagement.isValid()) {
 
@@ -205,7 +205,7 @@ public class GroupsRecordsManager {
             try {
 
                 if ("create".equals(selectedPanel) &&
-                        dao.findByPrimaryKey(selectedGroup.getId())!=null) {
+                        dao.findById(selectedGroup.getId())!=null) {
                     Messages.addLocalizedError("errors.action.groupexists");
                 } else {
                     boolean stored = false;

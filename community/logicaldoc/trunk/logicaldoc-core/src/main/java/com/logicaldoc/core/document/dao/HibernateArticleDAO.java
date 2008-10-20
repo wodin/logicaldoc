@@ -62,9 +62,9 @@ public class HibernateArticleDAO extends HibernateDaoSupport implements ArticleD
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.ArticleDAO#findByPrimaryKey(long)
+	 * @see com.logicaldoc.core.document.dao.ArticleDAO#findById(long)
 	 */
-	public Article findByPrimaryKey(long articleid) {
+	public Article findById(long articleid) {
 		Article article = null;
 
 		try {

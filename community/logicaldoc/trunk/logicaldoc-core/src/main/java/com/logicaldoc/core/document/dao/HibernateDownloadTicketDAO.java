@@ -62,9 +62,9 @@ public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements D
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#findByPrimaryKey(long)
+	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#findById(long)
 	 */
-	public DownloadTicket findByPrimaryKey(long ticketId) {
+	public DownloadTicket findById(long ticketId) {
 		DownloadTicket ticket = null;
 
 		try {

@@ -116,8 +116,8 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		assertTrue(users.isEmpty());
 	}
 
-	public void testFindByPrimaryKey() {
-		User user = dao.findByPrimaryKey(1);
+	public void testFindById() {
+		User user = dao.findById(1);
 		assertNotNull(user);
 		assertEquals("admin", user.getUserName());
 		user.setDecodedPassword("admin");
@@ -126,7 +126,7 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		assertEquals(1, user.getGroups().size());
 
 		// Try with unexisting id
-		user = dao.findByPrimaryKey(9999);
+		user = dao.findById(9999);
 		assertNull(user);
 	}
 
@@ -162,12 +162,12 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		assertEquals(1, storedUser.getGroups().size());
 		assertEquals(CryptUtil.cryptString("xxxpwd"), storedUser.getDecodedPassword());
 
-		user = dao.findByPrimaryKey(1);
+		user = dao.findById(1);
 		user.setDecodedPassword("xxxpwd");
 		dao.store(user);
 		manager.assignUserToGroups(user, new long[] { 1, 2 });
 		assertEquals(2, user.getGroups().size());
-		user = dao.findByPrimaryKey(1);
+		user = dao.findById(1);
 		assertNotNull(user);
 		assertEquals(2, user.getGroups().size());
 	}

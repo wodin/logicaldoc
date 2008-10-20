@@ -52,7 +52,7 @@ public class SimilarSearch {
 		while (iter.hasNext()) {
 			// calculate the score for ranking
 			Term term = (Term) iter.next();
-			Document doc = docDao.findByPrimaryKey(docId);
+			Document doc = docDao.findById(docId);
 			Menu folder = doc.getFolder();
 			if (!cache.contains(term.getDocId()) && mdao.isReadEnable(folder.getId(), userId)) {
 				Collection<Term> docTerms = termsDao.findByDocId(term.getDocId());

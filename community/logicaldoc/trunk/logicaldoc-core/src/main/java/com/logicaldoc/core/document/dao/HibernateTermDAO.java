@@ -63,9 +63,9 @@ public class HibernateTermDAO extends HibernateDaoSupport implements TermDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.TermDAO#findByPrimaryKey(long)
+	 * @see com.logicaldoc.core.document.dao.TermDAO#findById(long)
 	 */
-	public Term findByPrimaryKey(long termId) {
+	public Term findById(long termId) {
 		return (Term) getHibernateTemplate().get(Term.class, termId);
 	}
 
@@ -99,7 +99,7 @@ public class HibernateTermDAO extends HibernateDaoSupport implements TermDAO {
 			for (Long termId : tmp) {
 				if (i >= maxResults)
 					break;
-				result.add(findByPrimaryKey(termId.longValue()));
+				result.add(findById(termId.longValue()));
 				i++;
 			}
 		} catch (Exception e) {

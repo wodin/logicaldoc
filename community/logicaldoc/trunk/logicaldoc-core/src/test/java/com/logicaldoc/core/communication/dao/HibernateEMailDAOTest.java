@@ -57,20 +57,20 @@ public class HibernateEMailDAOTest extends AbstractCoreTestCase {
         assertTrue(dao.store(message));
         assertEquals(20, message.getId());
 
-        message = dao.findByPrimaryKey(20);
+        message = dao.findById(20);
         assertNotNull(message);
         assertFalse(message.getRecipients().isEmpty());
         assertEquals(2, message.getRecipients().size());
         assertEquals(1, message.getAttachments().size());
 
         // Update an already existing message
-        message = dao.findByPrimaryKey(18);
+        message = dao.findById(18);
         assertNotNull(message);
         assertEquals("messageText", message.getMessageText());
         message.setMessageText("xxxx");
 
         dao.store(message);
-        message = dao.findByPrimaryKey(18);
+        message = dao.findById(18);
         assertNotNull(message);
         assertEquals("xxxx", message.getMessageText());
 
@@ -80,12 +80,12 @@ public class HibernateEMailDAOTest extends AbstractCoreTestCase {
 
     public void testDelete() {
         assertTrue(dao.delete(18));
-        EMail message = dao.findByPrimaryKey(18);
+        EMail message = dao.findById(18);
         assertNull(message);
     }
 
-    public void testFindByPrimaryKey() {
-        EMail message = dao.findByPrimaryKey(17);
+    public void testFindById() {
+        EMail message = dao.findById(17);
         assertNotNull(message);
 
         assertEquals("messageText", message.getMessageText());
@@ -99,7 +99,7 @@ public class HibernateEMailDAOTest extends AbstractCoreTestCase {
         assertNotNull(message.getAttachment(54));
 
         // Try with unexisting document
-        message = dao.findByPrimaryKey(99);
+        message = dao.findById(99);
         assertNull(message);
     }
 

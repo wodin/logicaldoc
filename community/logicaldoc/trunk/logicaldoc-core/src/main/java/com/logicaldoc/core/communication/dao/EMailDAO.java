@@ -31,7 +31,7 @@ public interface EMailDAO {
 	/**
 	 * This method finds an email by its id.
 	 */
-	public EMail findByPrimaryKey(long emailId);
+	public EMail findById(long emailId);
 
 	public Collection<EMail> findByUserName(String username);
 

@@ -47,7 +47,7 @@ public interface TermDAO {
 	public Collection<Term> findByDocId(long docId);
 
 	/**
-	 * Finds the instance given it's primary key.
+	 * Finds the instance given it's ID.
 	 */
-	public Term findByPrimaryKey(long termId);
+	public Term findById(long termId);
 }

@@ -85,7 +85,7 @@ public class RightsRecordsManager {
 					gr.setGroupId(g.getId());
 					gr.setEnabled(true);
 
-					Menu menu = mdao.findByPrimaryKey(menuId);
+					Menu menu = mdao.findById(menuId);
 					MenuGroup mg = menu.getMenuGroup(g.getId());
 
 					if ((mg == null) || mg.getGroupId() != g.getId()) {
@@ -153,7 +153,7 @@ public class RightsRecordsManager {
 		if (!mdao.isWriteEnable(id, userId)) {
 			return;
 		}
-		Menu folder = mdao.findByPrimaryKey(id);
+		Menu folder = mdao.findById(id);
 		boolean sqlerrors = false;
 		for (GroupRule rule : rules) {
 			boolean read = rule.getRead();

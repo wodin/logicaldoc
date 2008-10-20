@@ -136,7 +136,7 @@ public class SecurityManagerImpl implements SecurityManager {
 			return;
 		ArrayList<Group> groups = new ArrayList<Group>();
 		for (int i = 0; i < groupIds.length; i++)
-			groups.add(groupDAO.findByPrimaryKey(groupIds[i]));
+			groups.add(groupDAO.findById(groupIds[i]));
 		assignUserToGroups(user, groups);
 	}
 }

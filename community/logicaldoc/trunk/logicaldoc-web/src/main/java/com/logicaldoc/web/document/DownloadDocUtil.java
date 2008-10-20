@@ -81,7 +81,7 @@ public class DownloadDocUtil {
 			IOException {
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(
 				DocumentDAO.class);
-		Document doc = ddao.findByPrimaryKey(docId);
+		Document doc = ddao.findById(docId);
 
 		if (doc == null) {
 			throw new FileNotFoundException();
@@ -141,7 +141,7 @@ public class DownloadDocUtil {
 		// get document
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(
 				DocumentDAO.class);
-		Document doc = ddao.findByPrimaryKey(docId);
+		Document doc = ddao.findById(docId);
 
 		if (doc == null) {
 			throw new FileNotFoundException();

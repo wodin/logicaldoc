@@ -61,7 +61,7 @@ public class DmsServiceImpl implements DmsService {
 		}
 
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document document = ddao.findByPrimaryKey(id);
+		Document document = ddao.findById(id);
 		Menu folder = document.getFolder();
 
 		checkCredentials(username, password);
@@ -115,7 +115,7 @@ public class DmsServiceImpl implements DmsService {
 		}
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findByPrimaryKey(id);
+		Document doc = docDao.findById(id);
 		checkCredentials(username, password);
 		checkWriteEnable(username, doc.getFolder().getId());
 		DocumentManager DocumentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
@@ -148,7 +148,7 @@ public class DmsServiceImpl implements DmsService {
 		}
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu folder = mdao.findByPrimaryKey(folderId);
+		Menu folder = mdao.findById(folderId);
 		if (folder == null) {
 			log.error("Menu " + folder + " not found");
 			return "error - folder not found";
@@ -188,7 +188,7 @@ public class DmsServiceImpl implements DmsService {
 		checkCredentials(username, password);
 
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu parentMenu = dao.findByPrimaryKey(parent);
+		Menu parentMenu = dao.findById(parent);
 
 		checkWriteEnable(username, parent);
 
@@ -221,7 +221,7 @@ public class DmsServiceImpl implements DmsService {
 	 */
 	public String deleteDocument(String username, String password, long id) throws Exception {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findByPrimaryKey(id);
+		Document doc = docDao.findById(id);
 		checkCredentials(username, password);
 		checkWriteEnable(username, doc.getFolder().getId());
 		docDao.delete(id);
@@ -251,7 +251,7 @@ public class DmsServiceImpl implements DmsService {
 	 */
 	public DataHandler downloadDocument(String username, String password, long id, String version) throws Exception {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findByPrimaryKey(id);
+		Document doc = docDao.findById(id);
 		checkCredentials(username, password);
 		checkReadEnable(username, doc.getFolder().getId());
 
@@ -276,7 +276,7 @@ public class DmsServiceImpl implements DmsService {
 	 */
 	public DocumentInfo downloadDocumentInfo(String username, String password, long id) throws Exception {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findByPrimaryKey(id);
+		Document doc = docDao.findById(id);
 		checkCredentials(username, password);
 		checkReadEnable(username, doc.getFolder().getId());
 
@@ -320,11 +320,11 @@ public class DmsServiceImpl implements DmsService {
 		// Retrieve the referenced menu and it's parent populating the folder
 		// content
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu folderMenu = mdao.findByPrimaryKey(folder);
+		Menu folderMenu = mdao.findById(folder);
 		folderContent.setId(folder);
 		folderContent.setName(folderMenu.getText());
 		folderContent.setParentId(folderMenu.getParentId());
-		Menu parenMenu = mdao.findByPrimaryKey(folderContent.getParentId());
+		Menu parenMenu = mdao.findById(folderContent.getParentId());
 		folderContent.setParentName(parenMenu.getText());
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);

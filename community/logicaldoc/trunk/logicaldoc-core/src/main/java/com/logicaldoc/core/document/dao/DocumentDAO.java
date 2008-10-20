@@ -31,12 +31,12 @@ public interface DocumentDAO {
 	public boolean delete(long docId);
 
 	/**
-	 * This method finds a document by primarykey.
+	 * This method finds a document by ID.
 	 * 
-	 * @param docId Primarykey of the document.
-	 * @return Document with given primarykey.
+	 * @param docId ID of the document.
+	 * @return Document with given ID.
 	 */
-	public Document findByPrimaryKey(long docId);
+	public Document findById(long docId);
 
 	/**
 	 * This method selects all documents.

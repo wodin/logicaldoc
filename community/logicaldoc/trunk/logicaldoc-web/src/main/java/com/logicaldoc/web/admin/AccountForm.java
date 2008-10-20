@@ -131,7 +131,7 @@ public class AccountForm {
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 				if (account.getTargetFolderId() != null) {
-					Menu menu = menuDao.findByPrimaryKey(account.getTargetFolderId().intValue());
+					Menu menu = menuDao.findById(account.getTargetFolderId().longValue());
 					account.setTargetFolder(menu);
 				} else {
 					account.setTargetFolder(null);

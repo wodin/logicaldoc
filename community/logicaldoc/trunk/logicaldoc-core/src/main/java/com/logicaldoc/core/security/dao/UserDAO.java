@@ -32,13 +32,13 @@ public interface UserDAO {
 	public boolean delete(long userId);
 
 	/**
-	 * This method deletes by its primary key
+	 * This method deletes by its ID
 	 * 
 	 * @param userId
 	 *            ID of the user to be searched.
 	 * @return Wanted User or null if user doesn't exist.
 	 */
-	public User findByPrimaryKey(long userId);
+	public User findById(long userId);
 
 	/**
 	 * This method finds an User by its username.

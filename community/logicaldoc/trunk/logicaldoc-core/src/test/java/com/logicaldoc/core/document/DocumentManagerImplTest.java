@@ -31,8 +31,8 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 	}
 
 	public void testDelete() throws Exception {
-		assertNotNull(docDao.findByPrimaryKey(1));
+		assertNotNull(docDao.findById(1));
 		documentManager.delete(1);
-		assertNull(docDao.findByPrimaryKey(1));
+		assertNull(docDao.findById(1));
 	}
 }

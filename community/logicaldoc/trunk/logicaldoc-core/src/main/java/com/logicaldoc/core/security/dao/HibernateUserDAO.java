@@ -190,7 +190,7 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 	}
 
 	@Override
-	public User findByPrimaryKey(long userId) {
+	public User findById(long userId) {
 		User user = null;
 
 		try {

@@ -58,7 +58,7 @@ public class SessionManagement {
 	public static User getUser() {
 		long userId = getUserId();
 		UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = dao.findByPrimaryKey(userId);
+		User user = dao.findById(userId);
 		user.getGroupIds();
 		return user;
 	}

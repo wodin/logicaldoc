@@ -108,9 +108,9 @@ public class DocumentNavigation extends NavigationBean {
 				Directory currentDir = getSelectedDir();
 				while (currentDir.getMenuId() != Menu.MENUID_DOCUMENTS) {
 					breadcrumb.add(currentDir);
-					currentDir = new Directory(menuDao.findByPrimaryKey(currentDir.getMenu().getParentId()));
+					currentDir = new Directory(menuDao.findById(currentDir.getMenu().getParentId()));
 				}
-				Directory rootDir = new Directory(menuDao.findByPrimaryKey(Menu.MENUID_DOCUMENTS));
+				Directory rootDir = new Directory(menuDao.findById(Menu.MENUID_DOCUMENTS));
 				rootDir.setDisplayText(Messages.getMessage(rootDir.getMenu().getText()));
 				breadcrumb.add(rootDir);
 			}
@@ -136,7 +136,7 @@ public class DocumentNavigation extends NavigationBean {
 	protected void createMenuItems() {
 		folderItems.clear();
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Directory parentDir = new Directory(menuDao.findByPrimaryKey(selectedDir.getMenu().getParentId()));
+		Directory parentDir = new Directory(menuDao.findById(selectedDir.getMenu().getParentId()));
 		if (parentDir.getMenuId() == Menu.MENUID_DOCUMENTS)
 			parentDir.setDisplayText(Messages.getMessage(parentDir.getMenu().getText()));
 		MenuItem item = createMenuItem("<< " + parentDir.getDisplayText(), parentDir);
@@ -196,7 +196,7 @@ public class DocumentNavigation extends NavigationBean {
 
 	public void selectDirectory(long directoryId) {
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		selectDirectory(new Directory(menuDao.findByPrimaryKey(directoryId)));
+		selectDirectory(new Directory(menuDao.findById(directoryId)));
 	}
 
 	/**
@@ -216,7 +216,7 @@ public class DocumentNavigation extends NavigationBean {
 		}
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document document = docDao.findByPrimaryKey(docId);
+		Document document = docDao.findById(docId);
 		Menu folder = document.getFolder();
 		selectDirectory(folder.getId());
 		highlightDocument(docId);
@@ -226,7 +226,7 @@ public class DocumentNavigation extends NavigationBean {
 		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
 				.getCurrentInstance(), log));
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu documentsMenu = menuDao.findByPrimaryKey(Menu.MENUID_DOCUMENTS);
+		Menu documentsMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
 
 		PageContentBean panel = new PageContentBean("m-" + documentsMenu.getId(), "document/browse");
 		panel.setContentTitle(Messages.getMessage(documentsMenu.getText()));
@@ -247,7 +247,7 @@ public class DocumentNavigation extends NavigationBean {
 		Article article = (Article) entry;
 		DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Document document = docdao.findByPrimaryKey(article.getDocId());
+		Document document = docdao.findById(article.getDocId());
 
 		long folderId = Menu.MENUID_DOCUMENTS;
 		Menu folder = document.getFolder();
@@ -260,7 +260,7 @@ public class DocumentNavigation extends NavigationBean {
 		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
 				.getCurrentInstance(), log));
 
-		Menu documentsMenu = menuDao.findByPrimaryKey(Menu.MENUID_DOCUMENTS);
+		Menu documentsMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
 
 		PageContentBean panel = new PageContentBean("m-" + documentsMenu.getId(), "document/browse");
 		panel.setContentTitle(Messages.getMessage(documentsMenu.getText()));
@@ -296,7 +296,7 @@ public class DocumentNavigation extends NavigationBean {
 			Messages.addLocalizedError("errors.action.deleteitem");
 		}
 
-		Directory parent = new Directory(menuDao.findByPrimaryKey(getSelectedDir().getMenu().getParentId()));
+		Directory parent = new Directory(menuDao.findById(getSelectedDir().getMenu().getParentId()));
 		selectDirectory(parent);
 		setSelectedPanel(new PageContentBean("documents"));
 

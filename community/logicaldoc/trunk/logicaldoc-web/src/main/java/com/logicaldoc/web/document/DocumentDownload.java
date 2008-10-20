@@ -104,7 +104,7 @@ public class DocumentDownload extends HttpServlet {
 			return;
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findByPrimaryKey(Long.parseLong(id));
+		Document doc = docDao.findById(Long.parseLong(id));
 		Menu folder = doc.getFolder();
 
 		if (session != null && SessionManagement.isValid(session)) {

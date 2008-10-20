@@ -62,7 +62,7 @@ public class ZipImport {
 		this.language = language;
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		this.user = userDao.findByPrimaryKey(userId);
+		this.user = userDao.findById(userId);
 
 		SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 		String userpath = settings.getValue("userdir");

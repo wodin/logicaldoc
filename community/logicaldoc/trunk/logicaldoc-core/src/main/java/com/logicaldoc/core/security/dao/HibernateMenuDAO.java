@@ -68,7 +68,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		boolean result = true;
 
 		try {
-			Menu menu = findByPrimaryKey(menuId);
+			Menu menu = findById(menuId);
 			if (menu != null) {
 				menu.getMenuGroups().clear();
 				getHibernateTemplate().delete(menu);
@@ -82,9 +82,9 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByPrimaryKey(long)
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#findById(long)
 	 */
-	public Menu findByPrimaryKey(long menuId) {
+	public Menu findById(long menuId) {
 		Menu menu = new Menu();
 
 		try {
@@ -103,7 +103,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	public Collection<Menu> findByUserId(long userId) {
 		Collection<Menu> coll = new ArrayList<Menu>();
 		try {
-			User user = userDAO.findByPrimaryKey(userId);
+			User user = userDAO.findById(userId);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 
@@ -146,7 +146,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		List<Menu> coll = new ArrayList<Menu>();
 
 		try {
-			User user = userDAO.findByPrimaryKey(userId);
+			User user = userDAO.findById(userId);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 			if (precoll.isEmpty())
@@ -185,7 +185,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	public long countByUserId(long userId, long parentId, Integer type) {
 		long count = 0;
 		try {
-			User user = userDAO.findByPrimaryKey(userId);
+			User user = userDAO.findById(userId);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 			if (precoll.isEmpty())
@@ -260,7 +260,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		boolean result = true;
 
 		try {
-			User user = userDAO.findByPrimaryKey(userId);
+			User user = userDAO.findById(userId);
 			Collection<Group> Groups = user.getGroups();
 			if (Groups.isEmpty())
 				return false;
@@ -301,7 +301,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 
 		try {
 			try {
-				User user = userDAO.findByPrimaryKey(userId);
+				User user = userDAO.findById(userId);
 				Collection<Group> Groups = user.getGroups();
 				if (Groups.isEmpty())
 					return false;
@@ -341,7 +341,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findTextByMenuId(long)
 	 */
 	public String findTextByMenuId(long menuId) {
-		Menu menu = this.findByPrimaryKey(menuId);
+		Menu menu = this.findById(menuId);
 		return menu.getText();
 	}
 
@@ -355,7 +355,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	public Set<Long> findMenuIdByUserId(long userId) {
 		Set<Long> ids = new HashSet<Long>();
 		try {
-			User user = userDAO.findByPrimaryKey(userId);
+			User user = userDAO.findById(userId);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 
@@ -465,7 +465,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	public Set<Long> findMenuIdByUserId(long userId, long parentId, Integer type) {
 		Set<Long> ids = new HashSet<Long>();
 		try {
-			User user = userDAO.findByPrimaryKey(userId);
+			User user = userDAO.findById(userId);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 
@@ -579,11 +579,11 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 
 	@Override
 	public List<Menu> findParents(long menuId) {
-		Menu menu = findByPrimaryKey(menuId);
+		Menu menu = findById(menuId);
 		List<Menu> coll = new ArrayList<Menu>();
 		try {
 			while (menu.getId() != Menu.MENUID_DOCUMENTS) {
-				menu = findByPrimaryKey(menu.getParentId());
+				menu = findById(menu.getParentId());
 				if (menu != null)
 					coll.add(0, menu);
 			}

@@ -12,7 +12,7 @@ public abstract class PersistentObject {
 	private long id = 0;
 
 	/**
-	 * Unique identifier(primary key) in the data store
+	 * Unique identifier in the data store
 	 */
 	public long getId() {
 		return id;

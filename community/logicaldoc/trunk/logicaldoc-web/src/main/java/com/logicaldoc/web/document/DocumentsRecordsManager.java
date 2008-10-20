@@ -238,7 +238,7 @@ public class DocumentsRecordsManager extends SortableList {
 			if (!clipboard.isEmpty()) {
 				long userId = SessionManagement.getUserId();
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-				Menu selectedMenuFolder = menuDao.findByPrimaryKey(selectedDirectory);
+				Menu selectedMenuFolder = menuDao.findById(selectedDirectory);
 				DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
 				if (menuDao.isWriteEnable(selectedDirectory, userId)) {
@@ -328,7 +328,7 @@ public class DocumentsRecordsManager extends SortableList {
 				final String zipLanguage = inputFile.getLanguage();
 
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-				final Menu parent = menuDao.findByPrimaryKey(selectedDirectory);
+				final Menu parent = menuDao.findById(selectedDirectory);
 				log.debug("parent.getMenuId() = " + parent.getId());
 				log.debug("parent.getMenuPath() = " + parent.getPath());
 

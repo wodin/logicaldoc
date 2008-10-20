@@ -37,7 +37,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 	public void testDelete() {
 		assertTrue(dao.delete(100));
-		Document doc = dao.findByPrimaryKey(100);
+		Document doc = dao.findById(100);
 		assertNull(doc);
 	}
 
@@ -47,8 +47,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(2, documents.size());
 	}
 
-	public void testFindByPrimaryKey() {
-		Document doc = dao.findByPrimaryKey(1);
+	public void testFindById() {
+		Document doc = dao.findById(1);
 		assertNotNull(doc);
 		assertEquals(1, doc.getId());
 		assertEquals("testDocname", doc.getTitle());
@@ -57,7 +57,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(103, doc.getFolder().getId());
 
 		// Try with unexisting document
-		doc = dao.findByPrimaryKey(99);
+		doc = dao.findById(99);
 		assertNull(doc);
 	}
 
@@ -88,7 +88,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Collection<Document> docs = dao.findByFolder(103);
 		assertNotNull(docs);
 		assertEquals(2, docs.size());
-		assertTrue(docs.contains(dao.findByPrimaryKey(2)));
+		assertTrue(docs.contains(dao.findById(2)));
 
 		docs = dao.findByFolder(1111);
 		assertNotNull(docs);
@@ -118,7 +118,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 	public void testStore() {
 		Document doc = new Document();
-		Menu menu = menuDao.findByPrimaryKey(Menu.MENUID_HOME);
+		Menu menu = menuDao.findById(Menu.MENUID_HOME);
 		doc.setFolder(menu);
 		doc.setPublisher("admin");
 		doc.setTitle("test");
@@ -132,7 +132,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.addVersion(version);
 		assertTrue(dao.store(doc));
 		assertEquals(3, doc.getId());
-		doc = dao.findByPrimaryKey(3);
+		doc = dao.findById(3);
 		assertNotNull(doc);
 		assertEquals(3, doc.getId());
 		assertEquals(3, doc.getKeywords().size());
@@ -142,26 +142,26 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(version, doc.getVersion("1.0"));
 
 		// Try to change the version comment
-		doc = dao.findByPrimaryKey(3);
+		doc = dao.findById(3);
 		version = doc.getVersion("1.0");
 		version.setComment("xxxx");
 		version.setVersion("1.0");
 		doc.clearVersions();
 		doc.addVersion(version);
 		dao.store(doc);
-		doc = dao.findByPrimaryKey(3);
+		doc = dao.findById(3);
 		version = doc.getVersion("1.0");
 		assertEquals("xxxx", version.getComment());
 
 		// Load an existing document and modify it
-		doc = dao.findByPrimaryKey(1);
+		doc = dao.findById(1);
 		assertNotNull(doc);
 		assertEquals("testDocname", doc.getTitle());
 		assertEquals(2, doc.getVersions().size());
 		assertEquals(3, doc.getKeywords().size());
 		doc.setTitle("xxxx");
 		assertTrue(dao.store(doc));
-		doc = dao.findByPrimaryKey(1);
+		doc = dao.findById(1);
 		assertNotNull(doc);
 		assertEquals(1, doc.getId());
 		assertEquals("xxxx", doc.getTitle());

@@ -41,10 +41,10 @@ public interface DownloadTicketDAO {
 	public DownloadTicket findByTicketId(String ticketId);
 
 	/**
-	 * This method finds a download ticket by its primarykey.
+	 * This method finds a download ticket by its ID.
 	 * 
-	 * @param ticketId Primary key of the download ticket.
-	 * @return DownloadTicket with given primarykey.
+	 * @param ticketId ID of the download ticket.
+	 * @return DownloadTicket with given ID.
 	 */
-	public DownloadTicket findByPrimaryKey(long ticketId);
+	public DownloadTicket findById(long ticketId);
 }

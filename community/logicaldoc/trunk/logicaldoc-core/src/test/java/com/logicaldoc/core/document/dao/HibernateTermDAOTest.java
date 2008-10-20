@@ -40,12 +40,12 @@ public class HibernateTermDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, terms.size());
 	}
 
-	public void findByPrimaryKey() {
-		Term term = dao.findByPrimaryKey(1);
+	public void findById() {
+		Term term = dao.findById(1);
 		assertNotNull(term);
 		assertEquals("a", term.getStem());
 		assertEquals("test", term.getOriginWord());
-		term = dao.findByPrimaryKey(100);
+		term = dao.findById(100);
 		assertNull(term);
 	}
 

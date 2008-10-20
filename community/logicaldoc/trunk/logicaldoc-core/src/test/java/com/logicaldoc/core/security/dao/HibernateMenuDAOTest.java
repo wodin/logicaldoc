@@ -38,27 +38,27 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		menu.setSort(1);
 		menu.setMenuGroup(new long[] { 1, 2 });
 		assertTrue(dao.store(menu));
-		menu = dao.findByPrimaryKey(100);
+		menu = dao.findById(100);
 		assertEquals("db.admin", menu.getText());
 		assertEquals("/", menu.getPath());
 		assertEquals(1, menu.getSort());
 		assertEquals(2, menu.getMenuGroups().size());
 
 		// Load an existing menu and modify it
-		menu = dao.findByPrimaryKey(Menu.MENUID_HOME);
+		menu = dao.findById(Menu.MENUID_HOME);
 		assertEquals("db.home", menu.getText());
 		menu.setText("xxxx");
 		menu.getMenuGroups().remove(menu.getMenuGroup(3));
 		assertEquals(2, menu.getMenuGroups().size());
 		assertTrue(dao.store(menu));
-		menu = dao.findByPrimaryKey(Menu.MENUID_HOME);
+		menu = dao.findById(Menu.MENUID_HOME);
 		assertEquals("xxxx", menu.getText());
 		assertEquals(2, menu.getMenuGroups().size());
 	}
 
 	public void testDelete() {
 		assertTrue(dao.delete(99));
-		Menu menu = dao.findByPrimaryKey(99);
+		Menu menu = dao.findById(99);
 		assertNull(menu);
 
 		DocumentDAO docDao = (DocumentDAO) context.getBean("DocumentDAO");
@@ -69,13 +69,13 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		} catch (Exception e) {
 			// All OK, we are trying to delete a folder with documents
 		}
-		menu = dao.findByPrimaryKey(103);
+		menu = dao.findById(103);
 		assertNotNull(menu);
 	}
 
-	public void testFindByPrimaryKey() {
+	public void testFindById() {
 		// Try with a menu id
-		Menu menu = dao.findByPrimaryKey(1);
+		Menu menu = dao.findById(1);
 		assertNotNull(menu);
 		assertEquals(Menu.MENUID_HOME, menu.getId());
 		assertEquals("db.home", menu.getText());
@@ -84,7 +84,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertEquals(3, menu.getMenuGroups().size());
 
 		// Try with unexisting id
-		menu = dao.findByPrimaryKey(99999);
+		menu = dao.findById(99999);
 		assertNull(menu);
 	}
 
@@ -101,7 +101,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertNotNull(menus);
 		assertEquals(1, menus.size());
 
-		Menu parent = dao.findByPrimaryKey(Menu.MENUID_HOME);
+		Menu parent = dao.findById(Menu.MENUID_HOME);
 		menus = (Collection<Menu>) dao.findByText(parent, "db.admin", 1);
 		assertNotNull(menus);
 		assertEquals(1, menus.size());
@@ -216,7 +216,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testHasWriteAccess() {
-		Menu menu = dao.findByPrimaryKey(103);
+		Menu menu = dao.findById(103);
 		assertTrue(dao.hasWriteAccess(menu, 1));
 		assertTrue(dao.hasWriteAccess(menu, 3));
 		assertFalse(dao.hasWriteAccess(menu, 5));
@@ -230,19 +230,19 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testCreateDirectories() throws Exception {
-		Menu docsMenu = dao.findByPrimaryKey(Menu.MENUID_DOCUMENTS);
+		Menu docsMenu = dao.findById(Menu.MENUID_DOCUMENTS);
 		Menu menu = dao.createFolders(docsMenu, "/pippo/pluto/paperino");
 		assertEquals("paperino", menu.getText());
-		menu = dao.findByPrimaryKey(menu.getParentId());
+		menu = dao.findById(menu.getParentId());
 		assertEquals("pluto", menu.getText());
-		menu = dao.findByPrimaryKey(menu.getParentId());
+		menu = dao.findById(menu.getParentId());
 		assertEquals("pippo", menu.getText());
 
 		menu = dao.createFolders(docsMenu, "/pippo/pluto/paperino");
 		assertEquals("paperino", menu.getText());
-		menu = dao.findByPrimaryKey(menu.getParentId());
+		menu = dao.findById(menu.getParentId());
 		assertEquals("pluto", menu.getText());
-		menu = dao.findByPrimaryKey(menu.getParentId());
+		menu = dao.findById(menu.getParentId());
 		assertEquals("pippo", menu.getText());
 	}
 
@@ -250,8 +250,8 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		List<Menu> menus = dao.findParents(103);
 		System.out.println(menus);
 		assertEquals(3, menus.size());
-		assertEquals(dao.findByPrimaryKey(Menu.MENUID_HOME), menus.get(0));
-		assertEquals(dao.findByPrimaryKey(100), menus.get(1));
-		assertEquals(dao.findByPrimaryKey(101), menus.get(2));
+		assertEquals(dao.findById(Menu.MENUID_HOME), menus.get(0));
+		assertEquals(dao.findById(100), menus.get(1));
+		assertEquals(dao.findById(101), menus.get(2));
 	}
 }

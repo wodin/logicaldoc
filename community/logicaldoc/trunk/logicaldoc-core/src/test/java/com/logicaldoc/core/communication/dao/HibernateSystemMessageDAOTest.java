@@ -30,18 +30,18 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTestCase {
 
 	public void testDelete() {
 		assertTrue(dao.delete(1));
-		SystemMessage message = dao.findByPrimaryKey(1);
+		SystemMessage message = dao.findById(1);
 		assertNull(message);
 	}
 
-	public void testFindByPrimaryKey() {
-		SystemMessage message = dao.findByPrimaryKey(1);
+	public void testFindById() {
+		SystemMessage message = dao.findById(1);
 		assertNotNull(message);
 		assertEquals(1, message.getId());
 		assertEquals("message text1", message.getMessageText());
 
 		// Try with unexisting message
-		message = dao.findByPrimaryKey(99);
+		message = dao.findById(99);
 		assertNull(message);
 	}
 
@@ -58,7 +58,7 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTestCase {
 
 	public void testDeleteExpiredMessages() {
 		dao.deleteExpiredMessages("sebastian");
-		assertNotNull(dao.findByPrimaryKey(2));
+		assertNotNull(dao.findById(2));
 	}
 
 	public void testGetCount() {
@@ -74,16 +74,16 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTestCase {
 		message.setMessageText("text");
 		assertTrue(dao.store(message));
 		assertEquals(4, message.getId());
-		message = dao.findByPrimaryKey(4);
+		message = dao.findById(4);
 		assertNotNull(message);
 
 		// Update an already existing message
-		message = dao.findByPrimaryKey(1);
+		message = dao.findById(1);
 		assertNotNull(message);
 		assertEquals("message text1", message.getMessageText());
 		message.setMessageText("xxxx");
 		dao.store(message);
-		message = dao.findByPrimaryKey(1);
+		message = dao.findById(1);
 		assertNotNull(message);
 		assertEquals("xxxx", message.getMessageText());
 	}

@@ -29,12 +29,12 @@ public interface ArticleDAO {
 	public boolean delete(long articleId);
 
 	/**
-	 * This method finds an article by its primarykey.
+	 * This method finds an article by its ID.
 	 * 
-	 * @param articleId Primary key of the article.
-	 * @return Article with given primarykey.
+	 * @param articleId ID of the article.
+	 * @return Article with given ID.
 	 */
-	public Article findByPrimaryKey(long articleId);
+	public Article findById(long articleId);
 
 	/**
 	 * This method selects all articles of for a given document

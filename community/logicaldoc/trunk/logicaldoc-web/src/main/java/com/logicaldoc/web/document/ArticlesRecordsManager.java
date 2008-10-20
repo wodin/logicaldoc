@@ -61,7 +61,7 @@ public class ArticlesRecordsManager {
 			long docId = selectedDocument.getId();
 
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			Document document = docDao.findByPrimaryKey(docId);
+			Document document = docDao.findById(docId);
 			docId = document.getId();
 
 			ArticleDAO artDao = (ArticleDAO) Context.getInstance().getBean(ArticleDAO.class);

@@ -132,9 +132,9 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findByPrimaryKey(int)
+	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findById(int)
 	 */
-	public Document findByPrimaryKey(long docId) {
+	public Document findById(long docId) {
 		Document doc = null;
 
 		try {
@@ -343,7 +343,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			for (Long docid : results) {
 				if (coll.size() >= maxElements)
 					break;
-				Document document = findByPrimaryKey(docid);
+				Document document = findById(docid);
 				if (menuDAO.isReadEnable(document.getFolder().getId(), userId))
 					coll.add(document);
 			}

@@ -30,7 +30,7 @@ public interface EMailAccountDAO {
 	/**
 	 * This method finds an emailaccount by its accountId.
 	 */
-	public EMailAccount findByPrimaryKey(long accountId);
+	public EMailAccount findById(long accountId);
 
 	/**
 	 * Loads all accounts

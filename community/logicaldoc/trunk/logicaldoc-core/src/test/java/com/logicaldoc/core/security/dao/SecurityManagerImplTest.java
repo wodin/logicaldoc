@@ -80,7 +80,7 @@ public class SecurityManagerImplTest extends AbstractCoreTestCase {
 		userDAO.store(user);
 //		manager.assignUserToGroups(user, new long[] { 1, 2 });
 //		assertEquals(2, user.getGroups().size());
-//		user = userDAO.findByPrimaryKey(user.getId());
+//		user = userDAO.findById(user.getId());
 //		assertNotNull(user);
 //		assertEquals(2, user.getGroups().size());
 	}

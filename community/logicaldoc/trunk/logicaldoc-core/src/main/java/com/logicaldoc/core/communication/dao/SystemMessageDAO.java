@@ -22,7 +22,7 @@ public interface SystemMessageDAO {
 
 	public boolean delete(long messageId);
 
-	public SystemMessage findByPrimaryKey(long messageId);
+	public SystemMessage findById(long messageId);
 
 	public List<SystemMessage> findByRecipient(String recipient);
 

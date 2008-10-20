@@ -31,12 +31,12 @@ public interface MenuDAO {
 	public boolean delete(long menuId);
 
 	/**
-	 * Finds a menu by primarykey.
+	 * Finds a menu by ID.
 	 * 
-	 * @param menuId Primarykey of wanted menu.
+	 * @param menuId ID of wanted menu.
 	 * @return Wanted menu or null.
 	 */
-	public Menu findByPrimaryKey(long menuId);
+	public Menu findById(long menuId);
 
 	/**
 	 * Finds all menus by menu text.

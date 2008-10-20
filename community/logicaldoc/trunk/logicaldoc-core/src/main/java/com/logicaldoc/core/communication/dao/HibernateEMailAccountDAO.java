@@ -67,9 +67,9 @@ public class HibernateEMailAccountDAO extends HibernateDaoSupport implements EMa
 	}
 
 	/**
-	 * @see com.logicaldoc.core.communication.dao.EMailAccountDAO#findByPrimaryKey(long)
+	 * @see com.logicaldoc.core.communication.dao.EMailAccountDAO#findById(long)
 	 */
-	public EMailAccount findByPrimaryKey(long accountId) {
+	public EMailAccount findById(long accountId) {
 		EMailAccount emAccount = null;
 
 		try {

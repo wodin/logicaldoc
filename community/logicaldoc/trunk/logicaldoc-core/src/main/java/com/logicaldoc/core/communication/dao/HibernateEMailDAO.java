@@ -51,7 +51,7 @@ public class HibernateEMailDAO extends HibernateDaoSupport implements EMailDAO {
 		boolean result = true;
 
 		try {
-			EMail message = findByPrimaryKey(messageId);
+			EMail message = findById(messageId);
 			if (message != null)
 				getHibernateTemplate().delete(message);
 		} catch (Exception e) {
@@ -64,9 +64,9 @@ public class HibernateEMailDAO extends HibernateDaoSupport implements EMailDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.communication.dao.EMailDAO#findByPrimaryKey(long)
+	 * @see com.logicaldoc.core.communication.dao.EMailDAO#findById(long)
 	 */
-	public EMail findByPrimaryKey(long messageId) {
+	public EMail findById(long messageId) {
 		EMail email = null;
 
 		try {

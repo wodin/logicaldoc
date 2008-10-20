@@ -31,10 +31,10 @@ public class HibernateArticleDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testDelete() {
-		Article article = dao.findByPrimaryKey(3);
+		Article article = dao.findById(3);
 		assertNotNull(article);
 		assertTrue(dao.delete(3));
-		article = dao.findByPrimaryKey(3);
+		article = dao.findById(3);
 		assertNull(article);
 	}
 
@@ -63,14 +63,14 @@ public class HibernateArticleDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, articles.size());
 	}
 	
-	public void testFindByPrimaryKey() {
-		Article article = dao.findByPrimaryKey(1);
+	public void testFindById() {
+		Article article = dao.findById(1);
 		assertNotNull(article);
 		assertEquals(1L, article.getId());
 		assertEquals("subject", article.getSubject());
 
 		// Try with unexisting article
-		article = dao.findByPrimaryKey(99);
+		article = dao.findById(99);
 		assertNull(article);
 	}
 
@@ -85,12 +85,12 @@ public class HibernateArticleDAOTest extends AbstractCoreTestCase {
 		assertEquals(4L, article.getId());
 
 		// Load an existing article and modify it
-		article = dao.findByPrimaryKey(3);
+		article = dao.findById(3);
 		assertNotNull(article);
 		assertEquals("subject3", article.getSubject());
 		article.setSubject("yyyy");
 		assertTrue(dao.store(article));
-		article = dao.findByPrimaryKey(3);
+		article = dao.findById(3);
 		assertNotNull(article);
 		assertEquals("yyyy", article.getSubject());
 	}

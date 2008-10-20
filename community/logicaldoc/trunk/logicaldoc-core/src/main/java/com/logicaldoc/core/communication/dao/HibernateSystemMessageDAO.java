@@ -51,9 +51,9 @@ public class HibernateSystemMessageDAO extends HibernateDaoSupport implements Sy
 	}
 
 	/**
-	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#findByPrimaryKey(long)
+	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#findById(long)
 	 */
-	public SystemMessage findByPrimaryKey(long messageId) {
+	public SystemMessage findById(long messageId) {
 		SystemMessage sysmess = null;
 
 		try {

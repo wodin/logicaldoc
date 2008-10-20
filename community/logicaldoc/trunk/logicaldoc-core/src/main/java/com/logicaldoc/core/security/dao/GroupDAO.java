@@ -39,12 +39,12 @@ public interface GroupDAO {
 	public Group findByName(String name);
 
 	/**
-	 * Finds a group by its primary key
+	 * Finds a group by its ID
 	 * 
 	 * @param groupId The group id
 	 * @return Wanted group or null
 	 */
-	public Group findByPrimaryKey(long groupId);
+	public Group findById(long groupId);
 
 	/**
 	 * This method selects all groups.

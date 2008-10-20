@@ -194,7 +194,7 @@ public class EMailForm {
 		// Attachment att = new Attachment();
 		// MenuDAO menuDao = (MenuDAO)
 		// Context.getInstance().getBean(MenuDAO.class);
-		// Menu menu = menuDao.findByPrimaryKey(menuId);
+		// Menu menu = menuDao.findById(menuId);
 		//
 		// if (menuDao.isReadEnable(menu.getId(), email.getUserName())) {
 		// att.setIcon(menu.getIcon());

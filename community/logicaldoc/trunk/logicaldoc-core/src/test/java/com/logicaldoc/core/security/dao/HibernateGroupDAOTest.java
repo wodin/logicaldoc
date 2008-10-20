@@ -34,14 +34,14 @@ public class HibernateGroupDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testDelete() {
-		assertNotNull(dao.findByPrimaryKey(10));
+		assertNotNull(dao.findById(10));
 
 		assertTrue(dao.delete(10));
-		assertNull(dao.findByPrimaryKey(10));
+		assertNull(dao.findById(10));
 
 		// Delete a BIG group with associated MenuGroups and UserGroups
 		assertTrue(dao.delete(1));
-		assertNull(dao.findByPrimaryKey(1));
+		assertNull(dao.findById(1));
 	}
 
 	public void testFindByName() {
@@ -54,13 +54,13 @@ public class HibernateGroupDAOTest extends AbstractCoreTestCase {
 		assertNull(group);
 	}
 
-	public void testFindByPrimaryKey() {
-		Group group = dao.findByPrimaryKey(1);
+	public void testFindById() {
+		Group group = dao.findById(1);
 		assertNotNull(group);
 		assertEquals("admin", group.getName());
 
 		// Try with unexisting id
-		group = dao.findByPrimaryKey(999);
+		group = dao.findById(999);
 		assertNull(group);
 	}
 
