@@ -62,7 +62,7 @@ public class DocumentDownload extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		String username = null;
 		if (session != null)
-			username = (String) session.getAttribute(Constants.AUTH_USERID);
+			username = (String) session.getAttribute(Constants.AUTH_USERNAME);
 
 		if (username == null)
 			username = request.getParameter("username");
