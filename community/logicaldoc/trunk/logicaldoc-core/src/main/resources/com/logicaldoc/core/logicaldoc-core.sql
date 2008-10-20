@@ -30,6 +30,7 @@ alter table ld_userdoc add constraint FK_USERDOC_DOC foreign key (ld_docid) refe
 alter table ld_userdoc add constraint FK_USERDOC_USER foreign key (ld_userid) references ld_user on delete cascade;
 alter table ld_article add constraint FK_ARTICLE_DOC foreign key (ld_docid) references ld_document on delete cascade;
 alter table ld_menu add constraint FK_MENU_PARENT foreign key (ld_parentid) references ld_menu on delete cascade;
+alter table ld_history add constraint FK_HISTORY_DOC foreign key (ld_docid) references ld_document on delete cascade;
 alter table ld_link add constraint FK_LINK_DOC1 foreign key (ld_docid1) references ld_document on delete cascade;
 alter table ld_link add constraint FK_LINK_DOC2 foreign key (ld_docid2) references ld_document on delete cascade;
 
