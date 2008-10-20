@@ -9,7 +9,8 @@ import java.util.Set;
 import javax.mail.internet.InternetAddress;
 
 /**
- * @author Michael Scholz, Marco Meschieri
+ * @author Michael Scholz
+ * @author Marco Meschieri - Logical Objects
  */
 public class EMail extends Message {
 
@@ -27,7 +28,7 @@ public class EMail extends Message {
 
 	private Set<Recipient> recipients = new HashSet<Recipient>();
 
-	private Map<Integer, Attachment> attachments = new HashMap<Integer, Attachment>();
+	private Map<Integer, EMailAttachment> attachments = new HashMap<Integer, EMailAttachment>();
 
 	public EMail() {
 	}
@@ -80,15 +81,15 @@ public class EMail extends Message {
 		folder = string;
 	}
 
-	public Map<Integer, Attachment> getAttachments() {
+	public Map<Integer, EMailAttachment> getAttachments() {
 		return attachments;
 	}
 
-	public Attachment getAttachment(int partId) {
+	public EMailAttachment getAttachment(int partId) {
 		return attachments.get(partId);
 	}
 
-	public void addAttachment(int partId, Attachment attachment) {
+	public void addAttachment(int partId, EMailAttachment attachment) {
 		attachments.put(partId, attachment);
 	}
 
@@ -114,7 +115,7 @@ public class EMail extends Message {
 		this.recipients = recipients;
 	}
 
-	public void setAttachments(Map<Integer, Attachment> attachments) {
+	public void setAttachments(Map<Integer, EMailAttachment> attachments) {
 		this.attachments = attachments;
 	}
 }

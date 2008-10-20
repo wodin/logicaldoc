@@ -1,7 +1,5 @@
 package com.logicaldoc.core.communication;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -18,13 +16,11 @@ import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.SettingsConfig;
-
 /**
- * SMTP E-Mail sender service 
+ * SMTP E-Mail sender service
  * 
- * @author Michael Scholz, Marco Meschieri
+ * @author Michael Scholz
+ * @author Matteo Caruso - Logical Objects
  */
 public class EMailSender {
 
@@ -96,42 +92,30 @@ public class EMailSender {
 
 		Session sess = Session.getDefaultInstance(props);
 		javax.mail.Message message = new MimeMessage(sess);
-		String frm=email.getAuthorAddress();
-		if(StringUtils.isEmpty(frm))
-			frm=defaultAddress;
+		String frm = email.getAuthorAddress();
+		if (StringUtils.isEmpty(frm))
+			frm = defaultAddress;
 		InternetAddress from = new InternetAddress(frm);
 		InternetAddress[] to = email.getAddresses();
 		message.setFrom(from);
 		message.setRecipients(javax.mail.Message.RecipientType.TO, to);
 		message.setSubject(email.getSubject());
 
-		if (email.getAttachmentCount() > 0) {
-			SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-			String userdir = conf.getValue("userdir");
-			String filename = userdir + "/mails/" + email.getId() + "/";
-			MimeBodyPart body = new MimeBodyPart();
-			body.setContent(email.getMessageText(), "text/plain");
+		MimeBodyPart body = new MimeBodyPart();
+		body.setContent(email.getMessageText(), "text/plain");
 
-			Multipart mpMessage = new MimeMultipart();
-			mpMessage.addBodyPart(body);
+		Multipart mpMessage = new MimeMultipart();
+		mpMessage.addBodyPart(body);
 
-			Collection attachments = email.getAttachments().values();
-			Iterator iter = attachments.iterator();
+		EMailAttachment att = email.getAttachment(2);
 
-			while (iter.hasNext()) {
-				Attachment att = (Attachment) iter.next();
-				DataSource fdSource = new FileDataSource(filename + att.getFilename());
-				DataHandler fdHandler = new DataHandler(fdSource);
-				MimeBodyPart part = new MimeBodyPart();
-				part.setDataHandler(fdHandler);
-				part.setFileName(att.getFilename());
-				mpMessage.addBodyPart(part);
-			}
-
-			message.setContent(mpMessage);
-		} else {
-			message.setContent(email.getMessageText(), "text/plain");
-		}
+		DataSource fdSource = new FileDataSource(att.getFile());
+		DataHandler fdHandler = new DataHandler(fdSource);
+		MimeBodyPart part = new MimeBodyPart();
+		part.setDataHandler(fdHandler);
+		part.setFileName(att.getFile().getName());
+		mpMessage.addBodyPart(part);
+		message.setContent(mpMessage);
 
 		Transport trans = sess.getTransport("smtp");
 		trans.connect(host, port, username, password);

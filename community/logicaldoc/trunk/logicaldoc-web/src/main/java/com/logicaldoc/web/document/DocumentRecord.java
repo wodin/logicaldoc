@@ -454,8 +454,6 @@ public class DocumentRecord extends MenuBarBean {
 		emailForm.reset();
 		emailForm.setSelectedDocument(getDocument());
 
-		// TODO Reimplement since now documents have no associated menu
-
 		// emailForm.getAttachments().add(getDocument());
 		emailForm.setAuthor(SessionManagement.getUser().getEmail());
 

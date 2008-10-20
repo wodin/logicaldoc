@@ -1,25 +1,23 @@
 package com.logicaldoc.web.document;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.IOException;
 import java.util.Date;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.communication.EMail;
+import com.logicaldoc.core.communication.EMailAttachment;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DownloadTicket;
-import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.MimeTypeConfig;
 import com.logicaldoc.util.config.SettingsConfig;
-import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
@@ -27,9 +25,8 @@ import com.logicaldoc.web.navigation.PageContentBean;
 /**
  * This form is used to send emails
  * 
- * TODO reimplement since now documents don't have associated menu
- * 
- * @author Michael Scholz, Marco Meschieri
+ * @author Michael Scholz
+ * @author Matteo Caruso - Logical Objects
  * @version $Id: EMailForm.java,v 1.2 2006/09/03 16:24:37 marco Exp $
  * @since 1.0
  */
@@ -45,8 +42,6 @@ public class EMailForm {
 	private String text;
 
 	private Document selectedDocument;
-
-	private Collection<Menu> attachments = new ArrayList<Menu>();
 
 	private DownloadTicket downloadTicket;
 
@@ -87,20 +82,11 @@ public class EMailForm {
 		this.text = text;
 	}
 
-	public Collection<Menu> getAttachments() {
-		return attachments;
-	}
-
-	public void setAttachments(Collection<Menu> attachments) {
-		this.attachments = attachments;
-	}
-
 	public void reset() {
 		author = "";
 		recipient = "";
 		subject = "";
 		text = "";
-		attachments.clear();
 		downloadTicket = null;
 		selectedDocument = null;
 	}
@@ -131,9 +117,6 @@ public class EMailForm {
 
 	public String send() {
 		EMail email;
-		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-		String udir = conf.getValue("userdir");
-		String maildir = udir + "/mails/";
 		if (SessionManagement.isValid()) {
 			try {
 				User user = SessionManagement.getUser();
@@ -141,7 +124,6 @@ public class EMailForm {
 
 				email.setAccountId(-1);
 				email.setAuthor(user.getUserName());
-				// email.setAuthorAddress(user.getEmail());
 				email.setAuthorAddress(getAuthor());
 
 				Recipient recipient = new Recipient();
@@ -154,14 +136,7 @@ public class EMailForm {
 				email.setSubject(getSubject());
 				email.setUserName(user.getUserName());
 
-				File mailDir = new File(maildir + String.valueOf(email.getId()) + "/");
-				FileUtils.forceMkdir(mailDir);				
-				FileUtil.writeFile(email.getMessageText(), maildir + "email.mail");
-				int i = 2;
-
-				for (Menu menu : attachments) {
-					createAttachment(email, menu.getId(), i++);
-				}
+				createAttachment(email);
 
 				try {
 					EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
@@ -170,10 +145,7 @@ public class EMailForm {
 				} catch (Exception ex) {
 					log.error(ex.getMessage(), ex);
 					Messages.addLocalizedError("errors.action.saveemail");
-				} finally {
-					FileUtils.forceDelete(new File(maildir));
 				}
-
 				setAuthor(user.getEmail());
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -189,44 +161,26 @@ public class EMailForm {
 		return null;
 	}
 
-	private void createAttachment(EMail email, long menuId, int partid) {
-		// TODO reimplement
-		// Attachment att = new Attachment();
-		// MenuDAO menuDao = (MenuDAO)
-		// Context.getInstance().getBean(MenuDAO.class);
-		// Menu menu = menuDao.findById(menuId);
-		//
-		// if (menuDao.isReadEnable(menu.getId(), email.getUserName())) {
-		// att.setIcon(menu.getIcon());
-		// att.setFilename(menu.getRef());
-		//
-		// String extension =
-		// menu.getRef().substring(menu.getRef().lastIndexOf(".") + 1);
-		// MimeTypeConfig mtc = (MimeTypeConfig)
-		// Context.getInstance().getBean(MimeTypeConfig.class);
-		// String mimetype = mtc.getMimeApp(extension);
-		//
-		// if ((mimetype == null) || mimetype.equals("")) {
-		// mimetype = "application/octet-stream";
-		// }
-		//
-		// att.setMimeType(mimetype);
-		//
-		// SettingsConfig conf = (SettingsConfig)
-		// Context.getInstance().getBean(SettingsConfig.class);
-		// String docdir = conf.getValue("docdir");
-		// String doc = docdir + "/" + menu.getPath() + "/" + menu.getId() + "/"
-		// + menu.getRef();
-		// String userdir = conf.getValue("userdir");
-		// String mail = userdir + "/mails/" +
-		// String.valueOf(email.getMessageId()) + "/";
-		// FileBean.createDir(mail);
-		// FileBean.copyFile(doc, mail + menu.getRef());
-		//			
-		// if (att != null) {
-		// email.addAttachment(partid, att);
-		// }
-		// }
+	private void createAttachment(EMail email) throws IOException {
+		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
+		EMailAttachment att = new EMailAttachment();
+		att.setIcon(selectedDocument.getIcon());
+		File file = new File(conf.getValue("docdir") + "/" + selectedDocument.getPath() + "/"
+				+ selectedDocument.getId() + "/" + selectedDocument.getFileName());
+		att.setFile(file);
+		String extension = selectedDocument.getFileExtension();
+		MimeTypeConfig mtc = (MimeTypeConfig) Context.getInstance().getBean(MimeTypeConfig.class);
+		String mimetype = mtc.getMimeApp(extension);
+
+		if ((mimetype == null) || mimetype.equals("")) {
+			mimetype = "application/octet-stream";
+		}
+
+		att.setMimeType(mimetype);
+
+		if (att != null) {
+			email.addAttachment(2, att);
+		}
 	}
 
 	public void setDocumentNavigation(DocumentNavigation documentNavigation) {

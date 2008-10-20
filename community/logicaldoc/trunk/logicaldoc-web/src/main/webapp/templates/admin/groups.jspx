@@ -47,7 +47,7 @@
                             <ice:outputText value="#{msgs['msg.jsp.groupname']}" />
                         </f:facet>
                         <ice:panelGroup>
-                            <ice:outputText value="#{group.groupName}" />
+                            <ice:outputText value="#{group.name}" />
                         </ice:panelGroup>
                     </ice:column>
 
@@ -57,7 +57,7 @@
                             <ice:outputText value="#{msgs['msg.jsp.groupdesc']}" />
                         </f:facet>
                         <ice:panelGroup>
-                            <ice:outputText value="#{group.groupDesc}" />
+                            <ice:outputText value="#{group.description}" />
                         </ice:panelGroup>
                     </ice:column>
 
@@ -72,11 +72,11 @@
                     <ice:column>
                         <ice:panelGroup>
                             <ice:commandLink action="#{groupsRecordsManager.delete}"
-                                rendered="#{group.groupName != 'admin'}"
+                                rendered="#{group.name != 'admin'}"
                                 onclick="if (!confirm(&quot;#{msgs['msg.question.deletegroup']}&quot;)) return false;">
                                 <ice:graphicImage value="#{styleBean.imagesPath}/delete.gif"
                                     style="border: 0px solid;" title="#{msgs['msg.jsp.delete']}"/>
-                                <f:param name="groupId" value="#{group.groupName}" />
+                                <f:param name="groupId" value="#{group.name}" />
                             </ice:commandLink>
                         </ice:panelGroup>
                     </ice:column>

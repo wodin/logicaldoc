@@ -1,30 +1,32 @@
 package com.logicaldoc.core.communication;
 
+import java.io.File;
+
 /**
  * @author Michael Scholz
  * @author Alessandro Gasparini - Logical Objects
  */
-public class Attachment {
+public class EMailAttachment {
 
 	private String icon = "";
 
-	private String filename = "";
+	private File file;
 
 	private String mimeType = "";
 
-	public Attachment() {
+	public EMailAttachment() {
 	}
 
-	public String getFilename() {
-		return filename;
+	public File getFile() {
+		return file;
 	}
 
 	public String getIcon() {
 		return icon;
 	}
 
-	public void setFilename(String filename) {
-		this.filename = filename;
+	public void setFile(File file) {
+		this.file = file;
 	}
 
 	public void setIcon(String icon) {
