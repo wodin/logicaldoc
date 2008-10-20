@@ -25,7 +25,7 @@ public class SearchOptions {
 
 	private boolean searchInSubPath = false;
 
-	private String username = "";
+	private long userId = -1;
 
 	private String path = null;
 
@@ -57,8 +57,8 @@ public class SearchOptions {
 		return fuzzy;
 	}
 
-	public String getUsername() {
-		return username;
+	public long getUserId() {
+		return userId;
 	}
 
 	public String[] getFields() {
@@ -123,8 +123,8 @@ public class SearchOptions {
 		fuzzy = fuz;
 	}
 
-	public void setUsername(String name) {
-		username = name;
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 	public void setFields(String[] flds) {

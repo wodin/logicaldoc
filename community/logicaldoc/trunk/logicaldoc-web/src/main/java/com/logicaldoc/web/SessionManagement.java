@@ -50,6 +50,8 @@ public class SessionManagement {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		Map<String, Object> session = facesContext.getExternalContext().getSessionMap();
 		Long userid = (Long) session.get(Constants.AUTH_USERID);
+		if (userid == null)
+			userid = new Long(-1);
 		return userid.longValue();
 	}
 

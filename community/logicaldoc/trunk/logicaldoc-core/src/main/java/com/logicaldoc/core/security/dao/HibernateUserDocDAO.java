@@ -84,7 +84,7 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByUserName(long)
+	 * @see com.logicaldoc.core.security.dao.UserDocDAO#findByUserId(long)
 	 */
 	@SuppressWarnings("unchecked")
 	public List<UserDoc> findByUserId(long userId) {

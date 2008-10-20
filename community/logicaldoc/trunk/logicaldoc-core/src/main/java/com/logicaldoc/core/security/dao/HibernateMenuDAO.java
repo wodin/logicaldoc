@@ -97,13 +97,13 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByUserName(java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByUserId(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Menu> findByUserName(String username) {
+	public Collection<Menu> findByUserId(long userId) {
 		Collection<Menu> coll = new ArrayList<Menu>();
 		try {
-			User user = userDAO.findByUserName(username);
+			User user = userDAO.findByPrimaryKey(userId);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 
@@ -131,23 +131,22 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByUserName(java.lang.String,
-	 *      long)
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByUserId(long, long)
 	 */
-	public List<Menu> findByUserName(String username, long parentId) {
-		return findByUserName(username, parentId, null);
+	public List<Menu> findByUserId(long userId, long parentId) {
+		return findByUserId(userId, parentId, null);
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByUserName(java.lang.String,
-	 *      long, type)
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByUserId(userId, long,
+	 *      type)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Menu> findByUserName(String username, long parentId, Integer type) {
+	public List<Menu> findByUserId(long userId, long parentId, Integer type) {
 		List<Menu> coll = new ArrayList<Menu>();
 
 		try {
-			User user = userDAO.findByUserName(username);
+			User user = userDAO.findByPrimaryKey(userId);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 			if (precoll.isEmpty())
@@ -179,14 +178,14 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#countByUserName(java.lang.String,
-	 *      long, java.lang.Integer)
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#countByUserId(long, long,
+	 *      java.lang.Integer)
 	 */
 	@SuppressWarnings("unchecked")
-	public long countByUserName(String username, long parentId, Integer type) {
+	public long countByUserId(long userId, long parentId, Integer type) {
 		long count = 0;
 		try {
-			User user = userDAO.findByUserName(username);
+			User user = userDAO.findByPrimaryKey(userId);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 			if (precoll.isEmpty())
@@ -347,16 +346,16 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findMenuIdByUserName(java.lang.String)
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#findMenuIdByUserId(long)
 	 *      <b>NOTE:</b> This implementation performs direct JDBC query, this
 	 *      is required in order to obtain acceptable performances during
 	 *      searches.
 	 */
 	@SuppressWarnings( { "unchecked", "deprecation" })
-	public Set<Long> findMenuIdByUserName(String username) {
+	public Set<Long> findMenuIdByUserId(long userId) {
 		Set<Long> ids = new HashSet<Long>();
 		try {
-			User user = userDAO.findByUserName(username);
+			User user = userDAO.findByPrimaryKey(userId);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 
@@ -457,16 +456,16 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findMenuIdByUserNameAndParent(java.lang.String,
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#findMenuIdByUserId(long,
 	 *      long, java.lang.Integer) <b>NOTE:</b> This implementation performs
 	 *      direct JDBC query, this is required in order to obtain acceptable
 	 *      performances during searches.
 	 */
 	@SuppressWarnings( { "unchecked", "deprecation" })
-	public Set<Long> findMenuIdByUserName(String username, long parentId, Integer type) {
+	public Set<Long> findMenuIdByUserId(long userId, long parentId, Integer type) {
 		Set<Long> ids = new HashSet<Long>();
 		try {
-			User user = userDAO.findByUserName(username);
+			User user = userDAO.findByPrimaryKey(userId);
 			Collection<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 

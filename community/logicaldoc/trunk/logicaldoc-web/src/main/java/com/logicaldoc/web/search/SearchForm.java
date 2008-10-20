@@ -417,7 +417,7 @@ public class SearchForm {
 		if (SessionManagement.isValid()) {
 
 			try {
-				String username = SessionManagement.getUsername();
+				long userId = SessionManagement.getUserId();
 
 				SearchOptions opt = new SearchOptions();
 				ArrayList<String> fields = new ArrayList<String>();
@@ -481,7 +481,7 @@ public class SearchForm {
 				opt.setLengthMin(getSizeMin());
 				if (getSizeMax() != null && getSizeMax().intValue() > 0)
 					opt.setLengthMax(getSizeMax());
-				opt.setUsername(username);
+				opt.setUserId(userId);
 
 				if (StringUtils.isNotEmpty(getPath())) {
 					opt.setPath(getPath());

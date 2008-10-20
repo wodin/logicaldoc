@@ -61,14 +61,14 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertNull(doc);
 	}
 
-	public void testFindByUserName() {
-		Collection<Long> ids = dao.findByUserName("sebastian");
+	public void testFindByUserId() {
+		Collection<Long> ids = dao.findByUserId(3);
 		assertNotNull(ids);
 		assertEquals(2, ids.size());
 		assertTrue(ids.contains(new Long(2)));
 
 		// Try with a user without documents
-		ids = dao.findByUserName("test");
+		ids = dao.findByUserId(5);
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 	}
@@ -94,7 +94,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertNotNull(docs);
 		assertEquals(0, docs.size());
 	}
-	
+
 	public void testFindLastModifiedByUserId() {
 		Collection<Document> coll = dao.findLastModifiedByUserId(4, 10);
 		assertNotNull(coll);
@@ -192,7 +192,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(1, keywords.size());
 		assertEquals("abc", keywords.iterator().next());
 	}
-	
+
 	public void testFindDocIdByUsernameAndKeyword() {
 		Collection<Long> ids = dao.findDocIdByUsernameAndKeyword("admin", "abc");
 		assertNotNull(ids);
@@ -202,12 +202,12 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		ids = dao.findDocIdByUsernameAndKeyword("admin", "xxx");
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
-		
+
 		ids = dao.findDocIdByUsernameAndKeyword("xxx", "abc");
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 	}
-	
+
 	public void testFindLastDownloadsByUserId() {
 		Collection<Document> documents = dao.findLastDownloadsByUserId(1, 10);
 		assertNotNull(documents);

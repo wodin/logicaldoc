@@ -128,7 +128,7 @@ public class MenuBarBean {
 	protected void createMenuItems() {
 		model.clear();
 
-		String username = SessionManagement.getUsername();
+		long userId = SessionManagement.getUserId();
 		PageContentBean page = new PageContentBean("home", "home");
 		page.setContentTitle(Messages.getMessage("home"));
 		page.setDisplayText(Messages.getMessage("home"));
@@ -139,9 +139,9 @@ public class MenuBarBean {
 		model.add(item);
 
 		try {
-			if (username != null) {
+			if (userId > 0) {
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-				Collection<Menu> menus = menuDao.findByUserName(username, 1, Menu.MENUTYPE_ACTION);
+				Collection<Menu> menus = menuDao.findByUserId(userId, 1, Menu.MENUTYPE_ACTION);
 
 				for (Menu menu : menus) {
 					createMenuStructure(menu, null);
@@ -211,7 +211,7 @@ public class MenuBarBean {
 		// For 'Documents' menu, skip children
 		if (menu.getId() != Menu.MENUID_DOCUMENTS) {
 			MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			Collection<Menu> children = menuDao.findByUserName(SessionManagement.getUsername(), menu.getId());
+			Collection<Menu> children = menuDao.findByUserId(SessionManagement.getUserId(), menu.getId());
 
 			for (Menu child : children) {
 				createMenuStructure(child, item);

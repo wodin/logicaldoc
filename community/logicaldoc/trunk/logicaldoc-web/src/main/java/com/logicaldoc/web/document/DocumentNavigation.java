@@ -146,9 +146,8 @@ public class DocumentNavigation extends NavigationBean {
 			folderItems.add(item);
 		}
 
-		String username = SessionManagement.getUsername();
-		List<Menu> menus = (List<Menu>) menuDao.findByUserName(username, selectedDir.getMenuId(),
-				Menu.MENUTYPE_DIRECTORY);
+		long userId = SessionManagement.getUserId();
+		List<Menu> menus = (List<Menu>) menuDao.findByUserId(userId, selectedDir.getMenuId(), Menu.MENUTYPE_DIRECTORY);
 		Collections.sort(menus, new Comparator<Menu>() {
 			@Override
 			public int compare(Menu menu1, Menu menu2) {

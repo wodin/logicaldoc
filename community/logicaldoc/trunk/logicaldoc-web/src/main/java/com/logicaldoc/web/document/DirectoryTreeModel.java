@@ -66,13 +66,12 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 	public void reload(DefaultMutableTreeNode node, int depth) {
 		Directory dir = ((Directory) node.getUserObject());
-		String username = SessionManagement.getUsername();
+		long userId = SessionManagement.getUserId();
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 		try {
-			if (username != null) {
-				List<Menu> menus = (List<Menu>) menuDao.findByUserName(username, dir.getMenuId(),
-						Menu.MENUTYPE_DIRECTORY);
+			if (userId > 0) {
+				List<Menu> menus = (List<Menu>) menuDao.findByUserId(userId, dir.getMenuId(), Menu.MENUTYPE_DIRECTORY);
 
 				// Sort by name
 				Collections.sort(menus, new Comparator<Menu>() {
@@ -83,12 +82,12 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 				});
 
 				for (Menu menu : menus) {
-					addDir(username, node, menu, depth);
+					addDir(userId, node, menu, depth);
 					dir.setLeaf(false);
 				}
 
 				if (countChildren)
-					dir.setCount(menuDao.countByUserName(username, dir.getMenuId(), null));
+					dir.setCount(menuDao.countByUserId(userId, dir.getMenuId(), null));
 			}
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
@@ -121,7 +120,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		rootTreeNode.setUserObject(rootObject);
 		directories.put(rootMenu.getId(), rootObject);
 		if (countChildren)
-			rootObject.setCount(menuDao.countByUserName(SessionManagement.getUsername(), Menu.MENUID_DOCUMENTS, null));
+			rootObject.setCount(menuDao.countByUserId(SessionManagement.getUserId(), Menu.MENUID_DOCUMENTS, null));
 	}
 
 	public void reload() {
@@ -159,7 +158,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	}
 
 	private DefaultMutableTreeNode addDir(String username, DefaultMutableTreeNode parentNode, Menu dir) {
-		return addDir(SessionManagement.getUsername(), parentNode, dir, -1);
+		return addDir(SessionManagement.getUserId(), parentNode, dir, -1);
 	}
 
 	/**
@@ -207,13 +206,13 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	/**
 	 * Adds a directory and all it's childs
 	 * 
-	 * @param username
+	 * @param userId
 	 * @param parent
 	 * @param dir
 	 * @param depth the maximum depth
 	 * @return
 	 */
-	private DefaultMutableTreeNode addDir(String username, DefaultMutableTreeNode parent, Menu dir, int depth) {
+	private DefaultMutableTreeNode addDir(long userId, DefaultMutableTreeNode parent, Menu dir, int depth) {
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 		Directory cachedDir = directories.get(dir.getId());
@@ -241,7 +240,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 		// Iterate over subdirs
 		if (depth != 0) {
-			List<Menu> children = (List<Menu>) menuDao.findByUserName(username, dir.getId(), Menu.MENUTYPE_DIRECTORY);
+			List<Menu> children = (List<Menu>) menuDao.findByUserId(userId, dir.getId(), Menu.MENUTYPE_DIRECTORY);
 			Collections.sort(children, new Comparator<Menu>() {
 				@Override
 				public int compare(Menu menu1, Menu menu2) {
@@ -252,20 +251,20 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 				branchObject.setLeaf(false);
 
 				if (depth > 0) {
-					addDir(username, branchNode, child, depth - 1);
+					addDir(userId, branchNode, child, depth - 1);
 				} else if (depth == -1) {
-					addDir(username, branchNode, child, depth);
+					addDir(userId, branchNode, child, depth);
 				}
 			}
 		} else {
-			branchObject.setLeaf(menuDao.countByUserName(username, dir.getId(), Menu.MENUTYPE_DIRECTORY) == 0);
+			branchObject.setLeaf(menuDao.countByUserId(userId, dir.getId(), Menu.MENUTYPE_DIRECTORY) == 0);
 		}
 
 		branchObject.setLoaded(true);
 		directories.put(dir.getId(), branchObject);
 		parent.add(branchNode);
 		if (countChildren)
-			branchObject.setCount(menuDao.countByUserName(username, dir.getId(), null));
+			branchObject.setCount(menuDao.countByUserId(userId, dir.getId(), null));
 		log.debug("added dir " + branchObject.getDisplayText());
 
 		return branchNode;
@@ -341,14 +340,13 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		Menu folderMenu = menuDao.findByPrimaryKey(folderId);
 		Collection<Menu> parents = menuDao.findParents(folderId);
 		DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) getRoot();
-		String username = SessionManagement.getUsername();
+		long userId = SessionManagement.getUserId();
 		for (Menu folderParent : parents) {
-			if (folderParent.getId() == Menu.MENUID_HOME
-					|| folderParent.getId() == Menu.MENUID_DOCUMENTS)
+			if (folderParent.getId() == Menu.MENUID_HOME || folderParent.getId() == Menu.MENUID_DOCUMENTS)
 				continue;
-			parentNode = addDir(username, parentNode, folderParent, 0);
+			parentNode = addDir(userId, parentNode, folderParent, 0);
 		}
-		parentNode = addDir(username, parentNode, folderMenu, 0);
+		parentNode = addDir(userId, parentNode, folderMenu, 0);
 		expandNodePath(parentNode);
 	}
 

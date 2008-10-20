@@ -36,7 +36,7 @@ public class ZipExport {
 
 	private ZipOutputStream zos;
 
-	private String username;
+	private long userId;
 
 	private boolean allLevel;
 
@@ -44,7 +44,7 @@ public class ZipExport {
 
 	public ZipExport() {
 		zos = null;
-		username = "";
+		userId = -1;
 		allLevel = false;
 		startFolderId = Menu.MENUID_DOCUMENTS;
 	}
@@ -53,13 +53,13 @@ public class ZipExport {
 	 * Exports the specified folder content
 	 * 
 	 * @param folderId Identifier of the folder
-	 * @param user Current username
+	 * @param userId Current user
 	 * @return The Stream of the zip archive
 	 */
-	public ByteArrayOutputStream process(long folderId, String user) {
+	public ByteArrayOutputStream process(long folderId, long userId) {
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu folder = menuDao.findByPrimaryKey(folderId);
-		this.username = user;
+		this.userId = userId;
 		this.startFolderId = folder.getId();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		zos = new ZipOutputStream(bos);
@@ -99,7 +99,7 @@ public class ZipExport {
 		} else {
 			addFolderDocuments(folder);
 			MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			Collection<Menu> children = menuDao.findByUserName(username, folder.getId(), Menu.MENUTYPE_DIRECTORY);
+			Collection<Menu> children = menuDao.findByUserId(userId, folder.getId(), Menu.MENUTYPE_DIRECTORY);
 			Iterator<Menu> iter = children.iterator();
 
 			while (iter.hasNext()) {

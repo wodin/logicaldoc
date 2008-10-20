@@ -60,10 +60,10 @@ public interface MenuDAO {
 	/**
 	 * Finds authorized menus for a user.
 	 * 
-	 * @param username Name of the user.
+	 * @param userId ID of the user.
 	 * @return Collection of found menus.
 	 */
-	public Collection<Menu> findByUserName(String username);
+	public Collection<Menu> findByUserId(long userId);
 
 	/**
 	 * Finds direct children of a menu.
@@ -71,7 +71,7 @@ public interface MenuDAO {
 	 * @param parentId MenuId of the menu which children are wanted.
 	 * @return Collection of found menus sorted by type, sort, text
 	 */
-	public List<Menu> findByUserName(String username, long parentId);
+	public List<Menu> findByUserId(long userId, long parentId);
 
 	/**
 	 * Finds direct children of a menu.
@@ -80,7 +80,7 @@ public interface MenuDAO {
 	 * @param type The wanted menu type, can be null
 	 * @return Collection of found menus sorted by type, sort, text
 	 */
-	public List<Menu> findByUserName(String username, long parentId, Integer type);
+	public List<Menu> findByUserId(long userId, long parentId, Integer type);
 
 	/**
 	 * Counts direct children of a menu.
@@ -89,7 +89,7 @@ public interface MenuDAO {
 	 * @param type The wanted menu type, can be null
 	 * @return The total number of elements
 	 */
-	public long countByUserName(String username, long parentId, Integer type);
+	public long countByUserId(long userId, long parentId, Integer type);
 
 	/**
 	 * Finds all children(direct and indirect) by parentId
@@ -129,21 +129,21 @@ public interface MenuDAO {
 	 * This method selects only the menuId from the menus for which a user is
 	 * authorized.
 	 * 
-	 * @param username Name of the user.
+	 * @param userId ID of the user.
 	 * @return Collection of selected menuId's.
 	 */
-	public Set<Long> findMenuIdByUserName(String username);
+	public Set<Long> findMenuIdByUserId(long userId);
 
 	/**
 	 * This method selects only the menuId from the menus for which a user is
 	 * authorized. Only menus direct child of the specified parent are returned.
 	 * 
-	 * @param username Name of the user.
+	 * @param userId ID of the user.
 	 * @param parentId Parent menu
 	 * @param type The menu type, can be null
 	 * @return Collection of selected menuId's.
 	 */
-	public Set<Long> findMenuIdByUserName(String username, long parentId, Integer type);
+	public Set<Long> findMenuIdByUserId(long userId, long parentId, Integer type);
 
 	/**
 	 * returns if a menu is writeable for a user

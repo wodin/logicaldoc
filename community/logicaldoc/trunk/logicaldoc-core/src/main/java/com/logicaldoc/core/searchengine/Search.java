@@ -68,14 +68,12 @@ public class Search {
 
 		results.clear();
 		moreHitsPresent = false;
-		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(
-				SettingsConfig.class);
+		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 
 		try {
 			String[] languages = options.getLanguages();
 			if ((languages == null) || (languages.length == 0)) {
-				List<String> iso639_2Languages = LanguageManager.getInstance()
-						.getISO639_2Languages();
+				List<String> iso639_2Languages = LanguageManager.getInstance().getISO639_2Languages();
 				languages = (String[]) iso639_2Languages.toArray(new String[0]);
 				options.setLanguages(languages);
 			}
@@ -89,8 +87,7 @@ public class Search {
 
 			for (int i = 0; i < languages.length; i++) {
 				String lang = languages[i];
-				String dir = new Locale(lang)
-						.getDisplayLanguage(Locale.ENGLISH).toLowerCase();
+				String dir = new Locale(lang).getDisplayLanguage(Locale.ENGLISH).toLowerCase();
 				searcher[i] = new IndexSearcher(indexPath + dir + "/");
 			}
 
@@ -98,15 +95,13 @@ public class Search {
 			Analyzer analyzer = LuceneAnalyzerFactory.getAnalyzer(language);
 
 			if (options.getFields() == null) {
-				String[] fields = new String[] { LuceneDocument.FIELD_CONTENT,
-						LuceneDocument.FIELD_KEYWORDS };
+				String[] fields = new String[] { LuceneDocument.FIELD_CONTENT, LuceneDocument.FIELD_KEYWORDS };
 				options.setFields(fields);
 			}
 
 			multiSearcher.setSimilarity(new SquareSimilarity());
 
-			MultiFieldQueryParser parser = new MultiFieldQueryParser(options
-					.getFields(), analyzer);
+			MultiFieldQueryParser parser = new MultiFieldQueryParser(options.getFields(), analyzer);
 
 			Query query = parser.parse(options.getQueryStr());
 
@@ -116,8 +111,7 @@ public class Search {
 			if (StringUtils.isEmpty(options.getPath())) {
 				hits = multiSearcher.search(query);
 			} else {
-				Term prfixTerm = new Term(LuceneDocument.FIELD_PATH, options
-						.getPath());
+				Term prfixTerm = new Term(LuceneDocument.FIELD_PATH, options.getPath());
 				Query filterQuery = new TermQuery(prfixTerm);
 
 				if (options.isSearchInSubPath()) {
@@ -132,19 +126,16 @@ public class Search {
 
 			estimatedHitsNumber = hits.length();
 
-			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
-					MenuDAO.class);
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			log.info("DB search");
-			Set<Long> accessibleMenus = mdao.findMenuIdByUserName(options
-					.getUsername());
+			Set<Long> accessibleMenus = mdao.findMenuIdByUserId(options.getUserId());
 			log.info("End of DB search");
 
 			int maxNumFragmentsRequired = 4;
 			String fragmentSeparator = "&nbsp;...&nbsp;";
 
 			Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter(
-					"<font style='background-color:#FFFF00'>", "</font>"),
-					new QueryScorer(query));
+					"<font style='background-color:#FFFF00'>", "</font>"), new QueryScorer(query));
 
 			for (int i = 0; i < hits.length(); i++) {
 				if (results.size() == maxHits) {
@@ -155,8 +146,7 @@ public class Search {
 
 				Document doc = hits.doc(i);
 				String path = doc.get(LuceneDocument.FIELD_PATH);
-				long folderId = Long.parseLong(path.substring(path
-						.lastIndexOf("/") + 1));
+				long folderId = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
 
 				// When user can see document with menuId then put it into
 				// result-collection.
@@ -169,26 +159,20 @@ public class Search {
 
 					String content = doc.get(LuceneDocument.FIELD_CONTENT);
 
-					TokenStream stream = analyzer.tokenStream(
-							LuceneDocument.FIELD_CONTENT, new StringReader(
-									content));
-					String summary = highlighter
-							.getBestFragments(stream, content,
-									maxNumFragmentsRequired, fragmentSeparator);
+					TokenStream stream = analyzer.tokenStream(LuceneDocument.FIELD_CONTENT, new StringReader(content));
+					String summary = highlighter.getBestFragments(stream, content, maxNumFragmentsRequired,
+							fragmentSeparator);
 
 					if ((summary == null) || summary.equals("")) {
 						summary = doc.get(LuceneDocument.FIELD_SUMMARY);
 					}
 
 					Result result = new ResultImpl();
-					result.setDocId(Long.parseLong(doc
-							.get(LuceneDocument.FIELD_DOC_ID)));
+					result.setDocId(Long.parseLong(doc.get(LuceneDocument.FIELD_DOC_ID)));
 					result.setTitle(doc.get(LuceneDocument.FIELD_TITLE));
 					result.setSize(Long.parseLong(size));
-					result.setDate(DateBean.dateFromCompactString(doc
-							.get(LuceneDocument.FIELD_DATE)));
-					result.setSourceDate(DateBean.dateFromCompactString(doc
-							.get(LuceneDocument.FIELD_SOURCE_DATE)));
+					result.setDate(DateBean.dateFromCompactString(doc.get(LuceneDocument.FIELD_DATE)));
+					result.setSourceDate(DateBean.dateFromCompactString(doc.get(LuceneDocument.FIELD_SOURCE_DATE)));
 					result.setType(doc.get(LuceneDocument.FIELD_TYPE));
 					result.setSummary(summary);
 					result.createScore(hits.score(i));

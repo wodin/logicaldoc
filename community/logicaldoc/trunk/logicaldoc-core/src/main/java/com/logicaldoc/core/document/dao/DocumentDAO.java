@@ -46,10 +46,10 @@ public interface DocumentDAO {
 	/**
 	 * Finds all documents for an user.
 	 * 
-	 * @param username Name of the user.
+	 * @param userId ID of the user.
 	 * @return Collection of all documentId required for the specified user.
 	 */
-	public Collection<Long> findByUserName(String username);
+	public Collection<Long> findByUserId(long userId);
 
 	/**
 	 * Finds all document ids inside the given folder.

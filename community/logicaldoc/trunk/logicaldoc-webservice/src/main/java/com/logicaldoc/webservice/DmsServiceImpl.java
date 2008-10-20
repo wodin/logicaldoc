@@ -344,7 +344,7 @@ public class DmsServiceImpl implements DmsService {
 				folderContent.addFolder(content);
 		}
 
-		// TODO Search for documents also
+		// TODO Search for child documents also
 
 		return folderContent;
 	}
@@ -356,9 +356,14 @@ public class DmsServiceImpl implements DmsService {
 	 */
 	public SearchResult search(String username, String password, String query, String indexLanguage,
 			String queryLanguage, int maxHits) throws Exception {
-
+		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		User user = udao.findByUserName(username);
+		if (user == null) {
+			log.error("User " + username + " not found");
+			return null;
+		}
+		
 		checkCredentials(username, password);
-
 		SearchResult searchResult = new SearchResult();
 
 		SearchOptions opt = new SearchOptions();
@@ -383,7 +388,7 @@ public class DmsServiceImpl implements DmsService {
 		String[] langs = (String[]) languages.toArray(new String[languages.size()]);
 		opt.setLanguages(langs);
 		opt.setQueryStr(query);
-		opt.setUsername(username);
+		opt.setUserId(user.getId());
 		opt.setFormat("all");
 
 		// Execute the search

@@ -148,14 +148,14 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findByUserName(java.lang.String)
+	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findByUserId(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Long> findByUserName(String username) {
+	public Collection<Long> findByUserId(long userId) {
 		Collection<Long> coll = new ArrayList<Long>();
 
 		try {
-			Collection<Menu> menus = menuDAO.findByUserName(username);
+			Collection<Menu> menus = menuDAO.findByUserId(userId);
 			if (menus.isEmpty())
 				return coll;
 

@@ -121,7 +121,7 @@ public class HibernateEMailAccountDAO extends HibernateDaoSupport implements EMa
 	}
 
 	/**
-	 * @see com.logicaldoc.core.communication.dao.EMailAccountDAO#findByUserName(long)
+	 * @see com.logicaldoc.core.communication.dao.EMailAccountDAO#findByUserId(long)
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<EMailAccount> findByUserId(long userId) {

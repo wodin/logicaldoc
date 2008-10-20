@@ -117,45 +117,45 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindByUserNameString() {
-		Collection<Menu> menus = dao.findByUserName("admin");
+		Collection<Menu> menus = dao.findByUserId(1);
 		assertNotNull(menus);
 		assertEquals(21, menus.size());
 
-		menus = dao.findByUserName("sebastian");
+		menus = dao.findByUserId(3);
 		assertNotNull(menus);
 		assertEquals(21, menus.size());
 
-		// Try with unexisting username
-		menus = dao.findByUserName("xxx");
+		// Try with unexisting user
+		menus = dao.findByUserId(99);
 		assertNotNull(menus);
 		assertEquals(0, menus.size());
 	}
 
 	public void testFindByUserNameStringIntInt() {
-		Collection<Menu> menus = dao.findByUserName("admin", Menu.MENUID_HOME);
+		Collection<Menu> menus = dao.findByUserId(1, Menu.MENUID_HOME);
 		assertNotNull(menus);
 		assertEquals(6, menus.size());
 
-		// Try with unexisting usernames and menus
-		menus = dao.findByUserName("admin", 70);
+		// Try with unexisting user and menus
+		menus = dao.findByUserId(1, 70);
 		assertNotNull(menus);
 		assertEquals(0, menus.size());
 
-		menus = dao.findByUserName("xxxx", Menu.MENUID_HOME);
+		menus = dao.findByUserId(99, Menu.MENUID_HOME);
 		assertNotNull(menus);
 		assertEquals(0, menus.size());
 
-		menus = dao.findByUserName("admin", Menu.MENUID_HOME, Menu.MENUTYPE_DIRECTORY);
+		menus = dao.findByUserId(1, Menu.MENUID_HOME, Menu.MENUTYPE_DIRECTORY);
 		assertNotNull(menus);
 		assertEquals(1, menus.size());
 	}
 
 	public void testCountByUserNameStringIntInt() {
-		long count = dao.countByUserName("admin", Menu.MENUID_HOME, null);
+		long count = dao.countByUserId(1, Menu.MENUID_HOME, null);
 		assertEquals(6, count);
 
 		// Try with unexisting usernames and menus
-		count = dao.countByUserName("admin", 70, null);
+		count = dao.countByUserId(1, 70, null);
 		assertEquals(0, count);
 	}
 
@@ -185,32 +185,32 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindMenuIdByUserName() {
-		Collection<Long> ids = dao.findMenuIdByUserName("admin");
+		Collection<Long> ids = dao.findMenuIdByUserId(1);
 		assertNotNull(ids);
 		assertEquals(21, ids.size());
 
-		// Try with unexisting username
-		ids = dao.findMenuIdByUserName("xxxx");
+		// Try with unexisting user
+		ids = dao.findMenuIdByUserId(99);
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 	}
 
 	public void testFindMenuIdByUserNameIntInteger() {
-		Collection<Long> ids = dao.findMenuIdByUserName("admin", 101, null);
+		Collection<Long> ids = dao.findMenuIdByUserId(1, 101, null);
 		assertNotNull(ids);
 		assertEquals(1, ids.size());
 		assertTrue(ids.contains(103L));
 
-		ids = dao.findMenuIdByUserName("admin", 101, Menu.MENUTYPE_DIRECTORY);
+		ids = dao.findMenuIdByUserId(1, 101, Menu.MENUTYPE_DIRECTORY);
 		assertNotNull(ids);
 		assertEquals(1, ids.size());
 
-		ids = dao.findMenuIdByUserName("admin", 101, 50);
+		ids = dao.findMenuIdByUserId(1, 101, 50);
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 
-		// Try with unexisting username
-		ids = dao.findMenuIdByUserName("xxxx", 101, null);
+		// Try with unexisting user
+		ids = dao.findMenuIdByUserId(99, 101, null);
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 	}
