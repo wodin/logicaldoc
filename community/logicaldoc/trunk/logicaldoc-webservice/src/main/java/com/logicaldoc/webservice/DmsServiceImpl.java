@@ -313,11 +313,8 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, long)
 	 */
 	public FolderContent downloadFolderContent(String username, String password, long folder) throws Exception {
-
 		FolderContent folderContent = new FolderContent();
-
 		checkCredentials(username, password);
-
 		checkReadEnable(username, folder);
 
 		// Retrieve the referenced menu and it's parent populating the folder
@@ -334,17 +331,25 @@ public class DmsServiceImpl implements DmsService {
 		User user = userDao.findByUserName(username);
 
 		// Now search for sub-elements
-		Collection<Menu> children = mdao.findChildren(folder);
+		Collection<Menu> children = mdao.findByUserId(user.getId(), folder, Menu.MENUTYPE_DIRECTORY);
 		for (Menu menu : children) {
 			Content content = new Content();
 			content.setId(menu.getId());
 			content.setTitle(menu.getText());
-			content.setWriteable(mdao.isReadEnable(menu.getId(), user.getId()) ? 1 : 0);
-			if (menu.getType() == Menu.MENUTYPE_DIRECTORY)
-				folderContent.addFolder(content);
+			content.setWriteable(mdao.isWriteEnable(menu.getId(), user.getId()) ? 1 : 0);
+			folderContent.addFolder(content);
 		}
 
-		// TODO Search for child documents also
+		boolean writeEnable = mdao.isReadEnable(folder, user.getId());
+		DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Collection<Document> docs = docdao.findByFolder(folder);
+		for (Document document : docs) {
+			Content content = new Content();
+			content.setId(document.getId());
+			content.setTitle(document.getTitle());
+			content.setWriteable(writeEnable ? 1 : 0);
+			folderContent.addDocument(content);
+		}
 
 		return folderContent;
 	}
@@ -362,7 +367,7 @@ public class DmsServiceImpl implements DmsService {
 			log.error("User " + username + " not found");
 			return null;
 		}
-		
+
 		checkCredentials(username, password);
 		SearchResult searchResult = new SearchResult();
 
