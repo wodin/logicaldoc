@@ -182,7 +182,6 @@ public interface DocumentManager {
 	 * Deletes the document from DB, index and filesystem
 	 * 
 	 * @param docId
-	 * @param username
 	 * @throws Exception
 	 */
 	public void delete(long docId) throws Exception;

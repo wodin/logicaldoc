@@ -476,14 +476,14 @@ public class DocumentRecord extends MenuBarBean {
 		emailForm.setSelectedDocument(getDocument());
 		emailForm.setAuthor(SessionManagement.getUser().getEmail());
 
-		String username = SessionManagement.getUsername();
+		long userId = SessionManagement.getUserId();
 		Date date = new Date();
-		String temp = DateFormat.getDateInstance().format(date) + username;
+		String temp = DateFormat.getDateInstance().format(date) + userId;
 		String ticketid = CryptUtil.cryptString(temp);
 		DownloadTicket ticket = new DownloadTicket();
 		ticket.setTicketId(ticketid);
 		ticket.setDocId(docId);
-		ticket.setUsername(username);
+		ticket.setUserId(userId);
 
 		DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance().getBean(DownloadTicketDAO.class);
 		ticketDao.store(ticket);

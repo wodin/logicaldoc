@@ -11,7 +11,7 @@ create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint, ld_writ
 create table ld_recipient (ld_messageid bigint not null, ld_address varchar(255) not null, ld_name varchar(255), primary key (ld_messageid, ld_address));
 create table ld_systemmessage (ld_id bigint not null, ld_author varchar(255), ld_recipient varchar(255), ld_messagetext varchar(2000), ld_subject varchar(255), ld_sentdate varchar(20) not null, ld_datescope int, ld_prio int, ld_confirmation int, ld_red int not null, primary key (ld_id));
 create table ld_term (ld_id bigint not null, ld_docid bigint not null, ld_stem varchar(255) not null, ld_value float, ld_wordcount int, ld_word varchar(255), primary key (ld_id));
-create table ld_ticket (ld_id bigint not null, ld_ticketid varchar(255) not null, ld_docid bigint, ld_username varchar(255), primary key (ld_id));
+create table ld_ticket (ld_id bigint not null, ld_ticketid varchar(255) not null, ld_docid bigint not null, ld_userid bigint not null, primary key (ld_id));
 create table ld_user (ld_id bigint not null, ld_username varchar(255) not null, ld_password varchar(255), ld_name varchar(255), ld_firstname varchar(255), ld_street varchar(255), ld_postalcode varchar(255), ld_city varchar(255), ld_country varchar(30), ld_language varchar(10), ld_email varchar(255), ld_telephone varchar(255), primary key (ld_id));
 create table ld_userdoc (ld_id bigint not null, ld_docid bigint not null, ld_userid bigint not null, ld_date timestamp, primary key (ld_id));
 create table ld_usergroup (ld_groupid bigint not null, ld_userid bigint not null, primary key (ld_groupid, ld_userid));

@@ -14,7 +14,7 @@ public class DownloadTicket extends PersistentObject {
 
 	private long docId = 0;
 
-	private String username = "";
+	private long userId = -1;
 
 	public DownloadTicket() {
 
@@ -42,17 +42,11 @@ public class DownloadTicket extends PersistentObject {
 		this.ticketId = ticketId;
 	}
 
-	/**
-	 * @return Returns the username.
-	 */
-	public String getUsername() {
-		return username;
+	public long getUserId() {
+		return userId;
 	}
 
-	/**
-	 * @param username The username to set.
-	 */
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 }

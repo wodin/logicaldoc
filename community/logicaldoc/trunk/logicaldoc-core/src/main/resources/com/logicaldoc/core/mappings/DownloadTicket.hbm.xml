@@ -8,7 +8,7 @@
             <generator class="increment" />
         </id>
 		<property name="ticketId" type="string" column="ld_ticketid" not-null="true" />
-		<property name="docId" type="long" column="ld_docid" />
-		<property name="username" type="string" column="ld_username" length="255" />
+		<property name="docId" type="long" column="ld_docid" not-null="true" />
+		<property name="userId" type="long" column="ld_userid" not-null="true" />
 	</class>
 </hibernate-mapping>
