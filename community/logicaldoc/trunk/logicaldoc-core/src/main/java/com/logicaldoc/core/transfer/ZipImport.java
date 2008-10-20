@@ -32,7 +32,7 @@ import com.logicaldoc.util.io.ZipUtil;
  */
 public class ZipImport {
 
-	private String username;
+	private long userId;
 
 	private String language;
 
@@ -43,7 +43,7 @@ public class ZipImport {
 	private boolean extractKeywords = true;
 
 	public ZipImport() {
-		username = "";
+		userId = -1;
 		language = "";
 		extractKeywords = true;
 	}
@@ -56,13 +56,13 @@ public class ZipImport {
 		this.extractKeywords = extractKeywords;
 	}
 
-	public void process(File zipsource, String language, Menu parent, String user) {
+	public void process(File zipsource, String language, Menu parent, long userId) {
 
-		this.username = user;
+		this.userId = userId;
 		this.language = language;
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		this.user = userDao.findByUserName(username);
+		this.user = userDao.findByPrimaryKey(userId);
 
 		SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 		String userpath = settings.getValue("userdir");
@@ -71,7 +71,7 @@ public class ZipImport {
 			userpath += "_";
 		}
 
-		userpath += username + "_" + "unzip";
+		userpath += userId + "_" + "unzip";
 		File file = new File(userpath);
 		if (file.exists()) {
 			try {
@@ -99,9 +99,9 @@ public class ZipImport {
 		}
 	}
 
-	public void process(String zipsource, String language, Menu parent, String user) {
+	public void process(String zipsource, String language, Menu parent, long userId) {
 		File srcfile = new File(zipsource);
-		process(srcfile, language, parent, user);
+		process(srcfile, language, parent, userId);
 	}
 
 	/**
