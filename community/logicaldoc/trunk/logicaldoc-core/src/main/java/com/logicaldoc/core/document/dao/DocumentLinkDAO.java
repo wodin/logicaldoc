@@ -54,4 +54,14 @@ public interface DocumentLinkDAO {
 	 * @return Collection<DocumentLink> The list of document link.
 	 */
 	public Collection<DocumentLink> findByDocId(long docId, String type);
+	
+	/**
+	 * Find a document link using its alternate keys.
+	 * 
+	 * @param docId1
+	 * @param docId2
+	 * @param type
+	 * @return The found instance
+	 */
+	public DocumentLink findByDocIdsAndType (long docId1, long docId2, String type);
 }
