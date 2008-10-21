@@ -7,7 +7,7 @@
         <id name="id" type="long" column="ld_id" unsaved-value="0">
             <generator class="increment" />
         </id>
-        <property name="type" type="string" column="ld_type" length="255" />
+        <property name="type" type="string" column="ld_type" length="255" not-null="true"/>
         <many-to-one name="document1" class="com.logicaldoc.core.document.Document" column="ld_docid1" />
         <many-to-one name="document2" class="com.logicaldoc.core.document.Document" column="ld_docid2" />
 	</class>

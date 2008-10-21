@@ -4,7 +4,7 @@ create table ld_emailaccount (ld_id bigint not null, ld_userid bigint, ld_mailad
 create table ld_group (ld_id bigint not null, ld_name varchar(255) not null, ld_description varchar(255), primary key (ld_id));
 create table ld_history (ld_id bigint not null, ld_docid bigint not null, lo_userid bigint not null, ld_date timestamp, lo_username varchar(255), lo_event varchar(255), primary key (ld_id));
 create table ld_keyword (ld_docid bigint not null, ld_keyword varchar(255));
-create table ld_link (ld_id bigint not null, ld_type varchar(255), ld_docid1 bigint, ld_docid2 bigint, primary key (ld_id));
+create table ld_link (ld_id bigint not null, ld_type varchar(255) not null, ld_docid1 bigint, ld_docid2 bigint, primary key (ld_id));
 create table ld_menu (ld_id bigint not null, ld_text varchar(255), ld_parentid bigint, ld_sort int, ld_icon varchar(255), ld_path varchar(255), ld_type int, ld_ref varchar(255), ld_size bigint, primary key (ld_id));
 create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint, ld_writeenable int);
 create table ld_systemmessage (ld_id bigint not null, ld_author varchar(255), ld_recipient varchar(255), ld_messagetext varchar(2000), ld_subject varchar(255), ld_sentdate varchar(20) not null, ld_datescope int, ld_prio int, ld_confirmation int, ld_red int not null, primary key (ld_id));
