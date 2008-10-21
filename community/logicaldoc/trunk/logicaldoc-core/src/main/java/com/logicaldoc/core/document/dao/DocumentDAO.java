@@ -137,4 +137,24 @@ public interface DocumentDAO {
 	 * @return Set of found ids.
 	 */
 	public Set<Long> findDocIdByUserIdAndKeyword(long userId, String keyword);
+
+	/**
+	 * This method enlists documents linked to the given document.
+	 * <p>
+	 * <b>Important:</b> The attribute <code>direction</code> defines the
+	 * search logic as follows:
+	 * <ul>
+	 * <li>1: docId will be compared to link's document1</li>
+	 * <li>2: docId will be compared to link's document2</li>
+	 * <li>null: docId will be compared to both document1 and document2</li>
+	 * </ul>
+	 * 
+	 * @param docId All documents linked to this one will be searched
+	 * @param linkType Type of the link (optional)
+	 * @param direction if 1 docId will be compared to link's document1, id 2
+	 *        docId will be compared to link's document2, if null docId will be
+	 *        compared to both document1 and document2 of the link.
+	 * @return The collection of linked documents
+	 */
+	public Collection<Document> findLinkedDocuments(long docId, String linkType, Integer direction);
 }

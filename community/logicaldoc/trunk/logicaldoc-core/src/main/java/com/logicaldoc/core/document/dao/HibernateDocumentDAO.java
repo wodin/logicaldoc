@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -50,6 +51,8 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	private TermDAO termDAO;
 
+	private DocumentLinkDAO linkDAO;
+
 	private SettingsConfig settings;
 
 	private HibernateDocumentDAO() {
@@ -65,6 +68,10 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	public void setSettings(SettingsConfig settings) {
 		this.settings = settings;
+	}
+
+	public void setLinkDAO(DocumentLinkDAO linkDAO) {
+		this.linkDAO = linkDAO;
 	}
 
 	public MenuDAO getMenuDAO() {
@@ -97,6 +104,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			if (doc != null) {
 				getHibernateTemplate().deleteAll(articleDAO.findByDocId(docId));
 				getHibernateTemplate().deleteAll(historyDAO.findByDocId(docId));
+				getHibernateTemplate().deleteAll(linkDAO.findByDocId(docId));
 				userDocDAO.delete(docId);
 				termDAO.delete(docId);
 				doc.getVersions().clear();
@@ -565,6 +573,40 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
+		}
+
+		return coll;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Collection<Document> findLinkedDocuments(long docId, String linkType, Integer direction) {
+		Collection<Document> coll = new ArrayList<Document>();
+		StringBuffer query = null;
+		try {
+			query = new StringBuffer("select distinct(_doc) from Document _doc, DocumentLink _link where ");
+			if (direction == null) {
+				query.append(" ((_link.document1 = _doc and _link.document1.id = ? )"
+						+ "or (_link.document2 = _doc and _link.document2.id = ? )) ");
+			} else if (direction.intValue() == 1)
+				query.append(" _link.document1 = _doc and _link.document1.id = ? ");
+			else if (direction.intValue() == 2)
+				query.append(" _link.document2 = _doc and _link.document2.id = ? ");
+			if (StringUtils.isNotEmpty(linkType)) {
+				query.append(" and _link.type = '");
+				query.append(linkType);
+				query.append("'");
+			}
+
+			if (direction == null)
+				coll = (Collection<Document>) getHibernateTemplate().find(query.toString(),
+						new Object[] { docId, docId });
+			else
+				coll = (Collection<Document>) getHibernateTemplate().find(query.toString(), new Object[] { docId });
+
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				logger.error(e.getMessage(), e);
 		}
 
 		return coll;

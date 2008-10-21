@@ -152,4 +152,8 @@ values     (1,'admin','sebastian','message text1','subject1','111199999999999999
 insert into ld_link(ld_id, ld_docid1, ld_docid2,ld_type)
 values   (1,1,2,'test');
 insert into ld_link(ld_id, ld_docid1, ld_docid2,ld_type)
-values   (2,2,1,null);
+values   (2,2,1,'xyz');
+insert into ld_link(ld_id, ld_docid1, ld_docid2,ld_type)
+values   (3,1,2,'xxx');
+insert into ld_link(ld_id, ld_docid1, ld_docid2,ld_type)
+values   (4,2,1,null);

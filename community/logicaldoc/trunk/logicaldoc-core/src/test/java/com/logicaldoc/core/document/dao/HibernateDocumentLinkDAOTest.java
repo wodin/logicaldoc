@@ -38,12 +38,12 @@ public class HibernateDocumentLinkDAOTest extends AbstractCoreTestCase {
 		Document doc2 = docDao.findById(2);
 		link.setDocument1(doc1);
 		link.setDocument2(doc2);
-		link.setType("xxx");
+		link.setType("zzz");
 		dao.store(link);
 		link = dao.findById(link.getId());
 		assertEquals(1, link.getDocument1().getId());
 		assertEquals(2, link.getDocument2().getId());
-		assertEquals("xxx", link.getType());
+		assertEquals("zzz", link.getType());
 	}
 
 	public void testDelete() {
@@ -80,11 +80,11 @@ public class HibernateDocumentLinkDAOTest extends AbstractCoreTestCase {
 	public void testFindByDocId() {
 		Collection<DocumentLink> links = dao.findByDocId(1, null);
 		assertNotNull(links);
-		assertEquals(2, links.size());
+		assertEquals(4, links.size());
 
 		Collection<DocumentLink> links2 = dao.findByDocId(2, null);
 		assertNotNull(links2);
-		assertEquals(2, links.size());
+		assertEquals(4, links.size());
 
 		Collection<DocumentLink> links3 = dao.findByDocId(99, null);
 		assertNotNull(links3);
@@ -95,6 +95,10 @@ public class HibernateDocumentLinkDAOTest extends AbstractCoreTestCase {
 		assertEquals(1, links.size());
 
 		links2 = dao.findByDocId(99, "pippo");
+		assertNotNull(links2);
+		assertEquals(0, links2.size());
+		
+		links2 = dao.findByDocId(1, "pippo");
 		assertNotNull(links2);
 		assertEquals(0, links2.size());
 	}

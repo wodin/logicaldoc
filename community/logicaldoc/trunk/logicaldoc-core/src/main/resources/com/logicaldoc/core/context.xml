@@ -188,6 +188,9 @@
 				<property name="userDocDAO">
                     <ref bean="UserDocDAO" />
                 </property>
+				<property name="linkDAO">
+                    <ref bean="DocumentLinkDAO" />
+                </property>
                 <property name="settings">
                     <ref bean="SettingsConfig" />
                 </property>
