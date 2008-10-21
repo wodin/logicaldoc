@@ -1,10 +1,12 @@
 package com.logicaldoc.core.document.dao;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
+
 /**
  * Test case for <code>HibernateDocumentLinkDAO</code>
- *
+ * 
  * @author Matteo Caruso - Logical Objects
  * @since 4.0
  */
@@ -13,7 +15,8 @@ public class HibernateDocumentLinkDAOTest extends AbstractCoreTestCase {
 	// Instance under test
 	private DocumentLinkDAO dao;
 
-	
+	private DocumentDAO docDao;
+
 	public HibernateDocumentLinkDAOTest(String name) {
 		super(name);
 	}
@@ -23,17 +26,21 @@ public class HibernateDocumentLinkDAOTest extends AbstractCoreTestCase {
 		// Retrieve the instance under test from spring context. Make sure that
 		// it is an HibernateDocumentLinkDAO
 		dao = (DocumentLinkDAO) context.getBean("DocumentLinkDAO");
+
+		docDao = (DocumentDAO) context.getBean("DocumentDAO");
 	}
 
 	public void testStore() {
 		DocumentLink link = new DocumentLink();
-		link.setDocId1(1);
-		link.setDocId2(2);
+		Document doc1 = docDao.findById(1);
+		Document doc2 = docDao.findById(2);
+		link.setDocument1(doc1);
+		link.setDocument2(doc2);
 		link.setType("xxx");
 		dao.store(link);
 		link = dao.findById(link.getId());
-		assertEquals(1, link.getDocId1());
-		assertEquals(2, link.getDocId2());
+		assertEquals(1, link.getDocument1().getId());
+		assertEquals(2, link.getDocument2().getId());
 		assertEquals("xxx", link.getType());
 	}
 
@@ -52,5 +59,4 @@ public class HibernateDocumentLinkDAOTest extends AbstractCoreTestCase {
 	public void testFindByDocIdLongString() {
 		fail("Not yet implemented");
 	}
-
 }

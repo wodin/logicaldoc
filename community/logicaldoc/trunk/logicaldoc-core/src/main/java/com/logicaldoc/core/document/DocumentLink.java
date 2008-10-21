@@ -4,7 +4,7 @@ import com.logicaldoc.core.PersistentObject;
 
 /**
  * Represents a document link. It represents a link beetween two documents
- * (docId1 and docId2). Every link can be of a certain type.
+ * (docId1 and document2). Every link can be of a certain type.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 4.0
@@ -13,9 +13,9 @@ public class DocumentLink extends PersistentObject {
 
 	private String type;
 
-	private long docId1 = -1;
+	private Document document1;
 
-	private long docId2 = -1;
+	private Document document2;
 
 	public DocumentLink() {
 
@@ -29,20 +29,19 @@ public class DocumentLink extends PersistentObject {
 		this.type = type;
 	}
 
-	public long getDocId1() {
-		return docId1;
+	public Document getDocument1() {
+		return document1;
 	}
 
-	public void setDocId1(long docId1) {
-		this.docId1 = docId1;
+	public void setDocument1(Document document1) {
+		this.document1 = document1;
 	}
 
-	public long getDocId2() {
-		return docId2;
+	public Document getDocument2() {
+		return document2;
 	}
 
-	public void setDocId2(long docId2) {
-		this.docId2 = docId2;
+	public void setDocument2(Document document2) {
+		this.document2 = document2;
 	}
-
 }
