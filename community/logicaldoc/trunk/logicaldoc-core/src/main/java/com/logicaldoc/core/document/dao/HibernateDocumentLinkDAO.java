@@ -51,7 +51,7 @@ public class HibernateDocumentLinkDAO extends HibernateDaoSupport implements Doc
 
 		try {
 			Collection<DocumentLink> coll = (Collection<DocumentLink>) getHibernateTemplate().find(
-					"from DocumentLink _link where _link.linkId = ?", new Object[] { linkid });
+					"from DocumentLink _link where _link.id = ?", new Object[] { linkid });
 			getHibernateTemplate().deleteAll(coll);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -93,8 +93,8 @@ public class HibernateDocumentLinkDAO extends HibernateDaoSupport implements Doc
 	public Collection<DocumentLink> findByDocId(long docId, String type) {
 		Collection<DocumentLink> coll = new ArrayList<DocumentLink>();
 		try {
-			StringBuffer query = new StringBuffer("from DocumentLink _link where (_link.docId1 = ? ");
-			query.append("or _link.docId2 = ?) ");
+			StringBuffer query = new StringBuffer("from DocumentLink _link where (_link.document1.id = ? ");
+			query.append("or _link.document2.id = ?) ");
 			if (StringUtils.isNotEmpty(type)) {
 				query.append("and _link.type = '");
 				query.append(type);

@@ -3,8 +3,8 @@ package com.logicaldoc.core.document;
 import com.logicaldoc.core.PersistentObject;
 
 /**
- * Represents a document link. It represents a link beetween two documents
- * (docId1 and document2). Every link can be of a certain type.
+ * Represents a document link. It represents a link between two documents
+ * (document1 and document2). Every link can be of a certain type.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 4.0
