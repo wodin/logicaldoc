@@ -179,7 +179,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 		coll = dao.toKeywords("il mio nome e' 123456789123456789123456789");
 		assertNotNull(coll);
-		System.out.println(coll);
 		assertEquals(3, coll.size());
 		assertFalse(coll.contains("123456789123456789123456789"));
 		assertTrue(coll.contains("12345678912345678912"));

@@ -249,7 +249,6 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 
 	public void testFindParents() {
 		List<Menu> menus = dao.findParents(103);
-		System.out.println(menus);
 		assertEquals(3, menus.size());
 		assertEquals(dao.findById(Menu.MENUID_HOME), menus.get(0));
 		assertEquals(dao.findById(100), menus.get(1));
