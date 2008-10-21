@@ -156,4 +156,4 @@ values   (2,2,1,'xyz');
 insert into ld_link(ld_id, ld_docid1, ld_docid2,ld_type)
 values   (3,1,2,'xxx');
 insert into ld_link(ld_id, ld_docid1, ld_docid2,ld_type)
-values   (4,2,1,null);
+values   (4,2,1,'');

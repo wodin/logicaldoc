@@ -112,20 +112,23 @@ public class HibernateDocumentLinkDAO extends HibernateDaoSupport implements Doc
 		return coll;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public DocumentLink findByDocIdsAndType(long docId1, long docId2, String type) {
+		if (type == null)
+			 return null;
 		DocumentLink link = null;
 		try {
-//			StringBuffer query = new StringBuffer("from DocumentLink _link where (_link.document1.id = ? ");
-//			query.append("or _link.document2.id = ?) ");
-//			if (StringUtils.isNotEmpty(type)) {
-//				query.append("and _link.type = '");
-//				query.append(type);
-//				query.append("'");
-//			}
-//
-//			coll = (Collection<DocumentLink>) getHibernateTemplate().find(query.toString(),
-//					new Object[] { docId, docId });
+			StringBuffer query = new StringBuffer("from DocumentLink _link where "
+					+ " _link.document1.id = ? and _link.document2.id = ? ");
+				query.append("and _link.type = '");
+				query.append(type);
+				query.append("'");
+				
+			Collection<DocumentLink> links = (Collection<DocumentLink>) getHibernateTemplate().find(query.toString(),
+					new Object[] { docId1, docId2 });
+			if (!links.isEmpty())
+				link = links.iterator().next();
 
 		} catch (Exception e) {
 			if (log.isErrorEnabled())

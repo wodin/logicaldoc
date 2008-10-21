@@ -102,4 +102,29 @@ public class HibernateDocumentLinkDAOTest extends AbstractCoreTestCase {
 		assertNotNull(links2);
 		assertEquals(0, links2.size());
 	}
+	
+	public void testFindByDocIdsAndType() {
+		DocumentLink link = dao.findByDocIdsAndType(1, 2, "test");
+		assertNotNull(link);
+		assertEquals(1, link.getId());
+
+		link = dao.findByDocIdsAndType(2, 1, "xyz");
+		assertNotNull(link);
+		assertEquals(2, link.getId());
+		
+		link = dao.findByDocIdsAndType(1, 2, "xxx");
+		assertNotNull(link);
+		assertEquals(3, link.getId());
+		
+		link = dao.findByDocIdsAndType(2, 1, "");
+		assertNotNull(link);
+		assertEquals(4, link.getId());
+		
+		link = dao.findByDocIdsAndType(2, 1, null);
+		assertNull(link);
+		
+		link = dao.findByDocIdsAndType(1, 2, "zzz");
+		assertNull(link);
+		
+	}
 }
