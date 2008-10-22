@@ -11,7 +11,6 @@ import com.logicaldoc.core.security.Menu;
  * Test case for <code>HibernateMenuDAOTest</code>
  * 
  * @author Marco Meschieri - Logical Objects
- * @version $Id:$
  * @since 3.0
  */
 public class HibernateMenuDAOTest extends AbstractCoreTestCase {
@@ -39,6 +38,8 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		menu.setParentId(1);
 		menu.setMenuGroup(new long[] { 1, 2 });
 		assertTrue(dao.store(menu));
+		assertEquals("/db.home/", menu.getPathExtended());
+		
 		menu = dao.findById(100);
 		assertEquals("db.admin", menu.getText());
 		assertEquals("/", menu.getPath());
@@ -46,15 +47,24 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertEquals(2, menu.getMenuGroups().size());
 
 		// Load an existing menu and modify it
-		menu = dao.findById(Menu.MENUID_HOME);
-		assertEquals("db.home", menu.getText());
+		menu = dao.findById(20);
+		assertEquals("db.emails", menu.getText());		
+		dao.store(menu);
+		assertEquals("/db.home/db.admin/", menu.getPathExtended());
+		menu = dao.findById(23);
+		dao.store(menu);
+		assertEquals("/db.home/db.admin/db.emails/", menu.getPathExtended());
+		menu = dao.findById(20);
 		menu.setText("xxxx");
+		dao.store(menu);
+		menu = dao.findById(23);
+		assertEquals("/db.home/db.admin/xxxx/", menu.getPathExtended());
+		
 		menu.getMenuGroups().remove(menu.getMenuGroup(3));
 		assertEquals(2, menu.getMenuGroups().size());
 		assertTrue(dao.store(menu));
 		menu = dao.findById(Menu.MENUID_HOME);
-		assertEquals("xxxx", menu.getText());
-		assertEquals(2, menu.getMenuGroups().size());
+		assertEquals(3, menu.getMenuGroups().size());
 	}
 
 	public void testDelete() {

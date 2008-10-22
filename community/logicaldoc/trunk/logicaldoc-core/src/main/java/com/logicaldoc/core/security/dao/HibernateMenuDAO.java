@@ -52,10 +52,10 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 
 		try {
 			getHibernateTemplate().saveOrUpdate(menu);
+			updatePathExtended(menu);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			result = false;
-			e.printStackTrace();
 		}
 
 		return result;
@@ -221,8 +221,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		Collection<Menu> coll = null;
 
 		try {
-			coll = (Collection<Menu>) getHibernateTemplate().find("from Menu _menu where _menu.parentId = ? and _menu.id!=_menu.parentId",
-					new Object[] { parentId });
+			coll = (Collection<Menu>) getHibernateTemplate().find(
+					"from Menu _menu where _menu.parentId = ? and _menu.id!=_menu.parentId", new Object[] { parentId });
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -591,6 +591,33 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			;
 		}
 		return coll;
+	}
 
+	/**
+	 * This utility method updates all pathExtended attributes of the hierarchy
+	 * starting from the specified menu
+	 */
+	private void updatePathExtended(Menu menu) {
+		// Prepare the pathExtended for this menu
+		StringBuffer pathExtended = new StringBuffer("/");
+		List<Menu> parents = findParents(menu.getId());
+		for (Menu parent : parents) {
+			pathExtended.append(parent.getText());
+			pathExtended.append("/");
+		}
+
+		// Set it and save
+		menu.setPathExtended(pathExtended.toString());
+		try {
+			getHibernateTemplate().saveOrUpdate(menu);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+
+		// Recursively invoke the method on all direct children
+		Collection<Menu> children = findByParentId(menu.getId());
+		for (Menu child : children) {
+			updatePathExtended(child);
+		}
 	}
 }
