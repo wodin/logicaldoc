@@ -130,6 +130,7 @@
 		<module>logicaldoc-core</module>
 		<module>logicaldoc-help</module>
 		<module>logicaldoc-webservice</module>
+		<module>logicaldoc-webdav</module>
 		<module>logicaldoc-web</module>
 	</modules>
 </project>
