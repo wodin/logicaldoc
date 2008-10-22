@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="logicaldoc-webdav" version="4.0.0" class="com.logicaldoc.websdav.WebDAVPlugin">
+	<runtime>
+		<library id="logicaldoc-webdav" path="classes/" type="code">
+			<export prefix="*" />
+		</library>
+	</runtime>
+</plugin>
