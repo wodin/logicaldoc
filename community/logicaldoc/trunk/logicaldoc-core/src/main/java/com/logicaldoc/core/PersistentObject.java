@@ -1,5 +1,6 @@
 package com.logicaldoc.core;
 
+import java.util.Date;
 
 /**
  * This abstract class defines the minimum requirements of persistent objects.
@@ -11,6 +12,8 @@ package com.logicaldoc.core;
 public abstract class PersistentObject {
 	private long id = 0;
 
+	private Date lastModified;
+
 	/**
 	 * Unique identifier in the data store
 	 */
@@ -20,6 +23,17 @@ public abstract class PersistentObject {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	/**
+	 * The last time this instance was modified
+	 */
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
 	}
 
 	public boolean equals(Object obj) {

@@ -7,6 +7,7 @@
         <id name="id" type="long" column="ld_id" unsaved-value="0">
             <generator class="increment" />
         </id>
+        <timestamp name="lastModified" column="ld_lastmodified" />
         <property name="docId" type="long" column="ld_docid" not-null="true"/>
         <property name="stem" type="string" column="ld_stem" not-null="true"/>
 		<property name="value" type="double" column="ld_value"  />

@@ -6,7 +6,8 @@
 		<cache usage="read-write" />
 		<id name="id" type="long" column="ld_id" unsaved-value="0">
             <generator class="increment" />
-        </id> 
+        </id>
+        <timestamp name="lastModified" column="ld_lastmodified" /> 
 		<property name="text" type="string" column="ld_text" length="255" />
 		<property name="parentId" type="long" column="ld_parentid" />
 		<property name="sort" type="int" column="ld_sort" />

@@ -95,7 +95,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindLastModifiedByUserId() {
-		Collection<Document> coll = dao.findLastModifiedByUserId(4, 10);
+		Collection<Document> coll = dao.findLastModifiedByUserId(1, 10);
 		assertNotNull(coll);
 		assertEquals(2, coll.size());
 

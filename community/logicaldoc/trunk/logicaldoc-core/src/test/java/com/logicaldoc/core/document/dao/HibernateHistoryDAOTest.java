@@ -33,7 +33,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 
 	@SuppressWarnings("unchecked")
 	public void testDelete() {
-		Collection<History> histories = (Collection<History>) dao.findByUserId(4);
+		Collection<History> histories = (Collection<History>) dao.findByUserId(1);
 		assertNotNull(histories);
 		assertEquals(2, histories.size());
 
@@ -61,7 +61,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 
 	@SuppressWarnings("unchecked")
 	public void testFindByUserId() {
-		Collection histories = dao.findByUserId(4);
+		Collection histories = dao.findByUserId(1);
 		assertNotNull(histories);
 		assertEquals(2, histories.size());
 
