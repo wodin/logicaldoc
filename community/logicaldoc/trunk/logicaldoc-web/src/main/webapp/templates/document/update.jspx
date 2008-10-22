@@ -48,6 +48,13 @@
                         <ice:outputText
                             value="#{documentForm.record.document.publisher}" style="font-weight: bold" />
                     </ice:panelGroup>
+                    
+                    <ice:panelGroup styleClass="outputLabel">
+                        <ice:outputLabel value="#{msgs['document.id']}" />
+                    </ice:panelGroup>
+                    <ice:panelGroup>
+                        <ice:outputText value="#{documentForm.record.document.id}" style="font-weight: bold"/>
+                    </ice:panelGroup>
                 </ice:panelGrid>
             </ice:panelGroup>
 
