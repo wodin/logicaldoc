@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.icesoft.faces.component.ext.RowSelectorEvent;
+import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
@@ -77,7 +78,7 @@ public class DocumentsRecordsManager extends SortableList {
 	private long selectedDirectory;
 
 	private long sourceDirectory;
-
+	
 	// Set of selected rows
 	private Set<DocumentRecord> selection = new HashSet<DocumentRecord>();
 
@@ -97,6 +98,8 @@ public class DocumentsRecordsManager extends SortableList {
 		clipboard.clear();
 	}
 
+	
+	
 	/**
 	 * Changes the currently selected directory and updates the documents list.
 	 * 
@@ -145,6 +148,10 @@ public class DocumentsRecordsManager extends SortableList {
 
 	public boolean isMultipleSelection() {
 		return multipleSelection;
+	}
+
+	public Set<DocumentRecord> getClipboard() {
+		return clipboard;
 	}
 
 	public void setMultipleSelection(boolean multiple) {

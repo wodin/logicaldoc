@@ -27,7 +27,7 @@ public class VersionsRecordsManager {
     /**
      * Changes the currently selected document and updates the versions list.
      * 
-     * @param directoryId
+     * @param doc
      */
     public void selectDocument(Document doc) {
         selectedDocument = doc;

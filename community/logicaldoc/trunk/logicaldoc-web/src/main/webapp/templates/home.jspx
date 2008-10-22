@@ -111,14 +111,13 @@
 									action="#{documentNavigation.openInFolder}">
 									<ice:graphicImage value="#{styleBean.imagesPath}/#{entry.icon}"
 										styleClass="iconSmall" />
-									<ice:outputText value=" #{entry.displayDescription}" />
+									<ice:outputText value=" #{entry.title}" />
 								</ice:commandLink>
 							</ice:panelGroup>
 						</ice:column>
 					</ice:dataTable>
 				</ice:panelGroup>
 			</ice:panelCollapsible>
-
 
 			<!-- End first Column -->
 		</ice:panelGroup>
@@ -161,7 +160,7 @@
 									action="#{documentNavigation.openInFolder}">
 									<ice:graphicImage value="#{styleBean.imagesPath}/#{entry.icon}"
 										styleClass="iconSmall" />
-									<ice:outputText value=" #{entry.displayDescription}" />
+									<ice:outputText value=" #{entry.title}" />
 								</ice:commandLink>
 							</ice:panelGroup>
 						</ice:column>

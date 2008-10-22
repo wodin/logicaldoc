@@ -108,6 +108,12 @@
 	</managed-bean>
 
 	<managed-bean>
+		<managed-bean-name>linksRecordsManager</managed-bean-name>
+		<managed-bean-class>com.logicaldoc.web.document.LinksRecordsManager</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+
+	<managed-bean>
 		<managed-bean-name>rightsRecordsManager</managed-bean-name>
 		<managed-bean-class>com.logicaldoc.web.document.RightsRecordsManager</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>

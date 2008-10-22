@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
@@ -15,9 +16,11 @@ import org.apache.commons.logging.LogFactory;
 
 import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Menu;
@@ -222,16 +225,21 @@ public class DocumentRecord extends MenuBarBean {
 						null));
 			}
 
-			model
-					.add(createMenuItem(" " + Messages.getMessage("msg.jsp.foldercontent.edit"), "edit-"
-							+ folder.getId(), null, "#{documentRecord.edit}", null, StyleBean
-							.getImagePath("document_edit.png"), true, null, null));
+			model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.foldercontent.edit"), "pastelink-"
+					+ folder.getId(), null, "#{documentRecord.edit}", null,
+					StyleBean.getImagePath("document_edit.png"), true, null, null));
+			
+			model.add(createMenuItem(" " + Messages.getMessage("link.pasteas"), "edit-" + folder.getId(), null,
+					"#{documentRecord.pasteAsLink}", null, StyleBean.getImagePath("pastelink.png"), true,
+					null, null));
 		}
 
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,
 				"#{documentRecord.versions}", null, StyleBean.getImagePath("versions.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.similardocs"), "similar-" + folder.getId(), null,
 				"#{searchForm.searchSimilar}", null, StyleBean.getImagePath("similar.png"), true, "_blank", null));
+		model.add(createMenuItem(" " + Messages.getMessage("links"), "linked-" + folder.getId(), null,
+				"#{documentRecord.links}", null, StyleBean.getImagePath("link.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.discuss"), "articles-" + folder.getId(), null,
 				"#{documentRecord.articles}", null, StyleBean.getImagePath("comments.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getId(),
@@ -384,6 +392,30 @@ public class DocumentRecord extends MenuBarBean {
 	}
 
 	/**
+	 * Shows all document links
+	 */
+	public String links() {
+		if (SessionManagement.isValid()) {
+			try {
+				LinksRecordsManager links = ((LinksRecordsManager) FacesUtil
+						.accessBeanFromFacesContext("linksRecordsManager", FacesContext.getCurrentInstance(), log));
+				links.selectDocument(document);
+
+				DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
+						"documentNavigation", FacesContext.getCurrentInstance(), log));
+				documentNavigation.setSelectedPanel(new PageContentBean("links"));
+			} catch (Exception ex) {
+				log.error(ex.getMessage(), ex);
+				Messages.addError(Messages.getMessage("errors.error"));
+			}
+		} else {
+			return "login";
+		}
+
+		return null;
+	}
+
+	/**
 	 * Shows the articles for this document
 	 */
 	public String articles() {
@@ -462,7 +494,6 @@ public class DocumentRecord extends MenuBarBean {
 
 	public String sendAsTicket() {
 		// Show the proper panel
-
 		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 				"documentNavigation", FacesContext.getCurrentInstance(), log));
 		documentNavigation.setSelectedPanel(new PageContentBean("email"));
@@ -497,6 +528,37 @@ public class DocumentRecord extends MenuBarBean {
 		address += ("/download-ticket?ticketId=" + ticketid);
 		emailForm.setText("URL: " + address);
 
+		return null;
+	}
+
+	/**
+	 * Links all selected documents to this document
+	 */
+	public String pasteAsLink() {
+		DocumentLinkDAO linkDao = (DocumentLinkDAO) Context.getInstance().getBean(DocumentLinkDAO.class);
+		DocumentsRecordsManager documentsRecordsManager = ((DocumentsRecordsManager) FacesUtil
+				.accessBeanFromFacesContext("documentsRecordsManager", FacesContext.getCurrentInstance(), log));
+
+		Set<DocumentRecord> clipboard = documentsRecordsManager.getClipboard();
+		if (!clipboard.isEmpty()) {
+			try {
+				for (DocumentRecord record : clipboard) {
+					DocumentLink link = linkDao.findByDocIdsAndType(getDocId(), record.getDocId(), "default");
+					if (link == null) {
+						// The link doesn't exist and must be created
+						link = new DocumentLink();
+						link.setDocument1(getDocument());
+						link.setDocument2(record.getDocument());
+						link.setType("default");
+						linkDao.store(link);
+					}
+				}
+			} catch (Exception e) {
+				Messages.addLocalizedInfo("link.error");
+				log.error("Exception moving document: " + e.getMessage(), e);
+			}
+			clipboard.clear();
+		}
 		return null;
 	}
 

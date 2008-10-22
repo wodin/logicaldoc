@@ -126,6 +126,12 @@
 				</f:subview>
 			</ice:panelGroup>
 
+			<ice:panelGroup id="links">
+				<f:subview id="w-links">
+					<ui:include src="/templates/document/links.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
 			<ice:panelGroup id="rights">
 				<f:subview id="w-rights">
 					<ui:include src="/templates/document/rights.jspx" />

@@ -49,7 +49,7 @@
 								<ice:outputText value="#{msgs['msg.jsp.author']}" />
 							</f:facet>
 							<ice:panelGroup>
-								<ice:outputText value="#{history.username}" />
+								<ice:outputText value="#{history.userName}" />
 							</ice:panelGroup>
 						</ice:column>
 
