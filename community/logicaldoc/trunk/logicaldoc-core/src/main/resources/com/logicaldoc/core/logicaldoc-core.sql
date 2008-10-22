@@ -93,10 +93,6 @@ values     (23,'2008-10-22','smtp',20,3,'mail_preferences.png','/2/20',1,'admin/
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (24,'2008-10-22','db.emailaccounts',20,4,'mailbox.png','/2/20',1,'admin/accounts',0);
-
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
 values     (25,'2008-10-22','db.searchengine',2,6,'search.png','/2',1,'admin/searchEngine',0);
 
 insert into ld_menu
@@ -167,9 +163,6 @@ insert into ld_menugroup
 values     (23,1,0);
 
 insert into ld_menugroup
-values     (24,1,0);
-
-insert into ld_menugroup
 values     (25,1,0);
 
 insert into ld_menugroup
@@ -201,9 +194,6 @@ values     (20,2,0);
 
 insert into ld_menugroup
 values     (23,2,0);
-
-insert into ld_menugroup
-values     (24,2,0);
 
 insert into ld_menugroup
 values     (26,2,1);
