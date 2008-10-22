@@ -221,7 +221,6 @@
 		<property name="triggers">
 			<list>
 				<ref bean="IndexOptimizerTrigger" />
-				<ref bean="EMailReceiverTrigger" />
 			</list>
 		</property>
 	</bean>

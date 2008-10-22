@@ -299,18 +299,6 @@
 	</managed-bean>
 
 	<managed-bean>
-		<managed-bean-name>accountsRecordsManager</managed-bean-name>
-		<managed-bean-class>com.logicaldoc.web.admin.AccountsRecordsManager</managed-bean-class>
-		<managed-bean-scope>request</managed-bean-scope>
-	</managed-bean>
-
-	<managed-bean>
-		<managed-bean-name>accountForm</managed-bean-name>
-		<managed-bean-class>com.logicaldoc.web.admin.AccountForm</managed-bean-class>
-		<managed-bean-scope>request</managed-bean-scope>
-	</managed-bean>
-
-	<managed-bean>
 		<managed-bean-name>smtpForm</managed-bean-name>
 		<managed-bean-class>com.logicaldoc.web.admin.SmtpForm</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
