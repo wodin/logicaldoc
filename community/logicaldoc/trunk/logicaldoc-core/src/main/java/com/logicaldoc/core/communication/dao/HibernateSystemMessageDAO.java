@@ -16,7 +16,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import com.logicaldoc.core.communication.SystemMessage;
 
 /**
- * Hibernate implementation of <code>EMailAccount</code>
+ * Hibernate implementation of <code>SystemMessageDAO</code>
  * 
  * @author Marco Meschieri
  * @version $Id: HibernateSystemMessageDAO.java,v 1.2 2006/08/29 16:33:46 marco

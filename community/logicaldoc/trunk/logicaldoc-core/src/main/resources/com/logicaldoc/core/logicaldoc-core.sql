@@ -1,6 +1,5 @@
 create table ld_article (ld_id bigint not null, ld_lastmodified timestamp not null, ld_docid bigint not null, ld_subject varchar(255), ld_message varchar(2000), ld_date timestamp, ld_username varchar(255), primary key (ld_id));
 create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not null, ld_title varchar(255), ld_version varchar(10), ld_date timestamp, ld_publisher varchar(30), ld_status int, ld_type varchar(255), ld_checkoutuser varchar(30), ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourcetype varchar(255), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_folderid bigint, primary key (ld_id));
-create table ld_emailaccount (ld_id bigint not null, ld_lastmodified timestamp not null, ld_userid bigint, ld_mailaddress varchar(255), ld_provider varchar(255), ld_host varchar(255), ld_port varchar(255), ld_user varchar(255), ld_password varchar(255), ld_allowedtypes varchar(255), ld_deletefrommailbox int, ld_language varchar(255), ld_enabled int, ld_targetfolder bigint, primary key (ld_id));
 create table ld_group (ld_id bigint not null, ld_lastmodified timestamp not null, ld_name varchar(255) not null, ld_description varchar(255), primary key (ld_id));
 create table ld_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_docid bigint not null, lo_userid bigint not null, ld_date timestamp, lo_username varchar(255), lo_event varchar(255), primary key (ld_id));
 create table ld_keyword (ld_docid bigint not null, ld_keyword varchar(255));
@@ -15,7 +14,6 @@ create table ld_userdoc (ld_id bigint not null, ld_lastmodified timestamp not nu
 create table ld_usergroup (ld_groupid bigint not null, ld_userid bigint not null, primary key (ld_groupid, ld_userid));
 create table ld_version (ld_docid bigint not null, ld_version varchar(10), ld_user varchar(255), ld_date timestamp, ld_comment varchar(2000));
 alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folderid) references ld_menu;
-alter table ld_emailaccount add constraint FK1013678CDFB2816 foreign key (ld_targetfolder) references ld_menu;
 alter table ld_keyword add constraint FK55BBDA227C693DFD foreign key (ld_docid) references ld_document;
 alter table ld_link add constraint FK1330661CADD6217 foreign key (ld_docid2) references ld_document;
 alter table ld_link add constraint FK1330661CADD6216 foreign key (ld_docid1) references ld_document;

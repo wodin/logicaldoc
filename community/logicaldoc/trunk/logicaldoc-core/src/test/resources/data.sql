@@ -143,11 +143,6 @@ values     (2,'2008-10-22',1,'subject2','message2','2008-10-10','admin');
 insert into ld_article
 values     (3,'2008-10-22',1,'subject3','message3','2008-10-11','sebastian');
 
-insert into ld_emailaccount
-values     (1,'2008-10-22',1,'author@logicaldoc.sf.net','Aruba','pcalle','port','author@logicaldoc.sf.net','authorPSWD','pdf,doc',0,'it',1,1);
-
-insert into ld_emailaccount
-values     (2,'2008-10-22',4,'admin@logicaldoc.sf.net','Aruba','pcalle','port','admin@logicaldoc.sf.net','adminPSWD','doc,txt',1,'en',0,1);
 
 insert into ld_systemmessage
 values     (1,'2008-10-22','admin','sebastian','message text1','subject1','1111999999999999999',5,3,1,0);

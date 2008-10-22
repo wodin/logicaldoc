@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.core.communication.EMailReceiver;
+import org.java.plugin.registry.Extension;
+
 import com.logicaldoc.core.searchengine.IndexOptimizer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.PluginRegistry;
 import com.logicaldoc.util.config.ContextConfigurator;
-import org.java.plugin.registry.Extension;
 
 /**
  * A manager that collects all operations about tasks.
@@ -19,8 +19,7 @@ import org.java.plugin.registry.Extension;
  * <b>Important:</b> Only tasks defined in the Task extension point will be
  * considered
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.5.0
  */
 public class TaskManager {
@@ -58,7 +57,6 @@ public class TaskManager {
 		List<Task> tasks = new ArrayList<Task>();
 		Context context = Context.getInstance();
 		tasks.add((Task) context.getBean(IndexOptimizer.NAME));
-		tasks.add((Task) context.getBean(EMailReceiver.NAME));
 
 		// Acquire the 'Task' extensions of the core plugin and add iterate over
 		// defined tasks

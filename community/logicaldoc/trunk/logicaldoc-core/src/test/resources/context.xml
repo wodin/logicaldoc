@@ -135,22 +135,6 @@
 		</property>
 	</bean>
 
-	<!-- Mail receiver -->
-	<bean id="EMailReceiver"
-		class="com.logicaldoc.core.communication.EMailReceiver" abstract="false"
-		lazy-init="default" autowire="default" dependency-check="default">
-		<property name="defaultOwner">
-			<value>admin</value>
-		</property>
-		<property name="accountDao" ref="EMailAccountDAO" />
-		<property name="menuDao" ref="MenuDAO" />
-		<property name="documentDao" ref="DocumentDAO" />
-		<property name="historyDao" ref="HistoryDAO" />
-		<property name="indexer" ref="Indexer" />
-		<property name="storer" ref="Storer" />
-		<property name="settingsConfig" ref="SettingsConfig" />
-	</bean>
-
 	<!-- DataSource -->
 	<bean id="DataSource"
 		class="org.apache.commons.dbcp.BasicDataSource">

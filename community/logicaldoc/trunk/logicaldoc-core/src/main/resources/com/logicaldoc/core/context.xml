@@ -198,21 +198,6 @@
 		</property>
 	</bean>
 
-	<bean id="EMailAccountDAO" parent="ApplicationBaseTransactionProxy"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
-		<property name="target">
-			<bean
-				class="com.logicaldoc.core.communication.dao.HibernateEMailAccountDAO"
-				abstract="false" lazy-init="default" autowire="default"
-				dependency-check="default">
-				<property name="sessionFactory">
-					<ref bean="SessionFactory" />
-				</property>
-			</bean>
-		</property>
-	</bean>
-
 	<bean id="SystemMessageDAO" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
@@ -332,45 +317,7 @@
 
 
 	<!-- Tasks -->
-
-	<!-- Mail receiver -->
-	<bean id="EMailReceiver"
-		class="com.logicaldoc.core.communication.EMailReceiver">
-		<property name="defaultOwner">
-			<value>admin</value>
-		</property>
-		<property name="accountDao" ref="EMailAccountDAO" />
-		<property name="menuDao" ref="MenuDAO" />
-		<property name="userDao" ref="UserDAO" />
-		<property name="documentDao" ref="DocumentDAO" />
-		<property name="historyDao" ref="HistoryDAO" />
-		<property name="indexer" ref="Indexer" />
-		<property name="storer" ref="Storer" />
-		<property name="settingsConfig" ref="SettingsConfig" />
-	</bean>
-
-	<bean id="EMailReceiverJob"
-		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="EMailReceiver" />
-		<property name="targetMethod">
-			<value>run</value>
-		</property>
-		<property name="concurrent">
-			<value>false</value>
-		</property>
-	</bean>
-
-	<bean id="EMailReceiverTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerBean"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
-		<property name="jobDetail" ref="EMailReceiverJob" />
-		<property name="cronExpression">
-			<value>${schedule.cron.EMailReceiver}</value>
-		</property>
-	</bean>
-
-
+	
 	<bean id="IndexOptimizer"
 		class="com.logicaldoc.core.searchengine.IndexOptimizer">
 		<property name="indexer">
