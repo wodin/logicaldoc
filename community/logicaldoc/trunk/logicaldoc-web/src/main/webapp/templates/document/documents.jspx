@@ -59,9 +59,10 @@
 					<ice:rowSelector value="#{documentRecord.selected}"
 						multiple="#{documentsRecordsManager.multipleSelection}"
 						selectionListener="#{documentsRecordsManager.selectRow}"
-						selectedClass="rowSelSelected" mouseOverClass="rowMouseOver" />
-					<ice:selectBooleanCheckbox title="#{msgs['msg.jsp.popup']}"
-						value="#{documentRecord.selected}" />
+						selectedClass="rowSelSelected" mouseOverClass="rowMouseOver">
+						<ice:selectBooleanCheckbox title="#{msgs['msg.jsp.popup']}"
+							value="#{documentRecord.selected}" />
+					</ice:rowSelector>
 				</ice:panelGroup>
 			</ice:column>
 
@@ -86,8 +87,7 @@
 						value="download?docId=#{documentRecord.docId}&amp;downloadText=true"
 						target="_blank" title="txt">
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
-							value="#{styleBean.imagesPath}/txt-icon.png"
-							alt="txt" />
+							value="#{styleBean.imagesPath}/txt-icon.png" alt="txt" />
 					</ice:outputLink>
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
@@ -128,7 +128,7 @@
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
 					menuPopup="pop">
 					<ice:outputText value="#{documentRecord.size} KB"
-						title="#{msgs['msg.jsp.popup']}" /> 
+						title="#{msgs['msg.jsp.popup']}" />
 				</ice:panelGroup>
 			</ice:column>
 		</ice:dataTable>

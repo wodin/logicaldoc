@@ -160,7 +160,7 @@ public class DocumentsRecordsManager extends SortableList {
 
 	public void selectRow(RowSelectorEvent e) {
 		DocumentRecord record = documents.get(e.getRow());
-
+		
 		if (e.isSelected() || !selection.contains(record)) {
 			selection.add(record);
 		} else if (!e.isSelected() || selection.contains(record)) {
