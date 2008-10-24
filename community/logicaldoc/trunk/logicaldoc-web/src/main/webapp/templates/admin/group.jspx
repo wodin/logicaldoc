@@ -2,8 +2,7 @@
 <!-- 
  This page is the group editing form
   
- @author Marco Meschieri
- @version $Id: user.jspx,v 1.1 2007/10/16 16:12:10 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -28,22 +27,22 @@
                 </h3>
                 <ice:panelGrid columns="3" onkeypress="return submitOnEnter('w-group:groupForm:save', event);">
                     <ice:panelGroup styleClass="outputLabel" >
-                        <ice:outputLabel for="groupName"
-                            value="#{msgs['msg.jsp.groupname']}*" />
+                        <ice:outputLabel for="name"
+                            value="#{msgs['group.name']}*" />
                     </ice:panelGroup>
                     <ice:panelGroup rendered="#{groupsRecordsManager.selectedPanel == 'create'}">
-                        <ice:inputText id="groupName"
+                        <ice:inputText id="name"
                             tabindex="1"
                             maxlength="30" size="30"
-                            value="#{groupsRecordsManager.selectedGroup.groupName}"
+                            value="#{groupsRecordsManager.selectedGroup.name}"
                             binding="#{groupsRecordsManager.groupName}"
                             onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
                             required="true" />
                         <br />
-                        <ice:message for="groupName" />
+                        <ice:message for="name" />
                     </ice:panelGroup>
                     <ice:panelGroup rendered="#{groupsRecordsManager.selectedPanel == 'edit'}">
-                        <ice:outputText value=" #{groupsRecordsManager.selectedGroup.groupName}" style="font-weight:bold" />
+                        <ice:outputText value=" #{groupsRecordsManager.selectedGroup.name}" style="font-weight:bold" />
                     </ice:panelGroup>
                     <ice:panelGroup style="width:20px" />
                     <ice:panelGroup styleClass="outputLabel" >
@@ -54,7 +53,7 @@
                         <ice:inputTextarea id="groupDesc"
                              tabindex="1"
                              cols="70" rows="4"
-                             value="#{groupsRecordsManager.selectedGroup.groupDesc}"
+                             value="#{groupsRecordsManager.selectedGroup.description}"
                              binding="#{groupsRecordsManager.groupDesc}" />
                         <br />
                         <ice:message for="groupDesc" />
@@ -106,6 +105,6 @@
       /**
        * Set initial focus
        */
-      document.getElementById('w-group:groupForm:groupName').focus();
+      document.getElementById('w-group:groupForm:name').focus();
     </script>
 </jsp:root>
