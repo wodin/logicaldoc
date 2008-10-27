@@ -87,7 +87,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Menu folder = document.getFolder();
 
 		// create some strings containing paths
-		String completeDocPath = settings.getValue("docdir") + document.getPath() + "/" + docId + "/";
+		String completeDocPath = settings.getValue("docdir") + document.getPath() + "/doc_" + docId + "/";
 
 		// rename the old current version file to the version name: "quelle.txt"
 		// -> "2.0"
@@ -254,7 +254,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	private void store(Document doc, InputStream content, String filename, String version) throws IOException {
 		// Makes path
-		String path = doc.getPath() + "/" + doc.getId();
+		String path = doc.getPath() + "/doc_" + doc.getId();
 
 		// Get file to upload inputStream
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
@@ -285,7 +285,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				indexer.deleteDocument(String.valueOf(docId), doc.getLanguage());
 			}
 
-			storer.delete(doc.getPath() + "/" + doc.getId());
+			storer.delete(doc.getPath() + "/doc_" + doc.getId());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -300,7 +300,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	public File getDocumentFile(Document doc, String version) {
 		Menu folder = doc.getFolder();
 		String path = settings.getValue("docdir") + "/";
-		path += (folder.getPath() + "/" + folder.getId() + "/" + doc.getId());
+		path += (folder.getPath() + "/" + folder.getId() + "/doc_" + doc.getId());
 
 		/*
 		 * Older versions of a document are stored in the same directory as the
