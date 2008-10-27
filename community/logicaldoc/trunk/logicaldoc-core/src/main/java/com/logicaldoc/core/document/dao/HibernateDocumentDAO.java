@@ -31,8 +31,7 @@ import com.logicaldoc.util.config.SettingsConfig;
 /**
  * Hibernate implementation of <code>DocumentDAO</code>
  * 
- * @author Marco Meschieri
- * @version $Id: HibernateDocumentDAO.java,v 1.1 2007/06/29 06:28:28 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class HibernateDocumentDAO extends HibernateDaoSupport implements DocumentDAO {
@@ -248,7 +247,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				doc.setKeywords(dst);
 			}
 
-			long size = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/" + doc.getId() + "/" + doc
+			long size = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
 					.getFileName())).length();
 			doc.setFileSize(size);
 

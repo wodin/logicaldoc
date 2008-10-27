@@ -32,7 +32,6 @@ import com.logicaldoc.util.config.SettingsConfig;
  * Basic Implementation of <code>DocumentManager</code>
  * 
  * @author Marco Meschieri
- * @version $Id:$
  * @since 3.5
  */
 public class DocumentManagerImpl implements DocumentManager {
@@ -87,7 +86,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Menu folder = document.getFolder();
 
 		// create some strings containing paths
-		String completeDocPath = settings.getValue("docdir") + document.getPath() + "/doc_" + docId + "/";
+		String completeDocPath = getDocFilePath(document);
 
 		// rename the old current version file to the version name: "quelle.txt"
 		// -> "2.0"
@@ -191,8 +190,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			documentDAO.store(doc);
 
-			String path = new StringBuilder(settings.getValue("docdir")).append("/").append(doc.getPath()).append("/")
-					.append(doc.getId()).toString();
+			String path = getDocFilePath(doc);
 
 			/* store the document */
 			store(doc, content, filename, "1.0");
@@ -298,9 +296,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public File getDocumentFile(Document doc, String version) {
-		Menu folder = doc.getFolder();
-		String path = settings.getValue("docdir") + "/";
-		path += (folder.getPath() + "/" + folder.getId() + "/doc_" + doc.getId());
+		String path = getDocFilePath(doc);
 
 		/*
 		 * Older versions of a document are stored in the same directory as the
@@ -352,9 +348,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void update(Document doc, User user, String title, String source, String sourceAuthor,
-			Date sourceDate, String sourceType, String coverage, String language, Set<String> keywords)
-			throws Exception {
+	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
+			String sourceType, String coverage, String language, Set<String> keywords) throws Exception {
 		try {
 			doc.setTitle(title);
 			doc.setSource(source);
@@ -449,14 +444,14 @@ public class DocumentManagerImpl implements DocumentManager {
 			return;
 
 		// Get original document directory path
-		String path = settings.getValue("docdir") + "/" + doc.getPath() + "/" + doc.getId();
+		String path = getDocFilePath(doc);
 		File originalDocDir = new File(path);
 
 		doc.setFolder(folder);
 		documentDAO.store(doc);
 
 		// Update the FS
-		path = settings.getValue("docdir") + "/" + doc.getPath() + "/" + doc.getId();
+		path = getDocFilePath(doc);
 
 		File newDocDir = new File(path);
 
@@ -470,5 +465,14 @@ public class DocumentManagerImpl implements DocumentManager {
 		indexDocument
 				.add(new Field(LuceneDocument.FIELD_PATH, doc.getPath(), Field.Store.YES, Field.Index.UN_TOKENIZED));
 		indexer.addDocument(indexDocument, doc.getLanguage());
+	}
+
+	/**
+	 * Computes the directory path where the document file is stored
+	 */
+	private String getDocFilePath(Document doc) {
+		String path = new StringBuilder(settings.getValue("docdir")).append("/").append(doc.getPath()).append("/doc_")
+				.append(doc.getId()).toString();
+		return path;
 	}
 }

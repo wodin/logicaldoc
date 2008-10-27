@@ -51,6 +51,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		boolean result = true;
 
 		try {
+			menu.setPath(menu.getPath().replaceAll("//", "/"));
 			getHibernateTemplate().saveOrUpdate(menu);
 			updatePathExtended(menu);
 		} catch (Exception e) {
@@ -547,7 +548,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		menu.setParentId(parent.getId());
 		menu.setSort(0);
 		menu.setIcon("folder.gif");
-		menu.setPath((parent.getPath() + "/" + parent.getId()).replaceAll("//", "/"));
+		menu.setPath(parent.getPath() + "/" + parent.getId());
 		menu.setType(Menu.MENUTYPE_DIRECTORY);
 		for (MenuGroup mg : parent.getMenuGroups()) {
 			menu.getMenuGroups().add(mg);
@@ -607,7 +608,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		}
 
 		// Set it and save
-		menu.setPathExtended(pathExtended.toString());
+		menu.setPathExtended(pathExtended.toString().replaceAll("//", "/"));
 		try {
 			getHibernateTemplate().saveOrUpdate(menu);
 		} catch (Exception e) {
