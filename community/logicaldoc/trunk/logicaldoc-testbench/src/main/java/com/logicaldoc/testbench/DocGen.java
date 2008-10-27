@@ -25,14 +25,22 @@ public class DocGen {
 
 	private List<String> lines = new ArrayList<String>();
 
+	private List<File> folders = new ArrayList<File>();
+
 	private File rootFolder;
 
 	private int linesPerDoc = 100;
 
-	private int docsPerDir = 1000;
+	private int deepLevel = 5;
 
-	private int totalDocs = 1000;
+	private int foldersPercentage = 2;
 
+	private int documentsTotal = 1000;
+
+	private int maxSubFolders = 5;
+	
+	private int foldersTotal;
+	
 	public DocGen(File rootFolder, String master) {
 		this.rootFolder = rootFolder;
 		try {
@@ -47,12 +55,12 @@ public class DocGen {
 		}
 	}
 
-	public int getTotalDocs() {
-		return totalDocs;
+	public int getDocumentsTotal() {
+		return documentsTotal;
 	}
 
-	public void setTotalDocs(int totalDocs) {
-		this.totalDocs = totalDocs;
+	public void setDocumentsTotal(int documentsTotal) {
+		this.documentsTotal = documentsTotal;
 	}
 
 	public int getLinesPerDoc() {
@@ -63,12 +71,12 @@ public class DocGen {
 		this.linesPerDoc = linesPerDoc;
 	}
 
-	public int getDocsPerDir() {
-		return docsPerDir;
+	public int getDeepLevel() {
+		return deepLevel;
 	}
 
-	public void setDocsPerDir(int docsPerDir) {
-		this.docsPerDir = docsPerDir;
+	public void setDeepLevel(int deepLevel) {
+		this.deepLevel = deepLevel;
 	}
 
 	/**
@@ -77,18 +85,50 @@ public class DocGen {
 	 * @throws IOException
 	 */
 	public void generate() throws IOException {
+		foldersTotal = (int) ((double) (documentsTotal * foldersPercentage) / (double) 100);
+		folders.clear();
 		rootFolder.mkdirs();
 		rootFolder.mkdir();
 
-		int subdirIndex = 0;
-		File subdir = null;
-		for (int i = 0; i < totalDocs; i++) {
-			if (i % docsPerDir == 0) {
-				subdir = new File(rootFolder, DIR_ + subdirIndex++);
-				subdir.mkdir();
-			}
-			generateFile(new File(subdir, DOC_ + i + TXT));
+		
+		while(folders.size()<foldersTotal)
+		 createTree(rootFolder,0);
+		
+		
+//
+// int foldersNumber = (int) ((double) (documentsTotal * foldersPercentage) /
+// (double) 100);
+// int docsPerDir = (int) (documentsTotal / foldersNumber);
+//
+// int subdirIndex = 0;
+// File subdir = null;
+// for (int i = 0; i < documentsTotal; i++) {
+// if (i % deepLevel == 0) {
+// subdir = new File(rootFolder, DIR_ + subdirIndex++);
+// subdir.mkdir();
+// }
+// generateFile(new File(subdir, DOC_ + i + TXT));
+// }
+	}
+
+
+	private void createTree(File parent, int currentDeepLevel) {
+		if(folders.size()>=foldersTotal || currentDeepLevel>=deepLevel)
+			return;
+		
+		int subDirs=generateRandomInt(maxSubFolders);
+		for(int i=0;i<subDirs && folders.size()<foldersTotal;i++){
+			File subDir=new File(parent,"DIR_"+folders.size());
+			subDir.mkdir();
+			folders.add(subDir);
+			createTree(subDir, currentDeepLevel+1);
 		}
+	}
+
+	private int generateRandomInt(int max) {
+		Random randomGenerator = new Random();
+		int randomInt = randomGenerator.nextInt(max+1);
+		return randomInt;
 	}
 
 	/**
@@ -110,18 +150,34 @@ public class DocGen {
 	}
 
 	public static void main(String[] args) throws IOException {
-		if (args.length < 2){
-			System.out.println("Usage is DocGen root_dir master_doc [total_docs] [docs_per_dir] [lines_per_doc]");
+		if (args.length < 2) {
+			System.out.println("Usage is DocGen root_dir master_doc [docs_total] [folders_percentage] [lines_per_doc]");
 			return;
 		}
 
 		DocGen docGen = new DocGen(new File(args[0]), args[1]);
 		if (args.length > 1)
-			docGen.setTotalDocs(Integer.parseInt(args[2]));
+			docGen.setDocumentsTotal(Integer.parseInt(args[2]));
 		if (args.length > 2)
-			docGen.setDocsPerDir(Integer.parseInt(args[3]));
+			docGen.setFoldersPercentage(Integer.parseInt(args[3]));
 		if (args.length > 3)
 			docGen.setLinesPerDoc(Integer.parseInt(args[4]));
 		docGen.generate();
+	}
+
+	public int getFoldersPercentage() {
+		return foldersPercentage;
+	}
+
+	public void setFoldersPercentage(int foldersPercentage) {
+		this.foldersPercentage = foldersPercentage;
+	}
+
+	public int getMaxSubFolders() {
+		return maxSubFolders;
+	}
+
+	public void setMaxSubFolders(int maxSubFolders) {
+		this.maxSubFolders = maxSubFolders;
 	}
 }
