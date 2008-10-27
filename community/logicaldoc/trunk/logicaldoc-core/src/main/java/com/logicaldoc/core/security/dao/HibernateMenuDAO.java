@@ -24,7 +24,6 @@ import com.logicaldoc.core.security.User;
  * Hibernate implementation of <code>MenuDAO</code>
  * 
  * @author Marco Meschieri - Logical Objects
- * @version $Id:$
  * @since 3.0
  */
 public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
