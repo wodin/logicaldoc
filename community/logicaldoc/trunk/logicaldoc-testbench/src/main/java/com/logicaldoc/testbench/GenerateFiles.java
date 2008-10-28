@@ -7,15 +7,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
- * Document generator utility
+ * Document generator utility. All configuration parameters are taken from
+ * /conf.properties (keys starting with generatefiles).
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
 public class GenerateFiles {
+
+	protected static Log log = LogFactory.getLog(GenerateFiles.class);
 
 	private String folderPrefix = "dir_";
 
@@ -31,6 +38,8 @@ public class GenerateFiles {
 
 	private File rootFolder;
 
+	private String master;
+
 	private int linesPerFile = 100;
 
 	private int deepLevel = 5;
@@ -45,28 +54,42 @@ public class GenerateFiles {
 
 	private int foldersTotal;
 
-	private long startFolderId = 0;
+	private long startFolderId = 10000;
 
-	private long startDocId = 0;
+	private long startDocId = 10000;
 
 	private boolean logicalDocLayout = false;
 
 	/**
-	 * Constructor of the File Generator
-	 * 
-	 * @param rootFolder Folder in which insert the files
-	 * @param master File from which retrieve the text for the generating files
+	 * Generate the files in the root folder
 	 */
-	public GenerateFiles(File rootFolder, String master) {
-		this.rootFolder = rootFolder;
+	public GenerateFiles() {
+
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(master)));
+			Properties conf = new Properties();
+			conf.load(this.getClass().getResourceAsStream("/conf.properties"));
+			this.rootFolder = new File(conf.getProperty("generatefiles.rootFolder"));
+			this.folderPrefix = conf.getProperty("generatefiles.folderPrefix");
+			this.filePrefix = conf.getProperty("generatefiles.filePrefix");
+			this.linesPerFile = Integer.parseInt(conf.getProperty("generatefiles.linesPerFile"));
+			this.deepLevel = Integer.parseInt(conf.getProperty("generatefiles.deepLevel"));
+			this.foldersPercentage = Integer.parseInt(conf.getProperty("generatefiles.foldersPercentage"));
+			this.filesTotal = Integer.parseInt(conf.getProperty("generatefiles.filesTotal"));
+			this.maxSubFolders = Integer.parseInt(conf.getProperty("generatefiles.maxSubFolders"));
+			this.maxFilesPerFolders = Integer.parseInt(conf.getProperty("generatefiles.maxFilesPerFolders"));
+			this.startFolderId = Long.parseLong(conf.getProperty("generatefiles.startFolderId"));
+			this.startDocId = Long.parseLong(conf.getProperty("generatefiles.startDocId"));
+			this.logicalDocLayout = Boolean.parseBoolean(conf.getProperty("generatefiles.logicalDocLayout"));
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(
+					conf.getProperty("generatefiles.master"))));
 			String str;
 			while ((str = in.readLine()) != null) {
 				if (!"".equals(str.trim()))
 					lines.add(str.trim());
 			}
 			in.close();
+
 		} catch (IOException e) {
 		}
 	}
@@ -75,10 +98,57 @@ public class GenerateFiles {
 		return logicalDocLayout;
 	}
 
+	/**
+	 * Retrieves the max number of files in a folder
+	 */
+	public int getMaxFilesPerFolders() {
+		return maxFilesPerFolders;
+	}
+
+	public void setMaxFilesPerFolders(int maxFilesPerFolders) {
+		this.maxFilesPerFolders = maxFilesPerFolders;
+	}
+
+	/**
+	 * Retrieves the total number of folders
+	 */
+	public int getFoldersTotal() {
+		return foldersTotal;
+	}
+
+	public void setFoldersTotal(int foldersTotal) {
+		this.foldersTotal = foldersTotal;
+	}
+
+	/**
+	 * Retrieves the folder in which insert the files
+	 */
+	public File getRootFolder() {
+		return rootFolder;
+	}
+
+	public void setRootFolder(File rootFolder) {
+		this.rootFolder = rootFolder;
+	}
+
+	/**
+	 * Retrieves the file from which retrieve the text for the generating files
+	 */
+	public String getMaster() {
+		return master;
+	}
+
+	public void setMaster(String master) {
+		this.master = master;
+	}
+
 	public void setLogicalDocLayout(boolean logicalDocLayout) {
 		this.logicalDocLayout = logicalDocLayout;
 	}
 
+	/**
+	 * Retrieves the total number of files
+	 */
 	public int getFilesTotal() {
 		return filesTotal;
 	}
@@ -87,6 +157,9 @@ public class GenerateFiles {
 		this.filesTotal = filesTotal;
 	}
 
+	/**
+	 * Retrieves the number of lines on each file
+	 */
 	public int getLinesPerFile() {
 		return linesPerFile;
 	}
@@ -95,6 +168,9 @@ public class GenerateFiles {
 		this.linesPerFile = linesPerFile;
 	}
 
+	/**
+	 * Retrieves the the deep level number of a folder
+	 */
 	public int getDeepLevel() {
 		return deepLevel;
 	}
@@ -103,6 +179,9 @@ public class GenerateFiles {
 		this.deepLevel = deepLevel;
 	}
 
+	/**
+	 * Retrieves the folder percentage every 100 files
+	 */
 	public int getFoldersPercentage() {
 		return foldersPercentage;
 	}
@@ -111,6 +190,9 @@ public class GenerateFiles {
 		this.foldersPercentage = foldersPercentage;
 	}
 
+	/**
+	 * Retrieves the max number of sub folders in a root folder
+	 */
 	public int getMaxSubFolders() {
 		return maxSubFolders;
 	}
@@ -119,6 +201,9 @@ public class GenerateFiles {
 		this.maxSubFolders = maxSubFolders;
 	}
 
+	/**
+	 * Retrieves the folder prefix
+	 */
 	public String getFolderPrefix() {
 		return folderPrefix;
 	}
@@ -127,6 +212,9 @@ public class GenerateFiles {
 		this.folderPrefix = folderPrefix;
 	}
 
+	/**
+	 * Retrieves the file prefix
+	 */
 	public String getFilePrefix() {
 		return filePrefix;
 	}
@@ -135,6 +223,9 @@ public class GenerateFiles {
 		this.filePrefix = filePrefix;
 	}
 
+	/**
+	 * Retrieves the value of the folder's start name
+	 */
 	public long getStartFolderId() {
 		return startFolderId;
 	}
@@ -143,6 +234,9 @@ public class GenerateFiles {
 		this.startFolderId = startFolderId;
 	}
 
+	/**
+	 * Retrieves the value of the file's start name
+	 */
 	public long getStartDocId() {
 		return startDocId;
 	}
@@ -155,6 +249,8 @@ public class GenerateFiles {
 	 * Launches the files generation.
 	 */
 	public void generate() throws IOException {
+		log.fatal("Start of files generation");
+
 		foldersTotal = (int) ((double) (filesTotal * foldersPercentage) / (double) 100);
 		folders.clear();
 		files.clear();
@@ -166,6 +262,8 @@ public class GenerateFiles {
 
 		while (files.size() < filesTotal)
 			createFiles();
+
+		log.fatal("End of files generation");
 	}
 
 	/**
@@ -189,6 +287,8 @@ public class GenerateFiles {
 			}
 			subDir.mkdir();
 			folders.add(subDir);
+			if (folders.size() % 100 == 0)
+				log.info("Created folder " + subDir.getName());
 			createTree(subDir, currentDeepLevel + 1);
 		}
 	}
@@ -214,6 +314,8 @@ public class GenerateFiles {
 				}
 				writeFile(file);
 				files.add(file);
+				if (files.size() % 100 == 0)
+					log.info("Created file " + file.getName());
 				count++;
 			}
 			if (files.size() >= filesTotal)
@@ -251,18 +353,7 @@ public class GenerateFiles {
 	}
 
 	public static void main(String[] args) throws IOException {
-		if (args.length < 2) {
-			System.out.println("Usage is GenerateFiles root_dir master_doc [files_total] [folders_percentage] [lines_per_file]");
-			return;
-		}
-
-		GenerateFiles genFiles = new GenerateFiles(new File(args[0]), args[1]);
-		if (args.length > 1)
-			genFiles.setFilesTotal(Integer.parseInt(args[2]));
-		if (args.length > 2)
-			genFiles.setFoldersPercentage(Integer.parseInt(args[3]));
-		if (args.length > 3)
-			genFiles.setLinesPerFile(Integer.parseInt(args[4]));
+		GenerateFiles genFiles = new GenerateFiles();
 		genFiles.generate();
 	}
 
