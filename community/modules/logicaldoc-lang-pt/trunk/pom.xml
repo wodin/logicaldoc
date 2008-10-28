@@ -96,4 +96,13 @@
       </plugin>
     </plugins>
   </build>
+  
+  <repositories>
+    <repository>
+      <id>logicaldoc</id>
+      <name>LogicalDOC Repository</name>
+      <url>http://logicaldoc.sourceforge.net/maven</url>
+    </repository>
+  </repositories>
+  
 </project>
