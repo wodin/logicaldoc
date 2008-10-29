@@ -228,7 +228,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				else
 					_title = parser.getTitle();
 			}
-			if (StringUtils.isEmpty(title))
+			if (StringUtils.isEmpty(sourceAuthor))
 				_author = parser.getAuthor();
 			String keys = parser.getKeywords();
 			if (keys != null && keys.length() > 0) {
