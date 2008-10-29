@@ -262,7 +262,7 @@ public class PopulateIndex {
 	}
 
 	/**
-	 * Adds all documents inside the specified rootFolder
+	 * Adds all documents inside the specified dir
 	 * 
 	 * @param dir The directory to browse
 	 * @param path Path for 'path' field
@@ -328,7 +328,7 @@ public class PopulateIndex {
 		writer.addDocument(doc);
 		
 		count++;
-		return 0;
+		return id;
 	}
 
 	/**
