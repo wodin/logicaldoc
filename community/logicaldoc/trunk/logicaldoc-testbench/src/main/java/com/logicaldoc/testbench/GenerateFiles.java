@@ -68,21 +68,21 @@ public class GenerateFiles {
 		try {
 			Properties conf = new Properties();
 			conf.load(this.getClass().getResourceAsStream("/conf.properties"));
-			this.rootFolder = new File(conf.getProperty("generatefiles.rootFolder"));
-			this.folderPrefix = conf.getProperty("generatefiles.folderPrefix");
-			this.filePrefix = conf.getProperty("generatefiles.filePrefix");
-			this.linesPerFile = Integer.parseInt(conf.getProperty("generatefiles.linesPerFile"));
-			this.deepLevel = Integer.parseInt(conf.getProperty("generatefiles.deepLevel"));
-			this.foldersPercentage = Integer.parseInt(conf.getProperty("generatefiles.foldersPercentage"));
-			this.filesTotal = Integer.parseInt(conf.getProperty("generatefiles.filesTotal"));
-			this.maxSubFolders = Integer.parseInt(conf.getProperty("generatefiles.maxSubFolders"));
-			this.maxFilesPerFolders = Integer.parseInt(conf.getProperty("generatefiles.maxFilesPerFolders"));
-			this.startFolderId = Long.parseLong(conf.getProperty("generatefiles.startFolderId"));
-			this.startDocId = Long.parseLong(conf.getProperty("generatefiles.startDocId"));
-			this.logicalDocLayout = Boolean.parseBoolean(conf.getProperty("generatefiles.logicalDocLayout"));
+			this.rootFolder = new File(conf.getProperty("files.rootFolder"));
+			this.folderPrefix = conf.getProperty("files.folderPrefix");
+			this.filePrefix = conf.getProperty("files.filePrefix");
+			this.linesPerFile = Integer.parseInt(conf.getProperty("files.linesPerFile"));
+			this.deepLevel = Integer.parseInt(conf.getProperty("files.deepLevel"));
+			this.foldersPercentage = Integer.parseInt(conf.getProperty("files.foldersPercentage"));
+			this.filesTotal = Integer.parseInt(conf.getProperty("files.filesTotal"));
+			this.maxSubFolders = Integer.parseInt(conf.getProperty("files.maxSubFolders"));
+			this.maxFilesPerFolders = Integer.parseInt(conf.getProperty("files.maxFilesPerFolders"));
+			this.startFolderId = Long.parseLong(conf.getProperty("files.startFolderId"));
+			this.startDocId = Long.parseLong(conf.getProperty("files.startDocId"));
+			this.logicalDocLayout = Boolean.parseBoolean(conf.getProperty("files.logicalDocLayout"));
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(
-					conf.getProperty("generatefiles.master"))));
+					conf.getProperty("files.master"))));
 			String str;
 			while ((str = in.readLine()) != null) {
 				if (!"".equals(str.trim()))

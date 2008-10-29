@@ -3,19 +3,19 @@ package com.logicaldoc.testbench;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Makes a complete test bench. Initially generating a specific number of files
- * inside a root directory. After this, makes the database population searching
- * files and folder in the root directory.
+ * Creates a complete test environment. Initially generating a specific number
+ * of files inside a root directory. After this, makes the database population
+ * searching files and folder in the root directory.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 4.0
- * 
  */
 public class TestBench {
 
@@ -25,6 +25,8 @@ public class TestBench {
 
 	private PopulateDatabase popDatabase;
 
+	private PopulateIndex popIndex;
+
 	public TestBench() throws IOException {
 		super();
 
@@ -32,7 +34,7 @@ public class TestBench {
 		conf.load(this.getClass().getResourceAsStream("/conf.properties"));
 
 		Properties context = new Properties();
-		context.load(new FileInputStream(conf.getProperty("testbench.logicaldoc.contextDir")
+		context.load(new FileInputStream(conf.getProperty("logicaldoc.contextDir")
 				+ "/WEB-INF/classes/context.properties"));
 
 		genFiles = new GenerateFiles();
@@ -47,7 +49,14 @@ public class TestBench {
 		popDatabase.setJdbcUrl(context.getProperty("jdbc.url"));
 		popDatabase.setUsername(context.getProperty("jdbc.username"));
 		popDatabase.setPassword(context.getProperty("jdbc.password"));
-		popDatabase.setRoot(docsRoot);
+		popDatabase.setRootFolder(docsRoot);
+
+		popIndex = new PopulateIndex();
+		Locale locale = new Locale(popDatabase.getLanguage());
+		File indexFolder = new File(context.getProperty("conf.indexdir") + "/"
+				+ locale.getDisplayLanguage(Locale.ENGLISH).toLowerCase());
+		popIndex.setIndexFolder(indexFolder);
+		popIndex.setRootFolder(genFiles.getRootFolder());
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -61,6 +70,8 @@ public class TestBench {
 			testBench.generateFiles();
 		if (phase.equals("all") || phase.equals("database"))
 			testBench.populateDatabase();
+		if (phase.equals("all") || phase.equals("index"))
+			testBench.populateIndex();
 
 	}
 
@@ -75,7 +86,13 @@ public class TestBench {
 	 * Launches the database population
 	 */
 	private void populateDatabase() {
-		popDatabase.generate();
+		popDatabase.populate();
 	}
 
+	/**
+	 * Launches the index population
+	 */
+	private void populateIndex() {
+		popIndex.populate();
+	}
 }

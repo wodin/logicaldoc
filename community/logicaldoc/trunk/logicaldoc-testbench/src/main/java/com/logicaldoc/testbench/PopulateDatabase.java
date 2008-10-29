@@ -16,7 +16,7 @@ import org.apache.commons.logging.LogFactory;
  * Generates database records browsing an existing filesystem in LogicalDOC's
  * format.
  * <p>
- * <b>NOTE:</b> The filesystem must be compliant with the one used by
+ * <b>NOTE:</b> The file system must be compliant with the one used by
  * LogicalDOC to store document archive files, so folders must be named with
  * internal menu id.
  * 
@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
 public class PopulateDatabase {
 	protected static Log log = LogFactory.getLog(PopulateDatabase.class);
 
-	private File root;
+	private File rootFolder;
 
 	private String jdbcClass;
 
@@ -50,29 +50,51 @@ public class PopulateDatabase {
 
 	private int batchCount = 0;
 
+	private String language = "en";
+
+	private long startDocId = 10000;
+
 	public PopulateDatabase() {
 		try {
 			Properties conf = new Properties();
 			conf.load(this.getClass().getResourceAsStream("/conf.properties"));
-			this.batchSize = Integer.parseInt(conf.getProperty("populatedatabase.batchSize"));
-			this.root = new File(conf.getProperty("populatedatabase.root"));
-			this.jdbcClass = conf.getProperty("populatedatabase.jdbcClass");
-			this.jdbcUrl = conf.getProperty("populatedatabase.jdbcUrl");
-			this.username = conf.getProperty("populatedatabase.username");
-			this.password = conf.getProperty("populatedatabase.password");
+			this.batchSize = Integer.parseInt(conf.getProperty("database.batchSize"));
+			this.rootFolder = new File(conf.getProperty("files.rootFolder"));
+			this.jdbcClass = conf.getProperty("database.jdbcClass");
+			this.jdbcUrl = conf.getProperty("database.jdbcUrl");
+			this.username = conf.getProperty("database.username");
+			this.password = conf.getProperty("database.password");
+			this.language = conf.getProperty("database.language");
+			this.startDocId = Long.parseLong(conf.getProperty("files.startDocId"));
 		} catch (IOException e) {
 		}
 	}
 
-	/**
-	 * Retrieves the root directory
-	 */
-	public File getRoot() {
-		return root;
+	public long getStartDocId() {
+		return startDocId;
 	}
 
-	public void setRoot(File root) {
-		this.root = root;
+	public void setStartDocId(long startDocId) {
+		this.startDocId = startDocId;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	/**
+	 * Retrieves the rootFolder directory
+	 */
+	public File getRootFolder() {
+		return rootFolder;
+	}
+
+	public void setRootFolder(File rootFolder) {
+		this.rootFolder = rootFolder;
 	}
 
 	/**
@@ -146,10 +168,10 @@ public class PopulateDatabase {
 
 	/**
 	 * Generate the database population looking for folders and files in the
-	 * root directory
+	 * rootFolder directory
 	 */
-	public void generate() {
-		log.fatal("Start of database populations");
+	public void populate() {
+		log.fatal("Start of database population");
 		batchCount = 0;
 		try {
 			Class.forName(jdbcClass);
@@ -162,7 +184,7 @@ public class PopulateDatabase {
 			insertDoc = con
 					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_STATUS,LD_TYPE,LD_CHECKOUTUSER,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_FOLDERID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
 
-			addDocuments(root, "/");
+			addDocuments(rootFolder, "/");
 			con.commit();
 
 			con.createStatement().execute("SHUTDOWN COMPACT");
@@ -188,7 +210,6 @@ public class PopulateDatabase {
 	 * @param folder The folder to browse
 	 * @param path Path for LD_PATH and LS_PATHEXT fields
 	 * @throws SQLException
-	 * @throws SQLException
 	 */
 	private void addDocuments(File folder, String path) {
 		long parentFolderId = Long.parseLong(folder.getName());
@@ -210,7 +231,7 @@ public class PopulateDatabase {
 			} else if (files[i].isDirectory() && files[i].getName().startsWith("doc_")) {
 				try {
 					long docId = insertDocument(files[i]);
-					if (batchCount % batchSize == 0) {
+					if (docId>0 && (batchCount % batchSize == 0)) {
 						con.commit();
 						log.info("Created document " + docId);
 					}
@@ -233,19 +254,24 @@ public class PopulateDatabase {
 		String filename = docFile.getName();
 		long filesize = docFile.length();
 		long id = Long.parseLong(dir.getName().substring(dir.getName().lastIndexOf("_") + 1));
+		
+		//Skip contidion
+		if(id<startDocId)
+			return -1;
+		
 		long folderId = Long.parseLong(dir.getParentFile().getName());
 		String extension = docFile.getName().substring(docFile.getName().lastIndexOf(".") + 1);
 
 		// LD_ID
 		insertDoc.setLong(1, id);
 		// LD_LASTMODIFIED
-		insertDoc.setDate(2, new Date(new java.util.Date().getTime()));
+		insertDoc.setDate(2, new Date(docFile.lastModified()));
 		// LD_TITLE
 		insertDoc.setString(3, docFile.getName().substring(0, docFile.getName().lastIndexOf(".")));
 		// LD_VERSION
 		insertDoc.setString(4, "1.0");
 		// LD_DATE
-		insertDoc.setDate(5, new Date(new java.util.Date().getTime()));
+		insertDoc.setDate(5, new Date(docFile.lastModified()));
 		// LD_PUBLISHER
 		insertDoc.setString(6, "admin");
 		// LD_STATUS
@@ -263,7 +289,7 @@ public class PopulateDatabase {
 		// LD_SOURCETYPE
 		insertDoc.setString(13, "");
 		// LD_COVERAGE
-		insertDoc.setString(14, "");
+		insertDoc.setString(14, "test");
 		// LD_LANGUAGE
 		insertDoc.setString(15, "en");
 		// LD_FILENAME
