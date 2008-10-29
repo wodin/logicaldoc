@@ -9,15 +9,15 @@ import com.logicaldoc.webservice.DocumentInfo;
 /**
  * Dms Webservice definition interface
  * 
- * @author Matteo Caruso
- * @version $Id:$
+ * @author Matteo Caruso - Logical Objects
  * @since 3.6
  */
 @WebService
 public interface DmsService {
 
 	/**
-	 * Creates a new folder
+	 * Create a new folder with a given name and under a specific folder. It
+	 * also assigns the same folder permissions of the parent folder
 	 * 
 	 * @param username
 	 * @param password
@@ -31,7 +31,7 @@ public interface DmsService {
 	String username, @WebParam(name = "password")
 	String password, @WebParam(name = "name")
 	String name, @WebParam(name = "parent")
-	int parent) throws Exception;
+	long parent) throws Exception;
 
 	/**
 	 * Deletes an existing folder and all it's contained elements
@@ -48,6 +48,27 @@ public interface DmsService {
 	String password, @WebParam(name = "folder")
 	long folder) throws Exception;
 
+	/**
+	 * Create a new document. The user can completely customize the document
+	 * through many optional fields.
+	 * 
+	 * @param username
+	 * @param password
+	 * @param folder
+	 * @param docTitle
+	 * @param source
+	 * @param sourceDate
+	 * @param author
+	 * @param sourceType
+	 * @param coverage
+	 * @param language
+	 * @param keywords
+	 * @param versionDesc
+	 * @param filename
+	 * @param content
+	 * @return The document identifier or 'error' if some errors occurred)
+	 * @throws Exception
+	 */
 	public String createDocument(@WebParam(name = "username")
 	String username, @WebParam(name = "password")
 	String password, @WebParam(name = "folder")
@@ -66,7 +87,7 @@ public interface DmsService {
 
 	/**
 	 * Downloads a document. The document content is sent as attachment
-	 * identified by 'document'.
+	 * identified by 'document'
 	 * 
 	 * @param username
 	 * @param password
@@ -86,7 +107,7 @@ public interface DmsService {
 	 * 
 	 * @param username
 	 * @param password
-	 * @param id The document menu id
+	 * @param id The document id
 	 * @return
 	 * @throws Exception
 	 */
@@ -110,11 +131,11 @@ public interface DmsService {
 	long folder) throws Exception;
 
 	/**
-	 * Deletes a document
+	 * Deletes an existing document with the given identifier
 	 * 
 	 * @param username
 	 * @param password
-	 * @param id The document menu id
+	 * @param id The document id
 	 * @return A return code('ok' if all went ok)
 	 * @throws Exception
 	 */

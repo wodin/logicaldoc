@@ -45,7 +45,7 @@ public class DmsClient implements DmsService {
 				coverage, language, keywords, versionDesc, filename, content);
 	}
 
-	public String createFolder(String username, String password, String name, int parent) throws Exception {
+	public String createFolder(String username, String password, String name, long parent) throws Exception {
 		return client.createFolder(username, password, name, parent);
 	}
 

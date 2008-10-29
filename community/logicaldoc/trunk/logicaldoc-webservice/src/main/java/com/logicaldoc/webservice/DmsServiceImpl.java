@@ -182,9 +182,9 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#createFolder(java.lang.String,
-	 *      java.lang.String, java.lang.String, int)
+	 *      java.lang.String, java.lang.String, long)
 	 */
-	public String createFolder(String username, String password, String name, int parent) throws Exception {
+	public String createFolder(String username, String password, String name, long parent) throws Exception {
 		checkCredentials(username, password);
 
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
