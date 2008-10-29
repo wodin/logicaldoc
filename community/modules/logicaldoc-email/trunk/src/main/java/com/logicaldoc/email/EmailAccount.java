@@ -38,14 +38,19 @@ public class EmailAccount extends PersistentObject {
 
 	private int enabled = 1;
 
+	private int extractKeywords = 0;
+
 	/** Creates a new instance of EmailAccount */
 	public EmailAccount() {
-		mailAddress = "";
-		provider = "";
-		host = "";
-		userName = "";
-		password = "";
 		targetFolder = null;
+	}
+
+	public int getExtractKeywords() {
+		return extractKeywords;
+	}
+
+	public void setExtractKeywords(int extractKeywords) {
+		this.extractKeywords = extractKeywords;
 	}
 
 	public int getDeleteFromMailbox() {

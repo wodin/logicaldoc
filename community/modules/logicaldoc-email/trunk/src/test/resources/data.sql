@@ -29,7 +29,7 @@ values     (2,'2008-10-22','testDocname2','testDocVer','2006-12-19','myself',1,'
 
 
 insert into ld_emailaccount
-values     (1,'2008-10-23','author@logicaldoc.sf.net','Aruba','pcalle','22','author@logicaldoc.sf.net','authorPSWD','pdf,doc',0,'it',1,1);
+values     (1,'2008-10-23','author@logicaldoc.sf.net','Aruba','pcalle','22','author@logicaldoc.sf.net','authorPSWD','pdf,doc',0,'it',1,1,1);
 
 insert into ld_emailaccount
-values     (2,'2008-10-23','admin@logicaldoc.sf.net','Aruba','pcalle','22','admin@logicaldoc.sf.net','adminPSWD','doc,txt',1,'en',0,1);
+values     (2,'2008-10-23','admin@logicaldoc.sf.net','Aruba','pcalle','22','admin@logicaldoc.sf.net','adminPSWD','doc,txt',1,'en',0,1,1);
