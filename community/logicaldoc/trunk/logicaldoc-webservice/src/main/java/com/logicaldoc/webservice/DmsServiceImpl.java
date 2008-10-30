@@ -37,8 +37,7 @@ import com.logicaldoc.util.SnippetStripper;
 /**
  * Web service implementation
  * 
- * @author Matteo Caruso
- * @version $Id:$
+ * @author Matteo Caruso - Logical Objects
  * @since 3.6.0
  */
 @WebService(endpointInterface = "com.logicaldoc.webservice.DmsService", serviceName = "DmsService")
