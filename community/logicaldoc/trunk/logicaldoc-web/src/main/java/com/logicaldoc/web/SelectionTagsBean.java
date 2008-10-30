@@ -73,7 +73,8 @@ public class SelectionTagsBean {
 
 		int i = 0;
 		for (Group group : coll) {
-			items[i++] = new SelectItem(group.getId(), group.getName());
+			if (group.getHidden() == 0)
+				items[i++] = new SelectItem(group.getId(), group.getName());
 		}
 
 		return items;
