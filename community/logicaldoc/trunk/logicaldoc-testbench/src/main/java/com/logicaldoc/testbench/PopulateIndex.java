@@ -244,6 +244,7 @@ public class PopulateIndex {
 
 		try {
 			writer = new IndexWriter(indexFolder, analyzer, false);
+			writer.setRAMBufferSizeMB(128);
 			addDocuments(rootFolder, "/");
 			writer.optimize();
 		} catch (Throwable e) {
