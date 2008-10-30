@@ -17,8 +17,6 @@ public class LuceneDocument {
 
 	public static final String FIELD_SUMMARY = "summary";
 
-	public static final String FIELD_LENGTH = "length";
-
 	public static final String FIELD_CONTENT = "content";
 
 	public static final String FIELD_TYPE = "type";
@@ -131,7 +129,6 @@ public class LuceneDocument {
 
 	protected void setContent(String content) {
 		doc.add(new Field(FIELD_CONTENT, content, Field.Store.YES, Field.Index.TOKENIZED));
-		doc.add(new Field(FIELD_LENGTH, String.valueOf(content.length()), Field.Store.YES, Field.Index.NO));
 	}
 
 	protected void setSummary() {
