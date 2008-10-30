@@ -40,8 +40,6 @@ public class PopulateIndex {
 
 	public static final String FIELD_SUMMARY = "summary";
 
-	public static final String FIELD_LENGTH = "length";
-
 	public static final String FIELD_CONTENT = "content";
 
 	public static final String FIELD_TYPE = "type";
@@ -318,7 +316,6 @@ public class PopulateIndex {
 
 		String content = parse(docFile);
 		doc.add(new Field(FIELD_CONTENT, content, Field.Store.YES, Field.Index.TOKENIZED));
-		doc.add(new Field(FIELD_LENGTH, String.valueOf(content.length()), Field.Store.YES, Field.Index.NO));
 
 		int summarysize = Math.min(content.length(), 500);
 		String summary = content.substring(0, summarysize);
