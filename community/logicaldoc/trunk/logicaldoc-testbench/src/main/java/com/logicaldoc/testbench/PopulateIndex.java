@@ -237,7 +237,7 @@ public class PopulateIndex {
 	 * Populates the full-text index
 	 */
 	public void populate() {
-		log.fatal("Start of database population");
+		log.fatal("Start of index population");
 		count = 0;
 		Locale locale = new Locale(language);
 		Analyzer analyzer = new SnowballAnalyzer(locale.getDisplayName(Locale.ENGLISH), stopwordsMap.get(language));
