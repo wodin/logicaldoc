@@ -41,6 +41,8 @@ public class User extends PersistentObject implements Serializable {
 
 	private String telephone = "";
 
+	private int hidden = 0;
+
 	private Set<Group> groups = new HashSet<Group>();
 
 	private long[] groupIds;
@@ -51,6 +53,14 @@ public class User extends PersistentObject implements Serializable {
 	private String repass;
 
 	public User() {
+	}
+
+	public int getHidden() {
+		return hidden;
+	}
+
+	public void setHidden(int hidden) {
+		this.hidden = hidden;
 	}
 
 	public String getRepass() {

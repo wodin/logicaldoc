@@ -18,7 +18,6 @@ import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.util.FacesUtil;
 
-
 /**
  * <p>
  * The <code>GroupsManager</code> class is responsible for constructing the
@@ -29,259 +28,252 @@ import com.logicaldoc.web.util.FacesUtil;
  * the dataTable could also be hidden and the dataTable could be added to
  * scrollable ice:panelGroup.
  * </p>
- *
+ * 
  * @author Marco Meschieri
  * @version $Id: DocumentsRecordsManager.java,v 1.1 2007/06/29 06:28:29 marco
  *          Exp $
  * @since 3.0
  */
 public class GroupsRecordsManager {
-    protected static Log log = LogFactory.getLog(GroupsRecordsManager.class);
+	protected static Log log = LogFactory.getLog(GroupsRecordsManager.class);
 
-    private Collection<Group> groups = new ArrayList<Group>();
+	private Collection<Group> groups = new ArrayList<Group>();
 
-    private String selectedPanel = "list";
+	private String selectedPanel = "list";
 
-    private long parentGroup;
+	private long parentGroup;
 
-    private Group selectedGroup = null;
+	private Group selectedGroup = null;
 
-    private HtmlInputText groupName = null;
+	private HtmlInputText groupName = null;
 
-    private HtmlInputTextarea groupDesc = null;
+	private HtmlInputTextarea groupDesc = null;
 
-    public GroupsRecordsManager() {
-    }
+	public GroupsRecordsManager() {
+	}
 
-    private void clear() {
+	private void clear() {
 
-        if (groupName != null) {
-            groupName.resetValue();
-        }
+		if (groupName != null) {
+			groupName.resetValue();
+		}
 
-        if (groupDesc != null) {
-            groupDesc.resetValue();
-        }
-    }
+		if (groupDesc != null) {
+			groupDesc.resetValue();
+		}
+	}
 
-    private void setInputData() {
+	private void setInputData() {
 
-        if (groupName != null) {
-            groupName.setSubmittedValue(selectedGroup.getName());
-        }
+		if (groupName != null) {
+			groupName.setSubmittedValue(selectedGroup.getName());
+		}
 
-        if (groupDesc != null) {
-            groupDesc.setSubmittedValue(selectedGroup.getDescription());
-        }
-    }
+		if (groupDesc != null) {
+			groupDesc.setSubmittedValue(selectedGroup.getDescription());
+		}
+	}
 
-    private void reload() {
-        groups.clear();
+	private void reload() {
+		groups.clear();
 
-        try {
-            long userId = SessionManagement.getUserId();
-            MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
-                    MenuDAO.class);
+		try {
+			long userId = SessionManagement.getUserId();
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
-            if (mdao.isReadEnable(7, userId)) {
-                GroupDAO dao = (GroupDAO) Context.getInstance().getBean(
-                        GroupDAO.class);
-                groups = dao.findAll();
-            } else {
-                Messages.addLocalizedError("errors.noaccess");
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            Messages.addLocalizedError("errors.error");
-        }
-    }
+			if (mdao.isReadEnable(7, userId)) {
+				GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+				Collection<Group> tmp = dao.findAll();
+				for (Group group : tmp) {
+					if (group.getHidden() == 0)
+						groups.add(group);
+				}
+			} else {
+				Messages.addLocalizedError("errors.noaccess");
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			Messages.addLocalizedError("errors.error");
+		}
+	}
 
-    public String getSelectedPanel() {
-        return selectedPanel;
-    }
+	public String getSelectedPanel() {
+		return selectedPanel;
+	}
 
-    public void setSelectedPanel(String panel) {
-        this.selectedPanel = panel;
-    }
+	public void setSelectedPanel(String panel) {
+		this.selectedPanel = panel;
+	}
 
-    public String list() {
-        selectedPanel = "list";
-        FacesUtil.clearAllMessages();
-        reload();
+	public String list() {
+		selectedPanel = "list";
+		FacesUtil.clearAllMessages();
+		reload();
 
-        return null;
-    }
+		return null;
+	}
 
-    public String edit() {
-        selectedGroup = (Group) FacesContext.getCurrentInstance()
-            .getExternalContext().getRequestMap().get("group");
+	public String edit() {
+		selectedGroup = (Group) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("group");
 
-        long userId = SessionManagement.getUserId();
-        MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		long userId = SessionManagement.getUserId();
+		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
-        if (mdao.isReadEnable(7, userId)) {
-            setInputData();
-        } else {
-            Messages.addLocalizedError("errors.noaccess");
-        }
+		if (mdao.isReadEnable(7, userId)) {
+			setInputData();
+		} else {
+			Messages.addLocalizedError("errors.noaccess");
+		}
 
-        selectedPanel = "edit";
+		selectedPanel = "edit";
 
-        return null;
-    }
+		return null;
+	}
 
-    public String addGroup() {
-        parentGroup = -1;
+	public String addGroup() {
+		parentGroup = -1;
 
-        long userId = SessionManagement.getUserId();
-        MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		long userId = SessionManagement.getUserId();
+		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
-        if (mdao.isReadEnable(7, userId)) {
-            selectedGroup = new Group();
-            clear();
-            FacesUtil.clearAllMessages();
-        } else {
-            Messages.addLocalizedError("errors.noaccess");
-        }
+		if (mdao.isReadEnable(7, userId)) {
+			selectedGroup = new Group();
+			clear();
+			FacesUtil.clearAllMessages();
+		} else {
+			Messages.addLocalizedError("errors.noaccess");
+		}
 
-        selectedPanel = "create";
+		selectedPanel = "create";
 
-        return null;
-    }
+		return null;
+	}
 
-    public String delete() {
-        long groupId = Long.parseLong((String) FacesContext.getCurrentInstance()
-            .getExternalContext().getRequestParameterMap().get("groupId"));
-        GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(
-        		GroupDAO.class);
-        Group group=gdao.findById(groupId);
-        
-        if (SessionManagement.isValid()) {
+	public String delete() {
+		long groupId = Long.parseLong((String) FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("groupId"));
+		GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+		Group group = gdao.findById(groupId);
 
-            try {
-                long userId = SessionManagement.getUserId();
-                MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
-                        MenuDAO.class);
+		if (SessionManagement.isValid()) {
 
-                if (mdao.isReadEnable(7, userId)) {
+			try {
+				long userId = SessionManagement.getUserId();
+				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
-                    // we do not allow to delete the initial "admin" group
-                    if (group.getName().equals("admin")) {
-                        Messages.addLocalizedError(
-                            "errors.action.groupdeleted.admin");
-                    } else {
-                        boolean deleted = gdao.delete(groupId);
+				if (mdao.isReadEnable(7, userId)) {
 
-                        if (!deleted) {
-                            Messages.addLocalizedError(
-                                "errors.action.groupdeleted");
-                        } else {
-                            Messages.addLocalizedInfo(
-                                "msg.action.groupdeleted");
-                        }
-                    }
-                } else {
-                    Messages.addLocalizedError("errors.noaccess");
-                }
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                Messages.addLocalizedError("errors.action.groupdeleted");
-            }
+					// we do not allow to delete the initial "admin" group
+					if (group.getName().equals("admin")) {
+						Messages.addLocalizedError("errors.action.groupdeleted.admin");
+					} else {
+						boolean deleted = gdao.delete(groupId);
 
-            reload();
-        } else {
-            return "login";
-        }
+						if (!deleted) {
+							Messages.addLocalizedError("errors.action.groupdeleted");
+						} else {
+							Messages.addLocalizedInfo("msg.action.groupdeleted");
+						}
+					}
+				} else {
+					Messages.addLocalizedError("errors.noaccess");
+				}
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				Messages.addLocalizedError("errors.action.groupdeleted");
+			}
 
-        return null;
-    }
+			reload();
+		} else {
+			return "login";
+		}
 
-    public String save() {
+		return null;
+	}
 
-        if (SessionManagement.isValid()) {
-            GroupDAO dao = (GroupDAO) Context.getInstance().getBean(
-                    GroupDAO.class);
+	public String save() {
 
-            try {
+		if (SessionManagement.isValid()) {
+			GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 
-                if ("create".equals(selectedPanel) &&
-                        dao.findById(selectedGroup.getId())!=null) {
-                    Messages.addLocalizedError("errors.action.groupexists");
-                } else {
-                    boolean stored = false;
+			try {
 
-                    if ("create".equals(selectedPanel)) {
-                        stored = dao.insert(selectedGroup, parentGroup);
-                    } else {
-                        stored = dao.store(selectedGroup);
-                    }
+				if ("create".equals(selectedPanel) && dao.findById(selectedGroup.getId()) != null) {
+					Messages.addLocalizedError("errors.action.groupexists");
+				} else {
+					boolean stored = false;
 
-                    if (!stored) {
-                        Messages.addLocalizedError(
-                            "errors.action.savegroup.notstored");
-                    } else {
-                        Messages.addLocalizedInfo("msg.action.savegroup");
-                    }
-                }
-            } catch (Exception e) {
-                Messages.addLocalizedError("errors.action.savegroup.notstored");
-            }
+					if ("create".equals(selectedPanel)) {
+						stored = dao.insert(selectedGroup, parentGroup);
+					} else {
+						stored = dao.store(selectedGroup);
+					}
 
-            selectedPanel = "list";
-            reload();
+					if (!stored) {
+						Messages.addLocalizedError("errors.action.savegroup.notstored");
+					} else {
+						Messages.addLocalizedInfo("msg.action.savegroup");
+					}
+				}
+			} catch (Exception e) {
+				Messages.addLocalizedError("errors.action.savegroup.notstored");
+			}
 
-            return null;
-        } else {
-            return "login";
-        }
-    }
+			selectedPanel = "list";
+			reload();
 
-    /**
-     * Gets the list of Group which will be used by the ice:dataTable component.
-     */
-    public Collection<Group> getGroups() {
+			return null;
+		} else {
+			return "login";
+		}
+	}
 
-        if (groups.size() == 0) {
-            reload();
-        }
+	/**
+	 * Gets the list of Group which will be used by the ice:dataTable component.
+	 */
+	public Collection<Group> getGroups() {
 
-        return groups;
-    }
+		if (groups.size() == 0) {
+			reload();
+		}
 
-    public int getCount() {
-        return getGroups().size();
-    }
+		return groups;
+	}
 
-    public Group getSelectedGroup() {
-        return selectedGroup;
-    }
+	public int getCount() {
+		return getGroups().size();
+	}
 
-    public void setSelectedGroup(Group selectedGroup) {
-        this.selectedGroup = selectedGroup;
-    }
+	public Group getSelectedGroup() {
+		return selectedGroup;
+	}
 
-    public long getParentGroup() {
-        return parentGroup;
-    }
+	public void setSelectedGroup(Group selectedGroup) {
+		this.selectedGroup = selectedGroup;
+	}
 
-    public void setParentGroup(long group) {
-        this.parentGroup = group;
-    }
+	public long getParentGroup() {
+		return parentGroup;
+	}
 
-    public HtmlInputText getGroupName() {
-        return groupName;
-    }
+	public void setParentGroup(long group) {
+		this.parentGroup = group;
+	}
 
-    public void setGroupName(HtmlInputText groupName) {
-        this.groupName = groupName;
-    }
+	public HtmlInputText getGroupName() {
+		return groupName;
+	}
 
-    public HtmlInputTextarea getGroupDesc() {
-        return groupDesc;
-    }
+	public void setGroupName(HtmlInputText groupName) {
+		this.groupName = groupName;
+	}
 
-    public void setGroupDesc(HtmlInputTextarea groupDesc) {
-        this.groupDesc = groupDesc;
-    }
+	public HtmlInputTextarea getGroupDesc() {
+		return groupDesc;
+	}
+
+	public void setGroupDesc(HtmlInputTextarea groupDesc) {
+		this.groupDesc = groupDesc;
+	}
 
 }

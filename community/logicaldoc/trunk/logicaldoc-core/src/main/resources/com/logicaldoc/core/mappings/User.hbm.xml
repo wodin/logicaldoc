@@ -19,6 +19,7 @@
 		<property name="language" type="string" column="ld_language" length="10" />
 		<property name="email" type="string" column="ld_email" length="255" />
 		<property name="telephone" type="string" column="ld_telephone" length="255" />
+		<property name="hidden" type="int" column="ld_hidden" not-null="true"/>
 		<set name="groups" table="ld_usergroup" inverse="true" lazy="false">
 			<key column="ld_userid" />
 			<many-to-many column="ld_groupid" class="com.logicaldoc.core.security.Group" />

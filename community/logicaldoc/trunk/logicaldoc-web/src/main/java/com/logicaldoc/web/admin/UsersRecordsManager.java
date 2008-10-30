@@ -70,7 +70,11 @@ public class UsersRecordsManager extends SortableList {
 			if (mdao.isReadEnable(6, userId)) {
 				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 				Collection<User> tmpusers = dao.findAll();
-				users.addAll(tmpusers);
+
+				for (User usr : tmpusers) {
+					if (usr.getHidden() == 0)
+						users.addAll(tmpusers);
+				}
 
 				for (User user : users) {
 					user.getGroupIds();

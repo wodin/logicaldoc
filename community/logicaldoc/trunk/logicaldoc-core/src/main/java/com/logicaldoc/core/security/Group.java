@@ -21,9 +21,19 @@ public class Group extends PersistentObject implements Serializable {
 
 	private String descriprion = "";
 
+	private int hidden = 0;
+
 	private Set<User> users = new HashSet<User>();
 
 	public Group() {
+	}
+
+	public int getHidden() {
+		return hidden;
+	}
+
+	public void setHidden(int hidden) {
+		this.hidden = hidden;
 	}
 
 	public Set<User> getUsers() {
