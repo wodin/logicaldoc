@@ -195,6 +195,8 @@ public class PopulateIndex {
 
 	private long startDocId = 10000;
 
+	private int ramBuffer = 16;
+
 	private IndexWriter writer;
 
 	public PopulateIndex() {
@@ -204,6 +206,7 @@ public class PopulateIndex {
 			this.rootFolder = new File(conf.getProperty("files.rootFolder"));
 			this.indexFolder = new File(conf.getProperty("index.indexFolder"));
 			this.language = conf.getProperty("database.language");
+			this.ramBuffer = Integer.parseInt(conf.getProperty("database.cacheSize"));
 			this.startDocId = Long.parseLong(conf.getProperty("files.startDocId"));
 		} catch (IOException e) {
 		}
@@ -244,7 +247,7 @@ public class PopulateIndex {
 
 		try {
 			writer = new IndexWriter(indexFolder, analyzer, false);
-			writer.setRAMBufferSizeMB(128);
+			writer.setRAMBufferSizeMB(ramBuffer);
 			addDocuments(rootFolder, "/");
 			writer.optimize();
 		} catch (Throwable e) {
@@ -277,8 +280,8 @@ public class PopulateIndex {
 			} else if (files[i].isDirectory() && files[i].getName().startsWith("doc_")) {
 				try {
 					long docId = insertDocument(files[i], path.replaceAll("//", "/"));
-					if ((count % 100 == 0)&& docId>0) {
-						log.info("Added index document " + docId);						
+					if ((count % 100 == 0) && docId > 0) {
+						log.info("Added index document " + docId);
 					}
 				} catch (Throwable e) {
 					e.printStackTrace();
@@ -296,10 +299,10 @@ public class PopulateIndex {
 		long filesize = docFile.length();
 		long id = Long.parseLong(dir.getName().substring(dir.getName().lastIndexOf("_") + 1));
 
-		//Skip condition
-		if(id<startDocId)
+		// Skip condition
+		if (id < startDocId)
 			return -1;
-		
+
 		Document doc = new Document();
 		doc.add(new Field(FIELD_DOC_ID, String.valueOf(id), Field.Store.YES, Field.Index.UN_TOKENIZED));
 		doc.add(new Field(FIELD_TITLE, title, Field.Store.YES, Field.Index.TOKENIZED));
@@ -322,9 +325,9 @@ public class PopulateIndex {
 		String summary = content.substring(0, summarysize);
 		doc.add(new Field(FIELD_SUMMARY, summary, Field.Store.YES, Field.Index.TOKENIZED));
 		doc.add(new Field(FIELD_KEYWORDS, extractKeywords(5, content), Field.Store.YES, Field.Index.TOKENIZED));
-		
+
 		writer.addDocument(doc);
-		
+
 		count++;
 		return id;
 	}
@@ -380,5 +383,13 @@ public class PopulateIndex {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	public int getRamBuffer() {
+		return ramBuffer;
+	}
+
+	public void setRamBuffer(int ramBuffer) {
+		this.ramBuffer = ramBuffer;
 	}
 }
