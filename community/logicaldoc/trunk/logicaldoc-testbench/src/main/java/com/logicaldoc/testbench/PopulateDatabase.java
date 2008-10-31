@@ -54,6 +54,8 @@ public class PopulateDatabase {
 
 	private long startDocId = 10000;
 
+	private long startFolderId = 10000;
+	
 	public PopulateDatabase() {
 		try {
 			Properties conf = new Properties();
@@ -66,8 +68,17 @@ public class PopulateDatabase {
 			this.password = conf.getProperty("database.password");
 			this.language = conf.getProperty("database.language");
 			this.startDocId = Long.parseLong(conf.getProperty("files.startDocId"));
+			this.startFolderId = Long.parseLong(conf.getProperty("files.startFolderId"));
 		} catch (IOException e) {
 		}
+	}
+
+	public long getStartFolderId() {
+		return startFolderId;
+	}
+
+	public void setStartFolderId(long startFolderId) {
+		this.startFolderId = startFolderId;
 	}
 
 	public long getStartDocId() {
@@ -218,7 +229,7 @@ public class PopulateDatabase {
 			if (files[i].isDirectory() && !files[i].getName().startsWith("doc_")) {
 				try {
 					long folderId = insertFolder(files[i], path + "/" + parentFolderId);
-					if (batchCount % batchSize == 0) {
+					if (folderId>0 && batchCount % batchSize == 0) {
 						con.commit();
 						log.info("Created folder " + folderId);
 					}
@@ -255,7 +266,7 @@ public class PopulateDatabase {
 		long filesize = docFile.length();
 		long id = Long.parseLong(dir.getName().substring(dir.getName().lastIndexOf("_") + 1));
 		
-		//Skip contidion
+		//Skip condition
 		if(id<startDocId)
 			return -1;
 		
@@ -318,6 +329,10 @@ public class PopulateDatabase {
 		long id = Long.parseLong(dir.getName());
 		long parentId = Long.parseLong(dir.getParentFile().getName());
 
+		//Skip condition
+		if(id<startFolderId)
+			return -1;
+		
 		// LD_ID
 		insertMenu.setLong(1, id);
 		// LD_LASTMODIFIED
