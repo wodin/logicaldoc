@@ -13,14 +13,14 @@ create table ld_user (ld_id bigint not null, ld_lastmodified timestamp not null,
 create table ld_userdoc (ld_id bigint not null, ld_lastmodified timestamp not null, ld_docid bigint not null, ld_userid bigint not null, ld_date timestamp, primary key (ld_id));
 create table ld_usergroup (ld_groupid bigint not null, ld_userid bigint not null, primary key (ld_groupid, ld_userid));
 create table ld_version (ld_docid bigint not null, ld_version varchar(10), ld_user varchar(255), ld_date timestamp, ld_comment varchar(2000));
-alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folderid) references ld_menu;
-alter table ld_keyword add constraint FK55BBDA227C693DFD foreign key (ld_docid) references ld_document;
-alter table ld_link add constraint FK1330661CADD6217 foreign key (ld_docid2) references ld_document;
-alter table ld_link add constraint FK1330661CADD6216 foreign key (ld_docid1) references ld_document;
-alter table ld_menugroup add constraint FKB4F7F679AA456AD1 foreign key (ld_menuid) references ld_menu;
-alter table ld_usergroup add constraint FK2435438DB8B12CA9 foreign key (ld_userid) references ld_user;
-alter table ld_usergroup add constraint FK2435438D76F11EA1 foreign key (ld_groupid) references ld_group;
-alter table ld_version add constraint FK9B3BD9117C693DFD foreign key (ld_docid) references ld_document;
+alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folderid) references ld_menu(ld_id);
+alter table ld_keyword add constraint FK55BBDA227C693DFD foreign key (ld_docid) references ld_document(ld_id);
+alter table ld_link add constraint FK1330661CADD6217 foreign key (ld_docid2) references ld_document(ld_id);
+alter table ld_link add constraint FK1330661CADD6216 foreign key (ld_docid1) references ld_document(ld_id);
+alter table ld_menugroup add constraint FKB4F7F679AA456AD1 foreign key (ld_menuid) references ld_menu(ld_id);
+alter table ld_usergroup add constraint FK2435438DB8B12CA9 foreign key (ld_userid) references ld_user(ld_id);
+alter table ld_usergroup add constraint FK2435438D76F11EA1 foreign key (ld_groupid) references ld_group(ld_id);
+alter table ld_version add constraint FK9B3BD9117C693DFD foreign key (ld_docid) references ld_document(ld_id);
 
 
 alter table ld_ticket add constraint FK_TICKET_DOC foreign key (ld_docid) references ld_document on delete cascade;
