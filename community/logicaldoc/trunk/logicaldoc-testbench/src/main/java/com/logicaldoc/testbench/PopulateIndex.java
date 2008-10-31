@@ -206,7 +206,7 @@ public class PopulateIndex {
 			this.rootFolder = new File(conf.getProperty("files.rootFolder"));
 			this.indexFolder = new File(conf.getProperty("index.indexFolder"));
 			this.language = conf.getProperty("database.language");
-			this.ramBuffer = Integer.parseInt(conf.getProperty("database.cacheSize"));
+			this.ramBuffer = Integer.parseInt(conf.getProperty("index.ramBuffer"));
 			this.startDocId = Long.parseLong(conf.getProperty("files.startDocId"));
 		} catch (IOException e) {
 		}
