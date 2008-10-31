@@ -13,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.text.AnalyzeText;
+import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;
@@ -152,7 +152,7 @@ public class NewDocWizard {
 					if ((keywords != null) && !keywords.trim().equals("")) {
 						docForm.setKeywords(keywords);
 					} else {
-						AnalyzeText analyzer = new AnalyzeText();
+						AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
 						docForm.setKeywords(analyzer.getTerms(5, content.toString(), documentLanguage));
 					}
 				}
