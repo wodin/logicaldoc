@@ -30,12 +30,12 @@
 			<ice:column>
 				<ice:panelGroup>
 					<ice:panelGroup>
-						<ice:outputLink value="download?menuId=#{entry.menuId}"
+						<ice:outputLink value="download?docId=#{entry.docId}"
 							target="_blank">
 							<ice:graphicImage value="#{styleBean.imagesPath}/#{entry.icon}"
 								styleClass="iconSmall" />
 							<ice:outputText value=" " />
-							<ice:outputText value="#{entry.name}" />
+							<ice:outputText value="#{entry.title}" />
 						</ice:outputLink>
 						<ice:outputText value="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;"
 							escape="false" />

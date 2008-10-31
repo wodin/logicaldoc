@@ -303,11 +303,11 @@
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="name" value="#{msgs['msg.jsp.title']}" />
+				<ice:outputLabel for="title" value="#{msgs['msg.jsp.title']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
-				<ice:selectBooleanCheckbox id="name" tabindex="1"
-					value="#{searchForm.name}" />
+				<ice:selectBooleanCheckbox id="title" tabindex="1"
+					value="#{searchForm.title}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
                 &amp;nbsp;
