@@ -25,6 +25,9 @@
 		<property name="settingsConfig">
 			<ref bean="SettingsConfig" />
 		</property>
+		<property name="analyzerManager">
+			<ref bean="AnalyzerManager" />
+		</property>
 	</bean>
 
 
@@ -284,6 +287,18 @@
 				</property>
 				<property name="indexer">
 					<ref bean="Indexer" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="AnalyzerManager" parent="CoreTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean class="com.logicaldoc.core.text.analyze.AnalyzerManager">
+				<property name="termDAO">
+					<ref bean="TermDAO" />
 				</property>
 			</bean>
 		</property>

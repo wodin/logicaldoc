@@ -17,7 +17,7 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.core.text.AnalyzeText;
+import com.logicaldoc.core.text.analyze.AnalyzerManager;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;
@@ -32,8 +32,6 @@ import com.logicaldoc.util.io.ZipUtil;
  */
 public class ZipImport {
 
-	private long userId;
-
 	private String language;
 
 	private User user;
@@ -43,7 +41,6 @@ public class ZipImport {
 	private boolean extractKeywords = true;
 
 	public ZipImport() {
-		userId = -1;
 		language = "";
 		extractKeywords = true;
 	}
@@ -58,7 +55,6 @@ public class ZipImport {
 
 	public void process(File zipsource, String language, Menu parent, long userId) {
 
-		this.userId = userId;
 		this.language = language;
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -131,6 +127,8 @@ public class ZipImport {
 				Document document = docManager.create(file, parent, user, language);
 
 				if (extractKeywords) {
+					AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
+
 					// also extract keywords and save on document
 					DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 					Locale locale = new Locale(language);
@@ -138,7 +136,6 @@ public class ZipImport {
 					parser.parse(file);
 					String words = parser.getKeywords();
 					if (StringUtils.isEmpty(words)) {
-						AnalyzeText analyzer = new AnalyzeText();
 						words = analyzer.getTerms(5, parser.getContent(), document.getLanguage());
 					}
 					Set<String> keywords = ddao.toKeywords(words);

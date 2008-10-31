@@ -1,14 +1,10 @@
-package com.logicaldoc.core.text;
+package com.logicaldoc.core.text.analyze;
 
 import java.util.Collection;
 import java.util.Iterator;
 
 import com.logicaldoc.core.document.Term;
 import com.logicaldoc.core.document.dao.TermDAO;
-import com.logicaldoc.core.text.analyze.Analyzer;
-import com.logicaldoc.core.text.analyze.AnalyzerFactory;
-import com.logicaldoc.core.text.analyze.Entry;
-import com.logicaldoc.util.Context;
 
 /**
  * Class for analysing texts like extracting keywords from a given text. Created
@@ -16,9 +12,15 @@ import com.logicaldoc.util.Context;
  * 
  * @author Michael Scholz
  */
-public class AnalyzeText {
+public class AnalyzerManager {
 
-	public AnalyzeText() {
+	private TermDAO termDAO;
+
+	public AnalyzerManager() {
+	}
+
+	public void setTermDAO(TermDAO termDAO) {
+		this.termDAO = termDAO;
 	}
 
 	/**
@@ -31,7 +33,6 @@ public class AnalyzeText {
 	 * @throws Exception
 	 */
 	public void storeTerms(long docId, String text, String language) throws Exception {
-		TermDAO termDao = (TermDAO) Context.getInstance().getBean(TermDAO.class);
 		Analyzer analyzer = AnalyzerFactory.getAnalyzer(language);
 		analyzer.analyze(text);
 
@@ -47,7 +48,7 @@ public class AnalyzeText {
 			term.setValue(entry.getNumber() * 1000 / words);
 			term.setWordCount(entry.getNumber());
 			term.setOriginWord(entry.getOriginWord());
-			termDao.store(term);
+			termDAO.store(term);
 		}
 	}
 
