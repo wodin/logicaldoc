@@ -46,7 +46,7 @@ public class PopulateDatabase {
 
 	private PreparedStatement insertDoc;
 
-	private PreparedStatement insertKewword;
+	private PreparedStatement insertKeyword;
 
 	private PreparedStatement insertTerm;
 
@@ -204,7 +204,7 @@ public class PopulateDatabase {
 					.prepareStatement("INSERT INTO LD_MENUGROUP (LD_MENUID,LD_GROUPID,LD_WRITEENABLE) VALUES (?,?,?);");
 			insertDoc = con
 					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_STATUS,LD_TYPE,LD_CHECKOUTUSER,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_FOLDERID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
-			insertKewword = con.prepareStatement("INSERT INTO LD_KEWWORD (LD_DOCID,LD_KEWWORD) VALUES (?,?);");
+			insertKeyword = con.prepareStatement("INSERT INTO LD_KEYWORD (LD_DOCID,LD_KEYWORD) VALUES (?,?);");
 			insertTerm = con
 					.prepareStatement("INSERT INTO LD_TERM (LD_ID,LD_LASTMODIFIED,LD_DOCID,LD_STEM,LD_VALUE,LD_WORDCOUNT,LD_WORD) VALUES (?,?,?,?,?,?,?);");
 
@@ -334,16 +334,16 @@ public class PopulateDatabase {
 			if (i == 5)
 				break;
 			//LD_DOCID
-			insertKewword.setLong(1, id);
+			insertKeyword.setLong(1, id);
 			if (keyword.length() > 255)
 				keyword = keyword.substring(0, 254);
 			//LD_KEYWORD
-			insertKewword.setString(2, keyword);
-			insertKewword.addBatch();
+			insertKeyword.setString(2, keyword);
+			insertKeyword.addBatch();
 			i++;
 		}
-		insertKewword.executeBatch();
-		insertKewword.clearBatch();
+		insertKeyword.executeBatch();
+		insertKeyword.clearBatch();
 
 		// Insert 10 document's terms
 		Random rnd = new Random();
@@ -443,7 +443,7 @@ public class PopulateDatabase {
 			try {
 				Statement statement = con.createStatement();
 				ResultSet rs = statement.executeQuery("select max(ld_id) from ld_term");
-				if (rs.first()) {
+				if (rs.next()) {
 					termId = rs.getLong(1);
 				}
 				con.commit();

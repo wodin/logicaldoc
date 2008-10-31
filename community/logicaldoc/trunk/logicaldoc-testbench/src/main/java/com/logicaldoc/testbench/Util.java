@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -143,7 +144,9 @@ public class Util {
 
 	public static String stem(String term, String language) {
 		try {
-			Class stemClass = Class.forName("net.sf.snowball.ext." + language + "Stemmer");
+			Locale locale = new Locale(language);
+			Class stemClass = Class.forName("net.sf.snowball.ext." + locale.getDisplayLanguage(Locale.ENGLISH)
+					+ "Stemmer");
 			SnowballProgram stemmer = (SnowballProgram) stemClass.newInstance();
 			Method stemMethod = stemmer.getClass().getMethod("stem", new Class[0]);
 
