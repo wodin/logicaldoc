@@ -62,7 +62,7 @@ public class Analyzer extends WordRanker {
 					+ language, e);
 			throw e;
 		}
-		AnalyseResult result = performAnalysis(boundary,
+		AnalyzeResult result = performAnalysis(boundary,
 				new StringBuffer(text), stoptable, minlen, stemmer);
 		wordcount = result.getWordCount();
 		wordtable = result.getWordTable();
@@ -76,14 +76,14 @@ public class Analyzer extends WordRanker {
 	 * Analyses a text and builds a table with each unique word stem,
 	 * number of stem presence in the text and original word.
 	 */
-	AnalyseResult performAnalysis(BreakIterator boundary,
+	AnalyzeResult performAnalysis(BreakIterator boundary,
 			StringBuffer source, Map<String, String> stopwords, int minlen,
 			Stemmer stemmer) throws IllegalArgumentException,
 			IllegalAccessException, InvocationTargetException {
 
 		int start = boundary.first();
 		long wordcount = 0;
-		AnalyseResult result = new AnalyseResult();
+		AnalyzeResult result = new AnalyzeResult();
 		Hashtable<String, WordEntry> wordtable = new Hashtable<String, WordEntry>(
 				source.length() / 6);
 
