@@ -6,8 +6,12 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
+import java.util.Random;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,6 +46,10 @@ public class PopulateDatabase {
 
 	private PreparedStatement insertDoc;
 
+	private PreparedStatement insertKewword;
+
+	private PreparedStatement insertTerm;
+
 	private long[] groupIds = new long[] { 1 };
 
 	private int batchSize = 50;
@@ -55,7 +63,9 @@ public class PopulateDatabase {
 	private long startDocId = 10000;
 
 	private long startFolderId = 10000;
-	
+
+	private long termId = -1;
+
 	public PopulateDatabase() {
 		try {
 			Properties conf = new Properties();
@@ -194,6 +204,9 @@ public class PopulateDatabase {
 					.prepareStatement("INSERT INTO LD_MENUGROUP (LD_MENUID,LD_GROUPID,LD_WRITEENABLE) VALUES (?,?,?);");
 			insertDoc = con
 					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_STATUS,LD_TYPE,LD_CHECKOUTUSER,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_FOLDERID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
+			insertKewword = con.prepareStatement("INSERT INTO LD_KEWWORD (LD_DOCID,LD_KEWWORD) VALUES (?,?);");
+			insertTerm = con
+					.prepareStatement("INSERT INTO LD_TERM (LD_ID,LD_LASTMODIFIED,LD_DOCID,LD_STEM,LD_VALUE,LD_WORDCOUNT,LD_WORD) VALUES (?,?,?,?,?,?,?);");
 
 			addDocuments(rootFolder, "/");
 			con.commit();
@@ -229,7 +242,7 @@ public class PopulateDatabase {
 			if (files[i].isDirectory() && !files[i].getName().startsWith("doc_")) {
 				try {
 					long folderId = insertFolder(files[i], path + "/" + parentFolderId);
-					if (folderId>0 && batchCount % batchSize == 0) {
+					if (folderId > 0 && batchCount % batchSize == 0) {
 						con.commit();
 						log.info("Created folder " + folderId);
 					}
@@ -242,7 +255,7 @@ public class PopulateDatabase {
 			} else if (files[i].isDirectory() && files[i].getName().startsWith("doc_")) {
 				try {
 					long docId = insertDocument(files[i]);
-					if (docId>0 && (batchCount % batchSize == 0)) {
+					if (docId > 0 && (batchCount % batchSize == 0)) {
 						con.commit();
 						log.info("Created document " + docId);
 					}
@@ -265,11 +278,12 @@ public class PopulateDatabase {
 		String filename = docFile.getName();
 		long filesize = docFile.length();
 		long id = Long.parseLong(dir.getName().substring(dir.getName().lastIndexOf("_") + 1));
-		
-		//Skip condition
-		if(id<startDocId)
+		String content = Util.parse(docFile);
+
+		// Skip condition
+		if (id < startDocId)
 			return -1;
-		
+
 		long folderId = Long.parseLong(dir.getParentFile().getName());
 		String extension = docFile.getName().substring(docFile.getName().lastIndexOf(".") + 1);
 
@@ -313,6 +327,52 @@ public class PopulateDatabase {
 		insertDoc.execute();
 		batchCount++;
 
+		// Insert 5 document's keywords
+		Set<String> kwds = Util.extractWords(10, content);
+		int i = 0;
+		for (String keyword : kwds) {
+			if (i == 5)
+				break;
+			//LD_DOCID
+			insertKewword.setLong(1, id);
+			if (keyword.length() > 255)
+				keyword = keyword.substring(0, 254);
+			//LD_KEYWORD
+			insertKewword.setString(2, keyword);
+			insertKewword.addBatch();
+			i++;
+		}
+		insertKewword.executeBatch();
+		insertKewword.clearBatch();
+
+		// Insert 10 document's terms
+		Random rnd = new Random();
+		for (String keyword : kwds) {
+			// LD_ID
+			insertTerm.setLong(1, nextTermId());
+			// LD_LASTMODIFIED
+			insertTerm.setDate(2, new Date(new java.util.Date().getTime()));
+			// LD_DOCID
+			insertTerm.setLong(3, id);
+			if (keyword.length() > 255)
+				keyword = keyword.substring(0, 254);
+			String stem = Util.stem(keyword, language);
+			// LD_STEM
+			insertTerm.setString(4, stem);
+
+			int random = rnd.nextInt(40);
+			// LD_VALUE
+			insertTerm.setFloat(5, (float) random);
+			random = rnd.nextInt(60);
+			// LD_WORDCOUNT
+			insertTerm.setInt(6, random);
+			// LD_WORD
+			insertTerm.setString(7, keyword);
+			insertTerm.addBatch();
+		}
+		insertTerm.executeBatch();
+		insertTerm.clearBatch();
+
 		return id;
 	}
 
@@ -329,10 +389,10 @@ public class PopulateDatabase {
 		long id = Long.parseLong(dir.getName());
 		long parentId = Long.parseLong(dir.getParentFile().getName());
 
-		//Skip condition
-		if(id<startFolderId)
+		// Skip condition
+		if (id < startFolderId)
 			return -1;
-		
+
 		// LD_ID
 		insertMenu.setLong(1, id);
 		// LD_LASTMODIFIED
@@ -371,5 +431,26 @@ public class PopulateDatabase {
 		insertMenuGroup.clearBatch();
 
 		return id;
+	}
+
+	/**
+	 * Gets a ld_id value certainly not used on Term
+	 * 
+	 * @return The max+1 term ld_id value
+	 */
+	private long nextTermId() {
+		if (termId < 0) {
+			try {
+				Statement statement = con.createStatement();
+				ResultSet rs = statement.executeQuery("select max(ld_id) from ld_term");
+				if (rs.first()) {
+					termId = rs.getLong(1);
+				}
+				con.commit();
+			} catch (Throwable e) {
+				log.error(e);
+			}
+		}
+		return ++termId;
 	}
 }
