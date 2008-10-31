@@ -1,4 +1,4 @@
-package com.logicaldoc.core.text.analyze;
+package com.logicaldoc.core.text.analyzer;
 
 import java.util.Hashtable;
 

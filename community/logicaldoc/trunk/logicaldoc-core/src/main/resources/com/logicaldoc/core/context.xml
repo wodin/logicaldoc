@@ -2,7 +2,6 @@
 <!--  
 	Context definition of the core plugin
 	@author Alessandro Gasparini - Logical Objects
-	@version $Id:$
 	@since 3.0
 -->
 <!DOCTYPE beans SYSTEM "spring-beans-2.0.dtd">
@@ -296,7 +295,7 @@
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
 		<property name="target">
-			<bean class="com.logicaldoc.core.text.analyze.AnalyzerManager">
+			<bean class="com.logicaldoc.core.text.analyzer.AnalyzerManager">
 				<property name="termDAO">
 					<ref bean="TermDAO" />
 				</property>

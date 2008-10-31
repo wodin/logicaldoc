@@ -4,7 +4,7 @@
  * Created on 23. Juli 2003, 22:09
  */
 
-package com.logicaldoc.core.text.analyze;
+package com.logicaldoc.core.text.analyzer;
 
 /**
  * This class encapsulates an entry consists of a top word and the quantity of this top word in the text.

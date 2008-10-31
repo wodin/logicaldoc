@@ -11,7 +11,8 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
-import com.logicaldoc.core.text.analyze.Stopwords;
+
+import com.logicaldoc.core.text.analyzer.Stopwords;
 
 public class AnalyzeFileTest extends TestCase {
 

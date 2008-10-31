@@ -17,7 +17,7 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.core.text.analyze.AnalyzerManager;
+import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;

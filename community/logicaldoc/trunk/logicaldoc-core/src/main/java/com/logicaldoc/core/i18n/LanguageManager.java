@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 import org.java.plugin.registry.Extension.Parameter;
 
-import com.logicaldoc.core.text.analyze.Stopwords;
+import com.logicaldoc.core.text.analyzer.Stopwords;
 import com.logicaldoc.util.PluginRegistry;
 
 /**

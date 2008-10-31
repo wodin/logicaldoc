@@ -11,7 +11,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
-import com.logicaldoc.core.text.analyze.Stopwords;
+import com.logicaldoc.core.text.analyzer.Stopwords;
 
 /**
  * This factory instantiates the analyzer for the given language

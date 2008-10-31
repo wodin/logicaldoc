@@ -27,7 +27,7 @@ import org.apache.lucene.store.LockObtainFailedException;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.util.SquareSimilarity;
-import com.logicaldoc.core.text.analyze.AnalyzerManager;
+import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.config.SettingsConfig;
