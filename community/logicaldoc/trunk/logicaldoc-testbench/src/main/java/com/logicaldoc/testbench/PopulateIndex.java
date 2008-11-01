@@ -31,8 +31,6 @@ import org.apache.lucene.index.IndexWriter;
 public class PopulateIndex {
 	public static final String FIELD_KEYWORDS = "keywords";
 
-	public static final String FIELD_SUMMARY = "summary";
-
 	public static final String FIELD_CONTENT = "content";
 
 	public static final String FIELD_TYPE = "type";
@@ -196,9 +194,6 @@ public class PopulateIndex {
 		String content = Util.parse(docFile);
 		doc.add(new Field(FIELD_CONTENT, content, Field.Store.YES, Field.Index.TOKENIZED));
 
-		int summarysize = Math.min(content.length(), 500);
-		String summary = content.substring(0, summarysize);
-		doc.add(new Field(FIELD_SUMMARY, summary, Field.Store.YES, Field.Index.TOKENIZED));
 		doc.add(new Field(FIELD_KEYWORDS, Util.extractWordsAsString(5, content), Field.Store.YES,
 				Field.Index.TOKENIZED));
 
