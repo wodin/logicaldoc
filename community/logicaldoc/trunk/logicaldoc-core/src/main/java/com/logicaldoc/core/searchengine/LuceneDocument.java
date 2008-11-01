@@ -15,8 +15,6 @@ import com.logicaldoc.core.i18n.DateBean;
 public class LuceneDocument {
 	public static final String FIELD_KEYWORDS = "keywords";
 
-	public static final String FIELD_SUMMARY = "summary";
-
 	public static final String FIELD_CONTENT = "content";
 
 	public static final String FIELD_TYPE = "type";
@@ -73,7 +71,6 @@ public class LuceneDocument {
 		setDocData();
 		setType();
 		setContent(content);
-		setSummary();
 		setKeywords();
 		setPath();
 		return doc;
@@ -129,12 +126,6 @@ public class LuceneDocument {
 
 	protected void setContent(String content) {
 		doc.add(new Field(FIELD_CONTENT, content, Field.Store.YES, Field.Index.TOKENIZED));
-	}
-
-	protected void setSummary() {
-		int summarysize = Math.min(content.length(), 500);
-		String summary = content.substring(0, summarysize);
-		doc.add(new Field(FIELD_SUMMARY, summary, Field.Store.YES, Field.Index.TOKENIZED));
 	}
 
 	protected void setKeywords() {

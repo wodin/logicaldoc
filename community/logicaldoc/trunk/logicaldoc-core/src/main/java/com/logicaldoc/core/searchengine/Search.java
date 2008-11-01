@@ -164,7 +164,11 @@ public class Search {
 							fragmentSeparator);
 
 					if ((summary == null) || summary.equals("")) {
-						summary = doc.get(LuceneDocument.FIELD_SUMMARY);
+						// If no fragments are available, use an extract from
+						// the content
+						content = doc.get(LuceneDocument.FIELD_CONTENT);
+						int summarysize = Math.min(content.length(), 500);
+						summary = content.substring(0, summarysize);
 					}
 
 					Result result = new ResultImpl();
