@@ -428,9 +428,6 @@ public class DocumentManagerImpl implements DocumentManager {
 	public String getDocumentContent(long docId) {
 		Document doc = documentDAO.findById(docId);
 		org.apache.lucene.document.Document luceneDoc = indexer.getDocument(Long.toString(docId), doc.getLanguage());
-		// First search the document using it's id
-		if (luceneDoc == null)
-			luceneDoc = indexer.getDocument(Long.toString(docId), doc.getLanguage());
 		// If not found, search the document using it's menu id
 		if (luceneDoc != null)
 			return luceneDoc.get(LuceneDocument.FIELD_CONTENT);
