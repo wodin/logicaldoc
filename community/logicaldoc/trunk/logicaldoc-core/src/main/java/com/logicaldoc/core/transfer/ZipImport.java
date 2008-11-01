@@ -136,7 +136,7 @@ public class ZipImport {
 					parser.parse(file);
 					String words = parser.getKeywords();
 					if (StringUtils.isEmpty(words)) {
-						words = analyzer.getTerms(5, parser.getContent(), document.getLanguage());
+						words = analyzer.getTermsAsString(5, parser.getContent(), document.getLanguage());
 					}
 					Set<String> keywords = ddao.toKeywords(words);
 					document.setKeywords(keywords);

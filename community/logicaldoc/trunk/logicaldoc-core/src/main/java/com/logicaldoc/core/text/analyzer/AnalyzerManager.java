@@ -62,7 +62,7 @@ public class AnalyzerManager {
 	 * @return String of keywords like "Information, Retrieval, DMS, CMS"
 	 * @throws Exception
 	 */
-	public String getTerms(int count, String text, String language) throws Exception {
+	public String getTermsAsString(int count, String text, String language) throws Exception {
 		StringBuffer result = new StringBuffer();
 		Analyzer analyzer = AnalyzerFactory.getAnalyzer(language);
 		analyzer.analyze(text);

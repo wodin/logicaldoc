@@ -433,7 +433,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			luceneDoc = indexer.getDocument(Long.toString(docId), doc.getLanguage());
 		// If not found, search the document using it's menu id
 		if (luceneDoc != null)
-			return luceneDoc.get("content");
+			return luceneDoc.get(LuceneDocument.FIELD_CONTENT);
 		else
 			return "";
 	}
