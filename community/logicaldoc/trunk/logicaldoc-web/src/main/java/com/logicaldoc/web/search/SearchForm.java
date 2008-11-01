@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Result;
@@ -26,6 +27,8 @@ import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.searchengine.SimilarSearch;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.text.analyzer.AnalyzerManager;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.document.Directory;
@@ -551,14 +554,26 @@ public class SearchForm {
 			long userId = SessionManagement.getUserId();
 
 			try {
-				SimilarSearch searcher = new SimilarSearch();
-				similar = searcher.findSimilarDocuments(docId, 0.0d, userId);
-
-				PageContentBean page = new PageContentBean("similar", "search/similar");
-				page.setContentTitle(Messages.getMessage("msg.jsp.similardocs"));
-
-				page.setIcon(StyleBean.getImagePath("similar.png"));
-				navigation.setSelectedPanel(page);
+				DocumentManager manager=(DocumentManager)Context.getInstance().getBean(DocumentManager.class);
+				String text=manager.getDocumentContent(docId);
+				//Extracts the most used 20 words
+				AnalyzerManager analyzer=(AnalyzerManager)Context.getInstance().getBean(AnalyzerManager.class);
+				String terms=analyzer.getTermsAsString(20, text, SessionManagement.getLanguage());
+				terms=terms.replaceAll(",", " ");
+				setQuery(terms);
+				System.out.println("**query="+getQuery());
+				search();
+				
+				
+				
+//				SimilarSearch searcher = new SimilarSearch();
+//				similar = searcher.findSimilarDocuments(docId, 0.0d, userId);
+//
+//				PageContentBean page = new PageContentBean("similar", "search/similar");
+//				page.setContentTitle(Messages.getMessage("msg.jsp.similardocs"));
+//
+//				page.setIcon(StyleBean.getImagePath("similar.png"));
+//				navigation.setSelectedPanel(page);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());

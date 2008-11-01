@@ -153,7 +153,7 @@ public class NewDocWizard {
 						docForm.setKeywords(keywords);
 					} else {
 						AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
-						docForm.setKeywords(analyzer.getTerms(5, content.toString(), documentLanguage));
+						docForm.setKeywords(analyzer.getTermsAsString(5, content.toString(), documentLanguage));
 					}
 				}
 
