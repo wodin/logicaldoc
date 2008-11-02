@@ -6,9 +6,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
 import java.util.Set;
 
@@ -60,8 +58,6 @@ public class PopulateDatabase {
 	private long startDocId = 10000;
 
 	private long startFolderId = 10000;
-
-	private long termId = -1;
 
 	public PopulateDatabase() {
 		try {
@@ -311,7 +307,7 @@ public class PopulateDatabase {
 		// LD_COVERAGE
 		insertDoc.setString(14, "test");
 		// LD_LANGUAGE
-		insertDoc.setString(15, "en");
+		insertDoc.setString(15, language);
 		// LD_FILENAME
 		insertDoc.setString(16, filename);
 		// LD_FILESIZE
@@ -398,26 +394,5 @@ public class PopulateDatabase {
 		insertMenuGroup.clearBatch();
 
 		return id;
-	}
-
-	/**
-	 * Gets a ld_id value certainly not used on Term
-	 * 
-	 * @return The max+1 term ld_id value
-	 */
-	private long nextTermId() {
-		if (termId < 0) {
-			try {
-				Statement statement = con.createStatement();
-				ResultSet rs = statement.executeQuery("select max(ld_id) from ld_term");
-				if (rs.next()) {
-					termId = rs.getLong(1);
-				}
-				con.commit();
-			} catch (Throwable e) {
-				log.error(e);
-			}
-		}
-		return ++termId;
 	}
 }

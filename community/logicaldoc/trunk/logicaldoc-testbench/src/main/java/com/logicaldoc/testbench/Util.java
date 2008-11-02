@@ -17,8 +17,6 @@ import net.sf.snowball.SnowballProgram;
 
 public class Util {
 
-	private int termId = -1;
-
 	private final static String[] GERMAN_STOP_WORDS = { "der", "die", "das", "dass", "daß", "ein", "dies", "dem",
 			"den", "des", "zu", "zum", "zur", "eine", "einer", "einem", "einen", "eines", "auf", "aus", "am", "im",
 			"in", "um", "an", "und", "oder", "ohne", "mit", "ich", "du", "er", "sie", "es", "wir", "ihr", "mein",
