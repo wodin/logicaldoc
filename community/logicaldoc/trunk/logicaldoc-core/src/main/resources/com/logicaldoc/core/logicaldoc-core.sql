@@ -7,7 +7,6 @@ create table ld_link (ld_id bigint not null, ld_lastmodified timestamp not null,
 create table ld_menu (ld_id bigint not null, ld_lastmodified timestamp not null, ld_text varchar(255), ld_parentid bigint not null, ld_sort int, ld_icon varchar(255), ld_path varchar(255), ld_pathextended varchar(40000), ld_type int not null, ld_ref varchar(255), ld_size bigint, primary key (ld_id));
 create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint, ld_writeenable int);
 create table ld_systemmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_author varchar(255), ld_recipient varchar(255), ld_messagetext varchar(2000), ld_subject varchar(255), ld_sentdate varchar(20) not null, ld_datescope int, ld_prio int, ld_confirmation int, ld_red int not null, primary key (ld_id));
-create table ld_term (ld_id bigint not null, ld_lastmodified timestamp not null, ld_docid bigint not null, ld_stem varchar(255) not null, ld_value float, ld_wordcount int, ld_word varchar(255), primary key (ld_id));
 create table ld_ticket (ld_id bigint not null, ld_lastmodified timestamp not null, ld_ticketid varchar(255) not null, ld_docid bigint not null, ld_userid bigint not null, primary key (ld_id));
 create table ld_user (ld_id bigint not null, ld_lastmodified timestamp not null, ld_username varchar(255) not null, ld_password varchar(255), ld_name varchar(255), ld_firstname varchar(255), ld_street varchar(255), ld_postalcode varchar(255), ld_city varchar(255), ld_country varchar(30), ld_language varchar(10), ld_email varchar(255), ld_telephone varchar(255), ld_hidden int not null, primary key (ld_id));
 create table ld_userdoc (ld_id bigint not null, ld_lastmodified timestamp not null, ld_docid bigint not null, ld_userid bigint not null, ld_date timestamp, primary key (ld_id));
@@ -26,7 +25,6 @@ alter table ld_version add constraint FK9B3BD9117C693DFD foreign key (ld_docid) 
 alter table ld_ticket add constraint FK_TICKET_DOC foreign key (ld_docid) references ld_document on delete cascade;
 alter table ld_ticket add constraint FK_TICKET_USER foreign key (ld_userid) references ld_user on delete cascade;
 alter table ld_menugroup add constraint FK_MENUGROUP_GROUP foreign key (ld_groupid) references ld_group on delete cascade;
-alter table ld_term add constraint FK_TERM_DOC foreign key (ld_docid) references ld_document on delete cascade;
 alter table ld_userdoc add constraint FK_USERDOC_DOC foreign key (ld_docid) references ld_document on delete cascade;
 alter table ld_userdoc add constraint FK_USERDOC_USER foreign key (ld_userid) references ld_user on delete cascade;
 alter table ld_article add constraint FK_ARTICLE_DOC foreign key (ld_docid) references ld_document on delete cascade;

@@ -3,9 +3,6 @@ package com.logicaldoc.core.text.analyzer;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.logicaldoc.core.document.Term;
-import com.logicaldoc.core.document.dao.TermDAO;
-
 /**
  * Class for analysing texts like extracting keywords from a given text. Created
  * on 24.03.2004
@@ -14,42 +11,7 @@ import com.logicaldoc.core.document.dao.TermDAO;
  */
 public class AnalyzerManager {
 
-	private TermDAO termDAO;
-
 	public AnalyzerManager() {
-	}
-
-	public void setTermDAO(TermDAO termDAO) {
-		this.termDAO = termDAO;
-	}
-
-	/**
-	 * This method selects 20 keywords of a given text in a specified language
-	 * and stores these keywords in a database.
-	 * 
-	 * @param docId The document id the text is from.
-	 * @param text Text of a document.
-	 * @param language Identified language of the text.
-	 * @throws Exception
-	 */
-	public void storeTerms(long docId, String text, String language) throws Exception {
-		Analyzer analyzer = AnalyzerFactory.getAnalyzer(language);
-		analyzer.analyze(text);
-
-		long words = analyzer.getWordCount();
-		Collection<Entry> terms = analyzer.getTopWords(20);
-		Iterator<Entry> iter = terms.iterator();
-
-		while (iter.hasNext()) {
-			Entry entry = iter.next();
-			Term term = new Term();
-			term.setDocId(docId);
-			term.setStem(entry.getWord());
-			term.setValue(entry.getNumber() * 1000 / words);
-			term.setWordCount(entry.getNumber());
-			term.setOriginWord(entry.getOriginWord());
-			termDAO.store(term);
-		}
 	}
 
 	/**

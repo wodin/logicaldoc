@@ -48,8 +48,6 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	private UserDocDAO userDocDAO;
 
-	private TermDAO termDAO;
-
 	private DocumentLinkDAO linkDAO;
 
 	private SettingsConfig settings;
@@ -59,10 +57,6 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	public void setUserDocDAO(UserDocDAO userDocDAO) {
 		this.userDocDAO = userDocDAO;
-	}
-
-	public void setTermDAO(TermDAO termDAO) {
-		this.termDAO = termDAO;
 	}
 
 	public void setSettings(SettingsConfig settings) {
@@ -105,7 +99,6 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				getHibernateTemplate().deleteAll(historyDAO.findByDocId(docId));
 				getHibernateTemplate().deleteAll(linkDAO.findByDocId(docId));
 				userDocDAO.delete(docId);
-				termDAO.delete(docId);
 				doc.getVersions().clear();
 				doc.getKeywords().clear();
 				doc.setFolder(null);

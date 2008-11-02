@@ -119,21 +119,6 @@ values     (2,'2008-10-22',2,1,'2006-12-25','author','data test 02');
 insert into ld_history
 values     (3,'2008-10-22',1,3,'2006-12-27','sebastian','data test 03');
 
-insert into ld_term
-values     (1,'2008-10-22',1,'a',2.5,50,'test');
-
-insert into ld_term
-values     (2,'2008-10-22',2,'a',0.7,12,'test2');
-
-insert into ld_term
-values     (3,'2008-10-22',2,'a',0.3,12,'test3');
-
-insert into ld_term
-values     (4,'2008-10-22',2,'a',0.14,20,'test4');
-
-insert into ld_term
-values     (5,'2008-10-22',2,'z',0.14,20,'test5');
-
 insert into ld_article
 values     (1,'2008-10-22',1,'subject','message','2008-10-09','admin');
 

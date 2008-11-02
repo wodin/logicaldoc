@@ -1,4 +1,4 @@
-package com.logicaldoc.core.searchengine.util;
+package com.logicaldoc.core.searchengine;
 
 import org.apache.lucene.search.Similarity;
 

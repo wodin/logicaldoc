@@ -24,9 +24,6 @@
 		<property name="settingsConfig">
 			<ref bean="SettingsConfig" />
 		</property>
-		<property name="analyzerManager">
-			<ref bean="AnalyzerManager" />
-		</property>
 	</bean>
 
 
@@ -131,21 +128,6 @@
 		</property>
 	</bean>
 
-	<bean id="TermDAO" parent="ApplicationBaseTransactionProxy"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
-		<property name="target">
-			<bean
-				class="com.logicaldoc.core.document.dao.HibernateTermDAO"
-				abstract="false" lazy-init="default" autowire="default"
-				dependency-check="default">
-				<property name="sessionFactory">
-					<ref bean="SessionFactory" />
-				</property>
-			</bean>
-		</property>
-	</bean>
-
 	<bean id="ArticleDAO" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
@@ -184,9 +166,6 @@
 				<property name="userDAO">
 					<ref bean="UserDAO" />
 				</property>
-                <property name="termDAO">
-                    <ref bean="TermDAO" />
-                </property>
 				<property name="userDocDAO">
                     <ref bean="UserDocDAO" />
                 </property>
@@ -291,16 +270,7 @@
 		</property>
 	</bean>
 
-	<bean id="AnalyzerManager" parent="CoreTransactionProxy"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
-		<property name="target">
-			<bean class="com.logicaldoc.core.text.analyzer.AnalyzerManager">
-				<property name="termDAO">
-					<ref bean="TermDAO" />
-				</property>
-			</bean>
-		</property>
+	<bean id="AnalyzerManager" class="com.logicaldoc.core.text.analyzer.AnalyzerManager">
 	</bean>
 
 	<bean id="TaskManager" class="com.logicaldoc.core.task.TaskManager"

@@ -26,8 +26,6 @@ import org.apache.lucene.store.LockObtainFailedException;
 
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
-import com.logicaldoc.core.searchengine.util.SquareSimilarity;
-import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.config.SettingsConfig;
@@ -43,13 +41,7 @@ public class Indexer {
 
 	private SettingsConfig settingsConfig;
 
-	private AnalyzerManager analyzerManager;
-
 	private Indexer() {
-	}
-
-	public void setAnalyzerManager(AnalyzerManager analyzerManager) {
-		this.analyzerManager = analyzerManager;
 	}
 
 	public void setSettingsConfig(SettingsConfig settingsConfig) {
@@ -87,11 +79,6 @@ public class Indexer {
 				addDocument(doc, language);
 			} catch (Exception e) {
 				log.error("Exception addFile: " + e.getLocalizedMessage(), e);
-			}
-			try {
-				analyzerManager.storeTerms(document.getId(), content.toString(), language);
-			} catch (Exception e) {
-				log.error("Exception analyzing File: " + e.getLocalizedMessage(), e);
 			}
 		}
 	}

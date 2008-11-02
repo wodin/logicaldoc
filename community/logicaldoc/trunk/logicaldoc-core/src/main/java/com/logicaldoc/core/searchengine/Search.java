@@ -30,7 +30,6 @@ import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 
 import com.logicaldoc.core.i18n.DateBean;
 import com.logicaldoc.core.i18n.LanguageManager;
-import com.logicaldoc.core.searchengine.util.SquareSimilarity;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
