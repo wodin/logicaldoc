@@ -25,7 +25,6 @@ import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Result;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
-import com.logicaldoc.core.searchengine.SimilarSearch;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.util.Context;
@@ -42,7 +41,6 @@ import com.logicaldoc.web.navigation.PageContentBean;
  * A simple search form bean.
  * 
  * @author Marco Meschieri - Logical Objects
- * @version $Id: SearchForm.java,v 1.10 2006/09/03 16:24:38 marco Exp $
  * @since 2.7
  */
 public class SearchForm {
@@ -102,8 +100,6 @@ public class SearchForm {
 
 	private Collection<DocumentResult> documentResult = new ArrayList<DocumentResult>();
 
-	private Collection<Result> similar = new ArrayList<Result>();
-
 	private NavigationBean navigation;
 
 	private Search lastSearch = null;
@@ -111,6 +107,8 @@ public class SearchForm {
 	private boolean showFolderSelector = false;
 
 	private String parentPathDescr;
+
+	private Long excludeFromResult = null;
 
 	private UIInput uiSizeMin = null;
 
@@ -253,10 +251,6 @@ public class SearchForm {
 		this.documentResult = result;
 	}
 
-	public void setSimilar(Collection<Result> similar) {
-		this.similar = similar;
-	}
-
 	public int getHitsPerPage() {
 		return hitsPerPage;
 	}
@@ -368,10 +362,6 @@ public class SearchForm {
 		return map;
 	}
 
-	public Collection<Result> getSimilar() {
-		return similar;
-	}
-
 	public String quickSearch() {
 		phrase = "";
 		any = "";
@@ -394,9 +384,8 @@ public class SearchForm {
 		sizeMin = null;
 		sizeMax = null;
 		searchInSubPath = false;
-
+		excludeFromResult = null;
 		maxHits = hitsPerBlock;
-
 		return searchHits();
 	}
 
@@ -503,6 +492,8 @@ public class SearchForm {
 				List<DocumentResult> docResult = new ArrayList<DocumentResult>();
 
 				for (Result myResult : result) {
+					if (excludeFromResult != null && excludeFromResult.longValue() == myResult.getDocId())
+						continue;
 					DocumentResult dr = new DocumentResult(myResult);
 					docResult.add(dr);
 				}
@@ -525,11 +516,10 @@ public class SearchForm {
 	}
 
 	/**
-	 * Relaunches the search includint one more block of hits.
+	 * Re-launches the search including one more block of hits.
 	 */
 	public String searchMore() {
 		maxHits += hitsPerBlock;
-
 		return searchHits();
 	}
 
@@ -538,7 +528,6 @@ public class SearchForm {
 	 */
 	@SuppressWarnings("unchecked")
 	public String searchSimilar() {
-
 		if (SessionManagement.isValid()) {
 			Map map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
 			long docId;
@@ -551,29 +540,40 @@ public class SearchForm {
 				docId = entry.getDocId();
 			}
 
-			long userId = SessionManagement.getUserId();
-
 			try {
-				DocumentManager manager=(DocumentManager)Context.getInstance().getBean(DocumentManager.class);
-				String text=manager.getDocumentContent(docId);
-				//Extracts the most used 20 words
-				AnalyzerManager analyzer=(AnalyzerManager)Context.getInstance().getBean(AnalyzerManager.class);
-				String terms=analyzer.getTermsAsString(20, text, SessionManagement.getLanguage());
-				terms=terms.replaceAll(",", " ");
+				DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+				String text = manager.getDocumentContent(docId);
+				// Extracts the most used 10 words
+				AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
+				String terms = analyzer.getTermsAsString(10, text, SessionManagement.getLanguage());
+				terms = terms.replaceAll(",", " ");
+
+				// Prepare a query and launch the search
+				phrase = "";
+				any = "";
+				nots = "";
+				format = "all";
+				path = null;
+				parentPathDescr = null;
+				fuzzy = false;
+				content = true;
+				keywords = true;
+				source = false;
+				sourceAuthor = false;
+				sourceType = false;
+				coverage = false;
+				title = true;
+				creationDateFrom = null;
+				creationDateTo = null;
+				sourceDateFrom = null;
+				sourceDateTo = null;
+				sizeMin = null;
+				sizeMax = null;
+				searchInSubPath = false;
+				maxHits = hitsPerBlock;
 				setQuery(terms);
-				System.out.println("**query="+getQuery());
+				setExcludeFromResult(docId);
 				search();
-				
-				
-				
-//				SimilarSearch searcher = new SimilarSearch();
-//				similar = searcher.findSimilarDocuments(docId, 0.0d, userId);
-//
-//				PageContentBean page = new PageContentBean("similar", "search/similar");
-//				page.setContentTitle(Messages.getMessage("msg.jsp.similardocs"));
-//
-//				page.setIcon(StyleBean.getImagePath("similar.png"));
-//				navigation.setSelectedPanel(page);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
@@ -860,5 +860,13 @@ public class SearchForm {
 
 	void loadTree() {
 		directoryModel = new DirectoryTreeModel();
+	}
+
+	public Long getExcludeFromResult() {
+		return excludeFromResult;
+	}
+
+	public void setExcludeFromResult(Long excludeFromResult) {
+		this.excludeFromResult = excludeFromResult;
 	}
 }
