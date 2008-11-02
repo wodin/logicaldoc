@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
-import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -47,8 +46,6 @@ public class PopulateDatabase {
 	private PreparedStatement insertDoc;
 
 	private PreparedStatement insertKeyword;
-
-	private PreparedStatement insertTerm;
 
 	private long[] groupIds = new long[] { 1 };
 
@@ -205,8 +202,6 @@ public class PopulateDatabase {
 			insertDoc = con
 					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_STATUS,LD_TYPE,LD_CHECKOUTUSER,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_FOLDERID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
 			insertKeyword = con.prepareStatement("INSERT INTO LD_KEYWORD (LD_DOCID,LD_KEYWORD) VALUES (?,?);");
-			insertTerm = con
-					.prepareStatement("INSERT INTO LD_TERM (LD_ID,LD_LASTMODIFIED,LD_DOCID,LD_STEM,LD_VALUE,LD_WORDCOUNT,LD_WORD) VALUES (?,?,?,?,?,?,?);");
 
 			addDocuments(rootFolder, "/");
 			con.commit();
@@ -333,45 +328,17 @@ public class PopulateDatabase {
 		for (String keyword : kwds) {
 			if (i == 5)
 				break;
-			//LD_DOCID
+			// LD_DOCID
 			insertKeyword.setLong(1, id);
 			if (keyword.length() > 255)
 				keyword = keyword.substring(0, 254);
-			//LD_KEYWORD
+			// LD_KEYWORD
 			insertKeyword.setString(2, keyword);
 			insertKeyword.addBatch();
 			i++;
 		}
 		insertKeyword.executeBatch();
 		insertKeyword.clearBatch();
-
-		// Insert 10 document's terms
-		Random rnd = new Random();
-		for (String keyword : kwds) {
-			// LD_ID
-			insertTerm.setLong(1, nextTermId());
-			// LD_LASTMODIFIED
-			insertTerm.setDate(2, new Date(new java.util.Date().getTime()));
-			// LD_DOCID
-			insertTerm.setLong(3, id);
-			if (keyword.length() > 255)
-				keyword = keyword.substring(0, 254);
-			String stem = Util.stem(keyword, language);
-			// LD_STEM
-			insertTerm.setString(4, stem);
-
-			int random = rnd.nextInt(40);
-			// LD_VALUE
-			insertTerm.setFloat(5, (float) random);
-			random = rnd.nextInt(60);
-			// LD_WORDCOUNT
-			insertTerm.setInt(6, random);
-			// LD_WORD
-			insertTerm.setString(7, keyword);
-			insertTerm.addBatch();
-		}
-		insertTerm.executeBatch();
-		insertTerm.clearBatch();
 
 		return id;
 	}
