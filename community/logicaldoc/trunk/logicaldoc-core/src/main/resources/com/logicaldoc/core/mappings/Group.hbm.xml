@@ -10,7 +10,7 @@
 		<timestamp name="lastModified" column="ld_lastmodified" />
 		<property name="name" type="string" column="ld_name" length="255" not-null="true" />
 		<property name="description" type="string" column="ld_description" length="255" />
-		<property name="hidden" type="int" column="ld_hidden" not-null="true"/>
+		<property name="type" type="int" column="ld_type" not-null="true"/>
         <set name="users" table="ld_usergroup" lazy="false">
              <key column="ld_groupid"/>
              <many-to-many column="ld_userid" class="com.logicaldoc.core.security.User" />

@@ -17,23 +17,27 @@ public class Group extends PersistentObject implements Serializable {
 
 	private static final long serialVersionUID = 2L;
 
+	public static int TYPE_DEFAULT = 0;
+
+	public static int TYPE_USER = 1;
+
 	private String name = "";
 
 	private String descriprion = "";
 
-	private int hidden = 0;
+	private int type = TYPE_DEFAULT;
 
 	private Set<User> users = new HashSet<User>();
 
 	public Group() {
 	}
 
-	public int getHidden() {
-		return hidden;
+	public int getType() {
+		return type;
 	}
 
-	public void setHidden(int hidden) {
-		this.hidden = hidden;
+	public void setType(int type) {
+		this.type = type;
 	}
 
 	public Set<User> getUsers() {

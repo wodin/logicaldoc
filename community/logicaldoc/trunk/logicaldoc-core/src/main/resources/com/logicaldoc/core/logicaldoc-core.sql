@@ -1,6 +1,6 @@
 create table ld_article (ld_id bigint not null, ld_lastmodified timestamp not null, ld_docid bigint not null, ld_subject varchar(255), ld_message varchar(2000), ld_date timestamp, ld_username varchar(255), primary key (ld_id));
 create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not null, ld_title varchar(255), ld_version varchar(10), ld_date timestamp, ld_publisher varchar(30), ld_status int, ld_type varchar(255), ld_checkoutuser varchar(30), ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourcetype varchar(255), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_folderid bigint, primary key (ld_id));
-create table ld_group (ld_id bigint not null, ld_lastmodified timestamp not null, ld_name varchar(255) not null, ld_description varchar(255),  ld_hidden int not null, primary key (ld_id));
+create table ld_group (ld_id bigint not null, ld_lastmodified timestamp not null, ld_name varchar(255) not null, ld_description varchar(255),  ld_type int not null, primary key (ld_id));
 create table ld_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_docid bigint not null, lo_userid bigint not null, ld_date timestamp, lo_username varchar(255), lo_event varchar(255), primary key (ld_id));
 create table ld_keyword (ld_docid bigint not null, ld_keyword varchar(255));
 create table ld_link (ld_id bigint not null, ld_lastmodified timestamp not null, ld_type varchar(255) not null, ld_docid1 bigint, ld_docid2 bigint, primary key (ld_id));
@@ -8,7 +8,7 @@ create table ld_menu (ld_id bigint not null, ld_lastmodified timestamp not null,
 create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint, ld_writeenable int);
 create table ld_systemmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_author varchar(255), ld_recipient varchar(255), ld_messagetext varchar(2000), ld_subject varchar(255), ld_sentdate varchar(20) not null, ld_datescope int, ld_prio int, ld_confirmation int, ld_red int not null, primary key (ld_id));
 create table ld_ticket (ld_id bigint not null, ld_lastmodified timestamp not null, ld_ticketid varchar(255) not null, ld_docid bigint not null, ld_userid bigint not null, primary key (ld_id));
-create table ld_user (ld_id bigint not null, ld_lastmodified timestamp not null, ld_username varchar(255) not null, ld_password varchar(255), ld_name varchar(255), ld_firstname varchar(255), ld_street varchar(255), ld_postalcode varchar(255), ld_city varchar(255), ld_country varchar(30), ld_language varchar(10), ld_email varchar(255), ld_telephone varchar(255), ld_hidden int not null, primary key (ld_id));
+create table ld_user (ld_id bigint not null, ld_lastmodified timestamp not null, ld_username varchar(255) not null, ld_password varchar(255), ld_name varchar(255), ld_firstname varchar(255), ld_street varchar(255), ld_postalcode varchar(255), ld_city varchar(255), ld_country varchar(30), ld_language varchar(10), ld_email varchar(255), ld_telephone varchar(255), ld_type int not null, primary key (ld_id));
 create table ld_userdoc (ld_id bigint not null, ld_lastmodified timestamp not null, ld_docid bigint not null, ld_userid bigint not null, ld_date timestamp, primary key (ld_id));
 create table ld_usergroup (ld_groupid bigint not null, ld_userid bigint not null, primary key (ld_groupid, ld_userid));
 create table ld_version (ld_docid bigint not null, ld_version varchar(10), ld_user varchar(255), ld_date timestamp, ld_comment varchar(2000));
@@ -115,7 +115,7 @@ insert into ld_group
 values     (3,'2008-10-22','guest','Group of guest',0);
 
 insert into ld_user
-           (ld_id,ld_lastmodified,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_hidden)
+           (ld_id,ld_lastmodified,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_type)
 values     (1,'2008-10-22','admin','d033e22ae348aeb566fc214aec3585c4da997','Admin','Admin','','','','','en','admin@admin.net','',0);
 
 insert into ld_menugroup

@@ -17,6 +17,10 @@ import com.logicaldoc.util.io.CryptUtil;
  */
 public class User extends PersistentObject implements Serializable {
 
+	public static int TYPE_DEFAULT = 0;
+
+	public static int TYPE_SYSTEM = 1;
+
 	private static final long serialVersionUID = 8093874904302301982L;
 
 	private String userName = "";
@@ -41,7 +45,7 @@ public class User extends PersistentObject implements Serializable {
 
 	private String telephone = "";
 
-	private int hidden = 0;
+	private int type = TYPE_DEFAULT;
 
 	private Set<Group> groups = new HashSet<Group>();
 
@@ -55,12 +59,12 @@ public class User extends PersistentObject implements Serializable {
 	public User() {
 	}
 
-	public int getHidden() {
-		return hidden;
+	public int getType() {
+		return type;
 	}
 
-	public void setHidden(int hidden) {
-		this.hidden = hidden;
+	public void setType(int type) {
+		this.type = type;
 	}
 
 	public String getRepass() {
