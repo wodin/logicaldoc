@@ -224,6 +224,9 @@
 				<property name="groupDAO">
 					<ref bean="GroupDAO" />
 				</property>
+				<property name="menuDAO">
+					<ref bean="MenuDAO" />
+				</property>
 			</bean>
 		</property>
 	</bean>

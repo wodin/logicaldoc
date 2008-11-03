@@ -1,6 +1,7 @@
 package com.logicaldoc.core.security;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * Manager on security issues such as users and groups
@@ -76,8 +77,8 @@ public interface SecurityManager {
 	/**
 	 * Retrieves the collection of groups that can access the given menu
 	 * 
-	 * @param menu The menu to consider
+	 * @param menuId The menu to consider
 	 * @return The collection of allowed groups
 	 */
-	public Collection<Group> getAllowedGroups(Menu menu);
+	public Set<Group> getAllowedGroups(long menuId);
 }

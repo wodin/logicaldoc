@@ -2,19 +2,21 @@ package com.logicaldoc.core.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.security.dao.GroupDAO;
+import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 
 /**
  * Basic implementation of <code>SecurityManager</code>
  * 
- * @author Marco Meschieri
- * @version $Id: SecurityManagerImpl.java,v 1.1 2007/06/29 06:28:30 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class SecurityManagerImpl implements SecurityManager {
@@ -25,7 +27,13 @@ public class SecurityManagerImpl implements SecurityManager {
 
 	protected GroupDAO groupDAO;
 
+	protected MenuDAO menuDAO;
+
 	private SecurityManagerImpl() {
+	}
+
+	public void setMenuDAO(MenuDAO menuDAO) {
+		this.menuDAO = menuDAO;
 	}
 
 	public void setGroupDAO(GroupDAO groupDAO) {
@@ -142,7 +150,14 @@ public class SecurityManagerImpl implements SecurityManager {
 	 * @see com.logicaldoc.core.security.SecurityManager#getAllowedGroups(com.logicaldoc.core.security.Menu)
 	 */
 	@Override
-	public Collection<Group> getAllowedGroups(Menu menu) {
-		return new ArrayList<Group>();
+	public Set<Group> getAllowedGroups(long menuId) {
+		Menu menu = menuDAO.findById(menuId);
+		Set<Group> groups = new HashSet<Group>();
+		for (MenuGroup mg : menu.getMenuGroups()) {
+			Group group = groupDAO.findById(mg.getGroupId());
+			if (!groups.contains(group))
+				groups.add(groupDAO.findById(mg.getGroupId()));
+		}
+		return groups;
 	}
 }

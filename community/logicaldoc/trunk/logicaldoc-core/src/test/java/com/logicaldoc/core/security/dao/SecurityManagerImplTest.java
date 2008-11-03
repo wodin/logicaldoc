@@ -1,6 +1,7 @@
 package com.logicaldoc.core.security.dao;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.security.Group;
@@ -78,10 +79,13 @@ public class SecurityManagerImplTest extends AbstractCoreTestCase {
 		user.setUserName("zzz");
 		user.setDecodedPassword("xxxpwd");
 		userDAO.store(user);
-//		manager.assignUserToGroups(user, new long[] { 1, 2 });
-//		assertEquals(2, user.getGroups().size());
-//		user = userDAO.findById(user.getId());
-//		assertNotNull(user);
-//		assertEquals(2, user.getGroups().size());
+	}
+	
+	public void testGetAllowedGroups() {
+		Set<Group> groups=manager.getAllowedGroups(5);
+		assertNotNull(groups);
+		assertTrue(groups.contains(groupDAO.findByName("admin")));
+		assertTrue(groups.contains(groupDAO.findByName("author")));
+		assertTrue(groups.contains(groupDAO.findByName("guest")));
 	}
 }
