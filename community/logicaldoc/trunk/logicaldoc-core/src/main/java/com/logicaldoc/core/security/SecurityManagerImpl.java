@@ -137,4 +137,12 @@ public class SecurityManagerImpl implements SecurityManager {
 			groups.add(groupDAO.findById(groupIds[i]));
 		assignUserToGroups(user, groups);
 	}
+
+	/**
+	 * @see com.logicaldoc.core.security.SecurityManager#getAllowedGroups(com.logicaldoc.core.security.Menu)
+	 */
+	@Override
+	public Collection<Group> getAllowedGroups(Menu menu) {
+		return new ArrayList<Group>();
+	}
 }

@@ -34,7 +34,7 @@ public interface SecurityManager {
 	 * @param groupIds Array of group ids
 	 */
 	public void assignUserToGroups(User user, long[] groupIds);
-	
+
 	/**
 	 * Assign a user to a group.
 	 * 
@@ -73,4 +73,11 @@ public interface SecurityManager {
 	 */
 	public void removeAllUsersFromGroup(Group group);
 
+	/**
+	 * Retrieves the collection of groups that can access the given menu
+	 * 
+	 * @param menu The menu to consider
+	 * @return The collection of allowed groups
+	 */
+	public Collection<Group> getAllowedGroups(Menu menu);
 }
