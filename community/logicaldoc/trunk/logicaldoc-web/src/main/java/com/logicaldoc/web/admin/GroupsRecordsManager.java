@@ -85,7 +85,7 @@ public class GroupsRecordsManager {
 				GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 				Collection<Group> tmp = dao.findAll();
 				for (Group group : tmp) {
-					if (group.getHidden() == 0)
+					if (group.getType() == Group.TYPE_DEFAULT)
 						groups.add(group);
 				}
 			} else {

@@ -72,7 +72,7 @@ public class UsersRecordsManager extends SortableList {
 				Collection<User> tmpusers = dao.findAll();
 
 				for (User usr : tmpusers) {
-					if (usr.getHidden() == 0)
+					if (usr.getType() == User.TYPE_DEFAULT)
 						users.addAll(tmpusers);
 				}
 
