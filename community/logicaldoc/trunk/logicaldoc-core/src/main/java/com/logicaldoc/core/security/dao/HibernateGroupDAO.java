@@ -121,7 +121,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 
 		try {
 			Collection<Group> coll = (Collection<Group>) getHibernateTemplate().find(
-					"from Group _group where _group.name = ?", new Object[] { name });
+					"from Group _group where _group.name like '"+name+"'");
 			if (coll.size() > 0) {
 				group = coll.iterator().next();
 			}
