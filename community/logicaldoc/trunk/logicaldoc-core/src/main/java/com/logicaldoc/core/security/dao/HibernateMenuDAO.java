@@ -525,14 +525,14 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	@SuppressWarnings("unchecked")
 	public Collection<Menu> findByText(Menu parent, String text, Integer type) {
 		Collection<Menu> coll = new ArrayList<Menu>();
-		StringBuffer query = new StringBuffer("from Menu _menu where _menu.text = ? ");
+		StringBuffer query = new StringBuffer("from Menu _menu where _menu.text like '"+text+"' ");
 		if (parent != null)
 			query.append(" AND _menu.parentId = " + parent.getId());
 		if (type != null)
 			query.append(" AND _menu.type = " + type.intValue());
 
 		try {
-			coll = (Collection<Menu>) getHibernateTemplate().find(query.toString(), new Object[] { text });
+			coll = (Collection<Menu>) getHibernateTemplate().find(query.toString());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
