@@ -75,7 +75,7 @@
                             <ice:panelGroup>
                                 <ice:panelSeries style="display: inline;" var="groupName"
                                     value="#{user.groupNames}">
-                                    <ice:outputText value="#{groupName}, " />
+                                    <ice:outputText value="#{groupName}, " rendered="#{!fn:startsWith(groupName,'_user_')}"/>
                                 </ice:panelSeries>
                             </ice:panelGroup>
                         </ice:column>

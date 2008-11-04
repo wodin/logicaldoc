@@ -45,7 +45,8 @@ public interface SecurityManager {
 	public void assignUserToGroup(User user, Group group);
 
 	/**
-	 * Removes the specified users from a group
+	 * Removes the specified users from a group. Users will not removed from
+	 * their user's groups.
 	 * 
 	 * @param users The users to be removed
 	 * @param group The group to be updated
@@ -53,7 +54,8 @@ public interface SecurityManager {
 	public void removeUsersFromGroup(Collection<User> users, Group group);
 
 	/**
-	 * Removes the specified user from a group
+	 * Removes the specified user from a group. If the specified group is the
+	 * user's group no changes are committed.
 	 * 
 	 * @param users The user to be removed
 	 * @param group The group to be updated
@@ -61,7 +63,7 @@ public interface SecurityManager {
 	public void removeUserFromGroup(User user, Group group);
 
 	/**
-	 * Removes the specified user from a all groups
+	 * Removes the specified user from a all groups except it's user's group
 	 * 
 	 * @param user The user to be removed
 	 */

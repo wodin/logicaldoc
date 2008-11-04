@@ -117,6 +117,12 @@ values     (3,'2008-10-22','guest','Group of guest',0);
 insert into ld_user
            (ld_id,ld_lastmodified,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_type)
 values     (1,'2008-10-22','admin','d033e22ae348aeb566fc214aec3585c4da997','Admin','Admin','','','','','en','admin@admin.net','',0);
+insert into ld_group
+values     (-1,'2008-10-22','_user_1','',1);
+insert into ld_usergroup
+values (1,1);
+insert into ld_usergroup
+values (-1,1);
 
 insert into ld_menugroup
 values     (1,1,0);
@@ -213,6 +219,3 @@ values     (16,3,0);
 
 insert into ld_menugroup
 values     (19,3,0);
-
-insert into ld_usergroup
-values (1,1);

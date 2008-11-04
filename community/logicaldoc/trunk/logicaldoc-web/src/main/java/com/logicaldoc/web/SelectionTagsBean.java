@@ -69,15 +69,14 @@ public class SelectionTagsBean {
 		GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		Collection<Group> coll = dao.findAll();
 
-		SelectItem[] items = new SelectItem[coll.size()];
+		ArrayList<SelectItem> items = new ArrayList<SelectItem>();
 
-		int i = 0;
 		for (Group group : coll) {
 			if (group.getType() == Group.TYPE_DEFAULT)
-				items[i++] = new SelectItem(group.getId(), group.getName());
+				items.add(new SelectItem(group.getId(), group.getName()));
 		}
 
-		return items;
+		return items.toArray(new SelectItem[0]);
 	}
 
 	/**

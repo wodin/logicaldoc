@@ -43,7 +43,7 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 	public void testDelete() {
 		// User with history, not deletable
 		User user = dao.findByUserName("author");
-		assertEquals(1, user.getGroups().size());
+		assertEquals(2, user.getGroups().size());
 		try {
 			dao.delete(user.getId());
 			fail("A referenced user was deleted ?!?");
@@ -52,15 +52,18 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		}
 		user = dao.findByUserName("author");
 		assertNotNull(user);
+		assertNotNull(user.getUserGroup());
 
 		// Try with a deletable user
 		User testUser = dao.findByUserName("test");
-		assertEquals(1, testUser.getGroups().size());
+		assertEquals(2, testUser.getGroups().size());
 		manager.removeUserFromAllGroups(testUser);
-		assertEquals(0, testUser.getGroups().size());
+		assertEquals(1, testUser.getGroups().size());
+		String name=testUser.getUserGroupName();
 		assertTrue(dao.delete(testUser.getId()));
 		user = dao.findByUserName("test");
 		assertNull(user);
+		assertNull(groupDao.findByName(name));
 
 		Group group = groupDao.findByName("guest");
 		assertFalse(group.getUsers().contains(testUser));
@@ -93,7 +96,7 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		user.setDecodedPassword("admin");
 		assertEquals(CryptUtil.cryptString("admin"), user.getPassword());
 		assertEquals("admin@admin.net", user.getEmail());
-		assertEquals(1, user.getGroups().size());
+		assertEquals(2, user.getGroups().size());
 
 		// Try with unexisting username
 		user = dao.findByUserName("xxxx");
@@ -123,7 +126,7 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		user.setDecodedPassword("admin");
 		assertEquals(CryptUtil.cryptString("admin"), user.getPassword());
 		assertEquals("admin@admin.net", user.getEmail());
-		assertEquals(1, user.getGroups().size());
+		assertEquals(2, user.getGroups().size());
 
 		// Try with unexisting id
 		user = dao.findById(9999);
@@ -154,22 +157,24 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		user.setFirstName("valca");
 		user.setEmail("valca@acme.com");
 		assertTrue(dao.store(user));
+		assertTrue(groupDao.findByName(user.getUserGroupName())!=null);
 		manager.assignUserToGroups(user, new long[] { 1 });
-
+			
 		User storedUser = dao.findByUserName("xxx");
 		assertNotNull(user);
 		assertEquals(user, storedUser);
-		assertEquals(1, storedUser.getGroups().size());
+		assertEquals(2, storedUser.getGroups().size());
+		assertNotNull(storedUser.getUserGroup());
 		assertEquals(CryptUtil.cryptString("xxxpwd"), storedUser.getDecodedPassword());
 
 		user = dao.findById(1);
 		user.setDecodedPassword("xxxpwd");
 		dao.store(user);
 		manager.assignUserToGroups(user, new long[] { 1, 2 });
-		assertEquals(2, user.getGroups().size());
+		assertEquals(3, user.getGroups().size());
 		user = dao.findById(1);
 		assertNotNull(user);
-		assertEquals(2, user.getGroups().size());
+		assertEquals(3, user.getGroups().size());
 	}
 
 	public void testValidateUser() {

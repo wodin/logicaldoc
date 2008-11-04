@@ -73,7 +73,7 @@ public class UsersRecordsManager extends SortableList {
 
 				for (User usr : tmpusers) {
 					if (usr.getType() == User.TYPE_DEFAULT)
-						users.addAll(tmpusers);
+						users.add(usr);
 				}
 
 				for (User user : users) {

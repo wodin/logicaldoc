@@ -92,7 +92,7 @@ public class SecurityManagerImpl implements SecurityManager {
 	public void removeUsersFromGroup(Collection<User> users, Group group) {
 		for (Iterator<User> iter = users.iterator(); iter.hasNext();) {
 			User user = iter.next();
-			if (group.getUsers().contains(user)) {
+			if (group.getUsers().contains(user) && !group.getName().equals(user.getUserGroupName())) {
 				group.getUsers().remove(user);
 				user.getGroups().remove(group);
 			}
@@ -109,6 +109,9 @@ public class SecurityManagerImpl implements SecurityManager {
 	 *      com.logicaldoc.core.security.Group)
 	 */
 	public void removeUserFromGroup(User user, Group group) {
+		//Avoid the unassignment to the user's group 
+		if (user.getUserGroupName().equals(group.getName()))
+			return;
 		Collection<User> users = new ArrayList<User>();
 		users.add(user);
 		removeUsersFromGroup(users, group);
@@ -143,6 +146,11 @@ public class SecurityManagerImpl implements SecurityManager {
 		ArrayList<Group> groups = new ArrayList<Group>();
 		for (int i = 0; i < groupIds.length; i++)
 			groups.add(groupDAO.findById(groupIds[i]));
+
+		// Always add the user's group
+		Group userGroup = groupDAO.findByName(user.getUserGroupName());
+		if (userGroup != null && !groups.contains(userGroup))
+			groups.add(userGroup);
 		assignUserToGroups(user, groups);
 	}
 

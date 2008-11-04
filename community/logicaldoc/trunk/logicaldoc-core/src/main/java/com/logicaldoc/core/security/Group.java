@@ -7,7 +7,13 @@ import java.util.Set;
 import com.logicaldoc.core.PersistentObject;
 
 /**
- * This class represents groups.
+ * This class represents groups. <br />
+ * Groups have a type that qualifies the group usage as follows:
+ * <ul>
+ * <li>DEFAULT (0): Standard group of users</li>
+ * <li>USER (1): Group of a user(one to one relationship), it is hidden and not
+ * editable using admin tools</li>
+ * </ul>
  * 
  * @author Michael Scholz
  * @author Marco Meschieri

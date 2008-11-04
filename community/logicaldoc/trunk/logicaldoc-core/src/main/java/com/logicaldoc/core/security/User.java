@@ -9,7 +9,9 @@ import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.util.io.CryptUtil;
 
 /**
- * This class represents a user.
+ * This class represents a user. A user can be member of any number of groups,
+ * but it is always member of a special group named '_user_'+id. When a new user
+ * is created this special group of type 'user' is also created.
  * 
  * @author Michael Scholz
  * @author Marco Meschieri
@@ -235,5 +237,24 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setGroups(Set<Group> groups) {
 		this.groups = groups;
+	}
+
+	/**
+	 * The name of the group associated to this user, that is '_user_'+id
+	 */
+	public String getUserGroupName() {
+		return "_user_" + getId();
+	}
+
+	/**
+	 * Retrieves this user's group
+	 */
+	public Group getUserGroup() {
+		if (getGroups() != null)
+			for (Group grp : getGroups()) {
+				if (grp.getName().equals(getUserGroupName()))
+					return grp;
+			}
+		return null;
 	}
 }

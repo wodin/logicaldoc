@@ -2,19 +2,22 @@ package com.logicaldoc.core.security.dao;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.io.CryptUtil;
 
 /**
  * Hibernate implementation of <code>MenuDAO</code>
  * 
- * @author Marco Meschieri
- * @version $Id: HibernateUserDAO.java,v 1.1 2007/06/29 06:28:25 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
@@ -22,6 +25,7 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 	protected static Log log = LogFactory.getLog(HibernateUserDAO.class);
 
 	private UserDocDAO userDocDAO;
+
 
 	private HibernateUserDAO() {
 	}
@@ -42,9 +46,16 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 
 		try {
 			User user = (User) getHibernateTemplate().get(User.class, userId);
+			Group userGroup=user.getUserGroup();
 			if (user != null) {
 				getHibernateTemplate().deleteAll(userDocDAO.findByUserId(user.getId()));
 				getHibernateTemplate().delete(user);
+			}
+			
+			//Delete the user's group
+			if(userGroup!=null){
+				GroupDAO groupDAO=(GroupDAO)Context.getInstance().getBean(GroupDAO.class);
+				groupDAO.delete(userGroup.getId());
 			}
 		} catch (Throwable e) {
 			if (log.isErrorEnabled())
@@ -158,6 +169,20 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 
 		try {
 			getHibernateTemplate().saveOrUpdate(user);
+			String userGroupName = "_user_" + Long.toString(user.getId());
+			GroupDAO groupDAO=(GroupDAO)Context.getInstance().getBean(GroupDAO.class);
+			Group grp = groupDAO.findByName(userGroupName);
+			if (grp == null) {
+				grp = new Group();
+				grp.setName(userGroupName);
+				grp.setType(Group.TYPE_USER);
+				Set<User> users = new HashSet<User>();
+				users.add(user);
+				grp.setUsers(users);
+				groupDAO.store(grp);
+				user.getGroups().add(grp);
+				getHibernateTemplate().saveOrUpdate(user);
+			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
