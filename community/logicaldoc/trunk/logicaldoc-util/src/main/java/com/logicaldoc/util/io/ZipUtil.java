@@ -30,15 +30,13 @@ public class ZipUtil {
 		boolean result = true;
 		try {
 			if (!target.endsWith("/"))
-				target = target + "/";
-			ZipFile zip = new ZipFile(zipsource);
+				target = target + "/";			
+			ZipFile zip = new ZipFile(zipsource,"Cp850");
 			Enumeration entries = zip.getEntries();
-
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = (ZipEntry) entries.nextElement();
 				saveEntry(target, zip, entry);
 			}
-
 			zip.close();
 		} catch (Exception e) {
 			result = false;
