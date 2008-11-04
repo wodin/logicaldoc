@@ -336,7 +336,7 @@ em { /*font-size:14px;*/
 }
 
 .documentsPanel {
-	width: 740px;
+	width: 100%;
 }
 
 .iceMnuItmLabel,.iceMnuBarItemLabel {
@@ -1208,7 +1208,7 @@ em { /*font-size:14px;*/
 }
 
 .commands { /* float: right; */
-	text-align: right;
+	text-align: left;
 	margin-right: 0px;
 	padding-right: 0px;
 }
@@ -1240,7 +1240,7 @@ em { /*font-size:14px;*/
 .commands a.iceLink:link,.commands a.iceLink:hover,.commands a.iceLink:visited,.commands a.iceLink:active
 	{
 	color: #C0C0C0;
-	float: right;
+	float: left;
 }
 
 .iconSmall {

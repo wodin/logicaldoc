@@ -133,8 +133,8 @@
 			</ice:column>
 		</ice:dataTable>
 
-		<ice:panelGrid columns="2" style="width:100%;">
-			<ice:panelGroup style="width:95%;">
+		<ice:panelGrid columns="2">
+			<ice:panelGroup>
 				<ldoc:paginator table="documentsList"
 					label="#{msgs['document.paginator']}" />
 			</ice:panelGroup>
