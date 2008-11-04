@@ -5,7 +5,7 @@ Quick Enterprise Document Management
 License Agreement
 ===============================================
 
-LogicalDOC source code is distributed under GNU LGPL v3
+LogicalDOC source code is distributed under GNU LGPLv3
 http://www.opensource.org/licenses/lgpl-3.0.html 
 You may copy, adapt, and redistribute LogicalDOC 3.6.0
 for commercial or non-commercial use.
