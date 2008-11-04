@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+
 /**
  * Generates database records browsing an existing filesystem in LogicalDOC's
  * format.
@@ -44,6 +45,8 @@ public class PopulateDatabase {
 	private PreparedStatement insertDoc;
 
 	private PreparedStatement insertKeyword;
+
+	private PreparedStatement insertVersion;
 
 	private long[] groupIds = new long[] { 1 };
 
@@ -198,6 +201,9 @@ public class PopulateDatabase {
 			insertDoc = con
 					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_STATUS,LD_TYPE,LD_CHECKOUTUSER,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_FOLDERID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
 			insertKeyword = con.prepareStatement("INSERT INTO LD_KEYWORD (LD_DOCID,LD_KEYWORD) VALUES (?,?);");
+			insertVersion = con
+					.prepareStatement("INSERT INTO LD_VERSION  (LD_DOCID, LD_VERSION, LD_USER, LD_DATE, LD_COMMENT)"
+							+ "VALUES (?,?,?,?,?);");
 
 			addDocuments(rootFolder, "/");
 			con.commit();
@@ -335,6 +341,20 @@ public class PopulateDatabase {
 		}
 		insertKeyword.executeBatch();
 		insertKeyword.clearBatch();
+
+		// Insert a version
+
+		// LD_DOCID
+		insertVersion.setLong(1, id);
+		// LD_VERSION
+		insertVersion.setString(2, "1.0");
+		// LD_USER
+		insertVersion.setString(3, "admin");
+		// LD_DATE
+		insertVersion.setDate(4, new Date(docFile.lastModified()));
+		// LD_COMMENT
+		insertVersion.setString(5, "initial version");
+		insertVersion.execute();
 
 		return id;
 	}
