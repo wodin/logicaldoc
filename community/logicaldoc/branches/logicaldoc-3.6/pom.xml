@@ -15,7 +15,7 @@
 	<description>
     LogicalDOC is an open-source enterprise class
     Document Management System developed by
-    Logical Objects snc, based on the Java Platform.
+    Logical Objects Snc, based on the Java Platform.
   </description>
   <organization>
 		<name>Logical Objects</name>
@@ -27,12 +27,12 @@
   </properties>
   <issueManagement>
     <system>Mantis</system>
-    <url>http://bugs.logicaldoc.com</url>
+    <url>http://issues.logicaldoc.com</url>
   </issueManagement>
   <licenses>
     <license>
       <name>LGPLv3</name>
-      <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+      <url>http://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community/logicaldoc/branches/logicaldoc-3.6/LICENSE.txt</url>
     </license>
   </licenses>
   <inceptionYear>2008</inceptionYear>
