@@ -177,7 +177,7 @@ public class RightsRecordsManager {
 					} else {
 						gr.setRead(true);
 
-						if (mg.getWriteEnable() == 1) {
+						if (mg.getWrite() == 1) {
 							gr.setWrite(true);
 						} else {
 							gr.setWrite(false);
@@ -215,7 +215,7 @@ public class RightsRecordsManager {
 			if (menu.getMenuGroup(grp) != null)
 				continue;
 			MenuGroup mg = new MenuGroup(grp);
-			mg.setWriteEnable(0);
+			mg.setWrite(0);
 			menu.getMenuGroups().add(mg);
 		}
 
@@ -241,7 +241,7 @@ public class RightsRecordsManager {
 		long[] groupIds = SessionManagement.getUser().getGroupIds();
 		boolean writeable = false;
 		for (MenuGroup mg : menu.getMenuGroups()) {
-			if (mg.getWriteEnable() == 1) {
+			if (mg.getWrite() == 1) {
 				for (long id : groupIds) {
 					if (id == mg.getGroupId()) {
 						writeable = true;
@@ -321,9 +321,9 @@ public class RightsRecordsManager {
 				}
 
 				if (write || rule.getGroupName().equals("admin")) {
-					mg.setWriteEnable(1);
+					mg.setWrite(1);
 				} else {
-					mg.setWriteEnable(0);
+					mg.setWrite(0);
 				}
 
 				boolean stored = mdao.store(folder);
