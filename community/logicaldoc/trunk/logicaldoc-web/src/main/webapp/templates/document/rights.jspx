@@ -13,60 +13,132 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form" id="rightsForm">
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="rightsForm">
 
 	<ice:panelGroup styleClass="formBorderHighlight">
-		<f:subview id="w-rights">
-			<ice:panelGroup>
-				<h3>
-					<ice:outputText
-						value="#{msgs['msg.jsp.rights']} - #{rightsRecordsManager.selectedDirectory.displayText}"
-						rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
-					<br />
-					<br />
-				</h3>
-
-				<!-- Groups and rights -->
-				<ice:panelGroup>
-					<ice:dataTable value="#{rightsRecordsManager.rules}" var="rule"
-						cellpadding="0" width="100%" rows="2000">
-
-						<!-- group column -->
-						<ice:column>
-							<f:facet name="header">
-								<ice:outputText value="#{msgs['msg.jsp.groupname']}" />
-							</f:facet>
-							<ice:panelGroup>
-								<ice:outputText value="#{rule.groupName}" />
-							</ice:panelGroup>
-						</ice:column>
-
-						<!-- read column -->
-						<ice:column>
-							<f:facet name="header">
-								<ice:outputText value="#{msgs['msg.jsp.readright']}" />
-							</f:facet>
-							<ice:panelGroup>
-								<ice:selectBooleanCheckbox value="#{rule.read}"
-									disabled="#{!rule.enabled}" />
-							</ice:panelGroup>
-						</ice:column>
-
-						<!-- write column -->
-						<ice:column>
-							<f:facet name="header">
-								<ice:outputText value="#{msgs['msg.jsp.writeright']}" />
-							</f:facet>
-							<ice:panelGroup>
-								<ice:selectBooleanCheckbox value="#{rule.write}"
-									disabled="#{!rule.enabled}" />
-							</ice:panelGroup>
-						</ice:column>
-					</ice:dataTable>
+		<h3>
+			<ice:outputText
+				value="#{msgs['msg.jsp.rights']} - #{rightsRecordsManager.selectedDirectory.displayText}"
+				rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
+			<br />
+			<br />
+		</h3>
+		<ice:messages />
+		<ice:panelCollapsible id="messagesPanel" expanded="false"
+			styleClass="pnlClpsbl">
+			<f:facet name="header">
+				<ice:panelGroup styleClass="expandableStateIndicator">
+					<h3>
+						<ice:outputText id="messagesHeader"
+							value="#{msgs['entity.modify']}" />
+					</h3>
 				</ice:panelGroup>
-			</ice:panelGroup>
-		</f:subview>
+			</f:facet>
+			<f:subview id="w-rights">
+				<ice:panelGroup>
+					<ice:panelGrid columns="3">
+						<ice:panelGroup style="text-align:center; margin-right:40px">
+							<ice:outputLabel for="availableGroups"
+								value="#{msgs['entity.available']}" />
+						</ice:panelGroup>
+						<ice:panelGroup />
+						<ice:panelGroup style="text-align:center; margin-left:40px">
+							<ice:outputLabel for="allowedGroups"
+								value="#{msgs['entity.allowed']}" />
+						</ice:panelGroup>
 
+						<ice:panelGroup style="margin-right:40px">
+							<ice:selectManyMenu id="availableGroups"
+								styleClass="selectManyMenu"
+								value="#{rightsRecordsManager.selectedAvailableGroups}">
+								<f:selectItems value="#{rightsRecordsManager.availableGroups}" />
+							</ice:selectManyMenu>
+						</ice:panelGroup>
+						<ice:panelGroup styleClass="commands">
+							<br />
+							<ice:commandButton value="&gt;&gt;"
+								action="#{rightsRecordsManager.assignGroups}"
+								rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
+							<br />
+							<br />
+							<ice:commandButton value="&lt;&lt;"
+								action="#{rightsRecordsManager.unassignGroups}"
+								rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
+						</ice:panelGroup>
+						<ice:panelGroup style="margin-left:40px">
+							<ice:selectManyMenu id="allowedGroups"
+								styleClass="selectManyMenu"
+								value="#{rightsRecordsManager.selectedAllowedGroups}">
+								<f:selectItems value="#{rightsRecordsManager.allowedGroups}" />
+							</ice:selectManyMenu>
+						</ice:panelGroup>
+
+						<ice:panelGroup style="text-align:center; margin-right:40px">
+							<ice:outputLabel for="availablefilter" value="#{msgs['filter']}" />
+						</ice:panelGroup>
+						<ice:panelGroup />
+						<ice:panelGroup style="text-align:center; margin-left:40px">
+							<ice:outputLabel for="allowedfilter" value="#{msgs['filter']}" />
+						</ice:panelGroup>
+
+						<ice:panelGroup style="margin-right:40px">
+							<ice:selectInputText width="125"
+								value="#{rightsRecordsManager.availableGroupFilter}"
+								valueChangeListener="#{rightsRecordsManager.filterAvailableGroups}"
+								immediate="true" />
+						</ice:panelGroup>
+						<ice:panelGroup />
+						<ice:panelGroup style="margin-left:40px">
+							<ice:selectInputText width="125"
+								value="#{rightsRecordsManager.allowedGroupFilter}"
+								valueChangeListener="#{rightsRecordsManager.filterAllowedGroups}"
+								immediate="true" />
+						</ice:panelGroup>
+					</ice:panelGrid>
+				</ice:panelGroup>
+			</f:subview>
+			<br />
+		</ice:panelCollapsible>
+
+		<!-- Groups and rights -->
+		<ice:panelGroup>
+			<ice:dataTable value="#{rightsRecordsManager.rules}" var="rule"
+				cellpadding="0" width="95%" rows="2000">
+
+				<!-- group column -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['entity.name']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:outputText value="#{rule.displayName}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- read column -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['msg.jsp.readright']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:selectBooleanCheckbox value="#{rule.read}"
+							disabled="#{!rule.enabled}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- write column -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['msg.jsp.writeright']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:selectBooleanCheckbox value="#{rule.write}"
+							disabled="#{!rule.enabled}" />
+					</ice:panelGroup>
+				</ice:column>
+			</ice:dataTable>
+		</ice:panelGroup>
 		<ice:panelGroup styleClass="commands">
 			<ice:selectBooleanCheckbox value="#{rightsRecordsManager.recursive}" />
 			<ice:outputText value="#{msgs['msg.jsp.recursive']}" />

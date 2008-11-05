@@ -2,9 +2,14 @@ package com.logicaldoc.web.document;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,13 +28,14 @@ import com.logicaldoc.web.navigation.PageContentBean;
  * Control that allows the user to select access rights
  * 
  * @author Marco Meschieri - Logical Objects
- * @version $Id: RightsRecordsManager.java,v 1.4 2006/09/03 16:24:37 marco Exp $
  * @since 3.0
  */
 public class RightsRecordsManager {
 	protected static Log log = LogFactory.getLog(RightsRecordsManager.class);
 
-	private ArrayList<GroupRule> rules = new ArrayList<GroupRule>();
+	private List<GroupRule> rules = new ArrayList<GroupRule>();
+
+	private List<Group> groups = new ArrayList<Group>();
 
 	private Directory selectedDirectory;
 
@@ -37,12 +43,72 @@ public class RightsRecordsManager {
 
 	private DocumentNavigation documentNavigation;
 
+	private Collection<SelectItem> availableGroups = new ArrayList<SelectItem>();
+
+	private Collection<SelectItem> allowedGroups = new ArrayList<SelectItem>();
+
+	private long[] selectedAvailableGroups = new long[0];
+
+	private long[] selectedAllowedGroups = new long[0];
+
+	private String availableGroupFilter = "";
+
+	private String allowedGroupFilter = "";
+
+	public String getAvailableGroupFilter() {
+		return availableGroupFilter;
+	}
+
+	public void setAvailableGroupFilter(String availableGroupFilter) {
+		this.availableGroupFilter = availableGroupFilter;
+	}
+
+	public String getAllowedGroupFilter() {
+		return allowedGroupFilter;
+	}
+
+	public void setAllowedGroupFilter(String allowedGroupFilter) {
+		this.allowedGroupFilter = allowedGroupFilter;
+	}
+
 	public boolean isRecursive() {
 		return recursive;
 	}
 
+	public long[] getSelectedAvailableGroups() {
+		return selectedAvailableGroups;
+	}
+
+	public void setSelectedAvailableGroups(long[] selectedAvailableGroups) {
+		this.selectedAvailableGroups = selectedAvailableGroups;
+	}
+
+	public long[] getSelectedAllowedGroups() {
+		return selectedAllowedGroups;
+	}
+
+	public void setSelectedAllowedGroups(long[] selectedAllowedGroups) {
+		this.selectedAllowedGroups = selectedAllowedGroups;
+	}
+
 	public void setRecursive(boolean recursive) {
 		this.recursive = recursive;
+	}
+
+	public Collection<SelectItem> getAvailableGroups() {
+		return availableGroups;
+	}
+
+	public Collection<SelectItem> getAllowedGroups() {
+		return allowedGroups;
+	}
+
+	public void setAvailableGroups(Collection<SelectItem> availableGroups) {
+		this.availableGroups = availableGroups;
+	}
+
+	public void setAllowedGroups(Collection<SelectItem> allowedGroups) {
+		this.allowedGroups = allowedGroups;
 	}
 
 	/**
@@ -63,6 +129,14 @@ public class RightsRecordsManager {
 	 * @param menuId The menu that must be evaluated
 	 */
 	private void initRights(long menuId) {
+		availableGroups.clear();
+		allowedGroups.clear();
+		groups.clear();
+		selectedAvailableGroups = new long[0];
+		selectedAllowedGroups = new long[0];
+		availableGroupFilter = "";
+		allowedGroupFilter = "";
+
 		// initiate the list
 		if (rules != null) {
 			rules.clear();
@@ -72,16 +146,24 @@ public class RightsRecordsManager {
 
 		try {
 			GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+			groups = (List<Group>) gdao.findAll();
+			Collections.sort(groups, new Comparator<Group>() {
+				public int compare(Group arg0, Group arg1) {
+					int sort = new Integer(arg0.getType()).compareTo(new Integer(arg1.getType()));
+					if (sort == 0)
+						sort = arg0.getName().toLowerCase().compareTo(arg1.getName().toLowerCase());
+					return sort;
+				}
+			});
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			long userId = SessionManagement.getUserId();
-
 			if (mdao.isWriteEnable(menuId, userId)) {
-				Collection<Group> groups = gdao.findAll();
 				Iterator<Group> iter = groups.iterator();
 				while (iter.hasNext()) {
 					Group g = (Group) iter.next();
 					GroupRule gr = new GroupRule();
 					gr.setGroupName(g.getName());
+					gr.setDisplayName(getEntityLabel(g));
 					gr.setGroupId(g.getId());
 					gr.setEnabled(true);
 
@@ -91,6 +173,7 @@ public class RightsRecordsManager {
 					if ((mg == null) || mg.getGroupId() != g.getId()) {
 						gr.setRead(false);
 						gr.setWrite(false);
+						availableGroups.add(new SelectItem(g.getId(), getEntityLabel(g)));
 					} else {
 						gr.setRead(true);
 
@@ -99,15 +182,85 @@ public class RightsRecordsManager {
 						} else {
 							gr.setWrite(false);
 						}
+						allowedGroups.add(new SelectItem(g.getId(), getEntityLabel(g)));
+						rules.add(gr);
 					}
-
-					rules.add(gr);
 				}
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
 		}
+	}
+
+	private String getEntityLabel(Group g) {
+		String label = "";
+		if (g.getType() == Group.TYPE_DEFAULT) {
+			label = Messages.getMessage("group") + ": " + g.getName();
+		} else {
+			label = Messages.getMessage("user") + ": " + g.getUsers().iterator().next().getUserName();
+		}
+		return label;
+	}
+
+	/**
+	 * Moves the selected available groups to the allowed groups list associated
+	 * to a menu
+	 * 
+	 */
+	public void assignGroups() {
+		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		Menu menu = mdao.findById(selectedDirectory.getMenu().getId());
+		for (long grp : selectedAvailableGroups) {
+			if (menu.getMenuGroup(grp) != null)
+				continue;
+			MenuGroup mg = new MenuGroup(grp);
+			mg.setWriteEnable(0);
+			menu.getMenuGroups().add(mg);
+		}
+
+		mdao.store(menu);
+		initRights(menu.getId());
+	}
+
+	/**
+	 * Moves the selected allowed groups to the available groups list associated
+	 * to a menu
+	 * 
+	 */
+	public void unassignGroups() {
+		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		Menu menu = mdao.findById(selectedDirectory.getMenu().getId());
+
+		for (long grp : selectedAllowedGroups) {
+			MenuGroup mg = new MenuGroup(grp);
+			menu.getMenuGroups().remove(mg);
+		}
+
+		// At least one rule must give write permission to the current user
+		long[] groupIds = SessionManagement.getUser().getGroupIds();
+		boolean writeable = false;
+		for (MenuGroup mg : menu.getMenuGroups()) {
+			if (mg.getWriteEnable() == 1) {
+				for (long id : groupIds) {
+					if (id == mg.getGroupId()) {
+						writeable = true;
+						break;
+					}
+				}
+			}
+			if (writeable)
+				break;
+		}
+
+		if (writeable) {
+			mdao.store(menu);
+		} else {
+			// The modification lead to unmodifiable permission rules
+			Messages.addLocalizedError("errors.rights.mandatory");
+		}
+
+		initRights(menu.getId());
 	}
 
 	/**
@@ -123,7 +276,7 @@ public class RightsRecordsManager {
 	 * 
 	 * @return array list of rights
 	 */
-	public ArrayList<GroupRule> getRules() {
+	public List<GroupRule> getRules() {
 		return rules;
 	}
 
@@ -214,5 +367,54 @@ public class RightsRecordsManager {
 
 	public void setDocumentNavigation(DocumentNavigation documentNavigation) {
 		this.documentNavigation = documentNavigation;
+	}
+
+	public void filterAvailableGroups(ValueChangeEvent event) {
+		availableGroups.clear();
+		for (Group group : groups) {
+			String username = "";
+			if (!group.getUsers().isEmpty())
+				username = group.getUsers().iterator().next().getUserName();
+			if ((group.getType() == Group.TYPE_DEFAULT && group.getName().toLowerCase().contains(
+					event.getNewValue().toString().toLowerCase()))
+					|| (group.getType() == Group.TYPE_USER && username.toLowerCase().contains(
+							event.getNewValue().toString().toLowerCase()))) {
+				// Check if the group is allowed
+				boolean allowed = false;
+				for (SelectItem item : allowedGroups) {
+					if (((Long) item.getValue()).equals(group.getId())) {
+						allowed = true;
+						break;
+					}
+				}
+				if (!allowed)
+					availableGroups.add(new SelectItem(group.getId(), getEntityLabel(group)));
+			}
+		}
+	}
+
+	public void filterAllowedGroups(ValueChangeEvent event) {
+		allowedGroups.clear();
+		for (Group group : groups) {
+			String username = "";
+			if (!group.getUsers().isEmpty())
+				username = group.getUsers().iterator().next().getUserName();
+
+			if ((group.getType() == Group.TYPE_DEFAULT && group.getName().toLowerCase().contains(
+					event.getNewValue().toString().toLowerCase()))
+					|| (group.getType() == Group.TYPE_USER && username.toLowerCase().contains(
+							event.getNewValue().toString().toLowerCase()))) {
+				// Check if the group is available
+				boolean available = false;
+				for (SelectItem item : availableGroups) {
+					if (((Long) item.getValue()).equals(group.getId())) {
+						available = true;
+						break;
+					}
+				}
+				if (!available)
+					allowedGroups.add(new SelectItem(group.getId(), getEntityLabel(group)));
+			}
+		}
 	}
 }

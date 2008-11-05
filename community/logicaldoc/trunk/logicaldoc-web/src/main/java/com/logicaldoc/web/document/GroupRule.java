@@ -7,7 +7,9 @@ package com.logicaldoc.web.document;
  * @author Marco Meschieri - Logical Objects
  */
 public class GroupRule {
-	private String groupName;
+	private String groupName = "";
+
+	private String displayName = "";
 
 	private long groupId;
 
@@ -23,7 +25,6 @@ public class GroupRule {
 	/** Creates a new instance of GroupRules */
 	public GroupRule() {
 		groupId = -1;
-		groupName = "";
 		read = false;
 		write = false;
 		enabled = false;
@@ -31,6 +32,14 @@ public class GroupRule {
 
 	public long getGroupId() {
 		return groupId;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
 	public void setGroupId(long groupId) {
@@ -67,5 +76,11 @@ public class GroupRule {
 
 	public void setEnabled(boolean e) {
 		enabled = e;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		GroupRule other = (GroupRule) obj;
+		return groupId == other.getGroupId();
 	}
 }
