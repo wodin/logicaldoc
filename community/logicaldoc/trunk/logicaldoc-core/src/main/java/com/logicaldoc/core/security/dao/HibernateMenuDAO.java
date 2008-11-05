@@ -18,6 +18,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
+import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 
 /**
@@ -257,39 +258,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean isWriteEnable(long menuId, long userId) {
-		boolean result = true;
-
-		try {
-			User user = userDAO.findById(userId);
-			Collection<Group> Groups = user.getGroups();
-			if (Groups.isEmpty())
-				return false;
-			Iterator iter = Groups.iterator();
-
-			StringBuffer query = new StringBuffer("select distinct(_menu) from Menu _menu  ");
-			query.append(" left outer join _menu.menuGroups as _group ");
-			query.append(" where _group.groupId in (");
-
-			boolean first = true;
-			while (iter.hasNext()) {
-				if (!first)
-					query.append(",");
-				Group ug = (Group) iter.next();
-				query.append(Long.toString(ug.getId()));
-				first = false;
-			}
-			query.append(") and _group.write=1 and _menu.id=?");
-
-			Collection<MenuGroup> coll = (Collection<MenuGroup>) getHibernateTemplate().find(query.toString(),
-					new Object[] { new Long(menuId) });
-
-			result = coll.size() > 0;
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			result = false;
-		}
-
-		return result;
+		return isPermissionEnabled(Permission.WRITE, menuId, userId);
 	}
 
 	/**
@@ -525,7 +494,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	@SuppressWarnings("unchecked")
 	public Collection<Menu> findByText(Menu parent, String text, Integer type) {
 		Collection<Menu> coll = new ArrayList<Menu>();
-		StringBuffer query = new StringBuffer("from Menu _menu where _menu.text like '"+text+"' ");
+		StringBuffer query = new StringBuffer("from Menu _menu where _menu.text like '" + text + "' ");
 		if (parent != null)
 			query.append(" AND _menu.parentId = " + parent.getId());
 		if (type != null)
@@ -619,5 +588,48 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		for (Menu child : children) {
 			updatePathExtended(child);
 		}
+	}
+
+	/**
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#isPermissionEnabled(java.lang.String,
+	 *      long, long)
+	 */
+	public boolean isPermissionEnabled(Permission permission, long menuId, long userId) {
+		if (Permission.READ==permission)
+			return isReadEnable(menuId, userId);
+
+		boolean result = true;
+
+		try {
+			User user = userDAO.findById(userId);
+			Collection<Group> Groups = user.getGroups();
+			if (Groups.isEmpty())
+				return false;
+			Iterator iter = Groups.iterator();
+
+			StringBuffer query = new StringBuffer("select distinct(_menu) from Menu _menu  ");
+			query.append(" left outer join _menu.menuGroups as _group ");
+			query.append(" where _group.groupId in (");
+
+			boolean first = true;
+			while (iter.hasNext()) {
+				if (!first)
+					query.append(",");
+				Group ug = (Group) iter.next();
+				query.append(Long.toString(ug.getId()));
+				first = false;
+			}
+			query.append(") and _group." + permission.getName() + "=1 and _menu.id=?");
+
+			Collection<MenuGroup> coll = (Collection<MenuGroup>) getHibernateTemplate().find(query.toString(),
+					new Object[] { new Long(menuId) });
+
+			result = coll.size() > 0;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			result = false;
+		}
+
+		return result;
 	}
 }

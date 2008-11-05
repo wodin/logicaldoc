@@ -1,0 +1,32 @@
+package com.logicaldoc.core.security;
+
+/**
+ * Models a permission, that is the ability to do something
+ * <p>
+ * <ul>
+ * <li>READ: ability to read the folder and it's documents</li>
+ * <li>WRITE: ability to insert and delete folder's documents</li>
+ * <li>ADD_CHILD: ability to add child elements</li>
+ * <li>MANAGE_SECURITY: ability to change security rules</li>
+ * <li>DELETE: ability to delete the entity</li>
+ * <li>RENAME: ability to rename the entity</li>
+ * </ul>
+ * 
+ * 
+ * @author Marco Meschieri - Logical Objects
+ * @since 4.0
+ */
+public enum Permission {
+	READ("read"), WRITE("write"), ADD_CHILD("addChild"), MANAGE_SECURITY("manageSecurity"), DELETE("delete"), RENAME(
+			"rename");
+
+	private final String name;
+
+	private Permission(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+}

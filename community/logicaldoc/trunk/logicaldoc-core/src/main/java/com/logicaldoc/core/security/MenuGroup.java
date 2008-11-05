@@ -10,7 +10,7 @@ public class MenuGroup {
 
 	private int write = 0;
 
-	private int addFolder = 0;
+	private int addChild = 0;
 
 	private int manageSecurity = 0;
 
@@ -23,12 +23,12 @@ public class MenuGroup {
 	public MenuGroup() {
 	}
 
-	public int getAddFolder() {
-		return addFolder;
+	public int getAddChild() {
+		return addChild;
 	}
 
-	public void setAddFolder(int addFolder) {
-		this.addFolder = addFolder;
+	public void setAddChild(int addChild) {
+		this.addChild = addChild;
 	}
 
 	public int getManageSecurity() {

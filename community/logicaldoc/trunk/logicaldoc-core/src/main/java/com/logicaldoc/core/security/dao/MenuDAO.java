@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Permission;
 
 /**
  * Instances of this class is a DAO-service for menu objects.
@@ -116,6 +117,16 @@ public interface MenuDAO {
 	public boolean isWriteEnable(long menuId, long userId);
 
 	public boolean isReadEnable(long menuId, long userId);
+
+	/**
+	 * This method checks if the given permission is enabled for a menu and an
+	 * user.
+	 * 
+	 * @param permission the permission to check
+	 * @param menuId ID of the menu.
+	 * @param userId ID of the user.
+	 */
+	public boolean isPermissionEnabled(Permission permission, long menuId, long userId);
 
 	/**
 	 * This method selects only the menu text from a menu.
