@@ -20,8 +20,12 @@
 		<set name="menuGroups" table="ld_menugroup" cascade="all">
 			<key column="ld_menuid" />
 			<composite-element class="com.logicaldoc.core.security.MenuGroup">
-               <property name="groupId" type="long" column="ld_groupid" />
-		       <property name="writeEnable" type="int" column="ld_writeenable" />
+               <property name="groupId" type="long" column="ld_groupid" not-null="true"/>
+		       <property name="write" type="int" column="ld_write" not-null="true"/>
+		       <property name="addFolder" type="int" column="ld_addfolder" not-null="true"/>
+		       <property name="manageSecurity" type="int" column="ld_managesecurity" not-null="true"/>
+		       <property name="delete" type="int" column="ld_delete" not-null="true"/>
+		       <property name="rename" type="int" column="ld_rename" not-null="true"/>
 			</composite-element>
 		</set>
 	</class>

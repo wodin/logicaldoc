@@ -1,18 +1,58 @@
 package com.logicaldoc.core.security;
 
 /**
- * This class represents menugroup.
+ * This class represents security permissions for a group in relation to a menu
  * 
- * @author Michael Scholz
+ * @author Marco Meschieri - Logical Objects
  * @version 1.0
  */
 public class MenuGroup {
 
-	private int writeEnable = 0;
+	private int write = 0;
+
+	private int addFolder = 0;
+
+	private int manageSecurity = 0;
+
+	private int delete = 0;
+
+	private int rename = 0;
 
 	private long groupId;
 
 	public MenuGroup() {
+	}
+
+	public int getAddFolder() {
+		return addFolder;
+	}
+
+	public void setAddFolder(int addFolder) {
+		this.addFolder = addFolder;
+	}
+
+	public int getManageSecurity() {
+		return manageSecurity;
+	}
+
+	public void setManageSecurity(int manageSecurity) {
+		this.manageSecurity = manageSecurity;
+	}
+
+	public int getDelete() {
+		return delete;
+	}
+
+	public void setDelete(int delete) {
+		this.delete = delete;
+	}
+
+	public int getRename() {
+		return rename;
+	}
+
+	public void setRename(int rename) {
+		this.rename = rename;
 	}
 
 	public MenuGroup(long groupId) {
@@ -23,20 +63,16 @@ public class MenuGroup {
 		return groupId;
 	}
 
-	public int getWriteEnable() {
-		return writeEnable;
+	public int getWrite() {
+		return write;
 	}
 
 	public void setGroupId(long groupId) {
 		this.groupId = groupId;
 	}
 
-	public void setWriteEnable(int enable) {
-		if ((enable < 0) || (enable > 1)) {
-			writeEnable = 0;
-		} else {
-			writeEnable = enable;
-		}
+	public void setWrite(int write) {
+		this.write = write;
 	}
 
 	@Override

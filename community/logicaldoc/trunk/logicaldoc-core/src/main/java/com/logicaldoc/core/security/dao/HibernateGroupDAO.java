@@ -148,7 +148,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 			if (parentGroupId>0) {
 				Collection<Menu> menus = menuDAO.findByGroupId(parentGroupId);
 				for (Menu menu : menus) {
-					addMenuGroup(group, menu.getId(), menu.getMenuGroup(parentGroupId).getWriteEnable());
+					addMenuGroup(group, menu.getId(), menu.getMenuGroup(parentGroupId).getWrite());
 				}
 			} else {
 				// if no parent group was given, the new group will have default
@@ -186,7 +186,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 
 		MenuGroup mgroup = new MenuGroup();
 		mgroup.setGroupId(group.getId());
-		mgroup.setWriteEnable(writeable);
+		mgroup.setWrite(writeable);
 		if (!menu.getMenuGroups().contains(mgroup))
 			menu.getMenuGroups().add(mgroup);
 		menuDAO.store(menu);

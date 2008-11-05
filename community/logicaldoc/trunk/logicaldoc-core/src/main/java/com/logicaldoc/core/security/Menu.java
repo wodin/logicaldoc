@@ -165,7 +165,7 @@ public class Menu extends PersistentObject {
 		for (int i = 0; i < groups.length; i++) {
 			MenuGroup mg = new MenuGroup();
 			mg.setGroupId(groups[i]);
-			mg.setWriteEnable(1);
+			mg.setWrite(1);
 			menuGroups.add(mg);
 		}
 	}

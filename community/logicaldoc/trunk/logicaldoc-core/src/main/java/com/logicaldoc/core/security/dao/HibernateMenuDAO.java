@@ -278,7 +278,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 				query.append(Long.toString(ug.getId()));
 				first = false;
 			}
-			query.append(") and _group.writeEnable=1 and _menu.id=?");
+			query.append(") and _group.write=1 and _menu.id=?");
 
 			Collection<MenuGroup> coll = (Collection<MenuGroup>) getHibernateTemplate().find(query.toString(),
 					new Object[] { new Long(menuId) });

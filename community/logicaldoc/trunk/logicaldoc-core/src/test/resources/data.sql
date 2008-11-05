@@ -50,19 +50,19 @@ insert into ld_menu
 values     (103,'2008-10-22','db.admin',101,1,'administration.gif','/',3,null,0);
 
 insert into ld_menugroup
-values     (100,1,1);
+values     (100,1,1,0,0,0,0);
 
 insert into ld_menugroup
-values     (100,3,1);
+values     (100,3,1,0,0,0,0);
 
 insert into ld_menugroup
-values     (103,1,1);
+values     (103,1,1,0,0,0,0);
 
 insert into ld_menugroup
-values     (103,2,1);
+values     (103,2,1,0,0,0,0);
 
 insert into ld_menugroup
-values     (99,1,0);
+values     (99,1,0,0,0,0,0);
 
 insert into ld_usergroup
            (ld_userid,ld_groupid)

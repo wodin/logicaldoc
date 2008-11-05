@@ -5,7 +5,7 @@ create table ld_history (ld_id bigint not null, ld_lastmodified timestamp not nu
 create table ld_keyword (ld_docid bigint not null, ld_keyword varchar(255));
 create table ld_link (ld_id bigint not null, ld_lastmodified timestamp not null, ld_type varchar(255) not null, ld_docid1 bigint, ld_docid2 bigint, primary key (ld_id));
 create table ld_menu (ld_id bigint not null, ld_lastmodified timestamp not null, ld_text varchar(255), ld_parentid bigint not null, ld_sort int, ld_icon varchar(255), ld_path varchar(255), ld_pathextended varchar(40000), ld_type int not null, ld_ref varchar(255), ld_size bigint, primary key (ld_id));
-create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint, ld_writeenable int);
+create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint, ld_write int not null, ld_addfolder int not null, ld_managesecurity int not null, ld_delete int not null, ld_rename int not null);
 create table ld_systemmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_author varchar(255), ld_recipient varchar(255), ld_messagetext varchar(2000), ld_subject varchar(255), ld_sentdate varchar(20) not null, ld_datescope int, ld_prio int, ld_confirmation int, ld_red int not null, primary key (ld_id));
 create table ld_ticket (ld_id bigint not null, ld_lastmodified timestamp not null, ld_ticketid varchar(255) not null, ld_docid bigint not null, ld_userid bigint not null, primary key (ld_id));
 create table ld_user (ld_id bigint not null, ld_lastmodified timestamp not null, ld_username varchar(255) not null, ld_password varchar(255), ld_name varchar(255), ld_firstname varchar(255), ld_street varchar(255), ld_postalcode varchar(255), ld_city varchar(255), ld_country varchar(30), ld_language varchar(10), ld_email varchar(255), ld_telephone varchar(255), ld_type int not null, primary key (ld_id));
@@ -125,97 +125,97 @@ insert into ld_usergroup
 values (-1,1);
 
 insert into ld_menugroup
-values     (1,1,0);
+values     (1,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (2,1,0);
+values     (2,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (4,1,0);
+values     (4,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (5,1,1);
+values     (5,1,1,0,0,0,0);
 
 insert into ld_menugroup
-values     (6,1,0);
+values     (6,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (7,1,0);
+values     (7,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (8,1,0);
+values     (8,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (13,1,0);
+values     (13,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (14,1,0);
+values     (14,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (16,1,0);
+values     (16,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (17,1,0);
+values     (17,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (19,1,0);
+values     (19,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (20,1,0);
+values     (20,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (23,1,0);
+values     (23,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (25,1,0);
+values     (25,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (26,1,1);
+values     (26,1,1,0,0,0,0);
 
 insert into ld_menugroup
-values     (27,1,0);
+values     (27,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (1,2,0);
+values     (1,2,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (4,2,0);
+values     (4,2,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (5,2,1);
+values     (5,2,1,0,0,0,0);
 
 insert into ld_menugroup
-values     (13,2,0);
+values     (13,2,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (16,2,0);
+values     (16,2,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (19,2,0);
+values     (19,2,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (20,2,0);
+values     (20,2,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (23,2,0);
+values     (23,2,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (26,2,1);
+values     (26,2,1,0,0,0,0);
 
 insert into ld_menugroup
-values     (1,3,0);
+values     (1,3,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (4,3,0);
+values     (4,3,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (5,3,0);
+values     (5,3,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (13,3,0);
+values     (13,3,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (16,3,0);
+values     (16,3,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (19,3,0);
+values     (19,3,0,0,0,0,0);
