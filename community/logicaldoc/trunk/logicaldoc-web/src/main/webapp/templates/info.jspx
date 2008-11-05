@@ -25,8 +25,9 @@
 			<ice:panelGrid columns="2">
 				<ice:panelGroup>
 					<b><ice:outputFormat value="#{messages['msg.jsp.osinfo']}">
-					  <f:param value="#{context['product.name']}"/>
-					</ice:outputFormat></b>
+							<f:param value="#{context['product.name']}" />
+						</ice:outputFormat>
+					</b>
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:outputLink value="http://logicaldoc.wikispaces.com"
@@ -49,32 +50,25 @@
 			<ice:panelGroup>
 				<ul>
 					<li>
-						Marco Meschieri ( Designer, Developer ) -
-						<a href="mailto:car031@users.sourceforge.net">car031@users.sourceforge.net</a>
-						-
+						Marco Meschieri ( Designer, Developer ) &amp;nbsp;-&amp;nbsp;
 						<a href="http://www.logicalobjects.com" target="_blank">Logical
 							Objects</a>
 					</li>
 					<li>
-						Alessandro Gasparini ( Designer, Developer ) -
-						<a href="mailto:blucecio@users.sourceforge.net">blucecio@users.sourceforge.net</a>
-						-
+						Alessandro Gasparini ( Designer, Developer ) &amp;nbsp;-&amp;nbsp;
 						<a href="http://www.logicalobjects.com" target="_blank">Logical
 							Objects</a>
 					</li>
 					<li>
-						Jes&amp;uacute;s Mar&amp;iacute;n ( Developer ) -
+						Matteo Caruso ( Developer ) &amp;nbsp;-&amp;nbsp;
+						<a href="http://www.logicalobjects.com" target="_blank">Logical
+							Objects</a>
+					</li>
+					<li>
+						Jes&amp;uacute;s Mar&amp;iacute;n ( Developer )
+						&amp;nbsp;-&amp;nbsp;
 						<a href="http://www.aplsoftware.com/" target="_blank">A.P.L.
 							software</a>
-					</li>
-					<li>
-						Sebastian Stein ( Designer )
-					</li>
-					<li>
-						Michael Scholz ( Designer, Developer )
-					</li>
-					<li>
-						Tewfik Lazreg ( Translator )
 					</li>
 				</ul>
 			</ice:panelGroup>
