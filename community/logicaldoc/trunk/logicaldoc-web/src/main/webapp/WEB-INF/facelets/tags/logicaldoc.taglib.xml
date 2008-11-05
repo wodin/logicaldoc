@@ -16,4 +16,8 @@
 		<tag-name>folderselector</tag-name>
 		<source>folderselector.jspx</source>
 	</tag>
+	<tag>
+		<tag-name>groupselector</tag-name>
+		<source>groupselector.jspx</source>
+	</tag>
 </facelet-taglib>

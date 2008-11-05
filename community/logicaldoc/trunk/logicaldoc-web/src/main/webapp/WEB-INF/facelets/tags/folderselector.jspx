@@ -1,9 +1,8 @@
 <?xml version = '1.0'?>
 <!-- 
- Paginator
+ Folder Selector
   
- @author Marco Meschieri
- @version $Id: paginator.jspx,v 1.2 2006/09/03 16:24:36 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
