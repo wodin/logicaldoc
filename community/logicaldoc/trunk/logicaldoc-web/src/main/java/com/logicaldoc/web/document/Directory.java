@@ -5,10 +5,11 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
-
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.FacesUtil;
@@ -17,29 +18,36 @@ import com.logicaldoc.web.util.FacesUtil;
  * Instances of this bean represents document directories to be displayed in the
  * navigation tree
  * 
- * @author Marco Meschieri
- * @version $Id: Directory.java,v 1.5 2006/08/27 10:25:36 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class Directory extends PageContentBean {
-    protected static Log log = LogFactory.getLog(Directory.class);
+	protected static Log log = LogFactory.getLog(Directory.class);
 
-    private boolean selected = false;
+	private boolean selected = false;
 
 	private long count = 0;
 
-    private Boolean writeable = null;
+	private Boolean writeEnabled = null;
 
-    // True if all childs were loaded from db
-    private boolean loaded = false;
+	private Boolean addChildEnabled = null;
 
-    public Directory(Menu menu) {
-        super(menu);
-        if(menu!=null)
-        	setDisplayText(menu.getText());
-        else
-        	setDisplayText("");
-    }
+	private Boolean manageSecurityEnabled = null;
+
+	private Boolean deleteEnabled = null;
+
+	private Boolean renameEnabled = null;
+
+	// True if all childs were loaded from db
+	private boolean loaded = false;
+
+	public Directory(Menu menu) {
+		super(menu);
+		if (menu != null)
+			setDisplayText(menu.getText());
+		else
+			setDisplayText("");
+	}
 
 	/**
 	 * The number of contained documents
@@ -52,38 +60,71 @@ public class Directory extends PageContentBean {
 		this.count = count;
 	}
 
-    @Override
-    public void onSelect(ActionEvent event) {
-        // Documents record manager binding
-        DocumentNavigation navigation = ((DocumentNavigation) FacesUtil
-                .accessBeanFromFacesContext("documentNavigation", FacesContext
-                        .getCurrentInstance(), log));
-        navigation.selectDirectory(this);
-    }
+	@Override
+	public void onSelect(ActionEvent event) {
+		// Documents record manager binding
+		DocumentNavigation navigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
+				"documentNavigation", FacesContext.getCurrentInstance(), log));
+		navigation.selectDirectory(this);
+	}
 
-    public boolean isSelected() {
-        return selected;
-    }
+	public boolean isSelected() {
+		return selected;
+	}
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
 
-    public boolean isLoaded() {
-        return loaded;
-    }
+	public boolean isLoaded() {
+		return loaded;
+	}
 
-    public void setLoaded(boolean loaded) {
-        this.loaded = loaded;
-    }
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
+	}
 
-    public boolean isWriteable() {
-        if (writeable == null) {
-            MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
-                    MenuDAO.class);
-            writeable = new Boolean(mdao.isWriteEnable(getMenuId(),
-                    SessionManagement.getUserId()));
-        }
-        return writeable.booleanValue();
-    }
+	public boolean isWriteEnabled() {
+		if (writeEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			writeEnabled = new Boolean(mdao.isWriteEnable(getMenuId(), SessionManagement.getUserId()));
+		}
+		return writeEnabled.booleanValue();
+	}
+
+	public boolean isAddChildEnabledEnabled() {
+		if (addChildEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			addChildEnabled = new Boolean(mdao.isPermissionEnabled(Permission.ADD_CHILD, getMenuId(), SessionManagement
+					.getUserId()));
+		}
+		return addChildEnabled.booleanValue();
+	}
+
+	public boolean isManageSecurityEnabledEnabled() {
+		if (manageSecurityEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			manageSecurityEnabled = new Boolean(mdao.isPermissionEnabled(Permission.MANAGE_SECURITY, getMenuId(),
+					SessionManagement.getUserId()));
+		}
+		return manageSecurityEnabled.booleanValue();
+	}
+
+	public boolean isDeleteEnabledEnabled() {
+		if (deleteEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			deleteEnabled = new Boolean(mdao.isPermissionEnabled(Permission.DELETE, getMenuId(), SessionManagement
+					.getUserId()));
+		}
+		return deleteEnabled.booleanValue();
+	}
+	
+	public boolean isRenameEnabledEnabled() {
+		if (renameEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			renameEnabled = new Boolean(mdao.isPermissionEnabled(Permission.RENAME, getMenuId(), SessionManagement
+					.getUserId()));
+		}
+		return renameEnabled.booleanValue();
+	}
 }
