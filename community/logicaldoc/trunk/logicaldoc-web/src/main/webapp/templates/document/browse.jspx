@@ -23,21 +23,21 @@
 			rendered="#{documentNavigation.selectedDir != null}">
 			<ice:form id="editFolderForm" style="border:0px; margin:0px; padding:0px;">
 				<ice:commandLink
-					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.writeable}"
+					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.writeEnabled}"
 					action="#{documentNavigation.edit}"
 					title="#{msgs['msg.jsp.foldercontent.edit']}">
 					<ice:graphicImage value="#{styleBean.imagesPath}/folder_edit.png"
 						style="border: 0px solid;" title="#{msgs['msg.jsp.foldercontent.edit']}"/>
 				</ice:commandLink>
 				<ice:commandLink
-					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.writeable}"
+					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.writeEnabled}"
 					action="#{documentNavigation.rights}"
 					title="#{msgs['msg.jsp.foldercontent.rights']}">
 					<ice:graphicImage value="#{styleBean.imagesPath}/folder_lock.png"
 						style="border: 0px solid;" title="#{msgs['msg.jsp.foldercontent.rights']}"/>
 				</ice:commandLink>
 				<ice:commandLink action="#{documentNavigation.newDirectory}"
-					title="#{msgs['msg.jsp.createfolder']}" rendered="#{documentNavigation.selectedDir.writeable}">
+					title="#{msgs['msg.jsp.createfolder']}" rendered="#{documentNavigation.selectedDir.writeEnabled}">
 					<ice:graphicImage value="#{styleBean.imagesPath}/folder_add.png"
 						style="border: 0px solid;" title="#{msgs['msg.jsp.createfolder']}"/>
 				</ice:commandLink>
@@ -55,7 +55,7 @@
 						style="border: 0px solid;" title="#{msgs['msg.jsp.zipalllevel']}"/>
 				</ice:outputLink>
 				<ice:commandLink
-					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.writeable}"
+					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.writeEnabled}"
 					action="#{documentNavigation.delete}"
 					title="#{msgs['msg.jsp.delete']}"
 					onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;">

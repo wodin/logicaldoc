@@ -27,7 +27,7 @@
 			<tr>
 				<td>
 					<ice:commandLink action="#{newDocWizard.start}"
-						title="#{msgs['msg.jsp.createdoc']}" rendered="#{documentNavigation.selectedDir.writeable}">
+						title="#{msgs['msg.jsp.createdoc']}" rendered="#{documentNavigation.selectedDir.writeEnabled}">
 						<ice:graphicImage
 							value="#{styleBean.imagesPath}/actions_upload.gif"
 							style="border: 0px solid;" title="#{msgs['msg.jsp.createdoc']}" />
@@ -35,7 +35,7 @@
 				</td>
 				<td>
 					<ice:commandLink action="#{documentsRecordsManager.startZipUpload}"
-						title="#{msgs['msg.jsp.uploadfolder']}" rendered="#{documentNavigation.selectedDir.writeable}">
+						title="#{msgs['msg.jsp.uploadfolder']}" rendered="#{documentNavigation.selectedDir.writeEnabled}">
 						<ice:graphicImage
 							value="#{styleBean.imagesPath}/actions_uploadzip.gif"
 							style="border: 0px solid;" title="#{msgs['msg.jsp.uploadfolder']}"/>
@@ -44,7 +44,7 @@
 				<td>
 					<ice:commandLink action="#{documentsRecordsManager.trimSelected}"
 						title="#{msgs['msg.jsp.cut']}"
-						rendered="#{documentsRecordsManager.clipboardSize==0 and documentNavigation.selectedDir.writeable}">
+						rendered="#{documentsRecordsManager.clipboardSize==0 and documentNavigation.selectedDir.writeEnabled}">
 						<ice:graphicImage
 							value="#{styleBean.imagesPath}/actions_trim.gif"
 							style="border: 0px solid;" title="#{msgs['msg.jsp.cut']}"/>
@@ -53,7 +53,7 @@
                 <td>
 					<ice:commandLink action="#{documentsRecordsManager.paste}"
 						title="#{msgs['msg.jsp.paste']}"
-						rendered="#{documentsRecordsManager.clipboardSize>0 and documentNavigation.selectedDir.writeable}" >
+						rendered="#{documentsRecordsManager.clipboardSize>0 and documentNavigation.selectedDir.writeEnabled}" >
 						<ice:graphicImage
 							value="#{styleBean.imagesPath}/actions_paste.gif"
 							style="border: 0px solid;" title="#{msgs['msg.jsp.paste']}"/>
@@ -62,7 +62,7 @@
 				<td>
 					<ice:commandLink action="#{documentsRecordsManager.deleteSelected}"
 						title="#{msgs['msg.jsp.delete']}"
-						onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;" rendered="#{documentNavigation.selectedDir.writeable}">
+						onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;" rendered="#{documentNavigation.selectedDir.writeEnabled}">
 						<ice:graphicImage
 							value="#{styleBean.imagesPath}/actions_delete.gif"
 							style="border: 0px solid;" title="#{msgs['msg.jsp.delete']}"/>
