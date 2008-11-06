@@ -6,13 +6,14 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 
 /**
  * Generates database records browsing an existing filesystem in LogicalDOC's
@@ -58,9 +59,9 @@ public class PopulateDatabase {
 
 	private String language = "en";
 
-	private long startDocId = 10000;
+	private Set<Long> existingDocIds = new HashSet<Long>();
 
-	private long startFolderId = 10000;
+	private Set<Long> existingMenuIds = new HashSet<Long>();
 
 	public PopulateDatabase() {
 		try {
@@ -73,26 +74,27 @@ public class PopulateDatabase {
 			this.username = conf.getProperty("database.username");
 			this.password = conf.getProperty("database.password");
 			this.language = conf.getProperty("database.language");
-			this.startDocId = Long.parseLong(conf.getProperty("files.startDocId"));
-			this.startFolderId = Long.parseLong(conf.getProperty("files.startFolderId"));
 		} catch (IOException e) {
 		}
 	}
 
-	public long getStartFolderId() {
-		return startFolderId;
-	}
+	private void initExistingIds() throws SQLException {
+		log.info("Collecting existing ids");
+		existingDocIds.clear();
+		existingMenuIds.clear();
 
-	public void setStartFolderId(long startFolderId) {
-		this.startFolderId = startFolderId;
-	}
+		ResultSet rs = con.createStatement().executeQuery("select ld_id from ld_document;");
+		while (rs.next()) {
+			existingDocIds.add(rs.getLong(1));
+		}
 
-	public long getStartDocId() {
-		return startDocId;
-	}
-
-	public void setStartDocId(long startDocId) {
-		this.startDocId = startDocId;
+		rs = con.createStatement().executeQuery("select ld_id from ld_menu;");
+		while (rs.next()) {
+			existingMenuIds.add(rs.getLong(1));
+		}
+		
+		log.info("Found "+existingDocIds.size()+" existing documents");
+		log.info("Found "+existingMenuIds.size()+" existing menus");
 	}
 
 	public String getLanguage() {
@@ -197,7 +199,7 @@ public class PopulateDatabase {
 			insertMenu = con
 					.prepareStatement("INSERT INTO LD_MENU (LD_ID,LD_LASTMODIFIED,LD_TEXT,LD_PARENTID,LD_SORT,LD_ICON,LD_PATH,LD_PATHEXTENDED,LD_TYPE,LD_REF,LD_SIZE) VALUES (?,?,?,?,?,?,?,?,?,?,?);");
 			insertMenuGroup = con
-					.prepareStatement("INSERT INTO LD_MENUGROUP (LD_MENUID,LD_GROUPID,LD_WRITEENABLE) VALUES (?,?,?);");
+					.prepareStatement("INSERT INTO LD_MENUGROUP (LD_MENUID,LD_GROUPID,LD_WRITE,LD_ADDCHILD,LD_MANAGESECURITY,LD_DELETE,LD_RENAME) VALUES (?,?,?,1,1,1,1);");
 			insertDoc = con
 					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_STATUS,LD_TYPE,LD_CHECKOUTUSER,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_FOLDERID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
 			insertKeyword = con.prepareStatement("INSERT INTO LD_KEYWORD (LD_DOCID,LD_KEYWORD) VALUES (?,?);");
@@ -205,6 +207,7 @@ public class PopulateDatabase {
 					.prepareStatement("INSERT INTO LD_VERSION  (LD_DOCID, LD_VERSION, LD_USER, LD_DATE, LD_COMMENT)"
 							+ "VALUES (?,?,?,?,?);");
 
+			initExistingIds();
 			addDocuments(rootFolder, "/");
 			con.commit();
 
@@ -239,28 +242,47 @@ public class PopulateDatabase {
 			if (files[i].isDirectory() && !files[i].getName().startsWith("doc_")) {
 				try {
 					long folderId = insertFolder(files[i], path + "/" + parentFolderId);
-					if (folderId > 0 && batchCount % batchSize == 0) {
-						con.commit();
+					if (folderId > 0) {
+						commit();
 						log.info("Created folder " + folderId);
 					}
-
 				} catch (SQLException e) {
-					log.error(e);
+					log.error(e, e);
 				}
 				// Recursive invocation
 				addDocuments(files[i], path + "/" + parentFolderId);
 			} else if (files[i].isDirectory() && files[i].getName().startsWith("doc_")) {
 				try {
 					long docId = insertDocument(files[i]);
-					if (docId > 0 && (batchCount % batchSize == 0)) {
-						con.commit();
+					if (docId > 0) {
+						commit();
 						log.info("Created document " + docId);
 					}
 				} catch (SQLException e) {
-					log.error(e);
+					log.error(e, e);
 				}
 			}
 		}
+	}
+
+	private void commit() throws SQLException {
+		if (batchCount % batchSize == 0) {
+			insertDoc.executeBatch();
+			insertVersion.executeBatch();
+			insertKeyword.executeBatch();
+			insertDoc.clearBatch();
+			insertVersion.clearBatch();
+			insertKeyword.clearBatch();
+			con.commit();
+			gc();
+		}
+	}
+
+	private void gc() {
+		System.gc();
+		System.gc();
+		System.gc();
+		log.debug("Memory usage: " + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024));
 	}
 
 	/**
@@ -278,8 +300,10 @@ public class PopulateDatabase {
 		String content = Util.parse(docFile);
 
 		// Skip condition
-		if (id < startDocId)
+		if (existingDocIds.contains(id)){
+			log.debug("Skipping file "+dir.getName());
 			return -1;
+		}
 
 		long folderId = Long.parseLong(dir.getParentFile().getName());
 		String extension = docFile.getName().substring(docFile.getName().lastIndexOf(".") + 1);
@@ -321,7 +345,7 @@ public class PopulateDatabase {
 		// LD_FOLDERID
 		insertDoc.setLong(18, folderId);
 
-		insertDoc.execute();
+		insertDoc.addBatch();
 		batchCount++;
 
 		// Insert 5 document's keywords
@@ -339,7 +363,6 @@ public class PopulateDatabase {
 			insertKeyword.addBatch();
 			i++;
 		}
-		insertKeyword.executeBatch();
 		insertKeyword.clearBatch();
 
 		// Insert a version
@@ -354,7 +377,7 @@ public class PopulateDatabase {
 		insertVersion.setDate(4, new Date(docFile.lastModified()));
 		// LD_COMMENT
 		insertVersion.setString(5, "initial version");
-		insertVersion.execute();
+		insertVersion.addBatch();
 
 		return id;
 	}
@@ -373,8 +396,10 @@ public class PopulateDatabase {
 		long parentId = Long.parseLong(dir.getParentFile().getName());
 
 		// Skip condition
-		if (id < startFolderId)
+		if (existingMenuIds.contains(id)){
+			log.debug("Skipping folder "+dir.getName());
 			return -1;
+		}
 
 		// LD_ID
 		insertMenu.setLong(1, id);
