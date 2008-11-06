@@ -311,22 +311,45 @@ public class RightsRecordsManager {
 		boolean sqlerrors = false;
 		for (GroupRule rule : rules) {
 			boolean read = rule.getRead();
-			boolean write = rule.getWrite();
-
+			boolean isAdmin=rule.getGroupName().equals("admin");
 			MenuGroup mg = folder.getMenuGroup(rule.getGroupId());
-			if (write || read || rule.getGroupName().equals("admin")) {
+			if (read || isAdmin) {
 				if ((mg == null) || mg.getGroupId() != rule.getGroupId()) {
 					mg = new MenuGroup();
 					mg.setGroupId(rule.getGroupId());
 					folder.getMenuGroups().add(mg);
 				}
 
-				if (write || rule.getGroupName().equals("admin")) {
+				if (rule.isWrite() || isAdmin) {
 					mg.setWrite(1);
 				} else {
 					mg.setWrite(0);
 				}
 
+				if (rule.isAddChild() || isAdmin) {
+					mg.setAddChild(1);
+				} else {
+					mg.setAddChild(0);
+				}
+				
+				if (rule.isManageSecurity() || isAdmin) {
+					mg.setManageSecurity(1);
+				} else {
+					mg.setManageSecurity(0);
+				}
+				
+				if (rule.isDelete() || isAdmin) {
+					mg.setDelete(1);
+				} else {
+					mg.setDelete(0);
+				}
+				
+				if (rule.isRename() || isAdmin) {
+					mg.setRename(1);
+				} else {
+					mg.setRename(0);
+				}
+				
 				boolean stored = mdao.store(folder);
 
 				if (!stored) {

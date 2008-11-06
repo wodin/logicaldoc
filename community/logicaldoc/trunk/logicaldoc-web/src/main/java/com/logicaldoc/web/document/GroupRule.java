@@ -68,7 +68,7 @@ public class GroupRule {
 		return read;
 	}
 
-	public boolean getWrite() {
+	public boolean isWrite() {
 		return write;
 	}
 
