@@ -124,7 +124,7 @@ values (1,1);
 insert into ld_usergroup
 values (-1,1);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (1,1,0,0,0,0,0);
 
 insert into ld_menugroup
@@ -134,7 +134,7 @@ insert into ld_menugroup
 values     (4,1,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (5,1,1,0,0,0,0);
+values     (5,1,1,1,1,1,1);
 
 insert into ld_menugroup
 values     (6,1,0,0,0,0,0);
