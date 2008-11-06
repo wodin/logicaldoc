@@ -166,6 +166,10 @@ public class Menu extends PersistentObject {
 			MenuGroup mg = new MenuGroup();
 			mg.setGroupId(groups[i]);
 			mg.setWrite(1);
+			mg.setAddChild(1);
+			mg.setManageSecurity(1);
+			mg.setDelete(1);
+			mg.setRename(1);
 			menuGroups.add(mg);
 		}
 	}

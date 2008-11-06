@@ -594,18 +594,19 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#isPermissionEnabled(java.lang.String,
 	 *      long, long)
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean isPermissionEnabled(Permission permission, long menuId, long userId) {
-		if (Permission.READ==permission)
+		if (Permission.READ == permission)
 			return isReadEnable(menuId, userId);
 
 		boolean result = true;
 
 		try {
 			User user = userDAO.findById(userId);
-			Collection<Group> Groups = user.getGroups();
-			if (Groups.isEmpty())
+			Collection<Group> groups = user.getGroups();
+			if (groups.isEmpty())
 				return false;
-			Iterator iter = Groups.iterator();
+			Iterator<Group> iter = groups.iterator();
 
 			StringBuffer query = new StringBuffer("select distinct(_menu) from Menu _menu  ");
 			query.append(" left outer join _menu.menuGroups as _group ");

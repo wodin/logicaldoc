@@ -127,95 +127,95 @@ values (-1,1);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (1,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (2,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (4,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (5,1,1,1,1,1,1);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (6,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (7,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (8,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (13,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (14,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (16,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (17,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (19,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (20,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (23,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (25,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (26,1,1,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (27,1,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (1,2,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (4,2,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (5,2,1,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (13,2,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (16,2,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (19,2,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (20,2,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (23,2,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (26,2,1,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (1,3,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (4,3,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (5,3,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (13,3,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (16,3,0,0,0,0,0);
 
-insert into ld_menugroup
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (19,3,0,0,0,0,0);
