@@ -12,8 +12,7 @@ import com.logicaldoc.web.i18n.Messages;
 /**
  * Base form for directory editing
  * 
- * @author Marco Meschieri
- * @version $Id: DirectoryEditForm.java,v 1.2 2006/09/03 16:24:37 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class DirectoryEditForm {

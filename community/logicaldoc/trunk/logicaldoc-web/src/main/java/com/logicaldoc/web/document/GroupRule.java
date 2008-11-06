@@ -1,5 +1,7 @@
 package com.logicaldoc.web.document;
 
+import com.logicaldoc.core.security.MenuGroup;
+
 /**
  * A simple bean used to show Access rules
  * 
@@ -11,25 +13,37 @@ public class GroupRule {
 
 	private String displayName = "";
 
-	private long groupId;
+	private long groupId = -1;
 
-	private boolean read;
+	private boolean read = false;
 
-	private boolean write;
+	private boolean write = false;
+
+	private boolean addChild = false;
+
+	private boolean manageSecurity = false;
+
+	private boolean delete = false;
+
+	private boolean rename = false;
 
 	/**
 	 * true, if this rule can be changed in a dialog
 	 */
-	private boolean enabled;
+	private boolean enabled = true;
 
 	/** Creates a new instance of GroupRules */
 	public GroupRule() {
-		groupId = -1;
-		read = false;
-		write = false;
-		enabled = false;
 	}
 
+	public void init(MenuGroup mg){
+		write=mg.getWrite() == 1;
+		addChild=mg.getAddChild() == 1;
+		manageSecurity=mg.getManageSecurity() == 1;
+		delete=mg.getDelete() == 1;
+		rename=mg.getRename() == 1;
+	}
+	
 	public long getGroupId() {
 		return groupId;
 	}
@@ -82,5 +96,37 @@ public class GroupRule {
 	public boolean equals(Object obj) {
 		GroupRule other = (GroupRule) obj;
 		return groupId == other.getGroupId();
+	}
+
+	public boolean isAddChild() {
+		return addChild;
+	}
+
+	public void setAddChild(boolean addChild) {
+		this.addChild = addChild;
+	}
+
+	public boolean isManageSecurity() {
+		return manageSecurity;
+	}
+
+	public void setManageSecurity(boolean manageSecurity) {
+		this.manageSecurity = manageSecurity;
+	}
+
+	public boolean isDelete() {
+		return delete;
+	}
+
+	public void setDelete(boolean delete) {
+		this.delete = delete;
+	}
+
+	public boolean isRename() {
+		return rename;
+	}
+
+	public void setRename(boolean rename) {
+		this.rename = rename;
 	}
 }

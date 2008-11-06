@@ -97,7 +97,7 @@
 				<!-- read column -->
 				<ice:column>
 					<f:facet name="header">
-						<ice:outputText value="#{msgs['msg.jsp.readright']}" />
+						<ice:outputText value="#{msgs['permission.read']}" />
 					</f:facet>
 					<ice:panelGroup>
 						<ice:selectBooleanCheckbox value="#{rule.read}"
@@ -108,10 +108,54 @@
 				<!-- write column -->
 				<ice:column>
 					<f:facet name="header">
-						<ice:outputText value="#{msgs['msg.jsp.writeright']}" />
+						<ice:outputText value="#{msgs['permission.write']}" />
 					</f:facet>
 					<ice:panelGroup>
 						<ice:selectBooleanCheckbox value="#{rule.write}"
+							disabled="#{!rule.enabled}" />
+					</ice:panelGroup>
+				</ice:column>
+				
+				<!-- add folder -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['permission.addChild']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:selectBooleanCheckbox value="#{rule.addChild}"
+							disabled="#{!rule.enabled}" />
+					</ice:panelGroup>
+				</ice:column>
+				
+				<!-- manage security -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['permission.manageSecurity']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:selectBooleanCheckbox value="#{rule.manageSecurity}"
+							disabled="#{!rule.enabled}" />
+					</ice:panelGroup>
+				</ice:column>
+				
+				<!-- delete -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['permission.delete']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:selectBooleanCheckbox value="#{rule.delete}"
+							disabled="#{!rule.enabled}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- rename -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['permission.rename']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:selectBooleanCheckbox value="#{rule.rename}"
 							disabled="#{!rule.enabled}" />
 					</ice:panelGroup>
 				</ice:column>

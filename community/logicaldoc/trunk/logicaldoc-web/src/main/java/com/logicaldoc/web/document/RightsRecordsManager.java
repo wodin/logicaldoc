@@ -17,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
+import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
@@ -156,8 +157,10 @@ public class RightsRecordsManager {
 				}
 			});
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			Menu menu = mdao.findById(menuId);
+			
 			long userId = SessionManagement.getUserId();
-			if (mdao.isWriteEnable(menuId, userId)) {
+			if (mdao.isPermissionEnabled(Permission.MANAGE_SECURITY,menuId, userId)) {
 				Iterator<Group> iter = groups.iterator();
 				while (iter.hasNext()) {
 					Group g = (Group) iter.next();
@@ -166,22 +169,20 @@ public class RightsRecordsManager {
 					gr.setDisplayName(getEntityLabel(g));
 					gr.setGroupId(g.getId());
 					gr.setEnabled(true);
-
-					Menu menu = mdao.findById(menuId);
+					
 					MenuGroup mg = menu.getMenuGroup(g.getId());
 
 					if ((mg == null) || mg.getGroupId() != g.getId()) {
 						gr.setRead(false);
 						gr.setWrite(false);
+						gr.setAddChild(false);
+						gr.setManageSecurity(false);
+						gr.setDelete(false);
+						gr.setRename(false);
 						availableGroups.add(new SelectItem(g.getId(), getEntityLabel(g)));
 					} else {
 						gr.setRead(true);
-
-						if (mg.getWrite() == 1) {
-							gr.setWrite(true);
-						} else {
-							gr.setWrite(false);
-						}
+						gr.init(mg);
 						allowedGroups.add(new SelectItem(g.getId(), getEntityLabel(g)));
 						rules.add(gr);
 					}
