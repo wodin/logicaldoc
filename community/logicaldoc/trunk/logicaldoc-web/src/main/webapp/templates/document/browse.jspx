@@ -21,46 +21,48 @@
 	<ice:panelGrid columns="1" styleClass="contentLayoutGridColumn">
 		<ice:panelGroup style="display: inline"
 			rendered="#{documentNavigation.selectedDir != null}">
-			<ice:form id="editFolderForm" style="border:0px; margin:0px; padding:0px;">
+			<ice:form id="editFolderForm"
+				style="border:0px; margin:0px; padding:0px;">
 				<ice:commandLink
-					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.writeEnabled}"
+					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.renameEnabled}"
 					action="#{documentNavigation.edit}"
 					title="#{msgs['msg.jsp.foldercontent.edit']}">
 					<ice:graphicImage value="#{styleBean.imagesPath}/folder_edit.png"
-						style="border: 0px solid;" title="#{msgs['msg.jsp.foldercontent.edit']}"/>
+						style="border: 0px solid;" title="#{msgs['msg.jsp.foldercontent.edit']}" />
 				</ice:commandLink>
 				<ice:commandLink
-					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.writeEnabled}"
+					rendered="#{documentNavigation.selectedDir.manageSecurityEnabled}"
 					action="#{documentNavigation.rights}"
 					title="#{msgs['msg.jsp.foldercontent.rights']}">
 					<ice:graphicImage value="#{styleBean.imagesPath}/folder_lock.png"
-						style="border: 0px solid;" title="#{msgs['msg.jsp.foldercontent.rights']}"/>
+						style="border: 0px solid;" title="#{msgs['msg.jsp.foldercontent.rights']}" />
 				</ice:commandLink>
 				<ice:commandLink action="#{documentNavigation.newDirectory}"
-					title="#{msgs['msg.jsp.createfolder']}" rendered="#{documentNavigation.selectedDir.writeEnabled}">
+					title="#{msgs['msg.jsp.createfolder']}"
+					rendered="#{documentNavigation.selectedDir.addChildEnabled}">
 					<ice:graphicImage value="#{styleBean.imagesPath}/folder_add.png"
-						style="border: 0px solid;" title="#{msgs['msg.jsp.createfolder']}"/>
+						style="border: 0px solid;" title="#{msgs['msg.jsp.createfolder']}" />
 				</ice:commandLink>
 				<ice:commandLink
 					rendered="#{documentNavigation.selectedDir.menuId != 5}"
 					action="#{documentNavigation.searchInFolder}"
 					title="#{msgs['msg.jsp.search']}">
 					<ice:graphicImage value="#{styleBean.imagesPath}/folder_search.png"
-						style="border: 0px solid;" title="#{msgs['msg.jsp.search']}"/>
+						style="border: 0px solid;" title="#{msgs['msg.jsp.search']}" />
 				</ice:commandLink>
 				<ice:outputLink
 					value="zip-export?menuId=#{documentNavigation.selectedDir.menuId}"
 					title="#{msgs['msg.jsp.zipalllevel']}" target="_blank">
 					<ice:graphicImage value="#{styleBean.imagesPath}/folder_export.png"
-						style="border: 0px solid;" title="#{msgs['msg.jsp.zipalllevel']}"/>
+						style="border: 0px solid;" title="#{msgs['msg.jsp.zipalllevel']}" />
 				</ice:outputLink>
 				<ice:commandLink
-					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.writeEnabled}"
+					rendered="#{documentNavigation.selectedDir.menuId != 5  and documentNavigation.selectedDir.deleteEnabled}"
 					action="#{documentNavigation.delete}"
 					title="#{msgs['msg.jsp.delete']}"
 					onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;">
 					<ice:graphicImage value="#{styleBean.imagesPath}/folder_delete.png"
-						style="border: 0px solid;" title="#{msgs['msg.jsp.delete']}"/>
+						style="border: 0px solid;" title="#{msgs['msg.jsp.delete']}" />
 				</ice:commandLink>
 			</ice:form>
 		</ice:panelGroup>

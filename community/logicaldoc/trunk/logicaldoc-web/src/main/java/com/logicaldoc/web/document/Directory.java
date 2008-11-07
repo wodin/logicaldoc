@@ -92,7 +92,7 @@ public class Directory extends PageContentBean {
 		return writeEnabled.booleanValue();
 	}
 
-	public boolean isAddChildEnabledEnabled() {
+	public boolean isAddChildEnabled() {
 		if (addChildEnabled == null) {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			addChildEnabled = new Boolean(mdao.isPermissionEnabled(Permission.ADD_CHILD, getMenuId(), SessionManagement
@@ -101,7 +101,7 @@ public class Directory extends PageContentBean {
 		return addChildEnabled.booleanValue();
 	}
 
-	public boolean isManageSecurityEnabledEnabled() {
+	public boolean isManageSecurityEnabled() {
 		if (manageSecurityEnabled == null) {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			manageSecurityEnabled = new Boolean(mdao.isPermissionEnabled(Permission.MANAGE_SECURITY, getMenuId(),
@@ -110,7 +110,7 @@ public class Directory extends PageContentBean {
 		return manageSecurityEnabled.booleanValue();
 	}
 
-	public boolean isDeleteEnabledEnabled() {
+	public boolean isDeleteEnabled() {
 		if (deleteEnabled == null) {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			deleteEnabled = new Boolean(mdao.isPermissionEnabled(Permission.DELETE, getMenuId(), SessionManagement
@@ -119,7 +119,7 @@ public class Directory extends PageContentBean {
 		return deleteEnabled.booleanValue();
 	}
 	
-	public boolean isRenameEnabledEnabled() {
+	public boolean isRenameEnabled() {
 		if (renameEnabled == null) {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			renameEnabled = new Boolean(mdao.isPermissionEnabled(Permission.RENAME, getMenuId(), SessionManagement
