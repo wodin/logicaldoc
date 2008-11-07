@@ -64,7 +64,7 @@ public class SelectionTagsBean {
 	/**
 	 * Gets the option items for groups selection
 	 */
-	public SelectItem[] getGroups() {
+	public List<SelectItem> getGroups() {
 		// gets available groups
 		GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		Collection<Group> coll = dao.findAll();
@@ -76,7 +76,7 @@ public class SelectionTagsBean {
 				items.add(new SelectItem(group.getId(), group.getName()));
 		}
 
-		return items.toArray(new SelectItem[0]);
+		return items;
 	}
 
 	/**
