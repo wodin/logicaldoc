@@ -82,10 +82,10 @@
 		<!-- Groups and rights -->
 		<ice:panelGroup>
 			<ice:dataTable value="#{rightsRecordsManager.rules}" var="rule"
-				cellpadding="0" width="95%" rows="2000">
+				cellpadding="0"  rows="2000">
 
 				<!-- group column -->
-				<ice:column>
+				<ice:column styleClass="nowrap center">
 					<f:facet name="header">
 						<ice:outputText value="#{msgs['entity.name']}" />
 					</f:facet>
@@ -95,7 +95,7 @@
 				</ice:column>
 
 				<!-- read column -->
-				<ice:column>
+				<ice:column styleClass="center">
 					<f:facet name="header">
 						<ice:outputText value="#{msgs['permission.read']}" />
 					</f:facet>
@@ -106,7 +106,7 @@
 				</ice:column>
 
 				<!-- write column -->
-				<ice:column>
+				<ice:column styleClass="center">
 					<f:facet name="header">
 						<ice:outputText value="#{msgs['permission.write']}" />
 					</f:facet>
@@ -117,7 +117,7 @@
 				</ice:column>
 				
 				<!-- add folder -->
-				<ice:column>
+				<ice:column styleClass="center">
 					<f:facet name="header">
 						<ice:outputText value="#{msgs['permission.addChild']}" />
 					</f:facet>
@@ -128,7 +128,7 @@
 				</ice:column>
 				
 				<!-- manage security -->
-				<ice:column>
+				<ice:column styleClass="center">
 					<f:facet name="header">
 						<ice:outputText value="#{msgs['permission.manageSecurity']}" />
 					</f:facet>
@@ -139,7 +139,7 @@
 				</ice:column>
 				
 				<!-- delete -->
-				<ice:column>
+				<ice:column styleClass="center">
 					<f:facet name="header">
 						<ice:outputText value="#{msgs['permission.delete']}" />
 					</f:facet>
@@ -150,7 +150,7 @@
 				</ice:column>
 
 				<!-- rename -->
-				<ice:column>
+				<ice:column styleClass="center">
 					<f:facet name="header">
 						<ice:outputText value="#{msgs['permission.rename']}" />
 					</f:facet>

@@ -289,11 +289,6 @@ em { /*font-size:14px;*/
 	width: 100%;
 }
 
-/* copyright information displayed at end of page */ /*.footer {
-	text-align: center;
-	border-top: 1px solid #dedede;
-	padding-top: 2px;
-}*/
 .footer {
 	text-align: center;
 	border-top: 1px solid #dedede;
@@ -489,31 +484,6 @@ em { /*font-size:14px;*/
 	vertical-align: middle;
 }
 
-/*
-  Drag and Drop
-*/ /* store and shopping cart list*/
-.shoppingCart {
-	text-align: center;
-	vertical-align: top;
-}
-
-.cartDropZone {
-	border: thin solid rgb(200, 200, 200);
-	padding-top: 5px;
-	height: 80px;
-	width: 120px;
-	text-align: center;
-	vertical-align: middle;
-}
-
-.cartDropZonText1 {
-	font-weight: bold;
-	text-align: left;
-}
-
-.cartDropZonText1 {
-	
-}
 
 .dragDropImage {
 	
@@ -1618,4 +1588,14 @@ em { /*font-size:14px;*/
 
 .cloud10 {
 	font-size: 1.90em;
+}
+
+/* Used to center text or columns */
+.center {
+	margin:0 auto; text-align:center;
+}
+
+/* Used to avoid multiple lines */
+.nowrap {
+	white-space: nowrap
 }
