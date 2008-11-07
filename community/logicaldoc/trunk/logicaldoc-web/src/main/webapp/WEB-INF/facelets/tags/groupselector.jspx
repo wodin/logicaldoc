@@ -20,19 +20,25 @@
 			methodBindings="filterListener=void javax.faces.event.ValueChangeEvent;">
 			<ice:panelGroup>
 				<ice:panelGroup style="text-align:center">
-					<ice:outputLabel for="availableGroups" value="#{label}" />
+					<ice:outputLabel for="groups" value="#{label}" />
 				</ice:panelGroup>
 
-				<ice:panelGroup>
+				<ice:panelGroup rendered="#{allowMultipleSelection eq 'true'}">
 					<ice:selectManyMenu styleClass="selectManyMenu"
 						value="#{value}">
 						<f:selectItems value="#{items}" />
 					</ice:selectManyMenu>
 				</ice:panelGroup>
-				<br />
+				
+				<ice:panelGroup rendered="#{allowMultipleSelection eq 'false'}">
+					<ice:selectOneListbox styleClass="selectManyMenu"
+						value="#{value}">
+						<f:selectItems value="#{items}" />
+					</ice:selectOneListbox>
+				</ice:panelGroup>
 							
 				<ice:panelGroup style="text-align:center">
-					<ice:outputLabel for="availablefilter" value="#{msgs['filter']}" />
+					<ice:outputLabel for="filter" value="#{msgs['filter']}" />
 				</ice:panelGroup>
 
 				<ice:panelGroup rendered="#{showFilter eq 'true'}">

@@ -2,8 +2,11 @@ package com.logicaldoc.web.admin;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,6 +17,7 @@ import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.web.SelectionTagsBean;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.util.FacesUtil;
@@ -48,6 +52,36 @@ public class GroupsRecordsManager {
 	private HtmlInputText groupName = null;
 
 	private HtmlInputTextarea groupDesc = null;
+	
+	private Collection<SelectItem> items = new ArrayList<SelectItem>();
+	
+	private String groupFilter = "";
+
+	private SelectionTagsBean selectionTags = null;
+
+	public Collection<SelectItem> getItems() {
+		return items;
+	}
+
+	public void setItems(Collection<SelectItem> items) {
+		this.items = items;
+	}
+
+	public String getGroupFilter() {
+		return groupFilter;
+	}
+
+	public void setGroupFilter(String groupFilter) {
+		this.groupFilter = groupFilter;
+	}
+
+	public SelectionTagsBean getSelectionTags() {
+		return selectionTags;
+	}
+
+	public void setSelectionTags(SelectionTagsBean selectionTags) {
+		this.selectionTags = selectionTags;
+	}
 
 	public GroupsRecordsManager() {
 	}
@@ -76,7 +110,7 @@ public class GroupsRecordsManager {
 
 	private void reload() {
 		groups.clear();
-
+		items = selectionTags.getGroups();
 		try {
 			long userId = SessionManagement.getUserId();
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -192,7 +226,6 @@ public class GroupsRecordsManager {
 	}
 
 	public String save() {
-
 		if (SessionManagement.isValid()) {
 			GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 
@@ -276,4 +309,21 @@ public class GroupsRecordsManager {
 		this.groupDesc = groupDesc;
 	}
 
+	/**
+	 * Filters all groups if group's name contains the string on
+	 * "Filter" input text
+	 * 
+	 * @param event
+	 */
+	public void filterGroups(ValueChangeEvent event) {
+		items.clear();
+		GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+		List<Group> groups = (List<Group>) dao.findAll();
+		for (Group group : groups) {
+			if (group.getName().toLowerCase().contains(event.getNewValue().toString().toLowerCase()) && group.getType()==Group.TYPE_DEFAULT) {
+				SelectItem item = new SelectItem(group.getId(), group.getName());
+				items.add(item);
+			}
+		}
+	}
 }

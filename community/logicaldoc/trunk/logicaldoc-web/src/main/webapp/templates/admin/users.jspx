@@ -70,7 +70,7 @@
                         <!-- Current Groups -->
                         <ice:column>
                             <f:facet name="header">
-                                <ice:outputText value="#{msgs['msg.jsp.users.currentgroups']}" />
+                                <ice:outputText value="#{msgs['group.assigned']}" />
                             </f:facet>
                             <ice:panelGroup>
                                 <ice:panelSeries style="display: inline;" var="groupName"

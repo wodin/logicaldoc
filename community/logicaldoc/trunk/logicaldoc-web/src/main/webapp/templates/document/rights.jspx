@@ -31,7 +31,7 @@
 				<ice:panelGroup styleClass="expandableStateIndicator">
 					<h3>
 						<ice:outputText id="messagesHeader"
-							value="#{msgs['entity.modify']}" />
+							value="#{msgs['entity.assign']}" />
 					</h3>
 				</ice:panelGroup>
 			</f:facet>

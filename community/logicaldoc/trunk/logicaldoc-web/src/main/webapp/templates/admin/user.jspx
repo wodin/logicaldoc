@@ -7,202 +7,243 @@
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ice="http://www.icesoft.com/icefaces/component"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:c="http://java.sun.com/jstl/core"
-    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-    xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form" id="userForm">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="userForm">
 
-    <ice:panelGroup styleClass="center formBorderHighlight"
-        style="width: 600px;">
-        <ice:panelGroup>
-            <!-- Login data -->
-            <ice:panelGroup>
-                <h3>
-                    <ice:outputText value="#{msgs['msg.jsp.adduser.logindata']}" />
-                    <br />
-                    <br />
-                </h3>
- 
-                <ice:panelGrid columns="5">
- 
-                    <ice:panelGroup style="text-align:right">
-                        <ice:outputLabel for="userName"
-                            value="#{msgs['msg.jsp.login.username']}*" />
-                    </ice:panelGroup>
-                    <ice:panelGroup>
-                        <ice:inputText id="userName" value="#{userForm.user.userName}"
-                            maxlength="255" required="true" disabled="#{userForm.user.userName == 'admin'}"/>
-                        <br />
-                        <ice:message for="userName" />
-                    </ice:panelGroup>
-                    <ice:panelGroup style="width:20px" />
-                    <ice:panelGroup style="text-align:right">
-                        <ice:outputLabel for="password"
-                            value="#{msgs['msg.jsp.login.password']}*" rendered="#{hidePasswd!='true'}"/>
-                    </ice:panelGroup>
-                    <ice:panelGroup style="text-align:right">
-                        <ice:inputSecret id="password" value="#{userForm.password}"
-                            maxlength="255" required="true" rendered="#{hidePasswd!='true'}"/>
-                        <br />
-                        <ice:message for="password" />
-                    </ice:panelGroup>
+	<ice:panelGroup styleClass="center formBorderHighlight"
+		style="width: 600px;">
 
-                    <ice:panelGroup>
-                    </ice:panelGroup>
-                    <ice:panelGroup>
-                    </ice:panelGroup>
-                    <ice:panelGroup style="width:20px" />
-                    <ice:panelGroup style="text-align:right">
-                        <ice:outputLabel for="repass"
-                            value="#{msgs['msg.jsp.adduser.repass']}*" rendered="#{hidePasswd!='true'}"/>
-                    </ice:panelGroup>
-                    <ice:panelGroup>
-                        <ice:inputSecret id="repass" value="#{userForm.repass}"
-                            maxlength="255" required="true" rendered="#{hidePasswd!='true'}"/>
-                        <br />
-                        <ice:message for="repass" />
-                    </ice:panelGroup>
-                </ice:panelGrid>
-            </ice:panelGroup>
-        </ice:panelGroup>
+		<ice:panelGroup>
+			<!-- Login data -->
+			<ice:panelGroup>
+				<h3>
+					<ice:outputText value="#{msgs['msg.jsp.adduser.logindata']}" />
+					<br />
+					<br />
+				</h3>
+				<ice:panelGrid columns="5">
+					<ice:panelGroup style="text-align:right">
+						<ice:outputLabel for="userName"
+							value="#{msgs['msg.jsp.login.username']}*" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="userName" value="#{userForm.user.userName}"
+							maxlength="255" required="true"
+							disabled="#{userForm.user.userName == 'admin'}" />
+						<br />
+						<ice:message for="userName" />
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup style="text-align:right">
+						<ice:outputLabel for="password"
+							value="#{msgs['msg.jsp.login.password']}*"
+							rendered="#{hidePasswd!='true'}" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:right">
+						<ice:inputSecret id="password" value="#{userForm.password}"
+							maxlength="255" required="true" rendered="#{hidePasswd!='true'}" />
+						<br />
+						<ice:message for="password" />
+					</ice:panelGroup>
 
-        <!-- Personal data -->
-        <ice:panelGroup>
-            <hr />
-            <h3>
-                <ice:outputText value="#{msgs['msg.jsp.adduser.personaldata']}" />
-                <br />
-                <br />
-            </h3>
-            <ice:panelGrid columns="5">
-                <ice:panelGroup style="text-align:right">
-                    <ice:outputLabel for="firstName"
-                        value="#{msgs['msg.jsp.adduser.firstname']}*" />
-                </ice:panelGroup>
-                <ice:panelGroup>
-                    <ice:inputText id="firstName" value="#{userForm.user.firstName}" 
-                        maxlength="30" required="true" />
-                    <br />
-                    <ice:message for="firstName" />
-                </ice:panelGroup>
-                <ice:panelGroup style="width:20px" />
-                <ice:panelGroup style="text-align:right">
-                    <ice:outputLabel for="name"
-                        value="#{msgs['msg.jsp.adduser.lastname']}*" />
-                </ice:panelGroup>
-                <ice:panelGroup>
-                    <ice:inputText id="name" value="#{userForm.user.name}" 
-                        maxlength="30" required="true" />
-                    <br />
-                    <ice:message for="name" />
-                </ice:panelGroup>
+					<ice:panelGroup>
+					</ice:panelGroup>
+					<ice:panelGroup>
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup style="text-align:right">
+						<ice:outputLabel for="repass"
+							value="#{msgs['msg.jsp.adduser.repass']}*"
+							rendered="#{hidePasswd!='true'}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputSecret id="repass" value="#{userForm.repass}"
+							maxlength="255" required="true" rendered="#{hidePasswd!='true'}" />
+						<br />
+						<ice:message for="repass" />
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+		</ice:panelGroup>
 
-                <ice:panelGroup style="text-align:right">
-                    <ice:outputLabel for="street"
-                        value="#{msgs['msg.jsp.adduser.street']}" />
-                </ice:panelGroup>
-                <ice:panelGroup>
-                    <ice:inputText id="street" value="#{userForm.user.street}" 
-                        maxlength="100" />
-                    <br />
-                    <ice:message for="street" />
-                </ice:panelGroup>
-                <ice:panelGroup style="width:20px" />
-                <ice:panelGroup style="text-align:right">
-                    <ice:outputLabel for="postalCode"
-                        value="#{msgs['msg.jsp.adduser.postalcode']}" />
-                </ice:panelGroup>
-                <ice:panelGroup>
-                    <ice:inputText id="postalCode" value="#{userForm.user.postalcode}" 
-                        maxlength="10" />
-                    <br />
-                    <ice:message for="postalCode" />
-                </ice:panelGroup>
+		<!-- Personal data -->
+		<ice:panelGroup>
+			<hr />
+			<h3>
+				<ice:outputText value="#{msgs['msg.jsp.adduser.personaldata']}" />
+				<br />
+				<br />
+			</h3>
+			<ice:panelGrid columns="5">
+				<ice:panelGroup style="text-align:right">
+					<ice:outputLabel for="firstName"
+						value="#{msgs['msg.jsp.adduser.firstname']}*" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="firstName" value="#{userForm.user.firstName}"
+						maxlength="30" required="true" />
+					<br />
+					<ice:message for="firstName" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup style="text-align:right">
+					<ice:outputLabel for="name"
+						value="#{msgs['msg.jsp.adduser.lastname']}*" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="name" value="#{userForm.user.name}"
+						maxlength="30" required="true" />
+					<br />
+					<ice:message for="name" />
+				</ice:panelGroup>
 
-                <ice:panelGroup style="text-align:right">
-                    <ice:outputLabel for="city"
-                        value="#{msgs['msg.jsp.adduser.city']}" />
-                </ice:panelGroup>
-                <ice:panelGroup>
-                    <ice:inputText id="city" value="#{userForm.user.city}" 
-                        maxlength="30" />
-                    <br />
-                    <ice:message for="city" />
-                </ice:panelGroup>
-                <ice:panelGroup style="width:20px" />
-                <ice:panelGroup style="text-align:right">
-                    <ice:outputLabel for="country"
-                        value="#{msgs['msg.jsp.adduser.country']}" />
-                </ice:panelGroup>
-                <ice:panelGroup>
-                    <ice:inputText id="country" value="#{userForm.user.country}" 
-                        maxlength="30" />
-                    <br />
-                    <ice:message for="country" />
-                </ice:panelGroup>
+				<ice:panelGroup style="text-align:right">
+					<ice:outputLabel for="street"
+						value="#{msgs['msg.jsp.adduser.street']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="street" value="#{userForm.user.street}"
+						maxlength="100" />
+					<br />
+					<ice:message for="street" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup style="text-align:right">
+					<ice:outputLabel for="postalCode"
+						value="#{msgs['msg.jsp.adduser.postalcode']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="postalCode" value="#{userForm.user.postalcode}"
+						maxlength="10" />
+					<br />
+					<ice:message for="postalCode" />
+				</ice:panelGroup>
 
-                <ice:panelGroup style="text-align:right">
-                    <ice:outputLabel for="language"
-                        value="#{msgs['msg.jsp.adduser.language']}" />
-                </ice:panelGroup>
-                <ice:panelGroup>
-                    <ice:selectOneMenu styleClass="selectTagMenu" 
-                        value="#{userForm.user.language}">
-                        <f:selectItems value="#{selectionTags.languages}" />
-                    </ice:selectOneMenu>
-                </ice:panelGroup>
-                <ice:panelGroup style="width:20px" />
-                <ice:panelGroup style="text-align:right">
-                    <ice:outputLabel for="email"
-                        value="#{msgs['msg.jsp.adduser.email']}*" />
-                </ice:panelGroup>
-                <ice:panelGroup>
-                    <ice:inputText id="email" value="#{userForm.user.email}" 
-                        maxlength="100" required="true">
-                        <f:validator validatorId="validator.email" />
-                    </ice:inputText>
-                    <br />
-                    <ice:message for="email" />
-                </ice:panelGroup>
+				<ice:panelGroup style="text-align:right">
+					<ice:outputLabel for="city" value="#{msgs['msg.jsp.adduser.city']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="city" value="#{userForm.user.city}"
+						maxlength="30" />
+					<br />
+					<ice:message for="city" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup style="text-align:right">
+					<ice:outputLabel for="country"
+						value="#{msgs['msg.jsp.adduser.country']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="country" value="#{userForm.user.country}"
+						maxlength="30" />
+					<br />
+					<ice:message for="country" />
+				</ice:panelGroup>
 
-                <ice:panelGroup style="text-align:right">
-                    <ice:outputLabel for="phone"
-                        value="#{msgs['msg.jsp.adduser.phone']}" />
-                </ice:panelGroup>
-                <ice:panelGroup>
-                    <ice:inputText id="phone" value="#{userForm.user.telephone}"
-                        maxlength="30" />
-                    <br />
-                    <ice:message for="phone" />
-                </ice:panelGroup>
-                <ice:panelGroup style="width:20px" />
-                <ice:panelGroup />
-                <ice:panelGroup />
+				<ice:panelGroup style="text-align:right">
+					<ice:outputLabel for="language"
+						value="#{msgs['msg.jsp.adduser.language']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:selectOneMenu styleClass="selectTagMenu"
+						value="#{userForm.user.language}">
+						<f:selectItems value="#{selectionTags.languages}" />
+					</ice:selectOneMenu>
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup style="text-align:right">
+					<ice:outputLabel for="email"
+						value="#{msgs['msg.jsp.adduser.email']}*" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="email" value="#{userForm.user.email}"
+						maxlength="100" required="true">
+						<f:validator validatorId="validator.email" />
+					</ice:inputText>
+					<br />
+					<ice:message for="email" />
+				</ice:panelGroup>
 
-                <ice:panelGroup style="text-align:right">
-                    <ice:outputLabel for="group"
-                        value="#{msgs['msg.jsp.adduser.groupaffiliation']}" />
-                </ice:panelGroup>
-                <ice:panelGroup>
-                    <ice:selectManyMenu id="group" styleClass="selectManyMenu"
-                        value="#{userForm.group}">
-                        <f:selectItems value="#{selectionTags.groups}" />
-                    </ice:selectManyMenu>
-                </ice:panelGroup>
-                <ice:panelGroup style="width:20px" />
-                <ice:panelGroup />
-                <ice:panelGroup />
-            </ice:panelGrid>
-        </ice:panelGroup>
+				<ice:panelGroup style="text-align:right">
+					<ice:outputLabel for="phone"
+						value="#{msgs['msg.jsp.adduser.phone']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="phone" value="#{userForm.user.telephone}"
+						maxlength="30" />
+					<br />
+					<ice:message for="phone" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup />
+				<ice:panelGroup />
+			</ice:panelGrid>
+		</ice:panelGroup>
 
-        <ice:panelGroup styleClass="commands">
-            <ice:commandButton value="#{msgs['abort']}" action="#{usersRecordsManager.list}" partialSubmit="true" />
-            <ice:commandButton value="#{msgs['save']}" action="#{userForm.save}" rendered="#{hidePasswd!='true'}" id="save"/>
-            <ice:commandButton value="#{msgs['save']}" action="#{userForm.saveWithoutPassword}" rendered="#{hidePasswd == 'true'}" id="save" />
-        </ice:panelGroup>
-    </ice:panelGroup>
-    
+		<!-- Group affiliation -->
+		<ice:panelGroup>
+			<hr />
+			<h3>
+				<ice:outputText value="#{msgs['msg.jsp.adduser.groupaffiliation']}" />
+				<br />
+				<br />
+			</h3>
+			<ice:panelGrid columns="5">
+				<ice:panelGroup>
+					<ldoc:groupselector showFilter="true" allowMultipleSelection="true"
+						label="#{msgs['group.available']}"
+						items="#{userForm.availableGroups}"
+						value="#{userForm.selectedAvailableGroups}"
+						filterValue="#{userForm.availableGroupFilter}"
+						filterListener="#{userForm.filterAvailableGroups}" />
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="commands">
+					<ice:panelGrid columns="1">
+						<ice:panelGroup>
+							<ice:commandButton value="&gt;&gt;"
+								action="#{userForm.assignGroups}" partialSubmit="true" />
+						</ice:panelGroup>
+						<ice:panelGroup>
+							<ice:commandButton value="&lt;&lt;"
+								action="#{userForm.unassignGroups}" partialSubmit="true" />
+						</ice:panelGroup>
+					</ice:panelGrid>
+				</ice:panelGroup>
+
+				<ice:panelGroup>
+					<ldoc:groupselector showFilter="true" allowMultipleSelection="true"
+						label="#{msgs['group.assigned']}"
+						items="#{userForm.allowedGroups}"
+						value="#{userForm.selectedAllowedGroups}"
+						filterValue="#{userForm.allowedGroupFilter}"
+						filterListener="#{userForm.filterAllowedGroups}" />
+				</ice:panelGroup>
+
+				<ice:panelGroup />
+				<ice:panelGroup />
+			</ice:panelGrid>
+		</ice:panelGroup>
+
+
+
+		<ice:panelGroup styleClass="commands">
+			<hr />
+			<ice:commandButton value="#{msgs['abort']}"
+				action="#{usersRecordsManager.list}" partialSubmit="true" />
+			<ice:commandButton value="#{msgs['save']}" action="#{userForm.save}"
+				rendered="#{hidePasswd!='true'}" id="save" />
+			<ice:commandButton value="#{msgs['save']}"
+				action="#{userForm.saveWithoutPassword}"
+				rendered="#{hidePasswd == 'true'}" id="save" />
+		</ice:panelGroup>
+
+	</ice:panelGroup>
+
 </jsp:root>

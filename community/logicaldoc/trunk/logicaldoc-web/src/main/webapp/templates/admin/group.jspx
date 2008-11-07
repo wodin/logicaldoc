@@ -71,18 +71,16 @@
                 <br />
             </h3>
             <ice:panelGrid columns="3">
-                <ice:panelGroup styleClass="outputLabel">
-                    <ice:outputLabel for="parentGroup"
-                        value="#{msgs['msg.jsp.inheritgroup']}" />
-                </ice:panelGroup>
                 <ice:panelGroup>
-                    <ice:selectOneMenu id="parentGroup"
-                         tabindex="1"
-                         styleClass="selectOneMenu"
-                         style="width:100px"
-                         value="#{groupsRecordsManager.parentGroup}">
-                         <f:selectItems value="#{selectionTags.groups}" />
-                    </ice:selectOneMenu>
+					<br />
+					<ldoc:groupselector
+						showFilter="true"
+						allowMultipleSelection="false"
+						label=""
+						items="#{groupsRecordsManager.items}"
+						value="#{groupsRecordsManager.parentGroup}"
+						filterValue="#{groupsRecordsManager.groupFilter}"
+						filterListener="#{groupsRecordsManager.filterGroups}"/>
                 </ice:panelGroup>
                 <ice:panelGroup style="width:20px" />
                 <ice:panelGroup />

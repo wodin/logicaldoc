@@ -283,6 +283,10 @@
 		<managed-bean-name>groupsRecordsManager</managed-bean-name>
 		<managed-bean-class>com.logicaldoc.web.admin.GroupsRecordsManager</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>selectionTags</property-name>
+			<value>#{selectionTags}</value>
+		</managed-property>
 	</managed-bean>
 
 

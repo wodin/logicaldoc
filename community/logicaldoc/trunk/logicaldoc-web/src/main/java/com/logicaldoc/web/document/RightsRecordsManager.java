@@ -125,7 +125,8 @@ public class RightsRecordsManager {
 	}
 
 	/**
-	 * Initializes the collection of rights
+	 * Initializes the collection of rights. Divides available and allowed
+	 * entities into two column.
 	 * 
 	 * @param menuId The menu that must be evaluated
 	 */
@@ -151,8 +152,9 @@ public class RightsRecordsManager {
 			Collections.sort(groups, new Comparator<Group>() {
 				public int compare(Group arg0, Group arg1) {
 					int sort = new Integer(arg0.getType()).compareTo(new Integer(arg1.getType()));
-					if (sort == 0)
-						sort = arg0.getName().toLowerCase().compareTo(arg1.getName().toLowerCase());
+					if (sort == 0) {
+						getEntityLabel(arg0).compareTo(getEntityLabel(arg1));
+					}
 					return sort;
 				}
 			});
@@ -194,6 +196,12 @@ public class RightsRecordsManager {
 		}
 	}
 
+	/**
+	 * Retrieves the label of a entity. There are two types: 'Group' and 'User'
+	 * 
+	 * @param g Group for which the label is recovered
+	 * @return label
+	 */
 	private String getEntityLabel(Group g) {
 		String label = "";
 		if (g.getType() == Group.TYPE_DEFAULT) {
@@ -311,45 +319,22 @@ public class RightsRecordsManager {
 		boolean sqlerrors = false;
 		for (GroupRule rule : rules) {
 			boolean read = rule.getRead();
-			boolean isAdmin=rule.getGroupName().equals("admin");
+			boolean write = rule.isWrite();
+
 			MenuGroup mg = folder.getMenuGroup(rule.getGroupId());
-			if (read || isAdmin) {
+			if (write || read || rule.getGroupName().equals("admin")) {
 				if ((mg == null) || mg.getGroupId() != rule.getGroupId()) {
 					mg = new MenuGroup();
 					mg.setGroupId(rule.getGroupId());
 					folder.getMenuGroups().add(mg);
 				}
 
-				if (rule.isWrite() || isAdmin) {
+				if (write || rule.getGroupName().equals("admin")) {
 					mg.setWrite(1);
 				} else {
 					mg.setWrite(0);
 				}
 
-				if (rule.isAddChild() || isAdmin) {
-					mg.setAddChild(1);
-				} else {
-					mg.setAddChild(0);
-				}
-				
-				if (rule.isManageSecurity() || isAdmin) {
-					mg.setManageSecurity(1);
-				} else {
-					mg.setManageSecurity(0);
-				}
-				
-				if (rule.isDelete() || isAdmin) {
-					mg.setDelete(1);
-				} else {
-					mg.setDelete(0);
-				}
-				
-				if (rule.isRename() || isAdmin) {
-					mg.setRename(1);
-				} else {
-					mg.setRename(0);
-				}
-				
 				boolean stored = mdao.store(folder);
 
 				if (!stored) {
@@ -392,7 +377,13 @@ public class RightsRecordsManager {
 	public void setDocumentNavigation(DocumentNavigation documentNavigation) {
 		this.documentNavigation = documentNavigation;
 	}
-
+	
+	/**
+	 * Filters the available groups if group's name contains the string on
+	 * "Filter" input text
+	 * 
+	 * @param event
+	 */
 	public void filterAvailableGroups(ValueChangeEvent event) {
 		availableGroups.clear();
 		for (Group group : groups) {
@@ -417,6 +408,12 @@ public class RightsRecordsManager {
 		}
 	}
 
+	/**
+	 * Filters the allowed groups if group's name contains the string on
+	 * "Filter" input text
+	 * 
+	 * @param event
+	 */
 	public void filterAllowedGroups(ValueChangeEvent event) {
 		allowedGroups.clear();
 		for (Group group : groups) {
