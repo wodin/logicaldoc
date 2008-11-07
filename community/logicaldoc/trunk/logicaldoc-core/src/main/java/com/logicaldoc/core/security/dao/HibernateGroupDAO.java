@@ -10,6 +10,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
+import com.logicaldoc.core.security.User;
 
 /**
  * @author Alessandro Gasparini
@@ -221,5 +222,21 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 		}
 
 		return group;
+	}
+
+	/**
+	 * @see com.logicaldoc.core.security.dao.GroupDAO#findByLikeName(java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	public Collection<Group> findByLikeName(String name) {
+		Collection<Group> coll = new ArrayList<Group>();
+		try {
+			coll = (Collection<Group>) getHibernateTemplate().find("from Group _group where _group.name like ?",
+					new Object[] { name });
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}	
+		return coll;
 	}
 }

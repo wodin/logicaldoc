@@ -3,6 +3,7 @@ package com.logicaldoc.core.security.dao;
 import java.util.Collection;
 
 import com.logicaldoc.core.security.Group;
+import com.logicaldoc.core.security.User;
 
 public interface GroupDAO {
 	/**
@@ -55,4 +56,14 @@ public interface GroupDAO {
 	 * This method selects all groupnames.
 	 */
 	public Collection<String> findAllGroupNames();
+	
+
+	/**
+	 * This method finds a Group by name.
+	 * 
+	 * @param name
+	 *            The name of wanted Group.
+	 * @return Collection of selected groups.
+	 */
+	public Collection<Group> findByLikeName(String name);
 }
