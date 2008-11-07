@@ -176,6 +176,9 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_manag
 values     (20,1,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
+values     (21,1,0,0,0,0,0);
+
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (23,1,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
