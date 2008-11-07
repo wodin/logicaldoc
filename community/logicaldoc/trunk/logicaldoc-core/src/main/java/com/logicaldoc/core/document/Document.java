@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.logicaldoc.core.PersistentObject;
+import com.logicaldoc.core.ExtensibleObject;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.util.IconSelector;
 
@@ -21,11 +21,10 @@ import com.logicaldoc.core.util.IconSelector;
  * A Document is written in a single language, this language defines the
  * full-text index in which the document's content will be stored.
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 1.0
  */
-public class Document extends PersistentObject {
+public class Document extends ExtensibleObject {
 	public static final int DOC_CHECKED_IN = 0;
 
 	public static final int DOC_CHECKED_OUT = 1;
@@ -72,6 +71,8 @@ public class Document extends PersistentObject {
 
 	private Menu folder;
 
+	private DocumentTemplate template;
+
 	public Document() {
 	}
 
@@ -111,8 +112,7 @@ public class Document extends PersistentObject {
 	/**
 	 * Iterates over the versions searching for the specified id
 	 * 
-	 * @param id
-	 *            The version id
+	 * @param id The version id
 	 * @return The found version
 	 */
 	public void setVersion(String version) {
@@ -301,8 +301,7 @@ public class Document extends PersistentObject {
 	public String getIcon() {
 		String icon = IconSelector.selectIcon("");
 		try {
-			String extension = fileName
-					.substring(fileName.lastIndexOf(".") + 1);
+			String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 			icon = IconSelector.selectIcon(extension);
 		} catch (Exception e) {
 		}
@@ -350,12 +349,19 @@ public class Document extends PersistentObject {
 	}
 
 	public String getPath() {
-		return (getFolder().getPath()
-				+ (getFolder().getPath().endsWith("/") ? "" : "/")
-				+ getFolder().getId()).replaceAll("//", "/");
+		return (getFolder().getPath() + (getFolder().getPath().endsWith("/") ? "" : "/") + getFolder().getId())
+				.replaceAll("//", "/");
 	}
 
 	public String getFileExtension() {
 		return getFileName().substring(getFileName().lastIndexOf(".") + 1);
+	}
+
+	public DocumentTemplate getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(DocumentTemplate template) {
+		this.template = template;
 	}
 }

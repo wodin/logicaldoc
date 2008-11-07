@@ -24,6 +24,7 @@
 		<property name="fileName" type="string" column="ld_filename" length="255" />
 		<property name="fileSize" type="long" column="ld_filesize" />
 		<many-to-one name="folder" class="com.logicaldoc.core.security.Menu" column="ld_folderid" />
+		<many-to-one name="template" class="com.logicaldoc.core.document.DocumentTemplate" column="ld_templateid" />
 		<set name="versions" table="ld_version" lazy="false" cascade="all">
 			<key column="ld_docid" />
 			<composite-element class="com.logicaldoc.core.document.Version">
@@ -37,5 +38,10 @@
 			<key column="ld_docid" />
 			<element type="string" column="ld_keyword" length="255" />
 		</set>
+		<map name="attributes" table="ld_document_ext" cascade="all">
+		   <key column="ld_docid" />
+		   <map-key type="string" column="ld_name" length="255"/>
+		   <element type="string" column="ld_value" length="255"/>
+		</map>
 	</class>
 </hibernate-mapping>

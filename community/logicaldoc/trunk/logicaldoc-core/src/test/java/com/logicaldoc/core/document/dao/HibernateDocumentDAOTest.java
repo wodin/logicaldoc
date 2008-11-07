@@ -123,6 +123,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.setTitle("test");
 		doc.addKeyword("pippo");
 		doc.addKeyword("pluto");
+		doc.setValue("att_1", "val 1");
+		
 		// Try a long keyword
 		doc.addKeyword("123456789123456789123456789");
 		Version version = new Version();
@@ -139,6 +141,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertTrue(doc.getKeywords().contains("123456789123456789123456789"));
 		assertEquals(1, doc.getVersions().size());
 		assertEquals(version, doc.getVersion("1.0"));
+		assertEquals("val 1", doc.getValue("att_1"));
 
 		// Try to change the version comment
 		doc = dao.findById(3);

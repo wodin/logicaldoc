@@ -157,3 +157,11 @@ insert into ld_link(ld_id, ld_lastmodified, ld_docid1, ld_docid2,ld_type)
 values   (3,'2008-10-22',1,2,'xxx');
 insert into ld_link(ld_id, ld_lastmodified, ld_docid1, ld_docid2,ld_type)
 values   (4,'2008-10-22',2,1,'');
+
+insert into ld_template (ld_id, ld_lastmodified, ld_name, ld_description)
+values (1, '2008-11-07','test1','test1_desc');
+insert into ld_attributes (ld_templateid, ld_attribute)
+values(1, 'attr1');
+
+insert into ld_template (ld_id, ld_lastmodified, ld_name, ld_description)
+values (2, '2008-11-07','test2','test2_desc');

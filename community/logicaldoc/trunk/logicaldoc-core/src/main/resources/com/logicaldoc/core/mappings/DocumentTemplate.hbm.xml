@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false">
+	<class name="com.logicaldoc.core.document.DocumentTemplate" table="ld_template">
+		<cache usage="read-write" />
+		<id name="id" type="long" column="ld_id" unsaved-value="0">
+			<generator class="increment" />
+		</id>
+		<timestamp name="lastModified" column="ld_lastmodified" />
+		<property name="name" type="string" column="ld_name" length="255" not-null="true"/>
+		<property name="description" type="string" column="ld_description" length="2000" />
+		<set name="attributes" table="ld_attributes" lazy="false" cascade="all">
+			<key column="ld_templateid" />
+			<element type="string" column="ld_attribute" length="255" />
+		</set>
+	</class>
+</hibernate-mapping>
