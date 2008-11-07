@@ -36,6 +36,15 @@
             <!-- Basic table -->
             <ice:panelGroup styleClass="formBorderHighlight"
                 rendered="#{groupsRecordsManager.count > 0}">
+                <ice:panelGrid columns="2">
+					<ice:panelGroup style="text-align:center">
+						<ice:outputLabel for="groupsFilter" value="#{msgs['group.name']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:selectInputText width="125" value="#{groupsRecordsManager.groupFilter}"
+							valueChangeListener="#{groupsRecordsManager.filterGroupsByName}" immediate="true" />
+					</ice:panelGroup>
+				</ice:panelGrid>
                 <ice:dataTable id="groupsList"
                     value="#{groupsRecordsManager.groups}" var="group" cellpadding="0"
                     rows="15"

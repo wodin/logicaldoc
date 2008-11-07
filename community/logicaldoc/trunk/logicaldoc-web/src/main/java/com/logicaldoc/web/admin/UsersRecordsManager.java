@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -54,6 +56,16 @@ public class UsersRecordsManager extends SortableList {
 	private List<User> users = new ArrayList<User>();
 
 	private String selectedPanel = "list";
+	
+	private String usersFilter = "";
+
+	public String getUsersFilter() {
+		return usersFilter;
+	}
+
+	public void setUsersFilter(String usersFilter) {
+		this.usersFilter = usersFilter;
+	}
 
 	public UsersRecordsManager() {
 		// We don't sort by default
@@ -69,7 +81,12 @@ public class UsersRecordsManager extends SortableList {
 
 			if (mdao.isReadEnable(6, userId)) {
 				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-				Collection<User> tmpusers = dao.findAll();
+				Collection<User> tmpusers = null;
+				if (usersFilter.length()!=0){
+					tmpusers = dao.findByLikeUserName(usersFilter+"%");
+				}
+				else
+					tmpusers = dao.findAll();
 
 				for (User usr : tmpusers) {
 					if (usr.getType() == User.TYPE_DEFAULT)
@@ -304,5 +321,16 @@ public class UsersRecordsManager extends SortableList {
 		};
 
 		Collections.sort(users, comparator);
+	}
+	
+	/**
+	 * Filters all users if group's name contains the string on
+	 * "Username" input text
+	 * 
+	 * @param event
+	 */
+	public void filterUsers(ValueChangeEvent event) {
+		usersFilter = event.getNewValue().toString();
+		reload();
 	}
 }

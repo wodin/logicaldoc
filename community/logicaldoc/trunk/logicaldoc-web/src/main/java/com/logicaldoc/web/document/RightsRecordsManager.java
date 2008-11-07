@@ -312,9 +312,6 @@ public class RightsRecordsManager {
 	private void saveRules(long id, long userId) {
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
-		if (!mdao.isWriteEnable(id, userId)) {
-			return;
-		}
 		Menu folder = mdao.findById(id);
 		boolean sqlerrors = false;
 		for (GroupRule rule : rules) {

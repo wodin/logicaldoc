@@ -14,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import com.icesoft.faces.component.ext.HtmlInputText;
 import com.icesoft.faces.component.ext.HtmlInputTextarea;
 import com.logicaldoc.core.security.Group;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
@@ -117,8 +118,13 @@ public class GroupsRecordsManager {
 
 			if (mdao.isReadEnable(7, userId)) {
 				GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
-				Collection<Group> tmp = dao.findAll();
-				for (Group group : tmp) {
+				Collection<Group> tmpgroups= null;
+				if (groupFilter.length()!=0){
+					tmpgroups = dao.findByLikeName(groupFilter+"%");
+				}
+				else
+					tmpgroups = dao.findAll();
+				for (Group group : tmpgroups) {
 					if (group.getType() == Group.TYPE_DEFAULT)
 						groups.add(group);
 				}
@@ -325,5 +331,16 @@ public class GroupsRecordsManager {
 				items.add(item);
 			}
 		}
+	}
+	
+	/**
+	 * Filters all group if group's name contains the string on
+	 * "GroupName" input text
+	 * 
+	 * @param event
+	 */
+	public void filterGroupsByName(ValueChangeEvent event) {
+		groupFilter = event.getNewValue().toString();
+		reload();
 	}
 }
