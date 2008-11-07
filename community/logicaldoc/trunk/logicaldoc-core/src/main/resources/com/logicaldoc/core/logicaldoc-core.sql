@@ -95,6 +95,10 @@ values     (20,'2008-10-22','db.emails',2,4,'mail.png','/2',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (21,'2008-10-22','templates',2,4,'template.png','/2',1,null,0);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
 values     (23,'2008-10-22','smtp',20,3,'mail_preferences.png','/2/20',1,'admin/smtp',0);
 
 insert into ld_menu
