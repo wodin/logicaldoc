@@ -40,7 +40,7 @@
             <ice:panelGroup>
                  <br />
                 <ice:selectBooleanCheckbox value="#{inputFile.extractKeywords}" id="keyW"/>
-                    <ice:outputLabel for="keyW" value=" #{msgs['keywords.extract']}" />
+                    <ice:outputLabel for="keyW" value=" #{msgs['tags.extract']}" />
                 
                 <br />
                 <br />

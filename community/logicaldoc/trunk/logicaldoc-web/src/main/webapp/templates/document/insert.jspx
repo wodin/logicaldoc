@@ -116,7 +116,7 @@
 
 		<ice:panelGrid columns="2">
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="keywords" value="#{msgs['msg.jsp.keywords']}" />
+				<ice:outputLabel for="keywords" value="#{msgs['tagwords']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:inputTextarea value="#{documentForm.keywords}" cols="70"
