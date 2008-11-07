@@ -183,13 +183,13 @@
     <dependency>
       <groupId>org.icefaces</groupId>
       <artifactId>icefaces-comps</artifactId>
-      <version>1.7.1</version>
+      <version>1.7.2</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.icefaces</groupId>
       <artifactId>icefaces-facelets</artifactId>
-      <version>1.7.1</version>
+      <version>1.7.2</version>
       <type>jar</type>
       <exclusions>
         <exclusion>
@@ -209,7 +209,7 @@
     <dependency>
       <groupId>org.icefaces</groupId>
       <artifactId>icefaces</artifactId>
-      <version>1.7.1</version>
+      <version>1.7.2</version>
       <type>jar</type>
       <exclusions>
         <exclusion>
@@ -229,13 +229,13 @@
     <dependency>
       <groupId>javax.faces</groupId>
       <artifactId>jsf-api</artifactId>
-      <version>1.2_08</version>
+      <version>1.2_09</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>javax.faces</groupId>
       <artifactId>jsf-impl</artifactId>
-      <version>1.2_08</version>
+      <version>1.2_09</version>
       <type>jar</type>
     </dependency>
     <dependency>
