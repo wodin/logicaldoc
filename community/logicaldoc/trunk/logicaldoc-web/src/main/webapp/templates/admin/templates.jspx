@@ -46,9 +46,7 @@
 						<!-- Name -->
 						<ice:column>
 							<f:facet name="header">
-								<ice:commandSortHeader columnName="name">
-									<ice:outputText value="#{msgs['name']}" />
-								</ice:commandSortHeader>
+								<ice:outputText value="#{msgs['name']}" />
 							</f:facet>
 							<ice:panelGroup>
 								<ice:outputText value="#{template.name}" />
@@ -58,12 +56,10 @@
 						<!-- Description -->
 						<ice:column>
 							<f:facet name="header">
-								<ice:commandSortHeader columnName="description">
-									<ice:outputText value="#{msgs['description']}" />
-								</ice:commandSortHeader>
+								<ice:outputText value="#{msgs['description']}" />
 							</f:facet>
 							<ice:panelGroup>
-								<ice:outputText value="#{user.userName}" />
+								<ice:outputText value="#{template.description}" />
 							</ice:panelGroup>
 						</ice:column>
 
@@ -90,7 +86,7 @@
 					</ice:dataTable>
 
 					<ice:panelGroup>
-						<ldoc:paginator table="templatesList"  />
+						<ldoc:paginator table="templatesList" label="#{msgs['paginator']}" />
 						<br />
 					</ice:panelGroup>
 				</ice:panelGroup>

@@ -22,15 +22,7 @@
             displayedRowsCountVar="displayedRowsCountVar"
             firstRowIndexVar="firstRowIndex" lastRowIndexVar="lastRowIndex"
             pageCountVar="pageCount" pageIndexVar="pageIndex">
-            <ice:outputFormat value="#{msgs['paginator']}" style="float:left" rendered="#{label==''}">
-                <f:param value="#{rowsCount}" />
-                <f:param value="#{displayedRowsCountVar}" />
-                <f:param value="#{firstRowIndex}" />
-                <f:param value="#{lastRowIndex}" />
-                <f:param value="#{pageIndex}" />
-                <f:param value="#{pageCount}" />
-            </ice:outputFormat>
-            <ice:outputFormat value="#{label}" style="float:left" rendered="#{!(label=='')}">
+            <ice:outputFormat value="#{label}" style="float:left">
                 <f:param value="#{rowsCount}" />
                 <f:param value="#{displayedRowsCountVar}" />
                 <f:param value="#{firstRowIndex}" />
