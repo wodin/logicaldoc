@@ -5,7 +5,7 @@
   <JSFFlowResource path="/main.iface" location="540,200" dimension="97,36" />
   <JSFFlowResource path="/login.iface" location="330,30" dimension="97,36" />
   <JSFFlowResource path="/*" location="30,30" dimension="54,36" />
-  <JSFFlowNavigationCase id="/login,/main.iface,loginSuccess,&lt;empty&gt;" routingType="0">
+  <JSFFlowNavigationCase id="/login,/main.iface,loginSuccess,&lt;empty&gt;" routingType="1">
     <AutomaticBendpoints>
       <AbsolutePoint location="218,66" />
       <AbsolutePoint location="218,218" />

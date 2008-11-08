@@ -290,6 +290,19 @@
 	</managed-bean>
 
 
+    <!-- Templates -->
+	<managed-bean>
+		<managed-bean-name>templatesRecordsManager</managed-bean-name>
+		<managed-bean-class>com.logicaldoc.web.admin.TemplatesRecordsManager</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+
+    <managed-bean>
+		<managed-bean-name>templateForm</managed-bean-name>
+		<managed-bean-class>com.logicaldoc.web.admin.TemplateForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+
 	<managed-bean>
 		<managed-bean-name>logForm</managed-bean-name>
 		<managed-bean-class>com.logicaldoc.web.admin.LogForm</managed-bean-class>

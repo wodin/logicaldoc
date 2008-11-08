@@ -14,7 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import com.icesoft.faces.component.ext.HtmlInputText;
 import com.icesoft.faces.component.ext.HtmlInputTextarea;
 import com.logicaldoc.core.security.Group;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
@@ -34,10 +33,8 @@ import com.logicaldoc.web.util.FacesUtil;
  * scrollable ice:panelGroup.
  * </p>
  * 
- * @author Marco Meschieri
- * @version $Id: DocumentsRecordsManager.java,v 1.1 2007/06/29 06:28:29 marco
- *          Exp $
- * @since 3.0
+ * @author Marco Meschieri - Logical Objects
+ * @since 4.0
  */
 public class GroupsRecordsManager {
 	protected static Log log = LogFactory.getLog(GroupsRecordsManager.class);
@@ -120,7 +117,7 @@ public class GroupsRecordsManager {
 				GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 				Collection<Group> tmpgroups= null;
 				if (groupFilter.length()!=0){
-					tmpgroups = dao.findByLikeName(groupFilter+"%");
+					tmpgroups = dao.findByLikeName("%"+groupFilter+"%");
 				}
 				else
 					tmpgroups = dao.findAll();

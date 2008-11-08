@@ -83,7 +83,7 @@ public class UsersRecordsManager extends SortableList {
 				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 				Collection<User> tmpusers = null;
 				if (usersFilter.length()!=0){
-					tmpusers = dao.findByLikeUserName(usersFilter+"%");
+					tmpusers = dao.findByLikeUserName("%"+usersFilter+"%");
 				}
 				else
 					tmpusers = dao.findAll();
@@ -156,7 +156,7 @@ public class UsersRecordsManager extends SortableList {
 	}
 
 	/**
-	 * Gets the list of UserRecord which will be used by the ice:dataTable
+	 * Gets the list of User which will be used by the ice:dataTable
 	 * component.
 	 */
 	public Collection<User> getUsers() {

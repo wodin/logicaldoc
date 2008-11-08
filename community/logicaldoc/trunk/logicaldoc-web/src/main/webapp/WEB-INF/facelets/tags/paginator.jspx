@@ -17,12 +17,20 @@
     <![CDATA[<!-- tag paginator -->]]>
     <ui:composition>
         <!-- Display counts about the table and the currently displayed page -->
-        <ice:dataPaginator for="${table}"
+        <ice:dataPaginator for="#{table}"
             rowsCountVar="rowsCount"
             displayedRowsCountVar="displayedRowsCountVar"
             firstRowIndexVar="firstRowIndex" lastRowIndexVar="lastRowIndex"
             pageCountVar="pageCount" pageIndexVar="pageIndex">
-            <ice:outputFormat value="${label}" style="float:left">
+            <ice:outputFormat value="#{msgs['paginator']}" style="float:left" rendered="#{label==''}">
+                <f:param value="#{rowsCount}" />
+                <f:param value="#{displayedRowsCountVar}" />
+                <f:param value="#{firstRowIndex}" />
+                <f:param value="#{lastRowIndex}" />
+                <f:param value="#{pageIndex}" />
+                <f:param value="#{pageCount}" />
+            </ice:outputFormat>
+            <ice:outputFormat value="#{label}" style="float:left" rendered="#{!(label=='')}">
                 <f:param value="#{rowsCount}" />
                 <f:param value="#{displayedRowsCountVar}" />
                 <f:param value="#{firstRowIndex}" />
@@ -33,7 +41,7 @@
         </ice:dataPaginator>
         
         <!-- Set up the buttons and links for browsing through the table -->
-        <ice:dataPaginator for="${table}"
+        <ice:dataPaginator for="#{table}"
             fastStep="3" pageCountVar="pageCount" pageIndexVar="pageIndex"
             paginator="true" paginatorMaxPages="5" vertical="false"
             style="float:right;">
