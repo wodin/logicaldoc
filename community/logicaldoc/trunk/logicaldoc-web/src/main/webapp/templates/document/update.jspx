@@ -76,7 +76,7 @@
                 </ice:panelGroup>
                 <ice:panelGroup styleClass="outputLabel">
                     <ice:outputLabel for="keywords"
-                        value="#{msgs['tagwords']}" />
+                        value="#{msgs['tags']}" />
                 </ice:panelGroup>
                 <ice:panelGroup id="keywords">
                     <ice:inputTextarea value="#{documentForm.keywords}"
