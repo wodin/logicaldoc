@@ -2,6 +2,7 @@ package com.logicaldoc.core.searchengine;
 
 import java.io.File;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
@@ -13,6 +14,8 @@ import com.logicaldoc.core.i18n.DateBean;
  * @author Michael Scholz, Marco Meschieri
  */
 public class LuceneDocument {
+	private static final String FIELD_TEMPLATE_ID = "templateId";
+
 	public static final String FIELD_KEYWORDS = "keywords";
 
 	public static final String FIELD_CONTENT = "content";
@@ -73,6 +76,8 @@ public class LuceneDocument {
 		setContent(content);
 		setKeywords();
 		setPath();
+		setTemplate();
+		setExtendedAttributes();
 		return doc;
 	}
 
@@ -122,6 +127,22 @@ public class LuceneDocument {
 		String type = file.getName().substring(point + 1);
 		type = type.toUpperCase();
 		doc.add(new Field(FIELD_TYPE, type, Field.Store.YES, Field.Index.UN_TOKENIZED));
+	}
+
+	protected void setTemplate() {
+		if (document.getTemplate() != null)
+			doc.add(new Field(FIELD_TEMPLATE_ID, Long.toString(document.getTemplate().getId()), Field.Store.YES,
+					Field.Index.UN_TOKENIZED));
+	}
+
+	protected void setExtendedAttributes() {
+		for (String attribute : document.getAttributeNames()) {
+			String value = document.getValue(attribute);
+			if (StringUtils.isNotEmpty(value)) {
+				doc.add(new Field(attribute, Long.toString(document.getTemplate().getId()), Field.Store.YES,
+						Field.Index.UN_TOKENIZED));
+			}
+		}
 	}
 
 	protected void setContent(String content) {
