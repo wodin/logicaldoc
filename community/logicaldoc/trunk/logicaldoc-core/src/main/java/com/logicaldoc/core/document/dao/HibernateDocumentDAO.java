@@ -240,9 +240,13 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				doc.setKeywords(dst);
 			}
 
-			long size = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
-					.getFileName())).length();
-			doc.setFileSize(size);
+			File docFile = new File(
+					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
+							.getFileName()));
+			if (docFile.exists()) {
+				long size = docFile.length();
+				doc.setFileSize(size);
+			}
 
 			getHibernateTemplate().saveOrUpdate(doc);
 		} catch (Exception e) {
