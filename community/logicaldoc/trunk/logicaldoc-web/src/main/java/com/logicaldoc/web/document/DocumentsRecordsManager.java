@@ -20,7 +20,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.icesoft.faces.component.ext.RowSelectorEvent;
-import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
@@ -48,9 +47,7 @@ import com.logicaldoc.web.util.FacesUtil;
  * scrollable ice:panelGroup.
  * </p>
  * 
- * @author Marco Meschieri
- * @version $Id: DocumentsRecordsManager.java,v 1.1 2007/06/29 06:28:29 marco
- *          Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class DocumentsRecordsManager extends SortableList {
@@ -78,7 +75,7 @@ public class DocumentsRecordsManager extends SortableList {
 	private long selectedDirectory;
 
 	private long sourceDirectory;
-	
+
 	// Set of selected rows
 	private Set<DocumentRecord> selection = new HashSet<DocumentRecord>();
 
@@ -98,8 +95,6 @@ public class DocumentsRecordsManager extends SortableList {
 		clipboard.clear();
 	}
 
-	
-	
 	/**
 	 * Changes the currently selected directory and updates the documents list.
 	 * 
@@ -160,7 +155,7 @@ public class DocumentsRecordsManager extends SortableList {
 
 	public void selectRow(RowSelectorEvent e) {
 		DocumentRecord record = documents.get(e.getRow());
-		
+
 		if (e.isSelected() || !selection.contains(record)) {
 			selection.add(record);
 		} else if (!e.isSelected() || selection.contains(record)) {

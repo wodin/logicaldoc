@@ -157,11 +157,9 @@ public class DocumentRecord extends MenuBarBean {
 
 	@Override
 	public boolean equals(Object arg0) {
-		if ((arg0 == null) || (document == null)) {
+		if (getDocument() == null || arg0 == null)
 			return false;
-		} else {
-			return document.equals(((DocumentRecord) arg0).getDocument());
-		}
+		return document.getId() == ((DocumentRecord) arg0).getDocument().getId();
 	}
 
 	public String getDocumentPath() {
@@ -228,10 +226,9 @@ public class DocumentRecord extends MenuBarBean {
 			model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.foldercontent.edit"), "pastelink-"
 					+ folder.getId(), null, "#{documentRecord.edit}", null,
 					StyleBean.getImagePath("document_edit.png"), true, null, null));
-			
+
 			model.add(createMenuItem(" " + Messages.getMessage("link.pasteas"), "edit-" + folder.getId(), null,
-					"#{documentRecord.pasteAsLink}", null, StyleBean.getImagePath("pastelink.png"), true,
-					null, null));
+					"#{documentRecord.pasteAsLink}", null, StyleBean.getImagePath("pastelink.png"), true, null, null));
 		}
 
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,
@@ -397,8 +394,8 @@ public class DocumentRecord extends MenuBarBean {
 	public String links() {
 		if (SessionManagement.isValid()) {
 			try {
-				LinksRecordsManager links = ((LinksRecordsManager) FacesUtil
-						.accessBeanFromFacesContext("linksRecordsManager", FacesContext.getCurrentInstance(), log));
+				LinksRecordsManager links = ((LinksRecordsManager) FacesUtil.accessBeanFromFacesContext(
+						"linksRecordsManager", FacesContext.getCurrentInstance(), log));
 				links.selectDocument(document);
 
 				DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
