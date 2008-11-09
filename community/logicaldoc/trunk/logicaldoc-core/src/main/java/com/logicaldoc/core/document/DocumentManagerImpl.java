@@ -31,7 +31,7 @@ import com.logicaldoc.util.config.SettingsConfig;
 /**
  * Basic Implementation of <code>DocumentManager</code>
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @since 3.5
  */
 public class DocumentManagerImpl implements DocumentManager {
@@ -158,10 +158,18 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc.setFileName(filename);
 			doc.setDate(new Date());
 
+			String fallbackTitle=filename;
+			String type="unknown";
+			int lastDotIndex=filename.lastIndexOf(".");
+			if(lastDotIndex>0){
+				fallbackTitle=filename.substring(0, lastDotIndex);
+				type=filename.substring(lastDotIndex + 1).toLowerCase();
+			}
+			
 			if (StringUtils.isNotEmpty(title)) {
 				doc.setTitle(title);
 			} else {
-				doc.setTitle(filename.substring(0, filename.lastIndexOf(".")));
+				doc.setTitle(fallbackTitle);
 			}
 
 			if (sourceDate != null)
@@ -170,7 +178,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setSourceDate(doc.getDate());
 			doc.setPublisher(user.getUserName());
 			doc.setStatus(Document.DOC_CHECKED_IN);
-			doc.setType(filename.substring(filename.lastIndexOf(".") + 1));
+			doc.setType(type);
 			doc.setVersion("1.0");
 			doc.setSource(source);
 			doc.setSourceAuthor(sourceAuthor);
@@ -221,10 +229,17 @@ public class DocumentManagerImpl implements DocumentManager {
 		String _title = title;
 		String _author = sourceAuthor;
 		Set<String> _kwds = keywords;
+		
+		String fallbackTitle=filename;
+		int lastDotIndex=filename.lastIndexOf(".");
+		if(lastDotIndex>0){
+			fallbackTitle=filename.substring(0, lastDotIndex);
+		}
+		
 		if (parser != null) {
 			if (StringUtils.isEmpty(title)) {
 				if (parser.getTitle().length() == 0)
-					_title = filename.substring(0, filename.lastIndexOf("."));
+					_title = fallbackTitle;
 				else
 					_title = parser.getTitle();
 			}
