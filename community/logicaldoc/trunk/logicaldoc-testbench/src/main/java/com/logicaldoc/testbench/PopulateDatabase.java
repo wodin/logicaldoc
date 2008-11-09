@@ -363,7 +363,6 @@ public class PopulateDatabase {
 			insertKeyword.addBatch();
 			i++;
 		}
-		insertKeyword.clearBatch();
 
 		// Insert a version
 
