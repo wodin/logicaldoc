@@ -10,7 +10,7 @@
 		<timestamp name="lastModified" column="ld_lastmodified" />
 		<property name="name" type="string" column="ld_name" length="255" not-null="true"/>
 		<property name="description" type="string" column="ld_description" length="2000" />
-		<set name="attributes" table="ld_attributes" lazy="false" cascade="all">
+		<set name="attributes" table="ld_attributes" lazy="false" cascade="all" order-by="ld_attribute asc">
 			<key column="ld_templateid" />
 			<element type="string" column="ld_attribute" length="255" />
 		</set>
