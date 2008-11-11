@@ -118,7 +118,7 @@
 	<ice:panelGroup
 		rendered="#{(keywords.keywordsCount == 0) and (keywords.documentsCount == 0)}"
 		style="text-align: center;">
-		<ice:outputText value="#{msgs['keywords.nodocs']}" />
+		<ice:outputText value="#{msgs['tags.notag']}" />
 	</ice:panelGroup>
 	<br />
 </jsp:root>
