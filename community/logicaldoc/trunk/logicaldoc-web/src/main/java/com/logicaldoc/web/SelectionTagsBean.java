@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+import com.logicaldoc.core.document.DocumentTemplate;
+import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.security.Group;
@@ -76,6 +78,22 @@ public class SelectionTagsBean {
 				items.add(new SelectItem(group.getId(), group.getName()));
 		}
 
+		return items;
+	}
+
+	/**
+	 * Gets the option items for templates selection
+	 */
+	public List<SelectItem> getTemplates() {
+		// Gets available templates
+		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+		Collection<DocumentTemplate> coll = dao.findAll();
+
+		ArrayList<SelectItem> items = new ArrayList<SelectItem>();
+
+		for (DocumentTemplate template : coll) {
+			items.add(new SelectItem(template.getId(), template.getName()));
+		}
 		return items;
 	}
 

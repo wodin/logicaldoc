@@ -278,7 +278,7 @@ em { /*font-size:14px;*/
 .icePageCenter {
 	background-color: #FFFFFF;
 	vertical-align: top;
-	width: 80%
+	/*width: 80%*/
 }
 
 .mainWindow { /*clear: right;*/
@@ -286,7 +286,7 @@ em { /*font-size:14px;*/
 }
 
 .mainWindow .icePnlStk {
-	width: 100%;
+	/*width: 100%;*/
 }
 
 .footer {
@@ -359,6 +359,14 @@ em { /*font-size:14px;*/
 .selectManyMenu {
 	width: 130px;
 	height: 90px;
+}
+
+.smallInputText {
+	width: 130px;
+}
+
+.bigInputText {
+	width: 300px;
 }
 
 /* IE bugfix - white background on radio and checkboxes */

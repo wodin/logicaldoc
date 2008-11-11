@@ -2,8 +2,7 @@
 <!-- 
  Document's insert form
   
- @author Marco Meschieri
- @version $Id: insert.jspx,v 1.4 2006/08/29 16:33:45 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -28,8 +27,7 @@
 				<ice:outputLabel for="title" value="#{msgs['doctitle']}*" />
 			</ice:panelGroup>
 			<ice:panelGroup>
-				<ice:inputText id="title"
-					label="#{msgs['errors.header.alert.key']}"
+				<ice:inputText id="title" label="#{msgs['errors.header.alert.key']}"
 					value="#{documentForm.title}" maxlength="255" size="30"
 					onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
 					required="true" />
@@ -128,8 +126,7 @@
 					value="#{msgs['msg.jsp.versiondesc']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
-				<ice:inputTextarea value="#{documentForm.versionDesc}" cols="70"
-					rows="3" />
+				<ice:inputText value="#{documentForm.versionDesc}" cols="70" />
 			</ice:panelGroup>
 		</ice:panelGrid>
 	</ice:panelGroup>

@@ -18,6 +18,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -67,6 +68,8 @@ public class DocumentEditForm {
 
 	private DocumentNavigation documentNavigation;
 
+	private Long template = null;
+
 	public DocumentEditForm() {
 		reset();
 	}
@@ -83,6 +86,7 @@ public class DocumentEditForm {
 		keywords = "";
 		versionDesc = "";
 		filename = "";
+		template = null;
 	}
 
 	public void init(DocumentRecord record) {
@@ -102,6 +106,16 @@ public class DocumentEditForm {
 		setKeywords(doc.getKeywordsString());
 		setCoverage(doc.getCoverage());
 		setSourceType(doc.getSourceType());
+		if (doc.getTemplate() != null)
+			template = new Long(doc.getTemplate().getId());
+	}
+
+	public Long getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(Long template) {
+		this.template = template;
 	}
 
 	/**
@@ -310,12 +324,21 @@ public class DocumentEditForm {
 				"documentNavigation", FacesContext.getCurrentInstance(), log));
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		DocumentTemplateDAO tdao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 
 		if (SessionManagement.isValid()) {
 			try {
 				Document doc = record.getDocument();
+
+				if (template != null) {
+					doc.setTemplate(tdao.findById(template));
+				} else {
+					doc.setTemplate(null);
+				}
+
 				User user = SessionManagement.getUser();
 				Set<String> keywords = ddao.toKeywords(getKeywords());
+
 				documentManager.update(doc, user, title, source, sourceAuthor, sourceDate, sourceType, coverage,
 						language, keywords);
 			} catch (Exception e) {
