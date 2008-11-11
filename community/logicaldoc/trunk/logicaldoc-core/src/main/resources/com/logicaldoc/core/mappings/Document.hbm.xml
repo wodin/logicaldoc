@@ -41,7 +41,7 @@
 		<map name="attributes" table="ld_document_ext" cascade="all">
 		   <key column="ld_docid" />
 		   <map-key type="string" column="ld_name" length="255"/>
-		   <element type="string" column="ld_value" length="255"/>
+		   <element type="string" column="ld_value" length="4000"/>
 		</map>
 	</class>
 </hibernate-mapping>
