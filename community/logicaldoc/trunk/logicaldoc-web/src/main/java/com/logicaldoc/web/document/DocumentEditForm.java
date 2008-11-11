@@ -2,20 +2,25 @@ package com.logicaldoc.web.document;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
@@ -33,8 +38,7 @@ import com.logicaldoc.web.util.FacesUtil;
 /**
  * Base form for document editing
  * 
- * @author Marco Meschieri
- * @version $Id: DocumentEditForm.java,v 1.9 2006/09/03 16:24:37 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class DocumentEditForm {
@@ -70,6 +74,8 @@ public class DocumentEditForm {
 
 	private Long template = null;
 
+	private Collection<Attribute> extendedAttributes = new ArrayList<Attribute>();
+
 	public DocumentEditForm() {
 		reset();
 	}
@@ -87,6 +93,7 @@ public class DocumentEditForm {
 		versionDesc = "";
 		filename = "";
 		template = null;
+		extendedAttributes.clear();
 	}
 
 	public void init(DocumentRecord record) {
@@ -106,8 +113,45 @@ public class DocumentEditForm {
 		setKeywords(doc.getKeywordsString());
 		setCoverage(doc.getCoverage());
 		setSourceType(doc.getSourceType());
-		if (doc.getTemplate() != null)
+		initTemplate();
+	}
+
+	private void initTemplate() {
+		extendedAttributes.clear();
+		Document doc = record.getDocument();
+		if (doc.getTemplate() != null) {
 			template = new Long(doc.getTemplate().getId());
+			for (String attrName : doc.getTemplate().getAttributes()) {
+				extendedAttributes.add(new Attribute(attrName, doc.getValue(attrName)));
+			}
+		}
+	}
+
+	public int getExtendedAttributesCount() {
+		Document doc = record.getDocument();
+		if (doc.getTemplate() != null) {
+			return doc.getTemplate().getAttributes().size();
+		} else {
+			return 0;
+		}
+	}
+
+	public void changeTemplate(ValueChangeEvent event) {
+		Long item = (Long) event.getNewValue();
+		if (item != null) {
+			DocumentTemplateDAO tdao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+			template = item;
+			DocumentTemplate buf = tdao.findById(template.longValue());
+			record.getDocument().setTemplate(buf);
+		} else {
+			record.getDocument().setTemplate(null);
+		}
+		initTemplate();
+		JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "cleanAttributes();");
+	}
+	
+	public Collection<Attribute> getExtendedAttributes() {
+		return extendedAttributes;
 	}
 
 	public Long getTemplate() {
@@ -330,8 +374,13 @@ public class DocumentEditForm {
 			try {
 				Document doc = record.getDocument();
 
+				doc.getAttributes().clear();
 				if (template != null) {
 					doc.setTemplate(tdao.findById(template));
+					for (Attribute attribute : extendedAttributes) {
+						if (StringUtils.isNotEmpty(attribute.getValue()))
+							doc.setValue(attribute.getName(), attribute.getValue());
+					}
 				} else {
 					doc.setTemplate(null);
 				}
@@ -431,5 +480,38 @@ public class DocumentEditForm {
 
 	public void setDocumentNavigation(DocumentNavigation documentNavigation) {
 		this.documentNavigation = documentNavigation;
+	}
+
+	public static class Attribute {
+		private String name;
+
+		private String value;
+
+		private Attribute(String name, String value) {
+			super();
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
+
+		@Override
+		public String toString() {
+			return getName() + " - " + getValue();
+		}
 	}
 }

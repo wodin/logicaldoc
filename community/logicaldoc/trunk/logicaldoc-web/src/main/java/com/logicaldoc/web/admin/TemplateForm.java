@@ -81,6 +81,7 @@ public class TemplateForm {
 			if (StringUtils.isNotEmpty(newAttribute) && !template.getAttributes().contains(newAttribute))
 				template.addAttribute(newAttribute);
 		}
+		newAttribute = null;
 		init();
 		return null;
 	}

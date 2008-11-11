@@ -2,8 +2,7 @@
 <!-- 
  This page is the document editing form
   
- @author Marco Meschieri
- @version $Id: updateDocument.jspx,v 1.3 2006/08/29 16:33:46 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -21,11 +20,12 @@
                 <ui:include src="/templates/document/update.jspx" />
             </f:subview>
         </ice:panelGroup>
+        
+        <hr />
 
         <ice:panelGroup styleClass="commands">
             <ice:commandButton value="#{msgs['abort']}"
                 partialSubmit="true"
-                immediate="true"
                 action="#{newDocWizard.abort}" />
             <ice:commandButton value="#{msgs['save']}"
                 action="#{documentForm.update}" rendered="#{!documentForm.readOnly}" />

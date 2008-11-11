@@ -10,7 +10,6 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.model.SelectItem;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
