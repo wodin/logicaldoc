@@ -31,10 +31,15 @@
 	<ice:panelGroup rendered="#{keywords.keywordsCount > 0}">
 		<!-- Table with results -->
 		<ice:dataTable id="words" value="#{keywords.keywords}" var="keyword"
-			cellpadding="0" rows="99999" styleClass="center">
+			cellpadding="0" rows="99999" styleClass="center"
+			sortColumn="#{keywords.sortColumn}"
+			sortAscending="#{keywords.ascending}">
 			<ice:column>
 				<f:facet name="header">
-					<ice:outputText value="Tag" />
+								<ice:commandSortHeader columnName="tagName">
+									<ice:outputText value="Tag"
+										style="text-decoration: underline;" />
+								</ice:commandSortHeader>				
 				</f:facet>
 				<ice:panelGroup>
 					<ice:commandLink action="#{keyword.select}">
@@ -45,7 +50,9 @@
 
 			<ice:column>
 				<f:facet name="header">
-					<ice:outputText value="#{msgs['tags.documentcount']}" />
+				   <ice:commandSortHeader columnName="documentsCount">
+					  <ice:outputText value="#{msgs['tags.documentcount']}" style="text-decoration: underline;"/>
+				   </ice:commandSortHeader>					
 				</f:facet>
 				<ice:panelGroup>
 					<ice:outputText value="#{keyword.count}" />
@@ -62,12 +69,17 @@
 		<br />
 		<ice:dataTable id="documentsList" styleClass="center"
 			value="#{keywords.documents}" var="entry" cellpadding="0" rows="10"
+			sortColumn="#{keywords.dh.sortColumn}"
+			sortAscending="#{keywords.dh.ascending}"
 			columnClasses="docNameColumn,docDateColumn,docSizeColumn">
 
 			<!-- Name -->
 			<ice:column>
 				<f:facet name="header">
-					<ice:outputText value="#{msgs['doctitle']}" />
+					<ice:commandSortHeader columnName="displayDescription" arrow="true">
+						<ice:outputText value="#{msgs['doctitle']}"
+							style="text-decoration: underline;" />
+					</ice:commandSortHeader>
 				</f:facet>
 				<ice:panelGroup>
 					<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
@@ -91,7 +103,10 @@
 			<!-- Date -->
 			<ice:column>
 				<f:facet name="header">
-					<ice:outputText value="#{msgs['msg.jsp.sourcedate']}" />
+					<ice:commandSortHeader columnName="date" arrow="true">
+						<ice:outputText value="#{msgs['msg.jsp.sourcedate']}"
+							style="text-decoration: underline;" />
+					</ice:commandSortHeader>
 				</f:facet>
 				<ice:panelGroup>
 					<ice:outputText value="#{entry.sourceDate}">
@@ -103,7 +118,10 @@
 			<!-- Size -->
 			<ice:column>
 				<f:facet name="header">
-					<ice:outputText value="#{msgs['msg.jsp.foldercontent.size']}" />
+					<ice:commandSortHeader columnName="size" arrow="true">
+						<ice:outputText value="#{msgs['msg.jsp.foldercontent.size']}"
+							style="text-decoration: underline;" />
+					</ice:commandSortHeader>
 				</f:facet>
 				<ice:panelGroup>
 					<ice:outputText value="#{entry.size} KB" />
