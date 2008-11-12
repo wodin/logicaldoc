@@ -441,8 +441,8 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 			if (!precoll.isEmpty()) {
 				StringBuffer query = new StringBuffer(
-						"select distinct(C.ld_id) from ld_menugroup A, ld_menu B, ld_document C, ld_keyword D "
-								+ " where A.ld_menuid=B.ld_id AND B.ld_id=C.ld_folderid AND C.ld_id=D.ld_docid"
+						"select distinct(C.ld_id) from ld_menugroup A, ld_document C, ld_keyword D "
+								+ " where A.ld_menuid=C.ld_folderid AND C.ld_id=D.ld_docid"
 								+ " AND A.ld_groupid in (");
 				boolean first = true;
 				while (iter.hasNext()) {
@@ -453,7 +453,6 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 					first = false;
 				}
 				query.append(")");
-				query.append(" AND B.ld_type=" + Menu.MENUTYPE_DIRECTORY);
 				query.append(" AND lower(D.ld_keyword)='" + keyword + "'");
 
 				Connection con = null;
