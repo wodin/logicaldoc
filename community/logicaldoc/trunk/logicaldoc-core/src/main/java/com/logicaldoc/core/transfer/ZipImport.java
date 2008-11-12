@@ -32,17 +32,28 @@ import com.logicaldoc.util.io.ZipUtil;
  */
 public class ZipImport {
 
-	private String language;
+	private String language="";
 
 	private User user;
 
 	protected static Log logger = LogFactory.getLog(ZipImport.class);
 
-	private boolean extractKeywords = true;
+	private boolean extractKeywords = false;
 
+	private int keywordsNumber = 3;
+	
 	public ZipImport() {
-		language = "";
-		extractKeywords = true;
+	}
+
+	/**
+	 * The number of auto-extracted keywords (if extractKeywords=true)
+	 */
+	public int getKeywordsNumber() {
+		return keywordsNumber;
+	}
+
+	public void setKeywordsNumber(int keywordsNumber) {
+		this.keywordsNumber = keywordsNumber;
 	}
 
 	public boolean isExtractKeywords() {
@@ -136,7 +147,7 @@ public class ZipImport {
 					parser.parse(file);
 					String words = parser.getKeywords();
 					if (StringUtils.isEmpty(words)) {
-						words = analyzer.getTermsAsString(5, parser.getContent(), document.getLanguage());
+						words = analyzer.getTermsAsString(keywordsNumber, parser.getContent(), document.getLanguage());
 					}
 					Set<String> keywords = ddao.toKeywords(words);
 					document.setKeywords(keywords);

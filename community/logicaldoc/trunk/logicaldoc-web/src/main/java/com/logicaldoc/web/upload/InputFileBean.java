@@ -47,7 +47,7 @@ public class InputFileBean implements Renderable {
 
 	private String contentType = "";
 
-	private boolean extractKeywords = true;
+	private boolean extractKeywords = false;
 
 	private InputFile inputFile = null;
 
