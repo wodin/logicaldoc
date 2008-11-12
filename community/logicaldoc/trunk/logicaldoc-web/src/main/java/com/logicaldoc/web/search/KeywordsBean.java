@@ -32,6 +32,7 @@ public class KeywordsBean {
 	private Collection<DocumentRecord> documents = new ArrayList<DocumentRecord>();
 
 	private String selectedWord;
+	private String reqop;
 
 	public KeywordsBean() {
 		String str = "abcdefghijklmnopqrstuvwxyz";
@@ -124,6 +125,7 @@ public class KeywordsBean {
 						table.put(keyword, new Integer(count));
 					}
 
+					reqop = "letter";
 					keywords.clear();
 					documents.clear();
 
@@ -184,20 +186,26 @@ public class KeywordsBean {
 			if (SessionManagement.isValid()) {
 				try {
 					selectedWord = word;
+					log.info("word: " + word);
 
 					long userId = SessionManagement.getUserId();
 					DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 					Set<Long> docIds = docDao.findDocIdByUserIdAndKeyword(userId, word);
+					log.info("docIds.size(): " + docIds.size());
+					
+					reqop = "keyword";
 					documents.clear();
 					keywords.clear();
 
 					for (Long id : docIds) {
-						DocumentRecord record;
-
-						record = new DocumentRecord(id, null, null, null);
+						DocumentRecord record = new DocumentRecord(id, null, null, null);
+						log.info("record: " + record);
 
 						if (!documents.contains(record)) {
+							log.info("document ADDED to docs collection");
 							documents.add(record);
+						} else {
+							log.info("document ALREADY IN doc collection");
 						}
 					}
 				} catch (Exception e) {
@@ -209,5 +217,9 @@ public class KeywordsBean {
 				return "login";
 			}
 		}
+	}
+
+	public String getReqop() {
+		return reqop;
 	}
 }

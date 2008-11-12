@@ -114,10 +114,22 @@
 		</ice:panelGroup>
 	</ice:panelGroup>
 
+    <ice:panelGroup>
+            kC: <ice:outputText value="#{keywords.keywordsCount}" /><br />
+		    dC: <ice:outputText value="#{keywords.documentsCount}" /><br />
+		    selW: <ice:outputText value="#{keywords.selectedWord}" /><br />
+		    reqOp: <ice:outputText value="#{keywords.reqop}" /><br />
+    </ice:panelGroup>
+    
 	<ice:panelGroup
-		rendered="#{(keywords.keywordsCount == 0) and (keywords.documentsCount == 0)}"
+		rendered="#{(keywords.reqop eq 'letter') and (keywords.keywordsCount == 0)}"
 		style="text-align: center;">
 		<ice:outputText value="#{msgs['tags.notag']}" />
+	</ice:panelGroup>
+		<ice:panelGroup
+		rendered="#{(keywords.reqop eq 'keyword') and (keywords.documentsCount == 0)}"
+		style="text-align: center;">
+		<ice:outputText value="No documents found for the given tag" />
 	</ice:panelGroup>
 	<br />
 </jsp:root>
