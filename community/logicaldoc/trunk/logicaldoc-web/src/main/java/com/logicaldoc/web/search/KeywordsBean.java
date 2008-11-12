@@ -19,10 +19,12 @@ import com.logicaldoc.web.document.DocumentRecord;
  * Handles documents access by keywords
  * 
  * @author Marco Meschieri - Logical Objects
+ * @author Alessandro Gasparini - Logical Objects
  * @version $Id: KeywordsBean.java,v 1.2 2007/08/22 14:12:20 marco Exp $
  * @since ###release###
  */
 public class KeywordsBean {
+	
 	protected static Log log = LogFactory.getLog(KeywordsBean.class);
 
 	private Collection<Letter> letters = new ArrayList<Letter>();
@@ -186,12 +188,10 @@ public class KeywordsBean {
 			if (SessionManagement.isValid()) {
 				try {
 					selectedWord = word;
-					log.info("word: " + word);
 
 					long userId = SessionManagement.getUserId();
 					DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 					Set<Long> docIds = docDao.findDocIdByUserIdAndKeyword(userId, word);
-					log.info("docIds.size(): " + docIds.size());
 					
 					reqop = "keyword";
 					documents.clear();
@@ -199,14 +199,10 @@ public class KeywordsBean {
 
 					for (Long id : docIds) {
 						DocumentRecord record = new DocumentRecord(id, null, null, null);
-						log.info("record: " + record);
 
 						if (!documents.contains(record)) {
-							log.info("document ADDED to docs collection");
 							documents.add(record);
-						} else {
-							log.info("document ALREADY IN doc collection");
-						}
+						} 
 					}
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
