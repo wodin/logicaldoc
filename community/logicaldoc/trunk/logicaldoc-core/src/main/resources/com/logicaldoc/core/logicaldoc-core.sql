@@ -107,7 +107,7 @@ values     (25,'2008-10-22','db.searchengine',2,6,'search.png','/2',1,'admin/sea
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (26,'2008-10-22','db.keywords',1,5,'keywords.png','/',1,'search/keywords',0);
+values     (26,'2008-10-22','db.tags',1,5,'tags.png','/',1,'search/tags',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
