@@ -63,7 +63,7 @@ public class TagCloud {
 				FacesContext.getCurrentInstance()));
 
 		PageContentBean content = new PageContentBean("message", "search/tags");
-		content.setContentTitle(Messages.getMessage("db.tags"));
+		content.setContentTitle(Messages.getMessage("tags"));
 		content.setIcon(StyleBean.getImagePath("tags.png"));
 		navigation.setSelectedPanel(content);
 
