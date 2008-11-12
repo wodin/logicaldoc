@@ -257,7 +257,7 @@
                     &amp;nbsp;
                 </ice:panelGroup>
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="keywords" value="#{msgs['msg.jsp.keywords']}" />
+				<ice:outputLabel for="keywords" value="#{msgs['tags']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectBooleanCheckbox id="keywords" tabindex="1"
