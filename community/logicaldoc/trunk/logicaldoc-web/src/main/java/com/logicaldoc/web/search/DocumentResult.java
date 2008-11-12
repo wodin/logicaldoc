@@ -140,6 +140,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 	private void openDocumentsPage() {
 		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
 				.getCurrentInstance(), log));
+		initCollections();
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu docMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
 		PageContentBean panel = new PageContentBean("m-" + docMenu.getId(), "document/browse");

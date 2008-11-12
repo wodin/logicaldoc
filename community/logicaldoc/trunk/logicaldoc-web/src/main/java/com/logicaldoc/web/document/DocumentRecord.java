@@ -566,4 +566,14 @@ public class DocumentRecord extends MenuBarBean {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		this.document = docDao.findById(docId);
 	}
+
+	/**
+	 * Initializes document's collections
+	 */
+	public void initCollections() {
+		if (this.document != null) {
+			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			docDao.initialize(this.document);
+		}
+	}
 }

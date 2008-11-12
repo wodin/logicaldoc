@@ -98,7 +98,7 @@ public class DocumentEditForm {
 
 	public void init(DocumentRecord record) {
 		this.record = record;
-
+		record.initCollections();
 		Document doc = record.getDocument();
 		setTitle(doc.getTitle());
 		setSource(doc.getSource());
