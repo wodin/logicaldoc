@@ -122,9 +122,19 @@ public class SearchForm {
 
 	private UIInput uiCreationDateTo = null;
 
+	private Long template = null;
+
 	public SearchForm() {
 		setQuery(Messages.getMessage("search") + "...");
 		setLanguage(SessionManagement.getLanguage());
+	}
+
+	public Long getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(Long template) {
+		this.template = template;
 	}
 
 	public String getLanguage() {
@@ -385,6 +395,7 @@ public class SearchForm {
 		sizeMax = null;
 		searchInSubPath = false;
 		excludeFromResult = null;
+		template = null;
 		maxHits = hitsPerBlock;
 		return searchHits();
 	}
@@ -483,6 +494,11 @@ public class SearchForm {
 					}
 				}
 
+				if (template != null && template.longValue() > 0)
+					opt.setTemplate(template);
+				else
+					opt.setTemplate(null);
+
 				String searchLanguage = "all".equals(language) ? SessionManagement.getLanguage() : language;
 				lastSearch = new Search(opt, searchLanguage);
 				lastSearch.setMaxHits(maxHits);
@@ -569,6 +585,7 @@ public class SearchForm {
 				sourceDateTo = null;
 				sizeMin = null;
 				sizeMax = null;
+				template = null;
 				searchInSubPath = false;
 				maxHits = hitsPerBlock;
 				setQuery(terms);
@@ -635,6 +652,7 @@ public class SearchForm {
 		sourceType = false;
 		coverage = false;
 		title = true;
+		template = null;
 		searchInSubPath = false;
 	}
 

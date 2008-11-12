@@ -2,8 +2,7 @@
 <!-- 
  Advanced search form
   
- @author Marco Meschieri
- @version $Id: advancedSearch.jspx,v 1.3 2006/08/29 16:33:46 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -13,8 +12,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form" id="searchForm"
-	styleClass="center formBorderHighlight" style="width: 700px">
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="searchForm" styleClass="center formBorderHighlight"
+	style="width: 700px">
 
 	<ice:panelGroup>
 		<ice:messages globalOnly="true" />
@@ -322,7 +322,33 @@
 			</ice:panelGroup>
 		</ice:panelGrid>
 	</ice:panelGroup>
+ 
+	<ice:panelGroup>
+		<hr />
+		<h3>
+			<ice:outputText value="#{msgs['template']}" />
+			<br />
+			<br />
+		</h3>
+		<ice:panelGrid columns="5"
+			onkeypress="return submitOnEnter('searchForm:save', event);">
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="template" value="#{msgs['template']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectOneMenu styleClass="selectTagMenu" tabindex="1"
+					value="#{searchForm.template}" partialSubmit="true">
+					<f:selectItem itemValue="" itemLabel="" />
+					<f:selectItems value="#{selectionTags.templates}" />
+				</ice:selectOneMenu>
+			</ice:panelGroup>
+			<ice:panelGroup style="width:20px" />
+			<ice:panelGroup />
+			<ice:panelGroup />
+		</ice:panelGrid>
+	</ice:panelGroup>
 
+	<hr />
 	<ice:panelGroup styleClass="commands">
 		<ice:commandButton type="submit" value="#{msgs['msg.jsp.search']}"
 			id="save" tabindex="1" action="#{searchForm.search}" />

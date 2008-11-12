@@ -8,14 +8,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.misc.ChainedFilter;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MultiSearcher;
@@ -107,18 +108,30 @@ public class Search {
 			log.info("Full-text search");
 			Hits hits = null;
 
-			if (StringUtils.isEmpty(options.getPath())) {
+			ArrayList<Filter> filters = new ArrayList<Filter>();
+
+			if (options.getTemplate() != null) {
+				// Prepare filter for template field
+				Term templateTerm = new Term(LuceneDocument.FIELD_TEMPLATE_ID, Long.toString(options.getTemplate()));
+				Query templateQuery = new TermQuery(templateTerm);
+				filters.add(new QueryWrapperFilter(templateQuery));
+			}
+
+			if (options.getPath() != null) {
+				// Prepare filter for path field
+				Term pathTerm = new Term(LuceneDocument.FIELD_PATH, options.getPath());
+				Query pathQuery = new TermQuery(pathTerm);
+				if (options.isSearchInSubPath()) {
+					pathQuery = new PrefixQuery(pathTerm);
+				}
+				filters.add(new QueryWrapperFilter(pathQuery));
+			}
+
+			if (filters.isEmpty()) {
 				hits = multiSearcher.search(query);
 			} else {
-				Term prfixTerm = new Term(LuceneDocument.FIELD_PATH, options.getPath());
-				Query filterQuery = new TermQuery(prfixTerm);
-
-				if (options.isSearchInSubPath()) {
-					filterQuery = new PrefixQuery(prfixTerm);
-				}
-
-				QueryWrapperFilter qwf = new QueryWrapperFilter(filterQuery);
-				hits = multiSearcher.search(query, qwf);
+				ChainedFilter chainedFilter = new ChainedFilter(filters.toArray(new Filter[0]), ChainedFilter.AND);
+				hits = multiSearcher.search(query, chainedFilter);
 			}
 
 			log.info("End of Full-text search");

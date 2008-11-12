@@ -14,7 +14,7 @@ import com.logicaldoc.core.i18n.DateBean;
  * @author Michael Scholz, Marco Meschieri
  */
 public class LuceneDocument {
-	private static final String FIELD_TEMPLATE_ID = "templateId";
+	public static final String FIELD_TEMPLATE_ID = "templateId";
 
 	public static final String FIELD_KEYWORDS = "keywords";
 

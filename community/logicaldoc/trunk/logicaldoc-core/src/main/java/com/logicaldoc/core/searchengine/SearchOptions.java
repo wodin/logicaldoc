@@ -41,8 +41,18 @@ public class SearchOptions {
 
 	private Date sourceDateTo = null;
 
+	private Long template = null;
+
 	/** Creates a new instance of SearchOptions */
 	public SearchOptions() {
+	}
+
+	public Long getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(Long template) {
+		this.template = template;
 	}
 
 	public String getQueryStr() {
