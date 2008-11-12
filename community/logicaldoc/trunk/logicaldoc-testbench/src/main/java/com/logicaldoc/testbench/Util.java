@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 import javax.swing.JEditorPane;
 import javax.swing.text.DefaultEditorKit;
 
-import net.sf.snowball.SnowballProgram;
+import org.tartarus.snowball.SnowballProgram;
 
 public class Util {
 

@@ -349,11 +349,9 @@ public class PopulateDatabase {
 		batchCount++;
 
 		// Insert 5 document's keywords
-		Set<String> kwds = Util.extractWords(10, content);
+		Set<String> kwds = Util.extractWords(5, content);
 		int i = 0;
 		for (String keyword : kwds) {
-			if (i == 5)
-				break;
 			// LD_DOCID
 			insertKeyword.setLong(1, id);
 			if (keyword.length() > 255)
