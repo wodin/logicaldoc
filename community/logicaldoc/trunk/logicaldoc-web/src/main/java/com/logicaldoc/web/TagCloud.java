@@ -54,7 +54,7 @@ public class TagCloud {
 
 	/**
 	 * Handles the selection of this tagcloud. Display the pageContent
-	 * "search/keywords" and set the selected word on KeywordsBean.
+	 * "search/tags" and set the selected word on KeywordsBean.
 	 */
 	public String select() {
 		Application application = FacesContext.getCurrentInstance().getApplication();
@@ -62,9 +62,9 @@ public class TagCloud {
 		NavigationBean navigation = ((NavigationBean) application.createValueBinding("#{navigation}").getValue(
 				FacesContext.getCurrentInstance()));
 
-		PageContentBean content = new PageContentBean("message", "search/keywords");
-		content.setContentTitle(Messages.getMessage("db.keywords"));
-		content.setIcon(StyleBean.getImagePath("keywords.png"));
+		PageContentBean content = new PageContentBean("message", "search/tags");
+		content.setContentTitle(Messages.getMessage("db.tags"));
+		content.setIcon(StyleBean.getImagePath("tags.png"));
 		navigation.setSelectedPanel(content);
 
 		KeywordsBean keywordsBean = ((KeywordsBean) application.createValueBinding("#{keywords}").getValue(
