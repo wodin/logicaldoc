@@ -49,6 +49,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindById() {
 		Document doc = dao.findById(1);
 		assertNotNull(doc);
+		dao.initialize(doc);
 		assertEquals(1, doc.getId());
 		assertEquals("testDocname", doc.getTitle());
 		assertEquals(2, doc.getVersions().size());
@@ -135,6 +136,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(3, doc.getId());
 		doc = dao.findById(3);
 		assertNotNull(doc);
+		dao.initialize(doc);
 		assertEquals(3, doc.getId());
 		assertEquals(3, doc.getKeywords().size());
 		assertTrue(doc.getKeywords().contains("pluto"));
@@ -145,6 +147,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 		// Try to change the version comment
 		doc = dao.findById(3);
+		dao.initialize(doc);
 		version = doc.getVersion("1.0");
 		version.setComment("xxxx");
 		version.setVersion("1.0");
@@ -152,12 +155,14 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.addVersion(version);
 		dao.store(doc);
 		doc = dao.findById(3);
+		dao.initialize(doc);
 		version = doc.getVersion("1.0");
 		assertEquals("xxxx", version.getComment());
 
 		// Load an existing document and modify it
 		doc = dao.findById(1);
 		assertNotNull(doc);
+		dao.initialize(doc);
 		assertEquals("testDocname", doc.getTitle());
 		assertEquals(2, doc.getVersions().size());
 		assertEquals(3, doc.getKeywords().size());
@@ -165,6 +170,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertTrue(dao.store(doc));
 		doc = dao.findById(1);
 		assertNotNull(doc);
+		dao.initialize(doc);
 		assertEquals(1, doc.getId());
 		assertEquals("xxxx", doc.getTitle());
 		assertEquals(2, doc.getVersions().size());

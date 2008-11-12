@@ -157,4 +157,11 @@ public interface DocumentDAO {
 	 * @return The collection of linked documents
 	 */
 	public Collection<Document> findLinkedDocuments(long docId, String linkType, Integer direction);
+	
+	/**
+	 * Initializes lazy loaded collections
+	 * 
+	 * @param doc The document to be initialized
+	 */
+	public void initialize(Document doc);
 }

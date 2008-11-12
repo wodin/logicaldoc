@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
@@ -606,5 +607,19 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		}
 
 		return coll;
+	}
+
+	@Override
+	public void initialize(Document doc) {
+		getHibernateTemplate().refresh(doc);
+		for (Version version : doc.getVersions()) {
+			version.getVersion();
+		}
+		for (String attribute : doc.getAttributes().keySet()) {
+			attribute.getBytes();
+		}
+		for (String keyword : doc.getKeywords()) {
+			keyword.getBytes();
+		}
 	}
 }
