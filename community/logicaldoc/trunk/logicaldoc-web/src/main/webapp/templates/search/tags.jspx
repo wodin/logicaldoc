@@ -2,8 +2,7 @@
 <!-- 
  Vocabulary of all stored keywords
   
- @author Marco Meschieri
- @version $Id: keywords.jspx,v 1.5 2006/09/03 16:24:37 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -81,7 +80,7 @@
 						style="border: 0px solid;" />
 					<ice:outputLink value="download?docId=#{entry.docId}"
 						target="_blank" >
-						<ice:outputText value="#{entry.displayDescription}" />
+						<ice:outputText value="#{entry.title}" />
 					</ice:outputLink>
 				</ice:panelGroup>
 			</ice:column>
