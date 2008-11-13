@@ -7,7 +7,7 @@
 		<property id="properties" file="build.properties" />
 
 		<echo message="Deploying webapp files" />
-		<copy todir="${logicaldoc.webroot}">
+		<copy todir="${logicaldoc.webroot}" verbose="true">
 			<fileset dir="src/main/webapp">
 				<include name="**" />
 				<exclude name="**/.*" />
