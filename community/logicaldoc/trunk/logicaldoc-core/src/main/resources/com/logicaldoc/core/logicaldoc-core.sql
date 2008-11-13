@@ -58,8 +58,8 @@ insert into ld_menu
 values     (4,'2008-10-22','db.personal',1,3,'personal.png','/',1,null,0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (5,'2008-10-22','db.projects',1,4,'documents.png','/',1,'document/browse',0);
+           (ld_id,ld_lastmodified,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size, ld_pathextended)
+values     (5,'2008-10-22','db.projects',1,4,'documents.png','/',1,'document/browse',0, '/');
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
