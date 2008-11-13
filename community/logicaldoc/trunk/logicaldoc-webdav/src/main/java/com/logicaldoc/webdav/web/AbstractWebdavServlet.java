@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,14 +42,11 @@ import org.apache.jackrabbit.webdav.transaction.TransactionResource;
 import org.apache.jackrabbit.webdav.version.DeltaVResource;
 import org.apache.jackrabbit.webdav.version.OptionsInfo;
 import org.apache.jackrabbit.webdav.version.OptionsResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webdav.AuthenticationUtil;
 import com.logicaldoc.webdav.AuthenticationUtil.Credentials;
-import com.logicaldoc.webdav.exception.WebDavAuthorisationException;
 import com.logicaldoc.webdav.resource.DavResourceFactory;
 import com.logicaldoc.webdav.session.DavSessionImpl;
 
@@ -60,13 +56,14 @@ import com.logicaldoc.webdav.session.DavSessionImpl;
  */
 abstract public class AbstractWebdavServlet extends HttpServlet implements DavConstants {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8726695805361483901L;
+
 	private UserDAO userDAO;
 	
-    /**
-     * default logger
-     */
-    private static Logger log = LoggerFactory.getLogger(AbstractWebdavServlet.class);
-    
+
     /**
      * Default value for the 'WWW-Authenticate' header, that is set, if request
      * results in a {@link DavServletResponse#SC_UNAUTHORIZED 401 (Unauthorized)}
@@ -163,7 +160,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
         WebdavResponse webdavResponse = new WebdavResponseImpl(response, noCache);
         
         try {
-        		if(session.getAttribute("username") == null){
+        		if(session.getAttribute("name") == null){
 	        		if(request.getHeader(DavConstants.HEADER_AUTHORIZATION) != null){
 	        			Credentials credentials = AuthenticationUtil.authenticate(webdavRequest);
 	        			boolean isLoggedOn = userDAO.validateUser(credentials.getUserName(), credentials.getPassword());
@@ -172,7 +169,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	        				return;
 	        			}
 	        			
-	        			session.setAttribute("username", credentials.getUserName());
+	        			session.setAttribute("name", credentials.getUserName());
 	        			
 	        		}
 	        		else {
@@ -183,8 +180,8 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
         	
                 
         	DavSessionImpl davSession = new DavSessionImpl();
-        	davSession.putObject("id", userDAO.findByUserName(session.getAttribute("username").toString()).getId());
-        	davSession.putObject("username", session.getAttribute("username"));
+        	davSession.putObject("id", userDAO.findByUserName(session.getAttribute("name").toString()).getId());
+        	davSession.putObject("name", session.getAttribute("name"));
         		
             //check matching if=header for lock-token relevant operations
             DavResource resource = getResourceFactory().createResource(webdavRequest.getRequestLocator(), webdavRequest, webdavResponse, davSession);
@@ -404,6 +401,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
      * @param resource
      * @throws IOException
      */
+    @SuppressWarnings("unchecked")
     protected void doPropPatch(WebdavRequest request, WebdavResponse response,
                                DavResource resource)
             throws IOException, DavException {
@@ -626,6 +624,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
      * @throws IOException
      * @throws DavException
      */
+    @SuppressWarnings("unchecked")
     protected void doLock(WebdavRequest request, WebdavResponse response,
                           DavResource resource) throws IOException, DavException {
 

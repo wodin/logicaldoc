@@ -236,9 +236,6 @@ public class DavResourceImpl implements DavResource{
 	 */
 	public DavProperty getProperty(DavPropertyName name) {
 		initProperties();
-		if (name.equals(DavPropertyName.GETCONTENTLENGTH)) {
-			int i = 1;
-		}
 		return properties.get(name);
 	}
 
@@ -291,13 +288,6 @@ public class DavResourceImpl implements DavResource{
 					"0"));
 		}
 
-		/*
-		 * set current lock information. If no lock is set to this resource, an
-		 * empty lockdiscovery will be returned in the response.
-		 */
-		// properties.add(new LockDiscovery(getLock(Type.WRITE,
-		// Scope.EXCLUSIVE)));
-		/* lock support information: all locks are lockable. */
 		SupportedLock supportedLock = new SupportedLock();
 		supportedLock.addEntry(Type.WRITE, Scope.EXCLUSIVE);
 		properties.add(supportedLock);
@@ -309,6 +299,7 @@ public class DavResourceImpl implements DavResource{
 	/**
 	 * @see DavResource#alterProperties(DavPropertySet, DavPropertyNameSet)
 	 */
+	@SuppressWarnings("unchecked")
 	public MultiStatusResponse alterProperties(DavPropertySet setProperties,
 			DavPropertyNameSet removePropertyNames) throws DavException {
 		List changeList = new ArrayList();
@@ -327,6 +318,7 @@ public class DavResourceImpl implements DavResource{
 		return alterProperties(changeList);
 	}
 
+	@SuppressWarnings("unchecked")
 	public MultiStatusResponse alterProperties(List changeList)
 			throws DavException {
 		return null;
@@ -362,6 +354,7 @@ public class DavResourceImpl implements DavResource{
 	/**
 	 * @see DavResource#getMembers()
 	 */
+	@SuppressWarnings("unchecked")
 	public DavResourceIterator getMembers() {
 		ArrayList list = new ArrayList();
 		if (exists() && isCollection()) {
@@ -372,7 +365,7 @@ public class DavResourceImpl implements DavResource{
 
 				//List<Resource> resources = resourceService
 				//		.getChildResources(locator);
-				List<Resource> resources = resourceService.getChildResources(Long.parseLong(this.resource.getID()));
+				List<Resource> resources = resourceService.getChildResources(this.resource);
 				Iterator<Resource> resourceIterator = resources.iterator();
 
 				while (resourceIterator.hasNext()) {
@@ -430,6 +423,8 @@ public class DavResourceImpl implements DavResource{
 			
 			String memberName = Text.getName(member.getLocator()
 					.getResourcePath());
+			
+			
 			ImportContext ctx = getImportContext(inputContext, memberName);
 			if (!config.getIOManager().importContent(ctx, member)) {
 				// any changes should have been reverted in the importer
@@ -451,35 +446,14 @@ public class DavResourceImpl implements DavResource{
 		if (isLocked(this) || isLocked(member)) {
 			throw new DavException(DavServletResponse.SC_LOCKED);
 		}
-		
-		/*
-		// don't allow removal of nodes, that would be filtered out
-		if (isFilteredResource(member)) {
-			log.debug("Avoid removal of filtered resource: "
-					+ member.getDisplayName());
-			throw new DavException(DavServletResponse.SC_FORBIDDEN);
-		}
-		 */
+
 		try {
 			
 			
-			Resource resource = resourceService.getResorce(member.getLocator().getResourcePath());
+			Resource resource = resourceService.getResorce(member.getLocator()
+					.getResourcePath(), this.resource.getRequestedPerson());
 			resourceService.deleteResource(resource);
-			// make sure, non-jcr locks are removed, once the removal is
-			// completed
-			/*
-			try {
-				if (!isJsrLockable()) {
-					ActiveLock lock = getLock(Type.WRITE, Scope.EXCLUSIVE);
-					if (lock != null) {
-						lockManager.releaseLock(lock.getToken(), member);
-					}
-				}
-			} catch (DavException e) {
-				// since check for 'locked' exception has been performed before
-				// ignore any error here
-			}
-			*/
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -488,6 +462,7 @@ public class DavResourceImpl implements DavResource{
 	/**
 	 * @see DavResource#move(DavResource)
 	 */
+	
 	public void move(DavResource destination) throws DavException {
 		if (!exists()) {
 			throw new DavException(DavServletResponse.SC_NOT_FOUND);
@@ -495,34 +470,24 @@ public class DavResourceImpl implements DavResource{
 		if (isLocked(this)) {
 			throw new DavException(DavServletResponse.SC_LOCKED);
 		}
-		/*
-		if (isFilteredResource(destination)) {
-			throw new DavException(DavServletResponse.SC_FORBIDDEN);
-		}
-		*/
-		
-		// make sure, that src and destination belong to the same workspace
-		//checkSameWorkspace(destination.getLocator());
-		
+
 		try {
-			String destItemPath = destination.getLocator().getRepositoryPath();
-			//getJcrSession().getWorkspace().move(locator.getRepositoryPath(),
-			//		destItemPath);
-			
-			
 			ResourceService resourceService = new ResourceServiceImpl();
-			Resource res = resourceService.getResorce(destination.getLocator().getResourcePath());
-			if(res != null){
+			Resource res = resourceService.getResorce(destination.getLocator()
+					.getResourcePath(), this.resource.getRequestedPerson());
+			if (res != null) {
 				res.setName(this.resource.getName());
 				resourceService.updateResource(res);
-			}
-			else {
+			} else {
 				String name = destination.getLocator().getResourcePath();
-				name = name.substring(name.lastIndexOf("/")+1, name.length()).replace("/default", "");
-				
-				Resource parentResource = resourceService.getParentResource(destination.getLocator().getResourcePath());				
+				name = name.substring(name.lastIndexOf("/") + 1, name.length())
+						.replace("/default", "");
+
+				Resource parentResource = resourceService
+						.getParentResource(destination.getLocator()
+								.getResourcePath());
 				this.resource.setName(name);
-				
+
 				resourceService.move(this.resource, parentResource);
 			}
 
@@ -697,20 +662,6 @@ public class DavResourceImpl implements DavResource{
 	 * @return true if this resource cannot be modified due to a write lock
 	 */
 	private boolean isLocked(DavResource res) {
-		ActiveLock lock = res.getLock(Type.WRITE, Scope.EXCLUSIVE);
-		
-		/*if (lock == null) {
-			return false;
-		} else {
-			String[] sLockTokens = session.getLockTokens();
-			for (int i = 0; i < sLockTokens.length; i++) {
-				if (sLockTokens[i].equals(lock.getToken())) {
-					return false;
-				}
-			}
-			return true;
-		}
-		*/
 		return false;
 	}
 

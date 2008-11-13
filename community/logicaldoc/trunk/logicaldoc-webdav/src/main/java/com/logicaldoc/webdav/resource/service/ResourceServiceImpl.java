@@ -17,7 +17,6 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.util.Context;
 import com.logicaldoc.webdav.context.ImportContext;
 import com.logicaldoc.webdav.exception.DavResourceIOException;
 import com.logicaldoc.webdav.exception.DavResourceNotFoundException;
@@ -82,8 +81,15 @@ public class ResourceServiceImpl implements ResourceService {
 		return resource;
 	}
 	
-	public List<Resource> getChildResources(long folderID) {
+	public List<Resource> getChildResources(Resource parentResource) {
 		List<Resource> resourceList = new LinkedList<Resource>();
+		
+		final Long folderID = Long.parseLong(parentResource.getID());
+		
+		boolean hasAccess = menuDAO.isReadEnable(folderID, parentResource.getRequestedPerson());
+		
+		if(hasAccess == false)
+			return resourceList;
 		
 		Collection<Menu> folders = menuDAO.findChildren(folderID);	
 		if(folders != null){
@@ -102,49 +108,9 @@ public class ResourceServiceImpl implements ResourceService {
 		
 		return resourceList;
 	}
-	
-	public List<Resource> getChildResources(String requestPath) {
-		
-		//if we browsing on the root, we have no requestPath greater then zero
-		if(requestPath.length() > 0)
-			requestPath = requestPath.substring(1);
 
+	public Resource getResorce(String requestPath, long id) {
 		
-		int idx = requestPath.lastIndexOf("/");
-		if(idx+1 == requestPath.length() != true)
-			requestPath = requestPath + "/";
-		
-		if(idx != -1)
-			requestPath = requestPath.substring(0, requestPath.lastIndexOf("/")+1);
-		
-		String path = "/" + FOLDER_PREFIX + "/"+requestPath;
-		
-		List<Resource> resourceList = new LinkedList<Resource>();
-		
-		Collection<Menu> folders = menuDAO.findFoldersByPathExtended(path);
-		
-		if(folders != null){
-			for (Iterator<Menu> iterator = folders.iterator(); iterator.hasNext();) {
-				Menu currentMenu = iterator.next();
-				resourceList.add(marshallFolder(currentMenu));			
-			}
-		}
-		
-		//now we have all folders, its time for akquiring documents
-		Resource parentFolderResource = this.getResorce(requestPath);
-		
-		Collection<Document> documents = documentDAO.findByFolder(Integer.parseInt(parentFolderResource.getID()));
-		
-		for (Iterator<Document> iterator = documents.iterator(); iterator.hasNext();) {
-			Document document = iterator.next();
-			resourceList.add(marshallDocument(document));
-		}
-		
-		
-		return resourceList;
-	}
-
-	public Resource getResorce(String requestPath) {
 		if(requestPath == null)
 			requestPath = "/";
 
@@ -165,7 +131,7 @@ public class ResourceServiceImpl implements ResourceService {
 		}
 
 		Menu menu = menuDAO.findFolder(name, path);
-		
+
 		//if this resource request is a folder
 		if(menu != null)
 			return marshallFolder(menu);
@@ -173,10 +139,17 @@ public class ResourceServiceImpl implements ResourceService {
 
 		Resource parentMenu = this.getParentResource(currentStablePath);
 		
-		Document document = documentDAO.findDocumentByNameAndParentFolderId(Long.parseLong(parentMenu.getID()), name);
+		Document document = documentDAO.findDocumentByNameAndParentFolderId(
+				Long.parseLong(parentMenu.getID()), name);
 		
 		if(document == null)
 			return null;
+		
+		boolean hasAccess = menuDAO.isReadEnable(document.getFolder().getId(), id);
+		
+		if(hasAccess == false)
+			throw new SecurityException("You have no appropriated rights to read this document");
+
 		
 		return marshallDocument(document);
 	}
@@ -213,23 +186,26 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public Resource createResource(Resource parentResource, String name,
 			boolean isCollection, ImportContext context) {
-
+		
 		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource.getID()));
+		
+		if (menuDAO.isWriteEnable(parentMenu.getId(), parentResource
+				.getRequestedPerson()) == false)
+			throw new SecurityException("Write Access not applied to this user");
 		
 		if(isCollection == true){
 			Menu createdMenu = menuDAO.createFolder(parentMenu, name);
 			return this.marshallFolder(createdMenu);
 		}
 		
-		DocumentManager documentManager = (DocumentManager) Context.getInstance()
-		.getBean(DocumentManager.class);
-		
 		User user = userDAO.findById(parentResource.getRequestedPerson());
+		
+		
 		
 		InputStream is = context.getInputStream();
 		try {
 			try {
-				documentManager.create(is, name, parentMenu, user, "en" );
+				documentManager.create(is, name, parentMenu, user, user.getLanguage() );
 			}
 			catch(Exception e){
 				e.printStackTrace();
@@ -245,11 +221,17 @@ public class ResourceServiceImpl implements ResourceService {
 		return null;
 	}
 
-	public void updateResource(String location, Resource resource) {
+	public void updateResource(Resource resource, ImportContext context) {
 		throw new AbstractMethodError();
 	}
 
 	public Resource getChildByName(Resource parentResource, String name) {
+		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource.getID()));
+		Document document = documentDAO.findDocumentByNameAndParentFolderId(parentMenu.getId(), name);
+		
+		if(document != null)
+			return marshallDocument(document);
+		
 		return null;
 	}
 

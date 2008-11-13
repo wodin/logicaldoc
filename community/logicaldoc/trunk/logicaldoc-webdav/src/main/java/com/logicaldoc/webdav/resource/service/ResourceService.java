@@ -3,8 +3,6 @@ package com.logicaldoc.webdav.resource.service;
 import java.io.InputStream;
 import java.util.List;
 
-import org.apache.jackrabbit.webdav.DavResourceLocator;
-
 import com.logicaldoc.webdav.context.ImportContext;
 import com.logicaldoc.webdav.resource.model.Resource;
 
@@ -19,21 +17,14 @@ public interface ResourceService {
 	 * @param locator
 	 * @return
 	 */
-	public Resource getResorce(String location);
+	public Resource getResorce(String location, long userid);
 	
 	/**
 	 * 
 	 * @param parentLocator
 	 * @return
 	 */
-	public List<Resource> getChildResources(String location);
-	
-	/**
-	 * 
-	 * @param parentLocator
-	 * @return
-	 */
-	public List<Resource> getChildResources(long folderID);
+	public List<Resource> getChildResources(Resource parentResource);
 	
 	/**
 	 * 
@@ -54,7 +45,7 @@ public interface ResourceService {
 	 * @param locator
 	 * @param resource
 	 */
-	public void updateResource(String location, Resource resource);
+	public void updateResource(Resource resource, ImportContext context);
 	
 	/**
 	 * 

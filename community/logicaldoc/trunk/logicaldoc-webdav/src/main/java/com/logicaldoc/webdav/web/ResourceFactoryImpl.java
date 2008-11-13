@@ -7,8 +7,6 @@ import org.apache.jackrabbit.webdav.DavResourceLocator;
 import org.apache.jackrabbit.webdav.DavServletRequest;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.lock.LockManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webdav.resource.DavResourceFactory;
@@ -18,7 +16,7 @@ import com.logicaldoc.webdav.resource.service.ResourceService;
 import com.logicaldoc.webdav.session.DavSession;
 
 public class ResourceFactoryImpl implements DavResourceFactory{
-	private static Logger log =LoggerFactory.getLogger(ResourceFactoryImpl.class);
+	
 
     private final LockManager lockMgr;
     private final ResourceConfig resourceConfig;
@@ -75,14 +73,15 @@ public class ResourceFactoryImpl implements DavResourceFactory{
                                       DavServletResponse response, DavSession session) throws DavException {
     	
         try {
-            Resource rT = resourceService.getResorce(locator.getResourcePath());
+            Resource rT = resourceService.getResorce(locator.getResourcePath(), new Long(session.getObject("id").toString()));
             DavResource resource;
             if (rT == null) {
-                log.debug("Creating resource for non-existing repository node.");
                 boolean isCollection = DavMethods.isCreateCollectionRequest(request);
                 resource = createNullResource(locator, session, isCollection);
             } else {
-            	resource =  createResource(locator, session, "TESTPURPOSES");
+            	Resource thisResource = resourceService.getResorce(locator.getResourcePath(), new Long(session.getObject("id").toString()));
+            	thisResource.setRequestedPerson(Long.parseLong(session.getObject("id").toString()));
+            	resource = new VersionControlledResourceImpl(locator, this, session, resourceConfig, thisResource, "");
             }
             
             resource.addLockManager(lockMgr);
@@ -105,7 +104,7 @@ public class ResourceFactoryImpl implements DavResourceFactory{
     public DavResource createResource(DavResourceLocator locator, DavSession session) throws DavException {
         try {
 
-            Resource resourceA = resourceService.getResorce( locator.getResourcePath() );
+            Resource resourceA = resourceService.getResorce( locator.getResourcePath(), new Long(session.getObject("id").toString()) );
             
             DavResource resource = createResource(locator, session, resourceA);
             resource.addLockManager(lockMgr);
@@ -128,33 +127,6 @@ public class ResourceFactoryImpl implements DavResourceFactory{
                                            DavSession session,
                                            boolean isCollection) throws DavException {
         DavResource resource = new VersionControlledResourceImpl(locator, this, session, resourceConfig, isCollection);
-        return resource;
-    }
-    
-    /**
-     * Tries to retrieve the repository item defined by the locator's resource
-     * path and build the corresponding WebDAV resource. If the repository
-     * supports the versioning option different resources are created for
-     * version, versionhistory and common nodes.
-     *
-     * @param locator
-     * @param sessionImpl
-     * @return DavResource representing a repository item.
-     */
-    private DavResource createResource(DavResourceLocator locator,
-                                       DavSession session, String TESTPURPOSES) throws DavException {
-
-        DavResource resource = null;
-        
-        try {
-        	Resource thisResource = resourceService.getResorce(locator.getResourcePath());
-        	thisResource.setRequestedPerson(Long.parseLong(session.getObject("id").toString()));
-        	resource = new VersionControlledResourceImpl(locator, this, session, resourceConfig, thisResource, "");
-        }
-        catch(Exception e){
-        	e.printStackTrace();
-        }
-        
         return resource;
     }
     

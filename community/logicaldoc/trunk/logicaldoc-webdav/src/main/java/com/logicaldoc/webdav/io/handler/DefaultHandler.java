@@ -153,17 +153,13 @@ public class DefaultHandler implements IOHandler {
 
         boolean success = false;
         try {
-            Resource resource = getContentNode(context, isCollection);
-            success = importData(context, isCollection, resource);
-            if(resource != null)
-            	success = true;
-            if (success) {
-              //  success = importProperties(context, isCollection, contentNode);
+            boolean isNewResource = getContentNode(context, isCollection);
+            //success = importData(context, isCollection, resource);
+           
             }
-        } catch (WebDavStorageException e) {
-            success = false;
-            throw new IOException(e.getMessage());
-        } finally {
+         catch(Exception e){
+        	 e.printStackTrace();
+         } finally {
 
         }
         return success;
@@ -297,16 +293,20 @@ public class DefaultHandler implements IOHandler {
      * @return
      * @throws WebDavStorageException
      */
-    protected Resource getContentNode(ImportContext context, boolean isCollection) throws WebDavStorageException {
+    protected boolean getContentNode(ImportContext context, boolean isCollection) throws WebDavStorageException {
         Resource resource = context.getResource();
         String name = context.getSystemId();
 
         Resource res = resourceService.getChildByName(resource, name);
         
-        if(res == null)
-        	return resourceService.createResource(resource, name, isCollection, context);
-        
-        return res;        
+        if(res == null){
+        	resourceService.createResource(resource, name, isCollection, context);
+        	return true;
+        }
+        else {
+        	//resourceService.updateResource(res, context);
+        	return false;
+        }     
     }
     
     /**
