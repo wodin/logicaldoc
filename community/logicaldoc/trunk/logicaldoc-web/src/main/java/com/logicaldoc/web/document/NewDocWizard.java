@@ -27,7 +27,6 @@ import com.logicaldoc.web.upload.InputFileBean;
  * Wizard that handled the creation of a new document.
  * 
  * @author Marco Meschieri - Logical Objects
- * @version $Id: NewDocWizard.java,v 1.9 2006/09/04 15:48:35 marco Exp $
  * @since 3.0
  */
 public class NewDocWizard {
@@ -153,7 +152,7 @@ public class NewDocWizard {
 						docForm.setKeywords(keywords);
 					} else {
 						AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
-						docForm.setKeywords(analyzer.getTermsAsString(5, content.toString(), documentLanguage));
+						docForm.setKeywords(analyzer.getTermsAsString(3, content.toString(), documentLanguage));
 					}
 				}
 
