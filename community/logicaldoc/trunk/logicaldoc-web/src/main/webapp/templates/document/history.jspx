@@ -24,12 +24,13 @@
 
 	<f:subview id="w-history">
 		<ice:form>
-			<ice:panelGroup>
+			<ice:panelGroup style="width:97%;">
 				<!-- articles -->
 				<ice:panelGroup>
 					<ice:dataTable id="histories"
 						value="#{historyRecordsManager.histories}" var="history"
-						cellpadding="0" width="100%" rows="10">
+						cellpadding="0" width="100%" rows="10"
+						columnClasses="docDateColumn,docDateColumn,titleColumn">
 
 						<!-- date column -->
 						<ice:column>
@@ -67,7 +68,7 @@
 
 					<ice:panelGroup>
 						<ldoc:paginator table="histories"
-							label="#{msgs['document.paginator']}" />
+							label="#{msgs['paginator.simple']}" />
 						<br />
 					</ice:panelGroup>
 				</ice:panelGroup>

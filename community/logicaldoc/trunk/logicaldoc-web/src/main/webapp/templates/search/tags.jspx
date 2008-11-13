@@ -131,7 +131,7 @@
 
 		<ice:panelGroup styleClass="center" style="width:600px;">
 			<ldoc:paginator table="documentsList"
-				label="#{msgs['document.paginator']}" />
+				label="#{msgs['paginator.simple']}" />
 		</ice:panelGroup>
 	</ice:panelGroup>
     
