@@ -44,7 +44,7 @@
 				rendered="#{groupsRecordsManager.count > 0}">
 				<ice:dataTable id="groupsList"
 					value="#{groupsRecordsManager.groups}" var="group" cellpadding="0"
-					rows="15"
+					rows="15" width="97%"
 					columnClasses="docNameColumn,docNameColumn,docMenuColumn,docMenuColumn">
 
 					<!-- Name -->
@@ -90,7 +90,7 @@
 
 				<ice:panelGroup>
 					<ldoc:paginator table="groupsList"
-						label="#{msgs['group.paginator']}" />
+						label="#{msgs['paginator.simple']}" />
 					<br />
 				</ice:panelGroup>
 			</ice:panelGroup>

@@ -538,11 +538,7 @@ em { /*font-size:14px;*/
 }
 
 .docSelectionColumn {
-	width: 20px;
-}
-
-.docTitleColumn {
-	width: 600px;
+	width: 4%;
 }
 
 .triangleColumn {
@@ -554,17 +550,18 @@ em { /*font-size:14px;*/
 }
 
 .docDateColumn {
-	width: 45px;
+	width: 15%;
 	text-align: center;
 }
 
 .docSizeColumn {
 	text-align: right;
 	white-space: nowrap;
+	width: 10%;
 }
 
 .docMenuColumn {
-	width: 50px;
+	width: 10%;
 	text-align: left;
 	border-bottom: 1px solid #CCCCCC;
 }

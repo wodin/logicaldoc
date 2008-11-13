@@ -121,7 +121,7 @@
 				</f:subview>
 			</ice:panelGroup>
 
-			<ice:panelGroup id="versions">
+			<ice:panelGroup id="versions" style="width: 100%;">
 				<f:subview id="w-versions">
 					<ui:include src="/templates/document/versions.jspx" />
 				</f:subview>
@@ -139,13 +139,13 @@
 				</f:subview>
 			</ice:panelGroup>
 
-			<ice:panelGroup id="articles">
+			<ice:panelGroup id="articles" style="width: 100%;">
 				<f:subview id="w-articles">
 					<ui:include src="/templates/document/articles.jspx" />
 				</f:subview>
 			</ice:panelGroup>
 
-			<ice:panelGroup id="history">
+			<ice:panelGroup id="history" style="width: 100%;">
 				<f:subview id="w-history">
 					<ui:include src="/templates/document/history.jspx" />
 				</f:subview>

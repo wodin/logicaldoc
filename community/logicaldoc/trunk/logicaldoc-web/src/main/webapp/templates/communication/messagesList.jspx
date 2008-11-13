@@ -109,7 +109,7 @@
 
 			<ice:panelGroup>
 				<ldoc:paginator table="messagesList"
-					label="#{msgs['message.paginator']}" />
+					label="#{msgs['paginator.simple']}" />
 				<br />
 			</ice:panelGroup>
 		</ice:panelGroup>

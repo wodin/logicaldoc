@@ -30,7 +30,7 @@
                     <ice:panelGroup>
                         <ice:dataTable id="articles"
                             value="#{articlesRecordsManager.articles}" var="article"
-                            cellpadding="0" width="100%" rows="10">
+                            cellpadding="0" width="97%" rows="10">
 
                             <!-- author column -->
                             <ice:column>
@@ -67,9 +67,9 @@
                             </ice:column>
                         </ice:dataTable>
 
-                        <ice:panelGroup>
+                        <ice:panelGroup style="width: 98%;">
                             <ldoc:paginator table="articles"
-                                label="#{msgs['article.paginator']}" />
+                                label="#{msgs['paginator.simple']}" />
                             <br />
                         </ice:panelGroup>
                     </ice:panelGroup>

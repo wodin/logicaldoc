@@ -24,12 +24,12 @@
 
 	<ice:form id="versionsForm">
 		<!-- Basic table -->
-		<ice:panelGroup styleClass="formBorderHighlight">
+		<ice:panelGroup styleClass="formBorderHighlight" style="width:97%;">
 			<ice:panelGroup>
 				<ice:dataTable id="versionData"
 					value="#{versionsRecordsManager.versions}" var="versionRecord"
-					cellpadding="0" width="100%" rows="2000"
-					columnClasses="docSelectionColumn,docSelectionColumn,docDateColumn,titleColumn,docSelectionColumn">
+					cellpadding="0" width="97%" rows="2000"
+					columnClasses="docSelectionColumn,docDateColumn,docDateColumn,titleColumn,docSelectionColumn">
 
 					<!-- version column -->
 					<ice:column>

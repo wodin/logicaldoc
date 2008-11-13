@@ -45,7 +45,7 @@
 				<ice:panelGroup styleClass="formBorderHighlight"
 					rendered="#{usersRecordsManager.count > 0}">
 					<ice:dataTable id="usersList" value="#{usersRecordsManager.users}"
-						var="user" cellpadding="0" rows="15"
+						var="user" cellpadding="0" rows="15" width="97%"
 						sortColumn="#{usersRecordsManager.sortColumn}"
 						sortAscending="#{usersRecordsManager.ascending}"
 						columnClasses="docNameColumn,docNameColumn,docNameColumn,docMenuColumn,docMenuColumn,docMenuColumn">
@@ -127,7 +127,7 @@
 
 					<ice:panelGroup>
 						<ldoc:paginator table="usersList"
-							label="#{msgs['user.paginator']}" />
+							label="#{msgs['paginator.simple']}" />
 						<br />
 					</ice:panelGroup>
 				</ice:panelGroup>
