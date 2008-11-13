@@ -490,7 +490,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	 */
 	private String getDocFilePath(Document doc) {
 		String path = new StringBuilder(settings.getValue("docdir")).append("/").append(doc.getPath()).append("/doc_")
-				.append(doc.getId()).toString();
+				.append(doc.getId()).append("/").toString();
 		return path;
 	}
 }
