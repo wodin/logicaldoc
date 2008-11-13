@@ -13,13 +13,17 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.DocumentTemplate;
+import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Result;
@@ -36,6 +40,7 @@ import com.logicaldoc.web.document.DocumentRecord;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.NavigationBean;
 import com.logicaldoc.web.navigation.PageContentBean;
+import com.logicaldoc.web.util.Attribute;
 
 /**
  * A simple search form bean.
@@ -100,6 +105,8 @@ public class SearchForm {
 
 	private Collection<DocumentResult> documentResult = new ArrayList<DocumentResult>();
 
+	private Collection<Attribute> extendedAttributes = new ArrayList<Attribute>();
+
 	private NavigationBean navigation;
 
 	private Search lastSearch = null;
@@ -141,12 +148,12 @@ public class SearchForm {
 		return language;
 	}
 
-	public static Log getLogger() {
-		return logger;
+	public Collection<Attribute> getExtendedAttributes() {
+		return extendedAttributes;
 	}
 
-	public static void setLogger(Log logger) {
-		SearchForm.logger = logger;
+	public void setExtendedAttributes(Collection<Attribute> extendedAttributes) {
+		this.extendedAttributes = extendedAttributes;
 	}
 
 	public String getAny() {
@@ -654,6 +661,7 @@ public class SearchForm {
 		title = true;
 		template = null;
 		searchInSubPath = false;
+		extendedAttributes.clear();
 	}
 
 	/**
@@ -886,5 +894,33 @@ public class SearchForm {
 
 	public void setExcludeFromResult(Long excludeFromResult) {
 		this.excludeFromResult = excludeFromResult;
+	}
+
+	private void initTemplate() {
+		extendedAttributes.clear();
+		if (template != null) {
+			DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+			DocumentTemplate docTemplate = dao.findById(template);
+			for (String attrName : docTemplate.getAttributes()) {
+				extendedAttributes.add(new Attribute(attrName, ""));
+			}
+		}
+	}
+
+	public int getExtendedAttributesCount() {
+		if (template != null) {
+			DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+			DocumentTemplate docTemplate = dao.findById(template);
+			return docTemplate.getAttributes().size();
+		} else {
+			return 0;
+		}
+	}
+
+	public void changeTemplate(ValueChangeEvent event) {
+		Long item = (Long) event.getNewValue();
+		this.template = item;
+		initTemplate();
+		JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "cleanAttributes();");
 	}
 }

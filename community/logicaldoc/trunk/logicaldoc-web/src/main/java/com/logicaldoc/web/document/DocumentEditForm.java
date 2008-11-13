@@ -33,6 +33,7 @@ import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.upload.InputFileBean;
+import com.logicaldoc.web.util.Attribute;
 import com.logicaldoc.web.util.FacesUtil;
 
 /**
@@ -480,38 +481,5 @@ public class DocumentEditForm {
 
 	public void setDocumentNavigation(DocumentNavigation documentNavigation) {
 		this.documentNavigation = documentNavigation;
-	}
-
-	public static class Attribute {
-		private String name;
-
-		private String value;
-
-		private Attribute(String name, String value) {
-			super();
-			this.name = name;
-			this.value = value;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public void setValue(String value) {
-			this.value = value;
-		}
-
-		@Override
-		public String toString() {
-			return getName() + " - " + getValue();
-		}
 	}
 }
