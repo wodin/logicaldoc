@@ -274,9 +274,10 @@ public class DocumentRecord extends MenuBarBean {
 	 * Executes the checkout and the related document's download
 	 */
 	public String checkout() {
+		initCollections();
 		long userId = SessionManagement.getUserId();
-		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu folder = getDocument().getFolder();
 
 		if (SessionManagement.isValid()) {
@@ -332,6 +333,7 @@ public class DocumentRecord extends MenuBarBean {
 	 */
 	@SuppressWarnings("deprecation")
 	public String checkin() {
+		initCollections();
 		if (SessionManagement.isValid()) {
 			// Show the proper panel
 			Application application = FacesContext.getCurrentInstance().getApplication();
@@ -359,6 +361,7 @@ public class DocumentRecord extends MenuBarBean {
 	 * Shows all versions of this document
 	 */
 	public String versions() {
+		initCollections();
 		long userId = SessionManagement.getUserId();
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu folder = getDocument().getFolder();
@@ -418,7 +421,6 @@ public class DocumentRecord extends MenuBarBean {
 	public String articles() {
 		if (SessionManagement.isValid()) {
 			try {
-
 				ArticlesRecordsManager articlesManager = ((ArticlesRecordsManager) FacesUtil
 						.accessBeanFromFacesContext("articlesRecordsManager", FacesContext.getCurrentInstance(), log));
 				articlesManager.selectDocument(document);
