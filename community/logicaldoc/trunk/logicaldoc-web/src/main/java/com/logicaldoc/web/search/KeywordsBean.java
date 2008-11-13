@@ -25,8 +25,7 @@ import com.logicaldoc.web.document.DocumentRecord;
  * 
  * @author Marco Meschieri - Logical Objects
  * @author Alessandro Gasparini - Logical Objects
- * @version $Id: KeywordsBean.java,v 1.2 2007/08/22 14:12:20 marco Exp $
- * @since ###release###
+ * @since 3.0
  */
 public class KeywordsBean extends SortableList {
 
@@ -39,9 +38,8 @@ public class KeywordsBean extends SortableList {
 	private List<DocumentRecord> documents = new ArrayList<DocumentRecord>();
 
 	private String selectedWord;
-	
+
 	private DocumentHandler dh = new DocumentHandler("xxx");
-	
 
 	// record the last operation requested: letter or keyword
 	private String reqop;
@@ -87,8 +85,7 @@ public class KeywordsBean extends SortableList {
 	/**
 	 * Set selectedWord and show documents marked with that word.
 	 * 
-	 * @param keyword
-	 *            The word of where we want to show documents
+	 * @param keyword The word of where we want to show documents
 	 */
 	public void select(String keyword) {
 		selectedWord = keyword;
@@ -279,11 +276,11 @@ public class KeywordsBean extends SortableList {
 
 		@Override
 		protected void sort(final String column, final boolean ascending) {
-			
+
 			log.debug("invoked DocumentsRecordsManager.sort()");
 			log.debug("sort on column: " + column);
 			log.debug("sort ascending: " + ascending);
-			
+
 			Comparator comparator = new Comparator() {
 				public int compare(Object o1, Object o2) {
 
@@ -316,5 +313,4 @@ public class KeywordsBean extends SortableList {
 	public DocumentHandler getDh() {
 		return dh;
 	}
-
 }
