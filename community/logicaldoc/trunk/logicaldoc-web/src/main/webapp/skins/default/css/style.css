@@ -317,18 +317,19 @@ em { /*font-size:14px;*/
 
 /* encapsulates the folder element and restricts it to the given size */
 .browseLeft {
-	border: 1px solid orange;
-	width: 25%;
+	/*border: 1px solid orange; */
+	width: 220;
 }
 
 .browseMain {
-	border: 1px solid navy;
-	width: 75%;
+	/* border: 1px solid navy; */
+	width: 100%;
 	vertical-align: top;
 }
 
 .folderContainer {
-	border: 0px solid #dedede;
+	/* border: 0px solid #dedede; */
+	/* border: 1px solid purple; */
 	width: 200px;
 	height: 420px;
 	overflow: auto;
