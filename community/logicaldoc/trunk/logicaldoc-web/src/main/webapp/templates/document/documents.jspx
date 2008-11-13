@@ -26,10 +26,10 @@
 	</ice:panelGroup>
 
 	<!-- Basic table -->
-	<ice:panelGroup styleClass="formBorderHighlight"
+	<ice:panelGroup styleClass="formBorderHighlight" style="width:97%;"
 		rendered="#{documentsRecordsManager.count > 0}">
 
-		<ice:dataTable id="documentsList"
+		<ice:dataTable id="documentsList" style="width:97%;"
 			value="#{documentsRecordsManager.documents}" var="documentRecord"
 			sortColumn="#{documentsRecordsManager.sortColumn}"
 			sortAscending="#{documentsRecordsManager.ascending}" cellpadding="0"
@@ -133,7 +133,7 @@
 			</ice:column>
 		</ice:dataTable>
 
-		<ice:panelGrid columns="2">
+		<ice:panelGrid columns="2" style="width: 95%;">
 			<ice:panelGroup>
 				<ldoc:paginator table="documentsList"
 					label="#{msgs['document.paginator']}" />

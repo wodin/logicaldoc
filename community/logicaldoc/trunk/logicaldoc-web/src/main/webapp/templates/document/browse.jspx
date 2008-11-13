@@ -13,12 +13,12 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGrid"
-	columns="2"
-	columnClasses="contentLayoutGridColumn,contentLayoutGridColumn"
+	columns="2" style="border: 1px solid #0000FF; width: 100%;"
+	columnClasses="browseLeft,browseMain"
 	cellpadding="4">
 
-	<ice:panelGrid columns="1" styleClass="contentLayoutGridColumn">
-		<ice:panelGroup style="display: inline"
+	<ice:panelGrid columns="1">
+		<ice:panelGroup style="display: inline;"
 			rendered="#{documentNavigation.selectedDir != null}">
 			<ice:form id="editFolderForm"
 				style="border:0px; margin:0px; padding:0px;">
@@ -96,7 +96,7 @@
 				<br />
 			</ice:panelGroup>
 
-			<ice:panelGroup id="documents">
+			<ice:panelGroup id="documents" style="width: 100%;">
 				<ice:messages />
 				<f:subview id="w-documents">
 					<ui:include src="/templates/document/documents.jspx" />
