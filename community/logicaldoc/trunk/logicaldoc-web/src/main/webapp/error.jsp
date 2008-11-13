@@ -1,4 +1,13 @@
 <% // generate a redirect as ICEFaces would do
+ String redirectedErrorLocation = null;
+ if((redirectedErrorLocation = (String)request.getAttribute("javax.servlet.error.request_uri")) != null){
+ 
+  if(redirectedErrorLocation.indexOf("/webdav") >= 0)      {
+     response.sendError(HttpServletResponse.SC_NOT_FOUND);
+     return;
+  }
+ }
+	
  response.setContentType("text/xml;charset=UTF-8");
  response.setStatus(200);
  
