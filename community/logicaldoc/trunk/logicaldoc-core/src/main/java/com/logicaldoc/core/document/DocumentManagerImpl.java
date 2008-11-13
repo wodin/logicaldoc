@@ -146,6 +146,12 @@ public class DocumentManagerImpl implements DocumentManager {
 	public Document create(File file, Menu folder, User user, String language) throws Exception {
 		return create(file, folder, user, language, "", null, "", "", "", "", "", null);
 	}
+	
+	@Override
+	public Document create(InputStream content, String filename, Menu folder, User user, String language) throws Exception {
+		return create(content, filename, folder, user, language, filename,
+				null, "", "", "", "","", null);
+	}
 
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,

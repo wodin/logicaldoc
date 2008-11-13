@@ -241,6 +241,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				doc.setKeywords(dst);
 			}
 
+
 			File docFile = new File(
 					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
 							.getFileName()));
@@ -606,6 +607,29 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		}
 
 		return coll;
+	}
+	
+	@Override
+	public Document findDocumentByNameAndParentFolderId(long folderId,
+			String documentName) {
+		Collection<Document> coll = null;
+		try {
+			StringBuffer query = new StringBuffer("select _doc.id from Document _doc where ");
+			query.append("_doc.folder.id = ");
+			query.append(Long.toString(folderId));
+
+			coll = (Collection<Document>) getHibernateTemplate().find(
+					"from Document _doc where _doc.folder.id = " + folderId
+							+ " and _doc.fileName='" + documentName + "'");
+			
+			if(coll != null && coll.size() > 0 )
+				return coll.iterator().next();
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+
+		return null;
 	}
 
 	@Override

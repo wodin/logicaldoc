@@ -195,4 +195,19 @@ public interface DocumentManager {
 	 * @throws Exception 
 	 */
 	public void moveToFolder(Document doc, Menu folder) throws Exception;
+
+	/**
+	 * Creates a new Document. Saves the information provided. That also
+	 * includes updating the search index for example.
+	 * 
+	 * @param content
+	 * @param filename
+	 * @param folder
+	 * @param user
+	 * @param language
+	 * @return
+	 * @throws Exception
+	 */
+	public Document create(InputStream content, String filename, Menu folder,
+			User user, String language) throws Exception;
 }

@@ -633,4 +633,43 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 
 		return result;
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public Collection<Menu> findFoldersByPathExtended(String path) {
+				
+		Collection<Menu> specified_menu = new ArrayList<Menu>();
+		try {
+			
+			specified_menu = (List<Menu>) getHibernateTemplate()
+					.find("from Menu _menu where  _menu.pathExtended = '" + path + "'");
+			
+			if(specified_menu != null && specified_menu.size() > 0)
+				return specified_menu;
+		}
+		catch(Exception e){
+			log.error(e.getMessage(), e);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public Menu findFolder(String folderName, String pathExtended) {
+		Collection<Menu> specified_menu = new ArrayList<Menu>();
+		try {
+			
+			specified_menu = (List<Menu>) getHibernateTemplate()
+					.find("from Menu _menu where _menu.text = '" + folderName + "' AND _menu.pathExtended = '" + pathExtended + "'");
+			
+			if(specified_menu != null && specified_menu.size() > 0)
+				return specified_menu.iterator().next();
+		}
+		catch(Exception e){
+			log.error(e.getMessage(), e);
+		}
+		
+		return null;
+	}
+	
 }
