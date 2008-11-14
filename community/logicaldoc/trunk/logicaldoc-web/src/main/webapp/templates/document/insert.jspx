@@ -14,6 +14,18 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
 
+	<script type="text/javascript" language="javascript">
+	   function cleanAttributes() {
+	        var e=document.getElementsByTagName("input");
+
+			for(var i=0; i &lt; e.length ;i++){
+				if(e[i].type=='text' &amp;&amp; e[i].id.contains('attribute'))
+				  e[i].value='';			 
+			}
+			return true;
+	   }
+	</script>
+
 	<!-- Core data -->
 	<ice:panelGroup>
 		<h3>
@@ -129,5 +141,56 @@
 				<ice:inputText value="#{documentForm.versionDesc}" cols="70" />
 			</ice:panelGroup>
 		</ice:panelGrid>
+	</ice:panelGroup>
+
+	<!-- Template data -->
+	<ice:panelGroup>
+		<hr />
+		<h3>
+			<ice:outputText value="#{msgs['template.data']}" />
+			<br />
+			<br />
+		</h3>
+		<ice:panelGrid columns="5">
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="source" value="#{msgs['template']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectOneMenu styleClass="selectTagMenu" tabindex="1"
+					value="#{documentForm.template}"
+					disabled="#{documentForm.readOnly}"
+					valueChangeListener="#{documentForm.changeTemplate}"
+					partialSubmit="true">
+					<f:selectItem itemValue="" itemLabel="" />
+					<f:selectItems value="#{selectionTags.templates}" />
+				</ice:selectOneMenu>
+			</ice:panelGroup>
+			<ice:panelGroup style="width:20px" />
+			<ice:panelGroup />
+			<ice:panelGroup />
+		</ice:panelGrid>
+
+		<!-- Extended Attributes -->
+		<ice:panelGroup rendered="#{documentForm.extendedAttributesCount >0}">
+			<ice:dataTable id="attributesList"
+				value="#{documentForm.extendedAttributes}" var="entry"
+				cellpadding="0" rows="9999"
+				columnClasses="docNameColumn,docNameColumn">
+				<!-- Name -->
+				<ice:column>
+					<ice:panelGroup>
+						<ice:outputText value="#{entry.name}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Value -->
+				<ice:column>
+					<ice:panelGroup>
+						<ice:inputText id="attribute-#{entry.name}" value="#{entry.value}"
+							maxlength="255" disabled="#{documentForm.readOnly}" />
+					</ice:panelGroup>
+				</ice:column>
+			</ice:dataTable>
+		</ice:panelGroup>
 	</ice:panelGroup>
 </jsp:root>

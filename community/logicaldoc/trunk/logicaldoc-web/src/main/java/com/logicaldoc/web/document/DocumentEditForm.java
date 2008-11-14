@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.faces.application.Application;
@@ -119,21 +121,43 @@ public class DocumentEditForm {
 
 	private void initTemplate() {
 		extendedAttributes.clear();
-		Document doc = record.getDocument();
-		if (doc.getTemplate() != null) {
-			template = new Long(doc.getTemplate().getId());
-			for (String attrName : doc.getTemplate().getAttributes()) {
-				extendedAttributes.add(new Attribute(attrName, doc.getValue(attrName)));
+		DocumentTemplate templt = null;
+		if (record != null) {
+			Document doc = record.getDocument();
+			templt = doc.getTemplate();
+			if (templt != null)
+				for (String attrName : templt.getAttributes()) {
+					extendedAttributes.add(new Attribute(attrName, doc.getValue(attrName)));
+				}
+		} else {
+			if (template != null) {
+				DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance()
+						.getBean(DocumentTemplateDAO.class);
+				templt = dao.findById(template.longValue());
+				for (String attrName : templt.getAttributes()) {
+					extendedAttributes.add(new Attribute(attrName, ""));
+				}
 			}
 		}
+
 	}
 
 	public int getExtendedAttributesCount() {
-		Document doc = record.getDocument();
-		if (doc.getTemplate() != null) {
-			return doc.getTemplate().getAttributes().size();
+		if (record == null) {
+			if (template != null) {
+				DocumentTemplateDAO tdao = (DocumentTemplateDAO) Context.getInstance().getBean(
+						DocumentTemplateDAO.class);
+				DocumentTemplate buf = tdao.findById(template.longValue());
+				return buf.getAttributes().size();
+			} else
+				return 0;
 		} else {
-			return 0;
+			Document doc = record.getDocument();
+			if (doc.getTemplate() != null) {
+				return doc.getTemplate().getAttributes().size();
+			} else {
+				return 0;
+			}
 		}
 	}
 
@@ -143,14 +167,16 @@ public class DocumentEditForm {
 			DocumentTemplateDAO tdao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 			template = item;
 			DocumentTemplate buf = tdao.findById(template.longValue());
-			record.getDocument().setTemplate(buf);
+			if (record != null)
+				record.getDocument().setTemplate(buf);
 		} else {
-			record.getDocument().setTemplate(null);
+			if (record != null)
+				record.getDocument().setTemplate(null);
 		}
 		initTemplate();
 		JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "cleanAttributes();");
 	}
-	
+
 	public Collection<Attribute> getExtendedAttributes() {
 		return extendedAttributes;
 	}
@@ -344,8 +370,15 @@ public class DocumentEditForm {
 
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
+
+				Map<String, String> attrs = new HashMap<String, String>();
+				for (Attribute att : extendedAttributes) {
+					if (StringUtils.isNotEmpty(att.getValue()))
+						attrs.put(att.getName(), att.getValue());
+				}
+
 				documentManager.create(file, folder, SessionManagement.getUser(), language, title, getSourceDate(),
-						source, sourceAuthor, sourceType, coverage, versionDesc, kwds);
+						source, sourceAuthor, sourceType, coverage, versionDesc, kwds, template, attrs);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, "errors.action.savedoc", "errors.action.savedoc");
