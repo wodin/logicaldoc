@@ -3,6 +3,7 @@ package com.logicaldoc.core.document;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
@@ -90,7 +91,32 @@ public interface DocumentManager {
 	 */
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> keywordso) throws Exception;
+			Set<String> keywords) throws Exception;
+
+	/**
+	 * Creates a new Document. Saves the information provided. That also
+	 * includes updating the search index for example.
+	 * 
+	 * @param user
+	 * @param folder
+	 * @param title If not provided the filename must be used instead
+	 * @param file
+	 * @param sourceDate
+	 * @param source
+	 * @param sourceAuthor
+	 * @param sourceType
+	 * @param coverage
+	 * @param language
+	 * @param versionDesc
+	 * @param keywords
+	 * @param templateId
+	 * @param extendedAttributes
+	 * @return The created document
+	 * @throws Exception
+	 */
+	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
+			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
+			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -109,13 +135,40 @@ public interface DocumentManager {
 	 * @param coverage
 	 * @param versionDesc
 	 * @param keywords
-	 * @param groups
+	 * @param templateId
+	 * @param extendedAttributes
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document create(InputStream content, String filename, Menu folder, User user, String language,
-			String title, Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> keywords) throws Exception;
+	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
+			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
+			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes)
+			throws Exception;
+	
+	/**
+	 * Creates a new Document. Saves the information provided. That also
+	 * includes updating the search index for example.
+	 * 
+	 * @param content The document content stream
+	 * @param filename The original document file name
+	 * @param folder
+	 * @param user
+	 * @param language
+	 * @param title If not provided the filename must be used instead
+	 * @param sourceDate
+	 * @param source
+	 * @param sourceAuthor
+	 * @param sourceType
+	 * @param coverage
+	 * @param versionDesc
+	 * @param keywords
+	 * @return The created document
+	 * @throws Exception
+	 */
+	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
+			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
+			String versionDesc, Set<String> keywords)
+			throws Exception;
 
 	/**
 	 * Obtains the document's file
@@ -166,9 +219,8 @@ public interface DocumentManager {
 	 * @param keywords
 	 * @throws Exception
 	 */
-	public void update(Document doc, User user, String title, String source, String sourceAuthor,
-			Date sourceDate, String sourceType, String coverage, String language, Set<String> keywords)
-			throws Exception;
+	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
+			String sourceType, String coverage, String language, Set<String> keywords) throws Exception;
 
 	/**
 	 * Retrieves the full-text document content
@@ -192,7 +244,7 @@ public interface DocumentManager {
 	 * 
 	 * @param doc The document to move
 	 * @param folder The target folder
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void moveToFolder(Document doc, Menu folder) throws Exception;
 
@@ -208,6 +260,6 @@ public interface DocumentManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public Document create(InputStream content, String filename, Menu folder,
-			User user, String language) throws Exception;
+	public Document create(InputStream content, String filename, Menu folder, User user, String language)
+			throws Exception;
 }

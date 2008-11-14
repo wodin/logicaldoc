@@ -272,6 +272,9 @@
 				<property name="documentDAO">
 					<ref bean="DocumentDAO" />
 				</property>
+				<property name="documentTemplateDAO">
+					<ref bean="DocumentTemplateDAO" />
+				</property>
 				<property name="historyDAO">
 					<ref bean="HistoryDAO" />
 				</property>
