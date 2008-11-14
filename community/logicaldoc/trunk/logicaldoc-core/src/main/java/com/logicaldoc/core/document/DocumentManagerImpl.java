@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -17,6 +18,7 @@ import org.apache.lucene.document.Field;
 
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.core.searchengine.LuceneDocument;
@@ -39,6 +41,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	private DocumentDAO documentDAO;
 
+	private DocumentTemplateDAO documentTemplateDAO;
+
 	private HistoryDAO historyDAO;
 
 	private SettingsConfig settings;
@@ -49,6 +53,10 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void setDocumentDAO(DocumentDAO documentDAO) {
 		this.documentDAO = documentDAO;
+	}
+
+	public void setDocumentTemplateDAO(DocumentTemplateDAO documentTemplateDAO) {
+		this.documentTemplateDAO = documentTemplateDAO;
 	}
 
 	public void setHistoryDAO(HistoryDAO historyDAO) {
@@ -146,129 +154,27 @@ public class DocumentManagerImpl implements DocumentManager {
 	public Document create(File file, Menu folder, User user, String language) throws Exception {
 		return create(file, folder, user, language, "", null, "", "", "", "", "", null);
 	}
-	
+
 	@Override
-	public Document create(InputStream content, String filename, Menu folder, User user, String language) throws Exception {
-		return create(content, filename, folder, user, language, filename,
-				null, "", "", "", "","", null);
+	public Document create(InputStream content, String filename, Menu folder, User user, String language)
+			throws Exception {
+		return create(content, filename, folder, user, language, filename, null, "", "", "", "", "", null);
 	}
 
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> keywords) throws Exception {
-		try {
-			Document doc = new Document();
-			Version vers = new Version();
-			doc.setFolder(folder);
-			doc.setFileName(filename);
-			doc.setDate(new Date());
-
-			String fallbackTitle=filename;
-			String type="unknown";
-			int lastDotIndex=filename.lastIndexOf(".");
-			if(lastDotIndex>0){
-				fallbackTitle=filename.substring(0, lastDotIndex);
-				type=filename.substring(lastDotIndex + 1).toLowerCase();
-			}
-			
-			if (StringUtils.isNotEmpty(title)) {
-				doc.setTitle(title);
-			} else {
-				doc.setTitle(fallbackTitle);
-			}
-
-			if (sourceDate != null)
-				doc.setSourceDate(sourceDate);
-			else
-				doc.setSourceDate(doc.getDate());
-			doc.setPublisher(user.getUserName());
-			doc.setStatus(Document.DOC_CHECKED_IN);
-			doc.setType(type);
-			doc.setVersion("1.0");
-			doc.setSource(source);
-			doc.setSourceAuthor(sourceAuthor);
-			doc.setSourceType(sourceType);
-			doc.setCoverage(coverage);
-			doc.setLanguage(language);
-			if (keywords != null)
-				doc.setKeywords(keywords);
-
-			/* insert initial version 1.0 */
-			vers.setVersion("1.0");
-			vers.setComment(versionDesc);
-			vers.setDate(doc.getDate());
-			vers.setUser(user.getUserName());
-
-			doc.addVersion(vers);
-
-			documentDAO.store(doc);
-
-			String path = getDocFilePath(doc);
-
-			/* store the document */
-			store(doc, content, filename, "1.0");
-
-			createHistoryEntry(doc.getId(), user.getUserName(), History.STORED);
-
-			/* create search index entry */
-			String lang = doc.getLanguage();
-			File file = new File(new StringBuilder(path).append("/").append(doc.getFileName()).toString());
-			indexer.addFile(file, doc, getDocumentContent(doc), lang);
-
-			doc.setFileSize(file.length());
-			documentDAO.store(doc);
-			return doc;
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			throw e;
-		}
+		return create(content, filename, folder, user, language, title, sourceDate, source, sourceAuthor, sourceType,
+				coverage, versionDesc, keywords, null, null);
 	}
 
 	@Override
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> keywords) throws Exception {
-		Locale locale = new Locale(language);
-		Parser parser = ParserFactory.getParser(file, locale);
-		String filename = file.getName();
-		String _title = title;
-		String _author = sourceAuthor;
-		Set<String> _kwds = keywords;
-		
-		String fallbackTitle=filename;
-		int lastDotIndex=filename.lastIndexOf(".");
-		if(lastDotIndex>0){
-			fallbackTitle=filename.substring(0, lastDotIndex);
-		}
-		
-		if (parser != null) {
-			if (StringUtils.isEmpty(title)) {
-				if (parser.getTitle().length() == 0)
-					_title = fallbackTitle;
-				else
-					_title = parser.getTitle();
-			}
-			if (StringUtils.isEmpty(sourceAuthor))
-				_author = parser.getAuthor();
-			String keys = parser.getKeywords();
-			if (keys != null && keys.length() > 0) {
-				if (keywords == null || keywords.isEmpty())
-					_kwds = new HashSet<String>();
-				_kwds = documentDAO.toKeywords(keys);
-			}
-		} else {
-			if (StringUtils.isEmpty(title))
-				title = filename;
-		}
-
-		InputStream is = new FileInputStream(file);
-		try {
-			return create(is, file.getName(), folder, user, language, _title, sourceDate, source, _author, sourceType,
-					coverage, versionDesc, _kwds);
-		} finally {
-			is.close();
-		}
+		return create(file, folder, user, language, title, sourceDate, source, sourceAuthor, sourceType, coverage,
+				versionDesc, keywords, null, null);
 	}
 
 	private void store(Document doc, InputStream content, String filename, String version) throws IOException {
@@ -492,5 +398,131 @@ public class DocumentManagerImpl implements DocumentManager {
 		String path = new StringBuilder(settings.getValue("docdir")).append("/").append(doc.getPath()).append("/doc_")
 				.append(doc.getId()).append("/").toString();
 		return path;
+	}
+
+	@Override
+	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
+			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
+			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes) throws Exception {
+		Locale locale = new Locale(language);
+		Parser parser = ParserFactory.getParser(file, locale);
+		String filename = file.getName();
+		String _title = title;
+		String _author = sourceAuthor;
+		Set<String> _kwds = keywords;
+
+		String fallbackTitle = filename;
+		int lastDotIndex = filename.lastIndexOf(".");
+		if (lastDotIndex > 0) {
+			fallbackTitle = filename.substring(0, lastDotIndex);
+		}
+
+		if (parser != null) {
+			if (StringUtils.isEmpty(title)) {
+				if (parser.getTitle().length() == 0)
+					_title = fallbackTitle;
+				else
+					_title = parser.getTitle();
+			}
+			if (StringUtils.isEmpty(sourceAuthor))
+				_author = parser.getAuthor();
+			String keys = parser.getKeywords();
+			if (keys != null && keys.length() > 0) {
+				if (keywords == null || keywords.isEmpty())
+					_kwds = new HashSet<String>();
+				_kwds = documentDAO.toKeywords(keys);
+			}
+		} else {
+			if (StringUtils.isEmpty(title))
+				title = filename;
+		}
+
+		InputStream is = new FileInputStream(file);
+		try {
+			return create(is, file.getName(), folder, user, language, _title, sourceDate, source, _author, sourceType,
+					coverage, versionDesc, _kwds, templateId, extendedAttributes);
+		} finally {
+			is.close();
+		}
+	}
+
+	@Override
+	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
+			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
+			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes)
+			throws Exception {
+		try {
+			Document doc = new Document();
+			Version vers = new Version();
+			doc.setFolder(folder);
+			doc.setFileName(filename);
+			doc.setDate(new Date());
+
+			String fallbackTitle = filename;
+			String type = "unknown";
+			int lastDotIndex = filename.lastIndexOf(".");
+			if (lastDotIndex > 0) {
+				fallbackTitle = filename.substring(0, lastDotIndex);
+				type = filename.substring(lastDotIndex + 1).toLowerCase();
+			}
+
+			if (StringUtils.isNotEmpty(title)) {
+				doc.setTitle(title);
+			} else {
+				doc.setTitle(fallbackTitle);
+			}
+
+			if (sourceDate != null)
+				doc.setSourceDate(sourceDate);
+			else
+				doc.setSourceDate(doc.getDate());
+			doc.setPublisher(user.getUserName());
+			doc.setStatus(Document.DOC_CHECKED_IN);
+			doc.setType(type);
+			doc.setVersion("1.0");
+			doc.setSource(source);
+			doc.setSourceAuthor(sourceAuthor);
+			doc.setSourceType(sourceType);
+			doc.setCoverage(coverage);
+			doc.setLanguage(language);
+			if (keywords != null)
+				doc.setKeywords(keywords);
+
+			/* insert initial version 1.0 */
+			vers.setVersion("1.0");
+			vers.setComment(versionDesc);
+			vers.setDate(doc.getDate());
+			vers.setUser(user.getUserName());
+
+			doc.addVersion(vers);
+
+			/* Set template and extended attributes */
+			if (templateId != null) {
+				DocumentTemplate template = documentTemplateDAO.findById(templateId);
+				doc.setTemplate(template);
+				if (extendedAttributes != null)
+					doc.setAttributes(extendedAttributes);
+			}
+			documentDAO.store(doc);
+
+			String path = getDocFilePath(doc);
+
+			/* store the document */
+			store(doc, content, filename, "1.0");
+
+			createHistoryEntry(doc.getId(), user.getUserName(), History.STORED);
+
+			/* create search index entry */
+			String lang = doc.getLanguage();
+			File file = new File(new StringBuilder(path).append("/").append(doc.getFileName()).toString());
+			indexer.addFile(file, doc, getDocumentContent(doc), lang);
+
+			doc.setFileSize(file.length());
+			documentDAO.store(doc);
+			return doc;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 }
