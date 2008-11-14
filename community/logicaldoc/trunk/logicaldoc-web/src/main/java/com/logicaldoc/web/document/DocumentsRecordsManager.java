@@ -353,13 +353,14 @@ public class DocumentsRecordsManager extends SortableList {
 				// delete the original file from the upload directory
 				inputFile.deleteUploadDir();
 
+				final long userId = SessionManagement.getUserId();
 				// Prepare the import thread
 				Thread zipImporter = new Thread(new Runnable() {
 					public void run() {
 						ZipImport importer = new ZipImport();
 						importer.setExtractKeywords(inputFile.isExtractKeywords());
 						log.debug("importing: = " + destFile.getPath());
-						importer.process(destFile.getPath(), zipLanguage, parent, SessionManagement.getUserId());
+						importer.process(destFile.getPath(), zipLanguage, parent, userId);
 						try {
 							FileUtils.forceDelete(destFile);
 						} catch (IOException e) {
