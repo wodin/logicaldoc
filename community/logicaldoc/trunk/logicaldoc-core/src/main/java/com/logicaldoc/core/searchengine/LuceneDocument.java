@@ -139,7 +139,7 @@ public class LuceneDocument {
 		for (String attribute : document.getAttributeNames()) {
 			String value = document.getValue(attribute);
 			if (StringUtils.isNotEmpty(value)) {
-				doc.add(new Field(attribute, value, Field.Store.YES, Field.Index.UN_TOKENIZED));
+				doc.add(new Field(attribute, value, Field.Store.NO, Field.Index.TOKENIZED));
 			}
 		}
 	}
