@@ -322,7 +322,7 @@
 			</ice:panelGroup>
 		</ice:panelGrid>
 	</ice:panelGroup>
- 
+
 	<ice:panelGroup>
 		<hr />
 		<h3>
@@ -337,7 +337,8 @@
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectOneMenu styleClass="selectTagMenu" tabindex="1"
-					value="#{searchForm.template}" partialSubmit="true">
+					value="#{searchForm.template}" partialSubmit="true"
+					valueChangeListener="#{searchForm.changeTemplate}">
 					<f:selectItem itemValue="" itemLabel="" />
 					<f:selectItems value="#{selectionTags.templates}" />
 				</ice:selectOneMenu>
@@ -346,6 +347,11 @@
 			<ice:panelGroup />
 			<ice:panelGroup />
 		</ice:panelGrid>
+	</ice:panelGroup>
+	<ice:panelGroup>
+		<ice:selectManyCheckbox	value="#{searchForm.extendedAttributes}">
+			<f:selectItems value="#{searchForm.extendedAttributesItems}" />
+		</ice:selectManyCheckbox>
 	</ice:panelGroup>
 
 	<hr />

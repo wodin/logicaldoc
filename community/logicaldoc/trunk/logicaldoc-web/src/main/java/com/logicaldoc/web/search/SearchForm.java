@@ -14,13 +14,13 @@ import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
@@ -40,7 +40,6 @@ import com.logicaldoc.web.document.DocumentRecord;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.NavigationBean;
 import com.logicaldoc.web.navigation.PageContentBean;
-import com.logicaldoc.web.util.Attribute;
 
 /**
  * A simple search form bean.
@@ -105,7 +104,9 @@ public class SearchForm {
 
 	private Collection<DocumentResult> documentResult = new ArrayList<DocumentResult>();
 
-	private Collection<Attribute> extendedAttributes = new ArrayList<Attribute>();
+	private String[] extendedAttributes = new String[0];
+
+	private Collection<SelectItem> extendedAttributesItems = new ArrayList<SelectItem>();
 
 	private NavigationBean navigation;
 
@@ -148,11 +149,11 @@ public class SearchForm {
 		return language;
 	}
 
-	public Collection<Attribute> getExtendedAttributes() {
+	public String[] getExtendedAttributes() {
 		return extendedAttributes;
 	}
 
-	public void setExtendedAttributes(Collection<Attribute> extendedAttributes) {
+	public void setExtendedAttributes(String[] extendedAttributes) {
 		this.extendedAttributes = extendedAttributes;
 	}
 
@@ -460,6 +461,15 @@ public class SearchForm {
 					fields.add(LuceneDocument.FIELD_TITLE);
 				}
 
+				if (template != null && template.longValue() > 0) {
+					opt.setTemplate(template);
+					for (String attribute : extendedAttributes) {
+						fields.add(attribute);
+					}
+				} else {
+					opt.setTemplate(null);
+				}
+				
 				String[] flds = (String[]) fields.toArray(new String[fields.size()]);
 				opt.setFields(flds);
 
@@ -500,12 +510,8 @@ public class SearchForm {
 							opt.setSearchInSubPath(true);
 					}
 				}
-
-				if (template != null && template.longValue() > 0)
-					opt.setTemplate(template);
-				else
-					opt.setTemplate(null);
-
+				
+				
 				String searchLanguage = "all".equals(language) ? SessionManagement.getLanguage() : language;
 				lastSearch = new Search(opt, searchLanguage);
 				lastSearch.setMaxHits(maxHits);
@@ -661,7 +667,7 @@ public class SearchForm {
 		title = true;
 		template = null;
 		searchInSubPath = false;
-		extendedAttributes.clear();
+		extendedAttributes=new String[0];
 	}
 
 	/**
@@ -861,6 +867,14 @@ public class SearchForm {
 		this.path = parentPath;
 	}
 
+	public Collection<SelectItem> getExtendedAttributesItems() {
+		return extendedAttributesItems;
+	}
+
+	public void setExtendedAttributesItems(Collection<SelectItem> extendedAttributesItems) {
+		this.extendedAttributesItems = extendedAttributesItems;
+	}
+
 	public boolean isSearchInSubPath() {
 		return searchInSubPath;
 	}
@@ -897,12 +911,13 @@ public class SearchForm {
 	}
 
 	private void initTemplate() {
-		extendedAttributes.clear();
+		extendedAttributes=new String[0];
+		extendedAttributesItems.clear();
 		if (template != null) {
 			DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 			DocumentTemplate docTemplate = dao.findById(template);
 			for (String attrName : docTemplate.getAttributes()) {
-				extendedAttributes.add(new Attribute(attrName, ""));
+				extendedAttributesItems.add(new SelectItem(attrName));
 			}
 		}
 	}
@@ -921,6 +936,5 @@ public class SearchForm {
 		Long item = (Long) event.getNewValue();
 		this.template = item;
 		initTemplate();
-		JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "cleanAttributes();");
 	}
 }
