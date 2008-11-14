@@ -65,7 +65,6 @@ public class ZipImport {
 	}
 
 	public void process(File zipsource, String language, Menu parent, long userId) {
-
 		this.language = language;
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -79,30 +78,28 @@ public class ZipImport {
 		}
 
 		userpath += userId + "_" + "unzip";
-		File file = new File(userpath);
-		if (file.exists()) {
+		File dir = new File(userpath);
+		if (dir.exists()) {
 			try {
-				FileUtils.deleteDirectory(file);
+				FileUtils.deleteDirectory(dir);
 			} catch (IOException e) {
 			}
 		}
 
 		try {
-			FileUtils.forceMkdir(file);
+			FileUtils.forceMkdir(dir);
 		} catch (IOException e) {
 		}
 		ZipUtil.unzip(zipsource.getPath(), userpath);
-
-		File[] files = file.listFiles();
+		File[] files = dir.listFiles();
 
 		for (int i = 0; i < files.length; i++) {
 			addEntry(files[i], parent);
 		}
 
 		try {
-			FileUtils.deleteDirectory(file);
-		} catch (IOException e) {
-			e.printStackTrace();
+			FileUtils.deleteDirectory(dir);
+		} catch (IOException e) {			
 		}
 	}
 

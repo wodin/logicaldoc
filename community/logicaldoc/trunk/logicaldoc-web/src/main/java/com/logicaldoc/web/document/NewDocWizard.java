@@ -78,6 +78,10 @@ public class NewDocWizard {
 		if (SessionManagement.isValid()) {
 			try {
 				File file = inputFile.getFile();
+
+				if (file == null)
+					return null;
+
 				String documentLanguage = inputFile.getLanguage();
 
 				// Get folder that called AddDocAction
@@ -101,14 +105,14 @@ public class NewDocWizard {
 				Locale locale = new Locale(inputFile.getLanguage());
 				Parser parser = ParserFactory.getParser(file, locale);
 				String content = null;
-				String name = "";
+				String title = "";
 				String author = "";
 				String keywords = "";
 
 				// and gets some fields
 				if (parser != null) {
 					content = parser.getContent();
-					name = parser.getTitle();
+					title = parser.getTitle();
 					author = parser.getAuthor();
 					if (inputFile.isExtractKeywords())
 						keywords = parser.getKeywords();
@@ -127,16 +131,18 @@ public class NewDocWizard {
 				}
 
 				// fills needed fields
-				if ((name != null) && (name.length() > 0)) {
-					docForm.setTitle(name);
+				if ((title != null) && (title.length() > 0)) {
+					docForm.setTitle(title);
 				} else {
 					int tmpInt = filename.lastIndexOf(".");
-
 					if (tmpInt != -1) {
-						docForm.setTitle(filename.substring(0, tmpInt));
+						title = filename.substring(0, tmpInt);
 					} else {
-						docForm.setTitle(filename);
+						title = filename;
 					}
+					   
+					title = new String(title.getBytes(), "UTF-8");
+					docForm.setTitle(title);
 				}
 				docForm.setSource(source);
 
@@ -151,7 +157,8 @@ public class NewDocWizard {
 					if ((keywords != null) && !keywords.trim().equals("")) {
 						docForm.setKeywords(keywords);
 					} else {
-						AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
+						AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(
+								AnalyzerManager.class);
 						docForm.setKeywords(analyzer.getTermsAsString(3, content.toString(), documentLanguage));
 					}
 				}
