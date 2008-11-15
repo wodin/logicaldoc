@@ -464,7 +464,7 @@ public class SearchForm {
 				if (template != null && template.longValue() > 0) {
 					opt.setTemplate(template);
 					for (String attribute : extendedAttributes) {
-						fields.add(attribute);
+						fields.add("ext_"+attribute);
 					}
 				} else {
 					opt.setTemplate(null);

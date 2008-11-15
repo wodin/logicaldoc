@@ -125,6 +125,7 @@ public class DocumentEditForm {
 		if (record != null) {
 			Document doc = record.getDocument();
 			templt = doc.getTemplate();
+			template = templt.getId();
 			if (templt != null)
 				for (String attrName : templt.getAttributes()) {
 					extendedAttributes.add(new Attribute(attrName, doc.getValue(attrName)));

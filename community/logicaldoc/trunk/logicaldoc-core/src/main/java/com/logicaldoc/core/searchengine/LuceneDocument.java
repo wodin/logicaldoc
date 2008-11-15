@@ -139,7 +139,9 @@ public class LuceneDocument {
 		for (String attribute : document.getAttributeNames()) {
 			String value = document.getValue(attribute);
 			if (StringUtils.isNotEmpty(value)) {
-				doc.add(new Field(attribute, value, Field.Store.NO, Field.Index.TOKENIZED));
+				// Prefix all extended attributes with 'ext_' in order to avoid
+				// collisions with standard fields
+				doc.add(new Field("ext_" + attribute, value, Field.Store.NO, Field.Index.TOKENIZED));
 			}
 		}
 	}
