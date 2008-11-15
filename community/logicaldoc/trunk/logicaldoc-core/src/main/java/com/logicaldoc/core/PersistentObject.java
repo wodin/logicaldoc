@@ -11,6 +11,8 @@ import java.util.Date;
 public abstract class PersistentObject {
 	private long id = 0;
 
+	private int deleted = 0;
+
 	private Date lastModified;
 
 	/**
@@ -33,6 +35,17 @@ public abstract class PersistentObject {
 
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
+	}
+
+	/**
+	 * This flag is used to mark an object as deleted
+	 */
+	public int getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
 	}
 
 	public boolean equals(Object obj) {

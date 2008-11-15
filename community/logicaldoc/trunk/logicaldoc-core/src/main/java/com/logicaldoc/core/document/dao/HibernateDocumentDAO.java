@@ -19,7 +19,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.logicaldoc.core.document.Article;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentLink;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
@@ -96,14 +99,38 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		try {
 			Document doc = (Document) getHibernateTemplate().get(Document.class, docId);
 			if (doc != null) {
-				getHibernateTemplate().deleteAll(articleDAO.findByDocId(docId));
-				getHibernateTemplate().deleteAll(historyDAO.findByDocId(docId));
-				getHibernateTemplate().deleteAll(linkDAO.findByDocId(docId));
+				// getHibernateTemplate().deleteAll(articleDAO.findByDocId(docId));
+				// getHibernateTemplate().deleteAll(historyDAO.findByDocId(docId));
+				// getHibernateTemplate().deleteAll(linkDAO.findByDocId(docId));
+				// userDocDAO.delete(docId);
+				// doc.getVersions().clear();
+				// doc.getKeywords().clear();
+				// doc.setFolder(null);
+
+				// Remove articles
+				for (Article article : articleDAO.findByDocId(docId)) {
+					article.setDeleted(1);
+					getHibernateTemplate().saveOrUpdate(article);
+				}
+
+				// Remove history
+				for (History history : historyDAO.findByDocId(docId)) {
+					history.setDeleted(1);
+					getHibernateTemplate().saveOrUpdate(history);
+				}
+
+				// Remove links
+				for (DocumentLink link : linkDAO.findByDocId(docId)) {
+					link.setDeleted(1);
+					getHibernateTemplate().saveOrUpdate(link);
+				}
+
 				userDocDAO.delete(docId);
-				doc.getVersions().clear();
-				doc.getKeywords().clear();
-				doc.setFolder(null);
-				getHibernateTemplate().delete(doc);
+
+				doc.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(doc);
+
+				// getHibernateTemplate().delete(doc);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -188,7 +215,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	public Collection<Document> findCheckoutByUserName(String username) {
 		Collection<Document> coll = new ArrayList<Document>();
 		try {
-			StringBuffer query = new StringBuffer("from com.logicaldoc.core.document.Document _doc where ");
+			StringBuffer query = new StringBuffer("from Document _doc where ");
 			query.append("_doc.checkoutUser = '" + username + "'");
 			coll = (Collection<Document>) getHibernateTemplate().find(query.toString());
 		} catch (Exception e) {
@@ -206,8 +233,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		Collection<Long> coll = new ArrayList<Long>();
 
 		try {
-			StringBuilder query = new StringBuilder(
-					"select _doc.id from com.logicaldoc.core.document.Document _doc where ");
+			StringBuilder query = new StringBuilder("select _doc.id from Document _doc where ");
 			query.append("'" + keyword + "'");
 			query.append(" in elements(_doc.keywords) ");
 			coll = (Collection<Long>) getHibernateTemplate().find(query.toString());
@@ -240,7 +266,6 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				}
 				doc.setKeywords(dst);
 			}
-
 
 			File docFile = new File(
 					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
@@ -296,7 +321,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			if (!precoll.isEmpty()) {
 				StringBuffer query = new StringBuffer(
 						"select B.ld_keyword from ld_document A, ld_keyword B, ld_menugroup C "
-								+ " where A.ld_id = B.ld_docid and A.ld_folderid=C.ld_menuid and C.ld_groupid in (");
+								+ " where A.ld_deleted=0 and A.ld_id = B.ld_docid and A.ld_folderid=C.ld_menuid and C.ld_groupid in (");
 				boolean first = true;
 				while (iter.hasNext()) {
 					if (!first)
@@ -367,8 +392,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 		try {
 			StringBuilder query = new StringBuilder("SELECT COUNT(keyword), keyword");
-			query
-					.append(" FROM com.logicaldoc.core.document.Document _doc JOIN _doc.keywords keyword GROUP BY keyword");
+			query.append(" FROM Document _doc JOIN _doc.keywords keyword GROUP BY keyword");
 
 			List ssss = getHibernateTemplate().find(query.toString());
 			for (Iterator iter = ssss.iterator(); iter.hasNext();) {
@@ -443,8 +467,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			if (!precoll.isEmpty()) {
 				StringBuffer query = new StringBuffer(
 						"select distinct(C.ld_id) from ld_menugroup A, ld_document C, ld_keyword D "
-								+ " where A.ld_menuid=C.ld_folderid AND C.ld_id=D.ld_docid"
-								+ " AND A.ld_groupid in (");
+								+ " where A.ld_menuid=C.ld_folderid AND C.ld_id=D.ld_docid" + " AND A.ld_groupid in (");
 				boolean first = true;
 				while (iter.hasNext()) {
 					if (!first)
@@ -608,10 +631,9 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 		return coll;
 	}
-	
+
 	@Override
-	public Document findDocumentByNameAndParentFolderId(long folderId,
-			String documentName) {
+	public Document findDocumentByNameAndParentFolderId(long folderId, String documentName) {
 		Collection<Document> coll = null;
 		try {
 			StringBuffer query = new StringBuffer("select _doc.id from Document _doc where ");
@@ -619,10 +641,10 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			query.append(Long.toString(folderId));
 
 			coll = (Collection<Document>) getHibernateTemplate().find(
-					"from Document _doc where _doc.folder.id = " + folderId
-							+ " and _doc.fileName='" + documentName + "'");
-			
-			if(coll != null && coll.size() > 0 )
+					"from Document _doc where _doc.folder.id = " + folderId + " and _doc.fileName='" + documentName
+							+ "'");
+
+			if (coll != null && coll.size() > 0)
 				return coll.iterator().next();
 		} catch (Exception e) {
 			if (log.isErrorEnabled())

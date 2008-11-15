@@ -2,12 +2,13 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-lazy="false">
-	<class name="com.logicaldoc.core.document.Article" table="ld_article">
+	<class name="com.logicaldoc.core.document.Article" table="ld_article" where="ld_deleted=0">
 		<cache usage="read-write" />
         <id name="id" type="long" column="ld_id" unsaved-value="0">
             <generator class="increment" />
         </id>
         <timestamp name="lastModified" column="ld_lastmodified" />
+        <property name="deleted" type="int" column="ld_deleted" not-null="true" />
 		<property name="docId" type="long" column="ld_docid" not-null="true" />
 		<property name="subject" type="string" column="ld_subject" length="255" />
 		<property name="message" type="string" column="ld_message" length="2000" />
