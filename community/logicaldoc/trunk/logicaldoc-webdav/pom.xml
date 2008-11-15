@@ -21,31 +21,21 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-      <groupId>javax.faces</groupId>
-      <artifactId>jsf-api</artifactId>
-      <version>1.2_08</version>
-      <type>jar</type>
-    </dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency> 
 		<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>servlet-api</artifactId>
-    <version>2.4</version>
-	</dependency> 
-	 <dependency>
-      <groupId>org.icefaces</groupId>
-      <artifactId>icefaces-comps</artifactId>
-      <version>1.7.1</version>
-      <scope>compile</scope>
-    </dependency>
-		<dependency>
-		    <groupId>javax.jcr</groupId>
-		    <artifactId>jcr</artifactId>
-		    <version>1.0.1</version>
+			<groupId>javax.jcr</groupId>
+			<artifactId>jcr</artifactId>
+			<version>1.0.1</version>
 		</dependency> 
 		<dependency>
     		<groupId>org.apache.jackrabbit</groupId>
     		<artifactId>jackrabbit-webapp</artifactId>
     		<version>1.4</version>
+    		<scope>runtime</scope>
 		</dependency> 
 		<dependency>
     		<groupId>org.apache.jackrabbit</groupId>
@@ -62,6 +52,7 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.5.5</version>
+			<scope>runtime</scope>
 		</dependency>
 		<!--  WebDAV Addins -->
 		<dependency>
