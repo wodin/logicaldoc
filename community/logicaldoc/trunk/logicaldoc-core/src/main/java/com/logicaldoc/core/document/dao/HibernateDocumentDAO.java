@@ -99,14 +99,6 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		try {
 			Document doc = (Document) getHibernateTemplate().get(Document.class, docId);
 			if (doc != null) {
-				// getHibernateTemplate().deleteAll(articleDAO.findByDocId(docId));
-				// getHibernateTemplate().deleteAll(historyDAO.findByDocId(docId));
-				// getHibernateTemplate().deleteAll(linkDAO.findByDocId(docId));
-				// userDocDAO.delete(docId);
-				// doc.getVersions().clear();
-				// doc.getKeywords().clear();
-				// doc.setFolder(null);
-
 				// Remove articles
 				for (Article article : articleDAO.findByDocId(docId)) {
 					article.setDeleted(1);
@@ -129,8 +121,6 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 				doc.setDeleted(1);
 				getHibernateTemplate().saveOrUpdate(doc);
-
-				// getHibernateTemplate().delete(doc);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
