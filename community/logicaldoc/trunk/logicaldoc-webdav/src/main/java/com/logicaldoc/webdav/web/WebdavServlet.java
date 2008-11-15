@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.BasicCredentialsProvider;
 import org.apache.jackrabbit.server.CredentialsProvider;
 import org.apache.jackrabbit.server.SessionProvider;
@@ -19,19 +21,18 @@ import org.apache.jackrabbit.webdav.lock.LockManager;
 import org.apache.jackrabbit.webdav.lock.SimpleLockManager;
 import org.apache.jackrabbit.webdav.simple.DavSessionProviderImpl;
 import org.apache.jackrabbit.webdav.simple.LocatorFactoryImplEx;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webdav.resource.DavResourceFactory;
 
 
+@SuppressWarnings("serial")
 public class WebdavServlet extends AbstractWebdavServlet{
 
     /**
      * the default logger
      */
-	private static final Logger log = LoggerFactory.getLogger(WebdavServlet.class);
+	protected static Log log = LogFactory.getLog(WebdavServlet.class);
 
     /**
      * init param name of the repository prefix
@@ -324,7 +325,10 @@ public class WebdavServlet extends AbstractWebdavServlet{
      */
     public ResourceConfig getResourceConfig() {
         // fallback if no config present
-    	return (ResourceConfig) Context.getInstance().getBean("ResourceConfig");
+    	if(config != null)
+    		return config;
+    	else
+    		return (ResourceConfig) Context.getInstance().getBean("ResourceConfig");
     }
 
     /**

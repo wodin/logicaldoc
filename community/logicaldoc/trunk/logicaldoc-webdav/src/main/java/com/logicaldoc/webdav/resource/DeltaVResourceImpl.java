@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.webdav.DavCompliance;
 import org.apache.jackrabbit.webdav.DavException;
@@ -22,8 +24,6 @@ import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.apache.jackrabbit.webdav.version.report.SupportedReportSetProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.session.DavSession;
@@ -31,11 +31,12 @@ import com.logicaldoc.webdav.web.ResourceConfig;
 
 public class DeltaVResourceImpl extends DavResourceImpl implements DeltaVResource {
 
+	protected static Log log = LogFactory.getLog(DeltaVResourceImpl.class);
+	
     protected SupportedReportSetProperty supportedReports = new SupportedReportSetProperty();
-    private static final Logger log = LoggerFactory.getLogger(DeltaVResourceImpl.class);
-
-    public DeltaVResourceImpl(DavResourceLocator locator, DavResourceFactory factory, DavSession session, ResourceConfig config, Resource resource, String holder) throws DavException {
-    	super(locator, factory, session, config, resource, holder);
+        
+    public DeltaVResourceImpl(DavResourceLocator locator, DavResourceFactory factory, DavSession session, ResourceConfig config, Resource resource) throws DavException {
+    	super(locator, factory, session, config, resource);
         initSupportedReports();
     }
     
@@ -49,7 +50,7 @@ public class DeltaVResourceImpl extends DavResourceImpl implements DeltaVResourc
         initSupportedReports();
     }
 
-    //---------------------------------------------------------< DavResource>---
+    
     /**
      * @return DavResource#COMPLIANCE_CLASS
      * @see org.apache.jackrabbit.webdav.DavResource#getComplianceClass()
@@ -64,7 +65,7 @@ public class DeltaVResourceImpl extends DavResourceImpl implements DeltaVResourc
         });
     }
 
-    //------------------------------------------------------< DeltaVResource>---
+   
     /**
      * @param optionsInfo
      * @return object to be used in the OPTIONS response body or <code>null</code>
@@ -128,7 +129,8 @@ public class DeltaVResourceImpl extends DavResourceImpl implements DeltaVResourc
      * @throws DavException
      * @see DeltaVResource#getReferenceResources(org.apache.jackrabbit.webdav.property.DavPropertyName)
      */
-    public DavResource[] getReferenceResources(DavPropertyName hrefPropertyName) throws DavException {
+    @SuppressWarnings("unchecked")
+	public DavResource[] getReferenceResources(DavPropertyName hrefPropertyName) throws DavException {
         DavProperty prop = getProperty(hrefPropertyName);
         List resources = new ArrayList();
         if (prop != null && prop instanceof HrefProperty) {
@@ -163,7 +165,8 @@ public class DeltaVResourceImpl extends DavResourceImpl implements DeltaVResourc
      * @param loc
      * @return new <code>DavResource</code>
      */
-    protected DavResource createResourceFromLocator(DavResourceLocator loc)
+    @SuppressWarnings("deprecation")
+	protected DavResource createResourceFromLocator(DavResourceLocator loc)
             throws DavException {
         DavResource res = getFactory().createResource(loc, getSession());
         return res;

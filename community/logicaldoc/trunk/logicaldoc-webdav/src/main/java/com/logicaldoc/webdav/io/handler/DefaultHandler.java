@@ -4,15 +4,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.jcr.Node;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.server.io.PropertyExportContext;
 import org.apache.jackrabbit.server.io.PropertyImportContext;
 import org.apache.jackrabbit.webdav.DavResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webdav.context.ExportContext;
 import com.logicaldoc.webdav.context.ImportContext;
@@ -20,7 +18,7 @@ import com.logicaldoc.webdav.exception.WebDavStorageException;
 import com.logicaldoc.webdav.io.manager.IOManager;
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.resource.service.ResourceService;
-import com.logicaldoc.webdav.resource.service.ResourceServiceImpl;
+import com.logicaldoc.webdav.web.AbstractWebdavServlet;
 
 /**
  * <code>DefaultHandler</code> implements a simple IOHandler that creates 'file'
@@ -46,7 +44,7 @@ import com.logicaldoc.webdav.resource.service.ResourceServiceImpl;
  */
 public class DefaultHandler implements IOHandler {
 
-    private static Logger log = LoggerFactory.getLogger(DefaultHandler.class);
+	protected static Log log = LogFactory.getLog(AbstractWebdavServlet.class);
 
     private String collectionNodetype = JcrConstants.NT_FOLDER;
     private String defaultNodetype = JcrConstants.NT_FILE;
@@ -153,15 +151,12 @@ public class DefaultHandler implements IOHandler {
 
         boolean success = false;
         try {
-            boolean isNewResource = getContentNode(context, isCollection);
-            //success = importData(context, isCollection, resource);
-           
-            }
-         catch(Exception e){
-        	 e.printStackTrace();
-         } finally {
-
+        	success = getContentNode(context, isCollection);
         }
+        catch(Exception e){
+        	e.printStackTrace();
+        } 
+
         return success;
     }
 
@@ -231,10 +226,9 @@ public class DefaultHandler implements IOHandler {
             throw new IOException(getName() + ": Cannot export " );
         }
         try {
-            Resource resource = getContentNode(context, isCollection);
-            if (context.hasStream()) {
+            if (context.hasStream()) 
                 exportData(context, isCollection, context.getResource());
-            } // else: missing stream. ignore.
+            
             return true;
         } catch (WebDavStorageException e) {
             // should never occur, since the proper structure of the content

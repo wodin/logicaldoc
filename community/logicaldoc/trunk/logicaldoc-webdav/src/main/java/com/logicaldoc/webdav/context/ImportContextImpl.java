@@ -6,23 +6,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
-import javax.jcr.Item;
-
-import org.apache.jackrabbit.server.io.DefaultIOListener;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOListener;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.server.io.MimeResolver;
 import org.apache.jackrabbit.webdav.io.InputContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webdav.resource.model.Resource;
 public class ImportContextImpl implements ImportContext {
 
-    private static Logger log = LoggerFactory.getLogger(ImportContextImpl.class);
-
-    private final IOListener ioListener;
-    private final Resource resource;
+	protected static Log log = LogFactory.getLog(ImportContextImpl.class);
+	
+	private final Resource resource;
     private final String systemId;
     private final File inputFile;
     private final MimeResolver mimeResolver;
@@ -42,9 +38,10 @@ public class ImportContextImpl implements ImportContext {
      * @param systemId
      * @param inputCtx wrapped by this <code>ImportContext</code>
      */
-    public ImportContextImpl(Resource resource, String systemId, InputContext inputCtx) throws IOException {
-        this(resource, systemId, inputCtx, null);
-    }
+    public ImportContextImpl(Resource resource, String systemId,
+			InputContext inputCtx) throws IOException {
+		this(resource, systemId, inputCtx, null);
+	}
 
     /**
      * Creates a new item import context with the given root item and the
@@ -59,30 +56,13 @@ public class ImportContextImpl implements ImportContext {
      * @param inputCtx wrapped by this <code>ImportContext</code>
      * @param mimeResolver
      */
-    public ImportContextImpl(Resource resource, String systemId, InputContext inputCtx,
-                             MimeResolver mimeResolver) throws IOException {
-        this(resource, systemId, (inputCtx != null) ? inputCtx.getInputStream() : null, null, mimeResolver);
-        this.inputCtx = inputCtx;
-    }
-
-    /**
-     * Creates a new item import context. The specified InputStream is written
-     * to a temporary file in order to avoid problems with multiple IOHandlers
-     * that try to run the import but fail. The temporary file is deleted as soon
-     * as this context is informed that the import has been completed and it
-     * will not be used any more.
-     *
-     * @param importRoot
-     * @param systemId
-     * @param in
-     * @param ioListener
-     * @throws IOException
-     * @see ImportContext#informCompleted(boolean)
-     */
-    public ImportContextImpl(Resource resource, String systemId, InputStream in,
-                             IOListener ioListener) throws IOException {
-        this(resource, systemId, in, ioListener, null);
-    }
+    public ImportContextImpl(Resource resource, String systemId,
+			InputContext inputCtx, MimeResolver mimeResolver)
+			throws IOException {
+		this(resource, systemId, (inputCtx != null) ? inputCtx.getInputStream()
+				: null, mimeResolver);
+		this.inputCtx = inputCtx;
+	}
 
     /**
      * Creates a new item import context. The specified InputStream is written
@@ -99,21 +79,22 @@ public class ImportContextImpl implements ImportContext {
      * @throws IOException
      * @see ImportContext#informCompleted(boolean)
      */
-    public ImportContextImpl(Resource resource, String systemId, InputStream in,
-                             IOListener ioListener, MimeResolver mimeResolver)
-            throws IOException {
-        this.resource = resource;
-        this.systemId = systemId;
-        this.inputFile = IOUtil.getTempFile(in);
-        this.ioListener = (ioListener != null) ? ioListener : new DefaultIOListener(log);
-        this.mimeResolver = (mimeResolver == null) ? IOUtil.MIME_RESOLVER : mimeResolver;
-    }
+    public ImportContextImpl(Resource resource, String systemId,
+			InputStream in, MimeResolver mimeResolver)
+			throws IOException {
+		this.resource = resource;
+		this.systemId = systemId;
+		this.inputFile = IOUtil.getTempFile(in);
+		
+		this.mimeResolver = (mimeResolver == null) ? IOUtil.MIME_RESOLVER
+				: mimeResolver;
+	}
 
     /**
      * @see ImportContext#getIOListener()
      */
     public IOListener getIOListener() {
-        return ioListener;
+        return null;
     }
 
     /**
@@ -159,32 +140,34 @@ public class ImportContextImpl implements ImportContext {
     }
 
     /**
-     * @see ImportContext#getModificationTime()
-     */
-    public long getModificationTime() {
-        return (inputCtx != null) ? inputCtx.getModificationTime() : new Date().getTime();
-    }
+	 * @see ImportContext#getModificationTime()
+	 */
+	public long getModificationTime() {
+		return (inputCtx != null) ? inputCtx.getModificationTime() : new Date()
+				.getTime();
+	}
 
-    /**
-     * @see ImportContext#getContentLanguage()
-     */
-    public String getContentLanguage() {
-        return (inputCtx != null) ? inputCtx.getContentLanguage() : null;
-    }
+	/**
+	 * @see ImportContext#getContentLanguage()
+	 */
+	public String getContentLanguage() {
+		return (inputCtx != null) ? inputCtx.getContentLanguage() : null;
+	}
 
     /**
      * @see ImportContext#getContentLength()
      */
     public long getContentLength() {
-        if (inputCtx != null) {
-            return inputCtx.getContentLength();
-        } else if (inputFile != null) {
-            return inputFile.length();
-        } else {
-            log.debug("Unable to determine content length -> default value = " + IOUtil.UNDEFINED_LENGTH);
-            return IOUtil.UNDEFINED_LENGTH;
-        }
-    }
+		if (inputCtx != null) {
+			return inputCtx.getContentLength();
+		} else if (inputFile != null) {
+			return inputFile.length();
+		} else {
+			log.debug("Unable to determine content length -> default value = "
+					+ IOUtil.UNDEFINED_LENGTH);
+			return IOUtil.UNDEFINED_LENGTH;
+		}
+	}
 
     /**
      * @return the content type present on the <code>InputContext</code> or
@@ -210,19 +193,20 @@ public class ImportContextImpl implements ImportContext {
     }
 
     /**
-     * @see ImportContext#getEncoding()
-     */
-    public String getEncoding() {
-        String contentType = getContentType();
-        return (contentType != null) ? IOUtil.getEncoding(contentType) : null;
-    }
+	 * @see ImportContext#getEncoding()
+	 */
+	public String getEncoding() {
+		String contentType = getContentType();
+		return (contentType != null) ? IOUtil.getEncoding(contentType) : null;
+	}
 
-    /**
-     * @see ImportContext#getProperty(Object)
-     */
-    public Object getProperty(Object propertyName) {
-        return (inputCtx != null) ? inputCtx.getProperty(propertyName.toString()) : null;
-    }
+	/**
+	 * @see ImportContext#getProperty(Object)
+	 */
+	public Object getProperty(Object propertyName) {
+		return (inputCtx != null) ? inputCtx.getProperty(propertyName
+				.toString()) : null;
+	}
 
     /**
      * @see ImportContext#informCompleted(boolean)

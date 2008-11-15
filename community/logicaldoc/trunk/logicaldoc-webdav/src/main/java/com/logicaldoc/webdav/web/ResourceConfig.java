@@ -1,24 +1,22 @@
 package com.logicaldoc.webdav.web;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.MimeResolver;
 import org.apache.jackrabbit.server.io.PropertyManager;
 import org.apache.jackrabbit.server.io.PropertyManagerImpl;
 import org.apache.jackrabbit.webdav.simple.DefaultItemFilter;
 import org.apache.jackrabbit.webdav.simple.ItemFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webdav.io.manager.IOManager;
 
 public class ResourceConfig {
 
-    private static Logger log = LoggerFactory.getLogger(ResourceConfig.class);
+	protected static Log log = LogFactory.getLog(ResourceConfig.class);
 
     private ItemFilter itemFilter;
     private IOManager ioManager;
     private PropertyManager propManager;
-    private String[] nodetypeNames = new String[0];
-    private boolean collectionNames = false;
     private MimeResolver mimeResolver;
 
     /**
