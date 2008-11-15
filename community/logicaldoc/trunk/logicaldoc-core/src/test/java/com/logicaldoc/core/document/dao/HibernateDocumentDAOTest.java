@@ -125,7 +125,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.addKeyword("pippo");
 		doc.addKeyword("pluto");
 		doc.setValue("att_1", "val 1");
-		
+
 		// Try a long keyword
 		doc.addKeyword("123456789123456789123456789");
 		Version version = new Version();
@@ -133,11 +133,11 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		version.setComment("comment");
 		doc.addVersion(version);
 		assertTrue(dao.store(doc));
-		assertEquals(3, doc.getId());
-		doc = dao.findById(3);
+		assertEquals(4, doc.getId());
+		doc = dao.findById(4);
 		assertNotNull(doc);
 		dao.initialize(doc);
-		assertEquals(3, doc.getId());
+		assertEquals(4, doc.getId());
 		assertEquals(3, doc.getKeywords().size());
 		assertTrue(doc.getKeywords().contains("pluto"));
 		assertTrue(doc.getKeywords().contains("123456789123456789123456789"));
@@ -146,7 +146,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals("val 1", doc.getValue("att_1"));
 
 		// Try to change the version comment
-		doc = dao.findById(3);
+		doc = dao.findById(4);
 		dao.initialize(doc);
 		version = doc.getVersion("1.0");
 		version.setComment("xxxx");
@@ -154,7 +154,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.clearVersions();
 		doc.addVersion(version);
 		dao.store(doc);
-		doc = dao.findById(3);
+		doc = dao.findById(4);
 		dao.initialize(doc);
 		version = doc.getVersion("1.0");
 		assertEquals("xxxx", version.getComment());
@@ -220,23 +220,23 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertNotNull(documents);
 		assertEquals(2, documents.size());
 	}
-	
+
 	public void testFindLinkedDocuments() {
 		Collection<Document> docs = dao.findLinkedDocuments(1, null, null);
 		assertNotNull(docs);
 		assertEquals(1, docs.size());
 		assertEquals(1, docs.iterator().next().getId());
-		
+
 		docs = dao.findLinkedDocuments(2, "xyz", null);
 		assertNotNull(docs);
 		assertEquals(1, docs.size());
 		assertEquals(2, docs.iterator().next().getId());
-		
+
 		docs = dao.findLinkedDocuments(2, "xyz", 1);
 		assertNotNull(docs);
 		assertEquals(1, docs.size());
 		assertEquals(2, docs.iterator().next().getId());
-		
+
 		docs = dao.findLinkedDocuments(2, "xyz", 2);
 		assertNotNull(docs);
 		assertEquals(0, docs.size());
