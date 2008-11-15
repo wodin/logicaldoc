@@ -45,17 +45,6 @@
 		</property>
 	</bean>
 
-	<bean id="BackupConfig"
-		class="com.logicaldoc.util.config.BackupConfig" abstract="false"
-		lazy-init="default" autowire="default" dependency-check="default">
-		<property name="enabled">
-			<value>${conf.backupenabled}</value>
-		</property>
-		<property name="location">
-			<value>${conf.backupdir}</value>
-		</property>
-	</bean>
-
 	<!-- Paths of the current skin -->
 	<bean id="StyleBean" class="com.logicaldoc.web.StyleBean"
 		lazy-init="false">

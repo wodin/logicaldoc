@@ -281,9 +281,6 @@
 				<property name="settings">
 					<ref bean="SettingsConfig" />
 				</property>
-				<property name="storer">
-					<ref bean="Storer" />
-				</property>
 				<property name="indexer">
 					<ref bean="Indexer" />
 				</property>

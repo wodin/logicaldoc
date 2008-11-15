@@ -74,13 +74,11 @@ public class SetupWizard implements TabChangeListener {
 			String docDir = FilenameUtils.separatorsToSystem(workingDir + "/data/docs/");
 			String indexDir = FilenameUtils.separatorsToSystem(workingDir + "/data/index/");
 			String userDir = FilenameUtils.separatorsToSystem(workingDir + "/data/users/");
-			String backupDir = FilenameUtils.separatorsToSystem(workingDir + "/data/backup/");
 
 			PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
 			pbean.setProperty("conf.docdir", docDir);
 			pbean.setProperty("conf.indexdir", indexDir);
 			pbean.setProperty("conf.userdir", userDir);
-			pbean.setProperty("conf.backupdir", backupDir);
 			pbean.write();
 
 			// Save the LOGICALDOC_REPOSITORY property

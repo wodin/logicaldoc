@@ -28,7 +28,6 @@ INSERT INTO co_menus VALUES(23,'smtp',20,3,'editmail.gif','ROOT/2/20',1,3,'admin
 INSERT INTO co_menus VALUES(24,'db.emailaccounts',20,4,'user.gif','ROOT/2/20',1,3,'admin/accounts',0);
 INSERT INTO co_menus VALUES(25,'db.searchengine',2,6,'search.gif','ROOT/2',1,2,'admin/searchEngine',0);
 INSERT INTO co_menus VALUES(26,'db.keywords',1,5,'keywords.gif','ROOT',1,1,'search/keywords',0);
-INSERT INTO co_menus VALUES(27,'db.backup',2,7,'backup.gif','ROOT/2',1,2,'admin/backup',0);
 
 CREATE TABLE co_groups (
 co_groupname VARCHAR(30) NOT NULL,
