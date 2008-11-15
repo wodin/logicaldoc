@@ -35,8 +35,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testDelete() {
-		assertTrue(dao.delete(100));
-		Document doc = dao.findById(100);
+		assertTrue(dao.delete(1));
+		Document doc = dao.findById(1);
 		assertNull(doc);
 	}
 

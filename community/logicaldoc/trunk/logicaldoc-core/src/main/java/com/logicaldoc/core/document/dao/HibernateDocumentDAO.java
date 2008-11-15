@@ -157,6 +157,8 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 		try {
 			doc = (Document) getHibernateTemplate().get(Document.class, docId);
+			if(doc!=null && doc.getDeleted()==1)
+				return null;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);

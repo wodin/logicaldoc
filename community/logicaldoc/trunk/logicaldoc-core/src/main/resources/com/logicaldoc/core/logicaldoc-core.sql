@@ -110,10 +110,6 @@ values     (26,'2008-10-22',0,'tags',1,5,'tags.png','/',1,'search/tags',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (27,'2008-10-22',0,'db.backup',2,7,'backup.png','/2',1,'admin/backup',0);
-
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
 values     (14,'2008-10-22',0,'task.tasks',2,8,'thread.png','/2',1,'admin/tasks',0);
 
 insert into ld_group
@@ -185,9 +181,6 @@ values     (25,1,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (26,1,1,0,0,0,0);
-
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
-values     (27,1,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (1,2,0,0,0,0,0);

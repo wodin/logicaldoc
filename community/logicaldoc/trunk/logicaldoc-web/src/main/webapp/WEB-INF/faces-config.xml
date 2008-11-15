@@ -235,13 +235,6 @@
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 
-	<!-- Informations about backup -->
-	<managed-bean>
-		<managed-bean-name>backupInfo</managed-bean-name>
-		<managed-bean-class>com.logicaldoc.web.admin.BackupInfo</managed-bean-class>
-		<managed-bean-scope>request</managed-bean-scope>
-	</managed-bean>
-
 	<managed-bean>
 		<managed-bean-name>messagesRecordsManager</managed-bean-name>
 		<managed-bean-class>com.logicaldoc.web.communication.MessagesRecordsManager</managed-bean-class>

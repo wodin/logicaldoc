@@ -47,8 +47,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	private SettingsConfig settings;
 
-	private Storer storer;
-
 	private Indexer indexer;
 
 	public void setDocumentDAO(DocumentDAO documentDAO) {
@@ -65,10 +63,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void setSettings(SettingsConfig settings) {
 		this.settings = settings;
-	}
-
-	public void setStorer(Storer storer) {
-		this.storer = storer;
 	}
 
 	public void setIndexer(Indexer indexer) {
@@ -206,11 +200,10 @@ public class DocumentManagerImpl implements DocumentManager {
 		try {
 			long docId = doc.getId();
 
+			// Physically remove the document from full-text index
 			if (doc != null) {
 				indexer.deleteDocument(String.valueOf(docId), doc.getLanguage());
 			}
-
-			storer.delete(doc.getPath() + "/doc_" + doc.getId());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
