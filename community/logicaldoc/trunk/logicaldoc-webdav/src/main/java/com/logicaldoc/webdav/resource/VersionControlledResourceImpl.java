@@ -1,6 +1,8 @@
 package com.logicaldoc.webdav.resource;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavMethods;
 import org.apache.jackrabbit.webdav.DavResource;
@@ -16,8 +18,6 @@ import org.apache.jackrabbit.webdav.version.VersionResource;
 import org.apache.jackrabbit.webdav.version.VersionableResource;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.apache.jackrabbit.webdav.version.report.SupportedReportSetProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.session.DavSession;
@@ -26,10 +26,10 @@ import com.logicaldoc.webdav.web.ResourceConfig;
 public class VersionControlledResourceImpl extends DeltaVResourceImpl
 implements VersionControlledResource {
 
-private static final Logger log = LoggerFactory.getLogger(VersionControlledResourceImpl.class);
+	protected static Log log = LogFactory.getLog(VersionControlledResourceImpl.class);
 
-	public VersionControlledResourceImpl(DavResourceLocator locator, DavResourceFactory factory, DavSession session, ResourceConfig config, Resource resource, String holder) throws DavException {
-		super(locator, factory, session, config, resource, holder);
+	public VersionControlledResourceImpl(DavResourceLocator locator, DavResourceFactory factory, DavSession session, ResourceConfig config, Resource resource) throws DavException {
+		super(locator, factory, session, config, resource);
 		initSupportedReports();
 	}
 

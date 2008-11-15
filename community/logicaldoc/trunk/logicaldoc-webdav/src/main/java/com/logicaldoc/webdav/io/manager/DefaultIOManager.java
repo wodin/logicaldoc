@@ -1,11 +1,11 @@
 package com.logicaldoc.webdav.io.manager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class DefaultIOManager extends IOManagerImpl {
 
-    private static Logger log = LoggerFactory.getLogger(DefaultIOManager.class);
+	protected static Log log = LogFactory.getLog(DefaultIOManager.class);
 
     /**
      * Creates a new <code>DefaultIOManager</code> and populates the internal

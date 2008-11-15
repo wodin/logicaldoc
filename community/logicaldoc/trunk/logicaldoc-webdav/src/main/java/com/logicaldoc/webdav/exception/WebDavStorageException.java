@@ -1,5 +1,6 @@
 package com.logicaldoc.webdav.exception;
 
+@SuppressWarnings("serial")
 public class WebDavStorageException extends Exception{
 	public WebDavStorageException(String s){
 		super(s);

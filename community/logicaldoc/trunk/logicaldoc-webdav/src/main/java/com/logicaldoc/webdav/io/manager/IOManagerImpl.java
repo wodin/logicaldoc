@@ -4,19 +4,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.jackrabbit.server.io.IOListener;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webdav.context.ExportContext;
 import com.logicaldoc.webdav.context.ImportContext;
-import com.logicaldoc.webdav.io.handler.DefaultIOListener;
 import com.logicaldoc.webdav.io.handler.IOHandler;
 
 public class IOManagerImpl implements IOManager {
 
-    private static Logger log = LoggerFactory.getLogger(IOManagerImpl.class);
+	protected static Log log = LogFactory.getLog(IOManagerImpl.class);
 
     private final List<IOHandler> ioHandlers = new ArrayList<IOHandler>();
 
@@ -75,11 +73,8 @@ public class IOManagerImpl implements IOManager {
     public boolean importContent(ImportContext context, DavResource resource) throws IOException {
         boolean success = false;
         if (context != null && resource != null) {
-            IOListener ioListener = context.getIOListener();
-            if (ioListener == null) {
-                ioListener = new DefaultIOListener(log);
-            }
-            IOHandler[] ioHandlers = getIOHandlers();
+         
+        	IOHandler[] ioHandlers = getIOHandlers();
             for (int i = 0; i < ioHandlers.length && !success; i++) {
                 IOHandler ioh = ioHandlers[i];
                 if (ioh.canImport(context, resource)) {
@@ -120,10 +115,7 @@ public class IOManagerImpl implements IOManager {
     public boolean exportContent(ExportContext context, DavResource resource) throws IOException {
         boolean success = false;
         if (context != null && resource != null) {
-            IOListener ioListener = context.getIOListener();
-            if (ioListener == null) {
-                ioListener = new DefaultIOListener(log);
-            }
+           
             IOHandler[] ioHandlers = getIOHandlers();
             for (int i = 0; i < ioHandlers.length && !success; i++) {
                 IOHandler ioh = ioHandlers[i];

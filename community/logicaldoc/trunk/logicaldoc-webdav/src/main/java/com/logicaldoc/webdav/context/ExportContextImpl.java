@@ -10,21 +10,23 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.ExportContext;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.server.io.MimeResolver;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webdav.resource.model.Resource;
 
 public class ExportContextImpl extends AbstractExportContext {
 
-    private static Logger log = LoggerFactory.getLogger(ExportContextImpl.class);
-
-    private final Map properties = new HashMap();
+	protected static Log log = LogFactory.getLog(ExportContextImpl.class);
+    
+    
+    @SuppressWarnings("unchecked")
+	private final Map properties = new HashMap();
     private final OutputContext outputCtx;
 
     private File outFile;
@@ -36,7 +38,7 @@ public class ExportContextImpl extends AbstractExportContext {
 
     public ExportContextImpl(Resource resource, OutputContext outputCtx,
                              MimeResolver mimeResolver) throws IOException {
-        super(resource, (outputCtx != null) ? outputCtx.hasStream() : false, null, mimeResolver);
+        super(resource, (outputCtx != null) ? outputCtx.hasStream() : false, mimeResolver);
         this.outputCtx = outputCtx;
         if (hasStream()) {
             // we need a tmp file, since the export could fail
@@ -73,21 +75,24 @@ public class ExportContextImpl extends AbstractExportContext {
     /**
      * @see ExportContext#setContentLanguage(String)
      */
-    public void setContentLanguage(String contentLanguage) {
+    @SuppressWarnings("unchecked")
+	public void setContentLanguage(String contentLanguage) {
         properties.put(DavConstants.HEADER_CONTENT_LANGUAGE, contentLanguage);
     }
 
     /**
      * @see ExportContext#setContentLength(long)
      */
-    public void setContentLength(long contentLength) {
+    @SuppressWarnings("unchecked")
+	public void setContentLength(long contentLength) {
         properties.put(DavConstants.HEADER_CONTENT_LENGTH, contentLength + "");
     }
 
     /**
      * @see ExportContext#setContentType(String,String)
      */
-    public void setContentType(String mimeType, String encoding) {
+    @SuppressWarnings("unchecked")
+	public void setContentType(String mimeType, String encoding) {
         properties.put(DavConstants.HEADER_CONTENT_TYPE, IOUtil.buildContentType(mimeType, encoding));
     }
 
@@ -105,7 +110,8 @@ public class ExportContextImpl extends AbstractExportContext {
     /**
      * @see ExportContext#setModificationTime(long)
      */
-    public void setModificationTime(long modificationTime) {
+    @SuppressWarnings("unchecked")
+	public void setModificationTime(long modificationTime) {
         if (modificationTime <= IOUtil.UNDEFINED_TIME) {
             modificationTime = new Date().getTime();
         }
@@ -116,14 +122,16 @@ public class ExportContextImpl extends AbstractExportContext {
     /**
      * @see ExportContext#setETag(String)
      */
-    public void setETag(String etag) {
+    @SuppressWarnings("unchecked")
+	public void setETag(String etag) {
         properties.put(DavConstants.HEADER_ETAG, etag);
     }
 
     /**
      * @see ExportContext#setProperty(Object, Object) 
      */
-    public void setProperty(Object propertyName, Object propertyValue) {
+    @SuppressWarnings("unchecked")
+	public void setProperty(Object propertyName, Object propertyValue) {
         properties.put(propertyName, propertyValue);
     }
 
@@ -134,7 +142,8 @@ public class ExportContextImpl extends AbstractExportContext {
      * @param success
      * @see ExportContext#informCompleted(boolean)
      */
-    public void informCompleted(boolean success) {
+    @SuppressWarnings("unchecked")
+	public void informCompleted(boolean success) {
         checkCompleted();
         completed = true;
         // make sure the outputStream gets closed (and don't assume the handlers

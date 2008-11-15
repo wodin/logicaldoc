@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jackrabbit.util.Base64;
 import org.apache.jackrabbit.webdav.DavConstants;
@@ -12,7 +11,7 @@ import org.apache.jackrabbit.webdav.WebdavResponse;
 
 import com.logicaldoc.webdav.exception.WebDavAuthorisationException;
 
-public class AuthenticationUtil {
+public final class AuthenticationUtil {
 	
 	public interface Credentials {
 		public String getUserName();
