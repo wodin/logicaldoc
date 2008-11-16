@@ -3,6 +3,7 @@ package com.logicaldoc.core.security.dao;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -11,6 +12,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.io.CryptUtil;
 
@@ -25,7 +27,6 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 	protected static Log log = LogFactory.getLog(HibernateUserDAO.class);
 
 	private UserDocDAO userDocDAO;
-
 
 	private HibernateUserDAO() {
 	}
@@ -46,15 +47,17 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 
 		try {
 			User user = (User) getHibernateTemplate().get(User.class, userId);
-			Group userGroup=user.getUserGroup();
+			Group userGroup = user.getUserGroup();
 			if (user != null) {
-				getHibernateTemplate().deleteAll(userDocDAO.findByUserId(user.getId()));
-				getHibernateTemplate().delete(user);
+				userDocDAO.deleteByUserId(userId);
+				user.setDeleted(1);
+				user.setUserName(user.getUserName() + "." + user.getId());
+				getHibernateTemplate().saveOrUpdate(user);
 			}
-			
-			//Delete the user's group
-			if(userGroup!=null){
-				GroupDAO groupDAO=(GroupDAO)Context.getInstance().getBean(GroupDAO.class);
+
+			// Delete the user's group
+			if (userGroup != null) {
+				GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 				groupDAO.delete(userGroup.getId());
 			}
 		} catch (Throwable e) {
@@ -170,7 +173,7 @@ public class HibernateUserDAO extends HibernateDaoSupport implements UserDAO {
 		try {
 			getHibernateTemplate().saveOrUpdate(user);
 			String userGroupName = "_user_" + Long.toString(user.getId());
-			GroupDAO groupDAO=(GroupDAO)Context.getInstance().getBean(GroupDAO.class);
+			GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 			Group grp = groupDAO.findByName(userGroupName);
 			if (grp == null) {
 				grp = new Group();

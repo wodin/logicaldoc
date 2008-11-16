@@ -11,9 +11,7 @@ import com.logicaldoc.core.document.DownloadTicket;
 /**
  * Hibernate implementation of <code>DownloadTicketDAO</code>
  * 
- * @author Marco Meschieri
- * @version $Id: HibernateDownloadTicketDAO.java,v 1.1 2007/06/29 06:28:28 marco
- *          Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements DownloadTicketDAO {
@@ -31,9 +29,11 @@ public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements D
 		boolean result = true;
 
 		try {
-			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) getHibernateTemplate().find(
-					"from DownloadTicket _ticket where _ticket.ticketId = ?", new Object[] { ticketid });
-			getHibernateTemplate().deleteAll(coll);
+			DownloadTicket ticket = findByTicketId(ticketid);
+			if (ticket != null) {
+				ticket.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(ticket);
+			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
@@ -50,10 +50,12 @@ public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements D
 		try {
 			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) getHibernateTemplate().find(
 					"from DownloadTicket _ticket where _ticket.ticketId = ?", new Object[] { ticketid });
-			if (!coll.isEmpty())
-				return coll.iterator().next();
-			else
-				return null;
+			DownloadTicket ticket = null;
+			if (!coll.isEmpty()) {
+				ticket = coll.iterator().next();
+				if (ticket.getDeleted() == 0)
+					return ticket;
+			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
@@ -66,9 +68,10 @@ public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements D
 	 */
 	public DownloadTicket findById(long ticketId) {
 		DownloadTicket ticket = null;
-
 		try {
 			ticket = (DownloadTicket) getHibernateTemplate().get(DownloadTicket.class, ticketId);
+			if (ticket != null && ticket.getDeleted() == 1)
+				ticket = null;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
@@ -103,7 +106,10 @@ public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements D
 		try {
 			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) getHibernateTemplate().find(
 					"from DownloadTicket _ticket where _ticket.docId = ?", new Object[] { new Long(docId) });
-			getHibernateTemplate().deleteAll(coll);
+			for (DownloadTicket downloadTicket : coll) {
+				downloadTicket.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(downloadTicket);
+			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);

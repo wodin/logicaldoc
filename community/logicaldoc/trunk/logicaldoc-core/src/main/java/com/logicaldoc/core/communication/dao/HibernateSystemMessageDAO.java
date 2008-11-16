@@ -18,9 +18,7 @@ import com.logicaldoc.core.communication.SystemMessage;
 /**
  * Hibernate implementation of <code>SystemMessageDAO</code>
  * 
- * @author Marco Meschieri
- * @version $Id: HibernateSystemMessageDAO.java,v 1.2 2006/08/29 16:33:46 marco
- *          Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class HibernateSystemMessageDAO extends HibernateDaoSupport implements SystemMessageDAO {
@@ -39,8 +37,10 @@ public class HibernateSystemMessageDAO extends HibernateDaoSupport implements Sy
 		try {
 			SystemMessage message = (SystemMessage) getHibernateTemplate()
 					.get(SystemMessage.class, new Long(messageId));
-			if (message != null)
-				getHibernateTemplate().delete(message);
+			if (message != null) {
+				message.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(message);
+			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
@@ -58,6 +58,8 @@ public class HibernateSystemMessageDAO extends HibernateDaoSupport implements Sy
 
 		try {
 			sysmess = (SystemMessage) getHibernateTemplate().get(SystemMessage.class, new Long(messageId));
+			if (sysmess != null && sysmess.getDeleted() == 1)
+				sysmess = null;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);

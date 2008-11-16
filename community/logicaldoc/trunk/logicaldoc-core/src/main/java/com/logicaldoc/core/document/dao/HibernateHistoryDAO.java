@@ -15,8 +15,7 @@ import com.logicaldoc.core.document.History;
 /**
  * Hibernate implementation of <code>HistoryDAO</code>
  * 
- * @author Alessandro Gasparini
- * @version $Id: HibernateHistoryDAO.java,v 1.1 2007/06/29 06:28:28 marco Exp $
+ * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
 public class HibernateHistoryDAO extends HibernateDaoSupport implements HistoryDAO {
@@ -52,7 +51,8 @@ public class HibernateHistoryDAO extends HibernateDaoSupport implements HistoryD
 		try {
 			History history = (History) getHibernateTemplate().get(History.class, historyId);
 			if (history != null) {
-				getHibernateTemplate().delete(history);
+				history.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(history);
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
