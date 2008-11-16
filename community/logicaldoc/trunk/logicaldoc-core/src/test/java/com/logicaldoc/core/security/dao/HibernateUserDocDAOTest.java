@@ -13,7 +13,6 @@ import com.logicaldoc.core.security.UserDoc;
  * Test case for <code>HibernateUserDocDAO</code>
  * 
  * @author Marco Meschieri - Logical Objects
- * @version $Id:$
  * @since 3.0
  */
 public class HibernateUserDocDAOTest extends AbstractCoreTestCase {
@@ -32,7 +31,7 @@ public class HibernateUserDocDAOTest extends AbstractCoreTestCase {
 		dao = (UserDocDAO) context.getBean("UserDocDAO");
 	}
 
-	public void testDelete() {
+	public void testDeleteLongLong() {
 		assertTrue(dao.exists(1, 1));
 		dao.delete(1, 1);
 		assertFalse(dao.exists(1, 1));
@@ -82,7 +81,7 @@ public class HibernateUserDocDAOTest extends AbstractCoreTestCase {
 		assertNotNull(col);
 		assertEquals(1, col.size());
 
-		assertTrue(dao.delete(1));
+		assertTrue(dao.deleteByDocId(1));
 
 		col = dao.findByDocId(1);
 		assertNotNull(col);

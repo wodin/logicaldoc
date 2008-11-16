@@ -25,7 +25,8 @@ public class HibernateDocumentTemplateDAO extends HibernateDaoSupport implements
 			DocumentTemplate template = (DocumentTemplate) getHibernateTemplate().get(DocumentTemplate.class,
 					templateId);
 			if (template != null) {
-				getHibernateTemplate().delete(template);
+				template.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(template);
 			}
 			return true;
 		} catch (Exception e) {
@@ -56,6 +57,8 @@ public class HibernateDocumentTemplateDAO extends HibernateDaoSupport implements
 
 		try {
 			template = (DocumentTemplate) getHibernateTemplate().get(DocumentTemplate.class, templateId);
+			if (template != null && template.getDeleted() == 1)
+				template = null;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -74,6 +77,8 @@ public class HibernateDocumentTemplateDAO extends HibernateDaoSupport implements
 			if (coll.size() > 0) {
 				template = coll.iterator().next();
 			}
+			if (template != null && template.getDeleted() == 1)
+				template = null;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);

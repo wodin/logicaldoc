@@ -12,8 +12,7 @@ import com.logicaldoc.core.document.Article;
 /**
  * Hibernate implementation of <code>ArticleDAO</code>
  * 
- * @author Marco Meschieri
- * @version $Id: HibernateArticleDAO.java,v 1.1 2007/06/29 06:28:28 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class HibernateArticleDAO extends HibernateDaoSupport implements ArticleDAO {
@@ -31,8 +30,10 @@ public class HibernateArticleDAO extends HibernateDaoSupport implements ArticleD
 
 		try {
 			Article article = (Article) getHibernateTemplate().get(Article.class, new Long(articleId));
-			if (article != null)
-				getHibernateTemplate().delete(article);
+			if (article != null){
+				article.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(article);
+			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
@@ -69,6 +70,8 @@ public class HibernateArticleDAO extends HibernateDaoSupport implements ArticleD
 
 		try {
 			article = (Article) getHibernateTemplate().get(Article.class, new Long(articleid));
+			if(article!=null && article.getDeleted()==1)
+				return null;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);

@@ -28,9 +28,20 @@ public interface UserDocDAO {
 	public boolean delete(long docId, long userId);
 
 	/**
+	 * Deletes the referenced instance
+	 */
+	public boolean delete(long id);
+	
+	/**
 	 * This method deletes all userdocs by the document id.
 	 */
-	public boolean delete(long docId);
+	public boolean deleteByDocId(long docId);
+	
+	/**
+	 * This method deletes all userdocs by the user id.
+	 */
+	public boolean deleteByUserId(long userId);
+	
 
 	/**
 	 * Selects all userdocs for a given user.

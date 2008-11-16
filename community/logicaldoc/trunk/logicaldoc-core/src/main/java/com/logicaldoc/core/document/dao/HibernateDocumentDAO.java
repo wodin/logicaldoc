@@ -117,7 +117,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 					getHibernateTemplate().saveOrUpdate(link);
 				}
 
-				userDocDAO.delete(docId);
+				userDocDAO.deleteByDocId(docId);
 
 				doc.setDeleted(1);
 				getHibernateTemplate().saveOrUpdate(doc);

@@ -27,7 +27,7 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 
 	/**
 	 * @see com.logicaldoc.core.security.dao.UserDocDAO#delete(long,
-	 *      java.lang.StringO)
+	 *      java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean delete(long docId, long userId) {
@@ -37,7 +37,10 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 			Collection<UserDoc> coll = (Collection<UserDoc>) getHibernateTemplate().find(
 					"from UserDoc _userdoc where _userdoc.docId = ? and _userdoc.userId = ?",
 					new Object[] { docId, userId });
-			getHibernateTemplate().deleteAll(coll);
+			for (UserDoc userDoc : coll) {
+				userDoc.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(userDoc);
+			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage());
@@ -150,13 +153,17 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.UserDocDAO#delete(long)
+	 * @see com.logicaldoc.core.security.dao.UserDocDAO#deleteByDocId(long)
 	 */
-	public boolean delete(long docId) {
+	public boolean deleteByDocId(long docId) {
 		boolean result = true;
 
 		try {
-			getHibernateTemplate().deleteAll(findByDocId(docId));
+			Collection<UserDoc> coll = findByDocId(docId);
+			for (UserDoc userDoc : coll) {
+				userDoc.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(userDoc);
+			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage());
@@ -183,5 +190,43 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 		}
 
 		return coll;
+	}
+
+	@Override
+	public boolean delete(long id) {
+		boolean result = true;
+
+		try {
+			UserDoc userDoc = (UserDoc) getHibernateTemplate().get(UserDoc.class, id);
+			if (userDoc != null) {
+				userDoc.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(userDoc);
+			}
+		} catch (Throwable e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+			result = true;
+		}
+
+		return result;
+	}
+
+	@Override
+	public boolean deleteByUserId(long userId) {
+		boolean result = true;
+
+		try {
+			Collection<UserDoc> coll = findByUserId(userId);
+			for (UserDoc userDoc : coll) {
+				userDoc.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(userDoc);
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage());
+			result = false;
+		}
+
+		return result;
 	}
 }

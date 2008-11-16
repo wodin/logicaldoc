@@ -10,10 +10,9 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
-import com.logicaldoc.core.security.User;
 
 /**
- * @author Alessandro Gasparini
+ * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
 public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
@@ -41,14 +40,14 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 		boolean result = true;
 
 		try {
+			// Delete menu-group assignments
+			getSession().connection().createStatement().execute("delete from ld_menugroup where ld_groupid=" + groupId);
+
 			Group group = findById(groupId);
 			if (group != null) {
-				// Delete menu-group assignments
-				getSession().connection().createStatement().execute(
-						"delete from ld_menugroup where ld_groupid=" + groupId);
-
-				// Finally delete the found Group
-				getHibernateTemplate().delete(group);
+				group.setName(group.getName() + "." + group.getId());
+				group.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(group);
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -122,9 +121,11 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 
 		try {
 			Collection<Group> coll = (Collection<Group>) getHibernateTemplate().find(
-					"from Group _group where _group.name like '"+name+"'");
+					"from Group _group where _group.name like '" + name + "'");
 			if (coll.size() > 0) {
 				group = coll.iterator().next();
+				if (group.getDeleted() == 1)
+					group = null;
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -135,7 +136,8 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.GroupDAO#insert(com.logicaldoc.core.security.Group, long)
+	 * @see com.logicaldoc.core.security.dao.GroupDAO#insert(com.logicaldoc.core.security.Group,
+	 *      long)
 	 */
 	public boolean insert(Group group, long parentGroupId) {
 		boolean result = true;
@@ -146,7 +148,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 		try {
 			getHibernateTemplate().saveOrUpdate(group);
 
-			if (parentGroupId>0) {
+			if (parentGroupId > 0) {
 				Collection<Menu> menus = menuDAO.findByGroupId(parentGroupId);
 				for (Menu menu : menus) {
 					addMenuGroup(group, menu.getId(), menu.getMenuGroup(parentGroupId).getWrite());
@@ -216,6 +218,8 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 
 		try {
 			group = (Group) getHibernateTemplate().get(Group.class, groupId);
+			if (group != null && group.getDeleted() == 1)
+				group = null;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -236,7 +240,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
-		}	
+		}
 		return coll;
 	}
 }

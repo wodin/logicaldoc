@@ -39,7 +39,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		menu.setMenuGroup(new long[] { 1, 2 });
 		assertTrue(dao.store(menu));
 		assertEquals("/db.home/", menu.getPathExtended());
-		
+
 		menu = dao.findById(100);
 		assertEquals("db.admin", menu.getText());
 		assertEquals("/", menu.getPath());
@@ -48,7 +48,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 
 		// Load an existing menu and modify it
 		menu = dao.findById(20);
-		assertEquals("db.emails", menu.getText());		
+		assertEquals("db.emails", menu.getText());
 		dao.store(menu);
 		assertEquals("/db.home/db.admin/", menu.getPathExtended());
 		menu = dao.findById(23);
@@ -59,7 +59,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		dao.store(menu);
 		menu = dao.findById(23);
 		assertEquals("/db.home/db.admin/xxxx/", menu.getPathExtended());
-		
+
 		menu.getMenuGroups().remove(menu.getMenuGroup(3));
 		assertEquals(2, menu.getMenuGroups().size());
 		assertTrue(dao.store(menu));
@@ -74,14 +74,11 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 
 		DocumentDAO docDao = (DocumentDAO) context.getBean("DocumentDAO");
 		docDao.delete(1);
-		try {
-			assertTrue(dao.delete(103));
-			fail();
-		} catch (Exception e) {
-			// All OK, we are trying to delete a folder with documents
-		}
+
+		// Delete a folder with documents
+		assertTrue(dao.delete(103));
 		menu = dao.findById(103);
-		assertNotNull(menu);
+		assertNull(menu);
 	}
 
 	public void testFindById() {

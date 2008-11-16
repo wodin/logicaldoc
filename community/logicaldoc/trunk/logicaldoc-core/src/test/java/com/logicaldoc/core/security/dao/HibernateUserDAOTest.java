@@ -44,22 +44,16 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		// User with history, not deletable
 		User user = dao.findByUserName("author");
 		assertEquals(2, user.getGroups().size());
-		try {
-			dao.delete(user.getId());
-			fail("A referenced user was deleted ?!?");
-		} catch (Throwable e) {
-			// All ok, don't worry
-		}
+		dao.delete(user.getId());
 		user = dao.findByUserName("author");
-		assertNotNull(user);
-		assertNotNull(user.getUserGroup());
+		assertNull(user);
 
 		// Try with a deletable user
 		User testUser = dao.findByUserName("test");
 		assertEquals(2, testUser.getGroups().size());
 		manager.removeUserFromAllGroups(testUser);
 		assertEquals(1, testUser.getGroups().size());
-		String name=testUser.getUserGroupName();
+		String name = testUser.getUserGroupName();
 		assertTrue(dao.delete(testUser.getId()));
 		user = dao.findByUserName("test");
 		assertNull(user);
@@ -157,9 +151,9 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		user.setFirstName("valca");
 		user.setEmail("valca@acme.com");
 		assertTrue(dao.store(user));
-		assertTrue(groupDao.findByName(user.getUserGroupName())!=null);
+		assertTrue(groupDao.findByName(user.getUserGroupName()) != null);
 		manager.assignUserToGroups(user, new long[] { 1 });
-			
+
 		User storedUser = dao.findByUserName("xxx");
 		assertNotNull(user);
 		assertEquals(user, storedUser);

@@ -14,7 +14,6 @@ import com.logicaldoc.core.document.DocumentLink;
  * Hibernate implementation of <code>DocumentLinkDAO</code>
  * 
  * @author Matteo Caruso - Logical Objects
- * @version $Id:$
  * @since 4.0
  * 
  */
@@ -46,13 +45,15 @@ public class HibernateDocumentLinkDAO extends HibernateDaoSupport implements Doc
 	 * @see com.logicaldoc.core.document.dao.DocumentLinkDAO#deleteByLinkId(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean delete(long linkid) {
+	public boolean delete(long linkId) {
 		boolean result = true;
 
 		try {
-			Collection<DocumentLink> coll = (Collection<DocumentLink>) getHibernateTemplate().find(
-					"from DocumentLink _link where _link.id = ?", new Object[] { linkid });
-			getHibernateTemplate().deleteAll(coll);
+			DocumentLink link = (DocumentLink) getHibernateTemplate().get(DocumentLink.class, linkId);
+			if (link != null) {
+				link.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(link);
+			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
@@ -69,6 +70,8 @@ public class HibernateDocumentLinkDAO extends HibernateDaoSupport implements Doc
 
 		try {
 			link = (DocumentLink) getHibernateTemplate().get(DocumentLink.class, linkid);
+			if (link != null && link.getDeleted() == 1)
+				link = null;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
@@ -116,15 +119,15 @@ public class HibernateDocumentLinkDAO extends HibernateDaoSupport implements Doc
 	@Override
 	public DocumentLink findByDocIdsAndType(long docId1, long docId2, String type) {
 		if (type == null)
-			 return null;
+			return null;
 		DocumentLink link = null;
 		try {
 			StringBuffer query = new StringBuffer("from DocumentLink _link where "
 					+ " _link.document1.id = ? and _link.document2.id = ? ");
-				query.append("and _link.type = '");
-				query.append(type);
-				query.append("'");
-				
+			query.append("and _link.type = '");
+			query.append(type);
+			query.append("'");
+
 			Collection<DocumentLink> links = (Collection<DocumentLink>) getHibernateTemplate().find(query.toString(),
 					new Object[] { docId1, docId2 });
 			if (!links.isEmpty())
