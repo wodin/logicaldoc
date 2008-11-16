@@ -20,7 +20,6 @@ import org.apache.jackrabbit.webdav.DavMethods;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavServletRequest;
 import org.apache.jackrabbit.webdav.DavServletResponse;
-import org.apache.jackrabbit.webdav.DavSessionProvider;
 import org.apache.jackrabbit.webdav.MultiStatus;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.WebdavRequest;
@@ -32,6 +31,11 @@ import org.apache.jackrabbit.webdav.io.InputContextImpl;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.io.OutputContextImpl;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
+import org.apache.jackrabbit.webdav.search.SearchConstants;
+import org.apache.jackrabbit.webdav.search.SearchResource;
+import org.apache.jackrabbit.webdav.version.DeltaVResource;
+import org.apache.jackrabbit.webdav.version.OptionsInfo;
+import org.apache.jackrabbit.webdav.version.OptionsResponse;
 
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -73,20 +77,6 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
      * @return
      */
     abstract protected boolean isPreconditionValid(WebdavRequest request, DavResource resource);
-
-    /**
-     * Returns the <code>DavSessionProvider</code>.
-     *
-     * @return the session provider
-     */
-    abstract public DavSessionProvider getDavSessionProvider();
-
-    /**
-     * Returns the <code>DavSessionProvider</code>.
-     *
-     * @param davSessionProvider
-     */
-    abstract public void setDavSessionProvider(DavSessionProvider davSessionProvider);
 
     /**
      * Returns the <code>DavLocatorFactory</code>.
@@ -145,7 +135,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
     	HttpSession session = request.getSession(true);
 
         WebdavRequest webdavRequest = new WebdavRequestImpl(request, getLocatorFactory());
-     
+        
         // DeltaV requires 'Cache-Control' header for all methods except 'VERSION-CONTROL' and 'REPORT'.
         int methodCode = DavMethods.getMethodCode(request.getMethod());
         boolean noCache = DavMethods.isDeltaVMethod(webdavRequest) && !(DavMethods.DAV_VERSION_CONTROL == methodCode || DavMethods.DAV_REPORT == methodCode);
@@ -172,9 +162,12 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
         	
                 
         	DavSessionImpl davSession = new DavSessionImpl();
-        	davSession.putObject("id", userDAO.findByUserName(session.getAttribute("name").toString()).getId());
-        	davSession.putObject("name", session.getAttribute("name"));
+        	davSession.putObject("id", userDAO.findByUserName(
+					session.getAttribute("name").toString()).getId());
+			davSession.putObject("name", session.getAttribute("name"));
         		
+        	webdavRequest.setDavSession(davSession);
+        	
             //check matching if=header for lock-token relevant operations
             DavResource resource = getResourceFactory().createResource(webdavRequest.getRequestLocator(), webdavRequest, webdavResponse, davSession);
 
@@ -248,6 +241,10 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
             case DavMethods.DAV_MKCOL:
                 doMkCol(request, response, resource);
                 break;
+            case DavMethods.DAV_OPTIONS:
+                doOptions(request, response, resource);
+                break;    
+                
             default:
                 // any other method
                 return false;
@@ -497,7 +494,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
             response.sendError(DavServletResponse.SC_BAD_REQUEST);
             return;
         }
-
+        
         DavResource destResource = getResourceFactory().createResource(request.getDestinationLocator(), request, response);
         int status = validateDestination(destResource, request);
         if (status > DavServletResponse.SC_NO_CONTENT) {
@@ -574,6 +571,38 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
         return status;
     }
 
+
+    /**
+     * The OPTION method
+     *
+     * @param request
+     * @param response
+     * @param resource
+     */
+    protected void doOptions(WebdavRequest request, WebdavResponse response,
+                             DavResource resource) throws IOException, DavException {
+        response.addHeader(DavConstants.HEADER_DAV, resource.getComplianceClass());
+        response.addHeader("Allow", resource.getSupportedMethods());
+        response.addHeader("MS-Author-Via", DavConstants.HEADER_DAV);
+        if (resource instanceof SearchResource) {
+            String[] langs = ((SearchResource) resource).getQueryGrammerSet().getQueryLanguages();
+            for (int i = 0; i < langs.length; i++) {
+                response.addHeader(SearchConstants.HEADER_DASL, "<" + langs[i] + ">");
+            }
+        }
+        // with DeltaV the OPTIONS request may contain a Xml body.
+        OptionsResponse oR = null;
+        OptionsInfo oInfo = request.getOptionsInfo();
+        if (oInfo != null && resource instanceof DeltaVResource) {
+            oR = ((DeltaVResource) resource).getOptionResponse(oInfo);
+        }
+        if (oR == null) {
+            response.setStatus(DavServletResponse.SC_OK);
+        } else {
+            response.sendXmlResponse(oR, DavServletResponse.SC_OK);
+        }
+    }
+    
     /**
      * Return a new <code>InputContext</code> used for adding resource members
      *

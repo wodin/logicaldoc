@@ -157,10 +157,9 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public Resource getParentResource(String resourcePath) {
-		if (resourcePath.equals("/" + FOLDER_PREFIX + "/")) {
-
-		}
-
+		if(resourcePath.startsWith("/" + FOLDER_PREFIX + "/") == false)
+			resourcePath = "/" + FOLDER_PREFIX + resourcePath;
+		
 		String name = "";
 		String path = resourcePath;
 		for (int i = 0; i < 2; i++) {

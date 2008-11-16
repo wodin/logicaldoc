@@ -9,7 +9,6 @@ import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.lock.LockManager;
 
 import com.logicaldoc.util.Context;
-import com.logicaldoc.webdav.exception.OperationNotSupportedException;
 import com.logicaldoc.webdav.resource.DavResourceFactory;
 import com.logicaldoc.webdav.resource.VersionControlledResourceImpl;
 import com.logicaldoc.webdav.resource.model.Resource;
@@ -48,11 +47,11 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 	}
 
 	/**
-	 * COPY/MOVE-Operation currently are not allowed
+	 * 
 	 */
 	public DavResource createResource(DavResourceLocator locator,
-			DavServletRequest request, DavServletResponse response) {
-		throw new OperationNotSupportedException();
+			DavServletRequest request, DavServletResponse response) throws DavException{	
+		return createResource(locator, request, response, (DavSession)request.getDavSession());
 	}
 
 	/**
