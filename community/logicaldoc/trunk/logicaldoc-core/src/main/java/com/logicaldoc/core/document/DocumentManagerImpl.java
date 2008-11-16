@@ -364,7 +364,9 @@ public class DocumentManagerImpl implements DocumentManager {
 		String path = getDocFilePath(doc);
 		File originalDocDir = new File(path);
 
+		documentDAO.initialize(doc);
 		doc.setFolder(folder);
+		setUniqueTitle(doc);
 		documentDAO.store(doc);
 
 		// Update the FS
@@ -465,6 +467,8 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setTitle(fallbackTitle);
 			}
 
+			setUniqueTitle(doc);
+
 			if (sourceDate != null)
 				doc.setSourceDate(sourceDate);
 			else
@@ -516,6 +520,17 @@ public class DocumentManagerImpl implements DocumentManager {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw e;
+		}
+	}
+
+	/**
+	 * Avoid title duplications in the same folder
+	 */
+	private void setUniqueTitle(Document doc) {
+		int counter = 1;
+		String buf=doc.getTitle();
+		while (documentDAO.findByTitleAndParentFolderId(doc.getFolder().getId(), doc.getTitle()).size() > 0) {
+			doc.setTitle(buf + " (" + (counter++) + ")");
 		}
 	}
 }
