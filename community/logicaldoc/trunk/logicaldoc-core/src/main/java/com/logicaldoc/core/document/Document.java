@@ -65,6 +65,8 @@ public class Document extends ExtensibleObject {
 
 	private String fileName;
 
+	private int indexed = 1;
+
 	private Set<String> keywords = new HashSet<String>();
 
 	private Set<Version> versions = new HashSet<Version>();
@@ -254,6 +256,14 @@ public class Document extends ExtensibleObject {
 
 	public void setVersions(Set<Version> versions) {
 		this.versions = versions;
+	}
+
+	public int getIndexed() {
+		return indexed;
+	}
+
+	public void setIndexed(int indexed) {
+		this.indexed = indexed;
 	}
 
 	public String getKeywordsString() {
