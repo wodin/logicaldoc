@@ -157,14 +157,26 @@ public interface DocumentDAO {
 	 * @return The collection of linked documents
 	 */
 	public Collection<Document> findLinkedDocuments(long docId, String linkType, Integer direction);
-	
+
 	/**
 	 * Finds that document that lies under a specific folder (given by the id)
+	 * an with a given fileName(like operator is used)
+	 * 
 	 * @param folderId
-	 * @param documentName
+	 * @param fileName
 	 * @return
 	 */
-	public Document findDocumentByNameAndParentFolderId(long folderId, String documentName);
+	public Collection<Document> findByFileNameAndParentFolderId(long folderId, String fileName);
+
+	/**
+	 * Finds that document that lies under a specific folder (given by the id)
+	 * an with a given title(like operator is used)
+	 * 
+	 * @param folderId
+	 * @param title
+	 * @return
+	 */
+	public Collection<Document> findByTitleAndParentFolderId(long folderId, String title);
 	
 	/**
 	 * Initializes lazy loaded collections

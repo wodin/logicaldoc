@@ -157,7 +157,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 		try {
 			doc = (Document) getHibernateTemplate().get(Document.class, docId);
-			if(doc!=null && doc.getDeleted()==1)
+			if (doc != null && doc.getDeleted() == 1)
 				return null;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -624,25 +624,31 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		return coll;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Document findDocumentByNameAndParentFolderId(long folderId, String documentName) {
-		Collection<Document> coll = null;
+	public Collection<Document> findByFileNameAndParentFolderId(long folderId, String fileName) {
 		try {
-			StringBuffer query = new StringBuffer("select _doc.id from Document _doc where ");
-			query.append("_doc.folder.id = ");
-			query.append(Long.toString(folderId));
-
-			coll = (Collection<Document>) getHibernateTemplate().find(
-					"from Document _doc where _doc.folder.id = " + folderId + " and _doc.fileName='" + documentName
+			return (Collection<Document>) getHibernateTemplate().find(
+					"from Document _doc where _doc.folder.id = " + folderId + " and _doc.fileName like '" + fileName
 							+ "'");
 
-			if (coll != null && coll.size() > 0)
-				return coll.iterator().next();
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
+		return null;
+	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public Collection<Document> findByTitleAndParentFolderId(long folderId, String title) {
+		try {
+			return (Collection<Document>) getHibernateTemplate().find(
+					"from Document _doc where _doc.folder.id = " + folderId + " and _doc.title like '" + title + "'");
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
 		return null;
 	}
 
