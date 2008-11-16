@@ -441,7 +441,7 @@ public class DavResourceImpl implements DavResource{
 		}
 
 		try {
-			ResourceService resourceService = new ResourceServiceImpl();
+
 			Resource res = resourceService.getResorce(destination.getLocator()
 					.getResourcePath(), this.resource.getRequestedPerson());
 			if (res != null) {

@@ -15,11 +15,9 @@ import org.apache.jackrabbit.server.SessionProvider;
 import org.apache.jackrabbit.server.SessionProviderImpl;
 import org.apache.jackrabbit.webdav.DavLocatorFactory;
 import org.apache.jackrabbit.webdav.DavResource;
-import org.apache.jackrabbit.webdav.DavSessionProvider;
 import org.apache.jackrabbit.webdav.WebdavRequest;
 import org.apache.jackrabbit.webdav.lock.LockManager;
 import org.apache.jackrabbit.webdav.lock.SimpleLockManager;
-import org.apache.jackrabbit.webdav.simple.DavSessionProviderImpl;
 import org.apache.jackrabbit.webdav.simple.LocatorFactoryImplEx;
 
 import com.logicaldoc.util.Context;
@@ -93,11 +91,6 @@ public class WebdavServlet extends AbstractWebdavServlet{
      * the locator factory
      */
     private DavLocatorFactory locatorFactory;
-
-    /**
-     * the webdav session provider
-     */
-    private DavSessionProvider davSessionProvider;
 
     /**
      * the repository session provider
@@ -277,32 +270,6 @@ public class WebdavServlet extends AbstractWebdavServlet{
      */
     public synchronized void setSessionProvider(SessionProvider sessionProvider) {
         this.sessionProvider = sessionProvider;
-    }
-
-    /**
-     * Returns the <code>DavSessionProvider</code>. If no session provider has
-     * been set or created a new instance of {@link DavSessionProviderImpl}
-     * is returned.
-     *
-     * @return the session provider
-     * @see AbstractWebdavServlet#getDavSessionProvider()
-     */
-    public synchronized DavSessionProvider getDavSessionProvider() {
-        if (davSessionProvider == null) {
-            davSessionProvider =
-                new DavSessionProviderImpl(null, getSessionProvider());
-        }
-        return davSessionProvider;
-    }
-
-    /**
-     * Sets the <code>DavSessionProvider</code>.
-     *
-     * @param sessionProvider
-     * @see AbstractWebdavServlet#setDavSessionProvider(org.apache.jackrabbit.webdav.DavSessionProvider)
-     */
-    public synchronized void setDavSessionProvider(DavSessionProvider sessionProvider) {
-        this.davSessionProvider = sessionProvider;
     }
 
     /**
