@@ -24,14 +24,14 @@
 				</ice:panelGroup>
 
 				<ice:panelGroup rendered="#{allowMultipleSelection eq 'true'}">
-					<ice:selectManyMenu styleClass="selectManyMenu"
+					<ice:selectManyMenu styleClass="#{fn:length(styleClass) == 0 ? 'selectManyMenu' : styleClass}"
 						value="#{value}">
 						<f:selectItems value="#{items}" />
 					</ice:selectManyMenu>
 				</ice:panelGroup>
 				
 				<ice:panelGroup rendered="#{allowMultipleSelection eq 'false'}">
-					<ice:selectOneListbox styleClass="selectManyMenu"
+					<ice:selectOneListbox styleClass="#{fn:length(styleClass) == 0  ? 'selectManyMenu' : styleClass}"
 						value="#{value}">
 						<f:selectItems value="#{items}" />
 					</ice:selectOneListbox>
@@ -42,7 +42,7 @@
 				</ice:panelGroup>
 
 				<ice:panelGroup rendered="#{showFilter eq 'true'}">
-					<ice:selectInputText width="125"
+					<ice:selectInputText width="#{fn:length(filterSize) == 0 ? '125' : filterSize}"
 						value="#{filterValue}"
 						valueChangeListener="#{filterListener}"
 						immediate="true" />

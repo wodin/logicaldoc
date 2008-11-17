@@ -373,6 +373,11 @@ em { /*font-size:14px;*/
 	height: 90px;
 }
 
+.selectManyMenuBig {
+	width: 200px;
+	height: 90px;
+}
+
 .smallInputText {
 	width: 130px;
 }
