@@ -2561,11 +2561,11 @@ TableComment 0 Arial,8,N</a:FontList>
 </o:Column>
 <o:Column Id="o97">
 <a:ObjectID>7263F8F0-5AC1-43BB-9006-05B18256DB1E</a:ObjectID>
-<a:Name>ld_hidden</a:Name>
-<a:Code>ld_hidden</a:Code>
+<a:Name>ld_type</a:Name>
+<a:Code>ld_type</a:Code>
 <a:CreationDate>1225353355</a:CreationDate>
 <a:Creator>marco</a:Creator>
-<a:ModificationDate>1225353355</a:ModificationDate>
+<a:ModificationDate>1225702463</a:ModificationDate>
 <a:Modifier>marco</a:Modifier>
 <a:DataType>int</a:DataType>
 <a:Mandatory>1</a:Mandatory>
@@ -3475,11 +3475,11 @@ TableComment 0 Arial,8,N</a:FontList>
 </o:Column>
 <o:Column Id="o169">
 <a:ObjectID>1F895E17-0C47-4412-AC9F-4B571B136D49</a:ObjectID>
-<a:Name>ld_hidden</a:Name>
-<a:Code>ld_hidden</a:Code>
+<a:Name>ld_type</a:Name>
+<a:Code>ld_type</a:Code>
 <a:CreationDate>1225353463</a:CreationDate>
 <a:Creator>marco</a:Creator>
-<a:ModificationDate>1225353463</a:ModificationDate>
+<a:ModificationDate>1225702437</a:ModificationDate>
 <a:Modifier>marco</a:Modifier>
 <a:DataType>int</a:DataType>
 <a:Mandatory>1</a:Mandatory>
