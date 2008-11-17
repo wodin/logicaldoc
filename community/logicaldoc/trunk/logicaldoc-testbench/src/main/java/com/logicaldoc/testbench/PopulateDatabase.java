@@ -348,8 +348,8 @@ public class PopulateDatabase {
 		insertDoc.addBatch();
 		batchCount++;
 
-		// Insert 5 document's keywords
-		Set<String> kwds = Util.extractWords(5, content);
+		// Insert 3 document's keywords
+		Set<String> kwds = Util.extractWords(3, content);
 		int i = 0;
 		for (String keyword : kwds) {
 			// LD_DOCID

@@ -25,6 +25,8 @@ public class TestBench {
 
 	private PopulateDatabase popDatabase;
 
+	private PopulateUsers popUsers;
+	
 	private PopulateIndex popIndex;
 
 	public TestBench() throws IOException {
@@ -51,6 +53,12 @@ public class TestBench {
 		popDatabase.setPassword(context.getProperty("jdbc.password"));
 		popDatabase.setRootFolder(docsRoot);
 
+		popUsers = new PopulateUsers();
+		popUsers.setJdbcClass(context.getProperty("jdbc.driver"));
+		popUsers.setJdbcUrl(context.getProperty("jdbc.url"));
+		popUsers.setUsername(context.getProperty("jdbc.username"));
+		popUsers.setPassword(context.getProperty("jdbc.password"));
+		
 		popIndex = new PopulateIndex();
 		Locale locale = new Locale(popDatabase.getLanguage());
 		File indexFolder = new File(context.getProperty("conf.indexdir") + "/"
@@ -70,6 +78,8 @@ public class TestBench {
 			testBench.generateFiles();
 		if (phase.equals("all") || phase.equals("database"))
 			testBench.populateDatabase();
+		if (phase.equals("all") || phase.equals("users"))
+			testBench.populateUsers();
 		if (phase.equals("all") || phase.equals("index"))
 			testBench.populateIndex();
 
@@ -87,6 +97,13 @@ public class TestBench {
 	 */
 	private void populateDatabase() {
 		popDatabase.populate();
+	}
+	
+	/**
+	 * Launches the users population
+	 */
+	private void populateUsers() {
+		popUsers.populate();
 	}
 
 	/**
