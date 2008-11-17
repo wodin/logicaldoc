@@ -93,7 +93,7 @@ values     (2,'2008-10-22',0,'testDocname2','testDocVer','2006-12-19','myself',1
 
 insert into ld_document
            (ld_id,ld_lastmodified,ld_deleted,ld_title,ld_version,ld_date,ld_publisher,ld_status,ld_type,ld_checkoutuser,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid)
-values     (3,'2008-10-22',3,'DELETED','testDocVer','2006-12-19','myself',1,'PDF','sebastian','source','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,103);
+values     (3,'2008-10-22',1,'DELETED','testDocVer','2006-12-19','myself',1,'PDF','sebastian','source','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,103);
 
 
 insert into ld_ticket

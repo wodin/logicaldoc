@@ -665,4 +665,105 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			keyword.getBytes();
 		}
 	}
+
+	@Override
+	public Collection<Long> getDeletedDocIds() {
+		Collection<Long> coll = new ArrayList<Long>();
+		try {
+			String query = "select A.ld_id from ld_document A where A.ld_deleted=1";
+			Connection con = null;
+			Statement stmt = null;
+			ResultSet rs = null;
+
+			try {
+				con = getSession().connection();
+				stmt = con.createStatement();
+				rs = stmt.executeQuery(query.toString());
+				while (rs.next()) {
+					coll.add(rs.getLong(1));
+				}
+			} finally {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return coll;
+	}
+
+	@Override
+	public long getTotalSize(boolean computeDeleted) {
+		long size = 0;
+		try {
+			String query = "select sum(A.ld_filesize) from ld_document A ";
+			if (!computeDeleted) {
+				query += " where A.ld_deleted=0";
+			}
+
+			Connection con = null;
+			Statement stmt = null;
+			ResultSet rs = null;
+
+			try {
+				con = getSession().connection();
+				stmt = con.createStatement();
+				rs = stmt.executeQuery(query.toString());
+				while (rs.next()) {
+					size=rs.getLong(1);
+				}
+			} finally {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return size;
+	}
+
+	@Override
+	public long getDocumentCount(boolean computeDeleted) {
+		long count = 0;
+		try {
+			String query = "select count(*) from ld_document A ";
+			if (!computeDeleted) {
+				query += " where A.ld_deleted=0";
+			}
+
+			Connection con = null;
+			Statement stmt = null;
+			ResultSet rs = null;
+
+			try {
+				con = getSession().connection();
+				stmt = con.createStatement();
+				rs = stmt.executeQuery(query.toString());
+				while (rs.next()) {
+					count=rs.getLong(1);
+				}
+			} finally {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return count;
+	}
 }
