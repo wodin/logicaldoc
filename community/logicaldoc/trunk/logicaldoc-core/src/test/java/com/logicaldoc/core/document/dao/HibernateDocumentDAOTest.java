@@ -226,7 +226,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertNotNull(documents);
 		assertEquals(1, documents.size());
 	}
-	
+
 	public void testFindLinkedDocuments() {
 		Collection<Document> docs = dao.findLinkedDocuments(1, null, null);
 		assertNotNull(docs);
@@ -246,5 +246,22 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		docs = dao.findLinkedDocuments(2, "xyz", 2);
 		assertNotNull(docs);
 		assertEquals(0, docs.size());
+	}
+
+	public void testGetDeletedDocIds() {
+		Collection<Long> coll = dao.getDeletedDocIds();
+		assertNotNull(coll);
+		assertEquals(1, coll.size());
+		assertEquals(new Long(3), coll.iterator().next());
+	}
+
+	public void testGetTotalSize() {
+		assertEquals(246046L, dao.getTotalSize(true));
+		assertEquals(123701L, dao.getTotalSize(false));
+	}
+
+	public void testGetDocumentCount() {
+		assertEquals(3L, dao.getDocumentCount(true));
+		assertEquals(2L, dao.getDocumentCount(false));
 	}
 }

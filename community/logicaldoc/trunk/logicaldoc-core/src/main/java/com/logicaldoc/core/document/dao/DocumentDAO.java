@@ -177,7 +177,7 @@ public interface DocumentDAO {
 	 * @return
 	 */
 	public Collection<Document> findByTitleAndParentFolderId(long folderId, String title);
-	
+
 	/**
 	 * Initializes lazy loaded collections
 	 * 
@@ -185,4 +185,24 @@ public interface DocumentDAO {
 	 */
 	public void initialize(Document doc);
 
+	/**
+	 * Obtains the total size of the archive, that is the sum of sizes of all
+	 * documents
+	 * 
+	 * @param computeDeleted If true, even deleted documents are considered
+	 * @return
+	 */
+	public long getTotalSize(boolean computeDeleted);
+
+	/**
+	 * Gets the collection of deleted document ids
+	 */
+	public Collection<Long> getDeletedDocIds();
+	
+	/**
+	 * Counts the number of documents
+	 * 
+	 * @param computeDeleted If true, even deleted documents are considered
+	 */
+	public long getDocumentCount(boolean computeDeleted);
 }
