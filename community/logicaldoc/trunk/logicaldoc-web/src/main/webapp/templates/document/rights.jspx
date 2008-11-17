@@ -41,12 +41,14 @@
 						<br />
 						<ldoc:groupselector
 							showFilter="true"
+							styleClass="selectManyMenuBig"
 							allowMultipleSelection="true"
 							label="#{msgs['entity.available']}"
 							items="#{rightsRecordsManager.availableGroups}"
 							value="#{rightsRecordsManager.selectedAvailableGroups}"
 							filterValue="#{rightsRecordsManager.availableGroupFilter}"
-							filterListener="#{rightsRecordsManager.filterAvailableGroups}"/>
+							filterListener="#{rightsRecordsManager.filterAvailableGroups}"
+							filterSize="193"/>
 					</ice:panelGroup>
 					
 					<ice:panelGroup styleClass="commands">
@@ -67,12 +69,14 @@
 						<br />
 						<ldoc:groupselector
 							showFilter="true"
+							styleClass="selectManyMenuBig"
 							allowMultipleSelection="true"
 							label="#{msgs['entity.allowed']}"
 							items="#{rightsRecordsManager.allowedGroups}"
 							value="#{rightsRecordsManager.selectedAllowedGroups}"
 							filterValue="#{rightsRecordsManager.allowedGroupFilter}"
-							filterListener="#{rightsRecordsManager.filterAllowedGroups}"/>
+							filterListener="#{rightsRecordsManager.filterAllowedGroups}"
+							filterSize="193"/>
 					</ice:panelGroup>
 				</ice:panelGrid>
 			</f:subview>
