@@ -74,6 +74,17 @@ public class MenuGroup {
 	public void setWrite(int write) {
 		this.write = write;
 	}
+	
+	@Override
+	public MenuGroup clone() throws CloneNotSupportedException {
+		MenuGroup mg=new MenuGroup(groupId);
+		mg.setAddChild(addChild);
+		mg.setDelete(delete);
+		mg.setManageSecurity(manageSecurity);
+		mg.setRename(rename);
+		mg.setWrite(write);
+		return mg;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
