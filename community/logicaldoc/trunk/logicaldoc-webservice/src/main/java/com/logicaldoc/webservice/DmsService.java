@@ -66,6 +66,9 @@ public interface DmsService {
 	 * @param versionDesc
 	 * @param filename
 	 * @param content
+	 * @param templateName
+	 * @param templateFields
+	 * @param templateValues
 	 * @return The document identifier or 'error' if some errors occurred)
 	 * @throws Exception
 	 */
@@ -83,7 +86,9 @@ public interface DmsService {
 	String keywords, @WebParam(name = "versionDesc")
 	String versionDesc, @WebParam(name = "filename")
 	String filename, @WebParam(name = "content")
-	DataHandler content) throws Exception;
+	DataHandler content, @WebParam(name = "templateName")
+	String templateName, @WebParam(name = "templateFields")
+	ExtendedAttribute[] extendedAttributes) throws Exception;
 
 	/**
 	 * Downloads a document. The document content is sent as attachment
@@ -190,6 +195,8 @@ public interface DmsService {
 	 *        considered
 	 * @param queryLanguage The language in which the query is expressed
 	 * @param maxHits The maximum number of hits to be returned
+	 * @param templateName The name of template to search
+	 * @param templateFields The template's fields
 	 * @return The objects representing the search result
 	 * @throws Exception
 	 */
@@ -199,5 +206,7 @@ public interface DmsService {
 	String query, @WebParam(name = "indexLanguage")
 	String indexLanguage, @WebParam(name = "queryLanguage")
 	String queryLanguage, @WebParam(name = "maxHits")
-	int maxHits) throws Exception;
+	int maxHits, @WebParam(name = "templateName")
+	String templateName, @WebParam(name = "templateFields")
+	String[] templateFields) throws Exception;
 }

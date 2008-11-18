@@ -40,9 +40,10 @@ public class DmsClient implements DmsService {
 
 	public String createDocument(String username, String password, long folder, String docTitle, String source,
 			String sourceDate, String author, String sourceType, String coverage, String language, String keywords,
-			String versionDesc, String filename, DataHandler content) throws Exception {
+			String versionDesc, String filename, DataHandler content, String templateName,
+			ExtendedAttribute[] extendedAttribute) throws Exception {
 		return client.createDocument(username, password, folder, docTitle, source, sourceDate, author, sourceType,
-				coverage, language, keywords, versionDesc, filename, content);
+				coverage, language, keywords, versionDesc, filename, content, templateName, extendedAttribute);
 	}
 
 	public String createFolder(String username, String password, String name, long parent) throws Exception {
@@ -70,8 +71,8 @@ public class DmsClient implements DmsService {
 	}
 
 	public SearchResult search(String username, String password, String query, String indexLanguage,
-			String queryLanguage, int maxHits) throws Exception {
-		return client.search(username, password, query, indexLanguage, queryLanguage, maxHits);
+			String queryLanguage, int maxHits, String templateName, String[] templateFields) throws Exception {
+		return client.search(username, password, query, indexLanguage, queryLanguage, maxHits, templateName, templateFields);
 	}
 
 }
