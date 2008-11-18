@@ -1,6 +1,7 @@
 package com.logicaldoc.webdav.resource.service;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -140,8 +141,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 		Resource parentMenu = this.getParentResource(currentStablePath);
 
-		Document document = documentDAO.findDocumentByNameAndParentFolderId(
-				Long.parseLong(parentMenu.getID()), name);
+		Document document = documentDAO.findByFileNameAndParentFolderId(Long.parseLong(parentMenu.getID()), name).iterator().next();
 
 		if (document == null)
 			return null;
@@ -227,8 +227,7 @@ public class ResourceServiceImpl implements ResourceService {
 	public Resource getChildByName(Resource parentResource, String name) {
 		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource
 				.getID()));
-		Document document = documentDAO.findDocumentByNameAndParentFolderId(
-				parentMenu.getId(), name);
+		Document document = documentDAO.findByFileNameAndParentFolderId(parentMenu.getId(), name).iterator().next();
 
 		if (document != null)
 			return marshallDocument(document);
@@ -310,8 +309,14 @@ public class ResourceServiceImpl implements ResourceService {
 	public InputStream streamOut(Resource resource) {
 		Document document = documentDAO.findById(Long.parseLong(resource
 				.getID()));
+		
+		if(document==null){
+			//Document not found
+			return new ByteArrayInputStream(new String("not found").getBytes());
+		}
+		
 		File file = null;
-
+		
 		if (document.getVersion().equals("1.0"))
 			file = documentManager.getDocumentFile(document, null);
 		else
