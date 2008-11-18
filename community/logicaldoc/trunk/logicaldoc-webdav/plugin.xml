@@ -37,10 +37,4 @@
 			<export prefix="*" />
 		</library>
 	</runtime>
-	
-	
-	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="emailDbInit">
-		<parameter id="position" value="5" />
-		<parameter id="name" value="logicaldoc-webdav" />
-	</extension>
 </plugin>
