@@ -11,6 +11,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -31,6 +34,8 @@ import com.logicaldoc.webdav.resource.model.ResourceImpl;
  * 
  */
 public class ResourceServiceImpl implements ResourceService {
+
+	protected static Log log = LogFactory.getLog(ResourceServiceImpl.class);
 
 	private static final String FOLDER_PREFIX = "db.projects";
 
@@ -75,36 +80,29 @@ public class ResourceServiceImpl implements ResourceService {
 		Resource resource = new ResourceImpl();
 		resource.setID(new Long(document.getId()).toString());
 		resource.setContentLength(document.getFileSize());
-		resource.setName(document.getFileName());
+		resource.setName(document.getTitle() + "." + document.getType());
 		resource.isFolder(false);
-
 		return resource;
 	}
 
 	public List<Resource> getChildResources(Resource parentResource) {
 		List<Resource> resourceList = new LinkedList<Resource>();
-
 		final Long folderID = Long.parseLong(parentResource.getID());
-
-		boolean hasAccess = menuDAO.isReadEnable(folderID, parentResource
-				.getRequestedPerson());
+		boolean hasAccess = menuDAO.isReadEnable(folderID, parentResource.getRequestedPerson());
 
 		if (hasAccess == false)
 			return resourceList;
 
 		Collection<Menu> folders = menuDAO.findChildren(folderID);
 		if (folders != null) {
-			for (Iterator<Menu> iterator = folders.iterator(); iterator
-					.hasNext();) {
+			for (Iterator<Menu> iterator = folders.iterator(); iterator.hasNext();) {
 				Menu currentMenu = iterator.next();
 				resourceList.add(marshallFolder(currentMenu));
 			}
 		}
 
 		Collection<Document> documents = documentDAO.findByFolder(folderID);
-
-		for (Iterator<Document> iterator = documents.iterator(); iterator
-				.hasNext();) {
+		for (Iterator<Document> iterator = documents.iterator(); iterator.hasNext();) {
 			Document document = iterator.next();
 			resourceList.add(marshallDocument(document));
 		}
@@ -113,7 +111,6 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public Resource getResorce(String requestPath, long id) {
-
 		if (requestPath == null)
 			requestPath = "/";
 
@@ -140,33 +137,29 @@ public class ResourceServiceImpl implements ResourceService {
 			return marshallFolder(menu);
 
 		Resource parentMenu = this.getParentResource(currentStablePath);
-
-		Document document = documentDAO.findByFileNameAndParentFolderId(Long.parseLong(parentMenu.getID()), name).iterator().next();
-
-		if (document == null)
+		String title = name.substring(0, name.lastIndexOf(".") > 0 ? name.lastIndexOf(".") : name.length());
+		Collection<Document> docs = documentDAO.findByTitleAndParentFolderId(Long.parseLong(parentMenu.getID()), title);
+		if (docs.isEmpty())
 			return null;
-
-		boolean hasAccess = menuDAO.isReadEnable(document.getFolder().getId(),
-				id);
+		Document document = docs.iterator().next();
+		boolean hasAccess = menuDAO.isReadEnable(document.getFolder().getId(), id);
 
 		if (hasAccess == false)
-			throw new SecurityException(
-					"You have no appropriated rights to read this document");
+			throw new SecurityException("You have no appropriated rights to read this document");
 
 		return marshallDocument(document);
 	}
 
 	public Resource getParentResource(String resourcePath) {
-		if(resourcePath.startsWith("/" + FOLDER_PREFIX + "/") == false)
+		if (resourcePath.startsWith("/" + FOLDER_PREFIX + "/") == false)
 			resourcePath = "/" + FOLDER_PREFIX + resourcePath;
-		
+
 		String name = "";
 		String path = resourcePath;
 		for (int i = 0; i < 2; i++) {
 			int lastidx = resourcePath.lastIndexOf("/");
 			if (lastidx > -1) {
-				name = resourcePath.substring(lastidx + 1, resourcePath
-						.length());
+				name = resourcePath.substring(lastidx + 1, resourcePath.length());
 				resourcePath = resourcePath.substring(0, lastidx);
 			}
 			if (path.equals("/" + FOLDER_PREFIX + "/") && name.equals("")) {
@@ -186,14 +179,10 @@ public class ResourceServiceImpl implements ResourceService {
 		super.finalize();
 	}
 
-	public Resource createResource(Resource parentResource, String name,
-			boolean isCollection, ImportContext context) {
+	public Resource createResource(Resource parentResource, String name, boolean isCollection, ImportContext context) {
+		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource.getID()));
 
-		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource
-				.getID()));
-
-		if (menuDAO.isWriteEnable(parentMenu.getId(), parentResource
-				.getRequestedPerson()) == false)
+		if (menuDAO.isWriteEnable(parentMenu.getId(), parentResource.getRequestedPerson()) == false)
 			throw new SecurityException("Write Access not applied to this user");
 
 		if (isCollection == true) {
@@ -206,10 +195,9 @@ public class ResourceServiceImpl implements ResourceService {
 		InputStream is = context.getInputStream();
 		try {
 			try {
-				documentManager.create(is, name, parentMenu, user, user
-						.getLanguage());
+				documentManager.create(is, name, parentMenu, user, user.getLanguage());
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e);
 			} finally {
 				is.close();
 			}
@@ -225,13 +213,13 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public Resource getChildByName(Resource parentResource, String name) {
-		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource
-				.getID()));
-		Document document = documentDAO.findByFileNameAndParentFolderId(parentMenu.getId(), name).iterator().next();
-
-		if (document != null)
+		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource.getID()));
+		String title = name.substring(0, name.lastIndexOf(".") > 0 ? name.lastIndexOf(".") : name.length());
+		Collection<Document> docs = documentDAO.findByTitleAndParentFolderId(parentMenu.getId(), title);
+		if (!docs.isEmpty()) {
+			Document document = docs.iterator().next();
 			return marshallDocument(document);
-
+		}
 		return null;
 	}
 
@@ -261,14 +249,13 @@ public class ResourceServiceImpl implements ResourceService {
 			if (destination == null)
 				throw new OperationNotSupportedException();
 
-			Document document = documentDAO.findById(Long.parseLong(target
-					.getID()));
+			Document document = documentDAO.findById(Long.parseLong(target.getID()));
 			Menu menu = menuDAO.findById(Long.parseLong(destination.getID()));
 
 			try {
 				documentManager.moveToFolder(document, menu);
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 
 			return this.marshallDocument(document);
@@ -279,9 +266,8 @@ public class ResourceServiceImpl implements ResourceService {
 		try {
 			if (resource.isFolder() == true)
 				menuDAO.delete(Long.parseLong(resource.getID()));
-
 			else
-				documentDAO.delete(Long.parseLong(resource.getID()));
+				documentManager.delete(Long.parseLong(resource.getID()));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -307,21 +293,19 @@ public class ResourceServiceImpl implements ResourceService {
 
 	@Override
 	public InputStream streamOut(Resource resource) {
-		Document document = documentDAO.findById(Long.parseLong(resource
-				.getID()));
-		
-		if(document==null){
-			//Document not found
+		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
+
+		if (document == null) {
+			// Document not found
 			return new ByteArrayInputStream(new String("not found").getBytes());
 		}
-		
+
 		File file = null;
-		
+
 		if (document.getVersion().equals("1.0"))
 			file = documentManager.getDocumentFile(document, null);
 		else
-			file = documentManager.getDocumentFile(document, document
-					.getVersion());
+			file = documentManager.getDocumentFile(document, document.getVersion());
 
 		if (!file.exists()) {
 			throw new DavResourceNotFoundException(file.getPath());

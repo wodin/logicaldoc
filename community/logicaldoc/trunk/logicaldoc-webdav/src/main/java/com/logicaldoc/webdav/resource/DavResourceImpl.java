@@ -47,7 +47,7 @@ import com.logicaldoc.webdav.web.ResourceConfig;
 /**
  * DavResourceImpl implements a DavResource.
  */
-public class DavResourceImpl implements DavResource{
+public class DavResourceImpl implements DavResource {
 
 	/**
 	 * the default logger
@@ -55,19 +55,26 @@ public class DavResourceImpl implements DavResource{
 	protected static Log log = LogFactory.getLog(DavResourceImpl.class);
 
 	private DavResourceFactory factory;
+
 	private DavSession session;
+
 	private DavResourceLocator locator;
+
 	private Resource resource;
+
 	protected DavPropertySet properties = new DavPropertySet();
+
 	protected boolean propsInitialized = false;
+
 	private boolean isCollection = true;
 
 	private ResourceConfig config;
+
 	private long modificationTime = IOUtil.UNDEFINED_TIME;
+
 	private ResourceService resourceService;
 
-	public DavResourceImpl(DavResourceLocator locator,
-			DavResourceFactory factory, DavSession session,
+	public DavResourceImpl(DavResourceLocator locator, DavResourceFactory factory, DavSession session,
 			ResourceConfig config, Resource resource) {
 		this.locator = locator;
 		this.resource = resource;
@@ -75,13 +82,11 @@ public class DavResourceImpl implements DavResource{
 		this.config = config;
 		this.session = session;
 		this.isCollection = this.resource.isFolder();
-		resourceService = (ResourceService) Context.getInstance().getBean(
-				"ResourceService");
+		resourceService = (ResourceService) Context.getInstance().getBean("ResourceService");
 		if (this.resource != null)
-			this.resource.setRequestedPerson(Long.parseLong(session.getObject(
-					"id").toString()));
+			this.resource.setRequestedPerson(Long.parseLong(session.getObject("id").toString()));
 	}
-	
+
 	/**
 	 * Create a new {@link DavResource}.
 	 * 
@@ -90,15 +95,14 @@ public class DavResourceImpl implements DavResource{
 	 * @param session
 	 * 
 	 */
-	public DavResourceImpl(DavResourceLocator locator,
-			DavResourceFactory factory, DavSession session,
+	public DavResourceImpl(DavResourceLocator locator, DavResourceFactory factory, DavSession session,
 			ResourceConfig config) throws DavException {
 
 		this.factory = factory;
 		this.locator = locator;
 		this.config = config;
 		this.session = session;
-		resourceService = (ResourceService)Context.getInstance().getBean("ResourceService");
+		resourceService = (ResourceService) Context.getInstance().getBean("ResourceService");
 	}
 
 	/**
@@ -111,12 +115,11 @@ public class DavResourceImpl implements DavResource{
 	 * @param isCollection
 	 * @throws DavException
 	 */
-	public DavResourceImpl(DavResourceLocator locator,
-			DavResourceFactory factory, DavSession session,
+	public DavResourceImpl(DavResourceLocator locator, DavResourceFactory factory, DavSession session,
 			ResourceConfig config, boolean isCollection) throws DavException {
 		this(locator, factory, session, config);
 		this.isCollection = isCollection;
-		resourceService = (ResourceService)Context.getInstance().getBean("ResourceService");
+		resourceService = (ResourceService) Context.getInstance().getBean("ResourceService");
 	}
 
 	/**
@@ -218,15 +221,13 @@ public class DavResourceImpl implements DavResource{
 	 * 
 	 * @see DavResource#spool(OutputContext)
 	 * @see ResourceConfig#getIOManager()
-	 * @throws IOException
-	 *             if the export fails.
+	 * @throws IOException if the export fails.
 	 */
 	public void spool(OutputContext outputContext) throws IOException {
 		if (exists() && outputContext != null) {
 			ExportContext exportCtx = getExportContext(outputContext);
 			if (!config.getIOManager().exportContent(exportCtx, this)) {
-				throw new IOException(
-						"Unexpected Error while spooling resource.");
+				throw new IOException("Unexpected Error while spooling resource.");
 			}
 		}
 	}
@@ -264,40 +265,35 @@ public class DavResourceImpl implements DavResource{
 
 		// set (or reset) fundamental properties
 		if (getDisplayName() != null) {
-			properties.add(new DefaultDavProperty(DavPropertyName.DISPLAYNAME,
-					getDisplayName()));
+			properties.add(new DefaultDavProperty(DavPropertyName.DISPLAYNAME, getDisplayName()));
 		}
 		if (isCollection()) {
 			properties.add(new ResourceType(ResourceType.COLLECTION));
 			// Windows XP support
-			properties.add(new DefaultDavProperty(DavPropertyName.ISCOLLECTION,
-					"1"));
+			properties.add(new DefaultDavProperty(DavPropertyName.ISCOLLECTION, "1"));
 		} else {
 			properties.add(new ResourceType(ResourceType.DEFAULT_RESOURCE));
 			// Windows XP support
-			properties.add(new DefaultDavProperty(DavPropertyName.ISCOLLECTION,
-					"0"));
+			properties.add(new DefaultDavProperty(DavPropertyName.ISCOLLECTION, "0"));
 		}
 
 		SupportedLock supportedLock = new SupportedLock();
 		supportedLock.addEntry(Type.WRITE, Scope.EXCLUSIVE);
 		properties.add(supportedLock);
-		properties.add(new DefaultDavProperty(DavPropertyName.GETCONTENTLENGTH,
-				this.resource.getContentLength()));
+		properties.add(new DefaultDavProperty(DavPropertyName.GETCONTENTLENGTH, this.resource.getContentLength()));
 		propsInitialized = true;
 	}
 
 	/**
 	 * @see DavResource#alterProperties(DavPropertySet, DavPropertyNameSet)
 	 */
-	public MultiStatusResponse alterProperties(DavPropertySet setProperties,
-			DavPropertyNameSet removePropertyNames) throws DavException {
+	public MultiStatusResponse alterProperties(DavPropertySet setProperties, DavPropertyNameSet removePropertyNames)
+			throws DavException {
 		throw new OperationNotSupportedException();
 	}
 
 	@SuppressWarnings("unchecked")
-	public MultiStatusResponse alterProperties(List changeList)
-			throws DavException {
+	public MultiStatusResponse alterProperties(List changeList) throws DavException {
 		throw new OperationNotSupportedException();
 	}
 
@@ -313,11 +309,10 @@ public class DavResourceImpl implements DavResource{
 			}
 			DavResourceLocator parentloc = null;
 			try {
-				parentloc = locator.getFactory()
-				.createResourceLocator(locator.getPrefix(),
-						"/", parentPath);
+				parentloc = locator.getFactory().createResourceLocator(locator.getPrefix(), "/", parentPath);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			catch(Exception e){e.printStackTrace();}
 
 			try {
 				parent = factory.createResource(parentloc, session);
@@ -336,37 +331,30 @@ public class DavResourceImpl implements DavResource{
 		ArrayList list = new ArrayList();
 		if (exists() && isCollection()) {
 			try {
-				String path = locator.getResourcePath() == null ? "/" : locator
-						.getResourcePath()
-						+ "/";
+				String path = locator.getResourcePath() == null ? "/" : locator.getResourcePath() + "/";
 
-				List<Resource> resources = resourceService
-						.getChildResources(this.resource);
+				List<Resource> resources = resourceService.getChildResources(this.resource);
 				Iterator<Resource> resourceIterator = resources.iterator();
 
 				while (resourceIterator.hasNext()) {
 					Resource resource = resourceIterator.next();
 
 					String currentFilePath = path;
-					if (currentFilePath.lastIndexOf("/") == currentFilePath
-							.length() - 1) {
+					if (currentFilePath.lastIndexOf("/") == currentFilePath.length() - 1) {
 						currentFilePath = currentFilePath + resource.getName();
 					} else {
-						currentFilePath = currentFilePath + "/"
-								+ resource.getName();
+						currentFilePath = currentFilePath + "/" + resource.getName();
 					}
 
-					DavResourceLocator resourceLocator = locator.getFactory()
-							.createResourceLocator(locator.getPrefix(), "",
-									currentFilePath, false);
+					DavResourceLocator resourceLocator = locator.getFactory().createResourceLocator(
+							locator.getPrefix(), "", currentFilePath, false);
 
-					DavResource childRes = factory.createResource(
-							resourceLocator, session);
+					DavResource childRes = factory.createResource(resourceLocator, session);
 
 					list.add(childRes);
 				}
 
-			} 
+			}
 
 			catch (DavException e) {
 				throw new RuntimeException(e);
@@ -383,8 +371,7 @@ public class DavResourceImpl implements DavResource{
 	 * @see DavResource#addMember(DavResource,
 	 *      org.apache.jackrabbit.webdav.io.InputContext)
 	 */
-	public void addMember(DavResource member, InputContext inputContext)
-			throws DavException {
+	public void addMember(DavResource member, InputContext inputContext) throws DavException {
 		if (!exists()) {
 			throw new DavException(DavServletResponse.SC_CONFLICT);
 		}
@@ -392,18 +379,16 @@ public class DavResourceImpl implements DavResource{
 			throw new DavException(DavServletResponse.SC_LOCKED);
 		}
 		try {
-			
-			String memberName = Text.getName(member.getLocator()
-					.getResourcePath());
-			
+
+			String memberName = Text.getName(member.getLocator().getResourcePath());
+
 			ImportContext ctx = getImportContext(inputContext, memberName);
 			if (!config.getIOManager().importContent(ctx, member)) {
 				// any changes should have been reverted in the importer
-				throw new DavException(
-						DavServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+				throw new DavException(DavServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
 			}
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -419,10 +404,10 @@ public class DavResourceImpl implements DavResource{
 		}
 
 		try {
-			Resource resource = resourceService.getResorce(member.getLocator()
-					.getResourcePath(), this.resource.getRequestedPerson());
+			Resource resource = resourceService.getResorce(member.getLocator().getResourcePath(), this.resource
+					.getRequestedPerson());
 			resourceService.deleteResource(resource);
-			
+
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -431,7 +416,7 @@ public class DavResourceImpl implements DavResource{
 	/**
 	 * @see DavResource#move(DavResource)
 	 */
-	
+
 	public void move(DavResource destination) throws DavException {
 		if (!exists()) {
 			throw new DavException(DavServletResponse.SC_NOT_FOUND);
@@ -442,25 +427,21 @@ public class DavResourceImpl implements DavResource{
 
 		try {
 
-			Resource res = resourceService.getResorce(destination.getLocator()
-					.getResourcePath(), this.resource.getRequestedPerson());
+			Resource res = resourceService.getResorce(destination.getLocator().getResourcePath(), this.resource
+					.getRequestedPerson());
 			if (res != null) {
 				res.setName(this.resource.getName());
 				resourceService.updateResource(res);
 			} else {
 				String name = destination.getLocator().getResourcePath();
-				name = name.substring(name.lastIndexOf("/") + 1, name.length())
-						.replace("/default", "");
+				name = name.substring(name.lastIndexOf("/") + 1, name.length()).replace("/default", "");
 
-				Resource parentResource = resourceService
-						.getParentResource(destination.getLocator()
-								.getResourcePath());
+				Resource parentResource = resourceService.getParentResource(destination.getLocator().getResourcePath());
 				this.resource.setName(name);
 
 				resourceService.move(this.resource, parentResource);
 			}
 
-			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -469,8 +450,7 @@ public class DavResourceImpl implements DavResource{
 	/**
 	 * @see DavResource#copy(DavResource, boolean)
 	 */
-	public void copy(DavResource destination, boolean shallow)
-			throws DavException {
+	public void copy(DavResource destination, boolean shallow) throws DavException {
 		if (!exists()) {
 			throw new DavException(DavServletResponse.SC_NOT_FOUND);
 		}
@@ -482,15 +462,15 @@ public class DavResourceImpl implements DavResource{
 			// TODO: currently no support for shallow copy; however this is
 			// only relevant if the source resource is a collection, because
 			// otherwise it doesn't make a difference
-			throw new DavException(DavServletResponse.SC_FORBIDDEN,
-					"Unable to perform shallow copy.");
+			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Unable to perform shallow copy.");
 		}
 		try {
 
 			ResourceService resourceService = new ResourceServiceImpl();
-			resourceService.copyResource(resourceService.getParentResource(destination.getLocator().getWorkspacePath()), this.resource);
-			
-		} catch(Exception e){
+			resourceService.copyResource(
+					resourceService.getParentResource(destination.getLocator().getWorkspacePath()), this.resource);
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
@@ -540,8 +520,7 @@ public class DavResourceImpl implements DavResource{
 	/**
 	 * @see DavResource#refreshLock(LockInfo, String)
 	 */
-	public ActiveLock refreshLock(LockInfo lockInfo, String lockToken)
-			throws DavException {
+	public ActiveLock refreshLock(LockInfo lockInfo, String lockToken) throws DavException {
 		throw new OperationNotSupportedException();
 	}
 
@@ -573,7 +552,7 @@ public class DavResourceImpl implements DavResource{
 	public org.apache.jackrabbit.webdav.DavSession getSession() {
 		throw new OperationNotSupportedException();
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -590,10 +569,8 @@ public class DavResourceImpl implements DavResource{
 	 * @return
 	 * @throws IOException
 	 */
-	protected ImportContext getImportContext(InputContext inputCtx,
-			String systemId) throws IOException {
-		return new ImportContextImpl(resource, systemId, inputCtx, config
-				.getMimeResolver());
+	protected ImportContext getImportContext(InputContext inputCtx, String systemId) throws IOException {
+		return new ImportContextImpl(resource, systemId, inputCtx, config.getMimeResolver());
 	}
 
 	/**
@@ -603,12 +580,9 @@ public class DavResourceImpl implements DavResource{
 	 * @return
 	 * @throws IOException
 	 */
-	protected ExportContext getExportContext(OutputContext outputCtx)
-			throws IOException {
-		return new ExportContextImpl(this.resource, outputCtx, config
-				.getMimeResolver());
+	protected ExportContext getExportContext(OutputContext outputCtx) throws IOException {
+		return new ExportContextImpl(this.resource, outputCtx, config.getMimeResolver());
 	}
-
 
 	/**
 	 * Return true if this resource cannot be modified due to a write lock that
