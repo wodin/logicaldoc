@@ -13,8 +13,7 @@ import com.logicaldoc.web.util.FacesUtil;
 /**
  * A wrapper around the Task for listing and also for editing
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.5.0
  */
 public class TaskRecord {
