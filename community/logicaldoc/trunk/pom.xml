@@ -73,10 +73,21 @@
 			<timezone>+1</timezone>
 		</developer>
 		<developer>
+			<name>Sebastian Wenzky</name>
+			<id>cheffilet</id>
+			<organization>Krypthonas.de</organization>
+			<organizationUrl>http://www.krypthonas.de</organizationUrl>
+			<roles>
+			    <role>designer</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+0</timezone>
+		</developer>		
+		<developer>
 			<name>Jesús Marín</name>
 			<id>jesus</id>
 			<organization>A.P.L. software</organization>
-			<organizationUrl>http://www.aplsoftware.com/</organizationUrl>
+			<organizationUrl>http://www.aplsoftware.com</organizationUrl>
 			<roles>
 				<role>developer</role>
 			</roles>
