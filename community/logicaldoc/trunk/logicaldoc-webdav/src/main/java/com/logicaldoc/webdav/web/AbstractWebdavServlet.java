@@ -176,12 +176,11 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			}
 
 		} catch (DavException e) {
-			if (e.getErrorCode() == HttpServletResponse.SC_UNAUTHORIZED) {
-				e.printStackTrace();
-			} else {
+			log.error(e.getMessage(), e);
+			if (e.getErrorCode() != HttpServletResponse.SC_UNAUTHORIZED) {
 				webdavResponse.sendError(e);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		} finally {
 
