@@ -41,7 +41,7 @@ public class WebdavServlet extends AbstractWebdavServlet{
      * Name of the optional init parameter that defines the value of the
      * 'WWW-Authenticate' header.<p/>
      * If the parameter is omitted the default value
-     * {@link #DEFAULT_AUTHENTICATE_HEADER "Basic Realm=Jackrabbit Webdav Server"}
+     * {@link #DEFAULT_AUTHENTICATE_HEADER "Basic Realm=LogicalDOC Webdav Server"}
      * is used.
      *
      * @see #getAuthenticateHeaderValue()
