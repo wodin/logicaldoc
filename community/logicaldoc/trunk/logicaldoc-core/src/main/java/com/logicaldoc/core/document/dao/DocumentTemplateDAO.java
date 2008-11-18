@@ -40,10 +40,10 @@ public interface DocumentTemplateDAO {
 	public List<DocumentTemplate> findAll();
 	
 	/**
-	 * This method finds a template by ID.
+	 * This method finds a template by name.
 	 * 
 	 * @param name Name of the template.
-	 * @return DocumentTemplate with given ID.
+	 * @return DocumentTemplate with given name.
 	 */
 	public DocumentTemplate findByName(String name);
 }
