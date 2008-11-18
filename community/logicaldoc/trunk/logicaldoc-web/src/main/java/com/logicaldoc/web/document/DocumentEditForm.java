@@ -124,12 +124,16 @@ public class DocumentEditForm {
 		DocumentTemplate templt = null;
 		if (record != null) {
 			Document doc = record.getDocument();
+			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			dao.initialize(doc);
 			templt = doc.getTemplate();
-			template = templt.getId();
-			if (templt != null)
-				for (String attrName : templt.getAttributes()) {
-					extendedAttributes.add(new Attribute(attrName, doc.getValue(attrName)));
-				}
+			if (templt != null) {
+				template = templt.getId();
+				if (templt != null)
+					for (String attrName : templt.getAttributes()) {
+						extendedAttributes.add(new Attribute(attrName, doc.getValue(attrName)));
+					}
+			}
 		} else {
 			if (template != null) {
 				DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance()
