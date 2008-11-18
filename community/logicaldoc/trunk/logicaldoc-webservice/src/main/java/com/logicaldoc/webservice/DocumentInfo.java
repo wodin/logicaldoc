@@ -33,6 +33,12 @@ public class DocumentInfo {
 	private String coverage;
 
 	private String filename;
+	
+	private String templateName;
+	
+	private Long templateId;
+	
+	private ExtendedAttribute[] extendedAttribute;
 
 	private VersionInfo[] version = new VersionInfo[] {};
 
@@ -138,6 +144,30 @@ public class DocumentInfo {
 
 	public void setVersion(VersionInfo[] versionInfo) {
 		this.version = versionInfo;
+	}
+
+	public String getTemplateName() {
+		return templateName;
+	}
+
+	public void setTemplateName(String templateName) {
+		this.templateName = templateName;
+	}
+
+	public Long getTemplateId() {
+		return templateId;
+	}
+
+	public void setTemplateId(Long templateId) {
+		this.templateId = templateId;
+	}
+
+	public ExtendedAttribute[] getExtendedAttribute() {
+		return extendedAttribute;
+	}
+
+	public void setExtendedAttribute(ExtendedAttribute[] extendedAttribute) {
+		this.extendedAttribute = extendedAttribute;
 	}
 
 	public void addVersion(VersionInfo versionInfo) {

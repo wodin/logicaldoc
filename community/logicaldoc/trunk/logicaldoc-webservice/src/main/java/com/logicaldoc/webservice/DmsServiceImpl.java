@@ -8,7 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.activation.DataHandler;
@@ -21,10 +23,13 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.Menu;
@@ -128,14 +133,16 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#createDocument(java.lang.String,
-	 *      java.lang.String, int, java.lang.String, java.lang.String,
+	 *      java.lang.String, long, java.lang.String, java.lang.String,
 	 *      java.lang.String, java.lang.String, java.lang.String,
 	 *      java.lang.String, java.lang.String, java.lang.String,
-	 *      java.lang.String, java.lang.String, javax.activation.DataHandler)
+	 *      java.lang.String, java.lang.String, javax.activation.DataHandler,
+	 *      java.lang.String, java.lang.String[], java.lang.String[])
 	 */
 	public String createDocument(String username, String password, long folderId, String docTitle, String source,
 			String sourceDate, String author, String sourceType, String coverage, String language, String keywords,
-			String versionDesc, String filename, DataHandler content) throws Exception {
+			String versionDesc, String filename, DataHandler content, String templateName,
+			ExtendedAttribute[] extendedAttributes) throws Exception {
 
 		checkCredentials(username, password);
 
@@ -163,6 +170,22 @@ public class DmsServiceImpl implements DmsService {
 		if (StringUtils.isNotEmpty(sourceDate))
 			date = df.parse(sourceDate);
 
+		DocumentTemplate template = null;
+		Map<String, String> attributes = null;
+		if (StringUtils.isNotEmpty(templateName)) {
+			DocumentTemplateDAO templDao = (DocumentTemplateDAO) Context.getInstance().getBean(
+					DocumentTemplateDAO.class);
+			template = templDao.findByName(templateName);
+			if (template != null) {
+				if (extendedAttributes != null && extendedAttributes.length > 0) {
+					attributes = new HashMap<String, String>();
+					for (int i = 0; i < extendedAttributes.length; i++) {
+						attributes.put(extendedAttributes[i].getName(), extendedAttributes[i].getValue());
+					}
+				}
+			}
+		}
+
 		// Get file to upload inputStream
 		InputStream stream = content.getInputStream();
 
@@ -170,7 +193,7 @@ public class DmsServiceImpl implements DmsService {
 
 		try {
 			Document doc = documentManager.create(stream, filename, folder, user, language, null, date, source, author,
-					sourceType, coverage, versionDesc, kwds);
+					sourceType, coverage, versionDesc, kwds, template != null ? template.getId() : null, attributes);
 			return String.valueOf(doc.getId());
 		} catch (Exception e) {
 			return "error";
@@ -276,6 +299,7 @@ public class DmsServiceImpl implements DmsService {
 	public DocumentInfo downloadDocumentInfo(String username, String password, long id) throws Exception {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(id);
+		docDao.initialize(doc);
 		checkCredentials(username, password);
 		checkReadEnable(username, doc.getFolder().getId());
 
@@ -294,6 +318,20 @@ public class DmsServiceImpl implements DmsService {
 		info.setPublisher(doc.getPublisher());
 		info.setCoverage(doc.getCoverage());
 		info.setFilename(doc.getFileName());
+
+		if (doc.getTemplate() != null) {
+			// Insert template infos
+			info.setTemplateName(doc.getTemplate().getName());
+			info.setTemplateId(doc.getTemplate().getId());
+
+			// Populate extended attributes
+			ExtendedAttribute[] extendedAttributes = new ExtendedAttribute[doc.getAttributes().size()];
+			int i = 0;
+			for (String name : doc.getAttributeNames()) {
+				extendedAttributes[i++] = new ExtendedAttribute(name, doc.getValue(name));
+			}
+			info.setExtendedAttribute(extendedAttributes);
+		}
 
 		Set<Version> versions = doc.getVersions();
 		for (Version version : versions) {
@@ -354,12 +392,13 @@ public class DmsServiceImpl implements DmsService {
 	}
 
 	/**
+	 * 
 	 * @see com.logicaldoc.webservice.DmsService#search(java.lang.String,
 	 *      java.lang.String, java.lang.String, java.lang.String,
-	 *      java.lang.String, int)
+	 *      java.lang.String, int, java.lang.String, java.lang.String[])
 	 */
 	public SearchResult search(String username, String password, String query, String indexLanguage,
-			String queryLanguage, int maxHits) throws Exception {
+			String queryLanguage, int maxHits, String templateName, String[] templateFields) throws Exception {
 		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = udao.findByUserName(username);
 		if (user == null) {
@@ -372,9 +411,28 @@ public class DmsServiceImpl implements DmsService {
 
 		SearchOptions opt = new SearchOptions();
 		ArrayList<String> fields = new ArrayList<String>();
-		fields.add("content");
-		fields.add("keywords");
-		fields.add("name");
+		fields.add(LuceneDocument.FIELD_CONTENT);
+		fields.add(LuceneDocument.FIELD_KEYWORDS);
+		fields.add(LuceneDocument.FIELD_TITLE);
+
+		if (StringUtils.isNotEmpty(templateName)) {
+			DocumentTemplateDAO templDao = (DocumentTemplateDAO) Context.getInstance().getBean(
+					DocumentTemplateDAO.class);
+			DocumentTemplate template = templDao.findByName(templateName);
+			if (template != null) {
+				opt.setTemplate(template.getId());
+				for (String attr : template.getAttributes()) {
+					if (templateFields != null && templateFields.length > 0) {
+						for (int i = 0; i < templateFields.length; i++) {
+							if (attr.equals(templateFields[i])) {
+								fields.add("ext_" + templateFields[i]);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
 
 		String[] flds = (String[]) fields.toArray(new String[fields.size()]);
 		opt.setFields(flds);
