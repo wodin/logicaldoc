@@ -24,10 +24,7 @@
 		<library id="jackrabbit-text-extractors" path="lib/jackrabbit-text-extractors-1.4.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="jcr" path="lib/jcr-1.0.jar" type="code">
-			<export prefix="*" />
-		</library>
-		<library id="jcr170" path="lib/jcr-1.0.1.jar" type="code">
+		<library id="jcr" path="lib/jcr-1.0.1.jar" type="code">
 			<export prefix="*" />
 		</library>
 		<library id="slf4j-api" path="lib/slf4j-api-1.5.5.jar" type="code">
