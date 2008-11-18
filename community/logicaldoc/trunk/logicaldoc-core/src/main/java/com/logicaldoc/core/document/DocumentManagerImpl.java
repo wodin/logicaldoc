@@ -152,7 +152,10 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, String language)
 			throws Exception {
-		return create(content, filename, folder, user, language, filename, null, "", "", "", "", "", null);
+		String title = filename;
+		if (StringUtils.isNotEmpty(filename) && filename.lastIndexOf(".") > 0)
+			title = filename.substring(0, filename.lastIndexOf("."));
+		return create(content, filename, folder, user, language, title, null, "", "", "", "", "", null);
 	}
 
 	@Override
@@ -528,7 +531,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	 */
 	private void setUniqueTitle(Document doc) {
 		int counter = 1;
-		String buf=doc.getTitle();
+		String buf = doc.getTitle();
 		while (documentDAO.findByTitleAndParentFolderId(doc.getFolder().getId(), doc.getTitle()).size() > 0) {
 			doc.setTitle(buf + " (" + (counter++) + ")");
 		}
