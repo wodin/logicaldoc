@@ -144,22 +144,16 @@
 									<fileset dir="target/plugin/lib">
 										<exclude name="jackrabbit-web*" />
 										<exclude name="jackrabbit-web*" />
-										<exclude name="jackrabbit-jcr-server*" />
-										<exclude name="jackrabbit-jcr-commons*" />
-										<exclude name="jackrabbit-text*" />
+										<exclude
+											name="jackrabbit-jcr-server*" />
+										<exclude
+											name="jackrabbit-jcr-commons*" />
+										<exclude
+											name="jackrabbit-text*" />
 										<exclude name="jcr*" />
 										<exclude name="slf4j*" />
 										<include name="*.jar" />
 									</fileset>
-
-									<!-- fileset dir="target/plugin"
-										includes="lib/*commons*" />
-										<fileset dir="target/plugin"
-										includes="lib/*quartz*" />
-										<fileset dir="target/plugin"
-										includes="lib/*log4j*" />
-										<fileset dir="target/plugin"
-										includes="lib/logicaldoc-*" /-->
 								</delete>
 								<zip
 									destfile="target/${project.artifactId}-${project.version}-plugin2.zip"
