@@ -58,7 +58,7 @@ public final class AuthenticationUtil {
 	
 	public static void sendAuthorisationCommand(WebdavResponse response){
 		try {
-			response.setHeader("WWW-Authenticate", "Basic realm=\"Jackrabbit Webdav Server\"");
+			response.setHeader("WWW-Authenticate", "Basic realm=\"LogicalDOC Webdav Server\"");
 			response.sendError(401);
 		}
 		catch(IOException e){
