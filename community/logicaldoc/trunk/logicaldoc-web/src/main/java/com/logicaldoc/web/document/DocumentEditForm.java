@@ -2,6 +2,7 @@ package com.logicaldoc.web.document;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -116,6 +117,7 @@ public class DocumentEditForm {
 		setKeywords(doc.getKeywordsString());
 		setCoverage(doc.getCoverage());
 		setSourceType(doc.getSourceType());
+		setFilename(doc.getFileName());
 		initTemplate();
 	}
 
@@ -319,6 +321,17 @@ public class DocumentEditForm {
 	public String getFilename() {
 		return filename;
 	}
+	
+	/**
+	 * @return the filename utf-8 formatted.
+	 */
+	public String getDisplayFilename() {
+		try {
+			return new String(this.filename.getBytes(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+		}
+		return this.filename;
+	}	
 
 	/**
 	 * @param filename The filename to set.

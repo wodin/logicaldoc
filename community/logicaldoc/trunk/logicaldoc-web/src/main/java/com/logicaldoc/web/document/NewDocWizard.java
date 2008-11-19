@@ -112,7 +112,6 @@ public class NewDocWizard {
 				// and gets some fields
 				if (parser != null) {
 					content = parser.getContent();
-					title = parser.getTitle();
 					author = parser.getAuthor();
 					if (inputFile.isExtractKeywords())
 						keywords = parser.getKeywords();
@@ -131,19 +130,17 @@ public class NewDocWizard {
 				}
 
 				// fills needed fields
-				if ((title != null) && (title.length() > 0)) {
-					docForm.setTitle(title);
+
+				int tmpInt = filename.lastIndexOf(".");
+				if (tmpInt != -1) {
+					title = filename.substring(0, tmpInt);
 				} else {
-					int tmpInt = filename.lastIndexOf(".");
-					if (tmpInt != -1) {
-						title = filename.substring(0, tmpInt);
-					} else {
-						title = filename;
-					}
-					   
-					title = new String(title.getBytes(), "UTF-8");
-					docForm.setTitle(title);
+					title = filename;
 				}
+
+				title = new String(title.getBytes(), "UTF-8");
+
+				docForm.setTitle(title);
 				docForm.setSource(source);
 
 				if (author != null) {
