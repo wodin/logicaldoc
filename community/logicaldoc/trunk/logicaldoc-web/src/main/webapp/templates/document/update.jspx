@@ -30,14 +30,20 @@
 	<ice:panelGroup>
 		<h3>
 			<ice:outputText value="#{msgs['msg.jsp.editdoc']}" />
-			&amp;nbsp;
-			<ice:outputText value="'#{documentForm.record.title}'" />
 			<br />
 			<br />
 		</h3>
 		<!-- Read only data -->
 		<ice:panelGroup style="float:right; valign:top;">
 			<ice:panelGrid columns="2">
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel value="File name" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:outputText value="#{documentForm.displayFilename}"
+						style="font-weight: bold" />
+				</ice:panelGroup>
+							
 				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel value="#{msgs['msg.jsp.version']}" />
 				</ice:panelGroup>
