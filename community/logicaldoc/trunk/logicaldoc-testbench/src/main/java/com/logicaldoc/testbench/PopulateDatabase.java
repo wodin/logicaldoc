@@ -92,9 +92,9 @@ public class PopulateDatabase {
 		while (rs.next()) {
 			existingMenuIds.add(rs.getLong(1));
 		}
-		
-		log.info("Found "+existingDocIds.size()+" existing documents");
-		log.info("Found "+existingMenuIds.size()+" existing menus");
+
+		log.info("Found " + existingDocIds.size() + " existing documents");
+		log.info("Found " + existingMenuIds.size() + " existing menus");
 	}
 
 	public String getLanguage() {
@@ -241,7 +241,7 @@ public class PopulateDatabase {
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isDirectory() && !files[i].getName().startsWith("doc_")) {
 				try {
-					long folderId = insertFolder(files[i], path + "/" + parentFolderId);
+					long folderId = insertFolder(files[i], (path + "/" + parentFolderId).replaceAll("//", "/"));
 					if (folderId > 0) {
 						commit();
 						log.info("Created folder " + folderId);
@@ -300,8 +300,8 @@ public class PopulateDatabase {
 		String content = Util.parse(docFile);
 
 		// Skip condition
-		if (existingDocIds.contains(id)){
-			log.debug("Skipping file "+dir.getName());
+		if (existingDocIds.contains(id)) {
+			log.debug("Skipping file " + dir.getName());
 			return -1;
 		}
 
@@ -393,8 +393,8 @@ public class PopulateDatabase {
 		long parentId = Long.parseLong(dir.getParentFile().getName());
 
 		// Skip condition
-		if (existingMenuIds.contains(id)){
-			log.debug("Skipping folder "+dir.getName());
+		if (existingMenuIds.contains(id)) {
+			log.debug("Skipping folder " + dir.getName());
 			return -1;
 		}
 
