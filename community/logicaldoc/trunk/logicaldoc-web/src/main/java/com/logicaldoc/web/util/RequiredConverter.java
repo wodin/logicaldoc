@@ -14,58 +14,49 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.web.i18n.Messages;
 
-
 public class RequiredConverter implements Converter {
-    protected static Log log = LogFactory.getLog(RequiredConverter.class);
 
-    public final Object getAsObject(final FacesContext facesContext,
-        final UIComponent component, final String value) {
+	protected static Log log = LogFactory.getLog(RequiredConverter.class);
 
-        if (StringUtils.isNotEmpty(value)) {
-            return value;
-        }
+	public final Object getAsObject(final FacesContext facesContext, final UIComponent component, final String value) {
 
-        FacesMessage message = new FacesMessage();
-        message.setDetail(Messages.getMessage("errors.field.required"));
-        message.setSeverity(FacesMessage.SEVERITY_ERROR);
-        facesContext.addMessage(component.getClientId(facesContext), message);
+		if (StringUtils.isNotEmpty(value)) {
+			return value;
+		}
 
-        Iterator<FacesMessage> iter = facesContext.getMessages();
-        boolean addError = true;
-        String strConvert = Messages.getMessage(
-                "javax.faces.component.UIInput.CONVERSION");
+		FacesMessage message = new FacesMessage();
+		message.setDetail(Messages.getMessage("errors.field.required"));
+		message.setSeverity(FacesMessage.SEVERITY_ERROR);
+		facesContext.addMessage(component.getClientId(facesContext), message);
 
-        while (iter.hasNext()) {
-            FacesMessage str = iter.next();
+		Iterator<FacesMessage> iter = facesContext.getMessages();
+		boolean addError = true;
+		String strConvert = Messages.getMessage("javax.faces.component.UIInput.CONVERSION");
 
-            if (str.getDetail().equals(strConvert)) {
-                addError = false;
+		while (iter.hasNext()) {
+			FacesMessage str = iter.next();
 
-                break;
-            }
+			if (str.getDetail().equals(strConvert)) {
+				addError = false;
+				break;
+			}
+		}
 
-        }
+		if (addError) {
+			throw new ConverterException(new FacesMessage(strConvert));
+		} else {
+			return null;
+		}
+	}
 
-        if (addError) {
-            throw new ConverterException(new FacesMessage(strConvert));
-        } else {
-            return null;
-        }
-    }
+	public final String getAsString(final FacesContext facesContext, final UIComponent component, final Object object)
+			throws ConverterException {
 
-    public final String getAsString(final FacesContext facesContext,
-        final UIComponent component, final Object object)
-        throws ConverterException {
-
-        if (object != null) {
-
-            if (object instanceof Integer) {
-                return ((Integer) object).toString();
-            }
-        }
-
-        String value = (String) object;
-
-        return value;
-    }
+		if (object != null) {
+			if (object instanceof Integer) {
+				return ((Integer) object).toString();
+			}
+		}
+		return (String) object;
+	}
 }

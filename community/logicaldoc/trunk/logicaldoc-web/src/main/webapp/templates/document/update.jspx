@@ -40,8 +40,10 @@
 					<ice:outputLabel value="File name" />
 				</ice:panelGroup>
 				<ice:panelGroup>
-					<ice:outputText value="#{documentForm.displayFilename}"
-						style="font-weight: bold" />
+					<ice:outputText value="#{documentForm.record.document.fileName}"
+						style="font-weight: bold">
+						<f:converter converterId="logicaldoc.UTFConverter" />
+					</ice:outputText>
 				</ice:panelGroup>
 							
 				<ice:panelGroup styleClass="outputLabel">
