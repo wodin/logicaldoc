@@ -402,6 +402,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes) throws Exception {
+		
 		Locale locale = new Locale(language);
 		Parser parser = ParserFactory.getParser(file, locale);
 		String filename = file.getName();
@@ -416,6 +417,8 @@ public class DocumentManagerImpl implements DocumentManager {
 				fallbackTitle = filename.substring(0, lastDotIndex);
 			}
 			_title = fallbackTitle;
+			if (_title != null && _title.length() > 0)
+				_title = new String(_title.getBytes(), "UTF-8");
 	    }
 
 		if (parser != null) {
