@@ -408,20 +408,17 @@ public class DocumentManagerImpl implements DocumentManager {
 		String _title = title;
 		String _author = sourceAuthor;
 		Set<String> _kwds = keywords;
-
-		String fallbackTitle = filename;
-		int lastDotIndex = filename.lastIndexOf(".");
-		if (lastDotIndex > 0) {
-			fallbackTitle = filename.substring(0, lastDotIndex);
-		}
+		
+		if (StringUtils.isEmpty(title)) {
+			String fallbackTitle = filename;
+			int lastDotIndex = filename.lastIndexOf(".");
+			if (lastDotIndex > 0) {
+				fallbackTitle = filename.substring(0, lastDotIndex);
+			}
+			_title = fallbackTitle;
+	    }
 
 		if (parser != null) {
-			if (StringUtils.isEmpty(title)) {
-				if (parser.getTitle().length() == 0)
-					_title = fallbackTitle;
-				else
-					_title = parser.getTitle();
-			}
 			if (StringUtils.isEmpty(sourceAuthor))
 				_author = parser.getAuthor();
 			String keys = parser.getKeywords();
@@ -430,10 +427,7 @@ public class DocumentManagerImpl implements DocumentManager {
 					_kwds = new HashSet<String>();
 				_kwds = documentDAO.toKeywords(keys);
 			}
-		} else {
-			if (StringUtils.isEmpty(title))
-				title = filename;
-		}
+		} 
 
 		InputStream is = new FileInputStream(file);
 		try {
