@@ -412,8 +412,17 @@ public class PopulateDatabase {
 		insertMenu.setString(6, "administration.png");
 		// LD_PATH
 		insertMenu.setString(7, path);
+		
+		String pathExt = path;
+		if (pathExt.startsWith("/5") && pathExt.length() > 2) {
+			pathExt = "/db.projects" + pathExt.substring(2);
+		} else if ("/5".equals(pathExt)) {
+			pathExt = "/db.projects";
+		}
+		if (pathExt.endsWith("/"))
+			pathExt += "/";
 		// LD_PATHEXTENDED
-		insertMenu.setString(8, path);
+		insertMenu.setString(8, pathExt);
 		// LD_TYPE
 		insertMenu.setInt(9, 3);
 		// LD_REF
