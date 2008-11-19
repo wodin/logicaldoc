@@ -321,17 +321,6 @@ public class DocumentEditForm {
 	public String getFilename() {
 		return filename;
 	}
-	
-	/**
-	 * @return the filename utf-8 formatted.
-	 */
-	public String getDisplayFilename() {
-		try {
-			return new String(this.filename.getBytes(), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-		}
-		return this.filename;
-	}	
 
 	/**
 	 * @param filename The filename to set.
