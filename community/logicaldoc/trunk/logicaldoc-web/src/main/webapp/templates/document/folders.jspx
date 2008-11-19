@@ -20,15 +20,4 @@
 		style="font-size: 14px; margin-bottom:20px;">
 		<ice:menuItems value="#{documentNavigation.folderItems}" />
 	</ice:menuBar>
-
-	<ice:panelGroup>
-		<br />
-		<br />
-		<ldoc:folderselector
-			directoryModel="#{documentNavigation.directoryModel}"
-			showSelector="#{documentNavigation.showFolderSelector}"
-			openListener="#{documentNavigation.openFolderSelector}"
-			confirmListener="#{documentNavigation.folderSelected}"
-			closeListener="#{documentNavigation.closeFolderSelector}" />
-	</ice:panelGroup>
 </jsp:root>

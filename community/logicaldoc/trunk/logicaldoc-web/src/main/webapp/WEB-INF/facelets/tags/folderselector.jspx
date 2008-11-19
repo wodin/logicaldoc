@@ -21,10 +21,18 @@
 			confirmListener=void javax.faces.event.ActionEvent;
 			closeListener=void javax.faces.event.ActionEvent;">
 
-			<ice:panelGroup styleClass="command">
+			<ice:panelGroup styleClass="command" rendered="#{useIcon!='true'}">
 				<ice:commandButton actionListener="#{openListener}"
 					value="#{msgs['folderselector.open']}" />
 			</ice:panelGroup>
+
+			<ice:commandLink
+					rendered="#{useIcon=='true'}"
+					actionListener="#{openListener}"
+					title="#{msgs['folderselector.open']}">
+					<ice:graphicImage value="#{styleBean.imagesPath}/tree.png"
+						style="border: 0px solid;" title="#{msgs['folderselector.open']}" />
+			</ice:commandLink>
 
 			<!-- panel popup code, draggable type  -->
 			<ice:panelPopup id="folderselectorDraggablePP"
