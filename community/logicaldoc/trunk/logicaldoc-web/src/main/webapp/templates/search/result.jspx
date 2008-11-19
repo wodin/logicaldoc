@@ -2,8 +2,7 @@
 <!-- 
  Documents result list table
   
- @author Marco Meschieri
- @version $Id: result.jspx,v 1.7 2006/09/03 16:24:37 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -136,7 +135,7 @@
 
 	<br />
 	<ice:panelGroup>
-		<ldoc:paginator table="result" label="#{msgs['document.paginator']}" />
+		<ldoc:paginator table="result" label="#{msgs['paginator.simple']}" />
 		<br />
 	</ice:panelGroup>
 </jsp:root>
