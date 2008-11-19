@@ -17,7 +17,7 @@ public interface ResourceService {
 	 * @param locator
 	 * @return
 	 */
-	public Resource getResorce(String location, long userid);
+	public Resource getResource(String location, long userid);
 	
 	/**
 	 * 
