@@ -49,7 +49,9 @@
             <!-- File selection -->
             <ice:panelGroup>
                 <ice:outputText value="#{msgs['upload.zipfilename']}: #{inputFile.fileName}"
-                    style="padding-left:8px;" />
+                    style="padding-left:8px;">
+                	<f:converter converterId="logicaldoc.UTF8Converter" />
+				</ice:outputText>
                 <br />
                 <br />
                 <ice:inputFile styleClass="inputFile"

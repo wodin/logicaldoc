@@ -6,9 +6,9 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
-public class UTFConverter implements Converter {
+public class UTF8Converter implements Converter {
 
-	public UTFConverter() {
+	public UTF8Converter() {
 	}
 
 	public Object getAsObject(FacesContext context, UIComponent component, String arg2) {
