@@ -160,9 +160,9 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			DavSessionImpl davSession = new DavSessionImpl();
 			davSession.putObject("id", userDAO.findByUserName(session.getAttribute("name").toString()).getId());
 			davSession.putObject("name", session.getAttribute("name"));
-
+			
 			webdavRequest.setDavSession(davSession);
-
+			
 			// check matching if=header for lock-token relevant operations
 			DavResource resource = getResourceFactory().createResource(webdavRequest.getRequestLocator(),
 					webdavRequest, webdavResponse, davSession);

@@ -110,7 +110,7 @@ public class ResourceServiceImpl implements ResourceService {
 		return resourceList;
 	}
 
-	public Resource getResorce(String requestPath, long id) {
+	public Resource getResource(String requestPath, long id) {
 		if (requestPath == null)
 			requestPath = "/";
 
@@ -135,7 +135,7 @@ public class ResourceServiceImpl implements ResourceService {
 		// if this resource request is a folder
 		if (menu != null)
 			return marshallFolder(menu);
-
+		
 		Resource parentMenu = this.getParentResource(currentStablePath);
 		String title = name.substring(0, name.lastIndexOf(".") > 0 ? name.lastIndexOf(".") : name.length());
 		Collection<Document> docs = documentDAO.findByTitleAndParentFolderId(Long.parseLong(parentMenu.getID()), title);
@@ -169,7 +169,7 @@ public class ResourceServiceImpl implements ResourceService {
 			}
 		}
 		resourcePath = resourcePath + "/";
-
+	
 		Menu menu = menuDAO.findFolder(name, resourcePath);
 		return marshallFolder(menu);
 	}

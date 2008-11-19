@@ -68,7 +68,7 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 			DavSession session) throws DavException {
 
 		try {
-			Resource repositoryResource = resourceService.getResorce(locator
+			Resource repositoryResource = resourceService.getResource(locator
 					.getResourcePath(), new Long(session.getObject("id")
 					.toString()));
 			DavResource resource;
@@ -104,7 +104,7 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 	public DavResource createResource(DavResourceLocator locator,
 			DavSession session) throws DavException {
 		try {
-			Resource resource = resourceService.getResorce(locator
+			Resource resource = resourceService.getResource(locator
 					.getResourcePath(), new Long(session.getObject("id")
 					.toString()));
 
