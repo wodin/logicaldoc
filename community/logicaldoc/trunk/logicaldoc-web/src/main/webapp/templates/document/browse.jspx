@@ -22,6 +22,14 @@
 			rendered="#{documentNavigation.selectedDir != null}">
 			<ice:form id="editFolderForm"
 				style="border:0px; margin:0px; padding:0px;">
+				<ldoc:folderselector
+			useIcon="true"
+			directoryModel="#{documentNavigation.directoryModel}"
+			showSelector="#{documentNavigation.showFolderSelector}"
+			openListener="#{documentNavigation.openFolderSelector}"
+			confirmListener="#{documentNavigation.folderSelected}"
+			closeListener="#{documentNavigation.closeFolderSelector}" />
+
 				<ice:commandLink
 					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.renameEnabled}"
 					action="#{documentNavigation.edit}"
