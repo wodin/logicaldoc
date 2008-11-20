@@ -13,36 +13,35 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGrid"
-	columns="2" style="width: 100%;"
-	columnClasses="browseLeft,browseMain"
-	cellpadding="4">
+	columns="2" columnClasses="browseLeft,browseMain" cellpadding="4">
 
 	<ice:panelGrid columns="1">
 		<ice:panelGroup style="display: inline;"
 			rendered="#{documentNavigation.selectedDir != null}">
 			<ice:form id="editFolderForm"
 				style="border:0px; margin:0px; padding:0px;">
-				<ldoc:folderselector
-			useIcon="true"
-			directoryModel="#{documentNavigation.directoryModel}"
-			showSelector="#{documentNavigation.showFolderSelector}"
-			openListener="#{documentNavigation.openFolderSelector}"
-			confirmListener="#{documentNavigation.folderSelected}"
-			closeListener="#{documentNavigation.closeFolderSelector}" />
+				<ldoc:folderselector useIcon="true"
+					directoryModel="#{documentNavigation.directoryModel}"
+					showSelector="#{documentNavigation.showFolderSelector}"
+					openListener="#{documentNavigation.openFolderSelector}"
+					confirmListener="#{documentNavigation.folderSelected}"
+					closeListener="#{documentNavigation.closeFolderSelector}" />
 
 				<ice:commandLink
 					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.renameEnabled}"
 					action="#{documentNavigation.edit}"
 					title="#{msgs['msg.jsp.foldercontent.edit']}">
 					<ice:graphicImage value="#{styleBean.imagesPath}/folder_edit.png"
-						style="border: 0px solid;" title="#{msgs['msg.jsp.foldercontent.edit']}" />
+						style="border: 0px solid;"
+						title="#{msgs['msg.jsp.foldercontent.edit']}" />
 				</ice:commandLink>
 				<ice:commandLink
 					rendered="#{documentNavigation.selectedDir.manageSecurityEnabled}"
 					action="#{documentNavigation.rights}"
 					title="#{msgs['msg.jsp.foldercontent.rights']}">
 					<ice:graphicImage value="#{styleBean.imagesPath}/folder_lock.png"
-						style="border: 0px solid;" title="#{msgs['msg.jsp.foldercontent.rights']}" />
+						style="border: 0px solid;"
+						title="#{msgs['msg.jsp.foldercontent.rights']}" />
 				</ice:commandLink>
 				<ice:commandLink action="#{documentNavigation.newDirectory}"
 					title="#{msgs['msg.jsp.createfolder']}"
@@ -94,6 +93,8 @@
 						</ice:commandLink>
 				</ice:panelSeries>
 			</ice:form>
+			<ice:graphicImage value="#{styleBean.imagesPath}/spacer.gif"
+						style="border: 0px solid;" height="0px" width="500px" title="" />
 		</ice:panelGroup>
 		<ice:panelStack id="documentsPanelStack"
 			styleClass="componentContentPanelStack"
@@ -104,7 +105,7 @@
 				<br />
 			</ice:panelGroup>
 
-			<ice:panelGroup id="documents" style="width: 100%;">
+			<ice:panelGroup id="documents">
 				<ice:messages />
 				<f:subview id="w-documents">
 					<ui:include src="/templates/document/documents.jspx" />
@@ -129,7 +130,7 @@
 				</f:subview>
 			</ice:panelGroup>
 
-			<ice:panelGroup id="versions" style="width: 100%;">
+			<ice:panelGroup id="versions">
 				<f:subview id="w-versions">
 					<ui:include src="/templates/document/versions.jspx" />
 				</f:subview>
@@ -147,13 +148,13 @@
 				</f:subview>
 			</ice:panelGroup>
 
-			<ice:panelGroup id="articles" style="width: 100%;">
+			<ice:panelGroup id="articles">
 				<f:subview id="w-articles">
 					<ui:include src="/templates/document/articles.jspx" />
 				</f:subview>
 			</ice:panelGroup>
 
-			<ice:panelGroup id="history" style="width: 100%;">
+			<ice:panelGroup id="history">
 				<f:subview id="w-history">
 					<ui:include src="/templates/document/history.jspx" />
 				</f:subview>
