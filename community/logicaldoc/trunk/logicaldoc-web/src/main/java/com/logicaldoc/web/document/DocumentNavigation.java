@@ -142,7 +142,8 @@ public class DocumentNavigation extends NavigationBean {
 		Directory parentDir = new Directory(menuDao.findById(selectedDir.getMenu().getParentId()));
 		if (parentDir.getMenuId() == Menu.MENUID_DOCUMENTS)
 			parentDir.setDisplayText(Messages.getMessage(parentDir.getMenu().getText()));
-		MenuItem item = createMenuItem("<< " + parentDir.getDisplayText(), parentDir);
+		
+		MenuItem item = createMenuItem(parentDir.getDisplayText(), parentDir, "folder_up.png");
 
 		if (parentDir.getMenuId() != Menu.MENUID_HOME) {
 			// Add parent folder as first menu
@@ -161,16 +162,22 @@ public class DocumentNavigation extends NavigationBean {
 			item = createMenuItem(menu.getText(), new Directory(menu));
 			folderItems.add(item);
 		}
+	}	
+	
+	protected MenuItem createMenuItem(String label, Directory dir) {
+	    return createMenuItem(label, dir, "folder.png");
 	}
 
-	protected MenuItem createMenuItem(String label, Directory dir) {
+	protected MenuItem createMenuItem(String label, Directory dir, String imageName) {
+		
 		MenuItem menuItem = new MenuItem();
 		menuItem.setValue(label);
 		menuItem.setId("dir-" + dir.getMenuId());
 		menuItem.setActionListener(FacesUtil
 				.createActionListenerMethodBinding("#{documentNavigation.onSelectDirectory}"));
-		menuItem.setIcon(StyleBean.getImagePath("folder.png"));
+		menuItem.setIcon(StyleBean.getImagePath(imageName));
 		menuItem.setUserObject(dir);
+		
 		return menuItem;
 	}
 
