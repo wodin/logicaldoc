@@ -24,7 +24,7 @@
                     <br />
                     <br />
                 </h3>
-                <ice:panelGrid columns="2" onkeypress="return submitOnEnter('smtpForm:save', event);">
+                <ice:panelGrid columns="2" onkeypress="return submitOnEnter('smtpForm:save', event);" style="text-align: left;">
                     <ice:panelGroup styleClass="outputLabel">
                         <ice:outputLabel for="host" value="#{msgs['msg.jsp.host']}*" />
                     </ice:panelGroup>

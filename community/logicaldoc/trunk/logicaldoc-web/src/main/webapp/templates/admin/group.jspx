@@ -25,7 +25,7 @@
                     <br />
                     <br />
                 </h3>
-                <ice:panelGrid columns="3" onkeypress="return submitOnEnter('w-group:groupForm:save', event);">
+                <ice:panelGrid columns="3" style="text-align:left;" onkeypress="return submitOnEnter('w-group:groupForm:save', event);">
                     <ice:panelGroup styleClass="outputLabel" >
                         <ice:outputLabel for="name"
                             value="#{msgs['group.name']}*" />
@@ -33,6 +33,7 @@
                     <ice:panelGroup rendered="#{groupsRecordsManager.selectedPanel == 'create'}">
                         <ice:inputText id="name"
                             tabindex="1"
+                            style="text-align:left;"
                             maxlength="30" size="30"
                             value="#{groupsRecordsManager.selectedGroup.name}"
                             binding="#{groupsRecordsManager.groupName}"

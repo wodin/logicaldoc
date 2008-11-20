@@ -735,6 +735,10 @@ em { /*font-size:14px;*/
 	height: 40px;
 }
 
+.outputLabel {
+	text-align: left;
+}
+
 /*
   Panel Border example
 */
