@@ -170,7 +170,7 @@
 			<ice:outputText value="#{msgs['msg.jsp.recursive']}" />
 		</ice:panelGroup>
 		<br />
-
+		<hr />
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="&lt;&lt; #{msgs['msg.jsp.back']}"
 				action="#{rightsRecordsManager.back}"

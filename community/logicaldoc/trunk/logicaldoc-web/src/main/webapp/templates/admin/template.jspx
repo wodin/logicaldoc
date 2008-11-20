@@ -75,9 +75,8 @@
 				</ice:panelGrid>
 			</ice:panelGroup>
 		</ice:panelGroup>
-
+		<hr />
 		<ice:panelGroup styleClass="commands">
-			<hr />
 			<ice:commandButton value="#{msgs['abort']}"
 				action="#{templatesRecordsManager.list}" partialSubmit="true" />
 			<ice:commandButton value="#{msgs['save']}"

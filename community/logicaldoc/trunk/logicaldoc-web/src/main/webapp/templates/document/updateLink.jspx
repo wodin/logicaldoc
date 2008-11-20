@@ -41,7 +41,7 @@
 					</ice:panelGroup>
 				</ice:panelGrid>
 			</ice:panelGroup>
-
+			<hr />
 			<ice:panelGroup styleClass="commands">
 				<ice:commandButton value="#{msgs['abort']}" partialSubmit="true"
 					immediate="true" action="#{linksRecordsManager.backToList}" />

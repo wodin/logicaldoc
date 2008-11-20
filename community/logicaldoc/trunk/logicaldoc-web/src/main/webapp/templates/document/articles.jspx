@@ -87,6 +87,7 @@
         <br />
         <ice:form>
             <ice:panelGroup styleClass="commands">
+            <hr />
                 <ice:commandButton value="&lt;&lt; #{msgs['msg.jsp.back']}"
                     immediate="true"
                     partialSubmit="true" action="#{articlesRecordsManager.back}" />

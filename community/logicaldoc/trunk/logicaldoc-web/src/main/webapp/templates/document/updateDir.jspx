@@ -50,7 +50,7 @@
                 </ice:panelGrid>
             </ice:panelGroup>
         </ice:panelGroup>
-
+		<hr />
         <ice:panelGroup styleClass="commands">
             <ice:commandButton value="#{msgs['abort']}"
                 partialSubmit="true"

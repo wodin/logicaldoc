@@ -131,7 +131,7 @@
                     </ice:panelGroup>
                 </ice:panelGrid>
             </ice:panelGroup>
-
+			<hr />
             <ice:panelGroup styleClass="commands">
                 <ice:commandButton value="&lt;&lt; #{msgs['msg.jsp.back']}"
                     immediate="true" partialSubmit="true"

@@ -164,7 +164,7 @@
                 <ice:panelGroup />
             </ice:panelGrid>
         </ice:panelGroup>
-
+		<hr />
         <ice:panelGroup styleClass="commands">
             <ice:commandButton value="#{msgs['save']}"
                 tabindex="1"
