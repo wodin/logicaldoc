@@ -4,10 +4,9 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.task.Task;
 
 /**
- * This task optimizes all indexes
+ * This task optimises all indexes
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.5.0
  */
 public class IndexOptimizer extends Task {
