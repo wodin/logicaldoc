@@ -134,6 +134,9 @@ public class DocumentNavigation extends NavigationBean {
 	 * @return
 	 */
 	protected void createMenuItems() {
+		if (selectedDir == null || selectedDir.getMenu() == null)
+			return;
+
 		folderItems.clear();
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Directory parentDir = new Directory(menuDao.findById(selectedDir.getMenu().getParentId()));
@@ -386,6 +389,7 @@ public class DocumentNavigation extends NavigationBean {
 
 	public void folderSelected(ActionEvent e) {
 		Directory dir = getDirectoryModel().getSelectedDir();
-		selectDirectory(dir);
+		if(dir!=null)
+			selectDirectory(dir);
 	}
 }
