@@ -40,9 +40,6 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 		boolean result = true;
 
 		try {
-			// Delete menu-group assignments
-			getSession().connection().createStatement().execute("delete from ld_menugroup where ld_groupid=" + groupId);
-
 			Group group = findById(groupId);
 			if (group != null) {
 				group.setName(group.getName() + "." + group.getId());
@@ -121,7 +118,7 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 
 		try {
 			Collection<Group> coll = (Collection<Group>) getHibernateTemplate().find(
-					"from Group _group where _group.name like '" + name + "'");
+					"from Group _group where _group.name = '" + name + "'");
 			if (coll.size() > 0) {
 				group = coll.iterator().next();
 				if (group.getDeleted() == 1)
@@ -207,7 +204,6 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage());
 			result = false;
-			e.printStackTrace();
 		}
 		return result;
 	}
