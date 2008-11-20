@@ -3,19 +3,18 @@ package com.logicaldoc.web.admin;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.SMTPConfig;
-
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 
 /**
  * Form for SMTP settings
  * 
- * @author Marco Meschieri
- * @version $Id:$
- * @since ###release###
+ * @author Marco Meschieri - Logical Objects
+ * @since 2.0
  */
 public class SmtpForm {
 	protected static Log log = LogFactory.getLog(SmtpForm.class);
@@ -28,12 +27,12 @@ public class SmtpForm {
 		return (EMailSender) Context.getInstance().getBean(EMailSender.class);
 	}
 
-	public String getDefaultAddress() {
-		return getSender().getDefaultAddress();
+	public String getSenderAddress() {
+		return getSender().getSender();
 	}
 
-	public void setDefaultAddress(String defaultAddress) {
-		getSender().setDefaultAddress(defaultAddress);
+	public void setSenderAddress(String sender) {
+		getSender().setSender(sender);
 	}
 
 	public String getHost() {
@@ -76,19 +75,23 @@ public class SmtpForm {
 			try {
 				EMailSender sender = getSender();
 
-				SMTPConfig config = new SMTPConfig();
-				config.setHost(sender.getHost());
-				config.setPort(Integer.toString(sender.getPort()));
-				config.setUsername(sender.getUsername());
-				
+				PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
+				pbean.setProperty("smtp.host", sender.getHost());
+				pbean.setProperty("smtp.port", Integer.toString(sender.getPort()));
+				pbean.setProperty("smtp.username", StringUtils.isNotEmpty(sender.getUsername()) ? sender.getUsername()
+						: "");
+				pbean.setProperty("smtp.password", StringUtils.isNotEmpty(sender.getPassword()) ? sender.getPassword()
+						: "");
+				pbean.setProperty("smtp.sender", sender.getSender());
 				if (StringUtils.isNotEmpty(password)) {
-					config.setPassword(password);
+					pbean.setProperty("smtp.password", password);
+					getSender().setPassword(password);
 				} else if (deletePassword == true) {
-					config.setPassword(null);
+					pbean.setProperty("smtp.password", "");
+					getSender().setPassword("");
 				}
-				
-				config.setDefaultAddress(sender.getDefaultAddress());
-				config.write();
+				pbean.write();
+
 				deletePassword = false;
 				Messages.addLocalizedInfo("msg.action.savesettings");
 			} catch (Exception e) {
@@ -102,14 +105,15 @@ public class SmtpForm {
 		}
 	}
 
-	public boolean isEmptyPassword(){
+	public boolean isEmptyPassword() {
 		return (StringUtils.isEmpty(getSender().getPassword()) || deletePassword);
 	}
-	
+
 	public String removePassword() {
 		setPassword(null);
 		deletePassword = true;
-		//JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "window.location.reload(false);");
+		// JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(),
+		// "window.location.reload(false);");
 		return null;
 	}
 }

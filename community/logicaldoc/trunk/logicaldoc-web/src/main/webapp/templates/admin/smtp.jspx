@@ -2,8 +2,7 @@
 <!-- 
  This page is the SMTP setup form
   
- @author Marco Meschieri
- @version $Id: user.jspx,v 1.1 2007/10/16 16:12:10 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -90,16 +89,16 @@
                     </ice:panelGroup>
 
                     <ice:panelGroup styleClass="outputLabel">
-                        <ice:outputLabel for="defaultAddress"
+                        <ice:outputLabel for="senderAddress"
                             value="#{msgs['msg.jsp.email']}" />
                     </ice:panelGroup>
                     <ice:panelGroup>
-                        <ice:inputText id="defaultAddress"
+                        <ice:inputText id="senderAddress"
                             tabindex="1"
-                            value="#{smtpForm.defaultAddress}"
+                            value="#{smtpForm.senderAddress}"
                             size="40" />
                         <br />
-                        <ice:message for="defaultAddress" />
+                        <ice:message for="senderAddress" />
                     </ice:panelGroup>
                 </ice:panelGrid>
             </ice:panelGroup>
