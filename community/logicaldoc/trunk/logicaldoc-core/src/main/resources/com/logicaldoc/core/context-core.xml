@@ -337,7 +337,6 @@
 
 
 	<!-- Tasks -->
-
 	<bean id="IndexOptimizer"
 		class="com.logicaldoc.core.searchengine.IndexOptimizer">
 		<property name="indexer">
@@ -363,6 +362,37 @@
 		<property name="jobDetail" ref="IndexOptimizerJob" />
 		<property name="cronExpression">
 			<value>${schedule.cron.IndexOptimizer}</value>
+		</property>
+	</bean>
+
+	<bean id="TagCloudGenerator"
+		class="com.logicaldoc.core.document.TagCloudGenerator">
+		<property name="documentDao">
+			<ref bean="DocumentDAO" />
+		</property>
+		<property name="genericDao">
+			<ref bean="GenericDAO" />
+		</property>
+	</bean>
+
+	<bean id="TagCloudGeneratorJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="TagCloudGenerator" />
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="TagCloudGeneratorTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="jobDetail" ref="TagCloudGeneratorJob" />
+		<property name="cronExpression">
+			<value>${schedule.cron.TagCloudGenerator}</value>
 		</property>
 	</bean>
 </beans>

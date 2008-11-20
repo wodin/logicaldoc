@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
+import com.logicaldoc.core.document.TagCloudGenerator;
 import com.logicaldoc.core.searchengine.IndexOptimizer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.PluginRegistry;
@@ -57,6 +58,7 @@ public class TaskManager {
 		List<Task> tasks = new ArrayList<Task>();
 		Context context = Context.getInstance();
 		tasks.add((Task) context.getBean(IndexOptimizer.NAME));
+		tasks.add((Task) context.getBean(TagCloudGenerator.NAME));
 
 		// Acquire the 'Task' extensions of the core plugin and add iterate over
 		// defined tasks

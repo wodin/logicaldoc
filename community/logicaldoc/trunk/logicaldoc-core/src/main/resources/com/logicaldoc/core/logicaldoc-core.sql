@@ -45,6 +45,7 @@ create unique index  AK_TICKET on ld_ticket (ld_ticketid);
 create unique index  AK_USERGROUP on ld_usergroup (ld_groupid, ld_userid);
 create unique index  AK_LINK on ld_link (ld_docid1, ld_docid2, ld_type);
 create unique index  AK_TEMPLATE on ld_template (ld_name);
+create unique index  AK_GENERIC on ld_generic (ld_type, ld_subtype);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)

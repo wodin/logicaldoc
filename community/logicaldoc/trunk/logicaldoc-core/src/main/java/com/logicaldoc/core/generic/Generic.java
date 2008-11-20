@@ -34,6 +34,16 @@ public class Generic extends ExtensibleObject {
 
 	private Date date2;
 
+	public Generic() {
+		super();
+	}
+
+	public Generic(String type, String subtype) {
+		super();
+		this.type = type;
+		this.subtype = subtype;
+	}
+
 	public String getType() {
 		return type;
 	}
