@@ -20,10 +20,11 @@
 			methodBindings="openListener=void javax.faces.event.ActionEvent;
 			confirmListener=void javax.faces.event.ActionEvent;
 			closeListener=void javax.faces.event.ActionEvent;">
-			
-			<ice:commandButton rendered="#{useIcon!='true'}" actionListener="#{openListener}"
-					value="#{msgs['folderselector.open']}" />
 
+			<ice:commandButton rendered="#{useIcon!='true'}"
+				actionListener="#{openListener}"
+				value="#{msgs['folderselector.open']}" />
+				
 			<ice:commandLink
 					rendered="#{useIcon=='true'}"
 					actionListener="#{openListener}"
@@ -65,7 +66,8 @@
 												immediate="true">
 												<f:param name="directoryId"
 													value="#{item.userObject.menuId}" />
-												<ice:outputText value="#{item.userObject.displayText}"
+												<ice:outputText
+													value="#{item.userObject.displayText=='db.projects' ? msgs['db.projects'] : item.userObject.displayText}"
 													styleClass="#{item.userObject.selected ? 'selected-tree-node' : 'tree-node'}" />
 											</ice:commandLink>
 										</ice:panelGroup>
@@ -81,7 +83,8 @@
 							</ice:tree>
 						</ice:panelGroup>
 
-						<ice:panelGroup styleClass="commands alignRight" style="margin-top: 8px;">
+						<ice:panelGroup styleClass="commands alignRight"
+							style="margin-top: 8px;">
 							<ice:commandButton id="folderSelected"
 								actionListener="#{confirmListener}" value="OK" />
 							<ice:commandButton id="closeFolderSelector"

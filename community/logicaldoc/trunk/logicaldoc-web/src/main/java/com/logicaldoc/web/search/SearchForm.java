@@ -464,12 +464,12 @@ public class SearchForm {
 				if (template != null && template.longValue() > 0) {
 					opt.setTemplate(template);
 					for (String attribute : extendedAttributes) {
-						fields.add("ext_"+attribute);
+						fields.add("ext_" + attribute);
 					}
 				} else {
 					opt.setTemplate(null);
 				}
-				
+
 				String[] flds = (String[]) fields.toArray(new String[fields.size()]);
 				opt.setFields(flds);
 
@@ -510,8 +510,7 @@ public class SearchForm {
 							opt.setSearchInSubPath(true);
 					}
 				}
-				
-				
+
 				String searchLanguage = "all".equals(language) ? SessionManagement.getLanguage() : language;
 				lastSearch = new Search(opt, searchLanguage);
 				lastSearch.setMaxHits(maxHits);
@@ -667,7 +666,7 @@ public class SearchForm {
 		title = true;
 		template = null;
 		searchInSubPath = false;
-		extendedAttributes=new String[0];
+		extendedAttributes = new String[0];
 	}
 
 	/**
@@ -844,6 +843,11 @@ public class SearchForm {
 		showFolderSelector = false;
 
 		Directory dir = directoryModel.getSelectedDir();
+		if (dir.getMenuId() == Menu.MENUID_DOCUMENTS) {
+			parentPathDescr = null;
+			setPath(null);
+			return;
+		}
 
 		Menu menu = dir.getMenu();
 		String dirPath = menu.getPath() + "/" + menu.getId();
@@ -911,7 +915,7 @@ public class SearchForm {
 	}
 
 	private void initTemplate() {
-		extendedAttributes=new String[0];
+		extendedAttributes = new String[0];
 		extendedAttributesItems.clear();
 		if (template != null) {
 			DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
