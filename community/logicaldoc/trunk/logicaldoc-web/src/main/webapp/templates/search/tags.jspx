@@ -84,7 +84,7 @@
 				<ice:panelGroup>
 					<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
 						action="#{documentNavigation.openInFolder}">
-						<ice:graphicImage value="#{styleBean.imagesPath}/folder.png"
+						<ice:graphicImage value="#{styleBean.imagesPath}/folder_into16.png"
 							styleClass="iconSmall" alt="#{msgs['msg.jsp.openinfolder']}" />
 					</ice:commandLink>
 

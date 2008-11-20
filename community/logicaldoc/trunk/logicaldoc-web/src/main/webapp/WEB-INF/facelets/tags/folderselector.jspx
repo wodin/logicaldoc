@@ -28,7 +28,7 @@
 					rendered="#{useIcon=='true'}"
 					actionListener="#{openListener}"
 					title="#{msgs['folderselector.open']}">
-					<ice:graphicImage value="#{styleBean.imagesPath}/tree.png"
+					<ice:graphicImage value="#{styleBean.imagesPath}/folder_tree.png"
 						style="border: 0px solid;" title="#{msgs['folderselector.open']}" />
 			</ice:commandLink>
 
