@@ -13,11 +13,11 @@ import com.logicaldoc.core.communication.EMailAttachment;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.MimeTypeConfig;
-import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
@@ -27,7 +27,6 @@ import com.logicaldoc.web.navigation.PageContentBean;
  * 
  * @author Michael Scholz
  * @author Matteo Caruso - Logical Objects
- * @version $Id: EMailForm.java,v 1.2 2006/09/03 16:24:37 marco Exp $
  * @since 1.0
  */
 public class EMailForm {
@@ -136,20 +135,21 @@ public class EMailForm {
 				email.setSubject(getSubject());
 				email.setUserName(user.getUserName());
 
-				createAttachment(email);
+				if (getSelectedDocument() != null)
+					createAttachment(email);
 
 				try {
 					EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
 					sender.send(email);
-					Messages.addLocalizedInfo("msg.action.saveemail");
+					Messages.addLocalizedInfo("email.sent");
 				} catch (Exception ex) {
 					log.error(ex.getMessage(), ex);
-					Messages.addLocalizedError("errors.action.saveemail");
+					Messages.addLocalizedError("email.error");
 				}
 				setAuthor(user.getEmail());
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
-				Messages.addLocalizedError("errors.action.saveemail");
+				Messages.addLocalizedError("email.error");
 			}
 		} else {
 			return "login";
@@ -162,11 +162,10 @@ public class EMailForm {
 	}
 
 	private void createAttachment(EMail email) throws IOException {
-		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 		EMailAttachment att = new EMailAttachment();
 		att.setIcon(selectedDocument.getIcon());
-		File file = new File(conf.getValue("docdir") + "/" + selectedDocument.getPath() + "/"
-				+ selectedDocument.getId() + "/" + selectedDocument.getFileName());
+		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		File file = manager.getDocumentFile(selectedDocument);
 		att.setFile(file);
 		String extension = selectedDocument.getFileExtension();
 		MimeTypeConfig mtc = (MimeTypeConfig) Context.getInstance().getBean(MimeTypeConfig.class);

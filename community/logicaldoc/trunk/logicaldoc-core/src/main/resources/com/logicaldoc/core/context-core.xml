@@ -319,19 +319,19 @@
 		class="com.logicaldoc.core.communication.EMailSender" abstract="false"
 		lazy-init="default" autowire="default" dependency-check="default">
 		<property name="host">
-			<value>localhost</value>
+			<value>${smtp.host}</value>
 		</property>
 		<property name="port">
-			<value>25</value>
+			<value>${smtp.port}</value>
 		</property>
 		<property name="username">
-			<value></value>
+			<value>${smtp.username}</value>
 		</property>
 		<property name="password">
-			<value></value>
+			<value>${smtp.password}</value>
 		</property>
-		<property name="defaultAddress">
-			<value>logicaldoc@acme.com</value>
+		<property name="sender">
+			<value>${smtp.sender}</value>
 		</property>
 	</bean>
 

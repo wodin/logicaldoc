@@ -26,7 +26,7 @@ public class EMailSender {
 
 	private String host = "localhost";
 
-	private String defaultAddress = "logicaldoc@acme.com";
+	private String sender = "logicaldoc@acme.com";
 
 	private String username = "";
 
@@ -37,12 +37,12 @@ public class EMailSender {
 	public EMailSender() {
 	}
 
-	public String getDefaultAddress() {
-		return defaultAddress;
+	public String getSender() {
+		return sender;
 	}
 
-	public void setDefaultAddress(String fromAddress) {
-		this.defaultAddress = fromAddress;
+	public void setSender(String sender) {
+		this.sender = sender;
 	}
 
 	public String getHost() {
@@ -94,7 +94,7 @@ public class EMailSender {
 		javax.mail.Message message = new MimeMessage(sess);
 		String frm = email.getAuthorAddress();
 		if (StringUtils.isEmpty(frm))
-			frm = defaultAddress;
+			frm = sender;
 		InternetAddress from = new InternetAddress(frm);
 		InternetAddress[] to = email.getAddresses();
 		message.setFrom(from);
@@ -108,13 +108,14 @@ public class EMailSender {
 		mpMessage.addBodyPart(body);
 
 		EMailAttachment att = email.getAttachment(2);
-
-		DataSource fdSource = new FileDataSource(att.getFile());
-		DataHandler fdHandler = new DataHandler(fdSource);
-		MimeBodyPart part = new MimeBodyPart();
-		part.setDataHandler(fdHandler);
-		part.setFileName(att.getFile().getName());
-		mpMessage.addBodyPart(part);
+		if (att != null) {
+			DataSource fdSource = new FileDataSource(att.getFile());
+			DataHandler fdHandler = new DataHandler(fdSource);
+			MimeBodyPart part = new MimeBodyPart();
+			part.setDataHandler(fdHandler);
+			part.setFileName(att.getFile().getName());
+			mpMessage.addBodyPart(part);
+		}
 		message.setContent(mpMessage);
 
 		Transport trans = sess.getTransport("smtp");

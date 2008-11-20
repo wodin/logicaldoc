@@ -41,8 +41,7 @@ import com.logicaldoc.web.util.FacesUtil;
  * entry in a data table. This class is meant to represent a model and should
  * only contain base document data <p/>
  * 
- * @author Marco Meschieri
- * @version $Id: DocumentRecord.java,v 1.17 2006/08/29 16:33:46 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class DocumentRecord extends MenuBarBean {
@@ -484,8 +483,6 @@ public class DocumentRecord extends MenuBarBean {
 				.getCurrentInstance(), log));
 		emailForm.reset();
 		emailForm.setSelectedDocument(getDocument());
-
-		// emailForm.getAttachments().add(getDocument());
 		emailForm.setAuthor(SessionManagement.getUser().getEmail());
 
 		return null;
@@ -503,10 +500,10 @@ public class DocumentRecord extends MenuBarBean {
 		emailForm.reset();
 		emailForm.setSelectedDocument(getDocument());
 		emailForm.setAuthor(SessionManagement.getUser().getEmail());
-
+		emailForm.setSelectedDocument(null);
+		
 		long userId = SessionManagement.getUserId();
-		Date date = new Date();
-		String temp = DateFormat.getDateInstance().format(date) + userId;
+		String temp = new Date().toString() + userId;
 		String ticketid = CryptUtil.cryptString(temp);
 		DownloadTicket ticket = new DownloadTicket();
 		ticket.setTicketId(ticketid);
