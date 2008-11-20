@@ -250,7 +250,6 @@ em { /*font-size:14px;*/
 
 /* Main border layout for template */
 .mainBorderLayout {
-	border: 0px;
 	vertical-align: top;
 	width: 100%;
 }
@@ -278,7 +277,6 @@ em { /*font-size:14px;*/
 .icePageCenter {
 	background-color: #FFFFFF;
 	vertical-align: top;
-	/*width: 80%*/
 }
 
 .mainWindow { /*clear: right;*/
@@ -317,21 +315,21 @@ em { /*font-size:14px;*/
 
 /* encapsulates the folder element and restricts it to the given size */
 .browseLeft {
-	/*border: 1px solid orange; */
-	width: 220;
+	width: 220px;
+	height: 400px;
+	overflow: scroll;
+	vertical-align: top;
 }
 
 .browseMain {
-	/* border: 1px solid navy; */
-	width: 100%;
+	height: 400px;
+	overflow: scroll;
 	vertical-align: top;
 }
 
 .folderContainer {
-	/* border: 0px solid #dedede; */
-	/* border: 1px solid purple; */
 	width: 200px;
-	height: 420px;
+	height: 400px;
 	overflow: auto;
 }
 

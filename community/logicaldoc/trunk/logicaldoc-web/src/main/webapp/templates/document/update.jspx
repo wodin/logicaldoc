@@ -33,76 +33,79 @@
 			<br />
 			<br />
 		</h3>
-		<!-- Read only data -->
-		<ice:panelGroup style="float:right; valign:top;">
+		<ice:panelGrid columns="2">
 			<ice:panelGrid columns="2">
 				<ice:panelGroup styleClass="outputLabel">
-					<ice:outputLabel value="File name" />
+					<ice:outputLabel for="title" value="#{msgs['doctitle']}*" />
 				</ice:panelGroup>
 				<ice:panelGroup>
-					<ice:outputText value="#{documentForm.record.document.fileName}"
-						style="font-weight: bold">
-						<f:converter converterId="logicaldoc.UTF8Converter" />
-					</ice:outputText>
+					<ice:inputText id="title"
+						label="#{msgs['errors.header.alert.key']}" tabindex="1"
+						value="#{documentForm.title}" maxlength="255" size="38"
+						onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+						required="true" disabled="#{documentForm.readOnly}"
+						immediate="true" />
+					<br />
+					<ice:message for="title" />
 				</ice:panelGroup>
-							
 				<ice:panelGroup styleClass="outputLabel">
-					<ice:outputLabel value="#{msgs['msg.jsp.version']}" />
+					<ice:outputLabel for="keywords" value="#{msgs['tags']}" />
 				</ice:panelGroup>
-				<ice:panelGroup>
-					<ice:outputText value="#{documentForm.record.document.version}"
-						style="font-weight: bold" />
-				</ice:panelGroup>
-
-				<ice:panelGroup styleClass="outputLabel">
-					<ice:outputLabel value="#{msgs['msg.jsp.publishedon']}" />
-				</ice:panelGroup>
-				<ice:panelGroup>
-					<ice:outputText value="#{documentForm.docDate}"
-						style="font-weight: bold">
-						<f:convertDateTime pattern="#{loc.dateFormatShort}" />
-					</ice:outputText>
-				</ice:panelGroup>
-
-				<ice:panelGroup styleClass="outputLabel">
-					<ice:outputLabel value="#{msgs['msg.jsp.publishedby']}" />
-				</ice:panelGroup>
-				<ice:panelGroup>
-					<ice:outputText value="#{documentForm.record.document.publisher}"
-						style="font-weight: bold" />
-				</ice:panelGroup>
-
-				<ice:panelGroup styleClass="outputLabel">
-					<ice:outputLabel value="#{msgs['document.id']}" />
-				</ice:panelGroup>
-				<ice:panelGroup>
-					<ice:outputText value="#{documentForm.record.document.id}"
-						style="font-weight: bold" />
+				<ice:panelGroup id="keywords">
+					<ice:inputTextarea value="#{documentForm.keywords}" tabindex="1"
+						cols="30" rows="2" disabled="#{documentForm.readOnly}" />
 				</ice:panelGroup>
 			</ice:panelGrid>
-		</ice:panelGroup>
 
-		<ice:panelGrid columns="2">
-			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="title" value="#{msgs['doctitle']}*" />
+			<!-- Read only data -->
+			<ice:panelGroup style="float:right; valign:top;">
+				<ice:panelGrid columns="2">
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="File name" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.record.document.fileName}"
+							style="font-weight: bold">
+							<f:converter converterId="logicaldoc.UTF8Converter" />
+						</ice:outputText>
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['msg.jsp.version']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.record.document.version}"
+							style="font-weight: bold" />
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['msg.jsp.publishedon']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.docDate}"
+							style="font-weight: bold">
+							<f:convertDateTime pattern="#{loc.dateFormatShort}" />
+						</ice:outputText>
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['msg.jsp.publishedby']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.record.document.publisher}"
+							style="font-weight: bold" />
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['document.id']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.record.document.id}"
+							style="font-weight: bold" />
+					</ice:panelGroup>
+				</ice:panelGrid>
 			</ice:panelGroup>
-			<ice:panelGroup>
-				<ice:inputText id="title" label="#{msgs['errors.header.alert.key']}"
-					tabindex="1" value="#{documentForm.title}" maxlength="255"
-					size="38"
-					onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
-					required="true" disabled="#{documentForm.readOnly}"
-					immediate="true" />
-				<br />
-				<ice:message for="title" />
-			</ice:panelGroup>
-			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="keywords" value="#{msgs['tags']}" />
-			</ice:panelGroup>
-			<ice:panelGroup id="keywords">
-				<ice:inputTextarea value="#{documentForm.keywords}" tabindex="1"
-					cols="30" rows="2" disabled="#{documentForm.readOnly}" />
-			</ice:panelGroup>
+
 		</ice:panelGrid>
 	</ice:panelGroup>
 
