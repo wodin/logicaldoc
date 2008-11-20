@@ -28,7 +28,7 @@
 	<ice:panelGroup styleClass="formBorderHighlight" 
 		rendered="#{documentsRecordsManager.count > 0}">
 
-		<ice:dataTable id="documentsList" width="97%"
+		<ice:dataTable id="documentsList"
 			value="#{documentsRecordsManager.documents}" var="documentRecord"
 			sortColumn="#{documentsRecordsManager.sortColumn}"
 			sortAscending="#{documentsRecordsManager.ascending}" cellpadding="0"
@@ -132,12 +132,12 @@
 			</ice:column>
 		</ice:dataTable>
 
-		<ice:panelGrid columns="2" style="width: 98%;">
+		<ice:panelGrid columns="2" style="width:100%">
 			<ice:panelGroup>
 				<ldoc:paginator table="documentsList"
 					label="#{msgs['paginator.simple']}" />
 			</ice:panelGroup>
-			<ice:panelGroup style="float:right;">
+			<ice:panelGroup style="float:right">
 				<ice:selectOneMenu id="dispRows"
 					value="#{documentsRecordsManager.displayedRows}"
 					partialSubmit="true">

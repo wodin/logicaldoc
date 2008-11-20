@@ -106,8 +106,14 @@
 			<ice:panelGroup>
 					&amp;nbsp;
 			</ice:panelGroup>
-			<ice:panelGroup />
-			<ice:panelGroup />
+			<ice:panelGroup>
+				<ice:outputLabel for="searchSubPath"
+					value="#{msgs['search.searchsubpath']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectBooleanCheckbox id="searchSubPath"
+					value="#{searchForm.searchInSubPath}" />
+			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="sizeMin" value="#{msgs['msg.jsp.sizefrom']} " />
@@ -312,14 +318,8 @@
 			<ice:panelGroup>
                 &amp;nbsp;
             </ice:panelGroup>
-			<ice:panelGroup>
-				<ice:outputLabel for="searchSubPath"
-					value="#{msgs['search.searchsubpath']}" />
-			</ice:panelGroup>
-			<ice:panelGroup>
-				<ice:selectBooleanCheckbox id="searchSubPath"
-					value="#{searchForm.searchInSubPath}" />
-			</ice:panelGroup>
+			<ice:panelGroup />
+			<ice:panelGroup />
 		</ice:panelGrid>
 	</ice:panelGroup>
 
