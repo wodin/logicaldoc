@@ -70,7 +70,8 @@ public class DavResourceImpl implements DavResource {
 
 	private ResourceConfig config;
 
-	private long modificationTime = IOUtil.UNDEFINED_TIME;
+	//private long modificationTime = IOUtil.UNDEFINED_TIME;
+	private long modificationTime = System.currentTimeMillis();
 
 	private ResourceService resourceService;
 
@@ -207,9 +208,14 @@ public class DavResourceImpl implements DavResource {
 	 * @see org.apache.jackrabbit.webdav.DavResource#getModificationTime()
 	 */
 	public long getModificationTime() {
+		
+		log.fatal("getModificationTime()");
+		
 		initProperties();
-		return modificationTime;
+		return this.modificationTime;
 	}
+	
+
 
 	/**
 	 * If this resource exists and the specified context is not
@@ -237,6 +243,9 @@ public class DavResourceImpl implements DavResource {
 	 */
 	public DavProperty getProperty(DavPropertyName name) {
 		initProperties();
+		
+		log.fatal("getProperty(..) " + name);
+		
 		return properties.get(name);
 	}
 
@@ -244,6 +253,9 @@ public class DavResourceImpl implements DavResource {
 	 * @see DavResource#getProperties()
 	 */
 	public DavPropertySet getProperties() {
+		
+		log.fatal("getProperties()");
+		
 		initProperties();
 		return properties;
 	}
@@ -281,6 +293,11 @@ public class DavResourceImpl implements DavResource {
 		supportedLock.addEntry(Type.WRITE, Scope.EXCLUSIVE);
 		properties.add(supportedLock);
 		properties.add(new DefaultDavProperty(DavPropertyName.GETCONTENTLENGTH, this.resource.getContentLength()));
+		
+		// TODO: 
+		String lastModified = IOUtil.getLastModified(modificationTime);
+		properties.add(new DefaultDavProperty(DavPropertyName.GETLASTMODIFIED, lastModified));
+		
 		propsInitialized = true;
 	}
 
@@ -404,7 +421,7 @@ public class DavResourceImpl implements DavResource {
 		}
 
 		try {
-			Resource resource = resourceService.getResource(member.getLocator().getResourcePath(), this.resource
+			Resource resource = resourceService.getResorce(member.getLocator().getResourcePath(), this.resource
 					.getRequestedPerson());
 			resourceService.deleteResource(resource);
 
@@ -427,7 +444,7 @@ public class DavResourceImpl implements DavResource {
 
 		try {
 
-			Resource res = resourceService.getResource(destination.getLocator().getResourcePath(), this.resource
+			Resource res = resourceService.getResorce(destination.getLocator().getResourcePath(), this.resource
 					.getRequestedPerson());
 			if (res != null) {
 				res.setName(this.resource.getName());
