@@ -189,7 +189,9 @@
 				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
 				<prop key="load*">PROPAGATION_REQUIRED,readOnly</prop>
 				<prop key="has*">PROPAGATION_REQUIRED,readOnly</prop>
-				<prop key="initialize*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="initialize*">
+					PROPAGATION_REQUIRED,readOnly
+				</prop>
 				<prop key="exists">PROPAGATION_REQUIRED,readOnly</prop>
 				<prop key="store*">PROPAGATION_REQUIRED</prop>
 				<prop key="insert*">PROPAGATION_REQUIRED</prop>
@@ -201,13 +203,13 @@
 		</property>
 	</bean>
 
-
 	<!-- Scheduler -->
 	<bean id="Scheduler"
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
 				<ref bean="IndexOptimizerTrigger" />
+				<ref bean="TagCloudGeneratorTrigger" />
 			</list>
 		</property>
 	</bean>

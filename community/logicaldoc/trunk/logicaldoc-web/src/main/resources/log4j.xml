@@ -4,7 +4,8 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"
 	threshold="null" debug="false">
 	<appender name="DMS" class="org.apache.log4j.RollingFileAppender">
-		<param name="File" value="${logicaldoc.repository}/logs/dms.log" />
+		<param name="File"
+			value="${logicaldoc.repository}/logs/dms.log" />
 		<param name="MaxFileSize" value="5MB" />
 		<param name="MaxBackupIndex" value="5" />
 		<param name="Append" value="true" />
@@ -16,7 +17,8 @@
 
 	<appender name="DMS_WEB"
 		class="org.apache.log4j.RollingFileAppender">
-		<param name="File" value="${logicaldoc.repository}/logs/dms.log.html" />
+		<param name="File"
+			value="${logicaldoc.repository}/logs/dms.log.html" />
 		<param name="MaxFileSize" value="5MB" />
 		<param name="MaxBackupIndex" value="5" />
 		<layout class="com.logicaldoc.web.util.HTMLLayout"></layout>
@@ -44,6 +46,28 @@
 		<layout class="com.logicaldoc.web.util.HTMLLayout"></layout>
 	</appender>
 
+	<appender name="TagCloudGenerator"
+		class="org.apache.log4j.RollingFileAppender">
+		<param name="File"
+			value="${logicaldoc.repository}/logs/tagcloudgenerator.log" />
+		<param name="MaxFileSize" value="5MB" />
+		<param name="MaxBackupIndex" value="5" />
+		<param name="Append" value="true" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%d{dd.MM.yyyy HH:mm:ss,SSS} %-5p  (%c:%4L) -- %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="TagCloudGenerator_WEB"
+		class="org.apache.log4j.RollingFileAppender">
+		<param name="File"
+			value="${logicaldoc.repository}/logs/tagcloudgenerator.log.html" />
+		<param name="MaxFileSize" value="5MB" />
+		<param name="MaxBackupIndex" value="5" />
+		<layout class="com.logicaldoc.web.util.HTMLLayout"></layout>
+	</appender>
+
 	<category name="org.hibernate.cache" additivity="true">
 		<priority value="error" />
 	</category>
@@ -65,6 +89,13 @@
 		<priority value="info" />
 		<appender-ref ref="IndexOptimizer" />
 		<appender-ref ref="IndexOptimizer_WEB" />
+	</category>
+
+	<category name="com.logicaldoc.core.document.TagCloudGenerator"
+		additivity="false">
+		<priority value="info" />
+		<appender-ref ref="TagCloudGenerator" />
+		<appender-ref ref="TagCloudGenerator_WEB" />
 	</category>
 
 	<root>

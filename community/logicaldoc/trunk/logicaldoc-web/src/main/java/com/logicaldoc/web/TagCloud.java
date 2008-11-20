@@ -12,50 +12,18 @@ import com.logicaldoc.web.search.KeywordsBean;
  * This class is a TagCloud
  * 
  * @author Alessandro Gasparini - Logical Objects
- * @version $Id:$
  * @since 3.5
  */
-public class TagCloud {
-
-	private String keyword;
-
-	private Integer occurence;
-
-	private int scale;
-
-	public TagCloud(String keyword, int occurence) {
-		this.keyword = keyword;
-		this.occurence = occurence;
-	}
-
-	public String getKeyword() {
-		return keyword;
-	}
-
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
-	}
-
-	public Integer getOccurence() {
-		return occurence;
-	}
-
-	public void setOccurence(Integer occurence) {
-		this.occurence = occurence;
-	}
-
-	public int getScale() {
-		return scale;
-	}
-
-	public void setScale(int scale) {
-		this.scale = scale;
+public class TagCloud extends com.logicaldoc.core.document.TagCloud {
+	public TagCloud(String keyword) {
+		super(keyword);
 	}
 
 	/**
 	 * Handles the selection of this tagcloud. Display the pageContent
 	 * "search/tags" and set the selected word on KeywordsBean.
 	 */
+	@SuppressWarnings("deprecation")
 	public String select() {
 		Application application = FacesContext.getCurrentInstance().getApplication();
 
@@ -69,8 +37,7 @@ public class TagCloud {
 
 		KeywordsBean keywordsBean = ((KeywordsBean) application.createValueBinding("#{keywords}").getValue(
 				FacesContext.getCurrentInstance()));
-		keywordsBean.select(this.keyword);
-
+		keywordsBean.select(this.getKeyword());
 		return null;
 	}
 }
