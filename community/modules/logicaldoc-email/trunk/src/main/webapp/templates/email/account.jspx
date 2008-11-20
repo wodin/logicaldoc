@@ -52,7 +52,7 @@
 						<ice:outputLabel for="accountUser"
 							value="#{msgs['msg.jsp.login.username']}*: " />
 					</ice:panelGroup>
-					<ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
 						<ice:inputText id="accountUser"
 							label="#{msgs['errors.header.alert.key']}" tabindex="1"
 							value="#{AccountForm.account.userName}" maxlength="255"
@@ -65,7 +65,7 @@
 					<ice:panelGroup style="width:20px" />
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="accountPassword"
-							value="#{msgs['msg.jsp.login.password']}" />
+							value="#{msgs['msg.jsp.login.password']}:" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputSecret id="accountPassword" tabindex="1"
@@ -100,7 +100,7 @@
 						<ice:outputLabel for="protocol"
 							value="#{email_msgs['logicaldoc-email.account.protocol']}*: " />
 					</ice:panelGroup>
-					<ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
 						<ice:selectOneMenu id="protocol"
 							label="#{msgs['errors.header.alert.key']}"
 							styleClass="selectTagMenu" tabindex="1"
@@ -118,9 +118,9 @@
 					<ice:panelGroup style="width:20px" />
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="deleteFromMailbox"
-							value="#{email_msgs['logicaldoc-email.account.deleteFromMailbox']}" />
+							value="#{email_msgs['logicaldoc-email.account.deleteFromMailbox']}:" />
 					</ice:panelGroup>
-					<ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
 						<ice:selectOneMenu id="deleteFromMailbox" tabindex="1"
 							onkeypress="return submitOnEnter(buttonSave, event);"
 							style="width:50px" styleClass="selectTagMenu"
@@ -138,8 +138,8 @@
 						<ice:inputText id="host"
 							label="#{msgs['errors.header.alert.key']}"
 							value="#{AccountForm.account.host}" tabindex="1"
-							style="width:250px"
 							onkeypress="return submitOnEnter(buttonSave, event);"
+							style="width:250px"
 							maxlength="255" size="25" binding="#{AccountForm.host}"
 							onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
 							required="true" />
@@ -148,9 +148,9 @@
 					</ice:panelGroup>
 					<ice:panelGroup style="width:20px" />
 					<ice:panelGroup styleClass="outputLabel">
-						<ice:outputLabel for="port" value="#{msgs['msg.jsp.port']}" />
+						<ice:outputLabel for="port" value="#{msgs['msg.jsp.port']}:" />
 					</ice:panelGroup>
-					<ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
 						<ice:inputText id="port" tabindex="1"
 							value="#{AccountForm.account.port}"
 							onkeypress="return submitOnEnter(buttonSave, event);"
@@ -223,6 +223,7 @@
 				</ice:panelGrid>
 			</ice:panelGroup>
 		</ice:panelGroup>
+		<hr />
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="#{email_msgs['logicaldoc-email.account.deletecache']}" tabindex="1"
 				action="#{AccountForm.deleteCache}" id="deleteCache"
