@@ -347,6 +347,7 @@ em { /*font-size:14px;*/
 .iceMnuItmLabel,.iceMnuBarItemLabel {
 	font-family: Arial, Helvetica, sans-serif;
 	padding-top: 4px;
+	padding-left: 4px;
 	font-size: 14px;
 	display: inline;
 	color: #333333;
