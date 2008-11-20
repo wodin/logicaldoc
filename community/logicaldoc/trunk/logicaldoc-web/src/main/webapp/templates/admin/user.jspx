@@ -28,7 +28,7 @@
 					<br />
 				</h3>
 				<ice:panelGrid columns="5">
-					<ice:panelGroup style="text-align:right">
+					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="userName"
 							value="#{msgs['msg.jsp.login.username']}*" />
 					</ice:panelGroup>
@@ -40,7 +40,7 @@
 						<ice:message for="userName" />
 					</ice:panelGroup>
 					<ice:panelGroup style="width:20px" />
-					<ice:panelGroup style="text-align:right">
+					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="password"
 							value="#{msgs['msg.jsp.login.password']}*"
 							rendered="#{hidePasswd!='true'}" />
@@ -57,7 +57,7 @@
 					<ice:panelGroup>
 					</ice:panelGroup>
 					<ice:panelGroup style="width:20px" />
-					<ice:panelGroup style="text-align:right">
+					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="repass"
 							value="#{msgs['msg.jsp.adduser.repass']}*"
 							rendered="#{hidePasswd!='true'}" />
@@ -81,7 +81,7 @@
 				<br />
 			</h3>
 			<ice:panelGrid columns="5">
-				<ice:panelGroup style="text-align:right">
+				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="firstName"
 						value="#{msgs['msg.jsp.adduser.firstname']}*" />
 				</ice:panelGroup>
@@ -92,7 +92,7 @@
 					<ice:message for="firstName" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
-				<ice:panelGroup style="text-align:right">
+				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="name"
 						value="#{msgs['msg.jsp.adduser.lastname']}*" />
 				</ice:panelGroup>
@@ -103,7 +103,7 @@
 					<ice:message for="name" />
 				</ice:panelGroup>
 
-				<ice:panelGroup style="text-align:right">
+				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="street"
 						value="#{msgs['msg.jsp.adduser.street']}" />
 				</ice:panelGroup>
@@ -114,7 +114,7 @@
 					<ice:message for="street" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
-				<ice:panelGroup style="text-align:right">
+				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="postalCode"
 						value="#{msgs['msg.jsp.adduser.postalcode']}" />
 				</ice:panelGroup>
@@ -125,7 +125,7 @@
 					<ice:message for="postalCode" />
 				</ice:panelGroup>
 
-				<ice:panelGroup style="text-align:right">
+				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="city" value="#{msgs['msg.jsp.adduser.city']}" />
 				</ice:panelGroup>
 				<ice:panelGroup>
@@ -135,7 +135,7 @@
 					<ice:message for="city" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
-				<ice:panelGroup style="text-align:right">
+				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="country"
 						value="#{msgs['msg.jsp.adduser.country']}" />
 				</ice:panelGroup>
@@ -146,18 +146,18 @@
 					<ice:message for="country" />
 				</ice:panelGroup>
 
-				<ice:panelGroup style="text-align:right">
+				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="language"
 						value="#{msgs['msg.jsp.adduser.language']}" />
 				</ice:panelGroup>
-				<ice:panelGroup>
+				<ice:panelGroup style="text-align:left;">
 					<ice:selectOneMenu styleClass="selectTagMenu"
 						value="#{userForm.user.language}">
 						<f:selectItems value="#{selectionTags.languages}" />
 					</ice:selectOneMenu>
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
-				<ice:panelGroup style="text-align:right">
+				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="email"
 						value="#{msgs['msg.jsp.adduser.email']}*" />
 				</ice:panelGroup>
@@ -170,7 +170,7 @@
 					<ice:message for="email" />
 				</ice:panelGroup>
 
-				<ice:panelGroup style="text-align:right">
+				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="phone"
 						value="#{msgs['msg.jsp.adduser.phone']}" />
 				</ice:panelGroup>

@@ -16,8 +16,7 @@
     xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
     id="personalDataForm">
     
-    <ice:panelGroup styleClass="center formBorderHighlight"
-        style="width: 600px;">
+    <ice:panelGroup styleClass="center formBorderHighlight" style="width: 600px;">
         <ice:messages globalOnly="true"/>
     
         <!-- Personal data -->
@@ -78,7 +77,7 @@
                     <ice:outputLabel for="postalCode"
                         value="#{msgs['msg.jsp.adduser.postalcode']}" />
                 </ice:panelGroup>
-                <ice:panelGroup>
+                <ice:panelGroup style="text-align: left;">
                     <ice:inputText id="postalCode"
                         value="#{personalDataForm.postalCode}"
                         partialSubmit="true"
@@ -120,7 +119,7 @@
                     <ice:outputLabel for="language"
                         value="#{msgs['msg.jsp.adduser.language']}" />
                 </ice:panelGroup>
-                <ice:panelGroup>
+                <ice:panelGroup style="text-align: left;">
                     <ice:selectOneMenu styleClass="selectTagMenu"
                         tabindex="1"
                         value="#{personalDataForm.language}"

@@ -14,7 +14,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
 	id="searchForm" styleClass="center formBorderHighlight"
-	style="width: 700px">
+	style="width: 700px; text-align:left;">
 
 	<ice:panelGroup>
 		<ice:messages globalOnly="true" />
@@ -93,11 +93,11 @@
 				<ice:outputLabel for="parentPath"
 					value="#{msgs['advancedSearch.searchin']}" />
 			</ice:panelGroup>
-			<ice:panelGroup>
+			<ice:panelGroup style="display: inline;">
 				<ice:inputHidden id="parentPath" value="#{searchForm.path}" />
 				<ice:inputText id="parentPathDescr"
 					value="#{searchForm.parentPathDescr}" maxlength="255" />
-				<ldoc:folderselector directoryModel="#{searchForm.directoryModel}"
+				<ldoc:folderselector style="float:right;" directoryModel="#{searchForm.directoryModel}"
 					showSelector="#{searchForm.showFolderSelector}"
 					openListener="#{searchForm.openFolderSelector}"
 					confirmListener="#{searchForm.folderSelected}"
@@ -126,7 +126,7 @@
 			<ice:panelGroup>
                     &amp;nbsp;
                 </ice:panelGroup>
-			<ice:panelGroup styleClass="outputLabel">
+			<ice:panelGroup style="text-align:right;">
 				<ice:outputLabel for="sizeMax" value="#{msgs['size.to']} " />
 			</ice:panelGroup>
 			<ice:panelGroup>
@@ -160,7 +160,7 @@
 			<ice:panelGroup>
                     &amp;nbsp;
             </ice:panelGroup>
-			<ice:panelGroup styleClass="outputLabel">
+			<ice:panelGroup style="text-align:right;">
 				<ice:outputLabel for="sourceDateTo" value="#{msgs['date.to']} " />
 			</ice:panelGroup>
 			<ice:panelGroup>
@@ -194,7 +194,7 @@
 			<ice:panelGroup>
                     &amp;nbsp;
             </ice:panelGroup>
-			<ice:panelGroup styleClass="outputLabel">
+			<ice:panelGroup style="text-align:right;">
 				<ice:outputLabel for="creationDateTo" value="#{msgs['date.to']} " />
 			</ice:panelGroup>
 			<ice:panelGroup>
