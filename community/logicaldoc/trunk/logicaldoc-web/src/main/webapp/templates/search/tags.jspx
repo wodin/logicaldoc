@@ -62,7 +62,7 @@
 	</ice:panelGroup>
 
 	<!-- Documents table -->
-	<ice:panelGroup rendered="#{keywords.documentsCount > 0}">
+	<ice:panelGroup rendered="#{keywords.documentsCount > 0}" styleClass="center calBorderHighlight" style="width:70%;">
 		<ice:panelGroup style="text-align: center;">
 			<h3><ice:outputText value="#{msgs['tags.dispdocs']}" /> &amp;nbsp; '#{keywords.selectedWord}'</h3>
 		</ice:panelGroup>
@@ -129,9 +129,11 @@
 			</ice:column>
 		</ice:dataTable>
 
-		<ice:panelGroup styleClass="center" style="width:600px;">
+		<ice:panelGroup styleClass="center" style="width:70%">
+		    <br/>
 			<ldoc:paginator table="documentsList"
 				label="#{msgs['paginator.simple']}" />
+			<br/>	
 		</ice:panelGroup>
 	</ice:panelGroup>
     
