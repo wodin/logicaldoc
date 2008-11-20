@@ -3,7 +3,6 @@ package com.logicaldoc.core.security.dao;
 import java.util.Collection;
 
 import com.logicaldoc.core.security.Group;
-import com.logicaldoc.core.security.User;
 
 public interface GroupDAO {
 	/**
