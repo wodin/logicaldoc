@@ -70,7 +70,7 @@
                 </ice:panelGroup>
             </ice:panelGroup>
         </ice:panelGroup>
-
+		<hr />
         <ice:panelGroup styleClass="commands">
             <ice:commandButton value="#{msgs['abort']}"
                 id="abort"
