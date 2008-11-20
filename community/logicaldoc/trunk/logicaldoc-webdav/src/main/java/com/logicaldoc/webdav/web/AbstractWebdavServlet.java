@@ -512,14 +512,15 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 
 		DavResource destResource = getResourceFactory().createResource(request.getDestinationLocator(), request,
 				response);
-		int status = validateDestination(destResource, request);
-		if (status > DavServletResponse.SC_NO_CONTENT) {
-			response.sendError(status);
-			return;
+	
+		try {
+			resource.move(destResource);
+			response.setStatus(DavServletResponse.SC_CREATED);
 		}
-
-		resource.move(destResource);
-		response.setStatus(status);
+		catch(Exception e){
+			response.setStatus(DavServletResponse.SC_NOT_ACCEPTABLE);
+		}
+		
 	}
 
 	/**

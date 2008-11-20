@@ -297,10 +297,8 @@ public class DefaultHandler implements IOHandler {
         	resourceService.createResource(resource, name, isCollection, context);
         	return true;
         }
-        else {
-        	//resourceService.updateResource(res, context);
-        	return false;
-        }     
+        
+		return false; 
     }
     
     /**
