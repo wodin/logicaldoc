@@ -44,6 +44,9 @@ public class HibernateEmailAccountDAOTest extends AbstractEmailTestCase {
 		account.setTargetFolder(menuDao.findById(24));
 		account.setDeleteFromMailbox(0);
 		account.setLanguage("it");
+		account.setDeleted(0);
+		account.setSslModel(0);
+		account.setExtractKeywords(0);
 
 		assertTrue(dao.store(account));
 
@@ -69,7 +72,7 @@ public class HibernateEmailAccountDAOTest extends AbstractEmailTestCase {
 		EmailAccount account = dao.findById(2);
 		assertNotNull(account);
 		assertTrue(dao.delete(2));
-
+		
 		account = dao.findById(2);
 		assertNull(account);
 	}

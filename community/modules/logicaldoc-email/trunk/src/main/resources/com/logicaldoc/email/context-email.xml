@@ -20,6 +20,7 @@
 				<property name="sessionFactory">
 					<ref bean="SessionFactory" />
 				</property>
+				<property name="cacheManager" ref="EmailCacheManager" />
 			</bean>
 		</property>
 	</bean>
@@ -28,13 +29,14 @@
 	<bean id="EmailCrawler"
 		class="com.logicaldoc.email.EmailCrawler">
 		<property name="defaultOwner">
-			<value>admin</value>
+			<value>_email</value>
 		</property>
 		<property name="accountDao" ref="EmailAccountDAO" />
 		<property name="menuDao" ref="MenuDAO" />
 		<property name="userDao" ref="UserDAO" />
 		<property name="documentDao" ref="DocumentDAO" />
 		<property name="documentLinkDao" ref="DocumentLinkDAO" />
+		<property name="templateDao" ref="DocumentTemplateDAO" />
 		<property name="historyDao" ref="HistoryDAO" />
 		<property name="indexer" ref="Indexer" />
 		<property name="storer" ref="Storer" />

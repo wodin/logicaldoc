@@ -38,6 +38,12 @@ public class EmailAccount extends PersistentObject {
 
 	private int enabled = 1;
 
+	/**
+	 * This attribute defines the EmailAccount security settings. Possible
+	 * values: '0'= "No" '1'= "TLS, se disponibile" '2'= "TLS" '3'= "SSL"
+	 */
+	private int sslModel = 0;
+
 	private int extractKeywords = 0;
 
 	/** Creates a new instance of EmailAccount */
@@ -143,6 +149,14 @@ public class EmailAccount extends PersistentObject {
 
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;
+	}
+
+	public int getSslModel() {
+		return sslModel;
+	}
+
+	public void setSslModel(int sslModel) {
+		this.sslModel = sslModel;
 	}
 
 	/**

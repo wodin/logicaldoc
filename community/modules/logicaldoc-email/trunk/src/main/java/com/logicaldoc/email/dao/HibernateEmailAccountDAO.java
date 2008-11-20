@@ -6,11 +6,10 @@ import java.util.Collection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Property;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.email.EmailAccount;
+import com.logicaldoc.email.EmailCacheManager;
 
 /**
  * Hibernate implementation of <code>EmailAccount</code>
@@ -22,7 +21,13 @@ public class HibernateEmailAccountDAO extends HibernateDaoSupport implements Ema
 
 	protected static Log log = LogFactory.getLog(HibernateEmailAccountDAO.class);
 
+	private EmailCacheManager cacheManager;
+
 	private HibernateEmailAccountDAO() {
+	}
+
+	public void setCacheManager(EmailCacheManager cacheManager) {
+		this.cacheManager = cacheManager;
 	}
 
 	/**
@@ -47,14 +52,13 @@ public class HibernateEmailAccountDAO extends HibernateDaoSupport implements Ema
 	 */
 	public boolean delete(long accountId) {
 		boolean result = true;
-
 		try {
-			DetachedCriteria dt = DetachedCriteria.forClass(EMail.class);
-			dt.add(Property.forName("accountId").eq(new Long(accountId)));
-			getHibernateTemplate().deleteAll(getHibernateTemplate().findByCriteria(dt));
 			EmailAccount emAccount = (EmailAccount) getHibernateTemplate().get(EmailAccount.class, accountId);
-			if (emAccount != null)
-				getHibernateTemplate().delete(emAccount);
+			if (emAccount != null) {
+				emAccount.setDeleted(1);
+				getHibernateTemplate().saveOrUpdate(emAccount);
+				cacheManager.deleteCache(emAccount);
+			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -76,6 +80,9 @@ public class HibernateEmailAccountDAO extends HibernateDaoSupport implements Ema
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
+
+		if (emAccount != null && emAccount.getDeleted() == 1)
+			return null;
 
 		return emAccount;
 	}
