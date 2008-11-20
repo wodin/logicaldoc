@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,6 +14,8 @@ import com.logicaldoc.core.document.Article;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.ArticleDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.generic.Generic;
+import com.logicaldoc.core.generic.dao.GenericDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.document.DocumentRecord;
 import com.logicaldoc.web.document.DocumentsRecordsManager;
@@ -181,37 +183,20 @@ public class HomeBean {
 	 * Generate tag clouds from lists of keywords
 	 */
 	public List<TagCloud> getTagClouds() {
-
 		List<TagCloud> tags = new ArrayList<TagCloud>();
-
-		DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		HashMap<String, Integer> keywords = (HashMap<String, Integer>) docdao.findAllKeywords();
-		if (keywords.isEmpty())
+		GenericDAO gendao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
+		Generic generic = gendao.findByAlternateKey("tagcloud", "-");
+		if (generic == null)
 			return tags;
+		else
+			gendao.initialize(generic);
 
-		for (String key : keywords.keySet()) {
-			Integer val = keywords.get(key);
-			TagCloud tc = new TagCloud(key, val);
+		for (String keyword : generic.getAttributeNames()) {
+			TagCloud tc = new TagCloud(keyword);
+			StringTokenizer st = new StringTokenizer(generic.getValue(keyword), "|", false);
+			tc.setOccurence(Integer.parseInt(st.nextToken()));
+			tc.setScale(Integer.parseInt(st.nextToken()));
 			tags.add(tc);
-		}
-
-		// order the list by occurrences
-		Comparator<TagCloud> compOccurrence = new TagCloudComparatorOccurrence();
-		Collections.sort(tags, compOccurrence);
-		Collections.reverse(tags);
-
-		// keep only the first 30 elements
-		if (tags.size() > 30)
-			tags = tags.subList(0, 30);
-
-		// Find the Max frequency
-		int maxValue = tags.get(0).getOccurence();
-		log.debug("maxValue = " + maxValue);
-
-		for (TagCloud cloud : tags) {
-			double scale = cloud.getOccurence().doubleValue() / maxValue;
-			int scaleInt = (int) Math.ceil(scale * 10);
-			cloud.setScale(scaleInt);
 		}
 
 		// Sort the tags collection by name
@@ -221,23 +206,16 @@ public class HomeBean {
 		return tags;
 	}
 
-	class TagCloudComparatorOccurrence implements Comparator<TagCloud> {
-		public int compare(TagCloud tc0, TagCloud tc1) {
-			return tc0.getOccurence().compareTo(tc1.getOccurence());
-		}
-	}
-
-	class TagCloudComparatorName implements Comparator<TagCloud> {
-		public int compare(TagCloud tc0, TagCloud tc1) {
-			return tc0.getKeyword().compareTo(tc1.getKeyword());
-		}
-	}
-
 	public boolean isTagCloudsExpanded() {
 		return tagCloudsExpanded;
 	}
 
 	public void setTagCloudsExpanded(boolean tagCloudsExpanded) {
 		this.tagCloudsExpanded = tagCloudsExpanded;
+	}
+	class TagCloudComparatorName implements Comparator<TagCloud> {
+		public int compare(TagCloud tc0, TagCloud tc1) {
+			return tc0.getKeyword().compareTo(tc1.getKeyword());
+		}
 	}
 }
