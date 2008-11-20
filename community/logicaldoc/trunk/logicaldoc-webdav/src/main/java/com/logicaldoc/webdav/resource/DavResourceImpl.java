@@ -421,7 +421,7 @@ public class DavResourceImpl implements DavResource {
 		}
 
 		try {
-			Resource resource = resourceService.getResorce(member.getLocator().getResourcePath(), this.resource
+			Resource resource = resourceService.getResource(member.getLocator().getResourcePath(), this.resource
 					.getRequestedPerson());
 			resourceService.deleteResource(resource);
 
@@ -443,12 +443,13 @@ public class DavResourceImpl implements DavResource {
 		}
 
 		try {
-
-			Resource res = resourceService.getResorce(destination.getLocator().getResourcePath(), this.resource
+			
+			Resource res = resourceService.getResource(destination.getLocator().getResourcePath(), this.resource
 					.getRequestedPerson());
 			if (res != null) {
 				res.setName(this.resource.getName());
-				resourceService.updateResource(res);
+				Resource parentResource = resourceService.getParentResource(res);
+				resourceService.move(this.resource, parentResource);
 			} else {
 				String name = destination.getLocator().getResourcePath();
 				name = name.substring(name.lastIndexOf("/") + 1, name.length()).replace("/default", "");

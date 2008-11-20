@@ -235,6 +235,14 @@ public class ResourceServiceImpl implements ResourceService {
 
 		if (target.isFolder() == true) {
 			Menu currentMenu = menuDAO.findById(Long.parseLong(target.getID()));
+			
+			long currentParentFolder = currentMenu.getParentId();
+			long destinationParentFolder = Long.parseLong(destination.getID());
+			//renaming is allowed
+			if(currentParentFolder != destinationParentFolder)
+				throw new UnsupportedOperationException();
+			
+			
 			currentMenu.setText(target.getName());
 
 			if (destination != null)
@@ -242,6 +250,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 			menuDAO.store(currentMenu);
 			return this.marshallFolder(currentMenu);
+			
 		} else {
 			// if the destination is null, then the user want to change the
 			// filename,
@@ -283,7 +292,8 @@ public class ResourceServiceImpl implements ResourceService {
 
 	@Override
 	public Resource getParentResource(Resource resource) {
-		throw new AbstractMethodError();
+		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
+		return this.marshallFolder(document.getFolder());
 	}
 
 	@Override
