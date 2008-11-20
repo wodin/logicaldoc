@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -34,8 +36,10 @@ import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentLinkDAO;
+import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.core.searchengine.store.Storer;
@@ -58,9 +62,11 @@ public class EmailCrawler extends Task {
 	public static final String NAME = "EmailCrawler";
 
 	// The default username that owns downloaded documents
-	private String defaultOwner = "admin";
+	private String defaultOwner = "_email";
 
 	private EmailAccountDAO accountDao;
+
+	private DocumentTemplateDAO templateDao;
 
 	private MenuDAO menuDao;
 
@@ -173,6 +179,14 @@ public class EmailCrawler extends Task {
 		this.settingsConfig = settingsConfig;
 	}
 
+	public DocumentTemplateDAO getTemplateDao() {
+		return templateDao;
+	}
+
+	public void setTemplateDao(DocumentTemplateDAO templateDao) {
+		this.templateDao = templateDao;
+	}
+
 	/**
 	 * Downloads all new mails from all accounts. The stored document will be
 	 * owned by the specified username
@@ -235,7 +249,6 @@ public class EmailCrawler extends Task {
 		return count;
 	}
 
-	
 	public void receive(EmailAccount account, String username) throws MessagingException, IOException {
 		// Get a session. Use a blank Properties object.
 		Session session = Session.getInstance(new Properties());
@@ -246,11 +259,11 @@ public class EmailCrawler extends Task {
 		cache.read();
 		// Open Folder INBOX
 		Folder inbox = store.getFolder("INBOX");
+
 		if (inbox != null) {
 			inbox.open(Folder.READ_ONLY);
 			int count = inbox.getMessageCount();
 			log.info(count + " total messages in " + account.getMailAddress());
-
 			// fetch messages from server
 			for (int i = 1; i <= count; i++) {
 				if (interruptRequested)
@@ -262,7 +275,10 @@ public class EmailCrawler extends Task {
 					if (message.getHeader("Message-ID") != null)
 						mailId = message.getHeader("Message-ID")[0];
 					else {
-						mailId = message.getFrom()[0] + "." + message.getSentDate().getTime();
+						mailId = (message.getFrom()[0] != null ? message.getFrom()[0] : "")
+								+ "."
+								+ (message.getSentDate() != null ? message.getSentDate().getTime() : new Date()
+										.getTime());
 					}
 					log.debug("Message with mailId: " + mailId);
 
@@ -351,12 +367,11 @@ public class EmailCrawler extends Task {
 				MimeBodyPart mbp = (MimeBodyPart) part;
 				if ((mbp.isMimeType("text/plain")) || mbp.isMimeType("text/html")) {
 					log.debug("Mime type is plain");
-					if(mbp.getFileName()!= null) {
+					if (mbp.getFileName() != null) {
 						File docFile = new File(mailDir, mbp.getFileName());
 						saveToFile(part.getInputStream(), docFile);
 						attachments.add(storeDocument(account, docFile, email));
-					}
-					else
+					} else
 						emailBody += (String) mbp.getContent();
 				} else {
 					log.debug("Mime type is not plain");
@@ -418,12 +433,15 @@ public class EmailCrawler extends Task {
 	private Document storeDocument(EmailAccount account, File file, EMail email) throws Exception {
 		User user = userDao.findByUserName(defaultOwner);
 
+		DocumentTemplate template = templateDao.findByName("email");
+
 		log.info("Store email document " + file);
 
 		Menu folder = account.getTargetFolder();
 
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		Document doc = null;
+		String to = "";
 
 		if (file.getName().equals("email.txt")) {
 			log.info("Insert email document.");
@@ -438,8 +456,23 @@ public class EmailCrawler extends Task {
 
 			Date srcDate = email.getSentDateAsDate();
 
+			Map<String, String> attributes = null;
+			if (template != null && to.isEmpty()) {
+				attributes = new HashMap<String, String>();
+				attributes.put("from", StringUtils.substring(email.getAuthorAddress(), 0, 3999));
+				for (int i = 0; i < email.getAddresses().length; i++) {
+					if (email.getAddresses()[i] != null)
+						attributes.put("to", (StringUtils.isNotEmpty(attributes.get("to")) ? (attributes
+								.get("to")+",") : "")
+								+ email.getAddresses()[i].getAddress());
+				}
+				attributes.put("to", StringUtils.substring(attributes.get("to"), 0, 3999));
+				attributes.put("subject", StringUtils.substring(email.getSubject(), 0, 3999));
+			}
+
 			doc = manager.create(file, folder, user, account.getLanguage(), email.getSubject(), srcDate, account
-					.getMailAddress(), srcAuthor, "", "", "", null);
+					.getMailAddress(), srcAuthor, "", "", "", null, template != null ? template.getId() : null,
+					attributes);
 		} else {
 			doc = manager.create(file, folder, user, account.getLanguage());
 		}

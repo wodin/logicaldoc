@@ -55,17 +55,6 @@
 		</property>
 	</bean>
 
-	<bean id="BackupConfig"
-		class="com.logicaldoc.util.config.BackupConfig" abstract="false"
-		lazy-init="default" autowire="default" dependency-check="default">
-		<property name="enabled">
-			<value>false</value>
-		</property>
-		<property name="location">
-			<value>${user.home}/logicaldoc/data/backup/</value>
-		</property>
-	</bean>
-
 	<bean id="MimeTypeConfig"
 		class="com.logicaldoc.util.config.MimeTypeConfig" abstract="false"
 		lazy-init="default" autowire="default" dependency-check="default">
@@ -167,13 +156,13 @@
 					/com/logicaldoc/core/mappings/History.hbm.xml
 				</value>
 				<value>
-					/com/logicaldoc/core/mappings/Term.hbm.xml
-				</value>
-				<value>
 					/com/logicaldoc/core/mappings/Article.hbm.xml
 				</value>
 				<value>
 					/com/logicaldoc/core/mappings/Document.hbm.xml
+				</value>
+				<value>
+					/com/logicaldoc/core/mappings/DocumentTemplate.hbm.xml
 				</value>
 				<value>
 					/com/logicaldoc/email/mappings/EmailAccount.hbm.xml
