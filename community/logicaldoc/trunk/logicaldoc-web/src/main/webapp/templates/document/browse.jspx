@@ -94,7 +94,7 @@
 				</ice:panelSeries>
 			</ice:form>
 			<ice:graphicImage value="#{styleBean.imagesPath}/spacer.gif"
-						style="border: 0px solid;" height="0px" width="500px" title="" />
+						style="border: 0px solid;" height="0px" width="480px" title="" />
 		</ice:panelGroup>
 		<ice:panelStack id="documentsPanelStack"
 			styleClass="componentContentPanelStack"

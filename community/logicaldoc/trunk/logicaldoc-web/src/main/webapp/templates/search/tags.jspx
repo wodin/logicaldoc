@@ -71,7 +71,7 @@
 			value="#{keywords.documents}" var="entry" cellpadding="0" rows="10"
 			sortColumn="#{keywords.dh.sortColumn}"
 			sortAscending="#{keywords.dh.ascending}"
-			columnClasses="docNameColumn,docDateColumn,docSizeColumn">
+			columnClasses="titleColumn,dateColumn,numberColumn">
 
 			<!-- Name -->
 			<ice:column>

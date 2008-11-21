@@ -145,16 +145,6 @@ em { /*font-size:14px;*/
 	top: 0;
 }
 
-/*
- Navigation
-*/
-.navTree {
-	overflow: auto;
-	height: 550px;
-	width: 200px;
-	border: 1px solid #dedede;
-	margin: 5px
-}
 
 .navConnectionStatus {
 	position: absolute;
@@ -185,7 +175,6 @@ em { /*font-size:14px;*/
 
 .componentContentPanelStack {
 	vertical-align: top;
-	width: 100%;
 }
 
 /* override default panel stack state */
@@ -216,9 +205,8 @@ em { /*font-size:14px;*/
 	width: 100%; /*table-layout: fixed;*/
 }
 
-.formBorderHighlight,.treeNodeControlButtonsBorder,.effectsControlsBorder
-	{
-	vertical-align: top; /*width: 100%;*/
+.formBorderHighlight,.treeNodeControlButtonsBorder,.effectsControlsBorder{
+	vertical-align: top;
 	border: 1px solid #CCCCCC;
 	padding: 10px;
 }
@@ -523,8 +511,7 @@ em { /*font-size:14px;*/
 	height: 38px;
 }
 
-.docImageColumn,.docTitleColumn,.docMenuColumn,.docDateColumn,.docSizeColumn,.triangleColumn,.docSelectionColumn
-	{
+.titleColumn,.smallColumn,.dateColumn,.numberColumn,.selectionColumn{
 	white-space: nowrap;
 	color: #000000;
 	padding-left: 5px;
@@ -537,37 +524,28 @@ em { /*font-size:14px;*/
 	text-align: left;
 }
 
-.triangleColumn {
-	width: 20px;
+.titleColumn{
+	width:100%;
 }
 
-.docSelectionColumn {
-	width: 4%;
+.selectionColumn {
+	width: 15px;
 }
 
-.triangleColumn {
-	width: 20px;
+.smallColumn{
+	width: 100px;
 }
 
-.docImageColumn {
-	width: 20px;
-}
-
-.docDateColumn {
-	width: 15%;
+.dateColumn {
+	width: 40px;
 	text-align: center;
-}
-
-.docSizeColumn {
-	text-align: right;
 	white-space: nowrap;
-	width: 10%;
 }
 
-.docMenuColumn {
-	width: 10%;
-	text-align: left;
-	border-bottom: 1px solid #CCCCCC;
+.numberColumn {
+	text-align: right;
+	width: 40px;
+	white-space: nowrap;
 }
 
 /*

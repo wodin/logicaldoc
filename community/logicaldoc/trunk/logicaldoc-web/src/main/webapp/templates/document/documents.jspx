@@ -33,7 +33,7 @@
 			sortColumn="#{documentsRecordsManager.sortColumn}"
 			sortAscending="#{documentsRecordsManager.ascending}" cellpadding="0"
 			rows="#{documentsRecordsManager.displayedRows}"
-			columnClasses="docSelectionColumn,titleColumn,docDateColumn,docSizeColumn">
+			columnClasses="selectionColumn,titleColumn,dateateColumn,numberColumn">
 
 			<!-- selection column -->
 			<ice:column>
@@ -145,7 +145,7 @@
 					<f:selectItem itemValue="25" />
 					<f:selectItem itemValue="50" />
 				</ice:selectOneMenu>
-				<ice:outputLabel value="#{msgs['document.perpage']}" for="dispRows" />
+				<ice:outputLabel value="#{msgs['document.perpage']}" for="dispRows" style="white-space: nowrap;"/>
 			</ice:panelGroup>
 		</ice:panelGrid>
 	</ice:panelGroup>

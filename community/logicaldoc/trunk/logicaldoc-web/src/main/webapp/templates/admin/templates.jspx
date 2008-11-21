@@ -12,8 +12,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
-	styleClass="center" style="width: 80%">
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
 
 	<ice:messages globalOnly="true" />
 	<ice:panelGroup>
@@ -41,7 +40,7 @@
 					<ice:dataTable id="templatesList"
 						value="#{templatesRecordsManager.templates}" var="template"
 						cellpadding="0" rows="15"
-						columnClasses="docNameColumn,docNameColumn,docNameColumn">
+						columnClasses="titleColumn,titleColumn,titleColumn">
 
 						<!-- Name -->
 						<ice:column>
@@ -86,7 +85,7 @@
 					</ice:dataTable>
 
 					<ice:panelGroup>
-						<ldoc:paginator table="templatesList" label="#{msgs['paginator']}" />
+						<ldoc:paginator table="templatesList" label="#{msgs['paginator.simple']}" />
 						<br />
 					</ice:panelGroup>
 				</ice:panelGroup>

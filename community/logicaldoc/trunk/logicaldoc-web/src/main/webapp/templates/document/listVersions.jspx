@@ -29,7 +29,7 @@
 				<ice:dataTable id="versionData"
 					value="#{versionsRecordsManager.versions}" var="versionRecord"
 					cellpadding="0" width="97%" rows="2000"
-					columnClasses="docSelectionColumn,docDateColumn,docDateColumn,titleColumn,docSelectionColumn">
+					columnClasses="selectionColumn,dateColumn,dateColumn,titleColumn,selectionColumn">
 
 					<!-- version column -->
 					<ice:column>
