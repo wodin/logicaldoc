@@ -25,7 +25,7 @@
 	</ice:panelGroup>
 
 	<!-- Basic table -->
-	<ice:panelGroup styleClass="formBorderHighlight" 
+	<ice:panelGroup styleClass="formBorderHighlight"
 		rendered="#{documentsRecordsManager.count > 0}">
 
 		<ice:dataTable id="documentsList"
@@ -92,6 +92,12 @@
 						rendered="#{documentRecord.checkedOut}"
 						value="#{styleBean.imagesPath}/lock.png"
 						alt="#{documentRecord.document.checkoutUser}" />
+					<ice:commandLink title="#{msgs['links']}"
+						action="#{documentRecord.links}">
+						<ice:graphicImage style="margin-left: 5px; border: 0px;"
+							rendered="#{documentRecord.linked}"
+							value="#{styleBean.imagesPath}/link.png" alt="#{msgs['links']}" />
+					</ice:commandLink>
 					<ice:menuPopup id="pop" value="#{documentRecord.docId}"
 						orientation="vertical" rendered="#{documentRecord.documentFound}">
 						<ice:menuItems value="#{documentRecord.model}" />
@@ -145,7 +151,8 @@
 					<f:selectItem itemValue="25" />
 					<f:selectItem itemValue="50" />
 				</ice:selectOneMenu>
-				<ice:outputLabel value="#{msgs['document.perpage']}" for="dispRows" style="white-space: nowrap;"/>
+				<ice:outputLabel value="#{msgs['document.perpage']}" for="dispRows"
+					style="white-space: nowrap;" />
 			</ice:panelGroup>
 		</ice:panelGrid>
 	</ice:panelGroup>

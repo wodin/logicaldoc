@@ -1,6 +1,5 @@
 package com.logicaldoc.web.document;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -269,6 +268,14 @@ public class DocumentRecord extends MenuBarBean {
 		return null;
 	}
 
+	/**
+	 * Checks if this document has links or is linked 
+	 */
+	public boolean isLinked(){
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		return docDao.findLinkedDocuments(docId, null, null).size()>0;
+	}
+	
 	/**
 	 * Executes the checkout and the related document's download
 	 */
