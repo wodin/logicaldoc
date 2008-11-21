@@ -164,4 +164,9 @@ public class LoginForm {
 	public void setNavigation(NavigationBean navigation) {
 		this.navigation = navigation;
 	}
+
+	public boolean isNotInitialized() {
+		// TODO: verify the connection to the database
+		return true;
+	}
 }
