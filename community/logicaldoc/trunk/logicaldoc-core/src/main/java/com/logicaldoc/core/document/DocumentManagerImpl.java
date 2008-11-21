@@ -418,12 +418,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 			_title = fallbackTitle;
 	    } 
-		
-//		if (_title != null && _title.length() > 0)
-//			_title = new String(_title.getBytes(), "UTF-8");
-		
-//		if (filename != null && filename.length() > 0)
-//			filename = new String(filename.getBytes(), "UTF-8");
 
 		if (parser != null) {
 			if (StringUtils.isEmpty(sourceAuthor))
