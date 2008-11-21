@@ -12,8 +12,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
-	styleClass="center" style="width: 80%">
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
 
 	<ice:messages globalOnly="true" />
 	<ice:panelGroup>
@@ -45,10 +44,23 @@
 				<ice:panelGroup styleClass="formBorderHighlight"
 					rendered="#{usersRecordsManager.count > 0}">
 					<ice:dataTable id="usersList" value="#{usersRecordsManager.users}"
-						var="user" cellpadding="0" rows="15" width="97%"
+						var="user" cellpadding="0" rows="15" 
 						sortColumn="#{usersRecordsManager.sortColumn}"
 						sortAscending="#{usersRecordsManager.ascending}"
-						columnClasses="docNameColumn,docNameColumn,docNameColumn,docMenuColumn,docMenuColumn,docMenuColumn">
+						columnClasses="smallColumn,titleColumn,titleColumn,titleColumn,selectionColumn,selectionColumn">
+
+						<!-- Username -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:commandSortHeader columnName="userName">
+									<ice:outputText value="#{msgs['msg.jsp.login.username']}"
+										style="text-decoration: underline;" />
+								</ice:commandSortHeader>
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{user.userName}" />
+							</ice:panelGroup>
+						</ice:column>
 
 						<!-- Name -->
 						<ice:column>
@@ -61,19 +73,6 @@
 							<ice:panelGroup>
 								<ice:outputText value="#{user.firstName} " />
 								<ice:outputText value="#{user.name}" />
-							</ice:panelGroup>
-						</ice:column>
-
-						<!-- Username -->
-						<ice:column>
-							<f:facet name="header">
-								<ice:commandSortHeader columnName="userName">
-									<ice:outputText value="#{msgs['msg.jsp.login.username']}"
-										style="text-decoration: underline;" />
-								</ice:commandSortHeader>
-							</f:facet>
-							<ice:panelGroup>
-								<ice:outputText value="#{user.userName}" />
 							</ice:panelGroup>
 						</ice:column>
 

@@ -2,8 +2,7 @@
 <!-- 
  The list of messages
   
- @author Marco Meschieri
- @version $Id: messagesList.jspx,v 1.4 2006/09/03 16:24:38 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -37,7 +36,7 @@
 			<ice:dataTable id="messagesList"
 				value="#{messagesRecordsManager.messages}" var="messageRecord"
 				cellpadding="0" rows="10" styleClass="center"
-				columnClasses="docSelectionColumn,docNameColumn,docMenuColumn,docDateColumn,docSelectionColumn">
+				columnClasses="selectionColumn,titleColumn,selectionColumn,dateColumn,selectionColumn">
 
 				<!-- Priority -->
 				<ice:column>

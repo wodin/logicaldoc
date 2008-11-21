@@ -27,7 +27,7 @@
 			<ice:panelGroup>
 				<ice:dataTable id="versionData" value="#{linksRecordsManager.links}"
 					var="link" cellpadding="0" width="100%" rows="2000"
-					columnClasses="docSelectionColumn,docSelectionColumn,titleColumn,docSelectionColumn,docSelectionColumn">
+					columnClasses="selectionColumn,selectionColumn,titleColumn,selectionColumn,selectionColumn">
 
 					<!-- type column -->
 					<ice:column>

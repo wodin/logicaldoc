@@ -222,7 +222,7 @@
 			<ice:dataTable id="attributesList"
 				value="#{documentForm.extendedAttributes}" var="entry"
 				cellpadding="0" rows="9999"
-				columnClasses="docNameColumn,docNameColumn">
+				columnClasses="titleColumn,titleColumn">
 				<!-- Name -->
 				<ice:column>
 					<ice:panelGroup>

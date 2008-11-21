@@ -25,8 +25,8 @@
 				<!-- Basic table -->
 				<ice:panelGroup styleClass="formBorderHighlight">
 					<ice:dataTable id="tasksList" value="#{tasksRecordsManager.tasks}"
-						var="task" cellpadding="0" rows="15"
-						columnClasses="docNameColumn,docDateColumn,docNameColumn,docMenuColumn,docMenuColumn">
+						var="task" cellpadding="0" rows="30"
+						columnClasses="titleColumn,dateColumn,titleColumn,dateColumn,selectionColumn,dateColumn">
 
 						<!-- Name -->
 						<ice:column>
@@ -41,10 +41,10 @@
 						<!-- Previous fire -->
 						<ice:column>
 							<f:facet name="header">
-								<ice:panelGroup style="white-space:nowrap;">
-									<ice:outputText value="#{msgs['task.previousStartTime']}" />
+								<ice:panelGroup>
+									<ice:outputText value="#{msgs['task.previousStartTime']}" style="white-space:nowrap;"/>
 									<br />
-									<ice:outputText value="#{msgs['task.nextStartTime']}" />
+									<ice:outputText value="#{msgs['task.nextStartTime']}" style="white-space:nowrap;"/>
 								</ice:panelGroup>
 							</f:facet>
 							<ice:panelGroup>

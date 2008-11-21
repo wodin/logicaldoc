@@ -13,7 +13,7 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
-	styleClass="center" style="width: 80%">
+	>
 	<ice:messages globalOnly="true" />
 	<ice:panelGroup id="list"
 		rendered="#{groupsRecordsManager.selectedPanel=='list'}">
@@ -45,7 +45,7 @@
 				<ice:dataTable id="groupsList"
 					value="#{groupsRecordsManager.groups}" var="group" cellpadding="0"
 					rows="15" width="97%"
-					columnClasses="docNameColumn,docNameColumn,docMenuColumn,docMenuColumn">
+					columnClasses="smallColumn,titleColumn,selectionColumn,selectionColumn">
 
 					<!-- Name -->
 					<ice:column>

@@ -30,7 +30,7 @@
 					<ice:dataTable id="histories"
 						value="#{historyRecordsManager.histories}" var="history"
 						cellpadding="0" width="100%" rows="10"
-						columnClasses="docDateColumn,docDateColumn,titleColumn">
+						columnClasses="dateColumn,dateColumn,titleColumn">
 
 						<!-- date column -->
 						<ice:column>
