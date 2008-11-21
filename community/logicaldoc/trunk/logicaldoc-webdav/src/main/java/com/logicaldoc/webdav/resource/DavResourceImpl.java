@@ -294,9 +294,13 @@ public class DavResourceImpl implements DavResource {
 		properties.add(supportedLock);
 		properties.add(new DefaultDavProperty(DavPropertyName.GETCONTENTLENGTH, this.resource.getContentLength()));
 		
-		// TODO: 
-		String lastModified = IOUtil.getLastModified(modificationTime);
-		properties.add(new DefaultDavProperty(DavPropertyName.GETLASTMODIFIED, lastModified));
+		// Set Dav property LastModified
+		long lastmodTime = IOUtil.UNDEFINED_TIME;
+        if (this.resource.getLastModified() != null) {
+        	lastmodTime = this.resource.getLastModified().getTime();
+        } 
+    	String lastModified = IOUtil.getLastModified(lastmodTime);
+    	properties.add(new DefaultDavProperty(DavPropertyName.GETLASTMODIFIED, lastModified));
 		
 		propsInitialized = true;
 	}

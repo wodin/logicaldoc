@@ -1,6 +1,7 @@
 package com.logicaldoc.webdav.resource.model;
 
 import java.io.InputStream;
+import java.util.Date;
 
 /**
  * 
@@ -17,6 +18,7 @@ public class ResourceImpl implements Resource{
 	private String path;
 	private InputStream is;
 	private long personRequest;
+	private Date lastModified;
 	
 	public Long getContentLength() {
 		return contentLength;
@@ -84,5 +86,13 @@ public class ResourceImpl implements Resource{
 	@Override
 	public void setRequestedPerson(long id) {
 		this.personRequest = id;
+	}
+
+	public Date getLastModified() {
+		return this.lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
 	}
 }
