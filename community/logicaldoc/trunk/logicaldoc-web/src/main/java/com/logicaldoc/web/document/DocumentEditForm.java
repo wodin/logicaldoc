@@ -2,7 +2,6 @@ package com.logicaldoc.web.document;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -126,8 +125,6 @@ public class DocumentEditForm {
 		DocumentTemplate templt = null;
 		if (record != null) {
 			Document doc = record.getDocument();
-			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			dao.initialize(doc);
 			templt = doc.getTemplate();
 			if (templt != null) {
 				template = templt.getId();
