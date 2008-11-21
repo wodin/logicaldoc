@@ -14,4 +14,15 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions" jsfc="ice:panelGroup">
 	<f:loadBundle basename="com.logicaldoc.web.i18n.application" var="msgs" />
+
+	<br />
+	<ice:panelGroup style="text-align: center;" rendered="#{loginForm.notInitialized}">
+		<ice:outputText>The setup of LogicalDOC has NOT been performed.</ice:outputText>
+		<br />
+		<br />
+		<ice:outputText>Please read the installation guide and start the Setup procedure</ice:outputText>
+		<br />
+		<ice:outputLink styleClass="system_link" value="#{facesContext.externalContext.requestContextPath}/setup/">setup</ice:outputLink>
+	</ice:panelGroup>
+
 </jsp:root>
