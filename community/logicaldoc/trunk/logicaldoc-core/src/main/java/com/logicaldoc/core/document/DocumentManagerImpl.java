@@ -534,7 +534,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		int counter = 1;
 		String buf = doc.getTitle();
 		while (documentDAO.findByTitleAndParentFolderId(doc.getFolder().getId(), doc.getTitle()).size() > 0) {
-			doc.setTitle(buf + " (" + (counter++) + ")");
+			doc.setTitle(buf + "(" + (counter++) + ")");
 		}
 	}
 }
