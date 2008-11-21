@@ -1,6 +1,7 @@
 package com.logicaldoc.webdav.resource.model;
 
 import java.io.InputStream;
+import java.util.Date;
 
 /**
  * 
@@ -40,5 +41,9 @@ public interface Resource {
 	public void setRequestedPerson(long id);
 	
 	public long getRequestedPerson();
+
+	public Date getLastModified();
+
+	public void setLastModified(Date lastModified);
 
 }

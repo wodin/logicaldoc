@@ -72,6 +72,7 @@ public class ResourceServiceImpl implements ResourceService {
 		resource.setContentLength(new Long(0));
 		resource.setName(menu.getText());
 		resource.setPath(menu.getPathExtended());
+		resource.setLastModified(menu.getLastModified());
 		resource.isFolder(true);
 		return resource;
 	}
@@ -79,8 +80,9 @@ public class ResourceServiceImpl implements ResourceService {
 	private Resource marshallDocument(Document document) {
 		Resource resource = new ResourceImpl();
 		resource.setID(new Long(document.getId()).toString());
-		resource.setContentLength(document.getFileSize());
 		resource.setName(document.getTitle() + "." + document.getType());
+		resource.setContentLength(document.getFileSize());
+		resource.setLastModified(document.getLastModified());
 		resource.isFolder(false);
 		return resource;
 	}
