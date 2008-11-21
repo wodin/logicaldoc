@@ -205,4 +205,12 @@ public interface DocumentDAO {
 	 * @param computeDeleted If true, even deleted documents are considered
 	 */
 	public long getDocumentCount(boolean computeDeleted);
+	
+	/**
+	 * Finds all documents by the indexed state. Order by ascending lastModifed
+	 * 
+	 * @param indexed the indexed property
+	 * @return Collection of all documents
+	 */
+	public List<Document> findByIndexed(int indexed);
 }

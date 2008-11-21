@@ -103,27 +103,6 @@
 		</property>
 	</bean>
 
-	<!-- Mail sender -->
-	<bean id="EMailSender"
-		class="com.logicaldoc.core.communication.EMailSender" abstract="false"
-		lazy-init="default" autowire="default" dependency-check="default">
-		<property name="host">
-			<value>localhost</value>
-		</property>
-		<property name="port">
-			<value>25</value>
-		</property>
-		<property name="username">
-			<value></value>
-		</property>
-		<property name="password">
-			<value></value>
-		</property>
-		<property name="defaultAddress">
-			<value>logicaldoc@acme.com</value>
-		</property>
-	</bean>
-
 	<!-- DataSource -->
 	<bean id="DataSource"
 		class="org.apache.commons.dbcp.BasicDataSource">

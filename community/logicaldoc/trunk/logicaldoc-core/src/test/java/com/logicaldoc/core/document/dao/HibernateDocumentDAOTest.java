@@ -1,6 +1,7 @@
 package com.logicaldoc.core.document.dao;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.Document;
@@ -95,6 +96,18 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, docs.size());
 	}
 
+	public void testFindIndexed() {
+		List<Document> docs = dao.findByIndexed(1);
+		assertNotNull(docs);
+		assertEquals(1, docs.size());
+		assertEquals(1, docs.get(0).getId());
+
+		docs = dao.findByIndexed(0);
+		assertNotNull(docs);
+		assertEquals(1, docs.size());
+		assertEquals(2, docs.get(0).getId());
+	}
+	
 	public void testFindLastModifiedByUserId() {
 		Collection<Document> coll = dao.findLastModifiedByUserId(1, 10);
 		assertNotNull(coll);
