@@ -666,6 +666,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Collection<Long> getDeletedDocIds() {
 		Collection<Long> coll = new ArrayList<Long>();
@@ -697,6 +698,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		return coll;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public long getTotalSize(boolean computeDeleted) {
 		long size = 0;
@@ -715,7 +717,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				stmt = con.createStatement();
 				rs = stmt.executeQuery(query.toString());
 				while (rs.next()) {
-					size=rs.getLong(1);
+					size = rs.getLong(1);
 				}
 			} finally {
 				if (rs != null)
@@ -732,6 +734,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		return size;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public long getDocumentCount(boolean computeDeleted) {
 		long count = 0;
@@ -750,7 +753,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				stmt = con.createStatement();
 				rs = stmt.executeQuery(query.toString());
 				while (rs.next()) {
-					count=rs.getLong(1);
+					count = rs.getLong(1);
 				}
 			} finally {
 				if (rs != null)
@@ -765,5 +768,24 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				log.error(e.getMessage(), e);
 		}
 		return count;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Document> findByIndexed(int indexed) {
+		List<Document> coll = new ArrayList<Document>();
+
+		try {
+			StringBuffer query = new StringBuffer("from Document _doc where ");
+			query.append("_doc.indexed=" + indexed);
+			query.append(" order by _doc.lastModified asc ");
+
+			coll = (List<Document>) getHibernateTemplate().find(query.toString());
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+
+		return coll;
 	}
 }
