@@ -16,7 +16,7 @@ import com.logicaldoc.core.task.Task;
  * @since 4.0
  */
 public class IndexerTask extends Task {
-	public static final String NAME = "ShareTask";
+	public static final String NAME = "IndexerTask";
 
 	private DocumentManager documentManager;
 
@@ -27,7 +27,7 @@ public class IndexerTask extends Task {
 	private long errors = 0;
 
 	public IndexerTask() {
-		super(NAME); 
+		super(NAME);
 		log = LogFactory.getLog(IndexerTask.class);
 	}
 
@@ -59,9 +59,12 @@ public class IndexerTask extends Task {
 				try {
 					documentDao.initialize(document);
 					documentManager.reindex(document, document.getLanguage());
+					indexed++;
 				} catch (Throwable e) {
 					log.error(e.getMessage(), e);
 					errors++;
+				} finally {
+					next();
 				}
 			}
 		} finally {
