@@ -137,7 +137,7 @@ public class ResourceServiceImpl implements ResourceService {
 		// if this resource request is a folder
 		if (menu != null)
 			return marshallFolder(menu);
-		
+
 		Resource parentMenu = this.getParentResource(currentStablePath);
 		String title = name.substring(0, name.lastIndexOf(".") > 0 ? name.lastIndexOf(".") : name.length());
 		Collection<Document> docs = documentDAO.findByTitleAndParentFolderId(Long.parseLong(parentMenu.getID()), title);
@@ -171,7 +171,7 @@ public class ResourceServiceImpl implements ResourceService {
 			}
 		}
 		resourcePath = resourcePath + "/";
-	
+
 		Menu menu = menuDAO.findFolder(name, resourcePath);
 		return marshallFolder(menu);
 	}
@@ -197,7 +197,7 @@ public class ResourceServiceImpl implements ResourceService {
 		InputStream is = context.getInputStream();
 		try {
 			try {
-				documentManager.create(is, name, parentMenu, user, user.getLanguage());
+				documentManager.create(is, name, parentMenu, user, user.getLanguage(), false);
 			} catch (Exception e) {
 				log.error(e);
 			} finally {
