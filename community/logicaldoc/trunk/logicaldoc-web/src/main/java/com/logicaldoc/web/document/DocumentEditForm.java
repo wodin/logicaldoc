@@ -77,10 +77,20 @@ public class DocumentEditForm {
 
 	private Long template = null;
 
+	private boolean immediateIndexing = false;
+
 	private Collection<Attribute> extendedAttributes = new ArrayList<Attribute>();
 
 	public DocumentEditForm() {
 		reset();
+	}
+
+	public boolean isImmediateIndexing() {
+		return immediateIndexing;
+	}
+
+	public void setImmediateIndexing(boolean immediateIndexing) {
+		this.immediateIndexing = immediateIndexing;
 	}
 
 	public void reset() {
@@ -96,6 +106,7 @@ public class DocumentEditForm {
 		versionDesc = "";
 		filename = "";
 		template = null;
+		immediateIndexing = false;
 		extendedAttributes.clear();
 	}
 
@@ -382,7 +393,8 @@ public class DocumentEditForm {
 				}
 
 				documentManager.create(file, folder, SessionManagement.getUser(), language, title, getSourceDate(),
-						source, sourceAuthor, sourceType, coverage, versionDesc, kwds, template, attrs);
+						source, sourceAuthor, sourceType, coverage, versionDesc, kwds, template, attrs,
+						immediateIndexing);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, "errors.action.savedoc", "errors.action.savedoc");
@@ -479,7 +491,7 @@ public class DocumentEditForm {
 						DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 								DocumentManager.class);
 						documentManager.checkin(document.getId(), new FileInputStream(file), fileName,
-								SessionManagement.getUser(), versionType, versionDesc);
+								SessionManagement.getUser(), versionType, versionDesc, immediateIndexing);
 
 						/* create positive log message */
 						Messages.addLocalizedInfo("msg.action.savedoc");
