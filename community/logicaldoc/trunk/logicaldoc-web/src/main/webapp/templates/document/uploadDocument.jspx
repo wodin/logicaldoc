@@ -42,7 +42,10 @@
 				<ice:selectBooleanCheckbox value="#{inputFile.extractKeywords}"
 					id="keyW" />
 				<ice:outputLabel for="keyW" value=" #{msgs['tags.extract']}" />
-
+				&amp;nbsp;&amp;nbsp;
+				<ice:selectBooleanCheckbox value="#{inputFile.immediateIndexing}"
+					id="indexing" />
+				<ice:outputLabel for="indrxing" value=" #{msgs['indexing.immediate']}" />
 				<br />
 				<br />
 			</ice:panelGroup>

@@ -24,8 +24,7 @@ import com.logicaldoc.web.SessionManagement;
  * demonstration. It is used to store the state of the uploaded file.
  * </p>
  * 
- * @author Marco Meschieri
- * @version $Id: InputFileBean.java,v 1.4 2007/07/16 06:35:17 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class InputFileBean implements Renderable {
@@ -48,6 +47,8 @@ public class InputFileBean implements Renderable {
 	private String contentType = "";
 
 	private boolean extractKeywords = false;
+
+	private boolean immediateIndexing = false;
 
 	private InputFile inputFile = null;
 
@@ -76,11 +77,11 @@ public class InputFileBean implements Renderable {
 	}
 
 	public void setPercent(int percent) {
-		if(percent<this.percent)
-			 return;
+		if (percent < this.percent)
+			return;
 		this.percent = percent;
 		if (percent == 100)
-			ready=true;
+			ready = true;
 	}
 
 	public int getPercent() {
@@ -105,8 +106,8 @@ public class InputFileBean implements Renderable {
 
 	private void setReady(boolean ready) {
 		this.ready = ready;
-		if(ready)
-			this.percent=100;
+		if (ready)
+			this.percent = 100;
 	}
 
 	public void action(ActionEvent event) {
@@ -207,6 +208,7 @@ public class InputFileBean implements Renderable {
 		this.fileName = "";
 		setPercent(-1);
 		setReady(false);
+		setImmediateIndexing(false);
 	}
 
 	public String getVersionType() {
@@ -231,5 +233,13 @@ public class InputFileBean implements Renderable {
 
 	public void setInputFile(InputFile inputFile) {
 		this.inputFile = inputFile;
+	}
+
+	public boolean isImmediateIndexing() {
+		return immediateIndexing;
+	}
+
+	public void setImmediateIndexing(boolean immediateIndexing) {
+		this.immediateIndexing = immediateIndexing;
 	}
 }
