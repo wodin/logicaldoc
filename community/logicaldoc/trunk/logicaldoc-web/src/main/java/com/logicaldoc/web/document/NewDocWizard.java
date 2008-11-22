@@ -159,7 +159,7 @@ public class NewDocWizard {
 						docForm.setKeywords(analyzer.getTermsAsString(3, content.toString(), documentLanguage));
 					}
 				}
-
+				docForm.setImmediateIndexing(inputFile.isImmediateIndexing());
 				docForm.setFilename(filename);
 			} catch (Exception e) {
 				String message = Messages.getMessage("errors.action.savedoc");
