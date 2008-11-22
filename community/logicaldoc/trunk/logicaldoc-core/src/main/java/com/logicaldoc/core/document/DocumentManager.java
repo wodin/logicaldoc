@@ -244,8 +244,7 @@ public interface DocumentManager {
 	 * @throws Exception
 	 */
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
-			String sourceType, String coverage, String language, Set<String> keywords, boolean immediateIndexing)
-			throws Exception;
+			String sourceType, String coverage, String language, Set<String> keywords) throws Exception;
 
 	/**
 	 * Retrieves the full-text document content
@@ -269,8 +268,7 @@ public interface DocumentManager {
 	 * 
 	 * @param doc The document to move
 	 * @param folder The target folder
-	 * @param immediateIndexing if true the document is immediately indexed
 	 * @throws Exception
 	 */
-	public void moveToFolder(Document doc, Menu folder, boolean immediateIndexing) throws Exception;
+	public void moveToFolder(Document doc, Menu folder) throws Exception;
 }

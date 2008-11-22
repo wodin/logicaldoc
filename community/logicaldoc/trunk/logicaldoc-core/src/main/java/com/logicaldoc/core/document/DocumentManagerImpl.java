@@ -286,7 +286,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
-			String sourceType, String coverage, String language, Set<String> keywords, boolean immediateIndexing)
+			String sourceType, String coverage, String language, Set<String> keywords)
 			throws Exception {
 		try {
 			doc.setTitle(title);
@@ -298,7 +298,6 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setSourceDate(null);
 			doc.setSourceType(sourceType);
 			doc.setCoverage(coverage);
-			doc.setIndexed(0);
 
 			// Intercept language changes
 			String oldLang = doc.getLanguage();
@@ -318,7 +317,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			historyDAO.store(history);
 
 			// Launch document re-indexing
-			if (immediateIndexing)
+			if (doc.getIndexed()==1)
 				reindex(doc, oldLang);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -378,7 +377,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void moveToFolder(Document doc, Menu folder, boolean immediateIndexing) throws Exception {
+	public void moveToFolder(Document doc, Menu folder) throws Exception {
 		if (folder.equals(doc.getFolder()))
 			return;
 
@@ -388,7 +387,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		documentDAO.initialize(doc);
 		doc.setFolder(folder);
-		doc.setIndexed(0);
 		setUniqueTitle(doc);
 		documentDAO.store(doc);
 
@@ -399,18 +397,17 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		FileUtils.moveDirectory(originalDocDir, newDocDir);
 
-		if (immediateIndexing) {
+		if (doc.getIndexed() == 1) {
 			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 			org.apache.lucene.document.Document indexDocument = null;
 			indexDocument = indexer.getDocument(String.valueOf(doc.getId()), doc.getLanguage());
-			indexer.deleteDocument(String.valueOf(doc.getId()), doc.getLanguage());
-			indexDocument.removeField(LuceneDocument.FIELD_PATH);
-			indexDocument.add(new Field(LuceneDocument.FIELD_PATH, doc.getPath(), Field.Store.YES,
-					Field.Index.UN_TOKENIZED));
-			indexer.addDocument(indexDocument, doc.getLanguage());
-
-			doc.setIndexed(1);
-			documentDAO.store(doc);
+			if (indexDocument != null) {
+				indexer.deleteDocument(String.valueOf(doc.getId()), doc.getLanguage());
+				indexDocument.removeField(LuceneDocument.FIELD_PATH);
+				indexDocument.add(new Field(LuceneDocument.FIELD_PATH, doc.getPath(), Field.Store.YES,
+						Field.Index.UN_TOKENIZED));
+				indexer.addDocument(indexDocument, doc.getLanguage());
+			}
 		}
 	}
 
