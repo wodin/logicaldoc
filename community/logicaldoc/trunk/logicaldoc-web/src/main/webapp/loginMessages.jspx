@@ -2,8 +2,7 @@
 <!-- 
  Login messages page
   
- @author Marco Meschieri
- @version $Id: login.jspx,v 1.11 2007/10/16 16:12:10 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -17,12 +16,7 @@
 
 	<br />
 	<ice:panelGroup style="text-align: center;" rendered="#{loginForm.notInitialized}">
-		<ice:outputText>The setup of LogicalDOC has NOT been performed.</ice:outputText>
-		<br />
-		<br />
-		<ice:outputText>Please read the installation guide and start the Setup procedure</ice:outputText>
-		<br />
+		<ice:outputText>#{msgs['setup.reminder']}</ice:outputText>&amp;nbsp;
 		<ice:outputLink styleClass="system_link" value="#{facesContext.externalContext.requestContextPath}/setup/">setup</ice:outputLink>
 	</ice:panelGroup>
-
 </jsp:root>
