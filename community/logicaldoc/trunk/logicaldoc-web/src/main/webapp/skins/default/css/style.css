@@ -145,7 +145,6 @@ em { /*font-size:14px;*/
 	top: 0;
 }
 
-
 .navConnectionStatus {
 	position: absolute;
 	top: 60px;
@@ -205,7 +204,8 @@ em { /*font-size:14px;*/
 	width: 100%; /*table-layout: fixed;*/
 }
 
-.formBorderHighlight,.treeNodeControlButtonsBorder,.effectsControlsBorder{
+.formBorderHighlight,.treeNodeControlButtonsBorder,.effectsControlsBorder
+	{
 	vertical-align: top;
 	border: 1px solid #CCCCCC;
 	padding: 10px;
@@ -271,8 +271,8 @@ em { /*font-size:14px;*/
 	
 }
 
-.mainWindow .icePnlStk {
-	/*width: 100%;*/
+.mainWindow .icePnlStk { /*width: 100%;*/
+	
 }
 
 .footer {
@@ -496,7 +496,6 @@ em { /*font-size:14px;*/
 	vertical-align: middle;
 }
 
-
 .dragDropImage {
 	
 }
@@ -511,7 +510,7 @@ em { /*font-size:14px;*/
 	height: 38px;
 }
 
-.titleColumn,.smallColumn,.dateColumn,.numberColumn,.selectionColumn{
+.titleColumn,.smallColumn,.dateColumn,.numberColumn,.selectionColumn {
 	white-space: nowrap;
 	color: #000000;
 	padding-left: 5px;
@@ -524,15 +523,15 @@ em { /*font-size:14px;*/
 	text-align: left;
 }
 
-.titleColumn{
-	width:100%;
+.titleColumn {
+	width: 100%;
 }
 
 .selectionColumn {
 	width: 15px;
 }
 
-.smallColumn{
+.smallColumn {
 	width: 100px;
 }
 
@@ -1096,6 +1095,11 @@ em { /*font-size:14px;*/
 	margin-right: auto;
 }
 
+.loginMessage {
+	font: bold;
+	color: red;
+}
+
 .loginStatus {
 	float: right;
 }
@@ -1595,7 +1599,8 @@ em { /*font-size:14px;*/
 
 /* Used to center text or columns */
 .center {
-	margin:0 auto; text-align:center;
+	margin: 0 auto;
+	text-align: center;
 }
 
 /* Used to avoid multiple lines */
