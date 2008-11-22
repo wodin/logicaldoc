@@ -15,8 +15,8 @@
 	<f:loadBundle basename="com.logicaldoc.web.i18n.application" var="msgs" />
 
 	<br />
-	<ice:panelGroup style="text-align: center;" rendered="#{loginForm.notInitialized}">
-		<ice:outputText>#{msgs['setup.reminder']}</ice:outputText>&amp;nbsp;
+	<ice:panelGroup style="center" rendered="#{loginForm.notInitialized}">
+		<ice:outputText styleClass="loginMessage">#{msgs['setup.reminder']}</ice:outputText>&amp;nbsp;
 		<ice:outputLink styleClass="system_link" value="#{facesContext.externalContext.requestContextPath}/setup/">setup</ice:outputLink>
 	</ice:panelGroup>
 </jsp:root>
