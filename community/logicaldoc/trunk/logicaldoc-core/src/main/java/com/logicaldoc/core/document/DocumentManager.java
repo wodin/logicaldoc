@@ -13,8 +13,7 @@ import com.logicaldoc.core.security.User;
 /**
  * A general manager for documents handling issues
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.5
  */
 public interface DocumentManager {
@@ -29,10 +28,11 @@ public interface DocumentManager {
 	 * @param versionType specifies if this is a new release, a subversion or
 	 *        the old version
 	 * @param versionDesc a change description
+	 * @param immediateIndexing if true the document is immediately indexed
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
 	public void checkin(long docId, InputStream fileInputStream, String filename, User user,
-			Version.VERSION_TYPE versionType, String versionDesc) throws Exception;
+			Version.VERSION_TYPE versionType, String versionDesc, boolean immediateIndexing) throws Exception;
 
 	/**
 	 * Checks in the given document
@@ -44,10 +44,11 @@ public interface DocumentManager {
 	 * @param versionType specifies if this is a new release, a subversion or
 	 *        the old version
 	 * @param versionDesc a change description
+	 * @param immediateIndexing if true the document is immediately indexed
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	void checkin(long docId, File file, String filename, User user, VERSION_TYPE versionType, String versionDesc)
-			throws Exception;
+	void checkin(long docId, File file, String filename, User user, VERSION_TYPE versionType, String versionDesc,
+			boolean immediateIndexing) throws Exception;
 
 	/**
 	 * Checks out the given document
@@ -65,10 +66,12 @@ public interface DocumentManager {
 	 * @param folder the parent folder
 	 * @param user the current user
 	 * @param language the document's language
+	 * @param immediateIndexing if true the document is immediately indexed
 	 * @return The newly created document
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public Document create(File file, Menu folder, User user, String language) throws Exception;
+	public Document create(File file, Menu folder, User user, String language, boolean immediateIndexing)
+			throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -86,12 +89,13 @@ public interface DocumentManager {
 	 * @param language
 	 * @param versionDesc
 	 * @param keywords
+	 * @param immediateIndexing
 	 * @return The created document
 	 * @throws Exception
 	 */
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> keywords) throws Exception;
+			Set<String> keywords, boolean immediateIndexing) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -111,12 +115,14 @@ public interface DocumentManager {
 	 * @param keywords
 	 * @param templateId
 	 * @param extendedAttributes
+	 * @param immediateIndexing if true the document is immediately indexed
 	 * @return The created document
 	 * @throws Exception
 	 */
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes) throws Exception;
+			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, boolean immediateIndexing)
+			throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -137,14 +143,15 @@ public interface DocumentManager {
 	 * @param keywords
 	 * @param templateId
 	 * @param extendedAttributes
+	 * @param immediateIndexing if true the document is immediately indexed
 	 * @return The created document
 	 * @throws Exception
 	 */
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes)
-			throws Exception;
-	
+			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
+			boolean immediateIndexing) throws Exception;
+
 	/**
 	 * Creates a new Document. Saves the information provided. That also
 	 * includes updating the search index for example.
@@ -162,13 +169,29 @@ public interface DocumentManager {
 	 * @param coverage
 	 * @param versionDesc
 	 * @param keywords
+	 * @param immediateIndexing if true the document is immediately indexed
 	 * @return The created document
 	 * @throws Exception
 	 */
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> keywords)
-			throws Exception;
+			String versionDesc, Set<String> keywords, boolean immediateIndexing) throws Exception;
+
+	/**
+	 * Creates a new Document. Saves the information provided. That also
+	 * includes updating the search index for example.
+	 * 
+	 * @param content
+	 * @param filename
+	 * @param folder
+	 * @param user
+	 * @param language
+	 * @param immediateIndexing if true the document is immediately indexed
+	 * @return
+	 * @throws Exception
+	 */
+	public Document create(InputStream content, String filename, Menu folder, User user, String language,
+			boolean immediateIndexing) throws Exception;
 
 	/**
 	 * Obtains the document's file
@@ -205,7 +228,7 @@ public interface DocumentManager {
 	public void reindex(Document doc, String originalLanguage) throws Exception;
 
 	/**
-	 * Updates an existing document and reindex it
+	 * Updates an existing document and marks it to be re-indexed
 	 * 
 	 * @param doc The document to be updated
 	 * @param user
@@ -217,10 +240,12 @@ public interface DocumentManager {
 	 * @param coverage
 	 * @param language
 	 * @param keywords
+	 * @param immediateIndexing If true the document is immediately indexed
 	 * @throws Exception
 	 */
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
-			String sourceType, String coverage, String language, Set<String> keywords) throws Exception;
+			String sourceType, String coverage, String language, Set<String> keywords, boolean immediateIndexing)
+			throws Exception;
 
 	/**
 	 * Retrieves the full-text document content
@@ -244,22 +269,8 @@ public interface DocumentManager {
 	 * 
 	 * @param doc The document to move
 	 * @param folder The target folder
+	 * @param immediateIndexing if true the document is immediately indexed
 	 * @throws Exception
 	 */
-	public void moveToFolder(Document doc, Menu folder) throws Exception;
-
-	/**
-	 * Creates a new Document. Saves the information provided. That also
-	 * includes updating the search index for example.
-	 * 
-	 * @param content
-	 * @param filename
-	 * @param folder
-	 * @param user
-	 * @param language
-	 * @return
-	 * @throws Exception
-	 */
-	public Document create(InputStream content, String filename, Menu folder, User user, String language)
-			throws Exception;
+	public void moveToFolder(Document doc, Menu folder, boolean immediateIndexing) throws Exception;
 }

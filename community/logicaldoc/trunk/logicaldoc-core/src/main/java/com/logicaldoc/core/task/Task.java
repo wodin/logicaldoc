@@ -12,8 +12,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * A task is a long running sequence of operations
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.5.0
  */
 public abstract class Task implements Runnable {
