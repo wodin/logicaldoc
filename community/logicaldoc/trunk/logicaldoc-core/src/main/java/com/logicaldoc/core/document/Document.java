@@ -65,7 +65,7 @@ public class Document extends ExtensibleObject {
 
 	private String fileName;
 
-	private int indexed = 1;
+	private int indexed = 0;
 
 	private Set<String> keywords = new HashSet<String>();
 

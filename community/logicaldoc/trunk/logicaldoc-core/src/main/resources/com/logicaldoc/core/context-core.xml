@@ -390,9 +390,40 @@
 		class="org.springframework.scheduling.quartz.CronTriggerBean"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
-		<property name="jobDetail" ref="TagCloudGeneratorJob" />
+		<property name="jobDetail" ref="IndexerTaskJob" />
 		<property name="cronExpression">
-			<value>${schedule.cron.TagCloudGenerator}</value>
+			<value>${schedule.cron.IndexerTask}</value>
+		</property>
+	</bean>
+	
+	<bean id="IndexerTask"
+		class="com.logicaldoc.core.searchengine.IndexerTask">
+		<property name="documentDao">
+			<ref bean="DocumentDAO" />
+		</property>
+		<property name="documentManager">
+			<ref bean="DocumentManager" />
+		</property>
+	</bean>
+
+	<bean id="IndexerTaskJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="IndexerTask" />
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="IndexerTaskTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="jobDetail" ref="IndexerTaskJob" />
+		<property name="cronExpression">
+			<value>${schedule.cron.IndexerTask}</value>
 		</property>
 	</bean>
 </beans>

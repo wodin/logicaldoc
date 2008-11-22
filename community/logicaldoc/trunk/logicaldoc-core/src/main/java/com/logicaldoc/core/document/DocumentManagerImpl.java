@@ -70,11 +70,11 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void checkin(long docId, File file, String filename, User user, VERSION_TYPE versionType, String versionDesc)
-			throws Exception {
+	public void checkin(long docId, File file, String filename, User user, VERSION_TYPE versionType,
+			String versionDesc, boolean immediateIndexing) throws Exception {
 		FileInputStream is = new FileInputStream(file);
 		try {
-			checkin(docId, is, filename, user, versionType, versionDesc);
+			checkin(docId, is, filename, user, versionType, versionDesc, immediateIndexing);
 		} finally {
 			is.close();
 		}
@@ -82,9 +82,13 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void checkin(long docId, InputStream fileInputStream, String filename, User user, VERSION_TYPE versionType,
-			String versionDesc) throws Exception {
+			String versionDesc, boolean immediateIndexing) throws Exception {
 		// identify the document and menu
 		Document document = documentDAO.findById(docId);
+		documentDAO.initialize(document);
+		document.setIndexed(0);
+		documentDAO.store(document);
+
 		Menu folder = document.getFolder();
 
 		// create some strings containing paths
@@ -117,7 +121,8 @@ public class DocumentManagerImpl implements DocumentManager {
 		createHistoryEntry(docId, user.getUserName(), History.CHECKIN);
 
 		// create search index entry
-		createIndexEntry(document, folder.getId(), filename, completeDocPath);
+		if (immediateIndexing)
+			createIndexEntry(document, folder.getId(), filename, completeDocPath);
 
 		// store the document in the repository (on the file system)
 		store(document, fileInputStream, filename, newVersion);
@@ -145,33 +150,35 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(File file, Menu folder, User user, String language) throws Exception {
-		return create(file, folder, user, language, "", null, "", "", "", "", "", null);
+	public Document create(File file, Menu folder, User user, String language, boolean immediateIndexing)
+			throws Exception {
+		return create(file, folder, user, language, "", null, "", "", "", "", "", null, immediateIndexing);
 	}
 
 	@Override
-	public Document create(InputStream content, String filename, Menu folder, User user, String language)
-			throws Exception {
+	public Document create(InputStream content, String filename, Menu folder, User user, String language,
+			boolean immediateIndexing) throws Exception {
 		String title = filename;
 		if (StringUtils.isNotEmpty(filename) && filename.lastIndexOf(".") > 0)
 			title = filename.substring(0, filename.lastIndexOf("."));
-		return create(content, filename, folder, user, language, title, null, "", "", "", "", "", null);
+		return create(content, filename, folder, user, language, title, null, "", "", "", "", "", null,
+				immediateIndexing);
 	}
 
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> keywords) throws Exception {
+			String versionDesc, Set<String> keywords, boolean immediateIndexing) throws Exception {
 		return create(content, filename, folder, user, language, title, sourceDate, source, sourceAuthor, sourceType,
-				coverage, versionDesc, keywords, null, null);
+				coverage, versionDesc, keywords, null, null, immediateIndexing);
 	}
 
 	@Override
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> keywords) throws Exception {
+			Set<String> keywords, boolean immediateIndexing) throws Exception {
 		return create(file, folder, user, language, title, sourceDate, source, sourceAuthor, sourceType, coverage,
-				versionDesc, keywords, null, null);
+				versionDesc, keywords, null, null, immediateIndexing);
 	}
 
 	private void store(Document doc, InputStream content, String filename, String version) throws IOException {
@@ -207,6 +214,9 @@ public class DocumentManagerImpl implements DocumentManager {
 			if (doc != null) {
 				indexer.deleteDocument(String.valueOf(docId), doc.getLanguage());
 			}
+
+			doc.setIndexed(0);
+			documentDAO.store(doc);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -263,16 +273,21 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// Remove the document from the index
 		indexer.deleteDocument(String.valueOf(doc.getId()), originalLanguage);
+		doc.setIndexed(0);
+		documentDAO.store(doc);
 
 		// Add the document to the index (lucene 2.x doesn't support the update
 		// operation)
 		File file = getDocumentFile(doc);
 		indexer.addFile(file, doc, content, lang);
+		doc.setIndexed(1);
+		documentDAO.store(doc);
 	}
 
 	@Override
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
-			String sourceType, String coverage, String language, Set<String> keywords) throws Exception {
+			String sourceType, String coverage, String language, Set<String> keywords, boolean immediateIndexing)
+			throws Exception {
 		try {
 			doc.setTitle(title);
 			doc.setSource(source);
@@ -283,6 +298,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setSourceDate(null);
 			doc.setSourceType(sourceType);
 			doc.setCoverage(coverage);
+			doc.setIndexed(0);
 
 			// Intercept language changes
 			String oldLang = doc.getLanguage();
@@ -302,7 +318,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			historyDAO.store(history);
 
 			// Launch document re-indexing
-			reindex(doc, oldLang);
+			if (immediateIndexing)
+				reindex(doc, oldLang);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -335,6 +352,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	private void createIndexEntry(Document document, long docId, String filename, String path) throws Exception {
 		indexer.deleteDocument(String.valueOf(docId), document.getLanguage());
 		indexer.addDirectory(new File(path + filename), document);
+		document.setIndexed(1);
+		documentDAO.store(document);
 	}
 
 	/** Creates history entry saying username has checked in document (id) */
@@ -359,7 +378,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void moveToFolder(Document doc, Menu folder) throws Exception {
+	public void moveToFolder(Document doc, Menu folder, boolean immediateIndexing) throws Exception {
 		if (folder.equals(doc.getFolder()))
 			return;
 
@@ -369,6 +388,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		documentDAO.initialize(doc);
 		doc.setFolder(folder);
+		doc.setIndexed(0);
 		setUniqueTitle(doc);
 		documentDAO.store(doc);
 
@@ -379,14 +399,19 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		FileUtils.moveDirectory(originalDocDir, newDocDir);
 
-		Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
-		org.apache.lucene.document.Document indexDocument = null;
-		indexDocument = indexer.getDocument(String.valueOf(doc.getId()), doc.getLanguage());
-		indexer.deleteDocument(String.valueOf(doc.getId()), doc.getLanguage());
-		indexDocument.removeField(LuceneDocument.FIELD_PATH);
-		indexDocument
-				.add(new Field(LuceneDocument.FIELD_PATH, doc.getPath(), Field.Store.YES, Field.Index.UN_TOKENIZED));
-		indexer.addDocument(indexDocument, doc.getLanguage());
+		if (immediateIndexing) {
+			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
+			org.apache.lucene.document.Document indexDocument = null;
+			indexDocument = indexer.getDocument(String.valueOf(doc.getId()), doc.getLanguage());
+			indexer.deleteDocument(String.valueOf(doc.getId()), doc.getLanguage());
+			indexDocument.removeField(LuceneDocument.FIELD_PATH);
+			indexDocument.add(new Field(LuceneDocument.FIELD_PATH, doc.getPath(), Field.Store.YES,
+					Field.Index.UN_TOKENIZED));
+			indexer.addDocument(indexDocument, doc.getLanguage());
+
+			doc.setIndexed(1);
+			documentDAO.store(doc);
+		}
 	}
 
 	/**
@@ -401,15 +426,16 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes) throws Exception {
-		
+			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, boolean immediateIndexing)
+			throws Exception {
+
 		Locale locale = new Locale(language);
 		Parser parser = ParserFactory.getParser(file, locale);
 		String filename = file.getName();
 		String _title = title;
 		String _author = sourceAuthor;
 		Set<String> _kwds = keywords;
-		
+
 		if (StringUtils.isEmpty(title)) {
 			String fallbackTitle = filename;
 			int lastDotIndex = filename.lastIndexOf(".");
@@ -417,7 +443,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				fallbackTitle = filename.substring(0, lastDotIndex);
 			}
 			_title = fallbackTitle;
-	    } 
+		}
 
 		if (parser != null) {
 			if (StringUtils.isEmpty(sourceAuthor))
@@ -428,12 +454,12 @@ public class DocumentManagerImpl implements DocumentManager {
 					_kwds = new HashSet<String>();
 				_kwds = documentDAO.toKeywords(keys);
 			}
-		} 
+		}
 
 		InputStream is = new FileInputStream(file);
 		try {
 			return create(is, file.getName(), folder, user, language, _title, sourceDate, source, _author, sourceType,
-					coverage, versionDesc, _kwds, templateId, extendedAttributes);
+					coverage, versionDesc, _kwds, templateId, extendedAttributes, immediateIndexing);
 		} finally {
 			is.close();
 		}
@@ -442,8 +468,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes)
-			throws Exception {
+			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
+			boolean immediateIndexing) throws Exception {
 		try {
 			Document doc = new Document();
 			Version vers = new Version();
@@ -507,10 +533,13 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			createHistoryEntry(doc.getId(), user.getUserName(), History.STORED);
 
-			/* create search index entry */
-			String lang = doc.getLanguage();
 			File file = new File(new StringBuilder(path).append("/").append(doc.getFileName()).toString());
-			indexer.addFile(file, doc, getDocumentContent(doc), lang);
+			if (immediateIndexing) {
+				/* create search index entry */
+				String lang = doc.getLanguage();
+				indexer.addFile(file, doc, getDocumentContent(doc), lang);
+				doc.setIndexed(1);
+			}
 
 			doc.setFileSize(file.length());
 			documentDAO.store(doc);

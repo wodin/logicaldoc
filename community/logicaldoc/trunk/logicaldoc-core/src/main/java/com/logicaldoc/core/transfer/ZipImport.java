@@ -10,7 +10,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
@@ -25,14 +24,15 @@ import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.ZipUtil;
 
 /**
- * Created on 16.12.2004
+ * This is an import utilities that imports documents stored in a zip archive.
+ * All folders in the zip will be replicated.
  * 
  * @author Sebastian Stein
  * @author Matteo Caruso - Logical Objects
  */
 public class ZipImport {
 
-	private String language="";
+	private String language = "";
 
 	private User user;
 
@@ -40,9 +40,23 @@ public class ZipImport {
 
 	private boolean extractKeywords = false;
 
+	private boolean immediateIndexing = false;
+
 	private int keywordsNumber = 3;
-	
+
 	public ZipImport() {
+	}
+
+	public boolean isImmediateIndexing() {
+		return immediateIndexing;
+	}
+
+	/**
+	 * This flag controls if newly imported documents must be immediately
+	 * indexed
+	 */
+	public void setImmediateIndexing(boolean immediateIndexing) {
+		this.immediateIndexing = immediateIndexing;
 	}
 
 	/**
@@ -99,7 +113,7 @@ public class ZipImport {
 
 		try {
 			FileUtils.deleteDirectory(dir);
-		} catch (IOException e) {			
+		} catch (IOException e) {
 		}
 	}
 
@@ -130,10 +144,7 @@ public class ZipImport {
 					addEntry(files[i], menu);
 				}
 			} else {
-				// creates a document
-				DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-				Document document = docManager.create(file, parent, user, language);
-
+				Set<String> keywords = null;
 				if (extractKeywords) {
 					AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
 
@@ -144,12 +155,15 @@ public class ZipImport {
 					parser.parse(file);
 					String words = parser.getKeywords();
 					if (StringUtils.isEmpty(words)) {
-						words = analyzer.getTermsAsString(keywordsNumber, parser.getContent(), document.getLanguage());
+						words = analyzer.getTermsAsString(keywordsNumber, parser.getContent(), language);
 					}
-					Set<String> keywords = ddao.toKeywords(words);
-					document.setKeywords(keywords);
-					ddao.store(document);
+					keywords = ddao.toKeywords(words);
 				}
+
+				// creates a document
+				DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+				docManager.create(file, parent, user, language, "", null, "", "", "", "", "", keywords,
+						immediateIndexing);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
