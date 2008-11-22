@@ -472,9 +472,9 @@ public class EmailCrawler extends Task {
 
 			doc = manager.create(file, folder, user, account.getLanguage(), email.getSubject(), srcDate, account
 					.getMailAddress(), srcAuthor, "", "", "", null, template != null ? template.getId() : null,
-					attributes);
+					attributes,false);
 		} else {
-			doc = manager.create(file, folder, user, account.getLanguage());
+			doc = manager.create(file, folder, user, account.getLanguage(),false);
 		}
 
 		return doc;
