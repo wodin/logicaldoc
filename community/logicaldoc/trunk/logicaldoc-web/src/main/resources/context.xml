@@ -50,9 +50,9 @@
 		lazy-init="false">
 		<property name="paths">
 			<props>
-				<prop key="css">${style.defaultSkin}/css</prop>
-				<prop key="images">${style.defaultSkin}/images</prop>
-				<prop key="help">${style.defaultSkin}/help</prop>
+				<prop key="css">/skins/${style.defaultSkin}/css</prop>
+				<prop key="images">/skins/${style.defaultSkin}/images</prop>
+				<prop key="help">/skins/${style.defaultSkin}/help</prop>
 			</props>
 		</property>
 	</bean>
