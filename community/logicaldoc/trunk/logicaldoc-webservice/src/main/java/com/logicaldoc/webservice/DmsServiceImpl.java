@@ -92,7 +92,7 @@ public class DmsServiceImpl implements DmsService {
 				// something goes wrong
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				documentManager.checkin(document.getId(), stream, filename, user, versionType, description);
+				documentManager.checkin(document.getId(), stream, filename, user, versionType, description, false);
 
 				/* create positive log message */
 				log.info("Document " + id + " checked in");
@@ -193,7 +193,8 @@ public class DmsServiceImpl implements DmsService {
 
 		try {
 			Document doc = documentManager.create(stream, filename, folder, user, language, null, date, source, author,
-					sourceType, coverage, versionDesc, kwds, template != null ? template.getId() : null, attributes);
+					sourceType, coverage, versionDesc, kwds, template != null ? template.getId() : null, attributes,
+					false);
 			return String.valueOf(doc.getId());
 		} catch (Exception e) {
 			return "error";
