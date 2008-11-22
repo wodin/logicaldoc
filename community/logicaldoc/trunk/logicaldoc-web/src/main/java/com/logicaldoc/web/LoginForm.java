@@ -25,8 +25,7 @@ import com.logicaldoc.web.util.Constants;
 /**
  * Executes user login
  * 
- * @author Marco Meschieri
- * @version $Id: LoginForm.java,v 1.9 2007/10/16 16:10:34 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0.0.0
  */
 public class LoginForm {

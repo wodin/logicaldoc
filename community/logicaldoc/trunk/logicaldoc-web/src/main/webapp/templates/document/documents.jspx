@@ -84,7 +84,7 @@
 					</ice:outputLink>
 					<ice:outputLink
 						value="download?docId=#{documentRecord.docId}&amp;downloadText=true"
-						target="_blank" title="txt">
+						target="_blank" title="txt" rendered="#{documentRecord.document.indexed==1}">
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
 							value="#{styleBean.imagesPath}/txt-icon.png" alt="txt" />
 					</ice:outputLink>
