@@ -669,10 +669,10 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public Collection<Long> getDeletedDocIds() {
-		Collection<Long> coll = new ArrayList<Long>();
+	public List<Long> findDeletedDocIds() {
+		List<Long> coll = new ArrayList<Long>();
 		try {
-			String query = "select A.ld_id from ld_document A where A.ld_deleted=1";
+			String query = "select A.ld_id from ld_document A where A.ld_deleted=1 order by A.ld_lastmodified desc";
 			Connection con = null;
 			Statement stmt = null;
 			ResultSet rs = null;
@@ -683,6 +683,41 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				rs = stmt.executeQuery(query.toString());
 				while (rs.next()) {
 					coll.add(rs.getLong(1));
+				}
+			} finally {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return coll;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public List<Document> findDeletedDocs() {
+		List<Document> coll = new ArrayList<Document>();
+		try {
+			String query = "select A.ld_id, A.ld_lastModified, A.ld_title from ld_document A where A.ld_deleted=1 order by A.ld_lastmodified desc";
+			Connection con = null;
+			Statement stmt = null;
+			ResultSet rs = null;
+			try {
+				con = getSession().connection();
+				stmt = con.createStatement();
+				rs = stmt.executeQuery(query.toString());
+				while (rs.next()) {
+					Document doc = new Document();
+					doc.setId(rs.getLong(1));
+					doc.setLastModified(rs.getDate(2));
+					doc.setTitle(rs.getString(3));
+					coll.add(doc);
 				}
 			} finally {
 				if (rs != null)
