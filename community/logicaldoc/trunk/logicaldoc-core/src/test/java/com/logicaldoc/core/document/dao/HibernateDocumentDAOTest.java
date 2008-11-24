@@ -146,11 +146,11 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		version.setComment("comment");
 		doc.addVersion(version);
 		assertTrue(dao.store(doc));
-		assertEquals(4, doc.getId());
-		doc = dao.findById(4);
+		assertEquals(5, doc.getId());
+		doc = dao.findById(5);
 		assertNotNull(doc);
 		dao.initialize(doc);
-		assertEquals(4, doc.getId());
+		assertEquals(5, doc.getId());
 		assertEquals(3, doc.getKeywords().size());
 		assertTrue(doc.getKeywords().contains("pluto"));
 		assertTrue(doc.getKeywords().contains("123456789123456789123456789"));
@@ -159,7 +159,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals("val 1", doc.getValue("att_1"));
 
 		// Try to change the version comment
-		doc = dao.findById(4);
+		doc = dao.findById(5);
 		dao.initialize(doc);
 		version = doc.getVersion("1.0");
 		version.setComment("xxxx");
@@ -167,7 +167,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.clearVersions();
 		doc.addVersion(version);
 		dao.store(doc);
-		doc = dao.findById(4);
+		doc = dao.findById(5);
 		dao.initialize(doc);
 		version = doc.getVersion("1.0");
 		assertEquals("xxxx", version.getComment());
@@ -264,17 +264,26 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testGetDeletedDocIds() {
 		Collection<Long> coll = dao.getDeletedDocIds();
 		assertNotNull(coll);
-		assertEquals(1, coll.size());
-		assertEquals(new Long(3), coll.iterator().next());
+		assertEquals(2, coll.size());
+		assertTrue(coll.contains(new Long(3)));
+		assertTrue(coll.contains(new Long(4)));
 	}
 
 	public void testGetTotalSize() {
-		assertEquals(246046L, dao.getTotalSize(true));
+		assertEquals(368391L, dao.getTotalSize(true));
 		assertEquals(123701L, dao.getTotalSize(false));
 	}
 
 	public void testGetDocumentCount() {
-		assertEquals(3L, dao.getDocumentCount(true));
+		assertEquals(4L, dao.getDocumentCount(true));
 		assertEquals(2L, dao.getDocumentCount(false));
+	}
+	
+	public void testRestore() {
+		assertNull(dao.findById(4));
+		dao.restore(4);
+		assertNotNull(dao.findById(4));
+		assertNotNull(menuDao.findById(1100));
+		assertNotNull(menuDao.findById(1000));
 	}
 }

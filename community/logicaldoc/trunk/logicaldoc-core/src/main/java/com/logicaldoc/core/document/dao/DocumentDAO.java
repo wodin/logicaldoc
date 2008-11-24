@@ -198,14 +198,14 @@ public interface DocumentDAO {
 	 * Gets the collection of deleted document ids
 	 */
 	public Collection<Long> getDeletedDocIds();
-	
+
 	/**
 	 * Counts the number of documents
 	 * 
 	 * @param computeDeleted If true, even deleted documents are considered
 	 */
 	public long getDocumentCount(boolean computeDeleted);
-	
+
 	/**
 	 * Finds all documents by the indexed state. Order by ascending lastModifed
 	 * 
@@ -213,4 +213,11 @@ public interface DocumentDAO {
 	 * @return Collection of all documents
 	 */
 	public List<Document> findByIndexed(int indexed);
+
+	/**
+	 * Restores a previously deleted document
+	 * 
+	 * @param docId Id of the document to be restored
+	 */
+	public void restore(long docId);
 }

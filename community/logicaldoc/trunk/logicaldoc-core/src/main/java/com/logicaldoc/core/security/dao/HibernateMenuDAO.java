@@ -1,6 +1,7 @@
 package com.logicaldoc.core.security.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -71,7 +72,6 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		try {
 			Menu menu = findById(menuId);
 			if (menu != null) {
-				menu.getMenuGroups().clear();
 				menu.setDeleted(1);
 				getHibernateTemplate().saveOrUpdate(menu);
 			}
@@ -656,6 +656,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Menu findFolder(String folderName, String pathExtended) {
 		Collection<Menu> specified_menu = new ArrayList<Menu>();
@@ -674,4 +675,46 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public void restore(long menuId, boolean parents) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		PreparedStatement stmt2 = null;
+		try {
+			con = getSession().connection();
+
+			StringBuffer query = new StringBuffer("update ld_menu _menu  ");
+			query.append(" set _menu.ld_deleted=0 ");
+			query.append(" where _menu.ld_id = ?");
+			stmt = con.prepareStatement(query.toString());
+
+			// Restore the menu
+			stmt.setLong(1, menuId);
+			stmt.execute();
+
+			// Restore parents
+			if (parents) {
+				query = new StringBuffer("select _menu.ld_parentid from ld_menu _menu  ");
+				query.append(" where _menu.ld_id = ?");
+				stmt2 = con.prepareStatement(query.toString());
+
+				stmt2.setLong(1, menuId);
+				ResultSet rs = stmt2.executeQuery();
+				long parent = -1;
+				while (rs.next() && parent != rs.getLong(1)) {
+					parent = rs.getLong(1);
+					stmt.setLong(1, parent);
+					stmt.execute();
+					stmt2.setLong(1, parent);
+					rs = stmt2.executeQuery();
+				}
+				rs.close();
+			}
+			stmt.close();
+			stmt2.close();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
 }

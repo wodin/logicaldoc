@@ -2,6 +2,7 @@ package com.logicaldoc.core.document.dao;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.BreakIterator;
@@ -787,5 +788,32 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		}
 
 		return coll;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void restore(long docId) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		try {
+			con = getSession().connection();
+			StringBuffer query = new StringBuffer("update ld_document _doc  ");
+			query.append(" set _doc.ld_deleted=0 ");
+			query.append(" where _doc.ld_id = ?");
+			stmt = con.prepareStatement(query.toString());
+
+			// Restore the document
+			stmt.setLong(1, docId);
+			stmt.execute();
+			stmt.close();
+
+			ResultSet rs = con.createStatement().executeQuery(
+					"select ld_folderid from ld_document where ld_id=" + docId);
+			rs.next();
+			menuDAO.restore(rs.getLong(1), true);
+			rs.close();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 }
