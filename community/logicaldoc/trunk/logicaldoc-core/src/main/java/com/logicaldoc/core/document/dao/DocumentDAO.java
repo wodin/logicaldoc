@@ -197,7 +197,15 @@ public interface DocumentDAO {
 	/**
 	 * Gets the collection of deleted document ids
 	 */
-	public Collection<Long> getDeletedDocIds();
+	public List<Long> findDeletedDocIds();
+
+	/**
+	 * Finds the list of deleted documents.
+	 * <p>
+	 * <b>Attention:</b> The returded objects are not fully operative and are
+	 * populated with a minimal set of data.
+	 */
+	public List<Document> findDeletedDocs();
 
 	/**
 	 * Counts the number of documents

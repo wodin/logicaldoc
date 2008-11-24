@@ -261,14 +261,20 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, docs.size());
 	}
 
-	public void testGetDeletedDocIds() {
-		Collection<Long> coll = dao.getDeletedDocIds();
+	public void testFindDeletedDocIds() {
+		List<Long> coll = dao.findDeletedDocIds();
 		assertNotNull(coll);
 		assertEquals(2, coll.size());
 		assertTrue(coll.contains(new Long(3)));
 		assertTrue(coll.contains(new Long(4)));
 	}
 
+	public void testFindDeletedDocs() {
+		List<Document> coll = dao.findDeletedDocs();
+		assertNotNull(coll);
+		assertEquals(2, coll.size());
+	}
+	
 	public void testGetTotalSize() {
 		assertEquals(368391L, dao.getTotalSize(true));
 		assertEquals(123701L, dao.getTotalSize(false));
