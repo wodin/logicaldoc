@@ -1,6 +1,7 @@
 package com.logicaldoc.web;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -10,12 +11,14 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.NavigationBean;
@@ -39,6 +42,8 @@ public class LoginForm {
 
 	private NavigationBean navigation;
 
+	private Boolean setupPerformed;
+
 	/**
 	 * Login handler
 	 * 
@@ -52,7 +57,7 @@ public class LoginForm {
 			logger.info("User " + j_username + " logged in.");
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			Map<String,Object> session = facesContext.getExternalContext().getSessionMap();
+			Map<String, Object> session = facesContext.getExternalContext().getSessionMap();
 
 			session.put(Constants.AUTH_USERID, user.getId());
 			session.put(Constants.AUTH_USERNAME, j_username);
@@ -126,7 +131,8 @@ public class LoginForm {
 	}
 
 	/**
-	 * @param j_password the j_password to set
+	 * @param j_password
+	 *            the j_password to set
 	 */
 	public void setJ_password(String j_password) {
 		this.j_password = j_password;
@@ -140,7 +146,8 @@ public class LoginForm {
 	}
 
 	/**
-	 * @param language the language to set
+	 * @param language
+	 *            the language to set
 	 */
 	public void setLanguage(String language) {
 		this.language = language;
@@ -154,7 +161,8 @@ public class LoginForm {
 	}
 
 	/**
-	 * @param j_username the j_username to set
+	 * @param j_username
+	 *            the j_username to set
 	 */
 	public void setJ_username(String j_username) {
 		this.j_username = j_username;
@@ -165,7 +173,26 @@ public class LoginForm {
 	}
 
 	public boolean isNotInitialized() {
-		// TODO: verify the connection to the database
-		return true;
+
+		if ((setupPerformed != null) && (setupPerformed.booleanValue() == true))
+			return false;
+			
+		try {
+			PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
+			String jdbcUrl = pbean.getProperty("jdbc.url");
+			if (StringUtils.isNotEmpty(jdbcUrl)) {
+				if (jdbcUrl.equals("jdbc:hsqldb:mem:logicaldoc")) {
+					return true;
+				}else {
+					setupPerformed = new Boolean(true);
+					return false;
+				}
+			}
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		return false;
 	}
+
 }
