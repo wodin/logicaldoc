@@ -49,6 +49,14 @@ insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
 values     (103,'2008-10-22',0,'db.admin',101,1,'administration.gif','/',3,null,0);
 
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (1000,'2008-10-22',1,'db.admin.1000',1,1,'administration.gif','/',5,null,0);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (1100,'2008-10-22',1,'db.admin.1100',1000,1,'administration.gif','/',5,null,0);
+
 insert into ld_menugroup
 values     (100,1,1,0,0,0,0);
 
@@ -94,6 +102,10 @@ values     (2,'2008-10-22',0,'testDocname2','testDocVer','2006-12-19','myself',1
 insert into ld_document
            (ld_id,ld_lastmodified,ld_deleted,ld_title,ld_version,ld_date,ld_publisher,ld_status,ld_type,ld_checkoutuser,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid)
 values     (3,'2008-10-22',1,'DELETED','testDocVer','2006-12-19','myself',1,'PDF','sebastian','source','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,103);
+
+insert into ld_document
+           (ld_id,ld_lastmodified,ld_deleted,ld_title,ld_version,ld_date,ld_publisher,ld_status,ld_type,ld_checkoutuser,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid)
+values     (4,'2008-10-22',1,'DELETED','testDocVer','2006-12-19','myself',1,'PDF','sebastian','source','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,1100);
 
 
 insert into ld_ticket

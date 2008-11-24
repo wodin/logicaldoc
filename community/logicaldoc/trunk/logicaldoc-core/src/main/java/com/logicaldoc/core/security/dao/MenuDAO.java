@@ -205,19 +205,29 @@ public interface MenuDAO {
 	 * @param menuId
 	 */
 	public List<Menu> findParents(long menuId);
-	
+
 	/**
 	 * Retrieval of all menus that exists under a specific pathextended
+	 * 
 	 * @param pathExtended
 	 * @return
 	 */
 	public Collection<Menu> findFoldersByPathExtended(String pathExtended);
-	
+
 	/**
 	 * Retrieval of a folder by the parent extended path
+	 * 
 	 * @param folderName
 	 * @param pathExtended
 	 * @return
 	 */
 	public Menu findFolder(String folderName, String pathExtended);
+
+	/**
+	 * Restores a previously deleted menu
+	 * 
+	 * @param menuId The menu identifier
+	 * @param parents true if parents must be restored also
+	 */
+	public void restore(long menuId, boolean parents);
 }

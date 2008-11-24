@@ -261,4 +261,17 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertEquals(dao.findById(100), menus.get(1));
 		assertEquals(dao.findById(101), menus.get(2));
 	}
+
+	public void testRestore() {
+		Menu menu = dao.findById(1000);
+		assertNull(menu);
+		menu = dao.findById(1100);
+		assertNull(menu);
+
+		dao.restore(1100, true);
+		menu = dao.findById(1000);
+		assertNotNull(menu);
+		menu = dao.findById(1100);
+		assertNotNull(menu);
+	}
 }
