@@ -37,6 +37,7 @@ import com.logicaldoc.util.config.SettingsConfig;
  * @since 3.5
  */
 public class DocumentManagerImpl implements DocumentManager {
+	
 	protected static Log log = LogFactory.getLog(DocumentManagerImpl.class);
 
 	private DocumentDAO documentDAO;
@@ -556,5 +557,23 @@ public class DocumentManagerImpl implements DocumentManager {
 		while (documentDAO.findByTitleAndParentFolderId(doc.getFolder().getId(), doc.getTitle()).size() > 0) {
 			doc.setTitle(buf + "(" + (counter++) + ")");
 		}
+	}
+
+	public Document copyToFolder(Document doc, Menu folder, User user) throws Exception {
+
+		// Get original document directory path
+		String path = getDocFilePath(doc);
+		File originalDocDir = new File(path);
+        
+		// initialize the document
+		documentDAO.initialize(doc);		
+		
+		InputStream is = new FileInputStream(originalDocDir);
+		try {
+			return create(is, originalDocDir.getName(), folder, user, doc.getLanguage(), doc.getTitle(), doc.getSourceDate(), doc.getSource(), doc.getSourceAuthor(), doc.getSourceType(),
+					doc.getCoverage(), "", doc.getKeywords(), doc.getTemplate().getId(), doc.getAttributes(), false);
+		} finally {
+			is.close();
+		}	
 	}
 }
