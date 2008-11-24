@@ -271,4 +271,15 @@ public interface DocumentManager {
 	 * @throws Exception
 	 */
 	public void moveToFolder(Document doc, Menu folder) throws Exception;
+	
+	/**
+	 * Copy a document to the specified folder.
+	 * 
+	 * @param doc The document to move
+	 * @param folder The target folder
+	 * @return The created document
+	 * @throws Exception
+	 */
+	public Document copyToFolder(Document doc, Menu folder, User user) throws Exception;
+	
 }
