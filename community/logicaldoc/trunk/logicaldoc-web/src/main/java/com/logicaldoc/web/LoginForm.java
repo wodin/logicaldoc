@@ -192,7 +192,7 @@ public class LoginForm {
 			logger.error(e.getMessage(), e);
 		}
 		
-		return false;
+		return true;
 	}
 
 }
