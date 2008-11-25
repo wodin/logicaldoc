@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -26,8 +27,7 @@ import org.java.plugin.util.ExtendedProperties;
  * must be personalized as needed. The used implementation can be specified with
  * the 'logicaldoc.app.pluginregistry' system property.
  * 
- * @author Marco Meschieri
- * @version $Id$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public abstract class PluginRegistry {
@@ -46,7 +46,7 @@ public abstract class PluginRegistry {
 				pluginregistry = "com.logicaldoc.util.DefaultPluginRegistry";
 			}
 			try {
-				System.out.println("Instantiate concrete PluginRegistry: "+pluginregistry);
+				System.out.println("Instantiate concrete PluginRegistry: " + pluginregistry);
 				instance = (PluginRegistry) Class.forName(pluginregistry).newInstance();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -170,11 +170,16 @@ public abstract class PluginRegistry {
 	 * @return List of connected extensions
 	 */
 	public Collection<Extension> getExtensions(String pluginId, String extensionPoint) {
-		PluginRegistry registry = PluginRegistry.getInstance();
-		PluginDescriptor descriptor = registry.getManager().getRegistry().getPluginDescriptor(pluginId);
-		ExtensionPoint dbinitExtPoint = registry.getManager().getRegistry().getExtensionPoint(descriptor.getId(),
-				extensionPoint);
-		Collection<Extension> exts = dbinitExtPoint.getConnectedExtensions();
+		Collection<Extension> exts = new ArrayList<Extension>();
+		try {
+			PluginRegistry registry = PluginRegistry.getInstance();
+			PluginDescriptor descriptor = registry.getManager().getRegistry().getPluginDescriptor(pluginId);
+			ExtensionPoint dbinitExtPoint = registry.getManager().getRegistry().getExtensionPoint(descriptor.getId(),
+					extensionPoint);
+			exts = dbinitExtPoint.getConnectedExtensions();
+		} catch (Exception e) {
+
+		}
 		return exts;
 	}
 
