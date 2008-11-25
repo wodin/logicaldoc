@@ -57,6 +57,8 @@ public class Document extends ExtensibleObject {
 
 	private Date sourceDate;
 
+	private Date creation=new Date();
+	
 	private String sourceType;
 
 	private String coverage;
@@ -75,6 +77,8 @@ public class Document extends ExtensibleObject {
 
 	private DocumentTemplate template;
 
+	private String customId;
+	
 	public Document() {
 	}
 
@@ -373,5 +377,27 @@ public class Document extends ExtensibleObject {
 
 	public void setTemplate(DocumentTemplate template) {
 		this.template = template;
+	}
+
+	/**
+	 * The document's creation date
+	 */
+	public Date getCreation() {
+		return creation;
+	}
+
+	public void setCreation(Date creation) {
+		this.creation = creation;
+	}
+
+	/**
+	 * Each document can be identified with a custom identifier
+	 */
+	public String getCustomId() {
+		return customId;
+	}
+
+	public void setCustomId(String customId) {
+		this.customId = customId;
 	}
 }
