@@ -287,7 +287,7 @@ public class DefaultHandler implements IOHandler {
      * @return
      * @throws WebDavStorageException
      */
-    protected boolean getContentNode(ImportContext context, boolean isCollection) throws WebDavStorageException {
+    protected synchronized boolean getContentNode(ImportContext context, boolean isCollection) throws WebDavStorageException {
         Resource resource = context.getResource();
         String name = context.getSystemId();
 
@@ -297,8 +297,12 @@ public class DefaultHandler implements IOHandler {
         	resourceService.createResource(resource, name, isCollection, context);
         	return true;
         }
-        
-		return false; 
+        else {
+        	res.setRequestedPerson(resource.getRequestedPerson());
+        	resourceService.updateResource(res, context);
+        	return false;
+        }
+
     }
     
     /**

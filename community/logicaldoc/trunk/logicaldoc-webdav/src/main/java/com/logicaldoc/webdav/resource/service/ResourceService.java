@@ -110,4 +110,18 @@ public interface ResourceService {
 	 * @param resource
 	 */
 	public void copyResource(Resource destinResource, Resource resource);
+	
+	/**
+	 * 
+	 * @param resource
+	 */
+	public void checkout(Resource resource);
+	
+
+	/**
+	 * 
+	 * @param resource
+	 * @return
+	 */
+	public List<Resource> getHistory(Resource resource);
 }

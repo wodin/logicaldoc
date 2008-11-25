@@ -18,7 +18,13 @@ public class ResourceImpl implements Resource{
 	private String path;
 	private InputStream is;
 	private long personRequest;
+	private boolean isCheckedOut;
+	private String versionLabel;
 	private Date lastModified;
+	private Date versionDate;
+	private String author;
+	private String comment;
+	
 	
 	public Long getContentLength() {
 		return contentLength;
@@ -88,6 +94,26 @@ public class ResourceImpl implements Resource{
 		this.personRequest = id;
 	}
 
+	@Override
+	public boolean getIsCheckedOut() {
+		return this.isCheckedOut;
+	}
+
+	@Override
+	public void setIsCheckedOut(boolean isCheckedOut) {
+		this.isCheckedOut = isCheckedOut;
+	}
+
+	@Override
+	public String getVersionLabel() {
+		return this.versionLabel;
+	}
+
+	@Override
+	public void setVersionLabel(String versionLabel) {
+		this.versionLabel = versionLabel;
+	}
+
 	public Date getLastModified() {
 		return this.lastModified;
 	}
@@ -95,4 +121,34 @@ public class ResourceImpl implements Resource{
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}
+
+	@Override
+	public Date getVersionDate() {
+		return this.versionDate;
+	}
+
+	@Override
+	public void setVersionDate(Date date) {
+		this.versionDate = date;
+	}
+	
+	@Override
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	
+	@Override
+	public String getAuthor() {
+		return this.author;
+	}
+
+	@Override
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	@Override
+	public String getComment() {
+		return this.comment;
+	}
+	
 }

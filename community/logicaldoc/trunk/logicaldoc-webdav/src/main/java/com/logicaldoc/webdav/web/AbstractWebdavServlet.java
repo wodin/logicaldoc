@@ -33,9 +33,16 @@ import org.apache.jackrabbit.webdav.io.OutputContextImpl;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.search.SearchConstants;
 import org.apache.jackrabbit.webdav.search.SearchResource;
+import org.apache.jackrabbit.webdav.security.AclResource;
+import org.apache.jackrabbit.webdav.transaction.TransactionInfo;
+import org.apache.jackrabbit.webdav.transaction.TransactionResource;
 import org.apache.jackrabbit.webdav.version.DeltaVResource;
 import org.apache.jackrabbit.webdav.version.OptionsInfo;
 import org.apache.jackrabbit.webdav.version.OptionsResponse;
+import org.apache.jackrabbit.webdav.version.VersionControlledResource;
+import org.apache.jackrabbit.webdav.version.VersionableResource;
+import org.apache.jackrabbit.webdav.version.report.Report;
+import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -163,6 +170,11 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			
 			webdavRequest.setDavSession(davSession);
 			
+			String path = webdavRequest.getRequestLocator().getResourcePath();
+			if(path.startsWith("/store") == false && path.startsWith("/vstore") == false)
+				throw new DavException(DavServletResponse.SC_NOT_FOUND);
+			
+			
 			// check matching if=header for lock-token relevant operations
 			DavResource resource = getResourceFactory().createResource(webdavRequest.getRequestLocator(),
 					webdavRequest, webdavResponse, davSession);
@@ -181,7 +193,8 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 				webdavResponse.sendError(e);
 			}
 		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+			e.printStackTrace();
+			throw new RuntimeException(e);
 		} finally {
 
 		}
@@ -238,7 +251,27 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 		case DavMethods.DAV_OPTIONS:
 			doOptions(request, response, resource);
 			break;
-
+		case DavMethods.DAV_LOCK:
+            doLock(request, response, resource);
+            break;
+        case DavMethods.DAV_UNLOCK:
+            doUnlock(request, response, resource);
+            break;	
+		case DavMethods.DAV_CHECKOUT:
+            doCheckout(request, response, resource);
+            break;
+		case DavMethods.DAV_CHECKIN:
+            doCheckin(request, response, resource);
+            break;	
+		case DavMethods.DAV_REPORT:
+            doReport(request, response, resource);
+            break;	
+		case DavMethods.DAV_VERSION_CONTROL:
+            doVersionControl(request, response, resource);
+            break;
+		case DavMethods.DAV_UNCHECKOUT:
+            doUncheckout(request, response, resource);
+            break;    
 		default:
 			// any other method
 			return false;
@@ -299,11 +332,10 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 				return;
 			}
 		}
-
+		
 		// spool resource properties and ev. resource content.
 		OutputStream out = (sendContent) ? response.getOutputStream() : null;
 		resource.spool(getOutputContext(response, out));
-		response.flushBuffer();
 	}
 
 	/**
@@ -512,15 +544,15 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 
 		DavResource destResource = getResourceFactory().createResource(request.getDestinationLocator(), request,
 				response);
-	
-		try {
-			resource.move(destResource);
-			response.setStatus(DavServletResponse.SC_CREATED);
-		}
-		catch(Exception e){
-			response.setStatus(DavServletResponse.SC_NOT_ACCEPTABLE);
-		}
+
+		//int status = validateDestination(destResource, request);
+		//if (status > DavServletResponse.SC_NO_CONTENT) {
+		//    response.sendError(status);
+		//    return;
+		//}
 		
+		resource.move(destResource);
+		response.setStatus(DavServletResponse.SC_CREATED);
 	}
 
 	/**
@@ -595,7 +627,122 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			response.sendXmlResponse(oR, DavServletResponse.SC_OK);
 		}
 	}
+	
+	 protected void doVersionControl(WebdavRequest request, WebdavResponse response,
+             DavResource resource)throws DavException, IOException {
+		
+		if (!(resource instanceof VersionableResource)) {
+			response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
+			return;
+		}
+		((VersionableResource) resource).addVersionControl();
+	 }
+	
+	
+	protected void doLock(WebdavRequest request, WebdavResponse response,
+             DavResource resource) throws IOException, DavException {
 
+		 response.sendError(DavServletResponse.SC_NOT_IMPLEMENTED);
+	}
+	 
+	 /**
+     * The UNLOCK method
+     *
+     * @param request
+     * @param response
+     * @param resource
+     * @throws DavException
+     */
+    protected void doUnlock(WebdavRequest request, WebdavResponse response,
+                            DavResource resource) throws DavException {
+        // get lock token from header
+        String lockToken = request.getLockToken();
+        TransactionInfo tInfo = request.getTransactionInfo();
+        if (tInfo != null) {
+            ((TransactionResource) resource).unlock(lockToken, tInfo);
+        } else {
+            resource.unlock(lockToken);
+        }
+        response.setStatus(DavServletResponse.SC_NO_CONTENT);
+    }
+	
+    /**
+     * The CHECKOUT method
+     *
+     * @param request
+     * @param response
+     * @param resource
+     * @throws DavException
+     * @throws IOException
+     */
+    protected void doCheckout(WebdavRequest request, WebdavResponse response,
+                              DavResource resource)
+            throws DavException, IOException {
+        if (!(resource instanceof VersionControlledResource)) {
+            response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
+            return;
+        }
+        ((VersionControlledResource) resource).checkout();
+    }
+    
+    /**
+     * The CHECKIN method
+     *
+     * @param request
+     * @param response
+     * @param resource
+     * @throws DavException
+     * @throws IOException
+     */
+    protected void doCheckin(WebdavRequest request, WebdavResponse response,
+                             DavResource resource)
+            throws DavException, IOException {
+
+        response.setStatus(DavServletResponse.SC_NOT_IMPLEMENTED);
+    }
+    
+    /**
+     * The REPORT method
+     *
+     * @param request
+     * @param response
+     * @param resource
+     * @throws DavException
+     * @throws IOException
+     */
+    protected void doReport(WebdavRequest request, WebdavResponse response,
+                            DavResource resource)
+            throws DavException, IOException {
+        ReportInfo info = request.getReportInfo();
+        Report report;
+        if (resource instanceof DeltaVResource) {
+            report = ((DeltaVResource) resource).getReport(info);
+        } else if (resource instanceof AclResource) {
+            report = ((AclResource) resource).getReport(info);
+        } else {
+            response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
+            return;
+        }
+
+        int statusCode = (report.isMultiStatusReport()) ? DavServletResponse.SC_MULTI_STATUS : DavServletResponse.SC_OK;
+        response.sendXmlResponse(report, statusCode);
+    }
+    
+    /**
+     * The UNCHECKOUT method
+     *
+     * @param request
+     * @param response
+     * @param resource
+     * @throws DavException
+     * @throws IOException
+     */
+    protected void doUncheckout(WebdavRequest request, WebdavResponse response,
+                                DavResource resource)
+            throws DavException, IOException {
+    	 response.setStatus(DavServletResponse.SC_NOT_IMPLEMENTED);
+    }
+    
 	/**
 	 * Return a new <code>InputContext</code> used for adding resource members
 	 * 

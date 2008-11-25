@@ -1,5 +1,8 @@
 package com.logicaldoc.webdav.web;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavMethods;
 import org.apache.jackrabbit.webdav.DavResource;
@@ -66,22 +69,35 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 	public DavResource createResource(DavResourceLocator locator,
 			DavServletRequest request, DavServletResponse response,
 			DavSession session) throws DavException {
-
+		
 		try {
-			Resource repositoryResource = resourceService.getResource(locator
-					.getResourcePath(), new Long(session.getObject("id")
-					.toString()));
+			String resourcePath = locator.getResourcePath();
+			Matcher matcher = Pattern.compile("/vstore/([0-9].[0-9])/(.*)")
+			.matcher(locator.getResourcePath());
+			
+			String version = null;
+			if(matcher.matches() == true) {
+				version = matcher.group(1);
+				resourcePath = resourcePath.replaceFirst("/vstore/" + version,"");
+			}
+			
+			Resource repositoryResource = resourceService.getResource(
+					resourcePath, new Long(session.getObject("id").toString()));
+
 			DavResource resource;
 			if (repositoryResource == null) {
 				boolean isCollection = DavMethods
 						.isCreateCollectionRequest(request);
 				resource = createNullResource(locator, session, isCollection);
 			} else {
-
+				repositoryResource.setVersionLabel(version);
+				
+				
 				repositoryResource.setRequestedPerson(Long.parseLong(session
 						.getObject("id").toString()));
 				resource = new VersionControlledResourceImpl(locator, this,
 						session, resourceConfig, repositoryResource);
+				
 			}
 
 			return resource;
