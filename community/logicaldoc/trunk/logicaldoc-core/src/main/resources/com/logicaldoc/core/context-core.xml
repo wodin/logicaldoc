@@ -176,6 +176,9 @@
 				<property name="settings">
 					<ref bean="SettingsConfig" />
 				</property>
+				<property name="listenerManager">
+					<ref bean="DocumentListenerManager" />
+				</property>
 			</bean>
 		</property>
 	</bean>
@@ -311,6 +314,10 @@
 
 	<bean id="TaskManager" class="com.logicaldoc.core.task.TaskManager"
 		destroy-method="stop">
+	</bean>
+
+	<bean id="DocumentListenerManager"
+		class="com.logicaldoc.core.document.DocumentListenerManager">
 	</bean>
 
 

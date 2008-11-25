@@ -1,6 +1,6 @@
 create table ld_article (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_subject varchar(255), ld_message varchar(2000), ld_date timestamp, ld_username varchar(255), primary key (ld_id));
 create table ld_attributes (ld_templateid bigint not null, ld_attribute varchar(255));
-create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_title varchar(255), ld_version varchar(10), ld_date timestamp, ld_publisher varchar(30), ld_status int, ld_type varchar(255), ld_checkoutuser varchar(30), ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourcetype varchar(255), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_indexed int not null , ld_folderid bigint, ld_templateid bigint, primary key (ld_id));
+create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_customid varchar(4000), ld_title varchar(255), ld_version varchar(10), ld_date timestamp, ld_creation timestamp not null, ld_publisher varchar(30), ld_status int, ld_type varchar(255), ld_checkoutuser varchar(30), ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourcetype varchar(255), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_indexed int not null , ld_folderid bigint, ld_templateid bigint, primary key (ld_id));
 create table ld_document_ext (ld_docid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_docid, ld_name));
 create table ld_group (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(255), ld_type int not null, primary key (ld_id));
 create table ld_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, lo_userid bigint not null, ld_date timestamp, lo_username varchar(255), lo_event varchar(255), primary key (ld_id));
@@ -39,6 +39,7 @@ alter table ld_article add constraint FK_ARTICLE_DOC foreign key (ld_docid) refe
 alter table ld_menu add constraint FK_MENU_PARENT foreign key (ld_parentid) references ld_menu on delete cascade;
 alter table ld_history add constraint FK_HISTORY_DOC foreign key (ld_docid) references ld_document on delete cascade;
 
+create unique index  AK_DOCUMENT on ld_document (ld_customid);
 create unique index  AK_USER on ld_user (ld_username);
 create unique index  AK_GROUP on ld_group (ld_name);  
 create unique index  AK_TICKET on ld_ticket (ld_ticketid);

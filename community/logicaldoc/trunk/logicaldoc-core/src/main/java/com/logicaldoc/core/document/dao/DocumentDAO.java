@@ -39,9 +39,17 @@ public interface DocumentDAO {
 	public Document findById(long docId);
 
 	/**
+	 * This method finds a document by the custom ID.
+	 * 
+	 * @param customId custom ID of the document.
+	 * @return Document with given ID.
+	 */
+	public Document findByCustomId(String customId);
+
+	/**
 	 * This method selects all documents.
 	 */
-	public Collection<Document> findAll();
+	public List<Document> findAll();
 
 	/**
 	 * Finds all documents for an user.
@@ -49,7 +57,7 @@ public interface DocumentDAO {
 	 * @param userId ID of the user.
 	 * @return Collection of all documentId required for the specified user.
 	 */
-	public Collection<Long> findByUserId(long userId);
+	public List<Long> findByUserId(long userId);
 
 	/**
 	 * Finds all document ids inside the given folder.
@@ -57,7 +65,7 @@ public interface DocumentDAO {
 	 * @param folderId Folder identifier
 	 * @return Collection of all document id in the folder.
 	 */
-	public Collection<Long> findDocIdByFolder(long folderId);
+	public List<Long> findDocIdByFolder(long folderId);
 
 	/**
 	 * Finds all documents inside the given folder.
@@ -65,7 +73,7 @@ public interface DocumentDAO {
 	 * @param folderId Folder identifier
 	 * @return Collection of all documents in the folder.
 	 */
-	public Collection<Document> findByFolder(long folderId);
+	public List<Document> findByFolder(long folderId);
 
 	/**
 	 * Finds all documents checked-out for an user.
@@ -73,7 +81,7 @@ public interface DocumentDAO {
 	 * @param username Name of the user.
 	 * @return Collection of all Documents checked out by the specified user.
 	 */
-	public Collection<Document> findCheckoutByUserName(String username);
+	public List<Document> findCheckoutByUserName(String username);
 
 	/**
 	 * Finds a max number of documents last modified by an user.
@@ -98,7 +106,7 @@ public interface DocumentDAO {
 	 * @param keyword Keyword of the document.
 	 * @return Document with specified keyword.
 	 */
-	public Collection<Long> findDocIdByKeyword(String keyword);
+	public List<Long> findDocIdByKeyword(String keyword);
 
 	/**
 	 * Converts the passed string into a collection of keywords
@@ -127,7 +135,7 @@ public interface DocumentDAO {
 	 * @param keyword Keyword of the document
 	 * @return Collection of found menus.
 	 */
-	public Collection<Document> findByUserIdAndKeyword(long userId, String keyword);
+	public List<Document> findByUserIdAndKeyword(long userId, String keyword);
 
 	/**
 	 * Finds authorized documents ids for a user having a specified keyword.
@@ -156,7 +164,7 @@ public interface DocumentDAO {
 	 *        compared to both document1 and document2 of the link.
 	 * @return The collection of linked documents
 	 */
-	public Collection<Document> findLinkedDocuments(long docId, String linkType, Integer direction);
+	public List<Document> findLinkedDocuments(long docId, String linkType, Integer direction);
 
 	/**
 	 * Finds that document that lies under a specific folder (given by the id)
@@ -166,7 +174,7 @@ public interface DocumentDAO {
 	 * @param fileName
 	 * @return
 	 */
-	public Collection<Document> findByFileNameAndParentFolderId(long folderId, String fileName);
+	public List<Document> findByFileNameAndParentFolderId(long folderId, String fileName);
 
 	/**
 	 * Finds that document that lies under a specific folder (given by the id)
@@ -176,7 +184,7 @@ public interface DocumentDAO {
 	 * @param title
 	 * @return
 	 */
-	public Collection<Document> findByTitleAndParentFolderId(long folderId, String title);
+	public List<Document> findByTitleAndParentFolderId(long folderId, String title);
 
 	/**
 	 * Initializes lazy loaded collections

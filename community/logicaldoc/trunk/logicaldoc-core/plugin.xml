@@ -63,4 +63,8 @@
     <extension-point id="Task">
         <parameter-def id="name" />
     </extension-point>
+    <extension-point id="DocumentListener">
+        <parameter-def id="class" />
+        <parameter-def id="position" />
+    </extension-point>
 </plugin>

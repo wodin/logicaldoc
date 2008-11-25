@@ -23,6 +23,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import com.logicaldoc.core.document.Article;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
+import com.logicaldoc.core.document.DocumentListener;
+import com.logicaldoc.core.document.DocumentListenerManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.security.Group;
@@ -57,7 +59,13 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	private SettingsConfig settings;
 
+	private DocumentListenerManager listenerManager;
+
 	private HibernateDocumentDAO() {
+	}
+
+	public void setListenerManager(DocumentListenerManager listenerManager) {
+		this.listenerManager = listenerManager;
 	}
 
 	public void setUserDocDAO(UserDocDAO userDocDAO) {
@@ -119,9 +127,8 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				}
 
 				userDocDAO.deleteByDocId(docId);
-
 				doc.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(doc);
+				store(doc);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -137,11 +144,11 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findAll()
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Document> findAll() {
-		Collection<Document> coll = new ArrayList<Document>();
+	public List<Document> findAll() {
+		List<Document> coll = new ArrayList<Document>();
 
 		try {
-			coll = (Collection<Document>) getHibernateTemplate().find("from Document");
+			coll = (List<Document>) getHibernateTemplate().find("from Document");
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -172,8 +179,8 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findByUserId(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Long> findByUserId(long userId) {
-		Collection<Long> coll = new ArrayList<Long>();
+	public List<Long> findByUserId(long userId) {
+		List<Long> coll = new ArrayList<Long>();
 
 		try {
 			Collection<Menu> menus = menuDAO.findByUserId(userId);
@@ -191,7 +198,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			}
 			query.append(")");
 
-			coll = (Collection<Long>) getHibernateTemplate().find(query.toString());
+			coll = (List<Long>) getHibernateTemplate().find(query.toString());
 
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -205,12 +212,12 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findCheckoutByUserName(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Document> findCheckoutByUserName(String username) {
-		Collection<Document> coll = new ArrayList<Document>();
+	public List<Document> findCheckoutByUserName(String username) {
+		List<Document> coll = new ArrayList<Document>();
 		try {
 			StringBuffer query = new StringBuffer("from Document _doc where ");
 			query.append("_doc.checkoutUser = '" + username + "'");
-			coll = (Collection<Document>) getHibernateTemplate().find(query.toString());
+			coll = (List<Document>) getHibernateTemplate().find(query.toString());
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -222,14 +229,14 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findDocIdByKeyword(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Long> findDocIdByKeyword(String keyword) {
-		Collection<Long> coll = new ArrayList<Long>();
+	public List<Long> findDocIdByKeyword(String keyword) {
+		List<Long> coll = new ArrayList<Long>();
 
 		try {
 			StringBuilder query = new StringBuilder("select _doc.id from Document _doc where ");
 			query.append("'" + keyword + "'");
 			query.append(" in elements(_doc.keywords) ");
-			coll = (Collection<Long>) getHibernateTemplate().find(query.toString());
+			coll = (List<Long>) getHibernateTemplate().find(query.toString());
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -268,6 +275,21 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				doc.setFileSize(size);
 			}
 
+			Map<String, Object> dictionary = new HashMap<String, Object>();
+
+			log.debug("Invoke listeners before store");
+			for (DocumentListener listener : listenerManager.getListeners()) {
+				listener.beforeStore(doc, dictionary);
+			}
+			// Save the document
+			getHibernateTemplate().saveOrUpdate(doc);
+
+			log.debug("Invoke listeners after store");
+			for (DocumentListener listener : listenerManager.getListeners()) {
+				listener.afterStore(doc, dictionary);
+			}
+			
+			//Perhaps some listener may have modified the document
 			getHibernateTemplate().saveOrUpdate(doc);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -363,7 +385,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			query.append(" WHERE _history.userId = " + Long.toString(userId) + " ");
 			query.append(" ORDER BY _history.date DESC");
 
-			Collection<Long> results = (Collection<Long>) getHibernateTemplate().find(query.toString());
+			List<Long> results = (List<Long>) getHibernateTemplate().find(query.toString());
 			for (Long docid : results) {
 				if (coll.size() >= maxElements)
 					break;
@@ -404,8 +426,8 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Document> findByUserIdAndKeyword(long userId, String keyword) {
-		Collection<Document> coll = new ArrayList<Document>();
+	public List<Document> findByUserIdAndKeyword(long userId, String keyword) {
+		List<Document> coll = new ArrayList<Document>();
 		try {
 			User user = userDAO.findById(userId);
 			Collection<Group> precoll = user.getGroups();
@@ -427,7 +449,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			}
 			query.append(")");
 
-			Collection<Long> ids = findDocIdByUserIdAndKeyword(userId, keyword);
+			Set<Long> ids = findDocIdByUserIdAndKeyword(userId, keyword);
 			Iterator<Long> iter2 = ids.iterator();
 			if (ids.isEmpty())
 				return coll;
@@ -440,7 +462,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 				first = false;
 			}
 			query.append(")");
-			coll = (Collection<Document>) getHibernateTemplate().find(query.toString());
+			coll = (List<Document>) getHibernateTemplate().find(query.toString());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -508,7 +530,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			query.append(" where _userdoc.id.userId = ?");
 			query.append(" order by _userdoc.date desc");
 
-			Collection<Long> results = (Collection<Long>) getHibernateTemplate().find(query.toString(), userId);
+			List<Long> results = (List<Long>) getHibernateTemplate().find(query.toString(), userId);
 			ArrayList<Long> tmpal = new ArrayList<Long>(results);
 			List<Long> docIds = tmpal;
 
@@ -531,7 +553,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			query.append(")");
 
 			// execute the query
-			Collection<Document> unorderdColl = (Collection<Document>) getHibernateTemplate().find(query.toString());
+			List<Document> unorderdColl = (List<Document>) getHibernateTemplate().find(query.toString());
 
 			// put all elements in a map
 			HashMap<Long, Document> hm = new HashMap<Long, Document>();
@@ -555,15 +577,15 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Long> findDocIdByFolder(long folderId) {
-		Collection<Long> coll = new ArrayList<Long>();
+	public List<Long> findDocIdByFolder(long folderId) {
+		List<Long> coll = new ArrayList<Long>();
 
 		try {
 			StringBuffer query = new StringBuffer("select _doc.id from Document _doc where ");
 			query.append("_doc.folder.id = ");
 			query.append(Long.toString(folderId));
 
-			coll = (Collection<Long>) getHibernateTemplate().find(query.toString());
+			coll = (List<Long>) getHibernateTemplate().find(query.toString());
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -574,15 +596,15 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Document> findByFolder(long folderId) {
-		Collection<Document> coll = new ArrayList<Document>();
+	public List<Document> findByFolder(long folderId) {
+		List<Document> coll = new ArrayList<Document>();
 
 		try {
 			StringBuffer query = new StringBuffer("select _doc from Document _doc where ");
 			query.append("_doc.folder.id = ");
 			query.append(Long.toString(folderId));
 
-			coll = (Collection<Document>) getHibernateTemplate().find(query.toString());
+			coll = (List<Document>) getHibernateTemplate().find(query.toString());
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -593,8 +615,8 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Document> findLinkedDocuments(long docId, String linkType, Integer direction) {
-		Collection<Document> coll = new ArrayList<Document>();
+	public List<Document> findLinkedDocuments(long docId, String linkType, Integer direction) {
+		List<Document> coll = new ArrayList<Document>();
 		StringBuffer query = null;
 		try {
 			query = new StringBuffer("select distinct(_doc) from Document _doc, DocumentLink _link where ");
@@ -612,10 +634,9 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 			}
 
 			if (direction == null)
-				coll = (Collection<Document>) getHibernateTemplate().find(query.toString(),
-						new Object[] { docId, docId });
+				coll = (List<Document>) getHibernateTemplate().find(query.toString(), new Object[] { docId, docId });
 			else
-				coll = (Collection<Document>) getHibernateTemplate().find(query.toString(), new Object[] { docId });
+				coll = (List<Document>) getHibernateTemplate().find(query.toString(), new Object[] { docId });
 
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -627,9 +648,9 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Document> findByFileNameAndParentFolderId(long folderId, String fileName) {
+	public List<Document> findByFileNameAndParentFolderId(long folderId, String fileName) {
 		try {
-			return (Collection<Document>) getHibernateTemplate().find(
+			return (List<Document>) getHibernateTemplate().find(
 					"from Document _doc where _doc.folder.id = " + folderId + " and _doc.fileName like '" + fileName
 							+ "'");
 
@@ -642,9 +663,9 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Document> findByTitleAndParentFolderId(long folderId, String title) {
+	public List<Document> findByTitleAndParentFolderId(long folderId, String title) {
 		try {
-			return (Collection<Document>) getHibernateTemplate().find(
+			return (List<Document>) getHibernateTemplate().find(
 					"from Document _doc where _doc.folder.id = " + folderId + " and _doc.title like '" + title + "'");
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -850,5 +871,24 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Document findByCustomId(String customId) {
+		Document doc = null;
+		try {
+			String query = "select _doc.id from Document _doc where _doc.customId = ?";
+			List<Document> coll = (List<Document>) getHibernateTemplate().find(query, customId);
+			if (!coll.isEmpty()) {
+				doc = coll.get(0);
+				if (doc.getDeleted() == 1)
+					doc = null;
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return doc;
 	}
 }

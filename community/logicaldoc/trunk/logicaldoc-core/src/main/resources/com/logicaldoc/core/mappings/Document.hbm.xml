@@ -9,9 +9,11 @@
 		</id>
 		<timestamp name="lastModified" column="ld_lastmodified" />
 		<property name="deleted" type="int" column="ld_deleted" not-null="true" />
+		<property name="customId" type="string" column="ld_customid" length="4000" />
 		<property name="title" type="string" column="ld_title" length="255" />
 		<property name="version" type="string" column="ld_version" length="10" />
 		<property name="date" type="timestamp" column="ld_date" />
+		<property name="creation" type="timestamp" column="ld_creation" not-null="true"/>
 		<property name="publisher" type="string" column="ld_publisher" length="30" />
 		<property name="status" type="int" column="ld_status" />
 		<property name="type" type="string" column="ld_type" length="255" />
