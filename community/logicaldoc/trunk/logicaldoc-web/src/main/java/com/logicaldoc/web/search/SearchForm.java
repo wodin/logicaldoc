@@ -98,6 +98,8 @@ public class SearchForm {
 
 	private boolean coverage = false;
 
+	private boolean customId = false;
+
 	private boolean title = true;
 
 	private boolean searchInSubPath = false;
@@ -402,6 +404,7 @@ public class SearchForm {
 		sizeMin = null;
 		sizeMax = null;
 		searchInSubPath = false;
+		customId = false;
 		excludeFromResult = null;
 		template = null;
 		maxHits = hitsPerBlock;
@@ -459,6 +462,10 @@ public class SearchForm {
 
 				if (isTitle()) {
 					fields.add(LuceneDocument.FIELD_TITLE);
+				}
+
+				if (isCustomId()) {
+					fields.add(LuceneDocument.FIELD_CUSTOM_ID);
 				}
 
 				if (template != null && template.longValue() > 0) {
@@ -541,6 +548,14 @@ public class SearchForm {
 		}
 
 		return null;
+	}
+
+	public boolean isCustomId() {
+		return customId;
+	}
+
+	public void setCustomId(boolean customId) {
+		this.customId = customId;
 	}
 
 	/**

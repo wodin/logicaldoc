@@ -36,7 +36,7 @@
 
 		<ice:panelGrid columns="5">
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="title" value="#{msgs['doctitle']}*" />
+				<ice:outputLabel for="title" value="#{msgs['document.title']}*" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:inputText id="title" label="#{msgs['errors.header.alert.key']}"

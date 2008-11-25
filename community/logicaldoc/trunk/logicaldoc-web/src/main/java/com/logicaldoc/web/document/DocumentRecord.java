@@ -106,6 +106,14 @@ public class DocumentRecord extends MenuBarBean {
 		return docId;
 	}
 
+	public String getCustomId() {
+		return document.getCustomId();
+	}
+
+	public Date getCreationDate() {
+		return document.getCreation();
+	}
+	
 	/**
 	 * Gets the description of the record
 	 * 

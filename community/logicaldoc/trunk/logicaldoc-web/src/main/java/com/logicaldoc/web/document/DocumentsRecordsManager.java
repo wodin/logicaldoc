@@ -504,7 +504,7 @@ public class DocumentsRecordsManager extends SortableList {
 				if (column == null) {
 					return 0;
 				}
-				if (column.equals("displayDescription")) {
+				if (column.equals("title")) {
 					return ascending ? c1.getDisplayTitle().compareTo(c2.getDisplayTitle()) : c2.getDisplayTitle()
 							.compareTo(c1.getDisplayTitle());
 				} else if (column.equals("date")) {
@@ -515,6 +515,10 @@ public class DocumentsRecordsManager extends SortableList {
 					Long s1 = new Long(c1.getDocument().getFileSize());
 					Long s2 = new Long(c2.getDocument().getFileSize());
 					return ascending ? s1.compareTo(s2) : s2.compareTo(s1);
+				} else if (column.equals("customid")) {
+					String id1 = c1.getCustomId() != null ? c1.getCustomId() : "";
+					String id2 = c2.getCustomId() != null ? c2.getCustomId() : "";
+					return ascending ? id1.compareTo(id2) : id2.compareTo(id1);
 				} else
 					return 0;
 			}

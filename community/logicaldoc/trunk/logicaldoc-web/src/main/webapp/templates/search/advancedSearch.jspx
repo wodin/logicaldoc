@@ -97,7 +97,8 @@
 				<ice:inputHidden id="parentPath" value="#{searchForm.path}" />
 				<ice:inputText id="parentPathDescr"
 					value="#{searchForm.parentPathDescr}" maxlength="255" />
-				<ldoc:folderselector style="float:right;" directoryModel="#{searchForm.directoryModel}"
+				<ldoc:folderselector style="float:right;"
+					directoryModel="#{searchForm.directoryModel}"
 					showSelector="#{searchForm.showFolderSelector}"
 					openListener="#{searchForm.openFolderSelector}"
 					confirmListener="#{searchForm.folderSelected}"
@@ -318,8 +319,13 @@
 			<ice:panelGroup>
                 &amp;nbsp;
             </ice:panelGroup>
-			<ice:panelGroup />
-			<ice:panelGroup />
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="customId" value="#{msgs['document.customid']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectBooleanCheckbox id="customId" tabindex="1"
+					value="#{searchForm.customId}" />
+			</ice:panelGroup>
 		</ice:panelGrid>
 	</ice:panelGroup>
 
@@ -349,7 +355,7 @@
 		</ice:panelGrid>
 	</ice:panelGroup>
 	<ice:panelGroup>
-		<ice:selectManyCheckbox	value="#{searchForm.extendedAttributes}">
+		<ice:selectManyCheckbox value="#{searchForm.extendedAttributes}">
 			<f:selectItems value="#{searchForm.extendedAttributesItems}" />
 		</ice:selectManyCheckbox>
 	</ice:panelGroup>

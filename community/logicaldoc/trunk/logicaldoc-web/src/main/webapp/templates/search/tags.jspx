@@ -77,7 +77,7 @@
 			<ice:column>
 				<f:facet name="header">
 					<ice:commandSortHeader columnName="displayDescription" arrow="true">
-						<ice:outputText value="#{msgs['doctitle']}"
+						<ice:outputText value="#{msgs['document.title']}"
 							style="text-decoration: underline;" />
 					</ice:commandSortHeader>
 				</f:facet>

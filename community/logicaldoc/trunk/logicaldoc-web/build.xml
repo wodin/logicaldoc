@@ -29,10 +29,4 @@
 			</fileset>
 		</copy>
 	</target>
-
-	<target name="wsdl2java" depends="init-all" description="WS client generator">
-		<delete dir="target/src"/>
-		<delete dir="target/test"/>
-		<wscodegen  wsdlfilename="http://localhost:8080/logicaldoc/services/Dms?wsdl"  testcase="true" output="target"  packagename="com.logicaldoc.web.ws" serverside="false"  />
-	</target>
 </project>
