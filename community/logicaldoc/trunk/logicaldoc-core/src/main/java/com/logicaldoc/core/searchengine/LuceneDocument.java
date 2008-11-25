@@ -42,6 +42,8 @@ public class LuceneDocument {
 
 	public static final String FIELD_DOC_ID = "docId";
 
+	public static final String FIELD_CUSTOM_ID = "customId";
+
 	private File file = null;
 
 	private Document doc;
@@ -83,6 +85,8 @@ public class LuceneDocument {
 
 	public void setDocId() {
 		doc.add(new Field(FIELD_DOC_ID, String.valueOf(document.getId()), Field.Store.YES, Field.Index.UN_TOKENIZED));
+		if (StringUtils.isNotEmpty(document.getCustomId()))
+			doc.add(new Field(FIELD_CUSTOM_ID, document.getCustomId(), Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
 	/**
