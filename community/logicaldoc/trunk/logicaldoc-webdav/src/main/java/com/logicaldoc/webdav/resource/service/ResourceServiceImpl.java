@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -16,14 +17,17 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.Version;
+import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.webdav.context.ImportContext;
 import com.logicaldoc.webdav.exception.DavResourceIOException;
-import com.logicaldoc.webdav.exception.DavResourceNotFoundException;
 import com.logicaldoc.webdav.exception.OperationNotSupportedException;
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.resource.model.ResourceImpl;
@@ -46,6 +50,8 @@ public class ResourceServiceImpl implements ResourceService {
 	private DocumentManager documentManager;
 
 	private UserDAO userDAO;
+	
+	private HistoryDAO historyDAO;
 
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
@@ -59,6 +65,10 @@ public class ResourceServiceImpl implements ResourceService {
 		this.menuDAO = menuDAO;
 	}
 
+	public void setHistoryDAO(HistoryDAO historyDAO) {
+		this.historyDAO = historyDAO;
+	}
+	
 	public void setDocumentManager(DocumentManager documentManager) {
 		this.documentManager = documentManager;
 	}
@@ -84,6 +94,9 @@ public class ResourceServiceImpl implements ResourceService {
 		resource.setContentLength(document.getFileSize());
 		resource.setLastModified(document.getLastModified());
 		resource.isFolder(false);
+		resource.setIsCheckedOut(document.getStatus() == Document.DOC_CHECKED_OUT);
+		resource.setVersionLabel(document.getVersion());
+		resource.setAuthor(document.getPublisher());
 		return resource;
 	}
 
@@ -115,7 +128,9 @@ public class ResourceServiceImpl implements ResourceService {
 	public Resource getResource(String requestPath, long id) {
 		if (requestPath == null)
 			requestPath = "/";
-
+		
+		requestPath = requestPath.replace("/store", "");
+		
 		if (requestPath.length() > 0 && requestPath.substring(0, 1).equals("/"))
 			requestPath = requestPath.substring(1);
 
@@ -153,6 +168,7 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public Resource getParentResource(String resourcePath) {
+		resourcePath = resourcePath.replace("/store", "").replace("/vstore", "");
 		if (resourcePath.startsWith("/" + FOLDER_PREFIX + "/") == false)
 			resourcePath = "/" + FOLDER_PREFIX + resourcePath;
 
@@ -211,7 +227,27 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public void updateResource(Resource resource, ImportContext context) {
-		throw new AbstractMethodError();
+		User user = userDAO.findById(resource.getRequestedPerson());
+		
+		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
+
+		try {
+			
+			if (document.getStatus() == Document.DOC_CHECKED_OUT)
+				documentManager.checkin(Long.parseLong(resource.getID()), context
+						.getInputStream(), resource.getName(), user,
+						VERSION_TYPE.NEW_SUBVERSION, "", false);
+			
+			else {
+				this.createResource(context.getResource(), context
+						.getSystemId(), resource.isFolder(), context);
+			}
+			
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Resource getChildByName(Resource parentResource, String name) {
@@ -327,9 +363,13 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	@Override
-	public InputStream streamOut(Resource resource) {
+	public InputStream streamOut(Resource resource) {		
+		String version = resource.getVersionLabel();
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
-
+		
+		if(document.getVersion().equals(resource.getVersionLabel()))
+			version = null;
+		
 		if (document == null) {
 			// Document not found
 			return new ByteArrayInputStream(new String("not found").getBytes());
@@ -337,19 +377,58 @@ public class ResourceServiceImpl implements ResourceService {
 
 		File file = null;
 
-		if (document.getVersion().equals("1.0"))
+		if (version == null || version.equals(""))
 			file = documentManager.getDocumentFile(document, null);
 		else
-			file = documentManager.getDocumentFile(document, document.getVersion());
+			file = documentManager.getDocumentFile(document, resource.getVersionLabel());
 
-		if (!file.exists()) {
-			throw new DavResourceNotFoundException(file.getPath());
-		}
 		try {
 			FileInputStream fis = new FileInputStream(file);
 			return new BufferedInputStream(fis, 2048);
 		} catch (IOException e) {
 			throw new DavResourceIOException(e.getMessage());
 		}
+	}
+
+	@Override
+	public void checkout(Resource resource) {
+		User user = userDAO.findById(resource.getRequestedPerson());
+		try {
+			documentManager.checkout(Long.parseLong(resource.getID()), user);
+		} catch (NumberFormatException e) {
+			throw new RuntimeException(e);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public boolean isCheckedOut(Resource resource){
+		Document document = documentDAO.findById(Long.parseLong(resource
+				.getID()));
+		return document.getStatus() == Document.DOC_CHECKED_OUT;
+	}
+	
+	public List<Resource> getHistory(Resource resource){
+		List<Resource> resourceHistory = new LinkedList<Resource>();
+	
+		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
+		documentDAO.initialize(document);
+
+		Collection<Version> tmp = document.getVersions();
+		Version[] sortIt = (Version[]) tmp.toArray(new Version[0]);
+
+		// clear collection and add sorted elements
+		Arrays.sort(sortIt);
+		
+		for(Version version : sortIt){
+			Resource res = marshallDocument(document);
+			res.setVersionLabel(version.getVersion());
+			res.setVersionDate(version.getDate());
+			res.setAuthor(version.getUser());
+			res.setIsCheckedOut( true );
+			resourceHistory.add( res );
+		}
+
+		return resourceHistory;
 	}
 }

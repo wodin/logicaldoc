@@ -42,8 +42,28 @@ public interface Resource {
 	
 	public long getRequestedPerson();
 
+	public boolean getIsCheckedOut();
+	
+	public void setIsCheckedOut(boolean isCheckedOut);
+	
+	public void setVersionLabel(String versionLabel);
+	
+	public String getVersionLabel();
+
 	public Date getLastModified();
 
 	public void setLastModified(Date lastModified);
 
+	public void setVersionDate(Date date);
+	
+	public Date getVersionDate();
+	
+	public String getAuthor();
+	
+	public void setAuthor(String author);
+	
+	public String getComment();
+	
+	public void setComment(String comment);
+	
 }

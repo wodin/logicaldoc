@@ -54,13 +54,13 @@ public class DavResourceImpl implements DavResource {
 	 */
 	protected static Log log = LogFactory.getLog(DavResourceImpl.class);
 
-	private DavResourceFactory factory;
+	protected DavResourceFactory factory;
 
-	private DavSession session;
+	protected DavSession session;
 
-	private DavResourceLocator locator;
+	protected DavResourceLocator locator;
 
-	private Resource resource;
+	protected Resource resource;
 
 	protected DavPropertySet properties = new DavPropertySet();
 
@@ -68,12 +68,12 @@ public class DavResourceImpl implements DavResource {
 
 	private boolean isCollection = true;
 
-	private ResourceConfig config;
-
+	protected ResourceConfig config;
+	
 	//private long modificationTime = IOUtil.UNDEFINED_TIME;
 	private long modificationTime = System.currentTimeMillis();
 
-	private ResourceService resourceService;
+	protected ResourceService resourceService;
 
 	public DavResourceImpl(DavResourceLocator locator, DavResourceFactory factory, DavSession session,
 			ResourceConfig config, Resource resource) {
@@ -298,9 +298,11 @@ public class DavResourceImpl implements DavResource {
 		long lastmodTime = IOUtil.UNDEFINED_TIME;
         if (this.resource.getLastModified() != null) {
         	lastmodTime = this.resource.getLastModified().getTime();
-        } 
+        }
+        
     	String lastModified = IOUtil.getLastModified(lastmodTime);
-    	properties.add(new DefaultDavProperty(DavPropertyName.GETLASTMODIFIED, lastModified));
+		properties.add(new DefaultDavProperty(DavPropertyName.GETLASTMODIFIED,
+				lastModified));
 		
 		propsInitialized = true;
 	}
@@ -634,6 +636,10 @@ public class DavResourceImpl implements DavResource {
 		return this.resource;
 	}
 
+	protected DavResourceFactory getCostumizedFactory(){
+		return this.factory;
+	}
+	
 	/**
 	 * Returns a new <code>ImportContext</code>
 	 * 

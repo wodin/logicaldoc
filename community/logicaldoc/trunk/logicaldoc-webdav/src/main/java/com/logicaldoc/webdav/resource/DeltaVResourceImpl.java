@@ -15,6 +15,7 @@ import org.apache.jackrabbit.webdav.DavResourceLocator;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.property.DavProperty;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
+import org.apache.jackrabbit.webdav.property.DefaultDavProperty;
 import org.apache.jackrabbit.webdav.property.HrefProperty;
 import org.apache.jackrabbit.webdav.version.DeltaVConstants;
 import org.apache.jackrabbit.webdav.version.DeltaVResource;
@@ -156,7 +157,7 @@ public class DeltaVResourceImpl extends DavResourceImpl implements DeltaVResourc
      * @see DavLocatorFactory#createResourceLocator(String, String, String)
      */
     protected DavResourceLocator getLocatorFromNodePath(String nodePath) {
-        DavResourceLocator loc = getLocator().getFactory().createResourceLocator(getLocator().getPrefix(), getLocator().getWorkspacePath(), nodePath, false);
+        DavResourceLocator loc = getLocator().getFactory().createResourceLocator(getLocator().getPrefix(), "/", "", false);
         return loc;
     }
 
@@ -178,10 +179,12 @@ public class DeltaVResourceImpl extends DavResourceImpl implements DeltaVResourc
     protected void initSupportedReports() {
         if (exists()) {
             supportedReports.addReportType(ReportType.EXPAND_PROPERTY);
-            log.info("STR-CALL WARN: initSupportedReports");
             if (isCollection()) {
                supportedReports.addReportType(ReportType.LOCATE_BY_HISTORY);
             }
+
+            properties.add(new DefaultDavProperty(
+					DeltaVConstants.CREATOR_DISPLAYNAME, resource.getAuthor()));
         }
     }
 
