@@ -563,15 +563,16 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// Get original document directory path
 		String path = getDocFilePath(doc);
-		File originalDocDir = new File(path);
+		
+		File sourceFile = new File(path, doc.getFileName());
         
 		// initialize the document
-		documentDAO.initialize(doc);		
+		documentDAO.initialize(doc);
 		
-		InputStream is = new FileInputStream(originalDocDir);
+		InputStream is = new FileInputStream(sourceFile);
 		try {
-			return create(is, originalDocDir.getName(), folder, user, doc.getLanguage(), doc.getTitle(), doc.getSourceDate(), doc.getSource(), doc.getSourceAuthor(), doc.getSourceType(),
-					doc.getCoverage(), "", doc.getKeywords(), doc.getTemplate().getId(), doc.getAttributes(), false);
+			return create(is, sourceFile.getName(), folder, user, doc.getLanguage(), doc.getTitle(), doc.getSourceDate(), doc.getSource(), doc.getSourceAuthor(), doc.getSourceType(),
+			doc.getCoverage(), "", null, null, null, false);			
 		} finally {
 			is.close();
 		}	
