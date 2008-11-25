@@ -36,7 +36,7 @@
 		<ice:panelGrid columns="2">
 			<ice:panelGrid columns="2">
 				<ice:panelGroup styleClass="outputLabel">
-					<ice:outputLabel for="title" value="#{msgs['doctitle']}*" />
+					<ice:outputLabel for="title" value="#{msgs['document.title']}*" />
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="title"
@@ -102,6 +102,24 @@
 					<ice:panelGroup>
 						<ice:outputText value="#{documentForm.record.document.id}"
 							style="font-weight: bold" />
+					</ice:panelGroup>
+					
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['document.customid']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.record.customId}"
+							style="font-weight: bold" />
+					</ice:panelGroup>
+					
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['document.createdon']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.record.creationDate}"
+							style="font-weight: bold">
+							<f:convertDateTime pattern="#{loc.dateFormatShort}" />
+						</ice:outputText>
 					</ice:panelGroup>
 				</ice:panelGrid>
 			</ice:panelGroup>

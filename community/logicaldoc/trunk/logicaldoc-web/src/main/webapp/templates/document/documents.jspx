@@ -33,7 +33,7 @@
 			sortColumn="#{documentsRecordsManager.sortColumn}"
 			sortAscending="#{documentsRecordsManager.ascending}" cellpadding="0"
 			rows="#{documentsRecordsManager.displayedRows}"
-			columnClasses="selectionColumn,titleColumn,dateateColumn,numberColumn">
+			columnClasses="selectionColumn,numberColumn,titleColumn,dateColumn,numberColumn">
 
 			<!-- selection column -->
 			<ice:column>
@@ -65,11 +65,28 @@
 				</ice:panelGroup>
 			</ice:column>
 
-			<!-- Name -->
+			<!-- Custom Id -->
 			<ice:column>
 				<f:facet name="header">
-					<ice:commandSortHeader columnName="displayDescription" arrow="true">
-						<ice:outputText value="#{msgs['doctitle']}"
+					<ice:commandSortHeader columnName="customid" arrow="true">
+						<ice:outputText value="#{msgs['document.customid']}"
+							style="text-decoration: underline;" />
+					</ice:commandSortHeader>
+				</f:facet>
+				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
+					menuPopup="pop">
+					<ice:outputLink value="download?docId=#{documentRecord.document.customId}"
+						target="_blank" title="#{msgs['msg.jsp.popup']}">
+						<ice:outputText value=" #{documentRecord.customId}" />
+					</ice:outputLink>
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- Title -->
+			<ice:column>
+				<f:facet name="header">
+					<ice:commandSortHeader columnName="title" arrow="true">
+						<ice:outputText value="#{msgs['document.title']}"
 							style="text-decoration: underline;" />
 					</ice:commandSortHeader>
 				</f:facet>
