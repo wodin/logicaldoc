@@ -285,11 +285,34 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public void copyResource(Resource destinationResource, Resource resource) {
-		if (resource.isFolder() == true)
+		
+		log.error("copyResource");
+		
+		if (resource.isFolder() == true) {
 			throw new RuntimeException("FolderCopy not supported");
+		} else {
+			try {
+				log.info("resource.getID() = " + resource.getID());
+				log.info("destinationResource.getID() = " + destinationResource.getID());
+				Document document = documentDAO.findById(Long.parseLong(resource.getID()));
+				Menu menu = menuDAO.findById(Long.parseLong(destinationResource.getID()));
 
-		throw new RuntimeException("Copy of files not supported");
+				log.info("document = " + document);
+				log.info("document.getFileName() = " + document.getFileName());
+				
+				log.info("menu = " + menu);
+				log.info("menu.getText() = " + menu.getText());
+				log.info("menu.getPath() = " + menu.getPath());
+				
+				User user = userDAO.findById(resource.getRequestedPerson());
+				log.info("user = " + user);
 
+				documentManager.copyToFolder(document, menu, user);
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	@Override

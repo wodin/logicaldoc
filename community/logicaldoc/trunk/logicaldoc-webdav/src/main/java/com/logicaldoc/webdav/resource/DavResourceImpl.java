@@ -473,6 +473,9 @@ public class DavResourceImpl implements DavResource {
 	 * @see DavResource#copy(DavResource, boolean)
 	 */
 	public void copy(DavResource destination, boolean shallow) throws DavException {
+		
+		log.fatal("davResourceImpl.copy");
+		
 		if (!exists()) {
 			throw new DavException(DavServletResponse.SC_NOT_FOUND);
 		}
@@ -486,16 +489,64 @@ public class DavResourceImpl implements DavResource {
 			// otherwise it doesn't make a difference
 			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Unable to perform shallow copy.");
 		}
+		
+		
 		try {
+			log.fatal("destination = " + destination);
+			log.fatal("destination.getResourcePath() = " + destination.getResourcePath());
+			
+			Resource res = resourceService.getResource(destination.getLocator().getResourcePath(), this.resource
+					.getRequestedPerson());
+			log.fatal("res = " + res);
+			
+			if (res != null) {
+				log.fatal("res != null");
+				res.setName(this.resource.getName());
+				Resource destResource = resourceService.getParentResource(res);
+				log.fatal("destResource.getID() = " + destResource.getID());
+				log.fatal("destResource.getPath() = " + destResource.getPath());
+				
+				resourceService.copyResource(destResource, this.resource);
+			} else {
+				log.fatal("res IS NULL");
+				String name = destination.getLocator().getResourcePath();
+				name = name.substring(name.lastIndexOf("/") + 1, name.length()).replace("/default", "");
+				log.fatal("name = " + name);
+				
+				Resource destResource = resourceService.getParentResource(destination.getResourcePath());
+				this.resource.setName(name);			
+				
+				log.fatal("destResource.getID() = " + destResource.getID());
+				log.fatal("destResource.getPath() = " + destResource.getPath());
+				
+				log.fatal("this.resource.getName() = " + this.resource.getName());
+				log.fatal("this.resource.getPath() = " + this.resource.getPath());				
 
-			ResourceService resourceService = new ResourceServiceImpl();
-			resourceService.copyResource(
-					resourceService.getParentResource(destination.getLocator().getWorkspacePath()), this.resource);
+				resourceService.copyResource(destResource, this.resource);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+		
+//		try {
+//			ResourceService resourceService = new ResourceServiceImpl();
+//			
+//			Resource res = resourceService.getResource(destination.getLocator().getWorkspacePath(), this.resource.getRequestedPerson());
+//			log.info("res.getPath() = " + res.getPath());
+//			
+//			String workspacePath = destination.getLocator().getWorkspacePath();
+//			log.info("workspacePath = " + workspacePath);
+//			Resource parentResource = resourceService.getParentResource(workspacePath);
+//			log.info("parentResource = " + parentResource);
+//			
+//			resourceService.copyResource(parentResource, this.resource);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new RuntimeException(e);
+//		}
 	}
 
 	/**
