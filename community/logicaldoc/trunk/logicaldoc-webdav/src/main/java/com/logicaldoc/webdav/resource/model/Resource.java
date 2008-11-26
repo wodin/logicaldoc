@@ -65,5 +65,9 @@ public interface Resource {
 	public String getComment();
 	
 	public void setComment(String comment);
+
+	public void setCreationDate(Date creation);
+
+	public Date getCreationDate();
 	
 }

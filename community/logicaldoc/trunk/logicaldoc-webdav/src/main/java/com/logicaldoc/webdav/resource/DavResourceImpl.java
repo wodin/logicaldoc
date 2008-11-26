@@ -253,9 +253,6 @@ public class DavResourceImpl implements DavResource {
 	 * @see DavResource#getProperties()
 	 */
 	public DavPropertySet getProperties() {
-		
-		log.fatal("getProperties()");
-		
 		initProperties();
 		return properties;
 	}
@@ -303,6 +300,16 @@ public class DavResourceImpl implements DavResource {
     	String lastModified = IOUtil.getLastModified(lastmodTime);
 		properties.add(new DefaultDavProperty(DavPropertyName.GETLASTMODIFIED,
 				lastModified));
+		
+//		 Set Dav property CreationDate
+		
+		long creationTime = IOUtil.UNDEFINED_TIME;
+        if (this.resource.getCreationDate() != null) {
+        	creationTime = this.resource.getCreationDate().getTime();
+        }
+		String creationDate  = IOUtil.getCreated(creationTime);
+		properties.add(new DefaultDavProperty(DavPropertyName.CREATIONDATE,
+				creationDate));
 		
 		propsInitialized = true;
 	}

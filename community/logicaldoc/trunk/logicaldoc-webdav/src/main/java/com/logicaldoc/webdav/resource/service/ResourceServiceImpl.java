@@ -92,6 +92,7 @@ public class ResourceServiceImpl implements ResourceService {
 		resource.setID(new Long(document.getId()).toString());
 		resource.setName(document.getTitle() + "." + document.getType());
 		resource.setContentLength(document.getFileSize());
+		resource.setCreationDate(document.getCreation());
 		resource.setLastModified(document.getLastModified());
 		resource.isFolder(false);
 		resource.setIsCheckedOut(document.getStatus() == Document.DOC_CHECKED_OUT);
@@ -232,17 +233,14 @@ public class ResourceServiceImpl implements ResourceService {
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 
 		try {
-			
-			if (document.getStatus() == Document.DOC_CHECKED_OUT)
+			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
 				documentManager.checkin(Long.parseLong(resource.getID()), context
 						.getInputStream(), resource.getName(), user,
 						VERSION_TYPE.NEW_SUBVERSION, "", false);
-			
-			else {
+		    } else {
 				this.createResource(context.getResource(), context
 						.getSystemId(), resource.isFolder(), context);
 			}
-			
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
