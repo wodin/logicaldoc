@@ -138,7 +138,7 @@
 					value="#{msgs['msg.jsp.versiondesc']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
-				<ice:inputText value="#{documentForm.versionDesc}" cols="70" />
+				<ice:inputText value="#{documentForm.versionDesc}" size="70" />
 			</ice:panelGroup>
 		</ice:panelGrid>
 	</ice:panelGroup>
