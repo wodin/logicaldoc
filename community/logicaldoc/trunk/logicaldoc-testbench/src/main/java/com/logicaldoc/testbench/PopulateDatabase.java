@@ -201,7 +201,7 @@ public class PopulateDatabase {
 			insertMenuGroup = con
 					.prepareStatement("INSERT INTO LD_MENUGROUP (LD_MENUID,LD_GROUPID,LD_WRITE,LD_ADDCHILD,LD_MANAGESECURITY,LD_DELETE,LD_RENAME) VALUES (?,?,?,1,1,1,1);");
 			insertDoc = con
-					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_STATUS,LD_TYPE,LD_CHECKOUTUSER,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_INDEXED,LD_FOLDERID) VALUES (?,?,0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?);");
+					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_STATUS,LD_TYPE,LD_CHECKOUTUSER,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_INDEXED,LD_FOLDERID,LD_CREATION) VALUES (?,?,0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?);");
 			insertKeyword = con.prepareStatement("INSERT INTO LD_KEYWORD (LD_DOCID,LD_KEYWORD) VALUES (?,?);");
 			insertVersion = con
 					.prepareStatement("INSERT INTO LD_VERSION  (LD_DOCID, LD_VERSION, LD_USER, LD_DATE, LD_COMMENT)"
@@ -344,6 +344,8 @@ public class PopulateDatabase {
 		insertDoc.setLong(17, filesize);
 		// LD_FOLDERID
 		insertDoc.setLong(18, folderId);
+		// LD_CREATION
+		insertDoc.setDate(19, new Date(new java.util.Date().getTime()));
 
 		insertDoc.addBatch();
 		batchCount++;
@@ -412,7 +414,7 @@ public class PopulateDatabase {
 		insertMenu.setString(6, "administration.png");
 		// LD_PATH
 		insertMenu.setString(7, path);
-		
+
 		String pathExt = path;
 		if (pathExt.startsWith("/5") && pathExt.length() > 2) {
 			pathExt = "/db.projects" + pathExt.substring(2);
