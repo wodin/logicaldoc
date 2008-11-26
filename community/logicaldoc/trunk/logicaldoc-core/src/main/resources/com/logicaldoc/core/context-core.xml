@@ -243,6 +243,24 @@
 		</property>
 	</bean>
 
+	<bean id="SequenceDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.sequence.HibernateSequenceDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+				<property name="genericDao">
+					<ref bean="GenericDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
 	<!-- Managers -->
 	<bean id="SecurityManager" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
@@ -402,7 +420,7 @@
 			<value>${schedule.cron.IndexerTask}</value>
 		</property>
 	</bean>
-	
+
 	<bean id="IndexerTask"
 		class="com.logicaldoc.core.searchengine.IndexerTask">
 		<property name="documentDao">
