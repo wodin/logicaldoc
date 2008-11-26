@@ -396,7 +396,7 @@ public class DocumentEditForm {
 						getSourceDate(), source, sourceAuthor, sourceType, coverage, versionDesc, kwds, template,
 						attrs, immediateIndexing);
 				if (StringUtils.isNotEmpty(doc.getCustomId()))
-					Messages.addInfo(Messages.getMessage("document.created", doc.getCustomId()));
+					Messages.addInfo(Messages.getMessage("document.inserted", doc.getCustomId()));
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addLocalizedError("errors.action.savedoc");
