@@ -185,21 +185,7 @@
 		</property>
 		<property name="transactionAttributes">
 			<props>
-				<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
-				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
-				<prop key="load*">PROPAGATION_REQUIRED,readOnly</prop>
-				<prop key="has*">PROPAGATION_REQUIRED,readOnly</prop>
-				<prop key="initialize*">
-					PROPAGATION_REQUIRED,readOnly
-				</prop>
-				<prop key="exists">PROPAGATION_REQUIRED,readOnly</prop>
-				<prop key="store*">PROPAGATION_REQUIRED</prop>
-				<prop key="insert*">PROPAGATION_REQUIRED</prop>
-				<prop key="update*">PROPAGATION_REQUIRED</prop>
-				<prop key="delete*">PROPAGATION_REQUIRED</prop>
-				<prop key="remove*">PROPAGATION_REQUIRED</prop>
-				<prop key="assign*">PROPAGATION_REQUIRED</prop>
-				<prop key="restore*">PROPAGATION_REQUIRED</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
 			</props>
 		</property>
 	</bean>
