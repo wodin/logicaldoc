@@ -24,7 +24,8 @@ public class ResourceImpl implements Resource{
 	private Date versionDate;
 	private String author;
 	private String comment;
-	
+	private Date creationDate;
+
 	
 	public Long getContentLength() {
 		return contentLength;
@@ -149,6 +150,14 @@ public class ResourceImpl implements Resource{
 	@Override
 	public String getComment() {
 		return this.comment;
+	}
+
+	public void setCreationDate(Date creation) {
+		this.creationDate = lastModified;
+	}
+
+	public Date getCreationDate() {
+		return this.creationDate;
 	}
 	
 }
