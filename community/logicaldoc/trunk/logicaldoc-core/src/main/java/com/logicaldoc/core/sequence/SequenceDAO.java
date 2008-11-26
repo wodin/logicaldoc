@@ -2,6 +2,9 @@ package com.logicaldoc.core.sequence;
 
 /**
  * Utility DAO that can manage sequences persisted on the DB
+ * <p>
+ * <b>Important:</b> Implementations of this interface must grant
+ * synchronization.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 4.0
@@ -14,7 +17,7 @@ public interface SequenceDAO {
 	 * @param sequence The sequence name
 	 * @return The next value
 	 */
-	public int nextValue(String sequence);
+	public int next(String sequence);
 
 	/**
 	 * Initializes the sequence value
@@ -22,6 +25,6 @@ public interface SequenceDAO {
 	 * @param sequence The sequence name
 	 * @param value The initial value
 	 */
-	public void initValue(String sequence, int value);
+	public void reset(String sequence, int value);
 
 }

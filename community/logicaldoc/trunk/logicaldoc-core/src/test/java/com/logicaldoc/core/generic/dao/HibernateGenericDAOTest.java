@@ -27,7 +27,7 @@ public class HibernateGenericDAOTest extends AbstractCoreTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		// Retrieve the instance under test from spring context. Make sure that
-		// it is an HibernateGenericDAOTest
+		// it is an HibernateGenericDAO
 		dao = (GenericDAO) context.getBean("GenericDAO");
 	}
 

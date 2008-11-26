@@ -878,7 +878,7 @@ public class HibernateDocumentDAO extends HibernateDaoSupport implements Documen
 	public Document findByCustomId(String customId) {
 		Document doc = null;
 		try {
-			String query = "select _doc.id from Document _doc where _doc.customId = ?";
+			String query = "select _doc from Document _doc where _doc.customId = ?";
 			List<Document> coll = (List<Document>) getHibernateTemplate().find(query, customId);
 			if (!coll.isEmpty()) {
 				doc = coll.get(0);
