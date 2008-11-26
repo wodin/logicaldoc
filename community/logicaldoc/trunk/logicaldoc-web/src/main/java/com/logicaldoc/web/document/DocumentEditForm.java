@@ -392,12 +392,14 @@ public class DocumentEditForm {
 						attrs.put(att.getName(), att.getValue());
 				}
 
-				documentManager.create(file, folder, SessionManagement.getUser(), language, title, getSourceDate(),
-						source, sourceAuthor, sourceType, coverage, versionDesc, kwds, template, attrs,
-						immediateIndexing);
+				Document doc = documentManager.create(file, folder, SessionManagement.getUser(), language, title,
+						getSourceDate(), source, sourceAuthor, sourceType, coverage, versionDesc, kwds, template,
+						attrs, immediateIndexing);
+				if (StringUtils.isNotEmpty(doc.getCustomId()))
+					Messages.addInfo(Messages.getMessage("document.created", doc.getCustomId()));
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, "errors.action.savedoc", "errors.action.savedoc");
+				Messages.addLocalizedError("errors.action.savedoc");
 			} finally {
 				reset();
 			}
