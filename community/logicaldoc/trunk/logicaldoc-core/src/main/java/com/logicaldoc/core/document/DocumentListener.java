@@ -18,14 +18,18 @@ public interface DocumentListener {
 	 * 
 	 * @param document The document to be stored
 	 * @param dictionary Dictionary of the execution pipeline
+	 * 
+	 * @throws Exception
 	 */
-	public void beforeStore(Document document, Map<String, Object> dictionary);
+	public void beforeStore(Document document, Map<String, Object> dictionary) throws Exception;
 
 	/**
 	 * Called after a document is stored in the database
 	 * 
 	 * @param document The document to be stored
 	 * @param dictionary Dictionary of the execution pipeline
+	 * 
+	 * @throws Exception
 	 */
-	public void afterStore(Document document, Map<String, Object> dictionary);
+	public void afterStore(Document document, Map<String, Object> dictionary) throws Exception;
 }
