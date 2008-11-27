@@ -1,14 +1,12 @@
 package com.logicaldoc.core.generic.dao;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.generic.Generic;
 
 /**
@@ -17,8 +15,11 @@ import com.logicaldoc.core.generic.Generic;
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
-public class HibernateGenericDAO extends HibernateDaoSupport implements GenericDAO {
-	protected static Log log = LogFactory.getLog(HibernateGenericDAO.class);
+public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> implements GenericDAO {
+	public HibernateGenericDAO() {
+		super(Generic.class);
+		super.log = LogFactory.getLog(HibernateGenericDAO.class);
+	}
 
 	@Override
 	public boolean delete(long genericId) {
@@ -43,30 +44,10 @@ public class HibernateGenericDAO extends HibernateDaoSupport implements GenericD
 	@Override
 	public Generic findByAlternateKey(String type, String subtype) {
 		Generic generic = null;
-		try {
-			Collection<Generic> coll = (Collection<Generic>) getHibernateTemplate().find(
-					"from Generic _generic where _generic.type = '" + type + "' and _generic.subtype='" + subtype
-							+ "' and _generic.deleted=0");
-			if (coll.size() > 0) {
-				generic = coll.iterator().next();
-			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
-		return generic;
-	}
-
-	@Override
-	public Generic findById(long genericId) {
-		Generic generic = null;
-		try {
-			generic = (Generic) getHibernateTemplate().get(com.logicaldoc.core.generic.Generic.class, genericId);
-			if (generic != null && generic.getDeleted() == 1)
-				generic = null;
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
+		Collection<Generic> coll = findByWhere("_entity.type = '" + type + "' and _entity.subtype='"
+				+ subtype + "'");
+		if (coll.size() > 0) {
+			generic = coll.iterator().next();
 		}
 		return generic;
 	}
@@ -74,32 +55,12 @@ public class HibernateGenericDAO extends HibernateDaoSupport implements GenericD
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Generic> findByTypeAndSubtype(String type, String subtype) {
-		List<Generic> coll = new ArrayList<Generic>();
-		try {
-			String query = "from Generic _generic where _generic.deleted=0 ";
-			if (StringUtils.isNotEmpty(type))
-				query += " and _generic.type like '" + type + "' ";
-			if (StringUtils.isNotEmpty(subtype))
-				query += " and _generic.subtype like '" + subtype + "' ";
-			coll = (List<Generic>) getHibernateTemplate().find(query);
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
-		return coll;
-	}
-
-	@Override
-	public boolean store(Generic generic) {
-		boolean result = true;
-		try {
-			getHibernateTemplate().saveOrUpdate(generic);
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage());
-			result = false;
-		}
-		return result;
+		String query = " 1=1 ";
+		if (StringUtils.isNotEmpty(type))
+			query += " and _entity.type like '" + type + "' ";
+		if (StringUtils.isNotEmpty(subtype))
+			query += " and _entity.subtype like '" + subtype + "' ";
+		return findByWhere(query);
 	}
 
 	@Override

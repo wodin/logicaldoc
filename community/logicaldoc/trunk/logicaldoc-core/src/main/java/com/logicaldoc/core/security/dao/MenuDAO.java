@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
 
@@ -13,31 +14,7 @@ import com.logicaldoc.core.security.Permission;
  * @author Michael Scholz
  * @version 1.0
  */
-public interface MenuDAO {
-
-	/**
-	 * This method persists the menu object.
-	 * 
-	 * @param menu Menu to be stored.
-	 * @return True if successful stored in a database.
-	 */
-	public boolean store(Menu menu);
-
-	/**
-	 * This method deletes a menu in database.
-	 * 
-	 * @param menuId Menu to be deleted.
-	 * @return True if successful deleted.
-	 */
-	public boolean delete(long menuId);
-
-	/**
-	 * Finds a menu by ID.
-	 * 
-	 * @param menuId ID of wanted menu.
-	 * @return Wanted menu or null.
-	 */
-	public Menu findById(long menuId);
+public interface MenuDAO extends PersistentObjectDAO<Menu>{
 
 	/**
 	 * Finds all menus by menu text.
@@ -163,7 +140,7 @@ public interface MenuDAO {
 	 * @param userId privileges for this should be checked
 	 * @return a 0 if false, a 1 if true
 	 */
-	public Integer isMenuWriteable(long menuId, long userId);
+	public int isMenuWriteable(long menuId, long userId);
 
 	/**
 	 * checks that the user has access to the menu and all its sub-items
@@ -176,7 +153,7 @@ public interface MenuDAO {
 	 * @param groupId The group id
 	 * @return The collection of menus
 	 */
-	public Collection<Menu> findByGroupId(long groupId);
+	public List<Menu> findByGroupId(long groupId);
 
 	/**
 	 * Creates a new folder in the parent menu
@@ -212,7 +189,7 @@ public interface MenuDAO {
 	 * @param pathExtended
 	 * @return
 	 */
-	public Collection<Menu> findFoldersByPathExtended(String pathExtended);
+	public List<Menu> findFoldersByPathExtended(String pathExtended);
 
 	/**
 	 * Retrieval of a folder by the parent extended path

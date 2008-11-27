@@ -2,6 +2,8 @@ package com.logicaldoc.core.generic.dao;
 
 import java.util.List;
 
+import com.logicaldoc.core.PersistentObjectDAO;
+import com.logicaldoc.core.document.Article;
 import com.logicaldoc.core.generic.Generic;
 
 /**
@@ -10,31 +12,7 @@ import com.logicaldoc.core.generic.Generic;
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
-public interface GenericDAO {
-	/**
-	 * This method persists the Generic object.
-	 * 
-	 * @param menu Menu to be stored.
-	 * @return True if successful stored in a database.
-	 */
-	public boolean store(Generic generic);
-
-	/**
-	 * This method deletes a Generic in database.
-	 * 
-	 * @param genericId Menu to be deleted.
-	 * @return True if successful deleted.
-	 */
-	public boolean delete(long genericId);
-
-	/**
-	 * Finds a Generic by ID.
-	 * 
-	 * @param genericId ID of wanted generic.
-	 * @return Wanted generic or null.
-	 */
-	public Generic findById(long genericId);
-
+public interface GenericDAO extends PersistentObjectDAO<Generic>{
 	/**
 	 * Finds a Generic by it's alternate key
 	 * 
@@ -53,11 +31,4 @@ public interface GenericDAO {
 	 * @return The collection of fount Generics
 	 */
 	public List<Generic> findByTypeAndSubtype(String type, String subtype);
-	
-	/**
-	 * Initializes lazy loaded collections
-	 * 
-	 * @param generic The Generic to be initialized
-	 */
-	public void initialize(Generic generic);
 }

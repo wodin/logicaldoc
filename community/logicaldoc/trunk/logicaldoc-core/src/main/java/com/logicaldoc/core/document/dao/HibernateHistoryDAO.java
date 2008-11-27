@@ -3,13 +3,12 @@ package com.logicaldoc.core.document.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.History;
 
 /**
@@ -18,49 +17,11 @@ import com.logicaldoc.core.document.History;
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
-public class HibernateHistoryDAO extends HibernateDaoSupport implements HistoryDAO {
-
-	protected static Log log = LogFactory.getLog(HibernateHistoryDAO.class);
+public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> implements HistoryDAO {
 
 	private HibernateHistoryDAO() {
-	}
-
-	/**
-	 * @see com.logicaldoc.core.document.dao.HistoryDAO#store(com.logicaldoc.core.document.History)
-	 */
-	public boolean store(History history) {
-		boolean result = true;
-
-		try {
-			getHibernateTemplate().saveOrUpdate(history);
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage());
-			result = false;
-		}
-
-		return result;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.document.dao.HistoryDAO#delete(long)
-	 */
-	public boolean delete(long historyId) {
-		boolean result = true;
-
-		try {
-			History history = (History) getHibernateTemplate().get(History.class, historyId);
-			if (history != null) {
-				history.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(history);
-			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-			result = false;
-		}
-
-		return result;
+		super(History.class);
+		super.log = LogFactory.getLog(HibernateHistoryDAO.class);
 	}
 
 	/**
@@ -74,7 +35,6 @@ public class HibernateHistoryDAO extends HibernateDaoSupport implements HistoryD
 			DetachedCriteria dt = DetachedCriteria.forClass(History.class);
 			dt.add(Property.forName("docId").eq(new Long(docId)));
 			dt.addOrder(Order.asc("date"));
-
 			coll = (List<History>) getHibernateTemplate().findByCriteria(dt);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -95,7 +55,6 @@ public class HibernateHistoryDAO extends HibernateDaoSupport implements HistoryD
 			DetachedCriteria dt = DetachedCriteria.forClass(History.class);
 			dt.add(Property.forName("userId").eq(userId));
 			dt.addOrder(Order.asc("date"));
-
 			coll = (List<History>) getHibernateTemplate().findByCriteria(dt);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())

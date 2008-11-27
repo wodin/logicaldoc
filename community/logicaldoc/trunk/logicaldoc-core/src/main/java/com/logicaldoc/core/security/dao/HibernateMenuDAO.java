@@ -12,10 +12,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
@@ -28,13 +27,13 @@ import com.logicaldoc.core.security.User;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
-
-	protected static Log log = LogFactory.getLog(HibernateMenuDAO.class);
+public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> implements MenuDAO {
 
 	private UserDAO userDAO;
 
 	private HibernateMenuDAO() {
+		super(Menu.class);
+		super.log = LogFactory.getLog(HibernateMenuDAO.class);
 	}
 
 	public UserDAO getUserDAO() {
@@ -45,9 +44,6 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		this.userDAO = userDAO;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#store(com.logicaldoc.core.security.Menu)
-	 */
 	public boolean store(Menu menu) {
 		boolean result = true;
 
@@ -61,43 +57,6 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		}
 
 		return result;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#delete(int)
-	 */
-	public boolean delete(long menuId) {
-		boolean result = true;
-
-		try {
-			Menu menu = findById(menuId);
-			if (menu != null) {
-				menu.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(menu);
-			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			result = false;
-		}
-
-		return result;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findById(long)
-	 */
-	public Menu findById(long menuId) {
-		Menu menu = new Menu();
-
-		try {
-			menu = (Menu) getHibernateTemplate().get(Menu.class, menuId);
-			if (menu != null && menu.getDeleted() == 1)
-				menu = null;
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-
-		return menu;
 	}
 
 	/**
@@ -156,8 +115,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			if (precoll.isEmpty())
 				return coll;
 
-			StringBuffer query = new StringBuffer("select  distinct(_menu) from Menu _menu ");
-			query.append(" left outer join _menu.menuGroups as _group");
+			StringBuffer query = new StringBuffer("select  distinct(_entity) from Menu _entity ");
+			query.append(" left outer join _entity.menuGroups as _group");
 			query.append(" where _group.groupId in (");
 
 			boolean first = true;
@@ -168,10 +127,10 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 				query.append(Long.toString(ug.getId()));
 				first = false;
 			}
-			query.append(") and _menu.parentId = ?");
+			query.append(") and _entity.parentId = ?");
 			if (type != null)
-				query.append(" and _menu.type = " + type.toString());
-			query.append(" order by _menu.type, _menu.sort, _menu.text");
+				query.append(" and _entity.type = " + type.toString());
+			query.append(" order by _entity.type, _entity.sort, _entity.text");
 
 			coll = (List<Menu>) getHibernateTemplate().find(query.toString(), parentId);
 		} catch (Exception e) {
@@ -194,8 +153,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			Iterator iter = precoll.iterator();
 			if (precoll.isEmpty())
 				return count;
-			StringBuffer query = new StringBuffer("select  count(_menu.id) from Menu _menu ");
-			query.append(" left outer join _menu.menuGroups as _group");
+			StringBuffer query = new StringBuffer("select  count(_entity.id) from Menu _entity ");
+			query.append(" left outer join _entity.menuGroups as _group");
 			query.append(" where _group.groupId in (");
 
 			boolean first = true;
@@ -206,32 +165,21 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 				query.append(Long.toString(ug.getId()));
 				first = false;
 			}
-			query.append(") and _menu.parentId = ?");
+			query.append(") and _entity.parentId = ?");
 			if (type != null)
-				query.append(" and _menu.type = " + type.toString());
+				query.append(" and _entity.type = " + type.toString());
 			count = ((Long) getHibernateTemplate().find(query.toString(), parentId).get(0)).intValue();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
-
 		return count;
 	}
 
 	/**
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findChildren(long)
 	 */
-	@SuppressWarnings("unchecked")
 	public Collection<Menu> findChildren(long parentId) {
-		Collection<Menu> coll = null;
-
-		try {
-			coll = (Collection<Menu>) getHibernateTemplate().find(
-					"from Menu _menu where _menu.parentId = ? and _menu.id!=_menu.parentId", new Object[] { parentId });
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-
-		return coll;
+		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId });
 	}
 
 	/**
@@ -279,8 +227,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 					return false;
 				Iterator iter = Groups.iterator();
 
-				StringBuffer query = new StringBuffer("select distinct(_menu) from Menu _menu  ");
-				query.append(" left outer join _menu.menuGroups as _group ");
+				StringBuffer query = new StringBuffer("select distinct(_entity) from Menu _entity  ");
+				query.append(" left outer join _entity.menuGroups as _group ");
 				query.append(" where _group.groupId in (");
 
 				boolean first = true;
@@ -291,7 +239,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 					query.append(Long.toString(ug.getId()));
 					first = false;
 				}
-				query.append(") and _menu.id=?");
+				query.append(") and _entity.id=?");
 
 				Collection<MenuGroup> coll = (Collection<MenuGroup>) getHibernateTemplate().find(query.toString(),
 						new Object[] { new Long(menuId) });
@@ -374,7 +322,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	/**
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#isMenuWriteable(long, long)
 	 */
-	public Integer isMenuWriteable(long menuId, long userId) {
+	public int isMenuWriteable(long menuId, long userId) {
 		boolean writePrivilegeBool = isWriteEnable(menuId, userId);
 		int writePrivilegeInt = 0;
 
@@ -382,7 +330,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 			writePrivilegeInt = 1;
 		}
 
-		return new Integer(writePrivilegeInt);
+		return writePrivilegeInt;
 	}
 
 	/**
@@ -411,15 +359,15 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByGroupId(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Menu> findByGroupId(long groupId) {
-		Collection<Menu> coll = new ArrayList<Menu>();
+	public List<Menu> findByGroupId(long groupId) {
+		List<Menu> coll = new ArrayList<Menu>();
 
 		try {
-			StringBuffer query = new StringBuffer("select distinct(_menu) from Menu _menu  ");
-			query.append(" left outer join _menu.menuGroups as _group ");
+			StringBuffer query = new StringBuffer("select distinct(_entity) from Menu _entity  ");
+			query.append(" left outer join _entity.menuGroups as _group ");
 			query.append(" where _group.groupId = ?");
 
-			coll = (Collection<Menu>) getHibernateTemplate().find(query.toString(), new Long(groupId));
+			coll = (List<Menu>) getHibernateTemplate().find(query.toString(), new Long(groupId));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -494,22 +442,13 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	 *      java.lang.String, java.lang.Integer)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
 	public Collection<Menu> findByText(Menu parent, String text, Integer type) {
-		Collection<Menu> coll = new ArrayList<Menu>();
-		StringBuffer query = new StringBuffer("from Menu _menu where _menu.text like '" + text + "' ");
+		StringBuffer query = new StringBuffer("_entity.text like '" + text + "' ");
 		if (parent != null)
-			query.append(" AND _menu.parentId = " + parent.getId());
+			query.append(" AND _entity.parentId = " + parent.getId());
 		if (type != null)
-			query.append(" AND _menu.type = " + type.intValue());
-
-		try {
-			coll = (Collection<Menu>) getHibernateTemplate().find(query.toString());
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-
-		return coll;
+			query.append(" AND _entity.type = " + type.intValue());
+		return findByWhere(query.toString());
 	}
 
 	@Override
@@ -611,8 +550,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 				return false;
 			Iterator<Group> iter = groups.iterator();
 
-			StringBuffer query = new StringBuffer("select distinct(_menu) from Menu _menu  ");
-			query.append(" left outer join _menu.menuGroups as _group ");
+			StringBuffer query = new StringBuffer("select distinct(_entity) from Menu _entity  ");
+			query.append(" left outer join _entity.menuGroups as _group ");
 			query.append(" where _group.groupId in (");
 
 			boolean first = true;
@@ -623,7 +562,7 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 				query.append(Long.toString(ug.getId()));
 				first = false;
 			}
-			query.append(") and _group." + permission.getName() + "=1 and _menu.id=?");
+			query.append(") and _group." + permission.getName() + "=1 and _entity.id=?");
 
 			Collection<MenuGroup> coll = (Collection<MenuGroup>) getHibernateTemplate().find(query.toString(),
 					new Object[] { new Long(menuId) });
@@ -638,40 +577,21 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public Collection<Menu> findFoldersByPathExtended(String path) {
-
-		Collection<Menu> specified_menu = new ArrayList<Menu>();
-		try {
-
-			specified_menu = (List<Menu>) getHibernateTemplate().find(
-					"from Menu _menu where  _menu.pathExtended = '" + path + "'");
-
-			if (specified_menu != null && specified_menu.size() > 0)
-				return specified_menu;
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-
+	public List<Menu> findFoldersByPathExtended(String path) {
+		List<Menu> specified_menu = new ArrayList<Menu>();
+		specified_menu = (List<Menu>) findByWhere("_entity.pathExtended = '" + path + "'");
+		if (specified_menu != null && specified_menu.size() > 0)
+			return specified_menu;
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Menu findFolder(String folderName, String pathExtended) {
-		Collection<Menu> specified_menu = new ArrayList<Menu>();
-		try {
-
-			specified_menu = (List<Menu>) getHibernateTemplate().find(
-					"from Menu _menu where _menu.text = '" + folderName + "' AND _menu.pathExtended = '" + pathExtended
-							+ "'");
-
-			if (specified_menu != null && specified_menu.size() > 0)
-				return specified_menu.iterator().next();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-
+		List<Menu> specified_menu = findByWhere("_entity.text = '" + folderName + "' AND _entity.pathExtended = '"
+				+ pathExtended + "'");
+		if (specified_menu != null && specified_menu.size() > 0)
+			return specified_menu.iterator().next();
 		return null;
 	}
 
@@ -684,9 +604,9 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 		try {
 			con = getSession().connection();
 
-			StringBuffer query = new StringBuffer("update ld_menu _menu  ");
-			query.append(" set _menu.ld_deleted=0 ");
-			query.append(" where _menu.ld_id = ?");
+			StringBuffer query = new StringBuffer("update ld_menu _entity  ");
+			query.append(" set _entity.ld_deleted=0 ");
+			query.append(" where _entity.ld_id = ?");
 			stmt = con.prepareStatement(query.toString());
 
 			// Restore the menu
@@ -695,8 +615,8 @@ public class HibernateMenuDAO extends HibernateDaoSupport implements MenuDAO {
 
 			// Restore parents
 			if (parents) {
-				query = new StringBuffer("select _menu.ld_parentid from ld_menu _menu  ");
-				query.append(" where _menu.ld_id = ?");
+				query = new StringBuffer("select _entity.ld_parentid from ld_menu _entity  ");
+				query.append(" where _entity.ld_id = ?");
 				stmt2 = con.prepareStatement(query.toString());
 
 				stmt2.setLong(1, menuId);

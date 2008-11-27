@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
 
 /**
@@ -14,30 +15,7 @@ import com.logicaldoc.core.document.Document;
  * @author Marco Meschieri
  * @version 1.0
  */
-public interface DocumentDAO {
-	/**
-	 * This method persists a document object.
-	 * 
-	 * @param doc Document to be stored.
-	 * @return True if successfully stored in a database.
-	 */
-	public boolean store(Document doc);
-
-	/**
-	 * This method deletes a document.
-	 * 
-	 * @param docId DocID of the document which should be delete.
-	 */
-	public boolean delete(long docId);
-
-	/**
-	 * This method finds a document by ID.
-	 * 
-	 * @param docId ID of the document.
-	 * @return Document with given ID.
-	 */
-	public Document findById(long docId);
-
+public interface DocumentDAO extends PersistentObjectDAO<Document>{
 	/**
 	 * This method finds a document by the custom ID.
 	 * 
@@ -45,11 +23,6 @@ public interface DocumentDAO {
 	 * @return Document with given ID.
 	 */
 	public Document findByCustomId(String customId);
-
-	/**
-	 * This method selects all documents.
-	 */
-	public List<Document> findAll();
 
 	/**
 	 * Finds all documents for an user.

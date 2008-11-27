@@ -2,10 +2,9 @@ package com.logicaldoc.core.document.dao;
 
 import java.util.Collection;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.DownloadTicket;
 
 /**
@@ -14,11 +13,12 @@ import com.logicaldoc.core.document.DownloadTicket;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements DownloadTicketDAO {
+public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<DownloadTicket> implements
+		DownloadTicketDAO {
 
-	protected static Log log = LogFactory.getLog(HibernateDownloadTicketDAO.class);
-
-	private HibernateDownloadTicketDAO() {
+	public HibernateDownloadTicketDAO() {
+		super(DownloadTicket.class);
+		super.log = LogFactory.getLog(HibernateArticleDAO.class);
 	}
 
 	/**
@@ -27,7 +27,6 @@ public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements D
 	@SuppressWarnings("unchecked")
 	public boolean deleteByTicketId(String ticketid) {
 		boolean result = true;
-
 		try {
 			DownloadTicket ticket = findByTicketId(ticketid);
 			if (ticket != null) {
@@ -61,39 +60,6 @@ public class HibernateDownloadTicketDAO extends HibernateDaoSupport implements D
 				logger.error(e.getMessage(), e);
 		}
 		return null;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#findById(long)
-	 */
-	public DownloadTicket findById(long ticketId) {
-		DownloadTicket ticket = null;
-		try {
-			ticket = (DownloadTicket) getHibernateTemplate().get(DownloadTicket.class, ticketId);
-			if (ticket != null && ticket.getDeleted() == 1)
-				ticket = null;
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
-		}
-		return ticket;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#store(com.logicaldoc.core.document.DownloadTicket)
-	 */
-	public boolean store(DownloadTicket ticket) {
-		boolean result = true;
-
-		try {
-			getHibernateTemplate().saveOrUpdate(ticket);
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
-			result = false;
-		}
-
-		return result;
 	}
 
 	/**
