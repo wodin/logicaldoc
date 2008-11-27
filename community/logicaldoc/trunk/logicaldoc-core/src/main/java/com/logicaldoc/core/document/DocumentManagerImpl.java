@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -37,18 +38,24 @@ import com.logicaldoc.util.config.SettingsConfig;
  * @since 3.5
  */
 public class DocumentManagerImpl implements DocumentManager {
-	
+
 	protected static Log log = LogFactory.getLog(DocumentManagerImpl.class);
 
 	private DocumentDAO documentDAO;
 
 	private DocumentTemplateDAO documentTemplateDAO;
 
+	private DocumentListenerManager listenerManager;
+
 	private HistoryDAO historyDAO;
 
 	private SettingsConfig settings;
 
 	private Indexer indexer;
+
+	public void setListenerManager(DocumentListenerManager listenerManager) {
+		this.listenerManager = listenerManager;
+	}
 
 	public void setDocumentDAO(DocumentDAO documentDAO) {
 		this.documentDAO = documentDAO;
@@ -87,6 +94,14 @@ public class DocumentManagerImpl implements DocumentManager {
 		// identify the document and menu
 		Document document = documentDAO.findById(docId);
 		documentDAO.initialize(document);
+
+		Map<String, Object> dictionary = new HashMap<String, Object>();
+
+		log.debug("Invoke listeners before checkin");
+		for (DocumentListener listener : listenerManager.getListeners()) {
+			listener.beforeCheckin(document, dictionary);
+		}
+
 		document.setIndexed(0);
 		documentDAO.store(document);
 
@@ -127,6 +142,11 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// store the document in the repository (on the file system)
 		store(document, fileInputStream, filename, newVersion);
+
+		log.debug("Invoke listeners after store");
+		for (DocumentListener listener : listenerManager.getListeners()) {
+			listener.afterCheckin(document, dictionary);
+		}
 
 		log.debug("Checked in document " + docId);
 	}
@@ -287,8 +307,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
-			String sourceType, String coverage, String language, Set<String> keywords)
-			throws Exception {
+			String sourceType, String coverage, String language, Set<String> keywords) throws Exception {
 		try {
 			doc.setTitle(title);
 			doc.setSource(source);
@@ -318,7 +337,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			historyDAO.store(history);
 
 			// Launch document re-indexing
-			if (doc.getIndexed()==1)
+			if (doc.getIndexed() == 1)
 				reindex(doc, oldLang);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -563,18 +582,19 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// Get original document directory path
 		String path = getDocFilePath(doc);
-		
+
 		File sourceFile = new File(path, doc.getFileName());
-        
+
 		// initialize the document
 		documentDAO.initialize(doc);
-		
+
 		InputStream is = new FileInputStream(sourceFile);
 		try {
-			return create(is, sourceFile.getName(), folder, user, doc.getLanguage(), doc.getTitle(), doc.getSourceDate(), doc.getSource(), doc.getSourceAuthor(), doc.getSourceType(),
-			doc.getCoverage(), "", null, null, null, false);			
+			return create(is, sourceFile.getName(), folder, user, doc.getLanguage(), doc.getTitle(), doc
+					.getSourceDate(), doc.getSource(), doc.getSourceAuthor(), doc.getSourceType(), doc.getCoverage(),
+					"", null, null, null, false);
 		} finally {
 			is.close();
-		}	
+		}
 	}
 }

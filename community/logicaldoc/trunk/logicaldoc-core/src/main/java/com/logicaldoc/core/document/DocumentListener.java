@@ -32,4 +32,25 @@ public interface DocumentListener {
 	 * @throws Exception
 	 */
 	public void afterStore(Document document, Map<String, Object> dictionary) throws Exception;
+	
+
+	/**
+	 * Called before a document is checked in
+	 * 
+	 * @param document The document to be checked in
+	 * @param dictionary Dictionary of the execution pipeline
+	 * 
+	 * @throws Exception
+	 */
+	public void beforeCheckin(Document document, Map<String, Object> dictionary) throws Exception;
+
+	/**
+	 * Called after a document is checked in
+	 * 
+	 * @param document The document to be checked in
+	 * @param dictionary Dictionary of the execution pipeline
+	 * 
+	 * @throws Exception
+	 */
+	public void afterCheckin(Document document, Map<String, Object> dictionary) throws Exception;
 }
