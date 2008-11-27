@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -63,11 +62,11 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByUserId(long)
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<Menu> findByUserId(long userId) {
-		Collection<Menu> coll = new ArrayList<Menu>();
+	public List<Menu> findByUserId(long userId) {
+		List<Menu> coll = new ArrayList<Menu>();
 		try {
 			User user = userDAO.findById(userId);
-			Collection<Group> precoll = user.getGroups();
+			Set<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 
 			if (!precoll.isEmpty()) {
@@ -84,7 +83,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					first = false;
 				}
 				query.append(")");
-				coll = (Collection<Menu>) getHibernateTemplate().find(query.toString());
+				coll = (List<Menu>) getHibernateTemplate().find(query.toString());
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -110,7 +109,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 		try {
 			User user = userDAO.findById(userId);
-			Collection<Group> precoll = user.getGroups();
+			Set<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 			if (precoll.isEmpty())
 				return coll;
@@ -149,7 +148,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		long count = 0;
 		try {
 			User user = userDAO.findById(userId);
-			Collection<Group> precoll = user.getGroups();
+			Set<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 			if (precoll.isEmpty())
 				return count;
@@ -178,23 +177,23 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	/**
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findChildren(long)
 	 */
-	public Collection<Menu> findChildren(long parentId) {
+	public List<Menu> findChildren(long parentId) {
 		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId });
 	}
 
 	/**
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByParentId(long)
 	 */
-	public Collection<Menu> findByParentId(long parentId) {
-		Collection<Menu> coll = new ArrayList<Menu>();
-		Collection<Menu> temp = findChildren(parentId);
+	public List<Menu> findByParentId(long parentId) {
+		List<Menu> coll = new ArrayList<Menu>();
+		List<Menu> temp = findChildren(parentId);
 		Iterator<Menu> iter = temp.iterator();
 
 		while (iter.hasNext()) {
 			Menu menu = iter.next();
 			coll.add(menu);
 
-			Collection<Menu> coll2 = findByParentId(menu.getId());
+			List<Menu> coll2 = findByParentId(menu.getId());
 
 			if (coll2 != null) {
 				coll.addAll(coll2);
@@ -222,7 +221,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		try {
 			try {
 				User user = userDAO.findById(userId);
-				Collection<Group> Groups = user.getGroups();
+				Set<Group> Groups = user.getGroups();
 				if (Groups.isEmpty())
 					return false;
 				Iterator iter = Groups.iterator();
@@ -241,7 +240,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				}
 				query.append(") and _entity.id=?");
 
-				Collection<MenuGroup> coll = (Collection<MenuGroup>) getHibernateTemplate().find(query.toString(),
+				List<MenuGroup> coll = (List<MenuGroup>) getHibernateTemplate().find(query.toString(),
 						new Object[] { new Long(menuId) });
 				result = coll.size() > 0;
 			} catch (Exception e) {
@@ -276,7 +275,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		Set<Long> ids = new HashSet<Long>();
 		try {
 			User user = userDAO.findById(userId);
-			Collection<Group> precoll = user.getGroups();
+			Set<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 
 			if (!precoll.isEmpty()) {
@@ -343,7 +342,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 
 		if (menu.getType() == Menu.MENUTYPE_DIRECTORY) {
-			Collection<Menu> children = findByParentId(menu.getId());
+			List<Menu> children = findByParentId(menu.getId());
 
 			for (Menu subMenu : children) {
 				if (!hasWriteAccess(subMenu, userId)) {
@@ -386,7 +385,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		Set<Long> ids = new HashSet<Long>();
 		try {
 			User user = userDAO.findById(userId);
-			Collection<Group> precoll = user.getGroups();
+			Set<Group> precoll = user.getGroups();
 			Iterator iter = precoll.iterator();
 
 			if (!precoll.isEmpty()) {
@@ -433,7 +432,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	/**
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByText(java.lang.String)
 	 */
-	public Collection<Menu> findByText(String text) {
+	public List<Menu> findByText(String text) {
 		return findByText(null, text, null);
 	}
 
@@ -442,7 +441,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 *      java.lang.String, java.lang.Integer)
 	 */
 	@Override
-	public Collection<Menu> findByText(Menu parent, String text, Integer type) {
+	public List<Menu> findByText(Menu parent, String text, Integer type) {
 		StringBuffer query = new StringBuffer("_entity.text like '" + text + "' ");
 		if (parent != null)
 			query.append(" AND _entity.parentId = " + parent.getId());
@@ -476,7 +475,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		Menu menu = parent;
 		while (st.hasMoreTokens()) {
 			String name = st.nextToken();
-			Collection<Menu> childs = findByText(menu, name, Menu.MENUTYPE_DIRECTORY);
+			List<Menu> childs = findByText(menu, name, Menu.MENUTYPE_DIRECTORY);
 			Menu dir;
 			if (childs.isEmpty())
 				dir = createFolder(menu, name);
@@ -526,7 +525,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 
 		// Recursively invoke the method on all direct children
-		Collection<Menu> children = findByParentId(menu.getId());
+		List<Menu> children = findByParentId(menu.getId());
 		for (Menu child : children) {
 			updatePathExtended(child);
 		}
@@ -545,7 +544,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 		try {
 			User user = userDAO.findById(userId);
-			Collection<Group> groups = user.getGroups();
+			Set<Group> groups = user.getGroups();
 			if (groups.isEmpty())
 				return false;
 			Iterator<Group> iter = groups.iterator();
@@ -564,7 +563,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			}
 			query.append(") and _group." + permission.getName() + "=1 and _entity.id=?");
 
-			Collection<MenuGroup> coll = (Collection<MenuGroup>) getHibernateTemplate().find(query.toString(),
+			List<MenuGroup> coll = (List<MenuGroup>) getHibernateTemplate().find(query.toString(),
 					new Object[] { new Long(menuId) });
 
 			result = coll.size() > 0;

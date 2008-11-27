@@ -20,9 +20,9 @@ public interface MenuDAO extends PersistentObjectDAO<Menu>{
 	 * Finds all menus by menu text.
 	 * 
 	 * @param text
-	 * @return Collection of menus with given menu text.
+	 * @return List of menus with given menu text.
 	 */
-	public Collection<Menu> findByText(String text);
+	public List<Menu> findByText(String text);
 
 	/**
 	 * Finds all menus by menu text, contained in the parent menu and of the
@@ -31,23 +31,23 @@ public interface MenuDAO extends PersistentObjectDAO<Menu>{
 	 * @param parent The parent menu(optional)
 	 * @param text The menutext to search for
 	 * @param type The menu type(optional)
-	 * @return Collection of menus with given menu text.
+	 * @return List of menus with given menu text.
 	 */
-	public Collection<Menu> findByText(Menu parent, String text, Integer type);
+	public List<Menu> findByText(Menu parent, String text, Integer type);
 
 	/**
 	 * Finds authorized menus for a user.
 	 * 
 	 * @param userId ID of the user.
-	 * @return Collection of found menus.
+	 * @return List of found menus.
 	 */
-	public Collection<Menu> findByUserId(long userId);
+	public List<Menu> findByUserId(long userId);
 
 	/**
 	 * Finds direct children of a menu.
 	 * 
 	 * @param parentId MenuId of the menu which children are wanted.
-	 * @return Collection of found menus sorted by type, sort, text
+	 * @return List of found menus sorted by type, sort, text
 	 */
 	public List<Menu> findByUserId(long userId, long parentId);
 
@@ -56,7 +56,7 @@ public interface MenuDAO extends PersistentObjectDAO<Menu>{
 	 * 
 	 * @param parentId MenuId of the menu which children are wanted.
 	 * @param type The wanted menu type, can be null
-	 * @return Collection of found menus sorted by type, sort, text
+	 * @return List of found menus sorted by type, sort, text
 	 */
 	public List<Menu> findByUserId(long userId, long parentId, Integer type);
 
@@ -75,15 +75,15 @@ public interface MenuDAO extends PersistentObjectDAO<Menu>{
 	 * @param parentId
 	 * @return
 	 */
-	public Collection<Menu> findByParentId(long parentId);
+	public List<Menu> findByParentId(long parentId);
 
 	/**
 	 * Finds direct children of a menu.
 	 * 
 	 * @param parentId MenuId of the menu which children are wanted.
-	 * @return Collection of found menus.
+	 * @return List of found menus.
 	 */
-	public Collection<Menu> findChildren(long parentId);
+	public List<Menu> findChildren(long parentId);
 
 	/**
 	 * This method is looking up for writing rights for a menu and an user.
@@ -118,7 +118,7 @@ public interface MenuDAO extends PersistentObjectDAO<Menu>{
 	 * authorized.
 	 * 
 	 * @param userId ID of the user.
-	 * @return Collection of selected menuId's.
+	 * @return List of selected menuId's.
 	 */
 	public Set<Long> findMenuIdByUserId(long userId);
 
@@ -129,7 +129,7 @@ public interface MenuDAO extends PersistentObjectDAO<Menu>{
 	 * @param userId ID of the user.
 	 * @param parentId Parent menu
 	 * @param type The menu type, can be null
-	 * @return Collection of selected menuId's.
+	 * @return List of selected menuId's.
 	 */
 	public Set<Long> findMenuIdByUserId(long userId, long parentId, Integer type);
 
@@ -151,7 +151,7 @@ public interface MenuDAO extends PersistentObjectDAO<Menu>{
 	 * Finds all menus associated to the passed group
 	 * 
 	 * @param groupId The group id
-	 * @return The collection of menus
+	 * @return The List of menus
 	 */
 	public List<Menu> findByGroupId(long groupId);
 
@@ -176,7 +176,7 @@ public interface MenuDAO extends PersistentObjectDAO<Menu>{
 	public Menu createFolders(Menu parent, String path);
 
 	/**
-	 * Returns a Collection of menus being a parent of the given menu. The list
+	 * Returns a List of menus being a parent of the given menu. The list
 	 * is ordered starting from the root of menus.
 	 * 
 	 * @param menuId
