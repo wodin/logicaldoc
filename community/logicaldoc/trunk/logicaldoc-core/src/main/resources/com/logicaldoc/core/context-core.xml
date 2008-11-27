@@ -322,6 +322,9 @@
 				<property name="indexer">
 					<ref bean="Indexer" />
 				</property>
+				<property name="listenerManager">
+					<ref bean="DocumentListenerManager" />
+				</property>
 			</bean>
 		</property>
 	</bean>
