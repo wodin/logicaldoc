@@ -110,7 +110,15 @@ values     (25,'2008-10-22',0,'db.searchengine',2,6,'search.png','/2',1,'admin/s
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (26,'2008-10-22',0,'tags',1,5,'tags.png','/',1,'search/tags',0);
+values     (18,'2008-10-22',0,'searches',1,6,'search.png','/1',1,null,0);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (26,'2008-10-22',0,'tags',18,5,'tags.png','/1/18',1,'search/tags',0);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (15,'2008-10-22',0,'search.advanced',18,5,'search.png','/1/18',1,'search/advancedSearch',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
@@ -187,6 +195,12 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_manag
 values     (26,1,1,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
+values     (18,1,1,0,0,0,0);
+
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
+values     (15,1,1,0,0,0,0);
+
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (1,2,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
@@ -212,6 +226,12 @@ values     (23,2,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (26,2,1,0,0,0,0);
+
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
+values     (18,2,1,0,0,0,0);
+
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
+values     (15,2,1,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename)
 values     (1,3,0,0,0,0,0);
