@@ -417,7 +417,7 @@
 		dependency-check="default">
 		<property name="jobDetail" ref="IndexerTaskJob" />
 		<property name="cronExpression">
-			<value>${schedule.cron.IndexerTask}</value>
+			<value>${schedule.cron.TagCloudGenerator}</value>
 		</property>
 	</bean>
 
