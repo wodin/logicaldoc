@@ -1,14 +1,12 @@
 package com.logicaldoc.core.security.dao;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.UserDoc;
 
 /**
@@ -18,25 +16,21 @@ import com.logicaldoc.core.security.UserDoc;
  * @version $Id: HibernateUserDocDAO.java,v 1.1 2007/06/29 06:28:25 marco Exp $
  * @since 3.0
  */
-public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocDAO {
-
-	protected static Log log = LogFactory.getLog(HibernateUserDocDAO.class);
-
-	private HibernateUserDocDAO() {
+public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> implements UserDocDAO {
+	public HibernateUserDocDAO() {
+		super(UserDoc.class);
+		super.log = LogFactory.getLog(HibernateUserDocDAO.class);
 	}
 
 	/**
 	 * @see com.logicaldoc.core.security.dao.UserDocDAO#delete(long,
 	 *      java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public boolean delete(long docId, long userId) {
 		boolean result = true;
 
 		try {
-			Collection<UserDoc> coll = (Collection<UserDoc>) getHibernateTemplate().find(
-					"from UserDoc _userdoc where _userdoc.docId = ? and _userdoc.userId = ?",
-					new Object[] { docId, userId });
+			List<UserDoc> coll = findByWhere("_entity.docId = ? and _entity.userId = ?", new Object[] { docId, userId });
 			for (UserDoc userDoc : coll) {
 				userDoc.setDeleted(1);
 				getHibernateTemplate().saveOrUpdate(userDoc);
@@ -59,9 +53,7 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 		boolean result = false;
 
 		try {
-			Collection<UserDoc> coll = (Collection<UserDoc>) getHibernateTemplate().find(
-					"from UserDoc _userdoc where _userdoc.docId = ? and _userdoc.userId = ?",
-					new Object[] { docId, userId });
+			List<UserDoc> coll = findByWhere("_entity.docId = ? and _entity.userId = ?", new Object[] { docId, userId });
 			return coll != null && coll.size() > 0;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -91,18 +83,7 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	 */
 	@SuppressWarnings("unchecked")
 	public List<UserDoc> findByUserId(long userId) {
-		List<UserDoc> coll = new ArrayList<UserDoc>();
-
-		try {
-			coll = (List<UserDoc>) getHibernateTemplate().find(
-					"from UserDoc _userdoc where _userdoc.userId = ? order by _userdoc.date desc",
-					new Object[] { userId });
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage());
-		}
-
-		return coll;
+		return findByWhere("_entity.userId = ? order by _entity.date desc", new Object[] { userId });
 	}
 
 	/**
@@ -142,7 +123,6 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 		try {
 			getHibernateTemplate().saveOrUpdate(userdoc);
 		} catch (Exception e) {
-
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 
@@ -178,37 +158,7 @@ public class HibernateUserDocDAO extends HibernateDaoSupport implements UserDocD
 	 */
 	@SuppressWarnings("unchecked")
 	public List<UserDoc> findByDocId(long docId) {
-		List<UserDoc> coll = new ArrayList<UserDoc>();
-
-		try {
-			coll = (List<UserDoc>) getHibernateTemplate().find(
-					"from UserDoc _userdoc where _userdoc.docId = ? order by _userdoc.date desc",
-					new Object[] { docId });
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage());
-		}
-
-		return coll;
-	}
-
-	@Override
-	public boolean delete(long id) {
-		boolean result = true;
-
-		try {
-			UserDoc userDoc = (UserDoc) getHibernateTemplate().get(UserDoc.class, id);
-			if (userDoc != null) {
-				userDoc.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(userDoc);
-			}
-		} catch (Throwable e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-			result = true;
-		}
-
-		return result;
+		return findByWhere("_entity.docId = ? order by _entity.date desc", new Object[] { docId });
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.logicaldoc.core.communication.dao;
 
 import java.util.List;
 
+import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.communication.SystemMessage;
 
 /**
@@ -11,18 +12,7 @@ import com.logicaldoc.core.communication.SystemMessage;
  * @author Marco Meschieri
  * @version 1.0
  */
-public interface SystemMessageDAO {
-	/**
-	 * This method persists a systemmessage object.
-	 * 
-	 * @param sysmess SystemMessage which should be store.
-	 * @return True if successfully stored in a database.
-	 */
-	public boolean store(SystemMessage sysmess);
-
-	public boolean delete(long messageId);
-
-	public SystemMessage findById(long messageId);
+public interface SystemMessageDAO extends PersistentObjectDAO<SystemMessage> {
 
 	public List<SystemMessage> findByRecipient(String recipient);
 

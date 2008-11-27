@@ -3,10 +3,9 @@ package com.logicaldoc.core.security.dao;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
@@ -15,13 +14,13 @@ import com.logicaldoc.core.security.MenuGroup;
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
-public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
-
-	protected static Log log = LogFactory.getLog(HibernateGroupDAO.class);
+public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> implements GroupDAO {
 
 	private MenuDAO menuDAO;
 
 	private HibernateGroupDAO() {
+		super(Group.class);
+		super.log = LogFactory.getLog(HibernateGroupDAO.class);
 	}
 
 	public MenuDAO getMenuDAO() {
@@ -32,10 +31,6 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 		this.menuDAO = menuDAO;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.GroupDAO#delete(long)
-	 */
-	@SuppressWarnings("deprecation")
 	public boolean delete(long groupId) {
 		boolean result = true;
 
@@ -73,24 +68,6 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.GroupDAO#findAll()
-	 */
-	@SuppressWarnings("unchecked")
-	public Collection<Group> findAll() {
-		Collection<Group> coll = new ArrayList<Group>();
-
-		try {
-			coll = getHibernateTemplate().loadAll(Group.class);
-		} catch (Exception e) {
-			if (log.isErrorEnabled()) {
-				log.error(e.getMessage());
-			}
-		}
-
-		return coll;
-	}
-
-	/**
 	 * @see com.logicaldoc.core.security.dao.GroupDAO#findAllGroupNames()
 	 */
 	public Collection<String> findAllGroupNames() {
@@ -115,20 +92,12 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 	@SuppressWarnings("unchecked")
 	public Group findByName(String name) {
 		Group group = null;
-
-		try {
-			Collection<Group> coll = (Collection<Group>) getHibernateTemplate().find(
-					"from Group _group where _group.name = '" + name + "'");
-			if (coll.size() > 0) {
-				group = coll.iterator().next();
-				if (group.getDeleted() == 1)
-					group = null;
-			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
+		Collection<Group> coll = findByWhere("_entity.name = '" + name + "'");
+		if (coll.size() > 0) {
+			group = coll.iterator().next();
+			if (group.getDeleted() == 1)
+				group = null;
 		}
-
 		return group;
 	}
 
@@ -193,50 +162,10 @@ public class HibernateGroupDAO extends HibernateDaoSupport implements GroupDAO {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.GroupDAO#store(com.logicaldoc.core.security.Group)
-	 */
-	public boolean store(Group group) {
-		boolean result = true;
-
-		try {
-			getHibernateTemplate().saveOrUpdate(group);
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage());
-			result = false;
-		}
-		return result;
-	}
-
-	@Override
-	public Group findById(long groupId) {
-		Group group = null;
-
-		try {
-			group = (Group) getHibernateTemplate().get(Group.class, groupId);
-			if (group != null && group.getDeleted() == 1)
-				group = null;
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
-
-		return group;
-	}
-
-	/**
 	 * @see com.logicaldoc.core.security.dao.GroupDAO#findByLikeName(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<Group> findByLikeName(String name) {
-		Collection<Group> coll = new ArrayList<Group>();
-		try {
-			coll = (Collection<Group>) getHibernateTemplate().find("from Group _group where _group.name like ?",
-					new Object[] { name });
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
-		return coll;
+		return findByWhere("_entity.name like ?", new Object[] { name });
 	}
 }

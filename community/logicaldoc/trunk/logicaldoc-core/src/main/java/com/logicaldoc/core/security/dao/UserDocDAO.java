@@ -2,6 +2,7 @@ package com.logicaldoc.core.security.dao;
 
 import java.util.List;
 
+import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.security.UserDoc;
 
 /**
@@ -10,12 +11,7 @@ import com.logicaldoc.core.security.UserDoc;
  * @author Michael Scholz
  * @version 1.0
  */
-public interface UserDocDAO {
-
-	/**
-	 * This method persist an userdoc. The maximum of userdoc for an user is 5.
-	 */
-	public boolean store(UserDoc userdoc);
+public interface UserDocDAO extends PersistentObjectDAO<UserDoc> {
 
 	/**
 	 * Select the count of userdocs for an user.
@@ -28,20 +24,14 @@ public interface UserDocDAO {
 	public boolean delete(long docId, long userId);
 
 	/**
-	 * Deletes the referenced instance
-	 */
-	public boolean delete(long id);
-	
-	/**
 	 * This method deletes all userdocs by the document id.
 	 */
 	public boolean deleteByDocId(long docId);
-	
+
 	/**
 	 * This method deletes all userdocs by the user id.
 	 */
 	public boolean deleteByUserId(long userId);
-	
 
 	/**
 	 * Selects all userdocs for a given user.

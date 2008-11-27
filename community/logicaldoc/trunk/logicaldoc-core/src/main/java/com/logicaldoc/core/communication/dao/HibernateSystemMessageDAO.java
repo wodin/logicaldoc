@@ -6,13 +6,12 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.communication.SystemMessage;
 
 /**
@@ -21,50 +20,10 @@ import com.logicaldoc.core.communication.SystemMessage;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class HibernateSystemMessageDAO extends HibernateDaoSupport implements SystemMessageDAO {
-
-	protected static Log log = LogFactory.getLog(HibernateSystemMessageDAO.class);
-
-	private HibernateSystemMessageDAO() {
-	}
-
-	/**
-	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#delete(long)
-	 */
-	public boolean delete(long messageId) {
-		boolean result = true;
-
-		try {
-			SystemMessage message = (SystemMessage) getHibernateTemplate()
-					.get(SystemMessage.class, new Long(messageId));
-			if (message != null) {
-				message.setDeleted(1);
-				getHibernateTemplate().saveOrUpdate(message);
-			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
-			result = false;
-		}
-
-		return result;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#findById(long)
-	 */
-	public SystemMessage findById(long messageId) {
-		SystemMessage sysmess = null;
-
-		try {
-			sysmess = (SystemMessage) getHibernateTemplate().get(SystemMessage.class, new Long(messageId));
-			if (sysmess != null && sysmess.getDeleted() == 1)
-				sysmess = null;
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
-		}
-		return sysmess;
+public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<SystemMessage> implements SystemMessageDAO {
+	public HibernateSystemMessageDAO() {
+		super(SystemMessage.class);
+		super.log = LogFactory.getLog(HibernateSystemMessageDAO.class);
 	}
 
 	/**
@@ -109,23 +68,6 @@ public class HibernateSystemMessageDAO extends HibernateDaoSupport implements Sy
 		}
 
 		return count;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#store(com.logicaldoc.core.communication.SystemMessage)
-	 */
-	public boolean store(SystemMessage sysmess) {
-		boolean result = true;
-
-		try {
-			getHibernateTemplate().saveOrUpdate(sysmess);
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
-			result = false;
-		}
-
-		return result;
 	}
 
 	public void deleteExpiredMessages(String recipient) {

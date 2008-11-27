@@ -3,6 +3,7 @@ package com.logicaldoc.core.document.dao;
 import java.util.Collection;
 import java.util.List;
 
+import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.document.Article;
 
 /**
@@ -11,30 +12,7 @@ import com.logicaldoc.core.document.Article;
  * @author Michael Scholz
  * @author Marco Meschieri
  */
-public interface ArticleDAO {
-
-	/**
-	 * This method persists a article object.
-	 * 
-	 * @param article Article to be stored.
-	 * @return True if successfully stored in a database.
-	 */
-	public boolean store(Article article);
-
-	/**
-	 * This method deletes an article.
-	 * 
-	 * @param articleId ID of the article which should be deleted.
-	 */
-	public boolean delete(long articleId);
-
-	/**
-	 * This method finds an article by its ID.
-	 * 
-	 * @param articleId ID of the article.
-	 * @return Article with given ID.
-	 */
-	public Article findById(long articleId);
+public interface ArticleDAO extends PersistentObjectDAO<Article> {
 
 	/**
 	 * This method selects all articles of for a given document
@@ -48,7 +26,7 @@ public interface ArticleDAO {
 	 * This method selects all articles of the given user
 	 * 
 	 * @param username - ID of the user
-	 *  @return The list of articles ordered by date
+	 * @return The list of articles ordered by date
 	 */
 	public Collection<Article> findByUserName(String username);
 }

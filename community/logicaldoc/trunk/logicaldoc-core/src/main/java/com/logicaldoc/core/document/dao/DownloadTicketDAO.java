@@ -1,5 +1,6 @@
 package com.logicaldoc.core.document.dao;
 
+import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.document.DownloadTicket;
 
 /**
@@ -8,16 +9,7 @@ import com.logicaldoc.core.document.DownloadTicket;
  * @author Michael Scholz
  * @author Marco Meschieri
  */
-public interface DownloadTicketDAO {
-
-	/**
-	 * This method persists a download ticket object.
-	 * 
-	 * @param ticket DownloadTicket to be stored.
-	 * @return True if successfully stored in a database.
-	 */
-	public boolean store(DownloadTicket ticket);
-
+public interface DownloadTicketDAO extends PersistentObjectDAO<DownloadTicket> {
 	/**
 	 * This method deletes a download ticket.
 	 * 
@@ -39,12 +31,4 @@ public interface DownloadTicketDAO {
 	 * @return DownloadTicket with given ticket id.
 	 */
 	public DownloadTicket findByTicketId(String ticketId);
-
-	/**
-	 * This method finds a download ticket by its ID.
-	 * 
-	 * @param ticketId ID of the download ticket.
-	 * @return DownloadTicket with given ID.
-	 */
-	public DownloadTicket findById(long ticketId);
 }
