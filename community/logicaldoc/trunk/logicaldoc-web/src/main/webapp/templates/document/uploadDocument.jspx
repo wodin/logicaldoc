@@ -45,7 +45,7 @@
 				&amp;nbsp;&amp;nbsp;
 				<ice:selectBooleanCheckbox value="#{inputFile.immediateIndexing}"
 					id="indexing" />
-				<ice:outputLabel for="indrxing" value=" #{msgs['indexing.immediate']}" />
+				<ice:outputLabel for="indexing" value=" #{msgs['indexing.immediate']}" />
 				<br />
 				<br />
 			</ice:panelGroup>
