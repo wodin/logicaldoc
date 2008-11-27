@@ -46,8 +46,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	}
 
 	public List<Long> findAllIds() {
-		// TODO Auto-generated method stub
-		return null;
+		return findIdsByWhere("");
 	}
 
 	@SuppressWarnings("unchecked")
