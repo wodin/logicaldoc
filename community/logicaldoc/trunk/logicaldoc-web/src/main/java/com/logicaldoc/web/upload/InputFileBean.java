@@ -38,8 +38,6 @@ public class InputFileBean implements Renderable {
 
 	private String description;
 
-	private String versionType;
-
 	private PersistentFacesState state;
 
 	private String fileName = "";
@@ -47,6 +45,8 @@ public class InputFileBean implements Renderable {
 	private String contentType = "";
 
 	private boolean extractKeywords = false;
+	
+	private boolean majorUpdate = false;
 
 	private boolean immediateIndexing = false;
 
@@ -206,17 +206,10 @@ public class InputFileBean implements Renderable {
 		this.description = null;
 		this.language = SessionManagement.getLanguage();
 		this.fileName = "";
+		this.majorUpdate = false;
 		setPercent(-1);
 		setReady(false);
 		setImmediateIndexing(false);
-	}
-
-	public String getVersionType() {
-		return versionType;
-	}
-
-	public void setVersionType(String versionType) {
-		this.versionType = versionType;
 	}
 
 	public boolean isExtractKeywords() {
@@ -241,5 +234,13 @@ public class InputFileBean implements Renderable {
 
 	public void setImmediateIndexing(boolean immediateIndexing) {
 		this.immediateIndexing = immediateIndexing;
+	}
+
+	public boolean isMajorUpdate() {
+		return majorUpdate;
+	}
+
+	public void setMajorUpdate(boolean majorUpdate) {
+		this.majorUpdate = majorUpdate;
 	}
 }

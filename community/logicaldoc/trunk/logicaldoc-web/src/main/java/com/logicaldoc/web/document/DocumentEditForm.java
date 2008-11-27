@@ -268,56 +268,64 @@ public class DocumentEditForm {
 	}
 
 	/**
-	 * @param title The title to set.
+	 * @param title
+	 *            The title to set.
 	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
 	/**
-	 * @param source The source to set.
+	 * @param source
+	 *            The source to set.
 	 */
 	public void setSource(String src) {
 		source = src;
 	}
 
 	/**
-	 * @param sourceAuthor The sourceAuthor to set.
+	 * @param sourceAuthor
+	 *            The sourceAuthor to set.
 	 */
 	public void setSourceAuthor(String author) {
 		sourceAuthor = author;
 	}
 
 	/**
-	 * @param sourceDate The sourceDate to set.
+	 * @param sourceDate
+	 *            The sourceDate to set.
 	 */
 	public void setSourceDate(Date date) {
 		sourceDate = date;
 	}
 
 	/**
-	 * @param sourceType The sourceType to set.
+	 * @param sourceType
+	 *            The sourceType to set.
 	 */
 	public void setSourceType(String type) {
 		sourceType = type;
 	}
 
 	/**
-	 * @param coverage The coverage to set.
+	 * @param coverage
+	 *            The coverage to set.
 	 */
 	public void setCoverage(String cover) {
 		coverage = cover;
 	}
 
 	/**
-	 * @param language The language to set.
+	 * @param language
+	 *            The language to set.
 	 */
 	public void setLanguage(String lang) {
 		language = lang;
 	}
 
 	/**
-	 * @param keywords The keywords to set.
+	 * @param keywords
+	 *            The keywords to set.
 	 */
 	public void setKeywords(String words) {
 		keywords = words;
@@ -331,14 +339,16 @@ public class DocumentEditForm {
 	}
 
 	/**
-	 * @param filename The filename to set.
+	 * @param filename
+	 *            The filename to set.
 	 */
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
 
 	/**
-	 * @param versionDesc The versionDesc to set.
+	 * @param versionDesc
+	 *            The versionDesc to set.
 	 */
 	public void setVersionDesc(String desc) {
 		versionDesc = desc;
@@ -456,6 +466,48 @@ public class DocumentEditForm {
 		}
 	}
 
+	public String unlock() {
+
+		Application application = FacesContext.getCurrentInstance().getApplication();
+		InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
+				FacesContext.getCurrentInstance()));
+		if (SessionManagement.isValid()) {
+			Document document = record.getDocument();
+
+			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
+
+				try {
+					// Unlock the document; throws an exception if something goes wrong
+					document.setStatus(Document.DOC_CHECKED_IN);
+					
+					DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+					ddao.initialize(document);
+					
+					boolean stored = ddao.store(document);
+
+					if (!stored) {
+						Messages.addLocalizedError("errors.error");
+					} else {
+						Messages.addLocalizedInfo(Messages.getMessage("msg.action.changedoc"));
+					}
+					fileForm.reset();
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+					Messages.addLocalizedError("errors.error");
+				}
+			}
+			reset();
+		} else {
+			return "login";
+		}
+
+		DocumentNavigation documentNavigation = ((DocumentNavigation) application.createValueBinding(
+				"#{documentNavigation}").getValue(FacesContext.getCurrentInstance()));
+		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
+		documentNavigation.refresh();
+		return null;
+	}
+
 	/**
 	 * Executes a document's checkin creating a new version
 	 */
@@ -474,22 +526,15 @@ public class DocumentEditForm {
 					// check that we have a valid file for storing as new
 					// version
 					String fileName = fileForm.getFileName();
-					String type = fileForm.getVersionType();
 
 					// determines the kind of version to create
-					Version.VERSION_TYPE versionType;
-
-					if (type.equals("release")) {
+					Version.VERSION_TYPE versionType = Version.VERSION_TYPE.NEW_SUBVERSION;
+					if (fileForm.isMajorUpdate()) {
 						versionType = Version.VERSION_TYPE.NEW_RELEASE;
-					} else if (type.equals("subversion")) {
-						versionType = Version.VERSION_TYPE.NEW_SUBVERSION;
-					} else {
-						versionType = Version.VERSION_TYPE.OLD_VERSION;
 					}
 
 					try {
-						// checkin the document; throws an exception if
-						// something goes wrong
+						// checkin the document; throws an exception if something goes wrong
 						DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 								DocumentManager.class);
 						documentManager.checkin(document.getId(), new FileInputStream(file), fileName,

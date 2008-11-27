@@ -45,27 +45,24 @@
 
 
             <!-- Description -->
-            <ice:panelGrid columns="2">
+            <ice:panelGrid columns="2">            
+                 <!-- Version type selection -->
+                 <ice:panelGroup styleClass="outputLabel">
+                     <ice:outputText value="Major Update:"
+                        style="padding-left:8px;" />
+                 </ice:panelGroup>
+                 <ice:selectBooleanCheckbox value="#{inputFile.majorUpdate}" />
+
+                 <br />
+                 <br />
+
+                <!-- Version description -->
                 <ice:panelGroup styleClass="outputLabel">
                  <ice:outputText value="#{msgs['msg.jsp.versiondesc']}"
                     style="padding-left:8px;" />
                 </ice:panelGroup>
-                <ice:inputText id="versiondesc"
-                    value="#{inputFile.description}"
-                    maxlength="255" size="80" />
-
-                 <br />
-                 <br />
-
-                 <!-- Version type selection -->
-                 <ice:panelGroup styleClass="outputLabel">
-                     <ice:outputText value="#{msgs['msg.jsp.version']}:"
-                        style="padding-left:8px;" />
-                 </ice:panelGroup>
-                 <ice:selectOneMenu styleClass="selectTagMenu"
-                    value="#{inputFile.versionType}">
-                    <f:selectItems value="#{selectionTags.versionTypes}" />
-                 </ice:selectOneMenu>
+                <ice:inputTextarea id="versiondesc" value="#{inputFile.description}"
+						 cols="35" rows="2" />
             </ice:panelGrid>
         </ice:panelGroup>
 		<hr />
@@ -74,8 +71,9 @@
                 partialSubmit="true"
                 immediate="tue"
                 action="#{newDocWizard.abort}" />
+            <ice:commandButton value="Unlock Only" action="#{documentForm.unlock}" />
             <ice:commandButton value="#{msgs['msg.jsp.checkin']}"
-                action="#{documentForm.checkin}" disabled="#{inputFile.percent!=100}" />
+                action="#{documentForm.checkin}" disabled="#{inputFile.percent!=100}" />    
         </ice:panelGroup>
     </ice:panelGroup>
 </jsp:root>
