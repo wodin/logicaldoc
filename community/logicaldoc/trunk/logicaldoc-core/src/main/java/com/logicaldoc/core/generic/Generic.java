@@ -13,7 +13,7 @@ import com.logicaldoc.core.ExtensibleObject;
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
-public class Generic extends ExtensibleObject {
+public class Generic extends ExtensibleObject implements Comparable<Generic> {
 	private String type;
 
 	private String subtype;
@@ -122,5 +122,13 @@ public class Generic extends ExtensibleObject {
 
 	public void setDate2(Date date2) {
 		this.date2 = date2;
+	}
+
+	@Override
+	public int compareTo(Generic o) {
+		if (getType().compareTo(o.getType()) != 0)
+			return getType().compareTo(o.getType());
+		else
+			return getSubtype().compareTo(o.getSubtype());
 	}
 }
