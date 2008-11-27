@@ -93,7 +93,7 @@ public class ResourceServiceImpl implements ResourceService {
 		resource.setName(document.getTitle() + "." + document.getType());
 		resource.setContentLength(document.getFileSize());
 		resource.setCreationDate(document.getCreation());
-		resource.setLastModified(document.getLastModified());
+		resource.setLastModified(document.getDate());
 		resource.isFolder(false);
 		resource.setIsCheckedOut(document.getStatus() == Document.DOC_CHECKED_OUT);
 		resource.setVersionLabel(document.getVersion());
