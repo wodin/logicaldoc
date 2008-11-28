@@ -59,7 +59,6 @@ public class DeltaVResourceImpl extends DavResourceImpl implements DeltaVResourc
     public String getComplianceClass() {
         return DavCompliance.concatComplianceClasses(new String[] {
                 DavCompliance._1_,
-                DavCompliance._2_,
                 DavCompliance.VERSION_CONTROL,
                 DavCompliance.VERSION_HISTORY,
                 DavCompliance.LABEL
