@@ -57,8 +57,8 @@ public class Document extends ExtensibleObject {
 
 	private Date sourceDate;
 
-	private Date creation=new Date();
-	
+	private Date creation = new Date();
+
 	private String sourceType;
 
 	private String coverage;
@@ -78,7 +78,7 @@ public class Document extends ExtensibleObject {
 	private DocumentTemplate template;
 
 	private String customId;
-	
+
 	public Document() {
 	}
 
@@ -126,7 +126,8 @@ public class Document extends ExtensibleObject {
 	}
 
 	/**
-	 * The document creation date
+	 * The document's last publication date. This date is altered by checkin
+	 * operations.
 	 */
 	public Date getDate() {
 		return date;
