@@ -1237,7 +1237,7 @@ em { /*font-size:14px;*/
 	text-align: center;
 }
 
-.center {
+DIV#center{
 	margin-left: auto;
 	margin-right: auto;
 }
