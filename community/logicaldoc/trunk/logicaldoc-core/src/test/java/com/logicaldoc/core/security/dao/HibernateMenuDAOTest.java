@@ -99,22 +99,22 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	@SuppressWarnings("unchecked")
 	public void testFindByText() {
 		// Try with existing text
-		Collection<Menu> menus = (Collection<Menu>) dao.findByText("db.admin");
+		List<Menu> menus = dao.findByText("db.admin");
 		assertNotNull(menus);
 		assertEquals(5, menus.size());
 		Menu menu = menus.iterator().next();
 		assertEquals("db.admin", menu.getText());
 
-		menus = (Collection<Menu>) dao.findByText(null, "db.admin", new Integer(1));
+		menus = (List<Menu>) dao.findByText(null, "db.admin", new Integer(1));
 		assertNotNull(menus);
 		assertEquals(1, menus.size());
 
 		Menu parent = dao.findById(Menu.MENUID_HOME);
-		menus = (Collection<Menu>) dao.findByText(parent, "db.admin", 1);
+		menus = (List<Menu>) dao.findByText(parent, "db.admin", 1);
 		assertNotNull(menus);
 		assertEquals(1, menus.size());
 
-		menus = (Collection<Menu>) dao.findByText(null, "db.admin", 3);
+		menus = (List<Menu>) dao.findByText(null, "db.admin", 3);
 		assertNotNull(menus);
 		assertEquals(2, menus.size());
 
@@ -125,7 +125,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindByUserNameString() {
-		Collection<Menu> menus = dao.findByUserId(1);
+		List<Menu> menus = dao.findByUserId(1);
 		assertNotNull(menus);
 		assertEquals(22, menus.size());
 
@@ -140,7 +140,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindByUserId() {
-		Collection<Menu> menus = dao.findByUserId(1, Menu.MENUID_HOME);
+		List<Menu> menus = dao.findByUserId(1, Menu.MENUID_HOME);
 		assertNotNull(menus);
 		assertEquals(7, menus.size());
 
@@ -168,7 +168,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindByParentId() {
-		Collection<Menu> menus = dao.findByParentId(Menu.MENUID_HOME);
+		List<Menu> menus = dao.findByParentId(Menu.MENUID_HOME);
 		assertNotNull(menus);
 		assertEquals(23, menus.size());
 
