@@ -1,8 +1,6 @@
 package com.logicaldoc.webdav.resource;
 
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavException;
@@ -204,44 +202,15 @@ implements VersionControlledResource {
 	@SuppressWarnings("unused")
 	public VersionHistoryResource getVersionHistory() {
 		
-		//if (!exists()) {
-		//        throw new DavException(DavServletResponse.SC_NOT_FOUND);
-		//}
-		//if (!isVersionControlled()) {
-		//    throw new DavException(DavServletResponse.SC_FORBIDDEN);
-		//}
-		int c = 0;
-		
 		DavResourceLocator loc = getLocatorFromResource(resource);
-        //DavResource vhr =  createResourceFromResource(resource);
-		
+	
 		try {
 			return new VersionHistoryResourceImpl(loc, factory, session, config, resource);
 		} catch (DavException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		throw new RuntimeException("");
-		
-		
-		
-		
-		/*
-		try {
-		    VersionHistory vh = getNode().getVersionHistory();
-		    DavResourceLocator loc = getLocatorFromNode(vh);
-		    DavResource vhr =  createResourceFromLocator(loc);
-		    if (vhr instanceof VersionHistoryResource) {
-		        return (VersionHistoryResource)vhr;
-		    } else {
-		        // severe error since resource factory doesn't behave correctly.
-		        throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR);
-		    }
-		} catch (RepositoryException e) {
-		    throw new JcrDavException(e);
-		}
-		*/
 		
 	}
 
@@ -256,11 +225,9 @@ implements VersionControlledResource {
 		super.initSupportedReports();
 		if (exists()) {
 			supportedReports.addReportType(ReportType.LOCATE_BY_HISTORY);
-			log.info("STR-CALL WARN: initSupportedReports");
-			if (isVersionControlled()) {
-				supportedReports.addReportType(ReportType.VERSION_TREE);
+			supportedReports.addReportType(ReportType.VERSION_TREE);
 	    }
-	}
+	
 }
 
 	/**
@@ -270,16 +237,24 @@ implements VersionControlledResource {
 	protected void initProperties() {
 		if (!propsInitialized) {
 			super.initProperties();
-			
+		
+			if(resource.isFolder())
+				return;
+		
 			String baseVHref = getLocatorFromResource(resource).getHref(false);
 			
-			properties.add(new HrefProperty(VERSION_HISTORY, baseVHref, true));
+			properties.add(new HrefProperty(VERSION_HISTORY, locator.getResourcePath(), true));
 
-            // DAV:auto-version property: there is no auto version, explicit CHECKOUT is required.
+			// DAV:auto-version property: there is no auto version, explicit CHECKOUT is required.
             properties.add(new DefaultDavProperty(AUTO_VERSION, null, false));
-			
+            
 			if(resource.getIsCheckedOut()){
 				 properties.add(new HrefProperty(CHECKED_OUT, baseVHref, true));
+				 properties.add(new HrefProperty(
+						VersionResource.PREDECESSOR_SET, locator.getResourcePath(), false));
+			}
+			else {
+				properties.add(new HrefProperty(CHECKED_IN, locator.getResourcePath(), true));
 			}
 			
 			

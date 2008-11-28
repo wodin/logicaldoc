@@ -199,9 +199,11 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public Resource createResource(Resource parentResource, String name, boolean isCollection, ImportContext context) {
-		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource.getID()));
+		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource
+				.getID()));
 
-		if (menuDAO.isWriteEnable(parentMenu.getId(), parentResource.getRequestedPerson()) == false)
+		if (menuDAO.isWriteEnable(parentMenu.getId(), parentResource
+				.getRequestedPerson()) == false)
 			throw new SecurityException("Write Access not applied to this user");
 
 		if (isCollection == true) {
@@ -234,13 +236,17 @@ public class ResourceServiceImpl implements ResourceService {
 
 		try {
 			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
+
 				documentManager.checkin(Long.parseLong(resource.getID()), context
 						.getInputStream(), resource.getName(), user,
 						VERSION_TYPE.NEW_SUBVERSION, "", false);
 		    } else {
+				documentManager.delete(document.getId());
+				
 				this.createResource(context.getResource(), context
-						.getSystemId(), resource.isFolder(), context);
+						.getSystemId(), false, context);
 			}
+			
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -295,6 +301,17 @@ public class ResourceServiceImpl implements ResourceService {
 				throw new OperationNotSupportedException();
 
 			Document document = documentDAO.findById(Long.parseLong(target.getID()));
+			documentDAO.initialize(document);
+			String name = target.getName();
+			String ext = "";
+			if(name.contains(".")){
+				ext = name.substring(name.lastIndexOf(".")+1);
+				name = name.substring(0, name.lastIndexOf("."));
+			}
+			
+			document.setTitle(name);
+			document.setType(ext);
+			documentDAO.store(document);
 			Menu menu = menuDAO.findById(Long.parseLong(destination.getID()));
 
 			try {

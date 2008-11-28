@@ -19,6 +19,8 @@ import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.lock.ActiveLock;
+import org.apache.jackrabbit.webdav.lock.DefaultActiveLock;
+import org.apache.jackrabbit.webdav.lock.LockDiscovery;
 import org.apache.jackrabbit.webdav.lock.LockInfo;
 import org.apache.jackrabbit.webdav.lock.LockManager;
 import org.apache.jackrabbit.webdav.lock.Scope;
@@ -30,6 +32,8 @@ import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.property.DefaultDavProperty;
 import org.apache.jackrabbit.webdav.property.ResourceType;
+
+import sun.swing.DefaultLayoutStyle;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webdav.context.ExportContext;
@@ -286,9 +290,15 @@ public class DavResourceImpl implements DavResource {
 			properties.add(new DefaultDavProperty(DavPropertyName.ISCOLLECTION, "0"));
 		}
 
-		SupportedLock supportedLock = new SupportedLock();
-		supportedLock.addEntry(Type.WRITE, Scope.EXCLUSIVE);
-		properties.add(supportedLock);
+		 /* set current lock information. If no lock is set to this resource,
+        an empty lockdiscovery will be returned in the response. */
+        //properties.add(new LockDiscovery(getLock(Type.WRITE, Scope.EXCLUSIVE)));
+
+        /* lock support information: all locks are lockable. */
+        //SupportedLock supportedLock = new SupportedLock();
+        //supportedLock.addEntry(Type.WRITE, Scope.EXCLUSIVE);
+        //properties.add(supportedLock);
+        
 		properties.add(new DefaultDavProperty(DavPropertyName.GETCONTENTLENGTH, this.resource.getContentLength()));
 		
 		// Set Dav property LastModified
@@ -538,24 +548,6 @@ public class DavResourceImpl implements DavResource {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		
-//		try {
-//			ResourceService resourceService = new ResourceServiceImpl();
-//			
-//			Resource res = resourceService.getResource(destination.getLocator().getWorkspacePath(), this.resource.getRequestedPerson());
-//			log.info("res.getPath() = " + res.getPath());
-//			
-//			String workspacePath = destination.getLocator().getWorkspacePath();
-//			log.info("workspacePath = " + workspacePath);
-//			Resource parentResource = resourceService.getParentResource(workspacePath);
-//			log.info("parentResource = " + parentResource);
-//			
-//			resourceService.copyResource(parentResource, this.resource);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			throw new RuntimeException(e);
-//		}
 	}
 
 	/**
@@ -567,7 +559,7 @@ public class DavResourceImpl implements DavResource {
 	 *      org.apache.jackrabbit.webdav.lock.Scope)
 	 */
 	public boolean isLockable(Type type, Scope scope) {
-		throw new OperationNotSupportedException();
+		return (resource.getIsCheckedOut() == false);
 	}
 
 	/**
@@ -575,21 +567,21 @@ public class DavResourceImpl implements DavResource {
 	 *      org.apache.jackrabbit.webdav.lock.Scope)
 	 */
 	public boolean hasLock(Type type, Scope scope) {
-		throw new OperationNotSupportedException();
+		return resource.getIsCheckedOut() == true;
 	}
 
 	/**
 	 * @see DavResource#getLock(Type, Scope)
 	 */
 	public ActiveLock getLock(Type type, Scope scope) {
-		return null;
+		return new DefaultActiveLock();
 	}
 
 	/**
 	 * @see org.apache.jackrabbit.webdav.DavResource#getLocks()
 	 */
 	public ActiveLock[] getLocks() {
-		throw new OperationNotSupportedException();
+		return new ActiveLock[]{};
 	}
 
 	/**
@@ -603,14 +595,14 @@ public class DavResourceImpl implements DavResource {
 	 * @see DavResource#refreshLock(LockInfo, String)
 	 */
 	public ActiveLock refreshLock(LockInfo lockInfo, String lockToken) throws DavException {
-		throw new OperationNotSupportedException();
+		return new DefaultActiveLock();
 	}
 
 	/**
 	 * @see DavResource#unlock(String)
 	 */
 	public void unlock(String lockToken) throws DavException {
-		throw new OperationNotSupportedException();
+		//
 	}
 
 	/**
@@ -677,7 +669,7 @@ public class DavResourceImpl implements DavResource {
 	 * @return true if this resource cannot be modified due to a write lock
 	 */
 	private boolean isLocked(DavResource res) {
-		return false;
+		return (resource.getIsCheckedOut() == true);
 	}
 
 	@Override
