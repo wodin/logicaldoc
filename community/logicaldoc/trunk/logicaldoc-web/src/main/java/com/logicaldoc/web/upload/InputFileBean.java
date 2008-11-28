@@ -28,6 +28,7 @@ import com.logicaldoc.web.SessionManagement;
  * @since 3.0
  */
 public class InputFileBean implements Renderable {
+	
 	protected static Log log = LogFactory.getLog(InputFileBean.class);
 
 	private int percent = -1;
@@ -45,8 +46,6 @@ public class InputFileBean implements Renderable {
 	private String contentType = "";
 
 	private boolean extractKeywords = false;
-	
-	private boolean majorUpdate = false;
 
 	private boolean immediateIndexing = false;
 
@@ -206,7 +205,6 @@ public class InputFileBean implements Renderable {
 		this.description = null;
 		this.language = SessionManagement.getLanguage();
 		this.fileName = "";
-		this.majorUpdate = false;
 		setPercent(-1);
 		setReady(false);
 		setImmediateIndexing(false);
@@ -236,11 +234,4 @@ public class InputFileBean implements Renderable {
 		this.immediateIndexing = immediateIndexing;
 	}
 
-	public boolean isMajorUpdate() {
-		return majorUpdate;
-	}
-
-	public void setMajorUpdate(boolean majorUpdate) {
-		this.majorUpdate = majorUpdate;
-	}
 }
