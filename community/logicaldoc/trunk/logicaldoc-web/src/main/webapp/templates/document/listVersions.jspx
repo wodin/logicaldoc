@@ -59,7 +59,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:outputText value="#{versionRecord.date}">
-								<f:convertDateTime pattern="#{loc.dateFormatShort}" />
+								<f:convertDateTime pattern="#{loc.dateFormat}" />
 							</ice:outputText>
 						</ice:panelGroup>
 					</ice:column>

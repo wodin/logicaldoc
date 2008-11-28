@@ -84,7 +84,7 @@
 					<ice:panelGroup>
 						<ice:outputText value="#{documentForm.docDate}"
 							style="font-weight: bold">
-							<f:convertDateTime pattern="#{loc.dateFormatShort}" />
+							<f:convertDateTime pattern="#{loc.dateFormatHM}" />
 						</ice:outputText>
 					</ice:panelGroup>
 
@@ -118,7 +118,7 @@
 					<ice:panelGroup>
 						<ice:outputText value="#{documentForm.record.creationDate}"
 							style="font-weight: bold">
-							<f:convertDateTime pattern="#{loc.dateFormatShort}" />
+							<f:convertDateTime pattern="#{loc.dateFormatHM}" />
 						</ice:outputText>
 					</ice:panelGroup>
 				</ice:panelGrid>
