@@ -185,7 +185,7 @@
 
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="creationDateFrom"
-					value="#{msgs['msg.jsp.publishedfrom']}" />
+					value="#{msgs['document.publishedfrom']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectInputDate id="creationDateFrom" tabindex="1"
