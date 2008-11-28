@@ -24,6 +24,14 @@
 
     <ice:panelGroup styleClass="formBorderHighlight">
         <ice:panelGroup>
+        
+            <!-- File selection -->
+            <ice:panelGroup>
+            	<b><ice:outputText value="#{documentForm.title}" /></b>
+            </ice:panelGroup>
+            
+            <br />
+            <br />
 
             <!-- File selection -->
             <ice:panelGroup>
@@ -69,7 +77,7 @@
 
                 <!-- Check fileName -->
                 <ice:panelGroup styleClass="outputLabel">
-                 <ice:outputText value="Check Original Filename"
+                 <ice:outputText value="#{msgs['checkin.checkoriginalfilename']}"
                     style="padding-left:8px;" />
                 </ice:panelGroup>
                 <ice:panelGroup>
@@ -83,7 +91,7 @@
                 partialSubmit="true"
                 immediate="tue"
                 action="#{newDocWizard.abort}" />
-            <ice:commandButton value="Cancel Checkout" action="#{documentForm.unlock}" />
+            <ice:commandButton value="#{msgs['checkin.cancelcheckout']}" action="#{documentForm.unlock}" />
             <ice:commandButton value="#{msgs['msg.jsp.checkin']}"
                 action="#{documentForm.checkin}" disabled="#{inputFile.percent!=100}" />    
         </ice:panelGroup>
