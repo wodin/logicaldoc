@@ -15,12 +15,11 @@ import org.apache.commons.logging.LogFactory;
 /**
  * A configuration utility used to retrieve and alter context properties
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class PropertiesBean {
-	private Properties props=new Properties();
+	private Properties props=new OrderedProperties();
 
 	/** this points to an ordinary file */
 	private String docPath;
