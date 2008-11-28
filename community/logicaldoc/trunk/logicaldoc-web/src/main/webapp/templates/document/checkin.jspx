@@ -51,7 +51,7 @@
                      <ice:outputText value="Major Update:"
                         style="padding-left:8px;" />
                  </ice:panelGroup>
-                 <ice:selectBooleanCheckbox value="#{inputFile.majorUpdate}" />
+                 <ice:selectBooleanCheckbox value="#{documentForm.majorUpdate}" />
 
                  <br />
                  <br />
@@ -63,6 +63,18 @@
                 </ice:panelGroup>
                 <ice:inputTextarea id="versiondesc" value="#{inputFile.description}"
 						 cols="35" rows="2" />
+						 
+                 <br />
+                 <br />
+
+                <!-- Check fileName -->
+                <ice:panelGroup styleClass="outputLabel">
+                 <ice:outputText value="Check Original Filename"
+                    style="padding-left:8px;" />
+                </ice:panelGroup>
+                <ice:panelGroup>
+                  <ice:selectBooleanCheckbox value="#{documentForm.checkOriginalFilename}" />
+                </ice:panelGroup>
             </ice:panelGrid>
         </ice:panelGroup>
 		<hr />
@@ -71,7 +83,7 @@
                 partialSubmit="true"
                 immediate="tue"
                 action="#{newDocWizard.abort}" />
-            <ice:commandButton value="Unlock Only" action="#{documentForm.unlock}" />
+            <ice:commandButton value="Cancel Checkout" action="#{documentForm.unlock}" />
             <ice:commandButton value="#{msgs['msg.jsp.checkin']}"
                 action="#{documentForm.checkin}" disabled="#{inputFile.percent!=100}" />    
         </ice:panelGroup>

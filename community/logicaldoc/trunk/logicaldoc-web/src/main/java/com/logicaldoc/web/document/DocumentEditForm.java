@@ -79,6 +79,10 @@ public class DocumentEditForm {
 
 	private boolean immediateIndexing = false;
 
+	private boolean majorUpdate = false;
+
+	private boolean checkOriginalFilename = true;
+
 	private Collection<Attribute> extendedAttributes = new ArrayList<Attribute>();
 
 	public DocumentEditForm() {
@@ -91,6 +95,22 @@ public class DocumentEditForm {
 
 	public void setImmediateIndexing(boolean immediateIndexing) {
 		this.immediateIndexing = immediateIndexing;
+	}
+
+	public boolean isMajorUpdate() {
+		return majorUpdate;
+	}
+
+	public void setMajorUpdate(boolean majorUpdate) {
+		this.majorUpdate = majorUpdate;
+	}
+
+	public boolean isCheckOriginalFilename() {
+		return checkOriginalFilename;
+	}
+
+	public void setCheckOriginalFilename(boolean checkOriginalFilename) {
+		this.checkOriginalFilename = checkOriginalFilename;
 	}
 
 	public void reset() {
@@ -107,6 +127,8 @@ public class DocumentEditForm {
 		filename = "";
 		template = null;
 		immediateIndexing = false;
+		this.majorUpdate = false;
+		this.checkOriginalFilename = true;
 		extendedAttributes.clear();
 	}
 
@@ -477,12 +499,13 @@ public class DocumentEditForm {
 			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
 
 				try {
-					// Unlock the document; throws an exception if something goes wrong
+					// Unlock the document; throws an exception if something
+					// goes wrong
 					document.setStatus(Document.DOC_CHECKED_IN);
-					
+
 					DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 					ddao.initialize(document);
-					
+
 					boolean stored = ddao.store(document);
 
 					if (!stored) {
@@ -527,14 +550,28 @@ public class DocumentEditForm {
 					// version
 					String fileName = fileForm.getFileName();
 
+					// if checkOriginalFileName is selected verify that the
+					// uploaded file has correct fileName
+					if (isCheckOriginalFilename()) {
+						if (!fileName.equals(document.getFileName())) {
+							log.info("Filename of the checked-in document(" + fileName
+									+ ") is different from the original filename (" + document.getFileName() + ")");
+							
+							String localizedMessage = Messages.getMessage("checkin.originalfilename", document.getFileName());
+							Messages.addError(localizedMessage, "iFile");
+							return null;
+						}
+					}
+
 					// determines the kind of version to create
 					Version.VERSION_TYPE versionType = Version.VERSION_TYPE.NEW_SUBVERSION;
-					if (fileForm.isMajorUpdate()) {
+					if (isMajorUpdate()) {
 						versionType = Version.VERSION_TYPE.NEW_RELEASE;
 					}
 
 					try {
-						// checkin the document; throws an exception if something goes wrong
+						// checkin the document; throws an exception if
+						// something goes wrong
 						DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 								DocumentManager.class);
 						documentManager.checkin(document.getId(), new FileInputStream(file), fileName,
