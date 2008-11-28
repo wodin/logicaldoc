@@ -132,7 +132,7 @@ public class DavResourceImpl implements DavResource {
 	 * @see org.apache.jackrabbit.webdav.DavResource#getComplianceClass()
 	 */
 	public String getComplianceClass() {
-		return DavResource.COMPLIANCE_CLASS;
+		return "1";
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class DavResourceImpl implements DavResource {
 	 * @see org.apache.jackrabbit.webdav.DavResource#getSupportedMethods()
 	 */
 	public String getSupportedMethods() {
-		return DavResource.METHODS;
+		return "OPTIONS, GET, HEAD, POST, TRACE, PROPFIND, PROPPATCH, MKCOL, COPY, PUT, DELETE, MOVE";
 	}
 
 	/**
