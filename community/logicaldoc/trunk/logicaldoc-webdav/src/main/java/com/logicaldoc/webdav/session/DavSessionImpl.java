@@ -35,7 +35,7 @@ public class DavSessionImpl implements DavSession{
 
 	@Override
 	public void addLockToken(String arg0) {
-		throw new OperationNotSupportedException();	
+		//throw new OperationNotSupportedException();	
 	}
 
 	@Override
@@ -45,7 +45,8 @@ public class DavSessionImpl implements DavSession{
 
 	@Override
 	public String[] getLockTokens() {
-		throw new OperationNotSupportedException();	
+		//throw new OperationNotSupportedException();
+		return new String[]{};
 	}
 
 	@Override
