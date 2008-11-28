@@ -479,7 +479,9 @@ public class DocumentEditForm {
 
 	@SuppressWarnings("deprecation")
 	public String unlock() {
-
+		
+        log.info("unlock()");
+        
 		Application application = FacesContext.getCurrentInstance().getApplication();
 		InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
 				FacesContext.getCurrentInstance()));
@@ -489,12 +491,11 @@ public class DocumentEditForm {
 			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
 
 				try {
-					// Unlock the document; throws an exception if something
-					// goes wrong
-					document.setStatus(Document.DOC_CHECKED_IN);
-
+//					 Unlock the document; throws an exception if something goes wrong
 					DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 					ddao.initialize(document);
+					
+					document.setStatus(Document.DOC_CHECKED_IN);
 
 					boolean stored = ddao.store(document);
 
