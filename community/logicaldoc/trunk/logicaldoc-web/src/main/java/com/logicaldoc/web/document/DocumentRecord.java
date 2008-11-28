@@ -113,7 +113,7 @@ public class DocumentRecord extends MenuBarBean {
 	public Date getCreationDate() {
 		return document.getCreation();
 	}
-	
+
 	/**
 	 * Gets the description of the record
 	 * 
@@ -159,6 +159,10 @@ public class DocumentRecord extends MenuBarBean {
 
 	public Date getSourceDate() {
 		return getDocument().getSourceDate();
+	}
+
+	public Date getDate() {
+		return getDocument().getDate();
 	}
 
 	@Override
@@ -277,13 +281,13 @@ public class DocumentRecord extends MenuBarBean {
 	}
 
 	/**
-	 * Checks if this document has links or is linked 
+	 * Checks if this document has links or is linked
 	 */
-	public boolean isLinked(){
+	public boolean isLinked() {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		return docDao.findLinkedDocuments(docId, null, null).size()>0;
+		return docDao.findLinkedDocuments(docId, null, null).size() > 0;
 	}
-	
+
 	/**
 	 * Executes the checkout and the related document's download
 	 */
@@ -516,7 +520,7 @@ public class DocumentRecord extends MenuBarBean {
 		emailForm.setSelectedDocument(getDocument());
 		emailForm.setAuthor(SessionManagement.getUser().getEmail());
 		emailForm.setSelectedDocument(null);
-		
+
 		long userId = SessionManagement.getUserId();
 		String temp = new Date().toString() + userId;
 		String ticketid = CryptUtil.cryptString(temp);
