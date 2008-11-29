@@ -153,7 +153,7 @@ public class ResourceImpl implements Resource{
 	}
 
 	public void setCreationDate(Date creation) {
-		this.creationDate = lastModified;
+		this.creationDate = creation;
 	}
 
 	public Date getCreationDate() {
