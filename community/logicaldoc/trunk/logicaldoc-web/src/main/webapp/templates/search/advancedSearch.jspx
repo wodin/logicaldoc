@@ -272,7 +272,7 @@
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="source" value="#{msgs['msg.jsp.source']}" />
+				<ice:outputLabel for="source" value="#{msgs['document.source']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectBooleanCheckbox id="source" value="#{searchForm.source}"
@@ -283,7 +283,7 @@
                 </ice:panelGroup>
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="sourceAuthor"
-					value="#{msgs['msg.jsp.author']}" />
+					value="#{msgs['document.author']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectBooleanCheckbox id="sourceAuthor" tabindex="1"
@@ -292,7 +292,7 @@
 
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="sourcetype"
-					value="#{msgs['msg.jsp.sourcetype']}" />
+					value="#{msgs['document.type']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectBooleanCheckbox id="sourcetype" tabindex="1"
@@ -302,7 +302,7 @@
                     &amp;nbsp;
                 </ice:panelGroup>
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="coverage" value="#{msgs['msg.jsp.coverage']}" />
+				<ice:outputLabel for="coverage" value="#{msgs['document.coverage']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectBooleanCheckbox id="coverage" tabindex="1"
