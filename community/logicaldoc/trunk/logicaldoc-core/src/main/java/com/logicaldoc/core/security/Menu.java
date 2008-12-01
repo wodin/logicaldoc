@@ -11,7 +11,7 @@ import com.logicaldoc.core.PersistentObject;
  * you can associate groups to a given menu and grant some permissions.
  * 
  * @author Michael Scholz
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @version 1.0
  */
 public class Menu extends PersistentObject {
@@ -28,9 +28,7 @@ public class Menu extends PersistentObject {
 
 	public static final int MENUTYPE_DIRECTORY = 3;
 
-	public static final int MENUTYPE_ACTION = 1;
-
-	public static final int MENUTYPE_HOME = 0;
+	public static final int MENUTYPE_MENU = 1;
 
 	private long id = 0;
 

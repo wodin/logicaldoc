@@ -50,7 +50,7 @@ create unique index  AK_GENERIC on ld_generic (ld_type, ld_subtype);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (1,'2008-10-22',0,'db.home',1,1,'home.png','/',0,null,0);
+values     (1,'2008-10-22',0,'db.home',1,1,'home.png','/',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
