@@ -61,7 +61,7 @@
                                 </f:facet>
                                 <ice:panelGroup>
                                     <ice:outputText value="#{article.date}">
-                                        <f:convertDateTime pattern="#{loc.dateFormatShort}" />
+                                        <f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{styleBean.timeZone}" />
                                     </ice:outputText>
                                 </ice:panelGroup>
                             </ice:column>
