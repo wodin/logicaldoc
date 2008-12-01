@@ -114,7 +114,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			if (precoll.isEmpty())
 				return coll;
 
-			StringBuffer query = new StringBuffer("select  distinct(_entity) from Menu _entity ");
+			StringBuffer query = new StringBuffer("select distinct(_entity) from Menu _entity ");
 			query.append(" left outer join _entity.menuGroups as _group");
 			query.append(" where _group.groupId in (");
 
@@ -126,7 +126,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				query.append(Long.toString(ug.getId()));
 				first = false;
 			}
-			query.append(") and _entity.parentId = ?");
+			query.append(") and _entity.parentId = ? and _entity.id!=_entity.parentId");
 			if (type != null)
 				query.append(" and _entity.type = " + type.toString());
 			query.append(" order by _entity.type, _entity.sort, _entity.text");
