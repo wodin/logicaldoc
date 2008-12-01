@@ -25,7 +25,6 @@ import com.logicaldoc.web.util.FacesUtil;
  * A result entry usable by the GUI.
  * 
  * @author Marco Meschieri - Logical Objects
- * @version $Id:$
  * @since 3.0
  */
 public class DocumentResult extends DocumentRecord implements Result {

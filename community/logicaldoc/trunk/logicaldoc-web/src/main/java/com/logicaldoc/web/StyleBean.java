@@ -173,14 +173,14 @@ public class StyleBean {
 	public static String getImagePath(String imageName) {
 		return getPath("images").substring(1) + "/" + imageName;
 	}
-	
+
 	public String getTimeZoneID() {
-		String tzDisplayName  = timeZone.getDisplayName(true, TimeZone.SHORT);
-		log.info("tzDisplayName = " + tzDisplayName);
+		String tzDisplayName = timeZone.getDisplayName(true, TimeZone.SHORT);
+		log.debug("tzDisplayName = " + tzDisplayName);
 		return tzDisplayName;
 	}
-	
+
 	public TimeZone getTimeZone() {
 		return timeZone;
-	}	
+	}
 }
