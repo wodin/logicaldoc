@@ -56,7 +56,7 @@
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="source" value="#{msgs['msg.jsp.source']}*" />
+				<ice:outputLabel for="source" value="#{msgs['document.source']}*" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:inputText id="source"
@@ -70,7 +70,7 @@
 			<ice:panelGroup style="width:20px" />
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="sourceAuthor"
-					value="#{msgs['msg.jsp.author']}" />
+					value="#{msgs['document.author']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:inputText id="sourceAuthor"
@@ -78,7 +78,7 @@
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="coverage" value="#{msgs['msg.jsp.coverage']}" />
+				<ice:outputLabel for="coverage" value="#{msgs['document.coverage']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:inputText id="coverage" value="#{documentForm.coverage}"
@@ -87,7 +87,7 @@
 			<ice:panelGroup style="width:20px" />
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="sourceType"
-					value="#{msgs['msg.jsp.sourcetype']}" />
+					value="#{msgs['document.type']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:inputText id="sourceType" value="#{documentForm.sourceType}"

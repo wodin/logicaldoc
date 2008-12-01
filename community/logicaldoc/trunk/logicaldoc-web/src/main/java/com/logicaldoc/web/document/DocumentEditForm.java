@@ -175,7 +175,6 @@ public class DocumentEditForm {
 				}
 			}
 		}
-
 	}
 
 	public int getExtendedAttributesCount() {

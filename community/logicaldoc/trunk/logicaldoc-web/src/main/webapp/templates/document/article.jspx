@@ -18,7 +18,7 @@
     <ice:panelGroup>
         <ice:panelGrid columns="2">
             <ice:panelGroup styleClass="outputLabel">
-                <ice:outputLabel for="author" value="#{msgs['msg.jsp.author']}*" />
+                <ice:outputLabel for="author" value="#{msgs['document.author']}*" />
             </ice:panelGroup>
             <ice:panelGroup rendered="false">
                 <ice:inputText id="author"
