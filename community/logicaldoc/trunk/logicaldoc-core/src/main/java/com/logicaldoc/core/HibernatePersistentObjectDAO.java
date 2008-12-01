@@ -30,9 +30,9 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	public boolean delete(long id) {
 		boolean result = true;
 		try {
-			T doc = findById(id);
-			doc.setDeleted(1);
-			store(doc);
+			T entity = findById(id);
+			entity.setDeleted(1);
+			store(entity);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -71,9 +71,10 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	public List<T> findByWhere(String where, Object[] values) {
 		List<T> coll = new ArrayList<T>();
 		try {
-			coll = (List<T>) getHibernateTemplate().find(
-					"from " + entityClass.getCanonicalName() + " _entity where _entity.deleted=0"
-							+ (StringUtils.isNotEmpty(where) ? " and " + where : ""), values);
+			String query = "from " + entityClass.getCanonicalName() + " _entity where _entity.deleted=0"
+					+ (StringUtils.isNotEmpty(where) ? " and " + where : "");
+			log.debug("Execute query: " + query);
+			coll = (List<T>) getHibernateTemplate().find(query, values);
 		} catch (Exception e) {
 			e.printStackTrace();
 			if (log.isErrorEnabled())
@@ -90,9 +91,10 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	public List<Long> findIdsByWhere(String where, Object[] values) {
 		List<Long> coll = new ArrayList<Long>();
 		try {
-			coll = (List<Long>) getHibernateTemplate().find(
-					"select _entity.id from " + entityClass.getCanonicalName() + " _entity where _entity.deleted=0"
-							+ (StringUtils.isNotEmpty(where) ? " and " + where : ""), values);
+			String query = "select _entity.id from " + entityClass.getCanonicalName()
+					+ " _entity where _entity.deleted=0" + (StringUtils.isNotEmpty(where) ? " and " + where : "");
+			log.debug("Execute query: " + query);
+			coll = (List<Long>) getHibernateTemplate().find(query, values);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -117,6 +119,6 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	 * Doesn't do anything
 	 */
 	public void initialize(T entity) {
-		//By default do nothing
+		// By default do nothing
 	}
 }
