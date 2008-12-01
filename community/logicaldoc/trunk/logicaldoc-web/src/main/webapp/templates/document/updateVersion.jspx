@@ -45,7 +45,7 @@
                     </ice:panelGroup>
                     <ice:panelGroup>
                         <ice:outputText value="#{versionForm.date}">
-                            <f:convertDateTime pattern="#{loc.dateFormatShort}" />
+                            <f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{styleBean.timeZone}" />
                         </ice:outputText>
                     </ice:panelGroup>
 
