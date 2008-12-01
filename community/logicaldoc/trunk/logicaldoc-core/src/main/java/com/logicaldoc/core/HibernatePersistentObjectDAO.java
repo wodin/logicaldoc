@@ -102,6 +102,19 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		return coll;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Object> findByQuery(String query, Object[] values) {
+		List<Object> coll = new ArrayList<Object>();
+		try {
+			log.debug("Execute query: " + query);
+			coll = (List<Object>) getHibernateTemplate().find(query, values != null ? values : new Object[0]);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return coll;
+	}
+
 	public boolean store(T entity) {
 		boolean result = true;
 		try {

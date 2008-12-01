@@ -67,6 +67,15 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	public List<T> findByWhere(String where, Object[] values);
 
 	/**
+	 * Find everything you want from the DB using the ORM query language
+	 * 
+	 * @param query The query to execute
+	 * @param values Array of paramaters
+	 * @return Query result
+	 */
+	public List<Object> findByQuery(String query, Object[] values);
+
+	/**
 	 * Finds all entities ids by the given expression. Use _entity alias to
 	 * reference attributes in the where expression.
 	 * 
@@ -84,7 +93,7 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @return The list of marching entities ids
 	 */
 	public List<Long> findIdsByWhere(String where, Object[] values);
-	
+
 	/**
 	 * Initialises lazy loaded data such as collections
 	 * 
