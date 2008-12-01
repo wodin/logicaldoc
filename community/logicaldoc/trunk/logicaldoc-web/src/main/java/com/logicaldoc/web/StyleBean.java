@@ -1,8 +1,10 @@
 package com.logicaldoc.web;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -54,6 +56,8 @@ public class StyleBean {
 	// default theme image directory for selectinputdate and theme.
 	private String imageDirectory = "./xmlhttp/css/xp/css-images/";
 
+	private TimeZone timeZone;
+
 	/**
 	 * Creates a new instance of the StyleBean.
 	 */
@@ -63,8 +67,16 @@ public class StyleBean {
 		styleList = new ArrayList<SelectItem>();
 		styleList.add(new SelectItem(XP, XP));
 		styleList.add(new SelectItem(ROYALE, ROYALE));
+		initTimeZone();
 
 		log.debug("StyleBean initialized");
+	}
+
+	private void initTimeZone() {
+		Calendar now = Calendar.getInstance();
+
+		// get current TimeZone using getTimeZone method of Calendar class
+		this.timeZone = now.getTimeZone();
 	}
 
 	public static Properties getPaths() {
@@ -161,4 +173,14 @@ public class StyleBean {
 	public static String getImagePath(String imageName) {
 		return getPath("images").substring(1) + "/" + imageName;
 	}
+	
+	public String getTimeZoneID() {
+		String tzDisplayName  = timeZone.getDisplayName(true, TimeZone.SHORT);
+		log.info("tzDisplayName = " + tzDisplayName);
+		return tzDisplayName;
+	}
+	
+	public TimeZone getTimeZone() {
+		return timeZone;
+	}	
 }
