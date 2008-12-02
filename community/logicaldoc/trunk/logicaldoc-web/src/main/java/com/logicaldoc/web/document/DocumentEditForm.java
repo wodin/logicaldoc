@@ -473,9 +473,9 @@ public class DocumentEditForm {
 	}
 
 	@SuppressWarnings("deprecation")
-	public String unlock() {
+	public String uncheckout() {
 		
-        log.info("unlock()");
+        log.info("uncheckout()");
         
 		Application application = FacesContext.getCurrentInstance().getApplication();
 		InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
@@ -486,23 +486,16 @@ public class DocumentEditForm {
 			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
 
 				try {
-//					 Unlock the document; throws an exception if something goes wrong
-					DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-					ddao.initialize(document);
-					
-					document.setStatus(Document.DOC_CHECKED_IN);
+//					Unchekout the document; throws an exception if something goes wrong
+					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+					documentManager.uncheckout(document.getId(), SessionManagement.getUser());
 
-					boolean stored = ddao.store(document);
-
-					if (!stored) {
-						Messages.addLocalizedError("errors.error");
-					} else {
-						Messages.addLocalizedInfo(Messages.getMessage("msg.action.changedoc"));
-					}
+					/* create positive log message */
+					Messages.addLocalizedInfo("msg.action.changedoc");
 					fileForm.reset();
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
-					Messages.addLocalizedError("errors.error");
+					Messages.addLocalizedError("errors.action.savedoc");
 				}
 			}
 			reset();

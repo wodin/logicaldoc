@@ -91,7 +91,7 @@
                 partialSubmit="true"
                 immediate="tue"
                 action="#{newDocWizard.abort}" />
-            <ice:commandButton value="#{msgs['checkin.cancelcheckout']}" action="#{documentForm.unlock}" />
+            <ice:commandButton value="#{msgs['checkin.cancelcheckout']}" action="#{documentForm.uncheckout}" />
             <ice:commandButton value="#{msgs['msg.jsp.checkin']}"
                 action="#{documentForm.checkin}" disabled="#{inputFile.percent!=100}" />    
         </ice:panelGroup>
