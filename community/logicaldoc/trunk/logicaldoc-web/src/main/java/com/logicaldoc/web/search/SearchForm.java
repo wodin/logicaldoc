@@ -496,8 +496,8 @@ public class SearchForm {
 				opt.setFormat(getFormat());
 
 				if ((getPublishingDateFrom() != null) && (getPublishingDateTo() != null)) {
-					opt.setCreationDateFrom(getPublishingDateFrom());
-					opt.setCreationDateTo(getPublishingDateTo());
+					opt.setDateFrom(getPublishingDateFrom());
+					opt.setDateTo(getPublishingDateTo());
 				}
 				if ((getSourceDateFrom() != null) && (getSourceDateTo() != null)) {
 					opt.setSourceDateFrom(getSourceDateFrom());
