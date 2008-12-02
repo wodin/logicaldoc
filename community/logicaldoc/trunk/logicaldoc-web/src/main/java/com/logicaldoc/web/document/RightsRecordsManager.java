@@ -251,23 +251,23 @@ public class RightsRecordsManager {
 			menu.getMenuGroups().remove(mg);
 		}
 
-		// At least one rule must give write permission to the current user
+		// At least one rule must give security permission to the current user
 		long[] groupIds = SessionManagement.getUser().getGroupIds();
-		boolean writeable = false;
+		boolean security = false;
 		for (MenuGroup mg : menu.getMenuGroups()) {
-			if (mg.getWrite() == 1) {
+			if (mg.getManageSecurity() == 1) {
 				for (long id : groupIds) {
 					if (id == mg.getGroupId()) {
-						writeable = true;
+						security = true;
 						break;
 					}
 				}
 			}
-			if (writeable)
+			if (security)
 				break;
 		}
 
-		if (writeable) {
+		if (security) {
 			mdao.store(menu);
 		} else {
 			// The modification lead to unmodifiable permission rules

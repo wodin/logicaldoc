@@ -25,6 +25,7 @@
 					showSelector="#{documentNavigation.showFolderSelector}"
 					openListener="#{documentNavigation.openFolderSelector}"
 					confirmListener="#{documentNavigation.folderSelected}"
+					cancelListener="#{documentNavigation.cancelFolderSelector}"
 					closeListener="#{documentNavigation.closeFolderSelector}" />
 
 				<ice:commandLink

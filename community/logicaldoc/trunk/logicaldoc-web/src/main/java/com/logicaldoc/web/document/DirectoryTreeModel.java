@@ -26,10 +26,9 @@ import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.i18n.Messages;
 
 /**
- * A tree model specialized for LogicalDOC's directories
+ * A tree model specialized for LogicalDOC's directories and menues
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class DirectoryTreeModel extends DefaultTreeModel {
@@ -42,9 +41,21 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 	private Directory selectedDir;
 
+	private long rootMenuId = Menu.MENUID_DOCUMENTS;
+
+	private int menuType = Menu.MENUTYPE_DIRECTORY;
+
 	private DefaultMutableTreeNode selectedNode;
 
 	private boolean countChildren = false;
+
+	private boolean useMenuIcons = false;
+
+	public DirectoryTreeModel(long rootMenuId, int menuType) {
+		super(new DefaultMutableTreeNode());
+		this.rootMenuId = rootMenuId;
+		this.menuType = menuType;
+	}
 
 	public DirectoryTreeModel() {
 		super(new DefaultMutableTreeNode());
@@ -59,6 +70,14 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		this.countChildren = countChildren;
 	}
 
+	public boolean isUseMenuIcons() {
+		return useMenuIcons;
+	}
+
+	public void setUseMenuIcons(boolean useMenuIcons) {
+		this.useMenuIcons = useMenuIcons;
+	}
+
 	public void reloadAll() {
 		init();
 		reload((DefaultMutableTreeNode) getRoot(), -1);
@@ -70,25 +89,23 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 		try {
-			if (userId > 0) {
-				List<Menu> menus = (List<Menu>) menuDao.findByUserId(userId, dir.getMenuId(), Menu.MENUTYPE_DIRECTORY);
+			List<Menu> menus = (List<Menu>) menuDao.findByUserId(userId, dir.getMenuId(), menuType);
 
-				// Sort by name
-				Collections.sort(menus, new Comparator<Menu>() {
-					@Override
-					public int compare(Menu arg0, Menu arg1) {
-						return arg0.getText().compareTo(arg1.getText());
-					}
-				});
-
-				for (Menu menu : menus) {
-					addDir(userId, node, menu, depth);
-					dir.setLeaf(false);
+			// Sort by name
+			Collections.sort(menus, new Comparator<Menu>() {
+				@Override
+				public int compare(Menu arg0, Menu arg1) {
+					return arg0.getText().compareTo(arg1.getText());
 				}
+			});
 
-				if (countChildren)
-					dir.setCount(menuDao.countByUserId(userId, dir.getMenuId(), null));
+			for (Menu menu : menus) {
+				addDir(userId, node, menu, depth);
+				dir.setLeaf(false);
 			}
+
+			if (countChildren)
+				dir.setCount(menuDao.countByUserId(userId, dir.getMenuId(), null));
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 		}
@@ -103,9 +120,14 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 		// build root node so that children can be attached
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu rootMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
+		Menu rootMenu = menuDao.findById(rootMenuId);
 		Directory rootObject = new Directory(rootMenu);
-		rootObject.setIcon(StyleBean.XP_BRANCH_CONTRACTED_ICON);
+		if (useMenuIcons) {
+			rootObject.setIcon(StyleBean.getImagePath(rootMenu.getIcon()));
+		} else {
+			rootObject.setIcon(StyleBean.XP_BRANCH_CONTRACTED_ICON);
+		}
+
 		rootObject.setDisplayText(null);
 		rootObject.setContentTitle(null);
 		rootObject.setPageContent(true);
@@ -113,6 +135,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		String label = Messages.getMessage(rootMenu.getText());
 		rootObject.setDisplayText(label);
 		rootObject.setContentTitle(label);
+		rootObject.setPathExtended(label);
 
 		DefaultMutableTreeNode rootTreeNode = new DefaultMutableTreeNode(rootObject);
 		rootObject.setWrapper(rootTreeNode);
@@ -120,7 +143,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		rootTreeNode.setUserObject(rootObject);
 		directories.put(rootMenu.getId(), rootObject);
 		if (countChildren)
-			rootObject.setCount(menuDao.countByUserId(SessionManagement.getUserId(), Menu.MENUID_DOCUMENTS, null));
+			rootObject.setCount(menuDao.countByUserId(SessionManagement.getUserId(), rootMenuId, null));
 	}
 
 	public void reload() {
@@ -227,20 +250,27 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 		// Component menu item
 		Directory branchObject = new Directory(dir);
-		branchObject.setDisplayText(dir.getText());
-		branchObject.setContentTitle(dir.getText());
-		branchObject.setIcon(StyleBean.XP_BRANCH_CONTRACTED_ICON);
+		String label = Messages.getMessage(dir.getText());
+		branchObject.setDisplayText(label);
+		branchObject.setContentTitle(label);
+		if (useMenuIcons) {
+			branchObject.setIcon(StyleBean.getImagePath(dir.getIcon()));
+		} else {
+			branchObject.setIcon(StyleBean.XP_BRANCH_CONTRACTED_ICON);
+		}
 
 		DefaultMutableTreeNode branchNode = new DefaultMutableTreeNode(branchObject);
 		branchObject.setWrapper(branchNode);
 		branchObject.setPageContent(false);
 		branchObject.setLeaf(true);
 		branchObject.setExpanded(false);
+		branchObject.setPathExtended(((Directory) parent.getUserObject()).getPathExtended() + "/"
+				+ branchObject.getDisplayText());
 		branchNode.setUserObject(branchObject);
 
 		// Iterate over subdirs
 		if (depth != 0) {
-			List<Menu> children = (List<Menu>) menuDao.findByUserId(userId, dir.getId(), Menu.MENUTYPE_DIRECTORY);
+			List<Menu> children = (List<Menu>) menuDao.findByUserId(userId, dir.getId(), menuType);
 			Collections.sort(children, new Comparator<Menu>() {
 				@Override
 				public int compare(Menu menu1, Menu menu2) {
@@ -257,7 +287,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 				}
 			}
 		} else {
-			branchObject.setLeaf(menuDao.countByUserId(userId, dir.getId(), Menu.MENUTYPE_DIRECTORY) == 0);
+			branchObject.setLeaf(menuDao.countByUserId(userId, dir.getId(), menuType) == 0);
 		}
 
 		branchObject.setLoaded(true);
@@ -265,8 +295,8 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		parent.add(branchNode);
 		if (countChildren)
 			branchObject.setCount(menuDao.countByUserId(userId, dir.getId(), null));
-		log.debug("added dir " + branchObject.getDisplayText());
 
+		log.debug("added dir " + branchObject.getDisplayText());
 		return branchNode;
 	}
 
@@ -285,11 +315,13 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 			if ((selectedDir != null) && (dir.getMenu() != null) && dir.getMenu().equals(selectedDir.getMenu())) {
 				dir.setSelected(true);
-				dir.setIcon(dir.getBranchExpandedIcon());
+				if (!useMenuIcons)
+					dir.setIcon(dir.getBranchExpandedIcon());
 				selectedNode = node;
 			} else {
 				dir.setSelected(false);
-				dir.setIcon(dir.getBranchContractedIcon());
+				if (!useMenuIcons)
+					dir.setIcon(dir.getBranchContractedIcon());
 			}
 		}
 
@@ -303,6 +335,12 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 	public Directory getSelectedDir() {
 		return selectedDir;
+	}
+
+	public void cancelSelection() {
+		selectedDir = null;
+		directories.clear();
+		reload();
 	}
 
 	public DefaultMutableTreeNode getSelectedNode() {
@@ -342,7 +380,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) getRoot();
 		long userId = SessionManagement.getUserId();
 		for (Menu folderParent : parents) {
-			if (folderParent.getId() == Menu.MENUID_HOME || folderParent.getId() == Menu.MENUID_DOCUMENTS)
+			if (folderParent.getId() == rootMenuId)
 				continue;
 			parentNode = addDir(userId, parentNode, folderParent, 0);
 		}
@@ -351,7 +389,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	}
 
 	public void onSelectDirectory(ActionEvent event) {
-		int directoryId = Integer.parseInt((String) FacesContext.getCurrentInstance().getExternalContext()
+		long directoryId = Long.parseLong((String) FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("directoryId"));
 		selectDirectory(directoryId);
 		reload(getSelectedNode());

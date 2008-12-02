@@ -102,6 +102,7 @@
 					showSelector="#{searchForm.showFolderSelector}"
 					openListener="#{searchForm.openFolderSelector}"
 					confirmListener="#{searchForm.folderSelected}"
+					cancelListener="#{searchForm.cancelFolderSelector}" 
 					closeListener="#{searchForm.closeFolderSelector}" />
 			</ice:panelGroup>
 			<ice:panelGroup>

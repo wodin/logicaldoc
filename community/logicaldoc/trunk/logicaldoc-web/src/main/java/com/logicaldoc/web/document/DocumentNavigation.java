@@ -398,5 +398,11 @@ public class DocumentNavigation extends NavigationBean {
 		Directory dir = getDirectoryModel().getSelectedDir();
 		if(dir!=null)
 			selectDirectory(dir);
+		showFolderSelector = false;
+	}
+	
+	public void cancelFolderSelector(ActionEvent e) {
+		directoryModel.cancelSelection();
+		showFolderSelector = false;
 	}
 }

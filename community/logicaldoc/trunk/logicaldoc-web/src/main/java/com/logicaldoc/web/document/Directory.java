@@ -11,6 +11,7 @@ import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
+import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.FacesUtil;
 
@@ -38,6 +39,8 @@ public class Directory extends PageContentBean {
 
 	private Boolean renameEnabled = null;
 
+	private String pathExtended;
+
 	// True if all childs were loaded from db
 	private boolean loaded = false;
 
@@ -47,6 +50,15 @@ public class Directory extends PageContentBean {
 			setDisplayText(menu.getText());
 		else
 			setDisplayText("");
+		setIcon(StyleBean.getImagePath(menu.getIcon()));
+	}
+
+	public String getPathExtended() {
+		return pathExtended;
+	}
+
+	public void setPathExtended(String pathExtended) {
+		this.pathExtended = pathExtended;
 	}
 
 	/**
@@ -118,7 +130,7 @@ public class Directory extends PageContentBean {
 		}
 		return deleteEnabled.booleanValue();
 	}
-	
+
 	public boolean isRenameEnabled() {
 		if (renameEnabled == null) {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
