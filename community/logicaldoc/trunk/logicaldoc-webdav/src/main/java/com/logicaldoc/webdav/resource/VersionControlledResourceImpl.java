@@ -79,11 +79,9 @@ implements VersionControlledResource {
 		sb.append(", ").append(VersionableResource.METHODS);
 		if (isVersionControlled()) {
 			sb.append(", ").append(DavMethods.METHOD_CHECKOUT);
-			sb.append(", ").append(DavMethods.METHOD_CHECKIN);
 			sb.append(", ").append(DavMethods.METHOD_UNCHECKOUT);
 		    sb.append(", ").append(DavMethods.METHOD_LABEL);
 		}
-		log.fatal("getSupportedMethods: " + sb.toString());
 		return sb.toString();
 	}
 
@@ -109,14 +107,7 @@ implements VersionControlledResource {
 	* @see org.apache.jackrabbit.webdav.version.VersionControlledResource#checkin()
 	*/
 	public String checkin() throws DavException {
-		boolean isCheckedOut = getResource().getIsCheckedOut();
-		if (isCheckedOut == false)
-			throw new DavException(DavServletResponse.SC_EXPECTATION_FAILED);
-		
-		resourceService.checkin(getResource());
-		this.propsInitialized = false;
-		initProperties();
-		return locator.getHref(isCollection());
+		return null;
 	}
 
 	/**

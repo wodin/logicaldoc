@@ -3,7 +3,6 @@ package com.logicaldoc.webdav.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -35,9 +34,6 @@ import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.search.SearchConstants;
 import org.apache.jackrabbit.webdav.search.SearchResource;
 import org.apache.jackrabbit.webdav.security.AclResource;
-import org.apache.jackrabbit.webdav.transaction.TransactionInfo;
-import org.apache.jackrabbit.webdav.transaction.TransactionResource;
-import org.apache.jackrabbit.webdav.version.DeltaVConstants;
 import org.apache.jackrabbit.webdav.version.DeltaVResource;
 import org.apache.jackrabbit.webdav.version.OptionsInfo;
 import org.apache.jackrabbit.webdav.version.OptionsResponse;
@@ -703,15 +699,18 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	protected void doCheckin(WebdavRequest request, WebdavResponse response, DavResource resource) throws DavException,
 			IOException {
 		log.debug("doCheckin");
-		if (!(resource instanceof VersionControlledResource)) {
-			response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
-			return;
-		}
 		
-		String versionHref = ((VersionControlledResource) resource).checkin();
-		log.info("versionHref = " + versionHref);
-		response.setHeader(DeltaVConstants.HEADER_LOCATION, versionHref);
-		response.setStatus(DavServletResponse.SC_CREATED);
+//		if (!(resource instanceof VersionControlledResource)) {
+//			response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
+//			return;
+//		}
+//		
+//		String versionHref = ((VersionControlledResource) resource).checkin();
+//		log.info("versionHref = " + versionHref);
+//		response.setHeader(DeltaVConstants.HEADER_LOCATION, versionHref);
+//		response.setStatus(DavServletResponse.SC_CREATED);
+		
+		response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
 	}
 
 	/**
@@ -802,7 +801,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			for (int n; (n = io.read(b)) != -1;) {
 				out.append(new String(b, 0, n));
 			}
-			log.debug(out);
+			log.debug( out);
 		} catch (Exception e) {
 		}
 	}

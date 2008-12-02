@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jackrabbit.server.io.IOUtil;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
@@ -26,7 +25,6 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
-import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.webdav.context.ImportContext;
 import com.logicaldoc.webdav.exception.DavResourceIOException;
 import com.logicaldoc.webdav.exception.OperationNotSupportedException;
@@ -456,27 +454,4 @@ public class ResourceServiceImpl implements ResourceService {
 		}
 	}
 
-	public void checkin(Resource resource) {
-
-		User user = userDAO.findById(resource.getRequestedPerson());
-
-		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
-
-		try {
-			if (isCheckedOut(resource)) {
-				File file = documentManager.getDocumentFile(document, null);
-
-				// TODO: You must read the entire file in memory because the
-				// checkout method in the end attempts to move the original file that is
-				// blocked by fileInputStream
-				FileInputStream fis = new FileInputStream(file);
-				documentManager.checkin(Long.parseLong(resource.getID()), fis, resource.getName(), user,
-						VERSION_TYPE.NEW_SUBVERSION, "", false);
-				resource.setIsCheckedOut(false);
-			}
-		} catch (Exception e) {
-			log.error(e);
-			throw new RuntimeException(e);
-		}
-	}
 }

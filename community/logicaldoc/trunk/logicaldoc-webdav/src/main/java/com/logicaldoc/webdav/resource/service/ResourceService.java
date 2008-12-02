@@ -125,7 +125,8 @@ public interface ResourceService {
 	 */
 	public List<Resource> getHistory(Resource resource);
 
+	/**
+	 * @param resource
+	 */
 	public void uncheckout(Resource resource);
-
-	public void checkin(Resource resource);
 }

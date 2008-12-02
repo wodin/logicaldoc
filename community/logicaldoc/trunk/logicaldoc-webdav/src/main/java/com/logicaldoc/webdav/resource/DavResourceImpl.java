@@ -20,11 +20,9 @@ import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.lock.ActiveLock;
 import org.apache.jackrabbit.webdav.lock.DefaultActiveLock;
-import org.apache.jackrabbit.webdav.lock.LockDiscovery;
 import org.apache.jackrabbit.webdav.lock.LockInfo;
 import org.apache.jackrabbit.webdav.lock.LockManager;
 import org.apache.jackrabbit.webdav.lock.Scope;
-import org.apache.jackrabbit.webdav.lock.SupportedLock;
 import org.apache.jackrabbit.webdav.lock.Type;
 import org.apache.jackrabbit.webdav.property.DavProperty;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
@@ -32,8 +30,6 @@ import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.property.DefaultDavProperty;
 import org.apache.jackrabbit.webdav.property.ResourceType;
-
-import sun.swing.DefaultLayoutStyle;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webdav.context.ExportContext;
@@ -44,7 +40,6 @@ import com.logicaldoc.webdav.exception.OperationNotSupportedException;
 import com.logicaldoc.webdav.io.manager.IOManager;
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.resource.service.ResourceService;
-import com.logicaldoc.webdav.resource.service.ResourceServiceImpl;
 import com.logicaldoc.webdav.session.DavSession;
 import com.logicaldoc.webdav.web.ResourceConfig;
 
@@ -419,10 +414,10 @@ public class DavResourceImpl implements DavResource {
 			throw new DavException(DavServletResponse.SC_LOCKED);
 		}
 		try {
-
 			String memberName = Text.getName(member.getLocator().getResourcePath());
 
 			ImportContext ctx = getImportContext(inputContext, memberName);
+		
 			if (!config.getIOManager().importContent(ctx, member)) {
 				// any changes should have been reverted in the importer
 				throw new DavException(DavServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
