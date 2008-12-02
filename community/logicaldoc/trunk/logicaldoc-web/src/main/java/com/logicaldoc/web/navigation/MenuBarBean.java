@@ -141,10 +141,11 @@ public class MenuBarBean {
 		try {
 			if (userId > 0) {
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-				Collection<Menu> menus = menuDao.findByUserId(userId, 1, Menu.MENUTYPE_ACTION);
+				Collection<Menu> menus = menuDao.findByUserId(userId, Menu.MENUID_HOME, Menu.MENUTYPE_MENU);
 
 				for (Menu menu : menus) {
-					createMenuStructure(menu, null);
+					if (menu.getId() != Menu.MENUID_HOME)
+						createMenuStructure(menu, null);
 				}
 			}
 		} catch (Throwable t) {
@@ -214,7 +215,8 @@ public class MenuBarBean {
 			Collection<Menu> children = menuDao.findByUserId(SessionManagement.getUserId(), menu.getId());
 
 			for (Menu child : children) {
-				createMenuStructure(child, item);
+				if (child.getId() != menu.getId())
+					createMenuStructure(child, item);
 			}
 		}
 	}
