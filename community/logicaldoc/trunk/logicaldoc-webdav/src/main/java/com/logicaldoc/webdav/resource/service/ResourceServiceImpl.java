@@ -441,10 +441,8 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public void uncheckout(Resource resource) {
 		try {
-			Document document = documentDAO.findById(Long.parseLong(resource.getID()));
-			documentDAO.initialize(document);
-			document.setStatus(Document.DOC_CHECKED_IN);
-			documentDAO.store(document);
+			User user = userDAO.findById(resource.getRequestedPerson());
+			documentManager.uncheckout(Long.parseLong(resource.getID()), user);
 
 			resource.setIsCheckedOut(false);
 
