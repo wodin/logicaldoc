@@ -70,7 +70,7 @@
 
 	<!-- Managed Bean for dynamic style examples -->
 	<managed-bean>
-		<managed-bean-name>styleBean</managed-bean-name>
+		<managed-bean-name>StyleBean</managed-bean-name>
 		<managed-bean-class>com.logicaldoc.web.StyleBean</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>

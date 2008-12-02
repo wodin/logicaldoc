@@ -35,8 +35,7 @@ import com.logicaldoc.web.ApplicationInitializer;
 
 /**
  * @author Alessandro Gasparini - Logical Objects
- * @version $Id:$
- * @since ###release###
+ * @since 3.0
  */
 public class SetupWizard implements TabChangeListener {
 	protected static Log log = LogFactory.getLog(SetupWizard.class);
@@ -60,7 +59,7 @@ public class SetupWizard implements TabChangeListener {
 
 	public SetupWizard() {
 		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-		String workDir = "${user.home}/" + conf.getValue("defaultSource").toLowerCase();
+		String workDir = "${user.home}/logicaldoc";
 
 		// Replacing ${var_name} in elements values with system property value
 		String tmp = StrSubstitutor.replaceSystemProperties(workDir);

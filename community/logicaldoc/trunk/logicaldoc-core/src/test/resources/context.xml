@@ -44,8 +44,6 @@
 				<prop key="kocontent.category">search</prop>
 				<prop key="enablerest">false</prop>
 				<prop key="enablerest.category">webservice</prop>
-				<prop key="defaultSource">LogicalDOC</prop>
-				<prop key="defaultSource.category">var</prop>
 			</props>
 		</property>
 	</bean>

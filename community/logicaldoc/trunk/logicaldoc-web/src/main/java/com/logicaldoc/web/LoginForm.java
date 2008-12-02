@@ -75,11 +75,14 @@ public class LoginForm {
 			String timezone = Calendar.getInstance().getTimeZone().getID();
 			session.put(Constants.TIMEZONE, timezone);
 
+			
+			StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+			
 			// Show the home page
 			PageContentBean content = new PageContentBean("home", "home");
 			content.setContentTitle(Messages.getMessage("home"));
 			content.setDisplayText(Messages.getMessage("home"));
-			content.setIcon(StyleBean.getImagePath("home.png"));
+			content.setIcon(style.getImagePath("home.png"));
 			navigation.setSelectedPanel(content);
 
 			return "loginSuccess";

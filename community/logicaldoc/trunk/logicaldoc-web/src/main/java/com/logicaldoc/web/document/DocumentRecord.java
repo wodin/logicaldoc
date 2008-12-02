@@ -222,42 +222,43 @@ public class DocumentRecord extends MenuBarBean {
 
 		Menu folder = getDocument().getFolder();
 		Document document = getDocument();
+		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
 		if (menuDAO.isWriteEnable(folder.getId(), userId)) {
 			if ((document.getStatus() == Document.DOC_CHECKED_OUT) && username.equals(document.getCheckoutUser())) {
 				model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.checkin"), "checkin-" + folder.getId(),
-						null, "#{documentRecord.checkin}", null, StyleBean.getImagePath("checkin.png"), true, null,
+						null, "#{documentRecord.checkin}", null, style.getImagePath("checkin.png"), true, null,
 						null));
 			} else if (document.getStatus() == Document.DOC_CHECKED_IN) {
 				model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.checkout"), "checkout-" + folder.getId(),
-						null, "#{documentRecord.checkout}", null, StyleBean.getImagePath("checkout.png"), true, null,
+						null, "#{documentRecord.checkout}", null, style.getImagePath("checkout.png"), true, null,
 						null));
 			}
 
 			model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.foldercontent.edit"), "pastelink-"
 					+ folder.getId(), null, "#{documentRecord.edit}", null,
-					StyleBean.getImagePath("document_edit.png"), true, null, null));
+					style.getImagePath("document_edit.png"), true, null, null));
 
 			model.add(createMenuItem(" " + Messages.getMessage("link.pasteas"), "edit-" + folder.getId(), null,
-					"#{documentRecord.pasteAsLink}", null, StyleBean.getImagePath("pastelink.png"), true, null, null));
+					"#{documentRecord.pasteAsLink}", null, style.getImagePath("pastelink.png"), true, null, null));
 		}
 
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,
-				"#{documentRecord.versions}", null, StyleBean.getImagePath("versions.png"), true, "_blank", null));
+				"#{documentRecord.versions}", null, style.getImagePath("versions.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.similardocs"), "similar-" + folder.getId(), null,
-				"#{searchForm.searchSimilar}", null, StyleBean.getImagePath("similar.png"), true, "_blank", null));
+				"#{searchForm.searchSimilar}", null, style.getImagePath("similar.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("links"), "linked-" + folder.getId(), null,
-				"#{documentRecord.links}", null, StyleBean.getImagePath("link.png"), true, "_blank", null));
+				"#{documentRecord.links}", null, style.getImagePath("link.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.discuss"), "articles-" + folder.getId(), null,
-				"#{documentRecord.articles}", null, StyleBean.getImagePath("comments.png"), true, "_blank", null));
+				"#{documentRecord.articles}", null, style.getImagePath("comments.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getId(),
-				null, "#{documentRecord.sendAsEmail}", null, StyleBean.getImagePath("editmail.png"), true, "_blank",
+				null, "#{documentRecord.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank",
 				null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(), null,
-				"#{documentRecord.sendAsTicket}", null, StyleBean.getImagePath("ticket.png"), true, "_blank", null));
+				"#{documentRecord.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.foldercontent.info"), "info-" + folder.getId(),
-				null, "#{documentRecord.info}", null, StyleBean.getImagePath("info.png"), true, "_blank", null));
+				null, "#{documentRecord.info}", null, style.getImagePath("info.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.history"), "history-" + folder.getId(), null,
-				"#{documentRecord.history}", null, StyleBean.getImagePath("history.png"), true, "_blank", null));
+				"#{documentRecord.history}", null, style.getImagePath("history.png"), true, "_blank", null));
 	}
 
 	public String noaction() {
@@ -320,9 +321,10 @@ public class DocumentRecord extends MenuBarBean {
 								+ Messages.getMessage("msg.checkout.alert") + "');");
 
 						try {
+							StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
 							// create a new menu to replace the checkout
 							MenuItem checkinMenuItem = createMenuItem(Messages.getMessage("msg.jsp.checkin"),
-									"checkin-" + document.getId(), null, "#{documentRecord.checkin}", null, StyleBean
+									"checkin-" + document.getId(), null, "#{documentRecord.checkin}", null, style
 											.getImagePath("checkin.png"), true, null, null);
 							// replacing the old menu at the same index
 							model.set(0, checkinMenuItem);

@@ -26,7 +26,7 @@ public final class Constants {
 	public static final String LANGUAGE = "language";
 
 	// The application skin name
-	public static final String SKIN = "xkins.defaultSkin";
+	public static final String SKIN = "skin";
 
 	public static final String LOCALE = "locale";
 

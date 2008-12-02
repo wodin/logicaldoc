@@ -50,7 +50,8 @@ public class Directory extends PageContentBean {
 			setDisplayText(menu.getText());
 		else
 			setDisplayText("");
-		setIcon(StyleBean.getImagePath(menu.getIcon()));
+		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+		setIcon(style.getImagePath(menu.getIcon()));
 	}
 
 	public String getPathExtended() {

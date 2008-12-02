@@ -21,12 +21,11 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-			<title>#{context['product.name']}
-				#{context['product.release']}</title>
+			<title>#{StyleBean.productName}  #{StyleBean.productRelease}</title>
 			<ice:outputText style="padding-top:0px; padding-bottom:0px;"
-				value="#{styleBean.style}" escape="false" />
-			<ice:outputStyle href="#{styleBean.cssPath}/system.css" />
-			<ice:outputStyle href="#{styleBean.cssPath}/style.css" />
+				value="#{StyleBean.style}" escape="false" />
+			<ice:outputStyle href="#{StyleBean.cssPath}/system.css" />
+			<ice:outputStyle href="#{StyleBean.cssPath}/style.css" />
 			<style type="text/css" media="screen">
 div.visible {
 	display: visible;
@@ -53,7 +52,7 @@ part2.className = 'hidden';
 
 				<div class="system_top">
 					<ice:graphicImage
-						value="#{styleBean.imagesPath}/logicaldoc-logo.png" styleClass="error_logo"/>
+						value="#{StyleBean.imagesPath}/logicaldoc-logo.png" styleClass="error_logo"/>
 				</div>
 
 				<div class="system_bg">

@@ -71,7 +71,8 @@ public class MessagesRecordsManager {
 
 		PageContentBean content = new PageContentBean("messages", "communication/messages");
 		content.setContentTitle(Messages.getMessage("db.readmessages"));
-		content.setIcon(StyleBean.getImagePath("message.png"));
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
+		content.setIcon(style.getImagePath("message.png"));
 		navigation.setSelectedPanel(content);
 
 		setSelectedPanel(new PageContentBean("list"));
@@ -86,9 +87,10 @@ public class MessagesRecordsManager {
 		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
 				.getCurrentInstance(), log));
 
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		PageContentBean content = new PageContentBean("message", "communication/messages");
 		content.setContentTitle(Messages.getMessage("db.createmessage"));
-		content.setIcon(StyleBean.getImagePath("message.png"));
+		content.setIcon(style.getImagePath("message.png"));
 		navigation.setSelectedPanel(content);
 
 		// Initialize the form

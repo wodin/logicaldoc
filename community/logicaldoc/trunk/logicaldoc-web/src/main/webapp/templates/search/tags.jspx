@@ -84,14 +84,14 @@
 				<ice:panelGroup>
 					<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
 						action="#{documentNavigation.openInFolder}">
-						<ice:graphicImage value="#{styleBean.imagesPath}/folder_into16.png"
+						<ice:graphicImage value="#{StyleBean.imagesPath}/folder_into16.png"
 							styleClass="iconSmall" alt="#{msgs['msg.jsp.openinfolder']}" />
 					</ice:commandLink>
 
 					<ice:outputText value="&amp;nbsp;&amp;nbsp;" escape="false" />
 
 					<ice:graphicImage
-						value="#{styleBean.imagesPath}/#{entry.document.icon}"
+						value="#{StyleBean.imagesPath}/#{entry.document.icon}"
 						style="border: 0px solid;" />
 					<ice:outputLink value="download?docId=#{entry.docId}"
 						target="_blank" >
@@ -110,7 +110,7 @@
 				</f:facet>
 				<ice:panelGroup>
 					<ice:outputText value="#{entry.sourceDate}">
-						<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{styleBean.timeZone}" />
+						<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{StyleBean.timeZone}" />
 					</ice:outputText>
 				</ice:panelGroup>
 			</ice:column>

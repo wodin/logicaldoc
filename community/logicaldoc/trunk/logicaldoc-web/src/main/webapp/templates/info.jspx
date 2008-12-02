@@ -32,7 +32,7 @@
 				<ice:panelGroup>
 					<ice:outputLink value="http://logicaldoc.wikispaces.com"
 						target="_blank">
-						<ice:graphicImage value="#{styleBean.imagesPath}/logo.gif"
+						<ice:graphicImage value="#{StyleBean.imagesPath}/logo.gif"
 							style="border: 0px solid white; padding-left: 50px" />
 					</ice:outputLink>
 				</ice:panelGroup>

@@ -23,7 +23,7 @@
 					<ice:panelGroup>
 						<ice:commandLink action="#{usersRecordsManager.addUser}"
 							title="#{msgs['msg.jsp.createuser']}">
-							<ice:graphicImage value="#{styleBean.imagesPath}/newuser.png"
+							<ice:graphicImage value="#{StyleBean.imagesPath}/newuser.png"
 								style="border: 0px solid;" alt="#{msgs['msg.jsp.createuser']}" />
 						</ice:commandLink>
 					</ice:panelGroup>
@@ -94,7 +94,7 @@
 						<ice:column>
 							<ice:panelGroup>
 								<ice:commandLink action="#{usersRecordsManager.edit}">
-									<ice:graphicImage value="#{styleBean.imagesPath}/options.gif"
+									<ice:graphicImage value="#{StyleBean.imagesPath}/options.gif"
 										style="border: 0px solid;" title="#{msgs['msg.jsp.edituser']}" />
 								</ice:commandLink>
 							</ice:panelGroup>
@@ -104,7 +104,7 @@
 						<ice:column>
 							<ice:panelGroup>
 								<ice:commandLink action="#{usersRecordsManager.password}">
-									<ice:graphicImage value="#{styleBean.imagesPath}/password.png"
+									<ice:graphicImage value="#{StyleBean.imagesPath}/password.png"
 										style="border: 0px solid;"
 										title="#{msgs['db.changepassword']}" />
 								</ice:commandLink>
@@ -117,7 +117,7 @@
 								<ice:commandLink action="#{usersRecordsManager.delete}"
 									onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;"
 									rendered="#{user.userName != 'admin'}">
-									<ice:graphicImage value="#{styleBean.imagesPath}/delete.gif"
+									<ice:graphicImage value="#{StyleBean.imagesPath}/delete.gif"
 										style="border: 0px solid;" title="#{msgs['msg.jsp.delete']}" />
 								</ice:commandLink>
 							</ice:panelGroup>

@@ -23,8 +23,8 @@
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
             <title>#{context['product.name']}  #{context['product.release']}</title>
             <ice:outputText style="padding-top:0px; padding-bottom:0px;"
-                value="#{styleBean.style}" escape="false" />
-            <ice:outputStyle href="#{styleBean.cssPath}/style.css" />
+                value="#{StyleBean.style}" escape="false" />
+            <ice:outputStyle href="#{StyleBean.cssPath}/style.css" />
             <script type="text/javascript" language="javascript">
   /**
    *  Handles the default action for a form, used when the enter key is pressed
@@ -65,7 +65,7 @@
                                 <ice:panelGrid columns="1" styleClass="loginForm">
                                     <ice:messages />
                                     <ice:panelGrid columns="2" style="width: 100%">
-                                        <ice:graphicImage url="#{styleBean.imagesPath}/logo.gif"
+                                        <ice:graphicImage url="#{StyleBean.imagesPath}/logo.gif"
                                             alt="LogicalDOC" />
                                         <div class="loginStatus">
                                             <ice:outputConnectionStatus />

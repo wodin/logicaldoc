@@ -1,7 +1,6 @@
 package com.logicaldoc.web.navigation;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +16,6 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.i18n.Messages;
@@ -30,8 +28,7 @@ import com.logicaldoc.web.util.FacesUtil;
  * orientation of the Menu Bar.
  * </p>
  * 
- * @author Marco Meschieri
- * @version $Id: MenuBarBean.java,v 1.9 2007/10/11 16:33:56 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class MenuBarBean {
@@ -127,15 +124,15 @@ public class MenuBarBean {
 	 */
 	protected void createMenuItems() {
 		model.clear();
-
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		long userId = SessionManagement.getUserId();
 		PageContentBean page = new PageContentBean("home", "home");
 		page.setContentTitle(Messages.getMessage("home"));
 		page.setDisplayText(Messages.getMessage("home"));
-		page.setIcon(StyleBean.getImagePath("home.png"));
+		page.setIcon(style.getImagePath("home.png"));
 
 		MenuItem item = createMenuItem(" " + Messages.getMessage("home"), null, "#{menuBar.primaryListener}", null,
-				null, StyleBean.getImagePath("home.png"), false, null, page);
+				null, style.getImagePath("home.png"), false, null, page);
 		model.add(item);
 
 		try {
@@ -153,41 +150,35 @@ public class MenuBarBean {
 		}
 
 		MenuItem helpMenu = createMenuItem(" " + Messages.getMessage("help"), "m-help", "#{menuBar.primaryListener}",
-				null, null, StyleBean.getImagePath("help.png"), false, null, null);
+				null, null, style.getImagePath("help.png"), false, null, null);
 
 		String lang = SessionManagement.getLanguage();
 		// check if the help for the language exists, if not use the en version
 		ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext()
 				.getContext();
-		File helpIndex = new File(servletContext.getRealPath(StyleBean.getPath("help") + "/"
+		File helpIndex = new File(servletContext.getRealPath(style.getPath("help") + "/"
 				+ SessionManagement.getLanguage() + "/index.html"));
 		if (!helpIndex.exists())
 			lang = "en";
 		String url = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath()
-				+ StyleBean.getPath("help") + "/" + lang + "/index.html";
+				+ style.getPath("help") + "/" + lang + "/index.html";
 		helpMenu.getChildren().add(
-				createMenuItem(" " + Messages.getMessage("help"), "m-helpcontents", null, null, url, StyleBean
+				createMenuItem(" " + Messages.getMessage("help"), "m-helpcontents", null, null, url, style
 						.getImagePath("help.png"), false, "_blank", null));
 
 		PageContentBean infoPage = new PageContentBean("info", "info");
 		infoPage.setContentTitle(Messages.getMessage("msg.jsp.info"));
 
-		String product = "";
-		try {
-			PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
-			product = pbean.getProperty("product.name");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		String product = style.getProductName();
 		helpMenu.getChildren().add(
 				createMenuItem(" " + Messages.getMessage("about") + " " + product, "m-about",
-						"#{menuBar.primaryListener}", null, null, StyleBean.getImagePath("about.png"), false, null,
+						"#{menuBar.primaryListener}", null, null, style.getImagePath("about.png"), false, null,
 						infoPage));
 		model.add(helpMenu);
 	}
 
 	private void createMenuStructure(Menu menu, MenuItem parent) {
-
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		PageContentBean page;
 		MenuItem item;
 		page = new PageContentBean("m-" + Long.toString(menu.getId()));
@@ -197,11 +188,11 @@ public class MenuBarBean {
 		}
 
 		page.setContentTitle(Messages.getMessage(menu.getText()));
-		page.setIcon(StyleBean.getImagePath(menu.getIcon()));
+		page.setIcon(style.getImagePath(menu.getIcon()));
 
 		item = createMenuItem(" " + Messages.getMessage(menu.getText()), "m-" + Long.toString(menu.getId()),
-				"#{menuBar.primaryListener}", null, null, (menu.getIcon() != null) ? StyleBean.getImagePath(menu
-						.getIcon()) : null, false, null, page);
+				"#{menuBar.primaryListener}", null, null, (menu.getIcon() != null) ? style.getImagePath(menu.getIcon())
+						: null, false, null, page);
 
 		if (parent == null) {
 			model.add(item);

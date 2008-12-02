@@ -56,14 +56,14 @@
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="source" value="#{msgs['document.source']}*" />
+				<ice:outputLabel for="source" value="#{msgs['document.source']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:inputText id="source"
 					label="#{msgs['errors.header.alert.key']}"
 					value="#{documentForm.source}"
 					onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
-					maxlength="255" size="30" required="true" />
+					maxlength="255" size="30" />
 				<br />
 				<ice:message for="source" />
 			</ice:panelGroup>

@@ -175,7 +175,8 @@ public class DocumentNavigation extends NavigationBean {
 		menuItem.setId("dir-" + dir.getMenuId());
 		menuItem.setActionListener(FacesUtil
 				.createActionListenerMethodBinding("#{documentNavigation.onSelectDirectory}"));
-		menuItem.setIcon(StyleBean.getImagePath(imageName));
+		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+		menuItem.setIcon(style.getImagePath(imageName));
 		menuItem.setUserObject(dir);
 		
 		return menuItem;
@@ -338,7 +339,8 @@ public class DocumentNavigation extends NavigationBean {
 
 		PageContentBean page = new PageContentBean("advancedSearch", "search/advancedSearch");
 		page.setContentTitle(Messages.getMessage("search.advanced"));
-		page.setIcon(StyleBean.getImagePath("extsearch.gif"));
+		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+		page.setIcon(style.getImagePath("extsearch.gif"));
 
 		SearchForm form = ((SearchForm) FacesUtil.accessBeanFromFacesContext("searchForm", FacesContext
 				.getCurrentInstance(), log));

@@ -43,13 +43,13 @@
 							rendered="#{!documentsRecordsManager.selectedAll}"
 							title="Select all">
 							<ice:graphicImage
-								value="#{styleBean.imagesPath}/checkbox_empty.gif"
+								value="#{StyleBean.imagesPath}/checkbox_empty.gif"
 								style="border: 0px solid;" title="Select all" />
 						</ice:commandLink>
 						<ice:commandLink action="#{documentsRecordsManager.unselectAll}"
 							rendered="#{documentsRecordsManager.selectedAll}"
 							title="Unselect all">
-							<ice:graphicImage value="#{styleBean.imagesPath}/checkbox.gif"
+							<ice:graphicImage value="#{StyleBean.imagesPath}/checkbox.gif"
 								style="border: 0px solid;" title="Unselect all" />
 						</ice:commandLink>
 					</ice:panelGroup>
@@ -93,7 +93,7 @@
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
 					menuPopup="pop">
 					<ice:graphicImage
-						value="#{styleBean.imagesPath}/#{documentRecord.icon}"
+						value="#{StyleBean.imagesPath}/#{documentRecord.icon}"
 						style="border: 0px solid;" />
 					<ice:outputLink value="download?docId=#{documentRecord.docId}"
 						target="_blank" title="#{msgs['msg.jsp.popup']}">
@@ -103,17 +103,17 @@
 						value="download?docId=#{documentRecord.docId}&amp;downloadText=true"
 						target="_blank" title="txt" rendered="#{documentRecord.document.indexed==1}">
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
-							value="#{styleBean.imagesPath}/txt-icon.png" alt="txt" />
+							value="#{StyleBean.imagesPath}/txt-icon.png" alt="txt" />
 					</ice:outputLink>
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
-						value="#{styleBean.imagesPath}/lock.png"
+						value="#{StyleBean.imagesPath}/lock.png"
 						alt="#{documentRecord.document.checkoutUser}" />
 					<ice:commandLink title="#{msgs['links']}"
 						action="#{documentRecord.links}">
 						<ice:graphicImage style="margin-left: 5px; border: 0px;"
 							rendered="#{documentRecord.linked}"
-							value="#{styleBean.imagesPath}/link.png" alt="#{msgs['links']}" />
+							value="#{StyleBean.imagesPath}/link.png" alt="#{msgs['links']}" />
 					</ice:commandLink>
 					<ice:menuPopup id="pop" value="#{documentRecord.docId}"
 						orientation="vertical" rendered="#{documentRecord.documentFound}">
@@ -134,7 +134,7 @@
 					menuPopup="pop">
 					<ice:outputText value="#{documentRecord.lastModified}"
 						title="#{msgs['msg.jsp.popup']}">
-						<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{styleBean.timeZone}" />
+						<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{StyleBean.timeZone}" />
 					</ice:outputText>
 				</ice:panelGroup>
 			</ice:column>
@@ -151,7 +151,7 @@
 					menuPopup="pop">
 					<ice:outputText value="#{documentRecord.creation}"
 						title="#{msgs['msg.jsp.popup']}">
-						<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{styleBean.timeZone}" />
+						<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{StyleBean.timeZone}" />
 					</ice:outputText>
 				</ice:panelGroup>
 			</ice:column>
