@@ -33,9 +33,9 @@ public class SearchOptions {
 
 	private String[] languages = null;
 
-	private Date creationDateFrom = null;
+	private Date dateFrom = null;
 
-	private Date creationDateTo = null;
+	private Date dateTo = null;
 
 	private Date sourceDateFrom = null;
 
@@ -154,19 +154,19 @@ public class SearchOptions {
 	}
 
 	public Date getCreationDateFrom() {
-		return creationDateFrom;
+		return dateFrom;
 	}
 
-	public void setCreationDateFrom(Date creationDateFrom) {
-		this.creationDateFrom = creationDateFrom;
+	public void setDateFrom(Date dateFrom) {
+		this.dateFrom = dateFrom;
 	}
 
-	public Date getCreationDateTo() {
-		return creationDateTo;
+	public Date getDateTo() {
+		return dateTo;
 	}
 
-	public void setCreationDateTo(Date creationDateTo) {
-		this.creationDateTo = creationDateTo;
+	public void setDateTo(Date dateTo) {
+		this.dateTo = dateTo;
 	}
 
 	public Integer getLengthMin() {

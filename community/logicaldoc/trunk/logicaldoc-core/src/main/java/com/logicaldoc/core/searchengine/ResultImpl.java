@@ -184,8 +184,8 @@ public class ResultImpl implements Serializable, Result {
 				result = false;
 		}
 
-		if (opt.getCreationDateTo() != null) {
-			long diff = opt.getCreationDateTo().getTime() - date.getTime();
+		if (opt.getDateTo() != null) {
+			long diff = opt.getDateTo().getTime() - date.getTime();
 			if (diff < 0)
 				result = false;
 		}
