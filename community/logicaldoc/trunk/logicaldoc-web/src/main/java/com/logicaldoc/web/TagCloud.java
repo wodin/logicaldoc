@@ -3,6 +3,7 @@ package com.logicaldoc.web;
 import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
 
+import com.logicaldoc.util.Context;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.NavigationBean;
 import com.logicaldoc.web.navigation.PageContentBean;
@@ -32,7 +33,8 @@ public class TagCloud extends com.logicaldoc.core.document.TagCloud {
 
 		PageContentBean content = new PageContentBean("message", "search/tags");
 		content.setContentTitle(Messages.getMessage("tags"));
-		content.setIcon(StyleBean.getImagePath("tags.png"));
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
+		content.setIcon(style.getImagePath("tags.png"));
 		navigation.setSelectedPanel(content);
 
 		KeywordsBean keywordsBean = ((KeywordsBean) application.createValueBinding("#{keywords}").getValue(
