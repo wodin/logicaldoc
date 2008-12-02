@@ -58,6 +58,15 @@ public interface DocumentManager {
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
 	public void checkout(long docId, User user) throws Exception;
+	
+	/**
+	 * UNChecks out the given document
+	 * 
+	 * @param docId the document to be unchecked out
+	 * @param user the user uncheking the document
+	 * @throws Exception if an error occurs, this exception is thrown
+	 */
+	public void uncheckout(long docId, User user) throws Exception;
 
 	/**
 	 * Creates a new document in the parent menu
