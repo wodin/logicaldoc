@@ -100,4 +100,13 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @param entity The entity to be initialised
 	 */
 	public void initialize(T entity);
+	
+	/**
+	 * Executes a free-form SQL query against the database, using direct JDBC access
+	 * 
+	 * @param query The query to be executed
+	 * @param returnedColumns Number of returned columns (must be >=)
+	 * @return The result set content as list
+	 */
+	public List<Object> findByJdbcQuery(String query, int returnedColumns, Object[] values);
 }

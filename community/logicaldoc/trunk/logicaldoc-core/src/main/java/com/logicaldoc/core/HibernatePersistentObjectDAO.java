@@ -1,5 +1,8 @@
 package com.logicaldoc.core;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,9 +132,58 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	}
 
 	/**
-	 * Doesn't do anything
+	 * Doesn't do anything by default
 	 */
 	public void initialize(T entity) {
 		// By default do nothing
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public List<Object> findByJdbcQuery(String query, int returnedColumns, Object[] values) {
+		assert (returnedColumns > 0);
+
+		List<Object> coll = new ArrayList<Object>();
+		try {
+			Connection con = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+
+			try {
+				con = getSession().connection();
+				stmt = con.prepareStatement(query);
+				if (values == null || values.length == 0) {
+					for (int i = 0; i < values.length; i++) {
+						stmt.setObject(i + 1, values[i]);
+					}
+				}
+
+				log.debug("Execute query: " + query);
+				rs = stmt.executeQuery();
+				while (rs.next()) {
+					if (returnedColumns == 1) {
+						coll.add(rs.getObject(1));
+					} else {
+						Object[] entry = new Object[returnedColumns];
+						for (int i = 1; i <= returnedColumns; i++) {
+							entry[i - 1] = rs.getObject(i);
+						}
+						coll.add(entry);
+					}
+				}
+			} finally {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+
+		return coll;
 	}
 }
