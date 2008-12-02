@@ -852,6 +852,11 @@ public class SearchForm {
 		path = null;
 		parentPathDescr = null;
 	}
+	
+	public void cancelFolderSelector(ActionEvent e) {
+		directoryModel.cancelSelection();
+		showFolderSelector = false;
+	}
 
 	public void folderSelected(ActionEvent e) {
 		showFolderSelector = false;

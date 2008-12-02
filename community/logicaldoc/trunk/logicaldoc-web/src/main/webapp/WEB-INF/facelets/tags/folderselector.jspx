@@ -19,7 +19,8 @@
 		<ldoc:compositeControl
 			methodBindings="openListener=void javax.faces.event.ActionEvent;
 			confirmListener=void javax.faces.event.ActionEvent;
-			closeListener=void javax.faces.event.ActionEvent;">
+			closeListener=void javax.faces.event.ActionEvent;
+			cancelListener=void javax.faces.event.ActionEvent;">
 
 			<ice:commandButton rendered="#{useIcon!='true'}"
 				actionListener="#{openListener}"
@@ -86,7 +87,9 @@
 						<ice:panelGroup styleClass="commands alignRight"
 							style="margin-top: 8px;">
 							<ice:commandButton id="folderSelected"
-								actionListener="#{confirmListener}" value="OK" />
+								actionListener="#{confirmListener}" value="#{msgs['ok']}" />
+							<ice:commandButton id="cancelSelection"
+								actionListener="#{cancelListener}" value="#{msgs['remove']}" />
 							<ice:commandButton id="closeFolderSelector"
 								actionListener="#{closeListener}" value="#{msgs['close']}" />
 						</ice:panelGroup>

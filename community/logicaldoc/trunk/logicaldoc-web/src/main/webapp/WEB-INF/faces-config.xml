@@ -214,6 +214,13 @@
 			<value>#{navigation}</value>
 		</managed-property>
 	</managed-bean>
+	
+	<!-- Security form -->
+	<managed-bean>
+		<managed-bean-name>securityForm</managed-bean-name>
+		<managed-bean-class>com.logicaldoc.web.admin.SecurityForm</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
 
 	<!-- Keywords -->
 	<managed-bean>
