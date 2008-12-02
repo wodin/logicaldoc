@@ -184,38 +184,38 @@
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="creationDateFrom"
+				<ice:outputLabel for="publishingDateFrom"
 					value="#{msgs['document.publishedfrom']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
-				<ice:selectInputDate id="creationDateFrom" tabindex="1"
+				<ice:selectInputDate id="publishingDateFrom" tabindex="1"
 					popupDateFormat="#{loc.dateFormatShort}"
-					value="#{searchForm.creationDateFrom}"
-					binding="#{searchForm.uiCreationDateFrom}" renderAsPopup="true">
+					value="#{searchForm.publishingDateFrom}"
+					binding="#{searchForm.uiPublishingDateFrom}" renderAsPopup="true">
 					<f:convertDateTime pattern="#{loc.dateFormatShort}"
 						timeZone="#{timezone}" />
 				</ice:selectInputDate>
 				<br />
-				<ice:message for="creationDateFrom" />
+				<ice:message for="publishingDateFrom" />
 			</ice:panelGroup>
 			<ice:panelGroup>
                     &amp;nbsp;
             </ice:panelGroup>
 			<ice:panelGroup style="text-align:right;">
-				<ice:outputLabel for="creationDateTo" value="#{msgs['date.to']} " />
+				<ice:outputLabel for="publishingDateTo" value="#{msgs['date.to']} " />
 			</ice:panelGroup>
 			<ice:panelGroup>
-				<ice:selectInputDate id="creationDateTo" tabindex="1"
+				<ice:selectInputDate id="publishingDateTo" tabindex="1"
 					popupDateFormat="#{loc.dateFormatShort}"
-					value="#{searchForm.creationDateTo}"
-					binding="#{searchForm.uiCreationDateTo}"
-					validator="#{searchForm.validateCreationDates}"
+					value="#{searchForm.publishingDateTo}"
+					binding="#{searchForm.uiPublishingDateTo}"
+					validator="#{searchForm.validatePublishingDates}"
 					renderAsPopup="true">
 					<f:convertDateTime pattern="#{loc.dateFormatShort}"
 						timeZone="#{timezone}" />
 				</ice:selectInputDate>
 				<br />
-				<ice:message for="creationDateTo" />
+				<ice:message for="publishingDateTo" />
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">

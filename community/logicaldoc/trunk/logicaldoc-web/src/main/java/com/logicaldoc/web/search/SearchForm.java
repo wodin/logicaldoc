@@ -76,9 +76,9 @@ public class SearchForm {
 
 	private Integer sizeMax = null;
 
-	private Date creationDateFrom;
+	private Date publishingDateFrom;
 
-	private Date creationDateTo;
+	private Date publishingDateTo;
 
 	private Date sourceDateFrom;
 
@@ -128,9 +128,9 @@ public class SearchForm {
 
 	private UIInput uiSourceDateTo = null;
 
-	private UIInput uiCreationDateFrom = null;
+	private UIInput uiPublishingDateFrom = null;
 
-	private UIInput uiCreationDateTo = null;
+	private UIInput uiPublishingDateTo = null;
 
 	private Long template = null;
 
@@ -346,14 +346,13 @@ public class SearchForm {
 		}
 	}
 
-	public void validateCreationDates(FacesContext context, UIComponent component, Object value)
+	public void validatePublishingDates(FacesContext context, UIComponent component, Object value)
 			throws ValidatorException {
-
-		if (getCreationDateFrom() == null) {
+		if (getPublishingDateFrom() == null) {
 			return;
 		}
 
-		Date lowerDate = getCreationDateFrom();
+		Date lowerDate = getPublishingDateFrom();
 		Date upperDate = (Date) value;
 
 		if ((lowerDate == null) || (upperDate == null)) {
@@ -397,8 +396,8 @@ public class SearchForm {
 		sourceType = false;
 		coverage = false;
 		title = true;
-		creationDateFrom = null;
-		creationDateTo = null;
+		publishingDateFrom = null;
+		publishingDateTo = null;
 		sourceDateFrom = null;
 		sourceDateTo = null;
 		sizeMin = null;
@@ -496,9 +495,9 @@ public class SearchForm {
 				opt.setQueryStr(getQuery(), getPhrase(), getAny(), getNots());
 				opt.setFormat(getFormat());
 
-				if ((getCreationDateFrom() != null) && (getCreationDateTo() != null)) {
-					opt.setCreationDateFrom(getCreationDateFrom());
-					opt.setCreationDateTo(getCreationDateTo());
+				if ((getPublishingDateFrom() != null) && (getPublishingDateTo() != null)) {
+					opt.setCreationDateFrom(getPublishingDateFrom());
+					opt.setCreationDateTo(getPublishingDateTo());
 				}
 				if ((getSourceDateFrom() != null) && (getSourceDateTo() != null)) {
 					opt.setSourceDateFrom(getSourceDateFrom());
@@ -606,8 +605,8 @@ public class SearchForm {
 				sourceType = false;
 				coverage = false;
 				title = true;
-				creationDateFrom = null;
-				creationDateTo = null;
+				publishingDateFrom = null;
+				publishingDateTo = null;
 				sourceDateFrom = null;
 				sourceDateTo = null;
 				sizeMin = null;
@@ -665,8 +664,8 @@ public class SearchForm {
 		format = "all";
 		path = null;
 		parentPathDescr = null;
-		creationDateFrom = null;
-		creationDateTo = null;
+		publishingDateFrom = null;
+		publishingDateTo = null;
 		sourceDateFrom = null;
 		sourceDateTo = null;
 		sizeMin = null;
@@ -722,16 +721,16 @@ public class SearchForm {
 		return lastSearch.getExecTime();
 	}
 
-	public Date getCreationDateFrom() {
-		return creationDateFrom;
+	public Date getPublishingDateFrom() {
+		return publishingDateFrom;
 	}
 
-	public void setCreationDateFrom(Date creationDateFrom) {
-		this.creationDateFrom = creationDateFrom;
+	public void setPublishingDateFrom(Date publishingDateFrom) {
+		this.publishingDateFrom = publishingDateFrom;
 	}
 
-	public Date getCreationDateTo() {
-		return creationDateTo;
+	public Date getPublishingDateTo() {
+		return publishingDateTo;
 	}
 
 	public Integer getSizeMin() {
@@ -779,20 +778,20 @@ public class SearchForm {
 		}
 	}
 
-	public void setCreationDateTo(Date creationDateTo) {
+	public void setPublishingDateTo(Date publishingDateTo) {
 
-		if (creationDateTo != null) {
+		if (publishingDateTo != null) {
 
 			// Include all the specified day
 			Calendar cal = Calendar.getInstance();
-			cal.setTime(creationDateTo);
+			cal.setTime(publishingDateTo);
 			cal.set(Calendar.MILLISECOND, 0);
 			cal.set(Calendar.SECOND, 59);
 			cal.set(Calendar.MINUTE, 59);
 			cal.set(Calendar.HOUR, 23);
-			this.creationDateTo = cal.getTime();
+			this.publishingDateTo = cal.getTime();
 		} else {
-			this.creationDateTo = creationDateTo;
+			this.publishingDateTo = publishingDateTo;
 		}
 	}
 
@@ -828,20 +827,20 @@ public class SearchForm {
 		this.uiSourceDateTo = uiSourceDateTo;
 	}
 
-	public UIInput getUiCreationDateFrom() {
-		return uiCreationDateFrom;
+	public UIInput getUiPublishingDateFrom() {
+		return uiPublishingDateFrom;
 	}
 
-	public void setUiCreationDateFrom(UIInput uiCreationDateFrom) {
-		this.uiCreationDateFrom = uiCreationDateFrom;
+	public void setUiPublishingDateFrom(UIInput uiPublishingDateFrom) {
+		this.uiPublishingDateFrom = uiPublishingDateFrom;
 	}
 
-	public UIInput getUiCreationDateTo() {
-		return uiCreationDateTo;
+	public UIInput getUiPublishingDateTo() {
+		return uiPublishingDateTo;
 	}
 
-	public void setUiCreationDateTo(UIInput uiCreationDateTo) {
-		this.uiCreationDateTo = uiCreationDateTo;
+	public void setUiPublishingDateTo(UIInput uiPublishingDateTo) {
+		this.uiPublishingDateTo = uiPublishingDateTo;
 	}
 
 	public void openFolderSelector(ActionEvent e) {
