@@ -32,7 +32,7 @@
 					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.renameEnabled}"
 					action="#{documentNavigation.edit}"
 					title="#{msgs['msg.jsp.foldercontent.edit']}">
-					<ice:graphicImage value="#{styleBean.imagesPath}/folder_edit.png"
+					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_edit.png"
 						style="border: 0px solid;"
 						title="#{msgs['msg.jsp.foldercontent.edit']}" />
 				</ice:commandLink>
@@ -40,27 +40,27 @@
 					rendered="#{documentNavigation.selectedDir.manageSecurityEnabled}"
 					action="#{documentNavigation.rights}"
 					title="#{msgs['msg.jsp.foldercontent.rights']}">
-					<ice:graphicImage value="#{styleBean.imagesPath}/folder_lock.png"
+					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_lock.png"
 						style="border: 0px solid;"
 						title="#{msgs['msg.jsp.foldercontent.rights']}" />
 				</ice:commandLink>
 				<ice:commandLink action="#{documentNavigation.newDirectory}"
 					title="#{msgs['msg.jsp.createfolder']}"
 					rendered="#{documentNavigation.selectedDir.addChildEnabled}">
-					<ice:graphicImage value="#{styleBean.imagesPath}/folder_add.png"
+					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_add.png"
 						style="border: 0px solid;" title="#{msgs['msg.jsp.createfolder']}" />
 				</ice:commandLink>
 				<ice:commandLink
 					rendered="#{documentNavigation.selectedDir.menuId != 5}"
 					action="#{documentNavigation.searchInFolder}"
 					title="#{msgs['msg.jsp.search']}">
-					<ice:graphicImage value="#{styleBean.imagesPath}/folder_search.png"
+					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_search.png"
 						style="border: 0px solid;" title="#{msgs['msg.jsp.search']}" />
 				</ice:commandLink>
 				<ice:outputLink
 					value="zip-export?menuId=#{documentNavigation.selectedDir.menuId}"
 					title="#{msgs['msg.jsp.zipalllevel']}" target="_blank">
-					<ice:graphicImage value="#{styleBean.imagesPath}/folder_export.png"
+					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_export.png"
 						style="border: 0px solid;" title="#{msgs['msg.jsp.zipalllevel']}" />
 				</ice:outputLink>
 				<ice:commandLink
@@ -68,7 +68,7 @@
 					action="#{documentNavigation.delete}"
 					title="#{msgs['msg.jsp.delete']}"
 					onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;">
-					<ice:graphicImage value="#{styleBean.imagesPath}/folder_delete.png"
+					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_delete.png"
 						style="border: 0px solid;" title="#{msgs['msg.jsp.delete']}" />
 				</ice:commandLink>
 			</ice:form>
@@ -94,7 +94,7 @@
 						</ice:commandLink>
 				</ice:panelSeries>
 			</ice:form>
-			<ice:graphicImage value="#{styleBean.imagesPath}/spacer.gif"
+			<ice:graphicImage value="#{StyleBean.imagesPath}/spacer.gif"
 						style="border: 0px solid;" height="0px" width="480px" title="" />
 		</ice:panelGroup>
 		<ice:panelStack id="documentsPanelStack"

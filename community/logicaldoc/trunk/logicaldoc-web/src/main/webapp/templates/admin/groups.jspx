@@ -22,7 +22,7 @@
 				<ice:panelGroup>
 					<ice:commandLink action="#{groupsRecordsManager.addGroup}"
 						title="#{msgs['msg.jsp.creategroup']}">
-						<ice:graphicImage value="#{styleBean.imagesPath}/newgroup.png"
+						<ice:graphicImage value="#{StyleBean.imagesPath}/newgroup.png"
 							style="border: 0px solid;" alt="#{msgs['msg.jsp.creategroup']}" />
 					</ice:commandLink>
 				</ice:panelGroup>
@@ -69,7 +69,7 @@
 
 					<!-- Edit -->
 					<ice:column>
-						<ice:commandButton image="#{styleBean.imagesPath}/options.gif"
+						<ice:commandButton image="#{StyleBean.imagesPath}/options.gif"
 							title="#{msgs['msg.jsp.editgroup']}"
 							action="#{groupsRecordsManager.edit}" />
 					</ice:column>
@@ -80,7 +80,7 @@
 							<ice:commandLink action="#{groupsRecordsManager.delete}"
 								rendered="#{group.name != 'admin'}"
 								onclick="if (!confirm(&quot;#{msgs['msg.question.deletegroup']}&quot;)) return false;">
-								<ice:graphicImage value="#{styleBean.imagesPath}/delete.gif"
+								<ice:graphicImage value="#{StyleBean.imagesPath}/delete.gif"
 									style="border: 0px solid;" title="#{msgs['msg.jsp.delete']}" />
 								<f:param name="groupId" value="#{group.name}" />
 							</ice:commandLink>

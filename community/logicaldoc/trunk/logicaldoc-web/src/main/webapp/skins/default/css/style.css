@@ -1098,6 +1098,7 @@ em { /*font-size:14px;*/
 .loginMessage {
 	font: bold;
 	color: red;
+	text-align: center;
 }
 
 .loginStatus {

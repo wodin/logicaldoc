@@ -22,7 +22,7 @@
 					<td>
 						<ice:commandLink action="#{messagesRecordsManager.addMessage}"
 							title="#{msgs['db.createmessage']}">
-							<ice:graphicImage value="#{styleBean.imagesPath}/editmessage.png"
+							<ice:graphicImage value="#{StyleBean.imagesPath}/editmessage.png"
 								style="border: 0px solid;" alt="#{msgs['db.createmessage']}"/>
 						</ice:commandLink>
 					</td>
@@ -45,7 +45,7 @@
 					</f:facet>
 					<ice:panelGroup>
 						<ice:graphicImage
-							value="#{styleBean.imagesPath}/#{messageRecord.prio}.gif"
+							value="#{StyleBean.imagesPath}/#{messageRecord.prio}.gif"
 							style="border: 0px solid;" />
 					</ice:panelGroup>
 				</ice:column>
@@ -99,7 +99,7 @@
 					<ice:panelGroup style="text-align: center;">
 						<ice:commandLink action="#{messagesRecordsManager.deleteMessage}"
 							onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;">
-							<ice:graphicImage value="#{styleBean.imagesPath}/delete.png"
+							<ice:graphicImage value="#{StyleBean.imagesPath}/delete.png"
 								style="border: 0px solid;" />
 						</ice:commandLink>
 					</ice:panelGroup>

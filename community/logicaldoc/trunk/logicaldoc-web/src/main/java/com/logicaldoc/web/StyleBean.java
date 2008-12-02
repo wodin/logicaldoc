@@ -1,16 +1,19 @@
 package com.logicaldoc.web;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Properties;
 import java.util.TimeZone;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.logicaldoc.util.config.PropertiesBean;
 
 /**
  * <p>
@@ -25,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
  * changed by changing the location of their image src directories.
  * </p>
  * 
- * @since 0.3.0
+ * @since 3.0
  */
 public class StyleBean {
 
@@ -37,8 +40,6 @@ public class StyleBean {
 	public static final String XP_BRANCH_CONTRACTED_ICON = "xmlhttp/css/xp/css-images/tree_folder_close.gif";
 
 	public static final String XP_SPACER_ICON = "xmlhttp/css/xp/css-images/spacer.gif";
-
-	private static Properties paths = new Properties();
 
 	// possible theme choices
 	private final String XP = "xp";
@@ -58,35 +59,93 @@ public class StyleBean {
 
 	private TimeZone timeZone;
 
+	private String skin = "default";
+
+	private String productName;
+
+	private String productUrl;
+
+	private String productHelp;
+
+	private String productRelease;
+
 	/**
 	 * Creates a new instance of the StyleBean.
 	 */
 	public StyleBean() {
 		super();
+		reload();
+		log.debug("StyleBean initialized");
+	}
+
+	public void reload() {
 		// initialize the style list
 		styleList = new ArrayList<SelectItem>();
 		styleList.add(new SelectItem(XP, XP));
 		styleList.add(new SelectItem(ROYALE, ROYALE));
 		initTimeZone();
+		
+		try {
+			PropertiesBean context=new PropertiesBean();
+			skin=context.getProperty("skin");
+			productName=context.getProperty("skin."+skin+".product.name");
+			if(StringUtils.isEmpty(productName))
+				productName=context.getProperty("product.name");
+			productUrl=context.getProperty("skin."+skin+".product.url");
+			if(StringUtils.isEmpty(productUrl))
+				productUrl=context.getProperty("product.url");
+			productHelp=context.getProperty("skin."+skin+".product.help");
+			if(StringUtils.isEmpty(productHelp))
+				productHelp=context.getProperty("product.help");
+			productHelp=context.getProperty("product.release");
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
+	}
 
-		log.debug("StyleBean initialized");
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public String getProductUrl() {
+		return productUrl;
+	}
+
+	public void setProductUrl(String productUrl) {
+		this.productUrl = productUrl;
+	}
+
+	public String getProductHelp() {
+		return productHelp;
+	}
+
+	public void setProductHelp(String productHelp) {
+		this.productHelp = productHelp;
+	}
+
+	public String getProductRelease() {
+		return productRelease;
+	}
+
+	public void setProductRelease(String productRelease) {
+		this.productRelease = productRelease;
+	}
+
+	public String getSkin() {
+		return skin;
+	}
+
+	public void setSkin(String skin) {
+		this.skin = skin;
 	}
 
 	private void initTimeZone() {
 		Calendar now = Calendar.getInstance();
-
-		// get current TimeZone using getTimeZone method of Calendar class
 		this.timeZone = now.getTimeZone();
-	}
-
-	public static Properties getPaths() {
-		return paths;
-	}
-
-	public void setPaths(Properties newpaths) {
-		paths = newpaths;
-		log.debug("StyleBean: properties loaded");
-		log.debug("StyleBean: properties = " + paths);
 	}
 
 	/**
@@ -154,8 +213,8 @@ public class StyleBean {
 		return styleList;
 	}
 
-	public static String getPath(String name) {
-		return paths.getProperty(name, "");
+	public String getPath(String name) {
+		return "/skins/" + skin + "/" + name;
 	}
 
 	public String getImagesPath() {
@@ -170,7 +229,7 @@ public class StyleBean {
 		return getPath("css");
 	}
 
-	public static String getImagePath(String imageName) {
+	public String getImagePath(String imageName) {
 		return getPath("images").substring(1) + "/" + imageName;
 	}
 

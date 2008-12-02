@@ -39,8 +39,6 @@
 				<prop key="kocontent.category">search</prop>
 				<prop key="enablerest">false</prop>
 				<prop key="enablerest.category">webservice</prop>
-				<prop key="defaultSource">${conf.defaultSource}</prop>
-				<prop key="defaultSource.category">var</prop>
 			</props>
 		</property>
 	</bean>
@@ -48,13 +46,6 @@
 	<!-- Paths of the current skin -->
 	<bean id="StyleBean" class="com.logicaldoc.web.StyleBean"
 		lazy-init="false">
-		<property name="paths">
-			<props>
-				<prop key="css">/skins/${style.defaultSkin}/css</prop>
-				<prop key="images">/skins/${style.defaultSkin}/images</prop>
-				<prop key="help">/skins/${style.defaultSkin}/help</prop>
-			</props>
-		</property>
 	</bean>
 
 	<bean id="MimeTypeConfig"

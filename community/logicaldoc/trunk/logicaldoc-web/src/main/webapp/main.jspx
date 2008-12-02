@@ -21,11 +21,11 @@
     <html>
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-            <title>#{context['product.name']}  #{context['product.release']}</title>
+            <title>#{StyleBean.productName}  #{StyleBean.productRelease}</title>
             <ice:outputText style="padding-top:0px; padding-bottom:0px;"
-                value="#{styleBean.style}" escape="false" />
-            <ice:outputStyle href="#{styleBean.cssPath}/style.css" />
-            <ice:outputStyle href="#{styleBean.cssPath}/system.css" />
+                value="#{StyleBean.style}" escape="false" />
+            <ice:outputStyle href="#{StyleBean.cssPath}/style.css" />
+            <ice:outputStyle href="#{StyleBean.cssPath}/system.css" />
             <script type="text/javascript" language="javascript">
   function noErrorMessages () { return true; }
   window.onerror = noErrorMessages;
@@ -98,7 +98,7 @@
                         <ice:form rendered="#{navigation.historySize>1}">
                             <ice:commandLink action="#{navigation.back}"
                                 title="#{msgs['msg.jsp.back']}" style="float: left;">
-                                <ice:graphicImage value="#{styleBean.imagesPath}/upper.gif"
+                                <ice:graphicImage value="#{StyleBean.imagesPath}/upper.gif"
                                     style="border: 0px solid;" alt="#{msgs['msg.jsp.back']}" />
                             </ice:commandLink>
                         </ice:form>

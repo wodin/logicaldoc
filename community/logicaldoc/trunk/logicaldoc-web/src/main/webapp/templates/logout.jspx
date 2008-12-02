@@ -19,7 +19,7 @@
 		<ice:commandLink action="#{loginForm.logout}">
 			<ice:outputText styleClass="logoutLink"
 				value="#{msgs['msg.jsp.headlinks.logout']} " />
-			<ice:graphicImage value="#{styleBean.imagesPath}/close_over.gif"
+			<ice:graphicImage value="#{StyleBean.imagesPath}/close_over.gif"
 				style="border: 0px;" />
 		</ice:commandLink>
 	</ice:form>

@@ -47,10 +47,10 @@
 						<ice:panelGroup>
 							<ice:graphicImage
 								rendered="#{link.document2.id==linksRecordsManager.selectedDocument.id}"
-								value="#{styleBean.imagesPath}/document_into.png" />
+								value="#{StyleBean.imagesPath}/document_into.png" />
 							<ice:graphicImage
 								rendered="#{link.document1.id==linksRecordsManager.selectedDocument.id}"
-								value="#{styleBean.imagesPath}/document_out.png" />
+								value="#{StyleBean.imagesPath}/document_out.png" />
 						</ice:panelGroup>
 					</ice:column>
 
@@ -63,7 +63,7 @@
 						<ice:panelGroup
 							rendered="#{link.document1.id!=linksRecordsManager.selectedDocument.id}">
 							<ice:graphicImage
-								value="#{styleBean.imagesPath}/#{link.document1.icon}"
+								value="#{StyleBean.imagesPath}/#{link.document1.icon}"
 								style="margin-right: 4px;" />
 							<ice:outputLink value="download?docId=#{link.document1.id}"
 								target="_blank">
@@ -74,7 +74,7 @@
 							rendered="#{(link.document2.id!=linksRecordsManager.selectedDocument.id) ||
 							(link.document2.id==link.document1.id)}">
 							<ice:graphicImage
-								value="#{styleBean.imagesPath}/#{link.document2.icon}"
+								value="#{StyleBean.imagesPath}/#{link.document2.icon}"
 								style="margin-right: 4px;" />
 							<ice:outputLink value="download?docId=#{link.document2.id}"
 								target="_blank">
@@ -87,7 +87,7 @@
 					<ice:column>
 						<ice:panelGroup>
 							<ice:commandLink action="#{linksRecordsManager.edit}">
-								<ice:graphicImage value="#{styleBean.imagesPath}/options.gif"
+								<ice:graphicImage value="#{StyleBean.imagesPath}/options.gif"
 									style="border: 0px solid;" title="#{msgs['link.edit']}" />
 							</ice:commandLink>
 						</ice:panelGroup>
@@ -98,7 +98,7 @@
 						<ice:panelGroup>
 							<ice:commandLink action="#{linksRecordsManager.delete}"
 								onclick="if (!confirm(&quot;#{msgs['link.delete.question']}&quot;)) return false;">
-								<ice:graphicImage value="#{styleBean.imagesPath}/delete.png"
+								<ice:graphicImage value="#{StyleBean.imagesPath}/delete.png"
 									style="border: 0px solid;" />
 							</ice:commandLink>
 						</ice:panelGroup>

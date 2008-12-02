@@ -32,7 +32,7 @@ function clearSearch(element, label) {
 							maxlength="100" size="35" styleClass="searchField"
 							onclick="javascript:clearSearch(this,'#{msgs.search}...');" />
 						<ice:commandButton id="quickSearch"
-							image="#{styleBean.imagesPath}/spacer.gif"
+							image="#{StyleBean.imagesPath}/spacer.gif"
 							action="#{searchForm.quickSearch}" styleClass="submitImage" />
 					</td>
 					<td class="tdLinks" rowspan="2">

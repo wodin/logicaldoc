@@ -114,18 +114,19 @@ public class DocumentResult extends DocumentRecord implements Result {
 	protected void createMenuItems() {
 		model.clear();
 		Menu folder = document.getFolder();
+		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
 		model.add(createMenuItem(Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,
-				"#{entry.versions}", null, StyleBean.getImagePath("versions.png"), true, "_blank", null));
+				"#{entry.versions}", null, style.getImagePath("versions.png"), true, "_blank", null));
 		model.add(createMenuItem(Messages.getMessage("msg.jsp.discuss"), "articles-" + folder.getId(), null,
-				"#{entry.articles}", null, StyleBean.getImagePath("comments.png"), true, "_blank", null));
+				"#{entry.articles}", null, style.getImagePath("comments.png"), true, "_blank", null));
 		model.add(createMenuItem(Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getId(), null,
-				"#{entry.sendAsEmail}", null, StyleBean.getImagePath("editmail.png"), true, "_blank", null));
+				"#{entry.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank", null));
 		model.add(createMenuItem(Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(), null,
-				"#{entry.sendAsTicket}", null, StyleBean.getImagePath("ticket.png"), true, "_blank", null));
+				"#{entry.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
 		model.add(createMenuItem(Messages.getMessage("msg.jsp.foldercontent.info"), "info-" + folder.getId(), null,
-				"#{entry.info}", null, StyleBean.getImagePath("info.png"), true, "_blank", null));
+				"#{entry.info}", null, style.getImagePath("info.png"), true, "_blank", null));
 		model.add(createMenuItem(Messages.getMessage("msg.jsp.history"), "history-" + folder.getId(), null,
-				"#{entry.history}", null, StyleBean.getImagePath("history.png"), true, "_blank", null));
+				"#{entry.history}", null, style.getImagePath("history.png"), true, "_blank", null));
 	}
 
 	public void showDocumentPath() {

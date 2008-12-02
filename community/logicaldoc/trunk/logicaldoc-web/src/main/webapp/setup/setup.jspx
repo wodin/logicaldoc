@@ -16,10 +16,10 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-			<title>#{context['product.name']}  #{context['product.release']}</title>
+			<title>#{StyleBean.productName}  #{StyleBean.productRelease}</title>
 			<ice:outputText style="padding-top:0px; padding-bottom:0px;"
-				value="#{styleBean.style}" escape="false" />
-			<ice:outputStyle href="#{styleBean.cssPath}/style.css" />
+				value="#{StyleBean.style}" escape="false" />
+			<ice:outputStyle href="#{StyleBean.cssPath}/style.css" />
                 <script type="text/javascript" language="javascript">
   function noErrorMessages () { return true; }
   window.onerror = noErrorMessages;
@@ -51,7 +51,7 @@
 						style="border: 1px solid #DDDDDD; width:630px; border-style:ridge;">
 
 						<ice:panelGrid columns="2" style="width:100%;">
-							<ice:graphicImage url="#{styleBean.imagesPath}/logo.gif"
+							<ice:graphicImage url="#{StyleBean.imagesPath}/logo.gif"
 								style="padding-left: 10px;" />
 							<ice:outputText value="#{msgs['setup.systemsetup']}"
 								style="font-size: 20px; font-weight: bold; font-family: Trebuchet MS, Tahoma, Myriad; color:#7F7F7F;" />

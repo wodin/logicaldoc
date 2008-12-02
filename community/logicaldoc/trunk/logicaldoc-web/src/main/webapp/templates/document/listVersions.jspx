@@ -59,7 +59,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:outputText value="#{versionRecord.date}">
-								<f:convertDateTime pattern="#{loc.dateFormat}" timeZone="#{styleBean.timeZone}" />
+								<f:convertDateTime pattern="#{loc.dateFormat}" timeZone="#{StyleBean.timeZone}" />
 							</ice:outputText>
 						</ice:panelGroup>
 					</ice:column>
@@ -91,7 +91,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:commandLink action="#{versionRecord.edit}">
-								<ice:graphicImage value="#{styleBean.imagesPath}/edit.gif"
+								<ice:graphicImage value="#{StyleBean.imagesPath}/edit.gif"
 									style="border: 0px solid;" />
 							</ice:commandLink>
 						</ice:panelGroup>

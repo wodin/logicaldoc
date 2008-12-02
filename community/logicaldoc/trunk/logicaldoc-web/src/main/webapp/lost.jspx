@@ -2,8 +2,7 @@
 <!-- 
  Connection lost warning page
   
- @author Marco Meschieri
- @version $Id: login.jspx,v 1.11 2007/10/16 16:12:10 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -21,17 +20,16 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-			<title>#{context['product.name']}
-				#{context['product.release']}</title>
+			<title>#{StyleBean.productName}  #{StyleBean.productRelease}</title>
 			<ice:outputText style="padding-top:0px; padding-bottom:0px;"
-				value="#{styleBean.style}" escape="false" />
-			<ice:outputStyle href="#{styleBean.cssPath}/system.css" />
+				value="#{StyleBean.style}" escape="false" />
+			<ice:outputStyle href="#{StyleBean.cssPath}/system.css" />
 		</head>
 		<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0"
 			bottommargin="0">
 			<div class="system_top">
 				<ice:graphicImage
-					value="#{styleBean.imagesPath}/logicaldoc-logo.png"
+					value="#{StyleBean.imagesPath}/logicaldoc-logo.png"
 					styleClass="error_logo" />
 			</div>
 

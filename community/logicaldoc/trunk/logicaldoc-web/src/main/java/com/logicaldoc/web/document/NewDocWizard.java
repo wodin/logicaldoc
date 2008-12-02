@@ -125,10 +125,6 @@ public class NewDocWizard {
 				// This field is required for Lucene to work properly
 				String source = (String) facesContext.getExternalContext().getApplicationMap().get("store");
 
-				if (source == null) {
-					source = settings.getValue("defaultSource");
-				}
-
 				// fills needed fields
 
 				int tmpInt = filename.lastIndexOf(".");

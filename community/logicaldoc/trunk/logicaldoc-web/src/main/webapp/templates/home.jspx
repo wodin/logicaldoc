@@ -19,7 +19,7 @@
 		<h3>
 			<ice:outputFormat value="#{messages['msg.jsp.main.welcome']}">
 				<f:param value="#{authUser}" />
-				<f:param value="#{context['product.name']}" />
+				<f:param value="#{StyleBean.productName}" />
 			</ice:outputFormat>
 		</h3>
 	</ice:panelGroup>
@@ -42,13 +42,13 @@
 				</f:facet>
 				<ice:panelGroup style="padding-bottom: 10px;">
 					<ice:panelGroup style="padding-top: 10px">
-						<ice:graphicImage value="#{styleBean.imagesPath}/editmessage.png" />
+						<ice:graphicImage value="#{StyleBean.imagesPath}/editmessage.png" />
 						<ice:outputText value=" " />
 						<ice:commandLink action="#{messagesRecordsManager.addMessage}"
 							value="#{msgs['db.createmessage']}" />
 					</ice:panelGroup>
 					<ice:panelGroup style="padding-top: 10px">
-						<ice:graphicImage value="#{styleBean.imagesPath}/message.png" />
+						<ice:graphicImage value="#{StyleBean.imagesPath}/message.png" />
 						<ice:outputText value=" " />
 						<ice:commandLink action="#{messagesRecordsManager.listMessages}">
 							<ice:outputText value="#{msgs['db.readmessages']}" />
@@ -109,7 +109,7 @@
 							<ice:panelGroup>
 								<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
 									action="#{documentNavigation.openInFolder}">
-									<ice:graphicImage value="#{styleBean.imagesPath}/#{entry.icon}"
+									<ice:graphicImage value="#{StyleBean.imagesPath}/#{entry.icon}"
 										styleClass="iconSmall" />
 									<ice:outputText value=" #{entry.title}" />
 								</ice:commandLink>
@@ -158,7 +158,7 @@
 							<ice:panelGroup>
 								<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
 									action="#{documentNavigation.openInFolder}">
-									<ice:graphicImage value="#{styleBean.imagesPath}/#{entry.icon}"
+									<ice:graphicImage value="#{StyleBean.imagesPath}/#{entry.icon}"
 										styleClass="iconSmall" />
 									<ice:outputText value=" #{entry.title}" />
 								</ice:commandLink>

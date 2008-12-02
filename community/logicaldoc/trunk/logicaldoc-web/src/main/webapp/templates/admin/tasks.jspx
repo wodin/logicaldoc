@@ -81,11 +81,11 @@
 								<ice:outputText value="#{msgs['enabled']}" />
 							</f:facet>
 							<ice:panelGroup>
-								<ice:commandButton image="#{styleBean.imagesPath}/2.gif"
+								<ice:commandButton image="#{StyleBean.imagesPath}/2.gif"
 									action="#{task.enable}" styleClass=""
 									rendered="#{!task.task.scheduling.enabled}"
 									title="#{msgs['msg.jsp.disabled']}: #{msgs['msg.jsp.enable']}" />
-								<ice:commandButton image="#{styleBean.imagesPath}/0.gif"
+								<ice:commandButton image="#{StyleBean.imagesPath}/0.gif"
 									action="#{task.disable}" styleClass=""
 									rendered="#{task.task.scheduling.enabled}"
 									title="#{msgs['msg.jsp.enabled']}: #{msgs['msg.jsp.disable']}" />
@@ -105,12 +105,12 @@
 								</ice:panelGroup>
 								<ice:panelGroup>
 									<ice:commandButton
-										image="#{styleBean.imagesPath}/idle_task.gif"
+										image="#{StyleBean.imagesPath}/idle_task.gif"
 										action="#{tasksRecordsManager.start}" styleClass=""
 										rendered="#{task.task.status==0 and task.task.scheduling.enabled}"
 										title="#{msgs['task.idle']}: #{msgs['task.start']}" />
 									<ice:commandButton
-										image="#{styleBean.imagesPath}/running_task.gif"
+										image="#{StyleBean.imagesPath}/running_task.gif"
 										action="#{tasksRecordsManager.stop}" styleClass=""
 										rendered="#{task.task.status==1 and task.task.scheduling.enabled}"
 										title="#{msgs['task.running']}: #{msgs['task.stop']}" />
@@ -124,7 +124,7 @@
 								<ice:outputText value="#{msgs['task.log']}" />
 							</f:facet>
 							<ice:panelGroup>
-								<ice:commandButton image="#{styleBean.imagesPath}/logging.png"
+								<ice:commandButton image="#{StyleBean.imagesPath}/logging.png"
 									action="#{tasksRecordsManager.log}" />
 							</ice:panelGroup>
 						</ice:column>

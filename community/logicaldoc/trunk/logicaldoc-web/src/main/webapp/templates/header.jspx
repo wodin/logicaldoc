@@ -16,7 +16,7 @@
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
 
 	<ice:panelGroup styleClass="headerTop">
-		<ice:graphicImage value="#{styleBean.imagesPath}/logicaldoc-logo.png"
+		<ice:graphicImage value="#{StyleBean.imagesPath}/logicaldoc-logo.png"
 			styleClass="headerLogo" />
 		<ui:include src="/templates/quickSearch.jspx" />
 		<ui:include src="/templates/headerInfo.jspx" />

@@ -84,7 +84,7 @@
 					<ice:panelGroup>
 						<ice:outputText value="#{documentForm.docDate}"
 							style="font-weight: bold">
-							<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{styleBean.timeZone}" />
+							<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{StyleBean.timeZone}" />
 						</ice:outputText>
 					</ice:panelGroup>
 
@@ -118,7 +118,7 @@
 					<ice:panelGroup>
 						<ice:outputText value="#{documentForm.record.creationDate}"
 							style="font-weight: bold">
-							<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{styleBean.timeZone}" />
+							<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{StyleBean.timeZone}" />
 						</ice:outputText>
 					</ice:panelGroup>
 				</ice:panelGrid>
@@ -137,14 +137,14 @@
 		</h3>
 		<ice:panelGrid columns="5">
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="source" value="#{msgs['document.source']}*" />
+				<ice:outputLabel for="source" value="#{msgs['document.source']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:inputText id="source"
 					label="#{msgs['errors.header.alert.key']}" tabindex="1"
 					value="#{documentForm.source}" maxlength="255"
 					onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
-					required="true" disabled="#{documentForm.readOnly}" />
+					disabled="#{documentForm.readOnly}" />
 				<br />
 				<ice:message for="source" />
 			</ice:panelGroup>

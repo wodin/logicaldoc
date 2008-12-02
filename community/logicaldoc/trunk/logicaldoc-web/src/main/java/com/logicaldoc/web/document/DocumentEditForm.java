@@ -137,10 +137,6 @@ public class DocumentEditForm {
 		Document doc = record.getDocument();
 		setTitle(doc.getTitle());
 		setSource(doc.getSource());
-		if (StringUtils.isEmpty(doc.getSource())) {
-			SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-			setSource(settings.getValue("defaultSource"));
-		}
 		setSourceAuthor(doc.getSourceAuthor());
 		setSourceDate(doc.getSourceDate());
 		setDocDate(doc.getDate());

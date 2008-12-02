@@ -123,7 +123,8 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		Menu rootMenu = menuDao.findById(rootMenuId);
 		Directory rootObject = new Directory(rootMenu);
 		if (useMenuIcons) {
-			rootObject.setIcon(StyleBean.getImagePath(rootMenu.getIcon()));
+			StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+			rootObject.setIcon(style.getImagePath(rootMenu.getIcon()));
 		} else {
 			rootObject.setIcon(StyleBean.XP_BRANCH_CONTRACTED_ICON);
 		}
@@ -253,8 +254,9 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		String label = Messages.getMessage(dir.getText());
 		branchObject.setDisplayText(label);
 		branchObject.setContentTitle(label);
+		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
 		if (useMenuIcons) {
-			branchObject.setIcon(StyleBean.getImagePath(dir.getIcon()));
+			branchObject.setIcon(style.getImagePath(dir.getIcon()));
 		} else {
 			branchObject.setIcon(StyleBean.XP_BRANCH_CONTRACTED_ICON);
 		}

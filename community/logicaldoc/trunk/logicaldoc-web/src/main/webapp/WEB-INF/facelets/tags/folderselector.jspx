@@ -30,7 +30,7 @@
 					rendered="#{useIcon=='true'}"
 					actionListener="#{openListener}"
 					title="#{msgs['folderselector.open']}">
-					<ice:graphicImage value="#{styleBean.imagesPath}/folder_tree.png"
+					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_tree.png"
 						style="border: 0px solid;" title="#{msgs['folderselector.open']}" />
 			</ice:commandLink>
 
@@ -56,7 +56,7 @@
 						<ice:panelGroup styleClass="treeContainer_folders">
 							<ice:tree id="accountTree" value="#{directoryModel}" var="item"
 								hideRootNode="false" hideNavigation="false"
-								imageDir="#{styleBean.imageDirectory}" immediate="true"
+								imageDir="#{StyleBean.imageDirectory}" immediate="true"
 								actionListener="#{directoryModel.nodeClicked}">
 								<ice:treeNode>
 									<f:facet name="icon">

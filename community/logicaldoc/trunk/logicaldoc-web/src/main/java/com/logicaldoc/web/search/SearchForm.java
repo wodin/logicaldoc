@@ -535,7 +535,8 @@ public class SearchForm {
 				setDocumentResult(docResult);
 
 				PageContentBean page = new PageContentBean("result", "search/result");
-				page.setIcon(StyleBean.getImagePath("search.png"));
+				StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+				page.setIcon(style.getImagePath("search.png"));
 				page.setContentTitle(Messages.getMessage("msg.jsp.searchresult"));
 				navigation.setSelectedPanel(page);
 			} catch (Throwable e) {
@@ -694,8 +695,8 @@ public class SearchForm {
 
 		PageContentBean page = new PageContentBean("advancedSearch", "search/advancedSearch");
 		page.setContentTitle(Messages.getMessage("search.advanced"));
-
-		page.setIcon(StyleBean.getImagePath("extsearch.gif"));
+		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class); 
+		page.setIcon(style.getImagePath("extsearch.gif"));
 		navigation.setSelectedPanel(page);
 
 		return null;

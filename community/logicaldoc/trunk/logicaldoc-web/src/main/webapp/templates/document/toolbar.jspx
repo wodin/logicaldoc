@@ -29,7 +29,7 @@
 					<ice:commandLink action="#{newDocWizard.start}"
 						title="#{msgs['msg.jsp.createdoc']}" rendered="#{documentNavigation.selectedDir.writeEnabled}">
 						<ice:graphicImage
-							value="#{styleBean.imagesPath}/actions_upload.gif"
+							value="#{StyleBean.imagesPath}/actions_upload.gif"
 							style="border: 0px solid;" title="#{msgs['msg.jsp.createdoc']}" />
 					</ice:commandLink>
 				</td>
@@ -37,7 +37,7 @@
 					<ice:commandLink action="#{documentsRecordsManager.startZipUpload}"
 						title="#{msgs['msg.jsp.uploadfolder']}" rendered="#{documentNavigation.selectedDir.writeEnabled}">
 						<ice:graphicImage
-							value="#{styleBean.imagesPath}/actions_uploadzip.gif"
+							value="#{StyleBean.imagesPath}/actions_uploadzip.gif"
 							style="border: 0px solid;" title="#{msgs['msg.jsp.uploadfolder']}"/>
 					</ice:commandLink>
 				</td>
@@ -46,7 +46,7 @@
 						title="#{msgs['msg.jsp.cut']}"
 						rendered="#{documentsRecordsManager.clipboardSize==0 and documentNavigation.selectedDir.writeEnabled}">
 						<ice:graphicImage
-							value="#{styleBean.imagesPath}/actions_trim.gif"
+							value="#{StyleBean.imagesPath}/actions_trim.gif"
 							style="border: 0px solid;" title="#{msgs['msg.jsp.cut']}"/>
 					</ice:commandLink>
 				</td>
@@ -55,7 +55,7 @@
 						title="#{msgs['msg.jsp.paste']}"
 						rendered="#{documentsRecordsManager.clipboardSize>0 and documentNavigation.selectedDir.writeEnabled}" >
 						<ice:graphicImage
-							value="#{styleBean.imagesPath}/actions_paste.gif"
+							value="#{StyleBean.imagesPath}/actions_paste.gif"
 							style="border: 0px solid;" title="#{msgs['msg.jsp.paste']}"/>
 					</ice:commandLink>
 				</td>
@@ -64,7 +64,7 @@
 						title="#{msgs['msg.jsp.delete']}"
 						onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;" rendered="#{documentNavigation.selectedDir.writeEnabled}">
 						<ice:graphicImage
-							value="#{styleBean.imagesPath}/actions_delete.gif"
+							value="#{StyleBean.imagesPath}/actions_delete.gif"
 							style="border: 0px solid;" title="#{msgs['msg.jsp.delete']}"/>
 					</ice:commandLink>
 				</td>
