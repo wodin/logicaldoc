@@ -602,11 +602,11 @@ public class DocumentManagerImpl implements DocumentManager {
 		Document document = documentDAO.findById(docId);
 
 		if (document.getStatus() == Document.DOC_CHECKED_OUT) {
-			document.setCheckoutUser(user.getUserName());
+			document.setCheckoutUser("");
 			document.setStatus(Document.DOC_CHECKED_IN);
 			documentDAO.store(document);
 
-			// create history entry for this checkout event
+			// create history entry for this UnCheckout event
 			createHistoryEntry(docId, user.getUserName(), History.UNCHECKOUT);
 
 			log.debug("UNChecked out document " + docId);
