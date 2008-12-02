@@ -14,10 +14,10 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jackrabbit.server.io.IOUtil;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
-import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -26,6 +26,7 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.webdav.context.ImportContext;
 import com.logicaldoc.webdav.exception.DavResourceIOException;
 import com.logicaldoc.webdav.exception.OperationNotSupportedException;
@@ -50,7 +51,7 @@ public class ResourceServiceImpl implements ResourceService {
 	private DocumentManager documentManager;
 
 	private UserDAO userDAO;
-	
+
 	private HistoryDAO historyDAO;
 
 	public void setUserDAO(UserDAO userDAO) {
@@ -68,7 +69,7 @@ public class ResourceServiceImpl implements ResourceService {
 	public void setHistoryDAO(HistoryDAO historyDAO) {
 		this.historyDAO = historyDAO;
 	}
-	
+
 	public void setDocumentManager(DocumentManager documentManager) {
 		this.documentManager = documentManager;
 	}
@@ -129,9 +130,9 @@ public class ResourceServiceImpl implements ResourceService {
 	public Resource getResource(String requestPath, long id) {
 		if (requestPath == null)
 			requestPath = "/";
-		
+
 		requestPath = requestPath.replace("/store", "");
-		
+
 		if (requestPath.length() > 0 && requestPath.substring(0, 1).equals("/"))
 			requestPath = requestPath.substring(1);
 
@@ -199,11 +200,9 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public Resource createResource(Resource parentResource, String name, boolean isCollection, ImportContext context) {
-		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource
-				.getID()));
+		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource.getID()));
 
-		if (menuDAO.isWriteEnable(parentMenu.getId(), parentResource
-				.getRequestedPerson()) == false)
+		if (menuDAO.isWriteEnable(parentMenu.getId(), parentResource.getRequestedPerson()) == false)
 			throw new SecurityException("Write Access not applied to this user");
 
 		if (isCollection == true) {
@@ -231,22 +230,19 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public void updateResource(Resource resource, ImportContext context) {
 		User user = userDAO.findById(resource.getRequestedPerson());
-		
+
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 
 		try {
 			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
-
-				documentManager.checkin(Long.parseLong(resource.getID()), context
-						.getInputStream(), resource.getName(), user,
-						VERSION_TYPE.NEW_SUBVERSION, "", false);
-		    } else {
+				documentManager.checkin(Long.parseLong(resource.getID()), context.getInputStream(), resource.getName(),
+						user, VERSION_TYPE.NEW_SUBVERSION, "", false);
+			} else {
 				documentManager.delete(document.getId());
-				
-				this.createResource(context.getResource(), context
-						.getSystemId(), false, context);
+
+				this.createResource(context.getResource(), context.getSystemId(), false, context);
 			}
-			
+
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -277,14 +273,13 @@ public class ResourceServiceImpl implements ResourceService {
 
 		if (target.isFolder() == true) {
 			Menu currentMenu = menuDAO.findById(Long.parseLong(target.getID()));
-			
+
 			long currentParentFolder = currentMenu.getParentId();
 			long destinationParentFolder = Long.parseLong(destination.getID());
-			//renaming is allowed
-			if(currentParentFolder != destinationParentFolder)
+			// renaming is allowed
+			if (currentParentFolder != destinationParentFolder)
 				throw new UnsupportedOperationException();
-			
-			
+
 			currentMenu.setText(target.getName());
 
 			if (destination != null)
@@ -292,7 +287,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 			menuDAO.store(currentMenu);
 			return this.marshallFolder(currentMenu);
-			
+
 		} else {
 			// if the destination is null, then the user want to change the
 			// filename,
@@ -304,11 +299,11 @@ public class ResourceServiceImpl implements ResourceService {
 			documentDAO.initialize(document);
 			String name = target.getName();
 			String ext = "";
-			if(name.contains(".")){
-				ext = name.substring(name.lastIndexOf(".")+1);
+			if (name.contains(".")) {
+				ext = name.substring(name.lastIndexOf(".") + 1);
 				name = name.substring(0, name.lastIndexOf("."));
 			}
-			
+
 			document.setTitle(name);
 			document.setType(ext);
 			documentDAO.store(document);
@@ -336,9 +331,9 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public void copyResource(Resource destinationResource, Resource resource) {
-		
+
 		log.error("copyResource");
-		
+
 		if (resource.isFolder() == true) {
 			throw new RuntimeException("FolderCopy not supported");
 		} else {
@@ -350,11 +345,11 @@ public class ResourceServiceImpl implements ResourceService {
 
 				log.info("document = " + document);
 				log.info("document.getFileName() = " + document.getFileName());
-				
+
 				log.info("menu = " + menu);
 				log.info("menu.getText() = " + menu.getText());
 				log.info("menu.getPath() = " + menu.getPath());
-				
+
 				User user = userDAO.findById(resource.getRequestedPerson());
 				log.info("user = " + user);
 
@@ -378,13 +373,13 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	@Override
-	public InputStream streamOut(Resource resource) {		
+	public InputStream streamOut(Resource resource) {
 		String version = resource.getVersionLabel();
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
-		
-		if(document.getVersion().equals(resource.getVersionLabel()))
+
+		if (document.getVersion().equals(resource.getVersionLabel()))
 			version = null;
-		
+
 		if (document == null) {
 			// Document not found
 			return new ByteArrayInputStream(new String("not found").getBytes());
@@ -416,16 +411,15 @@ public class ResourceServiceImpl implements ResourceService {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	public boolean isCheckedOut(Resource resource){
-		Document document = documentDAO.findById(Long.parseLong(resource
-				.getID()));
+
+	public boolean isCheckedOut(Resource resource) {
+		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 		return document.getStatus() == Document.DOC_CHECKED_OUT;
 	}
-	
-	public List<Resource> getHistory(Resource resource){
+
+	public List<Resource> getHistory(Resource resource) {
 		List<Resource> resourceHistory = new LinkedList<Resource>();
-	
+
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 		documentDAO.initialize(document);
 
@@ -434,16 +428,55 @@ public class ResourceServiceImpl implements ResourceService {
 
 		// clear collection and add sorted elements
 		Arrays.sort(sortIt);
-		
-		for(Version version : sortIt){
+
+		for (Version version : sortIt) {
 			Resource res = marshallDocument(document);
 			res.setVersionLabel(version.getVersion());
 			res.setVersionDate(version.getDate());
 			res.setAuthor(version.getUser());
-			res.setIsCheckedOut( true );
-			resourceHistory.add( res );
+			res.setIsCheckedOut(true);
+			resourceHistory.add(res);
 		}
 
 		return resourceHistory;
+	}
+
+	public void uncheckout(Resource resource) {
+		try {
+			Document document = documentDAO.findById(Long.parseLong(resource.getID()));
+			documentDAO.initialize(document);
+			document.setStatus(Document.DOC_CHECKED_IN);
+			documentDAO.store(document);
+
+			resource.setIsCheckedOut(false);
+
+		} catch (Exception e) {
+			log.error(e);
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void checkin(Resource resource) {
+
+		User user = userDAO.findById(resource.getRequestedPerson());
+
+		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
+
+		try {
+			if (isCheckedOut(resource)) {
+				File file = documentManager.getDocumentFile(document, null);
+
+				// TODO: You must read the entire file in memory because the
+				// checkout method in the end attempts to move the original file that is
+				// blocked by fileInputStream
+				FileInputStream fis = new FileInputStream(file);
+				documentManager.checkin(Long.parseLong(resource.getID()), fis, resource.getName(), user,
+						VERSION_TYPE.NEW_SUBVERSION, "", false);
+				resource.setIsCheckedOut(false);
+			}
+		} catch (Exception e) {
+			log.error(e);
+			throw new RuntimeException(e);
+		}
 	}
 }
