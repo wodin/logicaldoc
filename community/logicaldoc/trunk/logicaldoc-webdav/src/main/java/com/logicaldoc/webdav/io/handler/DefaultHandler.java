@@ -128,6 +128,7 @@ public class DefaultHandler implements IOHandler {
             return false;
         }
         Resource resource = context.getResource();
+        log.warn("(resource != null) = " + (resource != null));
         return resource != null;
     }
 
@@ -138,7 +139,9 @@ public class DefaultHandler implements IOHandler {
         if (resource == null) {
             return false;
         }
-        return canImport(context, resource.isCollection());
+        boolean canImport = canImport(context, resource.isCollection());
+        log.warn("canImport = " + canImport);
+        return canImport;
     }
 
     /**
@@ -146,15 +149,18 @@ public class DefaultHandler implements IOHandler {
      */
     public boolean importContent(ImportContext context, boolean isCollection) throws IOException {
         if (!canImport(context, isCollection)) {
+        	log.warn(getName() + ": Cannot import " + context.getSystemId());
             throw new IOException(getName() + ": Cannot import " + context.getSystemId());
         }
 
         boolean success = false;
         try {
         	success = getContentNode(context, isCollection);
+        	log.warn("success = " + success);
         }
-        catch(Exception e){
+        catch (Exception e){        	
         	e.printStackTrace();
+        	log.warn(e.getMessage(), e);
         } 
 
         return success;
@@ -293,16 +299,15 @@ public class DefaultHandler implements IOHandler {
 
         Resource res = resourceService.getChildByName(resource, name);
         
-        if(res == null){
+        if (res == null){
         	resourceService.createResource(resource, name, isCollection, context);
         	return true;
         }
         else {
         	res.setRequestedPerson(resource.getRequestedPerson());
         	resourceService.updateResource(res, context);
-        	return false;
+        	return true;
         }
-
     }
     
     /**

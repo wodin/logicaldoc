@@ -78,9 +78,7 @@ public class IOManagerImpl implements IOManager {
             for (int i = 0; i < ioHandlers.length && !success; i++) {
                 IOHandler ioh = ioHandlers[i];
                 if (ioh.canImport(context, resource)) {
-                   
                     success = ioh.importContent(context, resource);
-                   
                 }
             }
             context.informCompleted(success);
