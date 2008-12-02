@@ -594,4 +594,12 @@ public class DocumentRecord extends MenuBarBean {
 			docDao.initialize(this.document);
 		}
 	}
+
+	public Date getCreation() {
+		return document.getCreation();
+	}
+
+	public Date getLastModified() {
+		return document.getLastModified();
+	}
 }
