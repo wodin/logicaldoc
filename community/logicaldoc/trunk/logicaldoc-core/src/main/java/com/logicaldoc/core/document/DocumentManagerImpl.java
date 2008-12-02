@@ -597,4 +597,22 @@ public class DocumentManagerImpl implements DocumentManager {
 			is.close();
 		}
 	}
+
+	public void uncheckout(long docId, User user) throws Exception {
+		Document document = documentDAO.findById(docId);
+
+		if (document.getStatus() == Document.DOC_CHECKED_OUT) {
+			document.setCheckoutUser(user.getUserName());
+			document.setStatus(Document.DOC_CHECKED_IN);
+			documentDAO.store(document);
+
+			// create history entry for this checkout event
+			createHistoryEntry(docId, user.getUserName(), History.UNCHECKOUT);
+
+			log.debug("UNChecked out document " + docId);
+		} else {
+			throw new Exception("Document already checked in");
+		}
+		
+	}
 }

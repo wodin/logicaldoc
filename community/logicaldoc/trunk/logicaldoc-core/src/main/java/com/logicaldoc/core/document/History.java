@@ -18,6 +18,8 @@ public class History extends PersistentObject {
 
 	public final static String CHECKOUT = "msg.jsp.doccheckedout";
 
+	public static final String UNCHECKOUT = "msg.jsp.docuncheckedout";
+
 	private long docId;
 
 	private long userId;
