@@ -189,22 +189,6 @@ public class StyleBean {
 	}
 
 	/**
-	 * Applies temp style to to the current style and image directory and
-	 * manually refreshes the icons in the navigation tree. The page will reload
-	 * based on navigation rules to ensure the theme is applied; this is
-	 * necessary because of difficulties encountered by updating the stylesheet
-	 * reference within the <HEAD> of the document.
-	 * 
-	 * @return the reload navigation attribute
-	 */
-	public String changeStyle() {
-		currentStyle = tempStyle;
-		imageDirectory = "./xmlhttp/css/" + currentStyle + "/css-images/";
-
-		return "reload";
-	}
-
-	/**
 	 * Gets a list of available theme names that can be applied.
 	 * 
 	 * @return available theme list
@@ -214,6 +198,7 @@ public class StyleBean {
 	}
 
 	public String getPath(String name) {
+		System.out.println("getPath "+name+" - "+skin);
 		return "/skins/" + skin + "/" + name;
 	}
 
