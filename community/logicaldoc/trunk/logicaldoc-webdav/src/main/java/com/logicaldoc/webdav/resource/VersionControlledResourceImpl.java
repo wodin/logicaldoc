@@ -79,8 +79,11 @@ implements VersionControlledResource {
 		sb.append(", ").append(VersionableResource.METHODS);
 		if (isVersionControlled()) {
 			sb.append(", ").append(DavMethods.METHOD_CHECKOUT);
+			sb.append(", ").append(DavMethods.METHOD_CHECKIN);
+			sb.append(", ").append(DavMethods.METHOD_UNCHECKOUT);
 		    sb.append(", ").append(DavMethods.METHOD_LABEL);
 		}
+		log.fatal("getSupportedMethods: " + sb.toString());
 		return sb.toString();
 	}
 
@@ -106,7 +109,14 @@ implements VersionControlledResource {
 	* @see org.apache.jackrabbit.webdav.version.VersionControlledResource#checkin()
 	*/
 	public String checkin() throws DavException {
-	return null;
+		boolean isCheckedOut = getResource().getIsCheckedOut();
+		if (isCheckedOut == false)
+			throw new DavException(DavServletResponse.SC_EXPECTATION_FAILED);
+		
+		resourceService.checkin(getResource());
+		this.propsInitialized = false;
+		initProperties();
+		return locator.getHref(isCollection());
 	}
 
 	/**
@@ -121,15 +131,11 @@ implements VersionControlledResource {
 
 
 	/**
-	* UNCHECKOUT cannot be implemented on top of JSR 170 repository.
-	* Therefore this methods always throws a <code>DavException</code> with error code
-	* {@link org.apache.jackrabbit.webdav.DavServletResponse#SC_NOT_IMPLEMENTED}.
-	*
 	* @throws org.apache.jackrabbit.webdav.DavException
 	* @see org.apache.jackrabbit.webdav.version.VersionControlledResource#uncheckout()
 	*/
 	public void uncheckout() throws DavException {
-		throw new DavException(DavServletResponse.SC_NOT_IMPLEMENTED);
+		resourceService.uncheckout(getResource());
 	}
 
 	/**
@@ -248,7 +254,7 @@ implements VersionControlledResource {
 			// DAV:auto-version property: there is no auto version, explicit CHECKOUT is required.
             properties.add(new DefaultDavProperty(AUTO_VERSION, null, false));
             
-			if(resource.getIsCheckedOut()){
+			if (resource.getIsCheckedOut()){
 				 properties.add(new HrefProperty(CHECKED_OUT, baseVHref, true));
 				 properties.add(new HrefProperty(
 						VersionResource.PREDECESSOR_SET, locator.getResourcePath(), false));
@@ -256,8 +262,6 @@ implements VersionControlledResource {
 			else {
 				properties.add(new HrefProperty(CHECKED_IN, locator.getResourcePath(), true));
 			}
-			
-			
 		}
 	}
 	

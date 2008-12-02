@@ -3,6 +3,7 @@ package com.logicaldoc.webdav.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -133,9 +134,9 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	 * @throws IOException
 	 */
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		log.debug("Received WebDAV request");
-		
+
 		HttpSession session = request.getSession(true);
 
 		WebdavRequest webdavRequest = new WebdavRequestImpl(request, getLocatorFactory());
@@ -168,14 +169,13 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			DavSessionImpl davSession = new DavSessionImpl();
 			davSession.putObject("id", userDAO.findByUserName(session.getAttribute("name").toString()).getId());
 			davSession.putObject("name", session.getAttribute("name"));
-			
+
 			webdavRequest.setDavSession(davSession);
-			
+
 			String path = webdavRequest.getRequestLocator().getResourcePath();
-			if(path.startsWith("/store") == false && path.startsWith("/vstore") == false)
+			if (path.startsWith("/store") == false && path.startsWith("/vstore") == false)
 				throw new DavException(DavServletResponse.SC_NOT_FOUND);
-			
-			
+
 			// check matching if=header for lock-token relevant operations
 			DavResource resource = getResourceFactory().createResource(webdavRequest.getRequestLocator(),
 					webdavRequest, webdavResponse, davSession);
@@ -253,26 +253,26 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			doOptions(request, response, resource);
 			break;
 		case DavMethods.DAV_LOCK:
-            doLock(request, response, resource);
-            break;
-        case DavMethods.DAV_UNLOCK:
-            doUnlock(request, response, resource);
-            break;	
+			doLock(request, response, resource);
+			break;
+		case DavMethods.DAV_UNLOCK:
+			doUnlock(request, response, resource);
+			break;
 		case DavMethods.DAV_CHECKOUT:
-            doCheckout(request, response, resource);
-            break;
+			doCheckout(request, response, resource);
+			break;
 		case DavMethods.DAV_CHECKIN:
-            doCheckin(request, response, resource);
-            break;	
+			doCheckin(request, response, resource);
+			break;
 		case DavMethods.DAV_REPORT:
-            doReport(request, response, resource);
-            break;	
+			doReport(request, response, resource);
+			break;
 		case DavMethods.DAV_VERSION_CONTROL:
-            doVersionControl(request, response, resource);
-            break;
+			doVersionControl(request, response, resource);
+			break;
 		case DavMethods.DAV_UNCHECKOUT:
-            doUncheckout(request, response, resource);
-            break;    
+			doUncheckout(request, response, resource);
+			break;
 		default:
 			// any other method
 			return false;
@@ -335,7 +335,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 				return;
 			}
 		}
-		
+
 		// spool resource properties and ev. resource content.
 		OutputStream out = (sendContent) ? response.getOutputStream() : null;
 		resource.spool(getOutputContext(response, out));
@@ -384,7 +384,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	protected void doPropPatch(WebdavRequest request, WebdavResponse response, DavResource resource)
 			throws IOException, DavException {
 		log.debug("doPropPatch");
-		
+
 		List changeList = request.getPropPatchChangeList();
 		if (changeList.isEmpty()) {
 			response.sendError(DavServletResponse.SC_BAD_REQUEST);
@@ -554,10 +554,10 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 
 		int status = validateDestination(destResource, request);
 		if (status > DavServletResponse.SC_NO_CONTENT) {
-		    response.sendError(status);
-		    return;
+			response.sendError(status);
+			return;
 		}
-		
+
 		resource.move(destResource);
 		response.setStatus(status);
 	}
@@ -567,7 +567,8 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	 * code: Any return value greater/equal than
 	 * {@link DavServletResponse#SC_NO_CONTENT} indicates an error.
 	 * 
-	 * @param destResource destination resource to be validated.
+	 * @param destResource
+	 *            destination resource to be validated.
 	 * @param request
 	 * @return status code indicating whether the destination is valid.
 	 */
@@ -614,7 +615,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	protected void doOptions(WebdavRequest request, WebdavResponse response, DavResource resource) throws IOException,
 			DavException {
 		log.debug("doOptions");
-		
+
 		response.addHeader(DavConstants.HEADER_DAV, resource.getComplianceClass());
 		response.addHeader("Allow", resource.getSupportedMethods());
 		response.addHeader("MS-Author-Via", DavConstants.HEADER_DAV);
@@ -636,126 +637,131 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			response.sendXmlResponse(oR, DavServletResponse.SC_OK);
 		}
 	}
-	
-	 protected void doVersionControl(WebdavRequest request, WebdavResponse response,
-             DavResource resource)throws DavException, IOException {
+
+	protected void doVersionControl(WebdavRequest request, WebdavResponse response, DavResource resource)
+			throws DavException, IOException {
 		log.debug("doVersionControl");
 		if (!(resource instanceof VersionableResource)) {
 			response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
 			return;
 		}
 		((VersionableResource) resource).addVersionControl();
-	 }
-	
-	
-	protected void doLock(WebdavRequest request, WebdavResponse response,
-             DavResource resource) throws IOException, DavException {
+	}
+
+	protected void doLock(WebdavRequest request, WebdavResponse response, DavResource resource) throws IOException,
+			DavException {
 		log.debug("doLock");
-		
+
 		response.sendError(DavServletResponse.SC_NOT_IMPLEMENTED);
 	}
-	 
-	 /**
-     * The UNLOCK method
-     *
-     * @param request
-     * @param response
-     * @param resource
-     * @throws DavException
-     */
-    protected void doUnlock(WebdavRequest request, WebdavResponse response,
-                            DavResource resource) throws DavException {
-        // get lock token from header
-    	try {
+
+	/**
+	 * The UNLOCK method
+	 * 
+	 * @param request
+	 * @param response
+	 * @param resource
+	 * @throws DavException
+	 */
+	protected void doUnlock(WebdavRequest request, WebdavResponse response, DavResource resource) throws DavException {
+		// get lock token from header
+		try {
 			response.sendError(DavServletResponse.SC_NOT_IMPLEMENTED);
 		} catch (IOException e) {
 			throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-    }
-	
-    /**
-     * The CHECKOUT method
-     *
-     * @param request
-     * @param response
-     * @param resource
-     * @throws DavException
-     * @throws IOException
-     */
-    protected void doCheckout(WebdavRequest request, WebdavResponse response,
-                              DavResource resource)
-            throws DavException, IOException {
-    	log.debug("doCheckout");
-    	if (!(resource instanceof VersionControlledResource)) {
-            response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
-            return;
-        }
-        ((VersionControlledResource) resource).checkout();
-    }
-    
-    /**
-     * The CHECKIN method
-     *
-     * @param request
-     * @param response
-     * @param resource
-     * @throws DavException
-     * @throws IOException
-     */
-    protected void doCheckin(WebdavRequest request, WebdavResponse response,
-                             DavResource resource)
-            throws DavException, IOException {
-    	((VersionControlledResource)resource).checkin();
-        String versionHref = ((VersionControlledResource) resource).checkin();
-        response.setHeader(DeltaVConstants.HEADER_LOCATION, versionHref);
-        response.setStatus(DavServletResponse.SC_CREATED);
-    }
-    
-    /**
-     * The REPORT method
-     *
-     * @param request
-     * @param response
-     * @param resource
-     * @throws DavException
-     * @throws IOException
-     */
-    protected void doReport(WebdavRequest request, WebdavResponse response,
-                            DavResource resource)
-            throws DavException, IOException {
-    	log.debug("doReport");
-    	
-    	ReportInfo info = request.getReportInfo();
-        Report report;
-        if (resource instanceof DeltaVResource) {
-            report = ((DeltaVResource) resource).getReport(info);
-        } else if (resource instanceof AclResource) {
-            report = ((AclResource) resource).getReport(info);
-        } else {
-            response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
-            return;
-        }
+	}
 
-        int statusCode = (report.isMultiStatusReport()) ? DavServletResponse.SC_MULTI_STATUS : DavServletResponse.SC_OK;
-        response.sendXmlResponse(report, statusCode);
-    }
-    
-    /**
-     * The UNCHECKOUT method
-     *
-     * @param request
-     * @param response
-     * @param resource
-     * @throws DavException
-     * @throws IOException
-     */
-    protected void doUncheckout(WebdavRequest request, WebdavResponse response,
-                                DavResource resource)
-            throws DavException, IOException {
-    	log.debug("doUncheckout");
-    	response.setStatus(DavServletResponse.SC_NOT_IMPLEMENTED);
-    }
-    
+	/**
+	 * The CHECKOUT method
+	 * 
+	 * @param request
+	 * @param response
+	 * @param resource
+	 * @throws DavException
+	 * @throws IOException
+	 */
+	protected void doCheckout(WebdavRequest request, WebdavResponse response, DavResource resource)
+			throws DavException, IOException {
+		log.debug("doCheckout");
+		if (!(resource instanceof VersionControlledResource)) {
+			response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
+			return;
+		}
+		((VersionControlledResource) resource).checkout();
+	}
+
+	/**
+	 * The CHECKIN method
+	 * 
+	 * @param request
+	 * @param response
+	 * @param resource
+	 * @throws DavException
+	 * @throws IOException
+	 */
+	protected void doCheckin(WebdavRequest request, WebdavResponse response, DavResource resource) throws DavException,
+			IOException {
+		log.debug("doCheckin");
+		if (!(resource instanceof VersionControlledResource)) {
+			response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
+			return;
+		}
+		
+		String versionHref = ((VersionControlledResource) resource).checkin();
+		log.info("versionHref = " + versionHref);
+		response.setHeader(DeltaVConstants.HEADER_LOCATION, versionHref);
+		response.setStatus(DavServletResponse.SC_CREATED);
+	}
+
+	/**
+	 * The REPORT method
+	 * 
+	 * @param request
+	 * @param response
+	 * @param resource
+	 * @throws DavException
+	 * @throws IOException
+	 */
+	protected void doReport(WebdavRequest request, WebdavResponse response, DavResource resource) throws DavException,
+			IOException {
+		log.debug("doReport");
+
+		ReportInfo info = request.getReportInfo();
+		Report report;
+		if (resource instanceof DeltaVResource) {
+			report = ((DeltaVResource) resource).getReport(info);
+		} else if (resource instanceof AclResource) {
+			report = ((AclResource) resource).getReport(info);
+		} else {
+			response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
+			return;
+		}
+
+		int statusCode = (report.isMultiStatusReport()) ? DavServletResponse.SC_MULTI_STATUS : DavServletResponse.SC_OK;
+		response.sendXmlResponse(report, statusCode);
+	}
+
+	/**
+	 * The UNCHECKOUT method
+	 * 
+	 * @param request
+	 * @param response
+	 * @param resource
+	 * @throws DavException
+	 * @throws IOException
+	 */
+	protected void doUncheckout(WebdavRequest request, WebdavResponse response, DavResource resource)
+			throws DavException, IOException {
+		log.debug("doUncheckout");
+		if (!(resource instanceof VersionControlledResource)) {
+			response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
+			return;
+		}
+		((VersionControlledResource) resource).uncheckout();
+		response.setStatus(DavServletResponse.SC_OK);
+	}
+
 	/**
 	 * Return a new <code>InputContext</code> used for adding resource members
 	 * 
@@ -782,22 +788,22 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	protected OutputContext getOutputContext(DavServletResponse response, OutputStream out) {
 		return new OutputContextImpl(response, out);
 	}
-	
+
 	/**
 	 * 
 	 * @param request
 	 */
-	private void printRequest(DavServletRequest request){
+	private void printRequest(DavServletRequest request) {
 		StringBuffer out = new StringBuffer();
 		try {
 			InputStream io = request.getInputStream();
-		
-		byte b[] = new byte[4096];
-		for (int n; (n = io.read(b)) != -1;) {
-			out.append(new String(b, 0, n));
+
+			byte b[] = new byte[4096];
+			for (int n; (n = io.read(b)) != -1;) {
+				out.append(new String(b, 0, n));
+			}
+			log.debug(out);
+		} catch (Exception e) {
 		}
-		log.debug(out);
-		}
-		catch(Exception e){}
 	}
 }
