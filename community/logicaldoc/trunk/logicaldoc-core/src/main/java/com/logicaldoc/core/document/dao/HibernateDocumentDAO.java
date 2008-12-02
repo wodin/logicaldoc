@@ -254,8 +254,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@SuppressWarnings( { "unchecked", "deprecation" })
-	public Collection<String> findKeywords(String firstLetter, long userId) {
-		Collection<String> coll = new ArrayList<String>();
+	public List<String> findKeywords(String firstLetter, long userId) {
+		List<String> coll = new ArrayList<String>();
 
 		try {
 			User user = userDAO.findById(userId);
