@@ -152,7 +152,7 @@ public class MenuBarBean {
 		MenuItem helpMenu = createMenuItem(" " + Messages.getMessage("help"), "m-help", "#{menuBar.primaryListener}",
 				null, null, style.getImagePath("help.png"), false, null, null);
 
-		String helpUrl = style.getProductHelp() + "/index.html";
+		String helpUrl = style.getProductHelp();
 		helpMenu.getChildren().add(
 				createMenuItem(" " + Messages.getMessage("help"), "m-helpcontents", null, null, helpUrl, style
 						.getImagePath("help.png"), false, "_blank", null));
