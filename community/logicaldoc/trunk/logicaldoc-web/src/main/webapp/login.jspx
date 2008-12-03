@@ -53,7 +53,7 @@
                         <table width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td align="left">
-                                    <ice:outputText value="#{StyleBean.productName}  #{context['product.release']}" escape="false" />
+                                    <ice:outputText value="#{StyleBean.productName}  #{StyleBean.productRelease}" escape="false" />
                                     <br />
                                 </td>
                             </tr>
