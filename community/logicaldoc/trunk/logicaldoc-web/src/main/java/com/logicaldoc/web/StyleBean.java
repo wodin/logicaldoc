@@ -69,6 +69,8 @@ public class StyleBean {
 
 	private String productRelease;
 
+	private String productYear;
+
 	/**
 	 * Creates a new instance of the StyleBean.
 	 */
@@ -84,23 +86,34 @@ public class StyleBean {
 		styleList.add(new SelectItem(XP, XP));
 		styleList.add(new SelectItem(ROYALE, ROYALE));
 		initTimeZone();
-		
+
 		try {
-			PropertiesBean context=new PropertiesBean();
-			skin=context.getProperty("skin");
-			productName=context.getProperty("skin."+skin+".product.name");
-			if(StringUtils.isEmpty(productName))
-				productName=context.getProperty("product.name");
-			productUrl=context.getProperty("skin."+skin+".product.url");
-			if(StringUtils.isEmpty(productUrl))
-				productUrl=context.getProperty("product.url");
-			productHelp=context.getProperty("skin."+skin+".product.help");
-			if(StringUtils.isEmpty(productHelp))
-				productHelp=context.getProperty("product.help");
-			productHelp=context.getProperty("product.release");
+			PropertiesBean context = new PropertiesBean();
+			skin = context.getProperty("skin");
+			productName = context.getProperty("skin." + skin + ".product.name");
+			if (StringUtils.isEmpty(productName))
+				productName = context.getProperty("product.name");
+			productUrl = context.getProperty("skin." + skin + ".product.url");
+			if (StringUtils.isEmpty(productUrl))
+				productUrl = context.getProperty("product.url");
+			productHelp = context.getProperty("skin." + skin + ".product.help");
+			if (StringUtils.isEmpty(productHelp))
+				productHelp = context.getProperty("product.help");
+			productYear = context.getProperty("skin." + skin + ".product.year");
+			if (StringUtils.isEmpty(productYear))
+				productYear = context.getProperty("product.year");
+			productHelp = context.getProperty("product.release");
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
+	}
+
+	public String getProductYear() {
+		return productYear;
+	}
+
+	public void setProductYear(String productYear) {
+		this.productYear = productYear;
 	}
 
 	public String getProductName() {
@@ -198,7 +211,7 @@ public class StyleBean {
 	}
 
 	public String getPath(String name) {
-		System.out.println("getPath "+name+" - "+skin);
+		System.out.println("getPath " + name + " - " + skin);
 		return "/skins/" + skin + "/" + name;
 	}
 
