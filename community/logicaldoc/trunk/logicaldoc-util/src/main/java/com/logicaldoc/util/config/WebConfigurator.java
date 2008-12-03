@@ -8,9 +8,8 @@ import org.jdom.Element;
 /**
  * Configurator for the web.xml file
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @author Sebastian Wenzky
- * @version $Id:$
  * @since 3.0
  */
 public class WebConfigurator extends XMLBean {
