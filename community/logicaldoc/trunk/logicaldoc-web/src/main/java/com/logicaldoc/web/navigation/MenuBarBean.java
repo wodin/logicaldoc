@@ -1,13 +1,10 @@
 package com.logicaldoc.web.navigation;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -154,7 +151,7 @@ public class MenuBarBean {
 
 		String helpUrl = style.getProductHelp();
 		helpMenu.getChildren().add(
-				createMenuItem(" " + Messages.getMessage("help"), "m-helpcontents", null, null, helpUrl, style
+				createMenuItem(" " + Messages.getMessage("help.online"), "m-helpcontents", null, null, helpUrl, style
 						.getImagePath("help.png"), false, "_blank", null));
 
 		PageContentBean infoPage = new PageContentBean("info", "info");
