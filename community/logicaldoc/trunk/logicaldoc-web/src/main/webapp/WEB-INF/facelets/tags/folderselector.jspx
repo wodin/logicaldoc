@@ -68,7 +68,7 @@
 												<f:param name="directoryId"
 													value="#{item.userObject.menuId}" />
 												<ice:outputText
-													value="#{item.userObject.displayText=='db.projects' ? msgs['db.projects'] : item.userObject.displayText}"
+													value="  #{item.userObject.displayText=='db.projects' ? msgs['db.projects'] : item.userObject.displayText}"
 													styleClass="#{item.userObject.selected ? 'selected-tree-node' : 'tree-node'}" />
 											</ice:commandLink>
 										</ice:panelGroup>
