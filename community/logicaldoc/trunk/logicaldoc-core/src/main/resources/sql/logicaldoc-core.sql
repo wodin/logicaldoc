@@ -14,7 +14,7 @@ create table ld_ticket (ld_id bigint not null, ld_lastmodified timestamp not nul
 create table ld_user (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_username varchar(255) not null, ld_password varchar(255), ld_name varchar(255), ld_firstname varchar(255), ld_street varchar(255), ld_postalcode varchar(255), ld_city varchar(255), ld_country varchar(30), ld_language varchar(10), ld_email varchar(255), ld_telephone varchar(255), ld_type int not null, primary key (ld_id));
 create table ld_userdoc (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_userid bigint not null, ld_date timestamp, primary key (ld_id));
 create table ld_usergroup (ld_groupid bigint not null, ld_userid bigint not null, primary key (ld_groupid, ld_userid));
-create table ld_version (ld_docid bigint not null, ld_version varchar(10), ld_user varchar(255), ld_date timestamp, ld_comment varchar(2000));
+create table ld_version (ld_docid bigint not null, ld_version varchar(10), ld_username varchar(255), ld_userid bigint not null, ld_date timestamp, ld_comment varchar(2000));
 create table ld_generic (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_subtype varchar(255) not null, ld_string1 varchar(4000), ld_string2 varchar(4000), ld_integer1 int, ld_integer2 int, ld_double1 float, ld_double2 float, ld_date1 timestamp, ld_date2 timestamp, primary key (ld_id));
 create table ld_generic_ext (ld_genid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_genid, ld_name));
 alter table ld_attributes add constraint FKF9B7567E76C86307 foreign key (ld_templateid) references ld_template(ld_id);
@@ -48,6 +48,7 @@ create unique index  AK_LINK on ld_link (ld_docid1, ld_docid2, ld_type);
 create unique index  AK_TEMPLATE on ld_template (ld_name);
 create unique index  AK_GENERIC on ld_generic (ld_type, ld_subtype);
 alter table ld_history add constraint FK_HISTORY_USER foreign key (ld_userid) references ld_user(ld_id);
+alter table ld_version add constraint FK_VERSION_USER foreign key (ld_userid) references ld_user(ld_id);
 
 
 insert into ld_menu

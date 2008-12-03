@@ -362,7 +362,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		version.setVersion(newVersionName);
 		version.setComment(description);
 		version.setDate(new Date());
-		version.setUser(username);
+		version.setUsername(username);
 
 		return version;
 	}
@@ -531,7 +531,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			vers.setVersion("1.0");
 			vers.setComment(versionDesc);
 			vers.setDate(doc.getDate());
-			vers.setUser(user.getUserName());
+			vers.setUsername(user.getUserName());
 
 			doc.addVersion(vers);
 
