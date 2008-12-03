@@ -159,6 +159,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Version version = new Version();
 		version.setVersion("1.0");
 		version.setComment("comment");
+		version.setUserId(1);
 		doc.addVersion(version);
 		assertTrue(dao.store(doc));
 		assertEquals(5, doc.getId());
@@ -179,6 +180,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		version = doc.getVersion("1.0");
 		version.setComment("xxxx");
 		version.setVersion("1.0");
+		version.setUserId(1);
 		doc.clearVersions();
 		doc.addVersion(version);
 		dao.store(doc);
