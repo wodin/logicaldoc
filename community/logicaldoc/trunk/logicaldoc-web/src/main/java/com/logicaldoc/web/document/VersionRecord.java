@@ -67,8 +67,8 @@ public class VersionRecord extends Version {
 		return wrappedVersion.getNewVersionName(oldVersionName, versionType);
 	}
 
-	public String getUser() {
-		return wrappedVersion.getUser();
+	public String getUsername() {
+		return wrappedVersion.getUsername();
 	}
 
 	public String getVersion() {
@@ -87,8 +87,8 @@ public class VersionRecord extends Version {
 		wrappedVersion.setDate(date);
 	}
 
-	public void setUser(String user) {
-		wrappedVersion.setUser(user);
+	public void setUsername(String user) {
+		wrappedVersion.setUsername(user);
 	}
 
 	public void setVersion(String version) {
