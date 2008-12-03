@@ -74,11 +74,6 @@ public class SecurityForm {
 		showFolderSelector = false;
 
 		Directory dir = directoryModel.getSelectedDir();
-		if (dir.getMenuId() == Menu.MENUID_DOCUMENTS) {
-			setPath(null);
-			return;
-		}
-
 		Menu menu = dir.getMenu();
 		String dirPath = menu.getPath() + "/" + menu.getId();
 		setPath(dirPath);
