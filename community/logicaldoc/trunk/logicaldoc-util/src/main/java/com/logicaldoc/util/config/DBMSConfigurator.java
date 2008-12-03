@@ -14,7 +14,7 @@ public class DBMSConfigurator {
 	/** Creates a new instance of DBMSConfigurator */
 	public DBMSConfigurator() {
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		xml = new XMLBean(loader.getResource("com/logicaldoc/core/dbms.xml"));
+		xml = new XMLBean(loader.getResource("dbms.xml"));
 	}
 
 	public String getAttribute(String name, String attr) {
