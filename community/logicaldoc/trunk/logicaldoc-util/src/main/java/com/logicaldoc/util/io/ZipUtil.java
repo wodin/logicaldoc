@@ -2,14 +2,18 @@ package com.logicaldoc.util.io;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Enumeration;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipFile;
 
 /**
  * This class is for handling with zip-files.
@@ -30,8 +34,8 @@ public class ZipUtil {
 		boolean result = true;
 		try {
 			if (!target.endsWith("/"))
-				target = target + "/";			
-			ZipFile zip = new ZipFile(zipsource,"Cp850");
+				target = target + "/";
+			ZipFile zip = new ZipFile(zipsource, "Cp850");
 			Enumeration entries = zip.getEntries();
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = (ZipEntry) entries.nextElement();
@@ -107,5 +111,67 @@ public class ZipUtil {
 	private static void logError(String message) {
 		Log logger = LogFactory.getLog(ZipUtil.class);
 		logger.error(message);
+	}
+
+	private static void zipDir(File zipDir, ZipOutputStream zos, File startZipDir) {
+		try {
+			// get a listing of the directory content
+			File[] dirList = zipDir.listFiles();
+			byte[] readBuffer = new byte[2156];
+			int bytesIn = 0;
+			// loop through dirList, and zip the files
+			for (int i = 0; i < dirList.length; i++) {
+				File f = dirList[i];
+				if (f.isDirectory()) {
+					// if the File object is a directory, call this
+					// function again to add its content recursively
+					zipDir(f, zos, startZipDir);
+					// loop again
+					continue;
+				}
+				// if we reached here, the File object f was not
+				// a directory
+				// create a FileInputStream on top of f
+				FileInputStream fis = new FileInputStream(f);
+				// create a new zip entry
+				String path = f.getPath();
+				if (!path.equals(startZipDir.getPath()))
+					path = path.substring(startZipDir.getPath().length());
+				if(path.startsWith(File.separator))
+					path=path.substring(1);
+				ZipEntry anEntry = new ZipEntry(path);
+				// place the zip entry in the ZipOutputStream object
+				zos.putNextEntry(anEntry);
+				// now write the content of the file to the ZipOutputStream
+				while ((bytesIn = fis.read(readBuffer)) != -1) {
+					zos.write(readBuffer, 0, bytesIn);
+				}
+				// close the Stream
+				fis.close();
+			}
+		} catch (Exception e) {
+			logError(e.getMessage());
+		}
+	}
+
+	/**
+	 * Zips a folder into a .zip archive
+	 */
+	public static void zipFolder(File inFolder, File outFile) {
+		try {
+			// create a ZipOutputStream to zip the data to
+			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(outFile));
+			// assuming that there is a directory named inFolder (If there
+			// isn't create one) in the same directory as the one the code
+			// runs from,
+			// call the zipDir method
+			zipDir(inFolder, zos, inFolder);
+			// close the stream
+			zos.flush();
+			zos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logError(e.getMessage());
+		}
 	}
 }
