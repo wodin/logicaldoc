@@ -134,7 +134,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			throw new Exception();
 
 		// create history entry for this checkin event
-		createHistoryEntry(docId, user.getUserName(), History.CHECKIN);
+		createHistoryEntry(docId, user, History.CHECKIN);
 
 		// create search index entry
 		if (immediateIndexing)
@@ -162,7 +162,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(document);
 
 			// create history entry for this checkout event
-			createHistoryEntry(docId, user.getUserName(), History.CHECKOUT);
+			createHistoryEntry(docId, user, History.CHECKOUT);
 
 			log.debug("Checked out document " + docId);
 		} else {
@@ -332,7 +332,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			History history = new History();
 			history.setDocId(doc.getId());
 			history.setDate(new Date());
-			history.setUserName(user.getUserName());
+			history.setUserName(user.getFullName());
 			history.setEvent(History.CHANGED);
 			historyDAO.store(history);
 
@@ -376,11 +376,12 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	/** Creates history entry saying username has checked in document (id) */
-	private void createHistoryEntry(long docId, String username, String eventType) {
+	private void createHistoryEntry(long docId, User user, String eventType) {
 		History history = new History();
 		history.setDocId(docId);
 		history.setDate(new Date());
-		history.setUserName(username);
+		history.setUserId(user.getId());
+		history.setUserName(user.getFullName());
 		history.setEvent(eventType);
 		historyDAO.store(history);
 	}
@@ -548,7 +549,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			/* store the document */
 			store(doc, content, filename, "1.0");
 
-			createHistoryEntry(doc.getId(), user.getUserName(), History.STORED);
+			createHistoryEntry(doc.getId(), user, History.STORED);
 
 			File file = new File(new StringBuilder(path).append("/").append(doc.getFileName()).toString());
 			if (immediateIndexing) {
@@ -607,7 +608,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(document);
 
 			// create history entry for this UnCheckout event
-			createHistoryEntry(docId, user.getUserName(), History.UNCHECKOUT);
+			createHistoryEntry(docId, user, History.UNCHECKOUT);
 
 			log.debug("UNChecked out document " + docId);
 		} else {
