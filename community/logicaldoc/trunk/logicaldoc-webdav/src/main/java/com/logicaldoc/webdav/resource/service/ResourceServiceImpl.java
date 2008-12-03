@@ -431,7 +431,7 @@ public class ResourceServiceImpl implements ResourceService {
 			Resource res = marshallDocument(document);
 			res.setVersionLabel(version.getVersion());
 			res.setVersionDate(version.getDate());
-			res.setAuthor(version.getUser());
+			res.setAuthor(version.getUsername());
 			res.setIsCheckedOut(true);
 			resourceHistory.add(res);
 		}
