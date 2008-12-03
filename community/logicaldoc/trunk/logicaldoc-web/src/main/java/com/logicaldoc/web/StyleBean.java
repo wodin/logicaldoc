@@ -211,7 +211,6 @@ public class StyleBean {
 	}
 
 	public String getPath(String name) {
-		System.out.println("getPath " + name + " - " + skin);
 		return "/skins/" + skin + "/" + name;
 	}
 
