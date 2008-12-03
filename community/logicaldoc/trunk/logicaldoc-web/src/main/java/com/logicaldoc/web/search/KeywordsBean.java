@@ -293,8 +293,8 @@ public class KeywordsBean extends SortableList {
 						return ascending ? c1.getDisplayTitle().compareTo(c2.getDisplayTitle()) : c2.getDisplayTitle()
 								.compareTo(c1.getDisplayTitle());
 					} else if (column.equals("date")) {
-						Date d1 = c1.getSourceDate() != null ? c1.getSourceDate() : new Date(0);
-						Date d2 = c2.getSourceDate() != null ? c2.getSourceDate() : new Date(0);
+						Date d1 = c1.getLastModified() != null ? c1.getLastModified() : new Date(0);
+						Date d2 = c2.getLastModified() != null ? c2.getLastModified() : new Date(0);
 						return ascending ? d1.compareTo(d2) : d2.compareTo(d1);
 					} else if (column.equals("size")) {
 						Long s1 = new Long(c1.getDocument().getFileSize());
