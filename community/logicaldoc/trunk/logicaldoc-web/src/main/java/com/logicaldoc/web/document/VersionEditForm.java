@@ -37,7 +37,7 @@ public class VersionEditForm {
 	public void init(VersionRecord version) {
 		this.version = version.getVersion();
 		this.date = version.getDate();
-		this.author = version.getUser();
+		this.author = version.getUsername();
 		this.comment = version.getComment();
 	}
 
