@@ -81,8 +81,8 @@ public abstract class AbstractEmailTestCase extends TestCase {
 		emailSchemaFile = new File(tempDir, "logicaldoc-email.sql");
 
 		// Copy sql files
-		copyResource("/com/logicaldoc/core/logicaldoc-core.sql", dbSchemaFile.getCanonicalPath());
-		copyResource("/com/logicaldoc/email/logicaldoc-email.sql", emailSchemaFile.getCanonicalPath());
+		copyResource("/sql/logicaldoc-core.sql", dbSchemaFile.getCanonicalPath());
+		copyResource("/sql/logicaldoc-email.sql", emailSchemaFile.getCanonicalPath());
 		copyResource("/data.sql", dataFile.getCanonicalPath());
 	}
 
