@@ -152,18 +152,9 @@ public class MenuBarBean {
 		MenuItem helpMenu = createMenuItem(" " + Messages.getMessage("help"), "m-help", "#{menuBar.primaryListener}",
 				null, null, style.getImagePath("help.png"), false, null, null);
 
-		String lang = SessionManagement.getLanguage();
-		// check if the help for the language exists, if not use the en version
-		ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext()
-				.getContext();
-		File helpIndex = new File(servletContext.getRealPath(style.getPath("help") + "/"
-				+ SessionManagement.getLanguage() + "/index.html"));
-		if (!helpIndex.exists())
-			lang = "en";
-		String url = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath()
-				+ style.getPath("help") + "/" + lang + "/index.html";
+		String helpUrl = style.getProductHelp() + "/index.html";
 		helpMenu.getChildren().add(
-				createMenuItem(" " + Messages.getMessage("help"), "m-helpcontents", null, null, url, style
+				createMenuItem(" " + Messages.getMessage("help"), "m-helpcontents", null, null, helpUrl, style
 						.getImagePath("help.png"), false, "_blank", null));
 
 		PageContentBean infoPage = new PageContentBean("info", "info");
