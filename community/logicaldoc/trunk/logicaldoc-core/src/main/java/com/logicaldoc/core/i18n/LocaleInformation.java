@@ -5,13 +5,13 @@ import java.util.ResourceBundle;
 
 /**
  * A central bean for handling all localisation information like data format.<p>
- * All settings are retrieved from resource bundle <code>com.logicaldoc.core.i18n.localeInformation</code>
+ * All settings are retrieved from resource bundle <code>i18n.localeInformation</code>
  * 
  * 
  * @author Sebastian Stein
  */
 public class LocaleInformation {
-	private static final String BUNDLE_NAME = "com.logicaldoc.core.i18n.localeInformation";
+	private static final String BUNDLE_NAME = "i18n.localeInformation";
 
 	/**
 	 * Retrieves a localised information for the specified locale.

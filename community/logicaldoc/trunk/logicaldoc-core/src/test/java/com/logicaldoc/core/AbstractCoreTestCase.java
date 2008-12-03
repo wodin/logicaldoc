@@ -79,7 +79,7 @@ public abstract class AbstractCoreTestCase extends TestCase {
 		dataFile = new File(tempDir, "data.sql");
 
 		// Copy sql files
-		copyResource("/com/logicaldoc/core/logicaldoc-core.sql", dbSchemaFile.getCanonicalPath());
+		copyResource("/sql/logicaldoc-core.sql", dbSchemaFile.getCanonicalPath());
 		copyResource("/data.sql", dataFile.getCanonicalPath());
 	}
 
