@@ -23,8 +23,7 @@ import javax.faces.context.FacesContext;
  * faces-config.xml are searched but in the opposite order they are declared in
  * the file. The first key match wins.
  *
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class Messages extends AbstractMap<String, String> {

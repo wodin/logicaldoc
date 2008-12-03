@@ -54,7 +54,7 @@ public class PluginDbInit extends DBInit {
 
 			// Acquire the ordered list of sql files
 			getSqlList().clear();
-			getSqlList().add("/sql/logicaldoc-core.sql");
+			getSqlList().add("sql/logicaldoc-core.sql");
 			for (Extension ext : sortedExts) {
 				getSqlList().add(ext.getParameter("sqlFile").valueAsString());
 			}

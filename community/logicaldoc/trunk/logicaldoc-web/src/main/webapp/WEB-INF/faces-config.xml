@@ -39,7 +39,7 @@
 
 	<managed-bean>
 		<managed-bean-name>messages</managed-bean-name>
-		<managed-bean-class>i18n.Messages</managed-bean-class>
+		<managed-bean-class>com.logicaldoc.web.i18n.Messages</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 
