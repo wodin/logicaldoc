@@ -32,6 +32,16 @@
 						cellpadding="0" width="100%" rows="10"
 						columnClasses="dateColumn,dateColumn,titleColumn">
 
+						<!-- author column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['document.author']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{history.userName}" />
+							</ice:panelGroup>
+						</ice:column>
+						
 						<!-- date column -->
 						<ice:column>
 							<f:facet name="header">
@@ -41,16 +51,6 @@
 								<ice:outputText value="#{history.date}">
 									<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{StyleBean.timeZone}" />
 								</ice:outputText>
-							</ice:panelGroup>
-						</ice:column>
-
-						<!-- author column -->
-						<ice:column>
-							<f:facet name="header">
-								<ice:outputText value="#{msgs['document.author']}" />
-							</f:facet>
-							<ice:panelGroup>
-								<ice:outputText value="#{history.userName}" />
 							</ice:panelGroup>
 						</ice:column>
 
