@@ -20,9 +20,8 @@ import com.logicaldoc.web.util.Constants;
 /**
  * This servlet is responsible of zip export
  * 
- * @author Marco Meschieri
- * @version $Id: ExportZip.java,v 1.1 2006/08/27 06:14:21 marco Exp $
- * @since ###release###
+ * @author Marco Meschieri - Logical Objects
+ * @since 2.1
  */
 public class ExportZip extends HttpServlet {
 	private static final long serialVersionUID = 1L;
