@@ -10,15 +10,15 @@ import com.logicaldoc.core.PersistentObject;
  * @author Marco Meschieri - Logical Objects
  */
 public class History extends PersistentObject {
-	public final static String STORED = "msg.jsp.docstored";
+	public final static String STORED = "history.stored";
 
-	public final static String CHANGED = "msg.jsp.docchanged";
+	public final static String CHANGED = "history.changed";
 
-	public final static String CHECKIN = "msg.jsp.doccheckedin";
+	public final static String CHECKIN = "history.checkedin";
 
-	public final static String CHECKOUT = "msg.jsp.doccheckedout";
+	public final static String CHECKOUT = "history.checkedout";
 
-	public static final String UNCHECKOUT = "msg.jsp.docuncheckedout";
+	public static final String UNCHECKOUT = "history.uncheckedout";
 
 	private long docId;
 
