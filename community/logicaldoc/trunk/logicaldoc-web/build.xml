@@ -22,7 +22,7 @@
 				<exclude name="**/context.properties"/>
 			</fileset>
 		</copy>
-		<copy todir="${logicaldoc.webroot}/WEB-INF/classes">
+		<copy todir="${logicaldoc.webroot}/WEB-INF/classes" verbose="true">
 			<fileset dir="target/classes">
 				<include name="**" />
 				<!--exclude name="**/context.xml"/-->
