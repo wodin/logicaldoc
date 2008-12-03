@@ -89,21 +89,21 @@ public class StyleBean {
 
 		try {
 			PropertiesBean context = new PropertiesBean();
-			skin = context.getProperty("skin");
-			productName = context.getProperty("skin." + skin + ".product.name");
+            String sk = context.getProperty("skin");
+			productName = context.getProperty("skin." + sk + ".product.name");
 			if (StringUtils.isEmpty(productName))
 				productName = context.getProperty("product.name");
-			productUrl = context.getProperty("skin." + skin + ".product.url");
+			productUrl = context.getProperty("skin." + sk + ".product.url");
 			if (StringUtils.isEmpty(productUrl))
 				productUrl = context.getProperty("product.url");
-			productHelp = context.getProperty("skin." + skin + ".product.help");
+			productHelp = context.getProperty("skin." + sk + ".product.help");
 			if (StringUtils.isEmpty(productHelp))
 				productHelp = context.getProperty("product.help");
-			productYear = context.getProperty("skin." + skin + ".product.year");
+			productYear = context.getProperty("skin." + sk + ".product.year");
 			if (StringUtils.isEmpty(productYear))
 				productYear = context.getProperty("product.year");
 			productRelease = context.getProperty("product.release");
-		} catch (IOException e) {
+		} catch (Throwable e) {
 			log.error(e.getMessage());
 		}
 	}
