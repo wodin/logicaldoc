@@ -102,7 +102,7 @@ public class StyleBean {
 			productYear = context.getProperty("skin." + skin + ".product.year");
 			if (StringUtils.isEmpty(productYear))
 				productYear = context.getProperty("product.year");
-			productHelp = context.getProperty("product.release");
+			productRelease = context.getProperty("product.release");
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
@@ -216,10 +216,6 @@ public class StyleBean {
 
 	public String getImagesPath() {
 		return getPath("images");
-	}
-
-	public String getHelpPath() {
-		return getPath("help");
 	}
 
 	public String getCssPath() {
