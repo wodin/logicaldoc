@@ -15,7 +15,7 @@ import com.logicaldoc.util.plugin.LogicalDOCPlugin;
  * Web module plugin class. At the startup copies web resources into the webapp
  * dir
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
 public class EmailPlugin extends LogicalDOCPlugin {
@@ -37,7 +37,7 @@ public class EmailPlugin extends LogicalDOCPlugin {
 		// Now add the message bundle
 		log.info("Add logicaldoc-email resource bundle");
 		FacesConfigurator facesConfig = new FacesConfigurator();
-		facesConfig.addBundle("com.logicaldoc.email.i18n.application");
+		facesConfig.addBundle("i18n.application-email");
 
 		// Add some scheduling defaults
 		PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));

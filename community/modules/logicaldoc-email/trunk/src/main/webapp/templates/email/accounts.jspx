@@ -10,7 +10,7 @@
   xmlns:c="http://java.sun.com/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:ldoc="http://www.logicaldoc.com/jsf"
   jsfc="ice:panelGroup" styleClass="center" style="width: 60%">
 <f:loadBundle
-		basename="com.logicaldoc.email.i18n.application"
+		basename="i18n.application"
 		var="email_msgs" />
 
   <script type="text/javascript" language="javascript">
