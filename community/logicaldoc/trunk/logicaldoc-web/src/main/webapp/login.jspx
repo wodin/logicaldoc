@@ -2,8 +2,7 @@
 <!-- 
  Login page
   
- @author Marco Meschieri
- @version $Id: login.jspx,v 1.11 2007/10/16 16:12:10 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -21,7 +20,7 @@
     <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-            <title>#{context['product.name']}  #{context['product.release']}</title>
+            <title>#{StyleBean.productName}  #{StyleBean.productRelease}</title>
             <ice:outputText style="padding-top:0px; padding-bottom:0px;"
                 value="#{StyleBean.style}" escape="false" />
             <ice:outputStyle href="#{StyleBean.cssPath}/style.css" />
@@ -54,7 +53,7 @@
                         <table width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td align="left">
-                                    <ice:outputText value="#{context['product.name']} #{context['product.release']}" escape="false" />
+                                    <ice:outputText value="#{StyleBean.productName}  #{context['product.release']}" escape="false" />
                                     <br />
                                 </td>
                             </tr>
@@ -97,8 +96,9 @@
                             <tr>
                                 <td align="right">
                                     <ice:outputFormat value="#{msgs['footer']}" escape="false" >
-                                        <f:param value="#{context['product.name']}" />
-                                        <f:param value="#{context['product.url']}" />
+                                        <f:param value="#{StyleBean.productYear}" />
+                                        <f:param value="#{StyleBean.productName}" />
+                                        <f:param value="#{StyleBean.productUrl}" />
                                     </ice:outputFormat>
                                     <br />
                                 </td>
