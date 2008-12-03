@@ -18,13 +18,23 @@ public class Version implements Comparable<Version> {
 
 	private String version;
 
-	private String user;
+	private String username;
 
 	private Date date;
 
 	private String comment;
 
+	private long userId;
+
 	public Version() {
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 	/**
@@ -35,10 +45,10 @@ public class Version implements Comparable<Version> {
 	}
 
 	/**
-	 * @see Version#getUser()
+	 * @see Version#getUsername()
 	 */
-	public String getUser() {
-		return user;
+	public String getUsername() {
+		return username;
 	}
 
 	/**
@@ -63,10 +73,10 @@ public class Version implements Comparable<Version> {
 	}
 
 	/**
-	 * @see Version#setUser(java.lang.String)
+	 * @see Version#setUsername(java.lang.String)
 	 */
-	public void setUser(String user) {
-		this.user = user;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	/**
@@ -129,6 +139,6 @@ public class Version implements Comparable<Version> {
 
 	@Override
 	public String toString() {
-		return version.toString()+"-"+comment;
+		return version.toString() + "-" + comment;
 	}
 }

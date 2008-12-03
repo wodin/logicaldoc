@@ -129,10 +129,10 @@ insert into ld_userdoc
 values     (2,'2008-10-22',0,2,1,'2006-12-22');
 
 insert into ld_version
-values     (1,'testVersion','testUser','2006-12-19','testComment');
+values     (1,'testVersion','testUser',1,'2006-12-19','testComment');
 
 insert into ld_version
-values     (1,'testVersion2','testUser','2006-12-20','testComment');
+values     (1,'testVersion2','testUser',1,'2006-12-20','testComment');
 
 insert into ld_keyword
 values     (1,'abc');
