@@ -235,11 +235,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
-			<artifactId>logicaldoc-help</artifactId>
-			<version>4.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-core</artifactId>
 			<version>4.0.0</version>
 			<type>jar</type>
@@ -349,14 +344,6 @@
 						</goals>
 						<configuration>
 							<tasks>
-								<unzip
-									src="${project.build.directory}/${project.build.finalName}/WEB-INF/lib/logicaldoc-help-${project.version}.jar"
-									dest="${project.build.directory}/${project.build.finalName}/skins/default/help">
-									<patternset>
-										<include name="**/*" />
-										<exclude name="**/*.dwt" />
-									</patternset>
-								</unzip>
 								<zip
 									destfile="${project.build.directory}/${project.build.finalName}.war">
 									<zipfileset
