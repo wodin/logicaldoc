@@ -12,7 +12,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions" jsfc="f:view">
-	<f:loadBundle basename="com.logicaldoc.web.i18n.application" var="msgs" />
+	<f:loadBundle basename="i18n.application" var="msgs" />
 	<f:loadBundle basename="context" var="context" />
 	<ice:outputDeclaration doctypeRoot="html"
 		doctypePublic="-//W3C//DTD HTML 4.0 Transitional//EN"
