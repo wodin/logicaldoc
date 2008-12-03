@@ -126,7 +126,7 @@ values     (14,'2008-10-22',0,'task.tasks',2,8,'thread.png','/2',1,'admin/tasks'
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (-1,'2008-12-01',0,'admin.security',2,12,'user.png','/2',1,'admin/security',0);
+values     (-1,'2008-12-01',0,'admin.security',2,12,'password.png','/2',1,'admin/security',0);
 
 insert into ld_group
 values     (1,'2008-10-22',0,'admin','Group of admins',0);
