@@ -88,6 +88,17 @@ public class User extends PersistentObject implements Serializable {
 	public String getName() {
 		return name;
 	}
+	
+	public String getFullName() {
+		String fullName = getFirstName();
+		if (fullName != null && getName() != null)
+			fullName += " " + getName();
+		if (fullName == null && getName() != null)
+			fullName = getName();
+		if (fullName == null)
+			fullName = getUserName();
+		return fullName;
+	}
 
 	public String getFirstName() {
 		return firstName;
