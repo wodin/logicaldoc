@@ -11,9 +11,9 @@
 			<supported-locale>fr</supported-locale>
 			<supported-locale>es</supported-locale>
 		</locale-config>
-		<message-bundle>com.logicaldoc.web.i18n.application</message-bundle>
-		<message-bundle>com.logicaldoc.core.i18n.localeInformation</message-bundle>
-        <message-bundle>com.logicaldoc.web.i18n.FacesMessageBundle</message-bundle>
+		<message-bundle>i18n.application</message-bundle>
+		<message-bundle>i18n.localeInformation</message-bundle>
+        <message-bundle>i18n.FacesMessageBundle</message-bundle>
 	</application>
 
 	<validator>
@@ -39,7 +39,7 @@
 
 	<managed-bean>
 		<managed-bean-name>messages</managed-bean-name>
-		<managed-bean-class>com.logicaldoc.web.i18n.Messages</managed-bean-class>
+		<managed-bean-class>i18n.Messages</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 
@@ -68,12 +68,6 @@
 		</managed-property>
 	</managed-bean>
 
-	<!-- Managed Bean for dynamic style examples -->
-	<managed-bean>
-		<managed-bean-name>StyleBean</managed-bean-name>
-		<managed-bean-class>com.logicaldoc.web.StyleBean</managed-bean-class>
-		<managed-bean-scope>application</managed-bean-scope>
-	</managed-bean>
 
 	<!-- Menu Bar backing bean -->
 	<managed-bean>
