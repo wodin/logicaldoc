@@ -104,12 +104,12 @@
 			<ice:column>
 				<f:facet name="header">
 					<ice:commandSortHeader columnName="date" arrow="true">
-						<ice:outputText value="#{msgs['msg.jsp.sourcedate']}"
+						<ice:outputText value="#{msgs['lastmodified']}"
 							style="text-decoration: underline;" />
 					</ice:commandSortHeader>
 				</f:facet>
 				<ice:panelGroup>
-					<ice:outputText value="#{entry.sourceDate}">
+					<ice:outputText value="#{entry.lastModified}">
 						<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{StyleBean.timeZone}" />
 					</ice:outputText>
 				</ice:panelGroup>
