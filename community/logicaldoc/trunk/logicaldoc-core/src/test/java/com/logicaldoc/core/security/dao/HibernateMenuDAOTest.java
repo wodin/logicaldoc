@@ -127,11 +127,11 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	public void testFindByUserNameString() {
 		List<Menu> menus = dao.findByUserId(1);
 		assertNotNull(menus);
-		assertEquals(22, menus.size());
+		assertEquals(23, menus.size());
 
 		menus = dao.findByUserId(3);
 		assertNotNull(menus);
-		assertEquals(22, menus.size());
+		assertEquals(23, menus.size());
 
 		// Try with unexisting user
 		menus = dao.findByUserId(99);
@@ -142,7 +142,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	public void testFindByUserId() {
 		List<Menu> menus = dao.findByUserId(1, Menu.MENUID_HOME);
 		assertNotNull(menus);
-		assertEquals(7, menus.size());
+		assertEquals(6, menus.size());
 
 		// Try with unexisting user and menus
 		menus = dao.findByUserId(1, 70);
@@ -170,7 +170,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	public void testFindByParentId() {
 		List<Menu> menus = dao.findByParentId(Menu.MENUID_HOME);
 		assertNotNull(menus);
-		assertEquals(23, menus.size());
+		assertEquals(24, menus.size());
 
 		// Try with unexisting parent
 		menus = dao.findByParentId(999);
@@ -195,7 +195,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	public void testFindMenuIdByUserName() {
 		Collection<Long> ids = dao.findMenuIdByUserId(1);
 		assertNotNull(ids);
-		assertEquals(22, ids.size());
+		assertEquals(23, ids.size());
 
 		// Try with unexisting user
 		ids = dao.findMenuIdByUserId(99);
@@ -232,7 +232,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 
 	public void testFindByGroupId() {
 		Collection<Menu> menus = dao.findByGroupId(1);
-		assertEquals(22, menus.size());
+		assertEquals(23, menus.size());
 		menus = dao.findByGroupId(10);
 		assertEquals(0, menus.size());
 	}
