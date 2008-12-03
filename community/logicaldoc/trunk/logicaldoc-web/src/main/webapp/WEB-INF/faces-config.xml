@@ -121,6 +121,16 @@
 			<value>#{documentNavigation}</value>
 		</managed-property>
 	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>securityRightsRecordsManager</managed-bean-name>
+		<managed-bean-class>com.logicaldoc.web.document.RightsRecordsManager</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>documentNavigation</property-name>
+			<value>#{documentNavigation}</value>
+		</managed-property>
+	</managed-bean>
 
 	<!-- File upload -->
 	<managed-bean>
