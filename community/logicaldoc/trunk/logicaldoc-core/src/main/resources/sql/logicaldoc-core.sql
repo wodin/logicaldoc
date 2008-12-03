@@ -3,7 +3,7 @@ create table ld_attributes (ld_templateid bigint not null, ld_attribute varchar(
 create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_customid varchar(4000), ld_title varchar(255), ld_version varchar(10), ld_date timestamp, ld_creation timestamp not null, ld_publisher varchar(30), ld_status int, ld_type varchar(255), ld_checkoutuser varchar(30), ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourcetype varchar(255), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_indexed int not null , ld_folderid bigint, ld_templateid bigint, primary key (ld_id));
 create table ld_document_ext (ld_docid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_docid, ld_name));
 create table ld_group (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(255), ld_type int not null, primary key (ld_id));
-create table ld_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, lo_userid bigint not null, ld_date timestamp, lo_username varchar(255), lo_event varchar(255), primary key (ld_id));
+create table ld_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_userid bigint not null, ld_date timestamp, ld_username varchar(255), ld_event varchar(255), primary key (ld_id));
 create table ld_keyword (ld_docid bigint not null, ld_keyword varchar(255));
 create table ld_link (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_docid1 bigint, ld_docid2 bigint, primary key (ld_id));
 create table ld_menu (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_text varchar(255), ld_parentid bigint not null, ld_sort int, ld_icon varchar(255), ld_path varchar(255), ld_pathextended varchar(40000), ld_type int not null, ld_ref varchar(255), ld_size bigint, primary key (ld_id));
@@ -47,6 +47,8 @@ create unique index  AK_USERGROUP on ld_usergroup (ld_groupid, ld_userid);
 create unique index  AK_LINK on ld_link (ld_docid1, ld_docid2, ld_type);
 create unique index  AK_TEMPLATE on ld_template (ld_name);
 create unique index  AK_GENERIC on ld_generic (ld_type, ld_subtype);
+alter table ld_history add constraint FK_HISTORY_USER foreign key (ld_userid) references ld_user(ld_id);
+
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
