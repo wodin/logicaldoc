@@ -118,7 +118,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		document.setFileName(filename);
 
 		// create new version
-		Version version = createNewVersion(versionType, user.getUserName(), versionDesc, document.getVersion());
+		Version version = createNewVersion(versionType, user, versionDesc, document.getVersion());
 		String newVersion = version.getVersion();
 
 		// set other properties of the document
@@ -349,20 +349,22 @@ public class DocumentManagerImpl implements DocumentManager {
 	 * 
 	 * @param versionType either a new release, a new subversion or just the old
 	 *        version
-	 * @param username user creating the new version
+	 * @param user user creating the new version
 	 * @param description change description
 	 * @param docId version should belong to this document
 	 * @param oldVersionName the previous version name
 	 */
-	private Version createNewVersion(Version.VERSION_TYPE versionType, String username, String description,
+	private Version createNewVersion(Version.VERSION_TYPE versionType, User user, String description,
 			String oldVersionName) {
 		Version version = new Version();
 		String newVersionName = version.getNewVersionName(oldVersionName, versionType);
 
 		version.setVersion(newVersionName);
+		version.setVersion(newVersionName);
 		version.setComment(description);
 		version.setDate(new Date());
-		version.setUsername(username);
+		version.setUsername(user.getFullName());
+		version.setUserId(user.getId());
 
 		return version;
 	}
@@ -529,6 +531,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			/* insert initial version 1.0 */
 			vers.setVersion("1.0");
+			vers.setUserId(user.getId());
 			vers.setComment(versionDesc);
 			vers.setDate(doc.getDate());
 			vers.setUsername(user.getUserName());
@@ -614,6 +617,6 @@ public class DocumentManagerImpl implements DocumentManager {
 		} else {
 			throw new Exception("Document already checked in");
 		}
-		
+
 	}
 }
