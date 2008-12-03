@@ -12,6 +12,12 @@ import com.logicaldoc.web.document.DirectoryTreeModel;
 import com.logicaldoc.web.document.RightsRecordsManager;
 import com.logicaldoc.web.util.FacesUtil;
 
+/**
+ * Form for menu security
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 4.0
+ */
 public class SecurityForm {
 
 	protected static Log log = LogFactory.getLog(SecurityForm.class);
@@ -76,14 +82,13 @@ public class SecurityForm {
 		Menu menu = dir.getMenu();
 		String dirPath = menu.getPath() + "/" + menu.getId();
 		setPath(dirPath);
-		RightsRecordsManager form = ((RightsRecordsManager) FacesUtil.accessBeanFromFacesContext(
-				"rightsRecordsManager", FacesContext.getCurrentInstance(), log));
-		form.selectDirectory(dir);
+		RightsRecordsManager manager = ((RightsRecordsManager) FacesUtil.accessBeanFromFacesContext(
+				"securityRightsRecordsManager", FacesContext.getCurrentInstance(), log));
+		manager.selectDirectory(dir);
 	}
 
 	public void cancelFolderSelector(ActionEvent e) {
 		directoryModel.cancelSelection();
 		showFolderSelector = false;
 	}
-
 }

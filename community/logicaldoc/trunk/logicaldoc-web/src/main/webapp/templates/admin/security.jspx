@@ -57,10 +57,10 @@
 					<ldoc:groupselector showFilter="true"
 						styleClass="selectManyMenuBig" allowMultipleSelection="true"
 						label="#{msgs['entity.available']}"
-						items="#{rightsRecordsManager.availableGroups}"
-						value="#{rightsRecordsManager.selectedAvailableGroups}"
-						filterValue="#{rightsRecordsManager.availableGroupFilter}"
-						filterListener="#{rightsRecordsManager.filterAvailableGroups}"
+						items="#{securityRightsRecordsManager.availableGroups}"
+						value="#{securityRightsRecordsManager.selectedAvailableGroups}"
+						filterValue="#{securityRightsRecordsManager.availableGroupFilter}"
+						filterListener="#{securityRightsRecordsManager.filterAvailableGroups}"
 						filterSize="193" />
 				</ice:panelGroup>
 
@@ -69,13 +69,13 @@
 					<br />
 					<br />
 					<ice:commandButton value="&gt;&gt;"
-						action="#{rightsRecordsManager.assignGroups}"
-						rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
+						action="#{securityRightsRecordsManager.assignGroups}"
+						rendered="#{!empty (securityRightsRecordsManager.selectedDirectory)}" />
 					<br />
 					<br />
 					<ice:commandButton value="&lt;&lt;"
-						action="#{rightsRecordsManager.unassignGroups}"
-						rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
+						action="#{securityRightsRecordsManager.unassignGroups}"
+						rendered="#{!empty (securityRightsRecordsManager.selectedDirectory)}" />
 				</ice:panelGroup>
 
 				<ice:panelGroup>
@@ -83,10 +83,10 @@
 					<ldoc:groupselector showFilter="true"
 						styleClass="selectManyMenuBig" allowMultipleSelection="true"
 						label="#{msgs['entity.allowed']}"
-						items="#{rightsRecordsManager.allowedGroups}"
-						value="#{rightsRecordsManager.selectedAllowedGroups}"
-						filterValue="#{rightsRecordsManager.allowedGroupFilter}"
-						filterListener="#{rightsRecordsManager.filterAllowedGroups}"
+						items="#{securityRightsRecordsManager.allowedGroups}"
+						value="#{securityRightsRecordsManager.selectedAllowedGroups}"
+						filterValue="#{securityRightsRecordsManager.allowedGroupFilter}"
+						filterListener="#{securityRightsRecordsManager.filterAllowedGroups}"
 						filterSize="193" />
 				</ice:panelGroup>
 			</ice:panelGrid>
