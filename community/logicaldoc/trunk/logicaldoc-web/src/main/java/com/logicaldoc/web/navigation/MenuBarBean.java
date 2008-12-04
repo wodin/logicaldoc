@@ -147,12 +147,12 @@ public class MenuBarBean {
 		}
 
 		MenuItem helpMenu = createMenuItem(" " + Messages.getMessage("help"), "m-help", "#{menuBar.primaryListener}",
-				null, null, style.getImagePath("help.png"), false, null, null, null);
+				null, null, style.getImagePath("help.png"), false, null, null);
 
 		String helpUrl = style.getProductHelp();
 		helpMenu.getChildren().add(
 				createMenuItem(" " + Messages.getMessage("help.online"), "m-helpcontents", null, null, helpUrl, style
-						.getImagePath("help.png"), false, "_blank", null, null));
+						.getImagePath("help.png"), false, "_blank", null));
 
 		PageContentBean infoPage = new PageContentBean("info", "info");
 		infoPage.setContentTitle(Messages.getMessage("msg.jsp.info"));
@@ -198,6 +198,11 @@ public class MenuBarBean {
 					createMenuStructure(child, item);
 			}
 		}
+	}
+	
+	protected MenuItem createMenuItem(String label, String id, String actionListener, String action, String link,
+			String icon, boolean immediate, String target, PageContentBean content) {
+		return createMenuItem(label, id, actionListener, action, link, icon, immediate, target, null, content);
 	}
 
 	protected MenuItem createMenuItem(String label, String id, String actionListener, String action, String link,
