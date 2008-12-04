@@ -17,7 +17,7 @@
 	id="documentNavigationForm">
 
 	<ice:menuBar id="menu" orientation="vertical" immediate="true"
-		style="font-size: 14px; margin-bottom:20px;">
+		style="font-size: 14px; margin-bottom:20px;" styleClass="folderMenu">
 		<ice:menuItems value="#{documentNavigation.folderItems}" />
 	</ice:menuBar>
 </jsp:root>
