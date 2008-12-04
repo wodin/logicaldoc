@@ -317,6 +317,10 @@ public class RightsRecordsManager {
 	private void saveRules(long id, long userId) {
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
+		// Rules can be applied only if the user can manage the security
+		if (!mdao.isPermissionEnabled(Permission.MANAGE_SECURITY, id, userId))
+			return;
+
 		Menu folder = mdao.findById(id);
 		boolean sqlerrors = false;
 		for (GroupRule rule : rules) {
@@ -387,7 +391,8 @@ public class RightsRecordsManager {
 		}
 
 		if (recursive) {
-			// recursively apply permissions to all submenus
+			// recursively apply permissions to all submenus where the user has
+			// security management permission
 			Collection<Menu> submenus = mdao.findByParentId(id);
 			for (Menu submenu : submenus) {
 				saveRules(submenu.getId(), userId);
