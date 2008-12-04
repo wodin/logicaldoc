@@ -129,7 +129,7 @@ public class MenuBarBean {
 		page.setIcon(style.getImagePath("home.png"));
 
 		MenuItem item = createMenuItem(" " + Messages.getMessage("home"), null, "#{menuBar.primaryListener}", null,
-				null, style.getImagePath("home.png"), false, null, page);
+				null, style.getImagePath("home.png"), false, null, null,page);
 		model.add(item);
 
 		try {
@@ -147,12 +147,12 @@ public class MenuBarBean {
 		}
 
 		MenuItem helpMenu = createMenuItem(" " + Messages.getMessage("help"), "m-help", "#{menuBar.primaryListener}",
-				null, null, style.getImagePath("help.png"), false, null, null);
+				null, null, style.getImagePath("help.png"), false, null, null, null);
 
 		String helpUrl = style.getProductHelp();
 		helpMenu.getChildren().add(
 				createMenuItem(" " + Messages.getMessage("help.online"), "m-helpcontents", null, null, helpUrl, style
-						.getImagePath("help.png"), false, "_blank", null));
+						.getImagePath("help.png"), false, "_blank", null, null));
 
 		PageContentBean infoPage = new PageContentBean("info", "info");
 		infoPage.setContentTitle(Messages.getMessage("msg.jsp.info"));
@@ -160,7 +160,7 @@ public class MenuBarBean {
 		String product = style.getProductName();
 		helpMenu.getChildren().add(
 				createMenuItem(" " + Messages.getMessage("about") + " " + product, "m-about",
-						"#{menuBar.primaryListener}", null, null, style.getImagePath("about.png"), false, null,
+						"#{menuBar.primaryListener}", null, null, style.getImagePath("about.png"), false, null, "LDLargeMenuItem",
 						infoPage));
 		model.add(helpMenu);
 	}
@@ -180,7 +180,7 @@ public class MenuBarBean {
 
 		item = createMenuItem(" " + Messages.getMessage(menu.getText()), "m-" + Long.toString(menu.getId()),
 				"#{menuBar.primaryListener}", null, null, (menu.getIcon() != null) ? style.getImagePath(menu.getIcon())
-						: null, false, null, page);
+						: null, false, null, null, page);
 
 		if (parent == null) {
 			model.add(item);
@@ -201,7 +201,7 @@ public class MenuBarBean {
 	}
 
 	protected MenuItem createMenuItem(String label, String id, String actionListener, String action, String link,
-			String icon, boolean immediate, String target, PageContentBean content) {
+			String icon, boolean immediate, String target, String styleClass, PageContentBean content) {
 		MenuItem menuItem = new MenuItem();
 		menuItem.setValue(label);
 
@@ -224,7 +224,7 @@ public class MenuBarBean {
 		if (icon != null) {
 			menuItem.setIcon(icon);
 		}
-
+		
 		menuItem.setImmediate(immediate);
 
 		if (target != null) {
@@ -234,6 +234,11 @@ public class MenuBarBean {
 		if (content != null) {
 			menuItem.setContent(content);
 		}
+		
+		if (styleClass != null)
+			menuItem.setStyleClass(styleClass);
+		else
+			menuItem.setStyleClass("LDNormalMenuItem");
 
 		return menuItem;
 	}
