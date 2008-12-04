@@ -176,6 +176,11 @@ em { /*font-size:14px;*/
 	vertical-align: top;
 }
 
+.documentsPanelStack {
+	vertical-align: top;
+	width: 100%;
+}
+
 /* override default panel stack state */
 .icePnlStkRow,.icePnlStkCol {
 	vertical-align: top;
@@ -303,20 +308,20 @@ em { /*font-size:14px;*/
 
 /* encapsulates the folder element and restricts it to the given size */
 .browseLeft {
-	width: 220px;
+	width: 250px;
 	height: 400px;
 	overflow: scroll;
 	vertical-align: top;
 }
 
 .browseMain {
-	height: 400px;
+	width: 100%;
 	overflow: scroll;
 	vertical-align: top;
 }
 
 .folderContainer {
-	width: 200px;
+	width: 230px;
 	height: 400px;
 	overflow: auto;
 }
@@ -536,7 +541,7 @@ em { /*font-size:14px;*/
 }
 
 .dateColumn {
-	width: 40px;
+	/*width: 40px; */
 	text-align: center;
 	white-space: nowrap;
 }

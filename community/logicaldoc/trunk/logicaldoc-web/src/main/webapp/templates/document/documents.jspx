@@ -25,15 +25,15 @@
 	</ice:panelGroup>
 
 	<!-- Basic table -->
-	<ice:panelGroup styleClass="formBorderHighlight"
+	<ice:panelGroup styleClass="formBorderHighlight" style="width:97%;"
 		rendered="#{documentsRecordsManager.count > 0}">
 
-		<ice:dataTable id="documentsList"
+		<ice:dataTable id="documentsList" width="97%"
 			value="#{documentsRecordsManager.documents}" var="documentRecord"
 			sortColumn="#{documentsRecordsManager.sortColumn}"
 			sortAscending="#{documentsRecordsManager.ascending}" cellpadding="0"
 			rows="#{documentsRecordsManager.displayedRows}"
-			columnClasses="selectionColumn,numberColumn,titleColumn,dateColumn,dateColumn,numberColumn">
+			columnClasses="selectionColumn,numberColumn,titleColumn,dateColumn,dateColumn,dateColumn">
 
 			<!-- selection column -->
 			<ice:column>
@@ -172,7 +172,7 @@
 			</ice:column>
 		</ice:dataTable>
 
-		<ice:panelGrid columns="2" style="width:100%">
+		<ice:panelGrid columns="2" style="width: 100%;">
 			<ice:panelGroup>
 				<ldoc:paginator table="documentsList"
 					label="#{msgs['paginator.simple']}" />
