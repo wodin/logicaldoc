@@ -14,5 +14,6 @@
 		<property name="date" type="timestamp" column="ld_date" />
 		<property name="userName" type="string" column="ld_username" length="255" />
 		<property name="event" type="string" column="ld_event" length="255" />
+		<property name="reason" type="string" column="ld_reason" length="4000" />
 	</class>
 </hibernate-mapping>

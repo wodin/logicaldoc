@@ -93,62 +93,66 @@ public class DocumentManagerImpl implements DocumentManager {
 			String versionDesc, boolean immediateIndexing) throws Exception {
 		// identify the document and menu
 		Document document = documentDAO.findById(docId);
-		documentDAO.initialize(document);
 
-		Map<String, Object> dictionary = new HashMap<String, Object>();
+		if (document.getImmutable() == 0) {
+			documentDAO.initialize(document);
 
-		log.debug("Invoke listeners before checkin");
-		for (DocumentListener listener : listenerManager.getListeners()) {
-			listener.beforeCheckin(document, dictionary);
+			Map<String, Object> dictionary = new HashMap<String, Object>();
+
+			log.debug("Invoke listeners before checkin");
+			for (DocumentListener listener : listenerManager.getListeners()) {
+				listener.beforeCheckin(document, dictionary);
+			}
+
+			document.setIndexed(0);
+			documentDAO.store(document);
+
+			Menu folder = document.getFolder();
+
+			// create some strings containing paths
+			String completeDocPath = getDocFilePath(document);
+
+			// rename the old current version file to the version name:
+			// "quelle.txt"
+			// -> "2.0"
+			FileUtils.moveFile(new File(completeDocPath + document.getFileName()), new File(completeDocPath
+					+ document.getVersion()));
+
+			document.setFileName(filename);
+
+			// create new version
+			Version version = createNewVersion(versionType, user, versionDesc, document.getVersion());
+			String newVersion = version.getVersion();
+
+			// set other properties of the document
+			document.setDate(new Date());
+			document.setPublisher(user.getUserName());
+			document.setStatus(Document.DOC_CHECKED_IN);
+			document.setType(document.getFileExtension());
+			document.setCheckoutUser("");
+			document.setFolder(folder);
+			document.addVersion(version);
+			document.setVersion(newVersion);
+			if (documentDAO.store(document) == false)
+				throw new Exception();
+
+			// create history entry for this checkin event
+			createHistoryEntry(docId, user, History.CHECKIN, "");
+
+			// create search index entry
+			if (immediateIndexing)
+				createIndexEntry(document, folder.getId(), filename, completeDocPath);
+
+			// store the document in the repository (on the file system)
+			store(document, fileInputStream, filename, newVersion);
+
+			log.debug("Invoke listeners after store");
+			for (DocumentListener listener : listenerManager.getListeners()) {
+				listener.afterCheckin(document, dictionary);
+			}
+
+			log.debug("Checked in document " + docId);
 		}
-
-		document.setIndexed(0);
-		documentDAO.store(document);
-
-		Menu folder = document.getFolder();
-
-		// create some strings containing paths
-		String completeDocPath = getDocFilePath(document);
-
-		// rename the old current version file to the version name: "quelle.txt"
-		// -> "2.0"
-		FileUtils.moveFile(new File(completeDocPath + document.getFileName()), new File(completeDocPath
-				+ document.getVersion()));
-
-		document.setFileName(filename);
-
-		// create new version
-		Version version = createNewVersion(versionType, user, versionDesc, document.getVersion());
-		String newVersion = version.getVersion();
-
-		// set other properties of the document
-		document.setDate(new Date());
-		document.setPublisher(user.getUserName());
-		document.setStatus(Document.DOC_CHECKED_IN);
-		document.setType(document.getFileExtension());
-		document.setCheckoutUser("");
-		document.setFolder(folder);
-		document.addVersion(version);
-		document.setVersion(newVersion);
-		if (documentDAO.store(document) == false)
-			throw new Exception();
-
-		// create history entry for this checkin event
-		createHistoryEntry(docId, user, History.CHECKIN);
-
-		// create search index entry
-		if (immediateIndexing)
-			createIndexEntry(document, folder.getId(), filename, completeDocPath);
-
-		// store the document in the repository (on the file system)
-		store(document, fileInputStream, filename, newVersion);
-
-		log.debug("Invoke listeners after store");
-		for (DocumentListener listener : listenerManager.getListeners()) {
-			listener.afterCheckin(document, dictionary);
-		}
-
-		log.debug("Checked in document " + docId);
 	}
 
 	@Override
@@ -162,7 +166,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(document);
 
 			// create history entry for this checkout event
-			createHistoryEntry(docId, user, History.CHECKOUT);
+			createHistoryEntry(docId, user, History.CHECKOUT, "");
 
 			log.debug("Checked out document " + docId);
 		} else {
@@ -309,36 +313,38 @@ public class DocumentManagerImpl implements DocumentManager {
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
 			String sourceType, String coverage, String language, Set<String> keywords) throws Exception {
 		try {
-			doc.setTitle(title);
-			doc.setSource(source);
-			doc.setSourceAuthor(sourceAuthor);
-			if (sourceDate != null)
-				doc.setSourceDate(sourceDate);
-			else
-				doc.setSourceDate(null);
-			doc.setSourceType(sourceType);
-			doc.setCoverage(coverage);
+			if (doc.getImmutable() == 0) {
+				doc.setTitle(title);
+				doc.setSource(source);
+				doc.setSourceAuthor(sourceAuthor);
+				if (sourceDate != null)
+					doc.setSourceDate(sourceDate);
+				else
+					doc.setSourceDate(null);
+				doc.setSourceType(sourceType);
+				doc.setCoverage(coverage);
 
-			// Intercept language changes
-			String oldLang = doc.getLanguage();
-			doc.setLanguage(language);
+				// Intercept language changes
+				String oldLang = doc.getLanguage();
+				doc.setLanguage(language);
 
-			doc.clearKeywords();
-			documentDAO.store(doc);
-			doc.setKeywords(keywords);
-			documentDAO.store(doc);
+				doc.clearKeywords();
+				documentDAO.store(doc);
+				doc.setKeywords(keywords);
+				documentDAO.store(doc);
 
-			/* create history entry */
-			History history = new History();
-			history.setDocId(doc.getId());
-			history.setDate(new Date());
-			history.setUserName(user.getFullName());
-			history.setEvent(History.CHANGED);
-			historyDAO.store(history);
+				/* create history entry */
+				History history = new History();
+				history.setDocId(doc.getId());
+				history.setDate(new Date());
+				history.setUserName(user.getFullName());
+				history.setEvent(History.CHANGED);
+				historyDAO.store(history);
 
-			// Launch document re-indexing
-			if (doc.getIndexed() == 1)
-				reindex(doc, oldLang);
+				// Launch document re-indexing
+				if (doc.getIndexed() == 1)
+					reindex(doc, oldLang);
+			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -377,13 +383,14 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	/** Creates history entry saying username has checked in document (id) */
-	private void createHistoryEntry(long docId, User user, String eventType) {
+	private void createHistoryEntry(long docId, User user, String eventType, String reason) {
 		History history = new History();
 		history.setDocId(docId);
 		history.setDate(new Date());
 		history.setUserId(user.getId());
 		history.setUserName(user.getFullName());
 		history.setEvent(eventType);
+		history.setReason(reason);
 		historyDAO.store(history);
 	}
 
@@ -403,32 +410,35 @@ public class DocumentManagerImpl implements DocumentManager {
 		if (folder.equals(doc.getFolder()))
 			return;
 
-		// Get original document directory path
-		String path = getDocFilePath(doc);
-		File originalDocDir = new File(path);
+		if (doc.getImmutable() == 0) {
 
-		documentDAO.initialize(doc);
-		doc.setFolder(folder);
-		setUniqueTitle(doc);
-		documentDAO.store(doc);
+			// Get original document directory path
+			String path = getDocFilePath(doc);
+			File originalDocDir = new File(path);
 
-		// Update the FS
-		path = getDocFilePath(doc);
+			documentDAO.initialize(doc);
+			doc.setFolder(folder);
+			setUniqueTitle(doc);
+			documentDAO.store(doc);
 
-		File newDocDir = new File(path);
+			// Update the FS
+			path = getDocFilePath(doc);
 
-		FileUtils.moveDirectory(originalDocDir, newDocDir);
+			File newDocDir = new File(path);
 
-		if (doc.getIndexed() == 1) {
-			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
-			org.apache.lucene.document.Document indexDocument = null;
-			indexDocument = indexer.getDocument(String.valueOf(doc.getId()), doc.getLanguage());
-			if (indexDocument != null) {
-				indexer.deleteDocument(String.valueOf(doc.getId()), doc.getLanguage());
-				indexDocument.removeField(LuceneDocument.FIELD_PATH);
-				indexDocument.add(new Field(LuceneDocument.FIELD_PATH, doc.getPath(), Field.Store.YES,
-						Field.Index.UN_TOKENIZED));
-				indexer.addDocument(indexDocument, doc.getLanguage());
+			FileUtils.moveDirectory(originalDocDir, newDocDir);
+
+			if (doc.getIndexed() == 1) {
+				Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
+				org.apache.lucene.document.Document indexDocument = null;
+				indexDocument = indexer.getDocument(String.valueOf(doc.getId()), doc.getLanguage());
+				if (indexDocument != null) {
+					indexer.deleteDocument(String.valueOf(doc.getId()), doc.getLanguage());
+					indexDocument.removeField(LuceneDocument.FIELD_PATH);
+					indexDocument.add(new Field(LuceneDocument.FIELD_PATH, doc.getPath(), Field.Store.YES,
+							Field.Index.UN_TOKENIZED));
+					indexer.addDocument(indexDocument, doc.getLanguage());
+				}
 			}
 		}
 	}
@@ -551,7 +561,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			/* store the document */
 			store(doc, content, filename, "1.0");
 
-			createHistoryEntry(doc.getId(), user, History.STORED);
+			createHistoryEntry(doc.getId(), user, History.STORED, "");
 
 			File file = new File(new StringBuilder(path).append("/").append(doc.getFileName()).toString());
 			if (immediateIndexing) {
@@ -610,12 +620,24 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(document);
 
 			// create history entry for this UnCheckout event
-			createHistoryEntry(docId, user, History.UNCHECKOUT);
+			createHistoryEntry(docId, user, History.UNCHECKOUT, "");
 
 			log.debug("UNChecked out document " + docId);
 		} else {
 			throw new Exception("Document already checked in");
 		}
+	}
 
+	@Override
+	public void makeImmutable(long docId, User user, String reason) throws Exception {
+		Document document = documentDAO.findById(docId);
+
+		if (document.getImmutable() == 0) {
+			documentDAO.makeImmutable(docId);
+			createHistoryEntry(docId, user, History.IMMUTABLE, reason);
+			log.debug("The document " + docId + " has been marked as immutable ");
+		} else {
+			throw new Exception("Document cannot be marked as immutable");
+		}
 	}
 }

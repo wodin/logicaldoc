@@ -79,6 +79,8 @@ public class Document extends ExtensibleObject {
 
 	private String customId;
 
+	private int immutable = 0;
+
 	public Document() {
 	}
 
@@ -400,5 +402,20 @@ public class Document extends ExtensibleObject {
 
 	public void setCustomId(String customId) {
 		this.customId = customId;
+	}
+
+	/**
+	 * Defines if the document is immutable
+	 */
+	public int getImmutable() {
+		return immutable;
+	}
+
+	/**
+	 * <b>NOTE:</b> Once this flag is set to 1, it cannot be reverted to 0
+	 */
+	public void setImmutable(int immutable) {
+		if (this.immutable == 0)
+			this.immutable = immutable;
 	}
 }
