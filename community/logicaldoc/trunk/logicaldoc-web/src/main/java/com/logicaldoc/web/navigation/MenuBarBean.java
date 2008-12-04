@@ -239,7 +239,7 @@ public class MenuBarBean {
 		if (content != null) {
 			menuItem.setContent(content);
 		}
-		
+
 		if (styleClass != null)
 			menuItem.setStyleClass(styleClass);
 		else

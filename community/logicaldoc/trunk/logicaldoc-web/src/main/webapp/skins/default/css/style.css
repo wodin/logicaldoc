@@ -1592,3 +1592,16 @@ DIV#center {
 .LDLargeMenuItem {
 	padding-right: 10px;
 }
+
+.folderMenuVrt {
+	background-color: #dddddd;
+}
+
+.iceMnuBarVrtItem {
+	width: auto;
+}
+
+.folderMenuVrtItem {
+	padding-right: 5px;
+	border-top: 1px solid white;
+}
