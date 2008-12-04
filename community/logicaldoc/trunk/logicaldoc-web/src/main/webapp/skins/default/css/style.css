@@ -1238,7 +1238,7 @@ em { /*font-size:14px;*/
 	text-align: center;
 }
 
-DIV#center{
+DIV#center {
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -1558,45 +1558,17 @@ DIV#center{
 	border: 0px;
 }
 
-.cloud1 {
-	font-size: 1.00em;
-}
+.cloud1 { font-size: 0.9em; color: #999999; }
+.cloud2 { font-size: 1.0em; color: #888888; }
+.cloud3 { font-size: 1.15em; color: #777777; }
+.cloud4 { font-size: 1.25em; color: #666666; }
+.cloud5 { font-size: 1.40em; color: #555555; }
+.cloud6 { font-size: 1.50em; color: #444444; }
+.cloud7 { font-size: 1.60em; color: #333333; }
+.cloud8 { font-size: 1.70em; color: #222222; }
+.cloud9 { font-size: 1.80em; color: #111111; }
+.cloud10 { font-size: 1.90em; color: #000000; }
 
-.cloud2 {
-	font-size: 1.10em;
-}
-
-.cloud3 {
-	font-size: 1.20em;
-}
-
-.cloud4 {
-	font-size: 1.30em;
-}
-
-.cloud5 {
-	font-size: 1.40em;
-}
-
-.cloud6 {
-	font-size: 1.50em;
-}
-
-.cloud7 {
-	font-size: 1.60em;
-}
-
-.cloud8 {
-	font-size: 1.70em;
-}
-
-.cloud9 {
-	font-size: 1.80em;
-}
-
-.cloud10 {
-	font-size: 1.90em;
-}
 
 /* Used to center text or columns */
 .center {
@@ -1607,4 +1579,16 @@ DIV#center{
 /* Used to avoid multiple lines */
 .nowrap {
 	white-space: nowrap
+}
+
+.iceMnuBarSubMenu {
+	width: auto;
+} 
+
+.LDNormalMenuItem {
+	width: 160px;
+} 
+
+.LDLargeMenuItem {
+	padding-right: 10px;
 }
