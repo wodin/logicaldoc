@@ -70,7 +70,7 @@
 				<f:facet name="header">
 					<ice:commandSortHeader columnName="customid" arrow="true">
 						<ice:outputText value="#{msgs['document.customid']}"
-							style="text-decoration: underline;" />
+							style="text-decoration: underline; white-space: nowrap;" />
 					</ice:commandSortHeader>
 				</f:facet>
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
