@@ -58,7 +58,7 @@ public interface DocumentManager {
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
 	public void checkout(long docId, User user) throws Exception;
-	
+
 	/**
 	 * UNChecks out the given document
 	 * 
@@ -272,6 +272,17 @@ public interface DocumentManager {
 	public void delete(long docId) throws Exception;
 
 	/**
+	 * Marks the document, with the given docId, as immutable and save the given
+	 * reason on the document history
+	 * 
+	 * @param docId
+	 * @param user
+	 * @param reason
+	 * @throws Exception
+	 */
+	public void makeImmutable(long docId, User user, String reason) throws Exception;
+
+	/**
 	 * Moves a document to the specified folder. All stores(db, file system,
 	 * index) will be consequently altered.
 	 * 
@@ -280,7 +291,7 @@ public interface DocumentManager {
 	 * @throws Exception
 	 */
 	public void moveToFolder(Document doc, Menu folder) throws Exception;
-	
+
 	/**
 	 * Copy a document to the specified folder.
 	 * 
@@ -290,5 +301,5 @@ public interface DocumentManager {
 	 * @throws Exception
 	 */
 	public Document copyToFolder(Document doc, Menu folder, User user) throws Exception;
-	
+
 }

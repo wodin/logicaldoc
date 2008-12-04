@@ -19,6 +19,8 @@ public class History extends PersistentObject {
 	public final static String CHECKOUT = "history.checkedout";
 
 	public static final String UNCHECKOUT = "history.uncheckedout";
+	
+	public static final String IMMUTABLE = 	"history.makeimmutable";
 
 	private long docId;
 
@@ -29,6 +31,8 @@ public class History extends PersistentObject {
 	private String userName = "";
 
 	private String event = "";
+	
+	private String reason = null;
 
 	public History() {
 	}
@@ -95,5 +99,19 @@ public class History extends PersistentObject {
 	 */
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	/**
+	 * @return Returns the reason.
+	 */
+	public String getReason() {
+		return reason;
+	}
+
+	/**
+	 * @param reason The reason to set.
+	 */
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 }

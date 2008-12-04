@@ -309,4 +309,9 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertNotNull(menuDao.findById(1100));
 		assertNotNull(menuDao.findById(1000));
 	}
+	
+	public void testMakeImmutable() {
+		dao.makeImmutable(2);
+		assertEquals(1, dao.findById(2).getImmutable());
+	}
 }

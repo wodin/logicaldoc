@@ -103,7 +103,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		boolean result = true;
 		try {
 			Document doc = (Document) getHibernateTemplate().get(Document.class, docId);
-			if (doc != null) {
+			if (doc != null && doc.getImmutable() == 0) {
 				// Remove articles
 				for (Article article : articleDAO.findByDocId(docId)) {
 					article.setDeleted(1);
@@ -176,50 +176,50 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return findIdsByWhere(query.toString());
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	public boolean store(final Document doc) {
 		boolean result = true;
 		try {
-			Set<String> src = doc.getKeywords();
-			if (src != null && src.size() > 0) {
-				// Trim too long keywords
-				Set<String> dst = new HashSet<String>();
-				for (String str : src) {
-					String s = str;
-					if (str.length() > 255) {
-						s = str.substring(0, 255);
+			if (doc.getImmutable() == 0) {
+				Set<String> src = doc.getKeywords();
+				if (src != null && src.size() > 0) {
+					// Trim too long keywords
+					Set<String> dst = new HashSet<String>();
+					for (String str : src) {
+						String s = str;
+						if (str.length() > 255) {
+							s = str.substring(0, 255);
+						}
+						if (!dst.contains(s))
+							dst.add(s);
 					}
-					if (!dst.contains(s))
-						dst.add(s);
+					doc.setKeywords(dst);
 				}
-				doc.setKeywords(dst);
+
+				File docFile = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId()
+						+ "/" + doc.getFileName()));
+				if (docFile.exists()) {
+					long size = docFile.length();
+					doc.setFileSize(size);
+				}
+
+				Map<String, Object> dictionary = new HashMap<String, Object>();
+
+				log.debug("Invoke listeners before store");
+				for (DocumentListener listener : listenerManager.getListeners()) {
+					listener.beforeStore(doc, dictionary);
+				}
+				// Save the document
+				getHibernateTemplate().saveOrUpdate(doc);
+
+				log.debug("Invoke listeners after store");
+				for (DocumentListener listener : listenerManager.getListeners()) {
+					listener.afterStore(doc, dictionary);
+				}
+
+				// Perhaps some listener may have modified the document
+				getHibernateTemplate().saveOrUpdate(doc);
 			}
-
-			File docFile = new File(
-					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
-							.getFileName()));
-			if (docFile.exists()) {
-				long size = docFile.length();
-				doc.setFileSize(size);
-			}
-
-			Map<String, Object> dictionary = new HashMap<String, Object>();
-
-			log.debug("Invoke listeners before store");
-			for (DocumentListener listener : listenerManager.getListeners()) {
-				listener.beforeStore(doc, dictionary);
-			}
-			// Save the document
-			getHibernateTemplate().saveOrUpdate(doc);
-
-			log.debug("Invoke listeners after store");
-			for (DocumentListener listener : listenerManager.getListeners()) {
-				listener.afterStore(doc, dictionary);
-			}
-
-			// Perhaps some listener may have modified the document
-			getHibernateTemplate().saveOrUpdate(doc);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -507,13 +507,13 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> findDocIdByFolder(long folderId) {
-		return findIdsByWhere("_entity.folder.id = "+Long.toString(folderId));
+		return findIdsByWhere("_entity.folder.id = " + Long.toString(folderId));
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByFolder(long folderId) {
-		return findByWhere("_entity.folder.id = "+Long.toString(folderId));
+		return findByWhere("_entity.folder.id = " + Long.toString(folderId));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -749,7 +749,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 	}
 
-
 	@Override
 	public Document findByCustomId(String customId) {
 		Document doc = null;
@@ -766,5 +765,21 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				log.error(e.getMessage(), e);
 		}
 		return doc;
+	}
+
+	@Override
+	public void makeImmutable(long docId) {
+		Document doc = null;
+		try {
+			doc = findById(docId);
+			initialize(doc);
+			doc.setImmutable(1);
+			doc.setStatus(Document.DOC_CHECKED_IN);
+			getHibernateTemplate().saveOrUpdate(doc);
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+
 	}
 }
