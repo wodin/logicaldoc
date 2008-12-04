@@ -13,7 +13,7 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGrid"
-	columns="2" columnClasses="browseLeft,browseMain" cellpadding="4">
+	columns="2" style="width: 100%;" columnClasses="browseLeft,browseMain" cellpadding="4">
 
 	<ice:panelGrid columns="1">
 		<ice:panelGroup style="display: inline;"
@@ -98,7 +98,7 @@
 						style="border: 0px solid;" height="0px" width="480px" title="" />
 		</ice:panelGroup>
 		<ice:panelStack id="documentsPanelStack"
-			styleClass="componentContentPanelStack"
+			styleClass="documentsPanelStack"
 			selectedPanel="#{documentNavigation.selectedPanel.contentName}">
 
 			<!-- Custom Content Pages -->
@@ -106,7 +106,7 @@
 				<br />
 			</ice:panelGroup>
 
-			<ice:panelGroup id="documents">
+			<ice:panelGroup id="documents" style="width: 100%;">
 				<ice:messages />
 				<f:subview id="w-documents">
 					<ui:include src="/templates/document/documents.jspx" />
@@ -131,7 +131,7 @@
 				</f:subview>
 			</ice:panelGroup>
 
-			<ice:panelGroup id="versions">
+			<ice:panelGroup id="versions" style="width: 100%;">
 				<f:subview id="w-versions">
 					<ui:include src="/templates/document/versions.jspx" />
 				</f:subview>
@@ -149,13 +149,13 @@
 				</f:subview>
 			</ice:panelGroup>
 
-			<ice:panelGroup id="articles">
+			<ice:panelGroup id="articles" style="width: 100%;">
 				<f:subview id="w-articles">
 					<ui:include src="/templates/document/articles.jspx" />
 				</f:subview>
 			</ice:panelGroup>
 
-			<ice:panelGroup id="history">
+			<ice:panelGroup id="history" style="width: 100%;">
 				<f:subview id="w-history">
 					<ui:include src="/templates/document/history.jspx" />
 				</f:subview>
