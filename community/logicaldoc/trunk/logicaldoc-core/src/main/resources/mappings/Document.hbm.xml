@@ -37,7 +37,7 @@
 				<property name="username" type="string" column="ld_username" length="255" />
 				<property name="userId" type="long" column="ld_userid" />
 				<property name="date" type="timestamp" column="ld_date" />
-				<property name="comment" type="string" column="ld_comment" length="2000" />
+				<property name="comment" type="string" column="ld_comment" length="4000" />
 			</composite-element>
 		</set>
 		<set name="keywords" table="ld_keyword" lazy="true" cascade="all">

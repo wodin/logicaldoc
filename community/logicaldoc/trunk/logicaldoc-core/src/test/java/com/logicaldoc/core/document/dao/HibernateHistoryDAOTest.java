@@ -10,8 +10,7 @@ import com.logicaldoc.core.i18n.DateBean;
 /**
  * Test case for <code>HibernateHistoryDAO</code>
  * 
- * @author Alessandro Gasparini
- * @version $Id:$
+ * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
 public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
