@@ -12,13 +12,14 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+    styleClass="center" style="width: 70%">
 
 	<ice:messages globalOnly="true" />
 	<ice:panelGroup>
 		<ice:panelGroup id="list"
 			rendered="#{usersRecordsManager.selectedPanel=='list'}">
-			<ice:form id="usersForm">
+			<ice:form id="usersForm" style="text-align:left;">
 				<ice:panelGrid columns="4">
 					<ice:panelGroup>
 						<ice:commandLink action="#{usersRecordsManager.addUser}"
@@ -44,10 +45,10 @@
 				<ice:panelGroup styleClass="formBorderHighlight"
 					rendered="#{usersRecordsManager.count > 0}">
 					<ice:dataTable id="usersList" value="#{usersRecordsManager.users}"
-						var="user" cellpadding="0" rows="15" 
+						var="user" cellpadding="0" rows="15" width="97%"
 						sortColumn="#{usersRecordsManager.sortColumn}"
 						sortAscending="#{usersRecordsManager.ascending}"
-						columnClasses="smallColumn,titleColumn,titleColumn,titleColumn,selectionColumn,selectionColumn">
+						columnClasses="smallColumn,dateColumn,dateColumn,numberColumn,numberColumn,numberColumn">
 
 						<!-- Username -->
 						<ice:column>
@@ -79,7 +80,7 @@
 						<!-- Current Groups -->
 						<ice:column>
 							<f:facet name="header">
-								<ice:outputText value="#{msgs['group.assigned']}" />
+								<ice:outputText style="white-space: nowrap;" value="#{msgs['group.assigned']}" />
 							</f:facet>
 							<ice:panelGroup>
 								<ice:panelSeries style="display: inline;" var="groupName"
