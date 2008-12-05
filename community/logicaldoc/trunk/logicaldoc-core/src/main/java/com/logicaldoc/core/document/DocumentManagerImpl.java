@@ -338,6 +338,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				history.setDocId(doc.getId());
 				history.setDate(new Date());
 				history.setUserName(user.getFullName());
+				history.setUserId(user.getId());
 				history.setEvent(History.CHANGED);
 				historyDAO.store(history);
 
