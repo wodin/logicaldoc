@@ -8,8 +8,11 @@ package com.logicaldoc.core.security;
  * <li>WRITE: ability to insert and delete folder's documents</li>
  * <li>ADD_CHILD: ability to add child elements</li>
  * <li>MANAGE_SECURITY: ability to change security rules</li>
+ * <li>MANAGE_IMMUTABILITY: ability to mark a document as immutable</li>
  * <li>DELETE: ability to delete the entity</li>
  * <li>RENAME: ability to rename the entity</li>
+ * <li>BULK_IMPORT: ability to import documents</li>
+ * <li>BULK_EXPORT: ability to export documents</li>
  * </ul>
  * 
  * 
@@ -17,8 +20,9 @@ package com.logicaldoc.core.security;
  * @since 4.0
  */
 public enum Permission {
-	READ("read"), WRITE("write"), ADD_CHILD("addChild"), MANAGE_SECURITY("manageSecurity"), DELETE("delete"), RENAME(
-			"rename");
+	READ("read"), WRITE("write"), ADD_CHILD("addChild"), MANAGE_SECURITY("manageSecurity"), MANAGE_IMMUTABILITY(
+			"manageImmutability"), DELETE("delete"), RENAME("rename"), BULK_IMPORT("bulkImport"), BULK_EXPORT(
+			"bulkExport");
 
 	private final String name;
 

@@ -17,6 +17,12 @@ public class MenuGroup {
 	private int delete = 0;
 
 	private int rename = 0;
+	
+	private int manageImmutability = 0;
+
+	private int bulkImport = 0;
+
+	private int bulkExport = 0;
 
 	private long groupId;
 
@@ -75,14 +81,41 @@ public class MenuGroup {
 		this.write = write;
 	}
 	
+	public int getManageImmutability() {
+		return manageImmutability;
+	}
+
+	public void setManageImmutability(int manageImmutability) {
+		this.manageImmutability = manageImmutability;
+	}
+
+	public int getBulkImport() {
+		return bulkImport;
+	}
+
+	public void setBulkImport(int bulkImport) {
+		this.bulkImport = bulkImport;
+	}
+
+	public int getBulkExport() {
+		return bulkExport;
+	}
+
+	public void setBulkExport(int bulkExport) {
+		this.bulkExport = bulkExport;
+	}
+
 	@Override
 	public MenuGroup clone() throws CloneNotSupportedException {
 		MenuGroup mg=new MenuGroup(groupId);
 		mg.setAddChild(addChild);
 		mg.setDelete(delete);
 		mg.setManageSecurity(manageSecurity);
+		mg.setManageImmutability(manageImmutability);
 		mg.setRename(rename);
 		mg.setWrite(write);
+		mg.setBulkImport(bulkImport);
+		mg.setBulkExport(bulkExport);
 		return mg;
 	}
 

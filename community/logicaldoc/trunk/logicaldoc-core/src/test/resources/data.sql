@@ -58,19 +58,24 @@ insert into ld_menu
 values     (1100,'2008-10-22',1,'db.admin.1100',1000,1,'administration.gif','/',5,null,0);
 
 insert into ld_menugroup
-values     (100,1,1,0,0,0,0);
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport)
+values     (100,1,1,0,0,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (100,3,1,0,0,0,0);
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport)
+values     (100,3,1,0,0,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (103,1,1,0,0,0,0);
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport)
+values     (103,1,1,0,0,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (103,2,1,0,0,0,0);
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport)
+values     (103,2,1,0,0,0,0,0,0,0);
 
 insert into ld_menugroup
-values     (99,1,0,0,0,0,0);
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport)
+values     (99,1,0,0,0,0,0,0,0,0);
 
 insert into ld_usergroup
            (ld_userid,ld_groupid)
@@ -185,7 +190,6 @@ values(1, 'attr1');
 
 insert into ld_template (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description)
 values (2, '2008-11-07',0,'test2','test2_desc');
-
 
 
 insert into ld_generic(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1, ld_integer2, ld_double1, ld_double2, ld_date1, ld_date2)
