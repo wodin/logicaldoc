@@ -25,9 +25,9 @@
 		       <property name="write" type="int" column="ld_write" not-null="true"/>
 		       <property name="addChild" type="int" column="ld_addchild" not-null="true"/>
 		       <property name="manageSecurity" type="int" column="ld_managesecurity" not-null="true"/>
+		       <property name="manageImmutability" type="int" column="ld_manageimmutability" not-null="true"/>
 		       <property name="delete" type="int" column="ld_delete" not-null="true"/>
 		       <property name="rename" type="int" column="ld_rename" not-null="true"/>
-		       <property name="manageImmutability" type="int" column="ld_manageimmutability" not-null="true"/>
 		       <property name="bulkImport" type="int" column="ld_bulkimport" not-null="true"/>
 		       <property name="bulkExport" type="int" column="ld_bulkexport" not-null="true"/>
 			</composite-element>
