@@ -13,11 +13,12 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
-	>
+	styleClass="center" style="width: 70%">
+	
 	<ice:messages globalOnly="true" />
 	<ice:panelGroup id="list"
 		rendered="#{groupsRecordsManager.selectedPanel=='list'}">
-		<ice:form id="groupsForm">
+		<ice:form id="groupsForm" style="text-align:left;">
 			<ice:panelGrid columns="4">
 				<ice:panelGroup>
 					<ice:commandLink action="#{groupsRecordsManager.addGroup}"
