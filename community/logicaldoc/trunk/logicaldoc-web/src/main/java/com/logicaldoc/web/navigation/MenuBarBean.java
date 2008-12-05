@@ -129,7 +129,7 @@ public class MenuBarBean {
 		page.setIcon(style.getImagePath("home.png"));
 
 		MenuItem item = createMenuItem(" " + Messages.getMessage("home"), null, "#{menuBar.primaryListener}", null,
-				null, style.getImagePath("home.png"), false, null, null,page);
+				null, style.getImagePath("home.png"), false, null, null, page);
 		model.add(item);
 
 		try {
@@ -160,8 +160,8 @@ public class MenuBarBean {
 		String product = style.getProductName();
 		helpMenu.getChildren().add(
 				createMenuItem(" " + Messages.getMessage("about") + " " + product, "m-about",
-						"#{menuBar.primaryListener}", null, null, style.getImagePath("about.png"), false, null, "LDLargeMenuItem",
-						infoPage));
+						"#{menuBar.primaryListener}", null, null, style.getImagePath("about.png"), false, null,
+						"LDLargeMenuItem", infoPage));
 		model.add(helpMenu);
 	}
 
@@ -199,7 +199,7 @@ public class MenuBarBean {
 			}
 		}
 	}
-	
+
 	protected MenuItem createMenuItem(String label, String id, String actionListener, String action, String link,
 			String icon, boolean immediate, String target, PageContentBean content) {
 		return createMenuItem(label, id, actionListener, action, link, icon, immediate, target, null, content);
@@ -229,7 +229,7 @@ public class MenuBarBean {
 		if (icon != null) {
 			menuItem.setIcon(icon);
 		}
-		
+
 		menuItem.setImmediate(immediate);
 
 		if (target != null) {
@@ -242,9 +242,12 @@ public class MenuBarBean {
 
 		if (styleClass != null)
 			menuItem.setStyleClass(styleClass);
-		else
-			menuItem.setStyleClass("LDNormalMenuItem");
-
+		else {
+			if (label.length() > 15)
+				menuItem.setStyleClass("LDLargeMenuItem");
+			else
+				menuItem.setStyleClass("LDNormalMenuItem");
+		}
 		return menuItem;
 	}
 
