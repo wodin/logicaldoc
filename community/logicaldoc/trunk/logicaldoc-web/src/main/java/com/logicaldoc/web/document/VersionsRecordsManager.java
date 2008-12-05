@@ -3,6 +3,7 @@ package com.logicaldoc.web.document;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
@@ -18,7 +19,6 @@ import com.logicaldoc.web.util.FacesUtil;
  * Control that allows the user to navigate document's versions
  * 
  * @author Marco Meschieri - Logical Objects
- * @version $Id: VersionsRecordsManager.java,v 1.3 2007/08/20 12:19:37 marco Exp $
  * @since 3.0
  */
 public class VersionsRecordsManager {
@@ -51,6 +51,12 @@ public class VersionsRecordsManager {
 
 		// clear collection and add sorted elements
 		Arrays.sort(sortIt);
+		Arrays.sort(sortIt, new Comparator<Version>(){
+			@Override
+			public int compare(Version o1, Version o2) {
+				return o2.getDate().compareTo(o1.getDate());
+			}
+		});
 
 		for (int i = sortIt.length - 1; i >= 0; i--) {
 			VersionRecord versionTmp = new VersionRecord(sortIt[i]);

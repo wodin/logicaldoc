@@ -14,7 +14,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
 	id="documentsForm">
-
+	
 	<ice:panelGroup dropTarget="false">
 		<ui:include src="/templates/document/toolbar.jspx" />
 		<div style="display: none">
@@ -109,6 +109,10 @@
 						rendered="#{documentRecord.checkedOut}"
 						value="#{StyleBean.imagesPath}/lock.png"
 						alt="#{documentRecord.document.checkoutUser}" />
+					<ice:graphicImage style="margin-left: 5px;"
+						rendered="#{documentRecord.document.immutable == 1}"
+						value="#{StyleBean.imagesPath}/immutable.png"
+						title="Immutable" />
 					<ice:commandLink title="#{msgs['links']}"
 						action="#{documentRecord.links}">
 						<ice:graphicImage style="margin-left: 5px; border: 0px;"

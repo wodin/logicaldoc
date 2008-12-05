@@ -68,6 +68,14 @@
 							style="border: 0px solid;" title="#{msgs['msg.jsp.delete']}"/>
 					</ice:commandLink>
 				</td>
+				<td>
+					<ice:commandLink action="#{documentsRecordsManager.requireImmutabilityComment}"
+						title="#{msgs['document.immutable']}" rendered="#{documentNavigation.selectedDir.manageImmutabilityEnabled}">
+						<ice:graphicImage
+							value="#{StyleBean.imagesPath}/actions_immutability.gif"
+							style="border: 0px solid;" title="#{msgs['document.immutable']}"/>
+					</ice:commandLink>
+				</td>
 			</tr>
 		</table>
 </jsp:root>

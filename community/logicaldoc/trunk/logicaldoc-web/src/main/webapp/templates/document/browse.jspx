@@ -184,6 +184,12 @@
 					<ui:include src="/templates/document/updateDir.jspx" />
 				</f:subview>
 			</ice:panelGroup>
+			
+			<ice:panelGroup id="immutability">
+				<f:subview id="w-immutability">
+					<ui:include src="/templates/document/immutability.jspx" />
+				</f:subview>
+			</ice:panelGroup>
 		</ice:panelStack>
 	</ice:panelGroup>
 </jsp:root>
