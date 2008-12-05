@@ -35,7 +35,7 @@
 				</td>
 				<td>
 					<ice:commandLink action="#{documentsRecordsManager.startZipUpload}"
-						title="#{msgs['msg.jsp.uploadfolder']}" rendered="#{documentNavigation.selectedDir.writeEnabled}">
+						title="#{msgs['msg.jsp.uploadfolder']}" rendered="#{documentNavigation.selectedDir.bulkImportEnabled}">
 						<ice:graphicImage
 							value="#{StyleBean.imagesPath}/actions_uploadzip.gif"
 							style="border: 0px solid;" title="#{msgs['msg.jsp.uploadfolder']}"/>

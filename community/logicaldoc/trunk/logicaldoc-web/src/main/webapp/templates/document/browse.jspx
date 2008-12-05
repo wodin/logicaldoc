@@ -59,7 +59,7 @@
 				</ice:commandLink>
 				<ice:outputLink
 					value="zip-export?menuId=#{documentNavigation.selectedDir.menuId}"
-					title="#{msgs['msg.jsp.zipalllevel']}" target="_blank">
+					title="#{msgs['msg.jsp.zipalllevel']}" target="_blank" rendered="#{documentNavigation.selectedDir.bulkExportEnabled}">
 					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_export.png"
 						style="border: 0px solid;" title="#{msgs['msg.jsp.zipalllevel']}" />
 				</ice:outputLink>

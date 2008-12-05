@@ -182,8 +182,11 @@ public class RightsRecordsManager {
 							gr.setWrite(false);
 							gr.setAddChild(false);
 							gr.setManageSecurity(false);
+							gr.setManageImmutability(false);
 							gr.setDelete(false);
 							gr.setRename(false);
+							gr.setBulkImport(false);
+							gr.setBulkExport(false);
 							availableGroups.add(new SelectItem(g.getId(), getEntityLabel(g)));
 						} else {
 							gr.setRead(true);
@@ -351,6 +354,12 @@ public class RightsRecordsManager {
 				} else {
 					mg.setManageSecurity(0);
 				}
+				
+				if (rule.isManageImmutability() || isAdmin) {
+					mg.setManageImmutability(1);
+				} else {
+					mg.setManageImmutability(0);
+				}
 
 				if (rule.isDelete() || isAdmin) {
 					mg.setDelete(1);
@@ -362,6 +371,18 @@ public class RightsRecordsManager {
 					mg.setRename(1);
 				} else {
 					mg.setRename(0);
+				}
+				
+				if (rule.isBulkImport() || isAdmin) {
+					mg.setBulkImport(1);
+				} else {
+					mg.setBulkImport(0);
+				}
+				
+				if (rule.isBulkExport() || isAdmin) {
+					mg.setBulkExport(1);
+				} else {
+					mg.setBulkExport(0);
 				}
 
 				boolean stored = mdao.store(folder);
