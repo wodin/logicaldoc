@@ -390,7 +390,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		history.setUserId(user.getId());
 		history.setUserName(user.getFullName());
 		history.setEvent(eventType);
-		history.setReason(reason);
+		history.setComment(reason);
 		historyDAO.store(history);
 	}
 
