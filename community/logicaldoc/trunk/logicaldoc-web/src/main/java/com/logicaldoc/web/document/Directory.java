@@ -27,17 +27,23 @@ public class Directory extends PageContentBean {
 
 	private boolean selected = false;
 
-	private long count = 0;
+	private long count = 0; 
 
 	private Boolean writeEnabled = null;
 
 	private Boolean addChildEnabled = null;
 
 	private Boolean manageSecurityEnabled = null;
+	
+	private Boolean manageImmutabilityEnabled = null;
 
 	private Boolean deleteEnabled = null;
 
 	private Boolean renameEnabled = null;
+	
+	private Boolean bulkImportEnabled = null;
+
+	private Boolean bulkExportEnabled = null;
 
 	private String pathExtended;
 
@@ -122,6 +128,15 @@ public class Directory extends PageContentBean {
 		}
 		return manageSecurityEnabled.booleanValue();
 	}
+	
+	public boolean isManageImmutabilityEnabled() {
+		if (manageImmutabilityEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			manageImmutabilityEnabled = new Boolean(mdao.isPermissionEnabled(Permission.MANAGE_IMMUTABILITY, getMenuId(),
+					SessionManagement.getUserId()));
+		}
+		return manageImmutabilityEnabled.booleanValue();
+	}
 
 	public boolean isDeleteEnabled() {
 		if (deleteEnabled == null) {
@@ -139,5 +154,23 @@ public class Directory extends PageContentBean {
 					.getUserId()));
 		}
 		return renameEnabled.booleanValue();
+	}
+	
+	public boolean isBulkImportEnabled() {
+		if (bulkImportEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			bulkImportEnabled = new Boolean(mdao.isPermissionEnabled(Permission.BULK_IMPORT, getMenuId(), SessionManagement
+					.getUserId()));
+		}
+		return bulkImportEnabled.booleanValue();
+	}
+	
+	public boolean isBulkExportEnabled() {
+		if (bulkExportEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			bulkExportEnabled = new Boolean(mdao.isPermissionEnabled(Permission.BULK_EXPORT, getMenuId(), SessionManagement
+					.getUserId()));
+		}
+		return bulkExportEnabled.booleanValue();
 	}
 }

@@ -23,9 +23,15 @@ public class GroupRule {
 
 	private boolean manageSecurity = false;
 
+	private boolean manageImmutability = false;
+
 	private boolean delete = false;
 
 	private boolean rename = false;
+
+	private boolean bulkImport = false;
+
+	private boolean bulkExport = false;
 
 	/**
 	 * true, if this rule can be changed in a dialog
@@ -36,14 +42,17 @@ public class GroupRule {
 	public GroupRule() {
 	}
 
-	public void init(MenuGroup mg){
-		write=mg.getWrite() == 1;
-		addChild=mg.getAddChild() == 1;
-		manageSecurity=mg.getManageSecurity() == 1;
-		delete=mg.getDelete() == 1;
-		rename=mg.getRename() == 1;
+	public void init(MenuGroup mg) {
+		write = mg.getWrite() == 1;
+		addChild = mg.getAddChild() == 1;
+		manageSecurity = mg.getManageSecurity() == 1;
+		manageImmutability = mg.getManageImmutability() == 1;
+		delete = mg.getDelete() == 1;
+		rename = mg.getRename() == 1;
+		bulkImport = mg.getBulkImport() == 1;
+		bulkExport = mg.getBulkExport() == 1;
 	}
-	
+
 	public long getGroupId() {
 		return groupId;
 	}
@@ -114,6 +123,14 @@ public class GroupRule {
 		this.manageSecurity = manageSecurity;
 	}
 
+	public boolean isManageImmutability() {
+		return manageImmutability;
+	}
+
+	public void setManageImmutability(boolean manageImmutability) {
+		this.manageImmutability = manageImmutability;
+	}
+
 	public boolean isDelete() {
 		return delete;
 	}
@@ -128,5 +145,21 @@ public class GroupRule {
 
 	public void setRename(boolean rename) {
 		this.rename = rename;
+	}
+
+	public boolean isBulkImport() {
+		return bulkImport;
+	}
+
+	public void setBulkImport(boolean bulkImport) {
+		this.bulkImport = bulkImport;
+	}
+
+	public boolean isBulkExport() {
+		return bulkExport;
+	}
+
+	public void setBulkExport(boolean bulkExport) {
+		this.bulkExport = bulkExport;
 	}
 }
