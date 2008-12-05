@@ -2,6 +2,9 @@ package com.logicaldoc.web.document;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -20,14 +23,13 @@ import com.logicaldoc.web.util.FacesUtil;
 /**
  * Control that allows the user to list history events
  * 
- * @author Marco Meschieri
- * @version $Id: HistoryRecordsManager.java,v 1.1 2006/08/23 08:09:52 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class HistoryRecordsManager {
 	protected static Log log = LogFactory.getLog(HistoryRecordsManager.class);
 
-	private Collection<History> histories = new ArrayList<History>();
+	private List<History> histories = new ArrayList<History>();
 
 	private Document selectedDocument;
 
@@ -49,6 +51,12 @@ public class HistoryRecordsManager {
 		try {
 			HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			histories = historyDAO.findByDocId(doc.getId());
+			Collections.sort(histories,new Comparator<History>(){
+				@Override
+				public int compare(History o1, History o2) {
+					return o2.getDate().compareTo(o1.getDate());
+				}
+			});
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());

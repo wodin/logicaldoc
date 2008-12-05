@@ -23,6 +23,7 @@ import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.io.CryptUtil;
@@ -223,7 +224,7 @@ public class DocumentRecord extends MenuBarBean {
 		Menu folder = getDocument().getFolder();
 		Document document = getDocument();
 		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
-		if (menuDAO.isWriteEnable(folder.getId(), userId)) {
+		if ((menuDAO.isWriteEnable(folder.getId(), userId)) && (document.getImmutable() == 0)) {
 			if ((document.getStatus() == Document.DOC_CHECKED_OUT) && username.equals(document.getCheckoutUser())) {
 				model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.checkin"), "checkin-" + folder.getId(),
 						null, "#{documentRecord.checkin}", null, style.getImagePath("checkin.png"), true, null,
