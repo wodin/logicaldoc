@@ -158,6 +158,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public void checkout(long docId, User user) throws Exception {
 		Document document = documentDAO.findById(docId);
+		if (document.getImmutable() == 1)
+			throw new Exception("Document is immutable");
 
 		if (document.getStatus() == Document.DOC_CHECKED_IN) {
 			document.setCheckoutUser(user.getUserName());
@@ -220,6 +222,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public void delete(long docId) throws Exception {
 		Document doc = documentDAO.findById(docId);
+		if (doc.getImmutable() == 1)
+			throw new Exception("Document is immutable");
 		deleteDocument(doc);
 		boolean result = documentDAO.delete(docId);
 		if (!result)
@@ -232,6 +236,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	 * @param doc
 	 */
 	private void deleteDocument(Document doc) {
+		if (doc.getImmutable() == 1)
+			return;
 		try {
 			long docId = doc.getId();
 
@@ -345,9 +351,12 @@ public class DocumentManagerImpl implements DocumentManager {
 				// Launch document re-indexing
 				if (doc.getIndexed() == 1)
 					reindex(doc, oldLang);
+			} else {
+				throw new Exception("Document is immutable");
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
+			throw e;
 		}
 	}
 
@@ -441,6 +450,8 @@ public class DocumentManagerImpl implements DocumentManager {
 					indexer.addDocument(indexDocument, doc.getLanguage());
 				}
 			}
+		} else {
+			throw new Exception("Document is immutable");
 		}
 	}
 
@@ -593,6 +604,9 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	public Document copyToFolder(Document doc, Menu folder, User user) throws Exception {
+		if (doc.getImmutable() != 0) {
+			throw new Exception("Document is immutable");
+		}
 
 		// Get original document directory path
 		String path = getDocFilePath(doc);
@@ -614,18 +628,21 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void uncheckout(long docId, User user) throws Exception {
 		Document document = documentDAO.findById(docId);
+		if (document.getImmutable() == 0) {
+			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
+				document.setCheckoutUser("");
+				document.setStatus(Document.DOC_CHECKED_IN);
+				documentDAO.store(document);
 
-		if (document.getStatus() == Document.DOC_CHECKED_OUT) {
-			document.setCheckoutUser("");
-			document.setStatus(Document.DOC_CHECKED_IN);
-			documentDAO.store(document);
+				// create history entry for this UnCheckout event
+				createHistoryEntry(docId, user, History.UNCHECKOUT, "");
 
-			// create history entry for this UnCheckout event
-			createHistoryEntry(docId, user, History.UNCHECKOUT, "");
-
-			log.debug("UNChecked out document " + docId);
+				log.debug("UNChecked out document " + docId);
+			} else {
+				throw new Exception("Document already checked in");
+			}
 		} else {
-			throw new Exception("Document already checked in");
+			throw new Exception("Document is immutable");
 		}
 	}
 
@@ -638,7 +655,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			createHistoryEntry(docId, user, History.IMMUTABLE, reason);
 			log.debug("The document " + docId + " has been marked as immutable ");
 		} else {
-			throw new Exception("Document cannot be marked as immutable");
+			throw new Exception("Document is immutable");
 		}
 	}
 }

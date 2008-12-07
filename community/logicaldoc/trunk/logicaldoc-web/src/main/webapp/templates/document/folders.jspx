@@ -2,8 +2,7 @@
 <!-- 
  The documents navigation metaphore
   
- @author Marco Meschieri
- @version $Id: tree.jspx,v 1.9 2007/10/16 16:12:10 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"

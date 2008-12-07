@@ -180,7 +180,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public boolean store(final Document doc) {
 		boolean result = true;
 		try {
-			if (doc.getImmutable() == 0) {
 				Set<String> src = doc.getKeywords();
 				if (src != null && src.size() > 0) {
 					// Trim too long keywords
@@ -219,7 +218,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 				// Perhaps some listener may have modified the document
 				getHibernateTemplate().saveOrUpdate(doc);
-			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -775,7 +773,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			initialize(doc);
 			doc.setImmutable(1);
 			doc.setStatus(Document.DOC_CHECKED_IN);
-			getHibernateTemplate().saveOrUpdate(doc);
+			store(doc);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);

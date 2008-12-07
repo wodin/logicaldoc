@@ -34,6 +34,8 @@ public class ZipImport {
 
 	private String language = "";
 
+	private Long templateId = null;
+
 	private User user;
 
 	protected static Log logger = LogFactory.getLog(ZipImport.class);
@@ -78,8 +80,9 @@ public class ZipImport {
 		this.extractKeywords = extractKeywords;
 	}
 
-	public void process(File zipsource, String language, Menu parent, long userId) {
+	public void process(File zipsource, String language, Menu parent, long userId, Long templateId) {
 		this.language = language;
+		this.templateId = templateId;
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		this.user = userDao.findById(userId);
@@ -117,9 +120,9 @@ public class ZipImport {
 		}
 	}
 
-	public void process(String zipsource, String language, Menu parent, long userId) {
+	public void process(String zipsource, String language, Menu parent, long userId, Long templateId) {
 		File srcfile = new File(zipsource);
-		process(srcfile, language, parent, userId);
+		process(srcfile, language, parent, userId, templateId);
 	}
 
 	/**
@@ -162,8 +165,8 @@ public class ZipImport {
 
 				// creates a document
 				DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-				docManager.create(file, parent, user, language, "", null, "", "", "", "", "", keywords,
-						immediateIndexing);
+				docManager.create(file, parent, user, language, "", null, "", "", "", "", "", keywords, templateId,
+						null, immediateIndexing);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

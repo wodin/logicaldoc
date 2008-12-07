@@ -442,7 +442,7 @@ public class DocumentsRecordsManager extends SortableList {
 						ZipImport importer = new ZipImport();
 						importer.setExtractKeywords(inputFile.isExtractKeywords());
 						log.debug("importing: = " + destFile.getPath());
-						importer.process(destFile.getPath(), zipLanguage, parent, userId);
+						importer.process(destFile.getPath(), zipLanguage, parent, userId, inputFile.getTemplate());
 						try {
 							FileUtils.forceDelete(destFile);
 						} catch (IOException e) {
