@@ -28,7 +28,7 @@ import com.logicaldoc.web.SessionManagement;
  * @since 3.0
  */
 public class InputFileBean implements Renderable {
-	
+
 	protected static Log log = LogFactory.getLog(InputFileBean.class);
 
 	private int percent = -1;
@@ -52,6 +52,8 @@ public class InputFileBean implements Renderable {
 	private InputFile inputFile = null;
 
 	private boolean ready = false;
+
+	private Long template = null;
 
 	public InputFileBean() {
 		state = PersistentFacesState.getInstance();
@@ -208,6 +210,7 @@ public class InputFileBean implements Renderable {
 		setPercent(-1);
 		setReady(false);
 		setImmediateIndexing(false);
+		template = null;
 	}
 
 	public boolean isExtractKeywords() {
@@ -234,4 +237,11 @@ public class InputFileBean implements Renderable {
 		this.immediateIndexing = immediateIndexing;
 	}
 
+	public Long getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(Long template) {
+		this.template = template;
+	}
 }

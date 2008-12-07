@@ -2,85 +2,93 @@
 <!-- 
  This page shows the zip upload form
   
- @author Marco Meschieri
- @version $Id: uploadZip.jspx,v 1.2 2006/08/29 16:33:45 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ice="http://www.icesoft.com/icefaces/component"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:c="http://java.sun.com/jstl/core"
-    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-    xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form" id="uploadForm">
-    <ice:panelGroup styleClass="formBorderHighlight">
-        <ice:panelGroup>
-            <h3>
-                 <ice:outputText value="#{msgs['msg.jsp.uploadfolder']}" />
-                 <br />
-                 <br />
-            </h3>
-            <!-- Language selection -->
-          <ice:panelGrid columns="2">
-                 <ice:panelGroup styleClass="outputLabel">
-                    <ice:outputLabel for="lang"
-                       value="#{msgs['msg.jsp.login.language']}" />
-                </ice:panelGroup>
-                <ice:panelGroup>
-                    <ice:selectOneMenu id="lang" styleClass="selectTagMenu"
-                       value="#{inputFile.language}">
-                       <f:selectItems value="#{selectionTags.languages}" />
-                    </ice:selectOneMenu>
-                    <br />
-               </ice:panelGroup>
-            </ice:panelGrid>
-            
-            <!-- Keywords extraction -->
-            <ice:panelGroup>
-                 <br />
-                <ice:selectBooleanCheckbox value="#{inputFile.extractKeywords}">
-                    <ice:outputText value="#{msgs['keywords.extract']}" />
-                </ice:selectBooleanCheckbox>
-                <br />
-                <br />
-            </ice:panelGroup>
-            
-            <!-- File selection -->
-            <ice:panelGroup>
-                <ice:outputText value="#{msgs['upload.zipfilename']}: #{inputFile.fileName}"
-                    style="padding-left:8px;">
-                	<f:converter converterId="logicaldoc.UTF8Converter" />
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="uploadForm">
+	<ice:panelGroup styleClass="formBorderHighlight">
+		<ice:panelGroup>
+			<h3>
+				<ice:outputText value="#{msgs['msg.jsp.uploadfolder']}" />
+				<br />
+				<br />
+			</h3>
+			<!-- Language selection -->
+			<ice:panelGrid columns="2">
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="lang"
+						value="#{msgs['msg.jsp.login.language']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:selectOneMenu id="lang" styleClass="selectTagMenu"
+						value="#{inputFile.language}">
+						<f:selectItems value="#{selectionTags.languages}" />
+					</ice:selectOneMenu>
+					<br />
+				</ice:panelGroup>
+			</ice:panelGrid>
+
+			<!-- Template selection -->
+			<ice:panelGrid columns="2">
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="template" value="#{msgs['template']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:selectOneMenu id="template" styleClass="selectTagMenu"
+						value="#{inputFile.template}">
+						<f:selectItem itemValue="" itemLabel="" />
+						<f:selectItems value="#{selectionTags.templates}" />
+					</ice:selectOneMenu>
+					<br />
+				</ice:panelGroup>
+			</ice:panelGrid>
+
+			<!-- Keywords extraction -->
+			<ice:panelGroup>
+				<br />
+				<ice:selectBooleanCheckbox value="#{inputFile.extractKeywords}">
+					<ice:outputText value="#{msgs['keywords.extract']}" />
+				</ice:selectBooleanCheckbox>
+				<br />
+				<br />
+			</ice:panelGroup>
+
+			<!-- File selection -->
+			<ice:panelGroup>
+				<ice:outputText
+					value="#{msgs['upload.zipfilename']}: #{inputFile.fileName}"
+					style="padding-left:8px;">
+					<f:converter converterId="logicaldoc.UTF8Converter" />
 				</ice:outputText>
-                <br />
-                <br />
-                <ice:inputFile styleClass="inputFile"
-                    id="inputFileZ"
-                    progressRender="true"
-                    progressListener="#{inputFile.progress}"
-                    actionListener="#{inputFile.action}"
-                    inputTextSize="45"
-                    label="#{msgs['upload.button']}" />
-                <ice:outputProgress id="pro1" value="#{inputFile.percent}" />
-                <ice:panelGroup>
-                  <ice:messages
-                    globalOnly="false"
-                    showDetail="true"
-                    showSummary="false"/>
-                </ice:panelGroup>
-            </ice:panelGroup>
-        </ice:panelGroup>
+				<br />
+				<br />
+				<ice:inputFile styleClass="inputFile" id="inputFileZ"
+					progressRender="true" progressListener="#{inputFile.progress}"
+					actionListener="#{inputFile.action}" inputTextSize="45"
+					label="#{msgs['upload.button']}" />
+				<ice:outputProgress id="pro1" value="#{inputFile.percent}" />
+				<ice:panelGroup>
+					<ice:messages globalOnly="false" showDetail="true"
+						showSummary="false" />
+				</ice:panelGroup>
+			</ice:panelGroup>
+		</ice:panelGroup>
 		<hr />
-        <ice:panelGroup styleClass="commands">
-            <ice:commandButton value="#{msgs['abort']}"
-                id="abort"
-                partialSubmit="true"
-                immediate="true"
-                action="#{newDocWizard.abort}" />
-            <ice:commandButton value="#{msgs['msg.jsp.uploadfolder']}"
-                action="#{documentsRecordsManager.uploadZip}"
-                onclick="disabled=true;setFocus('');"
-                disabled="#{inputFile.percent!=100}" />
-        </ice:panelGroup>
-    </ice:panelGroup>
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['abort']}" id="abort"
+				partialSubmit="true" immediate="true" action="#{newDocWizard.abort}" />
+			<ice:commandButton value="#{msgs['msg.jsp.uploadfolder']}"
+				action="#{documentsRecordsManager.uploadZip}"
+				onclick="disabled=true;setFocus('');"
+				disabled="#{inputFile.percent!=100}" />
+		</ice:panelGroup>
+	</ice:panelGroup>
 </jsp:root>

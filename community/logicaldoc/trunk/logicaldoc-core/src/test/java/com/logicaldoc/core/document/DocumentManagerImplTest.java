@@ -8,9 +8,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 /**
  * Test case for <code>DocumentManagerImpl</code>
  * 
- * @author Marco Meschieri
- * @version $Id: LogicalObjects_Code_Templates.xml,v 1.1 2005/01/21 17:56:30
- *          marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.5
  */
 public class DocumentManagerImplTest extends AbstractCoreTestCase {
@@ -54,9 +52,8 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		docDao.store(doc);
 		assertEquals("pippo", doc.getFileName());		
 		doc.setImmutable(0);
-		doc.setFileName("ciccio");
 		docDao.store(doc);
-		docDao.initialize(doc);
-		assertEquals("pippo", doc.getFileName());
+		docDao.findById(doc.getId());
+		assertEquals(1, doc.getImmutable());
 	}
 }
