@@ -8,39 +8,23 @@ import org.apache.jackrabbit.webdav.DavServletResponse;
 
 import com.logicaldoc.webdav.session.DavSession;
 
-
+/**
+ * For more informations, please visit
+ * {@link org.apache.jackrabbit.webdav.DavResourceFactory}
+ * 
+ * @author Sebastian Wenzky
+ * 
+ */
 public interface DavResourceFactory {
 	
-	/**
-	 * 
-	 * @param locator
-	 * @param request
-	 * @param response
-	 * @param session
-	 * @return
-	 * @throws DavException
-	 */
-	public DavResource createResource(DavResourceLocator locator, DavServletRequest request, DavServletResponse response, DavSession session) throws DavException;
+	public DavResource createResource(DavResourceLocator locator,
+			DavServletRequest request, DavServletResponse response,
+			DavSession session) throws DavException;
 	
-	/**
-     * Create a {@link DavResource} object from the given locator, request and response
-     * objects.
-     *
-     * @param locator locator of the resource
-     * @param request
-     * @param response
-     * @return a new <code>DavResource</code> object.
-     * @throws DavException
-     */
-    public DavResource createResource(DavResourceLocator locator, DavServletRequest request, DavServletResponse response) throws DavException;
+    public DavResource createResource(DavResourceLocator locator,
+			DavServletRequest request, DavServletResponse response)
+			throws DavException;
 
-    /**
-     * Create a new {@link DavResource} object from the given locator and session.
-     *
-     * @param locator
-     * @param session
-     * @return a new <code>DavResource</code> object. 
-     * @throws DavException
-     */
-    public DavResource createResource(DavResourceLocator locator, DavSession session) throws DavException;
+    public DavResource createResource(DavResourceLocator locator,
+			DavSession session) throws DavException;
 }

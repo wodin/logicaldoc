@@ -34,18 +34,15 @@ import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.session.DavSession;
 import com.logicaldoc.webdav.web.ResourceConfig;
 
+/**
+ * For more informations, please visit
+ * {@link org.apache.jackrabbit.webdav.simple.VersionResourceImpl}
+ * 
+ * @author wenzkseb
+ * 
+ */
 public class VersionResourceImpl extends DeltaVResourceImpl implements VersionResource {
 	
-    /**
-     * Create a new {@link org.apache.jackrabbit.webdav.DavResource}.
-     * @param locator
-     * @param factory 
-     * @param session 
-     * @param config 
-     * @param item 
-     * @throws DavException 
-     *
-     */
     public VersionResourceImpl(DavResourceLocator locator,
 			DavResourceFactory factory, DavSession session,
 			ResourceConfig config, Resource item) throws DavException {
@@ -53,124 +50,49 @@ public class VersionResourceImpl extends DeltaVResourceImpl implements VersionRe
 
 	}
 
-    //--------------------------------------------------------< DavResource >---
-    /**
-     * Since this implementation of <code>VersionResource</code> never is a
-     * version belonging to a version controlled collection, this method always
-     * returns <code>false</code> not respecting the configuration.
-     *
-     * @return always false
-     */
-    public boolean isCollection() {
-        return false;
-    }
-
-    /**
-     * @return An empty <code>DavResourceIterator</code>
-     */
     public DavResourceIterator getMembers() {
         return new DavResourceIteratorImpl(Collections.EMPTY_LIST);
     }
 
-    /**
-     * The version storage is read-only -> fails with 403.
-     *
-     * @see DavResource#addMember(DavResource, InputContext)
-     */
     public void addMember(DavResource member, InputContext inputContext) throws DavException {
         throw new DavException(DavServletResponse.SC_FORBIDDEN);
     }
 
-    /**
-     * The version storage is read-only -> fails with 403.
-     *
-     * @see DavResource#removeMember(DavResource)
-     */
+
     public void removeMember(DavResource member) throws DavException {
         throw new DavException(DavServletResponse.SC_FORBIDDEN);
     }
 
-    /**
-     * Version storage is read-only -> fails with 403.
-     *
-     * @see DavResource#setProperty(DavProperty)
-     */
     public void setProperty(DavProperty property) throws DavException {
         throw new DavException(DavServletResponse.SC_FORBIDDEN);
     }
 
-    /**
-     * Version storage is read-only -> fails with 403.
-     *
-     * @see DavResource#removeProperty(DavPropertyName)
-     */
     public void removeProperty(DavPropertyName propertyName) throws DavException {
         throw new DavException(DavServletResponse.SC_FORBIDDEN);
     }
 
-    /**
-     * Version storage is read-only -> fails with 403.
-     *
-     * @see DavResource#alterProperties(DavPropertySet, DavPropertyNameSet)
-     */
     public MultiStatusResponse alterProperties(DavPropertySet setProperties, DavPropertyNameSet removePropertyNames) throws DavException {
         throw new DavException(DavServletResponse.SC_FORBIDDEN);
     }
 
-    /**
-     * Version storage is read-only -> fails with 403.
-     *
-     * @see DavResource#alterProperties(List)
-     */
-    public MultiStatusResponse alterProperties(List changeList) throws DavException {
+    @SuppressWarnings("unchecked")
+	public MultiStatusResponse alterProperties(List changeList) throws DavException {
         throw new DavException(DavServletResponse.SC_FORBIDDEN);
     }
 
-    //----------------------------------------------------< VersionResource >---
-    /**
-     * Modify the labels defined for the underlying repository version.
-     *
-     * @param labelInfo
-     * @throws org.apache.jackrabbit.webdav.DavException
-     * @see VersionResource#label(org.apache.jackrabbit.webdav.version.LabelInfo)
-     * @see javax.jcr.version.VersionHistory#addVersionLabel(String, String, boolean)
-     * @see javax.jcr.version.VersionHistory#removeVersionLabel(String)
-     */
     public void label(LabelInfo labelInfo) throws DavException {
         
     }
 
-    /**
-     * Returns the {@link VersionHistory} associated with the repository version.
-     * Note: in contrast to a versionable node, the version history of a version
-     * item is always represented by its nearest ancestor.
-     *
-     * @return the {@link org.apache.jackrabbit.webdav.version.VersionHistoryResource} associated with this resource.
-     * @throws org.apache.jackrabbit.webdav.DavException
-     * @see org.apache.jackrabbit.webdav.version.VersionResource#getVersionHistory()
-     * @see javax.jcr.Item#getParent()
-     */
     public VersionHistoryResource getVersionHistory() throws DavException {
        return null;
     }
 
-    /**
-     * Return versionhistory that contains this version item
-     *
-     * @return versionhistory that contains this version item
-     * @throws RepositoryException
-     * @see javax.jcr.version.Version#getContainingHistory()
-     */
-    private VersionHistory getVersionHistoryItem() throws RepositoryException {
+    @SuppressWarnings("unused")
+	private VersionHistory getVersionHistoryItem() throws RepositoryException {
         return null;
     }
 
-    //--------------------------------------------------------------------------
-    /**
-     * Define the set of reports supported by this resource.
-     *
-     * @see org.apache.jackrabbit.webdav.version.report.SupportedReportSetProperty
-     */
     protected void initSupportedReports() {
         super.initSupportedReports();
         if (exists()) {
@@ -178,9 +100,6 @@ public class VersionResourceImpl extends DeltaVResourceImpl implements VersionRe
         }
     }
 
-    /**
-     * Fill the property set for this resource.
-     */
     protected void initProperties() {
         if (!propsInitialized) {
             super.initProperties();

@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Date;
 
 /**
+ * @see Resource
  * 
  * @author Sebastian Wenzky
  *

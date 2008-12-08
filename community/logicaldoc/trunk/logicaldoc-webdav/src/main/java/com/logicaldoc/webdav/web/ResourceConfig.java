@@ -10,63 +10,49 @@ import org.apache.jackrabbit.webdav.simple.ItemFilter;
 
 import com.logicaldoc.webdav.io.manager.IOManager;
 
+/**
+ * For more informations, please visit
+ * {@link org.apache.jackrabbit.webdav.simple.ResourceConfig}
+ * 
+ * @author Sebastian Wenzky
+ * 
+ */
 public class ResourceConfig {
 
 	protected static Log log = LogFactory.getLog(ResourceConfig.class);
 
-    private ItemFilter itemFilter;
-    private IOManager ioManager;
-    private PropertyManager propManager;
-    private MimeResolver mimeResolver;
+	private ItemFilter itemFilter;
+	private IOManager ioManager;
+	private PropertyManager propManager;
+	private MimeResolver mimeResolver;
 
-    /**
-     * 
-     * @param ioManager
-     */
-    public void setIOManager(IOManager ioManager) {
+	public void setIOManager(IOManager ioManager) {
 		this.ioManager = ioManager;
 	}
-    
-    /**
-     *
-     * @return
-     */
-    public IOManager getIOManager() {
-        return ioManager;
-    }
 
-    /**
-     *
-     * @return
-     */
-    public PropertyManager getPropertyManager() {
-        if (propManager == null) {
-            log.debug("ResourceConfig: missing property-manager > building default.");
-            propManager = PropertyManagerImpl.getDefaultManager();
-        }
-        return propManager;
-    }
+	public IOManager getIOManager() {
+		return ioManager;
+	}
 
-    /**
-     * Returns the item filter specified with the configuration or {@link DefaultItemFilter}
-     * if the configuration was missing the corresponding entry or the parser failed
-     * to build a <code>ItemFilter</code> instance from the configuration.
-     *
-     * @return item filter as defined by the config or {@link DefaultItemFilter}
-     */
-    public ItemFilter getItemFilter() {
-        if (itemFilter == null) {
-            log.debug("ResourceConfig: missing resource filter > building DefaultItemFilter ");
-            itemFilter = new DefaultItemFilter();
-        }
-        return itemFilter;
-    }
+	public PropertyManager getPropertyManager() {
+		if (propManager == null) {
+			log.debug("ResourceConfig: missing property-manager > "
+					+ "building default.");
+			propManager = PropertyManagerImpl.getDefaultManager();
+		}
+		return propManager;
+	}
 
-    /**
-     *
-     * @return
-     */
-    public MimeResolver getMimeResolver() {
-        return mimeResolver;
-    }
+	public ItemFilter getItemFilter() {
+		if (itemFilter == null) {
+			log.debug("ResourceConfig: missing resource filter > "
+					+ "building DefaultItemFilter ");
+			itemFilter = new DefaultItemFilter();
+		}
+		return itemFilter;
+	}
+
+	public MimeResolver getMimeResolver() {
+		return mimeResolver;
+	}
 }

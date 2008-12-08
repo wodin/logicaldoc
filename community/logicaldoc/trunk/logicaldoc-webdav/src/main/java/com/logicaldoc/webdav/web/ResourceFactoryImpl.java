@@ -18,17 +18,21 @@ import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.resource.service.ResourceService;
 import com.logicaldoc.webdav.session.DavSession;
 
+/**
+ * For more informations, please visit
+ * {@link org.apache.jackrabbit.webdav.simple.ResourceFactoryImpl}
+ * 
+ * @author Sebastian Wenzky
+ * 
+ */
 public class ResourceFactoryImpl implements DavResourceFactory {
+
+	private static final Pattern versionRequestPattern = Pattern
+			.compile("/vstore/([0-9].[0-9])/(.*)");
 
 	private final ResourceConfig resourceConfig;
 	private ResourceService resourceService;
 
-	/**
-	 * Create a new <code>ResourceFactory</code> that uses the given lock
-	 * manager and the default {@link ResourceConfig resource config}.
-	 * 
-	 * @param lockMgr
-	 */
 	public ResourceFactoryImpl(LockManager lockMgr) {
 		this.resourceConfig = (ResourceConfig) Context.getInstance().getBean(
 				"ResourceConfig");
@@ -36,10 +40,6 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 				"ResourceService");
 	}
 
-	/**
-	 * @param lockMgr
-	 * @param resourceConfig
-	 */
 	public ResourceFactoryImpl(LockManager lockMgr,
 			ResourceConfig resourceConfig) {
 		this.resourceConfig = (resourceConfig != null) ? resourceConfig
@@ -49,38 +49,29 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 				"ResourceService");
 	}
 
-	/**
-	 * 
-	 */
 	public DavResource createResource(DavResourceLocator locator,
-			DavServletRequest request, DavServletResponse response) throws DavException{	
-		return createResource(locator, request, response, (DavSession)request.getDavSession());
+			DavServletRequest request, DavServletResponse response)
+			throws DavException {
+		return createResource(locator, request, response, (DavSession) request
+				.getDavSession());
 	}
 
-	/**
-	 * @param locator
-	 * @param request
-	 * @param response
-	 * @return DavResource
-	 * @throws DavException
-	 * @see DavResourceFactory#createResource(DavResourceLocator,
-	 *      DavServletRequest, DavServletResponse)
-	 */
 	public DavResource createResource(DavResourceLocator locator,
 			DavServletRequest request, DavServletResponse response,
 			DavSession session) throws DavException {
-		
+
 		try {
 			String resourcePath = locator.getResourcePath();
-			Matcher matcher = Pattern.compile("/vstore/([0-9].[0-9])/(.*)")
-			.matcher(locator.getResourcePath());
-			
+			Matcher matcher = versionRequestPattern.matcher(locator
+					.getResourcePath());
+
 			String version = null;
-			if(matcher.matches() == true) {
+			if (matcher.matches() == true) {
 				version = matcher.group(1);
-				resourcePath = resourcePath.replaceFirst("/vstore/" + version,"");
+				resourcePath = resourcePath.replaceFirst("/vstore/" + version,
+						"");
 			}
-			
+
 			Resource repositoryResource = resourceService.getResource(
 					resourcePath, new Long(session.getObject("id").toString()));
 
@@ -91,13 +82,11 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 				resource = createNullResource(locator, session, isCollection);
 			} else {
 				repositoryResource.setVersionLabel(version);
-				
-				
+
 				repositoryResource.setRequestedPerson(Long.parseLong(session
 						.getObject("id").toString()));
 				resource = new VersionControlledResourceImpl(locator, this,
 						session, resourceConfig, repositoryResource);
-				
 			}
 
 			return resource;
@@ -107,16 +96,6 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 		}
 	}
 
-	/**
-	 * Create a new <code>DavResource</code> from the given locator and webdav
-	 * session.
-	 * 
-	 * @param locator
-	 * @param session
-	 * @return
-	 * @throws DavException
-	 * @see DavResourceFactory#createResource(DavResourceLocator, DavSession)
-	 */
 	public DavResource createResource(DavResourceLocator locator,
 			DavSession session) throws DavException {
 		try {
@@ -131,15 +110,6 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 		}
 	}
 
-	/**
-	 * Create a 'null resource'
-	 * 
-	 * @param locator
-	 * @param session
-	 * @param request
-	 * @return
-	 * @throws DavException
-	 */
 	private DavResource createNullResource(DavResourceLocator locator,
 			DavSession session, boolean isCollection) throws DavException {
 
@@ -147,12 +117,6 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 				resourceConfig, isCollection);
 	}
 
-	/**
-	 * 
-	 * @param locator
-	 * @param sessionImpl
-	 * @return DavResource representing a repository item.
-	 */
 	public DavResource createResource(DavResourceLocator locator,
 			DavSession session, Resource resource) throws DavException {
 
