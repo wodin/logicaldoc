@@ -12,25 +12,22 @@ import com.logicaldoc.webdav.context.ExportContext;
 import com.logicaldoc.webdav.context.ImportContext;
 import com.logicaldoc.webdav.io.handler.IOHandler;
 
+/**
+ * For more informations, please visit
+ * {@link org.apache.jackrabbit.server.io.IOManagerImpl}
+ * 
+ * @author Sebastian Wenzky
+ * 
+ */
 public class IOManagerImpl implements IOManager {
 
 	protected static Log log = LogFactory.getLog(IOManagerImpl.class);
 
     private final List<IOHandler> ioHandlers = new ArrayList<IOHandler>();
 
-    /**
-     * Create a new <code>IOManager</code>.
-     * Note, that this manager does not define any <code>IOHandler</code>s by
-     * default. Use {@link #addIOHandler(IOHandler)} in order to populate the
-     * internal list of handlers that are called for <code>importContent</code> and
-     * <code>exportContent</code>.
-     */
     public IOManagerImpl() {
     }
 
-    /**
-     * @see IOManager#addIOHandler(IOHandler)
-     */
     public void addIOHandler(IOHandler ioHandler) {
         if (ioHandler == null) {
             throw new IllegalArgumentException("'null' is not a valid IOHandler.");
@@ -39,16 +36,10 @@ public class IOManagerImpl implements IOManager {
         ioHandlers.add(ioHandler);
     }
 
-    /**
-     * @see IOManager#getIOHandlers()
-     */
     public IOHandler[] getIOHandlers() {
         return (IOHandler[]) ioHandlers.toArray(new IOHandler[ioHandlers.size()]);
     }
 
-    /**
-     * @see IOManager#importContent(ImportContext, boolean)
-     */
     public boolean importContent(ImportContext context, boolean isCollection) throws IOException {
         boolean success = false;
         if (context != null) {
@@ -67,9 +58,6 @@ public class IOManagerImpl implements IOManager {
         return success;
     }
 
-    /**
-     * @see IOManager#importContent(ImportContext, DavResource)
-     */
     public boolean importContent(ImportContext context, DavResource resource) throws IOException {
         boolean success = false;
         if (context != null && resource != null) {
@@ -86,9 +74,6 @@ public class IOManagerImpl implements IOManager {
         return success;
     }
 
-    /**
-     * @see IOManager#exportContent(ExportContext, boolean)
-     */
     public boolean exportContent(ExportContext context, boolean isCollection) throws IOException {
         boolean success = false;
         if (context != null) {
@@ -107,9 +92,6 @@ public class IOManagerImpl implements IOManager {
         return success;
     }
 
-    /**
-     * @see IOManager#exportContent(ExportContext, DavResource)
-     */
     public boolean exportContent(ExportContext context, DavResource resource) throws IOException {
         boolean success = false;
         if (context != null && resource != null) {
@@ -134,8 +116,5 @@ public class IOManagerImpl implements IOManager {
 			myIOHandler.setIOManager(this);
 			this.ioHandlers.add(myIOHandler);
 		}
-		
-		
 	}
-
 }
