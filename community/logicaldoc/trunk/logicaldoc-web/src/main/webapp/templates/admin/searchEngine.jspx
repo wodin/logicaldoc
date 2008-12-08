@@ -43,7 +43,6 @@
             </ice:panelGroup>
         </ice:panelGroup>
 		<hr />
-        <br />
         <ice:panelGroup styleClass="commands">
             <ice:commandButton value="#{msgs['msg.jsp.unlock']}"
                 tabindex="1"

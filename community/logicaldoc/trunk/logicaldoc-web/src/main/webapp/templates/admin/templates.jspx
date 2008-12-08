@@ -12,7 +12,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup" styleClass="center" style="width:600px">
 
 	<ice:messages globalOnly="true" />
 	<ice:panelGroup>
