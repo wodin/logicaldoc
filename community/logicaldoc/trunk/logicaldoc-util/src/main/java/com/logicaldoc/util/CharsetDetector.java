@@ -42,12 +42,12 @@ public class CharsetDetector {
 		// The Notify() will be called when a matching charset is found.
 		det.Init(new nsICharsetDetectionObserver() {
 			public void Notify(String charset) {
-				HtmlCharsetDetector.found = true;
+				//Do nothing
 			}
 		});
 
 		byte[] buf = src.getBytes();
-		boolean done = det.DoIt(buf, buf.length, false);
+		det.DoIt(buf, buf.length, false);
 		det.DataEnd();
 
 		return det.getProbableCharsets();
@@ -60,6 +60,8 @@ public class CharsetDetector {
 	 * @return The converted string
 	 */
 	public static String convert(String str) {
+		if(str==null)
+			 return null;
 		try {
 			return new String(str.getBytes(), detectEncoding(str));
 		} catch (UnsupportedEncodingException e) {
