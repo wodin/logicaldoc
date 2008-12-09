@@ -60,12 +60,15 @@
 				<ice:panelGroup menuPopup="pop">
 					<ice:outputLink value="download?docId=#{entry.docId}"
 						target="_blank"
-						style="color: #333399; text-decoration: underline;" 
-						title="#{msgs['msg.jsp.popup']}" >
+						style="color: #333399; text-decoration: underline;"
+						title="#{msgs['msg.jsp.popup']}">
 						<ice:graphicImage value="#{StyleBean.imagesPath}/#{entry.icon}"
-							styleClass="iconSmall" title="#{msgs['msg.jsp.popup']}"/>
+							styleClass="iconSmall" title="#{msgs['msg.jsp.popup']}" />
 						<ice:outputText value=" " />
 						<ice:outputText value="#{entry.title}" style="color: #333399;" />
+						<ice:graphicImage style="margin-left: 5px;" styleClass="iconSmall"
+							rendered="#{entry.document.immutable == 1}"
+							value="#{StyleBean.imagesPath}/immutable.png" title="Immutable" />
 					</ice:outputLink>
 					<ice:menuPopup id="pop" value="#{entry.docId}">
 						<ice:menuItems value="#{entry.model}" />

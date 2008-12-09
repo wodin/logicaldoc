@@ -95,8 +95,8 @@
 			</ice:panelGroup>
 			<ice:panelGroup style="display: inline;">
 				<ice:inputHidden id="parentPath" value="#{searchForm.path}" />
-				<ice:inputText id="parentPathDescr"
-					value="#{searchForm.parentPathDescr}" maxlength="255" />
+				<ice:outputText id="parentPathDescr"
+					value="#{searchForm.parentPathDescr}  " maxlength="255" />
 				<ldoc:folderselector style="float:right;"
 					directoryModel="#{searchForm.directoryModel}"
 					showSelector="#{searchForm.showFolderSelector}"

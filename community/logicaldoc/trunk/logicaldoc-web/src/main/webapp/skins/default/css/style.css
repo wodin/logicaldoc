@@ -1611,3 +1611,9 @@ DIV#center {
 	padding-right: 5px;
 	border-top: 1px solid white;
 }
+
+/* Used to highlight the immutable documents */
+.immutable {
+	font-style: italic;
+	color: #919191;
+}

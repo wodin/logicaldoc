@@ -535,7 +535,7 @@ public class SearchForm {
 				setDocumentResult(docResult);
 
 				PageContentBean page = new PageContentBean("result", "search/result");
-				StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+				StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 				page.setIcon(style.getImagePath("search.png"));
 				page.setContentTitle(Messages.getMessage("msg.jsp.searchresult"));
 				navigation.setSelectedPanel(page);
@@ -695,7 +695,7 @@ public class SearchForm {
 
 		PageContentBean page = new PageContentBean("advancedSearch", "search/advancedSearch");
 		page.setContentTitle(Messages.getMessage("search.advanced"));
-		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class); 
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		page.setIcon(style.getImagePath("extsearch.gif"));
 		navigation.setSelectedPanel(page);
 
@@ -850,29 +850,26 @@ public class SearchForm {
 
 	public void closeFolderSelector(ActionEvent e) {
 		showFolderSelector = false;
-		path = null;
-		parentPathDescr = null;
 	}
-	
+
 	public void cancelFolderSelector(ActionEvent e) {
 		directoryModel.cancelSelection();
 		showFolderSelector = false;
+		path = null;
+		parentPathDescr = null;
 	}
 
 	public void folderSelected(ActionEvent e) {
 		showFolderSelector = false;
 
 		Directory dir = directoryModel.getSelectedDir();
-		if (dir.getMenuId() == Menu.MENUID_DOCUMENTS) {
-			parentPathDescr = null;
-			setPath(null);
-			return;
-		}
 
 		Menu menu = dir.getMenu();
 		String dirPath = menu.getPath() + "/" + menu.getId();
-		setPath(dirPath);
+		setPath(dirPath.replaceAll("//", "/"));
 		parentPathDescr = dir.getMenu().getText();
+		if (dir.getMenu().getType() == Menu.MENUTYPE_MENU)
+			parentPathDescr = Messages.getMessage(dir.getMenu().getText());
 	}
 
 	public String getParentPathDescr() {

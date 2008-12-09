@@ -88,7 +88,7 @@
 							style="margin-top: 8px;">
 							<ice:commandButton id="folderSelected"
 								actionListener="#{confirmListener}" value="#{msgs['ok']}" />
-							<ice:commandButton id="cancelSelection"
+							<ice:commandButton id="cancelFolderSelector"
 								actionListener="#{cancelListener}" value="#{msgs['remove']}" />
 							<ice:commandButton id="closeFolderSelector"
 								actionListener="#{closeListener}" value="#{msgs['close']}" />

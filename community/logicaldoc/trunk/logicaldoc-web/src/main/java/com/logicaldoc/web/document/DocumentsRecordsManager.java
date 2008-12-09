@@ -244,7 +244,7 @@ public class DocumentsRecordsManager extends SortableList {
 						log.debug("show the immutability panel");
 						documentNavigation.setSelectedPanel(new PageContentBean("immutability"));
 					} else
-						Messages.addLocalizedError("document.immutable.message");
+						Messages.addLocalizedError("error");
 				} catch (AccessControlException e) {
 					Messages.addLocalizedError("document.write.nopermission");
 				} catch (Exception e) {
@@ -270,7 +270,7 @@ public class DocumentsRecordsManager extends SortableList {
 				for (DocumentRecord record : selection) {
 					if (record.getDocument().getImmutable() == 0) {
 						manager.makeImmutable(record.getDocId(), SessionManagement.getUser(), operationComment);
-						Messages.addLocalizedInfo("Marked immutable");
+						Messages.addLocalizedInfo("document.immutable.message");
 					}
 				}
 				refresh();
