@@ -14,7 +14,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
 	id="documentsForm">
-	
+
 	<ice:panelGroup dropTarget="false">
 		<ui:include src="/templates/document/toolbar.jspx" />
 		<div style="display: none">
@@ -75,7 +75,8 @@
 				</f:facet>
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
 					menuPopup="pop">
-					<ice:outputLink value="download?docId=#{documentRecord.document.customId}"
+					<ice:outputLink
+						value="download?docId=#{documentRecord.document.customId}"
 						target="_blank" title="#{msgs['msg.jsp.popup']}">
 						<ice:outputText value=" #{documentRecord.customId}" />
 					</ice:outputLink>
@@ -95,13 +96,23 @@
 					<ice:graphicImage
 						value="#{StyleBean.imagesPath}/#{documentRecord.icon}"
 						style="border: 0px solid;" />
-					<ice:outputLink value="download?docId=#{documentRecord.docId}"
-						target="_blank" title="#{msgs['msg.jsp.popup']}">
+					<ice:outputLink
+						rendered="#{documentRecord.document.immutable == 0}"
+						value="download?docId=#{documentRecord.docId}" target="_blank"
+						title="#{msgs['msg.jsp.popup']}">
 						<ice:outputText value=" #{documentRecord.displayTitle}" />
 					</ice:outputLink>
 					<ice:outputLink
+						rendered="#{documentRecord.document.immutable == 1}"
+						value="download?docId=#{documentRecord.docId}" target="_blank"
+						title="#{msgs['msg.jsp.popup']}">
+						<ice:outputText styleClass="immutable"
+							value=" #{documentRecord.displayTitle}" />
+					</ice:outputLink>
+					<ice:outputLink
 						value="download?docId=#{documentRecord.docId}&amp;downloadText=true"
-						target="_blank" title="txt" rendered="#{documentRecord.document.indexed==1}">
+						target="_blank" title="txt"
+						rendered="#{documentRecord.document.indexed==1}">
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
 							value="#{StyleBean.imagesPath}/txt-icon.png" alt="txt" />
 					</ice:outputLink>
@@ -111,8 +122,7 @@
 						alt="#{documentRecord.document.checkoutUser}" />
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.document.immutable == 1}"
-						value="#{StyleBean.imagesPath}/immutable.png"
-						title="Immutable" />
+						value="#{StyleBean.imagesPath}/immutable.png" title="Immutable" />
 					<ice:commandLink title="#{msgs['links']}"
 						action="#{documentRecord.links}">
 						<ice:graphicImage style="margin-left: 5px; border: 0px;"
@@ -125,7 +135,7 @@
 					</ice:menuPopup>
 				</ice:panelGroup>
 			</ice:column>
-			
+
 			<!-- Creation -->
 			<ice:column>
 				<f:facet name="header">
@@ -138,10 +148,11 @@
 					menuPopup="pop">
 					<ice:outputText value="#{documentRecord.creation}"
 						title="#{msgs['msg.jsp.popup']}">
-						<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{StyleBean.timeZone}" />
+						<f:convertDateTime pattern="#{loc.dateFormatHM}"
+							timeZone="#{StyleBean.timeZone}" />
 					</ice:outputText>
 				</ice:panelGroup>
-			</ice:column>			
+			</ice:column>
 
 			<!-- Last Modified -->
 			<ice:column>
@@ -155,7 +166,8 @@
 					menuPopup="pop">
 					<ice:outputText value="#{documentRecord.lastModified}"
 						title="#{msgs['msg.jsp.popup']}">
-						<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{StyleBean.timeZone}" />
+						<f:convertDateTime pattern="#{loc.dateFormatHM}"
+							timeZone="#{StyleBean.timeZone}" />
 					</ice:outputText>
 				</ice:panelGroup>
 			</ice:column>
