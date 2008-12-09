@@ -27,7 +27,6 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.webdav.context.ImportContext;
 import com.logicaldoc.webdav.exception.DavResourceIOException;
-import com.logicaldoc.webdav.exception.OperationNotSupportedException;
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.resource.model.ResourceImpl;
 
@@ -291,7 +290,7 @@ public class ResourceServiceImpl implements ResourceService {
 			// filename,
 			// but this is not supported by logicalDOC
 			if (destination == null)
-				throw new OperationNotSupportedException();
+				throw new UnsupportedOperationException();
 
 			Document document = documentDAO.findById(Long.parseLong(target.getID()));
 			documentDAO.initialize(document);
