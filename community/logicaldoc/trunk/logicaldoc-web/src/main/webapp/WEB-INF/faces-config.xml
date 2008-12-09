@@ -27,8 +27,8 @@
     </validator>
     
     <converter>
-        <converter-id>logicaldoc.UTF8Converter</converter-id>
-        <converter-class>com.logicaldoc.web.util.UTF8Converter</converter-class>
+        <converter-id>logicaldoc.UniversalConverter</converter-id>
+        <converter-class>com.logicaldoc.web.util.UniversalConverter</converter-class>
     </converter>
 
 	<managed-bean>
