@@ -8,6 +8,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.FileUtil;
@@ -40,10 +41,11 @@ public class FSStorer implements Storer {
 	 */
 	public boolean store(InputStream stream, String docPath, String filename, String version) {
 		try {
+			String fn = CharsetDetector.convert(filename);
 			String path = new StringBuilder(settingsConfig.getValue("docdir")).append("/").append(docPath).append("/")
 					.toString();
 			FileUtils.forceMkdir(new File(path));
-			FileUtil.writeFile(stream, new StringBuilder(path).append(filename).toString());
+			FileUtil.writeFile(stream, new StringBuilder(path).append(fn).toString());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return false;

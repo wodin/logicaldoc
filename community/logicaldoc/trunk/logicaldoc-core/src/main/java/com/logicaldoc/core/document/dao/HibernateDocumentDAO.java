@@ -32,6 +32,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
+import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.config.SettingsConfig;
 
 /**
@@ -195,6 +196,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					doc.setKeywords(dst);
 				}
 
+				doc.setFileName(CharsetDetector.convert(doc.getFileName()));
+				
 				File docFile = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId()
 						+ "/" + doc.getFileName()));
 				if (docFile.exists()) {
