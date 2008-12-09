@@ -11,18 +11,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipOutputStream;
 
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.SettingsConfig;
 
 /**
  * Exports a folder hierarchy and all documents in it as a zip file.
@@ -63,6 +64,7 @@ public class ZipExport {
 		this.startFolderId = folder.getId();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		zos = new ZipOutputStream(bos);
+		zos.setEncoding("Cp850");
 		try {
 			appendChildren(folder, 0);
 		} finally {
@@ -115,19 +117,19 @@ public class ZipExport {
 	 */
 	protected void addFolderDocuments(Menu folder) {
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		Collection<Document> docs = ddao.findByFolder(folder.getId());
 
-		SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-		String path = settings.getValue("docdir");
 		for (Document document : docs) {
-			File documentFile = new File(path + "/" + document.getPath() + "/" + document.getFileName());
+			File documentFile = manager.getDocumentFile(document);
 			InputStream is = null;
 			BufferedInputStream bis = null;
 			try {
 				is = new FileInputStream(documentFile);
 				bis = new BufferedInputStream(is);
 
-				ZipEntry entry = new ZipEntry(getZipEntryPath(folder) + document.getFileName());
+				ZipEntry entry = new ZipEntry(CharsetDetector.convert(getZipEntryPath(folder))
+						+ CharsetDetector.convert(document.getFileName()));
 				zos.putNextEntry(entry);
 
 				// Transfer bytes from the file to the ZIP file
@@ -168,7 +170,7 @@ public class ZipExport {
 			Menu menu = menus.get(i);
 			if (menu.getId() == startFolderId)
 				break;
-			folderNames.add(menu.getText());
+			folderNames.add(CharsetDetector.convert(menu.getText()));
 		}
 		Collections.reverse(folderNames);
 
