@@ -244,11 +244,11 @@ public class DocumentsRecordsManager extends SortableList {
 						log.debug("show the immutability panel");
 						documentNavigation.setSelectedPanel(new PageContentBean("immutability"));
 					} else
-						Messages.addLocalizedError("All selected documents are immutable");
+						Messages.addLocalizedError("document.immutable.message");
 				} catch (AccessControlException e) {
-					Messages.addLocalizedError("No immutability permission");
+					Messages.addLocalizedError("document.write.nopermission");
 				} catch (Exception e) {
-					Messages.addLocalizedInfo("Errors on immutability");
+					Messages.addLocalizedInfo("error");
 				}
 			} else {
 				Messages.addLocalizedWarn("noselection");
