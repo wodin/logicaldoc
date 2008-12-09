@@ -19,7 +19,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.icesoft.faces.component.ext.HtmlInputTextarea;
 import com.icesoft.faces.component.ext.RowSelectorEvent;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -77,10 +76,6 @@ public class DocumentsRecordsManager extends SortableList {
 
 	private long sourceDirectory;
 
-	private String operationComment = "";
-
-	private HtmlInputTextarea reason = null;
-
 	// Set of selected rows
 	private Set<DocumentRecord> selection = new HashSet<DocumentRecord>();
 
@@ -98,14 +93,6 @@ public class DocumentsRecordsManager extends SortableList {
 		selectDirectory(Menu.MENUID_DOCUMENTS);
 		selection.clear();
 		clipboard.clear();
-	}
-
-	public String getOperationComment() {
-		return operationComment;
-	}
-
-	public void setOperationComment(String operationComment) {
-		this.operationComment = operationComment;
 	}
 
 	/**
@@ -219,75 +206,6 @@ public class DocumentsRecordsManager extends SortableList {
 		} else {
 			return "login";
 		}
-	}
-
-	/**
-	 * Shows the document immutability form
-	 */
-	public String requireImmutabilityComment() {
-		log.debug("start document immutability marking");
-
-		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-				"documentNavigation", FacesContext.getCurrentInstance(), log));
-		operationComment = "";
-		boolean documentNotImmutable = false;
-		if (SessionManagement.isValid()) {
-			if (!selection.isEmpty()) {
-				try {
-					for (DocumentRecord record : selection) {
-						if (record.getDocument().getImmutable() == 0) {
-							documentNotImmutable = true;
-							continue;
-						}
-					}
-					if (documentNotImmutable) {
-						log.debug("show the immutability panel");
-						documentNavigation.setSelectedPanel(new PageContentBean("immutability"));
-					} else
-						Messages.addLocalizedError("error");
-				} catch (AccessControlException e) {
-					Messages.addLocalizedError("document.write.nopermission");
-				} catch (Exception e) {
-					Messages.addLocalizedInfo("error");
-				}
-			} else {
-				Messages.addLocalizedWarn("noselection");
-			}
-
-			return null;
-		} else {
-			return "login";
-		}
-	}
-
-	/**
-	 * Marks as immutable all selected documents
-	 */
-	public String markSelectionAsImmutable() {
-		if (SessionManagement.isValid()) {
-			try {
-				DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-				for (DocumentRecord record : selection) {
-					if (record.getDocument().getImmutable() == 0) {
-						manager.makeImmutable(record.getDocId(), SessionManagement.getUser(), operationComment);
-						Messages.addLocalizedInfo("document.immutable.message");
-					}
-				}
-				refresh();
-
-				DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-						"documentNavigation", FacesContext.getCurrentInstance(), log));
-				documentNavigation.refresh();
-				documentNavigation.setSelectedPanel(new PageContentBean("documents"));
-			} catch (Throwable e) {
-				log.error(e.getMessage(), e);
-				Messages.addError(e.getMessage());
-			}
-		} else {
-			return "login";
-		}
-
-		return null;
 	}
 
 	/**
@@ -615,12 +533,5 @@ public class DocumentsRecordsManager extends SortableList {
 
 	public void setSelectedAll(boolean selectedAll) {
 		this.selectedAll = selectedAll;
-	}
-
-	public String back() {
-		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-				"documentNavigation", FacesContext.getCurrentInstance(), log));
-		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
-		return null;
 	}
 }
