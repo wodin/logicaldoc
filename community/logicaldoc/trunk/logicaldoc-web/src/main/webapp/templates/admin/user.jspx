@@ -2,8 +2,7 @@
 <!-- 
  This page is the document editing form
   
- @author Marco Meschieri
- @version $Id: user.jspx,v 1.1 2007/10/16 16:12:10 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -47,7 +46,9 @@
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:right">
 						<ice:inputSecret id="password" value="#{userForm.password}"
-							maxlength="255" required="true" rendered="#{hidePasswd!='true'}" />
+						 	maxlength="15" required="true" rendered="#{hidePasswd!='true'}">
+							<f:validateLength minimum = "8" maximum = "15"/>
+						</ice:inputSecret>
 						<br />
 						<ice:message for="password" />
 					</ice:panelGroup>
@@ -64,7 +65,9 @@
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputSecret id="repass" value="#{userForm.repass}"
-							maxlength="255" required="true" rendered="#{hidePasswd!='true'}" />
+							maxlength="15" required="true" rendered="#{hidePasswd!='true'}">
+							<f:validateLength minimum = "8" maximum = "15"/>
+						</ice:inputSecret>
 						<br />
 						<ice:message for="repass" />
 					</ice:panelGroup>
