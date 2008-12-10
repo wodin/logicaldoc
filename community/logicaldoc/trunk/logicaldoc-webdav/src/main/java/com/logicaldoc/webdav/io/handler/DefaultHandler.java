@@ -76,7 +76,6 @@ public class DefaultHandler implements IOHandler {
             return false;
         }
         Resource resource = context.getResource();
-        log.warn("(resource != null) = " + (resource != null));
         return resource != null;
     }
 
@@ -84,9 +83,7 @@ public class DefaultHandler implements IOHandler {
         if (resource == null) {
             return false;
         }
-        boolean canImport = canImport(context, resource.isCollection());
-        log.warn("canImport = " + canImport);
-        return canImport;
+        return canImport(context, resource.isCollection());
     }
 
     public boolean importContent(ImportContext context, boolean isCollection) throws IOException {
@@ -98,7 +95,7 @@ public class DefaultHandler implements IOHandler {
         boolean success = false;
         try {
         	success = setContentData(context, isCollection);
-        	log.warn("success = " + success);
+        	log.debug("success = " + success);
         }
         catch (Exception e){        	
         	e.printStackTrace();
