@@ -47,7 +47,7 @@
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="#{msgs['abort']}" partialSubmit="true"
 				immediate="true" action="#{documentsRecordsManager.back}" />
-			<ice:commandButton value="Confirm" id="save" tabindex="1"
+			<ice:commandButton value="#{msgs['confirm']}" id="save" tabindex="1"
 				onclick="if (!confirm(&quot;#{msgs['document.immutable.question']}&quot;)) return false;"
 				action="#{documentsRecordsManager.markSelectionAsImmutable}" />
 		</ice:panelGroup>
