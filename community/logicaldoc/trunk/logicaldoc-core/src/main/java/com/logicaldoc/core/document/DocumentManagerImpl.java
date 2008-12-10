@@ -533,6 +533,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 
 			setUniqueTitle(doc);
+			setUniqueFilename(doc);
 
 			if (sourceDate != null)
 				doc.setSourceDate(sourceDate);
