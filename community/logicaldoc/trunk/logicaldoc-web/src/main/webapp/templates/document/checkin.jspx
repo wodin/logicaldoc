@@ -2,8 +2,7 @@
 <!-- 
  This page shows the upload document wizard
   
- @author Marco Meschieri
- @version $Id: checkin.jspx,v 1.2 2006/08/29 16:33:45 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -44,7 +43,9 @@
                     label="#{msgs['upload.button']}" />
                 <ice:outputProgress id="pro" value="#{inputFile.percent}" />
                 <ice:outputText value="#{msgs['upload.filename']}: #{inputFile.fileName}"
-                    style="padding-left:8px;" />
+                    style="padding-left:8px;">
+                    <f:converter converterId="logicaldoc.UniversalConverter" />
+                </ice:outputText>
                 <br />
                 <ice:messages for="iFile"/>
             </ice:panelGroup>

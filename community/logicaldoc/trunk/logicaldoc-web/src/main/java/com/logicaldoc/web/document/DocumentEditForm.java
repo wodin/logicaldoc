@@ -28,6 +28,7 @@ import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.SessionManagement;
@@ -532,7 +533,8 @@ public class DocumentEditForm {
 					// if checkOriginalFileName is selected verify that the
 					// uploaded file has correct fileName
 					if (isCheckOriginalFilename()) {
-						if (!fileName.equals(document.getFileName())) {
+						
+						if (!CharsetDetector.convert(fileName).equals(document.getFileName())) {
 							log.info("Filename of the checked-in document(" + fileName
 									+ ") is different from the original filename (" + document.getFileName() + ")");
 

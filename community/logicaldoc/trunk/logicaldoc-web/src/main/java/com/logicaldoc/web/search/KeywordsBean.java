@@ -289,7 +289,7 @@ public class KeywordsBean extends SortableList {
 					if (column == null) {
 						return 0;
 					}
-					if (column.equals("displayDescription")) {
+					if (column.equals("title")) {
 						return ascending ? c1.getDisplayTitle().compareTo(c2.getDisplayTitle()) : c2.getDisplayTitle()
 								.compareTo(c1.getDisplayTitle());
 					} else if (column.equals("date")) {
