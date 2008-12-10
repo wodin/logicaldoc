@@ -424,11 +424,13 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// Get original document directory path
 			String path = getDocFilePath(doc);
+			String originalFileName = doc.getFileName();
 			File originalDocDir = new File(path);
 
 			documentDAO.initialize(doc);
 			doc.setFolder(folder);
 			setUniqueTitle(doc);
+			setUniqueFilename(doc);
 			documentDAO.store(doc);
 
 			// Update the FS
@@ -437,7 +439,13 @@ public class DocumentManagerImpl implements DocumentManager {
 			File newDocDir = new File(path);
 
 			FileUtils.moveDirectory(originalDocDir, newDocDir);
-
+			
+			if (!doc.getFileName().equals(originalFileName)) {
+				File originalFile = new File(newDocDir, originalFileName);
+				File destFile = new File(newDocDir, doc.getFileName());
+				originalFile.renameTo(destFile);
+			}
+			
 			if (doc.getIndexed() == 1) {
 				Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 				org.apache.lucene.document.Document indexDocument = null;
