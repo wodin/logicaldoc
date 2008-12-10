@@ -88,7 +88,8 @@ public class ResourceServiceImpl implements ResourceService {
 	private Resource marshallDocument(Document document) {
 		Resource resource = new ResourceImpl();
 		resource.setID(new Long(document.getId()).toString());
-		resource.setName(document.getTitle() + "." + document.getType());
+		//resource.setName(document.getTitle() + "." + document.getType());
+		resource.setName(document.getFileName());
 		resource.setContentLength(document.getFileSize());
 		resource.setCreationDate(document.getCreation());
 		resource.setLastModified(document.getDate());
@@ -153,8 +154,10 @@ public class ResourceServiceImpl implements ResourceService {
 			return marshallFolder(menu);
 
 		Resource parentMenu = this.getParentResource(currentStablePath);
-		String title = name.substring(0, name.lastIndexOf(".") > 0 ? name.lastIndexOf(".") : name.length());
-		Collection<Document> docs = documentDAO.findByTitleAndParentFolderId(Long.parseLong(parentMenu.getID()), title);
+//		String title = name.substring(0, name.lastIndexOf(".") > 0 ? name.lastIndexOf(".") : name.length());
+//		Collection<Document> docs = documentDAO.findByTitleAndParentFolderId(Long.parseLong(parentMenu.getID()), title);
+				
+		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(Long.parseLong(parentMenu.getID()), name);
 		if (docs.isEmpty())
 			return null;
 		Document document = docs.iterator().next();
@@ -249,8 +252,10 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public Resource getChildByName(Resource parentResource, String name) {
 		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource.getID()));
-		String title = name.substring(0, name.lastIndexOf(".") > 0 ? name.lastIndexOf(".") : name.length());
-		Collection<Document> docs = documentDAO.findByTitleAndParentFolderId(parentMenu.getId(), title);
+//		String title = name.substring(0, name.lastIndexOf(".") > 0 ? name.lastIndexOf(".") : name.length());
+//		Collection<Document> docs = documentDAO.findByTitleAndParentFolderId(parentMenu.getId(), title);
+		
+		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(parentMenu.getId(), name);
 		if (!docs.isEmpty()) {
 			Document document = docs.iterator().next();
 			return marshallDocument(document);
@@ -287,22 +292,29 @@ public class ResourceServiceImpl implements ResourceService {
 
 		} else {
 			// if the destination is null, then the user want to change the
-			// filename,
-			// but this is not supported by logicalDOC
+			// filename, but this is not supported by logicalDOC
 			if (destination == null)
 				throw new UnsupportedOperationException();
 
 			Document document = documentDAO.findById(Long.parseLong(target.getID()));
 			documentDAO.initialize(document);
-			String name = target.getName();
-			String ext = "";
-			if (name.contains(".")) {
-				ext = name.substring(name.lastIndexOf(".") + 1);
-				name = name.substring(0, name.lastIndexOf("."));
-			}
+			
+//			 DOCUMENT FILE RENAME IS NOT ALLOWED
+			if (!target.getName().equals(document.getFileName()))
+				throw new UnsupportedOperationException();
 
-			document.setTitle(name);
-			document.setType(ext);
+			
+//			String name = target.getName();
+//			String ext = "";
+//			if (name.contains(".")) {
+//				ext = name.substring(name.lastIndexOf(".") + 1);
+//				name = name.substring(0, name.lastIndexOf("."));
+//			}
+//
+//			document.setTitle(name);
+//			document.setType(ext);
+			
+			
 			documentDAO.store(document);
 			Menu menu = menuDAO.findById(Long.parseLong(destination.getID()));
 
