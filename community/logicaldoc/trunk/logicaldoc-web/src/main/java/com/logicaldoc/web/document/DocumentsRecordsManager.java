@@ -218,7 +218,7 @@ public class DocumentsRecordsManager extends SortableList {
 		}
 	}
 
-/**
+	/**
 	 * Shows the document immutability form
 	 */
 	public String requireImmutabilityComment() {
@@ -287,7 +287,6 @@ public class DocumentsRecordsManager extends SortableList {
 		return null;
 	}
 
-
 	/**
 	 * Trims all selected documents
 	 */
@@ -325,13 +324,20 @@ public class DocumentsRecordsManager extends SortableList {
 
 				if (menuDao.isWriteEnable(selectedDirectory, userId)) {
 					try {
+						boolean skippedSome = false;
 						for (DocumentRecord record : clipboard) {
+							if (record.getDocument().getImmutable() == 1) {
+								skippedSome = true;
+								continue;
+							}
 							docManager.moveToFolder(record.getDocument(), selectedMenuFolder);
 						}
+						if (skippedSome)
+							Messages.addLocalizedWarn("document.paste.warn");
 					} catch (AccessControlException e) {
 						Messages.addLocalizedWarn("document.write.nopermission");
 					} catch (Exception e) {
-						Messages.addLocalizedInfo("errors.action.movedocument");
+						Messages.addLocalizedError("errors.action.movedocument");
 						log.error("Exception moving document: " + e.getMessage(), e);
 					}
 					clipboard.clear();
@@ -614,7 +620,7 @@ public class DocumentsRecordsManager extends SortableList {
 	public void setSelectedAll(boolean selectedAll) {
 		this.selectedAll = selectedAll;
 	}
-	
+
 	public String back() {
 		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 				"documentNavigation", FacesContext.getCurrentInstance(), log));
