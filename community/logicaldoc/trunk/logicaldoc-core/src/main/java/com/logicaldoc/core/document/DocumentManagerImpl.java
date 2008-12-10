@@ -603,6 +603,27 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 	}
 
+	/**
+	 * Avoid Filename duplications in the same folder
+	 */
+	private void setUniqueFilename(Document doc) {
+		int counter = 1;
+		
+		String name = doc.getFileName();
+		if (doc.getFileName().indexOf(".") != -1) {
+			name = doc.getFileName().substring(0, doc.getFileName().lastIndexOf("."));		    
+		}
+		
+		String ext = "";
+		if (doc.getFileName().indexOf(".") != -1) {
+			ext = doc.getFileName().substring(doc.getFileName().lastIndexOf("."));			
+		}
+		
+		while (documentDAO.findByFileNameAndParentFolderId(doc.getFolder().getId(), doc.getFileName()).size() > 0) {
+			doc.setFileName(name + "(" + (counter++) + ")" + ext);
+		}
+	}	
+
 	public Document copyToFolder(Document doc, Menu folder, User user) throws Exception {
 		if (doc.getImmutable() != 0) {
 			throw new Exception("Document is immutable");
