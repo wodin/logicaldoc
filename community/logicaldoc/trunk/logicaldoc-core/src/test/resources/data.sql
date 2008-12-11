@@ -148,6 +148,9 @@ values     (1,'def');
 insert into ld_keyword
 values     (1,'ghi');
 
+insert into ld_keyword
+values     (2,'ask');
+
 insert into ld_history 
 				(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_userid, ld_date, ld_username, ld_event, ld_comment)
 values     (1,'2008-10-22',0,1,1,'2006-12-20','author','data test 01','reason test 01');
