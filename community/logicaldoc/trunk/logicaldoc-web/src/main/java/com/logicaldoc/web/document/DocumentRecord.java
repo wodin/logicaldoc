@@ -23,7 +23,6 @@ import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.io.CryptUtil;
@@ -223,21 +222,21 @@ public class DocumentRecord extends MenuBarBean {
 
 		Menu folder = getDocument().getFolder();
 		Document document = getDocument();
-		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		if ((menuDAO.isWriteEnable(folder.getId(), userId)) && (document.getImmutable() == 0)) {
 			if ((document.getStatus() == Document.DOC_CHECKED_OUT) && username.equals(document.getCheckoutUser())) {
 				model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.checkin"), "checkin-" + folder.getId(),
-						null, "#{documentRecord.checkin}", null, style.getImagePath("checkin.png"), true, null,
-						null));
+						null, "#{documentRecord.checkin}", null, style.getImagePath("checkin.png"), true, null, null));
 			} else if (document.getStatus() == Document.DOC_CHECKED_IN) {
-				model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.checkout"), "checkout-" + folder.getId(),
-						null, "#{documentRecord.checkout}", null, style.getImagePath("checkout.png"), true, null,
-						null));
+				model
+						.add(createMenuItem(" " + Messages.getMessage("msg.jsp.checkout"),
+								"checkout-" + folder.getId(), null, "#{documentRecord.checkout}", null, style
+										.getImagePath("checkout.png"), true, null, null));
 			}
 
 			model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.foldercontent.edit"), "pastelink-"
-					+ folder.getId(), null, "#{documentRecord.edit}", null,
-					style.getImagePath("document_edit.png"), true, null, null));
+					+ folder.getId(), null, "#{documentRecord.edit}", null, style.getImagePath("document_edit.png"),
+					true, null, null));
 
 			model.add(createMenuItem(" " + Messages.getMessage("link.pasteas"), "edit-" + folder.getId(), null,
 					"#{documentRecord.pasteAsLink}", null, style.getImagePath("pastelink.png"), true, null, null));
@@ -252,8 +251,7 @@ public class DocumentRecord extends MenuBarBean {
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.discuss"), "articles-" + folder.getId(), null,
 				"#{documentRecord.articles}", null, style.getImagePath("comments.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getId(),
-				null, "#{documentRecord.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank",
-				null));
+				null, "#{documentRecord.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(), null,
 				"#{documentRecord.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.foldercontent.info"), "info-" + folder.getId(),
@@ -322,7 +320,7 @@ public class DocumentRecord extends MenuBarBean {
 								+ Messages.getMessage("msg.checkout.alert") + "');");
 
 						try {
-							StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+							StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 							// create a new menu to replace the checkout
 							MenuItem checkinMenuItem = createMenuItem(Messages.getMessage("msg.jsp.checkin"),
 									"checkin-" + document.getId(), null, "#{documentRecord.checkin}", null, style
@@ -586,6 +584,8 @@ public class DocumentRecord extends MenuBarBean {
 	protected void loadDocument() {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		this.document = docDao.findById(docId);
+		if (this.document == null || this.document.getDeleted()==1)
+			this.document = new Document();
 	}
 
 	/**
