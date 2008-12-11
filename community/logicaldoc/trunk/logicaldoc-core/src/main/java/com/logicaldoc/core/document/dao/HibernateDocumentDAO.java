@@ -181,46 +181,47 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public boolean store(final Document doc) {
 		boolean result = true;
 		try {
-				Set<String> src = doc.getKeywords();
-				if (src != null && src.size() > 0) {
-					// Trim too long keywords
-					Set<String> dst = new HashSet<String>();
-					for (String str : src) {
-						String s = str;
-						if (str.length() > 255) {
-							s = str.substring(0, 255);
-						}
-						if (!dst.contains(s))
-							dst.add(s);
+			Set<String> src = doc.getKeywords();
+			if (src != null && src.size() > 0) {
+				// Trim too long keywords
+				Set<String> dst = new HashSet<String>();
+				for (String str : src) {
+					String s = str;
+					if (str.length() > 255) {
+						s = str.substring(0, 255);
 					}
-					doc.setKeywords(dst);
+					if (!dst.contains(s))
+						dst.add(s);
 				}
+				doc.setKeywords(dst);
+			}
 
-				doc.setFileName(CharsetDetector.convert(doc.getFileName()));
-				
-				File docFile = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId()
-						+ "/" + doc.getFileName()));
-				if (docFile.exists()) {
-					long size = docFile.length();
-					doc.setFileSize(size);
-				}
+			doc.setFileName(CharsetDetector.convert(doc.getFileName()));
 
-				Map<String, Object> dictionary = new HashMap<String, Object>();
+			File docFile = new File(
+					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
+							.getFileName()));
+			if (docFile.exists()) {
+				long size = docFile.length();
+				doc.setFileSize(size);
+			}
 
-				log.debug("Invoke listeners before store");
-				for (DocumentListener listener : listenerManager.getListeners()) {
-					listener.beforeStore(doc, dictionary);
-				}
-				// Save the document
-				getHibernateTemplate().saveOrUpdate(doc);
+			Map<String, Object> dictionary = new HashMap<String, Object>();
 
-				log.debug("Invoke listeners after store");
-				for (DocumentListener listener : listenerManager.getListeners()) {
-					listener.afterStore(doc, dictionary);
-				}
+			log.debug("Invoke listeners before store");
+			for (DocumentListener listener : listenerManager.getListeners()) {
+				listener.beforeStore(doc, dictionary);
+			}
+			// Save the document
+			getHibernateTemplate().saveOrUpdate(doc);
 
-				// Perhaps some listener may have modified the document
-				getHibernateTemplate().saveOrUpdate(doc);
+			log.debug("Invoke listeners after store");
+			for (DocumentListener listener : listenerManager.getListeners()) {
+				listener.afterStore(doc, dictionary);
+			}
+
+			// Perhaps some listener may have modified the document
+			getHibernateTemplate().saveOrUpdate(doc);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -265,7 +266,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			if (!precoll.isEmpty()) {
 				StringBuffer query = new StringBuffer(
-						"select B.ld_keyword from ld_document A, ld_keyword B, ld_menugroup C "
+						"select distinct B.ld_keyword, A.ld_id from ld_document A, ld_keyword B, ld_menugroup C "
 								+ " where A.ld_deleted=0 and A.ld_id = B.ld_docid and A.ld_folderid=C.ld_menuid and C.ld_groupid in (");
 				boolean first = true;
 				while (iter.hasNext()) {
@@ -277,7 +278,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				}
 				query.append(") and lower(B.ld_keyword) like '");
 				query.append(firstLetter.toLowerCase()).append("%' ");
-
+				
 				Connection con = null;
 				Statement stmt = null;
 				ResultSet rs = null;
@@ -299,6 +300,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
@@ -412,7 +414,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			if (!precoll.isEmpty()) {
 				StringBuffer query = new StringBuffer(
 						"select distinct(C.ld_id) from ld_menugroup A, ld_document C, ld_keyword D "
-								+ " where A.ld_menuid=C.ld_folderid AND C.ld_id=D.ld_docid" + " AND A.ld_groupid in (");
+								+ " where A.ld_menuid=C.ld_folderid AND C.ld_id=D.ld_docid AND C.ld_deleted=0 AND A.ld_groupid in (");
 				boolean first = true;
 				while (iter.hasNext()) {
 					if (!first)
