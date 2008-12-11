@@ -211,11 +211,11 @@
 					<ice:panelGrid columns="1">
 						<ice:panelGroup>
 							<ice:commandButton value="&gt;&gt;"
-								action="#{userForm.assignGroups}" partialSubmit="true" />
+								action="#{userForm.assignGroups}" partialSubmit="true" immediate="false"/>
 						</ice:panelGroup>
 						<ice:panelGroup>
 							<ice:commandButton value="&lt;&lt;"
-								action="#{userForm.unassignGroups}" partialSubmit="true" />
+								action="#{userForm.unassignGroups}" partialSubmit="true" immediate="false"/>
 						</ice:panelGroup>
 					</ice:panelGrid>
 				</ice:panelGroup>
@@ -238,7 +238,7 @@
 
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="#{msgs['abort']}"
-				action="#{usersRecordsManager.list}" partialSubmit="true" />
+				action="#{usersRecordsManager.list}" partialSubmit="true" immediate="true"/>
 			<ice:commandButton value="#{msgs['save']}" action="#{userForm.save}"
 				rendered="#{hidePasswd!='true'}" id="save" />
 			<ice:commandButton value="#{msgs['save']}"
