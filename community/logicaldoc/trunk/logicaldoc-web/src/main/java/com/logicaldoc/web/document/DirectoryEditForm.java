@@ -1,7 +1,5 @@
 package com.logicaldoc.web.document;
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
