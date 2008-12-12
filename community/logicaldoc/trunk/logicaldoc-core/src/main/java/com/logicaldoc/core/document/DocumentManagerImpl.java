@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +27,9 @@ import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.store.Storer;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;
@@ -439,13 +443,13 @@ public class DocumentManagerImpl implements DocumentManager {
 			File newDocDir = new File(path);
 
 			FileUtils.moveDirectory(originalDocDir, newDocDir);
-			
+
 			if (!doc.getFileName().equals(originalFileName)) {
 				File originalFile = new File(newDocDir, originalFileName);
 				File destFile = new File(newDocDir, doc.getFileName());
 				originalFile.renameTo(destFile);
 			}
-			
+
 			if (doc.getIndexed() == 1) {
 				Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 				org.apache.lucene.document.Document indexDocument = null;
@@ -617,21 +621,21 @@ public class DocumentManagerImpl implements DocumentManager {
 	 */
 	private void setUniqueFilename(Document doc) {
 		int counter = 1;
-		
+
 		String name = doc.getFileName();
 		if (doc.getFileName().indexOf(".") != -1) {
-			name = doc.getFileName().substring(0, doc.getFileName().lastIndexOf("."));		    
+			name = doc.getFileName().substring(0, doc.getFileName().lastIndexOf("."));
 		}
-		
+
 		String ext = "";
 		if (doc.getFileName().indexOf(".") != -1) {
-			ext = doc.getFileName().substring(doc.getFileName().lastIndexOf("."));			
+			ext = doc.getFileName().substring(doc.getFileName().lastIndexOf("."));
 		}
-		
+
 		while (documentDAO.findByFileNameAndParentFolderId(doc.getFolder().getId(), doc.getFileName()).size() > 0) {
 			doc.setFileName(name + "(" + (counter++) + ")" + ext);
 		}
-	}	
+	}
 
 	public Document copyToFolder(Document doc, Menu folder, User user) throws Exception {
 		if (doc.getImmutable() != 0) {
@@ -686,6 +690,69 @@ public class DocumentManagerImpl implements DocumentManager {
 			log.debug("The document " + docId + " has been marked as immutable ");
 		} else {
 			throw new Exception("Document is immutable");
+		}
+	}
+
+	@Override
+	public List<Menu> deleteFolder(Menu folder, User user) throws Exception {
+		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		List<Menu> deletableFolders = new ArrayList<Menu>();
+		List<Menu> notDeletableFolders = new ArrayList<Menu>();
+
+		if (mdao.isPermissionEnabled(Permission.DELETE, folder.getId(), user.getId())) {
+			deletableFolders.add(folder);
+		} else {
+			notDeletableFolders.add(folder);
+			return notDeletableFolders;
+		}
+		
+		try {
+			// Retrieve all the sub-folders
+			List<Menu> subfolders = mdao.findByParentId(folder.getId());
+
+			for (Menu subfolder : subfolders) {
+				if (mdao.isPermissionEnabled(Permission.DELETE, subfolder.getId(), user.getId())) {
+					deletableFolders.add(subfolder);
+				} else {
+					notDeletableFolders.add(subfolder);
+				}
+			}
+			
+			for (Menu deletableFolder : deletableFolders) {
+				boolean foundDocImmutable = false;
+				DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+				List<Document> docs = docdao.findByFolder(deletableFolder.getId());
+				for (Document doc : docs) {
+					if (doc.getImmutable() == 1) {
+						foundDocImmutable = true;
+						continue;
+					}
+					delete(doc.getId());
+				}
+				if (foundDocImmutable) {
+					notDeletableFolders.add(deletableFolder);
+				}
+			}
+
+			// Avoid deletion of the entire path of an undeleteble folder
+			for (Menu notDeletable : notDeletableFolders) {
+				Menu parent = notDeletable;
+				while (true) {
+					if (deletableFolders.contains(parent))
+						deletableFolders.remove(parent);
+					if (parent.equals(folder))
+						break;
+					parent = mdao.findById(parent.getParentId());
+				}
+			}
+
+			for (Menu fld : deletableFolders) {
+				mdao.delete(folder.getId());
+			}
+			return notDeletableFolders;
+		} catch (Throwable e) {
+			log.error(e);
+			return notDeletableFolders;
 		}
 	}
 }
