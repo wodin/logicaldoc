@@ -1,6 +1,5 @@
 package com.logicaldoc.core.security.dao;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -207,4 +206,14 @@ public interface MenuDAO extends PersistentObjectDAO<Menu>{
 	 * @param parents true if parents must be restored also
 	 */
 	public void restore(long menuId, boolean parents);
+	
+	/**
+	 * Finds that folder that lies under a specific parent (given by the id)
+	 * an with a given text(like operator is used)
+	 * 
+	 * @param text
+	 * @param parentId
+	 * @return
+	 */
+	public List<Menu> findByMenuTextAndParentId(String text, long parentId);
 }
