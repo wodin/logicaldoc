@@ -24,6 +24,7 @@ New Group editing interface
 New Permission assigment on folder (previously we had permission by file)
 Improved Tag browsing
 New Permission management on menus
+New Support for eastern Europe charsets
 
 
 
