@@ -3,6 +3,7 @@ package com.logicaldoc.core.document;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -302,4 +303,17 @@ public interface DocumentManager {
 	 */
 	public Document copyToFolder(Document doc, Menu folder, User user) throws Exception;
 
+	/**
+	 * Delete a folder and all its sub-folders that a user can delete. After
+	 * recovering of all sub-folders inside the folder, will be cancelled all
+	 * folders for which the user has the delete permission or there isn't an
+	 * immutable document inside it.
+	 * 
+	 * @param menu Folder to delete
+	 * @param user User that wants to delete the folder
+	 * @return List of folders that the user cannot delete(permissions, o
+	 *         immutable documents presents)
+	 * @throws Exception
+	 */
+	public List<Menu> deleteFolder(Menu menu, User user) throws Exception;
 }
