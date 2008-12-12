@@ -197,16 +197,26 @@ public class DocumentsRecordsManager extends SortableList {
 		if (SessionManagement.isValid()) {
 			if (!selection.isEmpty()) {
 				DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+				boolean skippedSome = false;
+				boolean deletedSome = false;
 				for (DocumentRecord record : selection) {
 					try {
+						if (record.getDocument().getImmutable() == 1) {
+							skippedSome = true;
+							continue;
+						}
 						manager.delete(record.getDocId());
-						Messages.addLocalizedInfo("msg.action.deleteitem");
+						deletedSome = true;
 					} catch (AccessControlException e) {
-						Messages.addLocalizedError("document.write.nopermission");
+						Messages.addLocalizedWarn("document.write.nopermission");
 					} catch (Exception e) {
-						Messages.addLocalizedInfo("errors.action.deleteitem");
+						Messages.addLocalizedError("errors.action.deleteitem");
 					}
 				}
+				if (deletedSome)
+					Messages.addLocalizedInfo("msg.action.deleteitem");
+				if (skippedSome)
+					Messages.addLocalizedWarn("document.delete.warn");
 				refresh();
 			} else {
 				Messages.addLocalizedWarn("noselection");
@@ -243,7 +253,7 @@ public class DocumentsRecordsManager extends SortableList {
 					} else
 						Messages.addLocalizedError("error");
 				} catch (AccessControlException e) {
-					Messages.addLocalizedError("document.write.nopermission");
+					Messages.addLocalizedWarn("document.write.nopermission");
 				} catch (Exception e) {
 					Messages.addLocalizedInfo("error");
 				}
@@ -384,7 +394,7 @@ public class DocumentsRecordsManager extends SortableList {
 					documentNavigation.setSelectedPanel(new PageContentBean("zipImport"));
 				} else {
 					log.debug("no permission to upload");
-					Messages.addLocalizedError("document.write.nopermission");
+					Messages.addLocalizedWarn("document.write.nopermission");
 				}
 
 				log.debug("show the upload zip panel");

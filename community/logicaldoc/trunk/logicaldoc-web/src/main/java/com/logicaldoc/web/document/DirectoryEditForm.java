@@ -1,11 +1,12 @@
 package com.logicaldoc.web.document;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
-import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
@@ -58,13 +59,18 @@ public class DirectoryEditForm {
 			MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 			try {
-				directory.setDisplayText(folderName);
-				directory.getMenu().setText(folderName);
-				dao.store(directory.getMenu());
-				documentNavigation.refresh();
+				if (dao.findByMenuTextAndParentId(folderName, directory.getMenu().getParentId()).size() > 0) {
+					Messages.addLocalizedWarn("errors.folder.duplicate");
+					documentNavigation.refresh();
+				} else {
+					directory.setDisplayText(folderName);
+					directory.getMenu().setText(folderName);
+					dao.store(directory.getMenu());
+					documentNavigation.refresh();
+				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
-				Messages.addLocalizedError("errors.action.savefolder.notstored");
+				Messages.addLocalizedError("errors.error");
 			}
 
 			return null;
@@ -80,14 +86,8 @@ public class DirectoryEditForm {
 			MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 			try {
-				Menu menu = new Menu();
-				menu.setText(getFolderName());
-				menu.setParentId(parent.getId());
-				menu.setSort(1);
-				menu.setIcon("folder.png");
-				menu.setPath(parent.getPath() + "/" + parent.getId());
-				menu.setType(Menu.MENUTYPE_DIRECTORY);
-
+				Menu menu = dao.createFolder(parent, getFolderName());
+				menu.getMenuGroups().clear();
 				for (MenuGroup mg : parent.getMenuGroups()) {
 					MenuGroup clone = mg.clone();
 					menu.getMenuGroups().add(clone);
