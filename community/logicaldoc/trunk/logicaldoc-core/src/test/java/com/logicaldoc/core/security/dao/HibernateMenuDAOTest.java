@@ -192,7 +192,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertFalse(dao.isReadEnable(Menu.MENUID_HOME, 999));
 	}
 
-	public void testFindMenuIdByUserName() {
+	public void testFindMenuIdByUserId() {
 		Collection<Long> ids = dao.findMenuIdByUserId(1);
 		assertNotNull(ids);
 		assertEquals(23, ids.size());
@@ -203,7 +203,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, ids.size());
 	}
 
-	public void testFindMenuIdByUserNameIntInteger() {
+	public void testFindMenuIdByUserIdIntInteger() {
 		Collection<Long> ids = dao.findMenuIdByUserId(1, 101, null);
 		assertNotNull(ids);
 		assertEquals(1, ids.size());
@@ -273,5 +273,15 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertNotNull(menu);
 		menu = dao.findById(1100);
 		assertNotNull(menu);
+	}
+	
+	public void testFindByMenuTextAndParentId() {
+		List<Menu> menus = dao.findByMenuTextAndParentId("%db.admin%", 1);
+		assertEquals(3, menus.size());
+		assertTrue(menus.contains(dao.findById(99)));
+		assertTrue(menus.contains(dao.findById(100)));
+		assertTrue(menus.contains(dao.findById(2)));
+		menus = dao.findByMenuTextAndParentId("text", 100);
+		assertEquals(dao.findById(101), menus.get(0));
 	}
 }

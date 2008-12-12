@@ -456,16 +456,32 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		menu.setText(name);
 		menu.setParentId(parent.getId());
 		menu.setSort(0);
-		menu.setIcon("folder.gif");
+		menu.setIcon("folder.png");
 		menu.setPath(parent.getPath() + "/" + parent.getId());
 		menu.setType(Menu.MENUTYPE_DIRECTORY);
 		for (MenuGroup mg : parent.getMenuGroups()) {
 			menu.getMenuGroups().add(mg);
 		}
 
+		setUniqueFolderName(menu);
+
 		if (store(menu) == false)
 			return null;
 		return menu;
+	}
+
+	private void setUniqueFolderName(Menu menu) {
+		int counter = 1;
+		String folderName = menu.getText();
+		while (findByMenuTextAndParentId(menu.getText(), menu.getParentId()).size() > 0) {
+			menu.setText(folderName + "(" + (counter++) + ")");
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Menu> findByMenuTextAndParentId(String text, long parentId) {
+		return findByWhere("_entity.parentId = " + parentId + " and _entity.text like '" + text + "'");
 	}
 
 	@Override
