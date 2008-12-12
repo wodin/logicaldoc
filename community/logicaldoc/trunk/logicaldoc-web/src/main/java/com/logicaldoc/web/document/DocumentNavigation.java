@@ -14,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.Article;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.searchengine.Result;
 import com.logicaldoc.core.security.Group;
@@ -142,7 +143,7 @@ public class DocumentNavigation extends NavigationBean {
 		Directory parentDir = new Directory(menuDao.findById(selectedDir.getMenu().getParentId()));
 		if (parentDir.getMenuId() == Menu.MENUID_DOCUMENTS)
 			parentDir.setDisplayText(Messages.getMessage(parentDir.getMenu().getText()));
-		
+
 		MenuItem item = createMenuItem(parentDir.getDisplayText(), parentDir, "folder_up.png");
 
 		if (parentDir.getMenuId() != Menu.MENUID_HOME) {
@@ -162,23 +163,23 @@ public class DocumentNavigation extends NavigationBean {
 			item = createMenuItem(menu.getText(), new Directory(menu));
 			folderItems.add(item);
 		}
-	}	
-	
+	}
+
 	protected MenuItem createMenuItem(String label, Directory dir) {
-	    return createMenuItem(label, dir, "folder.png");
+		return createMenuItem(label, dir, "folder.png");
 	}
 
 	protected MenuItem createMenuItem(String label, Directory dir, String imageName) {
-		
+
 		MenuItem menuItem = new MenuItem();
 		menuItem.setValue(label);
 		menuItem.setId("dir-" + dir.getMenuId());
 		menuItem.setActionListener(FacesUtil
 				.createActionListenerMethodBinding("#{documentNavigation.onSelectDirectory}"));
-		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		menuItem.setIcon(style.getImagePath(imageName));
 		menuItem.setUserObject(dir);
-		
+
 		return menuItem;
 	}
 
@@ -300,9 +301,13 @@ public class DocumentNavigation extends NavigationBean {
 
 	public String delete() {
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		try {
-			menuDao.delete(selectedDir.getMenuId());
-			Messages.addLocalizedInfo("msg.action.deleteitem");
+			List<Menu> notDeletableFolders = manager.deleteFolder(selectedDir.getMenu(), SessionManagement.getUser());
+			if (notDeletableFolders.size() > 0)
+				Messages.addLocalizedWarn("errors.action.deletefolder");
+			else
+				Messages.addLocalizedInfo("msg.action.deleteitem");
 		} catch (Exception e) {
 			Messages.addLocalizedError("errors.action.deleteitem");
 		}
@@ -339,7 +344,7 @@ public class DocumentNavigation extends NavigationBean {
 
 		PageContentBean page = new PageContentBean("advancedSearch", "search/advancedSearch");
 		page.setContentTitle(Messages.getMessage("search.advanced"));
-		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		page.setIcon(style.getImagePath("extsearch.gif"));
 
 		SearchForm form = ((SearchForm) FacesUtil.accessBeanFromFacesContext("searchForm", FacesContext
@@ -398,11 +403,11 @@ public class DocumentNavigation extends NavigationBean {
 
 	public void folderSelected(ActionEvent e) {
 		Directory dir = getDirectoryModel().getSelectedDir();
-		if(dir!=null)
+		if (dir != null)
 			selectDirectory(dir);
 		showFolderSelector = false;
 	}
-	
+
 	public void cancelFolderSelector(ActionEvent e) {
 		directoryModel.cancelSelection();
 		showFolderSelector = false;
