@@ -30,7 +30,6 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
@@ -68,6 +67,10 @@ public class DocumentEditForm {
 	private String versionDesc;
 
 	private String filename;
+
+	private String sourceId;
+
+	private String object;
 
 	private DocumentRecord record;
 
@@ -411,7 +414,7 @@ public class DocumentEditForm {
 
 				Document doc = documentManager.create(file, folder, SessionManagement.getUser(), language, title,
 						getSourceDate(), source, sourceAuthor, sourceType, coverage, versionDesc, kwds, template,
-						attrs, immediateIndexing);
+						attrs, sourceId, object, immediateIndexing);
 				if (StringUtils.isNotEmpty(doc.getCustomId()))
 					Messages.addInfo(Messages.getMessage("document.inserted", doc.getCustomId()));
 			} catch (Exception e) {
@@ -475,9 +478,9 @@ public class DocumentEditForm {
 
 	@SuppressWarnings("deprecation")
 	public String uncheckout() {
-		
-        log.info("uncheckout()");
-        
+
+		log.info("uncheckout()");
+
 		Application application = FacesContext.getCurrentInstance().getApplication();
 		InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
 				FacesContext.getCurrentInstance()));
@@ -487,8 +490,10 @@ public class DocumentEditForm {
 			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
 
 				try {
-//					Unchekout the document; throws an exception if something goes wrong
-					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+					// Unchekout the document; throws an exception if something
+					// goes wrong
+					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
+							DocumentManager.class);
 					documentManager.uncheckout(document.getId(), SessionManagement.getUser());
 
 					/* create positive log message */
@@ -533,7 +538,7 @@ public class DocumentEditForm {
 					// if checkOriginalFileName is selected verify that the
 					// uploaded file has correct fileName
 					if (isCheckOriginalFilename()) {
-						
+
 						if (!CharsetDetector.convert(fileName).equals(document.getFileName())) {
 							log.info("Filename of the checked-in document(" + fileName
 									+ ") is different from the original filename (" + document.getFileName() + ")");
@@ -596,5 +601,21 @@ public class DocumentEditForm {
 
 	public void setDocumentNavigation(DocumentNavigation documentNavigation) {
 		this.documentNavigation = documentNavigation;
+	}
+
+	public String getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(String sourceId) {
+		this.sourceId = sourceId;
+	}
+
+	public String getObject() {
+		return object;
+	}
+
+	public void setObject(String object) {
+		this.object = object;
 	}
 }

@@ -138,6 +138,65 @@ public interface DocumentManager {
 	 * Creates a new Document. Saves the information provided. That also
 	 * includes updating the search index for example.
 	 * 
+	 * @param user
+	 * @param folder
+	 * @param title If not provided the filename must be used instead
+	 * @param file
+	 * @param sourceDate
+	 * @param source
+	 * @param sourceAuthor
+	 * @param sourceType
+	 * @param coverage
+	 * @param language
+	 * @param versionDesc
+	 * @param keywords
+	 * @param templateId
+	 * @param extendedAttributes
+	 * @param sourceId
+	 * @param object
+	 * @param immediateIndexing if true the document is immediately indexed
+	 * @return The created document
+	 * @throws Exception
+	 */
+	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
+			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
+			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, String sourceId,
+			String object, boolean immediateIndexing) throws Exception;
+
+	/**
+	 * Creates a new Document. Saves the information provided. That also
+	 * includes updating the search index for example.
+	 * 
+	 * @param content The document content stream
+	 * @param filename The original document file name
+	 * @param folder
+	 * @param user
+	 * @param language
+	 * @param title If not provided the filename must be used instead
+	 * @param sourceDate
+	 * @param source
+	 * @param sourceAuthor
+	 * @param sourceType
+	 * @param coverage
+	 * @param versionDesc
+	 * @param keywords
+	 * @param templateId
+	 * @param extendedAttributes
+	 * @param sourceId
+	 * @param object
+	 * @param immediateIndexing if true the document is immediately indexed
+	 * @return The created document
+	 * @throws Exception
+	 */
+	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
+			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
+			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
+			String sourceId, String object, boolean immediateIndexing) throws Exception;
+
+	/**
+	 * Creates a new Document. Saves the information provided. That also
+	 * includes updating the search index for example.
+	 * 
 	 * @param content The document content stream
 	 * @param filename The original document file name
 	 * @param folder
