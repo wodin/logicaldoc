@@ -57,6 +57,10 @@ public class Document extends ExtensibleObject {
 
 	private Date sourceDate;
 
+	private String sourceId;
+
+	private String object;
+
 	private Date creation = new Date();
 
 	private String sourceType;
@@ -417,5 +421,21 @@ public class Document extends ExtensibleObject {
 	public void setImmutable(int immutable) {
 		if (this.immutable == 0)
 			this.immutable = immutable;
+	}
+
+	public String getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(String sourceId) {
+		this.sourceId = sourceId;
+	}
+
+	public String getObject() {
+		return object;
+	}
+
+	public void setObject(String object) {
+		this.object = object;
 	}
 }
