@@ -114,7 +114,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 	protected void createMenuItems() {
 		model.clear();
 		Menu folder = document.getFolder();
-		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		model.add(createMenuItem(Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,
 				"#{entry.versions}", null, style.getImagePath("versions.png"), true, "_blank", null));
 		model.add(createMenuItem(Messages.getMessage("msg.jsp.discuss"), "articles-" + folder.getId(), null,
@@ -229,5 +229,13 @@ public class DocumentResult extends DocumentRecord implements Result {
 	@Override
 	public void setSourceDate(Date date) {
 		throw new UnsupportedOperationException("setSourceDate method unsupported");
+	}
+
+	public Date getCreation() {
+		return result.getCreation();
+	}
+
+	public void setCreation(Date creation) {
+		result.setCreation(creation);
 	}
 }

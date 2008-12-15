@@ -84,6 +84,10 @@ public class SearchForm {
 
 	private Date sourceDateTo;
 
+	private Date creationDateFrom;
+
+	private Date creationDateTo;
+
 	private boolean fuzzy = false;
 
 	private boolean content = true;
@@ -503,6 +507,10 @@ public class SearchForm {
 					opt.setSourceDateFrom(getSourceDateFrom());
 					opt.setSourceDateTo(getSourceDateTo());
 				}
+				if ((getCreationDateFrom() != null) && (getCreationDateTo() != null)) {
+					opt.setCreationFrom(getCreationDateFrom());
+					opt.setCreationTo(getCreationDateTo());
+				}
 
 				opt.setLengthMin(getSizeMin());
 				if (getSizeMax() != null && getSizeMax().intValue() > 0)
@@ -610,6 +618,8 @@ public class SearchForm {
 				publishingDateTo = null;
 				sourceDateFrom = null;
 				sourceDateTo = null;
+				creationDateFrom = null;
+				creationDateTo = null;
 				sizeMin = null;
 				sizeMax = null;
 				template = null;
@@ -669,6 +679,8 @@ public class SearchForm {
 		publishingDateTo = null;
 		sourceDateFrom = null;
 		sourceDateTo = null;
+		creationDateFrom = null;
+		creationDateTo = null;
 		sizeMin = null;
 		sizeMax = null;
 		fuzzy = false;
@@ -957,5 +969,32 @@ public class SearchForm {
 		Long item = (Long) event.getNewValue();
 		this.template = item;
 		initTemplate();
+	}
+
+	public Date getCreationDateFrom() {
+		return creationDateFrom;
+	}
+
+	public void setCreationDateFrom(Date creationDateFrom) {
+		this.creationDateFrom = creationDateFrom;
+	}
+
+	public Date getCreationDateTo() {
+		return creationDateTo;
+	}
+
+	public void setCreationDateTo(Date creationDateTo) {
+		if (creationDateTo != null) {
+			// Include all the specified day
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(creationDateTo);
+			cal.set(Calendar.MILLISECOND, 0);
+			cal.set(Calendar.SECOND, 59);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.HOUR, 23);
+			this.creationDateTo = cal.getTime();
+		} else {
+			this.creationDateTo = creationDateTo;
+		}
 	}
 }
