@@ -185,6 +185,41 @@
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="creationDateFrom"
+					value="#{msgs['document.createdfrom']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectInputDate id="creationDateFrom" tabindex="1"
+					popupDateFormat="#{loc.dateFormatShort}"
+					value="#{searchForm.creationDateFrom}"
+					renderAsPopup="true">
+					<f:convertDateTime pattern="#{loc.dateFormatShort}"
+						timeZone="#{timezone}" />
+				</ice:selectInputDate>
+				<br />
+				<ice:message for="creationDateFrom" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+                    &amp;nbsp;
+            </ice:panelGroup>
+			<ice:panelGroup style="text-align:right;">
+				<ice:outputLabel for="creationDateTo" value="#{msgs['date.to']} " />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectInputDate id="creationDateTo" tabindex="1"
+					popupDateFormat="#{loc.dateFormatShort}"
+					value="#{searchForm.creationDateTo}"
+					validator="#{searchForm.validateCreationDates}"
+					renderAsPopup="true">
+					<f:convertDateTime pattern="#{loc.dateFormatShort}"
+						timeZone="#{timezone}" />
+				</ice:selectInputDate>
+				<br />
+				<ice:message for="creationDateTo" />
+			</ice:panelGroup>
+
+
+			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="publishingDateFrom"
 					value="#{msgs['document.publishedfrom']}" />
 			</ice:panelGroup>
@@ -229,7 +264,7 @@
 			<ice:panelGroup>
                     &amp;nbsp;
                 </ice:panelGroup>
-			<ice:panelGroup styleClass="outputLabel">
+			<ice:panelGroup styleClass="outputLabel" style="text-align:right;">
 				<ice:outputLabel for="format" value="#{msgs['msg.jsp.format']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>

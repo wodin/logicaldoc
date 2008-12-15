@@ -149,6 +149,8 @@ public class DocumentEditForm {
 		setCoverage(doc.getCoverage());
 		setSourceType(doc.getSourceType());
 		setFilename(doc.getFileName());
+		setObject(doc.getObject());
+		setSourceId(doc.getSourceId());
 		initTemplate();
 	}
 
@@ -461,7 +463,7 @@ public class DocumentEditForm {
 				Set<String> keywords = ddao.toKeywords(getKeywords());
 
 				documentManager.update(doc, user, title, source, sourceAuthor, sourceDate, sourceType, coverage,
-						language, keywords);
+						language, keywords, sourceId, object);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addError(e.getMessage());
