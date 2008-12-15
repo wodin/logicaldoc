@@ -75,7 +75,7 @@ public class SmtpForm {
 			try {
 				EMailSender sender = getSender();
 
-				PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
+				PropertiesBean pbean = (PropertiesBean)Context.getInstance().getBean("ContextProperties");
 				pbean.setProperty("smtp.host", sender.getHost());
 				pbean.setProperty("smtp.port", Integer.toString(sender.getPort()));
 				pbean.setProperty("smtp.username", StringUtils.isNotEmpty(sender.getUsername()) ? sender.getUsername()

@@ -1,7 +1,6 @@
 package com.logicaldoc.web;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -75,9 +74,8 @@ public class LoginForm {
 			String timezone = Calendar.getInstance().getTimeZone().getID();
 			session.put(Constants.TIMEZONE, timezone);
 
-			
-			StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
-			
+			StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
+
 			// Show the home page
 			PageContentBean content = new PageContentBean("home", "home");
 			content.setContentTitle(Messages.getMessage("home"));
@@ -134,8 +132,7 @@ public class LoginForm {
 	}
 
 	/**
-	 * @param j_password
-	 *            the j_password to set
+	 * @param j_password the j_password to set
 	 */
 	public void setJ_password(String j_password) {
 		this.j_password = j_password;
@@ -149,8 +146,7 @@ public class LoginForm {
 	}
 
 	/**
-	 * @param language
-	 *            the language to set
+	 * @param language the language to set
 	 */
 	public void setLanguage(String language) {
 		this.language = language;
@@ -164,8 +160,7 @@ public class LoginForm {
 	}
 
 	/**
-	 * @param j_username
-	 *            the j_username to set
+	 * @param j_username the j_username to set
 	 */
 	public void setJ_username(String j_username) {
 		this.j_username = j_username;
@@ -179,22 +174,18 @@ public class LoginForm {
 
 		if ((setupPerformed != null) && (setupPerformed.booleanValue() == true))
 			return false;
-			
-		try {
-			PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
-			String jdbcUrl = pbean.getProperty("jdbc.url");
-			if (StringUtils.isNotEmpty(jdbcUrl)) {
-				if (jdbcUrl.equals("jdbc:hsqldb:mem:logicaldoc")) {
-					return true;
-				}else {
-					setupPerformed = new Boolean(true);
-					return false;
-				}
+
+		PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		String jdbcUrl = pbean.getProperty("jdbc.url");
+		if (StringUtils.isNotEmpty(jdbcUrl)) {
+			if (jdbcUrl.equals("jdbc:hsqldb:mem:logicaldoc")) {
+				return true;
+			} else {
+				setupPerformed = new Boolean(true);
+				return false;
 			}
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
 		}
-		
+
 		return true;
 	}
 

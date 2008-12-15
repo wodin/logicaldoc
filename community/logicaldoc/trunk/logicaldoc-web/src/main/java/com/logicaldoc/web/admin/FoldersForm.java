@@ -69,7 +69,7 @@ public class FoldersForm {
                 conf.setValue("indexdir", indexDir);
                 conf.setValue("userdir", userDir);
 
-                PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
+                PropertiesBean pbean = (PropertiesBean)Context.getInstance().getBean("ContextProperties");
     			pbean.setProperty("conf.docdir", docDir);
     			pbean.setProperty("conf.indexdir", indexDir);
     			pbean.setProperty("conf.userdir", userDir);

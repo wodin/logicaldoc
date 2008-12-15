@@ -13,8 +13,7 @@ import org.quartz.Scheduler;
 /**
  * Scheduling configuration for a Task
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.5.0
  */
 public class TaskScheduling {
@@ -148,7 +147,7 @@ public class TaskScheduling {
 	 * Loads scheduling configurations from persistent storage
 	 */
 	public void load() throws IOException, ParseException {
-		PropertiesBean config = new PropertiesBean();
+		PropertiesBean config = (PropertiesBean)Context.getInstance().getBean("ContextProperties");
 		String enbl = config.getProperty("schedule.enabled." + taskName);
 		this.enabled = "true".equals(enbl);
 		setCronExpression(config.getProperty("schedule.cron." + taskName));
@@ -175,7 +174,7 @@ public class TaskScheduling {
 			
 		}
 
-		PropertiesBean config = new PropertiesBean();
+		PropertiesBean config = (PropertiesBean)Context.getInstance().getBean("ContextProperties");
 		config.setProperty("schedule.cron." + taskName, expression);
 		config.setProperty("schedule.enabled." + taskName, enabled ? "true" : "false");
 		config.setProperty("schedule.length." + taskName, Long.toString(maxLength));
