@@ -12,7 +12,6 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:c="http://java.sun.com/jstl/core"
     xmlns:fn="http://java.sun.com/jsp/jstl/functions" jsfc="f:view" locale="#{language}">
-    <f:loadBundle basename="context" var="context" />
     <f:loadBundle basename="i18n.application" var="msgs" />
     <ice:outputDeclaration doctypeRoot="html"
         doctypePublic="-//W3C//DTD XHTML 1.0 Transitional//EN"

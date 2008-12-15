@@ -25,7 +25,7 @@
 			<ice:panelGrid columns="2">
 				<ice:panelGroup>
 					<b><ice:outputFormat value="#{messages['msg.jsp.osinfo']}">
-							<f:param value="#{context['product.name']}" />
+							<f:param value="#{ContextProperties['product.name']}" />
 						</ice:outputFormat>
 					</b>
 				</ice:panelGroup>
