@@ -137,12 +137,13 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, java.lang.String, java.lang.String,
 	 *      java.lang.String, java.lang.String, java.lang.String,
 	 *      java.lang.String, java.lang.String, javax.activation.DataHandler,
-	 *      java.lang.String, java.lang.String[], java.lang.String[])
+	 *      java.lang.String, com.logicaldoc.webservice.ExtendedAttribute[],
+	 *      java.lang.String, java.lang.String)
 	 */
 	public String createDocument(String username, String password, long folderId, String docTitle, String source,
 			String sourceDate, String author, String sourceType, String coverage, String language, String keywords,
 			String versionDesc, String filename, DataHandler content, String templateName,
-			ExtendedAttribute[] extendedAttributes) throws Exception {
+			ExtendedAttribute[] extendedAttributes, String sourceId, String object) throws Exception {
 
 		checkCredentials(username, password);
 
@@ -194,7 +195,7 @@ public class DmsServiceImpl implements DmsService {
 		try {
 			Document doc = documentManager.create(stream, filename, folder, user, language, null, date, source, author,
 					sourceType, coverage, versionDesc, kwds, template != null ? template.getId() : null, attributes,
-					false);
+					sourceId, object, false);
 			return String.valueOf(doc.getId());
 		} catch (Exception e) {
 			return "error";
@@ -319,6 +320,9 @@ public class DmsServiceImpl implements DmsService {
 		info.setPublisher(doc.getPublisher());
 		info.setCoverage(doc.getCoverage());
 		info.setFilename(doc.getFileName());
+		info.setCustomId(doc.getCustomId());
+		info.setSourceId(doc.getSourceId());
+		info.setObject(doc.getObject());
 
 		if (doc.getTemplate() != null) {
 			// Insert template infos
@@ -471,6 +475,7 @@ public class DmsServiceImpl implements DmsService {
 			newRes.setLength((int) res.getSize());
 			newRes.setType(res.getType());
 			newRes.setScore(res.getScore());
+			newRes.setCustomId(res.getCustomId());
 			result.add(newRes);
 		}
 

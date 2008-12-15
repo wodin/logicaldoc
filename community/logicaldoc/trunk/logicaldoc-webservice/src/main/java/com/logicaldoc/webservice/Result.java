@@ -3,8 +3,7 @@ package com.logicaldoc.webservice;
 /**
  * A single search result match
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Object
  * @since 3.0
  */
 public class Result {
@@ -21,6 +20,8 @@ public class Result {
 	private int length;
 
 	private int score = 0;
+	
+	private String customId;
 
 	public String getDate() {
 		return date;
@@ -76,5 +77,13 @@ public class Result {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	public String getCustomId() {
+		return customId;
+	}
+
+	public void setCustomId(String customId) {
+		this.customId = customId;
 	}
 }

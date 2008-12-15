@@ -68,7 +68,8 @@ public interface DmsService {
 	 * @param content
 	 * @param templateName
 	 * @param templateFields
-	 * @param templateValues
+	 * @param sourceId
+	 * @param object
 	 * @return The document identifier or 'error' if some errors occurred)
 	 * @throws Exception
 	 */
@@ -88,7 +89,9 @@ public interface DmsService {
 	String filename, @WebParam(name = "content")
 	DataHandler content, @WebParam(name = "templateName")
 	String templateName, @WebParam(name = "templateFields")
-	ExtendedAttribute[] extendedAttributes) throws Exception;
+	ExtendedAttribute[] extendedAttributes, @WebParam(name = "sourceId")
+	String sourceId, @WebParam(name = "object")
+	String object) throws Exception;
 
 	/**
 	 * Downloads a document. The document content is sent as attachment

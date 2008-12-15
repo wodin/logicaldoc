@@ -3,8 +3,7 @@ package com.logicaldoc.webservice;
 /**
  * Value object containing metadata about an element contained in the folder
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Object
  * @since 3.0
  */
 public class Content {

@@ -9,8 +9,7 @@ import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 /**
  * This class provides initialisations needed by this plug-in
  * 
- * @author Matteo Caruso
- * @version $Id:$
+ * @author Matteo Caruso - Logical Object
  * @since 3.6
  * 
  */

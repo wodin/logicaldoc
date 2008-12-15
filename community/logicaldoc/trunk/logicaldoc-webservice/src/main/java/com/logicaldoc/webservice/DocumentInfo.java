@@ -3,8 +3,7 @@ package com.logicaldoc.webservice;
 /**
  * Document's metadata
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Object
  * @since 3.0
  */
 public class DocumentInfo {
@@ -41,6 +40,12 @@ public class DocumentInfo {
 	private ExtendedAttribute[] extendedAttribute;
 
 	private VersionInfo[] version = new VersionInfo[] {};
+	
+	private String customId;
+	
+	private String sourceId;
+	
+	private String object;
 
 	public long getId() {
 		return id;
@@ -184,5 +189,29 @@ public class DocumentInfo {
 
 	public void setFilename(String fileName) {
 		this.filename = fileName;
+	}
+
+	public String getCustomId() {
+		return customId;
+	}
+
+	public void setCustomId(String customId) {
+		this.customId = customId;
+	}
+	
+	public String getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(String sourceId) {
+		this.sourceId = sourceId;
+	}
+
+	public String getObject() {
+		return object;
+	}
+
+	public void setObject(String object) {
+		this.object = object;
 	}
 }
