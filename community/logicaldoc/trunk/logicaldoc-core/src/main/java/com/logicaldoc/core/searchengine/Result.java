@@ -5,8 +5,7 @@ import java.util.Date;
 /**
  * Search result
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.5
  */
 public interface Result {
@@ -47,6 +46,10 @@ public interface Result {
 	public void setTitle(String title);
 
 	public void setDate(Date date);
+	
+	public void setCustomId(String customId);
+	
+	public String getCustomId();
 	
 	public void setCreation(Date creation);
 
