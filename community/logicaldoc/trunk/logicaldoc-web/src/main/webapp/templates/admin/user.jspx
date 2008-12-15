@@ -162,7 +162,7 @@
 				<ice:panelGroup style="width:20px" />
 				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="email"
-						value="#{msgs['msg.jsp.adduser.email']}*" />
+						value="#{msgs['email']}*" />
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="email" value="#{userForm.user.email}"
