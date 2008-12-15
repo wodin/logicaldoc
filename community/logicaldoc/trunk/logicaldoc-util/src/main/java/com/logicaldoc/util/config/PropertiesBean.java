@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,39 +17,40 @@ import org.apache.commons.logging.LogFactory;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class PropertiesBean {
-	private Properties props=new OrderedProperties();
+public class PropertiesBean extends OrderedProperties {
+
+	private static final long serialVersionUID = 1L;
 
 	/** this points to an ordinary file */
 	private String docPath;
 
 	protected static Log log = LogFactory.getLog(PropertiesBean.class);
 
-	public PropertiesBean() throws IOException{
+	public PropertiesBean() throws IOException {
 		this(PropertiesBean.class.getClassLoader().getResource("context.properties"));
 	}
-	
+
 	public PropertiesBean(String docname) throws IOException {
 		docPath = docname;
 		try {
-			props.load(new FileInputStream(docPath));
+			load(new FileInputStream(docPath));
 		} catch (IOException e) {
-			log.error("Unable to read from " + docPath,e);
+			log.error("Unable to read from " + docPath, e);
 			throw e;
 		}
 	}
 
 	public PropertiesBean(URL docname) throws IOException {
 		try {
-			docPath = URLDecoder.decode(docname.getPath(),"UTF-8");
+			docPath = URLDecoder.decode(docname.getPath(), "UTF-8");
 		} catch (IOException e) {
-			log.error("Unable to read from " + docPath,e);
+			log.error("Unable to read from " + docPath, e);
 			throw e;
 		}
 		try {
-			props.load(new FileInputStream(docPath));
+			load(new FileInputStream(docPath));
 		} catch (IOException e) {
-			log.error("Unable to read from " + docPath,e);
+			log.error("Unable to read from " + docPath, e);
 			throw e;
 		}
 	}
@@ -58,36 +58,24 @@ public class PropertiesBean {
 	public PropertiesBean(File doc) throws IOException {
 		try {
 			docPath = doc.getPath();
-			props.load(new FileInputStream(docPath));
+			load(new FileInputStream(docPath));
 		} catch (IOException e) {
-			log.error("Unable to read from " + docPath,e);
+			log.error("Unable to read from " + docPath, e);
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * Creates new XMLBean from an input stream; XMLBean is read-only!!!
 	 */
 	public PropertiesBean(InputStream is) throws IOException {
 		docPath = null;
 		try {
-			props.load(is);
+			load(is);
 		} catch (IOException e) {
 			log.error("Unable to read from stream");
 			throw e;
 		}
-	}
-
-	public String getProperty(String key) {
-		return props.getProperty(key);
-	}
-
-	public void setProperty(String key, String value) {
-		props.setProperty(key, value);
-	}
-
-	public void removeProperty(String key) {
-		props.remove(key);
 	}
 
 	/**
@@ -103,9 +91,9 @@ public class PropertiesBean {
 		if (docPath == null)
 			throw new IOException("Path not given");
 
-		props.store(new FileOutputStream(docPath), "");
+		store(new FileOutputStream(docPath), "");
 		try {
-			props.store(new FileOutputStream(docPath), "");
+			store(new FileOutputStream(docPath), "");
 		} catch (IOException ex) {
 			if (log.isWarnEnabled()) {
 				log.warn(ex.getMessage());
