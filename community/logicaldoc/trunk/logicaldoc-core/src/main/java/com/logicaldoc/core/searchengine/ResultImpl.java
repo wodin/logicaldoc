@@ -21,6 +21,8 @@ public class ResultImpl implements Serializable, Result {
 
 	private String icon = "";
 
+	private String customId;
+
 	private long size = 0;
 
 	private Date date = new Date();
@@ -320,5 +322,15 @@ public class ResultImpl implements Serializable, Result {
 
 	public void setCreation(Date creation) {
 		this.creation = creation;
+	}
+
+	@Override
+	public String getCustomId() {
+		return customId;
+	}
+
+	@Override
+	public void setCustomId(String customId) {
+		this.customId = customId;
 	}
 }
