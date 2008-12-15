@@ -29,8 +29,10 @@ public class IconSelector {
 			icon = "picture.gif";
 		else if (ext.equals("htm") || ext.equals("html") || ext.equals("xml"))
 			icon = "internet.gif";
-        else if (ext.equals("mail"))
+        else if (ext.equals("mail"))       	
             icon = "mail.gif";
+        else if (ext.equals("dwg"))       	
+            icon = "dwg.gif";
         else
 			icon = "document.gif";
 		
