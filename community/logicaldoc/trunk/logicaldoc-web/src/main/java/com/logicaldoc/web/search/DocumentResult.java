@@ -238,4 +238,9 @@ public class DocumentResult extends DocumentRecord implements Result {
 	public void setCreation(Date creation) {
 		result.setCreation(creation);
 	}
+	
+	@Override
+	public void setCustomId(String customId) {
+		result.setCustomId(customId);
+	}
 }
