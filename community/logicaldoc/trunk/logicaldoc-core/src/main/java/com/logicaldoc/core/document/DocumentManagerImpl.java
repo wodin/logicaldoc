@@ -757,7 +757,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			String path = getDocFilePath(doc);
 
 			/* store the document */
-			store(doc, content, filename, "1.0");
+			store(doc, content, doc.getFileName(), "1.0");
 
 			createHistoryEntry(doc.getId(), user, History.STORED, "");
 
