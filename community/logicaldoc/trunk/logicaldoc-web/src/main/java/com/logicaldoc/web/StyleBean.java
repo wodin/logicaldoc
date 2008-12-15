@@ -1,6 +1,5 @@
 package com.logicaldoc.web;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -13,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
 
 /**
@@ -88,8 +88,8 @@ public class StyleBean {
 		initTimeZone();
 
 		try {
-			PropertiesBean context = new PropertiesBean();
-            String sk = context.getProperty("skin");
+			PropertiesBean context = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			String sk = context.getProperty("skin");
 			productName = context.getProperty("skin." + sk + ".product.name");
 			if (StringUtils.isEmpty(productName))
 				productName = context.getProperty("product.name");

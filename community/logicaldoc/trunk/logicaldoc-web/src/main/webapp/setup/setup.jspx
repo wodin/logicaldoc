@@ -1,14 +1,12 @@
 <!-- 
  Setup page
   
- @author Alessandro Gasparini
- @version $Id:$
+ @author Alessandro Gasparini - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ice="http://www.icesoft.com/icefaces/component" jsfc="f:view" locale="#{language}">
-	<f:loadBundle basename="context" var="context" />
 	<f:loadBundle basename="i18n.application" var="msgs" />
 	<ice:outputDeclaration doctypeRoot="html"
 		doctypePublic="-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -224,7 +222,7 @@
 									<ice:panelGroup rendered="#{setupWizard.setupSuccess}">
 										<h3 style="font-size: 10pt;">
 										   <ice:outputFormat value="#{msgs['setup.success']}" >
-										     <f:param value="#{context['product.name']}" />
+										     <f:param value="#{ContextProperties['product.name']}" />
 										   </ice:outputFormat>
 										</h3>
 										<br />
