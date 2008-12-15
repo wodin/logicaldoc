@@ -33,6 +33,8 @@ public interface Result {
 	public int getLengthCategory();
 
 	public Date getDate();
+	
+	public Date getCreation();
 
 	public int getDateCategory();
 
@@ -45,6 +47,8 @@ public interface Result {
 	public void setTitle(String title);
 
 	public void setDate(Date date);
+	
+	public void setCreation(Date creation);
 
 	public void setSourceDate(Date date);
 	

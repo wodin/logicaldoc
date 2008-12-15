@@ -26,6 +26,8 @@ public class LuceneDocument {
 
 	public static final String FIELD_SOURCE_TYPE = "sourceType";
 
+	public static final String FIELD_CREATION = "creation";
+
 	public static final String FIELD_DATE = "date";
 
 	public static final String FIELD_SOURCE_DATE = "sourceDate";
@@ -120,6 +122,8 @@ public class LuceneDocument {
 				.getSourceDate()) : "", Field.Store.YES, Field.Index.UN_TOKENIZED));
 		doc.add(new Field(FIELD_DATE, document.getDate() != null ? DateBean.toCompactString(document.getDate()) : "",
 				Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field(FIELD_CREATION, document.getCreation() != null ? DateBean.toCompactString(document
+				.getCreation()) : "", Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
 	protected void setPath() {

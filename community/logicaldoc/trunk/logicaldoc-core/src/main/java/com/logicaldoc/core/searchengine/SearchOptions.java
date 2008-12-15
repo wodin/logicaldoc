@@ -41,6 +41,10 @@ public class SearchOptions {
 
 	private Date sourceDateTo = null;
 
+	private Date creationFrom = null;
+
+	private Date creationTo = null;
+
 	private Long template = null;
 
 	/** Creates a new instance of SearchOptions */
@@ -153,14 +157,6 @@ public class SearchOptions {
 		this.languages = languages;
 	}
 
-	public Date getCreationDateFrom() {
-		return dateFrom;
-	}
-
-	public void setDateFrom(Date dateFrom) {
-		this.dateFrom = dateFrom;
-	}
-
 	public Date getDateTo() {
 		return dateTo;
 	}
@@ -215,5 +211,29 @@ public class SearchOptions {
 
 	public void setSearchInSubPath(boolean searchInSubPath) {
 		this.searchInSubPath = searchInSubPath;
+	}
+
+	public Date getCreationTo() {
+		return creationTo;
+	}
+
+	public void setCreationTo(Date creationTo) {
+		this.creationTo = creationTo;
+	}
+
+	public Date getCreationFrom() {
+		return creationFrom;
+	}
+
+	public void setCreationFrom(Date creationFrom) {
+		this.creationFrom = creationFrom;
+	}
+
+	public Date getDateFrom() {
+		return dateFrom;
+	}
+
+	public void setDateFrom(Date dateFrom) {
+		this.dateFrom = dateFrom;
 	}
 }
