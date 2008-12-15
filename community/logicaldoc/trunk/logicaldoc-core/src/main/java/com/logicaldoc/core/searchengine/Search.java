@@ -189,6 +189,7 @@ public class Search {
 					result.setSize(Long.parseLong(size));
 					result.setDate(DateBean.dateFromCompactString(doc.get(LuceneDocument.FIELD_DATE)));
 					result.setSourceDate(DateBean.dateFromCompactString(doc.get(LuceneDocument.FIELD_SOURCE_DATE)));
+					result.setCreation(DateBean.dateFromCompactString(doc.get(LuceneDocument.FIELD_CREATION)));
 					result.setType(doc.get(LuceneDocument.FIELD_TYPE));
 					result.setSummary(summary);
 					result.createScore(hits.score(i));

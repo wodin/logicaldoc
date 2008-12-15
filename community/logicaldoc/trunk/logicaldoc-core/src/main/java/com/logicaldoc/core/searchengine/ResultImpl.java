@@ -27,6 +27,8 @@ public class ResultImpl implements Serializable, Result {
 
 	private Date sourceDate = null;
 
+	private Date creation = null;
+
 	private Integer length = new Integer(0);
 
 	private Integer score = new Integer(0);
@@ -178,15 +180,23 @@ public class ResultImpl implements Serializable, Result {
 		if (opt.getLengthMax() != null && size > opt.getLengthMax().intValue())
 			result = false;
 
-		if (opt.getCreationDateFrom() != null) {
-			long diff = opt.getCreationDateFrom().getTime() - date.getTime();
-			if (diff > 0)
+		if (opt.getCreationFrom() != null) {
+			if (creation.before(opt.getCreationFrom()))
+				result = false;
+		}
+
+		if (opt.getCreationTo() != null) {
+			if (creation.after(opt.getDateTo()))
 				result = false;
 		}
 
 		if (opt.getDateTo() != null) {
-			long diff = opt.getDateTo().getTime() - date.getTime();
-			if (diff < 0)
+			if (date.after(opt.getDateTo()))
+				result = false;
+		}
+
+		if (opt.getDateFrom() != null && date != null) {
+			if (date.before(opt.getDateFrom()))
 				result = false;
 		}
 
@@ -204,6 +214,8 @@ public class ResultImpl implements Serializable, Result {
 	}
 
 	/**
+	 * o
+	 * 
 	 * @see com.logicaldoc.core.searchengine.search.Result#getLengthCategory()
 	 */
 	public int getLengthCategory() {
@@ -300,5 +312,13 @@ public class ResultImpl implements Serializable, Result {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+
+	public Date getCreation() {
+		return creation;
+	}
+
+	public void setCreation(Date creation) {
+		this.creation = creation;
 	}
 }

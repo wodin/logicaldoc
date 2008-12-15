@@ -309,11 +309,13 @@ public interface DocumentManager {
 	 * @param coverage
 	 * @param language
 	 * @param keywords
+	 * @param sourceId
+	 * @param object
 	 * @param immediateIndexing If true the document is immediately indexed
 	 * @throws Exception
 	 */
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
-			String sourceType, String coverage, String language, Set<String> keywords) throws Exception;
+			String sourceType, String coverage, String language, Set<String> keywords, String sourceId, String object) throws Exception;
 
 	/**
 	 * Retrieves the full-text document content

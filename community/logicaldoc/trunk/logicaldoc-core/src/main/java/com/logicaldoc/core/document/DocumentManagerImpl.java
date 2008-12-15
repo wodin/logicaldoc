@@ -321,11 +321,13 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
-			String sourceType, String coverage, String language, Set<String> keywords) throws Exception {
+			String sourceType, String coverage, String language, Set<String> keywords, String sourceId, String object) throws Exception {
 		try {
 			if (doc.getImmutable() == 0) {
 				doc.setTitle(title);
 				doc.setSource(source);
+				doc.setSourceId(sourceId);
+				doc.setObject(object);
 				doc.setSourceAuthor(sourceAuthor);
 				if (sourceDate != null)
 					doc.setSourceDate(sourceDate);
