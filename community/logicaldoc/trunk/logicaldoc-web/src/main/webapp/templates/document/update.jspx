@@ -137,6 +137,31 @@
 		</h3>
 		<ice:panelGrid columns="5">
 			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="sourceDate" value="#{msgs['msg.jsp.date']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectInputDate id="sourceDate" tabindex="1"
+					popupDateFormat="#{loc.dateFormatShort}"
+					value="#{documentForm.sourceDate}" renderAsPopup="true"
+					rendered="#{!documentForm.readOnly}">
+					<f:convertDateTime pattern="#{loc.dateFormatShort}"
+						timeZone="#{timezone}" />
+				</ice:selectInputDate>
+				<br />
+				<ice:message for="sourceDate" />
+			</ice:panelGroup>
+			<ice:panelGroup style="width:20px" />
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="sourceId"
+					value="#{msgs['document.sourceid']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="sourceId" tabindex="1"
+					value="#{documentForm.sourceId}" maxlength="255"
+					onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="source" value="#{msgs['document.source']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
@@ -179,21 +204,6 @@
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="sourceDate" value="#{msgs['msg.jsp.date']}" />
-			</ice:panelGroup>
-			<ice:panelGroup>
-				<ice:selectInputDate id="sourceDate" tabindex="1"
-					popupDateFormat="#{loc.dateFormatShort}"
-					value="#{documentForm.sourceDate}" renderAsPopup="true"
-					rendered="#{!documentForm.readOnly}">
-					<f:convertDateTime pattern="#{loc.dateFormatShort}"
-						timeZone="#{timezone}" />
-				</ice:selectInputDate>
-				<br />
-				<ice:message for="sourceDate" />
-			</ice:panelGroup>
-			<ice:panelGroup style="width:20px" />
-			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="language"
 					value="#{msgs['msg.jsp.login.language']}" />
 			</ice:panelGroup>
@@ -204,6 +214,9 @@
 					<f:selectItems value="#{selectionTags.languages}" />
 				</ice:selectOneMenu>
 			</ice:panelGroup>
+			<ice:panelGroup style="width:20px" />
+			<ice:panelGroup />
+			<ice:panelGroup />
 		</ice:panelGrid>
 	</ice:panelGroup>
 
