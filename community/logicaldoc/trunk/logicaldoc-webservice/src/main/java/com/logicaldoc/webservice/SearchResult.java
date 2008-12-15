@@ -3,8 +3,7 @@ package com.logicaldoc.webservice;
 /**
  * Represents a search result
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Object
  * @since 3.0
  */
 public class SearchResult {

@@ -11,8 +11,7 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 /**
  * Web Service client.
  * 
- * @author Matteo Caruso
- * @version $Id:$
+ * @author Matteo Caruso - Logical Object
  * @since 3.6
  */
 public class DmsClient implements DmsService {
@@ -41,9 +40,10 @@ public class DmsClient implements DmsService {
 	public String createDocument(String username, String password, long folder, String docTitle, String source,
 			String sourceDate, String author, String sourceType, String coverage, String language, String keywords,
 			String versionDesc, String filename, DataHandler content, String templateName,
-			ExtendedAttribute[] extendedAttribute) throws Exception {
+			ExtendedAttribute[] extendedAttribute, String sourceId, String object) throws Exception {
 		return client.createDocument(username, password, folder, docTitle, source, sourceDate, author, sourceType,
-				coverage, language, keywords, versionDesc, filename, content, templateName, extendedAttribute);
+				coverage, language, keywords, versionDesc, filename, content, templateName, extendedAttribute,
+				sourceId, object);
 	}
 
 	public String createFolder(String username, String password, String name, long parent) throws Exception {
@@ -72,7 +72,8 @@ public class DmsClient implements DmsService {
 
 	public SearchResult search(String username, String password, String query, String indexLanguage,
 			String queryLanguage, int maxHits, String templateName, String[] templateFields) throws Exception {
-		return client.search(username, password, query, indexLanguage, queryLanguage, maxHits, templateName, templateFields);
+		return client.search(username, password, query, indexLanguage, queryLanguage, maxHits, templateName,
+				templateFields);
 	}
 
 }

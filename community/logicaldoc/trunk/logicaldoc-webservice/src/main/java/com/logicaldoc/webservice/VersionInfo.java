@@ -3,8 +3,7 @@ package com.logicaldoc.webservice;
 /**
  * Version informations
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Object
  * @since 3.0
  */
 public class VersionInfo {
