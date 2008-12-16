@@ -199,13 +199,13 @@ public class PopulateDatabase {
 			insertMenu = con
 					.prepareStatement("INSERT INTO LD_MENU (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_TEXT,LD_PARENTID,LD_SORT,LD_ICON,LD_PATH,LD_PATHEXTENDED,LD_TYPE,LD_REF,LD_SIZE) VALUES (?,?,0,?,?,?,?,?,?,?,?,?);");
 			insertMenuGroup = con
-					.prepareStatement("INSERT INTO LD_MENUGROUP (LD_MENUID,LD_GROUPID,LD_WRITE,LD_ADDCHILD,LD_MANAGESECURITY,LD_DELETE,LD_RENAME) VALUES (?,?,?,1,1,1,1);");
+					.prepareStatement("INSERT INTO LD_MENUGROUP (LD_MENUID,LD_GROUPID,LD_WRITE,LD_ADDCHILD,LD_MANAGESECURITY,LD_MANAGEIMMUTABILITY,LD_DELETE,LD_RENAME, LD_BULKIMPORT, LD_BULKEXPORT) VALUES (?,?,?,1,1,1,1,1,1,1);");
 			insertDoc = con
-					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_STATUS,LD_TYPE,LD_CHECKOUTUSER,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_INDEXED,LD_FOLDERID,LD_CREATION,LD_IMMUTABLE) VALUES (?,?,0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,0);");
+					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_STATUS,LD_TYPE,LD_CHECKOUTUSER,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_INDEXED,LD_FOLDERID,LD_CREATION,LD_IMMUTABLE,LD_DIGEST) VALUES (?,?,0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,0,?);");
 			insertKeyword = con.prepareStatement("INSERT INTO LD_KEYWORD (LD_DOCID,LD_KEYWORD) VALUES (?,?);");
 			insertVersion = con
-					.prepareStatement("INSERT INTO LD_VERSION  (LD_DOCID, LD_VERSION, LD_USER, LD_DATE, LD_COMMENT)"
-							+ "VALUES (?,?,?,?,?);");
+					.prepareStatement("INSERT INTO LD_VERSION  (LD_DOCID, LD_VERSION, LD_USERID, LD_USERNAME, LD_DATE, LD_COMMENT)"
+							+ "VALUES (?,?,?,?,?,?);");
 
 			initExistingIds();
 			addDocuments(rootFolder, "/");
@@ -346,6 +346,8 @@ public class PopulateDatabase {
 		insertDoc.setLong(18, folderId);
 		// LD_CREATION
 		insertDoc.setDate(19, new Date(new java.util.Date().getTime()));
+		// LD_DIGEST
+		insertDoc.setString(20, Util.computeDigest(docFile));
 
 		insertDoc.addBatch();
 		batchCount++;
@@ -370,12 +372,14 @@ public class PopulateDatabase {
 		insertVersion.setLong(1, id);
 		// LD_VERSION
 		insertVersion.setString(2, "1.0");
-		// LD_USER
-		insertVersion.setString(3, "admin");
+		// LD_USERID
+		insertVersion.setLong(3, 1);
+		// LD_USERNAME
+		insertVersion.setString(4, "admin");
 		// LD_DATE
-		insertVersion.setDate(4, new Date(docFile.lastModified()));
+		insertVersion.setDate(5, new Date(docFile.lastModified()));
 		// LD_COMMENT
-		insertVersion.setString(5, "initial version");
+		insertVersion.setString(6, "initial version");
 		insertVersion.addBatch();
 
 		return id;
