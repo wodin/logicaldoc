@@ -615,7 +615,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public List<Document> findDeletedDocs() {
 		List<Document> coll = new ArrayList<Document>();
 		try {
-			String query = "select A.ld_id, A.ld_lastModified, A.ld_title from ld_document A where A.ld_deleted=1 order by A.ld_lastmodified desc";
+			String query = "select A.ld_id, A.ld_customid, A.ld_lastModified, A.ld_title from ld_document A where A.ld_deleted=1 order by A.ld_lastmodified desc";
 			Connection con = null;
 			Statement stmt = null;
 			ResultSet rs = null;
@@ -626,8 +626,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				while (rs.next()) {
 					Document doc = new Document();
 					doc.setId(rs.getLong(1));
-					doc.setLastModified(rs.getDate(2));
-					doc.setTitle(rs.getString(3));
+					doc.setCustomId(rs.getString(2));
+					doc.setLastModified(rs.getDate(3));
+					doc.setTitle(rs.getString(4));
 					coll.add(doc);
 				}
 			} finally {
