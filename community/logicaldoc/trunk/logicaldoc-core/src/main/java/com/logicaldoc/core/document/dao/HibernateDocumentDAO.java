@@ -34,6 +34,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.io.FileUtil;
 
 /**
  * Hibernate implementation of <code>DocumentDAO</code>
@@ -198,22 +199,27 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			doc.setFileName(CharsetDetector.convert(doc.getFileName()));
 
-			File docFile = new File(
-					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
-							.getFileName()));
-			if (docFile.exists()) {
-				long size = docFile.length();
-				doc.setFileSize(size);
-			}
-
 			Map<String, Object> dictionary = new HashMap<String, Object>();
 
 			log.debug("Invoke listeners before store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
 				listener.beforeStore(doc, dictionary);
 			}
+
 			// Save the document
 			getHibernateTemplate().saveOrUpdate(doc);
+
+			// Update size and digest
+			File docFile = new File(
+					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
+							.getFileName()));
+			if (docFile.exists()) {
+				System.out.println("path " + docFile.getPath());
+				long size = docFile.length();
+				doc.setFileSize(size);
+				doc.setDigest(FileUtil.computeDigest(docFile));
+				getHibernateTemplate().saveOrUpdate(doc);
+			}
 
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
@@ -222,7 +228,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			// Perhaps some listener may have modified the document
 			getHibernateTemplate().saveOrUpdate(doc);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 			result = false;
@@ -278,7 +284,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				}
 				query.append(") and lower(B.ld_keyword) like '");
 				query.append(firstLetter.toLowerCase()).append("%' ");
-				
+
 				Connection con = null;
 				Statement stmt = null;
 				ResultSet rs = null;

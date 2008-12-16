@@ -1,8 +1,12 @@
 package com.logicaldoc.testbench;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -13,9 +17,13 @@ import java.util.StringTokenizer;
 import javax.swing.JEditorPane;
 import javax.swing.text.DefaultEditorKit;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.tartarus.snowball.SnowballProgram;
 
 public class Util {
+
+	protected static Log log = LogFactory.getLog(Util.class);
 
 	private final static String[] GERMAN_STOP_WORDS = { "der", "die", "das", "dass", "daß", "ein", "dies", "dem",
 			"den", "des", "zu", "zum", "zur", "eine", "einer", "einem", "einen", "eines", "auf", "aus", "am", "im",
@@ -128,6 +136,8 @@ public class Util {
 
 	private static Map<String, String[]> stopwordsMap = new HashMap<String, String[]>();
 
+	static final int BUFF_SIZE = 100000;
+
 	static {
 		stopwordsMap.put("en", ENGLISH_STOP_WORDS);
 		stopwordsMap.put("de", GERMAN_STOP_WORDS);
@@ -215,5 +225,53 @@ public class Util {
 			ex.printStackTrace();
 		}
 		return content;
+	}
+
+	/**
+	 * This method calculates the digest of a file using the algorithm SHA-1.
+	 * 
+	 * @param file The file for which will be computed the digest
+	 * @return digest
+	 */
+	public static String computeDigest(File file) {
+		String digest = "";
+		InputStream is = null;
+		MessageDigest sha = null;
+
+		try {
+			is = new BufferedInputStream(new FileInputStream(file), BUFF_SIZE);
+			if (is != null) {
+				sha = MessageDigest.getInstance("SHA-1");
+				byte[] message = new byte[BUFF_SIZE];
+				int len = 0;
+				while ((len = is.read(message)) != -1) {
+					sha.update(message, 0, len);
+				}
+				byte[] messageDigest = sha.digest();
+				// convert the array to String
+				int size = messageDigest.length;
+				StringBuffer buf = new StringBuffer();
+				int unsignedValue = 0;
+				String strUnsignedValue = null;
+				for (int i = 0; i < size; i++) {
+					// convert each messageDigest byte to unsigned
+					unsignedValue = ((int) messageDigest[i]) & 0xff;
+					strUnsignedValue = Integer.toHexString(unsignedValue);
+					// at least two letters
+					if (strUnsignedValue.length() == 1)
+						buf.append("0");
+					buf.append(strUnsignedValue);
+				}
+				digest = buf.toString();
+				log.info("Computed Digest: " + digest);
+
+				return digest;
+			}
+		} catch (IOException io) {
+			log.error("Error generating digest: ", io);
+		} catch (Throwable t) {
+			log.error("Error generating digest: ", t);
+		}
+		return null;
 	}
 }

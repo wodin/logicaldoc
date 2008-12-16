@@ -84,6 +84,8 @@ public class Document extends ExtensibleObject {
 	private String customId;
 
 	private int immutable = 0;
+	
+	private String digest;
 
 	public Document() {
 	}
@@ -438,4 +440,16 @@ public class Document extends ExtensibleObject {
 	public void setObject(String object) {
 		this.object = object;
 	}
+
+	/**
+	 * The document's digest
+	 */
+	public String getDigest() {
+		return digest;
+	}
+
+	public void setDigest(String digest) {
+		this.digest = digest;
+	}
+	
 }

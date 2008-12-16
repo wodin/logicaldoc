@@ -1,13 +1,21 @@
 package com.logicaldoc.core.document.dao;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.io.FileUtil;
 
 /**
  * Test case for <code>HibernateDocumentDAO</code>
@@ -22,6 +30,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 	private MenuDAO menuDao;
 
+	private SettingsConfig settings;
+
 	public HibernateDocumentDAOTest(String name) {
 		super(name);
 	}
@@ -33,6 +43,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		// it is an HibernateDocumentDAO
 		dao = (DocumentDAO) context.getBean("DocumentDAO");
 		menuDao = (MenuDAO) context.getBean("MenuDAO");
+		settings = (SettingsConfig) context.getBean("SettingsConfig");
 	}
 
 	public void testDelete() {
@@ -76,7 +87,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc = dao.findByCustomId("xx");
 		assertNull(doc);
 	}
-	
+
 	public void testFindByUserId() {
 		Collection<Long> ids = dao.findByUserId(3);
 		assertNotNull(ids);
@@ -122,7 +133,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(1, docs.size());
 		assertEquals(2, docs.get(0).getId());
 	}
-	
+
 	public void testFindLastModifiedByUserId() {
 		Collection<Document> coll = dao.findLastModifiedByUserId(1, 10);
 		assertNotNull(coll);
@@ -144,7 +155,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, ids.size());
 	}
 
-	public void testStore() {
+	public void testStore() throws IOException {
 		Document doc = new Document();
 		Menu menu = menuDao.findById(Menu.MENUID_HOME);
 		doc.setFolder(menu);
@@ -153,6 +164,17 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.addKeyword("pippo");
 		doc.addKeyword("pluto");
 		doc.setValue("att_1", "val 1");
+		doc.setFileName("test.txt");
+
+		//Prepare the document file for digest computation
+		File docFile = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/doc_5/" + doc.getFileName()));
+		FileUtils.forceMkdir(docFile.getParentFile());
+		Writer out = new FileWriter(docFile);
+		out.write("Questo file serve per fare il test del digest su un documento");
+		out.flush();
+		out.close();
+		assertTrue(docFile.exists());
+		String digest = FileUtil.computeDigest(docFile);
 
 		// Try a long keyword
 		doc.addKeyword("123456789123456789123456789");
@@ -173,6 +195,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(1, doc.getVersions().size());
 		assertEquals(version, doc.getVersion("1.0"));
 		assertEquals("val 1", doc.getValue("att_1"));
+		assertNotNull(doc.getDigest());
+		assertEquals(doc.getDigest(), digest);
 
 		// Try to change the version comment
 		doc = dao.findById(5);
@@ -291,7 +315,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertNotNull(coll);
 		assertEquals(2, coll.size());
 	}
-	
+
 	public void testGetTotalSize() {
 		assertEquals(368391L, dao.getTotalSize(true));
 		assertEquals(123701L, dao.getTotalSize(false));
@@ -301,7 +325,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(4L, dao.getDocumentCount(true));
 		assertEquals(2L, dao.getDocumentCount(false));
 	}
-	
+
 	public void testRestore() {
 		assertNull(dao.findById(4));
 		dao.restore(4);
@@ -309,7 +333,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertNotNull(menuDao.findById(1100));
 		assertNotNull(menuDao.findById(1000));
 	}
-	
+
 	public void testMakeImmutable() {
 		dao.makeImmutable(2);
 		assertEquals(1, dao.findById(2).getImmutable());
