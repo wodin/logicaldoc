@@ -163,10 +163,6 @@ public class User extends PersistentObject implements Serializable {
 		}
 	}
 
-	public String getDecodedPassword() {
-		return password;
-	}
-
 	public void setName(String name) {
 		this.name = name;
 	}

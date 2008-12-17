@@ -159,7 +159,7 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		assertEquals(user, storedUser);
 		assertEquals(2, storedUser.getGroups().size());
 		assertNotNull(storedUser.getUserGroup());
-		assertEquals(CryptUtil.cryptString("xxxpwd"), storedUser.getDecodedPassword());
+		assertEquals(CryptUtil.cryptString("xxxpwd"), storedUser.getPassword());
 
 		user = dao.findById(1);
 		user.setDecodedPassword("xxxpwd");
