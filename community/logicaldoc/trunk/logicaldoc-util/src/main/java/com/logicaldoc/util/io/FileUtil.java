@@ -135,7 +135,7 @@ public class FileUtil {
 					buf.append(strUnsignedValue);
 				}
 				digest = buf.toString();
-				log.info("Computed Digest: " + digest);
+				log.debug("Computed Digest: " + digest);
 
 				return digest;
 			}
