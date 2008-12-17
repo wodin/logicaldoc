@@ -25,8 +25,7 @@ import com.logicaldoc.web.util.FacesUtil;
 /**
  * Bean used for Tasks listing and management
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.5.0
  */
 public class TasksRecordsManager implements Renderable, DisposableBean, TaskListener {

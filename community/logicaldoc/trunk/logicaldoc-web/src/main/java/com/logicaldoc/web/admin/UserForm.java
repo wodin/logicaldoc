@@ -6,10 +6,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -61,6 +64,100 @@ public class UserForm {
 	private Collection<SelectItem> availableGroups = new ArrayList<SelectItem>();
 
 	private Collection<SelectItem> allowedGroups = new ArrayList<SelectItem>();
+
+	private UIInput firstNameControl;
+
+	private UIInput nameControl;
+
+	private UIInput streetControl;
+
+	private UIInput postalCodeControl;
+
+	private UIInput cityControl;
+
+	private UIInput countryControl;
+
+	private UIInput languageControl;
+	
+	private UIInput emailControl;
+	
+	private UIInput phoneControl;
+
+	public UIInput getFirstNameControl() {
+		return firstNameControl;
+	}
+
+	public UIInput getNameControl() {
+		return nameControl;
+	}
+
+	public void setNameControl(UIInput nameControl) {
+		this.nameControl = nameControl;
+	}
+
+	public UIInput getStreetControl() {
+		return streetControl;
+	}
+
+	public void setStreetControl(UIInput streetControl) {
+		this.streetControl = streetControl;
+	}
+
+	public UIInput getPostalCodeControl() {
+		return postalCodeControl;
+	}
+
+	public void setPostalCodeControl(UIInput postalCodeControl) {
+		this.postalCodeControl = postalCodeControl;
+	}
+
+	public UIInput getCityControl() {
+		return cityControl;
+	}
+
+	public void setCityControl(UIInput cityControl) {
+		this.cityControl = cityControl;
+	}
+
+	public UIInput getCountryControl() {
+		return countryControl;
+	}
+
+	public void setCountryControl(UIInput countryControl) {
+		this.countryControl = countryControl;
+	}
+
+	public UIInput getLanguageControl() {
+		return languageControl;
+	}
+
+	public void setLanguageControl(UIInput languageControl) {
+		this.languageControl = languageControl;
+	}
+
+	public UIInput getEmailControl() {
+		return emailControl;
+	}
+
+	public void setEmailControl(UIInput emailControl) {
+		this.emailControl = emailControl;
+	}
+
+	public UIInput getPhoneControl() {
+		return phoneControl;
+	}
+
+	public void setPhoneControl(UIInput phoneControl) {
+		this.phoneControl = phoneControl;
+	}
+
+	public void setCreateNew(boolean createNew) {
+		this.createNew = createNew;
+	}
+
+	public void setFirstNameControl(UIInput firstNameControl) {
+		this.firstNameControl = firstNameControl;
+	}
 
 	public List<Group> getGroups() {
 		return groups;
@@ -138,6 +235,10 @@ public class UserForm {
 		this.repass = repass;
 	}
 
+	public boolean isCreateNew() {
+		return createNew;
+	}
+
 	public void setUser(User usr) {
 		this.user = usr;
 		createNew = StringUtils.isEmpty(this.user.getUserName());
@@ -150,6 +251,17 @@ public class UserForm {
 		selectedAllowedGroups = new long[0];
 		availableGroupFilter = "";
 		allowedGroupFilter = "";
+
+		FacesUtil.forceRefresh(firstNameControl);
+		FacesUtil.forceRefresh(nameControl);
+		FacesUtil.forceRefresh(cityControl);
+		FacesUtil.forceRefresh(countryControl);
+		FacesUtil.forceRefresh(emailControl);
+		FacesUtil.forceRefresh(languageControl);
+		FacesUtil.forceRefresh(phoneControl);
+		FacesUtil.forceRefresh(postalCodeControl);
+		FacesUtil.forceRefresh(streetControl);
+		
 
 		GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		groups = (List<Group>) gdao.findAll();
@@ -204,6 +316,8 @@ public class UserForm {
 					return null;
 				}
 
+				user.setEmail(user.getEmail().toLowerCase());
+				
 				if (withPassword) {
 					if (!getPassword().equals(getRepass())) {
 						Messages.addLocalizedError("msg.jsp.adduser.repass");
@@ -214,6 +328,9 @@ public class UserForm {
 					if (StringUtils.isNotEmpty(getPassword()) && !user.getPassword().equals(getPassword())) {
 						// The password was changed
 						user.setDecodedPassword(getPassword());
+
+						// Notify the user by email
+						notifyAccount(user, getPassword());
 					}
 
 					user.setRepass("");
@@ -228,7 +345,7 @@ public class UserForm {
 					user.setDecodedPassword(password);
 					dao.store(user);
 
-					// TODO Notify the user by email
+					// Notify the user by email
 					notifyAccount(user, password);
 				}
 
@@ -405,34 +522,37 @@ public class UserForm {
 	private void notifyAccount(User user, String password) {
 		EMail email;
 		EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
-		try {
-			email = new EMail();
-			email.setAccountId(-1);
-			email.setAuthor(user.getUserName());
-			email.setAuthorAddress(sender.getSender());
-			
-			System.out.println("***"+user.getEmail());
-			
-			Recipient recipient = new Recipient();
-			recipient.setAddress(user.getEmail());
-			email.addRecipient(recipient);
-			email.setFolder("outbox");
-			email.setMessageText("Sei stato registrato su LogicalDOC con la password:" + password);
-			email.setRead(1);
-			email.setSentDate(String.valueOf(new Date().getTime()));
-			email.setSubject("LogicalDOC - Registrazione account");
-			email.setUserName(user.getUserName());
 
-			try {
-				sender.send(email);
-				Messages.addLocalizedInfo("Password inviata per email all'indirizzo "+user.getEmail());
-			} catch (Exception ex) {
-				log.error(ex.getMessage(), ex);
-				Messages.addLocalizedInfo("Impossibile inviare l'email all'indirizzo "+user.getEmail());
-			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			Messages.addLocalizedError("email.error");
+		email = new EMail();
+		email.setAccountId(-1);
+		email.setAuthor(user.getUserName());
+		email.setAuthorAddress(SessionManagement.getUser().getEmail());
+
+		Recipient recipient = new Recipient();
+		recipient.setAddress(user.getEmail());
+		email.addRecipient(recipient);
+		email.setFolder("outbox");
+		Locale locale = new Locale(user.getLanguage());
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+				.getRequest();
+		String address = "http://";
+		address += (request.getServerName() + ":");
+		address += request.getServerPort();
+		address += request.getContextPath();
+		String text = Messages.getMessage("email.notify.account", locale, new Object[] {
+				user.getFirstName() + " " + user.getName(), user.getUserName(), password, address });
+		email.setMessageText(text);
+		email.setRead(1);
+		email.setSentDate(String.valueOf(new Date().getTime()));
+		email.setSubject(Messages.getMessage("email.notify.account.object", locale));
+		email.setUserName(user.getUserName());
+
+		try {
+			sender.send(email);
+			Messages.addLocalizedInfo("email.notify.account.sent");
+		} catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
+			Messages.addWarn(Messages.getMessage("email.notify.account.error", user.getEmail()));
 		}
 	}
 }

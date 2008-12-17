@@ -6,6 +6,7 @@ import javax.el.ELContext;
 import javax.el.ELResolver;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.el.MethodBinding;
@@ -133,4 +134,10 @@ public class FacesUtil {
 		}
 		return messagesShown;
 	}
+	
+	public static final void forceRefresh(UIInput control) {
+ 		control.setSubmittedValue(null);
+ 		control.setValue(null);
+ 		control.setLocalValueSet(false);
+ 	}
 }
