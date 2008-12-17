@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
@@ -14,12 +15,16 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.communication.EMail;
+import com.logicaldoc.core.communication.EMailSender;
+import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.security.PasswordGenerator;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.util.FacesUtil;
@@ -179,11 +184,11 @@ public class UserForm {
 	}
 
 	public String save() {
-		return save(true);
+		return save(false);
 	}
 
-	public String saveWithoutPassword() {
-		return save(false);
+	public String savePassword() {
+		return save(true);
 	}
 
 	private String save(boolean withPassword) {
@@ -198,7 +203,7 @@ public class UserForm {
 
 					return null;
 				}
-				
+
 				if (withPassword) {
 					if (!getPassword().equals(getRepass())) {
 						Messages.addLocalizedError("msg.jsp.adduser.repass");
@@ -213,12 +218,18 @@ public class UserForm {
 
 					user.setRepass("");
 				}
-				
+
 				SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
 				manager.removeUserFromAllGroups(user);
 
 				if (createNew) {
+					// Generate an initial password
+					String password = new PasswordGenerator().generate(8);
+					user.setDecodedPassword(password);
 					dao.store(user);
+
+					// TODO Notify the user by email
+					notifyAccount(user, password);
 				}
 
 				GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
@@ -303,6 +314,7 @@ public class UserForm {
 	/**
 	 * Filters the allowed groups if group's name contains the string on
 	 * "Filter" input text
+	 * 
 	 * @param event
 	 */
 	public void filterAllowedGroups(ValueChangeEvent event) {
@@ -381,6 +393,46 @@ public class UserForm {
 				if (!available)
 					allowedGroups.add(new SelectItem(group.getId(), group.getName()));
 			}
+		}
+	}
+
+	/**
+	 * Notify the user with it's new account
+	 * 
+	 * @param user The created user
+	 * @param password The decoded password
+	 */
+	private void notifyAccount(User user, String password) {
+		EMail email;
+		EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+		try {
+			email = new EMail();
+			email.setAccountId(-1);
+			email.setAuthor(user.getUserName());
+			email.setAuthorAddress(sender.getSender());
+			
+			System.out.println("***"+user.getEmail());
+			
+			Recipient recipient = new Recipient();
+			recipient.setAddress(user.getEmail());
+			email.addRecipient(recipient);
+			email.setFolder("outbox");
+			email.setMessageText("Sei stato registrato su LogicalDOC con la password:" + password);
+			email.setRead(1);
+			email.setSentDate(String.valueOf(new Date().getTime()));
+			email.setSubject("LogicalDOC - Registrazione account");
+			email.setUserName(user.getUserName());
+
+			try {
+				sender.send(email);
+				Messages.addLocalizedInfo("Password inviata per email all'indirizzo "+user.getEmail());
+			} catch (Exception ex) {
+				log.error(ex.getMessage(), ex);
+				Messages.addLocalizedInfo("Impossibile inviare l'email all'indirizzo "+user.getEmail());
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			Messages.addLocalizedError("email.error");
 		}
 	}
 }
