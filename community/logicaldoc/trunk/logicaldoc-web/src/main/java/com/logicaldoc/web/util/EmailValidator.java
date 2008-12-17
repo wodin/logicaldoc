@@ -16,8 +16,7 @@ import javax.faces.validator.ValidatorException;
  * A JSF compliant validator that validates email addresses
  *
  * @author Marco Meschieri - Logical Objects
- * @version $Id: EmailValidator.java,v 1.1 2006/08/23 16:22:57 marco Exp $
- * @since ###release###
+ * @since 3.0
  */
 public class EmailValidator implements Validator {
     public EmailValidator() {
@@ -28,6 +27,7 @@ public class EmailValidator implements Validator {
         Object value) throws ValidatorException {
         // Get the component's contents and cast it to a String
         String enteredEmail = (String) value;
+        enteredEmail=enteredEmail.toLowerCase();
 
         // Set the email pattern string
         Pattern p = Pattern.compile(".+@.+\\.[a-z]+");

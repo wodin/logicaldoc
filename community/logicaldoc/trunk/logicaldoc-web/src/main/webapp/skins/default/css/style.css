@@ -1179,6 +1179,8 @@ em { /*font-size:14px;*/
 }
 
 .iceMsgError {
+	display: block;
+	text-align: left;
 	color: darkred;
 }
 

@@ -43,9 +43,7 @@ import com.logicaldoc.web.util.FacesUtil;
  * scrollable ice:panelGroup.
  * </p>
  * 
- * @author Marco Meschieri
- * @version $Id: DocumentsRecordsManager.java,v 1.1 2007/06/29 06:28:29 marco
- *          Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class UsersRecordsManager extends SortableList {
@@ -55,7 +53,7 @@ public class UsersRecordsManager extends SortableList {
 	private List<User> users = new ArrayList<User>();
 
 	private String selectedPanel = "list";
-	
+
 	private String usersFilter = "";
 
 	public String getUsersFilter() {
@@ -81,10 +79,9 @@ public class UsersRecordsManager extends SortableList {
 			if (mdao.isReadEnable(6, userId)) {
 				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 				Collection<User> tmpusers = null;
-				if (usersFilter.length()!=0){
-					tmpusers = dao.findByLikeUserName("%"+usersFilter+"%");
-				}
-				else
+				if (usersFilter.length() != 0) {
+					tmpusers = dao.findByLikeUserName("%" + usersFilter + "%");
+				} else
 					tmpusers = dao.findAll();
 
 				for (User usr : tmpusers) {
@@ -132,7 +129,6 @@ public class UsersRecordsManager extends SortableList {
 				.getCurrentInstance(), log));
 		User user = (User) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("user");
 		userForm.setUser(user);
-
 		return null;
 	}
 
@@ -155,8 +151,7 @@ public class UsersRecordsManager extends SortableList {
 	}
 
 	/**
-	 * Gets the list of User which will be used by the ice:dataTable
-	 * component.
+	 * Gets the list of User which will be used by the ice:dataTable component.
 	 */
 	public Collection<User> getUsers() {
 		if (users.size() == 0) {
@@ -321,10 +316,10 @@ public class UsersRecordsManager extends SortableList {
 
 		Collections.sort(users, comparator);
 	}
-	
+
 	/**
-	 * Filters all users if group's name contains the string on
-	 * "Username" input text
+	 * Filters all users if group's name contains the string on "Username" input
+	 * text
 	 * 
 	 * @param event
 	 */

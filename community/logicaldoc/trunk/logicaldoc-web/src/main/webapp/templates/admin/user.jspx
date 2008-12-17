@@ -12,8 +12,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
-	id="userForm">
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form">
 
 	<ice:panelGroup styleClass="center formBorderHighlight"
 		style="width: 600px;">
@@ -33,44 +32,12 @@
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="userName" value="#{userForm.user.userName}"
-							maxlength="255" required="true"
-							disabled="#{userForm.user.userName == 'admin'}" />
-						<br />
+							maxlength="255" required="true" disabled="#{!userForm.createNew}" />
 						<ice:message for="userName" />
 					</ice:panelGroup>
 					<ice:panelGroup style="width:20px" />
-					<ice:panelGroup styleClass="outputLabel">
-						<ice:outputLabel for="password"
-							value="#{msgs['msg.jsp.login.password']}*"
-							rendered="#{hidePasswd!='true'}" />
-					</ice:panelGroup>
-					<ice:panelGroup style="text-align:right">
-						<ice:inputSecret id="password" value="#{userForm.password}"
-						 	maxlength="15" required="true" rendered="#{hidePasswd!='true'}">
-							<f:validateLength minimum = "8" maximum = "15"/>
-						</ice:inputSecret>
-						<br />
-						<ice:message for="password" />
-					</ice:panelGroup>
-
-					<ice:panelGroup>
-					</ice:panelGroup>
-					<ice:panelGroup>
-					</ice:panelGroup>
-					<ice:panelGroup style="width:20px" />
-					<ice:panelGroup styleClass="outputLabel">
-						<ice:outputLabel for="repass"
-							value="#{msgs['msg.jsp.adduser.repass']}*"
-							rendered="#{hidePasswd!='true'}" />
-					</ice:panelGroup>
-					<ice:panelGroup>
-						<ice:inputSecret id="repass" value="#{userForm.repass}"
-							maxlength="15" required="true" rendered="#{hidePasswd!='true'}">
-							<f:validateLength minimum = "8" maximum = "15"/>
-						</ice:inputSecret>
-						<br />
-						<ice:message for="repass" />
-					</ice:panelGroup>
+					<ice:panelGroup />
+					<ice:panelGroup />
 				</ice:panelGrid>
 			</ice:panelGroup>
 		</ice:panelGroup>
@@ -90,8 +57,8 @@
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="firstName" value="#{userForm.user.firstName}"
-						maxlength="30" required="true" />
-					<br />
+						maxlength="30" required="true"
+						binding="#{userForm.firstNameControl}" />
 					<ice:message for="firstName" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
@@ -101,8 +68,7 @@
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="name" value="#{userForm.user.name}"
-						maxlength="30" required="true" />
-					<br />
+						maxlength="30" required="true" binding="#{userForm.nameControl}" />
 					<ice:message for="name" />
 				</ice:panelGroup>
 
@@ -112,8 +78,7 @@
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="street" value="#{userForm.user.street}"
-						maxlength="100" />
-					<br />
+						maxlength="100" binding="#{userForm.streetControl}" />
 					<ice:message for="street" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
@@ -123,8 +88,7 @@
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="postalCode" value="#{userForm.user.postalcode}"
-						maxlength="10" />
-					<br />
+						maxlength="10" binding="#{userForm.postalCodeControl}" />
 					<ice:message for="postalCode" />
 				</ice:panelGroup>
 
@@ -133,8 +97,7 @@
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="city" value="#{userForm.user.city}"
-						maxlength="30" />
-					<br />
+						maxlength="30" binding="#{userForm.cityControl}" />
 					<ice:message for="city" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
@@ -144,8 +107,7 @@
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="country" value="#{userForm.user.country}"
-						maxlength="30" />
-					<br />
+						maxlength="30" binding="#{userForm.countryControl}" />
 					<ice:message for="country" />
 				</ice:panelGroup>
 
@@ -155,21 +117,20 @@
 				</ice:panelGroup>
 				<ice:panelGroup style="text-align:left;">
 					<ice:selectOneMenu styleClass="selectTagMenu"
-						value="#{userForm.user.language}">
+						value="#{userForm.user.language}"
+						binding="#{userForm.languageControl}">
 						<f:selectItems value="#{selectionTags.languages}" />
 					</ice:selectOneMenu>
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
 				<ice:panelGroup styleClass="outputLabel">
-					<ice:outputLabel for="email"
-						value="#{msgs['email']}*" />
+					<ice:outputLabel for="email" value="#{msgs['email']}*" />
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="email" value="#{userForm.user.email}"
-						maxlength="100" required="true">
+						maxlength="100" required="true" binding="#{userForm.emailControl}">
 						<f:validator validatorId="validator.email" />
 					</ice:inputText>
-					<br />
 					<ice:message for="email" />
 				</ice:panelGroup>
 
@@ -179,8 +140,7 @@
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="phone" value="#{userForm.user.telephone}"
-						maxlength="30" />
-					<br />
+						maxlength="30" binding="#{userForm.phoneControl}" />
 					<ice:message for="phone" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
@@ -211,11 +171,13 @@
 					<ice:panelGrid columns="1">
 						<ice:panelGroup>
 							<ice:commandButton value="&gt;&gt;"
-								action="#{userForm.assignGroups}" partialSubmit="true" immediate="false"/>
+								action="#{userForm.assignGroups}" partialSubmit="true"
+								immediate="false" />
 						</ice:panelGroup>
 						<ice:panelGroup>
 							<ice:commandButton value="&lt;&lt;"
-								action="#{userForm.unassignGroups}" partialSubmit="true" immediate="false"/>
+								action="#{userForm.unassignGroups}" partialSubmit="true"
+								immediate="false" />
 						</ice:panelGroup>
 					</ice:panelGrid>
 				</ice:panelGroup>
@@ -238,14 +200,11 @@
 
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="#{msgs['abort']}"
-				action="#{usersRecordsManager.list}" partialSubmit="true" immediate="true"/>
+				action="#{usersRecordsManager.list}" partialSubmit="true"
+				immediate="true" />
 			<ice:commandButton value="#{msgs['save']}" action="#{userForm.save}"
-				rendered="#{hidePasswd!='true'}" id="save" />
-			<ice:commandButton value="#{msgs['save']}"
-				action="#{userForm.saveWithoutPassword}"
-				rendered="#{hidePasswd == 'true'}" id="save" />
+				id="save" />
 		</ice:panelGroup>
 
 	</ice:panelGroup>
-
 </jsp:root>
