@@ -50,7 +50,6 @@
                             required="true">
                             <f:validator validatorId="validator.email" />
                         </ice:inputText>
-                        <br />
                         <ice:message for="recipient" />
                     </ice:panelGroup>
 

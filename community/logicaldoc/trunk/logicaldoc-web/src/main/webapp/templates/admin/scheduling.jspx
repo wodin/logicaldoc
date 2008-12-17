@@ -34,7 +34,6 @@
 					<ice:panelGroup>
 						<ice:inputText id="seconds"
 							value="#{taskForm.task.scheduling.seconds}" required="true"/>
-						<br />
 						<ice:message for="seconds" />
 					</ice:panelGroup>
 					<ice:panelGroup>
@@ -48,7 +47,6 @@
 					<ice:panelGroup>
 						<ice:inputText id="minutes"
 							value="#{taskForm.task.scheduling.minutes}" required="true"/>
-						<br />
 						<ice:message for="minutes" />
 					</ice:panelGroup>
 					<ice:panelGroup>
@@ -62,7 +60,6 @@
 					<ice:panelGroup>
 						<ice:inputText id="hours"
 							value="#{taskForm.task.scheduling.hours}" required="true" />
-						<br />
 						<ice:message for="hours" />
 					</ice:panelGroup>
 					<ice:panelGroup>
@@ -76,7 +73,6 @@
 					<ice:panelGroup>
 						<ice:inputText id="monthDay"
 							value="#{taskForm.task.scheduling.dayOfMonth}" required="true" />
-						<br />
 						<ice:message for="monthDay" />
 					</ice:panelGroup>
 					<ice:panelGroup>
@@ -90,7 +86,6 @@
 					<ice:panelGroup>
 						<ice:inputText id="month"
 							value="#{taskForm.task.scheduling.month}" required="true" />
-						<br />
 						<ice:message for="month" />
 					</ice:panelGroup>
 					<ice:panelGroup>
@@ -104,7 +99,6 @@
 					<ice:panelGroup>
 						<ice:inputText id="weekDay"
 							value="#{taskForm.task.scheduling.dayOfWeek}" required="true" />
-						<br />
 						<ice:message for="weekDay" />
 					</ice:panelGroup>
 					<ice:panelGroup>
@@ -133,5 +127,4 @@
 				id="save" />
 		</ice:panelGroup>
 	</ice:panelGroup>
-
 </jsp:root>
