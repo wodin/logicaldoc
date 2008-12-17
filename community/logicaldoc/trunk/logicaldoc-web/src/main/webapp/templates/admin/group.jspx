@@ -56,7 +56,6 @@
                              cols="70" rows="4"
                              value="#{groupsRecordsManager.selectedGroup.description}"
                              binding="#{groupsRecordsManager.groupDesc}" />
-                        <br />
                         <ice:message for="groupDesc" />
                     </ice:panelGroup>
                 </ice:panelGrid>

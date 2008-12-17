@@ -33,7 +33,6 @@
 					<ice:panelGroup>
 						<ice:inputText id="name" value="#{templateForm.template.name}"
 							maxlength="255" styleClass="smallInputText" required="true" />
-						<br />
 						<ice:message for="name" />
 					</ice:panelGroup>
 					<ice:panelGroup />
@@ -44,7 +43,6 @@
 					<ice:panelGroup>
 						<ice:inputText id="description"
 							value="#{templateForm.template.description}" styleClass="smallInputText" maxlength="500" />
-						<br />
 						<ice:message for="description" />
 					</ice:panelGroup>
 					<ice:panelGroup />

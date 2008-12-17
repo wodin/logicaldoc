@@ -36,7 +36,6 @@
 							cols="70" rows="2"
 							value="#{documentsRecordsManager.operationComment}"
 							binding="#{documentsRecordsManager.operationComment}" />
-						<br />
 						<ice:message for="reason" />
 					</ice:panelGroup>
 				</ice:panelGrid>

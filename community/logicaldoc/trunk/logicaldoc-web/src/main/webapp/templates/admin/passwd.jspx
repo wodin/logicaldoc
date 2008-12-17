@@ -35,7 +35,6 @@
 							tabindex="1" maxlength="15" size="30" required="true">
 							<f:validateLength minimum="8" maximum="15" />
 						</ice:inputSecret>
-						<br />
 						<ice:message for="password" />
 					</ice:panelGroup>
 
@@ -48,7 +47,6 @@
 							tabindex="1" maxlength="15" size="30" required="true">
 							<f:validateLength minimum="8" maximum="15" />
 						</ice:inputSecret>
-						<br />
 						<ice:message for="repass" />
 					</ice:panelGroup>
 				</ice:panelGrid>

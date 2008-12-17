@@ -127,8 +127,6 @@
 					<f:convertNumber groupingUsed="false" integerOnly="true" />
 					<f:validateLongRange minimum="0" maximum="999999999999" />
 				</ice:inputText>(KB)
-
-                <br />
 				<ice:message for="sizeMin" />
 			</ice:panelGroup>
 			<ice:panelGroup>
@@ -145,8 +143,6 @@
 					<f:convertNumber groupingUsed="false" integerOnly="true" />
 					<f:validateLongRange minimum="0" maximum="999999999999" />
 				</ice:inputText>(KB)
- 
-                <br />
 				<ice:message for="sizeMax" />
 			</ice:panelGroup>
 
@@ -162,7 +158,6 @@
 					<f:convertDateTime pattern="#{loc.dateFormatShort}"
 						timeZone="#{timezone}" />
 				</ice:selectInputDate>
-				<br />
 				<ice:message for="sourceDateFrom" />
 			</ice:panelGroup>
 			<ice:panelGroup>
@@ -180,7 +175,6 @@
 					<f:convertDateTime pattern="#{loc.dateFormatShort}"
 						timeZone="#{timezone}" />
 				</ice:selectInputDate>
-				<br />
 				<ice:message for="sourceDateTo" />
 			</ice:panelGroup>
 
@@ -196,7 +190,6 @@
 					<f:convertDateTime pattern="#{loc.dateFormatShort}"
 						timeZone="#{timezone}" />
 				</ice:selectInputDate>
-				<br />
 				<ice:message for="creationDateFrom" />
 			</ice:panelGroup>
 			<ice:panelGroup>
@@ -214,7 +207,6 @@
 					<f:convertDateTime pattern="#{loc.dateFormatShort}"
 						timeZone="#{timezone}" />
 				</ice:selectInputDate>
-				<br />
 				<ice:message for="creationDateTo" />
 			</ice:panelGroup>
 
@@ -231,7 +223,6 @@
 					<f:convertDateTime pattern="#{loc.dateFormatShort}"
 						timeZone="#{timezone}" />
 				</ice:selectInputDate>
-				<br />
 				<ice:message for="publishingDateFrom" />
 			</ice:panelGroup>
 			<ice:panelGroup>
@@ -250,7 +241,6 @@
 					<f:convertDateTime pattern="#{loc.dateFormatShort}"
 						timeZone="#{timezone}" />
 				</ice:selectInputDate>
-				<br />
 				<ice:message for="publishingDateTo" />
 			</ice:panelGroup>
 
