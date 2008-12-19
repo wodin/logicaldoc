@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.logicaldoc.core.ExtensibleObject;
 import com.logicaldoc.core.PersistentObject;
 
 /**
@@ -19,7 +20,7 @@ import com.logicaldoc.core.PersistentObject;
  * @author Marco Meschieri
  * @version 1.0
  */
-public class Group extends PersistentObject implements Serializable {
+public class Group extends ExtensibleObject implements Serializable {
 
 	private static final long serialVersionUID = 2L;
 

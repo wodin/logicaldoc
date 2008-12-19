@@ -159,7 +159,7 @@
 			</h3>
 			<ice:panelGrid columns="5">
 				<ice:panelGroup>
-					<ldoc:groupselector showFilter="true" allowMultipleSelection="true"
+					<ldoc:groupselector id="grp1" showFilter="true" allowMultipleSelection="true"
 						label="#{msgs['group.available']}"
 						items="#{userForm.availableGroups}"
 						value="#{userForm.selectedAvailableGroups}"
@@ -183,7 +183,7 @@
 				</ice:panelGroup>
 
 				<ice:panelGroup>
-					<ldoc:groupselector showFilter="true" allowMultipleSelection="true"
+					<ldoc:groupselector id="grp2" showFilter="true" allowMultipleSelection="true"
 						label="#{msgs['group.assigned']}"
 						items="#{userForm.allowedGroups}"
 						value="#{userForm.selectedAllowedGroups}"

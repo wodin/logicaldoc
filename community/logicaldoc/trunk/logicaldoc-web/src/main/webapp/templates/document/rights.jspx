@@ -39,7 +39,7 @@
 				<ice:panelGrid columns="3">
 					<ice:panelGroup>
 						<br />
-						<ldoc:groupselector
+						<ldoc:groupselector id="grp1"
 							showFilter="true"
 							styleClass="selectManyMenuBig"
 							allowMultipleSelection="true"
@@ -67,7 +67,7 @@
 					
 					<ice:panelGroup>
 						<br />
-						<ldoc:groupselector
+						<ldoc:groupselector id="grp2"
 							showFilter="true"
 							styleClass="selectManyMenuBig"
 							allowMultipleSelection="true"

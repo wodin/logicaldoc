@@ -321,7 +321,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
-			String sourceType, String coverage, String language, Set<String> keywords, String sourceId, String object) throws Exception {
+			String sourceType, String coverage, String language, Set<String> keywords, String sourceId, String object, String recipient) throws Exception {
 		try {
 			if (doc.getImmutable() == 0) {
 				doc.setTitle(title);
@@ -335,6 +335,7 @@ public class DocumentManagerImpl implements DocumentManager {
 					doc.setSourceDate(null);
 				doc.setSourceType(sourceType);
 				doc.setCoverage(coverage);
+				doc.setRecipient(recipient); 
 
 				// Intercept language changes
 				String oldLang = doc.getLanguage();
@@ -484,7 +485,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, boolean immediateIndexing)
 			throws Exception {
 		return create(file, folder, user, language, title, sourceDate, source, sourceAuthor, sourceType, coverage,
-				versionDesc, keywords, null, null, null, null, immediateIndexing);
+				versionDesc, keywords, null, null, immediateIndexing);
 
 	}
 
@@ -494,7 +495,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
 			boolean immediateIndexing) throws Exception {
 		return create(content, filename, folder, user, language, title, sourceDate, source, sourceAuthor, sourceType,
-				coverage, versionDesc, keywords, templateId, extendedAttributes, null, null, immediateIndexing);
+				coverage, versionDesc, keywords, templateId, extendedAttributes, null, null, null, immediateIndexing);
 	}
 
 	/**
@@ -652,7 +653,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, String sourceId,
-			String object, boolean immediateIndexing) throws Exception {
+			String object, String recipient, boolean immediateIndexing) throws Exception {
 		Locale locale = new Locale(language);
 		Parser parser = ParserFactory.getParser(file, locale);
 		String filename = file.getName();
@@ -683,7 +684,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		InputStream is = new FileInputStream(file);
 		try {
 			return create(is, file.getName(), folder, user, language, _title, sourceDate, source, _author, sourceType,
-					coverage, versionDesc, _kwds, templateId, extendedAttributes, sourceId, object, immediateIndexing);
+					coverage, versionDesc, _kwds, templateId, extendedAttributes, sourceId, object, recipient, immediateIndexing);
 		} finally {
 			is.close();
 		}
@@ -693,7 +694,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
-			String sourceId, String object, boolean immediateIndexing) throws Exception {
+			String sourceId, String object, String recipient, boolean immediateIndexing) throws Exception {
 		try {
 			Document doc = new Document();
 			Version vers = new Version();
@@ -733,6 +734,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc.setLanguage(language);
 			doc.setObject(object);
 			doc.setSourceId(sourceId);
+			doc.setRecipient(recipient);
 			if (keywords != null)
 				doc.setKeywords(keywords);
 

@@ -112,6 +112,12 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 			return false;
 
 		try {
+			Group parent = findById(parentGroupId);
+			if (parent != null)
+				for (String parentAttribute : parent.getAttributeNames()) {
+					group.setValue(parentAttribute, parent.getValue(parentAttribute));
+				}
+
 			getHibernateTemplate().saveOrUpdate(group);
 
 			if (parentGroupId > 0) {
@@ -166,6 +172,6 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<Group> findByLikeName(String name) {
-		return findByWhere("_entity.name like ?", new Object[] { name });
+		return findByWhere("lower(_entity.name) like ?", new Object[] { name.toLowerCase() });
 	}
 }

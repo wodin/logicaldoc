@@ -22,7 +22,6 @@ import com.logicaldoc.web.i18n.Messages;
  * <p>
  */
 public class SelectionTagsBean {
-
 	private static SelectItem[] languages;
 
 	/**

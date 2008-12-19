@@ -28,7 +28,7 @@ public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<D
 	@Override
 	public DocumentTemplate findByName(String name) {
 		DocumentTemplate template = null;
-		List<DocumentTemplate> coll = findByWhere("_entity.name like '" + name + "'");
+		List<DocumentTemplate> coll = findByWhere("_entity.name = '" + name + "'");
 		if (coll.size() > 0) {
 			template = coll.iterator().next();
 		}

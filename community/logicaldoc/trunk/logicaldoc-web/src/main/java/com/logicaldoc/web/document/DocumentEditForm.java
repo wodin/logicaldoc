@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.faces.application.Application;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 
@@ -48,21 +49,35 @@ public class DocumentEditForm {
 
 	private String title;
 
+	private String customId;
+
 	private String source;
+
+	private UIInput sourceInput = null;
 
 	private String sourceAuthor;
 
+	private UIInput sourceAuthorInput = null;
+
 	private Date sourceDate;
+
+	private UIInput sourceDateInput = null;
 
 	private Date docDate;
 
 	private String sourceType;
 
+	private UIInput sourceTypeInput = null;
+
 	private String coverage;
+
+	private UIInput coverageInput = null;
 
 	private String language;
 
 	private String keywords;
+
+	private UIInput keywordsInput = null;
 
 	private String versionDesc;
 
@@ -70,7 +85,11 @@ public class DocumentEditForm {
 
 	private String sourceId;
 
+	private UIInput sourceIdInput = null;
+
 	private String object;
+
+	private UIInput objectInput = null;
 
 	private DocumentRecord record;
 
@@ -85,6 +104,10 @@ public class DocumentEditForm {
 	private boolean majorUpdate = false;
 
 	private boolean checkOriginalFilename = true;
+
+	private String recipient;
+	
+	private UIInput recipientInput = null;
 
 	private Collection<Attribute> extendedAttributes = new ArrayList<Attribute>();
 
@@ -123,13 +146,17 @@ public class DocumentEditForm {
 		sourceDate = null;
 		docDate = new Date();
 		sourceType = "";
+		sourceId = "";
 		coverage = "";
 		language = "";
 		keywords = "";
 		versionDesc = "";
+		object = "";
 		filename = "";
+		customId = "";
 		template = null;
 		immediateIndexing = false;
+		recipient = "";
 		this.majorUpdate = false;
 		this.checkOriginalFilename = true;
 		extendedAttributes.clear();
@@ -151,6 +178,17 @@ public class DocumentEditForm {
 		setFilename(doc.getFileName());
 		setObject(doc.getObject());
 		setSourceId(doc.getSourceId());
+		setCustomId(doc.getCustomId());
+		setRecipient(doc.getRecipient());
+		FacesUtil.forceRefresh(sourceAuthorInput);
+		FacesUtil.forceRefresh(sourceDateInput);
+		FacesUtil.forceRefresh(sourceIdInput);
+		FacesUtil.forceRefresh(sourceTypeInput);
+		FacesUtil.forceRefresh(sourceInput);
+		FacesUtil.forceRefresh(coverageInput);
+		FacesUtil.forceRefresh(objectInput);
+		FacesUtil.forceRefresh(keywordsInput);
+		FacesUtil.forceRefresh(recipientInput);
 		initTemplate();
 	}
 
@@ -290,6 +328,13 @@ public class DocumentEditForm {
 	}
 
 	/**
+	 * @return Returns the customId.
+	 */
+	public String getCustomId() {
+		return customId;
+	}
+
+	/**
 	 * @param title The title to set.
 	 */
 	public void setTitle(String title) {
@@ -416,7 +461,7 @@ public class DocumentEditForm {
 
 				Document doc = documentManager.create(file, folder, SessionManagement.getUser(), language, title,
 						getSourceDate(), source, sourceAuthor, sourceType, coverage, versionDesc, kwds, template,
-						attrs, sourceId, object, immediateIndexing);
+						attrs, sourceId, object, recipient, immediateIndexing);
 				if (StringUtils.isNotEmpty(doc.getCustomId()))
 					Messages.addInfo(Messages.getMessage("document.inserted", doc.getCustomId()));
 			} catch (Exception e) {
@@ -462,8 +507,9 @@ public class DocumentEditForm {
 				User user = SessionManagement.getUser();
 				Set<String> keywords = ddao.toKeywords(getKeywords());
 
+				doc.setCustomId(customId);
 				documentManager.update(doc, user, title, source, sourceAuthor, sourceDate, sourceType, coverage,
-						language, keywords, sourceId, object);
+						language, keywords, sourceId, object, recipient);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addError(e.getMessage());
@@ -619,5 +665,89 @@ public class DocumentEditForm {
 
 	public void setObject(String object) {
 		this.object = object;
+	}
+
+	public UIInput getSourceInput() {
+		return sourceInput;
+	}
+
+	public void setSourceInput(UIInput sourceInput) {
+		this.sourceInput = sourceInput;
+	}
+
+	public UIInput getSourceAuthorInput() {
+		return sourceAuthorInput;
+	}
+
+	public void setSourceAuthorInput(UIInput sourceAuthorInput) {
+		this.sourceAuthorInput = sourceAuthorInput;
+	}
+
+	public UIInput getSourceDateInput() {
+		return sourceDateInput;
+	}
+
+	public void setSourceDateInput(UIInput sourceDateInput) {
+		this.sourceDateInput = sourceDateInput;
+	}
+
+	public UIInput getSourceTypeInput() {
+		return sourceTypeInput;
+	}
+
+	public void setSourceTypeInput(UIInput sourceTypeInput) {
+		this.sourceTypeInput = sourceTypeInput;
+	}
+
+	public UIInput getCoverageInput() {
+		return coverageInput;
+	}
+
+	public void setCoverageInput(UIInput coverageInput) {
+		this.coverageInput = coverageInput;
+	}
+
+	public UIInput getKeywordsInput() {
+		return keywordsInput;
+	}
+
+	public void setKeywordsInput(UIInput keywordsInput) {
+		this.keywordsInput = keywordsInput;
+	}
+
+	public UIInput getSourceIdInput() {
+		return sourceIdInput;
+	}
+
+	public void setSourceIdInput(UIInput sourceIdInput) {
+		this.sourceIdInput = sourceIdInput;
+	}
+
+	public UIInput getObjectInput() {
+		return objectInput;
+	}
+
+	public void setObjectInput(UIInput objectInput) {
+		this.objectInput = objectInput;
+	}
+
+	public void setCustomId(String customId) {
+		this.customId = customId;
+	}
+
+	public String getRecipient() {
+		return recipient;
+	}
+
+	public void setRecipient(String recipient) {
+		this.recipient = recipient;
+	}
+
+	public UIInput getRecipientInput() {
+		return recipientInput;
+	}
+
+	public void setRecipientInput(UIInput recipientInput) {
+		this.recipientInput = recipientInput;
 	}
 }

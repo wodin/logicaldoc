@@ -161,7 +161,7 @@ public interface DocumentManager {
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, String sourceId,
-			String object, boolean immediateIndexing) throws Exception;
+			String object, String recipient, boolean immediateIndexing) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -184,6 +184,7 @@ public interface DocumentManager {
 	 * @param extendedAttributes
 	 * @param sourceId
 	 * @param object
+	 * @param recipient
 	 * @param immediateIndexing if true the document is immediately indexed
 	 * @return The created document
 	 * @throws Exception
@@ -191,7 +192,7 @@ public interface DocumentManager {
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
-			String sourceId, String object, boolean immediateIndexing) throws Exception;
+			String sourceId, String object, String recipient, boolean immediateIndexing) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -311,11 +312,13 @@ public interface DocumentManager {
 	 * @param keywords
 	 * @param sourceId
 	 * @param object
+	 * @param recipient
 	 * @param immediateIndexing If true the document is immediately indexed
 	 * @throws Exception
 	 */
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
-			String sourceType, String coverage, String language, Set<String> keywords, String sourceId, String object) throws Exception;
+			String sourceType, String coverage, String language, Set<String> keywords, String sourceId, String object,
+			String recipient) throws Exception;
 
 	/**
 	 * Retrieves the full-text document content

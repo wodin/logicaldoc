@@ -276,7 +276,6 @@ public class DocumentRecord extends MenuBarBean {
 		docForm.reset();
 		docForm.init(this);
 		docForm.setReadOnly(false);
-		JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "window.location.reload();");
 		return null;
 	}
 

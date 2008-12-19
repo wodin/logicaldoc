@@ -46,23 +46,20 @@
 				<ice:message for="title" />
 			</ice:panelGroup>
 			<ice:panelGroup style="width:20px" />
-			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel value="#{msgs['msg.jsp.parentname']}" />
-			</ice:panelGroup>
-			<ice:panelGroup>
-				<b><ice:outputLabel
-						value="#{documentNavigation.selectedDir.contentTitle}" /> </b>
-			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="sourceDate"
-					value="#{msgs['msg.jsp.sourcedate']}" />
+					rendered="#{!fieldPreferences['insert.sourceDate.hidden']}"
+					value="#{msgs['msg.jsp.sourcedate']} #{fieldPreferences['insert.sourceDate.mandatory'] ? '*':''}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectInputDate id="sourceDate"
+					rendered="#{!fieldPreferences['insert.sourceDate.hidden']}"
 					label="#{msgs['errors.header.alert.key']}"
 					popupDateFormat="#{loc.dateFormatShort}"
 					value="#{documentForm.sourceDate}"
+					required="#{fieldPreferences['insert.sourceDate.mandatory']}"
+					disabled="#{fieldPreferences['insert.sourceDate.readonly']}"
 					onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
 					renderAsPopup="true">
 					<f:convertDateTime pattern="#{loc.dateFormatShort}"
@@ -70,53 +67,98 @@
 				</ice:selectInputDate>
 				<ice:message for="sourceDate" />
 			</ice:panelGroup>
-			<ice:panelGroup style="width:20px" />
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="sourceid" value="#{msgs['document.sourceid']}" />
+				<ice:outputLabel for="sourceid"
+					rendered="#{!fieldPreferences['insert.sourceId.hidden']}"
+					value="#{msgs['document.sourceid']} #{fieldPreferences['insert.sourceId.mandatory'] ? '*':''}" />
 			</ice:panelGroup>
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:inputText id="sourceid" value="#{documentForm.sourceId}"
+					rendered="#{!fieldPreferences['insert.sourceId.hidden']}"
+					required="#{fieldPreferences['insert.sourceId.mandatory']}"
+					disabled="#{fieldPreferences['insert.sourceId.readonly']}"
 					onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
 					maxlength="4000" size="30" />
+				<ice:message for="sourceid" />
 			</ice:panelGroup>
-
+			<ice:panelGroup style="width:20px" />
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="source" value="#{msgs['document.source']}" />
+				<ice:outputLabel for="source"
+					rendered="#{!fieldPreferences['insert.source.hidden']}"
+					value="#{msgs['document.source']} #{fieldPreferences['insert.source.mandatory'] ? '*':''}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:inputText id="source"
+					rendered="#{!fieldPreferences['insert.source.hidden']}"
 					label="#{msgs['errors.header.alert.key']}"
 					value="#{documentForm.source}"
+					required="#{fieldPreferences['insert.source.mandatory']}"
+					disabled="#{fieldPreferences['insert.source.readonly']}"
 					onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
 					maxlength="255" size="30" />
 				<ice:message for="source" />
 			</ice:panelGroup>
-			<ice:panelGroup style="width:20px" />
+
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="sourceAuthor"
-					value="#{msgs['document.author']}" />
+					rendered="#{!fieldPreferences['insert.sourceAuthor.hidden']}"
+					value="#{msgs['document.author']} #{fieldPreferences['insert.sourceAuthor.mandatory'] ? '*':''}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:inputText id="sourceAuthor"
-					value="#{documentForm.sourceAuthor}" maxlength="255" size="30" />
-			</ice:panelGroup>
-
-			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="coverage" value="#{msgs['document.coverage']}" />
-			</ice:panelGroup>
-			<ice:panelGroup>
-				<ice:inputText id="coverage" value="#{documentForm.coverage}"
-					maxlength="255" />
+					rendered="#{!fieldPreferences['insert.sourceAuthor.hidden']}"
+					value="#{documentForm.sourceAuthor}"
+					maxlength="255" size="30"
+					required="#{fieldPreferences['insert.sourceAuthor.mandatory']}"
+					disabled="#{fieldPreferences['insert.sourceAuthor.readonly']}" />
+				<ice:message for="sourceAuthor" />
 			</ice:panelGroup>
 			<ice:panelGroup style="width:20px" />
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="sourceType" value="#{msgs['document.type']}" />
+				<ice:outputLabel for="coverage"
+					rendered="#{!fieldPreferences['insert.coverage.hidden']}"
+					value="#{msgs['document.coverage']} #{fieldPreferences['insert.coverage.mandatory'] ? '*':''}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
-				<ice:inputText id="sourceType" value="#{documentForm.sourceType}"
+				<ice:inputText id="coverage" value="#{documentForm.coverage}"
+					rendered="#{!fieldPreferences['insert.coverage.hidden']}"
+					required="#{fieldPreferences['insert.coverage.mandatory']}"
+					disabled="#{fieldPreferences['insert.coverage.readonly']}"
 					maxlength="255" />
+				<ice:message for="coverage" />
 			</ice:panelGroup>
 
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="sourceType"
+					rendered="#{!fieldPreferences['insert.sourceType.hidden']}"
+					value="#{msgs['document.type']} #{fieldPreferences['insert.sourceType.mandatory'] ? '*':''}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="sourceType"
+					rendered="#{!fieldPreferences['insert.sourceType.hidden']}"
+					value="#{documentForm.sourceType}"
+					required="#{fieldPreferences['insert.sourceType.mandatory']}"
+					disabled="#{fieldPreferences['insert.sourceType.readonly']}"
+					maxlength="255" />
+				<ice:message for="sourceType" />
+			</ice:panelGroup>
+			<ice:panelGroup style="width:20px" />
+			
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="recipient"
+					rendered="#{!fieldPreferences['insert.recipient.hidden']}"
+					value="#{msgs['document.recipient']} #{fieldPreferences['insert.recipient.mandatory'] ? '*':''}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="recipient"
+					rendered="#{!fieldPreferences['insert.recipient.hidden']}"
+					value="#{documentForm.recipient}"
+					required="#{fieldPreferences['insert.recipient.mandatory']}"
+					disabled="#{fieldPreferences['insert.recipient.readonly']}"
+					maxlength="255" />
+				<ice:message for="recipient" />
+			</ice:panelGroup>
+			
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="language"
 					value="#{msgs['msg.jsp.login.language']}" />
@@ -127,25 +169,38 @@
 					<f:selectItems value="#{selectionTags.languages}" />
 				</ice:selectOneMenu>
 			</ice:panelGroup>
-			<ice:panelGroup style="width:20px" />
-			<ice:panelGroup />
-			<ice:panelGroup />
 		</ice:panelGrid>
 
 		<ice:panelGrid columns="2">
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="object" value="#{msgs['document.object']}" />
+				<ice:outputLabel for="object"
+					rendered="#{!fieldPreferences['insert.object.hidden']}"
+					value="#{msgs['document.object']} #{fieldPreferences['insert.object.mandatory'] ? '*':''}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
-				<ice:inputText id="object" value="#{documentForm.object}" size="70" />
+				<ice:inputText id="object"
+					value="#{documentForm.object}" 
+					size="70"
+					required="#{fieldPreferences['insert.object.mandatory']}"
+					disabled="#{fieldPreferences['insert.object.readonly']}"
+					rendered="#{!fieldPreferences['insert.object.hidden']}" />
+				<ice:message for="object" />
 			</ice:panelGroup>
-		
-		
+
+
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="keywords" value="#{msgs['tags']}" />
+				<ice:outputLabel for="keywords"
+					rendered="#{!fieldPreferences['insert.keywords.hidden']}"
+					value="#{msgs['tags']} #{fieldPreferences['insert.keywords.mandatory'] ? '*':''}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
-				<ice:inputText id="keywords" value="#{documentForm.keywords}" size="70" />
+				<ice:inputText id="keywords"
+					rendered="#{!fieldPreferences['insert.keywords.hidden']}"
+					value="#{documentForm.keywords}"
+					required="#{fieldPreferences['insert.keywords.mandatory']}"
+					disabled="#{fieldPreferences['insert.keywords.readonly']}"
+					size="70" />
+				<ice:message for="keywords" />
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
@@ -153,7 +208,8 @@
 					value="#{msgs['msg.jsp.versiondesc']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
-				<ice:inputText id="versionDesc" value="#{documentForm.versionDesc}" size="70" />
+				<ice:inputText id="versionDesc" value="#{documentForm.versionDesc}"
+					size="70" />
 			</ice:panelGroup>
 		</ice:panelGrid>
 	</ice:panelGroup>
@@ -162,23 +218,29 @@
 	<ice:panelGroup>
 		<hr />
 		<h3>
-			<ice:outputText value="#{msgs['template.data']}" />
+			<ice:outputText value="#{msgs['template.data']}"
+				rendered="#{!fieldPreferences['insert.template.hidden']}" />
 			<br />
 			<br />
 		</h3>
 		<ice:panelGrid columns="5">
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="source" value="#{msgs['template']}" />
+				<ice:outputLabel for="template"
+					rendered="#{!fieldPreferences['insert.template.hidden']}"
+					value="#{msgs['template']} #{fieldPreferences['insert.template.mandatory'] ? '*':''}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
-				<ice:selectOneMenu styleClass="selectTagMenu" tabindex="1"
-					value="#{documentForm.template}"
-					disabled="#{documentForm.readOnly}"
+				<ice:selectOneMenu id="template"
+					rendered="#{!fieldPreferences['insert.template.hidden']}"
+					styleClass="selectTagMenu" value="#{documentForm.template}"
+					required="#{fieldPreferences['insert.template.mandatory']}"
+					disabled="#{fieldPreferences['insert.template.readonly']}"
 					valueChangeListener="#{documentForm.changeTemplate}"
 					partialSubmit="true">
 					<f:selectItem itemValue="" itemLabel="" />
 					<f:selectItems value="#{selectionTags.templates}" />
 				</ice:selectOneMenu>
+				<ice:message for="template" />
 			</ice:panelGroup>
 			<ice:panelGroup style="width:20px" />
 			<ice:panelGroup />

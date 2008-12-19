@@ -292,13 +292,14 @@
 		<managed-bean-name>groupsRecordsManager</managed-bean-name>
 		<managed-bean-class>com.logicaldoc.web.admin.GroupsRecordsManager</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
-		<managed-property>
-			<property-name>selectionTags</property-name>
-			<value>#{selectionTags}</value>
-		</managed-property>
 	</managed-bean>
-
-
+	
+	<managed-bean>
+		<managed-bean-name>groupForm</managed-bean-name>
+		<managed-bean-class>com.logicaldoc.web.admin.GroupForm</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	
     <!-- Templates -->
 	<managed-bean>
 		<managed-bean-name>templatesRecordsManager</managed-bean-name>
@@ -371,6 +372,13 @@
 	<managed-bean>
 		<managed-bean-name>homeBean</managed-bean-name>
 		<managed-bean-class>com.logicaldoc.web.HomeBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<description>Bean to retrieve the document field preferences for the session user</description>
+		<managed-bean-name>fieldPreferences</managed-bean-name>
+		<managed-bean-class>com.logicaldoc.web.document.FieldPreferences</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 
