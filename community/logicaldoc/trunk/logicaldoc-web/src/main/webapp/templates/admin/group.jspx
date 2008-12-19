@@ -6,99 +6,155 @@
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ice="http://www.icesoft.com/icefaces/component"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:c="http://java.sun.com/jstl/core"
-    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-    xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
-    id="groupForm" >
-    
-    <ice:panelGroup styleClass="center formBorderHighlight"
-        style="width: 700px;">
-        <ice:panelGroup>
-            <!-- Group data -->
-            <ice:panelGroup>
-                <h3>
-                    <ice:outputText value="#{msgs['msg.jsp.groupdata']}" />
-                    <br />
-                    <br />
-                </h3>
-                <ice:panelGrid columns="3" style="text-align:left;" onkeypress="return submitOnEnter('w-group:groupForm:save', event);">
-                    <ice:panelGroup styleClass="outputLabel" >
-                        <ice:outputLabel for="name"
-                            value="#{msgs['group.name']}*" />
-                    </ice:panelGroup>
-                    <ice:panelGroup rendered="#{groupsRecordsManager.selectedPanel == 'create'}">
-                        <ice:inputText id="name"
-                            tabindex="1"
-                            style="text-align:left;"
-                            maxlength="30" size="30"
-                            value="#{groupsRecordsManager.selectedGroup.name}"
-                            binding="#{groupsRecordsManager.groupName}"
-                            onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
-                            required="true" />
-                        <br />
-                        <ice:message for="name" />
-                    </ice:panelGroup>
-                    <ice:panelGroup rendered="#{groupsRecordsManager.selectedPanel == 'edit'}">
-                        <ice:outputText value=" #{groupsRecordsManager.selectedGroup.name}" style="font-weight:bold" />
-                    </ice:panelGroup>
-                    <ice:panelGroup style="width:20px" />
-                    <ice:panelGroup styleClass="outputLabel" >
-                        <ice:outputLabel for="groupDesc"
-                            value="#{msgs['msg.jsp.groupdesc']}" />
-                    </ice:panelGroup>
-                    <ice:panelGroup>
-                        <ice:inputTextarea id="groupDesc"
-                             tabindex="1"
-                             cols="70" rows="4"
-                             value="#{groupsRecordsManager.selectedGroup.description}"
-                             binding="#{groupsRecordsManager.groupDesc}" />
-                        <ice:message for="groupDesc" />
-                    </ice:panelGroup>
-                </ice:panelGrid>
-            </ice:panelGroup>
-        </ice:panelGroup>
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="groupForm">
 
-        <!-- Group affiliation -->
-        <ice:panelGroup rendered="#{groupsRecordsManager.selectedPanel == 'create'}">
-            <hr />
-            <h3>
-                <ice:outputText value="#{msgs['msg.jsp.inheritgroup']}" />
-                <br />
-                <br />
-            </h3>
-            <ice:panelGrid columns="3">
-                <ice:panelGroup>
+	<ice:panelGroup styleClass="center formBorderHighlight"
+		style="width: 600px;">
+		<ice:panelGroup>
+			<!-- Group data -->
+			<ice:panelGroup>
+				<h3>
+					<ice:outputText value="#{msgs['msg.jsp.groupdata']}" />
 					<br />
-					<ldoc:groupselector
-						showFilter="true"
-						allowMultipleSelection="false"
-						label=""
-						items="#{groupsRecordsManager.items}"
-						value="#{groupsRecordsManager.parentGroup}"
-						filterValue="#{groupsRecordsManager.groupFilter}"
-						filterListener="#{groupsRecordsManager.filterGroups}"/>
-                </ice:panelGroup>
-                <ice:panelGroup style="width:20px" />
-                <ice:panelGroup />
-                <ice:panelGroup />
-            </ice:panelGrid>
-        </ice:panelGroup>
-		<hr/>
-        <ice:panelGroup styleClass="commands">
-            <ice:commandButton value="#{msgs['abort']}"
-                partialSubmit="true" immediate="true"
-                action="#{groupsRecordsManager.list}" />
-            <ice:commandButton value="#{msgs['save']}"
-                id="save" tabindex="1"
-                action="#{groupsRecordsManager.save}" />
-        </ice:panelGroup>
-    </ice:panelGroup>
-         
-    <script defer="defer" type="text/javascript" language="javascript">
+					<br />
+				</h3>
+				<ice:panelGrid columns="3" style="text-align:left;"
+					onkeypress="return submitOnEnter('w-group:groupForm:save', event);">
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="name" value="#{msgs['group.name']}*" />
+					</ice:panelGroup>
+					<ice:panelGroup
+						rendered="#{groupsRecordsManager.selectedPanel == 'create'}">
+						<ice:inputText id="name" tabindex="1" style="text-align:left;"
+							maxlength="30" size="30" value="#{groupForm.group.name}"
+							binding="#{groupForm.groupName}"
+							onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+							required="true" />
+						<ice:message for="name" />
+					</ice:panelGroup>
+					<ice:panelGroup
+						rendered="#{groupsRecordsManager.selectedPanel == 'edit'}">
+						<ice:outputText value=" #{groupForm.group.name}"
+							style="font-weight:bold" />
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="groupDesc"
+							value="#{msgs['msg.jsp.groupdesc']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="groupDesc" maxlength="70" size="30"
+							value="#{groupForm.group.description}"
+							binding="#{groupForm.groupDesc}" />
+						<ice:message for="groupDesc" />
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+		</ice:panelGroup>
+
+		<!-- Group affiliation -->
+		<ice:panelGroup
+			rendered="#{groupsRecordsManager.selectedPanel == 'create'}">
+			<hr />
+			<h3>
+				<ice:outputText value="#{msgs['msg.jsp.inheritgroup']}" />
+				<br />
+				<br />
+			</h3>
+			<ice:panelGrid columns="3">
+				<ice:panelGroup>
+					<ldoc:groupselector id="affiliateGroup"  showFilter="true"
+						allowMultipleSelection="false" label="" items="#{groupForm.items}"
+						value="#{groupForm.parentGroup}"
+						filterValue="#{groupForm.groupFilter}"
+						filterListener="#{groupForm.filterGroups}" 
+						required="true" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup>
+					<ice:message for="groups" />
+				</ice:panelGroup>
+				<ice:panelGroup />
+			</ice:panelGrid>
+		</ice:panelGroup>
+
+		<ice:panelGroup
+			rendered="#{groupsRecordsManager.selectedPanel == 'edit'}">
+			<hr />
+			<ice:panelCollapsible styleClass="pnlClpsbl">
+
+				<f:facet name="header">
+					<ice:panelGroup styleClass="expandableStateIndicator">
+						<ice:outputText id="messagesHeader"
+							value="#{msgs['field.preferences']}" />
+					</ice:panelGroup>
+				</f:facet>
+				<ice:panelGroup>
+					<ice:dataTable value="#{groupForm.preferences}" var="preference"
+						cellpadding="0">
+
+						<!-- field name column -->
+						<ice:column styleClass="nowrap center">
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['field']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{preference.label}" />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- insert column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['insert']}" />
+							</f:facet>
+							<ice:panelGroup style="white-space: nowrap;">
+								<ice:selectBooleanCheckbox value="#{preference.insertHidden}" /> nascosto
+					</ice:panelGroup>
+							<ice:panelGroup style="white-space: nowrap;">
+								<ice:selectBooleanCheckbox value="#{preference.insertReadOnly}" /> sola lettura
+					</ice:panelGroup>
+							<ice:panelGroup style="white-space: nowrap;">
+								<ice:selectBooleanCheckbox value="#{preference.insertMandatory}" /> obbligatorio
+					</ice:panelGroup>
+						</ice:column>
+
+						<!-- edit column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['edit']}" />
+							</f:facet>
+							<ice:panelGroup style="white-space: nowrap;">
+								<ice:selectBooleanCheckbox value="#{preference.editHidden}" /> nascosto
+					</ice:panelGroup>
+							<ice:panelGroup style="white-space: nowrap;">
+								<ice:selectBooleanCheckbox value="#{preference.editReadOnly}" /> sola lettura
+					</ice:panelGroup>
+							<ice:panelGroup style="white-space: nowrap;">
+								<ice:selectBooleanCheckbox value="#{preference.editMandatory}" /> obbligatorio
+					</ice:panelGroup>
+						</ice:column>
+					</ice:dataTable>
+				</ice:panelGroup>
+			</ice:panelCollapsible>
+		</ice:panelGroup>
+		<hr />
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['abort']}" partialSubmit="true"
+				immediate="true" action="#{groupsRecordsManager.list}" />
+			<ice:commandButton value="#{msgs['save']}" id="save" tabindex="1"
+				action="#{groupForm.save}" />
+		</ice:panelGroup>
+	</ice:panelGroup>
+
+	<script defer="defer" type="text/javascript" language="javascript">
       /**
        * Set initial focus
        */

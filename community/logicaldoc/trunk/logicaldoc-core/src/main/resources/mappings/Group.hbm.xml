@@ -16,5 +16,10 @@
              <key column="ld_groupid"/>
              <many-to-many column="ld_userid" class="com.logicaldoc.core.security.User" />
         </set>
+		<map name="attributes" table="ld_group_ext" lazy="false" cascade="all">
+		   <key column="ld_groupid" />
+		   <map-key type="string" column="ld_name" length="255"/>
+		   <element type="string" column="ld_value" length="4000"/>
+		</map>
 	</class>
 </hibernate-mapping>

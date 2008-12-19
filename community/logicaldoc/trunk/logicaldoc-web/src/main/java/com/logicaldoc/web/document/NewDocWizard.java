@@ -165,11 +165,6 @@ public class NewDocWizard {
 			} finally {
 
 			}
-
-			// sometimes IE7 freezes the page and in these cases a refresh
-			// solves the problem
-			JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "window.location.reload(false);");
-
 			return null;
 		} else {
 			return "login";

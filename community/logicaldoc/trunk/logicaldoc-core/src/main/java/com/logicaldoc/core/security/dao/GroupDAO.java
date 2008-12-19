@@ -7,7 +7,8 @@ import com.logicaldoc.core.security.Group;
 
 public interface GroupDAO extends PersistentObjectDAO<Group> {
 	/**
-	 * This method persists a new group object.
+	 * This method persists a new group object. All permissions and extended
+	 * attributes of the parent group will be replicated.
 	 * 
 	 * @param group Group which should be stored in a database.
 	 * @param parentGroupId ID of the group this group inherits ACLs from

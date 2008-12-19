@@ -40,10 +40,10 @@ public class DmsClient implements DmsService {
 	public String createDocument(String username, String password, long folder, String docTitle, String source,
 			String sourceDate, String author, String sourceType, String coverage, String language, String keywords,
 			String versionDesc, String filename, DataHandler content, String templateName,
-			ExtendedAttribute[] extendedAttribute, String sourceId, String object) throws Exception {
+			ExtendedAttribute[] extendedAttribute, String sourceId, String object, String recipient) throws Exception {
 		return client.createDocument(username, password, folder, docTitle, source, sourceDate, author, sourceType,
 				coverage, language, keywords, versionDesc, filename, content, templateName, extendedAttribute,
-				sourceId, object);
+				sourceId, object, recipient);
 	}
 
 	public String createFolder(String username, String password, String name, long parent) throws Exception {

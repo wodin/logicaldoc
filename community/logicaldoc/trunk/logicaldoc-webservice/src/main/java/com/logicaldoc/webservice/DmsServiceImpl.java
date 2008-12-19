@@ -138,12 +138,12 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, java.lang.String, java.lang.String,
 	 *      java.lang.String, java.lang.String, javax.activation.DataHandler,
 	 *      java.lang.String, com.logicaldoc.webservice.ExtendedAttribute[],
-	 *      java.lang.String, java.lang.String)
+	 *      java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public String createDocument(String username, String password, long folderId, String docTitle, String source,
 			String sourceDate, String author, String sourceType, String coverage, String language, String keywords,
 			String versionDesc, String filename, DataHandler content, String templateName,
-			ExtendedAttribute[] extendedAttributes, String sourceId, String object) throws Exception {
+			ExtendedAttribute[] extendedAttributes, String sourceId, String object, String recipient) throws Exception {
 
 		checkCredentials(username, password);
 
@@ -195,7 +195,7 @@ public class DmsServiceImpl implements DmsService {
 		try {
 			Document doc = documentManager.create(stream, filename, folder, user, language, null, date, source, author,
 					sourceType, coverage, versionDesc, kwds, template != null ? template.getId() : null, attributes,
-					sourceId, object, false);
+					sourceId, object, recipient, false);
 			return String.valueOf(doc.getId());
 		} catch (Exception e) {
 			return "error";

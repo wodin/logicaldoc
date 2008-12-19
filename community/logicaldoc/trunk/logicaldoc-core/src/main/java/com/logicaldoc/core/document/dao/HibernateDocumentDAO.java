@@ -214,7 +214,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
 							.getFileName()));
 			if (docFile.exists()) {
-				System.out.println("path " + docFile.getPath());
 				long size = docFile.length();
 				doc.setFileSize(size);
 				doc.setDigest(FileUtil.computeDigest(docFile));
@@ -561,13 +560,13 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByFileNameAndParentFolderId(long folderId, String fileName) {
-		return findByWhere("_entity.folder.id = " + folderId + " and _entity.fileName like '" + fileName + "'");
+		return findByWhere("_entity.folder.id = " + folderId + " and lower(_entity.fileName) like '" + fileName.toLowerCase() + "'");
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByTitleAndParentFolderId(long folderId, String title) {
-		return findByWhere("_entity.folder.id = " + folderId + " and _entity.title like '" + title + "'");
+		return findByWhere("_entity.folder.id = " + folderId + " and lower(_entity.title) like '" + title.toLowerCase() + "'");
 	}
 
 	@Override

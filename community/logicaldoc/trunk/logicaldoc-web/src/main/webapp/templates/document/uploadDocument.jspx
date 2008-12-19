@@ -85,8 +85,7 @@
 				action="#{newDocWizard.next}" onclick="disabled=true;setFocus('');"
 				rendered="#{newDocWizard.showUpload==true and inputFile.ready==true}" />
 			<ice:commandButton value="#{msgs['save']}" id="save"
-				onclick="disabled=true;disableButton('w-uploadDocument:uploadForm:abort');setFocus('');"
-				action="#{newDocWizard.save}" visible="#{!newDocWizard.showUpload}" />
+				action="#{newDocWizard.save}" rendered="#{!newDocWizard.showUpload}" />
 		</ice:panelGroup>
 	</ice:panelGroup>
 </jsp:root>

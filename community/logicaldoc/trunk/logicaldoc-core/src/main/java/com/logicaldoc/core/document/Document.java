@@ -86,6 +86,8 @@ public class Document extends ExtensibleObject {
 	private int immutable = 0;
 	
 	private String digest;
+	
+	private String recipient;
 
 	public Document() {
 	}
@@ -450,6 +452,17 @@ public class Document extends ExtensibleObject {
 
 	public void setDigest(String digest) {
 		this.digest = digest;
+	}
+
+	/**
+	 * The document's recipient
+	 */
+	public String getRecipient() {
+		return recipient;
+	}
+
+	public void setRecipient(String recipient) {
+		this.recipient = recipient;
 	}
 	
 }

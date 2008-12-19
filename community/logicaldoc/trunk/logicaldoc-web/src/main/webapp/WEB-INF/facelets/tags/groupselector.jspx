@@ -19,32 +19,37 @@
 		<ldoc:compositeControl
 			methodBindings="filterListener=void javax.faces.event.ValueChangeEvent;">
 			<ice:panelGroup>
-				<ice:panelGroup style="text-align:center">
-					<ice:outputLabel for="groups" value="#{label}" />
+				<ice:panelGroup style="text-align:center" rendered="#{label != ''}">
+					<ice:outputLabel for="groups"
+						value="#{label}#{required=='true' ? '*':''}" />
 				</ice:panelGroup>
 
 				<ice:panelGroup rendered="#{allowMultipleSelection eq 'true'}">
-					<ice:selectManyMenu styleClass="#{fn:length(styleClass) == 0 ? 'selectManyMenu' : styleClass}"
-						value="#{value}">
+					<ice:selectManyMenu id="#{id}"
+						styleClass="#{fn:length(styleClass) == 0 ? 'selectManyMenu' : styleClass}"
+						value="#{value}" required="#{required=='true'}">
 						<f:selectItems value="#{items}" />
 					</ice:selectManyMenu>
+					<ice:message for="#{id}" />
 				</ice:panelGroup>
-				
+
 				<ice:panelGroup rendered="#{allowMultipleSelection eq 'false'}">
-					<ice:selectOneListbox styleClass="#{fn:length(styleClass) == 0  ? 'selectManyMenu' : styleClass}"
-						value="#{value}">
+					<ice:selectOneListbox id="#{id}"
+						styleClass="#{fn:length(styleClass) == 0  ? 'selectManyMenu' : styleClass}"
+						value="#{value}" required="#{required=='true'}">
 						<f:selectItems value="#{items}" />
 					</ice:selectOneListbox>
+					<ice:message for="#{id}" />
 				</ice:panelGroup>
-							
+
 				<ice:panelGroup style="text-align:center">
 					<ice:outputLabel for="filter" value="#{msgs['filter']}" />
 				</ice:panelGroup>
 
 				<ice:panelGroup rendered="#{showFilter eq 'true'}">
-					<ice:selectInputText width="#{fn:length(filterSize) == 0 ? '125' : filterSize}"
-						value="#{filterValue}"
-						valueChangeListener="#{filterListener}"
+					<ice:selectInputText
+						width="#{fn:length(filterSize) == 0 ? '125' : filterSize}"
+						value="#{filterValue}" valueChangeListener="#{filterListener}"
 						immediate="true" />
 				</ice:panelGroup>
 			</ice:panelGroup>

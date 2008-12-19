@@ -1,8 +1,9 @@
 create table ld_article (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_subject varchar(255), ld_message varchar(2000), ld_date timestamp, ld_username varchar(255), primary key (ld_id));
 create table ld_attributes (ld_templateid bigint not null, ld_attribute varchar(255));
-create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null,ld_immutable int not null, ld_customid varchar(4000), ld_title varchar(255), ld_version varchar(10), ld_date timestamp, ld_creation timestamp not null, ld_publisher varchar(30), ld_status int, ld_type varchar(255), ld_checkoutuser varchar(30), ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourcetype varchar(255), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_indexed int not null , ld_folderid bigint, ld_templateid bigint, ld_sourceid varchar(4000), ld_object varchar(4000), ld_digest varchar(255),  primary key (ld_id));
+create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null,ld_immutable int not null, ld_customid varchar(4000), ld_title varchar(255), ld_version varchar(10), ld_date timestamp, ld_creation timestamp not null, ld_publisher varchar(30), ld_status int, ld_type varchar(255), ld_checkoutuser varchar(30), ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourcetype varchar(255), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_indexed int not null , ld_folderid bigint, ld_templateid bigint, ld_sourceid varchar(4000), ld_object varchar(4000), ld_digest varchar(255), ld_recipient varchar(4000),  primary key (ld_id));
 create table ld_document_ext (ld_docid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_docid, ld_name));
 create table ld_group (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(255), ld_type int not null, primary key (ld_id));
+create table ld_group_ext (ld_groupid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_groupid, ld_name));
 create table ld_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_userid bigint not null, ld_date timestamp, ld_username varchar(255), ld_event varchar(255), ld_comment varchar(4000), primary key (ld_id));
 create table ld_keyword (ld_docid bigint not null, ld_keyword varchar(255));
 create table ld_link (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_docid1 bigint, ld_docid2 bigint, primary key (ld_id));
@@ -29,6 +30,7 @@ alter table ld_usergroup add constraint FK2435438DB8B12CA9 foreign key (ld_useri
 alter table ld_usergroup add constraint FK2435438D76F11EA1 foreign key (ld_groupid) references ld_group(ld_id);
 alter table ld_version add constraint FK9B3BD9117C693DFD foreign key (ld_docid) references ld_document(ld_id);
 alter table ld_generic_ext add constraint FK913AF772CF5D92AF foreign key (ld_genid) references ld_generic(ld_id);
+alter table ld_group_ext add constraint FKB728EA5A76F11EA1 foreign key (ld_groupid) references ld_group(ld_id);
 
 alter table ld_ticket add constraint FK_TICKET_DOC foreign key (ld_docid) references ld_document on delete cascade;
 alter table ld_ticket add constraint FK_TICKET_USER foreign key (ld_userid) references ld_user on delete cascade;
@@ -260,3 +262,12 @@ values     (16,3,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport)
 values     (19,3,0,0,0,0,0,0,0,0);
+
+insert into ld_group_ext (ld_groupid, ld_value, ld_name)
+values (1,'010010','preference.field.customId');
+
+insert into ld_group_ext (ld_groupid, ld_value, ld_name)
+values (2,'010010','preference.field.customId');
+
+insert into ld_group_ext (ld_groupid, ld_value, ld_name)
+values (3,'010010','preference.field.customId');

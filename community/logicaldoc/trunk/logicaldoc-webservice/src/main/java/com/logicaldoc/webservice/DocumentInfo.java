@@ -46,6 +46,8 @@ public class DocumentInfo {
 	private String sourceId;
 	
 	private String object;
+	
+	private String recipient;
 
 	public long getId() {
 		return id;
@@ -213,5 +215,13 @@ public class DocumentInfo {
 
 	public void setObject(String object) {
 		this.object = object;
+	}
+
+	public String getRecipient() {
+		return recipient;
+	}
+
+	public void setRecipient(String recipient) {
+		this.recipient = recipient;
 	}
 }
