@@ -321,7 +321,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
-			String sourceType, String coverage, String language, Set<String> keywords, String sourceId, String object, String recipient) throws Exception {
+			String sourceType, String coverage, String language, Set<String> keywords, String sourceId, String object,
+			String recipient) throws Exception {
 		try {
 			if (doc.getImmutable() == 0) {
 				doc.setTitle(title);
@@ -335,7 +336,7 @@ public class DocumentManagerImpl implements DocumentManager {
 					doc.setSourceDate(null);
 				doc.setSourceType(sourceType);
 				doc.setCoverage(coverage);
-				doc.setRecipient(recipient); 
+				doc.setRecipient(recipient);
 
 				// Intercept language changes
 				String oldLang = doc.getLanguage();
@@ -485,7 +486,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, boolean immediateIndexing)
 			throws Exception {
 		return create(file, folder, user, language, title, sourceDate, source, sourceAuthor, sourceType, coverage,
-				versionDesc, keywords, null, null, immediateIndexing);
+				versionDesc, keywords, templateId, extendedAttributes, null, null, null, immediateIndexing);
 
 	}
 
@@ -598,7 +599,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			notDeletableFolders.add(folder);
 			return notDeletableFolders;
 		}
-		
+
 		try {
 			// Retrieve all the sub-folders
 			List<Menu> subfolders = mdao.findByParentId(folder.getId());
@@ -610,7 +611,7 @@ public class DocumentManagerImpl implements DocumentManager {
 					notDeletableFolders.add(subfolder);
 				}
 			}
-			
+
 			for (Menu deletableFolder : deletableFolders) {
 				boolean foundDocImmutable = false;
 				DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -684,7 +685,8 @@ public class DocumentManagerImpl implements DocumentManager {
 		InputStream is = new FileInputStream(file);
 		try {
 			return create(is, file.getName(), folder, user, language, _title, sourceDate, source, _author, sourceType,
-					coverage, versionDesc, _kwds, templateId, extendedAttributes, sourceId, object, recipient, immediateIndexing);
+					coverage, versionDesc, _kwds, templateId, extendedAttributes, sourceId, object, recipient,
+					immediateIndexing);
 		} finally {
 			is.close();
 		}
