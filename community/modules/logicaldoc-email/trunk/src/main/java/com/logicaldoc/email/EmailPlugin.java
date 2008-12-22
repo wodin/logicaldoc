@@ -40,7 +40,7 @@ public class EmailPlugin extends LogicalDOCPlugin {
 		facesConfig.addBundle("i18n.application-email");
 
 		// Add some scheduling defaults
-		PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
+		PropertiesBean pbean = new PropertiesBean();
 		pbean.setProperty("schedule.cron.EmailCrawler", "00 10 * * * ?");
 		pbean.setProperty("schedule.length.EmailCrawler", "1800");
 		pbean.setProperty("schedule.enabled.EmailCrawler", "true");
