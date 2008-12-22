@@ -540,8 +540,7 @@ em { /*font-size:14px;*/
 	width: 100px;
 }
 
-.dateColumn {
-	/*width: 40px; */
+.dateColumn { /*width: 40px; */
 	text-align: center;
 	white-space: nowrap;
 }
@@ -1566,17 +1565,55 @@ DIV#center {
 	border: 0px;
 }
 
-.cloud1 { font-size: 0.9em; color: #999999; }
-.cloud2 { font-size: 1.0em; color: #888888; }
-.cloud3 { font-size: 1.15em; color: #777777; }
-.cloud4 { font-size: 1.25em; color: #666666; }
-.cloud5 { font-size: 1.40em; color: #555555; }
-.cloud6 { font-size: 1.50em; color: #444444; }
-.cloud7 { font-size: 1.60em; color: #333333; }
-.cloud8 { font-size: 1.70em; color: #222222; }
-.cloud9 { font-size: 1.80em; color: #111111; }
-.cloud10 { font-size: 1.90em; color: #000000; }
+.cloud1 {
+	font-size: 0.9em;
+	color: #999999;
+}
 
+.cloud2 {
+	font-size: 1.0em;
+	color: #888888;
+}
+
+.cloud3 {
+	font-size: 1.15em;
+	color: #777777;
+}
+
+.cloud4 {
+	font-size: 1.25em;
+	color: #666666;
+}
+
+.cloud5 {
+	font-size: 1.40em;
+	color: #555555;
+}
+
+.cloud6 {
+	font-size: 1.50em;
+	color: #444444;
+}
+
+.cloud7 {
+	font-size: 1.60em;
+	color: #333333;
+}
+
+.cloud8 {
+	font-size: 1.70em;
+	color: #222222;
+}
+
+.cloud9 {
+	font-size: 1.80em;
+	color: #111111;
+}
+
+.cloud10 {
+	font-size: 1.90em;
+	color: #000000;
+}
 
 /* Used to center text or columns */
 .center {
@@ -1591,11 +1628,11 @@ DIV#center {
 
 .iceMnuBarSubMenu {
 	width: auto;
-} 
+}
 
 .LDNormalMenuItem {
 	width: 160px;
-} 
+}
 
 .LDLargeMenuItem {
 	padding-right: 10px;
@@ -1618,4 +1655,14 @@ DIV#center {
 .immutable {
 	font-style: italic;
 	color: #919191;
+}
+
+.breadcrumb{
+	background-color: #eeeeee;
+}
+
+.breadcrumbLink {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	font-weight: bold;
 }
