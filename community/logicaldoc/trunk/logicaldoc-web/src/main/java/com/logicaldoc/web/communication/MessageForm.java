@@ -14,6 +14,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
+import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.FacesUtil;
 
 /**
@@ -25,8 +26,11 @@ import com.logicaldoc.web.util.FacesUtil;
  */
 public class MessageForm {
 	protected static Log log = LogFactory.getLog(MessageForm.class);
+
 	private SystemMessage message = new SystemMessage();
+
 	private boolean readOnly = true;
+
 	private boolean confirmation = false;
 
 	public SystemMessage getMessage() {
@@ -39,9 +43,8 @@ public class MessageForm {
 	}
 
 	public String back() {
-		MessagesRecordsManager manager = ((MessagesRecordsManager) FacesUtil
-				.accessBeanFromFacesContext("messagesRecordsManager",
-						FacesContext.getCurrentInstance(), log));
+		MessagesRecordsManager manager = ((MessagesRecordsManager) FacesUtil.accessBeanFromFacesContext(
+				"messagesRecordsManager", FacesContext.getCurrentInstance(), log));
 		manager.listMessages();
 
 		return null;
@@ -76,16 +79,14 @@ public class MessageForm {
 	public String save() {
 		if (SessionManagement.isValid()) {
 			try {
-				UserDAO udao = (UserDAO) Context.getInstance().getBean(
-						UserDAO.class);
+				UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 				String recipient = message.getRecipient();
 				User user = udao.findByUserName(recipient);
 				if (user != null) {
 					message.setAuthor(SessionManagement.getUsername());
 					message.setSentDate(String.valueOf(new Date().getTime()));
 
-					SystemMessageDAO smdao = (SystemMessageDAO) Context
-							.getInstance().getBean(SystemMessageDAO.class);
+					SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
 					boolean stored = smdao.store(message);
 
 					if (!stored) {
@@ -94,11 +95,9 @@ public class MessageForm {
 						Messages.addLocalizedInfo("msg.action.savesysmess");
 					}
 				} else {
-					String id = FacesUtil.findParameterEndingWithId(
-							"messageForm:recipient", FacesContext
-									.getCurrentInstance());
-					Messages.addLocalizedError("errors.action.usernotexists",
-							id);
+					String id = FacesUtil.findParameterEndingWithId("messageForm:recipient", FacesContext
+							.getCurrentInstance());
+					Messages.addLocalizedError("errors.action.usernotexists", id);
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -107,7 +106,7 @@ public class MessageForm {
 		} else {
 			return "login";
 		}
-
-		return null;
+		
+		return back();
 	}
 }
