@@ -16,7 +16,7 @@
 	id="groupForm">
 
 	<ice:panelGroup styleClass="center formBorderHighlight"
-		style="width: 600px;">
+		style="text-align:left; width: 600px;">
 		<ice:panelGroup>
 			<!-- Group data -->
 			<ice:panelGroup>
@@ -25,8 +25,7 @@
 					<br />
 					<br />
 				</h3>
-				<ice:panelGrid columns="3" style="text-align:left;"
-					onkeypress="return submitOnEnter('w-group:groupForm:save', event);">
+				<ice:panelGrid columns="3">
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="name" value="#{msgs['group.name']}*" />
 					</ice:panelGroup>
@@ -70,12 +69,11 @@
 			</h3>
 			<ice:panelGrid columns="3">
 				<ice:panelGroup>
-					<ldoc:groupselector id="affiliateGroup"  showFilter="true"
+					<ldoc:groupselector id="affiliateGroup" showFilter="true"
 						allowMultipleSelection="false" label="" items="#{groupForm.items}"
 						value="#{groupForm.parentGroup}"
 						filterValue="#{groupForm.groupFilter}"
-						filterListener="#{groupForm.filterGroups}" 
-						required="true" />
+						filterListener="#{groupForm.filterGroups}" required="true" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
 				<ice:panelGroup>

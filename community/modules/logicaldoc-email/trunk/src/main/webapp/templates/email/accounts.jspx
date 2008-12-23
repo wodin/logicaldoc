@@ -10,8 +10,8 @@
   xmlns:c="http://java.sun.com/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:ldoc="http://www.logicaldoc.com/jsf"
   jsfc="ice:panelGroup" styleClass="center" style="width: 60%">
 <f:loadBundle
-		basename="i18n.application"
-		var="email_msgs" />
+		basename="i18n.application-email"
+		var="email_msgs" /> 
 
   <script type="text/javascript" language="javascript">
        var buttonSave;

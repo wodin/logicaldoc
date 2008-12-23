@@ -15,11 +15,11 @@
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
 	id="AccountForm">
 <f:loadBundle
-		basename="i18n.application"
+		basename="i18n.application-email"
 		var="email_msgs" />
 
 	<ice:panelGroup styleClass="center formBorderHighlight"
-		style="width: 600px;">
+		style="text-align:left; width: 600px;">
 		<ice:panelGroup>
 			<!-- Account data -->
 			<ice:panelGroup>

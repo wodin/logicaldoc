@@ -545,7 +545,7 @@ public class SearchForm {
 				PageContentBean page = new PageContentBean("result", "search/result");
 				StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 				page.setIcon(style.getImagePath("search.png"));
-				page.setContentTitle(Messages.getMessage("msg.jsp.searchresult"));
+				page.setContentTitle(Messages.getMessage("search.result"));
 				navigation.setSelectedPanel(page);
 			} catch (Throwable e) {
 				logger.error(e.getMessage(), e);
