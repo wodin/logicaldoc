@@ -25,6 +25,7 @@ import com.icesoft.faces.component.paneltabset.TabChangeEvent;
 import com.icesoft.faces.component.paneltabset.TabChangeListener;
 import com.icesoft.faces.webapp.http.servlet.ServletExternalContext;
 import com.logicaldoc.core.SystemProperty;
+import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.dbinit.PluginDbInit;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.util.Context;
@@ -55,6 +56,8 @@ public class SetupWizard implements TabChangeListener {
 
 	private ConnectionData cdata = new ConnectionData();
 
+	private SmtpData smtpData = new SmtpData();
+
 	private boolean setupSuccess;
 
 	public SetupWizard() {
@@ -74,7 +77,7 @@ public class SetupWizard implements TabChangeListener {
 			String indexDir = FilenameUtils.separatorsToSystem(workingDir + "/data/index/");
 			String userDir = FilenameUtils.separatorsToSystem(workingDir + "/data/users/");
 
-			PropertiesBean pbean = (PropertiesBean)Context.getInstance().getBean("ContextProperties");
+			PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 			pbean.setProperty("conf.docdir", docDir);
 			pbean.setProperty("conf.indexdir", indexDir);
 			pbean.setProperty("conf.userdir", userDir);
@@ -133,6 +136,14 @@ public class SetupWizard implements TabChangeListener {
 		}
 
 		next();
+	}
+
+	public SmtpData getSmtpData() {
+		return smtpData;
+	}
+
+	public void setSmtpData(SmtpData smtpData) {
+		this.smtpData = smtpData;
 	}
 
 	private void writeDBConfig(ConnectionData dbdata) throws Exception {
@@ -220,7 +231,7 @@ public class SetupWizard implements TabChangeListener {
 		int currentTab = tabSet.getSelectedIndex();
 		currentTab++;
 
-		if (currentTab < 5) {
+		if (currentTab < 6) {
 			tabSet.setSelectedIndex(currentTab);
 
 			// Enable the current panel
@@ -234,6 +245,31 @@ public class SetupWizard implements TabChangeListener {
 				}
 			}
 		}
+	}
+
+	public void writeSmtpSettings() throws Exception {
+		try {
+			PropertiesBean pbean = new PropertiesBean();
+			pbean.setProperty("smtp.host", smtpData.getHost());
+			pbean.setProperty("smtp.port", smtpData.getPort().toString());
+			pbean.setProperty("smtp.username", smtpData.getUsername());
+			pbean.setProperty("smtp.password", smtpData.getPassword());
+			pbean.setProperty("smtp.sender", smtpData.getSender());
+			pbean.write();
+
+			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+			sender.setHost(smtpData.getHost());
+			sender.setPort(smtpData.getPort());
+			sender.setUsername(smtpData.getUsername());
+			sender.setPassword(smtpData.getPassword());
+			sender.setSender(smtpData.getSender());
+
+			log.info("SMTP configuration data written successfully.");
+		} catch (Exception e) {
+			log.error("Exception writing context file: " + e.getMessage(), e);
+			throw e;
+		}
+		next();
 	}
 
 	public void prev() {

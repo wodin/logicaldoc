@@ -10,8 +10,7 @@ import com.logicaldoc.util.config.DBMSConfigurator;
  *
  *
  * @author Alessandro Gasparini - Logical Objects
- * @version $Id:$
- * @since ###release###
+ * @since 3.0
  */
 public class ConnectionData {
     private String dbms;

@@ -6,7 +6,8 @@
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ice="http://www.icesoft.com/icefaces/component" jsfc="f:view" locale="#{language}">
+	xmlns:ice="http://www.icesoft.com/icefaces/component" jsfc="f:view"
+	locale="#{language}">
 	<f:loadBundle basename="i18n.application" var="msgs" />
 	<ice:outputDeclaration doctypeRoot="html"
 		doctypePublic="-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -14,11 +15,11 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-			<title>#{StyleBean.productName}  #{StyleBean.productRelease}</title>
+			<title>#{StyleBean.productName} #{StyleBean.productRelease}</title>
 			<ice:outputText style="padding-top:0px; padding-bottom:0px;"
 				value="#{StyleBean.style}" escape="false" />
 			<ice:outputStyle href="#{StyleBean.cssPath}/style.css" />
-                <script type="text/javascript" language="javascript">
+			<script type="text/javascript" language="javascript">
   function noErrorMessages () { return true; }
   window.onerror = noErrorMessages;
             
@@ -71,11 +72,13 @@
 									<div style="height: 150px;">
 										<ice:panelGroup style="height: 90%; width: 100%;">
 											<h3 style="font-size: 10pt;">
-												<ice:outputLabel for="workingDir" value="#{msgs['setup.workdir']}" />
+												<ice:outputLabel for="workingDir"
+													value="#{msgs['setup.workdir']}" />
 											</h3>
 											<br />
-											<ice:inputText id="workingDir" tabindex="1" maxlength="80" size="80"
-                                                onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:0:continue', event);"
+											<ice:inputText id="workingDir" tabindex="1" maxlength="80"
+												size="80"
+												onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:0:continue', event);"
 												value="#{setupWizard.workingDir}" />
 										</ice:panelGroup>
 										<ice:panelGroup styleClass="alignRight">
@@ -92,13 +95,15 @@
 									<div style="height: 150px;">
 										<ice:panelGroup style="height: 90%; width: 100%;">
 											<h3 style="font-size: 10pt;">
-												<ice:outputLabel for="dbType" value="#{msgs['setup.dbconf']}" />
+												<ice:outputLabel for="dbType"
+													value="#{msgs['setup.dbconf']}" />
 											</h3>
 											<br />
 											<ice:panelGroup styleClass="selectionRadioGroup"
 												style="width: 95%;">
-												<ice:selectOneRadio id="dbType" value="#{setupWizard.dbms}" tabindex="1"
-													layout="pageDirection" onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:1:continue', event);"
+												<ice:selectOneRadio id="dbType" value="#{setupWizard.dbms}"
+													tabindex="1" layout="pageDirection"
+													onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:1:continue', event);"
 													style="text-align: left; font-size: 10pt;">
 													<f:selectItem id="intern" tabindex="1"
 														itemLabel="#{msgs['setup.internaldb']}" itemValue="intern" />
@@ -126,10 +131,11 @@
 												<ice:outputText value="#{msgs['setup.dbconf']}" />
 											</h3>
 											<br />
-											<ice:outputLabel for="internDBPath" value="#{msgs['setup.internaldb.path']}" />
+											<ice:outputLabel for="internDBPath"
+												value="#{msgs['setup.internaldb.path']}" />
 											<br />
 											<ice:inputText id="internDBPath" tabindex="1"
-                                                onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
+												onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
 												value="#{setupWizard.internDBPath}" size="80" maxlength="80" />
 										</ice:panelGroup>
 										<ice:panelGroup styleClass="alignRight">
@@ -145,18 +151,21 @@
 											<ice:outputText value="#{msgs['setup.dbconf']}" />
 										</h3>
 										<br />
-										<ice:outputLabel for="SlctDBMS" value="#{msgs['setup.dbconf.type']}" />
+										<ice:outputLabel for="SlctDBMS"
+											value="#{msgs['setup.dbconf.type']}" />
 										<br />
 										<br />
 										<ice:selectOneListbox id="SlctDBMS"
-											value="#{setupWizard.selectedDBMS}" partialSubmit="true" tabindex="1"
-											valueChangeListener="#{setupWizard.dbmsChanged}">
-                                            <f:selectItem itemValue="Firebird" itemLabel="Firebird 2.1" />
-                                            <f:selectItem itemValue="Hsqldb" itemLabel="HSQLDB 1.8" />
-                                            <f:selectItem itemValue="MsSQLServer" itemLabel="Microsoft SQL Server 2000" />
-                                            <f:selectItem itemValue="MySQL" itemLabel="MySQL 4.1/5.0" />
-                                            <f:selectItem itemValue="Oracle" itemLabel="Oracle 8i/9i/10i" />
-											<f:selectItem itemValue="PostgreSQL" itemLabel="PostgreSQL 8.x" />
+											value="#{setupWizard.selectedDBMS}" partialSubmit="true"
+											tabindex="1" valueChangeListener="#{setupWizard.dbmsChanged}">
+											<f:selectItem itemValue="Firebird" itemLabel="Firebird 2.1" />
+											<f:selectItem itemValue="Hsqldb" itemLabel="HSQLDB 1.8" />
+											<f:selectItem itemValue="MsSQLServer"
+												itemLabel="Microsoft SQL Server 2000" />
+											<f:selectItem itemValue="MySQL" itemLabel="MySQL 4.1/5.0" />
+											<f:selectItem itemValue="Oracle" itemLabel="Oracle 8i/9i/10i" />
+											<f:selectItem itemValue="PostgreSQL"
+												itemLabel="PostgreSQL 8.x" />
 										</ice:selectOneListbox>
 
 										<br />
@@ -166,46 +175,45 @@
 										<br />
 										<ice:panelGrid columns="2"
 											style="font-family: Arial, Helvetica, sans-serif; font-size: 8pt; font-weight: bold;">
-                                            <ice:panelGroup style="text-align:right;">
-											<ice:outputLabel for="clazz" value="#{msgs['setup.dbconf.driver']}" />
-                                            </ice:panelGroup>
-                                            <ice:panelGroup>
-											<ice:inputText id="clazz"
-                                                onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
-												binding="#{setupWizard.cdata.classInput}"
-                                                tabindex="1"
-												value="#{setupWizard.cdata.clazz}" size="60" maxdata="60" />
-                                            </ice:panelGroup>
-                                            <ice:panelGroup style="text-align:right;">
-											<ice:outputLabel for="dburl" value="URL" />
-                                            </ice:panelGroup>
-                                            <ice:panelGroup>
-											<ice:inputText id="dburl"
-                                                onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
-												binding="#{setupWizard.cdata.dburlInput}"
-                                                tabindex="1"
-												value="#{setupWizard.cdata.dburl}" size="60" maxdata="60" />
-                                            </ice:panelGroup>
-                                            <ice:panelGroup style="text-align:right;">
-											<ice:outputLabel for="user" value="#{msgs['setup.dbconf.username']}" />
-                                            </ice:panelGroup>
-                                            <ice:panelGroup>
-											<ice:inputText id="user"
-                                                onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
-												binding="#{setupWizard.cdata.userInput}"
-                                                tabindex="1"
-												value="#{setupWizard.cdata.user}" />
-                                            </ice:panelGroup>
-                                            <ice:panelGroup style="text-align:right;">
-											<ice:outputLabel for="password" value="#{msgs['setup.dbconf.password']}" />
-                                            </ice:panelGroup>
-                                            <ice:panelGroup>
-											<ice:inputText id="password"
-                                                onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
-												binding="#{setupWizard.cdata.passwordInput}"
-                                                tabindex="1"
-												value="#{setupWizard.cdata.password}" />
-                                            </ice:panelGroup>
+											<ice:panelGroup style="text-align:right;">
+												<ice:outputLabel for="clazz"
+													value="#{msgs['setup.dbconf.driver']}" />
+											</ice:panelGroup>
+											<ice:panelGroup>
+												<ice:inputText id="clazz"
+													onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
+													binding="#{setupWizard.cdata.classInput}" tabindex="1"
+													value="#{setupWizard.cdata.clazz}" size="60" maxdata="60" />
+											</ice:panelGroup>
+											<ice:panelGroup style="text-align:right;">
+												<ice:outputLabel for="dburl" value="URL" />
+											</ice:panelGroup>
+											<ice:panelGroup>
+												<ice:inputText id="dburl"
+													onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
+													binding="#{setupWizard.cdata.dburlInput}" tabindex="1"
+													value="#{setupWizard.cdata.dburl}" size="60" maxdata="60" />
+											</ice:panelGroup>
+											<ice:panelGroup style="text-align:right;">
+												<ice:outputLabel for="user"
+													value="#{msgs['setup.dbconf.username']}" />
+											</ice:panelGroup>
+											<ice:panelGroup>
+												<ice:inputText id="user"
+													onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
+													binding="#{setupWizard.cdata.userInput}" tabindex="1"
+													value="#{setupWizard.cdata.user}" />
+											</ice:panelGroup>
+											<ice:panelGroup style="text-align:right;">
+												<ice:outputLabel for="password"
+													value="#{msgs['setup.dbconf.password']}" />
+											</ice:panelGroup>
+											<ice:panelGroup>
+												<ice:inputText id="password"
+													onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
+													binding="#{setupWizard.cdata.passwordInput}" tabindex="1"
+													value="#{setupWizard.cdata.password}" />
+											</ice:panelGroup>
 										</ice:panelGrid>
 										<br />
 										<ice:panelGroup styleClass="alignRight">
@@ -219,20 +227,90 @@
 								<!-- 4th panel: db initialization -->
 								<ice:panelTab id="phase4" rendered="true" disabled="true"
 									label="#{msgs['setup.phase4']}">
+									<ice:panelGroup>
+										<ice:panelGroup style="height: 90%; width: 100%;">
+											<h3 style="font-size: 10pt;">
+												<ice:outputText value="#{msgs['setup.smtpconf']}" />
+											</h3>
+											<br />
+											<ice:panelGrid columns="2"
+												style="font-family: Arial, Helvetica, sans-serif; font-size: 8pt; font-weight: bold;">
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="host" value="#{msgs['host']}" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="host" tabindex="1"
+														value="#{setupWizard.smtpData.host}"
+														size="60" />
+												</ice:panelGroup>
+												
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="port"
+														value="#{msgs['port']}" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="port" tabindex="1"
+														value="#{setupWizard.smtpData.port}" />
+												</ice:panelGroup>
+												
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="username"
+														value="#{msgs['username']}" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="username" tabindex="1"
+														value="#{setupWizard.smtpData.username}" />
+												</ice:panelGroup>
+												
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="password"
+														value="#{msgs['password']}" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="password" tabindex="1"
+														value="#{setupWizard.smtpData.password}" />
+												</ice:panelGroup>
+												
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="sender"
+														value="#{msgs['sender']}" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="sender" tabindex="1"
+														value="#{setupWizard.smtpData.sender}">
+														<f:validator validatorId="validator.email" />
+													</ice:inputText>
+													<ice:message for="sender" />
+												</ice:panelGroup>
+											</ice:panelGrid>
+										</ice:panelGroup>
+										<ice:panelGroup styleClass="alignRight">
+											<ice:commandButton type="submit" tabindex="1"
+												value="#{msgs['msg.jsp.continue']}"
+												action="#{setupWizard.writeSmtpSettings}" id="continue" />
+										</ice:panelGroup>
+									</ice:panelGroup>
+								</ice:panelTab>
+
+
+								<!-- 5th panel: db initialization -->
+								<ice:panelTab id="phase5" rendered="true" disabled="true"
+									label="#{msgs['setup.phase5']}">
 									<ice:panelGroup rendered="#{setupWizard.setupSuccess}">
 										<h3 style="font-size: 10pt;">
-										   <ice:outputFormat value="#{msgs['setup.success']}" >
-										     <f:param value="#{ContextProperties['product.name']}" />
-										   </ice:outputFormat>
+											<ice:outputFormat value="#{msgs['setup.success']}">
+												<f:param value="#{ContextProperties['product.name']}" />
+											</ice:outputFormat>
 										</h3>
 										<br />
-										   <ice:outputText value="#{msgs['setup.login']}" />:
+										<ice:outputText value="#{msgs['setup.login']}" />:
 										   <br />
 										<br />
 										<b>#{msgs['setup.dbconf.username']}:</b> admin<br />
 										<b>#{msgs['setup.dbconf.password']}:</b> admin<br />
 										<br />
-											<ice:outputText value="#{msgs['setup.remember']}" /><br />
+										<ice:outputText value="#{msgs['setup.remember']}" />
+										<br />
 										<br />
 										<ice:panelGroup styleClass="alignRight">
 											<ice:commandButton value="#{msgs['setup.click']}"
@@ -245,9 +323,11 @@
 											<ice:outputText value="#{msgs['setup.warning']}" />
 										</h3>
 										<br />
-                                           <ice:outputText value="#{msgs['setup.warning1']}" /><br />
+										<ice:outputText value="#{msgs['setup.warning1']}" />
 										<br />
-                                           <ice:outputText value="#{msgs['setup.warning2']}" /><br />
+										<br />
+										<ice:outputText value="#{msgs['setup.warning2']}" />
+										<br />
 										<br />
 										<br />
 										<ice:commandButton type="submit"
@@ -255,7 +335,6 @@
 											id="back" />
 									</ice:panelGroup>
 								</ice:panelTab>
-
 							</ice:panelTabSet>
 
 						</ice:panelGroup>
