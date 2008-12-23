@@ -94,7 +94,7 @@
 
 					<ice:panelGroup>
 						<ldoc:paginator table="accountsList"
-							label="#{email_msgs['logicaldoc-email.account.paginator']}" />
+							label="#{msgs['paginator.simple']}" />
 						<br />
 					</ice:panelGroup>
 				</ice:panelGroup>
