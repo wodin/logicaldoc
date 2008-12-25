@@ -2,7 +2,6 @@ package com.logicaldoc.util;
 
 import java.io.UnsupportedEncodingException;
 
-import org.mozilla.intl.chardet.HtmlCharsetDetector;
 import org.mozilla.intl.chardet.nsDetector;
 import org.mozilla.intl.chardet.nsICharsetDetectionObserver;
 
