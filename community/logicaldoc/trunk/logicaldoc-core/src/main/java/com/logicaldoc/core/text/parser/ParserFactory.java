@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import net.sf.jmimemagic.Magic;
+import net.sf.jmimemagic.MagicMatch;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
@@ -117,8 +120,19 @@ public class ParserFactory {
 				parser = new TXTParser();
 			}
 		} else {
-			log.warn("No registered parser for extension " + extension + ", fall back to TXT parser");
-			parser = new TXTParser();
+			log.warn("No registered parser for extension " + extension);
+			Magic mimeDetector = new Magic();
+			try {
+				MagicMatch match = mimeDetector.getMagicMatch(file, true);
+				if ("text/plain".equals(match.getMimeType())) {
+					log.warn("Try to parse the file as plain text");
+					parser = new TXTParser();
+				} else {
+					parser = new DummyParser();
+				}
+			} catch (Exception e) {
+				parser = new DummyParser();
+			}
 		}
 
 		if (locale == null)

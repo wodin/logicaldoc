@@ -46,6 +46,9 @@
 		<library id="poi-scratchpad" path="lib/poi-scratchpad-3.0.2-FINAL.jar" type="code">
 			<export prefix="*" />
 		</library>
+        <library id="jmimemagic" path="lib/jmimemagic-0.1.2.jar" type="code">
+            <export prefix="*" />
+        </library>
 	</runtime>
 	<extension-point id="DbInit">
         <parameter-def id="name" />
