@@ -421,9 +421,9 @@ public class PopulateDatabase {
 
 		String pathExt = path;
 		if (pathExt.startsWith("/5") && pathExt.length() > 2) {
-			pathExt = "/db.projects" + pathExt.substring(2);
+			pathExt = "/menu.documents" + pathExt.substring(2);
 		} else if ("/5".equals(pathExt)) {
-			pathExt = "/db.projects";
+			pathExt = "/menu.documents";
 		}
 		if (pathExt.endsWith("/"))
 			pathExt += "/";

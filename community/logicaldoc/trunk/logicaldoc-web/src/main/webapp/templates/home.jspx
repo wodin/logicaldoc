@@ -44,13 +44,13 @@
 						<ice:graphicImage value="#{StyleBean.imagesPath}/editmessage.png" />
 						<ice:outputText value=" " />
 						<ice:commandLink action="#{messagesRecordsManager.addMessage}"
-							value="#{msgs['db.createmessage']}" />
+							value="#{msgs['menu.createmessage']}" />
 					</ice:panelGroup>
 					<ice:panelGroup style="padding-top: 10px">
 						<ice:graphicImage value="#{StyleBean.imagesPath}/message.png" />
 						<ice:outputText value=" " />
 						<ice:commandLink action="#{messagesRecordsManager.listMessages}">
-							<ice:outputText value="#{msgs['db.readmessages']}" />
+							<ice:outputText value="#{msgs['menu.readmessages']}" />
 							<ice:outputText
 								value=" (#{messagesRecordsManager.toBeReadCount})" />
 						</ice:commandLink>

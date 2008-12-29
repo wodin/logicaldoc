@@ -23,10 +23,10 @@
 					<tr>
 						<td>
 							<ice:commandLink action="#{messagesRecordsManager.addMessage}"
-								title="#{msgs['db.createmessage']}">
+								title="#{msgs['menu.createmessage']}">
 								<ice:graphicImage
 									value="#{StyleBean.imagesPath}/editmessage.png"
-									style="border: 0px solid;" alt="#{msgs['db.createmessage']}" />
+									style="border: 0px solid;" alt="#{msgs['menu.createmessage']}" />
 							</ice:commandLink>
 						</td>
 					</tr>

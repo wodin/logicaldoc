@@ -11,11 +11,11 @@ INSERT INTO co_users (co_username,co_password,co_name,co_firstname,co_street,co_
 VALUES ('test','d033e22ae348aeb566fc214aec3585c4da997','test','Test','','','','','de','test@acme.com','');
 
 
-INSERT INTO co_menus VALUES(99,'db.admin',1,1,'administration.gif','ROOT',5,1,NULL,0);
-INSERT INTO co_menus VALUES(100,'db.admin',1,1,'administration.gif','ROOT',3,1,NULL,0);
+INSERT INTO co_menus VALUES(99,'menu.admin',1,1,'administration.gif','ROOT',5,1,NULL,0);
+INSERT INTO co_menus VALUES(100,'menu.admin',1,1,'administration.gif','ROOT',3,1,NULL,0);
 INSERT INTO co_menus VALUES(101,'text',100,1,'administration.gif','ROOT',3,1,NULL,0);
-INSERT INTO co_menus VALUES(102,'db.admin',101,1,'administration.gif','ROOT',5,1,NULL,0);
-INSERT INTO co_menus VALUES(103,'db.admin',101,1,'administration.gif','ROOT',5,1,NULL,0);
+INSERT INTO co_menus VALUES(102,'menu.admin',101,1,'administration.gif','ROOT',5,1,NULL,0);
+INSERT INTO co_menus VALUES(103,'menu.admin',101,1,'administration.gif','ROOT',5,1,NULL,0);
 
 INSERT INTO co_menugroup VALUES(100,'admin',1);
 INSERT INTO co_menugroup VALUES(100,'guest',1);

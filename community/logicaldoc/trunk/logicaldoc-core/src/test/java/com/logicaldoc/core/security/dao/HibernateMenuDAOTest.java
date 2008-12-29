@@ -38,27 +38,27 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		menu.setParentId(1);
 		menu.setMenuGroup(new long[] { 1, 2 });
 		assertTrue(dao.store(menu));
-		assertEquals("/db.home/", menu.getPathExtended());
+		assertEquals("/menu.home/", menu.getPathExtended());
 
 		menu = dao.findById(100);
-		assertEquals("db.admin", menu.getText());
+		assertEquals("menu.admin", menu.getText());
 		assertEquals("/", menu.getPath());
 		assertEquals(1, menu.getSort());
 		assertEquals(2, menu.getMenuGroups().size());
 
 		// Load an existing menu and modify it
 		menu = dao.findById(20);
-		assertEquals("db.emails", menu.getText());
+		assertEquals("menu.emails", menu.getText());
 		dao.store(menu);
-		assertEquals("/db.home/db.admin/", menu.getPathExtended());
+		assertEquals("/menu.home/menu.admin/", menu.getPathExtended());
 		menu = dao.findById(23);
 		dao.store(menu);
-		assertEquals("/db.home/db.admin/db.emails/", menu.getPathExtended());
+		assertEquals("/menu.home/menu.admin/menu.emails/", menu.getPathExtended());
 		menu = dao.findById(20);
 		menu.setText("xxxx");
 		dao.store(menu);
 		menu = dao.findById(23);
-		assertEquals("/db.home/db.admin/xxxx/", menu.getPathExtended());
+		assertEquals("/menu.home/menu.admin/xxxx/", menu.getPathExtended());
 
 		menu.getMenuGroups().remove(menu.getMenuGroup(3));
 		assertEquals(2, menu.getMenuGroups().size());
@@ -86,7 +86,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		Menu menu = dao.findById(1);
 		assertNotNull(menu);
 		assertEquals(Menu.MENUID_HOME, menu.getId());
-		assertEquals("db.home", menu.getText());
+		assertEquals("menu.home", menu.getText());
 		assertEquals("home.png", menu.getIcon());
 		assertEquals(1, menu.getSort());
 		assertEquals(3, menu.getMenuGroups().size());
@@ -99,22 +99,22 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	@SuppressWarnings("unchecked")
 	public void testFindByText() {
 		// Try with existing text
-		List<Menu> menus = dao.findByText("db.admin");
+		List<Menu> menus = dao.findByText("menu.admin");
 		assertNotNull(menus);
 		assertEquals(5, menus.size());
 		Menu menu = menus.iterator().next();
-		assertEquals("db.admin", menu.getText());
+		assertEquals("menu.admin", menu.getText());
 
-		menus = (List<Menu>) dao.findByText(null, "db.admin", new Integer(1));
+		menus = (List<Menu>) dao.findByText(null, "menu.admin", new Integer(1));
 		assertNotNull(menus);
 		assertEquals(1, menus.size());
 
 		Menu parent = dao.findById(Menu.MENUID_HOME);
-		menus = (List<Menu>) dao.findByText(parent, "db.admin", 1);
+		menus = (List<Menu>) dao.findByText(parent, "menu.admin", 1);
 		assertNotNull(menus);
 		assertEquals(1, menus.size());
 
-		menus = (List<Menu>) dao.findByText(null, "db.admin", 3);
+		menus = (List<Menu>) dao.findByText(null, "menu.admin", 3);
 		assertNotNull(menus);
 		assertEquals(2, menus.size());
 
@@ -276,7 +276,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 	
 	public void testFindByMenuTextAndParentId() {
-		List<Menu> menus = dao.findByMenuTextAndParentId("%db.admin%", 1);
+		List<Menu> menus = dao.findByMenuTextAndParentId("%menu.admin%", 1);
 		assertEquals(3, menus.size());
 		assertTrue(menus.contains(dao.findById(99)));
 		assertTrue(menus.contains(dao.findById(100)));

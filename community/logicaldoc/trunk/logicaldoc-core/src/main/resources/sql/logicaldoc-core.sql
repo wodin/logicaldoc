@@ -55,39 +55,39 @@ alter table ld_version add constraint FK_VERSION_USER foreign key (ld_userid) re
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (1,'2008-10-22',0,'db.home',1,1,'home.png','/',1,null,0);
+values     (1,'2008-10-22',0,'menu.home',1,1,'home.png','/',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (2,'2008-10-22',0,'db.admin',1,1,'administration.png','/',1,null,0);
+values     (2,'2008-10-22',0,'menu.admin',1,1,'administration.png','/',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (4,'2008-10-22',0,'db.personal',1,3,'personal.png','/',1,null,0);
+values     (4,'2008-10-22',0,'menu.personal',1,3,'personal.png','/',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size, ld_pathextended)
-values     (5,'2008-10-22',0,'db.projects',1,4,'documents.png','/',1,'document/browse',0, '/');
+values     (5,'2008-10-22',0,'menu.documents',1,4,'documents.png','/',1,'document/browse',0, '/');
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (6,'2008-10-22',0,'db.user',2,1,'user.png','/2',1,'admin/users',0);
+values     (6,'2008-10-22',0,'menu.user',2,1,'user.png','/2',1,'admin/users',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (7,'2008-10-22',0,'db.group',2,2,'group.png','/2',1,'admin/groups',0);
+values     (7,'2008-10-22',0,'menu.group',2,2,'group.png','/2',1,'admin/groups',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (8,'2008-10-22',0,'db.logging',2,3,'logging.png','/2',1,'admin/logs',0);
+values     (8,'2008-10-22',0,'menu.logging',2,3,'logging.png','/2',1,'admin/logs',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (13,'2008-10-22',0,'db.messages',4,1,'message.png','/4',1,'communication/messages',0);
+values     (13,'2008-10-22',0,'menu.messages',4,1,'message.png','/4',1,'communication/messages',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (16,'2008-10-22',0,'db.changepassword',4,3,'password.png','/4',1,'settings/password',0);
+values     (16,'2008-10-22',0,'menu.changepassword',4,3,'password.png','/4',1,'settings/password',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
@@ -95,11 +95,11 @@ values     (17,'2008-10-22',0,'directory',2,5,'open.png','/2',1,'admin/folders',
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (19,'2008-10-22',0,'db.editme',4,4,'user.png','/4',1,'settings/personalData',0);
+values     (19,'2008-10-22',0,'menu.editme',4,4,'user.png','/4',1,'settings/personalData',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (20,'2008-10-22',0,'db.emails',2,4,'mail.png','/2',1,null,0);
+values     (20,'2008-10-22',0,'menu.emails',2,4,'mail.png','/2',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
@@ -111,7 +111,7 @@ values     (23,'2008-10-22',0,'smtp',20,3,'mail_preferences.png','/2/20',1,'admi
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (25,'2008-10-22',0,'db.searchengine',2,6,'search.png','/2',1,'admin/searchEngine',0);
+values     (25,'2008-10-22',0,'menu.searchengine',2,6,'search.png','/2',1,'admin/searchEngine',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
