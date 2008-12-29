@@ -39,12 +39,16 @@ public class EmailPlugin extends LogicalDOCPlugin {
 		FacesConfigurator facesConfig = new FacesConfigurator();
 		facesConfig.addBundle("i18n.application-email");
 
-		// Add some scheduling defaults
-		PropertiesBean pbean = new PropertiesBean();
-		pbean.setProperty("schedule.cron.EmailCrawler", "00 10 * * * ?");
-		pbean.setProperty("schedule.length.EmailCrawler", "1800");
-		pbean.setProperty("schedule.enabled.EmailCrawler", "true");
-		pbean.write();
+		try {
+			// Add some scheduling defaults
+			PropertiesBean pbean = new PropertiesBean();
+			pbean.setProperty("schedule.cron.EmailCrawler", "00 10 * * * ?");
+			pbean.setProperty("schedule.length.EmailCrawler", "1800");
+			pbean.setProperty("schedule.enabled.EmailCrawler", "true");
+			pbean.write();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
 
 		// Add crawler log issues
 		LoggingConfigurator logging = new LoggingConfigurator();
