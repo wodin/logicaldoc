@@ -70,7 +70,7 @@ public class MessagesRecordsManager {
 		smdao.deleteExpiredMessages(SessionManagement.getUsername());
 
 		PageContentBean content = new PageContentBean("messages", "communication/messages");
-		content.setContentTitle(Messages.getMessage("db.readmessages"));
+		content.setContentTitle(Messages.getMessage("menu.readmessages"));
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		content.setIcon(style.getImagePath("message.png"));
 		navigation.setSelectedPanel(content);
@@ -89,7 +89,7 @@ public class MessagesRecordsManager {
 
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		PageContentBean content = new PageContentBean("message", "communication/messages");
-		content.setContentTitle(Messages.getMessage("db.createmessage"));
+		content.setContentTitle(Messages.getMessage("menu.createmessage"));
 		content.setIcon(style.getImagePath("message.png"));
 		navigation.setSelectedPanel(content);
 

@@ -12,21 +12,21 @@ co_menusize INTEGER,
 PRIMARY KEY(co_menuid)
 );
 
-INSERT INTO co_menus VALUES(1,'db.home',0,1,'home.gif','',0,0,NULL,0);
-INSERT INTO co_menus VALUES(2,'db.admin',1,1,'administration.gif','ROOT',1,1,NULL,0);
-INSERT INTO co_menus VALUES(4,'db.personal',1,3,'personal.gif','ROOT',1,1,NULL,0);
-INSERT INTO co_menus VALUES(5,'db.projects',1,4,'documents.gif','ROOT',1,1,'document/browse',0);
-INSERT INTO co_menus VALUES(6,'db.user',2,1,'user.gif','ROOT/2',1,2,'admin/users',0);
-INSERT INTO co_menus VALUES(7,'db.group',2,2,'group.gif','ROOT/2',1,2,'admin/groups',0);
-INSERT INTO co_menus VALUES(8,'db.logging',2,3,'logging.gif','ROOT/2',1,2,'admin/logs',0);
-INSERT INTO co_menus VALUES(13,'db.messages',4,1,'message.gif','ROOT/4',1,2,'communication/messages',0);
-INSERT INTO co_menus VALUES(16,'db.changepassword',4,3,'password.gif','ROOT/4',1,2,'settings/password',0);
+INSERT INTO co_menus VALUES(1,'menu.home',0,1,'home.gif','',0,0,NULL,0);
+INSERT INTO co_menus VALUES(2,'menu.admin',1,1,'administration.gif','ROOT',1,1,NULL,0);
+INSERT INTO co_menus VALUES(4,'menu.personal',1,3,'personal.gif','ROOT',1,1,NULL,0);
+INSERT INTO co_menus VALUES(5,'menu.documents',1,4,'documents.gif','ROOT',1,1,'document/browse',0);
+INSERT INTO co_menus VALUES(6,'menu.user',2,1,'user.gif','ROOT/2',1,2,'admin/users',0);
+INSERT INTO co_menus VALUES(7,'menu.group',2,2,'group.gif','ROOT/2',1,2,'admin/groups',0);
+INSERT INTO co_menus VALUES(8,'menu.logging',2,3,'logging.gif','ROOT/2',1,2,'admin/logs',0);
+INSERT INTO co_menus VALUES(13,'menu.messages',4,1,'message.gif','ROOT/4',1,2,'communication/messages',0);
+INSERT INTO co_menus VALUES(16,'menu.changepassword',4,3,'password.gif','ROOT/4',1,2,'settings/password',0);
 INSERT INTO co_menus VALUES(17,'directory',2,5,'open.gif','ROOT/2',1,2,'admin/folders',0);
-INSERT INTO co_menus VALUES(19,'db.editme',4,4,'user.gif','ROOT/4',1,2,'settings/personalData',0);
-INSERT INTO co_menus VALUES(20,'db.emails',2,4,'mail.gif','ROOT/2',1,2,NULL,0);
+INSERT INTO co_menus VALUES(19,'menu.editme',4,4,'user.gif','ROOT/4',1,2,'settings/personalData',0);
+INSERT INTO co_menus VALUES(20,'menu.emails',2,4,'mail.gif','ROOT/2',1,2,NULL,0);
 INSERT INTO co_menus VALUES(23,'smtp',20,3,'editmail.gif','ROOT/2/20',1,3,'admin/smtp',0);
-INSERT INTO co_menus VALUES(24,'db.emailaccounts',20,4,'user.gif','ROOT/2/20',1,3,'admin/accounts',0);
-INSERT INTO co_menus VALUES(25,'db.searchengine',2,6,'search.gif','ROOT/2',1,2,'admin/searchEngine',0);
+INSERT INTO co_menus VALUES(24,'logicaldoc-email.accounts',20,4,'user.gif','ROOT/2/20',1,3,'admin/accounts',0);
+INSERT INTO co_menus VALUES(25,'menu.searchengine',2,6,'search.gif','ROOT/2',1,2,'admin/searchEngine',0);
 INSERT INTO co_menus VALUES(26,'db.keywords',1,5,'keywords.gif','ROOT',1,1,'search/keywords',0);
 
 CREATE TABLE co_groups (

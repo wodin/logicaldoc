@@ -39,7 +39,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 	protected static Log log = LogFactory.getLog(ResourceServiceImpl.class);
 
-	private static final String FOLDER_PREFIX = "db.projects";
+	private static final String FOLDER_PREFIX = "menu.documents";
 
 	private DocumentDAO documentDAO;
 
