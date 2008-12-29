@@ -1,10 +1,10 @@
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (99,'2008-10-22',0,'db.admin',1,1,'administration.gif','/',5,null,0);
+values     (99,'2008-10-22',0,'menu.admin',1,1,'administration.gif','/',5,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (100,'2008-10-22',0,'db.admin',1,1,'administration.gif','/',3,null,0);
+values     (100,'2008-10-22',0,'menu.admin',1,1,'administration.gif','/',3,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
@@ -12,10 +12,10 @@ values     (101,'2008-10-22',0,'text',100,1,'administration.gif','/',3,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (102,'2008-10-22',0,'db.admin',101,1,'administration.gif','/',5,null,0);
+values     (102,'2008-10-22',0,'menu.admin',101,1,'administration.gif','/',5,null,0);
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (103,'2008-10-22',0,'db.admin',101,1,'administration.gif','/',3,null,0);
+values     (103,'2008-10-22',0,'menu.admin',101,1,'administration.gif','/',3,null,0);
 
 insert into ld_template 
 			(ld_id, ld_lastmodified, ld_deleted, ld_name, ld_description)
