@@ -50,7 +50,7 @@
 
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="accountUser"
-							value="#{msgs['msg.jsp.login.username']}*: " />
+							value="#{msgs['username']}*: " />
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
 						<ice:inputText id="accountUser"
@@ -65,7 +65,7 @@
 					<ice:panelGroup style="width:20px" />
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="accountPassword"
-							value="#{msgs['msg.jsp.login.password']}:" />
+							value="#{msgs['password']}:" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputSecret id="accountPassword" tabindex="1"
@@ -132,7 +132,7 @@
 					</ice:panelGroup>
 
 					<ice:panelGroup styleClass="outputLabel">
-						<ice:outputLabel for="host" value="#{msgs['msg.jsp.host']}*: " />
+						<ice:outputLabel for="host" value="#{msgs['host']}*: " />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="host"
@@ -190,7 +190,7 @@
 					<ice:panelGroup style="width:20px" />
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="language"
-							value="#{msgs['msg.jsp.login.language']}*: " />
+							value="#{msgs['language']}*: " />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:selectOneMenu id="language"
