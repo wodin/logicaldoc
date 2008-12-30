@@ -21,7 +21,7 @@
 		<!-- Core data -->
 		<ice:panelGroup>
 			<h3>
-				<ice:outputText value="#{msgs['msg.jsp.messageheader']}"
+				<ice:outputText value="#{msgs['message.header']}"
 					rendered="#{!messageForm.readOnly}" />
 				<br />
 				<br />
@@ -49,7 +49,7 @@
 
 
 				<ice:panelGroup styleClass="outputLabel">
-					<ice:outputLabel for="subject" value="#{msgs['msg.jsp.subject']}*" />
+					<ice:outputLabel for="subject" value="#{msgs['subject']}*" />
 				</ice:panelGroup>
 				<ice:panelGroup rendered="#{!messageForm.readOnly}">
 					<ice:inputText id="subject"
@@ -94,7 +94,7 @@
 
 				<ice:panelGroup rendered="#{!messageForm.readOnly}"
 					styleClass="outputLabel">
-					<ice:outputLabel for="prio" value="#{msgs['msg.jsp.prio']}" />
+					<ice:outputLabel for="prio" value="#{msgs['priority']}" />
 				</ice:panelGroup>
 				<ice:panelGroup rendered="#{!messageForm.readOnly}">
 					<ice:selectOneMenu id="prio" styleClass="selectTagMenu"
@@ -109,13 +109,13 @@
 		<ice:panelGroup>
 			<hr />
 			<h3>
-				<ice:outputText value="#{msgs['msg.jsp.message']}" />
+				<ice:outputText value="#{msgs['message']}" />
 				<br />
 				<br />
 			</h3>
 			<ice:panelGrid columns="2">
 				<ice:panelGroup styleClass="outputLabel">
-					<ice:outputLabel for="message" value="#{msgs['msg.jsp.message']}" />
+					<ice:outputLabel for="message" value="#{msgs['message']}" />
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputTextarea id="message" tabindex="1" cols="65" rows="5"
@@ -126,7 +126,7 @@
 		</ice:panelGroup>
 		<hr />
 		<ice:panelGroup styleClass="commands">
-			<ice:commandButton value="&lt;&lt; #{msgs['msg.jsp.back']}"
+			<ice:commandButton value="&lt;&lt; #{msgs['back']}"
 				immediate="true" partialSubmit="true" action="#{messageForm.back}" />
 			<ice:commandButton value="#{msgs['save']}" id="save"
 				action="#{messageForm.save}" rendered="#{!messageForm.readOnly}"

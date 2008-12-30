@@ -72,20 +72,20 @@
 
                                     <ice:panelGrid columns="2" styleClass="loginForm2"
                                         rowClasses="textFieldNameRow">
-                                        <ice:outputText value="#{msgs['msg.jsp.login.username']}:" />
+                                        <ice:outputText value="#{msgs['username']}:" />
                                         <ice:inputText value="#{loginForm.j_username}" id="username" />
 
-                                        <ice:outputText value="#{msgs['msg.jsp.login.password']}:" />
+                                        <ice:outputText value="#{msgs['password']}:" />
                                         <ice:inputSecret value="#{loginForm.j_password}" />
 
-                                        <ice:outputText value="#{msgs['msg.jsp.login.language']}:" />
+                                        <ice:outputText value="#{msgs['language']}:" />
                                         <ice:selectOneMenu value="#{loginForm.language}">
-                                            <f:selectItem itemLabel="#{msgs['msg.jsp.login.language.default']}" itemValue="default" />
+                                            <f:selectItem itemLabel="#{msgs['default']}" itemValue="default" />
                                             <f:selectItems value="#{selectionTags.languages}" />
                                         </ice:selectOneMenu>
 
                                         <ice:outputText value=" " />
-                                        <ice:commandButton type="submit" value="#{msgs['msg.jsp.login.login']}"
+                                        <ice:commandButton type="submit" value="#{msgs['login']}"
                                             action="#{loginForm.login}" id="login" />
                                     </ice:panelGrid>
                                 </ice:panelGrid>

@@ -25,7 +25,7 @@
 			<ice:panelGrid columns="2">
 				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="lang"
-						value="#{msgs['msg.jsp.login.language']}" />
+						value="#{msgs['language']}" />
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:selectOneMenu id="lang" styleClass="selectTagMenu"
@@ -81,7 +81,7 @@
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="#{msgs['abort']}" id="abort"
 				partialSubmit="true" immediate="true" action="#{newDocWizard.abort}" />
-			<ice:commandButton value="#{msgs['msg.jsp.next']} >>" id="next"
+			<ice:commandButton value="#{msgs['next']} >>" id="next"
 				action="#{newDocWizard.next}" onclick="disabled=true;setFocus('');"
 				rendered="#{newDocWizard.showUpload==true and inputFile.ready==true}" />
 			<ice:commandButton value="#{msgs['save']}" id="save"

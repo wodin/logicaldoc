@@ -161,7 +161,7 @@
 			
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="language"
-					value="#{msgs['msg.jsp.login.language']}" />
+					value="#{msgs['language']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectOneMenu id="language" styleClass="selectTagMenu"

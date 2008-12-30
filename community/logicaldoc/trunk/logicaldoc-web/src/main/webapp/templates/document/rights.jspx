@@ -19,7 +19,7 @@
 	<ice:panelGroup styleClass="formBorderHighlight">
 		<h3>
 			<ice:outputText
-				value="#{msgs['msg.jsp.rights']} - #{rightsRecordsManager.selectedDirectory.displayText}"
+				value="#{msgs['rights']} - #{rightsRecordsManager.selectedDirectory.displayText}"
 				rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
 			<br />
 			<br />
@@ -206,7 +206,7 @@
 		<br />
 		<hr />
 		<ice:panelGroup styleClass="commands">
-			<ice:commandButton value="&lt;&lt; #{msgs['msg.jsp.back']}"
+			<ice:commandButton value="&lt;&lt; #{msgs['back']}"
 				action="#{rightsRecordsManager.back}"
 				rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
 			<ice:commandButton value="#{msgs['abort']}"

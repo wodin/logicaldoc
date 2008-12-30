@@ -28,7 +28,7 @@
 				<ice:panelGrid columns="5">
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="userName"
-							value="#{msgs['msg.jsp.login.username']}*" />
+							value="#{msgs['username']}*" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="userName" value="#{userForm.user.userName}"

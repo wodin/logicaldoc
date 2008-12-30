@@ -45,7 +45,7 @@
                             <!-- title column -->
                             <ice:column>
                                 <f:facet name="header">
-                                    <ice:outputText value="#{msgs['msg.jsp.title']}" />
+                                    <ice:outputText value="#{msgs['title']}" />
                                 </f:facet>
                                 <ice:panelGroup>
                                     <ice:commandLink action="#{article.select}">
@@ -57,7 +57,7 @@
                             <!-- date column -->
                             <ice:column>
                                 <f:facet name="header">
-                                    <ice:outputText value="#{msgs['msg.jsp.date']}" />
+                                    <ice:outputText value="#{msgs['date']}" />
                                 </f:facet>
                                 <ice:panelGroup>
                                     <ice:outputText value="#{article.date}">
@@ -88,7 +88,7 @@
         <ice:form>
             <ice:panelGroup styleClass="commands">
             <hr />
-                <ice:commandButton value="&lt;&lt; #{msgs['msg.jsp.back']}"
+                <ice:commandButton value="&lt;&lt; #{msgs['back']}"
                     immediate="true"
                     partialSubmit="true" action="#{articlesRecordsManager.back}" />
                 <ice:commandButton value="#{msgs['save']}"

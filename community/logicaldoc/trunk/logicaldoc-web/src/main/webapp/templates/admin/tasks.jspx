@@ -84,11 +84,11 @@
 								<ice:commandButton image="#{StyleBean.imagesPath}/2.gif"
 									action="#{task.enable}" styleClass=""
 									rendered="#{!task.task.scheduling.enabled}"
-									title="#{msgs['msg.jsp.disabled']}: #{msgs['msg.jsp.enable']}" />
+									title="#{msgs['disabled']}: #{msgs['enable']}" />
 								<ice:commandButton image="#{StyleBean.imagesPath}/0.gif"
 									action="#{task.disable}" styleClass=""
 									rendered="#{task.task.scheduling.enabled}"
-									title="#{msgs['msg.jsp.enabled']}: #{msgs['msg.jsp.disable']}" />
+									title="#{msgs['enabled']}: #{msgs['disable']}" />
 							</ice:panelGroup>
 						</ice:column>
 

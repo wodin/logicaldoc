@@ -19,7 +19,7 @@
         <ice:panelGroup>
             <h3>
                 <ice:outputText
-                    value="#{msgs['msg.jsp.email']} - #{emailForm.selectedDocument.title}" />
+                    value="#{msgs['email']} - #{emailForm.selectedDocument.title}" />
                 <br />
                 <br />
             </h3>
@@ -30,7 +30,7 @@
             <!-- Header data -->
             <ice:panelGroup>
                 <h3>
-                    <ice:outputText value="#{msgs['msg.jsp.emailheader']}" />
+                    <ice:outputText value="#{msgs['email.header']}" />
                     <br />
                     <br />
                 </h3>
@@ -54,7 +54,7 @@
                     </ice:panelGroup>
 
                     <ice:panelGroup styleClass="outputLabel">
-                        <ice:outputLabel for="subject" value="#{msgs['msg.jsp.subject']}" />
+                        <ice:outputLabel for="subject" value="#{msgs['subject']}" />
                     </ice:panelGroup>
                     <ice:panelGroup>
                         <ice:inputText id="subject"
@@ -70,12 +70,12 @@
         <ice:panelGroup>
             <hr />
             <h3>
-                <ice:outputText value="#{msgs['msg.jsp.email']}" />
+                <ice:outputText value="#{msgs['email']}" />
                 <br />
                 <br />
             </h3>
             <ice:panelGroup>
-                <ice:outputLabel for="message" value="#{msgs['msg.jsp.message']}" />
+                <ice:outputLabel for="message" value="#{msgs['message']}" />
             </ice:panelGroup>
             <ice:panelGroup>
                 <ice:inputTextarea id="message"
@@ -90,7 +90,7 @@
             <ice:commandButton value="#{msgs['abort']}"
                 partialSubmit="true" immediate="true"
                 action="#{newDocWizard.abort}" />
-            <ice:commandButton value="#{msgs['msg.jsp.send']}" id="save" tabindex="1"
+            <ice:commandButton value="#{msgs['send']}" id="save" tabindex="1"
                 action="#{emailForm.send}" />
         </ice:panelGroup>
     </ice:panelGroup>

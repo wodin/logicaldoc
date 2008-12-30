@@ -64,13 +64,13 @@
 
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="language"
-					value="#{msgs['msg.jsp.login.language']}" />
+					value="#{msgs['language']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectOneMenu id="language" styleClass="selectTagMenu"
 					tabindex="1" value="#{searchForm.language}">
 					<f:selectItem itemValue="all"
-						itemLabel="#{msgs['msg.jsp.search.allLanguages']}" />
+						itemLabel="#{msgs['search.allLanguages']}" />
 					<f:selectItems value="#{selectionTags.languages}" />
 				</ice:selectOneMenu>
 			</ice:panelGroup>
@@ -255,7 +255,7 @@
                     &amp;nbsp;
                 </ice:panelGroup>
 			<ice:panelGroup styleClass="outputLabel" style="text-align:right;">
-				<ice:outputLabel for="format" value="#{msgs['msg.jsp.format']}" />
+				<ice:outputLabel for="format" value="#{msgs['format']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectOneMenu id="format" styleClass="selectTagMenu"
@@ -280,7 +280,7 @@
 		<ice:panelGrid columns="5"
 			onkeypress="return submitOnEnter('searchForm:save', event);">
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="content" value="#{msgs['msg.jsp.fulltext']}" />
+				<ice:outputLabel for="content" value="#{msgs['fulltext']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectBooleanCheckbox id="content" tabindex="1"
@@ -336,7 +336,7 @@
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="title" value="#{msgs['msg.jsp.title']}" />
+				<ice:outputLabel for="title" value="#{msgs['title']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectBooleanCheckbox id="title" tabindex="1"
@@ -388,7 +388,7 @@
 
 	<hr />
 	<ice:panelGroup styleClass="commands">
-		<ice:commandButton type="submit" value="#{msgs['msg.jsp.search']}"
+		<ice:commandButton type="submit" value="#{msgs['search']}"
 			id="save" tabindex="1" action="#{searchForm.search}" />
 	</ice:panelGroup>
 

@@ -26,7 +26,7 @@
             <ice:panelGroup>
                 <ice:panelGrid columns="2">
                     <ice:panelGroup styleClass="outputLabel">
-                        <ice:outputLabel value="#{msgs['msg.jsp.title']}" />
+                        <ice:outputLabel value="#{msgs['title']}" />
                     </ice:panelGroup>
                     <ice:panelGroup>
                         <ice:outputText
@@ -34,7 +34,7 @@
                     </ice:panelGroup>
 
                     <ice:panelGroup styleClass="outputLabel">
-                        <ice:outputLabel value="#{msgs['msg.jsp.version']}" />
+                        <ice:outputLabel value="#{msgs['version']}" />
                     </ice:panelGroup>
                     <ice:panelGroup>
                         <ice:outputText value="#{versionForm.version}" />

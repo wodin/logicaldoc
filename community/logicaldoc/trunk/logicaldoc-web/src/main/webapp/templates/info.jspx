@@ -18,7 +18,7 @@
 	<ice:panelCollapsible expanded="true" styleClass="pnlClpsbl">
 		<f:facet name="header">
 			<ice:panelGroup styleClass="expandableStateIndicator">
-				<ice:outputText value="#{messages['msg.jsp.system']}" />
+				<ice:outputText value="#{messages['system']}" />
 			</ice:panelGroup>
 		</f:facet>
 		<ice:panelGroup>
@@ -43,7 +43,7 @@
 	<ice:panelCollapsible expanded="true" styleClass="pnlClpsbl">
 		<f:facet name="header">
 			<ice:panelGroup styleClass="expandableStateIndicator">
-				<ice:outputText value="#{msgs['msg.jsp.developer']}" />
+				<ice:outputText value="#{msgs['developers']}" />
 			</ice:panelGroup>
 		</f:facet>
 		<ice:panelGrid columns="1">

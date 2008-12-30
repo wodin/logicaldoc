@@ -16,6 +16,6 @@
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
 	id="headerInfo">
 	<ice:outputText styleClass="headerInfoText"
-		value="#{msgs['msg.jsp.login.username']}: "></ice:outputText>
+		value="#{msgs['username']}: "></ice:outputText>
 	<ice:outputText styleClass="headerInfoText" value="#{authUser}"></ice:outputText>
 </jsp:root>

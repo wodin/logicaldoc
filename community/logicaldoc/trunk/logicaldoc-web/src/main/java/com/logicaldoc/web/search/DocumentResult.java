@@ -123,9 +123,9 @@ public class DocumentResult extends DocumentRecord implements Result {
 				"#{entry.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank", null));
 		model.add(createMenuItem(Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(), null,
 				"#{entry.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("msg.jsp.foldercontent.info"), "info-" + folder.getId(), null,
+		model.add(createMenuItem(Messages.getMessage("info"), "info-" + folder.getId(), null,
 				"#{entry.info}", null, style.getImagePath("info.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("msg.jsp.history"), "history-" + folder.getId(), null,
+		model.add(createMenuItem(Messages.getMessage("history"), "history-" + folder.getId(), null,
 				"#{entry.history}", null, style.getImagePath("history.png"), true, "_blank", null));
 	}
 

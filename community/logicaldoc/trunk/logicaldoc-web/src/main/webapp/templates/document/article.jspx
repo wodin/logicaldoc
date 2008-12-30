@@ -34,7 +34,7 @@
             </ice:panelGroup>
             
             <ice:panelGroup styleClass="outputLabel">
-                <ice:outputLabel for="author" value="#{msgs['msg.jsp.title']}*" />
+                <ice:outputLabel for="author" value="#{msgs['title']}*" />
             </ice:panelGroup>
             <ice:panelGroup>
                 <ice:inputText id="title"
@@ -47,7 +47,7 @@
                 <ice:message for="title" />
             </ice:panelGroup>
             <ice:panelGroup styleClass="outputLabel">
-                <ice:outputLabel for="text" value="#{msgs['msg.jsp.text']}" />
+                <ice:outputLabel for="text" value="#{msgs['text']}" />
             </ice:panelGroup>
             <ice:panelGroup>
                 <ice:inputTextarea id="text"

@@ -225,16 +225,16 @@ public class DocumentRecord extends MenuBarBean {
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		if ((menuDAO.isWriteEnable(folder.getId(), userId)) && (document.getImmutable() == 0)) {
 			if ((document.getStatus() == Document.DOC_CHECKED_OUT) && username.equals(document.getCheckoutUser())) {
-				model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.checkin"), "checkin-" + folder.getId(),
+				model.add(createMenuItem(" " + Messages.getMessage("checkin"), "checkin-" + folder.getId(),
 						null, "#{documentRecord.checkin}", null, style.getImagePath("checkin.png"), true, null, null));
 			} else if (document.getStatus() == Document.DOC_CHECKED_IN) {
 				model
-						.add(createMenuItem(" " + Messages.getMessage("msg.jsp.checkout"),
+						.add(createMenuItem(" " + Messages.getMessage("checkout"),
 								"checkout-" + folder.getId(), null, "#{documentRecord.checkout}", null, style
 										.getImagePath("checkout.png"), true, null, null));
 			}
 
-			model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.foldercontent.edit"), "pastelink-"
+			model.add(createMenuItem(" " + Messages.getMessage("edit"), "pastelink-"
 					+ folder.getId(), null, "#{documentRecord.edit}", null, style.getImagePath("document_edit.png"),
 					true, null, null));
 
@@ -254,9 +254,9 @@ public class DocumentRecord extends MenuBarBean {
 				null, "#{documentRecord.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(), null,
 				"#{documentRecord.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.foldercontent.info"), "info-" + folder.getId(),
+		model.add(createMenuItem(" " + Messages.getMessage("info"), "info-" + folder.getId(),
 				null, "#{documentRecord.info}", null, style.getImagePath("info.png"), true, "_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.history"), "history-" + folder.getId(), null,
+		model.add(createMenuItem(" " + Messages.getMessage("history"), "history-" + folder.getId(), null,
 				"#{documentRecord.history}", null, style.getImagePath("history.png"), true, "_blank", null));
 	}
 
@@ -321,7 +321,7 @@ public class DocumentRecord extends MenuBarBean {
 						try {
 							StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 							// create a new menu to replace the checkout
-							MenuItem checkinMenuItem = createMenuItem(Messages.getMessage("msg.jsp.checkin"),
+							MenuItem checkinMenuItem = createMenuItem(Messages.getMessage("checkin"),
 									"checkin-" + document.getId(), null, "#{documentRecord.checkin}", null, style
 											.getImagePath("checkin.png"), true, null, null);
 							// replacing the old menu at the same index

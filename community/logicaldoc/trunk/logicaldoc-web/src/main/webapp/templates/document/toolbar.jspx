@@ -43,29 +43,29 @@
 				</td>
 				<td>
 					<ice:commandLink action="#{documentsRecordsManager.trimSelected}"
-						title="#{msgs['msg.jsp.cut']}"
+						title="#{msgs['cut']}"
 						rendered="#{documentsRecordsManager.clipboardSize==0 and documentNavigation.selectedDir.writeEnabled}">
 						<ice:graphicImage
 							value="#{StyleBean.imagesPath}/actions_trim.gif"
-							style="border: 0px solid;" title="#{msgs['msg.jsp.cut']}"/>
+							style="border: 0px solid;" title="#{msgs['cut']}"/>
 					</ice:commandLink>
 				</td>
                 <td>
 					<ice:commandLink action="#{documentsRecordsManager.paste}"
-						title="#{msgs['msg.jsp.paste']}"
+						title="#{msgs['paste']}"
 						rendered="#{documentsRecordsManager.clipboardSize>0 and documentNavigation.selectedDir.writeEnabled}" >
 						<ice:graphicImage
 							value="#{StyleBean.imagesPath}/actions_paste.gif"
-							style="border: 0px solid;" title="#{msgs['msg.jsp.paste']}"/>
+							style="border: 0px solid;" title="#{msgs['paste']}"/>
 					</ice:commandLink>
 				</td>
 				<td>
 					<ice:commandLink action="#{documentsRecordsManager.deleteSelected}"
-						title="#{msgs['msg.jsp.delete']}"
+						title="#{msgs['delete']}"
 						onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;" rendered="#{documentNavigation.selectedDir.writeEnabled}">
 						<ice:graphicImage
 							value="#{StyleBean.imagesPath}/actions_delete.gif"
-							style="border: 0px solid;" title="#{msgs['msg.jsp.delete']}"/>
+							style="border: 0px solid;" title="#{msgs['delete']}"/>
 					</ice:commandLink>
 				</td>
 				<td>
