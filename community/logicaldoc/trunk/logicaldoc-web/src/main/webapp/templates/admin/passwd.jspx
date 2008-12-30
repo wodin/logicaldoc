@@ -28,7 +28,7 @@
 				<ice:panelGrid columns="2">
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="password"
-							value="#{msgs['msg.jsp.login.password']}*" />
+							value="#{msgs['password']}*" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputSecret id="password" value="#{userForm.password}"

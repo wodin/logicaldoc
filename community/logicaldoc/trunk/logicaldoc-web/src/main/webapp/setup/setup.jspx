@@ -83,7 +83,7 @@
 										</ice:panelGroup>
 										<ice:panelGroup styleClass="alignRight">
 											<ice:commandButton type="submit" tabindex="1"
-												value="#{msgs['msg.jsp.continue']}"
+												value="#{msgs['continue']}"
 												action="#{setupWizard.makeWorkingDir}" id="continue" />
 										</ice:panelGroup>
 									</div>
@@ -114,7 +114,7 @@
 										</ice:panelGroup>
 										<ice:panelGroup styleClass="alignRight">
 											<ice:commandButton type="submit" tabindex="1"
-												value="#{msgs['msg.jsp.continue']}"
+												value="#{msgs['continue']}"
 												action="#{setupWizard.loadDBPath}" id="continue" />
 										</ice:panelGroup>
 									</div>
@@ -140,7 +140,7 @@
 										</ice:panelGroup>
 										<ice:panelGroup styleClass="alignRight">
 											<ice:commandButton type="submit" tabindex="1"
-												value="#{msgs['msg.jsp.continue']}"
+												value="#{msgs['continue']}"
 												action="#{setupWizard.createDB}" id="continue" />
 										</ice:panelGroup>
 									</ice:panelGroup>
@@ -218,7 +218,7 @@
 										<br />
 										<ice:panelGroup styleClass="alignRight">
 											<ice:commandButton type="submit"
-												value="#{msgs['msg.jsp.continue']}"
+												value="#{msgs['continue']}"
 												action="#{setupWizard.createDB}" id="continue" />
 										</ice:panelGroup>
 									</ice:panelGroup>
@@ -286,7 +286,7 @@
 										</ice:panelGroup>
 										<ice:panelGroup styleClass="alignRight">
 											<ice:commandButton type="submit" tabindex="1"
-												value="#{msgs['msg.jsp.continue']}"
+												value="#{msgs['continue']}"
 												action="#{setupWizard.writeSmtpSettings}" id="continue" />
 										</ice:panelGroup>
 									</ice:panelGroup>
@@ -331,7 +331,7 @@
 										<br />
 										<br />
 										<ice:commandButton type="submit"
-											value="#{msgs['msg.jsp.back']}" action="#{setupWizard.prev}"
+											value="#{msgs['back']}" action="#{setupWizard.prev}"
 											id="back" />
 									</ice:panelGroup>
 								</ice:panelTab>

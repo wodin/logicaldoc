@@ -33,7 +33,7 @@
                         <ice:outputText value="#{indexInfo.docCount}" />
                     </ice:panelGroup>
                     <ice:panelGroup styleClass="outputLabel">
-                        <ice:outputLabel value="#{msgs['msg.jsp.lock']}:" />
+                        <ice:outputLabel value="#{msgs['locked']}:" />
                     </ice:panelGroup>
                     <ice:panelGroup>
                         <ice:selectBooleanCheckbox value="#{indexInfo.locked}" tabindex="1"

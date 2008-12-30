@@ -155,7 +155,7 @@ public class MenuBarBean {
 						.getImagePath("help.png"), false, "_blank", null));
 
 		PageContentBean infoPage = new PageContentBean("info", "info");
-		infoPage.setContentTitle(Messages.getMessage("msg.jsp.info"));
+		infoPage.setContentTitle(Messages.getMessage("info"));
 
 		String product = style.getProductName();
 		helpMenu.getChildren().add(

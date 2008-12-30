@@ -28,7 +28,7 @@
 					onkeypress="return submitOnEnter('smtpForm:save', event);"
 					style="text-align: left;">
 					<ice:panelGroup styleClass="outputLabel">
-						<ice:outputLabel for="host" value="#{msgs['msg.jsp.host']}*" />
+						<ice:outputLabel for="host" value="#{msgs['host']}*" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="host" value="#{smtpForm.host}" required="true"
@@ -54,7 +54,7 @@
 
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="username"
-							value="#{msgs['msg.jsp.login.username']}" />
+							value="#{msgs['username']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="username" value="#{smtpForm.username}"
@@ -64,7 +64,7 @@
 
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="password"
-							value="#{msgs['msg.jsp.login.password']}" />
+							value="#{msgs['password']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputSecret id="password" value="#{smtpForm.password}"
@@ -81,7 +81,7 @@
 
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="senderAddress"
-							value="#{msgs['msg.jsp.email']}" />
+							value="#{msgs['email']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="senderAddress" tabindex="1"

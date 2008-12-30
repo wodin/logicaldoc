@@ -96,9 +96,9 @@
 
                         <ice:form rendered="#{navigation.historySize>1}">
                             <ice:commandLink action="#{navigation.back}"
-                                title="#{msgs['msg.jsp.back']}" style="float: left;">
+                                title="#{msgs['back']}" style="float: left;">
                                 <ice:graphicImage value="#{StyleBean.imagesPath}/upper.gif"
-                                    style="border: 0px solid;" alt="#{msgs['msg.jsp.back']}" />
+                                    style="border: 0px solid;" alt="#{msgs['back']}" />
                             </ice:commandLink>
                         </ice:form>
 

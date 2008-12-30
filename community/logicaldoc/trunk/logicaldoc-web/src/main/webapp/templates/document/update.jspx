@@ -92,7 +92,7 @@
 					</ice:panelGroup>
 					<ice:panelGroup style="width:20px" />
 					<ice:panelGroup styleClass="outputLabel">
-						<ice:outputLabel value="#{msgs['msg.jsp.version']}" />
+						<ice:outputLabel value="#{msgs['version']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:outputText value="#{documentForm.record.document.version}"
@@ -162,7 +162,7 @@
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="sourceDate"
 					rendered="#{!fieldPreferences['edit.sourceDate.hidden']}"
-					value="#{msgs['msg.jsp.date']} #{fieldPreferences['edit.sourceDate.mandatory'] ? '*':''}" />
+					value="#{msgs['date']} #{fieldPreferences['edit.sourceDate.mandatory'] ? '*':''}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectInputDate id="sourceDate"
@@ -273,7 +273,7 @@
 			<ice:panelGroup style="width:20px"/>
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="language"
-					value="#{msgs['msg.jsp.login.language']}" />
+					value="#{msgs['language']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:selectOneMenu styleClass="selectTagMenu" tabindex="1"

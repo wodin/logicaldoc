@@ -36,7 +36,7 @@
 				<f:facet name="header">
 					<ice:panelGroup styleClass="expandableStateIndicator">
 						<ice:outputText id="messagesHeader"
-							value="#{msgs['msg.jsp.messages']}" />
+							value="#{msgs['messages']}" />
 					</ice:panelGroup>
 				</f:facet>
 				<ice:panelGroup style="padding-bottom: 10px;">

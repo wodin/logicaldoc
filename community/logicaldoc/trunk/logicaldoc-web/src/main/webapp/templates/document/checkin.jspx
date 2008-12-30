@@ -15,7 +15,7 @@
     xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form" id="uploadForm">
 
     <h2>
-        <ice:outputText value="#{msgs['msg.jsp.checkin']}"
+        <ice:outputText value="#{msgs['checkin']}"
             style="padding-left:8px;" />
     </h2>
 
@@ -93,7 +93,7 @@
                 immediate="tue"
                 action="#{newDocWizard.abort}" />
             <ice:commandButton value="#{msgs['checkin.cancelcheckout']}" action="#{documentForm.uncheckout}" />
-            <ice:commandButton value="#{msgs['msg.jsp.checkin']}"
+            <ice:commandButton value="#{msgs['checkin']}"
                 action="#{documentForm.checkin}" disabled="#{inputFile.percent!=100}" />    
         </ice:panelGroup>
     </ice:panelGroup>

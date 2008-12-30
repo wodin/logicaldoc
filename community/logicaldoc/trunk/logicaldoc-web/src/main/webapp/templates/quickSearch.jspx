@@ -48,9 +48,9 @@ function clearSearch(element, label) {
 						<ice:selectOneRadio value="#{searchForm.language}"
 							styleClass="searchOptions">
 							<f:selectItem
-								itemLabel="#{msgs['msg.jsp.search.onlyCurrentLang']}"
+								itemLabel="#{msgs['search.onlyCurrentLang']}"
 								itemValue="#{language}"/>
-							<f:selectItem itemLabel="#{msgs['msg.jsp.search.allDocuments']}"
+							<f:selectItem itemLabel="#{msgs['search.allDocuments']}"
 								itemValue="all"/>
 						</ice:selectOneRadio>
 					</td>

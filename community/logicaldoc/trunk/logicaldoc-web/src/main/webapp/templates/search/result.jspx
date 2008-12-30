@@ -79,7 +79,7 @@
 
 				<ice:panelGrid columns="3">
 					<ice:panelGroup styleClass="resultInfo" style="color: #555555;">
-						<h:outputText value="#{msgs['msg.jsp.size']}: " />
+						<h:outputText value="#{msgs['size']}: " />
 						<h:outputText value="#{entry.size}">
 							<f:convertNumber type="number" />
 						</h:outputText>k
@@ -90,7 +90,7 @@
 							<tr>
 								<td nowrap="nowrap">
 									<ice:outputText value=" - " />
-									<h:outputText value="#{msgs['msg.jsp.score']}: " />
+									<h:outputText value="#{msgs['score']}: " />
 									<ice:outputText value="&amp;nbsp;" escape="false" />
 								</td>
 								<td nowrap="nowrap"

@@ -100,9 +100,9 @@ public class SelectionTagsBean {
 	 * Gets the option items for relations
 	 */
 	public SelectItem[] getRelations() {
-		return new SelectItem[] { new SelectItem("gt", Messages.getMessage("msg.jsp.greater")),
-				new SelectItem("eq", Messages.getMessage("msg.jsp.equals")),
-				new SelectItem("lt", Messages.getMessage("msg.jsp.less")) };
+		return new SelectItem[] { new SelectItem("gt", Messages.getMessage("greater")),
+				new SelectItem("eq", Messages.getMessage("equals")),
+				new SelectItem("lt", Messages.getMessage("less")) };
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class SelectionTagsBean {
 	 */
 	public SelectItem[] getDateRelations() {
 		return new SelectItem[] { new SelectItem("gt", Messages.getMessage("msg.jsp.after")),
-				new SelectItem("lt", Messages.getMessage("msg.jsp.before")) };
+				new SelectItem("lt", Messages.getMessage("before")) };
 	}
 
 	/**
@@ -130,9 +130,9 @@ public class SelectionTagsBean {
 	 * Gets the option items for message priorities
 	 */
 	public SelectItem[] getMessagePriorities() {
-		return new SelectItem[] { new SelectItem(0, Messages.getMessage("msg.jsp.low")),
+		return new SelectItem[] { new SelectItem(0, Messages.getMessage("low")),
 				new SelectItem(1, Messages.getMessage("msg.jsp.normal")),
-				new SelectItem(2, Messages.getMessage("msg.jsp.high")) };
+				new SelectItem(2, Messages.getMessage("high")) };
 	}
 
 	/**
