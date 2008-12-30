@@ -71,11 +71,11 @@
 								<ice:commandButton image="#{StyleBean.imagesPath}/2.gif"
 									action="#{AccountsRecordsManager.enable}" styleClass=""
 									rendered="#{account.enabled==0}"
-									title="#{msgs['msg.jsp.disabled']}: #{msgs['msg.jsp.enable']}" />
+									title="#{msgs['disabled']}: #{msgs['enable']}" />
 								<ice:commandButton image="#{StyleBean.imagesPath}/0.gif"
 									action="#{AccountsRecordsManager.disable}" styleClass=""
 									rendered="#{account.enabled>0}"
-									title="#{msgs['msg.jsp.enabled']}: #{msgs['msg.jsp.disable']}" />
+									title="#{msgs['enabled']}: #{msgs['disable']}" />
 							</ice:panelGroup>
 						</ice:column>
 
@@ -85,7 +85,7 @@
 								<ice:commandLink action="#{AccountsRecordsManager.delete}"
 									onclick="if (!confirm(&quot;#{email_msgs['logicaldoc-email.account.question.delete']}&quot;)) return false;">
 									<ice:graphicImage value="#{StyleBean.imagesPath}/delete.gif"
-										title="#{msgs['msg.jsp.delete']}" style="border: 0px solid;" />
+										title="#{msgs['delete']}" style="border: 0px solid;" />
 									<f:param name="accountId" value="#{account.id}" />
 								</ice:commandLink>
 							</ice:panelGroup>
