@@ -83,7 +83,7 @@
 								onclick="if (!confirm(&quot;#{msgs['msg.question.deletegroup']}&quot;)) return false;">
 								<ice:graphicImage value="#{StyleBean.imagesPath}/delete.gif"
 									style="border: 0px solid;" title="#{msgs['delete']}" />
-								<f:param name="groupId" value="#{group.name}" />
+								<f:param name="groupId" value="#{group.id}" />
 							</ice:commandLink>
 						</ice:panelGroup>
 					</ice:column>
