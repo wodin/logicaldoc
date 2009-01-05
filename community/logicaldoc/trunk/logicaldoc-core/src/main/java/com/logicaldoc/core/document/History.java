@@ -21,6 +21,8 @@ public class History extends PersistentObject {
 	public static final String UNCHECKOUT = "history.uncheckedout";
 
 	public static final String IMMUTABLE = "history.makeimmutable";
+	
+	public static final String RENAMED = "history.renamed";
 
 	private long docId;
 
