@@ -539,33 +539,33 @@ public class DavResourceImpl implements DavResource {
 
 			Resource res = resourceService.getResource(destination.getLocator()
 					.getResourcePath(), this.resource.getRequestedPerson());
-			log.fatal("res = " + res);
+			log.debug("res = " + res);
 
 			if (res != null) {
-				log.fatal("res != null");
+				log.debug("res != null");
 				res.setName(this.resource.getName());
 				Resource destResource = resourceService.getParentResource(res);
-				log.fatal("destResource.getID() = " + destResource.getID());
-				log.fatal("destResource.getPath() = " + destResource.getPath());
+				log.debug("destResource.getID() = " + destResource.getID());
+				log.debug("destResource.getPath() = " + destResource.getPath());
 
 				resourceService.copyResource(destResource, this.resource);
 			} else {
-				log.fatal("res IS NULL");
+				log.debug("res IS NULL");
 				String name = destination.getLocator().getResourcePath();
 				name = name.substring(name.lastIndexOf("/") + 1, name.length())
 						.replace("/default", "");
-				log.fatal("name = " + name);
+				log.debug("name = " + name);
 
 				Resource destResource = resourceService
 						.getParentResource(destination.getResourcePath());
 				this.resource.setName(name);
 
-				log.fatal("destResource.getID() = " + destResource.getID());
-				log.fatal("destResource.getPath() = " + destResource.getPath());
+				log.debug("destResource.getID() = " + destResource.getID());
+				log.debug("destResource.getPath() = " + destResource.getPath());
 
-				log.fatal("this.resource.getName() = "
+				log.debug("this.resource.getName() = "
 						+ this.resource.getName());
-				log.fatal("this.resource.getPath() = "
+				log.debug("this.resource.getPath() = "
 						+ this.resource.getPath());
 
 				resourceService.copyResource(destResource, this.resource);
