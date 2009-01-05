@@ -641,7 +641,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 
 			for (Menu fld : deletableFolders) {
-				mdao.delete(folder.getId());
+				mdao.delete(fld.getId());
 			}
 			return notDeletableFolders;
 		} catch (Throwable e) {
@@ -781,4 +781,34 @@ public class DocumentManagerImpl implements DocumentManager {
 			throw e;
 		}
 	}
+
+	public void rename(Document doc, User user, String newFilename) throws Exception {
+
+		if (doc.getImmutable() == 0) {
+
+			// Get original document directory path
+			String path = getDocFilePath(doc);
+			String originalFileName = doc.getFileName();
+
+			documentDAO.initialize(doc);
+			doc.setFileName(newFilename);
+			setUniqueFilename(doc);
+			documentDAO.store(doc);
+
+			// Update the FS
+			if (!doc.getFileName().equals(originalFileName)) {
+				File originalFile = new File(path, originalFileName);
+				File destFile = new File(path, doc.getFileName());
+				originalFile.renameTo(destFile);
+			}
+			
+			// create history entry for this UnCheckout event
+			createHistoryEntry(doc.getId(), user, History.RENAMED, "");
+
+			log.debug("Document filename renamed: " + doc.getId());
+		} else {
+			throw new Exception("Document is immutable");
+		}
+	}
+	
 }

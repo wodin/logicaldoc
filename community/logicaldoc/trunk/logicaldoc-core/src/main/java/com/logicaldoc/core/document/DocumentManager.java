@@ -298,6 +298,16 @@ public interface DocumentManager {
 	public void reindex(Document doc, String originalLanguage) throws Exception;
 
 	/**
+	 * Rename an existing document filename.
+	 * 
+	 * @param doc The document to be renamed
+	 * @param user The user requesting the operation
+	 * @param newFilename The new filename of the document
+	 * @throws Exception if an error occurs, this exception is thrown
+	 */
+	public void rename(Document doc, User user, String newFilename) throws Exception;
+
+	/**
 	 * Updates an existing document and marks it to be re-indexed
 	 * 
 	 * @param doc The document to be updated
