@@ -176,7 +176,7 @@
 			<ice:column>
 				<f:facet name="header">
 					<ice:commandSortHeader columnName="size" arrow="true">
-						<ice:outputText value="#{msgs['msg.jsp.foldercontent.size']}"
+						<ice:outputText value="#{msgs['size']}"
 							style="text-decoration: underline;" />
 					</ice:commandSortHeader>
 				</f:facet>
