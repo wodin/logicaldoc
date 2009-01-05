@@ -299,23 +299,29 @@ public class ResourceServiceImpl implements ResourceService {
 			Document document = documentDAO.findById(Long.parseLong(target.getID()));
 			documentDAO.initialize(document);
 			
-//			 DOCUMENT FILE RENAME IS NOT ALLOWED
-			if (!target.getName().equals(document.getFileName()))
-				throw new UnsupportedOperationException();
+			if (!target.getName().equals(document.getFileName())) {
+				
+				log.debug("document = " + document);
+				log.debug("document.getFileName() = " + document.getFileName());
 
+				log.debug("target.getRequestedPerson() = " + target.getRequestedPerson());
+				log.debug("destination.getRequestedPerson() = " + destination.getRequestedPerson());
+				User user = userDAO.findById(target.getRequestedPerson());
+				log.debug("user = " + user);
+				
+				try {
+					documentManager.rename(document, user, target.getName());
+					log.debug("document(2).getFileName() = " + document.getFileName());
+					// Just to be Sure
+					documentDAO.initialize(document);
+					log.debug("document(3).getFileName() = " + document.getFileName());
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+					throw new RuntimeException(e);
+				}
+			}
 			
-//			String name = target.getName();
-//			String ext = "";
-//			if (name.contains(".")) {
-//				ext = name.substring(name.lastIndexOf(".") + 1);
-//				name = name.substring(0, name.lastIndexOf("."));
-//			}
-//
-//			document.setTitle(name);
-//			document.setType(ext);
-			
-			
-			documentDAO.store(document);
+            
 			Menu menu = menuDAO.findById(Long.parseLong(destination.getID()));
 
 			try {
@@ -341,26 +347,26 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public void copyResource(Resource destinationResource, Resource resource) {
 
-		log.error("copyResource");
+		log.debug("copyResource");
 
 		if (resource.isFolder() == true) {
 			throw new RuntimeException("FolderCopy not supported");
 		} else {
 			try {
-				log.info("resource.getID() = " + resource.getID());
-				log.info("destinationResource.getID() = " + destinationResource.getID());
+				log.debug("resource.getID() = " + resource.getID());
+				log.debug("destinationResource.getID() = " + destinationResource.getID());
 				Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 				Menu menu = menuDAO.findById(Long.parseLong(destinationResource.getID()));
 
 				log.info("document = " + document);
 				log.info("document.getFileName() = " + document.getFileName());
 
-				log.info("menu = " + menu);
-				log.info("menu.getText() = " + menu.getText());
-				log.info("menu.getPath() = " + menu.getPath());
+				log.debug("menu = " + menu);
+				log.debug("menu.getText() = " + menu.getText());
+				log.debug("menu.getPath() = " + menu.getPath());
 
 				User user = userDAO.findById(resource.getRequestedPerson());
-				log.info("user = " + user);
+				log.debug("user = " + user);
 
 				documentManager.copyToFolder(document, menu, user);
 			} catch (Exception e) {
