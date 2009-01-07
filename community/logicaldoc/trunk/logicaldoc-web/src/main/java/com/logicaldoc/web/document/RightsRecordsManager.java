@@ -121,8 +121,19 @@ public class RightsRecordsManager {
 	public void selectDirectory(Directory dir) {
 		recursive = false;
 		selectedDirectory = dir;
-
 		initRights(dir.getMenuId());
+	}
+
+	public void cleanSelection() {
+		selectedDirectory = null;
+		availableGroups.clear();
+		allowedGroups.clear();
+		groups.clear();
+		selectedAvailableGroups = new long[0];
+		selectedAllowedGroups = new long[0];
+		availableGroupFilter = "";
+		allowedGroupFilter = "";
+		rules.clear();
 	}
 
 	/**
@@ -132,20 +143,10 @@ public class RightsRecordsManager {
 	 * @param menuId The menu that must be evaluated
 	 */
 	private void initRights(long menuId) {
-		availableGroups.clear();
-		allowedGroups.clear();
-		groups.clear();
-		selectedAvailableGroups = new long[0];
-		selectedAllowedGroups = new long[0];
-		availableGroupFilter = "";
-		allowedGroupFilter = "";
+		cleanSelection();
 
 		// initiate the list
-		if (rules != null) {
-			rules.clear();
-		} else {
-			rules = new ArrayList<GroupRule>(10);
-		}
+		rules = new ArrayList<GroupRule>(10);
 
 		try {
 			GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
@@ -354,7 +355,7 @@ public class RightsRecordsManager {
 				} else {
 					mg.setManageSecurity(0);
 				}
-				
+
 				if (rule.isManageImmutability() || isAdmin) {
 					mg.setManageImmutability(1);
 				} else {
@@ -372,13 +373,13 @@ public class RightsRecordsManager {
 				} else {
 					mg.setRename(0);
 				}
-				
+
 				if (rule.isBulkImport() || isAdmin) {
 					mg.setBulkImport(1);
 				} else {
 					mg.setBulkImport(0);
 				}
-				
+
 				if (rule.isBulkExport() || isAdmin) {
 					mg.setBulkExport(1);
 				} else {
