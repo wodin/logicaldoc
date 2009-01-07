@@ -49,15 +49,15 @@
 						<ice:panelGroup rendered="#{versionRecord.currentVersion}">
 							<ice:outputLink
 								value="download?docId=#{versionsRecordsManager.selectedDocument.id}"
-								target="_blank">
-								<ice:outputText value="#{versionRecord.version}" />
+								target="_blank" style="color: #344a6a; text-decoration: underline;">
+								<ice:outputText value="#{versionRecord.version}" style="color: #344a6a;"/>
 							</ice:outputLink>
 						</ice:panelGroup>
 						<ice:panelGroup rendered="#{!versionRecord.currentVersion}">
 							<ice:outputLink
 								value="download?docId=#{versionsRecordsManager.selectedDocument.id}&amp;versionId=#{versionRecord.version}"
-								target="_blank">
-								<ice:outputText value="#{versionRecord.version}" />
+								style="color: #344a6a; text-decoration: underline;" target="_blank">
+								<ice:outputText value="#{versionRecord.version}" style="color: #344a6a;"/>
 							</ice:outputLink>
 						</ice:panelGroup>
 					</ice:column>
