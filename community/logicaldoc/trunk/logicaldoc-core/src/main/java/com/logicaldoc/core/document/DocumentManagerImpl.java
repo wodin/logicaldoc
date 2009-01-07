@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -121,9 +120,9 @@ public class DocumentManagerImpl implements DocumentManager {
 			// "quelle.txt"
 			// -> "2.0"
 			File file = new File(completeDocPath + document.getFileName());
-			while(!file.renameTo(new File(completeDocPath + document.getVersion())));
+			while (!file.renameTo(new File(completeDocPath + document.getVersion())))
+				;
 			document.setFileName(filename);
-			
 
 			// create new version
 			Version version = createNewVersion(versionType, user, versionDesc, document.getVersion());
@@ -273,7 +272,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		 * extension, e.g. "docId/2.1"
 		 */
 		String filename;
-		if (StringUtils.isEmpty(version))
+		if (StringUtils.isEmpty(version) || doc.getVersion().equals(version))
 			filename = doc.getFileName();
 		else
 			filename = version;
