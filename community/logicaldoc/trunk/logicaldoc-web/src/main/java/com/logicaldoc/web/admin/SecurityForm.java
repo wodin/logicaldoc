@@ -84,6 +84,9 @@ public class SecurityForm {
 
 	public void cancelFolderSelector(ActionEvent e) {
 		directoryModel.cancelSelection();
+		RightsRecordsManager manager = ((RightsRecordsManager) FacesUtil.accessBeanFromFacesContext(
+				"securityRightsRecordsManager", FacesContext.getCurrentInstance(), log));
+		manager.cleanSelection();
 		showFolderSelector = false;
 	}
 }
