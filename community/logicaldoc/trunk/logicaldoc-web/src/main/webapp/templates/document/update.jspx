@@ -114,7 +114,7 @@
 						<ice:outputLabel value="#{msgs['msg.jsp.publishedby']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
-						<ice:outputText value="#{documentForm.record.document.publisher}"
+						<ice:outputText value="#{documentForm.record.publisherFullname}"
 							style="font-weight: bold" />
 					</ice:panelGroup>
 
