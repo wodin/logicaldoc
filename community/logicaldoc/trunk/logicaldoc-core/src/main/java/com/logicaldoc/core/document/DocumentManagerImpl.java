@@ -341,6 +341,9 @@ public class DocumentManagerImpl implements DocumentManager {
 				// Intercept language changes
 				String oldLang = doc.getLanguage();
 				doc.setLanguage(language);
+				
+				// Ensure unique title in folder
+				setUniqueTitle(doc);
 
 				doc.clearKeywords();
 				documentDAO.store(doc);
