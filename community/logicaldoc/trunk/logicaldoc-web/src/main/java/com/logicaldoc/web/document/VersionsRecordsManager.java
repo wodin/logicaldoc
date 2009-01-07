@@ -50,7 +50,6 @@ public class VersionsRecordsManager {
 		Version[] sortIt = (Version[]) tmp.toArray(new Version[0]);
 
 		// clear collection and add sorted elements
-		Arrays.sort(sortIt);
 		Arrays.sort(sortIt, new Comparator<Version>(){
 			@Override
 			public int compare(Version o1, Version o2) {
@@ -58,11 +57,11 @@ public class VersionsRecordsManager {
 			}
 		});
 
-		for (int i = sortIt.length - 1; i >= 0; i--) {
+		for (int i = 0; i <sortIt.length; i++) {
 			VersionRecord versionTmp = new VersionRecord(sortIt[i]);
 			versions.add(versionTmp);
 
-			if (i == (sortIt.length - 1)) {
+			if (i == 0) {
 				versionTmp.setCurrentVersion(true);
 			}
 		}
