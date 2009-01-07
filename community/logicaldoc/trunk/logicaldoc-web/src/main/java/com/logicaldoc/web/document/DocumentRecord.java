@@ -23,7 +23,9 @@ import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.io.CryptUtil;
 import com.logicaldoc.web.SessionManagement;
@@ -170,6 +172,16 @@ public class DocumentRecord extends MenuBarBean {
 		if (getDocument() == null || arg0 == null)
 			return false;
 		return document.getId() == ((DocumentRecord) arg0).getDocument().getId();
+	}
+	
+
+	public String getPublisherFullname() {
+		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		User user = userDAO.findByUserName(getDocument().getPublisher());
+		if (user != null)
+			return user.getFullName();
+		else
+			return document.getPublisher();
 	}
 
 	public String getDocumentPath() {
