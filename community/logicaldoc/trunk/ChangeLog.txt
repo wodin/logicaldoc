@@ -9,8 +9,14 @@
                       http://www.logicaldoc.com                    
 
                      LogicalDOC Community Edition
+
+LogicalDOC CE 4.0 RC2 (2009-01-08; logicaldoc-4.0RC2)
+===============
+Ability to define fields viewable and editable by group of users
+WebDAV: implemented rename on the Document's filename
+
                      
-LogicalDOC CE 4.0 RC1 (2008-12-05; logicaldoc-4.0RC1)
+LogicalDOC CE 4.0 RC1 (2008-12-12; logicaldoc-4.0RC1)
 ===============
 New WebDAV accessible interface (Thanks to Sebastian Wenzky)
 Heavily Refactored DB-schema
