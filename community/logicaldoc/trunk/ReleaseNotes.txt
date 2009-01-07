@@ -25,7 +25,7 @@ LogicalDOC uses the following core technologies:
  * Hibernate
  * Spring
  * CXF
- * Ice Faces
+ * ICEfaces
  * JPF
 
 For details of changes see the ChangeLog.
