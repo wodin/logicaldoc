@@ -126,14 +126,7 @@ public class RightsRecordsManager {
 
 	public void cleanSelection() {
 		selectedDirectory = null;
-		availableGroups.clear();
-		allowedGroups.clear();
-		groups.clear();
-		selectedAvailableGroups = new long[0];
-		selectedAllowedGroups = new long[0];
-		availableGroupFilter = "";
-		allowedGroupFilter = "";
-		rules.clear();
+		clean();
 	}
 
 	/**
@@ -143,7 +136,7 @@ public class RightsRecordsManager {
 	 * @param menuId The menu that must be evaluated
 	 */
 	private void initRights(long menuId) {
-		cleanSelection();
+		clean();
 
 		// initiate the list
 		rules = new ArrayList<GroupRule>(10);
@@ -205,6 +198,17 @@ public class RightsRecordsManager {
 		}
 	}
 
+	private void clean() {
+		availableGroups.clear();
+		allowedGroups.clear();
+		groups.clear();
+		selectedAvailableGroups = new long[0];
+		selectedAllowedGroups = new long[0];
+		availableGroupFilter = "";
+		allowedGroupFilter = "";
+		rules.clear();
+	}
+
 	/**
 	 * Retrieves the label of a entity. There are two types: 'Group' and 'User'
 	 * 
@@ -227,6 +231,9 @@ public class RightsRecordsManager {
 	 * 
 	 */
 	public void assignGroups() {
+		if(selectedDirectory==null)
+			return;
+		
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu menu = mdao.findById(selectedDirectory.getMenu().getId());
 		for (long grp : selectedAvailableGroups) {
@@ -247,6 +254,9 @@ public class RightsRecordsManager {
 	 * 
 	 */
 	public void unassignGroups() {
+		if(selectedDirectory==null)
+			return;
+		
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu menu = mdao.findById(selectedDirectory.getMenu().getId());
 
