@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -119,10 +120,10 @@ public class DocumentManagerImpl implements DocumentManager {
 			// rename the old current version file to the version name:
 			// "quelle.txt"
 			// -> "2.0"
-			FileUtils.moveFile(new File(completeDocPath + document.getFileName()), new File(completeDocPath
-					+ document.getVersion()));
-
+			File file = new File(completeDocPath + document.getFileName());
+			while(!file.renameTo(new File(completeDocPath + document.getVersion())));
 			document.setFileName(filename);
+			
 
 			// create new version
 			Version version = createNewVersion(versionType, user, versionDesc, document.getVersion());
@@ -341,7 +342,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				// Intercept language changes
 				String oldLang = doc.getLanguage();
 				doc.setLanguage(language);
-				
+
 				// Ensure unique title in folder
 				setUniqueTitle(doc);
 
@@ -804,7 +805,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				File destFile = new File(path, doc.getFileName());
 				originalFile.renameTo(destFile);
 			}
-			
+
 			// create history entry for this UnCheckout event
 			createHistoryEntry(doc.getId(), user, History.RENAMED, "");
 
@@ -813,5 +814,5 @@ public class DocumentManagerImpl implements DocumentManager {
 			throw new Exception("Document is immutable");
 		}
 	}
-	
+
 }
