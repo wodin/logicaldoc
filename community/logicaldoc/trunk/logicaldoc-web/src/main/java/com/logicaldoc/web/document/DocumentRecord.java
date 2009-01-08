@@ -229,14 +229,14 @@ public class DocumentRecord extends MenuBarBean {
 	protected void createMenuItems() {
 		model.clear();
 		long userId = SessionManagement.getUserId();
-		String username = SessionManagement.getUsername();
 		MenuDAO menuDAO = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 		Menu folder = getDocument().getFolder();
 		Document document = getDocument();
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		if ((menuDAO.isWriteEnable(folder.getId(), userId)) && (document.getImmutable() == 0)) {
-			if ((document.getStatus() == Document.DOC_CHECKED_OUT) && username.equals(document.getCheckoutUser())) {
+			
+			if ((document.getStatus() == Document.DOC_CHECKED_OUT) && (document.getCheckoutUserId().equals(new Long(userId)))) {
 				model.add(createMenuItem(" " + Messages.getMessage("checkin"), "checkin-" + folder.getId(),
 						null, "#{documentRecord.checkin}", null, style.getImagePath("checkin.png"), true, null, null));
 			} else if (document.getStatus() == Document.DOC_CHECKED_IN) {
@@ -313,7 +313,7 @@ public class DocumentRecord extends MenuBarBean {
 			try {
 				if (mdao.isWriteEnable(folder.getId(), userId)) {
 					if (document.getStatus() == Document.DOC_CHECKED_IN) {
-						document.setCheckoutUser(SessionManagement.getUsername());
+						document.setCheckoutUserId(userId);
 						document.setStatus(Document.DOC_CHECKED_OUT);
 						ddao.store(document);
 
