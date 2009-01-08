@@ -57,7 +57,7 @@
             <ice:panelGrid columns="2">            
                  <!-- Version type selection -->
                  <ice:panelGroup styleClass="outputLabel">
-                     <ice:outputText value="#{msgs['checkin.majorupdate']}:"
+                     <ice:outputText value="#{msgs['checkin.majorupdate']}"
                         style="padding-left:8px;" />
                  </ice:panelGroup>
                  <ice:selectBooleanCheckbox value="#{documentForm.majorUpdate}" />
@@ -67,18 +67,23 @@
 
                 <!-- Version description -->
                 <ice:panelGroup styleClass="outputLabel">
-                 <ice:outputText value="#{msgs['msg.jsp.versiondesc']}:"
+                 <ice:outputText value="#{msgs['msg.jsp.versiondesc']}*"
                     style="padding-left:8px;" />
                 </ice:panelGroup>
-                <ice:inputTextarea id="versiondesc" value="#{inputFile.description}"
-						 cols="35" rows="2" />
+                <ice:panelGroup>
+                	<ice:inputText id="versiondesc"
+                	    value="#{documentForm.versionDesc}"
+						maxlength="250" size="38"
+						required="true" />
+					<ice:message for="versiondesc" />
+				</ice:panelGroup>
 						 
                  <br />
                  <br />
 
                 <!-- Check fileName -->
                 <ice:panelGroup styleClass="outputLabel">
-                 <ice:outputText value="#{msgs['checkin.checkoriginalfilename']}:"
+                 <ice:outputText value="#{msgs['checkin.checkoriginalfilename']}"
                     style="padding-left:8px;" />
                 </ice:panelGroup>
                 <ice:panelGroup>
