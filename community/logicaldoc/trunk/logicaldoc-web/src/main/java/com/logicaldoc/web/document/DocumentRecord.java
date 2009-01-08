@@ -173,16 +173,6 @@ public class DocumentRecord extends MenuBarBean {
 			return false;
 		return document.getId() == ((DocumentRecord) arg0).getDocument().getId();
 	}
-	
-
-	public String getPublisherFullname() {
-		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = userDAO.findByUserName(getDocument().getPublisher());
-		if (user != null)
-			return user.getFullName();
-		else
-			return document.getPublisher();
-	}
 
 	public String getDocumentPath() {
 		if (StringUtils.isEmpty(documentPath)) {
