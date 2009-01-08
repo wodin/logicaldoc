@@ -296,13 +296,13 @@
    <dependency>
       <groupId>org.icefaces</groupId>
       <artifactId>icefaces-comps</artifactId>
-      <version>1.7.2</version>
+      <version>1.7.2.SP1</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.icefaces</groupId>
       <artifactId>icefaces-facelets</artifactId>
-      <version>1.7.2</version>
+      <version>1.7.2.SP1</version>
       <type>jar</type>
       <exclusions>
         <exclusion>
@@ -322,7 +322,7 @@
     <dependency>
       <groupId>org.icefaces</groupId>
       <artifactId>icefaces</artifactId>
-      <version>1.7.2</version>
+      <version>1.7.2.SP1</version>
       <type>jar</type>
       <exclusions>
         <exclusion>
