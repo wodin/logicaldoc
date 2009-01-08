@@ -160,13 +160,14 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Menu menu = menuDao.findById(Menu.MENUID_HOME);
 		doc.setFolder(menu);
 		doc.setPublisher("admin");
+		doc.setPublisherId(1);
 		doc.setTitle("test");
 		doc.addKeyword("pippo");
 		doc.addKeyword("pluto");
 		doc.setValue("att_1", "val 1");
 		doc.setFileName("test.txt");
 
-		//Prepare the document file for digest computation
+		// Prepare the document file for digest computation
 		File docFile = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/doc_5/" + doc.getFileName()));
 		FileUtils.forceMkdir(docFile.getParentFile());
 		Writer out = new FileWriter(docFile);

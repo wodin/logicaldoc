@@ -47,9 +47,11 @@ public class Document extends ExtensibleObject {
 
 	private String publisher;
 
+	private long publisherId;
+
 	private String type;
 
-	private String checkoutUser;
+	private Long checkoutUserId;
 
 	private String source;
 
@@ -84,9 +86,9 @@ public class Document extends ExtensibleObject {
 	private String customId;
 
 	private int immutable = 0;
-	
+
 	private String digest;
-	
+
 	private String recipient;
 
 	public Document() {
@@ -148,6 +150,17 @@ public class Document extends ExtensibleObject {
 	}
 
 	/**
+	 * The user id of the user that published this document
+	 */
+	public long getPublisherId() {
+		return publisherId;
+	}
+
+	public void setPublisherId(long publisherId) {
+		this.publisherId = publisherId;
+	}
+
+	/**
 	 * The username that published this document
 	 */
 	public String getPublisher() {
@@ -170,14 +183,15 @@ public class Document extends ExtensibleObject {
 	}
 
 	/**
-	 * The username that checked-out this document and that currently locks it
+	 * The id of the user that checked-out this document and that currently
+	 * locks it
 	 */
-	public String getCheckoutUser() {
-		return checkoutUser;
+	public Long getCheckoutUserId() {
+		return checkoutUserId;
 	}
 
-	public void setCheckoutUser(String checkoutUser) {
-		this.checkoutUser = checkoutUser;
+	public void setCheckoutUserId(Long checkoutUserId) {
+		this.checkoutUserId = checkoutUserId;
 	}
 
 	/**
@@ -464,5 +478,5 @@ public class Document extends ExtensibleObject {
 	public void setRecipient(String recipient) {
 		this.recipient = recipient;
 	}
-	
+
 }
