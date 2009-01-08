@@ -131,7 +131,7 @@ public class SelectionTagsBean {
 	 */
 	public SelectItem[] getMessagePriorities() {
 		return new SelectItem[] { new SelectItem(0, Messages.getMessage("low")),
-				new SelectItem(1, Messages.getMessage("msg.jsp.normal")),
+				new SelectItem(1, Messages.getMessage("normal")),
 				new SelectItem(2, Messages.getMessage("high")) };
 	}
 
