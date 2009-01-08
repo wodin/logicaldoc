@@ -70,8 +70,11 @@
 					<!-- Table with results -->
 					<ice:dataTable id="articleList"
 						value="#{homeBean.lastArticles}" var="article"
-						cellpadding="0" rows="10">
-						<ice:column>
+						cellpadding="0" rows="10" styleClass="homePlainTbl">
+						<ice:column style="border: 0px;">
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['title']}" />
+							</f:facet>
 							<ice:panelGroup>
 								<ice:commandLink title="#{msgs['home.show.discussion']}"
 									action="#{documentNavigation.showDiscussion}">
@@ -79,10 +82,13 @@
 								</ice:commandLink>
 							</ice:panelGroup>
 						</ice:column>
-						<ice:column>
+						<ice:column style="border: 0px;">
+						    <f:facet name="header">
+								<ice:outputText value="#{msgs['date']}" />
+							</f:facet>
 							<ice:panelGroup>
 								<ice:outputText value="#{article.date}">
-									<f:convertDateTime pattern="#{loc.dateFormat}" />
+									<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{StyleBean.timeZone}" />
 								</ice:outputText>
 							</ice:panelGroup>
 						</ice:column>
@@ -103,15 +109,26 @@
 					<!-- Table with results -->
 					<ice:dataTable id="lastDocumentList"
 						value="#{homeBean.lastModifiedDocuments}" var="entry"
-						cellpadding="0" rows="10">
-						<ice:column>
+						cellpadding="0" rows="10" styleClass="homePlainTbl">
+						<ice:column style="border: 0px;">
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['document']}" />
+							</f:facet>
 							<ice:panelGroup>
-								<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
-									action="#{documentNavigation.openInFolder}">
-									<ice:graphicImage value="#{StyleBean.imagesPath}/#{entry.icon}"
-										styleClass="iconSmall" />
-									<ice:outputText value=" #{entry.title}" />
+								<ice:commandLink action="#{documentNavigation.openInFolder}"
+								style="color: #344a6a; text-decoration: underline;">
+									<ice:outputText value="#{entry.title}" style="color: #344a6a;" />
 								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+						<ice:column style="border: 0px;">
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['date']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{entry.lastModified}">
+									<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{StyleBean.timeZone}" />
+								</ice:outputText>
 							</ice:panelGroup>
 						</ice:column>
 					</ice:dataTable>
@@ -179,12 +196,14 @@
 					<!-- Table with results -->
 					<ice:dataTable id="checkoutDocumentsList"
 						value="#{homeBean.checkoutDocs}" var="entry"
-						cellpadding="0" rows="10" border="0" styleClass="cntDatTblNone">
+						cellpadding="0" rows="10" border="0" styleClass="cntDatTblNone" style="border: 0px;">
 						<ice:column>
 							<ice:panelGroup>
-								<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
-									action="#{documentNavigation.openInFolder}">
-									<ice:outputText value=" #{entry.title}" />
+							    <ice:outputText value=" #{entry.title}" />
+							    |&amp;nbsp;
+								<ice:commandLink action="#{documentNavigation.openInFolder}" 
+									style="color: #344a6a; text-decoration: underline;">
+									<ice:outputText value="#{msgs['msg.jsp.openinfolder']}" style="color: #344a6a;" />
 								</ice:commandLink>
 							</ice:panelGroup>
 						</ice:column>

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -51,6 +52,8 @@ public class HomeBean {
 	public List<DocumentRecord> getLastModifiedDocuments() {
 
 		List<DocumentRecord> lastModified = new ArrayList<DocumentRecord>();
+		
+		HashMap hm = new HashMap();
 
 		if (SessionManagement.isValid()) {
 			try {
@@ -59,9 +62,14 @@ public class HomeBean {
 				DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 				Collection<Document> documents = (Collection<Document>) docdao.findLastModifiedByUserId(userId, 10);
 				for (Document document : documents) {
-					lastModified.add(new DocumentRecord(document.getId(), null,
-							DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
-							DocumentsRecordsManager.GROUP_ROW_STYLE_CLASS));
+					if (!hm.containsKey(document.getId())) {
+						DocumentRecord dr = new DocumentRecord(document.getId(), null,
+								DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
+								DocumentsRecordsManager.GROUP_ROW_STYLE_CLASS);
+						hm.put(document.getId(), dr);
+						
+						lastModified.add(dr);
+					}
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -132,9 +140,8 @@ public class HomeBean {
 
 		if (SessionManagement.isValid()) {
 			try {
-				String username = SessionManagement.getUsername();
 				DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-				Collection<Document> documents = (Collection<Document>) docdao.findCheckoutByUserName(username);
+				Collection<Document> documents = (Collection<Document>) docdao.findCheckoutByUserId(SessionManagement.getUserId());
 				for (Document document : documents) {
 					lastdocs.add(new DocumentRecord(document.getId(), null,
 							DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,

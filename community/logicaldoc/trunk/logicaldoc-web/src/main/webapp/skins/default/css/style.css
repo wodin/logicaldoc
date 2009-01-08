@@ -1557,6 +1557,21 @@ DIV#center {
 	border-top: 1px solid #ffffff;
 }
 
+.homePlainTbl {
+	border: 1px solid #ababab;
+	width: 96%;
+}
+
+.homePlainTblColHdr, .homePlainTblColHdr1, .homePlainTblHdr{
+	background-color: #ffffff;
+	background-image: none;
+	border: 0px;
+	border-bottom-width: 1px;
+	border-bottom: 1px solid #666666;
+}
+
+homePlainTblColHdr1 homePlainTblHdr
+
 .cntDatTblNone {
 	border: 0px;
 }
