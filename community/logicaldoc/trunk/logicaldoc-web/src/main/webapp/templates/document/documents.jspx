@@ -118,8 +118,7 @@
 					</ice:outputLink>
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
-						value="#{StyleBean.imagesPath}/lock.png"
-						alt="#{documentRecord.document.checkoutUser}" />
+						value="#{StyleBean.imagesPath}/lock.png" />
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.document.immutable == 1}"
 						value="#{StyleBean.imagesPath}/immutable.png" title="Immutable" />
