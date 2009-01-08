@@ -15,10 +15,11 @@
 		<property name="version" type="string" column="ld_version" length="10" />
 		<property name="date" type="timestamp" column="ld_date" />
 		<property name="creation" type="timestamp" column="ld_creation" not-null="true"/>
-		<property name="publisher" type="string" column="ld_publisher" length="30" />
+		<property name="publisher" type="string" column="ld_publisher" length="255" />
+		<property name="publisherId" type="long" column="ld_publisherid" not-null="true"/>
 		<property name="status" type="int" column="ld_status" />
 		<property name="type" type="string" column="ld_type" length="255" />
-		<property name="checkoutUser" type="string" column="ld_checkoutuser" length="30" />
+		<property name="checkoutUserId" type="long" column="ld_checkoutuserid" />
 		<property name="source" type="string" column="ld_source" length="255" />
 		<property name="sourceAuthor" type="string" column="ld_sourceauthor" length="255" />
 		<property name="sourceDate" type="timestamp" column="ld_sourcedate" />

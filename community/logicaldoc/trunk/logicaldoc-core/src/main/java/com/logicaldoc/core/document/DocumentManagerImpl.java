@@ -130,10 +130,11 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// set other properties of the document
 			document.setDate(new Date());
-			document.setPublisher(user.getUserName());
+			document.setPublisher(user.getFullName());
+			document.setPublisherId(user.getId());
 			document.setStatus(Document.DOC_CHECKED_IN);
 			document.setType(document.getFileExtension());
-			document.setCheckoutUser("");
+			document.setCheckoutUserId(null);
 			document.setFolder(folder);
 			document.addVersion(version);
 			document.setVersion(newVersion);
@@ -166,7 +167,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			throw new Exception("Document is immutable");
 
 		if (document.getStatus() == Document.DOC_CHECKED_IN) {
-			document.setCheckoutUser(user.getUserName());
+			document.setCheckoutUserId(user.getId());
 			document.setStatus(Document.DOC_CHECKED_OUT);
 			document.setFolder(document.getFolder());
 			documentDAO.store(document);
@@ -561,7 +562,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Document document = documentDAO.findById(docId);
 		if (document.getImmutable() == 0) {
 			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
-				document.setCheckoutUser("");
+				document.setCheckoutUserId(null);
 				document.setStatus(Document.DOC_CHECKED_IN);
 				documentDAO.store(document);
 
@@ -728,7 +729,8 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setSourceDate(sourceDate);
 			else
 				doc.setSourceDate(doc.getDate());
-			doc.setPublisher(user.getUserName());
+			doc.setPublisher(user.getFullName());
+			doc.setPublisherId(user.getId());
 			doc.setStatus(Document.DOC_CHECKED_IN);
 			doc.setType(type);
 			doc.setVersion("1.0");
