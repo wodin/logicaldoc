@@ -1651,6 +1651,10 @@ DIV#center {
 	border-top: 1px solid white;
 }
 
+.folderParentLabel {
+	font-style: italic;
+}
+
 /* Used to highlight the immutable documents */
 .immutable {
 	font-style: italic;

@@ -144,7 +144,7 @@ public class DocumentNavigation extends NavigationBean {
 		if (parentDir.getMenuId() == Menu.MENUID_DOCUMENTS)
 			parentDir.setDisplayText(Messages.getMessage(parentDir.getMenu().getText()));
 
-		MenuItem item = createMenuItem(parentDir.getDisplayText(), parentDir, "folder_up.png");
+		MenuItem item = createMenuItem(parentDir.getDisplayText(), parentDir, "folder_up.png", "folderParent");
 
 		if (parentDir.getMenuId() != Menu.MENUID_HOME) {
 			// Add parent folder as first menu
@@ -166,10 +166,10 @@ public class DocumentNavigation extends NavigationBean {
 	}
 
 	protected MenuItem createMenuItem(String label, Directory dir) {
-		return createMenuItem(label, dir, "folder.png");
+		return createMenuItem(label, dir, "folder.png", null);
 	}
 
-	protected MenuItem createMenuItem(String label, Directory dir, String imageName) {
+	protected MenuItem createMenuItem(String label, Directory dir, String imageName, String styleClass) {
 
 		MenuItem menuItem = new MenuItem();
 		menuItem.setValue(label);
@@ -179,6 +179,8 @@ public class DocumentNavigation extends NavigationBean {
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		menuItem.setIcon(style.getImagePath(imageName));
 		menuItem.setUserObject(dir);
+		if (styleClass != null)
+			menuItem.setStyleClass(styleClass);
 
 		return menuItem;
 	}
