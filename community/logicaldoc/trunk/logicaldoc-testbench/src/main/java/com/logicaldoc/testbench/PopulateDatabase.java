@@ -201,7 +201,7 @@ public class PopulateDatabase {
 			insertMenuGroup = con
 					.prepareStatement("INSERT INTO LD_MENUGROUP (LD_MENUID,LD_GROUPID,LD_WRITE,LD_ADDCHILD,LD_MANAGESECURITY,LD_MANAGEIMMUTABILITY,LD_DELETE,LD_RENAME, LD_BULKIMPORT, LD_BULKEXPORT) VALUES (?,?,?,1,1,1,1,1,1,1);");
 			insertDoc = con
-					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_STATUS,LD_TYPE,LD_CHECKOUTUSER,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_INDEXED,LD_FOLDERID,LD_CREATION,LD_IMMUTABLE,LD_DIGEST) VALUES (?,?,0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,0,?);");
+					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_PUBLISHERID,LD_STATUS,LD_TYPE,LD_CHECKOUTUSERID,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_INDEXED,LD_FOLDERID,LD_CREATION,LD_IMMUTABLE,LD_DIGEST) VALUES (?,?,0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,0,?);");
 			insertKeyword = con.prepareStatement("INSERT INTO LD_KEYWORD (LD_DOCID,LD_KEYWORD) VALUES (?,?);");
 			insertVersion = con
 					.prepareStatement("INSERT INTO LD_VERSION  (LD_DOCID, LD_VERSION, LD_USERID, LD_USERNAME, LD_DATE, LD_COMMENT)"
@@ -320,34 +320,36 @@ public class PopulateDatabase {
 		insertDoc.setDate(5, new Date(docFile.lastModified()));
 		// LD_PUBLISHER
 		insertDoc.setString(6, "admin");
+		// LD_PUBLISHERID
+		insertDoc.setLong(7, 1);
 		// LD_STATUS
-		insertDoc.setInt(7, 0);
+		insertDoc.setInt(8, 0);
 		// LD_TYPE
-		insertDoc.setString(8, extension);
-		// LD_CHECKOUTUSER
-		insertDoc.setString(9, "");
+		insertDoc.setString(9, extension);
+		// LD_CHECKOUTUSERID
+		insertDoc.setLong(10, -1);
 		// LD_SOURCE
-		insertDoc.setString(10, "LogicalDOC");
+		insertDoc.setString(11, "LogicalDOC");
 		// LD_SOURCEAUTHOR
-		insertDoc.setString(11, "");
+		insertDoc.setString(12, "");
 		// LD_SOURCEDATE
-		insertDoc.setDate(12, new Date(new java.util.Date().getTime()));
+		insertDoc.setDate(13, new Date(new java.util.Date().getTime()));
 		// LD_SOURCETYPE
-		insertDoc.setString(13, "");
+		insertDoc.setString(14, "");
 		// LD_COVERAGE
-		insertDoc.setString(14, "test");
+		insertDoc.setString(15, "test");
 		// LD_LANGUAGE
-		insertDoc.setString(15, language);
+		insertDoc.setString(16, language);
 		// LD_FILENAME
-		insertDoc.setString(16, filename);
+		insertDoc.setString(17, filename);
 		// LD_FILESIZE
-		insertDoc.setLong(17, filesize);
+		insertDoc.setLong(18, filesize);
 		// LD_FOLDERID
-		insertDoc.setLong(18, folderId);
+		insertDoc.setLong(19, folderId);
 		// LD_CREATION
-		insertDoc.setDate(19, new Date(new java.util.Date().getTime()));
+		insertDoc.setDate(20, new Date(new java.util.Date().getTime()));
 		// LD_DIGEST
-		insertDoc.setString(20, Util.computeDigest(docFile));
+		insertDoc.setString(21, Util.computeDigest(docFile));
 
 		insertDoc.addBatch();
 		batchCount++;
