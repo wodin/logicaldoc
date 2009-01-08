@@ -408,7 +408,7 @@ public class DocumentEditForm {
 	 * @param versionDesc The versionDesc to set.
 	 */
 	public void setVersionDesc(String desc) {
-		versionDesc = desc;
+		this.versionDesc = desc;
 	}
 
 	public Date getDocDate() {
@@ -569,11 +569,12 @@ public class DocumentEditForm {
 	 */
 	@SuppressWarnings("deprecation")
 	public String checkin() {
+		
 		Application application = FacesContext.getCurrentInstance().getApplication();
 		InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
 				FacesContext.getCurrentInstance()));
+		
 		if (SessionManagement.isValid()) {
-			String versionDesc = fileForm.getDescription();
 			Document document = record.getDocument();
 			File file = fileForm.getFile();
 
@@ -610,7 +611,7 @@ public class DocumentEditForm {
 						DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 								DocumentManager.class);
 						documentManager.checkin(document.getId(), new FileInputStream(file), fileName,
-								SessionManagement.getUser(), versionType, versionDesc, immediateIndexing);
+								SessionManagement.getUser(), versionType, this.versionDesc, immediateIndexing);
 
 						/* create positive log message */
 						Messages.addLocalizedInfo("msg.action.savedoc");
