@@ -2,21 +2,25 @@ package com.logicaldoc.web.document;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.document.Article;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.ArticleDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.util.Context;
-
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
+import com.logicaldoc.web.util.FacesUtil;
 
 /**
  * Control that allows the user to list and select articles
@@ -65,7 +69,8 @@ public class ArticlesRecordsManager {
 			docId = document.getId();
 
 			ArticleDAO artDao = (ArticleDAO) Context.getInstance().getBean(ArticleDAO.class);
-			Collection<Article> coll = artDao.findByDocId(docId);
+			List<Article> coll = artDao.findByDocId(docId);
+		    Collections.reverse(coll);
 
 			for (Article article : coll) {
 				articles.add(new ArticleRecord(article, this));
@@ -114,6 +119,12 @@ public class ArticlesRecordsManager {
 				selectedArticle.setDate(new Date());
 				selectedArticle.setUsername(username);
 				selectedArticle.setDocId(docId);
+				
+				// Verify that the subject is not empty
+				if (StringUtils.isEmpty(selectedArticle.getSubject())) {
+					Messages.addLocalizedError("errors.required");
+					return null;
+				}
 
 				ArticleDAO articleDao = (ArticleDAO) Context.getInstance().getBean(ArticleDAO.class);
 				articleDao.store(selectedArticle.getWrappedArticle());

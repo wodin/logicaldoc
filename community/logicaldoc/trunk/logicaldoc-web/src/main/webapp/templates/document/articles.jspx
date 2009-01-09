@@ -91,12 +91,12 @@
                 <ice:commandButton value="&lt;&lt; #{msgs['back']}"
                     immediate="true"
                     partialSubmit="true" action="#{articlesRecordsManager.back}" />
-                <ice:commandButton value="#{msgs['save']}"
-                    action="#{articlesRecordsManager.save}"
-                    rendered="#{articlesRecordsManager.editing}" />
                 <ice:commandButton value="#{msgs['msg.jsp.addarticle']}"
                     action="#{articlesRecordsManager.add}"
                     rendered="#{empty (articlesRecordsManager.selectedArticle)}" />
+                <ice:commandButton value="#{msgs['save']}"
+                    action="#{articlesRecordsManager.save}" 
+                    rendered="#{articlesRecordsManager.editing}" />
             </ice:panelGroup>
         </ice:form>
 </jsp:root>
