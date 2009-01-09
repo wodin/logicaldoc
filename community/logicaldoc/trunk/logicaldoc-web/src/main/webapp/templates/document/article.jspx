@@ -16,20 +16,12 @@
     xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
     id="articleForm">
     <ice:panelGroup>
+    	
         <ice:panelGrid columns="2">
             <ice:panelGroup styleClass="outputLabel">
                 <ice:outputLabel for="author" value="#{msgs['document.author']}*" />
             </ice:panelGroup>
-            <ice:panelGroup rendered="false">
-                <ice:inputText id="author"
-                    label="#{msgs['errors.header.alert.key']}"
-                    value="#{articlesRecordsManager.selectedArticle.username}"
-                    maxlength="255"
-                    required="true"
-                    disabled="true" />
-                <ice:message for="author" />
-            </ice:panelGroup>
-            <ice:panelGroup rendered="true">
+            <ice:panelGroup>
                 <ice:outputText value=" #{articlesRecordsManager.selectedArticle.username}" style="font-weight:bold" />
             </ice:panelGroup>
             
@@ -38,11 +30,10 @@
             </ice:panelGroup>
             <ice:panelGroup>
                 <ice:inputText id="title"
-                    label="#{msgs['errors.header.alert.key']}"
                     tabindex="1"
                     value="#{articlesRecordsManager.selectedArticle.subject}"
+                    partialSubmit="true"
                     maxlength="255"
-                    onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
                     required="true" />
                 <ice:message for="title" />
             </ice:panelGroup>
@@ -53,9 +44,8 @@
                 <ice:inputTextarea id="text"
                     tabindex="1"
                     value="#{articlesRecordsManager.selectedArticle.message}"
-                    cols="40" rows="3"
-                    onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
-                    />
+                    partialSubmit="true"
+                    cols="40" rows="3" />
             </ice:panelGroup>
         </ice:panelGrid>
     </ice:panelGroup>
