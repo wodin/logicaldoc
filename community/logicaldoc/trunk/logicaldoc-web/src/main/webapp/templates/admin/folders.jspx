@@ -19,11 +19,6 @@
         <ice:messages globalOnly="true"/>
         <ice:panelGroup>
             <ice:panelGroup>
-                <h3>
-                    <ice:outputText value="#{msgs['directory']}" />
-                    <br />
-                    <br />
-                </h3>
                 <ice:panelGrid columns="2" onkeypress="return submitOnEnter('folderForm:save', event);">
                     <ice:panelGroup style="text-align:right">
                         <ice:outputLabel for="userDir" value="userdir" />
