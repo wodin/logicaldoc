@@ -1667,7 +1667,8 @@ homePlainTblColHdr1 homePlainTblHdr
 }
 
 .folderParentLabel {
-	font-style: italic;
+	font-weight: bold;
+	color: green;
 }
 
 /* Used to highlight the immutable documents */
