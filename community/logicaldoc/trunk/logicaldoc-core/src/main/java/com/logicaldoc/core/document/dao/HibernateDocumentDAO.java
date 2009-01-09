@@ -160,11 +160,11 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findCheckoutByUserName(java.lang.String)
+	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findCheckoutByUserId(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Document> findCheckoutByUserName(String username) {
-		return findByWhere("_entity.checkoutUser = '" + username + "'");
+	public List<Document> findCheckoutByUserId(long userId) {
+		return findByWhere("_entity.checkoutUserId = " + userId);
 	}
 
 	/**
