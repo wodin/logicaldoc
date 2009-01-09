@@ -15,7 +15,7 @@
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
 	id="userForm">
 
-	<ice:panelGroup styleClass="formBorderHighlight">
+	<ice:panelGroup styleClass="formBorderHighlight" style="text-align:left">
 		<ice:panelGroup>
 			<!-- Template data -->
 			<ice:panelGroup>

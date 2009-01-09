@@ -15,7 +15,7 @@
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form">
 
 	<ice:panelGroup styleClass="center formBorderHighlight"
-		style="width: 600px;">
+		style="text-align:left; width: 600px;">
 
 		<ice:panelGroup>
 			<!-- Login data -->

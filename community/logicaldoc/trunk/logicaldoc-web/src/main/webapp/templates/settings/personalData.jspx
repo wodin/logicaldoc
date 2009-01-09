@@ -22,11 +22,6 @@
 
 		<!-- Personal data -->
 		<ice:panelGroup>
-			<h3>
-				<ice:outputText value="#{msgs['msg.jsp.adduser.personaldata']}" />
-				<br />
-				<br />
-			</h3>
 			<ice:panelGrid columns="5"
 				onkeypress="return submitOnEnter('personalDataForm:save', event);">
 				<ice:panelGroup styleClass="outputLabel">

@@ -69,13 +69,11 @@
 					<br />
 					<br />
 					<ice:commandButton value="&gt;&gt;"
-						action="#{securityRightsRecordsManager.assignGroups}"
-						rendered="#{!empty (securityRightsRecordsManager.selectedDirectory)}" />
+						action="#{securityRightsRecordsManager.assignGroups}"  />
 					<br />
 					<br />
 					<ice:commandButton value="&lt;&lt;"
-						action="#{securityRightsRecordsManager.unassignGroups}"
-						rendered="#{!empty (securityRightsRecordsManager.selectedDirectory)}" />
+						action="#{securityRightsRecordsManager.unassignGroups}" />
 				</ice:panelGroup>
 
 				<ice:panelGroup>
