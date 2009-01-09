@@ -51,10 +51,10 @@ public interface DocumentDAO extends PersistentObjectDAO<Document>{
 	/**
 	 * Finds all documents checked-out for an user.
 	 * 
-	 * @param username Name of the user.
+	 * @param userId Id of the user.
 	 * @return Collection of all Documents checked out by the specified user.
 	 */
-	public List<Document> findCheckoutByUserName(String username);
+	public List<Document> findCheckoutByUserId(long userId);
 
 	/**
 	 * Finds a max number of documents last modified by an user.
