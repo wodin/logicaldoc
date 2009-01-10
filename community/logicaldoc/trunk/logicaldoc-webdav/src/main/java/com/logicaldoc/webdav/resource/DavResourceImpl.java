@@ -464,8 +464,9 @@ public class DavResourceImpl implements DavResource {
 		try {
 			Resource resource = resourceService.getResource(member.getLocator()
 					.getResourcePath(), this.resource.getRequestedPerson());
+			// set the requesting person
+			resource.setRequestedPerson(this.resource.getRequestedPerson());
 			resourceService.deleteResource(resource);
-
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

@@ -336,9 +336,17 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public void deleteResource(Resource resource) {
 		try {
-			if (resource.isFolder() == true)
-				menuDAO.delete(Long.parseLong(resource.getID()));
-			else
+			if (resource.isFolder() == true) {
+				//menuDAO.delete(Long.parseLong(resource.getID()));
+				Menu menu = menuDAO.findById(Long.parseLong(resource.getID()));
+				User user = userDAO.findById(resource.getRequestedPerson());
+				log.debug("user = " + user);
+
+				List<Menu> notDeletableFolders = documentManager.deleteFolder(menu, user);
+				if (notDeletableFolders.size() > 0) {
+					throw new RuntimeException("Unable to delete some subfolders.");
+				}
+			} else
 				documentManager.delete(Long.parseLong(resource.getID()));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
