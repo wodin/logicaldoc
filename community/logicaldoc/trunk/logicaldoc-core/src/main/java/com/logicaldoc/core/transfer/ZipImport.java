@@ -132,44 +132,47 @@ public class ZipImport {
 	 * 
 	 * @param file
 	 * @param parent
-	 * @param language Two characters language of the file to add
 	 */
 	protected void addEntry(File file, Menu parent) {
-		try {
-			MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			String menuName = file.getName();
-			if (file.isDirectory()) { // creates a logicaldoc folder
-				Menu menu = dao.createFolder(parent, menuName);
+		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		String menuName = file.getName();
+		if (file.isDirectory()) { // creates a logicaldoc folder
+			Menu menu = dao.createFolder(parent, menuName);
 
-				File[] files = file.listFiles();
+			File[] files = file.listFiles();
 
-				for (int i = 0; i < files.length; i++) {
-					addEntry(files[i], menu);
-				}
-			} else {
-				Set<String> keywords = null;
-				if (extractKeywords) {
-					AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
-
-					// also extract keywords and save on document
-					DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-					Locale locale = new Locale(language);
-					Parser parser = ParserFactory.getParser(file, locale);
-					parser.parse(file);
-					String words = parser.getKeywords();
-					if (StringUtils.isEmpty(words)) {
-						words = analyzer.getTermsAsString(keywordsNumber, parser.getContent(), language);
-					}
-					keywords = ddao.toKeywords(words);
-				}
-
-				// creates a document
-				DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-				docManager.create(file, parent, user, language, "", null, "", "", "", "", "", keywords, templateId,
-						null, immediateIndexing);
+			for (int i = 0; i < files.length; i++) {
+				addEntry(files[i], menu);
 			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+		} else {
+			Set<String> keywords = null;
+			if (extractKeywords) {
+				AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
+
+				// also extract keywords and save on document
+				DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+				Locale locale = new Locale(language);
+				Parser parser = ParserFactory.getParser(file, locale);
+				parser.parse(file);
+				String words = parser.getKeywords();
+				if (StringUtils.isEmpty(words)) {
+					try {
+						words = analyzer.getTermsAsString(keywordsNumber, parser.getContent(), language);
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+				keywords = ddao.toKeywords(words);
+			}
+
+			// creates a document
+			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+			try {
+				docManager.create(file, parent, user, language, "", null, "", "", "", "", "", keywords, templateId, null,
+						immediateIndexing);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 	}
 }
