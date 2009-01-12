@@ -33,7 +33,7 @@
                     tabindex="1"
                     value="#{articlesRecordsManager.selectedArticle.subject}"
                     partialSubmit="true"
-                    maxlength="255"
+                    maxlength="255" disabled="#{articlesRecordsManager.readOnly}"
                     required="true" />
                 <ice:message for="title" />
             </ice:panelGroup>
@@ -44,7 +44,7 @@
                 <ice:inputTextarea id="text"
                     tabindex="1"
                     value="#{articlesRecordsManager.selectedArticle.message}"
-                    partialSubmit="true"
+                    partialSubmit="true" disabled="#{articlesRecordsManager.readOnly}"
                     cols="40" rows="3" />
             </ice:panelGroup>
         </ice:panelGrid>
