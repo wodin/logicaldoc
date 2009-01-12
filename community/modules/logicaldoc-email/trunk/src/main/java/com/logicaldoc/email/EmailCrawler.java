@@ -360,17 +360,20 @@ public class EmailCrawler extends Task {
 			Multipart mp = (Multipart) content;
 			Collection<Document> attachments = new ArrayList<Document>();
 			String emailBody = "";
+
 			for (int j = 0; j < mp.getCount(); j++) {
 				Part part = mp.getBodyPart(j);
 
 				// Check if plain
 				MimeBodyPart mbp = (MimeBodyPart) part;
-				if ((mbp.isMimeType("text/plain")) || mbp.isMimeType("text/html")) {
+				if (mbp.isMimeType("text/plain") || mbp.isMimeType("text/html")) {
 					log.debug("Mime type is plain");
 					if (mbp.getFileName() != null) {
-						File docFile = new File(mailDir, mbp.getFileName());
-						saveToFile(part.getInputStream(), docFile);
-						attachments.add(storeDocument(account, docFile, email));
+						if (account.isAllowed(FilenameUtils.getExtension(mbp.getFileName()))) {
+							File docFile = new File(mailDir, mbp.getFileName());
+							saveToFile(part.getInputStream(), docFile);
+							attachments.add(storeDocument(account, docFile, email));
+						}
 					} else
 						emailBody += (String) mbp.getContent();
 				} else {
@@ -425,8 +428,7 @@ public class EmailCrawler extends Task {
 	 * 
 	 * @param account
 	 * @param file File to be stored
-	 * @param docName Name of the document to be created
-	 * @param srcDate
+	 * @param email The email with the file to be stored
 	 * @return The newly created document
 	 * @throws Exception
 	 */
@@ -462,9 +464,9 @@ public class EmailCrawler extends Task {
 				attributes.put("from", StringUtils.substring(email.getAuthorAddress(), 0, 3999));
 				for (int i = 0; i < email.getAddresses().length; i++) {
 					if (email.getAddresses()[i] != null)
-						attributes.put("to", (StringUtils.isNotEmpty(attributes.get("to")) ? (attributes
-								.get("to")+",") : "")
-								+ email.getAddresses()[i].getAddress());
+						attributes.put("to",
+								(StringUtils.isNotEmpty(attributes.get("to")) ? (attributes.get("to") + ",") : "")
+										+ email.getAddresses()[i].getAddress());
 				}
 				attributes.put("to", StringUtils.substring(attributes.get("to"), 0, 3999));
 				attributes.put("subject", StringUtils.substring(email.getSubject(), 0, 3999));
@@ -472,9 +474,9 @@ public class EmailCrawler extends Task {
 
 			doc = manager.create(file, folder, user, account.getLanguage(), email.getSubject(), srcDate, account
 					.getMailAddress(), srcAuthor, "", "", "", null, template != null ? template.getId() : null,
-					attributes,false);
+					attributes, false);
 		} else {
-			doc = manager.create(file, folder, user, account.getLanguage(),false);
+			doc = manager.create(file, folder, user, account.getLanguage(), false);
 		}
 
 		return doc;
