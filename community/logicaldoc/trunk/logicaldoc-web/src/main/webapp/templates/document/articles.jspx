@@ -65,6 +65,30 @@
                                     </ice:outputText>
                                 </ice:panelGroup>
                             </ice:column>
+                            
+                        <!-- Edit -->
+						<ice:column>
+							<ice:panelGroup>
+								<ice:commandLink action="#{article.edit}" rendered="#{article.editable}">
+									<ice:graphicImage value="#{StyleBean.imagesPath}/options.gif"
+										style="border: 0px solid;" title="#{msgs['msg.jsp.edituser']}" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Delete -->
+						<ice:column>
+							<ice:panelGroup>
+								<ice:commandLink action="#{article.delete}"
+									onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;"
+									rendered="#{article.deletable}">
+									<ice:graphicImage value="#{StyleBean.imagesPath}/delete.gif"
+										style="border: 0px solid;" title="#{msgs['delete']}" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+                            
+                            
                         </ice:dataTable>
 
                         <ice:panelGroup style="width: 98%;">
@@ -88,7 +112,7 @@
         <ice:form>
             <ice:panelGroup styleClass="commands">
             <hr />
-                <ice:commandButton value="&lt;&lt; #{msgs['back']}"
+                <ice:commandButton value="&lt;&lt; #{msgs['back']}" immediate="true" partialSubmit="false"
                     action="#{articlesRecordsManager.back}" />
                 <ice:commandButton value="#{msgs['msg.jsp.addarticle']}"
                     action="#{articlesRecordsManager.add}"

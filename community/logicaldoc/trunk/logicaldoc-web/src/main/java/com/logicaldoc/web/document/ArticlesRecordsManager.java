@@ -44,6 +44,10 @@ public class ArticlesRecordsManager {
 	public boolean isEditing() {
 		return editing;
 	}
+	
+	public boolean isReadOnly() {
+		return !(editing);
+	}
 
 	/**
 	 * Changes the currently selected document and updates the articles list.
@@ -102,6 +106,8 @@ public class ArticlesRecordsManager {
 		if (selectedArticle == null) {
 			documentNavigation.setSelectedPanel(new PageContentBean("documents"));
 		} else {
+			// reload the list to avoid incorrect beahaviour during edit-changesubject-back actions
+			selectDocument(selectedDocument);
 			selectedArticle = null;
 		}
 
@@ -115,7 +121,9 @@ public class ArticlesRecordsManager {
 			try {
 				long docId = selectedDocument.getId();
 				String username = SessionManagement.getUsername();
-				selectedArticle.setDate(new Date());
+				if (selectedArticle.getDate() == null) {
+					selectedArticle.setDate(new Date());
+				}
 				selectedArticle.setUsername(username);
 				selectedArticle.setDocId(docId);
 				
@@ -164,11 +172,37 @@ public class ArticlesRecordsManager {
 		return selectedArticle;
 	}
 
-	public void setSelectedArticle(ArticleRecord selectedArticle) {
-		this.selectedArticle = selectedArticle;
+	public void setSelectedArticle(ArticleRecord article) {
+		this.selectedArticle = article;
 	}
 
 	public void setDocumentNavigation(DocumentNavigation documentNavigation) {
 		this.documentNavigation = documentNavigation;
+	}
+
+	public void editArticle(ArticleRecord article) {
+		editing = true;
+		setSelectedArticle(article);
+	}
+
+	public String deleteArticle(ArticleRecord record) {
+		if (SessionManagement.isValid()) {
+			try {
+				ArticleDAO articleDao = (ArticleDAO) Context.getInstance().getBean(ArticleDAO.class);
+				articleDao.delete(record.getId());
+
+				Messages.addLocalizedInfo("msg.action.deleteitem");
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				Messages.addLocalizedError("errors.action.deleteitem");
+			}
+
+			selectDocument(selectedDocument);
+			selectedArticle = null;
+			editing = false;
+		} else {
+			return "login";
+		}
+		return null;
 	}
 }

@@ -92,6 +92,23 @@ public class ArticleRecord extends Article {
 		manager.setSelectedArticle(this);
 		return null;
 	}
+	
+	public boolean isEditable() {
+		return true;
+	}
+	
+	public boolean isDeletable() {
+		return true;
+	}
+	
+	public String edit() {
+		manager.editArticle(this);
+		return null;
+	}
+	
+	public String delete() {
+		return manager.deleteArticle(this);
+	}
 
 	public Article getWrappedArticle() {
 		return wrappedArticle;
