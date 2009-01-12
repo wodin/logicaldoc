@@ -27,7 +27,6 @@
 	<!-- Basic table -->
 	<ice:panelGroup styleClass="formBorderHighlight" style="width:97%;"
 		rendered="#{documentsRecordsManager.count > 0}">
-
 		<ice:dataTable id="documentsList" width="97%"
 			value="#{documentsRecordsManager.documents}" var="documentRecord"
 			sortColumn="#{documentsRecordsManager.sortColumn}"
@@ -58,9 +57,12 @@
 					<ice:rowSelector value="#{documentRecord.selected}"
 						multiple="#{documentsRecordsManager.multipleSelection}"
 						selectionListener="#{documentsRecordsManager.selectRow}"
-						selectedClass="rowSelSelected" mouseOverClass="rowMouseOver">
-						<ice:selectBooleanCheckbox title="#{msgs['msg.jsp.popup']}"
-							value="#{documentRecord.selected}" />
+						selectedClass="rowSelSelected" mouseOverClass="rowMouseOver"
+						toggleOnInput="false">
+						<ice:graphicImage rendered="#{documentRecord.selected}"
+							value="#{StyleBean.imagesPath}/checkbox.gif" />
+						<ice:graphicImage rendered="#{!documentRecord.selected}"
+							value="#{StyleBean.imagesPath}/checkbox_empty.gif" />
 					</ice:rowSelector>
 				</ice:panelGroup>
 			</ice:column>
@@ -128,11 +130,11 @@
 							rendered="#{documentRecord.linked}"
 							value="#{StyleBean.imagesPath}/link.png" alt="#{msgs['links']}" />
 					</ice:commandLink>
-					<ice:menuPopup id="pop" value="#{documentRecord.docId}"
-						orientation="vertical" rendered="#{documentRecord.documentFound}">
-						<ice:menuItems value="#{documentRecord.model}" />
-					</ice:menuPopup>
 				</ice:panelGroup>
+				<ice:menuPopup id="pop" value="#{documentRecord.docId}"
+					orientation="vertical" rendered="#{documentRecord.documentFound}">
+					<ice:menuItems value="#{documentRecord.model}" />
+				</ice:menuPopup>
 			</ice:column>
 
 			<!-- Creation -->
