@@ -23,59 +23,62 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="div" id="toolbar">
-		<table cellpadding="0" cellspacing="2" border="0">
-			<tr>
-				<td>
-					<ice:commandLink action="#{newDocWizard.start}"
-						title="#{msgs['msg.jsp.createdoc']}" rendered="#{documentNavigation.selectedDir.writeEnabled}">
-						<ice:graphicImage
-							value="#{StyleBean.imagesPath}/actions_upload.gif"
-							style="border: 0px solid;" title="#{msgs['msg.jsp.createdoc']}" />
-					</ice:commandLink>
-				</td>
-				<td>
-					<ice:commandLink action="#{documentsRecordsManager.startZipUpload}"
-						title="#{msgs['msg.jsp.uploadfolder']}" rendered="#{documentNavigation.selectedDir.bulkImportEnabled}">
-						<ice:graphicImage
-							value="#{StyleBean.imagesPath}/actions_uploadzip.gif"
-							style="border: 0px solid;" title="#{msgs['msg.jsp.uploadfolder']}"/>
-					</ice:commandLink>
-				</td>
-				<td>
-					<ice:commandLink action="#{documentsRecordsManager.trimSelected}"
-						title="#{msgs['cut']}"
-						rendered="#{documentsRecordsManager.clipboardSize==0 and documentNavigation.selectedDir.writeEnabled}">
-						<ice:graphicImage
-							value="#{StyleBean.imagesPath}/actions_trim.gif"
-							style="border: 0px solid;" title="#{msgs['cut']}"/>
-					</ice:commandLink>
-				</td>
-                <td>
-					<ice:commandLink action="#{documentsRecordsManager.paste}"
-						title="#{msgs['paste']}"
-						rendered="#{documentsRecordsManager.clipboardSize>0 and documentNavigation.selectedDir.writeEnabled}" >
-						<ice:graphicImage
-							value="#{StyleBean.imagesPath}/actions_paste.gif"
-							style="border: 0px solid;" title="#{msgs['paste']}"/>
-					</ice:commandLink>
-				</td>
-				<td>
-					<ice:commandLink action="#{documentsRecordsManager.deleteSelected}"
-						title="#{msgs['delete']}"
-						onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;" rendered="#{documentNavigation.selectedDir.writeEnabled}">
-						<ice:graphicImage
-							value="#{StyleBean.imagesPath}/actions_delete.gif"
-							style="border: 0px solid;" title="#{msgs['delete']}"/>
-					</ice:commandLink>
-				</td>
-				<td>
-					<ice:commandLink action="#{documentsRecordsManager.requireImmutabilityComment}"
-						title="#{msgs['document.immutable']}" rendered="#{documentNavigation.selectedDir.manageImmutabilityEnabled}">
-						<ice:graphicImage
-							value="#{StyleBean.imagesPath}/actions_immutability.gif"
-							style="border: 0px solid;" title="#{msgs['document.immutable']}"/>
-					</ice:commandLink>
-				</td>
-			</tr>
-		</table>
+	<table cellpadding="0" cellspacing="2" border="0">
+		<tr>
+			<td>
+				<ice:commandLink action="#{newDocWizard.start}"
+					title="#{msgs['msg.jsp.createdoc']}"
+					rendered="#{documentNavigation.selectedDir.writeEnabled}">
+					<ice:graphicImage
+						value="#{StyleBean.imagesPath}/actions_upload.gif"
+						style="border: 0px solid;" title="#{msgs['msg.jsp.createdoc']}" />
+				</ice:commandLink>
+			</td>
+			<td>
+				<ice:commandLink action="#{documentsRecordsManager.startZipUpload}"
+					title="#{msgs['msg.jsp.uploadfolder']}"
+					rendered="#{documentNavigation.selectedDir.bulkImportEnabled}">
+					<ice:graphicImage
+						value="#{StyleBean.imagesPath}/actions_uploadzip.gif"
+						style="border: 0px solid;" title="#{msgs['msg.jsp.uploadfolder']}" />
+				</ice:commandLink>
+			</td>
+			<td>
+				<ice:commandLink action="#{documentsRecordsManager.trimSelected}"
+					title="#{msgs['cut']}"
+					rendered="#{documentsRecordsManager.clipboardSize==0 and documentNavigation.selectedDir.writeEnabled}">
+					<ice:graphicImage value="#{StyleBean.imagesPath}/actions_trim.gif"
+						style="border: 0px solid;" title="#{msgs['cut']}" />
+				</ice:commandLink>
+			</td>
+			<td>
+				<ice:commandLink action="#{documentsRecordsManager.paste}"
+					title="#{msgs['paste']}"
+					rendered="#{documentsRecordsManager.clipboardSize>0 and documentNavigation.selectedDir.writeEnabled}">
+					<ice:graphicImage value="#{StyleBean.imagesPath}/actions_paste.gif"
+						style="border: 0px solid;" title="#{msgs['paste']}" />
+				</ice:commandLink>
+			</td>
+			<td>
+				<ice:commandLink
+					action="#{documentsRecordsManager.requireImmutabilityComment}"
+					title="#{msgs['document.immutable']}"
+					rendered="#{documentNavigation.selectedDir.manageImmutabilityEnabled}">
+					<ice:graphicImage
+						value="#{StyleBean.imagesPath}/actions_immutability.gif"
+						style="border: 0px solid;" title="#{msgs['document.immutable']}" />
+				</ice:commandLink>
+			</td>
+			<td>
+				<ice:commandLink action="#{documentsRecordsManager.deleteSelected}"
+					title="#{msgs['delete']}"
+					onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;"
+					rendered="#{documentNavigation.selectedDir.writeEnabled}">
+					<ice:graphicImage
+						value="#{StyleBean.imagesPath}/actions_delete.gif"
+						style="border: 0px solid;" title="#{msgs['delete']}" />
+				</ice:commandLink>
+			</td>
+		</tr>
+	</table>
 </jsp:root>
