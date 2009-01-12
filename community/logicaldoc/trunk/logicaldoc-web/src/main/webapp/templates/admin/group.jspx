@@ -114,14 +114,19 @@
 								<ice:outputText value="#{msgs['insert']}" />
 							</f:facet>
 							<ice:panelGroup style="white-space: nowrap;">
-								<ice:selectBooleanCheckbox value="#{preference.insertHidden}" /> nascosto
-					</ice:panelGroup>
+								<ice:selectBooleanCheckbox value="#{preference.insertHidden}" />
+								<ice:outputLabel for="insert_hidden" value="#{msgs['hidden']}" style="padding-left:3px;" />
+							</ice:panelGroup>
 							<ice:panelGroup style="white-space: nowrap;">
-								<ice:selectBooleanCheckbox value="#{preference.insertReadOnly}" /> sola lettura
-					</ice:panelGroup>
+								<ice:selectBooleanCheckbox value="#{preference.insertReadOnly}" />
+								<ice:outputLabel for="insert_readonly"
+									value="#{msgs['readonly']}" style="padding-left:3px;" />
+							</ice:panelGroup>
 							<ice:panelGroup style="white-space: nowrap;">
-								<ice:selectBooleanCheckbox value="#{preference.insertMandatory}" /> obbligatorio
-					</ice:panelGroup>
+								<ice:selectBooleanCheckbox value="#{preference.insertMandatory}" />
+								<ice:outputLabel for="insert_mandatory"
+									value="#{msgs['mandatory']}" style="padding-left:3px;" />
+							</ice:panelGroup>
 						</ice:column>
 
 						<!-- edit column -->
@@ -130,14 +135,18 @@
 								<ice:outputText value="#{msgs['edit']}" />
 							</f:facet>
 							<ice:panelGroup style="white-space: nowrap;">
-								<ice:selectBooleanCheckbox value="#{preference.editHidden}" /> nascosto
-					</ice:panelGroup>
+								<ice:selectBooleanCheckbox value="#{preference.editHidden}" />
+								<ice:outputLabel for="edit_hidden" value="#{msgs['hidden']}" style="padding-left:3px;" />
+							</ice:panelGroup>
 							<ice:panelGroup style="white-space: nowrap;">
-								<ice:selectBooleanCheckbox value="#{preference.editReadOnly}" /> sola lettura
-					</ice:panelGroup>
+								<ice:selectBooleanCheckbox value="#{preference.editReadOnly}" />
+								<ice:outputLabel for="edit_readonly" value="#{msgs['readonly']}" style="padding-left:3px;" />
+							</ice:panelGroup>
 							<ice:panelGroup style="white-space: nowrap;">
-								<ice:selectBooleanCheckbox value="#{preference.editMandatory}" /> obbligatorio
-					</ice:panelGroup>
+								<ice:selectBooleanCheckbox value="#{preference.editMandatory}" />
+								<ice:outputLabel for="edit_mandatory"
+									value="#{msgs['mandatory']}" style="padding-left:3px;" />
+							</ice:panelGroup>
 						</ice:column>
 					</ice:dataTable>
 				</ice:panelGroup>
