@@ -114,13 +114,10 @@ public class HomeBean {
 		if (SessionManagement.isValid()) {
 			try {
 				long userId = SessionManagement.getUserId();
-				log.fatal("userId = " + userId);
 				ArticleDAO artDao = (ArticleDAO) Context.getInstance().getBean(ArticleDAO.class);
 				Collection<Article> articles = artDao.findByUserId(userId);
-				log.fatal("articles = " + articles);
 				
 				if (articles != null) {
-					log.fatal("articles.size() = " + articles.size());
 					// revert the list, it should be in asc order by time
 					lastarticles.addAll(articles);
 					Collections.reverse(lastarticles);
