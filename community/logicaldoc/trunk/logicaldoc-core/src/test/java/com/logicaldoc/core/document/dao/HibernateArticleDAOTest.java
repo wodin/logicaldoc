@@ -49,7 +49,7 @@ public class HibernateArticleDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, articles.size());
 	}
 
-	public void testFindByUserName() {
+	public void testFindByUserId() {
 		Collection<Article> articles = dao.findByUserId(2);
 		assertNotNull(articles);
 		assertEquals(2, articles.size());
