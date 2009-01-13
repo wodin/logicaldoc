@@ -83,4 +83,22 @@ public interface SecurityManager {
 	 * @return The collection of allowed groups
 	 */
 	public Set<Group> getAllowedGroups(long menuId);
+
+	/**
+	 * Checks if a given user is member of a particular group
+	 * 
+	 * @param userId The user identifier
+	 * @param groupId The group identifier
+	 * @return true only if the user belongs to the group
+	 */
+	public boolean isMemberOf(long userId, long groupId);
+	
+	/**
+	 * Checks if a given user is member of a particular group
+	 * 
+	 * @param userId The user identifier
+	 * @param groupName The group name
+	 * @return true only if the user belongs to the group
+	 */
+	public boolean isMemberOf(long userId, String groupName);
 }

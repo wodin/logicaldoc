@@ -12,9 +12,7 @@ import com.logicaldoc.core.security.User;
  * Test case for the manager <code>SecurityManager<code>
  * 
  * @author Marco Meschieri - Logical Objects
- * @version $Id:$
  * @since 3.0
- *
  */
 public class SecurityManagerImplTest extends AbstractCoreTestCase {
 	// Instance under test
@@ -87,5 +85,17 @@ public class SecurityManagerImplTest extends AbstractCoreTestCase {
 		assertTrue(groups.contains(groupDAO.findByName("admin")));
 		assertTrue(groups.contains(groupDAO.findByName("author")));
 		assertTrue(groups.contains(groupDAO.findByName("guest")));
+	}
+	
+	public void testIsMemberOfLongLong() {
+		assertTrue(manager.isMemberOf(1,1));
+		assertFalse(manager.isMemberOf(1,1234));
+		assertFalse(manager.isMemberOf(1,2));
+	}
+	
+	public void testIsMemberOfLongString() {
+		assertTrue(manager.isMemberOf(1,"admin"));
+		assertFalse(manager.isMemberOf(1,"xyz"));
+		assertFalse(manager.isMemberOf(1,"author"));
 	}
 }
