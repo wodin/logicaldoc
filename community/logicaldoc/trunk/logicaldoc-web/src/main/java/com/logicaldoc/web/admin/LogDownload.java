@@ -13,17 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.util.config.LoggingConfigurator;
 
+import com.logicaldoc.util.config.LoggingConfigurator;
 import com.logicaldoc.web.SessionManagement;
 
 /**
  * This servlet grant access to log files
  * 
  * @author Marco Meschieri
- * @version $Id:$
- * @since ###release###
- * 
+ * @since 3.0
  */
 public class LogDownload extends HttpServlet {
 	protected static Log logger = LogFactory.getLog(LogDownload.class);
@@ -54,7 +52,7 @@ public class LogDownload extends HttpServlet {
 
 				is.close();
 			} catch (Exception ex) {
-				logger.error(ex.getMessage(), ex);
+				//logger.error(ex.getMessage(), ex);
 			}
 		}
 	}
