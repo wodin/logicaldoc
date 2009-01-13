@@ -3,6 +3,8 @@ package com.logicaldoc.web.document;
 import java.util.Date;
 
 import com.logicaldoc.core.document.Article;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.UserDAO;
 
 /**
  * Utility class suitable for template display
@@ -17,8 +19,11 @@ public class ArticleRecord extends Article {
 
 	private ArticlesRecordsManager manager;
 
-	public ArticleRecord(Article wrappedArticle, ArticlesRecordsManager manager) {
+	private User user;
+
+	public ArticleRecord(Article wrappedArticle, ArticlesRecordsManager manager, User user) {
 		super();
+		this.user = user;
 		this.wrappedArticle = wrappedArticle;
 		this.manager = manager;
 	}
@@ -50,10 +55,10 @@ public class ArticleRecord extends Article {
 	public String getUsername() {
 		return wrappedArticle.getUsername();
 	}
-	
+
 	public long getUserId() {
 		return wrappedArticle.getUserId();
-	}	
+	}
 
 	public int hashCode() {
 		return wrappedArticle.hashCode();
@@ -86,7 +91,7 @@ public class ArticleRecord extends Article {
 	public void setUsername(String username) {
 		wrappedArticle.setUsername(username);
 	}
-	
+
 	public void setUserId(long userId) {
 		wrappedArticle.setUserId(userId);
 	}
@@ -99,20 +104,30 @@ public class ArticleRecord extends Article {
 		manager.setSelectedArticle(this);
 		return null;
 	}
-	
+
 	public boolean isEditable() {
-		return true;
+		// editable only by creator and admin
+		if ((user != null) && (user.getId() == getUserId()))
+			return true;
+		if (manager.isAdminUser(user))
+			return true;
+		return false;
 	}
-	
+
 	public boolean isDeletable() {
-		return true;
+		// deletable only by creator and admin
+		if ((user != null) && (user.getId() == getUserId()))
+			return true;
+		if (manager.isAdminUser(user))
+			return true;
+		return false;
 	}
-	
+
 	public String edit() {
 		manager.editArticle(this);
 		return null;
 	}
-	
+
 	public String delete() {
 		return manager.deleteArticle(this);
 	}
