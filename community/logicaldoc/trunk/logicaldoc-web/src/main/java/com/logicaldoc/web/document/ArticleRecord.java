@@ -121,8 +121,7 @@ public class ArticleRecord extends Article {
 		// deletable only by creator and admin
 		if ((user != null) && (user.getId() == getUserId()))
 			return true;
-		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(
-				com.logicaldoc.core.security.SecurityManager.class);
+		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
 		if (manager.isMemberOf(user.getId(), "admin"))
 			return true;
 		return false;
