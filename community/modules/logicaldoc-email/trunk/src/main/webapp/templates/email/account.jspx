@@ -225,9 +225,9 @@
 		</ice:panelGroup>
 		<hr />
 		<ice:panelGroup styleClass="commands">
-			<ice:commandButton value="#{email_msgs['logicaldoc-email.account.deletecache']}" tabindex="1"
+			<ice:commandButton value="#{msgs['cache.clear']}" tabindex="1"
 				action="#{AccountForm.deleteCache}" id="deleteCache"
-				onclick="if (!confirm(&quot;#{email_msgs['logicaldoc-email.account.deletecache.question']}&quot;)) return false;"/>
+				onclick="if (!confirm(&quot;#{msgs['cache.clear.question']}&quot;)) return false;"/>
 			<ice:commandButton value="#{msgs['abort']}" tabindex="1"
 				action="#{AccountsRecordsManager.list}" partialSubmit="true"
 				immediate="true" />
