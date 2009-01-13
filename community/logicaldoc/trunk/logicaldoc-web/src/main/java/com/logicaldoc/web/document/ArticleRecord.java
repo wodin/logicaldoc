@@ -3,8 +3,9 @@ package com.logicaldoc.web.document;
 import java.util.Date;
 
 import com.logicaldoc.core.document.Article;
+import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.util.Context;
 
 /**
  * Utility class suitable for template display
@@ -109,7 +110,9 @@ public class ArticleRecord extends Article {
 		// editable only by creator and admin
 		if ((user != null) && (user.getId() == getUserId()))
 			return true;
-		if (manager.isAdminUser(user))
+		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(
+				com.logicaldoc.core.security.SecurityManager.class);
+		if (manager.isMemberOf(user.getId(), "admin"))
 			return true;
 		return false;
 	}
@@ -118,7 +121,9 @@ public class ArticleRecord extends Article {
 		// deletable only by creator and admin
 		if ((user != null) && (user.getId() == getUserId()))
 			return true;
-		if (manager.isAdminUser(user))
+		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(
+				com.logicaldoc.core.security.SecurityManager.class);
+		if (manager.isMemberOf(user.getId(), "admin"))
 			return true;
 		return false;
 	}
