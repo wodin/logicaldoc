@@ -5,7 +5,7 @@
 		<import plugin-id="logicaldoc-core" />
 	</requires>
 	<runtime>
-		<library id="logicaldoc-email" path="classes/" type="code">
+		<library id="email" path="classes/" type="code">
 			<export prefix="*" />
 		</library>
 	</runtime>
