@@ -21,6 +21,8 @@ public class Article extends PersistentObject {
 	private Date date = new Date();
 
 	private String username = "";
+	
+	private long userId;
 
 	public Article() {
 	}
@@ -63,6 +65,7 @@ public class Article extends PersistentObject {
 		subject = "";
 		message = "";
 		username = "";
+		userId = -1;
 		date = new Date();
 	}
 
@@ -72,5 +75,13 @@ public class Article extends PersistentObject {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 }

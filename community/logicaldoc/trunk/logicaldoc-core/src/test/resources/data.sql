@@ -164,13 +164,13 @@ insert into ld_history
 values     (3,'2008-10-22',0,1,3,'2006-12-27','sebastian','data test 03','reason test 03');
 
 insert into ld_article
-values     (1,'2008-10-22',0,1,'subject','message','2008-10-09','admin');
+values     (1,'2008-10-22',0,1,'subject','message','2008-10-09',2,'admin');
 
 insert into ld_article
-values     (2,'2008-10-22',0,1,'subject2','message2','2008-10-10','admin');
+values     (2,'2008-10-22',0,1,'subject2','message2','2008-10-10',2,'admin');
 
 insert into ld_article
-values     (3,'2008-10-22',0,1,'subject3','message3','2008-10-11','sebastian');
+values     (3,'2008-10-22',0,1,'subject3','message3','2008-10-11',3, 'sebastian');
 
 
 insert into ld_systemmessage
