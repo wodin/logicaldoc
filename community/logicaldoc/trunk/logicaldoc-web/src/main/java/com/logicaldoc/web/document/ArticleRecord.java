@@ -8,7 +8,6 @@ import com.logicaldoc.core.document.Article;
  * Utility class suitable for template display
  * 
  * @author Marco Meschieri - Logical Objects
- * @version $Id: ArticleRecord.java,v 1.2 2007/10/16 16:10:34 marco Exp $
  * @since 3.0
  */
 public class ArticleRecord extends Article {
@@ -51,6 +50,10 @@ public class ArticleRecord extends Article {
 	public String getUsername() {
 		return wrappedArticle.getUsername();
 	}
+	
+	public long getUserId() {
+		return wrappedArticle.getUserId();
+	}	
 
 	public int hashCode() {
 		return wrappedArticle.hashCode();
@@ -82,6 +85,10 @@ public class ArticleRecord extends Article {
 
 	public void setUsername(String username) {
 		wrappedArticle.setUsername(username);
+	}
+	
+	public void setUserId(long userId) {
+		wrappedArticle.setUserId(userId);
 	}
 
 	public String toString() {

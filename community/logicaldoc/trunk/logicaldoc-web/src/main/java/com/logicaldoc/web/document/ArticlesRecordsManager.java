@@ -25,7 +25,6 @@ import com.logicaldoc.web.navigation.PageContentBean;
  * Control that allows the user to list and select articles
  * 
  * @author Marco Meschieri
- * @version $Id: ArticlesRecordsManager.java,v 1.3 2006/09/03 16:24:37 marco Exp $
  * @since 3.0
  */
 public class ArticlesRecordsManager {
@@ -123,7 +122,6 @@ public class ArticlesRecordsManager {
 				if (selectedArticle.getDate() == null) {
 					selectedArticle.setDate(new Date());
 				}
-				log.fatal("selectedArticle.getUserId(): " + selectedArticle.getUserId());
 				selectedArticle.setDocId(docId);
 				
 				// Verify that the subject is not empty
@@ -133,8 +131,7 @@ public class ArticlesRecordsManager {
 				}
 
 				ArticleDAO articleDao = (ArticleDAO) Context.getInstance().getBean(ArticleDAO.class);
-				boolean saved = articleDao.store(selectedArticle.getWrappedArticle());
-				log.fatal("saved: " + saved);
+				articleDao.store(selectedArticle.getWrappedArticle());
 
 				Messages.addLocalizedInfo("msg.action.savearticle");
 			} catch (Exception e) {
