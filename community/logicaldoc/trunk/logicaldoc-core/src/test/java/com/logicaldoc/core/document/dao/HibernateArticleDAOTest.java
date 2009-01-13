@@ -50,15 +50,15 @@ public class HibernateArticleDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindByUserName() {
-		Collection<Article> articles = dao.findByUserName("admin");
+		Collection<Article> articles = dao.findByUserId(2);
 		assertNotNull(articles);
 		assertEquals(2, articles.size());
-		articles = dao.findByUserName("sebastian");
+		articles = dao.findByUserId(3);
 		assertNotNull(articles);
 		assertEquals(1, articles.size());
 
 		// Try with unexisting user
-		articles = dao.findByUserName("xxx");
+		articles = dao.findByUserId(1234);
 		assertNotNull(articles);
 		assertEquals(0, articles.size());
 	}

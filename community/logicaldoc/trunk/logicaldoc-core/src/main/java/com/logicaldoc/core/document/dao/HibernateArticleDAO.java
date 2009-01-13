@@ -28,10 +28,10 @@ public class HibernateArticleDAO extends HibernatePersistentObjectDAO<Article> i
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.ArticleDAO#findByUserName(java.lang.String)
+	 * @see com.logicaldoc.core.document.dao.ArticleDAO#findByUserId(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Article> findByUserName(String username) {
-		return findByWhere("_entity.username = ? order by _entity.date", new Object[] { username });
+	public List<Article> findByUserId(long userId) {
+		return findByWhere("_entity.userId = ? order by _entity.date", new Object[] { new Long(userId) });
 	}
 }

@@ -25,8 +25,8 @@ public interface ArticleDAO extends PersistentObjectDAO<Article> {
 	/**
 	 * This method selects all articles of the given user
 	 * 
-	 * @param username - ID of the user
+	 * @param userId - ID of the user
 	 * @return The list of articles ordered by date
 	 */
-	public Collection<Article> findByUserName(String username);
+	public Collection<Article> findByUserId(long userId);
 }
