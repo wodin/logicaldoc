@@ -10,9 +10,10 @@
         <timestamp name="lastModified" column="ld_lastmodified" />
         <property name="deleted" type="int" column="ld_deleted" not-null="true" />
 		<property name="docId" type="long" column="ld_docid" not-null="true" />
-		<property name="subject" type="string" column="ld_subject" length="255" />
+		<property name="subject" type="string" column="ld_subject" length="255" not-null="true" />
 		<property name="message" type="string" column="ld_message" length="2000" />
 		<property name="date" type="timestamp" column="ld_date" />
+		<property name="userId" type="long" column="ld_userid" not-null="true"/>
 		<property name="username" type="string" column="ld_username" length="255" />
 	</class>
 </hibernate-mapping>
