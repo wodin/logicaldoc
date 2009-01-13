@@ -120,11 +120,10 @@ public class ArticlesRecordsManager {
 		if (SessionManagement.isValid()) {
 			try {
 				long docId = selectedDocument.getId();
-				String username = SessionManagement.getUsername();
 				if (selectedArticle.getDate() == null) {
 					selectedArticle.setDate(new Date());
 				}
-				selectedArticle.setUsername(username);
+				log.fatal("selectedArticle.getUserId(): " + selectedArticle.getUserId());
 				selectedArticle.setDocId(docId);
 				
 				// Verify that the subject is not empty
@@ -134,7 +133,8 @@ public class ArticlesRecordsManager {
 				}
 
 				ArticleDAO articleDao = (ArticleDAO) Context.getInstance().getBean(ArticleDAO.class);
-				articleDao.store(selectedArticle.getWrappedArticle());
+				boolean saved = articleDao.store(selectedArticle.getWrappedArticle());
+				log.fatal("saved: " + saved);
 
 				Messages.addLocalizedInfo("msg.action.savearticle");
 			} catch (Exception e) {
@@ -155,7 +155,9 @@ public class ArticlesRecordsManager {
 	public String add() {
 		editing = true;
 		selectedArticle = new ArticleRecord(new Article(), this);
-		selectedArticle.setUsername(SessionManagement.getUsername());
+		selectedArticle.setUserId(SessionManagement.getUserId());
+		String username = SessionManagement.getUser().getFullName();
+		selectedArticle.setUsername(username);
 
 		return null;
 	}
