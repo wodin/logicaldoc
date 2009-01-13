@@ -16,6 +16,9 @@ import com.logicaldoc.core.document.Article;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.ArticleDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.Group;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
@@ -40,10 +43,12 @@ public class ArticlesRecordsManager {
 
 	private DocumentNavigation documentNavigation;
 
+	private Group adminGroup;
+
 	public boolean isEditing() {
 		return editing;
 	}
-	
+
 	public boolean isReadOnly() {
 		return !(editing);
 	}
@@ -72,10 +77,11 @@ public class ArticlesRecordsManager {
 
 			ArticleDAO artDao = (ArticleDAO) Context.getInstance().getBean(ArticleDAO.class);
 			List<Article> coll = artDao.findByDocId(docId);
-		    Collections.reverse(coll);
+			Collections.reverse(coll);
 
+			User user = SessionManagement.getUser();
 			for (Article article : coll) {
-				articles.add(new ArticleRecord(article, this));
+				articles.add(new ArticleRecord(article, this, user));
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -105,7 +111,8 @@ public class ArticlesRecordsManager {
 		if (selectedArticle == null) {
 			documentNavigation.setSelectedPanel(new PageContentBean("documents"));
 		} else {
-			// reload the list to avoid incorrect beahaviour during edit-changesubject-back actions
+			// reload the list to avoid incorrect beahaviour during
+			// edit-changesubject-back actions
 			selectDocument(selectedDocument);
 			selectedArticle = null;
 		}
@@ -123,7 +130,7 @@ public class ArticlesRecordsManager {
 					selectedArticle.setDate(new Date());
 				}
 				selectedArticle.setDocId(docId);
-				
+
 				// Verify that the subject is not empty
 				if (StringUtils.isEmpty(selectedArticle.getSubject())) {
 					Messages.addLocalizedError("errors.required");
@@ -151,7 +158,7 @@ public class ArticlesRecordsManager {
 
 	public String add() {
 		editing = true;
-		selectedArticle = new ArticleRecord(new Article(), this);
+		selectedArticle = new ArticleRecord(new Article(), this, null);
 		selectedArticle.setUserId(SessionManagement.getUserId());
 		String username = SessionManagement.getUser().getFullName();
 		selectedArticle.setUsername(username);
@@ -203,5 +210,24 @@ public class ArticlesRecordsManager {
 			return "login";
 		}
 		return null;
+	}
+
+	boolean isAdminUser(User user) {
+		Group adminGroup = getAdminGroup();
+		if (adminGroup == null) {
+			return false;
+		}
+		if (user.getGroups().contains(adminGroup))
+			return true;
+
+		return false;
+	}
+
+	private Group getAdminGroup() {
+		if (this.adminGroup == null) {
+			GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+			this.adminGroup = groupDAO.findByName("admin");
+		}
+		return this.adminGroup;
 	}
 }
