@@ -87,7 +87,6 @@
 					<ice:panelGroup>
 						<ice:outputText value="#{documentForm.record.document.fileName}"
 							style="font-weight: bold">
-							<f:converter converterId="logicaldoc.UTFConverter" />
 						</ice:outputText>
 					</ice:panelGroup>
 					<ice:panelGroup style="width:20px" />
