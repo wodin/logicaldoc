@@ -7,8 +7,7 @@ import java.util.regex.Pattern;
  * Useful class used to filtes
  * 
  * @author Marco Meschieri
- * @version $Id:$
- * @since ###release###
+ * @since 3.0
  */
 public class SnippetStripper {
 
