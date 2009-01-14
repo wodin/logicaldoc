@@ -14,19 +14,6 @@ import org.mozilla.intl.chardet.nsICharsetDetectionObserver;
  * @since 4.0
  */
 public class CharsetDetector {
-	/**
-	 * Determines the encoding of a string
-	 * 
-	 * @param src The string to check
-	 * @return The encoding code (i.e.: UTF-8)
-	 */
-	public static String detectEncoding(String src) {
-		String[] encodings = CharsetDetector.detectEncodings(src);
-		if (encodings == null || encodings.length == 0)
-			return "UTF-8";
-		else
-			return encodings[0];
-	}
 
 	/**
 	 * Determines the probable encodings for a string
@@ -41,7 +28,7 @@ public class CharsetDetector {
 		// The Notify() will be called when a matching charset is found.
 		det.Init(new nsICharsetDetectionObserver() {
 			public void Notify(String charset) {
-				//Do nothing
+				// Do nothing
 			}
 		});
 
@@ -59,12 +46,33 @@ public class CharsetDetector {
 	 * @return The converted string
 	 */
 	public static String convert(String str) {
-		if(str==null)
-			 return null;
-		try {
-			return new String(str.getBytes(), detectEncoding(str));
-		} catch (UnsupportedEncodingException e) {
+		if (str == null)
+			return null;
+
+		//Count the number of question marks in the original string
+		int qmCount=str.replaceAll("\\?", "").length();
+
+		
+		String[] encodings = detectEncodings(str);
+		if(encodings==null || encodings.length==0)
 			return str;
+		
+		String conversion = "";
+		//Iterate over probable encodings
+		for (int i = 0; i < encodings.length; i++) {
+			try {
+				conversion = new String(str.getBytes(), encodings[i]);
+				//The character not correctly encoded appears as a question mark
+				int qmCount2=conversion.replaceAll("\\?", "").length();
+				if(qmCount2==qmCount){
+					//No more question marks added, so we have found the correct encoding
+					break;
+				}
+			} catch (UnsupportedEncodingException e) {
+				return str;
+			}
 		}
+
+		return conversion;
 	}
 }
