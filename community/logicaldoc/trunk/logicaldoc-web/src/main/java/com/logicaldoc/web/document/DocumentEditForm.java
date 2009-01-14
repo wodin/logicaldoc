@@ -108,9 +108,9 @@ public class DocumentEditForm {
 	private String recipient;
 	
 	private UIInput recipientInput = null;
-
+	
 	private Collection<Attribute> extendedAttributes = new ArrayList<Attribute>();
-
+	
 	public DocumentEditForm() {
 		reset();
 	}
@@ -441,7 +441,7 @@ public class DocumentEditForm {
 				InputFileBean inputFile = ((InputFileBean) FacesUtil.accessBeanFromFacesContext("inputFile",
 						FacesContext.getCurrentInstance(), log));
 				File file = inputFile.getFile();
-				String filename = inputFile.getFileName();
+
 				String title = getTitle();
 				if (StringUtils.isEmpty(title)) {
 					title = filename.substring(0, filename.lastIndexOf("."));

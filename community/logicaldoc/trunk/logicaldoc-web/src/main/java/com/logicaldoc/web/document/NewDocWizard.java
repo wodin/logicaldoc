@@ -11,7 +11,6 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.core.text.parser.Parser;
@@ -156,7 +155,7 @@ public class NewDocWizard {
 					}
 				}
 				docForm.setImmediateIndexing(inputFile.isImmediateIndexing());
-				docForm.setFilename(filename);
+				docForm.setFilename(new String(filename.getBytes(), "UTF-8"));
 			} catch (Exception e) {
 				String message = Messages.getMessage("errors.action.savedoc");
 				log.error(message, e);

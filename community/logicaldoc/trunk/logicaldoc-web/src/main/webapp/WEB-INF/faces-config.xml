@@ -30,6 +30,11 @@
         <converter-id>logicaldoc.UniversalConverter</converter-id>
         <converter-class>com.logicaldoc.web.util.UniversalConverter</converter-class>
     </converter>
+    
+        <converter>
+        <converter-id>logicaldoc.UTFConverter</converter-id>
+        <converter-class>com.logicaldoc.web.util.UTFConverter</converter-class>
+    </converter>
 
 	<managed-bean>
 		<managed-bean-name>renderManager</managed-bean-name>
