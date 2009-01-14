@@ -27,9 +27,7 @@ public class HibernateEmailAccountDAOTest extends AbstractEmailTestCase {
 		// Make sure that it is an HibernateEmailAccountDAO
 		dao = (EmailAccountDAO) context.getBean("EmailAccountDAO");
 		menuDao = (MenuDAO) context.getBean("MenuDAO");
-		;
 		userDao = (UserDAO) context.getBean("UserDAO");
-		;
 	}
 
 	public void testStore() {
