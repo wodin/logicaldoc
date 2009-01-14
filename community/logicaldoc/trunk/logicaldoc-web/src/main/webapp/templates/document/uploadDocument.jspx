@@ -55,7 +55,7 @@
 				<ice:outputText
 					value="#{msgs['upload.filename']}: #{inputFile.fileName}"
 					style="padding-left:8px;">
-					<f:converter converterId="logicaldoc.UniversalConverter" />
+					<f:converter converterId="logicaldoc.UTFConverter" />
 				</ice:outputText>
 				<br />
 				<br />

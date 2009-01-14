@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.EventObject;
 
 import javax.faces.event.ActionEvent;
@@ -16,6 +17,7 @@ import com.icesoft.faces.async.render.Renderable;
 import com.icesoft.faces.component.inputfile.InputFile;
 import com.icesoft.faces.webapp.xmlhttp.PersistentFacesState;
 import com.icesoft.faces.webapp.xmlhttp.RenderingException;
+import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.web.SessionManagement;
 
 /**
@@ -114,6 +116,7 @@ public class InputFileBean implements Renderable {
 	public void action(ActionEvent event) {
 		InputFile inputFile = (InputFile) event.getSource();
 		fileName = inputFile.getFileInfo().getFileName();
+		
 		setPercent(inputFile.getFileInfo().getPercent());
 
 		if (inputFile.getStatus() == InputFile.SAVED) {
@@ -139,7 +142,7 @@ public class InputFileBean implements Renderable {
 	public String getFileName() {
 		return fileName;
 	}
-
+	
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
@@ -190,7 +193,6 @@ public class InputFileBean implements Renderable {
 		while ((read = in.read(buffer, 0, 1024)) >= 0) {
 			content.append(new String(buffer, 0, read));
 		}
-
 		return content;
 	}
 
