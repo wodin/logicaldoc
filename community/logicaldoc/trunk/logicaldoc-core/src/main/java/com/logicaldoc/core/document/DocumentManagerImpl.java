@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.spi.CharsetProvider;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.CharSetUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,6 +36,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
+import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
 
@@ -657,7 +662,18 @@ public class DocumentManagerImpl implements DocumentManager {
 		
 		String filename = file.getName();
 		log.fatal("filename = " + filename);
-		filename = new String(filename.getBytes(), "UTF-8");
+		
+		String encoding = CharsetDetector.detectEncoding(filename);
+		log.fatal("encoding = " + encoding);
+		
+		Charset xx = Charset.forName("UTF-8");
+		byte[] xxx = xx.encode(filename).array();
+		log.fatal("filename xxx: " + new String(xxx, "UTF-8"));
+		
+		if ("UTF-8".equals(encoding)) {
+			filename = new String(filename.getBytes(), "UTF-8");
+		}	
+		
 		log.fatal("filename after: " + filename);
 
 		String _title = title;
