@@ -114,14 +114,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			Menu folder = document.getFolder();
 
 			// create some strings containing paths
-			String completeDocPath = getDocFilePath(document);
-
-			// rename the old current version file to the version name:
-			// "quelle.txt"
-			// -> "2.0"
-			File file = new File(completeDocPath + document.getFileName());
-			while (!file.renameTo(new File(completeDocPath + document.getVersion())))
-				;
 			document.setFileName(filename);
 
 			// create new version
@@ -146,10 +138,10 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// create search index entry
 			if (immediateIndexing)
-				createIndexEntry(document, folder.getId(), filename, completeDocPath);
+				createIndexEntry(document);
 
 			// store the document in the repository (on the file system)
-			store(document, fileInputStream, filename, newVersion);
+			store(document, fileInputStream);
 
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
@@ -213,7 +205,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				versionDesc, keywords, null, null, immediateIndexing);
 	}
 
-	private void store(Document doc, InputStream content, String filename, String version) throws IOException {
+	private void store(Document doc, InputStream content) throws IOException {
 		// Makes path
 		String path = doc.getPath() + "/doc_" + doc.getId();
 
@@ -221,7 +213,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 
 		// stores it in folder
-		storer.store(content, path, filename, version);
+		storer.store(content, path, doc.getVersion());
 	}
 
 	@Override
@@ -268,13 +260,13 @@ public class DocumentManagerImpl implements DocumentManager {
 		String path = getDocFilePath(doc);
 
 		/*
-		 * Older versions of a document are stored in the same directory as the
+		 * All versions of a document are stored in the same directory as the
 		 * current version, but the filename is the version number without
 		 * extension, e.g. "docId/2.1"
 		 */
 		String filename;
-		if (StringUtils.isEmpty(version) || doc.getVersion().equals(version))
-			filename = doc.getFileName();
+		if (StringUtils.isEmpty(version))
+			filename = doc.getVersion();
 		else
 			filename = version;
 		return new File(path, filename);
@@ -397,9 +389,9 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	/** Creates a new search index entry for the given document */
-	private void createIndexEntry(Document document, long docId, String filename, String path) throws Exception {
-		indexer.deleteDocument(String.valueOf(docId), document.getLanguage());
-		indexer.addDirectory(new File(path + filename), document);
+	private void createIndexEntry(Document document) throws Exception {
+		indexer.deleteDocument(String.valueOf(document.getId()), document.getLanguage());
+		indexer.addDirectory(getDocumentFile(document), document);
 		document.setIndexed(1);
 		documentDAO.store(document);
 	}
@@ -766,7 +758,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			String path = getDocFilePath(doc);
 
 			/* store the document */
-			store(doc, content, doc.getFileName(), "1.0");
+			store(doc, content);
 
 			createHistoryEntry(doc.getId(), user, History.STORED, "");
 

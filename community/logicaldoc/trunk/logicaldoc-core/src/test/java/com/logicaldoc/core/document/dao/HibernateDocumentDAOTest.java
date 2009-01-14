@@ -168,7 +168,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.setFileName("test.txt");
 
 		// Prepare the document file for digest computation
-		File docFile = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/doc_5/" + doc.getFileName()));
+		File docFile = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/doc_5/" + doc.getVersion()));
 		FileUtils.forceMkdir(docFile.getParentFile());
 		Writer out = new FileWriter(docFile);
 		out.write("Questo file serve per fare il test del digest su un documento");
