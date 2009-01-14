@@ -2,6 +2,7 @@ package com.logicaldoc.core.searchengine;
 
 import java.io.File;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -131,9 +132,7 @@ public class LuceneDocument {
 	}
 
 	protected void setType() {
-		int point = file.getName().lastIndexOf(".");
-		String type = file.getName().substring(point + 1);
-		type = type.toUpperCase();
+		String type = FilenameUtils.getExtension(document.getFileName());
 		doc.add(new Field(FIELD_TYPE, type, Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
