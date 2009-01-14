@@ -651,9 +651,15 @@ public class DocumentManagerImpl implements DocumentManager {
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, String sourceId,
 			String object, String recipient, boolean immediateIndexing) throws Exception {
+		
 		Locale locale = new Locale(language);
 		Parser parser = ParserFactory.getParser(file, locale);
+		
 		String filename = file.getName();
+		log.fatal("filename = " + filename);
+		filename = new String(filename.getBytes(), "UTF-8");
+		log.fatal("filename after: " + filename);
+
 		String _title = title;
 		String _author = sourceAuthor;
 		Set<String> _kwds = keywords;
@@ -680,7 +686,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		InputStream is = new FileInputStream(file);
 		try {
-			return create(is, file.getName(), folder, user, language, _title, sourceDate, source, _author, sourceType,
+			return create(is, filename, folder, user, language, _title, sourceDate, source, _author, sourceType,
 					coverage, versionDesc, _kwds, templateId, extendedAttributes, sourceId, object, recipient,
 					immediateIndexing);
 		} finally {
@@ -693,11 +699,15 @@ public class DocumentManagerImpl implements DocumentManager {
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
 			String sourceId, String object, String recipient, boolean immediateIndexing) throws Exception {
+		
 		try {
 			Document doc = new Document();
 			Version vers = new Version();
 			doc.setFolder(folder);
+			
+			//filename = new String(filename.getBytes(), "UTF-8");
 			doc.setFileName(filename);
+			log.fatal("doc.getFileName(): " + doc.getFileName());
 			doc.setDate(new Date());
 
 			String fallbackTitle = filename;
@@ -716,6 +726,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			setUniqueTitle(doc);
 			setUniqueFilename(doc);
+			log.fatal("doc.getFileName(): " + doc.getFileName());
 
 			if (sourceDate != null)
 				doc.setSourceDate(sourceDate);
@@ -754,6 +765,7 @@ public class DocumentManagerImpl implements DocumentManager {
 					doc.setAttributes(extendedAttributes);
 			}
 			documentDAO.store(doc);
+			log.fatal("doc.getFileName(): " + doc.getFileName());
 
 			String path = getDocFilePath(doc);
 
@@ -769,9 +781,13 @@ public class DocumentManagerImpl implements DocumentManager {
 				indexer.addFile(file, doc, getDocumentContent(doc), lang);
 				doc.setIndexed(1);
 			}
+			log.fatal("doc.getFileName(): " + doc.getFileName());
 
 			doc.setFileSize(file.length());
 			documentDAO.store(doc);
+			
+			log.fatal("doc.getFileName(): " + doc.getFileName());
+			
 			return doc;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

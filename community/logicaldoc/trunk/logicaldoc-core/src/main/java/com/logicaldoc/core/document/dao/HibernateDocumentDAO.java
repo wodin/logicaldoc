@@ -197,7 +197,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				doc.setKeywords(dst);
 			}
 
-			doc.setFileName(CharsetDetector.convert(doc.getFileName()));
+			//doc.setFileName(CharsetDetector.convert(doc.getFileName()));
 
 			Map<String, Object> dictionary = new HashMap<String, Object>();
 
