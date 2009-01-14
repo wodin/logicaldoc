@@ -97,9 +97,6 @@ public class NewDocWizard {
 				// Gets file to upload name
 				String filename = file.getName();
 
-				// Stores the document in the repository
-				SettingsConfig settings = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-
 				// Parses the file where it is already stored
 				Locale locale = new Locale(inputFile.getLanguage());
 				Parser parser = ParserFactory.getParser(file, locale);
