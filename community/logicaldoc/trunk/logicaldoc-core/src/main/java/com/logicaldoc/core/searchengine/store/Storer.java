@@ -21,7 +21,7 @@ public interface Storer {
 	 * @param version Version of the document.
 	 * @return ResultImpl of the storing process.
 	 */
-	boolean store(InputStream stream, String docPath, String filename, String version);
+	boolean store(InputStream stream, String docPath, String filename);
 
 	/**
 	 * Deletes a document from the documentpool.

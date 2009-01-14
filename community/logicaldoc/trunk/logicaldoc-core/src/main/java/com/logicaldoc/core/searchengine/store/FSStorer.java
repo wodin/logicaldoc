@@ -39,7 +39,7 @@ public class FSStorer implements Storer {
 	 * @see com.logicaldoc.core.searchengine.store.Storer#store(java.io.InputStream,
 	 *      java.lang.String, java.lang.String)
 	 */
-	public boolean store(InputStream stream, String docPath, String filename, String version) {
+	public boolean store(InputStream stream, String docPath, String filename) {
 		try {
 			String fn = CharsetDetector.convert(filename);
 			String path = new StringBuilder(settingsConfig.getValue("docdir")).append("/").append(docPath).append("/")

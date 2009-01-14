@@ -212,7 +212,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			// Update size and digest
 			File docFile = new File(
 					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
-							.getFileName()));
+							.getVersion()));
 			if (docFile.exists()) {
 				long size = docFile.length();
 				doc.setFileSize(size);
