@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,27 +61,15 @@ public class Indexer {
 	 */
 	public synchronized void addFile(File file, com.logicaldoc.core.document.Document document, String content,
 			String language) throws Exception {
-		String name = file.getName();
-		int testversion = -1;
-		name = name.substring(name.lastIndexOf(".") + 1);
-
+		LuceneDocument lDoc = new LuceneDocument(document);
 		try {
-			testversion = Integer.parseInt(name);
-		} catch (Exception e) {
-		}
-
-		if (testversion == -1) {
-			LuceneDocument lDoc = new LuceneDocument(document);
-
-			try {
-				log.info("addFile: " + file.toString());
-				Document doc = lDoc.getDocument(file, content);
-				log.info("doc path: " + doc.getField(LuceneDocument.FIELD_PATH).stringValue());
-				addDocument(doc, language);
-			} catch (Throwable e) {
-				log.error("Exception addFile: " + e.getLocalizedMessage(), e);
-				throw new Exception(e.getMessage(), e);
-			}
+			log.info("addFile: " + file.toString());
+			Document doc = lDoc.getDocument(file, content);
+			log.info("doc path: " + doc.getField(LuceneDocument.FIELD_PATH).stringValue());
+			addDocument(doc, language);
+		} catch (Throwable e) {
+			log.error("Exception addFile: " + e.getLocalizedMessage(), e);
+			throw new Exception(e.getMessage(), e);
 		}
 	}
 
@@ -127,7 +116,7 @@ public class Indexer {
 		} else {
 			try {
 				Locale locale = new Locale(doc.getLanguage());
-				Parser parser = ParserFactory.getParser(directory, locale);
+				Parser parser = ParserFactory.getParser(directory, locale, doc.getFileExtension());
 				if (parser == null) {
 					return;
 				}

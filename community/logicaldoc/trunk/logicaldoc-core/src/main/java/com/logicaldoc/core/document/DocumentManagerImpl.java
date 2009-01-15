@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.spi.CharsetProvider;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.CharSetUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -284,7 +281,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// Parses the file where it is already stored
 		Locale locale = new Locale(doc.getLanguage());
-		Parser parser = ParserFactory.getParser(file, locale);
+		Parser parser = ParserFactory.getParser(file, locale, FilenameUtils.getExtension(doc.getFileName()));
 
 		// and gets some fields
 		if (parser != null) {
@@ -312,6 +309,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		// Add the document to the index (lucene 2.x doesn't support the update
 		// operation)
 		File file = getDocumentFile(doc);
+
 		indexer.addFile(file, doc, content, lang);
 		doc.setIndexed(1);
 		documentDAO.store(doc);
@@ -656,25 +654,17 @@ public class DocumentManagerImpl implements DocumentManager {
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, String sourceId,
 			String object, String recipient, boolean immediateIndexing) throws Exception {
-		
+
 		Locale locale = new Locale(language);
-		Parser parser = ParserFactory.getParser(file, locale);
-		
 		String filename = file.getName();
-		log.fatal("filename = " + filename);
-		
-		String encoding = CharsetDetector.detectEncoding(filename);
-		log.fatal("encoding = " + encoding);
-		
-		Charset xx = Charset.forName("UTF-8");
-		byte[] xxx = xx.encode(filename).array();
-		log.fatal("filename xxx: " + new String(xxx, "UTF-8"));
-		
-		if ("UTF-8".equals(encoding)) {
-			filename = new String(filename.getBytes(), "UTF-8");
-		}	
-		
-		log.fatal("filename after: " + filename);
+		Parser parser = ParserFactory.getParser(file, locale);
+		String[] encodings = CharsetDetector.detectEncodings(filename);
+		for (int i = 0; i < encodings.length; i++) {
+			if ("UTF-8".equals(encodings[i])) {
+				filename = new String(filename.getBytes(), "UTF-8");
+				break;
+			}
+		}
 
 		String _title = title;
 		String _author = sourceAuthor;
@@ -715,15 +705,12 @@ public class DocumentManagerImpl implements DocumentManager {
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
 			String sourceId, String object, String recipient, boolean immediateIndexing) throws Exception {
-		
+
 		try {
 			Document doc = new Document();
 			Version vers = new Version();
 			doc.setFolder(folder);
-			
-			//filename = new String(filename.getBytes(), "UTF-8");
 			doc.setFileName(filename);
-			log.fatal("doc.getFileName(): " + doc.getFileName());
 			doc.setDate(new Date());
 
 			String fallbackTitle = filename;
@@ -742,7 +729,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			setUniqueTitle(doc);
 			setUniqueFilename(doc);
-			log.fatal("doc.getFileName(): " + doc.getFileName());
 
 			if (sourceDate != null)
 				doc.setSourceDate(sourceDate);
@@ -781,7 +767,6 @@ public class DocumentManagerImpl implements DocumentManager {
 					doc.setAttributes(extendedAttributes);
 			}
 			documentDAO.store(doc);
-			log.fatal("doc.getFileName(): " + doc.getFileName());
 
 			String path = getDocFilePath(doc);
 
@@ -797,13 +782,9 @@ public class DocumentManagerImpl implements DocumentManager {
 				indexer.addFile(file, doc, getDocumentContent(doc), lang);
 				doc.setIndexed(1);
 			}
-			log.fatal("doc.getFileName(): " + doc.getFileName());
 
 			doc.setFileSize(file.length());
 			documentDAO.store(doc);
-			
-			log.fatal("doc.getFileName(): " + doc.getFileName());
-			
 			return doc;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -812,9 +793,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	public void rename(Document doc, User user, String newFilename) throws Exception {
-
 		if (doc.getImmutable() == 0) {
-
 			// Get original document directory path
 			String path = getDocFilePath(doc);
 			String originalFileName = doc.getFileName();
@@ -823,13 +802,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc.setFileName(newFilename);
 			setUniqueFilename(doc);
 			documentDAO.store(doc);
-
-			// Update the FS
-			if (!doc.getFileName().equals(originalFileName)) {
-				File originalFile = new File(path, originalFileName);
-				File destFile = new File(path, doc.getFileName());
-				originalFile.renameTo(destFile);
-			}
 
 			// create history entry for this UnCheckout event
 			createHistoryEntry(doc.getId(), user, History.RENAMED, "");
