@@ -106,11 +106,11 @@ public class DocumentEditForm {
 	private boolean checkOriginalFilename = true;
 
 	private String recipient;
-	
+
 	private UIInput recipientInput = null;
-	
+
 	private Collection<Attribute> extendedAttributes = new ArrayList<Attribute>();
-	
+
 	public DocumentEditForm() {
 		reset();
 	}
@@ -223,7 +223,10 @@ public class DocumentEditForm {
 				DocumentTemplateDAO tdao = (DocumentTemplateDAO) Context.getInstance().getBean(
 						DocumentTemplateDAO.class);
 				DocumentTemplate buf = tdao.findById(template.longValue());
-				return buf.getAttributes().size();
+				if (buf != null && buf.getAttributes() != null)
+					return buf.getAttributes().size();
+				else
+					return 0;
 			} else
 				return 0;
 		} else {
@@ -569,11 +572,11 @@ public class DocumentEditForm {
 	 */
 	@SuppressWarnings("deprecation")
 	public String checkin() {
-		
+
 		Application application = FacesContext.getCurrentInstance().getApplication();
 		InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
 				FacesContext.getCurrentInstance()));
-		
+
 		if (SessionManagement.isValid()) {
 			Document document = record.getDocument();
 			File file = fileForm.getFile();
