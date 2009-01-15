@@ -658,12 +658,12 @@ public class DocumentManagerImpl implements DocumentManager {
 		Locale locale = new Locale(language);
 		String filename = file.getName();
 		Parser parser = ParserFactory.getParser(file, locale);
+		String encoding = "UTF-8";
 		String[] encodings = CharsetDetector.detectEncodings(filename);
-		for (int i = 0; i < encodings.length; i++) {
-			if ("UTF-8".equals(encodings[i])) {
-				filename = new String(filename.getBytes(), "UTF-8");
-				break;
-			}
+		if (encodings != null && encodings.length > 0)
+			encoding = encodings[0];
+		if ("UTF-8".equals(encoding)) {
+			filename = new String(filename.getBytes(), "UTF-8");
 		}
 
 		String _title = title;
