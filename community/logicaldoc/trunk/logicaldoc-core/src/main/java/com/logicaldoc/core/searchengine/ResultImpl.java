@@ -3,6 +3,8 @@ package com.logicaldoc.core.searchengine;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.logicaldoc.core.util.IconSelector;
+
 /**
  * Basic implementation of a <code>Result</code>
  * 
@@ -76,6 +78,11 @@ public class ResultImpl implements Serializable, Result {
 	 * @see com.logicaldoc.core.searchengine.search.Result#getIcon()
 	 */
 	public String getIcon() {
+		String icon = IconSelector.selectIcon("");
+		try {
+			icon = IconSelector.selectIcon(getType());
+		} catch (Exception e) {
+		}
 		return icon;
 	}
 
@@ -310,10 +317,6 @@ public class ResultImpl implements Serializable, Result {
 		}
 
 		return 3;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
 	}
 
 	public Date getCreation() {

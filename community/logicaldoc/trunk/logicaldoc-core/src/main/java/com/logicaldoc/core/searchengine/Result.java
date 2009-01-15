@@ -41,8 +41,6 @@ public interface Result {
 
 	public int getDocType();
 
-	public void setIcon(String icon);
-
 	public void setTitle(String title);
 
 	public void setDate(Date date);
