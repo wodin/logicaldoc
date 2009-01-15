@@ -9,6 +9,8 @@ import java.util.Map;
 import net.sf.jmimemagic.Magic;
 import net.sf.jmimemagic.MagicMatch;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
@@ -94,24 +96,18 @@ public class ParserFactory {
 		}
 	}
 
-	/**
-	 * Factory methods for parsers, the correct parser will be instantiated
-	 * depending on the file extension.
-	 * 
-	 * @param file
-	 * @param locale
-	 * @return
-	 */
-	public static Parser getParser(File file, Locale locale) {
+	public static Parser getParser(File file, Locale locale, String extension) {
 		if (parsers.isEmpty())
 			init();
 
-		String filename = file.getName();
-		String extension = filename.substring(filename.lastIndexOf(".") + 1);
-		extension = extension.toLowerCase();
+		String ext = extension;
+		if (StringUtils.isEmpty(ext)) {
+			String filename = file.getName().toLowerCase();
+			ext = FilenameUtils.getExtension(filename);
+		}
 
 		Parser parser = null;
-		Class parserClass = parsers.get(extension);
+		Class parserClass = parsers.get(ext);
 		if (parserClass != null) {
 			try {
 				parser = (Parser) parserClass.newInstance();
@@ -120,7 +116,7 @@ public class ParserFactory {
 				parser = new TXTParser();
 			}
 		} else {
-			log.warn("No registered parser for extension " + extension);
+			log.warn("No registered parser for extension " + ext);
 			Magic mimeDetector = new Magic();
 			try {
 				MagicMatch match = mimeDetector.getMagicMatch(file, true);
@@ -140,6 +136,18 @@ public class ParserFactory {
 		else
 			parser.parse(file, locale);
 		return parser;
+	}
+
+	/**
+	 * Factory methods for parsers, the correct parser will be instantiated
+	 * depending on the file extension.
+	 * 
+	 * @param file
+	 * @param locale
+	 * @return
+	 */
+	public static Parser getParser(File file, Locale locale) {
+		return getParser(file, locale, null);
 	}
 
 	/**

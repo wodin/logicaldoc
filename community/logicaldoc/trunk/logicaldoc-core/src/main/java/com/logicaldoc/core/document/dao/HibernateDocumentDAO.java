@@ -32,7 +32,6 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
-import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.FileUtil;
 
@@ -197,8 +196,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				doc.setKeywords(dst);
 			}
 
-			//doc.setFileName(CharsetDetector.convert(doc.getFileName()));
-
 			Map<String, Object> dictionary = new HashMap<String, Object>();
 
 			log.debug("Invoke listeners before store");
@@ -211,8 +208,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			// Update size and digest
 			File docFile = new File(
-					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
-							.getVersion()));
+					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc.getVersion()));
 			if (docFile.exists()) {
 				long size = docFile.length();
 				doc.setFileSize(size);
@@ -560,13 +556,15 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByFileNameAndParentFolderId(long folderId, String fileName) {
-		return findByWhere("_entity.folder.id = " + folderId + " and lower(_entity.fileName) like '" + fileName.toLowerCase() + "'");
+		return findByWhere("_entity.folder.id = " + folderId + " and lower(_entity.fileName) like '"
+				+ fileName.toLowerCase() + "'");
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByTitleAndParentFolderId(long folderId, String title) {
-		return findByWhere("_entity.folder.id = " + folderId + " and lower(_entity.title) like '" + title.toLowerCase() + "'");
+		return findByWhere("_entity.folder.id = " + folderId + " and lower(_entity.title) like '" + title.toLowerCase()
+				+ "'");
 	}
 
 	@Override
