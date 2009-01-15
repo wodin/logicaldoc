@@ -96,32 +96,15 @@ public class NewDocWizard {
 				// Gets file to upload name
 				String filename = file.getName();
 
-				// Parses the file where it is already stored
-				Locale locale = new Locale(inputFile.getLanguage());
-				Parser parser = ParserFactory.getParser(file, locale);
-				String content = null;
 				String title = "";
 				String author = "";
 				String keywords = "";
-
-				// and gets some fields
-				if (parser != null) {
-					content = parser.getContent();
-					author = parser.getAuthor();
-					if (inputFile.isExtractKeywords())
-						keywords = parser.getKeywords();
-				}
-
-				if (content == null) {
-					content = "";
-				}
 
 				// source field got from web.xml.
 				// This field is required for Lucene to work properly
 				String source = (String) facesContext.getExternalContext().getApplicationMap().get("store");
 
 				// fills needed fields
-
 				int tmpInt = filename.lastIndexOf(".");
 				if (tmpInt != -1) {
 					title = filename.substring(0, tmpInt);
@@ -142,6 +125,10 @@ public class NewDocWizard {
 				docForm.setLanguage(documentLanguage);
 
 				if (inputFile.isExtractKeywords()) {
+					// Parses the file where it is already stored
+					Locale locale = new Locale(inputFile.getLanguage());
+					Parser parser = ParserFactory.getParser(file, locale);
+					String content = parser.getContent();
 					if ((keywords != null) && !keywords.trim().equals("")) {
 						docForm.setKeywords(keywords);
 					} else {
