@@ -387,14 +387,13 @@ public class DocumentManagerImpl implements DocumentManager {
 		version.setDate(new Date());
 		version.setUsername(user.getFullName());
 		version.setUserId(user.getId());
-
 		return version;
 	}
 
 	/** Creates a new search index entry for the given document */
 	private void createIndexEntry(Document document) throws Exception {
 		indexer.deleteDocument(String.valueOf(document.getId()), document.getLanguage());
-		indexer.addDirectory(getDocumentFile(document), document);
+		indexer.addFile(getDocumentFile(document), document);
 		document.setIndexed(1);
 		documentDAO.store(document);
 	}

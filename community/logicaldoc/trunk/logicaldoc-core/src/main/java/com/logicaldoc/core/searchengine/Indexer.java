@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -101,43 +100,29 @@ public class Indexer {
 	/**
 	 * Adds a new document to the index
 	 * 
-	 * @param directory Path of the directory.
+	 * @param file The document file
 	 * @param doc The document that we want to add
 	 * @throws Exception
 	 */
-	public synchronized void addDirectory(File directory, com.logicaldoc.core.document.Document doc) throws Exception {
-
-		if (directory.isDirectory()) {
-			String[] subitems = directory.list();
-
-			for (int i = 0; i < subitems.length; i++) {
-				addDirectory(new File(directory, subitems[i]), doc);
-			}
-		} else {
-			try {
-				Locale locale = new Locale(doc.getLanguage());
-				Parser parser = ParserFactory.getParser(directory, locale, doc.getFileExtension());
-				if (parser == null) {
-					return;
-				}
-
-				String content = parser.getContent();
-
-				String language = doc.getLanguage();
-				if (StringUtils.isEmpty(language)) {
-					language = "en";
-				}
-
-				if (log.isInfoEnabled()) {
-					log.info("addDirectory " + doc.getId() + " " + doc.getTitle() + " " + doc.getVersion() + " "
-							+ doc.getPublisher() + " " + doc.getStatus() + " " + doc.getSource() + " "
-							+ doc.getSourceAuthor());
-				}
-				addFile(directory, doc, content, language);
-			} catch (Exception e) {
-				log.error("addDirectory " + e.getMessage(), e);
-			}
+	public synchronized void addFile(File file, com.logicaldoc.core.document.Document doc) throws Exception {
+		Locale locale = new Locale(doc.getLanguage());
+		Parser parser = ParserFactory.getParser(file, locale, doc.getFileExtension());
+		if (parser == null) {
+			return;
 		}
+
+		String content = parser.getContent();
+
+		String language = doc.getLanguage();
+		if (StringUtils.isEmpty(language)) {
+			language = "en";
+		}
+
+		if (log.isInfoEnabled()) {
+			log.info("addFile " + doc.getId() + " " + doc.getTitle() + " " + doc.getVersion() + " "
+					+ doc.getPublisher() + " " + doc.getStatus() + " " + doc.getSource() + " " + doc.getSourceAuthor());
+		}
+		addFile(file, doc, content, language);
 	}
 
 	/**
