@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -653,10 +652,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, String sourceId,
 			String object, String recipient, boolean immediateIndexing) throws Exception {
-
-		Locale locale = new Locale(language);
 		String filename = file.getName();
-		Parser parser = ParserFactory.getParser(file, locale);
 		String encoding = "UTF-8";
 		String[] encodings = CharsetDetector.detectEncodings(filename);
 		if (encodings != null && encodings.length > 0)
@@ -664,10 +660,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		if ("UTF-8".equals(encoding)) {
 			filename = new String(filename.getBytes(), "UTF-8");
 		}
-
 		String _title = title;
-		String _author = sourceAuthor;
-		Set<String> _kwds = keywords;
 
 		if (StringUtils.isEmpty(title)) {
 			String fallbackTitle = filename;
@@ -678,21 +671,10 @@ public class DocumentManagerImpl implements DocumentManager {
 			_title = fallbackTitle;
 		}
 
-		if (parser != null) {
-			if (StringUtils.isEmpty(sourceAuthor))
-				_author = parser.getAuthor();
-			String keys = parser.getKeywords();
-			if (keys != null && keys.length() > 0) {
-				if (keywords == null || keywords.isEmpty())
-					_kwds = new HashSet<String>();
-				_kwds = documentDAO.toKeywords(keys);
-			}
-		}
-
 		InputStream is = new FileInputStream(file);
 		try {
-			return create(is, filename, folder, user, language, _title, sourceDate, source, _author, sourceType,
-					coverage, versionDesc, _kwds, templateId, extendedAttributes, sourceId, object, recipient,
+			return create(is, filename, folder, user, language, _title, sourceDate, source, sourceAuthor, sourceType,
+					coverage, versionDesc, keywords, templateId, extendedAttributes, sourceId, object, recipient,
 					immediateIndexing);
 		} finally {
 			is.close();
@@ -706,6 +688,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			String sourceId, String object, String recipient, boolean immediateIndexing) throws Exception {
 
 		try {
+			System.out.println("**1");
+
 			Document doc = new Document();
 			Version vers = new Version();
 			doc.setFolder(folder);
@@ -766,24 +750,27 @@ public class DocumentManagerImpl implements DocumentManager {
 					doc.setAttributes(extendedAttributes);
 			}
 			documentDAO.store(doc);
-
+			System.out.println("**2");
 			String path = getDocFilePath(doc);
 
 			/* store the document */
 			store(doc, content);
-
+			System.out.println("**3");
 			createHistoryEntry(doc.getId(), user, History.STORED, "");
 
-			File file = new File(new StringBuilder(path).append("/").append(doc.getFileName()).toString());
+			// File file = new File(new
+			// StringBuilder(path).append("/").append(doc.getFileName()).toString());
+			File file = getDocumentFile(doc);
 			if (immediateIndexing) {
 				/* create search index entry */
 				String lang = doc.getLanguage();
 				indexer.addFile(file, doc, getDocumentContent(doc), lang);
 				doc.setIndexed(1);
 			}
-
+			System.out.println("**4");
 			doc.setFileSize(file.length());
 			documentDAO.store(doc);
+			System.out.println("**5");
 			return doc;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
