@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="logicaldoc-lang-pt" version="1.0.0" class="com.logicaldoc.plugin.language.pt.PortuguesePlugin">
+	<requires>
+		<import plugin-id="logicaldoc-core" />
+	</requires>	
+	<runtime>
+		<library id="core" path="classes/" type="code">
+			<export prefix="*" />
+		</library>
+	</runtime>
+	<extension plugin-id="logicaldoc-core" point-id="Language" id="ptLanguage">
+		<parameter id="languageKey" value="pt" />
+		<parameter id="stopWordsFile" value="com/logicaldoc/plugin/language/pt/stop_pt.txt" />
+	</extension>
+</plugin>
