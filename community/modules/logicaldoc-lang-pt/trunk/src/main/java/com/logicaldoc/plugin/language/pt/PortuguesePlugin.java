@@ -26,16 +26,6 @@ public class PortuguesePlugin extends LogicalDOCPlugin {
 
 	@Override
 	protected void install() throws Exception {
-		String webappDir = getManager().getPathResolver().resolvePath(getDescriptor(), "webapp").toString();
-		if (webappDir.startsWith("file:")) {
-			webappDir = webappDir.substring(5);
-		}
-
-		File src = new File(webappDir);
-		File dest = new File(System.getProperty("logicaldoc.app.rootdir"));
-
-		log.info("Copy web resources from " + src.getPath() + " to " + dest.getPath());
-		FileUtils.copyDirectory(src, dest);
 
 		// Create Lucene Index
 		createLuceneIndex();
