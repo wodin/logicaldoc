@@ -182,11 +182,6 @@ public class DocumentResult extends DocumentRecord implements Result {
 	}
 
 	@Override
-	public void setIcon(String icon) {
-		throw new UnsupportedOperationException("setIcon method unsupported");
-	}
-
-	@Override
 	public void setTitle(String name) {
 		throw new UnsupportedOperationException("setName method unsupported");
 	}
