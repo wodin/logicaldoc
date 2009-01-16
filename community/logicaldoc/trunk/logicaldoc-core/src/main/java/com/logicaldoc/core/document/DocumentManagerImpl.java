@@ -688,8 +688,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			String sourceId, String object, String recipient, boolean immediateIndexing) throws Exception {
 
 		try {
-			System.out.println("**1");
-
 			Document doc = new Document();
 			Version vers = new Version();
 			doc.setFolder(folder);
@@ -750,12 +748,10 @@ public class DocumentManagerImpl implements DocumentManager {
 					doc.setAttributes(extendedAttributes);
 			}
 			documentDAO.store(doc);
-			System.out.println("**2");
 			String path = getDocFilePath(doc);
 
 			/* store the document */
 			store(doc, content);
-			System.out.println("**3");
 			createHistoryEntry(doc.getId(), user, History.STORED, "");
 
 			// File file = new File(new
@@ -767,10 +763,8 @@ public class DocumentManagerImpl implements DocumentManager {
 				indexer.addFile(file, doc, getDocumentContent(doc), lang);
 				doc.setIndexed(1);
 			}
-			System.out.println("**4");
 			doc.setFileSize(file.length());
 			documentDAO.store(doc);
-			System.out.println("**5");
 			return doc;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
