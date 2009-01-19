@@ -1,0 +1,94 @@
+<?xml version = '1.0'?>
+<!-- 
+ Menu's security management
+  
+ @author Matteo Caruso - Logical Objects
+ @since 4.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="securityForm" styleClass="center formBorderHighlight"
+	style="width: 700px; text-align: left;">
+
+	<ice:messages globalOnly="true" />
+
+	<ice:panelGroup>
+		<ice:panelGrid columns="2"
+			onkeypress="return submitOnEnter('searchForm:save', event);">
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="parentPath" value="#{msgs['menu']}:  " />
+			</ice:panelGroup>
+			<ice:panelGroup style="display: inline;">
+				<ice:inputHidden id="parentPath" value="#{securityForm.path}" />
+				<ice:outputText
+					value="#{securityForm.directoryModel.selectedDir.pathExtended}  "
+					style="font-weight: bold" />
+				<ldoc:folderselector style="float:right;"
+					directoryModel="#{securityForm.directoryModel}"
+					showSelector="#{securityForm.showFolderSelector}"
+					openListener="#{securityForm.openFolderSelector}"
+					confirmListener="#{securityForm.folderSelected}"
+					cancelListener="#{securityForm.cancelFolderSelector}"
+					closeListener="#{securityForm.closeFolderSelector}" />
+			</ice:panelGroup>
+		</ice:panelGrid>
+	</ice:panelGroup>
+
+	<ice:panelGroup id="messagesPanel" styleClass="pnlClpsbl">
+		<f:facet name="header">
+			<ice:panelGroup styleClass="expandableStateIndicator">
+				<h3>
+					<ice:outputText id="messagesHeader"
+						value="#{msgs['entity.assign']}" />
+				</h3>
+			</ice:panelGroup>
+		</f:facet>
+		<f:subview id="w-rights">
+			<ice:panelGrid columns="3">
+				<ice:panelGroup>
+					<br />
+					<ldoc:groupselector id="grp1" showFilter="true"
+						styleClass="selectManyMenuBig" allowMultipleSelection="true"
+						label="#{msgs['entity.available']}"
+						items="#{securityRightsRecordsManager.availableGroups}"
+						value="#{securityRightsRecordsManager.selectedAvailableGroups}"
+						filterValue="#{securityRightsRecordsManager.availableGroupFilter}"
+						filterListener="#{securityRightsRecordsManager.filterAvailableGroups}"
+						filterSize="193" />
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="commands">
+					<br />
+					<br />
+					<br />
+					<ice:commandButton value="&gt;&gt;"
+						action="#{securityRightsRecordsManager.assignGroups}"  />
+					<br />
+					<br />
+					<ice:commandButton value="&lt;&lt;"
+						action="#{securityRightsRecordsManager.unassignGroups}" />
+				</ice:panelGroup>
+
+				<ice:panelGroup>
+					<br />
+					<ldoc:groupselector id="grp2" showFilter="true"
+						styleClass="selectManyMenuBig" allowMultipleSelection="true"
+						label="#{msgs['entity.allowed']}"
+						items="#{securityRightsRecordsManager.allowedGroups}"
+						value="#{securityRightsRecordsManager.selectedAllowedGroups}"
+						filterValue="#{securityRightsRecordsManager.allowedGroupFilter}"
+						filterListener="#{securityRightsRecordsManager.filterAllowedGroups}"
+						filterSize="193" />
+				</ice:panelGroup>
+			</ice:panelGrid>
+		</f:subview>
+		<br />
+	</ice:panelGroup>
+</jsp:root>

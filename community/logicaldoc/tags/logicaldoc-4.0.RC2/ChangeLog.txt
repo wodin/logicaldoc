@@ -1,0 +1,36 @@
+    __                _            __   ____  __      _           __
+   / /   ____  ____ _(_)________ _/ /  / __ \/ /_    (_)__  _____/ /______
+  / /   / __ \/ __ `/ / ___/ __ `/ /  / / / / __ \  / / _ \/ ___/ __/ ___/
+ / /___/ /_/ / /_/ / / /__/ /_/ / /  / /_/ / /_/ / / /  __/ /__/ /_(__  )
+/_____/\____/\__, /_/\___/\__,_/_/   \____/_.___/_/ /\___/\___/\__/____/
+            /____/                             /___/
+
+                    http://www.logicalobjects.com
+                      http://www.logicaldoc.com                    
+
+                     LogicalDOC Community Edition
+
+LogicalDOC CE 4.0 RC2 (2009-01-08; logicaldoc-4.0RC2)
+===============
+Ability to define fields viewable and editable by group of users
+WebDAV: implemented rename on the Document's filename
+
+                     
+LogicalDOC CE 4.0 RC1 (2008-12-12; logicaldoc-4.0RC1)
+===============
+New WebDAV accessible interface (Thanks to Sebastian Wenzky)
+Heavily Refactored DB-schema
+New Templates on document with custom attributes
+Tested with 1M (1.000.000) loaded documents
+New Indexing deferred scheduled tasks
+New Tag-cloud generation deferred scheduled tasks
+Improved the versioning system (checkin page)
+New User editing interface
+New Group editing interface
+New Permission assigment on folder (previously we had permission by file)
+Improved Tag browsing
+New Permission management on menus
+New Support for eastern Europe charsets
+New Possibility to mark a document as immutable
+
+

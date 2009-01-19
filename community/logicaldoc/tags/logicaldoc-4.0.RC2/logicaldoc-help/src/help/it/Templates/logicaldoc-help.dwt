@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+  <!-- TemplateBeginEditable name="doctitle" -->
+  <title>Primi passi</title>
+  <!-- TemplateEndEditable -->
+  <link href="../css/help.css" rel="stylesheet" type="text/css">
+  <!-- TemplateBeginEditable name="head" --><!-- TemplateEndEditable -->
+  </head>
+  <body>
+    <table summary="content" border="0" cellpadding="0" cellspacing="0" width="100%">
+      <!--================= start Content==================-->
+      <tbody>
+        <tr>
+          <td align="left" width="10">
+            <img alt="" src="../images/spacer.gif" class="spacer" height="1" width="10" /></td>
+          <td align="left" width="100%">
+            <div class="content">
+              <table class="title" width="100%">
+                <tbody>
+                  <tr>
+                    <td valign="middle">
+                      <h1><!-- TemplateBeginEditable name="TitleRegion" -->Primi passi<!-- TemplateEndEditable --></h1></td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- TemplateBeginEditable name="ContentRegion" -->
+              <h3>Login</h3>
+              <p> Per accedere al sistema, sono necessari username e password. Se non siete in possesso di entrambe, chiedete al vostro amministratore del sistema di assegnarvele. <br>
+                Nella pagina di Login potete scegliere la lingua con cui volete lavorare, tra le seguenti: Inglese, Tedesco, Italiano, Spagnolo, Francese.<br>
+                Lasciando selezionata nella tendina del linguaggio la voce &quot;Default&quot; il sistema utilizzer&agrave; la lingua impostata come preferenza dell'utente. </p>
+              <h3>Homepage</h3>
+              <p> Dopo il login, puoi vedere la homepage personale, dalla quale puoi accedere ai documenti scaricati  recentemente. Inoltre dalla homepage puoi accedere ai messaggi ricevuti e creare un nuovo messaggio. </p>
+              <center>
+                <img src="../images/desktop_it.jpg" width="788" heigth="197" border="0">
+              </center>
+              <h3>Men&ugrave; principale </h3>
+              <p> Nella parte superiore sono visualizzate le voci del menu principale. Ogni utente visualizza solamente i men&ugrave; per cui dispone dei diritti di accesso. <br>
+                Qualora siano presenti  sotto-men&ugrave; posizionandosi con il cursore sulla voce desiderata questi vengono automaticamente mostrati. <br>
+                Cliccando su una voce del men&ugrave; si accede alla pagina indicata.</p>
+              <h3>Messaggi</h3>
+              <p> Puoi inviare messaggi ad altri utenti del sistema e ricevere messaggi di altri utenti. <br>
+                Questa funzionalit&agrave; &egrave; accessibile sia usando il menu nella homepage sia usando la voce di menu messaggi nel menu personale. </p>
+              <h3>Ricerca</h3>
+              <p> E' possibile eseguire una ricerca sull'archivio documenti utilizzando l'apposita maschera presente nella parte superiore della pagina.<br>
+              </p>
+              <center>
+                <img src="../images/search_it.jpg" width="304" height="70" border="0">
+              </center>
+              <!-- TemplateEndEditable --></div></td>
+          <td width="10">
+            <img alt="" src="../images/spacer.gif" class="spacer" height="1" width="10" /></td>
+        </tr>
+        <!--================= end Content==================-->
+      </tbody>
+    </table>
+  </body>
+  </html>
