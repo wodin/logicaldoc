@@ -196,7 +196,20 @@
 			org.apache.cxf.transport.servlet.CXFServlet
 		</servlet-class>
 	</servlet>
-
+	<servlet>
+		<servlet-name>Webdav</servlet-name>
+		<servlet-class>
+			com.logicaldoc.webdav.web.WebdavServlet
+		</servlet-class>
+		<init-param>
+			<param-name>resource-path-prefix</param-name>
+			<param-value>/webdav</param-value>
+		</init-param>
+		<init-param>
+			<param-name>resource-config</param-name>
+			<param-value>/WEB-INF/config.xml</param-value>
+		</init-param>
+	</servlet>
 
 	<!-- mappings -->
 	<filter-mapping>
@@ -244,8 +257,12 @@
 		<url-pattern>/zip-export</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>CXFServlet</servlet-name>
+		<servlet-name>Webdav</servlet-name>
 		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CXFServlet</servlet-name>
+		<url-pattern>/webdav/*</url-pattern>
 	</servlet-mapping>
 
 	<session-config>
