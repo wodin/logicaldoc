@@ -181,8 +181,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public boolean store(final Document doc) {
 		boolean result = true;
 		try {
-			getHibernateTemplate().merge(doc);
-
 			Set<String> src = doc.getKeywords();
 			if (src != null && src.size() > 0) {
 				// Trim too long keywords
