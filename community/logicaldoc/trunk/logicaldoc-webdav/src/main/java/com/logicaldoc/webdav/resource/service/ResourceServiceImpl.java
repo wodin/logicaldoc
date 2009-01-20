@@ -153,11 +153,8 @@ public class ResourceServiceImpl implements ResourceService {
 		if (menu != null)
 			return marshallFolder(menu);
 
-		Resource parentMenu = this.getParentResource(currentStablePath);
-//		String title = name.substring(0, name.lastIndexOf(".") > 0 ? name.lastIndexOf(".") : name.length());
-//		Collection<Document> docs = documentDAO.findByTitleAndParentFolderId(Long.parseLong(parentMenu.getID()), title);
-				
-		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(Long.parseLong(parentMenu.getID()), name);
+		Resource parentMenu = this.getParentResource(currentStablePath);			
+		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(Long.parseLong(parentMenu.getID()), name, null);
 		if (docs.isEmpty())
 			return null;
 		Document document = docs.iterator().next();
@@ -251,11 +248,8 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public Resource getChildByName(Resource parentResource, String name) {
-		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource.getID()));
-//		String title = name.substring(0, name.lastIndexOf(".") > 0 ? name.lastIndexOf(".") : name.length());
-//		Collection<Document> docs = documentDAO.findByTitleAndParentFolderId(parentMenu.getId(), title);
-		
-		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(parentMenu.getId(), name);
+		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource.getID()));		
+		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(parentMenu.getId(), name, null);
 		if (!docs.isEmpty()) {
 			Document document = docs.iterator().next();
 			return marshallDocument(document);
