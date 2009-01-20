@@ -128,7 +128,7 @@
 			<ice:column>
 				<f:facet name="header">
 					<ice:commandSortHeader columnName="size" arrow="true">
-						<ice:outputText value="#{msgs['msg.jsp.foldercontent.size']}"
+						<ice:outputText value="#{msgs['size']}"
 							style="text-decoration: underline;" />
 					</ice:commandSortHeader>
 				</f:facet>
@@ -138,7 +138,7 @@
 			</ice:column>
 		</ice:dataTable>
 
-		<ice:panelGroup styleClass="center" style="width:70%">
+		<ice:panelGroup style="width:70%">
 			<br />
 			<ldoc:paginator table="documentsList"
 				label="#{msgs['paginator.simple']}" />
