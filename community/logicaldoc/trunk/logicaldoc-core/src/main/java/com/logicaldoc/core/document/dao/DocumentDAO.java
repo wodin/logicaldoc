@@ -145,9 +145,10 @@ public interface DocumentDAO extends PersistentObjectDAO<Document>{
 	 * 
 	 * @param folderId
 	 * @param fileName
+	 * @param excludeId Optional id of a document that must not be considered
 	 * @return
 	 */
-	public List<Document> findByFileNameAndParentFolderId(long folderId, String fileName);
+	public List<Document> findByFileNameAndParentFolderId(long folderId, String fileName, Long excludeId);
 
 	/**
 	 * Finds that document that lies under a specific folder (given by the id)
@@ -155,9 +156,10 @@ public interface DocumentDAO extends PersistentObjectDAO<Document>{
 	 * 
 	 * @param folderId
 	 * @param title
+	 * @param excludeId Optional id of a document that must not be considered
 	 * @return
 	 */
-	public List<Document> findByTitleAndParentFolderId(long folderId, String title);
+	public List<Document> findByTitleAndParentFolderId(long folderId, String title, Long excludeId);
 
 	/**
 	 * Initializes lazy loaded collections

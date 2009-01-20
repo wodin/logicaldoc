@@ -29,7 +29,6 @@
 
 
 	<!--DAOs-->
-
 	<bean id="UserDAO" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
@@ -283,25 +282,7 @@
 		</property>
 	</bean>
 
-	<!--Transactional proxy for core managers-->
-	<bean id="CoreTransactionProxy"
-		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-		lazy-init="true" abstract="false" autowire="default"
-		dependency-check="default">
-		<property name="transactionManager">
-			<ref bean="TransactionManager" />
-		</property>
-		<property name="transactionAttributes">
-			<props>
-				<prop key="check*">PROPAGATION_REQUIRED</prop>
-				<prop key="create*">PROPAGATION_REQUIRED</prop>
-				<prop key="delete*">PROPAGATION_REQUIRED</prop>
-				<prop key="update*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-
-	<bean id="DocumentManager" parent="CoreTransactionProxy"
+	<bean id="DocumentManager" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
 		<property name="target">

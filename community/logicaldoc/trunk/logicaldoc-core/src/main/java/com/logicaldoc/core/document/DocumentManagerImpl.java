@@ -502,7 +502,10 @@ public class DocumentManagerImpl implements DocumentManager {
 	private void setUniqueTitle(Document doc) {
 		int counter = 1;
 		String buf = doc.getTitle();
-		while (documentDAO.findByTitleAndParentFolderId(doc.getFolder().getId(), doc.getTitle()).size() > 0) {
+		Long excludeId = null;
+		if (doc.getId() > 0)
+			excludeId = doc.getId();
+		while (documentDAO.findByTitleAndParentFolderId(doc.getFolder().getId(), doc.getTitle(), excludeId).size() > 0) {
 			doc.setTitle(buf + "(" + (counter++) + ")");
 		}
 	}
@@ -523,7 +526,11 @@ public class DocumentManagerImpl implements DocumentManager {
 			ext = doc.getFileName().substring(doc.getFileName().lastIndexOf("."));
 		}
 
-		while (documentDAO.findByFileNameAndParentFolderId(doc.getFolder().getId(), doc.getFileName()).size() > 0) {
+		Long excludeId = null;
+		if (doc.getId() > 0)
+			excludeId = doc.getId();
+		while (documentDAO.findByFileNameAndParentFolderId(doc.getFolder().getId(), doc.getFileName(), excludeId)
+				.size() > 0) {
 			doc.setFileName(name + "(" + (counter++) + ")" + ext);
 		}
 	}

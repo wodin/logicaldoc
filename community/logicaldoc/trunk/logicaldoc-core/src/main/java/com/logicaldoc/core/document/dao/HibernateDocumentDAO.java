@@ -181,6 +181,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public boolean store(final Document doc) {
 		boolean result = true;
 		try {
+			getHibernateTemplate().merge(doc);
+
 			Set<String> src = doc.getKeywords();
 			if (src != null && src.size() > 0) {
 				// Trim too long keywords
@@ -555,16 +557,22 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findByFileNameAndParentFolderId(long folderId, String fileName) {
-		return findByWhere("_entity.folder.id = " + folderId + " and lower(_entity.fileName) like '"
-				+ fileName.toLowerCase() + "'");
+	public List<Document> findByFileNameAndParentFolderId(long folderId, String fileName, Long excludeId) {
+		String query="_entity.folder.id = " + folderId + " and lower(_entity.fileName) like '"
+		+ fileName.toLowerCase() + "'";
+		if(excludeId!=null)
+			 query+=" and not(_entity.id = "+excludeId+")";
+		return findByWhere(query);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findByTitleAndParentFolderId(long folderId, String title) {
-		return findByWhere("_entity.folder.id = " + folderId + " and lower(_entity.title) like '" + title.toLowerCase()
-				+ "'");
+	public List<Document> findByTitleAndParentFolderId(long folderId, String title, Long excludeId) {
+		String query="_entity.folder.id = " + folderId + " and lower(_entity.title) like '" + title.toLowerCase()
+		+ "'";
+		if(excludeId!=null)
+			 query+=" and not(_entity.id = "+excludeId+")";
+		return findByWhere(query);
 	}
 
 	@Override

@@ -277,7 +277,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindByTitleAndParentFolderId() {
-		Collection<Document> documents = dao.findByTitleAndParentFolderId(103, "testDocname");
+		Collection<Document> documents = dao.findByTitleAndParentFolderId(103, "testDocname",null);
 		assertNotNull(documents);
 		assertEquals(1, documents.size());
 	}
