@@ -97,8 +97,9 @@
                                     <ice:outputFormat value="#{msgs['footer']}" escape="false" >
                                         <f:param value="#{StyleBean.productYear}" />
                                         <f:param value="#{StyleBean.productVendor}" />
-                                        <f:param value="#{StyleBean.productUrl}" />
+                                        <f:param value=" " />
                                     </ice:outputFormat>
+                                    <ice:outputLink value="#{StyleBean.productUrl}" target="_blank">#{StyleBean.productUrl}</ice:outputLink>
                                     <br />
                                 </td>
                             </tr>
