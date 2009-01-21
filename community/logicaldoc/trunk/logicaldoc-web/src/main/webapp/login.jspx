@@ -96,7 +96,7 @@
                                 <td align="right">
                                     <ice:outputFormat value="#{msgs['footer']}" escape="false" >
                                         <f:param value="#{StyleBean.productYear}" />
-                                        <f:param value="#{StyleBean.productName}" />
+                                        <f:param value="#{StyleBean.productVendor}" />
                                         <f:param value="#{StyleBean.productUrl}" />
                                     </ice:outputFormat>
                                     <br />
