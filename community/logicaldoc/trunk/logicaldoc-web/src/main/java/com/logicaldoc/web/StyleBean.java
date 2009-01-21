@@ -62,6 +62,8 @@ public class StyleBean {
 	private String skin = "default";
 
 	private String productName;
+	
+	private String productVendor;
 
 	private String productUrl;
 
@@ -102,6 +104,9 @@ public class StyleBean {
 			productYear = context.getProperty("skin." + sk + ".product.year");
 			if (StringUtils.isEmpty(productYear))
 				productYear = context.getProperty("product.year");
+			productVendor = context.getProperty("skin." + sk + ".product.vendor");
+			if (StringUtils.isEmpty(productVendor))
+				productVendor = context.getProperty("product.vendor");
 			productRelease = context.getProperty("product.release");
 		} catch (Throwable e) {
 			log.error(e.getMessage());
@@ -234,5 +239,9 @@ public class StyleBean {
 
 	public TimeZone getTimeZone() {
 		return timeZone;
+	}
+
+	public String getProductVendor() {
+		return productVendor;
 	}
 }
