@@ -41,7 +41,7 @@
     </trycatch>
     <echo>LogicalDOC environment ready</echo>
   </target>
-  <target name="prepare-localization-package">
+  <target name="prepare-i18n-package">
     <copy todir="${logicaldoc.devroot}/logicaldoc-i18n" flatten="true">
       <fileset dir="${logicaldoc.devroot}">
         <include name="**/src/main/**/application*_*.properties" />
