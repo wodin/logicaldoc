@@ -1,13 +1,13 @@
 <!--   This is a general and build that collects common targets -->
 <project name="logicaldoc" default="init-all" basedir="."  xmlns:artifact="urn:maven-artifact-ant">
+  <property environment="env" />
+  <property file="${user.home}/logicaldoc-dev.properties" />
+  <path id="ext.classpath">
+    <fileset dir="${logicaldoc.devroot}/build/ant/lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
   <target name="task-definitions">
-    <property environment="env" />
-    <property file="${user.home}/logicaldoc-dev.properties" />
-    <path id="ext.classpath">
-      <fileset dir="${logicaldoc.devroot}/build/ant/lib">
-        <include name="*.jar"/>
-      </fileset>
-    </path>
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
       <classpath refid="ext.classpath" />
     </taskdef>
@@ -40,5 +40,14 @@
       </catch>
     </trycatch>
     <echo>LogicalDOC environment ready</echo>
+  </target>
+  <target name="prepare-localization-package">
+    <copy todir="${logicaldoc.devroot}/logicaldoc-i18n" flatten="true">
+      <fileset dir="${logicaldoc.devroot}">
+        <include name="**/src/main/**/application*_*.properties" />
+      </fileset>
+    </copy>
+    <zip destfile="${logicaldoc.devroot}/logicaldoc-i18n.zip" basedir="${logicaldoc.devroot}/logicaldoc-i18n"   />
+    <delete dir="${logicaldoc.devroot}/logicaldoc-i18n"/>
   </target>
 </project>
