@@ -41,11 +41,11 @@ public class Messages extends AbstractMap<String, String> {
 		// Iterate over bundles in reverse order
 		for (int i = bundles.size() - 1; i >= 0; i--) {
 			String path = bundles.get(i);
-			ResourceBundle bundle = ResourceBundle.getBundle(path, locale);
 
 			try {
+				ResourceBundle bundle = ResourceBundle.getBundle(path, locale);
 				return bundle.getString(key);
-			} catch (MissingResourceException e) {
+			} catch (Exception e) {
 				// Continue
 			}
 		}
