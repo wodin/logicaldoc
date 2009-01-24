@@ -207,7 +207,7 @@ public class DavResourceImpl implements DavResource {
 	 */
 	public long getModificationTime() {
 
-		log.fatal("getModificationTime()");
+		log.debug("getModificationTime()");
 
 		initProperties();
 		return this.modificationTime;
@@ -241,7 +241,7 @@ public class DavResourceImpl implements DavResource {
 	public DavProperty getProperty(DavPropertyName name) {
 		initProperties();
 
-		log.fatal("getProperty(..) " + name);
+		log.debug("getProperty(..) " + name);
 
 		return properties.get(name);
 	}
@@ -538,7 +538,8 @@ public class DavResourceImpl implements DavResource {
 
 				resourceService.copyResource(destResource, this.resource);
 			}
-
+		} catch (DavException de) {
+			throw de;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
