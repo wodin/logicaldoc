@@ -83,8 +83,9 @@ public interface ResourceService {
 	 *            The updateable resource
 	 * @param context
 	 *            the ImportContext
+	 * @throws DavException 
 	 */
-	public void updateResource(Resource resource, ImportContext context);
+	public void updateResource(Resource resource, ImportContext context) throws DavException;
 
 	/**
 	 * Check for existing resource(logically)
@@ -160,8 +161,9 @@ public interface ResourceService {
 	 * Copying of a resource within logicalDOC. Not supported those days.
 	 * @param destinResource
 	 * @param resource
+	 * @throws DavException 
 	 */
-	public void copyResource(Resource destinResource, Resource resource);
+	public void copyResource(Resource destinResource, Resource resource) throws DavException;
 
 	/**
 	 * Versioning-part. Checkout causes the system to make a version

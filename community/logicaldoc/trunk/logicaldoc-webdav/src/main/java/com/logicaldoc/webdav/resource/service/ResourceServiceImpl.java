@@ -266,12 +266,17 @@ public class ResourceServiceImpl implements ResourceService {
 		return null;
 	}
 
-	public void updateResource(Resource resource, ImportContext context) {
+	public void updateResource(Resource resource, ImportContext context) throws DavException {
 
 		User user = userDAO.findById(resource.getRequestedPerson());
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 
 		try {
+			// verify the write permission on the parent folder
+			Resource parent = getParentResource(resource);
+			if (!parent.isWriteEnabled())
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to write resource.");
+			
 			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
 				documentManager.checkin(Long.parseLong(resource.getID()), context.getInputStream(), resource.getName(),
 						user, VERSION_TYPE.NEW_SUBVERSION, "", false);
@@ -281,6 +286,8 @@ public class ResourceServiceImpl implements ResourceService {
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
+		} catch (DavException de) {
+			throw de;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -336,7 +343,7 @@ public class ResourceServiceImpl implements ResourceService {
 			boolean writeEnabled = folder.isWriteEnabled();
 			if (!writeEnabled)
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not applied to this user");
-			
+
 			Document document = documentDAO.findById(Long.parseLong(target.getID()));
 			documentDAO.initialize(document);
 
@@ -400,7 +407,7 @@ public class ResourceServiceImpl implements ResourceService {
 		}
 	}
 
-	public void copyResource(Resource destinationResource, Resource resource) {
+	public void copyResource(Resource destinationResource, Resource resource) throws DavException {
 
 		log.debug("copyResource");
 
@@ -408,6 +415,10 @@ public class ResourceServiceImpl implements ResourceService {
 			throw new RuntimeException("FolderCopy not supported");
 		} else {
 			try {
+				boolean writeEnabled = destinationResource.isWriteEnabled();
+				if (!writeEnabled)
+					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to write resource.");
+				
 				log.debug("resource.getID() = " + resource.getID());
 				log.debug("destinationResource.getID() = " + destinationResource.getID());
 				Document document = documentDAO.findById(Long.parseLong(resource.getID()));
@@ -424,6 +435,9 @@ public class ResourceServiceImpl implements ResourceService {
 				log.debug("user = " + user);
 
 				documentManager.copyToFolder(document, menu, user);
+			} catch (DavException de) {
+				log.info(de.getMessage(), de);
+				throw de;
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				throw new RuntimeException(e);
