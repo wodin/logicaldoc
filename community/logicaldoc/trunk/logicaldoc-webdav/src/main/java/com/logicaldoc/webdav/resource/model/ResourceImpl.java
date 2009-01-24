@@ -26,6 +26,10 @@ public class ResourceImpl implements Resource{
 	private String author;
 	private String comment;
 	private Date creationDate;
+	private boolean writeEnabled;
+	private boolean deleteEnabled;
+	private boolean renameEnabled;
+	private boolean addChildEnabled;
 
 	
 	public Long getContentLength() {
@@ -159,6 +163,38 @@ public class ResourceImpl implements Resource{
 
 	public Date getCreationDate() {
 		return this.creationDate;
+	}
+
+	public boolean isDeleteEnabled() {
+		return this.deleteEnabled;
+	}
+
+	public boolean isRenameEnabled() {
+		return this.renameEnabled;
+	}
+
+	public void setDeleteEnabled(boolean deleteEnabled) {
+		this.deleteEnabled = deleteEnabled;
+	}
+
+	public void setRenameEnabled(boolean renameEnabled) {
+		this.renameEnabled = renameEnabled;
+	}
+
+	public boolean isWriteEnabled() {
+		return writeEnabled;
+	}
+
+	public void setWriteEnabled(boolean writeEnabled) {
+		this.writeEnabled = writeEnabled;
+	}
+
+	public boolean isAddChildEnabled() {
+		return this.addChildEnabled;
+	}
+
+	public void setAddChildEnabled(boolean addChildEnabled) {
+		this.addChildEnabled = addChildEnabled;
 	}
 	
 }
