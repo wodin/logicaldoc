@@ -3,6 +3,7 @@ package com.logicaldoc.webdav.resource.service;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResourceLocator;
 
 import com.logicaldoc.webdav.context.ImportContext;
@@ -29,8 +30,9 @@ public interface ResourceService {
 	 *            The location retrieved through {@see
 	 *            DavResourceLocator#getResourcePath}
 	 * @return
+	 * @throws DavException 
 	 */
-	public Resource getResource(String location, long userid);
+	public Resource getResource(String location, long userid) throws DavException;
 
 	/**
 	 * On passing a valid @link {@link Resource} all resources (Folders as well
@@ -56,9 +58,10 @@ public interface ResourceService {
 	 * @param context
 	 *            for inputstream
 	 * @return the newly created {@link Resource}
+	 * @throws DavException 
 	 */
 	public Resource createResource(Resource parentResource, String name,
-			boolean isCollection, ImportContext context);
+			boolean isCollection, ImportContext context) throws DavException;
 
 	/**
 	 * Updating a resource on passing all new properties though a valid resource
@@ -121,15 +124,16 @@ public interface ResourceService {
 	 * @param resource the current resource
 	 * @return the parent resource
 	 */
-	public Resource getParentResource(String location);
+	public Resource getParentResource(String location, long userId);
 
 	/**
 	 * Moves a resource named target to the folder dictionary destionation
 	 * @param target the resource that is involved 
 	 * @param destination the destination of the move operation
 	 * @return the moved resource
+	 * @throws DavException 
 	 */
-	public Resource move(Resource target, Resource destination);
+	public Resource move(Resource target, Resource destination) throws DavException;
 
 	/**
 	 * 
@@ -148,8 +152,9 @@ public interface ResourceService {
 	/**
 	 * Deletion of a resource within logicalDOC.
 	 * @param resource a vaild resource
+	 * @throws DavException 
 	 */
-	public void deleteResource(Resource resource);
+	public void deleteResource(Resource resource) throws DavException;
 
 	/**
 	 * Copying of a resource within logicalDOC. Not supported those days.

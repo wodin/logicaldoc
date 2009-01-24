@@ -10,6 +10,7 @@ import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.server.io.PropertyExportContext;
 import org.apache.jackrabbit.server.io.PropertyImportContext;
+import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
 
 import com.logicaldoc.webdav.context.ExportContext;
@@ -165,7 +166,8 @@ public class DefaultHandler implements IOHandler {
 		}
     }
     
-    protected synchronized boolean setContentData(ImportContext context, boolean isCollection) throws WebDavStorageException {
+    protected synchronized boolean setContentData(ImportContext context, boolean isCollection) throws WebDavStorageException, DavException {
+    	
         Resource resource = context.getResource();
         String name = context.getSystemId();
 

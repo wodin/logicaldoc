@@ -33,6 +33,22 @@ public interface Resource {
 
 	public boolean isLocked();
 
+	public boolean isDeleteEnabled();
+
+	public boolean isRenameEnabled();
+	
+	public boolean isWriteEnabled();
+	
+	public boolean isAddChildEnabled();
+	
+	public void setDeleteEnabled(boolean deleteEnabled);
+
+	public void setRenameEnabled(boolean renameEnabled);
+	
+	public void setWriteEnabled(boolean writeEnabled);
+	
+	public void setAddChildEnabled(boolean renameEnabled);
+	
 	public void isLocked(boolean isLocked);
 
 	public void isFolder(boolean isFolder);
