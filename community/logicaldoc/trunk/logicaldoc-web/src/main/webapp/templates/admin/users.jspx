@@ -107,7 +107,7 @@
 								<ice:commandLink action="#{usersRecordsManager.password}">
 									<ice:graphicImage value="#{StyleBean.imagesPath}/password.png"
 										style="border: 0px solid;"
-										title="#{msgs['db.changepassword']}" />
+										title="#{msgs['menu.changepassword']}" />
 								</ice:commandLink>
 							</ice:panelGroup>
 						</ice:column>
