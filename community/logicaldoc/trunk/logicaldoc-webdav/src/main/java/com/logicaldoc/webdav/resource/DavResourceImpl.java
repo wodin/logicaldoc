@@ -488,8 +488,6 @@ public class DavResourceImpl implements DavResource {
 	 */
 	public void copy(DavResource destination, boolean shallow) throws DavException {
 
-		log.fatal("davResourceImpl.copy");
-
 		if (!exists()) {
 			throw new DavException(DavServletResponse.SC_NOT_FOUND);
 		}
@@ -505,9 +503,6 @@ public class DavResourceImpl implements DavResource {
 		}
 
 		try {
-			log.fatal("destination = " + destination);
-			log.fatal("destination.getResourcePath() = " + destination.getResourcePath());
-
 			Resource res = resourceService.getResource(destination.getLocator().getResourcePath(), this.resource
 					.getRequestedPerson());
 			log.debug("res = " + res);

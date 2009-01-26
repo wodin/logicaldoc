@@ -148,6 +148,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			if (session.getAttribute("name") == null) {
 				if (request.getHeader(DavConstants.HEADER_AUTHORIZATION) != null) {
 					Credentials credentials = AuthenticationUtil.authenticate(webdavRequest);
+					
 					boolean isLoggedOn = userDAO.validateUser(credentials.getUserName(), credentials.getPassword());
 					if (isLoggedOn == false) {
 						AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
@@ -549,7 +550,9 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 				response);
 
 		int status = validateDestination(destResource, request);
+		log.debug("status = " + status);
 		if (status > DavServletResponse.SC_NO_CONTENT) {
+			log.debug("status > DavServletResponse.SC_NO_CONTENT");
 			response.sendError(status);
 			return;
 		}
@@ -699,16 +702,6 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	protected void doCheckin(WebdavRequest request, WebdavResponse response, DavResource resource) throws DavException,
 			IOException {
 		log.debug("doCheckin");
-		
-//		if (!(resource instanceof VersionControlledResource)) {
-//			response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
-//			return;
-//		}
-//		
-//		String versionHref = ((VersionControlledResource) resource).checkin();
-//		log.info("versionHref = " + versionHref);
-//		response.setHeader(DeltaVConstants.HEADER_LOCATION, versionHref);
-//		response.setStatus(DavServletResponse.SC_CREATED);
 		
 		response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
 	}
