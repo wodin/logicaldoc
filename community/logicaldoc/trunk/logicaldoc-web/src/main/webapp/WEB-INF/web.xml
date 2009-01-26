@@ -257,11 +257,11 @@
 		<url-pattern>/zip-export</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>Webdav</servlet-name>
+		<servlet-name>CXFServlet</servlet-name>
 		<url-pattern>/services/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>CXFServlet</servlet-name>
+		<servlet-name>Webdav</servlet-name>
 		<url-pattern>/webdav/*</url-pattern>
 	</servlet-mapping>
 
