@@ -162,7 +162,7 @@ public class DefaultHandler implements IOHandler {
 				IOUtil.spool(is, context.getOutputStream());
 		}
 		catch(FileNotFoundException e){
-			throw new IOException("Can´t find file " + resource.getName() + "(" + resource.getID() + ")");
+			throw new IOException("Can't find file " + resource.getName() + "(" + resource.getID() + ")");
 		}
     }
     

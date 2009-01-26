@@ -233,9 +233,8 @@ public class ResourceServiceImpl implements ResourceService {
 		if (isCollection) {
 			// check permission to add folder
 			boolean addChildEnabled = parentResource.isAddChildEnabled();
-			log.fatal("addChildEnabled = " + addChildEnabled);
 			if (!addChildEnabled) {
-				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Add Folder not applied to this user");
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Add Folder not granted to this user");
 			}
 			Menu createdMenu = menuDAO.createFolder(parentMenu, name);
 			return this.marshallFolder(createdMenu, parentResource.getRequestedPerson());
@@ -243,9 +242,8 @@ public class ResourceServiceImpl implements ResourceService {
 
 		// check permission to add document
 		boolean writeEnabled = parentResource.isWriteEnabled();
-		log.fatal("writeEnabled = " + writeEnabled);
 		if (!writeEnabled) {
-			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Write Access not applied to this user");
+			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Write Access not granted to this user");
 		}
 
 		User user = userDAO.findById(parentResource.getRequestedPerson());
@@ -276,7 +274,7 @@ public class ResourceServiceImpl implements ResourceService {
 			Resource parent = getParentResource(resource);
 			if (!parent.isWriteEnabled())
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to write resource.");
-			
+
 			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
 				documentManager.checkin(Long.parseLong(resource.getID()), context.getInputStream(), resource.getName(),
 						user, VERSION_TYPE.NEW_SUBVERSION, "", false);
@@ -311,13 +309,13 @@ public class ResourceServiceImpl implements ResourceService {
 		return null;
 	}
 
-	public Resource move(Resource target, Resource destination) throws DavException {
+	public Resource move(Resource source, Resource destination) throws DavException {
 
-		if (target.isFolder()) {
-			if (!target.isRenameEnabled())
-				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not applied to this user");
+		if (source.isFolder()) {
+			if (!source.isRenameEnabled())
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not granted to this user");
 
-			Menu currentMenu = menuDAO.findById(Long.parseLong(target.getID()));
+			Menu currentMenu = menuDAO.findById(Long.parseLong(source.getID()));
 
 			long currentParentFolder = currentMenu.getParentId();
 			long destinationParentFolder = Long.parseLong(destination.getID());
@@ -325,51 +323,53 @@ public class ResourceServiceImpl implements ResourceService {
 			if (currentParentFolder != destinationParentFolder)
 				throw new UnsupportedOperationException();
 
-			currentMenu.setText(target.getName());
+			currentMenu.setText(source.getName());
 
 			if (destination != null)
 				currentMenu.setParentId(Long.parseLong(destination.getID()));
 
 			menuDAO.store(currentMenu);
-			return this.marshallFolder(currentMenu, target.getRequestedPerson());
+			return this.marshallFolder(currentMenu, source.getRequestedPerson());
 
 		} else {
+
 			// if the destination is null we can't do anything
 			if (destination == null)
 				throw new UnsupportedOperationException();
 
-			// verify the write permission on the folder
-			Resource folder = getParentResource(target);
+			// verify the write permission on source folders
+			Resource folder = getParentResource(source);
+
 			boolean writeEnabled = folder.isWriteEnabled();
 			if (!writeEnabled)
-				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not applied to this user");
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not granted to this user");
 
-			Document document = documentDAO.findById(Long.parseLong(target.getID()));
+			Document document = documentDAO.findById(Long.parseLong(source.getID()));
 			documentDAO.initialize(document);
 
-			if (!target.getName().equals(document.getFileName())) {
-
-				User user = userDAO.findById(target.getRequestedPerson());
-				log.debug("user = " + user);
+			if (!source.getName().equals(document.getFileName())) {
+                // we are doing a file rename
+				User user = userDAO.findById(source.getRequestedPerson());
 
 				try {
-					documentManager.rename(document, user, target.getName());
-					log.debug("document(2).getFileName() = " + document.getFileName());
-					// Just to be Sure
-					documentDAO.initialize(document);
-					log.debug("document(3).getFileName() = " + document.getFileName());
+					documentManager.rename(document, user, source.getName());
 				} catch (Exception e) {
-					log.error(e.getMessage(), e);
+					log.warn(e.getMessage(), e);
 					throw new RuntimeException(e);
 				}
-			}
+			} else {
+                // moving the document to another folder
+				boolean destWriteEnabled = destination.isWriteEnabled();
+				if (!destWriteEnabled)
+					throw new DavException(DavServletResponse.SC_FORBIDDEN, "Write Rights not granted to this user");
+				
+				Menu menu = menuDAO.findById(Long.parseLong(destination.getID()));
 
-			Menu menu = menuDAO.findById(Long.parseLong(destination.getID()));
-
-			try {
-				documentManager.moveToFolder(document, menu);
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
+				try {
+					documentManager.moveToFolder(document, menu);
+				} catch (Exception e) {
+					log.warn(e.getMessage(), e);
+				}
 			}
 
 			return this.marshallDocument(document);
@@ -380,13 +380,11 @@ public class ResourceServiceImpl implements ResourceService {
 		try {
 			if (resource.isFolder()) {
 
-				log.fatal("resource.isDeleteEnabled(): " + resource.isDeleteEnabled());
 				if (!resource.isDeleteEnabled())
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
 				Menu menu = menuDAO.findById(Long.parseLong(resource.getID()));
 				User user = userDAO.findById(resource.getRequestedPerson());
-				log.debug("user = " + user);
 
 				List<Menu> notDeletableFolders = documentManager.deleteFolder(menu, user);
 				if (notDeletableFolders.size() > 0) {
@@ -408,9 +406,7 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public void copyResource(Resource destinationResource, Resource resource) throws DavException {
-
-		log.debug("copyResource");
-
+		
 		if (resource.isFolder() == true) {
 			throw new RuntimeException("FolderCopy not supported");
 		} else {
@@ -418,21 +414,11 @@ public class ResourceServiceImpl implements ResourceService {
 				boolean writeEnabled = destinationResource.isWriteEnabled();
 				if (!writeEnabled)
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to write resource.");
-				
-				log.debug("resource.getID() = " + resource.getID());
-				log.debug("destinationResource.getID() = " + destinationResource.getID());
+
 				Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 				Menu menu = menuDAO.findById(Long.parseLong(destinationResource.getID()));
 
-				log.info("document = " + document);
-				log.info("document.getFileName() = " + document.getFileName());
-
-				log.debug("menu = " + menu);
-				log.debug("menu.getText() = " + menu.getText());
-				log.debug("menu.getPath() = " + menu.getPath());
-
 				User user = userDAO.findById(resource.getRequestedPerson());
-				log.debug("user = " + user);
 
 				documentManager.copyToFolder(document, menu, user);
 			} catch (DavException de) {
@@ -485,8 +471,15 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	@Override
-	public void checkout(Resource resource) {
+	public void checkout(Resource resource) throws DavException {
+		
 		User user = userDAO.findById(resource.getRequestedPerson());
+
+//		 verify the write permission on the parent folder
+		Resource parent = getParentResource(resource);
+		if (!parent.isWriteEnabled())
+			throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to checkout resource.");
+		
 		try {
 			documentManager.checkout(Long.parseLong(resource.getID()), user);
 		} catch (NumberFormatException e) {
@@ -494,6 +487,7 @@ public class ResourceServiceImpl implements ResourceService {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+		
 	}
 
 	public boolean isCheckedOut(Resource resource) {

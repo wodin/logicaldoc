@@ -170,8 +170,9 @@ public interface ResourceService {
 	 * "overwriteable" to put a new version on it.
 	 * 
 	 * @param resource The appropriated resource that has to be checked out
+	 * @throws DavException 
 	 */
-	public void checkout(Resource resource);
+	public void checkout(Resource resource) throws DavException;
 
 	/**
 	 * Versioning-part. Based upon the current resource, the versionhistory is
