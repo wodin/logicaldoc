@@ -781,10 +781,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void rename(Document doc, User user, String newFilename) throws Exception {
 		if (doc.getImmutable() == 0) {
-			// Get original document directory path
-			String path = getDocFilePath(doc);
-			String originalFileName = doc.getFileName();
-
 			documentDAO.initialize(doc);
 			doc.setFileName(newFilename);
 			setUniqueFilename(doc);
