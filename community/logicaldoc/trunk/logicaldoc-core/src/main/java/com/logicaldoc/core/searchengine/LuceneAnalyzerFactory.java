@@ -16,9 +16,8 @@ import com.logicaldoc.core.text.analyzer.Stopwords;
 /**
  * This factory instantiates the analyzer for the given language
  * 
- * @author Marco Meschieri
- * @version $Id:$
- * @since ###release###
+ * @author Marco Meschieri - Logical Objects
+ * @since 3.0
  */
 public class LuceneAnalyzerFactory {
 
