@@ -157,9 +157,12 @@ public class DocumentEditForm {
 		template = null;
 		immediateIndexing = false;
 		recipient = "";
+		readOnly = false;
 		this.majorUpdate = false;
 		this.checkOriginalFilename = true;
+		this.template = null;
 		extendedAttributes.clear();
+		record = null;
 		JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "cleanAttributes();");
 	}
 
