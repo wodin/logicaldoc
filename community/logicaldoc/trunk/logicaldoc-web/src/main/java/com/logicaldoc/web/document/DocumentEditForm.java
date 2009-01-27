@@ -160,6 +160,7 @@ public class DocumentEditForm {
 		this.majorUpdate = false;
 		this.checkOriginalFilename = true;
 		extendedAttributes.clear();
+		JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "cleanAttributes();");
 	}
 
 	public void init(DocumentRecord record) {
