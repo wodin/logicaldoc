@@ -23,10 +23,7 @@ public class EmailPlugin extends LogicalDOCPlugin {
 
 	@Override
 	protected void install() throws Exception {
-		String webappDir = getManager().getPathResolver().resolvePath(getDescriptor(), "webapp").toString();
-		if (webappDir.startsWith("file:")) {
-			webappDir = webappDir.substring(5);
-		}
+		String webappDir = resolvePath("webapp");
 
 		File src = new File(webappDir);
 		File dest = new File(System.getProperty("logicaldoc.app.rootdir"));
