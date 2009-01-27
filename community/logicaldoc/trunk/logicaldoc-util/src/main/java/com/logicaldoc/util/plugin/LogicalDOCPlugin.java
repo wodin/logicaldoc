@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,11 +73,27 @@ public abstract class LogicalDOCPlugin extends Plugin {
 		data.store(new FileOutputStream(resolveDataFile()), "");
 	}
 
-	private File resolveDataFile() {
-		String path = getManager().getPathResolver().resolvePath(getDescriptor(), PLUGIN_PROPERTIES).toString();
+	/**
+	 * Resolves a relative path inside the plugin shadow folder
+	 * 
+	 * @param relativePath The relative path
+	 * @return The absolute path
+	 */
+	protected String resolvePath(String relativePath){
+		String path = getManager().getPathResolver().resolvePath(getDescriptor(), relativePath).toString();
 		if (path.startsWith("file:")) {
 			path = path.substring(5);
+			URLDecoder decoder=new URLDecoder();
+			try {
+				path=decoder.decode(path, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+			}
 		}
+		return path;
+	}
+	
+	private File resolveDataFile() {
+		String path = resolvePath(PLUGIN_PROPERTIES);
 		File file = new File(path);
 		if (!file.exists())
 			try {
