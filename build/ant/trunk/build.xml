@@ -45,6 +45,7 @@
     <copy todir="${logicaldoc.devroot}/logicaldoc-i18n" flatten="true">
       <fileset dir="${logicaldoc.devroot}">
         <include name="**/src/main/**/application*_*.properties" />
+        <include name="**/src/main/**/*Message*_*.properties" />
       </fileset>
     </copy>
     <zip destfile="${logicaldoc.devroot}/logicaldoc-i18n.zip" basedir="${logicaldoc.devroot}/logicaldoc-i18n"   />
