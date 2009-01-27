@@ -50,7 +50,7 @@
     >
     </db>
     <db name="MySQL"
-        class="org.gjt.mm.mysql.Driver"
+        class="com.mysql.jdbc.Driver"
         protocol="jdbc"
         subprotocol="mysql"
         port="3306"
