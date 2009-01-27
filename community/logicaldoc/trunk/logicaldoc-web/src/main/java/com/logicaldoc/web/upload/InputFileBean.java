@@ -212,6 +212,7 @@ public class InputFileBean implements Renderable {
 		setPercent(-1);
 		setReady(false);
 		setImmediateIndexing(false);
+		setExtractKeywords(false);
 		template = null;
 	}
 
