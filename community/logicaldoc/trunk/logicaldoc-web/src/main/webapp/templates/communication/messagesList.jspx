@@ -91,7 +91,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:outputText value="#{messageRecord.sentDateAsDate}">
-								<f:convertDateTime pattern="#{loc.dateFormatShort}" />
+								<f:convertDateTime pattern="#{loc.dateFormatHM}" />
 							</ice:outputText>
 						</ice:panelGroup>
 					</ice:column>
