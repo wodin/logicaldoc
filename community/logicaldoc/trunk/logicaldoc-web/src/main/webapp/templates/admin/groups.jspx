@@ -28,7 +28,7 @@
 					</ice:commandLink>
 				</ice:panelGroup>
 				<ice:panelGroup style="width: 50px" />
-				<ice:panelGroup style="text-align:center">
+				<ice:panelGroup style="text-align: center">
 					<ice:outputLabel for="groupsFilter" value="#{msgs['group.name']}:" />
 				</ice:panelGroup>
 				<ice:panelGroup>
@@ -46,7 +46,7 @@
 				<ice:dataTable id="groupsList"
 					value="#{groupsRecordsManager.groups}" var="group" cellpadding="0"
 					rows="15" width="97%"
-					columnClasses="smallColumn,titleColumn,selectionColumn,selectionColumn">
+					columnClasses="smallColumn,dateColumn,numberColumn,numberColumn">
 
 					<!-- Name -->
 					<ice:column>

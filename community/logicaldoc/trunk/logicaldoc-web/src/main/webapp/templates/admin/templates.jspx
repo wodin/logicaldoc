@@ -39,8 +39,8 @@
 					rendered="#{templatesRecordsManager.count > 0}">
 					<ice:dataTable id="templatesList"
 						value="#{templatesRecordsManager.templates}" var="template"
-						cellpadding="0" rows="15"
-						columnClasses="titleColumn,titleColumn,titleColumn">
+						cellpadding="0" rows="15" width="97%"
+						columnClasses="smallColumn,dateColumn,numberColumn,numberColumn">
 
 						<!-- Name -->
 						<ice:column>
