@@ -181,7 +181,6 @@
 											</ice:panelGroup>
 											<ice:panelGroup>
 												<ice:inputText id="clazz"
-													onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
 													binding="#{setupWizard.cdata.classInput}" tabindex="1"
 													value="#{setupWizard.cdata.clazz}" size="60" maxdata="60" />
 											</ice:panelGroup>
@@ -190,7 +189,6 @@
 											</ice:panelGroup>
 											<ice:panelGroup>
 												<ice:inputText id="dburl"
-													onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
 													binding="#{setupWizard.cdata.dburlInput}" tabindex="1"
 													value="#{setupWizard.cdata.dburl}" size="60" maxdata="60" />
 											</ice:panelGroup>
@@ -200,19 +198,17 @@
 											</ice:panelGroup>
 											<ice:panelGroup>
 												<ice:inputText id="user"
-													onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
 													binding="#{setupWizard.cdata.userInput}" tabindex="1"
 													value="#{setupWizard.cdata.user}" />
 											</ice:panelGroup>
 											<ice:panelGroup style="text-align:right;">
-												<ice:outputLabel for="password"
+												<ice:outputLabel for="pswd"
 													value="#{msgs['setup.dbconf.password']}" />
 											</ice:panelGroup>
 											<ice:panelGroup>
-												<ice:inputText id="password"
-													onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
+												<ice:inputText id="pswd"
 													binding="#{setupWizard.cdata.passwordInput}" tabindex="1"
-													value="#{setupWizard.cdata.password}" />
+													value="#{setupWizard.cdata.pswd}" />
 											</ice:panelGroup>
 										</ice:panelGrid>
 										<br />

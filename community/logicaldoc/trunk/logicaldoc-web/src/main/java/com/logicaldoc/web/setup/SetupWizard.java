@@ -152,7 +152,7 @@ public class SetupWizard implements TabChangeListener {
 			pbean.setProperty("jdbc.driver", dbdata.getClazz());
 			pbean.setProperty("jdbc.url", dbdata.getDburl());
 			pbean.setProperty("jdbc.username", dbdata.getUser());
-			pbean.setProperty("jdbc.password", dbdata.getPassword());
+			pbean.setProperty("jdbc.password", dbdata.getPswd());
 
 			if (StringUtils.isNotEmpty(dbdata.getValidationQuery())) {
 				pbean.setProperty("jdbc.validationQuery", dbdata.getValidationQuery());
@@ -171,14 +171,6 @@ public class SetupWizard implements TabChangeListener {
 	}
 
 	public void createDB() {
-		
-		try {
-			log.fatal("createDB(): " + cdata.getPassword());
-		} catch (RuntimeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
 		try {
 			ConnectionData intdata = null;
 
@@ -193,17 +185,11 @@ public class SetupWizard implements TabChangeListener {
 				intdata.setClazz("org.hsqldb.jdbcDriver");
 				intdata.setDburl("jdbc:hsqldb:" + internDBPath);
 				intdata.setUser("sa");
-				intdata.setPassword("");
+				intdata.setPswd("");
 				intdata.setDbms("Hsqldb");
 				intdata.setValidationQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS");
 			} else {
 				intdata = cdata;
-				try {
-					log.fatal("createDB(): " + intdata.getPassword());
-				} catch (RuntimeException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 
 			// write the configuration for the db on the general context
@@ -228,12 +214,7 @@ public class SetupWizard implements TabChangeListener {
 		init.setDriver(dbdata.getClazz());
 		init.setUrl(dbdata.getDburl());
 		init.setUsername(dbdata.getUser());
-		init.setPassword(dbdata.getPassword());
-		
-		log.fatal(dbdata.getClazz());
-		log.fatal(dbdata.getDburl());
-		log.fatal(dbdata.getUser());
-		log.fatal(dbdata.getPassword());
+		init.setPassword(dbdata.getPswd());
 
 		if (init.testConnection()) {
 			// connection success
@@ -378,7 +359,6 @@ public class SetupWizard implements TabChangeListener {
 			cdata.setClazz(clazz);
 			cdata.setDburl(sample);
 			cdata.setValidationQuery(validationQuery);
-
 			cdata.clear();
 		} catch (RuntimeException e) {
 			log.error("Unable to load dbms data :" + e.getMessage(), e);
@@ -391,11 +371,6 @@ public class SetupWizard implements TabChangeListener {
 
 	public ConnectionData getCdata() {
 		return cdata;
-	}
-
-	public void setCdata(ConnectionData cdata) {
-		this.cdata = cdata;
-		log.fatal(cdata.getPassword());
 	}
 
 	public boolean isSetupSuccess() {

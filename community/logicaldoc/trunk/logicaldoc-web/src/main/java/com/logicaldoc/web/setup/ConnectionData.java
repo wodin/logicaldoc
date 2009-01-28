@@ -5,128 +5,135 @@ import javax.faces.component.UIInput;
 
 import com.logicaldoc.util.config.DBMSConfigurator;
 
-
 /**
- *
- *
+ * 
+ * 
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
 public class ConnectionData {
-    private String dbms;
-    private String clazz;
-    private String dburl;
-    private String user;
-    private String password;
-    private String validationQuery;
-    private UIComponent classInput;
-    private UIComponent dburlInput;
-    private UIComponent userInput;
-    private UIComponent passwordInput;
+	private String dbms;
 
-    /** Creates a new instance of ConnectionForm */
-    public ConnectionData() {
-        dbms = "";
-        clazz = "";
-        dburl = "";
-        user = "";
-        password = "";
-    }
+	private String clazz;
 
-    void clear() {
-        ((UIInput) classInput).setValue(getClazz());
-        ((UIInput) classInput).setSubmittedValue(null);
-        ((UIInput) dburlInput).setValue(getDburl());
-        ((UIInput) dburlInput).setSubmittedValue(null);
-        ((UIInput) userInput).setValue(getUser());
-        ((UIInput) userInput).setSubmittedValue(null);
-        ((UIInput) passwordInput).setValue(getPassword());
-        ((UIInput) passwordInput).setSubmittedValue(null);
-    }
+	private String dburl;
 
-    public UIComponent getClassInput() {
-        return classInput;
-    }
+	private String user;
 
-    public void setClassInput(UIComponent classInput) {
-        this.classInput = classInput;
-    }
+	private String pswd;
 
-    public UIComponent getPasswordInput() {
-        return passwordInput;
-    }
+	private String validationQuery;
 
-    public void setPasswordInput(UIComponent passwordInput) {
-        this.passwordInput = passwordInput;
-    }
+	private UIComponent classInput;
 
-    public UIComponent getUserInput() {
-        return userInput;
-    }
+	private UIComponent dburlInput;
 
-    public void setUserInput(UIComponent userInput) {
-        this.userInput = userInput;
-    }
+	private UIComponent userInput;
 
-    public String getClazz() {
-        return clazz;
-    }
+	private UIComponent passwordInput;
 
-    public void setClazz(String clazz) {
-        this.clazz = clazz;
-    }
+	/** Creates a new instance of ConnectionForm */
+	public ConnectionData() {
+		dbms = "";
+		clazz = "";
+		dburl = "";
+		user = "";
+		pswd = "";
+	}
 
-    public String getDbms() {
-        return dbms;
-    }
+	void clear() {
+		((UIInput) classInput).setValue(getClazz());
+		((UIInput) classInput).setSubmittedValue(null);
+		((UIInput) dburlInput).setValue(getDburl());
+		((UIInput) dburlInput).setSubmittedValue(null);
+		((UIInput) userInput).setValue(getUser());
+		((UIInput) userInput).setSubmittedValue(null);
+		((UIInput) passwordInput).setValue(getPswd());
+		((UIInput) passwordInput).setSubmittedValue(null);
+	}
 
-    public void setDbms(String dbms) {
-        this.dbms = dbms;
-    }
+	public UIComponent getClassInput() {
+		return classInput;
+	}
 
-    public String getPassword() {
-        return password;
-    }
-    
-    public String getDialect(){
-    	DBMSConfigurator conf = new DBMSConfigurator();
+	public void setClassInput(UIComponent classInput) {
+		this.classInput = classInput;
+	}
+
+	public UIComponent getPasswordInput() {
+		return passwordInput;
+	}
+
+	public void setPasswordInput(UIComponent passwordInput) {
+		this.passwordInput = passwordInput;
+	}
+
+	public UIComponent getUserInput() {
+		return userInput;
+	}
+
+	public void setUserInput(UIComponent userInput) {
+		this.userInput = userInput;
+	}
+
+	public String getClazz() {
+		return clazz;
+	}
+
+	public void setClazz(String clazz) {
+		this.clazz = clazz;
+	}
+
+	public String getDbms() {
+		return dbms;
+	}
+
+	public void setDbms(String dbms) {
+		this.dbms = dbms;
+	}
+
+	public String getDialect() {
+		DBMSConfigurator conf = new DBMSConfigurator();
 		return conf.getAttribute(dbms, "dialect");
-    }
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-        System.err.println("setPassword: " + this.password);
-    }
+	public String getUser() {
+		return user;
+	}
 
-    public String getUser() {
-        return user;
-    }
+	public void setUser(String user) {
+		this.user = user;
+	}
 
-    public void setUser(String user) {
-        this.user = user;
-    }
+	public String getDburl() {
+		return dburl;
+	}
 
-    public String getDburl() {
-        return dburl;
-    }
+	public void setDburl(String url) {
+		this.dburl = url;
+	}
 
-    public void setDburl(String url) {
-        this.dburl = url;
-    }
+	public UIComponent getDburlInput() {
+		return dburlInput;
+	}
 
-    public UIComponent getDburlInput() {
-        return dburlInput;
-    }
+	public void setDburlInput(UIComponent urlInput) {
+		this.dburlInput = urlInput;
+	}
 
-    public void setDburlInput(UIComponent urlInput) {
-        this.dburlInput = urlInput;
-    }
+	public String getValidationQuery() {
+		return validationQuery;
+	}
 
-    public String getValidationQuery() {
-        return validationQuery;
-    }
+	public void setValidationQuery(String validationQuery) {
+		this.validationQuery = validationQuery;
+	}
 
-    public void setValidationQuery(String validationQuery) {
-        this.validationQuery = validationQuery;
-    }
+	public String getPswd() {
+		return pswd;
+	}
+
+	public void setPswd(String pswd) {
+		this.pswd = pswd;
+	}
 }
