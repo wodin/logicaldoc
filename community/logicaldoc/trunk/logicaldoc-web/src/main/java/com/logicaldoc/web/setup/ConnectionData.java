@@ -95,6 +95,7 @@ public class ConnectionData {
 
     public void setPassword(String password) {
         this.password = password;
+        System.err.println("setPassword: " + this.password);
     }
 
     public String getUser() {

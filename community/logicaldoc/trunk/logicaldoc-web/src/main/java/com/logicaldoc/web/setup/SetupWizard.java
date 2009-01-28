@@ -171,6 +171,14 @@ public class SetupWizard implements TabChangeListener {
 	}
 
 	public void createDB() {
+		
+		try {
+			log.fatal("createDB(): " + cdata.getPassword());
+		} catch (RuntimeException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		try {
 			ConnectionData intdata = null;
 
@@ -190,6 +198,12 @@ public class SetupWizard implements TabChangeListener {
 				intdata.setValidationQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS");
 			} else {
 				intdata = cdata;
+				try {
+					log.fatal("createDB(): " + intdata.getPassword());
+				} catch (RuntimeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 			// write the configuration for the db on the general context
@@ -215,6 +229,11 @@ public class SetupWizard implements TabChangeListener {
 		init.setUrl(dbdata.getDburl());
 		init.setUsername(dbdata.getUser());
 		init.setPassword(dbdata.getPassword());
+		
+		log.fatal(dbdata.getClazz());
+		log.fatal(dbdata.getDburl());
+		log.fatal(dbdata.getUser());
+		log.fatal(dbdata.getPassword());
 
 		if (init.testConnection()) {
 			// connection success
@@ -376,6 +395,7 @@ public class SetupWizard implements TabChangeListener {
 
 	public void setCdata(ConnectionData cdata) {
 		this.cdata = cdata;
+		log.fatal(cdata.getPassword());
 	}
 
 	public boolean isSetupSuccess() {
