@@ -22,6 +22,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.util.Constants;
+import com.logicaldoc.web.util.DownloadDocUtil;
 
 /**
  * This servlet is responsible for document downloads. It searches for the
@@ -111,9 +112,9 @@ public class DocumentDownload extends HttpServlet {
 				// if we have access to the document, return it
 				if (mdao.isReadEnable(folder.getId(), user.getId())) {
 					if ("true".equals(downloadText)) {
-						DownloadDocUtil.downloadDocumentText(response, doc.getId());
+						DownloadDocUtil.downloadDocumentText(request, response, doc.getId());
 					} else {
-						DownloadDocUtil.downloadDocument(response, doc.getId(), version);
+						DownloadDocUtil.downloadDocument(request, response, doc.getId(), version);
 
 						// add the file to the recent files of the user
 						DownloadDocUtil.addToRecentFiles(user.getId(), doc.getId());
@@ -128,7 +129,7 @@ public class DocumentDownload extends HttpServlet {
 					throw new Exception("Unknown user " + username);
 
 				if (mdao.isReadEnable(folder.getId(), user.getId())) {
-					DownloadDocUtil.downloadDocument(response, doc.getId(), version);
+					DownloadDocUtil.downloadDocument(request, response, doc.getId(), version);
 				}
 			} catch (Exception ex) {
 				logger.error(ex.getMessage(), ex);

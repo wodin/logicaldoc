@@ -16,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.web.util.DownloadDocUtil;
 
 /**
  * This servlet is responsible for document downloads using download tickets. It
@@ -70,7 +71,7 @@ public class TicketDownload extends HttpServlet {
 			DownloadTicket ticket = ticketDao.findByTicketId(ticketId);
 
 			if ((ticket != null) && (ticket.getDocId() != 0)) {
-				DownloadDocUtil.downloadDocument(response, ticket.getDocId(), null);
+				DownloadDocUtil.downloadDocument(request, response, ticket.getDocId(), null);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
