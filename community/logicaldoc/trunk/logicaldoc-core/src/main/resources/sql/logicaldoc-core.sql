@@ -32,14 +32,14 @@ alter table ld_version add constraint FK9B3BD9117C693DFD foreign key (ld_docid) 
 alter table ld_generic_ext add constraint FK913AF772CF5D92AF foreign key (ld_genid) references ld_generic(ld_id);
 alter table ld_group_ext add constraint FKB728EA5A76F11EA1 foreign key (ld_groupid) references ld_group(ld_id);
 
-alter table ld_ticket add constraint FK_TICKET_DOC foreign key (ld_docid) references ld_document on delete cascade;
-alter table ld_ticket add constraint FK_TICKET_USER foreign key (ld_userid) references ld_user on delete cascade;
-alter table ld_menugroup add constraint FK_MENUGROUP_GROUP foreign key (ld_groupid) references ld_group on delete cascade;
-alter table ld_userdoc add constraint FK_USERDOC_DOC foreign key (ld_docid) references ld_document on delete cascade;
-alter table ld_userdoc add constraint FK_USERDOC_USER foreign key (ld_userid) references ld_user on delete cascade;
-alter table ld_article add constraint FK_ARTICLE_DOC foreign key (ld_docid) references ld_document on delete cascade;
-alter table ld_menu add constraint FK_MENU_PARENT foreign key (ld_parentid) references ld_menu on delete cascade;
-alter table ld_history add constraint FK_HISTORY_DOC foreign key (ld_docid) references ld_document on delete cascade;
+alter table ld_ticket add constraint FK_TICKET_DOC foreign key (ld_docid) references ld_document(ld_id) on delete cascade;
+alter table ld_ticket add constraint FK_TICKET_USER foreign key (ld_userid) references ld_user(ld_id) on delete cascade;
+alter table ld_menugroup add constraint FK_MENUGROUP_GROUP foreign key (ld_groupid) references ld_group(ld_id) on delete cascade;
+alter table ld_userdoc add constraint FK_USERDOC_DOC foreign key (ld_docid) references ld_document(ld_id) on delete cascade;
+alter table ld_userdoc add constraint FK_USERDOC_USER foreign key (ld_userid) references ld_user(ld_id) on delete cascade;
+alter table ld_article add constraint FK_ARTICLE_DOC foreign key (ld_docid) references ld_document(ld_id) on delete cascade;
+alter table ld_menu add constraint FK_MENU_PARENT foreign key (ld_parentid) references ld_menu(ld_id) on delete cascade;
+alter table ld_history add constraint FK_HISTORY_DOC foreign key (ld_docid) references ld_document(ld_id) on delete cascade;
 
 create unique index  AK_DOCUMENT on ld_document (ld_customid);
 create unique index  AK_USER on ld_user (ld_username);
