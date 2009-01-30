@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  
+	Context definition of the core plugin
+	@author Matteo Caruso - Logical Objects
+	@since 4.0
+-->
+<!DOCTYPE beans SYSTEM "spring-beans-2.0.dtd">
+<beans default-lazy-init="false" default-autowire="no"
+	default-dependency-check="none">
+
+	<!--DAOs-->
+	<bean id="EmailAccountDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.email.dao.HibernateEmailAccountDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+				<property name="cacheManager" ref="EmailCacheManager" />
+			</bean>
+		</property>
+	</bean>
+
+	<!-- Mail receiver -->
+	<bean id="EmailCrawler"
+		class="com.logicaldoc.email.EmailCrawler">
+		<property name="defaultOwner">
+			<value>_email</value>
+		</property>
+		<property name="accountDao" ref="EmailAccountDAO" />
+		<property name="menuDao" ref="MenuDAO" />
+		<property name="userDao" ref="UserDAO" />
+		<property name="documentDao" ref="DocumentDAO" />
+		<property name="documentLinkDao" ref="DocumentLinkDAO" />
+		<property name="templateDao" ref="DocumentTemplateDAO" />
+		<property name="historyDao" ref="HistoryDAO" />
+		<property name="indexer" ref="Indexer" />
+		<property name="storer" ref="Storer" />
+		<property name="settingsConfig" ref="SettingsConfig" />
+		<property name="cacheManager" ref="EmailCacheManager" />
+	</bean>
+
+	<bean id="EmailCrawlerJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="EmailCrawler" />
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="EmailCrawlerTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="jobDetail" ref="EmailCrawlerJob" />
+		<property name="cronExpression">
+			<value>${schedule.cron.EmailCrawler}</value>
+		</property>
+	</bean>
+	
+	<bean id="EmailCacheManager"
+		class="com.logicaldoc.email.EmailCacheManager">
+	</bean>
+	
+	<!-- Faces -->
+	<bean id="AccountsRecordsManager"
+		class="com.logicaldoc.email.web.AccountsRecordsManager">
+	</bean>
+
+	<bean id="AccountForm"
+		class="com.logicaldoc.email.web.AccountForm">
+		<property name="cacheManager" ref="EmailCacheManager" />
+	</bean>
+</beans>

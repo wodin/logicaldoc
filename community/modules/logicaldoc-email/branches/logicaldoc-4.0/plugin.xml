@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="logicaldoc-email" version="4.0.0" class="com.logicaldoc.email.EmailPlugin">
+	<requires>
+		<import plugin-id="logicaldoc-core" />
+	</requires>
+	<runtime>
+		<library id="email" path="classes/" type="code">
+			<export prefix="*" />
+		</library>
+	</runtime>
+	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="emailDbInit">
+		<parameter id="position" value="5" />
+		<parameter id="name" value="logicaldoc-email" />
+		<parameter id="sqlFile" value="sql/logicaldoc-email.sql" />
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="Task" id="emailTask">
+		<parameter id="name" value="EmailCrawler" />
+	</extension>
+</plugin>

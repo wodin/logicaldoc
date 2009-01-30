@@ -1,0 +1,27 @@
+<project name="logicaldoc-email" default="deploy" basedir="." xmlns:artifact="urn:maven-artifact-ant">
+	<property file="${user.home}/logicaldoc-dev.properties" />
+	<import file="${logicaldoc.devroot}/build/ant/build.xml" />
+
+	<target name="deploy" depends="init-all" description="Updates a deployed webapp">
+		<echo message="Deploying ${pom.artifactId} to webapp" />
+		<artifact:pom file="pom.xml" id="pom" />
+		<property name="pluginDir" value="${logicaldoc.webroot}/WEB-INF/.plugins/${pom.artifactId}@${pom.version}" />
+		<copy todir="${pluginDir}/classes">
+			<fileset dir="target/classes">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		
+		<echo message="Deploying webapp files" />
+		<copy todir="${logicaldoc.webroot}" verbose="true">
+			<fileset dir="src/main/webapp">
+				<include name="**" />
+				<exclude name="**/.*" />
+				<exclude name="WEB-INF/lib/**" />
+				<exclude name="WEB-INF/classes/**" />
+			</fileset>
+		</copy>
+		
+		<echo message="${pom.artifactId} is deployed" />
+	</target>
+</project>

@@ -1,0 +1,23 @@
+<assembly>
+	<id>plugin</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>target/classes</directory>
+			<outputDirectory>classes</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>target/webapp</directory>
+			<outputDirectory>webapp</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<includes>
+				<include>plugin.xml</include>
+			</includes>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+	</fileSets>
+</assembly>

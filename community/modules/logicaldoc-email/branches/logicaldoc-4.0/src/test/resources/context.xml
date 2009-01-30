@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans SYSTEM "spring-beans-2.0.dtd">
+<beans default-lazy-init="false" default-autowire="no"
+	default-dependency-check="none">
+	<import resource="classpath*:context-core.xml" />
+	<import resource="classpath*:context-email.xml" />
+
+	<!-- This post processor ensures placeholders substitutions -->
+	<bean id="PropertyPlaceholderConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		lazy-init="false" abstract="false" autowire="default"
+		dependency-check="default">
+		<property name="locations">
+			<list>
+				<value>classpath*:context.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="Context" class="com.logicaldoc.util.Context"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default" />
+
+	<bean id="SettingsConfig"
+		class="com.logicaldoc.util.config.SettingsConfig" abstract="false"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="settings">
+			<props>
+				<prop key="LOGICALDOC_REPOSITORY">
+					${user.home}/logicaldoc
+				</prop>
+				<prop key="LOGICALDOC_REPOSITORY.category">
+					directory
+				</prop>
+				<prop key="docdir">
+					${user.home}/logicaldoc/data/docs/
+				</prop>
+				<prop key="docdir.category">directory</prop>
+				<prop key="indexdir">
+					${user.home}/logicaldoc/data/index/
+				</prop>
+				<prop key="indexdir.category">directory</prop>
+				<prop key="userdir">
+					${user.home}/logicaldoc/data/users/
+				</prop>
+				<prop key="userdir.category">directory</prop>
+				<prop key="sxcontent">content.xml</prop>
+				<prop key="sxcontent.category">search</prop>
+				<prop key="kocontent">maindoc.xml</prop>
+				<prop key="kocontent.category">search</prop>
+				<prop key="enablerest">false</prop>
+				<prop key="enablerest.category">webservice</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="MimeTypeConfig"
+		class="com.logicaldoc.util.config.MimeTypeConfig" abstract="false"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="mimeTypes">
+			<props>
+				<prop key="pdf">application/pdf</prop>
+				<prop key="doc">application/msword</prop>
+				<prop key="dot">application/msword</prop>
+				<prop key="sxw">application/vnd.sun.xml.writer</prop>
+				<prop key="stw">
+					application/vnd.sun.xml.writer.template
+				</prop>
+				<prop key="sxg">
+					application/vnd.sun.xml.writer.global
+				</prop>
+				<prop key="sxc">application/vnd.sun.xml.calc</prop>
+				<prop key="stc">
+					application/vnd.sun.xml.calc.template
+				</prop>
+				<prop key="sxi">application/vnd.sun.xml.impress</prop>
+				<prop key="sti">
+					application/vnd.sun.xml.impress.template
+				</prop>
+				<prop key="sxd">application/vnd.sun.xml.draw</prop>
+				<prop key="std">
+					application/vnd.sun.xml.draw.template
+				</prop>
+				<prop key="sxm">application/vnd.sun.xml.math</prop>
+				<prop key="kwd">application/x-kword</prop>
+				<prop key="ksp">application/x-kspread</prop>
+				<prop key="kpr">application/x-kpresenter</prop>
+				<prop key="rtf">text/rtf</prop>
+				<prop key="ps">application/postscript</prop>
+				<prop key="xls">application/msexcel</prop>
+				<prop key="xlt">application/msexcel</prop>
+				<prop key="ppt">application/mspowerpoint</prop>
+				<prop key="pps">application/mspowerpoint</prop>
+				<prop key="pot">application/mspowerpoint</prop>
+				<prop key="html">text/html</prop>
+				<prop key="htm">text/html</prop>
+				<prop key="txt">text/plain</prop>
+				<prop key="mail">text/plain</prop>
+				<prop key="dbf">application/msexcel</prop>
+				<prop key="jpg">image/jpeg</prop>
+				<prop key="jpeg">image/jpeg</prop>
+				<prop key="png">image/png</prop>
+				<prop key="gif">image/gif</prop>
+				<prop key="tif">image/tiff</prop>
+				<prop key="tiff">image/tiff</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- DataSource -->
+	<bean id="DataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>org.hsqldb.jdbcDriver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:hsqldb:mem:logicaldoc</value>
+		</property>
+		<property name="username">
+			<value>sa</value>
+		</property>
+		<property name="password">
+			<value></value>
+		</property>
+		<property name="initialSize" value="3" />
+		<property name="validationQuery">
+			<value></value>
+		</property>
+	</bean>
+
+	<!-- Hibernate SessionFactory -->
+	<bean id="SessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="dataSource">
+			<ref bean="DataSource" />
+		</property>
+
+		<property name="mappingResources">
+			<list>
+				<value>/mappings/User.hbm.xml</value>
+				<value>/mappings/Menu.hbm.xml</value>
+				<value>/mappings/Group.hbm.xml</value>
+				<value>/mappings/UserDoc.hbm.xml</value>
+				<value>/mappings/History.hbm.xml</value>
+				<value>/mappings/Article.hbm.xml</value>
+				<value>/mappings/Document.hbm.xml</value>
+				<value>/mappings/DocumentTemplate.hbm.xml</value>
+				<value>/mappings/EmailAccount.hbm.xml</value>
+				<value>/mappings/SystemMessage.hbm.xml</value>
+			</list>
+		</property>
+
+		<property name="hibernateProperties">
+			<props>
+				<!-- 
+					<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				-->
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.HSQLDialect
+				</prop>
+				<prop key="hibernate.cache.use_second_level_cache">
+					true
+				</prop>
+				<prop key="hibernate.cache.provider_class">
+					org.hibernate.cache.EhCacheProvider
+				</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<!--Transaction management-->
+	<bean id="TransactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="sessionFactory">
+			<ref bean="SessionFactory" />
+		</property>
+	</bean>
+
+	<!--Transactional proxy-->
+	<bean id="ApplicationBaseTransactionProxy"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		lazy-init="true" abstract="false" autowire="default"
+		dependency-check="default">
+		<property name="transactionManager">
+			<ref bean="TransactionManager" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="load*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="has*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="initialize">
+					PROPAGATION_REQUIRED,readOnly
+				</prop>
+				<prop key="exists">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="store*">PROPAGATION_REQUIRED</prop>
+				<prop key="insert*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="remove*">PROPAGATION_REQUIRED</prop>
+				<prop key="assign*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="Scheduler"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="IndexOptimizerTrigger" />
+			</list>
+		</property>
+	</bean>
+</beans>

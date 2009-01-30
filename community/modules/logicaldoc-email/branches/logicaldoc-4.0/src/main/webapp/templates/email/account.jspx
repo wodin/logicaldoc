@@ -1,0 +1,245 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page is the account editing form
+  
+ @author Matteo Caruso - Logical Objects
+ @since 4.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="AccountForm">
+<f:loadBundle
+		basename="i18n.application-email"
+		var="email_msgs" />
+
+	<ice:panelGroup styleClass="center formBorderHighlight"
+		style="text-align:left; width: 600px;">
+		<ice:panelGroup>
+			<!-- Account data -->
+			<ice:panelGroup>
+				<h3>
+					<ice:outputText value="#{email_msgs['logicaldoc-email.account.data']}" />
+					<br />
+					<br />
+				</h3>
+				<ice:panelGrid columns="5"
+					onkeypress="return submitOnEnter(buttonSave, event);">
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="mailaddress"
+							value="#{email_msgs['logicaldoc-email.account.mailaddress']}*: " />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="mailaddress"
+							label="#{msgs['errors.header.alert.key']}" tabindex="1"
+							value="#{AccountForm.account.mailAddress}" maxlength="255"
+							size="25" binding="#{AccountForm.mailAddress}"
+							onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+							required="true" />
+						<br />
+						<ice:message for="mailaddress" />
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup />
+					<ice:panelGroup />
+
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="accountUser"
+							value="#{msgs['username']}*: " />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="accountUser"
+							label="#{msgs['errors.header.alert.key']}" tabindex="1"
+							value="#{AccountForm.account.userName}" maxlength="255"
+							size="15" binding="#{AccountForm.accountUser}"
+							onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+							required="true" />
+						<br />
+						<ice:message for="accountUser" />
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="accountPassword"
+							value="#{msgs['password']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputSecret id="accountPassword" tabindex="1"
+							value="#{AccountForm.password}" style="width:150px"
+							onkeypress="return submitOnEnter(buttonSave, event);"
+							maxlength="255" size="15" redisplay="true"
+							binding="#{AccountForm.accountPassword}"
+							rendered="#{AccountForm.emptyPassword}" />
+						<ice:commandLink action="#{AccountForm.removePassword}"
+							rendered="#{!AccountForm.emptyPassword}" immediate="true"
+							partialSubmit="true">
+							<ice:outputText styleClass="iceMsgError"
+								value="  #{msgs['password.remove']}" />
+						</ice:commandLink>
+						<br />
+						<ice:message for="accountPassword" />
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+
+			<!-- Incoming data -->
+			<ice:panelGroup>
+				<hr />
+				<h3>
+					<ice:outputText value="#{email_msgs['logicaldoc-email.account.incoming']}" />
+					<br />
+					<br />
+				</h3>
+				<ice:panelGrid columns="5"
+					onkeypress="return submitOnEnter(buttonSave, event);">
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="protocol"
+							value="#{email_msgs['logicaldoc-email.account.protocol']}*: " />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:selectOneMenu id="protocol"
+							label="#{msgs['errors.header.alert.key']}"
+							styleClass="selectTagMenu" tabindex="1"
+							onkeypress="return submitOnEnter(buttonSave, event);"
+							value="#{AccountForm.account.provider}"
+							binding="#{AccountForm.provider}">
+							<f:selectItem itemValue="pop3"
+								itemLabel="#{email_msgs['logicaldoc-email.account.in.pop3']}" />
+							<f:selectItem itemValue="imap"
+								itemLabel="#{email_msgs['logicaldoc-email.account.in.imap']}" />
+						</ice:selectOneMenu>
+						<br />
+						<ice:message for="protocol" />
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="deleteFromMailbox"
+							value="#{email_msgs['logicaldoc-email.account.deleteFromMailbox']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:selectOneMenu id="deleteFromMailbox" tabindex="1"
+							onkeypress="return submitOnEnter(buttonSave, event);"
+							style="width:50px" styleClass="selectTagMenu"
+							value="#{AccountForm.account.deleteFromMailbox}"
+							binding="#{AccountForm.deleteFromMailbox}">
+							<f:selectItems value="#{selectionTags.yesNo}" />
+						</ice:selectOneMenu>
+						<ice:message for="deleteFromMailbox" />
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="host" value="#{msgs['host']}*: " />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="host"
+							label="#{msgs['errors.header.alert.key']}"
+							value="#{AccountForm.account.host}" tabindex="1"
+							onkeypress="return submitOnEnter(buttonSave, event);"
+							style="width:250px"
+							maxlength="255" size="25" binding="#{AccountForm.host}"
+							onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+							required="true" />
+						<br />
+						<ice:message for="host" />
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="port" value="#{msgs['msg.jsp.port']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="port" tabindex="1"
+							value="#{AccountForm.account.port}"
+							onkeypress="return submitOnEnter(buttonSave, event);"
+							maxlength="5" size="5" binding="#{AccountForm.port}" />
+						<br />
+						<ice:message for="port" />
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+
+			<!-- Storage data -->
+			<ice:panelGroup>
+				<hr />
+				<h3>
+					<ice:outputText value="#{email_msgs['logicaldoc-email.account.storage']}" />
+					<br />
+					<br />
+				</h3>
+				<ice:panelGrid columns="5"
+					onkeypress="return submitOnEnter(buttonSave, event);">
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="allowedTypes"
+							value="#{email_msgs['logicaldoc-email.account.allowedTypes']}*: " />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="allowedTypes"
+							label="#{msgs['errors.header.alert.key']}" tabindex="1"
+							onkeypress="return submitOnEnter(buttonSave, event);"
+							style="width:250px" maxlength="255" size="25"
+							binding="#{AccountForm.allowedTypes}"
+							value="#{AccountForm.account.allowedTypes}"
+							onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+							required="true" />
+						<br />
+						<ice:message for="allowedTypes" />
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="language"
+							value="#{msgs['language']}*: " />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:selectOneMenu id="language"
+							label="#{msgs['errors.header.alert.key']}"
+							styleClass="selectTagMenu" tabindex="1"
+							onkeypress="return submitOnEnter(buttonSave, event);"
+							value="#{AccountForm.account.language}"
+							binding="#{AccountForm.language}">
+							<f:selectItems value="#{selectionTags.languages}" />
+						</ice:selectOneMenu>
+						<ice:message for="language" />
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:panelGrid columns="2"
+					onkeypress="return submitOnEnter(buttonSave, event);">
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="accountTree"
+							value="#{email_msgs['logicaldoc-email.account.targetFolder']}*: " />
+						<ice:outputText value="#{AccountForm.targetDirectoryName}"  />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ldoc:folderselector directoryModel="#{AccountForm.directoryModel}"
+							showSelector="#{AccountForm.showFolderSelector}"
+							openListener="#{AccountForm.openFolderSelector}"
+							confirmListener="#{AccountForm.folderSelected}"
+							closeListener="#{AccountForm.closeFolderSelector}" />
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+		</ice:panelGroup>
+		<hr />
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['cache.clear']}" tabindex="1"
+				action="#{AccountForm.deleteCache}" id="deleteCache"
+				onclick="if (!confirm(&quot;#{msgs['cache.clear.question']}&quot;)) return false;"/>
+			<ice:commandButton value="#{msgs['abort']}" tabindex="1"
+				action="#{AccountsRecordsManager.list}" partialSubmit="true"
+				immediate="true" />
+			<ice:commandButton value="#{msgs['save']}" tabindex="1" id="save"
+				action="#{AccountForm.save}" />
+		</ice:panelGroup>
+	</ice:panelGroup>
+
+	<script defer="defer" type="text/javascript" language="javascript">
+      /**
+       * Set initial focus
+       */
+      document.getElementById('AccountForm:mailaddress').focus();
+    </script>
+</jsp:root>
