@@ -10,6 +10,7 @@ import javax.faces.component.UIInput;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.el.MethodBinding;
+import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.lang.StringUtils;
@@ -32,7 +33,7 @@ public class FacesUtil {
 			str = "#{" + str;
 		if (!str.endsWith("}"))
 			str = str + "}";
-		methodBinding = FacesContext.getCurrentInstance().getApplication().createMethodBinding(str, args);		
+		methodBinding = FacesContext.getCurrentInstance().getApplication().createMethodBinding(str, args);
 		return methodBinding;
 	}
 
@@ -50,6 +51,18 @@ public class FacesUtil {
 		return methodBinding;
 	}
 
+	public static ValueBinding createValueBinding(String valueExpression) {
+		ValueBinding valueBinding = null;
+
+		String str = valueExpression;
+		if (!str.startsWith("#{"))
+			str = "#{" + str;
+		if (!str.endsWith("}"))
+			str = str + "}";
+		valueBinding = FacesContext.getCurrentInstance().getApplication().createValueBinding(str);
+		return valueBinding;
+	}
+	
 	/**
 	 * Get an external bean from FacesContext
 	 * 
@@ -134,10 +147,10 @@ public class FacesUtil {
 		}
 		return messagesShown;
 	}
-	
+
 	public static final void forceRefresh(UIInput control) {
- 		control.setSubmittedValue(null);
- 		control.setValue(null);
- 		control.setLocalValueSet(false);
- 	}
+		control.setSubmittedValue(null);
+		control.setValue(null);
+		control.setLocalValueSet(false);
+	}
 }
