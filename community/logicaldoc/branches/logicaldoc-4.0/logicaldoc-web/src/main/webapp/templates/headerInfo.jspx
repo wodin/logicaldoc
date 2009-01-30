@@ -1,0 +1,21 @@
+<?xml version = '1.0'?>
+<!-- 
+ The navigation menu
+  
+ @author Marco Meschieri
+ @version $Id: headerInfo.jspx,v 1.2 2006/08/29 16:33:46 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+	id="headerInfo">
+	<ice:outputText styleClass="headerInfoText"
+		value="#{msgs['username']}: "></ice:outputText>
+	<ice:outputText styleClass="headerInfoText" value="#{authUser}"></ice:outputText>
+</jsp:root>

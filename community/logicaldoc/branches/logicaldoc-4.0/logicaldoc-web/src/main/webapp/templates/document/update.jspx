@@ -1,0 +1,359 @@
+<?xml version = '1.0'?>
+<!--
+ Document's update form
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
+
+	<script type="text/javascript" language="javascript">
+	   function cleanAttributes() {
+	        var e=document.getElementsByTagName("input");
+
+			for(var i=0; i &lt; e.length ;i++){
+				if(e[i].type=='text' &amp;&amp; e[i].id.contains('attribute'))
+				  e[i].value='';			 
+			}
+			return true;
+	   }
+	</script>
+
+	<!-- Core data -->
+	<ice:panelGroup>
+		<h3>
+			<ice:outputText value="#{msgs['msg.jsp.editdoc']}" />
+			<br />
+			<br />
+		</h3>
+		<ice:panelGrid columns="2">
+			<ice:panelGrid columns="2">
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="title" value="#{msgs['document.title']}*" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="title"
+						label="#{msgs['errors.header.alert.key']}" tabindex="1"
+						value="#{documentForm.title}" maxlength="255" size="38"
+						onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+						required="true" disabled="#{documentForm.readOnly}"
+						immediate="true" />
+					<ice:message for="title" />
+				</ice:panelGroup>
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="keywords"
+						rendered="#{!fieldPreferences['edit.keywords.hidden']}"
+						value="#{msgs['tags']} #{fieldPreferences['edit.keywords.mandatory'] ? '*':''}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="keywords"
+						rendered="#{!fieldPreferences['edit.keywords.hidden']}"
+						value="#{documentForm.keywords}"
+						binding="#{documentForm.keywordsInput}" tabindex="1"
+						maxlength="255" size="38"
+						required="#{fieldPreferences['edit.keywords.mandatory']}"
+						disabled="#{documentForm.readOnly or fieldPreferences['edit.keywords.readonly']}" />
+					<ice:message for="keywords" />
+				</ice:panelGroup>
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="customId"
+						rendered="#{!fieldPreferences['edit.customId.hidden'] and !fieldPreferences['edit.customId.readonly']}"
+						value="#{msgs['document.customid']} #{fieldPreferences['edit.customId.mandatory'] ? '*':''}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="customId"
+						rendered="#{!fieldPreferences['edit.customId.hidden'] and !fieldPreferences['edit.customId.readonly']}"
+						value="#{documentForm.customId}" tabindex="1"
+						maxlength="255" size="38"
+						required="#{fieldPreferences['edit.customId.mandatory']}"
+						disabled="#{documentForm.readOnly}" />
+					<ice:message for="customId" />
+				</ice:panelGroup>
+			</ice:panelGrid>
+
+			<!-- Read only data -->
+			<ice:panelGroup style="margin-left:15px; valign:top;">
+				<ice:panelGrid columns="5" cellpadding="2">
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['upload.filename']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.record.document.fileName}"
+							style="font-weight: bold">
+						</ice:outputText>
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['version']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.record.document.version}"
+							style="font-weight: bold" />
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['msg.jsp.publishedon']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.docDate}"
+							style="font-weight: bold">
+							<f:convertDateTime pattern="#{loc.dateFormatHM}"
+								timeZone="#{StyleBean.timeZone}" />
+						</ice:outputText>
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['msg.jsp.publishedby']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.record.document.publisher}"
+							style="font-weight: bold" />
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['document.id']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.record.document.id}"
+							style="font-weight: bold" />
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['document.customid']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.record.customId}"
+							style="font-weight: bold" />
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['document.createdon']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.record.creationDate}"
+							style="font-weight: bold">
+							<f:convertDateTime pattern="#{loc.dateFormatHM}"
+								timeZone="#{StyleBean.timeZone}" />
+						</ice:outputText>
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+
+		</ice:panelGrid>
+	</ice:panelGroup>
+
+	<!-- Source data -->
+	<ice:panelGroup>
+		<hr />
+		<h3>
+			<ice:outputText value="#{msgs['msg.jsp.sourcedata']}" />
+			<br />
+			<br />
+		</h3>
+		<ice:panelGrid columns="5">
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="sourceDate"
+					rendered="#{!fieldPreferences['edit.sourceDate.hidden']}"
+					value="#{msgs['date']} #{fieldPreferences['edit.sourceDate.mandatory'] ? '*':''}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectInputDate id="sourceDate"
+					rendered="#{!fieldPreferences['edit.sourceDate.hidden']}"
+					tabindex="1" popupDateFormat="#{loc.dateFormatShort}"
+					value="#{documentForm.sourceDate}"
+					binding="#{documentForm.sourceDateInput}" renderAsPopup="true"
+					required="#{fieldPreferences['edit.keywords.mandatory']}"
+					disabled="#{documentForm.readOnly or fieldPreferences['edit.keywords.readonly']}">
+					<f:convertDateTime pattern="#{loc.dateFormatShort}"
+						timeZone="#{timezone}" />
+				</ice:selectInputDate>
+				<ice:message for="sourceDate" />
+			</ice:panelGroup>
+			<ice:panelGroup style="width:20px" />
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="sourceId"
+					rendered="#{!fieldPreferences['edit.sourceId.hidden']}"
+					value="#{msgs['document.sourceid']} #{fieldPreferences['edit.sourceId.mandatory'] ? '*':''}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="sourceId" tabindex="1"
+					rendered="#{!fieldPreferences['edit.sourceId.hidden']}"
+					value="#{documentForm.sourceId}"
+					binding="#{documentForm.sourceIdInput}" maxlength="255"
+					required="#{fieldPreferences['edit.sourceId.mandatory']}"
+					disabled="#{documentForm.readOnly or fieldPreferences['edit.sourceId.readonly']}"
+					onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}" />
+				<ice:message for="sourceId" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="source"
+					rendered="#{!fieldPreferences['edit.source.hidden']}"
+					value="#{msgs['document.source']} #{fieldPreferences['edit.source.mandatory'] ? '*':''}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="source"
+					rendered="#{!fieldPreferences['edit.source.hidden']}"
+					label="#{msgs['errors.header.alert.key']}" tabindex="1"
+					value="#{documentForm.source}"
+					binding="#{documentForm.sourceInput}" maxlength="255"
+					onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+					required="#{fieldPreferences['edit.source.mandatory']}"
+					disabled="#{documentForm.readOnly or fieldPreferences['edit.source.readonly']}" />
+				<ice:message for="source" />
+			</ice:panelGroup>
+			<ice:panelGroup style="width:20px" />
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="sourceAuthor"
+					rendered="#{!fieldPreferences['edit.sourceAuthor.hidden']}"
+					value="#{msgs['document.author']} #{fieldPreferences['edit.sourceAuthor.mandatory'] ? '*':''}" />
+			</ice:panelGroup>
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:inputText id="sourceAuthor" tabindex="1"
+					rendered="#{!fieldPreferences['edit.sourceAuthor.hidden']}"
+					value="#{documentForm.sourceAuthor}"
+					binding="#{documentForm.sourceAuthorInput}" maxlength="255"
+					required="#{fieldPreferences['edit.sourceAuthor.mandatory']}"
+					disabled="#{documentForm.readOnly or fieldPreferences['edit.sourceAuthor.readonly']}" />
+				<ice:message for="sourceAuthor" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="coverage"
+					rendered="#{!fieldPreferences['edit.coverage.hidden']}"
+					value="#{msgs['document.coverage']} #{fieldPreferences['edit.coverage.mandatory'] ? '*':''}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="coverage" tabindex="1"
+					rendered="#{!fieldPreferences['edit.coverage.hidden']}"
+					value="#{documentForm.coverage}"
+					binding="#{documentForm.coverageInput}" maxlength="255"
+					required="#{fieldPreferences['edit.coverage.mandatory']}"
+					disabled="#{documentForm.readOnly or fieldPreferences['edit.coverage.readonly']}" />
+				<ice:message for="coverage" />
+			</ice:panelGroup>
+			<ice:panelGroup style="width:20px" />
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="sourceType"
+					rendered="#{!fieldPreferences['edit.sourceType.hidden']}"
+					value="#{msgs['document.type']} #{fieldPreferences['edit.sourceType.mandatory'] ? '*':''}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="sourceType"
+					rendered="#{!fieldPreferences['edit.sourceType.hidden']}"
+					tabindex="1" value="#{documentForm.sourceType}"
+					binding="#{documentForm.sourceTypeInput}" maxlength="255"
+					required="#{fieldPreferences['edit.sourceType.mandatory']}"
+					disabled="#{documentForm.readOnly or fieldPreferences['edit.sourceType.readonly']}" />
+				<ice:message for="sourceType" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="recipient"
+					rendered="#{!fieldPreferences['edit.recipient.hidden']}"
+					value="#{msgs['document.recipient']} #{fieldPreferences['edit.recipient.mandatory'] ? '*':''}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="recipient"
+					rendered="#{!fieldPreferences['edit.recipient.hidden']}"
+					tabindex="1" value="#{documentForm.recipient}"
+					binding="#{documentForm.recipientInput}" maxlength="255"
+					required="#{fieldPreferences['edit.recipient.mandatory']}"
+					disabled="#{documentForm.readOnly or fieldPreferences['edit.recipient.readonly']}" />
+				<ice:message for="recipient" />
+			</ice:panelGroup>
+			<ice:panelGroup style="width:20px"/>
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="language"
+					value="#{msgs['language']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectOneMenu styleClass="selectTagMenu" tabindex="1"
+					value="#{documentForm.language}"
+					disabled="#{documentForm.readOnly}">
+					<f:selectItems value="#{selectionTags.languages}" />
+				</ice:selectOneMenu>
+			</ice:panelGroup>
+			
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="object"
+					rendered="#{!fieldPreferences['edit.object.hidden']}"
+					value="#{msgs['document.object']} #{fieldPreferences['edit.object.mandatory'] ? '*':''}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="object"
+					rendered="#{!fieldPreferences['edit.object.hidden']}" tabindex="1"
+					value="#{documentForm.object}"
+					binding="#{documentForm.objectInput}" maxlength="255"
+					required="#{fieldPreferences['edit.object.mandatory']}"
+					disabled="#{documentForm.readOnly or fieldPreferences['edit.object.readonly']}" />
+				<ice:message for="object" />
+			</ice:panelGroup>
+		</ice:panelGrid>
+	</ice:panelGroup>
+
+
+	<!-- Template data -->
+	<ice:panelGroup>
+		<hr />
+		<h3>
+			<ice:outputText value="#{msgs['template.data']}"
+				rendered="#{!fieldPreferences['edit.template.hidden']}" />
+			<br />
+			<br />
+		</h3>
+		<ice:panelGrid columns="5">
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="template"
+					rendered="#{!fieldPreferences['edit.template.hidden']}"
+					value="#{msgs['template']} #{fieldPreferences['edit.template.mandatory'] ? '*':''}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectOneMenu id="template" styleClass="selectTagMenu"
+					rendered="#{!fieldPreferences['edit.template.hidden']}"
+					tabindex="1" value="#{documentForm.template}"
+					required="#{fieldPreferences['edit.template.mandatory']}"
+					disabled="#{documentForm.readOnly or fieldPreferences['edit.template.readonly']}"
+					valueChangeListener="#{documentForm.changeTemplate}"
+					binding="#{documentForm.templateInput}"
+					partialSubmit="true">
+					<f:selectItem itemValue="" itemLabel="" />
+					<f:selectItems value="#{selectionTags.templates}" />
+				</ice:selectOneMenu>
+				<ice:message for="template" />
+			</ice:panelGroup>
+			<ice:panelGroup style="width:20px" />
+			<ice:panelGroup />
+			<ice:panelGroup />
+		</ice:panelGrid>
+
+		<!-- Extended Attributes -->
+		<ice:panelGroup rendered="#{documentForm.extendedAttributesCount >0}">
+			<ice:dataTable id="attributesList"
+				value="#{documentForm.extendedAttributes}" var="entry"
+				cellpadding="0" rows="9999" columnClasses="smallColumn,smallColumn">
+				<!-- Name -->
+				<ice:column>
+					<ice:panelGroup>
+						<ice:outputText value="#{entry.name}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Value -->
+				<ice:column>
+					<ice:panelGroup>
+						<ice:inputText id="attribute-#{entry.name}" value="#{entry.value}"
+							maxlength="255" disabled="#{documentForm.readOnly}" />
+					</ice:panelGroup>
+				</ice:column>
+			</ice:dataTable>
+		</ice:panelGroup>
+	</ice:panelGroup>
+</jsp:root>
