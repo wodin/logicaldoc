@@ -10,12 +10,19 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC CE 4.0 (2009-01-30; logicaldoc-4.0)
+===============
+WebDAV: full implementation
+File names: Handle all asian and arabic charsets
+Seup procecude: Fixed schema creation on external db
+Interface fixes
+
 LogicalDOC CE 4.0 RC2 (2009-01-08; logicaldoc-4.0RC2)
 ===============
 Ability to define fields viewable and editable by group of users
 WebDAV: implemented rename on the Document's filename
 
-                     
+
 LogicalDOC CE 4.0 RC1 (2008-12-12; logicaldoc-4.0RC1)
 ===============
 New WebDAV accessible interface (Thanks to Sebastian Wenzky)
@@ -32,5 +39,3 @@ Improved Tag browsing
 New Permission management on menus
 New Support for eastern Europe charsets
 New Possibility to mark a document as immutable
-
-
