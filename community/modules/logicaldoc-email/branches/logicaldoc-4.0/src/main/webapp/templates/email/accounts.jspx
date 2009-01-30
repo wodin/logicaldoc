@@ -1,0 +1,115 @@
+<?xml version = '1.0'?>
+<!-- 
+ Accounts listing
+  
+ @author Matteo Caruso - Logical Objects
+ @since 4.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+	styleClass="center" style="width:600px">
+	<f:loadBundle basename="i18n.application-email" var="email_msgs" />
+
+	<script type="text/javascript" language="javascript">
+       var buttonSave;
+    </script>
+
+	<ice:messages globalOnly="true" />
+	<ice:panelStack selectedPanel="#{AccountsRecordsManager.selectedPanel}">
+		<ice:panelGroup id="list">
+			<ice:form id="accountsForm" style="text-align:left;">
+				<ice:panelGrid columns="4">
+					<ice:panelGroup>
+						<ice:commandLink action="#{AccountsRecordsManager.addAccount}"
+							onclick="buttonSave='w-account:AccountForm:save'"
+							title="#{email_msgs['logicaldoc-email.account.add']}">
+							<ice:graphicImage value="#{StyleBean.imagesPath}/mailbox_add.png"
+								style="border: 0px solid;"
+								alt="#{email_msgs['logicaldoc-email.account.add']}" />
+						</ice:commandLink>
+					</ice:panelGroup>
+				</ice:panelGrid>
+
+				<!-- Basic table -->
+				<ice:panelGroup styleClass="formBorderHighlight" style="width:600px"
+					rendered="#{AccountsRecordsManager.count > 0}">
+					<ice:dataTable id="accountsList"
+						value="#{AccountsRecordsManager.accounts}" var="account"
+						cellpadding="0" rows="15" width="97%"
+						columnClasses="titleColumn,dateColumn,dateColumn,dateColumn">
+
+						<!-- Name -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText
+									value="#{email_msgs['logicaldoc-email.account']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{account.mailAddress}" />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Edit -->
+						<ice:column>
+							<ice:commandButton image="#{StyleBean.imagesPath}/options.gif"
+								title="#{email_msgs['logicaldoc-email.account.edit']}"
+								action="#{AccountsRecordsManager.edit}" styleClass="" />
+						</ice:column>
+
+						<!-- Enabled -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['enabled']}" />
+							</f:facet>
+							<ice:panelGroup style="text-align:center">
+								<ice:commandButton image="#{StyleBean.imagesPath}/2.gif"
+									action="#{AccountsRecordsManager.enable}" styleClass=""
+									rendered="#{account.enabled==0}"
+									title="#{msgs['disabled']}: #{msgs['enable']}" />
+								<ice:commandButton image="#{StyleBean.imagesPath}/0.gif"
+									action="#{AccountsRecordsManager.disable}" styleClass=""
+									rendered="#{account.enabled>0}"
+									title="#{msgs['enabled']}: #{msgs['disable']}" />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Delete -->
+						<ice:column>
+							<ice:panelGroup>
+								<ice:commandLink action="#{AccountsRecordsManager.delete}"
+									onclick="if (!confirm(&quot;#{email_msgs['logicaldoc-email.account.question.delete']}&quot;)) return false;">
+									<ice:graphicImage value="#{StyleBean.imagesPath}/delete.gif"
+										title="#{msgs['delete']}" style="border: 0px solid;" />
+									<f:param name="accountId" value="#{account.id}" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+					</ice:dataTable>
+
+					<ice:panelGroup>
+						<ldoc:paginator table="accountsList"
+							label="#{msgs['paginator.simple']}" />
+						<br />
+					</ice:panelGroup>
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="formBorderHighlight"
+					rendered="#{AccountsRecordsManager.count &lt; 1}">
+					<ice:outputText value="#{msgs['noelements']}" />
+				</ice:panelGroup>
+			</ice:form>
+		</ice:panelGroup>
+
+		<ice:panelGroup id="edit" styleClass="center">
+			<f:subview id="w-account">
+				<ui:include src="/templates/email/account.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+	</ice:panelStack>
+</jsp:root>
