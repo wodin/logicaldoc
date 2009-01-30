@@ -108,6 +108,8 @@ public class DocumentEditForm {
 	private String recipient;
 
 	private UIInput recipientInput = null;
+	
+	private UIInput templateInput = null;
 
 	private Collection<Attribute> extendedAttributes = new ArrayList<Attribute>();
 
@@ -193,6 +195,7 @@ public class DocumentEditForm {
 		FacesUtil.forceRefresh(objectInput);
 		FacesUtil.forceRefresh(keywordsInput);
 		FacesUtil.forceRefresh(recipientInput);
+		FacesUtil.forceRefresh(templateInput);
 		initTemplate();
 	}
 
@@ -757,5 +760,13 @@ public class DocumentEditForm {
 
 	public void setRecipientInput(UIInput recipientInput) {
 		this.recipientInput = recipientInput;
+	}
+
+	public UIInput getTemplateInput() {
+		return templateInput;
+	}
+
+	public void setTemplateInput(UIInput templateInput) {
+		this.templateInput = templateInput;
 	}
 }
