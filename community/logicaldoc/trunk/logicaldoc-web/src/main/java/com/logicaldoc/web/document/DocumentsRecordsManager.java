@@ -231,7 +231,7 @@ public class DocumentsRecordsManager extends SortableList {
 	/**
 	 * Shows the document immutability form
 	 */
-	public String requireImmutabilityComment() {
+	public String requestImmutabilityComment() {
 		log.debug("start document immutability marking");
 
 		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
@@ -277,9 +277,9 @@ public class DocumentsRecordsManager extends SortableList {
 				for (DocumentRecord record : selection) {
 					if (record.getDocument().getImmutable() == 0) {
 						manager.makeImmutable(record.getDocId(), SessionManagement.getUser(), operationComment);
-						Messages.addLocalizedInfo("document.immutable.message");
 					}
 				}
+				Messages.addLocalizedInfo("document.immutable.message");
 				refresh();
 
 				DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
