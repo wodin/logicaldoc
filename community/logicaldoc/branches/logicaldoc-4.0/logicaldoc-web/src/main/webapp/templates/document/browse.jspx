@@ -1,0 +1,195 @@
+<?xml version = '1.0'?>
+<!-- 
+ Page for documents browsing
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGrid"
+	columns="2" style="width: 100%;" columnClasses="browseLeft,browseMain"
+	cellpadding="4">
+
+	<ice:panelGrid columns="1">
+		<ice:panelGroup style="display: inline;"
+			rendered="#{documentNavigation.selectedDir != null}">
+			<ice:form id="editFolderForm"
+				style="border:0px; margin:0px; padding:0px;">
+				<ldoc:folderselector useIcon="true"
+					directoryModel="#{documentNavigation.directoryModel}"
+					showSelector="#{documentNavigation.showFolderSelector}"
+					openListener="#{documentNavigation.openFolderSelector}"
+					confirmListener="#{documentNavigation.folderSelected}"
+					cancelListener="#{documentNavigation.cancelFolderSelector}"
+					closeListener="#{documentNavigation.closeFolderSelector}" />
+
+				<ice:commandLink
+					rendered="#{documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.renameEnabled}"
+					action="#{documentNavigation.edit}"
+					title="#{msgs['edit']}">
+					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_edit.png"
+						style="border: 0px solid;"
+						title="#{msgs['edit']}" />
+				</ice:commandLink>
+				<ice:commandLink
+					rendered="#{documentNavigation.selectedDir.manageSecurityEnabled}"
+					action="#{documentNavigation.rights}"
+					title="#{msgs['rights']}">
+					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_lock.png"
+						style="border: 0px solid;"
+						title="#{msgs['rights']}" />
+				</ice:commandLink>
+				<ice:commandLink action="#{documentNavigation.newDirectory}"
+					title="#{msgs['msg.jsp.createfolder']}"
+					rendered="#{documentNavigation.selectedDir.addChildEnabled}">
+					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_add.png"
+						style="border: 0px solid;" title="#{msgs['msg.jsp.createfolder']}" />
+				</ice:commandLink>
+				<ice:commandLink
+					rendered="#{documentNavigation.selectedDir.menuId != 5}"
+					action="#{documentNavigation.searchInFolder}"
+					title="#{msgs['search']}">
+					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_search.png"
+						style="border: 0px solid;" title="#{msgs['search']}" />
+				</ice:commandLink>
+				<ice:outputLink
+					value="zip-export?menuId=#{documentNavigation.selectedDir.menuId}"
+					title="#{msgs['msg.jsp.zipalllevel']}" target="_blank"
+					rendered="#{documentNavigation.selectedDir.bulkExportEnabled}">
+					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_export.png"
+						style="border: 0px solid;" title="#{msgs['msg.jsp.zipalllevel']}" />
+				</ice:outputLink>
+				<ice:commandLink
+					rendered="#{documentNavigation.selectedDir.menuId != 5  and documentNavigation.selectedDir.deleteEnabled}"
+					action="#{documentNavigation.delete}"
+					title="#{msgs['delete']}"
+					onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;">
+					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_delete.png"
+						style="border: 0px solid;" title="#{msgs['delete']}" />
+				</ice:commandLink>
+			</ice:form>
+		</ice:panelGroup>
+		<ice:panelGroup styleClass="folderContainer">
+			<f:subview id="scSub1">
+				<ui:include src="/templates/document/folders.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+	</ice:panelGrid>
+
+	<ice:panelGroup styleClass="documentsPanel">
+		<ice:panelGroup styleClass="breadcrumb">
+			<ice:form>
+				<ice:panelSeries style="display: inline;" var="folder"
+					value="#{documentNavigation.breadcrumb}">
+					<ice:commandLink
+						actionListener="#{documentNavigation.onSelectDirectory}">
+						<f:param name="directoryId" value="#{folder.menuId}" />
+						<ice:outputText value="#{folder.displayText}" styleClass="breadcrumbLink"/>
+					</ice:commandLink>&amp;raquo;
+				</ice:panelSeries>
+			</ice:form>
+			<ice:graphicImage value="#{StyleBean.imagesPath}/spacer.gif"
+				style="border: 0px solid;" height="0px" width="480px" title="" />
+		</ice:panelGroup>
+		<ice:panelStack id="documentsPanelStack"
+			styleClass="documentsPanelStack"
+			selectedPanel="#{documentNavigation.selectedPanel.contentName}">
+
+			<!-- Custom Content Pages -->
+			<ice:panelGroup id="blank">
+				<br />
+			</ice:panelGroup>
+
+			<ice:panelGroup id="documents" style="width: 100%;">
+				<ice:messages />
+				<f:subview id="w-documents">
+					<ui:include src="/templates/document/documents.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
+			<ice:panelGroup id="uploadDocument">
+				<f:subview id="w-uploadDocument">
+					<ui:include src="/templates/document/uploadDocument.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
+			<ice:panelGroup id="updateDocument">
+				<f:subview id="w-updateDocument">
+					<ui:include src="/templates/document/updateDocument.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
+			<ice:panelGroup id="checkin">
+				<f:subview id="w-checkin">
+					<ui:include src="/templates/document/checkin.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
+			<ice:panelGroup id="versions" style="width: 100%;">
+				<f:subview id="w-versions">
+					<ui:include src="/templates/document/versions.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
+			<ice:panelGroup id="links">
+				<f:subview id="w-links">
+					<ui:include src="/templates/document/links.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
+			<ice:panelGroup id="rights">
+				<f:subview id="w-rights">
+					<ui:include src="/templates/document/rights.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
+			<ice:panelGroup id="articles" style="width: 100%;">
+				<f:subview id="w-articles">
+					<ui:include src="/templates/document/articles.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
+			<ice:panelGroup id="history" style="width: 100%;">
+				<f:subview id="w-history">
+					<ui:include src="/templates/document/history.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
+			<ice:panelGroup id="email">
+				<f:subview id="w-email">
+					<ui:include src="/templates/document/email.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
+			<ice:panelGroup id="zipUpload">
+				<f:subview id="w-zip">
+					<ui:include src="/templates/document/uploadZip.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
+			<ice:panelGroup id="newDir">
+				<f:subview id="w-newDir">
+					<ui:include src="/templates/document/insertDir.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
+			<ice:panelGroup id="updateDir">
+				<f:subview id="w-updateDir">
+					<ui:include src="/templates/document/updateDir.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+
+			<ice:panelGroup id="immutability">
+				<f:subview id="w-immutability">
+					<ui:include src="/templates/document/immutability.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+		</ice:panelStack>
+	</ice:panelGroup>
+</jsp:root>
