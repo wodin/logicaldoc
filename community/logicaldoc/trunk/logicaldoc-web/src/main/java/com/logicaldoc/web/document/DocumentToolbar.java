@@ -70,7 +70,7 @@ public class DocumentToolbar {
 		commands.add(command);
 		command.setTitle(Messages.getMessage("document.immutable"));
 		command.setIcon("actions_immutability.gif");
-		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.requireImmutabilityComment"));
+		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.requestImmutabilityComment"));
 		command.setRenderedBinding(FacesUtil
 				.createValueBinding("documentNavigation.selectedDir.manageImmutabilityEnabled"));
 
