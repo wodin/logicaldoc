@@ -20,4 +20,8 @@
 		<tag-name>groupselector</tag-name>
 		<source>groupselector.jspx</source>
 	</tag>
+	<tag>
+		<tag-name>toolbaritem</tag-name>
+		<source>toolbaritem.jspx</source>
+	</tag>
 </facelet-taglib>

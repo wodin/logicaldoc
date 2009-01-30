@@ -3,11 +3,6 @@
 <plugin id="logicaldoc-core" version="4.0.0" class="com.logicaldoc.core.CorePlugin">
 	<runtime>
 		<library id="core" path="classes/" type="code">
-		    <!-- 
-			<doc caption="API documentation">
-				<doc-ref path="api/index.html" caption="javadoc" />
-			</doc>
-			-->
 			<export prefix="*" />
 		</library>
 		<library id="lucene-core" path="lib/lucene-core-2.4.0.jar" type="code">
@@ -68,6 +63,14 @@
     </extension-point>
     <extension-point id="DocumentListener">
         <parameter-def id="class" />
+        <parameter-def id="position" />
+    </extension-point>
+    <extension-point id="DocumentToolbar">
+        <parameter-def id="action" />
+        <parameter-def id="title" />
+        <parameter-def id="rendered" />
+        <parameter-def id="confirm" />
+        <parameter-def id="icon" />
         <parameter-def id="position" />
     </extension-point>
 </plugin>
