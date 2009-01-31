@@ -127,12 +127,14 @@ public class ResourceServiceImpl implements ResourceService {
 
 		List<Resource> resourceList = new LinkedList<Resource>();
 		final Long folderID = Long.parseLong(parentResource.getID());
-		boolean hasAccess = menuDAO.isReadEnable(folderID, parentResource.getRequestedPerson());
+		long userId = parentResource.getRequestedPerson();
+		boolean hasAccess = menuDAO.isReadEnable(folderID, userId);
 
 		if (hasAccess == false)
 			return resourceList;
 
-		Collection<Menu> folders = menuDAO.findChildren(folderID);
+		//Collection<Menu> folders = menuDAO.findChildren(folderID);
+		Collection<Menu> folders = menuDAO.findByUserId(folderID, userId);
 		if (folders != null) {
 			for (Iterator<Menu> iterator = folders.iterator(); iterator.hasNext();) {
 				Menu currentMenu = iterator.next();
