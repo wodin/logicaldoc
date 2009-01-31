@@ -13,7 +13,6 @@ import com.logicaldoc.util.plugin.LogicalDOCPlugin;
  */
 public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 	protected static Log log = LogFactory.getLog(ExternalAuthenticationPlugin.class);
-	private static final String SERVLET_NAME = "Webdav";
 
 	@Override
 	protected void doStart() throws Exception {
