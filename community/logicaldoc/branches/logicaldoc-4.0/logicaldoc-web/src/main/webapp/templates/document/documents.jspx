@@ -32,7 +32,7 @@
 			sortColumn="#{documentsRecordsManager.sortColumn}"
 			sortAscending="#{documentsRecordsManager.ascending}" cellpadding="0"
 			rows="#{documentsRecordsManager.displayedRows}"
-			columnClasses="selectionColumn,numberColumn,titleColumn,dateColumn,dateColumn,dateColumn">
+			columnClasses="selectionColumn,numberColumn,titleColumn,dateColumn,dateColumn,numberColumn">
 
 			<!-- selection column -->
 			<ice:column>
