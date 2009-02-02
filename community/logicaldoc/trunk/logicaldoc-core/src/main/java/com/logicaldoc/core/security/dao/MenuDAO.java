@@ -13,7 +13,7 @@ import com.logicaldoc.core.security.Permission;
  * @author Michael Scholz
  * @version 1.0
  */
-public interface MenuDAO extends PersistentObjectDAO<Menu>{
+public interface MenuDAO extends PersistentObjectDAO<Menu> {
 
 	/**
 	 * Finds all menus by menu text.
@@ -99,10 +99,19 @@ public interface MenuDAO extends PersistentObjectDAO<Menu>{
 	 * user.
 	 * 
 	 * @param permission the permission to check
-	 * @param menuId ID of the menu.
-	 * @param userId ID of the user.
+	 * @param menuId ID of the menu
+	 * @param userId ID of the user
 	 */
 	public boolean isPermissionEnabled(Permission permission, long menuId, long userId);
+
+	/**
+	 * Finds all permissions of a user enabled on the specified menu.
+	 * 
+	 * @param menuId ID of the menu
+	 * @param userId ID of the user
+	 * @return Collection of enabled permissions
+	 */
+	public Set<Permission> getEnabledPermissions(long menuId, long userId);
 
 	/**
 	 * This method selects only the menu text from a menu.
@@ -175,8 +184,8 @@ public interface MenuDAO extends PersistentObjectDAO<Menu>{
 	public Menu createFolders(Menu parent, String path);
 
 	/**
-	 * Returns a List of menus being a parent of the given menu. The list
-	 * is ordered starting from the root of menus.
+	 * Returns a List of menus being a parent of the given menu. The list is
+	 * ordered starting from the root of menus.
 	 * 
 	 * @param menuId
 	 */
@@ -206,10 +215,10 @@ public interface MenuDAO extends PersistentObjectDAO<Menu>{
 	 * @param parents true if parents must be restored also
 	 */
 	public void restore(long menuId, boolean parents);
-	
+
 	/**
-	 * Finds that folder that lies under a specific parent (given by the id)
-	 * an with a given text(like operator is used)
+	 * Finds that folder that lies under a specific parent (given by the id) an
+	 * with a given text(like operator is used)
 	 * 
 	 * @param text
 	 * @param parentId

@@ -553,42 +553,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean isPermissionEnabled(Permission permission, long menuId, long userId) {
-		if (Permission.READ == permission)
-			return isReadEnable(menuId, userId);
-
-		boolean result = true;
-
-		try {
-			User user = userDAO.findById(userId);
-			Set<Group> groups = user.getGroups();
-			if (groups.isEmpty())
-				return false;
-			Iterator<Group> iter = groups.iterator();
-
-			StringBuffer query = new StringBuffer("select distinct(_entity) from Menu _entity  ");
-			query.append(" left outer join _entity.menuGroups as _group ");
-			query.append(" where _group.groupId in (");
-
-			boolean first = true;
-			while (iter.hasNext()) {
-				if (!first)
-					query.append(",");
-				Group ug = (Group) iter.next();
-				query.append(Long.toString(ug.getId()));
-				first = false;
-			}
-			query.append(") and _group." + permission.getName() + "=1 and _entity.id=?");
-
-			List<MenuGroup> coll = (List<MenuGroup>) getHibernateTemplate().find(query.toString(),
-					new Object[] { new Long(menuId) });
-
-			result = coll.size() > 0;
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			result = false;
-		}
-
-		return result;
+		Set<Permission> permissions = getEnabledPermissions(menuId, userId);
+		return permissions.contains(permission);
 	}
 
 	@Override
@@ -651,5 +617,83 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
+	}
+
+	@Override
+	public Set<Permission> getEnabledPermissions(long menuId, long userId) {
+		Set<Permission> permissions = new HashSet<Permission>();
+
+		try {
+			User user = userDAO.findById(userId);
+			Set<Group> groups = user.getGroups();
+			if (groups.isEmpty())
+				return permissions;
+			Iterator<Group> iter = groups.iterator();
+
+			StringBuffer query = new StringBuffer(
+					"select _menugroup.LD_WRITE as WRITE, _menugroup.LD_ADDCHILD as ADDCHILD, _menugroup.LD_MANAGESECURITY as MANAGESECURITY, _menugroup.LD_MANAGEIMMUTABILITY as MANAGEIMMUTABILITY, _menugroup.LD_DELETE as DELETE, _menugroup.LD_RENAME as RENAME, _menugroup.LD_BULKIMPORT as BULKIMPORT, _menugroup.LD_BULKEXPORT as BULKEXPORT");
+			query.append(" from ld_menugroup _menugroup");
+			query.append(" where ");
+			query.append(" _menugroup.LD_MENUID=" + menuId);
+			query.append(" and _menugroup.LD_GROUPID in (");
+
+			boolean first = true;
+			while (iter.hasNext()) {
+				if (!first)
+					query.append(",");
+				Group ug = (Group) iter.next();
+				query.append(Long.toString(ug.getId()));
+				first = false;
+			}
+			query.append(")");
+
+			Connection con = null;
+			Statement stmt = null;
+			ResultSet rs = null;
+
+			try {
+				con = getSession().connection();
+				stmt = con.createStatement();
+				rs = stmt.executeQuery(query.toString());
+				while (rs.next()) {
+					if (!permissions.contains(Permission.READ))
+						permissions.add(Permission.READ);
+
+					Permission permission = null;
+					if (rs.getInt("ADDCHILD") == 1)
+						permission = Permission.ADD_CHILD;
+					if (rs.getInt("BULKEXPORT") == 1)
+						permission = Permission.BULK_EXPORT;
+					if (rs.getInt("BULKIMPORT") == 1)
+						permission = Permission.BULK_IMPORT;
+					if (rs.getInt("DELETE") == 1)
+						permission = Permission.DELETE;
+					if (rs.getInt("MANAGEIMMUTABILITY") == 1)
+						permission = Permission.MANAGE_IMMUTABILITY;
+					if (rs.getInt("MANAGESECURITY") == 1)
+						permission = Permission.MANAGE_SECURITY;
+					if (rs.getInt("RENAME") == 1)
+						permission = Permission.RENAME;
+					if (rs.getInt("WRITE") == 1)
+						permission = Permission.WRITE;
+					if (rs.getInt("DELETE") == 1)
+						permission = Permission.DELETE;
+					if (!permissions.contains(permission))
+						permissions.add(permission);
+				}
+			} finally {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			}
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+
+		return permissions;
 	}
 }

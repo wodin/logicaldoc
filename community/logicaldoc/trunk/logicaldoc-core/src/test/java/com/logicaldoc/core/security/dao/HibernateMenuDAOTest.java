@@ -2,10 +2,12 @@ package com.logicaldoc.core.security.dao;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Permission;
 
 /**
  * Test case for <code>HibernateMenuDAOTest</code>
@@ -192,6 +194,27 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertFalse(dao.isReadEnable(Menu.MENUID_HOME, 999));
 	}
 
+	public void testIsPermissionEnabled() {
+		assertFalse(dao.isPermissionEnabled(Permission.WRITE, Menu.MENUID_HOME, 1));
+		assertTrue(dao.isPermissionEnabled(Permission.WRITE, 26, 1));
+		assertFalse(dao.isPermissionEnabled(Permission.WRITE, Menu.MENUID_HOME, 3));
+		assertFalse(dao.isPermissionEnabled(Permission.WRITE, Menu.MENUID_HOME, 999));
+	}
+
+	public void testGetEnabledPermissions() {
+		Set<Permission> permissions = dao.getEnabledPermissions(Menu.MENUID_HOME, 1);
+		assertEquals(2,permissions.size());
+		assertTrue(permissions.contains(Permission.READ));
+		assertTrue(permissions.contains(Permission.MANAGE_SECURITY));
+		permissions = dao.getEnabledPermissions(26, 1);
+		assertEquals(2,permissions.size());
+		assertTrue(permissions.contains(Permission.READ));
+		assertTrue(permissions.contains(Permission.WRITE));
+		permissions = dao.getEnabledPermissions(999, 1);
+		assertEquals(0,permissions.size());
+	}
+
+	
 	public void testFindMenuIdByUserId() {
 		Collection<Long> ids = dao.findMenuIdByUserId(1);
 		assertNotNull(ids);
@@ -274,7 +297,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		menu = dao.findById(1100);
 		assertNotNull(menu);
 	}
-	
+
 	public void testFindByMenuTextAndParentId() {
 		List<Menu> menus = dao.findByMenuTextAndParentId("%menu.admin%", 1);
 		assertEquals(3, menus.size());
