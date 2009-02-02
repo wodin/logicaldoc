@@ -1,6 +1,9 @@
 package com.logicaldoc.web.document;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.java.plugin.registry.Extension;
 
 import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.document.Document;
@@ -23,10 +27,9 @@ import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
-import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.PluginRegistry;
 import com.logicaldoc.util.io.CryptUtil;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
@@ -225,7 +228,6 @@ public class DocumentRecord extends MenuBarBean {
 		Document document = getDocument();
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		if ((menuDAO.isWriteEnable(folder.getId(), userId)) && (document.getImmutable() == 0)) {
-
 			if ((document.getStatus() == Document.DOC_CHECKED_OUT)
 					&& (document.getCheckoutUserId().equals(new Long(userId)))) {
 				model.add(createMenuItem(" " + Messages.getMessage("checkin"), "checkin-" + folder.getId(), null,
@@ -258,6 +260,38 @@ public class DocumentRecord extends MenuBarBean {
 				"#{documentRecord.info}", null, style.getImagePath("info.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("history"), "history-" + folder.getId(), null,
 				"#{documentRecord.history}", null, style.getImagePath("history.png"), true, "_blank", null));
+
+		// Add extended menues
+		// Acquire the 'DocumentContextMenu' extensions of the core plugin
+		PluginRegistry registry = PluginRegistry.getInstance();
+		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "DocumentContextMenu");
+
+		// Sort the extensions according to ascending position
+		List<Extension> sortedExts = new ArrayList<Extension>();
+		for (Extension extension : exts) {
+			sortedExts.add(extension);
+		}
+		Collections.sort(sortedExts, new Comparator<Extension>() {
+			public int compare(Extension e1, Extension e2) {
+				int position1 = Integer.parseInt(e1.getParameter("position").valueAsString());
+				int position2 = Integer.parseInt(e2.getParameter("position").valueAsString());
+				if (position1 < position2)
+					return -1;
+				else if (position1 > position2)
+					return 1;
+				else
+					return 0;
+			}
+		});
+
+		for (Extension ext : sortedExts) {
+			String title = Messages.getMessage(ext.getParameter("title").valueAsString());
+			String id = ext.getParameter("id").valueAsString() + "-" + folder.getId();
+			String action = ext.getParameter("action").valueAsString();
+			String icon = ext.getParameter("icon").valueAsString();
+			String target = ext.getParameter("target").valueAsString();
+			model.add(createMenuItem(" " + title, id, null, action, null, icon, true, target, null));
+		}
 	}
 
 	public String noaction() {

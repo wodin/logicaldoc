@@ -72,7 +72,7 @@ public interface SecurityManager {
 	/**
 	 * Removes all users from group
 	 * 
-	 * @param group The group from wich all users must be removed
+	 * @param group The group from which all users must be removed
 	 */
 	public void removeAllUsersFromGroup(Group group);
 
