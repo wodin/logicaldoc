@@ -27,6 +27,7 @@ import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.PluginRegistry;
@@ -264,7 +265,7 @@ public class DocumentRecord extends MenuBarBean {
 		// Add extended menues
 		// Acquire the 'DocumentContextMenu' extensions of the core plugin
 		PluginRegistry registry = PluginRegistry.getInstance();
-		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "DocumentContextMenu");
+		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "DocumentMenu");
 
 		// Sort the extensions according to ascending position
 		List<Extension> sortedExts = new ArrayList<Extension>();
@@ -284,7 +285,11 @@ public class DocumentRecord extends MenuBarBean {
 			}
 		});
 
+		Set<Permission> permissions = menuDAO.getEnabledPermissions(folder.getId(), userId);
 		for (Extension ext : sortedExts) {
+			Permission permission = Permission.valueOf(ext.getParameter("permission").valueAsString());
+			if (!permissions.contains(permission))
+				continue;
 			String title = Messages.getMessage(ext.getParameter("title").valueAsString());
 			String id = ext.getParameter("id").valueAsString() + "-" + folder.getId();
 			String action = ext.getParameter("action").valueAsString();
