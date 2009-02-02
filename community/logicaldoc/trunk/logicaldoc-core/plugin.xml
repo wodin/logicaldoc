@@ -73,4 +73,12 @@
         <parameter-def id="icon" />
         <parameter-def id="position" />
     </extension-point>
+    <extension-point id="DocumentMenu">
+        <parameter-def id="id" />
+        <parameter-def id="action" />
+        <parameter-def id="title" />
+        <parameter-def id="icon" />
+        <parameter-def id="target" />
+        <parameter-def id="position" />
+    </extension-point>
 </plugin>
