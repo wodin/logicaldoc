@@ -13,6 +13,7 @@ package com.logicaldoc.core.security;
  * <li>RENAME: ability to rename the entity</li>
  * <li>BULK_IMPORT: ability to import documents</li>
  * <li>BULK_EXPORT: ability to export documents</li>
+ * <li>SIGN: ability to digitally sign documents</li>
  * </ul>
  * 
  * 
@@ -22,7 +23,7 @@ package com.logicaldoc.core.security;
 public enum Permission {
 	READ("read"), WRITE("write"), ADD_CHILD("addChild"), MANAGE_SECURITY("manageSecurity"), MANAGE_IMMUTABILITY(
 			"manageImmutability"), DELETE("delete"), RENAME("rename"), BULK_IMPORT("bulkImport"), BULK_EXPORT(
-			"bulkExport");
+			"bulkExport"), SIGN("sign");
 
 	private final String name;
 
