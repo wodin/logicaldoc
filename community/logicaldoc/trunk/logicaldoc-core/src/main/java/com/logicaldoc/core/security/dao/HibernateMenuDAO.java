@@ -631,7 +631,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			Iterator<Group> iter = groups.iterator();
 
 			StringBuffer query = new StringBuffer(
-					"select _menugroup.LD_WRITE as WRITE, _menugroup.LD_ADDCHILD as ADDCHILD, _menugroup.LD_MANAGESECURITY as MANAGESECURITY, _menugroup.LD_MANAGEIMMUTABILITY as MANAGEIMMUTABILITY, _menugroup.LD_DELETE as DELETE, _menugroup.LD_RENAME as RENAME, _menugroup.LD_BULKIMPORT as BULKIMPORT, _menugroup.LD_BULKEXPORT as BULKEXPORT");
+					"select _menugroup.LD_WRITE as WRITE, _menugroup.LD_ADDCHILD as ADDCHILD, _menugroup.LD_MANAGESECURITY as MANAGESECURITY, _menugroup.LD_MANAGEIMMUTABILITY as MANAGEIMMUTABILITY, _menugroup.LD_DELETE as DELETE, _menugroup.LD_RENAME as RENAME, _menugroup.LD_BULKIMPORT as BULKIMPORT, _menugroup.LD_BULKEXPORT as BULKEXPORT, _menugroup.LD_SIGN as SIGN");
 			query.append(" from ld_menugroup _menugroup");
 			query.append(" where ");
 			query.append(" _menugroup.LD_MENUID=" + menuId);
@@ -658,28 +658,36 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				while (rs.next()) {
 					if (!permissions.contains(Permission.READ))
 						permissions.add(Permission.READ);
-
-					Permission permission = null;
 					if (rs.getInt("ADDCHILD") == 1)
-						permission = Permission.ADD_CHILD;
+						if (!permissions.contains(Permission.ADD_CHILD))
+							permissions.add(Permission.ADD_CHILD);
 					if (rs.getInt("BULKEXPORT") == 1)
-						permission = Permission.BULK_EXPORT;
+						if (!permissions.contains(Permission.BULK_EXPORT))
+							permissions.add(Permission.BULK_EXPORT);
 					if (rs.getInt("BULKIMPORT") == 1)
-						permission = Permission.BULK_IMPORT;
+						if (!permissions.contains(Permission.BULK_IMPORT))
+							permissions.add(Permission.BULK_IMPORT);
 					if (rs.getInt("DELETE") == 1)
-						permission = Permission.DELETE;
+						if (!permissions.contains(Permission.DELETE))
+							permissions.add(Permission.DELETE);
 					if (rs.getInt("MANAGEIMMUTABILITY") == 1)
-						permission = Permission.MANAGE_IMMUTABILITY;
+						if (!permissions.contains(Permission.MANAGE_IMMUTABILITY))
+							permissions.add(Permission.MANAGE_IMMUTABILITY);
 					if (rs.getInt("MANAGESECURITY") == 1)
-						permission = Permission.MANAGE_SECURITY;
+						if (!permissions.contains(Permission.MANAGE_SECURITY))
+							permissions.add(Permission.MANAGE_SECURITY);
 					if (rs.getInt("RENAME") == 1)
-						permission = Permission.RENAME;
+						if (!permissions.contains(Permission.RENAME))
+							permissions.add(Permission.RENAME);
 					if (rs.getInt("WRITE") == 1)
-						permission = Permission.WRITE;
+						if (!permissions.contains(Permission.WRITE))
+							permissions.add(Permission.WRITE);
 					if (rs.getInt("DELETE") == 1)
-						permission = Permission.DELETE;
-					if (!permissions.contains(permission))
-						permissions.add(permission);
+						if (!permissions.contains(Permission.DELETE))
+							permissions.add(Permission.DELETE);
+					if (rs.getInt("SIGN") == 1)
+						if (!permissions.contains(Permission.SIGN))
+							permissions.add(Permission.SIGN);
 				}
 			} finally {
 				if (rs != null)
