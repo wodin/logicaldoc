@@ -97,14 +97,11 @@ public class IndexInfo {
 								.getInstance().getBean(DocumentDAO.class);
 						Collection<Document> documents = documentDao.findAll();
 						Iterator<Document> iter = documents.iterator();
-						Indexer indexer = (Indexer) Context.getInstance()
-								.getBean(Indexer.class);
-
 						while (iter.hasNext()) {
 							Document document = iter.next();
-							String dir = conf.getValue("docdir") + "/";
-							dir += document.getPath()+"/"+document.getId();
-							indexer.addFile(new File(dir), document);
+							documentDao.initialize(document);
+							document.setIndexed(0);
+							documentDao.store(document);
 						}
 					} catch (Exception e) {
 						log.error(e.getMessage(), e);
