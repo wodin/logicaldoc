@@ -197,6 +197,17 @@
 					</ice:panelGroup>
 				</ice:column>
 				
+				<!-- sign -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['permission.sign']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:selectBooleanCheckbox value="#{rule.sign}"
+							disabled="#{!rule.enabled}" />
+					</ice:panelGroup>
+				</ice:column>
+				
 			</ice:dataTable>
 		</ice:panelGroup>
 		<ice:panelGroup styleClass="commands">
