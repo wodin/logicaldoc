@@ -395,6 +395,12 @@ public class RightsRecordsManager {
 				} else {
 					mg.setBulkExport(0);
 				}
+				
+				if (rule.isSign() || isAdmin) {
+					mg.setSign(1);
+				} else {
+					mg.setSign(0);
+				}
 
 				boolean stored = mdao.store(folder);
 

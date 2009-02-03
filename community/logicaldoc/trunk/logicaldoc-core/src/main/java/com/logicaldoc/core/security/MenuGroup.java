@@ -118,6 +118,7 @@ public class MenuGroup {
 		mg.setWrite(write);
 		mg.setBulkImport(bulkImport);
 		mg.setBulkExport(bulkExport);
+		mg.setSign(sign);
 		return mg;
 	}
 
