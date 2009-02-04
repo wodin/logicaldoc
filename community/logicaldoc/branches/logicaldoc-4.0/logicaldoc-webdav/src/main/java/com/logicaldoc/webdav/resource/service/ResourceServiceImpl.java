@@ -133,8 +133,7 @@ public class ResourceServiceImpl implements ResourceService {
 		if (hasAccess == false)
 			return resourceList;
 
-		//Collection<Menu> folders = menuDAO.findChildren(folderID);
-		Collection<Menu> folders = menuDAO.findByUserId(folderID, userId);
+		Collection<Menu> folders = menuDAO.findByUserId(userId, folderID);
 		if (folders != null) {
 			for (Iterator<Menu> iterator = folders.iterator(); iterator.hasNext();) {
 				Menu currentMenu = iterator.next();
