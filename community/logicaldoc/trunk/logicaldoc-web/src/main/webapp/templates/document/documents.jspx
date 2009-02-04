@@ -78,7 +78,7 @@
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
 					menuPopup="pop">
 					<ice:outputLink
-						value="download?docId=#{documentRecord.document.customId}"
+						value="download?docId=#{documentRecord.docId}"
 						target="_blank" title="#{msgs['msg.jsp.popup']}">
 						<ice:outputText value=" #{documentRecord.customId}" />
 					</ice:outputLink>
