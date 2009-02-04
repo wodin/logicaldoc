@@ -113,11 +113,11 @@ public class DocumentRecord extends MenuBarBean {
 	}
 
 	public String getCustomId() {
-		return document.getCustomId();
+		return getDocument().getCustomId();
 	}
 
 	public Date getCreationDate() {
-		return document.getCreation();
+		return getDocument().getCreation();
 	}
 
 	/**
