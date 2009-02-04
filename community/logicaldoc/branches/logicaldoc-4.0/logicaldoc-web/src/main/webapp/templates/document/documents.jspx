@@ -80,7 +80,7 @@
 					<ice:outputLink
 						value="download?docId=#{documentRecord.docId}"
 						target="_blank" title="#{msgs['msg.jsp.popup']}">
-						<ice:outputText value=" #{documentRecord.customId}" />
+					   <ice:outputText value="#{documentRecord.document.customId}" />
 					</ice:outputLink>
 				</ice:panelGroup>
 			</ice:column>
