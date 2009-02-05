@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-core</artifactId>
-			<version>4.0.0</version>
+			<version>4.5.0</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
@@ -64,7 +64,7 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-util</artifactId>
-			<version>4.0.0</version>
+			<version>4.5.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -81,12 +81,6 @@
 			<groupId>net.sf.jpf</groupId>
 			<artifactId>jpf</artifactId>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
