@@ -12,14 +12,6 @@
 	<name>logicaldoc-webdav</name>
 	<packaging>jar</packaging>
 	<dependencies>
-		<!--  WebDAV Addins -->
-		<dependency>
-			<groupId>com.logicaldoc</groupId>
-			<artifactId>logicaldoc-core</artifactId>
-			<version>4.5.0</version>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -54,11 +46,10 @@
 			<version>1.5.5</version>
 			<scope>runtime</scope>
 		</dependency>
-		<!--  WebDAV Addins -->
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-core</artifactId>
-			<version>4.0.0</version>
+			<version>4.5.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
