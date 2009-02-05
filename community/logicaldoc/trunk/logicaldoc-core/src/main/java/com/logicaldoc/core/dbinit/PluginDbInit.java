@@ -29,6 +29,8 @@ public class PluginDbInit extends DBInit {
 	 */
 	public void init() {
 		log.info("Start database initialization");
+		log.info("Database is " + getDbms());
+		
 		try {
 			// Acquire the 'DbInit' extensions of the core plugin
 			PluginRegistry registry = PluginRegistry.getInstance();
