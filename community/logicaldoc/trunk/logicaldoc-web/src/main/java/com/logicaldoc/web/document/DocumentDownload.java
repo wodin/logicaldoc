@@ -22,7 +22,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.util.Constants;
-import com.logicaldoc.web.util.DownloadDocUtil;
+import com.logicaldoc.web.util.ServletDocUtil;
 
 /**
  * This servlet is responsible for document downloads. It searches for the
@@ -32,11 +32,10 @@ import com.logicaldoc.web.util.DownloadDocUtil;
  * @since 2.6
  */
 public class DocumentDownload extends HttpServlet {
+	public static final String SUFFIX = "suffix";
+
 	public static final String DOC_ID = "docId";
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6956612970433309888L;
 
 	protected static Log logger = LogFactory.getLog(DocumentDownload.class);
@@ -68,11 +67,22 @@ public class DocumentDownload extends HttpServlet {
 			username = request.getParameter("username");
 		String password = (String) request.getParameter("password");
 
-		String id = request.getParameter(DOC_ID);
+		
 
 		// Flag indicating to download only indexed text
 		String downloadText = request.getParameter("downloadText");
 
+		if (StringUtils.isEmpty(downloadText)) {
+			downloadText = (String) session.getAttribute("downloadText");
+		}
+		
+		String suffix = request.getParameter(SUFFIX);
+		if (StringUtils.isEmpty(suffix)) {
+			suffix = (String) request.getAttribute(SUFFIX);
+		}
+		
+		String id = request.getParameter(DOC_ID);
+		
 		if (StringUtils.isEmpty(id)) {
 			id = (String) request.getAttribute(DOC_ID);
 		}
@@ -81,9 +91,7 @@ public class DocumentDownload extends HttpServlet {
 			id = (String) session.getAttribute(DOC_ID);
 		}
 
-		if (StringUtils.isEmpty(downloadText)) {
-			downloadText = (String) session.getAttribute("downloadText");
-		}
+
 
 		String version = request.getParameter("versionId");
 
@@ -112,12 +120,12 @@ public class DocumentDownload extends HttpServlet {
 				// if we have access to the document, return it
 				if (mdao.isReadEnable(folder.getId(), user.getId())) {
 					if ("true".equals(downloadText)) {
-						DownloadDocUtil.downloadDocumentText(request, response, doc.getId());
+						ServletDocUtil.downloadDocumentText(request, response, doc.getId());
 					} else {
-						DownloadDocUtil.downloadDocument(request, response, doc.getId(), version);
+						ServletDocUtil.downloadDocument(request, response, doc.getId(), version, suffix);
 
 						// add the file to the recent files of the user
-						DownloadDocUtil.addToRecentFiles(user.getId(), doc.getId());
+						ServletDocUtil.addToRecentFiles(user.getId(), doc.getId());
 					}
 				}
 			} catch (Exception ex) {
@@ -129,7 +137,7 @@ public class DocumentDownload extends HttpServlet {
 					throw new Exception("Unknown user " + username);
 
 				if (mdao.isReadEnable(folder.getId(), user.getId())) {
-					DownloadDocUtil.downloadDocument(request, response, doc.getId(), version);
+					ServletDocUtil.downloadDocument(request, response, doc.getId(), version, suffix);
 				}
 			} catch (Exception ex) {
 				logger.error(ex.getMessage(), ex);

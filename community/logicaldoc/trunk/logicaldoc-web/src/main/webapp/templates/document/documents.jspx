@@ -118,6 +118,13 @@
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
 							value="#{StyleBean.imagesPath}/txt-icon.png" alt="txt" />
 					</ice:outputLink>
+					<ice:outputLink
+						value="download?docId=#{documentRecord.docId}&amp;suffix=sign.p7m"
+						target="_blank" title="signed"
+						rendered="#{documentRecord.document.signed==1}">
+						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
+							value="#{StyleBean.imagesPath}/sign.png" alt="signed" />
+					</ice:outputLink>
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
 						value="#{StyleBean.imagesPath}/lock.png" />
