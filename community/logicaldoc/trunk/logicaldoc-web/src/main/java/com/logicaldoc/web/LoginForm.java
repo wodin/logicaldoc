@@ -60,6 +60,7 @@ public class LoginForm {
 
 			session.put(Constants.AUTH_USERID, user.getId());
 			session.put(Constants.AUTH_USERNAME, j_username);
+			session.put(Constants.AUTH_PASSWORD, j_password);
 
 			// Gets language option pressed
 			if (language.equals("default"))

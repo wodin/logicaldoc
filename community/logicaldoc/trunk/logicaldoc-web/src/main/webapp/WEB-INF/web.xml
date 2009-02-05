@@ -165,6 +165,13 @@
 		</servlet-class>
 	</servlet>
 	<servlet>
+		<display-name>Document resource upload servlet</display-name>
+		<servlet-name>uploadresource</servlet-name>
+		<servlet-class>
+			com.logicaldoc.web.document.DocumentResourceUpload
+		</servlet-class>
+	</servlet>
+	<servlet>
 		<display-name>Logs download servlet</display-name>
 		<servlet-name>log</servlet-name>
 		<servlet-class>
@@ -243,6 +250,10 @@
 	<servlet-mapping>
 		<servlet-name>download</servlet-name>
 		<url-pattern>/download</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>uploadresource</servlet-name>
+		<url-pattern>/uploadresource</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>log</servlet-name>

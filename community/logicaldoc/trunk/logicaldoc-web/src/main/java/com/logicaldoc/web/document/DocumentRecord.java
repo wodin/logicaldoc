@@ -295,7 +295,7 @@ public class DocumentRecord extends MenuBarBean {
 			String action = ext.getParameter("action").valueAsString();
 			String icon = ext.getParameter("icon").valueAsString();
 			String target = ext.getParameter("target").valueAsString();
-			model.add(createMenuItem(" " + title, id, null, action, null, icon, true, target, null));
+			model.add(createMenuItem(" " + title, id, null, action, null, style.getImagePath(icon), true, target, null));
 		}
 	}
 
