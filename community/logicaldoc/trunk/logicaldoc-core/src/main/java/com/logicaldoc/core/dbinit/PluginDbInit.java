@@ -54,15 +54,34 @@ public class PluginDbInit extends DBInit {
 
 			// Acquire the ordered list of sql files
 			getSqlList().clear();
-			getSqlList().add("sql/logicaldoc-core.sql");
-			for (Extension ext : sortedExts) {
-				getSqlList().add(ext.getParameter("sqlFile").valueAsString());
-			}
 
+			if (exists("sql/logicaldoc-core.sql." + getDbms().toLowerCase()))
+				getSqlList().add("sql/logicaldoc-core.sql." + getDbms().toLowerCase());
+			else
+				getSqlList().add("sql/logicaldoc-core.sql");
+			for (Extension ext : sortedExts) {
+				String sqlFile = ext.getParameter("sqlFile").valueAsString();
+				if (exists(sqlFile + "." + getDbms().toLowerCase()))
+					getSqlList().add(sqlFile + "." + getDbms().toLowerCase());
+				else
+					getSqlList().add(sqlFile);
+			}
 			execute();
 		} catch (Throwable e) {
 			log.error(e);
 			throw new RuntimeException(e.getMessage());
+		}
+	}
+
+	/**
+	 * Checks resource existence into the classpath
+	 */
+	private boolean exists(String name) {
+		ClassLoader cl = this.getClass().getClassLoader();
+		try {
+			return cl.getResourceAsStream(name) != null;
+		} catch (Throwable t) {
+			return false;
 		}
 	}
 }

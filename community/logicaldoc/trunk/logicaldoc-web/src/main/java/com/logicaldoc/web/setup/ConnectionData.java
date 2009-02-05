@@ -12,6 +12,7 @@ import com.logicaldoc.util.config.DBMSConfigurator;
  * @since 3.0
  */
 public class ConnectionData {
+
 	private String dbms;
 
 	private String clazz;
