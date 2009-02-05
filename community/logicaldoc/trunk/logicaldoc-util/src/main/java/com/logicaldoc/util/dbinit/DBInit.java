@@ -24,6 +24,8 @@ public class DBInit {
 
 	protected static Log log = LogFactory.getLog(DBInit.class);
 
+	private String dbms = "";
+
 	private String driver = "";
 
 	private String url = "";
@@ -90,12 +92,12 @@ public class DBInit {
 			// Try to interpret the path as a classpath path
 			ClassLoader loader = Thread.currentThread().getContextClassLoader();
 			try {
-				file = new File(URLDecoder.decode(loader.getResource(sqlFile).getPath(),"UTF-8"));
+				file = new File(URLDecoder.decode(loader.getResource(sqlFile).getPath(), "UTF-8"));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-	
+
 		SqlFile sFile = new SqlFile(file, false, null);
 		try {
 			sFile.execute(con, new Boolean(true));
@@ -170,5 +172,13 @@ public class DBInit {
 
 	public List<String> getSqlList() {
 		return sqlList;
+	}
+
+	public String getDbms() {
+		return dbms;
+	}
+
+	public void setDbms(String dbms) {
+		this.dbms = dbms;
 	}
 }

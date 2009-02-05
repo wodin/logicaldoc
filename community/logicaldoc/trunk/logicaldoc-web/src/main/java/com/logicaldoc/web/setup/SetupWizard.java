@@ -211,6 +211,7 @@ public class SetupWizard implements TabChangeListener {
 		Context.refresh();
 
 		PluginDbInit init = new PluginDbInit();
+		init.setDbms(dbdata.getDbms());
 		init.setDriver(dbdata.getClazz());
 		init.setUrl(dbdata.getDburl());
 		init.setUsername(dbdata.getUser());
