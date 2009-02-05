@@ -110,8 +110,11 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 
 			document.setIndexed(0);
+			document.setSigned(0);
 			documentDAO.store(document);
 
+			System.out.println("signed= "+document.getSigned());
+			
 			Menu folder = document.getFolder();
 
 			// create some strings containing paths

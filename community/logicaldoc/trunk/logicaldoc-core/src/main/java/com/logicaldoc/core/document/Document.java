@@ -74,6 +74,8 @@ public class Document extends ExtensibleObject {
 	private String fileName;
 
 	private int indexed = 0;
+	
+	private int signed = 0;
 
 	private Set<String> keywords = new HashSet<String>();
 
@@ -477,6 +479,17 @@ public class Document extends ExtensibleObject {
 
 	public void setRecipient(String recipient) {
 		this.recipient = recipient;
+	}
+
+	/**
+	 * Return 1 if the document was signed
+	 */
+	public int getSigned() {
+		return signed;
+	}
+
+	public void setSigned(int signed) {
+		this.signed = signed;
 	}
 
 }
