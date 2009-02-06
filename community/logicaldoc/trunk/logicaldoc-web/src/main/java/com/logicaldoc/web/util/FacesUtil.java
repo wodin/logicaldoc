@@ -149,6 +149,8 @@ public class FacesUtil {
 	}
 
 	public static final void forceRefresh(UIInput control) {
+		if(control==null)
+			return;
 		control.setSubmittedValue(null);
 		control.setValue(null);
 		control.setLocalValueSet(false);
