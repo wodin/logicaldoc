@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.logicaldoc.core.ExtensibleObject;
-import com.logicaldoc.core.PersistentObject;
 
 /**
  * This class represents groups. <br />
