@@ -13,12 +13,4 @@
 		</copy>
 		<echo message="${pom.artifactId} is deployed" />
 	</target>
-
-	<target name="schema-export" depends="init-all" description="Sql schema creation from Hibernate mappings">
-		<schemaexport quiet="no" text="yes" drop="no" delimiter=";" output="target/schema-export.sql">
-			<fileset dir="src/main">
-				<include name="**/*.hbm.xml" />
-			</fileset>
-		</schemaexport>
-	</target>
 </project>
