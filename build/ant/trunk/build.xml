@@ -51,4 +51,11 @@
     <zip destfile="${logicaldoc.devroot}/logicaldoc-i18n.zip" basedir="${logicaldoc.devroot}/logicaldoc-i18n"   />
     <delete dir="${logicaldoc.devroot}/logicaldoc-i18n"/>
   </target>
+  <target name="schema-export" depends="init-all" description="Sql schema creation from Hibernate mappings">
+		<schemaexport quiet="no" text="yes" drop="no" delimiter=";" output="target/schema-export.sql">
+			<fileset dir="${logicaldoc.devroot}">
+				<include name="**/src/main/resources/mappings/*.hbm.xml" />
+			</fileset>
+		</schemaexport>
+	</target>
 </project>
