@@ -8,14 +8,13 @@ create table ld_history (ld_id bigint not null, ld_lastmodified timestamp not nu
 create table ld_keyword (ld_docid bigint not null, ld_keyword varchar(255));
 create table ld_link (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_docid1 bigint, ld_docid2 bigint, primary key (ld_id));
 create table ld_menu (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_text varchar(255), ld_parentid bigint not null, ld_sort int, ld_icon varchar(255), ld_path varchar(255), ld_pathextended varchar(4000), ld_type int not null, ld_ref varchar(255), ld_size bigint, primary key (ld_id));
-create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint not null, ld_write int not null, ld_addchild int not null, ld_managesecurity int not null, ld_manageimmutability int not null, ld_delete int not null, ld_rename int not null, ld_bulkimport int not null, ld_bulkexport int not null, ld_sign int not null, primary key (ld_menuid, ld_groupid, ld_write, ld_addchild, ld_managesecurity, ld_delete, ld_rename, ld_manageimmutability, ld_bulkimport, ld_bulkexport, ld_sign));
+create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint not null, ld_write int not null, ld_addchild int not null, ld_managesecurity int not null, ld_manageimmutability int not null, ld_delete int not null, ld_rename int not null, ld_bulkimport int not null, ld_bulkexport int not null, ld_sign int not null, ld_archive int not null, primary key (ld_menuid, ld_groupid, ld_write, ld_addchild, ld_managesecurity, ld_delete, ld_rename, ld_manageimmutability, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive));
 create table ld_systemmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_author varchar(255), ld_recipient varchar(255), ld_messagetext varchar(2000), ld_subject varchar(255), ld_sentdate varchar(20) not null, ld_datescope int, ld_prio int, ld_confirmation int, ld_red int not null, primary key (ld_id));
 create table ld_template (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(2000), primary key (ld_id));
 create table ld_ticket (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_ticketid varchar(255) not null, ld_docid bigint not null, ld_userid bigint not null, primary key (ld_id));
 create table ld_user (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_username varchar(255) not null, ld_password varchar(255), ld_name varchar(255), ld_firstname varchar(255), ld_street varchar(255), ld_postalcode varchar(255), ld_city varchar(255), ld_country varchar(30), ld_language varchar(10), ld_email varchar(255), ld_telephone varchar(255), ld_type int not null, primary key (ld_id));
 create table ld_userdoc (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_userid bigint not null, ld_date timestamp, primary key (ld_id));
 create table ld_usergroup (ld_groupid bigint not null, ld_userid bigint not null, primary key (ld_groupid, ld_userid));
---create table ld_version (ld_docid bigint not null, ld_version varchar(10), ld_username varchar(255), ld_userid bigint not null, ld_date timestamp, ld_comment varchar(4000));
 create table ld_version(ld_docid bigint not null , ld_lastmodified timestamp , ld_deleted int not null, ld_immutable int not null , ld_customid varchar(4000), ld_title varchar(255), ld_version varchar(10), ld_date timestamp, ld_creation timestamp , ld_publisher varchar(255),ld_publisherid bigint not null, ld_status int not null, ld_type varchar(255), ld_checkoutuserid bigint, ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourcetype varchar(255), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint not null, ld_indexed int not null, ld_folderid bigint not null, ld_templateid bigint, ld_sourceid varchar(4000), ld_object varchar(4000), ld_digest varchar(255), ld_recipient varchar(4000), ld_signed int , ld_templatename varchar(4000), ld_foldername varchar(4000),  ld_kwds varchar(4000), ld_username varchar(255), ld_userid bigint, ld_versiondate timestamp, ld_comment varchar(4000));
 create table ld_generic (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_subtype varchar(255) not null, ld_string1 varchar(4000), ld_string2 varchar(4000), ld_integer1 int, ld_integer2 int, ld_double1 float, ld_double2 float, ld_date1 timestamp, ld_date2 timestamp, primary key (ld_id));
 create table ld_generic_ext (ld_genid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_genid, ld_name));
@@ -153,116 +152,116 @@ values (1,1);
 insert into ld_usergroup
 values (-1,1);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (1,1,0,0,1,1,0,0,1,1,1);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (1,1,0,0,1,1,0,0,1,1,1,1);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (2,1,0,0,1,1,0,0,1,1,1);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (2,1,0,0,1,1,0,0,1,1,1,1);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (4,1,0,0,1,1,0,0,1,1,1);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (4,1,0,0,1,1,0,0,1,1,1,1);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (5,1,1,1,1,1,1,1,1,1,1);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (5,1,1,1,1,1,1,1,1,1,1,1);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (6,1,0,0,1,1,0,0,1,1,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (6,1,0,0,1,1,0,0,1,1,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (7,1,0,0,1,1,0,0,1,1,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (7,1,0,0,1,1,0,0,1,1,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (8,1,0,0,1,1,0,0,1,1,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (8,1,0,0,1,1,0,0,1,1,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (13,1,0,0,1,1,0,0,1,1,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (13,1,0,0,1,1,0,0,1,1,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (14,1,0,0,1,1,0,0,1,1,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (14,1,0,0,1,1,0,0,1,1,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (16,1,0,0,1,1,0,0,1,1,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (16,1,0,0,1,1,0,0,1,1,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (17,1,0,0,1,1,0,0,1,1,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (17,1,0,0,1,1,0,0,1,1,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (19,1,0,0,1,1,0,0,1,1,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (19,1,0,0,1,1,0,0,1,1,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (20,1,0,0,1,1,0,0,1,1,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (20,1,0,0,1,1,0,0,1,1,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (21,1,0,0,1,1,0,0,1,1,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (21,1,0,0,1,1,0,0,1,1,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (23,1,0,0,1,1,0,0,1,1,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (23,1,0,0,1,1,0,0,1,1,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (25,1,0,0,1,1,0,0,1,1,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (25,1,0,0,1,1,0,0,1,1,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (26,1,1,0,1,1,0,0,1,1,1);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (26,1,1,0,1,1,0,0,1,1,1,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (18,1,1,0,1,1,0,0,1,1,1);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (18,1,1,0,1,1,0,0,1,1,1,1);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (15,1,1,0,1,1,0,0,1,1,1);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (15,1,1,0,1,1,0,0,1,1,1,1);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (-1,1,0,0,1,1,0,0,1,1,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (-1,1,0,0,1,1,0,0,1,1,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (1,2,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (1,2,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (4,2,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (4,2,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (5,2,1,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (5,2,1,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (13,2,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (13,2,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (16,2,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (16,2,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (19,2,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (19,2,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (20,2,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (20,2,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (23,2,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (23,2,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (26,2,1,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (26,2,1,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (18,2,1,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (18,2,1,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (15,2,1,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (15,2,1,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (1,3,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (1,3,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (4,3,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (4,3,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (5,3,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (5,3,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (13,3,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (13,3,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (16,3,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (16,3,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign)
-values     (19,3,0,0,0,0,0,0,0,0,0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (19,3,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_group_ext (ld_groupid, ld_value, ld_name)
 values (1,'010010','preference.field.customId');
