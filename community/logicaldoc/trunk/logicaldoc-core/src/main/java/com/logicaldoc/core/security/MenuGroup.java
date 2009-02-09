@@ -25,6 +25,8 @@ public class MenuGroup {
 	private int bulkExport = 0;
 
 	private int sign = 0;
+	
+	private int archive = 0;
 
 	private long groupId;
 
@@ -141,5 +143,13 @@ public class MenuGroup {
 
 	public void setSign(int sign) {
 		this.sign = sign;
+	}
+
+	public int getArchive() {
+		return archive;
+	}
+
+	public void setArchive(int archive) {
+		this.archive = archive;
 	}
 }

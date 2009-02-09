@@ -36,6 +36,9 @@ public class Version extends Document implements Comparable<Version> {
 
 	private String kwds;
 
+	private Document document;
+	
+	
 	public Version() {
 	}
 
@@ -184,6 +187,12 @@ public class Version extends Document implements Comparable<Version> {
 			version.setTemplateName(document.getTemplate().getName());
 		}
 
+		if (document.getAttributes() != null) {
+			for (String name : document.getAttributeNames()) {
+				version.getAttributes().put(name, document.getAttributes().get(name));
+			}
+		}
+
 		version.setFolderId(document.getFolder().getId());
 		version.setTemplateName(document.getFolder().getText());
 
@@ -198,5 +207,13 @@ public class Version extends Document implements Comparable<Version> {
 
 	public void setKwds(String kwds) {
 		this.kwds = kwds;
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
 	}
 }

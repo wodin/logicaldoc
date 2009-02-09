@@ -74,12 +74,10 @@ public class Document extends ExtensibleObject {
 	private String fileName;
 
 	private int indexed = 0;
-	
+
 	private int signed = 0;
 
 	private Set<String> keywords = new HashSet<String>();
-
-	private Set<Version> versions = new HashSet<Version>();
 
 	private Menu folder;
 
@@ -278,17 +276,6 @@ public class Document extends ExtensibleObject {
 		this.keywords = keywords;
 	}
 
-	/**
-	 * The set of all Versions
-	 */
-	public Set<Version> getVersions() {
-		return versions;
-	}
-
-	public void setVersions(Set<Version> versions) {
-		this.versions = versions;
-	}
-
 	public int getIndexed() {
 		return indexed;
 	}
@@ -315,14 +302,6 @@ public class Document extends ExtensibleObject {
 		}
 
 		return sb.toString();
-	}
-
-	public Version getVersion(String id) {
-		for (Version version : versions) {
-			if (version.getVersion().equals(id))
-				return version;
-		}
-		return null;
 	}
 
 	/**
@@ -375,18 +354,9 @@ public class Document extends ExtensibleObject {
 		keywords.add(word);
 	}
 
-	public void addVersion(Version vers) {
-		versions.add(vers);
-	}
-
 	public void clearKeywords() {
 		keywords.clear();
 		keywords = new HashSet<String>();
-	}
-
-	public void clearVersions() {
-		versions.clear();
-		versions = new HashSet<Version>();
 	}
 
 	public String getPath() {
