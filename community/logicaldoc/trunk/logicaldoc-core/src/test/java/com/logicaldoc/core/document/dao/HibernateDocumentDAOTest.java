@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -65,7 +64,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		dao.initialize(doc);
 		assertEquals(1, doc.getId());
 		assertEquals("testDocname", doc.getTitle());
-		assertEquals(2, doc.getVersions().size());
 		assertNotNull(doc.getFolder());
 		assertEquals(103, doc.getFolder().getId());
 
@@ -80,7 +78,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		dao.initialize(doc);
 		assertEquals(1, doc.getId());
 		assertEquals("testDocname", doc.getTitle());
-		assertEquals(2, doc.getVersions().size());
 		assertNotNull(doc.getFolder());
 		assertEquals(103, doc.getFolder().getId());
 
@@ -185,8 +182,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		version.setComment("comment");
 		version.setUserId(1);
 		version.setUsername("admin");
-		doc.addVersion(version);
-		
+
 		assertTrue(dao.store(doc));
 		assertEquals(5, doc.getId());
 		doc = dao.findById(5);
@@ -196,8 +192,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(3, doc.getKeywords().size());
 		assertTrue(doc.getKeywords().contains("pluto"));
 		assertTrue(doc.getKeywords().contains("123456789123456789123456789"));
-		assertEquals(1, doc.getVersions().size());
-		assertEquals(version, doc.getVersion("1.0"));
 		assertEquals("val 1", doc.getValue("att_1"));
 		assertNotNull(doc.getDigest());
 		assertEquals(doc.getDigest(), digest);
@@ -205,24 +199,18 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		// Try to change the version comment
 		doc = dao.findById(5);
 		dao.initialize(doc);
-		version = doc.getVersion("1.0");
 		version.setComment("xxxx");
 		version.setVersion("1.0");
 		version.setUserId(1);
-		doc.clearVersions();
-		doc.addVersion(version);
 		dao.store(doc);
 		doc = dao.findById(5);
 		dao.initialize(doc);
-		version = doc.getVersion("1.0");
-		assertEquals("xxxx", version.getComment());
 
 		// Load an existing document and modify it
 		doc = dao.findById(1);
 		assertNotNull(doc);
 		dao.initialize(doc);
 		assertEquals("testDocname", doc.getTitle());
-		assertEquals(2, doc.getVersions().size());
 		assertEquals(3, doc.getKeywords().size());
 		doc.setTitle("xxxx");
 		assertTrue(dao.store(doc));
@@ -231,7 +219,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		dao.initialize(doc);
 		assertEquals(1, doc.getId());
 		assertEquals("xxxx", doc.getTitle());
-		assertEquals(2, doc.getVersions().size());
 		assertEquals(3, doc.getKeywords().size());
 	}
 
@@ -280,7 +267,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindByTitleAndParentFolderId() {
-		Collection<Document> documents = dao.findByTitleAndParentFolderId(103, "testDocname",null);
+		Collection<Document> documents = dao.findByTitleAndParentFolderId(103, "testDocname", null);
 		assertNotNull(documents);
 		assertEquals(1, documents.size());
 	}

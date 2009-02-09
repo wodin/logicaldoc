@@ -133,7 +133,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			Version version = createNewVersion(document, versionType, user, versionDesc, document.getVersion());
 			String newVersion = version.getVersion();
 
-			document.addVersion(version);
+			//TODO save the version into DB
+			
 			document.setVersion(newVersion);
 			if (documentDAO.store(document) == false)
 				throw new Exception();
@@ -752,7 +753,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			vers.setDate(doc.getDate());
 			vers.setUsername(user.getFullName());
 
-			doc.addVersion(vers);
+			//TODO Save the version into DB
+			
 
 			/* Set template and extended attributes */
 			if (templateId != null) {

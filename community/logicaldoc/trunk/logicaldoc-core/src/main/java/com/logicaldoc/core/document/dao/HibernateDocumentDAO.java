@@ -47,6 +47,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	private HistoryDAO historyDAO;
 
+	private VersionDAO versionDAO;
+
 	private MenuDAO menuDAO;
 
 	private UserDAO userDAO;
@@ -70,6 +72,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	public void setUserDocDAO(UserDocDAO userDocDAO) {
 		this.userDocDAO = userDocDAO;
+	}
+
+	public void setVersionDAO(VersionDAO versionDAO) {
+		this.versionDAO = versionDAO;
 	}
 
 	public void setSettings(SettingsConfig settings) {
@@ -105,6 +111,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		try {
 			Document doc = (Document) getHibernateTemplate().get(Document.class, docId);
 			if (doc != null && doc.getImmutable() == 0) {
+				// Remove versions
+				for (Version version : versionDAO.findByDocId(docId)) {
+					version.setDeleted(1);
+					getHibernateTemplate().saveOrUpdate(version);
+				}
+				
 				// Remove articles
 				for (Article article : articleDAO.findByDocId(docId)) {
 					article.setDeleted(1);
@@ -409,7 +421,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		Set<Long> ids = new HashSet<Long>();
 		try {
 			User user = userDAO.findById(userId);
-			if(user==null)
+			if (user == null)
 				return ids;
 			Collection<Group> precoll = user.getGroups();
 			Iterator<Group> iter = precoll.iterator();
@@ -558,29 +570,27 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByFileNameAndParentFolderId(long folderId, String fileName, Long excludeId) {
-		String query="_entity.folder.id = " + folderId + " and lower(_entity.fileName) like '"
-		+ fileName.toLowerCase() + "'";
-		if(excludeId!=null)
-			 query+=" and not(_entity.id = "+excludeId+")";
+		String query = "_entity.folder.id = " + folderId + " and lower(_entity.fileName) like '"
+				+ fileName.toLowerCase() + "'";
+		if (excludeId != null)
+			query += " and not(_entity.id = " + excludeId + ")";
 		return findByWhere(query);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByTitleAndParentFolderId(long folderId, String title, Long excludeId) {
-		String query="_entity.folder.id = " + folderId + " and lower(_entity.title) like '" + title.toLowerCase()
-		+ "'";
-		if(excludeId!=null)
-			 query+=" and not(_entity.id = "+excludeId+")";
+		String query = "_entity.folder.id = " + folderId + " and lower(_entity.title) like '" + title.toLowerCase()
+				+ "'";
+		if (excludeId != null)
+			query += " and not(_entity.id = " + excludeId + ")";
 		return findByWhere(query);
 	}
 
 	@Override
 	public void initialize(Document doc) {
 		getHibernateTemplate().refresh(doc);
-		for (Version version : doc.getVersions()) {
-			version.getVersion();
-		}
+
 		for (String attribute : doc.getAttributes().keySet()) {
 			attribute.getBytes();
 		}

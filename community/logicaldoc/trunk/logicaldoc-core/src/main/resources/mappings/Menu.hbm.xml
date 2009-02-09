@@ -31,6 +31,7 @@
 		       <property name="bulkImport" type="int" column="ld_bulkimport" not-null="true"/>
 		       <property name="bulkExport" type="int" column="ld_bulkexport" not-null="true"/>
 		       <property name="sign" type="int" column="ld_sign" not-null="true"/>
+		       <property name="archive" type="int" column="ld_archive" not-null="true"/>
 			</composite-element>
 		</set>
 	</class>
