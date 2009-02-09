@@ -1,15 +1,13 @@
 package com.logicaldoc.web.document;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
-import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
@@ -79,24 +77,11 @@ public class VersionEditForm {
 
 		if (SessionManagement.isValid()) {
 			try {
-				DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-				Version version = doc.getVersion(getVersion());
+				VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+				Version version = vdao.findByVersion(doc.getId(), getVersion());
 				version.setComment(getComment());
-				Set<Version> oldVersions = doc.getVersions();
-				Set<Version> newVersions = new HashSet<Version>();
-				for (Version ver : oldVersions) {
-					newVersions.add(ver);
-				}
-				doc.clearVersions();
-				doc.setVersions(newVersions);
-
-				boolean stored = ddao.store(doc);
-
-				if (!stored) {
-					Messages.addLocalizedError("errors.action.changeversion");
-				} else {
-					Messages.addLocalizedInfo(Messages.getMessage("msg.action.changeversion"));
-				}
+				vdao.store(version);
+				Messages.addLocalizedError("errors.action.changeversion");
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addLocalizedError("errors.action.changeversion");
