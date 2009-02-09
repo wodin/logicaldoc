@@ -23,6 +23,7 @@ import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
+import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.store.Storer;
@@ -53,6 +54,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	private DocumentListenerManager listenerManager;
 
 	private HistoryDAO historyDAO;
+
+	private VersionDAO versionDAO;
 
 	private SettingsConfig settings;
 
@@ -131,10 +134,9 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// create new version
 			Version version = createNewVersion(document, versionType, user, versionDesc, document.getVersion());
+
 			String newVersion = version.getVersion();
 
-			//TODO save the version into DB
-			
 			document.setVersion(newVersion);
 			if (documentDAO.store(document) == false)
 				throw new Exception();
@@ -148,6 +150,10 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// store the document in the repository (on the file system)
 			store(document, fileInputStream);
+
+			// Store the version
+			versionDAO.store(version);
+			log.debug("Stored version " + version.getVersion());
 
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
@@ -372,7 +378,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	/**
-	 * Creates a new version object and fills in the provided attributes
+	 * Creates a new version object and fills in the provided attributes.
 	 * 
 	 * @param document
 	 * 
@@ -744,18 +750,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			if (keywords != null)
 				doc.setKeywords(keywords);
 
-			Version vers = Version.createVersion(doc);
-
-			/* insert initial version 1.0 */
-			vers.setVersion("1.0");
-			vers.setUserId(user.getId());
-			vers.setComment(versionDesc);
-			vers.setDate(doc.getDate());
-			vers.setUsername(user.getFullName());
-
-			//TODO Save the version into DB
-			
-
 			/* Set template and extended attributes */
 			if (templateId != null) {
 				DocumentTemplate template = documentTemplateDAO.findById(templateId);
@@ -764,14 +758,21 @@ public class DocumentManagerImpl implements DocumentManager {
 					doc.setAttributes(extendedAttributes);
 			}
 			documentDAO.store(doc);
-			String path = getDocFilePath(doc);
 
 			/* store the document */
 			store(doc, content);
+
+			// Store the initial version 1.0O
+			Version vers = Version.createVersion(doc);
+			vers.setUserId(user.getId());
+			vers.setComment(versionDesc);
+			vers.setDate(doc.getDate());
+			vers.setUsername(user.getFullName());
+			versionDAO.store(vers);
+			log.debug("Stored version " + vers.getVersion());
+
 			createHistoryEntry(doc.getId(), user, History.STORED, "");
 
-			// File file = new File(new
-			// StringBuilder(path).append("/").append(doc.getFileName()).toString());
 			File file = getDocumentFile(doc);
 			if (immediateIndexing) {
 				/* create search index entry */
@@ -802,6 +803,10 @@ public class DocumentManagerImpl implements DocumentManager {
 		} else {
 			throw new Exception("Document is immutable");
 		}
+	}
+
+	public void setVersionDAO(VersionDAO versionDAO) {
+		this.versionDAO = versionDAO;
 	}
 
 }
