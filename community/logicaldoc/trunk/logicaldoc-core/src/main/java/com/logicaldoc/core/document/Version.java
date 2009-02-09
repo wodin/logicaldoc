@@ -2,13 +2,15 @@ package com.logicaldoc.core.document;
 
 import java.util.Date;
 
+import org.apache.commons.beanutils.BeanUtils;
+
 /**
  * This class represents versions.
  * 
- * @author Michael Scholz
+ * @author Marco Meschieri - Logical Objects
  * @version 1.0
  */
-public class Version implements Comparable<Version> {
+public class Version extends Document implements Comparable<Version> {
 	/**
 	 * specifies different version types
 	 */
@@ -16,15 +18,23 @@ public class Version implements Comparable<Version> {
 		NEW_RELEASE, NEW_SUBVERSION, OLD_VERSION;
 	}
 
-	private String version;
-
 	private String username;
 
-	private Date date;
+	private Date versionDate = new Date();
 
 	private String comment;
 
 	private long userId;
+
+	private long folderId;
+
+	private String folderName;
+
+	private Long templateId;
+
+	private String templateName;
+
+	private String kwds;
 
 	public Version() {
 	}
@@ -38,24 +48,10 @@ public class Version implements Comparable<Version> {
 	}
 
 	/**
-	 * @see Version#getVersion()
-	 */
-	public String getVersion() {
-		return version;
-	}
-
-	/**
 	 * @see Version#getUsername()
 	 */
 	public String getUsername() {
 		return username;
-	}
-
-	/**
-	 * @see Version#getDate()
-	 */
-	public Date getDate() {
-		return date;
 	}
 
 	/**
@@ -66,24 +62,10 @@ public class Version implements Comparable<Version> {
 	}
 
 	/**
-	 * @see Version#setVersion(java.lang.String)
-	 */
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	/**
 	 * @see Version#setUsername(java.lang.String)
 	 */
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	/**
-	 * @see Version#setDate(java.lang.String)
-	 */
-	public void setDate(Date date) {
-		this.date = date;
 	}
 
 	/**
@@ -134,11 +116,87 @@ public class Version implements Comparable<Version> {
 
 	@Override
 	public int hashCode() {
-		return version.hashCode();
+		return getVersion().hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return version.toString() + "-" + comment;
+		return getVersion().toString() + "-" + comment;
+	}
+
+	public Date getVersionDate() {
+		return versionDate;
+	}
+
+	public void setVersionDate(Date versionDate) {
+		this.versionDate = versionDate;
+	}
+
+	public long getFolderId() {
+		return folderId;
+	}
+
+	public void setFolderId(long folderId) {
+		this.folderId = folderId;
+	}
+
+	public String getFolderName() {
+		return folderName;
+	}
+
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
+	}
+
+	public Long getTemplateId() {
+		return templateId;
+	}
+
+	public void setTemplateId(Long templateId) {
+		this.templateId = templateId;
+	}
+
+	public String getTemplateName() {
+		return templateName;
+	}
+
+	public void setTemplateName(String templateName) {
+		this.templateName = templateName;
+	}
+
+	/**
+	 * Factory method that creates a version and replicate all document
+	 * properties
+	 * 
+	 * @param document The original document
+	 * @return The newly created instance
+	 */
+	public static Version createVersion(Document document) {
+		Version version = new Version();
+		try {
+			BeanUtils.copyProperties(version, document);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (document.getTemplate() != null) {
+			version.setTemplateId(document.getTemplate().getId());
+			version.setTemplateName(document.getTemplate().getName());
+		}
+
+		version.setFolderId(document.getFolder().getId());
+		version.setTemplateName(document.getFolder().getText());
+
+		version.setKwds(document.getKeywordsString());
+
+		return version;
+	}
+
+	public String getKwds() {
+		return kwds;
+	}
+
+	public void setKwds(String kwds) {
+		this.kwds = kwds;
 	}
 }
