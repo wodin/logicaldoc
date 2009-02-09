@@ -113,16 +113,12 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setSigned(0);
 			documentDAO.store(document);
 
-			System.out.println("signed= "+document.getSigned());
-			
+			System.out.println("signed= " + document.getSigned());
+
 			Menu folder = document.getFolder();
 
 			// create some strings containing paths
 			document.setFileName(filename);
-
-			// create new version
-			Version version = createNewVersion(versionType, user, versionDesc, document.getVersion());
-			String newVersion = version.getVersion();
 
 			// set other properties of the document
 			document.setDate(new Date());
@@ -132,6 +128,11 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setType(document.getFileExtension());
 			document.setCheckoutUserId(null);
 			document.setFolder(folder);
+
+			// create new version
+			Version version = createNewVersion(document, versionType, user, versionDesc, document.getVersion());
+			String newVersion = version.getVersion();
+
 			document.addVersion(version);
 			document.setVersion(newVersion);
 			if (documentDAO.store(document) == false)
@@ -372,6 +373,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	/**
 	 * Creates a new version object and fills in the provided attributes
 	 * 
+	 * @param document
+	 * 
 	 * @param versionType either a new release, a new subversion or just the old
 	 *        version
 	 * @param user user creating the new version
@@ -379,14 +382,14 @@ public class DocumentManagerImpl implements DocumentManager {
 	 * @param docId version should belong to this document
 	 * @param oldVersionName the previous version name
 	 */
-	private Version createNewVersion(Version.VERSION_TYPE versionType, User user, String description,
-			String oldVersionName) {
-		Version version = new Version();
+	private Version createNewVersion(Document document, Version.VERSION_TYPE versionType, User user,
+			String description, String oldVersionName) {
+		Version version = Version.createVersion(document);
 		String newVersionName = version.getNewVersionName(oldVersionName, versionType);
 
 		version.setVersion(newVersionName);
 		version.setComment(description);
-		version.setDate(new Date());
+		version.setVersionDate(new Date());
 		version.setUsername(user.getFullName());
 		version.setUserId(user.getId());
 		return version;
@@ -553,9 +556,9 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		InputStream is = new FileInputStream(sourceFile);
 		try {
-			return create(is, doc.getFileName(), folder, user, doc.getLanguage(), doc.getTitle(), doc
-					.getSourceDate(), doc.getSource(), doc.getSourceAuthor(), doc.getSourceType(), doc.getCoverage(),
-					"", null, null, null, false);
+			return create(is, doc.getFileName(), folder, user, doc.getLanguage(), doc.getTitle(), doc.getSourceDate(),
+					doc.getSource(), doc.getSourceAuthor(), doc.getSourceType(), doc.getCoverage(), "", null, null,
+					null, false);
 		} finally {
 			is.close();
 		}
@@ -699,7 +702,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		try {
 			Document doc = new Document();
-			Version vers = new Version();
 			doc.setFolder(folder);
 			doc.setFileName(filename);
 			doc.setDate(new Date());
@@ -740,6 +742,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc.setRecipient(recipient);
 			if (keywords != null)
 				doc.setKeywords(keywords);
+
+			Version vers = Version.createVersion(doc);
 
 			/* insert initial version 1.0 */
 			vers.setVersion("1.0");

@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -179,11 +180,13 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 		// Try a long keyword
 		doc.addKeyword("123456789123456789123456789");
-		Version version = new Version();
+		Version version = Version.createVersion(doc);
 		version.setVersion("1.0");
 		version.setComment("comment");
 		version.setUserId(1);
+		version.setUsername("admin");
 		doc.addVersion(version);
+		
 		assertTrue(dao.store(doc));
 		assertEquals(5, doc.getId());
 		doc = dao.findById(5);

@@ -409,6 +409,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		Set<Long> ids = new HashSet<Long>();
 		try {
 			User user = userDAO.findById(userId);
+			if(user==null)
+				return ids;
 			Collection<Group> precoll = user.getGroups();
 			Iterator<Group> iter = precoll.iterator();
 
