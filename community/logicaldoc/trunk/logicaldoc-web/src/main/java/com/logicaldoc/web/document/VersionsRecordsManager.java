@@ -1,9 +1,6 @@
 package com.logicaldoc.web.document;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
@@ -11,6 +8,7 @@ import javax.faces.context.FacesContext;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.FacesUtil;
@@ -35,7 +33,8 @@ public class VersionsRecordsManager {
 	 */
 	public void selectDocument(Document doc) {
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		dao.initialize(doc);
+		VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+
 		selectedDocument = doc;
 
 		// initiate the list
@@ -45,23 +44,11 @@ public class VersionsRecordsManager {
 			versions = new ArrayList<Version>(10);
 		}
 
-		// get the versions and sort them
-		Collection<Version> tmp = doc.getVersions();
-		Version[] sortIt = (Version[]) tmp.toArray(new Version[0]);
-
-		// clear collection and add sorted elements
-		Arrays.sort(sortIt, new Comparator<Version>(){
-			@Override
-			public int compare(Version o1, Version o2) {
-				return o2.getDate().compareTo(o1.getDate());
-			}
-		});
-
-		for (int i = 0; i <sortIt.length; i++) {
-			VersionRecord versionTmp = new VersionRecord(sortIt[i]);
+		List<Version> tmp = vdao.findByDocId(doc.getId());
+		for (Version ver : tmp) {
+			VersionRecord versionTmp = new VersionRecord(ver);
 			versions.add(versionTmp);
-
-			if (i == 0) {
+			if (ver.getVersion().equals(doc.getVersion())) {
 				versionTmp.setCurrentVersion(true);
 			}
 		}
