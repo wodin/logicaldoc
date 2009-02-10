@@ -23,6 +23,7 @@ import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
+import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
@@ -46,6 +47,8 @@ public class ResourceServiceImpl implements ResourceService {
 	private static final String FOLDER_PREFIX = "menu.documents";
 
 	private DocumentDAO documentDAO;
+	
+	private VersionDAO versionDAO;
 
 	private MenuDAO menuDAO;
 
@@ -501,7 +504,7 @@ public class ResourceServiceImpl implements ResourceService {
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 		documentDAO.initialize(document);
 
-		Collection<Version> tmp = document.getVersions();
+		Collection<Version> tmp = versionDAO.findByDocId(document.getId());
 		Version[] sortIt = (Version[]) tmp.toArray(new Version[0]);
 
 		// clear collection and add sorted elements
@@ -530,6 +533,10 @@ public class ResourceServiceImpl implements ResourceService {
 			log.error(e);
 			throw new RuntimeException(e);
 		}
+	}
+
+	public void setVersionDAO(VersionDAO versionDAO) {
+		this.versionDAO = versionDAO;
 	}
 
 }
