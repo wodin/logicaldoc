@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.core.security.User;
 
@@ -21,19 +22,13 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		NEW_RELEASE, NEW_SUBVERSION, OLD_VERSION;
 	}
 
-	public final static String STORED = "history.stored";
+	public final static String EVENT_STORED = "event.stored";
 
-	public final static String CHANGED = "history.changed";
+	public final static String EVENT_CHANGED = "event.changed";
 
-	public final static String CHECKIN = "history.checkedin";
+	public final static String EVENT_CHECKIN = "event.checkedin";
 
-	public final static String CHECKOUT = "history.checkedout";
-
-	public static final String UNCHECKOUT = "history.uncheckedout";
-
-	public static final String IMMUTABLE = "history.makeimmutable";
-
-	public static final String RENAMED = "history.renamed";
+	public static final String EVENT_RENAMED = "event.renamed";
 
 	private String username;
 
@@ -100,7 +95,10 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 	 * @see Version#getNewVersionName(java.lang.String,
 	 *      VersionImpl.VERSION_TYPE)
 	 */
-	public String getNewVersionName(String oldVersionName, VERSION_TYPE versionType) {
+	private String getNewVersionName(String oldVersionName, VERSION_TYPE versionType) {
+		if (StringUtils.isEmpty(oldVersionName))
+			return "1.0";
+
 		String release = oldVersionName.substring(0, oldVersionName.indexOf("."));
 		String version = oldVersionName.substring(oldVersionName.lastIndexOf(".") + 1);
 
@@ -188,15 +186,18 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 	/**
 	 * Factory method that creates a Version and replicate all given document's
 	 * properties.<br />
-	 * <b>The created Version is not persistent</b>
+	 * The new version and fileVersion will be setted in both Document and
+	 * Version<br/><br/> <b>Important:</b> The created Version is not
+	 * persistent
 	 * 
 	 * @param document The document to be versioned
 	 * @param user The user who made the changes
 	 * @param comment The version comment
 	 * @param event The event that caused the new release
+	 * @param versionType The type for the new version
 	 * @return The newly created version
 	 */
-	public static Version create(Document document, User user, String comment, String event) {
+	public static Version create(Document document, User user, String comment, String event, VERSION_TYPE versionType) {
 		Version version = new Version();
 		try {
 			BeanUtils.copyProperties(version, document);
@@ -228,6 +229,17 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		version.setTemplateName(document.getFolder().getText());
 		version.setKwds(document.getKeywordsString());
 		version.setDocument(document);
+
+		String newVersionName = version.getNewVersionName(document.getVersion(), versionType);
+		version.setVersion(newVersionName);
+		document.setVersion(newVersionName);
+
+		// If the file changed, than the file version must be changed alsoo
+		if (Version.EVENT_CHECKIN.equals(event) || Version.EVENT_STORED.equals(event)
+				|| StringUtils.isEmpty(document.getFileVersion())) {
+			version.setFileVersion(newVersionName);
+			document.setFileVersion(newVersionName);
+		}
 
 		return version;
 	}

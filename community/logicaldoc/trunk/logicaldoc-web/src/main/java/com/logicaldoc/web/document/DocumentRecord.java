@@ -350,7 +350,7 @@ public class DocumentRecord extends MenuBarBean {
 						history.setDate(new Date());
 						history.setUserId(userId);
 						history.setUserName(SessionManagement.getUser().getFullName());
-						history.setEvent(History.CHECKOUT);
+						history.setEvent(History.EVENT_CHECKEDOUT);
 
 						HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 						historyDAO.store(history);

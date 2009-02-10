@@ -62,10 +62,6 @@ public class VersionRecord extends Version {
 		return wrappedVersion.getDate();
 	}
 
-	public String getNewVersionName(String oldVersionName, VERSION_TYPE versionType) {
-		return wrappedVersion.getNewVersionName(oldVersionName, versionType);
-	}
-
 	public String getUsername() {
 		return wrappedVersion.getUsername();
 	}
