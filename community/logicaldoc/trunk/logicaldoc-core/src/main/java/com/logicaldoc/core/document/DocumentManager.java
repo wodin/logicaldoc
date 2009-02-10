@@ -275,10 +275,10 @@ public interface DocumentManager {
 	 * Obtains the document's file for the specified version
 	 * 
 	 * @param doc The document representation
-	 * @param version The document version (use null for the latest version)
+	 * @param fileVersion The file version (use null for the latest version)
 	 * @return The document file
 	 */
-	public File getDocumentFile(Document doc, String version);
+	public File getDocumentFile(Document doc, String fileVersion);
 
 	/**
 	 * Retrieves the document's content as a string

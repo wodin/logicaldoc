@@ -10,7 +10,22 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.util.IconSelector;
 
 /**
- * This is the abstract class for documents
+ * The Document is the central entity of LogicalDOC. A Document is a persistent
+ * business object and represents metadata over a single file stored into the
+ * DMS.
+ * <p>
+ * Each document has one or more Versions. The most recent version is the one
+ * used as default when we refer to a Document, but all previous versions are
+ * accessible from the history even if the are not indexed.
+ * <p>
+ * Each Version carries out two main informations, the version code itself that
+ * is called simply 'version', and the file version, called 'fileVersion'. The
+ * first identified the Version itself while the second refers to the file
+ * content. In general not all updates to a document involves the upload of a
+ * new file.
+ * 
+ * A Document is written in a single language, this language defines the
+ * full-text index in which the document's content will be stored.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 4.5
@@ -34,6 +49,8 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	private String title;
 
 	private String version;
+
+	private String fileVersion;
 
 	private Date date;
 
@@ -453,5 +470,18 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	public void setSigned(int signed) {
 		this.signed = signed;
+	}
+
+	/**
+	 * The working file version. Sometimes the version of the document may
+	 * differ from the file versions. In fact if a new version differs from
+	 * metadata only, we it have to reference the old file.
+	 */
+	public String getFileVersion() {
+		return fileVersion;
+	}
+
+	public void setFileVersion(String fileVersion) {
+		this.fileVersion = fileVersion;
 	}
 }

@@ -119,7 +119,7 @@ public class Indexer {
 		}
 
 		if (log.isInfoEnabled()) {
-			log.info("addFile " + doc.getId() + " " + doc.getTitle() + " " + doc.getVersion() + " "
+			log.info("addFile " + doc.getId() + " " + doc.getTitle() + " " + doc.getFileVersion() + " "
 					+ doc.getPublisher() + " " + doc.getStatus() + " " + doc.getSource() + " " + doc.getSourceAuthor());
 		}
 		addFile(file, doc, content, language);

@@ -12,8 +12,7 @@ import com.logicaldoc.core.security.UserDoc;
 /**
  * Hibernate implementation of <code>UserDocDAO</code>
  * 
- * @author Marco Meschieri
- * @version $Id: HibernateUserDocDAO.java,v 1.1 2007/06/29 06:28:25 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> implements UserDocDAO {

@@ -5,7 +5,9 @@ import java.util.List;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
+import com.logicaldoc.core.security.User;
 
 /**
  * Hibernate implementation of <code>DocumentDAO</code>
@@ -22,7 +24,7 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 
 	@Override
 	public List<Version> findByDocId(long docId) {
-		return findByWhere(" _entity.document.id=" + docId+ " order by _entity.versionDate desc");
+		return findByWhere(" _entity.document.id=" + docId + " order by _entity.versionDate desc");
 	}
 
 	@Override
@@ -32,5 +34,14 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 			return versions.get(0);
 		else
 			return null;
+	}
+
+	@Override
+	public void initialize(Version version) {
+		getHibernateTemplate().refresh(version);
+
+		for (String attribute : version.getAttributes().keySet()) {
+			attribute.getBytes();
+		}
 	}
 }

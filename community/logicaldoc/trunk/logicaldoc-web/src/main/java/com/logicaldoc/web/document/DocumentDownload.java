@@ -67,22 +67,20 @@ public class DocumentDownload extends HttpServlet {
 			username = request.getParameter("username");
 		String password = (String) request.getParameter("password");
 
-		
-
 		// Flag indicating to download only indexed text
 		String downloadText = request.getParameter("downloadText");
 
 		if (StringUtils.isEmpty(downloadText)) {
 			downloadText = (String) session.getAttribute("downloadText");
 		}
-		
+
 		String suffix = request.getParameter(SUFFIX);
 		if (StringUtils.isEmpty(suffix)) {
 			suffix = (String) request.getAttribute(SUFFIX);
 		}
-		
+
 		String id = request.getParameter(DOC_ID);
-		
+
 		if (StringUtils.isEmpty(id)) {
 			id = (String) request.getAttribute(DOC_ID);
 		}
@@ -91,19 +89,17 @@ public class DocumentDownload extends HttpServlet {
 			id = (String) session.getAttribute(DOC_ID);
 		}
 
-
-
-		String version = request.getParameter("versionId");
+		String fileVersion = request.getParameter("versionId");
 
 		if (StringUtils.isEmpty(id)) {
-			version = (String) request.getAttribute("versionId");
+			fileVersion = (String) request.getAttribute("versionId");
 		}
 
 		if (StringUtils.isEmpty(id)) {
-			version = (String) session.getAttribute("versionId");
+			fileVersion = (String) session.getAttribute("versionId");
 		}
 
-		logger.debug("Download document id=" + id + " " + version);
+		logger.debug("Download document id=" + id + " " + fileVersion);
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -122,7 +118,7 @@ public class DocumentDownload extends HttpServlet {
 					if ("true".equals(downloadText)) {
 						ServletDocUtil.downloadDocumentText(request, response, doc.getId());
 					} else {
-						ServletDocUtil.downloadDocument(request, response, doc.getId(), version, suffix);
+						ServletDocUtil.downloadDocument(request, response, doc.getId(), fileVersion, suffix);
 
 						// add the file to the recent files of the user
 						ServletDocUtil.addToRecentFiles(user.getId(), doc.getId());
@@ -137,7 +133,7 @@ public class DocumentDownload extends HttpServlet {
 					throw new Exception("Unknown user " + username);
 
 				if (mdao.isReadEnable(folder.getId(), user.getId())) {
-					ServletDocUtil.downloadDocument(request, response, doc.getId(), version, suffix);
+					ServletDocUtil.downloadDocument(request, response, doc.getId(), fileVersion, suffix);
 				}
 			} catch (Exception ex) {
 				logger.error(ex.getMessage(), ex);
