@@ -401,6 +401,12 @@ public class RightsRecordsManager {
 				} else {
 					mg.setSign(0);
 				}
+				
+				if (rule.isArchive() || isAdmin) {
+					mg.setArchive(1);
+				} else {
+					mg.setArchive(0);
+				}
 
 				boolean stored = mdao.store(folder);
 
