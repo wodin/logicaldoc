@@ -113,21 +113,6 @@
 		</property>
 	</bean>
 
-	<bean id="VersionDAO" parent="ApplicationBaseTransactionProxy"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
-		<property name="target">
-			<bean
-				class="com.logicaldoc.core.document.dao.HibernateVersionDAO"
-				abstract="false" lazy-init="default" autowire="default"
-				dependency-check="default">
-				<property name="sessionFactory">
-					<ref bean="SessionFactory" />
-				</property>
-			</bean>
-		</property>
-	</bean>
-
 	<bean id="HistoryDAO" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
@@ -149,6 +134,21 @@
 		<property name="target">
 			<bean
 				class="com.logicaldoc.core.document.dao.HibernateArticleDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="VersionDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.document.dao.HibernateVersionDAO"
 				abstract="false" lazy-init="default" autowire="default"
 				dependency-check="default">
 				<property name="sessionFactory">
@@ -308,6 +308,9 @@
 				class="com.logicaldoc.core.document.DocumentManagerImpl">
 				<property name="documentDAO">
 					<ref bean="DocumentDAO" />
+				</property>
+				<property name="versionDAO">
+					<ref bean="VersionDAO" />
 				</property>
 				<property name="documentTemplateDAO">
 					<ref bean="DocumentTemplateDAO" />

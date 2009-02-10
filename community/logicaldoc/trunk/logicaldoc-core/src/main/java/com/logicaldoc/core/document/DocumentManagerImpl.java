@@ -762,15 +762,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			/* store the document */
 			store(doc, content);
 
-			// Store the initial version 1.0O
-			Version vers = Version.createVersion(doc);
-			vers.setUserId(user.getId());
-			vers.setComment(versionDesc);
-			vers.setDate(doc.getDate());
-			vers.setUsername(user.getFullName());
-			versionDAO.store(vers);
-			log.debug("Stored version " + vers.getVersion());
-
 			createHistoryEntry(doc.getId(), user, History.STORED, "");
 
 			File file = getDocumentFile(doc);
@@ -782,6 +773,15 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 			doc.setFileSize(file.length());
 			documentDAO.store(doc);
+
+			// Store the initial version 1.0
+			Version vers = Version.createVersion(doc);
+			vers.setUserId(user.getId());
+			vers.setComment(versionDesc);
+			vers.setUsername(user.getFullName());
+			versionDAO.store(vers);
+			log.debug("Stored version " + vers.getVersion());
+			
 			return doc;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
