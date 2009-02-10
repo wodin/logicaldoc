@@ -27,6 +27,7 @@ import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
+import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.LuceneDocument;
@@ -338,7 +339,8 @@ public class DmsServiceImpl implements DmsService {
 			info.setExtendedAttribute(extendedAttributes);
 		}
 
-		Set<Version> versions = doc.getVersions();
+		VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+		List<Version> versions = vdao.findByDocId(id);
 		for (Version version : versions) {
 			VersionInfo vInfo = new VersionInfo();
 			vInfo.setDate(convertDateToXML(version.getDate()));
