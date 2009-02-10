@@ -13,6 +13,7 @@ import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.FileUtil;
@@ -166,7 +167,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.setFileName("test.txt");
 
 		// Prepare the document file for digest computation
-		File docFile = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/doc_5/" + doc.getVersion()));
+		File docFile = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/doc_5/" + doc.getFileVersion()));
 		FileUtils.forceMkdir(docFile.getParentFile());
 		Writer out = new FileWriter(docFile);
 		out.write("Questo file serve per fare il test del digest su un documento");
@@ -177,9 +178,9 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 		// Try a long keyword
 		doc.addKeyword("123456789123456789123456789");
-		Version version = Version.createVersion(doc);
+		User user=new User();
+		Version version = Version.create(doc, user, "comment", Version.CHECKIN);
 		version.setVersion("1.0");
-		version.setComment("comment");
 		version.setUserId(1);
 		version.setUsername("admin");
 

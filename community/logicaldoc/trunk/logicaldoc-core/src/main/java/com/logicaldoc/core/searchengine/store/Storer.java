@@ -18,7 +18,6 @@ public interface Storer {
 	 * @param docPath Path in logicaldoc containing the menuIds of all parent
 	 *        items.
 	 * @param filename Name of the document.
-	 * @param version Version of the document.
 	 * @return ResultImpl of the storing process.
 	 */
 	boolean store(InputStream stream, String docPath, String filename);

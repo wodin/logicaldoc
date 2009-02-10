@@ -105,4 +105,8 @@ public class VersionRecord extends Version {
 	public void setVersionDate(Date versionDate) {
 		wrappedVersion.setVersionDate(versionDate);
 	}
+
+	public String getFileVersion() {
+		return wrappedVersion.getFileVersion();
+	}
 }

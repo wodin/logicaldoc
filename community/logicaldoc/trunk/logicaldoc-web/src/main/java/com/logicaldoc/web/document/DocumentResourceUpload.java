@@ -40,7 +40,7 @@ public class DocumentResourceUpload extends HttpServlet {
 
 	public static final String SUFFIX = "suffix";
 
-	public static final String VERSION = "version";
+	public static final String VERSION_ID = "versionId";
 
 	/**
 	 * Constructor of the object.
@@ -82,7 +82,7 @@ public class DocumentResourceUpload extends HttpServlet {
 
 		String suffix = request.getParameter(SUFFIX);
 
-		String version = request.getParameter(VERSION);
+		String fileVersion = request.getParameter(VERSION_ID);
 
 		logger.debug("Start Upload resource for document " + docId);
 
@@ -105,7 +105,7 @@ public class DocumentResourceUpload extends HttpServlet {
 		try {
 			Menu folder = doc.getFolder();
 			if (mdao.isPermissionEnabled(Permission.SIGN, folder.getId(), user.getId())) {
-				ServletDocUtil.uploadDocumentResource(request, docId, suffix, version);
+				ServletDocUtil.uploadDocumentResource(request, docId, suffix, fileVersion);
 				if (suffix.startsWith("sign")) {
 					docDao.initialize(doc);
 					doc.setSigned(1);

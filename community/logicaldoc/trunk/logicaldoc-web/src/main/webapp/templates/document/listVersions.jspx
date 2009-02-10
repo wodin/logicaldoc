@@ -13,7 +13,7 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
-	
+
 	<h3>
 		<ice:outputText value="#{msgs['msg.jsp.versions']}" />
 		:&amp;nbsp;
@@ -39,7 +39,7 @@
 							<ice:outputText value="#{versionRecord.username}" />
 						</ice:panelGroup>
 					</ice:column>
-					
+
 					<!-- version column -->
 					<ice:column>
 						<f:facet name="header">
@@ -48,16 +48,30 @@
 						<ice:panelGroup rendered="#{versionRecord.currentVersion}">
 							<ice:outputLink
 								value="download?docId=#{versionsRecordsManager.selectedDocument.id}"
-								target="_blank" style="color: #344a6a; text-decoration: underline;">
-								<ice:outputText value="#{versionRecord.version}" style="color: #344a6a;"/>
+								target="_blank"
+								style="color: #344a6a; text-decoration: underline;">
+								<ice:outputText value="#{versionRecord.version}"
+									style="color: #344a6a;" />
 							</ice:outputLink>
 						</ice:panelGroup>
 						<ice:panelGroup rendered="#{!versionRecord.currentVersion}">
 							<ice:outputLink
 								value="download?docId=#{versionsRecordsManager.selectedDocument.id}&amp;versionId=#{versionRecord.version}"
-								style="color: #344a6a; text-decoration: underline;" target="_blank">
-								<ice:outputText value="#{versionRecord.version}" style="color: #344a6a;"/>
+								style="color: #344a6a; text-decoration: underline;"
+								target="_blank">
+								<ice:outputText value="#{versionRecord.version}"
+									style="color: #344a6a;" />
 							</ice:outputLink>
+						</ice:panelGroup>
+					</ice:column>
+
+					<!-- fieVersion column -->
+					<ice:column>
+						<f:facet name="header">
+							<ice:outputText value="#{msgs['document.fileVersion']}" />
+						</f:facet>
+						<ice:panelGroup>
+							<ice:outputText value="#{versionRecord.fileVersion}" />
 						</ice:panelGroup>
 					</ice:column>
 
@@ -68,7 +82,8 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:outputText value="#{versionRecord.versionDate}">
-								<f:convertDateTime pattern="#{loc.dateFormat}" timeZone="#{StyleBean.timeZone}" />
+								<f:convertDateTime pattern="#{loc.dateFormat}"
+									timeZone="#{StyleBean.timeZone}" />
 							</ice:outputText>
 						</ice:panelGroup>
 					</ice:column>

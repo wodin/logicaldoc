@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import com.logicaldoc.core.security.User;
+
 /**
  * This class represents versions.
  * 
@@ -18,6 +20,20 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 	public enum VERSION_TYPE {
 		NEW_RELEASE, NEW_SUBVERSION, OLD_VERSION;
 	}
+
+	public final static String STORED = "history.stored";
+
+	public final static String CHANGED = "history.changed";
+
+	public final static String CHECKIN = "history.checkedin";
+
+	public final static String CHECKOUT = "history.checkedout";
+
+	public static final String UNCHECKOUT = "history.uncheckedout";
+
+	public static final String IMMUTABLE = "history.makeimmutable";
+
+	public static final String RENAMED = "history.renamed";
 
 	private String username;
 
@@ -38,6 +54,8 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 	private String kwds;
 
 	private Document document;
+
+	private String event;
 
 	public Version() {
 	}
@@ -168,13 +186,17 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 	}
 
 	/**
-	 * Factory method that creates a version and replicate all document
-	 * properties
+	 * Factory method that creates a Version and replicate all given document's
+	 * properties.<br />
+	 * <b>The created Version is not persistent</b>
 	 * 
-	 * @param document The original document
-	 * @return The newly created instance
+	 * @param document The document to be versioned
+	 * @param user The user who made the changes
+	 * @param comment The version comment
+	 * @param event The event that caused the new release
+	 * @return The newly created version
 	 */
-	public static Version createVersion(Document document) {
+	public static Version create(Document document, User user, String comment, String event) {
 		Version version = new Version();
 		try {
 			BeanUtils.copyProperties(version, document);
@@ -185,6 +207,10 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		version.setId(0);
 		version.setDeleted(0);
 		version.setLastModified(null);
+		version.setComment(comment);
+		version.setEvent(event);
+		version.setUserId(user.getId());
+		version.setUsername(user.getFullName());
 
 		if (document.getTemplate() != null) {
 			version.setTemplateId(document.getTemplate().getId());
@@ -220,5 +246,13 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 	public void setDocument(Document document) {
 		this.document = document;
+	}
+
+	public String getEvent() {
+		return event;
+	}
+
+	public void setEvent(String event) {
+		this.event = event;
 	}
 }

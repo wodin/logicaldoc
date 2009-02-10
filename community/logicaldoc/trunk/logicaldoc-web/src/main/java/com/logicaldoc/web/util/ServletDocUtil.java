@@ -30,8 +30,8 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.MimeTypeConfig;
 
 /**
- * Some helper utilities to download/upload a document and its resources.
- * The downloaded document is also added to the recent files of the user.
+ * Some helper utilities to download/upload a document and its resources. The
+ * downloaded document is also added to the recent files of the user.
  * 
  * @author Sebastian Stein
  */
@@ -74,11 +74,11 @@ public class ServletDocUtil {
 	 * @param request the current request
 	 * @param response the document is written to this object
 	 * @param docId Id of the document
-	 * @param version name of the version; if null the latest version will
-	 *        returned
+	 * @param fileVersion name of the file version; if null the latest version
+	 *        will be returned
 	 */
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, long docId,
-			String version, String suffix) throws FileNotFoundException, IOException {
+			String fileVersion, String suffix) throws FileNotFoundException, IOException {
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = ddao.findById(docId);
 
@@ -87,7 +87,7 @@ public class ServletDocUtil {
 		}
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		File file = documentManager.getDocumentFile(doc, version);
+		File file = documentManager.getDocumentFile(doc, fileVersion);
 		String filename = doc.getFileName();
 		if (!file.exists()) {
 			throw new FileNotFoundException(file.getPath());
@@ -203,44 +203,41 @@ public class ServletDocUtil {
 	 * @param request the current request
 	 * @param response the document is written to this object
 	 * @param docId Id of the document
-	 * @param version name of the version; if null the latest version will
-	 *        returned
+	 * @param fileVersion name of the file version; if null the latest version
+	 *        will be returned
 	 */
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String docId,
-			String version) throws FileNotFoundException, IOException {
-		downloadDocument(request, response, Integer.parseInt(docId), version, null);
+			String fileVersion) throws FileNotFoundException, IOException {
+		downloadDocument(request, response, Integer.parseInt(docId), fileVersion, null);
 	}
 
 	/**
 	 * Uploads a document's related resource.
 	 * 
 	 * The resource will be stored in the folder where the document's files
-	 * reside using the following pattern: <b>version</b>-<b>suffix</b>
+	 * reside using the following pattern: <b>fileVersion</b>-<b>suffix</b>
 	 * 
 	 * If no version is specified, the current one is used instead
-	 * 
-	 * 
-	 * 
 	 * 
 	 * @param request the current request
 	 * @param docId Id of the document
 	 * @param suffix Suffix of the document
-	 * @param version id of the version; if null the latest version will
-	 *        returned
+	 * @param fileVersion id of the file version; if null the latest version
+	 *        will returned
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public static void uploadDocumentResource(HttpServletRequest request, String docId, String suffix, String version)
-			throws Exception {
+	public static void uploadDocumentResource(HttpServletRequest request, String docId, String suffix,
+			String fileVersion) throws Exception {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(Long.parseLong(docId));
 
-		String ver = version;
+		String ver = fileVersion;
 		if (StringUtils.isEmpty(ver))
 			ver = doc.getVersion();
 
 		DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		File file = docManager.getDocumentFile(doc);
+		File file = docManager.getDocumentFile(doc, fileVersion);
 		String path = file.getParent();
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();

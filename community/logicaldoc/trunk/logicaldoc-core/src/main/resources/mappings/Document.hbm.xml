@@ -13,6 +13,7 @@
 		<property name="customId" type="string" column="ld_customid" length="4000" />
 		<property name="title" type="string" column="ld_title" length="255" />
 		<property name="version" type="string" column="ld_version" length="10" />
+		<property name="fileVersion" type="string" column="ld_fileversion" length="10" />
 		<property name="date" type="timestamp" column="ld_date" />
 		<property name="creation" type="timestamp" column="ld_creation" not-null="true"/>
 		<property name="publisher" type="string" column="ld_publisher" length="255" />

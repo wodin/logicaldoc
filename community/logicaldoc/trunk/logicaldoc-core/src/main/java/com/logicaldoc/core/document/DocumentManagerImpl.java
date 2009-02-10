@@ -116,8 +116,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setSigned(0);
 			documentDAO.store(document);
 
-			System.out.println("signed= " + document.getSigned());
-
 			Menu folder = document.getFolder();
 
 			// create some strings containing paths
@@ -133,11 +131,13 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setFolder(folder);
 
 			// create new version
-			Version version = createNewVersion(document, versionType, user, versionDesc, document.getVersion());
+			Version version = createNewVersion(document, versionType, user, versionDesc, document.getVersion(),
+					Version.CHECKIN);
 
 			String newVersion = version.getVersion();
 
 			document.setVersion(newVersion);
+			document.setFileVersion(newVersion);
 			if (documentDAO.store(document) == false)
 				throw new Exception();
 
@@ -225,7 +225,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 
 		// stores it in folder
-		storer.store(content, path, doc.getVersion());
+		storer.store(content, path, doc.getFileVersion());
 	}
 
 	@Override
@@ -268,7 +268,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public File getDocumentFile(Document doc, String version) {
+	public File getDocumentFile(Document doc, String fileVersion) {
 		String path = getDocFilePath(doc);
 
 		/*
@@ -277,10 +277,13 @@ public class DocumentManagerImpl implements DocumentManager {
 		 * extension, e.g. "docId/2.1"
 		 */
 		String filename;
-		if (StringUtils.isEmpty(version))
-			filename = doc.getVersion();
+		if (StringUtils.isEmpty(fileVersion))
+			filename = doc.getFileVersion();
 		else
-			filename = version;
+			filename = fileVersion;
+		if (StringUtils.isEmpty(filename))
+			filename = doc.getVersion();
+
 		return new File(path, filename);
 	}
 
@@ -386,19 +389,16 @@ public class DocumentManagerImpl implements DocumentManager {
 	 *        version
 	 * @param user user creating the new version
 	 * @param description change description
+	 * @param event The event type
 	 * @param docId version should belong to this document
 	 * @param oldVersionName the previous version name
 	 */
 	private Version createNewVersion(Document document, Version.VERSION_TYPE versionType, User user,
-			String description, String oldVersionName) {
-		Version version = Version.createVersion(document);
+			String description, String oldVersionName, String event) {
+		Version version = Version.create(document, user, description, event);
 		String newVersionName = version.getNewVersionName(oldVersionName, versionType);
-
 		version.setVersion(newVersionName);
-		version.setComment(description);
-		version.setVersionDate(new Date());
-		version.setUsername(user.getFullName());
-		version.setUserId(user.getId());
+		version.setFileVersion(newVersionName);
 		return version;
 	}
 
@@ -431,6 +431,15 @@ public class DocumentManagerImpl implements DocumentManager {
 			return luceneDoc.get(LuceneDocument.FIELD_CONTENT);
 		else
 			return "";
+	}
+
+	/**
+	 * Computes the directory path where the document file is stored
+	 */
+	private String getDocFilePath(Document doc) {
+		String path = new StringBuilder(settings.getValue("docdir")).append("/").append(doc.getPath()).append("/doc_")
+				.append(doc.getId()).append("/").toString();
+		return path;
 	}
 
 	@Override
@@ -481,15 +490,6 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 	}
 
-	/**
-	 * Computes the directory path where the document file is stored
-	 */
-	private String getDocFilePath(Document doc) {
-		String path = new StringBuilder(settings.getValue("docdir")).append("/").append(doc.getPath()).append("/doc_")
-				.append(doc.getId()).append("/").toString();
-		return path;
-	}
-
 	@Override
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
@@ -507,6 +507,92 @@ public class DocumentManagerImpl implements DocumentManager {
 			boolean immediateIndexing) throws Exception {
 		return create(content, filename, folder, user, language, title, sourceDate, source, sourceAuthor, sourceType,
 				coverage, versionDesc, keywords, templateId, extendedAttributes, null, null, null, immediateIndexing);
+	}
+
+	@Override
+	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
+			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
+			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
+			String sourceId, String object, String recipient, boolean immediateIndexing) throws Exception {
+
+		try {
+			Document doc = new Document();
+			doc.setFolder(folder);
+			doc.setFileName(filename);
+			doc.setDate(new Date());
+
+			String fallbackTitle = filename;
+			String type = "unknown";
+			int lastDotIndex = filename.lastIndexOf(".");
+			if (lastDotIndex > 0) {
+				fallbackTitle = filename.substring(0, lastDotIndex);
+				type = filename.substring(lastDotIndex + 1).toLowerCase();
+			}
+
+			if (StringUtils.isNotEmpty(title)) {
+				doc.setTitle(title);
+			} else {
+				doc.setTitle(fallbackTitle);
+			}
+
+			setUniqueTitle(doc);
+			setUniqueFilename(doc);
+
+			if (sourceDate != null)
+				doc.setSourceDate(sourceDate);
+			else
+				doc.setSourceDate(doc.getDate());
+			doc.setPublisher(user.getFullName());
+			doc.setPublisherId(user.getId());
+			doc.setStatus(Document.DOC_CHECKED_IN);
+			doc.setType(type);
+			doc.setVersion("1.0");
+			doc.setFileVersion("1.0");
+			doc.setSource(source);
+			doc.setSourceAuthor(sourceAuthor);
+			doc.setSourceType(sourceType);
+			doc.setCoverage(coverage);
+			doc.setLanguage(language);
+			doc.setObject(object);
+			doc.setSourceId(sourceId);
+			doc.setRecipient(recipient);
+			if (keywords != null)
+				doc.setKeywords(keywords);
+
+			/* Set template and extended attributes */
+			if (templateId != null) {
+				DocumentTemplate template = documentTemplateDAO.findById(templateId);
+				doc.setTemplate(template);
+				if (extendedAttributes != null)
+					doc.setAttributes(extendedAttributes);
+			}
+			documentDAO.store(doc);
+
+			/* store the document */
+			store(doc, content);
+
+			createHistoryEntry(doc.getId(), user, History.STORED, "");
+
+			File file = getDocumentFile(doc);
+			if (immediateIndexing) {
+				/* create search index entry */
+				String lang = doc.getLanguage();
+				indexer.addFile(file, doc, getDocumentContent(doc), lang);
+				doc.setIndexed(1);
+			}
+			doc.setFileSize(file.length());
+			documentDAO.store(doc);
+
+			// Store the initial version 1.0
+			Version vers = Version.create(doc, user, versionDesc, Version.STORED);
+			versionDAO.store(vers);
+			log.debug("Stored version " + vers.getVersion());
+
+			return doc;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	/**
@@ -698,94 +784,6 @@ public class DocumentManagerImpl implements DocumentManager {
 					immediateIndexing);
 		} finally {
 			is.close();
-		}
-	}
-
-	@Override
-	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
-			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
-			String sourceId, String object, String recipient, boolean immediateIndexing) throws Exception {
-
-		try {
-			Document doc = new Document();
-			doc.setFolder(folder);
-			doc.setFileName(filename);
-			doc.setDate(new Date());
-
-			String fallbackTitle = filename;
-			String type = "unknown";
-			int lastDotIndex = filename.lastIndexOf(".");
-			if (lastDotIndex > 0) {
-				fallbackTitle = filename.substring(0, lastDotIndex);
-				type = filename.substring(lastDotIndex + 1).toLowerCase();
-			}
-
-			if (StringUtils.isNotEmpty(title)) {
-				doc.setTitle(title);
-			} else {
-				doc.setTitle(fallbackTitle);
-			}
-
-			setUniqueTitle(doc);
-			setUniqueFilename(doc);
-
-			if (sourceDate != null)
-				doc.setSourceDate(sourceDate);
-			else
-				doc.setSourceDate(doc.getDate());
-			doc.setPublisher(user.getFullName());
-			doc.setPublisherId(user.getId());
-			doc.setStatus(Document.DOC_CHECKED_IN);
-			doc.setType(type);
-			doc.setVersion("1.0");
-			doc.setSource(source);
-			doc.setSourceAuthor(sourceAuthor);
-			doc.setSourceType(sourceType);
-			doc.setCoverage(coverage);
-			doc.setLanguage(language);
-			doc.setObject(object);
-			doc.setSourceId(sourceId);
-			doc.setRecipient(recipient);
-			if (keywords != null)
-				doc.setKeywords(keywords);
-
-			/* Set template and extended attributes */
-			if (templateId != null) {
-				DocumentTemplate template = documentTemplateDAO.findById(templateId);
-				doc.setTemplate(template);
-				if (extendedAttributes != null)
-					doc.setAttributes(extendedAttributes);
-			}
-			documentDAO.store(doc);
-
-			/* store the document */
-			store(doc, content);
-
-			createHistoryEntry(doc.getId(), user, History.STORED, "");
-
-			File file = getDocumentFile(doc);
-			if (immediateIndexing) {
-				/* create search index entry */
-				String lang = doc.getLanguage();
-				indexer.addFile(file, doc, getDocumentContent(doc), lang);
-				doc.setIndexed(1);
-			}
-			doc.setFileSize(file.length());
-			documentDAO.store(doc);
-
-			// Store the initial version 1.0
-			Version vers = Version.createVersion(doc);
-			vers.setUserId(user.getId());
-			vers.setComment(versionDesc);
-			vers.setUsername(user.getFullName());
-			versionDAO.store(vers);
-			log.debug("Stored version " + vers.getVersion());
-			
-			return doc;
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			throw e;
 		}
 	}
 
