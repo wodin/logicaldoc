@@ -2,8 +2,7 @@
 <!-- 
  This page shows the list of all versions of the selected document
   
- @author Marco Meschieri
- @version $Id: listVersions.jspx,v 1.2 2006/08/29 16:33:46 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -68,7 +67,7 @@
 							<ice:outputText value="#{msgs['date']}" />
 						</f:facet>
 						<ice:panelGroup>
-							<ice:outputText value="#{versionRecord.date}">
+							<ice:outputText value="#{versionRecord.versionDate}">
 								<f:convertDateTime pattern="#{loc.dateFormat}" timeZone="#{StyleBean.timeZone}" />
 							</ice:outputText>
 						</ice:panelGroup>

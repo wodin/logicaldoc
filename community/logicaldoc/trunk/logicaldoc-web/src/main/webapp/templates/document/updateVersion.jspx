@@ -44,7 +44,7 @@
                         <ice:outputLabel value="#{msgs['msg.jsp.versiondate']}" />
                     </ice:panelGroup>
                     <ice:panelGroup>
-                        <ice:outputText value="#{versionForm.date}">
+                        <ice:outputText value="#{versionForm.versionDate}">
                             <f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{StyleBean.timeZone}" />
                         </ice:outputText>
                     </ice:panelGroup>

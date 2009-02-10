@@ -10,8 +10,7 @@ import com.logicaldoc.web.util.FacesUtil;
 /**
  * Utility class suitable for template display
  * 
- * @author Marco Meschieri
- * @version $Id: VersionRecord.java,v 1.1 2007/07/31 16:56:55 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class VersionRecord extends Version {
@@ -97,5 +96,13 @@ public class VersionRecord extends Version {
 
 	public String toString() {
 		return wrappedVersion.toString();
+	}
+
+	public Date getVersionDate() {
+		return wrappedVersion.getVersionDate();
+	}
+
+	public void setVersionDate(Date versionDate) {
+		wrappedVersion.setVersionDate(versionDate);
 	}
 }

@@ -32,7 +32,6 @@ public class VersionsRecordsManager {
 	 * @param doc
 	 */
 	public void selectDocument(Document doc) {
-		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 
 		selectedDocument = doc;
