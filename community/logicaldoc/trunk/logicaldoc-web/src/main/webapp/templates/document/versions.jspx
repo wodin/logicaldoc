@@ -2,8 +2,7 @@
 <!-- 
  Document's versions management
   
- @author Marco Meschieri
- @version $Id: versions.jspx,v 1.2 2006/08/29 16:33:45 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
