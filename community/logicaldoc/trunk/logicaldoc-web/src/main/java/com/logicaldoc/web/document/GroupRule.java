@@ -34,6 +34,8 @@ public class GroupRule {
 	private boolean bulkExport = false;
 	
 	private boolean sign = false;
+	
+	private boolean archive = false;
 
 	/**
 	 * true, if this rule can be changed in a dialog
@@ -54,6 +56,7 @@ public class GroupRule {
 		bulkImport = mg.getBulkImport() == 1;
 		bulkExport = mg.getBulkExport() == 1;
 		sign = mg.getSign() == 1;
+		archive = mg.getArchive() == 1;
 	}
 
 	public long getGroupId() {
@@ -172,5 +175,13 @@ public class GroupRule {
 
 	public void setSign(boolean sign) {
 		this.sign = sign;
+	}
+
+	public boolean isArchive() {
+		return archive;
+	}
+
+	public void setArchive(boolean archive) {
+		this.archive = archive;
 	}
 }

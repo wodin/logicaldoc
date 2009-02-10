@@ -208,6 +208,17 @@
 					</ice:panelGroup>
 				</ice:column>
 				
+				<!-- archive -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['permission.archive']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:selectBooleanCheckbox value="#{rule.archive}"
+							disabled="#{!rule.enabled}" />
+					</ice:panelGroup>
+				</ice:column>
+				
 			</ice:dataTable>
 		</ice:panelGroup>
 		<ice:panelGroup styleClass="commands">
