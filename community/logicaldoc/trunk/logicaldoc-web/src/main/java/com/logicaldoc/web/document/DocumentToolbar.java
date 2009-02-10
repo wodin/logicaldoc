@@ -50,18 +50,15 @@ public class DocumentToolbar {
 
 		command = new DocumentCommand();
 		commands.add(command);
-		command.setTitle(Messages.getMessage("cut"));
-		command.setIcon("actions_trim.gif");
-		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.trimSelected"));
-		command
-				.setRenderedBinding(FacesUtil
-						.createValueBinding("documentsRecordsManager.clipboardSize==0 and documentNavigation.selectedDir.writeEnabled"));
+		command.setTitle(Messages.getMessage("clipboard.copy"));
+		command.setIcon("actions_copy.gif");
+		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.copyToClipboard"));
 
 		command = new DocumentCommand();
 		commands.add(command);
-		command.setTitle(Messages.getMessage("paste"));
-		command.setIcon("actions_paste.gif");
-		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.paste"));
+		command.setTitle(Messages.getMessage("clipboard.move"));
+		command.setIcon("actions_move.gif");
+		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.move"));
 		command
 				.setRenderedBinding(FacesUtil
 						.createValueBinding("documentsRecordsManager.clipboardSize>0 and documentNavigation.selectedDir.writeEnabled"));
@@ -156,11 +153,17 @@ public class DocumentToolbar {
 		}
 
 		public Boolean getRendered() {
-			return (Boolean) renderedBinding.getValue(FacesContext.getCurrentInstance());
+			if (renderedBinding != null)
+				return (Boolean) renderedBinding.getValue(FacesContext.getCurrentInstance());
+			else
+				return true;
 		}
 
 		public String action() {
-			return (String) action.invoke(FacesContext.getCurrentInstance(), new Object[] {});
+			if (action != null)
+				return (String) action.invoke(FacesContext.getCurrentInstance(), new Object[] {});
+			else
+				return "";
 		}
 
 		public String getConfirmation() {

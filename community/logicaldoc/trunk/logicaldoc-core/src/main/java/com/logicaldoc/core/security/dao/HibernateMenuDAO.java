@@ -631,7 +631,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			Iterator<Group> iter = groups.iterator();
 
 			StringBuffer query = new StringBuffer(
-					"select _menugroup.LD_WRITE as WRITE, _menugroup.LD_ADDCHILD as ADDCHILD, _menugroup.LD_MANAGESECURITY as MANAGESECURITY, _menugroup.LD_MANAGEIMMUTABILITY as MANAGEIMMUTABILITY, _menugroup.LD_DELETE as DELETE, _menugroup.LD_RENAME as RENAME, _menugroup.LD_BULKIMPORT as BULKIMPORT, _menugroup.LD_BULKEXPORT as BULKEXPORT, _menugroup.LD_SIGN as SIGN");
+					"select _menugroup.LD_WRITE as WRITE, _menugroup.LD_ADDCHILD as ADDCHILD, _menugroup.LD_MANAGESECURITY as MANAGESECURITY, _menugroup.LD_MANAGEIMMUTABILITY as MANAGEIMMUTABILITY, _menugroup.LD_DELETE as DELETE, _menugroup.LD_RENAME as RENAME, _menugroup.LD_BULKIMPORT as BULKIMPORT, _menugroup.LD_BULKEXPORT as BULKEXPORT, _menugroup.LD_SIGN as SIGN, _menugroup.LD_ARCHIVE as ARCHIVE");
 			query.append(" from ld_menugroup _menugroup");
 			query.append(" where ");
 			query.append(" _menugroup.LD_MENUID=" + menuId);
@@ -688,6 +688,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					if (rs.getInt("SIGN") == 1)
 						if (!permissions.contains(Permission.SIGN))
 							permissions.add(Permission.SIGN);
+					if (rs.getInt("ARCHIVE") == 1)
+						if (!permissions.contains(Permission.ARCHIVE))
+							permissions.add(Permission.ARCHIVE);
 				}
 			} finally {
 				if (rs != null)

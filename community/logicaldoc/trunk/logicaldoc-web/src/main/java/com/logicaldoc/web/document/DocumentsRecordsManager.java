@@ -298,9 +298,9 @@ public class DocumentsRecordsManager extends SortableList {
 	}
 
 	/**
-	 * Trims all selected documents
+	 * Places all selected documents into the clipboard
 	 */
-	public String trimSelected() {
+	public String copyToClipboard() {
 		if (SessionManagement.isValid()) {
 			if (!selection.isEmpty()) {
 				sourceDirectory = selectedDirectory;
@@ -322,9 +322,9 @@ public class DocumentsRecordsManager extends SortableList {
 	}
 
 	/**
-	 * Paste previously trimmed documents into the current directory
+	 * Move documents inside the clipboard into the current directory
 	 */
-	public String paste() {
+	public String move() {
 		if (SessionManagement.isValid()) {
 			if (!clipboard.isEmpty()) {
 				long userId = SessionManagement.getUserId();
