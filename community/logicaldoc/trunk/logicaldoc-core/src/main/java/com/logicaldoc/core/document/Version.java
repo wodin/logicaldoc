@@ -1,6 +1,7 @@
 package com.logicaldoc.core.document;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -10,7 +11,7 @@ import org.apache.commons.beanutils.BeanUtils;
  * @author Marco Meschieri - Logical Objects
  * @version 1.0
  */
-public class Version extends Document implements Comparable<Version> {
+public class Version extends AbstractDocument implements Comparable<Version> {
 	/**
 	 * specifies different version types
 	 */
@@ -37,8 +38,7 @@ public class Version extends Document implements Comparable<Version> {
 	private String kwds;
 
 	private Document document;
-	
-	
+
 	public Version() {
 	}
 
@@ -182,11 +182,16 @@ public class Version extends Document implements Comparable<Version> {
 			e.printStackTrace();
 		}
 
+		version.setId(0);
+		version.setDeleted(0);
+		version.setLastModified(null);
+
 		if (document.getTemplate() != null) {
 			version.setTemplateId(document.getTemplate().getId());
 			version.setTemplateName(document.getTemplate().getName());
 		}
 
+		version.setAttributes(new HashMap<String, String>());
 		if (document.getAttributes() != null) {
 			for (String name : document.getAttributeNames()) {
 				version.getAttributes().put(name, document.getAttributes().get(name));
@@ -195,8 +200,8 @@ public class Version extends Document implements Comparable<Version> {
 
 		version.setFolderId(document.getFolder().getId());
 		version.setTemplateName(document.getFolder().getText());
-
 		version.setKwds(document.getKeywordsString());
+		version.setDocument(document);
 
 		return version;
 	}
