@@ -131,18 +131,16 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setFolder(folder);
 
 			// create new version
-			Version version = createNewVersion(document, versionType, user, versionDesc, document.getVersion(),
-					Version.CHECKIN);
-
-			String newVersion = version.getVersion();
-
-			document.setVersion(newVersion);
-			document.setFileVersion(newVersion);
+			Version version = Version.create(document, user, versionDesc, Version.EVENT_CHECKIN, versionType);
 			if (documentDAO.store(document) == false)
 				throw new Exception();
 
+			// Store the version
+			versionDAO.store(version);
+			log.debug("Stored version " + version.getVersion());
+
 			// create history entry for this checkin event
-			createHistoryEntry(docId, user, History.CHECKIN, "");
+			createHistoryEntry(docId, user, History.EVENT_CHECKEDIN, "");
 
 			// create search index entry
 			if (immediateIndexing)
@@ -150,10 +148,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// store the document in the repository (on the file system)
 			store(document, fileInputStream);
-
-			// Store the version
-			versionDAO.store(version);
-			log.debug("Stored version " + version.getVersion());
 
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
@@ -177,7 +171,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(document);
 
 			// create history entry for this checkout event
-			createHistoryEntry(docId, user, History.CHECKOUT, "");
+			createHistoryEntry(docId, user, History.EVENT_CHECKEDOUT, "");
 
 			log.debug("Checked out document " + docId);
 		} else {
@@ -357,7 +351,12 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.clearKeywords();
 				documentDAO.store(doc);
 				doc.setKeywords(keywords);
+
+				// create a new version
+				Version version = Version.create(doc, user, "", Version.EVENT_CHANGED, Version.VERSION_TYPE.NEW_SUBVERSION);
+
 				documentDAO.store(doc);
+				versionDAO.store(version);
 
 				/* create history entry */
 				History history = new History();
@@ -365,7 +364,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				history.setDate(new Date());
 				history.setUserName(user.getFullName());
 				history.setUserId(user.getId());
-				history.setEvent(History.CHANGED);
+				history.setEvent(History.EVENT_CHANGED);
 				historyDAO.store(history);
 
 				// Launch document re-indexing
@@ -378,28 +377,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			log.error(e.getMessage(), e);
 			throw e;
 		}
-	}
-
-	/**
-	 * Creates a new version object and fills in the provided attributes.
-	 * 
-	 * @param document
-	 * 
-	 * @param versionType either a new release, a new subversion or just the old
-	 *        version
-	 * @param user user creating the new version
-	 * @param description change description
-	 * @param event The event type
-	 * @param docId version should belong to this document
-	 * @param oldVersionName the previous version name
-	 */
-	private Version createNewVersion(Document document, Version.VERSION_TYPE versionType, User user,
-			String description, String oldVersionName, String event) {
-		Version version = Version.create(document, user, description, event);
-		String newVersionName = version.getNewVersionName(oldVersionName, versionType);
-		version.setVersion(newVersionName);
-		version.setFileVersion(newVersionName);
-		return version;
 	}
 
 	/** Creates a new search index entry for the given document */
@@ -571,7 +548,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			/* store the document */
 			store(doc, content);
 
-			createHistoryEntry(doc.getId(), user, History.STORED, "");
+			createHistoryEntry(doc.getId(), user, History.EVENT_STORED, "");
 
 			File file = getDocumentFile(doc);
 			if (immediateIndexing) {
@@ -581,11 +558,12 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setIndexed(1);
 			}
 			doc.setFileSize(file.length());
-			documentDAO.store(doc);
 
 			// Store the initial version 1.0
-			Version vers = Version.create(doc, user, versionDesc, Version.STORED);
+			Version vers = Version.create(doc, user, versionDesc, Version.EVENT_STORED, Version.VERSION_TYPE.OLD_VERSION);
+			documentDAO.store(doc);
 			versionDAO.store(vers);
+
 			log.debug("Stored version " + vers.getVersion());
 
 			return doc;
@@ -666,7 +644,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				documentDAO.store(document);
 
 				// create history entry for this UnCheckout event
-				createHistoryEntry(docId, user, History.UNCHECKOUT, "");
+				createHistoryEntry(docId, user, History.EVENT_UNCHECKOUT, "");
 
 				log.debug("UNChecked out document " + docId);
 			} else {
@@ -683,7 +661,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		if (document.getImmutable() == 0) {
 			documentDAO.makeImmutable(docId);
-			createHistoryEntry(docId, user, History.IMMUTABLE, reason);
+			createHistoryEntry(docId, user, History.EVENT_IMMUTABLE, reason);
 			log.debug("The document " + docId + " has been marked as immutable ");
 		} else {
 			throw new Exception("Document is immutable");
@@ -795,7 +773,10 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(doc);
 
 			// create history entry for this UnCheckout event
-			createHistoryEntry(doc.getId(), user, History.RENAMED, "");
+			createHistoryEntry(doc.getId(), user, History.EVENT_RENAMED, "");
+
+			Version version = Version.create(doc, user, "", Version.EVENT_RENAMED, Version.VERSION_TYPE.NEW_SUBVERSION);
+			versionDAO.store(version);
 
 			log.debug("Document filename renamed: " + doc.getId());
 		} else {

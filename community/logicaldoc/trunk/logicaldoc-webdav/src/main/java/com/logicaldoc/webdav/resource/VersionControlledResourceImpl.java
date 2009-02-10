@@ -242,7 +242,7 @@ implements VersionControlledResource {
 			
 			properties.add(new HrefProperty(VERSION_HISTORY, locator.getResourcePath(), true));
 
-			// DAV:auto-version property: there is no auto version, explicit CHECKOUT is required.
+			// DAV:auto-version property: there is no auto version, explicit EVENT_CHECKEDOUT is required.
             properties.add(new DefaultDavProperty(AUTO_VERSION, null, false));
             
 			if (resource.getIsCheckedOut()){

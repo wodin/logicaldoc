@@ -672,7 +672,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	}
 
 	/**
-	 * The CHECKOUT method
+	 * The EVENT_CHECKEDOUT method
 	 * 
 	 * @param request
 	 * @param response
@@ -691,7 +691,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	}
 
 	/**
-	 * The CHECKIN method
+	 * The EVENT_CHECKEDIN method
 	 * 
 	 * @param request
 	 * @param response
@@ -735,7 +735,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	}
 
 	/**
-	 * The UNCHECKOUT method
+	 * The EVENT_UNCHECKOUT method
 	 * 
 	 * @param request
 	 * @param response

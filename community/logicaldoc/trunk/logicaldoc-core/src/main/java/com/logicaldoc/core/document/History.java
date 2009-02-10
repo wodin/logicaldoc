@@ -10,19 +10,19 @@ import com.logicaldoc.core.PersistentObject;
  * @author Marco Meschieri - Logical Objects
  */
 public class History extends PersistentObject {
-	public final static String STORED = "history.stored";
+	public final static String EVENT_STORED = "event.stored";
 
-	public final static String CHANGED = "history.changed";
+	public final static String EVENT_CHANGED = "event.changed";
 
-	public final static String CHECKIN = "history.checkedin";
+	public final static String EVENT_CHECKEDIN = "event.checkedin";
 
-	public final static String CHECKOUT = "history.checkedout";
+	public final static String EVENT_CHECKEDOUT = "event.checkedout";
 
-	public static final String UNCHECKOUT = "history.uncheckedout";
+	public static final String EVENT_UNCHECKOUT = "event.uncheckedout";
 
-	public static final String IMMUTABLE = "history.makeimmutable";
+	public static final String EVENT_IMMUTABLE = "event.makeimmutable";
 	
-	public static final String RENAMED = "history.renamed";
+	public static final String EVENT_RENAMED = "event.renamed";
 
 	private long docId;
 

@@ -45,7 +45,8 @@
 		<property name="userId" type="long" column="ld_userid" />
 		<property name="versionDate" type="timestamp" column="ld_versiondate" />
 		<property name="comment" type="string" column="ld_comment" length="4000" />
-
+		<property name="event" type="string" column="ld_event" length="255" />
+		
 		<many-to-one name="document" class="com.logicaldoc.core.document.Document" column="ld_documentid" />
 		
 		<map name="attributes" table="ld_version_ext" lazy="true" cascade="all">

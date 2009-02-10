@@ -12,6 +12,7 @@ import org.apache.commons.io.FileUtils;
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
+import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -165,6 +166,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.addKeyword("pluto");
 		doc.setValue("att_1", "val 1");
 		doc.setFileName("test.txt");
+		doc.setFileVersion("1.0");
 
 		// Prepare the document file for digest computation
 		File docFile = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/doc_5/" + doc.getFileVersion()));
@@ -178,11 +180,9 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 		// Try a long keyword
 		doc.addKeyword("123456789123456789123456789");
-		User user=new User();
-		Version version = Version.create(doc, user, "comment", Version.CHECKIN);
-		version.setVersion("1.0");
-		version.setUserId(1);
-		version.setUsername("admin");
+		User user = new User();
+		user.setId(1);
+		Version version = Version.create(doc, user, "comment", Version.EVENT_CHECKIN, VERSION_TYPE.OLD_VERSION);
 
 		assertTrue(dao.store(doc));
 		assertEquals(5, doc.getId());
