@@ -57,7 +57,7 @@ public class DocumentToolbar {
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("clipboard.move"));
-		command.setIcon("actions_move.gif");
+		command.setIcon("actions_paste.gif");
 		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.move"));
 		command
 				.setRenderedBinding(FacesUtil
