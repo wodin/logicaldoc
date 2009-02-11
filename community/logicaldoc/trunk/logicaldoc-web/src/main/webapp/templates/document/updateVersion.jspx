@@ -2,8 +2,7 @@
 <!-- 
  This page is the version editing form
   
- @author Marco Meschieri
- @version $Id: updateVersion.jspx,v 1.2 2006/08/29 16:33:45 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -57,10 +56,11 @@
                     </ice:panelGroup>
 
                     <ice:panelGroup styleClass="outputLabel">
-                        <ice:outputLabel value="#{msgs['msg.jsp.versioncomment']}" />
+                        <ice:outputLabel value="#{msgs['comment']}" />
                     </ice:panelGroup>
                     <ice:panelGroup>
                         <ice:inputTextarea value="#{versionForm.comment}"
+                        binding="#{versionForm.commentInput}"
                             cols="40"
                             rows="3" />
                     </ice:panelGroup>

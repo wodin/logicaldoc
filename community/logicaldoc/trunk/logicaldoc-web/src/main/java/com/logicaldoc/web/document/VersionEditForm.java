@@ -2,21 +2,21 @@ package com.logicaldoc.web.document;
 
 import java.util.Date;
 
+import javax.faces.component.UIInput;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
+import com.logicaldoc.web.util.FacesUtil;
 
 /**
- * Base form for version editingo
+ * Base form for version editing
  * 
- * @author Marco Meschieri
- * @version $Id: VersionEditForm.java,v 1.2 2006/09/03 16:24:37 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class VersionEditForm {
@@ -26,17 +26,20 @@ public class VersionEditForm {
 
 	private String author;
 
-	private Date date;
+	private Date versionDate;
 
 	private String comment;
 
 	private VersionsRecordsManager versionsManager;
 
+	private UIInput commentInput = null;
+
 	public void init(VersionRecord version) {
 		this.version = version.getVersion();
-		this.date = version.getDate();
+		this.versionDate = version.getVersionDate();
 		this.author = version.getUsername();
 		this.comment = version.getComment();
+		FacesUtil.forceRefresh(commentInput);
 	}
 
 	public String getAuthor() {
@@ -45,14 +48,6 @@ public class VersionEditForm {
 
 	public void setAuthor(String author) {
 		this.author = author;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
 	}
 
 	public String getComment() {
@@ -72,22 +67,16 @@ public class VersionEditForm {
 	}
 
 	public String update() {
-		// Show the proper panel
-		Document doc = versionsManager.getSelectedDocument();
-
-		if (SessionManagement.isValid()) {
-			try {
-				VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
-				Version version = vdao.findByVersion(doc.getId(), getVersion());
-				version.setComment(getComment());
-				vdao.store(version);
-				Messages.addLocalizedError("errors.action.changeversion");
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-				Messages.addLocalizedError("errors.action.changeversion");
-			}
-		} else {
-			return "login";
+		try {
+			VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+			Version version = versionsManager.getVersion(getVersion());
+			vdao.initialize(version);
+			version.setComment(getComment());
+			vdao.store(version);
+			Messages.addLocalizedInfo(Messages.getMessage("msg.action.changeversion"));
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			Messages.addLocalizedError("errors.action.changeversion");
 		}
 
 		versionsManager.backToList();
@@ -97,5 +86,21 @@ public class VersionEditForm {
 
 	public void setVersionsManager(VersionsRecordsManager versionsManager) {
 		this.versionsManager = versionsManager;
+	}
+
+	public Date getVersionDate() {
+		return versionDate;
+	}
+
+	public void setVersionDate(Date versionDate) {
+		this.versionDate = versionDate;
+	}
+
+	public UIInput getCommentInput() {
+		return commentInput;
+	}
+
+	public void setCommentInput(UIInput commentInput) {
+		this.commentInput = commentInput;
 	}
 }

@@ -28,7 +28,7 @@
 				<ice:dataTable id="versionData"
 					value="#{versionsRecordsManager.versions}" var="versionRecord"
 					cellpadding="0" width="97%" rows="2000"
-					columnClasses="selectionColumn,dateColumn,dateColumn,titleColumn,selectionColumn">
+					columnClasses="selectionColumn,selectionColumn,selectionColumn,selectionColumn,selectionColumn,selectionColumn">
 
 					<!-- publisher column -->
 					<ice:column>
@@ -40,23 +40,24 @@
 						</ice:panelGroup>
 					</ice:column>
 
+					<!-- event column -->
+					<ice:column>
+						<f:facet name="header">
+							<ice:outputText value="#{msgs['event']}" />
+						</f:facet>
+						<ice:panelGroup>
+							<ice:outputText value="#{msgs[versionRecord.event]}" />
+						</ice:panelGroup>
+					</ice:column>
+
 					<!-- version column -->
 					<ice:column>
 						<f:facet name="header">
 							<ice:outputText value="#{msgs['version']}" />
 						</f:facet>
-						<ice:panelGroup rendered="#{versionRecord.currentVersion}">
+						<ice:panelGroup>
 							<ice:outputLink
-								value="download?docId=#{versionsRecordsManager.selectedDocument.id}"
-								target="_blank"
-								style="color: #344a6a; text-decoration: underline;">
-								<ice:outputText value="#{versionRecord.version}"
-									style="color: #344a6a;" />
-							</ice:outputLink>
-						</ice:panelGroup>
-						<ice:panelGroup rendered="#{!versionRecord.currentVersion}">
-							<ice:outputLink
-								value="download?docId=#{versionsRecordsManager.selectedDocument.id}&amp;versionId=#{versionRecord.version}"
+								value="download?docId=#{versionsRecordsManager.selectedDocument.id}&amp;versionId=#{versionRecord.fileVersion}"
 								style="color: #344a6a; text-decoration: underline;"
 								target="_blank">
 								<ice:outputText value="#{versionRecord.version}"
@@ -65,14 +66,18 @@
 						</ice:panelGroup>
 					</ice:column>
 
-					<!-- fieVersion column -->
+					<!-- fileVersion column -->
 					<ice:column>
 						<f:facet name="header">
 							<ice:outputText value="#{msgs['document.fileVersion']}" />
 						</f:facet>
-						<ice:panelGroup>
-							<ice:outputText value="#{versionRecord.fileVersion}" />
-						</ice:panelGroup>
+						<ice:outputLink
+							value="download?docId=#{versionsRecordsManager.selectedDocument.id}&amp;versionId=#{versionRecord.fileVersion}"
+							style="color: #344a6a; text-decoration: underline;"
+							target="_blank">
+							<ice:outputText value="#{versionRecord.fileVersion}"
+								style="color: #344a6a;" />
+						</ice:outputLink>
 					</ice:column>
 
 					<!-- date column -->
@@ -91,7 +96,7 @@
 					<!-- description column -->
 					<ice:column>
 						<f:facet name="header">
-							<ice:outputText value="#{msgs['msg.jsp.versioncomment']}" />
+							<ice:outputText value="#{msgs['comment']}" />
 						</f:facet>
 						<ice:panelGroup>
 							<ice:outputText value="#{versionRecord.comment}" />
