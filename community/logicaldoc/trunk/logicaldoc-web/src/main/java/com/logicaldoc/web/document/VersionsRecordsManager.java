@@ -7,7 +7,6 @@ import javax.faces.context.FacesContext;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
-import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.navigation.PageContentBean;
@@ -71,6 +70,14 @@ public class VersionsRecordsManager {
 		return versions;
 	}
 
+	public Version getVersion(String version){
+		for (Version ver : getVersions()) {
+			if(ver.getVersion().equals(version))
+				return ver;
+		}
+		return null;
+	}
+	
 	public String back() {
 		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 				"documentNavigation", FacesContext.getCurrentInstance()));

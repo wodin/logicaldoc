@@ -105,4 +105,8 @@ public class VersionRecord extends Version {
 	public String getFileVersion() {
 		return wrappedVersion.getFileVersion();
 	}
+
+	public String getEvent() {
+		return wrappedVersion.getEvent();
+	}
 }

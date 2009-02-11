@@ -2,8 +2,7 @@
 <!-- 
  This page lists articles of a document
   
- @author Marco Meschieri
- @version $Id: history.jspx,v 1.4 2006/09/03 16:24:37 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
