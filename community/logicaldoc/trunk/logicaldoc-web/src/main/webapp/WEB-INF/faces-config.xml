@@ -156,6 +156,12 @@
 	</managed-bean>
 
 	<managed-bean>
+		<managed-bean-name>diffBean</managed-bean-name>
+		<managed-bean-class>com.logicaldoc.web.document.DiffBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+
+	<managed-bean>
 		<managed-bean-name>documentToolbar</managed-bean-name>
 		<managed-bean-class>com.logicaldoc.web.document.DocumentToolbar</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
