@@ -44,6 +44,8 @@ public class Directory extends PageContentBean {
 	private Boolean bulkImportEnabled = null;
 
 	private Boolean bulkExportEnabled = null;
+	
+	private Boolean archiveEnabled = null;
 
 	private String pathExtended;
 
@@ -173,4 +175,14 @@ public class Directory extends PageContentBean {
 		}
 		return bulkExportEnabled.booleanValue();
 	}
+	
+	public boolean isArchiveEnabled() {
+		if (archiveEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			archiveEnabled = new Boolean(mdao.isPermissionEnabled(Permission.ARCHIVE, getMenuId(), SessionManagement
+					.getUserId()));
+		}
+		return archiveEnabled.booleanValue();
+	}
+
 }

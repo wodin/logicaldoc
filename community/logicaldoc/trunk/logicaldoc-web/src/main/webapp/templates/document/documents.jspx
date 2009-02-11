@@ -113,17 +113,17 @@
 					</ice:outputLink>
 					<ice:outputLink
 						value="download?docId=#{documentRecord.docId}&amp;downloadText=true"
-						target="_blank" title="txt"
+						target="_blank" title="#{document.indexed}"
 						rendered="#{documentRecord.document.indexed==1}">
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
-							value="#{StyleBean.imagesPath}/txt-icon.png" alt="txt" />
+							value="#{StyleBean.imagesPath}/txt-icon.png" alt="#{document.indexed}" />
 					</ice:outputLink>
 					<ice:outputLink
 						value="download?docId=#{documentRecord.docId}&amp;suffix=sign.p7m"
-						target="_blank" title="signed"
+						target="_blank" title="#{document.signed}"
 						rendered="#{documentRecord.document.signed==1}">
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
-							value="#{StyleBean.imagesPath}/sign.png" alt="signed" />
+							value="#{StyleBean.imagesPath}/sign.png" alt="#{document.signed}" />
 					</ice:outputLink>
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
