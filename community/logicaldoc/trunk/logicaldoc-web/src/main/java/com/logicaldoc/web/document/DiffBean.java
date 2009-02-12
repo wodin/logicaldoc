@@ -1,5 +1,8 @@
 package com.logicaldoc.web.document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.context.FacesContext;
 
 import com.logicaldoc.core.document.Version;
@@ -25,6 +28,7 @@ public class DiffBean {
 
 	public void setVersion1(Version version1) {
 		this.version1 = version1;
+		this.version2 = version1;
 	}
 
 	public Version getVersion2() {
@@ -48,5 +52,20 @@ public class DiffBean {
 		version2 = manager.getVersion(version2Id).getWrappedVersion();
 		VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 		vdao.initialize(version2);
+	}
+
+	public List<String> getTemplateAttributes() {
+		List<String> attributes = new ArrayList<String>();
+		if (version1 != null && version1.getTemplateId() != null)
+			for (String name : version1.getAttributeNames()) {
+				if (!attributes.contains(name))
+					attributes.add(name);
+			}
+		if (version2 != null && version2.getTemplateId() != null)
+			for (String name : version2.getAttributeNames()) {
+				if (!attributes.contains(name))
+					attributes.add(name);
+			}
+		return attributes;
 	}
 }

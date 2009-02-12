@@ -37,6 +37,9 @@ public class VersionsRecordsManager {
 		VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 		selectedDocument = doc;
 
+		showCompare = false;
+		showList = true;
+
 		// initiate the list
 		if (versions != null) {
 			versions.clear();

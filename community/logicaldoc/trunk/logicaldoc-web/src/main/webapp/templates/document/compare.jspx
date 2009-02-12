@@ -20,6 +20,7 @@
 			<br />
 			<br />
 		</h3>
+
 		<ice:panelGrid columns="4">
 			<ice:outputLabel value="#{msgs['version']}" />
 			<ice:outputText value="#{diffBean.version1.version}" />
@@ -29,14 +30,19 @@
 				<f:selectItems value="#{versionsRecordsManager.versionItems}" />
 			</ice:selectOneMenu>
 
+			<ice:outputLabel value="#{msgs['user']}" />
+			<ice:outputText value="#{diffBean.version1.username}" />
+			<ice:panelGroup style="width:40px" />
+			<ice:outputText value="#{diffBean.version2.username}" />
+
+
 			<ice:outputLabel value="#{msgs['date']}" />
 			<ice:outputText value="#{diffBean.version1.versionDate}">
 				<f:convertDateTime pattern="#{loc.dateFormat}"
 					timeZone="#{StyleBean.timeZone}" />
 			</ice:outputText>
 			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.versionDate}"
-				styleClass="#{diffBean.version1.versionDate!=diffBean.version2.versionDate ? 'iceMsgsError':''}">
+			<ice:outputText value="#{diffBean.version2.versionDate}">
 				<f:convertDateTime pattern="#{loc.dateFormat}"
 					timeZone="#{StyleBean.timeZone}" />
 			</ice:outputText>
@@ -44,168 +50,231 @@
 			<ice:outputLabel value="#{msgs['comment']}" />
 			<ice:outputText value="#{diffBean.version1.comment}" />
 			<ice:panelGroup style="width:40px" />
-			<ice:outputText
-				styleClass="#{diffBean.version1.comment!=diffBean.version2.comment ? 'iceMsgsError':''}"
-				value="#{diffBean.version2.comment}" />
-
-			<ice:outputLabel value="#{msgs['document.customid']}" />
-			<ice:outputText value="#{diffBean.version1.customId}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.customId}"
-				styleClass="#{diffBean.version1.customId!=diffBean.version2.customId ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['document.sourceid']}" />
-			<ice:outputText value="#{diffBean.version1.sourceId}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.sourceId}"
-				styleClass="#{diffBean.version1.sourceId!=diffBean.version2.sourceId ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['document.fileVersion']}" />
-			<ice:outputText value="#{diffBean.version1.fileVersion}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.fileVersion}"
-				styleClass="#{diffBean.version1.fileVersion!=diffBean.version2.fileVersion ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['document.title']}" />
-			<ice:outputText value="#{diffBean.version1.title}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.title}"
-				styleClass="#{diffBean.version1.title!=diffBean.version2.title ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['language']}" />
-			<ice:outputText value="#{diffBean.version1.language}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.language}"
-				styleClass="#{diffBean.version1.language!=diffBean.version2.language ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['document.createdon']}" />
-			<ice:outputText value="#{diffBean.version1.creation}">
-				<f:convertDateTime pattern="#{loc.dateFormat}"
-					timeZone="#{StyleBean.timeZone}" />
-			</ice:outputText>
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.creation}"
-				styleClass="#{diffBean.version1.creation!=diffBean.version2.creation ? 'iceMsgsError':''}">
-				<f:convertDateTime pattern="#{loc.dateFormat}"
-					timeZone="#{StyleBean.timeZone}" />
-			</ice:outputText>
-
-			<ice:outputLabel value="#{msgs['date']}" />
-			<ice:outputText value="#{diffBean.version1.sourceDate}">
-				<f:convertDateTime pattern="#{loc.dateFormat}"
-					timeZone="#{StyleBean.timeZone}" />
-			</ice:outputText>
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.sourceDate}"
-				styleClass="#{diffBean.version1.sourceDate!=diffBean.version2.sourceDate ? 'iceMsgsError':''}">
-				<f:convertDateTime pattern="#{loc.dateFormat}"
-					timeZone="#{StyleBean.timeZone}" />
-			</ice:outputText>
-
-			<ice:outputLabel value="#{msgs['msg.jsp.publishedon']}" />
-			<ice:outputText value="#{diffBean.version1.date}">
-				<f:convertDateTime pattern="#{loc.dateFormat}"
-					timeZone="#{StyleBean.timeZone}" />
-			</ice:outputText>
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.date}"
-				styleClass="#{diffBean.version1.date!=diffBean.version2.date ? 'iceMsgsError':''}">
-				<f:convertDateTime pattern="#{loc.dateFormat}"
-					timeZone="#{StyleBean.timeZone}" />
-			</ice:outputText>
-
-			<ice:outputLabel value="#{msgs['msg.jsp.publishedby']}" />
-			<ice:outputText value="#{diffBean.version1.publisher}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.publisher}"
-				styleClass="#{diffBean.version1.publisher!=diffBean.version2.publisher ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['msg.jsp.publishedby']}" />
-			<ice:outputText value="#{diffBean.version1.publisher}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.publisher}"
-				styleClass="#{diffBean.version1.publisher!=diffBean.version2.publisher ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['document.source']}" />
-			<ice:outputText value="#{diffBean.version1.source}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.source}"
-				styleClass="#{diffBean.version1.source!=diffBean.version2.source ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['document.type']}" />
-			<ice:outputText value="#{diffBean.version1.type}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.type}"
-				styleClass="#{diffBean.version1.type!=diffBean.version2.type ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['document.sourcetype']}" />
-			<ice:outputText value="#{diffBean.version1.sourceType}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.sourceType}"
-				styleClass="#{diffBean.version1.sourceType!=diffBean.version2.sourceType ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['document.author']}" />
-			<ice:outputText value="#{diffBean.version1.sourceAuthor}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.sourceAuthor}"
-				styleClass="#{diffBean.version1.sourceAuthor!=diffBean.version2.sourceAuthor ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['document.object']}" />
-			<ice:outputText value="#{diffBean.version1.object}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.object}"
-				styleClass="#{diffBean.version1.object!=diffBean.version2.object ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['document.coverage']}" />
-			<ice:outputText value="#{diffBean.version1.coverage}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.coverage}"
-				styleClass="#{diffBean.version1.coverage!=diffBean.version2.coverage ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['upload.filename']}" />
-			<ice:outputText value="#{diffBean.version1.fileName}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.fileName}"
-				styleClass="#{diffBean.version1.fileName!=diffBean.version2.fileName ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['size']}" />
-			<ice:outputText value="#{diffBean.version1.fileSize}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.fileSize}"
-				styleClass="#{diffBean.version1.fileSize!=diffBean.version2.fileSize ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['document.recipient']}" />
-			<ice:outputText value="#{diffBean.version1.recipient}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.recipient}"
-				styleClass="#{diffBean.version1.recipient!=diffBean.version2.recipient ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['folder']}" />
-			<ice:outputText value="#{diffBean.version1.folderName}"
-				rendered="#{diffBean.version1.folderId!=5}" />
-			<ice:outputText value="#{msgs[diffBean.version1.folderName]}"
-				rendered="#{diffBean.version1.folderId==5}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.folderName}"
-				rendered="#{diffBean.version1.folderId!=5}"
-				styleClass="#{diffBean.version1.folderName!=diffBean.version2.folderName ? 'iceMsgsError':''}" />
-			<ice:outputText value="#{msgs[diffBean.version2.folderName]}"
-				rendered="#{diffBean.version1.folderId==5}"
-				styleClass="#{diffBean.version1.folderName!=diffBean.version2.folderName ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['tags']}" />
-			<ice:outputText value="#{diffBean.version1.kwds}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.kwds}"
-				styleClass="#{diffBean.version1.kwds!=diffBean.version2.kwds ? 'iceMsgsError':''}" />
-
-			<ice:outputLabel value="#{msgs['template']}" />
-			<ice:outputText value="#{diffBean.version1.templateName}" />
-			<ice:panelGroup style="width:40px" />
-			<ice:outputText value="#{diffBean.version2.templateName}"
-				styleClass="#{diffBean.version1.templateName!=diffBean.version2.templateName ? 'iceMsgsError':''}" />
-
+			<ice:outputText value="#{diffBean.version2.comment}" />
 		</ice:panelGrid>
+
+		<br />
+
+		<ice:panelTabSet tabPlacement="top">
+			<ice:panelTab rendered="true" label="#{msgs['default']}">
+				<ice:panelGrid columns="4">
+					<ice:outputLabel value="#{msgs['document.customid']}"
+						styleClass="#{diffBean.version1.customId!=diffBean.version2.customId ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.customId}"
+						styleClass="#{diffBean.version1.customId!=diffBean.version2.customId ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.customId}"
+						styleClass="#{diffBean.version1.customId!=diffBean.version2.customId ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['document.sourceid']}"
+						styleClass="#{diffBean.version1.sourceId!=diffBean.version2.sourceId ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.sourceId}"
+						styleClass="#{diffBean.version1.sourceId!=diffBean.version2.sourceId ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.sourceId}"
+						styleClass="#{diffBean.version1.sourceId!=diffBean.version2.sourceId ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['document.fileVersion']}"
+						styleClass="#{diffBean.version1.fileVersion!=diffBean.version2.fileVersion ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.fileVersion}"
+						styleClass="#{diffBean.version1.fileVersion!=diffBean.version2.fileVersion ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.fileVersion}"
+						styleClass="#{diffBean.version1.fileVersion!=diffBean.version2.fileVersion ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['document.title']}"
+						styleClass="#{diffBean.version1.title!=diffBean.version2.title ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.title}"
+						styleClass="#{diffBean.version1.title!=diffBean.version2.title ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.title}"
+						styleClass="#{diffBean.version1.title!=diffBean.version2.title ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['language']}"
+						styleClass="#{diffBean.version1.language!=diffBean.version2.language ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.language}"
+						styleClass="#{diffBean.version1.language!=diffBean.version2.language ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.language}"
+						styleClass="#{diffBean.version1.language!=diffBean.version2.language ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['document.createdon']}"
+						styleClass="#{diffBean.version1.creation!=diffBean.version2.creation ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.creation}"
+						styleClass="#{diffBean.version1.creation!=diffBean.version2.creation ? 'iceMsgsError':''}">
+						<f:convertDateTime pattern="#{loc.dateFormat}"
+							timeZone="#{StyleBean.timeZone}" />
+					</ice:outputText>
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.creation}"
+						styleClass="#{diffBean.version1.creation!=diffBean.version2.creation ? 'iceMsgsError':''}">
+						<f:convertDateTime pattern="#{loc.dateFormat}"
+							timeZone="#{StyleBean.timeZone}" />
+					</ice:outputText>
+
+					<ice:outputLabel value="#{msgs['date']}"
+						styleClass="#{diffBean.version1.sourceDate!=diffBean.version2.sourceDate ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.sourceDate}"
+						styleClass="#{diffBean.version1.sourceDate!=diffBean.version2.sourceDate ? 'iceMsgsError':''}">
+						<f:convertDateTime pattern="#{loc.dateFormat}"
+							timeZone="#{StyleBean.timeZone}" />
+					</ice:outputText>
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.sourceDate}"
+						styleClass="#{diffBean.version1.sourceDate!=diffBean.version2.sourceDate ? 'iceMsgsError':''}">
+						<f:convertDateTime pattern="#{loc.dateFormat}"
+							timeZone="#{StyleBean.timeZone}" />
+					</ice:outputText>
+
+					<ice:outputLabel value="#{msgs['msg.jsp.publishedon']}"
+						styleClass="#{diffBean.version1.date!=diffBean.version2.date ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.date}"
+						styleClass="#{diffBean.version1.date!=diffBean.version2.date ? 'iceMsgsError':''}">
+						<f:convertDateTime pattern="#{loc.dateFormat}"
+							timeZone="#{StyleBean.timeZone}" />
+					</ice:outputText>
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.date}"
+						styleClass="#{diffBean.version1.date!=diffBean.version2.date ? 'iceMsgsError':''}">
+						<f:convertDateTime pattern="#{loc.dateFormat}"
+							timeZone="#{StyleBean.timeZone}" />
+					</ice:outputText>
+
+					<ice:outputLabel value="#{msgs['msg.jsp.publishedby']}"
+						styleClass="#{diffBean.version1.publisher!=diffBean.version2.publisher ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.publisher}"
+						styleClass="#{diffBean.version1.publisher!=diffBean.version2.publisher ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.publisher}"
+						styleClass="#{diffBean.version1.publisher!=diffBean.version2.publisher ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['msg.jsp.publishedby']}"
+						styleClass="#{diffBean.version1.publisher!=diffBean.version2.publisher ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.publisher}"
+						styleClass="#{diffBean.version1.publisher!=diffBean.version2.publisher ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.publisher}"
+						styleClass="#{diffBean.version1.publisher!=diffBean.version2.publisher ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['document.source']}"
+						styleClass="#{diffBean.version1.source!=diffBean.version2.source ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.source}"
+						styleClass="#{diffBean.version1.source!=diffBean.version2.source ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.source}"
+						styleClass="#{diffBean.version1.source!=diffBean.version2.source ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['document.type']}"
+						styleClass="#{diffBean.version1.type!=diffBean.version2.type ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.type}"
+						styleClass="#{diffBean.version1.type!=diffBean.version2.type ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.type}"
+						styleClass="#{diffBean.version1.type!=diffBean.version2.type ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['document.sourcetype']}"
+						styleClass="#{diffBean.version1.sourceType!=diffBean.version2.sourceType ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.sourceType}"
+						styleClass="#{diffBean.version1.sourceType!=diffBean.version2.sourceType ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.sourceType}"
+						styleClass="#{diffBean.version1.sourceType!=diffBean.version2.sourceType ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['document.author']}"
+						styleClass="#{diffBean.version1.sourceAuthor!=diffBean.version2.sourceAuthor ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.sourceAuthor}"
+						styleClass="#{diffBean.version1.sourceAuthor!=diffBean.version2.sourceAuthor ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.sourceAuthor}"
+						styleClass="#{diffBean.version1.sourceAuthor!=diffBean.version2.sourceAuthor ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['document.object']}"
+						styleClass="#{diffBean.version1.object!=diffBean.version2.object ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.object}"
+						styleClass="#{diffBean.version1.object!=diffBean.version2.object ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.object}"
+						styleClass="#{diffBean.version1.object!=diffBean.version2.object ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['document.coverage']}"
+						styleClass="#{diffBean.version1.coverage!=diffBean.version2.coverage ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.coverage}"
+						styleClass="#{diffBean.version1.coverage!=diffBean.version2.coverage ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.coverage}"
+						styleClass="#{diffBean.version1.coverage!=diffBean.version2.coverage ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['upload.filename']}"
+						styleClass="#{diffBean.version1.fileName!=diffBean.version2.fileName ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.fileName}"
+						styleClass="#{diffBean.version1.fileName!=diffBean.version2.fileName ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.fileName}"
+						styleClass="#{diffBean.version1.fileName!=diffBean.version2.fileName ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['size']}"
+						styleClass="#{diffBean.version1.fileSize!=diffBean.version2.fileSize ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.fileSize}"
+						styleClass="#{diffBean.version1.fileSize!=diffBean.version2.fileSize ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.fileSize}"
+						styleClass="#{diffBean.version1.fileSize!=diffBean.version2.fileSize ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['document.recipient']}"
+						styleClass="#{diffBean.version1.recipient!=diffBean.version2.recipient ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.recipient}"
+						styleClass="#{diffBean.version1.recipient!=diffBean.version2.recipient ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.recipient}"
+						styleClass="#{diffBean.version1.recipient!=diffBean.version2.recipient ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['folder']}"
+						styleClass="#{diffBean.version1.folderName!=diffBean.version2.folderName ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.folderName}"
+						rendered="#{diffBean.version1.folderId!=5}"
+						styleClass="#{diffBean.version1.folderName!=diffBean.version2.folderName ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{msgs[diffBean.version1.folderName]}"
+						rendered="#{diffBean.version1.folderId==5}"
+						styleClass="#{diffBean.version1.folderName!=diffBean.version2.folderName ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.folderName}"
+						rendered="#{diffBean.version1.folderId!=5}"
+						styleClass="#{diffBean.version1.folderName!=diffBean.version2.folderName ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{msgs[diffBean.version2.folderName]}"
+						rendered="#{diffBean.version1.folderId==5}"
+						styleClass="#{diffBean.version1.folderName!=diffBean.version2.folderName ? 'iceMsgsError':''}" />
+
+					<ice:outputLabel value="#{msgs['tags']}"
+						styleClass="#{diffBean.version1.kwds!=diffBean.version2.kwds ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.kwds}"
+						styleClass="#{diffBean.version1.kwds!=diffBean.version2.kwds ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.kwds}"
+						styleClass="#{diffBean.version1.kwds!=diffBean.version2.kwds ? 'iceMsgsError':''}" />
+				</ice:panelGrid>
+			</ice:panelTab>
+			<ice:panelTab rendered="true" label="#{msgs['template']}">
+				<ice:panelGrid columns="4">
+					<ice:outputLabel value="#{msgs['template']}"
+						styleClass="#{diffBean.version1.templateName!=diffBean.version2.templateName ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.templateName}"
+						styleClass="#{diffBean.version1.templateName!=diffBean.version2.templateName ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.templateName}"
+						styleClass="#{diffBean.version1.templateName!=diffBean.version2.templateName ? 'iceMsgsError':''}" />
+
+					<c:forEach items="#{diffBean.templateAttributes}" var="attribute">
+						<ice:outputLabel value="#{attribute}"
+							styleClass="#{diffBean.version1.attributes[attribute]!=diffBean.version2.attributes[attribute] ? 'iceMsgsError':''}" />
+						<ice:outputText value="#{diffBean.version1.attributes[attribute]}"
+							styleClass="#{diffBean.version1.attributes[attribute]!=diffBean.version2.attributes[attribute] ? 'iceMsgsError':''}" />
+						<ice:panelGroup style="width:40px" />
+						<ice:outputText value="#{diffBean.version2.attributes[attribute]}"
+							styleClass="#{diffBean.version1.attributes[attribute]!=diffBean.version2.attributes[attribute] ? 'iceMsgsError':''}" />
+					</c:forEach>
+				</ice:panelGrid>
+			</ice:panelTab>
+		</ice:panelTabSet>
 	</ice:panelGroup>
 	<hr />
 	<ice:panelGroup styleClass="commands">
