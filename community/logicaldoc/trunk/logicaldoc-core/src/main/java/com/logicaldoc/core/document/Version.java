@@ -30,6 +30,8 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 	public static final String EVENT_RENAMED = "event.renamed";
 
+	public final static String EVENT_MOVED = "event.moved";
+	
 	private String username;
 
 	private Date versionDate = new Date();
