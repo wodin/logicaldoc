@@ -238,10 +238,10 @@
 						styleClass="#{diffBean.version1.folderName!=diffBean.version2.folderName ? 'iceMsgsError':''}" />
 					<ice:panelGroup style="width:40px" />
 					<ice:outputText value="#{diffBean.version2.folderName}"
-						rendered="#{diffBean.version1.folderId!=5}"
+						rendered="#{diffBean.version2.folderId!=5}"
 						styleClass="#{diffBean.version1.folderName!=diffBean.version2.folderName ? 'iceMsgsError':''}" />
 					<ice:outputText value="#{msgs[diffBean.version2.folderName]}"
-						rendered="#{diffBean.version1.folderId==5}"
+						rendered="#{diffBean.version2.folderId==5}"
 						styleClass="#{diffBean.version1.folderName!=diffBean.version2.folderName ? 'iceMsgsError':''}" />
 
 					<ice:outputLabel value="#{msgs['tags']}"

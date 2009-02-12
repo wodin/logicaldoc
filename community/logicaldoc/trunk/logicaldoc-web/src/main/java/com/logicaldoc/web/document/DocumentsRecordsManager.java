@@ -340,7 +340,8 @@ public class DocumentsRecordsManager extends SortableList {
 								skippedSome = true;
 								continue;
 							}
-							docManager.moveToFolder(record.getDocument(), selectedMenuFolder);
+							docManager.moveToFolder(record.getDocument(), selectedMenuFolder, SessionManagement
+									.getUser());
 						}
 						if (skippedSome)
 							Messages.addLocalizedWarn("document.paste.warn");
