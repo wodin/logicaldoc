@@ -353,7 +353,8 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setKeywords(keywords);
 
 				// create a new version
-				Version version = Version.create(doc, user, "", Version.EVENT_CHANGED, Version.VERSION_TYPE.NEW_SUBVERSION);
+				Version version = Version.create(doc, user, "", Version.EVENT_CHANGED,
+						Version.VERSION_TYPE.NEW_SUBVERSION);
 
 				documentDAO.store(doc);
 				versionDAO.store(version);
@@ -420,7 +421,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void moveToFolder(Document doc, Menu folder) throws Exception {
+	public void moveToFolder(Document doc, Menu folder, User user) throws Exception {
 		if (folder.equals(doc.getFolder()))
 			return;
 
@@ -449,6 +450,10 @@ public class DocumentManagerImpl implements DocumentManager {
 				File destFile = new File(newDocDir, doc.getFileName());
 				originalFile.renameTo(destFile);
 			}
+
+			createHistoryEntry(doc.getId(), user, History.EVENT_MOVED, "");
+			Version version = Version.create(doc, user, "", Version.EVENT_MOVED, Version.VERSION_TYPE.NEW_SUBVERSION);
+			versionDAO.store(version);
 
 			if (doc.getIndexed() == 1) {
 				Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
@@ -560,7 +565,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc.setFileSize(file.length());
 
 			// Store the initial version 1.0
-			Version vers = Version.create(doc, user, versionDesc, Version.EVENT_STORED, Version.VERSION_TYPE.OLD_VERSION);
+			Version vers = Version.create(doc, user, versionDesc, Version.EVENT_STORED,
+					Version.VERSION_TYPE.OLD_VERSION);
 			documentDAO.store(doc);
 			versionDAO.store(vers);
 

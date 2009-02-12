@@ -47,7 +47,7 @@ public class ResourceServiceImpl implements ResourceService {
 	private static final String FOLDER_PREFIX = "menu.documents";
 
 	private DocumentDAO documentDAO;
-	
+
 	private VersionDAO versionDAO;
 
 	private MenuDAO menuDAO;
@@ -349,11 +349,10 @@ public class ResourceServiceImpl implements ResourceService {
 
 			Document document = documentDAO.findById(Long.parseLong(source.getID()));
 			documentDAO.initialize(document);
+			User user = userDAO.findById(source.getRequestedPerson());
 
 			if (!source.getName().equals(document.getFileName())) {
-                // we are doing a file rename
-				User user = userDAO.findById(source.getRequestedPerson());
-
+				// we are doing a file rename
 				try {
 					documentManager.rename(document, user, source.getName());
 				} catch (Exception e) {
@@ -361,15 +360,15 @@ public class ResourceServiceImpl implements ResourceService {
 					throw new RuntimeException(e);
 				}
 			} else {
-                // moving the document to another folder
+				// moving the document to another folder
 				boolean destWriteEnabled = destination.isWriteEnabled();
 				if (!destWriteEnabled)
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "Write Rights not granted to this user");
-				
+
 				Menu menu = menuDAO.findById(Long.parseLong(destination.getID()));
 
 				try {
-					documentManager.moveToFolder(document, menu);
+					documentManager.moveToFolder(document, menu, user);
 				} catch (Exception e) {
 					log.warn(e.getMessage(), e);
 				}
@@ -409,7 +408,7 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public void copyResource(Resource destinationResource, Resource resource) throws DavException {
-		
+
 		if (resource.isFolder() == true) {
 			throw new RuntimeException("FolderCopy not supported");
 		} else {
@@ -475,14 +474,14 @@ public class ResourceServiceImpl implements ResourceService {
 
 	@Override
 	public void checkout(Resource resource) throws DavException {
-		
+
 		User user = userDAO.findById(resource.getRequestedPerson());
 
-//		 verify the write permission on the parent folder
+		// verify the write permission on the parent folder
 		Resource parent = getParentResource(resource);
 		if (!parent.isWriteEnabled())
 			throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to checkout resource.");
-		
+
 		try {
 			documentManager.checkout(Long.parseLong(resource.getID()), user);
 		} catch (NumberFormatException e) {
@@ -490,7 +489,7 @@ public class ResourceServiceImpl implements ResourceService {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		
+
 	}
 
 	public boolean isCheckedOut(Resource resource) {
