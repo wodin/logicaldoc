@@ -226,7 +226,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		}
 
 		version.setFolderId(document.getFolder().getId());
-		version.setTemplateName(document.getFolder().getText());
+		version.setFolderName(document.getFolder().getText());
 		version.setKwds(document.getKeywordsString());
 		version.setDocument(document);
 
