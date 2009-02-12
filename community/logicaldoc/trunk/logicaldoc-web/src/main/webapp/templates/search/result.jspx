@@ -80,9 +80,10 @@
 				<ice:panelGrid columns="3">
 					<ice:panelGroup styleClass="resultInfo" style="color: #555555;">
 						<h:outputText value="#{msgs['size']}: " />
-						<h:outputText value="#{entry.size}">
-							<f:convertNumber type="number" />
-						</h:outputText>k
+						<ice:outputText value="#{entry.size}"
+							title="#{msgs['msg.jsp.popup']}">
+							<f:convertNumber pattern="########" />
+						</ice:outputText>k
 					</ice:panelGroup>
 					<ice:panelGroup styleClass="resultInfo">
 						<table cellspacing="0" cellpadding="0" border="0"
