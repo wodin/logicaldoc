@@ -234,7 +234,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		version.setVersion(newVersionName);
 		document.setVersion(newVersionName);
 
-		// If the file changed, than the file version must be changed alsoo
+		// If the file changed, than the file version must be changed also
 		if (Version.EVENT_CHECKIN.equals(event) || Version.EVENT_STORED.equals(event)
 				|| StringUtils.isEmpty(document.getFileVersion())) {
 			version.setFileVersion(newVersionName);
