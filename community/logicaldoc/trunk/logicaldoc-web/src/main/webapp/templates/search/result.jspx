@@ -68,7 +68,7 @@
 						<ice:outputText value="#{entry.title}" style="color: #333399;" />
 						<ice:graphicImage style="margin-left: 5px;" styleClass="iconSmall"
 							rendered="#{entry.document.immutable == 1}"
-							value="#{StyleBean.imagesPath}/immutable.png" title="Immutable" />
+							value="#{StyleBean.imagesPath}/immutable.png" title="#{msgs['document.immutable']}" />
 					</ice:outputLink>
 					<ice:menuPopup id="pop" value="#{entry.docId}">
 						<ice:menuItems value="#{entry.model}" />

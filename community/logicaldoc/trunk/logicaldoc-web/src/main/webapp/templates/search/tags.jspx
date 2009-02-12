@@ -104,7 +104,7 @@
 					</ice:outputLink>
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{entry.document.immutable == 1}"
-						value="#{StyleBean.imagesPath}/immutable.png" title="Immutable" />
+						value="#{StyleBean.imagesPath}/immutable.png" title="#{msgs['document.immutable']}" />
 				</ice:panelGroup>
 			</ice:column>
 
