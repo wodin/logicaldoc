@@ -107,6 +107,10 @@ public class Messages extends AbstractMap<String, String> {
 		addInfo(Messages.getMessage(message));
 	}
 
+	public static void addLocalizedInfo(String message, String[] parameters) {
+		addInfo(Messages.getMessage(message, parameters));
+	}
+	
 	public static void addInfo(String message) {
 		addMessage(FacesMessage.SEVERITY_INFO, null, message, message);
 	}
