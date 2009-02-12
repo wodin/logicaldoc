@@ -107,7 +107,7 @@ public class Messages extends AbstractMap<String, String> {
 		addInfo(Messages.getMessage(message));
 	}
 
-	public static void addLocalizedInfo(String message, String[] parameters) {
+	public static void addLocalizedInfo(String message, Object[] parameters) {
 		addInfo(Messages.getMessage(message, parameters));
 	}
 	
