@@ -65,7 +65,7 @@ public class DocumentToolbar {
 
 		command = new DocumentCommand();
 		commands.add(command);
-		command.setTitle(Messages.getMessage("document.immutable"));
+		command.setTitle(Messages.getMessage("document.immutable.make"));
 		command.setIcon("actions_immutability.gif");
 		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.requestImmutabilityComment"));
 		command.setRenderedBinding(FacesUtil

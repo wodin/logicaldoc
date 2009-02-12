@@ -131,7 +131,7 @@
 						value="#{StyleBean.imagesPath}/lock.png" />
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.document.immutable == 1}"
-						value="#{StyleBean.imagesPath}/immutable.png" title="Immutable" />
+						value="#{StyleBean.imagesPath}/immutable.png" title="#{msgs['document.immutable']}" />
 					<ice:commandLink title="#{msgs['links']}"
 						action="#{documentRecord.links}">
 						<ice:graphicImage style="margin-left: 5px; border: 0px;"
