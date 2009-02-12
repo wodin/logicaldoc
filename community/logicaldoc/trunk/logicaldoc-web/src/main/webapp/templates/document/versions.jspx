@@ -21,9 +21,16 @@
 	</ice:panelGroup>
 
 	<ice:panelGroup id="updateVersion"
-		rendered="#{!versionsRecordsManager.showList}">
+		rendered="#{!versionsRecordsManager.showList and !versionsRecordsManager.showCompare}">
 		<f:subview id="w-updateVersion">
 			<ui:include src="/templates/document/updateVersion.jspx" />
+		</f:subview>
+	</ice:panelGroup>
+	
+	<ice:panelGroup id="compareVersions"
+		rendered="#{versionsRecordsManager.showCompare}">
+		<f:subview id="w-compareVersions">
+			<ui:include src="/templates/document/compare.jspx" />
 		</f:subview>
 	</ice:panelGroup>
 </jsp:root>

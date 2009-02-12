@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.faces.context.FacesContext;
 
 import com.logicaldoc.core.document.Version;
+import com.logicaldoc.core.document.dao.VersionDAO;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.FacesUtil;
 
 /**
@@ -43,6 +45,23 @@ public class VersionRecord extends Version {
 				FacesContext.getCurrentInstance()));
 		versionForm.init(this);
 
+		return null;
+	}
+
+	public String compare() {
+		// Show the proper panel
+		VersionsRecordsManager manager = ((VersionsRecordsManager) FacesUtil.accessBeanFromFacesContext(
+				"versionsRecordsManager", FacesContext.getCurrentInstance()));
+
+		manager.compare();
+
+		// Now initialize the form
+		DiffBean diffBean = ((DiffBean) FacesUtil.accessBeanFromFacesContext("diffBean", FacesContext
+				.getCurrentInstance()));
+
+		VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+		vdao.initialize(wrappedVersion);
+		diffBean.setVersion1(wrappedVersion);
 		return null;
 	}
 
@@ -108,5 +127,9 @@ public class VersionRecord extends Version {
 
 	public String getEvent() {
 		return wrappedVersion.getEvent();
+	}
+
+	public Version getWrappedVersion() {
+		return wrappedVersion;
 	}
 }

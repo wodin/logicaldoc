@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
@@ -19,11 +20,13 @@ import com.logicaldoc.web.util.FacesUtil;
  * @since 3.0
  */
 public class VersionsRecordsManager {
-	private List<Version> versions = new ArrayList<Version>();
+	private List<VersionRecord> versions = new ArrayList<VersionRecord>();
 
 	private Document selectedDocument;
 
 	private boolean showList = true;
+
+	private boolean showCompare = false;
 
 	/**
 	 * Changes the currently selected document and updates the versions list.
@@ -32,14 +35,13 @@ public class VersionsRecordsManager {
 	 */
 	public void selectDocument(Document doc) {
 		VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
-
 		selectedDocument = doc;
 
 		// initiate the list
 		if (versions != null) {
 			versions.clear();
 		} else {
-			versions = new ArrayList<Version>(10);
+			versions = new ArrayList<VersionRecord>(10);
 		}
 
 		List<Version> tmp = vdao.findByDocId(doc.getId());
@@ -66,18 +68,26 @@ public class VersionsRecordsManager {
 	 * 
 	 * @return array list of versions
 	 */
-	public List<Version> getVersions() {
+	public List<VersionRecord> getVersions() {
 		return versions;
 	}
 
-	public Version getVersion(String version){
-		for (Version ver : getVersions()) {
-			if(ver.getVersion().equals(version))
+	public List<SelectItem> getVersionItems() {
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		for (Version version : getVersions()) {
+			items.add(new SelectItem(version.getVersion()));
+		}
+		return items;
+	}
+
+	public VersionRecord getVersion(String version) {
+		for (VersionRecord ver : getVersions()) {
+			if (ver.getVersion().equals(version))
 				return ver;
 		}
 		return null;
 	}
-	
+
 	public String back() {
 		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 				"documentNavigation", FacesContext.getCurrentInstance()));
@@ -88,13 +98,19 @@ public class VersionsRecordsManager {
 
 	public String edit() {
 		showList = false;
+		showCompare = false;
+		return null;
+	}
 
+	public String compare() {
+		showList = false;
+		showCompare = true;
 		return null;
 	}
 
 	public String backToList() {
 		showList = true;
-
+		showCompare = false;
 		return null;
 	}
 
@@ -108,5 +124,9 @@ public class VersionsRecordsManager {
 
 	public boolean isShowList() {
 		return showList;
+	}
+
+	public boolean isShowCompare() {
+		return showCompare;
 	}
 }

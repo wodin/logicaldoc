@@ -1,9 +1,14 @@
 package com.logicaldoc.web.document;
 
+import javax.faces.context.FacesContext;
+
 import com.logicaldoc.core.document.Version;
+import com.logicaldoc.core.document.dao.VersionDAO;
+import com.logicaldoc.util.Context;
+import com.logicaldoc.web.util.FacesUtil;
 
 /**
- * This bean handles diffs between versions 
+ * This bean handles diffs between versions
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 4.5
@@ -11,7 +16,7 @@ import com.logicaldoc.core.document.Version;
 public class DiffBean {
 
 	private Version version1;
-	
+
 	private Version version2;
 
 	public Version getVersion1() {
@@ -29,6 +34,19 @@ public class DiffBean {
 	public void setVersion2(Version version2) {
 		this.version2 = version2;
 	}
-	
-	
+
+	public String getVersion2Id() {
+		if (version2 != null)
+			return version2.getVersion();
+		else
+			return version1.getVersion();
+	}
+
+	public void setVersion2Id(String version2Id) {
+		VersionsRecordsManager manager = ((VersionsRecordsManager) FacesUtil.accessBeanFromFacesContext(
+				"versionsRecordsManager", FacesContext.getCurrentInstance()));
+		version2 = manager.getVersion(version2Id).getWrappedVersion();
+		VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+		vdao.initialize(version2);
+	}
 }
