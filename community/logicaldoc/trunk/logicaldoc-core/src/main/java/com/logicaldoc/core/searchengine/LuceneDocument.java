@@ -106,7 +106,7 @@ public class LuceneDocument {
 	}
 
 	protected void setSize() {
-		String size = String.valueOf(file.length() / 1024);
+		String size = String.valueOf(Math.round(file.length() / 1024));
 		doc.add(new Field(FIELD_SIZE, size, Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 

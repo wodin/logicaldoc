@@ -77,8 +77,7 @@
 				</f:facet>
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
 					menuPopup="pop">
-					<ice:outputLink
-						value="download?docId=#{documentRecord.docId}"
+					<ice:outputLink value="download?docId=#{documentRecord.docId}"
 						target="_blank" title="#{msgs['msg.jsp.popup']}">
 						<ice:outputText value=" #{documentRecord.customId}" />
 					</ice:outputLink>
@@ -116,14 +115,16 @@
 						target="_blank" title="#{msgs['document.indexed']}"
 						rendered="#{documentRecord.document.indexed==1}">
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
-							value="#{StyleBean.imagesPath}/txt-icon.png" alt="#{msgs['document.indexed']}" />
+							value="#{StyleBean.imagesPath}/txt-icon.png"
+							alt="#{msgs['document.indexed']}" />
 					</ice:outputLink>
 					<ice:outputLink
 						value="download?docId=#{documentRecord.docId}&amp;suffix=sign.p7m"
 						target="_blank" title="#{msgs['document.signed']}"
 						rendered="#{documentRecord.document.signed==1}">
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
-							value="#{StyleBean.imagesPath}/sign.png" alt="#{msgs['document.signed']}" />
+							value="#{StyleBean.imagesPath}/sign.png"
+							alt="#{msgs['document.signed']}" />
 					</ice:outputLink>
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
@@ -190,8 +191,10 @@
 				</f:facet>
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
 					menuPopup="pop">
-					<ice:outputText value="#{documentRecord.size} KB"
-						title="#{msgs['msg.jsp.popup']}" />
+					<ice:outputText value="#{documentRecord.document.fileSize/1024}"
+						title="#{msgs['msg.jsp.popup']}">
+						<f:convertNumber pattern="########" />
+					</ice:outputText>KB
 				</ice:panelGroup>
 			</ice:column>
 		</ice:dataTable>
