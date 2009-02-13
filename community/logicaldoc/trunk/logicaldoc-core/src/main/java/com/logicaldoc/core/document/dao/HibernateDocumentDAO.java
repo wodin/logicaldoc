@@ -116,7 +116,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					version.setDeleted(1);
 					getHibernateTemplate().saveOrUpdate(version);
 				}
-				
+
 				// Remove articles
 				for (Article article : articleDAO.findByDocId(docId)) {
 					article.setDeleted(1);
@@ -136,7 +136,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				}
 
 				userDocDAO.deleteByDocId(docId);
+
 				doc.setDeleted(1);
+				if (doc.getCustomId() != null)
+					doc.setCustomId(doc.getCustomId() + "." + doc.getId());
 				store(doc);
 			}
 		} catch (Exception e) {
@@ -220,7 +223,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			// Update size and digest
 			File docFile = new File(
-					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc.getFileVersion()));
+					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
+							.getFileVersion()));
 			if (docFile.exists()) {
 				long size = docFile.length();
 				doc.setFileSize(size);
