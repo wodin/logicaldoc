@@ -399,7 +399,7 @@ public class DocumentsRecordsManager extends SortableList {
 				}
 
 				log.debug("show the upload zip panel");
-				documentNavigation.setSelectedPanel(new PageContentBean("zipUpload"));
+				documentNavigation.setSelectedPanel(new PageContentBean("uploadZip"));
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addError(e.getMessage());
