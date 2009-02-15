@@ -1,11 +1,12 @@
 package com.logicaldoc.util.config;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.jdom.Attribute;
 import org.jdom.Element;
-
-import com.logicaldoc.util.config.XMLBean;
 
 /**
  * Configurator class for spring's application context setup.
@@ -25,7 +26,7 @@ public class ContextConfigurator {
 	public ContextConfigurator() {
 		xml = new XMLBean(getClass().getClassLoader().getResource("context.xml"));
 	}
-
+	
 	public void setProperty(String id, String propertyName, String value) {
 		Element element = xml.getChild("bean", "id", id);
 		List poperties = element.getChildren("property");
@@ -33,6 +34,53 @@ public class ContextConfigurator {
 			Element property = (Element) iter.next();
 			if (propertyName.equals(property.getAttribute("name").getValue())) {
 				property.getChild("value").setText(value);
+				break;
+			}
+		}
+	}
+	
+	public void clearPropertyValue(String id, String propertyName){
+		Element element = xml.getChild("bean", "id", id);
+		List poperties = element.getChildren("property");
+		for (Iterator iter = poperties.iterator(); iter.hasNext();) {
+			Element property = (Element) iter.next();	
+			if (propertyName.equals(property.getAttribute("name").getValue())) {
+				property.removeContent();
+				return;
+			}
+		}
+	}
+	
+	public void addPropertyBeanRefList(String id, String propertyName, List<? extends String> values) {
+		Element element = xml.getChild("bean", "id", id);
+		List poperties = element.getChildren("property");
+		for (Iterator iter = poperties.iterator(); iter.hasNext();) {
+			Element property = (Element) iter.next();
+			
+			if (propertyName.equals(property.getAttribute("name").getValue())) {
+				Collection<Element> beanRefChildren = new LinkedList<Element>();
+				Element listElement = property.getChild("list");
+				if(listElement != null){
+					List<Element> elms = listElement.getChildren();
+					for(Element elm : elms){
+						if(elm.getName().equals("ref"))
+							beanRefChildren.add(elm);
+						
+					}
+				}
+				else {
+					listElement = new Element("list");
+				}
+				
+				for(String value : values){
+					Element refBeanElement = new Element("ref");
+					refBeanElement.setAttribute(new Attribute("bean", value));
+					beanRefChildren.add(refBeanElement);
+				}
+				listElement.removeContent();
+				listElement.setContent(beanRefChildren);
+				property.setContent(listElement);
+				
 				break;
 			}
 		}
