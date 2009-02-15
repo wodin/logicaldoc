@@ -65,6 +65,11 @@
         <parameter-def id="class" />
         <parameter-def id="position" />
     </extension-point>
+
+    <extension-point id="AuthenticationComponents">
+    	<parameter-def id="beanId" />
+    </extension-point>
+
     <extension-point id="DocumentToolbar">
         <parameter-def id="action" />
         <parameter-def id="title" />
@@ -82,4 +87,8 @@
         <parameter-def id="permission" />
         <parameter-def id="position" />
     </extension-point>
+    
+    <extension plugin-id="logicaldoc-core" point-id="AuthenticationComponents" id="basicAuth">
+		<parameter id="beanId" value="basicAuthentication"/>
+	</extension>
 </plugin>
