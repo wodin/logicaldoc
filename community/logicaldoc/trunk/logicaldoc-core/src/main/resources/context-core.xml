@@ -27,7 +27,6 @@
 		</property>
 	</bean>
 
-
 	<!--DAOs-->
 	<bean id="UserDAO" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
@@ -456,4 +455,11 @@
 			<value>${schedule.cron.IndexerTask}</value>
 		</property>
 	</bean>
+	
+	<!-- Authentication -->
+	
+	<bean id="basicAuthentication" class="com.logicaldoc.core.security.authentication.BasicAuthentication">
+		<property name="userDAO" ref="UserDAO"/>
+	</bean>
+	
 </beans>
