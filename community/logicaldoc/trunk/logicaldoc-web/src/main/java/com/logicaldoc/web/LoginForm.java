@@ -15,6 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
@@ -50,9 +51,13 @@ public class LoginForm {
 	 */
 	public String login() {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = userDao.findByUserName(j_username);
+		AuthenticationChain authenticationChain = (AuthenticationChain)	Context.getInstance().getBean("authenticationChain");
+		
 
-		if (userDao.validateUser(j_username, j_password)) {
+		if (authenticationChain.authenticate(j_username, j_password)) {
+			
+			User user = userDao.findByUserName(j_username);
+			
 			logger.info("User " + j_username + " logged in.");
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
