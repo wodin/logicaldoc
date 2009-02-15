@@ -197,4 +197,8 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="authenticationChain" class="com.logicaldoc.core.security.authentication.AuthenticationChain">
+		<property name="authenticationComponents"><list></list></property>
+	</bean>
 </beans>
