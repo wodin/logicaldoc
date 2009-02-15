@@ -1,0 +1,35 @@
+package com.logicaldoc.authentication.ldap;
+
+import java.util.Hashtable;
+
+import javax.naming.Context;
+
+/**
+ * 
+ * @author Sebastian Wenzky
+ *
+ */
+@SuppressWarnings("unchecked")
+public class DigestMD5LdapContextSource extends BasicLDAPContextSource{
+	
+	private String _localBase;
+	
+	@Override
+	public void setBase(String base) {
+		super.setBase(base);
+		this._localBase = base;
+	}
+	
+	
+	@Override
+	protected void setupAuthenticatedEnvironment(Hashtable env) {
+		super.setupAuthenticatedEnvironment(env);
+		env.put("java.naming.security.sasl.realm", super.getRealm());
+		//standard md5 context
+		env.put(Context.SECURITY_AUTHENTICATION,"DIGEST-MD5");
+		String[] urls = this.getUrls();
+		//redefine urls for secured login
+		for(int i = 0; i < urls.length; i++)
+			urls[i] = urls[i] + "/" + _localBase;
+	}
+}
