@@ -142,6 +142,7 @@
 		<module>logicaldoc-help</module>
 		<module>logicaldoc-webservice</module>
 		<module>logicaldoc-webdav</module>
+		<module>logicaldoc-external-authentication</module>
 		<module>logicaldoc-web</module>
 		<module>logicaldoc-testbench</module>
 	</modules>
