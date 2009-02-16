@@ -3,19 +3,20 @@ package com.logicaldoc.core.security.authentication;
 import com.logicaldoc.core.security.dao.UserDAO;
 
 /**
+ * This is the basic authentication mechanism, that searches for the user in the
+ * LogicalDOC database.
  * 
  * @author Sebastian Wenzky
  * @since 4.5
  */
-public class BasicAuthentication implements ForeignSystemComponent{
+public class BasicAuthentication implements ForeignSystemComponent {
 
 	private UserDAO userDAO;
-	
-	
+
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
-	
+
 	@Override
 	public int getOrderId() {
 		return 0;
@@ -23,7 +24,7 @@ public class BasicAuthentication implements ForeignSystemComponent{
 
 	@Override
 	public boolean validateOnUser(String user) {
-		if(user.equals("admin"))
+		if (user.equals("admin"))
 			return true;
 		else
 			return false;
@@ -33,5 +34,4 @@ public class BasicAuthentication implements ForeignSystemComponent{
 	public boolean authenticate(String username, String password) {
 		return userDAO.validateUser(username, password);
 	}
-
 }
