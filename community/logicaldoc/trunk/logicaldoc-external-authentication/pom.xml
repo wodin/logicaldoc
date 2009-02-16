@@ -41,13 +41,13 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-core</artifactId>
-			<version>4.0.0</version>
+			<version>4.5.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-util</artifactId>
-			<version>4.0.0</version>
+			<version>4.5.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
