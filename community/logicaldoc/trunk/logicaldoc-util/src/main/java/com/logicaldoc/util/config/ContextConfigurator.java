@@ -55,6 +55,8 @@ public class ContextConfigurator {
 
 	public void addPropertyBeanRefList(String id, String propertyName, List<? extends String> values) {
 		Element element = xml.getChild("bean", "id", id);
+		if (element == null)
+			return;
 		List poperties = element.getChildren("property");
 		for (Iterator iter = poperties.iterator(); iter.hasNext();) {
 			Element property = (Element) iter.next();
