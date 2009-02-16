@@ -52,7 +52,7 @@
 		Version: Windows Server 2003 Professional SP2
 	-->
 	<!-- 
-		<bean id="ldapUserGroupContext" class="com.logicaldoc.authentication.ldap.LDAPUserGroupContext">
+		<bean id="LDAPUserGroupContext" class="com.logicaldoc.authentication.ldap.LDAPUserGroupContext">
 		<property name="userIdentiferAttribute" value="CN"/>
 		<property name="logonAttribute" value="sAMAccountName"/>
 		<property name="userClass" value="person"/>
