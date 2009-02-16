@@ -44,6 +44,10 @@
 				<prop key="kocontent.category">search</prop>
 				<prop key="enablerest">false</prop>
 				<prop key="enablerest.category">webservice</prop>
+                <prop key="importdir">${conf.importdir}</prop>
+                <prop key="importdir.category">directory</prop>
+                <prop key="exportdir">${conf.exportdir}</prop>
+                <prop key="exportdir.category">directory</prop>
 			</props>
 		</property>
 	</bean>
