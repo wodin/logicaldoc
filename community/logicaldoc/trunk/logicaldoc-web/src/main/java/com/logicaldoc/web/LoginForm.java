@@ -47,17 +47,16 @@ public class LoginForm {
 	/**
 	 * Login handler
 	 * 
-	 * @return "success" if the user was succesfully authenticated
+	 * @return "success" if the user was successfully authenticated
 	 */
 	public String login() {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		AuthenticationChain authenticationChain = (AuthenticationChain)	Context.getInstance().getBean("authenticationChain");
-		
+		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
+				AuthenticationChain.class);
 
 		if (authenticationChain.authenticate(j_username, j_password)) {
-			
 			User user = userDao.findByUserName(j_username);
-			
+
 			logger.info("User " + j_username + " logged in.");
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
