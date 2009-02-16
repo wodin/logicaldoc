@@ -16,9 +16,6 @@
 		<library id="ldapbp" path="lib/ldapbp-1.0.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="spring-dao" path="lib/spring-dao-2.0.8.jar" type="code">
-			<export prefix="*" />
-		</library>
 		<library id="spring-ldap" path="lib/spring-ldap-1.1.2.jar" type="code">
 			<export prefix="*" />
 		</library>
