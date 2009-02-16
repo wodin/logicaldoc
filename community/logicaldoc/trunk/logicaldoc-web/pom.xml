@@ -331,6 +331,21 @@
 										${project.build.directory}/${project.build.finalName}/WEB-INF/plugins
 									</outputDirectory>
 								</artifactItem>
+								<artifactItem>
+									<groupId>com.logicaldoc</groupId>
+									<artifactId>
+										logicaldoc-external-authentication
+									</artifactId>
+									<version>
+										${project.version}
+									</version>
+									<type>zip</type>
+									<classifier>plugin</classifier>
+									<overWrite>true</overWrite>
+									<outputDirectory>
+										${project.build.directory}/${project.build.finalName}/WEB-INF/plugins
+									</outputDirectory>
+								</artifactItem>
 							</artifactItems>
 						</configuration>
 					</execution>
