@@ -25,6 +25,6 @@
     </extension-point>
     
 	<extension plugin-id="logicaldoc-external-authentication" point-id="AuthenticationComponents" id="ldapAuth">
-		<parameter id="beanId" value="ldapAuthenticationComponent"/>
+		<parameter id="beanId" value="LDAPAuthenticationComponent"/>
 	</extension>
 </plugin>
