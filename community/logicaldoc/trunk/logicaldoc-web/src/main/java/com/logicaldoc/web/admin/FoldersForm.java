@@ -23,6 +23,8 @@ public class FoldersForm {
     private String docDir = "";
     private String indexDir = "";
     private String userDir = "";
+    private String importDir = "";
+    private String exportDir = "";
 
     public FoldersForm() {
         reload();
@@ -51,6 +53,22 @@ public class FoldersForm {
     public void setUserDir(String userDir) {
         this.userDir = userDir;
     }
+    
+    public String getImportDir() {
+		return importDir;
+	}
+
+	public void setImportDir(String importDir) {
+		this.importDir = importDir;
+	}
+
+	public String getExportDir() {
+		return exportDir;
+	}
+
+	public void setExportDir(String exportDir) {
+		this.exportDir = exportDir;
+	}
 
     private void reload() {
         SettingsConfig conf = (SettingsConfig) Context.getInstance()
@@ -58,6 +76,8 @@ public class FoldersForm {
         docDir = conf.getValue("docdir");
         indexDir = conf.getValue("indexdir");
         userDir = conf.getValue("userdir");
+        importDir = conf.getValue("importdir");
+        exportDir = conf.getValue("exportdir");
     }
 
     public String save() {
@@ -68,11 +88,15 @@ public class FoldersForm {
                 conf.setValue("docdir", docDir);
                 conf.setValue("indexdir", indexDir);
                 conf.setValue("userdir", userDir);
+                conf.setValue("importdir", importDir);
+                conf.setValue("exportdir", exportDir);
 
                 PropertiesBean pbean = (PropertiesBean)Context.getInstance().getBean("ContextProperties");
     			pbean.setProperty("conf.docdir", docDir);
     			pbean.setProperty("conf.indexdir", indexDir);
     			pbean.setProperty("conf.userdir", userDir);
+    			pbean.setProperty("conf.importdir", importDir);
+    			pbean.setProperty("conf.exportdir", exportDir);
     			pbean.write();
                 
                 Messages.addLocalizedInfo("msg.action.savesettings");
