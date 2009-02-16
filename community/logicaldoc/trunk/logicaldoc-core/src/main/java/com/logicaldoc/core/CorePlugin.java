@@ -20,6 +20,8 @@ import com.logicaldoc.util.plugin.LogicalDOCPlugin;
  * @since 3.5.0
  */
 public class CorePlugin extends LogicalDOCPlugin {
+	private static final String AUTHENTICATION_CHAIN_BEAN_ID = "AuthenticationChain";
+
 	private static final String AUTHENTICATION_COMPONENTS_BEAN_ID = "AuthenticationComponents";
 	
 	protected static Log log = LogFactory.getLog(CorePlugin.class);
@@ -47,8 +49,8 @@ public class CorePlugin extends LogicalDOCPlugin {
 			Extension ext = it.next();
 			authenticationComponents.add(ext.getParameter("beanId").valueAsString());
 		}
-		cfg.clearPropertyValue("authenticationChain", AUTHENTICATION_COMPONENTS_BEAN_ID);
-		cfg.addPropertyBeanRefList("authenticationChain", AUTHENTICATION_COMPONENTS_BEAN_ID, authenticationComponents);
+		cfg.clearPropertyValue(AUTHENTICATION_CHAIN_BEAN_ID, AUTHENTICATION_COMPONENTS_BEAN_ID);
+		cfg.addPropertyBeanRefList(AUTHENTICATION_CHAIN_BEAN_ID, AUTHENTICATION_COMPONENTS_BEAN_ID, authenticationComponents);
 		
 		cfg.write();
 	}
