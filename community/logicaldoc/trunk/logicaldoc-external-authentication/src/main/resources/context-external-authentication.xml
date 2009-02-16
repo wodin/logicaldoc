@@ -119,7 +119,7 @@
 		<!-- time entries in quartz syntax -->
 		<property name="synchronisationTime" value="" />
 		<property name="ldapUserGroupContext"
-			ref="ldapUserGroupContext" />
+			ref="LDAPUserGroupContext" />
 		<property name="userGroupMapping">
 			<map>
 
@@ -130,7 +130,7 @@
 	<bean id="basicUserMapper"
 		class="com.logicaldoc.authentication.ldap.UserAttributeMapper">
 		<property name="ldapUserGroupContext"
-			ref="ldapUserGroupContext" />
+			ref="LDAPUserGroupContext" />
 	</bean>
 
 	<bean id="basicGroupMapper"
@@ -140,7 +140,7 @@
 	<bean id="ldapUserGroupDao"
 		class="com.logicaldoc.authentication.ldap.UserGroupMappingImpl">
 		<property name="ldapUserGroupContext"
-			ref="ldapUserGroupContext" />
+			ref="LDAPUserGroupContext" />
 		<property name="ldapTemplate" ref="LdapTemplate" />
 		<property name="userMapper" ref="basicUserMapper" />
 		<property name="groupMapper" ref="basicGroupMapper" />
@@ -149,7 +149,7 @@
 	<bean id="synchronisationJob"
 		class="com.logicaldoc.authentication.ldap.ExpImpSynchronisationJob">
 		<property name="synchronisationContext"
-			ref="ldapSynchronisationContext" />
+			ref="LDAPSynchronisationContext" />
 		<property name="ldapTemplate" ref="LdapTemplate" />
 		<property name="userDao" ref="UserDAO" />
 		<property name="groupDao" ref="GroupDAO" />
