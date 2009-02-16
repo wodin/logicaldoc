@@ -22,11 +22,11 @@ public class ContextConfigurator {
 	public ContextConfigurator(String resource) {
 		xml = new XMLBean(getClass().getClassLoader().getResource(resource));
 	}
-	
+
 	public ContextConfigurator() {
 		xml = new XMLBean(getClass().getClassLoader().getResource("context.xml"));
 	}
-	
+
 	public void setProperty(String id, String propertyName, String value) {
 		Element element = xml.getChild("bean", "id", id);
 		List poperties = element.getChildren("property");
@@ -38,41 +38,42 @@ public class ContextConfigurator {
 			}
 		}
 	}
-	
-	public void clearPropertyValue(String id, String propertyName){
+
+	public void clearPropertyValue(String id, String propertyName) {
 		Element element = xml.getChild("bean", "id", id);
+		if (element == null)
+			return;
 		List poperties = element.getChildren("property");
 		for (Iterator iter = poperties.iterator(); iter.hasNext();) {
-			Element property = (Element) iter.next();	
+			Element property = (Element) iter.next();
 			if (propertyName.equals(property.getAttribute("name").getValue())) {
 				property.removeContent();
 				return;
 			}
 		}
 	}
-	
+
 	public void addPropertyBeanRefList(String id, String propertyName, List<? extends String> values) {
 		Element element = xml.getChild("bean", "id", id);
 		List poperties = element.getChildren("property");
 		for (Iterator iter = poperties.iterator(); iter.hasNext();) {
 			Element property = (Element) iter.next();
-			
+
 			if (propertyName.equals(property.getAttribute("name").getValue())) {
 				Collection<Element> beanRefChildren = new LinkedList<Element>();
 				Element listElement = property.getChild("list");
-				if(listElement != null){
+				if (listElement != null) {
 					List<Element> elms = listElement.getChildren();
-					for(Element elm : elms){
-						if(elm.getName().equals("ref"))
+					for (Element elm : elms) {
+						if (elm.getName().equals("ref"))
 							beanRefChildren.add(elm);
-						
+
 					}
-				}
-				else {
+				} else {
 					listElement = new Element("list");
 				}
-				
-				for(String value : values){
+
+				for (String value : values) {
 					Element refBeanElement = new Element("ref");
 					refBeanElement.setAttribute(new Attribute("bean", value));
 					beanRefChildren.add(refBeanElement);
@@ -80,7 +81,7 @@ public class ContextConfigurator {
 				listElement.removeContent();
 				listElement.setContent(beanRefChildren);
 				property.setContent(listElement);
-				
+
 				break;
 			}
 		}
