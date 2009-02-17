@@ -160,7 +160,7 @@
 		<lookup-method name="obtainNewLdapContextSource"
 			bean="contextSource" />
 		<property name="ldapUserGroupContext"
-			ref="ldapUserGroupContext" />
+			ref="LDAPUserGroupContext" />
 		<property name="userGroupDao" ref="ldapUserGroupDao" />
 		<property name="synchronisationJob" ref="synchronisationJob" />
 		<property name="userDao" ref="UserDAO" />
