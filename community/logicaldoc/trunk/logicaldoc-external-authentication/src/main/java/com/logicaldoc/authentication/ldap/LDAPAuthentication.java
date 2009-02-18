@@ -9,7 +9,7 @@ import javax.naming.CommunicationException;
 import org.springframework.ldap.LdapTemplate;
 
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.authentication.AuthenticationComponent;
+import com.logicaldoc.core.security.authentication.AuthenticationProvider;
 import com.logicaldoc.core.security.dao.UserDAO;
 
 /**
@@ -19,7 +19,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
  * @author Sebastian Wenzky
  * @since 4.5
  */
-public abstract class LDAPAuthenticationComponent implements AuthenticationComponent {
+public abstract class LDAPAuthentication implements AuthenticationProvider {
 
 	private List<String> notValidatedUsers;
 
