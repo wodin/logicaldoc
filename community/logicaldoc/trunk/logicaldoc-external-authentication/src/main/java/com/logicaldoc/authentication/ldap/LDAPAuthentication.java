@@ -15,7 +15,6 @@ import com.logicaldoc.core.security.dao.UserDAO;
 /**
  * Abstract component used as a basis for LDAP implementations
  * 
- * 
  * @author Sebastian Wenzky
  * @since 4.5
  */
