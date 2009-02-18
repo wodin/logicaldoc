@@ -76,8 +76,8 @@ public class SetupWizard implements TabChangeListener {
 			String docDir = FilenameUtils.separatorsToSystem(workingDir + "/data/docs/");
 			String indexDir = FilenameUtils.separatorsToSystem(workingDir + "/data/index/");
 			String userDir = FilenameUtils.separatorsToSystem(workingDir + "/data/users/");
-			String importDir = FilenameUtils.separatorsToSystem(workingDir + "/data/impex/in/");
-			String exportDir = FilenameUtils.separatorsToSystem(workingDir + "/data/impex/out/");
+			String importDir = FilenameUtils.separatorsToSystem(workingDir + "/impex/in/");
+			String exportDir = FilenameUtils.separatorsToSystem(workingDir + "/impex/out/");
 
 			PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 			pbean.setProperty("conf.docdir", docDir);
