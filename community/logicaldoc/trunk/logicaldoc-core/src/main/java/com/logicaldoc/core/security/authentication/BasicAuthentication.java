@@ -9,17 +9,12 @@ import com.logicaldoc.core.security.dao.UserDAO;
  * @author Sebastian Wenzky
  * @since 4.5
  */
-public class BasicAuthentication implements ForeignSystemComponent {
+public class BasicAuthentication implements AuthenticationComponent {
 
 	private UserDAO userDAO;
 
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
-	}
-
-	@Override
-	public int getOrderId() {
-		return 0;
 	}
 
 	@Override

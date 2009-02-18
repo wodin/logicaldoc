@@ -9,6 +9,14 @@ package com.logicaldoc.core.security.authentication;
  */
 public interface AuthenticationComponent {
 
+	/**
+	 * Authenticates the user using the given credentials
+	 * 
+	 * @param username
+	 * @param password
+	 * @return  True only on successful authentication
+	 */
 	public boolean authenticate(String username, String password);
 
+	public boolean validateOnUser(String user);
 }

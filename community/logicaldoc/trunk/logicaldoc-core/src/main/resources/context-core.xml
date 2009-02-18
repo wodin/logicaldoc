@@ -457,9 +457,7 @@
 	</bean>
 	
 	<!-- Authentication -->
-	
-	<bean id="basicAuthentication" class="com.logicaldoc.core.security.authentication.BasicAuthentication">
+	<bean id="BasicAuthentication" class="com.logicaldoc.core.security.authentication.BasicAuthentication">
 		<property name="userDAO" ref="UserDAO"/>
 	</bean>
-	
 </beans>
