@@ -65,7 +65,7 @@ public class ExpImpSynchronisationJob {
 	}
 	
 	public void doImport(List<LdapUser> users, List<LdapGroup> groups){
-		Map<String, Group> systemGroups = new HashMap<String, Group>(); 
+		Map<String, Group> ldocGroups = new HashMap<String, Group>(); 
 		
 		
 		Map<String, User> userMap = new HashMap<String, User>();
@@ -91,13 +91,13 @@ public class ExpImpSynchronisationJob {
 				if(user == null)
 					continue;
 				
-				Group _group = systemGroups.get(ldapGroup.name);
+				Group _group = ldocGroups.get(ldapGroup.name);
 				
 				if(_group == null){
 					_group = new Group();
 					_group.setName(ldapGroup.name);
 					_group.setId(pseudoId);
-					systemGroups.put(ldapGroup.name, _group);
+					ldocGroups.put(ldapGroup.name, _group);
 				}
 				
 				user.getGroups().add(_group);
@@ -106,7 +106,7 @@ public class ExpImpSynchronisationJob {
 			pseudoId++;
 		}
 		
-		Collection<Group> _groups = systemGroups.values();
+		Collection<Group> _groups = ldocGroups.values();
 		createOrUpdateGroups(_groups);
 		
 		
