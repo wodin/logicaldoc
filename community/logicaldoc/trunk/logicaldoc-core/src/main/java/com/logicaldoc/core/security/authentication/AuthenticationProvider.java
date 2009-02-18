@@ -7,7 +7,7 @@ package com.logicaldoc.core.security.authentication;
  * @author Sebastian Wenzky
  * @since 4.5
  */
-public interface AuthenticationComponent {
+public interface AuthenticationProvider {
 
 	/**
 	 * Authenticates the user using the given credentials

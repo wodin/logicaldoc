@@ -20,21 +20,17 @@ import com.logicaldoc.util.PluginRegistry;
  * @author Sebastian Wenzky
  * @since 4.5
  */
-public class AuthenticationChain implements AuthenticationComponent {
+public class AuthenticationChain implements AuthenticationProvider {
 	protected Log log = LogFactory.getLog(AuthenticationChain.class);
 
-	private List<AuthenticationComponent> authenticationComponents = new ArrayList<AuthenticationComponent>();
-
-	public void setAuthenticationComponents(List<AuthenticationComponent> authenticationComponents) {
-		this.authenticationComponents = authenticationComponents;
-	}
+	private List<AuthenticationProvider> providers = new ArrayList<AuthenticationProvider>();
 
 	@Override
 	public boolean authenticate(String username, String password) {
-		if (authenticationComponents == null || authenticationComponents.isEmpty())
+		if (providers == null || providers.isEmpty())
 			init();
 
-		for (AuthenticationComponent cmp : authenticationComponents) {
+		for (AuthenticationProvider cmp : providers) {
 			// validate on user will be true, if a specific component manages
 			// this user explicitally (e.g. admin is BasicAuthentication)
 			if (cmp.validateOnUser(username)) {
@@ -50,6 +46,15 @@ public class AuthenticationChain implements AuthenticationComponent {
 		return false;
 	}
 
+	@Override
+	public boolean validateOnUser(String user) {
+		return false;
+	}
+
+	/**
+	 * Populate the providers chain using the extension point Authentication
+	 * declared in the core plug-in.
+	 */
 	private void init() {
 		Context context = Context.getInstance();
 		PluginRegistry registry = PluginRegistry.getInstance();
@@ -75,14 +80,9 @@ public class AuthenticationChain implements AuthenticationComponent {
 
 		for (Extension extension : sortedExts) {
 			// Retrieve the task name
-			authenticationComponents.add((AuthenticationComponent) context.getBean(extension.getParameter("providerId")
-					.valueAsString()));
+			providers.add((AuthenticationProvider) context
+					.getBean(extension.getParameter("providerId").valueAsString()));
 		}
 		log.info("Authentication chain initialized");
-	}
-
-	@Override
-	public boolean validateOnUser(String user) {
-		return false;
 	}
 }
