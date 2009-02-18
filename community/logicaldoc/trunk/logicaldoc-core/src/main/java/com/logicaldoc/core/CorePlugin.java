@@ -20,38 +20,32 @@ import com.logicaldoc.util.plugin.LogicalDOCPlugin;
  * @since 3.5.0
  */
 public class CorePlugin extends LogicalDOCPlugin {
-	private static final String AUTHENTICATION_CHAIN_BEAN_ID = "AuthenticationChain";
 
-	private static final String AUTHENTICATION_COMPONENTS_BEAN_ID = "AuthenticationComponents";
-	
+
 	protected static Log log = LogFactory.getLog(CorePlugin.class);
 
 	@Override
 	protected void doStart() throws Exception {
-		
-		//Register scheduled tasks
-		TaskManager manager=new TaskManager();
-		manager.registerTasks();
-		
 
-		
+		// Register scheduled tasks
+		TaskManager manager = new TaskManager();
+		manager.registerTasks();
+
 		ContextConfigurator cfg = new ContextConfigurator();
-		
-		
-		//authenticationChain
-		
-		List<String> authenticationComponents = new LinkedList<String>();
-		ExtensionPoint toolExtPoint = getManager().getRegistry()
-				.getExtensionPoint(getDescriptor().getId(),
-						AUTHENTICATION_COMPONENTS_BEAN_ID);
-		for (Iterator<Extension> it = toolExtPoint.getConnectedExtensions()
-				.iterator(); it.hasNext();) {
-			Extension ext = it.next();
-			authenticationComponents.add(ext.getParameter("beanId").valueAsString());
-		}
-		cfg.clearPropertyValue(AUTHENTICATION_CHAIN_BEAN_ID, AUTHENTICATION_COMPONENTS_BEAN_ID);
-		cfg.addPropertyBeanRefList(AUTHENTICATION_CHAIN_BEAN_ID, AUTHENTICATION_COMPONENTS_BEAN_ID, authenticationComponents);
-		
-		cfg.write();
+
+//		// AuthenticationChain
+//		List<String> authenticationComponents = new LinkedList<String>();
+//		authenticationComponents.add("BasicAuthentication");
+//		ExtensionPoint toolExtPoint = getManager().getRegistry().getExtensionPoint(getDescriptor().getId(),
+//				AUTHENTICATION_COMPONENTS_BEAN_ID);
+//		for (Iterator<Extension> it = toolExtPoint.getConnectedExtensions().iterator(); it.hasNext();) {
+//			Extension ext = it.next();
+//			authenticationComponents.add(ext.getParameter("beanId").valueAsString());
+//		}
+//		cfg.clearPropertyValue(AUTHENTICATION_CHAIN_BEAN_ID, AUTHENTICATION_COMPONENTS_BEAN_ID);
+//		cfg.addPropertyBeanRefList(AUTHENTICATION_CHAIN_BEAN_ID, AUTHENTICATION_COMPONENTS_BEAN_ID,
+//				authenticationComponents);
+//		System.out.println("*** authenticationComponents="+authenticationComponents);
+//		cfg.write();
 	}
 }
