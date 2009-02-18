@@ -155,8 +155,8 @@
 		<property name="groupDao" ref="GroupDAO" />
 	</bean>
 
-	<bean id="LDAPAuthenticationComponent"
-		class="com.logicaldoc.authentication.ldap.LDAPAuthenticationComponent">
+	<bean id="LDAPAuthentication"
+		class="com.logicaldoc.authentication.ldap.LDAPAuthentication">
 		<lookup-method name="obtainNewLdapContextSource"
 			bean="contextSource" />
 		<property name="ldapUserGroupContext"
