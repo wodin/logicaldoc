@@ -35,18 +35,13 @@ public class AuthenticationChain implements AuthenticationComponent {
 			init();
 
 		for (AuthenticationComponent cmp : authenticationComponents) {
-			System.out.println("** " + cmp);
-
 			// validate on user will be true, if a specific component manages
 			// this user explicitally (e.g. admin is BasicAuthentication)
 			if (cmp.validateOnUser(username)) {
-				System.out.println("** validateOnUser");
 				return cmp.authenticate(username, password);
 			}
 
 			boolean loggedIn = cmp.authenticate(username, password);
-
-			System.out.println("** " + loggedIn);
 
 			if (loggedIn)
 				return true;
