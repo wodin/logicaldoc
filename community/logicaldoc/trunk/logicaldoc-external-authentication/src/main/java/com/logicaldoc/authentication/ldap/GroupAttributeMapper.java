@@ -24,7 +24,6 @@ public class GroupAttributeMapper implements AttributesMapper{
 	
 		ldapGroup.name = attributes.get("cn").get().toString();
 		Attribute members = attributes.get("member");
-		//System.out.println(ldapGroup.dnName);
 		if(members != null){
 			NamingEnumeration listedMembers = members.getAll();
 			while (listedMembers.hasMoreElements()) {

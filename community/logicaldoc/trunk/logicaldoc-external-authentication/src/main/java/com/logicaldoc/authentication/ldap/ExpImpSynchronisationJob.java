@@ -65,7 +65,6 @@ public class ExpImpSynchronisationJob {
 	}
 	
 	public void doImport(List<LdapUser> users, List<LdapGroup> groups){
-
 		Map<String, Group> systemGroups = new HashMap<String, Group>(); 
 		
 		
@@ -77,9 +76,6 @@ public class ExpImpSynchronisationJob {
 		
 		for(LdapGroup ldapGroup : groups)
 			ldapGroupMap.put(ldapGroup.dn.toString(), ldapGroup);
-		
-		System.out.println();
-		System.out.println();
 		
 		//we need a pseudoId as we need a preceeding numbering 
 		//of groups within users (must be unequal to equals method)
@@ -138,12 +134,10 @@ public class ExpImpSynchronisationJob {
 			
 			group.setId(0);
 			groupDao.insert(group, 0);
-			System.out.println(group);
 		}
 	}
 	
 	private void createOrUpdateUsers(Collection<User> users){
-		
 		for (User user : users) {
 			User _user = userDao.findByUserName(user.getUserName());
 			
