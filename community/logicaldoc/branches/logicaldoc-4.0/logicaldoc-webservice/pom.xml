@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.logicaldoc</groupId>
 		<artifactId>logicaldoc</artifactId>
-		<version>4.0.0</version>
+		<version>4.0.1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>logicaldoc-webservice</artifactId>
@@ -15,13 +15,13 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-core</artifactId>
-			<version>4.0.0</version>
+			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-util</artifactId>
-			<version>4.0.0</version>
+			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
