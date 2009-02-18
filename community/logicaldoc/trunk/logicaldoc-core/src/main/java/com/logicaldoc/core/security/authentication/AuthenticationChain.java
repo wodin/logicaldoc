@@ -79,7 +79,7 @@ public class AuthenticationChain implements AuthenticationProvider {
 		});
 
 		for (Extension extension : sortedExts) {
-			// Retrieve the task name
+			// Retrieve the provider bean id
 			providers.add((AuthenticationProvider) context
 					.getBean(extension.getParameter("providerId").valueAsString()));
 		}
