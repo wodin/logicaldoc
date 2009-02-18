@@ -6,6 +6,8 @@ import java.util.List;
 import javax.naming.AuthenticationException;
 import javax.naming.CommunicationException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.LdapTemplate;
 
 import com.logicaldoc.core.security.User;
@@ -19,6 +21,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
  * @since 4.5
  */
 public abstract class LDAPAuthentication implements AuthenticationProvider {
+	protected static Log log = LogFactory.getLog(LDAPAuthentication.class);
 
 	private List<String> notValidatedUsers;
 
@@ -52,36 +55,41 @@ public abstract class LDAPAuthentication implements AuthenticationProvider {
 
 	@Override
 	public boolean authenticate(String name, String password) {
-
 		boolean foundOnDirectory = false;
 
 		for (String userBase : this.ldapUserGroupContext.getUserBase()) {
+			// This instance is created by Spring on the basis of a prototype
 			BasicLDAPContextSource ldapContextSource = obtainNewLdapContextSource();
 
+			// Change account informations to try a login against the LDAP
+			// server
 			ldapContextSource.setUserName(name);
-			ldapContextSource.setCurrentDN(userBase);
 			ldapContextSource.setPassword(password);
+			ldapContextSource.setCurrentDN(userBase);
 			LdapTemplate ldapTemplate = new LdapTemplate(ldapContextSource);
+
 			try {
-				// TODO: MUST BE IMPROVED!!!
+				// Execute a simple search just to check if we are connected
 				ldapTemplate.list("");
 				foundOnDirectory = true;
 				break;
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				if (e.getCause() instanceof AuthenticationException)
-					System.out.println("User named '" + name + "' not found in directory");
+					log.warn("User named '" + name + "' not found under '" + userBase + "'", e);
 				else if (e.getCause() instanceof CommunicationException) {
-					System.out.println("Directory Server is currently not available");
+					log.error("Directory Server is currently not available");
 					return false;
 				} else {
-					System.out.println(e);
+					log.error(e.getMessage(), e);
 					return false;
 				}
 			}
 		}
 
-		if (foundOnDirectory == false)
+		if (foundOnDirectory == false) {
+			log.warn("User named '" + name + "' not found in directory");
 			return false;
+		}
 
 		// all is okay, user already exist
 		User existingUser = userDAO.findByUserName(name);

@@ -8,20 +8,10 @@ import java.util.Map;
  *
  */
 public class LDAPSynchronisationContext {
-
-	private String synchronisationTime;
 	
 	private LDAPUserGroupContext ldapUserGroupContext;
 	
 	private Map<String, String> userGroupMapping;
-
-	public String getSynchronisationTime() {
-		return synchronisationTime;
-	}
-
-	public void setSynchronisationTime(String synchronisationTime) {
-		this.synchronisationTime = synchronisationTime;
-	}
 
 	public LDAPUserGroupContext getLdapUserContext() {
 		return ldapUserGroupContext;
@@ -38,6 +28,4 @@ public class LDAPSynchronisationContext {
 	public void setUserGroupMapping(Map<String, String> userGroupMapping) {
 		this.userGroupMapping = userGroupMapping;
 	}
-	
-	
 }

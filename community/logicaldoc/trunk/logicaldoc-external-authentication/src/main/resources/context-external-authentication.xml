@@ -16,14 +16,13 @@
 		<property name="groupClass" value="groupOfNames" />
 		<property name="groupIdentiferAttribute" value="cn" />
 		<property name="userBase">
-			<list>
-				<value>ou=users, ou=system</value>
+			<list>			
+				<value>ou=users,ou=system</value>
 			</list>
 		</property>
-
 		<property name="groupBase">
 			<list>
-				<value>ou=groups, ou=system</value>
+				<value>ou=groups,ou=system</value>
 			</list>
 		</property>
 	</bean>
@@ -36,12 +35,12 @@
 		scope="prototype">
 		<property name="url" value="ldap://localhost:10389" />
 		<property name="realm" value="localhost" />
-		<property name="currentDN" value="ou=users, ou=system" />
+		<property name="currentDN" value="ou=system" />
 		<property name="userGroupContext" ref="LDAPUserGroupContext" />
 		<property name="userAuthenticationPatern"
 			value="{logonAttribute}={userName},{userBaseEntry}" />
-		<property name="userName" value="swenzky" />
-		<property name="password" value="Test1234" />
+		<property name="userName" value="admin" />
+		<property name="password" value="admin" />
 	</bean>
 
 
@@ -116,13 +115,10 @@
 
 	<bean id="LDAPSynchronisationContext"
 		class="com.logicaldoc.authentication.ldap.LDAPSynchronisationContext">
-		<!-- time entries in quartz syntax -->
-		<property name="synchronisationTime" value="" />
 		<property name="ldapUserGroupContext"
 			ref="LDAPUserGroupContext" />
 		<property name="userGroupMapping">
 			<map>
-
 			</map>
 		</property>
 	</bean>
