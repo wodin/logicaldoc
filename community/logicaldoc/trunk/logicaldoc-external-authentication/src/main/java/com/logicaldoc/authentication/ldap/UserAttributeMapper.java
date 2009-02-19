@@ -10,9 +10,10 @@ import org.springframework.ldap.AttributesMapper;
 import com.logicaldoc.core.security.User;
 
 /**
+ * Maps LDAP attributes into User attributes
  * 
  * @author Sebastian Wenzky
- * 
+ * @since 4.5
  */
 public class UserAttributeMapper implements AttributesMapper {
 

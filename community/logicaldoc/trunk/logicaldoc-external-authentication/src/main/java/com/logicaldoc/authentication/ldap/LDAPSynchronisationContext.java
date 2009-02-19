@@ -5,12 +5,12 @@ import java.util.Map;
 /**
  * 
  * @author Sebastian Wenzky
- *
+ * 
  */
 public class LDAPSynchronisationContext {
-	
+
 	private LDAPUserGroupContext ldapUserGroupContext;
-	
+
 	private Map<String, String> userGroupMapping;
 
 	public LDAPUserGroupContext getLdapUserContext() {

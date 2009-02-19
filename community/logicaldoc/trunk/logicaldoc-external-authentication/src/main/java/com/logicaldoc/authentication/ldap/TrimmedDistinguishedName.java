@@ -11,35 +11,34 @@ import org.springframework.ldap.support.LdapRdn;
 /**
  * 
  * @author Sebastian Wenzky
- *
+ * @since 4.5
  */
-@SuppressWarnings({"serial", "unchecked"})
-public class TrimmedDistinguishedName extends DistinguishedName{
-	
-	public TrimmedDistinguishedName(String path){
+@SuppressWarnings( { "serial", "unchecked" })
+public class TrimmedDistinguishedName extends DistinguishedName {
+
+	public TrimmedDistinguishedName(String path) {
 		super(path.toLowerCase());
 	}
-	
+
 	@Override
 	public String encode() {
-		 // empty path
+		// empty path
 		List<Name> names = getNames();
-        if (names.size() == 0)
-            return "";
+		if (names.size() == 0)
+			return "";
 
-        StringBuffer buffer = new StringBuffer(256);
+		StringBuffer buffer = new StringBuffer(256);
 
-        ListIterator i = names.listIterator(names.size());
-        while (i.hasPrevious()) {
-            LdapRdn rdn = (LdapRdn) i.previous();
-            buffer.append(rdn.getLdapEncoded().trim());
+		ListIterator i = names.listIterator(names.size());
+		while (i.hasPrevious()) {
+			LdapRdn rdn = (LdapRdn) i.previous();
+			buffer.append(rdn.getLdapEncoded().trim());
 
-            // add comma, except in last iteration
-            if (i.hasPrevious())
-                buffer.append(",");
-        }
+			// add comma, except in last iteration
+			if (i.hasPrevious())
+				buffer.append(",");
+		}
 
-        return buffer.toString();
-
+		return buffer.toString();
 	}
 }
