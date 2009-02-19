@@ -26,6 +26,11 @@
         <validator-class>com.logicaldoc.web.util.TwoFieldsValidator</validator-class>
     </validator>
     
+    <validator>
+        <validator-id>validator.simplestring</validator-id>
+        <validator-class>com.logicaldoc.web.util.SimpleStringValidator</validator-class>
+    </validator>
+    
     <converter>
         <converter-id>logicaldoc.UniversalConverter</converter-id>
         <converter-class>com.logicaldoc.web.util.UniversalConverter</converter-class>
