@@ -14,7 +14,7 @@ import org.springframework.ldap.LdapTemplate;
 /**
  * 
  * @author Sebastian Wenzky
- * 
+ * @since 4.5
  */
 @SuppressWarnings("unchecked")
 public class UserGroupMappingImpl implements UserGroupMapping {
@@ -57,8 +57,8 @@ public class UserGroupMappingImpl implements UserGroupMapping {
 				userList = this.ldapTemplate.search(groupDN, "(& (objectClass=" + ldapUserGroupContext.getUserClass()
 						+ ") (" + ldapUserGroupContext.getLogonAttribute() + "=" + identifierValue + "))", sc,
 						this.userMapper);
-				
-				System.out.println("*** userList="+userList);
+
+				System.out.println("*** userList=" + userList);
 			} catch (Throwable t) {
 				log.error(t.getMessage(), t);
 			}

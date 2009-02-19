@@ -142,8 +142,8 @@
 		<property name="groupMapper" ref="basicGroupMapper" />
 	</bean>
 
-	<bean id="synchronisationJob"
-		class="com.logicaldoc.authentication.ldap.ExpImpSynchronisationJob">
+	<bean id="LDAPSynchroniser"
+		class="com.logicaldoc.authentication.ldap.LDAPSynchroniser">
 		<property name="synchronisationContext"
 			ref="LDAPSynchronisationContext" />
 		<property name="ldapTemplate" ref="LdapTemplate" />
@@ -158,7 +158,7 @@
 		<property name="ldapUserGroupContext"
 			ref="LDAPUserGroupContext" />
 		<property name="userGroupDao" ref="ldapUserGroupDao" />
-		<property name="synchronisationJob" ref="synchronisationJob" />
+		<property name="synchroniser" ref="LDAPSynchroniser" />
 		<property name="userDao" ref="UserDAO" />
 		<property name="notValidatedUsers">
 			<list>

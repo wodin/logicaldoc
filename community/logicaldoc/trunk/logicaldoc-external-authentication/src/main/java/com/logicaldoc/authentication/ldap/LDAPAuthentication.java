@@ -31,14 +31,14 @@ public abstract class LDAPAuthentication implements AuthenticationProvider {
 
 	private UserGroupMappingImpl userGroupDao;
 
-	private ExpImpSynchronisationJob synchronisationJob;
+	private LDAPSynchroniser synchroniser;
 
 	public void setUserDao(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
 
-	public void setSynchronisationJob(ExpImpSynchronisationJob synchronisationJob) {
-		this.synchronisationJob = synchronisationJob;
+	public void setSynchroniser(LDAPSynchroniser synchroniser) {
+		this.synchroniser = synchroniser;
 	}
 
 	public void setUserGroupDao(UserGroupMappingImpl userGroupDao) {
@@ -105,7 +105,7 @@ public abstract class LDAPAuthentication implements AuthenticationProvider {
 		List<LdapUser> oneUserList = new LinkedList<LdapUser>();
 		oneUserList.add(ldapUser);
 
-		synchronisationJob.doImport(oneUserList, userGroupDao.getAllGroups());
+		synchroniser.doImport(oneUserList, userGroupDao.getAllGroups());
 
 		return true;
 	}

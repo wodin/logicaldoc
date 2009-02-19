@@ -9,7 +9,7 @@ import org.springframework.ldap.support.LdapContextSource;
 /**
  * 
  * @author Sebastian Wenzky
- * 
+ * @since 4.5
  */
 public class BasicLDAPContextSource extends LdapContextSource {
 
