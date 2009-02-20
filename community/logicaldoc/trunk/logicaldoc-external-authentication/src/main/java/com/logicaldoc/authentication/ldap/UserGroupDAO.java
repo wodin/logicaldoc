@@ -12,13 +12,13 @@ import org.springframework.ldap.AttributesMapper;
 import org.springframework.ldap.LdapTemplate;
 
 /**
+ * A DAO for accessing LDAP informations regarding users and groups
  * 
  * @author Sebastian Wenzky
  * @since 4.5
  */
-@SuppressWarnings("unchecked")
-public class UserGroupMappingImpl implements UserGroupMapping {
-	protected static Log log = LogFactory.getLog(UserGroupMappingImpl.class);
+public class UserGroupDAO {
+	protected static Log log = LogFactory.getLog(UserGroupDAO.class);
 
 	private LDAPUserGroupContext ldapUserGroupContext;
 
@@ -74,7 +74,7 @@ public class UserGroupMappingImpl implements UserGroupMapping {
 		return null;
 	}
 
-	@Override
+	@SuppressWarnings("unchecked")
 	public List<LdapGroup> getAllGroups() {
 		SearchControls sc = new SearchControls();
 		sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -101,7 +101,7 @@ public class UserGroupMappingImpl implements UserGroupMapping {
 		return groups;
 	}
 
-	@Override
+	@SuppressWarnings("unchecked")
 	public List<LdapUser> getAllUsers() {
 		SearchControls sc = new SearchControls();
 		sc.setSearchScope(SearchControls.SUBTREE_SCOPE);

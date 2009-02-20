@@ -133,22 +133,13 @@
 		class="com.logicaldoc.authentication.ldap.GroupAttributeMapper">
 	</bean>
 
-	<bean id="ldapUserGroupDao"
-		class="com.logicaldoc.authentication.ldap.UserGroupMappingImpl">
+	<bean id="UserGroupDAO"
+		class="com.logicaldoc.authentication.ldap.UserGroupDAO">
 		<property name="ldapUserGroupContext"
 			ref="LDAPUserGroupContext" />
 		<property name="ldapTemplate" ref="LdapTemplate" />
 		<property name="userMapper" ref="basicUserMapper" />
 		<property name="groupMapper" ref="basicGroupMapper" />
-	</bean>
-
-	<bean id="LDAPSynchroniser"
-		class="com.logicaldoc.authentication.ldap.LDAPSynchroniser">
-		<property name="synchronisationContext"
-			ref="LDAPSynchronisationContext" />
-		<property name="ldapTemplate" ref="LdapTemplate" />
-		<property name="userDao" ref="UserDAO" />
-		<property name="groupDao" ref="GroupDAO" />
 	</bean>
 
 	<bean id="LDAPAuthentication"
@@ -157,7 +148,7 @@
 			bean="contextSource" />
 		<property name="ldapUserGroupContext"
 			ref="LDAPUserGroupContext" />
-		<property name="userGroupDao" ref="ldapUserGroupDao" />
+		<property name="userGroupDao" ref="UserGroupDAO" />
 		<property name="synchroniser" ref="LDAPSynchroniser" />
 		<property name="userDao" ref="UserDAO" />
 		<property name="notValidatedUsers">
@@ -166,4 +157,35 @@
 			</list>
 		</property>
 	</bean>
+
+	<bean id="LDAPSynchroniser"
+		class="com.logicaldoc.authentication.ldap.LDAPSynchroniser">
+		<property name="synchronisationContext" ref="LDAPSynchronisationContext" />
+		<property name="ldapTemplate" ref="LdapTemplate" />
+		<property name="userDao" ref="UserDAO" />
+		<property name="groupDao" ref="GroupDAO" />
+		<property name="userGroupDao" ref="UserGroupDAO" />
+	</bean>
+
+	<bean id="LDAPSynchroniserJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="LDAPSynchroniser" />
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="LDAPSynchroniserTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="jobDetail" ref="LDAPSynchroniserJob" />
+		<property name="cronExpression">
+			<value>${schedule.cron.LDAPSynchroniser}</value>
+		</property>
+	</bean>
+	
 </beans>

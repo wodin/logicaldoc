@@ -29,7 +29,7 @@ public abstract class LDAPAuthentication implements AuthenticationProvider {
 
 	private UserDAO userDAO;
 
-	private UserGroupMappingImpl userGroupDao;
+	private UserGroupDAO userGroupDao;
 
 	private LDAPSynchroniser synchroniser;
 
@@ -41,7 +41,7 @@ public abstract class LDAPAuthentication implements AuthenticationProvider {
 		this.synchroniser = synchroniser;
 	}
 
-	public void setUserGroupDao(UserGroupMappingImpl userGroupDao) {
+	public void setUserGroupDao(UserGroupDAO userGroupDao) {
 		this.userGroupDao = userGroupDao;
 	}
 

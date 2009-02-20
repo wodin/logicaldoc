@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.LdapTemplate;
 
 import com.logicaldoc.core.security.Group;
@@ -13,6 +13,7 @@ import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.task.Task;
 import com.logicaldoc.util.Context;
 
 /**
@@ -22,15 +23,30 @@ import com.logicaldoc.util.Context;
  * @author Sebastian Wenzky
  * @since 4.5
  */
-public class LDAPSynchroniser {
+public class LDAPSynchroniser extends Task {
+
+	public static final String NAME = "LDAPSynchroniser";
 
 	private GroupDAO groupDao;
 
 	private UserDAO userDao;
 
+	private UserGroupDAO userGroupDao;
+
 	private LDAPSynchronisationContext synchronisationContext;
 
 	private LdapTemplate ldapTemplate;
+
+	private long imported = 0;
+
+	private long updated = 0;
+
+	private long errors = 0;
+
+	public LDAPSynchroniser() {
+		super(NAME);
+		log = LogFactory.getLog(LDAPSynchroniser.class);
+	}
 
 	public void setUserDao(UserDAO userDao) {
 		this.userDao = userDao;
@@ -38,6 +54,18 @@ public class LDAPSynchroniser {
 
 	public void setGroupDao(GroupDAO groupDao) {
 		this.groupDao = groupDao;
+	}
+
+	public long getImported() {
+		return imported;
+	}
+
+	public long getUpdated() {
+		return updated;
+	}
+
+	public long getErrors() {
+		return errors;
 	}
 
 	public void setSynchronisationContext(LDAPSynchronisationContext synchronisationContext) {
@@ -56,9 +84,12 @@ public class LDAPSynchroniser {
 		this.ldapTemplate = ldapTemplate;
 	}
 
+	public void setUserGroupDao(UserGroupDAO userGroupDao) {
+		this.userGroupDao = userGroupDao;
+	}
+
 	public void doImport(List<LdapUser> users, List<LdapGroup> groups) {
 		Map<String, Group> ldocGroups = new HashMap<String, Group>();
-
 		Map<String, User> userMap = new HashMap<String, User>();
 		Map<String, LdapGroup> ldapGroupMap = new HashMap<String, LdapGroup>();
 
@@ -96,7 +127,6 @@ public class LDAPSynchroniser {
 
 			pseudoId++;
 		}
-
 		Collection<Group> _groups = ldocGroups.values();
 		createOrUpdateGroups(_groups);
 
@@ -107,38 +137,63 @@ public class LDAPSynchroniser {
 
 	private void createOrUpdateGroups(Collection<Group> groups) {
 		for (Group group : groups) {
-
-			Group _group = groupDao.findByName(group.getName());
-			if (_group != null) {
-				groupDao.delete(_group.getId());
-				_group = null;
+			try {
+				Group _group = groupDao.findByName(group.getName());
+				if (_group != null) {
+					// BeanUtils.copyProperties(group, _group, new String[] {
+					// "id" });
+					groupDao.initialize(_group);
+					group.setId(_group.getId());
+					group.setLastModified(group.getLastModified());
+					group.setAttributes(_group.getAttributes());
+					group.setType(_group.getType());
+					if (!groupDao.store(_group))
+						throw new Exception("Unable to store group " + group.getName());
+					updated++;
+				} else {
+					if (!groupDao.insert(group, 0))
+						throw new Exception("Unable to store group " + group.getName());
+					imported++;
+				}
+			} catch (Throwable e) {
+				log.error(e.getMessage(), e);
+				errors++;
+			} finally {
+				next();
 			}
-
-			if (_group != null) {
-				group.setId(_group.getId());
-				group.setLastModified(group.getLastModified());
-				group.setDeleted(_group.getDeleted());
-				group.setAttributes(_group.getAttributes());
-				continue;
-			}
-
-			group.setId(0);
-			groupDao.insert(group, 0);
 		}
 	}
 
 	private void createOrUpdateUsers(Collection<User> users) {
 		for (User user : users) {
-			User _user = userDao.findByUserName(user.getUserName());
+			try {
+				User _user = userDao.findByUserName(user.getUserName());
+				// if the user exists, no changes will be made
+				if (_user != null) {
+					// BeanUtils.copyProperties(user, _user, new
+					// String[]{"id"});
+					userDao.initialize(_user);
+					user.setId(_user.getId());
+					user.setGroups(_user.getGroups());
+					user.setLastModified(_user.getLastModified());
+					updated++;
+				} else {
+					imported++;
+				}
 
-			// if the user exists, no changes will be made
-			if (_user != null) {
-				userDao.delete(_user.getId());
+				// Do we want to remove all groups associations?
+				// Set<Group> grps = user.getGroups();
+				// _user.getGroups().removeAll(grps);
+				if (!userDao.store(user))
+					throw new Exception("Unable to store user " + user.getUserName());
+				
+
+			} catch (Throwable e) {
+				log.error(e.getMessage(), e);
+				errors++;
+			} finally {
+				next();
 			}
-			Set<Group> grps = user.getGroups();
-			user.getGroups().removeAll(grps);
-
-			userDao.store(user);
 		}
 	}
 
@@ -146,6 +201,33 @@ public class LDAPSynchroniser {
 		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
 		for (User user : users) {
 			manager.assignUserToGroups(user, user.getGroupIds());
+		}
+	}
+
+	@Override
+	public boolean isIndeterminate() {
+		return false;
+	}
+
+	@Override
+	protected void runTask() throws Exception {
+		log.info("Start synchronisation from Directory");
+		imported = 0;
+		updated = 0;
+		errors = 0;
+		try {
+			List<LdapGroup> groups = userGroupDao.getAllGroups();
+			List<LdapUser> users = userGroupDao.getAllUsers();
+
+			// First of all compute the task size
+			size = groups.size() + users.size();
+			log.info("Found a total of " + size + " directory entries");
+			doImport(users, groups);
+		} finally {
+			log.info("Synchronisation finished");
+			log.info("Elements imported: " + imported);
+			log.info("Elements updated: " + updated);
+			log.info("Errors: " + errors);
 		}
 	}
 }

@@ -21,4 +21,7 @@
 		<parameter id="providerId" value="LDAPAuthentication"/>
 		<parameter id="position" value="10"/>
 	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="Task" id="ldapTask">
+		<parameter id="name" value="LDAPSynchroniser" />
+	</extension>
 </plugin>
