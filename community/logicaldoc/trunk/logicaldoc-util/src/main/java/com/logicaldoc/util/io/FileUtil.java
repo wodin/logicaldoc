@@ -120,16 +120,16 @@ public class FileUtil {
 					sha.update(message, 0, len);
 				}
 				byte[] messageDigest = sha.digest();
-				//convert the array to String
+				// convert the array to String
 				int size = messageDigest.length;
 				StringBuffer buf = new StringBuffer();
 				int unsignedValue = 0;
 				String strUnsignedValue = null;
 				for (int i = 0; i < size; i++) {
-					//convert each messageDigest byte to unsigned 
+					// convert each messageDigest byte to unsigned
 					unsignedValue = ((int) messageDigest[i]) & 0xff;
 					strUnsignedValue = Integer.toHexString(unsignedValue);
-					//at least two letters
+					// at least two letters
 					if (strUnsignedValue.length() == 1)
 						buf.append("0");
 					buf.append(strUnsignedValue);
@@ -147,4 +147,27 @@ public class FileUtil {
 		return null;
 	}
 
+	/**
+	 * Writes the specified classpath resource into a file
+	 * 
+	 * @param resourceName Fully qualified resource name
+	 * @param out The output file
+	 * @throws IOException
+	 */
+	public static void copyResource(String resourceName, File out) throws IOException {
+		InputStream is = new BufferedInputStream(Thread.currentThread().getContextClassLoader().getResource(
+				resourceName).openStream());
+		OutputStream os = new BufferedOutputStream(new FileOutputStream(out));
+		try {
+			for (;;) {
+				int b = is.read();
+				if (b == -1)
+					break;
+				os.write(b);
+			}
+		} finally {
+			is.close();
+			os.close();
+		}
+	}
 }
