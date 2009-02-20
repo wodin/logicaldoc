@@ -1,6 +1,5 @@
 package com.logicaldoc.authentication.ldap;
 
-import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
@@ -21,15 +20,6 @@ public class UserAttributeMapper implements AttributesMapper {
 
 	public void setLdapUserGroupContext(LDAPUserGroupContext ldapUserGroupContext) {
 		this.ldapUserGroupContext = ldapUserGroupContext;
-	}
-
-	@SuppressWarnings("unused")
-	private void debugPrint(Attributes attributes) {
-		NamingEnumeration<? extends Attribute> atts = attributes.getAll();
-		while (atts.hasMoreElements()) {
-			Attribute attribute = (Attribute) atts.nextElement();
-			System.out.println(attribute);
-		}
 	}
 
 	@Override
@@ -84,5 +74,4 @@ public class UserAttributeMapper implements AttributesMapper {
 
 		return ldapUser;
 	}
-
 }
