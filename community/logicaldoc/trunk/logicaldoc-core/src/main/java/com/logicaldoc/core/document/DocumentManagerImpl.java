@@ -564,14 +564,14 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 			doc.setFileSize(file.length());
 
+			documentDAO.store(doc);
+
 			// Store the initial version 1.0
 			Version vers = Version.create(doc, user, versionDesc, Version.EVENT_STORED,
 					Version.VERSION_TYPE.OLD_VERSION);
-			documentDAO.store(doc);
 			versionDAO.store(vers);
 
 			log.debug("Stored version " + vers.getVersion());
-
 			return doc;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
