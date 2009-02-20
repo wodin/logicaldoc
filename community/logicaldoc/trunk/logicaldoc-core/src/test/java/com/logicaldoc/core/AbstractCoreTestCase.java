@@ -21,15 +21,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.logicaldoc.util.io.FileUtil;
+
 /**
  * Abstract test case for the Core module. This class initialises a test
  * database and prepares the spring test context.
  * <p>
- * All LogicalDOC's tests must extend this test case in order to find a ready and
- * accessible database.
+ * All LogicalDOC's tests must extend this test case in order to find a ready
+ * and accessible database.
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public abstract class AbstractCoreTestCase extends TestCase {
@@ -57,7 +58,7 @@ public abstract class AbstractCoreTestCase extends TestCase {
 		super.setUp();
 
 		tempDir = new File("target/tmp");
-		
+
 		userHome = System.getProperty("user.home");
 		System.setProperty("user.home", tempDir.getPath());
 		context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
@@ -84,30 +85,7 @@ public abstract class AbstractCoreTestCase extends TestCase {
 	}
 
 	protected void copyResource(String classpath, String destinationPath) throws IOException {
-		copyResource(classpath, new File(destinationPath));
-	}
-
-	/**
-	 * Copy a resource from the classpath into a file
-	 * 
-	 * @param classpath The classpath specification
-	 * @param out The target file
-	 * @throws IOException
-	 */
-	protected void copyResource(String classpath, File out) throws IOException {
-		InputStream is = new BufferedInputStream(this.getClass().getResource(classpath).openStream());
-		OutputStream os = new BufferedOutputStream(new FileOutputStream(out));
-		try {
-			for (;;) {
-				int b = is.read();
-				if (b == -1)
-					break;
-				os.write(b);
-			}
-		} finally {
-			is.close();
-			os.close();
-		}
+		FileUtil.copyResource(classpath, new File(destinationPath));
 	}
 
 	/**
