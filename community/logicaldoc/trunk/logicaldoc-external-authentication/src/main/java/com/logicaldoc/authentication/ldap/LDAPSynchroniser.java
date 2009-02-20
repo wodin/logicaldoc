@@ -140,8 +140,6 @@ public class LDAPSynchroniser extends Task {
 			try {
 				Group _group = groupDao.findByName(group.getName());
 				if (_group != null) {
-					// BeanUtils.copyProperties(group, _group, new String[] {
-					// "id" });
 					groupDao.initialize(_group);
 					group.setId(_group.getId());
 					group.setLastModified(group.getLastModified());
@@ -170,8 +168,6 @@ public class LDAPSynchroniser extends Task {
 				User _user = userDao.findByUserName(user.getUserName());
 				// if the user exists, no changes will be made
 				if (_user != null) {
-					// BeanUtils.copyProperties(user, _user, new
-					// String[]{"id"});
 					userDao.initialize(_user);
 					user.setId(_user.getId());
 					user.setGroups(_user.getGroups());
@@ -180,14 +176,8 @@ public class LDAPSynchroniser extends Task {
 				} else {
 					imported++;
 				}
-
-				// Do we want to remove all groups associations?
-				// Set<Group> grps = user.getGroups();
-				// _user.getGroups().removeAll(grps);
 				if (!userDao.store(user))
 					throw new Exception("Unable to store user " + user.getUserName());
-				
-
 			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 				errors++;

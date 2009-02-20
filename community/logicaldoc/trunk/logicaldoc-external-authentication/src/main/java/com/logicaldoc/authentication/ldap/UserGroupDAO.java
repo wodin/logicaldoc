@@ -44,6 +44,7 @@ public class UserGroupDAO {
 		this.userMapper = userMapper;
 	}
 
+	@SuppressWarnings("unchecked")
 	public LdapUser getUserByUniqueAttributeIdentiferValue(String identifierValue) {
 		SearchControls sc = new SearchControls();
 		sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -57,8 +58,6 @@ public class UserGroupDAO {
 				userList = this.ldapTemplate.search(groupDN, "(& (objectClass=" + ldapUserGroupContext.getUserClass()
 						+ ") (" + ldapUserGroupContext.getLogonAttribute() + "=" + identifierValue + "))", sc,
 						this.userMapper);
-
-				System.out.println("*** userList=" + userList);
 			} catch (Throwable t) {
 				log.error(t.getMessage(), t);
 			}
@@ -91,7 +90,6 @@ public class UserGroupDAO {
 			for (LdapGroup _ldapGroup : groupList) {
 				_ldapGroup.dn = new TrimmedDistinguishedName(this.ldapUserGroupContext.getGroupIdentiferAttribute()
 						+ "=" + _ldapGroup.name + "," + groupDN);
-				System.out.println("" + _ldapGroup.dn);
 			}
 
 			groups.addAll(groupList);
@@ -110,7 +108,6 @@ public class UserGroupDAO {
 		ArrayList<String> groupBases = this.ldapUserGroupContext.getUserBase();
 
 		for (String groupDN : groupBases) {
-			System.out.println("DN:" + groupDN);
 			List<LdapUser> groupList = this.ldapTemplate.search(groupDN, "objectClass="
 					+ ldapUserGroupContext.getUserClass(), sc, this.userMapper);
 
