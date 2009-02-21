@@ -24,6 +24,9 @@
         <hr />
 
         <ice:panelGroup styleClass="commands">
+            <ice:commandButton value="&lt;&lt; #{msgs['back']}"
+                partialSubmit="true"
+                action="#{newDocWizard.abort}" />        
             <ice:commandButton value="#{msgs['abort']}"
                 partialSubmit="true"
                 action="#{newDocWizard.abort}" />
