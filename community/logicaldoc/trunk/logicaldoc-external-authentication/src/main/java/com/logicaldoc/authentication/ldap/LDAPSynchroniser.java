@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.LdapTemplate;
 
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SecurityManager;
@@ -32,10 +31,6 @@ public class LDAPSynchroniser extends Task {
 	private UserDAO userDao;
 
 	private UserGroupDAO userGroupDao;
-
-	private LDAPSynchronisationContext synchronisationContext;
-
-	private LdapTemplate ldapTemplate;
 
 	private long imported = 0;
 
@@ -67,23 +62,7 @@ public class LDAPSynchroniser extends Task {
 	public long getErrors() {
 		return errors;
 	}
-
-	public void setSynchronisationContext(LDAPSynchronisationContext synchronisationContext) {
-		this.synchronisationContext = synchronisationContext;
-	}
-
-	public LDAPSynchronisationContext getSynchronisationContext() {
-		return synchronisationContext;
-	}
-
-	public LdapTemplate getLdapTemplate() {
-		return ldapTemplate;
-	}
-
-	public void setLdapTemplate(LdapTemplate ldapTemplate) {
-		this.ldapTemplate = ldapTemplate;
-	}
-
+	
 	public void setUserGroupDao(UserGroupDAO userGroupDao) {
 		this.userGroupDao = userGroupDao;
 	}
@@ -127,12 +106,15 @@ public class LDAPSynchroniser extends Task {
 
 			pseudoId++;
 		}
+		
 		Collection<Group> _groups = ldocGroups.values();
-		createOrUpdateGroups(_groups);
-
 		Collection<User> _users = userMap.values();
-		createOrUpdateUsers(_users);
-		assignGroupsToUsers(_users);
+		synchronized (groupDao) {
+			createOrUpdateGroups(_groups);
+			createOrUpdateUsers(_users);
+			assignGroupsToUsers(_users);
+		}
+		
 	}
 
 	private void createOrUpdateGroups(Collection<Group> groups) {

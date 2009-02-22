@@ -20,6 +20,10 @@ public class TrimmedDistinguishedName extends DistinguishedName {
 		super(path.toLowerCase());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.ldap.support.DistinguishedName#encode()
+	 */
 	@Override
 	public String encode() {
 		// empty path

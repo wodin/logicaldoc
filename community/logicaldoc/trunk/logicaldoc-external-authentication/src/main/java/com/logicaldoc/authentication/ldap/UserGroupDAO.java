@@ -73,6 +73,10 @@ public class UserGroupDAO {
 		return null;
 	}
 
+	/**
+	 * Returning all users being found on userBase List
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public List<LdapGroup> getAllGroups() {
 		SearchControls sc = new SearchControls();
@@ -98,7 +102,11 @@ public class UserGroupDAO {
 
 		return groups;
 	}
-
+	/**
+	 * Returning all users being found on groupBase List
+	 * 
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public List<LdapUser> getAllUsers() {
 		SearchControls sc = new SearchControls();

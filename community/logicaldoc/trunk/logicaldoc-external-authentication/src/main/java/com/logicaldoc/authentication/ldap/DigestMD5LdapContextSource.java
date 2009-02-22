@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import javax.naming.Context;
 
 /**
- * 
+ * Secure authentication source that supports DIGEST-MD5. 
  * @author Sebastian Wenzky
  * @since 4.5
  */
