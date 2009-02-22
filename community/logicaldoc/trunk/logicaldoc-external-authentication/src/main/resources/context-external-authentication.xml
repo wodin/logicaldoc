@@ -40,7 +40,7 @@
 		<property name="userAuthenticationPatern"
 			value="{logonAttribute}={userName},{userBaseEntry}" />
 		<property name="userName" value="admin" />
-		<property name="password" value="admin" />
+		<property name="password" value="test" />
 	</bean>
 
 
@@ -103,6 +103,50 @@
 	-->
 
 	<!-- 
+		*********** 
+		* OpenLDAP* 
+		***********
+		Version: 2.4.11
+	-->
+
+	<!-- 
+		Simple Authentication
+	-->
+	<!-- 
+	<bean id="contextSource"
+		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource"
+		scope="prototype">
+		<property name="url" value="ldap://192.168.0.102:389" />
+		<property name="realm" value="logicalobjects" />
+		<property name="currentDN" value="dc=logicalobjects" />
+		<property name="userGroupContext" ref="LDAPUserGroupContext" />
+		<property name="userAuthenticationPatern"
+			value="{logonAttribute}={userName},{userBaseEntry}" />
+		<property name="userName" value="admin" />
+		<property name="password" value="test" />
+	</bean>
+
+
+	<bean id="LDAPUserGroupContext"
+		class="com.logicaldoc.authentication.ldap.LDAPUserGroupContext">
+		<property name="userIdentiferAttribute" value="uid" />
+		<property name="logonAttribute" value="uid" />
+		<property name="userClass" value="person" />
+		<property name="groupClass" value="groupOfNames" />
+		<property name="groupIdentiferAttribute" value="cn" />
+		<property name="userBase">
+			<list>			
+				<value>ou=users,dc=logicalobjects</value>
+			</list>
+		</property>
+		<property name="groupBase">
+			<list>
+				<value>ou=users,dc=logicalobjects</value>
+			</list>
+		</property>
+	</bean>
+ 	-->
+	<!-- 
 		
 		LDAP Core Implementations! Please be warrent: Customizing only if you know what you are doing! 
 		
@@ -111,16 +155,6 @@
 	<bean id="LdapTemplate"
 		class="org.springframework.ldap.LdapTemplate" scope="prototype">
 		<constructor-arg ref="contextSource" />
-	</bean>
-
-	<bean id="LDAPSynchronisationContext"
-		class="com.logicaldoc.authentication.ldap.LDAPSynchronisationContext">
-		<property name="ldapUserGroupContext"
-			ref="LDAPUserGroupContext" />
-		<property name="userGroupMapping">
-			<map>
-			</map>
-		</property>
 	</bean>
 
 	<bean id="basicUserMapper"
@@ -160,8 +194,6 @@
 
 	<bean id="LDAPSynchroniser"
 		class="com.logicaldoc.authentication.ldap.LDAPSynchroniser">
-		<property name="synchronisationContext" ref="LDAPSynchronisationContext" />
-		<property name="ldapTemplate" ref="LdapTemplate" />
 		<property name="userDao" ref="UserDAO" />
 		<property name="groupDao" ref="GroupDAO" />
 		<property name="userGroupDao" ref="UserGroupDAO" />
