@@ -3,7 +3,7 @@ package com.logicaldoc.authentication.ldap;
 import com.logicaldoc.core.security.User;
 
 /**
- * 
+ * Mapping Class for an user. 
  * @author Sebastian Wenzky
  * @since 4.5
  */
