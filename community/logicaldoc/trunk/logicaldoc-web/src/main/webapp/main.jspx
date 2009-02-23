@@ -64,6 +64,11 @@
     }
   }
 </script>
+		<c:if test="${empty authUser}">
+			<script type="text/javascript" language="javascript">
+  			   window.location = 'timeout.iface';
+  			</script>
+		</c:if>
         </head>
         <body>
             <!--
@@ -91,7 +96,7 @@
                         <ice:panelGrid styleClass="navConnectionStatus"
                             columnClasses="statusLeft, statusRight" columns="2">
                             <!-- Connection Status -->
-                            <ice:outputConnectionStatus />
+                            <ice:outputConnectionStatus showPopupOnDisconnect="true"/>
                         </ice:panelGrid>
 
                         <ice:form rendered="#{navigation.historySize>1}">
