@@ -20,7 +20,7 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-			<title>#{StyleBean.productName}  #{StyleBean.productRelease}</title>
+			<title>#{StyleBean.productName} #{StyleBean.productRelease}</title>
 			<ice:outputText style="padding-top:0px; padding-bottom:0px;" value="#{StyleBean.style}" escape="false" />
 			<ice:outputStyle href="#{StyleBean.cssPath}/system.css" />
 		</head>
@@ -35,10 +35,16 @@
 			<div class="system_bg">
 				<div class="system_info">
 					<br />
-					<ice:outputText value="#{msgs['connection.lost']}" styleClass="system_info" />
+					<ice:outputText styleClass="system_info"
+						value="#{msgs['connection.lost']}" />
 					<br />
 					<br />
-					<b><ice:graphicImage value="#{StyleBean.imagesPath}/expand.png" style="text-align: left; vertical-align: top;" /><ice:outputLink value="#{facesContext.externalContext.requestContextPath}" styleClass="system_link" style="font-size: 12px; text-decoration: underline; color: #0a3266;">#{msgs['connection.reload']}</ice:outputLink>
+					<b>
+    <ice:form id="logoutForm">
+		<ice:commandLink action="#{loginForm.logout}" styleClass="system_link" style="font-size: 12px; text-decoration: underline; color: #0a3266;">
+			<ice:graphicImage value="#{StyleBean.imagesPath}/expand.png" style="text-align: left; vertical-align: middle; border: none; padding-right:5px;"/><ice:outputText value="#{msgs['connection.reload']}" style="font-size: 12px; text-decoration: underline; color:  #0a3266;"/>
+		</ice:commandLink>
+	</ice:form>
 					</b>
 				</div>
 			</div>

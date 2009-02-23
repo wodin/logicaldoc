@@ -62,16 +62,14 @@
 		<param-value>52428800</param-value>
 	</context-param>
 	<!-- Timing  -->
-	<context-param>
-		<param-name>com.icesoft.faces.connectionTimeout</param-name>
-		<param-value>300000</param-value>
-	</context-param>
-	<context-param>
-		<param-name>
-			com.icesoft.faces.connectionLostRedirectURI
-		</param-name>
-		<param-value>'lost.iface'</param-value>
-	</context-param>
+ <context-param>
+	<param-name>com.icesoft.faces.connectionTimeout</param-name>
+	<param-value>300000</param-value>
+</context-param>
+  <context-param>
+    <param-name>com.icesoft.faces.connectionLostRedirectURI</param-name>
+    <param-value>'lost.iface'</param-value>
+  </context-param>
 	<!-- Facelets -->
 	<context-param>
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
@@ -266,7 +264,7 @@
 	</servlet-mapping>
 
 	<session-config>
-		<session-timeout>30</session-timeout>
+		<session-timeout>15</session-timeout> 
 	</session-config>
 
 	<!-- Welcome files -->
