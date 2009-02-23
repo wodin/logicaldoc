@@ -155,9 +155,17 @@ public class FileUtil {
 	 * @throws IOException
 	 */
 	public static void copyResource(String resourceName, File out) throws IOException {
-		InputStream is = new BufferedInputStream(FileUtil.class.getResource(resourceName).openStream());
-		OutputStream os = new BufferedOutputStream(new FileOutputStream(out));
+		InputStream is = null;
+		OutputStream os = null;
 		try {
+			try {
+				is = new BufferedInputStream(FileUtil.class.getResource(resourceName).openStream());
+			} catch (Exception e) {
+				is = new BufferedInputStream(Thread.currentThread().getContextClassLoader().getResource(resourceName)
+						.openStream());
+			}
+			os = new BufferedOutputStream(new FileOutputStream(out));
+
 			for (;;) {
 				int b = is.read();
 				if (b == -1)
