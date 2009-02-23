@@ -10,37 +10,28 @@
 	-->
 	<bean id="LDAPUserGroupContext"
 		class="com.logicaldoc.authentication.ldap.LDAPUserGroupContext">
-		<property name="userIdentiferAttribute" value="uid" />
-		<property name="logonAttribute" value="uid" />
-		<property name="userClass" value="person" />
-		<property name="groupClass" value="groupOfNames" />
-		<property name="groupIdentiferAttribute" value="cn" />
-		<property name="userBase">
-			<list>			
-				<value>ou=users,ou=system</value>
-			</list>
-		</property>
-		<property name="groupBase">
-			<list>
-				<value>ou=groups,ou=system</value>
-			</list>
-		</property>
+		<property name="userIdentiferAttribute" value="${ldap.userIdentiferAttribute}" />
+		<property name="logonAttribute" value="${ldap.logonAttribute}" />
+		<property name="userClass" value="${ldap.userClass}" />
+		<property name="groupClass" value="${ldap.groupClass}" />
+		<property name="groupIdentiferAttribute" value="${ldap.groupIdentiferAttribute}" />
+		<property name="userBaseString" value="${ldap.userBase}" />
+		<property name="groupBaseString" value="${ldap.groupBase}" />
 	</bean>
 
 	<!-- 
 		Simple Authentication
 	-->
-	<bean id="contextSource"
+	<bean id="LDAPContextSource"
 		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource"
 		scope="prototype">
-		<property name="url" value="ldap://localhost:10389" />
-		<property name="realm" value="localhost" />
-		<property name="currentDN" value="ou=system" />
+		<property name="url" value="${ldap.url}" />
+		<property name="realm" value="${ldap.realm}" />
+		<property name="currentDN" value="${ldap.currentDN}" />
 		<property name="userGroupContext" ref="LDAPUserGroupContext" />
-		<property name="userAuthenticationPatern"
-			value="{logonAttribute}={userName},{userBaseEntry}" />
-		<property name="userName" value="admin" />
-		<property name="password" value="test" />
+		<property name="userAuthenticationPatern" value="${ldap.authenticationPattern}" />
+		<property name="userName" value="${ldap.username}" />
+		<property name="password" value="${ldap.password}" />
 	</bean>
 
 
@@ -72,12 +63,12 @@
 		</property>
 		</bean>
 	-->
+	
 	<!-- 
 		Simple Authentication
 	-->
-
 	<!-- 
-		<bean id="contextSource"
+		<bean id="LDAPContextSource"
 		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource" scope="prototype">
 		<property name="url" value="ldap://logicaldoc:389" />
 		<property name="realm" value="localhost"/>
@@ -92,7 +83,7 @@
 		DIGEST-MD5 Authentication
 	-->
 	<!-- 
-		<bean id="contextSource"
+		<bean id="LDAPContextSource"
 		class="com.logicaldoc.authentication.ldap.DigestMD5LdapContextSource" scope="prototype">
 		<property name="url" value="ldap://logicaldoc:389/DC=logicalobjects" />
 		<property name="base" value="" />
@@ -102,59 +93,12 @@
 		</bean>
 	-->
 
-	<!-- 
-		*********** 
-		* OpenLDAP* 
-		***********
-		Version: 2.4.11
-	-->
-
-	<!-- 
-		Simple Authentication
-	-->
-	<!-- 
-	<bean id="contextSource"
-		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource"
-		scope="prototype">
-		<property name="url" value="ldap://192.168.0.102:389" />
-		<property name="realm" value="logicalobjects" />
-		<property name="currentDN" value="dc=logicalobjects" />
-		<property name="userGroupContext" ref="LDAPUserGroupContext" />
-		<property name="userAuthenticationPatern"
-			value="{logonAttribute}={userName},{userBaseEntry}" />
-		<property name="userName" value="admin" />
-		<property name="password" value="test" />
-	</bean>
-
-
-	<bean id="LDAPUserGroupContext"
-		class="com.logicaldoc.authentication.ldap.LDAPUserGroupContext">
-		<property name="userIdentiferAttribute" value="uid" />
-		<property name="logonAttribute" value="uid" />
-		<property name="userClass" value="person" />
-		<property name="groupClass" value="groupOfNames" />
-		<property name="groupIdentiferAttribute" value="cn" />
-		<property name="userBase">
-			<list>			
-				<value>ou=users,dc=logicalobjects</value>
-			</list>
-		</property>
-		<property name="groupBase">
-			<list>
-				<value>ou=users,dc=logicalobjects</value>
-			</list>
-		</property>
-	</bean>
- 	-->
-	<!-- 
-		
+	<!-- 		
 		LDAP Core Implementations! Please be warrent: Customizing only if you know what you are doing! 
-		
 	-->
-
 	<bean id="LdapTemplate"
 		class="org.springframework.ldap.LdapTemplate" scope="prototype">
-		<constructor-arg ref="contextSource" />
+		<constructor-arg ref="LDAPContextSource" />
 	</bean>
 
 	<bean id="basicUserMapper"
@@ -179,7 +123,7 @@
 	<bean id="LDAPAuthentication"
 		class="com.logicaldoc.authentication.ldap.LDAPAuthentication">
 		<lookup-method name="obtainNewLdapContextSource"
-			bean="contextSource" />
+			bean="LDAPContextSource" />
 		<property name="ldapUserGroupContext"
 			ref="LDAPUserGroupContext" />
 		<property name="userGroupDao" ref="UserGroupDAO" />
@@ -220,4 +164,10 @@
 		</property>
 	</bean>
 	
+	
+	<bean id="LdapBean"
+		class="com.logicaldoc.authentication.web.LdapBean" scope="session">
+		<property name="userGroupContext" ref="LDAPUserGroupContext" />
+		<property name="contextSource" ref="LDAPContextSource" />
+	</bean>
 </beans>
