@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<project name="project" default="package" basedir="." xmlns:artifact="urn:maven-artifact-ant">
+    
+	<target name="package" description="Zip Sources creation">
+		 
+<zip destfile="../logicaldoc.zip"
+       basedir="."
+       excludes=".svn/**,**/.svn,**/target,**/target/**" />
+		
+		<echo>Zip Sources created</echo>
+	</target>
+
+</project>
