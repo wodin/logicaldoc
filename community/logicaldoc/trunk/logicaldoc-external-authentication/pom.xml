@@ -19,19 +19,14 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-	    	<groupId>org.springframework</groupId>
-	    	<artifactId>spring-ldap</artifactId>
-	    	<version>1.1.2</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-ldap</artifactId>
+			<version>1.1.2</version>
 		</dependency>
 		<dependency>
-			<groupId>com.logicaldoc</groupId>
-			<artifactId>logicaldoc-core</artifactId>
-			<version>4.5.0</version>
-		</dependency>
-	    <dependency>
-	    	<groupId>com.sun</groupId>
-	    	<artifactId>ldapbp</artifactId>
-	    	<version>1.0</version>
+			<groupId>com.sun</groupId>
+			<artifactId>ldapbp</artifactId>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
@@ -43,6 +38,14 @@
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-util</artifactId>
 			<version>4.5.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.logicaldoc</groupId>
+			<artifactId>logicaldoc-web</artifactId>
+			<version>4.5.0</version>
+			<classifier>api</classifier>
+			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

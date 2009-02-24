@@ -18,7 +18,7 @@ public class BasicLDAPContextSource extends LdapContextSource {
 
 	private String realm;
 
-	private String dn;
+	private String currentDN;
 
 	private String userAuthenticationPatern;
 
@@ -45,7 +45,15 @@ public class BasicLDAPContextSource extends LdapContextSource {
 	}
 
 	public void setCurrentDN(String dn) {
-		this.dn = dn;
+		this.currentDN = dn;
+	}
+
+	public String getUrl() {
+		String[] urls = super.getUrls();
+		if (urls != null && urls.length > 0)
+			return urls[0];
+		else
+			return null;
 	}
 
 	/*
@@ -75,5 +83,21 @@ public class BasicLDAPContextSource extends LdapContextSource {
 			tmpUserAuthenticationPatern = tmpUserAuthenticationPatern
 					.replaceAll("\\{userBaseEntry\\}", this.dn);
 		return tmpUserAuthenticationPatern;
+	}
+
+	public LDAPUserGroupContext getUserGroupContext() {
+		return userGroupContext;
+	}
+
+	public String getCurrentDN() {
+		return currentDN;
+	}
+	
+	public String getUserName(){
+		return super.userName;
+	}
+	
+	public String getPassword(){
+		return super.password;
 	}
 }

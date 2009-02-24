@@ -1,10 +1,11 @@
 package com.logicaldoc.authentication.ldap;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  * All directory-based informations responsible for data 
- * will be stored here.  
+ * will be stored here.
  * @author Sebastian Wenzky
  * @since 4.5
  */
@@ -28,9 +29,6 @@ public class LDAPUserGroupContext {
 	 */
 	private String logonAttribute;
 
-	/**
-	 * Responsible directory class that identifies an user
-	 */
 	private String userClass;
 
 	/**
@@ -45,15 +43,15 @@ public class LDAPUserGroupContext {
 	 */
 	private String groupIdentiferAttribute;
 
-	/**
+/**
 	 * List of DN where users can be stored
 	 */
-	private ArrayList<String> userBase;
+	private ArrayList<String> userBase = new ArrayList<String>();
 
-	/**
+/**
 	 * List of DB where groups can be stored
 	 */
-	private ArrayList<String> groupBase;
+	private ArrayList<String> groupBase = new ArrayList<String>();
 
 	public String getUserIdentiferAttribute() {
 		return userIdentiferAttribute;
@@ -109,5 +107,45 @@ public class LDAPUserGroupContext {
 
 	public String getLogonAttribute() {
 		return logonAttribute;
+	}
+
+	public String getUserBaseString() {
+		StringBuffer sb = new StringBuffer();
+		for (String element : getUserBase()) {
+			if (sb.length() > 0)
+				sb.append(";");
+			sb.append(element);
+		}
+		return sb.toString();
+	}
+
+	public String getGroupBaseString() {
+		StringBuffer sb = new StringBuffer();
+		for (String element : getGroupBase()) {
+			if (sb.length() > 0)
+				sb.append(";");
+			sb.append(element);
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * The user base list, each element separated by a semi-colon(;)
+	 */
+	public void setUserBaseString(String userBaseString) {
+		StringTokenizer st = new StringTokenizer(userBaseString, ";", false);
+		userBase.clear();
+		while (st.hasMoreTokens())
+			userBase.add(st.nextToken());
+	}
+
+	/**
+	 * The group base list, each element separated by a semi-colon(;)
+	 */
+	public void setGroupBaseString(String groupBaseString) {
+		StringTokenizer st = new StringTokenizer(groupBaseString, ";", false);
+		groupBase.clear();
+		while (st.hasMoreTokens())
+			groupBase.add(st.nextToken());
 	}
 }
