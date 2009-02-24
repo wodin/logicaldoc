@@ -37,7 +37,7 @@ public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 
 		// Add some scheduling defaults
 		PropertiesBean pbean = new PropertiesBean();
-		pbean.setProperty("schedule.cron.LDAPSynchroniser", "00 00 0/6 * * ?");
+		pbean.setProperty("schedule.cron.LDAPSynchroniser", "00 10 01 * * ?");
 		pbean.setProperty("schedule.length.LDAPSynchroniser", "3600");
 		pbean.setProperty("schedule.enabled.LDAPSynchroniser", "false");
 		pbean.write();
