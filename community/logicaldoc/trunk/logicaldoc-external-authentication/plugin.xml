@@ -24,4 +24,9 @@
 	<extension plugin-id="logicaldoc-core" point-id="Task" id="ldapTask">
 		<parameter id="name" value="LDAPSynchroniser" />
 	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="extauthDbInit">
+		<parameter id="position" value="20" />
+		<parameter id="name" value="logicaldoc-external-authentication" />
+		<parameter id="sqlFile" value="sql/logicaldoc-external-authentication.sql" />
+	</extension>
 </plugin>
