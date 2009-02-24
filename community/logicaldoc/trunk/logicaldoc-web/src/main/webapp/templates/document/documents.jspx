@@ -118,14 +118,14 @@
 							value="#{StyleBean.imagesPath}/txt-icon.png"
 							alt="#{msgs['document.indexed']}" />
 					</ice:outputLink>
-					<ice:outputLink
-						value="download?docId=#{documentRecord.docId}&amp;suffix=sign.p7m"
+					<ice:commandLink
+						action="#{VerifyBean.showVerifyPage}"
 						target="_blank" title="#{msgs['document.signed']}"
 						rendered="#{documentRecord.document.signed==1}">
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
 							value="#{StyleBean.imagesPath}/sign.png"
 							alt="#{msgs['document.signed']}" />
-					</ice:outputLink>
+					</ice:commandLink>
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
 						value="#{StyleBean.imagesPath}/lock.png" />
