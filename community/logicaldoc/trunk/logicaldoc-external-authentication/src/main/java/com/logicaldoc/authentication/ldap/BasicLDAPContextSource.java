@@ -81,7 +81,7 @@ public class BasicLDAPContextSource extends LdapContextSource {
 					.replaceAll("\\{userName\\}", username);
 		if (tmpUserAuthenticationPatern.contains("{userBaseEntry}"))
 			tmpUserAuthenticationPatern = tmpUserAuthenticationPatern
-					.replaceAll("\\{userBaseEntry\\}", this.dn);
+					.replaceAll("\\{userBaseEntry\\}", this.currentDN);
 		return tmpUserAuthenticationPatern;
 	}
 
