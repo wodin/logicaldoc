@@ -82,8 +82,8 @@
 						<h:outputText value="#{msgs['size']}: " />
 						<ice:outputText value="#{entry.size}"
 							title="#{msgs['msg.jsp.popup']}">
-							<f:convertNumber pattern="########" />
-						</ice:outputText>k
+							<f:converter converterId="logicaldoc.FileSizeConverter" />
+						</ice:outputText>
 					</ice:panelGroup>
 					<ice:panelGroup styleClass="resultInfo">
 						<table cellspacing="0" cellpadding="0" border="0"

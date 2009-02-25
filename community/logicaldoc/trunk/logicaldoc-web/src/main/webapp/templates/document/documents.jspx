@@ -118,8 +118,7 @@
 							value="#{StyleBean.imagesPath}/txt-icon.png"
 							alt="#{msgs['document.indexed']}" />
 					</ice:outputLink>
-					<ice:commandLink
-						action="#{VerifyBean.showVerifyPage}"
+					<ice:commandLink action="#{VerifyBean.showVerifyPage}"
 						target="_blank" title="#{msgs['document.signed']}"
 						rendered="#{documentRecord.document.signed==1}">
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
@@ -131,7 +130,8 @@
 						value="#{StyleBean.imagesPath}/lock.png" />
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.document.immutable == 1}"
-						value="#{StyleBean.imagesPath}/immutable.png" title="#{msgs['document.immutable']}" />
+						value="#{StyleBean.imagesPath}/immutable.png"
+						title="#{msgs['document.immutable']}" />
 					<ice:commandLink title="#{msgs['links']}"
 						action="#{documentRecord.links}">
 						<ice:graphicImage style="margin-left: 5px; border: 0px;"
@@ -191,10 +191,10 @@
 				</f:facet>
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
 					menuPopup="pop">
-					<ice:outputText value="#{documentRecord.document.fileSize/1024}"
+					<ice:outputText value="#{documentRecord.document.fileSize}"
 						title="#{msgs['msg.jsp.popup']}">
-						<f:convertNumber pattern="########" />
-					</ice:outputText>KB
+						<f:converter converterId="logicaldoc.FileSizeConverter" />
+					</ice:outputText>
 				</ice:panelGroup>
 			</ice:column>
 		</ice:dataTable>

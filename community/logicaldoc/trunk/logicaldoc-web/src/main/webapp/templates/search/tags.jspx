@@ -133,7 +133,9 @@
 					</ice:commandSortHeader>
 				</f:facet>
 				<ice:panelGroup>
-					<ice:outputText value="#{entry.size} KB" />
+					<ice:outputText value="#{entry.document.fileSize}">
+						<f:converter converterId="logicaldoc.FileSizeConverter" />
+					</ice:outputText>
 				</ice:panelGroup>
 			</ice:column>
 		</ice:dataTable>
