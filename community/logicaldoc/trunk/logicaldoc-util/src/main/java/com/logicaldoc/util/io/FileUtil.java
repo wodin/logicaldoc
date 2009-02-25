@@ -14,6 +14,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -211,7 +212,9 @@ public class FileUtil {
 	 */
 	public static String getDisplaySize(long size, String language) {
 		String displaySize = "";
-		Locale locale = new Locale(language);
+		Locale locale = new Locale("en");
+		if (StringUtils.isNotEmpty(language))
+			locale = new Locale(language);
 		NumberFormat nf = new DecimalFormat("###,###,###.0", new DecimalFormatSymbols(locale));
 		if (size > 1000000000) {
 			displaySize = nf.format((double) size / 1024 / 1024 / 1024) + " GB";
