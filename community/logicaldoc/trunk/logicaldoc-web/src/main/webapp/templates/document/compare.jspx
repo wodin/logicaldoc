@@ -215,10 +215,14 @@
 					<ice:outputLabel value="#{msgs['size']}"
 						styleClass="#{diffBean.version1.fileSize!=diffBean.version2.fileSize ? 'iceMsgsError':''}" />
 					<ice:outputText value="#{diffBean.version1.fileSize}"
-						styleClass="#{diffBean.version1.fileSize!=diffBean.version2.fileSize ? 'iceMsgsError':''}" />
+						styleClass="#{diffBean.version1.fileSize!=diffBean.version2.fileSize ? 'iceMsgsError':''}">
+						<f:converter converterId="logicaldoc.FileSizeConverter" />
+					</ice:outputText>
 					<ice:panelGroup style="width:40px" />
 					<ice:outputText value="#{diffBean.version2.fileSize}"
-						styleClass="#{diffBean.version1.fileSize!=diffBean.version2.fileSize ? 'iceMsgsError':''}" />
+						styleClass="#{diffBean.version1.fileSize!=diffBean.version2.fileSize ? 'iceMsgsError':''}">
+						<f:converter converterId="logicaldoc.FileSizeConverter" />
+					</ice:outputText>
 
 					<ice:outputLabel value="#{msgs['document.recipient']}"
 						styleClass="#{diffBean.version1.recipient!=diffBean.version2.recipient ? 'iceMsgsError':''}" />
