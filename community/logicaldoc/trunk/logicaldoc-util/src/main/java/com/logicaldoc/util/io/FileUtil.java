@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -176,5 +180,48 @@ public class FileUtil {
 			is.close();
 			os.close();
 		}
+	}
+
+	/**
+	 * Computes the folder size as the sum of all files directly and indirectly
+	 * contained.
+	 */
+	public static long getFolderSize(File folder) {
+		long foldersize = 0;
+
+		File[] files = folder.listFiles();
+		for (int i = 0; i < files.length; i++) {
+			if (files[i].isDirectory()) {
+				foldersize += getFolderSize(files[i]);
+			} else {
+				foldersize += files[i].length();
+			}
+		}
+		return foldersize;
+	}
+
+	/**
+	 * Renders a file size in a more readable behaviour taking into account the
+	 * user locale. Depending on the size, the result will be presented in the
+	 * following measure units: GB, MB, KB or Bytes
+	 * 
+	 * @param size Size to be rendered
+	 * @param language The language for the format symbols
+	 * @return
+	 */
+	public static String getDisplaySize(long size, String language) {
+		String displaySize = "";
+		Locale locale = new Locale(language);
+		NumberFormat nf = new DecimalFormat("###,###,###.0", new DecimalFormatSymbols(locale));
+		if (size > 1000000000) {
+			displaySize = nf.format((double) size / 1024 / 1024 / 1024) + " GB";
+		} else if (size > 1000000) {
+			displaySize = nf.format((double) size / 1024 / 1024) + " MB";
+		} else if (size > 1000) {
+			displaySize = nf.format((double) size / 1024) + " KB";
+		} else {
+			displaySize = size + " Bytes";
+		}
+		return displaySize;
 	}
 }
