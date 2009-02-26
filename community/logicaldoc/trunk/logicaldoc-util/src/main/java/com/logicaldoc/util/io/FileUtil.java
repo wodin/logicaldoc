@@ -152,6 +152,30 @@ public class FileUtil {
 		return null;
 	}
 
+	public static byte[] computeSha1Hash(File file) {
+		InputStream is = null;
+		MessageDigest sha = null;
+
+		try {
+			is = new BufferedInputStream(new FileInputStream(file), BUFF_SIZE);
+			if (is != null) {
+				sha = MessageDigest.getInstance("SHA-1");
+				byte[] message = new byte[BUFF_SIZE];
+				int len = 0;
+				while ((len = is.read(message)) != -1) {
+					sha.update(message, 0, len);
+				}
+				byte[] messageDigest = sha.digest();
+				return messageDigest;
+			}
+		} catch (IOException io) {
+			log.error("Error generating SHA-1: ", io);
+		} catch (Throwable t) {
+			log.error("Error generating SHA-1: ", t);
+		}
+		return null;
+	}
+
 	/**
 	 * Writes the specified classpath resource into a file
 	 * 
