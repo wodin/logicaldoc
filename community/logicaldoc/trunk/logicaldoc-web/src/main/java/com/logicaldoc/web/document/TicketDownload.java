@@ -23,8 +23,7 @@ import com.logicaldoc.web.util.ServletDocUtil;
  * searches for the attribute ticketId in any scope and extracts the proper
  * document's content.
  * 
- * @author Marco Meschieri
- * @version $Id: TicketDownload.java,v 1.3 2006/08/24 08:35:08 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 2.6
  */
 public class TicketDownload extends HttpServlet {

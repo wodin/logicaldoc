@@ -16,7 +16,7 @@ import com.logicaldoc.web.util.Constants;
 
 /**
  * This filter set the current locale in case of anonymous user. The locale is
- * taken from the HTTP headers-
+ * taken from the HTTP headers
  * 
  * @author Marco Meschieri
  * @version $Id:$
