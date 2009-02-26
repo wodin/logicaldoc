@@ -512,10 +512,11 @@ public class SearchForm {
 					opt.setCreationTo(getCreationDateTo());
 				}
 
-				//The user inputs sizes in KB while in the index we use bytes
-				opt.setSizeMin(getSizeMin()*1024);
+				// The user inputs sizes in KB while in the index we use bytes
+				if (getSizeMin() != null && getSizeMin().intValue() > 0)
+					opt.setSizeMin(getSizeMin() * 1024);
 				if (getSizeMax() != null && getSizeMax().intValue() > 0)
-					opt.setSizeMax(getSizeMax()*1024);
+					opt.setSizeMax(getSizeMax() * 1024);
 				opt.setUserId(userId);
 
 				if (StringUtils.isNotEmpty(getPath())) {
