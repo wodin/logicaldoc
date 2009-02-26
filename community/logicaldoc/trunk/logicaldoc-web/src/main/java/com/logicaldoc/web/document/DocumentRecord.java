@@ -572,7 +572,7 @@ public class DocumentRecord extends MenuBarBean {
 				.getRequest();
 		request.getRequestURL();
 
-		String address = "http://";
+		String address = request.getScheme() + "://";
 		address += (request.getServerName() + ":");
 		address += request.getServerPort();
 		address += request.getContextPath();

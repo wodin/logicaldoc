@@ -535,7 +535,8 @@ public class UserForm {
 		Locale locale = new Locale(user.getLanguage());
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
 				.getRequest();
-		String address = "http://";
+		
+		String address = request.getScheme() + "://";
 		address += (request.getServerName() + ":");
 		address += request.getServerPort();
 		address += request.getContextPath();

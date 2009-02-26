@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.EventObject;
 
 import javax.faces.event.ActionEvent;
@@ -17,7 +16,6 @@ import com.icesoft.faces.async.render.Renderable;
 import com.icesoft.faces.component.inputfile.InputFile;
 import com.icesoft.faces.webapp.xmlhttp.PersistentFacesState;
 import com.icesoft.faces.webapp.xmlhttp.RenderingException;
-import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.web.SessionManagement;
 
 /**
