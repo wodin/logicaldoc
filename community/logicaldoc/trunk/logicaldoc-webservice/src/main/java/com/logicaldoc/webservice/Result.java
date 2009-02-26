@@ -17,7 +17,7 @@ public class Result {
 
 	private String type;
 
-	private int size;
+	private long size;
 
 	private int score = 0;
 	
@@ -63,11 +63,11 @@ public class Result {
 		this.type = type;
 	}
 
-	public int getSize() {
+	public long getSize() {
 		return size;
 	}
 
-	public void setSize(int size) {
+	public void setSize(long size) {
 		this.size = size;
 	}
 

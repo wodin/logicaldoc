@@ -474,7 +474,7 @@ public class DmsServiceImpl implements DmsService {
 			newRes.setDate(df.format(res.getDate()));
 			newRes.setTitle(res.getTitle());
 			newRes.setSummary(SnippetStripper.strip(res.getSummary()));
-			newRes.setLength((int) res.getSize());
+			newRes.setSize(res.getSize());
 			newRes.setType(res.getType());
 			newRes.setScore(res.getScore());
 			newRes.setCustomId(res.getCustomId());
