@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.faces.context.FacesContext;
 
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.util.Context;
@@ -19,6 +20,17 @@ public class VersionRecord extends Version {
 	private Version wrappedVersion;
 
 	private boolean currentVersion = false;
+	
+	// indicates if node is selected
+	private boolean selected = false;
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
 
 	public VersionRecord(Version version) {
 		super();
@@ -131,5 +143,33 @@ public class VersionRecord extends Version {
 
 	public Version getWrappedVersion() {
 		return wrappedVersion;
+	}
+
+	public Date getCreation() {
+		return wrappedVersion.getCreation();
+	}
+
+	public String getCustomId() {
+		return wrappedVersion.getCustomId();
+	}
+
+	public long getFileSize() {
+		return wrappedVersion.getFileSize();
+	}
+
+	public String getIcon() {
+		return wrappedVersion.getIcon();
+	}
+
+	public String getTitle() {
+		return wrappedVersion.getTitle();
+	}
+
+	public Document getDocument() {
+		return wrappedVersion.getDocument();
+	}
+
+	public long getId() {
+		return wrappedVersion.getId();
 	}
 }
