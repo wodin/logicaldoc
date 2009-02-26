@@ -72,9 +72,9 @@ public class SearchForm {
 
 	private String path = null;
 
-	private Integer sizeMin = null;
+	private Long sizeMin = null;
 
-	private Integer sizeMax = null;
+	private Long sizeMax = null;
 
 	private Date publishingDateFrom;
 
@@ -512,9 +512,10 @@ public class SearchForm {
 					opt.setCreationTo(getCreationDateTo());
 				}
 
-				opt.setLengthMin(getSizeMin());
+				//The user inputs sizes in KB while in the index we use bytes
+				opt.setSizeMin(getSizeMin()*1024);
 				if (getSizeMax() != null && getSizeMax().intValue() > 0)
-					opt.setLengthMax(getSizeMax());
+					opt.setSizeMax(getSizeMax()*1024);
 				opt.setUserId(userId);
 
 				if (StringUtils.isNotEmpty(getPath())) {
@@ -746,19 +747,19 @@ public class SearchForm {
 		return publishingDateTo;
 	}
 
-	public Integer getSizeMin() {
+	public Long getSizeMin() {
 		return sizeMin;
 	}
 
-	public void setSizeMin(Integer sizeMin) {
+	public void setSizeMin(Long sizeMin) {
 		this.sizeMin = sizeMin;
 	}
 
-	public Integer getSizeMax() {
+	public Long getSizeMax() {
 		return sizeMax;
 	}
 
-	public void setSizeMax(Integer sizeMax) {
+	public void setSizeMax(Long sizeMax) {
 		this.sizeMax = sizeMax;
 	}
 

@@ -15,9 +15,11 @@ public class SearchOptions {
 
 	private String queryStr = "";
 
-	private Integer lengthMin = null;
+	// Min size in bytes
+	private Long sizeMin = null;
 
-	private Integer lengthMax = null;
+	// Max size in bytes
+	private Long sizeMax = null;
 
 	private String format = "";
 
@@ -165,20 +167,20 @@ public class SearchOptions {
 		this.dateTo = dateTo;
 	}
 
-	public Integer getLengthMin() {
-		return lengthMin;
+	public Long getSizeMin() {
+		return sizeMin;
 	}
 
-	public void setLengthMin(Integer lengthMin) {
-		this.lengthMin = lengthMin;
+	public void setSizeMin(Long sizeMin) {
+		this.sizeMin = sizeMin;
 	}
 
-	public Integer getLengthMax() {
-		return lengthMax;
+	public Long getSizeMax() {
+		return sizeMax;
 	}
 
-	public void setLengthMax(Integer lengthMax) {
-		this.lengthMax = lengthMax;
+	public void setSizeMax(Long sizeMax) {
+		this.sizeMax = sizeMax;
 	}
 
 	public Date getSourceDateFrom() {

@@ -183,10 +183,10 @@ public class ResultImpl implements Serializable, Result {
 			}
 		}
 
-		if (opt.getLengthMin() != null && size < opt.getLengthMin().intValue())
+		if (opt.getSizeMin() != null && size < opt.getSizeMin().longValue())
 			result = false;
 
-		if (opt.getLengthMax() != null && size > opt.getLengthMax().intValue())
+		if (opt.getSizeMax() != null && size > opt.getSizeMax().longValue())
 			result = false;
 
 		if (opt.getCreationFrom() != null) {
@@ -223,8 +223,6 @@ public class ResultImpl implements Serializable, Result {
 	}
 
 	/**
-	 * o
-	 * 
 	 * @see com.logicaldoc.core.searchengine.search.Result#getLengthCategory()
 	 */
 	public int getLengthCategory() {
