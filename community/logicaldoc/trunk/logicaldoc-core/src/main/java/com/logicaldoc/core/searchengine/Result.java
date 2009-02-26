@@ -21,6 +21,7 @@ public interface Result {
 
 	public String getIcon();
 
+	//The file size in bytes
 	public long getSize();
 
 	public Integer getScore();
