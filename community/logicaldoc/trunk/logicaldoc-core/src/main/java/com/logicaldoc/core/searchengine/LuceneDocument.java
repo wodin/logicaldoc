@@ -107,7 +107,7 @@ public class LuceneDocument {
 
 	protected void setSize() {
 		//Save the size in bytes
-		doc.add(new Field(FIELD_SIZE, Long.toString(document.getFileSize()), Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field(FIELD_SIZE, Long.toString(file.length()), Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
 	protected void setDocData() {
