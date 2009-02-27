@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
@@ -132,6 +133,11 @@ public class GroupsRecordsManager {
 					if (group.getName().equals("admin")) {
 						Messages.addLocalizedError("errors.action.groupdeleted.admin");
 					} else {
+						// First of all remove users from this group
+						SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
+						manager.removeAllUsersFromGroup(group);
+
+						// Then delete the group itself
 						boolean deleted = gdao.delete(groupId);
 
 						if (!deleted) {
