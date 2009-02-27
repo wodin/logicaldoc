@@ -2,8 +2,7 @@
 <!-- 
  Tasks listing
   
- @author Marco Meschieri
- @version $Id: users.jspx,v 1.2 2007/10/16 16:12:10 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.5.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"

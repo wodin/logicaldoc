@@ -55,6 +55,8 @@ public class User extends PersistentObject implements Serializable {
 
 	private String[] groupNames;
 
+	private int enabled = 1;
+
 	// Only for GUI
 	private String repass;
 
@@ -265,5 +267,13 @@ public class User extends PersistentObject implements Serializable {
 					return grp;
 			}
 		return null;
+	}
+
+	public int getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(int enabled) {
+		this.enabled = enabled;
 	}
 }

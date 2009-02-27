@@ -12,7 +12,6 @@ import com.logicaldoc.util.io.CryptUtil;
  * Test case for <code>HibernateUserDAO</code>
  * 
  * @author Marco Meschieri - Logical Objects
- * @version $Id:$
  * @since 3.0
  */
 public class HibernateUserDAOTest extends AbstractCoreTestCase {
@@ -175,5 +174,6 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		assertTrue(dao.validateUser("admin", "admin"));
 		assertFalse(dao.validateUser("admin", "adminPWD"));
 		assertFalse(dao.validateUser("xxxx", "admin"));
+		assertFalse(dao.validateUser("test", "admin"));
 	}
 }
