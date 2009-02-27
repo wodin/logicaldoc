@@ -88,7 +88,7 @@ public class User extends PersistentObject implements Serializable {
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getFullName() {
 		String fullName = getFirstName();
 		if (fullName != null && getName() != null)
@@ -209,6 +209,8 @@ public class User extends PersistentObject implements Serializable {
 
 			while (iter.hasNext()) {
 				Group ug = iter.next();
+				if (ug.getDeleted() == 1)
+					continue;
 				groupIds[i] = ug.getId();
 				groupNames[i] = ug.getName();
 				i++;
