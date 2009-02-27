@@ -16,6 +16,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.util.FacesUtil;
+import com.logicaldoc.core.security.SecurityManager;
 
 /**
  * <p>
@@ -121,19 +122,21 @@ public class GroupsRecordsManager {
 		Group group = gdao.findById(groupId);
 
 		if (SessionManagement.isValid()) {
-
 			try {
 				long userId = SessionManagement.getUserId();
 				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 				if (mdao.isReadEnable(7, userId)) {
-
 					// we do not allow to delete the initial "admin" group
 					if (group.getName().equals("admin")) {
 						Messages.addLocalizedError("errors.action.groupdeleted.admin");
 					} else {
+						//First of all remove users from this group
+						SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);				
+						manager.removeAllUsersFromGroup(group);
+						
+						//Then delete the group itself
 						boolean deleted = gdao.delete(groupId);
-
 						if (!deleted) {
 							Messages.addLocalizedError("errors.action.groupdeleted");
 						} else {
