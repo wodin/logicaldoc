@@ -209,6 +209,8 @@ public class User extends PersistentObject implements Serializable {
 
 			while (iter.hasNext()) {
 				Group ug = iter.next();
+				if (ug.getDeleted() == 1)
+					continue;
 				groupIds[i] = ug.getId();
 				groupNames[i] = ug.getName();
 				i++;
