@@ -533,11 +533,9 @@ public class DocumentRecord extends MenuBarBean {
 
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
 				.getRequest();
+		request.getRequestURL();
 
-		String protocol = request.getProtocol().toLowerCase();
-		protocol =  protocol.substring(0, protocol.indexOf("/")).toLowerCase();
-
-		String address = protocol + "://";
+		String address = request.getScheme() + "://";
 		address += (request.getServerName() + ":");
 		address += request.getServerPort();
 		address += request.getContextPath();
