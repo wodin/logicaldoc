@@ -165,6 +165,22 @@ public class UsersRecordsManager extends SortableList {
 		return getUsers().size();
 	}
 
+	public String enable() {
+		User user = (User) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("user");
+		user.setEnabled(1);
+		UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		dao.store(user);
+		return "";
+	}
+
+	public String disable() {
+		User user = (User) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("user");
+		user.setEnabled(0);
+		UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		dao.store(user);
+		return "";
+	}
+
 	public String delete() {
 		User user = (User) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("user");
 

@@ -97,7 +97,8 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	 */
 	@SuppressWarnings("unchecked")
 	public List<User> findByUserNameAndName(String username, String name) {
-		return findByWhere("lower(_entity.name) like ? and _entity.userName like ?", new Object[] { name.toLowerCase(), username });
+		return findByWhere("lower(_entity.name) like ? and _entity.userName like ?", new Object[] { name.toLowerCase(),
+				username });
 	}
 
 	/**
@@ -139,7 +140,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		boolean result = true;
 		try {
 			User user = findByUserName(username);
-			if ((user == null) || !user.getPassword().equals(CryptUtil.cryptString(password))) {
+			if ((user == null) || !user.getPassword().equals(CryptUtil.cryptString(password)) || user.getEnabled() == 0) {
 				result = false;
 			}
 		} catch (Exception e) {
