@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.icesoft.faces.component.ext.RowSelectorEvent;
+import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
@@ -570,6 +571,8 @@ public class DocumentsRecordsManager extends SortableList {
 	}
 
 	public void setDisplayedRows(int displayedRows) {
+		if (displayedRows != this.displayedRows)
+			JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "window.location.reload(false);");
 		this.displayedRows = displayedRows;
 	}
 
