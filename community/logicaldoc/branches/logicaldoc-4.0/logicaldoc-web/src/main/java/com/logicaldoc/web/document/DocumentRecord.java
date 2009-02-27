@@ -23,9 +23,7 @@ import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
-import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.io.CryptUtil;
 import com.logicaldoc.web.SessionManagement;
@@ -537,7 +535,11 @@ public class DocumentRecord extends MenuBarBean {
 				.getRequest();
 		request.getRequestURL();
 
-		String address = "http://";
+		//String address = "http://";
+		String protocol = request.getProtocol().toLowerCase();
+		protocol =  protocol.substring(0, protocol.indexOf("/")).toLowerCase();
+
+		String address = protocol + "://";
 		address += (request.getServerName() + ":");
 		address += request.getServerPort();
 		address += request.getContextPath();
