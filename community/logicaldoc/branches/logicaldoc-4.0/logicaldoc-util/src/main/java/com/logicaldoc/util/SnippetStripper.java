@@ -1,12 +1,10 @@
 package com.logicaldoc.util;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
- * Useful class used to filtes
+ * Useful class used to filter snippets from lucene, excluding those characters
+ * that invalidate HTML page
  * 
- * @author Marco Meschieri
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class SnippetStripper {
@@ -40,21 +38,9 @@ public class SnippetStripper {
 		summary = summary.replaceAll(">", "&gt;");
 
 		// But preserve Lucene hilights
-		String regex = LUCENE_HILIGHT_START + "[\\w\\s]*" + LUCENE_HILIGHT_STOP;
-		Pattern pattern = Pattern.compile(regex);
-		String targetString = summary;
-		String outString = targetString;
-
-		// Get a Matcher based on the target string.
-		Matcher matcher = pattern.matcher(targetString);
-
-		// Find all the matches and restore hilight markup
-		while (matcher.find()) {
-			String tmp = matcher.group();
-			tmp = tmp.replaceAll(LUCENE_HILIGHT_START, "<font style='background-color:#FFFF00'>");
-			tmp = tmp.replaceAll(LUCENE_HILIGHT_STOP, "</font>");
-			outString = outString.replaceAll(matcher.group(), tmp);
-		}
+		summary = summary.replaceAll(LUCENE_HILIGHT_START, "<font style='background-color:#FFFF00'>");
+		summary = summary.replaceAll(LUCENE_HILIGHT_STOP, "</font>");
+		String outString = summary;
 
 		// maintain all characters compatible with explorer
 		outString = outString.replaceAll("[^" + UNICODE_BASIC_LATIN + UNICODE_LATIN_1 + UNICODE_LATIN_EXTENDED_A + "]",
