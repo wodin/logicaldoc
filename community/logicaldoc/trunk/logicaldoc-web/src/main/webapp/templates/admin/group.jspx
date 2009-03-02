@@ -59,8 +59,7 @@
 		</ice:panelGroup>
 
 		<!-- Group affiliation -->
-		<ice:panelGroup
-			rendered="#{groupsRecordsManager.selectedPanel == 'create'}">
+		<ice:panelGroup>
 			<hr />
 			<h3>
 				<ice:outputText value="#{msgs['msg.jsp.inheritgroup']}" />
@@ -73,7 +72,7 @@
 						allowMultipleSelection="false" label="" items="#{groupForm.items}"
 						value="#{groupForm.parentGroup}"
 						filterValue="#{groupForm.groupFilter}"
-						filterListener="#{groupForm.filterGroups}" required="true" />
+						filterListener="#{groupForm.filterGroups}" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
 				<ice:panelGroup>
