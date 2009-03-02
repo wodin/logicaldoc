@@ -91,11 +91,11 @@ public class DocumentDownload extends HttpServlet {
 
 		String fileVersion = request.getParameter("versionId");
 
-		if (StringUtils.isEmpty(id)) {
+		if (StringUtils.isEmpty(fileVersion)) {
 			fileVersion = (String) request.getAttribute("versionId");
 		}
 
-		if (StringUtils.isEmpty(id)) {
+		if (StringUtils.isEmpty(fileVersion)) {
 			fileVersion = (String) session.getAttribute("versionId");
 		}
 
