@@ -124,14 +124,13 @@
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
 				<ice:panelGroup styleClass="outputLabel">
-					<ice:outputLabel for="email" value="#{msgs['email']}*" />
+					<ice:outputLabel for="state" value="#{msgs['state']}" />
 				</ice:panelGroup>
 				<ice:panelGroup>
-					<ice:inputText id="email" value="#{userForm.user.email}"
-						maxlength="100" required="true" binding="#{userForm.emailControl}">
-						<f:validator validatorId="validator.email" />
+					<ice:inputText id="state" value="#{userForm.user.state}"
+						maxlength="100" binding="#{userForm.stateControl}">
 					</ice:inputText>
-					<ice:message for="email" />
+					<ice:message for="state" />
 				</ice:panelGroup>
 
 				<ice:panelGroup styleClass="outputLabel">
@@ -144,8 +143,16 @@
 					<ice:message for="phone" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
-				<ice:panelGroup />
-				<ice:panelGroup />
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="email" value="#{msgs['email']}*" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="email" value="#{userForm.user.email}"
+						maxlength="100" required="true" binding="#{userForm.emailControl}">
+						<f:validator validatorId="validator.email" />
+					</ice:inputText>
+					<ice:message for="email" />
+				</ice:panelGroup>
 			</ice:panelGrid>
 		</ice:panelGroup>
 

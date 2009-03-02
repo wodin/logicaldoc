@@ -17,7 +17,8 @@
 		<property name="street" type="string" column="ld_street" length="255" />
 		<property name="postalcode" type="string" column="ld_postalcode" length="255" />
 		<property name="city" type="string" column="ld_city" length="255" />
-		<property name="country" type="string" column="ld_country" length="30" />
+		<property name="country" type="string" column="ld_country" length="255" />
+		<property name="state" type="string" column="ld_state" length="255" />
 		<property name="language" type="string" column="ld_language" length="10" />
 		<property name="email" type="string" column="ld_email" length="255" />
 		<property name="telephone" type="string" column="ld_telephone" length="255" />

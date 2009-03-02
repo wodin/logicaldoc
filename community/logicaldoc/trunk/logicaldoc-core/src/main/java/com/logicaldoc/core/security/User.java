@@ -41,6 +41,8 @@ public class User extends PersistentObject implements Serializable {
 
 	private String country = "";
 
+	private String state = "";
+
 	private String language = "";
 
 	private String email = "";
@@ -275,5 +277,13 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 }

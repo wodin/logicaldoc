@@ -47,6 +47,10 @@ public class UserAttributeMapper implements AttributesMapper {
 		if (val != null)
 			user.setCity(val.get().toString());
 
+		val = attributes.get("st");
+		if (val != null)
+			user.setState(val.get().toString());
+		
 		val = attributes.get("co");
 		if (val != null)
 			user.setCountry(val.get().toString());
