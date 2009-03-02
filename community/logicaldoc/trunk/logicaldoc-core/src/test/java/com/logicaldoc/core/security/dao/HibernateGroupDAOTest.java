@@ -21,6 +21,8 @@ public class HibernateGroupDAOTest extends AbstractCoreTestCase {
 	// Instance under test
 	private GroupDAO dao;
 
+	private com.logicaldoc.core.security.SecurityManager manager;
+
 	public HibernateGroupDAOTest(String name) {
 		super(name);
 	}
@@ -31,6 +33,7 @@ public class HibernateGroupDAOTest extends AbstractCoreTestCase {
 		// Retrieve the instance under test from spring context. Make sure that
 		// it is an HibernateGroupDAO
 		dao = (GroupDAO) context.getBean("GroupDAO");
+		manager = (com.logicaldoc.core.security.SecurityManager) context.getBean("SecurityManager");
 	}
 
 	public void testDelete() {
@@ -106,5 +109,17 @@ public class HibernateGroupDAOTest extends AbstractCoreTestCase {
 
 		assertTrue(dao.insert(group, 90));
 		assertNotNull(dao.findByName("parentNotEmpty"));
+	}
+
+	public void testInheritACLs() {
+		Group group = new Group();
+		group.setName("parentNone");
+		group.setDescription("Test group for insert method parent = none");
+
+		assertTrue(dao.insert(group, -1));
+		assertFalse(manager.getAllowedGroups(6).contains(group));
+		
+		dao.inheritACLs(group.getId(), 1);
+		assertTrue(manager.getAllowedGroups(6).contains(group));
 	}
 }
