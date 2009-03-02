@@ -1,7 +1,11 @@
 package com.logicaldoc.core.security.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.logging.LogFactory;
 
@@ -119,12 +123,11 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 				}
 
 			getHibernateTemplate().saveOrUpdate(group);
-
+			getHibernateTemplate().flush();
+			
 			if (parentGroupId > 0) {
-				Collection<Menu> menus = menuDAO.findByGroupId(parentGroupId);
-				for (Menu menu : menus) {
-					addMenuGroup(group, menu.getId(), menu.getMenuGroup(parentGroupId).getWrite());
-				}
+				// Inherit ACLs from the parent group
+				inheritACLs(group.getId(), parentGroupId);
 			} else {
 				// if no parent group was given, the new group will have default
 				// access rights
@@ -145,6 +148,43 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 		}
 
 		return result;
+	}
+
+	@Override
+	public void inheritACLs(long groupId, long parentGroupId) {
+		List<Object> coll = new ArrayList<Object>();
+		try {
+			Connection con = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+
+			try {
+				con = getSession().connection();
+				stmt = con.prepareStatement("delete from ld_menugroup A where A.ld_groupid=" + groupId);
+				log.debug("Delete all menugroup for group " + groupId);
+				stmt.executeUpdate();
+
+				stmt = con
+						.prepareStatement("insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive) "
+								+ "select B.ld_menuid,"
+								+ groupId
+								+ ", B.ld_write , B.ld_addchild, B.ld_managesecurity, B.ld_manageimmutability, B.ld_delete, B.ld_rename, B.ld_bulkimport, B.ld_bulkexport, B.ld_sign, B.ld_archive from ld_menugroup B "
+								+ "where B.ld_groupid= " + parentGroupId);
+				log.debug("Replicate all ACLs from group " + parentGroupId);
+				stmt.executeUpdate();
+			} finally {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+
 	}
 
 	/**
