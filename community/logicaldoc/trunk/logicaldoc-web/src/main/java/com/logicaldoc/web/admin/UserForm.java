@@ -78,9 +78,11 @@ public class UserForm {
 	private UIInput countryControl;
 
 	private UIInput languageControl;
-	
+
 	private UIInput emailControl;
-	
+
+	private UIInput stateControl;
+
 	private UIInput phoneControl;
 
 	public UIInput getFirstNameControl() {
@@ -239,6 +241,14 @@ public class UserForm {
 		return createNew;
 	}
 
+	public UIInput getStateControl() {
+		return stateControl;
+	}
+
+	public void setStateControl(UIInput stateControl) {
+		this.stateControl = stateControl;
+	}
+
 	public void setUser(User usr) {
 		this.user = usr;
 		createNew = StringUtils.isEmpty(this.user.getUserName());
@@ -261,7 +271,7 @@ public class UserForm {
 		FacesUtil.forceRefresh(phoneControl);
 		FacesUtil.forceRefresh(postalCodeControl);
 		FacesUtil.forceRefresh(streetControl);
-		
+		FacesUtil.forceRefresh(stateControl);
 
 		GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		groups = (List<Group>) gdao.findAll();
@@ -317,7 +327,7 @@ public class UserForm {
 				}
 
 				user.setEmail(user.getEmail().toLowerCase());
-				
+
 				if (withPassword) {
 					if (!getPassword().equals(getRepass())) {
 						Messages.addLocalizedError("msg.jsp.adduser.repass");
@@ -535,7 +545,7 @@ public class UserForm {
 		Locale locale = new Locale(user.getLanguage());
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
 				.getRequest();
-		
+
 		String address = request.getScheme() + "://";
 		address += (request.getServerName() + ":");
 		address += request.getServerPort();
