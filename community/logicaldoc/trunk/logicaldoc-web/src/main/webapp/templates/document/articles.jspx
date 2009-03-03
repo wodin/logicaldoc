@@ -113,7 +113,7 @@
             <ice:panelGroup styleClass="commands">
             <hr />
                 <ice:commandButton value="&lt;&lt; #{msgs['back']}" immediate="true" partialSubmit="false"
-                    action="#{articlesRecordsManager.back}" />
+                    action="#{documentNavigation.showDocuments}" />
                 <ice:commandButton value="#{msgs['msg.jsp.addarticle']}"
                     action="#{articlesRecordsManager.add}"
                     rendered="#{empty (articlesRecordsManager.selectedArticle)}" />

@@ -107,7 +107,7 @@
 			</ice:panelGroup>
 			<ice:panelGroup styleClass="commands">
 				<ice:commandButton value="&lt;&lt; #{msgs['back']}"
-					partialSubmit="true" action="#{linksRecordsManager.back}" />
+					partialSubmit="true" action="#{documentNavigation.showDocuments}" />
 			</ice:panelGroup>
 		</ice:panelGroup>
 	</ice:form>
