@@ -154,7 +154,7 @@ public class NewDocWizard {
 	}
 
 	public String abort() {
-		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
+		documentNavigation.showDocuments();
 
 		// Remove the uploaded file, if one was uploaded
 		Application application = FacesContext.getCurrentInstance().getApplication();

@@ -53,6 +53,7 @@ import com.logicaldoc.web.util.FacesUtil;
  * @since 3.0
  */
 public class DocumentNavigation extends NavigationBean {
+	
 	protected static Log log = LogFactory.getLog(DocumentNavigation.class);
 
 	// list for the dynamic menus w/ getter & setter
@@ -63,6 +64,8 @@ public class DocumentNavigation extends NavigationBean {
 	private DirectoryTreeModel directoryModel;
 
 	private boolean showFolderSelector = false;
+
+	private String viewMode = "documents";
 
 	/**
 	 * Default constructor of the tree. The root node of the tree is created at
@@ -85,6 +88,18 @@ public class DocumentNavigation extends NavigationBean {
 
 	public void setShowFolderSelector(boolean showFolderSelector) {
 		this.showFolderSelector = showFolderSelector;
+	}
+	
+	public void setViewMode(String viewModeP) {
+		if (!this.viewMode.equals(viewModeP)) {
+			this.viewMode = viewModeP;
+			refresh();
+			setSelectedPanel(new PageContentBean(viewMode));
+		}
+	}
+
+	public String getViewMode() {
+		return this.viewMode;
 	}
 
 	public List<MenuItem> getFolderItems() {
@@ -205,7 +220,7 @@ public class DocumentNavigation extends NavigationBean {
 		DocumentsRecordsManager recordsManager = ((DocumentsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"documentsRecordsManager", FacesContext.getCurrentInstance(), log));
 		recordsManager.selectDirectory(directory.getMenu().getId());
-		setSelectedPanel(new PageContentBean("documents"));
+		setSelectedPanel(new PageContentBean(this.viewMode));
 	}
 
 	public void selectDirectory(long directoryId) {
@@ -234,7 +249,7 @@ public class DocumentNavigation extends NavigationBean {
 		Menu folder = document.getFolder();
 		selectDirectory(folder.getId());
 		highlightDocument(docId);
-		setSelectedPanel(new PageContentBean("documents"));
+		setSelectedPanel(new PageContentBean(this.viewMode));
 
 		// Show the documents browsing panel
 		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
@@ -268,7 +283,7 @@ public class DocumentNavigation extends NavigationBean {
 		folderId = folder.getId();
 		selectDirectory(folderId);
 
-		setSelectedPanel(new PageContentBean("documents"));
+		setSelectedPanel(new PageContentBean(this.viewMode));
 
 		// Show the documents browsing panel
 		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
@@ -316,7 +331,7 @@ public class DocumentNavigation extends NavigationBean {
 
 		Directory parent = new Directory(menuDao.findById(getSelectedDir().getMenu().getParentId()));
 		selectDirectory(parent);
-		setSelectedPanel(new PageContentBean("documents"));
+		setSelectedPanel(new PageContentBean(this.viewMode));
 
 		loadTree();
 		return null;
@@ -413,5 +428,9 @@ public class DocumentNavigation extends NavigationBean {
 	public void cancelFolderSelector(ActionEvent e) {
 		directoryModel.cancelSelection();
 		showFolderSelector = false;
+	}
+
+	public void showDocuments() {
+		this.setSelectedPanel(new PageContentBean(viewMode));
 	}
 }

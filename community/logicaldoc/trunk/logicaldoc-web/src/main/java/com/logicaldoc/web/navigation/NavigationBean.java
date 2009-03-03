@@ -49,7 +49,6 @@ public class NavigationBean {
                     history.setSize(10);
                 }
             }
-
             this.selectedPanel = content;
         }
     }
@@ -61,7 +60,6 @@ public class NavigationBean {
         if (!history.isEmpty()) {
             selectedPanel = history.pop();
         }
-
         return null;
     }
 
