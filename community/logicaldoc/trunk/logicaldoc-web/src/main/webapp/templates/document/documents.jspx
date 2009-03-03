@@ -199,11 +199,23 @@
 			</ice:column>
 		</ice:dataTable>
 
-		<ice:panelGrid columns="2" style="width: 100%;">
+		<ice:panelGrid columns="3" style="width: 100%;">
 			<ice:panelGroup>
 				<ldoc:paginator table="documentsList"
 					label="#{msgs['paginator.simple']}" />
 			</ice:panelGroup>
+			
+			<ice:panelGroup style="margin-top:0px; padding-top:0px;">
+				<ice:outputLabel value="View Mode" for="viewMode" />
+				<ice:selectOneMenu id="viewMode"
+					value="#{documentNavigation.viewMode}" partialSubmit="true">
+					<f:selectItem itemValue="documents" itemLabel="Details" />
+					<f:selectItem itemValue="documentsIcons" itemLabel="Medium Icons" />
+					<f:selectItem itemValue="documentsIconsLarge"
+						itemLabel="Large Icons" />
+				</ice:selectOneMenu>
+			</ice:panelGroup>
+			
 			<ice:panelGroup style="float:right">
 				<ice:selectOneMenu id="dispRows"
 					value="#{documentsRecordsManager.displayedRows}"

@@ -14,11 +14,13 @@ import java.util.List;
 import java.util.Set;
 
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.icesoft.faces.component.ext.HtmlCommandLink;
 import com.icesoft.faces.component.ext.RowSelectorEvent;
 import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.document.DocumentManager;
@@ -174,6 +176,35 @@ public class DocumentsRecordsManager extends SortableList {
 		}
 	}
 
+	public void selectRow(ActionEvent event) {
+		HtmlCommandLink hcl = (HtmlCommandLink) event.getComponent();
+		Long docId = (Long) hcl.getValue();
+		DocumentRecord record = findDRinDocuments(docId);
+		if (record != null) {
+			record.setSelected(true);
+			selection.add(record);
+		}
+	}
+
+	public void unselectRow(ActionEvent event) {
+		HtmlCommandLink hcl = (HtmlCommandLink) event.getComponent();
+		Long docId = (Long) hcl.getValue();
+		DocumentRecord record = findDRinDocuments(docId);
+		if (record != null) {
+			record.setSelected(false);
+			selection.remove(record);
+		}
+	}
+
+	public DocumentRecord findDRinDocuments(long docId) {
+		for (DocumentRecord drI : documents) {
+			if (drI.getDocId() == docId) {
+				return drI;
+			}
+		}
+		return null;
+	}
+
 	public void refresh() {
 		selectedAll = false;
 		selectDirectory(selectedDirectory);
@@ -286,7 +317,7 @@ public class DocumentsRecordsManager extends SortableList {
 				DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 						"documentNavigation", FacesContext.getCurrentInstance(), log));
 				documentNavigation.refresh();
-				documentNavigation.setSelectedPanel(new PageContentBean("documents"));
+				documentNavigation.showDocuments();
 			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 				Messages.addError(e.getMessage());
@@ -475,7 +506,7 @@ public class DocumentsRecordsManager extends SortableList {
 				DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 						"documentNavigation", FacesContext.getCurrentInstance(), log));
 				documentNavigation.refresh();
-				documentNavigation.setSelectedPanel(new PageContentBean("documents"));
+				documentNavigation.showDocuments();
 			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 				Messages.addError(e.getMessage());
@@ -579,7 +610,8 @@ public class DocumentsRecordsManager extends SortableList {
 	/**
 	 * Determines the sort order.
 	 * 
-	 * @param sortColumn to sort by.
+	 * @param sortColumn
+	 *            to sort by.
 	 * @return whether sort order is ascending or descending.
 	 */
 	@Override
@@ -638,7 +670,7 @@ public class DocumentsRecordsManager extends SortableList {
 	public String back() {
 		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 				"documentNavigation", FacesContext.getCurrentInstance(), log));
-		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
+		documentNavigation.showDocuments();
 		return null;
 	}
 }

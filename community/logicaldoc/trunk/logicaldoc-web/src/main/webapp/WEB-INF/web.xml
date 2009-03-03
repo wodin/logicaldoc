@@ -165,6 +165,13 @@
 		</servlet-class>
 	</servlet>
 	<servlet>
+		<display-name>Documents preview servlet</display-name>
+		<servlet-name>thumbnail</servlet-name>
+		<servlet-class>
+			com.logicaldoc.web.document.DocumentPreview
+		</servlet-class>
+	</servlet>
+	<servlet>
 		<display-name>Document resource upload servlet</display-name>
 		<servlet-name>uploadresource</servlet-name>
 		<servlet-class>
@@ -250,6 +257,10 @@
 	<servlet-mapping>
 		<servlet-name>download</servlet-name>
 		<url-pattern>/download</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>thumbnail</servlet-name>
+		<url-pattern>/thumbnail</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>uploadresource</servlet-name>
