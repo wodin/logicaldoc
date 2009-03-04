@@ -17,7 +17,7 @@ public class WebservicePlugin extends LogicalDOCPlugin {
 	protected static Log log = LogFactory.getLog(WebservicePlugin.class);
 
 	@Override
-	protected void doStart() throws Exception {
+	protected void install() throws Exception {
 		WebConfigurator config=new WebConfigurator();
 		config.addServlet("CXFServlet", "org.apache.cxf.transport.servlet.CXFServlet");
 		config.writeXMLDoc();
