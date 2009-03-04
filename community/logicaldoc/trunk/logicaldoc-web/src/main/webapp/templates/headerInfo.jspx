@@ -2,8 +2,7 @@
 <!-- 
  The navigation menu
   
- @author Marco Meschieri
- @version $Id: headerInfo.jspx,v 1.2 2006/08/29 16:33:46 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
