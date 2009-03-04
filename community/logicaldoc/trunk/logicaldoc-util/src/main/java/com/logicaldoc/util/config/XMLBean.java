@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class XMLBean {
 	public XMLBean(URL docname) {
 
 		try {
-			docPath = docname.getPath();
+			docPath =  URLDecoder.decode(docname.getPath(),"UTF-8");
 			docInputStream = null;
 		} catch (Exception ex) {
 			logger.error(ex.getMessage());
