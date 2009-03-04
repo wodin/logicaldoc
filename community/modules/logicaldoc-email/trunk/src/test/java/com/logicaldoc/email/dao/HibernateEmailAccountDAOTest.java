@@ -1,5 +1,6 @@
 package com.logicaldoc.email.dao;
 
+import java.net.URLDecoder;
 import java.util.Collection;
 
 import com.logicaldoc.core.security.dao.MenuDAO;

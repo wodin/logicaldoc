@@ -48,8 +48,6 @@
 				<prop key="sxcontent.category">search</prop>
 				<prop key="kocontent">maindoc.xml</prop>
 				<prop key="kocontent.category">search</prop>
-				<prop key="enablerest">false</prop>
-				<prop key="enablerest.category">webservice</prop>
 			</props>
 		</property>
 	</bean>
