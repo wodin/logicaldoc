@@ -81,16 +81,6 @@ public class HistoryRecordsManager {
 		return histories;
 	}
 
-	public String back() {
-
-		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-				"documentNavigation", FacesContext.getCurrentInstance(), log));
-		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
-		selectedDocument = null;
-
-		return null;
-	}
-
 	public Document getSelectedDocument() {
 		return selectedDocument;
 	}
