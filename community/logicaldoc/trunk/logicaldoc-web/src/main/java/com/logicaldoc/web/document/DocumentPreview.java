@@ -22,7 +22,7 @@ import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.web.util.ScaleJPG;
+import com.logicaldoc.web.util.ScaleImage;
 import com.logicaldoc.web.util.ServletDocUtil;
 
 /**
@@ -122,7 +122,7 @@ public class DocumentPreview extends HttpServlet {
 			log.fatal("folderSrc: " + folderSrc);
 			File fileSrc = new File(folderSrc, fileVersion);
 
-			ScaleJPG.scale(fileSrc.getPath(), thumbnailSize, fileDest.getPath());
+			ScaleImage.scale(fileSrc.getPath(), thumbnailSize, fileDest.getPath());
 			return true;
 		} catch (Throwable e) {
 			//e.printStackTrace();

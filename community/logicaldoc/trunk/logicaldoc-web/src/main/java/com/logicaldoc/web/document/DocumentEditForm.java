@@ -112,6 +112,8 @@ public class DocumentEditForm {
 	private UIInput templateInput = null;
 
 	private Collection<Attribute> extendedAttributes = new ArrayList<Attribute>();
+	
+	private boolean displayPreviewPopup = false;
 
 	public DocumentEditForm() {
 		reset();
@@ -768,5 +770,23 @@ public class DocumentEditForm {
 
 	public void setTemplateInput(UIInput templateInput) {
 		this.templateInput = templateInput;
+	}
+
+	public boolean isDisplayPreviewPopup() {
+		return displayPreviewPopup;
+	}
+
+	public void setDisplayPreviewPopup(boolean displayPreviewPopup) {
+		this.displayPreviewPopup = displayPreviewPopup;
+	}
+	
+	public String openDocumentPreview() {
+		this.displayPreviewPopup = true;
+		return null;
+	}
+	
+	public String closeDocumentPreview() {
+		this.displayPreviewPopup = false;
+		return null;
 	}
 }

@@ -35,7 +35,7 @@
 				style="float: left; padding: 10px; text-align: center;">
 				<ice:outputLink value="download?docId=#{documentRecord.docId}"
 					target="_blank" title="#{msgs['msg.jsp.popup']}">
-					<h:graphicImage width="#{ContextProperties['thumbnail.size']/2}" height="#{ContextProperties['thumbnail.size']/2}" style="border: 0px;"
+					<ice:graphicImage width="#{ContextProperties['thumbnail.size']/2}" height="#{ContextProperties['thumbnail.size']/2}" style="border: 0px;"
 						url="thumbnail?docId=#{documentRecord.docId}&amp;versionId=#{documentRecord.document.fileVersion}" />
 				</ice:outputLink>
 				<br />
