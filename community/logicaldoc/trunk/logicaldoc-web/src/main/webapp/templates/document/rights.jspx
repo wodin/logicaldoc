@@ -15,12 +15,15 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
 	id="rightsForm">
-	
+
 	<ice:panelGroup styleClass="formBorderHighlight">
 		<h3>
 			<ice:outputText
 				value="#{msgs['rights']} - #{rightsRecordsManager.selectedDirectory.displayText}"
-				rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
+				rendered="#{!empty (rightsRecordsManager.selectedDirectory) and  (rightsRecordsManager.selectedDirectory.displayText != 'menu.documents')}" />
+			<ice:outputText
+				value="#{msgs['rights']} - #{msgs[rightsRecordsManager.selectedDirectory.displayText]}"
+				rendered="#{!empty (rightsRecordsManager.selectedDirectory) and (rightsRecordsManager.selectedDirectory.displayText == 'menu.documents')}" />
 			<br />
 			<br />
 		</h3>
@@ -39,18 +42,16 @@
 				<ice:panelGrid columns="3">
 					<ice:panelGroup>
 						<br />
-						<ldoc:groupselector id="grp1"
-							showFilter="true"
-							styleClass="selectManyMenuBig"
-							allowMultipleSelection="true"
+						<ldoc:groupselector id="grp1" showFilter="true"
+							styleClass="selectManyMenuBig" allowMultipleSelection="true"
 							label="#{msgs['entity.available']}"
 							items="#{rightsRecordsManager.availableGroups}"
 							value="#{rightsRecordsManager.selectedAvailableGroups}"
 							filterValue="#{rightsRecordsManager.availableGroupFilter}"
 							filterListener="#{rightsRecordsManager.filterAvailableGroups}"
-							filterSize="193"/>
+							filterSize="193" />
 					</ice:panelGroup>
-					
+
 					<ice:panelGroup styleClass="commands">
 						<br />
 						<br />
@@ -64,19 +65,17 @@
 							action="#{rightsRecordsManager.unassignGroups}"
 							rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
 					</ice:panelGroup>
-					
+
 					<ice:panelGroup>
 						<br />
-						<ldoc:groupselector id="grp2"
-							showFilter="true"
-							styleClass="selectManyMenuBig"
-							allowMultipleSelection="true"
+						<ldoc:groupselector id="grp2" showFilter="true"
+							styleClass="selectManyMenuBig" allowMultipleSelection="true"
 							label="#{msgs['entity.allowed']}"
 							items="#{rightsRecordsManager.allowedGroups}"
 							value="#{rightsRecordsManager.selectedAllowedGroups}"
 							filterValue="#{rightsRecordsManager.allowedGroupFilter}"
 							filterListener="#{rightsRecordsManager.filterAllowedGroups}"
-							filterSize="193"/>
+							filterSize="193" />
 					</ice:panelGroup>
 				</ice:panelGrid>
 			</f:subview>
@@ -86,7 +85,7 @@
 		<!-- Groups and rights -->
 		<ice:panelGroup>
 			<ice:dataTable value="#{rightsRecordsManager.rules}" var="rule"
-				cellpadding="0"  rows="2000">
+				cellpadding="0" rows="2000">
 
 				<!-- group column -->
 				<ice:column styleClass="nowrap center">
@@ -119,7 +118,7 @@
 							disabled="#{!rule.enabled}" />
 					</ice:panelGroup>
 				</ice:column>
-				
+
 				<!-- add folder -->
 				<ice:column styleClass="center">
 					<f:facet name="header">
@@ -130,7 +129,7 @@
 							disabled="#{!rule.enabled}" />
 					</ice:panelGroup>
 				</ice:column>
-				
+
 				<!-- manage security -->
 				<ice:column styleClass="center">
 					<f:facet name="header">
@@ -141,7 +140,7 @@
 							disabled="#{!rule.enabled}" />
 					</ice:panelGroup>
 				</ice:column>
-				
+
 				<!-- manage immutability -->
 				<ice:column styleClass="center">
 					<f:facet name="header">
@@ -152,7 +151,7 @@
 							disabled="#{!rule.enabled}" />
 					</ice:panelGroup>
 				</ice:column>
-				
+
 				<!-- delete -->
 				<ice:column styleClass="center">
 					<f:facet name="header">
@@ -174,7 +173,7 @@
 							disabled="#{!rule.enabled}" />
 					</ice:panelGroup>
 				</ice:column>
-				
+
 				<!-- bulk import -->
 				<ice:column styleClass="center">
 					<f:facet name="header">
@@ -185,7 +184,7 @@
 							disabled="#{!rule.enabled}" />
 					</ice:panelGroup>
 				</ice:column>
-				
+
 				<!-- bulk export -->
 				<ice:column styleClass="center">
 					<f:facet name="header">
@@ -196,7 +195,7 @@
 							disabled="#{!rule.enabled}" />
 					</ice:panelGroup>
 				</ice:column>
-				
+
 				<!-- sign -->
 				<ice:column styleClass="center">
 					<f:facet name="header">
@@ -207,7 +206,7 @@
 							disabled="#{!rule.enabled}" />
 					</ice:panelGroup>
 				</ice:column>
-				
+
 				<!-- archive -->
 				<ice:column styleClass="center">
 					<f:facet name="header">
@@ -218,7 +217,7 @@
 							disabled="#{!rule.enabled}" />
 					</ice:panelGroup>
 				</ice:column>
-				
+
 			</ice:dataTable>
 		</ice:panelGroup>
 		<ice:panelGroup styleClass="commands">
