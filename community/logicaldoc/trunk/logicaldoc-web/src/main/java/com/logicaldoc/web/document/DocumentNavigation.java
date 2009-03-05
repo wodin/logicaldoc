@@ -429,10 +429,6 @@ public class DocumentNavigation extends NavigationBean {
 		directoryModel.cancelSelection();
 		showFolderSelector = false;
 	}
-
-	public void XshowDocuments() {
-		this.setSelectedPanel(new PageContentBean(viewMode));
-	}
 	
 	public String showDocuments() {
 		this.setSelectedPanel(new PageContentBean(viewMode));
