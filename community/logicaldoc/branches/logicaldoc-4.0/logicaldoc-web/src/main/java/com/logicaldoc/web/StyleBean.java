@@ -32,6 +32,7 @@ import com.logicaldoc.util.config.PropertiesBean;
  */
 public class StyleBean {
 
+
 	protected static Log log = LogFactory.getLog(StyleBean.class);
 
 	// folder icons for the respective themes
@@ -91,20 +92,20 @@ public class StyleBean {
 
 		try {
 			PropertiesBean context = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
-			String sk = context.getProperty("skin");
-			productName = context.getProperty("skin." + sk + ".product.name");
+			skin = context.getProperty("skin");
+			productName = context.getProperty("skin." + skin + ".product.name");
 			if (StringUtils.isEmpty(productName))
 				productName = context.getProperty("product.name");
-			productUrl = context.getProperty("skin." + sk + ".product.url");
+			productUrl = context.getProperty("skin." + skin + ".product.url");
 			if (StringUtils.isEmpty(productUrl))
 				productUrl = context.getProperty("product.url");
-			productHelp = context.getProperty("skin." + sk + ".product.help");
+			productHelp = context.getProperty("skin." + skin + ".product.help");
 			if (StringUtils.isEmpty(productHelp))
 				productHelp = context.getProperty("product.help");
-			productYear = context.getProperty("skin." + sk + ".product.year");
+			productYear = context.getProperty("skin." + skin + ".product.year");
 			if (StringUtils.isEmpty(productYear))
 				productYear = context.getProperty("product.year");
-			productVendor = context.getProperty("skin." + sk + ".product.vendor");
+			productVendor = context.getProperty("skin." + skin + ".product.vendor");
 			if (StringUtils.isEmpty(productVendor))
 				productVendor = context.getProperty("product.vendor");
 			productRelease = context.getProperty("product.release");
