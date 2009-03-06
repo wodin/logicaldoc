@@ -99,7 +99,6 @@
 		</listener-class>
 	</listener>
 
-
 	<!--
 		Loads the root application context of this web app at startup.
 		Use WebApplicationContextUtils.getWebApplicationContext(servletContext)
@@ -123,6 +122,14 @@
 			com.icesoft.faces.util.event.servlet.ContextEventRepeater
 		</listener-class>
 	</listener>
+
+	<!-- Session Tracker listener -->
+	<listener>
+		<listener-class>
+			com.logicaldoc.web.SessionTracker
+		</listener-class>
+	</listener>
+
 
 	<filter>
 		<filter-name>LocaleFilter</filter-name>
@@ -176,6 +183,12 @@
 		<servlet-name>uploadresource</servlet-name>
 		<servlet-class>
 			com.logicaldoc.web.document.DocumentResourceUpload
+		</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>upload</servlet-name>
+		<servlet-class>
+			com.logicaldoc.web.upload.Upload
 		</servlet-class>
 	</servlet>
 	<servlet>
@@ -265,6 +278,10 @@
 	<servlet-mapping>
 		<servlet-name>uploadresource</servlet-name>
 		<url-pattern>/uploadresource</url-pattern>
+	</servlet-mapping>
+    <servlet-mapping>
+		<servlet-name>upload</servlet-name>
+		<url-pattern>/upload</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>log</servlet-name>

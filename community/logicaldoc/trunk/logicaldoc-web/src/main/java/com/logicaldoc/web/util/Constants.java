@@ -34,4 +34,7 @@ public final class Constants {
 	public static final String LOCALE = "locale";
 
 	public static final String TIMEZONE = "timezone";
+	
+	// Sessions the context key of the sessions map
+	public static final String SESSIONS = "sessions";
 }
