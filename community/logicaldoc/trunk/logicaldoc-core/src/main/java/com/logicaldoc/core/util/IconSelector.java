@@ -19,8 +19,7 @@ public class IconSelector {
 		else if (ext.equals("txt") || ext.equals("properties"))
 			icon = "text.png";
 		else if (ext.equals("doc") || ext.equals("odt") || ext.equals("docx") || ext.equals("rtf") || ext.equals("sxw")
-				|| ext.equals("wpd") || ext.equals("kwd") || ext.equals("abw") || ext.equals("zabw")
-				|| ext.equals("dot"))
+				|| ext.equals("wpd") || ext.equals("kwd") || ext.equals("dot"))
 			icon = "word.png";
 		else if (ext.equals("xls") || ext.equals("ods") || ext.equals("xslx") || ext.equals("xlt") || ext.equals("sxc")
 				|| ext.equals("dbf") || ext.equals("ksp") || ext.equals("odb"))
@@ -35,7 +34,8 @@ public class IconSelector {
 			icon = "html.png";
 		else if (ext.equals("eml") || ext.equals("mail"))
 			icon = "email.png";
-		else if (ext.equals("zip") || ext.equals("rar") || ext.equals("gz") || ext.equals("tar") || ext.equals("7z"))
+		else if (ext.equals("zip") || ext.equals("rar") || ext.equals("gz") || ext.equals("tar") || ext.equals("jar")
+				|| ext.equals("7z"))
 			icon = "zip.png";
 		else if (ext.equals("dwg"))
 			icon = "dwg.gif";
