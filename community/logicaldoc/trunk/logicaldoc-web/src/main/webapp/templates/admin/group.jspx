@@ -153,7 +153,7 @@
 		</ice:panelGroup>
 		<hr />
 		<ice:panelGroup styleClass="commands">
-			<ice:commandButton value="#{msgs['abort']}" partialSubmit="true"
+			<ice:commandButton value="#{msgs['cancel']}" partialSubmit="true"
 				immediate="true" action="#{groupsRecordsManager.list}" />
 			<ice:commandButton value="#{msgs['save']}" id="save" tabindex="1"
 				action="#{groupForm.save}" />

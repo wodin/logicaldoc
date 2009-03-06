@@ -54,7 +54,7 @@
 		</ice:panelGroup>
 		<hr />
 		<ice:panelGroup styleClass="commands">
-			<ice:commandButton value="#{msgs['abort']}"
+			<ice:commandButton value="#{msgs['cancel']}"
 				action="#{usersRecordsManager.list}" immediate="true" />
 			<ice:commandButton value="#{msgs['save']}"
 				action="#{userForm.savePassword}" id="save" tabindex="1" />
