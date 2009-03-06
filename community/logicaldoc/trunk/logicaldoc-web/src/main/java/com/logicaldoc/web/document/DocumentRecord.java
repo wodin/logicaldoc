@@ -253,6 +253,13 @@ public class DocumentRecord extends MenuBarBean {
 				null, "#{documentRecord.sendAsEmail}", null, style.getImagePath("email_go.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(), null,
 				"#{documentRecord.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
+
+		if (document.getIndexed() == 1) {
+			model.add(createMenuItem(" " + Messages.getMessage("document.indexed"), "sendticket-" + folder.getId(),
+					null, "#{documentRecord.downloadTextIndexed}", null, style.getImagePath("text_download.png"), true, "_blank",
+					null));
+		}
+
 		model.add(createMenuItem(" " + Messages.getMessage("info"), "info-" + folder.getId(), null,
 				"#{documentRecord.info}", null, style.getImagePath("info.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("history"), "history-" + folder.getId(), null,
@@ -291,7 +298,9 @@ public class DocumentRecord extends MenuBarBean {
 			String action = ext.getParameter("action").valueAsString();
 			String icon = ext.getParameter("icon").valueAsString();
 			String target = ext.getParameter("target").valueAsString();
-			model.add(createMenuItem(" " + title, id, null, action, null, style.getImagePath(icon), true, target, null));
+			model
+					.add(createMenuItem(" " + title, id, null, action, null, style.getImagePath(icon), true, target,
+							null));
 		}
 	}
 
@@ -578,6 +587,23 @@ public class DocumentRecord extends MenuBarBean {
 		address += request.getContextPath();
 		address += ("/download-ticket?ticketId=" + ticketid);
 		emailForm.setText("URL: " + address);
+
+		return null;
+	}
+	
+	
+	public String downloadTextIndexed() {
+		// Show the proper panel
+		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
+				"documentNavigation", FacesContext.getCurrentInstance(), log));
+		documentNavigation.setSelectedPanel(new PageContentBean("downloadTextIndexed"));
+		
+		// Now initialize the form
+		DocumentEditForm docForm = ((DocumentEditForm) FacesUtil.accessBeanFromFacesContext("documentForm",
+				FacesContext.getCurrentInstance(), log));
+		docForm.reset();
+		docForm.init(this);
+		docForm.setReadOnly(false);
 
 		return null;
 	}
