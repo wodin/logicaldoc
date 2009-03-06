@@ -42,7 +42,6 @@ public class SecurityForm {
 
 	public void closeFolderSelector(ActionEvent e) {
 		showFolderSelector = false;
-		path = null;
 	}
 
 	public boolean isShowFolderSelector() {
@@ -84,6 +83,7 @@ public class SecurityForm {
 
 	public void cancelFolderSelector(ActionEvent e) {
 		directoryModel.cancelSelection();
+		path = "";
 		RightsRecordsManager manager = ((RightsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"securityRightsRecordsManager", FacesContext.getCurrentInstance(), log));
 		manager.cleanSelection();
