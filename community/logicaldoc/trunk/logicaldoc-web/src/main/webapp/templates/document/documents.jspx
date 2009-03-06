@@ -115,7 +115,7 @@
 						target="_blank" title="#{msgs['document.indexed']}"
 						rendered="#{documentRecord.document.indexed==1}">
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
-							value="#{StyleBean.imagesPath}/txt-icon.png"
+							value="#{StyleBean.imagesPath}/database.png"
 							alt="#{msgs['document.indexed']}" />
 					</ice:outputLink>
 					<ice:commandLink action="#{VerifyBean.showVerifyPage}"
