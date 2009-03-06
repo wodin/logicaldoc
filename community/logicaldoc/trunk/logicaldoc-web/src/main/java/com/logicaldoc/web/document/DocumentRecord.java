@@ -238,7 +238,7 @@ public class DocumentRecord extends MenuBarBean {
 					"#{documentRecord.edit}", null, style.getImagePath("document_edit.png"), true, null, null));
 
 			model.add(createMenuItem(" " + Messages.getMessage("link.pasteas"), "edit-" + folder.getId(), null,
-					"#{documentRecord.pasteAsLink}", null, style.getImagePath("pastelink.png"), true, null, null));
+					"#{documentRecord.pasteAsLink}", null, style.getImagePath("paste_link.png"), true, null, null));
 		}
 
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,
@@ -246,11 +246,11 @@ public class DocumentRecord extends MenuBarBean {
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.similardocs"), "similar-" + folder.getId(), null,
 				"#{searchForm.searchSimilar}", null, style.getImagePath("similar.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("links"), "linked-" + folder.getId(), null,
-				"#{documentRecord.links}", null, style.getImagePath("link.png"), true, "_blank", null));
+				"#{documentRecord.links}", null, style.getImagePath("link_edit.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.discuss"), "articles-" + folder.getId(), null,
 				"#{documentRecord.articles}", null, style.getImagePath("comments.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getId(),
-				null, "#{documentRecord.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank", null));
+				null, "#{documentRecord.sendAsEmail}", null, style.getImagePath("email_go.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(), null,
 				"#{documentRecord.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("info"), "info-" + folder.getId(), null,
