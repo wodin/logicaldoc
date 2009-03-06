@@ -228,7 +228,7 @@
 			<ice:commandButton value="#{msgs['cache.clear']}" tabindex="1"
 				action="#{AccountForm.deleteCache}" id="deleteCache"
 				onclick="if (!confirm(&quot;#{msgs['cache.clear.question']}&quot;)) return false;"/>
-			<ice:commandButton value="#{msgs['abort']}" tabindex="1"
+			<ice:commandButton value="#{msgs['cancel']}" tabindex="1"
 				action="#{AccountsRecordsManager.list}" partialSubmit="true"
 				immediate="true" />
 			<ice:commandButton value="#{msgs['save']}" tabindex="1" id="save"
