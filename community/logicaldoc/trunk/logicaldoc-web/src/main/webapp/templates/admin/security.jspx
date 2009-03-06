@@ -14,7 +14,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
 	id="securityForm" styleClass="center formBorderHighlight"
-	style="width: 700px; text-align: left;">
+	style="width: 900px; text-align: left;">
 
 	<ice:messages globalOnly="true" />
 
@@ -69,7 +69,7 @@
 					<br />
 					<br />
 					<ice:commandButton value="&gt;&gt;"
-						action="#{securityRightsRecordsManager.assignGroups}"  />
+						action="#{securityRightsRecordsManager.assignGroups}" />
 					<br />
 					<br />
 					<ice:commandButton value="&lt;&lt;"
@@ -90,5 +90,149 @@
 			</ice:panelGrid>
 		</f:subview>
 		<br />
+	</ice:panelGroup>
+
+	<!-- Groups and rights -->
+	<ice:panelGroup rendered="#{!empty(securityForm.path)}">
+		<ice:dataTable value="#{securityRightsRecordsManager.rules}" var="rule"
+			cellpadding="0" rows="2000">
+
+			<!-- group column -->
+			<ice:column styleClass="nowrap center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['entity.name']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:outputText value="#{rule.displayName}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- read column -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.read']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.read}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- write column -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.write']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.write}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- add folder -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.addChild']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.addChild}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- manage security -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.manageSecurity']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.manageSecurity}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- manage immutability -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.manageImmutability']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.manageImmutability}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- delete -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.delete']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.delete}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- rename -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.rename']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.rename}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- bulk import -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.bulkImport']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.bulkImport}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- bulk export -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.bulkExport']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.bulkExport}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- sign -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.sign']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.sign}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- archive -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.archive']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.archive}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+		</ice:dataTable>
+		<br />
+		<hr />
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['save']}"
+				action="#{securityRightsRecordsManager.save}" />
+		</ice:panelGroup>
 	</ice:panelGroup>
 </jsp:root>
