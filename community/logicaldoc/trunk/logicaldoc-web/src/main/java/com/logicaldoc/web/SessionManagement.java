@@ -3,6 +3,7 @@ package com.logicaldoc.web;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.logicaldoc.core.security.User;
@@ -34,7 +35,6 @@ public class SessionManagement {
 	public static boolean isValid() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
-
 		return isValid(session);
 	}
 
@@ -68,5 +68,17 @@ public class SessionManagement {
 		Map<String, Object> session = facesContext.getExternalContext().getSessionMap();
 		String language = (String) session.get(Constants.LANGUAGE);
 		return language;
+	}
+
+	public static HttpSession getSession(String sessionId) {
+		try {
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			HttpSession session = (HttpSession) (((HttpServletRequest) facesContext.getExternalContext().getRequest()))
+					.getAttribute(Constants.SESSIONS);
+			return session;
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return null;
 	}
 }
