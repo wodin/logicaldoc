@@ -27,7 +27,7 @@
             <ice:commandButton value="&lt;&lt; #{msgs['back']}"
                 partialSubmit="true"
                 action="#{newDocWizard.abort}" />        
-            <ice:commandButton value="#{msgs['abort']}"
+            <ice:commandButton value="#{msgs['cancel']}"
                 partialSubmit="true"
                 action="#{newDocWizard.abort}" />
             <ice:commandButton value="#{msgs['save']}"

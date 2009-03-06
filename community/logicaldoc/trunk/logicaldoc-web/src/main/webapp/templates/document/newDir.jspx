@@ -79,7 +79,7 @@
         </ice:panelGroup>
 		<hr />
         <ice:panelGroup styleClass="commands">
-            <ice:commandButton value="#{msgs['abort']}"
+            <ice:commandButton value="#{msgs['cancel']}"
                 partialSubmit="true"
                 immediate="true"
                 action="#{newDocWizard.abort}" />

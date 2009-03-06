@@ -121,7 +121,7 @@
 		</ice:panelGroup>
 		<hr />
 		<ice:panelGroup styleClass="commands">
-			<ice:commandButton value="#{msgs['abort']}"
+			<ice:commandButton value="#{msgs['cancel']}"
 				action="#{tasksRecordsManager.list}" partialSubmit="true" />
 			<ice:commandButton value="#{msgs['save']}" action="#{taskForm.save}"
 				id="save" />
