@@ -6,10 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.faces.context.FacesContext;
-import javax.faces.el.MethodBinding;
-import javax.faces.el.ValueBinding;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -82,7 +78,7 @@ public class DocumentToolbar {
 		// Acquire the 'DocumentToolbar' extensions of the core plugin
 		PluginRegistry registry = PluginRegistry.getInstance();
 		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "DocumentToolbar");
-		
+
 		// Sort the extensions according to ascending position
 		List<Extension> sortedExts = new ArrayList<Extension>();
 		for (Extension extension : exts) {
@@ -100,7 +96,7 @@ public class DocumentToolbar {
 					return 0;
 			}
 		});
-		
+
 		for (Extension ext : sortedExts) {
 			command = new DocumentCommand();
 			commands.add(command);
@@ -110,68 +106,6 @@ public class DocumentToolbar {
 			command.setIcon(ext.getParameter("icon").valueAsString());
 			command.setAction(FacesUtil.createActionMethodBinding(ext.getParameter("action").valueAsString()));
 			command.setRenderedBinding(FacesUtil.createValueBinding(ext.getParameter("rendered").valueAsString()));
-		}
-	}
-
-	public static class DocumentCommand {
-		private String title;
-
-		private String icon;
-
-		private String confirmation = "X";
-
-		private ValueBinding renderedBinding;
-
-		private MethodBinding action;
-
-		public String getTitle() {
-			return title;
-		}
-
-		public void setTitle(String title) {
-			this.title = title;
-		}
-
-		public String getIcon() {
-			return icon;
-		}
-
-		public void setIcon(String icon) {
-			this.icon = icon;
-		}
-
-		public MethodBinding getAction() {
-			return action;
-		}
-
-		public void setAction(MethodBinding action) {
-			this.action = action;
-		}
-
-		public void setRenderedBinding(ValueBinding renderedBinding) {
-			this.renderedBinding = renderedBinding;
-		}
-
-		public Boolean getRendered() {
-			if (renderedBinding != null)
-				return (Boolean) renderedBinding.getValue(FacesContext.getCurrentInstance());
-			else
-				return true;
-		}
-
-		public String action() {
-			if (action != null)
-				return (String) action.invoke(FacesContext.getCurrentInstance(), new Object[] {});
-			else
-				return "";
-		}
-
-		public String getConfirmation() {
-			return confirmation;
-		}
-
-		public void setConfirmation(String confirmation) {
-			this.confirmation = confirmation;
 		}
 	}
 

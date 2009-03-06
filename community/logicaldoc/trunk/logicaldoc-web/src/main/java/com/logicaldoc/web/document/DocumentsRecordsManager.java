@@ -673,4 +673,8 @@ public class DocumentsRecordsManager extends SortableList {
 		documentNavigation.showDocuments();
 		return null;
 	}
+
+	public Set<DocumentRecord> getSelection() {
+		return selection;
+	}
 }
