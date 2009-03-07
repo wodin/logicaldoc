@@ -262,6 +262,17 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
+	public File getDocumentFile(long docId) {
+	  return getDocumentFile(docId, null);
+	}
+	
+	@Override
+	public File getDocumentFile(long docId, String fileVersion) {
+	  Document doc = documentDAO.findById(docId);
+	  return getDocumentFile(doc, fileVersion);
+	}
+	
+	@Override
 	public File getDocumentFile(Document doc, String fileVersion) {
 		String path = getDocFilePath(doc);
 
