@@ -272,6 +272,14 @@ public interface DocumentManager {
 	public File getDocumentFile(Document doc);
 
 	/**
+	 * Obtains the document's file
+	 * 
+	 * @param docId The document's identifier
+	 * @return The document file
+	 */
+	public File getDocumentFile(long docId);
+	
+	/**
 	 * Obtains the document's file for the specified version
 	 * 
 	 * @param doc The document representation
@@ -280,6 +288,16 @@ public interface DocumentManager {
 	 */
 	public File getDocumentFile(Document doc, String fileVersion);
 
+	/**
+	 * Obtains the document's file for the specified version
+	 * 
+	 * @param docId The document's identifier
+	 * @param fileVersion The file version (use null for the latest version)
+	 * @return The document file
+	 */
+	public File getDocumentFile(long docId, String fileVersion);
+
+	
 	/**
 	 * Retrieves the document's content as a string
 	 * 
