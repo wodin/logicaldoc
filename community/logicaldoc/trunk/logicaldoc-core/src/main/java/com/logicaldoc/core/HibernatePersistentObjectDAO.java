@@ -11,8 +11,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import com.logicaldoc.core.document.dao.HibernateDocumentDAO;
-
 /**
  * Hibernate implementation of <code>PersistentObjectDAO</code>
  * 
@@ -21,7 +19,7 @@ import com.logicaldoc.core.document.dao.HibernateDocumentDAO;
  */
 public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> extends HibernateDaoSupport implements
 		PersistentObjectDAO<T> {
-	protected Log log = LogFactory.getLog(HibernateDocumentDAO.class);
+	protected Log log = LogFactory.getLog(HibernatePersistentObjectDAO.class);
 
 	protected Class<T> entityClass;
 
