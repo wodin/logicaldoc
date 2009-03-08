@@ -3,7 +3,6 @@ package com.logicaldoc.core.generic.dao;
 import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
-import com.logicaldoc.core.document.Article;
 import com.logicaldoc.core.generic.Generic;
 
 /**
