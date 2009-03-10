@@ -138,6 +138,8 @@ public class SearchForm {
 
 	private Long template = null;
 
+	private String viewMode = "result";
+
 	public SearchForm() {
 		setQuery(Messages.getMessage("search") + "...");
 		setLanguage(SessionManagement.getLanguage());
@@ -544,7 +546,9 @@ public class SearchForm {
 
 				setDocumentResult(docResult);
 
-				PageContentBean page = new PageContentBean("result", "search/result");
+				// PageContentBean page = new PageContentBean("result",
+				// "search/result");
+				PageContentBean page = new PageContentBean(viewMode, "search/" + viewMode);
 				StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 				page.setIcon(style.getImagePath("search.png"));
 				page.setContentTitle(Messages.getMessage("search.result"));
@@ -998,5 +1002,25 @@ public class SearchForm {
 		} else {
 			this.creationDateTo = creationDateTo;
 		}
+	}
+
+	public String getViewMode() {
+		return viewMode;
+	}
+
+	public void onSelectViewMode(ValueChangeEvent vce) {
+		String newValue = (String) vce.getNewValue();
+		this.viewMode = newValue;
+
+		PageContentBean page = new PageContentBean(viewMode, "search/" + newValue);
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
+		page.setIcon(style.getImagePath("search.png"));
+		page.setContentTitle(Messages.getMessage("search.result"));
+		navigation.setSelectedPanel(page);
+	}
+
+	public void setViewMode(String viewModeP) {
+		this.viewMode = viewModeP;
+		System.out.println("searchForm.setViewMode: " + this.viewMode);
 	}
 }

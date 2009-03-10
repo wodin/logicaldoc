@@ -12,8 +12,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
-	id="searchResultsForm">
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form">
 
 	<ice:panelGroup styleClass="center"
 		rendered="#{searchForm.moreHitsPresent}">
@@ -45,7 +44,7 @@
 				<f:param value="#{searchForm.query}" />
 				<f:param value="#{searchForm.execTime/1000}" />
 			</ice:outputFormat>
-			<br />
+			sdsdsdsdsdsd<br />
 		</ice:dataPaginator>
 	</ice:panelGroup>
 	<br />
@@ -68,7 +67,8 @@
 						<ice:outputText value="#{entry.title}" style="color: #333399;" />
 						<ice:graphicImage style="margin-left: 5px;" styleClass="iconSmall"
 							rendered="#{entry.document.immutable == 1}"
-							value="#{StyleBean.imagesPath}/immutable.png" title="#{msgs['document.immutable']}" />
+							value="#{StyleBean.imagesPath}/immutable.png"
+							title="#{msgs['document.immutable']}" />
 					</ice:outputLink>
 					<ice:menuPopup id="pop" value="#{entry.docId}">
 						<ice:menuItems value="#{entry.model}" />
@@ -138,8 +138,22 @@
 	</ice:dataTable>
 
 	<br />
-	<ice:panelGroup>
-		<ldoc:paginator table="result" label="#{msgs['paginator.simple']}" />
-		<br />
-	</ice:panelGroup>
+
+	<ice:panelGrid columns="2" style="width: 100%;">
+		<ice:panelGroup>
+			<ldoc:paginator table="result" label="#{msgs['paginator.simple']}" />
+			<br />
+		</ice:panelGroup>
+
+		<ice:panelGroup style="margin-top:0px; padding-top:0px;">
+			<ice:outputLabel value="View Mode" for="viewMode" />
+			<ice:selectOneMenu id="viewMode" value="#{searchForm.viewMode}"
+			    valueChangeListener="#{searchForm.onSelectViewMode}"
+				partialSubmit="true">
+				<f:selectItem itemValue="result" itemLabel="Details" />
+				<f:selectItem itemValue="resultIcons" itemLabel="Medium Icons" />
+			</ice:selectOneMenu>
+		</ice:panelGroup>
+	</ice:panelGrid>
+
 </jsp:root>
