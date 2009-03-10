@@ -238,7 +238,7 @@ public class DocumentRecord extends MenuBarBean {
 					"#{documentRecord.edit}", null, style.getImagePath("document_edit.png"), true, null, null));
 
 			model.add(createMenuItem(" " + Messages.getMessage("link.pasteas"), "edit-" + folder.getId(), null,
-					"#{documentRecord.pasteAsLink}", null, style.getImagePath("paste_link.png"), true, null, null));
+					"#{documentRecord.pasteAsLink}", null, style.getImagePath("pastelink.png"), true, null, null));
 		}
 
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,
@@ -246,20 +246,13 @@ public class DocumentRecord extends MenuBarBean {
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.similardocs"), "similar-" + folder.getId(), null,
 				"#{searchForm.searchSimilar}", null, style.getImagePath("similar.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("links"), "linked-" + folder.getId(), null,
-				"#{documentRecord.links}", null, style.getImagePath("link_edit.png"), true, "_blank", null));
+				"#{documentRecord.links}", null, style.getImagePath("link.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.discuss"), "articles-" + folder.getId(), null,
 				"#{documentRecord.articles}", null, style.getImagePath("comments.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getId(),
-				null, "#{documentRecord.sendAsEmail}", null, style.getImagePath("email_go.png"), true, "_blank", null));
+				null, "#{documentRecord.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(), null,
 				"#{documentRecord.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
-
-		if (document.getIndexed() == 1) {
-			model.add(createMenuItem(" " + Messages.getMessage("document.indexed"), "sendticket-" + folder.getId(),
-					null, "#{documentRecord.downloadTextIndexed}", null, style.getImagePath("text_download.png"), true, "_blank",
-					null));
-		}
-
 		model.add(createMenuItem(" " + Messages.getMessage("info"), "info-" + folder.getId(), null,
 				"#{documentRecord.info}", null, style.getImagePath("info.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("history"), "history-" + folder.getId(), null,
@@ -290,17 +283,17 @@ public class DocumentRecord extends MenuBarBean {
 
 		Set<Permission> permissions = menuDAO.getEnabledPermissions(folder.getId(), userId);
 		for (Extension ext : sortedExts) {
+			if(StringUtils.isNotEmpty(ext.getParameter("permission").valueAsString())){
 			Permission permission = Permission.valueOf(ext.getParameter("permission").valueAsString());
 			if (!permissions.contains(permission))
 				continue;
+			}
 			String title = Messages.getMessage(ext.getParameter("title").valueAsString());
 			String id = ext.getParameter("id").valueAsString() + "-" + folder.getId();
 			String action = ext.getParameter("action").valueAsString();
 			String icon = ext.getParameter("icon").valueAsString();
 			String target = ext.getParameter("target").valueAsString();
-			model
-					.add(createMenuItem(" " + title, id, null, action, null, style.getImagePath(icon), true, target,
-							null));
+			model.add(createMenuItem(" " + title, id, null, action, null, style.getImagePath(icon), true, target, null));
 		}
 	}
 
@@ -587,23 +580,6 @@ public class DocumentRecord extends MenuBarBean {
 		address += request.getContextPath();
 		address += ("/download-ticket?ticketId=" + ticketid);
 		emailForm.setText("URL: " + address);
-
-		return null;
-	}
-	
-	
-	public String downloadTextIndexed() {
-		// Show the proper panel
-		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-				"documentNavigation", FacesContext.getCurrentInstance(), log));
-		documentNavigation.setSelectedPanel(new PageContentBean("downloadTextIndexed"));
-		
-		// Now initialize the form
-		DocumentEditForm docForm = ((DocumentEditForm) FacesUtil.accessBeanFromFacesContext("documentForm",
-				FacesContext.getCurrentInstance(), log));
-		docForm.reset();
-		docForm.init(this);
-		docForm.setReadOnly(false);
 
 		return null;
 	}
