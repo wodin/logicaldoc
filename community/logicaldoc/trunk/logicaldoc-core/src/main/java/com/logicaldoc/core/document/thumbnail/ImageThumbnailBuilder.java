@@ -19,10 +19,6 @@ public class ImageThumbnailBuilder implements ThumbnailBuilder {
 
 	@Override
 	public void build(File src, int size, File dest) throws IOException {
-		
-		System.out.println("src="+src.getPath());
-		System.out.println("dest="+dest.getPath());
-		
 		BufferedImage bsrc = ImageIO.read(src);
 
 		Image destImg = null;
