@@ -238,7 +238,7 @@ public class DocumentRecord extends MenuBarBean {
 					"#{documentRecord.edit}", null, style.getImagePath("document_edit.png"), true, null, null));
 
 			model.add(createMenuItem(" " + Messages.getMessage("link.pasteas"), "edit-" + folder.getId(), null,
-					"#{documentRecord.pasteAsLink}", null, style.getImagePath("pastelink.png"), true, null, null));
+					"#{documentRecord.pasteAsLink}", null, style.getImagePath("paste_link.png"), true, null, null));
 		}
 
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,

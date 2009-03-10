@@ -95,19 +95,13 @@
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
 					menuPopup="pop">
 					<ice:graphicImage
-						value="#{StyleBean.imagesPath}/#{documentRecord.icon}"
-						style="border: 0px solid;" />
+						value="#{StyleBean.imagesPath}/#{documentRecord.icon}" />
 					<ice:outputLink
-						rendered="#{documentRecord.document.immutable == 0}"
 						value="download?docId=#{documentRecord.docId}" target="_blank"
 						title="#{msgs['msg.jsp.popup']}">
-						<ice:outputText value=" #{documentRecord.displayTitle}" />
-					</ice:outputLink>
-					<ice:outputLink
-						rendered="#{documentRecord.document.immutable == 1}"
-						value="download?docId=#{documentRecord.docId}" target="_blank"
-						title="#{msgs['msg.jsp.popup']}">
-						<ice:outputText styleClass="immutable"
+						<ice:outputText rendered="#{documentRecord.document.immutable == 0}"
+							value=" #{documentRecord.displayTitle}" />
+						<ice:outputText rendered="#{documentRecord.document.immutable == 1}" styleClass="immutable"
 							value=" #{documentRecord.displayTitle}" />
 					</ice:outputLink>
 				</ice:panelGroup>
@@ -131,7 +125,7 @@
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
 						value="#{StyleBean.imagesPath}/checkout.png"
-						alt="checked-out" />
+						alt="checked-out" title="checked-out" />
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.document.immutable == 1}"
 						value="#{StyleBean.imagesPath}/immutable.png"
