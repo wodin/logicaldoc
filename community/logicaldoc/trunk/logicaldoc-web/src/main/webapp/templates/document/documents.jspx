@@ -32,7 +32,7 @@
 			sortColumn="#{documentsRecordsManager.sortColumn}"
 			sortAscending="#{documentsRecordsManager.ascending}" cellpadding="0"
 			rows="#{documentsRecordsManager.displayedRows}"
-			columnClasses="selectionColumn,numberColumn,titleColumn,dateColumn,dateColumn,dateColumn">
+			columnClasses="selectionColumn,numberColumn,titleColumn,selectionColumn,dateColumn,dateColumn,numberColumn">
 
 			<!-- selection column -->
 			<ice:column>
@@ -110,16 +110,28 @@
 						<ice:outputText styleClass="immutable"
 							value=" #{documentRecord.displayTitle}" />
 					</ice:outputLink>
-					<ice:commandLink action="#{VerifyBean.showVerifyPage}"
-						target="_blank" title="#{msgs['document.signed']}"
-						rendered="#{documentRecord.document.signed==1}">
-						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
-							value="#{StyleBean.imagesPath}/sign.png"
-							alt="#{msgs['document.signed']}" />
-					</ice:commandLink>
+				</ice:panelGroup>
+				<ice:menuPopup id="pop" value="#{documentRecord.docId}"
+					orientation="vertical" rendered="#{documentRecord.documentFound}">
+					<ice:menuItems value="#{documentRecord.model}" />
+				</ice:menuPopup>
+			</ice:column>
+
+			<!-- Status -->
+			<ice:column>
+				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}">
+					<ice:outputLink
+						value="download?docId=#{documentRecord.docId}&amp;downloadText=true"
+						target="_blank" title="#{msgs['document.indexed']}"
+						rendered="#{documentRecord.document.indexed==1}">
+						<ice:graphicImage style="border: 0px solid;"
+							value="#{StyleBean.imagesPath}/database.png"
+							alt="#{msgs['document.indexed']}" />
+					</ice:outputLink>
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
-						value="#{StyleBean.imagesPath}/lock.png" />
+						value="#{StyleBean.imagesPath}/checkout.png"
+						alt="checked-out" />
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.document.immutable == 1}"
 						value="#{StyleBean.imagesPath}/immutable.png"
@@ -130,11 +142,14 @@
 							rendered="#{documentRecord.linked}"
 							value="#{StyleBean.imagesPath}/link.png" alt="#{msgs['links']}" />
 					</ice:commandLink>
+					<ice:commandLink action="#{VerifyBean.showVerifyPage}"
+						target="_blank" title="#{msgs['document.signed']}"
+						rendered="#{documentRecord.document.signed==1}">
+						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
+							value="#{StyleBean.imagesPath}/sign.png"
+							alt="#{msgs['document.signed']}" />
+					</ice:commandLink>
 				</ice:panelGroup>
-				<ice:menuPopup id="pop" value="#{documentRecord.docId}"
-					orientation="vertical" rendered="#{documentRecord.documentFound}">
-					<ice:menuItems value="#{documentRecord.model}" />
-				</ice:menuPopup>
 			</ice:column>
 
 			<!-- Creation -->
@@ -196,7 +211,7 @@
 				<ldoc:paginator table="documentsList"
 					label="#{msgs['paginator.simple']}" />
 			</ice:panelGroup>
-			
+
 			<ice:panelGroup style="margin-top:0px; padding-top:0px;">
 				<ice:outputLabel value="View Mode" for="viewMode" />
 				<ice:selectOneMenu id="viewMode"
@@ -207,7 +222,7 @@
 						itemLabel="Large Icons" />
 				</ice:selectOneMenu>
 			</ice:panelGroup>
-			
+
 			<ice:panelGroup style="float:right">
 				<ice:selectOneMenu id="dispRows"
 					value="#{documentsRecordsManager.displayedRows}"
