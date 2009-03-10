@@ -375,7 +375,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	}
 
 	public String getFileExtension() {
-		return getFileName().substring(getFileName().lastIndexOf(".") + 1);
+		return getFileName().substring(getFileName().lastIndexOf(".") + 1).toLowerCase();
 	}
 
 	public DocumentTemplate getTemplate() {

@@ -99,8 +99,34 @@
         <parameter-def id="position" />
     </extension-point>
     
+    <extension-point id="ThumbnailBuilder">
+        <parameter-def id="extension" />
+        <parameter-def id="class" />
+    </extension-point>
+    
     <extension plugin-id="logicaldoc-core" point-id="Authentication" id="BasicAuthentication">
 		<parameter id="providerId" value="BasicAuthentication"/>
 		<parameter id="position" value="1"/>
+	</extension>
+	
+	<extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="jpgThumb">
+		<parameter id="extension" value="jpg"/>
+		<parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="jpegThumb">
+		<parameter id="extension" value="jpeg"/>
+		<parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="gifThumb">
+		<parameter id="extension" value="gif"/>
+		<parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="pngThumb">
+		<parameter id="extension" value="png"/>
+		<parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="bmpThumb">
+		<parameter id="extension" value="bmp"/>
+		<parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder"/>
 	</extension>
 </plugin>

@@ -263,17 +263,27 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public File getDocumentFile(long docId) {
-	  return getDocumentFile(docId, null);
+		return getDocumentFile(docId, null);
 	}
-	
+
 	@Override
 	public File getDocumentFile(long docId, String fileVersion) {
-	  Document doc = documentDAO.findById(docId);
-	  return getDocumentFile(doc, fileVersion);
+		return getDocumentFile(docId, fileVersion, null);
 	}
-	
+
+	@Override
+	public File getDocumentFile(long docId, String fileVersion, String suffix) {
+		Document doc = documentDAO.findById(docId);
+		return getDocumentFile(doc, fileVersion, suffix);
+	}
+
 	@Override
 	public File getDocumentFile(Document doc, String fileVersion) {
+		return getDocumentFile(doc, fileVersion, null);
+	}
+
+	@Override
+	public File getDocumentFile(Document doc, String fileVersion, String suffix) {
 		String path = getDocFilePath(doc);
 
 		/*
@@ -289,6 +299,12 @@ public class DocumentManagerImpl implements DocumentManager {
 		if (StringUtils.isEmpty(filename))
 			filename = doc.getVersion();
 
+		/*
+		 * Document's related resources are stored with a suffix, e.g.
+		 * "docId/2.1-thumb.jpg"
+		 */
+		if (StringUtils.isNotEmpty(suffix))
+			filename += "-" + suffix;
 		return new File(path, filename);
 	}
 
