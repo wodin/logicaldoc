@@ -46,6 +46,11 @@
     <converter-class>com.logicaldoc.web.util.FileSizeConverter</converter-class>
   </converter>
 
+  <converter>
+    <converter-id>logicaldoc.FileSizeConverterKB</converter-id>
+    <converter-class>com.logicaldoc.web.util.FileSizeConverterKB</converter-class>
+  </converter>
+
   <managed-bean>
     <managed-bean-name>renderManager</managed-bean-name>
     <managed-bean-class>com.icesoft.faces.async.render.RenderManager</managed-bean-class>
