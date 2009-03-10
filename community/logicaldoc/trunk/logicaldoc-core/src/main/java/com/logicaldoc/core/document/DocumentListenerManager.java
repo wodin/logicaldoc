@@ -53,7 +53,7 @@ public class DocumentListenerManager {
 			String className = ext.getParameter("class").valueAsString();
 			try {
 				Class clazz = Class.forName(className);
-				// Try to instantiate the parser
+				// Try to instantiate the listener
 				Object listener = clazz.newInstance();
 				if (!(listener instanceof DocumentListener))
 					throw new Exception("The specified listener " + className

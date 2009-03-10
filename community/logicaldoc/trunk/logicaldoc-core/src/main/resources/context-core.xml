@@ -342,6 +342,10 @@
 		class="com.logicaldoc.core.document.DocumentListenerManager">
 	</bean>
 
+	<bean id="ThumbnailManager"
+		class="com.logicaldoc.core.document.thumbnail.ThumbnailManager">
+		<property name="documentManager" ref="DocumentManager" />
+	</bean>
 
 	<!-- Mail sender -->
 	<bean id="EMailSender"
@@ -455,9 +459,10 @@
 			<value>${schedule.cron.IndexerTask}</value>
 		</property>
 	</bean>
-	
+
 	<!-- Authentication -->
-	<bean id="BasicAuthentication" class="com.logicaldoc.core.security.authentication.BasicAuthentication">
-		<property name="userDAO" ref="UserDAO"/>
+	<bean id="BasicAuthentication"
+		class="com.logicaldoc.core.security.authentication.BasicAuthentication">
+		<property name="userDAO" ref="UserDAO" />
 	</bean>
 </beans>
