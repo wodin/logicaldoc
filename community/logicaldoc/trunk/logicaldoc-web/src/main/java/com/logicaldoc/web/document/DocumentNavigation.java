@@ -94,7 +94,6 @@ public class DocumentNavigation extends NavigationBean {
 		if (!this.viewMode.equals(viewModeP)) {
 			this.viewMode = viewModeP;
 			refresh();
-			setSelectedPanel(new PageContentBean(viewMode));
 		}
 	}
 
