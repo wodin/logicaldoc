@@ -251,4 +251,23 @@ public class FileUtil {
 		}
 		return displaySize;
 	}
+
+	/**
+	 * Renders a file size in a more readable behaviour taking into account the
+	 * user locale. The size is always rendered in the KB(kilobyte) measure
+	 * unit.
+	 * 
+	 * @param size Size to be rendered
+	 * @param language The language for the format symbols
+	 * @return
+	 */
+	public static String getDisplaySizeKB(long size, String language) {
+		String displaySize = "";
+		Locale locale = new Locale("en");
+		if (StringUtils.isNotEmpty(language))
+			locale = new Locale(language);
+		NumberFormat nf = new DecimalFormat("###,###,###.0", new DecimalFormatSymbols(locale));
+		displaySize = nf.format((double) size / 1024) + " KB";
+		return displaySize;
+	}
 }

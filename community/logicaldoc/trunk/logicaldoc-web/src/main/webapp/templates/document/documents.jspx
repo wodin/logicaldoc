@@ -194,7 +194,7 @@
 					menuPopup="pop">
 					<ice:outputText value="#{documentRecord.document.fileSize}"
 						title="#{msgs['msg.jsp.popup']}">
-						<f:converter converterId="logicaldoc.FileSizeConverter" />
+						<f:converter converterId="logicaldoc.FileSizeConverterKB" />
 					</ice:outputText>
 				</ice:panelGroup>
 			</ice:column>

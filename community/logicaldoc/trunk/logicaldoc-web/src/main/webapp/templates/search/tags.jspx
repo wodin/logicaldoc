@@ -134,7 +134,7 @@
 				</f:facet>
 				<ice:panelGroup>
 					<ice:outputText value="#{entry.document.fileSize}">
-						<f:converter converterId="logicaldoc.FileSizeConverter" />
+						<f:converter converterId="logicaldoc.FileSizeConverterKB" />
 					</ice:outputText>
 				</ice:panelGroup>
 			</ice:column>
