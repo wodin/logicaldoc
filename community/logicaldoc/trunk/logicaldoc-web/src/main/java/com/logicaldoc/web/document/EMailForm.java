@@ -155,7 +155,7 @@ public class EMailForm {
 			return "login";
 		}
 
-		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
+		documentNavigation.showDocuments();
 		reset();
 
 		return null;

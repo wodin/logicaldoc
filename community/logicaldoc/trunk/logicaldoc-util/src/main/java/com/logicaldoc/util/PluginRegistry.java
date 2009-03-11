@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -182,6 +184,42 @@ public abstract class PluginRegistry {
 		}
 		return exts;
 	}
+	
+	/**
+	 * Returns the extensions connected to the specified extension point
+	 * 
+	 * @param pluginId The plugin identifier
+	 * @param extensionPoint The extension point id
+	 * @param sortingParameter Extensions will be sorted by this parameter (if null 'position' parameter is used)
+	 * @return List of connected extensions
+	 */
+	public List<Extension> getSortedExtensions(String pluginId, String extensionPoint, final String sortingParameter) {
+		Collection<Extension> exts = getExtensions(pluginId,extensionPoint);
+		
+		// Sort the extensions according to ascending position
+		List<Extension> sortedExts = new ArrayList<Extension>();
+		for (Extension extension : exts) {
+			sortedExts.add(extension);
+		}
+		
+		Collections.sort(sortedExts, new Comparator<Extension>() {
+			public int compare(Extension e1, Extension e2) {
+				String sortParam="position";
+				if(StringUtils.isNotEmpty(sortingParameter))
+					sortParam=sortingParameter;
+				int position1 = Integer.parseInt(e1.getParameter(sortParam).valueAsString());
+				int position2 = Integer.parseInt(e2.getParameter(sortParam).valueAsString());
+				if (position1 < position2)
+					return -1;
+				else if (position1 > position2)
+					return 1;
+				else
+					return 0;
+			}
+		});
+		return sortedExts;
+	}
+	
 
 	/**
 	 * Retrieves the list of registered plugins

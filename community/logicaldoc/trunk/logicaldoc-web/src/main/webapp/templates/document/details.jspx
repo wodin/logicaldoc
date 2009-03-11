@@ -1,6 +1,6 @@
 <?xml version = '1.0'?>
 <!-- 
- Documents list table
+ Documents list table - Details view
   
  @author Marco Meschieri - Logical Objects
  @since 3.0
@@ -96,13 +96,14 @@
 					menuPopup="pop">
 					<ice:graphicImage
 						value="#{StyleBean.imagesPath}/#{documentRecord.icon}" />
-					<ice:outputLink
-						value="download?docId=#{documentRecord.docId}" target="_blank"
-						title="#{msgs['msg.jsp.popup']}">
-						<ice:outputText rendered="#{documentRecord.document.immutable == 0}"
+					<ice:outputLink value="download?docId=#{documentRecord.docId}"
+						target="_blank" title="#{msgs['msg.jsp.popup']}">
+						<ice:outputText
+							rendered="#{documentRecord.document.immutable == 0}"
 							value=" #{documentRecord.displayTitle}" />
-						<ice:outputText rendered="#{documentRecord.document.immutable == 1}" styleClass="immutable"
-							value=" #{documentRecord.displayTitle}" />
+						<ice:outputText
+							rendered="#{documentRecord.document.immutable == 1}"
+							styleClass="immutable" value=" #{documentRecord.displayTitle}" />
 					</ice:outputLink>
 				</ice:panelGroup>
 				<ice:menuPopup id="pop" value="#{documentRecord.docId}"
@@ -124,8 +125,8 @@
 					</ice:outputLink>
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
-						value="#{StyleBean.imagesPath}/checkout.png"
-						alt="checked-out" title="checked-out" />
+						value="#{StyleBean.imagesPath}/checkout.png" alt="checked-out"
+						title="checked-out" />
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.document.immutable == 1}"
 						value="#{StyleBean.imagesPath}/immutable.png"
@@ -193,7 +194,7 @@
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
 					menuPopup="pop">
 					<ice:outputText value="#{documentRecord.document.fileSize}"
-						title="#{msgs['msg.jsp.popup']}">
+						title="#{msgs['msg.jsp.popup']}" style="white-space: nowrap;">
 						<f:converter converterId="logicaldoc.FileSizeConverterKB" />
 					</ice:outputText>
 				</ice:panelGroup>
@@ -207,13 +208,10 @@
 			</ice:panelGroup>
 
 			<ice:panelGroup style="margin-top:0px; padding-top:0px;">
-				<ice:outputLabel value="View Mode" for="viewMode" />
+				<ice:outputLabel value="#{msgs['vewmode']}" for="viewMode" />
 				<ice:selectOneMenu id="viewMode"
 					value="#{documentNavigation.viewMode}" partialSubmit="true">
-					<f:selectItem itemValue="documents" itemLabel="Details" />
-					<f:selectItem itemValue="documentsIcons" itemLabel="Medium Icons" />
-					<f:selectItem itemValue="documentsIconsLarge"
-						itemLabel="Large Icons" />
+					<f:selectItems value="#{selectionTags.viewModesBrowsing}" />
 				</ice:selectOneMenu>
 			</ice:panelGroup>
 

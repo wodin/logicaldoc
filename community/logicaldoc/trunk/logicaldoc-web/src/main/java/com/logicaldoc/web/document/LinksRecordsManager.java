@@ -103,7 +103,7 @@ public class LinksRecordsManager {
 	public String back() {
 		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 				"documentNavigation", FacesContext.getCurrentInstance()));
-		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
+		documentNavigation.showDocuments();
 		return null;
 	}
 

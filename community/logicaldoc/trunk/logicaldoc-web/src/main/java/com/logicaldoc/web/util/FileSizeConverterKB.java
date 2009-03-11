@@ -34,6 +34,6 @@ public class FileSizeConverterKB implements Converter {
 		} catch (Throwable e) {
 		}
 
-		return FileUtil.getDisplaySizeKB(size, SessionManagement.getLanguage());
+		return FileUtil.getDisplaySizeKB(size, SessionManagement.getLanguage()).trim();
 	}
 }

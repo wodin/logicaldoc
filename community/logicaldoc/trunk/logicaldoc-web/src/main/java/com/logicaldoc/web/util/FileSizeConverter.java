@@ -33,6 +33,6 @@ public class FileSizeConverter implements Converter {
 		} catch (Throwable e) {
 		}
 	
-		return FileUtil.getDisplaySize(size, SessionManagement.getLanguage());
+		return FileUtil.getDisplaySize(size, SessionManagement.getLanguage()).trim();
 	}
 }

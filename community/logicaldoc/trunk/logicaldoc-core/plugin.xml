@@ -104,6 +104,18 @@
         <parameter-def id="class" />
     </extension-point>
     
+    <extension-point id="ViewModeBrowsing">
+        <parameter-def id="id" />
+        <parameter-def id="label" />
+        <parameter-def id="position" />
+    </extension-point>
+    
+    <extension-point id="ViewModeSearch">
+        <parameter-def id="id" />
+        <parameter-def id="label" />
+        <parameter-def id="position" />
+    </extension-point>
+    
     <extension plugin-id="logicaldoc-core" point-id="Authentication" id="BasicAuthentication">
 		<parameter id="providerId" value="BasicAuthentication"/>
 		<parameter id="position" value="1"/>
@@ -133,4 +145,20 @@
 		<parameter id="extension" value="pdf"/>
 		<parameter id="class" value="com.logicaldoc.core.document.thumbnail.PdfThumbnailBuilder"/>
 	</extension>
+	
+	<extension plugin-id="logicaldoc-core" point-id="ViewModeBrowsing" id="simpleBrowsing">
+        <parameter id="id" value="simple" />
+        <parameter id="label" value="viewmode.simple" />
+        <parameter id="position" value="5" />
+    </extension>
+    <extension plugin-id="logicaldoc-core" point-id="ViewModeBrowsing" id="detailsBrowsing">
+        <parameter id="id" value="details" />
+        <parameter id="label" value="viewmode.details" />
+        <parameter id="position" value="10" />
+    </extension>
+    <extension plugin-id="logicaldoc-core" point-id="ViewModeSearch" id="detailsSearch">
+        <parameter id="id" value="details" />
+        <parameter id="label" value="viewmode.details" />
+        <parameter id="position" value="5" />
+    </extension>
 </plugin>

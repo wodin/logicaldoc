@@ -48,8 +48,7 @@ import com.logicaldoc.web.util.FacesUtil;
  * documents view
  * </p>
  * 
- * @author Marco Meschieri
- * @version $Id: DocumentNavigation.java,v 1.14 2006/08/29 16:33:46 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class DocumentNavigation extends NavigationBean {
@@ -65,7 +64,7 @@ public class DocumentNavigation extends NavigationBean {
 
 	private boolean showFolderSelector = false;
 
-	private String viewMode = "documents";
+	private String viewMode = "simple";
 
 	/**
 	 * Default constructor of the tree. The root node of the tree is created at
@@ -234,7 +233,9 @@ public class DocumentNavigation extends NavigationBean {
 		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
 
 		Object entry = (Object) map.get("entry");
-
+		if(entry ==null)
+			entry = (Object) map.get("documentRecord");
+		
 		long docId = 0;
 
 		if (entry instanceof Result) {
