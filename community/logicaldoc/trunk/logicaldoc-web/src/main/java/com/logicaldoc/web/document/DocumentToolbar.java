@@ -77,27 +77,9 @@ public class DocumentToolbar {
 
 		// Acquire the 'DocumentToolbar' extensions of the core plugin
 		PluginRegistry registry = PluginRegistry.getInstance();
-		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "DocumentToolbar");
+		Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "DocumentToolbar", null);
 
-		// Sort the extensions according to ascending position
-		List<Extension> sortedExts = new ArrayList<Extension>();
-		for (Extension extension : exts) {
-			sortedExts.add(extension);
-		}
-		Collections.sort(sortedExts, new Comparator<Extension>() {
-			public int compare(Extension e1, Extension e2) {
-				int position1 = Integer.parseInt(e1.getParameter("position").valueAsString());
-				int position2 = Integer.parseInt(e2.getParameter("position").valueAsString());
-				if (position1 < position2)
-					return -1;
-				else if (position1 > position2)
-					return 1;
-				else
-					return 0;
-			}
-		});
-
-		for (Extension ext : sortedExts) {
+		for (Extension ext : exts) {
 			command = new DocumentCommand();
 			commands.add(command);
 			command.setTitle(Messages.getMessage(ext.getParameter("title").valueAsString()));

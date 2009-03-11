@@ -1,6 +1,6 @@
 <?xml version = '1.0'?>
 <!-- 
- Documents result list table
+ Documents result list table - Details
   
  @author Marco Meschieri - Logical Objects
  @since 3.0
@@ -146,12 +146,11 @@
 		</ice:panelGroup>
 
 		<ice:panelGroup style="margin-top:0px; padding-top:0px;">
-			<ice:outputLabel value="View Mode" for="viewMode" />
-			<ice:selectOneMenu id="viewMode" value="#{searchForm.viewMode}"
-			    valueChangeListener="#{searchForm.onSelectViewMode}"
+			<ice:outputLabel value="#{msgs['vewmode']}" for="viewMode" />
+			<ice:selectOneMenu id="viewMode" alue="#{searchForm.viewMode}"
+				valueChangeListener="#{searchForm.onSelectViewMode}"
 				partialSubmit="true">
-				<f:selectItem itemValue="result" itemLabel="Details" />
-				<f:selectItem itemValue="resultIcons" itemLabel="Medium Icons" />
+				<f:selectItems value="#{selectionTags.viewModesSearch}" />
 			</ice:selectOneMenu>
 		</ice:panelGroup>
 	</ice:panelGrid>

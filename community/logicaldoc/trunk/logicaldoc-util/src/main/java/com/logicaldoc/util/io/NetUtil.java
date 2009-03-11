@@ -1,8 +1,8 @@
 package com.logicaldoc.util.io;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  * Some network utility methods.
@@ -19,29 +19,32 @@ public class NetUtil {
 	 * @return
 	 */
 	public static boolean available(int port) {
-		ServerSocket ss = null;
-		DatagramSocket ds = null;
+		ServerSocket socket = null;
+		Socket client = null;
 		try {
-			ss = new ServerSocket(port);
-			ss.setReuseAddress(true);
-			ds = new DatagramSocket(port);
-			ds.setReuseAddress(true);
-			return true;
-		} catch (IOException e) {
+			try {
+				client = new Socket("127.0.0.1", port);
+				return false;
+			} catch (Exception e) {
+				socket = new ServerSocket(port);
+				socket.close();
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		} finally {
-			if (ds != null) {
-				ds.close();
-			}
-
-			if (ss != null) {
+			// Clean up
+			if (socket != null)
 				try {
-					ss.close();
+					socket.close();
 				} catch (IOException e) {
-					/* should not be thrown */
 				}
-			}
+			if (client != null)
+				try {
+					client.close();
+				} catch (IOException e) {
+				}
 		}
-
-		return false;
 	}
 }

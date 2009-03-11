@@ -264,7 +264,7 @@ public class FileUtil {
 		Locale locale = new Locale("en");
 		if (StringUtils.isNotEmpty(language))
 			locale = new Locale(language);
-		NumberFormat nf = new DecimalFormat("###,###,###.0", new DecimalFormatSymbols(locale));
+		NumberFormat nf = new DecimalFormat("###,###,##0.0", new DecimalFormatSymbols(locale));
 		displaySize = nf.format((double) size / 1024) + " KB";
 		return displaySize;
 	}

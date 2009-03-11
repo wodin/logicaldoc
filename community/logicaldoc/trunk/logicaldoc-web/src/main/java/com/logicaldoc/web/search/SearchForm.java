@@ -138,7 +138,7 @@ public class SearchForm {
 
 	private Long template = null;
 
-	private String viewMode = "result";
+	private String viewMode = "details";
 
 	public SearchForm() {
 		setQuery(Messages.getMessage("search") + "...");
@@ -1021,6 +1021,5 @@ public class SearchForm {
 
 	public void setViewMode(String viewModeP) {
 		this.viewMode = viewModeP;
-		System.out.println("searchForm.setViewMode: " + this.viewMode);
 	}
 }

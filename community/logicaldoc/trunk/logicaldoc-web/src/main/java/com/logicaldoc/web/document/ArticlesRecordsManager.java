@@ -105,7 +105,7 @@ public class ArticlesRecordsManager {
 
 	public String back() {
 		if (selectedArticle == null) {
-			documentNavigation.setSelectedPanel(new PageContentBean("documents"));
+			documentNavigation.showDocuments();
 		} else {
 			// reload the list to avoid incorrect beahaviour during
 			// edit-changesubject-back actions

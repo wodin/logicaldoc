@@ -528,7 +528,7 @@ public class DocumentEditForm {
 			} finally {
 				reset();
 			}
-			navigation.setSelectedPanel(new PageContentBean("documents"));
+			navigation.showDocuments();
 			navigation.refresh();
 			return null;
 		} else {
@@ -571,7 +571,7 @@ public class DocumentEditForm {
 
 		DocumentNavigation documentNavigation = ((DocumentNavigation) application.createValueBinding(
 				"#{documentNavigation}").getValue(FacesContext.getCurrentInstance()));
-		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
+		documentNavigation.showDocuments();
 		documentNavigation.refresh();
 		return null;
 	}
@@ -643,7 +643,7 @@ public class DocumentEditForm {
 
 		DocumentNavigation documentNavigation = ((DocumentNavigation) application.createValueBinding(
 				"#{documentNavigation}").getValue(FacesContext.getCurrentInstance()));
-		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
+		documentNavigation.showDocuments();
 		documentNavigation.refresh();
 		return null;
 	}

@@ -309,7 +309,7 @@ public class RightsRecordsManager {
 	}
 
 	public String back() {
-		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
+		documentNavigation.showDocuments();
 
 		return null;
 	}
@@ -318,7 +318,7 @@ public class RightsRecordsManager {
 		long id = selectedDirectory.getMenuId();
 		long userId = SessionManagement.getUserId();
 		saveRules(id, userId);
-		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
+		documentNavigation.showDocuments();
 		return null;
 	}
 

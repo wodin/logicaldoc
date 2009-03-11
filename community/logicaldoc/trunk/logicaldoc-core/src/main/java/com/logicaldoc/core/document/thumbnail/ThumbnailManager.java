@@ -28,7 +28,7 @@ public class ThumbnailManager {
 
 	// Key is the extension, value is the associated builder
 	private Map<String, ThumbnailBuilder> builders = new HashMap<String, ThumbnailBuilder>();
-
+	
 	/**
 	 * Creates the thumbnail for the specified document and file version
 	 * 
@@ -37,10 +37,7 @@ public class ThumbnailManager {
 	 * @throws IOException
 	 */
 	public void createTumbnail(Document document, String fileVersion) throws IOException {
-		if (builders.isEmpty())
-			initBuilders();
-		System.out.println("extensions: "+builders.keySet());
-		ThumbnailBuilder builder = builders.get(document.getFileExtension());
+		ThumbnailBuilder builder = getBuilders().get(document.getFileExtension());
 		
 		if (builder == null)
 			return;
@@ -96,5 +93,11 @@ public class ThumbnailManager {
 
 	public void setDocumentManager(DocumentManager documentManager) {
 		this.documentManager = documentManager;
+	}
+
+	public Map<String, ThumbnailBuilder> getBuilders() {
+		if (builders.isEmpty())
+			initBuilders();
+		return builders;
 	}
 }

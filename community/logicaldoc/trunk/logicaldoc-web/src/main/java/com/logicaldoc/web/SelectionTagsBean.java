@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+import org.java.plugin.registry.Extension;
+
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.i18n.Language;
@@ -13,6 +15,7 @@ import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.PluginRegistry;
 import com.logicaldoc.web.i18n.Messages;
 
 /**
@@ -23,6 +26,10 @@ import com.logicaldoc.web.i18n.Messages;
  */
 public class SelectionTagsBean {
 	private static SelectItem[] languages;
+
+	private SelectItem[] viewModesBrowsing;
+
+	private SelectItem[] viewModesSearch;
 
 	/**
 	 * Gets the option items for languages
@@ -35,7 +42,6 @@ public class SelectionTagsBean {
 
 	private void initLanguages() {
 		List<SelectItem> sil = new ArrayList<SelectItem>();
-
 		LanguageManager lm = LanguageManager.getInstance();
 		Collection<Language> cLanguages = lm.getLanguages();
 		for (Language language : cLanguages) {
@@ -43,6 +49,49 @@ public class SelectionTagsBean {
 			sil.add(si);
 		}
 		languages = (SelectItem[]) sil.toArray(new SelectItem[0]);
+	}
+
+	private void initViewModesBrowsing() {
+		List<SelectItem> sil = new ArrayList<SelectItem>();
+		// Acquire the 'ViewModeBrowsing' extensions of the core plugin
+		PluginRegistry registry = PluginRegistry.getInstance();
+		Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "ViewModeBrowsing", null);
+
+		for (Extension ext : exts) {
+			String id = ext.getParameter("id").valueAsString();
+			String label = ext.getParameter("label").valueAsString();
+			SelectItem si = new SelectItem(id, Messages.getMessage(label));
+			sil.add(si);
+		}
+		viewModesBrowsing = (SelectItem[]) sil.toArray(new SelectItem[0]);
+	}
+
+	private void initViewModesSearch() {
+		List<SelectItem> sil = new ArrayList<SelectItem>();
+		// Acquire the 'ViewModeBrowsing' extensions of the core plugin
+		PluginRegistry registry = PluginRegistry.getInstance();
+		Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "ViewModeSearch", null);
+
+		for (Extension ext : exts) {
+			String id = ext.getParameter("id").valueAsString();
+			String label = ext.getParameter("label").valueAsString();
+			SelectItem si = new SelectItem(id, Messages.getMessage(label));
+			sil.add(si);
+		}
+		
+		viewModesSearch = (SelectItem[]) sil.toArray(new SelectItem[0]);
+	}
+
+	public SelectItem[] getViewModesSearch() {
+		if (viewModesSearch == null)
+			initViewModesSearch();
+		return viewModesSearch;
+	}
+
+	public SelectItem[] getViewModesBrowsing() {
+		if (viewModesBrowsing == null)
+			initViewModesBrowsing();
+		return viewModesBrowsing;
 	}
 
 	/**
@@ -101,8 +150,7 @@ public class SelectionTagsBean {
 	 */
 	public SelectItem[] getRelations() {
 		return new SelectItem[] { new SelectItem("gt", Messages.getMessage("greater")),
-				new SelectItem("eq", Messages.getMessage("equals")),
-				new SelectItem("lt", Messages.getMessage("less")) };
+				new SelectItem("eq", Messages.getMessage("equals")), new SelectItem("lt", Messages.getMessage("less")) };
 	}
 
 	/**
@@ -131,8 +179,7 @@ public class SelectionTagsBean {
 	 */
 	public SelectItem[] getMessagePriorities() {
 		return new SelectItem[] { new SelectItem(0, Messages.getMessage("low")),
-				new SelectItem(1, Messages.getMessage("normal")),
-				new SelectItem(2, Messages.getMessage("high")) };
+				new SelectItem(1, Messages.getMessage("normal")), new SelectItem(2, Messages.getMessage("high")) };
 	}
 
 	/**
