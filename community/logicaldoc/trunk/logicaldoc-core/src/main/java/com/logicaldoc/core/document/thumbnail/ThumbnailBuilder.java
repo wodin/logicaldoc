@@ -16,10 +16,11 @@ public interface ThumbnailBuilder {
 	 * Produce the thumbnail
 	 * 
 	 * @param src The source file
+	 * @param srcFileName The original file name
 	 * @param size The thumbnail size
 	 * @param dest The destination thumbnail file
 	 * 
 	 * @throws IOException
 	 */
-	public void build(File src, int size, File dest) throws IOException;
+	public void build(File src, String srcFileName,int size, File dest) throws IOException;
 }

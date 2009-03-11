@@ -3,7 +3,6 @@ package com.logicaldoc.core.document.thumbnail;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FilenameUtils;
 import org.pdfbox.PDFToImage;
 
 /**
@@ -15,13 +14,13 @@ import org.pdfbox.PDFToImage;
 public class PdfThumbnailBuilder extends ImageThumbnailBuilder {
 
 	@Override
-	public void build(File src, int size, File dest) throws IOException {
+	public void build(File src, String srcFileName, int size, File dest) throws IOException {
 		String[] args = new String[] { "-startPage", "1", "-endPage", "1", "-outputPrefix",
-				FilenameUtils.getBaseName(dest.getName()), src.getPath(), };
-		File firstPage = new File(src.getName() + "-thumb1.jpg");
+				"thumb", src.getPath()};
+		File firstPage = new File("thumb1.jpg");
 		try {
 			PDFToImage.main(args);
-			super.build(firstPage, size, dest);
+			super.build(firstPage, srcFileName, size, dest);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		} finally {

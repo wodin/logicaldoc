@@ -60,15 +60,13 @@ public class DocumentPreview extends HttpServlet {
 		String id = request.getParameter(DOC_ID);
 		String fileVersion = request.getParameter(VERSION_ID);
 
-		log.fatal("Preview document id=" + id + ", versionId= " + fileVersion);
-
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
 		// 1) check if the document exists
 		long docId = Long.parseLong(id);
 		String suffix = "thumb.jpg";
 		File thumbnail = manager.getDocumentFile(docId, fileVersion, suffix);
-		log.fatal("thumbnail: " + thumbnail.getPath());
+		log.debug("thumbnail: " + thumbnail.getPath());
 
 		// 2) the thumbnail doesn't exist, create it
 		if (thumbnail.exists() == false) {
@@ -77,7 +75,8 @@ public class DocumentPreview extends HttpServlet {
 			try {
 				thumbManaher.createTumbnail(docDao.findById(docId), fileVersion);
 			} catch (Throwable t) {
-				log.error(t);
+				t.printStackTrace();
+				log.error(t.getMessage(), t);
 			}
 		}
 

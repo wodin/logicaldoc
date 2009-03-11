@@ -18,7 +18,7 @@ import javax.imageio.ImageIO;
 public class ImageThumbnailBuilder implements ThumbnailBuilder {
 
 	@Override
-	public void build(File src, int size, File dest) throws IOException {
+	public void build(File src, String srcFileName, int size, File dest) throws IOException {
 		BufferedImage bsrc = ImageIO.read(src);
 
 		Image destImg = null;
