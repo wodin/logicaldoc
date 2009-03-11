@@ -39,10 +39,9 @@ public class ThumbnailManager {
 	public void createTumbnail(Document document, String fileVersion) throws IOException {
 		if (builders.isEmpty())
 			initBuilders();
-
+		System.out.println("extensions: "+builders.keySet());
 		ThumbnailBuilder builder = builders.get(document.getFileExtension());
-		System.out.println("builder " + builder + " " + document.getFileExtension());
-
+		
 		if (builder == null)
 			return;
 
@@ -55,7 +54,7 @@ public class ThumbnailManager {
 		}
 		File src = documentManager.getDocumentFile(document, fileVersion);
 		File dest = new File(src.getParentFile(), src.getName() + "-thumb.jpg");
-		builder.build(src, size, dest);
+		builder.build(src, document.getFileName(), size, dest);
 	}
 
 	/**
