@@ -44,8 +44,6 @@ public class FileUtil {
 					os.write(buffer, 0, amountRead);
 				}
 			}
-		} catch (Exception e) {
-			logError(e.getMessage());
 		} finally {
 			if (os != null)
 				os.flush();
