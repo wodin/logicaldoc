@@ -58,6 +58,10 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	private long publisherId;
 
+	private String creator;
+
+	private long creatorId;
+
 	private String type;
 
 	private Long checkoutUserId;
@@ -483,5 +487,21 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	public void setFileVersion(String fileVersion) {
 		this.fileVersion = fileVersion;
+	}
+
+	public long getCreatorId() {
+		return creatorId;
+	}
+
+	public void setCreatorId(long creatorId) {
+		this.creatorId = creatorId;
+	}
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
 	}
 }

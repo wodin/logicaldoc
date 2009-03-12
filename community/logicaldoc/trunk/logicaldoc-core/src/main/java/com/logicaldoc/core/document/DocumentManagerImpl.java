@@ -553,6 +553,8 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setSourceDate(doc.getDate());
 			doc.setPublisher(user.getFullName());
 			doc.setPublisherId(user.getId());
+			doc.setCreator(user.getFullName());
+			doc.setCreatorId(user.getId());
 			doc.setStatus(Document.DOC_CHECKED_IN);
 			doc.setType(type);
 			doc.setVersion("1.0");
@@ -820,5 +822,4 @@ public class DocumentManagerImpl implements DocumentManager {
 	public void setVersionDAO(VersionDAO versionDAO) {
 		this.versionDAO = versionDAO;
 	}
-
 }
