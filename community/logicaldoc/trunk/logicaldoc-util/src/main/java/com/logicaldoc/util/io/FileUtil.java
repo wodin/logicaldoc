@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -150,12 +151,38 @@ public class FileUtil {
 		return null;
 	}
 
+	/**
+	 * This method calculates the digest of a file using the algorithm SHA-1.
+	 * 
+	 * @param file The file for which will be computed the digest
+	 * @return digest
+	 */
 	public static byte[] computeSha1Hash(File file) {
 		InputStream is = null;
-		MessageDigest sha = null;
-
 		try {
 			is = new BufferedInputStream(new FileInputStream(file), BUFF_SIZE);
+			return computeSha1Hash(is);
+		} catch (IOException io) {
+			log.error(io.getMessage(), io);
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * This method calculates the digest of a inputStram content using the
+	 * algorithm SHA-1.
+	 * 
+	 * @param file The file for which will be computed the digest
+	 * @return digest
+	 */
+	public static byte[] computeSha1Hash(InputStream is) {
+		MessageDigest sha = null;
+		try {
 			if (is != null) {
 				sha = MessageDigest.getInstance("SHA-1");
 				byte[] message = new byte[BUFF_SIZE];
