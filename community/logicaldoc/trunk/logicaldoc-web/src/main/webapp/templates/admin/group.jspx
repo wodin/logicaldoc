@@ -62,7 +62,7 @@
 		<ice:panelGroup>
 			<hr />
 			<h3>
-				<ice:outputText value="#{msgs['msg.jsp.inheritgroup']}" />
+				<ice:outputText value="#{msgs['group.inheritfrom']}" />
 				<br />
 				<br />
 			</h3>
@@ -151,6 +151,9 @@
 				</ice:panelGroup>
 			</ice:panelCollapsible>
 		</ice:panelGroup>
+		
+		
+		
 		<hr />
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="#{msgs['cancel']}" partialSubmit="true"
