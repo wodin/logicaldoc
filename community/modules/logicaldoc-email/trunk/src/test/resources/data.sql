@@ -22,12 +22,12 @@ insert into ld_template
 values		(5,'2008-11-19',0,'pippo','pippo');
 
 insert into ld_document
-			(ld_id, ld_lastmodified, ld_deleted, ld_title, ld_version, ld_date, ld_publisher,ld_publisherid, ld_status, ld_type, ld_checkoutuserid, ld_source, ld_sourceauthor, ld_sourcedate, ld_sourcetype, ld_coverage, ld_language, ld_filename, ld_filesize, ld_indexed, ld_folderid, ld_templateid, ld_creation,ld_immutable,ld_signed)
-values     (1,'2008-10-22',0,'testDocname','testDocVer','2006-12-19','myself',1,1,'PDF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pippo',1356,1,103,5,'2008-12-19',0,0);
+			(ld_id, ld_lastmodified, ld_deleted, ld_title, ld_version, ld_date, ld_publisher,ld_publisherid, ld_status, ld_type, ld_checkoutuserid, ld_source, ld_sourceauthor, ld_sourcedate, ld_sourcetype, ld_coverage, ld_language, ld_filename, ld_filesize, ld_indexed, ld_folderid, ld_templateid, ld_creation,ld_immutable,ld_signed,ld_creator,ld_creatorid)
+values     (1,'2008-10-22',0,'testDocname','testDocVer','2006-12-19','myself',1,1,'PDF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pippo',1356,1,103,5,'2008-12-19',0,0,'',1);
 
 insert into ld_document
-			(ld_id, ld_lastmodified, ld_deleted, ld_title, ld_version, ld_date, ld_publisher,ld_publisherid, ld_status, ld_type, ld_checkoutuserid, ld_source, ld_sourceauthor, ld_sourcedate, ld_sourcetype, ld_coverage, ld_language, ld_filename, ld_filesize, ld_indexed, ld_folderid, ld_templateid, ld_creation,ld_immutable,ld_signed)
-values     (2,'2008-10-22',0,'testDocname2','testDocVer','2006-12-19','myself',1,1,'PDF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,103,5,'2008-12-19',0,0);
+			(ld_id, ld_lastmodified, ld_deleted, ld_title, ld_version, ld_date, ld_publisher,ld_publisherid, ld_status, ld_type, ld_checkoutuserid, ld_source, ld_sourceauthor, ld_sourcedate, ld_sourcetype, ld_coverage, ld_language, ld_filename, ld_filesize, ld_indexed, ld_folderid, ld_templateid, ld_creation,ld_immutable,ld_signed,ld_creator,ld_creatorid)
+values     (2,'2008-10-22',0,'testDocname2','testDocVer','2006-12-19','myself',1,1,'PDF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,103,5,'2008-12-19',0,0,'',1);
 
 insert into ld_emailaccount 
 			(ld_id, ld_lastmodified, ld_deleted, ld_mailaddress, ld_provider, ld_host, ld_port, ld_username, ld_password, ld_allowedtypes, ld_deletefrommailbox, ld_language, ld_enabled, ld_targetfolder, ld_sslmodel, ld_extractkeywords)
