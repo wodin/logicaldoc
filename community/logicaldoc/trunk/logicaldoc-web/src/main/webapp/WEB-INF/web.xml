@@ -136,6 +136,7 @@
 		<filter-class>com.logicaldoc.web.LocaleFilter</filter-class>
 	</filter>
 
+    <!-- Temporary pacth for Firefox 3.0.7 -->
     <servlet>
         <servlet-name>inputFileFrame</servlet-name>
         <servlet-class>
