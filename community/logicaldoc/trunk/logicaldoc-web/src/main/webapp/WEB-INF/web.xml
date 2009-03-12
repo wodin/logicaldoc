@@ -136,6 +136,13 @@
 		<filter-class>com.logicaldoc.web.LocaleFilter</filter-class>
 	</filter>
 
+    <servlet>
+        <servlet-name>inputFileFrame</servlet-name>
+        <servlet-class>
+            com.logicaldoc.web.util.InputFileFrameServlet
+        </servlet-class>
+    </servlet>
+
 	<!-- file upload Servlet -->
 	<servlet>
 		<servlet-name>uploadServlet</servlet-name>
@@ -243,6 +250,11 @@
 		<filter-name>LocaleFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	
+	<servlet-mapping>
+        <servlet-name>inputFileFrame</servlet-name>
+        <url-pattern>/inputFileFrame</url-pattern>
+    </servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>uploadServlet</servlet-name>
 		<url-pattern>/uploadHtml</url-pattern>
