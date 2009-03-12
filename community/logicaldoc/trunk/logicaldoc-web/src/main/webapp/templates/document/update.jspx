@@ -136,10 +136,10 @@
 					</ice:panelGroup>
 
 					<ice:panelGroup styleClass="outputLabel">
-						<ice:outputLabel value="#{msgs['upload.filename']}" />
+						<ice:outputLabel value="#{msgs['document.createdby']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
-						<ice:outputText value="#{documentForm.record.document.fileName}"
+						<ice:outputText value="#{documentForm.record.document.creator}"
 							style="font-weight: bold">
 						</ice:outputText>
 					</ice:panelGroup>
@@ -151,9 +151,20 @@
 						<ice:outputText value="#{documentForm.record.document.publisher}"
 							style="font-weight: bold" />
 					</ice:panelGroup>
+					
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['upload.filename']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{documentForm.record.document.fileName}"
+							style="font-weight: bold">
+						</ice:outputText>
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup />
+					<ice:panelGroup />
 				</ice:panelGrid>
 			</ice:panelGroup>
-
 		</ice:panelGrid>
 	</ice:panelGroup>
 

@@ -112,6 +112,14 @@
 							timeZone="#{StyleBean.timeZone}" />
 					</ice:outputText>
 
+					<ice:outputLabel value="#{msgs['document.createdby']}"
+						styleClass="#{diffBean.version1.creator!=diffBean.version2.creator ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.creator}"
+						styleClass="#{diffBean.version1.creator!=diffBean.version2.creator ? 'iceMsgsError':''}" />
+					<ice:panelGroup style="width:40px" />
+					<ice:outputText value="#{diffBean.version2.creator}"
+						styleClass="#{diffBean.version1.creator!=diffBean.version2.creator ? 'iceMsgsError':''}" />
+
 					<ice:outputLabel value="#{msgs['date']}"
 						styleClass="#{diffBean.version1.sourceDate!=diffBean.version2.sourceDate ? 'iceMsgsError':''}" />
 					<ice:outputText value="#{diffBean.version1.sourceDate}"
@@ -139,14 +147,6 @@
 						<f:convertDateTime pattern="#{loc.dateFormat}"
 							timeZone="#{StyleBean.timeZone}" />
 					</ice:outputText>
-
-					<ice:outputLabel value="#{msgs['msg.jsp.publishedby']}"
-						styleClass="#{diffBean.version1.publisher!=diffBean.version2.publisher ? 'iceMsgsError':''}" />
-					<ice:outputText value="#{diffBean.version1.publisher}"
-						styleClass="#{diffBean.version1.publisher!=diffBean.version2.publisher ? 'iceMsgsError':''}" />
-					<ice:panelGroup style="width:40px" />
-					<ice:outputText value="#{diffBean.version2.publisher}"
-						styleClass="#{diffBean.version1.publisher!=diffBean.version2.publisher ? 'iceMsgsError':''}" />
 
 					<ice:outputLabel value="#{msgs['msg.jsp.publishedby']}"
 						styleClass="#{diffBean.version1.publisher!=diffBean.version2.publisher ? 'iceMsgsError':''}" />

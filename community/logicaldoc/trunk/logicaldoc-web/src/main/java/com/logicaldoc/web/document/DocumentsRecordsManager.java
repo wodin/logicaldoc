@@ -610,8 +610,7 @@ public class DocumentsRecordsManager extends SortableList {
 	/**
 	 * Determines the sort order.
 	 * 
-	 * @param sortColumn
-	 *            to sort by.
+	 * @param sortColumn to sort by.
 	 * @return whether sort order is ascending or descending.
 	 */
 	@Override
@@ -643,10 +642,10 @@ public class DocumentsRecordsManager extends SortableList {
 					Date d1 = c1.getLastModified() != null ? c1.getLastModified() : new Date(0);
 					Date d2 = c2.getLastModified() != null ? c2.getLastModified() : new Date(0);
 					return ascending ? d1.compareTo(d2) : d2.compareTo(d1);
-				} else if (column.equals("creation")) {
-					Date d1 = c1.getCreation() != null ? c1.getCreation() : new Date(0);
-					Date d2 = c2.getCreation() != null ? c2.getCreation() : new Date(0);
-					return ascending ? d1.compareTo(d2) : d2.compareTo(d1);
+				} else if (column.equals("publishedby")) {
+					String publisher1 = c1.getDocument().getPublisher() != null ? c1.getDocument().getPublisher().toLowerCase() : "";
+					String publisher2 = c2.getDocument().getPublisher() != null ? c2.getDocument().getPublisher().toLowerCase() : "";
+					return ascending ? publisher1.compareTo(publisher2) : publisher2.compareTo(publisher1);
 				} else if (column.equals("size")) {
 					Long s1 = new Long(c1.getDocument().getFileSize());
 					Long s2 = new Long(c2.getDocument().getFileSize());
