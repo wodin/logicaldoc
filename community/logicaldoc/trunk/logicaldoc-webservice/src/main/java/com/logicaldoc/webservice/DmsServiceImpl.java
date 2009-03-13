@@ -319,6 +319,7 @@ public class DmsServiceImpl implements DmsService {
 		info.setType(doc.getType());
 		info.setUploadDate(convertDateToXML(doc.getDate()));
 		info.setPublisher(doc.getPublisher());
+		info.setPublisher(doc.getCreator());
 		info.setCoverage(doc.getCoverage());
 		info.setFilename(doc.getFileName());
 		info.setCustomId(doc.getCustomId());

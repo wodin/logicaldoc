@@ -17,6 +17,8 @@ public class DocumentInfo {
 
 	private String publisher;
 
+	private String creator;
+
 	private String uploadDate;
 
 	private String author;
@@ -32,21 +34,21 @@ public class DocumentInfo {
 	private String coverage;
 
 	private String filename;
-	
+
 	private String templateName;
-	
+
 	private Long templateId;
-	
+
 	private ExtendedAttribute[] extendedAttribute;
 
 	private VersionInfo[] version = new VersionInfo[] {};
-	
+
 	private String customId;
-	
+
 	private String sourceId;
-	
+
 	private String object;
-	
+
 	private String recipient;
 
 	public long getId() {
@@ -200,7 +202,7 @@ public class DocumentInfo {
 	public void setCustomId(String customId) {
 		this.customId = customId;
 	}
-	
+
 	public String getSourceId() {
 		return sourceId;
 	}
@@ -223,5 +225,13 @@ public class DocumentInfo {
 
 	public void setRecipient(String recipient) {
 		this.recipient = recipient;
+	}
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
 	}
 }
