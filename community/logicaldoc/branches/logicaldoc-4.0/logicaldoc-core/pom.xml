@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.logicaldoc</groupId>
     <artifactId>logicaldoc</artifactId>
-    <version>4.0.1</version>
+    <version>4.0.2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>logicaldoc-core</artifactId>
@@ -169,7 +169,7 @@
     <dependency>
       <groupId>com.logicaldoc</groupId>
       <artifactId>logicaldoc-util</artifactId>
-      <version>4.0.1</version>
+      <version>4.0.2</version>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
@@ -299,7 +299,6 @@
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-javadoc-plugin</artifactId>
     </plugin>
-    <!--  
     <plugin>
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-surefire-report-plugin</artifactId>
@@ -321,7 +320,7 @@
       <minimumTokens>100</minimumTokens>
       <targetJdk>1.6</targetJdk>
     </configuration>
-  </plugin>-->
+  </plugin>
   <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-project-info-reports-plugin</artifactId>
