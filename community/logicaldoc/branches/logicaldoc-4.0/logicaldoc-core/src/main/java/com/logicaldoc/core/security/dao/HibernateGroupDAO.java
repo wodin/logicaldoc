@@ -139,7 +139,6 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 				addMenuGroup(group, Menu.MENUID_EDITME, 0); // edit me
 				addMenuGroup(group, 20, 0); // emails
 				addMenuGroup(group, 23, 0); // smtp
-				addMenuGroup(group, 24, 0); // email accounts
 				addMenuGroup(group, 26, 1); // keywords
 			}
 		} catch (Exception e) {
@@ -166,10 +165,10 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 				stmt.executeUpdate();
 
 				stmt = con
-						.prepareStatement("insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive) "
+						.prepareStatement("insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport) "
 								+ "select B.ld_menuid,"
 								+ groupId
-								+ ", B.ld_write , B.ld_addchild, B.ld_managesecurity, B.ld_manageimmutability, B.ld_delete, B.ld_rename, B.ld_bulkimport, B.ld_bulkexport, B.ld_sign, B.ld_archive from ld_menugroup B "
+								+ ", B.ld_write , B.ld_addchild, B.ld_managesecurity, B.ld_manageimmutability, B.ld_delete, B.ld_rename, B.ld_bulkimport, B.ld_bulkexport from ld_menugroup B "
 								+ "where B.ld_groupid= " + parentGroupId);
 				log.debug("Replicate all ACLs from group " + parentGroupId);
 				stmt.executeUpdate();
