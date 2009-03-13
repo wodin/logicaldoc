@@ -6,11 +6,11 @@
 	<parent>
 		<groupId>com.logicaldoc</groupId>
 		<artifactId>logicaldoc</artifactId>
-		<version>4.0.1</version>
+		<version>4.0.2</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>logicaldoc-util</artifactId>
-	<name>logicaldoc</name>
+	<name>logicaldoc-util</name>
 	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>
