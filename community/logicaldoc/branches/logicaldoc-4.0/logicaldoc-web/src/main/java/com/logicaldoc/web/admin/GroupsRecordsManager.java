@@ -105,7 +105,8 @@ public class GroupsRecordsManager {
 		if (mdao.isReadEnable(7, userId)) {
 			Group group = new Group();
 			groupForm.setGroup(group);
-			groupForm.setParentGroup(-1);
+			//groupForm.setParentGroup(-1);
+			groupForm.setParentGroup(null);
 			FacesUtil.clearAllMessages();
 		} else {
 			Messages.addLocalizedError("errors.noaccess");

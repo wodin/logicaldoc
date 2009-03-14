@@ -39,7 +39,7 @@ public class GroupForm {
 
 	private UIInput groupDesc = null;
 
-	private long parentGroup;
+	private Long parentGroup = null;
 
 	private String groupFilter = "";
 
@@ -57,11 +57,11 @@ public class GroupForm {
 		return group;
 	}
 
-	public long getParentGroup() {
+	public Long getParentGroup() {
 		return parentGroup;
 	}
 
-	public void setParentGroup(long parentGroup) {
+	public void setParentGroup(Long parentGroup) {
 		this.parentGroup = parentGroup;
 	}
 
@@ -234,15 +234,19 @@ public class GroupForm {
 				boolean stored = false;
 
 				if (recordsManager.getSelectedPanel().equals("create")) {
-					if (parentGroup <= 0) {
-						return null;
+					if (parentGroup == null || parentGroup.longValue() <= 0) {
+						stored = dao.store(group);
+					} else {
+						stored = dao.insert(group, parentGroup.longValue());
 					}
-					stored = dao.insert(group, parentGroup);
+
 				} else {
 					for (Preference preference : preferences) {
 						preference.updateGroup(group);
 					}
 					stored = dao.store(group);
+					if (parentGroup != null)
+						dao.inheritACLs(group.getId(), parentGroup.longValue());
 				}
 				if (!stored) {
 					Messages.addLocalizedError("errors.action.savegroup.notstored");
@@ -258,6 +262,7 @@ public class GroupForm {
 		recordsManager.setSelectedPanel("list");
 		return null;
 	}
+
 
 	/**
 	 * Inner class to define the Preference Bean user only by the Group
