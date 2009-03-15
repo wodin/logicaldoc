@@ -120,7 +120,7 @@
 						target="_blank" title="#{msgs['document.indexed']}"
 						rendered="#{documentRecord.document.indexed==1}">
 						<ice:graphicImage style="border: 0px solid;"
-							value="#{StyleBean.imagesPath}/database.png"
+							value="#{StyleBean.imagesPath}/indexed.png"
 							alt="#{msgs['document.indexed']}" />
 					</ice:outputLink>
 					<ice:graphicImage style="margin-left: 5px;"
