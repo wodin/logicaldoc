@@ -9,8 +9,7 @@ import java.util.Stack;
  * stacks which display dynamic content.
  * </p>
  *
- * @author Marco Meschieri, Alessandro Gasparini
- * @version $Id: NavigationBean.java,v 1.3 2006/08/29 16:33:46 marco Exp $
+ * @author Marco Meschieri, Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
 public class NavigationBean {

@@ -75,15 +75,43 @@ values     (5,'2008-10-22',0,'menu.documents',1,4,'documents.png','/',1,'documen
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (6,'2008-10-22',0,'menu.user',2,1,'user.png','/2',1,'admin/users',0);
+values     (9,'2008-12-01',0,'admin.security',2,3,'password.png','/2',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (7,'2008-10-22',0,'menu.group',2,2,'group.png','/2',1,'admin/groups',0);
+values     (6,'2008-10-22',0,'menu.user',9,5,'user.png','/9',1,'admin/users',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (8,'2008-10-22',0,'menu.logging',2,3,'logging.png','/2',1,'admin/logs',0);
+values     (7,'2008-10-22',0,'menu.group',9,10,'group.png','/9',1,'admin/groups',0);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (-1,'2008-12-01',0,'admin.security',9,15,'password.png','/9',1,'admin/security',0);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (-2,'2008-12-01',0,'system',2,1,'system.png','/2',1,null,0);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (17,'2008-10-22',0,'directory',-2,5,'open.png','/-2',1,'admin/folders',0);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (8,'2008-10-22',0,'menu.logging',-2,10,'logging.png','/-2',1,'admin/logs',0);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (25,'2008-10-22',0,'menu.searchengine',-2,15,'search.png','/-2',1,'admin/searchEngine',0);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (14,'2008-10-22',0,'task.tasks',-2,20,'thread.png','/-2',1,'admin/tasks',0);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (23,'2008-10-22',0,'smtp',-2,25,'mail_preferences.png','/-2',1,'admin/smtp',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
@@ -95,27 +123,11 @@ values     (16,'2008-10-22',0,'menu.changepassword',4,3,'password.png','/4',1,'s
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (17,'2008-10-22',0,'directory',2,5,'open.png','/2',1,'admin/folders',0);
-
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
 values     (19,'2008-10-22',0,'menu.editme',4,4,'user.png','/4',1,'settings/personalData',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (20,'2008-10-22',0,'menu.emails',2,4,'mail.png','/2',1,null,0);
-
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
 values     (21,'2008-10-22',0,'templates',2,4,'template.png','/2',1,'admin/templates',0);
-
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (23,'2008-10-22',0,'smtp',20,3,'mail_preferences.png','/2/20',1,'admin/smtp',0);
-
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (25,'2008-10-22',0,'menu.searchengine',2,6,'search.png','/2',1,'admin/searchEngine',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
@@ -129,13 +141,6 @@ insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
 values     (15,'2008-10-22',0,'search.advanced',18,5,'search.png','/1/18',1,'search/advancedSearch',0);
 
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (14,'2008-10-22',0,'task.tasks',2,8,'thread.png','/2',1,'admin/tasks',0);
-
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (-1,'2008-12-01',0,'admin.security',2,12,'password.png','/2',1,'admin/security',0);
 
 insert into ld_group
 values     (1,'2008-10-22',0,'admin','Group of admins',0);
@@ -161,6 +166,12 @@ values     (1,1,0,0,1,1,0,0,1,1,1,1);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
 values     (2,1,0,0,1,1,0,0,1,1,1,1);
+
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (-2,1,0,0,1,1,0,0,1,1,1,1);
+
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
+values     (9,1,0,0,1,1,0,0,1,1,1,1);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
 values     (4,1,0,0,1,1,0,0,1,1,1,1);
@@ -191,9 +202,6 @@ values     (17,1,0,0,1,1,0,0,1,1,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
 values     (19,1,0,0,1,1,0,0,1,1,0,0);
-
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
-values     (20,1,0,0,1,1,0,0,1,1,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
 values     (21,1,0,0,1,1,0,0,1,1,0,0);
@@ -233,9 +241,6 @@ values     (16,2,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
 values     (19,2,0,0,0,0,0,0,0,0,0,0);
-
-insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
-values     (20,2,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
 values     (23,2,0,0,0,0,0,0,0,0,0,0);

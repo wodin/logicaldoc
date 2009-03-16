@@ -14,8 +14,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
+import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
@@ -81,13 +83,37 @@ public class LoginForm {
 
 			StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 
-			// Show the home page
-			PageContentBean content = new PageContentBean("home", "home");
-			content.setContentTitle(Messages.getMessage("home"));
-			content.setDisplayText(Messages.getMessage("home"));
-			content.setIcon(style.getImagePath("home.png"));
-			navigation.setSelectedPanel(content);
+			// Retrieve the entry page
+			PageContentBean page = null;
+			try {
+				PropertiesBean config = new PropertiesBean();
+				if (StringUtils.isNotEmpty(config.getProperty("entrypage"))) {
+					MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+					Menu menu = menuDao.findById(Long.parseLong(config.getProperty("entrypage")));
+					if (menu != null) {
+						page = new PageContentBean("m-" + Long.toString(menu.getId()));
+						if (StringUtils.isNotEmpty(menu.getRef())) {
+							page.setTemplate(menu.getRef());
+						}
+						page.setContentTitle(Messages.getMessage(menu.getText()));
+						page.setIcon(style.getImagePath(menu.getIcon()));
+					} else {
+						logger.warn("Menu " + config.getProperty("entrypage") + " not found");
+					}
+				}
+			} catch (Throwable e) {
+				logger.error(e.getMessage());
+			}
 
+			if (page == null) {
+				// Show the home page
+				page = new PageContentBean("home", "home");
+				page.setContentTitle(Messages.getMessage("home"));
+				page.setDisplayText(Messages.getMessage("home"));
+				page.setIcon(style.getImagePath("home.png"));				
+			}
+			navigation.setSelectedPanel(page);
+			
 			return "loginSuccess";
 		} else {
 			logger.warn("User " + j_username + " is not valid.");

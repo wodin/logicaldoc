@@ -137,8 +137,6 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 				// for documents
 				addMenuGroup(group, Menu.MENUID_MESSAGES, 0); // messages
 				addMenuGroup(group, Menu.MENUID_EDITME, 0); // edit me
-				addMenuGroup(group, 20, 0); // emails
-				addMenuGroup(group, 23, 0); // smtp
 				addMenuGroup(group, 26, 1); // keywords
 			}
 		} catch (Exception e) {
@@ -197,10 +195,11 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	private void addMenuGroup(Group group, long menuId, int writeable) {
 		MenuDAO menuDAO = getMenuDAO();
 		Menu menu = menuDAO.findById(menuId);
-
+		
 		MenuGroup mgroup = new MenuGroup();
 		mgroup.setGroupId(group.getId());
 		mgroup.setWrite(writeable);
+
 		if (!menu.getMenuGroups().contains(mgroup))
 			menu.getMenuGroups().add(mgroup);
 		menuDAO.store(menu);
