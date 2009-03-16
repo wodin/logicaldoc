@@ -44,7 +44,7 @@
 				<f:param value="#{searchForm.query}" />
 				<f:param value="#{searchForm.execTime/1000}" />
 			</ice:outputFormat>
-			sdsdsdsdsdsd<br />
+			<br />
 		</ice:dataPaginator>
 	</ice:panelGroup>
 	<br />

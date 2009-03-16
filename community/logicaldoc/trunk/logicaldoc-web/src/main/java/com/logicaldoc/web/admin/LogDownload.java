@@ -24,7 +24,7 @@ import com.logicaldoc.web.SessionManagement;
  * @since 3.0
  */
 public class LogDownload extends HttpServlet {
-	protected static Log logger = LogFactory.getLog(LogDownload.class);
+	protected static Log log = LogFactory.getLog(LogDownload.class);
 
 	private static final long serialVersionUID = 1L;
 
