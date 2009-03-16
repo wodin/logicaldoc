@@ -2,8 +2,10 @@ package com.logicaldoc.core.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -90,13 +92,19 @@ public class SecurityManagerImpl implements SecurityManager {
 	 *      com.logicaldoc.core.security.Group)
 	 */
 	public void removeUsersFromGroup(Collection<User> users, Group group) {
-		for (Iterator<User> iter = users.iterator(); iter.hasNext();) {
-			User user = iter.next();
-			if (group.getUsers().contains(user) && !group.getName().equals(user.getUserGroupName())) {
-				group.getUsers().remove(user);
+		Set<User> oldUsers=group.getUsers();
+		for (User user : users) {
+			if (oldUsers.contains(user) && !group.getName().equals(user.getUserGroupName())) {
 				user.getGroups().remove(group);
 			}
 		}
+		
+		Set<User> newUsers=new HashSet<User>();
+		for (User user : oldUsers) {
+			if(!users.contains(user))
+				newUsers.add(user);
+		}
+		group.setUsers(newUsers);
 
 		groupDAO.store(group);
 

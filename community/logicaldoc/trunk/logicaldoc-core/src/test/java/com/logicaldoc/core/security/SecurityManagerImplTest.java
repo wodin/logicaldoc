@@ -1,12 +1,11 @@
-package com.logicaldoc.core.security.dao;
+package com.logicaldoc.core.security;
 
 import java.util.ArrayList;
 import java.util.Set;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
-import com.logicaldoc.core.security.Group;
-import com.logicaldoc.core.security.SecurityManager;
-import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.GroupDAO;
+import com.logicaldoc.core.security.dao.UserDAO;
 
 /**
  * Test case for the manager <code>SecurityManager<code>
