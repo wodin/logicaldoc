@@ -19,6 +19,8 @@
 		<property name="creation" type="timestamp" column="ld_creation"/>
 		<property name="publisher" type="string" column="ld_publisher" length="255" />
 		<property name="publisherId" type="long" column="ld_publisherid" not-null="true"/>
+        <property name="creator" type="string" column="ld_creator" length="255" />
+        <property name="creatorId" type="long" column="ld_creatorid" not-null="true"/>
 		<property name="status" type="int" column="ld_status" />
 		<property name="type" type="string" column="ld_type" length="255" />
 		<property name="checkoutUserId" type="long" column="ld_checkoutuserid" />
