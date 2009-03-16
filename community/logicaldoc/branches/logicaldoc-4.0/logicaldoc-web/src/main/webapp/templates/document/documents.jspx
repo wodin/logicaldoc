@@ -32,7 +32,7 @@
 			sortColumn="#{documentsRecordsManager.sortColumn}"
 			sortAscending="#{documentsRecordsManager.ascending}" cellpadding="0"
 			rows="#{documentsRecordsManager.displayedRows}"
-			columnClasses="selectionColumn,numberColumn,titleColumn,dateColumn,dateColumn,numberColumn">
+			columnClasses="selectionColumn,numberColumn,titleColumn,selectionColumn,dateColumn,dateColumn,numberColumn">
 
 			<!-- selection column -->
 			<ice:column>
@@ -98,32 +98,40 @@
 					<ice:graphicImage
 						value="#{StyleBean.imagesPath}/#{documentRecord.icon}"
 						style="border: 0px solid;" />
-					<ice:outputLink
-						rendered="#{documentRecord.document.immutable == 0}"
-						value="download?docId=#{documentRecord.docId}" target="_blank"
-						title="#{msgs['msg.jsp.popup']}">
-						<ice:outputText value=" #{documentRecord.displayTitle}" />
-					</ice:outputLink>
-					<ice:outputLink
-						rendered="#{documentRecord.document.immutable == 1}"
-						value="download?docId=#{documentRecord.docId}" target="_blank"
-						title="#{msgs['msg.jsp.popup']}">
-						<ice:outputText styleClass="immutable"
+					<ice:outputLink value="download?docId=#{documentRecord.docId}"
+						target="_blank" title="#{msgs['msg.jsp.popup']}">
+						<ice:outputText
+							rendered="#{documentRecord.document.immutable == 0}"
 							value=" #{documentRecord.displayTitle}" />
+						<ice:outputText
+							rendered="#{documentRecord.document.immutable == 1}"
+							styleClass="immutable" value=" #{documentRecord.displayTitle}" />
 					</ice:outputLink>
+				</ice:panelGroup>
+				<ice:menuPopup id="pop" value="#{documentRecord.docId}"
+					orientation="vertical" rendered="#{documentRecord.documentFound}">
+					<ice:menuItems value="#{documentRecord.model}" />
+				</ice:menuPopup>
+			</ice:column>
+			
+			<!-- Status -->
+			<ice:column>
+				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}">
 					<ice:outputLink
 						value="download?docId=#{documentRecord.docId}&amp;downloadText=true"
 						target="_blank" title="txt"
 						rendered="#{documentRecord.document.indexed==1}">
 						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
-							value="#{StyleBean.imagesPath}/txt-icon.png" alt="txt" />
+							value="#{StyleBean.imagesPath}/indexed.png" alt="txt" />
 					</ice:outputLink>
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.checkedOut}"
-						value="#{StyleBean.imagesPath}/lock.png" />
+						value="#{StyleBean.imagesPath}/checkout.png" alt="checked-out"
+						title="checked-out" />
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.document.immutable == 1}"
-						value="#{StyleBean.imagesPath}/immutable.png" title="Immutable" />
+						value="#{StyleBean.imagesPath}/immutable.png"
+						title="#{msgs['document.immutable']}" />
 					<ice:commandLink title="#{msgs['links']}"
 						action="#{documentRecord.links}">
 						<ice:graphicImage style="margin-left: 5px; border: 0px;"
@@ -131,10 +139,6 @@
 							value="#{StyleBean.imagesPath}/link.png" alt="#{msgs['links']}" />
 					</ice:commandLink>
 				</ice:panelGroup>
-				<ice:menuPopup id="pop" value="#{documentRecord.docId}"
-					orientation="vertical" rendered="#{documentRecord.documentFound}">
-					<ice:menuItems value="#{documentRecord.model}" />
-				</ice:menuPopup>
 			</ice:column>
 
 			<!-- Creation -->
