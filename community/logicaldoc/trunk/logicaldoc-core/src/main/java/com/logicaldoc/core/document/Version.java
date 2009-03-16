@@ -53,6 +53,10 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 	private Document document;
 
 	private String event;
+	
+	private String creator;
+	
+	private long creatorId;
 
 	public Version() {
 	}
@@ -229,6 +233,9 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 			version.setFileVersion(newVersionName);
 			document.setFileVersion(newVersionName);
 		}
+		
+		version.setCreatorId(document.getCreatorId());
+		version.setCreator(document.getCreator());
 
 		return version;
 	}
@@ -255,5 +262,21 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 	public void setEvent(String event) {
 		this.event = event;
+	}
+	
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+
+	public long getCreatorId() {
+		return creatorId;
+	}
+
+	public void setCreatorId(long creatorId) {
+		this.creatorId = creatorId;
 	}
 }
