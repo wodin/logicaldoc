@@ -33,7 +33,6 @@ import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
-import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.upload.InputFileBean;
 import com.logicaldoc.web.util.Attribute;
 import com.logicaldoc.web.util.FacesUtil;
@@ -108,11 +107,11 @@ public class DocumentEditForm {
 	private String recipient;
 
 	private UIInput recipientInput = null;
-	
+
 	private UIInput templateInput = null;
 
 	private Collection<Attribute> extendedAttributes = new ArrayList<Attribute>();
-	
+
 	private boolean displayPreviewPopup = false;
 
 	public DocumentEditForm() {
@@ -554,7 +553,7 @@ public class DocumentEditForm {
 					// goes wrong
 					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 							DocumentManager.class);
-					documentManager.uncheckout(document.getId(), SessionManagement.getUser());
+					documentManager.unlock(document.getId(), SessionManagement.getUser(), null);
 
 					/* create positive log message */
 					Messages.addLocalizedInfo("msg.action.changedoc");
@@ -779,12 +778,12 @@ public class DocumentEditForm {
 	public void setDisplayPreviewPopup(boolean displayPreviewPopup) {
 		this.displayPreviewPopup = displayPreviewPopup;
 	}
-	
+
 	public String openDocumentPreview() {
 		this.displayPreviewPopup = true;
 		return null;
 	}
-	
+
 	public String closeDocumentPreview() {
 		this.displayPreviewPopup = false;
 		return null;

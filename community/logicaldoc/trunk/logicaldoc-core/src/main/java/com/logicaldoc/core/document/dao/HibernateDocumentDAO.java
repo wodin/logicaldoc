@@ -174,11 +174,23 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findCheckoutByUserId(java.lang.String)
+	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findLockedByUserId(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Document> findCheckoutByUserId(long userId) {
-		return findByWhere("_entity.checkoutUserId = " + userId);
+	public List<Document> findLockedByUserId(long userId) {
+		return findByWhere("_entity.lockUserId = " + userId + " and not(_entity.status=" + Document.DOC_UNLOCKED + ")");
+	}
+
+	@Override
+	public List<Document> findByLockUserAndStatus(Long userId, Integer status) {
+		StringBuffer sb = new StringBuffer();
+		if (userId != null)
+			sb.append(" _entity.lockUserId =" + userId);
+		else
+			sb.append(" 1=1 ");
+		if (status != null)
+			sb.append(" and _entity.status=" + status);
+		return findByWhere(sb.toString());
 	}
 
 	/**
@@ -803,7 +815,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			doc = findById(docId);
 			initialize(doc);
 			doc.setImmutable(1);
-			doc.setStatus(Document.DOC_CHECKED_IN);
+			doc.setStatus(Document.DOC_UNLOCKED);
 			store(doc);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())

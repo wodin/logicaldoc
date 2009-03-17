@@ -125,9 +125,9 @@ public class DocumentManagerImpl implements DocumentManager {
 			document.setDate(new Date());
 			document.setPublisher(user.getFullName());
 			document.setPublisherId(user.getId());
-			document.setStatus(Document.DOC_CHECKED_IN);
+			document.setStatus(Document.DOC_UNLOCKED);
 			document.setType(document.getFileExtension());
-			document.setCheckoutUserId(null);
+			document.setLockUserId(null);
 			document.setFolder(folder);
 
 			// create new version
@@ -160,23 +160,26 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void checkout(long docId, User user) throws Exception {
+		lock(docId, Document.DOC_CHECKED_OUT, user, "");
+	}
+
+	@Override
+	public void lock(long docId, int status, User user, String comment) throws Exception {
 		Document document = documentDAO.findById(docId);
 		if (document.getImmutable() == 1)
 			throw new Exception("Document is immutable");
+		if (document.getStatus() != Document.DOC_UNLOCKED)
+			throw new Exception("Document is locked");
 
-		if (document.getStatus() == Document.DOC_CHECKED_IN) {
-			document.setCheckoutUserId(user.getId());
-			document.setStatus(Document.DOC_CHECKED_OUT);
-			document.setFolder(document.getFolder());
-			documentDAO.store(document);
+		document.setLockUserId(user.getId());
+		document.setStatus(status);
+		document.setFolder(document.getFolder());
+		documentDAO.store(document);
 
-			// create history entry for this checkout event
-			createHistoryEntry(docId, user, History.EVENT_CHECKEDOUT, "");
+		// create history entry for this checkout event
+		createHistoryEntry(docId, user, History.EVENT_LOCKED, comment);
 
-			log.debug("Checked out document " + docId);
-		} else {
-			throw new Exception("Document already checked out");
-		}
+		log.debug("locked document " + docId);
 	}
 
 	@Override
@@ -555,7 +558,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc.setPublisherId(user.getId());
 			doc.setCreator(user.getFullName());
 			doc.setCreatorId(user.getId());
-			doc.setStatus(Document.DOC_CHECKED_IN);
+			doc.setStatus(Document.DOC_UNLOCKED);
 			doc.setType(type);
 			doc.setVersion("1.0");
 			doc.setFileVersion("1.0");
@@ -669,22 +672,19 @@ public class DocumentManagerImpl implements DocumentManager {
 			is.close();
 		}
 	}
-
-	public void uncheckout(long docId, User user) throws Exception {
+	
+	@Override
+	public void unlock(long docId, User user, String comment) throws Exception {
 		Document document = documentDAO.findById(docId);
 		if (document.getImmutable() == 0) {
-			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
-				document.setCheckoutUserId(null);
-				document.setStatus(Document.DOC_CHECKED_IN);
-				documentDAO.store(document);
+			document.setLockUserId(null);
+			document.setStatus(Document.DOC_UNLOCKED);
+			documentDAO.store(document);
 
-				// create history entry for this UnCheckout event
-				createHistoryEntry(docId, user, History.EVENT_UNCHECKOUT, "");
+			// create history entry for this UNLOCK event
+			createHistoryEntry(docId, user, History.EVENT_UNLOCKED, comment);
 
-				log.debug("UNChecked out document " + docId);
-			} else {
-				throw new Exception("Document already checked in");
-			}
+			log.debug("Unlocked document " + docId);
 		} else {
 			throw new Exception("Document is immutable");
 		}
@@ -807,7 +807,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			setUniqueFilename(doc);
 			documentDAO.store(doc);
 
-			// create history entry for this UnCheckout event
+			// create history entry for this RENAMED event
 			createHistoryEntry(doc.getId(), user, History.EVENT_RENAMED, "");
 
 			Version version = Version.create(doc, user, "", Version.EVENT_RENAMED, Version.VERSION_TYPE.NEW_SUBVERSION);

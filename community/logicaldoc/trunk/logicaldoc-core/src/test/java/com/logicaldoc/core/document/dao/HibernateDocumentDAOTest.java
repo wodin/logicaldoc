@@ -330,4 +330,19 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		dao.makeImmutable(2);
 		assertEquals(1, dao.findById(2).getImmutable());
 	}
+
+	public void testFindLockedByUserId() {
+		assertEquals(2, dao.findLockedByUserId(3).size());
+		assertEquals(0, dao.findLockedByUserId(1).size());
+		assertEquals(0, dao.findLockedByUserId(987541).size());
+	}
+
+	public void testFindByLockUserAndStatus() {
+		assertEquals(2, dao.findByLockUserAndStatus(3L,null).size());
+		assertEquals(2, dao.findByLockUserAndStatus(3L,Document.DOC_CHECKED_OUT).size());
+		assertEquals(2, dao.findByLockUserAndStatus(null,Document.DOC_CHECKED_OUT).size());
+		assertEquals(0, dao.findByLockUserAndStatus(1L,null).size());
+		assertEquals(0, dao.findByLockUserAndStatus(1L,Document.DOC_CHECKED_OUT).size());
+		assertEquals(0, dao.findByLockUserAndStatus(987541L,null).size());
+	}
 }

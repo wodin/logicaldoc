@@ -18,13 +18,15 @@ public class History extends PersistentObject {
 
 	public final static String EVENT_CHECKEDOUT = "event.checkedout";
 
-	public static final String EVENT_UNCHECKOUT = "event.uncheckedout";
-
 	public static final String EVENT_IMMUTABLE = "event.makeimmutable";
 	
 	public static final String EVENT_RENAMED = "event.renamed";
 
 	public final static String EVENT_MOVED = "event.moved";
+	
+	public final static String EVENT_LOCKED = "event.locked";
+	
+	public final static String EVENT_UNLOCKED = "event.unlocked";
 	
 	private long docId;
 

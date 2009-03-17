@@ -32,7 +32,7 @@ import com.logicaldoc.core.util.IconSelector;
  */
 public abstract class AbstractDocument extends ExtensibleObject {
 
-	public static final int DOC_CHECKED_IN = 0;
+	public static final int DOC_UNLOCKED = 0;
 
 	public static final int DOC_CHECKED_OUT = 1;
 
@@ -41,10 +41,10 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	/**
 	 * Whether document is checked in or out
 	 * 
-	 * @see Document#DOC_CHECKED_IN
+	 * @see Document#DOC_UNLOCKED
 	 * @see Document#DOC_CHECKED_OUT
 	 */
-	private int status = DOC_CHECKED_IN;
+	private int status = DOC_UNLOCKED;
 
 	private String title;
 
@@ -64,7 +64,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	private String type;
 
-	private Long checkoutUserId;
+	private Long lockUserId;
 
 	private String source;
 
@@ -111,7 +111,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	/**
 	 * The document status
 	 * 
-	 * @see Document#DOC_CHECKED_IN
+	 * @see Document#DOC_UNLOCKED
 	 * @see Document#DOC_CHECKED_OUT
 	 */
 	public int getStatus() {
@@ -197,15 +197,14 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	}
 
 	/**
-	 * The id of the user that checked-out this document and that currently
-	 * locks it
+	 * The id of the user that locked this document and that currently locks it
 	 */
-	public Long getCheckoutUserId() {
-		return checkoutUserId;
+	public Long getLockUserId() {
+		return lockUserId;
 	}
 
-	public void setCheckoutUserId(Long checkoutUserId) {
-		this.checkoutUserId = checkoutUserId;
+	public void setLockUserId(Long lockUserId) {
+		this.lockUserId = lockUserId;
 	}
 
 	/**

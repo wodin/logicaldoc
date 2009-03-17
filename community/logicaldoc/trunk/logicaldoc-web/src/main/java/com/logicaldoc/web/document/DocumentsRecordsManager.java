@@ -223,7 +223,8 @@ public class DocumentsRecordsManager extends SortableList {
 	}
 
 	/**
-	 * Deletes all selected documents
+	 * Deletes all selected documents.
+	 * Only not immutable and not locked document can be deleted.
 	 */
 	public String deleteSelected() {
 		if (SessionManagement.isValid()) {
@@ -231,10 +232,17 @@ public class DocumentsRecordsManager extends SortableList {
 				DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 				boolean skippedSome = false;
 				boolean deletedSome = false;
+				boolean lockedSome = false;
 				for (DocumentRecord record : selection) {
 					try {
+						// The document of the selected documentRecord must be not immutable
 						if (record.getDocument().getImmutable() == 1) {
 							skippedSome = true;
+							continue;
+						}
+						// The document of the selected documentRecord must be not locked
+						if(record.getDocument().getStatus() == 1) {
+							lockedSome = true;
 							continue;
 						}
 						manager.delete(record.getDocId());
@@ -247,7 +255,7 @@ public class DocumentsRecordsManager extends SortableList {
 				}
 				if (deletedSome)
 					Messages.addLocalizedInfo("msg.action.deleteitem");
-				if (skippedSome)
+				if (skippedSome || lockedSome)
 					Messages.addLocalizedWarn("document.delete.warn");
 				refresh();
 			} else {
@@ -643,8 +651,10 @@ public class DocumentsRecordsManager extends SortableList {
 					Date d2 = c2.getLastModified() != null ? c2.getLastModified() : new Date(0);
 					return ascending ? d1.compareTo(d2) : d2.compareTo(d1);
 				} else if (column.equals("publishedby")) {
-					String publisher1 = c1.getDocument().getPublisher() != null ? c1.getDocument().getPublisher().toLowerCase() : "";
-					String publisher2 = c2.getDocument().getPublisher() != null ? c2.getDocument().getPublisher().toLowerCase() : "";
+					String publisher1 = c1.getDocument().getPublisher() != null ? c1.getDocument().getPublisher()
+							.toLowerCase() : "";
+					String publisher2 = c2.getDocument().getPublisher() != null ? c2.getDocument().getPublisher()
+							.toLowerCase() : "";
 					return ascending ? publisher1.compareTo(publisher2) : publisher2.compareTo(publisher1);
 				} else if (column.equals("size")) {
 					Long s1 = new Long(c1.getDocument().getFileSize());
