@@ -20,6 +20,7 @@ import org.java.plugin.registry.Extension;
 import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
+import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -151,6 +152,10 @@ public class DocumentRecord extends MenuBarBean {
 		return getDocument().getStatus() == Document.DOC_CHECKED_OUT;
 	}
 
+	public boolean isLocked() {
+		return getDocument().getStatus() != Document.DOC_UNLOCKED;
+	}
+
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
@@ -220,18 +225,29 @@ public class DocumentRecord extends MenuBarBean {
 		model.clear();
 		long userId = SessionManagement.getUserId();
 		MenuDAO menuDAO = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-
 		Menu folder = getDocument().getFolder();
 		Document document = getDocument();
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		if ((menuDAO.isWriteEnable(folder.getId(), userId)) && (document.getImmutable() == 0)) {
-			if ((document.getStatus() == Document.DOC_CHECKED_OUT)
+
+			// Checkin/checkout
+			if (document.getStatus() == Document.DOC_UNLOCKED) {
+				model.add(createMenuItem(" " + Messages.getMessage("checkout"), "checkout-" + folder.getId(), null,
+						"#{documentRecord.checkout}", null, style.getImagePath("checkout.png"), true, null, null));
+			} else if ((document.getStatus() == Document.DOC_CHECKED_OUT)
 					&& (document.getLockUserId().equals(new Long(userId)))) {
 				model.add(createMenuItem(" " + Messages.getMessage("checkin"), "checkin-" + folder.getId(), null,
 						"#{documentRecord.checkin}", null, style.getImagePath("checkin.png"), true, null, null));
-			} else if (document.getStatus() == Document.DOC_UNLOCKED) {
-				model.add(createMenuItem(" " + Messages.getMessage("checkout"), "checkout-" + folder.getId(), null,
-						"#{documentRecord.checkout}", null, style.getImagePath("checkout.png"), true, null, null));
+			}
+
+			// Unlock
+			if ((document.getStatus() != Document.DOC_UNLOCKED)
+					&& ((document.getLockUserId().equals(new Long(userId))) || "admin".equals(SessionManagement
+							.getUsername()))) {
+				// The user that locked the document can unlock it, and also the
+				// admin user
+				model.add(createMenuItem(" " + Messages.getMessage("unlock"), "unlock-" + folder.getId(), null,
+						"#{documentRecord.unlock}", null, style.getImagePath("lock_open.png"), true, null, null));
 			}
 
 			model.add(createMenuItem(" " + Messages.getMessage("edit"), "pastelink-" + folder.getId(), null,
@@ -283,17 +299,19 @@ public class DocumentRecord extends MenuBarBean {
 
 		Set<Permission> permissions = menuDAO.getEnabledPermissions(folder.getId(), userId);
 		for (Extension ext : sortedExts) {
-			if(StringUtils.isNotEmpty(ext.getParameter("permission").valueAsString())){
-			Permission permission = Permission.valueOf(ext.getParameter("permission").valueAsString());
-			if (!permissions.contains(permission))
-				continue;
+			if (StringUtils.isNotEmpty(ext.getParameter("permission").valueAsString())) {
+				Permission permission = Permission.valueOf(ext.getParameter("permission").valueAsString());
+				if (!permissions.contains(permission))
+					continue;
 			}
 			String title = Messages.getMessage(ext.getParameter("title").valueAsString());
 			String id = ext.getParameter("id").valueAsString() + "-" + folder.getId();
 			String action = ext.getParameter("action").valueAsString();
 			String icon = ext.getParameter("icon").valueAsString();
 			String target = ext.getParameter("target").valueAsString();
-			model.add(createMenuItem(" " + title, id, null, action, null, style.getImagePath(icon), true, target, null));
+			model
+					.add(createMenuItem(" " + title, id, null, action, null, style.getImagePath(icon), true, target,
+							null));
 		}
 	}
 
@@ -364,9 +382,13 @@ public class DocumentRecord extends MenuBarBean {
 									.getImagePath("checkin.png"), true, null, null);
 							// replacing the old menu at the same index
 							model.set(0, checkinMenuItem);
+							
+							// adding the unlock option
+							model.set(1, createMenuItem(" " + Messages.getMessage("unlock"),
+									"unlock-" + folder.getId(), null, "#{documentRecord.unlock}", null, style
+											.getImagePath("lock_open.png"), true, null, null));
 						} catch (Throwable e) {
 						}
-
 					} else {
 						Messages.addLocalizedError("errors.noaccess");
 					}
@@ -500,7 +522,6 @@ public class DocumentRecord extends MenuBarBean {
 	 */
 	public String history() {
 		if (SessionManagement.isValid()) {
-
 			DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 					"documentNavigation", FacesContext.getCurrentInstance(), log));
 			documentNavigation.setSelectedPanel(new PageContentBean("history"));
@@ -520,7 +541,6 @@ public class DocumentRecord extends MenuBarBean {
 		edit();
 
 		// Now initialize the form
-
 		DocumentEditForm docForm = ((DocumentEditForm) FacesUtil.accessBeanFromFacesContext("documentForm",
 				FacesContext.getCurrentInstance(), log));
 		docForm.init(this);
@@ -615,6 +635,40 @@ public class DocumentRecord extends MenuBarBean {
 			Messages.addLocalizedWarn("clipboard.empty");
 		}
 
+		return null;
+	}
+
+	@SuppressWarnings("deprecation")
+	public String unlock() {
+		Document document = getDocument();
+		if (document.getStatus() != Document.DOC_UNLOCKED) {
+			try {
+				// Unlock the document; throws an exception if something
+				// goes wrong
+				DocumentManager documentManager = (DocumentManager) Context.getInstance()
+						.getBean(DocumentManager.class);
+				documentManager.unlock(document.getId(), SessionManagement.getUser(), null);
+
+				/* create positive log message */
+				Messages.addLocalizedInfo("msg.action.changedoc");
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				Messages.addLocalizedError("errors.action.savedoc");
+			}
+		}
+
+		// Fix the context menu, removing the unlock item and adding the checkout
+		try {
+			StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
+			// create a new menu to replace the checkout
+			MenuItem checkoutMenuItem = createMenuItem(Messages.getMessage("checkout"), "checkout-"
+					+ document.getId(), null, "#{documentRecord.checkout}", null, style
+					.getImagePath("checkout.png"), true, null, null);
+			// replacing the old menu at the same index
+			model.set(0, checkoutMenuItem);
+			model.remove(1);
+		} catch (Throwable e) {
+		}
 		return null;
 	}
 
