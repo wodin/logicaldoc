@@ -309,7 +309,7 @@ public class DocumentRecord extends MenuBarBean {
 			String action = ext.getParameter("action").valueAsString();
 			String icon = ext.getParameter("icon").valueAsString();
 			String readonly = ext.getParameter("readonly").valueAsString();
-			// Skip is the document is locked ant the menu can alter the
+			// Skip if the document is locked and the menu can alter the
 			// document
 			if ("false".equals(readonly) && document.getStatus() != Document.DOC_UNLOCKED)
 				continue;
