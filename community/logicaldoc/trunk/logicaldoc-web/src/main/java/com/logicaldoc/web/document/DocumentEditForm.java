@@ -535,46 +535,6 @@ public class DocumentEditForm {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	public String uncheckout() {
-
-		log.info("uncheckout()");
-
-		Application application = FacesContext.getCurrentInstance().getApplication();
-		InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
-				FacesContext.getCurrentInstance()));
-		if (SessionManagement.isValid()) {
-			Document document = record.getDocument();
-
-			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
-
-				try {
-					// Unchekout the document; throws an exception if something
-					// goes wrong
-					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
-							DocumentManager.class);
-					documentManager.unlock(document.getId(), SessionManagement.getUser(), null);
-
-					/* create positive log message */
-					Messages.addLocalizedInfo("msg.action.changedoc");
-					fileForm.reset();
-				} catch (Exception e) {
-					log.error(e.getMessage(), e);
-					Messages.addLocalizedError("errors.action.savedoc");
-				}
-			}
-			reset();
-		} else {
-			return "login";
-		}
-
-		DocumentNavigation documentNavigation = ((DocumentNavigation) application.createValueBinding(
-				"#{documentNavigation}").getValue(FacesContext.getCurrentInstance()));
-		documentNavigation.showDocuments();
-		documentNavigation.refresh();
-		return null;
-	}
-
 	/**
 	 * Executes a document's checkin creating a new version
 	 */

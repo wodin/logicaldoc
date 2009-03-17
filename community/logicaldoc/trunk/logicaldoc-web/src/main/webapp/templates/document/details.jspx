@@ -124,9 +124,9 @@
 							alt="#{msgs['document.indexed']}" />
 					</ice:outputLink>
 					<ice:graphicImage style="margin-left: 5px;"
-						rendered="#{documentRecord.checkedOut}"
-						value="#{StyleBean.imagesPath}/checkout.png" alt="checked-out"
-						title="checked-out" />
+						rendered="#{documentRecord.locked}"
+						value="#{StyleBean.imagesPath}/document_lock.png" alt="#{msgs['locked']}"
+						title="#{msgs['locked']}" />
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.document.immutable == 1}"
 						value="#{StyleBean.imagesPath}/immutable.png"
