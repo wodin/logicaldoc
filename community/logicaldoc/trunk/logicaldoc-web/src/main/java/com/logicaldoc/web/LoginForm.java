@@ -87,10 +87,11 @@ public class LoginForm {
 			PageContentBean page = null;
 			try {
 				PropertiesBean config = new PropertiesBean();
-				if (StringUtils.isNotEmpty(config.getProperty("entrypage"))) {
+				String entrypage=config.getProperty("gui.entrypage");
+				if (StringUtils.isNotEmpty(entrypage)) {
 					MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-					Menu menu = menuDao.findById(Long.parseLong(config.getProperty("entrypage")));
-					if (menu != null) {
+					Menu menu = menuDao.findById(Long.parseLong(entrypage));
+					if (menu != null && menuDao.isReadEnable(menu.getId(), user.getId())) {
 						page = new PageContentBean("m-" + Long.toString(menu.getId()));
 						if (StringUtils.isNotEmpty(menu.getRef())) {
 							page.setTemplate(menu.getRef());
@@ -98,11 +99,11 @@ public class LoginForm {
 						page.setContentTitle(Messages.getMessage(menu.getText()));
 						page.setIcon(style.getImagePath(menu.getIcon()));
 					} else {
-						logger.warn("Menu " + config.getProperty("entrypage") + " not found");
+						logger.warn("Menu " + entrypage + " not found");
 					}
 				}
 			} catch (Throwable e) {
-				logger.error(e.getMessage());
+				logger.error(e.getMessage(),e);
 			}
 
 			if (page == null) {
@@ -110,10 +111,10 @@ public class LoginForm {
 				page = new PageContentBean("home", "home");
 				page.setContentTitle(Messages.getMessage("home"));
 				page.setDisplayText(Messages.getMessage("home"));
-				page.setIcon(style.getImagePath("home.png"));				
+				page.setIcon(style.getImagePath("home.png"));
 			}
 			navigation.setSelectedPanel(page);
-			
+
 			return "loginSuccess";
 		} else {
 			logger.warn("User " + j_username + " is not valid.");

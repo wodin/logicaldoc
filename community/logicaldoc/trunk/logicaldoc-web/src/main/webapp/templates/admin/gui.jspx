@@ -1,0 +1,92 @@
+<?xml version = '1.0'?>
+<!-- 
+ Menu's security management
+  
+ @author Marco Meschie5ri - Logical Objects
+ @since 4.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="securityForm" styleClass="center formBorderHighlight"
+	style="width: 600px; text-align: left;">
+
+	<ice:messages globalOnly="true" />
+
+	<ice:panelGroup>
+		<ice:panelGrid columns="2">
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="parentPath"
+					value="#{msgs['gui.entrypage']}:  " />
+			</ice:panelGroup>
+			<ice:panelGroup style="display: inline;">
+				<ice:inputHidden id="parentPath" value="#{guiBean.path}" />
+				<ice:outputText
+					value="#{guiBean.directoryModel.selectedDir.pathExtended}  "
+					style="font-weight: bold" />
+				<ldoc:folderselector style="float:right;"
+					directoryModel="#{guiBean.directoryModel}"
+					showSelector="#{guiBean.showFolderSelector}"
+					openListener="#{guiBean.openFolderSelector}"
+					confirmListener="#{guiBean.folderSelected}"
+					cancelListener="#{guiBean.cancelFolderSelector}"
+					closeListener="#{guiBean.closeFolderSelector}" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="viewModeBrowsing"
+					value="#{msgs['gui.vewmode.browsing']}:  " />
+			</ice:panelGroup>
+			<ice:panelGroup style="margin-top:0px; padding-top:0px;">
+				<ice:selectOneMenu id="viewModeBrowsing"
+					value="#{guiBean.viewModeBrowsing}">
+					<f:selectItems value="#{selectionTags.viewModesBrowsing}" />
+				</ice:selectOneMenu>
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="viewModeSeach"
+					value="#{msgs['gui.vewmode.search']}:  " />
+			</ice:panelGroup>
+			<ice:panelGroup style="margin-top:0px; padding-top:0px;">
+				<ice:selectOneMenu id="viewModeSearch"
+					value="#{guiBean.viewModeSearch}">
+					<f:selectItems value="#{selectionTags.viewModesSearch}" />
+				</ice:selectOneMenu>
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="thumbsize"
+					value="#{msgs['gui.thumbnail.size']}:  " />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="thumbsize" value="#{guiBean.thumbnailSize}" />
+				<ice:message for="thumbsize" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="pagesize" value="#{msgs['gui.page.size']}:  " />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectOneMenu id="pagesize" value="#{guiBean.pageSize}">
+					<f:selectItem itemValue="10" />
+					<f:selectItem itemValue="25" />
+					<f:selectItem itemValue="50" />
+				</ice:selectOneMenu>
+				<ice:outputLabel value="#{msgs['document.perpage']}" for="pagesize" />
+			</ice:panelGroup>
+
+		</ice:panelGrid>
+
+		<hr />
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['save']}" tabindex="1" id="save"
+				action="#{guiBean.save}" />
+		</ice:panelGroup>
+	</ice:panelGroup>
+</jsp:root>

@@ -23,7 +23,7 @@ import com.logicaldoc.web.i18n.Messages;
 public class ParametersForm {
 	protected static Log log = LogFactory.getLog(ParametersForm.class);
 
-	PropertiesBean config;
+	private PropertiesBean config;
 
 	public PropertiesBean getConfig() {
 		if (config == null)
@@ -46,7 +46,8 @@ public class ParametersForm {
 				if ("true".equals(config.getProperty(name + ".hidden")))
 					continue;
 			} else if (name.startsWith("product") || name.startsWith("skin") || name.startsWith("conf")
-					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp"))
+					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp")
+					|| name.startsWith("gui"))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -58,20 +59,6 @@ public class ParametersForm {
 		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
 		Object parameter = (Object) map.get("entry");
 		return parameter.toString();
-	}
-
-	public String getParamValue() {
-		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
-		Object parameter = (Object) map.get("entry");
-		return (String) getConfig().getProperty(parameter.toString());
-	}
-
-	public void setParamValue(String value) {
-		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
-		Object parameter = (Object) map.get("entry");
-		getConfig().setProperty(parameter.toString(), value.trim());
-		System.err.println("++value= " + value);
-		System.err.println("++= " + getConfig().getProperty(parameter.toString()));
 	}
 
 	public boolean isReadonly() {
