@@ -59,15 +59,28 @@ public interface DocumentManager {
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
 	public void checkout(long docId, User user) throws Exception;
+	
+	/**
+	 * Locks the given document
+	 * 
+	 * @param docId the document to be locked
+	 * @param status the lock type (used to populate status attribute of the
+	 *        document)
+	 * @param user the user requesting the lock
+	 * @param comment optional comment
+	 * @throws Exception if an error occurs, this exception is thrown
+	 */
+	public void lock(long docId, int status, User user, String comment) throws Exception;
 
 	/**
 	 * UNChecks out the given document
 	 * 
 	 * @param docId the document to be unchecked out
 	 * @param user the user uncheking the document
+	 * @param comment optional comment
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public void uncheckout(long docId, User user) throws Exception;
+	public void unlock(long docId, User user, String comment) throws Exception;
 
 	/**
 	 * Creates a new document in the parent menu
@@ -278,7 +291,7 @@ public interface DocumentManager {
 	 * @return The document file
 	 */
 	public File getDocumentFile(long docId);
-	
+
 	/**
 	 * Obtains the document's file for the specified version
 	 * 
@@ -293,11 +306,12 @@ public interface DocumentManager {
 	 * 
 	 * @param doc The document representation
 	 * @param fileVersion The file version (use null for the latest version)
-	 * @param suffix The file suffix (use null if you want the exact document file)
+	 * @param suffix The file suffix (use null if you want the exact document
+	 *        file)
 	 * @return The document file
 	 */
 	public File getDocumentFile(Document doc, String fileVersion, String suffix);
-	
+
 	/**
 	 * Obtains the document's file for the specified version
 	 * 
@@ -307,17 +321,17 @@ public interface DocumentManager {
 	 */
 	public File getDocumentFile(long docId, String fileVersion);
 
-	
 	/**
 	 * Obtains the document's file for the specified version
 	 * 
 	 * @param docId The document's identifier
 	 * @param fileVersion The file version (use null for the latest version)
-	 * @param suffix The file suffix (use null if you want the exact document file)
+	 * @param suffix The file suffix (use null if you want the exact document
+	 *        file)
 	 * @return The document file
 	 */
 	public File getDocumentFile(long docId, String fileVersion, String suffix);
-	
+
 	/**
 	 * Retrieves the document's content as a string
 	 * 

@@ -52,7 +52,7 @@ public class HomeBean {
 	public List<DocumentRecord> getLastModifiedDocuments() {
 
 		List<DocumentRecord> lastModified = new ArrayList<DocumentRecord>();
-		
+
 		HashMap hm = new HashMap();
 
 		if (SessionManagement.isValid()) {
@@ -67,7 +67,7 @@ public class HomeBean {
 								DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
 								DocumentsRecordsManager.GROUP_ROW_STYLE_CLASS);
 						hm.put(document.getId(), dr);
-						
+
 						lastModified.add(dr);
 					}
 				}
@@ -116,7 +116,7 @@ public class HomeBean {
 				long userId = SessionManagement.getUserId();
 				ArticleDAO artDao = (ArticleDAO) Context.getInstance().getBean(ArticleDAO.class);
 				Collection<Article> articles = artDao.findByUserId(userId);
-				
+
 				if (articles != null) {
 					// revert the list, it should be in asc order by time
 					lastarticles.addAll(articles);
@@ -141,7 +141,7 @@ public class HomeBean {
 		if (SessionManagement.isValid()) {
 			try {
 				DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-				Collection<Document> documents = (Collection<Document>) docdao.findCheckoutByUserId(SessionManagement.getUserId());
+				Collection<Document> documents = (Collection<Document>) docdao.findByLockUserAndStatus(SessionManagement.getUserId(),Document.DOC_CHECKED_OUT);
 				for (Document document : documents) {
 					lastdocs.add(new DocumentRecord(document.getId(), null,
 							DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
@@ -220,6 +220,7 @@ public class HomeBean {
 	public void setTagCloudsExpanded(boolean tagCloudsExpanded) {
 		this.tagCloudsExpanded = tagCloudsExpanded;
 	}
+
 	class TagCloudComparatorName implements Comparator<TagCloud> {
 		public int compare(TagCloud tc0, TagCloud tc1) {
 			return tc0.getKeyword().compareTo(tc1.getKeyword());

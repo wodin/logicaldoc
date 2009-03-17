@@ -15,7 +15,7 @@ import com.logicaldoc.core.document.Document;
  * @author Marco Meschieri
  * @version 1.0
  */
-public interface DocumentDAO extends PersistentObjectDAO<Document>{
+public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	/**
 	 * This method finds a document by the custom ID.
 	 * 
@@ -49,12 +49,23 @@ public interface DocumentDAO extends PersistentObjectDAO<Document>{
 	public List<Document> findByFolder(long folderId);
 
 	/**
-	 * Finds all documents checked-out for an user.
+	 * Finds all documents locked by a user.
 	 * 
 	 * @param userId Id of the user.
-	 * @return Collection of all Documents checked out by the specified user.
+	 * @return Collection of all Documents locked by the specified user.
 	 */
-	public List<Document> findCheckoutByUserId(long userId);
+	public List<Document> findLockedByUserId(long userId);
+
+	/**
+	 * Finds all document of the specified status and locked by the specified
+	 * user
+	 * 
+	 * @param userId The user id(optional)
+	 * @param status The status code(optional)
+	 * @return Collection of all Documents locked by the specified user and of
+	 *         the specified status.
+	 */
+	public List<Document> findByLockUserAndStatus(Long userId, Integer status);
 
 	/**
 	 * Finds a max number of documents last modified by an user.
@@ -211,7 +222,7 @@ public interface DocumentDAO extends PersistentObjectDAO<Document>{
 	 * @param docId Id of the document to be restored
 	 */
 	public void restore(long docId);
-	
+
 	/**
 	 * Marks the document, with the given docId, as immutable
 	 * 

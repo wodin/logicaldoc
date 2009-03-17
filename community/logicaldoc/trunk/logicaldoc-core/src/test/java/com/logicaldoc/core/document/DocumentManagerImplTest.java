@@ -13,9 +13,9 @@ import com.logicaldoc.core.security.dao.UserDAO;
  */
 public class DocumentManagerImplTest extends AbstractCoreTestCase {
 	private DocumentDAO docDao;
-	
+
 	private UserDAO userDao;
-	
+
 	// Instance under test
 	private DocumentManager documentManager;
 
@@ -42,18 +42,30 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 	public void testMakeImmutable() throws Exception {
 		User user = userDao.findByUserName("admin");
 		Document doc = docDao.findById(1);
-		String reason = "pippo_reason";
+		String comment = "pippo_reason";
 		assertNotNull(doc);
-		documentManager.makeImmutable(doc.getId(), user, reason);
+		documentManager.makeImmutable(doc.getId(), user, comment);
 		doc = docDao.findById(1);
 		assertEquals(1, doc.getImmutable());
 		doc.setFileName("ciccio");
 		docDao.initialize(doc);
 		docDao.store(doc);
-		assertEquals("pippo", doc.getFileName());		
+		assertEquals("pippo", doc.getFileName());
 		doc.setImmutable(0);
 		docDao.store(doc);
 		docDao.findById(doc.getId());
 		assertEquals(1, doc.getImmutable());
+	}
+
+	public void testLock() throws Exception {
+		User user = userDao.findByUserName("admin");
+		documentManager.unlock(1L, user, "");
+		Document doc = docDao.findById(1);
+		String comment = "pippo_reason";
+		assertNotNull(doc);
+		documentManager.lock(doc.getId(), 2, user, comment);
+		doc = docDao.findById(1);
+		assertEquals(2, doc.getStatus());
+		assertEquals(1L, doc.getLockUserId().longValue());
 	}
 }

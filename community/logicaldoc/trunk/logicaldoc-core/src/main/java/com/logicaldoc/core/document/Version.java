@@ -233,10 +233,6 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 			version.setFileVersion(newVersionName);
 			document.setFileVersion(newVersionName);
 		}
-		
-		version.setCreatorId(document.getCreatorId());
-		version.setCreator(document.getCreator());
-
 		return version;
 	}
 

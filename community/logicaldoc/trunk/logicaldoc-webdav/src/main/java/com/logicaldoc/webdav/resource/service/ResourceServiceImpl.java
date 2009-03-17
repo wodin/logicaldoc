@@ -524,7 +524,7 @@ public class ResourceServiceImpl implements ResourceService {
 	public void uncheckout(Resource resource) {
 		try {
 			User user = userDAO.findById(resource.getRequestedPerson());
-			documentManager.uncheckout(Long.parseLong(resource.getID()), user);
+			documentManager.unlock(Long.parseLong(resource.getID()), user, "");
 
 			resource.setIsCheckedOut(false);
 
