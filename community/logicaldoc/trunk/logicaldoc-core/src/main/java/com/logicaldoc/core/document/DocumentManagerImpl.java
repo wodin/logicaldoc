@@ -165,6 +165,11 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void lock(long docId, int status, User user, String comment) throws Exception {
+		lock(docId, status, History.EVENT_LOCKED, user, comment);
+	}
+
+	@Override
+	public void lock(long docId, int status, String historyEvent, User user, String comment) throws Exception {
 		Document document = documentDAO.findById(docId);
 		if (document.getImmutable() == 1)
 			throw new Exception("Document is immutable");
@@ -177,7 +182,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		documentDAO.store(document);
 
 		// create history entry for this checkout event
-		createHistoryEntry(docId, user, History.EVENT_LOCKED, comment);
+		createHistoryEntry(docId, user, historyEvent, comment);
 
 		log.debug("locked document " + docId);
 	}
@@ -672,7 +677,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			is.close();
 		}
 	}
-	
+
 	@Override
 	public void unlock(long docId, User user, String comment) throws Exception {
 		Document document = documentDAO.findById(docId);

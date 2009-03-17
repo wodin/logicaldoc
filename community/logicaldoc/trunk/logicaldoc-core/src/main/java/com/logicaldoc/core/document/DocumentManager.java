@@ -73,6 +73,20 @@ public interface DocumentManager {
 	public void lock(long docId, int status, User user, String comment) throws Exception;
 
 	/**
+	 * Locks the given document
+	 * 
+	 * @param docId the document to be locked
+	 * @param status the lock type (used to populate status attribute of the
+	 *        document)
+	 * @param historyEvent The event that caused the lock
+	 * @param user the user requesting the lock
+	 * @param comment optional comment
+	 * @throws Exception if an error occurs, this exception is thrown
+	 */
+	public void lock(long docId, int status, String historyEvent, User user, String comment) throws Exception;
+	
+	
+	/**
 	 * UNChecks out the given document
 	 * 
 	 * @param docId the document to be unchecked out
