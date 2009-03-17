@@ -1,5 +1,6 @@
 package com.logicaldoc.web.document;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,6 +10,7 @@ import java.util.Map;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -22,6 +24,7 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.i18n.Messages;
@@ -52,7 +55,7 @@ import com.logicaldoc.web.util.FacesUtil;
  * @since 3.0
  */
 public class DocumentNavigation extends NavigationBean {
-	
+
 	protected static Log log = LogFactory.getLog(DocumentNavigation.class);
 
 	// list for the dynamic menus w/ getter & setter
@@ -64,7 +67,7 @@ public class DocumentNavigation extends NavigationBean {
 
 	private boolean showFolderSelector = false;
 
-	private String viewMode = "simple";
+	private String viewMode = null;
 
 	/**
 	 * Default constructor of the tree. The root node of the tree is created at
@@ -88,7 +91,7 @@ public class DocumentNavigation extends NavigationBean {
 	public void setShowFolderSelector(boolean showFolderSelector) {
 		this.showFolderSelector = showFolderSelector;
 	}
-	
+
 	public void setViewMode(String viewModeP) {
 		if (!this.viewMode.equals(viewModeP)) {
 			this.viewMode = viewModeP;
@@ -97,7 +100,16 @@ public class DocumentNavigation extends NavigationBean {
 	}
 
 	public String getViewMode() {
-		return this.viewMode;
+		if (viewMode == null)
+			try {
+				PropertiesBean config = new PropertiesBean();
+				viewMode = config.getProperty("gui.viewmode.browsing");
+			} catch (IOException e) {
+
+			}
+		if (StringUtils.isEmpty(viewMode))
+			viewMode = "simple";
+		return viewMode;
 	}
 
 	public List<MenuItem> getFolderItems() {
@@ -218,7 +230,7 @@ public class DocumentNavigation extends NavigationBean {
 		DocumentsRecordsManager recordsManager = ((DocumentsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"documentsRecordsManager", FacesContext.getCurrentInstance(), log));
 		recordsManager.selectDirectory(directory.getMenu().getId());
-		setSelectedPanel(new PageContentBean(this.viewMode));
+		setSelectedPanel(new PageContentBean(getViewMode()));
 	}
 
 	public void selectDirectory(long directoryId) {
@@ -233,9 +245,9 @@ public class DocumentNavigation extends NavigationBean {
 		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
 
 		Object entry = (Object) map.get("entry");
-		if(entry ==null)
+		if (entry == null)
 			entry = (Object) map.get("documentRecord");
-		
+
 		long docId = 0;
 
 		if (entry instanceof Result) {
@@ -249,7 +261,7 @@ public class DocumentNavigation extends NavigationBean {
 		Menu folder = document.getFolder();
 		selectDirectory(folder.getId());
 		highlightDocument(docId);
-		setSelectedPanel(new PageContentBean(this.viewMode));
+		setSelectedPanel(new PageContentBean(getViewMode()));
 
 		// Show the documents browsing panel
 		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
@@ -283,7 +295,7 @@ public class DocumentNavigation extends NavigationBean {
 		folderId = folder.getId();
 		selectDirectory(folderId);
 
-		setSelectedPanel(new PageContentBean(this.viewMode));
+		setSelectedPanel(new PageContentBean(getViewMode()));
 
 		// Show the documents browsing panel
 		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
@@ -331,7 +343,7 @@ public class DocumentNavigation extends NavigationBean {
 
 		Directory parent = new Directory(menuDao.findById(getSelectedDir().getMenu().getParentId()));
 		selectDirectory(parent);
-		setSelectedPanel(new PageContentBean(this.viewMode));
+		setSelectedPanel(new PageContentBean(getViewMode()));
 
 		loadTree();
 		return null;
@@ -429,9 +441,9 @@ public class DocumentNavigation extends NavigationBean {
 		directoryModel.cancelSelection();
 		showFolderSelector = false;
 	}
-	
+
 	public String showDocuments() {
-		this.setSelectedPanel(new PageContentBean(viewMode));
+		this.setSelectedPanel(new PageContentBean(getViewMode()));
 		return null;
 	}
 }

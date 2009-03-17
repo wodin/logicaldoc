@@ -411,6 +411,12 @@
     <managed-bean-class>com.logicaldoc.web.admin.ParametersForm</managed-bean-class>
     <managed-bean-scope>session</managed-bean-scope>
   </managed-bean>
+  
+  <managed-bean>
+    <managed-bean-name>guiBean</managed-bean-name>
+    <managed-bean-class>com.logicaldoc.web.admin.GuiBean</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
 
   <!-- Home bean -->
   <managed-bean>

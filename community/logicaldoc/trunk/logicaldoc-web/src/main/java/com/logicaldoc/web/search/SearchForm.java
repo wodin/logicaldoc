@@ -1,5 +1,6 @@
 package com.logicaldoc.web.search;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -32,6 +33,7 @@ import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.document.Directory;
@@ -138,7 +140,7 @@ public class SearchForm {
 
 	private Long template = null;
 
-	private String viewMode = "details";
+	private String viewMode = null;
 
 	public SearchForm() {
 		setQuery(Messages.getMessage("search") + "...");
@@ -548,7 +550,7 @@ public class SearchForm {
 
 				// PageContentBean page = new PageContentBean("result",
 				// "search/result");
-				PageContentBean page = new PageContentBean(viewMode, "search/" + viewMode);
+				PageContentBean page = new PageContentBean(getViewMode(), "search/" + getViewMode());
 				StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 				page.setIcon(style.getImagePath("search.png"));
 				page.setContentTitle(Messages.getMessage("search.result"));
@@ -1005,6 +1007,15 @@ public class SearchForm {
 	}
 
 	public String getViewMode() {
+		if (viewMode == null)
+			try {
+				PropertiesBean config = new PropertiesBean();
+				viewMode = config.getProperty("gui.viewmode.search");
+			} catch (IOException e) {
+
+			}
+		if (StringUtils.isEmpty(viewMode))
+			viewMode = "details";
 		return viewMode;
 	}
 

@@ -45,7 +45,7 @@ public class ThumbnailManager {
 		int size = 150;
 		try {
 			PropertiesBean conf = new PropertiesBean();
-			size = Integer.parseInt(conf.getProperty("thumbnail.size"));
+			size = Integer.parseInt(conf.getProperty("gui.thumbnail.size"));
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
