@@ -96,6 +96,7 @@
         <parameter-def id="icon" />
         <parameter-def id="target" />
         <parameter-def id="permission" />
+        <parameter-def id="readonly" />
         <parameter-def id="position" />
     </extension-point>
     

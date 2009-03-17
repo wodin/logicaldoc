@@ -35,6 +35,8 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	public static final int DOC_UNLOCKED = 0;
 
 	public static final int DOC_CHECKED_OUT = 1;
+	
+	public static final int DOC_LOCKED = 2;
 
 	private long fileSize = 0;
 
