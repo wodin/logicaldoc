@@ -28,6 +28,8 @@ public class History extends PersistentObject {
 	
 	public final static String EVENT_UNLOCKED = "event.unlocked";
 	
+	public final static String EVENT_ARCHIVED = "event.archived";
+	
 	private long docId;
 
 	private long userId;
