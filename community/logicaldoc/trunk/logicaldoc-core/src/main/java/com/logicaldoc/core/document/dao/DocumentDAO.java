@@ -224,7 +224,8 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	public void restore(long docId);
 
 	/**
-	 * Marks the document, with the given docId, as immutable
+	 * Marks the document, with the given docId, as immutable. Unlocks the
+	 * document if it was locked.
 	 * 
 	 * @param docId
 	 */
