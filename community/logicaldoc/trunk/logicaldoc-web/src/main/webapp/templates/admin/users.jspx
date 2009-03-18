@@ -135,7 +135,7 @@
 								<ice:commandLink action="#{usersRecordsManager.delete}"
 									onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;"
 									rendered="#{user.userName != 'admin'}">
-									<ice:graphicImage value="#{StyleBean.imagesPath}/delete.gif"
+									<ice:graphicImage value="#{StyleBean.imagesPath}/delete.png"
 										style="border: 0px solid;" title="#{msgs['delete']}" />
 								</ice:commandLink>
 							</ice:panelGroup>
