@@ -681,24 +681,19 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public void unlock(long docId, User user, String comment) throws Exception {
 		Document document = documentDAO.findById(docId);
-		if (document.getImmutable() == 0) {
-			document.setLockUserId(null);
-			document.setStatus(Document.DOC_UNLOCKED);
-			documentDAO.store(document);
+		document.setLockUserId(null);
+		document.setStatus(Document.DOC_UNLOCKED);
+		documentDAO.store(document);
 
-			// create history entry for this UNLOCK event
-			createHistoryEntry(docId, user, History.EVENT_UNLOCKED, comment);
+		// create history entry for this UNLOCK event
+		createHistoryEntry(docId, user, History.EVENT_UNLOCKED, comment);
 
-			log.debug("Unlocked document " + docId);
-		} else {
-			throw new Exception("Document is immutable");
-		}
+		log.debug("Unlocked document " + docId);
 	}
 
 	@Override
 	public void makeImmutable(long docId, User user, String reason) throws Exception {
 		Document document = documentDAO.findById(docId);
-
 		if (document.getImmutable() == 0) {
 			documentDAO.makeImmutable(docId);
 			createHistoryEntry(docId, user, History.EVENT_IMMUTABLE, reason);
