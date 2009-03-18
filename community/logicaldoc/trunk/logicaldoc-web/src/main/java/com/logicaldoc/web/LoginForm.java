@@ -31,7 +31,7 @@ import com.logicaldoc.web.util.Constants;
  * Executes user login
  * 
  * @author Marco Meschieri - Logical Objects
- * @since 3.0.0.0
+ * @since 3.0
  */
 public class LoginForm {
 	protected static Log logger = LogFactory.getLog(LoginForm.class);
@@ -87,8 +87,8 @@ public class LoginForm {
 			PageContentBean page = null;
 			try {
 				PropertiesBean config = new PropertiesBean();
-				String entrypage=config.getProperty("gui.entrypage");
-				if (StringUtils.isNotEmpty(entrypage)) {
+				String entrypage = config.getProperty("gui.entrypage");
+				if (StringUtils.isNotEmpty(entrypage) && Long.parseLong(entrypage) != 1L) {
 					MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 					Menu menu = menuDao.findById(Long.parseLong(entrypage));
 					if (menu != null && menuDao.isReadEnable(menu.getId(), user.getId())) {
@@ -103,7 +103,7 @@ public class LoginForm {
 					}
 				}
 			} catch (Throwable e) {
-				logger.error(e.getMessage(),e);
+				logger.error(e.getMessage(), e);
 			}
 
 			if (page == null) {
