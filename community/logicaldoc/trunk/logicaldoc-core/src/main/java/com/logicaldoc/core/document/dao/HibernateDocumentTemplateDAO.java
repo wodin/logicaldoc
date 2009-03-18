@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.DocumentTemplate;
+import com.logicaldoc.util.sql.SqlUtil;
 
 /**
  * Hibernate implementation of <code>DocumentTemplateDAO</code>
@@ -28,7 +29,7 @@ public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<D
 	@Override
 	public DocumentTemplate findByName(String name) {
 		DocumentTemplate template = null;
-		List<DocumentTemplate> coll = findByWhere("_entity.name = '" + name + "'");
+		List<DocumentTemplate> coll = findByWhere("_entity.name = '" + SqlUtil.doubleQuotes(name) + "'");
 		if (coll.size() > 0) {
 			template = coll.iterator().next();
 		}

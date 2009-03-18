@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.generic.Generic;
+import com.logicaldoc.util.sql.SqlUtil;
 
 /**
  * Hibernate implementation of <code>GenericDAO</code>
@@ -44,8 +45,8 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 	@Override
 	public Generic findByAlternateKey(String type, String subtype) {
 		Generic generic = null;
-		Collection<Generic> coll = findByWhere("_entity.type = '" + type + "' and _entity.subtype='"
-				+ subtype + "'");
+		Collection<Generic> coll = findByWhere("_entity.type = '" + SqlUtil.doubleQuotes(type) + "' and _entity.subtype='"
+				+ SqlUtil.doubleQuotes(subtype) + "'");
 		if (coll.size() > 0) {
 			generic = coll.iterator().next();
 		}
@@ -57,9 +58,9 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 	public List<Generic> findByTypeAndSubtype(String type, String subtype) {
 		String query = " 1=1 ";
 		if (StringUtils.isNotEmpty(type))
-			query += " and _entity.type like '" + type + "' ";
+			query += " and _entity.type like '" + SqlUtil.doubleQuotes(type) + "' ";
 		if (StringUtils.isNotEmpty(subtype))
-			query += " and _entity.subtype like '" + subtype + "' ";
+			query += " and _entity.subtype like '" + SqlUtil.doubleQuotes(subtype) + "' ";
 		return findByWhere(query);
 	}
 
