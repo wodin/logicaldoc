@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import com.icesoft.faces.component.ext.HtmlCommandLink;
 import com.icesoft.faces.component.ext.RowSelectorEvent;
 import com.icesoft.faces.context.effects.JavascriptContext;
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
@@ -223,8 +224,8 @@ public class DocumentsRecordsManager extends SortableList {
 	}
 
 	/**
-	 * Deletes all selected documents.
-	 * Only not immutable and not locked document can be deleted.
+	 * Deletes all selected documents. Only not immutable and not locked
+	 * document can be deleted.
 	 */
 	public String deleteSelected() {
 		if (SessionManagement.isValid()) {
@@ -235,13 +236,15 @@ public class DocumentsRecordsManager extends SortableList {
 				boolean lockedSome = false;
 				for (DocumentRecord record : selection) {
 					try {
-						// The document of the selected documentRecord must be not immutable
+						// The document of the selected documentRecord must be
+						// not immutable
 						if (record.getDocument().getImmutable() == 1) {
 							skippedSome = true;
 							continue;
 						}
-						// The document of the selected documentRecord must be not locked
-						if(record.getDocument().getStatus() == 1) {
+						// The document of the selected documentRecord must be
+						// not locked
+						if (record.getDocument().getStatus() != Document.DOC_UNLOCKED) {
 							lockedSome = true;
 							continue;
 						}
@@ -375,15 +378,24 @@ public class DocumentsRecordsManager extends SortableList {
 				if (menuDao.isWriteEnable(selectedDirectory, userId)) {
 					try {
 						boolean skippedSome = false;
+						boolean lockedSome = false;
 						for (DocumentRecord record : clipboard) {
+							// The document of the selected documentRecord must
+							// be not immutable
 							if (record.getDocument().getImmutable() == 1) {
 								skippedSome = true;
+								continue;
+							}
+							// The document of the selected documentRecord must
+							// be not locked
+							if (record.getDocument().getStatus() != Document.DOC_UNLOCKED) {
+								lockedSome = true;
 								continue;
 							}
 							docManager.moveToFolder(record.getDocument(), selectedMenuFolder, SessionManagement
 									.getUser());
 						}
-						if (skippedSome)
+						if (skippedSome || lockedSome)
 							Messages.addLocalizedWarn("document.paste.warn");
 					} catch (AccessControlException e) {
 						Messages.addLocalizedWarn("document.write.nopermission");
