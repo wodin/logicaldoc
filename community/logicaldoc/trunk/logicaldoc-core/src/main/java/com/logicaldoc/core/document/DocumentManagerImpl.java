@@ -171,8 +171,6 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public void lock(long docId, int status, String historyEvent, User user, String comment) throws Exception {
 		Document document = documentDAO.findById(docId);
-		if (document.getImmutable() == 1)
-			throw new Exception("Document is immutable");
 		if (document.getStatus() != Document.DOC_UNLOCKED)
 			throw new Exception("Document is locked");
 
