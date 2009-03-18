@@ -728,6 +728,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			for (Menu deletableFolder : deletableFolders) {
 				boolean foundDocImmutable = false;
+				boolean foundDocLocked = false;
 				DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 				List<Document> docs = docdao.findByFolder(deletableFolder.getId());
 				for (Document doc : docs) {
@@ -735,9 +736,13 @@ public class DocumentManagerImpl implements DocumentManager {
 						foundDocImmutable = true;
 						continue;
 					}
+					if (doc.getStatus() != Document.DOC_UNLOCKED) {
+						foundDocLocked = true;
+						continue;
+					}
 					delete(doc.getId());
 				}
-				if (foundDocImmutable) {
+				if (foundDocImmutable || foundDocLocked) {
 					notDeletableFolders.add(deletableFolder);
 				}
 			}
