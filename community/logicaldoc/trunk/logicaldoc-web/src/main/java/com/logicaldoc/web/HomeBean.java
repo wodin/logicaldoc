@@ -33,7 +33,7 @@ public class HomeBean {
 
 	private boolean lastDownloadsExpanded = false;
 
-	private boolean lastCheckoutExpanded = false;
+	private boolean lastLockedExpanded = false;
 
 	private boolean tagCloudsExpanded = true;
 
@@ -131,17 +131,16 @@ public class HomeBean {
 	}
 
 	/**
-	 * Retrieves the list of Checkout documents (by user in session) from the
+	 * Retrieves the list of Locked documents (by user in session) from the
 	 * database
 	 */
-	public List<DocumentRecord> getCheckoutDocs() {
-
+	public List<DocumentRecord> getLockedDocs() {
 		List<DocumentRecord> lastdocs = new ArrayList<DocumentRecord>();
-
 		if (SessionManagement.isValid()) {
 			try {
 				DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-				Collection<Document> documents = (Collection<Document>) docdao.findByLockUserAndStatus(SessionManagement.getUserId(),Document.DOC_CHECKED_OUT);
+				Collection<Document> documents = (Collection<Document>) docdao.findLockedByUserId(SessionManagement
+						.getUserId());
 				for (Document document : documents) {
 					lastdocs.add(new DocumentRecord(document.getId(), null,
 							DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
@@ -176,14 +175,6 @@ public class HomeBean {
 
 	public void setLastDownloadsExpanded(boolean lastDownloadsExpanded) {
 		this.lastDownloadsExpanded = lastDownloadsExpanded;
-	}
-
-	public boolean isLastCheckoutExpanded() {
-		return lastCheckoutExpanded;
-	}
-
-	public void setLastCheckoutExpanded(boolean lastCheckoutExpanded) {
-		this.lastCheckoutExpanded = lastCheckoutExpanded;
 	}
 
 	/**
@@ -225,5 +216,13 @@ public class HomeBean {
 		public int compare(TagCloud tc0, TagCloud tc1) {
 			return tc0.getKeyword().compareTo(tc1.getKeyword());
 		}
+	}
+
+	public boolean isLastLockedExpanded() {
+		return lastLockedExpanded;
+	}
+
+	public void setLastLockedExpanded(boolean lastLockedExpanded) {
+		this.lastLockedExpanded = lastLockedExpanded;
 	}
 }

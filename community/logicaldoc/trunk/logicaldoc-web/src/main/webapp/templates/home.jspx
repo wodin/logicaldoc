@@ -184,18 +184,18 @@
 				</ice:panelGroup>
 			</ice:panelCollapsible>
 
-			<ice:panelCollapsible id="lastCheckoutDocsPanel" expanded="#{homeBean.lastCheckoutExpanded}"
+			<ice:panelCollapsible id="lastCheckoutDocsPanel" expanded="#{homeBean.lastLockedExpanded}"
 				styleClass="pnlClpsbl" style="padding-top: 20px;">
 				<f:facet name="header">
 					<ice:panelGroup styleClass="expandableStateIndicator">
 						<ice:outputText id="lastCheckoutDocsHeader"
-							value="#{messages['home.your.checkedouts']}" />
+							value="#{messages['home.your.lockeds']}" />
 					</ice:panelGroup>
 				</f:facet>
 				<ice:panelGroup>
 					<!-- Table with results -->
-					<ice:dataTable id="checkoutDocumentsList"
-						value="#{homeBean.checkoutDocs}" var="entry"
+					<ice:dataTable id="lockedDocumentsList"
+						value="#{homeBean.lockedDocs}" var="entry"
 						cellpadding="0" rows="10" border="0" styleClass="cntDatTblNone" style="border: 0px;">
 						<ice:column>
 							<ice:panelGroup>
