@@ -81,7 +81,7 @@
 							<ice:commandLink action="#{groupsRecordsManager.delete}"
 								rendered="#{group.name != 'admin'}"
 								onclick="if (!confirm(&quot;#{msgs['msg.question.deletegroup']}&quot;)) return false;">
-								<ice:graphicImage value="#{StyleBean.imagesPath}/delete.gif"
+								<ice:graphicImage value="#{StyleBean.imagesPath}/delete.png"
 									style="border: 0px solid;" title="#{msgs['delete']}" />
 								<f:param name="groupId" value="#{group.id}" />
 							</ice:commandLink>

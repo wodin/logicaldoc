@@ -82,7 +82,7 @@
 								<ice:commandLink action="#{article.delete}"
 									onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;"
 									rendered="#{article.deletable}">
-									<ice:graphicImage value="#{StyleBean.imagesPath}/delete.gif"
+									<ice:graphicImage value="#{StyleBean.imagesPath}/delete.png"
 										style="border: 0px solid;" title="#{msgs['delete']}" />
 								</ice:commandLink>
 							</ice:panelGroup>
