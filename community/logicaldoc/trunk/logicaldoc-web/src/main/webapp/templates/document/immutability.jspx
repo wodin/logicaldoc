@@ -34,8 +34,7 @@
 					<ice:panelGroup>
 						<ice:inputTextarea id="reason" required="true" tabindex="1"
 							cols="70" rows="2"
-							value="#{documentsRecordsManager.operationComment}"
-							binding="#{documentsRecordsManager.operationComment}" />
+							value="#{documentsRecordsManager.operationComment}" />
 						<ice:message for="reason" />
 					</ice:panelGroup>
 				</ice:panelGrid>
@@ -44,7 +43,7 @@
 
 		<hr />
 		<ice:panelGroup styleClass="commands">
-			<ice:commandButton value="#{msgs['abort']}" partialSubmit="true"
+			<ice:commandButton value="&lt;&lt; #{msgs['back']}" partialSubmit="true"
 				immediate="true" action="#{documentsRecordsManager.back}" />
 			<ice:commandButton value="#{msgs['confirm']}" id="save" tabindex="1"
 				onclick="if (!confirm(&quot;#{msgs['document.immutable.question']}&quot;)) return false;"
