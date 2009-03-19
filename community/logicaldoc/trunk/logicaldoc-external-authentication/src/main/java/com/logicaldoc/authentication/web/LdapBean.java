@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.logicaldoc.authentication.ldap.BasicLDAPContextSource;
 import com.logicaldoc.authentication.ldap.LDAPUserGroupContext;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.web.i18n.Messages;
 
 /**
  * This bean allows the configuration of the LDAP connection parameters
@@ -34,10 +33,10 @@ public class LdapBean {
 		this.userGroupContext = userGroupContext;
 	}
 
-	public String save(){
+	public String save() {
 		try {
 			PropertiesBean pbean = new PropertiesBean();
-			
+
 			// Save source settings
 			pbean.setProperty("ldap.url", contextSource.getUrl());
 			pbean.setProperty("ldap.realm", contextSource.getRealm());
@@ -46,7 +45,7 @@ public class LdapBean {
 			pbean.setProperty("ldap.username", contextSource.getUserName());
 			pbean.setProperty("ldap.password", contextSource.getPassword());
 			pbean.setProperty("ldap.realm", contextSource.getRealm());
-			
+
 			// Save user group settings
 			pbean.setProperty("ldap.userIdentiferAttribute", userGroupContext.getUserIdentiferAttribute());
 			pbean.setProperty("ldap.logonAttribute", userGroupContext.getLogonAttribute());
@@ -55,15 +54,14 @@ public class LdapBean {
 			pbean.setProperty("ldap.groupIdentiferAttribute", userGroupContext.getGroupIdentiferAttribute());
 			pbean.setProperty("ldap.userBase", userGroupContext.getUserBaseString());
 			pbean.setProperty("ldap.groupBase", userGroupContext.getGroupBaseString());
-			
+
 			pbean.write();
-			
-			Messages.addLocalizedInfo("msg.action.savesettings");
+
+			LdapMessages.addLocalizedInfo("msg.action.savesettings");
 		} catch (IOException e) {
-			Messages.addLocalizedError("errors.action.savesettings");
+			LdapMessages.addLocalizedError("errors.action.savesettings");
 		}
-		
-		
+
 		return null;
 	}
 }
