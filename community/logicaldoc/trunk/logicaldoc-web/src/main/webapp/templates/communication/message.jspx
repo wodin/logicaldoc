@@ -128,7 +128,7 @@
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="&lt;&lt; #{msgs['back']}"
 				immediate="true" partialSubmit="true" action="#{messageForm.back}" />
-			<ice:commandButton value="#{msgs['save']}" id="save"
+			<ice:commandButton value="#{msgs['send']}" id="save"
 				action="#{messageForm.save}" rendered="#{!messageForm.readOnly}"
 				tabindex="1" />
 		</ice:panelGroup>
