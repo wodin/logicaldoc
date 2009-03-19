@@ -9,7 +9,7 @@
   <artifactId>logicaldoc-lang-nl</artifactId>
   <version>2.0.0</version>
   <name>logicaldoc-lang-nl</name>
-  <description>Netherland language plugin for LogicalDOC</description>
+  <description>Dutch language plugin for LogicalDOC</description>
   <packaging>jar</packaging>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/modules/logicaldoc-lang-nl/trunk</connection>
