@@ -129,7 +129,7 @@
 						title="#{msgs['locked']}" />
 					<ice:graphicImage style="margin-left: 5px;"
 						rendered="#{documentRecord.document.immutable == 1}"
-						value="#{StyleBean.imagesPath}/immutable.png"
+						value="#{StyleBean.imagesPath}/stop.png"
 						title="#{msgs['document.immutable']}" />
 					<ice:commandLink title="#{msgs['links']}"
 						action="#{documentRecord.links}">
