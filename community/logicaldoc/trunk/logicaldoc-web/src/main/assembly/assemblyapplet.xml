@@ -1,0 +1,19 @@
+<!--
+	Describes the applet artifact
+	
+	@author Marco Meschieri
+	@version 4.0
+-->
+<assembly>
+	<id>applet</id>
+	<formats>
+		<format>jar</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>target/classes</directory>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>
