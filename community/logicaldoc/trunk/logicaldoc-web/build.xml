@@ -28,5 +28,10 @@
 				<!--exclude name="**/context.xml"/-->
 			</fileset>
 		</copy>
+		<copy todir="${logicaldoc.webroot}/applet" verbose="true">
+			<fileset dir="target">
+				<include name="${pom.build.finalName}-applet.jar" />
+			</fileset>
+		</copy>
 	</target>
 </project>

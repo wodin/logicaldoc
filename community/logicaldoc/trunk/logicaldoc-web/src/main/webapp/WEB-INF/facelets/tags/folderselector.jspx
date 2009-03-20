@@ -24,14 +24,14 @@
 
 			<ice:commandButton rendered="#{useIcon!='true'}"
 				actionListener="#{openListener}"
-				value="#{msgs['folderselector.open']}" />
+				value="#{msgs['brows']}..." />
 				
 			<ice:commandLink
 					rendered="#{useIcon=='true'}"
 					actionListener="#{openListener}"
-					title="#{msgs['folderselector.open']}">
+					title="#{msgs['brows']}">
 					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_tree.png"
-						style="border: 0px solid;" title="#{msgs['folderselector.open']}" />
+						style="border: 0px solid;" title="#{msgs['brows']}" />
 			</ice:commandLink>
 
 			<!-- panel popup code, draggable type  -->
