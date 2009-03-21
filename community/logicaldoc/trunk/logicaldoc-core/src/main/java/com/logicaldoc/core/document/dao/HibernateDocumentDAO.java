@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -259,30 +258,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 
 		return result;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.document.dao.DocumentDAO#toKeywords(java.lang.String)
-	 */
-	public Set<String> toKeywords(String words) {
-		Set<String> coll = new HashSet<String>();
-		BreakIterator boundary = BreakIterator.getWordInstance();
-		boundary.setText(words);
-
-		int start = boundary.first();
-
-		for (int end = boundary.next(); end != BreakIterator.DONE; start = end, end = boundary.next()) {
-			String word = words.substring(start, end).toLowerCase().trim();
-
-			if (word.length() > 2) {
-				if (word.length() > 20)
-					coll.add(word.substring(0, 20));
-				else
-					coll.add(word);
-			}
-		}
-
-		return coll;
 	}
 
 	@SuppressWarnings( { "unchecked", "deprecation" })
@@ -597,8 +572,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByTitleAndParentFolderId(long folderId, String title, Long excludeId) {
-		String query = "_entity.folder.id = " + folderId + " and lower(_entity.title) like '" + SqlUtil.doubleQuotes(title.toLowerCase())
-				+ "'";
+		String query = "_entity.folder.id = " + folderId + " and lower(_entity.title) like '"
+				+ SqlUtil.doubleQuotes(title.toLowerCase()) + "'";
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
 		return findByWhere(query);

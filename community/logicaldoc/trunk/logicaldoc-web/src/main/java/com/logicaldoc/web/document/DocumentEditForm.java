@@ -24,13 +24,13 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.Version;
-import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.TagUtil;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.upload.InputFileBean;
@@ -458,8 +458,7 @@ public class DocumentEditForm {
 					title = filename.substring(0, filename.lastIndexOf("."));
 				}
 
-				DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-				Set<String> kwds = ddao.toKeywords(keywords);
+				Set<String> kwds = TagUtil.extractTags(keywords);
 
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
@@ -496,7 +495,6 @@ public class DocumentEditForm {
 	public String update() {
 		DocumentNavigation navigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 				"documentNavigation", FacesContext.getCurrentInstance(), log));
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		DocumentTemplateDAO tdao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 
@@ -516,11 +514,11 @@ public class DocumentEditForm {
 				}
 
 				User user = SessionManagement.getUser();
-				Set<String> keywords = ddao.toKeywords(getKeywords());
+				Set<String> tags = TagUtil.extractTags(getKeywords());
 
 				doc.setCustomId(customId);
 				documentManager.update(doc, user, title, source, sourceAuthor, sourceDate, sourceType, coverage,
-						language, keywords, sourceId, object, recipient);
+						language, tags, sourceId, object, recipient);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addError(e.getMessage());
