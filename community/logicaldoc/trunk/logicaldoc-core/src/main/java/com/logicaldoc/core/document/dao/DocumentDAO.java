@@ -93,14 +93,6 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	public List<Long> findDocIdByKeyword(String keyword);
 
 	/**
-	 * Converts the passed string into a collection of keywords
-	 * 
-	 * @param words the string to be considered
-	 * @return The resulting keywords collection
-	 */
-	public Set<String> toKeywords(String words);
-
-	/**
 	 * This method selects all keywords starting with a specified letter.
 	 * 
 	 * @param letter - First letter of the wanted keywords.

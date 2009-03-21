@@ -20,6 +20,7 @@ import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.TagUtil;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.ZipUtil;
 
@@ -149,8 +150,7 @@ public class ZipImport {
 			if (extractKeywords) {
 				AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
 
-				// also extract keywords and save on document
-				DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+				// also extract tags and save on document
 				Locale locale = new Locale(language);
 				Parser parser = ParserFactory.getParser(file, locale);
 				parser.parse(file);
@@ -162,7 +162,7 @@ public class ZipImport {
 						logger.error(e.getMessage(), e);
 					}
 				}
-				keywords = ddao.toKeywords(words);
+				keywords = TagUtil.extractTags(words);
 			}
 
 			// creates a document

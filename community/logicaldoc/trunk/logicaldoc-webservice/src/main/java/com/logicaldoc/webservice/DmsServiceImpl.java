@@ -39,6 +39,7 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.SnippetStripper;
+import com.logicaldoc.util.TagUtil;
 
 /**
  * Web service implementation
@@ -164,8 +165,7 @@ public class DmsServiceImpl implements DmsService {
 
 		checkWriteEnable(username, folderId);
 
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Set<String> kwds = ddao.toKeywords(keywords);
+		Set<String> tags = TagUtil.extractTags(keywords);
 
 		Date date = null;
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -195,7 +195,7 @@ public class DmsServiceImpl implements DmsService {
 
 		try {
 			Document doc = documentManager.create(stream, filename, folder, user, language, null, date, source, author,
-					sourceType, coverage, versionDesc, kwds, template != null ? template.getId() : null, attributes,
+					sourceType, coverage, versionDesc, tags, template != null ? template.getId() : null, attributes,
 					sourceId, object, recipient, false);
 			return String.valueOf(doc.getId());
 		} catch (Exception e) {
