@@ -2,8 +2,6 @@ package com.logicaldoc.web.document;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -33,27 +31,27 @@ public class DocumentToolbar {
 		DocumentCommand command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("msg.jsp.createdoc"));
-		command.setIcon("actions_upload.gif");
+		command.setIcon("actions_upload.png");
 		command.setAction(FacesUtil.createActionMethodBinding("newDocWizard.start"));
 		command.setRenderedBinding(FacesUtil.createValueBinding("documentNavigation.selectedDir.writeEnabled"));
 
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("msg.jsp.uploadfolder"));
-		command.setIcon("actions_uploadzip.gif");
+		command.setIcon("actions_uploadzip.png");
 		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.startZipUpload"));
 		command.setRenderedBinding(FacesUtil.createValueBinding("documentNavigation.selectedDir.bulkImportEnabled"));
 
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("clipboard.copy"));
-		command.setIcon("actions_copy.gif");
+		command.setIcon("actions_copy.png");
 		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.copyToClipboard"));
 
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("clipboard.move"));
-		command.setIcon("actions_paste.gif");
+		command.setIcon("actions_paste.png");
 		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.move"));
 		command
 				.setRenderedBinding(FacesUtil
@@ -62,7 +60,7 @@ public class DocumentToolbar {
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("document.immutable.make"));
-		command.setIcon("actions_immutability.gif");
+		command.setIcon("actions_immutability.png");
 		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.requestImmutabilityComment"));
 		command.setRenderedBinding(FacesUtil
 				.createValueBinding("documentNavigation.selectedDir.manageImmutabilityEnabled"));
@@ -70,7 +68,7 @@ public class DocumentToolbar {
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("delete"));
-		command.setIcon("actions_delete.gif");
+		command.setIcon("actions_delete.png");
 		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.deleteSelected"));
 		command.setRenderedBinding(FacesUtil.createValueBinding("documentNavigation.selectedDir.writeEnabled"));
 		command.setConfirmation(Messages.getMessage("msg.question.deletedoc"));
