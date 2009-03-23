@@ -48,6 +48,8 @@
                 <prop key="importdir.category">directory</prop>
                 <prop key="exportdir">${conf.exportdir}</prop>
                 <prop key="exportdir.category">directory</prop>
+                <prop key="plugindir">${conf.plugindir}</prop>
+                <prop key="plugindir.category">directory</prop>
 			</props>
 		</property>
 	</bean>

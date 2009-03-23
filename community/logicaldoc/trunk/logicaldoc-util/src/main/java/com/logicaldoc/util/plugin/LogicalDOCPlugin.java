@@ -16,6 +16,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.Plugin;
 
+import com.logicaldoc.util.config.PropertiesBean;
+
 /**
  * This is the base class for LogicalDOC plugins.
  * 
@@ -28,8 +30,7 @@ import org.java.plugin.Plugin;
  * {@see org.java.plugin.registry.PluginRegistry registry}) which it was
  * loaded.
  * 
- * @author Marco Meschieri
- * @version $Id$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public abstract class LogicalDOCPlugin extends Plugin {
@@ -79,22 +80,31 @@ public abstract class LogicalDOCPlugin extends Plugin {
 	 * @param relativePath The relative path
 	 * @return The absolute path
 	 */
-	protected String resolvePath(String relativePath){
+	public String resolvePath(String relativePath) {
 		String path = getManager().getPathResolver().resolvePath(getDescriptor(), relativePath).toString();
 		if (path.startsWith("file:")) {
 			path = path.substring(5);
-			URLDecoder decoder=new URLDecoder();
+			URLDecoder decoder = new URLDecoder();
 			try {
-				path=decoder.decode(path, "UTF-8");
+				path = decoder.decode(path, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 			}
 		}
 		return path;
 	}
-	
+
+	/**
+	 * Resolves a relative path inside the plugin data folder
+	 * 
+	 * @param relativePath The relative path
+	 * @return The file
+	 */
+	public File resolveDataPath(String relativePath) {
+		return new File(getDataDirectory(), relativePath);
+	}
+
 	private File resolveDataFile() {
-		String path = resolvePath(PLUGIN_PROPERTIES);
-		File file = new File(path);
+		File file = new File(getDataDirectory(), PLUGIN_PROPERTIES);
 		if (!file.exists())
 			try {
 				file.createNewFile();
@@ -102,6 +112,29 @@ public abstract class LogicalDOCPlugin extends Plugin {
 				log.error(e.getMessage());
 			}
 		return file;
+	}
+
+	/**
+	 * Returns the data directory for this plugin, that is
+	 * {conf.plugindir}/{pluginId}. It will be created in not existing.
+	 */
+	private File getDataDirectory() {
+		PropertiesBean conf;
+		try {
+			conf = new PropertiesBean();
+			File dir = new File(conf.getProperty("conf.plugindir"));
+			String pluginName = getDescriptor().getUniqueId().substring(0,
+					getDescriptor().getUniqueId().lastIndexOf('@'));
+			dir = new File(dir, pluginName);
+			if (!dir.exists()) {
+				dir.mkdirs();
+				dir.mkdir();
+			}
+			return dir;
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
+		return null;
 	}
 
 	/**
