@@ -101,4 +101,8 @@ public class PropertiesBean extends OrderedProperties {
 			throw ex;
 		}
 	}
+	
+	public int getInt(String property){
+		return Integer.parseInt(getProperty(property,"0"));
+	}
 }

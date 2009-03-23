@@ -1,8 +1,11 @@
 package com.logicaldoc.util;
 
+import java.io.IOException;
 import java.text.BreakIterator;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.logicaldoc.util.config.PropertiesBean;
 
 /**
  * Utility class for tags handling
@@ -11,10 +14,6 @@ import java.util.Set;
  * @since 4.5
  */
 public class TagUtil {
-
-	public static final int MIN_CHARS = 3;
-
-	public static final int MAX_CHARS = 20;
 
 	public static final int MAX_FIELD_LENGTH = 4000;
 
@@ -29,20 +28,25 @@ public class TagUtil {
 	 */
 	public static Set<String> extractTags(String words) {
 		Set<String> coll = new HashSet<String>();
-		BreakIterator boundary = BreakIterator.getWordInstance();
-		boundary.setText(words);
+		try {
+			PropertiesBean conf = new PropertiesBean();
 
-		int start = boundary.first();
+			BreakIterator boundary = BreakIterator.getWordInstance();
+			boundary.setText(words);
 
-		for (int end = boundary.next(); end != BreakIterator.DONE; start = end, end = boundary.next()) {
-			String word = words.substring(start, end).toLowerCase().trim();
+			int start = boundary.first();
 
-			if (word.length() >= MIN_CHARS) {
-				if (word.length() > MAX_CHARS)
-					coll.add(word.substring(0, MAX_CHARS));
-				else
-					coll.add(word);
+			for (int end = boundary.next(); end != BreakIterator.DONE; start = end, end = boundary.next()) {
+				String word = words.substring(start, end).toLowerCase().trim();
+				if (word.length() >= conf.getInt("tag.minsize")) {
+					if (word.length() > conf.getInt("tag.maxsize"))
+						coll.add(word.substring(0, conf.getInt("tag.maxsize")));
+					else
+						coll.add(word);
+				}
 			}
+
+		} catch (IOException e) {
 		}
 		return coll;
 	}
