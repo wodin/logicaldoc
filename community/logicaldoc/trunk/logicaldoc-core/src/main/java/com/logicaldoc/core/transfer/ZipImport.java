@@ -11,7 +11,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.DocumentManager;
-import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -41,11 +40,13 @@ public class ZipImport {
 
 	protected static Log logger = LogFactory.getLog(ZipImport.class);
 
-	private boolean extractKeywords = false;
+	private boolean extractTags = false;
 
 	private boolean immediateIndexing = false;
 
-	private int keywordsNumber = 3;
+	private int tagsNumber = 3;
+
+	private String tags;
 
 	public ZipImport() {
 	}
@@ -60,25 +61,6 @@ public class ZipImport {
 	 */
 	public void setImmediateIndexing(boolean immediateIndexing) {
 		this.immediateIndexing = immediateIndexing;
-	}
-
-	/**
-	 * The number of auto-extracted keywords (if extractKeywords=true)
-	 */
-	public int getKeywordsNumber() {
-		return keywordsNumber;
-	}
-
-	public void setKeywordsNumber(int keywordsNumber) {
-		this.keywordsNumber = keywordsNumber;
-	}
-
-	public boolean isExtractKeywords() {
-		return extractKeywords;
-	}
-
-	public void setExtractKeywords(boolean extractKeywords) {
-		this.extractKeywords = extractKeywords;
 	}
 
 	public void process(File zipsource, String language, Menu parent, long userId, Long templateId) {
@@ -146,8 +128,8 @@ public class ZipImport {
 				addEntry(files[i], menu);
 			}
 		} else {
-			Set<String> keywords = null;
-			if (extractKeywords) {
+			Set<String> tagSet = null;
+			if (extractTags) {
 				AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
 
 				// also extract tags and save on document
@@ -157,22 +139,51 @@ public class ZipImport {
 				String words = parser.getKeywords();
 				if (StringUtils.isEmpty(words)) {
 					try {
-						words = analyzer.getTermsAsString(keywordsNumber, parser.getContent(), language);
+						words = analyzer.getTermsAsString(tagsNumber, parser.getContent(), language);
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
 					}
 				}
-				keywords = TagUtil.extractTags(words);
+				tagSet = TagUtil.extractTags(words);
+			} else if (StringUtils.isNotEmpty(tags)) {
+				tagSet = TagUtil.extractTags(tags);
 			}
 
 			// creates a document
 			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 			try {
-				docManager.create(file, parent, user, language, "", null, "", "", "", "", "", keywords, templateId, null,
+				docManager.create(file, parent, user, language, "", null, "", "", "", "", "", tagSet, templateId, null,
 						immediateIndexing);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
 		}
+	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
+
+	public boolean isExtractTags() {
+		return extractTags;
+	}
+
+	public void setExtractTags(boolean extractTags) {
+		this.extractTags = extractTags;
+	}
+
+	/**
+	 * The number of auto-extracted tags
+	 */
+	public int getTagsNumber() {
+		return tagsNumber;
+	}
+
+	public void setTagsNumber(int tagsNumber) {
+		this.tagsNumber = tagsNumber;
 	}
 }

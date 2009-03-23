@@ -507,7 +507,8 @@ public class DocumentsRecordsManager extends SortableList {
 				Thread zipImporter = new Thread(new Runnable() {
 					public void run() {
 						ZipImport importer = new ZipImport();
-						importer.setExtractKeywords(inputFile.isExtractKeywords());
+						importer.setExtractTags(inputFile.isExtractTags());
+						importer.setTags(inputFile.getTags());
 						log.debug("importing: = " + destFile.getPath());
 						importer.process(destFile.getPath(), zipLanguage, parent, userId, inputFile.getTemplate());
 						try {
