@@ -124,7 +124,7 @@ public class NewDocWizard {
 				docForm.setSourceDate(new Date());
 				docForm.setLanguage(documentLanguage);
 
-				if (inputFile.isExtractKeywords()) {
+				if (inputFile.isExtractTags()) {
 					// Parses the file where it is already stored
 					Locale locale = new Locale(inputFile.getLanguage());
 					Parser parser = ParserFactory.getParser(file, locale);

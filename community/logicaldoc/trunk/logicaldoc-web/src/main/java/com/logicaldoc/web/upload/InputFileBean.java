@@ -45,9 +45,11 @@ public class InputFileBean implements Renderable {
 
 	private String contentType = "";
 
-	private boolean extractKeywords = false;
+	private boolean extractTags = false;
 
 	private boolean immediateIndexing = false;
+
+	private String tags = "";
 
 	private InputFile inputFile = null;
 
@@ -114,7 +116,7 @@ public class InputFileBean implements Renderable {
 	public void action(ActionEvent event) {
 		InputFile inputFile = (InputFile) event.getSource();
 		fileName = inputFile.getFileInfo().getFileName();
-		
+
 		setPercent(inputFile.getFileInfo().getPercent());
 
 		if (inputFile.getStatus() == InputFile.SAVED) {
@@ -140,7 +142,7 @@ public class InputFileBean implements Renderable {
 	public String getFileName() {
 		return fileName;
 	}
-	
+
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
@@ -210,16 +212,25 @@ public class InputFileBean implements Renderable {
 		setPercent(-1);
 		setReady(false);
 		setImmediateIndexing(false);
-		setExtractKeywords(false);
+		setExtractTags(false);
+		setTags(null);
 		template = null;
 	}
 
-	public boolean isExtractKeywords() {
-		return extractKeywords;
+	public boolean isExtractTags() {
+		return extractTags;
 	}
 
-	public void setExtractKeywords(boolean extractKeywords) {
-		this.extractKeywords = extractKeywords;
+	public void setExtractTags(boolean extractTags) {
+		this.extractTags = extractTags;
+	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 
 	public InputFile getInputFile() {
