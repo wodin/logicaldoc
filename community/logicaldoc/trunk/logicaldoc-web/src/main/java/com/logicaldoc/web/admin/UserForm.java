@@ -84,6 +84,8 @@ public class UserForm {
 	private UIInput stateControl;
 
 	private UIInput phoneControl;
+	
+	private UIInput phone2Control;
 
 	public UIInput getFirstNameControl() {
 		return firstNameControl;
@@ -269,6 +271,7 @@ public class UserForm {
 		FacesUtil.forceRefresh(emailControl);
 		FacesUtil.forceRefresh(languageControl);
 		FacesUtil.forceRefresh(phoneControl);
+		FacesUtil.forceRefresh(phone2Control);
 		FacesUtil.forceRefresh(postalCodeControl);
 		FacesUtil.forceRefresh(streetControl);
 		FacesUtil.forceRefresh(stateControl);
@@ -565,5 +568,13 @@ public class UserForm {
 			log.error(ex.getMessage(), ex);
 			Messages.addWarn(Messages.getMessage("email.notify.account.error", user.getEmail()));
 		}
+	}
+
+	public UIInput getPhone2Control() {
+		return phone2Control;
+	}
+
+	public void setPhone2Control(UIInput phone2Control) {
+		this.phone2Control = phone2Control;
 	}
 }
