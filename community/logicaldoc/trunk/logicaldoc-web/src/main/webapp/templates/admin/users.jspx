@@ -97,11 +97,11 @@
 								<ice:outputText value="#{msgs['enabled']}" />
 							</f:facet>
 							<ice:panelGroup>
-								<ice:commandButton image="#{StyleBean.imagesPath}/2.gif"
+								<ice:commandButton image="#{StyleBean.imagesPath}/bullet_red.png"
 									action="#{usersRecordsManager.enable}" styleClass=""
 									rendered="#{user.enabled==0}"
 									title="#{msgs['disabled']}: #{msgs['enable']}" />
-								<ice:commandButton image="#{StyleBean.imagesPath}/0.gif"
+								<ice:commandButton image="#{StyleBean.imagesPath}/bullet_green.png"
 									action="#{usersRecordsManager.disable}" styleClass=""
 									rendered="#{user.enabled==1}"
 									title="#{msgs['enabled']}: #{msgs['disable']}" />
