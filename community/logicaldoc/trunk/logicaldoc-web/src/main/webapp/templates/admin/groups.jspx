@@ -23,7 +23,7 @@
 				<ice:panelGroup>
 					<ice:commandLink action="#{groupsRecordsManager.addGroup}"
 						title="#{msgs['msg.jsp.creategroup']}">
-						<ice:graphicImage value="#{StyleBean.imagesPath}/newgroup.png"
+						<ice:graphicImage value="#{StyleBean.imagesPath}/group_add.png"
 							style="border: 0px solid;" alt="#{msgs['msg.jsp.creategroup']}" />
 					</ice:commandLink>
 				</ice:panelGroup>
@@ -70,7 +70,7 @@
 
 					<!-- Edit -->
 					<ice:column>
-						<ice:commandButton image="#{StyleBean.imagesPath}/options.gif"
+						<ice:commandButton image="#{StyleBean.imagesPath}/group_edit.png"
 							title="#{msgs['msg.jsp.editgroup']}"
 							action="#{groupsRecordsManager.edit}" />
 					</ice:column>
