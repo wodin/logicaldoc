@@ -39,7 +39,7 @@
 			<!-- Keywords extraction -->
 			<ice:panelGroup>
 				<br />
-				<ice:selectBooleanCheckbox value="#{inputFile.extractKeywords}"
+				<ice:selectBooleanCheckbox value="#{inputFile.extractTags}"
 					id="keyW" />
 				<ice:outputLabel for="keyW" value=" #{msgs['tags.extract']}" />
 				&amp;nbsp;&amp;nbsp;
