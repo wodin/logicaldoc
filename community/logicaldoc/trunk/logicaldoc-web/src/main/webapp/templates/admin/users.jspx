@@ -24,7 +24,7 @@
 					<ice:panelGroup>
 						<ice:commandLink action="#{usersRecordsManager.addUser}"
 							title="#{msgs['msg.jsp.createuser']}">
-							<ice:graphicImage value="#{StyleBean.imagesPath}/newuser.png"
+							<ice:graphicImage value="#{StyleBean.imagesPath}/user_add.png"
 								style="border: 0px solid;" alt="#{msgs['msg.jsp.createuser']}" />
 						</ice:commandLink>
 					</ice:panelGroup>
@@ -112,7 +112,7 @@
 						<ice:column>
 							<ice:panelGroup>
 								<ice:commandLink action="#{usersRecordsManager.edit}">
-									<ice:graphicImage value="#{StyleBean.imagesPath}/options.gif"
+									<ice:graphicImage value="#{StyleBean.imagesPath}/user_edit.png"
 										style="border: 0px solid;" title="#{msgs['msg.jsp.edituser']}" />
 								</ice:commandLink>
 							</ice:panelGroup>
