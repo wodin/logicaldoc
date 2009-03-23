@@ -266,7 +266,7 @@ public class DocumentRecord extends MenuBarBean {
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.discuss"), "articles-" + document.getId(), null,
 				"#{documentRecord.articles}", null, style.getImagePath("comments.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + document.getId(),
-				null, "#{documentRecord.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank", null));
+				null, "#{documentRecord.sendAsEmail}", null, style.getImagePath("email_go.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + document.getId(),
 				null, "#{documentRecord.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("info"), "info-" + document.getId(), null,
