@@ -48,6 +48,8 @@ public class User extends PersistentObject implements Serializable {
 	private String email = "";
 
 	private String telephone = "";
+	
+	private String telephone2 = "";
 
 	private int type = TYPE_DEFAULT;
 
@@ -285,5 +287,13 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public String getTelephone2() {
+		return telephone2;
+	}
+
+	public void setTelephone2(String telephone2) {
+		this.telephone2 = telephone2;
 	}
 }

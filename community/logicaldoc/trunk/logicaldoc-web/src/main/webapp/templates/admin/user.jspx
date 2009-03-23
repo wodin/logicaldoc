@@ -153,6 +153,19 @@
 					</ice:inputText>
 					<ice:message for="email" />
 				</ice:panelGroup>
+				
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="phone2"
+						value="#{msgs['msg.jsp.adduser.phone2']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="phone2" value="#{userForm.user.telephone2}"
+						maxlength="30" binding="#{userForm.phone2Control}" />
+					<ice:message for="phone2" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup />
+				<ice:panelGroup />
 			</ice:panelGrid>
 		</ice:panelGroup>
 

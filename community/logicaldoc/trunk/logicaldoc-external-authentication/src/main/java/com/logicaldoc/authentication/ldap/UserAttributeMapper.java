@@ -69,6 +69,10 @@ public class UserAttributeMapper implements AttributesMapper {
 		if (val != null)
 			user.setTelephone(val.get().toString());
 
+		val = attributes.get("homeTelephoneNumber");
+		if (val != null)
+			user.setTelephone2(val.get().toString());
+		
 		val = attributes.get("postalCode");
 		if (val != null)
 			user.setPostalcode(val.get().toString());
