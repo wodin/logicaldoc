@@ -24,18 +24,213 @@
 				<ice:outputLabel for="parentPath" value="#{msgs['menu']}:  " />
 			</ice:panelGroup>
 			<ice:panelGroup style="display: inline;">
-				<ice:inputHidden id="parentPath" value="#{entrypageForm.path}" />
+				<ice:inputHidden id="parentPath" value="#{securityForm.path}" />
 				<ice:outputText
-					value="#{entrypageForm.directoryModel.selectedDir.pathExtended}  "
+					value="#{securityForm.directoryModel.selectedDir.pathExtended}  "
 					style="font-weight: bold" />
 				<ldoc:folderselector style="float:right;"
-					directoryModel="#{entrypageForm.directoryModel}"
-					showSelector="#{entrypageForm.showFolderSelector}"
-					openListener="#{entrypageForm.openFolderSelector}"
-					confirmListener="#{entrypageForm.folderSelected}"
-					cancelListener="#{entrypageForm.cancelFolderSelector}"
-					closeListener="#{entrypageForm.closeFolderSelector}" />
+					directoryModel="#{securityForm.directoryModel}"
+					showSelector="#{securityForm.showFolderSelector}"
+					openListener="#{securityForm.openFolderSelector}"
+					confirmListener="#{securityForm.folderSelected}"
+					cancelListener="#{securityForm.cancelFolderSelector}"
+					closeListener="#{securityForm.closeFolderSelector}" />
 			</ice:panelGroup>
 		</ice:panelGrid>
+	</ice:panelGroup>
+	
+	<ice:panelGroup id="messagesPanel" styleClass="pnlClpsbl">
+		<f:facet name="header">
+			<ice:panelGroup styleClass="expandableStateIndicator">
+				<h3>
+					<ice:outputText id="messagesHeader"
+						value="#{msgs['entity.assign']}" />
+				</h3>
+			</ice:panelGroup>
+		</f:facet>
+		<f:subview id="w-rights">
+			<ice:panelGrid columns="3">
+				<ice:panelGroup>
+					<br />
+					<ldoc:groupselector id="grp1" showFilter="true"
+						styleClass="selectManyMenuBig" allowMultipleSelection="true"
+						label="#{msgs['entity.available']}"
+						items="#{securityRightsRecordsManager.availableGroups}"
+						value="#{securityRightsRecordsManager.selectedAvailableGroups}"
+						filterValue="#{securityRightsRecordsManager.availableGroupFilter}"
+						filterListener="#{securityRightsRecordsManager.filterAvailableGroups}"
+						filterSize="193" />
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="commands">
+					<br />
+					<br />
+					<br />
+					<ice:commandButton value="&gt;&gt;"
+						action="#{securityRightsRecordsManager.assignGroups}" />
+					<br />
+					<br />
+					<ice:commandButton value="&lt;&lt;"
+						action="#{securityRightsRecordsManager.unassignGroups}" />
+				</ice:panelGroup>
+
+				<ice:panelGroup>
+					<br />
+					<ldoc:groupselector id="grp2" showFilter="true"
+						styleClass="selectManyMenuBig" allowMultipleSelection="true"
+						label="#{msgs['entity.allowed']}"
+						items="#{securityRightsRecordsManager.allowedGroups}"
+						value="#{securityRightsRecordsManager.selectedAllowedGroups}"
+						filterValue="#{securityRightsRecordsManager.allowedGroupFilter}"
+						filterListener="#{securityRightsRecordsManager.filterAllowedGroups}"
+						filterSize="193" />
+				</ice:panelGroup>
+			</ice:panelGrid>
+		</f:subview>
+		<br />
+	</ice:panelGroup>
+
+	<!-- Groups and rights -->
+	<ice:panelGroup rendered="#{!empty(securityForm.path)}">
+		<ice:dataTable value="#{securityRightsRecordsManager.rules}" var="rule"
+			cellpadding="0" rows="2000">
+
+			<!-- group column -->
+			<ice:column styleClass="nowrap center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['entity.name']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:outputText value="#{rule.displayName}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- read column -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.read']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.read}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- write column -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.write']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.write}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- add folder -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.addChild']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.addChild}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- manage security -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.manageSecurity']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.manageSecurity}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- manage immutability -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.manageImmutability']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.manageImmutability}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- delete -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.delete']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.delete}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- rename -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.rename']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.rename}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- bulk import -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.bulkImport']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.bulkImport}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- bulk export -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.bulkExport']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.bulkExport}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- sign -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.sign']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.sign}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- archive -->
+			<ice:column styleClass="center">
+				<f:facet name="header">
+					<ice:outputText value="#{msgs['permission.archive']}" />
+				</f:facet>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox value="#{rule.archive}"
+						disabled="#{!rule.enabled}" />
+				</ice:panelGroup>
+			</ice:column>
+		</ice:dataTable>
+		<br />
+		<hr />
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['save']}"
+				action="#{securityRightsRecordsManager.save}" />
+		</ice:panelGroup>
 	</ice:panelGroup>
 </jsp:root>
