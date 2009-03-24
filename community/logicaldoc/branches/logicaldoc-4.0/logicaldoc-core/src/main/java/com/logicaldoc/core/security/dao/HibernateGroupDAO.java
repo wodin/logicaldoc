@@ -13,6 +13,7 @@ import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
+import com.logicaldoc.util.sql.SqlUtil;
 
 /**
  * @author Alessandro Gasparini - Logical Objects
@@ -96,7 +97,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	@SuppressWarnings("unchecked")
 	public Group findByName(String name) {
 		Group group = null;
-		Collection<Group> coll = findByWhere("_entity.name = '" + name + "'");
+		Collection<Group> coll = findByWhere("_entity.name = '" + SqlUtil.doubleQuotes(name) + "'");
 		if (coll.size() > 0) {
 			group = coll.iterator().next();
 			if (group.getDeleted() == 1)

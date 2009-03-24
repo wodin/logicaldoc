@@ -19,6 +19,7 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.util.sql.SqlUtil;
 
 /**
  * Hibernate implementation of <code>MenuDAO</code>
@@ -442,7 +443,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 */
 	@Override
 	public List<Menu> findByText(Menu parent, String text, Integer type) {
-		StringBuffer query = new StringBuffer("_entity.text like '" + text + "' ");
+		StringBuffer query = new StringBuffer("_entity.text like '" + SqlUtil.doubleQuotes(text) + "' ");
 		if (parent != null)
 			query.append(" AND _entity.parentId = " + parent.getId());
 		if (type != null)
@@ -481,7 +482,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Menu> findByMenuTextAndParentId(String text, long parentId) {
-		return findByWhere("_entity.parentId = " + parentId + " and _entity.text like '" + text + "'");
+		return findByWhere("_entity.parentId = " + parentId + " and _entity.text like '" + SqlUtil.doubleQuotes(text) + "'");
 	}
 
 	@Override
@@ -594,7 +595,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	@Override
 	public List<Menu> findFoldersByPathExtended(String path) {
 		List<Menu> specified_menu = new ArrayList<Menu>();
-		specified_menu = (List<Menu>) findByWhere("_entity.pathExtended = '" + path + "'");
+		specified_menu = (List<Menu>) findByWhere("_entity.pathExtended = '" + SqlUtil.doubleQuotes(path) + "'");
 		if (specified_menu != null && specified_menu.size() > 0)
 			return specified_menu;
 		return null;
@@ -603,8 +604,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	@SuppressWarnings("unchecked")
 	@Override
 	public Menu findFolder(String folderName, String pathExtended) {
-		List<Menu> specified_menu = findByWhere("_entity.text = '" + folderName + "' AND _entity.pathExtended = '"
-				+ pathExtended + "'");
+		List<Menu> specified_menu = findByWhere("_entity.text = '" + SqlUtil.doubleQuotes(folderName) + "' AND _entity.pathExtended = '"
+				+ SqlUtil.doubleQuotes(pathExtended) + "'");
 		if (specified_menu != null && specified_menu.size() > 0)
 			return specified_menu.iterator().next();
 		return null;
