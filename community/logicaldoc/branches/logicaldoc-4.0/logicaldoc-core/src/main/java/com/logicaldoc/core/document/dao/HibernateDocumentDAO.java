@@ -34,6 +34,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.FileUtil;
+import com.logicaldoc.util.sql.SqlUtil;
 
 /**
  * Hibernate implementation of <code>DocumentDAO</code>
@@ -172,7 +173,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@SuppressWarnings("unchecked")
 	public List<Long> findDocIdByKeyword(String keyword) {
 		StringBuilder query = new StringBuilder();
-		query.append("'" + keyword + "'");
+		query.append("'" +  keyword + "'");
 		query.append(" in elements(_entity.keywords) ");
 		return findIdsByWhere(query.toString());
 	}
@@ -425,7 +426,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					first = false;
 				}
 				query.append(")");
-				query.append(" AND lower(D.ld_keyword)='" + keyword + "'");
+				query.append(" AND lower(D.ld_keyword)='" + SqlUtil.doubleQuotes(keyword) + "'");
 
 				Connection con = null;
 				Statement stmt = null;
@@ -557,7 +558,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public List<Document> findByFileNameAndParentFolderId(long folderId, String fileName, Long excludeId) {
 		String query="_entity.folder.id = " + folderId + " and lower(_entity.fileName) like '"
-		+ fileName.toLowerCase() + "'";
+		+ SqlUtil.doubleQuotes(fileName.toLowerCase()) + "'";
 		if(excludeId!=null)
 			 query+=" and not(_entity.id = "+excludeId+")";
 		return findByWhere(query);
@@ -566,7 +567,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByTitleAndParentFolderId(long folderId, String title, Long excludeId) {
-		String query="_entity.folder.id = " + folderId + " and lower(_entity.title) like '" + title.toLowerCase()
+		String query="_entity.folder.id = " + folderId + " and lower(_entity.title) like '" + SqlUtil.doubleQuotes(title.toLowerCase())
 		+ "'";
 		if(excludeId!=null)
 			 query+=" and not(_entity.id = "+excludeId+")";
@@ -766,7 +767,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public Document findByCustomId(String customId) {
 		Document doc = null;
 		try {
-			String query = "_entity.customId = '" + customId + "'";
+			String query = "_entity.customId = '" + SqlUtil.doubleQuotes(customId) + "'";
 			List<Document> coll = findByWhere(query);
 			if (!coll.isEmpty()) {
 				doc = coll.get(0);
