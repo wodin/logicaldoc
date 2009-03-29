@@ -95,7 +95,7 @@ values     (14,'2008-10-22',0,'task.tasks',2,10,'task_scheduler.png','/2',1,'adm
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (-2,'2008-12-01',0,'system',2,1,'system.png','/2',1,null,0);
+values     (-2,'2008-12-01',0,'system',2,1,'computer.png','/2',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
