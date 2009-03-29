@@ -112,7 +112,7 @@
 						<ice:column>
 							<ice:panelGroup>
 								<ice:commandLink action="#{usersRecordsManager.edit}">
-									<ice:graphicImage value="#{StyleBean.imagesPath}/user_edit.png"
+									<ice:graphicImage value="#{StyleBean.imagesPath}/edit.png"
 										style="border: 0px solid;" title="#{msgs['msg.jsp.edituser']}" />
 								</ice:commandLink>
 							</ice:panelGroup>

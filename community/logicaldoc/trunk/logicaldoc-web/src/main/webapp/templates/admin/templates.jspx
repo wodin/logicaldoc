@@ -26,7 +26,7 @@
 								<ice:commandLink action="#{templatesRecordsManager.addTemplate}"
 									title="#{msgs['template.new']}">
 									<ice:graphicImage
-										value="#{StyleBean.imagesPath}/newtemplate.png"
+										value="#{StyleBean.imagesPath}/template_add.png"
 										style="border: 0px solid;" alt="#{msgs['template.new']}" />
 								</ice:commandLink>
 							</td>
@@ -66,7 +66,7 @@
 						<ice:column>
 							<ice:panelGroup>
 								<ice:commandLink action="#{templatesRecordsManager.edit}">
-									<ice:graphicImage value="#{StyleBean.imagesPath}/options.gif"
+									<ice:graphicImage value="#{StyleBean.imagesPath}/edit.png"
 										style="border: 0px solid;" title="#{msgs['edit']}" />
 								</ice:commandLink>
 							</ice:panelGroup>
