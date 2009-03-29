@@ -99,7 +99,7 @@ values     (-2,'2008-12-01',0,'system',2,1,'system.png','/2',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (17,'2008-10-22',0,'directory',-2,5,'open.png','/-2',1,'admin/folders',0);
+values     (17,'2008-10-22',0,'directory',-2,5,'folders.png','/-2',1,'admin/folders',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
