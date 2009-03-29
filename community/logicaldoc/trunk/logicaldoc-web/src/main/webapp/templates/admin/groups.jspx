@@ -70,7 +70,7 @@
 
 					<!-- Edit -->
 					<ice:column>
-						<ice:commandButton image="#{StyleBean.imagesPath}/group_edit.png"
+						<ice:commandButton image="#{StyleBean.imagesPath}/edit.png"
 							title="#{msgs['msg.jsp.editgroup']}"
 							action="#{groupsRecordsManager.edit}" />
 					</ice:column>
