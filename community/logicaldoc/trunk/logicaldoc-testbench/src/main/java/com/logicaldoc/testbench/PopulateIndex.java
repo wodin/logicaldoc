@@ -124,6 +124,7 @@ public class PopulateIndex {
 			addDocuments(rootFolder, "/");
 			writer.optimize();
 		} catch (Throwable e) {
+			e.printStackTrace();
 			log.error(e);
 		} finally {
 			if (writer != null)
@@ -156,6 +157,7 @@ public class PopulateIndex {
 					if ((count % 100 == 0) && docId > 0) {
 						log.info("Added index document " + docId);
 					}
+					
 				} catch (Throwable e) {
 					e.printStackTrace();
 					log.error(e);
@@ -194,10 +196,16 @@ public class PopulateIndex {
 		String content = Util.parse(docFile);
 		doc.add(new Field(FIELD_CONTENT, content, Field.Store.YES, Field.Index.TOKENIZED));
 
-		doc.add(new Field(FIELD_KEYWORDS, Util.extractWordsAsString(5, content), Field.Store.YES,
-				Field.Index.TOKENIZED));
+		doc
+				.add(new Field(FIELD_KEYWORDS, Util.extractWordsAsString(5, content), Field.Store.YES,
+						Field.Index.TOKENIZED));
 
 		writer.addDocument(doc);
+		
+		// Rename the document to "1.0"
+		docFile.renameTo(new File(dir, "1.0"));
+		if (docFile.exists())
+			docFile.delete();
 
 		count++;
 		return id;

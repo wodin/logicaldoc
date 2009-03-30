@@ -151,7 +151,7 @@ public class PopulateUsers {
 			con = DriverManager.getConnection(jdbcUrl, username, password);
 			con.setAutoCommit(false);
 			insertUser = con
-					.prepareStatement("INSERT INTO LD_USER (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_USERNAME,LD_PASSWORD,LD_NAME,LD_FIRSTNAME,LD_STREET,LD_POSTALCODE,LD_CITY,LD_COUNTRY,LD_LANGUAGE,LD_EMAIL,LD_TELEPHONE,LD_TYPE) VALUES (?,?,0,?,?,?,?,?,?,?,?,?,?,?,?);");
+					.prepareStatement("INSERT INTO LD_USER (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_USERNAME,LD_PASSWORD,LD_NAME,LD_FIRSTNAME,LD_STREET,LD_POSTALCODE,LD_CITY,LD_COUNTRY,LD_LANGUAGE,LD_EMAIL,LD_TELEPHONE,LD_TYPE,LD_ENABLED,LD_STATE,LD_TELEPHONE2) VALUES (?,?,0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'');");
 			insertGroup = con
 					.prepareStatement("INSERT INTO LD_GROUP (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_NAME,LD_DESCRIPTION,LD_TYPE) VALUES (?,?,0,?,?,?);");
 			insertUserGroup = con
@@ -169,7 +169,10 @@ public class PopulateUsers {
 						log.info("Created user " + userId);
 					}
 				} catch (SQLException e) {
-					log.error(e, e);
+					e.printStackTrace();
+					return;
+//					log.error(e, e);
+//					log.info("Error on user " + nextUserId);
 				}
 			}
 
@@ -182,7 +185,9 @@ public class PopulateUsers {
 						log.info("Created group " + groupId);
 					}
 				} catch (SQLException e) {
+					e.printStackTrace();
 					log.error(e, e);
+					log.info("Error on group " + nextGroupId);
 				}
 			}
 
@@ -230,7 +235,7 @@ public class PopulateUsers {
 	private long getMaxUserId() throws SQLException {
 		log.info("Finding max user id");
 
-		ResultSet rs = con.createStatement().executeQuery("select max(ld_id) from ld_user;");
+		ResultSet rs = con.createStatement().executeQuery("select max(abs(ld_id)) from ld_user;");
 		rs.next();
 		long userCount = rs.getLong(1);
 
@@ -248,7 +253,7 @@ public class PopulateUsers {
 	private long getMaxGroupId() throws SQLException {
 		log.info("Finding max group id");
 
-		ResultSet rs = con.createStatement().executeQuery("select max(ld_id) from ld_group;");
+		ResultSet rs = con.createStatement().executeQuery("select max(abs(ld_id)) from ld_group;");
 		rs.next();
 		long groupCount = rs.getLong(1);
 
@@ -292,7 +297,11 @@ public class PopulateUsers {
 		insertUser.setString(13, "333333");
 		// LD_TYPE
 		insertUser.setInt(14, 0);
-
+		//LD_ENABLED
+		insertUser.setInt(15, 1);
+		//LD_STATE
+		insertUser.setString(16, "Italy");
+		
 		insertUser.addBatch();
 		batchCount++;
 
