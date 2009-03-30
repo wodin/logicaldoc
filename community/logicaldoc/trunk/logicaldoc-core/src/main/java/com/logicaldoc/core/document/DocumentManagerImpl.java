@@ -358,7 +358,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
 			String sourceType, String coverage, String language, Set<String> keywords, String sourceId, String object,
-			String recipient) throws Exception {
+			String recipient, Long templateId, Map<String, String> attributes) throws Exception {
 		try {
 			if (doc.getImmutable() == 0) {
 				doc.setTitle(title);
@@ -384,6 +384,20 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.clearKeywords();
 				documentDAO.store(doc);
 				doc.setKeywords(keywords);
+
+				// Change the template and attributes
+				if (templateId != null) {
+					DocumentTemplate template = documentTemplateDAO.findById(templateId.longValue());
+					doc.setTemplate(template);
+					doc.getAttributes().clear();
+					if (attributes != null)
+						for (String name : attributes.keySet()) {
+							if (StringUtils.isNotEmpty(name))
+								doc.setValue(name, attributes.get(name));
+						}
+				} else {
+					doc.setTemplate(null);
+				}
 
 				// create a new version
 				Version version = Version.create(doc, user, "", Version.EVENT_CHANGED,
