@@ -92,7 +92,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	private int signed = 0;
 
-	private Set<String> keywords = new HashSet<String>();
+	private Set<String> tags = new HashSet<String>();
 
 	private Menu folder;
 
@@ -280,15 +280,14 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	}
 
 	/**
-	 * The set of keywords for this document. Each keyword is a tag on this
-	 * document.
+	 * The set of tags for this document.
 	 */
-	public Set<String> getKeywords() {
-		return keywords;
+	public Set<String> getTags() {
+		return tags;
 	}
 
-	public void setKeywords(Set<String> keywords) {
-		this.keywords = keywords;
+	public void setTags(Set<String> tags) {
+		this.tags = tags;
 	}
 
 	public int getIndexed() {
@@ -299,9 +298,9 @@ public abstract class AbstractDocument extends ExtensibleObject {
 		this.indexed = indexed;
 	}
 
-	public String getKeywordsString() {
+	public String getTagsString() {
 		StringBuffer sb = new StringBuffer();
-		Iterator<String> iter = keywords.iterator();
+		Iterator<String> iter = tags.iterator();
 		boolean start = true;
 
 		while (iter.hasNext()) {
@@ -365,13 +364,13 @@ public abstract class AbstractDocument extends ExtensibleObject {
 		this.folder = folder;
 	}
 
-	public void addKeyword(String word) {
-		keywords.add(word);
+	public void addTag(String word) {
+		tags.add(word);
 	}
 
-	public void clearKeywords() {
-		keywords.clear();
-		keywords = new HashSet<String>();
+	public void clearTags() {
+		tags.clear();
+		tags = new HashSet<String>();
 	}
 
 	public String getPath() {

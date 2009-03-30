@@ -40,9 +40,9 @@
 		<many-to-one name="folder" class="com.logicaldoc.core.security.Menu" column="ld_folderid" />
 		<many-to-one name="template" class="com.logicaldoc.core.document.DocumentTemplate" column="ld_templateid" />
 		
-		<set name="keywords" table="ld_keyword" lazy="true" cascade="all">
+		<set name="tags" table="ld_tag" lazy="true" cascade="all">
 			<key column="ld_docid" />
-			<element type="string" column="ld_keyword" length="255" />
+			<element type="string" column="ld_tag" length="255" />
 		</set>
 		<map name="attributes" table="ld_document_ext" lazy="true" cascade="all">
 		   <key column="ld_docid" />

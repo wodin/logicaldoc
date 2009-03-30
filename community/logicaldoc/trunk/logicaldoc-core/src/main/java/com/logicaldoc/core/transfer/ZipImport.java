@@ -136,7 +136,7 @@ public class ZipImport {
 				Locale locale = new Locale(language);
 				Parser parser = ParserFactory.getParser(file, locale);
 				parser.parse(file);
-				String words = parser.getKeywords();
+				String words = parser.getTags();
 				if (StringUtils.isEmpty(words)) {
 					try {
 						words = analyzer.getTermsAsString(tagsNumber, parser.getContent(), language);

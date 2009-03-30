@@ -204,17 +204,17 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> keywords, boolean immediateIndexing) throws Exception {
+			String versionDesc, Set<String> tags, boolean immediateIndexing) throws Exception {
 		return create(content, filename, folder, user, language, title, sourceDate, source, sourceAuthor, sourceType,
-				coverage, versionDesc, keywords, null, null, immediateIndexing);
+				coverage, versionDesc, tags, null, null, immediateIndexing);
 	}
 
 	@Override
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> keywords, boolean immediateIndexing) throws Exception {
+			Set<String> tags, boolean immediateIndexing) throws Exception {
 		return create(file, folder, user, language, title, sourceDate, source, sourceAuthor, sourceType, coverage,
-				versionDesc, keywords, null, null, immediateIndexing);
+				versionDesc, tags, null, null, immediateIndexing);
 	}
 
 	private void store(Document doc, InputStream content) throws IOException {
@@ -357,7 +357,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
-			String sourceType, String coverage, String language, Set<String> keywords, String sourceId, String object,
+			String sourceType, String coverage, String language, Set<String> tags, String sourceId, String object,
 			String recipient, Long templateId, Map<String, String> attributes) throws Exception {
 		try {
 			if (doc.getImmutable() == 0) {
@@ -381,9 +381,9 @@ public class DocumentManagerImpl implements DocumentManager {
 				// Ensure unique title in folder
 				setUniqueTitle(doc);
 
-				doc.clearKeywords();
+				doc.clearTags();
 				documentDAO.store(doc);
-				doc.setKeywords(keywords);
+				doc.setTags(tags);
 
 				// Change the template and attributes
 				if (templateId != null) {
@@ -522,26 +522,26 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, boolean immediateIndexing)
+			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, boolean immediateIndexing)
 			throws Exception {
 		return create(file, folder, user, language, title, sourceDate, source, sourceAuthor, sourceType, coverage,
-				versionDesc, keywords, templateId, extendedAttributes, null, null, null, immediateIndexing);
+				versionDesc, tags, templateId, extendedAttributes, null, null, null, immediateIndexing);
 
 	}
 
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
 			boolean immediateIndexing) throws Exception {
 		return create(content, filename, folder, user, language, title, sourceDate, source, sourceAuthor, sourceType,
-				coverage, versionDesc, keywords, templateId, extendedAttributes, null, null, null, immediateIndexing);
+				coverage, versionDesc, tags, templateId, extendedAttributes, null, null, null, immediateIndexing);
 	}
 
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
 			String sourceId, String object, String recipient, boolean immediateIndexing) throws Exception {
 
 		try {
@@ -587,8 +587,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc.setObject(object);
 			doc.setSourceId(sourceId);
 			doc.setRecipient(recipient);
-			if (keywords != null)
-				doc.setKeywords(keywords);
+			if (tags != null)
+				doc.setTags(tags);
 
 			/* Set template and extended attributes */
 			if (templateId != null) {
@@ -786,7 +786,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, String sourceId,
+			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, String sourceId,
 			String object, String recipient, boolean immediateIndexing) throws Exception {
 		String filename = file.getName();
 		String encoding = "UTF-8";
@@ -810,7 +810,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		InputStream is = new FileInputStream(file);
 		try {
 			return create(is, filename, folder, user, language, _title, sourceDate, source, sourceAuthor, sourceType,
-					coverage, versionDesc, keywords, templateId, extendedAttributes, sourceId, object, recipient,
+					coverage, versionDesc, tags, templateId, extendedAttributes, sourceId, object, recipient,
 					immediateIndexing);
 		} finally {
 			is.close();

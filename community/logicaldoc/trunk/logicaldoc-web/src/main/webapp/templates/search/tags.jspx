@@ -1,6 +1,6 @@
 <?xml version = '1.0'?>
 <!-- 
- Vocabulary of all stored keywords
+ Vocabulary of all stored tags
   
  @author Marco Meschieri - Logical Objects
  @since 3.0
@@ -13,10 +13,10 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
-	id="keywordsForm">
+	id="tagsForm">
 	<ice:panelGroup style="text-align: center;">
 		<br />
-		<ice:panelSeries var="letter" value="#{keywords.letters}">
+		<ice:panelSeries var="letter" value="#{tags.letters}">
 				&amp;nbsp;&amp;nbsp;
 				<ice:commandLink action="#{letter.select}">
 				<ice:outputText value="#{letter.letter}" style="font-weight: bold;" />
@@ -28,12 +28,12 @@
 	<br />
 
 	<!-- Words table -->
-	<ice:panelGroup rendered="#{keywords.keywordsCount > 0}">
+	<ice:panelGroup rendered="#{tags.tagsCount > 0}">
 		<!-- Table with results -->
-		<ice:dataTable id="words" value="#{keywords.keywords}" var="keyword"
+		<ice:dataTable id="words" value="#{tags.tags}" var="tag"
 			cellpadding="0" rows="99999" styleClass="center"
-			sortColumn="#{keywords.sortColumn}"
-			sortAscending="#{keywords.ascending}">
+			sortColumn="#{tags.sortColumn}"
+			sortAscending="#{tags.ascending}">
 			<ice:column>
 				<f:facet name="header">
 					<ice:commandSortHeader columnName="tagName">
@@ -41,8 +41,8 @@
 					</ice:commandSortHeader>
 				</f:facet>
 				<ice:panelGroup>
-					<ice:commandLink action="#{keyword.select}">
-						<ice:outputText value="#{keyword.word}" />
+					<ice:commandLink action="#{tag.select}">
+						<ice:outputText value="#{tag.word}" />
 					</ice:commandLink>
 				</ice:panelGroup>
 			</ice:column>
@@ -55,26 +55,26 @@
 					</ice:commandSortHeader>
 				</f:facet>
 				<ice:panelGroup>
-					<ice:outputText value="#{keyword.count}" />
+					<ice:outputText value="#{tag.count}" />
 				</ice:panelGroup>
 			</ice:column>
 		</ice:dataTable>
 	</ice:panelGroup>
 
 	<!-- Documents table -->
-	<ice:panelGroup rendered="#{keywords.documentsCount > 0}"
+	<ice:panelGroup rendered="#{tags.documentsCount > 0}"
 		styleClass="center calBorderHighlight" style="width:70%;">
 		<ice:panelGroup style="text-align: center;">
 			<h3>
 				<ice:outputText value="#{msgs['tags.dispdocs']}" />
-				&amp;nbsp; '#{keywords.selectedWord}'
+				&amp;nbsp; '#{tags.selectedWord}'
 			</h3>
 		</ice:panelGroup>
 		<br />
 		<ice:dataTable id="documentsList" styleClass="center"
-			value="#{keywords.documents}" var="entry" cellpadding="0" rows="10"
-			sortColumn="#{keywords.dh.sortColumn}"
-			sortAscending="#{keywords.dh.ascending}"
+			value="#{tags.documents}" var="entry" cellpadding="0" rows="10"
+			sortColumn="#{tags.dh.sortColumn}"
+			sortAscending="#{tags.dh.ascending}"
 			columnClasses="titleColumn,dateColumn,numberColumn">
 
 			<!-- Name -->
@@ -149,12 +149,12 @@
 	</ice:panelGroup>
 
 	<ice:panelGroup
-		rendered="#{(keywords.reqop eq 'letter') and (keywords.keywordsCount == 0)}"
+		rendered="#{(tags.reqop eq 'letter') and (tags.tagsCount == 0)}"
 		style="text-align: center;">
 		<ice:outputText value="#{msgs['tags.notag']}" />
 	</ice:panelGroup>
 	<ice:panelGroup
-		rendered="#{(keywords.reqop eq 'keyword') and (keywords.documentsCount == 0)}"
+		rendered="#{(tags.reqop eq 'tag') and (tags.documentsCount == 0)}"
 		style="text-align: center;">
 		<ice:outputText value="No documents found for the tag specified" />
 	</ice:panelGroup>

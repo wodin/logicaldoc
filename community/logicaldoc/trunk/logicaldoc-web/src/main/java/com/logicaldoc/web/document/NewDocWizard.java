@@ -58,7 +58,7 @@ public class NewDocWizard {
 	/**
 	 * Acquires the uploaded file and shows the edit form. Gets the file
 	 * uploaded through the HTML form and extracts all necessary data like
-	 * language, keywords, autor, etc. to fill the document form so that the
+	 * language, tags, autor, etc. to fill the document form so that the
 	 * user can still edit this data before finally storing the document in
 	 * logicaldoc.
 	 */
@@ -98,7 +98,7 @@ public class NewDocWizard {
 
 				String title = "";
 				String author = "";
-				String keywords = "";
+				String tags = "";
 
 				// source field got from web.xml.
 				// This field is required for Lucene to work properly
@@ -129,12 +129,12 @@ public class NewDocWizard {
 					Locale locale = new Locale(inputFile.getLanguage());
 					Parser parser = ParserFactory.getParser(file, locale);
 					String content = parser.getContent();
-					if ((keywords != null) && !keywords.trim().equals("")) {
-						docForm.setKeywords(keywords);
+					if ((tags != null) && !tags.trim().equals("")) {
+						docForm.setTags(tags);
 					} else {
 						AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(
 								AnalyzerManager.class);
-						docForm.setKeywords(analyzer.getTermsAsString(3, content.toString(), documentLanguage));
+						docForm.setTags(analyzer.getTermsAsString(3, content.toString(), documentLanguage));
 					}
 				}
 				docForm.setImmediateIndexing(inputFile.isImmediateIndexing());

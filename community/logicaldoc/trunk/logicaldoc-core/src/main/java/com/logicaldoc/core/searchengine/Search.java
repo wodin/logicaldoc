@@ -95,7 +95,7 @@ public class Search {
 			Analyzer analyzer = LuceneAnalyzerFactory.getAnalyzer(language);
 
 			if (options.getFields() == null) {
-				String[] fields = new String[] { LuceneDocument.FIELD_CONTENT, LuceneDocument.FIELD_KEYWORDS };
+				String[] fields = new String[] { LuceneDocument.FIELD_CONTENT, LuceneDocument.FIELD_TAGS };
 				options.setFields(fields);
 			}
 

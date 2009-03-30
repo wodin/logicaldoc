@@ -42,7 +42,7 @@
 		<property name="folderName" type="string" column="ld_foldername" length="4000" />
 		<property name="templateId" type="long" column="ld_templateid" />
 		<property name="templateName" type="string" column="ld_templatename" length="4000" />
-        <property name="kwds" type="string" column="ld_kwds" length="4000" />
+        <property name="tgs" type="string" column="ld_tgs" length="4000" />
 		<property name="username" type="string" column="ld_username" length="255" />
 		<property name="userId" type="long" column="ld_userid" />
 		<property name="versionDate" type="timestamp" column="ld_versiondate" />

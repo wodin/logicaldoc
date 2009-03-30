@@ -47,19 +47,19 @@
 					<ice:message for="title" />
 				</ice:panelGroup>
 				<ice:panelGroup styleClass="outputLabel">
-					<ice:outputLabel for="keywords"
-						rendered="#{!fieldPreferences['edit.keywords.hidden']}"
-						value="#{msgs['tags']} #{fieldPreferences['edit.keywords.mandatory'] ? '*':''}" />
+					<ice:outputLabel for="tags"
+						rendered="#{!fieldPreferences['edit.tags.hidden']}"
+						value="#{msgs['tags']} #{fieldPreferences['edit.tags.mandatory'] ? '*':''}" />
 				</ice:panelGroup>
 				<ice:panelGroup>
-					<ice:inputText id="keywords"
-						rendered="#{!fieldPreferences['edit.keywords.hidden']}"
-						value="#{documentForm.keywords}"
-						binding="#{documentForm.keywordsInput}" tabindex="1"
+					<ice:inputText id="tags"
+						rendered="#{!fieldPreferences['edit.tags.hidden']}"
+						value="#{documentForm.tags}"
+						binding="#{documentForm.tagsInput}" tabindex="1"
 						maxlength="255" size="38"
-						required="#{fieldPreferences['edit.keywords.mandatory']}"
-						disabled="#{documentForm.readOnly or fieldPreferences['edit.keywords.readonly']}" />
-					<ice:message for="keywords" />
+						required="#{fieldPreferences['edit.tags.mandatory']}"
+						disabled="#{documentForm.readOnly or fieldPreferences['edit.tags.readonly']}" />
+					<ice:message for="tags" />
 				</ice:panelGroup>
 				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="customId"
@@ -189,8 +189,8 @@
 						tabindex="1" popupDateFormat="#{loc.dateFormatShort}"
 						value="#{documentForm.sourceDate}"
 						binding="#{documentForm.sourceDateInput}" renderAsPopup="true"
-						required="#{fieldPreferences['edit.keywords.mandatory']}"
-						disabled="#{documentForm.readOnly or fieldPreferences['edit.keywords.readonly']}">
+						required="#{fieldPreferences['edit.tags.mandatory']}"
+						disabled="#{documentForm.readOnly or fieldPreferences['edit.tags.readonly']}">
 						<f:convertDateTime pattern="#{loc.dateFormatShort}"
 							timeZone="#{timezone}" />
 					</ice:selectInputDate>

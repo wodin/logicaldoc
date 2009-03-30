@@ -45,7 +45,7 @@ public class PopulateDatabase {
 
 	private PreparedStatement insertDoc;
 
-	private PreparedStatement insertKeyword;
+	private PreparedStatement insertTags;
 
 	private PreparedStatement insertVersion;
 
@@ -202,9 +202,9 @@ public class PopulateDatabase {
 					.prepareStatement("INSERT INTO LD_MENUGROUP (LD_MENUID,LD_GROUPID,LD_WRITE,LD_ADDCHILD,LD_MANAGESECURITY,LD_MANAGEIMMUTABILITY,LD_DELETE,LD_RENAME, LD_BULKIMPORT, LD_BULKEXPORT, LD_SIGN, LD_ARCHIVE) VALUES (?,?,?,1,1,1,1,1,1,1,1,1);");
 			insertDoc = con
 					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_PUBLISHERID,LD_STATUS,LD_TYPE,LD_LOCKUSERID,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_INDEXED,LD_FOLDERID,LD_CREATION,LD_IMMUTABLE,LD_DIGEST,LD_SIGNED,LD_FILEVERSION,LD_CUSTOMID,LD_CREATOR,LD_CREATORID,LD_SOURCEID,LD_OBJECT,LD_RECIPIENT,LD_TEMPLATEID) VALUES (?,?,0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,0,?,0,'1.0',?,?,?,?,?,?,null);");
-			insertKeyword = con.prepareStatement("INSERT INTO LD_KEYWORD (LD_DOCID,LD_KEYWORD) VALUES (?,?);");
+			insertTags = con.prepareStatement("INSERT INTO LD_TAG (LD_DOCID,LD_TAG) VALUES (?,?);");
 			insertVersion = con
-					.prepareStatement("INSERT INTO LD_VERSION  (LD_ID, LD_VERSION, LD_USERID, LD_USERNAME, LD_DATE, LD_COMMENT, LD_LASTMODIFIED,LD_DELETED,LD_IMMUTABLE,LD_CUSTOMID,LD_TITLE,LD_FILEVERSION,LD_CREATION,LD_PUBLISHER,LD_PUBLISHERID,LD_CREATOR,LD_CREATORID,LD_STATUS,LD_TYPE,LD_LOCKUSERID,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCEID,LD_SOURCETYPE,LD_OBJECT,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_INDEXED,LD_SIGNED,LD_DIGEST,LD_RECIPIENT,LD_FOLDERID,LD_FOLDERNAME,LD_TEMPLATEID,LD_TEMPLATENAME,LD_KWDS,LD_VERSIONDATE,LD_EVENT,LD_DOCUMENTID)"
+					.prepareStatement("INSERT INTO LD_VERSION  (LD_ID, LD_VERSION, LD_USERID, LD_USERNAME, LD_DATE, LD_COMMENT, LD_LASTMODIFIED,LD_DELETED,LD_IMMUTABLE,LD_CUSTOMID,LD_TITLE,LD_FILEVERSION,LD_CREATION,LD_PUBLISHER,LD_PUBLISHERID,LD_CREATOR,LD_CREATORID,LD_STATUS,LD_TYPE,LD_LOCKUSERID,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCEID,LD_SOURCETYPE,LD_OBJECT,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_INDEXED,LD_SIGNED,LD_DIGEST,LD_RECIPIENT,LD_FOLDERID,LD_FOLDERNAME,LD_TEMPLATEID,LD_TEMPLATENAME,LD_TGS,LD_VERSIONDATE,LD_EVENT,LD_DOCUMENTID)"
 							+ "VALUES (?,?,?,?,?,?,?,0,1,?,?,'1.0',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,0,?,?,?,?,null,?,?,?,?,?);");
 			initExistingIds();
 			addDocuments(rootFolder, "/");
@@ -268,10 +268,10 @@ public class PopulateDatabase {
 	private void forceCommit() throws SQLException {
 		insertDoc.executeBatch();
 		insertVersion.executeBatch();
-		insertKeyword.executeBatch();
+		insertTags.executeBatch();
 		insertDoc.clearBatch();
 		insertVersion.clearBatch();
-		insertKeyword.clearBatch();
+		insertTags.clearBatch();
 		con.commit();
 		gc();
 	}
@@ -370,17 +370,17 @@ public class PopulateDatabase {
 		insertDoc.addBatch();
 		batchCount++;
 
-		// Insert 3 document's keywords
-		Set<String> kwds = Util.extractWords(3, content);
+		// Insert 3 document's tags
+		Set<String> tgs = Util.extractWords(3, content);
 		int i = 0;
-		for (String keyword : kwds) {
+		for (String tag : tgs) {
 			// LD_DOCID
-			insertKeyword.setLong(1, id);
-			if (keyword.length() > 255)
-				keyword = keyword.substring(0, 254);
-			// LD_KEYWORD
-			insertKeyword.setString(2, keyword);
-			insertKeyword.addBatch();
+			insertTags.setLong(1, id);
+			if (tag.length() > 255)
+				tag = tag.substring(0, 254);
+			// LD_TAG
+			insertTags.setString(2, tag);
+			insertTags.addBatch();
 			i++;
 		}
 

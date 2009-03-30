@@ -125,14 +125,14 @@ public interface DocumentManager {
 	 * @param coverage
 	 * @param language
 	 * @param versionDesc
-	 * @param keywords
+	 * @param tags
 	 * @param immediateIndexing
 	 * @return The created document
 	 * @throws Exception
 	 */
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> keywords, boolean immediateIndexing) throws Exception;
+			Set<String> tags, boolean immediateIndexing) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -149,7 +149,7 @@ public interface DocumentManager {
 	 * @param coverage
 	 * @param language
 	 * @param versionDesc
-	 * @param keywords
+	 * @param tags
 	 * @param templateId
 	 * @param extendedAttributes
 	 * @param immediateIndexing if true the document is immediately indexed
@@ -158,7 +158,7 @@ public interface DocumentManager {
 	 */
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, boolean immediateIndexing)
+			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, boolean immediateIndexing)
 			throws Exception;
 
 	/**
@@ -176,7 +176,7 @@ public interface DocumentManager {
 	 * @param coverage
 	 * @param language
 	 * @param versionDesc
-	 * @param keywords
+	 * @param tags
 	 * @param templateId
 	 * @param extendedAttributes
 	 * @param sourceId
@@ -187,7 +187,7 @@ public interface DocumentManager {
 	 */
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> keywords, Long templateId, Map<String, String> extendedAttributes, String sourceId,
+			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, String sourceId,
 			String object, String recipient, boolean immediateIndexing) throws Exception;
 
 	/**
@@ -206,7 +206,7 @@ public interface DocumentManager {
 	 * @param sourceType
 	 * @param coverage
 	 * @param versionDesc
-	 * @param keywords
+	 * @param tags
 	 * @param templateId
 	 * @param extendedAttributes
 	 * @param sourceId
@@ -218,7 +218,7 @@ public interface DocumentManager {
 	 */
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
 			String sourceId, String object, String recipient, boolean immediateIndexing) throws Exception;
 
 	/**
@@ -237,7 +237,7 @@ public interface DocumentManager {
 	 * @param sourceType
 	 * @param coverage
 	 * @param versionDesc
-	 * @param keywords
+	 * @param tags
 	 * @param templateId
 	 * @param extendedAttributes
 	 * @param immediateIndexing if true the document is immediately indexed
@@ -246,7 +246,7 @@ public interface DocumentManager {
 	 */
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> keywords, Long templateId, Map<String, String> extendedAttributes,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
 			boolean immediateIndexing) throws Exception;
 
 	/**
@@ -265,14 +265,14 @@ public interface DocumentManager {
 	 * @param sourceType
 	 * @param coverage
 	 * @param versionDesc
-	 * @param keywords
+	 * @param tags
 	 * @param immediateIndexing if true the document is immediately indexed
 	 * @return The created document
 	 * @throws Exception
 	 */
 	public Document create(InputStream content, String filename, Menu folder, User user, String language, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> keywords, boolean immediateIndexing) throws Exception;
+			String versionDesc, Set<String> tags, boolean immediateIndexing) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -380,7 +380,7 @@ public interface DocumentManager {
 	 * @throws Exception
 	 */
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
-			String sourceType, String coverage, String language, Set<String> keywords, String sourceId, String object,
+			String sourceType, String coverage, String language, Set<String> tags, String sourceId, String object,
 			String recipient, Long templateId, Map<String, String> attributes) throws Exception;
 
 	/**

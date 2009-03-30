@@ -36,12 +36,12 @@
 				</ice:panelGroup>
 			</ice:panelGrid>
 
-			<!-- Keywords extraction -->
+			<!-- Tags extraction -->
 			<ice:panelGroup>
 				<br />
 				<ice:selectBooleanCheckbox value="#{inputFile.extractTags}"
-					id="keyW" />
-				<ice:outputLabel for="keyW" value=" #{msgs['tags.extract']}" />
+					id="tag" />
+				<ice:outputLabel for="tag" value=" #{msgs['tags.extract']}" />
 				&amp;nbsp;&amp;nbsp;
 				<ice:selectBooleanCheckbox value="#{inputFile.immediateIndexing}"
 					id="indexing" />

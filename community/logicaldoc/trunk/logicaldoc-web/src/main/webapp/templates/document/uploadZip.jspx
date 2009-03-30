@@ -52,14 +52,14 @@
 				</ice:panelGroup>
 			</ice:panelGrid>
 
-			<!-- Keywords extraction -->
+			<!-- Tags extraction -->
 			<ice:panelGrid columns="2">
 				<ice:panelGroup>
 					<ice:selectOneRadio value="#{inputFile.extractTags}"
 						partialSubmit="true" style="text-align: left; font-size: 10pt;">
-						<f:selectItem itemLabel="#{msgs['keywords.extract']}"
+						<f:selectItem itemLabel="#{msgs['tags.extract']}"
 							itemValue="true" />
-						<f:selectItem itemLabel="#{msgs['keywords.apply']}"
+						<f:selectItem itemLabel="#{msgs['tags.apply']}"
 							itemValue="false" />
 					</ice:selectOneRadio>
 				</ice:panelGroup>

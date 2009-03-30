@@ -85,42 +85,42 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	public List<Document> findLastDownloadsByUserId(long userId, int maxResults);
 
 	/**
-	 * This method finds all Doc Ids by a keyword.
+	 * This method finds all Doc Ids by a tag.
 	 * 
-	 * @param keyword Keyword of the document.
-	 * @return Document with specified keyword.
+	 * @param tag Tag of the document.
+	 * @return Document with specified tag.
 	 */
-	public List<Long> findDocIdByKeyword(String keyword);
+	public List<Long> findDocIdByTag(String tag);
 
 	/**
-	 * This method selects all keywords starting with a specified letter.
+	 * This method selects all tags starting with a specified letter.
 	 * 
-	 * @param letter - First letter of the wanted keywords.
+	 * @param letter - First letter of the wanted tags.
 	 */
-	public Collection<String> findKeywords(String firstLetter, long userId);
+	public Collection<String> findTags(String firstLetter, long userId);
 
 	/**
-	 * This method selects all keywords and counts the occurrences.
+	 * This method selects all tags and counts the occurrences.
 	 */
-	public Map<String, Integer> findAllKeywords();
+	public Map<String, Integer> findAllTags();
 
 	/**
-	 * Finds authorized documents for a user having a specified keyword.
+	 * Finds authorized documents for a user having a specified tag.
 	 * 
 	 * @param userId ID of the user.
-	 * @param keyword Keyword of the document
+	 * @param tag Tag of the document
 	 * @return Collection of found menus.
 	 */
-	public List<Document> findByUserIdAndKeyword(long userId, String keyword);
+	public List<Document> findByUserIdAndTag(long userId, String tag);
 
 	/**
-	 * Finds authorized documents ids for a user having a specified keyword.
+	 * Finds authorized documents ids for a user having a specified tag.
 	 * 
 	 * @param userId ID of the user.
-	 * @param keyword Keyword of the document
+	 * @param tag Tag of the document
 	 * @return Set of found ids.
 	 */
-	public Set<Long> findDocIdByUserIdAndKeyword(long userId, String keyword);
+	public Set<Long> findDocIdByUserIdAndTag(long userId, String tag);
 
 	/**
 	 * This method enlists documents linked to the given document.

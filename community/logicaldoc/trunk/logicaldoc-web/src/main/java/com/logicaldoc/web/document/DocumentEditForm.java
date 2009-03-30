@@ -74,9 +74,9 @@ public class DocumentEditForm {
 
 	private String language;
 
-	private String keywords;
+	private String tags;
 
-	private UIInput keywordsInput = null;
+	private UIInput tagsInput = null;
 
 	private String versionDesc;
 
@@ -152,7 +152,7 @@ public class DocumentEditForm {
 		sourceId = "";
 		coverage = "";
 		language = "";
-		keywords = "";
+		tags = "";
 		versionDesc = "";
 		object = "";
 		filename = "";
@@ -179,7 +179,7 @@ public class DocumentEditForm {
 		setSourceDate(doc.getSourceDate());
 		setDocDate(doc.getDate());
 		setLanguage(doc.getLanguage());
-		setKeywords(doc.getKeywordsString());
+		setTags(doc.getTagsString());
 		setCoverage(doc.getCoverage());
 		setSourceType(doc.getSourceType());
 		setFilename(doc.getFileName());
@@ -194,7 +194,7 @@ public class DocumentEditForm {
 		FacesUtil.forceRefresh(sourceInput);
 		FacesUtil.forceRefresh(coverageInput);
 		FacesUtil.forceRefresh(objectInput);
-		FacesUtil.forceRefresh(keywordsInput);
+		FacesUtil.forceRefresh(tagsInput);
 		FacesUtil.forceRefresh(recipientInput);
 		FacesUtil.forceRefresh(templateInput);
 		initTemplate();
@@ -325,10 +325,10 @@ public class DocumentEditForm {
 	}
 
 	/**
-	 * @return Returns the keywords.
+	 * @return Returns the tags.
 	 */
-	public String getKeywords() {
-		return keywords;
+	public String getTags() {
+		return tags;
 	}
 
 	/**
@@ -395,10 +395,10 @@ public class DocumentEditForm {
 	}
 
 	/**
-	 * @param keywords The keywords to set.
+	 * @param tags The tags to set.
 	 */
-	public void setKeywords(String words) {
-		keywords = words;
+	public void setTags(String words) {
+		tags = words;
 	}
 
 	/**
@@ -458,7 +458,7 @@ public class DocumentEditForm {
 					title = filename.substring(0, filename.lastIndexOf("."));
 				}
 
-				Set<String> kwds = TagUtil.extractTags(keywords);
+				Set<String> tgs = TagUtil.extractTags(tags);
 
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
@@ -470,7 +470,7 @@ public class DocumentEditForm {
 				}
 
 				Document doc = documentManager.create(file, folder, SessionManagement.getUser(), language, title,
-						getSourceDate(), source, sourceAuthor, sourceType, coverage, versionDesc, kwds, template,
+						getSourceDate(), source, sourceAuthor, sourceType, coverage, versionDesc, tgs, template,
 						attrs, sourceId, object, recipient, immediateIndexing);
 				if (StringUtils.isNotEmpty(doc.getCustomId()))
 					Messages.addInfo(Messages.getMessage("document.inserted", doc.getCustomId()));
@@ -509,11 +509,11 @@ public class DocumentEditForm {
 				}
 
 				User user = SessionManagement.getUser();
-				Set<String> tags = TagUtil.extractTags(getKeywords());
+				Set<String> tgs = TagUtil.extractTags(getTags());
 
 				doc.setCustomId(customId);
 				documentManager.update(doc, user, title, source, sourceAuthor, sourceDate, sourceType, coverage,
-						language, tags, sourceId, object, recipient, template, attrs);
+						language, tgs, sourceId, object, recipient, template, attrs);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addError(e.getMessage());
@@ -672,12 +672,12 @@ public class DocumentEditForm {
 		this.coverageInput = coverageInput;
 	}
 
-	public UIInput getKeywordsInput() {
-		return keywordsInput;
+	public UIInput getTagsInput() {
+		return tagsInput;
 	}
 
-	public void setKeywordsInput(UIInput keywordsInput) {
-		this.keywordsInput = keywordsInput;
+	public void setTagsInput(UIInput tagsInput) {
+		this.tagsInput = tagsInput;
 	}
 
 	public UIInput getSourceIdInput() {

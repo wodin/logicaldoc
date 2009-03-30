@@ -189,18 +189,18 @@
 
 
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="keywords"
-					rendered="#{!fieldPreferences['insert.keywords.hidden']}"
-					value="#{msgs['tags']} #{fieldPreferences['insert.keywords.mandatory'] ? '*':''}" />
+				<ice:outputLabel for="tags"
+					rendered="#{!fieldPreferences['insert.tags.hidden']}"
+					value="#{msgs['tags']} #{fieldPreferences['insert.tags.mandatory'] ? '*':''}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
-				<ice:inputText id="keywords"
-					rendered="#{!fieldPreferences['insert.keywords.hidden']}"
-					value="#{documentForm.keywords}"
-					required="#{fieldPreferences['insert.keywords.mandatory']}"
-					disabled="#{fieldPreferences['insert.keywords.readonly']}"
+				<ice:inputText id="tags"
+					rendered="#{!fieldPreferences['insert.tags.hidden']}"
+					value="#{documentForm.tags}"
+					required="#{fieldPreferences['insert.tags.mandatory']}"
+					disabled="#{fieldPreferences['insert.tags.readonly']}"
 					size="70" />
-				<ice:message for="keywords" />
+				<ice:message for="tags" />
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">

@@ -170,7 +170,7 @@ public class Util {
 	}
 
 	/**
-	 * This method extracts a specified number of keywords and appends them to a
+	 * This method extracts a specified number of tags and appends them to a
 	 * String.
 	 * <p>
 	 * 
@@ -189,7 +189,7 @@ public class Util {
 	}
 
 	/**
-	 * This method extracts a specified number of keywords
+	 * This method extracts a specified number of tags
 	 * 
 	 * <b>Note:</b> This is a quick-and-dirty implementation that basically
 	 * tokenizes the text and reports the first found words

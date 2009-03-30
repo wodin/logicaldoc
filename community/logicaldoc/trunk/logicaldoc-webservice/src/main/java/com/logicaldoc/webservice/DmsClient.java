@@ -39,11 +39,11 @@ public class DmsClient implements DmsService {
 	}
 
 	public String createDocument(String username, String password, long folder, String docTitle, String source,
-			String sourceDate, String author, String sourceType, String coverage, String language, String keywords,
+			String sourceDate, String author, String sourceType, String coverage, String language, String tags,
 			String versionDesc, String filename, DataHandler content, String templateName,
 			ExtendedAttribute[] extendedAttribute, String sourceId, String object, String recipient) throws Exception {
 		return client.createDocument(username, password, folder, docTitle, source, sourceDate, author, sourceType,
-				coverage, language, keywords, versionDesc, filename, content, templateName, extendedAttribute,
+				coverage, language, tags, versionDesc, filename, content, templateName, extendedAttribute,
 				sourceId, object, recipient);
 	}
 
