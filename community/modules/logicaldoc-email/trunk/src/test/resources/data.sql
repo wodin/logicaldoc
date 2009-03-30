@@ -30,11 +30,11 @@ insert into ld_document
 values     (2,'2008-10-22',0,'testDocname2','testDocVer','2006-12-19','myself',1,1,'PDF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,103,5,'2008-12-19',0,0,'',1);
 
 insert into ld_emailaccount 
-			(ld_id, ld_lastmodified, ld_deleted, ld_mailaddress, ld_provider, ld_host, ld_port, ld_username, ld_password, ld_allowedtypes, ld_deletefrommailbox, ld_language, ld_enabled, ld_targetfolder, ld_sslmodel, ld_extractkeywords)
+			(ld_id, ld_lastmodified, ld_deleted, ld_mailaddress, ld_provider, ld_host, ld_port, ld_username, ld_password, ld_allowedtypes, ld_deletefrommailbox, ld_language, ld_enabled, ld_targetfolder, ld_sslmodel, ld_extracttags)
 values     (1,'2008-10-23',0, 'author@logicaldoc.sf.net','Aruba','pcalle','22','author@logicaldoc.sf.net','authorPSWD','pdf,doc',0,'it',1,1,0,0);
 
 insert into ld_emailaccount
-			(ld_id, ld_lastmodified, ld_deleted, ld_mailaddress, ld_provider, ld_host, ld_port, ld_username, ld_password, ld_allowedtypes, ld_deletefrommailbox, ld_language, ld_enabled, ld_targetfolder, ld_sslmodel, ld_extractkeywords)
+			(ld_id, ld_lastmodified, ld_deleted, ld_mailaddress, ld_provider, ld_host, ld_port, ld_username, ld_password, ld_allowedtypes, ld_deletefrommailbox, ld_language, ld_enabled, ld_targetfolder, ld_sslmodel, ld_extracttags)
 values     (2,'2008-10-23',0, 'admin@logicaldoc.sf.net','Aruba','pcalle','22','admin@logicaldoc.sf.net','adminPSWD','doc,txt',1,'en',0,1,0,0);
 
 
