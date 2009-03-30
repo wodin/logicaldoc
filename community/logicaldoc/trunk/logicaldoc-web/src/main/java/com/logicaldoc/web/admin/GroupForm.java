@@ -143,10 +143,10 @@ public class GroupForm {
 			pref.decodePreferences(extendedValue);
 
 		pref = new Preference();
-		pref.setName("keywords");
+		pref.setName("tags");
 		pref.setLabel(Messages.getMessage("tags"));
 		preferences.add(pref);
-		extendedValue = group.getValue("preference.field.keywords");
+		extendedValue = group.getValue("preference.field.tags");
 		if (StringUtils.isNotEmpty(extendedValue))
 			pref.decodePreferences(extendedValue);
 

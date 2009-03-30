@@ -5,7 +5,7 @@ create table ld_document_ext (ld_docid bigint not null, ld_value varchar(4000), 
 create table ld_group (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(255), ld_type int not null, primary key (ld_id));  
 create table ld_group_ext (ld_groupid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_groupid, ld_name));  
 create table ld_history (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, ld_docid bigint not null, ld_userid bigint not null, ld_date datetime, ld_username varchar(255), ld_event varchar(255), ld_comment varchar(4000), primary key (ld_id));  
-create table ld_keyword (ld_docid bigint not null, ld_keyword varchar(255));  
+create table ld_tag (ld_docid bigint not null, ld_tag varchar(255));  
 create table ld_link (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, ld_type varchar(255) not null, ld_docid1 bigint, ld_docid2 bigint, primary key (ld_id));  
 create table ld_menu (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, ld_text varchar(255), ld_parentid bigint not null, ld_sort int, ld_icon varchar(255), ld_path varchar(255), ld_pathextended varchar(4000), ld_type int not null, ld_ref varchar(255), ld_size bigint, primary key (ld_id));  
 create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint not null, ld_write int not null, ld_addchild int not null, ld_managesecurity int not null, ld_manageimmutability int not null, ld_delete int not null, ld_rename int not null, ld_bulkimport int not null, ld_bulkexport int not null, ld_sign int not null, primary key (ld_menuid, ld_groupid, ld_write, ld_addchild, ld_managesecurity, ld_delete, ld_rename, ld_manageimmutability, ld_bulkimport, ld_bulkexport, ld_sign));  
@@ -22,7 +22,7 @@ alter table ld_attributes add constraint FKF9B7567E76C86307 foreign key (ld_temp
 alter table ld_document add constraint FK75ED9C0276C86307 foreign key (ld_templateid) references ld_template(ld_id);  
 alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folderid) references ld_menu(ld_id);  
 alter table ld_document_ext add constraint FK4E0884647C693DFD foreign key (ld_docid) references ld_document(ld_id);  
-alter table ld_keyword add constraint FK55BBDA227C693DFD foreign key (ld_docid) references ld_document(ld_id);  
+alter table ld_tag add constraint FK55BBDA227C693DFD foreign key (ld_docid) references ld_document(ld_id);  
 alter table ld_link add constraint FK1330661CADD6217 foreign key (ld_docid2) references ld_document(ld_id);  
 alter table ld_link add constraint FK1330661CADD6216 foreign key (ld_docid1) references ld_document(ld_id);  
 alter table ld_menugroup add constraint FKB4F7F679AA456AD1 foreign key (ld_menuid) references ld_menu(ld_id);  

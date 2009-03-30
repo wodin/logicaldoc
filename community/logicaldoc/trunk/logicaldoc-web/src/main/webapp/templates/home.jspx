@@ -151,7 +151,7 @@
 				<ice:panelGroup>
 	                <ice:panelSeries var="tagCloud" value="#{homeBean.tagClouds}">
 	                   <ice:commandLink action="#{tagCloud.select}" >
-						  <ice:outputText styleClass="cloud#{tagCloud.scale}" value="#{tagCloud.keyword}" />&amp;nbsp;
+						  <ice:outputText styleClass="cloud#{tagCloud.scale}" value="#{tagCloud.tag}" />&amp;nbsp;
 					   </ice:commandLink>
 					</ice:panelSeries>
 				</ice:panelGroup>

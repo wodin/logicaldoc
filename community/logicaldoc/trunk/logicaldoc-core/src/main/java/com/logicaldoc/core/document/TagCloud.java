@@ -8,27 +8,27 @@ package com.logicaldoc.core.document;
  */
 public class TagCloud {
 
-	private String keyword;
+	private String tag;
 
 	private int occurence;
 
 	private int scale;
 
-	public TagCloud(String keyword) {
-		this.keyword = keyword;
+	public TagCloud(String tag) {
+		this.tag = tag;
 	}
 
-	public TagCloud(String keyword, int occurence) {
-		this.keyword = keyword;
+	public TagCloud(String tag, int occurence) {
+		this.tag = tag;
 		this.occurence = occurence;
 	}
 
-	public String getKeyword() {
-		return keyword;
+	public String getTag() {
+		return tag;
 	}
 
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 
 	public int getOccurence() {

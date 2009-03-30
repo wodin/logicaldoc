@@ -21,19 +21,19 @@ import com.logicaldoc.web.components.SortableList;
 import com.logicaldoc.web.document.DocumentRecord;
 
 /**
- * Handles documents access by keywords
+ * Handles documents access by tags
  * 
  * @author Marco Meschieri - Logical Objects
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
-public class KeywordsBean extends SortableList {
+public class TagsBean extends SortableList {
 
-	protected static Log log = LogFactory.getLog(KeywordsBean.class);
+	protected static Log log = LogFactory.getLog(TagsBean.class);
 
 	private Collection<Letter> letters = new ArrayList<Letter>();
 
-	private List<Keyword> keywords = new ArrayList<Keyword>();
+	private List<Tag> tags = new ArrayList<Tag>();
 
 	private List<DocumentRecord> documents = new ArrayList<DocumentRecord>();
 
@@ -41,10 +41,10 @@ public class KeywordsBean extends SortableList {
 
 	private DocumentHandler dh = new DocumentHandler("xxx");
 
-	// record the last operation requested: letter or keyword
+	// record the last operation requested: letter or tag
 	private String reqop;
 
-	public KeywordsBean() {
+	public TagsBean() {
 		// We don't sort by default
 		super("xxx");
 		String str = "abcdefghijklmnopqrstuvwxyz";
@@ -58,16 +58,16 @@ public class KeywordsBean extends SortableList {
 		return letters;
 	}
 
-	public Collection<Keyword> getKeywords() {
-		return keywords;
+	public Collection<Tag> getTags() {
+		return tags;
 	}
 
 	public void reset() {
-		keywords.clear();
+		tags.clear();
 	}
 
-	public int getKeywordsCount() {
-		return keywords.size();
+	public int getTagsCount() {
+		return tags.size();
 	}
 
 	public int getDocumentsCount() {
@@ -85,12 +85,12 @@ public class KeywordsBean extends SortableList {
 	/**
 	 * Set selectedWord and show documents marked with that word.
 	 * 
-	 * @param keyword The word of where we want to show documents
+	 * @param tag The word of where we want to show documents
 	 */
-	public void select(String keyword) {
-		selectedWord = keyword;
-		Keyword kword = new Keyword();
-		kword.setWord(keyword);
+	public void select(String tag) {
+		selectedWord = tag;
+		Tag kword = new Tag();
+		kword.setWord(tag);
 		kword.select();
 	}
 
@@ -119,37 +119,37 @@ public class KeywordsBean extends SortableList {
 
 					long userId = SessionManagement.getUserId();
 					DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-					Collection<String> coll = ddao.findKeywords(lett, userId);
+					Collection<String> coll = ddao.findTags(lett, userId);
 					Iterator<String> iter = coll.iterator();
 					Hashtable<String, Integer> table = new Hashtable<String, Integer>(coll.size());
 
 					while (iter.hasNext()) {
-						String keyword = iter.next();
+						String tag = iter.next();
 						int count = 1;
 
-						if (table.containsKey(keyword)) {
-							Integer i = (Integer) table.get(keyword);
-							table.remove(keyword);
+						if (table.containsKey(tag)) {
+							Integer i = (Integer) table.get(tag);
+							table.remove(tag);
 							count = i.intValue();
 							count++;
 						}
 
-						table.put(keyword, new Integer(count));
+						table.put(tag, new Integer(count));
 					}
 
 					reqop = "letter";
-					keywords.clear();
+					tags.clear();
 					documents.clear();
 
 					Enumeration<String> enum1 = table.keys();
 
 					while (enum1.hasMoreElements()) {
-						Keyword keyword = new Keyword();
+						Tag tag = new Tag();
 						String key = enum1.nextElement();
 						Integer value = table.get(key);
-						keyword.setWord(key);
-						keyword.setCount(value.intValue());
-						keywords.add(keyword);
+						tag.setWord(key);
+						tag.setCount(value.intValue());
+						tags.add(tag);
 					}
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
@@ -163,14 +163,14 @@ public class KeywordsBean extends SortableList {
 	}
 
 	/**
-	 * Representation of a keyword
+	 * Representation of a tag
 	 */
-	public class Keyword {
+	public class Tag {
 		private String word;
 
 		private int count;
 
-		public Keyword() {
+		public Tag() {
 			word = "";
 			count = 0;
 		}
@@ -192,7 +192,7 @@ public class KeywordsBean extends SortableList {
 		}
 
 		/**
-		 * Handles the selection of this keyword
+		 * Handles the selection of this tag
 		 */
 		public String select() {
 			if (SessionManagement.isValid()) {
@@ -201,11 +201,11 @@ public class KeywordsBean extends SortableList {
 
 					long userId = SessionManagement.getUserId();
 					DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-					Set<Long> docIds = docDao.findDocIdByUserIdAndKeyword(userId, word);
+					Set<Long> docIds = docDao.findDocIdByUserIdAndTag(userId, word);
 
-					reqop = "keyword";
+					reqop = "tag";
 					documents.clear();
-					keywords.clear();
+					tags.clear();
 
 					for (Long id : docIds) {
 						DocumentRecord record = new DocumentRecord(id, null, null, null);
@@ -235,7 +235,7 @@ public class KeywordsBean extends SortableList {
 	}
 
 	/**
-	 * Sorts the list of Keyword data.
+	 * Sorts the list of Tag data.
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -244,8 +244,8 @@ public class KeywordsBean extends SortableList {
 		Comparator comparator = new Comparator() {
 			public int compare(Object o1, Object o2) {
 
-				Keyword c1 = (Keyword) o1;
-				Keyword c2 = (Keyword) o2;
+				Tag c1 = (Tag) o1;
+				Tag c2 = (Tag) o2;
 				if (column == null) {
 					return 0;
 				}
@@ -259,7 +259,7 @@ public class KeywordsBean extends SortableList {
 			}
 		};
 
-		Collections.sort(keywords, comparator);
+		Collections.sort(tags, comparator);
 	}
 
 	public class DocumentHandler extends SortableList {

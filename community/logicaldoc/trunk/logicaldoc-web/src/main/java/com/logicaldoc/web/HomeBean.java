@@ -178,7 +178,7 @@ public class HomeBean {
 	}
 
 	/**
-	 * Generate tag clouds from lists of keywords
+	 * Generate tag clouds from lists of tags
 	 */
 	public List<TagCloud> getTagClouds() {
 		List<TagCloud> tags = new ArrayList<TagCloud>();
@@ -189,9 +189,9 @@ public class HomeBean {
 		else
 			gendao.initialize(generic);
 
-		for (String keyword : generic.getAttributeNames()) {
-			TagCloud tc = new TagCloud(keyword);
-			StringTokenizer st = new StringTokenizer(generic.getValue(keyword), "|", false);
+		for (String tag : generic.getAttributeNames()) {
+			TagCloud tc = new TagCloud(tag);
+			StringTokenizer st = new StringTokenizer(generic.getValue(tag), "|", false);
 			tc.setOccurence(Integer.parseInt(st.nextToken()));
 			tc.setScale(Integer.parseInt(st.nextToken()));
 			tags.add(tc);
@@ -214,7 +214,7 @@ public class HomeBean {
 
 	class TagCloudComparatorName implements Comparator<TagCloud> {
 		public int compare(TagCloud tc0, TagCloud tc1) {
-			return tc0.getKeyword().compareTo(tc1.getKeyword());
+			return tc0.getTag().compareTo(tc1.getTag());
 		}
 	}
 

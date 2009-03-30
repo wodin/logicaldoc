@@ -29,7 +29,7 @@ import org.apache.lucene.index.IndexWriter;
  * @since 4.0
  */
 public class PopulateIndex {
-	public static final String FIELD_KEYWORDS = "keywords";
+	public static final String FIELD_TAGS = "tags";
 
 	public static final String FIELD_CONTENT = "content";
 
@@ -197,7 +197,7 @@ public class PopulateIndex {
 		doc.add(new Field(FIELD_CONTENT, content, Field.Store.YES, Field.Index.TOKENIZED));
 
 		doc
-				.add(new Field(FIELD_KEYWORDS, Util.extractWordsAsString(5, content), Field.Store.YES,
+				.add(new Field(FIELD_TAGS, Util.extractWordsAsString(5, content), Field.Store.YES,
 						Field.Index.TOKENIZED));
 
 		writer.addDocument(doc);

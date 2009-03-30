@@ -29,7 +29,7 @@ public class PDFParser extends AbstractParser {
 
 	private String sourceDate;
 
-	private String keywords;
+	private String tags;
 
 	protected static Log log = LogFactory.getLog(PDFParser.class);
 
@@ -37,7 +37,7 @@ public class PDFParser extends AbstractParser {
 		author = "";
 		title = "";
 		sourceDate = "";
-		keywords = "";
+		tags = "";
 		content = "";
 		PDDocument pdfDocument = null;
 
@@ -94,10 +94,10 @@ public class PDFParser extends AbstractParser {
 					sourceDate = "";
 				}
 
-				keywords = information.getKeywords();
+				tags = information.getKeywords();
 
-				if (keywords == null) {
-					keywords = "";
+				if (tags == null) {
+					tags = "";
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -153,10 +153,10 @@ public class PDFParser extends AbstractParser {
 	}
 
 	/**
-	 * @return Returns the keywords.
+	 * @return Returns the tags.
 	 */
-	public String getKeywords() {
-		return keywords;
+	public String getTags() {
+		return tags;
 	}
 
 	/**

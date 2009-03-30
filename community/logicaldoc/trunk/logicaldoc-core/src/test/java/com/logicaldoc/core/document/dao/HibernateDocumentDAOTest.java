@@ -144,13 +144,13 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(1, coll.size());
 	}
 
-	public void testFindDocIdByKeyword() {
-		Collection<Long> ids = dao.findDocIdByKeyword("abc");
+	public void testFindDocIdByTag() {
+		Collection<Long> ids = dao.findDocIdByTag("abc");
 		assertNotNull(ids);
 		assertEquals(1, ids.size());
 		assertEquals(new Long(1), ids.iterator().next());
 
-		ids = dao.findDocIdByKeyword("xxx");
+		ids = dao.findDocIdByTag("xxx");
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 	}
@@ -162,8 +162,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.setPublisher("admin");
 		doc.setPublisherId(1);
 		doc.setTitle("test");
-		doc.addKeyword("pippo");
-		doc.addKeyword("pluto");
+		doc.addTag("pippo");
+		doc.addTag("pluto");
 		doc.setValue("att_1", "val 1");
 		doc.setFileName("test.txt");
 		doc.setFileVersion("1.0");
@@ -178,8 +178,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertTrue(docFile.exists());
 		String digest = FileUtil.computeDigest(docFile);
 
-		// Try a long keyword
-		doc.addKeyword("123456789123456789123456789");
+		// Try a long tag
+		doc.addTag("123456789123456789123456789");
 		User user = new User();
 		user.setId(1);
 		Version version = Version.create(doc, user, "comment", Version.EVENT_CHECKIN, VERSION_TYPE.OLD_VERSION);
@@ -190,9 +190,9 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertNotNull(doc);
 		dao.initialize(doc);
 		assertEquals(5, doc.getId());
-		assertEquals(3, doc.getKeywords().size());
-		assertTrue(doc.getKeywords().contains("pluto"));
-		assertTrue(doc.getKeywords().contains("123456789123456789123456789"));
+		assertEquals(3, doc.getTags().size());
+		assertTrue(doc.getTags().contains("pluto"));
+		assertTrue(doc.getTags().contains("123456789123456789123456789"));
 		assertEquals("val 1", doc.getValue("att_1"));
 		assertNotNull(doc.getDigest());
 		assertEquals(doc.getDigest(), digest);
@@ -212,7 +212,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertNotNull(doc);
 		dao.initialize(doc);
 		assertEquals("testDocname", doc.getTitle());
-		assertEquals(3, doc.getKeywords().size());
+		assertEquals(3, doc.getTags().size());
 		doc.setTitle("xxxx");
 		assertTrue(dao.store(doc));
 		doc = dao.findById(1);
@@ -220,27 +220,27 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		dao.initialize(doc);
 		assertEquals(1, doc.getId());
 		assertEquals("xxxx", doc.getTitle());
-		assertEquals(3, doc.getKeywords().size());
+		assertEquals(3, doc.getTags().size());
 	}
 
-	public void testFindKeywords() {
-		Collection<String> keywords = dao.findKeywords("a", 1);
-		assertNotNull(keywords);
-		assertEquals(2, keywords.size());
-		assertTrue(keywords.contains("abc"));
+	public void testFindTagss() {
+		Collection<String> tags = dao.findTags("a", 1);
+		assertNotNull(tags);
+		assertEquals(2, tags.size());
+		assertTrue(tags.contains("abc"));
 	}
 
-	public void testFindDocIdByUserIdAndKeyword() {
-		Collection<Long> ids = dao.findDocIdByUserIdAndKeyword(1, "abc");
+	public void testFindDocIdByUserIdAndTag() {
+		Collection<Long> ids = dao.findDocIdByUserIdAndTag(1, "abc");
 		assertNotNull(ids);
 		assertEquals(1, ids.size());
 		assertEquals(new Long(1), ids.iterator().next());
 
-		ids = dao.findDocIdByUserIdAndKeyword(1, "xxx");
+		ids = dao.findDocIdByUserIdAndTag(1, "xxx");
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 
-		ids = dao.findDocIdByUserIdAndKeyword(99, "abc");
+		ids = dao.findDocIdByUserIdAndTag(99, "abc");
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 	}

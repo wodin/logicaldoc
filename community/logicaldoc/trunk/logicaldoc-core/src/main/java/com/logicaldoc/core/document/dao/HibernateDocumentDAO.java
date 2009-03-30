@@ -194,13 +194,13 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	/**
-	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findDocIdByKeyword(java.lang.String)
+	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findDocIdByTag(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Long> findDocIdByKeyword(String keyword) {
+	public List<Long> findDocIdByTag(String tag) {
 		StringBuilder query = new StringBuilder();
-		query.append("'" + SqlUtil.doubleQuotes(keyword) + "'");
-		query.append(" in elements(_entity.keywords) ");
+		query.append("'" + SqlUtil.doubleQuotes(tag) + "'");
+		query.append(" in elements(_entity.tags) ");
 		return findIdsByWhere(query.toString());
 	}
 
@@ -208,9 +208,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public boolean store(final Document doc) {
 		boolean result = true;
 		try {
-			Set<String> src = doc.getKeywords();
+			Set<String> src = doc.getTags();
 			if (src != null && src.size() > 0) {
-				// Trim too long keywords
+				// Trim too long tags
 				Set<String> dst = new HashSet<String>();
 				for (String str : src) {
 					String s = str;
@@ -220,7 +220,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					if (!dst.contains(s))
 						dst.add(s);
 				}
-				doc.setKeywords(dst);
+				doc.setTags(dst);
 			}
 
 			Map<String, Object> dictionary = new HashMap<String, Object>();
@@ -261,7 +261,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@SuppressWarnings( { "unchecked", "deprecation" })
-	public List<String> findKeywords(String firstLetter, long userId) {
+	public List<String> findTags(String firstLetter, long userId) {
 		List<String> coll = new ArrayList<String>();
 
 		try {
@@ -271,7 +271,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			if (!precoll.isEmpty()) {
 				StringBuffer query = new StringBuffer(
-						"select distinct B.ld_keyword, A.ld_id from ld_document A, ld_keyword B, ld_menugroup C "
+						"select distinct B.ld_tag, A.ld_id from ld_document A, ld_tag B, ld_menugroup C "
 								+ " where A.ld_deleted=0 and A.ld_id = B.ld_docid and A.ld_folderid=C.ld_menuid and C.ld_groupid in (");
 				boolean first = true;
 				while (iter.hasNext()) {
@@ -281,7 +281,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					query.append(Long.toString(ug.getId()));
 					first = false;
 				}
-				query.append(") and lower(B.ld_keyword) like '");
+				query.append(") and lower(B.ld_tag) like '");
 				query.append(firstLetter.toLowerCase()).append("%' ");
 
 				Connection con = null;
@@ -339,12 +339,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<String, Integer> findAllKeywords() {
+	public Map<String, Integer> findAllTags() {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 
 		try {
-			StringBuilder query = new StringBuilder("SELECT COUNT(keyword), keyword");
-			query.append(" FROM Document _entity JOIN _entity.keywords keyword GROUP BY keyword");
+			StringBuilder query = new StringBuilder("SELECT COUNT(tag), tag");
+			query.append(" FROM Document _entity JOIN _entity.tags tag GROUP BY tag");
 
 			List ssss = getHibernateTemplate().find(query.toString());
 			for (Iterator iter = ssss.iterator(); iter.hasNext();) {
@@ -363,7 +363,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findByUserIdAndKeyword(long userId, String keyword) {
+	public List<Document> findByUserIdAndTag(long userId, String tag) {
 		List<Document> coll = new ArrayList<Document>();
 		try {
 			User user = userDAO.findById(userId);
@@ -386,7 +386,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			}
 			query.append(")");
 
-			Set<Long> ids = findDocIdByUserIdAndKeyword(userId, keyword);
+			Set<Long> ids = findDocIdByUserIdAndTag(userId, tag);
 			Iterator<Long> iter2 = ids.iterator();
 			if (ids.isEmpty())
 				return coll;
@@ -409,7 +409,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public Set<Long> findDocIdByUserIdAndKeyword(long userId, String keyword) {
+	public Set<Long> findDocIdByUserIdAndTag(long userId, String tag) {
 		Set<Long> ids = new HashSet<Long>();
 		try {
 			User user = userDAO.findById(userId);
@@ -420,7 +420,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			if (!precoll.isEmpty()) {
 				StringBuffer query = new StringBuffer(
-						"select distinct(C.ld_id) from ld_menugroup A, ld_document C, ld_keyword D "
+						"select distinct(C.ld_id) from ld_menugroup A, ld_document C, ld_tag D "
 								+ " where A.ld_menuid=C.ld_folderid AND C.ld_id=D.ld_docid AND C.ld_deleted=0 AND A.ld_groupid in (");
 				boolean first = true;
 				while (iter.hasNext()) {
@@ -431,7 +431,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					first = false;
 				}
 				query.append(")");
-				query.append(" AND lower(D.ld_keyword)='" + SqlUtil.doubleQuotes(keyword) + "'");
+				query.append(" AND lower(D.ld_tag)='" + SqlUtil.doubleQuotes(tag) + "'");
 
 				Connection con = null;
 				Statement stmt = null;
@@ -586,8 +586,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		for (String attribute : doc.getAttributes().keySet()) {
 			attribute.getBytes();
 		}
-		for (String keyword : doc.getKeywords()) {
-			keyword.getBytes();
+		for (String tag : doc.getTags()) {
+			tag.getBytes();
 		}
 	}
 

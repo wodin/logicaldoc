@@ -7,7 +7,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.NavigationBean;
 import com.logicaldoc.web.navigation.PageContentBean;
-import com.logicaldoc.web.search.KeywordsBean;
+import com.logicaldoc.web.search.TagsBean;
 
 /**
  * This class is a TagCloud
@@ -16,13 +16,13 @@ import com.logicaldoc.web.search.KeywordsBean;
  * @since 3.5
  */
 public class TagCloud extends com.logicaldoc.core.document.TagCloud {
-	public TagCloud(String keyword) {
-		super(keyword);
+	public TagCloud(String tag) {
+		super(tag);
 	}
 
 	/**
 	 * Handles the selection of this tagcloud. Display the pageContent
-	 * "search/tags" and set the selected word on KeywordsBean.
+	 * "search/tags" and set the selected word on TagsBean.
 	 */
 	@SuppressWarnings("deprecation")
 	public String select() {
@@ -37,9 +37,9 @@ public class TagCloud extends com.logicaldoc.core.document.TagCloud {
 		content.setIcon(style.getImagePath("tags.png"));
 		navigation.setSelectedPanel(content);
 
-		KeywordsBean keywordsBean = ((KeywordsBean) application.createValueBinding("#{keywords}").getValue(
+		TagsBean tagsBean = ((TagsBean) application.createValueBinding("#{tags}").getValue(
 				FacesContext.getCurrentInstance()));
-		keywordsBean.select(this.getKeyword());
+		tagsBean.select(this.getTag());
 		return null;
 	}
 }

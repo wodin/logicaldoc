@@ -48,7 +48,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 	private String templateName;
 
-	private String kwds;
+	private String tgs;
 
 	private Document document;
 
@@ -220,7 +220,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 		version.setFolderId(document.getFolder().getId());
 		version.setFolderName(document.getFolder().getText());
-		version.setKwds(document.getKeywordsString());
+		version.setTgs(document.getTagsString());
 		version.setDocument(document);
 
 		String newVersionName = version.getNewVersionName(document.getVersion(), versionType);
@@ -236,12 +236,12 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		return version;
 	}
 
-	public String getKwds() {
-		return kwds;
+	public String getTgs() {
+		return tgs;
 	}
 
-	public void setKwds(String kwds) {
-		this.kwds = kwds;
+	public void setTgs(String tgs) {
+		this.tgs = tgs;
 	}
 
 	public Document getDocument() {

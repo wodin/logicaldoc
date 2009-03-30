@@ -146,7 +146,7 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public String createDocument(String username, String password, long folderId, String docTitle, String source,
-			String sourceDate, String author, String sourceType, String coverage, String language, String keywords,
+			String sourceDate, String author, String sourceType, String coverage, String language, String tags,
 			String versionDesc, String filename, DataHandler content, String templateName,
 			ExtendedAttribute[] extendedAttributes, String sourceId, String object, String recipient) throws Exception {
 
@@ -168,7 +168,7 @@ public class DmsServiceImpl implements DmsService {
 
 		checkWriteEnable(username, folderId);
 
-		Set<String> tags = TagUtil.extractTags(keywords);
+		Set<String> tgs = TagUtil.extractTags(tags);
 
 		Date date = null;
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -198,7 +198,7 @@ public class DmsServiceImpl implements DmsService {
 
 		try {
 			Document doc = documentManager.create(stream, filename, folder, user, language, null, date, source, author,
-					sourceType, coverage, versionDesc, tags, template != null ? template.getId() : null, attributes,
+					sourceType, coverage, versionDesc, tgs, template != null ? template.getId() : null, attributes,
 					sourceId, object, recipient, false);
 			return String.valueOf(doc.getId());
 		} catch (Exception e) {
@@ -423,7 +423,7 @@ public class DmsServiceImpl implements DmsService {
 		SearchOptions opt = new SearchOptions();
 		ArrayList<String> fields = new ArrayList<String>();
 		fields.add(LuceneDocument.FIELD_CONTENT);
-		fields.add(LuceneDocument.FIELD_KEYWORDS);
+		fields.add(LuceneDocument.FIELD_TAGS);
 		fields.add(LuceneDocument.FIELD_TITLE);
 
 		if (StringUtils.isNotEmpty(templateName)) {

@@ -138,7 +138,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 				// for documents
 				addMenuGroup(group, Menu.MENUID_MESSAGES, 0); // messages
 				addMenuGroup(group, Menu.MENUID_EDITME, 0); // edit me
-				addMenuGroup(group, 26, 1); // keywords
+				addMenuGroup(group, 26, 1); // tags
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())

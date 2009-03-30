@@ -62,7 +62,7 @@ public interface DmsService {
 	 * @param sourceType
 	 * @param coverage
 	 * @param language
-	 * @param keywords
+	 * @param tags
 	 * @param versionDesc
 	 * @param filename
 	 * @param content
@@ -84,8 +84,8 @@ public interface DmsService {
 	String author, @WebParam(name = "sourceType")
 	String sourceType, @WebParam(name = "coverage")
 	String coverage, @WebParam(name = "language")
-	String language, @WebParam(name = "keywords")
-	String keywords, @WebParam(name = "versionDesc")
+	String language, @WebParam(name = "tags")
+	String tags, @WebParam(name = "versionDesc")
 	String versionDesc, @WebParam(name = "filename")
 	String filename, @WebParam(name = "content")
 	DataHandler content, @WebParam(name = "templateName")

@@ -18,7 +18,7 @@ import com.logicaldoc.core.task.Task;
  * <p>
  * Each tag cloud is serialized in a custom attribute of the generic with
  * type='tagcloud' and subtype='-'. For each tag cloud a new attribute named
- * using the keyword will be created and its value will be 'occurrence|scale'.
+ * using the tag will be created and its value will be 'occurrence|scale'.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
@@ -69,7 +69,7 @@ public class TagCloudGenerator extends Task {
 		// Iterate over tag clouds and serialize them as extended attributes
 		List<TagCloud> tags = getTagClouds();
 		for (TagCloud tagCloud : tags) {
-			generic.setValue(tagCloud.getKeyword(), tagCloud.getOccurence() + "|" + tagCloud.getScale());
+			generic.setValue(tagCloud.getTag(), tagCloud.getOccurence() + "|" + tagCloud.getScale());
 		}
 		genericDao.store(generic);
 
@@ -82,12 +82,12 @@ public class TagCloudGenerator extends Task {
 	public List<TagCloud> getTagClouds() {
 		List<TagCloud> tags = new ArrayList<TagCloud>();
 
-		HashMap<String, Integer> keywords = (HashMap<String, Integer>) documentDao.findAllKeywords();
-		if (keywords.isEmpty())
+		HashMap<String, Integer> tgs = (HashMap<String, Integer>) documentDao.findAllTags();
+		if (tgs.isEmpty())
 			return tags;
 
-		for (String key : keywords.keySet()) {
-			Integer val = keywords.get(key);
+		for (String key : tgs.keySet()) {
+			Integer val = tgs.get(key);
 			TagCloud tc = new TagCloud(key, val);
 			tags.add(tc);
 		}

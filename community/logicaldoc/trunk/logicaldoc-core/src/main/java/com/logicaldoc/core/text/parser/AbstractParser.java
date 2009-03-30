@@ -24,7 +24,7 @@ public abstract class AbstractParser implements Parser {
 	}
 
 	@Override
-	public String getKeywords() {
+	public String getTags() {
 		return "";
 	}
 

@@ -16,7 +16,7 @@ public interface Parser {
 
 	public String getSourceDate();
 
-	public String getKeywords();
+	public String getTags();
 
 	public String getTitle();
 	

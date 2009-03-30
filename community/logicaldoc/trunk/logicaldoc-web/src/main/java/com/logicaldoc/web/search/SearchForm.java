@@ -94,7 +94,7 @@ public class SearchForm {
 
 	private boolean content = true;
 
-	private boolean keywords = true;
+	private boolean tags = true;
 
 	private boolean source = false;
 
@@ -215,12 +215,12 @@ public class SearchForm {
 		this.fuzzy = fuzzy;
 	}
 
-	public boolean isKeywords() {
-		return keywords;
+	public boolean isTags() {
+		return tags;
 	}
 
-	public void setKeywords(boolean keywords) {
-		this.keywords = keywords;
+	public void setTags(boolean tags) {
+		this.tags = tags;
 	}
 
 	public String getNots() {
@@ -398,7 +398,7 @@ public class SearchForm {
 		parentPathDescr = null;
 		fuzzy = false;
 		content = true;
-		keywords = true;
+		tags = true;
 		source = false;
 		sourceAuthor = false;
 		sourceType = false;
@@ -447,8 +447,8 @@ public class SearchForm {
 					fields.add(LuceneDocument.FIELD_CONTENT);
 				}
 
-				if (isKeywords()) {
-					fields.add(LuceneDocument.FIELD_KEYWORDS);
+				if (isTags()) {
+					fields.add(LuceneDocument.FIELD_TAGS);
 				}
 
 				if (isSource()) {
@@ -616,7 +616,7 @@ public class SearchForm {
 				parentPathDescr = null;
 				fuzzy = false;
 				content = true;
-				keywords = true;
+				tags = true;
 				source = false;
 				sourceAuthor = false;
 				sourceType = false;
@@ -693,7 +693,7 @@ public class SearchForm {
 		sizeMax = null;
 		fuzzy = false;
 		content = false;
-		keywords = false;
+		tags = false;
 		source = false;
 		sourceAuthor = false;
 		sourceType = false;

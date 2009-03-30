@@ -290,11 +290,11 @@
                     &amp;nbsp;
                 </ice:panelGroup>
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="keywords" value="#{msgs['tags']}" />
+				<ice:outputLabel for="tags" value="#{msgs['tags']}" />
 			</ice:panelGroup>
 			<ice:panelGroup>
-				<ice:selectBooleanCheckbox id="keywords" tabindex="1"
-					value="#{searchForm.keywords}" />
+				<ice:selectBooleanCheckbox id="tags" tabindex="1"
+					value="#{searchForm.tags}" />
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
