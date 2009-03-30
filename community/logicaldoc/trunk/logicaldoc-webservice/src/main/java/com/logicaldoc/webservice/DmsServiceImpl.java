@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +16,7 @@ import java.util.Set;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +36,7 @@ import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -537,10 +540,78 @@ public class DmsServiceImpl implements DmsService {
 	}
 
 	/**
-	 * Converts a dateO to a valid XML string
+	 * Converts a date to a valid XML string
 	 */
 	protected String convertDateToXML(Date date) {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return df.format(date);
+	}
+
+	protected Date convertXMLToDate(String date) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			return df.parse(date);
+		} catch (ParseException e) {
+			return null;
+		}
+	}
+
+	@Override
+	public void renameFolder(String username, String password, long folder, String name) throws Exception {
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		User user = userDao.findByUserName(username);
+		if (user == null)
+			throw new Exception("user " + username + "not found");
+
+		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		if (!dao.isPermissionEnabled(Permission.RENAME, folder, user.getId())) {
+			throw new Exception("user does't have rename permission");
+		}
+
+		if (folder == Menu.MENUID_DOCUMENTS)
+			throw new Exception("cannot rename the root folder");
+
+		Menu menu = dao.findById(folder);
+		if (menu == null)
+			throw new Exception("cannot find folder " + folder);
+
+		if (dao.findByMenuTextAndParentId(name, menu.getParentId()).size() > 0) {
+			throw new Exception("duplicate folder name " + name);
+		} else {
+			menu.setText(name);
+			dao.store(menu);
+		}
+	}
+
+	@Override
+	public void update(String username, String password, long id, String title, String source, String sourceAuthor,
+			String sourceDate, String sourceType, String coverage, String language, Set<String> tags, String sourceId,
+			String object, String recipient, Long templateId, @WebParam(name = "extendedAttribute")
+			ExtendedAttribute[] extendedAttribute) throws Exception {
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		User user = userDao.findByUserName(username);
+		if (user == null)
+			throw new Exception("user " + username + "not found");
+
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document doc = docDao.findById(id);
+		if (doc == null)
+			throw new Exception("unexisting document " + id);
+		if (doc.getImmutable() == 1)
+			throw new Exception("the document is immutable");
+
+		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		if (!dao.isWriteEnable(doc.getFolder().getId(), user.getId())) {
+			throw new Exception("user does't have write permission");
+		}
+
+		Map<String, String> attributes = new HashMap<String, String>();
+		for (int i = 0; extendedAttribute != null && i < extendedAttribute.length; i++) {
+			attributes.put(extendedAttribute[i].getName(), extendedAttribute[i].getValue());
+		}
+
+		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		manager.update(doc, user, title, source, sourceAuthor, convertXMLToDate(sourceDate), sourceType, coverage,
+				language, tags, sourceId, object, recipient, templateId, attributes);
 	}
 }
