@@ -496,21 +496,16 @@ public class DocumentEditForm {
 		DocumentNavigation navigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 				"documentNavigation", FacesContext.getCurrentInstance(), log));
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		DocumentTemplateDAO tdao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
-
 		if (SessionManagement.isValid()) {
 			try {
 				Document doc = record.getDocument();
 
-				doc.getAttributes().clear();
+				Map<String, String> attrs = new HashMap<String, String>();
 				if (template != null) {
-					doc.setTemplate(tdao.findById(template));
 					for (Attribute attribute : extendedAttributes) {
 						if (StringUtils.isNotEmpty(attribute.getValue()))
-							doc.setValue(attribute.getName(), attribute.getValue());
+							attrs.put(attribute.getName(), attribute.getValue());
 					}
-				} else {
-					doc.setTemplate(null);
 				}
 
 				User user = SessionManagement.getUser();
@@ -518,7 +513,7 @@ public class DocumentEditForm {
 
 				doc.setCustomId(customId);
 				documentManager.update(doc, user, title, source, sourceAuthor, sourceDate, sourceType, coverage,
-						language, tags, sourceId, object, recipient);
+						language, tags, sourceId, object, recipient, template, attrs);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addError(e.getMessage());
