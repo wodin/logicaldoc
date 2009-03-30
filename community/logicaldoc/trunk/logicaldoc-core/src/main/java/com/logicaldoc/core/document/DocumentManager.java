@@ -377,24 +377,11 @@ public interface DocumentManager {
 	 * Updates an existing document and marks it to be re-indexed
 	 * 
 	 * @param doc The document to be updated
-	 * @param user
-	 * @param title
-	 * @param source
-	 * @param sourceAuthor
-	 * @param sourceDate
-	 * @param sourceType
-	 * @param coverage
-	 * @param language
-	 * @param keywords
-	 * @param sourceId
-	 * @param object
-	 * @param recipient
-	 * @param immediateIndexing If true the document is immediately indexed
 	 * @throws Exception
 	 */
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
 			String sourceType, String coverage, String language, Set<String> keywords, String sourceId, String object,
-			String recipient) throws Exception;
+			String recipient, Long templateId, Map<String, String> attributes) throws Exception;
 
 	/**
 	 * Retrieves the full-text document content
