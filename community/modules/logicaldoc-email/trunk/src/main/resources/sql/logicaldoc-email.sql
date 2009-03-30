@@ -1,4 +1,4 @@
-create table ld_emailaccount (ld_id bigint not null, ld_lastmodified timestamp not null,  ld_deleted int not null, ld_mailaddress varchar(255), ld_provider varchar(255), ld_host varchar(255), ld_port int, ld_username varchar(255), ld_password varchar(255), ld_allowedtypes varchar(255), ld_deletefrommailbox int, ld_language varchar(255), ld_enabled int, ld_targetfolder bigint, ld_sslmodel int not null, ld_extractkeywords int not null, primary key (ld_id));
+create table ld_emailaccount (ld_id bigint not null, ld_lastmodified timestamp not null,  ld_deleted int not null, ld_mailaddress varchar(255), ld_provider varchar(255), ld_host varchar(255), ld_port int, ld_username varchar(255), ld_password varchar(255), ld_allowedtypes varchar(255), ld_deletefrommailbox int, ld_language varchar(255), ld_enabled int, ld_targetfolder bigint, ld_sslmodel int not null, ld_extracttags int not null, primary key (ld_id));
 alter table ld_emailaccount add constraint FK_EMAILACCOUNT_MENU  foreign key (ld_targetfolder) references ld_menu;
 
 insert into ld_menu (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)

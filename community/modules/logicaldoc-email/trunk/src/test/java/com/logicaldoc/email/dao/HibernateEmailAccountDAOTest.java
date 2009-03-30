@@ -45,7 +45,7 @@ public class HibernateEmailAccountDAOTest extends AbstractEmailTestCase {
 		account.setLanguage("it");
 		account.setDeleted(0);
 		account.setSslModel(0);
-		account.setExtractKeywords(0);
+		account.setExtractTags(0);
 
 		assertTrue(dao.store(account));
 

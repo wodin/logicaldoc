@@ -44,19 +44,19 @@ public class EmailAccount extends PersistentObject {
 	 */
 	private int sslModel = 0;
 
-	private int extractKeywords = 0;
+	private int extractTags = 0;
 
 	/** Creates a new instance of EmailAccount */
 	public EmailAccount() {
 		targetFolder = null;
 	}
 
-	public int getExtractKeywords() {
-		return extractKeywords;
+	public int getExtractTags() {
+		return extractTags;
 	}
 
-	public void setExtractKeywords(int extractKeywords) {
-		this.extractKeywords = extractKeywords;
+	public void setExtractTags(int extractTags) {
+		this.extractTags = extractTags;
 	}
 
 	public int getDeleteFromMailbox() {
