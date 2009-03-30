@@ -459,7 +459,7 @@ public class EmailCrawler extends Task {
 			Date srcDate = email.getSentDateAsDate();
 
 			Map<String, String> attributes = null;
-			if (template != null && to.isEmpty()) {
+			if (template != null && StringUtils.isEmpty(to)) {
 				attributes = new HashMap<String, String>();
 				attributes.put("from", StringUtils.substring(email.getAuthorAddress(), 0, 3999));
 				for (int i = 0; i < email.getAddresses().length; i++) {
