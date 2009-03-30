@@ -201,15 +201,16 @@ public class PopulateDatabase {
 			insertMenuGroup = con
 					.prepareStatement("INSERT INTO LD_MENUGROUP (LD_MENUID,LD_GROUPID,LD_WRITE,LD_ADDCHILD,LD_MANAGESECURITY,LD_MANAGEIMMUTABILITY,LD_DELETE,LD_RENAME, LD_BULKIMPORT, LD_BULKEXPORT, LD_SIGN, LD_ARCHIVE) VALUES (?,?,?,1,1,1,1,1,1,1,1,1);");
 			insertDoc = con
-					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_PUBLISHERID,LD_STATUS,LD_TYPE,LD_LOCKUSERID,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_INDEXED,LD_FOLDERID,LD_CREATION,LD_IMMUTABLE,LD_DIGEST,LD_SIGNED,LD_FILEVERSION) VALUES (?,?,0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,0,?,0,'1.0');");
+					.prepareStatement("INSERT INTO LD_DOCUMENT (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_TITLE,LD_VERSION,LD_DATE,LD_PUBLISHER,LD_PUBLISHERID,LD_STATUS,LD_TYPE,LD_LOCKUSERID,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCETYPE,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_INDEXED,LD_FOLDERID,LD_CREATION,LD_IMMUTABLE,LD_DIGEST,LD_SIGNED,LD_FILEVERSION,LD_CUSTOMID,LD_CREATOR,LD_CREATORID,LD_SOURCEID,LD_OBJECT,LD_RECIPIENT,LD_TEMPLATEID) VALUES (?,?,0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,0,?,0,'1.0',?,?,?,?,?,?,null);");
 			insertKeyword = con.prepareStatement("INSERT INTO LD_KEYWORD (LD_DOCID,LD_KEYWORD) VALUES (?,?);");
 			insertVersion = con
-					.prepareStatement("INSERT INTO LD_VERSION  (LD_DOCID, LD_VERSION, LD_USERID, LD_USERNAME, LD_DATE, LD_COMMENT)"
-							+ "VALUES (?,?,?,?,?,?);");
+					.prepareStatement("INSERT INTO LD_VERSION  (LD_ID, LD_VERSION, LD_USERID, LD_USERNAME, LD_DATE, LD_COMMENT, LD_LASTMODIFIED,LD_DELETED,LD_IMMUTABLE,LD_CUSTOMID,LD_TITLE,LD_FILEVERSION,LD_CREATION,LD_PUBLISHER,LD_PUBLISHERID,LD_CREATOR,LD_CREATORID,LD_STATUS,LD_TYPE,LD_LOCKUSERID,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCEID,LD_SOURCETYPE,LD_OBJECT,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_INDEXED,LD_SIGNED,LD_DIGEST,LD_RECIPIENT,LD_FOLDERID,LD_FOLDERNAME,LD_TEMPLATEID,LD_TEMPLATENAME,LD_KWDS,LD_VERSIONDATE,LD_EVENT,LD_DOCUMENTID)"
+							+ "VALUES (?,?,?,?,?,?,?,0,1,?,?,'1.0',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,0,?,?,?,?,null,?,?,?,?,?);");
 			initExistingIds();
 			addDocuments(rootFolder, "/");
+			forceCommit();
+			
 			con.commit();
-
 			con.createStatement().execute("SHUTDOWN COMPACT");
 			con.commit();
 		} catch (Throwable e) {
@@ -264,16 +265,20 @@ public class PopulateDatabase {
 		}
 	}
 
+	private void forceCommit() throws SQLException {
+		insertDoc.executeBatch();
+		insertVersion.executeBatch();
+		insertKeyword.executeBatch();
+		insertDoc.clearBatch();
+		insertVersion.clearBatch();
+		insertKeyword.clearBatch();
+		con.commit();
+		gc();
+	}
+
 	private void commit() throws SQLException {
 		if (batchCount % batchSize == 0) {
-			insertDoc.executeBatch();
-			insertVersion.executeBatch();
-			insertKeyword.executeBatch();
-			insertDoc.clearBatch();
-			insertVersion.clearBatch();
-			insertKeyword.clearBatch();
-			con.commit();
-			gc();
+			forceCommit();
 		}
 	}
 
@@ -349,6 +354,18 @@ public class PopulateDatabase {
 		insertDoc.setDate(20, new Date(new java.util.Date().getTime()));
 		// LD_DIGEST
 		insertDoc.setString(21, Util.computeDigest(docFile));
+		// LD_CUSTOMID
+		insertDoc.setString(22, "" + id);
+		// LD_CREATOR
+		insertDoc.setString(23, "admin");
+		// LD_CREATORID
+		insertDoc.setLong(24, 1);
+		// LD_SOURCEID
+		insertDoc.setString(25, "" + id);
+		// LD_OBJECT
+		insertDoc.setString(26, "testbench");
+		// LD_RECIPIENT
+		insertDoc.setString(27, "testUser");
 
 		insertDoc.addBatch();
 		batchCount++;
@@ -369,7 +386,7 @@ public class PopulateDatabase {
 
 		// Insert a version
 
-		// LD_DOCID
+		// LD_ID
 		insertVersion.setLong(1, id);
 		// LD_VERSION
 		insertVersion.setString(2, "1.0");
@@ -381,6 +398,67 @@ public class PopulateDatabase {
 		insertVersion.setDate(5, new Date(docFile.lastModified()));
 		// LD_COMMENT
 		insertVersion.setString(6, "initial version");
+		// LD_LASTMODIFIED
+		insertVersion.setDate(7, new Date(docFile.lastModified()));
+		// LD_CUSTOMID
+		insertVersion.setString(8, "" + id);
+		// LD_TITLE
+		insertVersion.setString(9, docFile.getName().substring(0, docFile.getName().lastIndexOf(".")));
+		// LD_CREATION
+		insertVersion.setDate(10, new Date(new java.util.Date().getTime()));
+		// LD_PUBLISHER
+		insertVersion.setString(11, "admin");
+		// LD_PUBLISHERID
+		insertVersion.setLong(12, 1);
+		// LD_CREATOR
+		insertVersion.setString(13, "admin");
+		// LD_CREATORID
+		insertVersion.setLong(14, 1);
+		// LD_STATUS
+		insertVersion.setInt(15, 0);
+		// LD_TYPE
+		insertVersion.setString(16, extension);
+		// LD_LOCKUSERID
+		insertVersion.setLong(17, -1);
+		// LD_SOURCE
+		insertVersion.setString(18, "LogicalDOC");
+		// LD_SOURCEAUTHOR
+		insertVersion.setString(19, "");
+		// LD_SOURCEDATE
+		insertVersion.setDate(20, new Date(new java.util.Date().getTime()));
+		// LD_SOURCEID
+		insertVersion.setString(21, "" + id);
+		// LD_SOURCETYPE
+		insertVersion.setString(22, "");
+		// LD_OBJECT
+		insertVersion.setString(23, "testbench");
+		// LD_COVERAGE
+		insertVersion.setString(24, "test");
+		// LD_LANGUAGE
+		insertVersion.setString(25, language);
+		// LD_FILENAME
+		insertVersion.setString(26, filename);
+		// LD_FILESIZE
+		insertVersion.setLong(27, filesize);
+		// LD_DIGEST
+		insertVersion.setString(28, Util.computeDigest(docFile));
+		// LD_RECIPIENT
+		insertVersion.setString(29, "testUser");
+		// LD_FOLDERID
+		insertVersion.setLong(30, folderId);
+		// LD_FOLDERNAME
+		insertVersion.setString(31, "testFolder");
+		// LD_TEMPLATENAME
+		insertVersion.setString(32, "testTemplate");
+		// LD_KWDS
+		insertVersion.setString(33, "pippo");
+		// LD_VERSIONDATE
+		insertVersion.setDate(34, new Date(new java.util.Date().getTime()));
+		// LD_EVENT
+		insertVersion.setString(35, "testEvent");
+		// LD_DOCUMENTID
+		insertVersion.setLong(36, id);
+
 		insertVersion.addBatch();
 
 		return id;
