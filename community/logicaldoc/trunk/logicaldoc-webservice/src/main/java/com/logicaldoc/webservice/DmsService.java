@@ -1,10 +1,10 @@
 package com.logicaldoc.webservice;
 
+import java.util.Set;
+
 import javax.activation.DataHandler;
 import javax.jws.WebParam;
 import javax.jws.WebService;
-
-import com.logicaldoc.webservice.DocumentInfo;
 
 /**
  * Dms Webservice definition interface
@@ -96,6 +96,27 @@ public interface DmsService {
 	String recipient) throws Exception;
 
 	/**
+	 * Updates an existing document and marks it to be re-indexed
+	 */
+	public void update(@WebParam(name = "username")
+	String username, @WebParam(name = "password")
+	String password, @WebParam(name = "id")
+	long id, @WebParam(name = "title")
+	String title, @WebParam(name = "source")
+	String source, @WebParam(name = "sourceAuthor")
+	String sourceAuthor, @WebParam(name = "sourceDate")
+	String sourceDate, @WebParam(name = "sourceType")
+	String sourceType, @WebParam(name = "coverage")
+	String coverage, @WebParam(name = "language")
+	String language, @WebParam(name = "tags")
+	Set<String> tags, @WebParam(name = "sourceId")
+	String sourceId, @WebParam(name = "object")
+	String object, @WebParam(name = "recipient")
+	String recipient, @WebParam(name = "templateId")
+	Long templateId, @WebParam(name = "extendedAttribute")
+	ExtendedAttribute[] extendedAttribute) throws Exception;
+
+	/**
 	 * Downloads a document. The document content is sent as attachment
 	 * identified by 'document'
 	 * 
@@ -132,7 +153,21 @@ public interface DmsService {
 	 * @param username
 	 * @param password
 	 * @param folder The folder identifier
-	 * @return The folder metadata
+	 * @param name the new name for the folder
+	 * @throws Exception
+	 */
+	public void renameFolder(@WebParam(name = "username")
+	String username, @WebParam(name = "password")
+	String password, @WebParam(name = "folder")
+	long folder, @WebParam(name = "name")
+	String name) throws Exception;
+
+	/**
+	 * Renames a folder
+	 * 
+	 * @param username
+	 * @param password
+	 * @param folder The folder identifier
 	 * @throws Exception
 	 */
 	public FolderContent downloadFolderContent(@WebParam(name = "username")
