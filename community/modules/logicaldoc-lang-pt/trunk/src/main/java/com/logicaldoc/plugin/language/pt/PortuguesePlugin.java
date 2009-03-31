@@ -27,29 +27,47 @@ public class PortuguesePlugin extends LogicalDOCPlugin {
 	@Override
 	protected void install() throws Exception {
 
+		String classesDir = getManager().getPathResolver().resolvePath(getDescriptor(), "classes").toString();
+		log.debug("classesDir: " + classesDir);
+		if (classesDir.startsWith("file:")) {
+			classesDir = classesDir.substring(5);
+		}
+
+		File src = new File(classesDir, "i18n");
+		File destRoot = new File(System.getProperty("logicaldoc.app.rootdir"));
+		File destClasses = new File(destRoot, "WEB-INF/classes/i18n");
+
+		log.debug("Copy resources from " + src.getPath() + " to " + destClasses.getPath());
+		FileUtils.copyDirectory(src, destClasses);
+		
 		// Create Lucene Index
 		createLuceneIndex();
-		
+
 		// Now add the message bundle
-		log.info("Add PT language to faces-config.xml");
+		log.info("Add Portuguese (pt) language to faces-config.xml");
 		FacesConfigurator facesConfig = new FacesConfigurator();
 		facesConfig.addLanguageToFacesConfig("pt");
-
-		// TODO: Verificare che nn ci siano eccezzioni se nn trova la classe Snwball
 	}
 
 	private void createLuceneIndex() throws Exception {
+		try {
+			Class.forName("com.logicaldoc.core.i18n.Language");
+		} catch (ClassNotFoundException ex) {
+			// The core plugin was not ready, so avoid initializations
+			return;
+		}
 		
 		log.info("Create Lucene Index");
 		PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
 		String indexdir = pbean.getProperty("conf.indexdir");
 		log.info("indexdir = '" + indexdir + "'");
-		if (indexdir == null || indexdir.equals(""))
+		if (indexdir == null || indexdir.equals("")) {
 			throw new Exception("System un-setted up, impossible to create Lucene Index");
+		}
 		
 		try {
-			Language ptLanguage = new Language(new Locale("pt"));
-			File indexPath = new File(indexdir, ptLanguage.getIndex());
+			Language ldLanguage = new Language(new Locale("pt"));
+			File indexPath = new File(indexdir, ldLanguage.getIndex());
 			
 			// Prevent overwrite of an already present index
 			if (indexPath.exists())
