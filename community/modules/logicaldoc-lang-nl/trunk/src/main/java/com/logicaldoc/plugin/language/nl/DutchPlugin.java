@@ -37,7 +37,7 @@ public class DutchPlugin extends LogicalDOCPlugin {
 		createLuceneIndex();
 
 		// Now add the message bundle
-		log.info("Add NL language to faces-config.xml");
+		log.info("Add Dutch (nl) language to faces-config.xml");
 		FacesConfigurator facesConfig = new FacesConfigurator();
 		facesConfig.addLanguageToFacesConfig("nl");
 	}
@@ -51,17 +51,16 @@ public class DutchPlugin extends LogicalDOCPlugin {
 		}
 
 		log.info("Create Lucene Index");
-		PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader()
-				.getResource("context.properties"));
+		PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
 		String indexdir = pbean.getProperty("conf.indexdir");
 		log.info("indexdir = '" + indexdir + "'");
-		if (indexdir == null || indexdir.equals(""))
-			throw new Exception(
-					"System un-setted up, impossible to create Lucene Index");
+		if (indexdir == null || indexdir.equals("")) {
+			throw new Exception("System un-setted up, impossible to create Lucene Index");
+		}
 
 		try {
-			Language ptLanguage = new Language(new Locale("nl"));
-			File indexPath = new File(indexdir, ptLanguage.getIndex());
+			Language ldLanguage = new Language(new Locale("nl"));
+			File indexPath = new File(indexdir, ldLanguage.getIndex());
 
 			// Prevent overwrite of an already present index
 			if (indexPath.exists())
