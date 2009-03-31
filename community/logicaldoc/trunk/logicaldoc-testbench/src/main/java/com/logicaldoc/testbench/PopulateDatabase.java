@@ -205,7 +205,7 @@ public class PopulateDatabase {
 			insertTags = con.prepareStatement("INSERT INTO LD_TAG (LD_DOCID,LD_TAG) VALUES (?,?);");
 			insertVersion = con
 					.prepareStatement("INSERT INTO LD_VERSION  (LD_ID, LD_VERSION, LD_USERID, LD_USERNAME, LD_DATE, LD_COMMENT, LD_LASTMODIFIED,LD_DELETED,LD_IMMUTABLE,LD_CUSTOMID,LD_TITLE,LD_FILEVERSION,LD_CREATION,LD_PUBLISHER,LD_PUBLISHERID,LD_CREATOR,LD_CREATORID,LD_STATUS,LD_TYPE,LD_LOCKUSERID,LD_SOURCE,LD_SOURCEAUTHOR,LD_SOURCEDATE,LD_SOURCEID,LD_SOURCETYPE,LD_OBJECT,LD_COVERAGE,LD_LANGUAGE,LD_FILENAME,LD_FILESIZE,LD_INDEXED,LD_SIGNED,LD_DIGEST,LD_RECIPIENT,LD_FOLDERID,LD_FOLDERNAME,LD_TEMPLATEID,LD_TEMPLATENAME,LD_TGS,LD_VERSIONDATE,LD_EVENT,LD_DOCUMENTID)"
-							+ "VALUES (?,?,?,?,?,?,?,0,1,?,?,'1.0',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,0,?,?,?,?,null,?,?,?,?,?);");
+							+ "VALUES (?,?,?,?,?,?,?,0,1,?,?,'1.0',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,0,?,?,?,?,null,null,?,?,?,?);");
 			initExistingIds();
 			addDocuments(rootFolder, "/");
 			forceCommit();
@@ -448,16 +448,14 @@ public class PopulateDatabase {
 		insertVersion.setLong(30, folderId);
 		// LD_FOLDERNAME
 		insertVersion.setString(31, "testFolder");
-		// LD_TEMPLATENAME
-		insertVersion.setString(32, "testTemplate");
 		// LD_KWDS
-		insertVersion.setString(33, "pippo");
+		insertVersion.setString(32, "pippo");
 		// LD_VERSIONDATE
-		insertVersion.setDate(34, new Date(new java.util.Date().getTime()));
+		insertVersion.setDate(33, new Date(new java.util.Date().getTime()));
 		// LD_EVENT
-		insertVersion.setString(35, "testEvent");
+		insertVersion.setString(34, "testEvent");
 		// LD_DOCUMENTID
-		insertVersion.setLong(36, id);
+		insertVersion.setLong(35, id);
 
 		insertVersion.addBatch();
 
