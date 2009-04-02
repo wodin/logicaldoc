@@ -3,6 +3,7 @@ package com.logicaldoc.core.security;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
 import com.logicaldoc.core.PersistentObject;
@@ -48,7 +49,7 @@ public class User extends PersistentObject implements Serializable {
 	private String email = "";
 
 	private String telephone = "";
-	
+
 	private String telephone2 = "";
 
 	private int type = TYPE_DEFAULT;
@@ -128,6 +129,10 @@ public class User extends PersistentObject implements Serializable {
 
 	public String getLanguage() {
 		return language;
+	}
+
+	public Locale getLocale() {
+		return new Locale(getLanguage());
 	}
 
 	public String getEmail() {
