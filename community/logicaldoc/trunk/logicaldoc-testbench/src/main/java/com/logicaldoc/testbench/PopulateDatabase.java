@@ -302,6 +302,7 @@ public class PopulateDatabase {
 		long filesize = docFile.length();
 		long id = Long.parseLong(dir.getName().substring(dir.getName().lastIndexOf("_") + 1));
 		String content = Util.parse(docFile);
+		String digest = Util.computeDigest(docFile);
 
 		// Skip condition
 		if (existingDocIds.contains(id)) {
@@ -353,7 +354,7 @@ public class PopulateDatabase {
 		// LD_CREATION
 		insertDoc.setDate(20, new Date(new java.util.Date().getTime()));
 		// LD_DIGEST
-		insertDoc.setString(21, Util.computeDigest(docFile));
+		insertDoc.setString(21, digest);
 		// LD_CUSTOMID
 		insertDoc.setString(22, "" + id);
 		// LD_CREATOR
@@ -441,7 +442,7 @@ public class PopulateDatabase {
 		// LD_FILESIZE
 		insertVersion.setLong(27, filesize);
 		// LD_DIGEST
-		insertVersion.setString(28, Util.computeDigest(docFile));
+		insertVersion.setString(28, digest);
 		// LD_RECIPIENT
 		insertVersion.setString(29, "testUser");
 		// LD_FOLDERID
