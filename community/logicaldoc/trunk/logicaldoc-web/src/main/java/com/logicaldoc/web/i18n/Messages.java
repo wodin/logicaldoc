@@ -5,7 +5,6 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -54,13 +53,15 @@ public class Messages extends AbstractMap<String, String> {
 	}
 
 	public static String getMessage(String key) {
+		Locale locale = Locale.getDefault();
+
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		Locale locale = (Locale) facesContext.getExternalContext().getSessionMap().get(Constants.LOCALE);
-
-		if (locale == null) {
-			locale = facesContext.getApplication().getDefaultLocale();
+		if (facesContext != null) {
+			locale = (Locale) facesContext.getExternalContext().getSessionMap().get(Constants.LOCALE);
+			if (locale == null) {
+				locale = facesContext.getApplication().getDefaultLocale();
+			}
 		}
-
 		return getMessage(key, locale);
 	}
 
@@ -110,7 +111,7 @@ public class Messages extends AbstractMap<String, String> {
 	public static void addLocalizedInfo(String message, Object[] parameters) {
 		addInfo(Messages.getMessage(message, parameters));
 	}
-	
+
 	public static void addInfo(String message) {
 		addMessage(FacesMessage.SEVERITY_INFO, null, message, message);
 	}
