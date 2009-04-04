@@ -1562,7 +1562,7 @@ DIV#center {
 	width: 96%;
 }
 
-.homePlainTblColHdr, .homePlainTblColHdr1, .homePlainTblHdr{
+.homePlainTblColHdr,.homePlainTblColHdr1,.homePlainTblHdr {
 	background-color: #ffffff;
 	background-image: none;
 	border: 0px;
@@ -1677,7 +1677,7 @@ homePlainTblColHdr1 homePlainTblHdr
 	color: #919191;
 }
 
-.breadcrumb{
+.breadcrumb {
 	background-color: #eeeeee;
 }
 
@@ -1685,4 +1685,20 @@ homePlainTblColHdr1 homePlainTblHdr
 	font-family: Tahoma, Verdana, Arial;
 	font-size: 12px;
 	font-weight: bold;
+}
+
+/* discussions */
+.discussionCommentHeader {
+	background-color: #DDDDDD;
+	padding: 2px;
+	margin-bottom: 5px;
+}
+.discussionCommentColumn{
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	padding-bottom: 4px;
+	text-align: left;
+	overflow: auto;
+	border: none;
 }

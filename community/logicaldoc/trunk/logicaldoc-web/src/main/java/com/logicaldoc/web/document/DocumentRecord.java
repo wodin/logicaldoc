@@ -263,8 +263,8 @@ public class DocumentRecord extends MenuBarBean {
 				"#{searchForm.searchSimilar}", null, style.getImagePath("similar.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("links"), "linked-" + document.getId(), null,
 				"#{documentRecord.links}", null, style.getImagePath("link.png"), true, "_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.discuss"), "articles-" + document.getId(), null,
-				"#{documentRecord.articles}", null, style.getImagePath("comments.png"), true, "_blank", null));
+		model.add(createMenuItem(" " + Messages.getMessage("document.discussions"), "discussions-" + document.getId(),
+				null, "#{documentRecord.discussions}", null, style.getImagePath("comments.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + document.getId(),
 				null, "#{documentRecord.sendAsEmail}", null, style.getImagePath("email_go.png"), true, "_blank", null));
 		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + document.getId(),
@@ -470,26 +470,21 @@ public class DocumentRecord extends MenuBarBean {
 	}
 
 	/**
-	 * Shows the articles for this document
+	 * Shows the discussions for this document
 	 */
-	public String articles() {
-		if (SessionManagement.isValid()) {
-			try {
-				ArticlesRecordsManager articlesManager = ((ArticlesRecordsManager) FacesUtil
-						.accessBeanFromFacesContext("articlesRecordsManager", FacesContext.getCurrentInstance(), log));
-				articlesManager.selectDocument(document);
+	public String discussions() {
+		try {
+			DiscussionsManager discussionsManager = ((DiscussionsManager) FacesUtil.accessBeanFromFacesContext(
+					"discussionsManager", FacesContext.getCurrentInstance(), log));
+			discussionsManager.selectDocument(document);
 
-				DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-						"documentNavigation", FacesContext.getCurrentInstance(), log));
-				documentNavigation.setSelectedPanel(new PageContentBean("articles"));
-			} catch (Exception ex) {
-				log.error(ex.getMessage(), ex);
-				Messages.addError(Messages.getMessage("errors.error"));
-			}
-		} else {
-			return "login";
+			DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
+					"documentNavigation", FacesContext.getCurrentInstance(), log));
+			documentNavigation.setSelectedPanel(new PageContentBean("discussions"));
+		} catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
+			Messages.addError(Messages.getMessage("errors.error"));
 		}
-
 		return null;
 	}
 

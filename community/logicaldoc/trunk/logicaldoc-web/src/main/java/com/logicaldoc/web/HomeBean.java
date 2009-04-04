@@ -11,9 +11,9 @@ import java.util.StringTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.document.Article;
+import com.logicaldoc.core.document.DiscussionComment;
 import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.dao.ArticleDAO;
+import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
@@ -27,7 +27,7 @@ public class HomeBean {
 
 	private boolean messagesExpanded = true;
 
-	private boolean lastArticlesExpanded = false;
+	private boolean lastCommentsExpanded = false;
 
 	private boolean lastDocumentsExpanded = false;
 
@@ -106,28 +106,29 @@ public class HomeBean {
 	}
 
 	/**
-	 * Retrieves the list of last articles from the database
+	 * Retrieves the list of last comments from the database
 	 */
-	public Collection<Article> getLastArticles() {
-		List<Article> lastarticles = new ArrayList<Article>();
+	public Collection<DiscussionComment> getLastComments() {
+		List<DiscussionComment> lastcomments = new ArrayList<DiscussionComment>();
 
 		if (SessionManagement.isValid()) {
 			try {
 				long userId = SessionManagement.getUserId();
-				ArticleDAO artDao = (ArticleDAO) Context.getInstance().getBean(ArticleDAO.class);
-				Collection<Article> articles = artDao.findByUserId(userId);
+				DiscussionThreadDAO artDao = (DiscussionThreadDAO) Context.getInstance().getBean(
+						DiscussionThreadDAO.class);
+				Collection<DiscussionComment> articles = artDao.findCommentsByUserId(userId, 10);
 
 				if (articles != null) {
 					// revert the list, it should be in asc order by time
-					lastarticles.addAll(articles);
-					Collections.reverse(lastarticles);
+					lastcomments.addAll(articles);
+					Collections.reverse(lastcomments);
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
 		}
 
-		return lastarticles;
+		return lastcomments;
 	}
 
 	/**
@@ -153,12 +154,12 @@ public class HomeBean {
 		return lastdocs;
 	}
 
-	public boolean isLastArticlesExpanded() {
-		return lastArticlesExpanded;
+	public boolean isLastCommentsExpanded() {
+		return lastCommentsExpanded;
 	}
 
-	public void setLastArticlesExpanded(boolean lastArticlesExpanded) {
-		this.lastArticlesExpanded = lastArticlesExpanded;
+	public void setLastCommentsExpanded(boolean lastCommentsExpanded) {
+		this.lastCommentsExpanded = lastCommentsExpanded;
 	}
 
 	public boolean isLastDocumentsExpanded() {

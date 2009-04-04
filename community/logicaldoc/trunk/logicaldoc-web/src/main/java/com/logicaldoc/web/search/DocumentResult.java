@@ -168,11 +168,6 @@ public class DocumentResult extends DocumentRecord implements Result {
 		return super.sendAsTicket();
 	}
 
-	public String articles() {
-		openDocumentsPage();
-		return super.articles();
-	}
-
 	public String versions() {
 		openDocumentsPage();
 		return super.versions();

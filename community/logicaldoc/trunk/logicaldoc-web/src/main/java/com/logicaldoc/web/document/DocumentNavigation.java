@@ -14,9 +14,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.document.Article;
+import com.logicaldoc.core.document.DiscussionComment;
+import com.logicaldoc.core.document.DiscussionThread;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.searchengine.Result;
 import com.logicaldoc.core.security.Group;
@@ -276,51 +278,6 @@ public class DocumentNavigation extends NavigationBean {
 		return null;
 	}
 
-	/**
-	 * Opens the discussion containing the selected article
-	 */
-	public String showDiscussion() {
-
-		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
-
-		Object entry = (Object) map.get("article");
-
-		Article article = (Article) entry;
-		DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Document document = docdao.findById(article.getDocId());
-
-		long folderId = Menu.MENUID_DOCUMENTS;
-		Menu folder = document.getFolder();
-		folderId = folder.getId();
-		selectDirectory(folderId);
-
-		setSelectedPanel(new PageContentBean(getViewMode()));
-
-		// Show the documents browsing panel
-		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
-				.getCurrentInstance(), log));
-
-		Menu documentsMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
-
-		PageContentBean panel = new PageContentBean("m-" + documentsMenu.getId(), "document/browse");
-		panel.setContentTitle(Messages.getMessage(documentsMenu.getText()));
-		navigation.setSelectedPanel(panel);
-
-		// Show the discussion panel
-		ArticlesRecordsManager articlesManager = ((ArticlesRecordsManager) FacesUtil.accessBeanFromFacesContext(
-				"articlesRecordsManager", FacesContext.getCurrentInstance(), log));
-
-		articlesManager.selectDocument(document);
-
-		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
-				"documentNavigation", FacesContext.getCurrentInstance(), log));
-
-		documentNavigation.setSelectedPanel(new PageContentBean("articles"));
-
-		return null;
-	}
-
 	private void highlightDocument(long docId) {
 		// Notify the records manager
 		DocumentsRecordsManager recordsManager = ((DocumentsRecordsManager) FacesUtil.accessBeanFromFacesContext(
@@ -444,6 +401,55 @@ public class DocumentNavigation extends NavigationBean {
 
 	public String showDocuments() {
 		this.setSelectedPanel(new PageContentBean(getViewMode()));
+		return null;
+	}
+
+	/**
+	 * Opens the discussion containing the selected article
+	 */
+	public String showDiscussion() {
+
+		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+
+		Object entry = (Object) map.get("comment");
+
+		DiscussionComment article = (DiscussionComment) entry;
+		DiscussionThreadDAO ddao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
+		DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		
+		DiscussionThread thread = ddao.findById(article.getThreadId());
+		ddao.initialize(thread);
+		Document document = docdao.findById(thread.getDocId());
+
+		long folderId = Menu.MENUID_DOCUMENTS;
+		Menu folder = document.getFolder();
+		folderId = folder.getId();
+		selectDirectory(folderId);
+
+		setSelectedPanel(new PageContentBean(getViewMode()));
+
+		// Show the documents browsing panel
+		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
+				.getCurrentInstance(), log));
+
+		Menu documentsMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
+
+		PageContentBean panel = new PageContentBean("m-" + documentsMenu.getId(), "document/browse");
+		panel.setContentTitle(Messages.getMessage(documentsMenu.getText()));
+		navigation.setSelectedPanel(panel);
+
+		// Show the discussion panel
+		DiscussionsManager discussionsManager=((DiscussionsManager) FacesUtil.accessBeanFromFacesContext(
+				"discussionsManager", FacesContext.getCurrentInstance(), log));
+		discussionsManager.selectDocument(document);
+		discussionsManager.setSelectedThread(thread);
+		discussionsManager.showComments();
+
+		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
+				"documentNavigation", FacesContext.getCurrentInstance(), log));
+		documentNavigation.setSelectedPanel(new PageContentBean("discussions"));
+
 		return null;
 	}
 }

@@ -58,18 +58,18 @@
 				</ice:panelGroup>
 			</ice:panelCollapsible>
 
-			<ice:panelCollapsible id="lastArticlesPanel" expanded="#{homeBean.lastArticlesExpanded}"
+			<ice:panelCollapsible id="lastCommentsPanel" expanded="#{homeBean.lastCommentsExpanded}"
 				styleClass="pnlClpsbl" style="padding-top: 20px;">
 				<f:facet name="header">
 					<ice:panelGroup styleClass="expandableStateIndicator">
-						<ice:outputText id="lastArticlesHeader"
-							value="#{msgs['home.last.articles']}" />
+						<ice:outputText id="lastCommentsHeader"
+							value="#{msgs['home.last.comments']}" />
 					</ice:panelGroup>
 				</f:facet>
 				<ice:panelGroup>
 					<!-- Table with results -->
-					<ice:dataTable id="articleList"
-						value="#{homeBean.lastArticles}" var="article"
+					<ice:dataTable id="commentsList"
+						value="#{homeBean.lastComments}" var="comment"
 						cellpadding="0" rows="10" styleClass="homePlainTbl">
 						<ice:column style="border: 0px;">
 							<f:facet name="header">
@@ -78,7 +78,7 @@
 							<ice:panelGroup>
 								<ice:commandLink title="#{msgs['home.show.discussion']}"
 									action="#{documentNavigation.showDiscussion}">
-									<ice:outputText value="#{article.subject}" />
+									<ice:outputText value="#{comment.subject}" />
 								</ice:commandLink>
 							</ice:panelGroup>
 						</ice:column>
@@ -87,7 +87,7 @@
 								<ice:outputText value="#{msgs['date']}" />
 							</f:facet>
 							<ice:panelGroup>
-								<ice:outputText value="#{article.date}">
+								<ice:outputText value="#{comment.date}">
 									<f:convertDateTime pattern="#{loc.dateFormatHM}" timeZone="#{StyleBean.timeZone}" />
 								</ice:outputText>
 							</ice:panelGroup>

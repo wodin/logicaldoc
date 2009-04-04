@@ -127,12 +127,12 @@
 		</property>
 	</bean>
 
-	<bean id="ArticleDAO" parent="ApplicationBaseTransactionProxy"
+	<bean id="DiscussionThreadDAO" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
 		<property name="target">
 			<bean
-				class="com.logicaldoc.core.document.dao.HibernateArticleDAO"
+				class="com.logicaldoc.core.document.dao.HibernateDiscussionThreadDAO"
 				abstract="false" lazy-init="default" autowire="default"
 				dependency-check="default">
 				<property name="sessionFactory">
@@ -168,8 +168,8 @@
 				<property name="sessionFactory">
 					<ref bean="SessionFactory" />
 				</property>
-				<property name="articleDAO">
-					<ref bean="ArticleDAO" />
+				<property name="discussionDAO">
+					<ref bean="DiscussionThreadDAO" />
 				</property>
 				<property name="historyDAO">
 					<ref bean="HistoryDAO" />
