@@ -220,6 +220,17 @@
       <value>#{documentNavigation}</value>
     </managed-property>
   </managed-bean>
+  
+  <!-- Discussions -->
+  <managed-bean>
+    <managed-bean-name>discussionsManager</managed-bean-name>
+    <managed-bean-class>com.logicaldoc.web.document.DiscussionsManager</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>documentNavigation</property-name>
+      <value>#{documentNavigation}</value>
+    </managed-property>
+  </managed-bean>
 
   <!-- History -->
   <managed-bean>

@@ -18,7 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
-import com.logicaldoc.core.document.Article;
+import com.logicaldoc.core.document.DiscussionThread;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentListener;
@@ -42,12 +42,11 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @since 3.0
  */
 public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document> implements DocumentDAO {
-
-	private ArticleDAO articleDAO;
-
 	private HistoryDAO historyDAO;
 
 	private VersionDAO versionDAO;
+
+	private DiscussionThreadDAO discussionDAO;
 
 	private MenuDAO menuDAO;
 
@@ -94,10 +93,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		this.menuDAO = menuDAO;
 	}
 
-	public void setArticleDAO(ArticleDAO articleDAO) {
-		this.articleDAO = articleDAO;
-	}
-
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
@@ -117,10 +112,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					getHibernateTemplate().saveOrUpdate(version);
 				}
 
-				// Remove articles
-				for (Article article : articleDAO.findByDocId(docId)) {
-					article.setDeleted(1);
-					getHibernateTemplate().saveOrUpdate(article);
+				// Remove discussions
+				for (DiscussionThread discussion : discussionDAO.findByDocId(docId)) {
+					discussion.setDeleted(1);
+					getHibernateTemplate().saveOrUpdate(discussion);
 				}
 
 				// Remove history
@@ -798,5 +793,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				log.error(e.getMessage(), e);
 		}
 
+	}
+
+	public void setDiscussionDAO(DiscussionThreadDAO discussionDAO) {
+		this.discussionDAO = discussionDAO;
 	}
 }

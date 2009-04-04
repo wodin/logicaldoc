@@ -6,8 +6,7 @@ import java.util.Set;
 /**
  * Manager on security issues such as users and groups
  * 
- * @author Marco Meschieri
- * @version $Id: SecurityManager.java,v 1.1 2007/06/29 06:28:30 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public interface SecurityManager {

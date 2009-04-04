@@ -1,7 +1,8 @@
-create table ld_article (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_subject varchar(255) not null, ld_message varchar(2000), ld_date timestamp, ld_userid bigint not null, ld_username varchar(255), primary key (ld_id));
 create table ld_attributes (ld_templateid bigint not null, ld_attribute varchar(255));
 create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(4000), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, ld_creation timestamp not null, ld_publisher varchar(255), ld_publisherid bigint not null, ld_creator varchar(255), ld_creatorid bigint not null, ld_status int, ld_type varchar(255), ld_lockuserid bigint, ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourceid varchar(4000), ld_sourcetype varchar(255), ld_object varchar(4000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_indexed int not null, ld_signed int not null, ld_digest varchar(255), ld_recipient varchar(4000), ld_folderid bigint, ld_templateid bigint, primary key (ld_id));
 create table ld_document_ext (ld_docid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_docid, ld_name));
+create table ld_dcomment (ld_threadid bigint not null, ld_replyto int, ld_replypath varchar(255), ld_userid bigint not null, ld_username varchar(255), ld_date timestamp, ld_subject varchar(255), ld_body varchar(4000), ld_deleted int not null, ld_id int not null, primary key (ld_threadid, ld_id));
+create table ld_dthread (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_creation timestamp, ld_creatorid bigint not null, ld_creatorname varchar(255), ld_lastpost timestamp, ld_subject varchar(255), ld_replies int, ld_views int, primary key (ld_id));
 create table ld_generic (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_subtype varchar(255) not null, ld_string1 varchar(4000), ld_string2 varchar(4000), ld_integer1 int, ld_integer2 int, ld_double1 float, ld_double2 float, ld_date1 timestamp, ld_date2 timestamp, primary key (ld_id));
 create table ld_generic_ext (ld_genid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_genid, ld_name));
 create table ld_group (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(255), ld_type int not null, primary key (ld_id));
@@ -19,6 +20,7 @@ create table ld_userdoc (ld_id bigint not null, ld_lastmodified timestamp not nu
 create table ld_usergroup (ld_groupid bigint not null, ld_userid bigint not null, primary key (ld_groupid, ld_userid));
 create table ld_version (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(4000), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, ld_creation timestamp, ld_publisher varchar(255), ld_publisherid bigint not null,  ld_creator varchar(255), ld_creatorid bigint not null, ld_status int, ld_type varchar(255), ld_lockuserid bigint, ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourceid varchar(4000), ld_sourcetype varchar(255), ld_object varchar(4000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_indexed int not null, ld_signed int not null, ld_digest varchar(255), ld_recipient varchar(4000), ld_folderid bigint, ld_foldername varchar(4000), ld_templateid bigint, ld_templatename varchar(4000), ld_tgs varchar(4000), ld_username varchar(255), ld_userid bigint, ld_versiondate timestamp, ld_comment varchar(4000),ld_event varchar(255),  ld_documentid bigint, primary key (ld_id));
 create table ld_version_ext (ld_versionid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_versionid, ld_name));
+
 alter table ld_attributes add constraint FKF9B7567E76C86307 foreign key (ld_templateid) references ld_template(ld_id);
 alter table ld_document add constraint FK75ED9C0276C86307 foreign key (ld_templateid) references ld_template(ld_id);
 alter table ld_document add constraint FK75ED9C027C565C60 foreign key (ld_folderid) references ld_menu(ld_id);
@@ -33,6 +35,7 @@ alter table ld_usergroup add constraint FK2435438DB8B12CA9 foreign key (ld_useri
 alter table ld_usergroup add constraint FK2435438D76F11EA1 foreign key (ld_groupid) references ld_group(ld_id);
 alter table ld_version add constraint FK9B3BD9118A053CE foreign key (ld_documentid) references ld_document(ld_id);
 alter table ld_version_ext add constraint FK78C3A1F3B90495EE foreign key (ld_versionid) references ld_version(ld_id);
+alter table ld_dcomment add constraint FKF2C40628DBB5BF4 foreign key (ld_threadid) references ld_dthread(ld_id);
 
 
 alter table ld_ticket add constraint FK_TICKET_DOC foreign key (ld_docid) references ld_document(ld_id) on delete cascade;
@@ -40,7 +43,6 @@ alter table ld_ticket add constraint FK_TICKET_USER foreign key (ld_userid) refe
 alter table ld_menugroup add constraint FK_MENUGROUP_GROUP foreign key (ld_groupid) references ld_group(ld_id) on delete cascade;
 alter table ld_userdoc add constraint FK_USERDOC_DOC foreign key (ld_docid) references ld_document(ld_id) on delete cascade;
 alter table ld_userdoc add constraint FK_USERDOC_USER foreign key (ld_userid) references ld_user(ld_id) on delete cascade;
-alter table ld_article add constraint FK_ARTICLE_DOC foreign key (ld_docid) references ld_document(ld_id) on delete cascade;
 alter table ld_menu add constraint FK_MENU_PARENT foreign key (ld_parentid) references ld_menu(ld_id) on delete cascade;
 alter table ld_history add constraint FK_HISTORY_DOC foreign key (ld_docid) references ld_document(ld_id) on delete cascade;
 

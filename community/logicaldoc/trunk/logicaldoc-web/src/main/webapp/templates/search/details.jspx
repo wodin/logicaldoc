@@ -3,7 +3,7 @@
  Documents result list table - Details
   
  @author Marco Meschieri - Logical Objects
- @since 3.0
+ @since 4.5
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:f="http://java.sun.com/jsf/core"

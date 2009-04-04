@@ -18,7 +18,7 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 
 	public HibernateDownloadTicketDAO() {
 		super(DownloadTicket.class);
-		super.log = LogFactory.getLog(HibernateArticleDAO.class);
+		super.log = LogFactory.getLog(HibernateDownloadTicketDAO.class);
 	}
 
 	/**
