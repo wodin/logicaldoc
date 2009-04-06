@@ -164,7 +164,7 @@ insert into ld_history
 values     (3,'2008-10-22',0,1,3,'2006-12-27','sebastian','data test 03','reason test 03');
 
 insert into ld_systemmessage
-values     (1,'2008-10-22',0,'admin','sebastian','message text1','subject1','1111999999999999999',5,3,1,0);
+values     (1,'2008-10-22',0,'admin','sebastian','message text1','subject1','2008-10-22',5,3,1,0);
 
 insert into ld_link(ld_id, ld_lastmodified,ld_deleted, ld_docid1, ld_docid2,ld_type)
 values   (1,'2008-10-22',0,1,2,'test');

@@ -13,7 +13,7 @@
 		<property name="recipient" type="string" column="ld_recipient" length="255" />
 		<property name="messageText" type="string" column="ld_messagetext" length="2000" />
 		<property name="subject" type="string" column="ld_subject" length="255" />
-		<property name="sentDate" type="string" column="ld_sentdate" length="20" not-null="true" />
+		<property name="sentDate" type="timestamp" column="ld_sentdate" not-null="true" />
 		<property name="dateScope" type="int" column="ld_datescope" />
 		<property name="prio" type="int" column="ld_prio" />
 		<property name="confirmation" type="int" column="ld_confirmation" />
