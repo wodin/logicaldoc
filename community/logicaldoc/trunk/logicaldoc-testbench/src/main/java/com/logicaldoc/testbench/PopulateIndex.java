@@ -160,7 +160,7 @@ public class PopulateIndex {
 				addDocuments(files[i], path + "/" + parentFolderId);
 			} else if (files[i].isDirectory() && files[i].getName().startsWith("doc_")) {
 				try {
-					long docId = insertDocument(files[i], path.replaceAll("//", "/"));
+					long docId = insertDocument(files[i], (path+"/"+files[i].getParentFile()).replaceAll("//", "/"));
 					if ((count % 100 == 0) && docId > 0) {
 						log.info("Added index document " + docId);
 					}
