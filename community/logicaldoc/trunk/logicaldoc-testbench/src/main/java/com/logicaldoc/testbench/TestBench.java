@@ -55,7 +55,7 @@ public class TestBench {
 
 		popUsers = new PopulateUsers();
 		popUsers.setJdbcClass(context.getProperty("jdbc.driver"));
-		popUsers.setJdbcUrl(context.getProperty("jdbc.url"));
+		popUsers.setJdbcUrl(context.getProperty("jdbc.url")); 
 		popUsers.setUsername(context.getProperty("jdbc.username"));
 		popUsers.setPassword(context.getProperty("jdbc.password"));
 		
