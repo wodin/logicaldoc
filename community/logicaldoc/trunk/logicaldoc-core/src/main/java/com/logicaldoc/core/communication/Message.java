@@ -19,7 +19,7 @@ public abstract class Message extends PersistentObject {
 
 	private String subject = "";
 
-	private String sentDate = "";
+	private Date sentDate = new Date();
 
 	private int read = 0; // 0 - false; 1 - true
 
@@ -33,10 +33,6 @@ public abstract class Message extends PersistentObject {
 
 	public String getSubject() {
 		return subject;
-	}
-
-	public String getSentDate() {
-		return sentDate;
 	}
 
 	public int getRead() {
@@ -55,21 +51,15 @@ public abstract class Message extends PersistentObject {
 		subject = subj;
 	}
 
-	public void setSentDate(String dat) {
-		sentDate = dat;
-	}
-
 	public void setRead(int rd) {
 		read = rd;
 	}
 
-	public Date getSentDateAsDate() {
-		Date date = new Date();
-		try {
-			date.setTime(Long.parseLong(getSentDate()));
-		} catch (Exception e) {
-		}
-		return date;
+	public Date getSentDate() {
+		return sentDate;
+	}
 
+	public void setSentDate(Date sentDate) {
+		this.sentDate = sentDate;
 	}
 }
