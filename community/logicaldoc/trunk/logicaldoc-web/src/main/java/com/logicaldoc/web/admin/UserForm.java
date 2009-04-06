@@ -557,7 +557,7 @@ public class UserForm {
 				user.getFirstName() + " " + user.getName(), user.getUserName(), password, address });
 		email.setMessageText(text);
 		email.setRead(1);
-		email.setSentDate(String.valueOf(new Date().getTime()));
+		email.setSentDate(new Date());
 		email.setSubject(Messages.getMessage("email.notify.account.object", locale));
 		email.setUserName(user.getUserName());
 

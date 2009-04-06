@@ -136,7 +136,7 @@ public class MessagesRecordsManager {
 				sysmess.setRecipient(record.getAuthor());
 				sysmess.setSubject("Confirmation");
 				sysmess.setMessageText("To: " + record.getRecipient() + "\nMessage: " + record.getMessageText());
-				sysmess.setSentDate(String.valueOf(date.getTime()));
+				sysmess.setSentDate(date);
 				sysmess.setRead(0);
 				sysmess.setConfirmation(0);
 				sysmess.setPrio(record.getPrio());
