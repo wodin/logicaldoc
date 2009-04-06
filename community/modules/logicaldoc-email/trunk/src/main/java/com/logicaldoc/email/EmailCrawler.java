@@ -335,9 +335,9 @@ public class EmailCrawler extends Task {
 		email.setUserName(username);
 		email.setFolder("inbox");
 		if (message.getSentDate() != null)
-			email.setSentDate(String.valueOf(message.getSentDate().getTime()));
+			email.setSentDate(message.getSentDate());
 		else
-			email.setSentDate(String.valueOf(new Date().getTime()));
+			email.setSentDate(new Date());
 		email.setEmailId(mailId);
 		email.setAccountId(account.getId());
 
@@ -456,7 +456,7 @@ public class EmailCrawler extends Task {
 			if ((srcAuthor != null) && (srcAuthor.length() > 255))
 				srcAuthor = srcAuthor.substring(0, fieldLength);
 
-			Date srcDate = email.getSentDateAsDate();
+			Date srcDate = email.getSentDate();
 
 			Map<String, String> attributes = null;
 			if (template != null && StringUtils.isEmpty(to)) {
