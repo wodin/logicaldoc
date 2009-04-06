@@ -90,7 +90,7 @@
 							<ice:outputText value="#{msgs['sent']}" />
 						</f:facet>
 						<ice:panelGroup>
-							<ice:outputText value="#{messageRecord.sentDateAsDate}">
+							<ice:outputText value="#{messageRecord.sentDate}">
 								<f:convertDateTime pattern="#{loc.dateFormatHM}" />
 							</ice:outputText>
 						</ice:panelGroup>
