@@ -84,7 +84,7 @@ public class MessageForm {
 				User user = udao.findByUserName(recipient);
 				if (user != null) {
 					message.setAuthor(SessionManagement.getUsername());
-					message.setSentDate(String.valueOf(new Date().getTime()));
+					message.setSentDate(new Date());
 
 					SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
 					boolean stored = smdao.store(message);

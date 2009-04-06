@@ -131,7 +131,7 @@ public class EMailForm {
 				email.setFolder("outbox");
 				email.setMessageText(getText());
 				email.setRead(1);
-				email.setSentDate(String.valueOf(new Date().getTime()));
+				email.setSentDate(new Date());
 				email.setSubject(getSubject());
 				email.setUserName(user.getUserName());
 
