@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -54,6 +55,12 @@ public class PopulateIndex {
 	public static final String FIELD_TITLE = "title";
 
 	public static final String FIELD_DOC_ID = "docId";
+	
+	public static final String FIELD_TEMPLATE_ID = "templateId";
+	
+	public static final String FIELD_CREATION = "creation";
+	
+	public static final String FIELD_CUSTOM_ID = "customId";
 
 	protected static Log log = LogFactory.getLog(PopulateIndex.class);
 
@@ -199,6 +206,10 @@ public class PopulateIndex {
 		doc
 				.add(new Field(FIELD_TAGS, Util.extractWordsAsString(5, content), Field.Store.YES,
 						Field.Index.TOKENIZED));
+		
+		doc.add(new Field(FIELD_CREATION, df.format(new Date().getTime()), Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field(FIELD_CUSTOM_ID, String.valueOf(id), Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field(FIELD_TEMPLATE_ID, " ", Field.Store.YES, Field.Index.UN_TOKENIZED));
 
 		writer.addDocument(doc);
 		
