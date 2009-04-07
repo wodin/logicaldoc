@@ -27,6 +27,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.sql.SqlUtil;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.components.SortableList;
 import com.logicaldoc.web.i18n.Messages;
@@ -80,7 +81,10 @@ public class UsersRecordsManager extends SortableList {
 				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 				Collection<User> tmpusers = null;
 				if (usersFilter.length() != 0) {
-					tmpusers = dao.findByLikeUserName("%" + usersFilter + "%");
+					String buf = SqlUtil.doubleQuotes(usersFilter.trim().toLowerCase());
+					tmpusers = dao.findByWhere(" lower(_entity.userName) like '%" + buf
+							+ "%' or lower(_entity.name) like '%" + buf + "%' or lower(_entity.firstName) like '%"
+							+ buf + "%'");
 				} else
 					tmpusers = dao.findAll();
 
