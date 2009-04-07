@@ -59,7 +59,7 @@ public interface DocumentManager {
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
 	public void checkout(long docId, User user) throws Exception;
-	
+
 	/**
 	 * Locks the given document
 	 * 
@@ -84,8 +84,7 @@ public interface DocumentManager {
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
 	public void lock(long docId, int status, String historyEvent, User user, String comment) throws Exception;
-	
-	
+
 	/**
 	 * UNChecks out the given document
 	 * 
@@ -187,8 +186,8 @@ public interface DocumentManager {
 	 */
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, String sourceId,
-			String object, String recipient, boolean immediateIndexing) throws Exception;
+			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, String sourceId, String object,
+			String recipient, boolean immediateIndexing) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -392,12 +391,10 @@ public interface DocumentManager {
 	public String getDocumentContent(long docId);
 
 	/**
-	 * Deletes the document from DB, index and filesystem
-	 * 
-	 * @param docId
-	 * @throws Exception
+	 * Utility method for document removal from index and database update(flag
+	 * indexed)
 	 */
-	public void delete(long docId) throws Exception;
+	public void deleteFromIndex(Document doc);
 
 	/**
 	 * Marks the document, with the given docId, as immutable and save the given

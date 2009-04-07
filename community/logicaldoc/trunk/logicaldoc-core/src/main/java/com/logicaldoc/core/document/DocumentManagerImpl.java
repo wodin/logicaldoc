@@ -58,6 +58,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	private VersionDAO versionDAO;
 
 	private SettingsConfig settings;
+	
+	private MenuDAO menuDAO;
 
 	private Indexer indexer;
 
@@ -228,23 +230,14 @@ public class DocumentManagerImpl implements DocumentManager {
 		storer.store(content, path, doc.getFileVersion());
 	}
 
-	@Override
-	public void delete(long docId) throws Exception {
-		Document doc = documentDAO.findById(docId);
-		if (doc.getImmutable() == 1)
-			throw new Exception("Document is immutable");
-		deleteDocument(doc);
-		boolean result = documentDAO.delete(docId);
-		if (!result)
-			throw new Exception("Database Error deleting document");
-	}
 
 	/**
-	 * Utility method for document removal from index and file system
+	 * Utility method for document removal from index
 	 * 
 	 * @param doc
 	 */
-	private void deleteDocument(Document doc) {
+	@Override
+	public void deleteFromIndex(Document doc) {
 		if (doc.getImmutable() == 1)
 			return;
 		try {
@@ -717,11 +710,14 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public List<Menu> deleteFolder(Menu folder, User user) throws Exception {
-		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		List<Menu> deletableFolders = new ArrayList<Menu>();
 		List<Menu> notDeletableFolders = new ArrayList<Menu>();
+		List<Document> deletableDocs = new ArrayList<Document>();
 
-		if (mdao.isPermissionEnabled(Permission.DELETE, folder.getId(), user.getId())) {
+		Set<Long> deletableIds = menuDAO.findMenuIdByUserIdAndPermission(user.getId(), Permission.DELETE,
+				Menu.MENUTYPE_DIRECTORY);
+
+		if (deletableIds.contains(folder.getId())) {
 			deletableFolders.add(folder);
 		} else {
 			notDeletableFolders.add(folder);
@@ -730,10 +726,10 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		try {
 			// Retrieve all the sub-folders
-			List<Menu> subfolders = mdao.findByParentId(folder.getId());
+			List<Menu> subfolders = menuDAO.findByParentId(folder.getId());
 
 			for (Menu subfolder : subfolders) {
-				if (mdao.isPermissionEnabled(Permission.DELETE, subfolder.getId(), user.getId())) {
+				if (deletableIds.contains(subfolder.getId())) {
 					deletableFolders.add(subfolder);
 				} else {
 					notDeletableFolders.add(subfolder);
@@ -743,8 +739,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			for (Menu deletableFolder : deletableFolders) {
 				boolean foundDocImmutable = false;
 				boolean foundDocLocked = false;
-				DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-				List<Document> docs = docdao.findByFolder(deletableFolder.getId());
+				List<Document> docs = documentDAO.findByFolder(deletableFolder.getId());
+
 				for (Document doc : docs) {
 					if (doc.getImmutable() == 1) {
 						foundDocImmutable = true;
@@ -754,14 +750,15 @@ public class DocumentManagerImpl implements DocumentManager {
 						foundDocLocked = true;
 						continue;
 					}
-					delete(doc.getId());
+					deletableDocs.add(doc);
+					//delete(doc.getId());
 				}
 				if (foundDocImmutable || foundDocLocked) {
 					notDeletableFolders.add(deletableFolder);
 				}
 			}
 
-			// Avoid deletion of the entire path of an undeleteble folder
+			// Avoid deletion of the entire path of an undeletable folder
 			for (Menu notDeletable : notDeletableFolders) {
 				Menu parent = notDeletable;
 				while (true) {
@@ -769,13 +766,11 @@ public class DocumentManagerImpl implements DocumentManager {
 						deletableFolders.remove(parent);
 					if (parent.equals(folder))
 						break;
-					parent = mdao.findById(parent.getParentId());
+					parent = menuDAO.findById(parent.getParentId());
 				}
 			}
-
-			for (Menu fld : deletableFolders) {
-				mdao.delete(fld.getId());
-			}
+			menuDAO.deleteAll(deletableFolders);
+			documentDAO.deleteAll(deletableDocs);
 			return notDeletableFolders;
 		} catch (Throwable e) {
 			log.error(e);
@@ -786,8 +781,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public Document create(File file, Menu folder, User user, String language, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, String sourceId,
-			String object, String recipient, boolean immediateIndexing) throws Exception {
+			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, String sourceId, String object,
+			String recipient, boolean immediateIndexing) throws Exception {
 		String filename = file.getName();
 		String encoding = "UTF-8";
 		String[] encodings = CharsetDetector.detectEncodings(filename);
@@ -838,5 +833,9 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void setVersionDAO(VersionDAO versionDAO) {
 		this.versionDAO = versionDAO;
+	}
+
+	public void setMenuDAO(MenuDAO menuDAO) {
+		this.menuDAO = menuDAO;
 	}
 }

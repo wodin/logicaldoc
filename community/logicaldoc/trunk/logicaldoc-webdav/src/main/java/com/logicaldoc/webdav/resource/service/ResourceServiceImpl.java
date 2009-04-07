@@ -282,7 +282,7 @@ public class ResourceServiceImpl implements ResourceService {
 				documentManager.checkin(Long.parseLong(resource.getID()), context.getInputStream(), resource.getName(),
 						user, VERSION_TYPE.NEW_SUBVERSION, "", false);
 			} else {
-				documentManager.delete(document.getId());
+				documentDAO.delete(document.getId());
 				this.createResource(context.getResource(), context.getSystemId(), false, context);
 			}
 		} catch (NumberFormatException e) {
@@ -398,7 +398,7 @@ public class ResourceServiceImpl implements ResourceService {
 				if (!parent.isWriteEnabled())
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
-				documentManager.delete(Long.parseLong(resource.getID()));
+				documentDAO.delete(Long.parseLong(resource.getID()));
 			}
 		} catch (DavException de) {
 			throw de;

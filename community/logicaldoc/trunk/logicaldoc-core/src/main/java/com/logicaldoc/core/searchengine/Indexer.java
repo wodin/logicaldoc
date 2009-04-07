@@ -2,7 +2,9 @@ package com.logicaldoc.core.searchengine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
@@ -146,6 +148,7 @@ public class Indexer {
 	 */
 	public synchronized void optimize() {
 		log.warn("Started optimization for all indexes");
+
 		String indexdir = settingsConfig.getValue("indexdir");
 		try {
 			// Get languages from LanguageManager
@@ -164,8 +167,7 @@ public class Indexer {
 	}
 
 	/**
-	 * Deletes the entries of a document in the index of the search engine then
-	 * launch optimization on the language specific index
+	 * Deletes the entries of a document in the index of the search engine.
 	 * 
 	 * @param docId - DocID of the document.
 	 * @param language - Language of the document.
@@ -180,6 +182,33 @@ public class Indexer {
 			reader.close();
 		} catch (IOException ioe) {
 			log.error("deleteDocument " + ioe.getMessage(), ioe);
+		}
+	}
+
+	/**
+	 * Removed all passed documents from the index
+	 * 
+	 * @param docIds Collection of document identifiers
+	 */
+	public void deleteDocuments(Collection<Long> docIds) {
+		List<File> indexes = new ArrayList<File>();
+		for (File index : indexes) {
+			for (Long docId : docIds) {
+				IndexReader reader = null;
+				try {
+					reader = IndexReader.open(index);
+					reader.deleteDocuments(new Term(LuceneDocument.FIELD_DOC_ID, Long.toString(docId)));
+				} catch (IOException ioe) {
+					log.error("deleteDocument " + ioe.getMessage(), ioe);
+				} finally {
+					if (reader != null) {
+						try {
+							reader.close();
+						} catch (IOException e) {
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -215,20 +244,22 @@ public class Indexer {
 	 * This method can unlock a locked index.
 	 */
 	public synchronized void unlock() {
-		String indexdir = settingsConfig.getValue("indexdir");
-		try {
-			// Get languages from LanguageManager
-			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
-			for (Language language : languages) {
-				File indexPath = new File(indexdir, language.getIndex());
-
-				FSDirectory fsindexdir = FSDirectory.getDirectory(indexPath);
-				IndexReader ir = IndexReader.open(fsindexdir);
+		List<File> indexes = new ArrayList<File>();
+		for (File index : indexes) {
+			IndexReader ir = null;
+			try {
+				FSDirectory fsindexdir = FSDirectory.getDirectory(index);
+				ir = IndexReader.open(fsindexdir);
 				IndexReader.unlock(fsindexdir);
-				ir.close();
+			} catch (Exception e) {
+				log.error("getCount " + e.getMessage(), e);
+			} finally {
+				if (ir != null)
+					try {
+						ir.close();
+					} catch (IOException e) {
+					}
 			}
-		} catch (Exception e) {
-			log.error("unlock " + e.getMessage(), e);
 		}
 	}
 
@@ -239,30 +270,27 @@ public class Indexer {
 	 */
 	public boolean isLocked() {
 		boolean result = false;
-		String indexdir = settingsConfig.getValue("indexdir");
 
-		try {
-			// Get languages from LanguageManager
-			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
-			for (Language language : languages) {
-				File indexPath = new File(indexdir, language.getIndex());
-				FSDirectory fsindexdir = FSDirectory.getDirectory(indexPath);
-				IndexReader ir = null;
-				try {
-					ir = IndexReader.open(fsindexdir);
-					if (IndexReader.isLocked(fsindexdir)) {
-						result = true;
-						break;
-					}
-				} finally {
-					if (ir != null)
-						ir.close();
+		List<File> indexes = new ArrayList<File>();
+		for (File index : indexes) {
+			IndexReader ir = null;
+			try {
+				FSDirectory fsindexdir = FSDirectory.getDirectory(index);
+				ir = IndexReader.open(fsindexdir);
+				if (IndexReader.isLocked(fsindexdir)) {
+					result = true;
+					break;
 				}
+			} catch (Exception e) {
+				log.error("getCount " + e.getMessage(), e);
+			} finally {
+				if (ir != null)
+					try {
+						ir.close();
+					} catch (IOException e) {
+					}
 			}
-		} catch (Exception e) {
-			log.error("isLocked " + e.getMessage(), e);
 		}
-
 		return result;
 	}
 
@@ -272,21 +300,23 @@ public class Indexer {
 	 */
 	public int getCount() {
 		int count = 0;
-		String indexdir = settingsConfig.getValue("indexdir");
-
-		try {
-			// Get languages from LanguageManager
-			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
-			for (Language language : languages) {
-				File indexPath = new File(indexdir, language.getIndex());
-				IndexReader ir = IndexReader.open(indexPath);
+		List<File> indexes = new ArrayList<File>();
+		for (File index : indexes) {
+			IndexReader ir = null;
+			try {
+				ir = IndexReader.open(index);
 				count += ir.numDocs();
 				ir.close();
+			} catch (Exception e) {
+				log.error("getCount " + e.getMessage(), e);
+			} finally {
+				if (ir != null)
+					try {
+						ir.close();
+					} catch (IOException e) {
+					}
 			}
-		} catch (Exception e) {
-			log.error("getCount " + e.getMessage(), e);
 		}
-
 		return count;
 	}
 
@@ -302,18 +332,33 @@ public class Indexer {
 	 * Drops all indexes (one per language)
 	 */
 	public void dropIndexes() {
-		String indexdir = settingsConfig.getValue("indexdir");
+		List<File> indexes = new ArrayList<File>();
+		for (File index : indexes) {
+			try {
+				FileUtils.deleteDirectory(index);
+			} catch (Exception e) {
+				log.error("dropIndexes " + e.getMessage(), e);
+			}
+		}
+	}
 
+	/**
+	 * Get all indexes dirs
+	 */
+	public List<File> getIndexes() {
+		List<File> dirs = new ArrayList<File>();
+		String indexdir = settingsConfig.getValue("indexdir");
 		try {
 			// Get languages from LanguageManager
 			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
 			for (Language language : languages) {
 				File indexPath = new File(indexdir, language.getIndex());
-				FileUtils.deleteDirectory(indexPath);
+				dirs.add(indexPath);
 			}
 		} catch (Exception e) {
-			log.error("createIndexes " + e.getMessage(), e);
+			log.error("getIndexes " + e.getMessage(), e);
 		}
+		return dirs;
 	}
 
 	/**

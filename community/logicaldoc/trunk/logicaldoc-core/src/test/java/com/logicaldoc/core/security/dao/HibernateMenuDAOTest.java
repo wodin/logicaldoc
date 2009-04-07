@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Test;
+
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
@@ -307,5 +309,18 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertTrue(menus.contains(dao.findById(2)));
 		menus = dao.findByMenuTextAndParentId("text", 100);
 		assertEquals(dao.findById(101), menus.get(0));
+	}
+	
+	@Test
+	public void testFindMenuIdByUserIdAndPermission(){
+		Set<Long> ids=dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE, null);
+		assertNotNull(ids);
+		assertEquals(6, ids.size());
+		ids=dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE, Menu.MENUTYPE_MENU);
+		assertNotNull(ids);
+		assertEquals(4, ids.size());
+		ids=dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE, Menu.MENUTYPE_DIRECTORY);
+		assertNotNull(ids);
+		assertEquals(2, ids.size());
 	}
 }
