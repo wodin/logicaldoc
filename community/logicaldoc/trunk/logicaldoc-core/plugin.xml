@@ -5,16 +5,16 @@
 		<library id="core" path="classes/" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="lucene-core" path="lib/lucene-core-2.4.0.jar" type="code">
+		<library id="lucene-core" path="lib/lucene-core-2.4.1.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="lucene-highlighter" path="lib/lucene-highlighter-2.4.0.jar" type="code">
+		<library id="lucene-highlighter" path="lib/lucene-highlighter-2.4.1.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="lucene-misc" path="lib/lucene-misc-2.4.0.jar" type="code">
+		<library id="lucene-misc" path="lib/lucene-misc-2.4.1.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="lucene-snowball" path="lib/lucene-snowball-2.4.0.jar" type="code">
+		<library id="lucene-snowball" path="lib/lucene-snowball-2.4.1.jar" type="code">
 			<export prefix="*" />
 		</library>
 		<library id="pdfbox" path="lib/pdfbox-0.7.3.jar" type="code">
