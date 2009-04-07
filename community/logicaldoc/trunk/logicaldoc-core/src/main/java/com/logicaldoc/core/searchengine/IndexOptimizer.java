@@ -1,6 +1,10 @@
 package com.logicaldoc.core.searchengine;
 
+import java.util.List;
+
 import org.apache.commons.logging.LogFactory;
+
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.task.Task;
 
 /**
@@ -14,6 +18,8 @@ public class IndexOptimizer extends Task {
 
 	private Indexer indexer;
 
+	private DocumentDAO documentDao;
+	
 	public IndexOptimizer() {
 		super(NAME);
 		log = LogFactory.getLog(IndexOptimizer.class);
@@ -31,12 +37,26 @@ public class IndexOptimizer extends Task {
 	protected void runTask() throws Exception {
 		log.info("Start index optimization");
 		indexer.unlock();
+		deleteOrphaned();
 		indexer.optimize();
 		log.info("End of index optimization");
 	}
 
+	
+	/**
+	 * Removes from index all documents deleted in the database
+	 */
+	private void deleteOrphaned(){
+		List<Long> ids=documentDao.findDeletedDocIds();
+		indexer.deleteDocuments(ids);
+	}
+	
 	@Override
 	public boolean isIndeterminate() {
 		return true;
+	}
+
+	public void setDocumentDao(DocumentDAO documentDao) {
+		this.documentDao = documentDao;
 	}
 }

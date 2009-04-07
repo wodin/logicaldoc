@@ -141,6 +141,7 @@ public class Search {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			log.info("DB search");
 			Set<Long> accessibleMenus = mdao.findMenuIdByUserId(options.getUserId());
+					
 			log.info("End of DB search");
 
 			int maxNumFragmentsRequired = 4;
@@ -162,7 +163,7 @@ public class Search {
 
 				// When user can see document with menuId then put it into
 				// result-collection.
-				if (accessibleMenus.contains(folderId)) {
+				if (accessibleMenus.contains(folderId)) {			
 					String size = doc.get(LuceneDocument.FIELD_SIZE);
 
 					if (size.equals("0")) {

@@ -273,50 +273,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 */
 	@SuppressWarnings( { "unchecked", "deprecation" })
 	public Set<Long> findMenuIdByUserId(long userId) {
-		Set<Long> ids = new HashSet<Long>();
-		try {
-			User user = userDAO.findById(userId);
-			Set<Group> precoll = user.getGroups();
-			Iterator iter = precoll.iterator();
-
-			if (!precoll.isEmpty()) {
-				StringBuffer query = new StringBuffer("select distinct(A.ld_menuid) from ld_menugroup A "
-						+ " where A.ld_groupid in (");
-				boolean first = true;
-				while (iter.hasNext()) {
-					if (!first)
-						query.append(",");
-					Group ug = (Group) iter.next();
-					query.append(Long.toString(ug.getId()));
-					first = false;
-				}
-				query.append(")");
-
-				Connection con = null;
-				Statement stmt = null;
-				ResultSet rs = null;
-
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query.toString());
-					while (rs.next()) {
-						ids.add(new Long(rs.getInt(1)));
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
-				}
-			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-
-		return ids;
+		return findMenuIdByUserIdAndPermission(userId, Permission.READ, null);
 	}
 
 	/**
@@ -391,7 +348,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 			if (!precoll.isEmpty()) {
 				StringBuffer query = new StringBuffer("select distinct(A.ld_menuid) from ld_menugroup A, ld_menu B "
-						+ " where A.ld_menuid=B.ld_id AND B.ld_parentid=" + parentId + " AND A.ld_groupid in (");
+						+ " where B.ld_deleted=0 and A.ld_menuid=B.ld_id AND B.ld_parentid=" + parentId
+						+ " AND A.ld_groupid in (");
 				boolean first = true;
 				while (iter.hasNext()) {
 					if (!first)
@@ -482,7 +440,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Menu> findByMenuTextAndParentId(String text, long parentId) {
-		return findByWhere("_entity.parentId = " + parentId + " and _entity.text like '" + SqlUtil.doubleQuotes(text) + "'");
+		return findByWhere("_entity.parentId = " + parentId + " and _entity.text like '" + SqlUtil.doubleQuotes(text)
+				+ "'");
 	}
 
 	@Override
@@ -570,8 +529,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	@SuppressWarnings("unchecked")
 	@Override
 	public Menu findFolder(String folderName, String pathExtended) {
-		List<Menu> specified_menu = findByWhere("_entity.text = '" + SqlUtil.doubleQuotes(folderName) + "' AND _entity.pathExtended = '"
-				+ SqlUtil.doubleQuotes(pathExtended) + "'");
+		List<Menu> specified_menu = findByWhere("_entity.text = '" + SqlUtil.doubleQuotes(folderName)
+				+ "' AND _entity.pathExtended = '" + SqlUtil.doubleQuotes(pathExtended) + "'");
 		if (specified_menu != null && specified_menu.size() > 0)
 			return specified_menu.iterator().next();
 		return null;
@@ -707,5 +666,58 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 
 		return permissions;
+	}
+
+	@Override
+	public Set<Long> findMenuIdByUserIdAndPermission(long userId, Permission permission, Integer type) {
+		Set<Long> ids = new HashSet<Long>();
+		try {
+			User user = userDAO.findById(userId);
+			Set<Group> precoll = user.getGroups();
+			Iterator<Group> iter = precoll.iterator();
+
+			if (!precoll.isEmpty()) {
+				StringBuffer query = new StringBuffer("select distinct(A.ld_menuid) from ld_menugroup A, ld_menu B "
+						+ " where A.ld_menuid=B.ld_id and B.ld_deleted=0 ");
+				if(type!=null)
+				 query.append("and B.ld_type=" + type);
+				if(permission != Permission.READ)
+					query.append(" and A.ld_" + permission.getName() + "=1 ");
+				query.append(" and A.ld_groupid in (");
+				boolean first = true;
+				while (iter.hasNext()) {
+					if (!first)
+						query.append(",");
+					Group ug = (Group) iter.next();
+					query.append(Long.toString(ug.getId()));
+					first = false;
+				}
+				query.append(")");
+				
+				Connection con = null;
+				Statement stmt = null;
+				ResultSet rs = null;
+
+				try {
+					con = getSession().connection();
+					stmt = con.createStatement();
+					rs = stmt.executeQuery(query.toString());
+					while (rs.next()) {
+						ids.add(new Long(rs.getInt(1)));
+					}
+				} finally {
+					if (rs != null)
+						rs.close();
+					if (stmt != null)
+						stmt.close();
+					if (con != null)
+						con.close();
+				}
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+
+		return ids;
 	}
 }

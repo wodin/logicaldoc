@@ -230,7 +230,7 @@ public class DocumentsRecordsManager extends SortableList {
 	public String deleteSelected() {
 		if (SessionManagement.isValid()) {
 			if (!selection.isEmpty()) {
-				DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+				DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 				boolean skippedSome = false;
 				boolean deletedSome = false;
 				boolean lockedSome = false;
@@ -248,7 +248,7 @@ public class DocumentsRecordsManager extends SortableList {
 							lockedSome = true;
 							continue;
 						}
-						manager.delete(record.getDocId());
+						dao.delete(record.getDocId());
 						deletedSome = true;
 					} catch (AccessControlException e) {
 						Messages.addLocalizedWarn("document.write.nopermission");

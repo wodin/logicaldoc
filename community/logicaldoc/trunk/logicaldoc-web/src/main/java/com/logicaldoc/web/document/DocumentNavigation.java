@@ -296,6 +296,7 @@ public class DocumentNavigation extends NavigationBean {
 				Messages.addLocalizedInfo("msg.action.deleteitem");
 		} catch (Exception e) {
 			Messages.addLocalizedError("errors.action.deleteitem");
+			log.error(e.getMessage(),e);
 		}
 
 		Directory parent = new Directory(menuDao.findById(getSelectedDir().getMenu().getParentId()));

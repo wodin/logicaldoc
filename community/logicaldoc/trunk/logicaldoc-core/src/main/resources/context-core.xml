@@ -127,9 +127,9 @@
 		</property>
 	</bean>
 
-	<bean id="DiscussionThreadDAO" parent="ApplicationBaseTransactionProxy"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
+	<bean id="DiscussionThreadDAO"
+		parent="ApplicationBaseTransactionProxy" abstract="false"
+		lazy-init="default" autowire="default" dependency-check="default">
 		<property name="target">
 			<bean
 				class="com.logicaldoc.core.document.dao.HibernateDiscussionThreadDAO"
@@ -308,6 +308,9 @@
 				<property name="documentDAO">
 					<ref bean="DocumentDAO" />
 				</property>
+				<property name="menuDAO">
+					<ref bean="MenuDAO" />
+				</property>
 				<property name="versionDAO">
 					<ref bean="VersionDAO" />
 				</property>
@@ -374,6 +377,9 @@
 		class="com.logicaldoc.core.searchengine.IndexOptimizer">
 		<property name="indexer">
 			<ref bean="Indexer" />
+		</property>
+		<property name="documentDao">
+			<ref bean="DocumentDAO" />
 		</property>
 	</bean>
 

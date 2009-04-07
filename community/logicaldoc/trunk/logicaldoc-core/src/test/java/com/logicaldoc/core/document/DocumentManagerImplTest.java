@@ -33,12 +33,6 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		documentManager = (DocumentManager) context.getBean("DocumentManager");
 	}
 
-	public void testDelete() throws Exception {
-		assertNotNull(docDao.findById(1));
-		documentManager.delete(1);
-		assertNull(docDao.findById(1));
-	}
-
 	public void testMakeImmutable() throws Exception {
 		User user = userDao.findByUserName("admin");
 		Document doc = docDao.findById(1);

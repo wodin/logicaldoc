@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -183,5 +184,22 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		}
 
 		return coll;
+	}
+
+	@Override
+	public void deleteAll(Collection<T> entities) {
+		StringBuffer ids = new StringBuffer();
+		for (T t : entities) {
+			if (ids.length() > 0)
+				ids.append(",");
+			ids.append(Long.toString(t.getId()));
+		}
+		getHibernateTemplate().bulkUpdate(
+				"update " + entityClass.getCanonicalName() + " set deleted=1 " + "where id in(" + ids.toString() + ")");
+	}
+
+	@Override
+	public int bulkUpdate(String expression) {
+		return getHibernateTemplate().bulkUpdate("update " + entityClass.getCanonicalName() + " " + expression);
 	}
 }
