@@ -199,7 +199,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	}
 
 	@Override
-	public int bulkUpdate(String expression) {
-		return getHibernateTemplate().bulkUpdate("update " + entityClass.getCanonicalName() + " " + expression);
+	public int bulkUpdate(String expression, Object[] values) {
+		return getHibernateTemplate().bulkUpdate("update " + entityClass.getCanonicalName() + " " + expression, values);
 	}
 }

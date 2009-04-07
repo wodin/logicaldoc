@@ -124,5 +124,5 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * 
 	 * @return the number of modified records
 	 */
-	public int bulkUpdate(String expression);
+	public int bulkUpdate(String expression, Object[] values);
 }
