@@ -122,7 +122,7 @@ public abstract class LogicalDOCPlugin extends Plugin {
 		PropertiesBean conf;
 		try {
 			conf = new PropertiesBean();
-			File dir = new File(conf.getProperty("conf.plugindir"));
+			File dir = new File(conf.getPropertyWithSubstitutions("conf.plugindir"));
 			String pluginName = getDescriptor().getUniqueId().substring(0,
 					getDescriptor().getUniqueId().lastIndexOf('@'));
 			dir = new File(dir, pluginName);
