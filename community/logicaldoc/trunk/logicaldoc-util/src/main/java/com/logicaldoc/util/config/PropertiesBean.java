@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLDecoder;
 
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -101,8 +102,15 @@ public class PropertiesBean extends OrderedProperties {
 			throw ex;
 		}
 	}
-	
-	public int getInt(String property){
-		return Integer.parseInt(getProperty(property,"0"));
+
+	public int getInt(String property) {
+		return Integer.parseInt(getProperty(property, "0"));
+	}
+
+	/**
+	 * Gets the property value replacing all variable references
+	 */
+	public String getPropertyWithSubstitutions(String property) {
+		return StrSubstitutor.replaceSystemProperties(getProperty(property));
 	}
 }
