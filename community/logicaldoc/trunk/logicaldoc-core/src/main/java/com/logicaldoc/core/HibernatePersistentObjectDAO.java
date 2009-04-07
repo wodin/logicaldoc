@@ -151,7 +151,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 			try {
 				con = getSession().connection();
 				stmt = con.prepareStatement(query);
-				if (values == null || values.length == 0) {
+				if (values != null || values.length != 0) {
 					for (int i = 0; i < values.length; i++) {
 						stmt.setObject(i + 1, values[i]);
 					}
