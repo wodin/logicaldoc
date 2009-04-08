@@ -167,6 +167,7 @@ public class EMailForm {
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		File file = manager.getDocumentFile(selectedDocument);
 		att.setFile(file);
+		att.setFileName(selectedDocument.getFileName());
 		String extension = selectedDocument.getFileExtension();
 		MimeTypeConfig mtc = (MimeTypeConfig) Context.getInstance().getBean(MimeTypeConfig.class);
 		String mimetype = mtc.getMimeApp(extension);
