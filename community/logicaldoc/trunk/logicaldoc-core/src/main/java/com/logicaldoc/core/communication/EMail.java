@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.mail.internet.InternetAddress;
 
@@ -117,5 +118,17 @@ public class EMail extends Message {
 
 	public void setAttachments(Map<Integer, EMailAttachment> attachments) {
 		this.attachments = attachments;
+	}
+
+	public void parseRecipients(String str) {
+		StringTokenizer st = new StringTokenizer(str.trim().toLowerCase(), ", ;", false);
+		recipients.clear();
+		while (st.hasMoreTokens()) {
+			String token = st.nextToken();
+			Recipient recipient = new Recipient();
+			recipient.setAddress(token);
+			recipient.setName(token);
+			recipients.add(recipient);
+		}
 	}
 }

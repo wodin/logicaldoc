@@ -29,21 +29,23 @@ public class EmailValidator implements Validator {
         String enteredEmail = (String) value;
         enteredEmail=enteredEmail.toLowerCase();
 
-        // Set the email pattern string
-        Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
-
-        // Match the given string with the pattern
-        Matcher m = p.matcher(enteredEmail);
-
-        // Check whether match is found
-        boolean matchFound = m.matches();
-
-        if (!matchFound) {
+        if (!validateEmail(enteredEmail)) {
             FacesMessage message = new FacesMessage();
             message.setDetail(Messages.getMessage("errors.email"));
             message.setSummary(Messages.getMessage("errors.email"));
             message.setSeverity(FacesMessage.SEVERITY_ERROR);
             throw new ValidatorException(message);
         }
+    }
+    
+    protected boolean validateEmail(String str){
+    	// Set the email pattern string
+        Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
+
+        // Match the given string with the pattern
+        Matcher m = p.matcher(str.trim().toLowerCase());
+
+        // Check whether match is found
+        return  m.matches();
     }
 }

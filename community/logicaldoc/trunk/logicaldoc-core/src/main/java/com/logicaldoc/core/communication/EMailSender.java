@@ -113,7 +113,7 @@ public class EMailSender {
 			DataHandler fdHandler = new DataHandler(fdSource);
 			MimeBodyPart part = new MimeBodyPart();
 			part.setDataHandler(fdHandler);
-			part.setFileName(att.getFile().getName());
+			part.setFileName(att.getFileName());
 			mpMessage.addBodyPart(part);
 		}
 		message.setContent(mpMessage);

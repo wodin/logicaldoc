@@ -14,6 +14,8 @@ public class EMailAttachment {
 
 	private String mimeType = "";
 
+	private String fileName = "";
+	
 	public EMailAttachment() {
 	}
 
@@ -39,5 +41,13 @@ public class EMailAttachment {
 
 	public void setMimeType(String string) {
 		mimeType = string;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 }
