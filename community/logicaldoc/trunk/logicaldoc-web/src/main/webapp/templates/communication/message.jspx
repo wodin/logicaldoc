@@ -32,7 +32,7 @@
 				style="text-align: left;">
 				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="recipient"
-						value="#{msgs['msg.jsp.recipient']}*" />
+						value="#{msgs['recipient']}*" />
 				</ice:panelGroup>
 				<ice:panelGroup rendered="#{!messageForm.readOnly}">
 					<ice:inputText id="recipient"

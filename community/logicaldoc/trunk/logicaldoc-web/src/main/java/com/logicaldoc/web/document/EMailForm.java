@@ -11,7 +11,6 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailAttachment;
 import com.logicaldoc.core.communication.EMailSender;
-import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DownloadTicket;
@@ -20,7 +19,6 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.MimeTypeConfig;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
-import com.logicaldoc.web.navigation.PageContentBean;
 
 /**
  * This form is used to send emails
@@ -124,10 +122,7 @@ public class EMailForm {
 				email.setAccountId(-1);
 				email.setAuthor(user.getUserName());
 				email.setAuthorAddress(getAuthor());
-
-				Recipient recipient = new Recipient();
-				recipient.setAddress(getRecipient());
-				email.addRecipient(recipient);
+				email.parseRecipients(recipient);
 				email.setFolder("outbox");
 				email.setMessageText(getText());
 				email.setRead(1);
@@ -167,6 +162,7 @@ public class EMailForm {
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		File file = manager.getDocumentFile(selectedDocument);
 		att.setFile(file);
+		att.setFileName(selectedDocument.getFileName());
 		String extension = selectedDocument.getFileExtension();
 		MimeTypeConfig mtc = (MimeTypeConfig) Context.getInstance().getBean(MimeTypeConfig.class);
 		String mimetype = mtc.getMimeApp(extension);
