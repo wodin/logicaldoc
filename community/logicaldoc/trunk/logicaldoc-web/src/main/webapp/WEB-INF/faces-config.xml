@@ -22,6 +22,11 @@
   </validator>
 
   <validator>
+    <validator-id>validator.multipleEmails</validator-id>
+    <validator-class>com.logicaldoc.web.util.MultipleEmailValidator</validator-class>
+  </validator>
+
+  <validator>
     <validator-id>validator.twoNumbers</validator-id>
     <validator-class>com.logicaldoc.web.util.TwoFieldsValidator</validator-class>
   </validator>

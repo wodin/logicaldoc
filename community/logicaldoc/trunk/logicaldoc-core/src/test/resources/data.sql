@@ -123,11 +123,11 @@ values     (2,'2008-10-22',0,'2',2,3);
 
 insert into ld_ticket
            (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid)
-values     (3,'2008-10-22',0,'3',1,3);
+values     (3,'2008-12-22',0,'3',1,3);
 
 insert into ld_userdoc
            (ld_id,ld_lastmodified,ld_deleted,ld_docid,ld_userid,ld_date)
-values     (1,'2008-10-22',0,1,1,'2006-12-17');
+values     (1,'2008-12-22',0,1,1,'2006-12-17');
 
 insert into ld_userdoc
            (ld_id,ld_lastmodified,ld_deleted,ld_docid,ld_userid,ld_date)

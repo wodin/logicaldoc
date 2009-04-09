@@ -1,5 +1,7 @@
 package com.logicaldoc.core.document.dao;
 
+import java.util.Date;
+
 import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.document.DownloadTicket;
 
@@ -25,7 +27,12 @@ public interface DownloadTicketDAO extends PersistentObjectDAO<DownloadTicket> {
 	public boolean deleteByDocId(long docId);
 
 	/**
-	 * This method deletes all tickets of the specified menu.
+	 * Deletes all tickets older than the specified date.
+	 */
+	public boolean deleteOlder(Date date);
+	
+	/**
+	 * This finds a ticket by its identifier.
 	 * 
 	 * @param ticketId The ticket id
 	 * @return DownloadTicket with given ticket id.

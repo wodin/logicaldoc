@@ -108,6 +108,7 @@
 				<property name="sessionFactory">
 					<ref bean="SessionFactory" />
 				</property>
+				<property name="contextProperties" ref="ContextProperties" />
 			</bean>
 		</property>
 	</bean>
