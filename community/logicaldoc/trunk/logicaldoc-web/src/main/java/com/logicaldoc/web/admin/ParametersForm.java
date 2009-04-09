@@ -10,6 +10,7 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.i18n.Messages;
 
@@ -23,16 +24,8 @@ import com.logicaldoc.web.i18n.Messages;
 public class ParametersForm {
 	protected static Log log = LogFactory.getLog(ParametersForm.class);
 
-	private PropertiesBean config;
-
 	public PropertiesBean getConfig() {
-		if (config == null)
-			try {
-				config = new PropertiesBean();
-			} catch (IOException e) {
-				log.error(e.getMessage());
-			}
-		return config;
+		return (PropertiesBean)Context.getInstance().getBean("ContextProperties");
 	}
 
 	public Collection<String> getKeys() {

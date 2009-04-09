@@ -1,5 +1,10 @@
 package com.logicaldoc.core.document.dao;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.DownloadTicket;
 
@@ -48,6 +53,15 @@ public class HibernateDownloadTicketDAOTest extends AbstractCoreTestCase {
 		assertNull(ticket);
 		ticket = dao.findByTicketId("3");
 		assertNull(ticket);
+	}
+
+	public void testDeleteOlder() throws ParseException {
+		List<DownloadTicket> tickets = dao.findAll();
+		assertEquals(3, tickets.size());
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		dao.deleteOlder(df.parse("11/12/2008"));
+		tickets = dao.findAll();
+		assertEquals(1, tickets.size());
 	}
 
 	public void testFindByTicketId() {
