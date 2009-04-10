@@ -21,7 +21,7 @@
 	<!-- Indexer -->
 	<bean id="Indexer" class="com.logicaldoc.core.searchengine.Indexer"
 		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
+		dependency-check="default" init-method="createIndexes">
 		<property name="settingsConfig">
 			<ref bean="SettingsConfig" />
 		</property>

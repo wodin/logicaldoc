@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import com.logicaldoc.core.PersistentObject;
+import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.io.CryptUtil;
 
 /**
@@ -129,10 +130,6 @@ public class User extends PersistentObject implements Serializable {
 
 	public String getLanguage() {
 		return language;
-	}
-
-	public Locale getLocale() {
-		return new Locale(getLanguage());
 	}
 
 	public String getEmail() {
@@ -300,5 +297,13 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setTelephone2(String telephone2) {
 		this.telephone2 = telephone2;
+	}
+
+	public Locale getLocale() {
+		return LocaleUtil.toLocale(getLanguage());
+	}
+
+	public void setLocale(Locale locale) {
+		setLanguage(locale.toString());
 	}
 }

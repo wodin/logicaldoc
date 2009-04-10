@@ -55,8 +55,8 @@
         <parameter-def id="class" />
     </extension-point>
     <extension-point id="Language">
-        <parameter-def id="languageKey" />
-        <parameter-def id="stopWordsFile" />
+        <parameter-def id="locale" />
+        <parameter-def id="analyzer" />
     </extension-point>
     <extension-point id="Task">
         <parameter-def id="name" />
@@ -121,6 +121,28 @@
 		<parameter id="providerId" value="BasicAuthentication"/>
 		<parameter id="position" value="1"/>
 	</extension>
+	
+	<extension plugin-id="logicaldoc-core" point-id="Language" id="enLanguage">
+		<parameter id="locale" value="en"/>
+		<parameter id="analyzer" value="-"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="Language" id="itLanguage">
+		<parameter id="locale" value="it"/>
+		<parameter id="analyzer" value="-"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="Language" id="esLanguage">
+		<parameter id="locale" value="es"/>
+		<parameter id="analyzer" value="-"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="Language" id="deLanguage">
+		<parameter id="locale" value="de"/>
+		<parameter id="analyzer" value="-"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="Language" id="frLanguage">
+		<parameter id="locale" value="fr"/>
+		<parameter id="analyzer" value="-"/>
+	</extension>
+	
 	
 	<extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="jpgThumb">
 		<parameter id="extension" value="jpg"/>

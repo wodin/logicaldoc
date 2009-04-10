@@ -254,7 +254,7 @@ public class ResourceServiceImpl implements ResourceService {
 		InputStream is = context.getInputStream();
 		try {
 			try {
-				documentManager.create(is, name, parentMenu, user, user.getLanguage(), false);
+				documentManager.create(is, name, parentMenu, user, user.getLocale(), false);
 			} catch (Exception e) {
 				log.error(e);
 			} finally {

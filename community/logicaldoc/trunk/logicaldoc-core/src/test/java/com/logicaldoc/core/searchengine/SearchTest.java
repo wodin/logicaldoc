@@ -2,6 +2,7 @@ package com.logicaldoc.core.searchengine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,23 +24,11 @@ public class SearchTest extends AbstractCoreTestCase {
 	}
 
 	public void testSearch() {
-
-		String language = "it";
-		String searchLanguage = "all".equals(language) ? "it" : "it";
+		Locale searchLanguage = Locale.ITALIAN;
 
 		SearchOptions opt = new SearchOptions();
 
 		ArrayList<String> languages = new ArrayList<String>();
-
-		if ("all".equals(language)) {
-			languages.add("en");
-			languages.add("it");
-			languages.add("fr");
-			languages.add("de");
-			languages.add("es");
-		} else {
-			languages.add(language);
-		}
 
 		String[] langs = (String[]) languages.toArray(new String[languages.size()]);
 		opt.setLanguages(langs);

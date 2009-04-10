@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
@@ -56,18 +55,18 @@ public class Indexer {
 	 * @param file
 	 * @param document
 	 * @param content
-	 * @param language
+	 * @param locale
 	 * @return
 	 * @throws Exception
 	 */
 	public synchronized void addFile(File file, com.logicaldoc.core.document.Document document, String content,
-			String language) throws Exception {
+			Locale locale) throws Exception {
 		LuceneDocument lDoc = new LuceneDocument(document);
 		try {
 			log.info("addFile: " + file.toString());
 			Document doc = lDoc.getDocument(file, content);
 			log.info("doc path: " + doc.getField(LuceneDocument.FIELD_PATH).stringValue());
-			addDocument(doc, language);
+			addDocument(doc, locale);
 		} catch (Throwable e) {
 			log.error("Exception addFile: " + e.getLocalizedMessage(), e);
 			throw new Exception(e.getMessage(), e);
@@ -77,10 +76,10 @@ public class Indexer {
 	/**
 	 * Adds a LuceneDocument to the index.
 	 */
-	public void addDocument(Document doc, String iso639_2) {
+	public void addDocument(Document doc, Locale locale) {
 		String indexdir = settingsConfig.getValue("indexdir");
-		Language language = LanguageManager.getInstance().getLanguage(iso639_2);
-		Analyzer analyzer = LuceneAnalyzerFactory.getAnalyzer(language.getLanguage());
+		Language language = LanguageManager.getInstance().getLanguage(locale);
+		Analyzer analyzer = language.getAnalyzer();
 		IndexWriter writer = null;
 		try {
 			File indexPath = new File(indexdir, language.getIndex());
@@ -107,7 +106,9 @@ public class Indexer {
 	 * @throws Exception
 	 */
 	public synchronized void addFile(File file, com.logicaldoc.core.document.Document doc) throws Exception {
-		Locale locale = new Locale(doc.getLanguage());
+		Locale locale = doc.getLocale();
+		if (locale == null)
+			locale = Locale.ENGLISH;
 		Parser parser = ParserFactory.getParser(file, locale, doc.getFileExtension());
 		if (parser == null) {
 			return;
@@ -115,16 +116,11 @@ public class Indexer {
 
 		String content = parser.getContent();
 
-		String language = doc.getLanguage();
-		if (StringUtils.isEmpty(language)) {
-			language = "en";
-		}
-
 		if (log.isInfoEnabled()) {
 			log.info("addFile " + doc.getId() + " " + doc.getTitle() + " " + doc.getFileVersion() + " "
 					+ doc.getPublisher() + " " + doc.getStatus() + " " + doc.getSource() + " " + doc.getSourceAuthor());
 		}
-		addFile(file, doc, content, language);
+		addFile(file, doc, content, locale);
 	}
 
 	/**
@@ -133,7 +129,7 @@ public class Indexer {
 	protected synchronized void optimize(Language language) {
 		String indexdir = settingsConfig.getValue("indexdir");
 		try {
-			Analyzer analyzer = LuceneAnalyzerFactory.getAnalyzer(language.getLanguage());
+			Analyzer analyzer = language.getAnalyzer();
 			File indexPath = new File(indexdir, language.getIndex());
 			IndexWriter writer = new IndexWriter(indexPath, analyzer, false);
 			writer.optimize();
@@ -154,7 +150,7 @@ public class Indexer {
 			// Get languages from LanguageManager
 			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
 			for (Language language : languages) {
-				Analyzer analyzer = LuceneAnalyzerFactory.getAnalyzer(language.getLanguage());
+				Analyzer analyzer = language.getAnalyzer();
 				File indexPath = new File(indexdir, language.getIndex());
 				IndexWriter writer = new IndexWriter(indexPath, analyzer, false);
 				writer.optimize();
@@ -170,11 +166,11 @@ public class Indexer {
 	 * Deletes the entries of a document in the index of the search engine.
 	 * 
 	 * @param docId - DocID of the document.
-	 * @param language - Language of the document.
+	 * @param locale - Locale of the document.
 	 */
-	public synchronized void deleteDocument(String docId, String iso639_2) {
+	public synchronized void deleteDocument(String docId, Locale locale) {
 		String indexdir = settingsConfig.getValue("indexdir");
-		Language language = LanguageManager.getInstance().getLanguage(iso639_2);
+		Language language = LanguageManager.getInstance().getLanguage(locale);
 		File indexPath = new File(indexdir, language.getIndex());
 		try {
 			IndexReader reader = IndexReader.open(indexPath);
@@ -212,9 +208,9 @@ public class Indexer {
 		}
 	}
 
-	public Document getDocument(String docId, String iso639_2) {
+	public Document getDocument(String docId, Locale locale) {
 		String indexdir = settingsConfig.getValue("indexdir");
-		Language language = LanguageManager.getInstance().getLanguage(iso639_2);
+		Language language = LanguageManager.getInstance().getLanguage(locale);
 		File indexPath = new File(indexdir, language.getIndex());
 		try {
 			IndexReader reader = IndexReader.open(indexPath);
@@ -332,7 +328,7 @@ public class Indexer {
 	 * Drops all indexes (one per language)
 	 */
 	public void dropIndexes() {
-		List<File> indexes = new ArrayList<File>();
+		List<File> indexes = getIndexes();
 		for (File index : indexes) {
 			try {
 				FileUtils.deleteDirectory(index);
@@ -371,18 +367,19 @@ public class Indexer {
 			// Get languages from LanguageManager
 			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
 			for (Language language : languages) {
-				File indexPath = new File(indexdir, language.getIndex());
-				indexPath.mkdirs();
-				indexPath.mkdir();
-				createIndex(indexPath, language.getLanguage());
+				createIndex(new File(indexdir, language.getIndex()), language.getLocale());
 			}
 		} catch (Exception e) {
 			log.error("createIndexes " + e.getMessage(), e);
 		}
 	}
 
-	public static void createIndex(File indexPath, String iso639_2) throws CorruptIndexException,
+	public static void createIndex(File indexPath, Locale locale) throws CorruptIndexException,
 			LockObtainFailedException, IOException {
-		new IndexWriter(indexPath, LuceneAnalyzerFactory.getAnalyzer(iso639_2), true);
+		if (!indexPath.exists()) {
+			indexPath.mkdirs();
+			indexPath.mkdir();
+			new IndexWriter(indexPath, LanguageManager.getInstance().getLanguage(locale).getAnalyzer(), true);
+		}
 	}
 }

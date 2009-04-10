@@ -32,6 +32,7 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.transfer.ZipImport;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.components.SortableList;
@@ -510,7 +511,7 @@ public class DocumentsRecordsManager extends SortableList {
 						importer.setExtractTags(inputFile.isExtractTags());
 						importer.setTags(inputFile.getTags());
 						log.debug("importing: = " + destFile.getPath());
-						importer.process(destFile.getPath(), zipLanguage, parent, userId, inputFile.getTemplate());
+						importer.process(destFile.getPath(), LocaleUtil.toLocale(zipLanguage), parent, userId, inputFile.getTemplate());
 						try {
 							FileUtils.forceDelete(destFile);
 						} catch (IOException e) {

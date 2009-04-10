@@ -8,6 +8,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.i18n.Language;
+
 /**
  * @author Michael Scholz
  * @author Alessandro Gasparini
@@ -16,32 +18,42 @@ public class Analyzer extends WordRanker {
 
 	protected static Log log = LogFactory.getLog(Analyzer.class);
 
-	private String[] stopwords;
-
-	private String language;
+	private Language language;
 
 	/**
 	 * Creates a new instance of Analyzer.
 	 * 
-	 * @param language Two characters language ISO 639-1
-	 * @param stopwords Array of user specific stop words.
+	 * @param language
 	 */
-	Analyzer(String language, String[] stopwords) {
+	Analyzer(Language language) {
 		this.language = language;
-		stoptable = StopTable.setStopWords(stopwords);
 	}
 
 	/**
 	 * Creates a new instance of Analyzer.
 	 * 
-	 * @param language Two characters language ISO 639-1
+	 * @param language
 	 * @param len Minimum length of words which should analyzed.
 	 */
-	Analyzer(String language, int len) {
+	Analyzer(Language language, int len) {
 		this.language = language;
 		minlen = len;
-		stopwords = Stopwords.getStopwords(language);
-		stoptable = StopTable.setStopWords(stopwords);
+		stoptable = Analyzer.getAsMap(language.getStopWords());
+	}
+
+	/**
+	 * This method transforms the array of stop words into a map of stop words.
+	 * 
+	 * @param stopwords - Map of stop words.
+	 */
+	final static Map<String, String> getAsMap(String[] stopwords) {
+		Hashtable<String, String> stoptable = new Hashtable<String, String>(stopwords.length);
+
+		for (int i = 0; i < stopwords.length; i++) {
+			stoptable.put(stopwords[i], stopwords[i]);
+		}
+
+		return stoptable;
 	}
 
 	/**
@@ -58,37 +70,28 @@ public class Analyzer extends WordRanker {
 		try {
 			stemmer = new Stemmer(language);
 		} catch (Exception e) {
-			log.error("Unable to instantiate a Stemmer for language "
-					+ language, e);
+			log.error("Unable to instantiate a Stemmer for language " + language, e);
 			throw e;
 		}
-		AnalyzeResult result = performAnalysis(boundary,
-				new StringBuffer(text), stoptable, minlen, stemmer);
+		AnalyzeResult result = performAnalysis(boundary, new StringBuffer(text), stoptable, minlen, stemmer);
 		wordcount = result.getWordCount();
 		wordtable = result.getWordTable();
 	}
 
-	public String getLanguage() {
-		return language;
-	}
-
 	/**
-	 * Analyses a text and builds a table with each unique word stem,
-	 * number of stem presence in the text and original word.
+	 * Analyses a text and builds a table with each unique word stem, number of
+	 * stem presence in the text and original word.
 	 */
-	AnalyzeResult performAnalysis(BreakIterator boundary,
-			StringBuffer source, Map<String, String> stopwords, int minlen,
-			Stemmer stemmer) throws IllegalArgumentException,
-			IllegalAccessException, InvocationTargetException {
+	AnalyzeResult performAnalysis(BreakIterator boundary, StringBuffer source, Map<String, String> stopwords,
+			int minlen, Stemmer stemmer) throws IllegalArgumentException, IllegalAccessException,
+			InvocationTargetException {
 
 		int start = boundary.first();
 		long wordcount = 0;
 		AnalyzeResult result = new AnalyzeResult();
-		Hashtable<String, WordEntry> wordtable = new Hashtable<String, WordEntry>(
-				source.length() / 6);
+		Hashtable<String, WordEntry> wordtable = new Hashtable<String, WordEntry>(source.length() / 6);
 
-		for (int end = boundary.next(); end != BreakIterator.DONE; start = end, end = boundary
-				.next()) {
+		for (int end = boundary.next(); end != BreakIterator.DONE; start = end, end = boundary.next()) {
 
 			String word = source.substring(start, end).trim();
 			char next = ' ';
@@ -101,16 +104,14 @@ public class Analyzer extends WordRanker {
 				String stem = stemmer.stem(word);
 				WordEntry entry = new WordEntry();
 
-				if ((word.length() >= minlen) && !stopwords.containsKey(word)
-						&& !stopwords.containsKey(stem)) {
+				if ((word.length() >= minlen) && !stopwords.containsKey(word) && !stopwords.containsKey(stem)) {
 					wordcount++;
 
 					if (wordtable.containsKey(stem)) {
 						entry = (WordEntry) wordtable.get(stem);
 						entry.incValue();
 
-						if ((word.length() < entry.getOriginWord().length())
-								&& (next != (char) 45)) {
+						if ((word.length() < entry.getOriginWord().length()) && (next != (char) 45)) {
 							entry.setOriginWord(word);
 						}
 					} else {
@@ -128,4 +129,7 @@ public class Analyzer extends WordRanker {
 		return result;
 	}
 
+	public Language getLanguage() {
+		return language;
+	}
 }

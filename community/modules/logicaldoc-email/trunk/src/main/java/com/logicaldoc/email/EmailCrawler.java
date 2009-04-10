@@ -471,12 +471,11 @@ public class EmailCrawler extends Task {
 				attributes.put("to", StringUtils.substring(attributes.get("to"), 0, 3999));
 				attributes.put("subject", StringUtils.substring(email.getSubject(), 0, 3999));
 			}
-
-			doc = manager.create(file, folder, user, account.getLanguage(), email.getSubject(), srcDate, account
+			doc = manager.create(file, folder, user, account.getLocale(), email.getSubject(), srcDate, account
 					.getMailAddress(), srcAuthor, "", "", "", null, template != null ? template.getId() : null,
 					attributes, false);
 		} else {
-			doc = manager.create(file, folder, user, account.getLanguage(), false);
+			doc = manager.create(file, folder, user, account.getLocale(), false);
 		}
 
 		return doc;

@@ -69,7 +69,6 @@ public abstract class AbstractCoreTestCase extends TestCase {
 		} catch (Exception e) {
 		}
 		tempDir.mkdirs();
-		assertTrue(tempDir.exists() && tempDir.isDirectory());
 
 		dbSchemaFile = new File(tempDir, "logicaldoc-core.sql");
 		dataFile = new File(tempDir, "data.sql");
