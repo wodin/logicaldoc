@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -135,6 +136,28 @@ public abstract class LogicalDOCPlugin extends Plugin {
 			log.error(e.getMessage());
 		}
 		return null;
+	}
+
+	/**
+	 * This method copies all i18n resources into WEB-INF/classes/i18n
+	 */
+	protected void copyI18n() {
+		try {
+			String classesDir = getManager().getPathResolver().resolvePath(getDescriptor(), "classes").toString();
+			log.debug("classesDir: " + classesDir);
+			if (classesDir.startsWith("file:")) {
+				classesDir = classesDir.substring(5);
+			}
+
+			File src = new File(classesDir, "i18n");
+			File destRoot = new File(System.getProperty("logicaldoc.app.rootdir"));
+			File destClasses = new File(destRoot, "WEB-INF/classes/i18n");
+
+			log.debug("Copy resources from " + src.getPath() + " to " + destClasses.getPath());
+			FileUtils.copyDirectory(src, destClasses);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
 	}
 
 	/**
