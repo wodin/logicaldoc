@@ -280,10 +280,10 @@
     <managed-bean-scope>session</managed-bean-scope>
   </managed-bean>
 
-  <!-- Keywords -->
+  <!-- Tags -->
   <managed-bean>
-    <managed-bean-name>keywords</managed-bean-name>
-    <managed-bean-class>com.logicaldoc.web.search.KeywordsBean</managed-bean-class>
+    <managed-bean-name>tags</managed-bean-name>
+    <managed-bean-class>com.logicaldoc.web.search.TagsBean</managed-bean-class>
     <managed-bean-scope>request</managed-bean-scope>
   </managed-bean>
 
