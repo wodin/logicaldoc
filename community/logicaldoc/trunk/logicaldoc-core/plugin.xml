@@ -17,6 +17,9 @@
 		<library id="lucene-snowball" path="lib/lucene-snowball-2.4.1.jar" type="code">
 			<export prefix="*" />
 		</library>
+		<library id="lucene-contrib" path="lib/lucene-analyzers-2.4.1.jar" type="code">
+			<export prefix="*" />
+		</library>
 		<library id="pdfbox" path="lib/pdfbox-0.7.3.jar" type="code">
 			<export prefix="*" />
 		</library>
