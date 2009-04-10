@@ -73,7 +73,7 @@ public class LoginForm {
 				language = user.getLanguage();
 			session.put(Constants.LANGUAGE, language);
 
-			Locale locale = new Locale(language, "");
+			Locale locale = user.getLocale();
 			session.put(Constants.LOCALE, locale);
 			facesContext.getViewRoot().setLocale(locale);
 			logger.info("Set locale to " + locale);

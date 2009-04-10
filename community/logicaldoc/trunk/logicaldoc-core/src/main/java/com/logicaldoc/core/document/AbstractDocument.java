@@ -3,11 +3,13 @@ package com.logicaldoc.core.document;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
 import com.logicaldoc.core.ExtensibleObject;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.util.IconSelector;
+import com.logicaldoc.util.LocaleUtil;
 
 /**
  * The Document is the central entity of LogicalDOC. A Document is a persistent
@@ -503,5 +505,13 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	public void setCreator(String creator) {
 		this.creator = creator;
+	}
+	
+	public Locale getLocale(){
+		return LocaleUtil.toLocale(getLanguage());
+	}
+	
+	public void setLocale(Locale locale){
+		setLanguage(locale.toString());
 	}
 }

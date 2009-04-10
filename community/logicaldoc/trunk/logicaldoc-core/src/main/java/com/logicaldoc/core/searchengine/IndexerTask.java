@@ -58,7 +58,7 @@ public class IndexerTask extends Task {
 			for (Document document : documents) {
 				try {
 					documentDao.initialize(document);
-					documentManager.reindex(document, document.getLanguage());
+					documentManager.reindex(document, document.getLocale());
 					indexed++;
 				} catch (Throwable e) {
 					log.error(e.getMessage(), e);

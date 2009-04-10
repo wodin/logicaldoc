@@ -1,5 +1,6 @@
 package com.logicaldoc.web;
 
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
@@ -68,6 +69,13 @@ public class SessionManagement {
 		Map<String, Object> session = facesContext.getExternalContext().getSessionMap();
 		String language = (String) session.get(Constants.LANGUAGE);
 		return language;
+	}
+
+	public static Locale getLocale() {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		Map<String, Object> session = facesContext.getExternalContext().getSessionMap();
+		Locale locale = (Locale) session.get(Constants.LOCALE);
+		return locale;
 	}
 
 	public static HttpSession getSession(String sessionId) {

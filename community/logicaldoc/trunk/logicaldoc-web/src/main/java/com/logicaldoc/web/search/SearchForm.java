@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -33,6 +34,7 @@ import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
@@ -490,8 +492,8 @@ public class SearchForm {
 				ArrayList<String> languages = new ArrayList<String>();
 
 				if ("all".equals(language)) {
-					List<String> iso639_2Languages = LanguageManager.getInstance().getISO639_2Languages();
-					languages.addAll(iso639_2Languages);
+					List<String> langs = LanguageManager.getInstance().getLanguagesAsString();
+					languages.addAll(langs);
 				} else {
 					languages.add(language);
 				}
@@ -531,8 +533,9 @@ public class SearchForm {
 					}
 				}
 
-				String searchLanguage = "all".equals(language) ? SessionManagement.getLanguage() : language;
-				lastSearch = new Search(opt, searchLanguage);
+				Locale searchLocale = "all".equals(language) ? SessionManagement.getLocale() : LocaleUtil
+						.toLocale(language);
+				lastSearch = new Search(opt, searchLocale);
 				lastSearch.setMaxHits(maxHits);
 
 				List<Result> result = lastSearch.search();
@@ -604,7 +607,7 @@ public class SearchForm {
 				String text = manager.getDocumentContent(docId);
 				// Extracts the most used 10 words
 				AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
-				String terms = analyzer.getTermsAsString(10, text, SessionManagement.getLanguage());
+				String terms = analyzer.getTermsAsString(10, text, SessionManagement.getLocale());
 				terms = terms.replaceAll(",", " ");
 
 				// Prepare a query and launch the search

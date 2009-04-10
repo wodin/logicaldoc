@@ -30,6 +30,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.TagUtil;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
@@ -469,7 +470,7 @@ public class DocumentEditForm {
 						attrs.put(att.getName(), att.getValue());
 				}
 
-				Document doc = documentManager.create(file, folder, SessionManagement.getUser(), language, title,
+				Document doc = documentManager.create(file, folder, SessionManagement.getUser(), LocaleUtil.toLocale(language), title,
 						getSourceDate(), source, sourceAuthor, sourceType, coverage, versionDesc, tgs, template,
 						attrs, sourceId, object, recipient, immediateIndexing);
 				if (StringUtils.isNotEmpty(doc.getCustomId()))
@@ -513,7 +514,7 @@ public class DocumentEditForm {
 
 				doc.setCustomId(customId);
 				documentManager.update(doc, user, title, source, sourceAuthor, sourceDate, sourceType, coverage,
-						language, tgs, sourceId, object, recipient, template, attrs);
+					LocaleUtil.toLocale(language), tgs, sourceId, object, recipient, template, attrs);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addError(e.getMessage());

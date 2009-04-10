@@ -41,6 +41,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.SnippetStripper;
 import com.logicaldoc.util.TagUtil;
 
@@ -197,9 +198,9 @@ public class DmsServiceImpl implements DmsService {
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
 		try {
-			Document doc = documentManager.create(stream, filename, folder, user, language, null, date, source, author,
-					sourceType, coverage, versionDesc, tgs, template != null ? template.getId() : null, attributes,
-					sourceId, object, recipient, false);
+			Document doc = documentManager.create(stream, filename, folder, user, LocaleUtil.toLocale(language), null,
+					date, source, author, sourceType, coverage, versionDesc, tgs, template != null ? template.getId()
+							: null, attributes, sourceId, object, recipient, false);
 			return String.valueOf(doc.getId());
 		} catch (Exception e) {
 			return "error";
@@ -465,7 +466,7 @@ public class DmsServiceImpl implements DmsService {
 		opt.setFormat("all");
 
 		// Execute the search
-		Search lastSearch = new Search(opt, queryLanguage);
+		Search lastSearch = new Search(opt, LocaleUtil.toLocale(queryLanguage));
 		lastSearch.setMaxHits(maxHits);
 		List<com.logicaldoc.core.searchengine.Result> tmp = lastSearch.search();
 
@@ -612,6 +613,6 @@ public class DmsServiceImpl implements DmsService {
 
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		manager.update(doc, user, title, source, sourceAuthor, convertXMLToDate(sourceDate), sourceType, coverage,
-				language, tags, sourceId, object, recipient, templateId, attributes);
+				LocaleUtil.toLocale(language), tags, sourceId, object, recipient, templateId, attributes);
 	}
 }

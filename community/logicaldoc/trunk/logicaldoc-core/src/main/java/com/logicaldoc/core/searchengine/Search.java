@@ -49,7 +49,7 @@ public class Search {
 
 	private SearchOptions options;
 
-	private String language;
+	private Locale locale;
 
 	private List<Result> results = new ArrayList<Result>();
 
@@ -57,9 +57,9 @@ public class Search {
 
 	private long execTime = 0;
 
-	public Search(SearchOptions opt, String language) {
+	public Search(SearchOptions opt, Locale locale) {
 		this.options = opt;
-		this.language = language;
+		this.locale = locale;
 	}
 
 	public List<Result> search() {
@@ -73,7 +73,7 @@ public class Search {
 		try {
 			String[] languages = options.getLanguages();
 			if ((languages == null) || (languages.length == 0)) {
-				List<String> iso639_2Languages = LanguageManager.getInstance().getISO639_2Languages();
+				List<String> iso639_2Languages = LanguageManager.getInstance().getLanguagesAsString();
 				languages = (String[]) iso639_2Languages.toArray(new String[0]);
 				options.setLanguages(languages);
 			}
@@ -87,12 +87,11 @@ public class Search {
 
 			for (int i = 0; i < languages.length; i++) {
 				String lang = languages[i];
-				String dir = new Locale(lang).getDisplayLanguage(Locale.ENGLISH).toLowerCase();
-				searcher[i] = new IndexSearcher(indexPath + dir + "/");
+				searcher[i] = new IndexSearcher(indexPath + lang + "/");
 			}
 
 			MultiSearcher multiSearcher = new MultiSearcher(searcher);
-			Analyzer analyzer = LuceneAnalyzerFactory.getAnalyzer(language);
+			Analyzer analyzer = LanguageManager.getInstance().getLanguage(locale).getAnalyzer();
 
 			if (options.getFields() == null) {
 				String[] fields = new String[] { LuceneDocument.FIELD_CONTENT, LuceneDocument.FIELD_TAGS };
@@ -141,7 +140,7 @@ public class Search {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			log.info("DB search");
 			Set<Long> accessibleMenus = mdao.findMenuIdByUserId(options.getUserId());
-					
+
 			log.info("End of DB search");
 
 			int maxNumFragmentsRequired = 4;
@@ -163,7 +162,7 @@ public class Search {
 
 				// When user can see document with menuId then put it into
 				// result-collection.
-				if (accessibleMenus.contains(folderId)) {			
+				if (accessibleMenus.contains(folderId)) {
 					String size = doc.get(LuceneDocument.FIELD_SIZE);
 
 					if (size.equals("0")) {

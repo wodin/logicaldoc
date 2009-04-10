@@ -32,7 +32,7 @@ import com.logicaldoc.util.io.ZipUtil;
  */
 public class ZipImport {
 
-	private String language = "";
+	private Locale locale;
 
 	private Long templateId = null;
 
@@ -63,8 +63,8 @@ public class ZipImport {
 		this.immediateIndexing = immediateIndexing;
 	}
 
-	public void process(File zipsource, String language, Menu parent, long userId, Long templateId) {
-		this.language = language;
+	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId) {
+		this.locale = locale;
 		this.templateId = templateId;
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -103,9 +103,9 @@ public class ZipImport {
 		}
 	}
 
-	public void process(String zipsource, String language, Menu parent, long userId, Long templateId) {
+	public void process(String zipsource, Locale locale, Menu parent, long userId, Long templateId) {
 		File srcfile = new File(zipsource);
-		process(srcfile, language, parent, userId, templateId);
+		process(srcfile, locale, parent, userId, templateId);
 	}
 
 	/**
@@ -133,13 +133,12 @@ public class ZipImport {
 				AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
 
 				// also extract tags and save on document
-				Locale locale = new Locale(language);
 				Parser parser = ParserFactory.getParser(file, locale);
 				parser.parse(file);
 				String words = parser.getTags();
 				if (StringUtils.isEmpty(words)) {
 					try {
-						words = analyzer.getTermsAsString(tagsNumber, parser.getContent(), language);
+						words = analyzer.getTermsAsString(tagsNumber, parser.getContent(), locale);
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
 					}
@@ -152,7 +151,7 @@ public class ZipImport {
 			// creates a document
 			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 			try {
-				docManager.create(file, parent, user, language, "", null, "", "", "", "", "", tagSet, templateId, null,
+				docManager.create(file, parent, user, locale, "", null, "", "", "", "", "", tagSet, templateId, null,
 						immediateIndexing);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
@@ -185,5 +184,13 @@ public class ZipImport {
 
 	public void setTagsNumber(int tagsNumber) {
 		this.tagsNumber = tagsNumber;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 }

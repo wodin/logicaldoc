@@ -1,9 +1,11 @@
 package com.logicaldoc.email;
 
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.util.LocaleUtil;
 
 /**
  * E-Mail account
@@ -190,5 +192,13 @@ public class EmailAccount extends PersistentObject {
 	@Override
 	public String toString() {
 		return mailAddress;
+	}
+	
+	public Locale getLocale() {
+		return LocaleUtil.toLocale(getLanguage());
+	}
+
+	public void setLocale(Locale locale) {
+		setLanguage(locale.toString());
 	}
 }
