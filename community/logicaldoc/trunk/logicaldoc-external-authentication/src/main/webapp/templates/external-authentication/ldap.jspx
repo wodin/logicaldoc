@@ -58,6 +58,17 @@
 						<ice:message for="realm" />
 					</ice:panelGroup>
 
+                    <ice:panelGroup style="text-align:right; white-space:nowrap;">
+                        <ice:outputLabel for="currentDN"
+                            value="#{ext_msgs['logicaldoc-external-authentication.ldap.currentDN']}" />
+                    </ice:panelGroup>
+                    <ice:panelGroup style="text-align:left">
+                        <ice:inputText id="currentDN"
+                            value="#{LdapBean.contextSource.currentDN}"
+                            size="40" />
+                        <ice:message for="currentDN" />
+                    </ice:panelGroup>
+
 					<ice:panelGroup style="text-align:right; white-space:nowrap;">
 						<ice:outputLabel for="userIdentiferAttribute"
 							value="#{ext_msgs['logicaldoc-external-authentication.ldap.userIdentiferAttribute']}" />
