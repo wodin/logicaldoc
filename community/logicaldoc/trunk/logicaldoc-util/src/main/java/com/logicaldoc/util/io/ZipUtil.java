@@ -8,8 +8,6 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tools.zip.ZipEntry;
@@ -137,8 +135,8 @@ public class ZipUtil {
 				String path = f.getPath();
 				if (!path.equals(startZipDir.getPath()))
 					path = path.substring(startZipDir.getPath().length());
-				if(path.startsWith(File.separator))
-					path=path.substring(1);
+				if (path.startsWith(File.separator))
+					path = path.substring(1);
 				ZipEntry anEntry = new ZipEntry(path);
 				// place the zip entry in the ZipOutputStream object
 				zos.putNextEntry(anEntry);
@@ -150,6 +148,41 @@ public class ZipUtil {
 				fis.close();
 			}
 		} catch (Exception e) {
+			logError(e.getMessage());
+		}
+	}
+
+	/**
+	 * Compress a single file
+	 * 
+	 * @param src The source file
+	 * @param dest The destination archive file
+	 */
+	public static void zipFile(File src, File dest) {
+		try {
+			// create a ZipOutputStream to zip the data to
+			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dest));
+
+			FileInputStream fis = new FileInputStream(src);
+			// create a new zip entry
+			ZipEntry anEntry = new ZipEntry("/" + src.getName());
+			// place the zip entry in the ZipOutputStream object
+			zos.putNextEntry(anEntry);
+
+			byte[] readBuffer = new byte[2156];
+			int bytesIn = 0;
+
+			// now write the content of the file to the ZipOutputStream
+			while ((bytesIn = fis.read(readBuffer)) != -1) {
+				zos.write(readBuffer, 0, bytesIn);
+			}
+			// close the Stream
+			fis.close();
+			// close the stream
+			zos.flush();
+			zos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 			logError(e.getMessage());
 		}
 	}
