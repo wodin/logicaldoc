@@ -41,6 +41,7 @@ public class ParserFactory {
 		parsers.put("dot", DOCParser.class);
 		parsers.put("htm", HTMLParser.class);
 		parsers.put("html", HTMLParser.class);
+		parsers.put("htm", HTMLParser.class);
 		parsers.put("pdf", PDFParser.class);
 		parsers.put("rtf", RTFParser.class);
 
