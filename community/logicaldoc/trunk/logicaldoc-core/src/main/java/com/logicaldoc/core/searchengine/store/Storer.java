@@ -1,11 +1,12 @@
 package com.logicaldoc.core.searchengine.store;
 
+import java.io.File;
 import java.io.InputStream;
 
 /**
- * The Storer manages the filesystem where document files are maintained.o
+ * The Storer manages the filesystem where document files are maintained.
  * 
- * @author Michael Scholz
+ * @author Michael Scholz, Marco Meschieri
  */
 public interface Storer {
 	/**
@@ -15,18 +16,33 @@ public interface Storer {
 	 * version of an existing document.
 	 * 
 	 * @param stream Document as InputStream
-	 * @param docPath Path in logicaldoc containing the menuIds of all parent
-	 *        items.
+	 * @param docId The document identifier
 	 * @param filename Name of the document.
 	 * @return ResultImpl of the storing process.
 	 */
-	boolean store(InputStream stream, String docPath, String filename);
+	public boolean store(InputStream stream, long docId, String filename);
 
 	/**
-	 * Deletes a document from the documentpool.
+	 * Deletes a document from the document storage.
 	 * 
-	 * @param docPath Path in logicaldoc containing the menuIds of all parent
-	 *        folders.
+	 * @param docId The document identifier
 	 */
-	void delete(String docPath);
+	public void delete(long docId);
+	
+	
+	/**
+	 * Finds the folder where all document's files are stored
+	 * 
+	 * @param docId The document identifier
+	 * @return The document's folder
+	 */
+	public File getDirectory(long docId);
+	
+	/**
+	 * Finds a specific file of a stored document
+	 * 
+	 * @param docId The document identifier
+	 * @return The document's file
+	 */
+	public File getFile(long docId, String filename);
 }

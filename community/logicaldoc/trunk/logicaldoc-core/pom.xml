@@ -301,6 +301,14 @@
 										includes="lib/*log4j*" />
 									<fileset dir="target/plugin"
 										includes="lib/*logicaldoc-core*" />
+									<fileset dir="target/plugin"
+										includes="lib/xerces*" />
+									<fileset dir="target/plugin"
+										includes="lib/xml*" />
+									<fileset dir="target/plugin"
+										includes="lib/jms*" />
+									<fileset dir="target/plugin"
+										includes="lib/activation*" />
 								</delete>
 								<zip
 									destfile="target/${project.artifactId}-${project.version}-plugin2.zip"
