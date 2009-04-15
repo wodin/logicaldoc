@@ -12,7 +12,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -57,11 +56,11 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	private VersionDAO versionDAO;
 
-	private SettingsConfig settings;
-
 	private MenuDAO menuDAO;
 
 	private Indexer indexer;
+
+	private Storer storer;
 
 	public void setListenerManager(DocumentListenerManager listenerManager) {
 		this.listenerManager = listenerManager;
@@ -77,10 +76,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void setHistoryDAO(HistoryDAO historyDAO) {
 		this.historyDAO = historyDAO;
-	}
-
-	public void setSettings(SettingsConfig settings) {
-		this.settings = settings;
 	}
 
 	public void setIndexer(Indexer indexer) {
@@ -219,14 +214,11 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	private void store(Document doc, InputStream content) throws IOException {
-		// Makes path
-		String path = doc.getPath() + "/doc_" + doc.getId();
-
 		// Get file to upload inputStream
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 
 		// stores it in folder
-		storer.store(content, path, doc.getFileVersion());
+		storer.store(content, doc.getId(), doc.getFileVersion());
 	}
 
 	/**
@@ -281,8 +273,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public File getDocumentFile(Document doc, String fileVersion, String suffix) {
-		String path = getDocFilePath(doc);
-
 		/*
 		 * All versions of a document are stored in the same directory as the
 		 * current version, but the filename is the version number without
@@ -302,7 +292,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		 */
 		if (StringUtils.isNotEmpty(suffix))
 			filename += "-" + suffix;
-		return new File(path, filename);
+		return storer.getFile(doc.getId(), filename);
 	}
 
 	@Override
@@ -450,45 +440,17 @@ public class DocumentManagerImpl implements DocumentManager {
 			return "";
 	}
 
-	/**
-	 * Computes the directory path where the document file is stored
-	 */
-	private String getDocFilePath(Document doc) {
-		String path = new StringBuilder(settings.getValue("docdir")).append("/").append(doc.getPath()).append("/doc_")
-				.append(doc.getId()).append("/").toString();
-		return path;
-	}
-
 	@Override
 	public void moveToFolder(Document doc, Menu folder, User user) throws Exception {
 		if (folder.equals(doc.getFolder()))
 			return;
 
 		if (doc.getImmutable() == 0) {
-
-			// Get original document directory path
-			String path = getDocFilePath(doc);
-			String originalFileName = doc.getFileName();
-			File originalDocDir = new File(path);
-
 			documentDAO.initialize(doc);
 			doc.setFolder(folder);
 			setUniqueTitle(doc);
 			setUniqueFilename(doc);
 			documentDAO.store(doc);
-
-			// Update the FS
-			path = getDocFilePath(doc);
-
-			File newDocDir = new File(path);
-
-			FileUtils.moveDirectory(originalDocDir, newDocDir);
-
-			if (!doc.getFileName().equals(originalFileName)) {
-				File originalFile = new File(newDocDir, originalFileName);
-				File destFile = new File(newDocDir, doc.getFileName());
-				originalFile.renameTo(destFile);
-			}
 
 			createHistoryEntry(doc.getId(), user, History.EVENT_MOVED, "");
 			Version version = Version.create(doc, user, "", Version.EVENT_MOVED, Version.VERSION_TYPE.NEW_SUBVERSION);
@@ -664,10 +626,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			throw new Exception("Document is immutable");
 		}
 
-		// Get original document directory path
-		String path = getDocFilePath(doc);
-
-		File sourceFile = new File(path, doc.getVersion());
+		File sourceFile = storer.getFile(doc.getId(), doc.getVersion());
 
 		// initialize the document
 		documentDAO.initialize(doc);
@@ -836,5 +795,9 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void setMenuDAO(MenuDAO menuDAO) {
 		this.menuDAO = menuDAO;
+	}
+
+	public void setStorer(Storer storer) {
+		this.storer = storer;
 	}
 }

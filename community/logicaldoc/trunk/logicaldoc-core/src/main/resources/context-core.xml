@@ -321,9 +321,7 @@
 				<property name="historyDAO">
 					<ref bean="HistoryDAO" />
 				</property>
-				<property name="settings">
-					<ref bean="SettingsConfig" />
-				</property>
+				<property name="storer" ref="Storer" />
 				<property name="indexer">
 					<ref bean="Indexer" />
 				</property>
