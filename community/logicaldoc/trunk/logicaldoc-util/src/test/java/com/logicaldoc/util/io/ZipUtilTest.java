@@ -3,7 +3,6 @@ package com.logicaldoc.util.io;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,8 +33,9 @@ public class ZipUtilTest {
 	}
 
 	@Test
-	public void testReadEntry() {
-		File file = new File("/test.zip");
+	public void testReadEntry() throws IOException {
+		File file = new File("target/test.zip");
+		FileUtil.copyResource("/test.zip", file);
 		InputStream is = ZipUtil.readEntry(file, "index.xsl");
 		assertNotNull(is);
 		File dir = new File("target/test");
