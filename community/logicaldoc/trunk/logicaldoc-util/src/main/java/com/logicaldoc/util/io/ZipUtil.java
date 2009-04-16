@@ -3,9 +3,12 @@ package com.logicaldoc.util.io;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.logging.Log;
@@ -75,15 +78,33 @@ public class ZipUtil {
 	}
 
 	/**
+	 * Read the entry inside the file zip resource.
+	 * 
+	 * @param zipFile File to read inside it
+	 * @param entry The entry to be read
+	 * @return The stream of the entry
+	 */
+	public static InputStream readEntry(File zipFile, String entry) {
+		InputStream entryStream = null;
+		ZipFile file = null;
+		try {
+			file = new ZipFile(zipFile);
+			entryStream = file.getInputStream(file.getEntry(entry));
+		} catch (Exception e) {
+			logError(e.getMessage());
+		}
+		return entryStream;
+	}
+
+	/**
 	 * Extracts an entry from a zip file to a target directory.
 	 * 
 	 * @param target the base directory the entry should be extracted to
 	 * @param zip the ZIP file
 	 * @param entry the to be extracted entry in the ZIP file
 	 */
-	private static void saveEntry(String target, ZipFile zip, ZipEntry entry) throws Exception {
+	private static void saveEntry(String target, ZipFile zip, org.apache.tools.zip.ZipEntry entry) throws Exception {
 		String targetFileName = target + entry.getName();
-
 		if (entry.isDirectory()) {
 			File dir = new File(targetFileName);
 			dir.mkdirs();
@@ -165,7 +186,7 @@ public class ZipUtil {
 
 			FileInputStream fis = new FileInputStream(src);
 			// create a new zip entry
-			ZipEntry anEntry = new ZipEntry("/" + src.getName());
+			ZipEntry anEntry = new ZipEntry(src.getName());
 			// place the zip entry in the ZipOutputStream object
 			zos.putNextEntry(anEntry);
 
