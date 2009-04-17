@@ -30,7 +30,15 @@ public interface DownloadTicketDAO extends PersistentObjectDAO<DownloadTicket> {
 	 * Deletes all tickets older than the specified date.
 	 */
 	public boolean deleteOlder(Date date);
-	
+
+	/**
+	 * Deletes all tickets older than the specified time to live.
+	 * <p>
+	 * Uses the global configuration parameter <code>ticket.ttl</code> that
+	 * specifies a number of hours.
+	 */
+	public void deleteOlder();
+
 	/**
 	 * This finds a ticket by its identifier.
 	 * 

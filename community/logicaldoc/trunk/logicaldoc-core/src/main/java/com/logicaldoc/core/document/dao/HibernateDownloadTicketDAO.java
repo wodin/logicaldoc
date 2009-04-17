@@ -20,16 +20,15 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 		DownloadTicketDAO {
 
 	private PropertiesBean contextProperties;
-	
+
 	public HibernateDownloadTicketDAO() {
 		super(DownloadTicket.class);
 		super.log = LogFactory.getLog(HibernateDownloadTicketDAO.class);
 	}
 
 	@Override
-	public boolean store(DownloadTicket entity) {		
+	public boolean store(DownloadTicket entity) {
 		boolean ret = super.store(entity);
-		deleteOlder();
 		return ret;
 	}
 
@@ -45,7 +44,6 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 				ticket.setDeleted(1);
 				getHibernateTemplate().saveOrUpdate(ticket);
 			}
-			deleteOlder();
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
@@ -89,7 +87,6 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 				downloadTicket.setDeleted(1);
 				getHibernateTemplate().saveOrUpdate(downloadTicket);
 			}
-			deleteOlder();
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				logger.error(e.getMessage(), e);
@@ -98,23 +95,26 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 
 		return result;
 	}
-	
-	private void deleteOlder(){
-	   // Retrieve the time to live
-	   int ttl=contextProperties.getInt("ticket.ttl");
-	   Calendar cal=Calendar.getInstance();
-	   cal.add(Calendar.HOUR_OF_DAY, -ttl);
-	   deleteOlder(cal.getTime());
+
+	@Override
+	public void deleteOlder() {
+		// Retrieve the time to live
+		int ttl = contextProperties.getInt("ticket.ttl");
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR_OF_DAY, -ttl);
+		deleteOlder(cal.getTime());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean deleteOlder(Date date) {
+		log.debug("delete all tickets before "+date);
 		boolean result = true;
 		try {
 			Collection<DownloadTicket> coll = (Collection<DownloadTicket>) getHibernateTemplate().find(
-					"from DownloadTicket _ticket where _ticket.lastModified < ?", new Object[] { date });
+					"from DownloadTicket _ticket where _ticket.deleted=0 and _ticket.lastModified < ?", date);
 			for (DownloadTicket downloadTicket : coll) {
+				getHibernateTemplate().initialize(downloadTicket);
 				downloadTicket.setDeleted(1);
 				getHibernateTemplate().saveOrUpdate(downloadTicket);
 			}
