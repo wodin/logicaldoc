@@ -296,7 +296,7 @@ public class Indexer {
 	 */
 	public int getCount() {
 		int count = 0;
-		List<File> indexes = new ArrayList<File>();
+		List<File> indexes = getIndexes();
 		for (File index : indexes) {
 			IndexReader ir = null;
 			try {
