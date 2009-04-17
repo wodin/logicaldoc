@@ -49,6 +49,8 @@ public class SetupWizard implements TabChangeListener {
 
 	private String selectedDBMS;
 
+	private String defaultLanguage;
+	
 	/**
 	 * Binding used by example to listen
 	 */
@@ -140,7 +142,6 @@ public class SetupWizard implements TabChangeListener {
 			File logicaldocDbPath = new File(workingDir, "db");
 			internDBPath = logicaldocDbPath.getPath();
 		}
-
 		next();
 	}
 
@@ -211,6 +212,7 @@ public class SetupWizard implements TabChangeListener {
 		next();
 	}
 
+
 	private void initDB(ConnectionData dbdata) {
 		// Reload the application context in order to reconnect DAOs to the
 		// database
@@ -226,6 +228,11 @@ public class SetupWizard implements TabChangeListener {
 		if (init.testConnection()) {
 			// connection success
 			init.init();
+			
+			//if a default language was specified, set it for all users
+			if(StringUtils.isNotEmpty(defaultLanguage)){
+				init.executeSql("update ld_user set ld_language='"+defaultLanguage+"';");
+			}
 		} else {
 			// connection failure
 			log.debug("connection failure");
@@ -382,5 +389,13 @@ public class SetupWizard implements TabChangeListener {
 
 	public boolean isSetupSuccess() {
 		return setupSuccess;
+	}
+
+	public String getDefaultLanguage() {
+		return defaultLanguage;
+	}
+
+	public void setDefaultLanguage(String defaultLanguage) {
+		this.defaultLanguage = defaultLanguage;
 	}
 }

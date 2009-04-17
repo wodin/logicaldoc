@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class DBInit {
 
 	// List of sql files to be executed
 	private List<String> sqlList = new ArrayList<String>();
-
+	
 	/**
 	 * A list of sql files to execute
 	 * 
@@ -74,6 +75,28 @@ public class DBInit {
 			}
 		}
 	}
+	
+	/**
+	 * Execute a SQL statements in the passed string
+	 * 
+	 * @param sql The SQL to execute
+	 */
+    public void executeSql(String sql){
+    	try {
+			doConnection();
+			PreparedStatement st = con.prepareStatement(sql);
+			st.execute();
+			st.close();
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+			try {
+				if (con != null)
+					con.close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+    }
 
 	/**
 	 * Executes a single sql file
