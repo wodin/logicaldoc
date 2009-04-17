@@ -11,8 +11,7 @@ import com.logicaldoc.core.document.DownloadTicket;
 /**
  * Test case for <code>HibernateDownloadTicketDAO</code>
  * 
- * @author Marco Meschieri
- * @version $Id:$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class HibernateDownloadTicketDAOTest extends AbstractCoreTestCase {

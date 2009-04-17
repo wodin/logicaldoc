@@ -1,6 +1,7 @@
 package com.logicaldoc.core.text.analyzer;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -16,9 +17,11 @@ import com.logicaldoc.core.i18n.LanguageManager;
  */
 public class AnalyzerManager {
 
-	private Map<Locale, Analyzer> analyzers = null;
+	private Map<Locale, Analyzer> analyzers;
 
 	private void init() {
+		analyzers = new HashMap<Locale, Analyzer>();
+
 		// Get languages from LanguageManager
 		Collection<Language> languages = LanguageManager.getInstance().getLanguages();
 		for (Language language : languages) {
