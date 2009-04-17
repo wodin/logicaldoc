@@ -12,7 +12,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import com.logicaldoc.util.config.FacesConfigurator;
-import com.logicaldoc.web.util.Constants;
+import com.logicaldoc.web.SessionManagement;
 
 /**
  * A class for retrieval of localized messages. All bundles declared in
@@ -57,7 +57,7 @@ public class Messages extends AbstractMap<String, String> {
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		if (facesContext != null) {
-			locale = (Locale) facesContext.getExternalContext().getSessionMap().get(Constants.LOCALE);
+			locale = SessionManagement.getLocale();
 			if (locale == null) {
 				locale = facesContext.getApplication().getDefaultLocale();
 			}

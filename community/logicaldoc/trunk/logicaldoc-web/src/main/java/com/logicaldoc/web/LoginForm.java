@@ -20,6 +20,7 @@ import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.i18n.Messages;
@@ -69,11 +70,15 @@ public class LoginForm {
 			session.put(Constants.AUTH_PASSWORD, j_password);
 
 			// Gets language option pressed
-			if (language.equals("default"))
-				language = user.getLanguage();
-			session.put(Constants.LANGUAGE, language);
 
-			Locale locale = user.getLocale();
+			Locale locale = user.getLocale(); 
+			if (language.equals("default")) {
+				language = user.getLanguage();
+			}else{
+				locale=LocaleUtil.toLocale(language);
+			}
+			
+			session.put(Constants.LANGUAGE, language);
 			session.put(Constants.LOCALE, locale);
 			facesContext.getViewRoot().setLocale(locale);
 			logger.info("Set locale to " + locale);
