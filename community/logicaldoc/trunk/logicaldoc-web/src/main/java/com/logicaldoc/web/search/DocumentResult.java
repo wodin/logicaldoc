@@ -41,6 +41,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 		this.result = result;
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		super.document = docDao.findById(result.getDocId());
+		super.docId = document.getId();
 	}
 
 	public Date getDate() {
@@ -209,12 +210,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 	@Override
 	public boolean isRelevant(SearchOptions opt) {
 		return result.isRelevant(opt);
-	}
-
-	@Override
-	public void setDocId(long docId) {
-		throw new UnsupportedOperationException("setDocId method unsupported");
-	}
+	}	
 
 	@Override
 	public void setSourceDate(Date date) {
@@ -232,5 +228,11 @@ public class DocumentResult extends DocumentRecord implements Result {
 	@Override
 	public void setCustomId(String customId) {
 		result.setCustomId(customId);
+	}
+
+	@Override
+	public void setDocId(long docId) {
+		// TODO Auto-generated method stub
+		
 	}
 }

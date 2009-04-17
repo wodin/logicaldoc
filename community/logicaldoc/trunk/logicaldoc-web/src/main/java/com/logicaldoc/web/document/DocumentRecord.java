@@ -65,7 +65,7 @@ public class DocumentRecord extends MenuBarBean {
 
 	private String documentPath;
 
-	private long docId;
+	protected long docId;
 
 	/**
 	 * <p>
@@ -546,10 +546,10 @@ public class DocumentRecord extends MenuBarBean {
 		EMailForm emailForm = ((EMailForm) FacesUtil.accessBeanFromFacesContext("emailForm", FacesContext
 				.getCurrentInstance(), log));
 		emailForm.reset();
-		emailForm.setSelectedDocument(getDocument());
 		emailForm.setAuthor(SessionManagement.getUser().getEmail());
 		emailForm.setSelectedDocument(null);
 
+		//Prepare a new download ticket
 		long userId = SessionManagement.getUserId();
 		String temp = new Date().toString() + userId;
 		String ticketid = CryptUtil.cryptString(temp);
@@ -558,9 +558,14 @@ public class DocumentRecord extends MenuBarBean {
 		ticket.setDocId(docId);
 		ticket.setUserId(userId);
 
+		// Store the ticket
 		DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance().getBean(DownloadTicketDAO.class);
 		ticketDao.store(ticket);
-
+		
+		//Try to clean the DB from old tickets
+		ticketDao.deleteOlder();
+		
+		//Prepare the download link to be shown as email body
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
 				.getRequest();
 		request.getRequestURL();
@@ -571,7 +576,7 @@ public class DocumentRecord extends MenuBarBean {
 		address += request.getContextPath();
 		address += ("/download-ticket?ticketId=" + ticketid);
 		emailForm.setText("URL: " + address);
-
+		
 		return null;
 	}
 
