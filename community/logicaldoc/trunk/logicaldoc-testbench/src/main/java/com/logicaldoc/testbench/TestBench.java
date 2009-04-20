@@ -3,7 +3,6 @@ package com.logicaldoc.testbench;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -26,7 +25,7 @@ public class TestBench {
 	private PopulateDatabase popDatabase;
 
 	private PopulateUsers popUsers;
-	
+
 	private PopulateIndex popIndex;
 
 	public TestBench() throws IOException {
@@ -41,10 +40,10 @@ public class TestBench {
 
 		genFiles = new GenerateFiles();
 		genFiles.setLogicalDocLayout(true);
-		File docsRoot = new File(context.getProperty("conf.docdir") + "/5");
+		File docsRoot = new File(context.getProperty("conf.docdir") + "/tmp/5");
 		docsRoot.mkdirs();
 		docsRoot.mkdir();
-		genFiles.setRootFolder(new File(context.getProperty("conf.docdir") + "/5"));
+		genFiles.setRootFolder(new File(context.getProperty("conf.docdir") + "/tmp/5"));
 
 		popDatabase = new PopulateDatabase();
 		popDatabase.setJdbcClass(context.getProperty("jdbc.driver"));
@@ -55,16 +54,15 @@ public class TestBench {
 
 		popUsers = new PopulateUsers();
 		popUsers.setJdbcClass(context.getProperty("jdbc.driver"));
-		popUsers.setJdbcUrl(context.getProperty("jdbc.url")); 
+		popUsers.setJdbcUrl(context.getProperty("jdbc.url"));
 		popUsers.setUsername(context.getProperty("jdbc.username"));
 		popUsers.setPassword(context.getProperty("jdbc.password"));
-		
+
 		popIndex = new PopulateIndex();
-		Locale locale = new Locale(popDatabase.getLanguage());
-		File indexFolder = new File(context.getProperty("conf.indexdir") + "/"
-				+ locale.getDisplayLanguage(Locale.ENGLISH).toLowerCase());
+		File indexFolder = new File(context.getProperty("conf.indexdir") + "/" + popDatabase.getLanguage());
 		popIndex.setIndexFolder(indexFolder);
-		popIndex.setRootFolder(genFiles.getRootFolder());
+		popIndex.setTempFolder(genFiles.getRootFolder());
+		popIndex.setRootFolder(new File(context.getProperty("conf.docdir")));
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -98,7 +96,7 @@ public class TestBench {
 	private void populateDatabase() {
 		popDatabase.populate();
 	}
-	
+
 	/**
 	 * Launches the users population
 	 */

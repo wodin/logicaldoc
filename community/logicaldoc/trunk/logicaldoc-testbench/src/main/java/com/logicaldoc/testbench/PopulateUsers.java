@@ -38,7 +38,7 @@ public class PopulateUsers {
 	private PreparedStatement insertUser;
 
 	private PreparedStatement insertGroup;
-	
+
 	private PreparedStatement insertUserGroup;
 
 	private int batchSize = 50;
@@ -154,9 +154,8 @@ public class PopulateUsers {
 					.prepareStatement("INSERT INTO LD_USER (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_USERNAME,LD_PASSWORD,LD_NAME,LD_FIRSTNAME,LD_STREET,LD_POSTALCODE,LD_CITY,LD_COUNTRY,LD_LANGUAGE,LD_EMAIL,LD_TELEPHONE,LD_TYPE,LD_ENABLED,LD_STATE,LD_TELEPHONE2) VALUES (?,?,0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'');");
 			insertGroup = con
 					.prepareStatement("INSERT INTO LD_GROUP (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_NAME,LD_DESCRIPTION,LD_TYPE) VALUES (?,?,0,?,?,?);");
-			insertUserGroup = con
-			.prepareStatement("INSERT INTO LD_USERGROUP (LD_GROUPID,LD_USERID) VALUES (?,?);");
-			
+			insertUserGroup = con.prepareStatement("INSERT INTO LD_USERGROUP (LD_GROUPID,LD_USERID) VALUES (?,?);");
+
 			long nextUserId = getMaxUserId() + 1;
 			long nextGroupId = getMaxGroupId() + 1;
 
@@ -171,8 +170,8 @@ public class PopulateUsers {
 				} catch (SQLException e) {
 					e.printStackTrace();
 					return;
-//					log.error(e, e);
-//					log.info("Error on user " + nextUserId);
+					// log.error(e, e);
+					// log.info("Error on user " + nextUserId);
 				}
 			}
 
@@ -297,16 +296,16 @@ public class PopulateUsers {
 		insertUser.setString(13, "333333");
 		// LD_TYPE
 		insertUser.setInt(14, 0);
-		//LD_ENABLED
+		// LD_ENABLED
 		insertUser.setInt(15, 1);
-		//LD_STATE
+		// LD_STATE
 		insertUser.setString(16, "Italy");
-		
+
 		insertUser.addBatch();
 		batchCount++;
 
 		insertGroup(-id, "_user_" + id, new Integer(1));
-		insertUserGroup(-id,id);
+		insertUserGroup(-id, id);
 
 		return id;
 	}
@@ -351,7 +350,7 @@ public class PopulateUsers {
 
 		return id;
 	}
-	
+
 	/**
 	 * Inserts a user group record mapping
 	 * 
