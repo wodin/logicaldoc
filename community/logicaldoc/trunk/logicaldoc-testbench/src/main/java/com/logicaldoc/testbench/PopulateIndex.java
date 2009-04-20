@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
@@ -55,11 +57,11 @@ public class PopulateIndex {
 	public static final String FIELD_TITLE = "title";
 
 	public static final String FIELD_DOC_ID = "docId";
-	
+
 	public static final String FIELD_TEMPLATE_ID = "templateId";
-	
+
 	public static final String FIELD_CREATION = "creation";
-	
+
 	public static final String FIELD_CUSTOM_ID = "customId";
 
 	protected static Log log = LogFactory.getLog(PopulateIndex.class);
@@ -67,6 +69,9 @@ public class PopulateIndex {
 	private String language;
 
 	private File rootFolder;
+
+	// Directory containing the temporally generated files
+	private File tempFolder;
 
 	private File indexFolder;
 
@@ -84,6 +89,7 @@ public class PopulateIndex {
 			conf.load(this.getClass().getResourceAsStream("/conf.properties"));
 			this.rootFolder = new File(conf.getProperty("files.rootFolder"));
 			this.indexFolder = new File(conf.getProperty("index.indexFolder"));
+			this.tempFolder = new File(conf.getProperty("index.tempFolder"));
 			this.language = conf.getProperty("database.language");
 			this.ramBuffer = Integer.parseInt(conf.getProperty("index.ramBuffer"));
 			this.startDocId = Long.parseLong(conf.getProperty("files.startDocId"));
@@ -128,8 +134,16 @@ public class PopulateIndex {
 		try {
 			writer = new IndexWriter(indexFolder, analyzer, false);
 			writer.setRAMBufferSizeMB(ramBuffer);
-			addDocuments(rootFolder, "/");
+			addDocuments(tempFolder, "/");
 			writer.optimize();
+
+			// Now we can delete the temporary folder.
+			try {
+				FileUtils.forceDelete(tempFolder);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+
 		} catch (Throwable e) {
 			e.printStackTrace();
 			log.error(e);
@@ -141,6 +155,7 @@ public class PopulateIndex {
 					log.error(e);
 				}
 		}
+
 		log.fatal("End of index population");
 	}
 
@@ -160,11 +175,11 @@ public class PopulateIndex {
 				addDocuments(files[i], path + "/" + parentFolderId);
 			} else if (files[i].isDirectory() && files[i].getName().startsWith("doc_")) {
 				try {
-					long docId = insertDocument(files[i], (path+"/"+files[i].getParentFile()).replaceAll("//", "/"));
+					long docId = insertDocument(files[i], (path + "/" + files[i].getParentFile()).replaceAll("//", "/"));
 					if ((count % 100 == 0) && docId > 0) {
 						log.info("Added index document " + docId);
 					}
-					
+
 				} catch (Throwable e) {
 					e.printStackTrace();
 					log.error(e);
@@ -203,18 +218,18 @@ public class PopulateIndex {
 		String content = Util.parse(docFile);
 		doc.add(new Field(FIELD_CONTENT, content, Field.Store.YES, Field.Index.TOKENIZED));
 
-		doc
-				.add(new Field(FIELD_TAGS, Util.extractWordsAsString(5, content), Field.Store.YES,
-						Field.Index.TOKENIZED));
-		
+		doc.add(new Field(FIELD_TAGS, Util.extractWordsAsString(5, content), Field.Store.YES, Field.Index.TOKENIZED));
+
 		doc.add(new Field(FIELD_CREATION, df.format(new Date().getTime()), Field.Store.YES, Field.Index.UN_TOKENIZED));
 		doc.add(new Field(FIELD_CUSTOM_ID, String.valueOf(id), Field.Store.YES, Field.Index.UN_TOKENIZED));
 		doc.add(new Field(FIELD_TEMPLATE_ID, " ", Field.Store.YES, Field.Index.UN_TOKENIZED));
 
 		writer.addDocument(doc);
-		
-		// Rename the document to "1.0"
-		docFile.renameTo(new File(dir, "1.0"));
+
+		File correctDir = getDirectory(id);
+		correctDir.mkdir();
+		correctDir.mkdirs();
+		docFile.renameTo(new File(correctDir, "1.0"));
 		if (docFile.exists())
 			docFile.delete();
 
@@ -236,5 +251,63 @@ public class PopulateIndex {
 
 	public void setRamBuffer(int ramBuffer) {
 		this.ramBuffer = ramBuffer;
+	}
+
+	/**
+	 * Determines the folder where the document's file will be stored. This
+	 * method is similar to the "getDirectory" method of the FSStorer class.
+	 * 
+	 * @param docId The document id.
+	 * @return The directory in which will be inserted the doc.
+	 */
+	public File getDirectory(long docId) {
+		String path = split(Long.toString(docId), '/', 3);
+		path = rootFolder + "/" + path + "/doc";
+		return new File(path);
+	}
+
+	/**
+	 * Splits a string into tokens separated by a separator
+	 * 
+	 * @param src The source string
+	 * @param separator The separator character
+	 * @param tokenSize Size or each token
+	 * @return
+	 */
+	public static String split(String src, char separator, int tokenSize) {
+		StringBuffer sb = new StringBuffer();
+		String[] tokens = split(src, tokenSize);
+		for (int i = 0; i < tokens.length; i++) {
+			if (sb.length() > 0)
+				sb.append(separator);
+			sb.append(tokens[i]);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Splits a string into an array of tokens
+	 * 
+	 * @param src The source string
+	 * @param tokenSize size of each token
+	 * @return
+	 */
+	public static String[] split(String src, int tokenSize) {
+		ArrayList<String> buf = new ArrayList<String>();
+		for (int i = 0; i < src.length(); i += tokenSize) {
+			int j = i + tokenSize;
+			if (j > src.length())
+				j = src.length();
+			buf.add(src.substring(i, j));
+		}
+		return buf.toArray(new String[] {});
+	}
+
+	public File getTempFolder() {
+		return tempFolder;
+	}
+
+	public void setTempFolder(File tempFolder) {
+		this.tempFolder = tempFolder;
 	}
 }

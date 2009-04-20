@@ -209,7 +209,7 @@ public class PopulateDatabase {
 			initExistingIds();
 			addDocuments(rootFolder, "/");
 			forceCommit();
-			
+
 			con.commit();
 			con.createStatement().execute("SHUTDOWN COMPACT");
 			con.commit();
