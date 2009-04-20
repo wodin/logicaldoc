@@ -91,7 +91,7 @@
 	</ice:panelGroup>
 
 	<!-- Groups and rights -->
-	<ice:panelGroup rendered="#{!empty(securityForm.path)}">
+	<ice:panelGroup rendered="#{!empty (securityForm.path)}">
 		<ice:dataTable value="#{securityRightsRecordsManager.rules}" var="rule"
 			cellpadding="0" rows="2000">
 
