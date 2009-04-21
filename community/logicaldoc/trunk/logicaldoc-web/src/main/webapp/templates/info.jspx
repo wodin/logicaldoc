@@ -30,7 +30,7 @@
 					</b>
 				</ice:panelGroup>
 				<ice:panelGroup>
-					<ice:outputLink value="http://logicaldoc.wikispaces.com"
+					<ice:outputLink value="http://www.logicaldoc.com"
 						target="_blank">
 						<ice:graphicImage value="#{StyleBean.imagesPath}/logo.gif"
 							style="border: 0px solid white; padding-left: 50px" />
