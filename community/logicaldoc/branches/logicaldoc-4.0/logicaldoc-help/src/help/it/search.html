@@ -25,8 +25,11 @@
                 </tbody>
               </table>
               <!-- InstanceBeginEditable name="ContentRegion" -->
-          <p>E' possibile effettuare ricerche tra i documenti archiviati nel sistema utilizzando due diverse modalit&agrave; di ricerca: Ricerca Semplice e <a href="#advanced">Ricerca Avanzata</a>.</p>
-          <h3>Ricerca Semplice </h3>
+          <p>In LogicalDOC &egrave; possibile ricercare un documento in tre diverse modalit&agrave;:<br>
+            1. Ricerca veloce<br>
+            2. <a href="#advanced">Ricerca avanzata</a><br>
+            3. <a href="#parametric">Ricerca per parametri</a></p>
+          <h3>Ricerca veloce </h3>
           <br>
           La maschera di ricerca semplice &egrave; sempre presente ed accessibile in qualsiasi momento nella parte superiore della finestra.<br>
           E' importante specificare la lingua in cui si vuole eseguire la ricerca. Di base il sistema propone la lingua di default dell'utente (Documenti in Italiano). <br>
@@ -85,9 +88,11 @@
             Ricercare <strong>&quot;+rossi +mario&quot;</strong> equivale a &quot; <strong>rossi AND mario&quot;</strong> cio&egrave; significa che cercheremo tutti i documenti in cui compaiono entrambe le parole rossi e mario.<br>
             E' anche possibile esplicitare direttamente queste ricerche ad esempio &quot;futura AND progetto NOT sviluppo&quot; equivale a &quot;+futura +progetto -sviluppo&quot;.<br>
             Quando si utilizzano operatori logici come AND, OR, NOT occorre tenere presente che devono essere scritti tassativamente in maiuscolo. </p>
-          <h3><a name="advanced"></a>Ricerca Avanzata</h3>
+          <h3><a name="advanced"></a>Ricerca avanzata</h3>
           <br>
-          La maschera di ricerca avanzata &egrave; accessibile premendo il link &quot;Ricerca avanzata&quot; presente a fianco della form di ricerca semplice nella parte superiore della finestra.<br>
+          In LogicalDOC sotto la voce di men&ugrave; Ricerche &egrave; possibile visualizzare la
+          pagina di ricerca avanzata.<br>
+          La funzionalit&agrave; &egrave; inoltre accessibile premendo il link &quot;Ricerca avanzata&quot; presente a fianco della form di ricerca semplice nella parte superiore della finestra.<br>
           <br>
           <br>
           <div>
@@ -114,13 +119,24 @@
           <div>
             <div align="center"><img src="images/searchadvanced01.gif" width="458" height="482"></div>
           </div>
-          <p><br>
-            <br>
-            <br>
-            <br>
-            <br>
-          </p>
-          <!-- InstanceEndEditable --></div></td>
+          <h3><a name="parametric" id="parametric"></a>Ricerca per parametri (solo edizione Enterprise</h3>
+            <p>In LogicalDOC sotto la voce di men&ugrave; Ricerche &egrave; possibile visualizzare la
+              pagina di ricerca per parametri. Questa funzionalit&agrave; consente all'utente di
+            poter ricercare documenti in base ai valori contenuti in diversi parametri. La
+            ricerca viene effettuata solo sui metadati dei documenti e, a differenza della
+            ricerca avanzata, vengono presi in esame tutti i documenti indicizzati e non. In
+            particolare, &egrave; possibile utilizzare il carattere speciale &ldquo;%&rdquo; per poter effettuare
+            ricerche pi&ugrave; sofisticate; ad esempio, se volete ricercare i documenti che nel
+            valore di protocollo inizino con la stringa &ldquo;fattura&rdquo;, allora sar&agrave; sufficiente
+            scrivere nell'apposito campo di ricerca &ldquo;fattura%&rdquo;. Se, invece, la stringa deve
+            essere contenuta nel valore del protocollo, allora sar&agrave; sufficiente scrivere
+            nell'apposito campo di ricerca &ldquo;%fattura%&rdquo;.</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>            
+              </p>
+                </p>
+              <!-- InstanceEndEditable --></div></td>
           <td width="10">
             <img alt="" src="images/spacer.gif" class="spacer" height="1" width="10" /></td>
         </tr>
