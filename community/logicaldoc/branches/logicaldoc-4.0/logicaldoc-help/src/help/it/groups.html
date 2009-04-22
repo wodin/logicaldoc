@@ -2,10 +2,23 @@
 <html><!-- InstanceBegin template="/Templates/logicaldoc-help.dwt" codeOutsideHTMLIsLocked="false" -->
   <head>
   <!-- InstanceBeginEditable name="doctitle" -->
-<title>Primi passi</title>
+<title>Gestione Gruppi</title>
 <!-- InstanceEndEditable -->
   <link href="css/help.css" rel="stylesheet" type="text/css">
-  <!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+  <!-- InstanceBeginEditable name="head" -->
+  <style type="text/css">
+<!--
+.style1 {
+	color: #FF6600;
+	font-weight: bold;
+}
+.style2 {
+	color: #000000;
+	font-weight: bold;
+}
+-->
+  </style>
+  <!-- InstanceEndEditable -->
   </head>
   <body>
     <table summary="content" border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -25,29 +38,60 @@
                 </tbody>
               </table>
               <!-- InstanceBeginEditable name="ContentRegion" -->
-          <p>Un gruppo &egrave; un insieme di utenti che condividono gli stessi permessi; &egrave; identificato   	da un nome univoco e pu&ograve; avere una descrizione. <br>
+          <p>Accedendo all'amministrazione, &egrave; possibile cliccare sulla gestione dei gruppi. 
+  			  <p>
+			    <center>
+			      <img src="images/groups_01.gif" width="458" height="207" heigth="197">
+			      <br>
+			      Figura 35: Amministrazione dei gruppi
+		        </center>
+		      </p>
             <br>
-            Un utente di tipo Amministratore pu&ograve; accedere alla pagina di manutenzione con il percorso: Amministrazione --&gt; Gruppi. <br>
-            Nella schermata principale verr&agrave; mostrato l'elenco dei gruppi presenti sul sistema. <br>
-            Le operazioni possibili sono quelle usuali di gestione: creazione, modifica, cancellazione.</p>
-          <h3>Aggiungere un Gruppo </h3>
-          <p> Similmente a quanto visto per gli utenti, cliccando sull'icona Crea gruppo si accede alla maschera richiesta.<br>
-            <img src="images/managegroup01.gif" width="155" height="108"><br>
-            E' sufficiente specificare un nome e una descrizione e confermare con il pulsante Crea. <br>
-            Ad esempio &egrave; possibile crere un gruppo per un dipartimento o un gruppo di lavoro  e specificare nella descrizione questa relazione. <br>
-            <br>
-            E' possibile anche specificare uno o pi&ugrave; gruppi di appartenenza, in questo caso il nuovo gruppo copier&agrave;  i permessi di lettura/scrittura a loro assegnati.</p>
-          <h3>Modificare un Gruppo </h3>
+            Come di consueto l'amministrazione dei gruppi parte dall'elenco dei gruppi
+            correntemente caricati.</p>
+          <h3><a name="create"></a>Creazione di un nuovo gruppo </h3>
+          <p>Similmente a quanto visto per gli utenti, cliccando sull'icona <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.7</span></a> &egrave; possibile
+            creare un nuovo gruppo compilando i campi presenti nella maschera di
+            inserimento e confermando con il pulsante <span class="style2">Salva</span>. Per creare un nuovo
+            gruppo &egrave; necessario specificare un nome, una descrizione e un gruppo di
+            appartenenza. Tutti i permessi gi&agrave; assegnati a quest'ultimo verranno ereditati
+            anche dal nuovo gruppo.</p>
+					  			  <p>
+			    <center>
+			      <img src="images/groups_02.gif" width="434" height="255" heigth="197">
+			      <br>
+			      Figura 36: Creazione di un nuovo gruppo
+		        </center>
+		      </p>
+          <h3><a name="update"></a>Modifica di un gruppo esistente </h3>
+          <p><br>
+            Per la modifica dei gruppi vale quanto detto per gli utenti: della lista dei gruppi          &egrave; possibile intervenire su un qualunque elemento dell'elenco utilizzando
+          l'icona <a href="images/icons03menu.gif"><span class="iconref">3.5</span></a>.<br>
+          Nelle pagine di inserimento e di <a href="documentoperations.html#update">modifica di un documento</a> si consente all'amministratore di specificare o modificare alcuni campi ad
+          esso relativi.<br>
           <br>
-          <br>
-          <div align="center"> <img src="images/managegroup02.gif"></div>
-          Per la modifica dei gruppi vale quanto detto per gli utenti: <br>
-              <ul><li>accedere alla pagina di gestione (Amministrazione --&gt; Gruppo)</li>
-              <li>selezionare l'icona <strong>Modifica gruppo </strong>per modificare la descrizione del gruppo oppure il <strong>cestino</strong> per la cancellazione.
-                <br>
-                <br>
-              </li>
-          </ul>
+          Nella pagina di modifica di un gruppo, &egrave; possibile impostare le
+          preferenze su tali campi nelle due fasi di inserimento e di modifica di un
+          documento:</p>
+          <ol>
+            <li><span class="style2">Nascosto</span>: il campo non viene visualizzato dagli utenti appartenenti al
+              gruppo.            </li>
+            <li><span class="style2">Sola lettura</span>: il valore del campo non pu&ograve; essere modificato dagli utenti
+              appartenenti al gruppo. </li>
+            <li><span class="style2">Obbligatorio</span>: il campo deve essere valorizzato per il corretto
+              completamento della procedura di salvataggio.</li>
+          </ol>
+          <p>In particolare, il campo <span class="style2">Protocollo</span> &egrave; impostato in <span class="style2">sola lettura</span> sia in fase di
+            inserimento che in fase di modifica.</p>
+								  			  <p>
+			    <center>
+			      <img src="images/groups_03.gif" width="407" height="488" heigth="197">
+			      <br>
+			      Figura 36: Creazione di un nuovo gruppo
+		          <br>
+			      <br>
+			    </center>
+		      </p>
           <div align="center">
             <table width="90%" border="0" cellpadding="0" cellspacing="0">
               <tr>
@@ -55,7 +99,11 @@
                 <td height="25">&nbsp;</td>
               </tr>
               <tr>
-                <td colspan="2" class="noteBody">Nel sistema il gruppo &egrave; un elemento strutturale che serve per assegnare privilegi di accesso. Utilizzate i gruppi al solo fine di agevolare la definizione dei privilegi e non per realizzare semplici raggruppamenti di utenti. Di serie sono gi&agrave; presenti i tre gruppi: admin, author e guest. Introducete nuovi gruppi solo se realmente necessario.</td>
+                <td colspan="2" class="noteBody">In LogicalDOC il gruppo &egrave; un elemento strutturale che serve per
+                  assegnare privilegi di accesso. Utilizzate i gruppi al solo fine di agevolare la<br>
+                  definizione dei privilegi e non per realizzare semplici raggruppamenti di
+                  utenti. Di serie sono gi&agrave; presenti i tre gruppi: admin, author e guest.<br>
+                Introducete nuovi gruppi solo se realmente necessario.</td>
               </tr>
             </table>
           </div>

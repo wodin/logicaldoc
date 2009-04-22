@@ -2,10 +2,19 @@
 <html><!-- InstanceBegin template="/Templates/logicaldoc-help.dwt" codeOutsideHTMLIsLocked="false" -->
   <head>
   <!-- InstanceBeginEditable name="doctitle" -->
-<title>Inviare documenti via email</title>
+<title>Inviare Documenti via email</title>
 <!-- InstanceEndEditable -->
   <link href="css/help.css" rel="stylesheet" type="text/css">
-  <!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+  <!-- InstanceBeginEditable name="head" -->
+  <style type="text/css">
+<!--
+.style1 {
+	color: #000000;
+	font-weight: bold;
+}
+-->
+  </style>
+  <!-- InstanceEndEditable -->
   </head>
   <body>
     <table summary="content" border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -28,7 +37,7 @@
           <p>Il sistema offre la possibilit&agrave; di inviare documenti via e-mail. <br>
             Tale funzionalit&agrave; essenzialmente permette di generare una mail ad un indirizzo specificato contenente in allegato il documento selezionato.<br>
             <br>
-            Sar&agrave; sufficiente accedere ad una cartella con documenti e dal men&ugrave; strumenti visualizzato sul documento selezionare l'opzione &quot;Invia come email&quot;.<br>
+            Sar&agrave; sufficiente accedere ad una cartella con documenti e dal men&ugrave; strumenti visualizzato sul documento selezionare l'opzione<span class="style1"> Invia come email</span>.<br>
             <br>
           </p>
           <div>
@@ -41,18 +50,30 @@
 		  <div align="center">
             <table width="90%" border="0" cellpadding="0" cellspacing="0">
               <tr>
-                <td width="180" height="25" class="noteHeader"><img src="images/note_ico.gif" width="10" height="10" hspace="4">Nota:</td>
+                <td width="180" height="25" class="noteHeader"><img src="images/note_ico.gif" width="10" height="10" hspace="4">Attenzione:</td>
                 <td height="25">&nbsp;</td>
               </tr
               >
               <tr>
-                <td colspan="2" class="noteBody">La specifica del soggetto e del testo del messaggio &egrave; fortemente consigliata. <br>
+                <td colspan="2" class="noteBody">Per il corretto invio delle e-mail occorre che l'amministratore
+                  abbia correttamente inserito le <a href="configsmtp.html">impostazioni SMTP</a>.<br>
+                  La specifica del soggetto e del testo del messaggio &egrave; fortemente consigliata. <br>
                 Alcuni software anti-spam possono considerare le email prive di soggetto come posta indesiderata ed eliminarla automaticamente.</td>
               </tr>
             </table>
 	      </div>
+		  <p>Nel caso in cui il documento abbia una dimensione eccessiva è possibile
+utilizzare un'altra funzionalità di LogicalDOC: inviare un ticket di download.
+<br>
+Selezionate il documento con il tasto destro e cliccate la voce del menù
+contestuale <span class="style1">Invia ticket download</span>. Vi si apre una pagina identica a quella del
+caso precedente, ma il destinatario riceverà una e-mail senza alcun allegato.
+L'e-mail conterrà un link, ovvero il ticket di download che, cliccandovi,
+consentirà di scaricare sul proprio personal computer il documento
+direttamente dall'archivio documentale.</p>
 		  <p>&nbsp;</p>
-		  <!-- InstanceEndEditable --></div></td>
+		  <p>&nbsp;</p>
+              <!-- InstanceEndEditable --></div></td>
           <td width="10">
             <img alt="" src="images/spacer.gif" class="spacer" height="1" width="10" /></td>
         </tr>
