@@ -241,3 +241,17 @@ ol {
 	vertical-align: middle;
 	padding-left: 13px;
 }
+.iconref {
+   color: #FF6600;
+   font-weight: bold;
+}
+
+a .iconref {
+	font-weight: bold;
+	color: #FF6600;
+}
+
+a:visited .iconref {
+	font-weight: bold;
+	color: #FF6600;
+}
