@@ -1,6 +1,15 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html><!-- InstanceBegin template="/Templates/logicaldoc-help.dwt" codeOutsideHTMLIsLocked="false" --><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<!-- InstanceBeginEditable name="doctitle" --><title>Search</title><!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="doctitle" -->
+<style type="text/css">
+<!--
+.style5 {
+	color: #000000;
+	font-weight: bold;
+}
+-->
+</style>
+<title>Search</title><!-- InstanceEndEditable -->
 
   
   
@@ -24,13 +33,15 @@
                 </tbody>
               </table>
               <!-- InstanceBeginEditable name="ContentRegion" -->
-          <p>Two search modalities are possible to carry out searches between documents archived in the system being used:
-           Simple search and <a href="#advanced">Advanced Search</a>.</p>
+          <p>In LogicalDOC you can search a document in four different ways:<br>
+            1. Quick search<br>
+            2. <a href="#advanced">Advanced search</a><br>
+            3. <a href="#parametric">Parametric search</a> (Enterprise Edition only)</p>
            <h3>Simple search  </h3> 
           <br>
           The simple search mask is always present and accessible any time in the upper part of the window.<br>
           It is important to specify the language in which the desired search has to be executed.
-          As a start, the system proposes the default Document language for the customer (in English).  <br>
+          As a start, the system proposes the default Document language for the customer (in English).  By pressing on icon <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.2</span></a> system will search for the entered word.<br>
           Simple search will find only documents archived in the base language (and not documents in other languages).<br>
           If you want to search on documents written in any language, it is necessary to select the option "All documents".<br> 
           <br>
@@ -100,16 +111,23 @@
             written compulsorily in upper case.  </p>
              <h3><a name="advanced" />Advanced search</h3> 
           <br>
-          The mask for advanced search is accessible pressing the link "Advanced Search", present to the right side of the
-          simple search form in the uppper side of the window.<br> 
+          The mask for advanced search is accessible pressing the link <span class="style5">Advanced Search</span>, present to the right side of the
+          simple search form in the uppper side of the window. The difference regarding the simple search is that such mask lets you specify, in a simple way, complex and active
+          search criteria.  Moreover, you can view the advanced search
+page under <span class="style5">Searches</span> menu. <br> 
           <br>
           <br>
           <div>
             <div align="center"><img src="images/searchadvanced00.jpg" height="56" width="360"></div>
           </div>
           <br>
-          The difference regarding the simple search is that such mask lets you specify, in a simple way, complex and active
-          search criteria.  <br>
+          This feature allows the user to search for one or more words
+through different search criteria. The search is performed on the contents
+and metadata of indexed documents and only on the search fields
+selected in checkbox. In addition, you can restrict your search only to a
+folder and, eventually, to its subfolders; you can search also among the
+attributes of a specific template (document type) associated with the searched
+document. <br>
           Using the advance search, it is possible to try simple words or phrases. Some words can moreover be excluded
           from the search or to activate an approximate search.<br> 
           The result can be narrowed based on the dimension, the date and the format of documents.<br> 
@@ -130,12 +148,20 @@
           <div>
             <div align="center"><img src="images/searchadvanced01.jpg" height="563" width="588"></div>
           </div>
-          <p><br>
-            <br>
-            <br>
-            <br>
-            <br>
-          </p>
+          <h3><a name="parametric" id="parametric"></a>Parametric search  (Enterprise Edition only)</h3>
+            <p>In LogicalDOC, under <span class="style5">Searches</span> menu you can view the parametric
+search page. This feature allows the user to search for documents that
+contain specific values on their metadata. The search is performed only on
+the metadata of the document and unlike the advanced search, all
+documents are taken into consideration, including those not already
+indexed. In particular, you can use the special character "%" to perform
+more sophisticated searches; for example, if you want to search for
+documents that have a custom ID with the string "invoice" at the
+beginning, then simply type "invoice%" into the "Custom ID" search field. If
+the searched string is contained in the custom ID, simply type "%invoice%"
+into the "Custom ID" search field.</p>
+            <p>&nbsp;</p>
+       </p>
           <!-- InstanceEndEditable --></div></td>
           <td width="10">
             <img alt="" src="images/spacer.gif" class="spacer" height="1" width="10"></td>
