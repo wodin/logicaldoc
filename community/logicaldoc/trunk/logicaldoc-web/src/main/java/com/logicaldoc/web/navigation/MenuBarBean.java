@@ -153,6 +153,9 @@ public class MenuBarBean {
 		helpMenu.getChildren().add(
 				createMenuItem(" " + Messages.getMessage("help.online"), "m-helpcontents", null, null, helpUrl, style
 						.getImagePath("help.png"), false, "_blank", null));
+		helpMenu.getChildren().add(
+				createMenuItem(" " + Messages.getMessage("bug.report"), "m-bugreport", null, null, "http://bugs.logicaldoc.com", style
+						.getImagePath("bug.png"), false, "_blank", null));
 
 		PageContentBean infoPage = new PageContentBean("info", "info");
 		infoPage.setContentTitle(Messages.getMessage("info"));
@@ -160,7 +163,7 @@ public class MenuBarBean {
 		String product = style.getProductName();
 		helpMenu.getChildren().add(
 				createMenuItem(" " + Messages.getMessage("about") + " " + product, "m-about",
-						"#{menuBar.primaryListener}", null, null, style.getImagePath("about.png"), false, null,
+						"#{menuBar.primaryListener}", null, null, style.getImagePath("info.png"), false, null,
 						"LDLargeMenuItem", infoPage));
 		model.add(helpMenu);
 	}
