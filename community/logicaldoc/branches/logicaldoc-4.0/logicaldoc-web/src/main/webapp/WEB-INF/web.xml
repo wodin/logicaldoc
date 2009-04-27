@@ -122,6 +122,13 @@
 		</listener-class>
 	</listener>
 
+	<!-- Session Tracker listener -->
+	<listener>
+		<listener-class>
+			com.logicaldoc.web.SessionTracker
+		</listener-class>
+	</listener>
+
 	<filter>
 		<filter-name>LocaleFilter</filter-name>
 		<filter-class>com.logicaldoc.web.LocaleFilter</filter-class>
@@ -216,6 +223,12 @@
 			<param-value>/WEB-INF/config.xml</param-value>
 		</init-param>
 	</servlet>
+	<servlet>
+		<servlet-name>upload</servlet-name>
+		<servlet-class>
+			com.logicaldoc.web.upload.Upload
+		</servlet-class>
+	</servlet>
 
 	<!-- mappings -->
 	<filter-mapping>
@@ -223,6 +236,10 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
+	<servlet-mapping>
+		<servlet-name>upload</servlet-name>
+		<url-pattern>/upload</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
         <servlet-name>inputFileFrame</servlet-name>
         <url-pattern>/inputFileFrame</url-pattern>

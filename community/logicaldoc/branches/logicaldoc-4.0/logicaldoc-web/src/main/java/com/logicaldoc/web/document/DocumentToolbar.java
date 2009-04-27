@@ -86,6 +86,7 @@ public class DocumentToolbar {
 		PluginRegistry registry = PluginRegistry.getInstance();
 		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "DocumentToolbar");
 
+		
 		// Sort the extensions according to ascending position
 		List<Extension> sortedExts = new ArrayList<Extension>();
 		for (Extension extension : exts) {
@@ -108,8 +109,8 @@ public class DocumentToolbar {
 			command = new DocumentCommand();
 			commands.add(command);
 			command.setTitle(Messages.getMessage(ext.getParameter("title").valueAsString()));
-			if (StringUtils.isNotEmpty(ext.getParameter("confirmation").valueAsString()))
-				command.setConfirmation(Messages.getMessage(ext.getParameter("confirmation").valueAsString()));
+			if (StringUtils.isNotEmpty(ext.getParameter("confirm").valueAsString()))
+				command.setConfirmation(Messages.getMessage(ext.getParameter("confirm").valueAsString()));
 			command.setIcon(ext.getParameter("icon").valueAsString());
 			command.setAction(FacesUtil.createActionMethodBinding(ext.getParameter("action").valueAsString()));
 			command.setRenderedBinding(FacesUtil.createValueBinding(ext.getParameter("rendered").valueAsString()));
