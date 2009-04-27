@@ -116,7 +116,7 @@
 			
 			<!-- Status -->
 			<ice:column>
-				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}">
+				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}" style="white-space: nowrap;">
 					<ice:outputLink
 						value="download?docId=#{documentRecord.docId}&amp;downloadText=true"
 						target="_blank" title="txt"
@@ -186,8 +186,8 @@
 					</ice:commandSortHeader>
 				</f:facet>
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
-					menuPopup="pop">
-					<ice:outputText value="#{documentRecord.size} KB"
+					menuPopup="pop" style="text-align:right;">
+					<ice:outputText style="white-space: nowrap;" value="#{documentRecord.size} KB"
 						title="#{msgs['msg.jsp.popup']}" />
 				</ice:panelGroup>
 			</ice:column>
