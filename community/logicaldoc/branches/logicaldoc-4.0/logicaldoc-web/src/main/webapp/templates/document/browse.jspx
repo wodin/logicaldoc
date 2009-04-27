@@ -97,12 +97,20 @@
 			<ice:graphicImage value="#{StyleBean.imagesPath}/spacer.gif"
 				style="border: 0px solid;" height="0px" width="480px" title="" />
 		</ice:panelGroup>
-		<ice:panelStack id="documentsPanelStack"
+		
+		<ice:panelGroup>
+			<ice:messages />
+			<f:subview id="w-documents">
+				<ui:include
+					src="/templates/document/#{documentNavigation.selectedPanel.contentName}.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+		
+		<!-- ice:panelStack id="documentsPanelStack"
 			styleClass="documentsPanelStack"
 			selectedPanel="#{documentNavigation.selectedPanel.contentName}">
 
-			<!-- Custom Content Pages -->
-			<ice:panelGroup id="blank">
+    		<ice:panelGroup id="blank">
 				<br />
 			</ice:panelGroup>
 
@@ -190,6 +198,12 @@
 					<ui:include src="/templates/document/immutability.jspx" />
 				</f:subview>
 			</ice:panelGroup>
-		</ice:panelStack>
+			
+			<ice:panelGroup id="scan">
+				<f:subview id="w-scan">
+					<ui:include src="/templates/document/scan.jspx" />
+				</f:subview>
+			</ice:panelGroup>
+		</ice:panelStack-->
 	</ice:panelGroup>
 </jsp:root>

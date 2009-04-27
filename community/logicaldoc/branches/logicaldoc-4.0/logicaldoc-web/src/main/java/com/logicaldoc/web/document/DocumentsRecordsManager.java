@@ -391,14 +391,14 @@ public class DocumentsRecordsManager extends SortableList {
 
 				if (mdao.isWriteEnable(folderId, userId)) {
 					log.debug("mdao.isWriteEnabled");
-					documentNavigation.setSelectedPanel(new PageContentBean("zipImport"));
+					documentNavigation.setSelectedPanel(new PageContentBean("uploadZip"));
 				} else {
 					log.debug("no permission to upload");
 					Messages.addLocalizedWarn("document.write.nopermission");
 				}
 
 				log.debug("show the upload zip panel");
-				documentNavigation.setSelectedPanel(new PageContentBean("zipUpload"));
+				documentNavigation.setSelectedPanel(new PageContentBean("uploadZip"));
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addError(e.getMessage());
