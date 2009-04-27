@@ -45,40 +45,46 @@
                   Picture 48: List of scheduled tasks
                 </center>
                  </p>
-                <p align="left">The list of scheduled tasks shows all the recorded activities in the system and for each of them see:</p>
+                <p align="left">The list of scheduled tasks shows all transactions recorded in the system and
+                each of them show:</p>
               </center>
               <ul>
                 <li>
-                  <div align="left">                  The name of the task                  </div>
+                  <div align="left">                  Name of the task</div>
                 </li>
                 <li>
-                  <div align="left">                  The last time of execution                  </div>
+                  <div align="left">                  Last moment of execution                  </div>
                 </li>
                 <li>
-                  <div align="left">                  The next time it will be re-executed                  </div>
+                  <div align="left">                  Moment of the next execution                  </div>
                 </li>
                 <li>
-                  <div align="left">                  A compact indication of the scheduling (clickable for editing)                  </div>
+                  <div align="left">                  Indication of scheduling policy (clickable for editing)</div>
                 </li>
                 <li>
-                  <div align="left">                  The enabled flag  (toggle button)                  </div>
+                  <div align="left">                  Enabled/disabled flag (clickable to change)</div>
                 </li>
                 <li>
-                  <div align="left">                  The indication of the progress                  </div>
+                  <div align="left">                  Progress indicator (clickable for execution)</div>
                 </li>
                 <li>
-                  <div align="left">                  The link to access logs</div>
+                  <div align="left">                  Link to access the specific operation log</div>
                 </li>
               </ul>
               <center>
-                <p align="left">                  Every planned task can be enabled or disabled, so that beyond the  planning, the activity can be effectively carried out only if enabled.</p>
+                <p align="left">Each scheduled task can be enabled or disabled. The task can be 
+                performed only if it is enabled.</p>
               </center>
               <h3>Scheduling</h3>
-              <p>Although scheduled tasks can also be launched as needed, as the name  suggests, they are generally performed on the basis of a time schedule. <br>
-By clicking on links in the column 'Scheduling', you can plan when to execute the operation.</p>
-              <p align="center"><img src="images/tasks02.jpg" width="682" height="333" border="0" heigth="197"><br>
-              [Mask scheduling]</p>
-              <p>The planning of activities will be effected by specific 6 fields (like the cron command in Unix) listed below:</p>
+              <p>Although the scheduled tasks can be launched whenever you wish,
+                but as the name suggests, they are generally performed on a time
+                schedule.<br>
+You can plan the execution of the task by clicking on the link column
+<span class="style5">Scheduling</span>.</p>
+              <p align="center"><img src="images/tasks02.jpg" width="615" height="282" border="0" heigth="197"><br>
+              Picture 49: Mask scheduling</p>
+              <p>The execution planning is done by the specification of 6 fields (as in the
+              Unix cron command) listed below::</p>
               <p align="center">
               <table width="441" height="278" border="0" align="center" cellspacing="1" bgcolor="#000000">
                     <col width="101*">
@@ -142,12 +148,31 @@ The character '#' is allowed for the day of the week. This character is  used to
 <br>
 In addition to  the descriptive parameters of planning, you can set the specific  maximum duration of processing. If this is specified, the procedure will be automatically stopped after the configured time.              </p>
               <h3>Progress status  and log</h3>
-              <p>If a task is running you can see it in column 'Run'.  If the process is running then the progression bar will be updated  constantly showing the percentage of progress. <br>
-                At the side of this bar  an animated icon indicates that the process is running.  
+              <p>If a task is running you can see it in column <span class="style5">Execution</span> and  the progression bar will be updated  constantly showing the percentage of progress. 
+                At the side of this bar  an animated icon indicates that the process is running. <br> 
 This icon is clickable and allows you to stop the execution. <br>
-When the task is not running, the same icon appears motionless and by clicking it the activity you can start the execution. <br>
-Each task has also a related log file that can be inspected by clicking on the links in the column 'Log'. 
- Reading this log it is possible to understand in detail how the activity proceed.              </p>
+When the task is not running, the same icon appears motionless and and by
+clicking on it you can start the execution. <br>
+Each task has also a related log file that can be inspected by clicking on the link <span class="style5">Log</span>. 
+ This log details how the activity proceeds. <br> 
+            <br>
+          </p>
+          <div align="center">
+            <table border="0" cellpadding="0" cellspacing="0" width="90%">
+              <tbody><tr>
+                <td class="noteHeader" height="25" width="180"><img src="images/note_ico.gif" height="10" hspace="4" width="10">Note:</td> 
+                <td height="25"> </td> 
+              </tr>
+              <tr>
+                <td colspan="2" class="noteBody">Not all tasks are able to provide the stage of processing. In such
+cases, the progression bar does not indicate the progression rate
+and remains undetermined.</td> 
+              </tr>
+            </tbody></table>
+            <br>
+            <br>
+          </div>
+          <p>&nbsp;   </p> 
               <!-- InstanceEndEditable --></div></td>
           <td width="10">
             <img alt="" src="images/spacer.gif" class="spacer" height="1" width="10" /></td>
