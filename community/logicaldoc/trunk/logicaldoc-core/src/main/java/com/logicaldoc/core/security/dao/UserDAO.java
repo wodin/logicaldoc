@@ -50,10 +50,21 @@ public interface UserDAO extends PersistentObjectDAO<User> {
 	/**
 	 * Validates an username and a password.
 	 * 
-	 * @param username Username of the User to be validate.
-	 * @param password Password of the User to be validate.
+	 * @param username Username of the User to be validated.
+	 * @param password Password of the User to be validated.
 	 * @return True if User is authenticated.
 	 */
 	public boolean validateUser(String username, String password);
 
+	/**
+	 * Is password expired.
+	 * 
+	 * @param username Username of the User to be validate.
+	 * @return True if the password is expired
+	 */
+	public boolean isPasswordExpired(String username);
+
+	public int getPasswordTtl();
+
+	public void setPasswordTtl(int passwordTtl);
 }

@@ -36,6 +36,7 @@
 				class="com.logicaldoc.core.security.dao.HibernateUserDAO"
 				abstract="false" lazy-init="default" autowire="default"
 				dependency-check="default">
+				<property name="passwordTtl" value="${password.ttl}" />		
 				<property name="sessionFactory">
 					<ref bean="SessionFactory" />
 				</property>

@@ -1,6 +1,6 @@
 <?xml version = '1.0'?>
 <!-- 
- This page is the document editing form
+ This page is the account editing form
   
  @author Marco Meschieri - Logical Objects
  @since 3.0
@@ -32,8 +32,8 @@
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputSecret id="password" value="#{userForm.password}"
-							tabindex="1" maxlength="15" size="30" required="true">
-							<f:validateLength minimum="8" maximum="15" />
+							tabindex="1" maxlength="30" size="30" required="true">
+							<f:validateLength minimum="#{securityForm.passwordSize}" maximum="30" />
 						</ice:inputSecret>
 						<ice:message for="password" />
 					</ice:panelGroup>
@@ -44,8 +44,8 @@
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputSecret id="repass" value="#{userForm.repass}"
-							tabindex="1" maxlength="15" size="30" required="true">
-							<f:validateLength minimum="8" maximum="15" />
+							tabindex="1" maxlength="30" size="30" required="true">
+							<f:validateLength minimum="#{SecurityForm.passwordSize}" maximum="30" />
 						</ice:inputSecret>
 						<ice:message for="repass" />
 					</ice:panelGroup>

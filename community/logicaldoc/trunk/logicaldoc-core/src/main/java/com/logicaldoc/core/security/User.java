@@ -1,6 +1,7 @@
 package com.logicaldoc.core.security;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
@@ -62,6 +63,12 @@ public class User extends PersistentObject implements Serializable {
 	private String[] groupNames;
 
 	private int enabled = 1;
+
+	// The last time the password was changed
+	private Date passwordChanged = new Date();
+
+	// If the password expires or not
+	private int passwordExpires = 0;
 
 	// Only for GUI
 	private String repass;
@@ -242,6 +249,7 @@ public class User extends PersistentObject implements Serializable {
 		telephone = "";
 		groups = new HashSet<Group>();
 		groupIds = null;
+		passwordExpires = 0;
 	}
 
 	public String toString() {
@@ -305,5 +313,27 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setLocale(Locale locale) {
 		setLanguage(locale.toString());
+	}
+
+	/**
+	 * When the password was modified
+	 */
+	public Date getPasswordChanged() {
+		return passwordChanged;
+	}
+
+	public void setPasswordChanged(Date passwordChanged) {
+		this.passwordChanged = passwordChanged;
+	}
+
+	/**
+	 * If the password expires or not
+	 */
+	public int getPasswordExpires() {
+		return passwordExpires;
+	}
+
+	public void setPasswordExpires(int passwordExpires) {
+		this.passwordExpires = passwordExpires;
 	}
 }

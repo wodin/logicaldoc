@@ -26,7 +26,9 @@ import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.NavigationBean;
 import com.logicaldoc.web.navigation.PageContentBean;
+import com.logicaldoc.web.password.PasswordBean;
 import com.logicaldoc.web.util.Constants;
+import com.logicaldoc.web.util.FacesUtil;
 
 /**
  * Executes user login
@@ -35,7 +37,7 @@ import com.logicaldoc.web.util.Constants;
  * @since 3.0
  */
 public class LoginForm {
-	protected static Log logger = LogFactory.getLog(LoginForm.class);
+	protected static Log log = LogFactory.getLog(LoginForm.class);
 
 	private String j_password;
 
@@ -56,11 +58,9 @@ public class LoginForm {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
 				AuthenticationChain.class);
-
 		if (authenticationChain.authenticate(j_username, j_password)) {
 			User user = userDao.findByUserName(j_username);
-
-			logger.info("User " + j_username + " logged in.");
+			log.info("User " + j_username + " logged in.");
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			Map<String, Object> session = facesContext.getExternalContext().getSessionMap();
@@ -71,17 +71,17 @@ public class LoginForm {
 
 			// Gets language option pressed
 
-			Locale locale = user.getLocale(); 
+			Locale locale = user.getLocale();
 			if (language.equals("default")) {
 				language = user.getLanguage();
-			}else{
-				locale=LocaleUtil.toLocale(language);
+			} else {
+				locale = LocaleUtil.toLocale(language);
 			}
-			
+
 			session.put(Constants.LANGUAGE, language);
 			session.put(Constants.LOCALE, locale);
 			facesContext.getViewRoot().setLocale(locale);
-			logger.info("Set locale to " + locale);
+			log.info("Set locale to " + locale);
 
 			String timezone = Calendar.getInstance().getTimeZone().getID();
 			session.put(Constants.TIMEZONE, timezone);
@@ -104,11 +104,11 @@ public class LoginForm {
 						page.setContentTitle(Messages.getMessage(menu.getText()));
 						page.setIcon(style.getImagePath(menu.getIcon()));
 					} else {
-						logger.warn("Menu " + entrypage + " not found");
+						log.warn("Menu " + entrypage + " not found");
 					}
 				}
 			} catch (Throwable e) {
-				logger.error(e.getMessage(), e);
+				log.error(e.getMessage(), e);
 			}
 
 			if (page == null) {
@@ -121,11 +121,17 @@ public class LoginForm {
 			navigation.setSelectedPanel(page);
 
 			return "loginSuccess";
+		} else if (userDao.isPasswordExpired(j_username)) {
+			User user = userDao.findByUserName(j_username);
+			PasswordBean bean = ((PasswordBean) FacesUtil.accessBeanFromFacesContext("passwordBean", FacesContext
+					.getCurrentInstance(), log));
+			bean.setUser(user);
+			log.info("User " + j_username + " password expired.");
+			return "passwordExpired";
 		} else {
-			logger.warn("User " + j_username + " is not valid.");
+			log.warn("User " + j_username + " is not valid.");
 			// Messages.addError(Messages.getString("errors.action.password.mismatch"));
 			Messages.addError("Invalid username or password");
-
 			return "loginFailure";
 		}
 	}
@@ -145,7 +151,7 @@ public class LoginForm {
 			SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 			FileUtils.deleteDirectory(new File(conf.getValue("userdir") + "/" + authUsername + "/temp"));
 
-			logger.info("User " + authUsername + " logged out.");
+			log.info("User " + authUsername + " logged out.");
 
 			Enumeration enumeration = session.getAttributeNames();
 
@@ -155,7 +161,7 @@ public class LoginForm {
 
 			// session.invalidate();
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
 		}
 
 		return "login";
