@@ -8,8 +8,8 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_manag
 values     (24,1,1,1,1,1,1,1,1,1,1,1);
 
 insert into ld_user
-           (ld_id,ld_lastmodified,ld_deleted,ld_enabled,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_type)
-values     (-5,'2008-11-18',0,1,'_email','','email','email','','','','','en','email@acme.com','',1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_enabled,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_type,ld_passwordchanged,ld_passwordexpires)
+values     (-5,'2008-11-18',0,1,'_email','','email','email','','','','','en','email@acme.com','',1,null,0);
 insert into ld_group
 values     (-5,'2008-11-18',0,'_user_-5','',1);
 insert into ld_usergroup
