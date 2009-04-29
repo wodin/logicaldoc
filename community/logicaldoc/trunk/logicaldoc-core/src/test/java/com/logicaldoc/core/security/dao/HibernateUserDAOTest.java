@@ -1,6 +1,9 @@
 package com.logicaldoc.core.security.dao;
 
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.security.Group;
@@ -175,5 +178,28 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		assertFalse(dao.validateUser("admin", "adminPWD"));
 		assertFalse(dao.validateUser("xxxx", "admin"));
 		assertFalse(dao.validateUser("test", "admin"));
+	}
+
+	public void isPasswordExpired() {
+		assertFalse(dao.isPasswordExpired("admin"));
+		User user = dao.findByUserName("boss");
+		Date lastChange = null;
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(lastChange);
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR, 0);
+		calendar.add(Calendar.DAY_OF_MONTH, -91);
+		lastChange = calendar.getTime();
+		user.setPasswordChanged(lastChange);
+		dao.store(user);
+		assertTrue(dao.isPasswordExpired("boss"));
+
+		calendar.add(Calendar.DAY_OF_MONTH, +2);
+		lastChange = calendar.getTime();
+		user.setPasswordChanged(lastChange);
+		dao.store(user);
+		assertFalse(dao.isPasswordExpired("boss"));
 	}
 }

@@ -27,6 +27,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.security.PasswordGenerator;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
@@ -65,7 +66,11 @@ public class UserForm {
 
 	private Collection<SelectItem> allowedGroups = new ArrayList<SelectItem>();
 
+	private boolean passwordExpires = true;
+
 	private UIInput firstNameControl;
+
+	private UIInput passwordExpiresControl;
 
 	private UIInput nameControl;
 
@@ -84,7 +89,7 @@ public class UserForm {
 	private UIInput stateControl;
 
 	private UIInput phoneControl;
-	
+
 	private UIInput phone2Control;
 
 	public UIInput getFirstNameControl() {
@@ -263,8 +268,10 @@ public class UserForm {
 		selectedAllowedGroups = new long[0];
 		availableGroupFilter = "";
 		allowedGroupFilter = "";
+		passwordExpires = usr.getPasswordExpires() == 1;
 
 		FacesUtil.forceRefresh(firstNameControl);
+		FacesUtil.forceRefresh(passwordExpiresControl);
 		FacesUtil.forceRefresh(nameControl);
 		FacesUtil.forceRefresh(cityControl);
 		FacesUtil.forceRefresh(countryControl);
@@ -315,6 +322,10 @@ public class UserForm {
 	public String savePassword() {
 		return save(true);
 	}
+	
+	public PropertiesBean getConfig() {
+		return (PropertiesBean)Context.getInstance().getBean("ContextProperties");
+	}
 
 	private String save(boolean withPassword) {
 		if (SessionManagement.isValid()) {
@@ -330,6 +341,7 @@ public class UserForm {
 				}
 
 				user.setEmail(user.getEmail().toLowerCase());
+				user.setPasswordExpires(passwordExpires ? 1 : 0);
 
 				if (withPassword) {
 					if (!getPassword().equals(getRepass())) {
@@ -341,6 +353,7 @@ public class UserForm {
 					if (StringUtils.isNotEmpty(getPassword()) && !user.getPassword().equals(getPassword())) {
 						// The password was changed
 						user.setDecodedPassword(getPassword());
+						user.setPasswordChanged(new Date());
 
 						// Notify the user by email
 						notifyAccount(user, getPassword());
@@ -353,8 +366,9 @@ public class UserForm {
 				manager.removeUserFromAllGroups(user);
 
 				if (createNew) {
+					
 					// Generate an initial password
-					String password = new PasswordGenerator().generate(8);
+					String password = new PasswordGenerator().generate(getConfig().getInt("password.size"));
 					user.setDecodedPassword(password);
 					dao.store(user);
 
@@ -576,5 +590,21 @@ public class UserForm {
 
 	public void setPhone2Control(UIInput phone2Control) {
 		this.phone2Control = phone2Control;
+	}
+
+	public boolean isPasswordExpires() {
+		return passwordExpires;
+	}
+
+	public void setPasswordExpires(boolean passwordExpires) {
+		this.passwordExpires = passwordExpires;
+	}
+
+	public UIInput getPasswordExpiresControl() {
+		return passwordExpiresControl;
+	}
+
+	public void setPasswordExpiresControl(UIInput passwordExpiresControl) {
+		this.passwordExpiresControl = passwordExpiresControl;
 	}
 }

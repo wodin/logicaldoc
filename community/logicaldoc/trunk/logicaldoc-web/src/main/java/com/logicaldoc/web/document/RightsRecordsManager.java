@@ -315,6 +315,8 @@ public class RightsRecordsManager {
 	}
 
 	public String save() {
+		if(selectedDirectory==null)
+			 return null;
 		long id = selectedDirectory.getMenuId();
 		long userId = SessionManagement.getUserId();
 		saveRules(id, userId);

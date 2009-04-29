@@ -1,5 +1,8 @@
 package com.logicaldoc.core.security.dao;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +24,9 @@ import com.logicaldoc.util.io.CryptUtil;
 public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> implements UserDAO {
 
 	private UserDocDAO userDocDAO;
+
+	// Password time to live
+	private int passwordTtl = 90;
 
 	private HibernateUserDAO() {
 		super(User.class);
@@ -140,14 +146,70 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		boolean result = true;
 		try {
 			User user = findByUserName(username);
-			if ((user == null) || !user.getPassword().equals(CryptUtil.cryptString(password)) || user.getEnabled() == 0) {
+			// Check the password match
+			if ((user == null) || !user.getPassword().equals(CryptUtil.cryptString(password))) {
 				result = false;
 			}
+
+			// Check if the user is enabled
+			if (user.getEnabled() == 0)
+				return false;
+
+			if (isPasswordExpired(username))
+				return false;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 			result = false;
 		}
 		return result;
+	}
+
+	public int getPasswordTtl() {
+		return passwordTtl;
+	}
+
+	public void setPasswordTtl(int passwordTtl) {
+		this.passwordTtl = passwordTtl;
+	}
+
+	@Override
+	public boolean isPasswordExpired(String username) {
+		if(getPasswordTtl()<=0)
+			return false;
+		
+		try {
+			User user = findByUserName(username);
+			
+			// Check if the password is expired
+			if (user.getPasswordExpires() == 1) {
+				Date lastChange = user.getPasswordChanged();
+				if (lastChange == null)
+					return false;
+				Calendar calendar = new GregorianCalendar();
+				calendar.setTime(lastChange);
+				calendar.set(Calendar.MILLISECOND, 0);
+				calendar.set(Calendar.SECOND, 0);
+				calendar.set(Calendar.MINUTE, 0);
+				calendar.set(Calendar.HOUR, 0);
+				lastChange = calendar.getTime();
+
+				calendar.setTime(new Date());
+				calendar.set(Calendar.MILLISECOND, 0);
+				calendar.set(Calendar.SECOND, 0);
+				calendar.set(Calendar.MINUTE, 0);
+				calendar.set(Calendar.HOUR, 0);
+
+				calendar.add(Calendar.DAY_OF_MONTH, -getPasswordTtl());
+				Date date = calendar.getTime();
+
+				return(lastChange.before(date));
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+			return true;
+		}
+		return false;
 	}
 }

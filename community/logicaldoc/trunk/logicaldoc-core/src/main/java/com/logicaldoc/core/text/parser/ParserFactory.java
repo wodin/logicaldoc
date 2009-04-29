@@ -105,6 +105,8 @@ public class ParserFactory {
 		if (StringUtils.isEmpty(ext)) {
 			String filename = file.getName().toLowerCase();
 			ext = FilenameUtils.getExtension(filename);
+		}else{
+			ext=extension.toLowerCase();
 		}
 
 		Parser parser = null;

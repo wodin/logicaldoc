@@ -36,8 +36,13 @@
 						<ice:message for="userName" />
 					</ice:panelGroup>
 					<ice:panelGroup style="width:20px" />
-					<ice:panelGroup />
-					<ice:panelGroup />
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="passwordExpires"
+							value="#{msgs['password.expires']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+					    <ice:selectBooleanCheckbox id="passwordExpires" value="#{userForm.passwordExpires}" binding="#{userForm.passwordExpiresControl}" disabled="#{userForm.user.userName eq 'admin'}"/>
+					</ice:panelGroup>
 				</ice:panelGrid>
 			</ice:panelGroup>
 		</ice:panelGroup>

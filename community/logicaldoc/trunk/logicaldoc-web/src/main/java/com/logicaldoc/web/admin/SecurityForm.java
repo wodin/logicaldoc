@@ -1,5 +1,7 @@
 package com.logicaldoc.web.admin;
 
+import java.io.IOException;
+
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
@@ -7,13 +9,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.document.Directory;
 import com.logicaldoc.web.document.DirectoryTreeModel;
 import com.logicaldoc.web.document.RightsRecordsManager;
 import com.logicaldoc.web.util.FacesUtil;
 
 /**
- * Form for menu security
+ * Form for menu security and other security issues.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 4.0
@@ -27,6 +32,10 @@ public class SecurityForm {
 	private String path = "";
 
 	private boolean showFolderSelector = false;
+
+	private int passwordSize;
+
+	private int passwordTtl;
 
 	public String getPath() {
 		return path;
@@ -71,7 +80,6 @@ public class SecurityForm {
 
 	public void folderSelected(ActionEvent e) {
 		showFolderSelector = false;
-
 		Directory dir = directoryModel.getSelectedDir();
 		Menu menu = dir.getMenu();
 		String dirPath = menu.getPath() + "/" + menu.getId();
@@ -88,5 +96,38 @@ public class SecurityForm {
 				"securityRightsRecordsManager", FacesContext.getCurrentInstance(), log));
 		manager.cleanSelection();
 		showFolderSelector = false;
+	}
+
+	public int getPasswordSize() {
+		return getConfig().getInt("password.size");
+	}
+
+	public int getPasswordTtl() {
+		return getConfig().getInt("password.ttl");
+	}
+
+	public void setPasswordSize(int passwordSize) {
+		this.passwordSize = passwordSize;
+	}
+
+	public void setPasswordTtl(int passwordTtl) {
+		this.passwordTtl = passwordTtl;
+	}
+
+	public PropertiesBean getConfig() {
+		return (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+	}
+
+	public void save() {
+		try {
+			PropertiesBean context = getConfig();
+			context.setProperty("password.size", passwordSize > 4 ? Integer.toString(passwordSize) : "0");
+			context.setProperty("password.ttl", passwordTtl > 0 ? Integer.toString(passwordTtl) : "0");
+			context.write();
+
+			UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			dao.setPasswordTtl(passwordTtl > 0 ? passwordTtl : 0);
+		} catch (IOException e) {
+		}
 	}
 }

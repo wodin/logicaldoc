@@ -69,6 +69,12 @@
   </managed-bean>
 
   <managed-bean>
+    <managed-bean-name>passwordBean</managed-bean-name>
+    <managed-bean-class>com.logicaldoc.web.password.PasswordBean</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
     <managed-bean-name>loginForm</managed-bean-name>
     <managed-bean-class>com.logicaldoc.web.LoginForm</managed-bean-class>
     <managed-bean-scope>request</managed-bean-scope>
@@ -462,6 +468,11 @@
       <redirect />
     </navigation-case>
     <navigation-case>
+      <from-outcome>passwordExpired</from-outcome>
+      <to-view-id>/password/passwd.iface</to-view-id>
+      <redirect />
+    </navigation-case>
+    <navigation-case>
       <from-outcome>login</from-outcome>
       <to-view-id>/login.iface</to-view-id>
       <redirect />
@@ -478,6 +489,11 @@
     <navigation-case>
       <from-outcome>loginSuccess</from-outcome>
       <to-view-id>/main.iface</to-view-id>
+      <redirect />
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>passwordExpired</from-outcome>
+      <to-view-id>/password/passwd.iface</to-view-id>
       <redirect />
     </navigation-case>
   </navigation-rule>
