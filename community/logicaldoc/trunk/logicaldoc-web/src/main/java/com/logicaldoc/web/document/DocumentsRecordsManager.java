@@ -94,6 +94,9 @@ public class DocumentsRecordsManager extends SortableList {
 
 	private int displayedRows = 10;
 
+	// The requested operation, can be: cut or copy
+	private String guiRequest;
+
 	public DocumentsRecordsManager() {
 		// We don't sort by default
 		super("xxx");
@@ -340,9 +343,20 @@ public class DocumentsRecordsManager extends SortableList {
 
 		return null;
 	}
+	
+	/**
+	 * Places all selected documents into the clipboard
+	 * and set the guiRequest to "cut"
+	 */
+	public String cutToClipboard() {
+		String xxx = copyToClipboard();
+		this.guiRequest = "cut";
+		return xxx;
+	}	
 
 	/**
 	 * Places all selected documents into the clipboard
+	 * and set the guiRequest to "copy"
 	 */
 	public String copyToClipboard() {
 		if (SessionManagement.isValid()) {
@@ -353,7 +367,7 @@ public class DocumentsRecordsManager extends SortableList {
 				for (DocumentRecord record : selection) {
 					clipboard.add(record);
 				}
-
+				this.guiRequest = "copy";
 				refresh();
 			} else {
 				Messages.addLocalizedWarn("noselection");
@@ -699,5 +713,9 @@ public class DocumentsRecordsManager extends SortableList {
 
 	public Set<DocumentRecord> getSelection() {
 		return selection;
+	}
+
+	public String getGuiRequest() {
+		return guiRequest;
 	}
 }
