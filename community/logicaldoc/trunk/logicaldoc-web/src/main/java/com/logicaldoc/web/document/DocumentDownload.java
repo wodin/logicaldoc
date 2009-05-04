@@ -118,7 +118,7 @@ public class DocumentDownload extends HttpServlet {
 					if ("true".equals(downloadText)) {
 						ServletDocUtil.downloadDocumentText(request, response, doc.getId());
 					} else {
-						ServletDocUtil.downloadDocument(request, response, doc.getId(), fileVersion, suffix);
+						ServletDocUtil.downloadDocument(request, response, doc.getId(), fileVersion, suffix, user);
 
 						// add the file to the recent files of the user
 						ServletDocUtil.addToRecentFiles(user.getId(), doc.getId());
@@ -133,7 +133,7 @@ public class DocumentDownload extends HttpServlet {
 					throw new Exception("Unknown user " + username);
 
 				if (mdao.isReadEnable(folder.getId(), user.getId())) {
-					ServletDocUtil.downloadDocument(request, response, doc.getId(), fileVersion, suffix);
+					ServletDocUtil.downloadDocument(request, response, doc.getId(), fileVersion, suffix, user);
 				}
 			} catch (Exception ex) {
 				logger.error(ex.getMessage(), ex);

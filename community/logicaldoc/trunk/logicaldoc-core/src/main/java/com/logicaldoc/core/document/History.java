@@ -22,6 +22,8 @@ public class History extends PersistentObject {
 	
 	public static final String EVENT_RENAMED = "event.renamed";
 
+	public static final String EVENT_DOWNLOADED = "event.downloaded";
+	
 	public final static String EVENT_MOVED = "event.moved";
 	
 	public final static String EVENT_LOCKED = "event.locked";
