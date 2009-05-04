@@ -18,8 +18,26 @@ import com.logicaldoc.util.plugin.LogicalDOCPlugin;
  * @since 4.5
  */
 public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
+	
 	protected static Log log = LogFactory.getLog(ExternalAuthenticationPlugin.class);
-
+	
+	@Override
+	protected void doStart() throws Exception {
+		super.doStart();
+		
+		boolean ecopied = false;
+		
+		// verify that the resources have actually been copied
+		File ldwebapp = new File(System.getProperty("logicaldoc.app.rootdir"));
+		File extFolder = new File(ldwebapp, "templates/external-authentication");
+		File ldapFile = new File(extFolder, "ldap.jspx");
+		if (ldapFile.exists())
+			ecopied = true;
+		
+		if (ecopied == false)
+			install();
+	}
+	
 	@Override
 	protected void install() throws Exception {
 		super.install();
