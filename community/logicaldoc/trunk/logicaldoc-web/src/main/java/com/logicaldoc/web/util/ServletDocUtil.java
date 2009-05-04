@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,10 @@ import org.apache.tools.ant.filters.StringInputStream;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.HistoryDAO;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.util.Context;
@@ -78,7 +82,7 @@ public class ServletDocUtil {
 	 *        will be returned
 	 */
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, long docId,
-			String fileVersion, String suffix) throws FileNotFoundException, IOException {
+			String fileVersion, String suffix, User user) throws FileNotFoundException, IOException {
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = ddao.findById(docId);
 
@@ -124,6 +128,18 @@ public class ServletDocUtil {
 			os.flush();
 			os.close();
 			is.close();
+		}
+
+		if (user != null && StringUtils.isEmpty(suffix)) {
+			// Add an history entry to track the download of the document
+			History history = new History();
+			history.setDocId(docId);
+			history.setDate(new Date());
+			history.setEvent(History.EVENT_DOWNLOADED);
+			history.setUserId(user.getId());
+			history.setUserName(user.getFullName());
+			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+			hdao.store(history);
 		}
 	}
 
@@ -207,8 +223,8 @@ public class ServletDocUtil {
 	 *        will be returned
 	 */
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String docId,
-			String fileVersion) throws FileNotFoundException, IOException {
-		downloadDocument(request, response, Integer.parseInt(docId), fileVersion, null);
+			String fileVersion, User user) throws FileNotFoundException, IOException {
+		downloadDocument(request, response, Integer.parseInt(docId), fileVersion, null, user);
 	}
 
 	/**
