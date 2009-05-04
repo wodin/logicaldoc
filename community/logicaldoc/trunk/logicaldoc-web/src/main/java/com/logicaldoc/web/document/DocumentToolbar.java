@@ -41,19 +41,21 @@ public class DocumentToolbar {
 		command.setIcon("actions_uploadzip.png");
 		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.startZipUpload"));
 		command.setRenderedBinding(FacesUtil.createValueBinding("documentNavigation.selectedDir.bulkImportEnabled"));
-		
+
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("clipboard.cut"));
 		command.setIcon("actions_cut.png");
 		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.cutToClipboard"));
+		command.setRenderedBinding(FacesUtil.createValueBinding("documentsRecordsManager.count>0"));
 
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("clipboard.copy"));
 		command.setIcon("actions_copy.png");
 		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.copyToClipboard"));
-
+		command.setRenderedBinding(FacesUtil.createValueBinding("documentsRecordsManager.count>0"));
+		
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("clipboard.move"));
