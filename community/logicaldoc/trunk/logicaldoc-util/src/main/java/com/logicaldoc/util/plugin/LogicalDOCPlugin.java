@@ -6,13 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.Plugin;
@@ -44,7 +40,9 @@ public abstract class LogicalDOCPlugin extends Plugin {
 
 	/**
 	 * This method will be called once during plug-in activation before any
-	 * access to any code from this plug-in.
+	 * access to any code from this plug-in. If the plug-in needs to be
+	 * installed(@link #isInstallNeeded())the
+	 * <code>install()</code> method is called
 	 * 
 	 * @throws Exception if an error has occurred during plug-in start-up
 	 * @see org.java.plugin.Plugin#doStart()
@@ -53,10 +51,9 @@ public abstract class LogicalDOCPlugin extends Plugin {
 	protected void doStart() throws Exception {
 		loadData();
 		try {
-			if (StringUtils.isEmpty(getProperty("install"))) {
+			if (isInstallNeeded()) {
 				install();
-				DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-				data.setProperty("install", df.format(new Date()));
+				getInstallMark().createNewFile();
 				log.info("Plugin " + getDescriptor().getId() + " installed");
 			}
 		} catch (Exception e) {
@@ -65,6 +62,25 @@ public abstract class LogicalDOCPlugin extends Plugin {
 		}
 		start();
 		saveData();
+	}
+
+	/**
+	 * Return the install mark file, that is the file called 'install' inside
+	 * the plug-in's shadow folder
+	 */
+	private File getInstallMark() {
+		return new File(resolvePath("install").toString());
+	}
+
+	/**
+	 * Tells is the plug-in need to be installed. This default implementation
+	 * check if the file 'install' exists o the plug-in's shadow folder.
+	 * Concrete implementations are free to re-implement this logic.
+	 * 
+	 * @return true if the plug-in need to be reinstalled
+	 */
+	protected boolean isInstallNeeded() {
+		return !getInstallMark().exists();
 	}
 
 	protected void loadData() throws IOException {
