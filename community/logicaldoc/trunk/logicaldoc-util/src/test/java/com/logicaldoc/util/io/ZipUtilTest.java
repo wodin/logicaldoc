@@ -2,6 +2,7 @@ package com.logicaldoc.util.io;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,7 +37,8 @@ public class ZipUtilTest {
 	public void testReadEntry() throws IOException {
 		File file = new File("target/test.zip");
 		FileUtil.copyResource("/test.zip", file);
-		InputStream is = ZipUtil.readEntry(file, "index.xsl");
+		byte[] in = ZipUtil.readEntry(file, "index.xsl");
+		ByteArrayInputStream is=new ByteArrayInputStream(in);
 		assertNotNull(is);
 		File dir = new File("target/test");
 		dir.mkdirs();
