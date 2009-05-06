@@ -1,14 +1,13 @@
 package com.logicaldoc.util.io;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.logging.Log;
@@ -84,16 +83,28 @@ public class ZipUtil {
 	 * @param entry The entry to be read
 	 * @return The stream of the entry
 	 */
-	public static InputStream readEntry(File zipFile, String entry) {
+	public static byte[] readEntry(File zipFile, String entry) {
 		InputStream entryStream = null;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ZipFile file = null;
 		try {
 			file = new ZipFile(zipFile);
 			entryStream = file.getInputStream(file.getEntry(entry));
+			int nextChar;
+			while ((nextChar = entryStream.read()) != -1)
+				baos.write((char) nextChar);
+			baos.flush();
 		} catch (Exception e) {
 			logError(e.getMessage());
+		} finally {
+			try {
+				baos.close();
+				entryStream.close();
+				file.close();
+			} catch (IOException e) {
+			}
 		}
-		return entryStream;
+		return baos.toByteArray();
 	}
 
 	/**
