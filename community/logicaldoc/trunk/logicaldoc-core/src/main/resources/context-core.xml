@@ -191,12 +191,10 @@
 				<property name="linkDAO">
 					<ref bean="DocumentLinkDAO" />
 				</property>
-				<property name="settings">
-					<ref bean="SettingsConfig" />
-				</property>
 				<property name="listenerManager">
 					<ref bean="DocumentListenerManager" />
 				</property>
+				<property name="storer" ref="Storer" />
 			</bean>
 		</property>
 	</bean>

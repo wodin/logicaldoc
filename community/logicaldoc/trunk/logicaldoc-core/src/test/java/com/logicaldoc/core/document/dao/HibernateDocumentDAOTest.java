@@ -13,10 +13,10 @@ import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
+import com.logicaldoc.core.searchengine.store.Storer;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
-import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.FileUtil;
 
 /**
@@ -32,7 +32,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 	private MenuDAO menuDao;
 
-	private SettingsConfig settings;
+	private Storer storer;
 
 	public HibernateDocumentDAOTest(String name) {
 		super(name);
@@ -45,7 +45,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		// it is an HibernateDocumentDAO
 		dao = (DocumentDAO) context.getBean("DocumentDAO");
 		menuDao = (MenuDAO) context.getBean("MenuDAO");
-		settings = (SettingsConfig) context.getBean("SettingsConfig");
+		storer = (Storer) context.getBean("Storer");
 	}
 
 	public void testDelete() {
@@ -169,7 +169,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.setFileVersion("1.0");
 
 		// Prepare the document file for digest computation
-		File docFile = new File((settings.getValue("docdir") + "/" + doc.getPath() + "/doc_5/" + doc.getFileVersion()));
+		File docFile = storer.getFile(5L, doc.getFileVersion());
 		FileUtils.forceMkdir(docFile.getParentFile());
 		Writer out = new FileWriter(docFile);
 		out.write("Questo file serve per fare il test del digest su un documento");
@@ -177,6 +177,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		out.close();
 		assertTrue(docFile.exists());
 		String digest = FileUtil.computeDigest(docFile);
+		System.out.println("Saved file " + docFile.getPath());
 
 		// Try a long tag
 		doc.addTag("123456789123456789123456789");
@@ -184,16 +185,31 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		user.setId(1);
 		Version version = Version.create(doc, user, "comment", Version.EVENT_CHECKIN, VERSION_TYPE.OLD_VERSION);
 
+		assertTrue(docFile.exists());
 		assertTrue(dao.store(doc));
+
+		assertTrue(docFile.exists());
 		assertEquals(5, doc.getId());
 		doc = dao.findById(5);
 		assertNotNull(doc);
 		dao.initialize(doc);
+
+		dao.store(doc);
+
+		docFile = storer.getFile(doc, doc.getFileVersion(), null);
+		FileUtils.forceMkdir(docFile.getParentFile());
+		out = new FileWriter(docFile);
+		out.write("Questo file serve per fare il test del digest su un documento");
+		out.flush();
+		out.close();
+		assertTrue(docFile.exists());
+
 		assertEquals(5, doc.getId());
 		assertEquals(3, doc.getTags().size());
 		assertTrue(doc.getTags().contains("pluto"));
 		assertTrue(doc.getTags().contains("123456789123456789123456789"));
 		assertEquals("val 1", doc.getValue("att_1"));
+		assertTrue(docFile.exists());
 		assertNotNull(doc.getDigest());
 		assertEquals(doc.getDigest(), digest);
 
@@ -322,11 +338,11 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindByLockUserAndStatus() {
-		assertEquals(2, dao.findByLockUserAndStatus(3L,null).size());
-		assertEquals(2, dao.findByLockUserAndStatus(3L,Document.DOC_CHECKED_OUT).size());
-		assertEquals(2, dao.findByLockUserAndStatus(null,Document.DOC_CHECKED_OUT).size());
-		assertEquals(0, dao.findByLockUserAndStatus(1L,null).size());
-		assertEquals(0, dao.findByLockUserAndStatus(1L,Document.DOC_CHECKED_OUT).size());
-		assertEquals(0, dao.findByLockUserAndStatus(987541L,null).size());
+		assertEquals(2, dao.findByLockUserAndStatus(3L, null).size());
+		assertEquals(2, dao.findByLockUserAndStatus(3L, Document.DOC_CHECKED_OUT).size());
+		assertEquals(2, dao.findByLockUserAndStatus(null, Document.DOC_CHECKED_OUT).size());
+		assertEquals(0, dao.findByLockUserAndStatus(1L, null).size());
+		assertEquals(0, dao.findByLockUserAndStatus(1L, Document.DOC_CHECKED_OUT).size());
+		assertEquals(0, dao.findByLockUserAndStatus(987541L, null).size());
 	}
 }

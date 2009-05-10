@@ -25,13 +25,13 @@ import com.logicaldoc.core.document.DocumentListener;
 import com.logicaldoc.core.document.DocumentListenerManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
+import com.logicaldoc.core.searchengine.store.Storer;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
-import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.util.sql.SqlUtil;
 
@@ -56,9 +56,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	private DocumentLinkDAO linkDAO;
 
-	private SettingsConfig settings;
-
 	private DocumentListenerManager listenerManager;
+
+	private Storer storer;
 
 	private HibernateDocumentDAO() {
 		super(Document.class);
@@ -75,10 +75,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	public void setVersionDAO(VersionDAO versionDAO) {
 		this.versionDAO = versionDAO;
-	}
-
-	public void setSettings(SettingsConfig settings) {
-		this.settings = settings;
 	}
 
 	public void setLinkDAO(DocumentLinkDAO linkDAO) {
@@ -229,9 +225,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			getHibernateTemplate().saveOrUpdate(doc);
 
 			// Update size and digest
-			File docFile = new File(
-					(settings.getValue("docdir") + "/" + doc.getPath() + "/doc_" + doc.getId() + "/" + doc
-							.getFileVersion()));
+			File docFile = storer.getFile(doc, doc.getFileVersion(), null);
+			System.out.println("qq="+docFile.getPath());
 			if (docFile.exists()) {
 				long size = docFile.length();
 				doc.setFileSize(size);
@@ -797,5 +792,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	public void setDiscussionDAO(DiscussionThreadDAO discussionDAO) {
 		this.discussionDAO = discussionDAO;
+	}
+
+	public void setStorer(Storer storer) {
+		this.storer = storer;
 	}
 }

@@ -273,28 +273,9 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public File getDocumentFile(Document doc, String fileVersion, String suffix) {
-		/*
-		 * All versions of a document are stored in the same directory as the
-		 * current version, but the filename is the version number without
-		 * extension, e.g. "docId/2.1"
-		 */
-		String filename;
-		if (StringUtils.isEmpty(fileVersion))
-			filename = doc.getFileVersion();
-		else
-			filename = fileVersion;
-		if (StringUtils.isEmpty(filename))
-			filename = doc.getVersion();
-
-		/*
-		 * Document's related resources are stored with a suffix, e.g.
-		 * "docId/2.1-thumb.jpg"
-		 */
-		if (StringUtils.isNotEmpty(suffix))
-			filename += "-" + suffix;
-		return storer.getFile(doc.getId(), filename);
+		return storer.getFile(doc, fileVersion, suffix);
 	}
-
+	
 	@Override
 	public String getDocumentContent(Document doc) {
 		String content = null;

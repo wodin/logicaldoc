@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.config.SettingsConfig;
@@ -75,5 +77,29 @@ public class FSStorer implements Storer {
 	public File getFile(long docId, String filename) {
 		File docDir = getDirectory(docId);
 		return new File(docDir, filename);
+	}
+	
+	@Override
+	public File getFile(Document doc, String fileVersion, String suffix) {
+		/*
+		 * All versions of a document are stored in the same directory as the
+		 * current version, but the filename is the version number without
+		 * extension, e.g. "docId/2.1"
+		 */
+		String filename;
+		if (StringUtils.isEmpty(fileVersion))
+			filename = doc.getFileVersion();
+		else
+			filename = fileVersion;
+		if (StringUtils.isEmpty(filename))
+			filename = doc.getVersion();
+
+		/*
+		 * Document's related resources are stored with a suffix, e.g.
+		 * "docId/2.1-thumb.jpg"
+		 */
+		if (StringUtils.isNotEmpty(suffix))
+			filename += "-" + suffix;
+		return getFile(doc.getId(), filename);
 	}
 }

@@ -3,6 +3,10 @@ package com.logicaldoc.core.searchengine.store;
 import java.io.File;
 import java.io.InputStream;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.logicaldoc.core.document.Document;
+
 /**
  * The Storer manages the filesystem where document files are maintained.
  * 
@@ -45,4 +49,15 @@ public interface Storer {
 	 * @return The document's file
 	 */
 	public File getFile(long docId, String filename);
+	
+	/**
+	 * Obtains the document's file for the specified version
+	 * 
+	 * @param doc The document representation
+	 * @param fileVersion The file version (use null for the latest version)
+	 * @param suffix The file suffix (use null if you want the exact document
+	 *        file)
+	 * @return The document file
+	 */
+	public File getFile(Document doc, String fileVersion, String suffix);
 }
