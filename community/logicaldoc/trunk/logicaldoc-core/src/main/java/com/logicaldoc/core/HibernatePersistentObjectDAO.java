@@ -188,6 +188,8 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 
 	@Override
 	public void deleteAll(Collection<T> entities) {
+		if (entities == null || entities.isEmpty())
+			return;
 		StringBuffer ids = new StringBuffer();
 		for (T t : entities) {
 			if (ids.length() > 0)
