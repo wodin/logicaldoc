@@ -690,7 +690,6 @@ public class DocumentManagerImpl implements DocumentManager {
 						continue;
 					}
 					deletableDocs.add(doc);
-					// delete(doc.getId());
 				}
 				if (foundDocImmutable || foundDocLocked) {
 					notDeletableFolders.add(deletableFolder);
