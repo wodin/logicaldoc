@@ -226,7 +226,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			// Update size and digest
 			File docFile = storer.getFile(doc, doc.getFileVersion(), null);
-			System.out.println("qq="+docFile.getPath());
 			if (docFile.exists()) {
 				long size = docFile.length();
 				doc.setFileSize(size);
@@ -786,6 +785,14 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
+		}
+
+	}
+
+	@Override
+	public void deleteAll(Collection<Document> documents) {
+		for (Document document : documents) {
+			delete(document.getId());
 		}
 
 	}

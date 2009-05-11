@@ -222,4 +222,12 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @param docId
 	 */
 	public void makeImmutable(long docId);
+
+	/**
+	 * Deletes all documents form the database and modifies the custom ids of
+	 * all documents
+	 * 
+	 * @param documents The documents to be deleted
+	 */
+	public void deleteAll(Collection<Document> documents);
 }
