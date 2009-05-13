@@ -37,4 +37,24 @@ public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<D
 			template = null;
 		return template;
 	}
+
+	@Override
+	public boolean delete(long id) {
+		boolean result = true;
+
+		try {
+			DocumentTemplate template = (DocumentTemplate) getHibernateTemplate().get(DocumentTemplate.class, id);
+			if (template != null) {
+				template.setDeleted(1);
+				template.setName(template.getName() + "." + template.getId());
+				getHibernateTemplate().saveOrUpdate(template);
+			}
+		} catch (Throwable e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+			result = false;
+		}
+
+		return result;
+	}
 }

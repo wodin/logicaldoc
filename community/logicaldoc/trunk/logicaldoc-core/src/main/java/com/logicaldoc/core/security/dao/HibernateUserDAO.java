@@ -65,7 +65,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		} catch (Throwable e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
-			result = true;
+			result = false;
 		}
 
 		return result;
