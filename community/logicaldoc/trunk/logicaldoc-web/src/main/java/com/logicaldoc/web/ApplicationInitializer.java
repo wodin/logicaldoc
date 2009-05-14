@@ -19,8 +19,7 @@ import com.logicaldoc.core.SystemProperty;
 /**
  * Listener that initialises relevant system stuffs during application startup
  * 
- * @author Alessandro Gasparini
- * @version $Id:$
+ * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
 public class ApplicationInitializer implements ServletContextListener {
@@ -69,16 +68,16 @@ public class ApplicationInitializer implements ServletContextListener {
 		boot.setProperty(SystemProperty.LOGICALDOC_PLUGINSREGISTRY,
 				initPluginRegistry());
 
+		saveBootProperties(boot, context);
+		
 		try {
 			String log4jPath = context
-					.getRealPath("/WEB-INF/classes/log4j.xml");
+					.getRealPath("/WEB-INF/classes/ldoc-log4j.xml");
 			System.out.println("log4jPath = " + log4jPath);
 			Log4jConfigurer.initLogging(log4jPath);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-
-		saveBootProperties(boot, context);
 
 		// Initialize plugins
 		com.logicaldoc.util.PluginRegistry.getInstance().init();
@@ -87,7 +86,6 @@ public class ApplicationInitializer implements ServletContextListener {
 	private String initPluginRegistry() {
 		System.setProperty(SystemProperty.LOGICALDOC_PLUGINSREGISTRY,
 				"com.logicaldoc.web.PluginRegistry");
-
 		return "com.logicaldoc.web.PluginRegistry";
 	}
 
@@ -107,7 +105,6 @@ public class ApplicationInitializer implements ServletContextListener {
 		homePath = StringUtils.removeEnd(homePath, "/");
 		System.err.println("LOGICALDOC_REPOSITORY = " + homePath);
 		System.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, homePath);
-
 		return homePath;
 	}
 
@@ -116,7 +113,6 @@ public class ApplicationInitializer implements ServletContextListener {
 				.getRealPath(StringUtils.EMPTY), "\\", "/");
 		rootPath = StringUtils.removeEnd(rootPath, "/");
 		System.setProperty(SystemProperty.LOGICALDOC_APP_ROOTDIR, rootPath);
-
 		return rootPath;
 	}
 
@@ -131,7 +127,6 @@ public class ApplicationInitializer implements ServletContextListener {
 		dir.mkdir();
 		System.setProperty(SystemProperty.LOGICALDOC_APP_PLUGINSDIR,
 				pluginsPath);
-
 		return pluginsPath;
 	}
 }

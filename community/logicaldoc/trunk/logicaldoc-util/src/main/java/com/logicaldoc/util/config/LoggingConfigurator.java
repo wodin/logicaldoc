@@ -19,7 +19,7 @@ public class LoggingConfigurator {
 
 	public LoggingConfigurator() {
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		xml = new XMLBean(loader.getResource("log4j.xml"));
+		xml = new XMLBean(loader.getResource("ldoc-log4j.xml"));
 	}
 
 	/**

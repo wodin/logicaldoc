@@ -106,7 +106,7 @@ public class SetupWizard implements TabChangeListener {
 			// Refresh the current logging location
 			try {
 				String rootPath = SystemProperty.getProperty(SystemProperty.LOGICALDOC_APP_ROOTDIR);
-				String log4jPath = rootPath + "/WEB-INF/classes/log4j.xml";
+				String log4jPath = rootPath + "/WEB-INF/classes/ldoc-log4j.xml";
 				System.err.println("log4jPath = " + log4jPath);
 				Log4jConfigurer.initLogging(log4jPath);
 			} catch (FileNotFoundException e) {
