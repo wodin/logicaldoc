@@ -40,6 +40,10 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	
 	public static final int DOC_LOCKED = 2;
 
+	public static final int EXPORT_UNLOCKED = 0;
+	
+	public static final int EXPORT_LOCKED = 1;
+	
 	private long fileSize = 0;
 
 	/**
@@ -51,10 +55,14 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	 */
 	private int status = DOC_UNLOCKED;
 
+	private int exportStatus = EXPORT_UNLOCKED;
+	
 	private String title;
 
 	private String version;
 
+	private String exportVersion;
+	
 	private String fileVersion;
 
 	private Date date;
@@ -109,6 +117,10 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	private String recipient;
 
+	private String exportName;
+	
+	private Long exportId = null;
+	
 	public AbstractDocument() {
 		super();
 	}
@@ -515,5 +527,52 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	
 	public void setLocale(Locale locale){
 		setLanguage(locale.toString());
+	}
+
+	/**
+	 * The document export status
+	 * 
+	 * @see Document#EXPORT_UNLOCKED
+	 * @see Document#EXPORT_LOCKED
+	 */
+	public int getExportStatus() {
+		return exportStatus;
+	}
+
+	public void setExportStatus(int exportStatus) {
+		this.exportStatus = exportStatus;
+	}
+
+	/**
+	 * The last exported version
+	 */
+	public String getExportVersion() {
+		return exportVersion;
+	}
+
+	public void setExportVersion(String exportVersion) {
+		this.exportVersion = exportVersion;
+	}
+
+	/**
+	 * The last archive name in which the document was exported 
+	 */
+	public String getExportName() {
+		return exportName;
+	}
+
+	public void setExportName(String exportName) {
+		this.exportName = exportName;
+	}
+
+	/**
+	 * The last archive in which the document was exported 
+	 */
+	public Long getExportId() {
+		return exportId;
+	}
+
+	public void setExportId(Long exportId) {
+		this.exportId = exportId;
 	}
 }

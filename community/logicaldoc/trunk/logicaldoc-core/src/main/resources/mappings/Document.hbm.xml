@@ -37,6 +37,11 @@
 		<property name="signed" type="int" column="ld_signed" not-null="true"/>
 		<property name="digest" type="string" column="ld_digest" length="255" />
 		<property name="recipient" type="string" column="ld_recipient" length="4000" />
+		<property name="exportStatus" type="int" column="ld_exportstatus" not-null="true"/>
+		<property name="exportId" type="long" column="ld_exportid" />
+		<property name="exportName" type="string" column="ld_exportname" length="255" />
+		<property name="exportVersion" type="string" column="ld_exportversion" length="10" />
+
 		<many-to-one name="folder" class="com.logicaldoc.core.security.Menu" column="ld_folderid" />
 		<many-to-one name="template" class="com.logicaldoc.core.document.DocumentTemplate" column="ld_templateid" />
 		
