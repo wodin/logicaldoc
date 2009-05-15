@@ -61,6 +61,7 @@ public class ParserFactory {
 		parsers.put("otp", SXParser.class);
 
 		parsers.put("txt", TXTParser.class);
+		parsers.put("csv", TXTParser.class);
 		parsers.put("dbf", TXTParser.class);
 		parsers.put("wpd", WPDParser.class);
 		parsers.put("xml", XMLParser.class);
