@@ -43,10 +43,11 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	private long fileSize = 0;
 
 	/**
-	 * Whether document is checked in or out
+	 * Whether document is checked out,locked or unlocked
 	 * 
 	 * @see Document#DOC_UNLOCKED
 	 * @see Document#DOC_CHECKED_OUT
+	 * @see Document#DOC_LOCKED
 	 */
 	private int status = DOC_UNLOCKED;
 
@@ -117,6 +118,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	 * 
 	 * @see Document#DOC_UNLOCKED
 	 * @see Document#DOC_CHECKED_OUT
+	 * @see Document#DOC_LOCKED
 	 */
 	public int getStatus() {
 		return status;
