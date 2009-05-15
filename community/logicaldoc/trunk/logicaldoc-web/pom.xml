@@ -291,9 +291,6 @@
 				<configuration>
 					<descriptors>
 						<descriptor>
-							src/main/assembly/assemblyapplet.xml
-						</descriptor>
-						<descriptor>
 							src/main/assembly/assemblyapi.xml
 						</descriptor>
 					</descriptors>
@@ -396,35 +393,6 @@
 						<goals>
 							<goal>run</goal>
 						</goals>
-						<configuration>
-							<tasks>
-								<unzip
-									src="${project.build.directory}/${project.build.finalName}-applet.jar"
-									dest="${project.build.directory}/tmp" />
-								<delete file="${project.build.directory}/${project.build.finalName}-applet.jar" />
-								<delete
-									dir="${project.build.directory}/tmp" excludes="**/applet/*"/>
-								<zip
-									destfile="${project.build.directory}/${project.build.finalName}-applet.jar"
-									basedir="${project.build.directory}/tmp" />
- 								<delete
-									dir="${project.build.directory}/tmp" />
-								<signjar
-									jar="${project.build.directory}/${project.build.finalName}-applet.jar"
-									keystore="${project.basedir}/var/keystore" alias="logicaldoc"
-									storepass="123456" keypass="logical" />
-								<copy
-									file="${project.build.directory}/${project.build.finalName}-applet.jar"
-									todir="${project.build.directory}/${project.build.finalName}/applet"
-									flatten="true" overwrite="true" />
-								<zip
-									destfile="${project.build.directory}/${project.build.finalName}.war">
-									<zipfileset
-										dir="${project.build.directory}/${project.build.finalName}"
-										includes="**" />
-								</zip>
-							</tasks>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -441,50 +409,6 @@
 					</archive>
 				</configuration>
 			</plugin>
-			<!-- plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-					    <id>copy-applet</id>
-						<phase>package</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								<unzip
-									src="${project.build.directory}/${project.build.finalName}-applet.jar"
-									dest="${project.build.directory}/tmp" />
-								<delete file="${project.build.directory}/${project.build.finalName}-applet.jar" />
-								<delete
-									dir="${project.build.directory}/tmp" excludes="**/web/applet/*"/>
-								<zip
-									destfile="${project.build.directory}/${project.build.finalName}-applet.jar"
-									basedir="${project.build.directory}/tmp" />
- 								<delete
-									dir="${project.build.directory}/tmp" />	
-								<signjar
-									jar="${project.build.directory}/${project.build.finalName}-applet.jar"
-									keystore="${project.basedir}/var/keystore" alias="logicaldoc"
-									storepass="123456" keypass="logical" />
-								<unzip
-									src="${project.build.directory}/${project.build.finalName}.war"
-									dest="${project.build.directory}/tmp" />
-								<copy
-									file="${project.build.directory}/${project.build.finalName}-applet.jar"
-									todir="${project.build.directory}/tmp/webapp/applet"
-									flatten="true" overwrite="true" />
-								<zip
-									destfile="${project.build.directory}/${project.build.finalName}.war"
-									basedir="${project.build.directory}/tmp" />
-								<delete
-									dir="${project.build.directory}/tmp" />
-							</tasks>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin-->
 		</plugins>
 	</build>
 	<reporting>
