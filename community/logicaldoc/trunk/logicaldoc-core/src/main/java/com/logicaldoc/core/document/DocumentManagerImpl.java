@@ -34,7 +34,6 @@ import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.SettingsConfig;
 
 /**
  * Basic Implementation of <code>DocumentManager</code>
@@ -275,7 +274,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	public File getDocumentFile(Document doc, String fileVersion, String suffix) {
 		return storer.getFile(doc, fileVersion, suffix);
 	}
-	
+
 	@Override
 	public String getDocumentContent(Document doc) {
 		String content = null;
@@ -685,7 +684,7 @@ public class DocumentManagerImpl implements DocumentManager {
 						foundDocImmutable = true;
 						continue;
 					}
-					if (doc.getStatus() != Document.DOC_UNLOCKED) {
+					if (doc.getStatus() != Document.DOC_UNLOCKED && doc.getExportStatus() != Document.EXPORT_UNLOCKED) {
 						foundDocLocked = true;
 						continue;
 					}
