@@ -97,20 +97,20 @@ insert into ld_group
 values     (10,'2008-10-22',0,'testGroup','Group for tests',0);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid)
-values     (1,'2008-10-22',0,0,'a','testDocname','testDocVer','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pippo',1356,1,103,0,'',1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus)
+values     (1,'2008-10-22',0,0,'a','testDocname','testDocVer','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pippo',1356,1,103,0,'',1,0);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid)
-values     (2,'2008-10-22',0,0,'b','testDocname2','testDocVer','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,0,103,0,'',1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus)
+values     (2,'2008-10-22',0,0,'b','testDocname2','testDocVer','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,0,103,0,'',1,0);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid)
-values     (3,'2008-10-22',1,0,'c','DELETED','testDocVer','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,103,0,'',1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus)
+values     (3,'2008-10-22',1,0,'c','DELETED','testDocVer','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,103,0,'',1,0);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid)
-values     (4,'2008-10-22',1,0,'d','DELETED','testDocVer','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,1100,0,'',1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus)
+values     (4,'2008-10-22',1,0,'d','DELETED','testDocVer','2006-12-19','2006-12-19','myself',1,1,'PDF',3,'source','sourceauthor','2008-12-19','sourcetype','coverage','en','pluto',122345,1,1100,0,'',1,0);
 
 
 insert into ld_ticket
@@ -133,11 +133,11 @@ insert into ld_userdoc
            (ld_id,ld_lastmodified,ld_deleted,ld_docid,ld_userid,ld_date)
 values     (2,'2008-10-22',0,2,1,'2006-12-22');
 
-insert into ld_version(ld_id, ld_documentid, ld_version, ld_fileversion, ld_username, ld_userid, ld_versiondate, ld_comment, ld_lastmodified, ld_deleted, ld_immutable, ld_creation, ld_publisherid, ld_indexed, ld_signed, ld_status, ld_filesize, ld_folderid,ld_creator,ld_creatorid)
-values     (1,1,'testVersion','testVersion','testUser',1,'2006-12-19','testComment','2009-02-09',0,0,'2009-02-09',1,0,0,0,0,5,'',1);
+insert into ld_version(ld_id, ld_documentid, ld_version, ld_fileversion, ld_username, ld_userid, ld_versiondate, ld_comment, ld_lastmodified, ld_deleted, ld_immutable, ld_creation, ld_publisherid, ld_indexed, ld_signed, ld_status, ld_filesize, ld_folderid,ld_creator,ld_creatorid,ld_exportstatus)
+values     (1,1,'testVersion','testVersion','testUser',1,'2006-12-19','testComment','2009-02-09',0,0,'2009-02-09',1,0,0,0,0,5,'',1,0);
 
-insert into ld_version(ld_id, ld_documentid, ld_version, ld_fileversion, ld_username, ld_userid, ld_versiondate, ld_comment, ld_lastmodified, ld_deleted, ld_immutable, ld_creation, ld_publisherid, ld_indexed, ld_signed, ld_status, ld_filesize, ld_folderid,ld_creator,ld_creatorid)
-values     (2,1,'testVersion2','testVersion2','testUser',1,'2006-12-20','testComment','2009-02-09',0,0,'2009-02-09',1,0,0,0,0,5,'',1);
+insert into ld_version(ld_id, ld_documentid, ld_version, ld_fileversion, ld_username, ld_userid, ld_versiondate, ld_comment, ld_lastmodified, ld_deleted, ld_immutable, ld_creation, ld_publisherid, ld_indexed, ld_signed, ld_status, ld_filesize, ld_folderid,ld_creator,ld_creatorid,ld_exportstatus)
+values     (2,1,'testVersion2','testVersion2','testUser',1,'2006-12-20','testComment','2009-02-09',0,0,'2009-02-09',1,0,0,0,0,5,'',1,0);
 
 insert into ld_tag
 values     (1,'abc');
