@@ -28,6 +28,8 @@ public class TestBench {
 
 	private PopulateIndex popIndex;
 
+	private PrepareFileSystem prepareFilesystem;
+
 	public TestBench() throws IOException {
 		super();
 
@@ -63,6 +65,11 @@ public class TestBench {
 		popIndex.setIndexFolder(indexFolder);
 		popIndex.setTempFolder(genFiles.getRootFolder());
 		popIndex.setRootFolder(new File(context.getProperty("conf.docdir")));
+
+		prepareFilesystem = new PrepareFileSystem();
+		prepareFilesystem.setRootFolder(popIndex.getRootFolder());
+		prepareFilesystem.setTempFolder(popIndex.getTempFolder());
+		
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -80,6 +87,8 @@ public class TestBench {
 			testBench.populateUsers();
 		if (phase.equals("all") || phase.equals("index"))
 			testBench.populateIndex();
+		if (phase.equals("all") || phase.equals("filesystem"))
+			testBench.prepareFilesystem();
 
 	}
 
@@ -109,5 +118,12 @@ public class TestBench {
 	 */
 	private void populateIndex() {
 		popIndex.populate();
+	}
+
+	/**
+	 * Launches the file system prepare
+	 */
+	private void prepareFilesystem() {
+		prepareFilesystem.prepare();
 	}
 }

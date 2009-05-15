@@ -214,6 +214,7 @@ public class PopulateDatabase {
 			con.createStatement().execute("SHUTDOWN COMPACT");
 			con.commit();
 		} catch (Throwable e) {
+			e.printStackTrace();
 			log.error(e);
 			try {
 				con.rollback();
@@ -448,7 +449,7 @@ public class PopulateDatabase {
 		// LD_FOLDERID
 		insertVersion.setLong(30, folderId);
 		// LD_FOLDERNAME
-		insertVersion.setString(31, "testFolder");
+		insertVersion.setString(31, Long.toString(folderId));
 		// LD_KWDS
 		insertVersion.setString(32, "pippo");
 		// LD_VERSIONDATE

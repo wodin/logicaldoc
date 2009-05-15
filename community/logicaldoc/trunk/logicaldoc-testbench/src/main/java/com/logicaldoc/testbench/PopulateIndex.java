@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
@@ -226,13 +225,6 @@ public class PopulateIndex {
 
 		writer.addDocument(doc);
 
-		File correctDir = getDirectory(id);
-		correctDir.mkdir();
-		correctDir.mkdirs();
-		docFile.renameTo(new File(correctDir, "1.0"));
-		if (docFile.exists())
-			docFile.delete();
-
 		count++;
 		return id;
 	}
@@ -251,56 +243,6 @@ public class PopulateIndex {
 
 	public void setRamBuffer(int ramBuffer) {
 		this.ramBuffer = ramBuffer;
-	}
-
-	/**
-	 * Determines the folder where the document's file will be stored. This
-	 * method is similar to the "getDirectory" method of the FSStorer class.
-	 * 
-	 * @param docId The document id.
-	 * @return The directory in which will be inserted the doc.
-	 */
-	public File getDirectory(long docId) {
-		String path = split(Long.toString(docId), '/', 3);
-		path = rootFolder + "/" + path + "/doc";
-		return new File(path);
-	}
-
-	/**
-	 * Splits a string into tokens separated by a separator
-	 * 
-	 * @param src The source string
-	 * @param separator The separator character
-	 * @param tokenSize Size or each token
-	 * @return
-	 */
-	public static String split(String src, char separator, int tokenSize) {
-		StringBuffer sb = new StringBuffer();
-		String[] tokens = split(src, tokenSize);
-		for (int i = 0; i < tokens.length; i++) {
-			if (sb.length() > 0)
-				sb.append(separator);
-			sb.append(tokens[i]);
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * Splits a string into an array of tokens
-	 * 
-	 * @param src The source string
-	 * @param tokenSize size of each token
-	 * @return
-	 */
-	public static String[] split(String src, int tokenSize) {
-		ArrayList<String> buf = new ArrayList<String>();
-		for (int i = 0; i < src.length(); i += tokenSize) {
-			int j = i + tokenSize;
-			if (j > src.length())
-				j = src.length();
-			buf.add(src.substring(i, j));
-		}
-		return buf.toArray(new String[] {});
 	}
 
 	public File getTempFolder() {
