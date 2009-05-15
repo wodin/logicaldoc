@@ -684,4 +684,12 @@ public class DocumentRecord extends MenuBarBean {
 	public Date getLastModified() {
 		return document.getLastModified();
 	}
+
+	public String getExportName() {
+		return document.getExportName();
+	}
+
+	public int getExportStatus() {
+		return document.getExportStatus();
+	}
 }
