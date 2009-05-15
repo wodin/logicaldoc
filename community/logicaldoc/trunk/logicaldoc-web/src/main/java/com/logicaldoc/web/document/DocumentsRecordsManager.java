@@ -248,7 +248,8 @@ public class DocumentsRecordsManager extends SortableList {
 						}
 						// The document of the selected documentRecord must be
 						// not locked
-						if (record.getDocument().getStatus() != Document.DOC_UNLOCKED) {
+						if (record.getDocument().getStatus() != Document.DOC_UNLOCKED
+								&& record.getDocument().getExportStatus() != Document.EXPORT_UNLOCKED) {
 							lockedSome = true;
 							continue;
 						}
@@ -343,20 +344,20 @@ public class DocumentsRecordsManager extends SortableList {
 
 		return null;
 	}
-	
+
 	/**
-	 * Places all selected documents into the clipboard
-	 * and set the guiRequest to "cut"
+	 * Places all selected documents into the clipboard and set the guiRequest
+	 * to "cut"
 	 */
 	public String cutToClipboard() {
 		String xxx = copyToClipboard();
 		this.guiRequest = "cut";
 		return xxx;
-	}	
+	}
 
 	/**
-	 * Places all selected documents into the clipboard
-	 * and set the guiRequest to "copy"
+	 * Places all selected documents into the clipboard and set the guiRequest
+	 * to "copy"
 	 */
 	public String copyToClipboard() {
 		if (SessionManagement.isValid()) {
@@ -403,7 +404,8 @@ public class DocumentsRecordsManager extends SortableList {
 							}
 							// The document of the selected documentRecord must
 							// be not locked
-							if (record.getDocument().getStatus() != Document.DOC_UNLOCKED) {
+							if (record.getDocument().getStatus() != Document.DOC_UNLOCKED
+									&& record.getDocument().getExportStatus() != Document.EXPORT_UNLOCKED) {
 								lockedSome = true;
 								continue;
 							}
@@ -525,7 +527,8 @@ public class DocumentsRecordsManager extends SortableList {
 						importer.setExtractTags(inputFile.isExtractTags());
 						importer.setTags(inputFile.getTags());
 						log.debug("importing: = " + destFile.getPath());
-						importer.process(destFile.getPath(), LocaleUtil.toLocale(zipLanguage), parent, userId, inputFile.getTemplate());
+						importer.process(destFile.getPath(), LocaleUtil.toLocale(zipLanguage), parent, userId,
+								inputFile.getTemplate());
 						try {
 							FileUtils.forceDelete(destFile);
 						} catch (IOException e) {
