@@ -1,9 +1,20 @@
 package com.logicaldoc.util;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.support.AbstractApplicationContext;
+
+import com.logicaldoc.util.event.SystemEvent;
+import com.logicaldoc.util.event.SystemEventStatus;
 
 /**
  * Utility class collecting static methods related to spring's context.
@@ -12,8 +23,10 @@ import org.springframework.context.support.AbstractApplicationContext;
  * @version $Id:$
  * @since 3.0
  */
-public class Context implements ApplicationContextAware {
+public class Context implements ApplicationContextAware, ApplicationListener {
 
+	private static HashMap<SystemEventStatus, LinkedList<SystemEvent>> systemEvents = new HashMap<SystemEventStatus, LinkedList<SystemEvent>>();
+	
 	// Singleton instance
 	private static Context instance;
 
@@ -68,5 +81,67 @@ public class Context implements ApplicationContextAware {
 	public static void refresh() {
 		if (applicationContext != null)
 			((AbstractApplicationContext) applicationContext).refresh();
+	}
+
+	/**
+	 * Adds an Listener to a particular Event given from 
+	 * @see {@link SystemEvent#getSystemStatus()}
+	 * @param evt
+	 */
+	public static void addListener(SystemEvent evt) {
+		
+		synchronized (systemEvents) {
+			LinkedList<SystemEvent> evts = Context.systemEvents.get(evt.getSystemStatus());
+			
+			//firstly we have to initialize every systemstatus
+			if(evts == null){
+				evts = new LinkedList<SystemEvent>();
+				Context.systemEvents.put(evt.getSystemStatus(), evts);
+			}
+			
+			evts.add(evt);
+		}
+	}
+	
+	/**
+	 * Removes a particular Listener from the list
+	 * @param evt
+	 */
+	public static void removeListener(SystemEvent evt){
+		synchronized (systemEvents) {
+			LinkedList<SystemEvent> evts = Context.systemEvents.get(evt.getSystemStatus());
+			if(evts == null || evts.size() == 0)
+				return;
+		
+			evts.remove(evt);
+		}
+	}
+	
+	/**
+	 * Processes a newly incoming event on appropriated events that 
+	 * registered itself on it
+	 */
+	@Override
+	public synchronized void onApplicationEvent(ApplicationEvent event) {
+		if((event instanceof ContextStartedEvent) || (event instanceof ContextRefreshedEvent)){
+			processEvents(SystemEventStatus.BEANS_AVAILABLE);
+		}
+		else if(event instanceof ContextClosedEvent){
+			processEvents(SystemEventStatus.SYSTEM_DESTORY);
+		}
+		
+	}
+	
+	private void processEvents(SystemEventStatus st){
+		LinkedList<SystemEvent> evts = Context.systemEvents.get(st);
+		
+		//surely its possible that no one event have been 
+		//registered to the current spring event
+		if(evts == null || evts.size() == 0)
+			return;
+		
+		for(SystemEvent evt : evts){
+			evt.processEvent();
+		}
 	}
 }
