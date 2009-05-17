@@ -31,7 +31,7 @@ public class AuthenticationChain implements AuthenticationProvider {
 			init();
 
 		for (AuthenticationProvider cmp : providers) {
-			// validate on user will be true, if a specific component manages
+			// validates an user for valid login credentials if a specific component handles
 			// this user explicitally (e.g. admin is BasicAuthentication)
 			if (cmp.validateOnUser(username)) {
 				return cmp.authenticate(username, password);
