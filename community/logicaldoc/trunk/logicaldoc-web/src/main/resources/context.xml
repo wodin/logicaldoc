@@ -6,7 +6,7 @@
 
 	<!-- This post processor ensures placeholders substitutions -->
 	<bean id="PropertyPlaceholderConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		class="com.logicaldoc.core.spring.PropertiesPlaceHolder"
 		lazy-init="false" abstract="false" autowire="default"
 		dependency-check="default">
 		<property name="locations">
@@ -135,7 +135,7 @@
 
 	<!-- Hibernate SessionFactory -->
 	<bean id="SessionFactory"
-		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"
+		class="com.logicaldoc.web.spring.LogicalDOCSessionFactoryBean"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
 		<property name="dataSource">
