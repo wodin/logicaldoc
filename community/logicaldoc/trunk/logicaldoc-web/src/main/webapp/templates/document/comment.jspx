@@ -31,7 +31,7 @@
 		<ice:panelGroup>
 			<ice:panelGrid columns="2">
 				<ice:panelGroup styleClass="outputLabel">
-					<ice:outputLabel for="author" value="#{msgs['subject']}*" />
+					<ice:outputLabel for="author" value="#{msgs['topic']}*" />
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="subject" value="#{discussionsManager.subject}"

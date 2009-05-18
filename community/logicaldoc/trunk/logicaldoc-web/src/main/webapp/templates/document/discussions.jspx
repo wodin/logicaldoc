@@ -32,7 +32,7 @@
 						<!-- subject column -->
 						<ice:column>
 							<f:facet name="header">
-								<ice:outputText value="#{msgs['subject']}" />
+								<ice:outputText value="#{msgs['topic']}" />
 							</f:facet>
 							<ice:commandLink action="#{discussionsManager.showComments}">
 								<ice:panelGroup>
@@ -107,13 +107,14 @@
 		</ice:form>
 	</f:subview>
 
-	<ice:panelGroup rendered="#{!empty (discussionsManager.selectedThread)}">
+	<ice:panelGroup
+		rendered="#{!empty (discussionsManager.selectedThread)}">
 		<f:subview id="comments">
 			<ui:include src="/templates/document/comments.jspx" />
 		</f:subview>
 	</ice:panelGroup>
-	
-		<ice:panelGroup rendered="#{empty (discussionsManager.selectedThread)}">
+
+	<ice:panelGroup rendered="#{empty (discussionsManager.selectedThread)}">
 		<f:subview id="comment">
 			<ui:include src="/templates/document/comment.jspx" />
 		</f:subview>
