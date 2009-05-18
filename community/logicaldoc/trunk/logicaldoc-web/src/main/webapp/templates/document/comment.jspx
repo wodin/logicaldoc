@@ -49,7 +49,7 @@
 				<ice:panelGroup>
 				</ice:panelGroup>
 				<ice:panelGroup styleClass="commands">
-					<ice:commandButton value="#{msgs['discussion.postComment']}"
+					<ice:commandButton value="#{msgs['discussion.add']}"
 						action="#{discussionsManager.addThread}"
 						rendered="#{empty (discussionsManager.selectedThread)}" />
 					<ice:commandButton value="#{msgs['discussion.postComment']}"
