@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="logicaldoc-workflow" version="4.5.0" class="com.logicaldoc.workflow.WorkflowPlugin">
+	<requires>
+		<import plugin-id="logicaldoc-core" />
+	</requires>
+
+	<runtime>
+		<library id="logicaldoc-workflow" path="classes/" type="code">
+			<export prefix="*" />
+		</library>
+		
+		<library id="jbpm-jpdl" path="lib/jbpm-jpdl.jar" type="code">
+			<export prefix="*" />
+		</library>
+		
+		<library id="jbpm-identity" path="lib/jbpm-identity.jar" type="code">
+			<export prefix="*" />
+		</library>
+		
+	</runtime>
+
+	<extension plugin-id="logicaldoc-core" point-id="database-mapping" id="worklow">
+		<parameter id="mapping" value="classpath*:org/jbpm/**/*.hbm.xml"/>
+		<parameter id="position" value="2"/>
+	</extension>
+
+</plugin>
