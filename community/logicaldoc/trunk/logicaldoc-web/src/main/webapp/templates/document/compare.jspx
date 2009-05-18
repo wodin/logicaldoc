@@ -249,12 +249,12 @@
 						styleClass="#{diffBean.version1.folderName!=diffBean.version2.folderName ? 'iceMsgsError':''}" />
 
 					<ice:outputLabel value="#{msgs['tags']}"
-						styleClass="#{diffBean.version1.kwds!=diffBean.version2.kwds ? 'iceMsgsError':''}" />
-					<ice:outputText value="#{diffBean.version1.kwds}"
-						styleClass="#{diffBean.version1.kwds!=diffBean.version2.kwds ? 'iceMsgsError':''}" />
+						styleClass="#{diffBean.version1.tgs!=diffBean.version2.tgs ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version1.tgs}"
+						styleClass="#{diffBean.version1.tgs!=diffBean.version2.tgs ? 'iceMsgsError':''}" />
 					<ice:panelGroup style="width:40px" />
-					<ice:outputText value="#{diffBean.version2.kwds}"
-						styleClass="#{diffBean.version1.kwds!=diffBean.version2.kwds ? 'iceMsgsError':''}" />
+					<ice:outputText value="#{diffBean.version2.tgs}"
+						styleClass="#{diffBean.version1.tgs!=diffBean.version2.tgs ? 'iceMsgsError':''}" />
 				</ice:panelGrid>
 			</ice:panelTab>
 			<ice:panelTab rendered="true" label="#{msgs['template']}">
