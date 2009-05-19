@@ -1,0 +1,23 @@
+<!--
+ Describes the plugin archive
+  
+ @author Marco Meschieri
+ @version 3.0
+-->
+<assembly>
+	<id>api</id>
+	<formats>
+		<format>jar</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>target/classes</directory>
+			<outputDirectory>/</outputDirectory>
+			<excludes>
+              <exclude>*.xml</exclude>
+              <exclude>*.dtd</exclude>
+            </excludes>
+		</fileSet>
+	</fileSets>
+</assembly>
