@@ -49,8 +49,6 @@ public class ApplicationInitializer implements ServletContextListener {
 	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
 	 */
 	public void contextInitialized(ServletContextEvent sce) {
-		System.out.println("*****1");
-		
 		ServletContext context = sce.getServletContext();
 		Properties boot = loadBootProperties(context);
 		String repository = boot
@@ -80,8 +78,6 @@ public class ApplicationInitializer implements ServletContextListener {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-
-		System.out.println("*****1");
 		
 		// Initialize plugins
 		com.logicaldoc.util.PluginRegistry.getInstance().init();
