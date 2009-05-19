@@ -1,0 +1,190 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="logicaldoc-core" version="4.5.0" class="com.logicaldoc.core.CorePlugin">
+	<runtime>
+		<library id="core" path="classes/" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="lucene-core" path="lib/lucene-core-2.4.1.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="lucene-highlighter" path="lib/lucene-highlighter-2.4.1.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="lucene-misc" path="lib/lucene-misc-2.4.1.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="lucene-snowball" path="lib/lucene-snowball-2.4.1.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="lucene-contrib" path="lib/lucene-analyzers-2.4.1.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="pdfbox" path="lib/pdfbox-0.7.3.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="jempbox" path="lib/jempbox-0.2.0.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="itext" path="lib/itext-2.1.2.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="fontbox" path="lib/fontbox-0.1.0.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="bcprov" path="lib/bcprov-jdk16-139.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="bcmail" path="lib/bcmail-jdk16-139.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="poi" path="lib/poi-3.0.2-FINAL.jar" type="code">
+			<export prefix="*" />
+		</library>
+		<library id="poi-scratchpad" path="lib/poi-scratchpad-3.0.2-FINAL.jar" type="code">
+			<export prefix="*" />
+		</library>
+        <library id="jmimemagic" path="lib/jmimemagic-0.1.2.jar" type="code">
+            <export prefix="*" />
+        </library>
+	</runtime>
+	<extension-point id="DbInit">
+        <parameter-def id="name" />
+		<parameter-def id="sqlFile" />
+        <parameter-def id="position" />
+	</extension-point>
+    <extension-point id="Parser">
+        <parameter-def id="extension" />
+        <parameter-def id="class" />
+    </extension-point>
+    <extension-point id="Language">
+        <parameter-def id="locale" />
+        <parameter-def id="analyzer" />
+    </extension-point>
+    <extension-point id="Task">
+        <parameter-def id="name" />
+    </extension-point>
+    <extension-point id="DocumentListener">
+        <parameter-def id="class" />
+        <parameter-def id="position" />
+    </extension-point>
+
+    <extension-point id="Authentication">
+    	<parameter-def id="providerId" />
+    	<parameter-def id="position" />
+    </extension-point>
+
+    <extension-point id="DocumentToolbar">
+        <parameter-def id="action" />
+        <parameter-def id="title" />
+        <parameter-def id="rendered" />
+        <parameter-def id="confirm" />
+        <parameter-def id="icon" />
+        <parameter-def id="position" />
+    </extension-point>
+    
+    <extension-point id="SearchResultToolbar">
+        <parameter-def id="action" />
+        <parameter-def id="title" />
+        <parameter-def id="rendered" />
+        <parameter-def id="confirm" />
+        <parameter-def id="icon" />
+        <parameter-def id="position" />
+    </extension-point>
+    
+    <extension-point id="DocumentMenu">
+        <parameter-def id="id" />
+        <parameter-def id="action" />
+        <parameter-def id="title" />
+        <parameter-def id="icon" />
+        <parameter-def id="target" />
+        <parameter-def id="permission" />
+        <parameter-def id="readonly" />
+        <parameter-def id="position" />
+    </extension-point>
+    
+    <extension-point id="ThumbnailBuilder">
+        <parameter-def id="extension" />
+        <parameter-def id="class" />
+    </extension-point>
+    
+    <extension-point id="ViewModeBrowsing">
+        <parameter-def id="id" />
+        <parameter-def id="label" />
+        <parameter-def id="position" />
+    </extension-point>
+    
+    <extension-point id="ViewModeSearch">
+        <parameter-def id="id" />
+        <parameter-def id="label" />
+        <parameter-def id="position" />
+    </extension-point>
+    
+    <extension plugin-id="logicaldoc-core" point-id="Authentication" id="BasicAuthentication">
+		<parameter id="providerId" value="BasicAuthentication"/>
+		<parameter id="position" value="1"/>
+	</extension>
+	
+	<extension plugin-id="logicaldoc-core" point-id="Language" id="enLanguage">
+		<parameter id="locale" value="en"/>
+		<parameter id="analyzer" value="-"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="Language" id="itLanguage">
+		<parameter id="locale" value="it"/>
+		<parameter id="analyzer" value="-"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="Language" id="esLanguage">
+		<parameter id="locale" value="es"/>
+		<parameter id="analyzer" value="-"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="Language" id="deLanguage">
+		<parameter id="locale" value="de"/>
+		<parameter id="analyzer" value="-"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="Language" id="frLanguage">
+		<parameter id="locale" value="fr"/>
+		<parameter id="analyzer" value="-"/>
+	</extension>
+	
+	
+	<extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="jpgThumb">
+		<parameter id="extension" value="jpg"/>
+		<parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="jpegThumb">
+		<parameter id="extension" value="jpeg"/>
+		<parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="gifThumb">
+		<parameter id="extension" value="gif"/>
+		<parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="pngThumb">
+		<parameter id="extension" value="png"/>
+		<parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="bmpThumb">
+		<parameter id="extension" value="bmp"/>
+		<parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="pdfThumb">
+		<parameter id="extension" value="pdf"/>
+		<parameter id="class" value="com.logicaldoc.core.document.thumbnail.PdfThumbnailBuilder"/>
+	</extension>
+	
+	<extension plugin-id="logicaldoc-core" point-id="ViewModeBrowsing" id="simpleBrowsing">
+        <parameter id="id" value="simple" />
+        <parameter id="label" value="viewmode.simple" />
+        <parameter id="position" value="5" />
+    </extension>
+    <extension plugin-id="logicaldoc-core" point-id="ViewModeBrowsing" id="detailsBrowsing">
+        <parameter id="id" value="details" />
+        <parameter id="label" value="viewmode.details" />
+        <parameter id="position" value="10" />
+    </extension>
+    <extension plugin-id="logicaldoc-core" point-id="ViewModeSearch" id="detailsSearch">
+        <parameter id="id" value="details" />
+        <parameter id="label" value="viewmode.details" />
+        <parameter id="position" value="5" />
+    </extension>
+</plugin>

@@ -1,0 +1,85 @@
+<?xml version = '1.0'?>
+<!-- 
+ Documents result list table
+  
+ @author Marco Meschieri
+ @version $Id: info.jspx,v 1.1 2007/10/09 06:42:31 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	styleClass="home">
+	<ice:panelCollapsible expanded="true" styleClass="pnlClpsbl">
+		<f:facet name="header">
+			<ice:panelGroup styleClass="expandableStateIndicator">
+				<ice:outputText value="#{messages['system']}" />
+			</ice:panelGroup>
+		</f:facet>
+		<ice:panelGroup>
+			<ice:panelGrid columns="2">
+				<ice:panelGroup>
+					<b><ice:outputFormat value="#{messages['msg.jsp.osinfo']}">
+							<f:param value="#{ContextProperties['product.name']}" />
+						</ice:outputFormat>
+					</b>
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:outputLink value="http://www.logicaldoc.com"
+						target="_blank">
+						<ice:graphicImage value="#{StyleBean.imagesPath}/logo.gif"
+							style="border: 0px solid white; padding-left: 50px" />
+					</ice:outputLink>
+				</ice:panelGroup>
+			</ice:panelGrid>
+		</ice:panelGroup>
+	</ice:panelCollapsible>
+
+	<ice:panelCollapsible expanded="true" styleClass="pnlClpsbl">
+		<f:facet name="header">
+			<ice:panelGroup styleClass="expandableStateIndicator">
+				<ice:outputText value="#{msgs['developers']}" />
+			</ice:panelGroup>
+		</f:facet>
+		<ice:panelGrid columns="1">
+			<ice:panelGroup>
+				<ul>
+					<li>
+						Marco Meschieri ( Designer, Developer ) &amp;nbsp;-&amp;nbsp;
+						<a href="http://www.logicalobjects.com" target="_blank">Logical
+							Objects</a>
+					</li>
+					<li>
+						Alessandro Gasparini ( Designer, Developer ) &amp;nbsp;-&amp;nbsp;
+						<a href="http://www.logicalobjects.com" target="_blank">Logical
+							Objects</a>
+					</li>
+					<li>
+						Matteo Caruso ( Developer ) &amp;nbsp;-&amp;nbsp;
+						<a href="http://www.logicalobjects.com" target="_blank">Logical
+							Objects</a>
+					</li>
+					<li>
+						Sebastian Wenzky ( Designer, Developer ) &amp;nbsp;-&amp;nbsp;
+						<a href="http://www.krypthonas.de" target="_blank">Krypthonas.de</a>
+					</li>
+					<li>
+						Sven Rajala ( Tester ) &amp;nbsp;-&amp;nbsp;
+						<a href="http://www.cygnacom.com" target="_blank">CygnaCom Solutions</a>
+					</li>					
+					<li>
+						Jes&amp;uacute;s Mar&amp;iacute;n ( Developer )
+						&amp;nbsp;-&amp;nbsp;
+						<a href="http://www.aplsoftware.com/" target="_blank">A.P.L.
+							software</a>
+					</li>
+				</ul>
+			</ice:panelGroup>
+		</ice:panelGrid>
+	</ice:panelCollapsible>
+</jsp:root>
