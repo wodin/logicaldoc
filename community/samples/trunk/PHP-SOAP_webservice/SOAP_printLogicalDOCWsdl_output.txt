@@ -1,0 +1,17 @@
+c:\www>php SOAP_printLogicalDOCWsdl.php
+Array
+(
+    [0] => downloadDocumentInfoResponse downloadDocumentInfo(downloadDocumentInf
+o $parameters)
+    [1] => checkinResponse checkin(checkin $parameters)
+    [2] => createDocumentResponse createDocument(createDocument $parameters)
+    [3] => deleteFolderResponse deleteFolder(deleteFolder $parameters)
+    [4] => checkoutResponse checkout(checkout $parameters)
+    [5] => downloadFolderContentResponse downloadFolderContent(downloadFolderCon
+tent $parameters)
+    [6] => searchResponse search(search $parameters)
+    [7] => downloadDocumentResponse downloadDocument(downloadDocument $parameter
+s)
+    [8] => createFolderResponse createFolder(createFolder $parameters)
+    [9] => deleteDocumentResponse deleteDocument(deleteDocument $parameters)
+)
