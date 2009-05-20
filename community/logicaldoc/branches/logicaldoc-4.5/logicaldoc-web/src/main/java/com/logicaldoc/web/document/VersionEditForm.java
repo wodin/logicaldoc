@@ -69,10 +69,10 @@ public class VersionEditForm {
 	public String update() {
 		try {
 			VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
-			Version version = versionsManager.getVersion(getVersion());
-			vdao.initialize(version);
+			VersionRecord version = versionsManager.getVersion(getVersion());
+			vdao.initialize(version.getWrappedVersion());
 			version.setComment(getComment());
-			vdao.store(version);
+			vdao.store(version.getWrappedVersion());
 			Messages.addLocalizedInfo(Messages.getMessage("msg.action.changeversion"));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
