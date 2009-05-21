@@ -73,8 +73,8 @@ public class Search {
 		try {
 			String[] languages = options.getLanguages();
 			if ((languages == null) || (languages.length == 0)) {
-				List<String> iso639_2Languages = LanguageManager.getInstance().getLanguagesAsString();
-				languages = (String[]) iso639_2Languages.toArray(new String[0]);
+				List<String> tmp = LanguageManager.getInstance().getLanguagesAsString();
+				languages = (String[]) tmp.toArray(new String[0]);
 				options.setLanguages(languages);
 			}
 
