@@ -15,6 +15,7 @@ import com.logicaldoc.util.LocaleUtil;
  * @since 4.0
  */
 public class EmailAccount extends PersistentObject {
+	
 	private static final long serialVersionUID = 1L;
 
 	private String mailAddress;
@@ -23,7 +24,7 @@ public class EmailAccount extends PersistentObject {
 
 	private String host;
 
-	private int port = 22;
+	private int port = 110;
 
 	private String userName;
 
