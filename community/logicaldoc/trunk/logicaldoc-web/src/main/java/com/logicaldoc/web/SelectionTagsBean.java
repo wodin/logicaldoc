@@ -45,7 +45,7 @@ public class SelectionTagsBean {
 		LanguageManager lm = LanguageManager.getInstance();
 		Collection<Language> cLanguages = lm.getLanguages();
 		for (Language language : cLanguages) {
-			SelectItem si = new SelectItem(language.getLanguage(), language.getDisplayLanguage());
+			SelectItem si = new SelectItem(language.getLocale(), language.getDisplayLanguage());
 			sil.add(si);
 		}
 		languages = (SelectItem[]) sil.toArray(new SelectItem[0]);
