@@ -105,7 +105,7 @@ public class LanguageManager {
 	public List<String> getLanguagesAsString() {
 		List<String> languages2 = new ArrayList<String>();
 		for (Language lang : getLanguages()) {
-			languages2.add(lang.getLanguage());
+			languages2.add(lang.getLocale().toString());
 		}
 		return languages2;
 	}
