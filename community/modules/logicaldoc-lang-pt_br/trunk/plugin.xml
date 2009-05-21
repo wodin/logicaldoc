@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="logicaldoc-lang-pt_br" version="4.5.0" class="com.logicaldoc.plugin.language.pt_br.BrazilianPlugin">
+	<requires>
+		<import plugin-id="logicaldoc-core" />
+	</requires>	
+	<runtime>
+		<library id="core" path="classes/" type="code">
+			<export prefix="*" />
+		</library>
+	</runtime>
+	<extension plugin-id="logicaldoc-core" point-id="Language" id="pt_BRLanguage">
+		<parameter id="locale" value="pt_BR" />
+		<parameter id="analyzer" value="org.apache.lucene.analysis.br.BrazilianAnalyzer" />
+	</extension>
+</plugin>
