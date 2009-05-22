@@ -47,8 +47,7 @@
             <ice:commandButton value="#{msgs['msg.jsp.unlock']}"
                 tabindex="1"
                 partialSubmit="true"
-                action="#{indexInfo.unlock}"
-                visible="#{indexInfo.locked}" />
+                action="#{indexInfo.unlock}" />
             <ice:commandButton value="#{msgs['msg.jsp.indexall']}"
                 tabindex="1" id="save"
                 action="#{indexInfo.recreate}" visible="#{!indexInfo.locked}" />
