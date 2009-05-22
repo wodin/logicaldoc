@@ -1,0 +1,68 @@
+<project name="migration_tool" default="upgrade" basedir=".">
+	<property file="classes/conf.properties" />
+	<property file="${logicaldoc.contextDir}/WEB-INF/classes/context.properties" />
+
+	<path id="class.path">
+		<pathelement path="${classpath}" />
+		<pathelement location="classes/" />
+		<fileset dir="lib/">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="${lib.dir}" />
+		<fileset dir="${logicaldoc.contextDir}/WEB-INF/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="class.path"/>
+
+	<target name="upgrade" description="Upgrade the system from release 4.0 to 4.5">
+		<echo>Update the Database</echo>
+		<antcall target="dbinit" />
+		<echo>Update the File System</echo>
+		<antcall target="convertfs" />
+		<echo>Drop full-text indexes</echo>
+		<delete includeemptydirs="true">
+		    <fileset dir="${conf.indexdir}" includes="**/*"/>
+		</delete>
+	</target>
+
+	<target name="convertfs" description="Converts the file system">
+		<echo>Convert filesystem ${conf.docdir}</echo>
+		<java classname="com.logicaldoc.migration.FixFilesystem">
+			<arg value="${conf.docdir}" />
+			<arg value="${conf.docdir}/../tmp" />
+			<classpath refid="class.path" />
+		</java>
+	</target>
+
+	<target name="dbinit" description="Updates the database">
+		<trycatch property="error" reference="exception">
+			<try>
+				<!--Iterate over each file and execute it in a connection-->
+				<for list="${dbinit.sql.files}" param="file">
+					<sequential>
+						<echo>Executing sql file @{file}.sql</echo>
+						<sql driver="${jdbc.driver}" url="${jdbc.url}" userid="${jdbc.username}" password="${jdbc.password}" autocommit="true" print="yes" output="${log.dir}/output.txt" append="true" src="classes/@{file}.sql" onerror="${dbinit.onerror}">
+							<classpath refid="class.path" />
+						</sql>
+					</sequential>
+				</for>
+
+				<if>
+					<equals arg1="${jdbc.driver}" arg2="org.hsqldb.jdbcDriver" />
+					<then>
+						<sql driver="${jdbc.driver}" url="${jdbc.url}" userid="${jdbc.username}" password="${jdbc.password}" autocommit="true" print="yes" output="${log.dir}/output.txt" append="true" onerror="${dbinit.onerror}">
+							<classpath refid="class.path" />
+							<transaction>shutdown compact;</transaction>
+						</sql>
+					</then>
+				</if>
+			</try>
+			<catch>
+				<echo>Unable to alter database</echo>
+				<echo>${error}</echo>
+			</catch>
+		</trycatch>
+	</target>
+</project>
