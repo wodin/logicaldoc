@@ -66,6 +66,8 @@ public class IndexerTask extends Task {
 				} finally {
 					next();
 				}
+				if(interruptRequested)
+					return;
 			}
 		} finally {
 			log.info("Indexing finished");
