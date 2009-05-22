@@ -187,7 +187,7 @@ public class Indexer {
 	 * @param docIds Collection of document identifiers
 	 */
 	public void deleteDocuments(Collection<Long> docIds) {
-		List<File> indexes = new ArrayList<File>();
+		List<File> indexes = getIndexes();
 		for (File index : indexes) {
 			for (Long docId : docIds) {
 				IndexReader reader = null;
@@ -240,7 +240,7 @@ public class Indexer {
 	 * This method can unlock a locked index.
 	 */
 	public synchronized void unlock() {
-		List<File> indexes = new ArrayList<File>();
+		List<File> indexes = getIndexes();
 		for (File index : indexes) {
 			IndexReader ir = null;
 			try {
@@ -255,6 +255,13 @@ public class Indexer {
 						ir.close();
 					} catch (IOException e) {
 					}
+				File lockFile = new File(index, "write.lock");
+				if (lockFile.exists())
+					try {
+						FileUtils.forceDelete(lockFile);
+					} catch (IOException e) {
+						log.error(e.getMessage());
+					}
 			}
 		}
 	}
@@ -267,7 +274,7 @@ public class Indexer {
 	public boolean isLocked() {
 		boolean result = false;
 
-		List<File> indexes = new ArrayList<File>();
+		List<File> indexes = getIndexes();
 		for (File index : indexes) {
 			IndexReader ir = null;
 			try {
