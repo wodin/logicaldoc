@@ -100,7 +100,10 @@ public class DiscussionsManager {
 	 */
 	public void selectDocument(Document doc) {
 		selectedDocument = doc;
+		reload();
+	}
 
+	private void reload() {
 		// initiate the list
 		if (threads != null) {
 			threads.clear();
@@ -323,7 +326,7 @@ public class DiscussionsManager {
 					.getRequestMap().get("entry");
 			DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
 			dao.delete(thread.getId());
-			selectDocument(getSelectedDocument());
+			reload();
 			Messages.addLocalizedInfo("discussion.delete.ok");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -342,6 +345,7 @@ public class DiscussionsManager {
 			comment.setDeleted(1);
 			DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
 			dao.store(getSelectedThread());
+			reload();
 			Messages.addLocalizedInfo("discussion.delete.ok");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
