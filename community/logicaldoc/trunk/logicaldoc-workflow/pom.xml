@@ -14,6 +14,19 @@
   <url>http://www.logicaldoc.com</url>
   <packaging>jar</packaging>
   <dependencies>
+     <!-- Only for Test-Purposes -->
+     <dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>servlet-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
+		
+	<dependency>
+		<groupId>org.springmodules</groupId>
+		<artifactId>spring-modules-jbpm31</artifactId>
+		<version>0.6</version>
+		
+	</dependency> 
   
     <dependency>
 		<groupId>com.logicaldoc</groupId>
@@ -190,11 +203,5 @@
 			</plugin>
 		</plugins>
 	</reporting>
-  
-  <repositories>
-  	<repository>
-  		<id>jboss</id>
-  		<url>http://repository.jboss.org/maven2</url>
-  	</repository>
-  </repositories>
+
 </project>

@@ -10,16 +10,20 @@
 			<export prefix="*" />
 		</library>
 		
-		<library id="jbpm-jpdl" path="lib/jbpm-jpdl.jar" type="code">
+		<library id="jbpm" path="lib/jbpm-3.1.1.jar" type="code">
 			<export prefix="*" />
 		</library>
 		
-		<library id="jbpm-identity" path="lib/jbpm-identity.jar" type="code">
+		<library id="jbpm-identity" path="lib/jbpm-identity-3.1.1.jar" type="code">
+			<export prefix="*"/>
+		</library>
+		
+		<library id="spring-modules-jbpm31" path="lib/spring-modules-jbpm31-0.6.jar" type="code">
 			<export prefix="*" />
 		</library>
 		
 	</runtime>
-
+	
 	<extension plugin-id="logicaldoc-core" point-id="database-mapping" id="worklow">
 		<parameter id="mapping" value="classpath*:org/jbpm/**/*.hbm.xml"/>
 		<parameter id="position" value="2"/>
