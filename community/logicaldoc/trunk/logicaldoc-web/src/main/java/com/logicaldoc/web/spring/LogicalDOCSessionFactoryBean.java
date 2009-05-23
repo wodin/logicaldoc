@@ -39,6 +39,6 @@ public class LogicalDOCSessionFactoryBean extends
 		}
 
 		//fire and forget
-		super.setMappingLocations(mappingLocations);
+		super.setMappingLocations(mappingList.toArray(new Resource[]{}));
 	}
 }
