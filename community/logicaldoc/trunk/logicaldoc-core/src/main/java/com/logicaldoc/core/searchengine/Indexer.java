@@ -75,8 +75,9 @@ public class Indexer {
 
 	/**
 	 * Adds a LuceneDocument to the index.
+	 * @throws Exception 
 	 */
-	public void addDocument(Document doc, Locale locale) {
+	public void addDocument(Document doc, Locale locale) throws Exception {
 		String indexdir = settingsConfig.getValue("indexdir");
 		Language language = LanguageManager.getInstance().getLanguage(locale);
 		Analyzer analyzer = language.getAnalyzer();
@@ -88,6 +89,7 @@ public class Indexer {
 			writer.addDocument(doc);
 		} catch (Exception e) {
 			log.error("Exception adding Document to Lucene index: " + indexdir + ", " + e.getMessage(), e);
+			throw e; 
 		} finally {
 			if (writer != null)
 				try {
