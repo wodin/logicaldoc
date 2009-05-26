@@ -236,7 +236,7 @@ public class EmailCrawler extends Task {
 		try {
 			Session session = Session.getInstance(new Properties());
 			store = session.getStore(account.getProvider());
-			store.connect(account.getHost(), account.getUserName(), account.getPassword());
+			store.connect(account.getHost(), account.getPort(), account.getUserName(), account.getPassword());
 			inbox = store.getFolder("INBOX");
 			inbox.open(Folder.READ_ONLY);
 			count = inbox.getMessageCount();
