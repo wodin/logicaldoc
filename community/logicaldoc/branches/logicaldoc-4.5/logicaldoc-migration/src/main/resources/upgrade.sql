@@ -1,4 +1,4 @@
---This script migrates a 4.0.x database to a 4.5
+--This script migrates a 4.0.x database to a 4.5 (Community Edition)
 alter table ld_attributes drop constraint FKF9B7567E76C86307;
 alter table ld_document drop constraint FK75ED9C0276C86307;
 alter table ld_document drop constraint FK75ED9C027C565C60;
@@ -110,13 +110,9 @@ alter table ld_history add constraint FK_HISTORY_USER foreign key (ld_userid) re
 alter table ld_version add constraint FK_VERSION_USER foreign key (ld_userid) references ld_user(ld_id);
 
 alter table ld_emailaccount add column ld_extracttags int default 0 not null;
-update ld_emailaccount set ld_extracttags=ld_extractkeywords:
+update ld_emailaccount set ld_extracttags=ld_extractkeywords;
 alter table ld_emailaccount drop column ld_extractkeywords;
 
-alter table ld_share add column ld_extracttags int default 0 not null;
-update ld_share set ld_extracttags=ld_extractkeywords:
-alter table ld_share drop column ld_extractkeywords;
-alter table ld_share add column ld_tags varchar(4000);
 
 --Rename event codes
 update ld_history set ld_event='event.stored' where ld_event='history.stored';
