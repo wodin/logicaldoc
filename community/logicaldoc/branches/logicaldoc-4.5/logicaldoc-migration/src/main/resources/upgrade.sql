@@ -152,7 +152,6 @@ insert into ld_menu
 values     (-20,'2009-02-23',0,'logicaldoc-external-authentication.ldap',9,10,'ldap.png','/9',3,'external-authentication/ldap',0);
 
 
-
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
 values     (-2,1,0,0,1,1,0,0,1,1,1,1);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
