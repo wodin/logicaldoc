@@ -20,8 +20,8 @@ alter table ld_userdoc drop constraint FK_USERDOC_USER;
 alter table ld_article drop constraint FK_ARTICLE_DOC;
 alter table ld_menu drop constraint FK_MENU_PARENT;
 alter table ld_history drop constraint FK_HISTORY_DOC;
-alter table drop constraint FK_HISTORY_USER;
-alter table drop constraint FK_VERSION_USER;
+alter table ld_history drop constraint FK_HISTORY_USER;
+alter table ld_version drop constraint FK_VERSION_USER;
 
 drop index  AK_DOCUMENT;
 drop index  AK_USER;
@@ -36,11 +36,11 @@ drop table ld_article;
 
 alter table ld_document add column ld_fileversion   VARCHAR(10);
 alter table ld_document add column ld_creator       VARCHAR(255);
-alter table ld_document add column ld_creatorid     BIGINT    NOT NULL default 0;
-alter table ld_document drop column  ld_checkoutuserid;
+alter table ld_document add column ld_creatorid  BIGINT  default 0  NOT NULL;
+alter table ld_document drop column ld_checkoutuserid;
 alter table ld_document add column  ld_lockuserid    BIGINT;
-alter table ld_document add column ld_signed        INT    NOT NULL default 0;
-alter table ld_document add column ld_exportstatus  INT    NOT NULL default 0;
+alter table ld_document add column ld_signed        INT   default 0 NOT NULL;
+alter table ld_document add column ld_exportstatus  INT   default 0 NOT NULL;
 alter table ld_document add column ld_exportid      BIGINT;
 alter table ld_document add column ld_exportname    VARCHAR(255);
 alter table ld_document add column ld_exportversion VARCHAR(10);
@@ -49,19 +49,20 @@ create table ld_tag (ld_docid bigint not null, ld_tag varchar(255));
 insert into ld_tag(ld_docid,ld_tag) select ld_docid,ld_keyword from ld_keyword;
 drop table ld_keyword;
 
-alter table ld_menugroup add column  ld_sign  INT    NOT NULL default 0;
-alter table ld_menugroup add column  ld_archive INT    NOT NULL default 0;
+alter table ld_menugroup add column  ld_sign  INT default 0 NOT NULL;
+alter table ld_menugroup add column  ld_archive INT default 0 NOT NULL;
+alter table ld_menugroup drop primary key;
 alter table ld_menugroup drop constraint ld_menugroup_pkey;
 alter table ld_menugroup add primary key (ld_menuid,ld_groupid,ld_write,ld_addchild,ld_managesecurity,ld_manageimmutability,ld_delete,ld_rename,ld_bulkimport,ld_bulkexport,ld_sign,ld_archive ); 
 
 alter table ld_systemmessage drop column  ld_sentdate;
-alter table ld_systemmessage add column  ld_sentdate   TIMESTAMP   NOT NULL DEFAULT '2000-01-01';
+alter table ld_systemmessage add column  ld_sentdate  TIMESTAMP DEFAULT '2000-01-01' NOT NULL;
 
-alter table ld_user add column  ld_enabled  INT   NOT NULL default 1;
-alter table ld_user add column  ld_state         VARCHAR(255);
-alter table ld_user add column  ld_telephone2         VARCHAR(255);
+alter table ld_user add column  ld_enabled INT default 1 NOT NULL;
+alter table ld_user add column  ld_state VARCHAR(255);
+alter table ld_user add column  ld_telephone2 VARCHAR(255);
 alter table ld_user add column  ld_passwordchanged TIMESTAMP;
-alter table ld_user add column  ld_passwordexpires INT   NOT NULL default 0;
+alter table ld_user add column  ld_passwordexpires INT default 0 NOT NULL;
 
 drop table ld_version;
 create table ld_version (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(4000), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, ld_creation timestamp, ld_publisher varchar(255), ld_publisherid bigint not null,  ld_creator varchar(255), ld_creatorid bigint not null, ld_status int, ld_type varchar(255), ld_lockuserid bigint, ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourceid varchar(4000), ld_sourcetype varchar(255), ld_object varchar(4000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_indexed int not null, ld_signed int not null, ld_digest varchar(255), ld_recipient varchar(4000), ld_folderid bigint, ld_foldername varchar(4000), ld_templateid bigint, ld_templatename varchar(4000), ld_tgs varchar(4000), ld_username varchar(255), ld_userid bigint, ld_versiondate timestamp, ld_comment varchar(4000),ld_event varchar(255), ld_documentid bigint, ld_exportstatus int not null, ld_exportid bigint, ld_exportname varchar(255), ld_exportversion varchar(10), primary key (ld_id));
@@ -108,9 +109,11 @@ create unique index  AK_VERSION on ld_version (ld_documentid, ld_version);
 alter table ld_history add constraint FK_HISTORY_USER foreign key (ld_userid) references ld_user(ld_id);
 alter table ld_version add constraint FK_VERSION_USER foreign key (ld_userid) references ld_user(ld_id);
 
-alter table ld_emailaccount rename column  ld_extractkeywords to ld_extracttags;
+alter table ld_emailaccount drop column ld_extractkeywords;
+alter table ld_emailaccount add column ld_extracttags int default 0 not null;
 
-alter table ld_share rename column ld_extractkeywords to ld_extracttags;
+alter table ld_share drop column ld_extractkeywords;
+alter table ld_share add column ld_extracttags int default 0 not null;
 alter table ld_share add column ld_tags varchar(4000);
 
 --Rename event codes
