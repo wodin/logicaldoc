@@ -109,11 +109,13 @@ create unique index  AK_VERSION on ld_version (ld_documentid, ld_version);
 alter table ld_history add constraint FK_HISTORY_USER foreign key (ld_userid) references ld_user(ld_id);
 alter table ld_version add constraint FK_VERSION_USER foreign key (ld_userid) references ld_user(ld_id);
 
-alter table ld_emailaccount drop column ld_extractkeywords;
 alter table ld_emailaccount add column ld_extracttags int default 0 not null;
+update ld_emailaccount set ld_extracttags=ld_extractkeywords:
+alter table ld_emailaccount drop column ld_extractkeywords;
 
-alter table ld_share drop column ld_extractkeywords;
 alter table ld_share add column ld_extracttags int default 0 not null;
+update ld_share set ld_extracttags=ld_extractkeywords:
+alter table ld_share drop column ld_extractkeywords;
 alter table ld_share add column ld_tags varchar(4000);
 
 --Rename event codes
@@ -145,6 +147,11 @@ values     (11,'2008-10-22',0,'menu.gui',-2,30,'gui.png','/-2',1,'admin/gui',0);
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
 values     (10,'2008-10-22',0,'parameters',-2,35,'parameters.png','/-2',1,'admin/parameters',0);
+insert into ld_menu   
+		   (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (-20,'2009-02-23',0,'logicaldoc-external-authentication.ldap',9,10,'ldap.png','/9',3,'external-authentication/ldap',0);
+
+
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
 values     (-2,1,0,0,1,1,0,0,1,1,1,1);
@@ -154,6 +161,9 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_manag
 values     (11,1,0,0,1,1,0,0,1,1,1,1);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive)
 values     (10,1,0,0,1,1,0,0,1,1,1,1);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive) 
+values     (-20,1,1,1,1,1,1,1,1,1,1,1);
+
 
 update ld_menu 
    set ld_parentid = 9, ld_sort=5, ld_path='/9'
