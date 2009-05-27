@@ -48,9 +48,20 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		boolean result = true;
 
 		try {
+			List<Object> old = (List<Object>) findByJdbcQuery(
+					"select ld_text,ld_pathextended from ld_menu where ld_id=?", 2, new Object[] { menu.getId() });
+			String oldText = menu.getText();
+			String oldPathExt = menu.getPathExtended();
+			if (!old.isEmpty()) {
+				oldText = (String) (((Object[]) old.get(0))[0]);
+				oldPathExt = (String) (((Object[]) old.get(0))[1]);
+			}
+			
 			menu.setPath(menu.getPath().replaceAll("//", "/"));
 			getHibernateTemplate().saveOrUpdate(menu);
-			updatePathExtended(menu);
+
+			// We need to update the path extended
+			updatePathExtended(menu, !oldText.equals(menu.getText()) || !menu.getPathExtended().equals(oldPathExt));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			result = false;
@@ -483,7 +494,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 * This utility method updates all pathExtended attributes of the hierarchy
 	 * starting from the specified menu
 	 */
-	private void updatePathExtended(Menu menu) {
+	private void updatePathExtended(Menu menu, boolean recursive) {
 		// Prepare the pathExtended for this menu
 		StringBuffer pathExtended = new StringBuffer("/");
 		List<Menu> parents = findParents(menu.getId());
@@ -491,9 +502,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			pathExtended.append(parent.getText());
 			pathExtended.append("/");
 		}
-
 		// Set it and save
 		menu.setPathExtended(pathExtended.toString().replaceAll("//", "/"));
+
 		try {
 			getHibernateTemplate().saveOrUpdate(menu);
 		} catch (Exception e) {
@@ -501,9 +512,11 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 
 		// Recursively invoke the method on all direct children
-		List<Menu> children = findByParentId(menu.getId());
-		for (Menu child : children) {
-			updatePathExtended(child);
+		if (recursive) {
+			List<Menu> children = findByParentId(menu.getId());
+			for (Menu child : children) {
+				updatePathExtended(child, recursive);
+			}
 		}
 	}
 
@@ -589,7 +602,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			if (groups.isEmpty())
 				return permissions;
 			Iterator<Group> iter = groups.iterator();
- 
+
 			StringBuffer query = new StringBuffer(
 					"select ldmenugroup.LD_WRITE as LDWRITE, ldmenugroup.LD_ADDCHILD as LDADDCHILD, ldmenugroup.LD_MANAGESECURITY as LDMANAGESECURITY, ldmenugroup.LD_MANAGEIMMUTABILITY as LDMANAGEIMMUTABILITY, ldmenugroup.LD_DELETE as LDDELETE, ldmenugroup.LD_RENAME as LDRENAME, ldmenugroup.LD_BULKIMPORT as LDBULKIMPORT, ldmenugroup.LD_BULKEXPORT as LDBULKEXPORT, ldmenugroup.LD_SIGN as LDSIGN, ldmenugroup.LD_ARCHIVE as LDARCHIVE");
 			query.append(" from ld_menugroup ldmenugroup");
@@ -679,9 +692,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			if (!precoll.isEmpty()) {
 				StringBuffer query = new StringBuffer("select distinct(A.ld_menuid) from ld_menugroup A, ld_menu B "
 						+ " where A.ld_menuid=B.ld_id and B.ld_deleted=0 ");
-				if(type!=null)
-				 query.append("and B.ld_type=" + type);
-				if(permission != Permission.READ)
+				if (type != null)
+					query.append("and B.ld_type=" + type);
+				if (permission != Permission.READ)
 					query.append(" and A.ld_" + permission.getName() + "=1 ");
 				query.append(" and A.ld_groupid in (");
 				boolean first = true;
@@ -693,7 +706,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					first = false;
 				}
 				query.append(")");
-				
+
 				Connection con = null;
 				Statement stmt = null;
 				ResultSet rs = null;
