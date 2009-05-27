@@ -104,7 +104,7 @@
 					</f:facet>
 					<ice:panelGroup>
 						<ice:selectBooleanCheckbox value="#{rule.read}"
-							disabled="#{!rule.enabled}" />
+							disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 					</ice:panelGroup>
 				</ice:column>
 
@@ -115,7 +115,7 @@
 					</f:facet>
 					<ice:panelGroup>
 						<ice:selectBooleanCheckbox value="#{rule.write}"
-							disabled="#{!rule.enabled}" />
+							disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 					</ice:panelGroup>
 				</ice:column>
 
@@ -126,7 +126,7 @@
 					</f:facet>
 					<ice:panelGroup>
 						<ice:selectBooleanCheckbox value="#{rule.addChild}"
-							disabled="#{!rule.enabled}" />
+							disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 					</ice:panelGroup>
 				</ice:column>
 
@@ -137,7 +137,7 @@
 					</f:facet>
 					<ice:panelGroup>
 						<ice:selectBooleanCheckbox value="#{rule.manageSecurity}"
-							disabled="#{!rule.enabled}" />
+							disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 					</ice:panelGroup>
 				</ice:column>
 
@@ -148,7 +148,7 @@
 					</f:facet>
 					<ice:panelGroup>
 						<ice:selectBooleanCheckbox value="#{rule.manageImmutability}"
-							disabled="#{!rule.enabled}" />
+							disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 					</ice:panelGroup>
 				</ice:column>
 
@@ -159,7 +159,7 @@
 					</f:facet>
 					<ice:panelGroup>
 						<ice:selectBooleanCheckbox value="#{rule.delete}"
-							disabled="#{!rule.enabled}" />
+							disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 					</ice:panelGroup>
 				</ice:column>
 
@@ -170,7 +170,7 @@
 					</f:facet>
 					<ice:panelGroup>
 						<ice:selectBooleanCheckbox value="#{rule.rename}"
-							disabled="#{!rule.enabled}" />
+							disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 					</ice:panelGroup>
 				</ice:column>
 
@@ -181,7 +181,7 @@
 					</f:facet>
 					<ice:panelGroup>
 						<ice:selectBooleanCheckbox value="#{rule.bulkImport}"
-							disabled="#{!rule.enabled}" />
+							disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 					</ice:panelGroup>
 				</ice:column>
 
@@ -192,7 +192,7 @@
 					</f:facet>
 					<ice:panelGroup>
 						<ice:selectBooleanCheckbox value="#{rule.bulkExport}"
-							disabled="#{!rule.enabled}" />
+							disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 					</ice:panelGroup>
 				</ice:column>
 
@@ -203,7 +203,7 @@
 					</f:facet>
 					<ice:panelGroup>
 						<ice:selectBooleanCheckbox value="#{rule.sign}"
-							disabled="#{!rule.enabled}" />
+							disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 					</ice:panelGroup>
 				</ice:column>
 
@@ -214,7 +214,7 @@
 					</f:facet>
 					<ice:panelGroup>
 						<ice:selectBooleanCheckbox value="#{rule.archive}"
-							disabled="#{!rule.enabled}" />
+							disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 					</ice:panelGroup>
 				</ice:column>
 
