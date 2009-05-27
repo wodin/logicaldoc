@@ -14,11 +14,11 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
 	id="securityForm" styleClass="center formBorderHighlight"
-	style="width: 900px; text-align: left;">
+	style="width: 1000px; text-align: left;">
 
 	<ice:messages globalOnly="true" />
 
-	<ice:panelTabSet tabPlacement="top">
+	<ice:panelTabSet tabPlacement="top" selectedIndex="0">
 		<ice:panelTab rendered="true" label="#{msgs['menu']}">
 			<ice:panelGroup>
 				<ice:panelGrid columns="2">
@@ -50,18 +50,44 @@
 						</h3>
 					</ice:panelGroup>
 				</f:facet>
-				<f:subview id="w-rights">
+				<f:subview id="w-secrights">
+
 					<ice:panelGrid columns="3">
 						<ice:panelGroup>
 							<br />
-							<ldoc:groupselector id="grp1" showFilter="true"
+							<ice:panelGroup style="text-align:center">
+								<ice:outputLabel for="grp1" value="#{msgs['entity.available']}" />
+							</ice:panelGroup>
+
+							<ice:panelGroup>
+								<ice:selectManyMenu id="grp1" styleClass="selectManyMenuBig"
+									value="#{securityRightsRecordsManager.selectedAvailableGroups}">
+									<f:selectItems
+										value="#{securityRightsRecordsManager.availableGroups}" />
+								</ice:selectManyMenu>
+								<ice:message for="grp1" />
+							</ice:panelGroup>
+
+							<ice:panelGroup style="text-align:center">
+								<ice:outputLabel for="filter" value="#{msgs['filter']}" />
+							</ice:panelGroup>
+
+							<ice:panelGroup>
+								<ice:selectInputText
+									value="#{securityRightsRecordsManager.availableGroupFilter}"
+									valueChangeListener="#{securityRightsRecordsManager.filterAvailableGroups}"
+									immediate="true" width="193" />
+							</ice:panelGroup>
+
+							<!-- Facelets seem not to work correctly inside a tab -->
+							<!-- ldoc:groupselector id="grp1" showFilter="true"
 								styleClass="selectManyMenuBig" allowMultipleSelection="true"
 								label="#{msgs['entity.available']}"
 								items="#{securityRightsRecordsManager.availableGroups}"
 								value="#{securityRightsRecordsManager.selectedAvailableGroups}"
 								filterValue="#{securityRightsRecordsManager.availableGroupFilter}"
 								filterListener="#{securityRightsRecordsManager.filterAvailableGroups}"
-								filterSize="193" />
+								filterSize="193" / -->
 						</ice:panelGroup>
 
 						<ice:panelGroup styleClass="commands">
@@ -78,14 +104,39 @@
 
 						<ice:panelGroup>
 							<br />
-							<ldoc:groupselector id="grp2" showFilter="true"
+							<ice:panelGroup style="text-align:center">
+								<ice:outputLabel for="grp2" value="#{msgs['entity.allowed']}" />
+							</ice:panelGroup>
+
+							<ice:panelGroup>
+								<ice:selectManyMenu id="grp2" styleClass="selectManyMenuBig"
+									value="#{securityRightsRecordsManager.selectedAllowedGroups}">
+									<f:selectItems
+										value="#{securityRightsRecordsManager.allowedGroups}" />
+								</ice:selectManyMenu>
+								<ice:message for="grp2" />
+							</ice:panelGroup>
+
+							<ice:panelGroup style="text-align:center">
+								<ice:outputLabel for="filter" value="#{msgs['filter']}" />
+							</ice:panelGroup>
+
+							<ice:panelGroup>
+								<ice:selectInputText
+									value="#{securityRightsRecordsManager.allowedGroupFilter}"
+									valueChangeListener="#{securityRightsRecordsManager.filterAllowedGroups}"
+									immediate="true" width="193" />
+							</ice:panelGroup>
+
+							<!-- Facelets seem not to work correctly inside a tab -->
+							<!-- ldoc:groupselector id="grp2" showFilter="true"
 								styleClass="selectManyMenuBig" allowMultipleSelection="true"
 								label="#{msgs['entity.allowed']}"
 								items="#{securityRightsRecordsManager.allowedGroups}"
 								value="#{securityRightsRecordsManager.selectedAllowedGroups}"
 								filterValue="#{securityRightsRecordsManager.allowedGroupFilter}"
 								filterListener="#{securityRightsRecordsManager.filterAllowedGroups}"
-								filterSize="193" />
+								filterSize="193" / -->
 						</ice:panelGroup>
 					</ice:panelGrid>
 				</f:subview>
@@ -114,7 +165,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:selectBooleanCheckbox value="#{rule.read}"
-								disabled="#{!rule.enabled}" />
+								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 						</ice:panelGroup>
 					</ice:column>
 
@@ -125,7 +176,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:selectBooleanCheckbox value="#{rule.write}"
-								disabled="#{!rule.enabled}" />
+								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 						</ice:panelGroup>
 					</ice:column>
 
@@ -136,7 +187,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:selectBooleanCheckbox value="#{rule.addChild}"
-								disabled="#{!rule.enabled}" />
+								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 						</ice:panelGroup>
 					</ice:column>
 
@@ -147,7 +198,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:selectBooleanCheckbox value="#{rule.manageSecurity}"
-								disabled="#{!rule.enabled}" />
+								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 						</ice:panelGroup>
 					</ice:column>
 
@@ -158,7 +209,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:selectBooleanCheckbox value="#{rule.manageImmutability}"
-								disabled="#{!rule.enabled}" />
+								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 						</ice:panelGroup>
 					</ice:column>
 
@@ -169,7 +220,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:selectBooleanCheckbox value="#{rule.delete}"
-								disabled="#{!rule.enabled}" />
+								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 						</ice:panelGroup>
 					</ice:column>
 
@@ -180,7 +231,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:selectBooleanCheckbox value="#{rule.rename}"
-								disabled="#{!rule.enabled}" />
+								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 						</ice:panelGroup>
 					</ice:column>
 
@@ -191,7 +242,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:selectBooleanCheckbox value="#{rule.bulkImport}"
-								disabled="#{!rule.enabled}" />
+								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 						</ice:panelGroup>
 					</ice:column>
 
@@ -202,7 +253,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:selectBooleanCheckbox value="#{rule.bulkExport}"
-								disabled="#{!rule.enabled}" />
+								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 						</ice:panelGroup>
 					</ice:column>
 
@@ -213,7 +264,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:selectBooleanCheckbox value="#{rule.sign}"
-								disabled="#{!rule.enabled}" />
+								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 						</ice:panelGroup>
 					</ice:column>
 
@@ -224,7 +275,7 @@
 						</f:facet>
 						<ice:panelGroup>
 							<ice:selectBooleanCheckbox value="#{rule.archive}"
-								disabled="#{!rule.enabled}" />
+								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 						</ice:panelGroup>
 					</ice:column>
 				</ice:dataTable>
@@ -248,10 +299,9 @@
 							value="#{securityForm.passwordSize}" />
 						<ice:message for="passwordSize" />
 					</ice:panelGroup>
-					
+
 					<ice:panelGroup styleClass="outputLabel">
-						<ice:outputLabel for="passwordTtl"
-							value="#{msgs['password.ttl']}" />
+						<ice:outputLabel for="passwordTtl" value="#{msgs['password.ttl']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="passwordTtl" tabindex="1"

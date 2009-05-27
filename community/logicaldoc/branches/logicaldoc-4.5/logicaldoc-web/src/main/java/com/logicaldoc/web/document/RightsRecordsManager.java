@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -139,7 +140,7 @@ public class RightsRecordsManager {
 
 		// initiate the list
 		rules = new ArrayList<GroupRule>(10);
-
+		
 		try {
 			GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 			groups = (List<Group>) gdao.findAll();
@@ -154,7 +155,7 @@ public class RightsRecordsManager {
 			});
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			Menu menu = mdao.findById(menuId);
-
+			mdao.initialize(menu);
 			long userId = SessionManagement.getUserId();
 			if (mdao.isPermissionEnabled(Permission.MANAGE_SECURITY, menuId, userId)) {
 				Iterator<Group> iter = groups.iterator();
@@ -233,7 +234,6 @@ public class RightsRecordsManager {
 	public void assignGroups() {
 		if (selectedDirectory == null)
 			return;
-
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu menu = mdao.findById(selectedDirectory.getMenu().getId());
 		for (long grp : selectedAvailableGroups) {
@@ -261,33 +261,14 @@ public class RightsRecordsManager {
 		Menu menu = mdao.findById(selectedDirectory.getMenu().getId());
 
 		for (long grp : selectedAllowedGroups) {
+			// Skip the admin group
+			if (grp == 1)
+				continue;
 			MenuGroup mg = new MenuGroup(grp);
 			menu.getMenuGroups().remove(mg);
 		}
 
-		// At least one rule must give security permission to the current user
-		long[] groupIds = SessionManagement.getUser().getGroupIds();
-		boolean security = false;
-		for (MenuGroup mg : menu.getMenuGroups()) {
-			if (mg.getManageSecurity() == 1) {
-				for (long id : groupIds) {
-					if (id == mg.getGroupId()) {
-						security = true;
-						break;
-					}
-				}
-			}
-			if (security)
-				break;
-		}
-
-		if (security) {
-			mdao.store(menu);
-		} else {
-			// The modification lead to unmodifiable permission rules
-			Messages.addLocalizedError("errors.rights.mandatory");
-		}
-
+		mdao.store(menu);
 		initRights(menu.getId());
 	}
 
@@ -310,13 +291,12 @@ public class RightsRecordsManager {
 
 	public String back() {
 		documentNavigation.showDocuments();
-
 		return null;
 	}
 
 	public String save() {
-		if(selectedDirectory==null)
-			 return null;
+		if (selectedDirectory == null)
+			return null;
 		long id = selectedDirectory.getMenuId();
 		long userId = SessionManagement.getUserId();
 		saveRules(id, userId);
@@ -409,12 +389,11 @@ public class RightsRecordsManager {
 				} else {
 					mg.setArchive(0);
 				}
-
+				
 				boolean stored = mdao.store(folder);
-
 				if (!stored) {
 					sqlerrors = true;
-				}
+				} 
 			} else {
 				if (mg != null) {
 					folder.getMenuGroups().remove(mg);
@@ -471,7 +450,7 @@ public class RightsRecordsManager {
 					username = group.getUsers().iterator().next().getUserName();
 					fullName = group.getUsers().iterator().next().getFullName();
 				}
-				
+
 				if ((group.getType() == Group.TYPE_DEFAULT && group.getName().toLowerCase().contains(
 						event.getNewValue().toString().toLowerCase()))
 						|| (group.getType() == Group.TYPE_USER && (username.toLowerCase().contains(
