@@ -180,6 +180,8 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		
 		try {
 			User user = findByUserName(username);
+			if(user==null)
+				return false;
 			
 			// Check if the password is expired
 			if (user.getPasswordExpires() == 1) {
