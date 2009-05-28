@@ -10,12 +10,22 @@
 
                      LogicalDOC Community Edition
 
-LogicalDOC CE 4.5 (2009-01-30; logicaldoc-4.5)
+LogicalDOC CE 4.5 (2009-06-10; logicaldoc-4.5)
 ===============
 Added LDAP integration
 User: added enabled property
+User: password expiration
+Document: Improved metadata informationj
+Document: Full versioning and diff system
+Document: Document first page preview
+Collaboration: Implemented duiscussion forum on document
+Browsing: Different view modes in browsing and search pages
+Added support for language variants
+Configurable entry page
+Multiple recipients for download tickets
 Fixed group deletion
 Fixed documents per page setting
+
 
 LogicalDOC CE 4.0 (2009-01-30; logicaldoc-4.0)
 ===============
