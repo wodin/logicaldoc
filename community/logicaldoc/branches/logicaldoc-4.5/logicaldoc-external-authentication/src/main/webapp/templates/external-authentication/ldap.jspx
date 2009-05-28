@@ -35,8 +35,8 @@
 						<ice:outputLabel for="username" value="#{msgs['username']}" />
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
-						<ice:inputText id="username" value="#{LdapBean.contextSource.userName}"
-							size="40" />
+						<ice:inputText id="username"
+							value="#{LdapBean.contextSource.userName}" size="40" />
 						<ice:message for="username" />
 					</ice:panelGroup>
 
@@ -50,24 +50,35 @@
 					</ice:panelGroup>
 
 					<ice:panelGroup style="text-align:right; white-space:nowrap;">
-						<ice:outputLabel for="realm" value="#{ext_msgs['logicaldoc-external-authentication.ldap.realm']}" />
+						<ice:outputLabel for="realm"
+							value="#{ext_msgs['logicaldoc-external-authentication.ldap.realm']}" />
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
-						<ice:inputText id="realm"
-							value="#{LdapBean.contextSource.realm}" size="40" />
+						<ice:inputText id="realm" value="#{LdapBean.contextSource.realm}"
+							size="40" />
 						<ice:message for="realm" />
 					</ice:panelGroup>
 
-                    <ice:panelGroup style="text-align:right; white-space:nowrap;">
-                        <ice:outputLabel for="currentDN"
-                            value="#{ext_msgs['logicaldoc-external-authentication.ldap.currentDN']}" />
-                    </ice:panelGroup>
-                    <ice:panelGroup style="text-align:left">
-                        <ice:inputText id="currentDN"
-                            value="#{LdapBean.contextSource.currentDN}"
-                            size="40" />
-                        <ice:message for="currentDN" />
-                    </ice:panelGroup>
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="authPattern"
+							value="#{ext_msgs['logicaldoc-external-authentication.ldap.authPattern']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="authPattern"
+							value="#{LdapBean.contextSource.userAuthenticationPatern}"
+							size="70" />
+						<ice:message for="authPattern" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="currentDN"
+							value="#{ext_msgs['logicaldoc-external-authentication.ldap.currentDN']}" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="currentDN"
+							value="#{LdapBean.contextSource.currentDN}" size="40" />
+						<ice:message for="currentDN" />
+					</ice:panelGroup>
 
 					<ice:panelGroup style="text-align:right; white-space:nowrap;">
 						<ice:outputLabel for="userIdentiferAttribute"
