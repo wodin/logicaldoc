@@ -23,8 +23,7 @@
 		Simple Authentication
 	-->
 	<bean id="LDAPContextSource"
-		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource"
-		scope="prototype">
+		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource">
 		<property name="url" value="${ldap.url}" />
 		<property name="realm" value="${ldap.realm}" />
 		<property name="currentDN" value="${ldap.currentDN}" />
@@ -69,7 +68,7 @@
 	-->
 	<!-- 
 		<bean id="LDAPContextSource"
-		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource" scope="prototype">
+		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource">
 		<property name="url" value="ldap://logicaldoc:389" />
 		<property name="realm" value="localhost"/>
 		<property name="userGroupContext" ref="ldapUserGroupContext"/>
@@ -84,7 +83,7 @@
 	-->
 	<!-- 
 		<bean id="LDAPContextSource"
-		class="com.logicaldoc.authentication.ldap.DigestMD5LdapContextSource" scope="prototype">
+		class="com.logicaldoc.authentication.ldap.DigestMD5LdapContextSource">
 		<property name="url" value="ldap://logicaldoc:389/DC=logicalobjects" />
 		<property name="base" value="" />
 		<property name="realm" value="logicalobjects"/>
