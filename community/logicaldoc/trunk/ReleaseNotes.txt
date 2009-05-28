@@ -1,20 +1,13 @@
 
 LogicalDOC is a Web-based Document Management System (DMS), easy to use and learn. 
 
-This 4.0 release is a heavily refactored version of LogicalDOC.
+This 4.5 release is an improved version of LogicalDOC.
 
-The database has been completely rewritten, security management has been rewritten 
-from scratch and the system was tested with 1M (1,000,000) of real documents.
+The file system structure was completely revised.
 
-It was also introduced support for WebDAV (thanks to Sebastian Wenzky) and the 
-creation of custom attributes on documents via document's template.
+It was also introduced support for LDAP (thanks to Sebastian Wenzky).
 
-The WebDAV is accessibile at the following address:
-http://localhost:8080/logicaldoc/webdav/store/    
-user/pass: admin/admin
-
-Among other things the deferred indexing of documents has been implemented 
-along with the scheduled task for calculation of Tag-Cloud.
+Among other things various optimizations has been implemented.
 
 LogicalDOC uses the following core technologies:
 
