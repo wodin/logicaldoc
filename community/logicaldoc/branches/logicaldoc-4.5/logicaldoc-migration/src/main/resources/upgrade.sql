@@ -187,4 +187,4 @@ update ld_menu
  
 
 insert into ld_systemmessage (ld_id, ld_lastmodified, ld_deleted, ld_author, ld_recipient, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red)
-values     (-10,NOW(),0,'admin','admin','Your LogicalDOC has been updated to release 4.5. Important: documents need to be reindexed.','Update to release 4.5',NOW(),5,3,1,0);
+values     (-10,NOW(),0,'SYSTEM','admin','Your LogicalDOC has been updated to release 4.5. Important: documents need to be reindexed.','Update to release 4.5',NOW(),5,3,0,0);
