@@ -119,7 +119,11 @@ public class EMailSender {
 		message.setContent(mpMessage);
 
 		Transport trans = sess.getTransport("smtp");
-		trans.connect(host, port, username, password);
+		if(StringUtils.isEmpty(username)){
+			trans.connect(host, port, null, null);
+		}else{
+			trans.connect(host, port, username, password);
+		}
 
 		Address[] adr = message.getAllRecipients();
 		trans.sendMessage(message, adr);
