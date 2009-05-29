@@ -36,8 +36,7 @@ public class ApplicationInitializer implements ServletContextListener {
 		Properties boot = new Properties();
 
 		try {
-			boot.load(new FileInputStream(context
-					.getRealPath(WEB_INF_BOOT_PROPERTIES)));
+			boot.load(new FileInputStream(context.getRealPath(WEB_INF_BOOT_PROPERTIES)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -51,29 +50,23 @@ public class ApplicationInitializer implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		ServletContext context = sce.getServletContext();
 		Properties boot = loadBootProperties(context);
-		String repository = boot
-				.getProperty(SystemProperty.LOGICALDOC_REPOSITORY);
+		String repository = boot.getProperty(SystemProperty.LOGICALDOC_REPOSITORY);
 
 		// replace system properties
 		if (repository.indexOf("$") != -1) {
 			repository = StrSubstitutor.replaceSystemProperties(repository);
 		}
 
-		boot.setProperty(SystemProperty.LOGICALDOC_REPOSITORY,
-				initRepositoryPath(repository));
-		boot.setProperty(SystemProperty.LOGICALDOC_APP_ROOTDIR,
-				initRootPath(context));
-		boot.setProperty(SystemProperty.LOGICALDOC_APP_PLUGINSDIR,
-				initPluginsPath(context));
-		boot.setProperty(SystemProperty.LOGICALDOC_PLUGINSREGISTRY,
-				initPluginRegistry());
+		boot.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, initRepositoryPath(repository));
+		boot.setProperty(SystemProperty.LOGICALDOC_APP_ROOTDIR, initRootPath(context));
+		boot.setProperty(SystemProperty.LOGICALDOC_APP_PLUGINSDIR, initPluginsPath(context));
+		boot.setProperty(SystemProperty.LOGICALDOC_PLUGINSREGISTRY, initPluginRegistry());
 
 		saveBootProperties(boot, context);
-		
+
+		// Initialize logging
+		String log4jPath = context.getRealPath("/WEB-INF/classes/ldoc-log4j.xml");
 		try {
-			String log4jPath = context
-					.getRealPath("/WEB-INF/classes/ldoc-log4j.xml");
-			System.out.println("log4jPath = " + log4jPath);
 			Log4jConfigurer.initLogging(log4jPath);
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -81,20 +74,25 @@ public class ApplicationInitializer implements ServletContextListener {
 
 		// Initialize plugins
 		com.logicaldoc.util.PluginRegistry.getInstance().init();
+
+		// Reinitialize logging because some plugins may have added new categories
+		try {
+			Log4jConfigurer.shutdownLogging();
+			Log4jConfigurer.initLogging(log4jPath);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 	private String initPluginRegistry() {
-		System.setProperty(SystemProperty.LOGICALDOC_PLUGINSREGISTRY,
-				"com.logicaldoc.web.PluginRegistry");
+		System.setProperty(SystemProperty.LOGICALDOC_PLUGINSREGISTRY, "com.logicaldoc.web.PluginRegistry");
 		return "com.logicaldoc.web.PluginRegistry";
 	}
 
-	public static void saveBootProperties(Properties boot,
-			ServletContext context) {
+	public static void saveBootProperties(Properties boot, ServletContext context) {
 		// Save properties for the next bootstrap
 		try {
-			boot.store(new FileOutputStream(context
-					.getRealPath(WEB_INF_BOOT_PROPERTIES)), "");
+			boot.store(new FileOutputStream(context.getRealPath(WEB_INF_BOOT_PROPERTIES)), "");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -109,24 +107,21 @@ public class ApplicationInitializer implements ServletContextListener {
 	}
 
 	protected String initRootPath(final ServletContext context) {
-		String rootPath = StringUtils.replace(context
-				.getRealPath(StringUtils.EMPTY), "\\", "/");
+		String rootPath = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/");
 		rootPath = StringUtils.removeEnd(rootPath, "/");
 		System.setProperty(SystemProperty.LOGICALDOC_APP_ROOTDIR, rootPath);
 		return rootPath;
 	}
 
 	protected String initPluginsPath(final ServletContext context) {
-		String pluginsPath = StringUtils.replace(context
-				.getRealPath(StringUtils.EMPTY), "\\", "/");
+		String pluginsPath = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/");
 		pluginsPath = StringUtils.removeEnd(pluginsPath, "/");
 		pluginsPath += "/WEB-INF/plugins";
 
 		File dir = new File(pluginsPath);
 		dir.mkdirs();
 		dir.mkdir();
-		System.setProperty(SystemProperty.LOGICALDOC_APP_PLUGINSDIR,
-				pluginsPath);
+		System.setProperty(SystemProperty.LOGICALDOC_APP_PLUGINSDIR, pluginsPath);
 		return pluginsPath;
 	}
 }
