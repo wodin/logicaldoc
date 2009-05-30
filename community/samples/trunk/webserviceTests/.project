@@ -1,6 +1,6 @@
 <projectDescription>
   <name>webserviceTests</name>
-  <comment>Web-Service sample project for LogicalDOC 4.0.0</comment>
+  <comment>Web-Service sample project for LogicalDOC 4.5.0</comment>
   <projects/>
   <buildSpec>
     <buildCommand>
