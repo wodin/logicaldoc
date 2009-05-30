@@ -1,5 +1,7 @@
 package com.logicaldoc.webservice;
 
+import java.util.Set;
+
 /**
  * Document's metadata
  * 
@@ -40,6 +42,8 @@ public class DocumentInfo {
 	private Long templateId;
 
 	private ExtendedAttribute[] extendedAttribute;
+	
+	private String[] tags;
 
 	private VersionInfo[] version = new VersionInfo[] {};
 
@@ -233,5 +237,13 @@ public class DocumentInfo {
 
 	public void setCreator(String creator) {
 		this.creator = creator;
+	}
+
+	public String[] getTags() {
+		return tags;
+	}
+
+	public void setTags(String[] tags) {
+		this.tags = tags;
 	}
 }

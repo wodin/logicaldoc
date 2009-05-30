@@ -1,7 +1,5 @@
 package com.logicaldoc.webservice;
 
-import java.util.Set;
-
 import javax.activation.DataHandler;
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -109,7 +107,7 @@ public interface DmsService {
 	String sourceType, @WebParam(name = "coverage")
 	String coverage, @WebParam(name = "language")
 	String language, @WebParam(name = "tags")
-	Set<String> tags, @WebParam(name = "sourceId")
+	String[] tags, @WebParam(name = "sourceId")
 	String sourceId, @WebParam(name = "object")
 	String object, @WebParam(name = "recipient")
 	String recipient, @WebParam(name = "templateId")

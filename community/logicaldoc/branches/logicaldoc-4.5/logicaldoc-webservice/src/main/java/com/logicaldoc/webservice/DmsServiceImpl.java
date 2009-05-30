@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -329,6 +330,12 @@ public class DmsServiceImpl implements DmsService {
 		info.setCustomId(doc.getCustomId());
 		info.setSourceId(doc.getSourceId());
 		info.setObject(doc.getObject());
+		
+		if (doc.getTags() != null) {
+			Set<String> tmpset = doc.getTags();
+			String[] mytags = (String[]) tmpset.toArray(new String[tmpset.size()]);
+			info.setTags(mytags);
+		}
 
 		if (doc.getTemplate() != null) {
 			// Insert template infos
@@ -586,9 +593,10 @@ public class DmsServiceImpl implements DmsService {
 
 	@Override
 	public void update(String username, String password, long id, String title, String source, String sourceAuthor,
-			String sourceDate, String sourceType, String coverage, String language, Set<String> tags, String sourceId,
+			String sourceDate, String sourceType, String coverage, String language, String[] tags, String sourceId,
 			String object, String recipient, Long templateId, @WebParam(name = "extendedAttribute")
 			ExtendedAttribute[] extendedAttribute) throws Exception {
+		
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = userDao.findByUserName(username);
 		if (user == null)
@@ -612,7 +620,15 @@ public class DmsServiceImpl implements DmsService {
 		}
 
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		
+		Set<String> setTags = new TreeSet<String>();
+		if (tags != null) {
+			for (int i = 0; i < tags.length; i++) {
+				setTags.add(tags[i]);
+			}
+		}
+		
 		manager.update(doc, user, title, source, sourceAuthor, convertXMLToDate(sourceDate), sourceType, coverage,
-				LocaleUtil.toLocale(language), tags, sourceId, object, recipient, templateId, attributes);
+				LocaleUtil.toLocale(language), setTags, sourceId, object, recipient, templateId, attributes);
 	}
 }

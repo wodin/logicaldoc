@@ -1,7 +1,6 @@
 package com.logicaldoc.webservice;
 
 import java.io.IOException;
-import java.util.Set;
 
 import javax.activation.DataHandler;
 
@@ -84,7 +83,7 @@ public class DmsClient implements DmsService {
 
 	@Override
 	public void update(String username, String password, long id, String title, String source, String sourceAuthor,
-			String sourceDate, String sourceType, String coverage, String language, Set<String> tags, String sourceId,
+			String sourceDate, String sourceType, String coverage, String language, String[] tags, String sourceId,
 			String object, String recipient, Long templateId, ExtendedAttribute[] extendedAttribute) throws Exception {
 		client.update(username, password, id, title, source, sourceAuthor, sourceDate, sourceType, coverage, language,
 				tags, sourceId, object, recipient, templateId, extendedAttribute);
