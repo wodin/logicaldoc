@@ -62,16 +62,22 @@ public class TestDocument extends TestCase {
 		
 		
 		// Update the metadata of the document created
-		// in particular we decided to update fields: title, source, sourceDate, sourceAuthor
+		// in particular we decided to update fields: title, source, sourceDate, sourceAuthor, tags
 		
 /*		public void update(String username, String password, long id, String title, String source, String sourceAuthor,
 				String sourceDate, String sourceType, String coverage, String language, String[] tags, String sourceId,
 				String object, String recipient, Long templateId, ExtendedAttribute[] extendedAttribute) throws Exception {*/
 		
-		String[] tags = new String[]{"tag, keyword,test"};
+		String[] tags = new String[]{"tag", "keyword", "test"};
 		client.update("admin", "admin", documentId, "MyTitle", "MySource", "MysourceAuthor", 
 				"2009-05-31", "sourceType", "coverage", "it", tags, "sourceId", 
 				"object", "recipient", null, null);
+		
+		//VERIFY THE CHANGES to the tags
+		DocumentInfo info2 = client.downloadDocumentInfo("admin", "admin", documentId);
+		String[] tags2 = info2.getTags();
+		assertNotNull(tags2);
+		assertEquals(3, tags2.length);
 		
 		// Delete the document just created
 		result = client.deleteDocument("admin", "admin", documentId);
