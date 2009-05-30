@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>webservicetests</groupId>
 	<artifactId>webserviceTests</artifactId>
-	<version>4.0.0</version>
+	<version>4.5.0</version>
 	<inceptionYear>2008</inceptionYear>
 	<name>webserviceTests</name>
 	<packaging>jar</packaging>
-	<description>Web-Service sample project for LogicalDOC 4.0.0</description>
+	<description>Web-Service sample project for LogicalDOC 4.5.0</description>
 	<organization/>
 	<url />
 	<developers>
@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-webservice</artifactId>
-			<version>4.0.2</version>
+			<version>4.5.0</version>
 			<type>jar</type>
 		</dependency>	
 		

@@ -22,7 +22,7 @@ public class TestFolder extends TestCase {
 		super.setUp();
 	}
 
-	public void testFolderCRD() throws IOException {
+	public void testFolderCRUD() throws IOException {
 
 		String endpoint = "http://localhost:8080/logicaldoc/services/Dms";
 		DmsClient client = new DmsClient(endpoint);
@@ -46,9 +46,16 @@ public class TestFolder extends TestCase {
 			FolderContent fc = client.downloadFolderContent("admin", "admin", createdFolder);
 			System.out.println(fc.getName());
 			assertEquals("myFirstFolder", fc.getName());
+			
+			// Folder Rename
+			// renameFolder(String username, String password, long folder, String name) throws Exception {
+			client.renameFolder("admin", "admin", createdFolder, "New Folder Name");
+			fc = client.downloadFolderContent("admin", "admin", createdFolder);
+			System.out.println(fc.getName());
 
 			// Folder Delete
 			result = client.deleteFolder("admin", "admin", createdFolder);
+			System.out.println("result: " + result);
 			assertEquals("ok", result);
 
 			// verify the folder deletion

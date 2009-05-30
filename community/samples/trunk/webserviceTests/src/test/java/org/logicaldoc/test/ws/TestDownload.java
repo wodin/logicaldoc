@@ -38,14 +38,15 @@ public class TestDownload extends TestCase {
 		OutputStream os = null;
 
 		try {
-			// download the document with id 107
-			int documentId = 107;
+			// download the document with id 677
+			int documentId = 677;
 			String version = "";
 			
 			DocumentInfo info = client.downloadDocumentInfo("admin", "admin", documentId);			
 			System.out.println(info.getFilename());
 			
 			File destFile = new File("C:/tmp", info.getFilename());
+			//File destFile = new File("C:/tmp/destfile.pdf");
 			os = new FileOutputStream(destFile);
 			
 			DataHandler dh = client.downloadDocument("admin", "admin", documentId, version);
