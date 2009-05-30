@@ -36,7 +36,7 @@ public class TestSearch extends TestCase {
 		String endpoint = "http://localhost:8080/logicaldoc/services/Dms";
 		DmsClient client = new DmsClient(endpoint);
 
-		String query = "checkout";
+		String query = "Guida";
 
 		/**
 		 * public SearchResult search(String username, String password, String
