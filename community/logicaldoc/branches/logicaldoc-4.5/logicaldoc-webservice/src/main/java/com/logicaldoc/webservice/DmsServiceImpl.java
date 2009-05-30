@@ -305,6 +305,7 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, long)
 	 */
 	public DocumentInfo downloadDocumentInfo(String username, String password, long id) throws Exception {
+		
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(id);
 		docDao.initialize(doc);
@@ -313,6 +314,7 @@ public class DmsServiceImpl implements DmsService {
 
 		// Populate document's metadata
 		DocumentInfo info = new DocumentInfo();
+		try {
 		info.setId(doc.getId());
 		info.setTitle(doc.getTitle());
 		info.setAuthor(doc.getSourceAuthor());
@@ -360,6 +362,11 @@ public class DmsServiceImpl implements DmsService {
 			vInfo.setVersion(version.getVersion());
 			info.addVersion(vInfo);
 		}
+		} catch(RuntimeException re) {
+			log.error("RuntimeException: " + re.getMessage(), re);
+		}catch(Exception e) {
+			log.error("Exception: " + e.getMessage(), e);
+		}
 
 		return info;
 	}
@@ -369,6 +376,7 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, long)
 	 */
 	public FolderContent downloadFolderContent(String username, String password, long folder) throws Exception {
+		
 		FolderContent folderContent = new FolderContent();
 		checkCredentials(username, password);
 		checkReadEnable(username, folder);
@@ -418,6 +426,7 @@ public class DmsServiceImpl implements DmsService {
 	 */
 	public SearchResult search(String username, String password, String query, String indexLanguage,
 			String queryLanguage, int maxHits, String templateName, String[] templateFields) throws Exception {
+		
 		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = udao.findByUserName(username);
 		if (user == null) {
@@ -608,7 +617,17 @@ public class DmsServiceImpl implements DmsService {
 			throw new Exception("unexisting document " + id);
 		if (doc.getImmutable() == 1)
 			throw new Exception("the document is immutable");
+		
+		// Initialize the lazy loaded collections
+		docDao.initialize(doc);
 
+		Date sdate = null;
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		if (StringUtils.isNotEmpty(sourceDate))
+			sdate = df.parse(sourceDate);
+		doc.setSourceDate(sdate);
+		
+		
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		if (!dao.isWriteEnable(doc.getFolder().getId(), user.getId())) {
 			throw new Exception("user does't have write permission");
@@ -620,7 +639,6 @@ public class DmsServiceImpl implements DmsService {
 		}
 
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		
 		Set<String> setTags = new TreeSet<String>();
 		if (tags != null) {
 			for (int i = 0; i < tags.length; i++) {
@@ -628,7 +646,7 @@ public class DmsServiceImpl implements DmsService {
 			}
 		}
 		
-		manager.update(doc, user, title, source, sourceAuthor, convertXMLToDate(sourceDate), sourceType, coverage,
+		manager.update(doc, user, title, source, sourceAuthor, sdate, sourceType, coverage,
 				LocaleUtil.toLocale(language), setTags, sourceId, object, recipient, templateId, attributes);
 	}
 }
