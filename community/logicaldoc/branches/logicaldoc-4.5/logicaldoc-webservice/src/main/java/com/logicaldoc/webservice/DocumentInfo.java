@@ -1,6 +1,5 @@
 package com.logicaldoc.webservice;
 
-import java.util.Set;
 
 /**
  * Document's metadata
