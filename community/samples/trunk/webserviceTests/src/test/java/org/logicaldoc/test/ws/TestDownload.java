@@ -39,7 +39,7 @@ public class TestDownload extends TestCase {
 
 		try {
 			// download the document with id 677
-			int documentId = 677;
+			int documentId = 8;
 			String version = "";
 			
 			DocumentInfo info = client.downloadDocumentInfo("admin", "admin", documentId);			
