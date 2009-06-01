@@ -40,7 +40,7 @@ public class ParametersForm {
 					continue;
 			} else if (name.startsWith("product") || name.startsWith("skin") || name.startsWith("conf")
 					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp")
-					|| name.startsWith("gui"))
+					|| name.startsWith("gui")||name.startsWith("password"))
 				continue;
 
 			sortedSet.add(key.toString());
