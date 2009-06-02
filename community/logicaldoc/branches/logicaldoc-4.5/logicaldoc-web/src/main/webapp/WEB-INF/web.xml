@@ -324,7 +324,7 @@
 	</servlet-mapping>
 		<servlet-mapping>
 		<servlet-name>DocumentRSS</servlet-name>
-		<url-pattern>/doc_rss/*</url-pattern>
+		<url-pattern>/doc_rss</url-pattern>
 	</servlet-mapping>
 
 	<session-config>
