@@ -15,5 +15,8 @@
 		<property name="userName" type="string" column="ld_username" length="255" />
 		<property name="event" type="string" column="ld_event" length="255" />
 		<property name="comment" type="string" column="ld_comment" length="4000" />
+		<property name="version" type="string" column="ld_version" length="10" />
+		<property name="title" type="string" column="ld_title" length="255" />
+		<property name="path" type="string" column="ld_path" length="4000" />
 	</class>
 </hibernate-mapping>

@@ -134,6 +134,10 @@ public class ServletDocUtil {
 			// Add an history entry to track the download of the document
 			History history = new History();
 			history.setDocId(docId);
+			history.setTitle(doc.getTitle());
+			history.setVersion(doc.getVersion());
+			history.setPath(doc.getFolder().getPath()+"/"+doc.getFolder().getText());
+			history.setPath(history.getPath().replaceAll("//", "/"));
 			history.setDate(new Date());
 			history.setEvent(History.EVENT_DOWNLOADED);
 			history.setUserId(user.getId());
