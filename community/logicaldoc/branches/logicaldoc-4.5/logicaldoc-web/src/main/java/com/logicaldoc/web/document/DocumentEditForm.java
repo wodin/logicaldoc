@@ -34,6 +34,7 @@ import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.TagUtil;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
+import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.upload.InputFileBean;
 import com.logicaldoc.web.util.Attribute;
 import com.logicaldoc.web.util.FacesUtil;
@@ -527,6 +528,48 @@ public class DocumentEditForm {
 		} else {
 			return "login";
 		}
+	}
+	
+	
+	@SuppressWarnings("deprecation")
+	public String uncheckout() {
+
+		log.info("uncheckout()");
+
+		Application application = FacesContext.getCurrentInstance().getApplication();
+		InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
+				FacesContext.getCurrentInstance()));
+		if (SessionManagement.isValid()) {
+			Document document = record.getDocument();
+
+			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
+
+				try {
+					// Unchekout the document; throws an exception if something
+					// goes wrong
+					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
+							DocumentManager.class);
+					//documentManager.uncheckout(document.getId(), SessionManagement.getUser());
+					documentManager.unlock(document.getId(), SessionManagement.getUser(), null);
+
+					/* create positive log message */
+					Messages.addLocalizedInfo("msg.action.changedoc");
+					fileForm.reset();
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+					Messages.addLocalizedError("errors.action.savedoc");
+				}
+			}
+			reset();
+		} else {
+			return "login";
+		}
+
+		DocumentNavigation documentNavigation = ((DocumentNavigation) application.createValueBinding(
+				"#{documentNavigation}").getValue(FacesContext.getCurrentInstance()));
+		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
+		documentNavigation.refresh();
+		return null;
 	}
 
 	/**
