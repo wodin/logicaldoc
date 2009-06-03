@@ -10,22 +10,59 @@
 
                      LogicalDOC Community Edition
 
-LogicalDOC CE 4.5 (2009-06-10; logicaldoc-4.5)
+LogicalDOC CE 4.5 RC3 (2009-06-01; logicaldoc-4.5-RC3)
 ===============
-Added LDAP integration
-User: added enabled property
-User: password expiration
-Document: Improved metadata informationj
-Document: Full versioning and diff system
-Document: Document first page preview
-Collaboration: Implemented duiscussion forum on document
-Browsing: Different view modes in browsing and search pages
-Added support for language variants
-Configurable entry page
-Multiple recipients for download tickets
-Fixed group deletion
-Fixed documents per page setting
+- Fixed support for language variants such as Portuguese brasilian
+- Record downloads in the document's history
+- 0000050: [Web Services] Improve the WebService module
+- 0000098: [Core] Notify user to change password using db auth
+- 0000106: [Core] Deleting folders        
 
+LogicalDOC CE 4.5 RC2 (2009-05-04; logicaldoc-4.5-RC2)
+===============
+- Fixed MySQL issues with permissions
+- Fixed support for Oracle 10g
+- 0000103: [Core] Cannot view LDAP menu
+- 0000088: [Core] Cannot view Security Menu
+- 0000100: [User Interface] Add the Bug report menu
+- 0000096: [Core] Unable to execute query (car031)
+- 0000092: [Core] Optimize Indexes
+- 0000093: [Import / Export] Uploading Documents
+- 0000091: [Core] Parser for HTM
+- 0000089: [Core] LDAP configuration
+
+LogicalDOC CE 4.5 RC1 (2009-04-11; logicaldoc-4.5-RC1)
+===============
+- 0000076: [Core] Multiple recipients for download tickets
+- 0000085: [Core] Unable to delete folder
+- 0000087: [Core] Support for language variants
+- 0000086: [Core] Upgrade to the latest Lucene release
+- 0000058: [Core] Hibernate operation: could not update:
+- 0000049: [User Interface] Ability to filter users by Name or Lastname
+- 0000066: [Core] Creator information on Document
+- 0000083: [Core] Discussion Forum
+- 0000080: [Core] Security
+- 0000065: [User Interface] Configurable documents view mode
+- 0000074: [Core] Additional Phone Number
+- 0000070: [Core] Minimum size for keywords should be configurable
+- 0000073: [User Interface] Messages button to send
+- 0000068: [User Interface] Configurable entry page
+- 0000053: [User Interface] Spanish support
+- 0000054: [Core] Create Groups
+- 0000064: [User Interface] Configurable first page
+- 0000047: [User Interface] Inherit permissions from another group when in editing mode
+- 0000042: [Core] Add a field for State in user template
+- 0000048: [Core] Add enabled flag on user
+- 0000037: [User Interface] Items per Page doesn't work on page 2
+- 0000040: [Core] New version and history entry when document is moved
+- 0000052: [Core] Failing to validty integrity on deleting groups
+- 0000044: [Core] Add a Back button to options when viewing a document
+- 0000055: [Core] Download-Tickets
+- 0000012: [Core] Authentication from external systems
+- 0000046: [Core] Unresolved database key referenced in Coremodule
+- 0000041: [User Interface] Versions full diff
+- 0000038: [User Interface] ARCHIVE permission handling
+- 0000036: [Setup] SQL SERVER 2000/2005 External Database does not complete successfully
 
 LogicalDOC CE 4.0 (2009-01-30; logicaldoc-4.0)
 ===============
