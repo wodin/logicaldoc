@@ -114,7 +114,11 @@
 
 			<!-- Status -->
 			<ice:column>
-				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}">
+				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}" style="white-space: nowrap;">
+				    <ice:outputLink value="doc_rss?docId=#{documentRecord.docId}" title="RSS" target="_blank">
+						<ice:graphicImage style="border: 0px solid;"
+							value="#{StyleBean.imagesPath}/small_feed.png" alt="RSS" />
+					</ice:outputLink>
 					<ice:outputLink
 						value="download?docId=#{documentRecord.docId}&amp;downloadText=true"
 						target="_blank" title="#{msgs['document.indexed']}"
@@ -186,7 +190,7 @@
 							style="text-decoration: underline;" />
 					</ice:commandSortHeader>
 				</f:facet>
-				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
+				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}" style="text-align: right;"
 					menuPopup="pop">
 					<ice:outputText value="#{documentRecord.document.fileSize}"
 						title="#{msgs['msg.jsp.popup']}" style="white-space: nowrap;">
