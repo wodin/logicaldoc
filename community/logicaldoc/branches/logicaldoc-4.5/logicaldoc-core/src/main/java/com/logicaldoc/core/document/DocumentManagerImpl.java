@@ -156,7 +156,8 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void checkout(long docId, User user) throws Exception {
-		lock(docId, Document.DOC_CHECKED_OUT, user, "");
+		//lock(docId, Document.DOC_CHECKED_OUT, user, "");
+		lock(docId, Document.DOC_CHECKED_OUT, History.EVENT_CHECKEDOUT, user, "");
 	}
 
 	@Override
