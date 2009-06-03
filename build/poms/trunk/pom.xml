@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>7</version>
+  <version>8</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -138,6 +138,13 @@
         <artifactId>commons-io</artifactId>
         <version>1.4</version>
         <type>jar</type>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.2</version>
+        <type>jar</type>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>commons-pool</groupId>
