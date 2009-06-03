@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,8 +16,6 @@ import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.i18n.Messages;
-import com.logicaldoc.web.navigation.PageContentBean;
-import com.logicaldoc.web.util.FacesUtil;
 
 /**
  * Control that allows the user to list history events

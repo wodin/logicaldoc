@@ -44,6 +44,36 @@ public class History extends PersistentObject {
 
 	private String comment = null;
 
+	private String title = null;
+	
+	private String version = null;
+	
+	private String path = null;
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 	public History() {
 	}
 
