@@ -3,7 +3,7 @@
 <!-- InstanceBegin template="/Templates/contineo-help.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>Cartelle di importazione</title>
+<title>Import folders</title>
 <!-- InstanceEndEditable -->
 <link href="css/help.css" rel="stylesheet" type="text/css">
 <!-- InstanceBeginEditable name="head" -->
@@ -27,88 +27,91 @@
           <table class="title" width="100%">
             <tbody>
               <tr>
-                <td valign="middle"><h1><!-- InstanceBeginEditable name="TitleRegion" -->Cartelle di importazione (solo edizione Enterprise)<!-- InstanceEndEditable --></h1></td>
+                <td valign="middle"><h1><!-- InstanceBeginEditable name="TitleRegion" -->Import folders (Enterprise Edition only)<!-- InstanceEndEditable --></h1></td>
               </tr>
             </tbody>
           </table>
           <!-- InstanceBeginEditable name="ContentRegion" -->
-          <p>Quando LogicalDOC viene installato all'interno di una rete costituita anche da
-            altri computer che condividono cartelle, &egrave; possibile importare
-            automaticamente tutti i documenti condivisi mediante la funzione <span class="style4">Cartelle di importazione</span>. Questa caratteristica di LogicalDOC funziona con tutte le normali condivisioni
-            Windows ed anche con le condivisioni SAMBA che &egrave; possibile configurare sui
-          sistemi UNIX/Linux. L'utente pu&ograve; inoltre importare automaticamente i documenti presenti in cartelle locali del computer. <br> Accedete dall'amministrazione alla sezione <span class="style4">Cartelle di importazione</span>. In questa sezione viene visualizzato l'elenco delle cartelle remote e locali attualmente impostate. In alto sulla sinistra sono presenti due icone: la prima <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.12</span></a> consente di importare documenti da una cartella remota, la seconda, invece, consente di importare documenti da una cartella locale presente nel server/computer che ospita LogicalDOC. Le pagine di impostazione e modifica delle due tipologie di cartelle sono identiche, ma nella pagina di importazione da cartelle locali non bisogna fornire username e password.</p>
+          <p>By installing LogicalDOC over a network made up by other computers which
+share folders, you can automatically import all shared documents. This feature
+works with all standard Windows shares and with all shares handled by
+SAMBA servers that you can configure on UNIX / Linux. You can also import
+automatically all the documents that are into local folders of your PC. <br> 
+From the administration, select <span class="style4">Import folders</span>. In this section you can see the
+currently configured remote and local folders. On the top left there are two
+icons: the first one <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.12</span></a> lets you import documents from a shared folder, the
+second one allows to import documents from a local folder on the server /
+computer that hosts LogicalDOC. The setup and editing pages for both folder
+types are identical, but to import documents from local folder you don't have to
+provide any username and password.</p>
 		   <p>
              			    <center>
-			      <img src="images/importingfolders_01.gif" width="635" height="229" heigth="197">
+			      <img src="images/importingfolders_01.gif" width="631" height="231" heigth="197">
 			      <br>
-			      Figura 44: Elenco delle cartelle remote e locali	          
-   			    </center>
+			      Picture 44: Shared and local folders list
+             			    </center>
 		  </p>
-          <h3>Configurazione delle cartelle remote</h3>	
-          <p>All'interno della tabella di elenco delle cartelle, ogni elemento riporta l'indirizzo della condivisione e i controlli che servono
-            per modificare il dato.<br>
-            Con l'icona <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.5</span></a> si possono editare tutte le informazioni, con <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.10</span></a> si pu&ograve;
-            cambiare lo stato in attivo/disattivo e ovviamente con <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.6</span></a> &egrave; possibile
-            cancellare la condivisione.<br>
-            In alto sulla sinistra &egrave; predisposta un'icona <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.12</span></a> per l'inserimento di nuove
-            cartelle, cliccando su tale icona viene mostrata la scheda di
-            inserimento/modifica. <br>
+          <h3>Configuring Remote Shares</h3>	
+          <p>Each element contains the address of the remote folder and some controls
+used to edit the data. <br>
+You can edit all the information by clicking on the icon <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.5</span></a>; by clicking on
+the icon <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.10</span></a> you can change the status in enabled/disabled; obviously by
+clicking on the icon <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.6</span></a> you can cancel the share. <br>On the top left there is
+the icon <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.12</span></a> to insert new folders, by clicking on this icon the
+insertion/editing form is shown.  <br> 
           </p>
 		  
 		  		  <p>
              			    <center>
-			      <img src="images/importingfolders_02.gif" width="635" height="409" heigth="197">
+			      <img src="images/importingfolders_02.gif" width="637" height="389" heigth="197">
 			      <br>
-			      Figura 45: Impostazioni di una cartella remota		          
-   			                </center>
+			      Picture 45: Shared folder editing 
+             			    </center>
 		  </p>
 		  
-                  <p>La parte superiore della scheda consente di inserire i dati di connessione alla
-                    cartella ed in particolare:<ul>
-                    <li>Percorso sul computer remoto</li>
-                    <li>Username (opzionale)</li>
-                    <li>Password (opzionale)</li>
-		  </ul>
-          <p>Il percorso remoto rappresenta la cartella che viene condivisa sul computer
-                    remoto, &egrave; possibile fare un copia e incolla dal path visualizzato in Esplora
-                    Risorse di Windows.<br>
-                    La figura di esempio mostra la configurazione della cartella
-                    remota \\eva01\ftparea.<br>
-                    Qualora la cartella remota fosse protetta, &egrave; anche possibile impostare
-                    username e password per l'autenticazione.<br>
-                    La parte inferiore della scheda consente di impostare le informazioni per
-                    l'immagazzinamento dei documenti e quindi:		            </p>
-                    <ul>
-                    <li>Le estensioni consentite(separate da virgola)</li>
-                    <li>La lingua in cui verranno importati i documenti</li>
-                    <li>Il livello di profondit&agrave;</li>
-                    <li>La dimensione massima dei file</li>
-                    <li>L'estrazione delle parole chiave dai documenti</li>
-                    <li>Il template dei documenti importati</li>
-                    <li>La cartella dell'archivio documentale in cui salvare i documenti</li>
-		  </ul>
-					
-          <p>Una volta salvate le impostazioni, ad intervalli regolari la cartella remota e
-                    tutte le sue sotto-cartelle fino al livello di profondit&agrave; impostato, verranno
-                    esplorate alla ricerca di documenti. I soli documenti con estensione ammessa
-                    verranno indicizzati e inseriti nell'archivio documentale a partire dalla cartella
-                    in archivio impostata.<br>
-                    E' importante considerare il fatto che tutte le sotto-cartelle della condivisione
-                    remota verranno replicate anche nell'archivio documentale di LogicalDOC.<br>
-                    Cliccando sul pulsante <span class="style4">Svuota cache</span> &egrave; possibile immagazzinare nuovamente
-                    tutti i documenti presenti nella cartella remota.                    </p>
-
-                              </p>
-							  <br>
+                            <p>The upper part of the form lets you enter your connection data of the folder
+          and in particular:</p><ul> 
+            <li> Location on the remote computer (Path)  </li> 
+            <li> Username (optional)</li> 
+            <li> Password (optional)</li> 
+          </ul>
+          <br>
+         The remote location is the folder that is shared on the remote computer. You
+can copy and paste the path displayed in the Windows Explorer. <br>
+The figure shows an example configuration of the remote
+folder \\192.168.0.255\docs.<br>
+If the remote folder is protected, you can also set username and password for
+authentication. <br>
+The bottom part of the form allows you to set the information for the storage of
+documents:
+          
+         <ul>
+            <li> Allowed extensions (comma-separated list)</li> 
+            <li> Language in which documents will be imported</li> 
+            <li>Depth level</li> 
+            <li> Maximum file size</li>
+            <li> Extraction of keywords from documents</li> 
+            <li>Template of the imported documents</li> 
+			<li>Folder of the documents archive in which to save documents</li> 
+          </ul>
+          
+          <p> Once the settings are saved, the remote folder and all its
+sub-folders up to the specified level of depth, will be explored searching for
+documents at regular intervals. Only documents with allowed extension will be
+indexed and included in the target folder. <br>
+It is important to consider the fact that all sub-folders of the remote folder will
+be replicated also in the LogicalDOC archive. <br> By clicking on the <span class="style4">Clear cache</span> button, LogicalDOC retrieves again all the
+documents in the remote folder. </p>  </p>
+								<br>
           			            <div align="center">
             <table width="90%" border="0" cellpadding="0" cellspacing="0">
               <tr>
-                <td width="180" height="25" class="noteHeader"><img src="images/note_ico.gif" width="10" height="10" hspace="4">Nota:</td>
+                <td width="180" height="25" class="noteHeader"><img src="images/note_ico.gif" width="10" height="10" hspace="4">Note:</td>
                 <td height="25">&nbsp;</td>
               </tr
               ><tr>
-                <td colspan="2" class="noteBody">Le sole cartelle remote attive verranno ispezionate ad intervalli di
-                tempo regolari da un'operazione pianificata in background.</td>
+                <td colspan="2" class="noteBody">Only the active remote folders will be inspected at regular intervals by
+a scheduled task.</td>
               </tr>
             </table>
           </div>
