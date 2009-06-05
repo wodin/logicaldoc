@@ -83,6 +83,17 @@
         <parameter-def id="position" />
     </extension-point>
     
+    <extension-point id="DocumentIcons">
+        <parameter-def id="action" />
+        <parameter-def id="link" />
+        <parameter-def id="target" />
+        <parameter-def id="title" />
+        <parameter-def id="rendered" />
+        <parameter-def id="confirm" />
+        <parameter-def id="icon" />
+        <parameter-def id="position" />
+    </extension-point>
+    
     <extension-point id="SearchResultToolbar">
         <parameter-def id="action" />
         <parameter-def id="title" />
@@ -187,4 +198,45 @@
         <parameter id="label" value="viewmode.details" />
         <parameter id="position" value="5" />
     </extension>
+    
+    <extension plugin-id="logicaldoc-core" point-id="DocumentIcons" id="indexedIcon">
+    	<parameter id="action" value="" />
+    	<parameter id="link" value="download?docId=#{documentRecord.docId}&amp;downloadText=true" />
+		<parameter id="title" value="document.indexed" />
+		<parameter id="rendered" value="documentRecord.document.indexed==1" />
+		<parameter id="position" value="10" />
+		<parameter id="icon" value="indexed.png" />
+		<parameter id="target" value="_blank" />
+		<parameter id="confirm" value="" />
+	</extension>
+    <extension plugin-id="logicaldoc-core" point-id="DocumentIcons" id="lockIcon">
+    	<parameter id="action" value="" />
+    	<parameter id="link" value="" />
+		<parameter id="title" value="locked" />
+		<parameter id="rendered" value="documentRecord.locked" />
+		<parameter id="position" value="15" />
+		<parameter id="icon" value="document_lock.png" />
+		<parameter id="target" value="" />
+		<parameter id="confirm" value="" />
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="DocumentIcons" id="immutableIcon">
+    	<parameter id="action" value="" />
+    	<parameter id="link" value="" />
+		<parameter id="title" value="document.immutable" />
+		<parameter id="rendered" value="documentRecord.document.immutable == 1" />
+		<parameter id="position" value="20" />
+		<parameter id="icon" value="stop.png" />
+		<parameter id="target" value="" />
+		<parameter id="confirm" value="" />
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="DocumentIcons" id="linksIcon">
+    	<parameter id="action" value="documentRecord.links" />
+    	<parameter id="link" value="" />
+		<parameter id="title" value="links" />
+		<parameter id="rendered" value="documentRecord.linked" />
+		<parameter id="position" value="25" />
+		<parameter id="icon" value="link.png" />
+		<parameter id="target" value="" />
+		<parameter id="confirm" value="" />
+	</extension>
 </plugin>

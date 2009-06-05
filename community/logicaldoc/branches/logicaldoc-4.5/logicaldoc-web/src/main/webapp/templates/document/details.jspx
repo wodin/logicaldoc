@@ -115,39 +115,7 @@
 			<!-- Status -->
 			<ice:column>
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}" style="white-space: nowrap;">
-				    <ice:outputLink value="doc_rss?docId=#{documentRecord.docId}" title="RSS" target="_blank">
-						<ice:graphicImage style="border: 0px solid;"
-							value="#{StyleBean.imagesPath}/small_feed.png" alt="RSS" />
-					</ice:outputLink>
-					<ice:outputLink
-						value="download?docId=#{documentRecord.docId}&amp;downloadText=true"
-						target="_blank" title="#{msgs['document.indexed']}"
-						rendered="#{documentRecord.document.indexed==1}">
-						<ice:graphicImage style="border: 0px solid;"
-							value="#{StyleBean.imagesPath}/indexed.png"
-							alt="#{msgs['document.indexed']}" />
-					</ice:outputLink>
-					<ice:graphicImage style="margin-left: 5px;"
-						rendered="#{documentRecord.locked}"
-						value="#{StyleBean.imagesPath}/document_lock.png" alt="#{msgs['locked']}"
-						title="#{msgs['locked']}" />
-					<ice:graphicImage style="margin-left: 5px;"
-						rendered="#{documentRecord.document.immutable == 1}"
-						value="#{StyleBean.imagesPath}/stop.png"
-						title="#{msgs['document.immutable']}" />
-					<ice:commandLink title="#{msgs['links']}"
-						action="#{documentRecord.links}">
-						<ice:graphicImage style="margin-left: 5px; border: 0px;"
-							rendered="#{documentRecord.linked}"
-							value="#{StyleBean.imagesPath}/link.png" alt="#{msgs['links']}" />
-					</ice:commandLink>
-					<ice:commandLink action="#{VerifyBean.showVerifyPage}"
-						target="_blank" title="#{msgs['document.signed']}"
-						rendered="#{documentRecord.document.signed==1}">
-						<ice:graphicImage style="border: 0px solid; margin-left: 5px;"
-							value="#{StyleBean.imagesPath}/sign.png"
-							alt="#{msgs['document.signed']}" />
-					</ice:commandLink>
+					<ui:include src="/templates/document/icons.jspx" />
 				</ice:panelGroup>
 			</ice:column>
 
