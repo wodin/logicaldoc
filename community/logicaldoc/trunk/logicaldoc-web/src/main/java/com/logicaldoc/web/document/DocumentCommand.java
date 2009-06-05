@@ -21,6 +21,10 @@ public class DocumentCommand {
 
 	private MethodBinding action;
 
+	private ValueBinding linkBinding;
+
+	private String target;
+
 	public String getTitle() {
 		return title;
 	}
@@ -69,5 +73,24 @@ public class DocumentCommand {
 
 	public void setConfirmation(String confirmation) {
 		this.confirmation = confirmation;
+	}
+
+	public String getTarget() {
+		return target;
+	}
+
+	public void setTarget(String target) {
+		this.target = target;
+	}
+
+	public String getLink() {
+		if (linkBinding != null)
+			return (String) linkBinding.getValue(FacesContext.getCurrentInstance());
+		else
+			return "X";
+	}
+
+	public void setLinkBinding(ValueBinding linkBinding) {
+		this.linkBinding = linkBinding;
 	}
 }
