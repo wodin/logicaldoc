@@ -194,6 +194,12 @@
   </managed-bean>
 
   <managed-bean>
+    <managed-bean-name>documentIcons</managed-bean-name>
+    <managed-bean-class>com.logicaldoc.web.document.DocumentIcons</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
     <managed-bean-name>searchResultToolbar</managed-bean-name>
     <managed-bean-class>com.logicaldoc.web.search.SearchResultToolbar</managed-bean-class>
     <managed-bean-scope>session</managed-bean-scope>
