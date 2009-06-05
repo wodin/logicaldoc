@@ -14,10 +14,9 @@
 	xmlns:ice="http://www.icesoft.com/icefaces/component"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf">
 	<![CDATA[<!-- tag toolbaritem -->]]>
-
 	<ui:composition>
 		<ldoc:compositeControl methodBindings="action=java.lang.String;">
-			<ice:panelGroup rendered="#{confirmation ne 'X'}">
+			<ice:panelGroup rendered="#{(confirmation ne 'X') and ((empty link) or (link eq 'X'))}">
 				<ice:commandLink action="#{action}" title="#{title}"
 					rendered="#{rendered}"
 					onclick="if (!confirm(&quot;#{confirmation}&quot;)) return false;">
@@ -25,12 +24,19 @@
 						style="border: 0px solid;" title="#{title}" />
 				</ice:commandLink>
 			</ice:panelGroup>
-			<ice:panelGroup rendered="#{confirmation eq 'X'}">
+			<ice:panelGroup rendered="#{(confirmation eq 'X') and ((empty link) or (link eq 'X'))}">
 				<ice:commandLink action="#{action}" title="#{title}"
 					rendered="#{rendered}">
 					<ice:graphicImage value="#{StyleBean.imagesPath}/#{icon}"
 						style="border: 0px solid;" title="#{title}" />
 				</ice:commandLink>
+			</ice:panelGroup>
+			<ice:panelGroup rendered="#{not ((empty link) or (link eq 'X'))}">
+				<ice:outputLink value="#{link}" target="#{target}" title="#{title}"
+					rendered="#{rendered}">
+					<ice:graphicImage value="#{StyleBean.imagesPath}/#{icon}"
+						style="border: 0px solid;" title="#{title}" />
+				</ice:outputLink>
 			</ice:panelGroup>
 		</ldoc:compositeControl>
 	</ui:composition>

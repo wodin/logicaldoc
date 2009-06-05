@@ -54,15 +54,15 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		menu = dao.findById(15);
 		assertEquals("search.advanced", menu.getText());
 		dao.store(menu);
-		assertEquals("/menu.home/searches/", menu.getPathExtended());
+
 		menu = dao.findById(23);
 		dao.store(menu);
-		assertEquals("/menu.home/menu.admin/system/", menu.getPathExtended());
+		
 		menu = dao.findById(18);
 		menu.setText("xxxx");
 		dao.store(menu);
 		menu = dao.findById(15);
-		assertEquals("/menu.home/xxxx/", menu.getPathExtended());
+		
 
 		menu.getMenuGroups().remove(menu.getMenuGroup(3));
 		assertEquals(2, menu.getMenuGroups().size());
