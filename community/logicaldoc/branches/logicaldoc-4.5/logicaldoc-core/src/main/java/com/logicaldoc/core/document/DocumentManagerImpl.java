@@ -156,7 +156,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void checkout(long docId, User user) throws Exception {
-		//lock(docId, Document.DOC_CHECKED_OUT, user, "");
 		lock(docId, Document.DOC_CHECKED_OUT, History.EVENT_CHECKEDOUT, user, "");
 	}
 
@@ -394,17 +393,23 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	/** Creates history entry saying username has checked in document (id) */
 	private void createHistoryEntry(Document doc, User user, String eventType, String comment) {
+		
 		History history = new History();
 		history.setDocId(doc.getId());
 		history.setTitle(doc.getTitle());
 		history.setVersion(doc.getVersion());
-		history.setPath(doc.getFolder().getPathExtended()+"/"+doc.getFolder().getText());
+		
+		history.setPath(doc.getFolder().getPathExtended() + "/" + doc.getFolder().getText());
 		history.setPath(history.getPath().replaceAll("//", "/"));
+		history.setPath(history.getPath().replaceFirst("/menu.documents/", "/"));
+		history.setPath(history.getPath().replaceFirst("/menu.documents", "/"));
+		
 		history.setDate(new Date());
 		history.setUserId(user.getId());
 		history.setUserName(user.getFullName());
 		history.setEvent(eventType);
 		history.setComment(comment);
+		
 		historyDAO.store(history);
 	}
 
