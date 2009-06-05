@@ -131,17 +131,23 @@ public class ServletDocUtil {
 		}
 
 		if (user != null && StringUtils.isEmpty(suffix)) {
+			
 			// Add an history entry to track the download of the document
 			History history = new History();
 			history.setDocId(docId);
 			history.setTitle(doc.getTitle());
 			history.setVersion(doc.getVersion());
-			history.setPath(doc.getFolder().getPath()+"/"+doc.getFolder().getText());
+			
+			history.setPath(doc.getFolder().getPathExtended() + "/" + doc.getFolder().getText());
 			history.setPath(history.getPath().replaceAll("//", "/"));
+			history.setPath(history.getPath().replaceFirst("/menu.documents/", "/"));
+			history.setPath(history.getPath().replaceFirst("/menu.documents", "/"));
+			
 			history.setDate(new Date());
 			history.setEvent(History.EVENT_DOWNLOADED);
 			history.setUserId(user.getId());
 			history.setUserName(user.getFullName());
+			
 			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			hdao.store(history);
 		}
