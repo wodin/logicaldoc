@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,9 +35,33 @@ public class DocumentRSS extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected static Log log = LogFactory.getLog(DocumentRSS.class);
+	protected HashMap<String,String> mimeDescr;
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		
+		mimeDescr = new HashMap<String,String>();
+		mimeDescr.put("txt", "Plain Text");
+		mimeDescr.put("pdf", "Acrobat PDF");
+		mimeDescr.put("xls", "Excel Spreadsheet");
+		mimeDescr.put("xlsx", "Excel Spreadsheet");
+		mimeDescr.put("doc", "Word Document");
+		mimeDescr.put("docx", "Word Document");
+		mimeDescr.put("ppt", "Powerpoint Presentation");
+		mimeDescr.put("pptx", "Powerpoint Presentation");
+		mimeDescr.put("odt", "OpenDocument Text");
+		mimeDescr.put("ods", "OpenDocument Spreadsheet");
+		mimeDescr.put("odp", "OpenDocument Presentation");
+		mimeDescr.put("htm", "HTML Webpage");
+		mimeDescr.put("html", "HTML Webpage");
+		mimeDescr.put("sxw", "OpenOffice.org Writer Document");
+		mimeDescr.put("png", "PNG Image");
+		mimeDescr.put("jpg", "JPEG Image");
+		mimeDescr.put("jpeg", "JPEG Image");
+		mimeDescr.put("gif", "GIF Image");
+		mimeDescr.put("tif", "TIFF Image");
+		mimeDescr.put("tiff", "TIFF Image");
+		mimeDescr.put("sql", "Plain Text");
 	}
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -97,7 +123,8 @@ public class DocumentRSS extends HttpServlet {
 				// Decode the ResourceBundle keyword
 				out.println("	<description>");
 				out.println("		&lt;table&gt;");
-				out.println("			&lt;tr&gt;&lt;td&gt;Document ID:   &lt;/td&gt; &lt;td&gt;" + doc.getId() + "&lt;/td&gt; &lt;/tr&gt;");
+				out.println("			&lt;tr&gt;&lt;td align=\"right\" &gt; &lt;img hspace=\"10\" src=\"" + serverUrl + "/skins/default/images/" + doc.getIcon() +"\"/&gt; &lt;/td&gt; &lt;td&gt; " +getMimeDescr(doc.getFileExtension()) +" &lt;/td&gt; &lt;/tr&gt;");
+				out.println("			&lt;tr&gt;&lt;td&gt;Document ID: &lt;/td&gt; &lt;td&gt;" + doc.getId() + "&lt;/td&gt; &lt;/tr&gt;");
 				out.println("			&lt;tr&gt;&lt;td&gt;File Name: &lt;/td&gt; &lt;td&gt;" + doc.getFileName() + "&lt;/td&gt; &lt;/tr&gt;");
 				out.println("			&lt;tr&gt;&lt;td&gt;Created by: &lt;/td&gt; &lt;td&gt;" + doc.getCreator() + "&lt;/td&gt; &lt;/tr&gt;");
 				if (doc.getTemplate() != null) {
@@ -163,6 +190,17 @@ public class DocumentRSS extends HttpServlet {
 			out.println("</channel>");
 			out.println("</rss>");
 		}
+	}
+
+	private String getMimeDescr(String fileExtension) {
+			
+		if (mimeDescr.containsKey(fileExtension))
+			return mimeDescr.get(fileExtension);
+		
+		if (StringUtils.isNotEmpty(fileExtension))
+			return fileExtension.toUpperCase() + " File";
+		
+		return "Unknown";
 	}
 
 	// This method checks the user information sent in the Authorization
