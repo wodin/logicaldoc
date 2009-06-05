@@ -206,7 +206,7 @@
     
     <extension plugin-id="logicaldoc-core" point-id="DocumentIcons" id="indexedIcon">
     	<parameter id="action" value="" />
-    	<parameter id="link" value="download?docId=#{documentRecord.docId}&amp;downloadText=true" />
+    	<parameter id="link" value="#{documentRecord.downloadTextLink}" />
 		<parameter id="title" value="document.indexed" />
 		<parameter id="rendered" value="documentRecord.document.indexed==1" />
 		<parameter id="position" value="10" />
