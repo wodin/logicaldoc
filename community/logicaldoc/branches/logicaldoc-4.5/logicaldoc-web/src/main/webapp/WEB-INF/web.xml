@@ -245,12 +245,6 @@
 			<param-value>/WEB-INF/config.xml</param-value>
 		</init-param>
 	</servlet>
-	<servlet>
-		<servlet-name>DocumentRSS</servlet-name>
-		<servlet-class>
-			com.logicaldoc.web.DocumentRSS
-		</servlet-class>
-	</servlet>
 
 	<!-- mappings -->
 	<filter-mapping>
@@ -321,10 +315,6 @@
 	<servlet-mapping>
 		<servlet-name>Webdav</servlet-name>
 		<url-pattern>/webdav/*</url-pattern>
-	</servlet-mapping>
-		<servlet-mapping>
-		<servlet-name>DocumentRSS</servlet-name>
-		<url-pattern>/doc_rss</url-pattern>
 	</servlet-mapping>
 
 	<session-config>

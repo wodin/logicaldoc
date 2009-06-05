@@ -661,6 +661,10 @@ public class DocumentRecord extends MenuBarBean {
 		return "download?docId="+getDocId()+"&downloadText=true";
 	}
 
+	public String getRssLink(){
+		return "doc_rss?docId="+getDocId();
+	}
+	
 	/**
 	 * Utility method used by document lazy loading
 	 */

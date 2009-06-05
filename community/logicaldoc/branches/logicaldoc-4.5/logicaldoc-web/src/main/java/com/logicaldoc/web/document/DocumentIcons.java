@@ -32,7 +32,7 @@ public class DocumentIcons {
 		Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "DocumentIcons", null);
 
 		DocumentCommand command;
-		for (Extension ext : exts) {
+		for (Extension ext : exts) {		
 			command = new DocumentCommand();
 			commands.add(command);
 			command.setTitle(Messages.getMessage(ext.getParameter("title").valueAsString()));
