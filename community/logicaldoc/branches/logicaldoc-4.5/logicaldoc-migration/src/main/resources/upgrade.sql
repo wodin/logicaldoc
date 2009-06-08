@@ -97,6 +97,10 @@ alter table ld_userdoc add constraint FK_USERDOC_USER foreign key (ld_userid) re
 alter table ld_menu add constraint FK_MENU_PARENT foreign key (ld_parentid) references ld_menu(ld_id) on delete cascade;
 alter table ld_history add constraint FK_HISTORY_DOC foreign key (ld_docid) references ld_document(ld_id) on delete cascade;
 
+alter table ld_history add column ld_version varchar(10);
+alter table ld_history add column ld_title varchar(255);
+alter table ld_history add column ld_path varchar(4000);
+
 create unique index  AK_DOCUMENT on ld_document (ld_customid);
 create unique index  AK_USER on ld_user (ld_username);
 create unique index  AK_GROUP on ld_group (ld_name);  
