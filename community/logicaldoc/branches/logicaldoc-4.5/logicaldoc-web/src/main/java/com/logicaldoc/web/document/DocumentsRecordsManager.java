@@ -249,7 +249,7 @@ public class DocumentsRecordsManager extends SortableList {
 						// The document of the selected documentRecord must be
 						// not locked
 						if (record.getDocument().getStatus() != Document.DOC_UNLOCKED
-								&& record.getDocument().getExportStatus() != Document.EXPORT_UNLOCKED) {
+								|| record.getDocument().getExportStatus() != Document.EXPORT_UNLOCKED) {
 							lockedSome = true;
 							continue;
 						}
@@ -322,12 +322,25 @@ public class DocumentsRecordsManager extends SortableList {
 		if (SessionManagement.isValid()) {
 			try {
 				DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+				boolean lockedSome = false;
+				boolean immutableSome = false;
 				for (DocumentRecord record : selection) {
 					if (record.getDocument().getImmutable() == 0) {
+						// The document of the selected documentRecord must be
+						// not locked
+						if (record.getDocument().getStatus() != Document.DOC_UNLOCKED
+								|| record.getDocument().getExportStatus() != Document.EXPORT_UNLOCKED) {
+							lockedSome = true;
+							continue;
+						}
 						manager.makeImmutable(record.getDocId(), SessionManagement.getUser(), operationComment);
+						immutableSome = true;
 					}
 				}
-				Messages.addLocalizedInfo("document.immutable.message");
+				if (immutableSome)
+					Messages.addLocalizedInfo("document.immutable.message");
+				if (lockedSome)
+					Messages.addLocalizedWarn("document.immutable.warn");
 				refresh();
 
 				DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
@@ -405,7 +418,7 @@ public class DocumentsRecordsManager extends SortableList {
 							// The document of the selected documentRecord must
 							// be not locked
 							if (record.getDocument().getStatus() != Document.DOC_UNLOCKED
-									&& record.getDocument().getExportStatus() != Document.EXPORT_UNLOCKED) {
+									|| record.getDocument().getExportStatus() != Document.EXPORT_UNLOCKED) {
 								lockedSome = true;
 								continue;
 							}
