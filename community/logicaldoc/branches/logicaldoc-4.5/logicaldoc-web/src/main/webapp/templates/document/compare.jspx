@@ -282,7 +282,7 @@
 	</ice:panelGroup>
 	<hr />
 	<ice:panelGroup styleClass="commands">
-		<ice:commandButton value="&lt;&lt;#{msgs['back']}"
+		<ice:commandButton value="&lt;&lt; #{msgs['back']}"
 			partialSubmit="true" immediate="true"
 			action="#{versionsRecordsManager.backToList}" />
 	</ice:panelGroup>
