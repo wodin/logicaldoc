@@ -114,8 +114,10 @@
 
 			<!-- Status -->
 			<ice:column>
-				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}" style="white-space: nowrap;">
-					<ui:include src="/templates/document/icons.jspx" />
+				<ice:panelGroup dropTarget="false" styleClass="#{documentRecord.rowStyleClass}" style="white-space: nowrap;">
+				  <f:subview id="icons">
+					 <ui:include src="/templates/document/documenticons.jspx" />
+				  </f:subview>
 				</ice:panelGroup>
 			</ice:column>
 
@@ -158,7 +160,7 @@
 							style="text-decoration: underline;" />
 					</ice:commandSortHeader>
 				</f:facet>
-				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
+				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}" style="text-align: right;"
 					menuPopup="pop">
 					<ice:outputText value="#{documentRecord.document.fileSize}"
 						title="#{msgs['msg.jsp.popup']}" style="white-space: nowrap;">
