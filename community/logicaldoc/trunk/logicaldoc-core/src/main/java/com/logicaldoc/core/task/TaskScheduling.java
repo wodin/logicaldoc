@@ -115,11 +115,17 @@ public class TaskScheduling {
 
 	public Date getNextFireTime() {
 		CronTrigger cronTrigger = (CronTrigger) Context.getInstance().getBean(taskName + "Trigger");
+		// The following loop 'while' is needed to update the next execution time
+		// of the task into the Task list page
+		while (cronTrigger.getNextFireTime().getTime() < System.currentTimeMillis()) {
+			cronTrigger.setNextFireTime(cronTrigger.getFireTimeAfter(previousFireTime));
+		}
 		return cronTrigger.getNextFireTime();
 	}
 
 	public String getCronExpression() {
-		return seconds.trim() + " " + minutes.trim() + " " + hours.trim() + " " + dayOfMonth.trim() + " " + month.trim().trim() + " " + dayOfWeek.trim();
+		return seconds.trim() + " " + minutes.trim() + " " + hours.trim() + " " + dayOfMonth.trim() + " "
+				+ month.trim().trim() + " " + dayOfWeek.trim();
 	}
 
 	public void setCronExpression(String cronExpression) throws ParseException {
@@ -147,7 +153,7 @@ public class TaskScheduling {
 	 * Loads scheduling configurations from persistent storage
 	 */
 	public void load() throws IOException, ParseException {
-		PropertiesBean config = (PropertiesBean)Context.getInstance().getBean("ContextProperties");
+		PropertiesBean config = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 		String enbl = config.getProperty("schedule.enabled." + taskName);
 		this.enabled = "true".equals(enbl);
 		setCronExpression(config.getProperty("schedule.cron." + taskName));
@@ -166,15 +172,15 @@ public class TaskScheduling {
 		CronTrigger cronTrigger = (CronTrigger) Context.getInstance().getBean(taskName + "Trigger");
 		String expression = getCronExpression();
 		cronTrigger.setCronExpression(expression);
-		
+
 		try {
 			// Reschedule the job
 			scheduler.rescheduleJob(taskName + "Trigger", "DEFAULT", cronTrigger);
 		} catch (Exception e) {
-			
+
 		}
 
-		PropertiesBean config = (PropertiesBean)Context.getInstance().getBean("ContextProperties");
+		PropertiesBean config = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 		config.setProperty("schedule.cron." + taskName, expression);
 		config.setProperty("schedule.enabled." + taskName, enabled ? "true" : "false");
 		config.setProperty("schedule.length." + taskName, Long.toString(maxLength));
