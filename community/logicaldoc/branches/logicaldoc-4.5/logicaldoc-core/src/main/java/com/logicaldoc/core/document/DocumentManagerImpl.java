@@ -393,23 +393,23 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	/** Creates history entry saying username has checked in document (id) */
 	private void createHistoryEntry(Document doc, User user, String eventType, String comment) {
-		
+
 		History history = new History();
 		history.setDocId(doc.getId());
 		history.setTitle(doc.getTitle());
 		history.setVersion(doc.getVersion());
-		
+
 		history.setPath(doc.getFolder().getPathExtended() + "/" + doc.getFolder().getText());
 		history.setPath(history.getPath().replaceAll("//", "/"));
 		history.setPath(history.getPath().replaceFirst("/menu.documents/", "/"));
 		history.setPath(history.getPath().replaceFirst("/menu.documents", "/"));
-		
+
 		history.setDate(new Date());
 		history.setUserId(user.getId());
 		history.setUserName(user.getFullName());
 		history.setEvent(eventType);
 		history.setComment(comment);
-		
+
 		historyDAO.store(history);
 	}
 
@@ -606,10 +606,6 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	public Document copyToFolder(Document doc, Menu folder, User user) throws Exception {
-		if (doc.getImmutable() != 0) {
-			throw new Exception("Document is immutable");
-		}
-
 		File sourceFile = storer.getFile(doc.getId(), doc.getVersion());
 
 		// initialize the document
@@ -756,8 +752,12 @@ public class DocumentManagerImpl implements DocumentManager {
 	public void rename(Document doc, User user, String newFilename) throws Exception {
 		if (doc.getImmutable() == 0) {
 			documentDAO.initialize(doc);
-			doc.setFileName(newFilename);
+			doc.setFileName(newFilename.trim());
+			String extension = FilenameUtils.getExtension(newFilename.trim());
+			if (StringUtils.isNotEmpty(extension))
+				doc.setType(FilenameUtils.getExtension(newFilename));
 			setUniqueFilename(doc);
+			doc.setIndexed(0);
 			documentDAO.store(doc);
 
 			// create history entry for this RENAMED event
@@ -765,6 +765,9 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			Version version = Version.create(doc, user, "", Version.EVENT_RENAMED, Version.VERSION_TYPE.NEW_SUBVERSION);
 			versionDAO.store(version);
+
+			// The document needs to be reindexed
+			indexer.deleteDocument(Long.toString(doc.getId()), doc.getLocale());
 
 			log.debug("Document filename renamed: " + doc.getId());
 		} else {
