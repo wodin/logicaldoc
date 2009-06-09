@@ -125,7 +125,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 
 			getHibernateTemplate().saveOrUpdate(group);
 			getHibernateTemplate().flush();
-			
+
 			if (parentGroupId > 0) {
 				// Inherit ACLs from the parent group
 				inheritACLs(group.getId(), parentGroupId);
@@ -151,6 +151,9 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 
 	@Override
 	public void inheritACLs(long groupId, long parentGroupId) {
+		if (groupId == parentGroupId)
+			return;
+
 		List<Object> coll = new ArrayList<Object>();
 		try {
 			Connection con = null;
@@ -196,7 +199,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	private void addMenuGroup(Group group, long menuId, int writeable) {
 		MenuDAO menuDAO = getMenuDAO();
 		Menu menu = menuDAO.findById(menuId);
-		
+
 		MenuGroup mgroup = new MenuGroup();
 		mgroup.setGroupId(group.getId());
 		mgroup.setWrite(writeable);
