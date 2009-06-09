@@ -1,5 +1,6 @@
 -- bigint -> number(19,0)
 -- to insert a date -> to_date('2008-10-22', 'yyyy-mm-dd')
+-- now() -> sysdate
 
 create table ld_attributes (ld_templateid number(19,0) not null, ld_attribute varchar(255));
 create table ld_document (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(4000), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, ld_creation timestamp not null, ld_publisher varchar(255), ld_publisherid number(19,0) not null, ld_creator varchar(255), ld_creatorid number(19,0) not null, ld_status int, ld_type varchar(255), ld_lockuserid number(19,0), ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourceid varchar(4000), ld_sourcetype varchar(255), ld_object varchar(4000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize number(19,0), ld_indexed int not null, ld_signed int not null, ld_digest varchar(255), ld_recipient varchar(4000), ld_folderid number(19,0), ld_templateid number(19,0), ld_exportstatus int not null, ld_exportid number(19,0), ld_exportname varchar(255), ld_exportversion varchar(10), primary key (ld_id));
