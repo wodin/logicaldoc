@@ -18,10 +18,10 @@ public interface GroupDAO extends PersistentObjectDAO<Group> {
 
 	/**
 	 * This method replicates all ACLs of the parent group to another group.<p>
-	 * <b>Attention:</b> The the group(groupId) ACLs will be discarded.
+	 * <b>Attention:</b> The group(groupId) ACLs will be discarded.
 	 *  
 	 * @param groupId The group to be altered.
-	 * @param groupId The group whose ACLs will be inherited.
+	 * @param parentGroupId The group whose ACLs will be inherited.
 	 */
 	public void inheritACLs(long groupId, long parentGroupId); 
 	
