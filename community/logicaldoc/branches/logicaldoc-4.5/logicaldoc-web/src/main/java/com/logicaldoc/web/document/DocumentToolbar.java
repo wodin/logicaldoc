@@ -63,7 +63,7 @@ public class DocumentToolbar {
 		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.move"));
 		command
 				.setRenderedBinding(FacesUtil
-						.createValueBinding("documentsRecordsManager.clipboardSize>0 and documentNavigation.selectedDir.writeEnabled and documentsRecordsManager.guiRequest=='cut'"));
+						.createValueBinding("documentsRecordsManager.clipboardSize>0 and documentNavigation.selectedDir.writeEnabled and (documentsRecordsManager.guiRequest=='cut' or documentsRecordsManager.guiRequest=='copy')"));
 
 		command = new DocumentCommand();
 		commands.add(command);
