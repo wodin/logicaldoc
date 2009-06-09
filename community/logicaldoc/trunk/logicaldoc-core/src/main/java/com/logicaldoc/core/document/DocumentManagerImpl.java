@@ -606,7 +606,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	public Document copyToFolder(Document doc, Menu folder, User user) throws Exception {
-		File sourceFile = storer.getFile(doc.getId(), doc.getVersion());
+		File sourceFile = storer.getFile(doc.getId(), doc.getFileVersion());
 
 		// initialize the document
 		documentDAO.initialize(doc);
