@@ -684,7 +684,7 @@ public class DocumentManagerImpl implements DocumentManager {
 						foundDocImmutable = true;
 						continue;
 					}
-					if (doc.getStatus() != Document.DOC_UNLOCKED && doc.getExportStatus() != Document.EXPORT_UNLOCKED) {
+					if (doc.getStatus() != Document.DOC_UNLOCKED || doc.getExportStatus() != Document.EXPORT_UNLOCKED) {
 						foundDocLocked = true;
 						continue;
 					}
