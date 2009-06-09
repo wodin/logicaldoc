@@ -131,9 +131,6 @@ update ld_history set ld_event='event.locked' where ld_event='history.locked';
 update ld_history set ld_event='event.unlocked' where ld_event='history.unlocked';
 update ld_history set ld_event='event.archived' where ld_event='history.archived';
 
---All documents must be reindexed
-update ld_document set ld_indexed=0;
-
 --Adjust menu hierarchy
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
