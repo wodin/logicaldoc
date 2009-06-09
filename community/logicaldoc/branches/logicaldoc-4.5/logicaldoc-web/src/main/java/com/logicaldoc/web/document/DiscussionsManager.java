@@ -120,7 +120,7 @@ public class DiscussionsManager {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
 		}
 
-		setSubject(" ");
+		setSubject("");
 		setBody("");
 		FacesUtil.forceRefresh(subjectInput);
 		FacesUtil.forceRefresh(bodyInput);
