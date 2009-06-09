@@ -244,7 +244,8 @@ public class GroupForm {
 						preference.updateGroup(group);
 					}
 					stored = dao.store(group);
-					if (parentGroup != null)
+
+					if (parentGroup != null && parentGroup.longValue() > 0)
 						dao.inheritACLs(group.getId(), parentGroup.longValue());
 				}
 				if (!stored) {
