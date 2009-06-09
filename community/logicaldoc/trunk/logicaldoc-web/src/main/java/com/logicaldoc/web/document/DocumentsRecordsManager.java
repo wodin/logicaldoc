@@ -394,9 +394,21 @@ public class DocumentsRecordsManager extends SortableList {
 	}
 
 	/**
+	 * Move or copy documents inside the clipboard into the current directory
+	 * checking if the user have clicked on the 'cut' button or on the 'copy'
+	 * button
+	 */
+	public void move() {
+		if (this.guiRequest.equals("cut"))
+			moveToFolder();
+		else if (this.guiRequest.equals("copy"))
+			copyToFolder();
+	}
+
+	/**
 	 * Move documents inside the clipboard into the current directory
 	 */
-	public String move() {
+	public String moveToFolder() {
 		if (SessionManagement.isValid()) {
 			if (!clipboard.isEmpty()) {
 				long userId = SessionManagement.getUserId();
@@ -432,6 +444,42 @@ public class DocumentsRecordsManager extends SortableList {
 					} catch (Exception e) {
 						Messages.addLocalizedError("errors.action.movedocument");
 						log.error("Exception moving document: " + e.getMessage(), e);
+					}
+					clipboard.clear();
+				} else {
+					Messages.addLocalizedWarn("document.write.nopermission");
+				}
+				refresh();
+			}
+
+			return null;
+		} else {
+			return "login";
+		}
+	}
+
+	/**
+	 * Copy documents inside the clipboard into the current directory
+	 */
+	public String copyToFolder() {
+		if (SessionManagement.isValid()) {
+			if (!clipboard.isEmpty()) {
+				long userId = SessionManagement.getUserId();
+				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+				Menu selectedMenuFolder = menuDao.findById(selectedDirectory);
+				DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+
+				if (menuDao.isWriteEnable(selectedDirectory, userId)) {
+					try {
+						for (DocumentRecord record : clipboard) {
+							docManager.copyToFolder(record.getDocument(), selectedMenuFolder, SessionManagement
+									.getUser());
+						}
+					} catch (AccessControlException e) {
+						Messages.addLocalizedWarn("document.write.nopermission");
+					} catch (Exception e) {
+						Messages.addLocalizedError("errors.action.copydocument");
+						log.error("Exception copying document: " + e.getMessage(), e);
 					}
 					clipboard.clear();
 				} else {
