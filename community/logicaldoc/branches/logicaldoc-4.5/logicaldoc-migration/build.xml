@@ -21,6 +21,13 @@
 		<antcall target="dbinit" />
 		<echo>Update the File System</echo>
 		<antcall target="convertfs" />
+		<echo>Rename indexes</echo>
+	    <move file="${conf.indexdir}/italian" tofile="${conf.docdir}/it" failonerror="false" />
+		<move file="${conf.indexdir}/english" tofile="${conf.docdir}/en" failonerror="false" />
+	    <move file="${conf.indexdir}/german" tofile="${conf.docdir}/de" failonerror="false" />
+	    <move file="${conf.indexdir}/spanish" tofile="${conf.docdir}/es" failonerror="false" />
+		<move file="${conf.indexdir}/french" tofile="${conf.docdir}/fr" failonerror="false" />
+		<move file="${conf.indexdir}/romanian" tofile="${conf.docdir}/ro" failonerror="false" />
 	</target>
 
 	<target name="convertfs" description="Converts the file system">
