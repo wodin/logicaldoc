@@ -22,7 +22,6 @@ public class PdfThumbnailBuilder extends ImageThumbnailBuilder {
 			PDFToImage.main(args);
 			super.build(firstPage, srcFileName, size, dest);
 		} catch (Throwable e) {
-			e.printStackTrace();
 		} finally {
 			firstPage.delete();
 		}
