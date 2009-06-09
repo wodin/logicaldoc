@@ -21,10 +21,6 @@
 		<antcall target="dbinit" />
 		<echo>Update the File System</echo>
 		<antcall target="convertfs" />
-		<echo>Drop full-text indexes</echo>
-		<delete includeemptydirs="true">
-		    <fileset dir="${conf.indexdir}" includes="**/*"/>
-		</delete>
 	</target>
 
 	<target name="convertfs" description="Converts the file system">
