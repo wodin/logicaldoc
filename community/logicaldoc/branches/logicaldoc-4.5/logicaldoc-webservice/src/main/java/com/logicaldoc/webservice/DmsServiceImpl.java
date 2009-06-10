@@ -67,7 +67,7 @@ public class DmsServiceImpl implements DmsService {
 		User user = udao.findByUserName(username);
 		if (user == null) {
 			log.error("User " + username + " not found");
-			return "error - user not found";
+			throw new Exception("error - user not found");
 		}
 
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -90,7 +90,6 @@ public class DmsServiceImpl implements DmsService {
 			}
 
 			try {
-
 				// Get file to upload inputStream
 				InputStream stream = content.getInputStream();
 
@@ -104,9 +103,10 @@ public class DmsServiceImpl implements DmsService {
 				log.info("Document " + id + " checked in");
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
+				throw new Exception(e);
 			}
 		} else {
-			return "document not checked out";
+			throw new Exception("document not checked out");
 		}
 
 		return "ok";
@@ -121,7 +121,7 @@ public class DmsServiceImpl implements DmsService {
 		User user = udao.findByUserName(username);
 		if (user == null) {
 			log.error("User " + username + " not found");
-			return "error - user not found";
+			throw new Exception("error - user not found");
 		}
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -129,12 +129,8 @@ public class DmsServiceImpl implements DmsService {
 		checkCredentials(username, password);
 		checkWriteEnable(username, doc.getFolder().getId());
 		DocumentManager DocumentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		try {
-			DocumentManager.checkout(id, user);
-			return "ok";
-		} catch (Exception e11) {
-			return "error";
-		}
+		DocumentManager.checkout(id, user);
+		return "ok";
 	}
 
 	/**
@@ -144,12 +140,14 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, java.lang.String, java.lang.String,
 	 *      java.lang.String, java.lang.String, javax.activation.DataHandler,
 	 *      java.lang.String, com.logicaldoc.webservice.ExtendedAttribute[],
-	 *      java.lang.String, java.lang.String, java.lang.String)
+	 *      java.lang.String, java.lang.String, java.lang.String,
+	 *      java.lang.String)
 	 */
 	public String createDocument(String username, String password, long folderId, String docTitle, String source,
 			String sourceDate, String author, String sourceType, String coverage, String language, String tags,
 			String versionDesc, String filename, DataHandler content, String templateName,
-			ExtendedAttribute[] extendedAttributes, String sourceId, String object, String recipient) throws Exception {
+			ExtendedAttribute[] extendedAttributes, String sourceId, String object, String recipient, String customId)
+			throws Exception {
 
 		checkCredentials(username, password);
 
@@ -157,14 +155,14 @@ public class DmsServiceImpl implements DmsService {
 		User user = udao.findByUserName(username);
 		if (user == null) {
 			log.error("User " + username + " not found");
-			return "error - user not found";
+			throw new Exception("error - user not found");
 		}
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu folder = mdao.findById(folderId);
 		if (folder == null) {
 			log.error("Menu " + folder + " not found");
-			return "error - folder not found";
+			throw new Exception("error - folder not found");
 		}
 
 		checkWriteEnable(username, folderId);
@@ -199,10 +197,8 @@ public class DmsServiceImpl implements DmsService {
 		try {
 			Document doc = documentManager.create(stream, filename, folder, user, LocaleUtil.toLocale(language), null,
 					date, source, author, sourceType, coverage, versionDesc, tgs, template != null ? template.getId()
-							: null, attributes, sourceId, object, recipient, false);
+							: null, attributes, sourceId, object, recipient, customId, false);
 			return String.valueOf(doc.getId());
-		} catch (Exception e) {
-			return "error";
 		} finally {
 			stream.close();
 		}
@@ -235,7 +231,7 @@ public class DmsServiceImpl implements DmsService {
 
 		if (!stored) {
 			log.error("Folder " + name + " not created");
-			return "error";
+			throw new Exception("error");
 		} else {
 			log.info("Created folder " + name);
 		}
@@ -269,7 +265,7 @@ public class DmsServiceImpl implements DmsService {
 			return "ok";
 		} catch (Exception e) {
 			log.error("Some elements were not deleted");
-			return "error";
+			throw new Exception("error");
 		}
 	}
 
@@ -362,8 +358,10 @@ public class DmsServiceImpl implements DmsService {
 			}
 		} catch (RuntimeException re) {
 			log.error("RuntimeException: " + re.getMessage(), re);
+			throw new Exception(re);
 		} catch (Exception e) {
 			log.error("Exception: " + e.getMessage(), e);
+			throw new Exception(e);
 		}
 
 		return info;
@@ -517,12 +515,9 @@ public class DmsServiceImpl implements DmsService {
 	/**
 	 * Check provided credentials
 	 * 
-	 * @param username
-	 *            The username
-	 * @param password
-	 *            The password
-	 * @throws Exception
-	 *             Raised if the user is not authenticated
+	 * @param username The username
+	 * @param password The password
+	 * @throws Exception Raised if the user is not authenticated
 	 */
 	private void checkCredentials(String username, String password) throws Exception {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -584,7 +579,7 @@ public class DmsServiceImpl implements DmsService {
 	}
 
 	@Override
-	public void renameFolder(String username, String password, long folder, String name) throws Exception {
+	public String renameFolder(String username, String password, long folder, String name) throws Exception {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = userDao.findByUserName(username);
 		if (user == null)
@@ -607,11 +602,12 @@ public class DmsServiceImpl implements DmsService {
 		} else {
 			menu.setText(name);
 			dao.store(menu);
+			return String.valueOf(menu.getId());
 		}
 	}
 
 	@Override
-	public void update(String username, String password, long id, String title, String source, String sourceAuthor,
+	public String update(String username, String password, long id, String title, String source, String sourceAuthor,
 			String sourceDate, String sourceType, String coverage, String language, String[] tags, String sourceId,
 			String object, String recipient, Long templateId, @WebParam(name = "extendedAttribute")
 			ExtendedAttribute[] extendedAttribute) throws Exception {
@@ -656,5 +652,6 @@ public class DmsServiceImpl implements DmsService {
 
 		manager.update(doc, user, title, source, sourceAuthor, sdate, sourceType, coverage, LocaleUtil
 				.toLocale(language), setTags, sourceId, object, recipient, templateId, attributes);
+		return Long.toString(doc.getId());
 	}
 }
