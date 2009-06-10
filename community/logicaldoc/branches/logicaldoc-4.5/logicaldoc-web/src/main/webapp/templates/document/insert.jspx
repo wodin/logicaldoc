@@ -25,7 +25,7 @@
 			return true;
 	   }
 	</script>
-	
+
 	<ice:panelTabSet tabPlacement="top">
 		<!-- Core data -->
 		<ice:panelTab rendered="true" label="#{msgs['document.core']}">
@@ -39,7 +39,7 @@
 						label="#{msgs['errors.header.alert.key']}"
 						value="#{documentForm.title}" maxlength="255" size="30"
 						onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
-						required="true"/>
+						required="true" />
 					<ice:message for="title" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
@@ -75,7 +75,7 @@
 						required="#{fieldPreferences['insert.sourceId.mandatory']}"
 						disabled="#{fieldPreferences['insert.sourceId.readonly']}"
 						onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
-						maxlength="4000" size="30"/>
+						maxlength="4000" size="30" />
 					<ice:message for="sourceid" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
@@ -92,7 +92,7 @@
 						required="#{fieldPreferences['insert.source.mandatory']}"
 						disabled="#{fieldPreferences['insert.source.readonly']}"
 						onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
-						maxlength="255" size="30"/>
+						maxlength="255" size="30" />
 					<ice:message for="source" />
 				</ice:panelGroup>
 
@@ -106,7 +106,7 @@
 						rendered="#{!fieldPreferences['insert.sourceAuthor.hidden']}"
 						value="#{documentForm.sourceAuthor}" maxlength="255" size="30"
 						required="#{fieldPreferences['insert.sourceAuthor.mandatory']}"
-						disabled="#{fieldPreferences['insert.sourceAuthor.readonly']}"/>
+						disabled="#{fieldPreferences['insert.sourceAuthor.readonly']}" />
 					<ice:message for="sourceAuthor" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
@@ -120,7 +120,7 @@
 						rendered="#{!fieldPreferences['insert.coverage.hidden']}"
 						required="#{fieldPreferences['insert.coverage.mandatory']}"
 						disabled="#{fieldPreferences['insert.coverage.readonly']}"
-						maxlength="255"/>
+						maxlength="255" />
 					<ice:message for="coverage" />
 				</ice:panelGroup>
 
@@ -135,7 +135,7 @@
 						value="#{documentForm.sourceType}"
 						required="#{fieldPreferences['insert.sourceType.mandatory']}"
 						disabled="#{fieldPreferences['insert.sourceType.readonly']}"
-						maxlength="255"/>
+						maxlength="255" />
 					<ice:message for="sourceType" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
@@ -151,7 +151,7 @@
 						value="#{documentForm.recipient}"
 						required="#{fieldPreferences['insert.recipient.mandatory']}"
 						disabled="#{fieldPreferences['insert.recipient.readonly']}"
-						maxlength="255"/>
+						maxlength="255" />
 					<ice:message for="recipient" />
 				</ice:panelGroup>
 
@@ -169,19 +169,18 @@
 			<ice:panelGrid columns="2">
 				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="customId"
-						rendered="#{!fieldPreferences['insert.customId.hidden']}"
+						rendered="#{!fieldPreferences['insert.customId.hidden'] and !fieldPreferences['insert.customId.readonly']}"
 						value="#{msgs['document.customid']} #{fieldPreferences['insert.customId.mandatory'] ? '*':''}" />
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="customId"
-						rendered="#{!fieldPreferences['insert.customId.hidden']}"
-						value="#{documentForm.customId}"
-						size="70"
+						rendered="#{!fieldPreferences['insert.customId.hidden'] and !fieldPreferences['insert.customId.readonly']}"
+						value="#{documentForm.customId}" size="70"
 						required="#{fieldPreferences['insert.customId.mandatory']}"
-						disabled="#{fieldPreferences['insert.customId.readonly']}"/>
+						disabled="#{fieldPreferences['insert.customId.readonly']}" />
 					<ice:message for="customId" />
 				</ice:panelGroup>
-				
+
 				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="object"
 						rendered="#{!fieldPreferences['insert.object.hidden']}"
@@ -191,7 +190,7 @@
 					<ice:inputText id="object" value="#{documentForm.object}" size="70"
 						required="#{fieldPreferences['insert.object.mandatory']}"
 						disabled="#{fieldPreferences['insert.object.readonly']}"
-						rendered="#{!fieldPreferences['insert.object.hidden']}"/>
+						rendered="#{!fieldPreferences['insert.object.hidden']}" />
 					<ice:message for="object" />
 				</ice:panelGroup>
 
@@ -206,19 +205,19 @@
 						rendered="#{!fieldPreferences['insert.tags.hidden']}"
 						value="#{documentForm.tags}"
 						required="#{fieldPreferences['insert.tags.mandatory']}"
-						disabled="#{fieldPreferences['insert.tags.readonly']}" size="70"/>
+						disabled="#{fieldPreferences['insert.tags.readonly']}" size="70" />
 					<ice:message for="tags" />
 				</ice:panelGroup>
 
 				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="versionDesc"
-						value="#{msgs['msg.jsp.versiondesc']}"/>
+						value="#{msgs['msg.jsp.versiondesc']}" />
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="versionDesc" value="#{documentForm.versionDesc}"
-						size="70"/>
+						size="70" />
 				</ice:panelGroup>
-				
+
 			</ice:panelGrid>
 		</ice:panelTab>
 
