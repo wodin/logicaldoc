@@ -58,12 +58,12 @@
 						</ice:panelGroup>
 						<ice:panelGroup styleClass="outputLabel">
 							<ice:outputLabel for="customId"
-								rendered="#{!fieldPreferences['edit.customId.hidden']}"
+								rendered="#{!fieldPreferences['edit.customId.hidden'] and !fieldPreferences['edit.customId.readonly']}"
 								value="#{msgs['document.customid']} #{fieldPreferences['edit.customId.mandatory'] ? '*':''}" />
 						</ice:panelGroup>
 						<ice:panelGroup>
 							<ice:inputText id="customId"
-								rendered="#{!fieldPreferences['edit.customId.hidden']}"
+								rendered="#{!fieldPreferences['edit.customId.hidden'] and !fieldPreferences['edit.customId.readonly']}"
 								value="#{documentForm.customId}" tabindex="1" maxlength="255"
 								size="38"
 								required="#{fieldPreferences['edit.customId.mandatory']}"
