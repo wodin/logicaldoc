@@ -59,8 +59,8 @@ public class NewDocWizard {
 	/**
 	 * Acquires the uploaded file and shows the edit form. Gets the file
 	 * uploaded through the HTML form and extracts all necessary data like
-	 * language, tags, autor, etc. to fill the document form so that the
-	 * user can still edit this data before finally storing the document in
+	 * language, tags, autor, etc. to fill the document form so that the user
+	 * can still edit this data before finally storing the document in
 	 * logicaldoc.
 	 */
 	public String next() {
@@ -135,7 +135,8 @@ public class NewDocWizard {
 					} else {
 						AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(
 								AnalyzerManager.class);
-						docForm.setTags(analyzer.getTermsAsString(3, content.toString(), LocaleUtil.toLocale(documentLanguage)));
+						docForm.setTags(analyzer.getTermsAsString(3, content.toString(), LocaleUtil
+								.toLocale(documentLanguage)));
 					}
 				}
 				docForm.setImmediateIndexing(inputFile.isImmediateIndexing());
@@ -170,9 +171,12 @@ public class NewDocWizard {
 		DocumentEditForm documentForm = ((DocumentEditForm) application.createValueBinding("#{documentForm}").getValue(
 				FacesContext.getCurrentInstance()));
 
-		documentForm.save();
-		documentNavigation.selectDirectory(documentNavigation.getSelectedDir());
-		return abort();
+		if (documentForm.isValid("insert")) {
+			documentForm.save();
+			documentNavigation.selectDirectory(documentNavigation.getSelectedDir());
+			return abort();
+		}
+		return null;
 	}
 
 	public void setDocumentNavigation(DocumentNavigation documentNavigation) {
