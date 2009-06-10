@@ -1,11 +1,13 @@
-NOTE: 
+NOTEs & questions: 
 
-1) Document UPDATE: Se concludo correttamente una operazione di update (document) non ricevo un messaggio di ritorno ?
-    (Ora non ricevo nulla)
+1) Document UPDATE: 
+   If and update transaction (document) ends successfully don't get a message back?
+     (Now don't get anything) 
     
-2) Folder UPDATE: Se concludo correttamente una operazione di update (folder (renameFolder)) non ricevo un messaggio di ritorno ?
-    (Ora non ricevo nulla)
+2) Folder UPDATE: If and update transaction (folder) ends successfully don't get a message back?
+     (Now don't get anything) 
     
-3) Folder DELETE: se cerco di cancellare una cartella che non esiste il Web-Service mi deve restituire 
-       un messaggio di errore ?? (Adesso restituisce sempre "ok", anche se la cartella da cancellare non esiste)
+3) Folder DELETE: if I try to delete a folder that does not exist, the Web-Service should return an error message? 
+       (Now always returns "ok", even if the folder to be deleted does not exist)
+       (i'm thinking that it should return something like this: "warning: the folder does not exist")
        
