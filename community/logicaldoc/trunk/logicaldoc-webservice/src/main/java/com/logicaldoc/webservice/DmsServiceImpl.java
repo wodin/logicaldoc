@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -30,7 +31,6 @@ import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
-import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Search;
@@ -67,7 +67,7 @@ public class DmsServiceImpl implements DmsService {
 		User user = udao.findByUserName(username);
 		if (user == null) {
 			log.error("User " + username + " not found");
-			return "error - user not found";
+			throw new Exception("error - user not found");
 		}
 
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -90,7 +90,6 @@ public class DmsServiceImpl implements DmsService {
 			}
 
 			try {
-
 				// Get file to upload inputStream
 				InputStream stream = content.getInputStream();
 
@@ -104,9 +103,10 @@ public class DmsServiceImpl implements DmsService {
 				log.info("Document " + id + " checked in");
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
+				throw new Exception(e);
 			}
 		} else {
-			return "document not checked out";
+			throw new Exception("document not checked out");
 		}
 
 		return "ok";
@@ -121,7 +121,7 @@ public class DmsServiceImpl implements DmsService {
 		User user = udao.findByUserName(username);
 		if (user == null) {
 			log.error("User " + username + " not found");
-			return "error - user not found";
+			throw new Exception("error - user not found");
 		}
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -129,12 +129,8 @@ public class DmsServiceImpl implements DmsService {
 		checkCredentials(username, password);
 		checkWriteEnable(username, doc.getFolder().getId());
 		DocumentManager DocumentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		try {
-			DocumentManager.checkout(id, user);
-			return "ok";
-		} catch (Exception e11) {
-			return "error";
-		}
+		DocumentManager.checkout(id, user);
+		return "ok";
 	}
 
 	/**
@@ -144,12 +140,14 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, java.lang.String, java.lang.String,
 	 *      java.lang.String, java.lang.String, javax.activation.DataHandler,
 	 *      java.lang.String, com.logicaldoc.webservice.ExtendedAttribute[],
-	 *      java.lang.String, java.lang.String, java.lang.String)
+	 *      java.lang.String, java.lang.String, java.lang.String,
+	 *      java.lang.String)
 	 */
 	public String createDocument(String username, String password, long folderId, String docTitle, String source,
 			String sourceDate, String author, String sourceType, String coverage, String language, String tags,
 			String versionDesc, String filename, DataHandler content, String templateName,
-			ExtendedAttribute[] extendedAttributes, String sourceId, String object, String recipient) throws Exception {
+			ExtendedAttribute[] extendedAttributes, String sourceId, String object, String recipient, String customId)
+			throws Exception {
 
 		checkCredentials(username, password);
 
@@ -157,14 +155,14 @@ public class DmsServiceImpl implements DmsService {
 		User user = udao.findByUserName(username);
 		if (user == null) {
 			log.error("User " + username + " not found");
-			return "error - user not found";
+			throw new Exception("error - user not found");
 		}
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu folder = mdao.findById(folderId);
 		if (folder == null) {
 			log.error("Menu " + folder + " not found");
-			return "error - folder not found";
+			throw new Exception("error - folder not found");
 		}
 
 		checkWriteEnable(username, folderId);
@@ -172,9 +170,8 @@ public class DmsServiceImpl implements DmsService {
 		Set<String> tgs = TagUtil.extractTags(tags);
 
 		Date date = null;
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		if (StringUtils.isNotEmpty(sourceDate))
-			date = df.parse(sourceDate);
+			date = convertXMLToDate(sourceDate);
 
 		DocumentTemplate template = null;
 		Map<String, String> attributes = null;
@@ -200,10 +197,8 @@ public class DmsServiceImpl implements DmsService {
 		try {
 			Document doc = documentManager.create(stream, filename, folder, user, LocaleUtil.toLocale(language), null,
 					date, source, author, sourceType, coverage, versionDesc, tgs, template != null ? template.getId()
-							: null, attributes, sourceId, object, recipient, false);
+							: null, attributes, sourceId, object, recipient, customId, false);
 			return String.valueOf(doc.getId());
-		} catch (Exception e) {
-			return "error";
 		} finally {
 			stream.close();
 		}
@@ -236,7 +231,7 @@ public class DmsServiceImpl implements DmsService {
 
 		if (!stored) {
 			log.error("Folder " + name + " not created");
-			return "error";
+			throw new Exception("error");
 		} else {
 			log.info("Created folder " + name);
 		}
@@ -270,7 +265,7 @@ public class DmsServiceImpl implements DmsService {
 			return "ok";
 		} catch (Exception e) {
 			log.error("Some elements were not deleted");
-			return "error";
+			throw new Exception("error");
 		}
 	}
 
@@ -304,6 +299,7 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, long)
 	 */
 	public DocumentInfo downloadDocumentInfo(String username, String password, long id) throws Exception {
+
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(id);
 		docDao.initialize(doc);
@@ -312,46 +308,60 @@ public class DmsServiceImpl implements DmsService {
 
 		// Populate document's metadata
 		DocumentInfo info = new DocumentInfo();
-		info.setId(doc.getId());
-		info.setTitle(doc.getTitle());
-		info.setAuthor(doc.getSourceAuthor());
-		info.setSourceDate(convertDateToXML(doc.getSourceDate()));
-		info.setLanguage(doc.getLanguage());
-		info.setFolderId(doc.getFolder().getId());
-		info.setFolderName(doc.getFolder().getText());
-		info.setSource(doc.getSource());
-		info.setType(doc.getType());
-		info.setUploadDate(convertDateToXML(doc.getDate()));
-		info.setPublisher(doc.getPublisher());
-		info.setPublisher(doc.getCreator());
-		info.setCoverage(doc.getCoverage());
-		info.setFilename(doc.getFileName());
-		info.setCustomId(doc.getCustomId());
-		info.setSourceId(doc.getSourceId());
-		info.setObject(doc.getObject());
+		try {
+			info.setId(doc.getId());
+			info.setTitle(doc.getTitle());
+			info.setAuthor(doc.getSourceAuthor());
+			info.setSourceDate(convertDateToXML(doc.getSourceDate()));
+			info.setLanguage(doc.getLanguage());
+			info.setFolderId(doc.getFolder().getId());
+			info.setFolderName(doc.getFolder().getText());
+			info.setSource(doc.getSource());
+			info.setType(doc.getType());
+			info.setUploadDate(convertDateToXML(doc.getDate()));
+			info.setPublisher(doc.getPublisher());
+			info.setPublisher(doc.getCreator());
+			info.setCoverage(doc.getCoverage());
+			info.setFilename(doc.getFileName());
+			info.setCustomId(doc.getCustomId());
+			info.setSourceId(doc.getSourceId());
+			info.setObject(doc.getObject());
 
-		if (doc.getTemplate() != null) {
-			// Insert template infos
-			info.setTemplateName(doc.getTemplate().getName());
-			info.setTemplateId(doc.getTemplate().getId());
-
-			// Populate extended attributes
-			ExtendedAttribute[] extendedAttributes = new ExtendedAttribute[doc.getAttributes().size()];
-			int i = 0;
-			for (String name : doc.getAttributeNames()) {
-				extendedAttributes[i++] = new ExtendedAttribute(name, doc.getValue(name));
+			if (doc.getTags() != null) {
+				Set<String> tmpset = doc.getTags();
+				String[] mytags = (String[]) tmpset.toArray(new String[tmpset.size()]);
+				info.setTags(mytags);
 			}
-			info.setExtendedAttribute(extendedAttributes);
-		}
 
-		VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
-		List<Version> versions = vdao.findByDocId(id);
-		for (Version version : versions) {
-			VersionInfo vInfo = new VersionInfo();
-			vInfo.setDate(convertDateToXML(version.getDate()));
-			vInfo.setComment(version.getComment());
-			vInfo.setVersion(version.getVersion());
-			info.addVersion(vInfo);
+			if (doc.getTemplate() != null) {
+				// Insert template infos
+				info.setTemplateName(doc.getTemplate().getName());
+				info.setTemplateId(doc.getTemplate().getId());
+
+				// Populate extended attributes
+				ExtendedAttribute[] extendedAttributes = new ExtendedAttribute[doc.getAttributes().size()];
+				int i = 0;
+				for (String name : doc.getAttributeNames()) {
+					extendedAttributes[i++] = new ExtendedAttribute(name, doc.getValue(name));
+				}
+				info.setExtendedAttribute(extendedAttributes);
+			}
+
+			VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+			List<Version> versions = vdao.findByDocId(id);
+			for (Version version : versions) {
+				VersionInfo vInfo = new VersionInfo();
+				vInfo.setDate(convertDateToXML(version.getDate()));
+				vInfo.setComment(version.getComment());
+				vInfo.setVersion(version.getVersion());
+				info.addVersion(vInfo);
+			}
+		} catch (RuntimeException re) {
+			log.error("RuntimeException: " + re.getMessage(), re);
+			throw new Exception(re);
+		} catch (Exception e) {
+			log.error("Exception: " + e.getMessage(), e);
+			throw new Exception(e);
 		}
 
 		return info;
@@ -362,6 +372,7 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, long)
 	 */
 	public FolderContent downloadFolderContent(String username, String password, long folder) throws Exception {
+
 		FolderContent folderContent = new FolderContent();
 		checkCredentials(username, password);
 		checkReadEnable(username, folder);
@@ -411,6 +422,7 @@ public class DmsServiceImpl implements DmsService {
 	 */
 	public SearchResult search(String username, String password, String query, String indexLanguage,
 			String queryLanguage, int maxHits, String templateName, String[] templateFields) throws Exception {
+
 		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = udao.findByUserName(username);
 		if (user == null) {
@@ -451,10 +463,13 @@ public class DmsServiceImpl implements DmsService {
 
 		ArrayList<String> languages = new ArrayList<String>();
 		if (StringUtils.isEmpty(indexLanguage)) {
-			Collection<Language> langs = LanguageManager.getInstance().getLanguages();
-			for (Language language : langs) {
-				languages.add(language.getLanguage());
-			}
+			// Collection<Language> langs =
+			// LanguageManager.getInstance().getLanguages();
+			// for (Language language : langs) {
+			// languages.add(language.getLanguage());
+			// }
+			List<String> langs = LanguageManager.getInstance().getLanguagesAsString();
+			languages.addAll(langs);
 		} else {
 			languages.add(indexLanguage);
 		}
@@ -472,11 +487,10 @@ public class DmsServiceImpl implements DmsService {
 
 		// Prepares the result array
 		ArrayList<Result> result = new ArrayList<Result>();
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		for (com.logicaldoc.core.searchengine.Result res : tmp) {
 			Result newRes = new Result();
 			newRes.setId(res.getDocId());
-			newRes.setDate(df.format(res.getDate()));
+			newRes.setDate(convertDateToXML(res.getDate()));
 			newRes.setTitle(res.getTitle());
 			newRes.setSummary(SnippetStripper.strip(res.getSummary()));
 			newRes.setSize(res.getSize());
@@ -544,6 +558,8 @@ public class DmsServiceImpl implements DmsService {
 	 * Converts a date to a valid XML string
 	 */
 	protected String convertDateToXML(Date date) {
+		if (date == null)
+			return null;
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return df.format(date);
 	}
@@ -553,12 +569,17 @@ public class DmsServiceImpl implements DmsService {
 		try {
 			return df.parse(date);
 		} catch (ParseException e) {
-			return null;
+			df = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				return df.parse(date);
+			} catch (ParseException e1) {
+			}
 		}
+		return null;
 	}
 
 	@Override
-	public void renameFolder(String username, String password, long folder, String name) throws Exception {
+	public String renameFolder(String username, String password, long folder, String name) throws Exception {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = userDao.findByUserName(username);
 		if (user == null)
@@ -581,14 +602,16 @@ public class DmsServiceImpl implements DmsService {
 		} else {
 			menu.setText(name);
 			dao.store(menu);
+			return String.valueOf(menu.getId());
 		}
 	}
 
 	@Override
-	public void update(String username, String password, long id, String title, String source, String sourceAuthor,
-			String sourceDate, String sourceType, String coverage, String language, Set<String> tags, String sourceId,
+	public String update(String username, String password, long id, String title, String source, String sourceAuthor,
+			String sourceDate, String sourceType, String coverage, String language, String[] tags, String sourceId,
 			String object, String recipient, Long templateId, @WebParam(name = "extendedAttribute")
 			ExtendedAttribute[] extendedAttribute) throws Exception {
+
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = userDao.findByUserName(username);
 		if (user == null)
@@ -601,6 +624,14 @@ public class DmsServiceImpl implements DmsService {
 		if (doc.getImmutable() == 1)
 			throw new Exception("the document is immutable");
 
+		// Initialize the lazy loaded collections
+		docDao.initialize(doc);
+
+		Date sdate = null;
+		if (StringUtils.isNotEmpty(sourceDate))
+			sdate = convertXMLToDate(sourceDate);
+		doc.setSourceDate(sdate);
+
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		if (!dao.isWriteEnable(doc.getFolder().getId(), user.getId())) {
 			throw new Exception("user does't have write permission");
@@ -612,7 +643,15 @@ public class DmsServiceImpl implements DmsService {
 		}
 
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		manager.update(doc, user, title, source, sourceAuthor, convertXMLToDate(sourceDate), sourceType, coverage,
-				LocaleUtil.toLocale(language), tags, sourceId, object, recipient, templateId, attributes);
+		Set<String> setTags = new TreeSet<String>();
+		if (tags != null) {
+			for (int i = 0; i < tags.length; i++) {
+				setTags.add(tags[i]);
+			}
+		}
+
+		manager.update(doc, user, title, source, sourceAuthor, sdate, sourceType, coverage, LocaleUtil
+				.toLocale(language), setTags, sourceId, object, recipient, templateId, attributes);
+		return Long.toString(doc.getId());
 	}
 }
