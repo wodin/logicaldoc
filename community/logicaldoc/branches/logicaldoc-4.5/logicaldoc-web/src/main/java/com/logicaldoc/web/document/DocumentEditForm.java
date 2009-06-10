@@ -473,7 +473,8 @@ public class DocumentEditForm {
 
 				Document doc = documentManager.create(file, folder, SessionManagement.getUser(), LocaleUtil
 						.toLocale(language), title, getSourceDate(), source, sourceAuthor, sourceType, coverage,
-						versionDesc, tgs, template, attrs, sourceId, object, recipient, immediateIndexing);
+						versionDesc, tgs, template, attrs, sourceId, object, recipient, getCustomId(),
+						immediateIndexing);
 				if (StringUtils.isNotEmpty(doc.getCustomId()))
 					Messages.addInfo(Messages.getMessage("document.inserted", doc.getCustomId()));
 			} catch (Exception e) {
@@ -544,17 +545,17 @@ public class DocumentEditForm {
 				"fieldPreferences", FacesContext.getCurrentInstance(), log));
 		boolean valid = true;
 		// Author
-		if (fieldPreferences.get(page + ".sourceAuthor.mandatory") && getSourceAuthor().equals("")) {
+		if (fieldPreferences.get(page + ".sourceAuthor.mandatory") && StringUtils.isBlank(getSourceAuthor())) {
 			valid = false;
 			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.author")));
 		}
 		// Coverage
-		if (fieldPreferences.get(page + ".coverage.mandatory") && getCoverage().equals("")) {
+		if (fieldPreferences.get(page + ".coverage.mandatory") && StringUtils.isBlank(getCoverage())) {
 			valid = false;
 			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.coverage")));
 		}
 		// Custom ID
-		if (fieldPreferences.get(page + ".customId.mandatory") && getCustomId().equals("")) {
+		if (fieldPreferences.get(page + ".customId.mandatory") && StringUtils.isBlank(getCustomId())) {
 			valid = false;
 			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.customid")));
 		}
@@ -564,32 +565,32 @@ public class DocumentEditForm {
 			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("msg.jsp.sourcedate")));
 		}
 		// Document type
-		if (fieldPreferences.get(page + ".sourceType.mandatory") && getSourceType().equals("")) {
+		if (fieldPreferences.get(page + ".sourceType.mandatory") && StringUtils.isBlank(getSourceType())) {
 			valid = false;
 			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.type")));
 		}
 		// Object
-		if (fieldPreferences.get(page + ".object.mandatory") && getObject().equals("")) {
+		if (fieldPreferences.get(page + ".object.mandatory") && StringUtils.isBlank(getObject())) {
 			valid = false;
 			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.object")));
 		}
 		// Recipient
-		if (fieldPreferences.get(page + ".recipient.mandatory") && getRecipient().equals("")) {
+		if (fieldPreferences.get(page + ".recipient.mandatory") && StringUtils.isBlank(getRecipient())) {
 			valid = false;
 			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.recipient")));
 		}
 		// Source
-		if (fieldPreferences.get(page + ".source.mandatory") && getSource().equals("")) {
+		if (fieldPreferences.get(page + ".source.mandatory") && StringUtils.isBlank(getSource())) {
 			valid = false;
 			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.source")));
 		}
 		// Source ID
-		if (fieldPreferences.get(page + ".sourceId.mandatory") && getSourceId().equals("")) {
+		if (fieldPreferences.get(page + ".sourceId.mandatory") && StringUtils.isBlank(getSourceId())) {
 			valid = false;
 			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.sourceid")));
 		}
 		// Tags
-		if (fieldPreferences.get(page + ".tags.mandatory") && getTags().equals("")) {
+		if (fieldPreferences.get(page + ".tags.mandatory") && StringUtils.isBlank(getTags())) {
 			valid = false;
 			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("tags")));
 		}
