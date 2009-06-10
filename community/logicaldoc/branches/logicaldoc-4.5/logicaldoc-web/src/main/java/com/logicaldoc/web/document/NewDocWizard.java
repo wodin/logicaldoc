@@ -171,6 +171,7 @@ public class NewDocWizard {
 		DocumentEditForm documentForm = ((DocumentEditForm) application.createValueBinding("#{documentForm}").getValue(
 				FacesContext.getCurrentInstance()));
 
+		//Check if all the mandatory preferences are correctly defined by the user
 		if (documentForm.isValid("insert")) {
 			documentForm.save();
 			documentNavigation.selectDirectory(documentNavigation.getSelectedDir());
