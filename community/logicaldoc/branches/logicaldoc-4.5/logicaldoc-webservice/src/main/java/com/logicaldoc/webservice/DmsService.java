@@ -69,6 +69,7 @@ public interface DmsService {
 	 * @param sourceId
 	 * @param object
 	 * @param recipient
+	 * @param customId
 	 * @return The document identifier or 'error' if some errors occurred)
 	 * @throws Exception
 	 */
@@ -91,12 +92,13 @@ public interface DmsService {
 	ExtendedAttribute[] extendedAttributes, @WebParam(name = "sourceId")
 	String sourceId, @WebParam(name = "object")
 	String object, @WebParam(name = "recipient")
-	String recipient) throws Exception;
+	String recipient, @WebParam(name = "customId")
+	String customId) throws Exception;
 
 	/**
 	 * Updates an existing document and marks it to be re-indexed
 	 */
-	public void update(@WebParam(name = "username")
+	public String update(@WebParam(name = "username")
 	String username, @WebParam(name = "password")
 	String password, @WebParam(name = "id")
 	long id, @WebParam(name = "title")
@@ -154,7 +156,7 @@ public interface DmsService {
 	 * @param name the new name for the folder
 	 * @throws Exception
 	 */
-	public void renameFolder(@WebParam(name = "username")
+	public String renameFolder(@WebParam(name = "username")
 	String username, @WebParam(name = "password")
 	String password, @WebParam(name = "folder")
 	long folder, @WebParam(name = "name")
