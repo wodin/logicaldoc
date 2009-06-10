@@ -471,9 +471,9 @@ public class DocumentEditForm {
 						attrs.put(att.getName(), att.getValue());
 				}
 
-				Document doc = documentManager.create(file, folder, SessionManagement.getUser(), LocaleUtil.toLocale(language), title,
-						getSourceDate(), source, sourceAuthor, sourceType, coverage, versionDesc, tgs, template,
-						attrs, sourceId, object, recipient, immediateIndexing);
+				Document doc = documentManager.create(file, folder, SessionManagement.getUser(), LocaleUtil
+						.toLocale(language), title, getSourceDate(), source, sourceAuthor, sourceType, coverage,
+						versionDesc, tgs, template, attrs, sourceId, object, recipient, immediateIndexing);
 				if (StringUtils.isNotEmpty(doc.getCustomId()))
 					Messages.addInfo(Messages.getMessage("document.inserted", doc.getCustomId()));
 			} catch (Exception e) {
@@ -482,7 +482,6 @@ public class DocumentEditForm {
 			} finally {
 				reset();
 			}
-
 			return null;
 		} else {
 			return "login";
@@ -499,38 +498,110 @@ public class DocumentEditForm {
 				"documentNavigation", FacesContext.getCurrentInstance(), log));
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		if (SessionManagement.isValid()) {
-			try {
-				Document doc = record.getDocument();
+			if (isValid("edit")) {
+				try {
+					Document doc = record.getDocument();
 
-				Map<String, String> attrs = new HashMap<String, String>();
-				if (template != null) {
-					for (Attribute attribute : extendedAttributes) {
-						if (StringUtils.isNotEmpty(attribute.getValue()))
-							attrs.put(attribute.getName(), attribute.getValue());
+					Map<String, String> attrs = new HashMap<String, String>();
+					if (template != null) {
+						for (Attribute attribute : extendedAttributes) {
+							if (StringUtils.isNotEmpty(attribute.getValue()))
+								attrs.put(attribute.getName(), attribute.getValue());
+						}
 					}
+
+					User user = SessionManagement.getUser();
+
+					Set<String> tgs = TagUtil.extractTags(getTags());
+
+					doc.setCustomId(customId);
+					documentManager.update(doc, user, title, source, sourceAuthor, sourceDate, sourceType, coverage,
+							LocaleUtil.toLocale(language), tgs, sourceId, object, recipient, template, attrs);
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+					Messages.addError(e.getMessage());
+				} finally {
+					reset();
 				}
-
-				User user = SessionManagement.getUser();
-				Set<String> tgs = TagUtil.extractTags(getTags());
-
-				doc.setCustomId(customId);
-				documentManager.update(doc, user, title, source, sourceAuthor, sourceDate, sourceType, coverage,
-					LocaleUtil.toLocale(language), tgs, sourceId, object, recipient, template, attrs);
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-				Messages.addError(e.getMessage());
-			} finally {
-				reset();
+				navigation.showDocuments();
+				navigation.refresh();
 			}
-			navigation.showDocuments();
-			navigation.refresh();
 			return null;
 		} else {
 			return "login";
 		}
 	}
-	
-	
+
+	/**
+	 * Returns true if all the mandatory preferences in the given page are
+	 * correctly defined by the user.
+	 * 
+	 * @param page It can be 'insert' (document upload page) or 'edit' (document
+	 *        editing page)
+	 */
+	protected boolean isValid(String page) {
+		FieldPreferences fieldPreferences = ((FieldPreferences) FacesUtil.accessBeanFromFacesContext(
+				"fieldPreferences", FacesContext.getCurrentInstance(), log));
+		boolean valid = true;
+		// Author
+		if (fieldPreferences.get(page + ".sourceAuthor.mandatory") && getSourceAuthor().equals("")) {
+			valid = false;
+			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.author")));
+		}
+		// Coverage
+		if (fieldPreferences.get(page + ".coverage.mandatory") && getCoverage().equals("")) {
+			valid = false;
+			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.coverage")));
+		}
+		// Custom ID
+		if (fieldPreferences.get(page + ".customId.mandatory") && getCustomId().equals("")) {
+			valid = false;
+			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.customid")));
+		}
+		// Date
+		if (fieldPreferences.get(page + ".sourceDate.mandatory") && getSourceDate() == null) {
+			valid = false;
+			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("msg.jsp.sourcedate")));
+		}
+		// Document type
+		if (fieldPreferences.get(page + ".sourceType.mandatory") && getSourceType().equals("")) {
+			valid = false;
+			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.type")));
+		}
+		// Object
+		if (fieldPreferences.get(page + ".object.mandatory") && getObject().equals("")) {
+			valid = false;
+			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.object")));
+		}
+		// Recipient
+		if (fieldPreferences.get(page + ".recipient.mandatory") && getRecipient().equals("")) {
+			valid = false;
+			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.recipient")));
+		}
+		// Source
+		if (fieldPreferences.get(page + ".source.mandatory") && getSource().equals("")) {
+			valid = false;
+			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.source")));
+		}
+		// Source ID
+		if (fieldPreferences.get(page + ".sourceId.mandatory") && getSourceId().equals("")) {
+			valid = false;
+			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.sourceid")));
+		}
+		// Tags
+		if (fieldPreferences.get(page + ".tags.mandatory") && getTags().equals("")) {
+			valid = false;
+			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("tags")));
+		}
+		// Template
+		if (fieldPreferences.get(page + ".template.mandatory") && getTemplate() == null) {
+			valid = false;
+			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("template")));
+		}
+
+		return valid;
+	}
+
 	@SuppressWarnings("deprecation")
 	public String uncheckout() {
 
@@ -549,7 +620,8 @@ public class DocumentEditForm {
 					// goes wrong
 					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 							DocumentManager.class);
-					//documentManager.uncheckout(document.getId(), SessionManagement.getUser());
+					// documentManager.uncheckout(document.getId(),
+					// SessionManagement.getUser());
 					documentManager.unlock(document.getId(), SessionManagement.getUser(), null);
 
 					/* create positive log message */
