@@ -95,7 +95,7 @@
 		</ice:panelGroup>
 
 		<ice:panelGroup>
-			<ice:messages />
+			<ice:messages globalOnly="true" />
 			<f:subview id="w-documents">
 				<ui:include
 					src="/templates/document/#{documentNavigation.selectedPanel.contentName}.jspx" />
