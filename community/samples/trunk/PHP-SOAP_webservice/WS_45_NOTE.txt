@@ -1,0 +1,11 @@
+NOTE: 
+
+1) Document UPDATE: Se concludo correttamente una operazione di update (document) non ricevo un messaggio di ritorno ?
+    (Ora non ricevo nulla)
+    
+2) Folder UPDATE: Se concludo correttamente una operazione di update (folder (renameFolder)) non ricevo un messaggio di ritorno ?
+    (Ora non ricevo nulla)
+    
+3) Folder DELETE: se cerco di cancellare una cartella che non esiste il Web-Service mi deve restituire 
+       un messaggio di errore ?? (Adesso restituisce sempre "ok", anche se la cartella da cancellare non esiste)
+       
