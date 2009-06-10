@@ -463,7 +463,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, boolean immediateIndexing)
 			throws Exception {
 		return create(file, folder, user, locale, title, sourceDate, source, sourceAuthor, sourceType, coverage,
-				versionDesc, tags, templateId, extendedAttributes, null, null, null, immediateIndexing);
+				versionDesc, tags, templateId, extendedAttributes, null, null, null, null, immediateIndexing);
 
 	}
 
@@ -473,14 +473,15 @@ public class DocumentManagerImpl implements DocumentManager {
 			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
 			boolean immediateIndexing) throws Exception {
 		return create(content, filename, folder, user, locale, title, sourceDate, source, sourceAuthor, sourceType,
-				coverage, versionDesc, tags, templateId, extendedAttributes, null, null, null, immediateIndexing);
+				coverage, versionDesc, tags, templateId, extendedAttributes, null, null, null, null, immediateIndexing);
 	}
 
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
-			String sourceId, String object, String recipient, boolean immediateIndexing) throws Exception {
+			String sourceId, String object, String recipient, String customId, boolean immediateIndexing)
+			throws Exception {
 
 		try {
 			Document doc = new Document();
@@ -525,6 +526,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc.setObject(object);
 			doc.setSourceId(sourceId);
 			doc.setRecipient(recipient);
+			if (StringUtils.isNotBlank(customId))
+				doc.setCustomId(customId);
 			if (tags != null)
 				doc.setTags(tags);
 
@@ -719,7 +722,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	public Document create(File file, Menu folder, User user, Locale locale, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, String sourceId, String object,
-			String recipient, boolean immediateIndexing) throws Exception {
+			String recipient, String customId, boolean immediateIndexing) throws Exception {
 		String filename = file.getName();
 		String encoding = "UTF-8";
 		String[] encodings = CharsetDetector.detectEncodings(filename);
@@ -742,7 +745,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		InputStream is = new FileInputStream(file);
 		try {
 			return create(is, filename, folder, user, locale, _title, sourceDate, source, sourceAuthor, sourceType,
-					coverage, versionDesc, tags, templateId, extendedAttributes, sourceId, object, recipient,
+					coverage, versionDesc, tags, templateId, extendedAttributes, sourceId, object, recipient, customId,
 					immediateIndexing);
 		} finally {
 			is.close();
