@@ -11,13 +11,14 @@ $cdp['sourceDate'] = '2009-04-06';
 $cdp['author'] = 'author'; 
 $cdp['sourceType'] = 'sourceType'; 
 $cdp['coverage'] = 'coverage'; 
-$cdp['language'] = 'en'; 
-$cdp['keywords'] = 'keywords'; 
+$cdp['language'] = 'en';
+// Setting some useful Tags for the document created (tags must be separated by commas)
+$cdp['tags'] = 'logicaldoc,installation,guide,manual'; 
 $cdp['versionDesc'] = 'versionDesc'; 
 
 // read the binary content of a file
-$myFile = "logicaldoc-4.0-installation_guide.pdf";
-$myFilePath = "C:\\tmp\\" . $myFile; 
+$myFile = "logicaldoc-installation_guide-4.5.pdf";
+$myFilePath = "C:\\tmp\\" . $myFile;
 $fh = fopen($myFilePath, 'r');
 $theData = fread($fh, filesize($myFilePath));
 fclose($fh);

@@ -2,7 +2,7 @@
 try { 
 $username = "admin";
 $password = "admin";
-$folder = 32.0;
+$folder = 28.0;
 
 $deleteFolderParams = array('username' => $username,'password' => $password,'folder' => $folder);
  

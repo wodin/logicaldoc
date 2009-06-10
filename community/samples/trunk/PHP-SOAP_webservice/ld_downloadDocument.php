@@ -2,7 +2,7 @@
 try { 
 $username = "admin";
 $password = "admin";
-$id = 29.0;
+$id = 2.0;
 $version = "1.0";
 
 $ddp = array('username' => $username,'password' => $password,'id' => $id,'version' => $version);
@@ -10,7 +10,9 @@ $ddp = array('username' => $username,'password' => $password,'id' => $id,'versio
 $sclient = new SoapClient('http://localhost:8080/logicaldoc/services/Dms?wsdl');
 
 $result = $sclient->downloadDocument($ddp);
+print_r($result);
 
+// return contains the binary content
 $content = $result->return;
 
 $myFile = "C:\\tmp\\testFile.txt";

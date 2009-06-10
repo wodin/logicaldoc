@@ -2,7 +2,7 @@
 try { 
 $username = "admin";
 $password = "admin";
-$id = 13.0;
+$id = 3.0;
 $version = "1.0";
 
 $sclient = new SoapClient('http://localhost:8080/logicaldoc/services/Dms?wsdl');
