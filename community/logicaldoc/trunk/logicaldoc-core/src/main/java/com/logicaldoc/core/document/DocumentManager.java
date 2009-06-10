@@ -181,6 +181,8 @@ public interface DocumentManager {
 	 * @param extendedAttributes
 	 * @param sourceId
 	 * @param object
+	 * @param recipient
+	 * @param customId
 	 * @param immediateIndexing if true the document is immediately indexed
 	 * @return The created document
 	 * @throws Exception
@@ -188,7 +190,7 @@ public interface DocumentManager {
 	public Document create(File file, Menu folder, User user, Locale locale, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, String sourceId, String object,
-			String recipient, boolean immediateIndexing) throws Exception;
+			String recipient, String customId, boolean immediateIndexing) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -212,6 +214,7 @@ public interface DocumentManager {
 	 * @param sourceId
 	 * @param object
 	 * @param recipient
+	 * @param customId
 	 * @param immediateIndexing if true the document is immediately indexed
 	 * @return The created document
 	 * @throws Exception
@@ -219,7 +222,7 @@ public interface DocumentManager {
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
-			String sourceId, String object, String recipient, boolean immediateIndexing) throws Exception;
+			String sourceId, String object, String recipient, String customId, boolean immediateIndexing) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
