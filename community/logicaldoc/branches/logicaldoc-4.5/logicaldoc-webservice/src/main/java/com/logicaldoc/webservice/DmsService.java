@@ -79,7 +79,7 @@ public interface DmsService {
 	long folder, @WebParam(name = "docTitle")
 	String docTitle, @WebParam(name = "source")
 	String source, @WebParam(name = "sourceDate")
-	String sourceDate, @WebParam(name = "author")
+	String sourceDate, @WebParam(name = "sourceAuthor")
 	String author, @WebParam(name = "sourceType")
 	String sourceType, @WebParam(name = "coverage")
 	String coverage, @WebParam(name = "language")
@@ -112,8 +112,8 @@ public interface DmsService {
 	String[] tags, @WebParam(name = "sourceId")
 	String sourceId, @WebParam(name = "object")
 	String object, @WebParam(name = "recipient")
-	String recipient, @WebParam(name = "templateId")
-	Long templateId, @WebParam(name = "extendedAttribute")
+	String recipient, @WebParam(name = "templateName")
+	String templateName, @WebParam(name = "templateFields")
 	ExtendedAttribute[] extendedAttribute) throws Exception;
 
 	/**
@@ -148,7 +148,7 @@ public interface DmsService {
 	long id) throws Exception;
 
 	/**
-	 * Downloads folder metadata
+	 * Renames a folder
 	 * 
 	 * @param username
 	 * @param password
@@ -163,7 +163,7 @@ public interface DmsService {
 	String name) throws Exception;
 
 	/**
-	 * Renames a folder
+	 * Downloads folder metadata
 	 * 
 	 * @param username
 	 * @param password
