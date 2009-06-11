@@ -45,7 +45,7 @@ public class DocumentIcons {
 				command.setTarget(ext.getParameter("target").valueAsString());
 			command.setIcon(ext.getParameter("icon").valueAsString());
 			if (StringUtils.isNotEmpty(ext.getParameter("action").valueAsString()))
-				command.setAction(FacesUtil.createActionMethodBinding(ext.getParameter("action").valueAsString()));
+				command.setActionBinding(FacesUtil.createActionMethodBinding(ext.getParameter("action").valueAsString()));
 			if (StringUtils.isNotEmpty(ext.getParameter("rendered").valueAsString()))
 				command.setRenderedBinding(FacesUtil.createValueBinding(ext.getParameter("rendered").valueAsString()));
 		}
