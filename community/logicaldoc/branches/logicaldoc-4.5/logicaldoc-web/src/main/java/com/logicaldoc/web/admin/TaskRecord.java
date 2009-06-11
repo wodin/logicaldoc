@@ -6,7 +6,6 @@ import java.text.ParseException;
 import javax.faces.context.FacesContext;
 
 import com.logicaldoc.core.task.Task;
-
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.util.FacesUtil;
 

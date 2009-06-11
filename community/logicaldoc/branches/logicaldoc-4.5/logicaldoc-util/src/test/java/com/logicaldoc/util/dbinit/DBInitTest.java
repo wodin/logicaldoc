@@ -3,8 +3,6 @@ package com.logicaldoc.util.dbinit;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.logicaldoc.util.dbinit.DBInit;
-
 import junit.framework.TestCase;
 
 /**
