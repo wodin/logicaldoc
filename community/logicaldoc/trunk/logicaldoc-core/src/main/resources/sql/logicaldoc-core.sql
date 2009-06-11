@@ -291,10 +291,10 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_manag
 values     (19,3,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_group_ext (ld_groupid, ld_value, ld_name)
-values (1,'010010','preference.field.customId');
+values (1,'110110','preference.field.customId');
 
 insert into ld_group_ext (ld_groupid, ld_value, ld_name)
-values (2,'010010','preference.field.customId');
+values (2,'110110','preference.field.customId');
 
 insert into ld_group_ext (ld_groupid, ld_value, ld_name)
-values (3,'010010','preference.field.customId');
+values (3,'110110','preference.field.customId');
