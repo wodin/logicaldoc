@@ -609,7 +609,7 @@ public class DmsServiceImpl implements DmsService {
 	@Override
 	public String update(String username, String password, long id, String title, String source, String sourceAuthor,
 			String sourceDate, String sourceType, String coverage, String language, String[] tags, String sourceId,
-			String object, String recipient, Long templateId, @WebParam(name = "extendedAttribute")
+			String object, String recipient, String templateName, @WebParam(name = "extendedAttribute")
 			ExtendedAttribute[] extendedAttribute) throws Exception {
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -650,8 +650,11 @@ public class DmsServiceImpl implements DmsService {
 			}
 		}
 
+		DocumentTemplateDAO templDao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+		DocumentTemplate template = templDao.findByName(templateName);
 		manager.update(doc, user, title, source, sourceAuthor, sdate, sourceType, coverage, LocaleUtil
-				.toLocale(language), setTags, sourceId, object, recipient, templateId, attributes);
+				.toLocale(language), setTags, sourceId, object, recipient, template != null ? template.getId() : null,
+				attributes);
 		return Long.toString(doc.getId());
 	}
 }
