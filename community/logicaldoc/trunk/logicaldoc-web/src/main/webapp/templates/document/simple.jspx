@@ -13,7 +13,7 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
-	id="documentsForm">
+	id="documentsForm" style="width: 95%">
 
 	<ice:panelGroup dropTarget="false">
 		<ui:include src="/templates/document/toolbar.jspx" />
@@ -25,7 +25,7 @@
 	</ice:panelGroup>
 
 	<!-- Basic table -->
-	<ice:panelGroup styleClass="formBorderHighlight" style="width:97%;"
+	<ice:panelGroup styleClass="formBorderHighlight" style="width:97%"
 		rendered="#{documentsRecordsManager.count > 0}">
 		<ice:dataTable id="documentsList" width="97%"
 			value="#{documentsRecordsManager.documents}" var="documentRecord"
