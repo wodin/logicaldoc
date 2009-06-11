@@ -115,19 +115,23 @@ public class InputFileBean implements Renderable {
 
 	public void action(ActionEvent event) {
 		InputFile inputFile = (InputFile) event.getSource();
-		fileName = inputFile.getFileInfo().getFileName();
+		if (inputFile.getFile() != null && inputFile.getFile().length() != 0) {
+			fileName = inputFile.getFileInfo().getFileName();
 
-		setPercent(inputFile.getFileInfo().getPercent());
+			setPercent(inputFile.getFileInfo().getPercent());
 
-		if (inputFile.getStatus() == InputFile.SAVED) {
-			setFile(inputFile.getFile());
+			if (inputFile.getStatus() == InputFile.SAVED) {
+				setFile(inputFile.getFile());
+			}
+
+			if (inputFile.getFileInfo().getException() != null) {
+				inputFile.getFileInfo().getException().printStackTrace();
+			}
+
+			contentType = inputFile.getFileInfo().getContentType();
+		} else {
+			setReady(false);
 		}
-
-		if (inputFile.getFileInfo().getException() != null) {
-			inputFile.getFileInfo().getException().printStackTrace();
-		}
-
-		contentType = inputFile.getFileInfo().getContentType();
 	}
 
 	public void progress(EventObject event) {
