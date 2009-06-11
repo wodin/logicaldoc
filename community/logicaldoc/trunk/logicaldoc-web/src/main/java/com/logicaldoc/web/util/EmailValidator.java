@@ -1,7 +1,5 @@
 package com.logicaldoc.web.util;
 
-import com.logicaldoc.web.i18n.Messages;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,6 +8,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
+
+import com.logicaldoc.web.i18n.Messages;
 
 
 /**

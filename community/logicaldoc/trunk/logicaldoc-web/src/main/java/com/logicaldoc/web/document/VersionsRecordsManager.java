@@ -10,7 +10,6 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.FacesUtil;
 
 /**

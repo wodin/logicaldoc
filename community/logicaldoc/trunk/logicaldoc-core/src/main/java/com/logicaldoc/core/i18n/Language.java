@@ -1,6 +1,5 @@
 package com.logicaldoc.core.i18n;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;

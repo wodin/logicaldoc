@@ -5,10 +5,11 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.StringTokenizer;
 
-import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.PropertiesBean;
 import org.quartz.CronTrigger;
 import org.quartz.Scheduler;
+
+import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.PropertiesBean;
 
 /**
  * Scheduling configuration for a Task
