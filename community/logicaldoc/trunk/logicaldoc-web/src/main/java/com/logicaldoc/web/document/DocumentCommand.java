@@ -19,7 +19,7 @@ public class DocumentCommand {
 
 	private ValueBinding renderedBinding;
 
-	private MethodBinding action;
+	private MethodBinding actionBinding;
 
 	private ValueBinding linkBinding;
 
@@ -41,12 +41,12 @@ public class DocumentCommand {
 		this.icon = icon;
 	}
 
-	public MethodBinding getAction() {
-		return action;
+	public MethodBinding getActionBinding() {
+		return actionBinding;
 	}
 
-	public void setAction(MethodBinding action) {
-		this.action = action;
+	public void setActionBinding(MethodBinding actionBinding) {
+		this.actionBinding = actionBinding;
 	}
 
 	public void setRenderedBinding(ValueBinding renderedBinding) {
@@ -61,8 +61,8 @@ public class DocumentCommand {
 	}
 
 	public String action() {
-		if (action != null)
-			return (String) action.invoke(FacesContext.getCurrentInstance(), new Object[] {});
+		if (actionBinding != null)
+			return (String) actionBinding.invoke(FacesContext.getCurrentInstance(), new Object[] {});
 		else
 			return "";
 	}

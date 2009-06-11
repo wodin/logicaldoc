@@ -59,7 +59,7 @@ public class SearchResultToolbar {
 			if (StringUtils.isNotEmpty(ext.getParameter("confirm").valueAsString()))
 				command.setConfirmation(Messages.getMessage(ext.getParameter("confirm").valueAsString()));
 			command.setIcon(ext.getParameter("icon").valueAsString());
-			command.setAction(FacesUtil.createActionMethodBinding(ext.getParameter("action").valueAsString()));
+			command.setActionBinding(FacesUtil.createActionMethodBinding(ext.getParameter("action").valueAsString()));
 			command.setRenderedBinding(FacesUtil.createValueBinding(ext.getParameter("rendered").valueAsString()));
 		}
 	}
