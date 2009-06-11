@@ -90,6 +90,9 @@ public class FieldPreferences extends HashMap<String, Boolean> {
 	public Boolean get(Object key) {
 		if (size() == 0)
 			load();
-		return super.get(key);
+		if (!containsKey(key))
+			return false;
+		else
+			return super.get(key);
 	}
 }
