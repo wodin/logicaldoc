@@ -1,12 +1,10 @@
 package com.logicaldoc.web.navigation;
 
-import com.icesoft.faces.component.tree.IceUserObject;
-import com.logicaldoc.web.StyleBean;
-
-import com.logicaldoc.core.security.Menu;
-
-
 import javax.faces.event.ActionEvent;
+
+import com.icesoft.faces.component.tree.IceUserObject;
+import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.web.StyleBean;
 
 
 /**

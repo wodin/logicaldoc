@@ -7,7 +7,6 @@ import javax.faces.component.UIInput;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.i18n.Messages;

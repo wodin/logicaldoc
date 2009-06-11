@@ -3,9 +3,7 @@ package com.logicaldoc.core.document.dao;
 import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
-import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
-import com.logicaldoc.core.security.User;
 
 /**
  * This class is a DAO-service for versions.

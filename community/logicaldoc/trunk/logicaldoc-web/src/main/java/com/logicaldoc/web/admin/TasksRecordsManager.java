@@ -8,10 +8,6 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.logicaldoc.core.task.Task;
-import com.logicaldoc.core.task.TaskListener;
-import com.logicaldoc.core.task.TaskManager;
-import com.logicaldoc.util.Context;
 
 import com.icesoft.faces.async.render.RenderManager;
 import com.icesoft.faces.async.render.Renderable;
@@ -20,6 +16,10 @@ import com.icesoft.faces.webapp.xmlhttp.FatalRenderingException;
 import com.icesoft.faces.webapp.xmlhttp.PersistentFacesState;
 import com.icesoft.faces.webapp.xmlhttp.RenderingException;
 import com.icesoft.faces.webapp.xmlhttp.TransientRenderingException;
+import com.logicaldoc.core.task.Task;
+import com.logicaldoc.core.task.TaskListener;
+import com.logicaldoc.core.task.TaskManager;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.FacesUtil;
 
 /**

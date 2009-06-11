@@ -6,10 +6,8 @@ import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.AbstractCoreTestCase;
-import com.logicaldoc.core.searchengine.Result;
-import com.logicaldoc.core.searchengine.Search;
-import com.logicaldoc.core.searchengine.SearchOptions;
 
 public class SearchTest extends AbstractCoreTestCase {
 
