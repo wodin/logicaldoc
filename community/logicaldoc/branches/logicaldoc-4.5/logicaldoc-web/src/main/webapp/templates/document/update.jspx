@@ -336,7 +336,6 @@
 						<ice:selectOneMenu id="template" styleClass="selectTagMenu"
 							rendered="#{!fieldPreferences['edit.template.hidden']}"
 							tabindex="1" value="#{documentForm.template}"
-							required="#{fieldPreferences['edit.template.mandatory']}"
 							disabled="#{documentForm.readOnly or fieldPreferences['edit.template.readonly']}"
 							valueChangeListener="#{documentForm.changeTemplate}"
 							binding="#{documentForm.templateInput}" partialSubmit="true">
