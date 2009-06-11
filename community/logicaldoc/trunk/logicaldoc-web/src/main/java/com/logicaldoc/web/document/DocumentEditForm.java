@@ -512,7 +512,6 @@ public class DocumentEditForm {
 					}
 
 					User user = SessionManagement.getUser();
-
 					Set<String> tgs = TagUtil.extractTags(getTags());
 
 					doc.setCustomId(customId);
