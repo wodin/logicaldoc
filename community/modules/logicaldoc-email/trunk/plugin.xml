@@ -9,6 +9,10 @@
 			<export prefix="*" />
 		</library>
 	</runtime>
+	<extension plugin-id="logicaldoc-core" point-id="ResourceBundle" id="emailBundle">
+		<parameter id="position" value="50"/>
+		<parameter id="bundle" value="i18n.application-email"/>
+	</extension>
 	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="emailDbInit">
 		<parameter id="position" value="5" />
 		<parameter id="name" value="logicaldoc-email" />

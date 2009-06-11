@@ -5,9 +5,7 @@ import java.util.List;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
-import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
-import com.logicaldoc.core.security.User;
 
 /**
  * Hibernate implementation of <code>DocumentDAO</code>

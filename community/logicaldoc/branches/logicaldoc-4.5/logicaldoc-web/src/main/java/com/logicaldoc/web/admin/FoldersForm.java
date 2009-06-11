@@ -6,7 +6,6 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.config.SettingsConfig;
-
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 

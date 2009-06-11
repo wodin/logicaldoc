@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.jdom.Element;
 
-import com.logicaldoc.util.config.XMLBean;
-
 /**
  * Configurator for the faces-config.xml file
  * 

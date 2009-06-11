@@ -61,6 +61,10 @@
         <parameter-def id="locale" />
         <parameter-def id="analyzer" />
     </extension-point>
+    <extension-point id="ResourceBundle">
+        <parameter-def id="position" />
+        <parameter-def id="bundle" />
+    </extension-point>
     <extension-point id="Task">
         <parameter-def id="name" />
     </extension-point>
@@ -156,7 +160,18 @@
 		<parameter id="locale" value="fr"/>
 		<parameter id="analyzer" value="-"/>
 	</extension>
-	
+	<extension plugin-id="logicaldoc-core" point-id="ResourceBundle" id="applicationBundle">
+		<parameter id="position" value="1"/>
+		<parameter id="bundle" value="i18n.application"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="ResourceBundle" id="facesBundle">
+		<parameter id="position" value="10"/>
+		<parameter id="bundle" value="i18n.FacesMessageBundle"/>
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="ResourceBundle" id="infoBundle">
+		<parameter id="position" value="20"/>
+		<parameter id="bundle" value="i18n.localeInformation"/>
+	</extension>
 	
 	<extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="jpgThumb">
 		<parameter id="extension" value="jpg"/>

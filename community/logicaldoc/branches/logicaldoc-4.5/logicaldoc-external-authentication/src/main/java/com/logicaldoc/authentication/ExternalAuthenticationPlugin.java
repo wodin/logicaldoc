@@ -6,7 +6,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.util.config.FacesConfigurator;
 import com.logicaldoc.util.config.LoggingConfigurator;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
@@ -47,11 +46,6 @@ public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 		File dest = new File(System.getProperty("logicaldoc.app.rootdir"));
 		log.info("Copy web resources from " + src.getPath() + " to " + dest.getPath());
 		FileUtils.copyDirectory(src, dest);
-
-		// Now add the message bundle
-		log.info("Add logicaldoc-external-authentication resource bundle");
-		FacesConfigurator facesConfig = new FacesConfigurator();
-		facesConfig.addBundle("i18n.application-external-authentication");
 
 		// Add some scheduling defaults
 		PropertiesBean pbean = new PropertiesBean();

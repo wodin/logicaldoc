@@ -2,8 +2,6 @@ package com.logicaldoc.util.config;
 
 import org.jdom.Element;
 
-import com.logicaldoc.util.config.XMLBean;
-
 /**
  * @author Michael Scholz
  */

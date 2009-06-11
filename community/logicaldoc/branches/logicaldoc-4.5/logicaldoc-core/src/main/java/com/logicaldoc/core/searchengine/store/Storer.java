@@ -3,8 +3,6 @@ package com.logicaldoc.core.searchengine.store;
 import java.io.File;
 import java.io.InputStream;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.logicaldoc.core.document.Document;
 
 /**
