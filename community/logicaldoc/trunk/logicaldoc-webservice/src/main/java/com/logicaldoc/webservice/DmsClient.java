@@ -85,9 +85,9 @@ public class DmsClient implements DmsService {
 	@Override
 	public String update(String username, String password, long id, String title, String source, String sourceAuthor,
 			String sourceDate, String sourceType, String coverage, String language, String[] tags, String sourceId,
-			String object, String recipient, Long templateId, ExtendedAttribute[] extendedAttribute) throws Exception {
+			String object, String recipient, String templateId, ExtendedAttribute[] templateFields) throws Exception {
 		return client.update(username, password, id, title, source, sourceAuthor, sourceDate, sourceType, coverage,
-				language, tags, sourceId, object, recipient, templateId, extendedAttribute);
+				language, tags, sourceId, object, recipient, templateId, templateFields);
 	}
 
 }
