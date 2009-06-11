@@ -15,12 +15,12 @@
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="div" id="toolbar">
 	<table cellpadding="0" cellspacing="2" border="0">
 		<tr>
-			<c:forEach items="#{documentIcons.commands}" var="icon">
+			<c:forEach items="#{documentIcons.commands}" var="command">
 				<td>
-					<ldoc:toolbaritem action="#{icon.action}" link="#{icon.link}"
-					    target="#{icon.target}"
-						title="#{icon.title}" rendered="#{icon.rendered}"
-						icon="#{icon.icon}" confirmation="#{icon.confirmation}">
+					<ldoc:toolbaritem action="#{command.action}" link="#{command.link}"
+					    target="#{command.target}"
+						title="#{command.title}" rendered="#{command.rendered}"
+						icon="#{command.icon}" confirmation="#{command.confirmation}">
 					</ldoc:toolbaritem>
 				</td>
 			</c:forEach>

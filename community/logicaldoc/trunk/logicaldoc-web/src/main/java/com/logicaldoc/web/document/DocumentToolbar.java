@@ -32,35 +32,35 @@ public class DocumentToolbar {
 		commands.add(command);
 		command.setTitle(Messages.getMessage("msg.jsp.createdoc"));
 		command.setIcon("actions_upload.png");
-		command.setAction(FacesUtil.createActionMethodBinding("newDocWizard.start"));
+		command.setActionBinding(FacesUtil.createActionMethodBinding("newDocWizard.start"));
 		command.setRenderedBinding(FacesUtil.createValueBinding("documentNavigation.selectedDir.writeEnabled"));
 
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("msg.jsp.uploadfolder"));
 		command.setIcon("actions_uploadzip.png");
-		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.startZipUpload"));
+		command.setActionBinding(FacesUtil.createActionMethodBinding("documentsRecordsManager.startZipUpload"));
 		command.setRenderedBinding(FacesUtil.createValueBinding("documentNavigation.selectedDir.bulkImportEnabled"));
 
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("clipboard.cut"));
 		command.setIcon("actions_cut.png");
-		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.cutToClipboard"));
+		command.setActionBinding(FacesUtil.createActionMethodBinding("documentsRecordsManager.cutToClipboard"));
 		command.setRenderedBinding(FacesUtil.createValueBinding("documentsRecordsManager.count>0"));
 
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("clipboard.copy"));
 		command.setIcon("actions_copy.png");
-		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.copyToClipboard"));
+		command.setActionBinding(FacesUtil.createActionMethodBinding("documentsRecordsManager.copyToClipboard"));
 		command.setRenderedBinding(FacesUtil.createValueBinding("documentsRecordsManager.count>0"));
 		
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("clipboard.move"));
 		command.setIcon("actions_paste.png");
-		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.move"));
+		command.setActionBinding(FacesUtil.createActionMethodBinding("documentsRecordsManager.move"));
 		command
 				.setRenderedBinding(FacesUtil
 						.createValueBinding("documentsRecordsManager.clipboardSize>0 and documentNavigation.selectedDir.writeEnabled and (documentsRecordsManager.guiRequest=='cut' or documentsRecordsManager.guiRequest=='copy')"));
@@ -69,7 +69,7 @@ public class DocumentToolbar {
 		commands.add(command);
 		command.setTitle(Messages.getMessage("document.immutable.make"));
 		command.setIcon("actions_immutability.png");
-		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.requestImmutabilityComment"));
+		command.setActionBinding(FacesUtil.createActionMethodBinding("documentsRecordsManager.requestImmutabilityComment"));
 		command.setRenderedBinding(FacesUtil
 				.createValueBinding("documentNavigation.selectedDir.manageImmutabilityEnabled"));
 
@@ -77,7 +77,7 @@ public class DocumentToolbar {
 		commands.add(command);
 		command.setTitle(Messages.getMessage("delete"));
 		command.setIcon("actions_delete.png");
-		command.setAction(FacesUtil.createActionMethodBinding("documentsRecordsManager.deleteSelected"));
+		command.setActionBinding(FacesUtil.createActionMethodBinding("documentsRecordsManager.deleteSelected"));
 		command.setRenderedBinding(FacesUtil.createValueBinding("documentNavigation.selectedDir.writeEnabled"));
 		command.setConfirmation(Messages.getMessage("msg.question.deletedoc"));
 
@@ -92,7 +92,7 @@ public class DocumentToolbar {
 			if (StringUtils.isNotEmpty(ext.getParameter("confirm").valueAsString()))
 				command.setConfirmation(Messages.getMessage(ext.getParameter("confirm").valueAsString()));
 			command.setIcon(ext.getParameter("icon").valueAsString());
-			command.setAction(FacesUtil.createActionMethodBinding(ext.getParameter("action").valueAsString()));
+			command.setActionBinding(FacesUtil.createActionMethodBinding(ext.getParameter("action").valueAsString()));
 			command.setRenderedBinding(FacesUtil.createValueBinding(ext.getParameter("rendered").valueAsString()));
 		}
 	}
