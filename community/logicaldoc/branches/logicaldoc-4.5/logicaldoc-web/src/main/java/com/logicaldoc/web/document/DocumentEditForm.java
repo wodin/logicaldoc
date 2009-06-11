@@ -220,8 +220,10 @@ public class DocumentEditForm {
 				DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance()
 						.getBean(DocumentTemplateDAO.class);
 				templt = dao.findById(template.longValue());
-				for (String attrName : templt.getAttributes()) {
-					extendedAttributes.add(new Attribute(attrName, ""));
+				if (templt != null) {
+					for (String attrName : templt.getAttributes()) {
+						extendedAttributes.add(new Attribute(attrName, ""));
+					}
 				}
 			}
 		}
@@ -594,7 +596,7 @@ public class DocumentEditForm {
 			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("tags")));
 		}
 		// Template
-		if (fieldPreferences.get(page + ".template.mandatory") && getTemplate() == null) {
+		if (fieldPreferences.get(page + ".template.mandatory") && (getTemplate() == 0 || getTemplate() == null)) {
 			valid = false;
 			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("template")));
 		}
