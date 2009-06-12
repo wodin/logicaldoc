@@ -207,7 +207,7 @@ public class ServletDocUtil {
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		String content = manager.getDocumentContent(doc.getId());
 
-		InputStream is = new StringInputStream(content);
+		InputStream is = new StringInputStream(content.trim());
 		OutputStream os;
 		os = response.getOutputStream();
 		int letter = 0;
