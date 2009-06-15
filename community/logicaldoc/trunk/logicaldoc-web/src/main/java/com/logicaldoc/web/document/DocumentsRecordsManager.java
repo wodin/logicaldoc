@@ -35,6 +35,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.SessionManagement;
+import com.logicaldoc.web.admin.GuiBean;
 import com.logicaldoc.web.components.SortableList;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
@@ -92,7 +93,7 @@ public class DocumentsRecordsManager extends SortableList {
 
 	private boolean selectedAll;
 
-	private int displayedRows = 10;
+	private int displayedRows;
 
 	// The requested operation, can be: cut or copy
 	private String guiRequest;
@@ -698,6 +699,11 @@ public class DocumentsRecordsManager extends SortableList {
 	}
 
 	public int getDisplayedRows() {
+		if (displayedRows == 0) {
+			GuiBean guiBean = ((GuiBean) FacesUtil.accessBeanFromFacesContext("guiBean", FacesContext
+					.getCurrentInstance(), log));
+			displayedRows = guiBean.getPageSize();
+		}
 		return displayedRows;
 	}
 
