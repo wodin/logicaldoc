@@ -171,9 +171,14 @@ public class NewDocWizard {
 		DocumentEditForm documentForm = ((DocumentEditForm) application.createValueBinding("#{documentForm}").getValue(
 				FacesContext.getCurrentInstance()));
 
-		//Check if all the mandatory preferences are correctly defined by the user
+		// Check if all the mandatory preferences are correctly defined by the
+		// user
 		if (documentForm.isValid("insert")) {
-			documentForm.save();
+			// Check if the save document operation has no errors.
+			String result = documentForm.save();
+			// If there are errors,the user remains on the upload document page.
+			if ("customIdDuplicated".equals(result))
+				return null;
 			documentNavigation.selectDirectory(documentNavigation.getSelectedDir());
 			return abort();
 		}

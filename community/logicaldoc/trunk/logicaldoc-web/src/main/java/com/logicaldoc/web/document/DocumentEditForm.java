@@ -24,6 +24,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.Version;
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
@@ -452,6 +453,7 @@ public class DocumentEditForm {
 		long userId = SessionManagement.getUserId();
 		Menu folder = documentNavigation.getSelectedDir().getMenu();
 		if (SessionManagement.isValid() && mdao.isWriteEnable(folder.getId(), userId)) {
+			boolean duplicateCustomId = false;
 			try {
 				InputFileBean inputFile = ((InputFileBean) FacesUtil.accessBeanFromFacesContext("inputFile",
 						FacesContext.getCurrentInstance(), log));
@@ -473,17 +475,27 @@ public class DocumentEditForm {
 						attrs.put(att.getName(), att.getValue());
 				}
 
-				Document doc = documentManager.create(file, folder, SessionManagement.getUser(), LocaleUtil
-						.toLocale(language), title, getSourceDate(), source, sourceAuthor, sourceType, coverage,
-						versionDesc, tgs, template, attrs, sourceId, object, recipient, getCustomId(),
-						immediateIndexing);
-				if (StringUtils.isNotEmpty(doc.getCustomId()))
-					Messages.addInfo(Messages.getMessage("document.inserted", doc.getCustomId()));
+				// Check if the given customid is not already associated to an
+				// existing document
+				DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+				if (StringUtils.isNotBlank(getCustomId()) && documentDAO.findByCustomId(getCustomId()) != null) {
+					Messages.addLocalizedError("errors.customid.duplicate");
+					duplicateCustomId = true;
+					return "customIdDuplicated";
+				} else {
+					Document doc = documentManager.create(file, folder, SessionManagement.getUser(), LocaleUtil
+							.toLocale(language), title, getSourceDate(), source, sourceAuthor, sourceType, coverage,
+							versionDesc, tgs, template, attrs, sourceId, object, recipient, getCustomId(),
+							immediateIndexing);
+					if (StringUtils.isNotEmpty(doc.getCustomId()))
+						Messages.addInfo(Messages.getMessage("document.inserted", doc.getCustomId()));
+				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addLocalizedError("errors.action.savedoc");
 			} finally {
-				reset();
+				if (!duplicateCustomId)
+					reset();
 			}
 			return null;
 		} else {
@@ -502,6 +514,7 @@ public class DocumentEditForm {
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		if (SessionManagement.isValid()) {
 			if (isValid("edit")) {
+				boolean duplicateCustomId = false;
 				try {
 					Document doc = record.getDocument();
 
@@ -516,14 +529,28 @@ public class DocumentEditForm {
 					User user = SessionManagement.getUser();
 					Set<String> tgs = TagUtil.extractTags(getTags());
 
-					doc.setCustomId(customId);
+					// Check if the given customid is not already associated to
+					// an existing document
+					DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+					if (StringUtils.isNotBlank(customId)) {
+						Document existingDoc = documentDAO.findByCustomId(customId);
+						if (existingDoc != null && existingDoc.getId() != doc.getId()) {
+							Messages.addLocalizedError("errors.customid.duplicate");
+							duplicateCustomId = true;
+							return null;
+						} else {
+							doc.setCustomId(customId);
+						}
+					}
+
 					documentManager.update(doc, user, title, source, sourceAuthor, sourceDate, sourceType, coverage,
 							LocaleUtil.toLocale(language), tgs, sourceId, object, recipient, template, attrs);
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 					Messages.addError(e.getMessage());
 				} finally {
-					reset();
+					if (!duplicateCustomId)
+						reset();
 				}
 				navigation.showDocuments();
 				navigation.refresh();
