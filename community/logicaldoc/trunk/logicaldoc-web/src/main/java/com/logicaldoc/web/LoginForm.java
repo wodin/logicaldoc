@@ -130,8 +130,7 @@ public class LoginForm {
 			return "passwordExpired";
 		} else {
 			log.warn("User " + j_username + " is not valid.");
-			// Messages.addError(Messages.getString("errors.action.password.mismatch"));
-			Messages.addError("Invalid username or password");
+			Messages.addLocalizedError("errors.login.notvalid");
 			return "loginFailure";
 		}
 	}
