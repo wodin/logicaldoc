@@ -118,6 +118,7 @@ public class GuiBean {
 			viewModeBrowsing = config.getProperty("gui.viewmode.browsing");
 			viewModeSearch = config.getProperty("gui.viewmode.search");
 			thumbnailSize = Integer.parseInt(config.getProperty("gui.thumbnail.size"));
+			pageSize = Integer.parseInt(config.getProperty("gui.page.size"));
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 		}
