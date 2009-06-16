@@ -56,12 +56,14 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				oldText = (String) (((Object[]) old.get(0))[0]);
 				oldPathExt = (String) (((Object[]) old.get(0))[1]);
 			}
-			
+
 			menu.setPath(menu.getPath().replaceAll("//", "/"));
 			getHibernateTemplate().saveOrUpdate(menu);
 
-			// We need to update the path extended
-			updatePathExtended(menu, !oldText.equals(menu.getText()) || !menu.getPathExtended().equals(oldPathExt));
+			if (menu.getPathExtended() != null) {
+				// We need to update the path extended
+				updatePathExtended(menu, !oldText.equals(menu.getText()) || !menu.getPathExtended().equals(oldPathExt));
+			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			result = false;
