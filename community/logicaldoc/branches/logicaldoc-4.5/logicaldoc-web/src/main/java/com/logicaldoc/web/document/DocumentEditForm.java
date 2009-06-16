@@ -649,12 +649,10 @@ public class DocumentEditForm {
 					// goes wrong
 					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 							DocumentManager.class);
-					// documentManager.uncheckout(document.getId(),
-					// SessionManagement.getUser());
 					documentManager.unlock(document.getId(), SessionManagement.getUser(), null);
 
 					/* create positive log message */
-					Messages.addLocalizedInfo("msg.action.changedoc");
+					Messages.addLocalizedInfo("document.action.unlocked");
 					fileForm.reset();
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
