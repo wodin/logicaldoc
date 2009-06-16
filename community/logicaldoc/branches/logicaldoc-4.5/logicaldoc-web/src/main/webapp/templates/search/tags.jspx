@@ -63,7 +63,7 @@
 
 	<!-- Documents table -->
 	<ice:panelGroup rendered="#{tags.documentsCount > 0}"
-		styleClass="center calBorderHighlight" style="width:70%;">
+		styleClass="center calBorderHighlight" style="width:70%; font-size: 14px;">
 		<ice:panelGroup style="text-align: center;">
 			<h3>
 				<ice:outputText value="#{msgs['tags.dispdocs']}" />
@@ -97,7 +97,7 @@
 
 					<ice:graphicImage
 						value="#{StyleBean.imagesPath}/#{entry.document.icon}"
-						style="border: 0px solid;" />
+						style="border: 0px solid; padding-right: 3px;" />
 					<ice:outputLink value="download?docId=#{entry.docId}"
 						target="_blank">
 						<ice:outputText value="#{entry.title}" />
@@ -132,7 +132,7 @@
 							style="text-decoration: underline;" />
 					</ice:commandSortHeader>
 				</f:facet>
-				<ice:panelGroup>
+				<ice:panelGroup style="text-align: right; white-space: nowrap;">
 					<ice:outputText value="#{entry.document.fileSize}">
 						<f:converter converterId="logicaldoc.FileSizeConverterKB" />
 					</ice:outputText>
