@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.java.plugin.Plugin;
 
 import com.logicaldoc.util.PluginRegistry;
+import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 
 public class EmailCacheManager {
 	protected static Log log = LogFactory.getLog(EmailCache.class);
@@ -39,13 +40,11 @@ public class EmailCacheManager {
 	private File getCacheDirectory() {
 		File file = new File("");
 		try {
-			Plugin emailPlugin = PluginRegistry.getInstance().getManager().getPlugin("logicaldoc-email");
-			String path = PluginRegistry.getInstance().getManager().getPathResolver().resolvePath(
-					emailPlugin.getDescriptor(), "cache").toString();
-			if (path.startsWith("file:")) {
-				path = path.substring(5);
-			}
-			file = new File(path);
+			LogicalDOCPlugin emailPlugin = (LogicalDOCPlugin) PluginRegistry.getInstance().getManager().getPlugin(
+					"logicaldoc-email");
+			file = emailPlugin.resolveDataPath("cache");
+			if (!file.exists())
+				file.mkdir();
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 		}
