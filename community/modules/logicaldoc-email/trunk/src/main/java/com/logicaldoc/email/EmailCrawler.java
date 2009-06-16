@@ -220,8 +220,6 @@ public class EmailCrawler extends Task {
 				receive(account, defaultOwner);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
-			} finally {
-				setProgress(getSize());
 			}
 		}
 	}
@@ -494,6 +492,7 @@ public class EmailCrawler extends Task {
 		errors = 0;
 		log.info("Start email download from all accounts");
 		receiveMails(defaultOwner);
+		setProgress(getSize());
 		log.info("End email download");
 		log.info("Email imported: " + imported);
 		log.info("Errors: " + errors);
