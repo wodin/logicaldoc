@@ -80,7 +80,7 @@
 				<ice:inputFile styleClass="inputFile" id="inputFileZ"
 					progressRender="true" progressListener="#{inputFile.progress}"
 					actionListener="#{inputFile.action}" inputTextSize="45"
-					label="#{msgs['upload.button']}" />
+					label="#{msgs['upload.button']}" style="width: 677px"/>
 				<ice:outputProgress id="pro1" value="#{inputFile.percent}" />
 				<ice:panelGroup>
 					<ice:messages globalOnly="false" showDetail="true"
