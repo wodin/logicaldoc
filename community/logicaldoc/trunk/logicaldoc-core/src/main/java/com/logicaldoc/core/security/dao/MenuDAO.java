@@ -235,4 +235,13 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	 * @return
 	 */
 	public List<Menu> findByMenuTextAndParentId(String text, long parentId);
+
+	/**
+	 * This method persists the menu object and updates its path extended
+	 * 
+	 * @param menu menu to be stored.
+	 * @param updatePathExtended true if you want to update menu path extended
+	 * @return True if successfully stored in a database.
+	 */
+	public boolean store(Menu menu, boolean updatePathExtended);
 }
