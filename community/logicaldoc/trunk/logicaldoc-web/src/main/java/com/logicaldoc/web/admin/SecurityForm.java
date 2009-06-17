@@ -15,6 +15,7 @@ import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.document.Directory;
 import com.logicaldoc.web.document.DirectoryTreeModel;
 import com.logicaldoc.web.document.RightsRecordsManager;
+import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.util.FacesUtil;
 
 /**
@@ -121,13 +122,15 @@ public class SecurityForm {
 	public void save() {
 		try {
 			PropertiesBean context = getConfig();
-			context.setProperty("password.size", passwordSize > 4 ? Integer.toString(passwordSize) : "0");
+			context.setProperty("password.size", passwordSize > 4 ? Integer.toString(passwordSize) : "4");
 			context.setProperty("password.ttl", passwordTtl > 0 ? Integer.toString(passwordTtl) : "0");
 			context.write();
 
 			UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 			dao.setPasswordTtl(passwordTtl > 0 ? passwordTtl : 0);
+			Messages.addLocalizedInfo("msg.action.passwordsettings");
 		} catch (IOException e) {
+			Messages.addLocalizedError("errors.error");
 		}
 	}
 }
