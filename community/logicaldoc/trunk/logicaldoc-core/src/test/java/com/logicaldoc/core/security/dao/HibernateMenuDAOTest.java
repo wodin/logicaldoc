@@ -57,18 +57,33 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 
 		menu = dao.findById(23);
 		dao.store(menu);
-		
+
 		menu = dao.findById(18);
 		menu.setText("xxxx");
 		dao.store(menu);
 		menu = dao.findById(15);
-		
 
 		menu.getMenuGroups().remove(menu.getMenuGroup(3));
 		assertEquals(2, menu.getMenuGroups().size());
 		assertTrue(dao.store(menu));
 		menu = dao.findById(Menu.MENUID_HOME);
 		assertEquals(3, menu.getMenuGroups().size());
+
+		menu = dao.findById(101);
+		menu.setText("pippo");
+		assertTrue(dao.store(menu));
+		menu = dao.findById(102);
+		assertEquals("/menu.home/menu.admin/pippo/", menu.getPathExtended());
+
+		menu = dao.findById(101);
+		menu.setText("pippo2");
+		assertTrue(dao.store(menu, false));
+		menu = dao.findById(102);
+		assertEquals("/menu.home/menu.admin/pippo/", menu.getPathExtended());
+		
+		menu = dao.findById(102);
+		dao.store(menu, true);
+		assertEquals("/menu.home/menu.admin/pippo2/", menu.getPathExtended());
 	}
 
 	public void testDelete() {
@@ -205,19 +220,18 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 
 	public void testGetEnabledPermissions() {
 		Set<Permission> permissions = dao.getEnabledPermissions(Menu.MENUID_HOME, 1);
-		assertEquals(7,permissions.size());
+		assertEquals(7, permissions.size());
 		assertTrue(permissions.contains(Permission.READ));
 		assertTrue(permissions.contains(Permission.MANAGE_SECURITY));
 		assertTrue(permissions.contains(Permission.SIGN));
 		permissions = dao.getEnabledPermissions(26, 1);
-		assertEquals(7,permissions.size());
+		assertEquals(7, permissions.size());
 		assertTrue(permissions.contains(Permission.READ));
 		assertTrue(permissions.contains(Permission.WRITE));
 		permissions = dao.getEnabledPermissions(999, 1);
-		assertEquals(0,permissions.size());
+		assertEquals(0, permissions.size());
 	}
 
-	
 	public void testFindMenuIdByUserId() {
 		Collection<Long> ids = dao.findMenuIdByUserId(1);
 		assertNotNull(ids);
@@ -310,16 +324,16 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		menus = dao.findByMenuTextAndParentId("text", 100);
 		assertEquals(dao.findById(101), menus.get(0));
 	}
-	
+
 	@Test
-	public void testFindMenuIdByUserIdAndPermission(){
-		Set<Long> ids=dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE, null);
+	public void testFindMenuIdByUserIdAndPermission() {
+		Set<Long> ids = dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE, null);
 		assertNotNull(ids);
 		assertEquals(6, ids.size());
-		ids=dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE, Menu.MENUTYPE_MENU);
+		ids = dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE, Menu.MENUTYPE_MENU);
 		assertNotNull(ids);
 		assertEquals(4, ids.size());
-		ids=dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE, Menu.MENUTYPE_DIRECTORY);
+		ids = dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE, Menu.MENUTYPE_DIRECTORY);
 		assertNotNull(ids);
 		assertEquals(2, ids.size());
 	}
