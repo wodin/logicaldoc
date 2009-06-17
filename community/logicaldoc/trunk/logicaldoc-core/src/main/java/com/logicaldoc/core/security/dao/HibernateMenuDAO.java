@@ -44,7 +44,12 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		this.userDAO = userDAO;
 	}
 
+	@Override
 	public boolean store(Menu menu) {
+		return store(menu, true);
+	}
+
+	public boolean store(Menu menu, boolean updatePathExtended) {
 		boolean result = true;
 
 		try {
@@ -60,7 +65,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			menu.setPath(menu.getPath().replaceAll("//", "/"));
 			getHibernateTemplate().saveOrUpdate(menu);
 
-			if (menu.getPathExtended() != null) {
+			if (updatePathExtended) {
 				// We need to update the path extended
 				updatePathExtended(menu, !oldText.equals(menu.getText()) || !menu.getPathExtended().equals(oldPathExt));
 			}
