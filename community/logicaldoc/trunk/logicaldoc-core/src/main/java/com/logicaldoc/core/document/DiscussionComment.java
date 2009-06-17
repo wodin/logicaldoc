@@ -55,6 +55,14 @@ public class DiscussionComment implements Comparable<DiscussionComment> {
 		return body;
 	}
 
+	/**
+	 * Returns a formatted body suitable for HTML output
+	 */
+	public String getFormattedBody() {
+		String buf=body.replaceAll("\\n", "<br/>");
+		return buf;
+	}
+	
 	public void setBody(String body) {
 		this.body = body;
 	}
