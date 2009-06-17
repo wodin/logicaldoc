@@ -139,7 +139,7 @@ public class RightsRecordsManager {
 
 		// initiate the list
 		rules = new ArrayList<GroupRule>(10);
-		
+
 		try {
 			GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 			groups = (List<Group>) gdao.findAll();
@@ -243,7 +243,7 @@ public class RightsRecordsManager {
 			menu.getMenuGroups().add(mg);
 		}
 
-		mdao.store(menu);
+		mdao.store(menu, false);
 		initRights(menu.getId());
 	}
 
@@ -267,7 +267,7 @@ public class RightsRecordsManager {
 			menu.getMenuGroups().remove(mg);
 		}
 
-		mdao.store(menu);
+		mdao.store(menu, false);
 		initRights(menu.getId());
 	}
 
@@ -388,16 +388,16 @@ public class RightsRecordsManager {
 				} else {
 					mg.setArchive(0);
 				}
-				
-				boolean stored = mdao.store(folder);
+
+				boolean stored = mdao.store(folder, false);
 				if (!stored) {
 					sqlerrors = true;
-				} 
+				}
 			} else {
 				if (mg != null) {
 					folder.getMenuGroups().remove(mg);
 
-					boolean deleted = mdao.store(folder);
+					boolean deleted = mdao.store(folder, false);
 
 					if (!deleted) {
 						sqlerrors = true;
