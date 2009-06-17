@@ -1,5 +1,6 @@
 -- timestamp -> datetime
 -- to insert a date -> CONVERT(DATETIME, '2008-10-22 00:00:00', 20)
+
 create table ld_attributes (ld_templateid bigint not null, ld_attribute varchar(255));
 create table ld_document (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(4000), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date datetime, ld_creation datetime not null, ld_publisher varchar(255), ld_publisherid bigint not null, ld_creator varchar(255), ld_creatorid bigint not null, ld_status int, ld_type varchar(255), ld_lockuserid bigint, ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate datetime, ld_sourceid varchar(4000), ld_sourcetype varchar(255), ld_object varchar(4000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_indexed int not null, ld_signed int not null, ld_digest varchar(255), ld_recipient varchar(4000), ld_folderid bigint, ld_templateid bigint, ld_exportstatus int not null, ld_exportid bigint, ld_exportname varchar(255), ld_exportversion varchar(10), primary key (ld_id));
 create table ld_document_ext (ld_docid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_docid, ld_name));
