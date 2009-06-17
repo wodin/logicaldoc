@@ -120,7 +120,6 @@
 		</f:subview>
 	</ice:panelGroup>
 
-	<br />
 	<ice:form>
 		<ice:panelGroup styleClass="commands">
 			<hr />
