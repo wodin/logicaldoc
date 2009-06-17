@@ -298,7 +298,14 @@ public class RightsRecordsManager {
 			return null;
 		long id = selectedDirectory.getMenuId();
 		long userId = SessionManagement.getUserId();
-		saveRules(id, userId);
+		try {
+			saveRules(id, userId);
+			Messages.addMessage(FacesMessage.SEVERITY_INFO, Messages.getMessage("msg.action.saverules"), Messages
+					.getMessage("msg.action.saverules"));
+		} catch (Exception e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Messages.getMessage("errors.action.saverules"), Messages
+					.getMessage("errors.action.saverules"));
+		}
 		documentNavigation.showDocuments();
 		return null;
 	}
@@ -308,8 +315,9 @@ public class RightsRecordsManager {
 	 * 
 	 * @param id
 	 * @param userId
+	 * @throws Exception
 	 */
-	private void saveRules(long id, long userId) {
+	private void saveRules(long id, long userId) throws Exception {
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 		// Rules can be applied only if the user can manage the security
@@ -407,11 +415,8 @@ public class RightsRecordsManager {
 		}
 
 		if (sqlerrors) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Messages.getMessage("errors.action.saverules"), Messages
-					.getMessage("errors.action.saverules"));
-		} else {
-			Messages.addMessage(FacesMessage.SEVERITY_INFO, Messages.getMessage("msg.action.saverules"), Messages
-					.getMessage("msg.action.saverules"));
+			log.error("SQL errors saving permissions on folder " + folder.getText());
+			throw new Exception("SQL errors saving permissions on folder " + folder.getText());
 		}
 
 		if (recursive) {
