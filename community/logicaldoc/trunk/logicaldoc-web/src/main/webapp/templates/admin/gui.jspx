@@ -68,6 +68,34 @@
 				<ice:inputText id="thumbsize" value="#{guiBean.thumbnailSize}" />
 				<ice:message for="thumbsize" />
 			</ice:panelGroup>
+			
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="thumbnailQuality"
+					value="#{msgs['gui.thumbnail.quality']}:  " />
+			</ice:panelGroup>
+			<ice:panelGroup style="margin-top:0px; padding-top:0px;">
+				<ice:selectOneMenu id="thumbnailQuality"
+					value="#{guiBean.thumbnailQuality}">
+					<f:selectItem itemValue="100" />
+					<f:selectItem itemValue="90" />
+					<f:selectItem itemValue="80" />
+					<f:selectItem itemValue="60" />
+					<f:selectItem itemValue="50" />
+					<f:selectItem itemValue="40" />
+				</ice:selectOneMenu>
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="thumbnailScale"
+					value="#{msgs['gui.thumbnail.scale']}:  " />
+			</ice:panelGroup>
+			<ice:panelGroup style="margin-top:0px; padding-top:0px;">
+				<ice:selectOneMenu id="thumbnailScale"
+					value="#{guiBean.thumbnailScale}">
+					<f:selectItem itemValue="1" itemLabel="DEFAULT"/>
+					<f:selectItem itemValue="4" itemLabel="SMOOTH"/>
+				</ice:selectOneMenu>
+			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
 				<ice:outputLabel for="pagesize" value="#{msgs['gui.page.size']}:  " />

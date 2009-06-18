@@ -45,7 +45,7 @@
 										</ice:outputText>
 									</ice:panelGroup>
 									<ice:panelGroup>
-										<ice:outputText value="#{comment.body}" />
+										<ice:outputText value="#{comment.formattedBody}" escape="false"/>
 									</ice:panelGroup>
 								</ice:panelGroup>
 							</ice:panelGrid>
