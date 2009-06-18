@@ -1,5 +1,6 @@
 package com.logicaldoc.core.document.thumbnail;
 
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -28,7 +29,7 @@ public class ThumbnailManager {
 
 	// Key is the extension, value is the associated builder
 	private Map<String, ThumbnailBuilder> builders = new HashMap<String, ThumbnailBuilder>();
-	
+
 	/**
 	 * Creates the thumbnail for the specified document and file version
 	 * 
@@ -38,7 +39,7 @@ public class ThumbnailManager {
 	 */
 	public void createTumbnail(Document document, String fileVersion) throws IOException {
 		ThumbnailBuilder builder = getBuilders().get(document.getFileExtension());
-		
+
 		if (builder == null)
 			return;
 
@@ -47,11 +48,33 @@ public class ThumbnailManager {
 			PropertiesBean conf = new PropertiesBean();
 			size = Integer.parseInt(conf.getProperty("gui.thumbnail.size"));
 		} catch (Throwable t) {
-			t.printStackTrace();
+			log.error(t.getMessage());
 		}
+
+		float quality = 1;
+		try {
+			PropertiesBean conf = new PropertiesBean();
+			int buf = Integer.parseInt(conf.getProperty("gui.thumbnail.quality"));
+			if (buf < 1)
+				buf = 1;
+			if (buf > 100)
+				buf = 100;
+			quality = (float) buf / (float) 100;
+		} catch (Throwable t) {
+			log.error(t.getMessage());
+		}
+
+		int scaleAlgorithm = Image.SCALE_SMOOTH;
+		try {
+			PropertiesBean conf = new PropertiesBean();
+			scaleAlgorithm = Integer.parseInt(conf.getProperty("gui.thumbnail.scale"));
+		} catch (Throwable t) {
+			log.error(t.getMessage());
+		}
+
 		File src = documentManager.getDocumentFile(document, fileVersion);
 		File dest = new File(src.getParentFile(), src.getName() + "-thumb.jpg");
-		builder.build(src, document.getFileName(), size, dest);
+		builder.build(src, document.getFileName(), size, dest, scaleAlgorithm, quality);
 	}
 
 	/**

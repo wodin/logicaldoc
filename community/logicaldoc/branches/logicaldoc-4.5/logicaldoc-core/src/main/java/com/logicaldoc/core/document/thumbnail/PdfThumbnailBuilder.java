@@ -14,13 +14,13 @@ import org.pdfbox.PDFToImage;
 public class PdfThumbnailBuilder extends ImageThumbnailBuilder {
 
 	@Override
-	public void build(File src, String srcFileName, int size, File dest) throws IOException {
-		String[] args = new String[] { "-startPage", "1", "-endPage", "1", "-outputPrefix",
-				"thumb", src.getPath()};
+	public void build(File src, String srcFileName, int size, File dest, int scaleAlgorithm, float compressionQuality)
+			throws IOException {
+		String[] args = new String[] { "-startPage", "1", "-endPage", "1", "-outputPrefix", "thumb", src.getPath() };
 		File firstPage = new File("thumb1.jpg");
 		try {
 			PDFToImage.main(args);
-			super.build(firstPage, srcFileName, size, dest);
+			super.build(firstPage, srcFileName, size, dest, scaleAlgorithm, compressionQuality);
 		} catch (Throwable e) {
 		} finally {
 			firstPage.delete();

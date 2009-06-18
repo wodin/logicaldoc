@@ -39,6 +39,10 @@ public class GuiBean {
 
 	private Integer thumbnailSize = null;
 
+	private Integer thumbnailQuality = null;
+
+	private Integer thumbnailScale = null;
+
 	private Integer pageSize = null;
 
 	public String getPath() {
@@ -118,8 +122,10 @@ public class GuiBean {
 			viewModeBrowsing = config.getProperty("gui.viewmode.browsing");
 			viewModeSearch = config.getProperty("gui.viewmode.search");
 			thumbnailSize = Integer.parseInt(config.getProperty("gui.thumbnail.size"));
+			thumbnailScale = Integer.parseInt(config.getProperty("gui.thumbnail.scale"));
+			thumbnailQuality = Integer.parseInt(config.getProperty("gui.thumbnail.quality"));
 			pageSize = Integer.parseInt(config.getProperty("gui.page.size"));
-		} catch (IOException e) {
+		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
 	}
@@ -153,6 +159,8 @@ public class GuiBean {
 			config.setProperty("gui.viewmode.browsing", viewModeBrowsing);
 			config.setProperty("gui.viewmode.search", viewModeSearch);
 			config.setProperty("gui.thumbnail.size", thumbnailSize.toString());
+			config.setProperty("gui.thumbnail.quality", thumbnailQuality.toString());
+			config.setProperty("gui.thumbnail.scale", thumbnailScale.toString());
 			config.setProperty("gui.page.size", pageSize.toString());
 			config.write();
 			Messages.addLocalizedInfo("msg.action.savesettings");
@@ -171,5 +179,21 @@ public class GuiBean {
 
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
+	}
+
+	public Integer getThumbnailScale() {
+		return thumbnailScale;
+	}
+
+	public void setThumbnailScale(Integer thumbnailScale) {
+		this.thumbnailScale = thumbnailScale;
+	}
+
+	public Integer getThumbnailQuality() {
+		return thumbnailQuality;
+	}
+
+	public void setThumbnailQuality(Integer thumbnailQuality) {
+		this.thumbnailQuality = thumbnailQuality;
 	}
 }
