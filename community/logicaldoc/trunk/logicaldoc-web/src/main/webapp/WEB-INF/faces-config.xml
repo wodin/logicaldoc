@@ -144,7 +144,7 @@
   <managed-bean>
     <managed-bean-name>rightsRecordsManager</managed-bean-name>
     <managed-bean-class>com.logicaldoc.web.document.RightsRecordsManager</managed-bean-class>
-    <managed-bean-scope>request</managed-bean-scope>
+    <managed-bean-scope>session</managed-bean-scope>
     <managed-property>
       <property-name>documentNavigation</property-name>
       <value>#{documentNavigation}</value>
@@ -154,7 +154,7 @@
   <managed-bean>
     <managed-bean-name>securityRightsRecordsManager</managed-bean-name>
     <managed-bean-class>com.logicaldoc.web.document.RightsRecordsManager</managed-bean-class>
-    <managed-bean-scope>request</managed-bean-scope>
+    <managed-bean-scope>session</managed-bean-scope>
     <managed-property>
       <property-name>documentNavigation</property-name>
       <value>#{documentNavigation}</value>
