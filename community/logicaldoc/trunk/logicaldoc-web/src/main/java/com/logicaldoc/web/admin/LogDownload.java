@@ -30,7 +30,8 @@ public class LogDownload extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String appender = request.getParameter("appender");
-
+		response.setContentType("text/html");
+		
 		if (SessionManagement.isValid(request.getSession())) {
 			try {
 				LoggingConfigurator conf = new LoggingConfigurator();
