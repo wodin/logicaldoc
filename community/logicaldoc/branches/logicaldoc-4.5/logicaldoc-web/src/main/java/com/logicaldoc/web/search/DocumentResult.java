@@ -118,16 +118,16 @@ public class DocumentResult extends DocumentRecord implements Result {
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		model.add(createMenuItem(Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,
 				"#{entry.versions}", null, style.getImagePath("versions.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("msg.jsp.discuss"), "articles-" + folder.getId(), null,
-				"#{entry.articles}", null, style.getImagePath("comments.png"), true, "_blank", null));
+		model.add(createMenuItem(" " + Messages.getMessage("document.discussions"), "discussions-" + document.getId(),
+				null, "#{entry.discussions}", null, style.getImagePath("comments.png"), true, "_blank", null));
 		model.add(createMenuItem(Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getId(), null,
 				"#{entry.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank", null));
 		model.add(createMenuItem(Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(), null,
 				"#{entry.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("info"), "info-" + folder.getId(), null,
-				"#{entry.info}", null, style.getImagePath("info.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("history"), "history-" + folder.getId(), null,
-				"#{entry.history}", null, style.getImagePath("history.png"), true, "_blank", null));
+		model.add(createMenuItem(Messages.getMessage("info"), "info-" + folder.getId(), null, "#{entry.info}", null,
+				style.getImagePath("info.png"), true, "_blank", null));
+		model.add(createMenuItem(Messages.getMessage("history"), "history-" + folder.getId(), null, "#{entry.history}",
+				null, style.getImagePath("history.png"), true, "_blank", null));
 	}
 
 	public void showDocumentPath() {
@@ -174,6 +174,11 @@ public class DocumentResult extends DocumentRecord implements Result {
 		return super.versions();
 	}
 
+	public String discussions() {
+		openDocumentsPage();
+		return super.discussions();
+	}
+
 	public void setScore(Double score) {
 	}
 
@@ -210,7 +215,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 	@Override
 	public boolean isRelevant(SearchOptions opt) {
 		return result.isRelevant(opt);
-	}	
+	}
 
 	@Override
 	public void setSourceDate(Date date) {
@@ -224,7 +229,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 	public void setCreation(Date creation) {
 		result.setCreation(creation);
 	}
-	
+
 	@Override
 	public void setCustomId(String customId) {
 		result.setCustomId(customId);
@@ -233,6 +238,6 @@ public class DocumentResult extends DocumentRecord implements Result {
 	@Override
 	public void setDocId(long docId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
