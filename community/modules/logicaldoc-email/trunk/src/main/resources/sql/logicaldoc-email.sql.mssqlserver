@@ -20,7 +20,7 @@ values (-5,-5);
 
 insert into ld_template
 			(ld_id, ld_lastmodified, ld_deleted, ld_name, ld_description)
-values (1,'2008-11-19',0,'email','email');
+values (1,CONVERT(DATETIME, '2008-11-19 00:00:00', 20),0,'email','email');
 
 insert into ld_attributes 
 			(ld_templateid, ld_attribute)
