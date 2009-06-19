@@ -14,7 +14,7 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
-	id="rightsForm">
+	id="rightsForm" style="width: 95%">
 
 	<ice:panelGroup styleClass="formBorderHighlight">
 		<h3>
@@ -81,7 +81,7 @@
 			</f:subview>
 			<br />
 		</ice:panelCollapsible>
-
+		<br />
 		<!-- Groups and rights -->
 		<ice:panelGroup>
 			<ice:dataTable value="#{rightsRecordsManager.rules}" var="rule"
