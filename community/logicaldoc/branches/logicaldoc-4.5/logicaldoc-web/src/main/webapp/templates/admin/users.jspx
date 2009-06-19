@@ -31,7 +31,7 @@
 					<ice:panelGroup style="width: 50px" />
 					<ice:panelGroup style="text-align:center">
 						<ice:outputLabel for="usersFilter"
-							value="#{msgs['filter']}:" />
+							value="#{msgs['username']}:" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:selectInputText width="125"
