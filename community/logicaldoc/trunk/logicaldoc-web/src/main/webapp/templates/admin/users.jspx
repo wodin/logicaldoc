@@ -31,7 +31,7 @@
 					<ice:panelGroup style="width: 50px" />
 					<ice:panelGroup style="text-align:center">
 						<ice:outputLabel for="usersFilter"
-							value="#{msgs['filter']}:" />
+							value="#{msgs['username']}:" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:selectInputText width="125"
@@ -48,7 +48,7 @@
 						var="user" cellpadding="0" rows="15" width="97%"
 						sortColumn="#{usersRecordsManager.sortColumn}"
 						sortAscending="#{usersRecordsManager.ascending}"
-						columnClasses="smallColumn,smallColumn,titleColumn,dateColumn,dateColumn,dateColumn,dateColumn">
+						columnClasses="dateColumn,dateColumn,titleColumn,smallColumn,smallColumn,smallColumn,smallColumn">
 
 						<!-- Username -->
 						<ice:column>
@@ -64,14 +64,14 @@
 						</ice:column>
 
 						<!-- Name -->
-						<ice:column>
+						<ice:column style="width: 150px;">
 							<f:facet name="header">
 								<ice:commandSortHeader columnName="name">
 									<ice:outputText value="#{msgs['msg.jsp.adduser.name']}"
 										style="text-decoration: underline;" />
 								</ice:commandSortHeader>
 							</f:facet>
-							<ice:panelGroup>
+							<ice:panelGroup style="width: 150px;">
 								<ice:outputText value="#{user.firstName} " />
 								<ice:outputText value="#{user.name}" />
 							</ice:panelGroup>
