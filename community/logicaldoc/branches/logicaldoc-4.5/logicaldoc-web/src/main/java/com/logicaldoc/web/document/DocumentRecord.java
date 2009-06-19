@@ -225,98 +225,112 @@ public class DocumentRecord extends MenuBarBean {
 		Menu folder = getDocument().getFolder();
 		Document document = getDocument();
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
-		if ((menuDAO.isWriteEnable(folder.getId(), userId)) && (document.getImmutable() == 0)) {
 
-			// Checkin/checkout an lock/unlock
-			if (document.getStatus() == Document.DOC_UNLOCKED) {
-				model.add(createMenuItem(" " + Messages.getMessage("checkout"), "checkout-" + document.getId(), null,
-						"#{documentRecord.checkout}", null, style.getImagePath("checkout.png"), true, null, null));
-				model.add(createMenuItem(" " + Messages.getMessage("lock"), "lock-" + document.getId(), null,
-						"#{documentRecord.lock}", null, style.getImagePath("document_lock.png"), true, null, null));
-			} else if ((document.getStatus() == Document.DOC_CHECKED_OUT)
-					&& (document.getLockUserId().equals(new Long(userId)))) {
-				model.add(createMenuItem(" " + Messages.getMessage("checkin"), "checkin-" + document.getId(), null,
-						"#{documentRecord.checkin}", null, style.getImagePath("checkin.png"), true, null, null));
-			}
+		try {
+			if ((menuDAO.isWriteEnable(folder.getId(), userId)) && (document.getImmutable() == 0)) {
 
-			// Lock/Unlock
-			if ((document.getStatus() != Document.DOC_UNLOCKED)
-					&& ((document.getLockUserId().equals(new Long(userId))) || "admin".equals(SessionManagement
-							.getUsername()))) {
-				// The user that locked the document can unlock it, and also the
-				// admin user
-				model.add(createMenuItem(" " + Messages.getMessage("unlock"), "unlock-" + document.getId(), null,
-						"#{documentRecord.unlock}", null, style.getImagePath("lock_open.png"), true, null, null));
-			}
-
-			if (document.getStatus() == Document.DOC_UNLOCKED)
-				model.add(createMenuItem(" " + Messages.getMessage("edit"), "edit-" + document.getId(), null,
-						"#{documentRecord.edit}", null, style.getImagePath("document_edit.png"), true, null, null));
-
-			model.add(createMenuItem(" " + Messages.getMessage("link.pasteas"), "pastelink-" + document.getId(), null,
-					"#{documentRecord.pasteAsLink}", null, style.getImagePath("paste_link.png"), true, null, null));
-		}
-
-		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.versions"), "versions-" + document.getId(), null,
-				"#{documentRecord.versions}", null, style.getImagePath("versions.png"), true, "_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.similardocs"), "similar-" + document.getId(), null,
-				"#{searchForm.searchSimilar}", null, style.getImagePath("similar.png"), true, "_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("links"), "linked-" + document.getId(), null,
-				"#{documentRecord.links}", null, style.getImagePath("link.png"), true, "_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("document.discussions"), "discussions-" + document.getId(),
-				null, "#{documentRecord.discussions}", null, style.getImagePath("comments.png"), true, "_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + document.getId(),
-				null, "#{documentRecord.sendAsEmail}", null, style.getImagePath("email_go.png"), true, "_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + document.getId(),
-				null, "#{documentRecord.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("info"), "info-" + document.getId(), null,
-				"#{documentRecord.info}", null, style.getImagePath("info.png"), true, "_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("history"), "history-" + document.getId(), null,
-				"#{documentRecord.history}", null, style.getImagePath("history.png"), true, "_blank", null));
-
-		// Add extended menues
-		// Acquire the 'DocumentContextMenu' extensions of the core plugin
-		PluginRegistry registry = PluginRegistry.getInstance();
-		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "DocumentMenu");
-
-		// Sort the extensions according to ascending position
-		List<Extension> sortedExts = new ArrayList<Extension>();
-		for (Extension extension : exts) {
-			sortedExts.add(extension);
-		}
-		Collections.sort(sortedExts, new Comparator<Extension>() {
-			public int compare(Extension e1, Extension e2) {
-				int position1 = Integer.parseInt(e1.getParameter("position").valueAsString());
-				int position2 = Integer.parseInt(e2.getParameter("position").valueAsString());
-				if (position1 < position2)
-					return -1;
-				else if (position1 > position2)
-					return 1;
-				else
-					return 0;
-			}
-		});
-
-		Set<Permission> permissions = menuDAO.getEnabledPermissions(folder.getId(), userId);
-		for (Extension ext : sortedExts) {
-			if (StringUtils.isNotEmpty(ext.getParameter("permission").valueAsString())) {
-				Permission permission = Permission.valueOf(ext.getParameter("permission").valueAsString());
-				if (!permissions.contains(permission))
-					continue;
-			}
-			String title = Messages.getMessage(ext.getParameter("title").valueAsString());
-			String id = ext.getParameter("id").valueAsString() + "-" + folder.getId();
-			String action = ext.getParameter("action").valueAsString();
-			String icon = ext.getParameter("icon").valueAsString();
-			String readonly = ext.getParameter("readonly").valueAsString();
-			// Skip if the document is locked and the menu can alter the
-			// document
-			if ("false".equals(readonly) && document.getStatus() != Document.DOC_UNLOCKED)
-				continue;
-			String target = ext.getParameter("target").valueAsString();
-			model
-					.add(createMenuItem(" " + title, id, null, action, null, style.getImagePath(icon), true, target,
+				// Checkin/checkout an lock/unlock
+				if (document.getStatus() == Document.DOC_UNLOCKED) {
+					model.add(createMenuItem(" " + Messages.getMessage("checkout"), "checkout-" + document.getId(),
+							null, "#{documentRecord.checkout}", null, style.getImagePath("checkout.png"), true, null,
 							null));
+					model.add(createMenuItem(" " + Messages.getMessage("lock"), "lock-" + document.getId(), null,
+							"#{documentRecord.lock}", null, style.getImagePath("document_lock.png"), true, null, null));
+				} else if ((document.getStatus() == Document.DOC_CHECKED_OUT)
+						&& (document.getLockUserId().equals(new Long(userId)))) {
+					model.add(createMenuItem(" " + Messages.getMessage("checkin"), "checkin-" + document.getId(), null,
+							"#{documentRecord.checkin}", null, style.getImagePath("checkin.png"), true, null, null));
+				}
+
+				// Lock/Unlock
+				if ((document.getStatus() != Document.DOC_UNLOCKED)
+						&& ((document.getLockUserId().equals(new Long(userId))) || "admin".equals(SessionManagement
+								.getUsername()))) {
+					// The user that locked the document can unlock it, and also
+					// the
+					// admin user
+					model.add(createMenuItem(" " + Messages.getMessage("unlock"), "unlock-" + document.getId(), null,
+							"#{documentRecord.unlock}", null, style.getImagePath("lock_open.png"), true, null, null));
+				}
+
+				if (document.getStatus() == Document.DOC_UNLOCKED)
+					model.add(createMenuItem(" " + Messages.getMessage("edit"), "edit-" + document.getId(), null,
+							"#{documentRecord.edit}", null, style.getImagePath("document_edit.png"), true, null, null));
+
+				model.add(createMenuItem(" " + Messages.getMessage("link.pasteas"), "pastelink-" + document.getId(),
+						null, "#{documentRecord.pasteAsLink}", null, style.getImagePath("paste_link.png"), true, null,
+						null));
+			}
+
+			model
+					.add(createMenuItem(" " + Messages.getMessage("msg.jsp.versions"), "versions-" + document.getId(),
+							null, "#{documentRecord.versions}", null, style.getImagePath("versions.png"), true,
+							"_blank", null));
+			model
+					.add(createMenuItem(" " + Messages.getMessage("msg.jsp.similardocs"),
+							"similar-" + document.getId(), null, "#{searchForm.searchSimilar}", null, style
+									.getImagePath("similar.png"), true, "_blank", null));
+			model.add(createMenuItem(" " + Messages.getMessage("links"), "linked-" + document.getId(), null,
+					"#{documentRecord.links}", null, style.getImagePath("link.png"), true, "_blank", null));
+			model.add(createMenuItem(" " + Messages.getMessage("document.discussions"), "discussions-"
+					+ document.getId(), null, "#{documentRecord.discussions}", null,
+					style.getImagePath("comments.png"), true, "_blank", null));
+			model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendasemail"),
+					"sendasmail-" + document.getId(), null, "#{documentRecord.sendAsEmail}", null, style
+							.getImagePath("email_go.png"), true, "_blank", null));
+			model.add(createMenuItem(" " + Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + document.getId(),
+					null, "#{documentRecord.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank",
+					null));
+			model.add(createMenuItem(" " + Messages.getMessage("info"), "info-" + document.getId(), null,
+					"#{documentRecord.info}", null, style.getImagePath("info.png"), true, "_blank", null));
+			model.add(createMenuItem(" " + Messages.getMessage("history"), "history-" + document.getId(), null,
+					"#{documentRecord.history}", null, style.getImagePath("history.png"), true, "_blank", null));
+
+			// Add extended menues
+			// Acquire the 'DocumentContextMenu' extensions of the core plugin
+			PluginRegistry registry = PluginRegistry.getInstance();
+			Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "DocumentMenu");
+
+			// Sort the extensions according to ascending position
+			List<Extension> sortedExts = new ArrayList<Extension>();
+			for (Extension extension : exts) {
+				sortedExts.add(extension);
+			}
+			Collections.sort(sortedExts, new Comparator<Extension>() {
+				public int compare(Extension e1, Extension e2) {
+					int position1 = Integer.parseInt(e1.getParameter("position").valueAsString());
+					int position2 = Integer.parseInt(e2.getParameter("position").valueAsString());
+					if (position1 < position2)
+						return -1;
+					else if (position1 > position2)
+						return 1;
+					else
+						return 0;
+				}
+			});
+
+			Set<Permission> permissions = menuDAO.getEnabledPermissions(folder.getId(), userId);
+			for (Extension ext : sortedExts) {
+				if (StringUtils.isNotEmpty(ext.getParameter("permission").valueAsString())) {
+					Permission permission = Permission.valueOf(ext.getParameter("permission").valueAsString());
+					if (!permissions.contains(permission))
+						continue;
+				}
+				String title = Messages.getMessage(ext.getParameter("title").valueAsString());
+				String id = ext.getParameter("id").valueAsString() + "-" + folder.getId();
+				String action = ext.getParameter("action").valueAsString();
+				String icon = ext.getParameter("icon").valueAsString();
+				String readonly = ext.getParameter("readonly").valueAsString();
+				// Skip if the document is locked and the menu can alter the
+				// document
+				if ("false".equals(readonly) && document.getStatus() != Document.DOC_UNLOCKED)
+					continue;
+				String target = ext.getParameter("target").valueAsString();
+				model.add(createMenuItem(" " + title, id, null, action, null, style.getImagePath(icon), true, target,
+						null));
+			}
+		} catch (Exception e) {
+
 		}
 	}
 
@@ -549,7 +563,7 @@ public class DocumentRecord extends MenuBarBean {
 		emailForm.setAuthor(SessionManagement.getUser().getEmail());
 		emailForm.setSelectedDocument(null);
 
-		//Prepare a new download ticket
+		// Prepare a new download ticket
 		long userId = SessionManagement.getUserId();
 		String temp = new Date().toString() + userId;
 		String ticketid = CryptUtil.cryptString(temp);
@@ -561,11 +575,11 @@ public class DocumentRecord extends MenuBarBean {
 		// Store the ticket
 		DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance().getBean(DownloadTicketDAO.class);
 		ticketDao.store(ticket);
-		
-		//Try to clean the DB from old tickets
+
+		// Try to clean the DB from old tickets
 		ticketDao.deleteOlder();
-		
-		//Prepare the download link to be shown as email body
+
+		// Prepare the download link to be shown as email body
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
 				.getRequest();
 		request.getRequestURL();
@@ -576,7 +590,7 @@ public class DocumentRecord extends MenuBarBean {
 		address += request.getContextPath();
 		address += ("/download-ticket?ticketId=" + ticketid);
 		emailForm.setText("URL: " + address);
-		
+
 		return null;
 	}
 
@@ -656,15 +670,15 @@ public class DocumentRecord extends MenuBarBean {
 		}
 		return null;
 	}
-	
-	public String getDownloadTextLink(){
-		return "download?docId="+getDocId()+"&downloadText=true";
+
+	public String getDownloadTextLink() {
+		return "download?docId=" + getDocId() + "&downloadText=true";
 	}
 
-	public String getRssLink(){
-		return "doc_rss?docId="+getDocId();
+	public String getRssLink() {
+		return "doc_rss?docId=" + getDocId();
 	}
-	
+
 	/**
 	 * Utility method used by document lazy loading
 	 */
