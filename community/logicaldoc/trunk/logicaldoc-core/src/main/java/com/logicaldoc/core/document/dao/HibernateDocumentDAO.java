@@ -735,13 +735,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		PreparedStatement stmt = null;
 		try {
 			con = getSession().connection();
-			StringBuffer query = new StringBuffer("update ld_document _entity  ");
-			query.append(" set _entity.ld_deleted=0 ");
-			query.append(" where _entity.ld_id = ?");
+			StringBuffer query = new StringBuffer("update ld_document ");
+			query.append(" set ld_deleted=0 ");
+			query.append(" where ld_id=" + docId);
 			stmt = con.prepareStatement(query.toString());
 
 			// Restore the document
-			stmt.setLong(1, docId);
 			stmt.execute();
 			stmt.close();
 
