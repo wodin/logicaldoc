@@ -32,7 +32,7 @@
 			sortColumn="#{documentsRecordsManager.sortColumn}"
 			sortAscending="#{documentsRecordsManager.ascending}" cellpadding="0"
 			rows="#{documentsRecordsManager.displayedRows}"
-			columnClasses="selectionColumn,numberColumn,titleColumn,selectionColumn,dateColumn,dateColumn,numberColumn">
+			columnClasses="selectionColumn,dateColumn,titleColumn,selectionColumn,dateColumn,dateColumn,numberColumn">
 
 			<!-- selection column -->
 			<ice:column>
@@ -76,7 +76,7 @@
 					</ice:commandSortHeader>
 				</f:facet>
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
-					menuPopup="pop">
+					menuPopup="pop" style="text-align:right;">
 					<ice:outputLink value="download?docId=#{documentRecord.docId}"
 						target="_blank" title="#{msgs['msg.jsp.popup']}">
 						<ice:outputText value=" #{documentRecord.customId}" />
