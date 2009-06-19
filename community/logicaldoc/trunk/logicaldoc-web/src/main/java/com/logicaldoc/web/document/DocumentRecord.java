@@ -225,6 +225,9 @@ public class DocumentRecord extends MenuBarBean {
 		Menu folder = getDocument().getFolder();
 		Document document = getDocument();
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
+		
+		
+		try{
 		if ((menuDAO.isWriteEnable(folder.getId(), userId)) && (document.getImmutable() == 0)) {
 
 			// Checkin/checkout an lock/unlock
@@ -317,6 +320,9 @@ public class DocumentRecord extends MenuBarBean {
 			model
 					.add(createMenuItem(" " + title, id, null, action, null, style.getImagePath(icon), true, target,
 							null));
+		}
+		}catch(Exception e){
+			
 		}
 	}
 
