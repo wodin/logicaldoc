@@ -18,6 +18,7 @@ import com.logicaldoc.core.document.DiscussionComment;
 import com.logicaldoc.core.document.DiscussionThread;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
+import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
@@ -143,6 +144,10 @@ public class DiscussionsManager {
 	 */
 	public Collection<DiscussionThread> getThreads() {
 		return threads;
+	}
+	
+	public int getCount() {
+		return getThreads().size();
 	}
 
 	public String back() {

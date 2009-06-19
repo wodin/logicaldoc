@@ -43,7 +43,7 @@
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputTextarea id="body" value="#{discussionsManager.body}"
-						cols="70" rows="5" required="true" />
+						cols="70" rows="5" required="true" style="font-size: 12px;"/>
 					<ice:message for="body" />
 				</ice:panelGroup>
 				<ice:panelGroup>
