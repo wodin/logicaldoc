@@ -1,7 +1,6 @@
 package com.logicaldoc.core.security.dao;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -556,46 +555,18 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return null;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void restore(long menuId, boolean parents) {
-		Connection con = null;
-		PreparedStatement stmt = null;
-		PreparedStatement stmt2 = null;
-		try {
-			con = getSession().connection();
-
-			StringBuffer query = new StringBuffer("update ld_menu ");
-			query.append(" set ld_deleted=0 ");
-			query.append(" where ld_id = ?");
-			stmt = con.prepareStatement(query.toString());
-
-			// Restore the menu
-			stmt.setLong(1, menuId);
-			stmt.execute();
-
-			// Restore parents
-			if (parents) {
-				query = new StringBuffer("select ld_parentid from ld_menu ");
-				query.append(" where ld_id = ?");
-				stmt2 = con.prepareStatement(query.toString());
-
-				stmt2.setLong(1, menuId);
-				ResultSet rs = stmt2.executeQuery();
-				long parent = -1;
-				while (rs.next() && parent != rs.getLong(1)) {
-					parent = rs.getLong(1);
-					stmt.setLong(1, parent);
-					stmt.execute();
-					stmt2.setLong(1, parent);
-					rs = stmt2.executeQuery();
-				}
-				rs.close();
+		super.bulkUpdate("set ld_deleted=0 where ld_id=" + menuId, null);
+		// Restore parents
+		if (parents) {
+			List<Object> menus = super.findByJdbcQuery("select ld_parentid from ld_menu where ld_id =" + menuId, 1,
+					null);
+			for (Object id : menus) {
+				Long xx=(Long) id;
+				if(xx.longValue()!=menuId)
+					restore(xx, parents);
 			}
-			stmt.close();
-			stmt2.close();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
 		}
 	}
 
