@@ -97,11 +97,11 @@
 						</ice:column>
 					</ice:dataTable>
 
-					<ice:panelGroup style="width: 98%;">
-						<ldoc:paginator table="threads"
-							label="#{msgs['paginator.simple']}" />
+					<ice:panelGroup style="float: right; padding-right: 30px;" rendered="#{discussionsManager.count > 10}">
+						<ldoc:paginator table="threads" label="#{msgs['paginator.simple']}" />
 						<br />
 					</ice:panelGroup>
+					
 				</ice:panelGroup>
 			</ice:panelGroup>
 		</ice:form>
@@ -116,6 +116,7 @@
 
 	<ice:panelGroup rendered="#{empty (discussionsManager.selectedThread)}">
 		<f:subview id="comment">
+		    <br />
 			<ui:include src="/templates/document/comment.jspx" />
 		</f:subview>
 	</ice:panelGroup>
