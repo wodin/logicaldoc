@@ -29,7 +29,7 @@
 				</ice:panelGroup>
 				<ice:panelGroup style="width: 50px" />
 				<ice:panelGroup style="text-align: center">
-					<ice:outputLabel for="groupsFilter" value="#{msgs['group.name']}:" />
+					<ice:outputLabel for="groupsFilter" value="#{msgs['filter']}:" />
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:selectInputText width="125"
