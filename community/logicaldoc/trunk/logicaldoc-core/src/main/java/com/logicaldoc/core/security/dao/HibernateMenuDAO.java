@@ -565,9 +565,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		try {
 			con = getSession().connection();
 
-			StringBuffer query = new StringBuffer("update ld_menu _entity  ");
-			query.append(" set _entity.ld_deleted=0 ");
-			query.append(" where _entity.ld_id = ?");
+			StringBuffer query = new StringBuffer("update ld_menu ");
+			query.append(" set ld_deleted=0 ");
+			query.append(" where ld_id = ?");
 			stmt = con.prepareStatement(query.toString());
 
 			// Restore the menu
@@ -576,8 +576,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 			// Restore parents
 			if (parents) {
-				query = new StringBuffer("select _entity.ld_parentid from ld_menu _entity  ");
-				query.append(" where _entity.ld_id = ?");
+				query = new StringBuffer("select ld_parentid from ld_menu ");
+				query.append(" where ld_id = ?");
 				stmt2 = con.prepareStatement(query.toString());
 
 				stmt2.setLong(1, menuId);
