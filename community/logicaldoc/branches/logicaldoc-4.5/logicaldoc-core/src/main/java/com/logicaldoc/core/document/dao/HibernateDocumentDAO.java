@@ -2,7 +2,6 @@ package com.logicaldoc.core.document.dao;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -728,29 +727,13 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return findByWhere(query.toString());
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void restore(long docId) {
-		Connection con = null;
-		PreparedStatement stmt = null;
-		try {
-			con = getSession().connection();
-			StringBuffer query = new StringBuffer("update ld_document ");
-			query.append(" set ld_deleted=0 ");
-			query.append(" where ld_id=" + docId);
-			stmt = con.prepareStatement(query.toString());
-
-			// Restore the document
-			stmt.execute();
-			stmt.close();
-
-			ResultSet rs = con.createStatement().executeQuery(
-					"select ld_folderid from ld_document where ld_id=" + docId);
-			rs.next();
-			menuDAO.restore(rs.getLong(1), true);
-			rs.close();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+		super.bulkUpdate("set ld_deleted=0 where ld_id=" + docId, null);
+		List<Object> folders = super.findByJdbcQuery("select ld_folderid from ld_document where ld_id=" + docId, 1,
+				null);
+		for (Object id : folders) {
+			menuDAO.restore((Long) id, true);
 		}
 	}
 
