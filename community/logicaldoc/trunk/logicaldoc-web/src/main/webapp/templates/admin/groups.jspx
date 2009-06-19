@@ -29,7 +29,7 @@
 				</ice:panelGroup>
 				<ice:panelGroup style="width: 50px" />
 				<ice:panelGroup style="text-align: center">
-					<ice:outputLabel for="groupsFilter" value="#{msgs['group.name']}:" />
+					<ice:outputLabel for="groupsFilter" value="#{msgs['filter']}:" />
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:selectInputText width="125"
@@ -46,12 +46,12 @@
 				<ice:dataTable id="groupsList"
 					value="#{groupsRecordsManager.groups}" var="group" cellpadding="0"
 					rows="15" width="97%"
-					columnClasses="smallColumn,dateColumn,numberColumn,numberColumn">
+					columnClasses="dateColumn,titleColumn,numberColumn,numberColumn">
 
 					<!-- Name -->
 					<ice:column>
 						<f:facet name="header">
-							<ice:outputText value="#{msgs['msg.jsp.groupname']}" />
+							<ice:outputText style="white-space: nowrap;" value="#{msgs['msg.jsp.groupname']}" />
 						</f:facet>
 						<ice:panelGroup>
 							<ice:outputText value="#{group.name}" />
