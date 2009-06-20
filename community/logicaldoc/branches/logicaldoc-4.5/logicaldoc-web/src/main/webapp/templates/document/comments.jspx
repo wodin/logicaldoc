@@ -23,9 +23,7 @@
 						columnClasses="discussionCommentColumn" styleClass="resultTable">
 						<ice:column>
 							<ice:panelGrid columns="2" width="100%">
-								<ice:panelGroup style="width: #{comment.indentLevel*5}px;">
-								</ice:panelGroup>
-								<ice:panelGroup>
+								<ice:panelGroup style="padding-left: #{comment.indentLevel*20}px;">
 									<ice:panelGroup styleClass="discussionCommentHeader">
 										<ice:commandLink action="#{discussionsManager.replyTo}"
 											target="commentForm">
@@ -38,7 +36,7 @@
 												style="border: 0px solid;" title="#{msgs['delete']}" />
 										</ice:commandLink>
 										<br />
-										<ice:outputText value="#{msgs['by']} #{comment.userName} - " />
+										<ice:outputText value="#{msgs['by']}: #{comment.userName} - " />
 										<ice:outputText value="#{comment.date}">
 											<f:convertDateTime pattern="#{loc.dateFormatHM}"
 												timeZone="#{StyleBean.timeZone}" />
