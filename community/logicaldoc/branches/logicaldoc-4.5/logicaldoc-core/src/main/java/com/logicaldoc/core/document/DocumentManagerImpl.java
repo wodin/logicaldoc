@@ -398,12 +398,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		history.setDocId(doc.getId());
 		history.setTitle(doc.getTitle());
 		history.setVersion(doc.getVersion());
-
-		history.setPath(doc.getFolder().getPathExtended() + "/" + doc.getFolder().getText());
-		history.setPath(history.getPath().replaceAll("//", "/"));
-		history.setPath(history.getPath().replaceFirst("/menu.documents/", "/"));
-		history.setPath(history.getPath().replaceFirst("/menu.documents", "/"));
-
+		history.setPath(decodeDocumentPath(doc));
 		history.setDate(new Date());
 		history.setUserId(user.getId());
 		history.setUserName(user.getFullName());
@@ -430,13 +425,20 @@ public class DocumentManagerImpl implements DocumentManager {
 			return;
 
 		if (doc.getImmutable() == 0) {
+			// get the start folder
+			String startFolder = decodeDocumentPath(doc);
+			
 			documentDAO.initialize(doc);
 			doc.setFolder(folder);
 			setUniqueTitle(doc);
 			setUniqueFilename(doc);
 			documentDAO.store(doc);
 
-			createHistoryEntry(doc, user, History.EVENT_MOVED, "");
+            // Better description of the event Eg. Document moved from x to y
+			String destFolder = decodeDocumentPath(doc);
+			
+			createHistoryEntry(doc, user, History.EVENT_MOVED, "Moved from " +startFolder + " to " + destFolder);
+			
 			Version version = Version.create(doc, user, "", Version.EVENT_MOVED, Version.VERSION_TYPE.NEW_SUBVERSION);
 			versionDAO.store(version);
 
@@ -456,6 +458,21 @@ public class DocumentManagerImpl implements DocumentManager {
 			throw new Exception("Document is immutable");
 		}
 	}
+
+	
+	private String decodeDocumentPath(Document doc) {
+		
+		if (doc == null)
+			return "";
+		
+		String pathDecoded = doc.getFolder().getPathExtended() + "/" + doc.getFolder().getText();
+		pathDecoded = pathDecoded.replaceAll("//", "/");
+		pathDecoded = pathDecoded.replaceFirst("/menu.documents/", "/");
+		pathDecoded = pathDecoded.replaceFirst("/menu.documents", "/");
+		
+		return pathDecoded;
+	}
+	
 
 	@Override
 	public Document create(File file, Menu folder, User user, Locale locale, String title, Date sourceDate,
@@ -754,7 +771,10 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void rename(Document doc, User user, String newFilename) throws Exception {
 		if (doc.getImmutable() == 0) {
+			
 			documentDAO.initialize(doc);
+			String originalFilename = doc.getFileName();
+			
 			doc.setFileName(newFilename.trim());
 			String extension = FilenameUtils.getExtension(newFilename.trim());
 			if (StringUtils.isNotEmpty(extension))
@@ -764,8 +784,9 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(doc);
 
 			// create history entry for this RENAMED event
-			createHistoryEntry(doc, user, History.EVENT_RENAMED, "");
-
+            // Better description of the event Eg. Renamed from x to y (Document renamed)
+			createHistoryEntry(doc, user, History.EVENT_RENAMED, "Renamed from " + originalFilename + " to " + newFilename);
+			 
 			Version version = Version.create(doc, user, "", Version.EVENT_RENAMED, Version.VERSION_TYPE.NEW_SUBVERSION);
 			versionDAO.store(version);
 
