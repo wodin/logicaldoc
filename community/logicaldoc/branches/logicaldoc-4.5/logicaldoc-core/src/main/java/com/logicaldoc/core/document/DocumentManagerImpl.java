@@ -113,9 +113,19 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(document);
 
 			Menu folder = document.getFolder();
+			
+			// Encode the filename in the same way of when we insert a new document
+			String myFilename = new String(filename);
+			String encoding = "UTF-8";
+			String[] encodings = CharsetDetector.detectEncodings(myFilename);
+			if (encodings != null && encodings.length > 0)
+				encoding = encodings[0];
+			if ("UTF-8".equals(encoding)) {
+				myFilename = new String(myFilename.getBytes(), "UTF-8");
+			}
 
 			// create some strings containing paths
-			document.setFileName(filename);
+			document.setFileName(myFilename);
 
 			// set other properties of the document
 			document.setDate(new Date());
