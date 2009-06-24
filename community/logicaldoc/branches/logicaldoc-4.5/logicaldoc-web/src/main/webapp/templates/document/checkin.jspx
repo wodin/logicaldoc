@@ -13,7 +13,7 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
-	id="uploadForm">
+	id="checkinForm">
 
 	<h2>
 		<ice:outputText value="#{msgs['checkin']}" style="padding-left:8px;" />
@@ -43,7 +43,7 @@
 				<ice:outputText
 					value="#{msgs['upload.filename']}: #{inputFile.fileName}"
 					style="padding-left:8px;">
-					<f:converter converterId="logicaldoc.UniversalConverter" />
+					<f:converter converterId="logicaldoc.UTFConverter" />
 				</ice:outputText>
 				<br />
 				<ice:messages for="iFile" />
