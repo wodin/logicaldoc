@@ -13,6 +13,9 @@ import org.jdom.Element;
  * @since 3.0
  */
 public class WebConfigurator extends XMLBean {
+	
+	public static enum INIT_PARAM{ PARAM_OVERWRITE, PARAM_APPEND, PARAM_STOP }
+	
 	public WebConfigurator() {
 		super(System.getProperty("logicaldoc.app.rootdir") + "/WEB-INF/web.xml");
 	}
@@ -39,14 +42,76 @@ public class WebConfigurator extends XMLBean {
 	}
 	
 	/**
+	 * Adding a contextparam to the web.xml
+	 * @param param_name the param
+	 * @param param_value the value
+	 * @param param_description
+	 * @param append * @param append if the param exist, should the new value appended? possible values are represented in {@link WebConfigurator.INIT_PARAM}
+	 */
+	public void addContextParam(String param_name, String param_value, String param_description, INIT_PARAM append){
+		List contextParams = getRootElement().getChildren("context-param", getRootElement().getNamespace());
+		Element contextParam = this.elementLookUp(contextParams, "param-name", param_name);
+		
+		
+		if(contextParam != null && append.equals(INIT_PARAM.PARAM_STOP))
+			return;
+		
+		if(contextParam == null) {
+			// Retrieve the last <servlet> element
+			Element lastContextParam = (Element) contextParams.get(contextParams.size() - 1);
+
+			List children = getRootElement().getChildren();
+
+			// Find the index of the element to add the new element after.
+			int index = children.indexOf(contextParams);
+
+			// Prepare the new mapping
+			contextParam = new Element("context-param", getRootElement().getNamespace());
+			Element paramName = new Element("param-name", getRootElement().getNamespace());
+			paramName.setText(param_name);
+			Element paramValue = new Element("param-value", getRootElement().getNamespace());
+			paramValue.setText(param_value);
+			contextParam.addContent("\n ");
+			contextParam.addContent(paramName);
+			contextParam.addContent("\n ");
+			contextParam.addContent(paramValue);
+			contextParam.addContent("\n ");
+			
+			// Add the new element to the next index along.
+			// This does cover the case where indexOf returned -1.
+			children.add(index + 1, contextParam);
+			writeXMLDoc();
+			
+			return;
+		}
+	
+		
+
+		if(contextParam != null && append.equals(INIT_PARAM.PARAM_APPEND)){
+
+			Element paramValue = (Element)contextParam.getChildren().get(1);
+			paramValue.setText(paramValue.getText() + "," + param_value);
+			writeXMLDoc();
+			return;
+		}
+		
+		if(contextParam != null && append.equals(INIT_PARAM.PARAM_OVERWRITE)){
+			Element paramValue = (Element)contextParam.getChildren().get(1);
+			paramValue.setText(param_value);
+			writeXMLDoc();
+			return;
+		}
+	}
+	
+	/**
 	 * Adds a init parameter to the servlet
 	 * @param clazz The classname
 	 * @param name Name of the Parameter
 	 * @param value Value of the Parameter
 	 * @param description Description
+	 * @param append if the param exist, should the new value appended? possible values are represented in {@link WebConfigurator.INIT_PARAM}
 	 */
-	@SuppressWarnings("unchecked")
-	public void addInitParam(String servletName, String param_name, String param_value, String param_description){
+	public void addInitParam(String servletName, String param_name, String param_value, String param_description, INIT_PARAM append){
 		List servlets = getRootElement().getChildren("servlet", getRootElement().getNamespace());
 		Element servlet = this.elementLookUp(servlets, "servlet-name", servletName);
 		
@@ -58,9 +123,24 @@ public class WebConfigurator extends XMLBean {
 		
 		Element initParam = this.elementLookUp(servlet.getChildren(), "param-name", param_name);
 		
-		if(initParam != null)
+		if(initParam != null && append.equals(INIT_PARAM.PARAM_STOP))
 			return;
 
+		if(initParam != null && append.equals(INIT_PARAM.PARAM_APPEND)){
+			Element paramValue = ((Element)initParam.getParent()).getChild("param-value");
+			paramValue.setText(paramValue.getText() + "," + param_value);
+			writeXMLDoc();
+			return;
+		}
+		
+		if(initParam != null && append.equals(INIT_PARAM.PARAM_OVERWRITE)){
+			Element paramValue = ((Element)initParam.getParent()).getChild("param-value");
+			paramValue.setText(param_value);
+			writeXMLDoc();
+			return;
+		}
+		
+		
 		
 		Element paramElement = new Element("init-param", getRootElement().getNamespace());
 		
@@ -95,7 +175,18 @@ public class WebConfigurator extends XMLBean {
 		else 
 			servlet.getChildren().add(paramElement);
 		
-		
+	}
+	
+	/**
+	 * Adds a init parameter to the servlet
+	 * @param clazz The classname
+	 * @param name Name of the Parameter
+	 * @param value Value of the Parameter
+	 * @param description Description
+	 */
+	@SuppressWarnings("unchecked")
+	public void addInitParam(String servletName, String param_name, String param_value, String param_description){
+		this.addInitParam(servletName, param_name, param_value, param_description, INIT_PARAM.PARAM_STOP);
 	}
 	/**
 	 * Adds a new servlet mapping to the deployment descriptor. If the mapping
