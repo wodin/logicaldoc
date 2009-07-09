@@ -32,7 +32,6 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
-import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.Context;
 
 /**
@@ -182,9 +181,9 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(File file, Menu folder, User user, Locale locale, boolean immediateIndexing)
+	public Document create(File file, String filename, Menu folder, User user, Locale locale, boolean immediateIndexing)
 			throws Exception {
-		return create(file, folder, user, locale, "", null, "", "", "", "", "", null, immediateIndexing);
+		return create(file, filename, folder, user, locale, "", null, "", "", "", "", "", null, immediateIndexing);
 	}
 
 	@Override
@@ -205,11 +204,11 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(File file, Menu folder, User user, Locale locale, String title, Date sourceDate,
-			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> tags, boolean immediateIndexing) throws Exception {
-		return create(file, folder, user, locale, title, sourceDate, source, sourceAuthor, sourceType, coverage,
-				versionDesc, tags, null, null, immediateIndexing);
+	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
+			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
+			String versionDesc, Set<String> tags, boolean immediateIndexing) throws Exception {
+		return create(file, filename, folder, user, locale, title, sourceDate, source, sourceAuthor, sourceType,
+				coverage, versionDesc, tags, null, null, immediateIndexing);
 	}
 
 	private void store(Document doc, InputStream content) throws IOException {
@@ -458,12 +457,12 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(File file, Menu folder, User user, Locale locale, String title, Date sourceDate,
-			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, boolean immediateIndexing)
-			throws Exception {
-		return create(file, folder, user, locale, title, sourceDate, source, sourceAuthor, sourceType, coverage,
-				versionDesc, tags, templateId, extendedAttributes, null, null, null, null, immediateIndexing);
+	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
+			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
+			boolean immediateIndexing) throws Exception {
+		return create(file, filename, folder, user, locale, title, sourceDate, source, sourceAuthor, sourceType,
+				coverage, versionDesc, tags, templateId, extendedAttributes, null, null, null, null, immediateIndexing);
 
 	}
 
@@ -719,18 +718,11 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document create(File file, Menu folder, User user, Locale locale, String title, Date sourceDate,
-			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, String sourceId, String object,
-			String recipient, String customId, boolean immediateIndexing) throws Exception {
-		String filename = file.getName();
-		String encoding = "UTF-8";
-		String[] encodings = CharsetDetector.detectEncodings(filename);
-		if (encodings != null && encodings.length > 0)
-			encoding = encodings[0];
-		if ("UTF-8".equals(encoding)) {
-			filename = new String(filename.getBytes(), "UTF-8");
-		}
+	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
+			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
+			String sourceId, String object, String recipient, String customId, boolean immediateIndexing)
+			throws Exception {
 		String _title = title;
 
 		if (StringUtils.isEmpty(title)) {

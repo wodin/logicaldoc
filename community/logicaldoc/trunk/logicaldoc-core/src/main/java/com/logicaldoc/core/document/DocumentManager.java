@@ -100,6 +100,7 @@ public interface DocumentManager {
 	 * Creates a new document in the parent menu
 	 * 
 	 * @param file document's file
+	 * @param filename document's file name
 	 * @param folder the parent folder
 	 * @param user the current user
 	 * @param locale the document's language
@@ -107,7 +108,7 @@ public interface DocumentManager {
 	 * @return The newly created document
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public Document create(File file, Menu folder, User user, Locale locale, boolean immediateIndexing)
+	public Document create(File file, String filename, Menu folder, User user, Locale locale, boolean immediateIndexing)
 			throws Exception;
 
 	/**
@@ -115,6 +116,7 @@ public interface DocumentManager {
 	 * includes updating the search index for example.
 	 * 
 	 * @param user
+	 * @param filename document's file name
 	 * @param folder
 	 * @param title If not provided the filename must be used instead
 	 * @param file
@@ -130,7 +132,7 @@ public interface DocumentManager {
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document create(File file, Menu folder, User user, Locale locale, String title, Date sourceDate,
+	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> tags, boolean immediateIndexing) throws Exception;
 
@@ -142,6 +144,7 @@ public interface DocumentManager {
 	 * @param folder
 	 * @param title If not provided the filename must be used instead
 	 * @param file
+	 * @param filename document's file name
 	 * @param sourceDate
 	 * @param source
 	 * @param sourceAuthor
@@ -156,7 +159,7 @@ public interface DocumentManager {
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document create(File file, Menu folder, User user, Locale locale, String title, Date sourceDate,
+	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, boolean immediateIndexing)
 			throws Exception;
@@ -169,6 +172,7 @@ public interface DocumentManager {
 	 * @param folder
 	 * @param title If not provided the filename must be used instead
 	 * @param file
+	 * @param filename document's file name
 	 * @param sourceDate
 	 * @param source
 	 * @param sourceAuthor
@@ -187,7 +191,7 @@ public interface DocumentManager {
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document create(File file, Menu folder, User user, Locale locale, String title, Date sourceDate,
+	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
 			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, String sourceId, String object,
 			String recipient, String customId, boolean immediateIndexing) throws Exception;
