@@ -13,7 +13,7 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
-	id="checkinForm">
+	id="uploadForm">
 
 	<h2>
 		<ice:outputText value="#{msgs['checkin']}" style="padding-left:8px;" />
@@ -41,7 +41,9 @@
 					label="#{msgs['upload.button']}" />
 				<ice:outputProgress id="pro" value="#{inputFile.percent}" />
 				<ice:outputText
-					value="#{msgs['upload.filename']}: #{inputFile.fileName}" escape="false">
+					value="#{msgs['upload.filename']}: #{inputFile.fileName}" escape="false" />
+					value="#{msgs['upload.filename']}: #{inputFile.fileName}"
+					style="padding-left:8px;" escape="false">
 				</ice:outputText>
 				<br />
 				<ice:messages for="iFile" />
@@ -91,8 +93,8 @@
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="&lt;&lt; #{msgs['back']}" partialSubmit="true"
 				immediate="true" action="#{newDocWizard.abort}" />
-			<ice:commandButton value="#{msgs['checkin.cancelcheckout']}"
-				action="#{documentForm.uncheckout}" partialSubmit="true"
+			<ice:commandButton value="#{msgs['unlock']}"
+				action="#{documentForm.record.unlock}" partialSubmit="true"
 				immediate="true" />
 			<ice:commandButton value="#{msgs['checkin']}"
 				action="#{documentForm.checkin}"
