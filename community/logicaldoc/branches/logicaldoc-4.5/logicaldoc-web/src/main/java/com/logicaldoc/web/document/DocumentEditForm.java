@@ -679,7 +679,8 @@ public class DocumentEditForm {
 	public String checkin() {
 
 		Application application = FacesContext.getCurrentInstance().getApplication();
-		InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(FacesContext.getCurrentInstance()));
+		InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
+				FacesContext.getCurrentInstance()));
 
 		if (SessionManagement.isValid()) {
 			Document document = record.getDocument();
@@ -694,12 +695,9 @@ public class DocumentEditForm {
 					// if checkOriginalFileName is selected verify that the
 					// uploaded file has correct fileName
 					if (isCheckOriginalFilename()) {
-						String chConverted = convertCharset(fileName);
-						boolean filenameEquals = chConverted.equals(document.getFileName());
-						if (!filenameEquals) {
+						if (!fileName.equals(document.getFileName())) {
 							log.info("Filename of the checked-in document(" + fileName
 									+ ") is different from the original filename (" + document.getFileName() + ")");
-
 							String localizedMessage = Messages.getMessage("checkin.originalfilename", document
 									.getFileName());
 							Messages.addError(localizedMessage, "iFile");
@@ -742,30 +740,6 @@ public class DocumentEditForm {
 		documentNavigation.showDocuments();
 		documentNavigation.refresh();
 		return null;
-	}
-
-	private String convertCharset(String fileName2) {
-		if (fileName2 == null)
-			return null;
-		if (fileName2.equals(""))
-			return "";
-		
-		// Encode the filename in the same way of when we insert a new document
-		String myFilename = new String(fileName2);
-		String encoding = "UTF-8";
-		String[] encodings = CharsetDetector.detectEncodings(myFilename);
-		if (encodings != null && encodings.length > 0)
-			encoding = encodings[0];
-		if ("UTF-8".equals(encoding)) {
-			try {
-				myFilename = new String(myFilename.getBytes(), "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		return myFilename;
 	}
 
 	public DocumentRecord getRecord() {
