@@ -151,7 +151,7 @@ public class ZipImport {
 			// creates a document
 			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 			try {
-				docManager.create(file, parent, user, locale, "", null, "", "", "", "", "", tagSet, templateId, null,
+				docManager.create(file, file.getName(), parent, user, locale, "", null, "", "", "", "", "", tagSet, templateId, null,
 						immediateIndexing);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
