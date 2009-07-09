@@ -95,7 +95,7 @@ public class NewDocWizard {
 				menu.setPath(path);
 
 				// Gets file to upload name
-				String filename = file.getName();
+				String filename = inputFile.getFileName();
 
 				String title = "";
 				String author = "";
@@ -112,8 +112,6 @@ public class NewDocWizard {
 				} else {
 					title = filename;
 				}
-
-				title = new String(title.getBytes(), "UTF-8");
 
 				docForm.setTitle(title);
 				docForm.setSource(source);
@@ -140,7 +138,7 @@ public class NewDocWizard {
 					}
 				}
 				docForm.setImmediateIndexing(inputFile.isImmediateIndexing());
-				docForm.setFilename(new String(filename.getBytes(), "UTF-8"));
+				docForm.setFilename(filename);
 			} catch (Exception e) {
 				String message = Messages.getMessage("errors.action.savedoc");
 				log.error(message, e);
