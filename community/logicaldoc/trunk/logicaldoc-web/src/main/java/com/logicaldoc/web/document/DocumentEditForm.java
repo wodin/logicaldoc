@@ -2,6 +2,7 @@ package com.logicaldoc.web.document;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -694,11 +695,9 @@ public class DocumentEditForm {
 					// if checkOriginalFileName is selected verify that the
 					// uploaded file has correct fileName
 					if (isCheckOriginalFilename()) {
-
-						if (!CharsetDetector.convert(fileName).equals(document.getFileName())) {
+						if (!fileName.equals(document.getFileName())) {
 							log.info("Filename of the checked-in document(" + fileName
 									+ ") is different from the original filename (" + document.getFileName() + ")");
-
 							String localizedMessage = Messages.getMessage("checkin.originalfilename", document
 									.getFileName());
 							Messages.addError(localizedMessage, "iFile");
