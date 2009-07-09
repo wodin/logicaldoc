@@ -484,7 +484,7 @@ public class DocumentEditForm {
 					duplicateCustomId = true;
 					return "customIdDuplicated";
 				} else {
-					Document doc = documentManager.create(file, folder, SessionManagement.getUser(), LocaleUtil
+					Document doc = documentManager.create(file, filename, folder, SessionManagement.getUser(), LocaleUtil
 							.toLocale(language), title, getSourceDate(), source, sourceAuthor, sourceType, coverage,
 							versionDesc, tgs, template, attrs, sourceId, object, recipient, getCustomId(),
 							immediateIndexing);

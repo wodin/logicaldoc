@@ -9,6 +9,7 @@ import java.util.EventObject;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -116,7 +117,12 @@ public class InputFileBean implements Renderable {
 	public void action(ActionEvent event) {
 		InputFile inputFile = (InputFile) event.getSource();
 		if (inputFile.getFile() != null && inputFile.getFile().length() != 0) {
-			fileName = inputFile.getFileInfo().getFileName();
+
+			// First of all try to escape the file name with entities
+			fileName = StringEscapeUtils.escapeHtml(inputFile.getFilename());
+
+			// Then produce a UTF-8 compliant string
+			fileName = StringEscapeUtils.unescapeHtml(fileName);
 
 			setPercent(inputFile.getFileInfo().getPercent());
 
