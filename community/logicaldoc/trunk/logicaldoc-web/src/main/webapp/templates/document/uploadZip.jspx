@@ -72,8 +72,7 @@
 			<ice:panelGroup>
 				<ice:outputText
 					value="#{msgs['upload.zipfilename']}: #{inputFile.fileName}"
-					style="padding-left:8px;">
-					<f:converter converterId="logicaldoc.UTFConverter" />
+					style="padding-left:8px;" escape="false">
 				</ice:outputText>
 				<br />
 				<br />
