@@ -136,13 +136,22 @@
 		<filter-class>com.logicaldoc.web.LocaleFilter</filter-class>
 	</filter>
 
-    <!-- Temporary pacth for Firefox 3.0.7 -->
-    <servlet>
-        <servlet-name>inputFileFrame</servlet-name>
-        <servlet-class>
-            com.logicaldoc.web.util.InputFileFrameServlet
-        </servlet-class>
-    </servlet>
+	<filter>
+		<filter-name>Charset Filter</filter-name>
+		<filter-class>com.logicaldoc.web.CharsetFilter</filter-class>
+		<init-param>
+			<param-name>requestEncoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+
+	<!-- Temporary pacth for Firefox 3.0.7 -->
+	<servlet>
+		<servlet-name>inputFileFrame</servlet-name>
+		<servlet-class>
+			com.logicaldoc.web.util.InputFileFrameServlet
+		</servlet-class>
+	</servlet>
 
 	<!-- file upload Servlet -->
 	<servlet>
@@ -195,9 +204,7 @@
 	</servlet>
 	<servlet>
 		<servlet-name>upload</servlet-name>
-		<servlet-class>
-			com.logicaldoc.web.upload.Upload
-		</servlet-class>
+		<servlet-class>com.logicaldoc.web.upload.Upload</servlet-class>
 	</servlet>
 	<servlet>
 		<display-name>Logs download servlet</display-name>
@@ -251,11 +258,15 @@
 		<filter-name>LocaleFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+	<filter-mapping>
+		<filter-name>Charset Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 	<servlet-mapping>
-        <servlet-name>inputFileFrame</servlet-name>
-        <url-pattern>/inputFileFrame</url-pattern>
-    </servlet-mapping>
+		<servlet-name>inputFileFrame</servlet-name>
+		<url-pattern>/inputFileFrame</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>uploadServlet</servlet-name>
 		<url-pattern>/uploadHtml</url-pattern>
@@ -292,7 +303,7 @@
 		<servlet-name>uploadresource</servlet-name>
 		<url-pattern>/uploadresource</url-pattern>
 	</servlet-mapping>
-    <servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>upload</servlet-name>
 		<url-pattern>/upload</url-pattern>
 	</servlet-mapping>
