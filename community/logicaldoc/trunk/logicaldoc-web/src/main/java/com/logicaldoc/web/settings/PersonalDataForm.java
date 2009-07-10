@@ -16,8 +16,7 @@ import com.logicaldoc.web.util.FacesUtil;
 /**
  * Personal data editing
  * 
- * @author Marco Meschieri
- * @version $Id: UserForm.java,v 1.1 2007/10/16 16:10:33 marco Exp $
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class PersonalDataForm {
@@ -40,6 +39,8 @@ public class PersonalDataForm {
 	private String email;
 
 	private String phone;
+	
+	private String phone2;
 
 	public PersonalDataForm() {
 		super();
@@ -54,6 +55,7 @@ public class PersonalDataForm {
 		language = user.getLanguage();
 		email = user.getEmail();
 		phone = user.getTelephone();
+		phone2 = user.getTelephone2();
 	}
 
 	public String getCity() {
@@ -142,6 +144,7 @@ public class PersonalDataForm {
 				user.setLanguage(language);
 				user.setPostalcode(postalCode);
 				user.setTelephone(phone);
+				user.setTelephone2(phone2);
 
 				boolean stored = dao.store(user);
 
@@ -166,5 +169,13 @@ public class PersonalDataForm {
 		} else {
 			return "login";
 		}
+	}
+
+	public String getPhone2() {
+		return phone2;
+	}
+
+	public void setPhone2(String phone2) {
+		this.phone2 = phone2;
 	}
 }
