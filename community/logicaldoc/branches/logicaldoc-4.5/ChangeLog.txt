@@ -9,6 +9,15 @@
                       http://www.logicaldoc.com                    
 
                      LogicalDOC Community Edition
+                     
+LogicalDOC CE 4.5 (2009-06-28; logicaldoc-4.5)
+===============
+- Fixed problem during checkin with accented characters
+- Improved the style of discussion forum
+- Fixed SQL DDLs for MS SQL Server 2005
+- Implemented the document's copy feature
+- Fixed visualization problems of ICEfaces error messages
+- Improved preview of the documents        
 
 LogicalDOC CE 4.5 RC3 (2009-06-01; logicaldoc-4.5-RC3)
 ===============
