@@ -125,8 +125,15 @@
 					<ice:message for="phone" />
 				</ice:panelGroup>
 				<ice:panelGroup style="width:20px" />
-				<ice:panelGroup />
-				<ice:panelGroup />
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="phone2"
+						value="#{msgs['msg.jsp.adduser.phone2']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="phone2" value="#{personalDataForm.phone2}"
+						tabindex="1" maxlength="30" size="30" partialSubmit="true" />
+					<ice:message for="phone2" />
+				</ice:panelGroup>
 			</ice:panelGrid>
 		</ice:panelGroup>
 		<hr />
