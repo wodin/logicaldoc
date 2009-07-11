@@ -183,6 +183,9 @@ public class ServletDocUtil {
 	 */
 	public static void downloadDocumentText(HttpServletRequest request, HttpServletResponse response, long docId)
 			throws FileNotFoundException, IOException {
+		
+		response.setCharacterEncoding("UTF-8");
+		
 		// get document
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = ddao.findById(docId);
@@ -207,7 +210,7 @@ public class ServletDocUtil {
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		String content = manager.getDocumentContent(doc.getId());
 
-		InputStream is = new StringInputStream(content.trim());
+		InputStream is = new StringInputStream(content.trim(),"UTF-8");
 		OutputStream os;
 		os = response.getOutputStream();
 		int letter = 0;
