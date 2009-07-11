@@ -1,5 +1,9 @@
 package com.logicaldoc.util;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+
 /**
  * Useful class used to filter snippets from lucene, excluding those characters
  * that invalidate HTML page
@@ -24,6 +28,18 @@ public class SnippetStripper {
 	// Latin Extended-A characters pattern
 	private static final String UNICODE_LATIN_EXTENDED_A = "\\u0100-\\u017F";
 
+	// Greek characters pattern
+	private static final String UNICODE_GREEK = "\\u0370–\\u03FF";
+
+	// Cyrillic characters pattern
+	private static final String UNICODE_CYRILLIK = "\\u0400–\\u04FF";
+
+	// Arabic characters pattern
+	private static final String UNICODE_ARABIC = "\\u0600–\\u06FF";
+
+	// Chinese characters pattern
+	private static final String UNICODE_CHINESE = "\\u4E00–\\u9FFF";
+
 	/**
 	 * Strips all characters from the input string that may invalidate XML.
 	 * Particularly useful for search result summaries
@@ -43,9 +59,22 @@ public class SnippetStripper {
 		String outString = summary;
 
 		// maintain all characters compatible with explorer
-		outString = outString.replaceAll("[^" + UNICODE_BASIC_LATIN + UNICODE_LATIN_1 + UNICODE_LATIN_EXTENDED_A + "]",
-				" ");
+		outString = outString.replaceAll("[^" + UNICODE_BASIC_LATIN + UNICODE_LATIN_1 + UNICODE_LATIN_EXTENDED_A
+				+ UNICODE_GREEK + UNICODE_CYRILLIK + UNICODE_ARABIC + UNICODE_CHINESE + "]", " ");
 
+		write(outString);
+		
 		return outString;
+	}
+	
+	public static void write(String str){
+		try {
+			OutputStreamWriter sout = new OutputStreamWriter (new FileOutputStream(new File("/C:/test.txt")),"UTF8");
+			sout.write(str);
+			sout.flush();
+			sout.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
 	}
 }
