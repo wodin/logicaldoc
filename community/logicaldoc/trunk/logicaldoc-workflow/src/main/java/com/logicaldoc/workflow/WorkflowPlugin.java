@@ -54,7 +54,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 				"com.logicaldoc.workflow.TestServlet", 4);
 		config.writeXMLDoc();
 	
-		config.addServletMapping("Workflow Servlet", "/webdav/*");
+		config.addServletMapping("Workflow Servlet", "/workflow/*");
 		config.writeXMLDoc();
 	}
 }
