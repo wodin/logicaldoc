@@ -13,7 +13,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
@@ -110,6 +112,11 @@ public class DocumentResourceUpload extends HttpServlet {
 					docDao.initialize(doc);
 					doc.setSigned(1);
 					docDao.store(doc);
+					VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+					Version version = vdao.findByVersion(doc.getId(), doc.getVersion());
+					vdao.initialize(version);
+					version.setSigned(1);
+					vdao.store(version);
 				}
 			}
 		} catch (Exception ex) {
