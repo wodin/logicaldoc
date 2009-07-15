@@ -41,9 +41,7 @@
 					label="#{msgs['upload.button']}" />
 				<ice:outputProgress id="pro" value="#{inputFile.percent}" />
 				<ice:outputText
-					value="#{msgs['upload.filename']}: #{inputFile.fileName}" escape="false" />
-					value="#{msgs['upload.filename']}: #{inputFile.fileName}"
-					style="padding-left:8px;" escape="false">
+					value="#{msgs['upload.filename']}: #{inputFile.fileName}" escape="false">
 				</ice:outputText>
 				<br />
 				<ice:messages for="iFile" />
