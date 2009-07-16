@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 /**
  * Useful class used to filter snippets from lucene, excluding those characters
  * that invalidate HTML page
@@ -18,27 +20,6 @@ public class SnippetStripper {
 
 	// Lucene font hilight end tag
 	private static final String LUCENE_HILIGHT_STOP = "&lt;/font&gt;";
-
-	// Basic latin characters pattern
-	private static final String UNICODE_BASIC_LATIN = "\\u0021-\\u007E";
-
-	// Latin-1 characters pattern
-	private static final String UNICODE_LATIN_1 = "\\u00A1-\\u00FF";
-
-	// Latin Extended-A characters pattern
-	private static final String UNICODE_LATIN_EXTENDED_A = "\\u0100-\\u017F";
-
-	// Greek characters pattern
-	private static final String UNICODE_GREEK = "\\u0370–\\u03FF";
-
-	// Cyrillic characters pattern
-	private static final String UNICODE_CYRILLIK = "\\u0400–\\u04FF";
-
-	// Arabic characters pattern
-	private static final String UNICODE_ARABIC = "\\u0600–\\u06FF";
-
-	// Chinese characters pattern
-	private static final String UNICODE_CHINESE = "\\u4E00–\\u9FFF";
 
 	/**
 	 * Strips all characters from the input string that may invalidate XML.
@@ -58,23 +39,23 @@ public class SnippetStripper {
 		summary = summary.replaceAll(LUCENE_HILIGHT_STOP, "</font>");
 		String outString = summary;
 
-		// maintain all characters compatible with explorer
-		outString = outString.replaceAll("[^" + UNICODE_BASIC_LATIN + UNICODE_LATIN_1 + UNICODE_LATIN_EXTENDED_A
-				+ UNICODE_GREEK + UNICODE_CYRILLIK + UNICODE_ARABIC + UNICODE_CHINESE + "]", " ");
-
-		write(outString);
+		
+		//Remove all control characters
+		outString = outString.replaceAll("[\\u0000-\\u0020]", " ");
+		outString = outString.replaceAll("\\u007F", " ");
+		outString = outString.replaceAll("[\\u0080-\\u009F]", " ");
 		
 		return outString;
 	}
 	
-	public static void write(String str){
-		try {
-			OutputStreamWriter sout = new OutputStreamWriter (new FileOutputStream(new File("/C:/test.txt")),"UTF8");
-			sout.write(str);
-			sout.flush();
-			sout.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-	}
+//	public static void write(String str){
+//		try {
+//			OutputStreamWriter sout = new OutputStreamWriter (new FileOutputStream(new File("/C:/test.txt")),"UTF8");
+//			sout.write(str);
+//			sout.flush();
+//			sout.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}		
+//	}
 }
