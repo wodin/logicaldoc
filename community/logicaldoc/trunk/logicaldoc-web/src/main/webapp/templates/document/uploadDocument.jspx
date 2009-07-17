@@ -64,6 +64,7 @@
 					actionListener="#{inputFile.action}" inputTextSize="30"
 					label="#{msgs['upload.button']}" style="width: 612px"/>
 				<ice:outputProgress id="pro1" value="#{inputFile.percent}" />
+				<ice:outputText value="#{msgs['upload.clicktoproceed']}"	rendered="#{newDocWizard.showUpload==true and inputFile.ready==true}" />
 				<ice:panelGroup>
 					<ice:messages globalOnly="false" showDetail="true"
 						showSummary="false" />
