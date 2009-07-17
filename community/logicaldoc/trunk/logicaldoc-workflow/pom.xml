@@ -63,30 +63,18 @@
 	</dependency>
   
     <!-- jBPM Dependencies -->
-    <!-- 
+    
     <dependency>
-      <groupId>org.jbpm.jbpm3</groupId>
-      <artifactId>jbpm-identity</artifactId>
-      <version>3.3.1.GA</version>
-      <exclusions>
-      	<exclusion>
-      		<artifactId>jbpm-identity</artifactId>
-      		<groupId>org.jbpm.jbpm3</groupId>
-      	</exclusion>
-      </exclusions>
+      <groupId>org.jbpm.jbpm4</groupId>
+      <artifactId>jbpm-api</artifactId>
+      <version>4.0</version>
     </dependency>
     <dependency>
-      <groupId>org.jbpm.jbpm3</groupId>
+      <groupId>org.jbpm.jbpm4</groupId>
       <artifactId>jbpm-jpdl</artifactId>
-      <version>3.3.1.GA</version>
-       <exclusions>
-      	<exclusion>
-      		<groupId>org.jbpm.jbpm3</groupId>
-      		<artifactId>jbpm-jpdl</artifactId>
-      	</exclusion>
-      </exclusions>
+      <version>4.0</version>
     </dependency>
- -->
+ 
     <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
