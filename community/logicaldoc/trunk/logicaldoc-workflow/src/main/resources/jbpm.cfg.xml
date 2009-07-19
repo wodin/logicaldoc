@@ -7,6 +7,7 @@
     <service name='scheduler' factory='org.jbpm.scheduler.db.DbSchedulerServiceFactory' />
     <service name='logging' factory='org.jbpm.logging.db.DbLoggingServiceFactory' />
     <service name='authentication' factory='org.jbpm.security.authentication.DefaultAuthenticationServiceFactory' />
+    <service name='tx' factory='org.jbpm.tx.TxServiceFactory' />
   </jbpm-context>
   <string name='resource.hibernate.properties' value='context.properties'/>
   <!-- configuration resource files pointing to default configuration files in jbpm-{version}.jar -->

@@ -7,44 +7,23 @@
 <hibernate-configuration>
   <session-factory>
 
-    <!-- jdbc connection properties -->
-   <!--  <property name="hibernate.dialect">org.hibernate.dialect.HSQLDialect</property>
-    <property name="hibernate.connection.driver_class">org.hsqldb.jdbcDriver</property>
-    <property name="hibernate.connection.url">jdbc:hsqldb:mem:.;sql.enforce_strict_size=true</property>
-    <property name="hibernate.connection.username">sa</property>
-    <property name="hibernate.connection.password"></property>
-        --> 
-    <!-- other hibernate properties 
-    <property name="hibernate.show_sql">true</property>
-    <property name="hibernate.format_sql">true</property>
-    -->
-    <!-- ############################################ -->
-    <!-- # mapping files with external dependencies # -->
-    <!-- ############################################ -->
-
-    <!-- following mapping file has a dependendy on   -->
-    <!-- 'bsh-{version}.jar'.                         -->
-    <!-- uncomment this if you don't have bsh on your -->
-    <!-- classpath.  you won't be able to use the     -->
-    <!-- script element in process definition files   -->
-    <mapping resource="org/jbpm/graph/action/Script.hbm.xml"/>
-
-    <!-- following mapping files have a dependendy on  -->
-    <!-- 'jbpm-identity-{version}.jar', mapping files  -->
-    <!-- of the pluggable jbpm identity component.     -->
-    <!-- comment out the following 3 lines if you don't-->
-    <!-- want to use the default jBPM identity mgmgt   -->
-    <!-- component                                     -->
-    <mapping resource="org/jbpm/identity/User.hbm.xml"/>
-    <mapping resource="org/jbpm/identity/Group.hbm.xml"/>
-    <mapping resource="org/jbpm/identity/Membership.hbm.xml"/>
-
-    <!-- ###################### -->
+   <!-- ###################### -->
     <!-- # jbpm mapping files # -->
     <!-- ###################### -->
 
     <!-- hql queries and type defs -->
     <mapping resource="org/jbpm/db/hibernate.queries.hbm.xml" />
+    <!-- hql queries used in simulation for querying historical data
+         uncomment if you want to use the GetSimulationInputCommand
+         or maybe you also want to use the queries yourself
+         be patient: the queries need the stddev function to be enabled in your dialect
+         more information on this can be found here: http://www.camunda.com/business_process_simulation_news/mysql_and_stddev.html -->
+    <!--
+    <mapping resource="org/jbpm/sim/bam/hibernate.queries.hbm.xml" />
+    -->
+
+    <!-- graph.action mapping files -->
+    <mapping resource="org/jbpm/graph/action/MailAction.hbm.xml"/>
     
     <!-- graph.def mapping files -->
     <mapping resource="org/jbpm/graph/def/ProcessDefinition.hbm.xml"/>
@@ -56,6 +35,18 @@
     <mapping resource="org/jbpm/graph/def/ExceptionHandler.hbm.xml"/>
     <mapping resource="org/jbpm/instantiation/Delegation.hbm.xml"/>
 
+    <!-- ############################################ -->
+    <!-- # another mapping file with external dependencies # -->
+    <!-- ############################################ -->
+    <!-- following mapping file has a dependency on   -->
+    <!-- 'bsh-{version}.jar'.                         -->
+    <!-- uncomment this if you don't have bsh on your -->
+    <!-- classpath.  you won't be able to use the     -->
+    <!-- script element in process definition files   -->
+    <!-- has to be defined below org/jbpm/graph/def/Action.hbm.xml -->
+    <!-- due to the inline collection-cache elements below -->
+    <mapping resource="org/jbpm/graph/action/Script.hbm.xml"/>    
+
     <!-- graph.node mapping files -->
     <mapping resource="org/jbpm/graph/node/StartState.hbm.xml"/>
     <mapping resource="org/jbpm/graph/node/EndState.hbm.xml"/>
@@ -63,6 +54,7 @@
     <mapping resource="org/jbpm/graph/node/Decision.hbm.xml"/>
     <mapping resource="org/jbpm/graph/node/Fork.hbm.xml"/>
     <mapping resource="org/jbpm/graph/node/Join.hbm.xml"/>
+    <mapping resource="org/jbpm/graph/node/MailNode.hbm.xml"/>
     <mapping resource="org/jbpm/graph/node/State.hbm.xml"/>
     <mapping resource="org/jbpm/graph/node/TaskNode.hbm.xml"/>
 
@@ -70,21 +62,21 @@
     <mapping resource="org/jbpm/context/def/ContextDefinition.hbm.xml"/>
     <mapping resource="org/jbpm/context/def/VariableAccess.hbm.xml"/>
 
+    <!-- bytes mapping files -->
+    <mapping resource="org/jbpm/bytes/ByteArray.hbm.xml"/>
+
+    <!-- module.def mapping files -->
+    <mapping resource="org/jbpm/module/def/ModuleDefinition.hbm.xml"/>
+
+    <!-- file.def mapping files -->
+    <mapping resource="org/jbpm/file/def/FileDefinition.hbm.xml"/>
+
     <!-- taskmgmt.def mapping files -->
     <mapping resource="org/jbpm/taskmgmt/def/TaskMgmtDefinition.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/def/Swimlane.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/def/Task.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/def/TaskController.hbm.xml"/>
-
-    <!-- module.def mapping files -->
-    <mapping resource="org/jbpm/module/def/ModuleDefinition.hbm.xml"/>
-
-    <!-- bytes mapping files -->
-    <mapping resource="org/jbpm/bytes/ByteArray.hbm.xml"/>
-
-    <!-- file.def mapping files -->
-    <mapping resource="org/jbpm/file/def/FileDefinition.hbm.xml"/>
-
+    
     <!-- scheduler.def mapping files -->
     <mapping resource="org/jbpm/scheduler/def/CreateTimerAction.hbm.xml"/>
     <mapping resource="org/jbpm/scheduler/def/CancelTimerAction.hbm.xml"/>
@@ -111,22 +103,17 @@
     <mapping resource="org/jbpm/context/exe/variableinstance/NullInstance.hbm.xml"/>
     <mapping resource="org/jbpm/context/exe/variableinstance/StringInstance.hbm.xml"/>
 
-    <!-- msg.db mapping files -->
-    <mapping resource="org/jbpm/msg/Message.hbm.xml"/>
-    <mapping resource="org/jbpm/msg/db/TextMessage.hbm.xml"/>
-    <mapping resource="org/jbpm/command/ExecuteActionCommand.hbm.xml"/>
-    <mapping resource="org/jbpm/command/ExecuteNodeCommand.hbm.xml"/>
-    <mapping resource="org/jbpm/command/SignalCommand.hbm.xml"/>
-    <mapping resource="org/jbpm/command/TaskInstanceEndCommand.hbm.xml"/>
+    <!-- job mapping files -->
+    <mapping resource="org/jbpm/job/Job.hbm.xml"/>
+    <mapping resource="org/jbpm/job/Timer.hbm.xml"/>
+    <mapping resource="org/jbpm/job/ExecuteNodeJob.hbm.xml"/>
+    <mapping resource="org/jbpm/job/ExecuteActionJob.hbm.xml"/>
 
     <!-- taskmgmt.exe mapping files -->
     <mapping resource="org/jbpm/taskmgmt/exe/TaskMgmtInstance.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/exe/TaskInstance.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/exe/PooledActor.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/exe/SwimlaneInstance.hbm.xml"/>
-
-    <!-- scheduler.exe mapping files -->
-    <mapping resource="org/jbpm/scheduler/exe/Timer.hbm.xml"/>
 
     <!-- logging mapping files -->
     <mapping resource="org/jbpm/logging/log/ProcessLog.hbm.xml"/>
@@ -136,6 +123,7 @@
     <mapping resource="org/jbpm/graph/log/NodeLog.hbm.xml"/>
     <mapping resource="org/jbpm/graph/log/ProcessInstanceCreateLog.hbm.xml"/>
     <mapping resource="org/jbpm/graph/log/ProcessInstanceEndLog.hbm.xml"/>
+    <mapping resource="org/jbpm/graph/log/ProcessStateLog.hbm.xml"/>
     <mapping resource="org/jbpm/graph/log/SignalLog.hbm.xml"/>
     <mapping resource="org/jbpm/graph/log/TokenCreateLog.hbm.xml"/>
     <mapping resource="org/jbpm/graph/log/TokenEndLog.hbm.xml"/>
@@ -158,6 +146,66 @@
     <mapping resource="org/jbpm/taskmgmt/log/SwimlaneLog.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/log/SwimlaneCreateLog.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/log/SwimlaneAssignLog.hbm.xml"/>
+
+    <!-- ################################### -->
+    <!-- # cache settings                  # -->
+    <!-- # strategy="nonstrict-read-write" # -->
+    <!-- # can be used with hibernate.cache.provider_class=org.hibernate.cache.HashtableCacheProvider # -->
+    <!-- ################################### -->
+
+    <class-cache	class="org.jbpm.context.def.VariableAccess" usage="nonstrict-read-write" />	
     
+    <collection-cache collection="org.jbpm.file.def.FileDefinition.processFiles" usage="nonstrict-read-write" />
+    
+    <collection-cache collection="org.jbpm.graph.action.Script.variableAccesses" usage="nonstrict-read-write" />
+	
+    <class-cache 	class="org.jbpm.graph.def.Action"	usage="nonstrict-read-write" />		
+	
+    <class-cache 	class="org.jbpm.graph.def.Event"	usage="nonstrict-read-write" />		
+    <collection-cache collection="org.jbpm.graph.def.Event.actions" usage="nonstrict-read-write" />	
+	
+    <class-cache 	class="org.jbpm.graph.def.ExceptionHandler"	usage="nonstrict-read-write" />			
+    <collection-cache collection="org.jbpm.graph.def.ExceptionHandler.actions" usage="nonstrict-read-write" />		
+	
+    <class-cache 	class="org.jbpm.graph.def.Node" usage="nonstrict-read-write" />			
+    <collection-cache collection="org.jbpm.graph.def.Node.events" usage="nonstrict-read-write" />			
+    <collection-cache collection="org.jbpm.graph.def.Node.exceptionHandlers" usage="nonstrict-read-write" />				
+    <collection-cache collection="org.jbpm.graph.def.Node.leavingTransitions" usage="nonstrict-read-write" />			
+    <collection-cache collection="org.jbpm.graph.def.Node.arrivingTransitions" usage="nonstrict-read-write" />	
+	
+    <class-cache 	class="org.jbpm.graph.def.ProcessDefinition"	usage="nonstrict-read-write" />	
+    <collection-cache collection="org.jbpm.graph.def.ProcessDefinition.events" usage="nonstrict-read-write" />			
+    <collection-cache collection="org.jbpm.graph.def.ProcessDefinition.exceptionHandlers" usage="nonstrict-read-write" />			
+    <collection-cache collection="org.jbpm.graph.def.ProcessDefinition.nodes" usage="nonstrict-read-write" />			
+    <collection-cache collection="org.jbpm.graph.def.ProcessDefinition.actions" usage="nonstrict-read-write" />			
+    <collection-cache collection="org.jbpm.graph.def.ProcessDefinition.definitions" usage="nonstrict-read-write" />			
+
+    <collection-cache collection="org.jbpm.graph.def.SuperState.nodes" usage="nonstrict-read-write" />			
+	
+    <class-cache 	class="org.jbpm.graph.def.Transition"	usage="nonstrict-read-write" />	
+    <collection-cache collection="org.jbpm.graph.def.Transition.events" usage="nonstrict-read-write" />			
+    <collection-cache collection="org.jbpm.graph.def.Transition.exceptionHandlers" usage="nonstrict-read-write" />			
+    
+    <collection-cache collection="org.jbpm.graph.node.Decision.decisionConditions" usage="nonstrict-read-write" />			
+    
+    <collection-cache collection="org.jbpm.graph.node.ProcessState.variableAccesses" usage="nonstrict-read-write" />			
+    
+    <collection-cache collection="org.jbpm.graph.node.TaskNode.tasks" usage="nonstrict-read-write" />			
+    
+    <class-cache 	class="org.jbpm.instantiation.Delegation"	usage="nonstrict-read-write" />	
+    
+    <class-cache 	class="org.jbpm.module.def.ModuleDefinition"	usage="nonstrict-read-write" />	
+    
+    <collection-cache collection="org.jbpm.taskmgmt.def.Swimlane.tasks" usage="nonstrict-read-write" />			
+    
+    <class-cache 	class="org.jbpm.taskmgmt.def.TaskController"	usage="nonstrict-read-write" />	    
+    <collection-cache collection="org.jbpm.taskmgmt.def.TaskController.variableAccesses" usage="nonstrict-read-write" />			
+    
+    <class-cache 	class="org.jbpm.taskmgmt.def.Task"	usage="nonstrict-read-write" />	    
+    <collection-cache collection="org.jbpm.taskmgmt.def.Task.events" usage="nonstrict-read-write" />			
+    <collection-cache collection="org.jbpm.taskmgmt.def.Task.exceptionHandlers" usage="nonstrict-read-write" />			
+    
+    <collection-cache collection="org.jbpm.taskmgmt.def.TaskMgmtDefinition.swimlanes" usage="nonstrict-read-write" />			
+    <collection-cache collection="org.jbpm.taskmgmt.def.TaskMgmtDefinition.tasks" usage="nonstrict-read-write" />	
   </session-factory>
 </hibernate-configuration>

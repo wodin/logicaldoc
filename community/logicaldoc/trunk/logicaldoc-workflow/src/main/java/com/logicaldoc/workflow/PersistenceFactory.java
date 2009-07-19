@@ -13,6 +13,10 @@ public class PersistenceFactory extends DbPersistenceServiceFactory {
 
 	private static final long serialVersionUID = 4845270442669524870L;
 
+	public PersistenceFactory(){
+		setTransactionEnabled(false);
+	}
+	
 	/**
 	 * 
   		Setting up following properties:

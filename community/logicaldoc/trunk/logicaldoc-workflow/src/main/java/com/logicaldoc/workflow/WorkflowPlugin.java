@@ -1,11 +1,18 @@
 package com.logicaldoc.workflow;
 
+import java.io.File;
+
+import org.apache.commons.io.FileUtils;
 import org.hibernate.cfg.Configuration;
 import org.java.plugin.PluginManager;
 import org.jbpm.JbpmConfiguration;
-import org.springmodules.workflow.jbpm31.LocalJbpmConfigurationFactoryBean;
+import org.springframework.util.Log4jConfigurer;
 
+import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.MenuGroup;
+import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.FacesConfigurator;
 import com.logicaldoc.util.config.WebConfigurator;
 import com.logicaldoc.util.event.SystemEvent;
 import com.logicaldoc.util.event.SystemEventStatus;
@@ -39,7 +46,26 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 			jbpmInstallConfig.createSchema();
 			
-
+			MenuDAO menuDAO = (MenuDAO)ctx.getBean("MenuDAO");
+			Menu menu =  new Menu();
+			menu.setDeleted(0);
+			
+			MenuGroup mg = new MenuGroup();
+			mg.setGroupId(1);
+			
+			menu.setText("Workflow");
+			menu.setSize(0);
+			menu.setParentId(2);
+			menu.setSort(4);
+			menu.setIcon("tags.png");
+			menu.setType(1);
+			menu.setRef("workflow/manage-workflowtemplates");
+			
+			long groups[] = {1};
+			
+			menu.setMenuGroup(groups);
+			menuDAO.store(menu);
+			
 		}
 
 	}
@@ -48,13 +74,33 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 		Configuration installConfiguration = new Configuration();
 		Context.addListener(new InstallationEvent());
-		
+			
 		WebConfigurator config = new WebConfigurator();
-		config.addServlet("Workflow Servlet",
-				"com.logicaldoc.workflow.TestServlet", 4);
+
+		//TODO: Its the "best" way to adding a faces-file?
+		config.addContextParam("javax.faces.CONFIG_FILES", "/WEB-INF/faces-config-workflow.xml", "", WebConfigurator.INIT_PARAM.PARAM_APPEND);
 		config.writeXMLDoc();
-	
-		config.addServletMapping("Workflow Servlet", "/workflow/*");
-		config.writeXMLDoc();
+		
+		super.install();
+
+		String webappDir = resolvePath("webapp");
+		File src = new File(webappDir);
+		File dest = new File(System.getProperty("logicaldoc.app.rootdir"));
+		log.info("Copy web resources from " + src.getPath() + " to " + dest.getPath());
+		FileUtils.copyDirectory(src, dest);
+
+		// Now add the message bundle
+		log.info("Add logicaldoc-workflow resource bundle");
+		FacesConfigurator facesConfig = new FacesConfigurator();
+		facesConfig.addBundle("i18n.application-logicaldoc-workflow");
+
 	}
+	
+	@Override
+	protected void start() throws Exception {
+		//Debug issues
+		Log4jConfigurer.initLogging("classpath:log4j.xml");
+		
+	}
+	
 }

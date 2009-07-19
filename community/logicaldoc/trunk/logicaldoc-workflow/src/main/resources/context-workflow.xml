@@ -2,26 +2,98 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 <beans>
 
-<!-- jBPM configuration -->
-  <bean id="jbpmConfiguration" 
-      class="org.springmodules.workflow.jbpm31.LocalJbpmConfigurationFactoryBean">
-    <property name="sessionFactory" ref="SessionFactory"/>
-    <property name="configuration" value="classpath:jbpm.cfg.xml"/>
-    <!-- property name="processDefinitions">
-     <list>
-      <ref local="simpleWorkflow"/>
-     </list>
-    </property>
-     -->
-    <!-- 
-    <property name="processDefinitionsResources">
-     <list>
-      <value>classpath:/org/springmodules/workflow/jbpm31/someOtherWorkflow.xml</value>
-     </list>
-    </property>
-     -->
-  </bean>
+	<!-- jBPM configuration -->
 
+	<bean id="jbpmConfiguration"
+		class="org.springmodules.workflow.jbpm31.LocalJbpmConfigurationFactoryBean">
+		<property name="sessionFactory" ref="SessionFactory" />
+		<property name="configuration" value="classpath:jbpm.cfg.xml" />
 
+		<!--
+			property name="processDefinitions"> <list> <ref
+			local="simpleWorkflow"/> </list> </property>
+		-->
+		<!--
+			<property name="processDefinitionsResources"> <list>
+			<value>classpath:/org/springmodules/workflow/jbpm31/someOtherWorkflow.xml</value>
+			</list> </property>
+		-->
 
+	</bean>
+
+	
+	<bean id="jbpmTemplate" class="org.springmodules.workflow.jbpm31.JbpmTemplate">
+		<constructor-arg ref="jbpmConfiguration" />
+	</bean>
+
+	<bean id="jbpmWorkflowEngine" class="com.logicaldoc.workflow.JBPMWorkflowEngine">
+		<property name="jbpmTemplate" ref="jbpmTemplate" />
+	</bean>
+
+	<bean id="workflowService" class="com.logicaldoc.workflow.WorkflowServiceImpl">
+		<property name="workflowComponent" ref="jbpmWorkflowEngine" />
+	</bean>
+
+	<bean id="WorkflowTemplateLoader" class="com.logicaldoc.workflow.editor.WorkflowTemplateLoader"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="sessionFactory">
+			<ref bean="SessionFactory" />
+		</property>
+	</bean>
+	
+	<!-- Controller for Models -->
+	
+	<bean id="workflowTaskController" class="com.logicaldoc.workflow.editor.controll.TaskController">
+		<property name="userDAO" ref="UserDAO"/>
+		<property name="groupDAO" ref="GroupDAO"/>
+	</bean>
+	
+	<bean id="forkController" class="com.logicaldoc.workflow.editor.controll.ForkController"/>
+	
+	<bean id="joinController" class="com.logicaldoc.workflow.editor.controll.JoinController"/>
+	
+	<bean id="endStateController" class="com.logicaldoc.workflow.editor.controll.EndStateController"/>
+	
+	<bean id="transitionController" class="com.logicaldoc.workflow.editor.controll.TransitionController"/>
+
+	<!-- Transformer for Models -->
+
+	<bean id="workflowTaskTransformer" class="com.logicaldoc.workflow.transform.JBPMWorkflowTask"/>
+	
+	<bean id="forkTransformer" class="com.logicaldoc.workflow.transform.JBPMFork"/>
+	
+	<bean id="joinTransformer" class="com.logicaldoc.workflow.transform.JBPMJoin"/>
+	
+	<bean id="endStateTransformer" class="com.logicaldoc.workflow.transform.JBPMEndState"/>
+	
+	<bean id="bpmModelController" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key="WorkflowTask" value-ref="workflowTaskController"/>
+				<entry key="Fork" value-ref="forkController"/>
+				<entry key="Join" value-ref="joinController"/>
+				<entry key="Transition" value-ref="transitionController"/>
+				<entry key="EndState" value-ref="endStateController"/>
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="bpmTransformer" class="com.logicaldoc.workflow.transform.JBPMWorkflowTransformServiceImpl"/>
+
+	<bean id="workflowTransformService" class="com.logicaldoc.workflow.transform.JBPMWorkflowTransformServiceImpl">
+		<property name="XStream" ref="xStream"/>
+		<property name="componentTransformer">
+			<list>
+				<ref bean="workflowTaskTransformer"/>
+				<ref bean="forkTransformer"/>
+				<ref bean="joinTransformer"/>
+				<ref bean="endStateTransformer"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="xStream" class="com.thoughtworks.xstream.XStream"/>
+	
+	
 </beans>
