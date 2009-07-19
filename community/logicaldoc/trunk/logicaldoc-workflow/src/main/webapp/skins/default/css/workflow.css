@@ -1,0 +1,20 @@
+@CHARSET "ISO-8859-1";
+
+.targetClass{
+	background-image: url(/skins/default/images/workflow/workflowDestinationGradient.png); 
+
+	width:150px; 
+	height:30px;
+}
+
+.dropClass {
+	margin-bottom:4px;
+	background-image: url(/skins/default/images/workflow/workflowDestinationGradient.png); 
+	border:1px solid #cccccc; 	
+	width:150px; 
+	height:30px;
+}
+
+.hightAlignment{
+	vertical-align: top;
+}
