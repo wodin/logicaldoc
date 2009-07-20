@@ -14,15 +14,20 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
 	id="tagsForm">
+	
 	<ice:panelGroup style="text-align: center;">
 		<br />
 		<ice:panelSeries var="letter" value="#{tags.letters}">
-				&amp;nbsp;&amp;nbsp;
-				<ice:commandLink action="#{letter.select}">
-				<ice:outputText value="#{letter.letter}" style="font-weight: bold;" />
+			<ice:commandLink action="#{letter.select}">
+				<ice:outputText value="#{letter.letter}" style="font-weight: bold; padding-right: 15px;" />
 			</ice:commandLink>
-     			&amp;nbsp;&amp;nbsp;
-			</ice:panelSeries>
+		</ice:panelSeries>
+		<br />
+					<ice:panelGroup>
+					    <ice:outputLabel for="manualchar" value="#{tags.otherchar}: " />
+						<ice:inputText id="manualchar" value="#{tags.manualchar}" size="1" />
+						<ice:commandButton value="#{msgs['search']}" action="#{tags.showWordsbychar}" />
+					</ice:panelGroup>
 	</ice:panelGroup>
 
 	<br />
