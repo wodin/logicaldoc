@@ -44,6 +44,8 @@ public class TagsBean extends SortableList {
 	// record the last operation requested: letter or tag
 	private String reqop;
 
+	private String manualchar;
+	
 	public TagsBean() {
 		// We don't sort by default
 		super("xxx");
@@ -93,6 +95,20 @@ public class TagsBean extends SortableList {
 		kword.setWord(tag);
 		kword.select();
 	}
+	
+	/**
+	 * Handles the selection of this letter
+	 */
+	public String showWordsbychar() {
+		if (SessionManagement.isValid()) {
+			String lett = new String(manualchar).toLowerCase();
+			selectWordsByFirstLetter(lett);
+
+			return null;
+		} else {
+			return "login";
+		}
+	}
 
 	/**
 	 * Representation of a letter
@@ -114,46 +130,8 @@ public class TagsBean extends SortableList {
 		 */
 		public String select() {
 			if (SessionManagement.isValid()) {
-				try {
-					String lett = new String(new char[] { letter }).toLowerCase();
-
-					long userId = SessionManagement.getUserId();
-					DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-					Collection<String> coll = ddao.findTags(lett, userId);
-					Iterator<String> iter = coll.iterator();
-					Hashtable<String, Integer> table = new Hashtable<String, Integer>(coll.size());
-
-					while (iter.hasNext()) {
-						String tag = iter.next();
-						int count = 1;
-
-						if (table.containsKey(tag)) {
-							Integer i = (Integer) table.get(tag);
-							table.remove(tag);
-							count = i.intValue();
-							count++;
-						}
-
-						table.put(tag, new Integer(count));
-					}
-
-					reqop = "letter";
-					tags.clear();
-					documents.clear();
-
-					Enumeration<String> enum1 = table.keys();
-
-					while (enum1.hasMoreElements()) {
-						Tag tag = new Tag();
-						String key = enum1.nextElement();
-						Integer value = table.get(key);
-						tag.setWord(key);
-						tag.setCount(value.intValue());
-						tags.add(tag);
-					}
-				} catch (Exception e) {
-					log.error(e.getMessage(), e);
-				}
+				String lett = new String(new char[] { letter }).toLowerCase();
+				selectWordsByFirstLetter(lett);
 
 				return null;
 			} else {
@@ -312,5 +290,54 @@ public class TagsBean extends SortableList {
 
 	public DocumentHandler getDh() {
 		return dh;
+	}
+
+	public String getManualchar() {
+		return manualchar;
+	}
+
+	public void setManualchar(String manualchar) {
+		this.manualchar = manualchar;
+	}
+
+	public void selectWordsByFirstLetter(String lett) {
+		try {
+			long userId = SessionManagement.getUserId();
+			DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			Collection<String> coll = ddao.findTags(lett, userId);
+			Iterator<String> iter = coll.iterator();
+			Hashtable<String, Integer> table = new Hashtable<String, Integer>(coll.size());
+
+			while (iter.hasNext()) {
+				String tag = iter.next();
+				int count = 1;
+
+				if (table.containsKey(tag)) {
+					Integer i = (Integer) table.get(tag);
+					table.remove(tag);
+					count = i.intValue();
+					count++;
+				}
+
+				table.put(tag, new Integer(count));
+			}
+
+			reqop = "letter";
+			tags.clear();
+			documents.clear();
+
+			Enumeration<String> enum1 = table.keys();
+
+			while (enum1.hasMoreElements()) {
+				Tag tag = new Tag();
+				String key = enum1.nextElement();
+				Integer value = table.get(key);
+				tag.setWord(key);
+				tag.setCount(value.intValue());
+				tags.add(tag);
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 }
