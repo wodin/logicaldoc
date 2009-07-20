@@ -1,11 +1,14 @@
 package com.logicaldoc.core.text.parser;
 
 import java.io.ByteArrayOutputStream;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,6 +26,7 @@ import org.pdfbox.util.PDFTextStripper;
  * @author Michael Scholz
  */
 public class PDFParser extends AbstractParser {
+	
 	private String author;
 
 	private String title;
@@ -59,7 +63,6 @@ public class PDFParser extends AbstractParser {
 
 			try {
 				PDDocumentInformation information = pdfDocument.getDocumentInformation();
-
 				if (information == null) {
 					throw new Exception("Can not get information from pdf document " + file.getName());
 				}
@@ -105,8 +108,10 @@ public class PDFParser extends AbstractParser {
 
 			// create a tmp output stream with the size of the content.
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			OutputStreamWriter writer = new OutputStreamWriter(out);
+			OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8");
+			
 			PDFTextStripper stripper = new PDFTextStripper();
+			
 			try {
 				if (pdfDocument.isEncrypted())
 					throw new IOException("Encripted document");
@@ -117,8 +122,9 @@ public class PDFParser extends AbstractParser {
 				title = file.getName().substring(0, file.getName().lastIndexOf('.'));
 				author = "";
 			}
+			writer.flush();
 			writer.close();
-			content = out.toString();
+			content = new String(out.toByteArray(), "UTF-8");
 			is.close();
 			out.close();
 		} catch (Exception ex) {
