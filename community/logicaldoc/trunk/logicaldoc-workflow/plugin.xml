@@ -62,4 +62,10 @@
 		<parameter id="position" value="60"/>
 		<parameter id="bundle" value="i18n.application-workflow"/>
 	</extension>
+	
+	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="workflowDbInit">
+		<parameter id="position" value="10" />
+		<parameter id="name" value="logicaldoc-workflow" />
+		<parameter id="sqlFile" value="sql/logicaldoc-workflow.sql" />
+	</extension>
 </plugin>
