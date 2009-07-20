@@ -88,19 +88,11 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 		File dest = new File(System.getProperty("logicaldoc.app.rootdir"));
 		log.info("Copy web resources from " + src.getPath() + " to " + dest.getPath());
 		FileUtils.copyDirectory(src, dest);
-
-		// Now add the message bundle
-		log.info("Add logicaldoc-workflow resource bundle");
-		FacesConfigurator facesConfig = new FacesConfigurator();
-		facesConfig.addBundle("i18n.application-logicaldoc-workflow");
-
 	}
 	
 	@Override
 	protected void start() throws Exception {
 		//Debug issues
-		Log4jConfigurer.initLogging("classpath:log4j.xml");
-		
+		Log4jConfigurer.initLogging("classpath:log4j.xml");		
 	}
-	
 }

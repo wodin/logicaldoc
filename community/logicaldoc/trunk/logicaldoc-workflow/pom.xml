@@ -9,7 +9,6 @@
 	</parent>
 	<artifactId>logicaldoc-workflow</artifactId>
 	<name>logicaldoc-workflow</name>
-	<version>0.1</version>
 	<url>http://www.logicaldoc.com</url>
 	<packaging>jar</packaging>
 	<dependencies>
@@ -80,15 +79,15 @@
 		</dependency>
 
 		<dependency>
-			<groupId>jboss</groupId>
+			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-identity</artifactId>
-			<version>3.2.3</version>
+			<version>3.2.6.GA</version>
 		</dependency>
 
 		<dependency>
-			<groupId>jboss</groupId>
+			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-jpdl</artifactId>
-			<version>3.2.3</version>
+			<version>3.2.6.GA</version>
 		</dependency>
 
 
