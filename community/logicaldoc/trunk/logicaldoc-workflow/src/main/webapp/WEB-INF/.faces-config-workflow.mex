@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JSFFlowViewLayout version="1.0">
+  <Drawing gridVisible="true" snapOn="true" />
+  <JSFFlowResource path="*" location="86,0" dimension="49,36" />
+  <JSFFlowResource path="/templates/workflow/wizard.iface" location="0,111" dimension="222,36" />
+  <JSFFlowNavigationCase id="*,/templates/workflow/wizard.iface,startworkflowwizard,&lt;empty&gt;" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="111,36" />
+      <AbsolutePoint location="111,111" />
+    </AutomaticBendpoints>
+  </JSFFlowNavigationCase>
+</JSFFlowViewLayout>
+
