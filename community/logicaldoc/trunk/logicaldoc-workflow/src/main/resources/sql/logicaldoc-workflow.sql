@@ -1,1 +1,1 @@
-create table ld_workflowtemplate (ld_id bigint not null, ld_name varchar(100) not null, ld_description varchar(1000) , ld_xmldata blob , ld_deployed int, ld_startstate char(36), primary key (ld_id));
+create table ld_workflowtemplate (ld_id bigint not null, ld_name varchar(100) not null, ld_description varchar(1000), ld_deployed int, ld_startstate char(36), primary key (ld_id));
