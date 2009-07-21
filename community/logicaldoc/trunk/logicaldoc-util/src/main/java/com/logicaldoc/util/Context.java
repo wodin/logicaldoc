@@ -81,8 +81,10 @@ public class Context implements ApplicationContextAware, ApplicationListener {
 	 * changed
 	 */
 	public static void refresh() {
-		if (applicationContext != null)
-			((AbstractApplicationContext) applicationContext).refresh();
+		if (applicationContext != null){
+			((AbstractApplicationContext) applicationContext).stop();
+			((AbstractApplicationContext) applicationContext).start();
+		}
 	}
 
 	/**
