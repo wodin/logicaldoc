@@ -36,51 +36,17 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 		@Override
 		public void processEvent() {
-
 			Context ctx = Context.getInstance();
-			
 			JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration) ctx
-					.getBean("jbpmConfiguration");
-			
+					.getBean("jbpmConfiguration");			
 			jbpmInstallConfig.dropSchema();
-
 			jbpmInstallConfig.createSchema();
-			
-			MenuDAO menuDAO = (MenuDAO)ctx.getBean("MenuDAO");
-			Menu menu =  new Menu();
-			menu.setDeleted(0);
-			
-			MenuGroup mg = new MenuGroup();
-			mg.setGroupId(1);
-			
-			menu.setText("Workflow");
-			menu.setSize(0);
-			menu.setParentId(2);
-			menu.setSort(4);
-			menu.setIcon("tags.png");
-			menu.setType(1);
-			menu.setRef("workflow/manage-workflowtemplates");
-			
-			long groups[] = {1};
-			
-			menu.setMenuGroup(groups);
-			menuDAO.store(menu);
-			
 		}
-
 	}
 
 	protected void install() throws Exception {
-
 		Configuration installConfiguration = new Configuration();
 		Context.addListener(new InstallationEvent());
-			
-		WebConfigurator config = new WebConfigurator();
-
-		//TODO: Its the "best" way to adding a faces-file?
-		config.addContextParam("javax.faces.CONFIG_FILES", "/WEB-INF/faces-config-workflow.xml", "", WebConfigurator.INIT_PARAM.PARAM_APPEND);
-		config.writeXMLDoc();
-		
 		super.install();
 
 		String webappDir = resolvePath("webapp");
@@ -92,7 +58,6 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 	
 	@Override
 	protected void start() throws Exception {
-		//Debug issues
-		Log4jConfigurer.initLogging("classpath:log4j.xml");		
+			
 	}
 }
