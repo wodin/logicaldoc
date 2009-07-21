@@ -12,10 +12,10 @@ import com.logicaldoc.workflow.model.WorkflowTaskInstance;
 import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
 
 /**
- * The interface "WorkflowEngine" descriped one component that has to be
+ * The interface "WorkflowEngine" described one component that has to be
  * implemented as its responsible to build up the bridge between LogicalDOC and
  * the BPM-Engine. Thus, the Engine incorporates directly with an BPM-System.
- * Furthermore, the Engine must provide the mapping of the BPM-Spefic classes to
+ * Furthermore, the Engine must provide the mapping of the BPM-Specific classes to
  * LogicalDOC. The WorkflowService gets injected one particular WorkflowEngine
  * that manages the relying processes.
  * 
