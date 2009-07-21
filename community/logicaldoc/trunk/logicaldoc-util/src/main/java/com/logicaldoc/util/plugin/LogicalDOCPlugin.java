@@ -135,7 +135,7 @@ public abstract class LogicalDOCPlugin extends Plugin {
 	 * Returns the data directory for this plugin, that is
 	 * {conf.plugindir}/{pluginId}. It will be created in not existing.
 	 */
-	private File getDataDirectory() {
+	public File getDataDirectory() {
 		PropertiesBean conf;
 		try {
 			conf = new PropertiesBean();
