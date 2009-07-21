@@ -60,4 +60,9 @@
 		<parameter id="name" value="logicaldoc-workflow" />
 		<parameter id="sqlFile" value="sql/logicaldoc-workflow.sql" />
 	</extension>
+	
+	<extension plugin-id="logicaldoc-core" point-id="database-mapping" id="worklowMapping">
+		<parameter id="mapping" value="classpath*:org/jbpm/**/hibernate.queries.hbm.xml"/>
+		<parameter id="position" value="10"/>
+	</extension>
 </plugin>
