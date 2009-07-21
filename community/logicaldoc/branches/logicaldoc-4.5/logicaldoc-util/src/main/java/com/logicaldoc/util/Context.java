@@ -1,5 +1,6 @@
 package com.logicaldoc.util;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -12,6 +13,7 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.core.io.Resource;
 
 import com.logicaldoc.util.event.SystemEvent;
 import com.logicaldoc.util.event.SystemEventStatus;
@@ -40,7 +42,7 @@ public class Context implements ApplicationContextAware, ApplicationListener {
 	public static Context getInstance() {
 		return instance;
 	}
-
+	
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		Context.applicationContext = applicationContext;
 	}
@@ -79,8 +81,10 @@ public class Context implements ApplicationContextAware, ApplicationListener {
 	 * changed
 	 */
 	public static void refresh() {
-		if (applicationContext != null)
-			((AbstractApplicationContext) applicationContext).refresh();
+		if (applicationContext != null){
+			((AbstractApplicationContext) applicationContext).stop();
+			((AbstractApplicationContext) applicationContext).start();
+		}
 	}
 
 	/**
@@ -115,6 +119,24 @@ public class Context implements ApplicationContextAware, ApplicationListener {
 		
 			evts.remove(evt);
 		}
+	}
+	
+	public Resource[] getResources(String resourcePattern){
+		try {
+			return this.applicationContext.getResources(resourcePattern);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Returns a Spring-Resource
+	 * @return
+	 */
+	public Resource getResource(String resourceLocation) {
+		return this.applicationContext.getResource(resourceLocation);
 	}
 	
 	/**
