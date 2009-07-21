@@ -18,7 +18,7 @@
 			<value>classpath:/org/springmodules/workflow/jbpm31/someOtherWorkflow.xml</value>
 			</list> </property>
 		-->
-        <property name="createSchema" value="true"/>
+        <property name="createSchema" value="false"/>
 	</bean>
 
 
