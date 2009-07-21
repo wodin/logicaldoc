@@ -14,11 +14,11 @@
 			<export prefix="*" />
 		</library>	
 			
-		<library id="jbpm-identity" path="lib/jbpm-identity-3.2.3.jar" type="code">
+		<library id="jbpm-identity" path="lib/jbpm-identity-3.2.6.GA.jar" type="code">
 			<export prefix="*"/>
 		</library>
 		
-		<library id="jbpm-jpdl" path="lib/jbpm-jpdl-3.2.3.jar" type="code">
+		<library id="jbpm-jpdl" path="lib/jbpm-jpdl-3.2.6.GA.jar" type="code">
 			<export prefix="*"/>
 		</library>
 		
@@ -39,17 +39,9 @@
 		
    	</runtime>
 	
-
-        
-	<extension plugin-id="logicaldoc-core" point-id="database-mapping" id="worklow">
-		<parameter id="mapping" value="classpath*:org/jbpm/**/*.hbm.xml"/>
-		<parameter id="position" value="2"/>
-	</extension>
-
-	
 	<extension plugin-id="logicaldoc-core" point-id="DocumentMenu" id="startworkflow">
 		<parameter id="id" value="startworkflow"/>
-		<parameter id="action" value="#{workflowTemplateManagerBean.setupWorkflow}"/>
+		<parameter id="action" value="#{WorkflowTemplateManager.setupWorkflow}"/>
 		<parameter id="title" value="logicaldoc-workflow.startworkflow"/>
 		<parameter id="icon" value="workflow.png"/>
 		<parameter id="target" value=""/>

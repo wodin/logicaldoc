@@ -29,13 +29,13 @@
 					<tr>
 						<td>
 							<ice:dataTable id="workflowTemplateList" var="workflowDefinition"
-								value="#{workflowBean.workflowDefinitions}"
+								value="#{WorkflowManager.workflowDefinitions}"
 								rows="15" columnClasses="tableCol">
 
 								<ice:column>
 								
 									<ice:rowSelector id="selected"
-										selectionListener="#{workflowBean.rowSelectionListener}"
+										selectionListener="#{WorkflowManager.rowSelectionListener}"
 										preStyleOnSelection="true" />
 										
 									<f:facet name="header">
