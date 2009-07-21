@@ -1,5 +1,6 @@
 package com.logicaldoc.workflow.transform;
 
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.sql.Blob;
 import java.sql.SQLException;
@@ -40,13 +41,8 @@ public class JBPMWorkflowTransformServiceImpl implements
 	@Override
 	public List<BaseWorkflowModel> fromWorkflowDefinitionToObject(
 			WorkflowPersistenceTemplate workflowTemplateModel) {
-		try {
-		
-			return (List<BaseWorkflowModel>)xStream.fromXML(workflowTemplateModel.getXmldata().getBinaryStream());
-		
-		} catch (SQLException e) {
-			throw new IllegalStateException(e);
-		}
+	
+		return (List<BaseWorkflowModel>)xStream.fromXML((String)workflowTemplateModel.getXmldata());
 	}
 
 	@Override
@@ -101,15 +97,13 @@ public class JBPMWorkflowTransformServiceImpl implements
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<BaseWorkflowModel> retrieveWorkflowModels(Blob binarayContent) {
-		try {
-			List<BaseWorkflowModel> workflowComponents = (List<BaseWorkflowModel>) this.xStream
-					.fromXML(binarayContent.getBinaryStream());
+	private List<BaseWorkflowModel> retrieveWorkflowModels(Serializable binarayContent) {
+		
+		List<BaseWorkflowModel> workflowComponents = (List<BaseWorkflowModel>) this.xStream
+				.fromXML((String)binarayContent);
 
-			return workflowComponents;
-		} catch (SQLException e) {
-			throw new WorkflowEditorException(e);
-		}
+		return workflowComponents;
+	
 	}
 	
 	private String retrieveStringFromXMLElement(Element elm){

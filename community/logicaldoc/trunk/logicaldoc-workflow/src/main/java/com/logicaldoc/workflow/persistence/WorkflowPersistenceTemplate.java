@@ -1,12 +1,13 @@
 package com.logicaldoc.workflow.persistence;
 
+import java.io.Serializable;
 import java.sql.Blob;
 
 public class WorkflowPersistenceTemplate {
 	
 	private long id;
 	
-	private Blob xmldata;
+	private Serializable xmldata;
 	
 	private String name;
 	
@@ -40,11 +41,11 @@ public class WorkflowPersistenceTemplate {
 		return description;
 	}
 	
-	public void setXmldata(Blob xmldata) {
+	public void setXmldata(Serializable xmldata) {
 		this.xmldata = xmldata;
 	}
 	
-	public Blob getXmldata() {
+	public Serializable getXmldata() {
 		return xmldata;
 	}
 	

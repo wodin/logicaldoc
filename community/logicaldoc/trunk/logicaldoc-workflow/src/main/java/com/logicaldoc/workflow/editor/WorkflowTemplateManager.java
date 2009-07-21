@@ -1,5 +1,7 @@
 package com.logicaldoc.workflow.editor;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -40,7 +42,7 @@ import com.logicaldoc.workflow.transform.WorkflowTransformService;
 import com.thoughtworks.xstream.XStream;
 
 public class WorkflowTemplateManager {
-
+	
 	private WorkflowTransformService workflowTransformService;
 
 	private WorkflowService workflowService;
@@ -65,7 +67,7 @@ public class WorkflowTemplateManager {
 			WorkflowTransformService workflowTransformService) {
 		this.workflowTransformService = workflowTransformService;
 	}
-
+	
 	public BaseWorkflowModel getSelectedComponent() {
 		return this.component;
 	}
@@ -316,8 +318,7 @@ public class WorkflowTemplateManager {
 
 		try {
 			this.workflowComponents = (List<BaseWorkflowModel>) xstream
-					.fromXML(this.persistenceTemplate.getXmldata()
-							.getBinaryStream());
+					.fromXML((String)this.persistenceTemplate.getXmldata());
 
 			if (this.workflowComponents == null)
 				this.workflowComponents = new LinkedList<BaseWorkflowModel>();
@@ -349,8 +350,7 @@ public class WorkflowTemplateManager {
 	public void saveCurrentWorkflowTemplate() {
 
 		String xmlData = xstream.toXML(this.workflowComponents);
-		this.persistenceTemplate.setXmldata(Hibernate.createBlob(xmlData
-				.getBytes()));
+		this.persistenceTemplate.setXmldata(xmlData);
 
 		this.workflowTemplateLoader
 				.saveWorkflowTemplate(this.persistenceTemplate);
@@ -379,6 +379,14 @@ public class WorkflowTemplateManager {
 
 	public String deployWorkflowTemplate() {
 		TRANSMITTER.XML_DATA = "";
+		File f = new File("GOLEM");
+		try {
+			f.createNewFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		HttpServletRequest request = (HttpServletRequest) FacesContext
 				.getCurrentInstance().getExternalContext().getRequest();
 		String workflowTemplateId = request.getParameter("id");
