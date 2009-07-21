@@ -5,7 +5,7 @@
 
   <!-- Home bean -->
   <managed-bean>
-    <managed-bean-name>workflowTemplateManagerBean</managed-bean-name>
+    <managed-bean-name>WorkflowTemplateManager</managed-bean-name>
     <managed-bean-class>com.logicaldoc.workflow.editor.WorkflowTemplateManager</managed-bean-class>
     <managed-bean-scope>session</managed-bean-scope>
      <managed-property>
@@ -23,7 +23,7 @@
 	
   <managed-bean>
    
-    <managed-bean-name>workflowBean</managed-bean-name>
+    <managed-bean-name>WorkflowManager</managed-bean-name>
     <managed-bean-class>com.logicaldoc.workflow.WorkflowManager</managed-bean-class>
     <managed-bean-scope>session</managed-bean-scope>
     

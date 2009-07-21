@@ -1,7 +1,6 @@
 <?xml version = '1.0'?>
 <!-- 
  
-  
  @author Sebastian Wenzky
  @since 4.5
 -->
@@ -28,7 +27,7 @@
 			<td valign="top"><ice:panelGroup styleClass="exampleBox ">
 
 				<ice:dataTable id="workflowTemplateList" var="workflowTemplate"
-					value="#{workflowTemplateManagerBean.availableWorkflowTemplates}"
+					value="#{WorkflowTemplateManager.availableWorkflowTemplates}"
 					rows="15" columnClasses="tableCol">
 					<ice:column>
 
@@ -58,17 +57,17 @@
 						</f:facet>
 	
 						<ice:commandLink value="load"
-							action="#{workflowTemplateManagerBean.loadWorkflowTemplate}">
+							action="#{WorkflowTemplateManager.loadWorkflowTemplate}">
 							<f:param name="id" value="#{workflowTemplate.id}"></f:param>
 						</ice:commandLink>
 
 						<ice:commandLink value="remove"
-							action="#{workflowTemplateManagerBean.deleteWorkflowTemplate}">
+							action="#{WorkflowTemplateManager.deleteWorkflowTemplate}">
 							<f:param name="id" value="#{workflowTemplate.id}"></f:param>
 						</ice:commandLink>
 
 						<ice:commandLink value="deploy"
-							action="#{workflowTemplateManagerBean.deployWorkflowTemplate}">
+							action="#{WorkflowTemplateManager.deployWorkflowTemplate}">
 							<f:param name="id" value="#{workflowTemplate.id}"></f:param>
 						</ice:commandLink>
 
@@ -79,7 +78,7 @@
 			TaskLookup for particular user (Developer-Tool):
 			
 			 <ice:dataTable id="taskInstanceList" var="taskInstance"
-					value="#{workflowBean.taskInstances}"
+					value="#{WorkflowManager.taskInstances}"
 					rows="15" columnClasses="tableCol">
 					<ice:column>
 
@@ -105,7 +104,7 @@
 							<ice:outputText value=""/>
 							
 							<ice:commandLink value="#{transition.name}"
-								actionListener="#{workflowBean.endTask}">
+								actionListener="#{WorkflowManager.endTask}">
 							<f:param name="taskInstance" value="#{taskInstance}"></f:param>
 							<f:param name="transition" value="#{transition}"></f:param>
 							
@@ -122,20 +121,20 @@
 			<td>
 				
 				
-			<ice:commandButton action="#{workflowTemplateManagerBean.createNewWorkflowTemplate}"
+			<ice:commandButton action="#{WorkflowTemplateManager.createNewWorkflowTemplate}"
 				value="Create new Workflow-Template">
 			</ice:commandButton>
 		
-			<ice:commandButton action="#{workflowTemplateManagerBean.removeAllWorkflowComponents}"
+			<ice:commandButton action="#{WorkflowTemplateManager.removeAllWorkflowComponents}"
 				value="Remove All Components"></ice:commandButton>
 				
-			<ice:commandButton action="#{workflowTemplateManagerBean.undeployAllDefinitions}"
+			<ice:commandButton action="#{WorkflowTemplateManager.undeployAllDefinitions}"
 				value="Undeploy all workflowdefinitions"></ice:commandButton>	
 				
-			<ice:commandButton action="#{workflowTemplateManagerBean.deleteAllActiveWorkflows}"
+			<ice:commandButton action="#{WorkflowTemplateManager.deleteAllActiveWorkflows}"
 				value="rm -rf WorkflowInstances "></ice:commandButton>	
 				
-				<ice:panelGroup rendered="#{not empty workflowTemplateManagerBean.persistenceTemplate}"> 
+				<ice:panelGroup rendered="#{not empty WorkflowTemplateManager.persistenceTemplate}"> 
 					
 <!-- ************************************************************************ -->
 <!-- START - Following code should be migrated into a single jspx file - START-->
@@ -143,12 +142,12 @@
 
 				<ice:panelGrid>
 					Start-State
-					<h:selectOneMenu value="#{workflowTemplateManagerBean.persistenceTemplate.startState}">
-						<f:selectItems value="#{workflowTemplateManagerBean.possibleStartStates}"/>
+					<h:selectOneMenu value="#{WorkflowTemplateManager.persistenceTemplate.startState}">
+						<f:selectItems value="#{WorkflowTemplateManager.possibleStartStates}"/>
 					</h:selectOneMenu>
 				</ice:panelGrid>
 
-				<ice:panelGrid columns="3" rendered="#{not empty workflowTemplateManagerBean.persistenceTemplate}">
+				<ice:panelGrid columns="3" rendered="#{not empty WorkflowTemplateManager.persistenceTemplate}">
 					<!-- Left Taskbar -->
 					<ice:panelGroup>
 							
@@ -163,8 +162,8 @@
 									                </ice:panelGroup>
 									            </f:facet>
 									
-												Name: <ice:inputText value="#{workflowTemplateManagerBean.persistenceTemplate.name}"/><br/>
-												Description:<br/> <ice:inputTextarea style="font-size:10px; width:200px;"  value="#{workflowTemplateManagerBean.persistenceTemplate.description}"/>
+												Name: <ice:inputText value="#{WorkflowTemplateManager.persistenceTemplate.name}"/><br/>
+												Description:<br/> <ice:inputTextarea style="font-size:10px; width:200px;"  value="#{WorkflowTemplateManager.persistenceTemplate.description}"/>
 												
 											</ice:panelCollapsible>
 											
@@ -172,7 +171,7 @@
 											<!--  Task  -->
 											<!-- ****** -->
 											 
-											<ice:panelGroup rendered="#{not empty workflowTemplateManagerBean.selectedComponent and workflowTemplateManagerBean.selectedComponent.template == 'task'}">
+											<ice:panelGroup rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'task'}">
 												<ice:panelCollapsible  expanded="true">
 										            <f:facet name="header">
 										                <ice:panelGroup>
@@ -180,9 +179,9 @@
 										                </ice:panelGroup>
 										            </f:facet>
 									        
-													<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="2" rendered="#{ workflowTemplateManagerBean.selectedComponent != null}">
+													<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="2" rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
 											
-													    <ice:outputLabel for="name" value="Name:"><ice:inputText id="name" value="#{workflowTemplateManagerBean.selectedComponent.name}"/></ice:outputLabel>
+													    <ice:outputLabel for="name" value="Name:"><ice:inputText id="name" value="#{WorkflowTemplateManager.selectedComponent.name}"/></ice:outputLabel>
 					
 													</ice:panelGrid>	
 												</ice:panelCollapsible>
@@ -193,13 +192,13 @@
 										                </ice:panelGroup>
 										            </f:facet>
 													<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="3">
-														<ice:outputLabel for="dueDate" value="Due Date"/><ice:inputText style="width:24px;" value="#{workflowTemplateManagerBean.selectedComponent.dueDateValue}"/>
-														<h:selectOneMenu value="#{workflowTemplateManagerBean.selectedComponent.dueDateUnit}">
-															<f:selectItems value="#{workflowTemplateManagerBean.timeUnits}"/>
+														<ice:outputLabel for="dueDate" value="Due Date"/><ice:inputText style="width:24px;" value="#{WorkflowTemplateManager.selectedComponent.dueDateValue}"/>
+														<h:selectOneMenu value="#{WorkflowTemplateManager.selectedComponent.dueDateUnit}">
+															<f:selectItems value="#{WorkflowTemplateManager.timeUnits}"/>
 														</h:selectOneMenu>
-														<ice:outputLabel for="remindTime" value="RemindTime"/><ice:inputText style="width:24px;" value="#{workflowTemplateManagerBean.selectedComponent.remindTimeValue}"/>
-														<h:selectOneMenu value="#{workflowTemplateManagerBean.selectedComponent.remindTimeUnit}">
-															<f:selectItems value="#{workflowTemplateManagerBean.timeUnits}"/>
+														<ice:outputLabel for="remindTime" value="RemindTime"/><ice:inputText style="width:24px;" value="#{WorkflowTemplateManager.selectedComponent.remindTimeValue}"/>
+														<h:selectOneMenu value="#{WorkflowTemplateManager.selectedComponent.remindTimeUnit}">
+															<f:selectItems value="#{WorkflowTemplateManager.timeUnits}"/>
 														</h:selectOneMenu>
 														
 													</ice:panelGrid>
@@ -213,19 +212,19 @@
 										                    <ice:outputText value="Participants"/>
 										                </ice:panelGroup>
 										            </f:facet>
-													<ui:repeat value="#{workflowTemplateManagerBean.selectedComponent.assignees}" var="assignment">
-														<ice:commandButton value="Remove Assignment" actionListener="#{workflowTemplateManagerBean.controller.removeAssignment}">
+													<ui:repeat value="#{WorkflowTemplateManager.selectedComponent.assignees}" var="assignment">
+														<ice:commandButton value="Remove Assignment" actionListener="#{WorkflowTemplateManager.controller.removeAssignment}">
 															<f:param name="assignment" value="#{assignment}"/>
 															<f:param name="workflowComponent" value="#{workflowComponent}"/>
 														</ice:commandButton>
 														<ice:selectInputText id="AutoCmpTxt"  rows="10"
-									                             width="300" value="#{assignment.value}" valueChangeListener="#{workflowTemplateManagerBean.controller.selectInputValueChanged}">
-												            	<f:selectItems id="AutoCmpTxtItms"  value="#{workflowTemplateManagerBean.controller.possibleAssignments}"/>
+									                             width="300" value="#{assignment.value}" valueChangeListener="#{VorkflowTemplateManagerBean.controller.selectInputValueChanged}">
+												            	<f:selectItems id="AutoCmpTxtItms"  value="#{WorkflowTemplateManager.controller.possibleAssignments}"/>
 												       	</ice:selectInputText>
 											       		
 													</ui:repeat>
-													<ice:commandLink value="Add Assignment" actionListener="#{workflowTemplateManagerBean.controller.addAssignment}">
-														<f:param name="workflowTask" value="#{workflowTemplateManagerBean.selectedComponent}"/>
+													<ice:commandLink value="Add Assignment" actionListener="#{WorkflowTemplateManager.controller.addAssignment}">
+														<f:param name="workflowTask" value="#{WorkflowTemplateManager.selectedComponent}"/>
 													</ice:commandLink>
 													<ice:panelGroup/>
 												</ice:panelCollapsible>
@@ -235,9 +234,9 @@
 										                    <ice:outputText value="Transitions"/>
 										                </ice:panelGroup>
 										            </f:facet>
-													<ui:repeat value="#{workflowTemplateManagerBean.selectedComponent.transitions}" var="transition">
+													<ui:repeat value="#{WorkflowTemplateManager.selectedComponent.transitions}" var="transition">
 														<ice:outputText value=""/>
-														<ice:commandButton value="Remove Transition" actionListener="#{workflowTemplateManagerBean.controller.removeTransition}">
+														<ice:commandButton value="Remove Transition" actionListener="#{WorkflowTemplateManager.controller.removeTransition}">
 															<f:param name="transition" value="#{transition}"/>
 														</ice:commandButton>
 														<ice:inputText value="#{transition.name}"/>
@@ -245,7 +244,7 @@
 													</ui:repeat>
 													
 												
-													<ice:commandLink value="Add Transition" action="#{workflowTemplateManagerBean.controller.addTransition}"/>
+													<ice:commandLink value="Add Transition" action="#{WorkflowTemplateManager.controller.addTransition}"/>
 												
 												</ice:panelCollapsible>
 											</ice:panelGroup>		
@@ -254,7 +253,7 @@
 											<!--  Join  -->
 											<!-- ****** -->	
 											
-											<ice:panelGroup rendered="#{not empty workflowTemplateManagerBean.selectedComponent and workflowTemplateManagerBean.selectedComponent.template == 'join'}">
+											<ice:panelGroup rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'join'}">
 												<ice:panelCollapsible id="panelJoinBasic" expanded="true">
 													<f:facet name="header">
 										                <ice:panelGroup>
@@ -262,10 +261,10 @@
 										                </ice:panelGroup>
 										            </f:facet>
 											            
-													<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="2" rendered="#{ workflowTemplateManagerBean.selectedComponent != null}">
+													<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="2" rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
 														
 														
-														<ice:outputLabel for="name" value="Name"><ice:inputText id="name" value="#{workflowTemplateManagerBean.selectedComponent.name}"/></ice:outputLabel>
+														<ice:outputLabel for="name" value="Name"><ice:inputText id="name" value="#{WorkflowTemplateManager.selectedComponent.name}"/></ice:outputLabel>
 														
 														
 													</ice:panelGrid>	
@@ -276,15 +275,15 @@
 											<!--  Fork  -->
 											<!-- ****** -->	
 											
-											<ice:panelGroup rendered="#{not empty workflowTemplateManagerBean.selectedComponent and workflowTemplateManagerBean.selectedComponent.template == 'fork'}">
+											<ice:panelGroup rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'fork'}">
 												<ice:panelCollapsible id="panelEndpointBasic" expanded="true">
 													<f:facet name="header">
 										                <ice:panelGroup>
 										                    <ice:outputText value="Basic"/>
 										                </ice:panelGroup>
 										            </f:facet>
-										           	<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="2" rendered="#{ workflowTemplateManagerBean.selectedComponent != null}">
-														<ice:outputLabel for="name" value="Name"><ice:inputText id="name" value="#{workflowTemplateManagerBean.selectedComponent.name}"/></ice:outputLabel>	
+										           	<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="2" rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
+														<ice:outputLabel for="name" value="Name"><ice:inputText id="name" value="#{WorkflowTemplateManager.selectedComponent.name}"/></ice:outputLabel>	
 													</ice:panelGrid>
 										        </ice:panelCollapsible>
 													
@@ -295,16 +294,16 @@
 											<!--  End-State  -->
 											<!-- *********** -->	
 											
-											<ice:panelGroup rendered="#{not empty workflowTemplateManagerBean.selectedComponent and workflowTemplateManagerBean.selectedComponent.template == 'endState'}">
+											<ice:panelGroup rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'endState'}">
 												<ice:panelCollapsible id="panelEndpointBasic" expanded="true">
 													<f:facet name="header">
 										                <ice:panelGroup>
 										                    <ice:outputText value="Basic"/>
 										                </ice:panelGroup>
 										            </f:facet>
-										            <ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="2" rendered="#{ workflowTemplateManagerBean.selectedComponent != null}">
+										            <ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="2" rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
 
-												    	<ice:outputLabel for="name" value="Name"><ice:inputText id="name" value="#{workflowTemplateManagerBean.selectedComponent.name}"/></ice:outputLabel>
+												    	<ice:outputLabel for="name" value="Name"><ice:inputText id="name" value="#{WorkflowTemplateManager.selectedComponent.name}"/></ice:outputLabel>
 													
 													</ice:panelGrid>
 										        </ice:panelCollapsible>
@@ -313,12 +312,12 @@
 									</td>
 									<td valign="top">
 									
-								<ui:repeat value="#{workflowTemplateManagerBean.workflowComponents}"
+								<ui:repeat value="#{WorkflowTemplateManager.workflowComponents}"
 									var="workflowComponent">
 					
 									<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="2">
 			
-										<h:panelGrid columns="#{workflowTemplateManagerBean.workflowComponentSize}">
+										<h:panelGrid columns="#{WorkflowTemplateManager.workflowComponentSize}">
 											<table>
 												<tr>
 													<td valign="top">
@@ -336,7 +335,7 @@
 																			dragMask="hover_start, hover_end"
 																			dropTarget="true"
 																			
-																			dragListener="#{workflowTemplateManagerBean.dragObject}"
+																			dragListener="#{WorkflowTemplateManager.dragObject}"
 																			dragValue="#{workflowComponent}"
 																			dragOptions="dragGhost" dropMask="hover_start"
 																			hoverclass="seriesHover" >
@@ -353,11 +352,11 @@
 																				</ice:panelGroup>
 																			
 																			
-																				<ice:commandLink actionListener="#{workflowTemplateManagerBean.deleteWorkflowComponent}" value=" delete ">
+																				<ice:commandLink actionListener="#{WorkflowTemplateManager.deleteWorkflowComponent}" value=" delete ">
 																					<f:param name="component" value="#{workflowComponent}"/>
 																				</ice:commandLink>
 																					
-																			<ice:commandLink actionListener="#{workflowTemplateManagerBean.selectComponent}" value=" edit ">
+																			<ice:commandLink actionListener="#{WorkflowTemplateManager.selectComponent}" value=" edit ">
 																				<f:param name="component" value="#{workflowComponent}"/>
 																			</ice:commandLink>
 																	</ice:panelGroup>
@@ -389,17 +388,17 @@
 												 					<tr>
 												 						<td width="100" height="30">
 																 			
-																 			<ice:panelGroup rendered="#{not empty transition.destination}" dropListener="#{workflowTemplateManagerBean.dropObject}" dropValue="#{transition}"
+																 			<ice:panelGroup rendered="#{not empty transition.destination}" dropListener="#{WorkflowTemplateManager.dropObject}" dropValue="#{transition}"
 																				styleClass="dropClass"
 																				dropTarget="true" >
 																				#{transition.destination.name} 
 																				<br/>
-																				<ice:commandLink actionListener="#{workflowComponent.controller.removeDestinationFromTransition}" value="delete">
+																				<ice:commandLink actionListener="#{WorkflowComponent.controller.removeDestinationFromTransition}" value="delete">
 																					<f:param name="transition" value="#{transition}"/>
 																				</ice:commandLink>
 																 			</ice:panelGroup>
 																 			
-																 			<ice:panelGroup rendered="#{empty transition.destination}" hoverclass="targetClass"  dropListener="#{workflowTemplateManagerBean.dropObject}" dropValue="#{transition}"
+																 			<ice:panelGroup rendered="#{empty transition.destination}" hoverclass="targetClass"  dropListener="#{WorkflowTemplateManager.dropObject}" dropValue="#{transition}"
 																				style="height:30px; width:150px; padding:1px; "
 																				dropTarget="true" >
 																				
@@ -433,7 +432,7 @@
 															 			</td>
 															 		</ui:repeat>
 															 			<td>
-															 				<ice:panelGroup hoverclass="targetClass" dropListener="#{workflowTemplateManagerBean.dropObject}" dropValue="#{workflowComponent}"
+															 				<ice:panelGroup hoverclass="targetClass" dropListener="#{WorkflowTemplateManager.dropObject}" dropValue="#{workflowComponent}"
 																				style="height: 30px; width:100px;  border-bottom:1px solid #cccccc;  "
 																				dropTarget="true" >
 															 				</ice:panelGroup>
@@ -450,7 +449,7 @@
 												 				<tr>
 												 					<td>
 															 			
-															 			<ice:panelGroup rendered="#{empty workflowComponent.destination}" hoverclass="targetClass" dropListener="#{workflowTemplateManagerBean.dropObject}" dropValue="#{workflowComponent}"
+															 			<ice:panelGroup rendered="#{empty workflowComponent.destination}" hoverclass="targetClass" dropListener="#{WorkflowTemplateManager.dropObject}" dropValue="#{workflowComponent}"
 																				style="height: 30px; width:100px;  border-bottom:1px solid #cccccc;  "
 																				dropTarget="true" >
 																				
@@ -484,27 +483,27 @@
 
 		
 			
-			<ice:commandButton actionListener="#{workflowTemplateManagerBean.addWorkflowComponent}"
+			<ice:commandButton actionListener="#{WorkflowTemplateManager.addWorkflowComponent}"
 				value="Add Task">
 				<f:param name="workflowType" value="WorkflowTask"/>	
 			</ice:commandButton>
 			
-			<ice:commandButton actionListener="#{workflowTemplateManagerBean.addWorkflowComponent}"
+			<ice:commandButton actionListener="#{WorkflowTemplateManager.addWorkflowComponent}"
 				value="Add Endstate">
 				<f:param name="workflowType" value="EndState"/>	
 			</ice:commandButton>
 			
-			<ice:commandButton actionListener="#{workflowTemplateManagerBean.addWorkflowComponent}"
+			<ice:commandButton actionListener="#{WorkflowTemplateManager.addWorkflowComponent}"
 				value="Add Join">
 				<f:param name="workflowType" value="Join"/>	
 			</ice:commandButton>
 			
-			<ice:commandButton actionListener="#{workflowTemplateManagerBean.addWorkflowComponent}"
+			<ice:commandButton actionListener="#{WorkflowTemplateManager.addWorkflowComponent}"
 				value="Add Fork">
 				<f:param name="workflowType" value="Fork"/>	
 			</ice:commandButton>
 				
-			<ice:commandButton action="#{workflowTemplateManagerBean.saveCurrentWorkflowTemplate}"
+			<ice:commandButton action="#{WorkflowTemplateManager.saveCurrentWorkflowTemplate}"
 				value="Save..."></ice:commandButton>
 		
 		
@@ -519,7 +518,7 @@
 		<td>
 			Generated JPDL-Code: <br />
 			<ice:inputTextarea style="height:500px; width:400px"
-			value="#{workflowTemplateManagerBean.XMLData}">
+			value="#{WorkflowTemplateManager.XMLData}">
 
 			</ice:inputTextarea>
 		</td>
