@@ -14,11 +14,11 @@
 			<export prefix="*" />
 		</library>	
 			
-		<library id="jbpm-identity" path="lib/jbpm-identity-3.2.6.GA.jar" type="code">
+		<library id="jbpm-identity" path="lib/jbpm-identity-3.2.3.jar" type="code">
 			<export prefix="*"/>
 		</library>
 		
-		<library id="jbpm-jpdl" path="lib/jbpm-jpdl-3.2.6.GA.jar" type="code">
+		<library id="jbpm-jpdl" path="lib/jbpm-jpdl-3.2.3.jar" type="code">
 			<export prefix="*"/>
 		</library>
 		
@@ -61,8 +61,8 @@
 		<parameter id="sqlFile" value="sql/logicaldoc-workflow.sql" />
 	</extension>
 	
-	<extension plugin-id="logicaldoc-core" point-id="database-mapping" id="worklowMapping">
-		<parameter id="mapping" value="classpath*:org/jbpm/**/hibernate.queries.hbm.xml"/>
-		<parameter id="position" value="10"/>
-	</extension>
+    <extension plugin-id="logicaldoc-core" point-id="database-mapping" id="worklow">
+        <parameter id="mapping" value="classpath*:org/jbpm/**/*.hbm.xml"/>
+        <parameter id="position" value="2"/>
+    </extension>
 </plugin>

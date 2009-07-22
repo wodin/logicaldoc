@@ -7,7 +7,7 @@
 	<bean id="jbpmConfiguration"
 		class="org.springmodules.workflow.jbpm31.LocalJbpmConfigurationFactoryBean">
 		<property name="sessionFactory" ref="SessionFactory" />
-		<property name="configuration" value="classpath:jbpm.cfg.xml" />
+		<property name="configuration" value="classpath:/jbpm.cfg.xml" />
 
 		<!--
 			property name="processDefinitions"> <list> <ref
