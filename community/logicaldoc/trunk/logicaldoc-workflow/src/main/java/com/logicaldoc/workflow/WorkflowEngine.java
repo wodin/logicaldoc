@@ -159,7 +159,21 @@ public interface WorkflowEngine {
 	public List<WorkflowTaskInstance> getAllActionTasksByUser(String username);
 	
 	/**
+	 * Retrieves users pooled-tasklist
+	 * @param username The Username
+	 * @return	List of tasks owned by the user
+	 */
+	public List<WorkflowTaskInstance> getAllActionPooledTasksByUser(String username);
+	
+	/**
 	 * its just like rm -rf / on unix-platforms ;-)
 	 */
 	public void deleteAllActiveWorkflows();
+	
+	/**
+	 * 
+	 * @param taskId
+	 * @param assignee
+	 */
+	public void assignUserToTask(String taskId, String assignee);
 }

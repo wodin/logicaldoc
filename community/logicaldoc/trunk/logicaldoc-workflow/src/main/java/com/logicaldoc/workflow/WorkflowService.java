@@ -50,4 +50,8 @@ public interface WorkflowService {
 	public void deleteAllActiveWorkflows();
 	
 	public List<WorkflowTaskInstance> getTaskInstancesForUser(String username);
+	
+	public List<WorkflowTaskInstance> getPooledTaskInstancesForUser(String username);
+	
+	public void assign(String taskId, String assignee);
 }

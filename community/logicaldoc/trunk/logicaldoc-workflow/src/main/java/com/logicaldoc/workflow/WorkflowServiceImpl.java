@@ -125,4 +125,14 @@ public class WorkflowServiceImpl implements WorkflowService {
 	public List<WorkflowTaskInstance> getTaskInstancesForUser(String username){
 		return this.workflowComponent.getAllActionTasksByUser(username);
 	}
+	
+	@Override
+	public List<WorkflowTaskInstance> getPooledTaskInstancesForUser(
+			String username) {
+		return this.workflowComponent.getAllActionPooledTasksByUser(username);
+	}
+	
+	public void assign(String taskId, String assignee){
+		this.workflowComponent.assignUserToTask(taskId, assignee);	
+	}
 }
