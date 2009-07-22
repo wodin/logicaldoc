@@ -81,16 +81,14 @@
 		<dependency>
 			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-identity</artifactId>
-			<version>3.2.6.GA</version>
+			<version>3.2.3</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-jpdl</artifactId>
-			<version>3.2.6.GA</version>
+			<version>3.2.3</version>
 		</dependency>
-
-
 
 		<dependency>
 			<groupId>com.logicaldoc</groupId>

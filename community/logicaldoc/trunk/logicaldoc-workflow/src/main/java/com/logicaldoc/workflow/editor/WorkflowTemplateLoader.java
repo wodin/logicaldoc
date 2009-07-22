@@ -16,16 +16,13 @@ import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
 
 public class WorkflowTemplateLoader extends HibernateDaoSupport{
 	
-	private String pluginDirectory;
+	private File templatesDirectory;
 	
-	private String resolveSystemPath(WorkflowPersistenceTemplate template){
-		return this.pluginDirectory + template.getName() + "-" + template.getId() + ".jbpm";
+	private File resolveSystemPath(WorkflowPersistenceTemplate template){
+		return new File(templatesDirectory, template.getId() + ".jbpm");
 	}
 	
-	public void setPluginDirectory(String pluginDirectory) {
-		this.pluginDirectory = pluginDirectory;
-	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<WorkflowPersistenceTemplate> getAvailableWorkflowTemplates(){
 		
@@ -48,7 +45,7 @@ public class WorkflowTemplateLoader extends HibernateDaoSupport{
 		
 		//save IO 
 		
-		File workflowFile = new File(resolveSystemPath(persistenceTemplate));
+		File workflowFile =resolveSystemPath(persistenceTemplate);
 		try {
 			DataOutputStream os = new DataOutputStream(new FileOutputStream(
 			        workflowFile));
@@ -66,7 +63,7 @@ public class WorkflowTemplateLoader extends HibernateDaoSupport{
 		
 		getHibernateTemplate().delete(persistenceTemplate);
 		
-		File workflowFile = new File(resolveSystemPath(persistenceTemplate));
+		File workflowFile = resolveSystemPath(persistenceTemplate);
 		try {
 			workflowFile.delete();
 		} catch (Exception e) {
@@ -79,7 +76,7 @@ public class WorkflowTemplateLoader extends HibernateDaoSupport{
 		WorkflowPersistenceTemplate workflowPersistenceTemplate = 
 		(WorkflowPersistenceTemplate)getHibernateTemplate().load(WorkflowPersistenceTemplate.class, id);
 		
-		File workflowFile = new File(resolveSystemPath(workflowPersistenceTemplate));
+		File workflowFile = resolveSystemPath(workflowPersistenceTemplate);
 		try {
 			FileInputStream is = new FileInputStream(
 			        workflowFile);
@@ -109,4 +106,8 @@ public class WorkflowTemplateLoader extends HibernateDaoSupport{
 		return loadWorkflowTemplate(workflowTemplate.getId());
 	}
 
+
+	public void setTemplatesDirectory(File templatesDirectory) {
+		this.templatesDirectory = templatesDirectory;
+	}
 }
