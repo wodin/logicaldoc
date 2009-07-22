@@ -56,4 +56,19 @@ public class WorkflowManager {
 		return this.workflowService.getTaskInstancesForUser(username);
 		
 	}
+	
+	public void assign(ActionEvent actionEvent){
+		HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		String username = (String)session.getAttribute(Constants.AUTH_USERNAME);
+		
+		UIComponent component = (UIComponent)actionEvent.getSource();
+		WorkflowTaskInstance instance = (WorkflowTaskInstance)((UIParameter)component.getChildren().get(0)).getValue();
+		this.workflowService.assign(instance.id, username);
+	}
+	
+	public List<WorkflowTaskInstance> getPooledTaskInstances(){
+		HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		String username = (String)session.getAttribute(Constants.AUTH_USERNAME);
+		return this.workflowService.getPooledTaskInstancesForUser(username);
+	}
 }

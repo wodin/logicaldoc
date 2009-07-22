@@ -1,11 +1,14 @@
 package com.logicaldoc.workflow;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.taskmgmt.exe.PooledActor;
 
 import com.logicaldoc.workflow.exception.WorkflowException;
 import com.logicaldoc.workflow.model.WorkflowInstance;
@@ -34,6 +37,18 @@ public class WorkflowFactory {
 		if (ti.getActorId() != null)
 			taskInstance.properties.put(WorkflowConstants.VAR_OWNER, ti
 					.getActorId());
+		
+		if(ti.getPooledActors() != null) {
+			Set<PooledActor> pooledActors = ti.getPooledActors();
+			List<String> actors = new LinkedList<String>();
+			
+			for(PooledActor actor : pooledActors)
+				actors.add(actor.getActorId());
+			
+			taskInstance.properties.put(WorkflowConstants.VAR_POOLEDACTORS, actors);
+			
+		}
+			
 
 		if (ti.getStart() != null)
 			taskInstance.properties.put(WorkflowConstants.VAR_STARTDATE, ti
@@ -51,10 +66,9 @@ public class WorkflowFactory {
 			taskInstance.properties.put(WorkflowConstants.VAR_DUEDATE, ti
 					.getDescription());
 
-		taskInstance.properties = mapped_properties;
+		taskInstance.properties.putAll(mapped_properties);
 
 		List<Transition> transitions = ti.getAvailableTransitions();
-		
 		
 		for(Transition tr : transitions){
 			com.logicaldoc.workflow.model.Transition trans = new com.logicaldoc.workflow.model.Transition();

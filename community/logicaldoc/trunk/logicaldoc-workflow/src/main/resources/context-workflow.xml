@@ -37,11 +37,19 @@
 		<property name="workflowComponent" ref="jbpmWorkflowEngine" />
 	</bean>
 
-	<bean id="WorkflowTemplateLoader"
-		class="com.logicaldoc.workflow.editor.WorkflowTemplateLoader"
+   <bean id="WorkflowTemplateLoader" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
-		<property name="sessionFactory" ref="SessionFactory" />
+		<property name="target">
+			<bean
+				class="com.logicaldoc.workflow.editor.WorkflowTemplateLoaderDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
 	</bean>
 
 	<!-- Controller for Models -->

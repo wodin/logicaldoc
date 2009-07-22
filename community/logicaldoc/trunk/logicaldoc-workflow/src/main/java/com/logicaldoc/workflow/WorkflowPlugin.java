@@ -32,7 +32,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 		@Override
 		public void processEvent() {
-			templatesDirectory.mkdirs();
+			
 			templatesDirectory.mkdir();
 
 			Context ctx = Context.getInstance();
@@ -42,6 +42,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 			// Create JBPM database schema
 			JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
+			
 			jbpmInstallConfig.createSchema();
 		}
 
@@ -55,33 +56,33 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 	}
 
-//	private class VariableEvent extends SystemEvent {
-//
-//		private File templatesDirectory;
-//
-//		private PluginManager manager;
-//
-//		public VariableEvent(PluginManager manager) {
-//			this();
-//			this.manager = manager;
-//		}
-//
-//		public VariableEvent() {
-//			super(SystemEventStatus.BEANS_AVAILABLE);
-//		}
-//
-//		@Override
-//		public void processEvent() {
-//			Context ctx = Context.getInstance();
-//			WorkflowTemplateLoader workflowTemplateLoader = (WorkflowTemplateLoader) ctx
-//					.getBean(WorkflowTemplateLoader.class);
-//			workflowTemplateLoader.setTemplatesDirectory(templatesDirectory);
-//		}
-//
-//		public void setTemplatesDirectory(File templatesDirectory) {
-//			this.templatesDirectory = templatesDirectory;
-//		}
-//	}
+	private class VariableEvent extends SystemEvent {
+
+		private File templatesDirectory;
+
+		private PluginManager manager;
+
+		public VariableEvent(PluginManager manager) {
+			this();
+			this.manager = manager;
+		}
+
+		public VariableEvent() {
+			super(SystemEventStatus.BEANS_AVAILABLE);
+		}
+
+		@Override
+		public void processEvent() {
+			Context ctx = Context.getInstance();
+			WorkflowTemplateLoader workflowTemplateLoader = (WorkflowTemplateLoader) ctx
+					.getBean(WorkflowTemplateLoader.class);
+			workflowTemplateLoader.setTemplatesDirectory(templatesDirectory);
+		}
+
+		public void setTemplatesDirectory(File templatesDirectory) {
+			this.templatesDirectory = templatesDirectory;
+		}
+	}
 
 	protected void install() throws Exception {
 		super.install();
@@ -99,8 +100,8 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 	@Override
 	protected void start() throws Exception {
-		InstallationEvent installationEvent = new InstallationEvent();
-		installationEvent.setTemplatesDirectory(resolveDataPath("templates"));
-		Context.addListener(installationEvent);
+		VariableEvent variableEvent = new VariableEvent();
+		variableEvent.setTemplatesDirectory(resolveDataPath("templates"));
+		Context.addListener(variableEvent);
 	}
 }

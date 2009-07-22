@@ -6,6 +6,8 @@ public class WorkflowConstants {
 	
 	public static final String VAR_OWNER = PREFIX + "owner";
 	
+	public static final String VAR_POOLEDACTORS = PREFIX + "pooledActors";
+	
 	public static final String VAR_DUEDATE = PREFIX + "duedate";
 	
 	public static final String VAR_STARTDATE = PREFIX + "startdate";

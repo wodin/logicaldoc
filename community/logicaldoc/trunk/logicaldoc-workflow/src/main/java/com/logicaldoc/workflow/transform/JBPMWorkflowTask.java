@@ -74,7 +74,7 @@ public class JBPMWorkflowTask implements TransformModel {
 		else {
 			String assigneeStringList = "";
 			for(int idx = 0; idx < assignees.size(); idx++){
-				assigneeStringList+=assignees.get(idx);
+				assigneeStringList+=assignees.get(idx).getValue();
 				if(idx+1 != assignees.size())
 					assigneeStringList+=",";
 			}

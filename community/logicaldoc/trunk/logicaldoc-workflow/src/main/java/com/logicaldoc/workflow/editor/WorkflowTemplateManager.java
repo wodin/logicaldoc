@@ -1,7 +1,5 @@
 package com.logicaldoc.workflow.editor;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -13,6 +11,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,6 +25,7 @@ import com.icesoft.faces.component.ext.RowSelectorEvent;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.document.DocumentNavigation;
 import com.logicaldoc.web.navigation.PageContentBean;
+import com.logicaldoc.web.util.Constants;
 import com.logicaldoc.web.util.FacesUtil;
 import com.logicaldoc.workflow.WorkflowService;
 import com.logicaldoc.workflow.debug.TRANSMITTER;
@@ -36,6 +36,7 @@ import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
 import com.logicaldoc.workflow.editor.model.Transition;
 import com.logicaldoc.workflow.editor.model.WorkflowEditorException;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
+import com.logicaldoc.workflow.model.WorkflowTaskInstance;
 import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
 import com.logicaldoc.workflow.transform.WorkflowTransformService;
 import com.thoughtworks.xstream.XStream;
@@ -330,7 +331,9 @@ public class WorkflowTemplateManager {
 	public void saveCurrentWorkflowTemplate() {
 		String xmlData = xstream.toXML(this.workflowComponents);
 		this.persistenceTemplate.setXmldata(xmlData);
-		this.workflowTemplateLoader.saveWorkflowTemplate(this.persistenceTemplate);
+		Long id = this.workflowTemplateLoader.saveWorkflowTemplate(this.persistenceTemplate);
+		this.persistenceTemplate.setId( id );
+		
 	}
 
 	public String createNewWorkflowTemplate() {
@@ -349,8 +352,12 @@ public class WorkflowTemplateManager {
 		String workflowTemplateId = request.getParameter("id");
 		WorkflowPersistenceTemplate workflowTemplate = this.workflowTemplateLoader.loadWorkflowTemplate(Long
 				.parseLong(workflowTemplateId));
+		
 		this.workflowTemplateLoader.deleteWorkflowTemplate(workflowTemplate);
 
+		if(this.persistenceTemplate.getId() == workflowTemplate.getId())
+			initializing();
+		
 		return null;
 	}
 
@@ -417,6 +424,8 @@ public class WorkflowTemplateManager {
 		String workflowTemplateId = request.getParameter("id");
 		this.initializing();
 		this.persistenceTemplate = this.workflowTemplateLoader.loadWorkflowTemplate(Long.parseLong(workflowTemplateId));
-		this.workflowComponents = this.workflowTransformService.fromWorkflowDefinitionToObject(persistenceTemplate);
+		if(this.persistenceTemplate.getXmldata() != null && ((String)this.persistenceTemplate.getXmldata()).getBytes().length > 0)
+			this.workflowComponents = this.workflowTransformService.fromWorkflowDefinitionToObject(persistenceTemplate);
 	}
+	
 }

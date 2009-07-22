@@ -429,6 +429,28 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 	
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<WorkflowTaskInstance> getAllActionPooledTasksByUser(
+			final String username) {
+		
+		return (List<WorkflowTaskInstance>)this.jbpmTemplate.execute(new JbpmCallback() {
+			
+			
+			public Object doInJbpm(JbpmContext context) throws JbpmException {
+			
+				List<WorkflowTaskInstance> returnedTaskInstances = new LinkedList<WorkflowTaskInstance>();
+
+				List<TaskInstance> taskInstances = context.getTaskMgmtSession().findPooledTaskInstances(username);
+				for(TaskInstance taskInstance : taskInstances){
+					returnedTaskInstances.add(WorkflowFactory.createTaskInstance(taskInstance));
+				}
+				
+				return returnedTaskInstances;
+			}
+		});
+	}
+	
 	public void deleteAllActiveWorkflows(){
 		this.jbpmTemplate.execute(new JbpmCallback() {
 			
@@ -441,6 +463,21 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 					System.out.println("Delete WorkflowInstance with id " + pi.getId());
 				}
 				
+				return null;
+			}
+		});
+	}
+	
+	
+	@Override
+	public void assignUserToTask(final String taskId, final String assignee) {
+		this.jbpmTemplate.execute(new JbpmCallback() {
+			
+			public Object doInJbpm(JbpmContext context) throws JbpmException {
+																							      
+				TaskInstance taskInstance = context.getTaskInstance(WorkflowFactory.getJbpmTaskId(taskId));
+				taskInstance.setActorId(assignee);
+				System.out.println("Assign '" + assignee + "' to " + taskId);
 				return null;
 			}
 		});
