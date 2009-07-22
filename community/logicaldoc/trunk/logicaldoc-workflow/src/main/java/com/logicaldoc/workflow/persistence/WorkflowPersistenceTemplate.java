@@ -1,7 +1,6 @@
 package com.logicaldoc.workflow.persistence;
 
 import java.io.Serializable;
-import java.sql.Blob;
 
 public class WorkflowPersistenceTemplate {
 	

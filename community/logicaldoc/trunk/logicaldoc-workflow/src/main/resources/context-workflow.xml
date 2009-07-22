@@ -118,14 +118,7 @@
 		class="com.logicaldoc.workflow.editor.WorkflowTemplateManager"
 		scope="session">
 		<property name="workflowTemplateLoader"
-			ref="WorkflowTemplateLoaderBean" />
-	</bean>
-
-	<bean id="WorkflowTemplateLoaderBean"
-		class="com.logicaldoc.workflow.editor.WorkflowTemplateLoader"
-		scope="request" abstract="false" lazy-init="default"
-		autowire="default" dependency-check="default">
-		<property name="sessionFactory" ref="SessionFactory" />
+			ref="WorkflowTemplateLoader" />
 	</bean>
 
 	<bean id="WorkflowManager"
