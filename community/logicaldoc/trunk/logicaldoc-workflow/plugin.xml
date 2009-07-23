@@ -25,6 +25,7 @@
 		<library id="spring-modules-jbpm31" path="lib/spring-modules-jbpm31-0.6.jar" type="code">
 			<export prefix="*" />
 		</library>
+		
 		<library id="jcr" path="lib/jcr-1.0.1.jar" type="code">
 			<export prefix="*" />
 		</library>

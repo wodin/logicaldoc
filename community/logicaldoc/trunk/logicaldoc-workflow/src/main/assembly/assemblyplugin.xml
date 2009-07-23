@@ -14,7 +14,12 @@
 		<dependencySet>
 			<outputDirectory>lib</outputDirectory>
 			<includes>
-				<include>*:jar:*</include>
+              <include>org.springmodules:*</include>
+              <include>org.jbpm.jbpm3:*</include>
+              <include>bsh:*</include>
+              <include>javax.jcr:*</include>
+              <include>com.thoughtworks.xstream:*</include>
+              <include>xpp3:*</include>
 			</includes>
 		</dependencySet>
 	</dependencySets>
