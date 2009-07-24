@@ -4,10 +4,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.Document;
@@ -17,6 +23,7 @@ import com.logicaldoc.core.searchengine.store.Storer;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.io.FileUtil;
 
 /**
@@ -26,6 +33,8 @@ import com.logicaldoc.util.io.FileUtil;
  * @since 3.0
  */
 public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
+	
+	protected static Log log = LogFactory.getLog(HibernateDocumentDAOTest.class);
 
 	// Instance under test
 	private DocumentDAO dao;
@@ -238,6 +247,76 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals("xxxx", doc.getTitle());
 		assertEquals(3, doc.getTags().size());
 	}
+	
+	
+	public void testStoreGreekDocument() throws IOException {
+		
+		Document doc = new Document();
+		Menu menu = menuDao.findById(Menu.MENUID_HOME);
+		doc.setFolder(menu);
+		doc.setPublisher("admin");
+		doc.setPublisherId(1);
+		
+		 File file = new File("C:/Users/alle/Desktop/LogicalDoc45RC3_Greek_problem/\u03B7 \u03B1\u03BD\u03B1\u03B6\u03AE\u03C4\u03B7\u03C3\u03B7 \u03B5\u03C1\u03B3\u03B1\u03C3\u03AF\u03B1\u03C2.pdf");
+		
+		 File dir = new File("C:/Users/alle/Desktop/LogicalDoc45RC3_Greek_problem/ccc");
+		 String[] files = dir.list( new SuffixFileFilter(".pdf") );
+		 for (int i = 0; i < files.length; i++) {
+		     System.out.println(files[i]);
+		 }
+		 if (files.length > 0)
+			 file = new File(files[0]);
+		
+		String fileName = file.getName();
+		
+		System.out.println("fileName : " + fileName);
+		log.fatal("fileName : " + fileName);
+		String baseName = FilenameUtils.getBaseName(fileName);
+		System.out.println("baseName : " + baseName);
+		log.fatal("baseName : " + baseName);
+		doc.setTitle(baseName);
+		
+		String[] encodings = CharsetDetector.detectEncodings(fileName);
+		if (encodings != null && encodings.length > 0) {
+			for (int i = 0; i < encodings.length; i++) {
+				System.out.println(encodings[i]);
+			}
+		}
+		
+		
+		String conv = new String(fileName.getBytes(), "UTF-8");
+		System.out.println("conv: " + conv);
+		log.fatal("conv: " + conv);
+		
+		String xxx = URLEncoder.encode(fileName, "UTF-8");
+		System.out.println("xxx: " + xxx);
+		log.fatal("xxx: " + xxx);
+		
+		String htmlEsc = StringEscapeUtils.escapeHtml(fileName);
+		System.out.println("htmlEsc: " + htmlEsc);
+		log.fatal("htmlEsc: " + htmlEsc);
+		
+		doc.setFileName(fileName);
+		doc.setFileVersion("1.0");
+
+		// Create a new version for the document
+		User user = new User();
+		user.setId(1);
+		Version.create(doc, user, "comment", Version.EVENT_CHECKIN, VERSION_TYPE.OLD_VERSION);
+
+		assertTrue(dao.store(doc));
+		dao.initialize(doc);
+		long dID = doc.getId();
+
+		// Load the document and verify it
+		doc = null;
+		doc = dao.findById(dID);
+		assertNotNull(doc);
+		dao.initialize(doc);
+		assertEquals(dID, doc.getId());
+		assertEquals(baseName, doc.getTitle());
+	}
+	
 
 	public void testFindTagss() {
 		Collection<String> tags = dao.findTags("a", 1);

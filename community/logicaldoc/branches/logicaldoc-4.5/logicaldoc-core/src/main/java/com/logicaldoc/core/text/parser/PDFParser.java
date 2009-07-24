@@ -1,14 +1,11 @@
 package com.logicaldoc.core.text.parser;
 
 import java.io.ByteArrayOutputStream;
-import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -115,6 +112,7 @@ public class PDFParser extends AbstractParser {
 			try {
 				if (pdfDocument.isEncrypted())
 					throw new IOException("Encripted document");
+				
 				stripper.writeText(pdfDocument, writer);
 			} catch (IOException e) {
 				log.error("Unable to decrypt pdf document");
