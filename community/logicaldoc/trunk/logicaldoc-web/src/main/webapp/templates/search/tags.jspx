@@ -25,7 +25,7 @@
 		<br />
 					<ice:panelGroup>
 					    <ice:outputLabel for="manualchar" value="#{msgs['tags.otherchar']}: " />
-						<ice:inputText id="manualchar" value="#{tags.manualchar}" size="1" />
+						<ice:inputText id="manualchar" value="#{tags.manualchar}" size="1" maxlength="1" required="true"/>
 						<ice:commandButton value="#{msgs['search']}" action="#{tags.showWordsbychar}" />
 					</ice:panelGroup>
 	</ice:panelGroup>
