@@ -1,36 +1,32 @@
 
-LogicalDOC is a Web-based Document Management System (DMS), easy to use and learn. 
+The purpose of this 4.5.1 release is to improve the multilingual support 
+provided by LogicalDOC.
 
-The most significant change is undoubtedly the introduction of the external 
-authentication system. This means that you can connect LogicalDOC to an 
-external LDAP or Active Directory server.
+In particular, after the creation of plugins to support Greek and Chinese 
+languages, there was the need to treat properly the files with ideographic 
+characters.
 
-The discussion on documents has been improved, now there is a genuine forum 
-for debate on the single document that allows you to insert comments and start 
-dynamic discussions.
+Not only that, it was necessary to make some changes to properly index the 
+content of foreign documents and display correctly the snippets with search 
+results.
 
-Improved the versioning with metadata diffs among versions.
+Among other things the search by tag has been improved, allowing to manually 
+enter the first character of the tag, useful for non-Latin alphabets.
 
-Security controls have been increased with the minimum password length and the 
-rules for password expiration.
+A big thanks to Marinos Vlasakis for Greek translation and Tong Hongxian 
+(Shanghai Electric) for translation in Chinese simplified.
 
-The file system structure of the document repository was revised. 
-Improved support for localization, for example, we can support the variations 
-of language such as Portuguese Brazilian. 
+Chinese plugin:
+https://sourceforge.net/projects/logicaldoc/files/plugins/logicaldoc-lang-zh-4.5.1-plugin.zip/download
 
-LogicalDOC uses the following core technologies:
+Greek plugin:
+https://sourceforge.net/projects/logicaldoc/files/plugins/logicaldoc-lang-el-4.5.1-plugin.zip/download
 
- * Hibernate
- * Spring
- * Lucene 2.4
- * CXF (JAX-WS webservices)
- * ICEfaces (Ajax JSF framework)
- * JPF (Java plugin framework)
 
 For details of changes see the ChangeLog.
 
 Report any bugs you find using the bug tracker
-http://logicaldoc.info/mantis
+http://bugs.LogicalDOC.com
 
 You can discuss issues in the user forum
 https://sourceforge.net/forum/forum.php?forum_id=865524

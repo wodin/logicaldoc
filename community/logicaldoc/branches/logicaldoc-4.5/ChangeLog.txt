@@ -10,6 +10,17 @@
 
                      LogicalDOC Community Edition
                      
+LogicalDOC CE 4.5.1 (2009-07-21; logicaldoc-4.5.1)
+===============
+- improved handling of files with accented letters
+- managing files with ideographic characters such as Greek or Chinese
+- improved and speeded up the search for documents including non-Latin documents
+- search by tag for ideographic characters
+- Extract text from PDF documents in UTF-8
+- Full-text indexing and search on non-Latin documents
+- Full support for indexing and search in Chinese language (through localization plugin)
+- Full support for indexing and search in Greek language (through localization plugin)   
+                     
 LogicalDOC CE 4.5 (2009-06-28; logicaldoc-4.5)
 ===============
 - Fixed problem during checkin with accented characters
