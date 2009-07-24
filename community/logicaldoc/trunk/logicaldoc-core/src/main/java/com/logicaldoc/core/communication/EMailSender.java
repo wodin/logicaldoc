@@ -97,8 +97,11 @@ public class EMailSender {
 			frm = sender;
 		InternetAddress from = new InternetAddress(frm);
 		InternetAddress[] to = email.getAddresses();
+		InternetAddress[] cc = email.getAddressesCC();
 		message.setFrom(from);
 		message.setRecipients(javax.mail.Message.RecipientType.TO, to);
+		if (cc.length > 0)
+			message.setRecipients(javax.mail.Message.RecipientType.CC, cc);
 		message.setSubject(email.getSubject());
 
 		MimeBodyPart body = new MimeBodyPart();
@@ -119,9 +122,9 @@ public class EMailSender {
 		message.setContent(mpMessage);
 
 		Transport trans = sess.getTransport("smtp");
-		if(StringUtils.isEmpty(username)){
+		if (StringUtils.isEmpty(username)) {
 			trans.connect(host, port, null, null);
-		}else{
+		} else {
 			trans.connect(host, port, username, password);
 		}
 

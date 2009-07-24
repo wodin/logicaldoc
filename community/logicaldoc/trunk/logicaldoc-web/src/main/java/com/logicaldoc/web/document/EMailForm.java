@@ -33,6 +33,8 @@ public class EMailForm {
 	private String author;
 
 	private String recipient;
+	
+	private String recipientCC;
 
 	private String subject;
 
@@ -82,6 +84,7 @@ public class EMailForm {
 	public void reset() {
 		author = "";
 		recipient = "";
+		recipientCC = SessionManagement.getUser().getEmail();
 		subject = "";
 		text = "";
 		downloadTicket = null;
@@ -123,6 +126,7 @@ public class EMailForm {
 				email.setAuthor(user.getUserName());
 				email.setAuthorAddress(getAuthor());
 				email.parseRecipients(recipient);
+				email.parseRecipientsCC(recipientCC);
 				email.setFolder("outbox");
 				email.setMessageText(getText());
 				email.setRead(1);
@@ -180,5 +184,13 @@ public class EMailForm {
 
 	public void setDocumentNavigation(DocumentNavigation documentNavigation) {
 		this.documentNavigation = documentNavigation;
+	}
+
+	public String getRecipientCC() {
+		return recipientCC;
+	}
+
+	public void setRecipientCC(String recipientCC) {
+		this.recipientCC = recipientCC;
 	}
 }
