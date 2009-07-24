@@ -109,16 +109,13 @@ public class PDFParser extends AbstractParser {
 			// create a tmp output stream with the size of the content.
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8");
-			//CharArrayWriter caw = new CharArrayWriter();
 			
-    		PDFTextStripper stripper = new PDFTextStripper();
+    	PDFTextStripper stripper = new PDFTextStripper();
+    	
 			try {
 				if (pdfDocument.isEncrypted())
 					throw new IOException("Encripted document");
 				stripper.writeText(pdfDocument, writer);
-				
-				// write to my output
-				//stripper.writeText(pdfDocument, output);
 			} catch (IOException e) {
 				log.error("Unable to decrypt pdf document");
 				writer.write("encrypted document");

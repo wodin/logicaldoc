@@ -24,6 +24,7 @@ import com.logicaldoc.util.PluginRegistry;
  * @author Michael Scholz
  */
 public class ParserFactory {
+	
 	protected static Log log = LogFactory.getLog(ParserFactory.class);
 
 	// This is the list of registered parsers: key is the file extension, value
@@ -45,20 +46,25 @@ public class ParserFactory {
 		parsers.put("pdf", PDFParser.class);
 		parsers.put("rtf", RTFParser.class);
 
-		// StarOffice extensions
-		parsers.put("sxw", SXParser.class);
-		parsers.put("sxc", SXParser.class);
-		parsers.put("sxp", SXParser.class);
+		// StarOffice, OpenOffice 1.0 - 1.1 extensions
+		parsers.put("sxw", OpenOfficeParser.class);
+		parsers.put("sxc", OpenOfficeParser.class);
+		parsers.put("sxi", OpenOfficeParser.class); // Presentation
 
-		// OpenOffice 2.3 extensions
-		parsers.put("odt", SXParser.class);
-		parsers.put("ods", SXParser.class);
-		parsers.put("odp", SXParser.class);
+		// OpenOffice 2.3/3.0 extensions
+		parsers.put("odt", OpenOfficeParser.class);
+		parsers.put("ods", OpenOfficeParser.class);
+		parsers.put("odp", OpenOfficeParser.class);
 
 		// OpenDocument extensions
-		parsers.put("ott", SXParser.class);
-		parsers.put("ots", SXParser.class);
-		parsers.put("otp", SXParser.class);
+		parsers.put("ott", OpenOfficeParser.class);
+		parsers.put("ots", OpenOfficeParser.class);
+		parsers.put("otp", OpenOfficeParser.class);
+		
+		// KOffice extensions
+		parsers.put("kwd", KOParser.class);
+		parsers.put("ksp", KOParser.class);
+		parsers.put("kpr", KOParser.class);
 
 		parsers.put("txt", TXTParser.class);
 		parsers.put("csv", TXTParser.class);
@@ -67,10 +73,6 @@ public class ParserFactory {
 		parsers.put("xml", XMLParser.class);
 		parsers.put("xls", XLSParser.class);
 		parsers.put("xlt", XLSParser.class);
-		parsers.put("kwd", KOParser.class);
-		parsers.put("kpr", KOParser.class);
-		parsers.put("kpr", KOParser.class);
-		parsers.put("ksp", KOParser.class);
 		parsers.put("abw", XMLParser.class);
 		parsers.put("zabw", ZABWParser.class);
 		parsers.put("ppt", PPTParser.class);
