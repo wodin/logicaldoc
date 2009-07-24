@@ -1,5 +1,6 @@
 package com.logicaldoc.core.communication;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -7,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 /**
@@ -30,6 +32,8 @@ public class EMail extends Message {
 	private Set<Recipient> recipients = new HashSet<Recipient>();
 
 	private Map<Integer, EMailAttachment> attachments = new HashMap<Integer, EMailAttachment>();
+
+	private Set<Recipient> recipientsCC = new HashSet<Recipient>();
 
 	public EMail() {
 	}
@@ -95,6 +99,14 @@ public class EMail extends Message {
 	}
 
 	public InternetAddress[] getAddresses() throws Exception {
+		return getAddresses(recipients);
+	}
+
+	public InternetAddress[] getAddressesCC() throws Exception {
+		return getAddresses(recipientsCC);
+	}
+
+	private InternetAddress[] getAddresses(Collection<Recipient> recipients) throws AddressException {
 		InternetAddress[] recs = new InternetAddress[recipients.size()];
 		Iterator<Recipient> iter = recipients.iterator();
 		int i = 0;
@@ -121,6 +133,14 @@ public class EMail extends Message {
 	}
 
 	public void parseRecipients(String str) {
+		xx(str, recipients);
+	}
+
+	public void parseRecipientsCC(String str) {
+		xx(str, recipientsCC);
+	}
+
+	private void xx(String str, Collection<Recipient> recipients) {
 		StringTokenizer st = new StringTokenizer(str.trim().toLowerCase(), ", ;", false);
 		recipients.clear();
 		while (st.hasMoreTokens()) {
@@ -130,5 +150,13 @@ public class EMail extends Message {
 			recipient.setName(token);
 			recipients.add(recipient);
 		}
+	}
+
+	public Set<Recipient> getRecipientsCC() {
+		return recipientsCC;
+	}
+
+	public void setRecipientsCC(Set<Recipient> recipientsCC) {
+		this.recipientsCC = recipientsCC;
 	}
 }
