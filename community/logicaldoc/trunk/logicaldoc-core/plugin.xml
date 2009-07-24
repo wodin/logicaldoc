@@ -213,9 +213,9 @@
         <parameter id="label" value="viewmode.details" />
         <parameter id="position" value="10" />
     </extension>
-    <extension plugin-id="logicaldoc-core" point-id="ViewModeSearch" id="detailsSearch">
-        <parameter id="id" value="details" />
-        <parameter id="label" value="viewmode.details" />
+    <extension plugin-id="logicaldoc-core" point-id="ViewModeSearch" id="defaultSearch">
+        <parameter id="id" value="default" />
+        <parameter id="label" value="viewmode.default" />
         <parameter id="position" value="5" />
     </extension>
     
