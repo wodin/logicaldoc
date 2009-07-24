@@ -4,11 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -38,6 +42,7 @@ import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
+import com.logicaldoc.web.components.SortableList;
 import com.logicaldoc.web.document.Directory;
 import com.logicaldoc.web.document.DirectoryTreeModel;
 import com.logicaldoc.web.document.DocumentRecord;
@@ -51,7 +56,7 @@ import com.logicaldoc.web.navigation.PageContentBean;
  * @author Marco Meschieri - Logical Objects
  * @since 2.7
  */
-public class SearchForm {
+public class SearchForm extends SortableList {
 	protected static Log logger = LogFactory.getLog(SearchForm.class);
 
 	private int hitsPerPage = 10;
@@ -112,7 +117,7 @@ public class SearchForm {
 
 	private boolean searchInSubPath = false;
 
-	private Collection<DocumentResult> documentResult = new ArrayList<DocumentResult>();
+	private List<DocumentResult> documentResult = new ArrayList<DocumentResult>();
 
 	private String[] extendedAttributes = new String[0];
 
@@ -144,7 +149,13 @@ public class SearchForm {
 
 	private String viewMode = null;
 
+	private boolean selectedAll;
+
+	// Set of selected rows
+	private Set<DocumentRecord> selection = new HashSet<DocumentRecord>();
+
 	public SearchForm() {
+		super("xxx");
 		setQuery(Messages.getMessage("search") + "...");
 		setLanguage(SessionManagement.getLanguage());
 	}
@@ -277,7 +288,7 @@ public class SearchForm {
 		this.language = language;
 	}
 
-	public void setDocumentResult(Collection<DocumentResult> result) {
+	public void setDocumentResult(List<DocumentResult> result) {
 		this.documentResult = result;
 	}
 
@@ -1035,5 +1046,75 @@ public class SearchForm {
 
 	public void setViewMode(String viewModeP) {
 		this.viewMode = viewModeP;
+	}
+
+	public String selectAll() {
+		for (DocumentRecord document : documentResult) {
+			document.setSelected(true);
+			selection.add(document);
+		}
+		selectedAll = true;
+
+		return null;
+	}
+
+	public String unselectAll() {
+		for (DocumentRecord document : documentResult) {
+			document.setSelected(false);
+		}
+		if (selection != null)
+			selection.clear();
+		selectedAll = false;
+
+		return null;
+	}
+
+	@Override
+	protected boolean isDefaultAscending(String columnName) {
+		return true;
+	}
+
+	@Override
+	protected void sort(final String column, final boolean ascending) {
+		Comparator<DocumentResult> comparator = new Comparator<DocumentResult>() {
+			public int compare(DocumentResult c1, DocumentResult c2) {
+				if (column == null) {
+					return 0;
+				}
+				if (column.equals("title")) {
+					return ascending ? c1.getDisplayTitle().compareTo(c2.getDisplayTitle()) : c2.getDisplayTitle()
+							.compareTo(c1.getDisplayTitle());
+				} else if (column.equals("lastmodified")) {
+					Date d1 = c1.getLastModified() != null ? c1.getLastModified() : new Date(0);
+					Date d2 = c2.getLastModified() != null ? c2.getLastModified() : new Date(0);
+					return ascending ? d1.compareTo(d2) : d2.compareTo(d1);
+				} else if (column.equals("publishedby")) {
+					String publisher1 = c1.getDocument().getPublisher() != null ? c1.getDocument().getPublisher()
+							.toLowerCase() : "";
+					String publisher2 = c2.getDocument().getPublisher() != null ? c2.getDocument().getPublisher()
+							.toLowerCase() : "";
+					return ascending ? publisher1.compareTo(publisher2) : publisher2.compareTo(publisher1);
+				} else if (column.equals("size")) {
+					Long s1 = new Long(c1.getDocument().getFileSize());
+					Long s2 = new Long(c2.getDocument().getFileSize());
+					return ascending ? s1.compareTo(s2) : s2.compareTo(s1);
+				} else if (column.equals("customid")) {
+					String id1 = c1.getCustomId() != null ? c1.getCustomId() : "";
+					String id2 = c2.getCustomId() != null ? c2.getCustomId() : "";
+					return ascending ? id1.compareTo(id2) : id2.compareTo(id1);
+				} else
+					return 0;
+			}
+		};
+
+		Collections.sort(documentResult, comparator);
+	}
+
+	public boolean isSelectedAll() {
+		return selectedAll;
+	}
+
+	public void setSelectedAll(boolean selectedAll) {
+		this.selectedAll = selectedAll;
 	}
 }
