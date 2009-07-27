@@ -9,8 +9,6 @@
 		</id>
 		
 		<property name="name" type="string" column="ld_name" not-null="true" length="30" />
-		<property name="description" type="string" column="ld_description" not-null="false" length="1000" />
-		<property name="deployed" type="boolean" column="ld_deployed" not-null="false" />
-		<property name="startState" type="string" column="ld_startstate" not-null="false" />	
+		<property name="deployed" type="boolean" column="ld_deployed" not-null="false" />	
 	</class>
 </hibernate-mapping>

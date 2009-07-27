@@ -2,14 +2,14 @@ package com.logicaldoc.workflow;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
-import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.Token;
 
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
 import com.logicaldoc.workflow.model.WorkflowTaskInstance;
-import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
+import com.logicaldoc.workflow.model.WorkflowTemplate;
 
 /**
  * The interface "WorkflowEngine" described one component that has to be
@@ -38,7 +38,7 @@ public interface WorkflowEngine {
 	 * @param _processDefinition
 	 *            The serialized content of the processedefinition.
 	 */
-	public void deployWorkflow(WorkflowPersistenceTemplate deployWorkflow, Serializable _processDefinition);
+	public void deployWorkflow(WorkflowTemplate template, Serializable _processDefinition);
 
 	/**
 	 * End the task using the default-transition.
@@ -59,14 +59,21 @@ public interface WorkflowEngine {
 	public void processTaskToEnd(final String taskId,
 			final String transitionName);
 
+	
+	/**
+	 * 
+	 * @param defId
+	 * @return
+	 */
+	public WorkflowDefinition getWorkflowDefinitionById(final String defId);
+	
 	/**
 	 * 
 	 * @param processdefinitionName
 	 * @return
-	 * @deprecated
 	 */
-	public ProcessDefinition getProcessDefinitionByName(
-			final String processdefinitionName);
+	public WorkflowDefinition getWorkflowDefinitionByName(
+			final String workflowDefinitionName);
 
 	/**
 	 * Starts a workflow on using the deployed definition name.
@@ -74,7 +81,7 @@ public interface WorkflowEngine {
 	 * @param processdefinitionName
 	 * @return The newly started Workflow
 	 */
-	public WorkflowInstance startWorkflow(final String processdefinitionName);
+	public WorkflowInstance startWorkflow(final String processdefinitionName, Map<String, Serializable> properties);
 
 	/**
 	 * Stops a workflow on using the corresponding processid

@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.PooledActor;
 
 import com.logicaldoc.workflow.exception.WorkflowException;
+import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
 import com.logicaldoc.workflow.model.WorkflowTaskInstance;
 
@@ -71,8 +73,17 @@ public class WorkflowFactory {
 		List<Transition> transitions = ti.getAvailableTransitions();
 		
 		for(Transition tr : transitions){
+			
+			//TODO: should not occure
+			if(tr.getTo() == null)
+				continue;
+			
 			com.logicaldoc.workflow.model.Transition trans = new com.logicaldoc.workflow.model.Transition();
 			trans.name = tr.getName();
+			
+			
+				
+			
 			trans.to = tr.getTo().getName();
 			
 			taskInstance.getTransitions().add(trans);
@@ -93,6 +104,21 @@ public class WorkflowFactory {
 		wfi.endDate = processInstance.getEnd();
 
 		return wfi;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static WorkflowDefinition createWorkflowDefinition(ProcessDefinition definition){
+		WorkflowDefinition workflowDefinition = new WorkflowDefinition();
+		workflowDefinition.setName(definition.getName());
+		workflowDefinition.setDescription(definition
+				.getDescription());
+		workflowDefinition.setDefinitionId(WorkflowFactory
+				.createProcessDefintionId(definition
+						.getId()));
+		
+		workflowDefinition.setProperties(definition.getDefinitions());
+		
+		return workflowDefinition;
 	}
 
 	public static long getJbpmProcessInstanceId(String processId) {
@@ -144,5 +170,7 @@ public class WorkflowFactory {
 			throw new IllegalStateException("id does not match to a long value");
 		}
 	}
+	
+	
 	
 }

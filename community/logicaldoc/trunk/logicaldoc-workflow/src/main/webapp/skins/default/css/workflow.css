@@ -18,3 +18,27 @@
 .hightAlignment{
 	vertical-align: top;
 }
+
+.rightToolSite, .deactivatedRightToolSite, .rightToolSitePanel{
+	border-right: 1px solid #FFCC00;
+	padding-right: 4px;	
+	float: left;
+	margin-right: 4px;
+}
+
+.rightToolSitePanel{
+	padding-right:10px;
+	border-right: 2px solid #FFCC00;	
+}
+
+.deactivatedRightToolSite {
+	cursor: default;	
+}
+
+
+.linkImage {
+	vertical-align: middle;
+	border: 0px;
+	padding-right: 4px;
+	
+}

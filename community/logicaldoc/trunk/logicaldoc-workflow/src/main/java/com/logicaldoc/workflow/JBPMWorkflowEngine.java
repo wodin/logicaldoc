@@ -3,6 +3,8 @@ package com.logicaldoc.workflow;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -21,16 +23,18 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.springmodules.workflow.jbpm31.JbpmCallback;
 import org.springmodules.workflow.jbpm31.JbpmTemplate;
 
+import com.logicaldoc.workflow.editor.WorkflowTemplateLoader;
 import com.logicaldoc.workflow.exception.WorkflowException;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
 import com.logicaldoc.workflow.model.WorkflowTaskInstance;
+import com.logicaldoc.workflow.model.WorkflowTemplate;
 import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
 
 public class JBPMWorkflowEngine implements WorkflowEngine {
 
 	protected final Log logger = LogFactory.getLog(getClass());
-
+	
 	private JbpmTemplate jbpmTemplate;
 
 	public void setJbpmTemplate(JbpmTemplate jbpmTemplate) {
@@ -56,7 +60,7 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 		});
 	}
 
-	public void deployWorkflow(WorkflowPersistenceTemplate template, Serializable _processDefinition) {
+	public void deployWorkflow(WorkflowTemplate template, Serializable _processDefinition) {
 
 		if (_processDefinition instanceof String) {
 			try {
@@ -73,6 +77,12 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 
 		final ProcessDefinition processDefinition = (ProcessDefinition) _processDefinition;
 		processDefinition.setDescription(template.getDescription());
+
+		//Map <String, Serializable> properties = new HashMap<String, Serializable>();
+		//properties.put("WF_TID", template.getId());
+		//properties.put("WF_TEMPLATE", template.getXmldata());
+		
+		//processDefinition.setDefinitions(properties);
 		
 		this.jbpmTemplate.execute(new JbpmCallback() {
 
@@ -152,7 +162,7 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 		});
 	}
 
-	public WorkflowInstance startWorkflow(final String processDefinitionId) {
+	public WorkflowInstance startWorkflow(final String processDefinitionId, final  Map<String, Serializable> properties) {
 		return (WorkflowInstance) this.jbpmTemplate.execute(new JbpmCallback() {
 
 			@Override
@@ -161,9 +171,10 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 
 				ProcessDefinition processDefinition = context.getGraphSession()
 						.getProcessDefinition( WorkflowFactory.getJbpmProcessDefinitionId(processDefinitionId));
-
+				
 				ProcessInstance processInstance = context
 						.newProcessInstance(processDefinition.getName());
+				processInstance.getContextInstance().addVariables(properties);
 				context.save(processInstance);
 
 				return WorkflowFactory.createWorkflowInstance(processInstance);
@@ -172,9 +183,9 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 		});
 	}
 
-	public ProcessDefinition getProcessDefinitionByName(
+	public WorkflowDefinition getWorkflowDefinitionByName(
 			final String processdefinitionName) {
-		return (ProcessDefinition) this.jbpmTemplate
+		return (WorkflowDefinition) this.jbpmTemplate
 				.execute(new JbpmCallback() {
 
 					@Override
@@ -185,7 +196,26 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 								.getGraphSession().findProcessDefinition(
 										processdefinitionName, 1);
 
-						return processDefinition;
+						return WorkflowFactory.createWorkflowDefinition(processDefinition);
+					}
+
+				});
+
+	}
+	
+	public WorkflowDefinition getWorkflowDefinitionById(
+			final String defId) {
+		return (WorkflowDefinition) this.jbpmTemplate
+				.execute(new JbpmCallback() {
+
+					@Override
+					public Object doInJbpm(JbpmContext context)
+							throws JbpmException {
+
+						ProcessDefinition processDefinition = context
+								.getGraphSession().getProcessDefinition(Long.parseLong(defId));
+
+						return WorkflowFactory.createWorkflowDefinition(processDefinition);
 					}
 
 				});
@@ -206,15 +236,9 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 						List<ProcessDefinition> processDefinitions = context
 								.getGraphSession().findAllProcessDefinitions();
 						for (ProcessDefinition definition : processDefinitions) {
-							WorkflowDefinition workflowDefinition = new WorkflowDefinition();
-							workflowDefinition.setName(definition.getName());
-							workflowDefinition.setDescription(definition
-									.getDescription());
-							workflowDefinition.setDefinitionId(WorkflowFactory
-									.createProcessDefintionId(definition
-											.getId()));
 							
-							definitions.add(workflowDefinition);
+							definitions.add(WorkflowFactory.createWorkflowDefinition(definition));
+						
 						}
 						return definitions;
 					}
@@ -420,6 +444,7 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 				List<TaskInstance> taskInstances = context.getTaskMgmtSession().findTaskInstances(username);
 				
 				for(TaskInstance taskInstance : taskInstances){
+					
 					returnedTaskInstances.add(WorkflowFactory.createTaskInstance(taskInstance));
 				}
 				
@@ -433,13 +458,25 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 	@Override
 	public List<WorkflowTaskInstance> getAllActionPooledTasksByUser(
 			final String username) {
+		
 		return (List<WorkflowTaskInstance>)this.jbpmTemplate.execute(new JbpmCallback() {
-			public Object doInJbpm(JbpmContext context) throws JbpmException {		
+			
+			
+			public Object doInJbpm(JbpmContext context) throws JbpmException {
+			
 				List<WorkflowTaskInstance> returnedTaskInstances = new LinkedList<WorkflowTaskInstance>();
+
 				List<TaskInstance> taskInstances = context.getTaskMgmtSession().findPooledTaskInstances(username);
 				for(TaskInstance taskInstance : taskInstances){
-					returnedTaskInstances.add(WorkflowFactory.createTaskInstance(taskInstance));
-				}			
+					
+					//we return only those tasks that are currently not assigned to a user:
+					//In Brief: If you have a pooled task and one person takes ownership on it, other personst
+					//should not be able to assign this task as well as long as this task has been finished from
+					//the assigned person
+					if(taskInstance.getActorId() == null)
+						returnedTaskInstances.add(WorkflowFactory.createTaskInstance(taskInstance));
+				}
+				
 				return returnedTaskInstances;
 			}
 		});
@@ -453,13 +490,14 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 				List<ProcessInstance> processInstances = context.getSession().createQuery(" from org.jbpm.graph.exe.ProcessInstance").list();
 
 				for(ProcessInstance pi : processInstances){
-					context.getGraphSession().deleteProcessInstance(pi.getId());
+					context.getGraphSession().deleteProcessInstance(pi, true, true);
+					
 					System.out.println("Delete WorkflowInstance with id " + pi.getId());
 				}
 				
 				return null;
 			}
-		});
+		});	
 	}
 	
 	

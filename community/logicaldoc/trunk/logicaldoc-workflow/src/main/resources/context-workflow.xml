@@ -35,6 +35,7 @@
 	<bean id="workflowService"
 		class="com.logicaldoc.workflow.WorkflowServiceImpl">
 		<property name="workflowComponent" ref="jbpmWorkflowEngine" />
+		<property name="workflowTransformService" ref="workflowTransformService" />
 	</bean>
 
    <bean id="WorkflowTemplateLoader" parent="ApplicationBaseTransactionProxy"
@@ -52,6 +53,11 @@
 		</property>
 	</bean>
 
+	<bean id="StartWorkflowWizard"
+		class="com.logicaldoc.workflow.wizard.StartWorkflowWizard" scope="session">
+		<property name="XStream" ref="xStream"/>
+	</bean>
+	
 	<!-- Controller for Models -->
 
 	<bean id="workflowTaskController"
@@ -100,9 +106,6 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="bpmTransformer"
-		class="com.logicaldoc.workflow.transform.JBPMWorkflowTransformServiceImpl" />
-
 	<bean id="workflowTransformService"
 		class="com.logicaldoc.workflow.transform.JBPMWorkflowTransformServiceImpl">
 		<property name="XStream" ref="xStream" />
@@ -127,8 +130,15 @@
 		scope="session">
 		<property name="workflowTemplateLoader"
 			ref="WorkflowTemplateLoader" />
+		<property name="xStream" ref="xStream" />	
 	</bean>
 
 	<bean id="WorkflowManager"
 		class="com.logicaldoc.workflow.WorkflowManager" scope="session" />
+		
+	<bean id="DevEMailSender" class="com.logicaldoc.workflow.mail.DevEMailSender" parent="EMailSender" init-method="init">
+		<property name="destination" value="G:\\devmails\\butchers-mailchest.msg"/>
+	</bean>
+	
+	<bean id="templateService" class=" com.logicaldoc.workflow.FreemarkerTemplateService"/>
 </beans>

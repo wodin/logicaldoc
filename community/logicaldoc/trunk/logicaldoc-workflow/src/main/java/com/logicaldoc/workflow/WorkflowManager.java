@@ -34,7 +34,7 @@ public class WorkflowManager {
 				.getAllDefinitions().get(event.getRow());
 
 		WorkflowInstance instance = this.workflowService
-				.startWorkflow(workflowDefinition.getDefinitionId());
+				.startWorkflow(workflowDefinition, null);
 		this.workflowService.signal(instance.id);
 	}
 
