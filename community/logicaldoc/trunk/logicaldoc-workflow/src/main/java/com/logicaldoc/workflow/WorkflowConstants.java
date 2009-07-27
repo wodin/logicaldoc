@@ -16,4 +16,7 @@ public class WorkflowConstants {
 	
 	public static final String VAR_DESCRIPTION = PREFIX + "description";
 	
+	public static final String VAR_TEMPLATE = PREFIX + "template";
+	
+	public static final String VAR_DOCUMENTS = PREFIX + "documents";
 }

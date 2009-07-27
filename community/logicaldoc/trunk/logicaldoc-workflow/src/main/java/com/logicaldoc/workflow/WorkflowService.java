@@ -2,12 +2,14 @@ package com.logicaldoc.workflow;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import org.jbpm.graph.exe.Token;
 
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
 import com.logicaldoc.workflow.model.WorkflowTaskInstance;
+import com.logicaldoc.workflow.model.WorkflowTemplate;
 import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
 
 /**
@@ -20,7 +22,7 @@ public interface WorkflowService {
 
 	public void undeployWorkflow(final String processId);
 
-	public void deployWorkflow(WorkflowPersistenceTemplate persistenceTemplate, Serializable _processDefinition);
+	public void deployWorkflow(WorkflowTemplate workflowTemplate);
 
 	public void endTask(final String taskId);
 
@@ -39,7 +41,7 @@ public interface WorkflowService {
 
 	public Token getTokenForWorkflowInstance(String workflowInstance);
 
-	public WorkflowInstance startWorkflow(String processdefinitionName);
+	public WorkflowInstance startWorkflow(WorkflowDefinition workflowDefinition, Map<String, Serializable> properties);
 
 	public void signal(String workflowInstance);
 

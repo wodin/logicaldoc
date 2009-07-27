@@ -42,8 +42,8 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 			// Create JBPM database schema
 			JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
-			
-			jbpmInstallConfig.createSchema();
+			//jbpmInstallConfig.dropSchema();
+			//jbpmInstallConfig.createSchema();
 		}
 
 		public File getTemplatesDirectory() {
@@ -101,7 +101,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 	@Override
 	protected void start() throws Exception {
 		VariableEvent variableEvent = new VariableEvent();
-		variableEvent.setTemplatesDirectory(resolveDataPath("templates"));
+		variableEvent.setTemplatesDirectory(resolveDataPath("workflow-templates"));
 		Context.addListener(variableEvent);
 	}
 }

@@ -11,7 +11,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,7 +24,6 @@ import com.icesoft.faces.component.ext.RowSelectorEvent;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.document.DocumentNavigation;
 import com.logicaldoc.web.navigation.PageContentBean;
-import com.logicaldoc.web.util.Constants;
 import com.logicaldoc.web.util.FacesUtil;
 import com.logicaldoc.workflow.WorkflowService;
 import com.logicaldoc.workflow.debug.TRANSMITTER;
@@ -36,7 +34,7 @@ import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
 import com.logicaldoc.workflow.editor.model.Transition;
 import com.logicaldoc.workflow.editor.model.WorkflowEditorException;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
-import com.logicaldoc.workflow.model.WorkflowTaskInstance;
+import com.logicaldoc.workflow.model.WorkflowTemplate;
 import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
 import com.logicaldoc.workflow.transform.WorkflowTransformService;
 import com.thoughtworks.xstream.XStream;
@@ -59,10 +57,28 @@ public class WorkflowTemplateManager {
 
 	private EditController controller;
 
-	private List<BaseWorkflowModel> workflowComponents;
-
 	private WorkflowTemplateLoader workflowTemplateLoader;
 
+	private WorkflowTemplate workflowTemplate;
+		
+	private Long workflowTemplateId;
+	
+	public WorkflowTemplateManager(){
+	//	this.initializing();
+	}
+	
+	public Long getWorkflowTemplateId() {
+		return workflowTemplateId;
+	}
+	
+	public void setWorkflowTemplateId(Long workflowTemplateId) {
+		this.workflowTemplateId = workflowTemplateId;
+	}
+	
+	public void setWorkflowService(WorkflowService workflowService) {
+		this.workflowService = workflowService;
+	}
+	
 	public void setWorkflowTransformService(WorkflowTransformService workflowTransformService) {
 		this.workflowTransformService = workflowTransformService;
 	}
@@ -85,7 +101,7 @@ public class WorkflowTemplateManager {
 
 	private BaseWorkflowModel getWorkflowComponentById(String taskId) {
 		BaseWorkflowModel baseWorkflowModel = null;
-		for (BaseWorkflowModel model : this.workflowComponents) {
+		for (BaseWorkflowModel model : this.workflowTemplate.getWorkflowComponents()) {
 			if (model.getId().equals(taskId)) {
 				return baseWorkflowModel;
 			}
@@ -93,25 +109,26 @@ public class WorkflowTemplateManager {
 		return null;
 	}
 
-	public WorkflowTemplateManager() {
-
-	}
-
+	
 	public void setBPMModelController(HashMap<String, EditController> bpmModelController) {
 		this.instantiatedCmponents = bpmModelController;
+	}
+	
+	public void setInstantiatedCmponents(
+			HashMap<String, EditController> instantiatedCmponents) {
+		this.instantiatedCmponents = instantiatedCmponents;
 	}
 
 	@SuppressWarnings("unchecked")
 	public void initializing() {
 		TRANSMITTER.XML_DATA = "";
-		this.workflowComponents = new LinkedList<BaseWorkflowModel>();
+		this.workflowTemplate = new WorkflowTemplate();
 		this.persistenceTemplate = new WorkflowPersistenceTemplate();
-		this.instantiatedCmponents = (HashMap<String, EditController>) Context.getInstance().getBean(
-				"bpmModelController");
-		this.workflowTransformService = (WorkflowTransformService) Context.getInstance().getBean(
-				"workflowTransformService");
-		this.xstream = (XStream) Context.getInstance().getBean("xStream");
-		this.workflowService = (WorkflowService) Context.getInstance().getBean("workflowService");
+		this.workflowService = (WorkflowService)Context.getInstance().getBean("workflowService");
+		this.workflowTransformService = (WorkflowTransformService) Context.getInstance().getBean("workflowTransformService");
+		this.instantiatedCmponents = (HashMap<String, EditController>) Context.getInstance().getBean("bpmModelController");
+		
+
 	}
 
 	public List<SelectItem> getTimeUnits() {
@@ -128,10 +145,6 @@ public class WorkflowTemplateManager {
 		return timeValues;
 	}
 
-	public void setWorkflowTasks(List<BaseWorkflowModel> workflowComponents) {
-		this.workflowComponents = workflowComponents;
-	}
-
 	public String addWorkflowComponent(ActionEvent ae) {
 		UIParameter param = (UIParameter) ((UIComponent) ae.getSource()).getChildren().get(0);
 		EditController editController = this.instantiatedCmponents.get(param.getValue());
@@ -140,21 +153,8 @@ public class WorkflowTemplateManager {
 			throw new WorkflowEditorException("No match with an instantiated controller");
 
 		BaseWorkflowModel workflowModel = editController.instantiateNew();
-
-		/*
-		 * WorkflowTask workflowTask = new WorkflowTask();
-		 * workflowTask.setName("Task" + new Random().nextInt());
-		 * 
-		 * Transition approveTransition = new Transition();
-		 * approveTransition.setName("Approve");
-		 * 
-		 * Transition rejectTransition = new Transition();
-		 * rejectTransition.setName("reject");
-		 * 
-		 * workflowTask.addTransition(approveTransition);
-		 * workflowTask.addTransition(rejectTransition);
-		 */
-		this.workflowComponents.add(workflowModel);
+		
+		this.workflowTemplate.getWorkflowComponents().add(workflowModel);
 
 		return null;
 	}
@@ -164,18 +164,18 @@ public class WorkflowTemplateManager {
 				.getRequest();
 		BaseWorkflowModel baseWorkflowModel = (BaseWorkflowModel) request.getAttribute("component");
 
-		this.workflowComponents.remove(baseWorkflowModel);
+		this.workflowTemplate.getWorkflowComponents().remove(baseWorkflowModel);
 
 		return null;
 
 	}
 
 	public List<BaseWorkflowModel> getWorkflowComponents() {
-		return this.workflowComponents;
+		return this.workflowTemplate.getWorkflowComponents();
 	}
 
 	public Integer getWorkflowComponentSize() {
-		return this.workflowComponents.size();
+		return this.workflowTemplate.getWorkflowComponents().size();
 	}
 
 	public void addTransition() {
@@ -193,12 +193,13 @@ public class WorkflowTemplateManager {
 		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 				"documentNavigation", FacesContext.getCurrentInstance(), log));
 		documentNavigation.setSelectedPanel(new PageContentBean("workflow/wizard"));
+		
 
 		return null;
 	}
 
 	public String removeAllWorkflowComponents() {
-		this.workflowComponents.clear();
+		this.workflowTemplate.getWorkflowComponents().clear();
 
 		if (this.controller != null)
 			this.controller.invalidate();
@@ -293,52 +294,47 @@ public class WorkflowTemplateManager {
 
 	}
 
-
-	public void rowSelectionListener(RowSelectorEvent event) {
-
-		this.persistenceTemplate = this.getAvailableWorkflowTemplates().get(event.getRow());
-
-		try {
-			this.workflowComponents = (List<BaseWorkflowModel>) xstream.fromXML((String) this.persistenceTemplate
-					.getXmldata());
-
-			if (this.workflowComponents == null)
-				this.workflowComponents = new LinkedList<BaseWorkflowModel>();
-
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public List<WorkflowPersistenceTemplate> getAvailableWorkflowTemplates() {
-
-		return this.workflowTemplateLoader.getAvailableWorkflowTemplates();
-	}
-
-	public Long saveWorkflowTemplate(WorkflowPersistenceTemplate persistenceTemplate) {
-
-		return null;
-
+	public List<SelectItem> getAvailableWorkflowTemplates() {
+		List<SelectItem> workflowTemplates = new LinkedList<SelectItem>();
+		
+		for(WorkflowPersistenceTemplate template : this.workflowTemplateLoader.getAvailableWorkflowTemplates())
+			workflowTemplates.add( new SelectItem( template.getId(),template.getName() ) );
+		
+		return workflowTemplates;
+		
 	}
 
 	public void deleteWorkflowComponent(ActionEvent actionEvent) {
 		UIComponent component = (UIComponent) actionEvent.getSource();
 		BaseWorkflowModel model = (BaseWorkflowModel) ((UIParameter) component.getChildren().get(0)).getValue();
 
-		this.workflowComponents.remove(model);
+		this.workflowTemplate.getWorkflowComponents().remove(model);
 	}
 
-	public void saveCurrentWorkflowTemplate() {
-		String xmlData = xstream.toXML(this.workflowComponents);
+	public String saveCurrentWorkflowTemplate() {
+		
+		this.workflowTemplate.setName(this.persistenceTemplate.getName());
+		
+		String xmlData = xstream.toXML(this.workflowTemplate);
 		this.persistenceTemplate.setXmldata(xmlData);
-		Long id = this.workflowTemplateLoader.saveWorkflowTemplate(this.persistenceTemplate);
+		Long id = this.workflowTemplateLoader.saveWorkflowTemplate(this.persistenceTemplate, WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
 		this.persistenceTemplate.setId( id );
+		
+		return null;
+	}
+	
+	private void setAllItemsToNull(){
+		this.persistenceTemplate = null;
+		this.workflowTemplate = null;
+		this.workflowTemplateId = null;
 		
 	}
 
 	public String createNewWorkflowTemplate() {
-		this.initializing();
-
+		
+		initializing();
+		
+		
 		return null;
 	}
 
@@ -346,30 +342,34 @@ public class WorkflowTemplateManager {
 		return persistenceTemplate;
 	}
 
+	public String closeCurrentWorkflowTemplate(){
+		
+		setAllItemsToNull();
+		
+		return null;
+	}
+	
 	public String deleteWorkflowTemplate() {
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
-				.getRequest();
-		String workflowTemplateId = request.getParameter("id");
-		WorkflowPersistenceTemplate workflowTemplate = this.workflowTemplateLoader.loadWorkflowTemplate(Long
-				.parseLong(workflowTemplateId));
+		
+		WorkflowPersistenceTemplate workflowTemplate = this.workflowTemplateLoader
+				.loadWorkflowTemplate(this.workflowTemplateId,
+						WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
 		
 		this.workflowTemplateLoader.deleteWorkflowTemplate(workflowTemplate);
 
 		if(this.persistenceTemplate.getId() == workflowTemplate.getId())
 			initializing();
 		
+		initializing();
+		
 		return null;
 	}
 
 	public String deployWorkflowTemplate() {
-		TRANSMITTER.XML_DATA = "";
 
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
-				.getRequest();
-		String workflowTemplateId = request.getParameter("id");
-
-		WorkflowPersistenceTemplate workflowTemplate = this.workflowTemplateLoader.loadWorkflowTemplate(Long
-				.parseLong(workflowTemplateId));
+		WorkflowPersistenceTemplate workflowTemplate = this.workflowTemplateLoader
+				.loadWorkflowTemplate(this.workflowTemplateId,
+						WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
 
 		// at first we have to delete the current workflow instance
 		// TODO:we should add API-improvements to handle more clearer this
@@ -380,9 +380,10 @@ public class WorkflowTemplateManager {
 				this.workflowService.undeployWorkflow(definition.getDefinitionId());
 		}
 
-		Object fromObjectToWorkflowDefinition = this.workflowTransformService
-				.fromObjectToWorkflowDefinition(workflowTemplate);
-		this.workflowService.deployWorkflow(workflowTemplate, (Serializable) fromObjectToWorkflowDefinition);
+		this.persistenceTemplate.setXmldata( xstream.toXML(this.workflowTemplate) );
+		this.workflowTemplateLoader.deployWorkflowTemplate(persistenceTemplate);
+		this.workflowService.deployWorkflow(this.workflowTemplate);
+		
 		return null;
 	}
 
@@ -397,7 +398,7 @@ public class WorkflowTemplateManager {
 	public List<SelectItem> getPossibleStartStates() {
 		List<SelectItem> possibleStartStates = new LinkedList<SelectItem>();
 
-		for (BaseWorkflowModel model : this.workflowComponents) {
+		for (BaseWorkflowModel model : this.workflowTemplate.getWorkflowComponents()) {
 
 			if (model.isPossibleStartState())
 				possibleStartStates.add(new SelectItem(model.getId(), model.getName()));
@@ -418,14 +419,20 @@ public class WorkflowTemplateManager {
 		this.workflowService.deleteAllActiveWorkflows();
 	}
 
-	public void loadWorkflowTemplate() {
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
-				.getRequest();
-		String workflowTemplateId = request.getParameter("id");
+	public String loadWorkflowTemplate() {
+		
 		this.initializing();
-		this.persistenceTemplate = this.workflowTemplateLoader.loadWorkflowTemplate(Long.parseLong(workflowTemplateId));
-		if(this.persistenceTemplate.getXmldata() != null && ((String)this.persistenceTemplate.getXmldata()).getBytes().length > 0)
-			this.workflowComponents = this.workflowTransformService.fromWorkflowDefinitionToObject(persistenceTemplate);
+		this.persistenceTemplate = this.workflowTemplateLoader.loadWorkflowTemplate(this.workflowTemplateId, WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
+		if(this.persistenceTemplate.getXmldata() != null && ((String)this.persistenceTemplate.getXmldata()).getBytes().length > 0){
+			this.workflowTemplate = this.workflowTransformService.fromWorkflowDefinitionToObject(persistenceTemplate);
+		}
+		
+		return null;
 	}
+	
+	public WorkflowTemplate getWorkflowTemplate() {
+		return workflowTemplate;
+	}
+	
 	
 }

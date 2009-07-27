@@ -2,35 +2,47 @@ package com.logicaldoc.workflow;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jbpm.graph.exe.Token;
 
+import com.logicaldoc.workflow.editor.WorkflowTemplateLoader;
 import com.logicaldoc.workflow.exception.WorkflowException;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
 import com.logicaldoc.workflow.model.WorkflowTaskInstance;
-import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
+import com.logicaldoc.workflow.model.WorkflowTemplate;
+import com.logicaldoc.workflow.transform.WorkflowTransformService;
 
 public class WorkflowServiceImpl implements WorkflowService {
 
 	protected static Log logger = LogFactory.getLog(WorkflowServiceImpl.class);
 
 	private WorkflowEngine workflowComponent;
+	
+	private WorkflowTransformService workflowTransformService;
 
+	private WorkflowTemplateLoader workflowTemplateLoader;
+	
+	public void setWorkflowTransformService(
+			WorkflowTransformService workflowTransformService) {
+		this.workflowTransformService = workflowTransformService;
+	}
+	
 	public void setWorkflowComponent(WorkflowEngine workflowComponent) {
 		this.workflowComponent = workflowComponent;
 	}
 
 	@Override
-	public void deployWorkflow(WorkflowPersistenceTemplate persistenceTemplate,
-			Serializable definition) {
-
+	public void deployWorkflow(WorkflowTemplate workflowTemplate) {
+		
+		Serializable definition = (Serializable)this.workflowTransformService.fromObjectToWorkflowDefinition(workflowTemplate);
+		
 		try {
-			workflowComponent.deployWorkflow(persistenceTemplate, definition);
+			workflowComponent.deployWorkflow(workflowTemplate, definition);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new WorkflowException(e);
 		}
 
@@ -51,9 +63,11 @@ public class WorkflowServiceImpl implements WorkflowService {
 		workflowComponent.undeployWorkflow(processId);
 	}
 
-	public WorkflowInstance startWorkflow(String processdefinitionName) {
+	public WorkflowInstance startWorkflow(WorkflowDefinition workflowDefinition, Map<String, Serializable> properties) {
+		
 		WorkflowInstance workflowInstance = workflowComponent
-				.startWorkflow(processdefinitionName);
+				.startWorkflow(workflowDefinition.getDefinitionId(), properties);
+		
 		return workflowInstance;
 	}
 

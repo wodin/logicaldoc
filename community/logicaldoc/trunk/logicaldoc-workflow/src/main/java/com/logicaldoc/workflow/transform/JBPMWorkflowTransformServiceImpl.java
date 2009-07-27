@@ -2,8 +2,6 @@ package com.logicaldoc.workflow.transform;
 
 import java.io.Serializable;
 import java.io.StringWriter;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.xml.transform.OutputKeys;
@@ -18,7 +16,7 @@ import org.w3c.dom.Element;
 
 import com.logicaldoc.workflow.debug.TRANSMITTER;
 import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
-import com.logicaldoc.workflow.editor.model.WorkflowEditorException;
+import com.logicaldoc.workflow.model.WorkflowTemplate;
 import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
 import com.thoughtworks.xstream.XStream;
 
@@ -31,7 +29,7 @@ public class JBPMWorkflowTransformServiceImpl implements
 
 	public void setXStream(XStream stream) {
 		xStream = stream;
-	}
+	} 
 
 	public void setComponentTransformer(
 			List<TransformModel> componentTransformers) {
@@ -39,21 +37,20 @@ public class JBPMWorkflowTransformServiceImpl implements
 	}
 	
 	@Override
-	public List<BaseWorkflowModel> fromWorkflowDefinitionToObject(
+	public WorkflowTemplate fromWorkflowDefinitionToObject(
 			WorkflowPersistenceTemplate workflowTemplateModel) {
-	
-		return (List<BaseWorkflowModel>)xStream.fromXML((String)workflowTemplateModel.getXmldata());
+		
+		return (WorkflowTemplate)xStream.fromXML((String)workflowTemplateModel.getXmldata());
 	}
 
 	@Override
 	public Object fromObjectToWorkflowDefinition(
-			WorkflowPersistenceTemplate workflowTemplateModel) {
+			WorkflowTemplate workflowTemplateModel) {
 
-		List<BaseWorkflowModel> workflowComponents = this
-				.retrieveWorkflowModels(workflowTemplateModel.getXmldata());
+		
 
 		JBPMTransformContext transformContext = new JBPMTransformContext(
-				workflowComponents);
+				workflowTemplateModel.getWorkflowComponents());
 
 		Element processDefininiton = transformContext.getDocumentBuildObject().createElement("process-definiton");
 		processDefininiton.setAttribute("xmlns", "urn:jbpm.org:jpdl-3.2");
@@ -97,12 +94,12 @@ public class JBPMWorkflowTransformServiceImpl implements
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<BaseWorkflowModel> retrieveWorkflowModels(Serializable binarayContent) {
+	private WorkflowTemplate retrieveWorkflowModels(Serializable binarayContent) {
 		
-		List<BaseWorkflowModel> workflowComponents = (List<BaseWorkflowModel>) this.xStream
+		WorkflowTemplate workflowTemplate = (WorkflowTemplate) this.xStream
 				.fromXML((String)binarayContent);
 
-		return workflowComponents;
+		return workflowTemplate;
 	
 	}
 	

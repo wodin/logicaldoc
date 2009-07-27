@@ -4,23 +4,19 @@ import java.io.Serializable;
 
 public class WorkflowPersistenceTemplate {
 	
-	private long id;
+	private Long id;
 	
 	private Serializable xmldata;
 	
 	private String name;
 	
-	private String description;
-	
 	private boolean deployed;
-	
-	private String startState;
-	
-	public void setId(long id) {
+		
+	public void setId(Long id) {
 		this.id = id;
 	}
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 	
@@ -31,15 +27,7 @@ public class WorkflowPersistenceTemplate {
 	public String getName() {
 		return name;
 	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
+
 	public void setXmldata(Serializable xmldata) {
 		this.xmldata = xmldata;
 	}
@@ -58,14 +46,6 @@ public class WorkflowPersistenceTemplate {
 	
 	public boolean isDeployed() {
 		return deployed;
-	}
-	
-	public String getStartState() {
-		return startState;
-	}
-	
-	public void setStartState(String startState) {
-		this.startState = startState;
 	}
 	
 }

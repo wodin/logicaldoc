@@ -2,6 +2,7 @@ package com.logicaldoc.workflow.transform;
 
 
 import java.util.List;
+import java.util.UUID;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -48,15 +49,13 @@ public class JBPMWorkflowTask implements TransformModel {
 		
 		//event 
 		//still in development...
-		/**
-		Element eventTaskCreate  = wr.createElement("event");
-		eventTaskCreate.setAttribute("type", "task-create");
-		Element actionTaskCreate = wr.createElement("action");
-		//TODO: Enter classname here
-		actionTaskCreate.setAttribute("class", "com.logicaldoc.workflow.flow.action...");
-		eventTaskCreate.appendChild(actionTaskCreate);
-		taskNode.appendChild(eventTaskCreate);
-		**/
+
+		Element assignmentNode  = wr.createElement("assignment");
+		assignmentNode.setAttribute("class", "com.logicaldoc.workflow.action.DefaultAssignmentHandler");
+		Element taskId = wr.createElement("taskId");
+		taskId.setTextContent(workflowTask.getId());
+		assignmentNode.appendChild(taskId);
+		task.appendChild(assignmentNode);
 		//assignments
 		
 		List<Assignee> assignees = workflowTask.getAssignees();
@@ -66,6 +65,7 @@ public class JBPMWorkflowTask implements TransformModel {
 		/**
 		 * Assignment
 		 */
+		/*
 		//TODO: We have to check if the actor is a group so we have instead a pooled-task 
 		if(assignees.size() == 1)
 			assignment.setAttribute("actor-id", assignees.get(0).getValue());
@@ -84,7 +84,7 @@ public class JBPMWorkflowTask implements TransformModel {
 		}
 		
 		task.appendChild(assignment);
-		
+		*/
 		
 		/**
 		 * Escalationmanagement
@@ -101,8 +101,8 @@ public class JBPMWorkflowTask implements TransformModel {
 			
 			
 			Element timer = wr.createElement("timer");
-
-			timer.setAttribute("duedate", dueDateValue + " " + dueDateUnit);
+			timer.setAttribute("name", UUID.randomUUID().toString());
+			timer.setAttribute("duedate", dueDateValue + " " + dueDateUnit.toLowerCase());
 			
 			if(workflowTask.getRemindTimeValue() != null && workflowTask.getRemindTimeValue()  > 0){
 				Integer reminderValue = workflowTask.getRemindTimeValue();
@@ -112,8 +112,13 @@ public class JBPMWorkflowTask implements TransformModel {
 				if(reminderValue > 1)
 					reminderUnit+="s";
 				
-				timer.setAttribute("reminder", reminderValue + " " + reminderUnit);
+				timer.setAttribute("repeat", reminderValue + " " + reminderUnit.toLowerCase());
 			}
+			
+			Element actionTimer = wr.createElement("action");
+			actionTimer.setAttribute("class", "com.logicaldoc.workflow.action.DefaultRemindHandler");
+			timer.appendChild(actionTimer);
+			
 			
 			task.appendChild(timer);
 			
