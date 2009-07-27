@@ -12,14 +12,7 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form">
-	<f:loadBundle basename="i18n.application" var="workflow_msgs" />
-
-
-	<!--  
-	<f:loadBundle basename="i18n.application-external-authentication"
-		var="ext_msgs" />
-	-->
-
+	<f:loadBundle basename="i18n.application-workflow" var="workflow_msgs" />
 
 	<ice:outputStyle href="/skins/default/css/workflow.css" />
 
@@ -59,17 +52,17 @@
 	
 						<ice:commandLink value="#{msgs['load']}"
 							action="#{WorkflowTemplateManager.loadWorkflowTemplate}">
-							<f:param name="id" value="#{workflowTemplate.id}"></f:param>
+							<f:param name="id" value="#{workflowTemplate.id}" />
 						</ice:commandLink>
 
 						<ice:commandLink value="#{msgs['remove']}"
 							action="#{WorkflowTemplateManager.deleteWorkflowTemplate}">
-							<f:param name="id" value="#{workflowTemplate.id}"></f:param>
+							<f:param name="id" value="#{workflowTemplate.id}" />
 						</ice:commandLink>
 
 						<ice:commandLink value="#{msgs['deploy']}"
 							action="#{WorkflowTemplateManager.deployWorkflowTemplate}">
-							<f:param name="id" value="#{workflowTemplate.id}"></f:param>
+							<f:param name="id" value="#{workflowTemplate.id}" />
 						</ice:commandLink>
 
 					</ice:column>
@@ -106,9 +99,8 @@
 							
 							<ice:commandLink value="#{transition.name}"
 								actionListener="#{WorkflowManager.endTask}">
-							<f:param name="taskInstance" value="#{taskInstance}"></f:param>
-							<f:param name="transition" value="#{transition}"></f:param>
-							
+							<f:param name="taskInstance" value="#{taskInstance}" />
+							<f:param name="transition" value="#{transition}" />							
 						</ice:commandLink>
 						
 						</ui:repeat>				

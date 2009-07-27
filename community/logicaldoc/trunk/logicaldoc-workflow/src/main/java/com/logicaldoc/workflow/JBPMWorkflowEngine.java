@@ -433,19 +433,13 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 	@Override
 	public List<WorkflowTaskInstance> getAllActionPooledTasksByUser(
 			final String username) {
-		
 		return (List<WorkflowTaskInstance>)this.jbpmTemplate.execute(new JbpmCallback() {
-			
-			
-			public Object doInJbpm(JbpmContext context) throws JbpmException {
-			
+			public Object doInJbpm(JbpmContext context) throws JbpmException {		
 				List<WorkflowTaskInstance> returnedTaskInstances = new LinkedList<WorkflowTaskInstance>();
-
 				List<TaskInstance> taskInstances = context.getTaskMgmtSession().findPooledTaskInstances(username);
 				for(TaskInstance taskInstance : taskInstances){
 					returnedTaskInstances.add(WorkflowFactory.createTaskInstance(taskInstance));
-				}
-				
+				}			
 				return returnedTaskInstances;
 			}
 		});
