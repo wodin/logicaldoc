@@ -38,6 +38,10 @@
 			<export prefix="*" />
 		</library>
 		
+		<library id="freemarker" path="lib/freemarker-2.3.15.jar" type="code">
+			<export prefix="*" />
+		</library>
+		
    	</runtime>
 	
 	<extension plugin-id="logicaldoc-core" point-id="DocumentMenu" id="startworkflow">
