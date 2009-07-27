@@ -8,7 +8,7 @@
     </fileset>
   </path>
   <target name="task-definitions">
-    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
       <classpath refid="ext.classpath" />
     </taskdef>
     <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant">
@@ -41,24 +41,14 @@
     </trycatch>
     <echo>LogicalDOC environment ready</echo>
   </target>
-  <target name="prepare-i18n-package">
-    <copy todir="${logicaldoc.devroot}/logicaldoc-i18n" flatten="true">
-      <fileset dir="${logicaldoc.devroot}">
-        <include name="**/src/main/**/application*_*.properties" />
-        <include name="**/src/main/**/*Message*_*.properties" />
-      </fileset>
-    </copy>
-    <zip destfile="${logicaldoc.devroot}/logicaldoc-i18n.zip" basedir="${logicaldoc.devroot}/logicaldoc-i18n"   />
-    <delete dir="${logicaldoc.devroot}/logicaldoc-i18n"/>
-  </target>
   <target name="schema-export" depends="init-all" description="Sql schema creation from Hibernate mappings">
-		<schemaexport quiet="no" text="yes" drop="no" delimiter=";" output="target/schema-export.sql">
-			<fileset dir="${logicaldoc.devroot}">
-				<include name="**/src/main/resources/mappings/*.hbm.xml" />
-			</fileset>
-		</schemaexport>
-	</target>
-	<target name="prepare-sql-package">
+    <schemaexport quiet="no" text="yes" drop="no" delimiter=";" output="target/schema-export.sql">
+      <fileset dir="${logicaldoc.devroot}">
+        <include name="**/src/main/resources/mappings/*.hbm.xml" />
+      </fileset>
+    </schemaexport>
+  </target>
+  <target name="prepare-sql-package">
     <copy todir="${logicaldoc.devroot}/logicaldoc-sql" flatten="true">
       <fileset dir="${logicaldoc.devroot}">
         <include name="**/src/main/**/logicaldoc-*.sql*" />
