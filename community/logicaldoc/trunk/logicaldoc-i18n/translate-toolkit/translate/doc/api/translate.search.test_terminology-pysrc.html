@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>translate.search.test_terminology</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://translate.sourceforge.net">Translate Toolkit</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;translate ::
+        <a href="translate.search-module.html">Package&nbsp;search</a> ::
+        Module&nbsp;test_terminology
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="translate.search.test_terminology-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="translate.search.test_terminology-module.html">Module translate.search.test_terminology</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Method translate.storage.base.TranslationStore.translate()=translate.storage.base.TranslationStore-class.html#translate,Method translate.storage.tmx.tmxfile.translate()=translate.storage.tmx.tmxfile-class.html#translate"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-0', 'translate', 'link-0');">translate</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Package translate.search=translate.search-module.html"><a title="translate.search" class="py-name" href="#" onclick="return doclink('link-1', 'search', 'link-1');">search</a></tt> <tt class="py-keyword">import</tt> <tt id="link-2" class="py-name" targets="Module translate.search.terminology=translate.search.terminology-module.html"><a title="translate.search.terminology" class="py-name" href="#" onclick="return doclink('link-2', 'terminology', 'link-2');">terminology</a></tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"> </tt>
+<a name="TestTerminology"></a><div id="TestTerminology-def"><a name="L3"></a><tt class="py-lineno"> 3</tt> <a class="py-toggle" href="#" id="TestTerminology-toggle" onclick="return toggle('TestTerminology');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="translate.search.test_terminology.TestTerminology-class.html">TestTerminology</a><tt class="py-op">:</tt> </tt>
+</div><div id="TestTerminology-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="TestTerminology-expanded"><a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line">    <tt class="py-docstring">"""Test terminology matching"""</tt> </tt>
+<a name="TestTerminology.test_basic"></a><div id="TestTerminology.test_basic-def"><a name="L5"></a><tt class="py-lineno"> 5</tt> <a class="py-toggle" href="#" id="TestTerminology.test_basic-toggle" onclick="return toggle('TestTerminology.test_basic');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.search.test_terminology.TestTerminology-class.html#test_basic">test_basic</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTerminology.test_basic-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="TestTerminology.test_basic-expanded"><a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests basic functionality"""</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line">        <tt class="py-name">termmatcher</tt> <tt class="py-op">=</tt> <tt id="link-3" class="py-name"><a title="translate.search.terminology" class="py-name" href="#" onclick="return doclink('link-3', 'terminology', 'link-2');">terminology</a></tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Class translate.search.terminology.TerminologyComparer=translate.search.terminology.TerminologyComparer-class.html"><a title="translate.search.terminology.TerminologyComparer" class="py-name" href="#" onclick="return doclink('link-4', 'TerminologyComparer', 'link-4');">TerminologyComparer</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">termmatcher</tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Method translate.search.lshtein.LevenshteinComparer.similarity()=translate.search.lshtein.LevenshteinComparer-class.html#similarity,Method translate.search.terminology.TerminologyComparer.similarity()=translate.search.terminology.TerminologyComparer-class.html#similarity"><a title="translate.search.lshtein.LevenshteinComparer.similarity
+translate.search.terminology.TerminologyComparer.similarity" class="py-name" href="#" onclick="return doclink('link-5', 'similarity', 'link-5');">similarity</a></tt><tt class="py-op">(</tt><tt class="py-string">"Open the file"</tt><tt class="py-op">,</tt> <tt class="py-string">"file"</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">75</tt> </tt>
+</div><a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line">     </tt>
+<a name="TestTerminology.test_brackets"></a><div id="TestTerminology.test_brackets-def"><a name="L10"></a><tt class="py-lineno">10</tt> <a class="py-toggle" href="#" id="TestTerminology.test_brackets-toggle" onclick="return toggle('TestTerminology.test_brackets');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.search.test_terminology.TestTerminology-class.html#test_brackets">test_brackets</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTerminology.test_brackets-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="TestTerminology.test_brackets-expanded"><a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests that brackets at the end of a term are ignored"""</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line">        <tt class="py-name">termmatcher</tt> <tt class="py-op">=</tt> <tt id="link-6" class="py-name"><a title="translate.search.terminology" class="py-name" href="#" onclick="return doclink('link-6', 'terminology', 'link-2');">terminology</a></tt><tt class="py-op">.</tt><tt id="link-7" class="py-name"><a title="translate.search.terminology.TerminologyComparer" class="py-name" href="#" onclick="return doclink('link-7', 'TerminologyComparer', 'link-4');">TerminologyComparer</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">termmatcher</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name"><a title="translate.search.lshtein.LevenshteinComparer.similarity
+translate.search.terminology.TerminologyComparer.similarity" class="py-name" href="#" onclick="return doclink('link-8', 'similarity', 'link-5');">similarity</a></tt><tt class="py-op">(</tt><tt class="py-string">"Open file"</tt><tt class="py-op">,</tt> <tt class="py-string">"file (noun)"</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">75</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">termmatcher</tt><tt class="py-op">.</tt><tt id="link-9" class="py-name"><a title="translate.search.lshtein.LevenshteinComparer.similarity
+translate.search.terminology.TerminologyComparer.similarity" class="py-name" href="#" onclick="return doclink('link-9', 'similarity', 'link-5');">similarity</a></tt><tt class="py-op">(</tt><tt class="py-string">"Contact your ISP"</tt><tt class="py-op">,</tt> <tt class="py-string">"ISP (Internet Service Provider)"</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">75</tt> </tt>
+</div><a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"> </tt>
+<a name="TestTerminology.test_past_tences"></a><div id="TestTerminology.test_past_tences-def"><a name="L16"></a><tt class="py-lineno">16</tt> <a class="py-toggle" href="#" id="TestTerminology.test_past_tences-toggle" onclick="return toggle('TestTerminology.test_past_tences');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.search.test_terminology.TestTerminology-class.html#test_past_tences">test_past_tences</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTerminology.test_past_tences-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="TestTerminology.test_past_tences-expanded"><a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests matching of some past tenses"""</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line">        <tt class="py-name">termmatcher</tt> <tt class="py-op">=</tt> <tt id="link-10" class="py-name"><a title="translate.search.terminology" class="py-name" href="#" onclick="return doclink('link-10', 'terminology', 'link-2');">terminology</a></tt><tt class="py-op">.</tt><tt id="link-11" class="py-name"><a title="translate.search.terminology.TerminologyComparer" class="py-name" href="#" onclick="return doclink('link-11', 'TerminologyComparer', 'link-4');">TerminologyComparer</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">termmatcher</tt><tt class="py-op">.</tt><tt id="link-12" class="py-name"><a title="translate.search.lshtein.LevenshteinComparer.similarity
+translate.search.terminology.TerminologyComparer.similarity" class="py-name" href="#" onclick="return doclink('link-12', 'similarity', 'link-5');">similarity</a></tt><tt class="py-op">(</tt><tt class="py-string">"The bug was submitted"</tt><tt class="py-op">,</tt> <tt class="py-string">"submit"</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">75</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">termmatcher</tt><tt class="py-op">.</tt><tt id="link-13" class="py-name"><a title="translate.search.lshtein.LevenshteinComparer.similarity
+translate.search.terminology.TerminologyComparer.similarity" class="py-name" href="#" onclick="return doclink('link-13', 'similarity', 'link-5');">similarity</a></tt><tt class="py-op">(</tt><tt class="py-string">"The site is certified"</tt><tt class="py-op">,</tt> <tt class="py-string">"certify"</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">75</tt> </tt>
+</div><a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line">         </tt>
+<a name="TestTerminology.test_space_mismatch"></a><div id="TestTerminology.test_space_mismatch-def"><a name="L22"></a><tt class="py-lineno">22</tt> <a class="py-toggle" href="#" id="TestTerminology.test_space_mismatch-toggle" onclick="return toggle('TestTerminology.test_space_mismatch');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.search.test_terminology.TestTerminology-class.html#test_space_mismatch">test_space_mismatch</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTerminology.test_space_mismatch-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="TestTerminology.test_space_mismatch-expanded"><a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests that we can match with some spacing mismatch"""</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">        <tt class="py-name">termmatcher</tt> <tt class="py-op">=</tt> <tt id="link-14" class="py-name"><a title="translate.search.terminology" class="py-name" href="#" onclick="return doclink('link-14', 'terminology', 'link-2');">terminology</a></tt><tt class="py-op">.</tt><tt id="link-15" class="py-name"><a title="translate.search.terminology.TerminologyComparer" class="py-name" href="#" onclick="return doclink('link-15', 'TerminologyComparer', 'link-4');">TerminologyComparer</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">termmatcher</tt><tt class="py-op">.</tt><tt id="link-16" class="py-name"><a title="translate.search.lshtein.LevenshteinComparer.similarity
+translate.search.terminology.TerminologyComparer.similarity" class="py-name" href="#" onclick="return doclink('link-16', 'similarity', 'link-5');">similarity</a></tt><tt class="py-op">(</tt><tt class="py-string">"%d minutes downtime"</tt><tt class="py-op">,</tt> <tt class="py-string">"down time"</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">75</tt> </tt>
+</div><a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"> </tt>
+<a name="TestTerminology.test_hyphen_mismatch"></a><div id="TestTerminology.test_hyphen_mismatch-def"><a name="L27"></a><tt class="py-lineno">27</tt> <a class="py-toggle" href="#" id="TestTerminology.test_hyphen_mismatch-toggle" onclick="return toggle('TestTerminology.test_hyphen_mismatch');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.search.test_terminology.TestTerminology-class.html#test_hyphen_mismatch">test_hyphen_mismatch</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTerminology.test_hyphen_mismatch-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="TestTerminology.test_hyphen_mismatch-expanded"><a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests that we can match with some spacing mismatch"""</tt> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">        <tt class="py-name">termmatcher</tt> <tt class="py-op">=</tt> <tt id="link-17" class="py-name"><a title="translate.search.terminology" class="py-name" href="#" onclick="return doclink('link-17', 'terminology', 'link-2');">terminology</a></tt><tt class="py-op">.</tt><tt id="link-18" class="py-name"><a title="translate.search.terminology.TerminologyComparer" class="py-name" href="#" onclick="return doclink('link-18', 'TerminologyComparer', 'link-4');">TerminologyComparer</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">termmatcher</tt><tt class="py-op">.</tt><tt id="link-19" class="py-name"><a title="translate.search.lshtein.LevenshteinComparer.similarity
+translate.search.terminology.TerminologyComparer.similarity" class="py-name" href="#" onclick="return doclink('link-19', 'similarity', 'link-5');">similarity</a></tt><tt class="py-op">(</tt><tt class="py-string">"You can preorder"</tt><tt class="py-op">,</tt> <tt class="py-string">"pre-order"</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">75</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">termmatcher</tt><tt class="py-op">.</tt><tt id="link-20" class="py-name"><a title="translate.search.lshtein.LevenshteinComparer.similarity
+translate.search.terminology.TerminologyComparer.similarity" class="py-name" href="#" onclick="return doclink('link-20', 'similarity', 'link-5');">similarity</a></tt><tt class="py-op">(</tt><tt class="py-string">"You can pre-order"</tt><tt class="py-op">,</tt> <tt class="py-string">"pre order"</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">75</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">termmatcher</tt><tt class="py-op">.</tt><tt id="link-21" class="py-name"><a title="translate.search.lshtein.LevenshteinComparer.similarity
+translate.search.terminology.TerminologyComparer.similarity" class="py-name" href="#" onclick="return doclink('link-21', 'similarity', 'link-5');">similarity</a></tt><tt class="py-op">(</tt><tt class="py-string">"You can preorder"</tt><tt class="py-op">,</tt> <tt class="py-string">"pre order"</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">75</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">termmatcher</tt><tt class="py-op">.</tt><tt id="link-22" class="py-name"><a title="translate.search.lshtein.LevenshteinComparer.similarity
+translate.search.terminology.TerminologyComparer.similarity" class="py-name" href="#" onclick="return doclink('link-22', 'similarity', 'link-5');">similarity</a></tt><tt class="py-op">(</tt><tt class="py-string">"You can pre order"</tt><tt class="py-op">,</tt> <tt class="py-string">"pre-order"</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">75</tt> </tt>
+</div></div><a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://translate.sourceforge.net">Translate Toolkit</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Tue Sep 23 13:51:19 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

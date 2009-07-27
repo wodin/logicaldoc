@@ -1,0 +1,907 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>translate.storage.test_base</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://translate.sourceforge.net">Translate Toolkit</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;translate ::
+        <a href="translate.storage-module.html">Package&nbsp;storage</a> ::
+        Module&nbsp;test_base
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="translate.storage.test_base-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="translate.storage.test_base-module.html">Module translate.storage.test_base</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment">#!/usr/bin/env python</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># -*- coding: utf-8 -*-</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-docstring">"""tests for storage base classes"""</tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Method translate.storage.base.TranslationStore.translate()=translate.storage.base.TranslationStore-class.html#translate,Method translate.storage.tmx.tmxfile.translate()=translate.storage.tmx.tmxfile-class.html#translate"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-0', 'translate', 'link-0');">translate</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Package translate.storage=translate.storage-module.html"><a title="translate.storage" class="py-name" href="#" onclick="return doclink('link-1', 'storage', 'link-1');">storage</a></tt> <tt class="py-keyword">import</tt> <tt id="link-2" class="py-name" targets="Module translate.storage.base=translate.storage.base-module.html"><a title="translate.storage.base" class="py-name" href="#" onclick="return doclink('link-2', 'base', 'link-2');">base</a></tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">py</tt> <tt class="py-keyword">import</tt> <tt id="link-3" class="py-name" targets="Function translate.misc.progressbar.test()=translate.misc.progressbar-module.html#test"><a title="translate.misc.progressbar.test" class="py-name" href="#" onclick="return doclink('link-3', 'test', 'link-3');">test</a></tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"> </tt>
+<a name="test_force_override"></a><div id="test_force_override-def"><a name="L10"></a><tt class="py-lineno"> 10</tt> <a class="py-toggle" href="#" id="test_force_override-toggle" onclick="return toggle('test_force_override');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base-module.html#test_force_override">test_force_override</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="test_force_override-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="test_force_override-expanded"><a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line">    <tt class="py-docstring">"""Tests that derived classes are not allowed to call certain functions"""</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line">    <tt class="py-keyword">class</tt> <tt class="py-def-name">BaseClass</tt><tt class="py-op">:</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line">        <tt class="py-keyword">def</tt> <tt class="py-def-name">test</tt><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line">            <tt id="link-4" class="py-name"><a title="translate.storage.base" class="py-name" href="#" onclick="return doclink('link-4', 'base', 'link-2');">base</a></tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Function translate.storage.base.force_override()=translate.storage.base-module.html#force_override"><a title="translate.storage.base.force_override" class="py-name" href="#" onclick="return doclink('link-5', 'force_override', 'link-5');">force_override</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-6" class="py-name"><a title="translate.misc.progressbar.test" class="py-name" href="#" onclick="return doclink('link-6', 'test', 'link-3');">test</a></tt><tt class="py-op">,</tt> <tt class="py-name">BaseClass</tt><tt class="py-op">)</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-name">True</tt> </tt>
+</div><a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line">        <tt class="py-keyword">def</tt> <tt class="py-def-name">classtest</tt><tt class="py-op">(</tt><tt class="py-param">cls</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line">            <tt id="link-7" class="py-name"><a title="translate.storage.base" class="py-name" href="#" onclick="return doclink('link-7', 'base', 'link-2');">base</a></tt><tt class="py-op">.</tt><tt id="link-8" class="py-name"><a title="translate.storage.base.force_override" class="py-name" href="#" onclick="return doclink('link-8', 'force_override', 'link-5');">force_override</a></tt><tt class="py-op">(</tt><tt class="py-name">cls</tt><tt class="py-op">.</tt><tt class="py-name">classtest</tt><tt class="py-op">,</tt> <tt class="py-name">BaseClass</tt><tt class="py-op">)</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-name">True</tt> </tt>
+</div><a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line">        <tt class="py-name">classtest</tt> <tt class="py-op">=</tt> <tt class="py-name">classmethod</tt><tt class="py-op">(</tt><tt class="py-name">classtest</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line">    <tt class="py-keyword">class</tt> <tt class="py-def-name">DerivedClass</tt><tt class="py-op">(</tt><tt class="py-base-class">BaseClass</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line">        <tt class="py-keyword">pass</tt> </tt>
+</div><a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line">    <tt class="py-name">baseobject</tt> <tt class="py-op">=</tt> <tt class="py-name">BaseClass</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line">    <tt class="py-keyword">assert</tt> <tt class="py-name">baseobject</tt><tt class="py-op">.</tt><tt id="link-9" class="py-name"><a title="translate.misc.progressbar.test" class="py-name" href="#" onclick="return doclink('link-9', 'test', 'link-3');">test</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line">    <tt class="py-keyword">assert</tt> <tt class="py-name">baseobject</tt><tt class="py-op">.</tt><tt class="py-name">classtest</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">    <tt class="py-name">derivedobject</tt> <tt class="py-op">=</tt> <tt class="py-name">DerivedClass</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line">    <tt class="py-keyword">assert</tt> <tt id="link-10" class="py-name"><a title="translate.misc.progressbar.test" class="py-name" href="#" onclick="return doclink('link-10', 'test', 'link-3');">test</a></tt><tt class="py-op">.</tt><tt class="py-name">raises</tt><tt class="py-op">(</tt><tt class="py-name">NotImplementedError</tt><tt class="py-op">,</tt> <tt class="py-name">derivedobject</tt><tt class="py-op">.</tt><tt id="link-11" class="py-name"><a title="translate.misc.progressbar.test" class="py-name" href="#" onclick="return doclink('link-11', 'test', 'link-3');">test</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">    <tt class="py-keyword">assert</tt> <tt id="link-12" class="py-name"><a title="translate.misc.progressbar.test" class="py-name" href="#" onclick="return doclink('link-12', 'test', 'link-3');">test</a></tt><tt class="py-op">.</tt><tt class="py-name">raises</tt><tt class="py-op">(</tt><tt class="py-name">NotImplementedError</tt><tt class="py-op">,</tt> <tt class="py-name">derivedobject</tt><tt class="py-op">.</tt><tt class="py-name">classtest</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationUnit"></a><div id="TestTranslationUnit-def"><a name="L29"></a><tt class="py-lineno"> 29</tt> <a class="py-toggle" href="#" id="TestTranslationUnit-toggle" onclick="return toggle('TestTranslationUnit');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationUnit-class.html">TestTranslationUnit</a><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationUnit-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TestTranslationUnit-expanded"><a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">    <tt class="py-docstring">"""Tests a TranslationUnit.</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"><tt class="py-docstring">    Derived classes can reuse these tests by pointing UnitClass to a derived Unit"""</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">    <tt class="py-name">UnitClass</tt> <tt class="py-op">=</tt> <tt id="link-13" class="py-name"><a title="translate.storage.base" class="py-name" href="#" onclick="return doclink('link-13', 'base', 'link-2');">base</a></tt><tt class="py-op">.</tt><tt id="link-14" class="py-name" targets="Class translate.storage.base.TranslationUnit=translate.storage.base.TranslationUnit-class.html"><a title="translate.storage.base.TranslationUnit" class="py-name" href="#" onclick="return doclink('link-14', 'TranslationUnit', 'link-14');">TranslationUnit</a></tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationUnit.setup_method"></a><div id="TestTranslationUnit.setup_method-def"><a name="L34"></a><tt class="py-lineno"> 34</tt> <a class="py-toggle" href="#" id="TestTranslationUnit.setup_method-toggle" onclick="return toggle('TestTranslationUnit.setup_method');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationUnit-class.html#setup_method">setup_method</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">method</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationUnit.setup_method-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationUnit.setup_method-expanded"><a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">UnitClass</tt><tt class="py-op">(</tt><tt class="py-string">"Test String"</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationUnit.test_isfuzzy"></a><div id="TestTranslationUnit.test_isfuzzy-def"><a name="L37"></a><tt class="py-lineno"> 37</tt> <a class="py-toggle" href="#" id="TestTranslationUnit.test_isfuzzy-toggle" onclick="return toggle('TestTranslationUnit.test_isfuzzy');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationUnit-class.html#test_isfuzzy">test_isfuzzy</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationUnit.test_isfuzzy-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationUnit.test_isfuzzy-expanded"><a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">        <tt class="py-docstring">"""Test that we can call isfuzzy() on a unit.</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line"><tt class="py-docstring">        </tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line"><tt class="py-docstring">        The default return value for isfuzzy() should be False.</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-keyword">not</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-15" class="py-name" targets="Method translate.filters.checks.StandardUnitChecker.isfuzzy()=translate.filters.checks.StandardUnitChecker-class.html#isfuzzy,Method translate.storage.base.TranslationUnit.isfuzzy()=translate.storage.base.TranslationUnit-class.html#isfuzzy,Method translate.storage.cpo.pounit.isfuzzy()=translate.storage.cpo.pounit-class.html#isfuzzy,Method translate.storage.pypo.pounit.isfuzzy()=translate.storage.pypo.pounit-class.html#isfuzzy,Method translate.storage.ts2.tsunit.isfuzzy()=translate.storage.ts2.tsunit-class.html#isfuzzy,Method translate.storage.xliff.xliffunit.isfuzzy()=translate.storage.xliff.xliffunit-class.html#isfuzzy"><a title="translate.filters.checks.StandardUnitChecker.isfuzzy
+translate.storage.base.TranslationUnit.isfuzzy
+translate.storage.cpo.pounit.isfuzzy
+translate.storage.pypo.pounit.isfuzzy
+translate.storage.ts2.tsunit.isfuzzy
+translate.storage.xliff.xliffunit.isfuzzy" class="py-name" href="#" onclick="return doclink('link-15', 'isfuzzy', 'link-15');">isfuzzy</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationUnit.test_create"></a><div id="TestTranslationUnit.test_create-def"><a name="L44"></a><tt class="py-lineno"> 44</tt> <a class="py-toggle" href="#" id="TestTranslationUnit.test_create-toggle" onclick="return toggle('TestTranslationUnit.test_create');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationUnit-class.html#test_create">test_create</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationUnit.test_create-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationUnit.test_create-expanded"><a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">        <tt class="py-docstring">"""tests a simple creation with a source string"""</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">unit</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-string">'unit.source:'</tt><tt class="py-op">,</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-16" class="py-name" targets="Variable translate.storage.cpo.pounit.source=translate.storage.cpo.pounit-class.html#source,Variable translate.storage.dtd.dtdunit.source=translate.storage.dtd.dtdunit-class.html#source,Variable translate.storage.html.htmlunit.source=translate.storage.html.htmlunit-class.html#source,Variable translate.storage.lisa.LISAunit.source=translate.storage.lisa.LISAunit-class.html#source,Variable translate.storage.php.phpunit.source=translate.storage.php.phpunit-class.html#source,Variable translate.storage.poxliff.PoXliffUnit.source=translate.storage.poxliff.PoXliffUnit-class.html#source,Variable translate.storage.properties.propunit.source=translate.storage.properties.propunit-class.html#source,Variable translate.storage.pypo.pounit.source=translate.storage.pypo.pounit-class.html#source,Variable translate.storage.rc.rcunit.source=translate.storage.rc.rcunit-class.html#source,Variable translate.storage.ts2.tsunit.source=translate.storage.ts2.tsunit-class.html#source,Variable translate.storage.txt.TxtUnit.source=translate.storage.txt.TxtUnit-class.html#source,Variable translate.storage.wordfast.WordfastUnit.source=translate.storage.wordfast.WordfastUnit-class.html#source"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-16', 'source', 'link-16');">source</a></tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-17" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-17', 'source', 'link-16');">source</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"Test String"</tt> </tt>
+</div><a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationUnit.test_eq"></a><div id="TestTranslationUnit.test_eq-def"><a name="L50"></a><tt class="py-lineno"> 50</tt> <a class="py-toggle" href="#" id="TestTranslationUnit.test_eq-toggle" onclick="return toggle('TestTranslationUnit.test_eq');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationUnit-class.html#test_eq">test_eq</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationUnit.test_eq-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationUnit.test_eq-expanded"><a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">        <tt class="py-docstring">"""tests equality comparison"""</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">        <tt class="py-name">unit1</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">unit</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">        <tt class="py-name">unit2</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">UnitClass</tt><tt class="py-op">(</tt><tt class="py-string">"Test String"</tt><tt class="py-op">)</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">        <tt class="py-name">unit3</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">UnitClass</tt><tt class="py-op">(</tt><tt class="py-string">"Test String"</tt><tt class="py-op">)</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">        <tt class="py-name">unit4</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">UnitClass</tt><tt class="py-op">(</tt><tt class="py-string">"Blessed String"</tt><tt class="py-op">)</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">        <tt class="py-name">unit5</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">UnitClass</tt><tt class="py-op">(</tt><tt class="py-string">"Blessed String"</tt><tt class="py-op">)</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">        <tt class="py-name">unit6</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">UnitClass</tt><tt class="py-op">(</tt><tt class="py-string">"Blessed String"</tt><tt class="py-op">)</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit1</tt> <tt class="py-op">==</tt> <tt class="py-name">unit1</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit1</tt> <tt class="py-op">==</tt> <tt class="py-name">unit2</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit1</tt> <tt class="py-op">!=</tt> <tt class="py-name">unit4</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">        <tt class="py-name">unit1</tt><tt class="py-op">.</tt><tt id="link-18" class="py-name" targets="Variable translate.storage.cpo.pounit.target=translate.storage.cpo.pounit-class.html#target,Variable translate.storage.dtd.dtdunit.target=translate.storage.dtd.dtdunit-class.html#target,Variable translate.storage.lisa.LISAunit.target=translate.storage.lisa.LISAunit-class.html#target,Variable translate.storage.php.phpunit.target=translate.storage.php.phpunit-class.html#target,Variable translate.storage.poxliff.PoXliffUnit.target=translate.storage.poxliff.PoXliffUnit-class.html#target,Variable translate.storage.properties.propunit.target=translate.storage.properties.propunit-class.html#target,Variable translate.storage.pypo.pounit.target=translate.storage.pypo.pounit-class.html#target,Variable translate.storage.qph.QphUnit.target=translate.storage.qph.QphUnit-class.html#target,Variable translate.storage.rc.rcunit.target=translate.storage.rc.rcunit-class.html#target,Variable translate.storage.ts2.tsunit.target=translate.storage.ts2.tsunit-class.html#target,Variable translate.storage.txt.TxtUnit.target=translate.storage.txt.TxtUnit-class.html#target,Variable translate.storage.wordfast.WordfastUnit.target=translate.storage.wordfast.WordfastUnit-class.html#target"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-18', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Stressed Ting"</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">        <tt class="py-name">unit2</tt><tt class="py-op">.</tt><tt id="link-19" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-19', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Stressed Ting"</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">        <tt class="py-name">unit5</tt><tt class="py-op">.</tt><tt id="link-20" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-20', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Stressed Bling"</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">        <tt class="py-name">unit6</tt><tt class="py-op">.</tt><tt id="link-21" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-21', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Stressed Ting"</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit1</tt> <tt class="py-op">==</tt> <tt class="py-name">unit2</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit1</tt> <tt class="py-op">!=</tt> <tt class="py-name">unit3</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit4</tt> <tt class="py-op">!=</tt> <tt class="py-name">unit5</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit1</tt> <tt class="py-op">!=</tt> <tt class="py-name">unit6</tt> </tt>
+</div><a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationUnit.test_target"></a><div id="TestTranslationUnit.test_target-def"><a name="L70"></a><tt class="py-lineno"> 70</tt> <a class="py-toggle" href="#" id="TestTranslationUnit.test_target-toggle" onclick="return toggle('TestTranslationUnit.test_target');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationUnit-class.html#test_target">test_target</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationUnit.test_target-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationUnit.test_target-expanded"><a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">unit</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-keyword">not</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-22" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-22', 'target', 'link-18');">target</a></tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-23" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-23', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Stressed Ting"</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-24" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-24', 'target', 'link-18');">target</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"Stressed Ting"</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-25" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-25', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Stressed Bling"</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-26" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-26', 'target', 'link-18');">target</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"Stressed Bling"</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-27" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-27', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">""</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-28" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-28', 'target', 'link-18');">target</a></tt> <tt class="py-op">==</tt> <tt class="py-string">""</tt> </tt>
+</div><a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationUnit.test_escapes"></a><div id="TestTranslationUnit.test_escapes-def"><a name="L80"></a><tt class="py-lineno"> 80</tt> <a class="py-toggle" href="#" id="TestTranslationUnit.test_escapes-toggle" onclick="return toggle('TestTranslationUnit.test_escapes');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationUnit-class.html#test_escapes">test_escapes</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationUnit.test_escapes-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationUnit.test_escapes-expanded"><a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">        <tt class="py-docstring">"""Test all sorts of characters that might go wrong in a quoting and </tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line"><tt class="py-docstring">        escaping roundtrip."""</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">unit</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">        <tt class="py-name">specials</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'Fish &amp; chips'</tt><tt class="py-op">,</tt> <tt class="py-string">'five &lt; six'</tt><tt class="py-op">,</tt> <tt class="py-string">'six &gt; five'</tt><tt class="py-op">,</tt> <tt class="py-string">'five &amp;lt; six'</tt><tt class="py-op">,</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">                    <tt class="py-string">'Use &amp;nbsp;'</tt><tt class="py-op">,</tt> <tt class="py-string">'Use &amp;amp;nbsp;'</tt><tt class="py-op">,</tt> <tt class="py-string">'Use &amp;amp;amp;nbsp;'</tt><tt class="py-op">,</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">                    <tt class="py-string">'A "solution"'</tt><tt class="py-op">,</tt> <tt class="py-string">"skop 'n bal"</tt><tt class="py-op">,</tt> <tt class="py-string">'"""'</tt><tt class="py-op">,</tt> <tt class="py-string">"'''"</tt><tt class="py-op">,</tt> <tt class="py-string">u'&#181;'</tt><tt class="py-op">,</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">                    <tt class="py-string">'\n'</tt><tt class="py-op">,</tt> <tt class="py-string">'\t'</tt><tt class="py-op">,</tt> <tt class="py-string">'\r'</tt><tt class="py-op">,</tt> <tt class="py-string">'\r\n'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\r'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\\r'</tt><tt class="py-op">]</tt>  </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">special</tt> <tt class="py-keyword">in</tt> <tt class="py-name">specials</tt><tt class="py-op">:</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">            <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-29" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-29', 'source', 'link-16');">source</a></tt> <tt class="py-op">=</tt> <tt class="py-name">special</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">            <tt class="py-keyword">print</tt> <tt class="py-string">"unit.source:"</tt><tt class="py-op">,</tt> <tt class="py-name">repr</tt><tt class="py-op">(</tt><tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-30" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-30', 'source', 'link-16');">source</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">            <tt class="py-keyword">print</tt> <tt class="py-string">"special:"</tt><tt class="py-op">,</tt> <tt class="py-name">repr</tt><tt class="py-op">(</tt><tt class="py-name">special</tt><tt class="py-op">)</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">            <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-31" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-31', 'source', 'link-16');">source</a></tt> <tt class="py-op">==</tt> <tt class="py-name">special</tt> </tt>
+</div><a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationUnit.test_difficult_escapes"></a><div id="TestTranslationUnit.test_difficult_escapes-def"><a name="L94"></a><tt class="py-lineno"> 94</tt> <a class="py-toggle" href="#" id="TestTranslationUnit.test_difficult_escapes-toggle" onclick="return toggle('TestTranslationUnit.test_difficult_escapes');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationUnit-class.html#test_difficult_escapes">test_difficult_escapes</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationUnit.test_difficult_escapes-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationUnit.test_difficult_escapes-expanded"><a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">        <tt class="py-docstring">"""Test difficult characters that might go wrong in a quoting and </tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line"><tt class="py-docstring">        escaping roundtrip."""</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line"> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">unit</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">        <tt class="py-name">specials</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'\\n'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\t'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\"'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\ '</tt><tt class="py-op">,</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">                    <tt class="py-string">'\\\n'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\\t'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\\\n'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\\\t'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\\\r'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\\\"'</tt><tt class="py-op">,</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">                    <tt class="py-string">'\\r\\n'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\\\r\\n'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\r\\\\n'</tt><tt class="py-op">,</tt> <tt class="py-string">'\\\\n\\\\r'</tt><tt class="py-op">]</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">special</tt> <tt class="py-keyword">in</tt> <tt class="py-name">specials</tt><tt class="py-op">:</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">            <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-32" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-32', 'source', 'link-16');">source</a></tt> <tt class="py-op">=</tt> <tt class="py-name">special</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">            <tt class="py-keyword">print</tt> <tt class="py-string">"unit.source:"</tt><tt class="py-op">,</tt> <tt class="py-name">repr</tt><tt class="py-op">(</tt><tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-33" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-33', 'source', 'link-16');">source</a></tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt class="py-string">'|'</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">            <tt class="py-keyword">print</tt> <tt class="py-string">"special:"</tt><tt class="py-op">,</tt> <tt class="py-name">repr</tt><tt class="py-op">(</tt><tt class="py-name">special</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt class="py-string">'|'</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">            <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-34" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-34', 'source', 'link-16');">source</a></tt> <tt class="py-op">==</tt> <tt class="py-name">special</tt> </tt>
+</div><a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationUnit.test_note_sanity"></a><div id="TestTranslationUnit.test_note_sanity-def"><a name="L108"></a><tt class="py-lineno">108</tt> <a class="py-toggle" href="#" id="TestTranslationUnit.test_note_sanity-toggle" onclick="return toggle('TestTranslationUnit.test_note_sanity');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationUnit-class.html#test_note_sanity">test_note_sanity</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationUnit.test_note_sanity-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationUnit.test_note_sanity-expanded"><a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests that all subclasses of the base behaves consistently with regards to notes."""</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">unit</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line"> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-35" class="py-name" targets="Method translate.storage.base.TranslationUnit.addnote()=translate.storage.base.TranslationUnit-class.html#addnote,Method translate.storage.cpo.pounit.addnote()=translate.storage.cpo.pounit-class.html#addnote,Method translate.storage.php.phpunit.addnote()=translate.storage.php.phpunit-class.html#addnote,Method translate.storage.poxliff.PoXliffUnit.addnote()=translate.storage.poxliff.PoXliffUnit-class.html#addnote,Method translate.storage.properties.propunit.addnote()=translate.storage.properties.propunit-class.html#addnote,Method translate.storage.pypo.pounit.addnote()=translate.storage.pypo.pounit-class.html#addnote,Method translate.storage.qph.QphUnit.addnote()=translate.storage.qph.QphUnit-class.html#addnote,Method translate.storage.rc.rcunit.addnote()=translate.storage.rc.rcunit-class.html#addnote,Method translate.storage.tmx.tmxunit.addnote()=translate.storage.tmx.tmxunit-class.html#addnote,Method translate.storage.ts2.tsunit.addnote()=translate.storage.ts2.tsunit-class.html#addnote,Method translate.storage.xliff.xliffunit.addnote()=translate.storage.xliff.xliffunit-class.html#addnote"><a title="translate.storage.base.TranslationUnit.addnote
+translate.storage.cpo.pounit.addnote
+translate.storage.php.phpunit.addnote
+translate.storage.poxliff.PoXliffUnit.addnote
+translate.storage.properties.propunit.addnote
+translate.storage.pypo.pounit.addnote
+translate.storage.qph.QphUnit.addnote
+translate.storage.rc.rcunit.addnote
+translate.storage.tmx.tmxunit.addnote
+translate.storage.ts2.tsunit.addnote
+translate.storage.xliff.xliffunit.addnote" class="py-name" href="#" onclick="return doclink('link-35', 'addnote', 'link-35');">addnote</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test note 1"</tt><tt class="py-op">,</tt> <tt class="py-name">origin</tt><tt class="py-op">=</tt><tt class="py-string">"translator"</tt><tt class="py-op">)</tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-36" class="py-name"><a title="translate.storage.base.TranslationUnit.addnote
+translate.storage.cpo.pounit.addnote
+translate.storage.php.phpunit.addnote
+translate.storage.poxliff.PoXliffUnit.addnote
+translate.storage.properties.propunit.addnote
+translate.storage.pypo.pounit.addnote
+translate.storage.qph.QphUnit.addnote
+translate.storage.rc.rcunit.addnote
+translate.storage.tmx.tmxunit.addnote
+translate.storage.ts2.tsunit.addnote
+translate.storage.xliff.xliffunit.addnote" class="py-name" href="#" onclick="return doclink('link-36', 'addnote', 'link-35');">addnote</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test note 2"</tt><tt class="py-op">,</tt> <tt class="py-name">origin</tt><tt class="py-op">=</tt><tt class="py-string">"translator"</tt><tt class="py-op">)</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-37" class="py-name"><a title="translate.storage.base.TranslationUnit.addnote
+translate.storage.cpo.pounit.addnote
+translate.storage.php.phpunit.addnote
+translate.storage.poxliff.PoXliffUnit.addnote
+translate.storage.properties.propunit.addnote
+translate.storage.pypo.pounit.addnote
+translate.storage.qph.QphUnit.addnote
+translate.storage.rc.rcunit.addnote
+translate.storage.tmx.tmxunit.addnote
+translate.storage.ts2.tsunit.addnote
+translate.storage.xliff.xliffunit.addnote" class="py-name" href="#" onclick="return doclink('link-37', 'addnote', 'link-35');">addnote</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test note 3"</tt><tt class="py-op">,</tt> <tt class="py-name">origin</tt><tt class="py-op">=</tt><tt class="py-string">"translator"</tt><tt class="py-op">)</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">        <tt class="py-name">expected_notes</tt> <tt class="py-op">=</tt> <tt class="py-string">u"Test note 1\nTest note 2\nTest note 3"</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">        <tt class="py-name">actual_notes</tt> <tt class="py-op">=</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-38" class="py-name" targets="Method translate.storage.base.TranslationUnit.getnotes()=translate.storage.base.TranslationUnit-class.html#getnotes,Method translate.storage.cpo.pounit.getnotes()=translate.storage.cpo.pounit-class.html#getnotes,Method translate.storage.php.phpunit.getnotes()=translate.storage.php.phpunit-class.html#getnotes,Method translate.storage.poxliff.PoXliffUnit.getnotes()=translate.storage.poxliff.PoXliffUnit-class.html#getnotes,Method translate.storage.properties.propunit.getnotes()=translate.storage.properties.propunit-class.html#getnotes,Method translate.storage.pypo.pounit.getnotes()=translate.storage.pypo.pounit-class.html#getnotes,Method translate.storage.qph.QphUnit.getnotes()=translate.storage.qph.QphUnit-class.html#getnotes,Method translate.storage.rc.rcunit.getnotes()=translate.storage.rc.rcunit-class.html#getnotes,Method translate.storage.tmx.tmxunit.getnotes()=translate.storage.tmx.tmxunit-class.html#getnotes,Method translate.storage.ts2.tsunit.getnotes()=translate.storage.ts2.tsunit-class.html#getnotes,Method translate.storage.xliff.xliffunit.getnotes()=translate.storage.xliff.xliffunit-class.html#getnotes"><a title="translate.storage.base.TranslationUnit.getnotes
+translate.storage.cpo.pounit.getnotes
+translate.storage.php.phpunit.getnotes
+translate.storage.poxliff.PoXliffUnit.getnotes
+translate.storage.properties.propunit.getnotes
+translate.storage.pypo.pounit.getnotes
+translate.storage.qph.QphUnit.getnotes
+translate.storage.rc.rcunit.getnotes
+translate.storage.tmx.tmxunit.getnotes
+translate.storage.ts2.tsunit.getnotes
+translate.storage.xliff.xliffunit.getnotes" class="py-name" href="#" onclick="return doclink('link-38', 'getnotes', 'link-38');">getnotes</a></tt><tt class="py-op">(</tt><tt class="py-name">origin</tt><tt class="py-op">=</tt><tt class="py-string">"translator"</tt><tt class="py-op">)</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">actual_notes</tt> <tt class="py-op">==</tt> <tt class="py-name">expected_notes</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line"> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">        <tt class="py-comment"># Test with no origin.</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-39" class="py-name" targets="Method translate.storage.base.TranslationUnit.removenotes()=translate.storage.base.TranslationUnit-class.html#removenotes,Method translate.storage.cpo.pounit.removenotes()=translate.storage.cpo.pounit-class.html#removenotes,Method translate.storage.php.phpunit.removenotes()=translate.storage.php.phpunit-class.html#removenotes,Method translate.storage.properties.propunit.removenotes()=translate.storage.properties.propunit-class.html#removenotes,Method translate.storage.pypo.pounit.removenotes()=translate.storage.pypo.pounit-class.html#removenotes,Method translate.storage.qph.QphUnit.removenotes()=translate.storage.qph.QphUnit-class.html#removenotes,Method translate.storage.rc.rcunit.removenotes()=translate.storage.rc.rcunit-class.html#removenotes,Method translate.storage.tmx.tmxunit.removenotes()=translate.storage.tmx.tmxunit-class.html#removenotes,Method translate.storage.ts2.tsunit.removenotes()=translate.storage.ts2.tsunit-class.html#removenotes,Method translate.storage.xliff.xliffunit.removenotes()=translate.storage.xliff.xliffunit-class.html#removenotes"><a title="translate.storage.base.TranslationUnit.removenotes
+translate.storage.cpo.pounit.removenotes
+translate.storage.php.phpunit.removenotes
+translate.storage.properties.propunit.removenotes
+translate.storage.pypo.pounit.removenotes
+translate.storage.qph.QphUnit.removenotes
+translate.storage.rc.rcunit.removenotes
+translate.storage.tmx.tmxunit.removenotes
+translate.storage.ts2.tsunit.removenotes
+translate.storage.xliff.xliffunit.removenotes" class="py-name" href="#" onclick="return doclink('link-39', 'removenotes', 'link-39');">removenotes</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-keyword">not</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-40" class="py-name"><a title="translate.storage.base.TranslationUnit.getnotes
+translate.storage.cpo.pounit.getnotes
+translate.storage.php.phpunit.getnotes
+translate.storage.poxliff.PoXliffUnit.getnotes
+translate.storage.properties.propunit.getnotes
+translate.storage.pypo.pounit.getnotes
+translate.storage.qph.QphUnit.getnotes
+translate.storage.rc.rcunit.getnotes
+translate.storage.tmx.tmxunit.getnotes
+translate.storage.ts2.tsunit.getnotes
+translate.storage.xliff.xliffunit.getnotes" class="py-name" href="#" onclick="return doclink('link-40', 'getnotes', 'link-38');">getnotes</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-41" class="py-name"><a title="translate.storage.base.TranslationUnit.addnote
+translate.storage.cpo.pounit.addnote
+translate.storage.php.phpunit.addnote
+translate.storage.poxliff.PoXliffUnit.addnote
+translate.storage.properties.propunit.addnote
+translate.storage.pypo.pounit.addnote
+translate.storage.qph.QphUnit.addnote
+translate.storage.rc.rcunit.addnote
+translate.storage.tmx.tmxunit.addnote
+translate.storage.ts2.tsunit.addnote
+translate.storage.xliff.xliffunit.addnote" class="py-name" href="#" onclick="return doclink('link-41', 'addnote', 'link-35');">addnote</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test note 1"</tt><tt class="py-op">)</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-42" class="py-name"><a title="translate.storage.base.TranslationUnit.addnote
+translate.storage.cpo.pounit.addnote
+translate.storage.php.phpunit.addnote
+translate.storage.poxliff.PoXliffUnit.addnote
+translate.storage.properties.propunit.addnote
+translate.storage.pypo.pounit.addnote
+translate.storage.qph.QphUnit.addnote
+translate.storage.rc.rcunit.addnote
+translate.storage.tmx.tmxunit.addnote
+translate.storage.ts2.tsunit.addnote
+translate.storage.xliff.xliffunit.addnote" class="py-name" href="#" onclick="return doclink('link-42', 'addnote', 'link-35');">addnote</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test note 2"</tt><tt class="py-op">)</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line">        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-43" class="py-name"><a title="translate.storage.base.TranslationUnit.addnote
+translate.storage.cpo.pounit.addnote
+translate.storage.php.phpunit.addnote
+translate.storage.poxliff.PoXliffUnit.addnote
+translate.storage.properties.propunit.addnote
+translate.storage.pypo.pounit.addnote
+translate.storage.qph.QphUnit.addnote
+translate.storage.rc.rcunit.addnote
+translate.storage.tmx.tmxunit.addnote
+translate.storage.ts2.tsunit.addnote
+translate.storage.xliff.xliffunit.addnote" class="py-name" href="#" onclick="return doclink('link-43', 'addnote', 'link-35');">addnote</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test note 3"</tt><tt class="py-op">)</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">        <tt class="py-name">expected_notes</tt> <tt class="py-op">=</tt> <tt class="py-string">u"Test note 1\nTest note 2\nTest note 3"</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">        <tt class="py-name">actual_notes</tt> <tt class="py-op">=</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-44" class="py-name"><a title="translate.storage.base.TranslationUnit.getnotes
+translate.storage.cpo.pounit.getnotes
+translate.storage.php.phpunit.getnotes
+translate.storage.poxliff.PoXliffUnit.getnotes
+translate.storage.properties.propunit.getnotes
+translate.storage.pypo.pounit.getnotes
+translate.storage.qph.QphUnit.getnotes
+translate.storage.rc.rcunit.getnotes
+translate.storage.tmx.tmxunit.getnotes
+translate.storage.ts2.tsunit.getnotes
+translate.storage.xliff.xliffunit.getnotes" class="py-name" href="#" onclick="return doclink('link-44', 'getnotes', 'link-38');">getnotes</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">actual_notes</tt> <tt class="py-op">==</tt> <tt class="py-name">expected_notes</tt> </tt>
+</div></div><a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore"></a><div id="TestTranslationStore-def"><a name="L129"></a><tt class="py-lineno">129</tt> <a class="py-toggle" href="#" id="TestTranslationStore-toggle" onclick="return toggle('TestTranslationStore');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html">TestTranslationStore</a><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TestTranslationStore-expanded"><a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line">    <tt class="py-docstring">"""Tests a TranslationStore.</tt> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line"><tt class="py-docstring">    Derived classes can reuse these tests by pointing StoreClass to a derived Store"""</tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line">    <tt class="py-name">StoreClass</tt> <tt class="py-op">=</tt> <tt id="link-45" class="py-name"><a title="translate.storage.base" class="py-name" href="#" onclick="return doclink('link-45', 'base', 'link-2');">base</a></tt><tt class="py-op">.</tt><tt id="link-46" class="py-name" targets="Class translate.storage.base.TranslationStore=translate.storage.base.TranslationStore-class.html"><a title="translate.storage.base.TranslationStore" class="py-name" href="#" onclick="return doclink('link-46', 'TranslationStore', 'link-46');">TranslationStore</a></tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore.setup_method"></a><div id="TestTranslationStore.setup_method-def"><a name="L134"></a><tt class="py-lineno">134</tt> <a class="py-toggle" href="#" id="TestTranslationStore.setup_method-toggle" onclick="return toggle('TestTranslationStore.setup_method');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html#setup_method">setup_method</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">method</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore.setup_method-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationStore.setup_method-expanded"><a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line">        <tt class="py-docstring">"""Allocates a unique self.filename for the method, making sure it doesn't exist"""</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-47" class="py-name" targets="Variable translate.filters.test_pofilter.BaseTestFilter.filename=translate.filters.test_pofilter.BaseTestFilter-class.html#filename,Variable translate.filters.test_pofilter.TestPOFilter.filename=translate.filters.test_pofilter.TestPOFilter-class.html#filename,Variable translate.filters.test_pofilter.TestTMXFilter.filename=translate.filters.test_pofilter.TestTMXFilter-class.html#filename,Variable translate.filters.test_pofilter.TestXliffFilter.filename=translate.filters.test_pofilter.TestXliffFilter-class.html#filename,Variable translate.storage.test_factory.TestPOFactory.filename=translate.storage.test_factory.TestPOFactory-class.html#filename,Variable translate.storage.test_factory.TestPOXliffFactory.filename=translate.storage.test_factory.TestPOXliffFactory-class.html#filename,Variable translate.storage.test_factory.TestWordfastFactory.filename=translate.storage.test_factory.TestWordfastFactory-class.html#filename,Variable translate.storage.test_factory.TestXliffFactory.filename=translate.storage.test_factory.TestXliffFactory-class.html#filename"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-47', 'filename', 'link-47');">filename</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"%s_%s.test"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__class__</tt><tt class="py-op">.</tt><tt class="py-name">__name__</tt><tt class="py-op">,</tt> <tt class="py-name">method</tt><tt class="py-op">.</tt><tt class="py-name">__name__</tt><tt class="py-op">)</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">exists</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-48" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-48', 'filename', 'link-47');">filename</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line">            <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">remove</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-49" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-49', 'filename', 'link-47');">filename</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore.teardown_method"></a><div id="TestTranslationStore.teardown_method-def"><a name="L140"></a><tt class="py-lineno">140</tt> <a class="py-toggle" href="#" id="TestTranslationStore.teardown_method-toggle" onclick="return toggle('TestTranslationStore.teardown_method');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html#teardown_method">teardown_method</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">method</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore.teardown_method-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationStore.teardown_method-expanded"><a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line">        <tt class="py-docstring">"""Makes sure that if self.filename was created by the method, it is cleaned up"""</tt> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">exists</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-50" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-50', 'filename', 'link-47');">filename</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line">            <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">remove</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-51" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-51', 'filename', 'link-47');">filename</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore.test_create_blank"></a><div id="TestTranslationStore.test_create_blank-def"><a name="L145"></a><tt class="py-lineno">145</tt> <a class="py-toggle" href="#" id="TestTranslationStore.test_create_blank-toggle" onclick="return toggle('TestTranslationStore.test_create_blank');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html#test_create_blank">test_create_blank</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore.test_create_blank-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationStore.test_create_blank-expanded"><a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests creating a new blank store"""</tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line">        <tt class="py-name">store</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">StoreClass</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-52" class="py-name" targets="Variable translate.tools.poterminology.TerminologyOptionParser.units=translate.tools.poterminology.TerminologyOptionParser-class.html#units"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-52', 'units', 'link-52');">units</a></tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-number">0</tt> </tt>
+</div><a name="L149"></a><tt class="py-lineno">149</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore.test_add"></a><div id="TestTranslationStore.test_add-def"><a name="L150"></a><tt class="py-lineno">150</tt> <a class="py-toggle" href="#" id="TestTranslationStore.test_add-toggle" onclick="return toggle('TestTranslationStore.test_add');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html#test_add">test_add</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore.test_add-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationStore.test_add-expanded"><a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests adding a new unit with a source string"""</tt> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line">        <tt class="py-name">store</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">StoreClass</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-53" class="py-name" targets="Method translate.storage.base.TranslationStore.addsourceunit()=translate.storage.base.TranslationStore-class.html#addsourceunit,Method translate.storage.lisa.LISAfile.addsourceunit()=translate.storage.lisa.LISAfile-class.html#addsourceunit,Method translate.storage.xliff.xlifffile.addsourceunit()=translate.storage.xliff.xlifffile-class.html#addsourceunit"><a title="translate.storage.base.TranslationStore.addsourceunit
+translate.storage.lisa.LISAfile.addsourceunit
+translate.storage.xliff.xlifffile.addsourceunit" class="py-name" href="#" onclick="return doclink('link-53', 'addsourceunit', 'link-53');">addsourceunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test String"</tt><tt class="py-op">)</tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">unit</tt><tt class="py-op">)</tt> </tt>
+<a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">store</tt><tt class="py-op">)</tt> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-54" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-54', 'units', 'link-52');">units</a></tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-number">1</tt> </tt>
+<a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-55" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-55', 'source', 'link-16');">source</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"Test String"</tt> </tt>
+</div><a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore.test_find"></a><div id="TestTranslationStore.test_find-def"><a name="L159"></a><tt class="py-lineno">159</tt> <a class="py-toggle" href="#" id="TestTranslationStore.test_find-toggle" onclick="return toggle('TestTranslationStore.test_find');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html#test_find">test_find</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore.test_find-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationStore.test_find-expanded"><a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests searching for a given source string"""</tt> </tt>
+<a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line">        <tt class="py-name">store</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">StoreClass</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line">        <tt class="py-name">unit1</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-56" class="py-name"><a title="translate.storage.base.TranslationStore.addsourceunit
+translate.storage.lisa.LISAfile.addsourceunit
+translate.storage.xliff.xlifffile.addsourceunit" class="py-name" href="#" onclick="return doclink('link-56', 'addsourceunit', 'link-53');">addsourceunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test String"</tt><tt class="py-op">)</tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line">        <tt class="py-name">unit2</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-57" class="py-name"><a title="translate.storage.base.TranslationStore.addsourceunit
+translate.storage.lisa.LISAfile.addsourceunit
+translate.storage.xliff.xlifffile.addsourceunit" class="py-name" href="#" onclick="return doclink('link-57', 'addsourceunit', 'link-53');">addsourceunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Blessed String"</tt><tt class="py-op">)</tt> </tt>
+<a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-58" class="py-name" targets="Method translate.storage.base.TranslationStore.findunit()=translate.storage.base.TranslationStore-class.html#findunit"><a title="translate.storage.base.TranslationStore.findunit" class="py-name" href="#" onclick="return doclink('link-58', 'findunit', 'link-58');">findunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test String"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-name">unit1</tt> </tt>
+<a name="L165"></a><tt class="py-lineno">165</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-59" class="py-name"><a title="translate.storage.base.TranslationStore.findunit" class="py-name" href="#" onclick="return doclink('link-59', 'findunit', 'link-58');">findunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Blessed String"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-name">unit2</tt> </tt>
+<a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-60" class="py-name"><a title="translate.storage.base.TranslationStore.findunit" class="py-name" href="#" onclick="return doclink('link-60', 'findunit', 'link-58');">findunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Nest String"</tt><tt class="py-op">)</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt> </tt>
+</div><a name="L167"></a><tt class="py-lineno">167</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore.test_translate"></a><div id="TestTranslationStore.test_translate-def"><a name="L168"></a><tt class="py-lineno">168</tt> <a class="py-toggle" href="#" id="TestTranslationStore.test_translate-toggle" onclick="return toggle('TestTranslationStore.test_translate');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html#test_translate">test_translate</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore.test_translate-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationStore.test_translate-expanded"><a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests the translate method and non-ascii characters."""</tt> </tt>
+<a name="L170"></a><tt class="py-lineno">170</tt>  <tt class="py-line">        <tt class="py-name">store</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">StoreClass</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-61" class="py-name"><a title="translate.storage.base.TranslationStore.addsourceunit
+translate.storage.lisa.LISAfile.addsourceunit
+translate.storage.xliff.xlifffile.addsourceunit" class="py-name" href="#" onclick="return doclink('link-61', 'addsourceunit', 'link-53');">addsourceunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"scissor"</tt><tt class="py-op">)</tt> </tt>
+<a name="L172"></a><tt class="py-lineno">172</tt>  <tt class="py-line">        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-62" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-62', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">u"sk&#234;r"</tt> </tt>
+<a name="L173"></a><tt class="py-lineno">173</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-63" class="py-name"><a title="translate.storage.base.TranslationStore.addsourceunit
+translate.storage.lisa.LISAfile.addsourceunit
+translate.storage.xliff.xlifffile.addsourceunit" class="py-name" href="#" onclick="return doclink('link-63', 'addsourceunit', 'link-53');">addsourceunit</a></tt><tt class="py-op">(</tt><tt class="py-string">u"Bezi&#233;r curve"</tt><tt class="py-op">)</tt> </tt>
+<a name="L174"></a><tt class="py-lineno">174</tt>  <tt class="py-line">        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-64" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-64', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">u"Bezi&#233;r-kurwe"</tt> </tt>
+<a name="L175"></a><tt class="py-lineno">175</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-65" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-65', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"scissor"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">u"sk&#234;r"</tt> </tt>
+<a name="L176"></a><tt class="py-lineno">176</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-66" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-66', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">u"Bezi&#233;r curve"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">u"Bezi&#233;r-kurwe"</tt> </tt>
+</div><a name="L177"></a><tt class="py-lineno">177</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore.reparse"></a><div id="TestTranslationStore.reparse-def"><a name="L178"></a><tt class="py-lineno">178</tt> <a class="py-toggle" href="#" id="TestTranslationStore.reparse-toggle" onclick="return toggle('TestTranslationStore.reparse');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html#reparse">reparse</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">store</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore.reparse-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationStore.reparse-expanded"><a name="L179"></a><tt class="py-lineno">179</tt>  <tt class="py-line">        <tt class="py-docstring">"""converts the store to a string and back to a store again"""</tt> </tt>
+<a name="L180"></a><tt class="py-lineno">180</tt>  <tt class="py-line">        <tt class="py-name">storestring</tt> <tt class="py-op">=</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">store</tt><tt class="py-op">)</tt> </tt>
+<a name="L181"></a><tt class="py-lineno">181</tt>  <tt class="py-line">        <tt class="py-name">newstore</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">StoreClass</tt><tt class="py-op">.</tt><tt id="link-67" class="py-name" targets="Class Method translate.storage.base.TranslationStore.parsestring()=translate.storage.base.TranslationStore-class.html#parsestring,Class Method translate.storage.xliff.xlifffile.parsestring()=translate.storage.xliff.xlifffile-class.html#parsestring"><a title="translate.storage.base.TranslationStore.parsestring
+translate.storage.xliff.xlifffile.parsestring" class="py-name" href="#" onclick="return doclink('link-67', 'parsestring', 'link-67');">parsestring</a></tt><tt class="py-op">(</tt><tt class="py-name">storestring</tt><tt class="py-op">)</tt> </tt>
+<a name="L182"></a><tt class="py-lineno">182</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">newstore</tt> </tt>
+</div><a name="L183"></a><tt class="py-lineno">183</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore.check_equality"></a><div id="TestTranslationStore.check_equality-def"><a name="L184"></a><tt class="py-lineno">184</tt> <a class="py-toggle" href="#" id="TestTranslationStore.check_equality-toggle" onclick="return toggle('TestTranslationStore.check_equality');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html#check_equality">check_equality</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">store1</tt><tt class="py-op">,</tt> <tt class="py-param">store2</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore.check_equality-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationStore.check_equality-expanded"><a name="L185"></a><tt class="py-lineno">185</tt>  <tt class="py-line">        <tt class="py-docstring">"""asserts that store1 and store2 are the same"""</tt> </tt>
+<a name="L186"></a><tt class="py-lineno">186</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">store1</tt><tt class="py-op">.</tt><tt id="link-68" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-68', 'units', 'link-52');">units</a></tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">store2</tt><tt class="py-op">.</tt><tt id="link-69" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-69', 'units', 'link-52');">units</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L187"></a><tt class="py-lineno">187</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">n</tt><tt class="py-op">,</tt> <tt class="py-name">store1unit</tt> <tt class="py-keyword">in</tt> <tt class="py-name">enumerate</tt><tt class="py-op">(</tt><tt class="py-name">store1</tt><tt class="py-op">.</tt><tt id="link-70" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-70', 'units', 'link-52');">units</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L188"></a><tt class="py-lineno">188</tt>  <tt class="py-line">            <tt class="py-name">store2unit</tt> <tt class="py-op">=</tt> <tt class="py-name">store2</tt><tt class="py-op">.</tt><tt id="link-71" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-71', 'units', 'link-52');">units</a></tt><tt class="py-op">[</tt><tt class="py-name">n</tt><tt class="py-op">]</tt> </tt>
+<a name="L189"></a><tt class="py-lineno">189</tt>  <tt class="py-line">            <tt id="link-72" class="py-name" targets="Module translate.search.match=translate.search.match-module.html"><a title="translate.search.match" class="py-name" href="#" onclick="return doclink('link-72', 'match', 'link-72');">match</a></tt> <tt class="py-op">=</tt> <tt class="py-name">store1unit</tt> <tt class="py-op">==</tt> <tt class="py-name">store2unit</tt> </tt>
+<a name="L190"></a><tt class="py-lineno">190</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt id="link-73" class="py-name"><a title="translate.search.match" class="py-name" href="#" onclick="return doclink('link-73', 'match', 'link-72');">match</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L191"></a><tt class="py-lineno">191</tt>  <tt class="py-line">                <tt class="py-keyword">print</tt> <tt class="py-string">"match failed between elements %d of %d"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">n</tt><tt class="py-op">+</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">store1</tt><tt class="py-op">.</tt><tt id="link-74" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-74', 'units', 'link-52');">units</a></tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L192"></a><tt class="py-lineno">192</tt>  <tt class="py-line">                <tt class="py-keyword">print</tt> <tt class="py-string">"store1:"</tt> </tt>
+<a name="L193"></a><tt class="py-lineno">193</tt>  <tt class="py-line">                <tt class="py-keyword">print</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">store1</tt><tt class="py-op">)</tt> </tt>
+<a name="L194"></a><tt class="py-lineno">194</tt>  <tt class="py-line">                <tt class="py-keyword">print</tt> <tt class="py-string">"store2:"</tt> </tt>
+<a name="L195"></a><tt class="py-lineno">195</tt>  <tt class="py-line">                <tt class="py-keyword">print</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">store2</tt><tt class="py-op">)</tt> </tt>
+<a name="L196"></a><tt class="py-lineno">196</tt>  <tt class="py-line">                <tt class="py-keyword">print</tt> <tt class="py-string">"store1.units[%d].__dict__:"</tt> <tt class="py-op">%</tt> <tt class="py-name">n</tt><tt class="py-op">,</tt> <tt class="py-name">store1unit</tt><tt class="py-op">.</tt><tt class="py-name">__dict__</tt> </tt>
+<a name="L197"></a><tt class="py-lineno">197</tt>  <tt class="py-line">                <tt class="py-keyword">print</tt> <tt class="py-string">"store2.units[%d].__dict__:"</tt> <tt class="py-op">%</tt> <tt class="py-name">n</tt><tt class="py-op">,</tt> <tt class="py-name">store2unit</tt><tt class="py-op">.</tt><tt class="py-name">__dict__</tt> </tt>
+<a name="L198"></a><tt class="py-lineno">198</tt>  <tt class="py-line">                <tt class="py-keyword">assert</tt> <tt class="py-name">store1unit</tt> <tt class="py-op">==</tt> <tt class="py-name">store2unit</tt> </tt>
+</div><a name="L199"></a><tt class="py-lineno">199</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore.test_parse"></a><div id="TestTranslationStore.test_parse-def"><a name="L200"></a><tt class="py-lineno">200</tt> <a class="py-toggle" href="#" id="TestTranslationStore.test_parse-toggle" onclick="return toggle('TestTranslationStore.test_parse');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html#test_parse">test_parse</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore.test_parse-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationStore.test_parse-expanded"><a name="L201"></a><tt class="py-lineno">201</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests converting to a string and parsing the resulting string"""</tt> </tt>
+<a name="L202"></a><tt class="py-lineno">202</tt>  <tt class="py-line">        <tt class="py-name">store</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">StoreClass</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L203"></a><tt class="py-lineno">203</tt>  <tt class="py-line">        <tt class="py-name">unit1</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-75" class="py-name"><a title="translate.storage.base.TranslationStore.addsourceunit
+translate.storage.lisa.LISAfile.addsourceunit
+translate.storage.xliff.xlifffile.addsourceunit" class="py-name" href="#" onclick="return doclink('link-75', 'addsourceunit', 'link-53');">addsourceunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test String"</tt><tt class="py-op">)</tt> </tt>
+<a name="L204"></a><tt class="py-lineno">204</tt>  <tt class="py-line">        <tt class="py-name">unit1</tt><tt class="py-op">.</tt><tt id="link-76" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-76', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Test String"</tt> </tt>
+<a name="L205"></a><tt class="py-lineno">205</tt>  <tt class="py-line">        <tt class="py-name">unit2</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-77" class="py-name"><a title="translate.storage.base.TranslationStore.addsourceunit
+translate.storage.lisa.LISAfile.addsourceunit
+translate.storage.xliff.xlifffile.addsourceunit" class="py-name" href="#" onclick="return doclink('link-77', 'addsourceunit', 'link-53');">addsourceunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test String 2"</tt><tt class="py-op">)</tt> </tt>
+<a name="L206"></a><tt class="py-lineno">206</tt>  <tt class="py-line">        <tt class="py-name">unit2</tt><tt class="py-op">.</tt><tt id="link-78" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-78', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Test String 2"</tt> </tt>
+<a name="L207"></a><tt class="py-lineno">207</tt>  <tt class="py-line">        <tt class="py-name">newstore</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-79" class="py-name" targets="Method translate.storage.test_base.TestTranslationStore.reparse()=translate.storage.test_base.TestTranslationStore-class.html#reparse"><a title="translate.storage.test_base.TestTranslationStore.reparse" class="py-name" href="#" onclick="return doclink('link-79', 'reparse', 'link-79');">reparse</a></tt><tt class="py-op">(</tt><tt class="py-name">store</tt><tt class="py-op">)</tt> </tt>
+<a name="L208"></a><tt class="py-lineno">208</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-80" class="py-name" targets="Method translate.storage.test_base.TestTranslationStore.check_equality()=translate.storage.test_base.TestTranslationStore-class.html#check_equality"><a title="translate.storage.test_base.TestTranslationStore.check_equality" class="py-name" href="#" onclick="return doclink('link-80', 'check_equality', 'link-80');">check_equality</a></tt><tt class="py-op">(</tt><tt class="py-name">store</tt><tt class="py-op">,</tt> <tt class="py-name">newstore</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L209"></a><tt class="py-lineno">209</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore.test_files"></a><div id="TestTranslationStore.test_files-def"><a name="L210"></a><tt class="py-lineno">210</tt> <a class="py-toggle" href="#" id="TestTranslationStore.test_files-toggle" onclick="return toggle('TestTranslationStore.test_files');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html#test_files">test_files</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore.test_files-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationStore.test_files-expanded"><a name="L211"></a><tt class="py-lineno">211</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests saving to and loading from files"""</tt> </tt>
+<a name="L212"></a><tt class="py-lineno">212</tt>  <tt class="py-line">        <tt class="py-name">store</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">StoreClass</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L213"></a><tt class="py-lineno">213</tt>  <tt class="py-line">        <tt class="py-name">unit1</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-81" class="py-name"><a title="translate.storage.base.TranslationStore.addsourceunit
+translate.storage.lisa.LISAfile.addsourceunit
+translate.storage.xliff.xlifffile.addsourceunit" class="py-name" href="#" onclick="return doclink('link-81', 'addsourceunit', 'link-53');">addsourceunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test String"</tt><tt class="py-op">)</tt> </tt>
+<a name="L214"></a><tt class="py-lineno">214</tt>  <tt class="py-line">        <tt class="py-name">unit1</tt><tt class="py-op">.</tt><tt id="link-82" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-82', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Test String"</tt> </tt>
+<a name="L215"></a><tt class="py-lineno">215</tt>  <tt class="py-line">        <tt class="py-name">unit2</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-83" class="py-name"><a title="translate.storage.base.TranslationStore.addsourceunit
+translate.storage.lisa.LISAfile.addsourceunit
+translate.storage.xliff.xlifffile.addsourceunit" class="py-name" href="#" onclick="return doclink('link-83', 'addsourceunit', 'link-53');">addsourceunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test String 2"</tt><tt class="py-op">)</tt> </tt>
+<a name="L216"></a><tt class="py-lineno">216</tt>  <tt class="py-line">        <tt class="py-name">unit2</tt><tt class="py-op">.</tt><tt id="link-84" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-84', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Test String 2"</tt> </tt>
+<a name="L217"></a><tt class="py-lineno">217</tt>  <tt class="py-line">        <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-85" class="py-name" targets="Method translate.storage.base.TranslationStore.savefile()=translate.storage.base.TranslationStore-class.html#savefile"><a title="translate.storage.base.TranslationStore.savefile" class="py-name" href="#" onclick="return doclink('link-85', 'savefile', 'link-85');">savefile</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-86" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-86', 'filename', 'link-47');">filename</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L218"></a><tt class="py-lineno">218</tt>  <tt class="py-line">        <tt class="py-name">newstore</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">StoreClass</tt><tt class="py-op">.</tt><tt id="link-87" class="py-name" targets="Class Method translate.storage.base.TranslationStore.parsefile()=translate.storage.base.TranslationStore-class.html#parsefile"><a title="translate.storage.base.TranslationStore.parsefile" class="py-name" href="#" onclick="return doclink('link-87', 'parsefile', 'link-87');">parsefile</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-88" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-88', 'filename', 'link-47');">filename</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L219"></a><tt class="py-lineno">219</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-89" class="py-name"><a title="translate.storage.test_base.TestTranslationStore.check_equality" class="py-name" href="#" onclick="return doclink('link-89', 'check_equality', 'link-80');">check_equality</a></tt><tt class="py-op">(</tt><tt class="py-name">store</tt><tt class="py-op">,</tt> <tt class="py-name">newstore</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L220"></a><tt class="py-lineno">220</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore.test_save"></a><div id="TestTranslationStore.test_save-def"><a name="L221"></a><tt class="py-lineno">221</tt> <a class="py-toggle" href="#" id="TestTranslationStore.test_save-toggle" onclick="return toggle('TestTranslationStore.test_save');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html#test_save">test_save</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore.test_save-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationStore.test_save-expanded"><a name="L222"></a><tt class="py-lineno">222</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests that we can save directly back to the original file."""</tt> </tt>
+<a name="L223"></a><tt class="py-lineno">223</tt>  <tt class="py-line">        <tt class="py-name">store</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">StoreClass</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L224"></a><tt class="py-lineno">224</tt>  <tt class="py-line">        <tt class="py-name">unit1</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-90" class="py-name"><a title="translate.storage.base.TranslationStore.addsourceunit
+translate.storage.lisa.LISAfile.addsourceunit
+translate.storage.xliff.xlifffile.addsourceunit" class="py-name" href="#" onclick="return doclink('link-90', 'addsourceunit', 'link-53');">addsourceunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test String"</tt><tt class="py-op">)</tt> </tt>
+<a name="L225"></a><tt class="py-lineno">225</tt>  <tt class="py-line">        <tt class="py-name">unit1</tt><tt class="py-op">.</tt><tt id="link-91" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-91', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Test String"</tt> </tt>
+<a name="L226"></a><tt class="py-lineno">226</tt>  <tt class="py-line">        <tt class="py-name">unit2</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-92" class="py-name"><a title="translate.storage.base.TranslationStore.addsourceunit
+translate.storage.lisa.LISAfile.addsourceunit
+translate.storage.xliff.xlifffile.addsourceunit" class="py-name" href="#" onclick="return doclink('link-92', 'addsourceunit', 'link-53');">addsourceunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Test String 2"</tt><tt class="py-op">)</tt> </tt>
+<a name="L227"></a><tt class="py-lineno">227</tt>  <tt class="py-line">        <tt class="py-name">unit2</tt><tt class="py-op">.</tt><tt id="link-93" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-93', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Test String 2"</tt> </tt>
+<a name="L228"></a><tt class="py-lineno">228</tt>  <tt class="py-line">        <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-94" class="py-name"><a title="translate.storage.base.TranslationStore.savefile" class="py-name" href="#" onclick="return doclink('link-94', 'savefile', 'link-85');">savefile</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-95" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-95', 'filename', 'link-47');">filename</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L229"></a><tt class="py-lineno">229</tt>  <tt class="py-line">        <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-96" class="py-name" targets="Method translate.storage.base.TranslationStore.save()=translate.storage.base.TranslationStore-class.html#save"><a title="translate.storage.base.TranslationStore.save" class="py-name" href="#" onclick="return doclink('link-96', 'save', 'link-96');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L230"></a><tt class="py-lineno">230</tt>  <tt class="py-line">        <tt class="py-name">newstore</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">StoreClass</tt><tt class="py-op">.</tt><tt id="link-97" class="py-name"><a title="translate.storage.base.TranslationStore.parsefile" class="py-name" href="#" onclick="return doclink('link-97', 'parsefile', 'link-87');">parsefile</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-98" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-98', 'filename', 'link-47');">filename</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L231"></a><tt class="py-lineno">231</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-99" class="py-name"><a title="translate.storage.test_base.TestTranslationStore.check_equality" class="py-name" href="#" onclick="return doclink('link-99', 'check_equality', 'link-80');">check_equality</a></tt><tt class="py-op">(</tt><tt class="py-name">store</tt><tt class="py-op">,</tt> <tt class="py-name">newstore</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L232"></a><tt class="py-lineno">232</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore.test_markup"></a><div id="TestTranslationStore.test_markup-def"><a name="L233"></a><tt class="py-lineno">233</tt> <a class="py-toggle" href="#" id="TestTranslationStore.test_markup-toggle" onclick="return toggle('TestTranslationStore.test_markup');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html#test_markup">test_markup</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore.test_markup-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationStore.test_markup-expanded"><a name="L234"></a><tt class="py-lineno">234</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests that markup survives the roundtrip. Most usefull for xml types."""</tt> </tt>
+<a name="L235"></a><tt class="py-lineno">235</tt>  <tt class="py-line">        <tt class="py-name">store</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">StoreClass</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L236"></a><tt class="py-lineno">236</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-100" class="py-name"><a title="translate.storage.base.TranslationStore.addsourceunit
+translate.storage.lisa.LISAfile.addsourceunit
+translate.storage.xliff.xlifffile.addsourceunit" class="py-name" href="#" onclick="return doclink('link-100', 'addsourceunit', 'link-53');">addsourceunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"&lt;vark@hok.org&gt; %d keer %2$s"</tt><tt class="py-op">)</tt> </tt>
+<a name="L237"></a><tt class="py-lineno">237</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-101" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-101', 'source', 'link-16');">source</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"&lt;vark@hok.org&gt; %d keer %2$s"</tt> </tt>
+<a name="L238"></a><tt class="py-lineno">238</tt>  <tt class="py-line">        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-102" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-102', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"bla"</tt> </tt>
+<a name="L239"></a><tt class="py-lineno">239</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-103" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-103', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"&lt;vark@hok.org&gt; %d keer %2$s"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"bla"</tt> </tt>
+</div><a name="L240"></a><tt class="py-lineno">240</tt>  <tt class="py-line"> </tt>
+<a name="TestTranslationStore.test_nonascii"></a><div id="TestTranslationStore.test_nonascii-def"><a name="L241"></a><tt class="py-lineno">241</tt> <a class="py-toggle" href="#" id="TestTranslationStore.test_nonascii-toggle" onclick="return toggle('TestTranslationStore.test_nonascii');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_base.TestTranslationStore-class.html#test_nonascii">test_nonascii</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTranslationStore.test_nonascii-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestTranslationStore.test_nonascii-expanded"><a name="L242"></a><tt class="py-lineno">242</tt>  <tt class="py-line">        <tt class="py-name">store</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">StoreClass</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L243"></a><tt class="py-lineno">243</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-104" class="py-name"><a title="translate.storage.base.TranslationStore.addsourceunit
+translate.storage.lisa.LISAfile.addsourceunit
+translate.storage.xliff.xlifffile.addsourceunit" class="py-name" href="#" onclick="return doclink('link-104', 'addsourceunit', 'link-53');">addsourceunit</a></tt><tt class="py-op">(</tt><tt class="py-string">u"Bezi&#233;r curve"</tt><tt class="py-op">)</tt> </tt>
+<a name="L244"></a><tt class="py-lineno">244</tt>  <tt class="py-line">        <tt class="py-name">string</tt> <tt class="py-op">=</tt> <tt class="py-string">u"Bezi&#233;r-kurwe"</tt> </tt>
+<a name="L245"></a><tt class="py-lineno">245</tt>  <tt class="py-line">        <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-105" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-105', 'target', 'link-18');">target</a></tt> <tt class="py-op">=</tt> <tt class="py-name">string</tt><tt class="py-op">.</tt><tt id="link-106" class="py-name" targets="Method translate.storage.pypo.pofile.encode()=translate.storage.pypo.pofile-class.html#encode"><a title="translate.storage.pypo.pofile.encode" class="py-name" href="#" onclick="return doclink('link-106', 'encode', 'link-106');">encode</a></tt><tt class="py-op">(</tt><tt class="py-string">"utf-8"</tt><tt class="py-op">)</tt> </tt>
+<a name="L246"></a><tt class="py-lineno">246</tt>  <tt class="py-line">        <tt class="py-name">answer</tt> <tt class="py-op">=</tt> <tt class="py-name">store</tt><tt class="py-op">.</tt><tt id="link-107" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-107', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">u"Bezi&#233;r curve"</tt><tt class="py-op">)</tt> </tt>
+<a name="L247"></a><tt class="py-lineno">247</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">answer</tt><tt class="py-op">,</tt> <tt class="py-name">str</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L248"></a><tt class="py-lineno">248</tt>  <tt class="py-line">            <tt class="py-name">answer</tt> <tt class="py-op">=</tt> <tt class="py-name">answer</tt><tt class="py-op">.</tt><tt id="link-108" class="py-name" targets="Method translate.storage.pypo.pofile.decode()=translate.storage.pypo.pofile-class.html#decode"><a title="translate.storage.pypo.pofile.decode" class="py-name" href="#" onclick="return doclink('link-108', 'decode', 'link-108');">decode</a></tt><tt class="py-op">(</tt><tt class="py-string">"utf-8"</tt><tt class="py-op">)</tt> </tt>
+<a name="L249"></a><tt class="py-lineno">249</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">answer</tt> <tt class="py-op">==</tt> <tt class="py-string">u"Bezi&#233;r-kurwe"</tt> </tt>
+<a name="L250"></a><tt class="py-lineno">250</tt>  <tt class="py-line">        <tt class="py-comment">#Just test that __str__ doesn't raise exception:</tt> </tt>
+<a name="L251"></a><tt class="py-lineno">251</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-name">src</tt> <tt class="py-op">=</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">store</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L252"></a><tt class="py-lineno">252</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://translate.sourceforge.net">Translate Toolkit</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Tue Sep 23 13:51:37 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

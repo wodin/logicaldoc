@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>translate.storage.test_factory</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://translate.sourceforge.net">Translate Toolkit</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;translate ::
+        <a href="translate.storage-module.html">Package&nbsp;storage</a> ::
+        Module&nbsp;test_factory
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="translate.storage.test_factory-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="translate.storage.test_factory-module.html">Module translate.storage.test_factory</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment">#!/usr/bin/env python</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># -*- coding: utf-8 -*-</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Method translate.storage.base.TranslationStore.translate()=translate.storage.base.TranslationStore-class.html#translate,Method translate.storage.tmx.tmxfile.translate()=translate.storage.tmx.tmxfile-class.html#translate"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-0', 'translate', 'link-0');">translate</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Package translate.storage=translate.storage-module.html"><a title="translate.storage" class="py-name" href="#" onclick="return doclink('link-1', 'storage', 'link-1');">storage</a></tt> <tt class="py-keyword">import</tt> <tt id="link-2" class="py-name" targets="Module translate.storage.factory=translate.storage.factory-module.html"><a title="translate.storage.factory" class="py-name" href="#" onclick="return doclink('link-2', 'factory', 'link-2');">factory</a></tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-3" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-3', 'translate', 'link-0');">translate</a></tt><tt class="py-op">.</tt><tt id="link-4" class="py-name"><a title="translate.storage" class="py-name" href="#" onclick="return doclink('link-4', 'storage', 'link-1');">storage</a></tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Module translate.storage.directory=translate.storage.directory-module.html"><a title="translate.storage.directory" class="py-name" href="#" onclick="return doclink('link-5', 'directory', 'link-5');">directory</a></tt> <tt class="py-keyword">import</tt> <tt id="link-6" class="py-name" targets="Class translate.storage.directory.Directory=translate.storage.directory.Directory-class.html"><a title="translate.storage.directory.Directory" class="py-name" href="#" onclick="return doclink('link-6', 'Directory', 'link-6');">Directory</a></tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-7" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-7', 'translate', 'link-0');">translate</a></tt><tt class="py-op">.</tt><tt id="link-8" class="py-name" targets="Package translate.misc=translate.misc-module.html"><a title="translate.misc" class="py-name" href="#" onclick="return doclink('link-8', 'misc', 'link-8');">misc</a></tt> <tt class="py-keyword">import</tt> <tt id="link-9" class="py-name" targets="Module translate.misc.wStringIO=translate.misc.wStringIO-module.html"><a title="translate.misc.wStringIO" class="py-name" href="#" onclick="return doclink('link-9', 'wStringIO', 'link-9');">wStringIO</a></tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">gzip</tt> <tt class="py-keyword">import</tt> <tt class="py-name">GzipFile</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line">    <tt class="py-comment"># bz2 is not available on python 2.3</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-keyword">from</tt> <tt class="py-name">bz2</tt> <tt class="py-keyword">import</tt> <tt class="py-name">BZ2File</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-keyword">except</tt> <tt class="py-name">ImportError</tt><tt class="py-op">:</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line">    <tt class="py-name">BZ2File</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"> </tt>
+<a name="classname"></a><div id="classname-def"><a name="L16"></a><tt class="py-lineno"> 16</tt> <a class="py-toggle" href="#" id="classname-toggle" onclick="return toggle('classname');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_factory-module.html#classname">classname</a><tt class="py-op">(</tt><tt class="py-param">filename</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="classname-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="classname-expanded"><a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line">    <tt class="py-docstring">"""returns the classname to ease testing"""</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line">    <tt class="py-name">classinstance</tt> <tt class="py-op">=</tt> <tt id="link-10" class="py-name"><a title="translate.storage.factory" class="py-name" href="#" onclick="return doclink('link-10', 'factory', 'link-2');">factory</a></tt><tt class="py-op">.</tt><tt id="link-11" class="py-name" targets="Function translate.storage.factory.getclass()=translate.storage.factory-module.html#getclass"><a title="translate.storage.factory.getclass" class="py-name" href="#" onclick="return doclink('link-11', 'getclass', 'link-11');">getclass</a></tt><tt class="py-op">(</tt><tt id="link-12" class="py-name" targets="Variable translate.filters.test_pofilter.BaseTestFilter.filename=translate.filters.test_pofilter.BaseTestFilter-class.html#filename,Variable translate.filters.test_pofilter.TestPOFilter.filename=translate.filters.test_pofilter.TestPOFilter-class.html#filename,Variable translate.filters.test_pofilter.TestTMXFilter.filename=translate.filters.test_pofilter.TestTMXFilter-class.html#filename,Variable translate.filters.test_pofilter.TestXliffFilter.filename=translate.filters.test_pofilter.TestXliffFilter-class.html#filename,Variable translate.storage.test_factory.TestPOFactory.filename=translate.storage.test_factory.TestPOFactory-class.html#filename,Variable translate.storage.test_factory.TestPOXliffFactory.filename=translate.storage.test_factory.TestPOXliffFactory-class.html#filename,Variable translate.storage.test_factory.TestWordfastFactory.filename=translate.storage.test_factory.TestWordfastFactory-class.html#filename,Variable translate.storage.test_factory.TestXliffFactory.filename=translate.storage.test_factory.TestXliffFactory-class.html#filename"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-12', 'filename', 'link-12');">filename</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">classinstance</tt><tt class="py-op">.</tt><tt class="py-name">__name__</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">lower</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"> </tt>
+<a name="givefile"></a><div id="givefile-def"><a name="L21"></a><tt class="py-lineno"> 21</tt> <a class="py-toggle" href="#" id="givefile-toggle" onclick="return toggle('givefile');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_factory-module.html#givefile">givefile</a><tt class="py-op">(</tt><tt class="py-param">filename</tt><tt class="py-op">,</tt> <tt class="py-param">content</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="givefile-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="givefile-expanded"><a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line">    <tt class="py-docstring">"""returns a file dummy object with the given content"""</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line">    <tt class="py-name">file</tt> <tt class="py-op">=</tt> <tt id="link-13" class="py-name"><a title="translate.misc.wStringIO" class="py-name" href="#" onclick="return doclink('link-13', 'wStringIO', 'link-9');">wStringIO</a></tt><tt class="py-op">.</tt><tt id="link-14" class="py-name" targets="Class translate.misc.wStringIO.StringIO=translate.misc.wStringIO.StringIO-class.html"><a title="translate.misc.wStringIO.StringIO" class="py-name" href="#" onclick="return doclink('link-14', 'StringIO', 'link-14');">StringIO</a></tt><tt class="py-op">(</tt><tt class="py-name">content</tt><tt class="py-op">)</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line">    <tt class="py-name">file</tt><tt class="py-op">.</tt><tt id="link-15" class="py-name" targets="Variable translate.misc.ini.LineContainer.name=translate.misc.ini.LineContainer-class.html#name,Variable translate.storage.cpo.name=translate.storage.cpo-module.html#name"><a title="translate.misc.ini.LineContainer.name
+translate.storage.cpo.name" class="py-name" href="#" onclick="return doclink('link-15', 'name', 'link-15');">name</a></tt> <tt class="py-op">=</tt> <tt id="link-16" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-16', 'filename', 'link-12');">filename</a></tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">file</tt> </tt>
+</div><a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line"> </tt>
+<a name="BaseTestFactory"></a><div id="BaseTestFactory-def"><a name="L27"></a><tt class="py-lineno"> 27</tt> <a class="py-toggle" href="#" id="BaseTestFactory-toggle" onclick="return toggle('BaseTestFactory');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="translate.storage.test_factory.BaseTestFactory-class.html">BaseTestFactory</a><tt class="py-op">:</tt> </tt>
+</div><div id="BaseTestFactory-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="BaseTestFactory-expanded"><a name="BaseTestFactory.setup_method"></a><div id="BaseTestFactory.setup_method-def"><a name="L28"></a><tt class="py-lineno"> 28</tt> <a class="py-toggle" href="#" id="BaseTestFactory.setup_method-toggle" onclick="return toggle('BaseTestFactory.setup_method');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_factory.BaseTestFactory-class.html#setup_method">setup_method</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">method</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseTestFactory.setup_method-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BaseTestFactory.setup_method-expanded"><a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line">        <tt class="py-docstring">"""sets up a test directory"""</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">testdir</tt> <tt class="py-op">=</tt> <tt class="py-string">"%s_testdir"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__class__</tt><tt class="py-op">.</tt><tt class="py-name">__name__</tt><tt class="py-op">)</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-17" class="py-name" targets="Method translate.convert.test_convert.TestConvertCommand.cleardir()=translate.convert.test_convert.TestConvertCommand-class.html#cleardir,Method translate.storage.test_directory.TestDirectory.cleardir()=translate.storage.test_directory.TestDirectory-class.html#cleardir,Class Method translate.storage.test_factory.BaseTestFactory.cleardir()=translate.storage.test_factory.BaseTestFactory-class.html#cleardir,Method translate.storage.test_zip.TestZIPFile.cleardir()=translate.storage.test_zip.TestZIPFile-class.html#cleardir"><a title="translate.convert.test_convert.TestConvertCommand.cleardir
+translate.storage.test_directory.TestDirectory.cleardir
+translate.storage.test_factory.BaseTestFactory.cleardir
+translate.storage.test_zip.TestZIPFile.cleardir" class="py-name" href="#" onclick="return doclink('link-17', 'cleardir', 'link-17');">cleardir</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">testdir</tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">        <tt class="py-name">os</tt><tt class="py-op">.</tt><tt id="link-18" class="py-name" targets="Method translate.misc.optrecurse.RecursiveOptionParser.mkdir()=translate.misc.optrecurse.RecursiveOptionParser-class.html#mkdir,Method translate.storage.test_directory.TestDirectory.mkdir()=translate.storage.test_directory.TestDirectory-class.html#mkdir,Method translate.storage.test_zip.TestZIPFile.mkdir()=translate.storage.test_zip.TestZIPFile-class.html#mkdir"><a title="translate.misc.optrecurse.RecursiveOptionParser.mkdir
+translate.storage.test_directory.TestDirectory.mkdir
+translate.storage.test_zip.TestZIPFile.mkdir" class="py-name" href="#" onclick="return doclink('link-18', 'mkdir', 'link-18');">mkdir</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">testdir</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line"> </tt>
+<a name="BaseTestFactory.teardown_method"></a><div id="BaseTestFactory.teardown_method-def"><a name="L34"></a><tt class="py-lineno"> 34</tt> <a class="py-toggle" href="#" id="BaseTestFactory.teardown_method-toggle" onclick="return toggle('BaseTestFactory.teardown_method');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_factory.BaseTestFactory-class.html#teardown_method">teardown_method</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">method</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseTestFactory.teardown_method-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BaseTestFactory.teardown_method-expanded"><a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">        <tt class="py-docstring">"""removes the attributes set up by setup_method"""</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-19" class="py-name"><a title="translate.convert.test_convert.TestConvertCommand.cleardir
+translate.storage.test_directory.TestDirectory.cleardir
+translate.storage.test_factory.BaseTestFactory.cleardir
+translate.storage.test_zip.TestZIPFile.cleardir" class="py-name" href="#" onclick="return doclink('link-19', 'cleardir', 'link-17');">cleardir</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">testdir</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line"> </tt>
+<a name="BaseTestFactory.cleardir"></a><div id="BaseTestFactory.cleardir-def"><a name="L38"></a><tt class="py-lineno"> 38</tt> <a class="py-toggle" href="#" id="BaseTestFactory.cleardir-toggle" onclick="return toggle('BaseTestFactory.cleardir');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_factory.BaseTestFactory-class.html#cleardir">cleardir</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">dirname</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseTestFactory.cleardir-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BaseTestFactory.cleardir-expanded"><a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">        <tt class="py-docstring">"""removes the given directory"""</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">exists</tt><tt class="py-op">(</tt><tt class="py-name">dirname</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">dirpath</tt><tt class="py-op">,</tt> <tt class="py-name">subdirs</tt><tt class="py-op">,</tt> <tt class="py-name">filenames</tt> <tt class="py-keyword">in</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">walk</tt><tt class="py-op">(</tt><tt class="py-name">dirname</tt><tt class="py-op">,</tt> <tt class="py-name">topdown</tt><tt class="py-op">=</tt><tt class="py-name">False</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt id="link-20" class="py-name"><a title="translate.misc.ini.LineContainer.name
+translate.storage.cpo.name" class="py-name" href="#" onclick="return doclink('link-20', 'name', 'link-15');">name</a></tt> <tt class="py-keyword">in</tt> <tt class="py-name">filenames</tt><tt class="py-op">:</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line">                    <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">remove</tt><tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt id="link-21" class="py-name" targets="Method translate.misc.autoencode.autoencode.join()=translate.misc.autoencode.autoencode-class.html#join"><a title="translate.misc.autoencode.autoencode.join" class="py-name" href="#" onclick="return doclink('link-21', 'join', 'link-21');">join</a></tt><tt class="py-op">(</tt><tt class="py-name">dirpath</tt><tt class="py-op">,</tt> <tt id="link-22" class="py-name"><a title="translate.misc.ini.LineContainer.name
+translate.storage.cpo.name" class="py-name" href="#" onclick="return doclink('link-22', 'name', 'link-15');">name</a></tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt id="link-23" class="py-name"><a title="translate.misc.ini.LineContainer.name
+translate.storage.cpo.name" class="py-name" href="#" onclick="return doclink('link-23', 'name', 'link-15');">name</a></tt> <tt class="py-keyword">in</tt> <tt class="py-name">subdirs</tt><tt class="py-op">:</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">                    <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">rmdir</tt><tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt id="link-24" class="py-name"><a title="translate.misc.autoencode.autoencode.join" class="py-name" href="#" onclick="return doclink('link-24', 'join', 'link-21');">join</a></tt><tt class="py-op">(</tt><tt class="py-name">dirpath</tt><tt class="py-op">,</tt> <tt id="link-25" class="py-name"><a title="translate.misc.ini.LineContainer.name
+translate.storage.cpo.name" class="py-name" href="#" onclick="return doclink('link-25', 'name', 'link-15');">name</a></tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">exists</tt><tt class="py-op">(</tt><tt class="py-name">dirname</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">rmdir</tt><tt class="py-op">(</tt><tt class="py-name">dirname</tt><tt class="py-op">)</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-keyword">not</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">exists</tt><tt class="py-op">(</tt><tt class="py-name">dirname</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line">    <tt id="link-26" class="py-name"><a title="translate.convert.test_convert.TestConvertCommand.cleardir
+translate.storage.test_directory.TestDirectory.cleardir
+translate.storage.test_factory.BaseTestFactory.cleardir
+translate.storage.test_zip.TestZIPFile.cleardir" class="py-name" href="#" onclick="return doclink('link-26', 'cleardir', 'link-17');">cleardir</a></tt> <tt class="py-op">=</tt> <tt class="py-name">classmethod</tt><tt class="py-op">(</tt><tt id="link-27" class="py-name"><a title="translate.convert.test_convert.TestConvertCommand.cleardir
+translate.storage.test_directory.TestDirectory.cleardir
+translate.storage.test_factory.BaseTestFactory.cleardir
+translate.storage.test_zip.TestZIPFile.cleardir" class="py-name" href="#" onclick="return doclink('link-27', 'cleardir', 'link-17');">cleardir</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line"> </tt>
+<a name="BaseTestFactory.test_getclass"></a><div id="BaseTestFactory.test_getclass-def"><a name="L50"></a><tt class="py-lineno"> 50</tt> <a class="py-toggle" href="#" id="BaseTestFactory.test_getclass-toggle" onclick="return toggle('BaseTestFactory.test_getclass');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_factory.BaseTestFactory-class.html#test_getclass">test_getclass</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseTestFactory.test_getclass-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BaseTestFactory.test_getclass-expanded"><a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-28" class="py-name" targets="Function translate.storage.test_factory.classname()=translate.storage.test_factory-module.html#classname"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-28', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.po"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"pofile"</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-29" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-29', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.pot"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"pofile"</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-30" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-30', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.dtd.po"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"pofile"</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line"> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-31" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-31', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.tmx"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"tmxfile"</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-32" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-32', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.af.tmx"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"tmxfile"</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-33" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-33', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.tbx"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"tbxfile"</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-34" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-34', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.po.xliff"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"xlifffile"</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line"> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-keyword">not</tt> <tt id="link-35" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-35', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.po"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"tmxfile"</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-keyword">not</tt> <tt id="link-36" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-36', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.po"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"xlifffile"</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line"> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-37" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-37', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.po.gz"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"pofile"</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-38" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-38', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.pot.gz"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"pofile"</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-39" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-39', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.dtd.po.gz"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"pofile"</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line"> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-40" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-40', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.tmx.gz"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"tmxfile"</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-41" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-41', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.af.tmx.gz"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"tmxfile"</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-42" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-42', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.tbx.gz"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"tbxfile"</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-43" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-43', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.po.xliff.gz"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"xlifffile"</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line"> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-keyword">not</tt> <tt id="link-44" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-44', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.po.gz"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"tmxfile"</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-keyword">not</tt> <tt id="link-45" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-45', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.po.gz"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"xlifffile"</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line"> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-46" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-46', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.po.bz2"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"pofile"</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-47" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-47', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.pot.bz2"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"pofile"</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-48" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-48', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.dtd.po.bz2"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"pofile"</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line"> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-49" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-49', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.tmx.bz2"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"tmxfile"</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-50" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-50', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.af.tmx.bz2"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"tmxfile"</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-51" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-51', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.tbx.bz2"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"tbxfile"</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-52" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-52', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.po.xliff.bz2"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"xlifffile"</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line"> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-keyword">not</tt> <tt id="link-53" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-53', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.po.bz2"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"tmxfile"</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-keyword">not</tt> <tt id="link-54" class="py-name"><a title="translate.storage.test_factory.classname" class="py-name" href="#" onclick="return doclink('link-54', 'classname', 'link-28');">classname</a></tt><tt class="py-op">(</tt><tt class="py-string">"file.po.bz2"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"xlifffile"</tt> </tt>
+</div><a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line"> </tt>
+<a name="BaseTestFactory.test_getobject"></a><div id="BaseTestFactory.test_getobject-def"><a name="L87"></a><tt class="py-lineno"> 87</tt> <a class="py-toggle" href="#" id="BaseTestFactory.test_getobject-toggle" onclick="return toggle('BaseTestFactory.test_getobject');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_factory.BaseTestFactory-class.html#test_getobject">test_getobject</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseTestFactory.test_getobject-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BaseTestFactory.test_getobject-expanded"><a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests that we get a valid object."""</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">        <tt class="py-name">fileobj</tt> <tt class="py-op">=</tt> <tt id="link-55" class="py-name" targets="Function translate.storage.test_factory.givefile()=translate.storage.test_factory-module.html#givefile"><a title="translate.storage.test_factory.givefile" class="py-name" href="#" onclick="return doclink('link-55', 'givefile', 'link-55');">givefile</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-56" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-56', 'filename', 'link-12');">filename</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-57" class="py-name" targets="Variable translate.storage.test_factory.TestPOFactory.file_content=translate.storage.test_factory.TestPOFactory-class.html#file_content,Variable translate.storage.test_factory.TestPOXliffFactory.file_content=translate.storage.test_factory.TestPOXliffFactory-class.html#file_content,Variable translate.storage.test_factory.TestWordfastFactory.file_content=translate.storage.test_factory.TestWordfastFactory-class.html#file_content,Variable translate.storage.test_factory.TestXliffFactory.file_content=translate.storage.test_factory.TestXliffFactory-class.html#file_content"><a title="translate.storage.test_factory.TestPOFactory.file_content
+translate.storage.test_factory.TestPOXliffFactory.file_content
+translate.storage.test_factory.TestWordfastFactory.file_content
+translate.storage.test_factory.TestXliffFactory.file_content" class="py-name" href="#" onclick="return doclink('link-57', 'file_content', 'link-57');">file_content</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">        <tt class="py-name">store</tt> <tt class="py-op">=</tt> <tt id="link-58" class="py-name"><a title="translate.storage.factory" class="py-name" href="#" onclick="return doclink('link-58', 'factory', 'link-2');">factory</a></tt><tt class="py-op">.</tt><tt id="link-59" class="py-name" targets="Function translate.storage.factory.getobject()=translate.storage.factory-module.html#getobject"><a title="translate.storage.factory.getobject" class="py-name" href="#" onclick="return doclink('link-59', 'getobject', 'link-59');">getobject</a></tt><tt class="py-op">(</tt><tt class="py-name">fileobj</tt><tt class="py-op">)</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">store</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">expected_instance</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line"> </tt>
+<a name="BaseTestFactory.test_get_noname_object"></a><div id="BaseTestFactory.test_get_noname_object-def"><a name="L93"></a><tt class="py-lineno"> 93</tt> <a class="py-toggle" href="#" id="BaseTestFactory.test_get_noname_object-toggle" onclick="return toggle('BaseTestFactory.test_get_noname_object');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_factory.BaseTestFactory-class.html#test_get_noname_object">test_get_noname_object</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseTestFactory.test_get_noname_object-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BaseTestFactory.test_get_noname_object-expanded"><a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests that we get a valid object from a file object without a name."""</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">        <tt class="py-name">fileobj</tt> <tt class="py-op">=</tt> <tt id="link-60" class="py-name"><a title="translate.misc.wStringIO" class="py-name" href="#" onclick="return doclink('link-60', 'wStringIO', 'link-9');">wStringIO</a></tt><tt class="py-op">.</tt><tt id="link-61" class="py-name"><a title="translate.misc.wStringIO.StringIO" class="py-name" href="#" onclick="return doclink('link-61', 'StringIO', 'link-14');">StringIO</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-62" class="py-name"><a title="translate.storage.test_factory.TestPOFactory.file_content
+translate.storage.test_factory.TestPOXliffFactory.file_content
+translate.storage.test_factory.TestWordfastFactory.file_content
+translate.storage.test_factory.TestXliffFactory.file_content" class="py-name" href="#" onclick="return doclink('link-62', 'file_content', 'link-57');">file_content</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-keyword">not</tt> <tt class="py-name">hasattr</tt><tt class="py-op">(</tt><tt class="py-name">fileobj</tt><tt class="py-op">,</tt> <tt class="py-string">'name'</tt><tt class="py-op">)</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">        <tt class="py-name">store</tt> <tt class="py-op">=</tt> <tt id="link-63" class="py-name"><a title="translate.storage.factory" class="py-name" href="#" onclick="return doclink('link-63', 'factory', 'link-2');">factory</a></tt><tt class="py-op">.</tt><tt id="link-64" class="py-name"><a title="translate.storage.factory.getobject" class="py-name" href="#" onclick="return doclink('link-64', 'getobject', 'link-59');">getobject</a></tt><tt class="py-op">(</tt><tt class="py-name">fileobj</tt><tt class="py-op">)</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">store</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">expected_instance</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line"> </tt>
+<a name="BaseTestFactory.test_gzfile"></a><div id="BaseTestFactory.test_gzfile-def"><a name="L100"></a><tt class="py-lineno">100</tt> <a class="py-toggle" href="#" id="BaseTestFactory.test_gzfile-toggle" onclick="return toggle('BaseTestFactory.test_gzfile');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_factory.BaseTestFactory-class.html#test_gzfile">test_gzfile</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseTestFactory.test_gzfile-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BaseTestFactory.test_gzfile-expanded"><a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">        <tt class="py-docstring">"""Test that we can open a gzip file correctly."""</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">        <tt id="link-65" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-65', 'filename', 'link-12');">filename</a></tt> <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt id="link-66" class="py-name"><a title="translate.misc.autoencode.autoencode.join" class="py-name" href="#" onclick="return doclink('link-66', 'join', 'link-21');">join</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">testdir</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-67" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-67', 'filename', 'link-12');">filename</a></tt> <tt class="py-op">+</tt> <tt class="py-string">'.gz'</tt><tt class="py-op">)</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">        <tt class="py-name">gzfile</tt> <tt class="py-op">=</tt> <tt class="py-name">GzipFile</tt><tt class="py-op">(</tt><tt id="link-68" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-68', 'filename', 'link-12');">filename</a></tt><tt class="py-op">,</tt> <tt class="py-name">mode</tt><tt class="py-op">=</tt><tt class="py-string">"wb"</tt><tt class="py-op">)</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">        <tt class="py-name">gzfile</tt><tt class="py-op">.</tt><tt id="link-69" class="py-name" targets="Method translate.misc.stdiotell.StdIOWrapper.write()=translate.misc.stdiotell.StdIOWrapper-class.html#write,Method translate.misc.wStringIO.StringIO.write()=translate.misc.wStringIO.StringIO-class.html#write,Method translate.misc.xmlwrapper.XMLWrapper.write()=translate.misc.xmlwrapper.XMLWrapper-class.html#write"><a title="translate.misc.stdiotell.StdIOWrapper.write
+translate.misc.wStringIO.StringIO.write
+translate.misc.xmlwrapper.XMLWrapper.write" class="py-name" href="#" onclick="return doclink('link-69', 'write', 'link-69');">write</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-70" class="py-name"><a title="translate.storage.test_factory.TestPOFactory.file_content
+translate.storage.test_factory.TestPOXliffFactory.file_content
+translate.storage.test_factory.TestWordfastFactory.file_content
+translate.storage.test_factory.TestXliffFactory.file_content" class="py-name" href="#" onclick="return doclink('link-70', 'file_content', 'link-57');">file_content</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">        <tt class="py-name">gzfile</tt><tt class="py-op">.</tt><tt id="link-71" class="py-name" targets="Method translate.misc.progressbar.DotsProgressBar.close()=translate.misc.progressbar.DotsProgressBar-class.html#close,Method translate.misc.progressbar.HashProgressBar.close()=translate.misc.progressbar.HashProgressBar-class.html#close,Method translate.misc.progressbar.NoProgressBar.close()=translate.misc.progressbar.NoProgressBar-class.html#close,Method translate.misc.stdiotell.StdIOWrapper.close()=translate.misc.stdiotell.StdIOWrapper-class.html#close,Method translate.misc.wStringIO.CatchStringOutput.close()=translate.misc.wStringIO.CatchStringOutput-class.html#close,Method translate.misc.wStringIO.StringIO.close()=translate.misc.wStringIO.StringIO-class.html#close,Method translate.misc.zipfileext.ZipFileExt.close()=translate.misc.zipfileext.ZipFileExt-class.html#close,Method translate.storage.xpi.CatchPotentialOutput.close()=translate.storage.xpi.CatchPotentialOutput-class.html#close,Method translate.storage.xpi.XpiFile.close()=translate.storage.xpi.XpiFile-class.html#close,Method translate.storage.xpi.ZipFileCatcher.close()=translate.storage.xpi.ZipFileCatcher-class.html#close"><a title="translate.misc.progressbar.DotsProgressBar.close
+translate.misc.progressbar.HashProgressBar.close
+translate.misc.progressbar.NoProgressBar.close
+translate.misc.stdiotell.StdIOWrapper.close
+translate.misc.wStringIO.CatchStringOutput.close
+translate.misc.wStringIO.StringIO.close
+translate.misc.zipfileext.ZipFileExt.close
+translate.storage.xpi.CatchPotentialOutput.close
+translate.storage.xpi.XpiFile.close
+translate.storage.xpi.ZipFileCatcher.close" class="py-name" href="#" onclick="return doclink('link-71', 'close', 'link-71');">close</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">        <tt class="py-name">store</tt> <tt class="py-op">=</tt> <tt id="link-72" class="py-name"><a title="translate.storage.factory" class="py-name" href="#" onclick="return doclink('link-72', 'factory', 'link-2');">factory</a></tt><tt class="py-op">.</tt><tt id="link-73" class="py-name"><a title="translate.storage.factory.getobject" class="py-name" href="#" onclick="return doclink('link-73', 'getobject', 'link-59');">getobject</a></tt><tt class="py-op">(</tt><tt id="link-74" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-74', 'filename', 'link-12');">filename</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">store</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">expected_instance</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line"> </tt>
+<a name="BaseTestFactory.test_bz2file"></a><div id="BaseTestFactory.test_bz2file-def"><a name="L109"></a><tt class="py-lineno">109</tt> <a class="py-toggle" href="#" id="BaseTestFactory.test_bz2file-toggle" onclick="return toggle('BaseTestFactory.test_bz2file');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_factory.BaseTestFactory-class.html#test_bz2file">test_bz2file</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseTestFactory.test_bz2file-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BaseTestFactory.test_bz2file-expanded"><a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">        <tt class="py-docstring">"""Test that we can open a gzip file correctly."""</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">BZ2File</tt><tt class="py-op">:</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">        <tt id="link-75" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-75', 'filename', 'link-12');">filename</a></tt> <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt id="link-76" class="py-name"><a title="translate.misc.autoencode.autoencode.join" class="py-name" href="#" onclick="return doclink('link-76', 'join', 'link-21');">join</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">testdir</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-77" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-77', 'filename', 'link-12');">filename</a></tt> <tt class="py-op">+</tt> <tt class="py-string">'.bz2'</tt><tt class="py-op">)</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">        <tt class="py-name">bz2file</tt> <tt class="py-op">=</tt> <tt class="py-name">BZ2File</tt><tt class="py-op">(</tt><tt id="link-78" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-78', 'filename', 'link-12');">filename</a></tt><tt class="py-op">,</tt> <tt class="py-name">mode</tt><tt class="py-op">=</tt><tt class="py-string">"wb"</tt><tt class="py-op">)</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">        <tt class="py-name">bz2file</tt><tt class="py-op">.</tt><tt id="link-79" class="py-name"><a title="translate.misc.stdiotell.StdIOWrapper.write
+translate.misc.wStringIO.StringIO.write
+translate.misc.xmlwrapper.XMLWrapper.write" class="py-name" href="#" onclick="return doclink('link-79', 'write', 'link-69');">write</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-80" class="py-name"><a title="translate.storage.test_factory.TestPOFactory.file_content
+translate.storage.test_factory.TestPOXliffFactory.file_content
+translate.storage.test_factory.TestWordfastFactory.file_content
+translate.storage.test_factory.TestXliffFactory.file_content" class="py-name" href="#" onclick="return doclink('link-80', 'file_content', 'link-57');">file_content</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">        <tt class="py-name">bz2file</tt><tt class="py-op">.</tt><tt id="link-81" class="py-name"><a title="translate.misc.progressbar.DotsProgressBar.close
+translate.misc.progressbar.HashProgressBar.close
+translate.misc.progressbar.NoProgressBar.close
+translate.misc.stdiotell.StdIOWrapper.close
+translate.misc.wStringIO.CatchStringOutput.close
+translate.misc.wStringIO.StringIO.close
+translate.misc.zipfileext.ZipFileExt.close
+translate.storage.xpi.CatchPotentialOutput.close
+translate.storage.xpi.XpiFile.close
+translate.storage.xpi.ZipFileCatcher.close" class="py-name" href="#" onclick="return doclink('link-81', 'close', 'link-71');">close</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">        <tt class="py-name">store</tt> <tt class="py-op">=</tt> <tt id="link-82" class="py-name"><a title="translate.storage.factory" class="py-name" href="#" onclick="return doclink('link-82', 'factory', 'link-2');">factory</a></tt><tt class="py-op">.</tt><tt id="link-83" class="py-name"><a title="translate.storage.factory.getobject" class="py-name" href="#" onclick="return doclink('link-83', 'getobject', 'link-59');">getobject</a></tt><tt class="py-op">(</tt><tt id="link-84" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-84', 'filename', 'link-12');">filename</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">store</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">expected_instance</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line"> </tt>
+<a name="BaseTestFactory.test_directory"></a><div id="BaseTestFactory.test_directory-def"><a name="L120"></a><tt class="py-lineno">120</tt> <a class="py-toggle" href="#" id="BaseTestFactory.test_directory-toggle" onclick="return toggle('BaseTestFactory.test_directory');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.storage.test_factory.BaseTestFactory-class.html#test_directory">test_directory</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseTestFactory.test_directory-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BaseTestFactory.test_directory-expanded"><a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">        <tt class="py-docstring">"""Test that a directory is correctly detected."""</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">        <tt class="py-name">object</tt> <tt class="py-op">=</tt> <tt id="link-85" class="py-name"><a title="translate.storage.factory" class="py-name" href="#" onclick="return doclink('link-85', 'factory', 'link-2');">factory</a></tt><tt class="py-op">.</tt><tt id="link-86" class="py-name"><a title="translate.storage.factory.getobject" class="py-name" href="#" onclick="return doclink('link-86', 'getobject', 'link-59');">getobject</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">testdir</tt><tt class="py-op">)</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">object</tt><tt class="py-op">,</tt> <tt id="link-87" class="py-name"><a title="translate.storage.directory.Directory" class="py-name" href="#" onclick="return doclink('link-87', 'Directory', 'link-6');">Directory</a></tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line"> </tt>
+<a name="TestPOFactory"></a><div id="TestPOFactory-def"><a name="L125"></a><tt class="py-lineno">125</tt> <a class="py-toggle" href="#" id="TestPOFactory-toggle" onclick="return toggle('TestPOFactory');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="translate.storage.test_factory.TestPOFactory-class.html">TestPOFactory</a><tt class="py-op">(</tt><tt class="py-base-class">BaseTestFactory</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestPOFactory-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TestPOFactory-expanded"><a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">    <tt class="py-name">expected_instance</tt> <tt class="py-op">=</tt> <tt id="link-88" class="py-name"><a title="translate.storage.factory" class="py-name" href="#" onclick="return doclink('link-88', 'factory', 'link-2');">factory</a></tt><tt class="py-op">.</tt><tt id="link-89" class="py-name" targets="Module translate.storage.po=translate.storage.po-module.html"><a title="translate.storage.po" class="py-name" href="#" onclick="return doclink('link-89', 'po', 'link-89');">po</a></tt><tt class="py-op">.</tt><tt id="link-90" class="py-name" targets="Class translate.storage.cpo.pofile=translate.storage.cpo.pofile-class.html,Class translate.storage.pocommon.pofile=translate.storage.pocommon.pofile-class.html,Class translate.storage.pypo.pofile=translate.storage.pypo.pofile-class.html"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-90', 'pofile', 'link-90');">pofile</a></tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">    <tt id="link-91" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-91', 'filename', 'link-12');">filename</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'dummy.po'</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line">    <tt id="link-92" class="py-name"><a title="translate.storage.test_factory.TestPOFactory.file_content
+translate.storage.test_factory.TestPOXliffFactory.file_content
+translate.storage.test_factory.TestWordfastFactory.file_content
+translate.storage.test_factory.TestXliffFactory.file_content" class="py-name" href="#" onclick="return doclink('link-92', 'file_content', 'link-57');">file_content</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'''#: test.c\nmsgid "test"\nmsgstr "rest"\n'''</tt> </tt>
+</div><a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line"> </tt>
+<a name="TestXliffFactory"></a><div id="TestXliffFactory-def"><a name="L130"></a><tt class="py-lineno">130</tt> <a class="py-toggle" href="#" id="TestXliffFactory-toggle" onclick="return toggle('TestXliffFactory');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="translate.storage.test_factory.TestXliffFactory-class.html">TestXliffFactory</a><tt class="py-op">(</tt><tt class="py-base-class">BaseTestFactory</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestXliffFactory-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TestXliffFactory-expanded"><a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line">    <tt class="py-name">expected_instance</tt> <tt class="py-op">=</tt> <tt id="link-93" class="py-name"><a title="translate.storage.factory" class="py-name" href="#" onclick="return doclink('link-93', 'factory', 'link-2');">factory</a></tt><tt class="py-op">.</tt><tt id="link-94" class="py-name" targets="Module translate.storage.xliff=translate.storage.xliff-module.html"><a title="translate.storage.xliff" class="py-name" href="#" onclick="return doclink('link-94', 'xliff', 'link-94');">xliff</a></tt><tt class="py-op">.</tt><tt id="link-95" class="py-name" targets="Class translate.storage.xliff.xlifffile=translate.storage.xliff.xlifffile-class.html"><a title="translate.storage.xliff.xlifffile" class="py-name" href="#" onclick="return doclink('link-95', 'xlifffile', 'link-95');">xlifffile</a></tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line">    <tt id="link-96" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-96', 'filename', 'link-12');">filename</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'dummy.xliff'</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line">    <tt id="link-97" class="py-name"><a title="translate.storage.test_factory.TestPOFactory.file_content
+translate.storage.test_factory.TestPOXliffFactory.file_content
+translate.storage.test_factory.TestWordfastFactory.file_content
+translate.storage.test_factory.TestXliffFactory.file_content" class="py-name" href="#" onclick="return doclink('link-97', 'file_content', 'link-57');">file_content</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'''&lt;?xml version="1.0" encoding="utf-8"?&gt;</tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line"><tt class="py-string">&lt;xliff version="1.1" xmlns="urn:oasis:names:tc:xliff:document:1.1"&gt;</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line"><tt class="py-string">&lt;file&gt;</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line"><tt class="py-string">&lt;body&gt;</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line"><tt class="py-string">  &lt;trans-unit&gt;</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line"><tt class="py-string">    &lt;source&gt;test&lt;/source&gt;</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line"><tt class="py-string">    &lt;target&gt;rest&lt;/target&gt;</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line"><tt class="py-string">  &lt;/trans-unit&gt;</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line"><tt class="py-string">&lt;/body&gt;</tt> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line"><tt class="py-string">&lt;/file&gt;</tt> </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line"><tt class="py-string">&lt;/xliff&gt;'''</tt> </tt>
+</div><a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line"> </tt>
+<a name="TestPOXliffFactory"></a><div id="TestPOXliffFactory-def"><a name="L145"></a><tt class="py-lineno">145</tt> <a class="py-toggle" href="#" id="TestPOXliffFactory-toggle" onclick="return toggle('TestPOXliffFactory');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="translate.storage.test_factory.TestPOXliffFactory-class.html">TestPOXliffFactory</a><tt class="py-op">(</tt><tt class="py-base-class">BaseTestFactory</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestPOXliffFactory-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TestPOXliffFactory-expanded"><a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line">    <tt class="py-name">expected_instance</tt> <tt class="py-op">=</tt> <tt id="link-98" class="py-name"><a title="translate.storage.factory" class="py-name" href="#" onclick="return doclink('link-98', 'factory', 'link-2');">factory</a></tt><tt class="py-op">.</tt><tt id="link-99" class="py-name" targets="Module translate.storage.poxliff=translate.storage.poxliff-module.html"><a title="translate.storage.poxliff" class="py-name" href="#" onclick="return doclink('link-99', 'poxliff', 'link-99');">poxliff</a></tt><tt class="py-op">.</tt><tt id="link-100" class="py-name" targets="Class translate.storage.poxliff.PoXliffFile=translate.storage.poxliff.PoXliffFile-class.html"><a title="translate.storage.poxliff.PoXliffFile" class="py-name" href="#" onclick="return doclink('link-100', 'PoXliffFile', 'link-100');">PoXliffFile</a></tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line">    <tt id="link-101" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-101', 'filename', 'link-12');">filename</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'dummy.xliff'</tt> </tt>
+<a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line">    <tt id="link-102" class="py-name"><a title="translate.storage.test_factory.TestPOFactory.file_content
+translate.storage.test_factory.TestPOXliffFactory.file_content
+translate.storage.test_factory.TestWordfastFactory.file_content
+translate.storage.test_factory.TestXliffFactory.file_content" class="py-name" href="#" onclick="return doclink('link-102', 'file_content', 'link-57');">file_content</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'''&lt;?xml version="1.0" encoding="utf-8"?&gt;</tt> </tt>
+<a name="L149"></a><tt class="py-lineno">149</tt>  <tt class="py-line"><tt class="py-string">&lt;xliff version="1.1" xmlns="urn:oasis:names:tc:xliff:document:1.1"&gt;</tt> </tt>
+<a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line"><tt class="py-string">&lt;file datatype="po" original="file.po" source-language="en-US"&gt;&lt;body&gt;&lt;trans-unit approved="no" id="1" restype="x-gettext-domain-header" xml:space="preserve"&gt;</tt> </tt>
+<a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line"><tt class="py-string">&lt;source&gt;MIME-Version: 1.0</tt> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line"><tt class="py-string">Content-Type: text/plain; charset=UTF-8</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line"><tt class="py-string">Content-Transfer-Encoding: 8bit</tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line"><tt class="py-string">&lt;/source&gt;</tt> </tt>
+<a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line"><tt class="py-string">&lt;target&gt;MIME-Version: 1.0</tt> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line"><tt class="py-string">Content-Type: text/plain; charset=UTF-8</tt> </tt>
+<a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line"><tt class="py-string">Content-Transfer-Encoding: 8bit</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line"><tt class="py-string">&lt;/target&gt;</tt> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line"><tt class="py-string">&lt;/trans-unit&gt;&lt;/body&gt;&lt;/file&gt;&lt;/xliff&gt;'''</tt> </tt>
+</div><a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line"> </tt>
+<a name="TestWordfastFactory"></a><div id="TestWordfastFactory-def"><a name="L161"></a><tt class="py-lineno">161</tt> <a class="py-toggle" href="#" id="TestWordfastFactory-toggle" onclick="return toggle('TestWordfastFactory');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="translate.storage.test_factory.TestWordfastFactory-class.html">TestWordfastFactory</a><tt class="py-op">(</tt><tt class="py-base-class">BaseTestFactory</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestWordfastFactory-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TestWordfastFactory-expanded"><a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line">    <tt class="py-name">expected_instance</tt> <tt class="py-op">=</tt> <tt id="link-103" class="py-name"><a title="translate.storage.factory" class="py-name" href="#" onclick="return doclink('link-103', 'factory', 'link-2');">factory</a></tt><tt class="py-op">.</tt><tt id="link-104" class="py-name" targets="Module translate.storage.wordfast=translate.storage.wordfast-module.html"><a title="translate.storage.wordfast" class="py-name" href="#" onclick="return doclink('link-104', 'wordfast', 'link-104');">wordfast</a></tt><tt class="py-op">.</tt><tt id="link-105" class="py-name" targets="Class translate.storage.wordfast.WordfastTMFile=translate.storage.wordfast.WordfastTMFile-class.html"><a title="translate.storage.wordfast.WordfastTMFile" class="py-name" href="#" onclick="return doclink('link-105', 'WordfastTMFile', 'link-105');">WordfastTMFile</a></tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line">    <tt id="link-106" class="py-name"><a title="translate.filters.test_pofilter.BaseTestFilter.filename
+translate.filters.test_pofilter.TestPOFilter.filename
+translate.filters.test_pofilter.TestTMXFilter.filename
+translate.filters.test_pofilter.TestXliffFilter.filename
+translate.storage.test_factory.TestPOFactory.filename
+translate.storage.test_factory.TestPOXliffFactory.filename
+translate.storage.test_factory.TestWordfastFactory.filename
+translate.storage.test_factory.TestXliffFactory.filename" class="py-name" href="#" onclick="return doclink('link-106', 'filename', 'link-12');">filename</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'dummy.txt'</tt> </tt>
+<a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line">    <tt id="link-107" class="py-name"><a title="translate.storage.test_factory.TestPOFactory.file_content
+translate.storage.test_factory.TestPOXliffFactory.file_content
+translate.storage.test_factory.TestWordfastFactory.file_content
+translate.storage.test_factory.TestXliffFactory.file_content" class="py-name" href="#" onclick="return doclink('link-107', 'file_content', 'link-57');">file_content</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'''%20070801~103212  %User ID,S,S SMURRAY,SMS Samuel Murray-Smit,SM Samuel Murray-Smit,MW Mary White,DS Deepak Shota,MT! Machine translation (15),AL! Alignment (10),SM Samuel Murray,       %TU=00000075    %AF-ZA  %Wordfast TM v.5.51r/00 %EN-ZA  %---80597535    Subject (5),EL,EL Electronics,AC Accounting,LE Legal,ME Mechanics,MD Medical,LT Literary,AG Agriculture,CO Commercial   Client (5),LS,LS LionSoft Corp,ST SuperTron Inc,CA CompArt Ltd                  </tt> </tt>
+<a name="L165"></a><tt class="py-lineno">165</tt>  <tt class="py-line"><tt class="py-string">20070801~103248 SM      0       AF-ZA   Langeraad en duimpie    EN-ZA   Big Ben and Little John EL      LS'''</tt> </tt>
+</div><a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://translate.sourceforge.net">Translate Toolkit</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Tue Sep 23 13:51:13 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

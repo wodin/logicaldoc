@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title></title>
+  <link rel="stylesheet" media="screen" type="text/css" href="./style.css" />
+  <link rel="stylesheet" media="screen" type="text/css" href="./design.css" />
+  <link rel="stylesheet" media="print" type="text/css" href="./print.css" />
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<a href=.>start</a></br>
+
+
+
+<h1><a name="tbx" id="tbx">TBX</a></h1>
+<div class="level1">
+
+<p>
+<acronym title="TermBase eXchange">TBX</acronym> is the LISA standard for terminology and term exchange.
+</p>
+
+<p>
+For information on more file formats, see <a href="toolkit-conformance.html" class="wikilink1" title="toolkit-conformance.html">conformance</a>.
+</p>
+
+</div>
+<!-- SECTION "TBX" [1-139] -->
+<h2><a name="references" id="references">References</a></h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.lisa.org/standards/tbx/" class="urlextern" title="http://www.lisa.org/standards/tbx/">Standard home page</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.lisa.org/TBX-Specification.33.0.html" class="urlextern" title="http://www.lisa.org/TBX-Specification.33.0.html">Specification</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=45797" class="urlextern" title="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=45797">ISO 30042</a> - <acronym title="TermBase eXchange">TBX</acronym> is an approved <acronym title="International Organization for Standardization">ISO</acronym> standard</div>
+</li>
+</ul>
+
+</div>
+<!-- SECTION "References" [140-434] -->
+<h2><a name="standard_conformance" id="standard_conformance">Standard conformance</a></h2>
+<div class="level2">
+
+</div>
+<!-- SECTION "Standard conformance" [435-467] -->
+<h3><a name="done" id="done">Done</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Basic file creation</div>
+</li>
+<li class="level1"><div class="li"> Creating a bilingual list from <acronym title="Comma Seperated Value">CSV</acronym> with <a href="toolkit-csv2tbx.html" class="wikilink1" title="toolkit-csv2tbx.html">csv2tbx</a></div>
+</li>
+<li class="level1"><div class="li"> Using &lt;tig&gt; tags, not ntig</div>
+</li>
+</ul>
+
+</div>
+<!-- SECTION "Done" [468-594] -->
+<h3><a name="todo" id="todo">Todo</a></h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> id attributes for termEntry tags</div>
+</li>
+<li class="level1"><div class="li"> ntig, read and write</div>
+</li>
+<li class="level1"><div class="li"> multiple languages</div>
+</li>
+<li class="level1"><div class="li"> synonyms</div>
+</li>
+<li class="level1"><div class="li"> cross references</div>
+</li>
+<li class="level1"><div class="li"> abbreviations</div>
+</li>
+<li class="level1"><div class="li"> definitions</div>
+</li>
+<li class="level1"><div class="li"> context</div>
+</li>
+<li class="level1"><div class="li"> parts of speech</div>
+</li>
+</ul>
+
+</div>
+<!-- SECTION "Todo" [595-795] -->
+<h2><a name="implementation_notes_for_missing_features" id="implementation_notes_for_missing_features">Implementation notes for missing features</a></h2>
+<div class="level2">
+
+<p>
+
+Note here:
+
+</p>
+<ul>
+<li class="level1"><div class="li"> NLS - South African National Language Services - Multilingual Maths Dictionary</div>
+</li>
+</ul>
+
+</div>
+<!-- SECTION "Implementation notes for missing features" [796-946] -->
+<h3><a name="synonyms" id="synonyms">Synonyms</a></h3>
+<div class="level3">
+
+<p>
+NLS: Extra listing<br/>
+
+<acronym title="TermBase eXchange">TBX</acronym>:
+
+</p>
+<pre class="code xml"><pre class="code xml"><span class="sc3"><span class="re1">&lt;termNote</span> <span class="re0">type</span>=<span class="st0">&quot;termNote&quot;</span><span class="re2">&gt;</span></span>synonym<span class="sc3"><span class="re1">&lt;/termNote<span class="re2">&gt;</span></span></span></pre></pre>
+<p>
+according to this <acronym title="TermBase eXchange">TBX</acronym> documentation. In another place:
+</p>
+<pre class="code xml"><pre class="code xml"><span class="sc3"><span class="re1">&lt;termNote</span> <span class="re0">type</span>=<span class="st0">&quot;termType&quot;</span><span class="re2">&gt;</span></span>synonym<span class="sc3"><span class="re1">&lt;/termNote<span class="re2">&gt;</span></span></span></pre></pre>
+<p>
+inside a &lt;termGrp&gt;, following &lt;term&gt;
+</p>
+
+</div>
+<!-- SECTION "Synonyms" [947-1215] -->
+<h3><a name="definition" id="definition">Definition</a></h3>
+<div class="level3">
+
+<p>
+NLS: term {definition/contextual information}<br/>
+
+<acronym title="TermBase eXchange">TBX</acronym>
+
+</p>
+<pre class="code xml"><pre class="code xml"><span class="sc3"><span class="re1">&lt;descripGrp<span class="re2">&gt;</span></span></span>
+   <span class="sc3"><span class="re1">&lt;descrip</span> <span class="re0">type</span>=<span class="st0">&quot;definition&quot;</span><span class="re2">&gt;</span></span>The longish definition of the term<span class="sc3"><span class="re1">&lt;/descrip<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/descripGrp<span class="re2">&gt;</span></span></span></pre></pre>
+<p>
+inside langSet
+&lt;descript&gt; can probably be used directly under langSet
+</p>
+
+</div>
+<!-- SECTION "Definition" [1216-1481] -->
+<h3><a name="context" id="context">Context</a></h3>
+<div class="level3">
+
+<p>
+NLS: term {definition/contextual information} (see above)<br/>
+
+<acronym title="TermBase eXchange">TBX</acronym>:
+
+</p>
+<pre class="code xml"><pre class="code xml"><span class="sc3"><span class="re1">&lt;descrip</span> <span class="re0">type</span>=<span class="st0">&quot;context&quot;</span><span class="re2">&gt;</span></span>A usually somewhat longer contextual sentence.<span class="sc3"><span class="re1">&lt;/descrip<span class="re2">&gt;</span></span></span></pre></pre>
+<p>
+inside &lt;ntig&gt;
+</p>
+
+</div>
+<!-- SECTION "Context" [1482-1680] -->
+<h3><a name="parts_of_speech" id="parts_of_speech">Parts of speech</a></h3>
+<div class="level3">
+
+<p>
+NLS: term v.  (or adj, or n.)<br/>
+
+<acronym title="TermBase eXchange">TBX</acronym>:
+
+</p>
+<pre class="code xml"><pre class="code xml"><span class="sc3"><span class="re1">&lt;termNote</span> <span class="re0">type</span>=<span class="st0">&quot;partOfSpeech&quot;</span> <span class="re2">&gt;</span></span>noun<span class="sc3"><span class="re1">&lt;/termNote<span class="re2">&gt;</span></span></span></pre></pre>
+<p>
+following &lt;term&gt;
+</p>
+
+</div>
+<!-- SECTION "Parts of speech" [1681-1828] -->
+<h3><a name="cross_reference" id="cross_reference">Cross reference</a></h3>
+<div class="level3">
+
+<p>
+NLS: alternate term → real lemma<br/>
+
+<acronym title="TermBase eXchange">TBX</acronym>: &lt;ref&gt; TODO
+</p>
+
+</div>
+<!-- SECTION "Cross reference" [1829-1907] -->
+<h3><a name="abbreviations" id="abbreviations">Abbreviations</a></h3>
+<div class="level3">
+
+<p>
+NLS: same as alternate term: a.m. → before noon<br/>
+
+<acronym title="TermBase eXchange">TBX</acronym>: TODO
+
+</p>
+
+</div>
+<!-- SECTION "Abbreviations" [1908-] --></body>
+</html>

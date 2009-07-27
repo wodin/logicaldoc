@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>translate.convert.test_xliff2po</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://translate.sourceforge.net">Translate Toolkit</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;translate ::
+        <a href="translate.convert-module.html">Package&nbsp;convert</a> ::
+        Module&nbsp;test_xliff2po
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="translate.convert.test_xliff2po-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="translate.convert.test_xliff2po-module.html">Module translate.convert.test_xliff2po</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment">#!/usr/bin/env python</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Method translate.storage.base.TranslationStore.translate()=translate.storage.base.TranslationStore-class.html#translate,Method translate.storage.tmx.tmxfile.translate()=translate.storage.tmx.tmxfile-class.html#translate"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-0', 'translate', 'link-0');">translate</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Package translate.convert=translate.convert-module.html,Module translate.convert.convert=translate.convert.convert-module.html,Method translate.convert.test_oo2po.TestOO2PO.convert()=translate.convert.test_oo2po.TestOO2PO-class.html#convert"><a title="translate.convert
+translate.convert.convert
+translate.convert.test_oo2po.TestOO2PO.convert" class="py-name" href="#" onclick="return doclink('link-1', 'convert', 'link-1');">convert</a></tt> <tt class="py-keyword">import</tt> <tt id="link-2" class="py-name" targets="Method translate.convert.test_xliff2po.TestXLIFF2PO.xliff2po()=translate.convert.test_xliff2po.TestXLIFF2PO-class.html#xliff2po,Module translate.convert.xliff2po=translate.convert.xliff2po-module.html,Class translate.convert.xliff2po.xliff2po=translate.convert.xliff2po.xliff2po-class.html"><a title="translate.convert.test_xliff2po.TestXLIFF2PO.xliff2po
+translate.convert.xliff2po
+translate.convert.xliff2po.xliff2po" class="py-name" href="#" onclick="return doclink('link-2', 'xliff2po', 'link-2');">xliff2po</a></tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-3" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-3', 'translate', 'link-0');">translate</a></tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Package translate.misc=translate.misc-module.html"><a title="translate.misc" class="py-name" href="#" onclick="return doclink('link-4', 'misc', 'link-4');">misc</a></tt> <tt class="py-keyword">import</tt> <tt id="link-5" class="py-name" targets="Module translate.misc.wStringIO=translate.misc.wStringIO-module.html"><a title="translate.misc.wStringIO" class="py-name" href="#" onclick="return doclink('link-5', 'wStringIO', 'link-5');">wStringIO</a></tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"> </tt>
+<a name="TestXLIFF2PO"></a><div id="TestXLIFF2PO-def"><a name="L6"></a><tt class="py-lineno">  6</tt> <a class="py-toggle" href="#" id="TestXLIFF2PO-toggle" onclick="return toggle('TestXLIFF2PO');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="translate.convert.test_xliff2po.TestXLIFF2PO-class.html">TestXLIFF2PO</a><tt class="py-op">:</tt> </tt>
+</div><div id="TestXLIFF2PO-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TestXLIFF2PO-expanded"><a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line">    <tt id="link-6" class="py-name" targets="Variable translate.convert.test_xliff2po.TestBasicXLIFF2PO.xliffskeleton=translate.convert.test_xliff2po.TestBasicXLIFF2PO-class.html#xliffskeleton,Variable translate.convert.test_xliff2po.TestXLIFF2PO.xliffskeleton=translate.convert.test_xliff2po.TestXLIFF2PO-class.html#xliffskeleton,Variable translate.storage.test_poxliff.TestPOXLIFFfile.xliffskeleton=translate.storage.test_poxliff.TestPOXLIFFfile-class.html#xliffskeleton,Variable translate.tools.test_pomerge.TestPOMerge.xliffskeleton=translate.tools.test_pomerge.TestPOMerge-class.html#xliffskeleton"><a title="translate.convert.test_xliff2po.TestBasicXLIFF2PO.xliffskeleton
+translate.convert.test_xliff2po.TestXLIFF2PO.xliffskeleton
+translate.storage.test_poxliff.TestPOXLIFFfile.xliffskeleton
+translate.tools.test_pomerge.TestPOMerge.xliffskeleton" class="py-name" href="#" onclick="return doclink('link-6', 'xliffskeleton', 'link-6');">xliffskeleton</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'''&lt;?xml version="1.0" ?&gt;</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-string">&lt;xliff version="1.1" xmlns="urn:oasis:names:tc:xliff:document:1.1"&gt;</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-string">  &lt;file original="filename.po" source-language="en-US" datatype="po"&gt;</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-string">    &lt;body&gt;</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-string">        %s</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-string">    &lt;/body&gt;</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-string">  &lt;/file&gt;</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-string">&lt;/xliff&gt;'''</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"> </tt>
+<a name="TestXLIFF2PO.xliff2po"></a><div id="TestXLIFF2PO.xliff2po-def"><a name="L16"></a><tt class="py-lineno"> 16</tt> <a class="py-toggle" href="#" id="TestXLIFF2PO.xliff2po-toggle" onclick="return toggle('TestXLIFF2PO.xliff2po');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_xliff2po.TestXLIFF2PO-class.html#xliff2po">xliff2po</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">xliffsource</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestXLIFF2PO.xliff2po-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestXLIFF2PO.xliff2po-expanded"><a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line">        <tt class="py-docstring">"""helper that converts xliff source to po source without requiring files"""</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line">        <tt class="py-name">inputfile</tt> <tt class="py-op">=</tt> <tt id="link-7" class="py-name"><a title="translate.misc.wStringIO" class="py-name" href="#" onclick="return doclink('link-7', 'wStringIO', 'link-5');">wStringIO</a></tt><tt class="py-op">.</tt><tt id="link-8" class="py-name" targets="Class translate.misc.wStringIO.StringIO=translate.misc.wStringIO.StringIO-class.html"><a title="translate.misc.wStringIO.StringIO" class="py-name" href="#" onclick="return doclink('link-8', 'StringIO', 'link-8');">StringIO</a></tt><tt class="py-op">(</tt><tt class="py-name">xliffsource</tt><tt class="py-op">)</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line">        <tt class="py-name">convertor</tt> <tt class="py-op">=</tt> <tt id="link-9" class="py-name"><a title="translate.convert.test_xliff2po.TestXLIFF2PO.xliff2po
+translate.convert.xliff2po
+translate.convert.xliff2po.xliff2po" class="py-name" href="#" onclick="return doclink('link-9', 'xliff2po', 'link-2');">xliff2po</a></tt><tt class="py-op">.</tt><tt id="link-10" class="py-name"><a title="translate.convert.test_xliff2po.TestXLIFF2PO.xliff2po
+translate.convert.xliff2po
+translate.convert.xliff2po.xliff2po" class="py-name" href="#" onclick="return doclink('link-10', 'xliff2po', 'link-2');">xliff2po</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line">        <tt class="py-name">outputpo</tt> <tt class="py-op">=</tt> <tt class="py-name">convertor</tt><tt class="py-op">.</tt><tt id="link-11" class="py-name" targets="Method translate.convert.csv2po.csv2po.convertstore()=translate.convert.csv2po.csv2po-class.html#convertstore,Method translate.convert.dtd2po.dtd2po.convertstore()=translate.convert.dtd2po.dtd2po-class.html#convertstore,Method translate.convert.ini2po.ini2po.convertstore()=translate.convert.ini2po.ini2po-class.html#convertstore,Method translate.convert.odf2po.odf2po.convertstore()=translate.convert.odf2po.odf2po-class.html#convertstore,Method translate.convert.oo2po.oo2po.convertstore()=translate.convert.oo2po.oo2po-class.html#convertstore,Method translate.convert.oo2xliff.oo2xliff.convertstore()=translate.convert.oo2xliff.oo2xliff-class.html#convertstore,Method translate.convert.php2po.php2po.convertstore()=translate.convert.php2po.php2po-class.html#convertstore,Method translate.convert.po2csv.po2csv.convertstore()=translate.convert.po2csv.po2csv-class.html#convertstore,Method translate.convert.po2dtd.po2dtd.convertstore()=translate.convert.po2dtd.po2dtd-class.html#convertstore,Method translate.convert.po2dtd.redtd.convertstore()=translate.convert.po2dtd.redtd-class.html#convertstore,Method translate.convert.po2html.po2html.convertstore()=translate.convert.po2html.po2html-class.html#convertstore,Method translate.convert.po2ini.reini.convertstore()=translate.convert.po2ini.reini-class.html#convertstore,Method translate.convert.po2oo.reoo.convertstore()=translate.convert.po2oo.reoo-class.html#convertstore,Method translate.convert.po2php.rephp.convertstore()=translate.convert.po2php.rephp-class.html#convertstore,Method translate.convert.po2prop.reprop.convertstore()=translate.convert.po2prop.reprop-class.html#convertstore,Method translate.convert.po2rc.rerc.convertstore()=translate.convert.po2rc.rerc-class.html#convertstore,Method translate.convert.po2ts.po2ts.convertstore()=translate.convert.po2ts.po2ts-class.html#convertstore,Method translate.convert.po2txt.po2txt.convertstore()=translate.convert.po2txt.po2txt-class.html#convertstore,Method translate.convert.po2xliff.po2xliff.convertstore()=translate.convert.po2xliff.po2xliff-class.html#convertstore,Method translate.convert.prop2po.prop2po.convertstore()=translate.convert.prop2po.prop2po-class.html#convertstore,Method translate.convert.rc2po.rc2po.convertstore()=translate.convert.rc2po.rc2po-class.html#convertstore,Method translate.convert.txt2po.txt2po.convertstore()=translate.convert.txt2po.txt2po-class.html#convertstore,Method translate.convert.xliff2oo.reoo.convertstore()=translate.convert.xliff2oo.reoo-class.html#convertstore,Method translate.convert.xliff2po.xliff2po.convertstore()=translate.convert.xliff2po.xliff2po-class.html#convertstore,Method translate.tools.pocompile.POCompile.convertstore()=translate.tools.pocompile.POCompile-class.html#convertstore,Method translate.tools.podebug.podebug.convertstore()=translate.tools.podebug.podebug-class.html#convertstore,Method translate.tools.posegment.segment.convertstore()=translate.tools.posegment.segment-class.html#convertstore"><a title="translate.convert.csv2po.csv2po.convertstore
+translate.convert.dtd2po.dtd2po.convertstore
+translate.convert.ini2po.ini2po.convertstore
+translate.convert.odf2po.odf2po.convertstore
+translate.convert.oo2po.oo2po.convertstore
+translate.convert.oo2xliff.oo2xliff.convertstore
+translate.convert.php2po.php2po.convertstore
+translate.convert.po2csv.po2csv.convertstore
+translate.convert.po2dtd.po2dtd.convertstore
+translate.convert.po2dtd.redtd.convertstore
+translate.convert.po2html.po2html.convertstore
+translate.convert.po2ini.reini.convertstore
+translate.convert.po2oo.reoo.convertstore
+translate.convert.po2php.rephp.convertstore
+translate.convert.po2prop.reprop.convertstore
+translate.convert.po2rc.rerc.convertstore
+translate.convert.po2ts.po2ts.convertstore
+translate.convert.po2txt.po2txt.convertstore
+translate.convert.po2xliff.po2xliff.convertstore
+translate.convert.prop2po.prop2po.convertstore
+translate.convert.rc2po.rc2po.convertstore
+translate.convert.txt2po.txt2po.convertstore
+translate.convert.xliff2oo.reoo.convertstore
+translate.convert.xliff2po.xliff2po.convertstore
+translate.tools.pocompile.POCompile.convertstore
+translate.tools.podebug.podebug.convertstore
+translate.tools.posegment.segment.convertstore" class="py-name" href="#" onclick="return doclink('link-11', 'convertstore', 'link-11');">convertstore</a></tt><tt class="py-op">(</tt><tt class="py-name">inputfile</tt><tt class="py-op">)</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-string">"The generated po:"</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">type</tt><tt class="py-op">(</tt><tt class="py-name">outputpo</tt><tt class="py-op">)</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">outputpo</tt><tt class="py-op">)</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">outputpo</tt> </tt>
+</div><a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">         </tt>
+<a name="TestXLIFF2PO.test_minimal"></a><div id="TestXLIFF2PO.test_minimal-def"><a name="L26"></a><tt class="py-lineno"> 26</tt> <a class="py-toggle" href="#" id="TestXLIFF2PO.test_minimal-toggle" onclick="return toggle('TestXLIFF2PO.test_minimal');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_xliff2po.TestXLIFF2PO-class.html#test_minimal">test_minimal</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestXLIFF2PO.test_minimal-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestXLIFF2PO.test_minimal-expanded"><a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">        <tt class="py-name">minixlf</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-12" class="py-name"><a title="translate.convert.test_xliff2po.TestBasicXLIFF2PO.xliffskeleton
+translate.convert.test_xliff2po.TestXLIFF2PO.xliffskeleton
+translate.storage.test_poxliff.TestPOXLIFFfile.xliffskeleton
+translate.tools.test_pomerge.TestPOMerge.xliffskeleton" class="py-name" href="#" onclick="return doclink('link-12', 'xliffskeleton', 'link-6');">xliffskeleton</a></tt> <tt class="py-op">%</tt> <tt class="py-string">'''&lt;trans-unit&gt;</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"><tt class="py-string">        &lt;source&gt;red&lt;/source&gt;</tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line"><tt class="py-string">        &lt;target&gt;rooi&lt;/target&gt;</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line"><tt class="py-string">      &lt;/trans-unit&gt;'''</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">        <tt id="link-13" class="py-name" targets="Class translate.storage.cpo.pofile=translate.storage.cpo.pofile-class.html,Class translate.storage.pocommon.pofile=translate.storage.pocommon.pofile-class.html,Class translate.storage.pypo.pofile=translate.storage.pypo.pofile-class.html"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-13', 'pofile', 'link-13');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-14" class="py-name"><a title="translate.convert.test_xliff2po.TestXLIFF2PO.xliff2po
+translate.convert.xliff2po
+translate.convert.xliff2po.xliff2po" class="py-name" href="#" onclick="return doclink('link-14', 'xliff2po', 'link-2');">xliff2po</a></tt><tt class="py-op">(</tt><tt class="py-name">minixlf</tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt id="link-15" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-15', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-16" class="py-name" targets="Variable translate.tools.poterminology.TerminologyOptionParser.units=translate.tools.poterminology.TerminologyOptionParser-class.html#units"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-16', 'units', 'link-16');">units</a></tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-number">1</tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-17" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-17', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-18" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-18', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"red"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"rooi"</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-19" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-19', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-20" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-20', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"bla"</tt><tt class="py-op">)</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt> </tt>
+</div><a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">  </tt>
+<a name="TestXLIFF2PO.test_basic"></a><div id="TestXLIFF2PO.test_basic-def"><a name="L36"></a><tt class="py-lineno"> 36</tt> <a class="py-toggle" href="#" id="TestXLIFF2PO.test_basic-toggle" onclick="return toggle('TestXLIFF2PO.test_basic');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_xliff2po.TestXLIFF2PO-class.html#test_basic">test_basic</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestXLIFF2PO.test_basic-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestXLIFF2PO.test_basic-expanded"><a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line">        <tt class="py-name">headertext</tt> <tt class="py-op">=</tt> <tt class="py-string">'''Project-Id-Version: program 2.1-branch</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line"><tt class="py-string">Report-Msgid-Bugs-To: </tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line"><tt class="py-string">POT-Creation-Date: 2006-01-09 07:15+0100</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line"><tt class="py-string">PO-Revision-Date: 2004-03-30 17:02+0200</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line"><tt class="py-string">Last-Translator: Zuza Software Foundation &amp;lt;xxx@translate.org.za&gt;</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line"><tt class="py-string">Language-Team: Afrikaans &amp;lt;translate-discuss-xxx@lists.sourceforge.net&gt;</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line"><tt class="py-string">MIME-Version: 1.0</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line"><tt class="py-string">Content-Type: text/plain; charset=UTF-8</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line"><tt class="py-string">Content-Transfer-Encoding: 8bit'''</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line"> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">        <tt class="py-name">minixlf</tt> <tt class="py-op">=</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-21" class="py-name"><a title="translate.convert.test_xliff2po.TestBasicXLIFF2PO.xliffskeleton
+translate.convert.test_xliff2po.TestXLIFF2PO.xliffskeleton
+translate.storage.test_poxliff.TestPOXLIFFfile.xliffskeleton
+translate.tools.test_pomerge.TestPOMerge.xliffskeleton" class="py-name" href="#" onclick="return doclink('link-21', 'xliffskeleton', 'link-6');">xliffskeleton</a></tt> <tt class="py-op">%</tt> <tt class="py-string">'''&lt;trans-unit id="1" restype="x-gettext-domain-header" approved="no" xml:space="preserve"&gt;</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line"><tt class="py-string">  &lt;source&gt;%s&lt;/source&gt;</tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line"><tt class="py-string">  &lt;target&gt;%s&lt;/target&gt;</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line"><tt class="py-string">  &lt;note from="po-translator"&gt;Zulu translation of program ABC&lt;/note&gt;</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line"><tt class="py-string">  &lt;/trans-unit&gt;</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line"><tt class="py-string">  &lt;trans-unit&gt;</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line"><tt class="py-string">    &lt;source&gt;gras&lt;/source&gt;</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line"><tt class="py-string">    &lt;target&gt;utshani&lt;/target&gt;</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line"><tt class="py-string">  &lt;/trans-unit&gt;'''</tt><tt class="py-op">)</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">headertext</tt><tt class="py-op">,</tt> <tt class="py-name">headertext</tt><tt class="py-op">)</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line"> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">minixlf</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">        <tt id="link-22" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-22', 'pofile', 'link-13');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-23" class="py-name"><a title="translate.convert.test_xliff2po.TestXLIFF2PO.xliff2po
+translate.convert.xliff2po
+translate.convert.xliff2po.xliff2po" class="py-name" href="#" onclick="return doclink('link-23', 'xliff2po', 'link-2');">xliff2po</a></tt><tt class="py-op">(</tt><tt class="py-name">minixlf</tt><tt class="py-op">)</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-24" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-24', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-25" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-25', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"gras"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"utshani"</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-26" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-26', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-27" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-27', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"bla"</tt><tt class="py-op">)</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">        <tt class="py-name">potext</tt> <tt class="py-op">=</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt id="link-28" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-28', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">potext</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">'# Zulu translation of program ABC'</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-number">0</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">potext</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">'msgid "gras"\n'</tt><tt class="py-op">)</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">potext</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">'msgstr "utshani"\n'</tt><tt class="py-op">)</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">potext</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">'MIME-Version: 1.0\\n'</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line"> </tt>
+<a name="TestXLIFF2PO.test_translatorcomments"></a><div id="TestXLIFF2PO.test_translatorcomments-def"><a name="L67"></a><tt class="py-lineno"> 67</tt> <a class="py-toggle" href="#" id="TestXLIFF2PO.test_translatorcomments-toggle" onclick="return toggle('TestXLIFF2PO.test_translatorcomments');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_xliff2po.TestXLIFF2PO-class.html#test_translatorcomments">test_translatorcomments</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestXLIFF2PO.test_translatorcomments-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestXLIFF2PO.test_translatorcomments-expanded"><a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests translator comments"""</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">        <tt class="py-name">minixlf</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-29" class="py-name"><a title="translate.convert.test_xliff2po.TestBasicXLIFF2PO.xliffskeleton
+translate.convert.test_xliff2po.TestXLIFF2PO.xliffskeleton
+translate.storage.test_poxliff.TestPOXLIFFfile.xliffskeleton
+translate.tools.test_pomerge.TestPOMerge.xliffskeleton" class="py-name" href="#" onclick="return doclink('link-29', 'xliffskeleton', 'link-6');">xliffskeleton</a></tt> <tt class="py-op">%</tt> <tt class="py-string">'''&lt;trans-unit&gt;</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line"><tt class="py-string">        &lt;source&gt;nonsense&lt;/source&gt;</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line"><tt class="py-string">        &lt;target&gt;matlhapolosa&lt;/target&gt;</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line"><tt class="py-string">        &lt;context-group name="po-entry" purpose="information"&gt;</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line"><tt class="py-string">            &lt;context context-type="x-po-trancomment"&gt;Couldn't do</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line"><tt class="py-string">it&lt;/context&gt;</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line"><tt class="py-string">        &lt;/context-group&gt;</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line"><tt class="py-string">        &lt;note from="po-translator"&gt;Couldn't do</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line"><tt class="py-string">it&lt;/note&gt;</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line"><tt class="py-string">&lt;/trans-unit&gt;'''</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">        <tt id="link-30" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-30', 'pofile', 'link-13');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-31" class="py-name"><a title="translate.convert.test_xliff2po.TestXLIFF2PO.xliff2po
+translate.convert.xliff2po
+translate.convert.xliff2po.xliff2po" class="py-name" href="#" onclick="return doclink('link-31', 'xliff2po', 'link-2');">xliff2po</a></tt><tt class="py-op">(</tt><tt class="py-name">minixlf</tt><tt class="py-op">)</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-32" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-32', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-33" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-33', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"nonsense"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"matlhapolosa"</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-34" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-34', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-35" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-35', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"bla"</tt><tt class="py-op">)</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt id="link-36" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-36', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-37" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-37', 'units', 'link-16');">units</a></tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-38" class="py-name" targets="Method translate.storage.base.TranslationUnit.getnotes()=translate.storage.base.TranslationUnit-class.html#getnotes,Method translate.storage.cpo.pounit.getnotes()=translate.storage.cpo.pounit-class.html#getnotes,Method translate.storage.php.phpunit.getnotes()=translate.storage.php.phpunit-class.html#getnotes,Method translate.storage.poxliff.PoXliffUnit.getnotes()=translate.storage.poxliff.PoXliffUnit-class.html#getnotes,Method translate.storage.properties.propunit.getnotes()=translate.storage.properties.propunit-class.html#getnotes,Method translate.storage.pypo.pounit.getnotes()=translate.storage.pypo.pounit-class.html#getnotes,Method translate.storage.qph.QphUnit.getnotes()=translate.storage.qph.QphUnit-class.html#getnotes,Method translate.storage.rc.rcunit.getnotes()=translate.storage.rc.rcunit-class.html#getnotes,Method translate.storage.tmx.tmxunit.getnotes()=translate.storage.tmx.tmxunit-class.html#getnotes,Method translate.storage.ts2.tsunit.getnotes()=translate.storage.ts2.tsunit-class.html#getnotes,Method translate.storage.xliff.xliffunit.getnotes()=translate.storage.xliff.xliffunit-class.html#getnotes"><a title="translate.storage.base.TranslationUnit.getnotes
+translate.storage.cpo.pounit.getnotes
+translate.storage.php.phpunit.getnotes
+translate.storage.poxliff.PoXliffUnit.getnotes
+translate.storage.properties.propunit.getnotes
+translate.storage.pypo.pounit.getnotes
+translate.storage.qph.QphUnit.getnotes
+translate.storage.rc.rcunit.getnotes
+translate.storage.tmx.tmxunit.getnotes
+translate.storage.ts2.tsunit.getnotes
+translate.storage.xliff.xliffunit.getnotes" class="py-name" href="#" onclick="return doclink('link-38', 'getnotes', 'link-38');">getnotes</a></tt><tt class="py-op">(</tt><tt class="py-string">"translator"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"Couldn't do\nit"</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">        <tt class="py-name">potext</tt> <tt class="py-op">=</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt id="link-39" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-39', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">potext</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">"# Couldn't do\n# it\n"</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;=</tt> <tt class="py-number">0</tt> </tt>
+</div><a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line"> </tt>
+<a name="TestXLIFF2PO.test_autocomment"></a><div id="TestXLIFF2PO.test_autocomment-def"><a name="L87"></a><tt class="py-lineno"> 87</tt> <a class="py-toggle" href="#" id="TestXLIFF2PO.test_autocomment-toggle" onclick="return toggle('TestXLIFF2PO.test_autocomment');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_xliff2po.TestXLIFF2PO-class.html#test_autocomment">test_autocomment</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestXLIFF2PO.test_autocomment-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestXLIFF2PO.test_autocomment-expanded"><a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests automatic comments"""</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">        <tt class="py-name">minixlf</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-40" class="py-name"><a title="translate.convert.test_xliff2po.TestBasicXLIFF2PO.xliffskeleton
+translate.convert.test_xliff2po.TestXLIFF2PO.xliffskeleton
+translate.storage.test_poxliff.TestPOXLIFFfile.xliffskeleton
+translate.tools.test_pomerge.TestPOMerge.xliffskeleton" class="py-name" href="#" onclick="return doclink('link-40', 'xliffskeleton', 'link-6');">xliffskeleton</a></tt> <tt class="py-op">%</tt> <tt class="py-string">'''&lt;trans-unit&gt;</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line"><tt class="py-string">        &lt;source&gt;nonsense&lt;/source&gt;</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line"><tt class="py-string">        &lt;target&gt;matlhapolosa&lt;/target&gt;</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line"><tt class="py-string">        &lt;context-group name="po-entry" purpose="information"&gt;</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line"><tt class="py-string">            &lt;context context-type="x-po-autocomment"&gt;Note that this is</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line"><tt class="py-string">garbage&lt;/context&gt;</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line"><tt class="py-string">        &lt;/context-group&gt;</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line"><tt class="py-string">        &lt;note from="developer"&gt;Note that this is</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line"><tt class="py-string">garbage&lt;/note&gt;</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line"><tt class="py-string">&lt;/trans-unit&gt;'''</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">        <tt id="link-41" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-41', 'pofile', 'link-13');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-42" class="py-name"><a title="translate.convert.test_xliff2po.TestXLIFF2PO.xliff2po
+translate.convert.xliff2po
+translate.convert.xliff2po.xliff2po" class="py-name" href="#" onclick="return doclink('link-42', 'xliff2po', 'link-2');">xliff2po</a></tt><tt class="py-op">(</tt><tt class="py-name">minixlf</tt><tt class="py-op">)</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-43" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-43', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-44" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-44', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"nonsense"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"matlhapolosa"</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-45" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-45', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-46" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-46', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"bla"</tt><tt class="py-op">)</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt id="link-47" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-47', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-48" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-48', 'units', 'link-16');">units</a></tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-49" class="py-name"><a title="translate.storage.base.TranslationUnit.getnotes
+translate.storage.cpo.pounit.getnotes
+translate.storage.php.phpunit.getnotes
+translate.storage.poxliff.PoXliffUnit.getnotes
+translate.storage.properties.propunit.getnotes
+translate.storage.pypo.pounit.getnotes
+translate.storage.qph.QphUnit.getnotes
+translate.storage.rc.rcunit.getnotes
+translate.storage.tmx.tmxunit.getnotes
+translate.storage.ts2.tsunit.getnotes
+translate.storage.xliff.xliffunit.getnotes" class="py-name" href="#" onclick="return doclink('link-49', 'getnotes', 'link-38');">getnotes</a></tt><tt class="py-op">(</tt><tt class="py-string">"developer"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"Note that this is\ngarbage"</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">        <tt class="py-name">potext</tt> <tt class="py-op">=</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt id="link-50" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-50', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">potext</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">"#. Note that this is\n#. garbage\n"</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;=</tt> <tt class="py-number">0</tt> </tt>
+</div><a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line"> </tt>
+<a name="TestXLIFF2PO.test_locations"></a><div id="TestXLIFF2PO.test_locations-def"><a name="L107"></a><tt class="py-lineno">107</tt> <a class="py-toggle" href="#" id="TestXLIFF2PO.test_locations-toggle" onclick="return toggle('TestXLIFF2PO.test_locations');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_xliff2po.TestXLIFF2PO-class.html#test_locations">test_locations</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestXLIFF2PO.test_locations-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestXLIFF2PO.test_locations-expanded"><a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests location comments (#:)"""</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">        <tt class="py-name">minixlf</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-51" class="py-name"><a title="translate.convert.test_xliff2po.TestBasicXLIFF2PO.xliffskeleton
+translate.convert.test_xliff2po.TestXLIFF2PO.xliffskeleton
+translate.storage.test_poxliff.TestPOXLIFFfile.xliffskeleton
+translate.tools.test_pomerge.TestPOMerge.xliffskeleton" class="py-name" href="#" onclick="return doclink('link-51', 'xliffskeleton', 'link-6');">xliffskeleton</a></tt> <tt class="py-op">%</tt> <tt class="py-string">'''&lt;trans-unit id="1"&gt;</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line"><tt class="py-string">        &lt;source&gt;nonsense&lt;/source&gt;</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line"><tt class="py-string">        &lt;target&gt;matlhapolosa&lt;/target&gt;</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line"><tt class="py-string">        &lt;context-group name="po-reference" purpose="location"&gt;</tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line"><tt class="py-string">            &lt;context context-type="sourcefile"&gt;example.c&lt;/context&gt;</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line"><tt class="py-string">            &lt;context context-type="linenumber"&gt;123&lt;/context&gt;</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line"><tt class="py-string">            &lt;/context-group&gt;</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line"><tt class="py-string">        &lt;context-group name="po-reference" purpose="location"&gt;</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line"><tt class="py-string">            &lt;context context-type="sourcefile"&gt;place.py&lt;/context&gt;</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line"><tt class="py-string">        &lt;/context-group&gt;</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line"><tt class="py-string">&lt;/trans-unit&gt;'''</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line">        <tt id="link-52" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-52', 'pofile', 'link-13');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-53" class="py-name"><a title="translate.convert.test_xliff2po.TestXLIFF2PO.xliff2po
+translate.convert.xliff2po
+translate.convert.xliff2po.xliff2po" class="py-name" href="#" onclick="return doclink('link-53', 'xliff2po', 'link-2');">xliff2po</a></tt><tt class="py-op">(</tt><tt class="py-name">minixlf</tt><tt class="py-op">)</tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-54" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-54', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-55" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-55', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"nonsense"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"matlhapolosa"</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-56" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-56', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-57" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-57', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"bla"</tt><tt class="py-op">)</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt id="link-58" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-58', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-59" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-59', 'units', 'link-16');">units</a></tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line">        <tt class="py-name">locations</tt> <tt class="py-op">=</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-60" class="py-name" targets="Method translate.storage.base.TranslationUnit.getlocations()=translate.storage.base.TranslationUnit-class.html#getlocations,Method translate.storage.cpo.pounit.getlocations()=translate.storage.cpo.pounit-class.html#getlocations,Method translate.storage.html.htmlunit.getlocations()=translate.storage.html.htmlunit-class.html#getlocations,Method translate.storage.ini.iniunit.getlocations()=translate.storage.ini.iniunit-class.html#getlocations,Method translate.storage.php.phpunit.getlocations()=translate.storage.php.phpunit-class.html#getlocations,Method translate.storage.poxliff.PoXliffUnit.getlocations()=translate.storage.poxliff.PoXliffUnit-class.html#getlocations,Method translate.storage.properties.propunit.getlocations()=translate.storage.properties.propunit-class.html#getlocations,Method translate.storage.pypo.pounit.getlocations()=translate.storage.pypo.pounit-class.html#getlocations,Method translate.storage.rc.rcunit.getlocations()=translate.storage.rc.rcunit-class.html#getlocations,Method translate.storage.ts2.tsunit.getlocations()=translate.storage.ts2.tsunit-class.html#getlocations,Method translate.storage.txt.TxtUnit.getlocations()=translate.storage.txt.TxtUnit-class.html#getlocations,Method translate.storage.xliff.xliffunit.getlocations()=translate.storage.xliff.xliffunit-class.html#getlocations"><a title="translate.storage.base.TranslationUnit.getlocations
+translate.storage.cpo.pounit.getlocations
+translate.storage.html.htmlunit.getlocations
+translate.storage.ini.iniunit.getlocations
+translate.storage.php.phpunit.getlocations
+translate.storage.poxliff.PoXliffUnit.getlocations
+translate.storage.properties.propunit.getlocations
+translate.storage.pypo.pounit.getlocations
+translate.storage.rc.rcunit.getlocations
+translate.storage.ts2.tsunit.getlocations
+translate.storage.txt.TxtUnit.getlocations
+translate.storage.xliff.xliffunit.getlocations" class="py-name" href="#" onclick="return doclink('link-60', 'getlocations', 'link-60');">getlocations</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">locations</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-number">2</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-string">"example.c:123"</tt> <tt class="py-keyword">in</tt> <tt class="py-name">locations</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-string">"place.py"</tt> <tt class="py-keyword">in</tt> <tt class="py-name">locations</tt> </tt>
+</div><a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line"> </tt>
+<a name="TestXLIFF2PO.test_fuzzy"></a><div id="TestXLIFF2PO.test_fuzzy-def"><a name="L129"></a><tt class="py-lineno">129</tt> <a class="py-toggle" href="#" id="TestXLIFF2PO.test_fuzzy-toggle" onclick="return toggle('TestXLIFF2PO.test_fuzzy');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_xliff2po.TestXLIFF2PO-class.html#test_fuzzy">test_fuzzy</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestXLIFF2PO.test_fuzzy-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestXLIFF2PO.test_fuzzy-expanded"><a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests fuzzyness"""</tt> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line">        <tt class="py-name">minixlf</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-61" class="py-name"><a title="translate.convert.test_xliff2po.TestBasicXLIFF2PO.xliffskeleton
+translate.convert.test_xliff2po.TestXLIFF2PO.xliffskeleton
+translate.storage.test_poxliff.TestPOXLIFFfile.xliffskeleton
+translate.tools.test_pomerge.TestPOMerge.xliffskeleton" class="py-name" href="#" onclick="return doclink('link-61', 'xliffskeleton', 'link-6');">xliffskeleton</a></tt> <tt class="py-op">%</tt> <tt class="py-string">'''&lt;trans-unit approved="no"&gt;</tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line"><tt class="py-string">            &lt;source&gt;book&lt;/source&gt;</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line"><tt class="py-string">        &lt;/trans-unit&gt;</tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line"><tt class="py-string">        &lt;trans-unit id="2" approved="yes"&gt;</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line"><tt class="py-string">            &lt;source&gt;nonsense&lt;/source&gt;</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line"><tt class="py-string">            &lt;target&gt;matlhapolosa&lt;/target&gt;</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line"><tt class="py-string">        &lt;/trans-unit&gt;</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line"><tt class="py-string">        &lt;trans-unit id="2" approved="no"&gt;</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line"><tt class="py-string">            &lt;source&gt;verb&lt;/source&gt;</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line"><tt class="py-string">            &lt;target state="needs-review-translation"&gt;lediri&lt;/target&gt;</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line"><tt class="py-string">        &lt;/trans-unit&gt;'''</tt> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line">        <tt id="link-62" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-62', 'pofile', 'link-13');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-63" class="py-name"><a title="translate.convert.test_xliff2po.TestXLIFF2PO.xliff2po
+translate.convert.xliff2po
+translate.convert.xliff2po.xliff2po" class="py-name" href="#" onclick="return doclink('link-63', 'xliff2po', 'link-2');">xliff2po</a></tt><tt class="py-op">(</tt><tt class="py-name">minixlf</tt><tt class="py-op">)</tt> </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-64" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-64', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-65" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-65', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"nonsense"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"matlhapolosa"</tt> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-66" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-66', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-67" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-67', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"verb"</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"lediri"</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-68" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-68', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-69" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-69', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"book"</tt><tt class="py-op">)</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-70" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-70', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-71" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-71', 'translate', 'link-0');">translate</a></tt><tt class="py-op">(</tt><tt class="py-string">"bla"</tt><tt class="py-op">)</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt id="link-72" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-72', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-73" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-73', 'units', 'link-16');">units</a></tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-number">3</tt> </tt>
+<a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line">        <tt class="py-comment">#TODO: decide if this one should be fuzzy:</tt> </tt>
+<a name="L149"></a><tt class="py-lineno">149</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-comment">#assert pofile.units[0].isfuzzy()</tt> </tt>
+<a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-keyword">assert</tt> <tt class="py-keyword">not</tt> <tt id="link-74" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-74', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-75" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-75', 'units', 'link-16');">units</a></tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt id="link-76" class="py-name" targets="Method translate.filters.checks.StandardUnitChecker.isfuzzy()=translate.filters.checks.StandardUnitChecker-class.html#isfuzzy,Method translate.storage.base.TranslationUnit.isfuzzy()=translate.storage.base.TranslationUnit-class.html#isfuzzy,Method translate.storage.cpo.pounit.isfuzzy()=translate.storage.cpo.pounit-class.html#isfuzzy,Method translate.storage.pypo.pounit.isfuzzy()=translate.storage.pypo.pounit-class.html#isfuzzy,Method translate.storage.ts2.tsunit.isfuzzy()=translate.storage.ts2.tsunit-class.html#isfuzzy,Method translate.storage.xliff.xliffunit.isfuzzy()=translate.storage.xliff.xliffunit-class.html#isfuzzy"><a title="translate.filters.checks.StandardUnitChecker.isfuzzy
+translate.storage.base.TranslationUnit.isfuzzy
+translate.storage.cpo.pounit.isfuzzy
+translate.storage.pypo.pounit.isfuzzy
+translate.storage.ts2.tsunit.isfuzzy
+translate.storage.xliff.xliffunit.isfuzzy" class="py-name" href="#" onclick="return doclink('link-76', 'isfuzzy', 'link-76');">isfuzzy</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-77" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-77', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-78" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-78', 'units', 'link-16');">units</a></tt><tt class="py-op">[</tt><tt class="py-number">2</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt id="link-79" class="py-name"><a title="translate.filters.checks.StandardUnitChecker.isfuzzy
+translate.storage.base.TranslationUnit.isfuzzy
+translate.storage.cpo.pounit.isfuzzy
+translate.storage.pypo.pounit.isfuzzy
+translate.storage.ts2.tsunit.isfuzzy
+translate.storage.xliff.xliffunit.isfuzzy" class="py-name" href="#" onclick="return doclink('link-79', 'isfuzzy', 'link-76');">isfuzzy</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line">         </tt>
+<a name="TestXLIFF2PO.test_plurals"></a><div id="TestXLIFF2PO.test_plurals-def"><a name="L153"></a><tt class="py-lineno">153</tt> <a class="py-toggle" href="#" id="TestXLIFF2PO.test_plurals-toggle" onclick="return toggle('TestXLIFF2PO.test_plurals');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_xliff2po.TestXLIFF2PO-class.html#test_plurals">test_plurals</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestXLIFF2PO.test_plurals-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestXLIFF2PO.test_plurals-expanded"><a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests fuzzyness"""</tt> </tt>
+<a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line">        <tt class="py-name">minixlf</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-80" class="py-name"><a title="translate.convert.test_xliff2po.TestBasicXLIFF2PO.xliffskeleton
+translate.convert.test_xliff2po.TestXLIFF2PO.xliffskeleton
+translate.storage.test_poxliff.TestPOXLIFFfile.xliffskeleton
+translate.tools.test_pomerge.TestPOMerge.xliffskeleton" class="py-name" href="#" onclick="return doclink('link-80', 'xliffskeleton', 'link-6');">xliffskeleton</a></tt> <tt class="py-op">%</tt> <tt class="py-string">'''&lt;group restype="x-gettext-plurals"&gt;</tt> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line"><tt class="py-string">        &lt;trans-unit id="1[0]" xml:space="preserve"&gt;</tt> </tt>
+<a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line"><tt class="py-string">            &lt;source&gt;cow&lt;/source&gt;</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line"><tt class="py-string">            &lt;target&gt;inkomo&lt;/target&gt;</tt> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line"><tt class="py-string">        &lt;/trans-unit&gt;</tt> </tt>
+<a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line"><tt class="py-string">        &lt;trans-unit id="1[1]" xml:space="preserve"&gt;</tt> </tt>
+<a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line"><tt class="py-string">            &lt;source&gt;cows&lt;/source&gt;</tt> </tt>
+<a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line"><tt class="py-string">            &lt;target&gt;iinkomo&lt;/target&gt;</tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line"><tt class="py-string">        &lt;/trans-unit&gt;</tt> </tt>
+<a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line"><tt class="py-string">&lt;/group&gt;'''</tt> </tt>
+<a name="L165"></a><tt class="py-lineno">165</tt>  <tt class="py-line">        <tt id="link-81" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-81', 'pofile', 'link-13');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-82" class="py-name"><a title="translate.convert.test_xliff2po.TestXLIFF2PO.xliff2po
+translate.convert.xliff2po
+translate.convert.xliff2po.xliff2po" class="py-name" href="#" onclick="return doclink('link-82', 'xliff2po', 'link-2');">xliff2po</a></tt><tt class="py-op">(</tt><tt class="py-name">minixlf</tt><tt class="py-op">)</tt> </tt>
+<a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt id="link-83" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-83', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L167"></a><tt class="py-lineno">167</tt>  <tt class="py-line">        <tt class="py-name">potext</tt> <tt class="py-op">=</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt id="link-84" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-84', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L168"></a><tt class="py-lineno">168</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt id="link-85" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-85', 'pofile', 'link-13');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-86" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-86', 'units', 'link-16');">units</a></tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-number">1</tt> </tt>
+<a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">potext</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">'msgid_plural "cows"'</tt><tt class="py-op">)</tt> </tt>
+<a name="L170"></a><tt class="py-lineno">170</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">potext</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">'msgstr[0] "inkomo"'</tt><tt class="py-op">)</tt> </tt>
+<a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">potext</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">'msgstr[1] "iinkomo"'</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L172"></a><tt class="py-lineno">172</tt>  <tt class="py-line"> </tt>
+<a name="L173"></a><tt class="py-lineno">173</tt>  <tt class="py-line"> </tt>
+<a name="TestBasicXLIFF2PO"></a><div id="TestBasicXLIFF2PO-def"><a name="L174"></a><tt class="py-lineno">174</tt> <a class="py-toggle" href="#" id="TestBasicXLIFF2PO-toggle" onclick="return toggle('TestBasicXLIFF2PO');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="translate.convert.test_xliff2po.TestBasicXLIFF2PO-class.html">TestBasicXLIFF2PO</a><tt class="py-op">(</tt><tt class="py-base-class">TestXLIFF2PO</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestBasicXLIFF2PO-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TestBasicXLIFF2PO-expanded"><a name="L175"></a><tt class="py-lineno">175</tt>  <tt class="py-line">    <tt class="py-docstring">"""This tests a basic XLIFF file without xmlns attribute"""</tt> </tt>
+<a name="L176"></a><tt class="py-lineno">176</tt>  <tt class="py-line"> </tt>
+<a name="L177"></a><tt class="py-lineno">177</tt>  <tt class="py-line">    <tt id="link-87" class="py-name"><a title="translate.convert.test_xliff2po.TestBasicXLIFF2PO.xliffskeleton
+translate.convert.test_xliff2po.TestXLIFF2PO.xliffskeleton
+translate.storage.test_poxliff.TestPOXLIFFfile.xliffskeleton
+translate.tools.test_pomerge.TestPOMerge.xliffskeleton" class="py-name" href="#" onclick="return doclink('link-87', 'xliffskeleton', 'link-6');">xliffskeleton</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'''&lt;?xml version="1.0" ?&gt;</tt> </tt>
+<a name="L178"></a><tt class="py-lineno">178</tt>  <tt class="py-line"><tt class="py-string">&lt;xliff version="1.1"&gt;</tt> </tt>
+<a name="L179"></a><tt class="py-lineno">179</tt>  <tt class="py-line"><tt class="py-string">  &lt;file original="filename.po" source-language="en-US" datatype="po"&gt;</tt> </tt>
+<a name="L180"></a><tt class="py-lineno">180</tt>  <tt class="py-line"><tt class="py-string">    &lt;body&gt;</tt> </tt>
+<a name="L181"></a><tt class="py-lineno">181</tt>  <tt class="py-line"><tt class="py-string">        %s</tt> </tt>
+<a name="L182"></a><tt class="py-lineno">182</tt>  <tt class="py-line"><tt class="py-string">    &lt;/body&gt;</tt> </tt>
+<a name="L183"></a><tt class="py-lineno">183</tt>  <tt class="py-line"><tt class="py-string">  &lt;/file&gt;</tt> </tt>
+<a name="L184"></a><tt class="py-lineno">184</tt>  <tt class="py-line"><tt class="py-string">&lt;/xliff&gt;'''</tt> </tt>
+</div><a name="L185"></a><tt class="py-lineno">185</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://translate.sourceforge.net">Translate Toolkit</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Tue Sep 23 13:51:05 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

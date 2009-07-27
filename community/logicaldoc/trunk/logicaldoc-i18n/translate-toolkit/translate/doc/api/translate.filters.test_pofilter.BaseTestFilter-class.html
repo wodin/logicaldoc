@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>translate.filters.test_pofilter.BaseTestFilter</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://translate.sourceforge.net">Translate Toolkit</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;translate ::
+        <a href="translate.filters-module.html">Package&nbsp;filters</a> ::
+        <a href="translate.filters.test_pofilter-module.html">Module&nbsp;test_pofilter</a> ::
+        Class&nbsp;BaseTestFilter
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="translate.filters.test_pofilter.BaseTestFilter-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class BaseTestFilter</h1><p class="nomargin-top"><span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter">source&nbsp;code</a></span></p>
+<pre class="base-tree">
+object --+
+         |
+        <strong class="uidshort">BaseTestFilter</strong>
+</pre>
+
+<dl><dt>Known Subclasses:</dt>
+<dd>
+      <ul class="subclass-list">
+<li><a href="translate.filters.test_pofilter.TestPOFilter-class.html">TestPOFilter</a></li><li>, <a href="translate.filters.test_pofilter.TestTMXFilter-class.html">TestTMXFilter</a></li><li>, <a href="translate.filters.test_pofilter.TestXliffFilter-class.html">TestXliffFilter</a></li>  </ul>
+</dd></dl>
+
+<hr />
+<p>Base class for filter tests.</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="parse_text"></a><span class="summary-sig-name">parse_text</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">filetext</span>)</span><br />
+      helper that parses xliff file content without requiring files</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.parse_text">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="filter"></a><span class="summary-sig-name">filter</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">translationstore</span>,
+        <span class="summary-sig-arg">checkerconfig</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">cmdlineoptions</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Helper that passes a translations store through a filter, and returns
+      the resulting store.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.filter">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_simplepass"></a><span class="summary-sig-name">test_simplepass</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      checks that an obviously correct string passes</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.test_simplepass">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_simplefail"></a><span class="summary-sig-name">test_simplefail</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      checks that an obviously wrong string fails</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.test_simplefail">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_variables_across_lines"></a><span class="summary-sig-name">test_variables_across_lines</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test that variables can span lines and still fail/pass</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.test_variables_across_lines">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_ignore_if_already_marked"></a><span class="summary-sig-name">test_ignore_if_already_marked</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      check that we don't add another failing marker if the message is 
+      already marked as failed</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.test_ignore_if_already_marked">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_non_existant_check"></a><span class="summary-sig-name">test_non_existant_check</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      check that we report an error if a user tries to run a non-existant 
+      test</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.test_non_existant_check">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_list_all_tests"></a><span class="summary-sig-name">test_list_all_tests</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      lists all available tests</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.test_list_all_tests">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_test_against_fuzzy"></a><span class="summary-sig-name">test_test_against_fuzzy</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      test whether to run tests against fuzzy translations</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.test_test_against_fuzzy">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_test_against_review"></a><span class="summary-sig-name">test_test_against_review</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      test whether to run tests against translations marked for review</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.test_test_against_review">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_isfuzzy"></a><span class="summary-sig-name">test_isfuzzy</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      tests the extraction of items marked fuzzy</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.test_isfuzzy">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_isreview"></a><span class="summary-sig-name">test_isreview</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      tests the extraction of items marked review</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.test_isreview">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_unicode"></a><span class="summary-sig-name">test_unicode</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      tests that we can handle UTF-8 encoded characters when there is no 
+      known header specified encoding</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.test_unicode">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_preconditions"></a><span class="summary-sig-name">test_preconditions</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      tests that the preconditions work correctly</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="translate.filters.test_pofilter-pysrc.html#BaseTestFilter.test_preconditions">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__init__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>,
+      <code>__str__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="filename"></a><span class="summary-name">filename</span> = <code title="''"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://translate.sourceforge.net">Translate Toolkit</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Tue Sep 23 13:50:52 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
