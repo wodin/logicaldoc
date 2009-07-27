@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>translate.convert.test_csv2po</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://translate.sourceforge.net">Translate Toolkit</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;translate ::
+        <a href="translate.convert-module.html">Package&nbsp;convert</a> ::
+        Module&nbsp;test_csv2po
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="translate.convert.test_csv2po-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="translate.convert.test_csv2po-module.html">Module translate.convert.test_csv2po</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment">#!/usr/bin/env python</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Method translate.storage.base.TranslationStore.translate()=translate.storage.base.TranslationStore-class.html#translate,Method translate.storage.tmx.tmxfile.translate()=translate.storage.tmx.tmxfile-class.html#translate"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-0', 'translate', 'link-0');">translate</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Package translate.convert=translate.convert-module.html,Module translate.convert.convert=translate.convert.convert-module.html,Method translate.convert.test_oo2po.TestOO2PO.convert()=translate.convert.test_oo2po.TestOO2PO-class.html#convert"><a title="translate.convert
+translate.convert.convert
+translate.convert.test_oo2po.TestOO2PO.convert" class="py-name" href="#" onclick="return doclink('link-1', 'convert', 'link-1');">convert</a></tt> <tt class="py-keyword">import</tt> <tt id="link-2" class="py-name" targets="Module translate.convert.csv2po=translate.convert.csv2po-module.html,Class translate.convert.csv2po.csv2po=translate.convert.csv2po.csv2po-class.html,Method translate.convert.test_csv2po.TestCSV2PO.csv2po()=translate.convert.test_csv2po.TestCSV2PO-class.html#csv2po,Method translate.convert.test_po2csv.TestPO2CSV.csv2po()=translate.convert.test_po2csv.TestPO2CSV-class.html#csv2po"><a title="translate.convert.csv2po
+translate.convert.csv2po.csv2po
+translate.convert.test_csv2po.TestCSV2PO.csv2po
+translate.convert.test_po2csv.TestPO2CSV.csv2po" class="py-name" href="#" onclick="return doclink('link-2', 'csv2po', 'link-2');">csv2po</a></tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-3" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-3', 'translate', 'link-0');">translate</a></tt><tt class="py-op">.</tt><tt id="link-4" class="py-name"><a title="translate.convert
+translate.convert.convert
+translate.convert.test_oo2po.TestOO2PO.convert" class="py-name" href="#" onclick="return doclink('link-4', 'convert', 'link-1');">convert</a></tt> <tt class="py-keyword">import</tt> <tt id="link-5" class="py-name" targets="Module translate.convert.test_convert=translate.convert.test_convert-module.html"><a title="translate.convert.test_convert" class="py-name" href="#" onclick="return doclink('link-5', 'test_convert', 'link-5');">test_convert</a></tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-6" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-6', 'translate', 'link-0');">translate</a></tt><tt class="py-op">.</tt><tt id="link-7" class="py-name" targets="Package translate.misc=translate.misc-module.html"><a title="translate.misc" class="py-name" href="#" onclick="return doclink('link-7', 'misc', 'link-7');">misc</a></tt> <tt class="py-keyword">import</tt> <tt id="link-8" class="py-name" targets="Module translate.misc.wStringIO=translate.misc.wStringIO-module.html"><a title="translate.misc.wStringIO" class="py-name" href="#" onclick="return doclink('link-8', 'wStringIO', 'link-8');">wStringIO</a></tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-9" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-9', 'translate', 'link-0');">translate</a></tt><tt class="py-op">.</tt><tt id="link-10" class="py-name" targets="Package translate.storage=translate.storage-module.html"><a title="translate.storage" class="py-name" href="#" onclick="return doclink('link-10', 'storage', 'link-10');">storage</a></tt> <tt class="py-keyword">import</tt> <tt id="link-11" class="py-name" targets="Module translate.storage.po=translate.storage.po-module.html"><a title="translate.storage.po" class="py-name" href="#" onclick="return doclink('link-11', 'po', 'link-11');">po</a></tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-12" class="py-name"><a title="translate.storage.base.TranslationStore.translate
+translate.storage.tmx.tmxfile.translate" class="py-name" href="#" onclick="return doclink('link-12', 'translate', 'link-0');">translate</a></tt><tt class="py-op">.</tt><tt id="link-13" class="py-name"><a title="translate.storage" class="py-name" href="#" onclick="return doclink('link-13', 'storage', 'link-10');">storage</a></tt> <tt class="py-keyword">import</tt> <tt id="link-14" class="py-name" targets="Module translate.storage.csvl10n=translate.storage.csvl10n-module.html"><a title="translate.storage.csvl10n" class="py-name" href="#" onclick="return doclink('link-14', 'csvl10n', 'link-14');">csvl10n</a></tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"> </tt>
+<a name="TestCSV2PO"></a><div id="TestCSV2PO-def"><a name="L9"></a><tt class="py-lineno">  9</tt> <a class="py-toggle" href="#" id="TestCSV2PO-toggle" onclick="return toggle('TestCSV2PO');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="translate.convert.test_csv2po.TestCSV2PO-class.html">TestCSV2PO</a><tt class="py-op">:</tt> </tt>
+</div><div id="TestCSV2PO-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TestCSV2PO-expanded"><a name="TestCSV2PO.csv2po"></a><div id="TestCSV2PO.csv2po-def"><a name="L10"></a><tt class="py-lineno"> 10</tt> <a class="py-toggle" href="#" id="TestCSV2PO.csv2po-toggle" onclick="return toggle('TestCSV2PO.csv2po');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_csv2po.TestCSV2PO-class.html#csv2po">csv2po</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">csvsource</tt><tt class="py-op">,</tt> <tt class="py-param">template</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestCSV2PO.csv2po-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestCSV2PO.csv2po-expanded"><a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line">        <tt class="py-docstring">"""helper that converts csv source to po source without requiring files"""</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line">        <tt class="py-name">inputfile</tt> <tt class="py-op">=</tt> <tt id="link-15" class="py-name"><a title="translate.misc.wStringIO" class="py-name" href="#" onclick="return doclink('link-15', 'wStringIO', 'link-8');">wStringIO</a></tt><tt class="py-op">.</tt><tt id="link-16" class="py-name" targets="Class translate.misc.wStringIO.StringIO=translate.misc.wStringIO.StringIO-class.html"><a title="translate.misc.wStringIO.StringIO" class="py-name" href="#" onclick="return doclink('link-16', 'StringIO', 'link-16');">StringIO</a></tt><tt class="py-op">(</tt><tt class="py-name">csvsource</tt><tt class="py-op">)</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line">        <tt class="py-name">inputcsv</tt> <tt class="py-op">=</tt> <tt id="link-17" class="py-name"><a title="translate.storage.csvl10n" class="py-name" href="#" onclick="return doclink('link-17', 'csvl10n', 'link-14');">csvl10n</a></tt><tt class="py-op">.</tt><tt id="link-18" class="py-name" targets="Class translate.storage.csvl10n.csvfile=translate.storage.csvl10n.csvfile-class.html"><a title="translate.storage.csvl10n.csvfile" class="py-name" href="#" onclick="return doclink('link-18', 'csvfile', 'link-18');">csvfile</a></tt><tt class="py-op">(</tt><tt class="py-name">inputfile</tt><tt class="py-op">)</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">template</tt><tt class="py-op">:</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line">            <tt class="py-name">templatefile</tt> <tt class="py-op">=</tt> <tt id="link-19" class="py-name"><a title="translate.misc.wStringIO" class="py-name" href="#" onclick="return doclink('link-19', 'wStringIO', 'link-8');">wStringIO</a></tt><tt class="py-op">.</tt><tt id="link-20" class="py-name"><a title="translate.misc.wStringIO.StringIO" class="py-name" href="#" onclick="return doclink('link-20', 'StringIO', 'link-16');">StringIO</a></tt><tt class="py-op">(</tt><tt class="py-name">template</tt><tt class="py-op">)</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line">            <tt class="py-name">inputpot</tt> <tt class="py-op">=</tt> <tt id="link-21" class="py-name"><a title="translate.storage.po" class="py-name" href="#" onclick="return doclink('link-21', 'po', 'link-11');">po</a></tt><tt class="py-op">.</tt><tt id="link-22" class="py-name" targets="Class translate.storage.cpo.pofile=translate.storage.cpo.pofile-class.html,Class translate.storage.pocommon.pofile=translate.storage.pocommon.pofile-class.html,Class translate.storage.pypo.pofile=translate.storage.pypo.pofile-class.html"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-22', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">(</tt><tt class="py-name">templatefile</tt><tt class="py-op">)</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line">            <tt class="py-name">inputpot</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line">        <tt class="py-name">convertor</tt> <tt class="py-op">=</tt> <tt id="link-23" class="py-name"><a title="translate.convert.csv2po
+translate.convert.csv2po.csv2po
+translate.convert.test_csv2po.TestCSV2PO.csv2po
+translate.convert.test_po2csv.TestPO2CSV.csv2po" class="py-name" href="#" onclick="return doclink('link-23', 'csv2po', 'link-2');">csv2po</a></tt><tt class="py-op">.</tt><tt id="link-24" class="py-name"><a title="translate.convert.csv2po
+translate.convert.csv2po.csv2po
+translate.convert.test_csv2po.TestCSV2PO.csv2po
+translate.convert.test_po2csv.TestPO2CSV.csv2po" class="py-name" href="#" onclick="return doclink('link-24', 'csv2po', 'link-2');">csv2po</a></tt><tt class="py-op">(</tt><tt class="py-name">templatepo</tt><tt class="py-op">=</tt><tt class="py-name">inputpot</tt><tt class="py-op">)</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line">        <tt class="py-name">outputpo</tt> <tt class="py-op">=</tt> <tt class="py-name">convertor</tt><tt class="py-op">.</tt><tt id="link-25" class="py-name" targets="Method translate.convert.csv2po.csv2po.convertstore()=translate.convert.csv2po.csv2po-class.html#convertstore,Method translate.convert.dtd2po.dtd2po.convertstore()=translate.convert.dtd2po.dtd2po-class.html#convertstore,Method translate.convert.ini2po.ini2po.convertstore()=translate.convert.ini2po.ini2po-class.html#convertstore,Method translate.convert.odf2po.odf2po.convertstore()=translate.convert.odf2po.odf2po-class.html#convertstore,Method translate.convert.oo2po.oo2po.convertstore()=translate.convert.oo2po.oo2po-class.html#convertstore,Method translate.convert.oo2xliff.oo2xliff.convertstore()=translate.convert.oo2xliff.oo2xliff-class.html#convertstore,Method translate.convert.php2po.php2po.convertstore()=translate.convert.php2po.php2po-class.html#convertstore,Method translate.convert.po2csv.po2csv.convertstore()=translate.convert.po2csv.po2csv-class.html#convertstore,Method translate.convert.po2dtd.po2dtd.convertstore()=translate.convert.po2dtd.po2dtd-class.html#convertstore,Method translate.convert.po2dtd.redtd.convertstore()=translate.convert.po2dtd.redtd-class.html#convertstore,Method translate.convert.po2html.po2html.convertstore()=translate.convert.po2html.po2html-class.html#convertstore,Method translate.convert.po2ini.reini.convertstore()=translate.convert.po2ini.reini-class.html#convertstore,Method translate.convert.po2oo.reoo.convertstore()=translate.convert.po2oo.reoo-class.html#convertstore,Method translate.convert.po2php.rephp.convertstore()=translate.convert.po2php.rephp-class.html#convertstore,Method translate.convert.po2prop.reprop.convertstore()=translate.convert.po2prop.reprop-class.html#convertstore,Method translate.convert.po2rc.rerc.convertstore()=translate.convert.po2rc.rerc-class.html#convertstore,Method translate.convert.po2ts.po2ts.convertstore()=translate.convert.po2ts.po2ts-class.html#convertstore,Method translate.convert.po2txt.po2txt.convertstore()=translate.convert.po2txt.po2txt-class.html#convertstore,Method translate.convert.po2xliff.po2xliff.convertstore()=translate.convert.po2xliff.po2xliff-class.html#convertstore,Method translate.convert.prop2po.prop2po.convertstore()=translate.convert.prop2po.prop2po-class.html#convertstore,Method translate.convert.rc2po.rc2po.convertstore()=translate.convert.rc2po.rc2po-class.html#convertstore,Method translate.convert.txt2po.txt2po.convertstore()=translate.convert.txt2po.txt2po-class.html#convertstore,Method translate.convert.xliff2oo.reoo.convertstore()=translate.convert.xliff2oo.reoo-class.html#convertstore,Method translate.convert.xliff2po.xliff2po.convertstore()=translate.convert.xliff2po.xliff2po-class.html#convertstore,Method translate.tools.pocompile.POCompile.convertstore()=translate.tools.pocompile.POCompile-class.html#convertstore,Method translate.tools.podebug.podebug.convertstore()=translate.tools.podebug.podebug-class.html#convertstore,Method translate.tools.posegment.segment.convertstore()=translate.tools.posegment.segment-class.html#convertstore"><a title="translate.convert.csv2po.csv2po.convertstore
+translate.convert.dtd2po.dtd2po.convertstore
+translate.convert.ini2po.ini2po.convertstore
+translate.convert.odf2po.odf2po.convertstore
+translate.convert.oo2po.oo2po.convertstore
+translate.convert.oo2xliff.oo2xliff.convertstore
+translate.convert.php2po.php2po.convertstore
+translate.convert.po2csv.po2csv.convertstore
+translate.convert.po2dtd.po2dtd.convertstore
+translate.convert.po2dtd.redtd.convertstore
+translate.convert.po2html.po2html.convertstore
+translate.convert.po2ini.reini.convertstore
+translate.convert.po2oo.reoo.convertstore
+translate.convert.po2php.rephp.convertstore
+translate.convert.po2prop.reprop.convertstore
+translate.convert.po2rc.rerc.convertstore
+translate.convert.po2ts.po2ts.convertstore
+translate.convert.po2txt.po2txt.convertstore
+translate.convert.po2xliff.po2xliff.convertstore
+translate.convert.prop2po.prop2po.convertstore
+translate.convert.rc2po.rc2po.convertstore
+translate.convert.txt2po.txt2po.convertstore
+translate.convert.xliff2oo.reoo.convertstore
+translate.convert.xliff2po.xliff2po.convertstore
+translate.tools.pocompile.POCompile.convertstore
+translate.tools.podebug.podebug.convertstore
+translate.tools.posegment.segment.convertstore" class="py-name" href="#" onclick="return doclink('link-25', 'convertstore', 'link-25');">convertstore</a></tt><tt class="py-op">(</tt><tt class="py-name">inputcsv</tt><tt class="py-op">)</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">outputpo</tt> </tt>
+</div><a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line"> </tt>
+<a name="TestCSV2PO.singleelement"></a><div id="TestCSV2PO.singleelement-def"><a name="L23"></a><tt class="py-lineno"> 23</tt> <a class="py-toggle" href="#" id="TestCSV2PO.singleelement-toggle" onclick="return toggle('TestCSV2PO.singleelement');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_csv2po.TestCSV2PO-class.html#singleelement">singleelement</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">storage</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestCSV2PO.singleelement-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestCSV2PO.singleelement-expanded"><a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line">        <tt class="py-docstring">"""checks that the pofile contains a single non-header element, and returns it"""</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt id="link-26" class="py-name"><a title="translate.storage" class="py-name" href="#" onclick="return doclink('link-26', 'storage', 'link-10');">storage</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt id="link-27" class="py-name"><a title="translate.storage" class="py-name" href="#" onclick="return doclink('link-27', 'storage', 'link-10');">storage</a></tt><tt class="py-op">.</tt><tt id="link-28" class="py-name" targets="Variable translate.tools.poterminology.TerminologyOptionParser.units=translate.tools.poterminology.TerminologyOptionParser-class.html#units"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-28', 'units', 'link-28');">units</a></tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-number">1</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt id="link-29" class="py-name"><a title="translate.storage" class="py-name" href="#" onclick="return doclink('link-29', 'storage', 'link-10');">storage</a></tt><tt class="py-op">.</tt><tt id="link-30" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-30', 'units', 'link-28');">units</a></tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+</div><a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"> </tt>
+<a name="TestCSV2PO.test_simpleentity"></a><div id="TestCSV2PO.test_simpleentity-def"><a name="L29"></a><tt class="py-lineno"> 29</tt> <a class="py-toggle" href="#" id="TestCSV2PO.test_simpleentity-toggle" onclick="return toggle('TestCSV2PO.test_simpleentity');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_csv2po.TestCSV2PO-class.html#test_simpleentity">test_simpleentity</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestCSV2PO.test_simpleentity-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestCSV2PO.test_simpleentity-expanded"><a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">        <tt class="py-docstring">"""checks that a simple csv entry definition converts properly to a po entry"""</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">        <tt class="py-name">csvheader</tt> <tt class="py-op">=</tt> <tt class="py-string">'comment,original,translation\n'</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">        <tt class="py-name">csvsource</tt> <tt class="py-op">=</tt> <tt class="py-string">'intl.charset.default,ISO-8859-1,UTF-16'</tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">        <tt class="py-comment"># Headerless</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt id="link-31" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-31', 'pofile', 'link-22');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-32" class="py-name"><a title="translate.convert.csv2po
+translate.convert.csv2po.csv2po
+translate.convert.test_csv2po.TestCSV2PO.csv2po
+translate.convert.test_po2csv.TestPO2CSV.csv2po" class="py-name" href="#" onclick="return doclink('link-32', 'csv2po', 'link-2');">csv2po</a></tt><tt class="py-op">(</tt><tt class="py-name">csvsource</tt><tt class="py-op">)</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">        <tt id="link-33" class="py-name" targets="Class translate.storage.cpo.pounit=translate.storage.cpo.pounit-class.html,Class translate.storage.pocommon.pounit=translate.storage.pocommon.pounit-class.html,Class translate.storage.pypo.pounit=translate.storage.pypo.pounit-class.html"><a title="translate.storage.cpo.pounit
+translate.storage.pocommon.pounit
+translate.storage.pypo.pounit" class="py-name" href="#" onclick="return doclink('link-33', 'pounit', 'link-33');">pounit</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-34" class="py-name" targets="Method translate.convert.test_csv2po.TestCSV2PO.singleelement()=translate.convert.test_csv2po.TestCSV2PO-class.html#singleelement,Method translate.convert.test_dtd2po.TestDTD2PO.singleelement()=translate.convert.test_dtd2po.TestDTD2PO-class.html#singleelement,Method translate.convert.test_mozfunny2prop.TestInc2PO.singleelement()=translate.convert.test_mozfunny2prop.TestInc2PO-class.html#singleelement,Method translate.convert.test_oo2po.TestOO2PO.singleelement()=translate.convert.test_oo2po.TestOO2PO-class.html#singleelement,Method translate.convert.test_php2po.TestPhp2PO.singleelement()=translate.convert.test_php2po.TestPhp2PO-class.html#singleelement,Method translate.convert.test_po2csv.TestPO2CSV.singleelement()=translate.convert.test_po2csv.TestPO2CSV-class.html#singleelement,Method translate.convert.test_po2ts.TestPO2TS.singleelement()=translate.convert.test_po2ts.TestPO2TS-class.html#singleelement,Method translate.convert.test_prop2po.TestProp2PO.singleelement()=translate.convert.test_prop2po.TestProp2PO-class.html#singleelement,Method translate.convert.test_txt2po.TestDoku2po.singleelement()=translate.convert.test_txt2po.TestDoku2po-class.html#singleelement,Method translate.convert.test_txt2po.TestTxt2PO.singleelement()=translate.convert.test_txt2po.TestTxt2PO-class.html#singleelement"><a title="translate.convert.test_csv2po.TestCSV2PO.singleelement
+translate.convert.test_dtd2po.TestDTD2PO.singleelement
+translate.convert.test_mozfunny2prop.TestInc2PO.singleelement
+translate.convert.test_oo2po.TestOO2PO.singleelement
+translate.convert.test_php2po.TestPhp2PO.singleelement
+translate.convert.test_po2csv.TestPO2CSV.singleelement
+translate.convert.test_po2ts.TestPO2TS.singleelement
+translate.convert.test_prop2po.TestProp2PO.singleelement
+translate.convert.test_txt2po.TestDoku2po.singleelement
+translate.convert.test_txt2po.TestTxt2PO.singleelement" class="py-name" href="#" onclick="return doclink('link-34', 'singleelement', 'link-34');">singleelement</a></tt><tt class="py-op">(</tt><tt id="link-35" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-35', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">        <tt class="py-comment"># With header</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt id="link-36" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-36', 'pofile', 'link-22');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-37" class="py-name"><a title="translate.convert.csv2po
+translate.convert.csv2po.csv2po
+translate.convert.test_csv2po.TestCSV2PO.csv2po
+translate.convert.test_po2csv.TestPO2CSV.csv2po" class="py-name" href="#" onclick="return doclink('link-37', 'csv2po', 'link-2');">csv2po</a></tt><tt class="py-op">(</tt><tt class="py-name">csvheader</tt> <tt class="py-op">+</tt> <tt class="py-name">csvsource</tt><tt class="py-op">)</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">        <tt id="link-38" class="py-name"><a title="translate.storage.cpo.pounit
+translate.storage.pocommon.pounit
+translate.storage.pypo.pounit" class="py-name" href="#" onclick="return doclink('link-38', 'pounit', 'link-33');">pounit</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-39" class="py-name"><a title="translate.convert.test_csv2po.TestCSV2PO.singleelement
+translate.convert.test_dtd2po.TestDTD2PO.singleelement
+translate.convert.test_mozfunny2prop.TestInc2PO.singleelement
+translate.convert.test_oo2po.TestOO2PO.singleelement
+translate.convert.test_php2po.TestPhp2PO.singleelement
+translate.convert.test_po2csv.TestPO2CSV.singleelement
+translate.convert.test_po2ts.TestPO2TS.singleelement
+translate.convert.test_prop2po.TestProp2PO.singleelement
+translate.convert.test_txt2po.TestDoku2po.singleelement
+translate.convert.test_txt2po.TestTxt2PO.singleelement" class="py-name" href="#" onclick="return doclink('link-39', 'singleelement', 'link-34');">singleelement</a></tt><tt class="py-op">(</tt><tt id="link-40" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-40', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-41" class="py-name"><a title="translate.storage.cpo.pounit
+translate.storage.pocommon.pounit
+translate.storage.pypo.pounit" class="py-name" href="#" onclick="return doclink('link-41', 'pounit', 'link-33');">pounit</a></tt><tt class="py-op">.</tt><tt id="link-42" class="py-name" targets="Method translate.storage.base.TranslationUnit.getlocations()=translate.storage.base.TranslationUnit-class.html#getlocations,Method translate.storage.cpo.pounit.getlocations()=translate.storage.cpo.pounit-class.html#getlocations,Method translate.storage.html.htmlunit.getlocations()=translate.storage.html.htmlunit-class.html#getlocations,Method translate.storage.ini.iniunit.getlocations()=translate.storage.ini.iniunit-class.html#getlocations,Method translate.storage.php.phpunit.getlocations()=translate.storage.php.phpunit-class.html#getlocations,Method translate.storage.poxliff.PoXliffUnit.getlocations()=translate.storage.poxliff.PoXliffUnit-class.html#getlocations,Method translate.storage.properties.propunit.getlocations()=translate.storage.properties.propunit-class.html#getlocations,Method translate.storage.pypo.pounit.getlocations()=translate.storage.pypo.pounit-class.html#getlocations,Method translate.storage.rc.rcunit.getlocations()=translate.storage.rc.rcunit-class.html#getlocations,Method translate.storage.ts2.tsunit.getlocations()=translate.storage.ts2.tsunit-class.html#getlocations,Method translate.storage.txt.TxtUnit.getlocations()=translate.storage.txt.TxtUnit-class.html#getlocations,Method translate.storage.xliff.xliffunit.getlocations()=translate.storage.xliff.xliffunit-class.html#getlocations"><a title="translate.storage.base.TranslationUnit.getlocations
+translate.storage.cpo.pounit.getlocations
+translate.storage.html.htmlunit.getlocations
+translate.storage.ini.iniunit.getlocations
+translate.storage.php.phpunit.getlocations
+translate.storage.poxliff.PoXliffUnit.getlocations
+translate.storage.properties.propunit.getlocations
+translate.storage.pypo.pounit.getlocations
+translate.storage.rc.rcunit.getlocations
+translate.storage.ts2.tsunit.getlocations
+translate.storage.txt.TxtUnit.getlocations
+translate.storage.xliff.xliffunit.getlocations" class="py-name" href="#" onclick="return doclink('link-42', 'getlocations', 'link-42');">getlocations</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-op">[</tt><tt class="py-string">'intl.charset.default'</tt><tt class="py-op">]</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-43" class="py-name"><a title="translate.storage.cpo.pounit
+translate.storage.pocommon.pounit
+translate.storage.pypo.pounit" class="py-name" href="#" onclick="return doclink('link-43', 'pounit', 'link-33');">pounit</a></tt><tt class="py-op">.</tt><tt id="link-44" class="py-name" targets="Variable translate.storage.cpo.pounit.source=translate.storage.cpo.pounit-class.html#source,Variable translate.storage.dtd.dtdunit.source=translate.storage.dtd.dtdunit-class.html#source,Variable translate.storage.html.htmlunit.source=translate.storage.html.htmlunit-class.html#source,Variable translate.storage.lisa.LISAunit.source=translate.storage.lisa.LISAunit-class.html#source,Variable translate.storage.php.phpunit.source=translate.storage.php.phpunit-class.html#source,Variable translate.storage.poxliff.PoXliffUnit.source=translate.storage.poxliff.PoXliffUnit-class.html#source,Variable translate.storage.properties.propunit.source=translate.storage.properties.propunit-class.html#source,Variable translate.storage.pypo.pounit.source=translate.storage.pypo.pounit-class.html#source,Variable translate.storage.rc.rcunit.source=translate.storage.rc.rcunit-class.html#source,Variable translate.storage.ts2.tsunit.source=translate.storage.ts2.tsunit-class.html#source,Variable translate.storage.txt.TxtUnit.source=translate.storage.txt.TxtUnit-class.html#source,Variable translate.storage.wordfast.WordfastUnit.source=translate.storage.wordfast.WordfastUnit-class.html#source"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-44', 'source', 'link-44');">source</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"ISO-8859-1"</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-45" class="py-name"><a title="translate.storage.cpo.pounit
+translate.storage.pocommon.pounit
+translate.storage.pypo.pounit" class="py-name" href="#" onclick="return doclink('link-45', 'pounit', 'link-33');">pounit</a></tt><tt class="py-op">.</tt><tt id="link-46" class="py-name" targets="Variable translate.storage.cpo.pounit.target=translate.storage.cpo.pounit-class.html#target,Variable translate.storage.dtd.dtdunit.target=translate.storage.dtd.dtdunit-class.html#target,Variable translate.storage.lisa.LISAunit.target=translate.storage.lisa.LISAunit-class.html#target,Variable translate.storage.php.phpunit.target=translate.storage.php.phpunit-class.html#target,Variable translate.storage.poxliff.PoXliffUnit.target=translate.storage.poxliff.PoXliffUnit-class.html#target,Variable translate.storage.properties.propunit.target=translate.storage.properties.propunit-class.html#target,Variable translate.storage.pypo.pounit.target=translate.storage.pypo.pounit-class.html#target,Variable translate.storage.qph.QphUnit.target=translate.storage.qph.QphUnit-class.html#target,Variable translate.storage.rc.rcunit.target=translate.storage.rc.rcunit-class.html#target,Variable translate.storage.ts2.tsunit.target=translate.storage.ts2.tsunit-class.html#target,Variable translate.storage.txt.TxtUnit.target=translate.storage.txt.TxtUnit-class.html#target,Variable translate.storage.wordfast.WordfastUnit.target=translate.storage.wordfast.WordfastUnit-class.html#target"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-46', 'target', 'link-46');">target</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"UTF-16"</tt> </tt>
+</div><a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line"> </tt>
+<a name="TestCSV2PO.test_simpleentity_with_template"></a><div id="TestCSV2PO.test_simpleentity_with_template-def"><a name="L43"></a><tt class="py-lineno"> 43</tt> <a class="py-toggle" href="#" id="TestCSV2PO.test_simpleentity_with_template-toggle" onclick="return toggle('TestCSV2PO.test_simpleentity_with_template');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_csv2po.TestCSV2PO-class.html#test_simpleentity_with_template">test_simpleentity_with_template</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestCSV2PO.test_simpleentity_with_template-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestCSV2PO.test_simpleentity_with_template-expanded"><a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">        <tt class="py-docstring">"""checks that a simple csv entry definition converts properly to a po entry"""</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">        <tt class="py-name">csvsource</tt> <tt class="py-op">=</tt> <tt class="py-string">'''source,original,translation</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line"><tt class="py-string">intl.charset.default,ISO-8859-1,UTF-16'''</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">        <tt class="py-name">potsource</tt> <tt class="py-op">=</tt> <tt class="py-string">'''#: intl.charset.default</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line"><tt class="py-string">msgid "ISO-8859-1"</tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line"><tt class="py-string">msgstr ""</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line"><tt class="py-string">'''</tt>  </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">        <tt id="link-47" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-47', 'pofile', 'link-22');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-48" class="py-name"><a title="translate.convert.csv2po
+translate.convert.csv2po.csv2po
+translate.convert.test_csv2po.TestCSV2PO.csv2po
+translate.convert.test_po2csv.TestPO2CSV.csv2po" class="py-name" href="#" onclick="return doclink('link-48', 'csv2po', 'link-2');">csv2po</a></tt><tt class="py-op">(</tt><tt class="py-name">csvsource</tt><tt class="py-op">,</tt> <tt class="py-name">potsource</tt><tt class="py-op">)</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">        <tt id="link-49" class="py-name"><a title="translate.storage.cpo.pounit
+translate.storage.pocommon.pounit
+translate.storage.pypo.pounit" class="py-name" href="#" onclick="return doclink('link-49', 'pounit', 'link-33');">pounit</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-50" class="py-name"><a title="translate.convert.test_csv2po.TestCSV2PO.singleelement
+translate.convert.test_dtd2po.TestDTD2PO.singleelement
+translate.convert.test_mozfunny2prop.TestInc2PO.singleelement
+translate.convert.test_oo2po.TestOO2PO.singleelement
+translate.convert.test_php2po.TestPhp2PO.singleelement
+translate.convert.test_po2csv.TestPO2CSV.singleelement
+translate.convert.test_po2ts.TestPO2TS.singleelement
+translate.convert.test_prop2po.TestProp2PO.singleelement
+translate.convert.test_txt2po.TestDoku2po.singleelement
+translate.convert.test_txt2po.TestTxt2PO.singleelement" class="py-name" href="#" onclick="return doclink('link-50', 'singleelement', 'link-34');">singleelement</a></tt><tt class="py-op">(</tt><tt id="link-51" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-51', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-52" class="py-name"><a title="translate.storage.cpo.pounit
+translate.storage.pocommon.pounit
+translate.storage.pypo.pounit" class="py-name" href="#" onclick="return doclink('link-52', 'pounit', 'link-33');">pounit</a></tt><tt class="py-op">.</tt><tt id="link-53" class="py-name"><a title="translate.storage.base.TranslationUnit.getlocations
+translate.storage.cpo.pounit.getlocations
+translate.storage.html.htmlunit.getlocations
+translate.storage.ini.iniunit.getlocations
+translate.storage.php.phpunit.getlocations
+translate.storage.poxliff.PoXliffUnit.getlocations
+translate.storage.properties.propunit.getlocations
+translate.storage.pypo.pounit.getlocations
+translate.storage.rc.rcunit.getlocations
+translate.storage.ts2.tsunit.getlocations
+translate.storage.txt.TxtUnit.getlocations
+translate.storage.xliff.xliffunit.getlocations" class="py-name" href="#" onclick="return doclink('link-53', 'getlocations', 'link-42');">getlocations</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-op">[</tt><tt class="py-string">'intl.charset.default'</tt><tt class="py-op">]</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-54" class="py-name"><a title="translate.storage.cpo.pounit
+translate.storage.pocommon.pounit
+translate.storage.pypo.pounit" class="py-name" href="#" onclick="return doclink('link-54', 'pounit', 'link-33');">pounit</a></tt><tt class="py-op">.</tt><tt id="link-55" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-55', 'source', 'link-44');">source</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"ISO-8859-1"</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-56" class="py-name"><a title="translate.storage.cpo.pounit
+translate.storage.pocommon.pounit
+translate.storage.pypo.pounit" class="py-name" href="#" onclick="return doclink('link-56', 'pounit', 'link-33');">pounit</a></tt><tt class="py-op">.</tt><tt id="link-57" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-57', 'target', 'link-46');">target</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"UTF-16"</tt> </tt>
+</div><a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line"> </tt>
+<a name="TestCSV2PO.test_newlines"></a><div id="TestCSV2PO.test_newlines-def"><a name="L57"></a><tt class="py-lineno"> 57</tt> <a class="py-toggle" href="#" id="TestCSV2PO.test_newlines-toggle" onclick="return toggle('TestCSV2PO.test_newlines');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_csv2po.TestCSV2PO-class.html#test_newlines">test_newlines</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestCSV2PO.test_newlines-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestCSV2PO.test_newlines-expanded"><a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">        <tt class="py-docstring">"""tests multiline po entries"""</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">        <tt class="py-name">minicsv</tt> <tt class="py-op">=</tt> <tt class="py-string">r'''"Random comment</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line"><tt class="py-string">with continuation","Original text","Langdradige teks</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line"><tt class="py-string">wat lank aanhou"</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line"><tt class="py-string">'''</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">        <tt id="link-58" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-58', 'pofile', 'link-22');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-59" class="py-name"><a title="translate.convert.csv2po
+translate.convert.csv2po.csv2po
+translate.convert.test_csv2po.TestCSV2PO.csv2po
+translate.convert.test_po2csv.TestPO2CSV.csv2po" class="py-name" href="#" onclick="return doclink('link-59', 'csv2po', 'link-2');">csv2po</a></tt><tt class="py-op">(</tt><tt class="py-name">minicsv</tt><tt class="py-op">)</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-60" class="py-name"><a title="translate.convert.test_csv2po.TestCSV2PO.singleelement
+translate.convert.test_dtd2po.TestDTD2PO.singleelement
+translate.convert.test_mozfunny2prop.TestInc2PO.singleelement
+translate.convert.test_oo2po.TestOO2PO.singleelement
+translate.convert.test_php2po.TestPhp2PO.singleelement
+translate.convert.test_po2csv.TestPO2CSV.singleelement
+translate.convert.test_po2ts.TestPO2TS.singleelement
+translate.convert.test_prop2po.TestProp2PO.singleelement
+translate.convert.test_txt2po.TestDoku2po.singleelement
+translate.convert.test_txt2po.TestTxt2PO.singleelement" class="py-name" href="#" onclick="return doclink('link-60', 'singleelement', 'link-34');">singleelement</a></tt><tt class="py-op">(</tt><tt id="link-61" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-61', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-62" class="py-name"><a title="translate.storage.base.TranslationUnit.getlocations
+translate.storage.cpo.pounit.getlocations
+translate.storage.html.htmlunit.getlocations
+translate.storage.ini.iniunit.getlocations
+translate.storage.php.phpunit.getlocations
+translate.storage.poxliff.PoXliffUnit.getlocations
+translate.storage.properties.propunit.getlocations
+translate.storage.pypo.pounit.getlocations
+translate.storage.rc.rcunit.getlocations
+translate.storage.ts2.tsunit.getlocations
+translate.storage.txt.TxtUnit.getlocations
+translate.storage.xliff.xliffunit.getlocations" class="py-name" href="#" onclick="return doclink('link-62', 'getlocations', 'link-42');">getlocations</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-op">[</tt><tt class="py-string">'Random'</tt><tt class="py-op">,</tt> <tt class="py-string">'comment'</tt><tt class="py-op">,</tt> <tt class="py-string">'with'</tt><tt class="py-op">,</tt> <tt class="py-string">'continuation'</tt><tt class="py-op">]</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-63" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-63', 'source', 'link-44');">source</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"Original text"</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-64" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-64', 'target', 'link-46');">target</a></tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-65" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-65', 'target', 'link-46');">target</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"Langdradige teks\nwat lank aanhou"</tt> </tt>
+</div><a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line"> </tt>
+<a name="TestCSV2PO.test_tabs"></a><div id="TestCSV2PO.test_tabs-def"><a name="L70"></a><tt class="py-lineno"> 70</tt> <a class="py-toggle" href="#" id="TestCSV2PO.test_tabs-toggle" onclick="return toggle('TestCSV2PO.test_tabs');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_csv2po.TestCSV2PO-class.html#test_tabs">test_tabs</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestCSV2PO.test_tabs-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestCSV2PO.test_tabs-expanded"><a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">        <tt class="py-docstring">"""Test the escaping of tabs"""</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">        <tt class="py-name">minicsv</tt> <tt class="py-op">=</tt> <tt class="py-string">',"First column\tSecond column","Twee kolomme gesky met \t"'</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">        <tt id="link-66" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-66', 'pofile', 'link-22');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-67" class="py-name"><a title="translate.convert.csv2po
+translate.convert.csv2po.csv2po
+translate.convert.test_csv2po.TestCSV2PO.csv2po
+translate.convert.test_po2csv.TestPO2CSV.csv2po" class="py-name" href="#" onclick="return doclink('link-67', 'csv2po', 'link-2');">csv2po</a></tt><tt class="py-op">(</tt><tt class="py-name">minicsv</tt><tt class="py-op">)</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-68" class="py-name"><a title="translate.convert.test_csv2po.TestCSV2PO.singleelement
+translate.convert.test_dtd2po.TestDTD2PO.singleelement
+translate.convert.test_mozfunny2prop.TestInc2PO.singleelement
+translate.convert.test_oo2po.TestOO2PO.singleelement
+translate.convert.test_php2po.TestPhp2PO.singleelement
+translate.convert.test_po2csv.TestPO2CSV.singleelement
+translate.convert.test_po2ts.TestPO2TS.singleelement
+translate.convert.test_prop2po.TestProp2PO.singleelement
+translate.convert.test_txt2po.TestDoku2po.singleelement
+translate.convert.test_txt2po.TestTxt2PO.singleelement" class="py-name" href="#" onclick="return doclink('link-68', 'singleelement', 'link-34');">singleelement</a></tt><tt class="py-op">(</tt><tt id="link-69" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-69', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-70" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-70', 'source', 'link-44');">source</a></tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-71" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-71', 'source', 'link-44');">source</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"First column\tSecond column"</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-keyword">not</tt> <tt id="link-72" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-72', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-73" class="py-name" targets="Method translate.storage.base.TranslationStore.findunit()=translate.storage.base.TranslationStore-class.html#findunit"><a title="translate.storage.base.TranslationStore.findunit" class="py-name" href="#" onclick="return doclink('link-73', 'findunit', 'link-73');">findunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"First column\tSecond column"</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-74" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-74', 'target', 'link-46');">target</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"Twee kolomme gesky met \\t"</tt> </tt>
+</div><a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line"> </tt>
+<a name="TestCSV2PO.test_quotes"></a><div id="TestCSV2PO.test_quotes-def"><a name="L79"></a><tt class="py-lineno"> 79</tt> <a class="py-toggle" href="#" id="TestCSV2PO.test_quotes-toggle" onclick="return toggle('TestCSV2PO.test_quotes');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_csv2po.TestCSV2PO-class.html#test_quotes">test_quotes</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestCSV2PO.test_quotes-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestCSV2PO.test_quotes-expanded"><a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">        <tt class="py-docstring">"""Test the escaping of quotes (and slash)"""</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">        <tt class="py-name">minicsv</tt> <tt class="py-op">=</tt> <tt class="py-string">r''',"Hello ""Everyone""","Good day ""All"""</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line"><tt class="py-string">,"Use \"".","Gebruik \""."'''</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">minicsv</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">        <tt id="link-75" class="py-name"><a title="translate.storage.csvl10n.csvfile" class="py-name" href="#" onclick="return doclink('link-75', 'csvfile', 'link-18');">csvfile</a></tt> <tt class="py-op">=</tt> <tt id="link-76" class="py-name"><a title="translate.storage.csvl10n" class="py-name" href="#" onclick="return doclink('link-76', 'csvl10n', 'link-14');">csvl10n</a></tt><tt class="py-op">.</tt><tt id="link-77" class="py-name"><a title="translate.storage.csvl10n.csvfile" class="py-name" href="#" onclick="return doclink('link-77', 'csvfile', 'link-18');">csvfile</a></tt><tt class="py-op">(</tt><tt id="link-78" class="py-name"><a title="translate.misc.wStringIO" class="py-name" href="#" onclick="return doclink('link-78', 'wStringIO', 'link-8');">wStringIO</a></tt><tt class="py-op">.</tt><tt id="link-79" class="py-name"><a title="translate.misc.wStringIO.StringIO" class="py-name" href="#" onclick="return doclink('link-79', 'StringIO', 'link-16');">StringIO</a></tt><tt class="py-op">(</tt><tt class="py-name">minicsv</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt id="link-80" class="py-name"><a title="translate.storage.csvl10n.csvfile" class="py-name" href="#" onclick="return doclink('link-80', 'csvfile', 'link-18');">csvfile</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">        <tt id="link-81" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-81', 'pofile', 'link-22');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-82" class="py-name"><a title="translate.convert.csv2po
+translate.convert.csv2po.csv2po
+translate.convert.test_csv2po.TestCSV2PO.csv2po
+translate.convert.test_po2csv.TestPO2CSV.csv2po" class="py-name" href="#" onclick="return doclink('link-82', 'csv2po', 'link-2');">csv2po</a></tt><tt class="py-op">(</tt><tt class="py-name">minicsv</tt><tt class="py-op">)</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">        <tt class="py-name">unit</tt> <tt class="py-op">=</tt> <tt id="link-83" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-83', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-84" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-84', 'units', 'link-28');">units</a></tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-85" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-85', 'source', 'link-44');">source</a></tt> <tt class="py-op">==</tt> <tt class="py-string">'Hello "Everyone"'</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-86" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-86', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-87" class="py-name"><a title="translate.storage.base.TranslationStore.findunit" class="py-name" href="#" onclick="return doclink('link-87', 'findunit', 'link-73');">findunit</a></tt><tt class="py-op">(</tt><tt class="py-string">'Hello "Everyone"'</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-88" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-88', 'target', 'link-46');">target</a></tt> <tt class="py-op">==</tt> <tt class="py-string">'Good day "All"'</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt id="link-89" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-89', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">unit</tt> <tt class="py-keyword">in</tt> <tt id="link-90" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-90', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-91" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-91', 'units', 'link-28');">units</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">            <tt class="py-keyword">print</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-92" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-92', 'source', 'link-44');">source</a></tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">            <tt class="py-keyword">print</tt> <tt class="py-name">unit</tt><tt class="py-op">.</tt><tt id="link-93" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-93', 'target', 'link-46');">target</a></tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">            <tt class="py-keyword">print</tt> </tt>
+</div><a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line"><tt class="py-comment">#        assert pofile.findunit('Use \\".').target == 'Gebruik \\".'</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="TestCSV2PO.test_empties"></a><div id="TestCSV2PO.test_empties-def"><a name="L97"></a><tt class="py-lineno"> 97</tt> <a class="py-toggle" href="#" id="TestCSV2PO.test_empties-toggle" onclick="return toggle('TestCSV2PO.test_empties');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_csv2po.TestCSV2PO-class.html#test_empties">test_empties</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestCSV2PO.test_empties-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestCSV2PO.test_empties-expanded"><a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">        <tt class="py-docstring">"""Tests that things keep working with empty entries"""</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">        <tt class="py-name">minicsv</tt> <tt class="py-op">=</tt> <tt class="py-string">',Source,'</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">        <tt id="link-94" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-94', 'pofile', 'link-22');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-95" class="py-name"><a title="translate.convert.csv2po
+translate.convert.csv2po.csv2po
+translate.convert.test_csv2po.TestCSV2PO.csv2po
+translate.convert.test_po2csv.TestPO2CSV.csv2po" class="py-name" href="#" onclick="return doclink('link-95', 'csv2po', 'link-2');">csv2po</a></tt><tt class="py-op">(</tt><tt class="py-name">minicsv</tt><tt class="py-op">)</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-96" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-96', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-97" class="py-name"><a title="translate.storage.base.TranslationStore.findunit" class="py-name" href="#" onclick="return doclink('link-97', 'findunit', 'link-73');">findunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Source"</tt><tt class="py-op">)</tt> <tt class="py-keyword">is</tt> <tt class="py-keyword">not</tt> <tt class="py-name">None</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-98" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-98', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-99" class="py-name"><a title="translate.storage.base.TranslationStore.findunit" class="py-name" href="#" onclick="return doclink('link-99', 'findunit', 'link-73');">findunit</a></tt><tt class="py-op">(</tt><tt class="py-string">"Source"</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-100" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-100', 'target', 'link-46');">target</a></tt> <tt class="py-op">==</tt> <tt class="py-string">""</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt id="link-101" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-101', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">.</tt><tt id="link-102" class="py-name"><a title="translate.tools.poterminology.TerminologyOptionParser.units" class="py-name" href="#" onclick="return doclink('link-102', 'units', 'link-28');">units</a></tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-number">1</tt> </tt>
+</div><a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line"> </tt>
+<a name="TestCSV2PO.test_kdecomment"></a><div id="TestCSV2PO.test_kdecomment-def"><a name="L105"></a><tt class="py-lineno">105</tt> <a class="py-toggle" href="#" id="TestCSV2PO.test_kdecomment-toggle" onclick="return toggle('TestCSV2PO.test_kdecomment');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_csv2po.TestCSV2PO-class.html#test_kdecomment">test_kdecomment</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestCSV2PO.test_kdecomment-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestCSV2PO.test_kdecomment-expanded"><a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">        <tt class="py-docstring">"""checks that we can merge into KDE comment entries"""</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line">        <tt class="py-name">csvsource</tt> <tt class="py-op">=</tt> <tt class="py-string">'''comment,original,translation</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line"><tt class="py-string">simple.c,Source,Target'''</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">        <tt class="py-name">potsource</tt> <tt class="py-op">=</tt> <tt class="py-string">r'''#: simple.c</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line"><tt class="py-string">msgid "_: KDE comment\n"</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line"><tt class="py-string">"Source"</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line"><tt class="py-string">msgstr ""</tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line"><tt class="py-string">'''</tt>  </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">        <tt id="link-103" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-103', 'pofile', 'link-22');">pofile</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-104" class="py-name"><a title="translate.convert.csv2po
+translate.convert.csv2po.csv2po
+translate.convert.test_csv2po.TestCSV2PO.csv2po
+translate.convert.test_po2csv.TestPO2CSV.csv2po" class="py-name" href="#" onclick="return doclink('link-104', 'csv2po', 'link-2');">csv2po</a></tt><tt class="py-op">(</tt><tt class="py-name">csvsource</tt><tt class="py-op">,</tt> <tt class="py-name">potsource</tt><tt class="py-op">)</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">        <tt id="link-105" class="py-name"><a title="translate.storage.cpo.pounit
+translate.storage.pocommon.pounit
+translate.storage.pypo.pounit" class="py-name" href="#" onclick="return doclink('link-105', 'pounit', 'link-33');">pounit</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-106" class="py-name"><a title="translate.convert.test_csv2po.TestCSV2PO.singleelement
+translate.convert.test_dtd2po.TestDTD2PO.singleelement
+translate.convert.test_mozfunny2prop.TestInc2PO.singleelement
+translate.convert.test_oo2po.TestOO2PO.singleelement
+translate.convert.test_php2po.TestPhp2PO.singleelement
+translate.convert.test_po2csv.TestPO2CSV.singleelement
+translate.convert.test_po2ts.TestPO2TS.singleelement
+translate.convert.test_prop2po.TestProp2PO.singleelement
+translate.convert.test_txt2po.TestDoku2po.singleelement
+translate.convert.test_txt2po.TestTxt2PO.singleelement" class="py-name" href="#" onclick="return doclink('link-106', 'singleelement', 'link-34');">singleelement</a></tt><tt class="py-op">(</tt><tt id="link-107" class="py-name"><a title="translate.storage.cpo.pofile
+translate.storage.pocommon.pofile
+translate.storage.pypo.pofile" class="py-name" href="#" onclick="return doclink('link-107', 'pofile', 'link-22');">pofile</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-108" class="py-name"><a title="translate.storage.cpo.pounit
+translate.storage.pocommon.pounit
+translate.storage.pypo.pounit" class="py-name" href="#" onclick="return doclink('link-108', 'pounit', 'link-33');">pounit</a></tt><tt class="py-op">.</tt><tt id="link-109" class="py-name" targets="Method translate.storage.cpo.pounit._extract_msgidcomments()=translate.storage.cpo.pounit-class.html#_extract_msgidcomments,Method translate.storage.pypo.pounit._extract_msgidcomments()=translate.storage.pypo.pounit-class.html#_extract_msgidcomments"><a title="translate.storage.cpo.pounit._extract_msgidcomments
+translate.storage.pypo.pounit._extract_msgidcomments" class="py-name" href="#" onclick="return doclink('link-109', '_extract_msgidcomments', 'link-109');">_extract_msgidcomments</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">'KDE comment'</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-110" class="py-name"><a title="translate.storage.cpo.pounit
+translate.storage.pocommon.pounit
+translate.storage.pypo.pounit" class="py-name" href="#" onclick="return doclink('link-110', 'pounit', 'link-33');">pounit</a></tt><tt class="py-op">.</tt><tt id="link-111" class="py-name"><a title="translate.storage.cpo.pounit.source
+translate.storage.dtd.dtdunit.source
+translate.storage.html.htmlunit.source
+translate.storage.lisa.LISAunit.source
+translate.storage.php.phpunit.source
+translate.storage.poxliff.PoXliffUnit.source
+translate.storage.properties.propunit.source
+translate.storage.pypo.pounit.source
+translate.storage.rc.rcunit.source
+translate.storage.ts2.tsunit.source
+translate.storage.txt.TxtUnit.source
+translate.storage.wordfast.WordfastUnit.source" class="py-name" href="#" onclick="return doclink('link-111', 'source', 'link-44');">source</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"Source"</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">        <tt class="py-keyword">assert</tt> <tt id="link-112" class="py-name"><a title="translate.storage.cpo.pounit
+translate.storage.pocommon.pounit
+translate.storage.pypo.pounit" class="py-name" href="#" onclick="return doclink('link-112', 'pounit', 'link-33');">pounit</a></tt><tt class="py-op">.</tt><tt id="link-113" class="py-name"><a title="translate.storage.cpo.pounit.target
+translate.storage.dtd.dtdunit.target
+translate.storage.lisa.LISAunit.target
+translate.storage.php.phpunit.target
+translate.storage.poxliff.PoXliffUnit.target
+translate.storage.properties.propunit.target
+translate.storage.pypo.pounit.target
+translate.storage.qph.QphUnit.target
+translate.storage.rc.rcunit.target
+translate.storage.ts2.tsunit.target
+translate.storage.txt.TxtUnit.target
+translate.storage.wordfast.WordfastUnit.target" class="py-name" href="#" onclick="return doclink('link-113', 'target', 'link-46');">target</a></tt> <tt class="py-op">==</tt> <tt class="py-string">"Target"</tt> </tt>
+</div></div><a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line"> </tt>
+<a name="TestCSV2POCommand"></a><div id="TestCSV2POCommand-def"><a name="L120"></a><tt class="py-lineno">120</tt> <a class="py-toggle" href="#" id="TestCSV2POCommand-toggle" onclick="return toggle('TestCSV2POCommand');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="translate.convert.test_csv2po.TestCSV2POCommand-class.html">TestCSV2POCommand</a><tt class="py-op">(</tt><tt class="py-base-class">test_convert</tt><tt class="py-op">.</tt><tt class="py-base-class">TestConvertCommand</tt><tt class="py-op">,</tt> <tt class="py-base-class">TestCSV2PO</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestCSV2POCommand-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TestCSV2POCommand-expanded"><a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">    <tt class="py-docstring">"""Tests running actual csv2po commands on files"""</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">    <tt class="py-name">convertmodule</tt> <tt class="py-op">=</tt> <tt id="link-114" class="py-name"><a title="translate.convert.csv2po
+translate.convert.csv2po.csv2po
+translate.convert.test_csv2po.TestCSV2PO.csv2po
+translate.convert.test_po2csv.TestPO2CSV.csv2po" class="py-name" href="#" onclick="return doclink('link-114', 'csv2po', 'link-2');">csv2po</a></tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line"> </tt>
+<a name="TestCSV2POCommand.test_help"></a><div id="TestCSV2POCommand.test_help-def"><a name="L124"></a><tt class="py-lineno">124</tt> <a class="py-toggle" href="#" id="TestCSV2POCommand.test_help-toggle" onclick="return toggle('TestCSV2POCommand.test_help');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="translate.convert.test_csv2po.TestCSV2POCommand-class.html#test_help">test_help</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestCSV2POCommand.test_help-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestCSV2POCommand.test_help-expanded"><a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">        <tt class="py-docstring">"""tests getting help"""</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">        <tt id="link-115" class="py-name" targets="Variable translate.convert.po2oo.options=translate.convert.po2oo-module.html#options,Variable translate.convert.xliff2oo.options=translate.convert.xliff2oo-module.html#options,Method translate.filters.checks.StandardChecker.options()=translate.filters.checks.StandardChecker-class.html#options"><a title="translate.convert.po2oo.options
+translate.convert.xliff2oo.options
+translate.filters.checks.StandardChecker.options" class="py-name" href="#" onclick="return doclink('link-115', 'options', 'link-115');">options</a></tt> <tt class="py-op">=</tt> <tt id="link-116" class="py-name"><a title="translate.convert.test_convert" class="py-name" href="#" onclick="return doclink('link-116', 'test_convert', 'link-5');">test_convert</a></tt><tt class="py-op">.</tt><tt id="link-117" class="py-name" targets="Class translate.convert.test_convert.TestConvertCommand=translate.convert.test_convert.TestConvertCommand-class.html"><a title="translate.convert.test_convert.TestConvertCommand" class="py-name" href="#" onclick="return doclink('link-117', 'TestConvertCommand', 'link-117');">TestConvertCommand</a></tt><tt class="py-op">.</tt><tt id="link-118" class="py-name" targets="Method translate.convert.test_convert.TestConvertCommand.test_help()=translate.convert.test_convert.TestConvertCommand-class.html#test_help,Method translate.convert.test_csv2po.TestCSV2POCommand.test_help()=translate.convert.test_csv2po.TestCSV2POCommand-class.html#test_help,Method translate.convert.test_dtd2po.TestDTD2POCommand.test_help()=translate.convert.test_dtd2po.TestDTD2POCommand-class.html#test_help,Method translate.convert.test_html2po.TestHTML2POCommand.test_help()=translate.convert.test_html2po.TestHTML2POCommand-class.html#test_help,Method translate.convert.test_moz2po.TestMoz2POCommand.test_help()=translate.convert.test_moz2po.TestMoz2POCommand-class.html#test_help,Method translate.convert.test_odf2po.TestODF2POCommand.test_help()=translate.convert.test_odf2po.TestODF2POCommand-class.html#test_help,Method translate.convert.test_oo2po.TestOO2POCommand.test_help()=translate.convert.test_oo2po.TestOO2POCommand-class.html#test_help,Method translate.convert.test_oo2xliff.TestOO2POCommand.test_help()=translate.convert.test_oo2xliff.TestOO2POCommand-class.html#test_help,Method translate.convert.test_php2po.TestPhp2POCommand.test_help()=translate.convert.test_php2po.TestPhp2POCommand-class.html#test_help,Method translate.convert.test_po2csv.TestPO2CSVCommand.test_help()=translate.convert.test_po2csv.TestPO2CSVCommand-class.html#test_help,Method translate.convert.test_po2dtd.TestPO2DTDCommand.test_help()=translate.convert.test_po2dtd.TestPO2DTDCommand-class.html#test_help,Method translate.convert.test_po2html.TestPO2HtmlCommand.test_help()=translate.convert.test_po2html.TestPO2HtmlCommand-class.html#test_help,Method translate.convert.test_po2moz.TestPO2MozCommand.test_help()=translate.convert.test_po2moz.TestPO2MozCommand-class.html#test_help,Method translate.convert.test_po2oo.TestPO2OOCommand.test_help()=translate.convert.test_po2oo.TestPO2OOCommand-class.html#test_help,Method translate.convert.test_po2php.TestPO2PhpCommand.test_help()=translate.convert.test_po2php.TestPO2PhpCommand-class.html#test_help,Method translate.convert.test_po2prop.TestPO2PropCommand.test_help()=translate.convert.test_po2prop.TestPO2PropCommand-class.html#test_help,Method translate.convert.test_po2tmx.TestPO2TMXCommand.test_help()=translate.convert.test_po2tmx.TestPO2TMXCommand-class.html#test_help,Method translate.convert.test_po2ts.TestPO2TSCommand.test_help()=translate.convert.test_po2ts.TestPO2TSCommand-class.html#test_help,Method translate.convert.test_po2txt.TestPO2TxtCommand.test_help()=translate.convert.test_po2txt.TestPO2TxtCommand-class.html#test_help,Method translate.convert.test_pot2po.TestPOT2POCommand.test_help()=translate.convert.test_pot2po.TestPOT2POCommand-class.html#test_help,Method translate.convert.test_prop2po.TestProp2POCommand.test_help()=translate.convert.test_prop2po.TestProp2POCommand-class.html#test_help,Method translate.convert.test_ts2po.TestTS2POCommand.test_help()=translate.convert.test_ts2po.TestTS2POCommand-class.html#test_help,Method translate.convert.test_txt2po.TestTxt2POCommand.test_help()=translate.convert.test_txt2po.TestTxt2POCommand-class.html#test_help"><a title="translate.convert.test_convert.TestConvertCommand.test_help
+translate.convert.test_csv2po.TestCSV2POCommand.test_help
+translate.convert.test_dtd2po.TestDTD2POCommand.test_help
+translate.convert.test_html2po.TestHTML2POCommand.test_help
+translate.convert.test_moz2po.TestMoz2POCommand.test_help
+translate.convert.test_odf2po.TestODF2POCommand.test_help
+translate.convert.test_oo2po.TestOO2POCommand.test_help
+translate.convert.test_oo2xliff.TestOO2POCommand.test_help
+translate.convert.test_php2po.TestPhp2POCommand.test_help
+translate.convert.test_po2csv.TestPO2CSVCommand.test_help
+translate.convert.test_po2dtd.TestPO2DTDCommand.test_help
+translate.convert.test_po2html.TestPO2HtmlCommand.test_help
+translate.convert.test_po2moz.TestPO2MozCommand.test_help
+translate.convert.test_po2oo.TestPO2OOCommand.test_help
+translate.convert.test_po2php.TestPO2PhpCommand.test_help
+translate.convert.test_po2prop.TestPO2PropCommand.test_help
+translate.convert.test_po2tmx.TestPO2TMXCommand.test_help
+translate.convert.test_po2ts.TestPO2TSCommand.test_help
+translate.convert.test_po2txt.TestPO2TxtCommand.test_help
+translate.convert.test_pot2po.TestPOT2POCommand.test_help
+translate.convert.test_prop2po.TestProp2POCommand.test_help
+translate.convert.test_ts2po.TestTS2POCommand.test_help
+translate.convert.test_txt2po.TestTxt2POCommand.test_help" class="py-name" href="#" onclick="return doclink('link-118', 'test_help', 'link-118');">test_help</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">)</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">        <tt id="link-119" class="py-name"><a title="translate.convert.po2oo.options
+translate.convert.xliff2oo.options
+translate.filters.checks.StandardChecker.options" class="py-name" href="#" onclick="return doclink('link-119', 'options', 'link-115');">options</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-120" class="py-name" targets="Method translate.convert.test_convert.TestConvertCommand.help_check()=translate.convert.test_convert.TestConvertCommand-class.html#help_check"><a title="translate.convert.test_convert.TestConvertCommand.help_check" class="py-name" href="#" onclick="return doclink('link-120', 'help_check', 'link-120');">help_check</a></tt><tt class="py-op">(</tt><tt id="link-121" class="py-name"><a title="translate.convert.po2oo.options
+translate.convert.xliff2oo.options
+translate.filters.checks.StandardChecker.options" class="py-name" href="#" onclick="return doclink('link-121', 'options', 'link-115');">options</a></tt><tt class="py-op">,</tt> <tt class="py-string">"-t TEMPLATE, --template=TEMPLATE"</tt><tt class="py-op">)</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line">        <tt id="link-122" class="py-name"><a title="translate.convert.po2oo.options
+translate.convert.xliff2oo.options
+translate.filters.checks.StandardChecker.options" class="py-name" href="#" onclick="return doclink('link-122', 'options', 'link-115');">options</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-123" class="py-name"><a title="translate.convert.test_convert.TestConvertCommand.help_check" class="py-name" href="#" onclick="return doclink('link-123', 'help_check', 'link-120');">help_check</a></tt><tt class="py-op">(</tt><tt id="link-124" class="py-name"><a title="translate.convert.po2oo.options
+translate.convert.xliff2oo.options
+translate.filters.checks.StandardChecker.options" class="py-name" href="#" onclick="return doclink('link-124', 'options', 'link-115');">options</a></tt><tt class="py-op">,</tt> <tt class="py-string">"--charset=CHARSET"</tt><tt class="py-op">)</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line">        <tt id="link-125" class="py-name"><a title="translate.convert.po2oo.options
+translate.convert.xliff2oo.options
+translate.filters.checks.StandardChecker.options" class="py-name" href="#" onclick="return doclink('link-125', 'options', 'link-115');">options</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-126" class="py-name"><a title="translate.convert.test_convert.TestConvertCommand.help_check" class="py-name" href="#" onclick="return doclink('link-126', 'help_check', 'link-120');">help_check</a></tt><tt class="py-op">(</tt><tt id="link-127" class="py-name"><a title="translate.convert.po2oo.options
+translate.convert.xliff2oo.options
+translate.filters.checks.StandardChecker.options" class="py-name" href="#" onclick="return doclink('link-127', 'options', 'link-115');">options</a></tt><tt class="py-op">,</tt> <tt class="py-string">"--columnorder=COLUMNORDER"</tt><tt class="py-op">)</tt> </tt>
+<a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line">        <tt id="link-128" class="py-name"><a title="translate.convert.po2oo.options
+translate.convert.xliff2oo.options
+translate.filters.checks.StandardChecker.options" class="py-name" href="#" onclick="return doclink('link-128', 'options', 'link-115');">options</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-129" class="py-name"><a title="translate.convert.test_convert.TestConvertCommand.help_check" class="py-name" href="#" onclick="return doclink('link-129', 'help_check', 'link-120');">help_check</a></tt><tt class="py-op">(</tt><tt id="link-130" class="py-name"><a title="translate.convert.po2oo.options
+translate.convert.xliff2oo.options
+translate.filters.checks.StandardChecker.options" class="py-name" href="#" onclick="return doclink('link-130', 'options', 'link-115');">options</a></tt><tt class="py-op">,</tt> <tt class="py-string">"--duplicates=DUPLICATESTYLE"</tt><tt class="py-op">,</tt> <tt class="py-name">last</tt><tt class="py-op">=</tt><tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://translate.sourceforge.net">Translate Toolkit</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Tue Sep 23 13:51:29 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
