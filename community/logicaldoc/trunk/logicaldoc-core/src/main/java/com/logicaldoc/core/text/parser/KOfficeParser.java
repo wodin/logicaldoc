@@ -20,14 +20,13 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Text extractor for OpenOffice documents.
- * tested with OpenOffice documents produced with 2.3,2.4,3.0.1 OO release
- * tested with StarOffice documents
+ * tested with KOffice 1.6.3 documents
  * 
  * @author Alessandro Gasparini
  */
-public class OpenOfficeParser extends AbstractParser {
+public class KOfficeParser extends AbstractParser {
 
-	protected static Log logger = LogFactory.getLog(OpenOfficeParser.class);
+	protected static Log logger = LogFactory.getLog(KOfficeParser.class);
 	
 	public void parse(File file) {
 		InputStream stream = null;
@@ -42,11 +41,11 @@ public class OpenOfficeParser extends AbstractParser {
 
             ZipInputStream zis = new ZipInputStream(stream);
             ZipEntry ze = zis.getNextEntry();
-            while (ze != null && !ze.getName().equals("content.xml")) {
+            while (ze != null && !ze.getName().equals("maindoc.xml")) {
                 ze = zis.getNextEntry();
             }
 
-            OpenOfficeContentHandler contentHandler = new OpenOfficeContentHandler();
+            KOfficeContentHandler contentHandler = new KOfficeContentHandler();
             xmlReader.setContentHandler(contentHandler);
             try {
                 xmlReader.parse(new InputSource(zis));
@@ -58,7 +57,7 @@ public class OpenOfficeParser extends AbstractParser {
             
 			
 		} catch (Exception ex) {
-            logger.warn("Failed to extract OpenOffice text content", ex);
+            logger.warn("Failed to extract KOffice_1.6.x text content", ex);
             content = "";
 		} finally {
 			if (stream != null) {
@@ -74,12 +73,12 @@ public class OpenOfficeParser extends AbstractParser {
 	
     //--------------------------------------------< OpenOfficeContentHandler >
 
-    private class OpenOfficeContentHandler extends DefaultHandler {
+    private class KOfficeContentHandler extends DefaultHandler {
 
         private StringBuffer content;
         private boolean appendChar;
 
-        public OpenOfficeContentHandler() {
+        public KOfficeContentHandler() {
             content = new StringBuffer();
             appendChar = false;
         }
@@ -94,7 +93,7 @@ public class OpenOfficeParser extends AbstractParser {
         public void startElement(String namespaceURI, String localName,
                                  String rawName, Attributes atts)
                 throws SAXException {
-            if (rawName.startsWith("text:")) {
+            if (rawName.equalsIgnoreCase("TEXT")) {
                 appendChar = true;
             }
         }
