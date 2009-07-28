@@ -23,7 +23,19 @@ public class JBPMJoin implements TransformModel {
 		transition.setAttribute("name", destination.getId());
 		transition.setAttribute("to", destination.getId());
 		
+		Element nodeEnterEvent = wr.createElement("event");
+		nodeEnterEvent.setAttribute("type", "node-enter");
+		
+		Element actionElement = wr.createElement("action");
+		actionElement.setAttribute("class", "com.logicaldoc.workflow.action.JoinHandler");
+
+		Element componentId = wr.createElement("componentId");
+		//componentId.setTextContent(joinModel.getId());
+		
+		nodeEnterEvent.appendChild(actionElement);
+
 		join.appendChild(transition);
+		join.appendChild(nodeEnterEvent);
 		
 		return join;
 	}

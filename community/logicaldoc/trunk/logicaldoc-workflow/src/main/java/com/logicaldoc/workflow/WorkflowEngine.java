@@ -183,4 +183,18 @@ public interface WorkflowEngine {
 	 * @param assignee
 	 */
 	public void assignUserToTask(String taskId, String assignee);
+	
+	/**
+	 * 
+	 * @param workflow_id
+	 * @return
+	 */
+	public List<WorkflowTaskInstance> getTaskInstancesByActiveWorkflow(final String workflow_id);
+	
+	/**
+	 * 
+	 * @param workflowTaskId
+	 * @return
+	 */
+	public WorkflowInstance getWorkflowInstanceByTaskInstance(String workflowTaskId);
 }

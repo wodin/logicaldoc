@@ -5,7 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class WorkflowTaskInstance {
-		
+	
+	public static enum STATE {CANCELED, DONE, ALL, ACTIVE};
+	
 	public String id;
 
 	public String name;
@@ -14,6 +16,8 @@ public class WorkflowTaskInstance {
 
 	public List<Transition> transitions = new LinkedList<Transition>(); 
 
+	public STATE state;
+	
 	public String getName() {
 		return name;
 	}

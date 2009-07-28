@@ -168,9 +168,9 @@
 							
 							<table>
 								<tr>
-									<td valign="top">
+									<td valign="top" width="340">
 											
-											<ice:panelCollapsible id="workflowSettingsPanel" expanded="true">
+											<ice:panelCollapsible id="workflowSettingsPanel" expanded="true" >
 									            <f:facet name="header">
 									                <ice:panelGroup>
 									                    <ice:outputText  value="Workflow Settings"/>
@@ -178,16 +178,16 @@
 									            </f:facet>
 									  
 												Name: <ice:inputText value="#{WorkflowTemplateManager.persistenceTemplate.name}"/><br/>
-												Description:<br/> <ice:inputTextarea style="font-size:10px; width:95%;"  value="#{WorkflowTemplateManager.workflowTemplate.description}"/>
+												Description:<br/> <ice:inputTextarea style="width:95%; height:100px; font-size:10px"  value="#{WorkflowTemplateManager.workflowTemplate.description}"/>
 											<br/>
 												TaskAssignment<br/>
 												<hr/>
 												Subject: <ice:inputText value="#{WorkflowTemplateManager.workflowTemplate.assignmentMailMessage.subject}"/>
-												<br/>Body: <ice:inputTextarea style="font-size:10px; width:95%;" value="#{WorkflowTemplateManager.workflowTemplate.assignmentMailMessage.body}"/>
+												<br/>Body: <ice:inputTextarea style="width:95%; height:100px; font-size:10px" value="#{WorkflowTemplateManager.workflowTemplate.assignmentMailMessage.body}"/>
 												<br/>Reminder<br/>
 												<hr/>
 												Subject: <ice:inputText value="#{WorkflowTemplateManager.workflowTemplate.reminderMailMessage.subject}"/>
-												<br/>Body: <ice:inputTextarea style="font-size:10px; width:95%;" value="#{WorkflowTemplateManager.workflowTemplate.reminderMailMessage.body}"/>
+												<br/>Body: <ice:inputTextarea style="width:95%; height:100px; font-size:10px" value="#{WorkflowTemplateManager.workflowTemplate.reminderMailMessage.body}"/>
 											</ice:panelCollapsible>
 											
 											<!-- ****** -->
@@ -202,10 +202,13 @@
 										                </ice:panelGroup>
 										            </f:facet>
 									        
-													<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="2" rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
+													<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0"  width="100%" columns="1" rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
 											
-													    <ice:outputLabel for="name" value="Name:"><ice:inputText id="name" value="#{WorkflowTemplateManager.selectedComponent.name}"/></ice:outputLabel>
-					
+													    <ice:outputText value="Name"/><ice:inputText style="width:95%" id="name" value="#{WorkflowTemplateManager.selectedComponent.name}"/>
+														
+														<ice:outputText value="Description"/>
+														<ice:inputTextarea  style="width:95%; height:100px; font-size:10px" value="#{WorkflowTemplateManager.selectedComponent.description}"/>
+														
 													</ice:panelGrid>	
 												</ice:panelCollapsible>
 												<ice:panelCollapsible id="panelEscalation" expanded="true">
@@ -214,11 +217,13 @@
 										                    <ice:outputText value="Escalation-Management"/>
 										                </ice:panelGroup>
 										            </f:facet>
-													<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="3">
+													<ice:panelGrid cellpadding="0" cellspacing="0" columns="4" style="height:40px">
+														<ice:graphicImage styleClass="symbol" value="/skins/default/images/workflow/editor/calendar.gif"/>
 														<ice:outputLabel for="dueDate" value="Due Date"/><ice:inputText style="width:24px;" value="#{WorkflowTemplateManager.selectedComponent.dueDateValue}"/>
 														<h:selectOneMenu value="#{WorkflowTemplateManager.selectedComponent.dueDateUnit}">
 															<f:selectItems value="#{WorkflowTemplateManager.timeUnits}"/>
 														</h:selectOneMenu>
+														<ice:graphicImage styleClass="symbol" value="/skins/default/images/workflow/editor/repeat.gif"/>
 														<ice:outputLabel for="remindTime" value="RemindTime"/><ice:inputText style="width:24px;" value="#{WorkflowTemplateManager.selectedComponent.remindTimeValue}"/>
 														<h:selectOneMenu value="#{WorkflowTemplateManager.selectedComponent.remindTimeUnit}">
 															<f:selectItems value="#{WorkflowTemplateManager.timeUnits}"/>
@@ -236,18 +241,23 @@
 										                </ice:panelGroup>
 										            </f:facet>
 													<ui:repeat value="#{WorkflowTemplateManager.selectedComponent.assignees}" var="assignment">
-														<ice:commandButton value="Remove Assignment" actionListener="#{WorkflowTemplateManager.controller.removeAssignment}">
-															<f:param name="assignment" value="#{assignment}"/>
-															<f:param name="workflowComponent" value="#{workflowComponent}"/>
-														</ice:commandButton>
-														<ice:selectInputText id="AutoCmpTxt"  rows="10"
+														
+														<ice:panelGrid columns="2" cellpadding="0" cellspacing="0">
+															<ice:commandLink title="Remove Assignment" actionListener="#{WorkflowTemplateManager.controller.removeAssignment}">
+																<f:param name="assignment" value="#{assignment}"/>
+																<f:param name="workflowComponent" value="#{workflowComponent}"/>
+																<ice:graphicImage styleClass="symbol" value="/skins/default/images/workflow/editor/user_remove.gif"/>			
+															</ice:commandLink>
+															<ice:selectInputText id="AutoCmpTxt"  rows="10"
 									                             width="300" value="#{assignment.value}" valueChangeListener="#{WorkflowTemplateManager.controller.selectInputValueChanged}">
 												            	<f:selectItems id="AutoCmpTxtItms"  value="#{WorkflowTemplateManager.controller.possibleAssignments}"/>
-												       	</ice:selectInputText>
-											       		
+												       		</ice:selectInputText>
+											       		</ice:panelGrid>
 													</ui:repeat>
-													<ice:commandLink value="Add Assignment" actionListener="#{WorkflowTemplateManager.controller.addAssignment}">
+													<ice:commandLink actionListener="#{WorkflowTemplateManager.controller.addAssignment}">
 														<f:param name="workflowTask" value="#{WorkflowTemplateManager.selectedComponent}"/>
+														<ice:graphicImage styleClass="symbol" value="/skins/default/images/workflow/editor/user_add.gif"/>
+														<ice:outputText value="Add Assignment"/>
 													</ice:commandLink>
 													<ice:panelGroup/>
 												</ice:panelCollapsible>
@@ -257,17 +267,30 @@
 										                    <ice:outputText value="Transitions"/>
 										                </ice:panelGroup>
 										            </f:facet>
-													<ui:repeat value="#{WorkflowTemplateManager.selectedComponent.transitions}" var="transition">
-														<ice:outputText value=""/>
-														<ice:commandButton value="Remove Transition" actionListener="#{WorkflowTemplateManager.controller.removeTransition}">
-															<f:param name="transition" value="#{transition}"/>
-														</ice:commandButton>
-														<ice:inputText value="#{transition.name}"/>
-														<ice:panelGroup/>
-													</ui:repeat>
 													
+													<ui:repeat value="#{WorkflowTemplateManager.selectedComponent.transitions}" var="transition">
+														<ice:outputText/>
+														<ice:commandLink title="Remove Transition" actionListener="#{WorkflowTemplateManager.controller.removeTransition}">
+															<f:param name="transition" value="#{transition}"/>
+															<ice:graphicImage styleClass="symbol" value="/skins/default/images/workflow/editor/transition_remove.gif"/>
+														</ice:commandLink>
+														<ice:inputText value="#{transition.name}"/>
+														<!-- 
+														<ice:outputLabel for="trans_term">
+														
+															<ice:selectBooleanCheckbox  value="#{transition.terminatesParallelProcess}" />
+															
+															<ice:outputText value="Force Proceeding"/>
+														</ice:outputLabel>
+														
+													 -->
+													</ui:repeat>
+													<br/>	
 												
-													<ice:commandLink value="Add Transition" action="#{WorkflowTemplateManager.controller.addTransition}"/>
+													<ice:commandLink action="#{WorkflowTemplateManager.controller.addTransition}">
+														<ice:graphicImage styleClass="symbol" value="/skins/default/images/workflow/editor/transition_add.gif"/>
+														<ice:outputText value="Add Transition"/>
+													</ice:commandLink>
 												
 												</ice:panelCollapsible>
 											</ice:panelGroup>		

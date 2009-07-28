@@ -10,7 +10,6 @@ import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
 import com.logicaldoc.workflow.model.WorkflowTaskInstance;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
-import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
 
 /**
  * Please see {@link WorkflowEngine} for more informations about the functions.
@@ -20,11 +19,11 @@ import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
  */
 public interface WorkflowService {
 
+	public static enum TASK_SORT {ASC, DESC};
+	
 	public void undeployWorkflow(final String processId);
 
 	public void deployWorkflow(WorkflowTemplate workflowTemplate);
-
-	public void endTask(final String taskId);
 
 	public void endTask(final String taskId, final String transitionName);
 
@@ -56,4 +55,10 @@ public interface WorkflowService {
 	public List<WorkflowTaskInstance> getPooledTaskInstancesForUser(String username);
 	
 	public void assign(String taskId, String assignee);
+	
+	public List<WorkflowTaskInstance> getWorkflowTasks(WorkflowInstance workflowInstance, WorkflowTaskInstance.STATE taskState,  TASK_SORT sort);
+	
+	public List<WorkflowTaskInstance> getWorkflowHistory(WorkflowInstance workflowInstance);
+	
+	public WorkflowInstance getWorkflowInstanceByTaskInstance(String workflowTaskId);
 }

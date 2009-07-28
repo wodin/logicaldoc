@@ -1,6 +1,8 @@
 package com.logicaldoc.workflow;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,12 +51,13 @@ public class WorkflowServiceImpl implements WorkflowService {
 	}
 
 	@Override
-	public void endTask(String taskId) {
-		workflowComponent.processTaskToEnd(taskId);
-	}
-
-	@Override
 	public void endTask(String taskId, String transitionName) {
+		
+		WorkflowTaskInstance taskInstance = workflowComponent.getTaskInstanceById(taskId);
+		taskInstance.getProperties().put(WorkflowConstants.VAR_OUTCOME, transitionName);
+		
+		workflowComponent.updateTaskInstance(taskInstance);
+		
 		workflowComponent.processTaskToEnd(taskId, transitionName);
 	}
 
@@ -148,5 +151,71 @@ public class WorkflowServiceImpl implements WorkflowService {
 	
 	public void assign(String taskId, String assignee){
 		this.workflowComponent.assignUserToTask(taskId, assignee);	
+	}
+	
+	public List<WorkflowTaskInstance> getWorkflowTasks(WorkflowInstance workflowInstance, WorkflowTaskInstance.STATE taskState,  TASK_SORT sort){
+		
+		List<WorkflowTaskInstance> workflowTaskInstances = this.workflowComponent.getTaskInstancesByActiveWorkflow(workflowInstance.id);
+		List<WorkflowTaskInstance> instances = new LinkedList<WorkflowTaskInstance>();
+		
+		for(WorkflowTaskInstance taskInstance : workflowTaskInstances){
+			
+
+			
+			if(taskInstance.state.equals(WorkflowTaskInstance.STATE.ALL) == false){
+				if(taskInstance.state.equals(taskState) == false)
+					continue;
+			}
+			
+			instances.add(taskInstance);
+			
+		}
+		
+		for(int i = 0; i < instances.size()-1; i++){
+			
+			for(int j = 0; j < instances.size()-1; j++){
+				
+				WorkflowTaskInstance currentElement = instances.get(j);
+				WorkflowTaskInstance nextElement = instances.get(j+1);
+				
+				Date currentDate = (Date)currentElement.getProperties().get(WorkflowConstants.VAR_ENDDATE);
+				Date nextDate = (Date)nextElement.getProperties().get(WorkflowConstants.VAR_ENDDATE); 
+				
+				if(currentDate == null || nextDate == null)
+					continue;
+				
+				if(sort.equals(TASK_SORT.ASC)){
+
+					//the current date is before the second date 
+					if(nextDate.after(currentDate))
+						continue;
+						
+					
+					instances.set(j, nextElement);
+					instances.set(j+1, currentElement);
+				
+				}
+				else {
+					if(nextDate.before(currentDate))
+						continue;
+					
+					instances.set(j, nextElement);
+					instances.set(j+1, currentElement);
+					
+				}
+				
+			}
+		}
+		
+		return instances;
+		
+	}
+	
+	public List<WorkflowTaskInstance> getWorkflowHistory(WorkflowInstance workflowInstance){
+		return this.getWorkflowTasks(workflowInstance, WorkflowTaskInstance.STATE.DONE, TASK_SORT.ASC);
+	}
+	
+	public WorkflowInstance getWorkflowInstanceByTaskInstance(String workflowTaskId){
+		return this.workflowComponent.getWorkflowInstanceByTaskInstance(workflowTaskId);
 	}
 }
