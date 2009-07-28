@@ -1,6 +1,5 @@
 package com.logicaldoc.workflow.editor;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +19,6 @@ import com.icesoft.faces.component.dragdrop.DragEvent;
 import com.icesoft.faces.component.dragdrop.DropEvent;
 import com.icesoft.faces.component.ext.HtmlCommandLink;
 import com.icesoft.faces.component.ext.HtmlPanelGroup;
-import com.icesoft.faces.component.ext.RowSelectorEvent;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.document.DocumentNavigation;
 import com.logicaldoc.web.navigation.PageContentBean;
@@ -64,7 +62,7 @@ public class WorkflowTemplateManager {
 	private Long workflowTemplateId;
 	
 	public WorkflowTemplateManager(){
-	//	this.initializing();
+		this.initializing();
 	}
 	
 	public Long getWorkflowTemplateId() {

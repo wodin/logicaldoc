@@ -20,6 +20,8 @@ public class WorkflowManager {
 
 	private WorkflowService workflowService;
 
+	private List<WorkflowTaskInstance> taskHistory;
+	
 	public WorkflowManager() {
 		this.workflowService = (WorkflowService) Context.getInstance().getBean(
 				"workflowService");
@@ -53,6 +55,8 @@ public class WorkflowManager {
 		
 		String username = (String)session.getAttribute(Constants.AUTH_USERNAME);
 		
+		
+		
 		return this.workflowService.getTaskInstancesForUser(username);
 		
 	}
@@ -70,5 +74,16 @@ public class WorkflowManager {
 		HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 		String username = (String)session.getAttribute(Constants.AUTH_USERNAME);
 		return this.workflowService.getPooledTaskInstancesForUser(username);
+	}
+	
+	public void showWorkflowHistoryHistory(ActionEvent actionEvent){
+		UIComponent component = (UIComponent)actionEvent.getSource();
+		WorkflowTaskInstance workflowTaskInstance = (WorkflowTaskInstance)((UIParameter)component.getChildren().get(0)).getValue();
+		WorkflowInstance instance  = this.workflowService.getWorkflowInstanceByTaskInstance(workflowTaskInstance.id);
+		this.taskHistory = this.workflowService.getWorkflowHistory(instance);
+	}
+	
+	public List<WorkflowTaskInstance> getWorkflowHistory(){
+		return this.taskHistory;
 	}
 }

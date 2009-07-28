@@ -23,14 +23,21 @@ public class WorkflowFactory {
 			org.jbpm.taskmgmt.exe.TaskInstance ti) {
 
 		WorkflowTaskInstance taskInstance = new WorkflowTaskInstance();
-
-		taskInstance.id = createTaskId(ti.getContextInstance().getId(), ti
+		
+		taskInstance.id = createTaskId(ti.getProcessInstance().getId(), ti
 				.getId());
-
+		ti.getVariables();
 		taskInstance.name = ti.getName();
 		
 		Map<String, Object> variables = ti.getVariablesLocally();
 
+		if(ti.isCancelled())
+			taskInstance.state = WorkflowTaskInstance.STATE.CANCELED;
+		else if(ti.getEnd() != null)
+			taskInstance.state = WorkflowTaskInstance.STATE.DONE;
+		else if(ti.isOpen())
+			taskInstance.state = WorkflowTaskInstance.STATE.ACTIVE;
+		
 		// mapping
 		HashMap<String, Object> mapped_properties = new HashMap<String, Object>();
 		for (String key : variables.keySet())
@@ -72,21 +79,21 @@ public class WorkflowFactory {
 
 		List<Transition> transitions = ti.getAvailableTransitions();
 		
-		for(Transition tr : transitions){
-			
-			//TODO: should not occure
-			if(tr.getTo() == null)
-				continue;
-			
-			com.logicaldoc.workflow.model.Transition trans = new com.logicaldoc.workflow.model.Transition();
-			trans.name = tr.getName();
-			
-			
+		//you dont have any more transition if you got finished a task for a while ago
+		if(transitions != null){
+			for(Transition tr : transitions){
 				
-			
-			trans.to = tr.getTo().getName();
-			
-			taskInstance.getTransitions().add(trans);
+				//TODO: should not occure
+				if(tr.getTo() == null)
+					continue;
+				
+				com.logicaldoc.workflow.model.Transition trans = new com.logicaldoc.workflow.model.Transition();
+				trans.name = tr.getName();
+				
+				trans.to = tr.getTo().getName();
+				
+				taskInstance.getTransitions().add(trans);
+			}
 		}
 		
 		return taskInstance;
@@ -171,6 +178,9 @@ public class WorkflowFactory {
 		}
 	}
 	
+	public static Long getJbpmProcessDefinitionIdFromTaskInstance(String id){
+		return Long.parseLong(id.substring(0, id.indexOf('@')));
+	}
 	
 	
 }

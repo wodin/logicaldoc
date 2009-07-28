@@ -10,6 +10,8 @@ public class Transition extends BaseWorkflowModel {
 	
 	private BaseWorkflowModel baseWorkflowModel;
 	
+	private boolean terminatesParallelProcess;
+	
 	public Transition(){
 		
 	}
@@ -62,7 +64,6 @@ public class Transition extends BaseWorkflowModel {
 	
 	@Override
 	public boolean isPossibleStartState() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
@@ -70,5 +71,20 @@ public class Transition extends BaseWorkflowModel {
 	public String getType() {
 		return "transition";
 	}
+	
+	
+	public void setTerminatesParallelProcess(boolean terminatesParallelProcess) {
+		this.terminatesParallelProcess = terminatesParallelProcess;
+	}
+	
+	
+	public boolean isTerminatesParallelProcess() {
+		return terminatesParallelProcess;
+	}
+	
+	public boolean getTerminatesParallelProcess() {
+		return this.terminatesParallelProcess ;
+	}
+	
 	
 }
