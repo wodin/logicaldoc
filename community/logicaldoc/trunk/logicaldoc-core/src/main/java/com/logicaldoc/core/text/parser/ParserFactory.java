@@ -61,20 +61,25 @@ public class ParserFactory {
 		parsers.put("ots", OpenOfficeParser.class);
 		parsers.put("otp", OpenOfficeParser.class);
 		
-		// KOffice extensions
-		parsers.put("kwd", KOParser.class);
-		parsers.put("ksp", KOParser.class);
-		parsers.put("kpr", KOParser.class);
+		// KOffice 1.6.x extensions
+		parsers.put("kwd", KOfficeParser.class);
+		parsers.put("ksp", KOfficeParser.class);
+		parsers.put("kpr", KOfficeParser.class);
+		
+		// WordPerfect
+		parsers.put("wpd", WPDParser.class);
+		
+		parsers.put("abw", XMLParser.class);
+		parsers.put("zabw", ZABWParser.class);
 
 		parsers.put("txt", TXTParser.class);
 		parsers.put("csv", TXTParser.class);
 		parsers.put("dbf", TXTParser.class);
-		parsers.put("wpd", WPDParser.class);
 		parsers.put("xml", XMLParser.class);
 		parsers.put("xls", XLSParser.class);
 		parsers.put("xlt", XLSParser.class);
-		parsers.put("abw", XMLParser.class);
-		parsers.put("zabw", ZABWParser.class);
+		
+		// MS Office 2003 Powerpoint
 		parsers.put("ppt", PPTParser.class);
 		parsers.put("pps", PPTParser.class);
 		parsers.put("pot", PPTParser.class);
