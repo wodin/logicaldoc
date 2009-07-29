@@ -15,6 +15,7 @@ package com.logicaldoc.core.security;
  * <li>BULK_EXPORT: ability to export documents</li>
  * <li>SIGN: ability to digitally sign documents</li>
  * <li>ARCHIVE: ability to archive documents</li>
+ * <li>WORKFLOW: ability to handle workflow</li>
  * </ul>
  * 
  * 
@@ -24,7 +25,7 @@ package com.logicaldoc.core.security;
 public enum Permission {
 	READ("read"), WRITE("write"), ADD_CHILD("addChild"), MANAGE_SECURITY("manageSecurity"), MANAGE_IMMUTABILITY(
 			"manageImmutability"), DELETE("delete"), RENAME("rename"), BULK_IMPORT("bulkImport"), BULK_EXPORT(
-			"bulkExport"), SIGN("sign"), ARCHIVE("archive");
+			"bulkExport"), SIGN("sign"), ARCHIVE("archive"), WORKFLOW("workflow");
 
 	private final String name;
 

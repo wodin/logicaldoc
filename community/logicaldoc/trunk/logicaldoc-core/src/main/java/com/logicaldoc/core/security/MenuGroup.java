@@ -25,8 +25,10 @@ public class MenuGroup {
 	private int bulkExport = 0;
 
 	private int sign = 0;
-	
+
 	private int archive = 0;
+
+	private int workflow = 0;
 
 	private long groupId;
 
@@ -152,5 +154,13 @@ public class MenuGroup {
 
 	public void setArchive(int archive) {
 		this.archive = archive;
+	}
+
+	public int getWorkflow() {
+		return workflow;
+	}
+
+	public void setWorkflow(int workflow) {
+		this.workflow = workflow;
 	}
 }
