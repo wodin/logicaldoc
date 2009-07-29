@@ -31,10 +31,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 		}
 
 		@Override
-		public void processEvent() {
-			
-			templatesDirectory.mkdir();
-
+		public void processEvent() {	
 			Context ctx = Context.getInstance();
 			WorkflowTemplateLoader workflowTemplateLoader = (WorkflowTemplateLoader) ctx
 					.getBean(WorkflowTemplateLoader.class);
@@ -43,7 +40,10 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 			// Create JBPM database schema
 			JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
 			//jbpmInstallConfig.dropSchema();
-			//jbpmInstallConfig.createSchema();
+			jbpmInstallConfig.createSchema();
+			
+			templatesDirectory.mkdirs();
+			templatesDirectory.mkdir();
 		}
 
 		public File getTemplatesDirectory() {
@@ -77,6 +77,12 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 			WorkflowTemplateLoader workflowTemplateLoader = (WorkflowTemplateLoader) ctx
 					.getBean(WorkflowTemplateLoader.class);
 			workflowTemplateLoader.setTemplatesDirectory(templatesDirectory);
+			
+			templatesDirectory.mkdirs();
+			templatesDirectory.mkdir();
+			
+			JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
+			jbpmInstallConfig.createSchema();
 		}
 
 		public void setTemplatesDirectory(File templatesDirectory) {
@@ -101,7 +107,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 	@Override
 	protected void start() throws Exception {
 		VariableEvent variableEvent = new VariableEvent();
-		variableEvent.setTemplatesDirectory(resolveDataPath("workflow-templates"));
+		variableEvent.setTemplatesDirectory(resolveDataPath("templates"));
 		Context.addListener(variableEvent);
 	}
 }
