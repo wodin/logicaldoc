@@ -582,7 +582,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			Iterator<Group> iter = groups.iterator();
 
 			StringBuffer query = new StringBuffer(
-					"select ldmenugroup.LD_WRITE as LDWRITE, ldmenugroup.LD_ADDCHILD as LDADDCHILD, ldmenugroup.LD_MANAGESECURITY as LDMANAGESECURITY, ldmenugroup.LD_MANAGEIMMUTABILITY as LDMANAGEIMMUTABILITY, ldmenugroup.LD_DELETE as LDDELETE, ldmenugroup.LD_RENAME as LDRENAME, ldmenugroup.LD_BULKIMPORT as LDBULKIMPORT, ldmenugroup.LD_BULKEXPORT as LDBULKEXPORT, ldmenugroup.LD_SIGN as LDSIGN, ldmenugroup.LD_ARCHIVE as LDARCHIVE");
+					"select ldmenugroup.LD_WRITE as LDWRITE, ldmenugroup.LD_ADDCHILD as LDADDCHILD, ldmenugroup.LD_MANAGESECURITY as LDMANAGESECURITY, ldmenugroup.LD_MANAGEIMMUTABILITY as LDMANAGEIMMUTABILITY, ldmenugroup.LD_DELETE as LDDELETE, ldmenugroup.LD_RENAME as LDRENAME, ldmenugroup.LD_BULKIMPORT as LDBULKIMPORT, ldmenugroup.LD_BULKEXPORT as LDBULKEXPORT, ldmenugroup.LD_SIGN as LDSIGN, ldmenugroup.LD_ARCHIVE as LDARCHIVE, ldmenugroup.LD_WORKFLOW as LDWORKFLOW");
 			query.append(" from ld_menugroup ldmenugroup");
 			query.append(" where ");
 			query.append(" ldmenugroup.LD_MENUID=" + menuId);
@@ -642,6 +642,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					if (rs.getInt("LDARCHIVE") == 1)
 						if (!permissions.contains(Permission.ARCHIVE))
 							permissions.add(Permission.ARCHIVE);
+					if (rs.getInt("LDWORKFLOW") == 1)
+						if (!permissions.contains(Permission.WORKFLOW))
+							permissions.add(Permission.WORKFLOW);
 				}
 			} finally {
 				if (rs != null)
