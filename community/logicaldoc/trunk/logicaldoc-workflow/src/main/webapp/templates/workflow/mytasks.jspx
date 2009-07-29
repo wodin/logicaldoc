@@ -36,28 +36,12 @@
 			<f:facet name="header">
 				<ice:outputText id="column2" value="#{msgs['name']}" />
 			</f:facet>
-			<ice:outputText id="name" value="#{taskInstance.name} " />
-		</ice:column>
-
-		<ice:column>
-			<f:facet name="header">
-				<ice:outputText id="column3"
-					value="#{workflow_msgs['logicaldoc-workflow.transitions']}" />
-			</f:facet>
-			<ui:repeat value="#{taskInstance.transitions}" var="transition">
-				<ice:outputText value="" />
-				<ice:commandLink value="#{transition.name}"
-					actionListener="#{WorkflowManager.endTask}">
-					<f:param name="taskInstance" value="#{taskInstance}" />
-					<f:param name="transition" value="#{transition}" />
-				</ice:commandLink>
-			</ui:repeat>
 			
-			<ice:commandLink value="Show WorkflowHistory"
-					actionListener="#{WorkflowManager.showWorkflowHistoryHistory}">
-					<f:param name="transId" value="#{taskInstance}" />
-			</ice:commandLink>
-				
+			<ice:commandLink value="#{taskInstance.name}"
+					actionListener="#{WorkflowManager.showTaskDetails}">
+					<f:param name="instanceId" value="#{taskInstance.id}" />
+			</ice:commandLink>		
+			
 		</ice:column>
 	</ice:dataTable>
 
@@ -94,51 +78,14 @@
 		</ice:column>
 
 		<ice:column>
-			<ice:commandLink value="Take OwnerShip"
-				actionListener="#{WorkflowManager.assign}">
-				<f:param name="taskInstance" value="#{taskInstance}" />
-			</ice:commandLink>
+			
+			<ice:commandLink value="#{taskInstance.name}"
+					actionListener="#{WorkflowManager.showTaskDetails}">
+					<f:param name="instanceId" value="#{taskInstance.id}" />
+			</ice:commandLink>		
+		
 		</ice:column>
 	</ice:dataTable>
+
 	
-	<br />
-	<h3>
-		<ice:outputText
-			value="Workflowhistory:" />
-	</h3>
-	
-	<ice:dataTable id="workflowHistory" var="taskInstance"
-		value="#{WorkflowManager.workflowHistory}" rendered="#{not empty WorkflowManager.workflowHistory}" rows="15"
-		columnClasses="tableCol" styleClass="center">
-		<ice:column>
-			<f:facet name="header">
-				<ice:outputText id="column1" value="Id" />
-			</f:facet>
-			<ice:outputText id="Number" value="#{taskInstance.id}" />
-		</ice:column>
-
-		<ice:column>
-			<f:facet name="header">
-				<ice:outputText id="column2" value="Name" />
-			</f:facet>
-			<ice:outputText id="name" value="#{taskInstance.name} " />
-		</ice:column>
-
-		<ice:column>
-			<f:facet name="header">
-				<ice:outputText id="column3" value="Processed Assignee" />
-			</f:facet>
-			
-			<h:outputText value="#{taskInstance.properties['ld_owner']}"/>
-			
-		</ice:column>
-
-		<ice:column>
-			<f:facet name="header">
-				<ice:outputText id="column3" value="Transition Processed" />
-			</f:facet>
-			
-			#{taskInstance.properties['ld_outcome']}
-		</ice:column>
-	</ice:dataTable>
 </jsp:root>

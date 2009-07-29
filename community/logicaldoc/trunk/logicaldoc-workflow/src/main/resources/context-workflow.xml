@@ -136,7 +136,7 @@
 		class="com.logicaldoc.workflow.WorkflowManager" scope="session" />
 		
 	<bean id="DevEMailSender" class="com.logicaldoc.workflow.mail.DevEMailSender" parent="EMailSender" init-method="init">
-		<property name="destination" value="C:\\butchers-mailchest.msg"/>
+		<property name="destination" value="G:\\butchers-mailchest.msg"/>
 	</bean>
 	
 	<bean id="templateService" class=" com.logicaldoc.workflow.FreemarkerTemplateService"/>

@@ -197,4 +197,11 @@ public interface WorkflowEngine {
 	 * @return
 	 */
 	public WorkflowInstance getWorkflowInstanceByTaskInstance(String workflowTaskId);
+	
+	/**
+	 * 
+	 * @param workflowTaskId
+	 * @return
+	 */
+	public List<WorkflowInstance> getAllWorkflows();
 }

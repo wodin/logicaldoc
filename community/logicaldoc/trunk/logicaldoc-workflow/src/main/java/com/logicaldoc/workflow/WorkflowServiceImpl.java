@@ -218,4 +218,8 @@ public class WorkflowServiceImpl implements WorkflowService {
 	public WorkflowInstance getWorkflowInstanceByTaskInstance(String workflowTaskId){
 		return this.workflowComponent.getWorkflowInstanceByTaskInstance(workflowTaskId);
 	}
+	
+	public List<WorkflowInstance> getAllWorkflows(){
+		return this.workflowComponent.getAllWorkflows();
+	}
 }

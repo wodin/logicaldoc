@@ -11,11 +11,13 @@ public class WorkflowTaskInstance {
 	public String id;
 
 	public String name;
+
+	private String description;
 	
 	public HashMap<String, Object> properties = new HashMap<String, Object>();
 
 	public List<Transition> transitions = new LinkedList<Transition>(); 
-
+	
 	public STATE state;
 	
 	public String getName() {
@@ -33,4 +35,9 @@ public class WorkflowTaskInstance {
 	public HashMap<String, Object> getProperties() {
 		return properties;
 	}
+	
+	public String getDescription() {
+		return description;
+	}
+
 }
