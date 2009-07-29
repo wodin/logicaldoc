@@ -130,7 +130,6 @@
 		scope="session">
 		<property name="workflowTemplateLoader"
 			ref="WorkflowTemplateLoader" />
-		<property name="xStream" ref="xStream" />	
 	</bean>
 
 	<bean id="WorkflowManager"
