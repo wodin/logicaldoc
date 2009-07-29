@@ -28,7 +28,7 @@ public class WorkflowFactory {
 				.getId());
 		ti.getVariables();
 		taskInstance.name = ti.getName();
-		
+
 		Map<String, Object> variables = ti.getVariablesLocally();
 
 		if(ti.isCancelled())
@@ -94,7 +94,22 @@ public class WorkflowFactory {
 				
 				taskInstance.getTransitions().add(trans);
 			}
+			
+			for(int i = 0; i < taskInstance.getTransitions().size() -1; i ++){
+				for(int j = 0; j < taskInstance.getTransitions().size()-1; j++){
+					com.logicaldoc.workflow.model.Transition current = taskInstance.getTransitions().get(j);
+					com.logicaldoc.workflow.model.Transition next = taskInstance.getTransitions().get(j+1);
+					
+					if(current.name.compareTo(next.name) > 0){
+						 taskInstance.getTransitions().set(j, next);
+						 taskInstance.getTransitions().set(j+1, current);
+					}
+					
+				}
+			}
 		}
+		
+		
 		
 		return taskInstance;
 
@@ -109,7 +124,13 @@ public class WorkflowFactory {
 		wfi.id = Long.toString(processInstance.getId());
 		wfi.startDate = processInstance.getStart();
 		wfi.endDate = processInstance.getEnd();
-
+		wfi.name = processInstance.getProcessDefinition().getName();
+		
+		wfi.properties.put (
+				WorkflowConstants.VAR_DOCUMENTS, 
+				processInstance.getContextInstance().getVariable(WorkflowConstants.VAR_DOCUMENTS)
+		);
+		
 		return wfi;
 	}
 	

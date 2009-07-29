@@ -95,7 +95,7 @@ public class TaskController extends DragAndDropSupportController {
 	}
 
 	public void removeAssignment(ActionEvent actionEvent) {
-		HtmlCommandButton commandLink = (HtmlCommandButton) actionEvent
+		HtmlCommandLink commandLink = (HtmlCommandLink) actionEvent
 				.getSource();
 		Object val = ((UIParameter) commandLink.getChildren().get(0))
 				.getValue();

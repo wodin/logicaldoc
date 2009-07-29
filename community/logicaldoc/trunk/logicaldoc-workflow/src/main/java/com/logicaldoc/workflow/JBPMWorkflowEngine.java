@@ -428,7 +428,12 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 
 					// updating actor
 					if (key.equals(WorkflowConstants.VAR_OWNER)) {
-						taskInstance.setActorId(val.toString());
+						
+						if(val == null)
+							taskInstance.setActorId(null);
+						else
+							taskInstance.setActorId(val.toString());
+						
 						continue;
 					}
 
@@ -586,4 +591,24 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 			}
 		});
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<WorkflowInstance> getAllWorkflows() {
+
+		return (List<WorkflowInstance>) this.jbpmTemplate.execute(new JbpmCallback() {
+
+			public List<WorkflowInstance> doInJbpm(JbpmContext context)
+					throws JbpmException {
+
+					List<ProcessInstance> processInstances = context.getSession().createQuery("from org.jbpm.graph.exe.ProcessInstance").list();
+					List<WorkflowInstance> workflowInstances = new LinkedList<WorkflowInstance>();
+					
+					for(ProcessInstance instance : processInstances)
+						workflowInstances.add( WorkflowFactory.createWorkflowInstance(instance) );
+					
+					
+					return workflowInstances;
+			}
+		});
+	} 
 }

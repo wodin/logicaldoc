@@ -61,4 +61,6 @@ public interface WorkflowService {
 	public List<WorkflowTaskInstance> getWorkflowHistory(WorkflowInstance workflowInstance);
 	
 	public WorkflowInstance getWorkflowInstanceByTaskInstance(String workflowTaskId);
+	
+	public List<WorkflowInstance> getAllWorkflows();
 }

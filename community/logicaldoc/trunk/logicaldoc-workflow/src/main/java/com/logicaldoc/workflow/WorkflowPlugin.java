@@ -82,7 +82,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 			templatesDirectory.mkdir();
 			
 			JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
-			jbpmInstallConfig.createSchema();
+			//jbpmInstallConfig.createSchema();
 		}
 
 		public void setTemplatesDirectory(File templatesDirectory) {
