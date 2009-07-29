@@ -50,7 +50,7 @@
 		<parameter id="title" value="logicaldoc-workflow.startworkflow"/>
 		<parameter id="icon" value="workflow.png"/>
 		<parameter id="target" value=""/>
-		<parameter id="permission" value=""/>
+		<parameter id="permission" value="WORKFLOW"/>
 		<parameter id="readonly" value="false"/>
 		<parameter id="position" value="10"/>
 	</extension>
