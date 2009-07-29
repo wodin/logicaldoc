@@ -397,6 +397,12 @@ public class RightsRecordsManager {
 					mg.setArchive(0);
 				}
 
+				if (rule.isWorkflow() || isAdmin) {
+					mg.setWorkflow(1);
+				} else {
+					mg.setWorkflow(0);
+				}
+				
 				boolean stored = mdao.store(folder, false);
 				if (!stored) {
 					sqlerrors = true;

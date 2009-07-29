@@ -2,8 +2,7 @@
 <!-- 
  This page is the document rights specification form
   
- @author Marco Meschieri
- @version $Id: rights.jspx,v 1.4 2006/08/29 16:33:45 marco Exp $
+ @author Marco Meschieri - Logical Objects
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -218,6 +217,16 @@
 					</ice:panelGroup>
 				</ice:column>
 
+				<!-- workflow -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['permission.workflow']}" />
+					</f:facet>
+					<ice:panelGroup>
+						<ice:selectBooleanCheckbox value="#{rule.workflow}"
+							disabled="#{!rule.enabled||rule.groupName=='admin'}" />
+					</ice:panelGroup>
+				</ice:column>
 			</ice:dataTable>
 		</ice:panelGroup>
 		<ice:panelGroup styleClass="commands">

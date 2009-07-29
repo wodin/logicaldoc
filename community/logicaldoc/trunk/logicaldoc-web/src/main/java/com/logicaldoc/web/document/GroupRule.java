@@ -32,10 +32,12 @@ public class GroupRule {
 	private boolean bulkImport = false;
 
 	private boolean bulkExport = false;
-	
+
 	private boolean sign = false;
-	
+
 	private boolean archive = false;
+
+	private boolean workflow = false;
 
 	/**
 	 * true, if this rule can be changed in a dialog
@@ -57,6 +59,7 @@ public class GroupRule {
 		bulkExport = mg.getBulkExport() == 1;
 		sign = mg.getSign() == 1;
 		archive = mg.getArchive() == 1;
+		workflow = mg.getWorkflow() == 1;
 	}
 
 	public long getGroupId() {
@@ -183,5 +186,13 @@ public class GroupRule {
 
 	public void setArchive(boolean archive) {
 		this.archive = archive;
+	}
+
+	public boolean isWorkflow() {
+		return workflow;
+	}
+
+	public void setWorkflow(boolean workflow) {
+		this.workflow = workflow;
 	}
 }
