@@ -398,4 +398,5 @@ public class SetupWizard implements TabChangeListener {
 	public void setDefaultLanguage(String defaultLanguage) {
 		this.defaultLanguage = defaultLanguage;
 	}
+	
 }
