@@ -278,6 +278,17 @@
 								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 						</ice:panelGroup>
 					</ice:column>
+					
+					<!-- workflow -->
+					<ice:column styleClass="center">
+						<f:facet name="header">
+							<ice:outputText value="#{msgs['permission.workflow']}" />
+						</f:facet>
+						<ice:panelGroup>
+							<ice:selectBooleanCheckbox value="#{rule.workflow}"
+								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
+						</ice:panelGroup>
+					</ice:column>
 				</ice:dataTable>
 			</ice:panelGroup>
 			<br />
