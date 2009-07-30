@@ -85,10 +85,6 @@ public class ParserFactory {
 		parsers.put("ppt", PPTParser.class);
 		parsers.put("pps", PPTParser.class);
 		parsers.put("pot", PPTParser.class);
-		
-		// .eml parser to extract content from saved email (Thunderbird 2.0)
-		parsers.put("eml", EMLParser.class);
-
 
 		// Acquire the 'Parse' extensions of the core plugin and add defined
 		// parsers
