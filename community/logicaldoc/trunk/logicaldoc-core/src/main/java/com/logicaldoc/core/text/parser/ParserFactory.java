@@ -40,9 +40,10 @@ public class ParserFactory {
 		// First of all register all standard parsers
 		parsers.put("doc", DOCParser.class);
 		parsers.put("dot", DOCParser.class);
+		
 		parsers.put("htm", HTMLParser.class);
 		parsers.put("html", HTMLParser.class);
-		parsers.put("htm", HTMLParser.class);
+
 		parsers.put("pdf", PDFParser.class);
 		parsers.put("rtf", RTFParser.class);
 
@@ -69,8 +70,9 @@ public class ParserFactory {
 		// WordPerfect
 		parsers.put("wpd", WPDParser.class);
 		
+		// AbiWord http://www.abisource.com/
 		parsers.put("abw", XMLParser.class);
-		parsers.put("zabw", ZABWParser.class);
+		parsers.put("zabw", ZABWParser.class); // Compressed AbiWord document
 
 		parsers.put("txt", TXTParser.class);
 		parsers.put("csv", TXTParser.class);
@@ -83,6 +85,10 @@ public class ParserFactory {
 		parsers.put("ppt", PPTParser.class);
 		parsers.put("pps", PPTParser.class);
 		parsers.put("pot", PPTParser.class);
+		
+		// .eml parser to extract content from saved email (Thunderbird 2.0)
+		parsers.put("eml", EMLParser.class);
+
 
 		// Acquire the 'Parse' extensions of the core plugin and add defined
 		// parsers

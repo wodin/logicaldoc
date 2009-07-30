@@ -2,11 +2,9 @@ package com.logicaldoc.core.text.parser;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -42,7 +40,7 @@ public class HTMLParser extends AbstractParser {
     /**
      * {@inheritDoc}
      */
-    private Reader extractText(InputStream stream,
+    public Reader extractText(InputStream stream,
                               String type,
                               String encoding) throws IOException {
         try {
