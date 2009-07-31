@@ -32,7 +32,7 @@ public class IconSelector {
 			icon = "picture.png";
 		else if (ext.equals("htm") || ext.equals("html") || ext.equals("xml") || ext.equals("xhtml"))
 			icon = "html.png";
-		else if (ext.equals("eml") || ext.equals("mail"))
+		else if (ext.equals("eml") || ext.equals("msg") || ext.equals("mail"))
 			icon = "email.png";
 		else if (ext.equals("zip") || ext.equals("rar") || ext.equals("gz") || ext.equals("tar") || ext.equals("jar")
 				|| ext.equals("7z"))
