@@ -75,11 +75,11 @@ public class KOfficeParser extends AbstractParser {
 
     private class KOfficeContentHandler extends DefaultHandler {
 
-        private StringBuffer content;
+        private StringBuilder content;
         private boolean appendChar;
 
         public KOfficeContentHandler() {
-            content = new StringBuffer();
+            content = new StringBuilder();
             appendChar = false;
         }
 

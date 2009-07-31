@@ -22,6 +22,7 @@ import org.apache.xerces.xni.NamespaceContext;
 import org.apache.xerces.xni.XMLLocator;
 import org.apache.xerces.xni.XMLString;
 import org.apache.xerces.xni.XNIException;
+import org.apache.xerces.xni.parser.XMLParserConfiguration;
 import org.cyberneko.html.HTMLConfiguration;
 
 /**
@@ -32,57 +33,25 @@ public class HTMLSAXParser extends AbstractSAXParser {
     private StringBuffer buffer;
 
     public HTMLSAXParser() {
-
-        super(new HTMLConfiguration());
+         super(new HTMLConfiguration());
+    }
+    
+    public HTMLSAXParser(XMLParserConfiguration parserConfig) { 
+        super(parserConfig);
     }
 
     public void startDocument(XMLLocator arg0,
                               String arg1,
                               NamespaceContext arg2,
                               Augmentations arg3) throws XNIException {
-
         super.startDocument(arg0, arg1, arg2, arg3);
-
         buffer = new StringBuffer();
     }
 
     public void characters(XMLString xmlString, Augmentations augmentations)
             throws XNIException {
-
         super.characters(xmlString, augmentations);
-
         buffer.append(xmlString.toString());
-    }
-
-    private String filterAndJoin(String text) {
-
-        boolean space = false;
-        StringBuffer buffer = new StringBuffer();
-        for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
-
-            if ((c == '\n') || (c == ' ') || Character.isWhitespace(c)) {
-                if (space) {
-                    continue;
-                } else {
-                    space = true;
-                    buffer.append(' ');
-                    continue;
-                }
-            } else {
-                if (!Character.isLetter(c)) {
-                    if (!space) {
-                        space = true;
-                        buffer.append(' ');
-                        continue;
-                    }
-                    continue;
-                }
-            }
-            space = false;
-            buffer.append(c);
-        }
-        return buffer.toString();
     }
 
     /**
@@ -91,8 +60,11 @@ public class HTMLSAXParser extends AbstractSAXParser {
      * @return String Parsed content
      */
     public String getContents() {
-
-        String text = filterAndJoin(buffer.toString());
-        return text;
-    }
+		String tmp = buffer.toString();
+		if (tmp != null && tmp.length() > 1) {
+			tmp = tmp.replaceAll("\\p{Blank}+", " ");
+			tmp = tmp.replaceAll("\\s+", " ");
+		}
+		return tmp;
+	}
 }
