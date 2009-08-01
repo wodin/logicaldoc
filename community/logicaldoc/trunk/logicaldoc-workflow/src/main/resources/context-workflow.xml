@@ -139,5 +139,9 @@
 		<property name="destination" value="G:\\butchers-mailchest.msg"/>
 	</bean>
 	
-	<bean id="templateService" class=" com.logicaldoc.workflow.FreemarkerTemplateService"/>
+	<bean id="templateService" class=" com.logicaldoc.workflow.FreemarkerTemplateService">
+		<property name="userDAO" ref="UserDAO"/>
+		<property name="documentDAO" ref="DocumentDAO"/>
+		<property name="workflowService" ref="workflowService"/>
+	</bean>
 </beans>

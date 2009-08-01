@@ -159,6 +159,12 @@ public interface WorkflowEngine {
 	public void updateTaskInstance(WorkflowTaskInstance wti);
 	
 	/**
+	 * 
+	 * @param workflowInstance
+	 */
+	public void updateWorkflowInstance(WorkflowInstance workflowInstance);
+	
+	/**
 	 * Retrieves users tasklist
 	 * @param username The Username
 	 * @return	List of tasks owned by the user
@@ -204,4 +210,10 @@ public interface WorkflowEngine {
 	 * @return
 	 */
 	public List<WorkflowInstance> getAllWorkflows();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<WorkflowTaskInstance> getAllSuspendedTaskInstances(final String actorId);
 }

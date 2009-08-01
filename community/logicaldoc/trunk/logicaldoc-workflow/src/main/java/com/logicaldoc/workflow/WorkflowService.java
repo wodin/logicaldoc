@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.jbpm.graph.exe.Token;
 
+import com.logicaldoc.workflow.model.FetchModel;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
 import com.logicaldoc.workflow.model.WorkflowTaskInstance;
@@ -27,15 +28,17 @@ public interface WorkflowService {
 
 	public void endTask(final String taskId, final String transitionName);
 
-	public WorkflowInstance getWorkflowInstancesById(String workflowinstanceId);
+	public WorkflowInstance getWorkflowInstanceById(String workflowinstanceId, FetchModel.FETCH_TYPE fetch_type);
 
 	public List<WorkflowDefinition> getAllDefinitions();
 
-	public WorkflowTaskInstance getTaskInstanceByTaskId(String id);
+	public WorkflowTaskInstance getTaskInstanceByTaskId(String id, FetchModel.FETCH_TYPE fetch_type);
 
 	public List<WorkflowTaskInstance> getTaskInstancesByWorkflowInstanceId(
 			String workflowInstanceId);
 
+	public List<WorkflowTaskInstance> getSuspendedTaskInstancesForUser(String username);
+	
 	public List<WorkflowTaskInstance> getAllActiveTaskInstances();
 
 	public Token getTokenForWorkflowInstance(String workflowInstance);
@@ -45,8 +48,10 @@ public interface WorkflowService {
 	public void signal(String workflowInstance);
 
 	public void stopWorkflow(String processInstanceId);
-
-	public void updateTaskInstace(WorkflowTaskInstance taskInstance);
+	
+	public void updateWorkflow(WorkflowInstance taskInstance);
+	
+	public void updateWorkflow(WorkflowTaskInstance taskInstance);
 	
 	public void deleteAllActiveWorkflows();
 	
@@ -60,7 +65,8 @@ public interface WorkflowService {
 	
 	public List<WorkflowTaskInstance> getWorkflowHistory(WorkflowInstance workflowInstance);
 	
-	public WorkflowInstance getWorkflowInstanceByTaskInstance(String workflowTaskId);
+	public WorkflowInstance getWorkflowInstanceByTaskInstance(String workflowTaskId, FetchModel.FETCH_TYPE fetch_type);
 	
 	public List<WorkflowInstance> getAllWorkflows();
+	
 }

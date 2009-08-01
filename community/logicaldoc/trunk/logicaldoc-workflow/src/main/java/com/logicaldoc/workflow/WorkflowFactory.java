@@ -24,19 +24,25 @@ public class WorkflowFactory {
 
 		WorkflowTaskInstance taskInstance = new WorkflowTaskInstance();
 		
-		taskInstance.id = createTaskId(ti.getProcessInstance().getId(), ti
-				.getId());
+		taskInstance.setId( createTaskId(ti.getProcessInstance().getId(), ti
+				.getId()));
 		ti.getVariables();
-		taskInstance.name = ti.getName();
+		taskInstance.setName(ti.getName());
 
+		taskInstance.getProperties().put(WorkflowConstants.VAR_TASKID, ti.getVariableLocally(WorkflowConstants.VAR_TASKID));
 		Map<String, Object> variables = ti.getVariablesLocally();
-
-		if(ti.isCancelled())
-			taskInstance.state = WorkflowTaskInstance.STATE.CANCELED;
-		else if(ti.getEnd() != null)
-			taskInstance.state = WorkflowTaskInstance.STATE.DONE;
-		else if(ti.isOpen())
-			taskInstance.state = WorkflowTaskInstance.STATE.ACTIVE;
+		
+		//if the task is ended
+		if(ti.getEnd() != null)
+			taskInstance.setState( WorkflowTaskInstance.STATE.DONE);
+		else if(ti.getStart() == null)
+			taskInstance.setState(WorkflowTaskInstance.STATE.NOT_YET_STARTED);
+		else if(ti.getStart() != null && ti.isSuspended() != true)
+			taskInstance.setState(WorkflowTaskInstance.STATE.STARTED);
+		else if(ti.getStart() != null && ti.isSuspended())
+			taskInstance.setState(WorkflowTaskInstance.STATE.SUSPENDED);
+		
+		taskInstance.getProperties().put(WorkflowConstants.VAR_TASKSTATE, taskInstance.getState().getVal());
 		
 		// mapping
 		HashMap<String, Object> mapped_properties = new HashMap<String, Object>();
@@ -44,7 +50,7 @@ public class WorkflowFactory {
 			mapped_properties.put(key.toString(), variables.get(key));
 
 		if (ti.getActorId() != null)
-			taskInstance.properties.put(WorkflowConstants.VAR_OWNER, ti
+			taskInstance.getProperties().put(WorkflowConstants.VAR_OWNER, ti
 					.getActorId());
 		
 		if(ti.getPooledActors() != null) {
@@ -54,28 +60,28 @@ public class WorkflowFactory {
 			for(PooledActor actor : pooledActors)
 				actors.add(actor.getActorId());
 			
-			taskInstance.properties.put(WorkflowConstants.VAR_POOLEDACTORS, actors);
+			taskInstance.getProperties().put(WorkflowConstants.VAR_POOLEDACTORS, actors);
 			
 		}
 			
 
 		if (ti.getStart() != null)
-			taskInstance.properties.put(WorkflowConstants.VAR_STARTDATE, ti
+			taskInstance.getProperties().put(WorkflowConstants.VAR_STARTDATE, ti
 					.getStart());
 
 		if (ti.getEnd() != null)
-			taskInstance.properties.put(WorkflowConstants.VAR_ENDDATE, ti
+			taskInstance.getProperties().put(WorkflowConstants.VAR_ENDDATE, ti
 					.getEnd());
 
 		if (ti.getDueDate() != null)
-			taskInstance.properties.put(WorkflowConstants.VAR_DUEDATE, ti
+			taskInstance.getProperties().put(WorkflowConstants.VAR_DUEDATE, ti
 					.getDueDate());
 
 		if (ti.getDescription() != null)
-			taskInstance.properties.put(WorkflowConstants.VAR_DUEDATE, ti
+			taskInstance.getProperties().put(WorkflowConstants.VAR_DUEDATE, ti
 					.getDescription());
 
-		taskInstance.properties.putAll(mapped_properties);
+		taskInstance.getProperties().putAll(mapped_properties);
 
 		List<Transition> transitions = ti.getAvailableTransitions();
 		
@@ -119,17 +125,19 @@ public class WorkflowFactory {
 			ProcessInstance processInstance) {
 
 		WorkflowInstance wfi = new WorkflowInstance();
-		wfi.processDefinitionId = processInstance.getProcessDefinition()
-				.getId();
-		wfi.id = Long.toString(processInstance.getId());
-		wfi.startDate = processInstance.getStart();
-		wfi.endDate = processInstance.getEnd();
-		wfi.name = processInstance.getProcessDefinition().getName();
+		wfi.setProcessDefinitionId( processInstance.getProcessDefinition()
+				.getId());
+		wfi.setId( Long.toString(processInstance.getId()) );
+		wfi.setStartDate( processInstance.getStart() );
+		wfi.setEndDate( processInstance.getEnd() );
+		wfi.setName( processInstance.getProcessDefinition().getName() );
 		
-		wfi.properties.put (
+		wfi.getProperties().put (
 				WorkflowConstants.VAR_DOCUMENTS, 
 				processInstance.getContextInstance().getVariable(WorkflowConstants.VAR_DOCUMENTS)
 		);
+		
+		wfi.getProperties().put(WorkflowConstants.VAR_TEMPLATE, processInstance.getContextInstance().getVariable(WorkflowConstants.VAR_TEMPLATE));
 		
 		return wfi;
 	}
@@ -176,7 +184,7 @@ public class WorkflowFactory {
 	public static String createTaskId(long processId, long taskid) {
 		return new String(processId + "@" + taskid);
 	}
-
+	
 	public static String createProcessDefintionId(Long defId){
 		return "jbpm-" + defId + "pid";
 	}

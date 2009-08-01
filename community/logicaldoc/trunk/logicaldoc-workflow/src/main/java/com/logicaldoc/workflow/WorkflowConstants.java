@@ -21,4 +21,11 @@ public class WorkflowConstants {
 	public static final String VAR_DOCUMENTS = PREFIX + "documents";
 	
 	public static final String VAR_OUTCOME = PREFIX + "outcome";
+	
+	public static final String VAR_TASKSTATE = PREFIX + "taskstate";
+	
+	public static final String VAR_TASKID = PREFIX + "taskid";
+	
+	public static final String VAR_COMMENT = PREFIX + "comment";
+
 }
