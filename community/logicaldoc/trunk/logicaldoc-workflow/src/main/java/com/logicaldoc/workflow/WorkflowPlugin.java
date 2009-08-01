@@ -40,7 +40,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 			// Create JBPM database schema
 			JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
 			//jbpmInstallConfig.dropSchema();
-			jbpmInstallConfig.createSchema();
+		//	jbpmInstallConfig.createSchema();
 			
 			templatesDirectory.mkdirs();
 			templatesDirectory.mkdir();

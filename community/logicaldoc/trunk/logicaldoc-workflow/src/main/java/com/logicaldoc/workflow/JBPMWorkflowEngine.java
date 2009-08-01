@@ -26,7 +26,6 @@ import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
 import com.logicaldoc.workflow.model.WorkflowTaskInstance;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
-import com.logicaldoc.workflow.transform.JBPMWorkflowTask;
 
 public class JBPMWorkflowEngine implements WorkflowEngine {
 
@@ -89,7 +88,7 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 			public Object doInJbpm(JbpmContext context) throws JbpmException {
 
 				context.deployProcessDefinition(processDefinition);
-
+				
 				logger.info("deploy processdefinition with name "
 						+ processDefinition.getName());
 
@@ -411,13 +410,41 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 		});
 	}
 
+	public void updateWorkflowInstance(final WorkflowInstance workflowInstance){
+		this.jbpmTemplate.execute(new JbpmCallback() {
+
+			@SuppressWarnings("unchecked")
+			public Object doInJbpm(JbpmContext context) throws JbpmException {
+
+				long jbpmProcessId = WorkflowFactory.getJbpmProcessInstanceId(workflowInstance.getId());
+				
+				ProcessInstance processInstance = context.getProcessInstance(jbpmProcessId);
+				
+			
+				Map<String, Object> taskVariables = workflowInstance.getProperties();
+
+				for (String key : taskVariables.keySet()) {
+
+					Object val = taskVariables.get(key);
+
+					processInstance.getContextInstance().setVariable(key.toString(), val);
+					
+				}
+				context.save(processInstance);
+
+				return null;
+			}
+		});
+	}
+	
+	
 	public void updateTaskInstance(final WorkflowTaskInstance wti) {
 		this.jbpmTemplate.execute(new JbpmCallback() {
 
 			@SuppressWarnings("unchecked")
 			public Object doInJbpm(JbpmContext context) throws JbpmException {
 
-				long jbpmTaskId = WorkflowFactory.getJbpmTaskId(wti.id);
+				long jbpmTaskId = WorkflowFactory.getJbpmTaskId(wti.getId());
 
 				TaskInstance taskInstance = context.getTaskInstance(jbpmTaskId);
 				Map<String, Object> taskVariables = wti.getProperties();
@@ -431,13 +458,47 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 						
 						if(val == null)
 							taskInstance.setActorId(null);
-						else
+						else if(taskInstance.getActorId().equals(val) == false)
 							taskInstance.setActorId(val.toString());
-						
-						continue;
 					}
+					
+					else if(key.equals(WorkflowConstants.VAR_TASKSTATE)){
+						String state =(String)val;
+						
+						//only two 
+						if(WorkflowTaskInstance.STATE.STARTED.getVal().equals(state)){
+						
+							if(taskInstance.isSuspended() == true){
+								taskInstance.resume();
+							}
+							
+							else if(taskInstance.getStart() == null){
+								taskInstance.start();
+							}
+						
+						}
+						else if(WorkflowTaskInstance.STATE.SUSPENDED.getVal().equals(state)){
+							if(taskInstance.isSuspended() == false){
+								taskInstance.suspend();
+								
+							}
+						}
 
-					taskInstance.setVariableLocally(key.toString(), val);
+						
+						
+						/*if(ti.getEnd() != null)
+							taskInstance.state = WorkflowTaskInstance.STATE.DONE;
+						else if(ti.getStart() == null)
+							taskInstance.state = WorkflowTaskInstance.STATE.NOT_YET_STARTED;
+						else if(ti.getStart() != null && ti.isSuspended() != true)
+							taskInstance.state = WorkflowTaskInstance.STATE.STARTED;
+						else if(ti.getStart() != null && ti.isSuspended())
+							taskInstance.state = WorkflowTaskInstance.STATE.SUSPENDED;
+						*/
+					}
+					else {
+						taskInstance.setVariableLocally(key.toString(), val);
+					}
 				}
 				context.save(taskInstance);
 
@@ -460,7 +521,7 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 						List<TaskInstance> taskInstances = context
 								.getTaskMgmtSession().findTaskInstances(
 										username);
-
+						
 						for (TaskInstance taskInstance : taskInstances) {
 
 							returnedTaskInstances.add(WorkflowFactory
@@ -611,4 +672,27 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 			}
 		});
 	} 
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<WorkflowTaskInstance> getAllSuspendedTaskInstances(final String actorId){
+		return (List<WorkflowTaskInstance>) this.jbpmTemplate.execute(new JbpmCallback() {
+
+			public List<WorkflowTaskInstance> doInJbpm(JbpmContext context)
+					throws JbpmException {
+
+					List<TaskInstance> taskInstances = context.getSession().createQuery(
+							"from org.jbpm.taskmgmt.exe.TaskInstance as ti " +
+							"where ti.actorId = :actorId  and ti.isSuspended = true and ti.isOpen = true").setString("actorId", actorId).list();
+				
+					List<WorkflowTaskInstance> workflowTaskInstances = new LinkedList<WorkflowTaskInstance>();
+					
+					for(TaskInstance instance : taskInstances)
+						workflowTaskInstances.add( WorkflowFactory.createTaskInstance( instance) );
+					
+					
+					return workflowTaskInstances;
+			}
+		});
+	}
 }

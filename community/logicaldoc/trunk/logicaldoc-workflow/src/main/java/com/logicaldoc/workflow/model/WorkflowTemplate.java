@@ -81,4 +81,17 @@ public class WorkflowTemplate {
 	public EMailMessage getReminderMailMessage() {
 		return reminderMailMessage;
 	}
+	
+	public BaseWorkflowModel getWorkflowComponentById(String id){
+		
+		if(this.workflowComponents == null)
+			return null;
+		
+		for(BaseWorkflowModel baseWorkflowModel : this.workflowComponents){
+			if(baseWorkflowModel.getId().equals(id))
+				return baseWorkflowModel;
+		}
+		
+		return null;
+	}
 }

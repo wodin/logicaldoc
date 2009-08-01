@@ -4,21 +4,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WorkflowInstance {
+public class WorkflowInstance implements FetchModel{
 	
-	public String id;
+	private String id;
 	
-	public Long processDefinitionId;
+	private Long processDefinitionId;
 	
-	public Date startDate;
+	private Date startDate;
 	
-	public Date endDate;
+	private Date endDate;
 	
-	public String name;
+	private String name;
 	
-	public String description;
-	
-	public Map<String, Object> properties = new HashMap<String, Object>();
+	private Map<String, Object> properties = new HashMap<String, Object>();
 	
 	public Date getEndDate() {
 		return endDate;
@@ -44,7 +42,50 @@ public class WorkflowInstance {
 		return name;
 	}
 	
-	public String getDescription() {
-		return description;
+	@Override
+	public boolean isUpdateable() {
+		return true;
+	}
+	
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setProcessDefinitionId(Long processDefinitionId) {
+		this.processDefinitionId = processDefinitionId;
+	}
+	
+	public void setProperties(Map<String, Object> properties) {
+		this.properties = properties;
+	}
+	
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	
+	public WorkflowInstance(){
+		
+	}
+	
+	public WorkflowInstance(WorkflowInstance workflowInstance){
+		this.endDate = workflowInstance.endDate;
+		this.id = workflowInstance.id;
+		this.processDefinitionId = workflowInstance.processDefinitionId;
+		this.startDate = workflowInstance.startDate;
+
+		if(workflowInstance.properties != null){
+			for(Map.Entry entry : workflowInstance.properties.entrySet()){
+				this.properties.put((String)entry.getKey(), entry.getValue());
+			}
+		}
+		
 	}
 }

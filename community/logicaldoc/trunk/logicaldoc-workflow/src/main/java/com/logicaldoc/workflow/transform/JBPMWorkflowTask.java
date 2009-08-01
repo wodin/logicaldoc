@@ -33,10 +33,7 @@ public class JBPMWorkflowTask implements TransformModel {
 
 	@Override
 	public Object open(TransformContext ctx){
-		
-		
-
-		
+	
 		Document wr = ((JBPMTransformContext) ctx).getDocumentBuildObject();
 
 		WorkflowTask workflowTask = (WorkflowTask) ctx.getCurrentBaseModel();
@@ -60,8 +57,16 @@ public class JBPMWorkflowTask implements TransformModel {
 		
 		List<Assignee> assignees = workflowTask.getAssignees();
 		
-		Element assignment = wr.createElement("assignment");
+		Element initialEvent = wr.createElement("event");
+		initialEvent.setAttribute("type", "task-create");
+		Element initialActionEvent = wr.createElement("action");
+		initialActionEvent.setAttribute("class", "com.logicaldoc.workflow.action.TaskSetupHandler");
+		initialEvent.appendChild(initialActionEvent);
 		
+		taskId = wr.createElement("taskId");
+		taskId.setTextContent(workflowTask.getId());
+		initialActionEvent.appendChild(taskId);
+		task.appendChild(initialEvent);
 		/**
 		 * Assignment
 		 */

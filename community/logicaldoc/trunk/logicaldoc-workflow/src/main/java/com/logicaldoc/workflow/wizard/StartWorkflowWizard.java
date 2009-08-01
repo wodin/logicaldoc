@@ -180,7 +180,7 @@ public class StartWorkflowWizard implements TabChangeListener {
 		
 		WorkflowInstance instance = this.workflowService.startWorkflow(
 				workflowDefinition, properties);
-		this.workflowService.signal(instance.id);
+		this.workflowService.signal(instance.getId());
 		
 		return null;
 	}

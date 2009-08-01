@@ -94,7 +94,7 @@ public class JBPMWorkflowTransformServiceImpl implements
 	}
 
 	@SuppressWarnings("unchecked")
-	private WorkflowTemplate retrieveWorkflowModels(Serializable binarayContent) {
+	public WorkflowTemplate retrieveWorkflowModels(Serializable binarayContent) {
 		
 		WorkflowTemplate workflowTemplate = (WorkflowTemplate) this.xStream
 				.fromXML((String)binarayContent);

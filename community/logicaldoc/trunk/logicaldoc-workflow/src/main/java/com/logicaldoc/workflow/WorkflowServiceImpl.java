@@ -12,10 +12,14 @@ import org.jbpm.graph.exe.Token;
 
 import com.logicaldoc.workflow.editor.WorkflowTemplateLoader;
 import com.logicaldoc.workflow.exception.WorkflowException;
+import com.logicaldoc.workflow.model.FetchModel;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
+import com.logicaldoc.workflow.model.WorkflowInstanceInfo;
 import com.logicaldoc.workflow.model.WorkflowTaskInstance;
+import com.logicaldoc.workflow.model.WorkflowTaskInstanceInfo;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
+import com.logicaldoc.workflow.model.FetchModel.FETCH_TYPE;
 import com.logicaldoc.workflow.transform.WorkflowTransformService;
 
 public class WorkflowServiceImpl implements WorkflowService {
@@ -83,12 +87,16 @@ public class WorkflowServiceImpl implements WorkflowService {
 	}
 
 	@Override
-	public WorkflowTaskInstance getTaskInstanceByTaskId(String id) {
+	public WorkflowTaskInstance getTaskInstanceByTaskId(String id, FETCH_TYPE fetch_type) {
 
 		WorkflowTaskInstance taskInstance = workflowComponent
 				.getTaskInstanceById(id);
-		return taskInstance;
-
+		
+		if(fetch_type.equals(FETCH_TYPE.FORUPDATE))
+			return  taskInstance;
+		
+		else 
+			return new WorkflowTaskInstanceInfo(taskInstance);
 	}
 
 	@Override
@@ -117,11 +125,16 @@ public class WorkflowServiceImpl implements WorkflowService {
 	}
 
 	@Override
-	public WorkflowInstance getWorkflowInstancesById(String workflowinstanceId) {
-
+	public WorkflowInstance getWorkflowInstanceById(String workflowinstanceId, FetchModel.FETCH_TYPE fetch_type) {
+		
 		WorkflowInstance workflowInstance = workflowComponent
 				.getWorkflowInstanceById(workflowinstanceId);
-		return workflowInstance;
+		
+		if(fetch_type.equals(FetchModel.FETCH_TYPE.FORUPDATE))
+			return workflowInstance;
+		
+		else
+			return new WorkflowInstanceInfo( workflowInstance );
 	}
 
 	@Override
@@ -130,7 +143,12 @@ public class WorkflowServiceImpl implements WorkflowService {
 	}
 
 	@Override
-	public void updateTaskInstace(WorkflowTaskInstance taskInstance) {
+	public void updateWorkflow(WorkflowInstance workflowInstance) {
+		workflowComponent.updateWorkflowInstance(workflowInstance);
+	}
+	
+	@Override
+	public void updateWorkflow(WorkflowTaskInstance taskInstance) {
 		workflowComponent.updateTaskInstance(taskInstance);
 	}
 
@@ -141,6 +159,10 @@ public class WorkflowServiceImpl implements WorkflowService {
 	
 	public List<WorkflowTaskInstance> getTaskInstancesForUser(String username){
 		return this.workflowComponent.getAllActionTasksByUser(username);
+	}
+	
+	public List<WorkflowTaskInstance> getSuspendedTaskInstancesForUser(String username){
+		return this.workflowComponent.getAllSuspendedTaskInstances(username);
 	}
 	
 	@Override
@@ -155,15 +177,15 @@ public class WorkflowServiceImpl implements WorkflowService {
 	
 	public List<WorkflowTaskInstance> getWorkflowTasks(WorkflowInstance workflowInstance, WorkflowTaskInstance.STATE taskState,  TASK_SORT sort){
 		
-		List<WorkflowTaskInstance> workflowTaskInstances = this.workflowComponent.getTaskInstancesByActiveWorkflow(workflowInstance.id);
+		List<WorkflowTaskInstance> workflowTaskInstances = this.workflowComponent.getTaskInstancesByActiveWorkflow(workflowInstance.getId());
 		List<WorkflowTaskInstance> instances = new LinkedList<WorkflowTaskInstance>();
 		
 		for(WorkflowTaskInstance taskInstance : workflowTaskInstances){
 			
 
 			
-			if(taskInstance.state.equals(WorkflowTaskInstance.STATE.ALL) == false){
-				if(taskInstance.state.equals(taskState) == false)
+			if(taskInstance.getState().equals(WorkflowTaskInstance.STATE.ALL) == false){
+				if(taskInstance.getState().equals(taskState) == false)
 					continue;
 			}
 			
@@ -190,7 +212,6 @@ public class WorkflowServiceImpl implements WorkflowService {
 					if(nextDate.after(currentDate))
 						continue;
 						
-					
 					instances.set(j, nextElement);
 					instances.set(j+1, currentElement);
 				
@@ -215,11 +236,19 @@ public class WorkflowServiceImpl implements WorkflowService {
 		return this.getWorkflowTasks(workflowInstance, WorkflowTaskInstance.STATE.DONE, TASK_SORT.ASC);
 	}
 	
-	public WorkflowInstance getWorkflowInstanceByTaskInstance(String workflowTaskId){
-		return this.workflowComponent.getWorkflowInstanceByTaskInstance(workflowTaskId);
+	public WorkflowInstance getWorkflowInstanceByTaskInstance(String workflowTaskId, FetchModel.FETCH_TYPE fetch_type){
+		WorkflowInstance workflowInstance = this.workflowComponent.getWorkflowInstanceByTaskInstance(workflowTaskId);
+		
+		if(fetch_type.equals(FetchModel.FETCH_TYPE.FORUPDATE))
+			return workflowInstance;
+		
+		else 
+			return new WorkflowInstanceInfo(workflowInstance);
 	}
 	
 	public List<WorkflowInstance> getAllWorkflows(){
 		return this.workflowComponent.getAllWorkflows();
 	}
+
+
 }
