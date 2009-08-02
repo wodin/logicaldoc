@@ -1,11 +1,10 @@
 package com.logicaldoc.workflow.editor.model;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIParameter;
-import javax.faces.event.ActionEvent;
+import java.util.List;
 
 import com.logicaldoc.workflow.editor.controll.EditController;
 import com.logicaldoc.workflow.editor.controll.JoinController;
+import com.logicaldoc.workflow.editor.message.DeployMessage;
 
 public class Join extends BaseWorkflowModel {
 
@@ -43,7 +42,6 @@ public class Join extends BaseWorkflowModel {
 	
 	@Override
 	public boolean isPossibleStartState() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
@@ -52,4 +50,11 @@ public class Join extends BaseWorkflowModel {
 		return "join";
 	}
 
+	@Override
+	public void checkForDeploy(List<DeployMessage> failures) {
+		
+		if(this.getDestination() == null)
+			failures.add(new DeployMessage(this, "No destination has been specified"));
+		
+	}
 }

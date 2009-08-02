@@ -26,6 +26,7 @@ import com.logicaldoc.web.navigation.NavigationBean;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.Constants;
 import com.logicaldoc.web.util.FacesUtil;
+import com.logicaldoc.workflow.editor.message.DeployMessage;
 import com.logicaldoc.workflow.model.Transition;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
@@ -56,8 +57,7 @@ public class WorkflowManager {
 	private DocumentDAO documentDAO;
 	
 	private boolean showFolderSelector = false;
-	
-	
+		
 	public WorkflowManager() {
 		this.workflowService = (WorkflowService) Context.getInstance().getBean(
 				"workflowService");

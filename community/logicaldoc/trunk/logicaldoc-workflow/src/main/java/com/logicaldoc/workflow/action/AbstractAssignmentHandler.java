@@ -18,7 +18,9 @@ public abstract class AbstractAssignmentHandler implements AssignmentHandler {
 
 	private String taskId;
 	
-	
+	protected final String getTaskId() {
+		return taskId;
+	}
 	
 	/**
 	 * 
