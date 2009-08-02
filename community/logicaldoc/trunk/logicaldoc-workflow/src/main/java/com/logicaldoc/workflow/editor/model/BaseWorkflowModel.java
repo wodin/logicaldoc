@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.logicaldoc.workflow.editor.controll.EditController;
+import com.logicaldoc.workflow.editor.message.DeployMessage;
 
 public abstract class BaseWorkflowModel implements Serializable{
 
@@ -16,13 +17,10 @@ public abstract class BaseWorkflowModel implements Serializable{
 
 	private String id;
 
-	private List<Transition> transitions;
-	
 	private String name;
 	
 	public BaseWorkflowModel() {
 		id = UUID.randomUUID().toString();
-		this.transitions = new ArrayList<Transition>();
 	}
 
 	public BaseWorkflowModel(BaseWorkflowModel workflowModel){
@@ -43,28 +41,6 @@ public abstract class BaseWorkflowModel implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	
-	public void addTransition(Transition _transition) {
-
-		for (Transition transition : this.transitions) {
-			if (transition.getId().equals(_transition.getId()))
-				throw new WorkflowEditorException(
-						"You can not add the same transition twice");
-
-			if (transition.getName().equals(_transition.getName()))
-				throw new WorkflowEditorException(
-						"You can not add the a transition with equal names");
-
-		}
-
-		this.transitions.add(_transition);
-
-	}
-
-	public List<Transition> getTransitions() {
-		return this.transitions;
-	}
 	
 	public abstract String getType();
 	
@@ -76,10 +52,11 @@ public abstract class BaseWorkflowModel implements Serializable{
 	
 	public abstract boolean isPossibleStartState();
 	
+	public abstract void checkForDeploy(List<DeployMessage> failures);
+	
 	public BaseWorkflowModel copy(BaseWorkflowModel baseWorkflowModel) {
 		this.id = baseWorkflowModel.id;
 		this.name = baseWorkflowModel.name;
-		this.transitions = baseWorkflowModel.transitions;
 		
 		return this;
 	}

@@ -1,10 +1,12 @@
 package com.logicaldoc.workflow.editor.model;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.workflow.editor.controll.EditController;
+import com.logicaldoc.workflow.editor.message.DeployMessage;
 
 
 public class WorkflowTask extends BaseWorkflowModel {
@@ -21,7 +23,14 @@ public class WorkflowTask extends BaseWorkflowModel {
 	
 	private List<Assignee> assignees;
 	
+	private List<Transition> transitions = new LinkedList<Transition>();
+	
 	private boolean parallelProcessingSupported;
+	
+	
+	public List<Transition> getTransitions() {
+		return transitions;
+	}
 	
 	public WorkflowTask(){
 		this.assignees = new ArrayList<Assignee>();
@@ -107,9 +116,29 @@ public class WorkflowTask extends BaseWorkflowModel {
 		return "task";
 	}
 	
+	public void addTransition(Transition _transition) {
+
+		for (Transition transition : this.transitions) {
+			if (transition.getId().equals(_transition.getId()))
+				throw new WorkflowEditorException(
+						"You can not add the same transition twice");
+
+			if (transition.getName().equals(_transition.getName()))
+				throw new WorkflowEditorException(
+						"You can not add the a transition with equal names");
+
+		}
+
+		this.transitions.add(_transition);
+
+	}
+	
 	@Override
 	public EditController getController() {
-		return (EditController)Context.getInstance().getBean("workflowTaskController");
+		
+		EditController controller = (EditController)Context.getInstance().getBean("workflowTaskController");
+		controller.initialize(this);
+		return controller;
 	}
 	
 	@Override
@@ -123,7 +152,7 @@ public class WorkflowTask extends BaseWorkflowModel {
 		this.remindTimeValue = workflowTask.remindTimeValue;
 		this.assignees = workflowTask.assignees;
 		this.parallelProcessingSupported = workflowTask.parallelProcessingSupported;
-		
+		this.transitions = workflowTask.transitions;
 		return this;
 	}
 	
@@ -135,6 +164,30 @@ public class WorkflowTask extends BaseWorkflowModel {
 	@Override
 	public String getType() {
 		return "task";
+	}
+	
+	@Override
+	public void checkForDeploy(List<DeployMessage> failures) {
+		
+		if(dueDateValue < 0){
+			failures.add(new DeployMessage(this, "You have entered a negative due date."));
+		}
+		
+		if(remindTimeValue < 0){
+			failures.add(new DeployMessage(this, "You have entered a negative remind time."));
+		}
+		
+		if(this.remindTimeValue > 0 && (this.dueDateValue == 0)){
+			failures.add(new DeployMessage(this, "You have entered a remindTime but without specifiying a duedate. "));
+		}
+		
+		if(getTransitions().size() == 0){
+			failures.add(new DeployMessage(this, "A Task without any transition is not possible "));
+		}
+		
+		for(Transition transition : getTransitions()){
+			transition.checkForDeploy(failures);
+		}
 	}
 	
 }

@@ -28,6 +28,7 @@ import com.logicaldoc.workflow.debug.TRANSMITTER;
 import com.logicaldoc.workflow.editor.controll.DragAndDropSupportController;
 import com.logicaldoc.workflow.editor.controll.EditController;
 import com.logicaldoc.workflow.editor.controll.DragAndDropSupportController.Container;
+import com.logicaldoc.workflow.editor.message.DeployMessage;
 import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
 import com.logicaldoc.workflow.editor.model.Transition;
 import com.logicaldoc.workflow.editor.model.WorkflowEditorException;
@@ -60,6 +61,9 @@ public class WorkflowTemplateManager {
 	private WorkflowTemplate workflowTemplate;
 		
 	private Long workflowTemplateId;
+	
+	private List<DeployMessage> errorMessages;
+
 	
 	public WorkflowTemplateManager(){
 		this.initializing();
@@ -174,17 +178,6 @@ public class WorkflowTemplateManager {
 
 	public Integer getWorkflowComponentSize() {
 		return this.workflowTemplate.getWorkflowComponents().size();
-	}
-
-	public void addTransition() {
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
-				.getRequest();
-
-		String componentId = request.getParameter("componentId");
-
-		BaseWorkflowModel signedTask = getWorkflowComponentById(componentId);
-		signedTask.getTransitions().add(new Transition());
-
 	}
 
 	public String setupWorkflow() {
@@ -365,10 +358,20 @@ public class WorkflowTemplateManager {
 
 	public String deployWorkflowTemplate() {
 
+		this.errorMessages = new LinkedList<DeployMessage>();
+		
+		for(BaseWorkflowModel model : this.workflowTemplate.getWorkflowComponents()){
+			model.checkForDeploy(errorMessages);
+		}
+		
+		if( this.errorMessages.size() > 0 )
+			return null;
+		
+		
 		WorkflowPersistenceTemplate workflowTemplate = this.workflowTemplateLoader
 				.loadWorkflowTemplate(this.workflowTemplateId,
 						WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
-
+		
 		// at first we have to delete the current workflow instance
 		// TODO:we should add API-improvements to handle more clearer this
 		List<WorkflowDefinition> definitions = this.workflowService.getAllDefinitions();
@@ -432,5 +435,11 @@ public class WorkflowTemplateManager {
 		return workflowTemplate;
 	}
 	
+	public List<DeployMessage> getErrorMessages(){
+		return this.errorMessages;
+	}
 	
+	public void closeErrorMessageWindow(){
+		this.errorMessages = null;
+	}
 }

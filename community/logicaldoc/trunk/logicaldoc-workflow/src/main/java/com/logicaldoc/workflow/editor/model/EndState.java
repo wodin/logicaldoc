@@ -1,6 +1,9 @@
 package com.logicaldoc.workflow.editor.model;
 
+import java.util.List;
+
 import com.logicaldoc.workflow.editor.controll.EditController;
+import com.logicaldoc.workflow.editor.message.DeployMessage;
 
 public class EndState extends BaseWorkflowModel{
 
@@ -28,5 +31,10 @@ public class EndState extends BaseWorkflowModel{
 	@Override
 	public String getType() {
 		return "endState";
+	}
+	
+	@Override
+	public void checkForDeploy(List<DeployMessage> failures) {
+		
 	}
 }

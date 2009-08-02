@@ -13,8 +13,40 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form">
 	<f:loadBundle basename="i18n.application-workflow" var="workflow_msgs" />
+	
+	
+	
+	<script language="javascript" type="text/javascript" src="/js/workflow.js"/>
+
 
 	<ice:outputStyle href="/skins/default/css/workflow.css" />
+
+
+	<ice:panelPopup modal="true" clientOnly="true"
+		
+		draggable="false" visible="#{not empty WorkflowTemplateManager.errorMessages}">
+		<f:facet name="header">
+			
+			<ice:panelGrid width="100%" cellpadding="0" cellspacing="0" columns="2" style="text-align: center;">
+                <ice:outputText style="color: #FFFFFF;" value="Deployment-Errors"/>
+           		<ice:commandButton image="/skins/default/images/workflow/editor/close.gif" action="#{WorkflowTemplateManager.closeErrorMessageWindow}"/>
+            </ice:panelGrid>
+			
+		</f:facet>
+
+		<f:facet name="body">
+        			Please correct your settings and entries with respect to the errormessage descriped below:
+        			<br />
+		
+			
+				<ui:repeat value="#{WorkflowTemplateManager.errorMessages}"
+					var="message">
+	        				#{message.model.name}: #{message.message} <br />
+				</ui:repeat>
+			
+		</f:facet>
+		
+	</ice:panelPopup>
 
 	<table cellpadding="3" cellspacing="0" width="100%">
 		<tr>
@@ -155,7 +187,9 @@
 		</tr>
 		
 	</table>	
-		
+	
+	
+	
 				<ice:panelGroup rendered="#{not empty WorkflowTemplateManager.persistenceTemplate}" style="background-image:url('/skins/default/images/workflow/editor/editor_gradient.jpg'); background-repeat:repeat-x"> 
 					
 <!-- ************************************************************************ -->
@@ -178,7 +212,8 @@
 									            </f:facet>
 									  
 												Name: <ice:inputText value="#{WorkflowTemplateManager.persistenceTemplate.name}"/><br/>
-												Description:<br/> <ice:inputTextarea style="width:95%; height:100px; font-size:10px"  value="#{WorkflowTemplateManager.workflowTemplate.description}"/>
+											
+												Description:<br/> <ice:inputTextarea id="testing"  style="width:95%; height:100px; font-size:10px"  value="#{WorkflowTemplateManager.workflowTemplate.description}"/>
 											<br/>
 												TaskAssignment<br/>
 												<hr/>
@@ -287,7 +322,7 @@
 													</ui:repeat>
 													<br/>	
 												
-													<ice:commandLink action="#{WorkflowTemplateManager.controller.addTransition}">
+													<ice:commandLink action="#{WorkflowTemplateManager.selectedComponent.controller.addTransition}">
 														<ice:graphicImage styleClass="symbol" value="/skins/default/images/workflow/editor/transition_add.gif"/>
 														<ice:outputText value="Add Transition"/>
 													</ice:commandLink>
@@ -396,7 +431,7 @@
 																				</ice:panelGroup>
 																			
 																			
-																				<ice:commandLink actionListener="#{WorkflowTemplateManager.deleteWorkflowComponent}" value=" delete ">
+																				<ice:commandLink onclick="if(window.confirm('Do you really want to to delete this WorkflowComponent?') == 0)return false;" actionListener="#{WorkflowTemplateManager.deleteWorkflowComponent}"  value=" delete ">
 																					<f:param name="component" value="#{workflowComponent}"/>
 																				</ice:commandLink>
 																					
@@ -437,7 +472,7 @@
 																				dropTarget="true" >
 																				#{transition.destination.name} 
 																				<br/>
-																				<ice:commandLink actionListener="#{workflowComponent.controller.removeDestinationFromTransition}" value="delete">
+																				<ice:commandLink onclick="if(window.confirm('Do you really want to to delete this WorkflowComponent?') == 0)return false;" actionListener="#{workflowComponent.controller.removeDestinationFromTransition}" value="delete">
 																					<f:param name="transition" value="#{transition}"/>
 																				</ice:commandLink>
 																 			</ice:panelGroup>
@@ -467,7 +502,7 @@
 																 			<ice:panelGroup styleClass="dropClass">
 																 			
 																 				#{workflowTask.name} <br/>
-																				<ice:commandLink actionListener="#{workflowComponent.controller.removeTask}" value="delete">
+																				<ice:commandLink onclick="if(window.confirm('Do you really want to to delete this WorkflowComponent?') == 0)return false;" actionListener="#{workflowComponent.controller.removeTask}" value="delete">
 																					<f:param name="workflowTask" value="#{workflowTask}"/>
 																					<f:param name="workflowComponent" value="#{workflowComponent}"/>
 																				</ice:commandLink>
@@ -502,7 +537,7 @@
 															 			<ice:panelGroup styleClass="dropClass" rendered="#{not empty workflowComponent.destination}">
 															 				#{workflowComponent.destination.name}
 															 				<br/>
-															 				<ice:commandLink actionListener="#{workflowComponent.controller.removeTask}" value="delete">
+															 				<ice:commandLink onclick="if(window.confirm('Do you really want to to delete this WorkflowComponent?') == 0)return false;" actionListener="#{workflowComponent.controller.removeTask}" value="delete">
 																				<f:param name="workflowComponent" value="#{workflowComponent}"/>
 																			</ice:commandLink>
 															 				
@@ -525,7 +560,9 @@
 				</ice:panelGroup>
 			</ice:panelGrid>
 
-		
+			
+
+
 			
 		
 		
@@ -557,10 +594,10 @@
 				<ice:commandButton action="#{WorkflowTemplateManager.removeAllWorkflowComponents}"
 					value="Remove All Components"></ice:commandButton>
 					
-				<ice:commandButton action="#{WorkflowTemplateManager.undeployAllDefinitions}"
+				<ice:commandButton onclick="if(window.confirm('Do you really want to to undeploy all Definitions?') == 0)return false;" action="#{WorkflowTemplateManager.undeployAllDefinitions}"
 					value="Undeploy all workflowdefinitions"></ice:commandButton>	
 					
-				<ice:commandButton action="#{WorkflowTemplateManager.deleteAllActiveWorkflows}"
+				<ice:commandButton onclick="if(window.confirm('Do you really want to to delete all Instances ?') == 0)return false;" action="#{WorkflowTemplateManager.deleteAllActiveWorkflows}"
 					value="rm -rf WorkflowInstances "></ice:commandButton>	
 			
 			</ice:panelCollapsible>

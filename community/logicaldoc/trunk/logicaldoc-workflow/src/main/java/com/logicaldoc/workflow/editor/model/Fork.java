@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.logicaldoc.workflow.editor.controll.EditController;
 import com.logicaldoc.workflow.editor.controll.ForkController;
+import com.logicaldoc.workflow.editor.message.DeployMessage;
 
 public class Fork extends BaseWorkflowModel{
 	
@@ -46,5 +47,12 @@ public class Fork extends BaseWorkflowModel{
 	@Override
 	public String getType() {
 		return "fork";
+	}
+	
+	@Override
+	public void checkForDeploy(List<DeployMessage> failures) {
+		if(getWorkflowTasks().size() == 0)
+			failures.add(new DeployMessage(this, "No element has been attached to this element"));
+		
 	}
 }

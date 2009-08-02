@@ -55,7 +55,7 @@
 								value="#{WorkflowManager.selectedWorkflowInstance.name}" />
 
 							<ice:outputText value="Description: " />
-							<h:outputText
+							<h:outputText 
 								value="#{WorkflowManager.selectedWorkflowInstance.properties['ld_description']}" />
 
 							<ice:outputText value="StartDate: " />

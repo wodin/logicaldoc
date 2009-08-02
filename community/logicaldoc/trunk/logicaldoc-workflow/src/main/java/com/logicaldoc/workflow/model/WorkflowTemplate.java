@@ -3,9 +3,13 @@ package com.logicaldoc.workflow.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.logicaldoc.workflow.editor.controll.EditController;
+import com.logicaldoc.workflow.editor.message.DeployMessage;
 import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
+import com.logicaldoc.workflow.editor.model.EndState;
+import com.logicaldoc.workflow.editor.model.Transition;
 
-public class WorkflowTemplate {
+public class WorkflowTemplate extends BaseWorkflowModel {
 	
 	private Long id; 
 	
@@ -20,6 +24,13 @@ public class WorkflowTemplate {
 	private EMailMessage reminderMailMessage;
 	
 	private List<BaseWorkflowModel> workflowComponents = new LinkedList<BaseWorkflowModel>();
+	
+	private List<Transition> transitions;
+	
+	public List<Transition> getTransitions() {
+		return transitions;
+	}
+	
 	
 	public WorkflowTemplate(){
 		this.assignmentMailMessage = new EMailMessage("", "");
@@ -40,10 +51,6 @@ public class WorkflowTemplate {
 	
 	public String getDescription() {
 		return description;
-	}
-	
-	public Long getId() {
-		return id;
 	}
 	
 	public void setId(Long id) {
@@ -93,5 +100,50 @@ public class WorkflowTemplate {
 		}
 		
 		return null;
+	}
+	
+	public void checkForDeploy(List<DeployMessage> failures ){
+		
+		boolean endState = false;
+		
+		for(BaseWorkflowModel model : getWorkflowComponents()){
+			if(model instanceof EndState){
+				endState = true;
+				break;
+			}
+		}
+		
+		if(endState == false){
+			failures.add(new DeployMessage(this, "No endstate have been added"));
+		}
+	}
+
+	@Override
+	public EditController getController() {
+		throw new UnsupportedOperationException("Controller does not exists for this type of WorkflowComponent");
+	}
+
+
+	@Override
+	public String getImage() {
+		throw new UnsupportedOperationException("Image does not exists for this type of WorkflowComponent");
+	}
+
+
+	@Override
+	public String getTemplate() {
+		throw new UnsupportedOperationException("template does not exists for this type of WorkflowComponent");
+	}
+
+
+	@Override
+	public String getType() {
+		return "workflowTemplate";
+	}
+
+
+	@Override
+	public boolean isPossibleStartState() {
+		throw new UnsupportedOperationException("not enddstate can be entered by this component");
 	}
 }
