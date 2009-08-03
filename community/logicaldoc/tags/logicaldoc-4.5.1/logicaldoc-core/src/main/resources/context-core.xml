@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  
+	Context definition of the core plugin
+	@author Alessandro Gasparini - Logical Objects
+	@since 3.0
+-->
+<!DOCTYPE beans SYSTEM "spring-beans-2.0.dtd">
+<beans default-lazy-init="false" default-autowire="no"
+	default-dependency-check="none">
+
+	<!-- Storer -->
+	<bean id="Storer"
+		class="com.logicaldoc.core.searchengine.store.FSStorer"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="settingsConfig">
+			<ref bean="SettingsConfig" />
+		</property>
+	</bean>
+
+	<!-- Indexer -->
+	<bean id="Indexer" class="com.logicaldoc.core.searchengine.Indexer"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default" init-method="createIndexes">
+		<property name="settingsConfig">
+			<ref bean="SettingsConfig" />
+		</property>
+	</bean>
+
+	<!--DAOs-->
+	<bean id="UserDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.security.dao.HibernateUserDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="passwordTtl" value="${password.ttl}" />		
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+				<property name="userDocDAO">
+					<ref bean="UserDocDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="MenuDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.security.dao.HibernateMenuDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+				<property name="userDAO">
+					<ref bean="UserDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="UserDocDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.security.dao.HibernateUserDocDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="GroupDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.security.dao.HibernateGroupDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+				<property name="menuDAO">
+					<ref bean="MenuDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="DownloadTicketDAO"
+		parent="ApplicationBaseTransactionProxy" abstract="false"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.document.dao.HibernateDownloadTicketDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+				<property name="contextProperties" ref="ContextProperties" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="HistoryDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.document.dao.HibernateHistoryDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="DiscussionThreadDAO"
+		parent="ApplicationBaseTransactionProxy" abstract="false"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.document.dao.HibernateDiscussionThreadDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="VersionDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.document.dao.HibernateVersionDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="DocumentDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.document.dao.HibernateDocumentDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+				<property name="discussionDAO">
+					<ref bean="DiscussionThreadDAO" />
+				</property>
+				<property name="historyDAO">
+					<ref bean="HistoryDAO" />
+				</property>
+				<property name="versionDAO">
+					<ref bean="VersionDAO" />
+				</property>
+				<property name="menuDAO">
+					<ref bean="MenuDAO" />
+				</property>
+				<property name="userDAO">
+					<ref bean="UserDAO" />
+				</property>
+				<property name="userDocDAO">
+					<ref bean="UserDocDAO" />
+				</property>
+				<property name="linkDAO">
+					<ref bean="DocumentLinkDAO" />
+				</property>
+				<property name="listenerManager">
+					<ref bean="DocumentListenerManager" />
+				</property>
+				<property name="storer" ref="Storer" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="DocumentTemplateDAO"
+		parent="ApplicationBaseTransactionProxy" abstract="false"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.document.dao.HibernateDocumentTemplateDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="SystemMessageDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.communication.dao.HibernateSystemMessageDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="DocumentLinkDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.document.dao.HibernateDocumentLinkDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="GenericDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.generic.dao.HibernateGenericDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="SequenceDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.sequence.HibernateSequenceDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory">
+					<ref bean="SessionFactory" />
+				</property>
+				<property name="genericDao">
+					<ref bean="GenericDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- Managers -->
+	<bean id="SecurityManager" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.security.SecurityManagerImpl"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="userDAO">
+					<ref bean="UserDAO" />
+				</property>
+				<property name="groupDAO">
+					<ref bean="GroupDAO" />
+				</property>
+				<property name="menuDAO">
+					<ref bean="MenuDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="DocumentManager" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean
+				class="com.logicaldoc.core.document.DocumentManagerImpl">
+				<property name="documentDAO">
+					<ref bean="DocumentDAO" />
+				</property>
+				<property name="menuDAO">
+					<ref bean="MenuDAO" />
+				</property>
+				<property name="versionDAO">
+					<ref bean="VersionDAO" />
+				</property>
+				<property name="documentTemplateDAO">
+					<ref bean="DocumentTemplateDAO" />
+				</property>
+				<property name="historyDAO">
+					<ref bean="HistoryDAO" />
+				</property>
+				<property name="storer" ref="Storer" />
+				<property name="indexer">
+					<ref bean="Indexer" />
+				</property>
+				<property name="listenerManager">
+					<ref bean="DocumentListenerManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="AnalyzerManager"
+		class="com.logicaldoc.core.text.analyzer.AnalyzerManager">
+	</bean>
+
+	<bean id="TaskManager" class="com.logicaldoc.core.task.TaskManager"
+		destroy-method="stop">
+	</bean>
+
+	<bean id="DocumentListenerManager"
+		class="com.logicaldoc.core.document.DocumentListenerManager">
+	</bean>
+
+	<bean id="ThumbnailManager"
+		class="com.logicaldoc.core.document.thumbnail.ThumbnailManager">
+		<property name="documentManager" ref="DocumentManager" />
+	</bean>
+
+	<!-- Mail sender -->
+	<bean id="EMailSender"
+		class="com.logicaldoc.core.communication.EMailSender" abstract="false"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="host">
+			<value>${smtp.host}</value>
+		</property>
+		<property name="port">
+			<value>${smtp.port}</value>
+		</property>
+		<property name="username">
+			<value>${smtp.username}</value>
+		</property>
+		<property name="password">
+			<value>${smtp.password}</value>
+		</property>
+		<property name="sender">
+			<value>${smtp.sender}</value>
+		</property>
+	</bean>
+
+
+	<!-- Tasks -->
+	<bean id="IndexOptimizer"
+		class="com.logicaldoc.core.searchengine.IndexOptimizer">
+		<property name="indexer">
+			<ref bean="Indexer" />
+		</property>
+		<property name="documentDao">
+			<ref bean="DocumentDAO" />
+		</property>
+	</bean>
+
+	<bean id="IndexOptimizerJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="IndexOptimizer" />
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="IndexOptimizerTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="jobDetail" ref="IndexOptimizerJob" />
+		<property name="cronExpression">
+			<value>${schedule.cron.IndexOptimizer}</value>
+		</property>
+	</bean>
+
+	<bean id="TagCloudGenerator"
+		class="com.logicaldoc.core.document.TagCloudGenerator">
+		<property name="documentDao">
+			<ref bean="DocumentDAO" />
+		</property>
+		<property name="genericDao">
+			<ref bean="GenericDAO" />
+		</property>
+	</bean>
+
+	<bean id="TagCloudGeneratorJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="TagCloudGenerator" />
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="TagCloudGeneratorTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="jobDetail" ref="IndexerTaskJob" />
+		<property name="cronExpression">
+			<value>${schedule.cron.TagCloudGenerator}</value>
+		</property>
+	</bean>
+
+	<bean id="IndexerTask"
+		class="com.logicaldoc.core.searchengine.IndexerTask">
+		<property name="documentDao">
+			<ref bean="DocumentDAO" />
+		</property>
+		<property name="documentManager">
+			<ref bean="DocumentManager" />
+		</property>
+	</bean>
+
+	<bean id="IndexerTaskJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="IndexerTask" />
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="IndexerTaskTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="jobDetail" ref="IndexerTaskJob" />
+		<property name="cronExpression">
+			<value>${schedule.cron.IndexerTask}</value>
+		</property>
+	</bean>
+
+	<!-- Authentication -->
+	<bean id="BasicAuthentication"
+		class="com.logicaldoc.core.security.authentication.BasicAuthentication">
+		<property name="userDAO" ref="UserDAO" />
+	</bean>
+</beans>
