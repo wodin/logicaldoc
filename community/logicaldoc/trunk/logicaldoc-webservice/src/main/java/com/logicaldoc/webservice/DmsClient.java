@@ -40,7 +40,7 @@ public class DmsClient implements DmsService {
 	public String createDocument(String username, String password, long folder, String docTitle, String source,
 			String sourceDate, String author, String sourceType, String coverage, String language, String tags,
 			String versionDesc, String filename, DataHandler content, String templateName,
-			ExtendedAttribute[] extendedAttribute, String sourceId, String object, String recipient, String customId)
+			Attribute[] extendedAttribute, String sourceId, String object, String recipient, String customId)
 			throws Exception {
 		return client.createDocument(username, password, folder, docTitle, source, sourceDate, author, sourceType,
 				coverage, language, tags, versionDesc, filename, content, templateName, extendedAttribute, sourceId,
@@ -85,7 +85,7 @@ public class DmsClient implements DmsService {
 	@Override
 	public String update(String username, String password, long id, String title, String source, String sourceAuthor,
 			String sourceDate, String sourceType, String coverage, String language, String[] tags, String sourceId,
-			String object, String recipient, String templateId, ExtendedAttribute[] templateFields) throws Exception {
+			String object, String recipient, String templateId, Attribute[] templateFields) throws Exception {
 		return client.update(username, password, id, title, source, sourceAuthor, sourceDate, sourceType, coverage,
 				language, tags, sourceId, object, recipient, templateId, templateFields);
 	}

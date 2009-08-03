@@ -24,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
@@ -146,7 +147,7 @@ public class DmsServiceImpl implements DmsService {
 	public String createDocument(String username, String password, long folderId, String docTitle, String source,
 			String sourceDate, String author, String sourceType, String coverage, String language, String tags,
 			String versionDesc, String filename, DataHandler content, String templateName,
-			ExtendedAttribute[] extendedAttributes, String sourceId, String object, String recipient, String customId)
+			Attribute[] extendedAttributes, String sourceId, String object, String recipient, String customId)
 			throws Exception {
 
 		checkCredentials(username, password);
@@ -174,16 +175,16 @@ public class DmsServiceImpl implements DmsService {
 			date = convertXMLToDate(sourceDate);
 
 		DocumentTemplate template = null;
-		Map<String, String> attributes = null;
+		Map<String, ExtendedAttribute> attributes = null;
 		if (StringUtils.isNotEmpty(templateName)) {
 			DocumentTemplateDAO templDao = (DocumentTemplateDAO) Context.getInstance().getBean(
 					DocumentTemplateDAO.class);
 			template = templDao.findByName(templateName);
 			if (template != null) {
 				if (extendedAttributes != null && extendedAttributes.length > 0) {
-					attributes = new HashMap<String, String>();
+					attributes = new HashMap<String, ExtendedAttribute>();
 					for (int i = 0; i < extendedAttributes.length; i++) {
-						attributes.put(extendedAttributes[i].getName(), extendedAttributes[i].getValue());
+						attributes.put(extendedAttributes[i].getName(), extendedAttributes[i].getAttribute());
 					}
 				}
 			}
@@ -299,7 +300,6 @@ public class DmsServiceImpl implements DmsService {
 	 *      java.lang.String, long)
 	 */
 	public DocumentInfo downloadDocumentInfo(String username, String password, long id) throws Exception {
-
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(id);
 		docDao.initialize(doc);
@@ -339,10 +339,10 @@ public class DmsServiceImpl implements DmsService {
 				info.setTemplateId(doc.getTemplate().getId());
 
 				// Populate extended attributes
-				ExtendedAttribute[] extendedAttributes = new ExtendedAttribute[doc.getAttributes().size()];
+				Attribute[] extendedAttributes = new Attribute[doc.getAttributeNames().size()];
 				int i = 0;
 				for (String name : doc.getAttributeNames()) {
-					extendedAttributes[i++] = new ExtendedAttribute(name, doc.getValue(name));
+					extendedAttributes[i++] = new Attribute(name, doc.getExtendedAttribute(name));
 				}
 				info.setExtendedAttribute(extendedAttributes);
 			}
@@ -445,7 +445,7 @@ public class DmsServiceImpl implements DmsService {
 			DocumentTemplate template = templDao.findByName(templateName);
 			if (template != null) {
 				opt.setTemplate(template.getId());
-				for (String attr : template.getAttributes()) {
+				for (String attr : template.getAttributeNames()) {
 					if (templateFields != null && templateFields.length > 0) {
 						for (int i = 0; i < templateFields.length; i++) {
 							if (attr.equals(templateFields[i])) {
@@ -610,7 +610,7 @@ public class DmsServiceImpl implements DmsService {
 	public String update(String username, String password, long id, String title, String source, String sourceAuthor,
 			String sourceDate, String sourceType, String coverage, String language, String[] tags, String sourceId,
 			String object, String recipient, String templateName, @WebParam(name = "extendedAttribute")
-			ExtendedAttribute[] extendedAttribute) throws Exception {
+			Attribute[] extendedAttribute) throws Exception {
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = userDao.findByUserName(username);
@@ -637,9 +637,9 @@ public class DmsServiceImpl implements DmsService {
 			throw new Exception("user does't have write permission");
 		}
 
-		Map<String, String> attributes = new HashMap<String, String>();
+		Map<String, ExtendedAttribute> attributes = new HashMap<String, ExtendedAttribute>();
 		for (int i = 0; extendedAttribute != null && i < extendedAttribute.length; i++) {
-			attributes.put(extendedAttribute[i].getName(), extendedAttribute[i].getValue());
+			attributes.put(extendedAttribute[i].getName(), doc.getExtendedAttribute(extendedAttribute[i].getName()));
 		}
 
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
