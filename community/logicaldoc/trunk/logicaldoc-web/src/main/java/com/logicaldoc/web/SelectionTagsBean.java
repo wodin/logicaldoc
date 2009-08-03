@@ -8,6 +8,7 @@ import javax.faces.model.SelectItem;
 
 import org.java.plugin.registry.Extension;
 
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.i18n.Language;
@@ -78,7 +79,7 @@ public class SelectionTagsBean {
 			SelectItem si = new SelectItem(id, Messages.getMessage(label));
 			sil.add(si);
 		}
-		
+
 		viewModesSearch = (SelectItem[]) sil.toArray(new SelectItem[0]);
 	}
 
@@ -109,6 +110,16 @@ public class SelectionTagsBean {
 		return new SelectItem[] { new SelectItem("release", Messages.getMessage("msg.jsp.newrelease")),
 				new SelectItem("oldversion", Messages.getMessage("msg.jsp.oldversion")),
 				new SelectItem("subversion", Messages.getMessage("msg.jsp.newsubversion")) };
+	}
+
+	/**
+	 * Gets the option items for extended attribute types
+	 */
+	public SelectItem[] getExtendedTypes() {
+		return new SelectItem[] { new SelectItem(ExtendedAttribute.TYPE_STRING, Messages.getMessage("string")),
+				new SelectItem(ExtendedAttribute.TYPE_INT, Messages.getMessage("integer")),
+				new SelectItem(ExtendedAttribute.TYPE_DOUBLE, Messages.getMessage("decimal")),
+				new SelectItem(ExtendedAttribute.TYPE_DATE, Messages.getMessage("date")) };
 	}
 
 	/**
