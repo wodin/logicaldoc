@@ -229,7 +229,7 @@
 			<version>0.2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>quartz</groupId>
+			<groupId>org.opensymphony.quartz</groupId>
 			<artifactId>quartz</artifactId>
 		</dependency>
 		<dependency>
