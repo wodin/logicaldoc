@@ -130,89 +130,78 @@ public class GroupForm {
 		pref.setName("coverage");
 		pref.setLabel(Messages.getMessage("document.coverage"));
 		preferences.add(pref);
-		String extendedValue = group.getValue("preference.field.coverage");
-		if (StringUtils.isNotEmpty(extendedValue))
-			pref.decodePreferences(extendedValue);
+		if (group.getValue("preference.field.coverage") != null)
+			pref.decodePreferences(group.getValue("preference.field.coverage").toString());
 
 		pref = new Preference();
 		pref.setName("customId");
 		pref.setLabel(Messages.getMessage("document.customid"));
 		preferences.add(pref);
-		extendedValue = group.getValue("preference.field.customId");
-		if (StringUtils.isNotEmpty(extendedValue))
-			pref.decodePreferences(extendedValue);
+		if (group.getValue("preference.field.customId") != null)
+			pref.decodePreferences(group.getValue("preference.field.customId").toString());
 
 		pref = new Preference();
 		pref.setName("tags");
 		pref.setLabel(Messages.getMessage("tags"));
 		preferences.add(pref);
-		extendedValue = group.getValue("preference.field.tags");
-		if (StringUtils.isNotEmpty(extendedValue))
-			pref.decodePreferences(extendedValue);
+		if (group.getValue("preference.field.tags") != null)
+			pref.decodePreferences(group.getValue("preference.field.tags").toString());
 
 		pref = new Preference();
 		pref.setName("object");
 		pref.setLabel(Messages.getMessage("document.object"));
 		preferences.add(pref);
-		extendedValue = group.getValue("preference.field.object");
-		if (StringUtils.isNotEmpty(extendedValue))
-			pref.decodePreferences(extendedValue);
+		if (group.getValue("preference.field.object") != null)
+			pref.decodePreferences(group.getValue("preference.field.object").toString());
 
 		pref = new Preference();
 		pref.setName("recipient");
 		pref.setLabel(Messages.getMessage("document.recipient"));
 		preferences.add(pref);
-		extendedValue = group.getValue("preference.field.recipient");
-		if (StringUtils.isNotEmpty(extendedValue))
-			pref.decodePreferences(extendedValue);
+		if (group.getValue("preference.field.recipient") != null)
+			pref.decodePreferences(group.getValue("preference.field.recipient").toString());
 
 		pref = new Preference();
 		pref.setName("source");
 		pref.setLabel(Messages.getMessage("document.source"));
 		preferences.add(pref);
-		extendedValue = group.getValue("preference.field.source");
-		if (StringUtils.isNotEmpty(extendedValue))
-			pref.decodePreferences(extendedValue);
+		if (group.getValue("preference.field.source") != null)
+			pref.decodePreferences(group.getValue("preference.field.source").toString());
 
 		pref = new Preference();
 		pref.setName("sourceAuthor");
 		pref.setLabel(Messages.getMessage("document.author"));
 		preferences.add(pref);
-		extendedValue = group.getValue("preference.field.sourceAuthor");
-		if (StringUtils.isNotEmpty(extendedValue))
-			pref.decodePreferences(extendedValue);
+		if (group.getValue("preference.field.sourceAuthor") != null)
+			pref.decodePreferences(group.getValue("preference.field.sourceAuthor").toString());
 
 		pref = new Preference();
 		pref.setName("sourceDate");
 		pref.setLabel(Messages.getMessage("msg.jsp.sourcedate"));
 		preferences.add(pref);
-		extendedValue = group.getValue("preference.field.sourceDate");
-		if (StringUtils.isNotEmpty(extendedValue))
-			pref.decodePreferences(extendedValue);
+		if (group.getValue("preference.field.sourceDate") != null)
+			pref.decodePreferences(group.getValue("preference.field.sourceDate").toString());
 
 		pref = new Preference();
 		pref.setName("sourceId");
 		pref.setLabel(Messages.getMessage("document.sourceid"));
 		preferences.add(pref);
-		extendedValue = group.getValue("preference.field.sourceId");
-		if (StringUtils.isNotEmpty(extendedValue))
-			pref.decodePreferences(extendedValue);
+		if (group.getValue("preference.field.sourceId") != null)
+			pref.decodePreferences(group.getValue("preference.field.sourceId").toString());
 
 		pref = new Preference();
 		pref.setName("sourceType");
 		pref.setLabel(Messages.getMessage("document.type"));
 		preferences.add(pref);
-		extendedValue = group.getValue("preference.field.sourceType");
-		if (StringUtils.isNotEmpty(extendedValue))
-			pref.decodePreferences(extendedValue);
+		if (group.getValue("preference.field.sourceType") != null)
+			pref.decodePreferences(group.getValue("preference.field.sourceType").toString());
 
 		pref = new Preference();
 		pref.setName("template");
 		pref.setLabel(Messages.getMessage("template"));
 		preferences.add(pref);
-		extendedValue = group.getValue("preference.field.template");
-		if (StringUtils.isNotEmpty(extendedValue))
-			pref.decodePreferences(extendedValue);
+		if (group.getValue("preference.field.template") != null)
+			pref.decodePreferences(group.getValue("preference.field.template").toString());
 
 		Collections.sort(preferences, new Comparator<Preference>() {
 			@Override

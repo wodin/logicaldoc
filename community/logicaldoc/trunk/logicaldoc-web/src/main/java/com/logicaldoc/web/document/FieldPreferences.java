@@ -50,7 +50,7 @@ public class FieldPreferences extends HashMap<String, Boolean> {
 			for (String attributeName : groupAttributeNames) {
 				if (attributeName.contains("preference.field.")) {
 					String field = attributeName.substring(attributeName.lastIndexOf(".") + 1);
-					String fieldValue = group.getValue(attributeName);
+					String fieldValue = group.getValue(attributeName).toString();
 					String preference = "insert." + field + ".hidden";
 					if (super.get(preference) == null || !super.get(preference)) {
 						char val = fieldValue.charAt(0);

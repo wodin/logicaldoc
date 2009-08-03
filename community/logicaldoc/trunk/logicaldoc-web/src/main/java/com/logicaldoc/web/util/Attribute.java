@@ -1,20 +1,23 @@
 package com.logicaldoc.web.util;
 
+import com.logicaldoc.core.ExtendedAttribute;
+
 /**
- * Simple bean that stores a name-value pair
+ * Simple bean that stores a name-Extended Attribute pair
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
 public class Attribute {
+	
 	private String name;
 
-	private String value;
+	private ExtendedAttribute attribute;
 
-	public Attribute(String name, String value) {
+	public Attribute(String name, ExtendedAttribute attribute) {
 		super();
 		this.name = name;
-		this.value = value;
+		this.attribute = attribute;
 	}
 
 	public String getName() {
@@ -25,16 +28,16 @@ public class Attribute {
 		this.name = name;
 	}
 
-	public String getValue() {
-		return value;
+	public ExtendedAttribute getAttribute() {
+		return attribute;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void setAttribute(ExtendedAttribute attribute) {
+		this.attribute = attribute;
 	}
 
 	@Override
 	public String toString() {
-		return getName() + " - " + getValue();
+		return getName() + " - " + getAttribute().getValue().toString();
 	}
 }

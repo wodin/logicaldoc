@@ -2,7 +2,6 @@ package com.logicaldoc.web.document;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -11,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.faces.application.Application;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.icesoft.faces.context.effects.JavascriptContext;
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
@@ -30,7 +31,6 @@ import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
-import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.TagUtil;
@@ -114,9 +114,51 @@ public class DocumentEditForm {
 
 	private UIInput templateInput = null;
 
+	private UIInput templateValueInput = null;
+
 	private Collection<Attribute> extendedAttributes = new ArrayList<Attribute>();
 
 	private boolean displayPreviewPopup = false;
+
+	private UIInput stringValueInput = null;
+
+	private UIInput intValueInput = null;
+
+	private UIInput doubleValueInput = null;
+
+	private UIInput dateValueInput = null;
+
+	public UIInput getStringValueInput() {
+		return stringValueInput;
+	}
+
+	public void setStringValueInput(UIInput stringValueInput) {
+		this.stringValueInput = stringValueInput;
+	}
+
+	public UIInput getIntValueInput() {
+		return intValueInput;
+	}
+
+	public void setIntValueInput(UIInput intValueInput) {
+		this.intValueInput = intValueInput;
+	}
+
+	public UIInput getDoubleValueInput() {
+		return doubleValueInput;
+	}
+
+	public void setDoubleValueInput(UIInput doubleValueInput) {
+		this.doubleValueInput = doubleValueInput;
+	}
+
+	public UIInput getDateValueInput() {
+		return dateValueInput;
+	}
+
+	public void setDateValueInput(UIInput dateValueInput) {
+		this.dateValueInput = dateValueInput;
+	}
 
 	public DocumentEditForm() {
 		reset();
@@ -201,6 +243,7 @@ public class DocumentEditForm {
 		FacesUtil.forceRefresh(tagsInput);
 		FacesUtil.forceRefresh(recipientInput);
 		FacesUtil.forceRefresh(templateInput);
+		FacesUtil.forceRefresh(templateValueInput);
 		initTemplate();
 	}
 
@@ -212,10 +255,13 @@ public class DocumentEditForm {
 			templt = doc.getTemplate();
 			if (templt != null) {
 				template = templt.getId();
-				if (templt != null)
-					for (String attrName : templt.getAttributes()) {
-						extendedAttributes.add(new Attribute(attrName, doc.getValue(attrName)));
+				for (String attrName : templt.getAttributeNames()) {
+					if (doc.getExtendedAttribute(attrName) != null) {
+						extendedAttributes.add(new Attribute(attrName, doc.getExtendedAttribute(attrName)));
+					} else {
+						extendedAttributes.add(new Attribute(attrName, templt.getExtendedAttribute(attrName)));
 					}
+				}
 			}
 		} else {
 			if (template != null) {
@@ -223,8 +269,9 @@ public class DocumentEditForm {
 						.getBean(DocumentTemplateDAO.class);
 				templt = dao.findById(template.longValue());
 				if (templt != null) {
-					for (String attrName : templt.getAttributes()) {
-						extendedAttributes.add(new Attribute(attrName, ""));
+					for (String attrName : templt.getAttributeNames()) {
+						ExtendedAttribute extAttribute = templt.getExtendedAttribute(attrName);
+						extendedAttributes.add(new Attribute(attrName, extAttribute));
 					}
 				}
 			}
@@ -259,6 +306,13 @@ public class DocumentEditForm {
 			DocumentTemplateDAO tdao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 			template = item;
 			DocumentTemplate buf = tdao.findById(template.longValue());
+			Set<String> attrNames = buf.getAttributeNames();
+			for (String attrName : attrNames) {
+				FacesUtil.forceRefresh(stringValueInput);
+				FacesUtil.forceRefresh(intValueInput);
+				FacesUtil.forceRefresh(doubleValueInput);
+				FacesUtil.forceRefresh(dateValueInput);
+			}
 			if (record != null)
 				record.getDocument().setTemplate(buf);
 		} else {
@@ -470,10 +524,13 @@ public class DocumentEditForm {
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
 
-				Map<String, String> attrs = new HashMap<String, String>();
-				for (Attribute att : extendedAttributes) {
-					if (StringUtils.isNotEmpty(att.getValue()))
-						attrs.put(att.getName(), att.getValue());
+				Map<String, ExtendedAttribute> attrs = new HashMap<String, ExtendedAttribute>();
+				if (template != null) {
+					for (Attribute attribute : extendedAttributes) {
+						if (attribute != null) {
+							attrs.put(attribute.getName(), attribute.getAttribute());
+						}
+					}
 				}
 
 				// Check if the given customid is not already associated to an
@@ -484,9 +541,9 @@ public class DocumentEditForm {
 					duplicateCustomId = true;
 					return "customIdDuplicated";
 				} else {
-					Document doc = documentManager.create(file, filename, folder, SessionManagement.getUser(), LocaleUtil
-							.toLocale(language), title, getSourceDate(), source, sourceAuthor, sourceType, coverage,
-							versionDesc, tgs, template, attrs, sourceId, object, recipient, getCustomId(),
+					Document doc = documentManager.create(file, filename, folder, SessionManagement.getUser(),
+							LocaleUtil.toLocale(language), title, getSourceDate(), source, sourceAuthor, sourceType,
+							coverage, versionDesc, tgs, template, attrs, sourceId, object, recipient, getCustomId(),
 							immediateIndexing);
 					if (StringUtils.isNotEmpty(doc.getCustomId()))
 						Messages.addInfo(Messages.getMessage("document.inserted", doc.getCustomId()));
@@ -519,11 +576,12 @@ public class DocumentEditForm {
 				try {
 					Document doc = record.getDocument();
 
-					Map<String, String> attrs = new HashMap<String, String>();
+					Map<String, ExtendedAttribute> attrs = new HashMap<String, ExtendedAttribute>();
 					if (template != null) {
 						for (Attribute attribute : extendedAttributes) {
-							if (StringUtils.isNotEmpty(attribute.getValue()))
-								attrs.put(attribute.getName(), attribute.getValue());
+							if (attribute != null) {
+								attrs.put(attribute.getName(), attribute.getAttribute());
+							}
 						}
 					}
 
@@ -882,5 +940,13 @@ public class DocumentEditForm {
 	public String closeDocumentPreview() {
 		this.displayPreviewPopup = false;
 		return null;
+	}
+
+	public UIInput getTemplateValueInput() {
+		return templateValueInput;
+	}
+
+	public void setTemplateValueInput(UIInput templateValueInput) {
+		this.templateValueInput = templateValueInput;
 	}
 }
