@@ -220,7 +220,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 
 	public void testGetEnabledPermissions() {
 		Set<Permission> permissions = dao.getEnabledPermissions(Menu.MENUID_HOME, 1);
-		assertEquals(7, permissions.size());
+		assertEquals(8, permissions.size());
 		assertTrue(permissions.contains(Permission.READ));
 		assertTrue(permissions.contains(Permission.MANAGE_SECURITY));
 		assertTrue(permissions.contains(Permission.SIGN));

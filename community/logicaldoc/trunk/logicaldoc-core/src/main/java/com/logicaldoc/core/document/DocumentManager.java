@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
@@ -161,7 +162,7 @@ public interface DocumentManager {
 	 */
 	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, boolean immediateIndexing)
+			Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes, boolean immediateIndexing)
 			throws Exception;
 
 	/**
@@ -193,7 +194,7 @@ public interface DocumentManager {
 	 */
 	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title, Date sourceDate,
 			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> tags, Long templateId, Map<String, String> extendedAttributes, String sourceId, String object,
+			Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes, String sourceId, String object,
 			String recipient, String customId, boolean immediateIndexing) throws Exception;
 
 	/**
@@ -225,7 +226,7 @@ public interface DocumentManager {
 	 */
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
 			String sourceId, String object, String recipient, String customId, boolean immediateIndexing) throws Exception;
 
 	/**
@@ -253,7 +254,7 @@ public interface DocumentManager {
 	 */
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
 			boolean immediateIndexing) throws Exception;
 
 	/**
@@ -388,7 +389,7 @@ public interface DocumentManager {
 	 */
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
 			String sourceType, String coverage, Locale locale, Set<String> tags, String sourceId, String object,
-			String recipient, Long templateId, Map<String, String> attributes) throws Exception;
+			String recipient, Long templateId, Map<String, ExtendedAttribute> attributes) throws Exception;
 
 	/**
 	 * Retrieves the full-text document content

@@ -1,12 +1,12 @@
 create table ld_attributes (ld_templateid bigint not null, ld_attribute varchar(255));
 create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(4000), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, ld_creation timestamp not null, ld_publisher varchar(255), ld_publisherid bigint not null, ld_creator varchar(255), ld_creatorid bigint not null, ld_status int, ld_type varchar(255), ld_lockuserid bigint, ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourceid varchar(4000), ld_sourcetype varchar(255), ld_object varchar(4000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_indexed int not null, ld_signed int not null, ld_digest varchar(255), ld_recipient varchar(4000), ld_folderid bigint, ld_templateid bigint, ld_exportstatus int not null, ld_exportid bigint, ld_exportname varchar(255), ld_exportversion varchar(10), primary key (ld_id));
-create table ld_document_ext (ld_docid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_docid, ld_name));
+create table ld_document_ext (ld_docid bigint not null, ld_mandatory int not null, ld_type int not null, ld_stringvalue varchar(4000), ld_intvalue int, ld_doublevalue float, ld_datevalue timestamp, ld_name varchar(255) not null, primary key (ld_docid, ld_name));
 create table ld_dcomment (ld_threadid bigint not null, ld_replyto int, ld_replypath varchar(255), ld_userid bigint not null, ld_username varchar(255), ld_date timestamp, ld_subject varchar(255), ld_body varchar(4000), ld_deleted int not null, ld_id int not null, primary key (ld_threadid, ld_id));
 create table ld_dthread (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_creation timestamp, ld_creatorid bigint not null, ld_creatorname varchar(255), ld_lastpost timestamp, ld_subject varchar(255), ld_replies int, ld_views int, primary key (ld_id));
 create table ld_generic (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_subtype varchar(255) not null, ld_string1 varchar(4000), ld_string2 varchar(4000), ld_integer1 int, ld_integer2 int, ld_double1 float, ld_double2 float, ld_date1 timestamp, ld_date2 timestamp, primary key (ld_id));
-create table ld_generic_ext (ld_genid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_genid, ld_name));
+create table ld_generic_ext (ld_genid bigint not null, ld_mandatory int not null, ld_type int not null, ld_stringvalue varchar(4000), ld_intvalue int, ld_doublevalue float, ld_datevalue timestamp, ld_name varchar(255) not null, primary key (ld_genid, ld_name));
 create table ld_group (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(255), ld_type int not null, primary key (ld_id));
-create table ld_group_ext (ld_groupid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_groupid, ld_name));
+create table ld_group_ext (ld_groupid bigint not null, ld_mandatory int not null, ld_type int not null, ld_stringvalue varchar(4000), ld_intvalue int, ld_doublevalue float, ld_datevalue timestamp, ld_name varchar(255) not null, primary key (ld_groupid, ld_name));
 create table ld_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_userid bigint not null, ld_date timestamp, ld_username varchar(255), ld_event varchar(255), ld_comment varchar(4000), ld_version varchar(10), ld_title varchar(255), ld_path varchar(4000),  primary key (ld_id));
 create table ld_tag (ld_docid bigint not null, ld_tag varchar(255));
 create table ld_link (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_type varchar(255) not null, ld_docid1 bigint, ld_docid2 bigint, primary key (ld_id));
@@ -14,12 +14,13 @@ create table ld_menu (ld_id bigint not null, ld_lastmodified timestamp not null,
 create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint not null, ld_write int not null, ld_addchild int not null, ld_managesecurity int not null, ld_manageimmutability int not null, ld_delete int not null, ld_rename int not null, ld_bulkimport int not null, ld_bulkexport int not null, ld_sign int not null, ld_archive int not null, ld_workflow int not null, primary key (ld_menuid, ld_groupid, ld_write, ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow));
 create table ld_systemmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_author varchar(255), ld_recipient varchar(255), ld_messagetext varchar(2000), ld_subject varchar(255), ld_sentdate timestamp not null, ld_datescope int, ld_prio int, ld_confirmation int, ld_red int not null, primary key (ld_id));
 create table ld_template (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_name varchar(255) not null, ld_description varchar(2000), primary key (ld_id));
+create table ld_template_ext (ld_templateid bigint not null, ld_mandatory int not null, ld_type int not null, ld_stringvalue varchar(4000), ld_intvalue int, ld_doublevalue float, ld_datevalue timestamp, ld_name varchar(255) not null, primary key (ld_templateid, ld_name));
 create table ld_ticket (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_ticketid varchar(255) not null, ld_docid bigint not null, ld_userid bigint not null, primary key (ld_id));
 create table ld_user (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_enabled int not null, ld_username varchar(255) not null, ld_password varchar(255), ld_name varchar(255), ld_firstname varchar(255), ld_street varchar(255), ld_postalcode varchar(255), ld_city varchar(255), ld_country varchar(255), ld_state varchar(255), ld_language varchar(10), ld_email varchar(255), ld_telephone varchar(255), ld_telephone2 varchar(255), ld_type int not null, ld_passwordchanged timestamp, ld_passwordexpires int not null, primary key (ld_id));
 create table ld_userdoc (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_docid bigint not null, ld_userid bigint not null, ld_date timestamp, primary key (ld_id));
 create table ld_usergroup (ld_groupid bigint not null, ld_userid bigint not null, primary key (ld_groupid, ld_userid));
 create table ld_version (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(4000), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, ld_creation timestamp, ld_publisher varchar(255), ld_publisherid bigint not null,  ld_creator varchar(255), ld_creatorid bigint not null, ld_status int, ld_type varchar(255), ld_lockuserid bigint, ld_source varchar(255), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourceid varchar(4000), ld_sourcetype varchar(255), ld_object varchar(4000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_indexed int not null, ld_signed int not null, ld_digest varchar(255), ld_recipient varchar(4000), ld_folderid bigint, ld_foldername varchar(4000), ld_templateid bigint, ld_templatename varchar(4000), ld_tgs varchar(4000), ld_username varchar(255), ld_userid bigint, ld_versiondate timestamp, ld_comment varchar(4000),ld_event varchar(255), ld_documentid bigint, ld_exportstatus int not null, ld_exportid bigint, ld_exportname varchar(255), ld_exportversion varchar(10), primary key (ld_id));
-create table ld_version_ext (ld_versionid bigint not null, ld_value varchar(4000), ld_name varchar(255) not null, primary key (ld_versionid, ld_name));
+create table ld_version_ext (ld_versionid bigint not null, ld_mandatory int not null, ld_type int not null, ld_stringvalue varchar(4000), ld_intvalue int, ld_doublevalue float, ld_datevalue timestamp, ld_name varchar(255) not null, primary key (ld_versionid, ld_name));
 
 alter table ld_attributes add constraint FKF9B7567E76C86307 foreign key (ld_templateid) references ld_template(ld_id);
 alter table ld_document add constraint FK75ED9C0276C86307 foreign key (ld_templateid) references ld_template(ld_id);
@@ -36,6 +37,7 @@ alter table ld_usergroup add constraint FK2435438D76F11EA1 foreign key (ld_group
 alter table ld_version add constraint FK9B3BD9118A053CE foreign key (ld_documentid) references ld_document(ld_id);
 alter table ld_version_ext add constraint FK78C3A1F3B90495EE foreign key (ld_versionid) references ld_version(ld_id);
 alter table ld_dcomment add constraint FKF2C40628DBB5BF4 foreign key (ld_threadid) references ld_dthread(ld_id);
+alter table ld_template_ext add constraint FK6BABB84376C86307 foreign key (ld_templateid) references ld_template;
 
 
 alter table ld_ticket add constraint FK_TICKET_DOC foreign key (ld_docid) references ld_document(ld_id) on delete cascade;
@@ -290,11 +292,11 @@ values     (16,3,0,0,0,0,0,0,0,0,0,0,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
 values     (19,3,0,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_group_ext (ld_groupid, ld_value, ld_name)
-values (1,'110110','preference.field.customId');
+insert into ld_group_ext (ld_groupid, ld_mandatory, ld_type, ld_stringvalue, ld_name)
+values (1, 0, 0, '110110','preference.field.customId');
 
-insert into ld_group_ext (ld_groupid, ld_value, ld_name)
-values (2,'110110','preference.field.customId');
+insert into ld_group_ext (ld_groupid, ld_mandatory, ld_type, ld_stringvalue, ld_name)
+values (2, 0, 0, '110110','preference.field.customId');
 
-insert into ld_group_ext (ld_groupid, ld_value, ld_name)
-values (3,'110110','preference.field.customId');
+insert into ld_group_ext (ld_groupid, ld_mandatory, ld_type, ld_stringvalue, ld_name)
+values (3, 0, 0, '110110','preference.field.customId');

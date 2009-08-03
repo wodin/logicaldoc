@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.security.User;
 
 /**
@@ -211,7 +212,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 			version.setTemplateName(document.getTemplate().getName());
 		}
 
-		version.setAttributes(new HashMap<String, String>());
+		version.setAttributes(new HashMap<String, ExtendedAttribute>());
 		if (document.getAttributes() != null) {
 			for (String name : document.getAttributeNames()) {
 				version.getAttributes().put(name, document.getAttributes().get(name));
