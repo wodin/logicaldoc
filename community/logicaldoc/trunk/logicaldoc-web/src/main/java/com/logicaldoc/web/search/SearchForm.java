@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
@@ -971,8 +972,9 @@ public class SearchForm extends SortableList {
 		if (template != null) {
 			DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 			DocumentTemplate docTemplate = dao.findById(template);
-			for (String attrName : docTemplate.getAttributes()) {
-				extendedAttributesItems.add(new SelectItem(attrName));
+			for (String attrName : docTemplate.getAttributeNames()) {
+				if (docTemplate.getAttributes().get(attrName).getType() == ExtendedAttribute.TYPE_STRING)
+					extendedAttributesItems.add(new SelectItem(attrName));
 			}
 		}
 	}
