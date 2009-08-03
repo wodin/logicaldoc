@@ -1,0 +1,34 @@
+
+The purpose of this 4.5.1 release is to improve the multilingual support 
+provided by LogicalDOC.
+
+In particular, after the creation of plugins to support Greek and Chinese 
+languages, there was the need to treat properly the files with ideographic 
+characters.
+
+Not only that, it was necessary to make some changes to properly index the 
+content of foreign documents and display correctly the snippets with search 
+results.
+
+Among other things the search by tag has been improved, allowing to manually 
+enter the first character of the tag, useful for non-Latin alphabets.
+
+A big thanks to Marinos Vlasakis for Greek translation and Tong Hongxian 
+(Shanghai Electric) for translation in Chinese simplified.
+
+Chinese plugin:
+https://sourceforge.net/projects/logicaldoc/files/plugins/logicaldoc-lang-zh-4.5.1-plugin.zip/download
+
+Greek plugin:
+https://sourceforge.net/projects/logicaldoc/files/plugins/logicaldoc-lang-el-4.5.1-plugin.zip/download
+
+
+For details of changes see the ChangeLog.
+
+Report any bugs you find using the bug tracker
+http://bugs.LogicalDOC.com
+
+You can discuss issues in the user forum
+https://sourceforge.net/forum/forum.php?forum_id=865524
+
+

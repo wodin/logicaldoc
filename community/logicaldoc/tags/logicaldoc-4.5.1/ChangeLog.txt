@@ -1,0 +1,115 @@
+    __                _            __   ____  __      _           __
+   / /   ____  ____ _(_)________ _/ /  / __ \/ /_    (_)__  _____/ /______
+  / /   / __ \/ __ `/ / ___/ __ `/ /  / / / / __ \  / / _ \/ ___/ __/ ___/
+ / /___/ /_/ / /_/ / / /__/ /_/ / /  / /_/ / /_/ / / /  __/ /__/ /_(__  )
+/_____/\____/\__, /_/\___/\__,_/_/   \____/_.___/_/ /\___/\___/\__/____/
+            /____/                             /___/
+
+                    http://www.logicalobjects.com
+                      http://www.logicaldoc.com                    
+
+                     LogicalDOC Community Edition
+                     
+LogicalDOC CE 4.5.1 (2009-07-21; logicaldoc-4.5.1)
+===============
+- improved handling of files with accented letters
+- managing files with ideographic characters such as Greek or Chinese
+- improved and speeded up the search for documents including non-Latin documents
+- search by tag for ideographic characters
+- Extract text from PDF documents in UTF-8
+- Full-text indexing and search on non-Latin documents
+- Full support for indexing and search in Chinese language (through localization plugin)
+- Full support for indexing and search in Greek language (through localization plugin)   
+                     
+LogicalDOC CE 4.5 (2009-06-28; logicaldoc-4.5)
+===============
+- Fixed problem during checkin with accented characters
+- Improved the style of discussion forum
+- Fixed SQL DDLs for MS SQL Server 2005
+- Implemented the document's copy feature
+- Fixed visualization problems of ICEfaces error messages
+- Improved preview of the documents        
+
+LogicalDOC CE 4.5 RC3 (2009-06-01; logicaldoc-4.5-RC3)
+===============
+- Fixed support for language variants such as Portuguese brasilian
+- Record downloads in the document's history
+- 0000050: [Web Services] Improve the WebService module
+- 0000098: [Core] Notify user to change password using db auth
+- 0000106: [Core] Deleting folders        
+
+LogicalDOC CE 4.5 RC2 (2009-05-04; logicaldoc-4.5-RC2)
+===============
+- Fixed MySQL issues with permissions
+- Fixed support for Oracle 10g
+- 0000103: [Core] Cannot view LDAP menu
+- 0000088: [Core] Cannot view Security Menu
+- 0000100: [User Interface] Add the Bug report menu
+- 0000096: [Core] Unable to execute query (car031)
+- 0000092: [Core] Optimize Indexes
+- 0000093: [Import / Export] Uploading Documents
+- 0000091: [Core] Parser for HTM
+- 0000089: [Core] LDAP configuration
+
+LogicalDOC CE 4.5 RC1 (2009-04-11; logicaldoc-4.5-RC1)
+===============
+- 0000076: [Core] Multiple recipients for download tickets
+- 0000085: [Core] Unable to delete folder
+- 0000087: [Core] Support for language variants
+- 0000086: [Core] Upgrade to the latest Lucene release
+- 0000058: [Core] Hibernate operation: could not update:
+- 0000049: [User Interface] Ability to filter users by Name or Lastname
+- 0000066: [Core] Creator information on Document
+- 0000083: [Core] Discussion Forum
+- 0000080: [Core] Security
+- 0000065: [User Interface] Configurable documents view mode
+- 0000074: [Core] Additional Phone Number
+- 0000070: [Core] Minimum size for keywords should be configurable
+- 0000073: [User Interface] Messages button to send
+- 0000068: [User Interface] Configurable entry page
+- 0000053: [User Interface] Spanish support
+- 0000054: [Core] Create Groups
+- 0000064: [User Interface] Configurable first page
+- 0000047: [User Interface] Inherit permissions from another group when in editing mode
+- 0000042: [Core] Add a field for State in user template
+- 0000048: [Core] Add enabled flag on user
+- 0000037: [User Interface] Items per Page doesn't work on page 2
+- 0000040: [Core] New version and history entry when document is moved
+- 0000052: [Core] Failing to validty integrity on deleting groups
+- 0000044: [Core] Add a Back button to options when viewing a document
+- 0000055: [Core] Download-Tickets
+- 0000012: [Core] Authentication from external systems
+- 0000046: [Core] Unresolved database key referenced in Coremodule
+- 0000041: [User Interface] Versions full diff
+- 0000038: [User Interface] ARCHIVE permission handling
+- 0000036: [Setup] SQL SERVER 2000/2005 External Database does not complete successfully
+
+LogicalDOC CE 4.0 (2009-01-30; logicaldoc-4.0)
+===============
+WebDAV: full implementation
+File names: Handle all asian and arabic charsets
+Seup procecude: Fixed schema creation on external db
+Interface fixes
+
+LogicalDOC CE 4.0 RC2 (2009-01-08; logicaldoc-4.0RC2)
+===============
+Ability to define fields viewable and editable by group of users
+WebDAV: implemented rename on the Document's filename
+
+
+LogicalDOC CE 4.0 RC1 (2008-12-12; logicaldoc-4.0RC1)
+===============
+New WebDAV accessible interface (Thanks to Sebastian Wenzky)
+Heavily Refactored DB-schema
+New Templates on document with custom attributes
+Tested with 1M (1.000.000) loaded documents
+New Indexing deferred scheduled tasks
+New Tag-cloud generation deferred scheduled tasks
+Improved the versioning system (checkin page)
+New User editing interface
+New Group editing interface
+New Permission assigment on folder (previously we had permission by file)
+Improved Tag browsing
+New Permission management on menus
+New Support for eastern Europe charsets
+New Possibility to mark a document as immutable

@@ -1,0 +1,108 @@
+<?xml version = '1.0'?>
+<!-- 
+ Templates listing
+  
+ @author Marco Meschieri - Logical Objects
+ @since 4.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup" styleClass="center" style="width:600px">
+
+	<ice:messages globalOnly="true" />
+	<ice:panelGroup>
+		<ice:panelGroup id="list"
+			rendered="#{templatesRecordsManager.selectedPanel=='list'}">
+			<ice:form id="templatesForm" style="text-align:left;">
+				<div id="toolbar">
+					<table cellpadding="0" cellspacing="2" border="0">
+						<tr>
+							<td>
+								<ice:commandLink action="#{templatesRecordsManager.addTemplate}"
+									title="#{msgs['template.new']}">
+									<ice:graphicImage
+										value="#{StyleBean.imagesPath}/template_add.png"
+										style="border: 0px solid;" alt="#{msgs['template.new']}" />
+								</ice:commandLink>
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<!-- Basic table -->
+				<ice:panelGroup styleClass="formBorderHighlight"
+					rendered="#{templatesRecordsManager.count > 0}">
+					<ice:dataTable id="templatesList"
+						value="#{templatesRecordsManager.templates}" var="template"
+						cellpadding="0" rows="15" width="97%"
+						columnClasses="smallColumn,dateColumn,numberColumn,numberColumn">
+
+						<!-- Name -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['name']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{template.name}" />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Description -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['description']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{template.description}" />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Edit -->
+						<ice:column>
+							<ice:panelGroup>
+								<ice:commandLink action="#{templatesRecordsManager.edit}">
+									<ice:graphicImage value="#{StyleBean.imagesPath}/edit.png"
+										style="border: 0px solid;" title="#{msgs['edit']}" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Delete -->
+						<ice:column>
+							<ice:panelGroup>
+								<ice:commandLink action="#{templatesRecordsManager.delete}"
+									onclick="if (!confirm(&quot;#{msgs['delete.question']}&quot;)) return false;">
+									<ice:graphicImage value="#{StyleBean.imagesPath}/delete.png"
+										style="border: 0px solid;" title="#{msgs['delete']}" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+					</ice:dataTable>
+
+					<ice:panelGroup>
+						<ldoc:paginator table="templatesList" label="#{msgs['paginator.simple']}" />
+						<br />
+					</ice:panelGroup>
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="formBorderHighlight"
+					rendered="#{templatesRecordsManager.count &lt; 1}">
+					<ice:outputText value="#{msgs['noelements']}" />
+				</ice:panelGroup>
+			</ice:form>
+		</ice:panelGroup>
+
+		<ice:panelGroup styleClass="center"
+			rendered="#{templatesRecordsManager.selectedPanel!='list'}">
+			<f:subview id="w-template">
+				<ui:include src="/templates/admin/template.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+
+	</ice:panelGroup>
+</jsp:root>
