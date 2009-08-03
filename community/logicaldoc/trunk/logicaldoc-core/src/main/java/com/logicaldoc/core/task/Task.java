@@ -33,8 +33,7 @@ public abstract class Task implements Runnable {
 	private String name;
 
 	// When becomes true, the processing must be terminated asap but gracefully
-	// an
-	// leaving the system in a consistent state
+	// and leaving the system in a consistent state
 	protected boolean interruptRequested = false;
 
 	private List<TaskListener> taskListeners = Collections.synchronizedList(new ArrayList<TaskListener>());
@@ -65,6 +64,7 @@ public abstract class Task implements Runnable {
 		setProgress(progress + 1);
 	}
 
+	
 	protected void setProgress(long progress) {
 		try {
 			if (progress > size || progress < 0)
@@ -87,12 +87,12 @@ public abstract class Task implements Runnable {
 	@Override
 	public void run() {
 		if (!getScheduling().isEnabled()) {
-			log.warn("Task " + getName() + " is disabled");
+			//log.debug("Task " + getName() + " is disabled");
 			return;
 		}
 
 		if (getStatus() != STATUS_IDLE) {
-			log.warn("Task " + getName() + " is already running");
+			//log.debug("Task " + getName() + " is already running");
 			return;
 		}
 
