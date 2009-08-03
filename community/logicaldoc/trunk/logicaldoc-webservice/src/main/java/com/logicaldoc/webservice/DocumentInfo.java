@@ -40,7 +40,7 @@ public class DocumentInfo {
 
 	private Long templateId;
 
-	private ExtendedAttribute[] extendedAttribute;
+	private Attribute[] extendedAttribute;
 	
 	private String[] tags;
 
@@ -174,11 +174,11 @@ public class DocumentInfo {
 		this.templateId = templateId;
 	}
 
-	public ExtendedAttribute[] getExtendedAttribute() {
+	public Attribute[] getExtendedAttribute() {
 		return extendedAttribute;
 	}
 
-	public void setExtendedAttribute(ExtendedAttribute[] extendedAttribute) {
+	public void setExtendedAttribute(Attribute[] extendedAttribute) {
 		this.extendedAttribute = extendedAttribute;
 	}
 
