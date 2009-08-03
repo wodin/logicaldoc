@@ -18,6 +18,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.document.Field;
 
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
@@ -318,7 +319,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
 			String sourceType, String coverage, Locale locale, Set<String> tags, String sourceId, String object,
-			String recipient, Long templateId, Map<String, String> attributes) throws Exception {
+			String recipient, Long templateId, Map<String, ExtendedAttribute> attributes) throws Exception {
 		try {
 			if (doc.getImmutable() == 0) {
 				doc.setTitle(title);
@@ -352,14 +353,49 @@ public class DocumentManagerImpl implements DocumentManager {
 
 				// Change the template and attributes
 				if (templateId != null) {
-					DocumentTemplate template = documentTemplateDAO.findById(templateId.longValue());
-					doc.setTemplate(template);
-					doc.getAttributes().clear();
-					if (attributes != null)
-						for (String name : attributes.keySet()) {
-							if (StringUtils.isNotEmpty(name))
-								doc.setValue(name, attributes.get(name));
+					DocumentTemplate template = documentTemplateDAO.findById(templateId);
+					// Get the list of template attributes with a mandatory
+					// value
+					List<String> mandatoryAttributes = new ArrayList<String>();
+					for (String attrName : template.getAttributeNames()) {
+						if (template.getAttributes().get(attrName).getMandatory() == 1)
+							mandatoryAttributes.add(attrName);
+					}
+					int mandatoryAttributesCount = 0;
+					if (attributes != null) {
+						for (String attrName : attributes.keySet()) {
+							if (template.getAttributes().get(attrName) != null) {
+								ExtendedAttribute templateExtAttribute = template.getAttributes().get(attrName);
+								ExtendedAttribute docExtendedAttribute = attributes.get(attrName);
+								if (templateExtAttribute.getType() == docExtendedAttribute.getType()) {
+									if (templateExtAttribute.getMandatory() == docExtendedAttribute.getMandatory()) {
+										if (templateExtAttribute.getMandatory() == 1
+												&& docExtendedAttribute.getValue() == null) {
+											throw new Exception("The value for attribute " + attrName + " is mandatory");
+										} else {
+											if (mandatoryAttributes.contains((String) attrName)) {
+												mandatoryAttributesCount++;
+											}
+										}
+									} else {
+										throw new Exception("The given mandatory value is not correct.");
+									}
+								} else {
+									throw new Exception("The given type value is not correct.");
+								}
+							} else {
+								throw new Exception("The attribute name '" + attrName
+										+ "' is not correct for template '" + template.getName() + "'.");
+							}
 						}
+						doc.setAttributes(attributes);
+					}
+					if (mandatoryAttributesCount == mandatoryAttributes.size())
+						doc.setTemplate(template);
+					else {
+						throw new Exception("Some mandatory attributes for the template '" + template.getName()
+								+ "' have no value");
+					}
 				} else {
 					doc.setTemplate(null);
 				}
@@ -459,7 +495,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
 			boolean immediateIndexing) throws Exception {
 		return create(file, filename, folder, user, locale, title, sourceDate, source, sourceAuthor, sourceType,
 				coverage, versionDesc, tags, templateId, extendedAttributes, null, null, null, null, immediateIndexing);
@@ -469,7 +505,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
 			boolean immediateIndexing) throws Exception {
 		return create(content, filename, folder, user, locale, title, sourceDate, source, sourceAuthor, sourceType,
 				coverage, versionDesc, tags, templateId, extendedAttributes, null, null, null, null, immediateIndexing);
@@ -478,7 +514,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
 			String sourceId, String object, String recipient, String customId, boolean immediateIndexing)
 			throws Exception {
 
@@ -533,9 +569,48 @@ public class DocumentManagerImpl implements DocumentManager {
 			/* Set template and extended attributes */
 			if (templateId != null) {
 				DocumentTemplate template = documentTemplateDAO.findById(templateId);
-				doc.setTemplate(template);
-				if (extendedAttributes != null)
+				// Get the list of template attributes with a mandatory
+				// value
+				List<String> mandatoryAttributes = new ArrayList<String>();
+				for (String attrName : template.getAttributeNames()) {
+					if (template.getAttributes().get(attrName).getMandatory() == 1)
+						mandatoryAttributes.add(attrName);
+				}
+				int mandatoryAttributesCount = 0;
+				if (extendedAttributes != null) {
+					for (String attrName : extendedAttributes.keySet()) {
+						if (template.getAttributes().get(attrName) != null) {
+							ExtendedAttribute templateExtAttribute = template.getAttributes().get(attrName);
+							ExtendedAttribute docExtendedAttribute = extendedAttributes.get(attrName);
+							if (templateExtAttribute.getType() == docExtendedAttribute.getType()) {
+								if (templateExtAttribute.getMandatory() == docExtendedAttribute.getMandatory()) {
+									if (templateExtAttribute.getMandatory() == 1
+											&& docExtendedAttribute.getValue() == null) {
+										throw new Exception("The value for attribute " + attrName + " is mandatory");
+									} else {
+										if (mandatoryAttributes.contains((String) attrName)) {
+											mandatoryAttributesCount++;
+										}
+									}
+								} else {
+									throw new Exception("The given mandatory value is not correct.");
+								}
+							} else {
+								throw new Exception("The given type value is not correct.");
+							}
+						} else {
+							throw new Exception("The attribute name '" + attrName + "' is not correct for template '"
+									+ template.getName() + "'.");
+						}
+					}
 					doc.setAttributes(extendedAttributes);
+				}
+				if (mandatoryAttributesCount == mandatoryAttributes.size())
+					doc.setTemplate(template);
+				else {
+					throw new Exception("Some mandatory attributes for the template '" + template.getName()
+							+ "' have no value");
+				}
 			}
 			documentDAO.store(doc);
 
@@ -720,7 +795,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
 			String sourceId, String object, String recipient, String customId, boolean immediateIndexing)
 			throws Exception {
 		String _title = title;

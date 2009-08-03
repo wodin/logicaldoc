@@ -22,7 +22,14 @@
 		<map name="attributes" table="ld_generic_ext" lazy="true" cascade="all">
 		   <key column="ld_genid" />
 		   <map-key type="string" column="ld_name" length="255"/>
-		   <element type="string" column="ld_value" length="4000"/>
+		   <composite-element class="com.logicaldoc.core.ExtendedAttribute">
+    	       <property name="mandatory" type="int" column="ld_mandatory" not-null="true"/>
+               <property name="type" type="int" column="ld_type" not-null="true"/>
+               <property name="stringValue" type="string" column="ld_stringvalue" length="4000"/>
+               <property name="intValue" type="int" column="ld_intvalue"/>
+               <property name="doubleValue" type="double" column="ld_doublevalue"/>
+               <property name="dateValue" type="timestamp" column="ld_datevalue"/>
+		   </composite-element>
 		</map>
 	</class>
 </hibernate-mapping>

@@ -6,31 +6,43 @@ import java.util.Set;
 
 /**
  * An extensible object is able to store an undeterminate number of attributes.
- * Each attribute har a name and a string value.
+ * Each attribute has a name and a string value.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
 public abstract class ExtensibleObject extends PersistentObject {
-	private Map<String, String> attributes = new HashMap<String, String>();
+	private Map<String, ExtendedAttribute> attributes = new HashMap<String, ExtendedAttribute>();
 
-	public Map<String, String> getAttributes() {
+	public Map<String, ExtendedAttribute> getAttributes() {
 		return attributes;
 	}
 
-	public void setAttributes(Map<String, String> attributes) {
+	public void setAttributes(Map<String, ExtendedAttribute> attributes) {
 		this.attributes = attributes;
 	}
 
-	public String getValue(String name) {
-		return attributes.get(name);
+	public Object getValue(String name) {
+		if (attributes.get(name) != null)
+			return attributes.get(name).getValue();
+		else
+			return null;
 	}
 
-	public String setValue(String name, String value) {
-		return attributes.put(name, value);
+	public ExtendedAttribute getExtendedAttribute(String name) {
+		if (attributes.get(name) != null)
+			return attributes.get(name);
+		else
+			return null;
 	}
-	
-	public Set<String> getAttributeNames(){
+
+	public ExtendedAttribute setValue(String name, Object value) {
+		ExtendedAttribute ext = new ExtendedAttribute();
+		ext.setValue(value);
+		return attributes.put(name, ext);
+	}
+
+	public Set<String> getAttributeNames() {
 		return attributes.keySet();
 	}
 }

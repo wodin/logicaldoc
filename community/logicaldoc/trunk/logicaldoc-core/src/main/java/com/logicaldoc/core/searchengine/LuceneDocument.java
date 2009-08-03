@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.i18n.DateBean;
 
 /**
@@ -106,7 +107,7 @@ public class LuceneDocument {
 	}
 
 	protected void setSize() {
-		//Save the size in bytes
+		// Save the size in bytes
 		doc.add(new Field(FIELD_SIZE, Long.toString(file.length()), Field.Store.YES, Field.Index.UN_TOKENIZED));
 	}
 
@@ -144,11 +145,13 @@ public class LuceneDocument {
 
 	protected void setExtendedAttributes() {
 		for (String attribute : document.getAttributeNames()) {
-			String value = document.getValue(attribute);
-			if (StringUtils.isNotEmpty(value)) {
+			ExtendedAttribute ext = document.getExtendedAttribute(attribute);
+			//Skip all non-string attributes
+			if (ext.getType() == ExtendedAttribute.TYPE_STRING
+					&& StringUtils.isNotEmpty(ext.getStringValue())) {
 				// Prefix all extended attributes with 'ext_' in order to avoid
 				// collisions with standard fields
-				doc.add(new Field("ext_" + attribute, value, Field.Store.NO, Field.Index.TOKENIZED));
+				doc.add(new Field("ext_" + attribute, ext.getStringValue(), Field.Store.NO, Field.Index.TOKENIZED));
 			}
 		}
 	}

@@ -1,9 +1,6 @@
 package com.logicaldoc.core.document;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.logicaldoc.core.PersistentObject;
+import com.logicaldoc.core.ExtensibleObject;
 
 /**
  * A template simply collects a set of attribute names
@@ -11,13 +8,11 @@ import com.logicaldoc.core.PersistentObject;
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
-public class DocumentTemplate extends PersistentObject {
+public class DocumentTemplate extends ExtensibleObject {
 
 	private String name;
 
 	private String description;
-
-	private Set<String> attributes = new HashSet<String>();
 
 	public String getName() {
 		return name;
@@ -33,23 +28,5 @@ public class DocumentTemplate extends PersistentObject {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Set<String> getAttributes() {
-		return attributes;
-	}
-
-	public void setAttributes(Set<String> attributes) {
-		this.attributes = attributes;
-	}
-	
-	public void addAttribute(String attribute){
-		if(!attributes.contains(attribute))
-			attributes.add(attribute);
-	}
-	
-	public void removeAttribute(String attribute){
-		if(attributes.contains(attribute))
-			attributes.remove(attribute);
 	}
 }
