@@ -446,14 +446,16 @@
 												
 												
 													<td>
-														<ui:repeat value="#{workflowComponent.transitions}" var="transition">
-															<ice:panelGroup 
-																style="background-image:url(/skins/default/images/workflow/transition.png); background-position:right bottom; background-repeat:no-repeat; vertical-align:bottom;text-align:right; height:30px; line-height:30px; border-bottom:1px solid #cccccc; width:100px; ">
-																<h:outputText value="#{transition.name}" />
-																
-																
-															</ice:panelGroup>
-														</ui:repeat>
+														<ice:panelGroup rendered="#{ not (workflowComponent.type == 'endState') }">
+															<ui:repeat value="#{workflowComponent.transitions}" var="transition">
+																<ice:panelGroup 
+																	style="background-image:url(/skins/default/images/workflow/transition.png); background-position:right bottom; background-repeat:no-repeat; vertical-align:bottom;text-align:right; height:30px; line-height:30px; border-bottom:1px solid #cccccc; width:100px; ">
+																	<h:outputText value="#{transition.name}" />
+																	
+																	
+																</ice:panelGroup>
+															</ui:repeat>
+														</ice:panelGroup>
 													</td>
 													
 													
