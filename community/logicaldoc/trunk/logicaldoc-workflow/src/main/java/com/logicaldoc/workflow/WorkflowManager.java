@@ -288,17 +288,22 @@ public class WorkflowManager {
 		this.workflowTaskInstance.getProperties().put(WorkflowConstants.VAR_TASKSTATE, WorkflowTaskInstance.STATE.STARTED.getVal());
 		this.workflowService.updateWorkflow(this.workflowTaskInstance);
 		
+		
+		this.setupTaskPage(workingWorkflowTaskinstance.getId());
 	}
 	
 	public void resumeTask(){
 		this.workflowTaskInstance.getProperties().put(WorkflowConstants.VAR_TASKSTATE, WorkflowTaskInstance.STATE.STARTED.getVal());
 		this.workflowService.updateWorkflow(workflowTaskInstance);
-
+		
+		this.setupTaskPage(workingWorkflowTaskinstance.getId());
 	}
 	
 	public void suspendTask(){
 		this.workflowTaskInstance.getProperties().put(WorkflowConstants.VAR_TASKSTATE, WorkflowTaskInstance.STATE.SUSPENDED.getVal());
 		this.workflowService.updateWorkflow(workflowTaskInstance);
+		
+		this.setupTaskPage(workingWorkflowTaskinstance.getId());
 	}
 	
 	public WorkflowInstance getWorkingWorkflowInstance() {
