@@ -108,10 +108,6 @@ public class WorkflowServiceImpl implements WorkflowService {
 
 	}
 
-	public Token getTokenForWorkflowInstance(String workflowInstance) {
-		return workflowComponent.getToken(Long.parseLong(workflowInstance));
-	}
-
 	public void signal(String workflowInstanceId) {
 		workflowComponent.signal(workflowInstanceId);
 	}
