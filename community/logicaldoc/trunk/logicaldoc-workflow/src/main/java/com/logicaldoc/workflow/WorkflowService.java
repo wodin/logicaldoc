@@ -41,8 +41,6 @@ public interface WorkflowService {
 	
 	public List<WorkflowTaskInstance> getAllActiveTaskInstances();
 
-	public Token getTokenForWorkflowInstance(String workflowInstance);
-
 	public WorkflowInstance startWorkflow(WorkflowDefinition workflowDefinition, Map<String, Serializable> properties);
 
 	public void signal(String workflowInstance);
