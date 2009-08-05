@@ -114,15 +114,7 @@ public interface WorkflowEngine {
 	 * @return All TaskInstances
 	 */
 	public List<WorkflowTaskInstance> getAllTaskInstances();
-
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 * @deprecated
-	 */
-	public Token getToken(final long id);
-
+	
 	/**
 	 * Signales the process instance to set the token onto the next node
 	 * 

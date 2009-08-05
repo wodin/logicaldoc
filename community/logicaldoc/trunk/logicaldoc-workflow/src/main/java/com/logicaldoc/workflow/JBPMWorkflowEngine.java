@@ -311,20 +311,6 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 		});
 	}
 
-	public Token getToken(final long id) {
-		return (Token) this.jbpmTemplate.execute(
-
-		new JbpmCallback() {
-
-			public Token doInJbpm(JbpmContext context) throws JbpmException {
-
-				ProcessInstance processInstance = context
-						.loadProcessInstance(id);
-				return processInstance.getRootToken();
-			}
-		});
-	}
-
 	public void signal(final String id) {
 		this.jbpmTemplate.execute(new JbpmCallback() {
 
