@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -43,6 +44,8 @@ public class DocumentResourceUpload extends HttpServlet {
 	public static final String SUFFIX = "suffix";
 
 	public static final String VERSION_ID = "versionId";
+
+	public static final String VERSION_DOC = "versionDoc";
 
 	/**
 	 * Constructor of the object.
@@ -86,6 +89,8 @@ public class DocumentResourceUpload extends HttpServlet {
 
 		String fileVersion = request.getParameter(VERSION_ID);
 
+		String docVersion = request.getParameter(VERSION_DOC);
+
 		logger.debug("Start Upload resource for document " + docId);
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -107,13 +112,17 @@ public class DocumentResourceUpload extends HttpServlet {
 		try {
 			Menu folder = doc.getFolder();
 			if (mdao.isPermissionEnabled(Permission.SIGN, folder.getId(), user.getId())) {
-				ServletDocUtil.uploadDocumentResource(request, docId, suffix, fileVersion);
+				ServletDocUtil.uploadDocumentResource(request, docId, suffix, fileVersion, docVersion);
 				if (suffix.startsWith("sign")) {
 					docDao.initialize(doc);
 					doc.setSigned(1);
 					docDao.store(doc);
 					VersionDAO vdao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
-					Version version = vdao.findByVersion(doc.getId(), doc.getVersion());
+					Version version = null;
+					if (StringUtils.isNotEmpty(docVersion))
+						version = vdao.findByVersion(doc.getId(), docVersion);
+					else
+						version = vdao.findByVersion(doc.getId(), doc.getVersion());
 					vdao.initialize(version);
 					version.setSigned(1);
 					vdao.store(version);

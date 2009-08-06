@@ -131,23 +131,23 @@ public class ServletDocUtil {
 		}
 
 		if (user != null && StringUtils.isEmpty(suffix)) {
-			
+
 			// Add an history entry to track the download of the document
 			History history = new History();
 			history.setDocId(docId);
 			history.setTitle(doc.getTitle());
 			history.setVersion(doc.getVersion());
-			
+
 			history.setPath(doc.getFolder().getPathExtended() + "/" + doc.getFolder().getText());
 			history.setPath(history.getPath().replaceAll("//", "/"));
 			history.setPath(history.getPath().replaceFirst("/menu.documents/", "/"));
 			history.setPath(history.getPath().replaceFirst("/menu.documents", "/"));
-			
+
 			history.setDate(new Date());
 			history.setEvent(History.EVENT_DOWNLOADED);
 			history.setUserId(user.getId());
 			history.setUserName(user.getFullName());
-			
+
 			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			hdao.store(history);
 		}
@@ -183,9 +183,9 @@ public class ServletDocUtil {
 	 */
 	public static void downloadDocumentText(HttpServletRequest request, HttpServletResponse response, long docId)
 			throws FileNotFoundException, IOException {
-		
+
 		response.setCharacterEncoding("UTF-8");
-		
+
 		// get document
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = ddao.findById(docId);
@@ -210,7 +210,7 @@ public class ServletDocUtil {
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		String content = manager.getDocumentContent(doc.getId());
 
-		InputStream is = new StringInputStream(content.trim(),"UTF-8");
+		InputStream is = new StringInputStream(content.trim(), "UTF-8");
 		OutputStream os;
 		os = response.getOutputStream();
 		int letter = 0;
@@ -253,15 +253,19 @@ public class ServletDocUtil {
 	 * @param suffix Suffix of the document
 	 * @param fileVersion id of the file version; if null the latest version
 	 *        will returned
+	 * @param docVersion id of the doc version; if null the latest version will
+	 *        returned
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
 	public static void uploadDocumentResource(HttpServletRequest request, String docId, String suffix,
-			String fileVersion) throws Exception {
+			String fileVersion, String docVersion) throws Exception {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(Long.parseLong(docId));
 
-		String ver = fileVersion;
+		String ver = docVersion;
+		if (StringUtils.isEmpty(ver))
+			ver = fileVersion;
 		if (StringUtils.isEmpty(ver))
 			ver = doc.getVersion();
 
