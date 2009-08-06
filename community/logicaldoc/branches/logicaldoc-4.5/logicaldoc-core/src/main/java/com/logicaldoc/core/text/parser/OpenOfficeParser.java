@@ -19,11 +19,14 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Text extractor for OpenOffice documents.
- * tested with OpenOffice documents produced with 2.3,2.4,3.0.1 OO release
- * tested with StarOffice documents
+ * Text extractor for OpenOffice/OpenDocument documents.
  * 
- * @author Alessandro Gasparini
+ * Tested with OpenOffice documents produced with 2.3,2.4,3.0.1 OO release
+ * Works with extensions (odt, ods, odp) and templates (ott, ots, otp). 
+ * Tested with StarOffice documents (sxw, sxc, sxi)
+ * 
+ * @author Alessandro Gasparini - Logical Objects
+ * @since 4.5.2
  */
 public class OpenOfficeParser extends AbstractParser {
 

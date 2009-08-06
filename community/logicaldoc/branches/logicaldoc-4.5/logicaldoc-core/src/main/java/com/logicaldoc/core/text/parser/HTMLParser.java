@@ -25,13 +25,16 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.xni.parser.XMLDocumentFilter;
 import org.apache.xerces.xni.parser.XMLParserConfiguration;
 import org.cyberneko.html.HTMLConfiguration;
-import org.cyberneko.html.filters.DefaultFilter;
 import org.cyberneko.html.filters.ElementRemover;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Text extractor for HyperText Markup Language (HTML).
+ * 
+ * @author Michael Scholz
+ * @author Alessandro Gasparini - Logical Objects
+ * @since 3.6
  */
 public class HTMLParser extends AbstractParser {
 

@@ -97,10 +97,10 @@ public class ZipImport {
 			addEntry(files[i], parent);
 		}
 
-		try {
-			FileUtils.deleteDirectory(dir);
-		} catch (IOException e) {
-		}
+//		try {
+//			FileUtils.deleteDirectory(dir);
+//		} catch (IOException e) {
+//		}
 	}
 
 	public void process(String zipsource, Locale locale, Menu parent, long userId, Long templateId) {

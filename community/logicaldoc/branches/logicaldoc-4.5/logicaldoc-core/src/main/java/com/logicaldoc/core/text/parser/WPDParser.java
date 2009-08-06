@@ -8,10 +8,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * 
  * @author Michael Scholz
+ * @since 3.6
  */
 public class WPDParser extends AbstractParser {
+	
 	protected static Log logger = LogFactory.getLog(WPDParser.class);
 
 	private final int EOF = -1;
