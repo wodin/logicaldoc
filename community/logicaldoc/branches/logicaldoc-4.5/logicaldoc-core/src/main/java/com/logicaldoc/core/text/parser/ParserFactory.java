@@ -57,7 +57,7 @@ public class ParserFactory {
 		parsers.put("ods", OpenOfficeParser.class);
 		parsers.put("odp", OpenOfficeParser.class);
 
-		// OpenDocument extensions
+		// OpenDocument template extensions
 		parsers.put("ott", OpenOfficeParser.class);
 		parsers.put("ots", OpenOfficeParser.class);
 		parsers.put("otp", OpenOfficeParser.class);
@@ -71,7 +71,7 @@ public class ParserFactory {
 		parsers.put("wpd", WPDParser.class);
 		
 		// AbiWord http://www.abisource.com/
-		parsers.put("abw", XMLParser.class);
+		parsers.put("abw", AbiWordParser.class);
 		parsers.put("zabw", ZABWParser.class); // Compressed AbiWord document
 
 		parsers.put("txt", TXTParser.class);

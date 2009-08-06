@@ -19,10 +19,10 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Text extractor for OpenOffice documents.
- * tested with KOffice 1.6.3 documents
+ * Text extractor for KOffice 1.6 documents.
  * 
- * @author Alessandro Gasparini
+ * @author Alessandro Gasparini - Logical Objects
+ * @since 4.5.2
  */
 public class KOfficeParser extends AbstractParser {
 
@@ -71,7 +71,7 @@ public class KOfficeParser extends AbstractParser {
 		}
 	}
 	
-    //--------------------------------------------< OpenOfficeContentHandler >
+    //--------------------------------------------< KOfficeContentHandler >
 
     private class KOfficeContentHandler extends DefaultHandler {
 

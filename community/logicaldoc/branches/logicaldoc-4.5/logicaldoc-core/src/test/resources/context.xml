@@ -38,9 +38,7 @@
 					${user.home}/logicaldoc/data/index/
 				</prop>
 				<prop key="indexdir.category">directory</prop>
-				<prop key="userdir">
-					${user.home}/logicaldoc/data/users/
-				</prop>
+				<prop key="userdir">C:/Users/alle/logicaldoc/data/users/</prop>
 				<prop key="userdir.category">directory</prop>
 				<prop key="sxcontent">content.xml</prop>
 				<prop key="sxcontent.category">search</prop>
