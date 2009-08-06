@@ -1,9 +1,13 @@
 package com.logicaldoc.util;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import org.mozilla.intl.chardet.nsDetector;
 import org.mozilla.intl.chardet.nsICharsetDetectionObserver;
+import org.mozilla.intl.chardet.nsPSMDetector;
 
 /**
  * Utility class used to detect the encoding of a string and to apply encodings.
@@ -22,6 +26,7 @@ public class CharsetDetector {
 	 * @return The array of encodings starting from the most probable
 	 */
 	public static String[] detectEncodings(String src) {
+		
 		nsDetector det = new nsDetector();
 
 		// Set an observer...
@@ -38,6 +43,75 @@ public class CharsetDetector {
 
 		return det.getProbableCharsets();
 	}
+	
+	
+	/**
+	 * Determines the probable encodings for a string
+	 * 
+	 * @param src The buffer of bytes to check
+	 * @return The array of encodings starting from the most probable
+	 */
+	public static String[] detectEncodings(byte[] buf) {
+		
+		nsDetector det = new nsDetector();
+
+		// Set an observer...
+		// The Notify() will be called when a matching charset is found.
+		det.Init(new nsICharsetDetectionObserver() {
+			public void Notify(String charset) {
+				// Do nothing
+			}
+		});
+
+		det.DoIt(buf, buf.length, false);
+		det.DataEnd();
+
+		return det.getProbableCharsets();
+	}
+	
+	/**
+	 * Determines the probable encodings for a string
+	 * 
+	 * @param src The InputStream to check
+	 * @return The array of encodings starting from the most probable
+	 * @throws IOException 
+	 */
+	public static String[] detectEncodings(InputStream stream) throws IOException {
+		
+		// Initalize the nsDetector() ;
+		int lang = nsPSMDetector.ALL;
+		nsDetector det = new nsDetector(lang);
+
+		// Set an observer...
+		// The Notify() will be called when a matching charset is found.
+		det.Init(new nsICharsetDetectionObserver() {
+			public void Notify(String charset) {
+//				 Do nothing
+			}
+		});
+
+		BufferedInputStream imp = new BufferedInputStream(stream);
+
+		byte[] buf = new byte[1024];
+		int len;
+		boolean done = false;
+		boolean isAscii = true;
+
+		while ((len = imp.read(buf, 0, buf.length)) != -1) {
+
+			// Check if the stream is only ascii.
+			if (isAscii)
+				isAscii = det.isAscii(buf, len);
+
+			// DoIt if non-ascii and not done yet.
+			if (!isAscii && !done)
+				done = det.DoIt(buf, len, false);
+		}
+		det.DataEnd();
+
+		return det.getProbableCharsets();
+	}
+	
 
 	/**
 	 * Detects the most probable encoding and converts the passed string
