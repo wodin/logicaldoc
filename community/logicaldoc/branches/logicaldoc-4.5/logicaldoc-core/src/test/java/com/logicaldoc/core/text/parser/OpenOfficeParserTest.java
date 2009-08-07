@@ -5,13 +5,28 @@ import java.io.IOException;
 
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 
-public class AbiWordParserTest extends DefaultParserTest  {
-	
+public class OpenOfficeParserTest extends DefaultParserTest  {
+
 	public void testParseFolder() throws IOException {
 
-		File dir = new File("C:/tmp/abiword");
+		File dir = new File("C:/tmp/openoffice");
 		
-		String[] files = dir.list(new SuffixFileFilter(".abw"));
+		String[] files = dir.list(new SuffixFileFilter(".odt"));
+		for (int i = 0; i < files.length; i++) {
+			parseFile(dir, files[i]);
+		}
+		
+		files = dir.list(new SuffixFileFilter(".ods"));
+		for (int i = 0; i < files.length; i++) {
+			parseFile(dir, files[i]);
+		}
+		
+		files = dir.list(new SuffixFileFilter(".odp"));
+		for (int i = 0; i < files.length; i++) {
+			parseFile(dir, files[i]);
+		}
+		
+		files = dir.list(new SuffixFileFilter(".ott"));
 		for (int i = 0; i < files.length; i++) {
 			parseFile(dir, files[i]);
 		}
@@ -25,7 +40,7 @@ public class AbiWordParserTest extends DefaultParserTest  {
 
 		File file = new File(dir, fileName);
 
-		AbstractParser parser = new AbiWordParser();
+		AbstractParser parser = new OpenOfficeParser();
 		parser.parse(file);
 		
 		System.out.println("content: \n" + parser.getContent());
