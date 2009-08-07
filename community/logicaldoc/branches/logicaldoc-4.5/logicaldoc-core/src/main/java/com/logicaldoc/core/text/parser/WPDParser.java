@@ -3,12 +3,17 @@ package com.logicaldoc.core.text.parser;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Michael Scholz
+ * @author Alessandro Gasparini - Logical Objects
  * @since 3.6
  */
 public class WPDParser extends AbstractParser {
@@ -18,12 +23,28 @@ public class WPDParser extends AbstractParser {
 	private final int EOF = -1;
 
 	public void parse(File file) {
-		StringBuffer buffer = new StringBuffer();
+		
+		
 		try {
-			FileInputStream in = new FileInputStream(file);
-			BufferedInputStream bis = new BufferedInputStream(in);
+			FileInputStream fis = new FileInputStream(file);
+			Reader reader = extractText(fis, null, null);
+			content = readText(reader, "UTF-8");
+			
+		} catch (Exception ex) {
+			logger.error(ex.getMessage(), ex);
+		}
+	}
+	
+    /**
+     * {@inheritDoc}
+     */
+	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
+		
+		try {
+			StringBuilder sb = new StringBuilder();
+			BufferedInputStream bis = new BufferedInputStream(stream);
+			
 			int token = 0;
-
 			while ((token = bis.read()) != EOF) {
 				// 128 (80h) equals space in wordperfect
 				if (token == 128) {
@@ -31,15 +52,12 @@ public class WPDParser extends AbstractParser {
 				}
 
 				if ((token > 31) && (token < 126)) {
-					buffer.append((char) token);
+					sb.append((char) token);
 				}
 			}
-
-			in.close();
-			bis.close();
-		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
+			return new StringReader(sb.toString());
+		} finally {
+			stream.close();
 		}
-		content = buffer.toString();
 	}
 }

@@ -6,15 +6,19 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * 
  * @author Michael Scholz
+ * @author Alessandro Gasparini - Logical Objects
+ * @since 3.6
  */
 public class PSParser extends AbstractParser {
+	
 	protected static Log logger = LogFactory.getLog(PSParser.class);
 
 	private String version = "";
@@ -23,38 +27,27 @@ public class PSParser extends AbstractParser {
 
 	public void parse(File file) {
 		try {
-			InputStream in = new FileInputStream(file);
-			reader = new BufferedReader(new InputStreamReader(in));
-
-			String line = reader.readLine();
-
-			if ((line != null) && (line.length() >= 3)) {
-				version = line.substring(line.length() - 3);
-
-				if (version.startsWith("2")) {
-					parse_v2();
-				}
-
-				if (version.startsWith("3")) {
-					parse_v3();
-				}
-			}
+			InputStream stream = new FileInputStream(file);
+			Reader reader = extractText(stream, null, null);
+			content = readText(reader, "UTF-8");
+			
 		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
+			logger.warn("Failed to extract PostScrip text content", ex);
 		}
 	}
 
-	protected void parse_v2() throws IOException {
+	private String parse_v2() throws IOException {
+		
 		boolean isComment = false;
 		boolean isText = false;
 		boolean isConnector = false;
 		int ichar = 0;
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		while ((ichar = reader.read()) > 0) {
 			if (isConnector) {
 				if (ichar < 108) {
-					buffer.append((char) 32);
+					sb.append((char) 32);
 				}
 
 				isConnector = false;
@@ -74,7 +67,7 @@ public class PSParser extends AbstractParser {
 			}
 
 			if (isText) {
-				buffer.append((char) ichar);
+				sb.append((char) ichar);
 			}
 
 			if ((ichar == 40) && !isComment) {
@@ -82,18 +75,19 @@ public class PSParser extends AbstractParser {
 			}
 		}
 		reader.close();
-		content = buffer.toString();
+		return sb.toString();
 	}
 
-	protected void parse_v3() throws IOException {
-		StringBuffer stmt = new StringBuffer();
+	private String parse_v3() throws IOException {
+		
+		StringBuilder stmt = new StringBuilder();
 		boolean isComment = false;
 		boolean isText = false;
 		boolean isBMP = false;
 		boolean isStore = false;
 		int store = 0;
 		int ichar = 0;
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		while ((ichar = reader.read()) > 0) {
 			if (ichar == 37) {
@@ -109,7 +103,7 @@ public class PSParser extends AbstractParser {
 			}
 
 			if (isText && !isBMP) {
-				buffer.append((char) ichar);
+				sb.append((char) ichar);
 			}
 
 			if ((ichar == 40) && !isComment && !isBMP) {
@@ -144,10 +138,36 @@ public class PSParser extends AbstractParser {
 			}
 		}
 		reader.close();
-		content = buffer.toString();
+		return sb.toString();
 	}
 
 	public String getVersion() {
 		return version;
+	}
+
+	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
+		try {
+			reader = new BufferedReader(new InputStreamReader(stream));
+
+			String line = reader.readLine();
+			String textExtracted = "";
+			if ((line != null) && (line.length() >= 3)) {
+				version = line.substring(line.length() - 3);
+
+				if (version.startsWith("2")) {
+					textExtracted = parse_v2();
+				}
+
+				if (version.startsWith("3")) {
+					textExtracted = parse_v3();
+				}
+			}
+			return new StringReader(textExtracted);
+		} catch (Exception ex) {
+			logger.error(ex.getMessage(), ex);
+			return new StringReader("");
+		} finally {
+			stream.close();
+		}
 	}
 }

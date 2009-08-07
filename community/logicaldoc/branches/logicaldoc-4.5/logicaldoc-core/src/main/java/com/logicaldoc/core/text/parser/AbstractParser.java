@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 /**
@@ -17,6 +17,7 @@ import java.util.Locale;
  * @since 3.5
  */
 public abstract class AbstractParser implements Parser {
+	
 	protected String content = "";
 
 	@Override
@@ -54,7 +55,7 @@ public abstract class AbstractParser implements Parser {
 		parse(file);
 	}
 
-	protected String readText(Reader reader, String encoding) throws UnsupportedEncodingException {
+	protected String readText(Reader reader, String encoding) throws IOException {
 	
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
@@ -74,6 +75,8 @@ public abstract class AbstractParser implements Parser {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "";
+		} finally {
+			reader.close();
 		}
 		return new String(baos.toByteArray(), encoding);
 	}

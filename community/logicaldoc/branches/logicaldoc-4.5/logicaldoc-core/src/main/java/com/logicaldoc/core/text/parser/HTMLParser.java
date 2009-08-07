@@ -1,14 +1,11 @@
 package com.logicaldoc.core.text.parser;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.Charset;
@@ -99,38 +96,12 @@ public class HTMLParser extends AbstractParser {
 			String encoding = getCharEncoding(fis);
 			//System.out.println("encoding: " + encoding);
 			fis = new FileInputStream(file);
-			Reader read = extractText(fis, null, encoding);
+			Reader reader = extractText(fis, null, encoding);
 			
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			OutputStreamWriter osw = new OutputStreamWriter(baos, "UTF-8");
-			BufferedWriter bw = new BufferedWriter(osw);
-			
-			BufferedReader br = new BufferedReader(read);
-			String inputLine;
-			while ((inputLine = br.readLine()) != null) {
-				//System.out.println(inputLine);
-				bw.write(inputLine);
-				bw.newLine();
-			}
-			
-			bw.flush();
-			osw.flush();
-			osw.close();
-			content = new String(baos.toByteArray(), "UTF-8");
-
-			baos.close();
+			content = readText(reader, "UTF-8");
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
-		} finally {
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+		} 
 	}
 
 	private String getCharEncoding(FileInputStream fis) throws IOException {

@@ -33,23 +33,14 @@ public class AbiWordParser extends AbstractParser {
 		InputStream stream = null;
 		try {
 			stream = new FileInputStream(file);
+
+			Reader reader = extractText(stream, null, null);
 			
-			String encoding = "UTF-8";
-			Reader reader = extractText(stream, null, encoding);
-			
-			content = readText(reader, encoding);
+			content = readText(reader, "UTF-8");
 
 		} catch (Exception ex) {
 			logger.warn("Failed to extract AbiWord text content", ex);
-			content = "";
-		} finally {
-			try {
-				if (stream != null)
-					stream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		} 
 	}
 	
 	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {

@@ -23,7 +23,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * ignoring all errors and warnings. This is useful in avoiding the
  * default console output or other error logging of many XML parsers.
  *
- * @see XMLTextExtractor
+ * @see XMLParser
  * @since 4.5.2
  */
 class ExtractorHandler extends DefaultHandler implements ErrorHandler {

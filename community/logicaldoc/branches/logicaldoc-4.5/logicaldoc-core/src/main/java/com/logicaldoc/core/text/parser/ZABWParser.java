@@ -36,7 +36,6 @@ public class ZABWParser extends AbstractParser {
 
 		} catch (Exception ex) {
 			logger.warn("Failed to extract Compressed AbiWord text content", ex);
-			content = "";
 		} finally {
 			try {
 				if (stream != null)
