@@ -82,7 +82,7 @@ public class TXTParserTest extends TestCase  {
 
 		String fname = file.getName();
 		fname = fname.substring(0, fname.lastIndexOf("."));
-		fname += ".parsed.txt";
+		fname += ".parsed";
 		file = new File(file.getParent(), fname);
 
 		return file;
