@@ -2,8 +2,12 @@ package com.logicaldoc.core.text.parser;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 
-import javax.swing.JEditorPane;
+import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.rtf.RTFEditorKit;
 
 import org.apache.commons.logging.Log;
@@ -11,27 +15,39 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Michael Scholz
+ * @author Alessandro Gasparini
+ * @since 3.6
  */
 public class RTFParser extends AbstractParser {
+
 	protected static Log logger = LogFactory.getLog(RTFParser.class);
 
 	public void parse(File file) {
 		try {
-			RTFEditorKit rtf = new RTFEditorKit();
-			JEditorPane editor = new JEditorPane();
-			editor.setEditorKit(rtf);
-
 			FileInputStream fis = new FileInputStream(file);
-			rtf.read(fis, editor.getDocument(), 0);
-
-			content = editor.getDocument().getText(0, editor.getDocument().getLength());
-			fis.close();
+			Reader reader = extractText(fis, null, null);
+			content = readText(reader, "UTF-8");
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
 	}
 
-	public String getContent() {
-		return content;
+	/**
+	 * {@inheritDoc}
+	 */
+	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
+
+		try {
+			RTFEditorKit rek = new RTFEditorKit();
+			DefaultStyledDocument doc = new DefaultStyledDocument();
+			rek.read(stream, doc, 0);
+			String text = doc.getText(0, doc.getLength());
+			return new StringReader(text);
+		} catch (Throwable t) {
+			logger.warn("Failed to extract RTF text content", t);
+			return new StringReader("");
+		} finally {
+			stream.close();
+		}
 	}
 }

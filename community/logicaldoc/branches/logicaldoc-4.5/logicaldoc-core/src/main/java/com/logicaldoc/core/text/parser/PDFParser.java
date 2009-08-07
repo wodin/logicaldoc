@@ -1,11 +1,16 @@
 package com.logicaldoc.core.text.parser;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.CharArrayReader;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.StringReader;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,10 +22,13 @@ import org.pdfbox.pdmodel.PDDocumentInformation;
 import org.pdfbox.util.PDFTextStripper;
 
 /**
- * Parses a PDF document and provides the information. For parsing an external
- * library is used. Created on 4. November 2003, 18:09
+ * Text extractor for Portable Document Format (PDF). 
+ * For parsing uses an external library: PDFBox. 
+ * Created on 4. November 2003, 18:09
  * 
  * @author Michael Scholz
+ * @author Alessandro Gasparini - Logical Objects
+ * @since 3.6
  */
 public class PDFParser extends AbstractParser {
 	
@@ -35,6 +43,7 @@ public class PDFParser extends AbstractParser {
 	protected static Log log = LogFactory.getLog(PDFParser.class);
 
 	public void parse(File file) {
+		
 		author = "";
 		title = "";
 		sourceDate = "";
@@ -169,4 +178,41 @@ public class PDFParser extends AbstractParser {
 	public String getTitle() {
 		return title;
 	}
+	
+	
+    /**
+     * {@inheritDoc}
+     */
+    public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
+    	
+        try {
+        	org.pdfbox.pdfparser.PDFParser parser = new org.pdfbox.pdfparser.PDFParser(new BufferedInputStream(stream));
+            try {
+                parser.parse();
+                PDDocument document = parser.getPDDocument();
+                CharArrayWriter writer = new CharArrayWriter();
+
+                PDFTextStripper stripper = new PDFTextStripper();
+                stripper.setLineSeparator("\n");
+                stripper.writeText(document, writer);
+
+                return new CharArrayReader(writer.toCharArray());
+            } finally {
+                try {
+                    PDDocument doc = parser.getPDDocument();
+                    if (doc != null) {
+                        doc.close();
+                    }
+                } catch (IOException e) {
+                }
+            }
+        } catch (Exception e) {
+            // it may happen that PDFParser throws a runtime
+            // exception when parsing certain pdf documents
+            log.warn("Failed to extract PDF text content", e);
+            return new StringReader("");
+        } finally {
+            stream.close();
+        }
+    }
 }

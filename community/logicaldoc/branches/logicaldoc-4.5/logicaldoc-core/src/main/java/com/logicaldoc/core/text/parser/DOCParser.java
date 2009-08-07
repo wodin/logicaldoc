@@ -2,10 +2,14 @@ package com.logicaldoc.core.text.parser;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
 
 /**
  * Parses a MS Word (*.doc, *.dot) file to extract the text contained in the
@@ -17,29 +21,48 @@ import org.apache.poi.hwpf.HWPFDocument;
  * 
  * @author Michael Scholz
  * @author Sebastian Stein
+ * @author Alessandro Gasparini - Logical Objects
+ * @since 3.6
  */
 public class DOCParser extends AbstractParser {
+
 	protected static Log logger = LogFactory.getLog(DOCParser.class);
 
 	/**
 	 * This function actually parses the doc file using the HWPF library. The
 	 * text content is stored in the class member variable content.
 	 * 
-	 * @param file The MS Word (*.doc, *.dot) file to be parsed.
+	 * @param file
+	 *            The MS Word (*.doc, *.dot) file to be parsed.
 	 */
 	public void parse(File file) {
 		try {
-			// for reading the MS Word file we use the deprecated HWPF library
-			// provided by Jakarta POI
-			FileInputStream in = new FileInputStream(file);
-			HWPFDocument doc = new HWPFDocument(in);
+			FileInputStream stream = new FileInputStream(file);
+			Reader reader = extractText(stream, null, null);
+			content = readText(reader, "UTF-8");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
-			// this call returns the complete document text without any
-			// formatting
-			content = doc.getRange().text();
-			in.close();
-		} catch (Throwable ex) {
-			logger.error(ex.getMessage());
+	/**
+	 * {@inheritDoc} Returns an empty reader if an error occured extracting text
+	 * from the word document.
+	 */
+	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
+		try {
+			String tmp = new WordExtractor(stream).getText();
+
+			// Replace Control characters
+			if (tmp != null)
+				tmp = tmp.replaceAll("\\p{Cntrl}", " ");
+
+			return new StringReader(tmp);
+		} catch (Exception e) {
+			logger.warn("Failed to extract Word text content", e);
+			return new StringReader("");
+		} finally {
+			stream.close();
 		}
 	}
 }

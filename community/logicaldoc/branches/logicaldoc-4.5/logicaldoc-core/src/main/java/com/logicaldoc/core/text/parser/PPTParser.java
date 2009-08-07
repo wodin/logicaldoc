@@ -2,93 +2,58 @@ package com.logicaldoc.core.text.parser;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.poifs.eventfilesystem.POIFSReader;
-import org.apache.poi.poifs.eventfilesystem.POIFSReaderEvent;
-import org.apache.poi.poifs.eventfilesystem.POIFSReaderListener;
-import org.apache.poi.poifs.filesystem.DocumentInputStream;
+import org.apache.poi.hslf.extractor.PowerPointExtractor;
 
 /**
  * Parser for Office 2003 presentations
  * 
  * @author Michael Scholz
+ * @author Alessandro Gasparini - Logical Objects
+ * @since 3.6
  */
-public class PPTParser extends AbstractParser implements POIFSReaderListener {
-	private InputStream input;
+public class PPTParser extends AbstractParser {
 
 	protected static Log logger = LogFactory.getLog(PPTParser.class);
 
 	/**
-	 * @see com.logicaldoc.core.text.parser.Parser#getContent()
+	 * {@inheritDoc}
 	 */
-	public String getContent() {
-		return content;
+	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
+		try {
+			PowerPointExtractor extractor = new PowerPointExtractor(stream);
+			String tmp = extractor.getText(true, true);
+			
+			// Replace Control characters
+			if (tmp != null)
+				tmp = tmp.replaceAll("\\p{Cntrl}", " ");
+			
+			return new StringReader(tmp);
+		} catch (RuntimeException e) {
+			logger.warn("Failed to extract PowerPoint text content", e);
+			return new StringReader("");
+		} finally {
+			try {
+				stream.close();
+			} catch (IOException ignored) {
+			}
+		}
 	}
 
 	public void parse(File file) {
 		try {
-			content = "";
-			input = new FileInputStream(file);
-			POIFSReader reader = new POIFSReader();
-			reader.registerListener(this);
-			reader.read(input);
-		} catch (Throwable ex) {
-			logger.error(ex.getMessage(), ex);
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (Exception ex) {
-					logger.error(ex.getMessage(), ex);
-				}
-			}
-		}
-	}
-
-	public void processPOIFSReaderEvent(POIFSReaderEvent event) {
-		StringBuffer buffer = new StringBuffer();
-		try {
-			if (!event.getName().equalsIgnoreCase("PowerPoint Document")) {
-				return;
-			}
-
-			DocumentInputStream input = event.getStream();
-			int letter = 0;
-			StringBuffer word = new StringBuffer();
-			boolean separator = true;
-
-			while ((letter = input.read()) != -1) {
-				if (((letter > 64) && (letter < 91)) || ((letter > 96) && (letter < 123))) {
-					word.append((char) letter);
-					separator = true;
-				} else {
-					if ((letter == 196) || (letter == 214) || (letter == 220) || (letter == 223) || (letter == 228)
-							|| (letter == 246) || (letter == 252)) {
-						word.append((char) letter);
-						separator = true;
-					} else {
-						if (letter == 32) {
-							buffer.append((char) 32);
-						}
-
-						if (separator && (letter != 0)) {
-							if (word.length() > 2) {
-								buffer.append(word);
-								buffer.append((char) 32);
-							}
-
-							word = new StringBuffer();
-							separator = false;
-						}
-					}
-				}
-			}
+			FileInputStream stream = new FileInputStream(file);
+			Reader reader = extractText(stream, null, null);
+			content = readText(reader, "UTF-8");
 		} catch (Throwable ex) {
 			logger.error(ex.getMessage(), ex);
 		}
-		content = buffer.toString();
 	}
+
 }
