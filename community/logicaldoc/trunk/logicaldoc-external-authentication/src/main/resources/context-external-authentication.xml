@@ -10,11 +10,13 @@
 	-->
 	<bean id="LDAPUserGroupContext"
 		class="com.logicaldoc.authentication.ldap.LDAPUserGroupContext">
-		<property name="userIdentiferAttribute" value="${ldap.userIdentiferAttribute}" />
+		<property name="userIdentiferAttribute"
+			value="${ldap.userIdentiferAttribute}" />
 		<property name="logonAttribute" value="${ldap.logonAttribute}" />
 		<property name="userClass" value="${ldap.userClass}" />
 		<property name="groupClass" value="${ldap.groupClass}" />
-		<property name="groupIdentiferAttribute" value="${ldap.groupIdentiferAttribute}" />
+		<property name="groupIdentiferAttribute"
+			value="${ldap.groupIdentiferAttribute}" />
 		<property name="userBaseString" value="${ldap.userBase}" />
 		<property name="groupBaseString" value="${ldap.groupBase}" />
 	</bean>
@@ -28,7 +30,8 @@
 		<property name="realm" value="${ldap.realm}" />
 		<property name="currentDN" value="${ldap.currentDN}" />
 		<property name="userGroupContext" ref="LDAPUserGroupContext" />
-		<property name="userAuthenticationPatern" value="${ldap.authenticationPattern}" />
+		<property name="userAuthenticationPatern"
+			value="${ldap.authenticationPattern}" />
 		<property name="userName" value="${ldap.username}" />
 		<property name="password" value="${ldap.password}" />
 	</bean>
@@ -62,7 +65,7 @@
 		</property>
 		</bean>
 	-->
-	
+
 	<!-- 
 		Simple Authentication
 	-->
@@ -154,16 +157,31 @@
 	</bean>
 
 	<bean id="LDAPSynchroniserTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerBean"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
+		class="com.logicaldoc.util.quartz.DoubleTrigger">
 		<property name="jobDetail" ref="LDAPSynchroniserJob" />
-		<property name="cronExpression">
-			<value>${schedule.cron.LDAPSynchroniser}</value>
-		</property>
+		<property name="cronTrigger" ref="CronLDAPSynchroniserTrigger" />
+		<property name="simpleTrigger"
+			ref="SimpleLDAPSynchroniserTrigger" />
+		<property name="mode" value="${schedule.mode.LDAPSynchroniser}" />
 	</bean>
-	
-	
+
+	<bean id="CronLDAPSynchroniserTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="LDAPSynchroniserJob" />
+		<property name="cronExpression"
+			value="${schedule.cron.LDAPSynchroniser}" />
+	</bean>
+
+	<bean id="SimpleLDAPSynchroniserTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="LDAPSynchroniserJob" />
+		<property name="startDelay"
+			value="${schedule.delay.LDAPSynchroniser}" />
+		<property name="repeatInterval"
+			value="${schedule.interval.LDAPSynchroniser}" />
+	</bean>
+
+
 	<bean id="LdapBean"
 		class="com.logicaldoc.authentication.web.LdapBean" scope="session">
 		<property name="userGroupContext" ref="LDAPUserGroupContext" />
