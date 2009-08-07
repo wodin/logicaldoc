@@ -64,6 +64,18 @@ public class ApplicationInitializer implements ServletContextListener {
 
 		saveBootProperties(boot, context);
 
+		// Set native libs location
+		File nativeDir = new File(context.getRealPath("/WEB-INF/native/"));
+		File[] libs = nativeDir.listFiles();
+		for (int i = 0; i < libs.length; i++) {
+			if (libs[i].isFile())
+				try {
+					System.load(new File(nativeDir, libs[i].getName()).getPath());
+				} catch (Throwable t) {
+
+				}
+		}
+
 		// Initialize logging
 		String log4jPath = context.getRealPath("/WEB-INF/classes/ldoc-log4j.xml");
 		try {
@@ -75,7 +87,8 @@ public class ApplicationInitializer implements ServletContextListener {
 		// Initialize plugins
 		com.logicaldoc.util.PluginRegistry.getInstance().init();
 
-		// Reinitialize logging because some plugins may have added new categories
+		// Reinitialize logging because some plugins may have added new
+		// categories
 		try {
 			Log4jConfigurer.shutdownLogging();
 			Log4jConfigurer.initLogging(log4jPath);

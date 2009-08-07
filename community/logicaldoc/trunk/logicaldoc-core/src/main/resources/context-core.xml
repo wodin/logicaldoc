@@ -393,13 +393,26 @@
 	</bean>
 
 	<bean id="IndexOptimizerTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerBean"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
+		class="com.logicaldoc.util.quartz.DoubleTrigger">
 		<property name="jobDetail" ref="IndexOptimizerJob" />
-		<property name="cronExpression">
-			<value>${schedule.cron.IndexOptimizer}</value>
-		</property>
+		<property name="cronTrigger" ref="CronIndexOptimizerTrigger" />
+		<property name="simpleTrigger" ref="SimpleIndexOptimizerTrigger" />
+		<property name="mode" value="${schedule.mode.IndexOptimizer}" />
+	</bean>
+
+	<bean id="CronIndexOptimizerTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="IndexOptimizerJob" />
+		<property name="cronExpression" value="${schedule.cron.IndexOptimizer}" />
+	</bean>
+
+	<bean id="SimpleIndexOptimizerTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="IndexOptimizerJob" />
+		<property name="startDelay"
+			value="${schedule.delay.IndexOptimizer}" />
+		<property name="repeatInterval"
+			value="${schedule.interval.IndexOptimizer}" />
 	</bean>
 
 	<bean id="TagCloudGenerator"
@@ -424,13 +437,26 @@
 	</bean>
 
 	<bean id="TagCloudGeneratorTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerBean"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
-		<property name="jobDetail" ref="IndexerTaskJob" />
-		<property name="cronExpression">
-			<value>${schedule.cron.TagCloudGenerator}</value>
-		</property>
+		class="com.logicaldoc.util.quartz.DoubleTrigger">
+		<property name="jobDetail" ref="TagCloudGeneratorJob" />
+		<property name="cronTrigger" ref="CronTagCloudGeneratorTrigger" />
+		<property name="simpleTrigger" ref="SimpleTagCloudGeneratorTrigger" />
+		<property name="mode" value="${schedule.mode.TagCloudGenerator}" />
+	</bean>
+
+	<bean id="CronTagCloudGeneratorTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="TagCloudGeneratorJob" />
+		<property name="cronExpression" value="${schedule.cron.TagCloudGenerator}" />
+	</bean>
+
+	<bean id="SimpleTagCloudGeneratorTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="TagCloudGeneratorJob" />
+		<property name="startDelay"
+			value="${schedule.delay.TagCloudGenerator}" />
+		<property name="repeatInterval"
+			value="${schedule.interval.TagCloudGenerator}" />
 	</bean>
 
 	<bean id="IndexerTask"
@@ -455,13 +481,26 @@
 	</bean>
 
 	<bean id="IndexerTaskTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerBean"
-		abstract="false" lazy-init="default" autowire="default"
-		dependency-check="default">
+		class="com.logicaldoc.util.quartz.DoubleTrigger">
 		<property name="jobDetail" ref="IndexerTaskJob" />
-		<property name="cronExpression">
-			<value>${schedule.cron.IndexerTask}</value>
-		</property>
+		<property name="cronTrigger" ref="CronIndexerTaskTrigger" />
+		<property name="simpleTrigger" ref="SimpleIndexerTaskTrigger" />
+		<property name="mode" value="${schedule.mode.IndexerTask}" />
+	</bean>
+
+	<bean id="CronIndexerTaskTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="IndexerTaskJob" />
+		<property name="cronExpression" value="${schedule.cron.IndexerTask}" />
+	</bean>
+
+	<bean id="SimpleIndexerTaskTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="IndexerTaskJob" />
+		<property name="startDelay"
+			value="${schedule.delay.IndexerTask}" />
+		<property name="repeatInterval"
+			value="${schedule.interval.IndexerTask}" />
 	</bean>
 
 	<!-- Authentication -->

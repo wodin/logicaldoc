@@ -5,11 +5,14 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.StringTokenizer;
 
-import org.quartz.CronTrigger;
+import org.quartz.JobDetail;
 import org.quartz.Scheduler;
+import org.quartz.Trigger;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.quartz.DoubleTrigger;
+import com.logicaldoc.util.system.CpuInfo;
 
 /**
  * Scheduling configuration for a Task
@@ -31,6 +34,14 @@ public class TaskScheduling {
 	private String month = "*";
 
 	private String dayOfWeek = "?";
+
+	private String mode = DoubleTrigger.MODE_CRON;
+
+	private long delay = 1000;
+
+	private long interval = 60000;
+
+	private int minCpuIdle = 0;
 
 	private Date previousFireTime;
 
@@ -115,13 +126,22 @@ public class TaskScheduling {
 	}
 
 	public Date getNextFireTime() {
-		CronTrigger cronTrigger = (CronTrigger) Context.getInstance().getBean(taskName + "Trigger");
-		// The following loop 'while' is needed to update the next execution time
-		// of the task into the Task list page
-		while (cronTrigger.getNextFireTime().getTime() < System.currentTimeMillis()) {
-			cronTrigger.setNextFireTime(cronTrigger.getFireTimeAfter(previousFireTime));
+		Trigger trigger = (Trigger) Context.getInstance().getBean(taskName + "Trigger");
+		if (!(trigger instanceof DoubleTrigger))
+			return null;
+
+		// The following loop 'while' is needed to update the next execution
+		// time of the task into the Task list page
+		if (DoubleTrigger.MODE_CRON.equals(getMode())) {
+			while (trigger.getNextFireTime().getTime() < System.currentTimeMillis()) {
+				((DoubleTrigger) trigger).setNextFireTime(trigger.getFireTimeAfter(previousFireTime));
+			}
+			return trigger.getNextFireTime();
+		} else {
+			long next = (previousFireTime != null ? previousFireTime.getTime() : System.currentTimeMillis())
+					+ ((DoubleTrigger) trigger).getSimpleTrigger().getRepeatInterval();
+			return new Date(next);
 		}
-		return cronTrigger.getNextFireTime();
 	}
 
 	public String getCronExpression() {
@@ -130,8 +150,8 @@ public class TaskScheduling {
 	}
 
 	public void setCronExpression(String cronExpression) throws ParseException {
-		CronTrigger cronTrigger = (CronTrigger) Context.getInstance().getBean(taskName + "Trigger");
-		cronTrigger.setCronExpression(cronExpression);
+		DoubleTrigger trigger = (DoubleTrigger) Context.getInstance().getBean(taskName + "Trigger");
+		trigger.getCronTrigger().setCronExpression(cronExpression);
 		StringTokenizer st = new StringTokenizer(cronExpression, " ", false);
 		seconds = st.nextToken();
 		minutes = st.nextToken();
@@ -139,7 +159,6 @@ public class TaskScheduling {
 		dayOfMonth = st.nextToken();
 		month = st.nextToken();
 		dayOfWeek = st.nextToken();
-
 	}
 
 	public boolean isEnabled() {
@@ -158,8 +177,11 @@ public class TaskScheduling {
 		String enbl = config.getProperty("schedule.enabled." + taskName);
 		this.enabled = "true".equals(enbl);
 		setCronExpression(config.getProperty("schedule.cron." + taskName));
+		setMode(config.getProperty("schedule.mode." + taskName));
 		try {
 			maxLength = Long.parseLong(config.getProperty("schedule.length." + taskName));
+			interval = Long.parseLong(config.getProperty("schedule.interval." + taskName));
+			delay = Long.parseLong(config.getProperty("schedule.delay." + taskName));
 		} catch (Exception e) {
 
 		}
@@ -170,22 +192,31 @@ public class TaskScheduling {
 	 */
 	public void save() throws IOException, ParseException {
 		Scheduler scheduler = (Scheduler) Context.getInstance().getBean("Scheduler");
-		CronTrigger cronTrigger = (CronTrigger) Context.getInstance().getBean(taskName + "Trigger");
+		DoubleTrigger trigger = (DoubleTrigger) Context.getInstance().getBean(taskName + "Trigger");
+		trigger.setMode(mode);
 		String expression = getCronExpression();
-		cronTrigger.setCronExpression(expression);
-
-		try {
-			// Reschedule the job
-			scheduler.rescheduleJob(taskName + "Trigger", "DEFAULT", cronTrigger);
-		} catch (Exception e) {
-
-		}
+		trigger.getCronTrigger().setCronExpression(expression);
+		trigger.getSimpleTrigger().setStartDelay(getDelay());
+		trigger.getSimpleTrigger().setRepeatInterval(getInterval());
 
 		PropertiesBean config = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 		config.setProperty("schedule.cron." + taskName, expression);
 		config.setProperty("schedule.enabled." + taskName, enabled ? "true" : "false");
 		config.setProperty("schedule.length." + taskName, Long.toString(maxLength));
+		config.setProperty("schedule.mode." + taskName, getMode());
+		config.setProperty("schedule.delay." + taskName, Long.toString(delay));
+		config.setProperty("schedule.interval." + taskName, Long.toString(interval));
+		config.setProperty("schedule.cpuidle." + taskName, Integer.toString(minCpuIdle));
 		config.write();
+
+		try {
+			// Reschedule the job
+			JobDetail detail = scheduler.getJobDetail(taskName + "Job", "DEFAULT");
+			scheduler.deleteJob(taskName + "Job", "DEFAULT");
+			scheduler.scheduleJob(detail, trigger);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -202,8 +233,66 @@ public class TaskScheduling {
 		}
 	}
 
+	/**
+	 * Checks if the CPU idle percentage is greater than the minimum required
+	 */
+	boolean isCpuIdle() {
+		if (minCpuIdle <= 0)
+			return false;
+		else
+			return (CpuInfo.getCpuIdle() * 100) >= minCpuIdle;
+	}
+
 	@Override
 	public String toString() {
 		return getCronExpression();
+	}
+
+	public String getMode() {
+		return mode;
+	}
+
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+
+	public long getDelay() {
+		return delay;
+	}
+
+	public long getDelaySeconds() {
+		return delay / 1000;
+	}
+
+	public void setDelay(long delay) {
+		this.delay = delay;
+	}
+
+	public void setDelaySeconds(long delay) {
+		this.delay = delay * 1000;
+	}
+
+	public long getInterval() {
+		return interval;
+	}
+
+	public long getIntervalSeconds() {
+		return interval / 1000;
+	}
+
+	public void setInterval(long interval) {
+		this.interval = interval;
+	}
+
+	public void setIntervalSeconds(long interval) {
+		this.interval = interval * 1000;
+	}
+
+	public int getMinCpuIdle() {
+		return minCpuIdle;
+	}
+
+	public void setMinCpuIdle(int minCpuIdle) {
+		this.minCpuIdle = minCpuIdle;
 	}
 }

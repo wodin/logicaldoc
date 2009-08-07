@@ -69,7 +69,8 @@
 							<ice:panelGroup>
 								<ice:commandLink action="#{tasksRecordsManager.editScheduling}"
 									title="#{msgs['task.scheduling.edit']}">
-									<ice:outputText value="#{task.task.scheduling.cronExpression} " />
+									<ice:outputText value="#{task.task.scheduling.cronExpression} " rendered="#{task.task.scheduling.mode eq 'cron'}"/>
+									<ice:outputText value="#{msgs['each']} #{task.task.scheduling.intervalSeconds} #{msgs['seconds']}" rendered="#{task.task.scheduling.mode eq 'simple'}"/>
 								</ice:commandLink>
 							</ice:panelGroup>
 						</ice:column>

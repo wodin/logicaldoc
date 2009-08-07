@@ -9,6 +9,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.util.system.CpuInfo;
+
 /**
  * A task is a long running sequence of operations
  * 
@@ -88,6 +90,11 @@ public abstract class Task implements Runnable {
 	public void run() {
 		if (!getScheduling().isEnabled()) {
 			//log.debug("Task " + getName() + " is disabled");
+			return;
+		}
+		
+		if (!getScheduling().isCpuIdle()) {
+			//log.debug("CPU too busy");
 			return;
 		}
 
