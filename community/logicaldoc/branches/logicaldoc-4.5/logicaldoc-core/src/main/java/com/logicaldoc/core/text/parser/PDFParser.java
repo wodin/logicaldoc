@@ -40,7 +40,7 @@ public class PDFParser extends AbstractParser {
 
 	private String tags;
 
-	protected static Log log = LogFactory.getLog(PDFParser.class);
+	protected static Log logger = LogFactory.getLog(PDFParser.class);
 
 	public void parse(File file) {
 		
@@ -89,7 +89,7 @@ public class PDFParser extends AbstractParser {
 				try {
 					calendar = information.getCreationDate();
 				} catch (Throwable e) {
-					log.error("Bad date format " + e.getMessage());
+					logger.error("Bad date format " + e.getMessage());
 				}
 				Date date = null;
 
@@ -109,7 +109,7 @@ public class PDFParser extends AbstractParser {
 					tags = "";
 				}
 			} catch (Exception e) {
-				log.error(e.getMessage(), e);
+				logger.error(e.getMessage(), e);
 			}
 
 			// create a tmp output stream with the size of the content.
@@ -124,7 +124,7 @@ public class PDFParser extends AbstractParser {
 				
 				stripper.writeText(pdfDocument, writer);
 			} catch (IOException e) {
-				log.error("Unable to decrypt pdf document");
+				logger.error("Unable to decrypt pdf document");
 				writer.write("encrypted document");
 				title = file.getName().substring(0, file.getName().lastIndexOf('.'));
 				author = "";
@@ -135,14 +135,14 @@ public class PDFParser extends AbstractParser {
 			is.close();
 			out.close();
 		} catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
+			logger.error(ex.getMessage(), ex);
 		} finally {
 			try {
 				if (pdfDocument != null) {
 					pdfDocument.close();
 				}
 			} catch (Exception e) {
-				log.fatal(e.getMessage(), e);
+				logger.error(e.getMessage(), e);
 			}
 		}
 	}
@@ -209,7 +209,7 @@ public class PDFParser extends AbstractParser {
         } catch (Exception e) {
             // it may happen that PDFParser throws a runtime
             // exception when parsing certain pdf documents
-            log.warn("Failed to extract PDF text content", e);
+            logger.warn("Failed to extract PDF text content", e);
             return new StringReader("");
         } finally {
             stream.close();
