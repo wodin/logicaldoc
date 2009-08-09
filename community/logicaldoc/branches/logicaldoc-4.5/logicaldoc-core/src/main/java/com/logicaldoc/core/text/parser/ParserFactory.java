@@ -15,6 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
+import com.logicaldoc.core.text.parser.wordperfect.WordPerfectParser;
 import com.logicaldoc.util.PluginRegistry;
 
 /**
@@ -68,7 +69,7 @@ public class ParserFactory {
 		parsers.put("kpr", KOfficeParser.class);
 		
 		// WordPerfect
-		parsers.put("wpd", WPDParser.class);
+		parsers.put("wpd", WordPerfectParser.class);
 		
 		// AbiWord http://www.abisource.com/
 		parsers.put("abw", AbiWordParser.class);
@@ -130,9 +131,8 @@ public class ParserFactory {
 			}
 		} else {
 			log.warn("No registered parser for extension " + ext);
-			Magic mimeDetector = new Magic();
 			try {
-				MagicMatch match = mimeDetector.getMagicMatch(file, true);
+				MagicMatch match = Magic.getMagicMatch(file, true);
 				if ("text/plain".equals(match.getMimeType())) {
 					log.warn("Try to parse the file as plain text");
 					parser = new TXTParser();

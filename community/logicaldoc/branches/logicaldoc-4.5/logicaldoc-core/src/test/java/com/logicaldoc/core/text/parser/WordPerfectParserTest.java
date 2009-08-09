@@ -5,7 +5,9 @@ import java.io.IOException;
 
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 
-public class WPDParserTest extends DefaultParserTest {
+import com.logicaldoc.core.text.parser.wordperfect.WordPerfectParser;
+
+public class WordPerfectParserTest extends DefaultParserTest {
 
 	public void testParseFolder() throws IOException {
 
@@ -21,14 +23,14 @@ public class WPDParserTest extends DefaultParserTest {
 	
 	
 	public void parseFile(File dir, String fileName) throws IOException {
-		System.out.println(fileName);
+		System.err.println(fileName);
 
 		File file = new File(dir, fileName);
 
-		AbstractParser parser = new WPDParser();
+		AbstractParser parser = new WordPerfectParser();
 		parser.parse(file);
 		
-		System.out.println("content: \n" + parser.getContent());
+		//System.out.println("content: \n" + parser.getContent());
 
 		myContent = parser.getContent();
 		

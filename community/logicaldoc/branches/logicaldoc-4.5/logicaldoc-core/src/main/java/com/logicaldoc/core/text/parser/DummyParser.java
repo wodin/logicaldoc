@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.StringReader;
 
 /**
  * Parser that doesn't parse anything
@@ -17,6 +18,6 @@ public class DummyParser extends AbstractParser {
 	}
 
 	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
-		return null;
+		return new StringReader("");
 	}
 }
