@@ -28,7 +28,7 @@ public class RTFParser extends AbstractParser {
 			Reader reader = extractText(fis, null, null);
 			content = readText(reader, "UTF-8");
 		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
+			logger.warn("Failed to extract RTF text content", ex);
 		}
 	}
 

@@ -7,7 +7,8 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 
 import com.logicaldoc.core.text.parser.wordperfect.WordPerfectParser;
 
-public class WordPerfectParserTest extends DefaultParserTest {
+
+public class WordPerfectParserTest extends DefaultParserTest{
 
 	public void testParseFolder() throws IOException {
 
@@ -23,7 +24,7 @@ public class WordPerfectParserTest extends DefaultParserTest {
 	
 	
 	public void parseFile(File dir, String fileName) throws IOException {
-		System.err.println(fileName);
+		System.out.println(fileName);
 
 		File file = new File(dir, fileName);
 
@@ -36,4 +37,5 @@ public class WordPerfectParserTest extends DefaultParserTest {
 		
 		saveTxtFile(file.getAbsolutePath(), "UTF-8");
 	}
+
 }

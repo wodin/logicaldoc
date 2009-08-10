@@ -29,15 +29,10 @@ public class AbiWordParser extends AbstractParser {
 	protected static Log logger = LogFactory.getLog(AbiWordParser.class);
 
 	public void parse(File file) {
-
-		InputStream stream = null;
 		try {
-			stream = new FileInputStream(file);
-
+			FileInputStream stream = new FileInputStream(file);
 			Reader reader = extractText(stream, null, null);
-			
 			content = readText(reader, "UTF-8");
-
 		} catch (Exception ex) {
 			logger.warn("Failed to extract AbiWord text content", ex);
 		} 

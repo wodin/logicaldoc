@@ -30,9 +30,8 @@ public class PSParser extends AbstractParser {
 			InputStream stream = new FileInputStream(file);
 			Reader reader = extractText(stream, null, null);
 			content = readText(reader, "UTF-8");
-			
 		} catch (Exception ex) {
-			logger.warn("Failed to extract PostScrip text content", ex);
+			logger.warn("Failed to extract PostScript text content", ex);
 		}
 	}
 

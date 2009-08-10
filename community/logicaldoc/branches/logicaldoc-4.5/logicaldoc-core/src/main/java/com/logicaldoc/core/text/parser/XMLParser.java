@@ -39,25 +39,13 @@ public class XMLParser extends AbstractParser {
 
 	public void parse(File file) {
 		
-		StringBuffer buffer = new StringBuffer();
-		FileInputStream fis = null;
 		try {
-			fis = new FileInputStream(file);
-			
+			FileInputStream fis = new FileInputStream(file);	
 			Reader reader = extractText(fis, null, "UTF-8");
 			content = readText(reader, "UTF-8");
-			
 		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
-			content = "";
-		} finally {
-			try {
-				if (fis != null)
-					fis.close();
-			} catch (IOException e) {
-			}
-		}
-		content = buffer.toString();
+			logger.warn("Failed to extract XML text content", ex);
+		} 
 	}
     
     
