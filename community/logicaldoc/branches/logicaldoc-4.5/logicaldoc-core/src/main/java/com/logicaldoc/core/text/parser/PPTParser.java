@@ -32,7 +32,7 @@ public class PPTParser extends AbstractParser {
 			
 			// Replace Control characters
 			if (tmp != null)
-				tmp = tmp.replaceAll("\\p{Cntrl}", " ");
+				tmp = tmp.replaceAll("\\p{Cntrl} && ^\\n", " ");
 			
 			return new StringReader(tmp);
 		} catch (RuntimeException e) {
@@ -51,8 +51,8 @@ public class PPTParser extends AbstractParser {
 			FileInputStream stream = new FileInputStream(file);
 			Reader reader = extractText(stream, null, null);
 			content = readText(reader, "UTF-8");
-		} catch (Throwable ex) {
-			logger.error(ex.getMessage(), ex);
+		} catch (Exception ex) {
+			logger.warn("Failed to extract PowerPoint text content", ex);
 		}
 	}
 

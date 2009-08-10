@@ -41,7 +41,7 @@ public class DOCParser extends AbstractParser {
 			Reader reader = extractText(stream, null, null);
 			content = readText(reader, "UTF-8");
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.warn("Failed to extract Word text content", ex);
 		}
 	}
 
@@ -55,7 +55,7 @@ public class DOCParser extends AbstractParser {
 
 			// Replace Control characters
 			if (tmp != null)
-				tmp = tmp.replaceAll("\\p{Cntrl}", " ");
+				tmp = tmp.replaceAll("\\p{Cntrl} && ^\\n", " ");
 
 			return new StringReader(tmp);
 		} catch (Exception e) {

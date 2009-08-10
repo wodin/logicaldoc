@@ -43,7 +43,6 @@ public class KOfficeParser extends AbstractParser {
 
 		} catch (Exception ex) {
 			logger.warn("Failed to extract OpenOffice text content", ex);
-			content = "";
 		} 
 	}
 	

@@ -41,7 +41,7 @@ public class ZABWParser extends AbstractParser {
 				if (stream != null)
 					stream.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}

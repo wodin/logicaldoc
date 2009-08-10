@@ -100,7 +100,7 @@ public class HTMLParser extends AbstractParser {
 			
 			content = readText(reader, "UTF-8");
 		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
+			logger.warn("Failed to extract HTML text content", ex);
 		} 
 	}
 
