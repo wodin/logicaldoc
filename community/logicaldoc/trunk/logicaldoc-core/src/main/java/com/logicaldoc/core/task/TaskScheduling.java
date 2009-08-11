@@ -138,9 +138,12 @@ public class TaskScheduling {
 			}
 			return trigger.getNextFireTime();
 		} else {
-			long next = (previousFireTime != null ? previousFireTime.getTime() : System.currentTimeMillis())
-					+ ((DoubleTrigger) trigger).getSimpleTrigger().getRepeatInterval();
-			return new Date(next);
+			if (previousFireTime != null) {
+				long next = previousFireTime.getTime()
+						+ ((DoubleTrigger) trigger).getSimpleTrigger().getRepeatInterval();
+				return new Date(next);
+			} else
+				return null;
 		}
 	}
 
@@ -238,7 +241,7 @@ public class TaskScheduling {
 	 */
 	boolean isCpuIdle() {
 		if (minCpuIdle <= 0)
-			return false;
+			return true;
 		else
 			return (CpuInfo.getCpuIdle() * 100) >= minCpuIdle;
 	}
