@@ -9,8 +9,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.util.system.CpuInfo;
-
 /**
  * A task is a long running sequence of operations
  * 
@@ -66,7 +64,6 @@ public abstract class Task implements Runnable {
 		setProgress(progress + 1);
 	}
 
-	
 	protected void setProgress(long progress) {
 		try {
 			if (progress > size || progress < 0)
@@ -78,7 +75,7 @@ public abstract class Task implements Runnable {
 				for (TaskListener listener : taskListeners)
 					listener.progressChanged(progress);
 		} catch (Throwable t) {
-			//Nothing to do
+			// Nothing to do
 		} finally {
 			// Check it time was expired, and request interruption if the case
 			if (getScheduling().isExpired())
@@ -89,17 +86,17 @@ public abstract class Task implements Runnable {
 	@Override
 	public void run() {
 		if (!getScheduling().isEnabled()) {
-			//log.debug("Task " + getName() + " is disabled");
+			log.debug("Task " + getName() + " is disabled");
 			return;
 		}
-		
+
 		if (!getScheduling().isCpuIdle()) {
-			//log.debug("CPU too busy");
+			log.debug("CPU too busy");
 			return;
 		}
 
 		if (getStatus() != STATUS_IDLE) {
-			//log.debug("Task " + getName() + " is already running");
+			log.debug("Task " + getName() + " is already running");
 			return;
 		}
 
@@ -108,6 +105,7 @@ public abstract class Task implements Runnable {
 		setStatus(STATUS_RUNNING);
 		setProgress(0);
 		getScheduling().setPreviousFireTime(new Date());
+
 		try {
 			runTask();
 		} catch (Throwable t) {
