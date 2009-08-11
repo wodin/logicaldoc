@@ -567,7 +567,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setTags(tags);
 
 			/* Set template and extended attributes */
-			if (templateId != null) {
+			if (templateId != null && templateId.longValue()!=0) {
 				DocumentTemplate template = documentTemplateDAO.findById(templateId);
 				// Get the list of template attributes with a mandatory
 				// value
