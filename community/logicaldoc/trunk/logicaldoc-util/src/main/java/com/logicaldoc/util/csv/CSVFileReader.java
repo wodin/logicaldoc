@@ -1,9 +1,11 @@
 package com.logicaldoc.util.csv;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.Vector;
 
 /**
@@ -37,10 +39,12 @@ public class CSVFileReader extends CSVFile {
 	 * 
 	 * @param inputFileName The name of the CSV file to be opened for reading
 	 * @throws FileNotFoundException If the file to be read does not exist
+	 * @throws UnsupportedEncodingException
 	 */
-	public CSVFileReader(String inputFileName) throws FileNotFoundException {
+	public CSVFileReader(String inputFileName) throws FileNotFoundException, UnsupportedEncodingException {
 		super();
-		in = new BufferedReader(new FileReader(inputFileName));
+		InputStreamReader isr = new InputStreamReader(new FileInputStream(inputFileName), "UTF-8");
+		in = new BufferedReader(isr);
 	}
 
 	/**
@@ -49,10 +53,12 @@ public class CSVFileReader extends CSVFile {
 	 * @param inputFileName The name of the CSV file to be opened for reading
 	 * @param sep The field separator to be used; overwrites the default one
 	 * @throws FileNotFoundException If the file to be read does not exist
+	 * @throws UnsupportedEncodingException
 	 */
-	public CSVFileReader(String inputFileName, char sep) throws FileNotFoundException {
+	public CSVFileReader(String inputFileName, char sep) throws FileNotFoundException, UnsupportedEncodingException {
 		super(sep);
-		in = new BufferedReader(new FileReader(inputFileName));
+		InputStreamReader isr = new InputStreamReader(new FileInputStream(inputFileName), "UTF-8");
+		in = new BufferedReader(isr);
 	}
 
 	/**
@@ -62,10 +68,13 @@ public class CSVFileReader extends CSVFile {
 	 * @param sep The field separator to be used; overwrites the default one
 	 * @param qual The text qualifier to be used; overwrites the default one
 	 * @throws FileNotFoundException If the file to be read does not exist
+	 * @throws UnsupportedEncodingException
 	 */
-	public CSVFileReader(String inputFileName, char sep, char qual) throws FileNotFoundException {
+	public CSVFileReader(String inputFileName, char sep, char qual) throws FileNotFoundException,
+			UnsupportedEncodingException {
 		super(sep, qual);
-		in = new BufferedReader(new FileReader(inputFileName));
+		InputStreamReader isr = new InputStreamReader(new FileInputStream(inputFileName), "UTF-8");
+		in = new BufferedReader(isr);
 	}
 
 	/**
@@ -127,16 +136,16 @@ public class CSVFileReader extends CSVFile {
 				if (s.charAt(j + 1) == textQualifier) {
 					j++; // skip escape char
 				} else if (s.charAt(j + 1) == fieldSeparator) { // next
-																// delimiter
+					// delimiter
 					j++; // skip end quotes
 					break;
 				}
 			} else if ((s.charAt(j) == textQualifier) && (j + 1 == len)) { // end
-																			// quotes
-																			// at
-																			// end
-																			// of
-																			// line
+				// quotes
+				// at
+				// end
+				// of
+				// line
 				break; // done
 			}
 			sb.append(s.charAt(j)); // regular character

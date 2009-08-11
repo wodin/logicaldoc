@@ -1,8 +1,10 @@
 package com.logicaldoc.util.csv;
 
 import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Vector;
 
@@ -28,7 +30,8 @@ public class CSVFileWriter extends CSVFile {
 	 */
 	public CSVFileWriter(String outputFileName) throws IOException {
 		super();
-		out = new PrintWriter(new BufferedWriter(new FileWriter(outputFileName)));
+		OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(outputFileName), "UTF-8");
+		out = new PrintWriter(new BufferedWriter(osw));
 	}
 
 	/**
@@ -40,7 +43,8 @@ public class CSVFileWriter extends CSVFile {
 	 */
 	public CSVFileWriter(String outputFileName, char sep) throws IOException {
 		super(sep);
-		out = new PrintWriter(new BufferedWriter(new FileWriter(outputFileName)));
+		OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(outputFileName),"UTF-8");
+		out = new PrintWriter(new BufferedWriter(osw));
 	}
 
 	/**
@@ -53,7 +57,8 @@ public class CSVFileWriter extends CSVFile {
 	 */
 	public CSVFileWriter(String outputFileName, char sep, char qual) throws IOException {
 		super(sep, qual);
-		out = new PrintWriter(new BufferedWriter(new FileWriter(outputFileName)));
+		OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(outputFileName),"UTF-8");
+		out = new PrintWriter(new BufferedWriter(osw));
 	}
 
 	/**
@@ -66,7 +71,8 @@ public class CSVFileWriter extends CSVFile {
 	 */
 	public CSVFileWriter(String outputFileName, boolean append) throws IOException {
 		super();
-		out = new PrintWriter(new BufferedWriter(new FileWriter(outputFileName, append)));
+		OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(outputFileName,append),"UTF-8");
+		out = new PrintWriter(new BufferedWriter(osw));
 	}
 
 	/**
@@ -79,7 +85,8 @@ public class CSVFileWriter extends CSVFile {
 	 */
 	public CSVFileWriter(String outputFileName, char sep, boolean append) throws IOException {
 		super(sep);
-		out = new PrintWriter(new BufferedWriter(new FileWriter(outputFileName, append)));
+		OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(outputFileName,append),"UTF-8");
+		out = new PrintWriter(new BufferedWriter(osw));
 	}
 
 	/**
@@ -93,7 +100,8 @@ public class CSVFileWriter extends CSVFile {
 	 */
 	public CSVFileWriter(String outputFileName, char sep, char qual, boolean append) throws IOException {
 		super(sep, qual);
-		out = new PrintWriter(new BufferedWriter(new FileWriter(outputFileName, append)));
+		OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(outputFileName,append),"UTF-8");
+		out = new PrintWriter(new BufferedWriter(osw));
 	}
 
 	/**
