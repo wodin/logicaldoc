@@ -30,6 +30,7 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
+import com.logicaldoc.core.transfer.InMemoryZipImport;
 import com.logicaldoc.core.transfer.ZipImport;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
@@ -585,7 +586,8 @@ public class DocumentsRecordsManager extends SortableList {
 				// Prepare the import thread
 				Thread zipImporter = new Thread(new Runnable() {
 					public void run() {
-						ZipImport importer = new ZipImport();
+						//ZipImport importer = new ZipImport();
+						InMemoryZipImport importer = new InMemoryZipImport();
 						importer.setExtractTags(inputFile.isExtractTags());
 						importer.setTags(inputFile.getTags());
 						log.debug("importing: = " + destFile.getPath());
