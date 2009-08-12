@@ -136,26 +136,24 @@
 			<artifactId>spring</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
-			<!-- new from 4.6.0 -->
-			<dependency>
+		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<scope>provided</scope>
-		 </dependency>
-		  <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-ehcache</artifactId>
-      </dependency>
-		  <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-      </dependency>
-     <dependency>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-ehcache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.opensymphony.quartz</groupId>
 			<artifactId>quartz</artifactId>
 		</dependency>
@@ -164,8 +162,6 @@
 			<artifactId>nekohtml</artifactId>
 			<version>1.9.7</version>
 		</dependency>
-		<!-- end of changed/new deps -->
-		
 		<dependency>
 			<groupId>javax.transaction</groupId>
 			<artifactId>jta</artifactId>
@@ -258,7 +254,7 @@
 			<artifactId>jmimemagic</artifactId>
 			<version>0.1.2</version>
 		</dependency>
-		
+
 	</dependencies>
 	<build>
 		<plugins>
@@ -290,9 +286,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<argLine>
-						-Xmx600m -XX:MaxPermSize=100m
-					</argLine>
+					<argLine>-Xmx600m -XX:MaxPermSize=100m</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
