@@ -32,21 +32,21 @@ import com.logicaldoc.util.io.ZipUtil;
  */
 public class ZipImport {
 
-	private Locale locale;
+	protected Locale locale;
 
-	private Long templateId = null;
+	protected Long templateId = null;
 
-	private User user;
+	protected User user;
 
 	protected static Log logger = LogFactory.getLog(ZipImport.class);
 
-	private boolean extractTags = false;
+	protected boolean extractTags = false;
 
-	private boolean immediateIndexing = false;
+	protected boolean immediateIndexing = false;
 
-	private int tagsNumber = 3;
+	protected int tagsNumber = 3;
 
-	private String tags;
+	protected String tags;
 
 	public ZipImport() {
 	}
@@ -97,10 +97,10 @@ public class ZipImport {
 			addEntry(files[i], parent);
 		}
 
-//		try {
-//			FileUtils.deleteDirectory(dir);
-//		} catch (IOException e) {
-//		}
+		try {
+			FileUtils.deleteDirectory(dir);
+		} catch (IOException e) {
+		}
 	}
 
 	public void process(String zipsource, Locale locale, Menu parent, long userId, Long templateId) {

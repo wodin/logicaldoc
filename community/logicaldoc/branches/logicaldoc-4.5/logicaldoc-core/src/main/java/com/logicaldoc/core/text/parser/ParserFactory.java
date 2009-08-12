@@ -150,6 +150,36 @@ public class ParserFactory {
 			parser.parse(file, locale);
 		return parser;
 	}
+	
+	
+	
+	public static Parser getParser(String filename, String extension) {
+		if (parsers.isEmpty())
+			init();
+
+		String ext = extension;
+		if (StringUtils.isEmpty(ext)) {
+			ext = FilenameUtils.getExtension(filename);
+		}else{
+			ext=extension.toLowerCase();
+		}
+
+		Parser parser = null;
+		Class parserClass = parsers.get(ext);
+		if (parserClass != null) {
+			try {
+				parser = (Parser) parserClass.newInstance();
+			} catch (Exception e) {
+				log.error(e.getMessage());
+				parser = new TXTParser();
+			}
+		} else {
+			log.warn("No registered parser for extension " + ext);
+			parser = new DummyParser();
+		}
+
+		return parser;
+	}
 
 	/**
 	 * Factory methods for parsers, the correct parser will be instantiated
