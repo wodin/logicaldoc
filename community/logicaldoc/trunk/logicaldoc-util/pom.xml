@@ -45,11 +45,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.sourceforge.jchardet</groupId>
-			<artifactId>jchardet</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.hyperic.sigar</groupId>
 			<artifactId>sigar</artifactId>
 			<version>1.6.3</version>
