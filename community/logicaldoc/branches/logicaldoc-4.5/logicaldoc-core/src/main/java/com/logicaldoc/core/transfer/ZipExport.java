@@ -22,7 +22,6 @@ import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
-import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.Context;
 
 /**
@@ -64,7 +63,7 @@ public class ZipExport {
 		this.startFolderId = folder.getId();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		zos = new ZipOutputStream(bos);
-		zos.setEncoding("Cp850");
+		zos.setEncoding("UTF-8");
 		try {
 			appendChildren(folder, 0);
 		} finally {
@@ -128,8 +127,7 @@ public class ZipExport {
 				is = new FileInputStream(documentFile);
 				bis = new BufferedInputStream(is);
 
-				ZipEntry entry = new ZipEntry(CharsetDetector.convert(getZipEntryPath(folder))
-						+ CharsetDetector.convert(document.getFileName()));
+				ZipEntry entry = new ZipEntry(getZipEntryPath(folder) + document.getFileName());
 				zos.putNextEntry(entry);
 
 				// Transfer bytes from the file to the ZIP file
@@ -170,7 +168,7 @@ public class ZipExport {
 			Menu menu = menus.get(i);
 			if (menu.getId() == startFolderId)
 				break;
-			folderNames.add(CharsetDetector.convert(menu.getText()));
+			folderNames.add(menu.getText());
 		}
 		Collections.reverse(folderNames);
 

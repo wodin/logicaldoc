@@ -7,11 +7,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.util.CharsetDetector;
+import com.logicaldoc.util.charset.CharsetDetector;
+import com.logicaldoc.util.charset.CharsetMatch;
 
 /**
  * Class for parsing text (*.txt) files.
@@ -25,17 +27,20 @@ public class TXTParser extends AbstractParser {
 	protected static Log logger = LogFactory.getLog(TXTParser.class);
 
 	public void parse(File file) {
+		
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(file);
-			
+
 			// Determine the most probable encoding
 			String msEncoding = null;
 			try {
-				String[] encodings = CharsetDetector.detectEncodings(fis);
-				if (encodings != null && encodings.length > 0)
-					msEncoding = encodings[0];
-			} catch (IOException ioe) {
+				CharsetDetector cd = new CharsetDetector();
+				cd.setText(fis);
+				CharsetMatch cm = cd.detect();
+				if (Charset.isSupported(cm.getName()))
+					msEncoding = cm.getName();
+			} catch (Throwable th) {
 			}
 			System.out.println("Detected encoding: " + msEncoding);
 			fis = new FileInputStream(file);
@@ -43,14 +48,13 @@ public class TXTParser extends AbstractParser {
 
 			content = readText(reader, "UTF-8");
 		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
+			logger.warn("Failed to extract TXT text content", ex);
 			content = "";
 		} finally {
 			try {
 				if (fis != null)
 					fis.close();
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}

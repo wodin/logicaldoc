@@ -56,5 +56,21 @@ public class ZipUtilTest {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	@Test
+	public void testGetDetectedEncoding() throws IOException {
+		File zipsource = new File("c:/tmp/zips/testsimple.zip");
+		ZipUtil.detectedEncoding(zipsource);
+	}
+	
+	@Test
+	public void testGetDetectedEncodingUTF8() throws IOException {
+		File zipsource = new File("c:/tmp/zips/htmls.zip");
+		ZipUtil.detectedEncoding(zipsource);
+	}
+	
+	
+	
 
 }

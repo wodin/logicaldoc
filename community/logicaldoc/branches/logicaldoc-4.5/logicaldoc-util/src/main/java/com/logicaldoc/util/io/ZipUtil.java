@@ -1,6 +1,7 @@
 package com.logicaldoc.util.io;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,13 +16,18 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
+import com.logicaldoc.util.charset.CharsetDetector;
+import com.logicaldoc.util.charset.CharsetMatch;
+
 /**
  * This class is for handling with zip-files.
  * 
  * @author Marco Meschieri - Logical Objects
- * @version 4.0
+ * @author Alessandro Gasparini - Logical Objects
+ * @since 4.0
  */
 public class ZipUtil {
+	
 	/**
 	 * This method extracts all entries of a zip-file.
 	 * 
@@ -47,6 +53,35 @@ public class ZipUtil {
 			logError(e.getMessage());
 		}
 		return result;
+	}
+	
+	/**
+	 * 
+	 * @param zipsource Path of the zip-file.
+	 * @return the detected encoding
+	 * @throws IOException 
+	 * @since 4.5.2
+	 */
+	public static String detectedEncoding(File zipsource) throws IOException {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		ZipFile zip = new ZipFile(zipsource);
+		Enumeration entries = zip.getEntries();
+		while (entries.hasMoreElements()) {
+			ZipEntry entry = (ZipEntry) entries.nextElement();
+			String tmp = entry.getName();
+			tmp = tmp.replaceAll("/", " ");
+			sb.append(tmp).append("\n");
+		}
+		
+		// Start charset analysis
+		CharsetDetector icu4jcd = new CharsetDetector();
+		InputStream stream = new ByteArrayInputStream(sb.toString().getBytes());
+		icu4jcd.setText(stream);
+		CharsetMatch cm = icu4jcd.detect();
+		
+		return cm.getName();
 	}
 
 	/**
@@ -239,4 +274,5 @@ public class ZipUtil {
 			logError(e.getMessage());
 		}
 	}
+
 }

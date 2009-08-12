@@ -15,8 +15,6 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 
-import com.logicaldoc.util.CharsetDetector;
-
 public class TXTParserTest extends TestCase  {
 	
 	private String myContent;
@@ -37,11 +35,6 @@ public class TXTParserTest extends TestCase  {
 		}
 
 		fis.close();
-		
-		String[] encodings = CharsetDetector.detectEncodings(sb.toString());
-		for (String enc : encodings) {
-			System.out.println("enc: " + enc);
-		}
 		
 		System.err.println("Finished");
 	}	

@@ -23,7 +23,6 @@ import com.logicaldoc.core.searchengine.store.Storer;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
-import com.logicaldoc.util.CharsetDetector;
 import com.logicaldoc.util.io.FileUtil;
 
 /**
@@ -275,14 +274,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		System.out.println("baseName : " + baseName);
 		log.fatal("baseName : " + baseName);
 		doc.setTitle(baseName);
-		
-		String[] encodings = CharsetDetector.detectEncodings(fileName);
-		if (encodings != null && encodings.length > 0) {
-			for (int i = 0; i < encodings.length; i++) {
-				System.out.println(encodings[i]);
-			}
-		}
-		
 		
 		String conv = new String(fileName.getBytes(), "UTF-8");
 		System.out.println("conv: " + conv);

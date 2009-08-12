@@ -19,7 +19,7 @@ import org.apache.commons.lang.ArrayUtils;
  */
 public class WPFilterInputStream extends FilterInputStream {
 
-	private final static int[] intarry = new int[] { 0x05, 0x06, 0x1a, 0x1b, 0x1c, 0x1d };
+	protected final static int[] intarry = new int[] { 0x05, 0x06, 0x1a, 0x1b, 0x1c, 0x1d };
 
 	// The contents of this class was reverse engineered from example
 	// WordPerfect documents.
