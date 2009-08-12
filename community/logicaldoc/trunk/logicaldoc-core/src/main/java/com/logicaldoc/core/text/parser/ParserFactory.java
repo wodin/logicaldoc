@@ -15,6 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
+import com.logicaldoc.core.text.parser.wordperfect.WordPerfectParser;
 import com.logicaldoc.util.PluginRegistry;
 
 /**
@@ -57,7 +58,7 @@ public class ParserFactory {
 		parsers.put("ods", OpenOfficeParser.class);
 		parsers.put("odp", OpenOfficeParser.class);
 
-		// OpenDocument extensions
+		// OpenDocument template extensions
 		parsers.put("ott", OpenOfficeParser.class);
 		parsers.put("ots", OpenOfficeParser.class);
 		parsers.put("otp", OpenOfficeParser.class);
@@ -68,10 +69,10 @@ public class ParserFactory {
 		parsers.put("kpr", KOfficeParser.class);
 		
 		// WordPerfect
-		parsers.put("wpd", WPDParser.class);
+		parsers.put("wpd", WordPerfectParser.class);
 		
 		// AbiWord http://www.abisource.com/
-		parsers.put("abw", XMLParser.class);
+		parsers.put("abw", AbiWordParser.class);
 		parsers.put("zabw", ZABWParser.class); // Compressed AbiWord document
 
 		parsers.put("txt", TXTParser.class);
@@ -130,9 +131,8 @@ public class ParserFactory {
 			}
 		} else {
 			log.warn("No registered parser for extension " + ext);
-			Magic mimeDetector = new Magic();
 			try {
-				MagicMatch match = mimeDetector.getMagicMatch(file, true);
+				MagicMatch match = Magic.getMagicMatch(file, true);
 				if ("text/plain".equals(match.getMimeType())) {
 					log.warn("Try to parse the file as plain text");
 					parser = new TXTParser();
@@ -148,6 +148,36 @@ public class ParserFactory {
 			parser.parse(file);
 		else
 			parser.parse(file, locale);
+		return parser;
+	}
+	
+	
+	
+	public static Parser getParser(String filename, String extension) {
+		if (parsers.isEmpty())
+			init();
+
+		String ext = extension;
+		if (StringUtils.isEmpty(ext)) {
+			ext = FilenameUtils.getExtension(filename);
+		}else{
+			ext=extension.toLowerCase();
+		}
+
+		Parser parser = null;
+		Class parserClass = parsers.get(ext);
+		if (parserClass != null) {
+			try {
+				parser = (Parser) parserClass.newInstance();
+			} catch (Exception e) {
+				log.error(e.getMessage());
+				parser = new TXTParser();
+			}
+		} else {
+			log.warn("No registered parser for extension " + ext);
+			parser = new DummyParser();
+		}
+
 		return parser;
 	}
 
