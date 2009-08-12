@@ -1,14 +1,16 @@
 package com.logicaldoc.core.text.parser;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.CharArrayReader;
 import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.Reader;
+import java.io.StringReader;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,10 +22,13 @@ import org.pdfbox.pdmodel.PDDocumentInformation;
 import org.pdfbox.util.PDFTextStripper;
 
 /**
- * Parses a PDF document and provides the information. For parsing an external
- * library is used. Created on 4. November 2003, 18:09
+ * Text extractor for Portable Document Format (PDF). 
+ * For parsing uses an external library: PDFBox. 
+ * Created on 4. November 2003, 18:09
  * 
  * @author Michael Scholz
+ * @author Alessandro Gasparini - Logical Objects
+ * @since 3.6
  */
 public class PDFParser extends AbstractParser {
 	
@@ -35,9 +40,10 @@ public class PDFParser extends AbstractParser {
 
 	private String tags;
 
-	protected static Log log = LogFactory.getLog(PDFParser.class);
+	protected static Log logger = LogFactory.getLog(PDFParser.class);
 
 	public void parse(File file) {
+		
 		author = "";
 		title = "";
 		sourceDate = "";
@@ -83,7 +89,7 @@ public class PDFParser extends AbstractParser {
 				try {
 					calendar = information.getCreationDate();
 				} catch (Throwable e) {
-					log.error("Bad date format " + e.getMessage());
+					logger.error("Bad date format " + e.getMessage());
 				}
 				Date date = null;
 
@@ -103,21 +109,22 @@ public class PDFParser extends AbstractParser {
 					tags = "";
 				}
 			} catch (Exception e) {
-				log.error(e.getMessage(), e);
+				logger.error(e.getMessage(), e);
 			}
 
 			// create a tmp output stream with the size of the content.
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8");
 			
-    	PDFTextStripper stripper = new PDFTextStripper();
-    	
+			PDFTextStripper stripper = new PDFTextStripper();
+			
 			try {
 				if (pdfDocument.isEncrypted())
 					throw new IOException("Encripted document");
+				
 				stripper.writeText(pdfDocument, writer);
 			} catch (IOException e) {
-				log.error("Unable to decrypt pdf document");
+				logger.error("Unable to decrypt pdf document");
 				writer.write("encrypted document");
 				title = file.getName().substring(0, file.getName().lastIndexOf('.'));
 				author = "";
@@ -128,14 +135,14 @@ public class PDFParser extends AbstractParser {
 			is.close();
 			out.close();
 		} catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
+			logger.error(ex.getMessage(), ex);
 		} finally {
 			try {
 				if (pdfDocument != null) {
 					pdfDocument.close();
 				}
 			} catch (Exception e) {
-				log.fatal(e.getMessage(), e);
+				logger.error(e.getMessage(), e);
 			}
 		}
 	}
@@ -171,4 +178,41 @@ public class PDFParser extends AbstractParser {
 	public String getTitle() {
 		return title;
 	}
+	
+	
+    /**
+     * {@inheritDoc}
+     */
+    public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
+    	
+        try {
+        	org.pdfbox.pdfparser.PDFParser parser = new org.pdfbox.pdfparser.PDFParser(new BufferedInputStream(stream));
+            try {
+                parser.parse();
+                PDDocument document = parser.getPDDocument();
+                CharArrayWriter writer = new CharArrayWriter();
+
+                PDFTextStripper stripper = new PDFTextStripper();
+                stripper.setLineSeparator("\n");
+                stripper.writeText(document, writer);
+
+                return new CharArrayReader(writer.toCharArray());
+            } finally {
+                try {
+                    PDDocument doc = parser.getPDDocument();
+                    if (doc != null) {
+                        doc.close();
+                    }
+                } catch (IOException e) {
+                }
+            }
+        } catch (Exception e) {
+            // it may happen that PDFParser throws a runtime
+            // exception when parsing certain pdf documents
+            logger.warn("Failed to extract PDF text content", e);
+            return new StringReader("");
+        } finally {
+            stream.close();
+        }
+    }
 }
