@@ -35,6 +35,8 @@ public class InputFileBean implements Renderable {
 	private int percent = -1;
 
 	private String language;
+	
+	private String encoding;
 
 	private File file = null;
 
@@ -265,5 +267,13 @@ public class InputFileBean implements Renderable {
 
 	public void setTemplate(Long template) {
 		this.template = template;
+	}
+
+	public String getEncoding() {
+		return encoding;
+	}
+
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
 	}
 }

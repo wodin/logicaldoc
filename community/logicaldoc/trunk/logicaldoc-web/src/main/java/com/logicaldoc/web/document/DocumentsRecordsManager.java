@@ -31,7 +31,6 @@ import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.transfer.InMemoryZipImport;
-import com.logicaldoc.core.transfer.ZipImport;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.SettingsConfig;
@@ -588,11 +587,17 @@ public class DocumentsRecordsManager extends SortableList {
 					public void run() {
 						//ZipImport importer = new ZipImport();
 						InMemoryZipImport importer = new InMemoryZipImport();
+						
+						String encoding = inputFile.getEncoding();
+						System.out.println("uploadZip() encoding: " + encoding);
+						System.err.println("uploadZip() encoding: " + encoding);
+						
 						importer.setExtractTags(inputFile.isExtractTags());
 						importer.setTags(inputFile.getTags());
 						log.debug("importing: = " + destFile.getPath());
-						importer.process(destFile.getPath(), LocaleUtil.toLocale(zipLanguage), parent, userId,
-								inputFile.getTemplate());
+						//importer.process(destFile.getPath(), LocaleUtil.toLocale(zipLanguage), parent, userId, inputFile.getTemplate());
+						
+						importer.process(destFile, LocaleUtil.toLocale(zipLanguage), parent, userId, inputFile.getTemplate(), encoding);
 						try {
 							FileUtils.forceDelete(destFile);
 						} catch (IOException e) {

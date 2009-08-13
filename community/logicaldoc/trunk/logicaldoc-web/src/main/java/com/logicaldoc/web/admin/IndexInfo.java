@@ -78,11 +78,8 @@ public class IndexInfo {
 	 */
 	public String recreate() {
 		if (SessionManagement.isValid()) {
-			final SettingsConfig conf = (SettingsConfig) Context.getInstance()
-					.getBean(SettingsConfig.class);
 			try {
-				Indexer indexer = (Indexer) Context.getInstance().getBean(
-						Indexer.class);
+				Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 				indexer.recreateIndexes();
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);

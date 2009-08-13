@@ -1,5 +1,7 @@
 package com.logicaldoc.web;
 
+import java.nio.charset.Charset;
+import java.nio.charset.spi.CharsetProvider;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -201,5 +203,29 @@ public class SelectionTagsBean {
 				new SelectItem(60 * 15, Messages.getMessage("task.scheduling.maxlength.fifteenminutes")),
 				new SelectItem(60 * 60, Messages.getMessage("task.scheduling.maxlength.onehour")),
 				new SelectItem(60 * 60 * 5, Messages.getMessage("task.scheduling.maxlength.fivehours")) };
+	}
+	
+	/**
+	 * Gets the option items for Zip encoding
+	 */
+	public SelectItem[] getEncodings() {
+		String platformEncoding = System.getProperty("file.encoding");
+		Charset ce = Charset.forName(platformEncoding);
+		
+		return new SelectItem[] {
+				new SelectItem("UTF8", "UTF-8"),
+				new SelectItem(platformEncoding, ce.name()),
+				new SelectItem("ISO8859_1", "ISO-8859-1"),
+				new SelectItem("ISO8859_5", "ISO-8859-5"),
+				new SelectItem("ISO8859_7", "ISO-8859-7"),
+				new SelectItem("GB18030", "GB18030"),
+				new SelectItem("EUC_CN", "GB2312"),
+				new SelectItem("EUC_JP", "EUC-JP"),
+				new SelectItem("SJIS", "Shift_JIS"),
+				new SelectItem("EUC_KR", "EUC-KR"),
+				new SelectItem("Cp1252", "windows-1252"),
+				new SelectItem("Cp1250", "windows-1250"),
+				new SelectItem("Cp1253", "windows-1253")
+				};
 	}
 }
