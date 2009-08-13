@@ -48,6 +48,6 @@ public abstract class ExtensibleObject extends PersistentObject {
 
 	public void removeAttribute(String name) {
 		if(attributes.containsKey(name))
-			attributes.remove(name)
+			attributes.remove(name);
 	}
 }
