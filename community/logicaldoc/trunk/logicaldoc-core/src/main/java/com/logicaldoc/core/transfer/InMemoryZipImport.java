@@ -3,6 +3,7 @@ package com.logicaldoc.core.transfer;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Set;
@@ -84,7 +85,6 @@ public class InMemoryZipImport extends ZipImport {
 	protected void addEntry(ZipFile zip, ZipEntry ze, Menu parent) throws ZipException, IOException {
 		
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		System.out.println("ze.getName(): " + ze);
 
 		if (ze.isDirectory()) { 
 			// creates a logicaldoc folder
@@ -106,15 +106,16 @@ public class InMemoryZipImport extends ZipImport {
 
 				// also extract tags and save on document
 				Parser parser = ParserFactory.getParser(filename, null);
-				parser.extractText(stream, null, null);
+				Reader reader = parser.extractText(stream, null, null);
 
 				String words = parser.getTags();
 				if (StringUtils.isEmpty(words)) {
 					try {
-						words = analyzer.getTermsAsString(tagsNumber, parser.getContent(), locale);
+						String text = parser.readText(reader, "UTF-8");
+						words = analyzer.getTermsAsString(tagsNumber, text, locale);
 					} catch (Exception e) {
-						logger.error(e.getMessage(), e);
-					}
+						logger.error("Error in text extraction from document", e);
+					} 
 				}
 				tagSet = TagUtil.extractTags(words);
 			} else if (StringUtils.isNotEmpty(tags)) {
@@ -124,11 +125,6 @@ public class InMemoryZipImport extends ZipImport {
 			// creates a document
 			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 			try {
-				// 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
-				// 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-				// 			String versionDesc, Set<String> tags, Long templateId, Map<String, String> extendedAttributes, boolean immediateIndexing) throws Exception {
-				System.out.println("start creation");
-				
 				// Reopen the stream (the parser has closed it)
 				stream = zip.getInputStream(ze);
 				docManager.create(stream, filename, documentPath, user, locale, doctitle, null, "", "", "", "", "", tagSet, templateId, null, immediateIndexing);
