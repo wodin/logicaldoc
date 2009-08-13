@@ -35,6 +35,20 @@
 					<br />
 				</ice:panelGroup>
 			</ice:panelGrid>
+			
+			<!-- ZIP Encoding selection -->
+			<ice:panelGrid columns="2">
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="encod" value="#{msgs['encoding']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:selectOneMenu id="encod" styleClass="selectTagMenu"
+						value="#{inputFile.encoding}">
+						<f:selectItems value="#{selectionTags.encodings}" />
+					</ice:selectOneMenu>
+					<br />
+				</ice:panelGroup>
+			</ice:panelGrid>
 
 
 			<!-- Template selection -->
