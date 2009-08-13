@@ -1,7 +1,6 @@
 package com.logicaldoc.web;
 
 import java.nio.charset.Charset;
-import java.nio.charset.spi.CharsetProvider;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,6 +27,7 @@ import com.logicaldoc.web.i18n.Messages;
  * <p>
  */
 public class SelectionTagsBean {
+	
 	private static SelectItem[] languages;
 
 	private SelectItem[] viewModesBrowsing;
@@ -209,23 +209,26 @@ public class SelectionTagsBean {
 	 * Gets the option items for Zip encoding
 	 */
 	public SelectItem[] getEncodings() {
+		
 		String platformEncoding = System.getProperty("file.encoding");
 		Charset ce = Charset.forName(platformEncoding);
 		
 		return new SelectItem[] {
-				new SelectItem("UTF8", "UTF-8"),
-				new SelectItem(platformEncoding, ce.name()),
-				new SelectItem("ISO8859_1", "ISO-8859-1"),
-				new SelectItem("ISO8859_5", "ISO-8859-5"),
-				new SelectItem("ISO8859_7", "ISO-8859-7"),
-				new SelectItem("GB18030", "GB18030"),
-				new SelectItem("EUC_CN", "GB2312"),
-				new SelectItem("EUC_JP", "EUC-JP"),
-				new SelectItem("SJIS", "Shift_JIS"),
-				new SelectItem("EUC_KR", "EUC-KR"),
-				new SelectItem("Cp1252", "windows-1252"),
-				new SelectItem("Cp1250", "windows-1250"),
-				new SelectItem("Cp1253", "windows-1253")
+				new SelectItem("UTF8", "UTF-8"), // Eight-bit Unicode (or UCS) Transformation Format 
+				new SelectItem(platformEncoding, ce.name()), // Default plaform encoding for file names
+				new SelectItem("ISO8859_1", "ISO-8859-1"), // ISO-8859-1, Latin Alphabet No. 1 
+				new SelectItem("ISO8859_5", "ISO-8859-5"), // Latin/Cyrillic Alphabet 
+				new SelectItem("ISO8859_6", "ISO-8859-6"), // Latin/Arabic Alphabet 
+				new SelectItem("ISO8859_7", "ISO-8859-7"), // Latin/Greek Alphabet (ISO-8859-7:2003) 
+				new SelectItem("GB18030", "GB18030"), // Simplified Chinese, PRC standard 
+				new SelectItem("EUC_CN", "GB2312"), // GB2312, EUC encoding, Simplified Chinese 
+				new SelectItem("EUC_JP", "EUC-JP"), // JISX 0201, 0208 and 0212, EUC encoding Japanese 
+				new SelectItem("SJIS", "Shift_JIS"), // Shift-JIS, Japanese 
+				new SelectItem("EUC_KR", "EUC-KR"), // KS C 5601, EUC encoding, Korean
+				new SelectItem("Cp1250", "windows-1250"), // Windows Eastern European 
+				new SelectItem("Cp1252", "windows-1252"), // Windows Latin-1 
+				new SelectItem("Cp1253", "windows-1253"), // Windows Greek 
+				new SelectItem("Cp1256", "windows-1256") // Windows Arabic 
 				};
 	}
 }
