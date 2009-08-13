@@ -9,6 +9,9 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Abstract implementation of a Parser
  * 
@@ -17,6 +20,8 @@ import java.util.Locale;
  * @since 3.5
  */
 public abstract class AbstractParser implements Parser {
+	
+	protected static Log logger = LogFactory.getLog(AbstractParser.class);
 	
 	protected String content = "";
 
@@ -55,7 +60,7 @@ public abstract class AbstractParser implements Parser {
 		parse(file);
 	}
 
-	protected String readText(Reader reader, String encoding) throws IOException {
+	public String readText(Reader reader, String encoding) throws IOException {
 	
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
@@ -73,7 +78,7 @@ public abstract class AbstractParser implements Parser {
 			osw.flush();
 			osw.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Unable to extract text from document", e);
 			return "";
 		} finally {
 			reader.close();
