@@ -59,4 +59,6 @@ public interface Parser {
      */
     public Reader extractText(InputStream stream, String type, String encoding)
         throws IOException;
+    
+    public String readText(Reader reader, String encoding) throws IOException;
 }
