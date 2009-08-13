@@ -3,7 +3,6 @@ package com.logicaldoc.core.transfer;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Set;
@@ -28,9 +27,10 @@ import com.logicaldoc.util.TagUtil;
 
 /**
  * This is an import utilities that imports documents stored in a zip archive.
- * The entire import process is followed in memory, to replicate correctly the names of directories and documents when they contain native characters.
- * All folders in the zip will be replicated.
- * Also, if required the parsing of documents is executed for the extraction of the tags of the documents.
+ * The entire import process is followed in memory, to replicate correctly the
+ * names of directories and documents when they contain native characters. All
+ * folders in the zip will be replicated. Also, if required the parsing of
+ * documents is executed for the extraction of the tags of the documents.
  * 
  * @author Alessandro Gasparini - Logical Objects
  * @since 4.5.2
@@ -48,15 +48,15 @@ public class InMemoryZipImport extends ZipImport {
 	}
 
 	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId, String encoding) {
-		
+
 		this.locale = locale;
 		this.templateId = templateId;
-		
+
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		this.user = userDao.findById(userId);
 
 		logger.debug("Using encoding: " + encoding);
-		
+
 		try {
 			ZipFile zip = new ZipFile(zipsource, encoding);
 			Enumeration zipEntries = zip.getEntries();
@@ -74,34 +74,34 @@ public class InMemoryZipImport extends ZipImport {
 		}
 	}
 
-
 	/**
 	 * Stores a file in the repository of LogicalDOC and inserts some
-	 * information in the database of LogicalDOC (menu, document, filename, title, tags, templateid, created user, locale)
+	 * information in the database of LogicalDOC (menu, document, filename,
+	 * title, tags, templateid, created user, locale)
 	 * 
 	 * @param zis
 	 * @param file
 	 * @param ze
-	 * @throws IOException 
-	 * @throws ZipException 
+	 * @throws IOException
+	 * @throws ZipException
 	 */
 	protected void addEntry(ZipFile zip, ZipEntry ze, Menu parent) throws ZipException, IOException {
-		
+
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
-		if (ze.isDirectory()) { 
+		if (ze.isDirectory()) {
 			// creates a logicaldoc folder
 			String folderPath = FilenameUtils.getFullPathNoEndSeparator(ze.getName());
-            dao.createFolders(parent, folderPath);
+			dao.createFolders(parent, folderPath);
 		} else {
 			InputStream stream = zip.getInputStream(ze);
 			File docFile = new File(ze.getName());
 			String filename = docFile.getName();
 			String doctitle = FilenameUtils.getBaseName(filename);
-			
+
 			// ensure to have the proper folder to upload the file into
 			String folderPath = FilenameUtils.getFullPathNoEndSeparator(ze.getName());
-            Menu documentPath = dao.createFolders(parent, folderPath);
+			Menu documentPath = dao.createFolders(parent, folderPath);
 
 			Set<String> tagSet = null;
 			if (extractTags) {
@@ -109,17 +109,17 @@ public class InMemoryZipImport extends ZipImport {
 
 				// also extract tags and save on document
 				Parser parser = ParserFactory.getParser(filename, null);
-				// This reader will be automatically closed by method parser.readText
-				Reader reader = parser.extractText(stream, null, null);
-
+				// This reader will be automatically closed by method
+				// parser.readText
+				parser.parse(stream, null, null);
 				String words = parser.getTags();
 				if (StringUtils.isEmpty(words)) {
 					try {
-						String text = parser.readText(reader, "UTF-8");
+						String text = parser.getContent();
 						words = analyzer.getTermsAsString(tagsNumber, text, locale);
 					} catch (Exception e) {
 						logger.error("Error in text extraction from document", e);
-					} 
+					}
 				}
 				tagSet = TagUtil.extractTags(words);
 			} else if (StringUtils.isNotEmpty(tags)) {
@@ -131,7 +131,8 @@ public class InMemoryZipImport extends ZipImport {
 			try {
 				// Reopen the stream (the parser has closed it)
 				stream = zip.getInputStream(ze);
-				docManager.create(stream, filename, documentPath, user, locale, doctitle, null, "", "", "", "", "", tagSet, templateId, null, immediateIndexing);
+				docManager.create(stream, filename, documentPath, user, locale, doctitle, null, "", "", "", "", "",
+						tagSet, templateId, null, immediateIndexing);
 			} catch (Exception e) {
 				logger.error("InMemoryZipImport addEntry failed", e);
 			} finally {

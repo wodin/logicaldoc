@@ -1,11 +1,8 @@
 package com.logicaldoc.core.text.parser;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.io.StringReader;
+import java.util.Locale;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -18,6 +15,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.logicaldoc.util.StringUtil;
+
 /**
  * Text extractor for AbiWord documents.
  * 
@@ -26,41 +25,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class AbiWordParser extends AbstractParser {
 
-	protected static Log logger = LogFactory.getLog(AbiWordParser.class);
-
-	public void parse(File file) {
-		try {
-			FileInputStream stream = new FileInputStream(file);
-			Reader reader = extractText(stream, null, null);
-			content = readText(reader, "UTF-8");
-		} catch (Exception ex) {
-			logger.warn("Failed to extract AbiWord text content", ex);
-		} 
-	}
-	
-	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
-		try {
-				SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-				saxParserFactory.setValidating(false);
-				SAXParser saxParser = saxParserFactory.newSAXParser();
-				XMLReader xmlReader = saxParser.getXMLReader();
-				xmlReader.setFeature("http://xml.org/sax/features/validation", false);
-				xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-
-				AbiWordContentHandler contentHandler = new AbiWordContentHandler();
-				xmlReader.setContentHandler(contentHandler);
-				xmlReader.parse(new InputSource(stream));
-				
-				return new StringReader(contentHandler.getContent());
-		} catch (Exception e) {
-			logger.warn("Failed to extract AbiWord text content", e);
-			return new StringReader("");
-		} finally{
-			stream.close();
-		}
-	}
-
-	// --------------------------------------------< AbiWordContentHandler >
+	protected static Log log = LogFactory.getLog(AbiWordParser.class);
 
 	private class AbiWordContentHandler extends DefaultHandler {
 
@@ -104,4 +69,23 @@ public class AbiWordParser extends AbstractParser {
 		}
 	}
 
+	@Override
+	public void parse(InputStream input, Locale locale, String encoding) {
+		try {
+			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+			saxParserFactory.setValidating(false);
+			SAXParser saxParser = saxParserFactory.newSAXParser();
+			XMLReader xmlReader = saxParser.getXMLReader();
+			xmlReader.setFeature("http://xml.org/sax/features/validation", false);
+			xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+
+			AbiWordContentHandler contentHandler = new AbiWordContentHandler();
+			xmlReader.setContentHandler(contentHandler);
+			xmlReader.parse(new InputSource(input));
+
+			content = StringUtil.writeToString(new StringReader(contentHandler.getContent()));
+		} catch (Exception e) {
+			log.warn("Failed to extract AbiWord text content", e);
+		}
+	}
 }

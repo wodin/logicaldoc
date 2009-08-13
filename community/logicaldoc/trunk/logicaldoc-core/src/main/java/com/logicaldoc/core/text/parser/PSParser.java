@@ -1,16 +1,16 @@
 package com.logicaldoc.core.text.parser;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.StringReader;
+import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.logicaldoc.util.StringUtil;
 
 /**
  * @author Michael Scholz
@@ -18,25 +18,10 @@ import org.apache.commons.logging.LogFactory;
  * @since 3.6
  */
 public class PSParser extends AbstractParser {
-	
-	protected static Log logger = LogFactory.getLog(PSParser.class);
 
-	private String version = "";
+	protected static Log log = LogFactory.getLog(PSParser.class);
 
-	private BufferedReader reader;
-
-	public void parse(File file) {
-		try {
-			InputStream stream = new FileInputStream(file);
-			Reader reader = extractText(stream, null, null);
-			content = readText(reader, "UTF-8");
-		} catch (Exception ex) {
-			logger.warn("Failed to extract PostScript text content", ex);
-		}
-	}
-
-	private String parse_v2() throws IOException {
-		
+	private String parse_v2(BufferedReader reader) throws IOException {
 		boolean isComment = false;
 		boolean isText = false;
 		boolean isConnector = false;
@@ -77,8 +62,8 @@ public class PSParser extends AbstractParser {
 		return sb.toString();
 	}
 
-	private String parse_v3() throws IOException {
-		
+	private String parse_v3(BufferedReader reader) throws IOException {
+
 		StringBuilder stmt = new StringBuilder();
 		boolean isComment = false;
 		boolean isText = false;
@@ -140,13 +125,11 @@ public class PSParser extends AbstractParser {
 		return sb.toString();
 	}
 
-	public String getVersion() {
-		return version;
-	}
-
-	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
+	@Override
+	public void parse(InputStream input, Locale locale, String encoding) {
 		try {
-			reader = new BufferedReader(new InputStreamReader(stream));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+			String version = "";
 
 			String line = reader.readLine();
 			String textExtracted = "";
@@ -154,19 +137,16 @@ public class PSParser extends AbstractParser {
 				version = line.substring(line.length() - 3);
 
 				if (version.startsWith("2")) {
-					textExtracted = parse_v2();
+					textExtracted = parse_v2(reader);
 				}
 
 				if (version.startsWith("3")) {
-					textExtracted = parse_v3();
+					textExtracted = parse_v3(reader);
 				}
 			}
-			return new StringReader(textExtracted);
+			content = StringUtil.writeToString(new StringReader(textExtracted));
 		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
-			return new StringReader("");
-		} finally {
-			stream.close();
+			log.error(ex.getMessage(), ex);
 		}
 	}
 }

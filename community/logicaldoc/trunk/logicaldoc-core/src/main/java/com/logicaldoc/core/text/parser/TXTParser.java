@@ -5,13 +5,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.charset.CharsetDetector;
 import com.logicaldoc.util.charset.CharsetMatch;
 
@@ -24,33 +26,34 @@ import com.logicaldoc.util.charset.CharsetMatch;
  */
 public class TXTParser extends AbstractParser {
 
-	protected static Log logger = LogFactory.getLog(TXTParser.class);
+	protected static Log log = LogFactory.getLog(TXTParser.class);
 
-	public void parse(File file) {
-
+	@Override
+	public void parse(File file, Locale locale, String encoding) {
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(file);
 
-			// Determine the most probable encoding
 			String msEncoding = null;
-			try {
-				CharsetDetector cd = new CharsetDetector();
-				cd.setText(fis);
-				CharsetMatch cm = cd.detect();
-				if (cm != null) {
-					if (Charset.isSupported(cm.getName()))
-						msEncoding = cm.getName();
+			if (StringUtils.isEmpty(encoding)) {
+				// Determine the most probable encoding
+				try {
+					CharsetDetector cd = new CharsetDetector();
+					cd.setText(fis);
+					CharsetMatch cm = cd.detect();
+					if (cm != null) {
+						if (Charset.isSupported(cm.getName()))
+							msEncoding = cm.getName();
+					}
+				} catch (Throwable th) {
 				}
-			} catch (Throwable th) {
+			} else {
+				msEncoding = encoding;
 			}
-			System.out.println("Detected encoding: " + msEncoding);
 			fis = new FileInputStream(file);
-			Reader reader = extractText(fis, null, msEncoding);
-
-			content = readText(reader, "UTF-8");
+			parse(fis, locale, msEncoding);
 		} catch (Exception ex) {
-			logger.warn("Failed to extract TXT text content", ex);
+			log.warn("Failed to extract TXT text content", ex);
 			content = "";
 		} finally {
 			try {
@@ -61,31 +64,16 @@ public class TXTParser extends AbstractParser {
 		}
 	}
 
-	/**
-	 * Wraps the given input stream to an {@link InputStreamReader} using the
-	 * given encoding, or the platform default encoding if the encoding is not
-	 * given or is unsupported.
-	 * 
-	 * @param stream
-	 *            binary stream
-	 * @param type
-	 *            ignored
-	 * @param encoding
-	 *            character encoding, optional
-	 * @return reader for the plain text content
-	 * @throws IOException
-	 *             if the binary stream can not be closed in case of an encoding
-	 *             issue
-	 */
-	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
+	@Override
+	public void parse(InputStream input, Locale locale, String encoding) {
 		try {
-			if (encoding != null) {
-				return new InputStreamReader(stream, encoding);
-			}
+			if (encoding != null)
+				content = StringUtil.writeToString(new InputStreamReader(input, encoding));
 		} catch (UnsupportedEncodingException e) {
-			logger.warn("Unsupported encoding '" + encoding + "', using default ("
-					+ System.getProperty("file.encoding") + ") instead.");
+			log.warn("Unsupported encoding '" + encoding + "', using default (" + System.getProperty("file.encoding")
+					+ ") instead.");
+		} catch (IOException e) {
+			log.warn(e.getMessage(), e);
 		}
-		return new InputStreamReader(stream);
 	}
 }

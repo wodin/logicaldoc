@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
+import java.util.Locale;
 import java.util.zip.GZIPInputStream;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -19,44 +19,38 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ZABWParser extends AbstractParser {
 
-	protected static Log logger = LogFactory.getLog(ZABWParser.class);
+	protected static Log log = LogFactory.getLog(ZABWParser.class);
 
-	public void parse(File file) {
+	@Override
+	public void parse(File file, Locale locale, String encoding) {
+		String enc = "UTF-8";
+		if (StringUtils.isNotEmpty(encoding))
+			enc = encoding;
 
-		System.err.println(file);
 		FileInputStream stream = null;
 		try {
 			stream = new FileInputStream(file);
 			GZIPInputStream gis = new GZIPInputStream(stream);
-
-			String encoding = "UTF-8";
-			Reader reader = extractText(gis, null, encoding);
-
-			content = readText(reader, encoding);
-
+			parse(gis, null, enc);
 		} catch (Exception ex) {
-			logger.warn("Failed to extract Compressed AbiWord text content", ex);
+			log.warn("Failed to extract Compressed AbiWord text content", ex);
 		} finally {
 			try {
 				if (stream != null)
 					stream.close();
 			} catch (IOException e) {
-				//e.printStackTrace();
 			}
 		}
 	}
 
-	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
+	@Override
+	public void parse(InputStream input, Locale locale, String encoding) {
 		try {
 			AbiWordParser parser = new AbiWordParser();
-			Reader reader = parser.extractText(stream, type, encoding);
-			return reader;
+			parser.parse(input, locale, encoding);
+			content = parser.getContent();
 		} catch (Exception e) {
-			logger.warn("Failed to extract AbiWord Compressed zabw text content", e);
-			return new StringReader("");
-		} finally {
-			stream.close();
+			log.warn("Failed to extract AbiWord Compressed zabw text content", e);
 		}
 	}
-
 }
