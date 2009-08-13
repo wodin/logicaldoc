@@ -20,14 +20,14 @@ import com.logicaldoc.util.charset.CharsetMatch;
  * 
  * @author Michael Scholz
  * @author Alessandro Gasparini - Logical Objects
- * @since 3.6
+ * @since 3.5
  */
 public class TXTParser extends AbstractParser {
 
 	protected static Log logger = LogFactory.getLog(TXTParser.class);
 
 	public void parse(File file) {
-		
+
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(file);
@@ -38,8 +38,10 @@ public class TXTParser extends AbstractParser {
 				CharsetDetector cd = new CharsetDetector();
 				cd.setText(fis);
 				CharsetMatch cm = cd.detect();
-				if (Charset.isSupported(cm.getName()))
-					msEncoding = cm.getName();
+				if (cm != null) {
+					if (Charset.isSupported(cm.getName()))
+						msEncoding = cm.getName();
+				}
 			} catch (Throwable th) {
 			}
 			System.out.println("Detected encoding: " + msEncoding);
