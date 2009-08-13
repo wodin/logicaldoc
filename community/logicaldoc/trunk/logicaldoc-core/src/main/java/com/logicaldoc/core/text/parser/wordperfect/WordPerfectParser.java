@@ -23,7 +23,7 @@ public class WordPerfectParser extends AbstractParser {
 		try {
 			WPStringExtractor extractor = new WPStringExtractor();
 			String text = extractor.extract(input).trim();
-			StringUtil.writeToString(new StringReader(text));
+			content = StringUtil.writeToString(new StringReader(text));
 		} catch (Exception e) {
 			log.warn("Failed to extract WordPerfect text content", e);
 		}
