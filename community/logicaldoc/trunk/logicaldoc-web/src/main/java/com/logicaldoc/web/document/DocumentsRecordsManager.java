@@ -585,18 +585,13 @@ public class DocumentsRecordsManager extends SortableList {
 				// Prepare the import thread
 				Thread zipImporter = new Thread(new Runnable() {
 					public void run() {
-						//ZipImport importer = new ZipImport();
 						InMemoryZipImport importer = new InMemoryZipImport();
 						
 						String encoding = inputFile.getEncoding();
-						System.out.println("uploadZip() encoding: " + encoding);
-						System.err.println("uploadZip() encoding: " + encoding);
 						
 						importer.setExtractTags(inputFile.isExtractTags());
 						importer.setTags(inputFile.getTags());
 						log.debug("importing: = " + destFile.getPath());
-						//importer.process(destFile.getPath(), LocaleUtil.toLocale(zipLanguage), parent, userId, inputFile.getTemplate());
-						
 						importer.process(destFile, LocaleUtil.toLocale(zipLanguage), parent, userId, inputFile.getTemplate(), encoding);
 						try {
 							FileUtils.forceDelete(destFile);
