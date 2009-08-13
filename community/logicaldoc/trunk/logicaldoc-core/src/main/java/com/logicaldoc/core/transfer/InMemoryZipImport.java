@@ -28,7 +28,9 @@ import com.logicaldoc.util.TagUtil;
 
 /**
  * This is an import utilities that imports documents stored in a zip archive.
+ * The entire import process is followed in memory, to replicate correctly the names of directories and documents when they contain native characters.
  * All folders in the zip will be replicated.
+ * Also, if required the parsing of documents is executed for the extraction of the tags of the documents.
  * 
  * @author Alessandro Gasparini - Logical Objects
  * @since 4.5.2
@@ -39,7 +41,7 @@ public class InMemoryZipImport extends ZipImport {
 
 	public InMemoryZipImport() {
 	}
-	
+
 	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId) {
 		// process the files in the zip using UTF-8 encoding for file names
 		process(zipsource, locale, parent, userId, templateId, "UTF-8");
@@ -53,7 +55,7 @@ public class InMemoryZipImport extends ZipImport {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		this.user = userDao.findById(userId);
 
-		System.out.println("Using encoding: " + encoding);
+		logger.debug("Using encoding: " + encoding);
 		
 		try {
 			ZipFile zip = new ZipFile(zipsource, encoding);
@@ -61,7 +63,11 @@ public class InMemoryZipImport extends ZipImport {
 			ZipEntry zipe = null;
 			while (zipEntries.hasMoreElements()) {
 				zipe = (ZipEntry) zipEntries.nextElement();
-				addEntry(zip, zipe, parent);
+				try {
+					addEntry(zip, zipe, parent);
+				} catch (IOException e) {
+					logger.warn("InMemoryZipImport unable to import ZIP entry", e);
+				}
 			}
 		} catch (IOException e) {
 			logger.error("InMemoryZipImport process failed", e);
@@ -70,15 +76,12 @@ public class InMemoryZipImport extends ZipImport {
 
 
 	/**
-	 * Stores a file in the repository of logicaldoc and inserts some
-	 * information in the database of logicaldoc (menu, document, version,
-	 * history, searchdocument).
+	 * Stores a file in the repository of LogicalDOC and inserts some
+	 * information in the database of LogicalDOC (menu, document, filename, title, tags, templateid, created user, locale)
 	 * 
 	 * @param zis
-	 * 
 	 * @param file
-	 * @param parent
-	 * @param encoding 
+	 * @param ze
 	 * @throws IOException 
 	 * @throws ZipException 
 	 */
@@ -106,6 +109,7 @@ public class InMemoryZipImport extends ZipImport {
 
 				// also extract tags and save on document
 				Parser parser = ParserFactory.getParser(filename, null);
+				// This reader will be automatically closed by method parser.readText
 				Reader reader = parser.extractText(stream, null, null);
 
 				String words = parser.getTags();
