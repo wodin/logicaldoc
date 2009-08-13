@@ -45,4 +45,9 @@ public abstract class ExtensibleObject extends PersistentObject {
 	public Set<String> getAttributeNames() {
 		return attributes.keySet();
 	}
+
+	public void removeAttribute(String name) {
+		if(attributes.containsKey(name))
+			attributes.remove(name)
+	}
 }
