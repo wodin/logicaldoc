@@ -1,10 +1,7 @@
 package com.logicaldoc.core.text.parser;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
+import java.util.Locale;
 
 /**
  * Parser that doesn't parse anything
@@ -13,11 +10,10 @@ import java.io.StringReader;
  * @since 4.0
  */
 public class DummyParser extends AbstractParser {
-	
-	public void parse(File file) {
+
+	@Override
+	public void parse(InputStream input, Locale locale, String encoding) {
+		content = "";
 	}
 
-	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
-		return new StringReader("");
-	}
 }

@@ -1,15 +1,16 @@
 package com.logicaldoc.core.text.parser;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hwpf.extractor.WordExtractor;
+
+import com.logicaldoc.util.StringUtil;
 
 /**
  * Parses a MS Word (*.doc, *.dot) file to extract the text contained in the
@@ -25,25 +26,7 @@ import org.apache.poi.hwpf.extractor.WordExtractor;
  * @since 3.6
  */
 public class DOCParser extends AbstractParser {
-
-	protected static Log logger = LogFactory.getLog(DOCParser.class);
-
-	/**
-	 * This function actually parses the doc file using the HWPF library. The
-	 * text content is stored in the class member variable content.
-	 * 
-	 * @param file
-	 *            The MS Word (*.doc, *.dot) file to be parsed.
-	 */
-	public void parse(File file) {
-		try {
-			FileInputStream stream = new FileInputStream(file);
-			Reader reader = extractText(stream, null, null);
-			content = readText(reader, "UTF-8");
-		} catch (Exception ex) {
-			logger.warn("Failed to extract Word text content", ex);
-		}
-	}
+	protected static Log log = LogFactory.getLog(DOCParser.class);
 
 	/**
 	 * {@inheritDoc} Returns an empty reader if an error occured extracting text
@@ -59,10 +42,24 @@ public class DOCParser extends AbstractParser {
 
 			return new StringReader(tmp);
 		} catch (Exception e) {
-			logger.warn("Failed to extract Word text content", e);
+			log.warn("Failed to extract Word text content", e);
 			return new StringReader("");
 		} finally {
 			stream.close();
+		}
+	}
+
+	@Override
+	public void parse(InputStream input, Locale locale, String encoding) {
+		try {
+			String tmp = new WordExtractor(input).getText();
+
+			// Replace Control characters
+			if (tmp != null)
+				tmp = tmp.replaceAll("\\p{Cntrl} && ^\\n", " ");
+			content = StringUtil.writeToString(new StringReader(tmp));
+		} catch (Exception e) {
+			log.warn("Failed to extract Word text content", e);
 		}
 	}
 }

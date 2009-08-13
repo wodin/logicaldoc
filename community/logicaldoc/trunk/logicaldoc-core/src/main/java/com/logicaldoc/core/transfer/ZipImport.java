@@ -134,7 +134,7 @@ public class ZipImport {
 
 				// also extract tags and save on document
 				Parser parser = ParserFactory.getParser(file, locale);
-				parser.parse(file);
+				parser.parse(file, locale, null);
 				String words = parser.getTags();
 				if (StringUtils.isEmpty(words)) {
 					try {
@@ -151,8 +151,8 @@ public class ZipImport {
 			// creates a document
 			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 			try {
-				docManager.create(file, file.getName(), parent, user, locale, "", null, "", "", "", "", "", tagSet, templateId, null,
-						immediateIndexing);
+				docManager.create(file, file.getName(), parent, user, locale, "", null, "", "", "", "", "", tagSet,
+						templateId, null, immediateIndexing);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}

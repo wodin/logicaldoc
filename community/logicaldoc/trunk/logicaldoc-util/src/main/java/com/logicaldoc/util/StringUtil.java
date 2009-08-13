@@ -1,6 +1,14 @@
 package com.logicaldoc.util;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.util.ArrayList;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Some utility methods specialized in string manipulation
@@ -45,5 +53,51 @@ public class StringUtil {
 			buf.add(src.substring(i, j));
 		}
 		return buf.toArray(new String[] {});
+	}
+
+	/**
+	 * Writes to UFT-8 encoding.
+	 */
+	public static String writeToString(Reader reader) throws IOException {
+		return writeToString(reader, "UTF-8");
+	}
+
+	/**
+	 * Writes the content from the reader in a string encoded as specified.
+	 * 
+	 * @param reader Attention, this will be closed at the end of invocation
+	 * @param targetEncoding The output string encoding
+	 * @return The encoded string
+	 * @throws IOException
+	 */
+	public static String writeToString(Reader reader, String targetEncoding) throws IOException {
+		String enc = "UTF-8";
+		if (StringUtils.isNotEmpty(targetEncoding))
+			enc = targetEncoding;
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		OutputStreamWriter osw = null;
+		try {
+			baos = new ByteArrayOutputStream();
+			osw = new OutputStreamWriter(baos, enc);
+			BufferedWriter bw = new BufferedWriter(osw);
+			BufferedReader br = new BufferedReader(reader);
+			String inputLine;
+			while ((inputLine = br.readLine()) != null) {
+				bw.write(inputLine);
+				bw.newLine();
+			}
+			bw.flush();
+			osw.flush();
+			return new String(baos.toByteArray(), enc);
+		} finally {
+			try {
+				if (reader != null)
+					reader.close();
+				if (osw != null)
+					osw.close();
+			} catch (IOException e) {
+			}
+		}
 	}
 }

@@ -282,7 +282,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// Parses the file where it is already stored
 		Locale locale = doc.getLocale();
-		Parser parser = ParserFactory.getParser(file, locale, FilenameUtils.getExtension(doc.getFileName()));
+		Parser parser = ParserFactory.getParser(file, locale, null, FilenameUtils.getExtension(doc.getFileName()));
 
 		// and gets some fields
 		if (parser != null) {
@@ -567,7 +567,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setTags(tags);
 
 			/* Set template and extended attributes */
-			if (templateId != null && templateId.longValue()!=0) {
+			if (templateId != null && templateId.longValue() != 0) {
 				DocumentTemplate template = documentTemplateDAO.findById(templateId);
 				// Get the list of template attributes with a mandatory
 				// value

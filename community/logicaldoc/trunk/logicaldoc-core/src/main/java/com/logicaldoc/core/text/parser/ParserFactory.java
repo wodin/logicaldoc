@@ -25,7 +25,7 @@ import com.logicaldoc.util.PluginRegistry;
  * @author Michael Scholz
  */
 public class ParserFactory {
-	
+
 	protected static Log log = LogFactory.getLog(ParserFactory.class);
 
 	// This is the list of registered parsers: key is the file extension, value
@@ -41,7 +41,7 @@ public class ParserFactory {
 		// First of all register all standard parsers
 		parsers.put("doc", DOCParser.class);
 		parsers.put("dot", DOCParser.class);
-		
+
 		parsers.put("htm", HTMLParser.class);
 		parsers.put("html", HTMLParser.class);
 
@@ -62,15 +62,15 @@ public class ParserFactory {
 		parsers.put("ott", OpenOfficeParser.class);
 		parsers.put("ots", OpenOfficeParser.class);
 		parsers.put("otp", OpenOfficeParser.class);
-		
+
 		// KOffice 1.6.x extensions
 		parsers.put("kwd", KOfficeParser.class);
 		parsers.put("ksp", KOfficeParser.class);
 		parsers.put("kpr", KOfficeParser.class);
-		
+
 		// WordPerfect
 		parsers.put("wpd", WordPerfectParser.class);
-		
+
 		// AbiWord http://www.abisource.com/
 		parsers.put("abw", AbiWordParser.class);
 		parsers.put("zabw", ZABWParser.class); // Compressed AbiWord document
@@ -81,7 +81,7 @@ public class ParserFactory {
 		parsers.put("xml", XMLParser.class);
 		parsers.put("xls", XLSParser.class);
 		parsers.put("xlt", XLSParser.class);
-		
+
 		// MS Office 2003 Powerpoint
 		parsers.put("ppt", PPTParser.class);
 		parsers.put("pps", PPTParser.class);
@@ -108,7 +108,7 @@ public class ParserFactory {
 		}
 	}
 
-	public static Parser getParser(File file, Locale locale, String extension) {
+	public static Parser getParser(File file, Locale locale, String encoding, String extension) {
 		if (parsers.isEmpty())
 			init();
 
@@ -116,8 +116,8 @@ public class ParserFactory {
 		if (StringUtils.isEmpty(ext)) {
 			String filename = file.getName().toLowerCase();
 			ext = FilenameUtils.getExtension(filename);
-		}else{
-			ext=extension.toLowerCase();
+		} else {
+			ext = extension.toLowerCase();
 		}
 
 		Parser parser = null;
@@ -143,16 +143,10 @@ public class ParserFactory {
 				parser = new DummyParser();
 			}
 		}
-
-		if (locale == null)
-			parser.parse(file);
-		else
-			parser.parse(file, locale);
+		parser.parse(file, locale, encoding);
 		return parser;
 	}
-	
-	
-	
+
 	public static Parser getParser(String filename, String extension) {
 		if (parsers.isEmpty())
 			init();
@@ -160,8 +154,8 @@ public class ParserFactory {
 		String ext = extension;
 		if (StringUtils.isEmpty(ext)) {
 			ext = FilenameUtils.getExtension(filename);
-		}else{
-			ext=extension.toLowerCase();
+		} else {
+			ext = extension.toLowerCase();
 		}
 
 		Parser parser = null;
@@ -190,7 +184,7 @@ public class ParserFactory {
 	 * @return
 	 */
 	public static Parser getParser(File file, Locale locale) {
-		return getParser(file, locale, null);
+		return getParser(file, locale, null, null);
 	}
 
 	/**
@@ -201,6 +195,6 @@ public class ParserFactory {
 	 * @return
 	 */
 	public static Parser getParser(File file) {
-		return getParser(file, null);
+		return getParser(file, null, null, null);
 	}
 }
