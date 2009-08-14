@@ -29,6 +29,8 @@ import com.logicaldoc.web.i18n.Messages;
 public class SelectionTagsBean {
 	
 	private static SelectItem[] languages;
+	
+  private static SelectItem[] encodings;
 
 	private SelectItem[] viewModesBrowsing;
 
@@ -209,26 +211,43 @@ public class SelectionTagsBean {
 	 * Gets the option items for Zip encoding
 	 */
 	public SelectItem[] getEncodings() {
-		
+		if (encodings == null)
+			initEncodings();
+		return encodings;
+	}
+	
+	private void initEncodings() {
+
 		String platformEncoding = System.getProperty("file.encoding");
 		Charset ce = Charset.forName(platformEncoding);
+
+		List<SelectItem> sil = new ArrayList<SelectItem>();
+		sil.add(new SelectItem("UTF8", "UTF-8")); // Eight-bit Unicode (or UCS) Transformation Format 
+		sil.add(new SelectItem(platformEncoding, ce.name())); // Default plaform encoding for file names
+		sil.add(new SelectItem("ISO8859_1", "ISO-8859-1")); // ISO-8859-1, Latin Alphabet No. 1 
+		sil.add(new SelectItem("ISO8859_5", "ISO-8859-5")); // Latin/Cyrillic Alphabet
+		sil.add(new SelectItem("ISO8859_6", "ISO-8859-6")); // Latin/Arabic Alphabet
+		sil.add(new SelectItem("ISO8859_7", "ISO-8859-7")); // Latin/Greek Alphabet (ISO-8859-7:2003) 
+    sil.add(new SelectItem("GB18030", "GB18030")); // Simplified Chinese, PRC standard 
+		sil.add(new SelectItem("EUC_CN", "GB2312")); // GB2312, EUC encoding, Simplified Chinese 
+		sil.add(new SelectItem("EUC_JP", "EUC-JP")); // JISX 0201, 0208 and 0212, EUC encoding Japanese 
+		sil.add(new SelectItem("SJIS", "Shift_JIS")); // Shift-JIS, Japanese 
+		sil.add(new SelectItem("EUC_KR", "EUC-KR")); // KS C 5601, EUC encoding, Korean
+		sil.add(new SelectItem("Cp1250", "windows-1250")); // Windows Eastern European 
+		sil.add(new SelectItem("Cp1252", "windows-1252")); // Windows Latin-1 
+		sil.add(new SelectItem("Cp1253", "windows-1253")); // Windows Greek 
+		sil.add(new SelectItem("Cp1256", "windows-1256")); // Windows Arabic
 		
-		return new SelectItem[] {
-				new SelectItem("UTF8", "UTF-8"), // Eight-bit Unicode (or UCS) Transformation Format 
-				new SelectItem(platformEncoding, ce.name()), // Default plaform encoding for file names
-				new SelectItem("ISO8859_1", "ISO-8859-1"), // ISO-8859-1, Latin Alphabet No. 1 
-				new SelectItem("ISO8859_5", "ISO-8859-5"), // Latin/Cyrillic Alphabet 
-				new SelectItem("ISO8859_6", "ISO-8859-6"), // Latin/Arabic Alphabet 
-				new SelectItem("ISO8859_7", "ISO-8859-7"), // Latin/Greek Alphabet (ISO-8859-7:2003) 
-				new SelectItem("GB18030", "GB18030"), // Simplified Chinese, PRC standard 
-				new SelectItem("EUC_CN", "GB2312"), // GB2312, EUC encoding, Simplified Chinese 
-				new SelectItem("EUC_JP", "EUC-JP"), // JISX 0201, 0208 and 0212, EUC encoding Japanese 
-				new SelectItem("SJIS", "Shift_JIS"), // Shift-JIS, Japanese 
-				new SelectItem("EUC_KR", "EUC-KR"), // KS C 5601, EUC encoding, Korean
-				new SelectItem("Cp1250", "windows-1250"), // Windows Eastern European 
-				new SelectItem("Cp1252", "windows-1252"), // Windows Latin-1 
-				new SelectItem("Cp1253", "windows-1253"), // Windows Greek 
-				new SelectItem("Cp1256", "windows-1256") // Windows Arabic 
-				};
+		// clean the list from the unsupported charset
+		// in practice some charset could not be installed and to prevent errors we don't show them to the user
+		List<SelectItem> silpurged = new ArrayList<SelectItem>();
+		for (Iterator iter = sil.iterator(); iter.hasNext();) {
+			SelectItem si = (SelectItem) iter.next();
+			if (Charset.isSupported((String)si.getValue()))
+				silpurged.add(si);
+		}
+		
+		encodings = (SelectItem[]) silpurged.toArray(new SelectItem[0]);
 	}
+	
 }
