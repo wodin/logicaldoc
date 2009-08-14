@@ -18,6 +18,9 @@
       <fileset dir="${logicaldoc.hibernate.home}">
         <include name="**/*.jar" />
       </fileset>
+      <fileset dir="${logicaldoc.devroot}/build/ant/lib">
+        <include name="*.jar"/>
+      </fileset>
       <pathelement path="target/classes" />
     </path>
     <echo>${logicaldoc.devroot}</echo>
