@@ -53,7 +53,7 @@ public class LogDownload extends HttpServlet {
 
 				is.close();
 			} catch (Exception ex) {
-				//logger.error(ex.getMessage(), ex);
+				//log.error(ex.getMessage(), ex);
 			}
 		}
 	}

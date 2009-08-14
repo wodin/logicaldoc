@@ -82,7 +82,7 @@ public class InputFileRenderer extends Renderer {
                                 ( preUpload
                                   ? ("Ice.InputFileIdPreUpload = '" + id + "'; Ice.InputFileIdPostUpload = null;")
                                   : "return;" ) +
-                            " } try { '" + id + "'.asExtendedElement().form().submit(); } catch (e) { logger.warn('Form not available', e); } finally { Ice.InputFileIdPreUpload = null; Ice.InputFileIdPostUpload = null; } };" +
+                            " } try { '" + id + "'.asExtendedElement().form().submit(); } catch (e) { log.warn('Form not available', e); } finally { Ice.InputFileIdPreUpload = null; Ice.InputFileIdPostUpload = null; } };" +
                         //trigger form submit when the upload starts
                         "frame.document.getElementsByTagName('form')[0].onsubmit = submit;" +
                         //trigger form submit when the upload ends and re-register handlers
