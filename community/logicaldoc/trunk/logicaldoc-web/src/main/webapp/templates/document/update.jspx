@@ -393,7 +393,7 @@
 									binding="#{documentForm.doubleValueInput}"
 									required="#{entry.attribute.mandatory == 1 ? 'true': 'false'}"
 									disabled="#{documentForm.readOnly}">
-									<f:convertNumber groupingUsed="true" />
+									<f:convertNumber locale="#{sessionScope['locale']}"/>
 								</ice:inputText>
 							</ice:panelGroup>
 
