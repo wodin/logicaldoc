@@ -182,4 +182,8 @@ public class TasksRecordsManager implements Renderable, DisposableBean, TaskList
 	public void statusChanged(int status) {
 		renderManager.getOnDemandRenderer(sessionId).requestRender();
 	}
+
+	public RenderManager getRenderManager() {
+		return renderManager;
+	}
 }
