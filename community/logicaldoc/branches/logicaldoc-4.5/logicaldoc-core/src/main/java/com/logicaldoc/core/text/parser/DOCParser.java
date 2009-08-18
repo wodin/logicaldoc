@@ -52,10 +52,9 @@ public class DOCParser extends AbstractParser {
 	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
 		try {
 			String tmp = new WordExtractor(stream).getText();
-
-			// Replace Control characters
+			
 			if (tmp != null)
-				tmp = tmp.replaceAll("\\p{Cntrl} && ^\\n", " ");
+				tmp = tmp.replaceAll("[\\p{Cntrl}&&[^\\n]]", " ");
 
 			return new StringReader(tmp);
 		} catch (Exception e) {
