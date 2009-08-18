@@ -43,7 +43,7 @@ public class XLSParser extends AbstractParser {
 			
 			// Replace Control characters
 			if (tmp != null)
-				tmp = tmp.replaceAll("\\p{Cntrl} && ^\\n", " ");
+				tmp = tmp.replaceAll("[\\p{Cntrl}&&[^\\n]]", " ");
 
 			return new StringReader(tmp);
 		} catch (RuntimeException e) {
