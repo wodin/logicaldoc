@@ -22,6 +22,8 @@ public final class SystemProperty {
 
 	public static final String LOGICALDOC_PLUGINSREGISTRY = "logicaldoc.pluginsregistry";
 	
+	public static final String LOGICALDOC_HOME = "LOGICALDOC_HOME";
+	
 	
 	/**
 	 * Utility class, don't instantiate.
@@ -61,6 +63,10 @@ public final class SystemProperty {
 		return SystemProperty.properties;
 	}
 
+	public static String getHome() {
+		return getProperty(LOGICALDOC_HOME);
+	}
+	
 	/**
 	 * The home directory of the application, where the data are stored
 	 */
