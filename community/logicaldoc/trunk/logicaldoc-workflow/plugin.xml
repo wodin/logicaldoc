@@ -66,7 +66,7 @@
 		<parameter id="sqlFile" value="sql/logicaldoc-workflow.sql" />
 	</extension>
 	
-    <extension plugin-id="logicaldoc-core" point-id="database-mapping" id="worklow">
+    <extension plugin-id="logicaldoc-core" point-id="DatabaseMapping" id="worklow">
         <parameter id="mapping" value="classpath*:org/jbpm/**/*.hbm.xml"/>
         <parameter id="position" value="2"/>
     </extension>

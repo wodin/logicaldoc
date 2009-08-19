@@ -249,7 +249,7 @@ public abstract class PluginRegistry {
 	 */
 	public String[] getMappings(){
 		PluginRegistry registry = PluginRegistry.getInstance();
-		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "database-mapping");
+		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "DatabaseMapping");
 		List<String> mappings = new ArrayList<String>();
 		
 		for (Extension extension : exts) {
