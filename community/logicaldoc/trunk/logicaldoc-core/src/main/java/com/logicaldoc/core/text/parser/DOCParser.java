@@ -23,31 +23,11 @@ import com.logicaldoc.util.StringUtil;
  * @author Michael Scholz
  * @author Sebastian Stein
  * @author Alessandro Gasparini - Logical Objects
- * @since 3.6
+ * @since 3.5
  */
 public class DOCParser extends AbstractParser {
+	
 	protected static Log log = LogFactory.getLog(DOCParser.class);
-
-	/**
-	 * {@inheritDoc} Returns an empty reader if an error occured extracting text
-	 * from the word document.
-	 */
-	public Reader extractText(InputStream stream, String type, String encoding) throws IOException {
-		try {
-			String tmp = new WordExtractor(stream).getText();
-
-			// Replace Control characters
-			if (tmp != null)
-				tmp = tmp.replaceAll("\\p{Cntrl} && ^\\n", " ");
-
-			return new StringReader(tmp);
-		} catch (Exception e) {
-			log.warn("Failed to extract Word text content", e);
-			return new StringReader("");
-		} finally {
-			stream.close();
-		}
-	}
 
 	@Override
 	public void parse(InputStream input, Locale locale, String encoding) {
@@ -56,7 +36,7 @@ public class DOCParser extends AbstractParser {
 
 			// Replace Control characters
 			if (tmp != null)
-				tmp = tmp.replaceAll("\\p{Cntrl} && ^\\n", " ");
+				tmp = tmp.replaceAll("[\\p{Cntrl}&&[^\\n]]", " ");
 			content = StringUtil.writeToString(new StringReader(tmp));
 		} catch (Exception e) {
 			log.warn("Failed to extract Word text content", e);

@@ -32,7 +32,7 @@ import com.logicaldoc.util.StringUtil;
  * 
  * @author Michael Scholz
  * @author Alessandro Gasparini - Logical Objects
- * @since 3.6
+ * @since 3.5
  */
 public class HTMLParser extends AbstractParser {
 
@@ -104,7 +104,7 @@ public class HTMLParser extends AbstractParser {
 			}
 			SAXSource source = new SAXSource(parser, new InputSource(reader));
 			transformer.transform(source, result);
-			content=StringUtil.writeToString(new StringReader(parser.getContents()));
+			content = StringUtil.writeToString(new StringReader(parser.getContents()));
 		} catch (Exception e) {
 			log.warn("Failed to extract HTML text content", e);
 		}

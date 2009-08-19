@@ -15,7 +15,7 @@ import org.apache.commons.logging.LogFactory;
  * Text extractor for AbiWord compressed documents.
  * 
  * @author Alessandro Gasparini - Logical Objects
- * @since 3.6
+ * @since 3.5
  */
 public class ZABWParser extends AbstractParser {
 
