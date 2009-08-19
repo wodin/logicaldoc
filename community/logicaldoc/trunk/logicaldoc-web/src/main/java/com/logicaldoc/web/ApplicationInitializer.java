@@ -62,10 +62,13 @@ public class ApplicationInitializer implements ServletContextListener {
 		boot.setProperty(SystemProperty.LOGICALDOC_APP_PLUGINSDIR, initPluginsPath(context));
 		boot.setProperty(SystemProperty.LOGICALDOC_PLUGINSREGISTRY, initPluginRegistry());
 
+		if(boot.getProperty("LOGICALDOC_HOME")!=null){
+			System.setProperty("LOGICALDOC_HOME", boot.getProperty("LOGICALDOC_HOME"));
+		}
+		
 		saveBootProperties(boot, context);
 
-
-		// Initialize logging
+				// Initialize logging
 		String log4jPath = context.getRealPath("/WEB-INF/classes/ldoc-log4j.xml");
 		try {
 			Log4jConfigurer.initLogging(log4jPath);
