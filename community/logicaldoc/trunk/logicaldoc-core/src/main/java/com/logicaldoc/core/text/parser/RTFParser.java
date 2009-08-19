@@ -15,7 +15,7 @@ import com.logicaldoc.util.StringUtil;
 /**
  * @author Michael Scholz
  * @author Alessandro Gasparini
- * @since 3.6
+ * @since 3.5
  */
 public class RTFParser extends AbstractParser {
 

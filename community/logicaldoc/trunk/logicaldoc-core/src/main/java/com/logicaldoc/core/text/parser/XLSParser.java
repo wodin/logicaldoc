@@ -16,7 +16,7 @@ import com.logicaldoc.util.StringUtil;
  * 
  * @author Michael Scholz
  * @author Alessandro Gasparini - Logical Objects
- * @since 3.6
+ * @since 3.5
  */
 public class XLSParser extends AbstractParser {
 
@@ -30,7 +30,7 @@ public class XLSParser extends AbstractParser {
 
 			// Replace Control characters
 			if (tmp != null)
-				tmp = tmp.replaceAll("\\p{Cntrl} && ^\\n", " ");
+				tmp = tmp.replaceAll("[\\p{Cntrl}&&[^\\n]]", " ");
 
 			content = StringUtil.writeToString(new StringReader(tmp));
 		} catch (Exception e) {

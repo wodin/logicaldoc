@@ -1,5 +1,6 @@
 package com.logicaldoc.core.text.parser;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,7 +23,7 @@ import com.logicaldoc.util.charset.CharsetMatch;
  * 
  * @author Michael Scholz
  * @author Alessandro Gasparini - Logical Objects
- * @since 3.6
+ * @since 3.5
  */
 public class TXTParser extends AbstractParser {
 
@@ -30,36 +31,42 @@ public class TXTParser extends AbstractParser {
 
 	@Override
 	public void parse(File file, Locale locale, String encoding) {
+
 		FileInputStream fis = null;
+		BufferedInputStream bis = null;
 		try {
 			fis = new FileInputStream(file);
+			bis = new BufferedInputStream(fis);
 
 			String msEncoding = null;
 			if (StringUtils.isEmpty(encoding)) {
 				// Determine the most probable encoding
 				try {
 					CharsetDetector cd = new CharsetDetector();
-					cd.setText(fis);
+					cd.setText(bis);
 					CharsetMatch cm = cd.detect();
 					if (cm != null) {
-						if (Charset.isSupported(cm.getName()))
+						if (Charset.isSupported(cm.getName())) 
 							msEncoding = cm.getName();
 					}
 				} catch (Throwable th) {
-				}
+					log.warn("Error during TXT charset detection", th);
+				} 
 			} else {
 				msEncoding = encoding;
 			}
-			fis = new FileInputStream(file);
-			parse(fis, locale, msEncoding);
+			parse(bis, locale, msEncoding);
 		} catch (Exception ex) {
 			log.warn("Failed to extract TXT text content", ex);
 			content = "";
 		} finally {
 			try {
-				if (fis != null)
+				if (bis != null) 
+					bis.close();
+				if (fis != null) 
 					fis.close();
 			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
