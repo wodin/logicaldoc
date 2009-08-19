@@ -76,9 +76,29 @@ public class CharsetDetector {
      * 
      * @return This CharsetDetector
      *
+     * @since 4.6.0
+     */
+    public CharsetDetector setText(String str) {
+    	byte[] ba = str.getBytes();
+        fRawInput  = ba;
+        fRawLength = ba.length;
+        
+        MungeInput();
+        
+        return this;
+    }
+    
+    
+    /**
+     * Set the input text (byte) data whose charset is to be detected.
+     * 
+     * @param in the input text of unknown encoding
+     * 
+     * @return This CharsetDetector
+     *
      * @stable ICU 3.4
      */
-    public CharsetDetector setText(byte [] in) {
+    public CharsetDetector setText(byte[] in) {
         fRawInput  = in;
         fRawLength = in.length;
         
