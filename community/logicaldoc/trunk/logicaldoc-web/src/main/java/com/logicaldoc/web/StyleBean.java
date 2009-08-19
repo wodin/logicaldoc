@@ -62,7 +62,7 @@ public class StyleBean {
 	private String skin = "default";
 
 	private String productName;
-	
+
 	private String productVendor;
 
 	private String productUrl;
@@ -107,7 +107,10 @@ public class StyleBean {
 			productVendor = context.getProperty("skin." + skin + ".product.vendor");
 			if (StringUtils.isEmpty(productVendor))
 				productVendor = context.getProperty("product.vendor");
-			productRelease = context.getProperty("product.release");
+			productRelease = context.getProperty("skin." + skin + ".product.release");
+			if (StringUtils.isEmpty(productRelease))
+				productRelease = context.getProperty("product.release");
+
 		} catch (Throwable e) {
 			log.error(e.getMessage());
 		}
