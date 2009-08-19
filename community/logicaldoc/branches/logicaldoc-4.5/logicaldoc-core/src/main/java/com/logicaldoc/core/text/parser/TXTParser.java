@@ -1,5 +1,6 @@
 package com.logicaldoc.core.text.parser;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,14 +30,16 @@ public class TXTParser extends AbstractParser {
 	public void parse(File file) {
 
 		FileInputStream fis = null;
+		BufferedInputStream bis = null;
 		try {
 			fis = new FileInputStream(file);
+			bis = new BufferedInputStream(fis);
 
 			// Determine the most probable encoding
 			String msEncoding = null;
 			try {
 				CharsetDetector cd = new CharsetDetector();
-				cd.setText(fis);
+				cd.setText(bis);
 				CharsetMatch cm = cd.detect();
 				if (cm != null) {
 					if (Charset.isSupported(cm.getName()))
@@ -44,9 +47,8 @@ public class TXTParser extends AbstractParser {
 				}
 			} catch (Throwable th) {
 			}
-			System.out.println("Detected encoding: " + msEncoding);
-			fis = new FileInputStream(file);
-			Reader reader = extractText(fis, null, msEncoding);
+			logger.debug("Detected encoding: " + msEncoding);
+			Reader reader = extractText(bis, null, msEncoding);
 
 			content = readText(reader, "UTF-8");
 		} catch (Exception ex) {
@@ -54,6 +56,8 @@ public class TXTParser extends AbstractParser {
 			content = "";
 		} finally {
 			try {
+				if (bis != null)
+					bis.close();
 				if (fis != null)
 					fis.close();
 			} catch (IOException e) {
