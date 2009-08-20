@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.PluginRegistry;
 
@@ -25,25 +26,43 @@ public class AuthenticationChain implements AuthenticationProvider {
 
 	private List<AuthenticationProvider> providers = new ArrayList<AuthenticationProvider>();
 
+	private static ThreadLocal<String> sessionId = new ThreadLocal<String>() {
+		protected synchronized String initialValue() {
+			return null;
+		}
+	};
+
+	public static String getSessionId() {
+		return (String) sessionId.get();
+	}
+
 	@Override
 	public boolean authenticate(String username, String password) {
 		if (providers == null || providers.isEmpty())
 			init();
 
+		boolean loggedIn = false;
 		for (AuthenticationProvider cmp : providers) {
-			// validates an user for valid login credentials if a specific component handles
-			// this user explicitally (e.g. admin is BasicAuthentication)
+			// validates an user for valid login credentials if a specific
+			// component handles this user explicitally (e.g. admin is BasicAuthentication)
 			if (cmp.validateOnUser(username)) {
-				return cmp.authenticate(username, password);
+				loggedIn = cmp.authenticate(username, password);
+				break;
 			}
 
-			boolean loggedIn = cmp.authenticate(username, password);
+			loggedIn = cmp.authenticate(username, password);
 
 			if (loggedIn)
-				return true;
+				break;
 		}
 
-		return false;
+		if (loggedIn) {
+			// Create a new session and store if into the current thread
+			String session = SessionManager.getInstance().newSession(username);
+			AuthenticationChain.sessionId.set(session);
+		}
+
+		return loggedIn;
 	}
 
 	@Override
