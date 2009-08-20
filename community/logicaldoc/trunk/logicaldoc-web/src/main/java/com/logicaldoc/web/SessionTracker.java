@@ -4,13 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequestEvent;
+import javax.servlet.ServletRequestListener;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionAttributeListener;
+import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.web.util.Constants;
 
 /**
@@ -20,7 +27,7 @@ import com.logicaldoc.web.util.Constants;
  * @author Marco Meschieri - Logical Objects
  * @since 4.5
  */
-public class SessionTracker implements HttpSessionListener {
+public class SessionTracker implements HttpSessionListener, HttpSessionAttributeListener, ServletRequestListener {
 	protected static Log log = LogFactory.getLog(SessionTracker.class);
 
 	/**
@@ -29,14 +36,15 @@ public class SessionTracker implements HttpSessionListener {
 	@SuppressWarnings("unchecked")
 	public void sessionCreated(HttpSessionEvent event) {
 		HttpSession session = event.getSession();
-		log.debug("Created session "+session.getId());
+		log.debug("Created session " + session.getId());
 		ServletContext context = session.getServletContext();
-		if(context.getAttribute(Constants.SESSIONS)==null){
-			context.setAttribute(Constants.SESSIONS, new HashMap<Object,Object>());
+		if (context.getAttribute(Constants.SESSIONS) == null) {
+			context.setAttribute(Constants.SESSIONS, new HashMap<Object, Object>());
 		}
+
 		Map sessions = (Map) context.getAttribute(Constants.SESSIONS);
 		sessions.put(session.getId(), session);
-		log.debug("Created session "+session.getId());
+		log.debug("Created session " + session.getId());
 	}
 
 	/**
@@ -47,11 +55,44 @@ public class SessionTracker implements HttpSessionListener {
 	public void sessionDestroyed(HttpSessionEvent event) {
 		HttpSession session = event.getSession();
 		ServletContext context = session.getServletContext();
-		if(context.getAttribute(Constants.SESSIONS)==null){
-			context.setAttribute(Constants.SESSIONS, new HashMap<Object,Object>());
+		if (context.getAttribute(Constants.SESSIONS) == null) {
+			context.setAttribute(Constants.SESSIONS, new HashMap<Object, Object>());
 		}
 		Map sessions = (Map) context.getAttribute(Constants.SESSIONS);
 		sessions.remove(session.getId());
-		log.debug("Destroyed session "+session.getId());
+
+		if (session.getAttribute(Constants.USER_SESSION) != null)
+			SessionManager.getInstance().kill((String) session.getAttribute(Constants.USER_SESSION));
+
+		log.debug("Destroyed session " + session.getId());
+	}
+
+	@Override
+	public void attributeAdded(HttpSessionBindingEvent event) {
+		if (event.getName().equals(Constants.AUTH_USERNAME)) {
+			// Bind this servlet session to the user session
+			event.getSession().setAttribute(Constants.USER_SESSION, AuthenticationChain.getSessionId());
+			SessionManager sm = SessionManager.getInstance();
+			sm.get(AuthenticationChain.getSessionId()).setExternalSession(event.getSession().getId());
+		}
+	}
+
+	@Override
+	public void attributeRemoved(HttpSessionBindingEvent event) {
+	}
+
+	@Override
+	public void attributeReplaced(HttpSessionBindingEvent event) {
+	}
+
+	@Override
+	public void requestDestroyed(ServletRequestEvent arg0) {
+	}
+
+	@Override
+	public void requestInitialized(ServletRequestEvent event) {
+		HttpSession session = ((HttpServletRequest) event.getServletRequest()).getSession(false);
+		if (session.getAttribute(Constants.USER_SESSION) != null)
+			SessionManager.getInstance().renew((String) session.getAttribute(Constants.USER_SESSION));
 	}
 }

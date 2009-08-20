@@ -25,6 +25,9 @@ public final class Constants {
 	// The currenly logged user password
 	public static final String AUTH_PASSWORD = "authPassword";
 
+	// The current user session
+	public static final String USER_SESSION = "UserSession";
+
 	// The language of the currently logged user
 	public static final String LANGUAGE = "language";
 
