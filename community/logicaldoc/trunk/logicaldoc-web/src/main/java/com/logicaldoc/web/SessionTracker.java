@@ -71,9 +71,10 @@ public class SessionTracker implements HttpSessionListener, HttpSessionAttribute
 	public void attributeAdded(HttpSessionBindingEvent event) {
 		if (event.getName().equals(Constants.AUTH_USERNAME)) {
 			// Bind this servlet session to the user session
-			event.getSession().setAttribute(Constants.USER_SESSION, AuthenticationChain.getSessionId());
+			String sessionId = AuthenticationChain.getSessionId();
+			event.getSession().setAttribute(Constants.USER_SESSION, sessionId);
 			SessionManager sm = SessionManager.getInstance();
-			sm.get(AuthenticationChain.getSessionId()).setExternalSession(event.getSession().getId());
+			sm.get(sessionId).setExternalSession(event.getSession().getId());
 		}
 	}
 
@@ -92,7 +93,13 @@ public class SessionTracker implements HttpSessionListener, HttpSessionAttribute
 	@Override
 	public void requestInitialized(ServletRequestEvent event) {
 		HttpSession session = ((HttpServletRequest) event.getServletRequest()).getSession(false);
-		if (session!=null && session.getAttribute(Constants.USER_SESSION) != null)
-			SessionManager.getInstance().renew((String) session.getAttribute(Constants.USER_SESSION));
+		if (session != null && session.getAttribute(Constants.USER_SESSION) != null) {
+			if (SessionManager.getInstance().isValid((String) session.getAttribute(Constants.USER_SESSION))) {
+				// Renew the valid session
+				SessionManager.getInstance().renew((String) session.getAttribute(Constants.USER_SESSION));
+			} else {
+				throw new RuntimeException("User session timed out");
+			}
+		}
 	}
 }
