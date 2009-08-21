@@ -17,7 +17,7 @@ public class PurifyRB {
 	 */
 	public static void main(String[] args) {
 
-		ResourceBundle master = ResourceBundle.getBundle("master/application", Locale.ENGLISH);
+		ResourceBundle master = ResourceBundle.getBundle("i18n/application", Locale.ENGLISH);
 		
 		Locale[] locales = new Locale[]{Locale.GERMAN, Locale.FRENCH, Locale.ITALIAN, new Locale("es"), new Locale("pt"), new Locale("nl"), new Locale("pt", "BR"), Locale.CHINA, new Locale("ro"),new Locale("el")};
 		for (int i = 0; i < locales.length; i++) {
@@ -37,7 +37,7 @@ public class PurifyRB {
 
 	private static void writePurifiedRB(ResourceBundle master, Locale locale) {
 		
-		ResourceBundle translated = ResourceBundle.getBundle("translated/application", locale);
+		ResourceBundle translated = ResourceBundle.getBundle("i18n/application", locale);
 		
 		if (locale != translated.getLocale()) {
 			System.out.println("Translation for locale: "+ locale + ", not Found; Skipped");
@@ -80,7 +80,7 @@ public class PurifyRB {
 		try {
 			// scrivo il prop destinazione su FileSystem
 			System.out.println(locale);
-			File file = new File("dest/application_" +locale +".properties");
+			File file = new File("src/main/resources/i18n/application_" +locale +".properties");
 			FileOutputStream out = new FileOutputStream(file);
 			destprop.store(out, "comments");
 			out.flush();
