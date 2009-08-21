@@ -152,13 +152,7 @@ public class LoginForm {
 
 			log.info("User " + authUsername + " logged out.");
 
-			Enumeration enumeration = session.getAttributeNames();
-
-			while (enumeration.hasMoreElements()) {
-				session.removeAttribute((String) enumeration.nextElement());
-			}
-
-			// session.invalidate();
+			session.invalidate();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}

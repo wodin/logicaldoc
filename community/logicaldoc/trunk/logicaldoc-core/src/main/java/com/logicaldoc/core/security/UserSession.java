@@ -96,7 +96,7 @@ public class UserSession implements Comparable<UserSession> {
 	public int compareTo(UserSession o) {
 		int compare = new Integer(status).compareTo(new Integer(o.getStatus()));
 		if (compare == 0)
-			compare = creation.compareTo(o.getCreation());
+			compare = o.getCreation().compareTo(creation);
 		return compare;
 	}
 
