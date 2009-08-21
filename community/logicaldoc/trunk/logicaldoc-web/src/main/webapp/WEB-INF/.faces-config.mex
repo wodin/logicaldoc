@@ -19,7 +19,7 @@
       <AbsolutePoint location="330,48" />
     </AutomaticBendpoints>
   </JSFFlowNavigationCase>
-  <JSFFlowNavigationCase id="/login,/password/passwd.iface,passwordExpired,&lt;empty&gt;" routingType="1">
+  <JSFFlowNavigationCase id="/login,/password/passwd.iface,passwordExpired,&lt;empty&gt;" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="193,66" />
       <AbsolutePoint location="193,130" />
@@ -41,16 +41,16 @@
   </JSFFlowNavigationCase>
   <JSFFlowNavigationCase id="/*,/main.iface,loginSuccess,&lt;empty&gt;" routingType="0">
     <AutomaticBendpoints>
-      <AbsolutePoint location="57,66" />
-      <AbsolutePoint location="57,93" />
+      <AbsolutePoint location="72,66" />
+      <AbsolutePoint location="72,93" />
       <AbsolutePoint location="588,93" />
       <AbsolutePoint location="588,200" />
     </AutomaticBendpoints>
   </JSFFlowNavigationCase>
   <JSFFlowNavigationCase id="/*,/password/passwd.iface,passwordExpired,&lt;empty&gt;" routingType="0">
     <AutomaticBendpoints>
-      <AbsolutePoint location="57,48" />
-      <AbsolutePoint location="115,148" />
+      <AbsolutePoint location="57,66" />
+      <AbsolutePoint location="57,130" />
     </AutomaticBendpoints>
   </JSFFlowNavigationCase>
 </JSFFlowViewLayout>

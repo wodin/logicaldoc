@@ -15,7 +15,7 @@
 			<supported-locale>fr</supported-locale>
 			<supported-locale>es</supported-locale>
 		</locale-config>
-		<message-bundle>i18n.FacesMessageBundle</message-bundle>
+		<message-bundle>i18n.faces</message-bundle>
 	</application>
 
 	<validator>
