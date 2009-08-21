@@ -143,6 +143,7 @@
 		<module>logicaldoc-webdav</module>
 		<module>logicaldoc-external-authentication</module>
 		<module>logicaldoc-workflow</module>
+		<module>logicaldoc-i18n</module>
 		<module>logicaldoc-web</module>
 		<module>logicaldoc-testbench</module>
 	</modules>
