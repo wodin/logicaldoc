@@ -3,18 +3,18 @@
 	<import file="${logicaldoc.devroot}/build/ant/build.xml" />
 
 	<target name="prop2po">
-		<copy todir="src/main/resources/i18n" flatten="true">
+		<!--copy todir="src/main/resources/i18n" flatten="true">
 			<fileset dir="${logicaldoc.devroot}">
 				<exclude name="**/logicaldoc-i18n/**" />
 				<include name="**/src/main/**/application*.properties" />
 				<include name="**/src/main/**/*Message*.properties" />
 			</fileset>
-		</copy>
+		</copy-->
 		<exec executable="python" dir="./translate-toolkit/translate/convert/">
 			<arg value="prop2po.py" />
 			<arg value="--pot" />
-			<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}application.properties" />
-			<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}po${file.separator}application.pot" />
+			<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}application_en.properties" />
+			<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}application.pot" />
 		</exec>
 	</target>
 
@@ -22,7 +22,7 @@
 		<exec executable="python" dir="./translate-toolkit/translate/convert/">
 			<arg value="po2prop.py" />
 			<arg value="-t" />
-			<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}application.properties" />
+			<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}application_en.properties" />
 			<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}po" />
 			<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n" />
 		</exec>
