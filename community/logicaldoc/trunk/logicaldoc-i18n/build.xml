@@ -10,6 +10,8 @@
 				<include name="**/src/main/**/*Message*.properties" />
 			</fileset>
 		</copy-->
+		<delete file="target/po" failonerror="no"/>
+		<mkdir dir="target/po"/>
 		<exec executable="python" dir="./translate-toolkit/translate/convert/">
 			<arg value="prop2po.py" />
 			<arg value="--pot" />
@@ -19,6 +21,8 @@
 	</target>
 
 	<target name="po2prop">
+		<delete file="target/po" failonerror="no"/>
+				<mkdir dir="target/po"/>
 		<exec executable="python" dir="./translate-toolkit/translate/convert/">
 			<arg value="po2prop.py" />
 			<arg value="-t" />
