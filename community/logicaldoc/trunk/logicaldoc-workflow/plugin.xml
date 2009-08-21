@@ -54,11 +54,6 @@
 		<parameter id="readonly" value="false"/>
 		<parameter id="position" value="10"/>
 	</extension>
-
-	<extension plugin-id="logicaldoc-core" point-id="ResourceBundle" id="workflowBundle">
-		<parameter id="position" value="60"/>
-		<parameter id="bundle" value="i18n.application-workflow"/>
-	</extension>
 	
 	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="workflowDbInit">
 		<parameter id="position" value="10" />
