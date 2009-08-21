@@ -98,7 +98,7 @@ public class SessionTracker implements HttpSessionListener, HttpSessionAttribute
 				// Renew the valid session
 				SessionManager.getInstance().renew((String) session.getAttribute(Constants.USER_SESSION));
 			} else {
-				throw new RuntimeException("User session timed out");
+				session.invalidate();
 			}
 		}
 	}
