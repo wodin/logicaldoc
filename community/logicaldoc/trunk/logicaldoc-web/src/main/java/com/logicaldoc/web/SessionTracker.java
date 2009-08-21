@@ -92,7 +92,7 @@ public class SessionTracker implements HttpSessionListener, HttpSessionAttribute
 	@Override
 	public void requestInitialized(ServletRequestEvent event) {
 		HttpSession session = ((HttpServletRequest) event.getServletRequest()).getSession(false);
-		if (session.getAttribute(Constants.USER_SESSION) != null)
+		if (session!=null && session.getAttribute(Constants.USER_SESSION) != null)
 			SessionManager.getInstance().renew((String) session.getAttribute(Constants.USER_SESSION));
 	}
 }
