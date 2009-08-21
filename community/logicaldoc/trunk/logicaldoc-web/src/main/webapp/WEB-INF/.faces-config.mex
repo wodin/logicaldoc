@@ -19,7 +19,7 @@
       <AbsolutePoint location="330,48" />
     </AutomaticBendpoints>
   </JSFFlowNavigationCase>
-  <JSFFlowNavigationCase id="/login,/password/passwd.iface,passwordExpired,&lt;empty&gt;" routingType="0">
+  <JSFFlowNavigationCase id="/login,/password/passwd.iface,passwordExpired,&lt;empty&gt;" routingType="1">
     <AutomaticBendpoints>
       <AbsolutePoint location="193,66" />
       <AbsolutePoint location="193,130" />
