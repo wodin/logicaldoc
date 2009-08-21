@@ -134,7 +134,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 	@Override
 	public String toString() {
-		return getVersion().toString() + "-" + comment;
+		return getVersion() + "-" + comment;
 	}
 
 	public Date getVersionDate() {
