@@ -28,66 +28,69 @@ public class DmsClient implements DmsService {
 		client = (DmsService) factory.create();
 	}
 
-	public String checkin(String username, String password, long id, String filename, String description, String type,
-			DataHandler content) throws Exception {
-		return client.checkin(username, password, id, filename, description, type, content);
-	}
-
-	public String checkout(String username, String password, long id) throws Exception {
-		return client.checkout(username, password, id);
-	}
-
-	public String createDocument(String username, String password, long folder, String docTitle, String source,
-			String sourceDate, String author, String sourceType, String coverage, String language, String tags,
-			String versionDesc, String filename, DataHandler content, String templateName,
-			Attribute[] extendedAttribute, String sourceId, String object, String recipient, String customId)
+	public String checkin(String sid, long id, String filename, String description, String type, DataHandler content)
 			throws Exception {
-		return client.createDocument(username, password, folder, docTitle, source, sourceDate, author, sourceType,
-				coverage, language, tags, versionDesc, filename, content, templateName, extendedAttribute, sourceId,
-				object, recipient, customId);
+		return client.checkin(sid, id, filename, description, type, content);
 	}
 
-	public String createFolder(String username, String password, String name, long parent) throws Exception {
-		return client.createFolder(username, password, name, parent);
+	public String checkout(String sid, long id) throws Exception {
+		return client.checkout(sid, id);
 	}
 
-	public String deleteDocument(String username, String password, long id) throws Exception {
-		return client.deleteDocument(username, password, id);
+	public String createDocument(String sid, long folder, String docTitle, String source, String sourceDate,
+			String author, String sourceType, String coverage, String language, String tags, String versionDesc,
+			String filename, DataHandler content, String templateName, Attribute[] extendedAttributes, String sourceId,
+			String object, String recipient, String customId) throws Exception {
+		return client.createDocument(sid, folder, docTitle, source, sourceDate, author, sourceType, coverage, language,
+				tags, versionDesc, filename, content, templateName, extendedAttributes, sourceId, object, recipient,
+				customId);
 	}
 
-	public String deleteFolder(String username, String password, long folder) throws Exception {
-		return client.deleteFolder(username, password, folder);
+	public String createFolder(String sid, String name, long parent) throws Exception {
+		return client.createFolder(sid, name, parent);
 	}
 
-	public DataHandler downloadDocument(String username, String password, long id, String version) throws Exception {
-		return client.downloadDocument(username, password, id, version);
+	public String deleteDocument(String sid, long id) throws Exception {
+		return client.deleteDocument(sid, id);
 	}
 
-	public DocumentInfo downloadDocumentInfo(String username, String password, long id) throws Exception {
-		return client.downloadDocumentInfo(username, password, id);
+	public String deleteFolder(String sid, long folder) throws Exception {
+		return client.deleteFolder(sid, folder);
 	}
 
-	public FolderContent downloadFolderContent(String username, String password, long folder) throws Exception {
-		return client.downloadFolderContent(username, password, folder);
+	public DataHandler downloadDocument(String sid, long id, String version) throws Exception {
+		return client.downloadDocument(sid, id, version);
 	}
 
-	public SearchResult search(String username, String password, String query, String indexLanguage,
-			String queryLanguage, int maxHits, String templateName, String[] templateFields) throws Exception {
-		return client.search(username, password, query, indexLanguage, queryLanguage, maxHits, templateName,
-				templateFields);
+	public DocumentInfo downloadDocumentInfo(String sid, long id) throws Exception {
+		return client.downloadDocumentInfo(sid, id);
 	}
 
-	@Override
-	public String renameFolder(String username, String password, long folder, String name) throws Exception {
-		return client.renameFolder(username, password, folder, name);
+	public FolderContent downloadFolderContent(String sid, long folder) throws Exception {
+		return client.downloadFolderContent(sid, folder);
 	}
 
-	@Override
-	public String update(String username, String password, long id, String title, String source, String sourceAuthor,
-			String sourceDate, String sourceType, String coverage, String language, String[] tags, String sourceId,
-			String object, String recipient, String templateId, Attribute[] templateFields) throws Exception {
-		return client.update(username, password, id, title, source, sourceAuthor, sourceDate, sourceType, coverage,
-				language, tags, sourceId, object, recipient, templateId, templateFields);
+	public String login(String username, String password) throws Exception {
+		return client.login(username, password);
 	}
 
+	public void logout(String sid) {
+		client.logout(sid);
+	}
+
+	public String renameFolder(String sid, long folder, String name) throws Exception {
+		return client.renameFolder(sid, folder, name);
+	}
+
+	public SearchResult search(String sid, String query, String indexLanguage, String queryLanguage, int maxHits,
+			String templateName, String[] templateFields) throws Exception {
+		return client.search(sid, query, indexLanguage, queryLanguage, maxHits, templateName, templateFields);
+	}
+
+	public String update(String sid, long id, String title, String source, String sourceAuthor, String sourceDate,
+			String sourceType, String coverage, String language, String[] tags, String sourceId, String object,
+			String recipient, String templateName, Attribute[] extendedAttribute) throws Exception {
+		return client.update(sid, id, title, source, sourceAuthor, sourceDate, sourceType, coverage, language, tags,
+				sourceId, object, recipient, templateName, extendedAttribute);
+	}
 }

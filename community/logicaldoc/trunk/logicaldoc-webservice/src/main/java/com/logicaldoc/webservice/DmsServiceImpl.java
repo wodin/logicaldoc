@@ -38,7 +38,9 @@ import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -58,25 +60,18 @@ public class DmsServiceImpl implements DmsService {
 	protected static Log log = LogFactory.getLog(DmsServiceImpl.class);
 
 	/**
-	 * @see com.logicaldoc.webservice.DmsService#checkin(java.lang.String,
-	 *      java.lang.String, long, java.lang.String, java.lang.String,
-	 *      java.lang.String, javax.activation.DataHandler)
+	 * @see com.logicaldoc.webservice.DmsService#checkin(java.lang.String, long,
+	 *      java.lang.String, java.lang.String, java.lang.String,
+	 *      javax.activation.DataHandler)
 	 */
-	public String checkin(String username, String password, long id, String filename, String description, String type,
-			DataHandler content) throws Exception {
-		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = udao.findByUserName(username);
-		if (user == null) {
-			log.error("User " + username + " not found");
-			throw new Exception("error - user not found");
-		}
-
+	public String checkin(String sid, long id, String filename, String description, String type, DataHandler content)
+			throws Exception {
+		User user = validateSession(sid);
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document document = ddao.findById(id);
 		Menu folder = document.getFolder();
 
-		checkCredentials(username, password);
-		checkWriteEnable(username, folder.getId());
+		checkWriteEnable(user, folder.getId());
 
 		if (document.getStatus() == Document.DOC_CHECKED_OUT) {
 			// determines the kind of version to create
@@ -115,20 +110,13 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#checkout(java.lang.String,
-	 *      java.lang.String, long)
+	 *      long)
 	 */
-	public String checkout(String username, String password, long id) throws Exception {
-		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = udao.findByUserName(username);
-		if (user == null) {
-			log.error("User " + username + " not found");
-			throw new Exception("error - user not found");
-		}
-
+	public String checkout(String sid, long id) throws Exception {
+		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(id);
-		checkCredentials(username, password);
-		checkWriteEnable(username, doc.getFolder().getId());
+		checkWriteEnable(user, doc.getFolder().getId());
 		DocumentManager DocumentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		DocumentManager.checkout(id, user);
 		return "ok";
@@ -136,28 +124,18 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#createDocument(java.lang.String,
-	 *      java.lang.String, long, java.lang.String, java.lang.String,
+	 *      long, java.lang.String, java.lang.String, java.lang.String,
 	 *      java.lang.String, java.lang.String, java.lang.String,
 	 *      java.lang.String, java.lang.String, java.lang.String,
-	 *      java.lang.String, java.lang.String, javax.activation.DataHandler,
-	 *      java.lang.String, com.logicaldoc.webservice.ExtendedAttribute[],
-	 *      java.lang.String, java.lang.String, java.lang.String,
-	 *      java.lang.String)
+	 *      java.lang.String, javax.activation.DataHandler, java.lang.String,
+	 *      com.logicaldoc.webservice.ExtendedAttribute[], java.lang.String,
+	 *      java.lang.String, java.lang.String, java.lang.String)
 	 */
-	public String createDocument(String username, String password, long folderId, String docTitle, String source,
-			String sourceDate, String author, String sourceType, String coverage, String language, String tags,
-			String versionDesc, String filename, DataHandler content, String templateName,
-			Attribute[] extendedAttributes, String sourceId, String object, String recipient, String customId)
-			throws Exception {
-
-		checkCredentials(username, password);
-
-		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = udao.findByUserName(username);
-		if (user == null) {
-			log.error("User " + username + " not found");
-			throw new Exception("error - user not found");
-		}
+	public String createDocument(String sid, long folderId, String docTitle, String source, String sourceDate,
+			String author, String sourceType, String coverage, String language, String tags, String versionDesc,
+			String filename, DataHandler content, String templateName, Attribute[] extendedAttributes, String sourceId,
+			String object, String recipient, String customId) throws Exception {
+		User user = validateSession(sid);
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu folder = mdao.findById(folderId);
@@ -166,7 +144,7 @@ public class DmsServiceImpl implements DmsService {
 			throw new Exception("error - folder not found");
 		}
 
-		checkWriteEnable(username, folderId);
+		checkWriteEnable(user, folderId);
 
 		Set<String> tgs = TagUtil.extractTags(tags);
 
@@ -207,15 +185,15 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#createFolder(java.lang.String,
-	 *      java.lang.String, java.lang.String, long)
+	 *      java.lang.String, long)
 	 */
-	public String createFolder(String username, String password, String name, long parent) throws Exception {
-		checkCredentials(username, password);
+	public String createFolder(String sid, String name, long parent) throws Exception {
+		User user = validateSession(sid);
 
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu parentMenu = dao.findById(parent);
 
-		checkWriteEnable(username, parent);
+		checkWriteEnable(user, parent);
 
 		Menu menu = new Menu();
 		menu.setText(name);
@@ -242,25 +220,25 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#deleteDocument(java.lang.String,
-	 *      java.lang.String, long)
+	 *      long)
 	 */
-	public String deleteDocument(String username, String password, long id) throws Exception {
+	public String deleteDocument(String sid, long id) throws Exception {
+		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(id);
-		checkCredentials(username, password);
-		checkWriteEnable(username, doc.getFolder().getId());
+		checkWriteEnable(user, doc.getFolder().getId());
 		docDao.delete(id);
 		return "ok";
 	}
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#deleteFolder(java.lang.String,
-	 *      java.lang.String, long)
+	 *      long)
 	 */
-	public String deleteFolder(String username, String password, long folder) throws Exception {
-		checkCredentials(username, password);
+	public String deleteFolder(String sid, long folder) throws Exception {
+		User user = validateSession(sid);
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		checkWriteEnable(username, folder);
+		checkWriteEnable(user, folder);
 		try {
 			mdao.delete(folder);
 			return "ok";
@@ -272,13 +250,14 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#downloadDocument(java.lang.String,
-	 *      java.lang.String, java.lang.String, long, java.lang.String)
+	 *      java.lang.String, long, java.lang.String)
 	 */
-	public DataHandler downloadDocument(String username, String password, long id, String version) throws Exception {
+	public DataHandler downloadDocument(String sid, long id, String version) throws Exception {
+		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(id);
-		checkCredentials(username, password);
-		checkReadEnable(username, doc.getFolder().getId());
+
+		checkReadEnable(user, doc.getFolder().getId());
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		File file = documentManager.getDocumentFile(doc);
@@ -297,14 +276,14 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#downloadDocumentInfo(java.lang.String,
-	 *      java.lang.String, long)
+	 *      long)
 	 */
-	public DocumentInfo downloadDocumentInfo(String username, String password, long id) throws Exception {
+	public DocumentInfo downloadDocumentInfo(String sid, long id) throws Exception {
+		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(id);
 		docDao.initialize(doc);
-		checkCredentials(username, password);
-		checkReadEnable(username, doc.getFolder().getId());
+		checkReadEnable(user, doc.getFolder().getId());
 
 		// Populate document's metadata
 		DocumentInfo info = new DocumentInfo();
@@ -369,13 +348,12 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#downloadFolderContent(java.lang.String,
-	 *      java.lang.String, long)
+	 *      long)
 	 */
-	public FolderContent downloadFolderContent(String username, String password, long folder) throws Exception {
-
+	public FolderContent downloadFolderContent(String sid, long folder) throws Exception {
+		User user = validateSession(sid);
 		FolderContent folderContent = new FolderContent();
-		checkCredentials(username, password);
-		checkReadEnable(username, folder);
+		checkReadEnable(user, folder);
 
 		// Retrieve the referenced menu and it's parent populating the folder
 		// content
@@ -386,9 +364,6 @@ public class DmsServiceImpl implements DmsService {
 		folderContent.setParentId(folderMenu.getParentId());
 		Menu parenMenu = mdao.findById(folderContent.getParentId());
 		folderContent.setParentName(parenMenu.getText());
-
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = userDao.findByUserName(username);
 
 		// Now search for sub-elements
 		Collection<Menu> children = mdao.findByUserId(user.getId(), folder, Menu.MENUTYPE_DIRECTORY);
@@ -416,23 +391,16 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * 
-	 * @see com.logicaldoc.webservice.DmsService#search(java.lang.String,
-	 *      java.lang.String, java.lang.String, java.lang.String,
-	 *      java.lang.String, int, java.lang.String, java.lang.String[])
+	 * @see com.logicaldoc.webservice.DmsService#search(java.lang.String
+	 *      java.lang.String, java.lang.String, java.lang.String, int,
+	 *      java.lang.String, java.lang.String[])
 	 */
-	public SearchResult search(String username, String password, String query, String indexLanguage,
-			String queryLanguage, int maxHits, String templateName, String[] templateFields) throws Exception {
+	public SearchResult search(String sid, String query, String indexLanguage, String queryLanguage, int maxHits,
+			String templateName, String[] templateFields) throws Exception {
 
-		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = udao.findByUserName(username);
-		if (user == null) {
-			log.error("User " + username + " not found");
-			return null;
-		}
+		User user = validateSession(sid);
 
-		checkCredentials(username, password);
 		SearchResult searchResult = new SearchResult();
-
 		SearchOptions opt = new SearchOptions();
 		ArrayList<String> fields = new ArrayList<String>();
 		fields.add(LuceneDocument.FIELD_CONTENT);
@@ -506,50 +474,24 @@ public class DmsServiceImpl implements DmsService {
 		searchResult.setTime(lastSearch.getExecTime());
 		searchResult.setMoreHits(lastSearch.isMoreHitsPresent() ? 1 : 0);
 
-		log.info("User:" + username + " Query:" + query);
+		log.info("User:" + user.getUserName() + " Query:" + query);
 		log.info("Results number:" + result.size());
 
 		return searchResult;
 	}
 
-	/**
-	 * Check provided credentials
-	 * 
-	 * @param username The username
-	 * @param password The password
-	 * @throws Exception Raised if the user is not authenticated
-	 */
-	private void checkCredentials(String username, String password) throws Exception {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-
-		if (!userDao.validateUser(username, password)) {
-			log.error("Invalid credentials " + username + "/" + password);
-			throw new Exception("Invalid credentials");
-		}
-	}
-
-	private void checkWriteEnable(String username, long folderId) throws Exception {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = userDao.findByUserName(username);
-		if (user == null)
-			throw new Exception("The provided user has no read permissions");
-
+	private void checkWriteEnable(User user, long folderId) throws Exception {
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		if (!dao.isWriteEnable(folderId, user.getId())) {
-			log.error("User " + username + " cannot write element " + folderId);
+			log.error("User " + user.getUserName() + " cannot write element " + folderId);
 			throw new Exception("The provided user has no write permissions");
 		}
 	}
 
-	private void checkReadEnable(String username, long folderId) throws Exception {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = userDao.findByUserName(username);
-		if (user == null)
-			throw new Exception("The provided user has no read permissions");
-
+	private void checkReadEnable(User user, long folderId) throws Exception {
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		if (!dao.isReadEnable(folderId, user.getId())) {
-			log.error("User " + username + " cannot read element " + folderId);
+			log.error("User " + user.getUserName() + " cannot read element " + folderId);
 			throw new Exception("The provided user has no read permissions");
 		}
 	}
@@ -579,11 +521,8 @@ public class DmsServiceImpl implements DmsService {
 	}
 
 	@Override
-	public String renameFolder(String username, String password, long folder, String name) throws Exception {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = userDao.findByUserName(username);
-		if (user == null)
-			throw new Exception("user " + username + "not found");
+	public String renameFolder(String sid, long folder, String name) throws Exception {
+		User user = validateSession(sid);
 
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		if (!dao.isPermissionEnabled(Permission.RENAME, folder, user.getId())) {
@@ -607,16 +546,11 @@ public class DmsServiceImpl implements DmsService {
 	}
 
 	@Override
-	public String update(String username, String password, long id, String title, String source, String sourceAuthor,
-			String sourceDate, String sourceType, String coverage, String language, String[] tags, String sourceId,
-			String object, String recipient, String templateName, @WebParam(name = "extendedAttribute")
+	public String update(String sid, long id, String title, String source, String sourceAuthor, String sourceDate,
+			String sourceType, String coverage, String language, String[] tags, String sourceId, String object,
+			String recipient, String templateName, @WebParam(name = "extendedAttribute")
 			Attribute[] extendedAttribute) throws Exception {
-
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = userDao.findByUserName(username);
-		if (user == null)
-			throw new Exception("user " + username + "not found");
-
+		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(id);
 		if (doc == null)
@@ -656,5 +590,43 @@ public class DmsServiceImpl implements DmsService {
 				.toLocale(language), setTags, sourceId, object, recipient, template != null ? template.getId() : null,
 				attributes);
 		return Long.toString(doc.getId());
+	}
+
+	/**
+	 * Utility method that validates the session and retrieve the associated
+	 * user
+	 * 
+	 * @param sid The session identifier
+	 * @return
+	 * @throws Exception
+	 */
+	private User validateSession(String sid) throws Exception {
+		if (!SessionManager.getInstance().isValid(sid)) {
+			throw new Exception("Invalid session");
+		} else {
+			SessionManager.getInstance().renew(sid);
+		}
+		String username = SessionManager.getInstance().get(sid).getUserName();
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		User user = userDao.findByUserName(username);
+		if (user == null)
+			throw new Exception("user " + username + "not found");
+		return user;
+	}
+
+	@Override
+	public String login(String username, String password) throws Exception {
+		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
+				AuthenticationChain.class);
+		if (authenticationChain.authenticate(username, password))
+			return AuthenticationChain.getSessionId();
+		else
+			throw new Exception("Unable to create a new session");
+		
+	}
+
+	@Override
+	public void logout(String sid) {
+		SessionManager.getInstance().kill(sid);
 	}
 }

@@ -14,44 +14,58 @@ import javax.jws.WebService;
 public interface DmsService {
 
 	/**
+	 * Starts a new user session.
+	 * 
+	 * @param username The username
+	 * @param password The password
+	 * @return The newly created session identifier(sid)
+	 */
+	public String login(@WebParam(name = "username")
+	String username, @WebParam(name = "password")
+	String password) throws Exception;
+
+	/**
+	 * Closes a user session.
+	 * 
+	 * @param sid The session identifier
+	 */
+	public void logout(@WebParam(name = "sid")
+	String sid);
+
+	/**
 	 * Create a new folder with a given name and under a specific folder. It
 	 * also assigns the same folder permissions of the parent folder
 	 * 
-	 * @param username
-	 * @param password
+	 * @param sid Session identifier
 	 * @param name Name of the folder
 	 * @param parent Parent identifier
 	 * @return 'error' if error occurred, the folder identifier if it was
 	 *         created
 	 * @throws Exception
 	 */
-	public String createFolder(@WebParam(name = "username")
-	String username, @WebParam(name = "password")
-	String password, @WebParam(name = "name")
+	public String createFolder(@WebParam(name = "sid")
+	String sid, @WebParam(name = "name")
 	String name, @WebParam(name = "parent")
 	long parent) throws Exception;
 
 	/**
 	 * Deletes an existing folder and all it's contained elements
 	 * 
-	 * @param username
-	 * @param password
+	 * @param sid Session identifier
 	 * @param folder Folder identifier
 	 * @return A return code('ok' if all went ok, 'error' if some errors
 	 *         occurred)
 	 * @throws Exception
 	 */
-	public String deleteFolder(@WebParam(name = "username")
-	String username, @WebParam(name = "password")
-	String password, @WebParam(name = "folder")
+	public String deleteFolder(@WebParam(name = "sid")
+	String sid, @WebParam(name = "folder")
 	long folder) throws Exception;
 
 	/**
 	 * Create a new document. The user can completely customize the document
 	 * through many optional fields.
 	 * 
-	 * @param username
-	 * @param password
+	 * @param sid Session identifier
 	 * @param folder
 	 * @param docTitle
 	 * @param source
@@ -73,9 +87,8 @@ public interface DmsService {
 	 * @return The document identifier or 'error' if some errors occurred)
 	 * @throws Exception
 	 */
-	public String createDocument(@WebParam(name = "username")
-	String username, @WebParam(name = "password")
-	String password, @WebParam(name = "folder")
+	public String createDocument(@WebParam(name = "sid")
+	String sid, @WebParam(name = "folder")
 	long folder, @WebParam(name = "docTitle")
 	String docTitle, @WebParam(name = "source")
 	String source, @WebParam(name = "sourceDate")
@@ -98,9 +111,8 @@ public interface DmsService {
 	/**
 	 * Updates an existing document and marks it to be re-indexed
 	 */
-	public String update(@WebParam(name = "username")
-	String username, @WebParam(name = "password")
-	String password, @WebParam(name = "id")
+	public String update(@WebParam(name = "sid")
+	String sid, @WebParam(name = "id")
 	long id, @WebParam(name = "title")
 	String title, @WebParam(name = "source")
 	String source, @WebParam(name = "sourceAuthor")
@@ -120,94 +132,80 @@ public interface DmsService {
 	 * Downloads a document. The document content is sent as attachment
 	 * identified by 'document'
 	 * 
-	 * @param username
-	 * @param password
+	 * @param sid Session identifier
 	 * @param id The document menu id
 	 * @param version The specific version(it can be empty)
 	 * @return The requested document's binary
 	 * @throws Exception
 	 */
-	public DataHandler downloadDocument(@WebParam(name = "username")
-	String username, @WebParam(name = "password")
-	String password, @WebParam(name = "id")
+	public DataHandler downloadDocument(@WebParam(name = "sid")
+	String sid, @WebParam(name = "id")
 	long id, @WebParam(name = "version")
 	String version) throws Exception;
 
 	/**
 	 * Retrieves the document meta-data
 	 * 
-	 * @param username
-	 * @param password
+	 * @param sid Session identifier
 	 * @param id The document id
 	 * @return
 	 * @throws Exception
 	 */
-	public DocumentInfo downloadDocumentInfo(@WebParam(name = "username")
-	String username, @WebParam(name = "password")
-	String password, @WebParam(name = "id")
+	public DocumentInfo downloadDocumentInfo(@WebParam(name = "sid")
+	String sid, @WebParam(name = "id")
 	long id) throws Exception;
 
 	/**
 	 * Renames a folder
 	 * 
-	 * @param username
-	 * @param password
+	 * @param sid Session identifier
 	 * @param folder The folder identifier
 	 * @param name the new name for the folder
 	 * @throws Exception
 	 */
-	public String renameFolder(@WebParam(name = "username")
-	String username, @WebParam(name = "password")
-	String password, @WebParam(name = "folder")
+	public String renameFolder(@WebParam(name = "sid")
+	String sid, @WebParam(name = "folder")
 	long folder, @WebParam(name = "name")
 	String name) throws Exception;
 
 	/**
 	 * Downloads folder metadata
 	 * 
-	 * @param username
-	 * @param password
+	 * @param sid Session identifier
 	 * @param folder The folder identifier
 	 * @throws Exception
 	 */
-	public FolderContent downloadFolderContent(@WebParam(name = "username")
-	String username, @WebParam(name = "password")
-	String password, @WebParam(name = "folder")
+	public FolderContent downloadFolderContent(@WebParam(name = "sid")
+	String sid, @WebParam(name = "folder")
 	long folder) throws Exception;
 
 	/**
 	 * Deletes an existing document with the given identifier
 	 * 
-	 * @param username
-	 * @param password
+	 * @param sid Session identifier
 	 * @param id The document id
 	 * @return A return code('ok' if all went ok)
 	 * @throws Exception
 	 */
-	public String deleteDocument(@WebParam(name = "username")
-	String username, @WebParam(name = "password")
-	String password, @WebParam(name = "id")
+	public String deleteDocument(@WebParam(name = "sid")
+	String sid, @WebParam(name = "id")
 	long id) throws Exception;
 
 	/**
 	 * Marks the document as checked out
 	 * 
-	 * @param username
-	 * @param password
+	 * @param sid Session identifier
 	 * @param id The document menu id
 	 * @return A return code('ok' if all went ok)
 	 * @throws Exception
 	 */
-	public String checkout(@WebParam(name = "username")
-	String username, @WebParam(name = "password")
-	String password, @WebParam(name = "id")
+	public String checkout(@WebParam(name = "sid") String sid, @WebParam(name = "id")
 	long id) throws Exception;
 
 	/**
 	 * Uploads a new version of an already checked out document
 	 * 
-	 * @param username
-	 * @param password
+	 * @param sid Session identifier
 	 * @param id
 	 * @param filename
 	 * @param description
@@ -216,9 +214,7 @@ public interface DmsService {
 	 * @return ok if all went right
 	 * @throws Exception
 	 */
-	public String checkin(@WebParam(name = "username")
-	String username, @WebParam(name = "password")
-	String password, @WebParam(name = "id")
+	public String checkin(@WebParam(name = "sid") String sid, @WebParam(name = "id")
 	long id, @WebParam(name = "filename")
 	String filename, @WebParam(name = "description")
 	String description, @WebParam(name = "type")
@@ -228,8 +224,7 @@ public interface DmsService {
 	/**
 	 * Search for a documents
 	 * 
-	 * @param username
-	 * @param password
+	 * @param sid Session identifier
 	 * @param query The query string
 	 * @param indexLanguage The index language, if null all indexes are
 	 *        considered
@@ -240,9 +235,7 @@ public interface DmsService {
 	 * @return The objects representing the search result
 	 * @throws Exception
 	 */
-	public SearchResult search(@WebParam(name = "username")
-	String username, @WebParam(name = "password")
-	String password, @WebParam(name = "query")
+	public SearchResult search(@WebParam(name = "sid") String sid, @WebParam(name = "query")
 	String query, @WebParam(name = "indexLanguage")
 	String indexLanguage, @WebParam(name = "queryLanguage")
 	String queryLanguage, @WebParam(name = "maxHits")
