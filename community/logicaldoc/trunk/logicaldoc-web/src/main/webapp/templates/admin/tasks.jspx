@@ -24,7 +24,7 @@
 				<!-- Basic table -->
 				<ice:panelGroup styleClass="formBorderHighlight">
 					<ice:dataTable id="tasksList" value="#{tasksRecordsManager.tasks}"
-						var="task" cellpadding="0" rows="30"
+						var="task" cellpadding="0" rows="10"
 						columnClasses="titleColumn,dateColumn,titleColumn,dateColumn,selectionColumn,dateColumn">
 
 						<!-- Name -->
@@ -129,6 +129,12 @@
 							</ice:panelGroup>
 						</ice:column>
 					</ice:dataTable>
+					
+					<ice:panelGroup>
+						<ldoc:paginator table="tasksList"
+							label="#{msgs['paginator.simple']}" />
+						<br />
+					</ice:panelGroup>
 				</ice:panelGroup>
 			</ice:form>
 		</ice:panelGroup>
