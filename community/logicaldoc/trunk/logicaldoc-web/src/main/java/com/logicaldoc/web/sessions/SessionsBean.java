@@ -24,8 +24,12 @@ public class SessionsBean {
 		UserSession session = (UserSession) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(
 				"userSession");
 		SessionManager.getInstance().kill(session.getId());
-		if(session.getExternalSession()!=null){
+		if (session.getExternalSession() != null) {
 			SessionManagement.getSession((String) session.getExternalSession()).invalidate();
 		}
+	}
+
+	public String getCurrentSessionId() {
+		return SessionManagement.getrCurrentUserSessionId();
 	}
 }

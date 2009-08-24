@@ -32,6 +32,13 @@ public class SessionManagement {
 
 		return result;
 	}
+	
+	public static String getrCurrentUserSessionId(){
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		Map<String, Object> session = facesContext.getExternalContext().getSessionMap();
+		String sid = (String) session.get(Constants.USER_SESSION);
+		return sid;
+	}
 
 	public static boolean isValid() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -43,7 +50,6 @@ public class SessionManagement {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		Map<String, Object> session = facesContext.getExternalContext().getSessionMap();
 		String username = (String) session.get(Constants.AUTH_USERNAME);
-
 		return username;
 	}
 

@@ -60,8 +60,7 @@ part2.className = 'hidden';
 						<ice:outputText styleClass="system_info">&#160;&#160;#{msgs['connection.sorry']}</ice:outputText>
 						<br />
 						<br />
-						<ice:outputLink styleClass="system_link"
-							value="#{facesContext.externalContext.requestContextPath}/login.iface">#{msgs['connection.login']}</ice:outputLink>
+						<ice:commandLink styleClass="system_link" action="#{loginForm.logout}">#{msgs['connection.login']}</ice:commandLink>
 
 						<br />
 						<br />
