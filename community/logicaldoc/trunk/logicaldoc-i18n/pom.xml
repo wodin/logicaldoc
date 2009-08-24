@@ -10,6 +10,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>logicaldoc-i18n</artifactId>
+	<name>logicaldoc-i18n</name>
 	<packaging>jar</packaging>
 	<dependencies />
 </project>
