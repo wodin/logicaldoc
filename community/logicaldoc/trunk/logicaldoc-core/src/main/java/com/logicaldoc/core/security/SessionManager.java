@@ -124,6 +124,18 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	}
 
 	/**
+	 * Counts the number of opened sessions
+	 */
+	public int countOpened(){
+		int count=0;
+		for (UserSession session : getSessions()) {
+			if(!isExpired(session))
+				count++;
+		}
+		return count;
+	}
+	
+	/**
 	 * Returns the list of sessions ordered by ascending status and creation
 	 * date.
 	 */
