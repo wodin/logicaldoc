@@ -9,7 +9,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ice="http://www.icesoft.com/icefaces/component" jsfc="f:view"
 	xmlns:ui="http://java.sun.com/jsf/facelets" locale="#{language}">
-	<f:loadBundle basename="i18n.application" var="msgs" />
+	
 <ice:outputStyle href="/skins/default/css/workflow.css" />
 
 			<ice:form id="setupWizard"

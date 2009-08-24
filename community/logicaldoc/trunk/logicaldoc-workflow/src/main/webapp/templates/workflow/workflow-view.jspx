@@ -14,7 +14,6 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
 	styleClass="center">
-	<f:loadBundle basename="i18n.application-workflow" var="workflow_msgs" />
 	<ice:outputStyle href="/skins/default/css/workflow.css" />
 
 	<style>
