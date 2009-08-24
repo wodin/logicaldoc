@@ -62,7 +62,7 @@ public class PurifyRB {
 			return;
 		}
 
-		Properties destprop = new Properties();
+		Properties destprop = new OrderedProperties();
 
 		// 1: controllare che nel bundle dest i valori delle chiavi siano
 		// diversi da quelli nel bundle source
