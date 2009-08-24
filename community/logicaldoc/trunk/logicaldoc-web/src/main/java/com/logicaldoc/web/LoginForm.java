@@ -2,7 +2,6 @@ package com.logicaldoc.web;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 
@@ -143,7 +142,6 @@ public class LoginForm {
 	@SuppressWarnings("unchecked")
 	public String logout() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
 
 		try {
 			String authUsername = SessionManagement.getUsername();
@@ -152,8 +150,11 @@ public class LoginForm {
 
 			log.info("User " + authUsername + " logged out.");
 
-			session.invalidate();
+			HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
+			if (session != null && session.getAttribute(Constants.AUTH_USERNAME)!=null)
+				session.invalidate();
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error(e.getMessage(), e);
 		}
 
