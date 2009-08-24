@@ -12,10 +12,7 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form">
-	<f:loadBundle basename="i18n.application-workflow" var="workflow_msgs" />
-	
-	
-	
+
 	<script language="javascript" type="text/javascript" src="/js/workflow.js"/>
 
 
