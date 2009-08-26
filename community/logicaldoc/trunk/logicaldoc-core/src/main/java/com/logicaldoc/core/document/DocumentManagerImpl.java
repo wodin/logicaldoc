@@ -354,32 +354,15 @@ public class DocumentManagerImpl implements DocumentManager {
 				// Change the template and attributes
 				if (templateId != null) {
 					DocumentTemplate template = documentTemplateDAO.findById(templateId);
-					// Get the list of template attributes with a mandatory
-					// value
-					List<String> mandatoryAttributes = new ArrayList<String>();
-					for (String attrName : template.getAttributeNames()) {
-						if (template.getAttributes().get(attrName).getMandatory() == 1)
-							mandatoryAttributes.add(attrName);
-					}
-					int mandatoryAttributesCount = 0;
 					if (attributes != null) {
+						doc.getAttributes().clear();
 						for (String attrName : attributes.keySet()) {
 							if (template.getAttributes().get(attrName) != null) {
 								ExtendedAttribute templateExtAttribute = template.getAttributes().get(attrName);
 								ExtendedAttribute docExtendedAttribute = attributes.get(attrName);
+								docExtendedAttribute.setMandatory(templateExtAttribute.getMandatory());
 								if (templateExtAttribute.getType() == docExtendedAttribute.getType()) {
-									if (templateExtAttribute.getMandatory() == docExtendedAttribute.getMandatory()) {
-										if (templateExtAttribute.getMandatory() == 1
-												&& docExtendedAttribute.getValue() == null) {
-											throw new Exception("The value for attribute " + attrName + " is mandatory");
-										} else {
-											if (mandatoryAttributes.contains((String) attrName)) {
-												mandatoryAttributesCount++;
-											}
-										}
-									} else {
-										throw new Exception("The given mandatory value is not correct.");
-									}
+									doc.getAttributes().put(attrName, docExtendedAttribute);
 								} else {
 									throw new Exception("The given type value is not correct.");
 								}
@@ -388,13 +371,6 @@ public class DocumentManagerImpl implements DocumentManager {
 										+ "' is not correct for template '" + template.getName() + "'.");
 							}
 						}
-						doc.setAttributes(attributes);
-					}
-					if (mandatoryAttributesCount == mandatoryAttributes.size())
-						doc.setTemplate(template);
-					else {
-						throw new Exception("Some mandatory attributes for the template '" + template.getName()
-								+ "' have no value");
 					}
 				} else {
 					doc.setTemplate(null);
