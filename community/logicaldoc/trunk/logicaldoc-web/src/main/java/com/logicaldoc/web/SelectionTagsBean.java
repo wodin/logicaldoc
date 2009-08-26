@@ -3,6 +3,8 @@ package com.logicaldoc.web;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,10 +30,10 @@ import com.logicaldoc.web.i18n.Messages;
  * <p>
  */
 public class SelectionTagsBean {
-	
+
 	private static SelectItem[] languages;
-	
-  private static SelectItem[] encodings;
+
+	private static SelectItem[] encodings;
 
 	private SelectItem[] viewModesBrowsing;
 
@@ -106,6 +108,14 @@ public class SelectionTagsBean {
 	public SelectItem[] getYesNo() {
 		return new SelectItem[] { new SelectItem(1, Messages.getMessage("yes")),
 				new SelectItem(0, Messages.getMessage("no")) };
+	}
+
+	/**
+	 * Gets the option items for and/or flags
+	 */
+	public SelectItem[] getAndOr() {
+		return new SelectItem[] { new SelectItem("and", Messages.getMessage("and")),
+				new SelectItem("or", Messages.getMessage("or")) };
 	}
 
 	/**
@@ -207,7 +217,7 @@ public class SelectionTagsBean {
 				new SelectItem(60 * 60, Messages.getMessage("task.scheduling.maxlength.onehour")),
 				new SelectItem(60 * 60 * 5, Messages.getMessage("task.scheduling.maxlength.fivehours")) };
 	}
-	
+
 	/**
 	 * Gets the option items for Zip encoding
 	 */
@@ -216,39 +226,87 @@ public class SelectionTagsBean {
 			initEncodings();
 		return encodings;
 	}
-	
+
 	private void initEncodings() {
 
 		String platformEncoding = System.getProperty("file.encoding");
 		Charset ce = Charset.forName(platformEncoding);
 
 		List<SelectItem> sil = new ArrayList<SelectItem>();
-		sil.add(new SelectItem("UTF8", "UTF-8")); // Eight-bit Unicode (or UCS) Transformation Format 
-		sil.add(new SelectItem(platformEncoding, ce.name())); // Default plaform encoding for file names
-		sil.add(new SelectItem("ISO8859_1", "ISO-8859-1")); // ISO-8859-1, Latin Alphabet No. 1 
-		sil.add(new SelectItem("ISO8859_5", "ISO-8859-5")); // Latin/Cyrillic Alphabet
-		sil.add(new SelectItem("ISO8859_6", "ISO-8859-6")); // Latin/Arabic Alphabet
-		sil.add(new SelectItem("ISO8859_7", "ISO-8859-7")); // Latin/Greek Alphabet (ISO-8859-7:2003) 
-    sil.add(new SelectItem("GB18030", "GB18030")); // Simplified Chinese, PRC standard 
-		sil.add(new SelectItem("EUC_CN", "GB2312")); // GB2312, EUC encoding, Simplified Chinese 
-		sil.add(new SelectItem("EUC_JP", "EUC-JP")); // JISX 0201, 0208 and 0212, EUC encoding Japanese 
-		sil.add(new SelectItem("SJIS", "Shift_JIS")); // Shift-JIS, Japanese 
-		sil.add(new SelectItem("EUC_KR", "EUC-KR")); // KS C 5601, EUC encoding, Korean
-		sil.add(new SelectItem("Cp1250", "windows-1250")); // Windows Eastern European 
-		sil.add(new SelectItem("Cp1252", "windows-1252")); // Windows Latin-1 
-		sil.add(new SelectItem("Cp1253", "windows-1253")); // Windows Greek 
+		sil.add(new SelectItem("UTF8", "UTF-8")); // Eight-bit Unicode (or
+		// UCS) Transformation
+		// Format
+		sil.add(new SelectItem(platformEncoding, ce.name())); // Default
+		// plaform
+		// encoding for
+		// file names
+		sil.add(new SelectItem("ISO8859_1", "ISO-8859-1")); // ISO-8859-1, Latin
+		// Alphabet No. 1
+		sil.add(new SelectItem("ISO8859_5", "ISO-8859-5")); // Latin/Cyrillic
+		// Alphabet
+		sil.add(new SelectItem("ISO8859_6", "ISO-8859-6")); // Latin/Arabic
+		// Alphabet
+		sil.add(new SelectItem("ISO8859_7", "ISO-8859-7")); // Latin/Greek
+		// Alphabet
+		// (ISO-8859-7:2003)
+		sil.add(new SelectItem("GB18030", "GB18030")); // Simplified Chinese,
+		// PRC standard
+		sil.add(new SelectItem("EUC_CN", "GB2312")); // GB2312, EUC encoding,
+		// Simplified Chinese
+		sil.add(new SelectItem("EUC_JP", "EUC-JP")); // JISX 0201, 0208 and
+		// 0212, EUC encoding
+		// Japanese
+		sil.add(new SelectItem("SJIS", "Shift_JIS")); // Shift-JIS, Japanese
+		sil.add(new SelectItem("EUC_KR", "EUC-KR")); // KS C 5601, EUC
+		// encoding, Korean
+		sil.add(new SelectItem("Cp1250", "windows-1250")); // Windows Eastern
+		// European
+		sil.add(new SelectItem("Cp1252", "windows-1252")); // Windows Latin-1
+		sil.add(new SelectItem("Cp1253", "windows-1253")); // Windows Greek
 		sil.add(new SelectItem("Cp1256", "windows-1256")); // Windows Arabic
-		
+
 		// clean the list from the unsupported charset
-		// in practice some charset could not be installed and to prevent errors we don't show them to the user
+		// in practice some charset could not be installed and to prevent errors
+		// we don't show them to the user
 		List<SelectItem> silpurged = new ArrayList<SelectItem>();
 		for (Iterator iter = sil.iterator(); iter.hasNext();) {
 			SelectItem si = (SelectItem) iter.next();
-			if (Charset.isSupported((String)si.getValue()))
+			if (Charset.isSupported((String) si.getValue()))
 				silpurged.add(si);
 		}
-		
+
 		encodings = (SelectItem[]) silpurged.toArray(new SelectItem[0]);
 	}
-	
+
+	public SelectItem[] getDocumentFields() {
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		items.add(new SelectItem("id", Messages.getMessage("document.id")));
+		items.add(new SelectItem("customId", Messages.getMessage("document.customid")));
+		items.add(new SelectItem("title", Messages.getMessage("document.title")));
+		items.add(new SelectItem("sourceId", Messages.getMessage("document.sourceid")));
+		items.add(new SelectItem("language", Messages.getMessage("language")));
+		items.add(new SelectItem("folder", Messages.getMessage("folder")));
+		items.add(new SelectItem("docDate", Messages.getMessage("msg.jsp.publishedon")));
+		items.add(new SelectItem("creationDate", Messages.getMessage("document.createdon")));
+		items.add(new SelectItem("sourceDate", Messages.getMessage("date")));
+		items.add(new SelectItem("source", Messages.getMessage("document.source")));
+		items.add(new SelectItem("sourceAuthor", Messages.getMessage("document.author")));
+		items.add(new SelectItem("coverage", Messages.getMessage("document.coverage")));
+		items.add(new SelectItem("sourceType", Messages.getMessage("document.type")));
+		items.add(new SelectItem("recipient", Messages.getMessage("document.recipient")));
+		items.add(new SelectItem("object", Messages.getMessage("document.object")));
+		items.add(new SelectItem("template", Messages.getMessage("template")));
+		items.add(new SelectItem("fileName", Messages.getMessage("file")));
+		items.add(new SelectItem("fileSize", Messages.getMessage("size")));
+		
+
+		Collections.sort(items, new Comparator<SelectItem>() {
+			@Override
+			public int compare(SelectItem o1, SelectItem o2) {
+				return o1.getLabel().toLowerCase().compareTo(o2.getLabel().toLowerCase());
+			}
+		});
+
+		return items.toArray(new SelectItem[0]);
+	}
 }

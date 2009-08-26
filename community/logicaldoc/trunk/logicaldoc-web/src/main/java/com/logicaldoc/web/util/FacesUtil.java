@@ -16,6 +16,8 @@ import javax.faces.event.ActionEvent;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 
+import com.logicaldoc.core.security.User;
+
 /**
  * Faces utilities methods
  * 
@@ -75,7 +77,7 @@ public class FacesUtil {
 		final ELContext elContext = facesContext.getELContext();
 		final ELResolver elResolver = elContext.getELResolver();
 		final Object returnObject = elResolver.getValue(elContext, null, beanName);
-		if (returnObject == null) {
+		if (returnObject == null && logs!=null) {
 			for (Log log : logs) {
 				log.error("Bean with name " + beanName
 						+ " was not found. Check the faces-config.xml file if the given bean name is ok.");
@@ -154,5 +156,9 @@ public class FacesUtil {
 		control.setSubmittedValue(null);
 		control.setValue(null);
 		control.setLocalValueSet(false);
+	}
+	
+	public static Object getCurrentRequestAttribute(String key){
+		return FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(key);
 	}
 }

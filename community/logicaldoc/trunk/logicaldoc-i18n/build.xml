@@ -3,7 +3,16 @@
 	<property file="src/main/resources/i18n/i18n.properties" />
 	<import file="${logicaldoc.devroot}/build/ant/build.xml" />
 
-
+	<target name="deploy" depends="init-all" description="Updates a deployed webapp">
+		<echo message="Deploying ${pom.artifactId} to webapp" />
+		<copy todir="${logicaldoc.webroot}/WEB-INF/classes/i18n" verbose="true">
+			<fileset dir="src/main/resources/i18n">
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+		<echo message="${pom.artifactId} is deployed" />
+	</target>
+	
 	<target name="prop2po" depends="init-all">
 		<!--copy todir="src/main/resources/i18n" flatten="true">
 			<fileset dir="${logicaldoc.devroot}">

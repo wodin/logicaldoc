@@ -569,47 +569,20 @@ public class DocumentManagerImpl implements DocumentManager {
 			/* Set template and extended attributes */
 			if (templateId != null && templateId.longValue() != 0) {
 				DocumentTemplate template = documentTemplateDAO.findById(templateId);
-				// Get the list of template attributes with a mandatory
-				// value
-				List<String> mandatoryAttributes = new ArrayList<String>();
-				for (String attrName : template.getAttributeNames()) {
-					if (template.getAttributes().get(attrName).getMandatory() == 1)
-						mandatoryAttributes.add(attrName);
-				}
-				int mandatoryAttributesCount = 0;
+				doc.setTemplate(template);
+
 				if (extendedAttributes != null) {
 					for (String attrName : extendedAttributes.keySet()) {
 						if (template.getAttributes().get(attrName) != null) {
 							ExtendedAttribute templateExtAttribute = template.getAttributes().get(attrName);
 							ExtendedAttribute docExtendedAttribute = extendedAttributes.get(attrName);
 							if (templateExtAttribute.getType() == docExtendedAttribute.getType()) {
-								if (templateExtAttribute.getMandatory() == docExtendedAttribute.getMandatory()) {
-									if (templateExtAttribute.getMandatory() == 1
-											&& docExtendedAttribute.getValue() == null) {
-										throw new Exception("The value for attribute " + attrName + " is mandatory");
-									} else {
-										if (mandatoryAttributes.contains((String) attrName)) {
-											mandatoryAttributesCount++;
-										}
-									}
-								} else {
-									throw new Exception("The given mandatory value is not correct.");
-								}
+								doc.getAttributes().put(attrName, docExtendedAttribute);
 							} else {
 								throw new Exception("The given type value is not correct.");
 							}
-						} else {
-							throw new Exception("The attribute name '" + attrName + "' is not correct for template '"
-									+ template.getName() + "'.");
 						}
 					}
-					doc.setAttributes(extendedAttributes);
-				}
-				if (mandatoryAttributesCount == mandatoryAttributes.size())
-					doc.setTemplate(template);
-				else {
-					throw new Exception("Some mandatory attributes for the template '" + template.getName()
-							+ "' have no value");
 				}
 			}
 			documentDAO.store(doc);
