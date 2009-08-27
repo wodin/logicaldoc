@@ -286,8 +286,8 @@ public class SelectionTagsBean {
 		items.add(new SelectItem("sourceId", Messages.getMessage("document.sourceid")));
 		items.add(new SelectItem("language", Messages.getMessage("language")));
 		items.add(new SelectItem("folder", Messages.getMessage("folder")));
-		items.add(new SelectItem("docDate", Messages.getMessage("msg.jsp.publishedon")));
-		items.add(new SelectItem("creationDate", Messages.getMessage("document.createdon")));
+		items.add(new SelectItem("date", Messages.getMessage("msg.jsp.publishedon")));
+		items.add(new SelectItem("creation", Messages.getMessage("document.createdon")));
 		items.add(new SelectItem("sourceDate", Messages.getMessage("date")));
 		items.add(new SelectItem("source", Messages.getMessage("document.source")));
 		items.add(new SelectItem("sourceAuthor", Messages.getMessage("document.author")));
@@ -298,6 +298,7 @@ public class SelectionTagsBean {
 		items.add(new SelectItem("template", Messages.getMessage("template")));
 		items.add(new SelectItem("fileName", Messages.getMessage("file")));
 		items.add(new SelectItem("fileSize", Messages.getMessage("size")));
+		items.add(new SelectItem("type", Messages.getMessage("type")));
 		
 
 		Collections.sort(items, new Comparator<SelectItem>() {
