@@ -267,7 +267,7 @@ public class ServletDocUtil {
 		if (StringUtils.isEmpty(ver))
 			ver = fileVersion;
 		if (StringUtils.isEmpty(ver))
-			ver = doc.getVersion();
+			ver = doc.getFileVersion();
 
 		DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		File file = docManager.getDocumentFile(doc, fileVersion);
