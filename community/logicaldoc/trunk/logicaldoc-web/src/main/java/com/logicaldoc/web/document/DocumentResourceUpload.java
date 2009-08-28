@@ -7,7 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -19,11 +18,11 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.Constants;
 import com.logicaldoc.web.util.ServletDocUtil;
 
 /**
@@ -37,15 +36,19 @@ public class DocumentResourceUpload extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	protected static Log logger = LogFactory.getLog(DocumentResourceUpload.class);
+	protected static Log log = LogFactory.getLog(DocumentResourceUpload.class);
 
 	public static final String DOC_ID = "docId";
 
 	public static final String SUFFIX = "suffix";
 
+	// The file version
 	public static final String VERSION_ID = "versionId";
 
+	// The document version
 	public static final String VERSION_DOC = "versionDoc";
+
+	public static final String SESSION = "session";
 
 	/**
 	 * Constructor of the object.
@@ -72,16 +75,20 @@ public class DocumentResourceUpload extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		HttpSession session = request.getSession(false);
-		String username = null;
+		String userSession = request.getParameter(SESSION);
+		if (!SessionManager.getInstance().isValid(userSession)) {
+			log.error("Invalid session " + userSession);
+			return;
+		} else {
+			SessionManager.getInstance().renew(userSession);
+		}
 
-		if (session != null)
-			username = (String) session.getAttribute(Constants.AUTH_USERNAME);
+		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 
-		if (username == null)
-			username = request.getParameter("username");
-
-		String password = (String) request.getParameter("password");
+		// Load the user associated to the session
+		User user = udao.findByUserName(SessionManager.getInstance().get(userSession).getUserName());
+		if (user == null)
+			return;
 
 		String docId = request.getParameter(DOC_ID);
 
@@ -91,20 +98,9 @@ public class DocumentResourceUpload extends HttpServlet {
 
 		String docVersion = request.getParameter(VERSION_DOC);
 
-		logger.debug("Start Upload resource for document " + docId);
+		log.debug("Start Upload resource for document " + docId);
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = udao.findByUserName(username);
-		if (user == null)
-			return;
-		if (!udao.validateUser(username, password)) {
-			try {
-				throw new Exception("Unknown user " + username);
-			} catch (Exception e) {
-				logger.error(e.getMessage());
-			}
-		}
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(Long.parseLong(docId));
@@ -129,7 +125,7 @@ public class DocumentResourceUpload extends HttpServlet {
 				}
 			}
 		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
+			log.error(ex.getMessage(), ex);
 		}
 	}
 }

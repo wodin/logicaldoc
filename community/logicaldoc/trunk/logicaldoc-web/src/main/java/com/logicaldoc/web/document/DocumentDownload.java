@@ -7,7 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -16,12 +15,11 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.SessionManagement;
-import com.logicaldoc.web.util.Constants;
 import com.logicaldoc.web.util.ServletDocUtil;
 
 /**
@@ -32,13 +30,19 @@ import com.logicaldoc.web.util.ServletDocUtil;
  * @since 2.6
  */
 public class DocumentDownload extends HttpServlet {
+
+	// The file version
+	public static final String VERSION_ID = "versionId";
+
 	public static final String SUFFIX = "suffix";
 
 	public static final String DOC_ID = "docId";
 
+	public static final String SESSION = "session";
+
 	private static final long serialVersionUID = -6956612970433309888L;
 
-	protected static Log logger = LogFactory.getLog(DocumentDownload.class);
+	protected static Log log = LogFactory.getLog(DocumentDownload.class);
 
 	/**
 	 * Constructor of the object.
@@ -58,21 +62,23 @@ public class DocumentDownload extends HttpServlet {
 	 * @throws IOException if an error occurred
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(false);
-		String username = null;
-		if (session != null)
-			username = (String) session.getAttribute(Constants.AUTH_USERNAME);
+		String userSession = request.getParameter(SESSION);
+		if (!SessionManager.getInstance().isValid(userSession)) {
+			log.error("Invalid session " + userSession);
+			return;
+		} else {
+			SessionManager.getInstance().renew(userSession);
+		}
 
-		if (username == null)
-			username = request.getParameter("username");
-		String password = (String) request.getParameter("password");
+		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+
+		// Load the user associated to the session
+		User user = udao.findByUserName(SessionManager.getInstance().get(userSession).getUserName());
+		if (user == null)
+			return;
 
 		// Flag indicating to download only indexed text
 		String downloadText = request.getParameter("downloadText");
-
-		if (StringUtils.isEmpty(downloadText)) {
-			downloadText = (String) session.getAttribute("downloadText");
-		}
 
 		String suffix = request.getParameter(SUFFIX);
 		if (StringUtils.isEmpty(suffix)) {
@@ -85,59 +91,33 @@ public class DocumentDownload extends HttpServlet {
 			id = (String) request.getAttribute(DOC_ID);
 		}
 
-		if (StringUtils.isEmpty(id)) {
-			id = (String) session.getAttribute(DOC_ID);
-		}
-
-		String fileVersion = request.getParameter("versionId");
+		String fileVersion = request.getParameter(VERSION_ID);
 
 		if (StringUtils.isEmpty(fileVersion)) {
-			fileVersion = (String) request.getAttribute("versionId");
+			fileVersion = (String) request.getAttribute(VERSION_ID);
 		}
 
-		if (StringUtils.isEmpty(fileVersion)) {
-			fileVersion = (String) session.getAttribute("versionId");
-		}
-
-		logger.debug("Download document id=" + id + " " + fileVersion);
+		log.debug("Download document id=" + id + " " + fileVersion);
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = udao.findByUserName(username);
-		if (user == null)
-			return;
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(Long.parseLong(id));
 		Menu folder = doc.getFolder();
-
-		if (session != null && SessionManagement.isValid(session)) {
-			try {
-				// if we have access to the document, return it
-				if (mdao.isReadEnable(folder.getId(), user.getId())) {
-					if ("true".equals(downloadText)) {
-						ServletDocUtil.downloadDocumentText(request, response, doc.getId());
-					} else {
-						ServletDocUtil.downloadDocument(request, response, doc.getId(), fileVersion, suffix, user);
-
-						// add the file to the recent files of the user
-						ServletDocUtil.addToRecentFiles(user.getId(), doc.getId());
-					}
-				}
-			} catch (Exception ex) {
-				logger.error(ex.getMessage(), ex);
-			}
-		} else {
-			try {
-				if (!udao.validateUser(username, password))
-					throw new Exception("Unknown user " + username);
-
-				if (mdao.isReadEnable(folder.getId(), user.getId())) {
+		try {
+			// if we have access to the document, return it
+			if (mdao.isReadEnable(folder.getId(), user.getId())) {
+				if ("true".equals(downloadText)) {
+					ServletDocUtil.downloadDocumentText(request, response, doc.getId());
+				} else {
 					ServletDocUtil.downloadDocument(request, response, doc.getId(), fileVersion, suffix, user);
+
+					// add the file to the recent files of the user
+					ServletDocUtil.addToRecentFiles(user.getId(), doc.getId());
 				}
-			} catch (Exception ex) {
-				logger.error(ex.getMessage(), ex);
 			}
+		} catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
 		}
 	}
 
