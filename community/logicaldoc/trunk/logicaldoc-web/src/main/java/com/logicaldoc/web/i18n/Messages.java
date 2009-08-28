@@ -19,8 +19,7 @@ import com.logicaldoc.web.SessionManagement;
 
 /**
  * A class for retrieval of localized messages. All bundles declared in
- * faces-config.xml are searched but in the opposite order they are declared in
- * the file. The first key match wins.
+ * ResourceBundle extension point. The first key match wins.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
