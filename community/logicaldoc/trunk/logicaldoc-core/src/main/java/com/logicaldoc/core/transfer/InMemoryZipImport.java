@@ -48,7 +48,7 @@ public class InMemoryZipImport extends ZipImport {
 	}
 
 	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId, String encoding) {
-
+		this.zipFile = zipsource;
 		this.locale = locale;
 		this.templateId = templateId;
 
@@ -58,7 +58,7 @@ public class InMemoryZipImport extends ZipImport {
 		logger.debug("Using encoding: " + encoding);
 
 		try {
-			ZipFile zip = new ZipFile(zipsource, encoding);
+			ZipFile zip = new ZipFile(zipFile, encoding);
 			Enumeration zipEntries = zip.getEntries();
 			ZipEntry zipe = null;
 			while (zipEntries.hasMoreElements()) {
@@ -72,6 +72,9 @@ public class InMemoryZipImport extends ZipImport {
 		} catch (IOException e) {
 			logger.error("InMemoryZipImport process failed", e);
 		}
+
+		if (isNotifyUser())
+			sendNotificationMessage();
 	}
 
 	/**
