@@ -2,7 +2,10 @@ package com.logicaldoc.core.transfer;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.Date;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -10,6 +13,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.communication.SystemMessage;
+import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
@@ -48,6 +53,10 @@ public class ZipImport {
 
 	protected String tags;
 
+	protected File zipFile;
+
+	private boolean notifyUser = true;
+
 	public ZipImport() {
 	}
 
@@ -64,6 +73,7 @@ public class ZipImport {
 	}
 
 	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId) {
+		this.zipFile = zipsource;
 		this.locale = locale;
 		this.templateId = templateId;
 
@@ -90,7 +100,7 @@ public class ZipImport {
 			FileUtils.forceMkdir(dir);
 		} catch (IOException e) {
 		}
-		ZipUtil.unzip(zipsource.getPath(), userpath);
+		ZipUtil.unzip(zipFile.getPath(), userpath);
 		File[] files = dir.listFiles();
 
 		for (int i = 0; i < files.length; i++) {
@@ -101,6 +111,9 @@ public class ZipImport {
 			FileUtils.deleteDirectory(dir);
 		} catch (IOException e) {
 		}
+
+		if (notifyUser)
+			sendNotificationMessage();
 	}
 
 	public void process(String zipsource, Locale locale, Menu parent, long userId, Long templateId) {
@@ -159,6 +172,30 @@ public class ZipImport {
 		}
 	}
 
+	/**
+	 * Sends a system message to the user that imported the zip.
+	 * 
+	 * @param archive
+	 */
+	protected void sendNotificationMessage() {
+		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+		Date now = new Date();
+		SystemMessage sysmess = new SystemMessage();
+		sysmess.setAuthor("SYSTEM");
+		sysmess.setRecipient(user.getUserName());
+		ResourceBundle bundle = ResourceBundle.getBundle("/i18n/application", user.getLocale());
+		sysmess.setSubject(bundle.getString("zip.import.subject"));
+		String message=bundle.getString("zip.import.body");
+		String body = MessageFormat.format(message, new String[] { zipFile.getName() });
+		sysmess.setMessageText(body);
+		sysmess.setSentDate(now);
+		sysmess.setRead(0);
+		sysmess.setConfirmation(0);
+		sysmess.setPrio(0);
+		sysmess.setDateScope(1);
+		smdao.store(sysmess);
+	}
+
 	public String getTags() {
 		return tags;
 	}
@@ -192,5 +229,13 @@ public class ZipImport {
 
 	public void setLocale(Locale locale) {
 		this.locale = locale;
+	}
+
+	public boolean isNotifyUser() {
+		return notifyUser;
+	}
+
+	public void setNotifyUser(boolean notifyUser) {
+		this.notifyUser = notifyUser;
 	}
 }
