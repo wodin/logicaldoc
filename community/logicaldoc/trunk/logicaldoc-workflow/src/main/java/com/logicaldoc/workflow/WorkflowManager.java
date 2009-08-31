@@ -246,7 +246,7 @@ public class WorkflowManager {
 			if(documentAlreadyAppended)
 				continue;
 			
-			records.add(new DocumentRecord(document.getId(), null, DocumentsRecordsManager.CHILD_INDENT_STYLE_CLASS, 
+			records.add(new DocumentRecord(document.getId(), DocumentsRecordsManager.CHILD_INDENT_STYLE_CLASS, 
 					DocumentsRecordsManager.CHILD_ROW_STYLE_CLASS) );
 			
 		}
