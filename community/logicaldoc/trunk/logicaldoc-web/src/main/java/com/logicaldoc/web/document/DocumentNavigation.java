@@ -296,7 +296,7 @@ public class DocumentNavigation extends NavigationBean {
 				Messages.addLocalizedInfo("msg.action.deleteitem");
 		} catch (Exception e) {
 			Messages.addLocalizedError("errors.action.deleteitem");
-			log.error(e.getMessage(),e);
+			log.error(e.getMessage(), e);
 		}
 
 		Directory parent = new Directory(menuDao.findById(getSelectedDir().getMenu().getParentId()));
@@ -418,7 +418,7 @@ public class DocumentNavigation extends NavigationBean {
 		DiscussionThreadDAO ddao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
 		DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		
+
 		DiscussionThread thread = ddao.findById(article.getThreadId());
 		ddao.initialize(thread);
 		Document document = docdao.findById(thread.getDocId());
@@ -441,7 +441,7 @@ public class DocumentNavigation extends NavigationBean {
 		navigation.setSelectedPanel(panel);
 
 		// Show the discussion panel
-		DiscussionsManager discussionsManager=((DiscussionsManager) FacesUtil.accessBeanFromFacesContext(
+		DiscussionsManager discussionsManager = ((DiscussionsManager) FacesUtil.accessBeanFromFacesContext(
 				"discussionsManager", FacesContext.getCurrentInstance(), log));
 		discussionsManager.selectDocument(document);
 		discussionsManager.setSelectedThread(thread);
@@ -452,5 +452,13 @@ public class DocumentNavigation extends NavigationBean {
 		documentNavigation.setSelectedPanel(new PageContentBean("discussions"));
 
 		return null;
+	}
+
+	public void refresh(long docId) {
+		// Notify the records manager
+		DocumentsRecordsManager recordsManager = ((DocumentsRecordsManager) FacesUtil.accessBeanFromFacesContext(
+				"documentsRecordsManager", FacesContext.getCurrentInstance(), log));
+		recordsManager.refresh(docId);
+		setSelectedPanel(new PageContentBean(getViewMode()));
 	}
 }

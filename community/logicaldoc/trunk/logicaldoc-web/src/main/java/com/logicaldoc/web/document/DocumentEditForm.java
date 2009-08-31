@@ -607,11 +607,12 @@ public class DocumentEditForm {
 					log.error(e.getMessage(), e);
 					Messages.addError(e.getMessage());
 				} finally {
-					if (!duplicateCustomId)
+					if (!duplicateCustomId) {
+						navigation.refresh(record.getDocId());
+						navigation.showDocuments();
 						reset();
+					}
 				}
-				navigation.showDocuments();
-				navigation.refresh();
 			}
 			return null;
 		} else {

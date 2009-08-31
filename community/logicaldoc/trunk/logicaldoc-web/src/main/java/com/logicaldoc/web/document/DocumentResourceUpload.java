@@ -23,6 +23,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.web.util.Constants;
 import com.logicaldoc.web.util.ServletDocUtil;
 
 /**
@@ -76,6 +77,9 @@ public class DocumentResourceUpload extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		String userSession = request.getParameter(SESSION);
+		if (userSession == null && request.getSession(false) != null)
+			userSession = (String) request.getSession().getAttribute(Constants.USER_SESSION);
+		
 		if (!SessionManager.getInstance().isValid(userSession)) {
 			log.error("Invalid session " + userSession);
 			return;

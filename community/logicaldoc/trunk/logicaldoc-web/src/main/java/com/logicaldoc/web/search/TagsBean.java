@@ -45,7 +45,7 @@ public class TagsBean extends SortableList {
 	private String reqop;
 
 	private String manualchar;
-	
+
 	public TagsBean() {
 		// We don't sort by default
 		super("xxx");
@@ -95,7 +95,7 @@ public class TagsBean extends SortableList {
 		kword.setWord(tag);
 		kword.select();
 	}
-	
+
 	/**
 	 * Handles the selection of this letter
 	 */
@@ -186,7 +186,7 @@ public class TagsBean extends SortableList {
 					tags.clear();
 
 					for (Long id : docIds) {
-						DocumentRecord record = new DocumentRecord(id, null, null, null);
+						DocumentRecord record = new DocumentRecord(id, null, null);
 
 						if (!documents.contains(record)) {
 							documents.add(record);

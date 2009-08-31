@@ -63,7 +63,7 @@ public class HomeBean {
 				Collection<Document> documents = (Collection<Document>) docdao.findLastModifiedByUserId(userId, 10);
 				for (Document document : documents) {
 					if (!hm.containsKey(document.getId())) {
-						DocumentRecord dr = new DocumentRecord(document.getId(), null,
+						DocumentRecord dr = new DocumentRecord(document.getId(),
 								DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
 								DocumentsRecordsManager.GROUP_ROW_STYLE_CLASS);
 						hm.put(document.getId(), dr);
@@ -93,8 +93,7 @@ public class HomeBean {
 
 				Collection<Document> docColl = docDao.findLastDownloadsByUserId(userId, 10);
 				for (Document doc : docColl) {
-					lastDownloads.add(new DocumentRecord(doc.getId(), null,
-							DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
+					lastDownloads.add(new DocumentRecord(doc.getId(), DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
 							DocumentsRecordsManager.GROUP_ROW_STYLE_CLASS));
 				}
 			} catch (Exception e) {
@@ -143,8 +142,7 @@ public class HomeBean {
 				Collection<Document> documents = (Collection<Document>) docdao.findLockedByUserId(SessionManagement
 						.getUserId());
 				for (Document document : documents) {
-					lastdocs.add(new DocumentRecord(document.getId(), null,
-							DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
+					lastdocs.add(new DocumentRecord(document.getId(), DocumentsRecordsManager.GROUP_INDENT_STYLE_CLASS,
 							DocumentsRecordsManager.GROUP_ROW_STYLE_CLASS));
 				}
 			} catch (Exception e) {
