@@ -30,7 +30,7 @@ public class WorkflowInstanceInfo extends WorkflowInstance{
 		for(Long documentId : documentSet)
 			documents.add( 
 					new DocumentRecord(
-							documentId, null, DocumentsRecordsManager.CHILD_INDENT_STYLE_CLASS, 
+							documentId, DocumentsRecordsManager.CHILD_INDENT_STYLE_CLASS, 
 							DocumentsRecordsManager.CHILD_ROW_STYLE_CLASS
 						));
 		
