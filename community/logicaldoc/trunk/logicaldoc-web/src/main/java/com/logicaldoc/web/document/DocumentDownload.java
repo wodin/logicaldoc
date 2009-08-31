@@ -20,6 +20,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.web.util.Constants;
 import com.logicaldoc.web.util.ServletDocUtil;
 
 /**
@@ -62,49 +63,52 @@ public class DocumentDownload extends HttpServlet {
 	 * @throws IOException if an error occurred
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String userSession = request.getParameter(SESSION);
-		if (!SessionManager.getInstance().isValid(userSession)) {
-			log.error("Invalid session " + userSession);
-			return;
-		} else {
-			SessionManager.getInstance().renew(userSession);
-		}
-
-		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-
-		// Load the user associated to the session
-		User user = udao.findByUserName(SessionManager.getInstance().get(userSession).getUserName());
-		if (user == null)
-			return;
-
-		// Flag indicating to download only indexed text
-		String downloadText = request.getParameter("downloadText");
-
-		String suffix = request.getParameter(SUFFIX);
-		if (StringUtils.isEmpty(suffix)) {
-			suffix = (String) request.getAttribute(SUFFIX);
-		}
-
-		String id = request.getParameter(DOC_ID);
-
-		if (StringUtils.isEmpty(id)) {
-			id = (String) request.getAttribute(DOC_ID);
-		}
-
-		String fileVersion = request.getParameter(VERSION_ID);
-
-		if (StringUtils.isEmpty(fileVersion)) {
-			fileVersion = (String) request.getAttribute(VERSION_ID);
-		}
-
-		log.debug("Download document id=" + id + " " + fileVersion);
-
-		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findById(Long.parseLong(id));
-		Menu folder = doc.getFolder();
 		try {
+			String userSession = request.getParameter(SESSION);
+			if (userSession == null && request.getSession(false) != null)
+				userSession = (String) request.getSession().getAttribute(Constants.USER_SESSION);
+
+			if (!SessionManager.getInstance().isValid(userSession)) {
+				log.error("Invalid session " + userSession);
+				return;
+			} else {
+				SessionManager.getInstance().renew(userSession);
+			}
+
+			UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+
+			// Load the user associated to the session
+			User user = udao.findByUserName(SessionManager.getInstance().get(userSession).getUserName());
+			if (user == null)
+				return;
+
+			// Flag indicating to download only indexed text
+			String downloadText = request.getParameter("downloadText");
+
+			String suffix = request.getParameter(SUFFIX);
+			if (StringUtils.isEmpty(suffix)) {
+				suffix = (String) request.getAttribute(SUFFIX);
+			}
+
+			String id = request.getParameter(DOC_ID);
+
+			if (StringUtils.isEmpty(id)) {
+				id = (String) request.getAttribute(DOC_ID);
+			}
+
+			String fileVersion = request.getParameter(VERSION_ID);
+
+			if (StringUtils.isEmpty(fileVersion)) {
+				fileVersion = (String) request.getAttribute(VERSION_ID);
+			}
+
+			log.debug("Download document id=" + id + " " + fileVersion);
+
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+
+			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			Document doc = docDao.findById(Long.parseLong(id));
+			Menu folder = doc.getFolder();
 			// if we have access to the document, return it
 			if (mdao.isReadEnable(folder.getId(), user.getId())) {
 				if ("true".equals(downloadText)) {
@@ -116,7 +120,7 @@ public class DocumentDownload extends HttpServlet {
 					ServletDocUtil.addToRecentFiles(user.getId(), doc.getId());
 				}
 			}
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
 		}
 	}

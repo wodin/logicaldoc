@@ -32,6 +32,7 @@
 			sortColumn="#{documentsRecordsManager.sortColumn}"
 			sortAscending="#{documentsRecordsManager.ascending}" cellpadding="0"
 			rows="#{documentsRecordsManager.displayedRows}"
+			binding="#{documentsRecordsManager.table}"
 			columnClasses="selectionColumn,dateColumn,titleColumn,selectionColumn,dateColumn,dateColumn,numberColumn">
 
 			<!-- selection column -->

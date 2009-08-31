@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.faces.component.UIData;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
@@ -98,6 +99,10 @@ public class DocumentsRecordsManager extends SortableList {
 	// The requested operation, can be: cut or copy
 	private String guiRequest;
 
+	private UIData table;
+
+	private UIData panels;
+
 	public DocumentsRecordsManager() {
 		// We don't sort by default
 		super("xxx");
@@ -127,7 +132,7 @@ public class DocumentsRecordsManager extends SortableList {
 
 		for (Long id : docIds) {
 			DocumentRecord record;
-			record = new DocumentRecord(id, documents, CHILD_INDENT_STYLE_CLASS, CHILD_ROW_STYLE_CLASS);
+			record = new DocumentRecord(id, CHILD_INDENT_STYLE_CLASS, CHILD_ROW_STYLE_CLASS);
 			if (!documents.contains(record)) {
 				documents.add(record);
 			}
@@ -214,6 +219,21 @@ public class DocumentsRecordsManager extends SortableList {
 	public void refresh() {
 		selectedAll = false;
 		selectDirectory(selectedDirectory);
+	}
+
+	public void refresh(long docId) {
+		DocumentRecord oldRecord = null;
+		for (DocumentRecord record : documents) {
+			if (record.getDocId() == docId) {
+				oldRecord = record;
+			}
+		}
+		if (oldRecord != null) {
+			DocumentRecord newRecord = new DocumentRecord(docId, CHILD_INDENT_STYLE_CLASS, CHILD_ROW_STYLE_CLASS);
+			int index = documents.indexOf(oldRecord);
+			documents.remove(index);
+			documents.add(index, newRecord);
+		}
 	}
 
 	public int getClipboardSize() {
@@ -586,13 +606,14 @@ public class DocumentsRecordsManager extends SortableList {
 				Thread zipImporter = new Thread(new Runnable() {
 					public void run() {
 						InMemoryZipImport importer = new InMemoryZipImport();
-						
+
 						String encoding = inputFile.getEncoding();
-						
+
 						importer.setExtractTags(inputFile.isExtractTags());
 						importer.setTags(inputFile.getTags());
 						log.debug("importing: = " + destFile.getPath());
-						importer.process(destFile, LocaleUtil.toLocale(zipLanguage), parent, userId, inputFile.getTemplate(), encoding);
+						importer.process(destFile, LocaleUtil.toLocale(zipLanguage), parent, userId, inputFile
+								.getTemplate(), encoding);
 						try {
 							FileUtils.forceDelete(destFile);
 						} catch (IOException e) {
@@ -636,8 +657,8 @@ public class DocumentsRecordsManager extends SortableList {
 
 				while (iter.hasNext()) {
 					UserDoc userdoc = iter.next();
-					lastdocs.add(new DocumentRecord(userdoc.getDocId(), null, GROUP_INDENT_STYLE_CLASS,
-							GROUP_ROW_STYLE_CLASS));
+					lastdocs
+							.add(new DocumentRecord(userdoc.getDocId(), GROUP_INDENT_STYLE_CLASS, GROUP_ROW_STYLE_CLASS));
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -789,5 +810,21 @@ public class DocumentsRecordsManager extends SortableList {
 
 	public String getGuiRequest() {
 		return guiRequest;
+	}
+
+	public UIData getPanels() {
+		return panels;
+	}
+
+	public void setPanels(UIData panels) {
+		this.panels = panels;
+	}
+
+	public UIData getTable() {
+		return table;
+	}
+
+	public void setTable(UIData table) {
+		this.table = table;
 	}
 }
