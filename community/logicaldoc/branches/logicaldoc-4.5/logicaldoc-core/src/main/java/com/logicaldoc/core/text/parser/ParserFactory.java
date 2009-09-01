@@ -19,10 +19,12 @@ import com.logicaldoc.core.text.parser.wordperfect.WordPerfectParser;
 import com.logicaldoc.util.PluginRegistry;
 
 /**
- * This is a factory, returning a parser instance for the given file. Created on
- * 4. November 2003, 21:54
+ * This is a factory, returning a parser instance for the given file. 
  * 
  * @author Michael Scholz
+ * @author Marco Meschieri
+ * @author Alessandro Gasparini
+ * @since 3.5
  */
 public class ParserFactory {
 	
