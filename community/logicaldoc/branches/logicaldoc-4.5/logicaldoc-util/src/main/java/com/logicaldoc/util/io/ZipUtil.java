@@ -58,11 +58,11 @@ public class ZipUtil {
 	/**
 	 * 
 	 * @param zipsource Path of the zip-file.
-	 * @return the detected encoding
+	 * @return an object representing the closest encoding match
 	 * @throws IOException 
 	 * @since 4.5.2
 	 */
-	public static String detectedEncoding(File zipsource) throws IOException {
+	public static CharsetMatch detectedEncoding(File zipsource) throws IOException {
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -79,9 +79,8 @@ public class ZipUtil {
 		CharsetDetector icu4jcd = new CharsetDetector();
 		InputStream stream = new ByteArrayInputStream(sb.toString().getBytes());
 		icu4jcd.setText(stream);
-		CharsetMatch cm = icu4jcd.detect();
 		
-		return cm.getName();
+		return icu4jcd.detect();
 	}
 
 	/**
