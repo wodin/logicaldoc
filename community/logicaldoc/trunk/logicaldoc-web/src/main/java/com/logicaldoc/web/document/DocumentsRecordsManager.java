@@ -117,8 +117,10 @@ public class DocumentsRecordsManager extends SortableList {
 	 * @param directoryId
 	 */
 	public void selectDirectory(long directoryId) {
+		this.table=null;
 		selectedDirectory = directoryId;
 		selection.clear();
+
 
 		// initiate the list
 		if (documents != null) {

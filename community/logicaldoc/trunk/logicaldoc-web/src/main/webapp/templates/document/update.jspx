@@ -40,8 +40,11 @@
 						<ice:panelGroup>
 							<ice:inputText id="title" tabindex="1"
 								value="#{documentForm.title}" maxlength="255" size="38"
-								onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
-								required="true" disabled="#{documentForm.readOnly}" />
+								required="true" rendered="#{!documentForm.readOnly}" />
+							<ice:panelGroup rendered="#{documentForm.readOnly}">
+								<input type="text" class="iceInpTxt disabled"
+									value="#{documentForm.title}" maxlength="255" size="38" />
+							</ice:panelGroup>
 							<ice:message for="title" />
 						</ice:panelGroup>
 						<ice:panelGroup styleClass="outputLabel">
@@ -51,12 +54,16 @@
 						</ice:panelGroup>
 						<ice:panelGroup>
 							<ice:inputText id="tags"
-								rendered="#{!fieldPreferences['edit.tags.hidden']}"
+								rendered="#{!fieldPreferences['edit.tags.hidden'] and !(documentForm.readOnly or fieldPreferences['edit.tags.readonly'])}"
 								value="#{documentForm.tags}" binding="#{documentForm.tagsInput}"
 								tabindex="1" maxlength="255" size="38"
-								required="#{fieldPreferences['edit.tags.mandatory']}"
-								disabled="#{documentForm.readOnly or fieldPreferences['edit.tags.readonly']}" />
+								required="#{fieldPreferences['edit.tags.mandatory']}" />
 							<ice:message for="tags" />
+							<ice:panelGroup
+								rendered="#{!fieldPreferences['edit.tags.hidden'] and (documentForm.readOnly or fieldPreferences['edit.tags.readonly'])}">
+								<input type="text" class="iceInpTxt disabled"
+									value="#{documentForm.tags}" maxlength="255" size="38" />
+							</ice:panelGroup>
 						</ice:panelGroup>
 						<ice:panelGroup styleClass="outputLabel">
 							<ice:outputLabel for="customId"
@@ -65,11 +72,15 @@
 						</ice:panelGroup>
 						<ice:panelGroup>
 							<ice:inputText id="customId"
-								rendered="#{!fieldPreferences['edit.customId.hidden'] and !fieldPreferences['edit.customId.readonly']}"
+								rendered="#{!fieldPreferences['edit.customId.hidden'] and !fieldPreferences['edit.customId.readonly'] and !documentForm.readOnly}"
 								value="#{documentForm.customId}" tabindex="1" maxlength="255"
 								size="38"
-								required="#{fieldPreferences['edit.customId.mandatory']}"
-								disabled="#{documentForm.readOnly}" />
+								required="#{fieldPreferences['edit.customId.mandatory']}" />
+							<ice:panelGroup
+								rendered="#{!fieldPreferences['edit.customId.hidden'] and !(!fieldPreferences['edit.customId.readonly'] and !documentForm.readOnly)}">
+								<input type="text" class="iceInpTxt disabled"
+									value="#{documentForm.customId}" maxlength="255" size="38" />
+							</ice:panelGroup>
 							<ice:message for="customId" />
 						</ice:panelGroup>
 					</ice:panelGrid>
@@ -193,7 +204,7 @@
 					<ice:panelGroup>
 						<ice:selectInputDate id="sourceDate"
 							rendered="#{!fieldPreferences['edit.sourceDate.hidden']}"
-							tabindex="1" popupDateFormat="#{loc.dateFormatShort}"
+							popupDateFormat="#{loc.dateFormatShort}"
 							value="#{documentForm.sourceDate}"
 							binding="#{documentForm.sourceDateInput}" renderAsPopup="true"
 							required="#{fieldPreferences['edit.tags.mandatory']}"
@@ -210,13 +221,17 @@
 							value="#{msgs['document.sourceid']} #{fieldPreferences['edit.sourceId.mandatory'] ? '*':''}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
-						<ice:inputText id="sourceId" tabindex="1"
-							rendered="#{!fieldPreferences['edit.sourceId.hidden']}"
-							value="#{documentForm.sourceId}"
+						<ice:inputText id="sourceId"
+							rendered="#{!fieldPreferences['edit.sourceId.hidden'] and !(documentForm.readOnly or fieldPreferences['edit.sourceId.readonly'])}"
+                            value="#{documentForm.sourceId}"
 							binding="#{documentForm.sourceIdInput}" maxlength="255"
 							required="#{fieldPreferences['edit.sourceId.mandatory']}"
-							disabled="#{documentForm.readOnly or fieldPreferences['edit.sourceId.readonly']}"
-							onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}" />
+							disabled="#{documentForm.readOnly or fieldPreferences['edit.sourceId.readonly']}" />
+						<ice:panelGroup
+							rendered="#{!fieldPreferences['edit.sourceId.hidden'] and (documentForm.readOnly or fieldPreferences['edit.sourceId.readonly'])}">
+							<input type="text" class="iceInpTxt disabled"
+								value="#{documentForm.sourceId}" maxlength="255" />
+						</ice:panelGroup>
 						<ice:message for="sourceId" />
 					</ice:panelGroup>
 
@@ -227,12 +242,15 @@
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="source"
-							rendered="#{!fieldPreferences['edit.source.hidden']}"
-							tabindex="1" value="#{documentForm.source}"
+							rendered="#{!fieldPreferences['edit.source.hidden'] and !(documentForm.readOnly or fieldPreferences['edit.source.readonly'])}"
+							value="#{documentForm.source}"
 							binding="#{documentForm.sourceInput}" maxlength="255"
-							onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
-							required="#{fieldPreferences['edit.source.mandatory']}"
-							disabled="#{documentForm.readOnly or fieldPreferences['edit.source.readonly']}" />
+							required="#{fieldPreferences['edit.source.mandatory']}" />
+						<ice:panelGroup
+							rendered="#{!fieldPreferences['edit.source.hidden'] and (documentForm.readOnly or fieldPreferences['edit.source.readonly'])}">
+							<input type="text" class="iceInpTxt disabled"
+								value="#{documentForm.source}" axlength="255" />
+						</ice:panelGroup>
 						<ice:message for="source" />
 					</ice:panelGroup>
 					<ice:panelGroup style="width:20px" />
@@ -243,11 +261,15 @@
 					</ice:panelGroup>
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:inputText id="sourceAuthor" tabindex="1"
-							rendered="#{!fieldPreferences['edit.sourceAuthor.hidden']}"
+							rendered="#{!fieldPreferences['edit.sourceAuthor.hidden'] and !(documentForm.readOnly or fieldPreferences['edit.sourceAuthor.readonly'])}"
 							value="#{documentForm.sourceAuthor}"
 							binding="#{documentForm.sourceAuthorInput}" maxlength="255"
-							required="#{fieldPreferences['edit.sourceAuthor.mandatory']}"
-							disabled="#{documentForm.readOnly or fieldPreferences['edit.sourceAuthor.readonly']}" />
+							required="#{fieldPreferences['edit.sourceAuthor.mandatory']}" />
+						<ice:panelGroup
+							rendered="#{!fieldPreferences['edit.sourceAuthor.hidden'] and (documentForm.readOnly or fieldPreferences['edit.sourceAuthor.readonly'])}">
+							<input type="text" class="iceInpTxt disabled"
+								value="#{documentForm.sourceAuthor}" maxlength="255" />
+						</ice:panelGroup>
 						<ice:message for="sourceAuthor" />
 					</ice:panelGroup>
 
@@ -257,12 +279,16 @@
 							value="#{msgs['document.coverage']} #{fieldPreferences['edit.coverage.mandatory'] ? '*':''}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
-						<ice:inputText id="coverage" tabindex="1"
-							rendered="#{!fieldPreferences['edit.coverage.hidden']}"
+						<ice:inputText id="coverage"
+							rendered="#{!fieldPreferences['edit.coverage.hidden'] and !(documentForm.readOnly or fieldPreferences['edit.coverage.readonly'])}"
 							value="#{documentForm.coverage}"
 							binding="#{documentForm.coverageInput}" maxlength="255"
-							required="#{fieldPreferences['edit.coverage.mandatory']}"
-							disabled="#{documentForm.readOnly or fieldPreferences['edit.coverage.readonly']}" />
+							required="#{fieldPreferences['edit.coverage.mandatory']}" />
+						<ice:panelGroup
+							rendered="#{!fieldPreferences['edit.coverage.hidden'] and (documentForm.readOnly or fieldPreferences['edit.coverage.readonly'])}">
+							<input type="text" class="iceInpTxt disabled"
+								value="#{documentForm.coverage}" maxlength="255" />
+						</ice:panelGroup>
 						<ice:message for="coverage" />
 					</ice:panelGroup>
 					<ice:panelGroup style="width:20px" />
@@ -273,11 +299,15 @@
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="sourceType"
-							rendered="#{!fieldPreferences['edit.sourceType.hidden']}"
+							rendered="#{!fieldPreferences['edit.sourceType.hidden'] and !(documentForm.readOnly or fieldPreferences['edit.sourceType.readonly'])}"
 							tabindex="1" value="#{documentForm.sourceType}"
 							binding="#{documentForm.sourceTypeInput}" maxlength="255"
-							required="#{fieldPreferences['edit.sourceType.mandatory']}"
-							disabled="#{documentForm.readOnly or fieldPreferences['edit.sourceType.readonly']}" />
+							required="#{fieldPreferences['edit.sourceType.mandatory']}" />
+						<ice:panelGroup
+							rendered="#{!fieldPreferences['edit.sourceType.hidden'] and (documentForm.readOnly or fieldPreferences['edit.sourceType.readonly'])}">
+							<input type="text" class="iceInpTxt disabled"
+								value="#{documentForm.sourceType}" maxlength="255" />
+						</ice:panelGroup>
 						<ice:message for="sourceType" />
 					</ice:panelGroup>
 
@@ -288,11 +318,15 @@
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="recipient"
-							rendered="#{!fieldPreferences['edit.recipient.hidden']}"
-							tabindex="1" value="#{documentForm.recipient}"
+							rendered="#{!fieldPreferences['edit.recipient.hidden'] and !(documentForm.readOnly or fieldPreferences['edit.recipient.readonly'])}"
+							value="#{documentForm.recipient}"
 							binding="#{documentForm.recipientInput}" maxlength="255"
-							required="#{fieldPreferences['edit.recipient.mandatory']}"
-							disabled="#{documentForm.readOnly or fieldPreferences['edit.recipient.readonly']}" />
+							required="#{fieldPreferences['edit.recipient.mandatory']}" />
+						<ice:panelGroup
+							rendered="#{!fieldPreferences['edit.recipient.hidden'] and (documentForm.readOnly or fieldPreferences['edit.recipient.readonly'])}">
+							<input type="text" class="iceInpTxt disabled"
+								value="#{documentForm.recipient}" maxlength="255" />
+						</ice:panelGroup>
 						<ice:message for="recipient" />
 					</ice:panelGroup>
 					<ice:panelGroup style="width:20px" />
@@ -300,7 +334,7 @@
 						<ice:outputLabel for="language" value="#{msgs['language']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
-						<ice:selectOneMenu styleClass="selectTagMenu" tabindex="1"
+						<ice:selectOneMenu styleClass="selectTagMenu"
 							value="#{documentForm.language}"
 							disabled="#{documentForm.readOnly}">
 							<f:selectItems value="#{selectionTags.languages}" />
@@ -314,11 +348,15 @@
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="object"
-							rendered="#{!fieldPreferences['edit.object.hidden']}"
-							tabindex="1" value="#{documentForm.object}"
+							rendered="#{!fieldPreferences['edit.object.hidden'] and !(documentForm.readOnly or fieldPreferences['edit.object.readonly'])}"
+							value="#{documentForm.object}"
 							binding="#{documentForm.objectInput}" maxlength="255"
-							required="#{fieldPreferences['edit.object.mandatory']}"
-							disabled="#{documentForm.readOnly or fieldPreferences['edit.object.readonly']}" />
+							required="#{fieldPreferences['edit.object.mandatory']}" />
+						<ice:panelGroup
+							rendered="#{!fieldPreferences['edit.object.hidden'] and (documentForm.readOnly or fieldPreferences['edit.object.readonly'])}">
+							<input type="text" class="iceInpTxt disabled"
+								value="#{documentForm.object}" maxlength="255" />
+						</ice:panelGroup>
 						<ice:message for="object" />
 					</ice:panelGroup>
 				</ice:panelGrid>
@@ -372,8 +410,12 @@
 									value="#{entry.attribute.stringValue}"
 									binding="#{documentForm.stringValueInput}" maxlength="255"
 									required="#{entry.attribute.mandatory == 1 ? 'true': 'false'}"
-									disabled="#{documentForm.readOnly}">
+									rendered="#{!documentForm.readOnly}">
 								</ice:inputText>
+								<ice:panelGroup rendered="#{documentForm.readOnly}">
+									<input type="text" class="iceInpTxt disabled"
+										value="#{entry.attribute.stringValue}" maxlength="255" />
+								</ice:panelGroup>
 							</ice:panelGroup>
 
 							<!-- Integer -->
@@ -381,7 +423,7 @@
 								<ice:inputText id="int" value="#{entry.attribute.intValue}"
 									binding="#{documentForm.intValueInput}" maxlength="255"
 									required="#{entry.attribute.mandatory == 1 ? 'true': 'false'}"
-									disabled="#{documentForm.readOnly}">
+									rendered="#{!documentForm.readOnly}">
 								</ice:inputText>
 							</ice:panelGroup>
 
