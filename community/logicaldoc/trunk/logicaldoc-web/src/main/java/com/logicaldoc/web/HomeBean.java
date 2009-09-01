@@ -113,13 +113,13 @@ public class HomeBean {
 		if (SessionManagement.isValid()) {
 			try {
 				long userId = SessionManagement.getUserId();
-				DiscussionThreadDAO artDao = (DiscussionThreadDAO) Context.getInstance().getBean(
+				DiscussionThreadDAO discussionDao = (DiscussionThreadDAO) Context.getInstance().getBean(
 						DiscussionThreadDAO.class);
-				Collection<DiscussionComment> articles = artDao.findCommentsByUserId(userId, 10);
+				Collection<DiscussionComment> discussions = discussionDao.findCommentsByUserId(userId, 10);
 
-				if (articles != null) {
+				if (discussions != null) {
 					// revert the list, it should be in asc order by time
-					lastcomments.addAll(articles);
+					lastcomments.addAll(discussions);
 					Collections.reverse(lastcomments);
 				}
 			} catch (Exception e) {
