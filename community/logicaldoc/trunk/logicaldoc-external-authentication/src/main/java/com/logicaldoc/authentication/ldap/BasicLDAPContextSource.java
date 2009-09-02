@@ -20,20 +20,22 @@ public class BasicLDAPContextSource extends LdapContextSource {
 
 	private String currentDN;
 
-	private String userAuthenticationPatern;
+	private String userAuthenticationPattern;
 
 	private LDAPUserGroupContext userGroupContext;
 
+	public void setConfiguration(LDAPContextSourceConfig config) {
+		this.realm = config.getRealm();
+		this.currentDN = config.getCurrentDN();
+		this.userAuthenticationPattern = config.getUserAuthenticationPattern();
+		setUrl(config.getUrl());
+		setUserName(config.getUserName());
+		setPassword(config.getPassword());
+		setBase(config.getBase());
+	}
+
 	public void setUserGroupContext(LDAPUserGroupContext userGroupContext) {
 		this.userGroupContext = userGroupContext;
-	}
-
-	public void setUserAuthenticationPatern(String userAuthenticationPatern) {
-		this.userAuthenticationPatern = userAuthenticationPatern;
-	}
-
-	public String getUserAuthenticationPatern() {
-		return userAuthenticationPatern;
 	}
 
 	public void setRealm(String realm) {
@@ -58,6 +60,7 @@ public class BasicLDAPContextSource extends LdapContextSource {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.springframework.ldap.support.AbstractContextSource#setupAuthenticatedEnvironment(java.util.Hashtable)
 	 */
 	@SuppressWarnings("unchecked")
@@ -71,17 +74,14 @@ public class BasicLDAPContextSource extends LdapContextSource {
 	}
 
 	private String generateUserLogonName(String username) {
-		String tmpUserAuthenticationPatern = userAuthenticationPatern;
+		String tmpUserAuthenticationPatern = userAuthenticationPattern;
 		if (tmpUserAuthenticationPatern.contains("{logonAttribute}"))
-			tmpUserAuthenticationPatern = tmpUserAuthenticationPatern
-					.replaceAll("\\{logonAttribute\\}", this.userGroupContext
-							.getUserIdentiferAttribute());
+			tmpUserAuthenticationPatern = tmpUserAuthenticationPatern.replaceAll("\\{logonAttribute\\}",
+					this.userGroupContext.getUserIdentiferAttribute());
 		if (tmpUserAuthenticationPatern.contains("{userName}"))
-			tmpUserAuthenticationPatern = tmpUserAuthenticationPatern
-					.replaceAll("\\{userName\\}", username);
+			tmpUserAuthenticationPatern = tmpUserAuthenticationPatern.replaceAll("\\{userName\\}", username);
 		if (tmpUserAuthenticationPatern.contains("{userBaseEntry}"))
-			tmpUserAuthenticationPatern = tmpUserAuthenticationPatern
-					.replaceAll("\\{userBaseEntry\\}", this.currentDN);
+			tmpUserAuthenticationPatern = tmpUserAuthenticationPatern.replaceAll("\\{userBaseEntry\\}", this.currentDN);
 		return tmpUserAuthenticationPatern;
 	}
 
@@ -92,12 +92,20 @@ public class BasicLDAPContextSource extends LdapContextSource {
 	public String getCurrentDN() {
 		return currentDN;
 	}
-	
-	public String getUserName(){
+
+	public String getUserName() {
 		return super.userName;
 	}
-	
-	public String getPassword(){
+
+	public String getPassword() {
 		return super.password;
+	}
+
+	public String getUserAuthenticationPattern() {
+		return userAuthenticationPattern;
+	}
+
+	public void setUserAuthenticationPattern(String userAuthenticationPattern) {
+		this.userAuthenticationPattern = userAuthenticationPattern;
 	}
 }

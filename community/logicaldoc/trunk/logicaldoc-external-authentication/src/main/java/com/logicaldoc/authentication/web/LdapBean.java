@@ -2,7 +2,7 @@ package com.logicaldoc.authentication.web;
 
 import java.io.IOException;
 
-import com.logicaldoc.authentication.ldap.BasicLDAPContextSource;
+import com.logicaldoc.authentication.ldap.LDAPContextSourceConfig;
 import com.logicaldoc.authentication.ldap.LDAPUserGroupContext;
 import com.logicaldoc.util.config.PropertiesBean;
 
@@ -13,16 +13,12 @@ import com.logicaldoc.util.config.PropertiesBean;
  * @since 4.5
  */
 public class LdapBean {
-	private BasicLDAPContextSource contextSource;
+	private LDAPContextSourceConfig contextSourceConfig;
 
 	private LDAPUserGroupContext userGroupContext;
 
-	public BasicLDAPContextSource getContextSource() {
-		return contextSource;
-	}
-
-	public void setContextSource(BasicLDAPContextSource contextSource) {
-		this.contextSource = contextSource;
+	public LDAPContextSourceConfig getContextSourceConfig() {
+		return contextSourceConfig;
 	}
 
 	public LDAPUserGroupContext getUserGroupContext() {
@@ -38,13 +34,14 @@ public class LdapBean {
 			PropertiesBean pbean = new PropertiesBean();
 
 			// Save source settings
-			pbean.setProperty("ldap.url", contextSource.getUrl());
-			pbean.setProperty("ldap.realm", contextSource.getRealm());
-			pbean.setProperty("ldap.currentDN", contextSource.getCurrentDN());
-			pbean.setProperty("ldap.authenticationPattern", contextSource.getUserAuthenticationPatern());
-			pbean.setProperty("ldap.username", contextSource.getUserName());
-			pbean.setProperty("ldap.password", contextSource.getPassword());
-			pbean.setProperty("ldap.realm", contextSource.getRealm());
+			pbean.setProperty("ldap.url", contextSourceConfig.getUrl());
+			pbean.setProperty("ldap.realm", contextSourceConfig.getRealm());
+			pbean.setProperty("ldap.currentDN", contextSourceConfig.getCurrentDN());
+			pbean.setProperty("ldap.authenticationPattern", contextSourceConfig.getUserAuthenticationPattern());
+			pbean.setProperty("ldap.username", contextSourceConfig.getUserName());
+			pbean.setProperty("ldap.password", contextSourceConfig.getPassword());
+			pbean.setProperty("ldap.realm", contextSourceConfig.getRealm());
+			pbean.setProperty("ldap.base", contextSourceConfig.getBase());
 
 			// Save user group settings
 			pbean.setProperty("ldap.userIdentiferAttribute", userGroupContext.getUserIdentiferAttribute());
@@ -63,5 +60,9 @@ public class LdapBean {
 		}
 
 		return null;
+	}
+
+	public void setContextSourceConfig(LDAPContextSourceConfig contextSourceConfig) {
+		this.contextSourceConfig = contextSourceConfig;
 	}
 }
