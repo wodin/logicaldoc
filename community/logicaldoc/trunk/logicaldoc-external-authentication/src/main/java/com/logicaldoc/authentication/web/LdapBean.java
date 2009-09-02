@@ -13,6 +13,8 @@ import com.logicaldoc.util.config.PropertiesBean;
  * @since 4.5
  */
 public class LdapBean {
+	private String propertyPrefix="ldap";
+	
 	private LDAPContextSourceConfig contextSourceConfig;
 
 	private LDAPUserGroupContext userGroupContext;
@@ -34,23 +36,24 @@ public class LdapBean {
 			PropertiesBean pbean = new PropertiesBean();
 
 			// Save source settings
-			pbean.setProperty("ldap.url", contextSourceConfig.getUrl());
-			pbean.setProperty("ldap.realm", contextSourceConfig.getRealm());
-			pbean.setProperty("ldap.currentDN", contextSourceConfig.getCurrentDN());
-			pbean.setProperty("ldap.authenticationPattern", contextSourceConfig.getUserAuthenticationPattern());
-			pbean.setProperty("ldap.username", contextSourceConfig.getUserName());
-			pbean.setProperty("ldap.password", contextSourceConfig.getPassword());
-			pbean.setProperty("ldap.realm", contextSourceConfig.getRealm());
-			pbean.setProperty("ldap.base", contextSourceConfig.getBase());
+			pbean.setProperty(propertyPrefix+".url", contextSourceConfig.getUrl());
+			pbean.setProperty(propertyPrefix+".realm", contextSourceConfig.getRealm());
+			pbean.setProperty(propertyPrefix+".currentDN", contextSourceConfig.getCurrentDN());
+			pbean.setProperty(propertyPrefix+".authenticationPattern", contextSourceConfig.getUserAuthenticationPattern());
+			pbean.setProperty(propertyPrefix+".username", contextSourceConfig.getUserName());
+			pbean.setProperty(propertyPrefix+".password", contextSourceConfig.getPassword());
+			pbean.setProperty(propertyPrefix+".realm", contextSourceConfig.getRealm());
+			pbean.setProperty(propertyPrefix+".base", contextSourceConfig.getBase());
+			pbean.setProperty(propertyPrefix+".enabled", contextSourceConfig.getEnabled());
 
 			// Save user group settings
-			pbean.setProperty("ldap.userIdentiferAttribute", userGroupContext.getUserIdentiferAttribute());
-			pbean.setProperty("ldap.logonAttribute", userGroupContext.getLogonAttribute());
-			pbean.setProperty("ldap.userClass", userGroupContext.getUserClass());
-			pbean.setProperty("ldap.groupClass", userGroupContext.getGroupClass());
-			pbean.setProperty("ldap.groupIdentiferAttribute", userGroupContext.getGroupIdentiferAttribute());
-			pbean.setProperty("ldap.userBase", userGroupContext.getUserBaseString());
-			pbean.setProperty("ldap.groupBase", userGroupContext.getGroupBaseString());
+			pbean.setProperty(propertyPrefix+"userIdentiferAttribute", userGroupContext.getUserIdentiferAttribute());
+			pbean.setProperty(propertyPrefix+"logonAttribute", userGroupContext.getLogonAttribute());
+			pbean.setProperty(propertyPrefix+"userClass", userGroupContext.getUserClass());
+			pbean.setProperty(propertyPrefix+"groupClass", userGroupContext.getGroupClass());
+			pbean.setProperty(propertyPrefix+"groupIdentiferAttribute", userGroupContext.getGroupIdentiferAttribute());
+			pbean.setProperty(propertyPrefix+"userBase", userGroupContext.getUserBaseString());
+			pbean.setProperty(propertyPrefix+"groupBase", userGroupContext.getGroupBaseString());
 
 			pbean.write();
 
@@ -64,5 +67,13 @@ public class LdapBean {
 
 	public void setContextSourceConfig(LDAPContextSourceConfig contextSourceConfig) {
 		this.contextSourceConfig = contextSourceConfig;
+	}
+
+	public String getPropertyPrefix() {
+		return propertyPrefix;
+	}
+
+	public void setPropertyPrefix(String propertyPrefix) {
+		this.propertyPrefix = propertyPrefix;
 	}
 }

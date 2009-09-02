@@ -185,8 +185,8 @@ public class TaskScheduling {
 			maxLength = Long.parseLong(config.getProperty("schedule.length." + taskName));
 			interval = Long.parseLong(config.getProperty("schedule.interval." + taskName));
 			delay = Long.parseLong(config.getProperty("schedule.delay." + taskName));
+			minCpuIdle=Integer.parseInt(config.getProperty("schedule.cpuidle." + taskName));
 		} catch (Exception e) {
-
 		}
 	}
 

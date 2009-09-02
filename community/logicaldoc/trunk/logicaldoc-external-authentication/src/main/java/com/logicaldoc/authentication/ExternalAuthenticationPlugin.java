@@ -17,26 +17,26 @@ import com.logicaldoc.util.plugin.LogicalDOCPlugin;
  * @since 4.5
  */
 public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
-	
+
 	protected static Log log = LogFactory.getLog(ExternalAuthenticationPlugin.class);
-	
+
 	@Override
 	protected void doStart() throws Exception {
 		super.doStart();
-		
+
 		boolean ecopied = false;
-		
+
 		// verify that the resources have actually been copied
 		File ldwebapp = new File(System.getProperty("logicaldoc.app.rootdir"));
 		File extFolder = new File(ldwebapp, "templates/external-authentication");
 		File ldapFile = new File(extFolder, "ldap.jspx");
 		if (ldapFile.exists())
 			ecopied = true;
-		
+
 		if (ecopied == false)
 			install();
 	}
-	
+
 	@Override
 	protected void install() throws Exception {
 		super.install();
@@ -52,6 +52,18 @@ public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 		pbean.setProperty("schedule.cron.LDAPSynchroniser", "00 10 01 * * ?");
 		pbean.setProperty("schedule.length.LDAPSynchroniser", "3600");
 		pbean.setProperty("schedule.enabled.LDAPSynchroniser", "false");
+		pbean.setProperty("schedule.mode.LDAPSynchroniser", "simple");
+		pbean.setProperty("schedule.interval.LDAPSynchroniser", "1800000");
+		pbean.setProperty("schedule.delay.LDAPSynchroniser", "1800000");
+		pbean.setProperty("schedule.cpuidle.LDAPSynchroniser", "-1");
+		pbean.setProperty("schedule.cron.ADSynchroniser", "00 10 01 * * ?");
+		pbean.setProperty("schedule.length.ADSynchroniser", "3600");
+		pbean.setProperty("schedule.enabled.ADSynchroniser", "false");
+		pbean.setProperty("schedule.mode.ADSynchroniser", "simple");
+		pbean.setProperty("schedule.interval.ADSynchroniser", "1800000");
+		pbean.setProperty("schedule.delay.ADSynchroniser", "1800000");
+		pbean.setProperty("schedule.cpuidle.ADSynchroniser", "-1");
+
 		pbean.write();
 
 		// Add crawler log issues
@@ -63,8 +75,15 @@ public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 		logging.addCategory("com.logicaldoc.authentication.ldap.LDAPSynchroniser", new String[] { "LDAPSynchroniser",
 				"LDAPSynchroniser_WEB" });
 		logging.write();
+		logging.addTextAppender("ADSynchroniser");
+		logging.write();
+		logging.addHtmlAppender("ADSynchroniser_WEB");
+		logging.write();
+		logging.addCategory("com.logicaldoc.authentication.ldap.ADSynchroniser", new String[] { "ADSynchroniser",
+				"ADSynchroniser_WEB" });
+		logging.write();
 
-		//Add some default settings
+		// Add some default settings
 		pbean.setProperty("ldap.url", "ldap://localhost:10389");
 		pbean.setProperty("ldap.realm", "localhost");
 		pbean.setProperty("ldap.currentDN", "ou=system");
@@ -79,5 +98,22 @@ public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 		pbean.setProperty("ldap.userBase", "ou=users,ou=system");
 		pbean.setProperty("ldap.groupBase", "ou=groups,ou=system");
 		pbean.setProperty("ldap.base", "");
+
+		pbean.setProperty("ad.url", "{userName}@logicalobjects");
+		pbean.setProperty("ad.realm", "localhost");
+		pbean.setProperty("ad.currentDN", "ou=system");
+		pbean.setProperty("ad.authenticationPattern", "{logonAttribute}={userName},{userBaseEntry}");
+		pbean.setProperty("ad.username", "Administrator");
+		pbean.setProperty("ad.password", "1");
+		pbean.setProperty("ad.userIdentiferAttribute", "CN");
+		pbean.setProperty("ad.logonAttribute", "sAMAccountName");
+		pbean.setProperty("ad.userClass", "person");
+		pbean.setProperty("ad.groupClass", "group");
+		pbean.setProperty("ad.groupIdentiferAttribute", "sAMAccountName");
+		pbean.setProperty("ad.userBase", "cn=users,dc=logicalobjects");
+		pbean.setProperty("ad.groupBase", "cn=Builtin,dc=logicalobjects");
+		pbean.setProperty("ad.base", "");
+
+		pbean.write();
 	}
 }

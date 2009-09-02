@@ -24,8 +24,6 @@ import com.logicaldoc.util.Context;
  */
 public class LDAPSynchroniser extends Task {
 
-	public static final String NAME = "LDAPSynchroniser";
-
 	private GroupDAO groupDao;
 
 	private UserDAO userDao;
@@ -39,7 +37,11 @@ public class LDAPSynchroniser extends Task {
 	private long errors = 0;
 
 	public LDAPSynchroniser() {
-		super(NAME);
+		this("LDAPSynchroniser");
+	}
+
+	public LDAPSynchroniser(String name) {
+		super(name);
 		log = LogFactory.getLog(LDAPSynchroniser.class);
 	}
 
@@ -62,7 +64,7 @@ public class LDAPSynchroniser extends Task {
 	public long getErrors() {
 		return errors;
 	}
-	
+
 	public void setUserGroupDao(UserGroupDAO userGroupDao) {
 		this.userGroupDao = userGroupDao;
 	}
@@ -106,7 +108,7 @@ public class LDAPSynchroniser extends Task {
 
 			pseudoId++;
 		}
-		
+
 		Collection<Group> _groups = ldocGroups.values();
 		Collection<User> _users = userMap.values();
 		synchronized (groupDao) {
@@ -114,7 +116,7 @@ public class LDAPSynchroniser extends Task {
 			createOrUpdateUsers(_users);
 			assignGroupsToUsers(_users);
 		}
-		
+
 	}
 
 	private void createOrUpdateGroups(Collection<Group> groups) {
@@ -200,6 +202,7 @@ public class LDAPSynchroniser extends Task {
 			log.info("Elements imported: " + imported);
 			log.info("Elements updated: " + updated);
 			log.info("Errors: " + errors);
+			setProgress(getSize());
 		}
 	}
 }

@@ -21,8 +21,15 @@
 		<parameter id="providerId" value="LDAPAuthentication"/>
 		<parameter id="position" value="10"/>
 	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="Authentication" id="ADAuthentication">
+		<parameter id="providerId" value="ADAuthentication"/>
+		<parameter id="position" value="11"/>
+	</extension>
 	<extension plugin-id="logicaldoc-core" point-id="Task" id="ldapTask">
 		<parameter id="name" value="LDAPSynchroniser" />
+	</extension>
+	<extension plugin-id="logicaldoc-core" point-id="Task" id="adTask">
+		<parameter id="name" value="ADSynchroniser" />
 	</extension>
 	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="extauthDbInit">
 		<parameter id="position" value="20" />

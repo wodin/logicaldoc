@@ -19,4 +19,9 @@ public interface AuthenticationProvider {
 	public boolean authenticate(String username, String password);
 
 	public boolean validateOnUser(String user);
+	
+	/**
+	 * A provider can be in a disabled state
+	 */
+	public boolean isEnabled();
 }

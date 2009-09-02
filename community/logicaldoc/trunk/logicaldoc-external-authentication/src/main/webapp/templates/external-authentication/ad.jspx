@@ -1,6 +1,6 @@
 <?xml version = '1.0'?>
 <!-- 
- This page is the LDAP settings form
+ This page is the Active Directory settings form
   
  @author Marco Meschieri - Logical Objects
  @since 4.5
@@ -26,19 +26,19 @@
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left;">
 					<ice:selectOneMenu  styleClass="selectTagMenu"
-							value="#{LdapBean.contextSourceConfig.enabled}">
+							value="#{ActiveDirBean.contextSourceConfig.enabled}">
 							<f:selectItem itemValue="true" itemLabel="#{msgs['yes']}" />
 							<f:selectItem itemValue="false" itemLabel="#{msgs['no']}" />
 						</ice:selectOneMenu>
 					</ice:panelGroup>
-				
-				
+
 					<ice:panelGroup style="text-align:right; white-space:nowrap;">
 						<ice:outputLabel for="url" value="#{msgs['url']}*" />
 					</ice:panelGroup>
 					<ice:panelGroup>
-						<ice:inputText id="url" value="#{LdapBean.contextSourceConfig.url}"
-							required="true" size="70" />
+						<ice:inputText id="url"
+							value="#{ActiveDirBean.contextSourceConfig.url}" required="true"
+							size="70" />
 						<ice:message for="url" />
 					</ice:panelGroup>
 
@@ -46,8 +46,8 @@
 						<ice:outputLabel for="username" value="#{msgs['username']}" />
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
-						<ice:inputText id="username" value="#{LdapBean.contextSourceConfig.userName}"
-							size="40" />
+						<ice:inputText id="username"
+							value="#{ActiveDirBean.contextSourceConfig.userName}" size="40" />
 						<ice:message for="username" />
 					</ice:panelGroup>
 
@@ -56,37 +56,36 @@
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
 						<ice:inputSecret id="password"
-							value="#{LdapBean.contextSourceConfig.password}" size="40" />
+							value="#{ActiveDirBean.contextSourceConfig.password}" size="40" />
 						<ice:message for="password" />
 					</ice:panelGroup>
 
 					<ice:panelGroup style="text-align:right; white-space:nowrap;">
-						<ice:outputLabel for="realm" value="#{msgs['logicaldoc-external-authentication.ldap.realm']}" />
+						<ice:outputLabel for="realm"
+							value="#{msgs['logicaldoc-external-authentication.ldap.realm']}" />
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
 						<ice:inputText id="realm"
-							value="#{LdapBean.contextSourceConfig.realm}" size="40" />
+							value="#{ActiveDirBean.contextSourceConfig.realm}" size="40" />
 						<ice:message for="realm" />
 					</ice:panelGroup>
 
-                    <ice:panelGroup style="text-align:right; white-space:nowrap;">
-                        <ice:outputLabel for="currentDN"
-                            value="#{msgs['logicaldoc-external-authentication.ldap.currentDN']}" />
-                    </ice:panelGroup>
-                    <ice:panelGroup style="text-align:left">
-                        <ice:inputText id="currentDN"
-                            value="#{LdapBean.contextSourceConfig.currentDN}"
-                            size="40" />
-                        <ice:message for="currentDN" />
-                    </ice:panelGroup>
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="currentDN"
+							value="#{msgs['logicaldoc-external-authentication.ldap.currentDN']}" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="currentDN"
+							value="#{ActiveDirBean.contextSourceConfig.currentDN}" size="40" />
+						<ice:message for="currentDN" />
+					</ice:panelGroup>
 
 					<ice:panelGroup style="text-align:right; white-space:nowrap;">
-						<ice:outputLabel for="base"
-							value="#{msgs['ldap.base']}" />
+						<ice:outputLabel for="base" value="#{msgs['ldap.base']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="base"
-							value="#{LdapBean.contextSourceConfig.base}" size="70" />
+							value="#{ActiveDirBean.contextSourceConfig.base}" size="70" />
 						<ice:message for="base" />
 					</ice:panelGroup>
 
@@ -96,7 +95,7 @@
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
 						<ice:inputText id="userIdentiferAttribute"
-							value="#{LdapBean.userGroupContext.userIdentiferAttribute}"
+							value="#{ActiveDirBean.userGroupContext.userIdentiferAttribute}"
 							size="40" />
 						<ice:message for="userIdentiferAttribute" />
 					</ice:panelGroup>
@@ -107,7 +106,7 @@
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
 						<ice:inputText id="groupIdentiferAttribute"
-							value="#{LdapBean.userGroupContext.groupIdentiferAttribute}"
+							value="#{ActiveDirBean.userGroupContext.groupIdentiferAttribute}"
 							size="40" />
 						<ice:message for="groupIdentiferAttribute" />
 					</ice:panelGroup>
@@ -118,7 +117,8 @@
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
 						<ice:inputText id="logonAttribute"
-							value="#{LdapBean.userGroupContext.logonAttribute}" size="40" />
+							value="#{ActiveDirBean.userGroupContext.logonAttribute}"
+							size="40" />
 						<ice:message for="logonAttribute" />
 					</ice:panelGroup>
 
@@ -128,7 +128,7 @@
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
 						<ice:inputText id="userClass"
-							value="#{LdapBean.userGroupContext.userClass}" size="40" />
+							value="#{ActiveDirBean.userGroupContext.userClass}" size="40" />
 						<ice:message for="userClass" />
 					</ice:panelGroup>
 
@@ -138,7 +138,7 @@
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
 						<ice:inputText id="groupClass"
-							value="#{LdapBean.userGroupContext.groupClass}" size="40" />
+							value="#{ActiveDirBean.userGroupContext.groupClass}" size="40" />
 						<ice:message for="groupClass" />
 					</ice:panelGroup>
 
@@ -148,7 +148,8 @@
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="userBase"
-							value="#{LdapBean.userGroupContext.userBaseString}" size="70" />
+							value="#{ActiveDirBean.userGroupContext.userBaseString}"
+							size="70" />
 						<ice:message for="userBase" />
 					</ice:panelGroup>
 
@@ -158,7 +159,8 @@
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="groupBase"
-							value="#{LdapBean.userGroupContext.groupBaseString}" size="70" />
+							value="#{ActiveDirBean.userGroupContext.groupBaseString}"
+							size="70" />
 						<ice:message for="groupBase" />
 					</ice:panelGroup>
 				</ice:panelGrid>
@@ -166,7 +168,7 @@
 			<hr />
 			<ice:panelGroup styleClass="commands">
 				<ice:commandButton value="#{msgs['save']}" tabindex="1" id="save"
-					action="#{LdapBean.save}" />
+					action="#{ActiveDirBean.save}" />
 			</ice:panelGroup>
 		</ice:panelGroup>
 	</ice:panelGroup>
