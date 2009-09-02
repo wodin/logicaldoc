@@ -21,19 +21,26 @@
 		<property name="groupBaseString" value="${ldap.groupBase}" />
 	</bean>
 
+	<bean id="LDAPContextSourceConfig"
+		class="com.logicaldoc.authentication.ldap.LDAPContextSourceConfig">
+		<property name="url" value="${ldap.url}" />
+		<property name="realm" value="${ldap.realm}" />
+		<property name="currentDN" value="${ldap.currentDN}" />
+		<property name="userAuthenticationPattern"
+			value="${ldap.authenticationPattern}" />
+		<property name="userName" value="${ldap.username}" />
+		<property name="password" value="${ldap.password}" />
+		<property name="base" value="${ldap.base}" />
+	</bean>
+
 	<!-- 
 		Simple Authentication
 	-->
 	<bean id="LDAPContextSource"
-		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource">
-		<property name="url" value="${ldap.url}" />
-		<property name="realm" value="${ldap.realm}" />
-		<property name="currentDN" value="${ldap.currentDN}" />
+		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource"
+		scope="prototype">
+		<property name="configuration" ref="LDAPContextSourceConfig" />
 		<property name="userGroupContext" ref="LDAPUserGroupContext" />
-		<property name="userAuthenticationPatern"
-			value="${ldap.authenticationPattern}" />
-		<property name="userName" value="${ldap.username}" />
-		<property name="password" value="${ldap.password}" />
 	</bean>
 
 
@@ -71,12 +78,12 @@
 	-->
 	<!-- 
 		<bean id="LDAPContextSource"
-		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource">
+		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource" scope="prototype">
 		<property name="url" value="ldap://logicaldoc:389" />
 		<property name="realm" value="localhost"/>
 		<property name="userGroupContext" ref="ldapUserGroupContext"/>
 		
-		<property name="userAuthenticationPatern" value="{userName}@logicalobjects"/>
+		<property name="userAuthenticationPattern" value="{userName}@logicalobjects"/>
 		<property name="userName" value="Administrator" />
 		<property name="password" value="1" />
 		</bean>
@@ -86,12 +93,12 @@
 	-->
 	<!-- 
 		<bean id="LDAPContextSource"
-		class="com.logicaldoc.authentication.ldap.DigestMD5LdapContextSource">
+		class="com.logicaldoc.authentication.ldap.DigestMD5LdapContextSource" scope="prototype">
 		<property name="url" value="ldap://logicaldoc:389/DC=logicalobjects" />
 		<property name="base" value="" />
 		<property name="realm" value="logicalobjects"/>
 		<property name="userName" value="swenzky" />
-		<property name="password" value="Test1234" />
+		<property name="password" value="Test1234" />>
 		</bean>
 	-->
 
@@ -185,6 +192,6 @@
 	<bean id="LdapBean"
 		class="com.logicaldoc.authentication.web.LdapBean" scope="session">
 		<property name="userGroupContext" ref="LDAPUserGroupContext" />
-		<property name="contextSource" ref="LDAPContextSource" />
+		<property name="contextSourceConfig" ref="LDAPContextSourceConfig" />
 	</bean>
 </beans>

@@ -25,7 +25,7 @@
 						<ice:outputLabel for="url" value="#{msgs['url']}*" />
 					</ice:panelGroup>
 					<ice:panelGroup>
-						<ice:inputText id="url" value="#{LdapBean.contextSource.url}"
+						<ice:inputText id="url" value="#{LdapBean.contextSourceConfig.url}"
 							required="true" size="70" />
 						<ice:message for="url" />
 					</ice:panelGroup>
@@ -34,7 +34,7 @@
 						<ice:outputLabel for="username" value="#{msgs['username']}" />
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
-						<ice:inputText id="username" value="#{LdapBean.contextSource.userName}"
+						<ice:inputText id="username" value="#{LdapBean.contextSourceConfig.userName}"
 							size="40" />
 						<ice:message for="username" />
 					</ice:panelGroup>
@@ -44,7 +44,7 @@
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
 						<ice:inputSecret id="password"
-							value="#{LdapBean.contextSource.password}" size="40" />
+							value="#{LdapBean.contextSourceConfig.password}" size="40" />
 						<ice:message for="password" />
 					</ice:panelGroup>
 
@@ -53,7 +53,7 @@
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left">
 						<ice:inputText id="realm"
-							value="#{LdapBean.contextSource.realm}" size="40" />
+							value="#{LdapBean.contextSourceConfig.realm}" size="40" />
 						<ice:message for="realm" />
 					</ice:panelGroup>
 
@@ -63,10 +63,20 @@
                     </ice:panelGroup>
                     <ice:panelGroup style="text-align:left">
                         <ice:inputText id="currentDN"
-                            value="#{LdapBean.contextSource.currentDN}"
+                            value="#{LdapBean.contextSourceConfig.currentDN}"
                             size="40" />
                         <ice:message for="currentDN" />
                     </ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="base"
+							value="#{msgs['ldap.base']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="base"
+							value="#{LdapBean.contextSourceConfig.base}" size="70" />
+						<ice:message for="base" />
+					</ice:panelGroup>
 
 					<ice:panelGroup style="text-align:right; white-space:nowrap;">
 						<ice:outputLabel for="userIdentiferAttribute"
