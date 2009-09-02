@@ -41,7 +41,7 @@ public class HibernateDocumentLinkDAO extends HibernatePersistentObjectDAO<Docum
 			query.append(type);
 			query.append("'");
 		}
-		return findByWhere(query.toString(), new Object[] { docId, docId });
+		return findByWhere(query.toString(), new Object[] { docId, docId }, null);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -55,7 +55,7 @@ public class HibernateDocumentLinkDAO extends HibernatePersistentObjectDAO<Docum
 		query.append(type);
 		query.append("'");
 
-		List<DocumentLink> links = findByWhere(query.toString(), new Object[] { docId1, docId2 });
+		List<DocumentLink> links = findByWhere(query.toString(), new Object[] { docId1, docId2 }, null);
 		if (!links.isEmpty())
 			link = links.iterator().next();
 		return link;

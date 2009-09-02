@@ -97,7 +97,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	@SuppressWarnings("unchecked")
 	public Group findByName(String name) {
 		Group group = null;
-		Collection<Group> coll = findByWhere("_entity.name = '" + SqlUtil.doubleQuotes(name) + "'");
+		Collection<Group> coll = findByWhere("_entity.name = '" + SqlUtil.doubleQuotes(name) + "'", null);
 		if (coll.size() > 0) {
 			group = coll.iterator().next();
 			if (group.getDeleted() == 1)
@@ -214,6 +214,6 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<Group> findByLikeName(String name) {
-		return findByWhere("lower(_entity.name) like ?", new Object[] { name.toLowerCase() });
+		return findByWhere("lower(_entity.name) like ?", new Object[] { name.toLowerCase() }, null);
 	}
 }

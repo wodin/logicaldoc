@@ -75,7 +75,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	 * @see com.logicaldoc.core.security.dao.UserDAO#findByName(java.lang.String)
 	 */
 	public List<User> findByName(String name) {
-		return findByWhere("lower(_entity.name) like ?", new Object[] { name.toLowerCase() });
+		return findByWhere("lower(_entity.name) like ?", new Object[] { name.toLowerCase() }, null);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	 */
 	public User findByUserName(String username) {
 		User user = null;
-		List<User> coll = findByWhere("_entity.userName = ?", new Object[] { username });
+		List<User> coll = findByWhere("_entity.userName = ?", new Object[] { username }, null);
 		if (coll.size() > 0) {
 			user = coll.iterator().next();
 		}
@@ -94,7 +94,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	 * @see com.logicaldoc.core.security.dao.UserDAO#findByUserName(java.lang.String)
 	 */
 	public List<User> findByLikeUserName(String username) {
-		return findByWhere("_entity.userName like ?", new Object[] { username });
+		return findByWhere("_entity.userName like ?", new Object[] { username }, null);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	@SuppressWarnings("unchecked")
 	public List<User> findByUserNameAndName(String username, String name) {
 		return findByWhere("lower(_entity.name) like ? and _entity.userName like ?", new Object[] { name.toLowerCase(),
-				username });
+				username }, null);
 	}
 
 	/**
@@ -175,14 +175,14 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	@Override
 	public boolean isPasswordExpired(String username) {
-		if(getPasswordTtl()<=0)
+		if (getPasswordTtl() <= 0)
 			return false;
-		
+
 		try {
 			User user = findByUserName(username);
-			if(user==null)
+			if (user == null)
 				return false;
-			
+
 			// Check if the password is expired
 			if (user.getPasswordExpires() == 1) {
 				Date lastChange = user.getPasswordChanged();
@@ -205,7 +205,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 				calendar.add(Calendar.DAY_OF_MONTH, -getPasswordTtl());
 				Date date = calendar.getTime();
 
-				return(lastChange.before(date));
+				return (lastChange.before(date));
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())

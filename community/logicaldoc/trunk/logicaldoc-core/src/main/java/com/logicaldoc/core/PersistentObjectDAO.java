@@ -53,9 +53,10 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * reference attributes in the where expression.
 	 * 
 	 * @param where The where clause expression
+	 * @param order The order clause expression
 	 * @return The list of marching entities
 	 */
-	public List<T> findByWhere(String where);
+	public List<T> findByWhere(String where, String order);
 
 	/**
 	 * Finds all entities by the given expression. Use _entity alias to
@@ -63,9 +64,10 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * 
 	 * @param where The where clause expression
 	 * @param values Parameters used in the where expression
+	 * @param order The order clause expression
 	 * @return The list of marching entities
 	 */
-	public List<T> findByWhere(String where, Object[] values);
+	public List<T> findByWhere(String where, Object[] values, String order);
 
 	/**
 	 * Find everything you want from the DB using the ORM query language
@@ -81,9 +83,10 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * reference attributes in the where expression.
 	 * 
 	 * @param where The where clause expression
+	 * @param order The order clause expression
 	 * @return The list of marching entities ids
 	 */
-	public List<Long> findIdsByWhere(String where);
+	public List<Long> findIdsByWhere(String where, String order);
 
 	/**
 	 * Finds all entities ids by the given expression. Use _entity alias to
@@ -91,9 +94,10 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * 
 	 * @param where The where clause expression
 	 * @param values Parameters used in the where expression
+	 * @param order The order clause expression
 	 * @return The list of marching entities ids
 	 */
-	public List<Long> findIdsByWhere(String where, Object[] values);
+	public List<Long> findIdsByWhere(String where, Object[] values, String order);
 
 	/**
 	 * Initialises lazy loaded data such as collections
@@ -118,7 +122,7 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @param entities The entities to be deleted
 	 */
 	public void deleteAll(Collection<T> entities);
-	
+
 	/**
 	 * Executes a bulk update as specified by the given expression
 	 * 

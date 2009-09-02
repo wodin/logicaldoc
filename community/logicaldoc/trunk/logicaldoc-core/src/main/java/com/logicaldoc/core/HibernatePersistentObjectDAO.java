@@ -44,13 +44,14 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	}
 
 	public List<T> findAll() {
-		return findByWhere("");
+		return findByWhere("", "");
 	}
 
 	public List<Long> findAllIds() {
-		return findIdsByWhere("");
+		return findIdsByWhere("", "");
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public T findById(long id) {
 		T entity = null;
@@ -65,16 +66,19 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		return entity;
 	}
 
-	public List<T> findByWhere(String where) {
-		return findByWhere(where, new Object[0]);
+	@Override
+	public List<T> findByWhere(String where, String order) {
+		return findByWhere(where, new Object[0], order);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	public List<T> findByWhere(String where, Object[] values) {
+	public List<T> findByWhere(String where, Object[] values, String order) {
 		List<T> coll = new ArrayList<T>();
 		try {
-			String query = "from " + entityClass.getCanonicalName() + " _entity where _entity.deleted=0"
-					+ (StringUtils.isNotEmpty(where) ? " and " + where : "");
+			String query = "from " + entityClass.getCanonicalName() + " _entity where _entity.deleted=0 "
+					+ (StringUtils.isNotEmpty(where) ? " and (" + where + ") " : " ")
+					+ (StringUtils.isNotEmpty(order) ? order : " ");
 			log.debug("Execute query: " + query);
 			coll = (List<T>) getHibernateTemplate().find(query, values);
 		} catch (Exception e) {
@@ -85,16 +89,20 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		return coll;
 	}
 
-	public List<Long> findIdsByWhere(String where) {
-		return findIdsByWhere(where, new Object[0]);
+	@Override
+	public List<Long> findIdsByWhere(String where, String order) {
+		return findIdsByWhere(where, new Object[0], order);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	public List<Long> findIdsByWhere(String where, Object[] values) {
+	public List<Long> findIdsByWhere(String where, Object[] values, String order) {
 		List<Long> coll = new ArrayList<Long>();
 		try {
 			String query = "select _entity.id from " + entityClass.getCanonicalName()
-					+ " _entity where _entity.deleted=0" + (StringUtils.isNotEmpty(where) ? " and " + where : "");
+					+ " _entity where _entity.deleted = 0 "
+					+ (StringUtils.isNotEmpty(where) ? " and (" + where + ") " : " ")
+					+ (StringUtils.isNotEmpty(order) ? order : " ");
 			log.debug("Execute query: " + query);
 			coll = (List<Long>) getHibernateTemplate().find(query, values);
 		} catch (Exception e) {
@@ -197,7 +205,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 			ids.append(Long.toString(t.getId()));
 		}
 		getHibernateTemplate().bulkUpdate(
-				"update " + entityClass.getCanonicalName() + " set deleted=1 " + "where id in(" + ids.toString() + ")");
+				"update " + entityClass.getCanonicalName() + " set deleted=1 where id in(" + ids.toString() + ")");
 	}
 
 	@Override
