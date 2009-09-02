@@ -75,7 +75,8 @@ public class Indexer {
 
 	/**
 	 * Adds a LuceneDocument to the index.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	public void addDocument(Document doc, Locale locale) throws Exception {
 		String indexdir = settingsConfig.getValue("indexdir");
@@ -89,7 +90,7 @@ public class Indexer {
 			writer.addDocument(doc);
 		} catch (Exception e) {
 			log.error("Exception adding Document to Lucene index: " + indexdir + ", " + e.getMessage(), e);
-			throw e; 
+			throw e;
 		} finally {
 			if (writer != null)
 				try {
@@ -352,7 +353,7 @@ public class Indexer {
 	 */
 	public List<File> getIndexes() {
 		List<File> dirs = new ArrayList<File>();
-		String indexdir = settingsConfig.getValue("indexdir");
+		File indexdir = new File(settingsConfig.getValue("indexdir"));
 		try {
 			// Get languages from LanguageManager
 			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
@@ -366,15 +367,15 @@ public class Indexer {
 		return dirs;
 	}
 
-	
 	/**
-	 * To be called on the context startup, this method creates all indexes and unlock  the existing ones
+	 * To be called on the context startup, this method creates all indexes and
+	 * unlock the existing ones
 	 */
-	public void init(){
+	public void init() {
 		createIndexes();
 		unlock();
 	}
-	
+
 	/**
 	 * Create all indexes (one per language)
 	 */
