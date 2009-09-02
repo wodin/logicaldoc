@@ -366,6 +366,15 @@ public class Indexer {
 		return dirs;
 	}
 
+	
+	/**
+	 * To be called on the context startup, this method creates all indexes and unlock  the existing ones
+	 */
+	public void init(){
+		createIndexes();
+		unlock();
+	}
+	
 	/**
 	 * Create all indexes (one per language)
 	 */
