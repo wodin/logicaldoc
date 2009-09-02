@@ -13,14 +13,15 @@ import org.springframework.ldap.LdapTemplate;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.authentication.AuthenticationProvider;
 import com.logicaldoc.core.security.dao.UserDAO;
+
 /**
- * Abstract component used as a basis for LDAP implementations
+ * o Abstract component used as a basis for LDAP implementations
  * 
  * @author Sebastian Wenzky
  * @since 4.5
  */
 public abstract class LDAPAuthentication implements AuthenticationProvider {
-	protected static Log log = LogFactory.getLog(LDAPAuthentication.class);
+	protected Log log = LogFactory.getLog(LDAPAuthentication.class);
 
 	private List<String> notValidatedUsers;
 
@@ -29,6 +30,8 @@ public abstract class LDAPAuthentication implements AuthenticationProvider {
 	private UserDAO userDAO;
 
 	private UserGroupDAO userGroupDao;
+
+	private LDAPContextSourceConfig config;
 
 	private LDAPSynchroniser synchroniser;
 
@@ -120,4 +123,13 @@ public abstract class LDAPAuthentication implements AuthenticationProvider {
 	public abstract BasicLDAPContextSource obtainNewLdapContextSource();
 
 	public abstract void obtainNewLdapTemplate();
+
+	@Override
+	public boolean isEnabled() {
+		return "true".equals(config.getEnabled());
+	}
+
+	public void setConfig(LDAPContextSourceConfig config) {
+		this.config = config;
+	}
 }

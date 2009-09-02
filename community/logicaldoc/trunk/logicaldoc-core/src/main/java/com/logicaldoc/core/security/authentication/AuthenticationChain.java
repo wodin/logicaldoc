@@ -43,6 +43,9 @@ public class AuthenticationChain implements AuthenticationProvider {
 
 		boolean loggedIn = false;
 		for (AuthenticationProvider cmp : providers) {
+			if(!cmp.isEnabled())
+				continue;
+			
 			// validates an user for valid login credentials if a specific
 			// component handles this user explicitally (e.g. admin is BasicAuthentication)
 			if (cmp.validateOnUser(username)) {
@@ -103,5 +106,10 @@ public class AuthenticationChain implements AuthenticationProvider {
 					.getBean(extension.getParameter("providerId").valueAsString()));
 		}
 		log.info("Authentication chain initialized");
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 }
