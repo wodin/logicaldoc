@@ -48,6 +48,7 @@ alter table ld_userdoc add constraint FK_USERDOC_USER foreign key (ld_userid) re
 alter table ld_menu add constraint FK_MENU_PARENT foreign key (ld_parentid) references ld_menu(ld_id) on delete cascade;
 alter table ld_history add constraint FK_HISTORY_DOC foreign key (ld_docid) references ld_document(ld_id) on delete cascade;
 
+--On MySQL AK fields cannot be larger than
 create unique index  AK_DOCUMENT on ld_document (ld_customid);
 create unique index  AK_USER on ld_user (ld_username);
 create unique index  AK_GROUP on ld_group (ld_name);  
