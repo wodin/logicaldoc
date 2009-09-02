@@ -196,7 +196,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findChildren(long)
 	 */
 	public List<Menu> findChildren(long parentId) {
-		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId });
+		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId }, null);
 	}
 
 	/**
@@ -423,7 +423,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			query.append(" AND _entity.parentId = " + parent.getId());
 		if (type != null)
 			query.append(" AND _entity.type = " + type.intValue());
-		return findByWhere(query.toString());
+		return findByWhere(query.toString(), null);
 	}
 
 	@Override
@@ -458,7 +458,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	@Override
 	public List<Menu> findByMenuTextAndParentId(String text, long parentId) {
 		return findByWhere("_entity.parentId = " + parentId + " and _entity.text like '" + SqlUtil.doubleQuotes(text)
-				+ "'");
+				+ "'", null);
 	}
 
 	@Override
@@ -539,7 +539,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	@Override
 	public List<Menu> findFoldersByPathExtended(String path) {
 		List<Menu> specified_menu = new ArrayList<Menu>();
-		specified_menu = (List<Menu>) findByWhere("_entity.pathExtended = '" + SqlUtil.doubleQuotes(path) + "'");
+		specified_menu = (List<Menu>) findByWhere("_entity.pathExtended = '" + SqlUtil.doubleQuotes(path) + "'", null);
 		if (specified_menu != null && specified_menu.size() > 0)
 			return specified_menu;
 		return null;
@@ -549,7 +549,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	@Override
 	public Menu findFolder(String folderName, String pathExtended) {
 		List<Menu> specified_menu = findByWhere("_entity.text = '" + SqlUtil.doubleQuotes(folderName)
-				+ "' AND _entity.pathExtended = '" + SqlUtil.doubleQuotes(pathExtended) + "'");
+				+ "' AND _entity.pathExtended = '" + SqlUtil.doubleQuotes(pathExtended) + "'", null);
 		if (specified_menu != null && specified_menu.size() > 0)
 			return specified_menu.iterator().next();
 		return null;
@@ -563,8 +563,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			List<Object> menus = super.findByJdbcQuery("select ld_parentid from ld_menu where ld_id =" + menuId, 1,
 					null);
 			for (Object id : menus) {
-				Long xx=(Long) id;
-				if(xx.longValue()!=menuId)
+				Long xx = (Long) id;
+				if (xx.longValue() != menuId)
 					restore(xx, parents);
 			}
 		}

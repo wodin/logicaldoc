@@ -61,7 +61,7 @@ public class TaskController extends DragAndDropSupportController {
 					.getComponent();
 			
 			String currentValue = autoComplete.getValue().toString();
-			List<User> matchedUsers = userDAO.findByWhere("_entity.userName like concat(?,'%') OR _entity.firstName like concat(?,'%') OR _entity.name like concat(?,'%')", new Object[] { currentValue, currentValue, currentValue });
+			List<User> matchedUsers = userDAO.findByWhere("_entity.userName like concat(?,'%') OR _entity.firstName like concat(?,'%') OR _entity.name like concat(?,'%')", new Object[] { currentValue, currentValue, currentValue },null);
 			
 			possibleAssignments = new LinkedList<String>();
 			for(User user : matchedUsers){

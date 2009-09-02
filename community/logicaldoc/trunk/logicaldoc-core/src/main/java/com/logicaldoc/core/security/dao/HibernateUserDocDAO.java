@@ -29,7 +29,8 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 		boolean result = true;
 
 		try {
-			List<UserDoc> coll = findByWhere("_entity.docId = ? and _entity.userId = ?", new Object[] { docId, userId });
+			List<UserDoc> coll = findByWhere("_entity.docId = ? and _entity.userId = ?",
+					new Object[] { docId, userId }, null);
 			for (UserDoc userDoc : coll) {
 				userDoc.setDeleted(1);
 				getHibernateTemplate().saveOrUpdate(userDoc);
@@ -52,7 +53,8 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 		boolean result = false;
 
 		try {
-			List<UserDoc> coll = findByWhere("_entity.docId = ? and _entity.userId = ?", new Object[] { docId, userId });
+			List<UserDoc> coll = findByWhere("_entity.docId = ? and _entity.userId = ?",
+					new Object[] { docId, userId }, null);
 			return coll != null && coll.size() > 0;
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -82,7 +84,7 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 	 */
 	@SuppressWarnings("unchecked")
 	public List<UserDoc> findByUserId(long userId) {
-		return findByWhere("_entity.userId = ? order by _entity.date desc", new Object[] { userId });
+		return findByWhere("_entity.userId = ?", new Object[] { userId }, "order by _entity.date desc");
 	}
 
 	/**
@@ -157,7 +159,7 @@ public class HibernateUserDocDAO extends HibernatePersistentObjectDAO<UserDoc> i
 	 */
 	@SuppressWarnings("unchecked")
 	public List<UserDoc> findByDocId(long docId) {
-		return findByWhere("_entity.docId = ? order by _entity.date desc", new Object[] { docId });
+		return findByWhere("_entity.docId = ?", new Object[] { docId }, "order by _entity.date desc");
 	}
 
 	@Override

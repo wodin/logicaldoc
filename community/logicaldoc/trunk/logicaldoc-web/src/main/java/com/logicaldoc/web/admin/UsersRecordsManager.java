@@ -84,7 +84,7 @@ public class UsersRecordsManager extends SortableList {
 					String buf = SqlUtil.doubleQuotes(usersFilter.trim().toLowerCase());
 					tmpusers = dao.findByWhere(" lower(_entity.userName) like '%" + buf
 							+ "%' or lower(_entity.name) like '%" + buf + "%' or lower(_entity.firstName) like '%"
-							+ buf + "%'");
+							+ buf + "%'", null);
 				} else
 					tmpusers = dao.findAll();
 

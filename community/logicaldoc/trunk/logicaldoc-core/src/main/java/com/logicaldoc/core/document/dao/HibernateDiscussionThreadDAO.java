@@ -27,12 +27,12 @@ public class HibernateDiscussionThreadDAO extends HibernatePersistentObjectDAO<D
 
 	@Override
 	public List<DiscussionThread> findByDocId(long docId) {
-		return findByWhere("_entity.docId = ? order by _entity.lastPost desc", new Object[] { new Long(docId) });
+		return findByWhere("_entity.docId = ?", new Object[] { new Long(docId) }, "order by _entity.lastPost desc");
 	}
 
 	@Override
 	public boolean delete(long id) {
-		DiscussionThread dt=findById(id);
+		DiscussionThread dt = findById(id);
 		for (DiscussionComment comment : dt.getComments()) {
 			comment.setDeleted(1);
 		}

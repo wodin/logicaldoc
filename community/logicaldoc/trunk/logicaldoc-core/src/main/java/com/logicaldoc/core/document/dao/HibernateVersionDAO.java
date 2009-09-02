@@ -22,12 +22,13 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 
 	@Override
 	public List<Version> findByDocId(long docId) {
-		return findByWhere(" _entity.document.id=" + docId + " order by _entity.versionDate desc");
+		return findByWhere(" _entity.document.id=" + docId, "order by _entity.versionDate desc");
 	}
 
 	@Override
 	public Version findByVersion(long docId, String version) {
-		List<Version> versions = findByWhere(" _entity.document.id=" + docId + " and _entity.version='" + version + "'");
+		List<Version> versions = findByWhere(
+				" _entity.document.id=" + docId + " and _entity.version='" + version + "'", null);
 		if (!versions.isEmpty())
 			return versions.get(0);
 		else
