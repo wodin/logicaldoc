@@ -4,28 +4,25 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- * All directory-based informations responsible for data 
- * will be stored here.
+ * All directory-based informations responsible for data will be stored here.
+ * 
  * @author Sebastian Wenzky
  * @since 4.5
  */
 public class LDAPUserGroupContext {
-	
+
 	/**
-	 * Attribute that identifies a user explicitly 
-	 * regarding the user class definition
-	 * (e.g: Active Directory: CN) 
+	 * Attribute that identifies a user explicitly regarding the user class
+	 * definition (e.g: Active Directory: CN)
 	 */
 	private String userIdentiferAttribute;
 
 	/**
-	 * Similar to member variable userIdentiferAttribute
-	 * logonAttribute defines a user on its logonAttribute 
-	 * at login-time in LogicalDOC. 
-	 * Those attributes can be the same but can differ 
-	 * from each other as well 
-	 * (e.g. Active Directory: CN is userIdentiferAttribute, 
-	 * logonAttribute is sAMAccountName)
+	 * Similar to member variable userIdentiferAttribute logonAttribute defines
+	 * a user on its logonAttribute at login-time in LogicalDOC. Those
+	 * attributes can be the same but can differ from each other as well (e.g.
+	 * Active Directory: CN is userIdentiferAttribute, logonAttribute is
+	 * sAMAccountName)
 	 */
 	private String logonAttribute;
 
@@ -37,18 +34,17 @@ public class LDAPUserGroupContext {
 	private String groupClass;
 
 	/**
-	 * Attribute that identifies a group explicitly 
-	 * regarding the group class definition
-	 * (e.g: Active Directory: CN) 
+	 * Attribute that identifies a group explicitly regarding the group class
+	 * definition (e.g: Active Directory: CN)
 	 */
 	private String groupIdentiferAttribute;
 
-/**
+	/**
 	 * List of DN where users can be stored
 	 */
 	private ArrayList<String> userBase = new ArrayList<String>();
 
-/**
+	/**
 	 * List of DB where groups can be stored
 	 */
 	private ArrayList<String> groupBase = new ArrayList<String>();
@@ -128,7 +124,7 @@ public class LDAPUserGroupContext {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * The user base list, each element separated by a semi-colon(;)
 	 */

@@ -130,4 +130,8 @@ public class UserGroupDAO {
 
 		return users;
 	}
+
+	public LDAPUserGroupContext getLdapUserGroupContext() {
+		return ldapUserGroupContext;
+	}
 }
