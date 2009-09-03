@@ -22,6 +22,17 @@
 			<ice:panelGroup>
 				<ice:panelGrid columns="2">
 					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="implementation" value="#{msgs['implementation']}*" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+					<ice:selectOneMenu  styleClass="selectTagMenu"
+							value="#{ActiveDirBean.contextSourceConfig.authentication}">
+							<f:selectItem itemValue="basic"  />
+							<f:selectItem itemValue="md5" />
+						</ice:selectOneMenu>
+					</ice:panelGroup>
+					
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
 						<ice:outputLabel for="enabled" value="#{msgs['enabled']}*" />
 					</ice:panelGroup>
 					<ice:panelGroup style="text-align:left;">
@@ -120,6 +131,17 @@
 							value="#{ActiveDirBean.userGroupContext.logonAttribute}"
 							size="40" />
 						<ice:message for="logonAttribute" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="pattern"
+							value="#{msgs['ldap.authenticationpattern']}" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="pattern"
+							value="#{ActiveDirBean.contextSourceConfig.userAuthenticationPattern}"
+							size="40" />
+						<ice:message for="pattern" />
 					</ice:panelGroup>
 
 					<ice:panelGroup style="text-align:right; white-space:nowrap;">

@@ -4,9 +4,9 @@
 
 	<!--
 		*************************** 
-		* Apache Directory Server * 
+		* LDAP  configuration     * 
 		***************************
-		Version: 1.3.0.v20081020
+		Apache Directory Server Version: 1.3.0.v20081020
 	-->
 	<bean id="LDAPUserGroupContext"
 		class="com.logicaldoc.authentication.ldap.LDAPUserGroupContext">
@@ -32,11 +32,10 @@
 		<property name="password" value="${ldap.password}" />
 		<property name="base" value="${ldap.base}" />
 		<property name="enabled" value="${ldap.enabled}" />
+		<property name="authentication" value="${ldap.authentication}" />
 	</bean>
 
-	<!-- 
-		Simple Authentication
-	-->
+	<!-- Simple Authentication -->
 	<bean id="LDAPContextSource"
 		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource"
 		scope="prototype">
@@ -44,69 +43,20 @@
 		<property name="userGroupContext" ref="LDAPUserGroupContext" />
 	</bean>
 
-
-	<!-- 
-		******************** 
-		* Active Directory * 
-		********************
-		Version: Windows Server 2003 Professional SP2
-	-->
-	<bean id="ADUserGroupContext"
-		class="com.logicaldoc.authentication.ldap.LDAPUserGroupContext">
-		<property name="userIdentiferAttribute"
-			value="${ad.userIdentiferAttribute}" />
-		<property name="logonAttribute" value="${ad.logonAttribute}" />
-		<property name="userClass" value="${ad.userClass}" />
-		<property name="groupClass" value="${ad.groupClass}" />
-		<property name="groupIdentiferAttribute"
-			value="${ad.groupIdentiferAttribute}" />
-		<property name="userBaseString" value="${ad.userBase}" />
-		<property name="groupBaseString" value="${ad.groupBase}" />
-	</bean>
-
-	<bean id="ADContextSourceConfig"
-		class="com.logicaldoc.authentication.ldap.LDAPContextSourceConfig">
-		<property name="url" value="${ad.url}" />
-		<property name="realm" value="${ad.realm}" />
-		<property name="currentDN" value="${ad.currentDN}" />
-		<property name="userAuthenticationPattern"
-			value="${ad.authenticationPattern}" />
-		<property name="userName" value="${ad.username}" />
-		<property name="password" value="${ad.password}" />
-		<property name="base" value="${ad.base}" />
-		<property name="enabled" value="${ad.enabled}" />
-	</bean>
-
-	<bean id="ADContextSource"
-		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource"
+	<!-- DIGEST-MD5 Authentication -->
+	<bean id="LDAPContextSource-MD5"
+		class="com.logicaldoc.authentication.ldap.DigestMD5LdapContextSource"
 		scope="prototype">
 		<property name="configuration" ref="ADContextSourceConfig" />
 		<property name="userGroupContext" ref="ADUserGroupContext" />
 	</bean>
 
-	<!-- 
-		DIGEST-MD5 Authentication
-	-->
-	<!-- 
-		<bean id="LDAPContextSource"
-		class="com.logicaldoc.authentication.ldap.DigestMD5LdapContextSource" scope="prototype">
-		<property name="url" value="ldap://logicaldoc:389/DC=logicalobjects" />
-		<property name="base" value="" />
-		<property name="realm" value="logicalobjects"/>
-		<property name="userName" value="swenzky" />
-		<property name="password" value="Test1234" />>
-		</bean>
-	-->
-
-	<!-- 		
-		LDAP Core Implementations! Please be warrent: Customizing only if you know what you are doing! 
-	-->
 	<bean id="LdapTemplate"
 		class="org.springframework.ldap.LdapTemplate" scope="prototype">
 		<constructor-arg ref="LDAPContextSource" />
 	</bean>
 
-	<bean id="basicUserMapper"
+	<bean id="LDAPBasicUserMapper"
 		class="com.logicaldoc.authentication.ldap.UserAttributeMapper">
 		<property name="ldapUserGroupContext"
 			ref="LDAPUserGroupContext" />
@@ -116,12 +66,12 @@
 		class="com.logicaldoc.authentication.ldap.GroupAttributeMapper">
 	</bean>
 
-	<bean id="UserGroupDAO"
+	<bean id="LDAPUserGroupDAO"
 		class="com.logicaldoc.authentication.ldap.UserGroupDAO">
 		<property name="ldapUserGroupContext"
 			ref="LDAPUserGroupContext" />
 		<property name="ldapTemplate" ref="LdapTemplate" />
-		<property name="userMapper" ref="basicUserMapper" />
+		<property name="userMapper" ref="LDAPBasicUserMapper" />
 		<property name="groupMapper" ref="basicGroupMapper" />
 	</bean>
 
@@ -129,9 +79,11 @@
 		class="com.logicaldoc.authentication.ldap.LDAPAuthentication">
 		<lookup-method name="obtainNewLdapContextSource"
 			bean="LDAPContextSource" />
+		<lookup-method name="obtainNewMD5LdapContextSource"
+			bean="LDAPContextSource-MD5" />
 		<property name="ldapUserGroupContext"
 			ref="LDAPUserGroupContext" />
-		<property name="userGroupDao" ref="UserGroupDAO" />
+		<property name="userGroupDao" ref="LDAPUserGroupDAO" />
 		<property name="synchroniser" ref="LDAPSynchroniser" />
 		<property name="userDao" ref="UserDAO" />
 		<property name="config" ref="LDAPContextSourceConfig" />
@@ -141,29 +93,12 @@
 			</list>
 		</property>
 	</bean>
-
-	<bean id="ADAuthentication"
-		class="com.logicaldoc.authentication.ldap.LDAPAuthentication">
-		<lookup-method name="obtainNewLdapContextSource"
-			bean="ADContextSource" />
-		<property name="ldapUserGroupContext" ref="ADUserGroupContext" />
-		<property name="userGroupDao" ref="UserGroupDAO" />
-		<property name="synchroniser" ref="LDAPSynchroniser" />
-		<property name="userDao" ref="UserDAO" />
-		<property name="config" ref="ADContextSourceConfig" />
-		<property name="notValidatedUsers">
-			<list>
-				<value>admin</value>
-			</list>
-		</property>
-	</bean>
-
-
+	
 	<bean id="LDAPSynchroniser"
 		class="com.logicaldoc.authentication.ldap.LDAPSynchroniser">
 		<property name="userDao" ref="UserDAO" />
 		<property name="groupDao" ref="GroupDAO" />
-		<property name="userGroupDao" ref="UserGroupDAO" />
+		<property name="userGroupDao" ref="LDAPUserGroupDAO" />
 	</bean>
 
 	<bean id="LDAPSynchroniserJob"
@@ -202,12 +137,102 @@
 			value="${schedule.interval.LDAPSynchroniser}" />
 	</bean>
 
+	<!-- 
+		*************************** 
+		* End LDAP  onfiguration  *
+		***************************
+	-->
+
+	<!-- 
+		********************************** 
+		* Active Directory configuration * 
+		**********************************
+		Version: Windows Server 2003 Professional SP2
+	-->
+	<bean id="ADUserGroupContext"
+		class="com.logicaldoc.authentication.ldap.LDAPUserGroupContext">
+		<property name="userIdentiferAttribute"
+			value="${ad.userIdentiferAttribute}" />
+		<property name="logonAttribute" value="${ad.logonAttribute}" />
+		<property name="userClass" value="${ad.userClass}" />
+		<property name="groupClass" value="${ad.groupClass}" />
+		<property name="groupIdentiferAttribute"
+			value="${ad.groupIdentiferAttribute}" />
+		<property name="userBaseString" value="${ad.userBase}" />
+		<property name="groupBaseString" value="${ad.groupBase}" />
+	</bean>
+
+	<bean id="ADContextSourceConfig"
+		class="com.logicaldoc.authentication.ldap.LDAPContextSourceConfig">
+		<property name="url" value="${ad.url}" />
+		<property name="realm" value="${ad.realm}" />
+		<property name="currentDN" value="${ad.currentDN}" />
+		<property name="userAuthenticationPattern"
+			value="${ad.authenticationPattern}" />
+		<property name="userName" value="${ad.username}" />
+		<property name="password" value="${ad.password}" />
+		<property name="base" value="${ad.base}" />
+		<property name="enabled" value="${ad.enabled}" />
+		<property name="authentication" value="${ad.authentication}" />
+	</bean>
+
+	<!-- Simple Authentication	-->
+	<bean id="ADContextSource"
+		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource"
+		scope="prototype">
+		<property name="configuration" ref="ADContextSourceConfig" />
+		<property name="userGroupContext" ref="ADUserGroupContext" />
+	</bean>
+
+	<!-- DIGEST-MD5 Authentication	-->
+	<bean id="ADContextSource-MD5"
+		class="com.logicaldoc.authentication.ldap.DigestMD5LdapContextSource"
+		scope="prototype">
+		<property name="configuration" ref="ADContextSourceConfig" />
+		<property name="userGroupContext" ref="ADUserGroupContext" />
+	</bean>
+
+	<bean id="ADTemplate" class="org.springframework.ldap.LdapTemplate"
+		scope="prototype">
+		<constructor-arg ref="ADContextSource" />
+	</bean>
+
+	<bean id="ADBasicUserMapper"
+		class="com.logicaldoc.authentication.ldap.UserAttributeMapper">
+		<property name="ldapUserGroupContext" ref="ADUserGroupContext" />
+	</bean>
+
+	<bean id="ADUserGroupDAO"
+		class="com.logicaldoc.authentication.ldap.UserGroupDAO">
+		<property name="ldapUserGroupContext" ref="ADUserGroupContext" />
+		<property name="ldapTemplate" ref="ADTemplate" />
+		<property name="userMapper" ref="ADBasicUserMapper" />
+		<property name="groupMapper" ref="basicGroupMapper" />
+	</bean>
+
+	<bean id="ADAuthentication"
+		class="com.logicaldoc.authentication.ldap.LDAPAuthentication">
+		<lookup-method name="obtainNewLdapContextSource"
+			bean="ADContextSource" />
+		<lookup-method name="obtainNewMD5LdapContextSource"
+			bean="ADContextSource-MD5" />
+		<property name="ldapUserGroupContext" ref="ADUserGroupContext" />
+		<property name="userGroupDao" ref="ADUserGroupDAO" />
+		<property name="synchroniser" ref="ADSynchroniser" />
+		<property name="userDao" ref="UserDAO" />
+		<property name="config" ref="ADContextSourceConfig" />
+		<property name="notValidatedUsers">
+			<list>
+				<value>admin</value>
+			</list>
+		</property>
+	</bean>
 
 	<bean id="ADSynchroniser"
 		class="com.logicaldoc.authentication.ldap.ADSynchroniser">
 		<property name="userDao" ref="UserDAO" />
 		<property name="groupDao" ref="GroupDAO" />
-		<property name="userGroupDao" ref="UserGroupDAO" />
+		<property name="userGroupDao" ref="ADUserGroupDAO" />
 	</bean>
 
 	<bean id="ADSynchroniserJob"
@@ -246,6 +271,11 @@
 			value="${schedule.interval.ADSynchroniser}" />
 	</bean>
 
+	<!-- 
+		************************************** 
+		* End Active Directory configuration * 
+		**************************************
+	-->
 
 	<bean id="LdapBean"
 		class="com.logicaldoc.authentication.web.LdapBean" scope="session">

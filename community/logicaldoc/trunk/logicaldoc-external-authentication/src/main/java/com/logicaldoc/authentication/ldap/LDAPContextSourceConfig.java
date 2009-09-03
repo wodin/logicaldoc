@@ -25,6 +25,8 @@ public class LDAPContextSourceConfig {
 	private String base;
 
 	private String enabled;
+	
+	private String authentication;
 
 	public String getRealm() {
 		return realm;
@@ -96,5 +98,13 @@ public class LDAPContextSourceConfig {
 
 	public void setEnabled(String enabled) {
 		this.enabled = enabled;
+	}
+
+	public String getAuthentication() {
+		return authentication;
+	}
+
+	public void setAuthentication(String authentication) {
+		this.authentication = authentication;
 	}
 }

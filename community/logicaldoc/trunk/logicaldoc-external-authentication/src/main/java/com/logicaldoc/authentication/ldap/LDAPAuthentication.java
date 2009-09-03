@@ -61,7 +61,14 @@ public abstract class LDAPAuthentication implements AuthenticationProvider {
 
 		for (String userBase : this.ldapUserGroupContext.getUserBase()) {
 			// This instance is created by Spring on the basis of a prototype
-			BasicLDAPContextSource ldapContextSource = obtainNewLdapContextSource();
+			BasicLDAPContextSource ldapContextSource = null;
+			if ("basic".equals(config.getAuthentication())){
+				log.info("Use basic authentication");
+				ldapContextSource = obtainNewLdapContextSource();
+			}else{
+				log.info("Use MD5 authentication");
+				ldapContextSource = obtainNewMD5LdapContextSource();
+			}
 
 			// Change account informations to try a login against the LDAP
 			// server
@@ -121,6 +128,8 @@ public abstract class LDAPAuthentication implements AuthenticationProvider {
 	}
 
 	public abstract BasicLDAPContextSource obtainNewLdapContextSource();
+
+	public abstract DigestMD5LdapContextSource obtainNewMD5LdapContextSource();
 
 	public abstract void obtainNewLdapTemplate();
 

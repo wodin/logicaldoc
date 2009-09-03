@@ -45,15 +45,16 @@ public class LdapBean {
 			pbean.setProperty(propertyPrefix+".realm", contextSourceConfig.getRealm());
 			pbean.setProperty(propertyPrefix+".base", contextSourceConfig.getBase());
 			pbean.setProperty(propertyPrefix+".enabled", contextSourceConfig.getEnabled());
+			pbean.setProperty(propertyPrefix+".authentication", contextSourceConfig.getAuthentication());
 
 			// Save user group settings
-			pbean.setProperty(propertyPrefix+"userIdentiferAttribute", userGroupContext.getUserIdentiferAttribute());
-			pbean.setProperty(propertyPrefix+"logonAttribute", userGroupContext.getLogonAttribute());
-			pbean.setProperty(propertyPrefix+"userClass", userGroupContext.getUserClass());
-			pbean.setProperty(propertyPrefix+"groupClass", userGroupContext.getGroupClass());
-			pbean.setProperty(propertyPrefix+"groupIdentiferAttribute", userGroupContext.getGroupIdentiferAttribute());
-			pbean.setProperty(propertyPrefix+"userBase", userGroupContext.getUserBaseString());
-			pbean.setProperty(propertyPrefix+"groupBase", userGroupContext.getGroupBaseString());
+			pbean.setProperty(propertyPrefix+".userIdentiferAttribute", userGroupContext.getUserIdentiferAttribute());
+			pbean.setProperty(propertyPrefix+".logonAttribute", userGroupContext.getLogonAttribute());
+			pbean.setProperty(propertyPrefix+".userClass", userGroupContext.getUserClass());
+			pbean.setProperty(propertyPrefix+".groupClass", userGroupContext.getGroupClass());
+			pbean.setProperty(propertyPrefix+".groupIdentiferAttribute", userGroupContext.getGroupIdentiferAttribute());
+			pbean.setProperty(propertyPrefix+".userBase", userGroupContext.getUserBaseString());
+			pbean.setProperty(propertyPrefix+".groupBase", userGroupContext.getGroupBaseString());
 
 			pbean.write();
 
