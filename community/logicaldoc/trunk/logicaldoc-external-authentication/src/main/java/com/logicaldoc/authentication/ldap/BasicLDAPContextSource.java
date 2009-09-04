@@ -71,6 +71,7 @@ public class BasicLDAPContextSource extends LdapContextSource {
 		String generatedName = this.generateUserLogonName(userName);
 		env.put(Context.SECURITY_PRINCIPAL, generatedName);
 		env.put(Context.REFERRAL, "ignore");
+		//env.put(Context.REFERRAL, "follow");
 	}
 
 	private String generateUserLogonName(String username) {

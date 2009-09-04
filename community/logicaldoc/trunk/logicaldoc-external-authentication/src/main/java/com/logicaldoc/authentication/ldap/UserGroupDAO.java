@@ -87,7 +87,6 @@ public class UserGroupDAO {
 		ArrayList<String> groupBases = this.ldapUserGroupContext.getGroupBase();
 
 		for (String groupDN : groupBases) {
-
 			List<LdapGroup> groupList = this.ldapTemplate.search(groupDN, "objectClass="
 					+ this.ldapUserGroupContext.getGroupClass(), sc, this.groupMapper);
 
