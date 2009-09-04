@@ -58,7 +58,7 @@
 							</ice:panelGroup>
 							<ice:panelGroup>
 								<ice:selectOneListbox style="width: 135px" partialSubmit="true"
-									value="#{templateForm.selectedAttribute}" size="6"
+									value="#{templateForm.selectedAttribute}"
 									valueChangeListener="#{templateForm.selectAttribute}">
 									<f:selectItems value="#{templateForm.templateAttributes}" />
 								</ice:selectOneListbox>
