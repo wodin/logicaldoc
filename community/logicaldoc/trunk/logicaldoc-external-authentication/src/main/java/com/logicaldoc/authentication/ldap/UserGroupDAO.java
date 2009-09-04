@@ -96,7 +96,6 @@ public class UserGroupDAO {
 			}
 
 			groups.addAll(groupList);
-
 		}
 
 		return groups;
