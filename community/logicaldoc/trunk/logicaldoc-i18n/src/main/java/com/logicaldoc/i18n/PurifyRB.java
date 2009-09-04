@@ -1,9 +1,12 @@
 package com.logicaldoc.i18n;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -38,13 +41,13 @@ public class PurifyRB {
 		}
 
 		for (String bundle : bundles) {
-			System.out.println("\nInspecting bundle "+bundle);
-			
-			ResourceBundle master = ResourceBundle.getBundle("i18n/"+bundle, Locale.ENGLISH);
+			System.out.println("\nInspecting bundle " + bundle);
+
+			ResourceBundle master = ResourceBundle.getBundle("i18n/" + bundle, Locale.ENGLISH);
 			for (Locale locale : locales) {
 				try {
 					System.out.println("\nAnalyzing language: " + locale);
-					writePurifiedRB(master, "i18n/"+bundle, locale);
+					writePurifiedRB(master, "i18n/" + bundle, locale);
 				} catch (Exception e) {
 					System.out.println("Locale: " + locale + ", NOT FOUND");
 					e.printStackTrace();
@@ -99,11 +102,18 @@ public class PurifyRB {
 		try {
 			// scrivo il prop destinazione su FileSystem
 			System.out.println(locale);
-			File file = new File("src/main/resources/"+transalatedBundle+"_" + locale + ".properties");
+			File dir=new File("target/po/i18n");
+			dir.mkdir();
+			dir.mkdirs();
+			
+			File file = new File("target/po/" + transalatedBundle + "_" + locale + ".properties");
 			FileOutputStream out = new FileOutputStream(file);
-			destprop.store(out, "comments");
+			OutputStreamWriter ow=new OutputStreamWriter(out,"UTF-8");
+			destprop.store(ow, "comments");
+			ow.flush();
 			out.flush();
 			out.close();
+			ow.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
