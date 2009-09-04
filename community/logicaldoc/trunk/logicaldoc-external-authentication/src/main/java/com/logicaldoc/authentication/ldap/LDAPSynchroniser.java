@@ -80,7 +80,7 @@ public class LDAPSynchroniser extends Task {
 		for (LdapGroup ldapGroup : groups)
 			ldapGroupMap.put(ldapGroup.dn.toString(), ldapGroup);
 
-		// we need a pseudoId as we need a preceeding numbering
+		// we need a pseudoId as we need a preceding numbering
 		// of groups within users (must be unequal to equals method)
 		int pseudoId = 1;
 		// iterating on every group

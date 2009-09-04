@@ -107,7 +107,7 @@ public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 		pbean.setProperty("ad.authenticationPattern", "{userName}@acme.net");
 		pbean.setProperty("ad.username", "Administrator");
 		pbean.setProperty("ad.password", "1");
-		pbean.setProperty("ad.userIdentiferAttribute", "sAMAccountName");
+		pbean.setProperty("ad.userIdentiferAttribute", "CN");
 		pbean.setProperty("ad.logonAttribute", "sAMAccountName");
 		pbean.setProperty("ad.userClass", "person");
 		pbean.setProperty("ad.groupClass", "group");
