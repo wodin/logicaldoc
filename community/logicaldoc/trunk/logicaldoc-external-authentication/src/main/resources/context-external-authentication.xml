@@ -93,7 +93,7 @@
 			</list>
 		</property>
 	</bean>
-	
+
 	<bean id="LDAPSynchroniser"
 		class="com.logicaldoc.authentication.ldap.LDAPSynchroniser">
 		<property name="userDao" ref="UserDAO" />
@@ -277,17 +277,20 @@
 		**************************************
 	-->
 
-	<bean id="LdapBean"
+	<bean id="LdapBean" 
 		class="com.logicaldoc.authentication.web.LdapBean" scope="session">
 		<property name="userGroupContext" ref="LDAPUserGroupContext" />
 		<property name="contextSourceConfig"
 			ref="LDAPContextSourceConfig" />
+		<property name="contextSource" ref="LDAPContextSource" />
 	</bean>
 	<bean id="ActiveDirBean"
 		class="com.logicaldoc.authentication.web.LdapBean" scope="session">
 		<property name="userGroupContext" ref="ADUserGroupContext" />
 		<property name="contextSourceConfig"
 			ref="ADContextSourceConfig" />
+		<property name="contextSource" ref="ADContextSource" />
 		<property name="propertyPrefix" value="ad" />
+
 	</bean>
 </beans>

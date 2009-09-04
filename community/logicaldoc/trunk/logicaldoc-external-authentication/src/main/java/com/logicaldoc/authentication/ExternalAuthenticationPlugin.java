@@ -98,21 +98,25 @@ public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 		pbean.setProperty("ldap.userBase", "ou=users,ou=system");
 		pbean.setProperty("ldap.groupBase", "ou=groups,ou=system");
 		pbean.setProperty("ldap.base", "");
+		pbean.setProperty("ldap.authentication", "basic");
+		pbean.setProperty("ldap.enabled", "false");
 
-		pbean.setProperty("ad.url", "{userName}@logicalobjects");
-		pbean.setProperty("ad.realm", "localhost");
-		pbean.setProperty("ad.currentDN", "ou=system");
-		pbean.setProperty("ad.authenticationPattern", "{logonAttribute}={userName},{userBaseEntry}");
+		pbean.setProperty("ad.url", "ldap://acme.net:389");
+		pbean.setProperty("ad.realm", "acme.net");
+		pbean.setProperty("ad.currentDN", "DC=acme,DC=NET");
+		pbean.setProperty("ad.authenticationPattern", "{userName}@acme.net");
 		pbean.setProperty("ad.username", "Administrator");
 		pbean.setProperty("ad.password", "1");
-		pbean.setProperty("ad.userIdentiferAttribute", "CN");
+		pbean.setProperty("ad.userIdentiferAttribute", "sAMAccountName");
 		pbean.setProperty("ad.logonAttribute", "sAMAccountName");
 		pbean.setProperty("ad.userClass", "person");
 		pbean.setProperty("ad.groupClass", "group");
 		pbean.setProperty("ad.groupIdentiferAttribute", "sAMAccountName");
-		pbean.setProperty("ad.userBase", "cn=users,dc=logicalobjects");
-		pbean.setProperty("ad.groupBase", "cn=Builtin,dc=logicalobjects");
+		pbean.setProperty("ad.userBase", "CN=Users,DC=acme,DC=net");
+		pbean.setProperty("ad.groupBase", "CN=Builtin,DC=acme,DC=net");
 		pbean.setProperty("ad.base", "");
+		pbean.setProperty("ad.authentication", "basic");
+		pbean.setProperty("ad.enabled", "false");
 
 		pbean.write();
 	}
