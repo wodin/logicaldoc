@@ -62,113 +62,111 @@ alter table ld_version add constraint FK_VERSION_USER foreign key (ld_userid) re
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (1,'2008-10-22',0,'menu.home',1,1,'home.png','/',1,null,0);
+values     (1,CURRENT_TIMESTAMP,0,'menu.home',1,1,'home.png','/',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (2,'2008-10-22',0,'menu.admin',1,1,'administration.png','/',1,null,0);
+values     (2,CURRENT_TIMESTAMP,0,'menu.admin',1,1,'administration.png','/',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (4,'2008-10-22',0,'menu.personal',1,3,'personal.png','/',1,null,0);
+values     (4,CURRENT_TIMESTAMP,0,'menu.personal',1,3,'personal.png','/',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size, ld_pathextended)
-values     (5,'2008-10-22',0,'menu.documents',1,4,'documents.png','/',1,'document/browse',0, '/');
+values     (5,CURRENT_TIMESTAMP,0,'menu.documents',1,4,'documents.png','/',1,'document/browse',0, '/');
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (9,'2008-12-01',0,'admin.security',2,3,'password.png','/2',1,null,0);
+values     (9,CURRENT_TIMESTAMP,0,'admin.security',2,3,'password.png','/2',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (6,'2008-10-22',0,'menu.user',9,5,'user.png','/9',1,'admin/users',0);
+values     (6,CURRENT_TIMESTAMP,0,'menu.user',9,5,'user.png','/9',1,'admin/users',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (7,'2008-10-22',0,'menu.group',9,10,'group.png','/9',1,'admin/groups',0);
+values     (7,CURRENT_TIMESTAMP,0,'menu.group',9,10,'group.png','/9',1,'admin/groups',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (-1,'2008-12-01',0,'admin.security',9,15,'password.png','/9',1,'admin/security',0);
+values     (-1,CURRENT_TIMESTAMP,0,'admin.security',9,15,'password.png','/9',1,'admin/security',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (14,'2008-10-22',0,'task.tasks',2,10,'task_scheduler.png','/2',1,'admin/tasks',0);
+values     (14,CURRENT_TIMESTAMP,0,'task.tasks',2,10,'task_scheduler.png','/2',1,'admin/tasks',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (-2,'2008-12-01',0,'system',2,1,'system.png','/2',1,null,0);
+values     (-2,CURRENT_TIMESTAMP,0,'system',2,1,'system.png','/2',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (17,'2008-10-22',0,'directory',-2,5,'folders.png','/-2',1,'admin/folders',0);
+values     (17,CURRENT_TIMESTAMP,0,'directory',-2,5,'folders.png','/-2',1,'admin/folders',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (8,'2008-10-22',0,'menu.logging',-2,10,'logging.png','/-2',1,'admin/logs',0);
+values     (8,CURRENT_TIMESTAMP,0,'menu.logging',-2,10,'logging.png','/-2',1,'admin/logs',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (25,'2008-10-22',0,'menu.searchengine',-2,15,'search.png','/-2',1,'admin/searchEngine',0);
-
-
+values     (25,CURRENT_TIMESTAMP,0,'menu.searchengine',-2,15,'search.png','/-2',1,'admin/searchEngine',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (23,'2008-10-22',0,'smtp',-2,25,'mail_preferences.png','/-2',1,'admin/smtp',0);
+values     (23,CURRENT_TIMESTAMP,0,'smtp',-2,25,'mail_preferences.png','/-2',1,'admin/smtp',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (11,'2008-10-22',0,'menu.gui',-2,30,'gui.png','/-2',1,'admin/gui',0);
+values     (11,CURRENT_TIMESTAMP,0,'menu.gui',-2,30,'gui.png','/-2',1,'admin/gui',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (10,'2008-10-22',0,'parameters',-2,35,'parameters.png','/-2',1,'admin/parameters',0);
+values     (10,CURRENT_TIMESTAMP,0,'parameters',-2,35,'parameters.png','/-2',1,'admin/parameters',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (13,'2008-10-22',0,'menu.messages',4,1,'message.png','/4',1,'communication/messages',0);
+values     (13,CURRENT_TIMESTAMP,0,'menu.messages',4,1,'message.png','/4',1,'communication/messages',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (16,'2008-10-22',0,'menu.changepassword',4,3,'password.png','/4',1,'settings/password',0);
+values     (16,CURRENT_TIMESTAMP,0,'menu.changepassword',4,3,'password.png','/4',1,'settings/password',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (19,'2008-10-22',0,'menu.editme',4,4,'user.png','/4',1,'settings/personalData',0);
+values     (19,CURRENT_TIMESTAMP,0,'menu.editme',4,4,'user.png','/4',1,'settings/personalData',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (21,'2008-10-22',0,'templates',2,4,'template.png','/2',1,'admin/templates',0);
+values     (21,CURRENT_TIMESTAMP,0,'templates',2,4,'template.png','/2',1,'admin/templates',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (18,'2008-10-22',0,'searches',1,6,'search.png','/1',1,null,0);
+values     (18,CURRENT_TIMESTAMP,0,'searches',1,6,'search.png','/1',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (26,'2008-10-22',0,'tags',18,5,'tags.png','/1/18',1,'search/tags',0);
+values     (26,CURRENT_TIMESTAMP,0,'tags',18,5,'tags.png','/1/18',1,'search/tags',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (15,'2008-10-22',0,'search.advanced',18,5,'search.png','/1/18',1,'search/advancedSearch',0);
+values     (15,CURRENT_TIMESTAMP,0,'search.advanced',18,5,'search.png','/1/18',1,'search/advancedSearch',0);
 
 
 insert into ld_group
-values     (1,'2008-10-22',0,'admin','Group of admins',0);
+values     (1,CURRENT_TIMESTAMP,0,'admin','Group of admins',0);
 
 insert into ld_group
-values     (2,'2008-10-22',0,'author','Group of authors',0);
+values     (2,CURRENT_TIMESTAMP,0,'author','Group of authors',0);
 
 insert into ld_group
-values     (3,'2008-10-22',0,'guest','Group of guest',0);
+values     (3,CURRENT_TIMESTAMP,0,'guest','Group of guest',0);
 
 insert into ld_user
            (ld_id,ld_lastmodified,ld_deleted,ld_enabled,ld_username,ld_password,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_telephone2,ld_type,ld_passwordchanged,ld_passwordexpires)
-values     (1,'2008-10-22',0,1,'admin','d033e22ae348aeb566fc214aec3585c4da997','Admin','Admin','','','','','en','admin@admin.net','','',0,null,0);
+values     (1,CURRENT_TIMESTAMP,0,1,'admin','d033e22ae348aeb566fc214aec3585c4da997','Admin','Admin','','','','','en','admin@admin.net','','',0,null,0);
 insert into ld_group
-values     (-1,'2008-10-22',0,'_user_1','',1);
+values     (-1,CURRENT_TIMESTAMP,0,'_user_1','',1);
 insert into ld_usergroup
 values (1,1);
 insert into ld_usergroup
