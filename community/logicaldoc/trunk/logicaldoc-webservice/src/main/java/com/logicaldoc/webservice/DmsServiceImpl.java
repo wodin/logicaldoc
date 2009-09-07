@@ -610,7 +610,7 @@ public class DmsServiceImpl implements DmsService {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = userDao.findByUserName(username);
 		if (user == null)
-			throw new Exception("user " + username + "not found");
+			throw new Exception("User " + username + "not found");
 		return user;
 	}
 
@@ -628,5 +628,16 @@ public class DmsServiceImpl implements DmsService {
 	@Override
 	public void logout(String sid) {
 		SessionManager.getInstance().kill(sid);
+	}
+
+	@Override
+	public void indexDocument(String sid, long id) throws Exception {
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Document doc=docDao.findById(id);
+		if(doc==null)
+			throw new Exception("Document "+id+" not found");
+		
+		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		manager.reindex(doc, doc.getLocale());
 	}
 }
