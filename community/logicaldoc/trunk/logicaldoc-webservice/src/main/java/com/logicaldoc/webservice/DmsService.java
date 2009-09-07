@@ -156,6 +156,18 @@ public interface DmsService {
 	long id) throws Exception;
 
 	/**
+	 * Requests the indexing of a particular document. If the document is
+	 * already indexed, it will be re-indexed.
+	 * 
+	 * @param sid
+	 * @param id
+	 * @throws Exception
+	 */
+	public void indexDocument(@WebParam(name = "sid")
+	String sid, @WebParam(name = "id")
+	long id) throws Exception;
+
+	/**
 	 * Renames a folder
 	 * 
 	 * @param sid Session identifier
@@ -199,7 +211,8 @@ public interface DmsService {
 	 * @return A return code('ok' if all went ok)
 	 * @throws Exception
 	 */
-	public String checkout(@WebParam(name = "sid") String sid, @WebParam(name = "id")
+	public String checkout(@WebParam(name = "sid")
+	String sid, @WebParam(name = "id")
 	long id) throws Exception;
 
 	/**
@@ -214,7 +227,8 @@ public interface DmsService {
 	 * @return ok if all went right
 	 * @throws Exception
 	 */
-	public String checkin(@WebParam(name = "sid") String sid, @WebParam(name = "id")
+	public String checkin(@WebParam(name = "sid")
+	String sid, @WebParam(name = "id")
 	long id, @WebParam(name = "filename")
 	String filename, @WebParam(name = "description")
 	String description, @WebParam(name = "type")
@@ -235,7 +249,8 @@ public interface DmsService {
 	 * @return The objects representing the search result
 	 * @throws Exception
 	 */
-	public SearchResult search(@WebParam(name = "sid") String sid, @WebParam(name = "query")
+	public SearchResult search(@WebParam(name = "sid")
+	String sid, @WebParam(name = "query")
 	String query, @WebParam(name = "indexLanguage")
 	String indexLanguage, @WebParam(name = "queryLanguage")
 	String queryLanguage, @WebParam(name = "maxHits")

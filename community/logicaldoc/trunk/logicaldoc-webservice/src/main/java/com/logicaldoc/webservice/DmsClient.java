@@ -93,4 +93,9 @@ public class DmsClient implements DmsService {
 		return client.update(sid, id, title, source, sourceAuthor, sourceDate, sourceType, coverage, language, tags,
 				sourceId, object, recipient, templateName, extendedAttribute);
 	}
+
+	@Override
+	public void indexDocument(String sid, long id) throws Exception {
+		client.indexDocument(sid, id);
+	}
 }
