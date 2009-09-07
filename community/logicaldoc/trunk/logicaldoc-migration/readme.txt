@@ -1,13 +1,8 @@
-Upgrade from LogicalDOC CE 4.0.x to LogicalDOC CE 4.5
-(tested with LD 4.0.2 HSQLDB 1.8.x     2009/07/01 blucecio - Windows Vista)
-(tested with LD 4.0.2 PostgreSQL 8.3   2009/07/02 blucecio - Windows Vista)
-
-This is the migration tool to upgrade LogicalDOC 4.0.x to 4.5
+This is the migration tool to upgrade LogicalDOC 4.5.x to 4.6
 
 Unpack and make sure to have installed Java6 and Ant 1.7
 edit the config file classes/conf.properties setting a proper value for 'logicaldoc.contextDir'
 than type the command 'ant'
-
 
 1) Update the property file conf.properties inside the classes folder
    classes/conf.properties
@@ -18,7 +13,7 @@ than type the command 'ant'
    
 2) Shutdown tomcat
 
-3) Open a shell to the logicaldoc-migration-4.5-tool folder
+3) Open a shell to the logicaldoc-migration-4.6-tool folder
 
 4) launch the command:
    ANT
@@ -28,7 +23,7 @@ it will also delete the indexes of LogicalDOC.
 
 5) Move your previous logicaldoc webapp to a new location (outside the "webapps" folder of tomcat)
 
-6) Rename the logicaldoc 4.5 war file in logicaldoc.war
+6) Rename the logicaldoc 4.6 war file in logicaldoc.war
 
 7) Drop logicaldoc.war inside the "webapps" folder of tomcat
 
@@ -42,13 +37,6 @@ The most frequent is linked to the presence of the logicaldoc-email plugin.
 The migration tool attempts to update the tables of this plugin, but if there 
 aren't tables the SQL DDLs scripts can't upgrade something that does not 
 exists and display the related errors to the console.
-
-Note 2:  
-There is a good chance that this tool can be used successfully to migrate from version RC1 and RC2 
-of LogicalDOC 4.5 to the final LogicalDOC 4.5, but has not been tested yet.
-So before you do the migration make sure you have done an exhaustive backup of the database 
-and of the Working folder of LogicalDOC.
-
 
 Please reports errors using the Help forum or the bug-tracker of LogicalDOC.
 
