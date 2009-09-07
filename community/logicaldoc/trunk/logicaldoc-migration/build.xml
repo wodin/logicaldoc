@@ -14,30 +14,13 @@
 		</fileset>
 	</path>
 
-	<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="class.path"/>
+	<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="class.path" />
 
 	<target name="upgrade" description="Upgrade the system from release 4.0 to 4.5">
 		<echo>Update the Database</echo>
 		<antcall target="dbinit" />
-		<echo>Update the File System</echo>
-		<antcall target="convertfs" />
-		<echo>Rename indexes</echo>
-	    <move file="${conf.indexdir}/italian" tofile="${conf.indexdir}/it" failonerror="false" />
-		<move file="${conf.indexdir}/english" tofile="${conf.indexdir}/en" failonerror="false" />
-	    <move file="${conf.indexdir}/german" tofile="${conf.indexdir}/de" failonerror="false" />
-	    <move file="${conf.indexdir}/spanish" tofile="${conf.indexdir}/es" failonerror="false" />
-		<move file="${conf.indexdir}/french" tofile="${conf.indexdir}/fr" failonerror="false" />
-		<move file="${conf.indexdir}/romanian" tofile="${conf.indexdir}/ro" failonerror="false" />
 	</target>
 
-	<target name="convertfs" description="Converts the file system">
-		<echo>Convert filesystem ${conf.docdir}</echo>
-		<java classname="com.logicaldoc.migration.FixFilesystem">
-			<arg value="${conf.docdir}" />
-			<arg value="${conf.docdir}/../tmp" />
-			<classpath refid="class.path" />
-		</java>
-	</target>
 
 	<target name="dbinit" description="Updates the database">
 		<trycatch property="error" reference="exception">
