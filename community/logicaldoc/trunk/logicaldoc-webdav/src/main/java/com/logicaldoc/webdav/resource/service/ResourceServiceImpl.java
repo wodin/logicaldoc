@@ -22,7 +22,6 @@ import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
@@ -56,8 +55,6 @@ public class ResourceServiceImpl implements ResourceService {
 
 	private UserDAO userDAO;
 
-	private HistoryDAO historyDAO;
-
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
@@ -68,10 +65,6 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public void setMenuDAO(MenuDAO menuDAO) {
 		this.menuDAO = menuDAO;
-	}
-
-	public void setHistoryDAO(HistoryDAO historyDAO) {
-		this.historyDAO = historyDAO;
 	}
 
 	public void setDocumentManager(DocumentManager documentManager) {
@@ -113,13 +106,15 @@ public class ResourceServiceImpl implements ResourceService {
 
 		Resource resource = new ResourceImpl();
 		resource.setID(new Long(document.getId()).toString());
+		// We cannot use the title because it can contain
 		// resource.setName(document.getTitle() + "." + document.getType());
 		resource.setName(document.getFileName());
 		resource.setContentLength(document.getFileSize());
 		resource.setCreationDate(document.getCreation());
 		resource.setLastModified(document.getDate());
 		resource.isFolder(false);
-		resource.setIsCheckedOut(document.getStatus() == Document.DOC_CHECKED_OUT);
+		resource.setIsCheckedOut(document.getStatus() == Document.DOC_CHECKED_OUT
+				|| document.getStatus() == Document.DOC_LOCKED);
 		resource.setVersionLabel(document.getVersion());
 		resource.setAuthor(document.getPublisher());
 
@@ -230,7 +225,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public Resource createResource(Resource parentResource, String name, boolean isCollection, ImportContext context)
 			throws DavException {
-
+	
 		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource.getID()));
 
 		if (isCollection) {
@@ -268,7 +263,9 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public void updateResource(Resource resource, ImportContext context) throws DavException {
-
+		System.out.println("*** updateResource");
+		
+		
 		User user = userDAO.findById(resource.getRequestedPerson());
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 
@@ -278,13 +275,16 @@ public class ResourceServiceImpl implements ResourceService {
 			if (!parent.isWriteEnabled())
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to write resource.");
 
-			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
-				documentManager.checkin(Long.parseLong(resource.getID()), context.getInputStream(), resource.getName(),
-						user, VERSION_TYPE.NEW_SUBVERSION, "", false);
-			} else {
-				documentDAO.delete(document.getId());
-				this.createResource(context.getResource(), context.getSystemId(), false, context);
+			if ((document.getStatus() == Document.DOC_CHECKED_OUT || document.getStatus() == Document.DOC_LOCKED)
+					&& (user.getId() != document.getLockUserId() && !"admin".equals(user.getUserName()))) {
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "User didn't locked the document");
 			}
+
+			
+			
+			documentManager.checkin(Long.parseLong(resource.getID()), context.getInputStream(), resource.getName(),
+					user, VERSION_TYPE.NEW_SUBVERSION, "", false);
+
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (DavException de) {
@@ -354,7 +354,7 @@ public class ResourceServiceImpl implements ResourceService {
 			if (!source.getName().equals(document.getFileName())) {
 				// we are doing a file rename
 				try {
-					documentManager.rename(document, user, source.getName());
+					documentManager.rename(document, user, source.getName(), false);
 				} catch (Exception e) {
 					log.warn(e.getMessage(), e);
 					throw new RuntimeException(e);

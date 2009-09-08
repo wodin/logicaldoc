@@ -16,9 +16,9 @@ public class SessionManagerTest {
 	public void testNewSession() {
 		SessionManager sm = SessionManager.getInstance();
 		sm.clear();
-		String session1 = sm.newSession("admin");
+		String session1 = sm.newSession("admin", null);
 		Assert.assertNotNull(session1);
-		String session2 = sm.newSession("admin");
+		String session2 = sm.newSession("admin", null);
 		Assert.assertNotNull(session2);
 		Assert.assertFalse(session1.equals(session2));
 		Assert.assertEquals(2, sm.getSessions().size());
@@ -28,9 +28,9 @@ public class SessionManagerTest {
 	public void testKill() {
 		SessionManager sm = SessionManager.getInstance();
 		sm.clear();
-		String session1 = sm.newSession("admin");
+		String session1 = sm.newSession("admin", null);
 		Assert.assertNotNull(session1);
-		String session2 = sm.newSession("admin");
+		String session2 = sm.newSession("admin", null);
 		Assert.assertNotNull(session2);
 		Assert.assertFalse(session1.equals(session2));
 		Assert.assertEquals(2, sm.getSessions().size());

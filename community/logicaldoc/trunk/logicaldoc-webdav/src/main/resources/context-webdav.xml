@@ -8,7 +8,6 @@
 		<property name="menuDAO" ref="MenuDAO"/>
 		<property name="documentManager" ref="DocumentManager"/>
 		<property name="userDAO" ref="UserDAO"/>
-		<property name="historyDAO" ref="HistoryDAO"/>
 		<property name="versionDAO" ref="VersionDAO"/>
 	</bean>
 

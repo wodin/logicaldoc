@@ -9,7 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,6 +41,9 @@ import org.apache.jackrabbit.webdav.version.VersionableResource;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 
+import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -57,12 +59,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 
 	protected static Log log = LogFactory.getLog(AbstractWebdavServlet.class);
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8726695805361483901L;
-
-	private UserDAO userDAO;
 
 	/**
 	 * Default value for the 'WWW-Authenticate' header, that is set, if request
@@ -118,10 +115,6 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	 */
 	abstract public String getAuthenticateHeaderValue();
 
-	public void init() {
-		this.userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-	}
-
 	/**
 	 * Service the given request.
 	 * 
@@ -133,8 +126,6 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.debug("Received WebDAV request");
 
-		HttpSession session = request.getSession(true);
-
 		WebdavRequest webdavRequest = new WebdavRequestImpl(request, getLocatorFactory());
 
 		// DeltaV requires 'Cache-Control' header for all methods except
@@ -144,31 +135,52 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 				&& !(DavMethods.DAV_VERSION_CONTROL == methodCode || DavMethods.DAV_REPORT == methodCode);
 		WebdavResponse webdavResponse = new WebdavResponseImpl(response, noCache);
 
+		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
+				AuthenticationChain.class);
+		String sid = null;
+		String username = null;
 		try {
-			if (session.getAttribute("authUser") == null) {
-				if (request.getHeader(DavConstants.HEADER_AUTHORIZATION) != null) {
-					Credentials credentials = AuthenticationUtil.authenticate(webdavRequest);
+			if (request.getHeader(DavConstants.HEADER_AUTHORIZATION) != null) {
+				Credentials credentials = AuthenticationUtil.authenticate(webdavRequest);
+				username = credentials.getUserName();
+				String combinedUserId = request.getRemoteHost() + "-" + credentials.getUserName();
 
-					AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
-							AuthenticationChain.class);
-					boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(), credentials
-							.getPassword());
-
-					if (isLoggedOn == false) {
-						AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
-						return;
-					}
-
-					session.setAttribute("authUser", credentials.getUserName());
-				} else {
+				// Check the credentials
+				if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword())) {
 					AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
 					return;
 				}
+
+				// Check if it exists a session for this user
+				if (!SessionManager.getInstance().getSessionsByUserObject(combinedUserId).isEmpty()) {
+					UserSession session = SessionManager.getInstance().getSessionsByUserObject(combinedUserId).get(0);
+					sid = session.getId();
+					if (SessionManager.getInstance().isValid(sid))
+						SessionManager.getInstance().renew(sid);
+					else {
+						AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
+						return;
+					}
+				} else {
+					boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(), credentials
+							.getPassword(), combinedUserId);
+					if (isLoggedOn == false) {
+						AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
+						return;
+					} else {
+						sid = AuthenticationChain.getSessionId();
+					}
+				}
+			} else {
+				AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
+				return;
 			}
 
 			DavSessionImpl davSession = new DavSessionImpl();
-			davSession.putObject("id", userDAO.findByUserName(session.getAttribute("authUser").toString()).getId());
-			davSession.putObject("name", session.getAttribute("authUser"));
+			davSession.putObject("sid", sid);
+			UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			User user = dao.findByUserName(username);
+			davSession.putObject("id", user.getId());
 
 			webdavRequest.setDavSession(davSession);
 
@@ -194,7 +206,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 				webdavResponse.sendError(e);
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new RuntimeException(e);
 		} finally {
 

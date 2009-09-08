@@ -42,8 +42,9 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	 * @param username
 	 * @return
 	 */
-	public synchronized String newSession(String username) {
+	public synchronized String newSession(String username, Object userObject) {
 		UserSession session = new UserSession(username);
+		session.setUserObject(userObject);
 		put(session.getId(), session);
 		log.warn("Created new session " + session.getId() + " for user '" + username + "'");
 		cleanClosedSessions();
@@ -142,6 +143,18 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	public List<UserSession> getSessions() {
 		List<UserSession> sessions = new ArrayList<UserSession>(values());
 		Collections.sort(sessions);
+		return sessions;
+	}
+
+	/**
+	 * Returns the list of sessions for the specified user object
+	 */
+	public List<UserSession> getSessionsByUserObject(Object userObject) {
+		List<UserSession> sessions = new ArrayList<UserSession>();
+		for (UserSession userSession : values()) {
+			if (userSession.getUserObject().equals(userObject))
+				sessions.add(userSession);
+		}
 		return sessions;
 	}
 

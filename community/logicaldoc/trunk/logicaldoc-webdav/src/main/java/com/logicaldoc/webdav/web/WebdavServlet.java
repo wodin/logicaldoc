@@ -21,6 +21,7 @@ import org.apache.jackrabbit.webdav.lock.SimpleLockManager;
 import org.apache.jackrabbit.webdav.simple.LocatorFactoryImplEx;
 
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.webdav.resource.DavResourceFactory;
 
 /**
@@ -28,7 +29,7 @@ import com.logicaldoc.webdav.resource.DavResourceFactory;
  * {@link org.apache.jackrabbit.webdav.simple.SimpleWebdavServlet}
  * 
  * @author Sebastian Wenzky
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class WebdavServlet extends AbstractWebdavServlet {
@@ -59,22 +60,19 @@ public class WebdavServlet extends AbstractWebdavServlet {
 
 	private ResourceConfig config;
 
-	public void init() {
-		super.init();
+	private PropertiesBean settings;
 
+	public void init() {
 		resourcePathPrefix = getInitParameter(INIT_PARAM_RESOURCE_PATH_PREFIX);
 		if (resourcePathPrefix == null) {
 			log.debug("Missing path prefix > setting to empty string.");
 			resourcePathPrefix = "";
 		} else if (resourcePathPrefix.endsWith("/")) {
 			log.debug("Path prefix ends with '/' > removing trailing slash.");
-			resourcePathPrefix = resourcePathPrefix.substring(0,
-					resourcePathPrefix.length() - 1);
+			resourcePathPrefix = resourcePathPrefix.substring(0, resourcePathPrefix.length() - 1);
 		}
-		getServletContext().setAttribute(CTX_ATTR_RESOURCE_PATH_PREFIX,
-				resourcePathPrefix);
-		log.info(INIT_PARAM_RESOURCE_PATH_PREFIX + " = '" + resourcePathPrefix
-				+ "'");
+		getServletContext().setAttribute(CTX_ATTR_RESOURCE_PATH_PREFIX, resourcePathPrefix);
+		log.info(INIT_PARAM_RESOURCE_PATH_PREFIX + " = '" + resourcePathPrefix + "'");
 
 		authenticate_header = getInitParameter(INIT_PARAM_AUTHENTICATE_HEADER);
 		if (authenticate_header == null) {
@@ -95,8 +93,7 @@ public class WebdavServlet extends AbstractWebdavServlet {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected boolean isPreconditionValid(WebdavRequest request,
-			DavResource resource) {
+	protected boolean isPreconditionValid(WebdavRequest request, DavResource resource) {
 		return !resource.exists() || request.matchesIfHeader(resource);
 	}
 
@@ -132,8 +129,7 @@ public class WebdavServlet extends AbstractWebdavServlet {
 
 	public DavResourceFactory getResourceFactory() {
 		if (resourceFactory == null) {
-			resourceFactory = new ResourceFactoryImpl(getLockManager(),
-					getResourceConfig());
+			resourceFactory = new ResourceFactoryImpl(getLockManager(), getResourceConfig());
 		}
 		return resourceFactory;
 	}
@@ -150,8 +146,7 @@ public class WebdavServlet extends AbstractWebdavServlet {
 	}
 
 	protected CredentialsProvider getCredentialsProvider() {
-		return new BasicCredentialsProvider(
-				getInitParameter(INIT_PARAM_MISSING_AUTH_MAPPING));
+		return new BasicCredentialsProvider(getInitParameter(INIT_PARAM_MISSING_AUTH_MAPPING));
 	}
 
 	public synchronized void setSessionProvider(SessionProvider sessionProvider) {
@@ -167,16 +162,26 @@ public class WebdavServlet extends AbstractWebdavServlet {
 		if (config != null)
 			return config;
 		else
-			return (ResourceConfig) Context.getInstance().getBean(
-					"ResourceConfig");
+			return (ResourceConfig) Context.getInstance().getBean(ResourceConfig.class);
 	}
 
 	public void setResourceConfig(ResourceConfig config) {
 		this.config = config;
 	}
 
-	public void service(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		super.service(request, response);
+	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		PropertiesBean settings = getSettings();
+
+		// Check if the service is enabled
+		if ("true".equals(settings.get("webdav.enabled")))
+			super.service(request, response);
+		else
+			response.sendError(HttpServletResponse.SC_MOVED_TEMPORARILY);
+	}
+
+	public PropertiesBean getSettings() {
+		if (settings == null)
+			settings = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		return settings;
 	}
 }

@@ -133,9 +133,9 @@ public interface DocumentManager {
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title, Date sourceDate,
-			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> tags, boolean immediateIndexing) throws Exception;
+	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
+			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
+			String versionDesc, Set<String> tags, boolean immediateIndexing) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -160,10 +160,10 @@ public interface DocumentManager {
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title, Date sourceDate,
-			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes, boolean immediateIndexing)
-			throws Exception;
+	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
+			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
+			boolean immediateIndexing) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -192,10 +192,11 @@ public interface DocumentManager {
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title, Date sourceDate,
-			String source, String sourceAuthor, String sourceType, String coverage, String versionDesc,
-			Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes, String sourceId, String object,
-			String recipient, String customId, boolean immediateIndexing) throws Exception;
+	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
+			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
+			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
+			String sourceId, String object, String recipient, String customId, boolean immediateIndexing)
+			throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -227,7 +228,8 @@ public interface DocumentManager {
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
-			String sourceId, String object, String recipient, String customId, boolean immediateIndexing) throws Exception;
+			String sourceId, String object, String recipient, String customId, boolean immediateIndexing)
+			throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -372,14 +374,15 @@ public interface DocumentManager {
 	public void reindex(Document doc, Locale originalLocale) throws Exception;
 
 	/**
-	 * Rename an existing document filename.
+	 * Rename an existing document title/filename.
 	 * 
 	 * @param doc The document to be renamed
 	 * @param user The user requesting the operation
-	 * @param newFilename The new filename of the document
+	 * @param newName The new title/filename of the document
+	 * @param title True if the title must be renamed, False for the filename
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public void rename(Document doc, User user, String newFilename) throws Exception;
+	public void rename(Document doc, User user, String newName, boolean title) throws Exception;
 
 	/**
 	 * Updates an existing document and marks it to be re-indexed

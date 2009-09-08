@@ -768,14 +768,19 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 	}
 
-	public void rename(Document doc, User user, String newFilename) throws Exception {
+	public void rename(Document doc, User user, String newName, boolean title) throws Exception {
 		if (doc.getImmutable() == 0) {
 			documentDAO.initialize(doc);
-			doc.setFileName(newFilename.trim());
-			String extension = FilenameUtils.getExtension(newFilename.trim());
-			if (StringUtils.isNotEmpty(extension))
-				doc.setType(FilenameUtils.getExtension(newFilename));
-			setUniqueFilename(doc);
+			if (title) {
+				doc.setTitle(newName);
+				setUniqueTitle(doc);
+			} else {
+				doc.setFileName(newName.trim());
+				String extension = FilenameUtils.getExtension(newName.trim());
+				if (StringUtils.isNotEmpty(extension))
+					doc.setType(FilenameUtils.getExtension(newName));
+				setUniqueFilename(doc);
+			}
 			doc.setIndexed(0);
 			documentDAO.store(doc);
 

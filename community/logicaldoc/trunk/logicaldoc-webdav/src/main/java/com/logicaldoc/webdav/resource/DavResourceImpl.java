@@ -80,10 +80,12 @@ public class DavResourceImpl implements DavResource {
 		this.factory = factory;
 		this.config = config;
 		this.session = session;
-		this.isCollection = this.resource.isFolder();
+		
 		resourceService = (ResourceService) Context.getInstance().getBean("ResourceService");
-		if (this.resource != null)
+		if (this.resource != null){
+			this.isCollection = this.resource.isFolder();
 			this.resource.setRequestedPerson(Long.parseLong(session.getObject("id").toString()));
+		}
 	}
 
 	/**
