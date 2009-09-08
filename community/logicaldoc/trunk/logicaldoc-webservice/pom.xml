@@ -50,6 +50,16 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>net.sf.jpf</groupId>
+			<artifactId>jpf</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
