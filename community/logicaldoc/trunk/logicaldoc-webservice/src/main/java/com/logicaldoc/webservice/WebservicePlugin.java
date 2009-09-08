@@ -19,7 +19,7 @@ public class WebservicePlugin extends LogicalDOCPlugin {
 	@Override
 	protected void install() throws Exception {
 		WebConfigurator config=new WebConfigurator();
-		config.addServlet("CXFServlet", "org.apache.cxf.transport.servlet.CXFServlet");
+		config.addServlet("CXFServlet", "com.logicaldoc.webservice.WebserviceServlet");
 		config.writeXMLDoc();
 		config.addServletMapping("CXFServlet", "/services/*");
 		config.writeXMLDoc();
