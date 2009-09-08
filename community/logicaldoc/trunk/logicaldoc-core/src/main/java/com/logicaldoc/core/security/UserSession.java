@@ -28,7 +28,9 @@ public class UserSession implements Comparable<UserSession> {
 	private int status = STATUS_OPEN;
 
 	private Object externalSession = null;
-	
+
+	private Object userObject = null;
+
 	public String getId() {
 		return id;
 	}
@@ -120,5 +122,16 @@ public class UserSession implements Comparable<UserSession> {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	/**
+	 * A generic object that is stored within the session
+	 */
+	public Object getUserObject() {
+		return userObject;
+	}
+
+	public void setUserObject(Object userObject) {
+		this.userObject = userObject;
 	}
 }

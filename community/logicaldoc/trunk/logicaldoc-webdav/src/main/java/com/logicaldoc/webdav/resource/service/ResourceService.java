@@ -32,7 +32,7 @@ public interface ResourceService {
 	 * @return
 	 * @throws DavException 
 	 */
-	public Resource getResource(String location, long userid) throws DavException;
+	public Resource getResource(String location, long id) throws DavException;
 
 	/**
 	 * On passing a valid @link {@link Resource} all resources (Folders as well

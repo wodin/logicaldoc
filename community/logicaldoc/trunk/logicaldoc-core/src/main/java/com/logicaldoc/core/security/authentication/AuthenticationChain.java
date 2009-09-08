@@ -37,17 +37,42 @@ public class AuthenticationChain implements AuthenticationProvider {
 	}
 
 	@Override
-	public boolean authenticate(String username, String password) {
+	public final boolean authenticate(String username, String password) {
+		return authenticate(username, password, null);
+	}
+
+	@Override
+	public final boolean authenticate(String username, String password, Object userObject) {
+		boolean loggedIn = validate(username, password);
+
+		if (loggedIn) {
+			// Create a new session and store if into the current thread
+			String session = SessionManager.getInstance().newSession(username, userObject);
+			AuthenticationChain.sessionId.set(session);
+		}
+
+		return loggedIn;
+	}
+	
+	/**
+	 * Try to authenticate the user without creating a new session
+	 * 
+	 * @param username
+	 * @param password
+	 * @return True only on successful authentication
+	 */
+	public boolean validate(String username, String password) {
 		if (providers == null || providers.isEmpty())
 			init();
 
 		boolean loggedIn = false;
 		for (AuthenticationProvider cmp : providers) {
-			if(!cmp.isEnabled())
+			if (!cmp.isEnabled())
 				continue;
-			
+
 			// validates an user for valid login credentials if a specific
-			// component handles this user explicitally (e.g. admin is BasicAuthentication)
+			// component handles this user explicitally (e.g. admin is
+			// BasicAuthentication)
 			if (cmp.validateOnUser(username)) {
 				loggedIn = cmp.authenticate(username, password);
 				break;
@@ -57,12 +82,6 @@ public class AuthenticationChain implements AuthenticationProvider {
 
 			if (loggedIn)
 				break;
-		}
-
-		if (loggedIn) {
-			// Create a new session and store if into the current thread
-			String session = SessionManager.getInstance().newSession(username);
-			AuthenticationChain.sessionId.set(session);
 		}
 
 		return loggedIn;
