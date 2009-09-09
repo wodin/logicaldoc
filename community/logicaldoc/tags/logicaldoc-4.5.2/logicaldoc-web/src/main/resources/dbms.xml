@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : dbms.xml
+    Created on : 16. Januar 2004, 20:44
+    Author     : Administrator
+    Description:
+        Purpose of the document follows.
+-->
+
+<dbms>
+    <db name="PostgreSQL"
+        class="org.postgresql.Driver"
+        protocol="jdbc"
+        subprotocol="postgresql"
+        port="5432"
+        sample="jdbc:postgresql:[&lt;//host&gt;[:&lt;5432&gt;/]]&lt;database&gt;"
+        dialect="org.hibernate.dialect.PostgreSQLDialect"
+        validationQuery="SELECT 1"
+    >
+    </db>
+    <db name="Firebird"
+        class="org.firebirdsql.jdbc.FBDriver"
+        protocol="jdbc"
+        subprotocol="firebirdsql"
+        port="3050"
+        sample="jdbc:firebirdsql:[&lt;host&gt;[/&lt;3050&gt;:]]&lt;database&gt;?lc_ctype=WIN1252"
+        dialect="org.hibernate.dialect.FirebirdDialect"
+        validationQuery="select count(*) from rdb$database"
+    >
+    </db>
+    <db name="Hsqldb"
+        class="org.hsqldb.jdbcDriver"
+        protocol="jdbc"
+        subprotocol="hsqldb"
+        port=""
+        sample="jdbc:hsqldb:&lt;databaseName&gt;"
+        dialect="org.hibernate.dialect.HSQLDialect"
+        validationQuery="SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS"
+    >
+    </db>
+    <db name="MsSQLServer"
+        class="net.sourceforge.jtds.jdbc.Driver"
+        protocol="jdbc"
+        subprotocol="jtds:sqlserver"
+        port="1433"
+        sample="jdbc:jtds:sqlserver://&lt;hostname&gt;[:&lt;1433&gt;]/&lt;dbname&gt;"
+        dialect="org.hibernate.dialect.SQLServerDialect"
+        validationQuery="SELECT 1"
+    >
+    </db>
+    <db name="MySQL"
+        class="com.mysql.jdbc.Driver"
+        protocol="jdbc"
+        subprotocol="mysql"
+        port="3306"
+        sample="jdbc:mysql://&lt;hostname&gt;[,&lt;failoverhost&gt;][&lt;:3306&gt;]/&lt;dbname&gt;"
+        dialect="org.hibernate.dialect.MySQLDialect"
+        validationQuery="SELECT 1"
+    >
+    </db>
+    <db name="Oracle"
+        class="oracle.jdbc.driver.OracleDriver"
+        protocol="jdbc"
+        subprotocol="oracle"
+        port="1521"
+        sample="jdbc:oracle:thin:@&lt;server&gt;[:&lt;1521&gt;]:&lt;database_name&gt;"
+        dialect="org.hibernate.dialect.OracleDialect"
+        validationQuery="SELECT 1 FROM DUAL"
+    >
+    </db>    
+</dbms>

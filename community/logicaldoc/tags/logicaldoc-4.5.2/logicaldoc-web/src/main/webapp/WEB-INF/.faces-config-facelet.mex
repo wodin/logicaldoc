@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JSFFlowViewLayout version="1.0">
+  <Drawing gridVisible="true" snapOn="true" />
+  <JSFFlowResource path="/showcase-facelet.iface" location="0,0" dimension="159,36" />
+  <JSFFlowResource path="/index-facelet.jsp" location="15,111" dimension="129,36" />
+  <JSFFlowNavigationCase id="/showcase-facelet.iface,/index-facelet.jsp,reload,null" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="79,36" />
+      <AbsolutePoint location="79,111" />
+    </AutomaticBendpoints>
+  </JSFFlowNavigationCase>
+</JSFFlowViewLayout>
+
