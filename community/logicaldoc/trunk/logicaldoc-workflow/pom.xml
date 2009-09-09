@@ -86,6 +86,12 @@
 		</dependency>
 
 		<dependency>
+		    <groupId>javassist</groupId>
+		    <artifactId>javassist</artifactId>
+		    <version>3.8.0.GA</version>
+		</dependency> 
+
+		<dependency>
 			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-identity</artifactId>
 			<version>3.2.3</version>

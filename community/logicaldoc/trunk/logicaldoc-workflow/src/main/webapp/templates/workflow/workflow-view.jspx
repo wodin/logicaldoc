@@ -26,7 +26,31 @@
 	text-align: left;
 }
 </style>
+<ice:panelPopup modal="true" clientOnly="true"
+		
+		draggable="false" rendered="#{not empty WorkflowManager.taskController}" visible="#{not empty WorkflowManager.taskController}">
+		<f:facet name="header">
+			
+			<ice:panelGrid width="100%" cellpadding="0" cellspacing="0" columns="2" style="text-align: center;">
+                <ice:outputText style="color: #FFFFFF;" value="Reassignment"/>
+           		<ice:commandButton image="/skins/default/images/workflow/editor/close.gif" actionListener="#{WorkflowManager.closeReassignmentDialog}"/>
+            </ice:panelGrid>
+			
+		</f:facet>
 
+		<f:facet name="body">
+        	<ice:panelGrid columns="2" cellpadding="0" cellspacing="0">
+        		<ice:outputText value="testing"></ice:outputText>
+				<ice:selectInputText  rows="10" width="300" value="#{WorkflowManager.newAssignment}" valueChangeListener="#{WorkflowManager.taskController.selectInputValueChanged}">
+					<f:selectItems value="#{WorkflowManager.taskController.possibleAssignments}"/>
+				</ice:selectInputText>
+				<ice:commandButton actionListener="#{WorkflowManager.setupNewAssignment}" value="Reassign"></ice:commandButton>
+			</ice:panelGrid>
+			
+		</f:facet>
+		
+	</ice:panelPopup>
+	
 	<br />
 	<h3><!-- 
 		<ice:outputText
@@ -135,7 +159,10 @@
 						rendered="#{not empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_enddate']}"
 						value="This task is already ended" /> <ice:panelGroup
 						rendered="#{ empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_enddate']}">
-
+						
+						<ice:commandButton value="Reassign User" actionListener="#{WorkflowManager.openReassignmentDialog}">
+						</ice:commandButton>
+						
 						<ice:commandButton value="Start Workking"
 							rendered="#{empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_startdate']}"
 							action="#{WorkflowManager.startTask}" />
@@ -321,7 +348,9 @@
 						</ice:dataTable></td>
 					</tr>
 				</table>
-			</ice:panelGroup> <ice:panelGroup
+			</ice:panelGroup>
+			
+			 <ice:panelGroup
 				rendered="#{ WorkflowManager.selectedWorkflowTaskInstance.properties['ld_taskstate'] == 'started'}">
 
 				<ldoc:folderselector useIcon="true"

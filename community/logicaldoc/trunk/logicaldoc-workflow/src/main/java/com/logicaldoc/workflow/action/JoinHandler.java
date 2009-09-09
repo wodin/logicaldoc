@@ -15,12 +15,14 @@ public class JoinHandler extends BaseEventAction{
 	private static final long serialVersionUID = -3177740964090532273L;
 
 	@Override
+	public void init() {
+		
+		
+	}
+	@Override
 	public void executeImpl(ExecutionContext executionContext){
 		
-		XStream xStream = new XStream();
-		
-		WorkflowTemplate workflowTemplate = (WorkflowTemplate)xStream.fromXML((String)executionContext.getVariable(WorkflowConstants.VAR_TEMPLATE));
-		
+
 	}
 
 }

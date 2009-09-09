@@ -332,7 +332,7 @@
 											<!-- ****** -->	
 											
 											<ice:panelGroup rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'join'}">
-												<ice:panelCollapsible id="panelJoinBasic" expanded="true">
+												<ice:panelCollapsible expanded="true">
 													<f:facet name="header">
 										                <ice:panelGroup>
 										                    <ice:outputText value="Basic"/>
@@ -354,7 +354,7 @@
 											<!-- ****** -->	
 											
 											<ice:panelGroup rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'fork'}">
-												<ice:panelCollapsible id="panelEndpointBasic" expanded="true">
+												<ice:panelCollapsible expanded="true">
 													<f:facet name="header">
 										                <ice:panelGroup>
 										                    <ice:outputText value="Basic"/>
@@ -373,7 +373,7 @@
 											<!-- *********** -->	
 											
 											<ice:panelGroup rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'endState'}">
-												<ice:panelCollapsible id="panelEndpointBasic" expanded="true">
+												<ice:panelCollapsible  expanded="true">
 													<f:facet name="header">
 										                <ice:panelGroup>
 										                    <ice:outputText value="Basic"/>
@@ -443,7 +443,7 @@
 												
 												
 													<td>
-														<ice:panelGroup rendered="#{ not (workflowComponent.type == 'endState') }">
+														<ice:panelGroup rendered="#{ not (workflowComponent.type == 'endState') &amp;&amp; not (workflowComponent.type == 'join')}">
 															<ui:repeat value="#{workflowComponent.transitions}" var="transition">
 																<ice:panelGroup 
 																	style="background-image:url(/skins/default/images/workflow/transition.png); background-position:right bottom; background-repeat:no-repeat; vertical-align:bottom;text-align:right; height:30px; line-height:30px; border-bottom:1px solid #cccccc; width:100px; ">

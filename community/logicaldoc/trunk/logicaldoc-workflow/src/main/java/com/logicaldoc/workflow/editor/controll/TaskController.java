@@ -3,13 +3,13 @@ package com.logicaldoc.workflow.editor.controll;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIParameter;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
-import com.icesoft.faces.component.ext.HtmlCommandButton;
 import com.icesoft.faces.component.ext.HtmlCommandLink;
 import com.icesoft.faces.component.selectinputtext.SelectInputText;
 import com.logicaldoc.core.security.User;
@@ -29,7 +29,7 @@ public class TaskController extends DragAndDropSupportController {
 	
 	private WorkflowTask workflowTask;
 
-	private List<String> possibleAssignments;
+	private List<String> possibleAssignments = new LinkedList<String>();
 
 	public void setGroupDAO(GroupDAO groupDAO) {
 		this.groupDAO = groupDAO;
@@ -69,11 +69,10 @@ public class TaskController extends DragAndDropSupportController {
 			}
 
 			if (autoComplete.getSelectedItem() != null) {
-				Assignee assignee = (Assignee) autoComplete.getSelectedItem().getValue();
+			//	Assignee assignee = this.possibleAssignments.get(autoComplete.getSelectedItem().getValue());
 				// fire effect to draw attention
 
-				assignee.setValue(autoComplete.getSelectedItem()
-						.getValue().toString());
+				//assignee.setValue(this.possibleAssignments.get(autoComplete.getSelectedItem().getValue()));
 				
 			} else {
 
@@ -95,7 +94,7 @@ public class TaskController extends DragAndDropSupportController {
 	}
 
 	public void removeAssignment(ActionEvent actionEvent) {
-		HtmlCommandLink commandLink = (HtmlCommandLink) actionEvent
+		UICommand commandLink = (UICommand) actionEvent
 				.getSource();
 		Object val = ((UIParameter) commandLink.getChildren().get(0))
 				.getValue();

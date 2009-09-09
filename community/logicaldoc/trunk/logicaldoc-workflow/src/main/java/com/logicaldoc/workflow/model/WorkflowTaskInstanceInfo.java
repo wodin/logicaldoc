@@ -27,7 +27,7 @@ public class WorkflowTaskInstanceInfo extends WorkflowTaskInstance {
 		workflowInstance.getProperties().get(WorkflowConstants.VAR_TEMPLATE);
 		
 		String taskDescription = templateService.transformWorkflowTask(workflowTask, workflowInstance, 
-				this);
+				this, workflowTask.getDescription());
 		
 		getProperties().put(WorkflowConstants.VAR_DESCRIPTION, taskDescription);
 		

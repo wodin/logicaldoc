@@ -90,15 +90,21 @@ public class StartWorkflowWizard implements TabChangeListener {
 		this.documentNavigation = (DocumentNavigation) FacesUtil
 				.accessBeanFromFacesContext("documentNavigation", FacesContext
 						.getCurrentInstance(), log);
-
+		
 	}
 
 	public void setXStream(XStream stream) {
 		xStream = stream;
+		
 	}
 	
-	private void init() {
-
+	public void init() {
+		this.persistenceTemplate = null;
+		this.priority = null;
+		this.workflowTask = null;
+		
+		if(tabSet != null)
+			setupAllPanels(true);
 	}
 
 	public List<SelectItem> getPriorities() {
@@ -140,7 +146,7 @@ public class StartWorkflowWizard implements TabChangeListener {
 
 	public void rowSelectionListener(RowSelectorEvent event) {
 
-		setupAllPanels();
+		setupAllPanels(false);
 		
 		this.workflowDefinition = this.workflowService.getAllDefinitions().get(
 				event.getRow());
@@ -182,6 +188,7 @@ public class StartWorkflowWizard implements TabChangeListener {
 				workflowDefinition, properties);
 		this.workflowService.signal(instance.getId());
 		
+		this.documentNavigation.showDocuments();
 		return null;
 	}
 
@@ -191,19 +198,18 @@ public class StartWorkflowWizard implements TabChangeListener {
 	public String prepareSelectedWorkflow() {
 
 		init();
-
+		setupAllPanels(false);
 		return null;
 	}
 
 	public String editOverallWorkflowSettings() {
 
-		
-
+		setupAllPanels(true);
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
-	public void setupAllPanels() {
+	public void setupAllPanels(boolean t) {
 		int currentTab = tabSet.getSelectedIndex();
 		currentTab++;
 
@@ -213,10 +219,10 @@ public class StartWorkflowWizard implements TabChangeListener {
 			
 			List<UIComponent> panels = tabSet.getChildren();
 
-			for (int i = 0; i < panels.size(); i++) {
+			for (int i = 1; i < panels.size(); i++) {
 				PanelTab panel = (PanelTab) panels.get(i);
 
-				panel.setDisabled(false);
+				panel.setDisabled(t);
 			}
 			
 			

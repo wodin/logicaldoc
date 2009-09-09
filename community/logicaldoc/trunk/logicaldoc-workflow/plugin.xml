@@ -42,6 +42,11 @@
 			<export prefix="*" />
 		</library>
 		
+		<library id="javassist" path="lib/javassist-3.8.0.GA.jar" type="code">
+			<export prefix="*" />
+		</library>
+		
+		
    	</runtime>
 	
 	<extension plugin-id="logicaldoc-core" point-id="DocumentMenu" id="startworkflow">

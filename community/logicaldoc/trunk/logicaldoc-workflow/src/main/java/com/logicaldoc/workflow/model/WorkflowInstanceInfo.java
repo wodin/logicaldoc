@@ -40,7 +40,7 @@ public class WorkflowInstanceInfo extends WorkflowInstance{
 		getProperties().put(WorkflowConstants.VAR_DOCUMENTS, documents);
 		getProperties().put(WorkflowConstants.VAR_TEMPLATE, workflowTemplate);
 		
-		String description = templateService.transformWorkflowInstance(this, workflowTemplate);
+		String description = templateService.transformWorkflowInstance(this, workflowTemplate, workflowTemplate.getDescription());
 		getProperties().put(WorkflowConstants.VAR_DESCRIPTION, description);
 		
 		this.setName(workflowTemplate.getName());
