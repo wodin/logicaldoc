@@ -7,7 +7,6 @@ import javax.faces.event.ActionEvent;
 import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
 import com.logicaldoc.workflow.editor.model.Join;
 import com.logicaldoc.workflow.editor.model.WorkflowEditorException;
-import com.logicaldoc.workflow.editor.model.WorkflowTask;
 
 public class JoinController extends DragAndDropSupportController{
 

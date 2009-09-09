@@ -21,6 +21,7 @@
               <include>com.thoughtworks.xstream:*</include>
               <include>xpp3:*</include>
               <include>org.freemarker:*</include>
+              <include>javassist:*</include>
 			</includes>
 		</dependencySet>
 	</dependencySets>

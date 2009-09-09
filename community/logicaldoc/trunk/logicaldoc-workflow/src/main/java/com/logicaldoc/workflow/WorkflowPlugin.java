@@ -5,6 +5,7 @@ import java.io.File;
 import org.apache.commons.io.FileUtils;
 import org.java.plugin.PluginManager;
 import org.jbpm.JbpmConfiguration;
+import org.jbpm.job.executor.JobExecutor;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.event.SystemEvent;
@@ -39,8 +40,8 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 			// Create JBPM database schema
 			JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
-			//jbpmInstallConfig.dropSchema();
-		//	jbpmInstallConfig.createSchema();
+			jbpmInstallConfig.dropSchema();
+			jbpmInstallConfig.createSchema();
 			
 			templatesDirectory.mkdirs();
 			templatesDirectory.mkdir();
@@ -76,13 +77,21 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 			Context ctx = Context.getInstance();
 			WorkflowTemplateLoader workflowTemplateLoader = (WorkflowTemplateLoader) ctx
 					.getBean(WorkflowTemplateLoader.class);
+			
+			System.out.println("Setting up jBPM-Template-Dictionary");
+			
 			workflowTemplateLoader.setTemplatesDirectory(templatesDirectory);
 			
 			templatesDirectory.mkdirs();
 			templatesDirectory.mkdir();
 			
-			JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
-			//jbpmInstallConfig.createSchema();
+			JbpmConfiguration jbpmConfiguration = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
+			
+			System.out.println("Starting jBPM Timer...");
+			
+			JobExecutor jobExecutor = jbpmConfiguration.getJobExecutor();
+			jobExecutor.setJbpmConfiguration(jbpmConfiguration);
+			jobExecutor.start();
 		}
 
 		public void setTemplatesDirectory(File templatesDirectory) {
@@ -109,5 +118,6 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 		VariableEvent variableEvent = new VariableEvent();
 		variableEvent.setTemplatesDirectory(resolveDataPath("templates"));
 		Context.addListener(variableEvent);
+		
 	}
 }

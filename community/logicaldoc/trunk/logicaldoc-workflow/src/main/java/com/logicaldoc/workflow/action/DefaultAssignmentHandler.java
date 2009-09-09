@@ -1,5 +1,6 @@
 package com.logicaldoc.workflow.action;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -22,16 +23,26 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.workflow.TemplateService;
 import com.logicaldoc.workflow.WorkflowConstants;
+import com.logicaldoc.workflow.WorkflowFactory;
 import com.logicaldoc.workflow.WorkflowService;
-import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
+import com.logicaldoc.workflow.WorkflowUtil;
 import com.logicaldoc.workflow.editor.model.WorkflowTask;
+import com.logicaldoc.workflow.model.WorkflowInstanceInfo;
+import com.logicaldoc.workflow.model.WorkflowTaskInstance;
+import com.logicaldoc.workflow.model.WorkflowTaskInstanceInfo;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
 import com.logicaldoc.workflow.model.script.UserScriptObject;
 import com.thoughtworks.xstream.XStream;
 
 public class DefaultAssignmentHandler extends AbstractAssignmentHandler{
 
+	private EMailSender mailSender;
 	
+	@Override
+	public void init() {
+		this.mailSender = (EMailSender) Context.getInstance().getBean(
+		"EMailSender");
+	}
 	/**
 	 * 
 	 */
@@ -40,22 +51,23 @@ public class DefaultAssignmentHandler extends AbstractAssignmentHandler{
 	@Override
 	public void executeImpl(List<String> assignees, ExecutionContext executionContext) {
 		
-		EMailSender eMailer = (EMailSender) Context.getInstance().getBean(
-				"DevEMailSender");
+		XStream xsStream = new XStream();
 		
+	
 		WorkflowService workflowService = (WorkflowService) Context.getInstance().getBean("workflowService");
 		
+		WorkflowTemplate workflowTemplate = getWorkflowTransformService().retrieveWorkflowModels((Serializable)executionContext.getVariable(WorkflowConstants.VAR_TEMPLATE));
+		
+		WorkflowTask workflowTask = WorkflowUtil.getWorkflowTaskById(executionContext.getNode().getName(), workflowTemplate.getWorkflowComponents());
+		
+	
 		
 		UserDAO userDAO = (UserDAO) Context.getInstance().getBean("UserDAO");
 		
 		DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean("DocumentDAO");
 		
 		SystemMessageDAO systemMessageDAO = (SystemMessageDAO) Context.getInstance().getBean("SystemMessageDAO");
-		
-		XStream xStream = new XStream();
-		
-		WorkflowTemplate workflowTemplate = (WorkflowTemplate)xStream.fromXML((String)executionContext.getVariable(WorkflowConstants.VAR_TEMPLATE));
-
+			
 		Set<Long> documentRecords = (Set<Long>)executionContext.getVariable(WorkflowConstants.VAR_DOCUMENTS);
 		
 		List<Document> documents = new LinkedList<Document>();
@@ -73,15 +85,25 @@ public class DefaultAssignmentHandler extends AbstractAssignmentHandler{
 		for(String assignee : assignees){
 			LinkedHashSet<Recipient> addresses = new LinkedHashSet<Recipient>();
 			Recipient ad = new Recipient();
-			ad.setAddress(assignee + "@logicaldoc.com");
-			addresses.add( ad );
+			
 			
 			User user = userDAO.findByUserName(assignee);
+	
+			ad.setAddress(user.getEmail());
+			addresses.add( ad );
 			
 			preparteTemplateModelWithRecipient(user, modelProperties);
 				
-			String assignmentText = templateService.transformToString(workflowTemplate
-					.getAssignmentMailMessage().getBody(), modelProperties);
+			String assignmentText = templateService.transformWorkflowTask(
+					workflowTask, 
+						new WorkflowInstanceInfo(WorkflowFactory
+							.createWorkflowInstance(executionContext
+									.getProcessInstance())), new WorkflowTaskInstanceInfo(
+											WorkflowFactory
+							.createTaskInstance(executionContext
+									.getTaskInstance())), workflowTemplate
+							.getAssignmentMailMessage().getBody());
+			
 			
 			eMail.setMessageText(assignmentText);
 			eMail.setRecipients( addresses );
@@ -102,14 +124,12 @@ public class DefaultAssignmentHandler extends AbstractAssignmentHandler{
 			
 			systemMessageDAO.store(message);
 		}
-		
-		
-		
-		
-		
+
 		
 		try {
-			eMailer.send(eMail);
+		//	System.out.println(eMail.getMessageText());
+			mailSender.send(eMail);
+			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

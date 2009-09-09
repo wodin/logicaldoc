@@ -26,13 +26,12 @@ import com.logicaldoc.web.navigation.NavigationBean;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.Constants;
 import com.logicaldoc.web.util.FacesUtil;
-import com.logicaldoc.workflow.editor.message.DeployMessage;
+import com.logicaldoc.workflow.editor.controll.TaskController;
 import com.logicaldoc.workflow.model.Transition;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
 import com.logicaldoc.workflow.model.WorkflowTaskInstance;
 import com.logicaldoc.workflow.model.FetchModel.FETCH_TYPE;
-import com.logicaldoc.workflow.transform.WorkflowTransformService;
 
 public class WorkflowManager {
 	protected static Log log = LogFactory.getLog(WorkflowManager.class);
@@ -58,6 +57,10 @@ public class WorkflowManager {
 	
 	private boolean showFolderSelector = false;
 		
+	private TaskController taskController;
+	
+	private String newAssignment = null;
+	
 	public WorkflowManager() {
 		this.workflowService = (WorkflowService) Context.getInstance().getBean(
 				"workflowService");
@@ -70,6 +73,18 @@ public class WorkflowManager {
 		.accessBeanFromFacesContext("DocumentDAO", FacesContext
 				.getCurrentInstance(), log);
 
+	}
+	
+	public void setNewAssignment(String newAssignment) {
+		this.newAssignment = newAssignment;
+	}
+	
+	public String getNewAssignment() {
+		return newAssignment;
+	}
+	
+	public TaskController getTaskController() {
+		return taskController;
 	}
 
 	public List<WorkflowDefinition> getWorkflowDefinitions() {
@@ -157,10 +172,14 @@ public class WorkflowManager {
 	}
 	
 	public void setupTaskPage(String taskid){
+		this.taskController = null;
 		this.workingWorkflowTaskinstance = this.workflowService.getTaskInstanceByTaskId(taskid, FETCH_TYPE.FORUPDATE);
 		this.workflowTaskInstance = this.workflowService.getTaskInstanceByTaskId(taskid, FETCH_TYPE.INFO);
 		this.workingWorkflowInstance = this.workflowService.getWorkflowInstanceByTaskInstance(taskid, FETCH_TYPE.FORUPDATE );
 		this.workflowInstance = this.workflowService.getWorkflowInstanceByTaskInstance( taskid, FETCH_TYPE.INFO );
+		
+		this.taskController = null;
+		this.newAssignment = null;
 		
 	}
 	
@@ -314,4 +333,19 @@ public class WorkflowManager {
 		return workingWorkflowTaskinstance;
 	}
 	
+	public void openReassignmentDialog(ActionEvent actionEvent){
+		this.taskController = (TaskController)Context.getInstance().getBean("workflowTaskController");
+	}
+	
+	public void closeReassignmentDialog(ActionEvent actionEvent){
+		this.taskController = null;
+	}
+	
+	public void setupNewAssignment(ActionEvent actionEvent){
+		WorkflowTaskInstance taskInstance = this.workflowService.getTaskInstanceByTaskId(this.workflowTaskInstance.getId(), FETCH_TYPE.FORUPDATE);
+		taskInstance.getProperties().put(WorkflowConstants.VAR_OWNER, this.newAssignment);
+		this.workflowService.updateWorkflow(taskInstance);
+		
+		this.navigationBean.back();
+	}
 }

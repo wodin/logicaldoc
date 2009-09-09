@@ -58,7 +58,10 @@ public class ForkController extends DragAndDropSupportController {
 	@Override
 	public void droppedObject(Container container) {
 		Fork fork = (Fork) container.droppingZone;
-		fork.getWorkflowTasks().add((WorkflowTask) container.draggedObject);
+		BaseWorkflowModel workflowModel = container.draggedObject;
+		
+		if(workflowModel instanceof WorkflowTask)
+			fork.getWorkflowTasks().add((WorkflowTask) container.draggedObject);
 	}
 
 	

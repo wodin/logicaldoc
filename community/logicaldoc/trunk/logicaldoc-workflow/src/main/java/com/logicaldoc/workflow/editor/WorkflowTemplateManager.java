@@ -36,6 +36,7 @@ import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
 import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
 import com.logicaldoc.workflow.transform.WorkflowTransformService;
+import com.logicaldoc.workflow.wizard.StartWorkflowWizard;
 import com.thoughtworks.xstream.XStream;
 
 public class WorkflowTemplateManager {
@@ -184,7 +185,8 @@ public class WorkflowTemplateManager {
 		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 				"documentNavigation", FacesContext.getCurrentInstance(), log));
 		documentNavigation.setSelectedPanel(new PageContentBean("workflow/wizard"));
-		
+		StartWorkflowWizard startWorkflowWizard = (StartWorkflowWizard)Context.getInstance().getBean("StartWorkflowWizard");
+		startWorkflowWizard.init();
 
 		return null;
 	}
@@ -375,11 +377,13 @@ public class WorkflowTemplateManager {
 		// at first we have to delete the current workflow instance
 		// TODO:we should add API-improvements to handle more clearer this
 		List<WorkflowDefinition> definitions = this.workflowService.getAllDefinitions();
-
+		
+		/*
 		for (WorkflowDefinition definition : definitions) {
 			if (definition.getName().equals(workflowTemplate.getName()))
 				this.workflowService.undeployWorkflow(definition.getDefinitionId());
 		}
+		*/
 
 		this.persistenceTemplate.setXmldata( xstream.toXML(this.workflowTemplate) );
 		this.workflowTemplateLoader.deployWorkflowTemplate(persistenceTemplate);

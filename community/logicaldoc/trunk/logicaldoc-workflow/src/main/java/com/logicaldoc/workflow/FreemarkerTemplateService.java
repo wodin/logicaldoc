@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.User;
@@ -50,7 +51,7 @@ public class FreemarkerTemplateService implements TemplateService {
 		Template template = null;
 
 		try {
-			template = new Template("tmp", new StringReader(text),
+			template = new Template(UUID.randomUUID().toString() + ".ftl", new StringReader(text),
 					new Configuration());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -65,17 +66,17 @@ public class FreemarkerTemplateService implements TemplateService {
 
 	}
 
-	public String transformWorkflowInstance(WorkflowInstance workflowInstance, WorkflowTemplate workflowDefinition){
+	public String transformWorkflowInstance(WorkflowInstance workflowInstance, WorkflowTemplate workflowDefinition, String msg){
 		HashMap modelProperties = new HashMap();
 		mapWorkflowDocumentsToWorkflowModel(modelProperties, workflowInstance);
 		
-		return this.transformToString(workflowDefinition.getDescription(),
+		return this.transformToString(msg,
 				modelProperties);
 	}
 	
 	public String transformWorkflowTask(WorkflowTask workflowTask,
 			WorkflowInstance workflowInstance,
-			WorkflowTaskInstance workflowTaskInstance) {
+			WorkflowTaskInstance workflowTaskInstance, String msg) {
 
 		HashMap modelProperties = new HashMap();
 
@@ -118,7 +119,7 @@ public class FreemarkerTemplateService implements TemplateService {
 
 		mapWorkflowDocumentsToWorkflowModel(modelProperties, workflowInstance);		
 		
-		return this.transformToString(workflowTask.getDescription(),
+		return this.transformToString(msg,
 				modelProperties);
 
 	}
@@ -151,7 +152,7 @@ public class FreemarkerTemplateService implements TemplateService {
 				.getWorkflowInstanceByTaskInstance(
 						workflowTaskInstance.getId(), FETCH_TYPE.INFO);
 		return this.transformWorkflowTask(workflowTask, workflowInstance,
-				workflowTaskInstance);
+				workflowTaskInstance, workflowTask.getDescription());
 	}
 
 	public static void main(String[] args) {
@@ -171,4 +172,6 @@ public class FreemarkerTemplateService implements TemplateService {
 				"hello <#list test as x>"
 						+ "${x}<#if x_has_next>,</#if></#list>", test));
 	}
+
+
 }

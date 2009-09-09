@@ -241,7 +241,7 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 						List<WorkflowDefinition> definitions = new LinkedList<WorkflowDefinition>();
 
 						List<ProcessDefinition> processDefinitions = context
-								.getGraphSession().findAllProcessDefinitions();
+								.getGraphSession().findLatestProcessDefinitions();
 						for (ProcessDefinition definition : processDefinitions) {
 
 							definitions.add(WorkflowFactory

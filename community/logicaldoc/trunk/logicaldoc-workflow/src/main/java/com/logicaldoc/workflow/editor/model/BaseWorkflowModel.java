@@ -1,7 +1,7 @@
 package com.logicaldoc.workflow.editor.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +18,16 @@ public abstract class BaseWorkflowModel implements Serializable{
 	private String id;
 
 	private String name;
+	
+	private List<Transition> transitions = new LinkedList<Transition>();
+	
+	public List<Transition> getTransitions() {
+		return transitions;
+	}
+	
+	public void setTransitions(List<Transition> transitions) {
+		this.transitions = transitions;
+	}
 	
 	public BaseWorkflowModel() {
 		id = UUID.randomUUID().toString();
