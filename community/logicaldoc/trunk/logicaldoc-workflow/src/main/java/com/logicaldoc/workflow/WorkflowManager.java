@@ -17,6 +17,9 @@ import org.apache.commons.logging.LogFactory;
 import com.icesoft.faces.component.ext.RowSelectorEvent;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.Group;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.document.Directory;
 import com.logicaldoc.web.document.DirectoryTreeModel;
@@ -61,6 +64,8 @@ public class WorkflowManager {
 	
 	private String newAssignment = null;
 	
+	private UserDAO userDAO;
+	
 	public WorkflowManager() {
 		this.workflowService = (WorkflowService) Context.getInstance().getBean(
 				"workflowService");
@@ -73,6 +78,7 @@ public class WorkflowManager {
 		.accessBeanFromFacesContext("DocumentDAO", FacesContext
 				.getCurrentInstance(), log);
 
+		this.userDAO = (UserDAO)Context.getInstance().getBean("UserDAO");
 	}
 	
 	public void setNewAssignment(String newAssignment) {
@@ -347,5 +353,20 @@ public class WorkflowManager {
 		this.workflowService.updateWorkflow(taskInstance);
 		
 		this.navigationBean.back();
+	}
+	
+	public List<WorkflowTaskInstance> getAdminTasks(){
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+		.getExternalContext().getSession(false);
+
+		String username = (String)session.getAttribute(Constants.AUTH_USERNAME);
+		User currentUser = this.userDAO.findByUserName(username);
+		
+		for(Group group : currentUser.getGroups()){
+			if(group.getName().equals("admin"))
+				return this.workflowService.getAllActiveTaskInstances();
+		}
+		
+		return null;
 	}
 }
