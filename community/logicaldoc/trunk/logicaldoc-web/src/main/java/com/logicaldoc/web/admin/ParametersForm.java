@@ -25,7 +25,7 @@ public class ParametersForm {
 	protected static Log log = LogFactory.getLog(ParametersForm.class);
 
 	public PropertiesBean getConfig() {
-		return (PropertiesBean)Context.getInstance().getBean("ContextProperties");
+		return (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 	}
 
 	public Collection<String> getKeys() {
@@ -40,7 +40,8 @@ public class ParametersForm {
 					continue;
 			} else if (name.startsWith("product") || name.startsWith("skin") || name.startsWith("conf")
 					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp")
-					|| name.startsWith("gui")||name.startsWith("password")||name.startsWith("ad"))
+					|| name.startsWith("gui") || name.startsWith("password") || name.startsWith("ad")
+					|| name.startsWith("webservice") || name.startsWith("webdav"))
 				continue;
 
 			sortedSet.add(key.toString());

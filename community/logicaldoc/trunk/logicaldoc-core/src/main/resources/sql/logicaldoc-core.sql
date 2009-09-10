@@ -102,6 +102,11 @@ values     (-2,CURRENT_TIMESTAMP,0,'system',2,1,'system.png','/2',1,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (3,CURRENT_TIMESTAMP,0,'clients',2,2,'connect.png','/2',1,'admin/clients',0);
+
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
 values     (17,CURRENT_TIMESTAMP,0,'directory',-2,5,'folders.png','/-2',1,'admin/folders',0);
 
 insert into ld_menu
@@ -180,6 +185,9 @@ values     (2,1,0,0,1,1,0,0,1,1,1,1,1);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
 values     (-2,1,0,0,1,1,0,0,1,1,1,1,1);
+
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (3,1,0,0,1,1,0,0,1,1,1,1,1);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
 values     (9,1,0,0,1,1,0,0,1,1,1,1,1);

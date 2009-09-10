@@ -10,9 +10,16 @@
 	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 	<jaxws:endpoint id="dms"
-		implementor="com.logicaldoc.webservice.DmsServiceImpl" address="/Dms">
+		implementor="com.logicaldoc.webservice.DmsServiceImpl"
+		address="/Dms">
 		<jaxws:properties>
 			<entry key="mtom-enabled" value="true" />
 		</jaxws:properties>
 	</jaxws:endpoint>
+
+
+	<bean id="WebserviceBean"
+		class="com.logicaldoc.webservice.WebserviceBean" scope="request">
+		<property name="properties" ref="ContextProperties" />
+	</bean>
 </beans>
