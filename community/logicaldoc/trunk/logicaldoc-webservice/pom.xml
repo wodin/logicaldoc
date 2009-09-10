@@ -60,6 +60,13 @@
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.logicaldoc</groupId>
+			<artifactId>logicaldoc-web</artifactId>
+			<version>4.6.0</version>
+			<scope>provided</scope>
+			<classifier>api</classifier>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
