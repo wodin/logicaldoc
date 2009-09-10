@@ -6,7 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.web.i18n.Messages;
+
 
 /**
  * Configuration bean
@@ -22,9 +22,9 @@ public class WebserviceBean {
 	public String save() {
 		try {
 			properties.write();
-			Messages.addLocalizedInfo("msg.action.savesettings");
+			WebServiceMessages.addLocalizedInfo("msg.action.savesettings");
 		} catch (IOException e) {
-			Messages.addLocalizedError("errors.action.savesettings");
+			WebServiceMessages.addLocalizedError("errors.action.savesettings");
 			log.error("Error saving webservice paramaters", e);
 		}
 		return null;

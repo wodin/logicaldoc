@@ -51,22 +51,15 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.jpf</groupId>
-			<artifactId>jpf</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.logicaldoc</groupId>
-			<artifactId>logicaldoc-web</artifactId>
-			<version>4.6.0</version>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-api</artifactId>
 			<scope>provided</scope>
-			<classifier>api</classifier>
-		</dependency>
+		</dependency>		
 	</dependencies>
 	<build>
 		<plugins>
