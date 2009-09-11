@@ -82,6 +82,7 @@ public class DefaultAssignmentHandler extends AbstractAssignmentHandler{
 		
 		Map<String, Object> modelProperties = new HashMap<String, Object>();
 		modelProperties.put("documents", documents);
+		
 		for(String assignee : assignees){
 			LinkedHashSet<Recipient> addresses = new LinkedHashSet<Recipient>();
 			Recipient ad = new Recipient();

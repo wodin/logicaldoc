@@ -99,7 +99,8 @@ public class FreemarkerTemplateService implements TemplateService {
 
 		for (int i = 0; i < assignees.size(); i++) {
 			User _user = userDAO.findByUserName(assignees.get(i));
-
+			if(_user == null)
+				continue;
 			txt_assignee += _user.getFirstName() + " " + _user.getName();
 			txt_assignee_rev += _user.getName() + " " + _user.getFirstName();
 
