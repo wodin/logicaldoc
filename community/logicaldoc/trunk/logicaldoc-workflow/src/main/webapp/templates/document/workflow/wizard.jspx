@@ -10,7 +10,9 @@
 	xmlns:ice="http://www.icesoft.com/icefaces/component" jsfc="f:view"
 	xmlns:ui="http://java.sun.com/jsf/facelets" locale="#{language}">
 	
-<ice:outputStyle href="/skins/default/css/workflow.css" />
+	<f:loadBundle basename="i18n.workflow" var="msg" />
+	
+	<ice:outputStyle href="/skins/default/css/workflow.css" />
 
 			<ice:form id="setupWizard"
 				style="border: 1px solid #DDDDDD; border-style:ridge;">
@@ -28,7 +30,7 @@
 
 						<!-- 1st panel: Choose Workflow -->
 						<ice:panelTab id="phase1" rendered="true"
-							label="Choose a Workflow">
+							label="#{msg.wizard_chooseworkflow}">
 							<div style="height: 150px;"><ice:dataTable
 								id="workflowTemplateList" var="workflowDefinition"
 								value="#{WorkflowManager.workflowDefinitions}" rows="15"
@@ -41,16 +43,16 @@
 										preStyleOnSelection="true" />
 
 									<f:facet name="header">
-										<ice:outputText id="column2" value="Name" />
+										<ice:outputText id="column2" value="#{msg.workflow_name}" />
 									</f:facet>
-									<ice:outputText id="Name" value="#{workflowDefinition.name}" />
+									<ice:outputText value="#{workflowDefinition.name}" />
 								</ice:column>
 
 								<ice:column>
 									<f:facet name="header">
-										<ice:outputText id="column3" value="Description" />
+										<ice:outputText id="column3" value="#{msg.workflow_description}" />
 									</f:facet>
-									<ice:outputText id="Description"
+									<ice:outputText 
 										value="#{workflowDefinition.description}" />
 								</ice:column>
 
@@ -64,7 +66,7 @@
 							label="Workflow Settings">
 							<div><ice:panelGroup style="width: 100%;">
 											
-											Managing of workflow #{StartWorkflowWizard.workflowDefinition.name} 
+											#{msg.wizard_manage } #{StartWorkflowWizard.workflowDefinition.name} 
 											
 											<br />
 
@@ -73,7 +75,7 @@
 
 								<br />
 										
-											Priority of the Workflow
+											#{msg.workflow_priority }
 											
 											<ice:panelGroup styleClass="selectionRadioGroup"
 									style="width: 95%;">
@@ -142,7 +144,7 @@
 
 
 						<ice:panelTab id="phase3" rendered="true" disabled="true"
-							label="Workflow-Assignments">
+							label="#{msg.wizard_tab_workflowassignment}">
 							<table>
 								<tr>
 									<td><ui:repeat
@@ -176,7 +178,7 @@
 																						<br />
 																		<ice:commandLink
 																			actionListener="#{StartWorkflowWizard.changeAssignments}"
-																			value="Change Assignments"
+																			value="#{msg.wizard_changeassignments}"
 																			rendered="#{workflowComponent.type == 'task'}">
 																			<f:param name="transition"
 																				value="#{workflowComponent}" />
@@ -188,7 +190,7 @@
 																	
 																	<ui:repeat value="#{workflowComponent.assignees}"
 																		var="assignment">
-																		<ice:commandButton value="Remove Assignment"
+																		<ice:commandButton value="#{msg.wizard_removeassignment}"
 																			actionListener="#{workflowComponent.controller.removeAssignment}">
 																			<f:param name="assignment" value="#{assignment}" />
 																			<f:param name="workflowComponent"
@@ -204,7 +206,7 @@
 																	</ui:repeat>
 
 																	<ice:commandLink immediate="true"
-																		value="Add Assignment"
+																		value="#{msg.wizard_addassignment}"
 																		actionListener="#{workflowComponent.controller.addAssignment}">
 																		<f:param name="workflowTask"
 																			value="#{workflowComponent}" />
@@ -299,7 +301,7 @@
 			            <ice:commandButton value="#{msgs['cancel']}"
 			                partialSubmit="true" immediate="true"
 			                action="#{StartWorkflowWizard.cancel}" />
-			            <ice:commandButton value="Start Workflow" id="startWorkflow" tabindex="1"
+			            <ice:commandButton value="#{msg.wiard_startworkflow}" id="startWorkflow" tabindex="1"
 			                action="#{StartWorkflowWizard.startWorkflow}" />
 			        </ice:panelGroup>
 				</ice:panelGroup>

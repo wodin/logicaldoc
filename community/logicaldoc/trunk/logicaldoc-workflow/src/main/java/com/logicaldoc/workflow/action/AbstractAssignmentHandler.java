@@ -15,12 +15,11 @@ import com.logicaldoc.workflow.editor.model.Assignee;
 import com.logicaldoc.workflow.editor.model.WorkflowTask;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
 import com.logicaldoc.workflow.transform.WorkflowTransformService;
-import com.thoughtworks.xstream.XStream;
 
 public abstract class AbstractAssignmentHandler implements AssignmentHandler {
 
 	private String taskId;
-	
+
 	private WorkflowTransformService workflowTransformService;
 	
 	protected final String getTaskId() {
@@ -64,9 +63,15 @@ public abstract class AbstractAssignmentHandler implements AssignmentHandler {
 			
 		}
 		else {
-			assignable.setActorId(workflowTask.getAssignees().get(0).getValue());
-			assignees.add(workflowTask.getAssignees().get(0).getValue());
-			System.out.println("user " + workflowTask.getAssignees().get(0).getValue() + " has been assigned to task: " + taskId);
+			String assignee = workflowTask.getAssignees().get(0).getValue();
+			
+			if(assignee == null) {
+				assignee = "admin";
+			}
+			
+			assignable.setActorId(assignee);
+			assignees.add(assignee);
+			System.out.println("user " + assignee + " has been assigned to task: " + taskId);
 			
 		}
 		
@@ -76,4 +81,6 @@ public abstract class AbstractAssignmentHandler implements AssignmentHandler {
 	public abstract void executeImpl(List<String> assignees, ExecutionContext executionContext);
 
 	public abstract void init();
+	
+	
 }

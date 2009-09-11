@@ -14,7 +14,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
 	styleClass="center">
-	
+	<f:loadBundle basename="i18n.workflow" var="msg" />
 	<ice:outputStyle href="/skins/default/css/workflow.css" />
 	<table align="center">
 		<tr>
@@ -85,7 +85,7 @@
 			</ice:dataTable></td>
 			<td valign="top">
 				<h3><ice:outputText
-				value="Suspended Workflows:" />
+				value="#{msg.tasklist_suspended}:" />
 			</h3>
 			<ice:dataTable id="suspendedTaskInstanceList" var="taskInstance"
 				value="#{WorkflowManager.suspendedTaskInstances}" rows="15"
@@ -116,7 +116,7 @@
 			</td>
 			<td valign="top">
 				<h3><ice:outputText
-				value="Suspended Workflows:" />
+				value="#{msg.tasklist_suspended}:" />
 			</h3>
 			<ice:dataTable id="suspendedTaskInstanceList" var="taskInstance"
 				value="#{WorkflowManager.suspendedTaskInstances}" rows="15"
@@ -150,7 +150,7 @@
 		<tr>
 			<td colspan="2">
 				<h3><ice:outputText
-				value="All Workflows (Restricted to admins):" />
+				value="#{msg.tasklist_admin}:" />
 			</h3>
 			<ice:dataTable id="adminTasks" var="taskInstance"
 				value="#{WorkflowManager.adminTasks}" rendered="#{not empty WorkflowManager.adminTasks}" rows="15"
