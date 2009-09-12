@@ -39,9 +39,9 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 			workflowTemplateLoader.setTemplatesDirectory(templatesDirectory);
 
 			// Create JBPM database schema
-			JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
-			jbpmInstallConfig.dropSchema();
-			jbpmInstallConfig.createSchema();
+			//JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
+			//jbpmInstallConfig.dropSchema();
+			//jbpmInstallConfig.createSchema();
 			
 			templatesDirectory.mkdirs();
 			templatesDirectory.mkdir();
@@ -87,11 +87,13 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 			
 			JbpmConfiguration jbpmConfiguration = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
 			
-			System.out.println("Starting jBPM Timer...");
-			
 			JobExecutor jobExecutor = jbpmConfiguration.getJobExecutor();
-			jobExecutor.setJbpmConfiguration(jbpmConfiguration);
-			jobExecutor.start();
+			
+			if(jobExecutor.isStarted() == false){
+				System.out.println("Starting jBPM Timer...");
+				jobExecutor.setJbpmConfiguration(jbpmConfiguration);
+				jobExecutor.start();
+			}
 		}
 
 		public void setTemplatesDirectory(File templatesDirectory) {
@@ -101,7 +103,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 	protected void install() throws Exception {
 		super.install();
-
+		System.out.println("installing Workflow-Module...");
 		InstallationEvent installationEvent = new InstallationEvent();
 		installationEvent.setTemplatesDirectory(resolveDataPath("templates"));
 		Context.addListener(installationEvent);
