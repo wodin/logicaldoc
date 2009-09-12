@@ -32,6 +32,7 @@ import com.logicaldoc.workflow.editor.message.DeployMessage;
 import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
 import com.logicaldoc.workflow.editor.model.Transition;
 import com.logicaldoc.workflow.editor.model.WorkflowEditorException;
+import com.logicaldoc.workflow.editor.model.WorkflowTask;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
 import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
@@ -359,12 +360,27 @@ public class WorkflowTemplateManager {
 	}
 
 	public String deployWorkflowTemplate() {
-
+		
+		this.saveCurrentWorkflowTemplate();
+		
 		this.errorMessages = new LinkedList<DeployMessage>();
 		
+		if(this.workflowTemplate.getWorkflowComponents().size() == 0)
+			this.errorMessages.add(new DeployMessage(this.workflowTemplate,
+					"No workflow-component have been added"));
+		
+		boolean workflowTaskExist = false;
 		for(BaseWorkflowModel model : this.workflowTemplate.getWorkflowComponents()){
+			
+			if(model instanceof WorkflowTask)
+				workflowTaskExist = true;
+			
 			model.checkForDeploy(errorMessages);
 		}
+		
+		if(workflowTaskExist == false)
+			this.errorMessages.add(new DeployMessage(this.workflowTemplate,
+					"There must at least exist one Workflow-Task"));
 		
 		if( this.errorMessages.size() > 0 )
 			return null;

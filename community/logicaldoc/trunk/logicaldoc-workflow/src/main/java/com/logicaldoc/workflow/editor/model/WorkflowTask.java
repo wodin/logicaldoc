@@ -13,11 +13,11 @@ public class WorkflowTask extends BaseWorkflowModel {
 	
 	private String description;
 	
-	private Integer dueDateValue;
+	private Integer dueDateValue = 0;
 	
 	private String dueDateUnit;
 	
-	private Integer remindTimeValue;
+	private Integer remindTimeValue = 0;
 	
 	private String remindTimeUnit;
 	
