@@ -426,6 +426,9 @@ public class WorkflowTemplateManager {
 
 	public String loadWorkflowTemplate() {
 		
+		if(this.workflowTemplateId == 0)
+			return null;
+		
 		this.initializing();
 		this.persistenceTemplate = this.workflowTemplateLoader.loadWorkflowTemplate(this.workflowTemplateId, WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
 		if(this.persistenceTemplate.getXmldata() != null && ((String)this.persistenceTemplate.getXmldata()).getBytes().length > 0){
