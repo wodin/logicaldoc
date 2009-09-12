@@ -95,6 +95,22 @@ values     (-2050,1,1,1,1,1,1,1,1,1,1,1,1);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename,ld_bulkimport,ld_bulkexport,ld_manageimmutability, ld_sign, ld_archive, ld_workflow)
 values     (-2060,1,1,1,1,1,1,1,1,1,1,1,1);
 
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (3,CURRENT_TIMESTAMP,0,'clients',2,2,'connect.png','/2',1,'admin/clients',0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (3,1,0,0,1,1,0,0,1,1,1,1,1);
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (-40,CURRENT_TIMESTAMP,0,'webdav',3,2,'connect.png','/-2/3',0,'admin/webdav',0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename,ld_bulkimport,ld_bulkexport,ld_manageimmutability, ld_sign, ld_archive,ld_workflow)
+values     (-40,1,1,1,1,1,1,1,1,1,1,1,1);
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (-30,CURRENT_TIMESTAMP,0,'webservice',3,1,'connect.png','/-2/3',0,'admin/webservice',0);
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_delete, ld_rename,ld_bulkimport,ld_bulkexport,ld_manageimmutability, ld_sign, ld_archive,ld_workflow)
+values     (-30,1,1,1,1,1,1,1,1,1,1,1,1);
+
 
 --Templates and bindings for Conservazione Sostitutiva
 INSERT INTO LD_TEMPLATE (LD_ID,LD_LASTMODIFIED,LD_DELETED,LD_NAME,LD_DESCRIPTION) VALUES (-98,'2009-09-04',0,'Fattura vendita','Fattura di vendita');
