@@ -49,11 +49,6 @@
 		
    	</runtime>
 	
-	<extension plugin-id="logicaldoc-core" point-id="ResourceBundle" id="workflowBundle">
-		<parameter id="position" value="1"/>
-		<parameter id="bundle" value="i18n.workflow"/>
-	</extension>
-	
 	<extension plugin-id="logicaldoc-core" point-id="DocumentMenu" id="startworkflow">
 		<parameter id="id" value="startworkflow"/>
 		<parameter id="action" value="#{WorkflowTemplateManager.setupWorkflow}"/>
@@ -74,7 +69,7 @@
 	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="jbpmInit">
 		<parameter id="position" value="10" />
 		<parameter id="name" value="jbpm" />
-		<parameter id="sqlFile" value="sql/jbpm.jpdl" />
+		<parameter id="sqlFile" value="sql/jbpm.jpdl.sql" />
 	</extension>
 	
     <extension plugin-id="logicaldoc-core" point-id="DatabaseMapping" id="worklow">
