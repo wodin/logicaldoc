@@ -8,6 +8,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.def.AssignmentHandler;
 import org.jbpm.taskmgmt.exe.Assignable;
 
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.workflow.WorkflowConstants;
 import com.logicaldoc.workflow.WorkflowUtil;
@@ -22,12 +23,15 @@ public abstract class AbstractAssignmentHandler implements AssignmentHandler {
 
 	private WorkflowTransformService workflowTransformService;
 	
+	private UserDAO userDAO;
+	
 	protected final String getTaskId() {
 		return taskId;
 	}
 	
 	public AbstractAssignmentHandler(){
 		this.workflowTransformService = (WorkflowTransformService)Context.getInstance().getBean("workflowTransformService");
+		this.userDAO = (UserDAO)Context.getInstance().getBean("UserDAO");
 		this.init();
 	}
 	
@@ -63,7 +67,16 @@ public abstract class AbstractAssignmentHandler implements AssignmentHandler {
 			
 		}
 		else {
-			String assignee = workflowTask.getAssignees().get(0).getValue();
+			
+			String assignee = null;
+			if( workflowTask.getAssignees().size() > 0)
+				 assignee = workflowTask.getAssignees().get(0).getValue();
+			
+			if(assignee != null){
+				if(this.userDAO.findByUserName(assignee) == null)
+					assignee = null;
+			}
+				
 			
 			if(assignee == null) {
 				assignee = "admin";
