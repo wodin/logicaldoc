@@ -30,7 +30,7 @@
 
 						<!-- 1st panel: Choose Workflow -->
 						<ice:panelTab id="phase1" rendered="true"
-							label="#{msg.wizard_chooseworkflow}">
+							label="#{msgs['logicaldoc-workflow.wizard_chooseworkflow']}">
 							<div style="height: 150px;"><ice:dataTable
 								id="workflowTemplateList" var="workflowDefinition"
 								value="#{WorkflowManager.workflowDefinitions}" rows="15"
@@ -43,14 +43,14 @@
 										preStyleOnSelection="true" />
 
 									<f:facet name="header">
-										<ice:outputText id="column2" value="#{msg.workflow_name}" />
+										<ice:outputText id="column2" value="#{msgs['logicaldoc-workflow.workflow_name']}" />
 									</f:facet>
 									<ice:outputText value="#{workflowDefinition.name}" />
 								</ice:column>
 
 								<ice:column>
 									<f:facet name="header">
-										<ice:outputText id="column3" value="#{msg.workflow_description}" />
+										<ice:outputText id="column3" value="#{msgs['logicaldoc-workflow.workflow_description']}" />
 									</f:facet>
 									<ice:outputText 
 										value="#{workflowDefinition.description}" />
@@ -66,7 +66,7 @@
 							label="Workflow Settings">
 							<div><ice:panelGroup style="width: 100%;">
 											
-											#{msg.wizard_manage } #{StartWorkflowWizard.workflowDefinition.name} 
+											#{msgs['logicaldoc-workflow.wizard_manage']} #{StartWorkflowWizard.workflowDefinition.name} 
 											
 											<br />
 
@@ -75,7 +75,7 @@
 
 								<br />
 										
-											#{msg.workflow_priority }
+											#{msgs['logicaldoc-workflow.workflow_priority']}
 											
 											<ice:panelGroup styleClass="selectionRadioGroup"
 									style="width: 95%;">
@@ -144,7 +144,7 @@
 
 
 						<ice:panelTab id="phase3" rendered="true" disabled="true"
-							label="#{msg.wizard_tab_workflowassignment}">
+							label="#{msgs['logicaldoc-workflow.wizard_tab_workflowassignment']}">
 							<table>
 								<tr>
 									<td><ui:repeat
@@ -178,7 +178,7 @@
 																						<br />
 																		<ice:commandLink
 																			actionListener="#{StartWorkflowWizard.changeAssignments}"
-																			value="#{msg.wizard_changeassignments}"
+																			value="#{msgs['logicaldoc-workflow.wizard_changeassignments']}"
 																			rendered="#{workflowComponent.type == 'task'}">
 																			<f:param name="transition"
 																				value="#{workflowComponent}" />
@@ -190,7 +190,7 @@
 																	
 																	<ui:repeat value="#{workflowComponent.assignees}"
 																		var="assignment">
-																		<ice:commandButton value="#{msg.wizard_removeassignment}"
+																		<ice:commandButton value="#{msgs['logicaldoc-workflow.wizard_removeassignment']}"
 																			actionListener="#{workflowComponent.controller.removeAssignment}">
 																			<f:param name="assignment" value="#{assignment}" />
 																			<f:param name="workflowComponent"
@@ -206,7 +206,7 @@
 																	</ui:repeat>
 
 																	<ice:commandLink immediate="true"
-																		value="#{msg.wizard_addassignment}"
+																		value="#{msgs['logicaldoc-workflow.wizard_addassignment']}"
 																		actionListener="#{workflowComponent.controller.addAssignment}">
 																		<f:param name="workflowTask"
 																			value="#{workflowComponent}" />
@@ -301,7 +301,7 @@
 			            <ice:commandButton value="#{msgs['cancel']}"
 			                partialSubmit="true" immediate="true"
 			                action="#{StartWorkflowWizard.cancel}" />
-			            <ice:commandButton value="#{msg.wiard_startworkflow}" id="startWorkflow" tabindex="1"
+			            <ice:commandButton value="#{msgs['logicaldoc-workflow.wiard_startworkflow']}" id="startWorkflow" tabindex="1"
 			                action="#{StartWorkflowWizard.startWorkflow}" />
 			        </ice:panelGroup>
 				</ice:panelGroup>
