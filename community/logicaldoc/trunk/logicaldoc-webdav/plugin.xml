@@ -34,4 +34,9 @@
 			<export prefix="*" />
 		</library>
 	</runtime>
+	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="webdavDbInit">
+		<parameter id="position" value="40" />
+		<parameter id="name" value="logicaldoc-webdav" />
+		<parameter id="sqlFile" value="sql/logicaldoc-webdav.sql" />
+	</extension>
 </plugin>
