@@ -26,5 +26,8 @@
 		<property name="IOManager" ref="IOManager"/>
 	</bean>
 	
-	
+	<bean id="WebdavBean"
+		class="com.logicaldoc.webdav.web.WebdavBean" scope="request">
+		<property name="properties" ref="ContextProperties" />
+	</bean>
 </beans>

@@ -83,6 +83,20 @@ public class TasksRecordsManager implements Renderable, DisposableBean, TaskList
 		// need a unique reference so we use the object hash
 		sessionId = FacesContext.getCurrentInstance().getExternalContext().getSession(false).toString();
 		renderManager.getOnDemandRenderer(sessionId).add(this);
+
+		// new Thread() {
+		// @Override
+		// public void run() {
+		// while (true) {
+		// try {
+		// sleep(1000);
+		// } catch (InterruptedException e) {
+		// }
+		// getRenderManager().getOnDemandRenderer(sessionId).requestRender();
+		// System.out.println("**** refresh");
+		// }
+		// }
+		// }.start();
 	}
 
 	@Override
@@ -175,12 +189,16 @@ public class TasksRecordsManager implements Renderable, DisposableBean, TaskList
 
 	@Override
 	public void progressChanged(long progress) {
-		renderManager.getOnDemandRenderer(sessionId).requestRender();
+		synchronized (this) {
+			renderManager.getOnDemandRenderer(sessionId).requestRender();
+		}
 	}
 
 	@Override
 	public void statusChanged(int status) {
-		renderManager.getOnDemandRenderer(sessionId).requestRender();
+		synchronized (this) {
+			renderManager.getOnDemandRenderer(sessionId).requestRender();
+		}
 	}
 
 	public RenderManager getRenderManager() {
