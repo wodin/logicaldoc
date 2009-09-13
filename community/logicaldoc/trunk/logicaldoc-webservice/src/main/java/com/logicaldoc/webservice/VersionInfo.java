@@ -9,6 +9,16 @@ package com.logicaldoc.webservice;
 public class VersionInfo {
 	private String version;
 
+	private String fileVersion;
+	
+	public String getFileVersion() {
+		return fileVersion;
+	}
+
+	public void setFileVersion(String fileVersion) {
+		this.fileVersion = fileVersion;
+	}
+
 	private String date;
 
 	private String comment;

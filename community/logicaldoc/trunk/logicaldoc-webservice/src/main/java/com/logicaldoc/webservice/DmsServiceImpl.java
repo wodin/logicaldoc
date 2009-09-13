@@ -333,6 +333,7 @@ public class DmsServiceImpl implements DmsService {
 				vInfo.setDate(convertDateToXML(version.getDate()));
 				vInfo.setComment(version.getComment());
 				vInfo.setVersion(version.getVersion());
+				vInfo.setFileVersion(version.getFileVersion());
 				info.addVersion(vInfo);
 			}
 		} catch (RuntimeException re) {
