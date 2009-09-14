@@ -180,6 +180,11 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		assertFalse(dao.validateUser("test", "admin"));
 	}
 
+	public void testCount() {
+		assertEquals(5,dao.count());
+	}
+
+	
 	public void isPasswordExpired() {
 		assertFalse(dao.isPasswordExpired("admin"));
 		User user = dao.findByUserName("boss");

@@ -15,6 +15,11 @@ import com.logicaldoc.core.security.User;
 public interface UserDAO extends PersistentObjectDAO<User> {
 
 	/**
+	 * Counts the total number of users
+	 */
+	public int count();
+
+	/**
 	 * This method finds an User by its username.
 	 * 
 	 * @param username username of wanted User.
