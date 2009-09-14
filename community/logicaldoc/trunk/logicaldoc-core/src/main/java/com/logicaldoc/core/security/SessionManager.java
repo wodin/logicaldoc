@@ -151,6 +151,8 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	 */
 	public List<UserSession> getSessionsByUserObject(Object userObject) {
 		List<UserSession> sessions = new ArrayList<UserSession>();
+		if(userObject==null)
+			return sessions;
 		for (UserSession userSession : values()) {
 			if (userSession.getUserObject().equals(userObject))
 				sessions.add(userSession);
