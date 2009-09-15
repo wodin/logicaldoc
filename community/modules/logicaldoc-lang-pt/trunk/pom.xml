@@ -4,10 +4,10 @@
   <parent>
     <groupId>com.logicaldoc</groupId>
     <artifactId>logicaldoc</artifactId>
-    <version>4.0.0</version>
+    <version>4.5.0</version>
   </parent>
   <artifactId>logicaldoc-lang-pt</artifactId>
-  <version>4.0.1</version>
+  <version>4.5.0</version>
   <name>logicaldoc-lang-pt</name>
   <description>Portuguese language plugin for LogicalDOC</description>
   <packaging>jar</packaging>
@@ -16,17 +16,25 @@
     <developerConnection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/modules/logicaldoc-lang-pt/trunk</developerConnection>
     <url>http://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/modules/logicaldoc-lang-pt/trunk</url>
   </scm>
+  	<contributors>
+		<contributor>
+			<name>Marta Figueiredo</name>
+			<roles>
+			  <role>Translator (I18N/L10N)</role>
+			</roles>
+		</contributor>
+	</contributors>
   <dependencies>
-    <dependency>
-      <groupId>net.sf.jpf</groupId>
-      <artifactId>jpf-boot</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>net.sf.jpf</groupId>
-      <artifactId>jpf</artifactId>
-      <scope>provided</scope>
-    </dependency>
+		<dependency>
+			<groupId>net.sf.jpf</groupId>
+			<artifactId>jpf-boot</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jpf</groupId>
+			<artifactId>jpf</artifactId>
+			<scope>provided</scope>
+		</dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
@@ -40,14 +48,7 @@
     <dependency>
       <groupId>com.logicaldoc</groupId>
       <artifactId>logicaldoc-util</artifactId>
-      <version>4.0.0</version>
-      <type>jar</type>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.logicaldoc</groupId>
-      <artifactId>logicaldoc-core</artifactId>
-      <version>4.0.0</version>
+      <version>4.5.0</version>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
