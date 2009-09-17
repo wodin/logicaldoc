@@ -269,12 +269,44 @@
 
 					<c:forEach items="#{diffBean.templateAttributes}" var="attribute">
 						<ice:outputLabel value="#{attribute}"
-							styleClass="#{diffBean.version1.attributes[attribute]!=diffBean.version2.attributes[attribute] ? 'iceMsgsError':''}" />
-						<ice:outputText value="#{diffBean.version1.attributes[attribute]}"
-							styleClass="#{diffBean.version1.attributes[attribute]!=diffBean.version2.attributes[attribute] ? 'iceMsgsError':''}" />
+							styleClass="#{diffBean.version1.attributes[attribute].value!=diffBean.version2.attributes[attribute].value ? 'iceMsgsError':''}" />
+						<ice:outputText
+							value="#{diffBean.version1.attributes[attribute].value}"
+							styleClass="#{diffBean.version1.attributes[attribute].value!=diffBean.version2.attributes[attribute].value ? 'iceMsgsError':''}"
+							rendered="#{diffBean.version1.attributes[attribute].type == 0 or diffBean.version1.attributes[attribute].type == 1}" />
+						<ice:outputText
+							value="#{diffBean.version1.attributes[attribute].value}"
+							styleClass="#{diffBean.version1.attributes[attribute].value!=diffBean.version2.attributes[attribute].value ? 'iceMsgsError':''}"
+							rendered="#{diffBean.version1.attributes[attribute].type == 2}">
+							<f:convertNumber locale="#{locale}" />
+						</ice:outputText>
+						<ice:outputText
+							value="#{diffBean.version1.attributes[attribute].value}"
+							styleClass="#{diffBean.version1.attributes[attribute].value!=diffBean.version2.attributes[attribute].value ? 'iceMsgsError':''}"
+							rendered="#{diffBean.version1.attributes[attribute].type == 3}">
+							<f:convertDateTime pattern="#{loc.dateFormatShort}"
+								timeZone="#{timezone}" />
+						</ice:outputText>
+
 						<ice:panelGroup style="width:40px" />
-						<ice:outputText value="#{diffBean.version2.attributes[attribute]}"
-							styleClass="#{diffBean.version1.attributes[attribute]!=diffBean.version2.attributes[attribute] ? 'iceMsgsError':''}" />
+
+						<ice:outputText
+							value="#{diffBean.version2.attributes[attribute].value}"
+							styleClass="#{diffBean.version1.attributes[attribute].value!=diffBean.version2.attributes[attribute].value ? 'iceMsgsError':''}"
+							rendered="#{diffBean.version1.attributes[attribute].type == 0 or diffBean.version1.attributes[attribute].type == 1}" />
+						<ice:outputText
+							value="#{diffBean.version2.attributes[attribute].value}"
+							styleClass="#{diffBean.version1.attributes[attribute].value!=diffBean.version2.attributes[attribute].value ? 'iceMsgsError':''}"
+							rendered="#{diffBean.version1.attributes[attribute].type == 2}">
+							<f:convertNumber locale="#{locale}" />
+						</ice:outputText>
+						<ice:outputText
+							value="#{diffBean.version2.attributes[attribute].value}"
+							styleClass="#{diffBean.version1.attributes[attribute].value!=diffBean.version2.attributes[attribute].value ? 'iceMsgsError':''}"
+							rendered="#{diffBean.version1.attributes[attribute].type == 3}">
+							<f:convertDateTime pattern="#{loc.dateFormatShort}"
+								timeZone="#{timezone}" />
+						</ice:outputText>
 					</c:forEach>
 				</ice:panelGrid>
 			</ice:panelTab>
