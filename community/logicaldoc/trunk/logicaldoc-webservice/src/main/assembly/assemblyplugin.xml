@@ -24,6 +24,10 @@
 			<outputDirectory>classes</outputDirectory>
 		</fileSet>
 		<fileSet>
+			<directory>src/main/webapp</directory>
+			<outputDirectory>webapp</outputDirectory>
+		</fileSet>
+		<fileSet>
 			<includes>
 				<include>plugin.xml</include>
 			</includes>
