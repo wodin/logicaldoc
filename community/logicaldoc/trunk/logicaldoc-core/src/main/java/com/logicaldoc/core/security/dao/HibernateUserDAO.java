@@ -217,7 +217,10 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	@Override
 	public int count() {
-		List<Object> result=findByJdbcQuery("select count(*) from ld_user where not(ld_deleted=1)", 1, null);
-		return ((Integer)result.get(0)).intValue();
+		List<Object> result = findByJdbcQuery("select count(*) from ld_user where not(ld_deleted=1)", 1, null);
+		if (result.get(0) instanceof Integer)
+			return ((Integer) result.get(0)).intValue();
+		else
+			return ((Long) result.get(0)).intValue();
 	}
 }
