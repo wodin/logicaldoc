@@ -97,7 +97,7 @@ public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 		pbean.setProperty("ldap.groupIdentiferAttribute", "cn");
 		pbean.setProperty("ldap.userBase", "ou=users,ou=system");
 		pbean.setProperty("ldap.groupBase", "ou=groups,ou=system");
-		pbean.setProperty("ldap.base", "");
+		pbean.setProperty("ldap.base", " ");
 		pbean.setProperty("ldap.authentication", "basic");
 		pbean.setProperty("ldap.enabled", "false");
 
@@ -114,7 +114,7 @@ public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 		pbean.setProperty("ad.groupIdentiferAttribute", "sAMAccountName");
 		pbean.setProperty("ad.userBase", "CN=Users,DC=acme,DC=net");
 		pbean.setProperty("ad.groupBase", "CN=Builtin,DC=acme,DC=net");
-		pbean.setProperty("ad.base", "");
+		pbean.setProperty("ad.base", " ");
 		pbean.setProperty("ad.authentication", "basic");
 		pbean.setProperty("ad.enabled", "false");
 
