@@ -20,6 +20,7 @@
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 			<title>#{StyleBean.productName}  #{StyleBean.productRelease}</title>
+			<link type="image/x-icon" href="#{facesContext.externalContext.requestContextPath}#{StyleBean.imagesPath}/favicon.ico" rel="shortcut icon"/>
 			<ice:outputText style="padding-top:0px; padding-bottom:0px;"
 				value="#{StyleBean.style}" escape="false" />
 			<ice:outputStyle href="#{StyleBean.cssPath}/system.css" />
