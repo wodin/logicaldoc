@@ -263,9 +263,6 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public void updateResource(Resource resource, ImportContext context) throws DavException {
-		System.out.println("*** updateResource");
-		
-		
 		User user = userDAO.findById(resource.getRequestedPerson());
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 
