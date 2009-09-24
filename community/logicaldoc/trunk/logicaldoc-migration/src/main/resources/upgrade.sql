@@ -1,4 +1,4 @@
---This script migrates a 4.5.x database to a 4.6 (Community Edition)
+--This script migrates a 4.5.x database to a 4.6
 drop constraint FKF9B7567E76C86307;
 drop table ld_attributes;
 
