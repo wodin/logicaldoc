@@ -154,7 +154,7 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 		if(userObject==null)
 			return sessions;
 		for (UserSession userSession : values()) {
-			if (userSession.getUserObject().equals(userObject))
+			if (userObject.equals(userSession.getUserObject()))
 				sessions.add(userSession);
 		}
 		return sessions;
