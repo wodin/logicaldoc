@@ -53,7 +53,8 @@ import com.logicaldoc.webdav.resource.DavResourceFactory;
 import com.logicaldoc.webdav.session.DavSessionImpl;
 
 /**
- * <code>AbstractWebdavServlet</code> <p/>
+ * <code>AbstractWebdavServlet</code>
+ * <p/>
  */
 abstract public class AbstractWebdavServlet extends HttpServlet implements DavConstants {
 
@@ -63,8 +64,8 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 
 	/**
 	 * Default value for the 'WWW-Authenticate' header, that is set, if request
-	 * results in a
-	 * {@link DavServletResponse#SC_UNAUTHORIZED 401 (Unauthorized)} error.
+	 * results in a {@link DavServletResponse#SC_UNAUTHORIZED 401
+	 * (Unauthorized)} error.
 	 * 
 	 * @see #getAuthenticateHeaderValue()
 	 */
@@ -144,24 +145,22 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 				Credentials credentials = AuthenticationUtil.authenticate(webdavRequest);
 				username = credentials.getUserName();
 				String combinedUserId = request.getRemoteHost() + "-" + credentials.getUserName();
-
+	
 				// Check the credentials
 				if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword())) {
 					AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
 					return;
 				}
 
-				// Check if it exists a session for this user
-				if (!SessionManager.getInstance().getSessionsByUserObject(combinedUserId).isEmpty()) {
-					UserSession session = SessionManager.getInstance().getSessionsByUserObject(combinedUserId).get(0);
-					sid = session.getId();
-					if (SessionManager.getInstance().isValid(sid))
-						SessionManager.getInstance().renew(sid);
-					else {
-						AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
-						return;
+				for (UserSession session : SessionManager.getInstance().getSessionsByUserObject(combinedUserId)) {
+					if (SessionManager.getInstance().isValid(session.getId())) {
+						SessionManager.getInstance().renew(session.getId());
+						sid = session.getId();
+						break;
 					}
-				} else {
+				}
+				// No active session found, new login required
+				if (sid == null) {
 					boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(), credentials
 							.getPassword(), combinedUserId);
 					if (isLoggedOn == false) {
@@ -792,23 +791,5 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	 */
 	protected OutputContext getOutputContext(DavServletResponse response, OutputStream out) {
 		return new OutputContextImpl(response, out);
-	}
-
-	/**
-	 * 
-	 * @param request
-	 */
-	private void printRequest(DavServletRequest request) {
-		StringBuffer out = new StringBuffer();
-		try {
-			InputStream io = request.getInputStream();
-
-			byte b[] = new byte[4096];
-			for (int n; (n = io.read(b)) != -1;) {
-				out.append(new String(b, 0, n));
-			}
-			log.debug(out);
-		} catch (Exception e) {
-		}
 	}
 }
