@@ -146,6 +146,5 @@
 		<module>logicaldoc-i18n</module>
 		<module>logicaldoc-web</module>
 		<module>logicaldoc-testbench</module>
-		<module>logicaldoc-migration</module>
 	</modules>
 </project>
