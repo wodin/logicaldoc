@@ -1,7 +1,4 @@
 --This script migrates a 4.5.x database to a 4.6
-drop constraint FKF9B7567E76C86307;
-drop table ld_attributes;
-
 alter table ld_document_ext add column ld_mandatory int default 0 not null;
 alter table ld_document_ext add column ld_type int default 0 not null;
 alter table ld_document_ext add column ld_stringvalue varchar(4000);
@@ -21,7 +18,7 @@ update ld_generic_ext set ld_stringvalue=ld_value;
 alter table ld_generic_ext drop column ld_value;
 
 alter table ld_group_ext add column ld_mandatory int default 0  not null;
-alter table ld_group_ext add column ld_type int default 0 not nul;
+alter table ld_group_ext add column ld_type int default 0 not null;
 alter table ld_group_ext add column ld_stringvalue varchar(4000);
 alter table ld_group_ext add column ld_intvalue int;
 alter table ld_group_ext add column ld_doublevalue float;
@@ -33,17 +30,15 @@ alter table ld_menugroup add column ld_workflow int default 0 not null;
 alter table ld_menugroup drop constraint ld_menugroup_pkey;
 alter table ld_menugroup add primary key ( ld_menuid,ld_groupid,ld_write,ld_addchild,ld_managesecurity,ld_manageimmutability,ld_delete,ld_rename,ld_bulkimport,ld_bulkexport,ld_sign,ld_archive,ld_workflow );
 
-alter table ld_template_ext add column ld_mandatory int default 0  not null;
-alter table ld_template_ext add column ld_type int default 0 not nul;
-alter table ld_template_ext add column ld_stringvalue varchar(4000);
-alter table ld_template_ext add column ld_intvalue int;
-alter table ld_template_ext add column ld_doublevalue float;
-alter table ld_template_ext add column ld_datevalue timestamp;
-update ld_template_ext set ld_stringvalue=ld_value;
-alter table ld_template_ext drop column ld_value;
+create table ld_template_ext (ld_templateid bigint not null, ld_mandatory int not null, ld_type int not null, ld_stringvalue varchar(4000), ld_intvalue int, ld_doublevalue float, ld_datevalue timestamp, ld_name varchar(255) not null, primary key (ld_templateid, ld_name));
+alter table ld_template_ext add constraint FK6BABB84376C86307 foreign key (ld_templateid) references ld_template;
+insert into ld_template_ext(ld_templateid, ld_mandatory, ld_type, ld_name)
+select ld_templateid, 0, 0, ld_attribute from ld_attributes;
+alter table ld_attributes drop constraint FKF9B7567E76C86307;
+drop table ld_attributes;
 
 alter table ld_version_ext add column ld_mandatory int default 0  not null;
-alter table ld_version_ext add column ld_type int default 0 not nul;
+alter table ld_version_ext add column ld_type int default 0 not null;
 alter table ld_version_ext add column ld_stringvalue varchar(4000);
 alter table ld_version_ext add column ld_intvalue int;
 alter table ld_version_ext add column ld_doublevalue float;
@@ -56,16 +51,6 @@ alter table ld_emailaccount add column ld_mailfolder varchar(255);
 create table ld_emailaccount_rule (ld_accountid bigint not null, ld_field int not null, ld_policy int not null, ld_expression varchar(4000), ld_targetfolder bigint, ld_position int not null, primary key (ld_accountid, ld_position));
 alter table ld_emailaccount_rule add constraint FK_EMAILACCOUNT_RULE_MENU foreign key (ld_targetfolder) references ld_menu;
 alter table ld_emailaccount_rule add constraint FK_EMAILACCOUNT_RULE_ACCOUNT foreign key (ld_accountid) references ld_emailaccount;
-
-alter table ld_version_ext add column ld_mandatory int default 0  not null;
-alter table ld_version_ext add column ld_type int default 0 not nul;
-alter table ld_version_ext add column ld_stringvalue varchar(4000);
-alter table ld_version_ext add column ld_intvalue int;
-alter table ld_version_ext add column ld_doublevalue float;
-alter table ld_version_ext add column ld_datevalue timestamp;
-update ld_version_ext set ld_stringvalue=ld_value;
-alter table ld_version_ext drop column ld_value;
-
 
 insert into ld_menu
 (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
