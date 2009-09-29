@@ -178,7 +178,7 @@
 			</ice:panelGroup>
 
 			<ice:panelGroup style="margin-top:0px; padding-top:0px;">
-				<ice:outputLabel value="#{msgs['vewmode']}" for="viewMode" />
+				<ice:outputLabel value="#{msgs['viewmode']}" for="viewMode" />
 				<ice:selectOneMenu id="viewMode"
 					value="#{documentNavigation.viewMode}" partialSubmit="true">
 					<f:selectItems value="#{selectionTags.viewModesBrowsing}" />
