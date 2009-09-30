@@ -1,6 +1,8 @@
 package com.logicaldoc.core.i18n;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,7 @@ public class Language {
 
 	private Locale locale;
 
-	private String[] stopWords;
+	private String[] stopWords = new String[0];
 
 	private Analyzer analyzer;
 
@@ -68,27 +70,31 @@ public class Language {
 	/**
 	 * Populates the field stopWords reading the resource /stopwords/stopwords_<locale>.txt
 	 */
-	private void loadStopwords() {
+	void loadStopwords() {
 		try {
 			List<String> swlist = new ArrayList<String>();
 			String stopwordsResource = "/stopwords/stopwords_" + getLocale().toString() + ".txt";
-			InputStream is = null;
-			is = Thread.currentThread().getContextClassLoader().getResourceAsStream(stopwordsResource);
+			InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(stopwordsResource);
 			if (is == null)
 				is = getClass().getResourceAsStream(stopwordsResource);
 
-			Properties pp = new Properties();
-			pp.load(is);
-			Set<Object> xxx = pp.keySet();
-			is.close();
-
-			for (Object object : xxx) {
-				swlist.add((String) object);
+			InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+			BufferedReader br = new BufferedReader(isr);
+			String line = null;
+			while((line = br.readLine()) != null) {
+				line = line.trim();
+				if (line.indexOf("|") != -1) {
+					line = line.substring(0, line.indexOf("|"));
+					line = line.trim();
+				}
+				if (line != null && line.length() > 0) {
+					swlist.add(line);
+				}
 			}
+
 			stopWords = (String[]) swlist.toArray(new String[0]);
 		} catch (Throwable e) {
 			log.warn(e.getMessage());
-			stopWords = new String[] {};
 		}
 	}
 	
