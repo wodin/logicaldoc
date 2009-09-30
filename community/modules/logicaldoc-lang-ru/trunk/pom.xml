@@ -16,6 +16,14 @@
     <developerConnection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/modules/logicaldoc-lang-ru/trunk</developerConnection>
     <url>http://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/modules/logicaldoc-lang-ru/trunk</url>
   </scm>
+  <contributors>
+		<contributor>
+			<name>Alexander Kosyakov</name>
+			<roles>
+			  <role>Translator (I18N/L10N)</role>
+			</roles>
+		</contributor>
+	</contributors>
 	<dependencies>
 		<dependency>
 			<groupId>net.sf.jpf</groupId>
