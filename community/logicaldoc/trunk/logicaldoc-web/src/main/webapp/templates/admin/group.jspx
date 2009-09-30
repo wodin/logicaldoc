@@ -70,7 +70,7 @@
 				<ice:panelGroup>
 					<ldoc:groupselector id="affiliateGroup" showFilter="true"
 						allowMultipleSelection="false" label="" items="#{groupForm.items}"
-						value="#{groupForm.parentGroup}"
+						value="#{groupForm.parentGroup}" size="131"
 						filterValue="#{groupForm.groupFilter}"
 						filterListener="#{groupForm.filterGroups}" />
 				</ice:panelGroup>
