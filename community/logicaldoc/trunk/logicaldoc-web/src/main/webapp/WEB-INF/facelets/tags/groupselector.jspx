@@ -25,7 +25,7 @@
 				</ice:panelGroup>
 
 				<ice:panelGroup rendered="#{allowMultipleSelection eq 'true'}">
-					<ice:selectManyMenu id="#{id}"
+					<ice:selectManyMenu id="#{id}" style="width:#{fn:length(size) == 0 ? '125' : size}px;"
 						styleClass="#{fn:length(styleClass) == 0 ? 'selectManyMenu' : styleClass}"
 						value="#{value}" required="#{required=='true'}">
 						<f:selectItems value="#{items}" />
@@ -34,7 +34,7 @@
 				</ice:panelGroup>
 
 				<ice:panelGroup rendered="#{allowMultipleSelection eq 'false'}">
-					<ice:selectOneListbox id="#{id}"
+					<ice:selectOneListbox id="#{id}" style="width:#{fn:length(size) == 0 ? '125' : size}px;"
 						styleClass="#{fn:length(styleClass) == 0  ? 'selectManyMenu' : styleClass}"
 						value="#{value}" required="#{required=='true'}">
 						<f:selectItems value="#{items}" />
