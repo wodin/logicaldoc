@@ -147,7 +147,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		try {
 			User user = findByUserName(username);
 			// Check the password match
-			if ((user == null) || !user.getPassword().equals(CryptUtil.cryptString(password))) {
+			if ((user == null) || !user.getPassword().equals(CryptUtil.cryptString(password)) || user.getType()!=User.TYPE_DEFAULT) {
 				result = false;
 			}
 
@@ -217,7 +217,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	@Override
 	public int count() {
-		List<Object> result = findByJdbcQuery("select count(*) from ld_user where not(ld_deleted=1)", 1, null);
+		List<Object> result = findByJdbcQuery("select count(*) from ld_user where ld_type=0 and not(ld_deleted=1)", 1, null);
 		if (result.get(0) instanceof Integer)
 			return ((Integer) result.get(0)).intValue();
 		else
