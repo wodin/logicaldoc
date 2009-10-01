@@ -3,6 +3,7 @@ package com.logicaldoc.webservice;
 import java.text.MessageFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -11,6 +12,9 @@ import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.java.plugin.registry.Extension;
+
+import com.logicaldoc.util.PluginRegistry;
 import com.logicaldoc.util.config.FacesConfigurator;
 
 
@@ -31,10 +35,15 @@ public class WebServiceMessages extends AbstractMap<String, String> {
 
 	public static String getMessage(String key, Locale locale) {
 		if (bundles.isEmpty()) {
-			FacesConfigurator config = new FacesConfigurator();
-			bundles = config.getBundles();
-		}
+			// Acquire the 'ResourceBundle' extensions of the core plugin
+			PluginRegistry registry = PluginRegistry.getInstance();
+			Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "ResourceBundle", null);
 
+			for (Extension ext : exts) {
+				bundles.add(ext.getParameter("bundle").valueAsString());
+			}
+		}
+		
 		// Iterate over bundles in reverse order
 		for (int i = bundles.size() - 1; i >= 0; i--) {
 			String path = bundles.get(i);
@@ -46,7 +55,7 @@ public class WebServiceMessages extends AbstractMap<String, String> {
 				// Continue
 			}
 		}
-
+		
 		return key;
 	}
 
