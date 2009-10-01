@@ -16,11 +16,9 @@
 	styleClass="center formBorderHighlight"
 	style="width: 800px; text-align:left;">
 
-	<ice:form>
-		<ice:panelGroup>
-			<ice:messages globalOnly="true" />
-		</ice:panelGroup>
+	<ice:messages globalOnly="true" />
 
+	<ice:form>
 		<ice:panelGrid columns="2">
 			<ice:panelGroup>
 				<ice:outputLabel value="#{msgs['webdav.url']}:" />
@@ -48,7 +46,7 @@
 
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="#{msgs['save']}"
-				action="#{WebserviceBean.save}" />
+				action="#{WebdavBean.save}" />
 		</ice:panelGroup>
 	</ice:form>
 </jsp:root>
