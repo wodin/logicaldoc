@@ -35,7 +35,7 @@
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="subject" value="#{discussionsManager.subject}"
-						maxlength="255" required="true" />
+						maxlength="255" required="true" size="45" />
 					<ice:message for="subject" />
 				</ice:panelGroup>
 				<ice:panelGroup styleClass="outputLabel">
@@ -43,7 +43,7 @@
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputTextarea id="body" value="#{discussionsManager.body}"
-						cols="40" rows="3" required="true" />
+						cols="45" rows="4" required="true" style="font-size: 12px;" />
 					<ice:message for="body" />
 				</ice:panelGroup>
 				<ice:panelGroup>
