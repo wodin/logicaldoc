@@ -31,6 +31,7 @@ import com.logicaldoc.web.util.FacesUtil;
  * @since 4.5
  */
 public class DiscussionsManager {
+	
 	protected static Log log = LogFactory.getLog(DiscussionsManager.class);
 
 	private Collection<DiscussionThread> threads = new ArrayList<DiscussionThread>();
@@ -143,6 +144,10 @@ public class DiscussionsManager {
 	 */
 	public Collection<DiscussionThread> getThreads() {
 		return threads;
+	}
+	
+	public int getCount() {
+		return getThreads().size();
 	}
 
 	public String back() {
@@ -369,4 +374,5 @@ public class DiscussionsManager {
 	public void setComments(List<DiscussionComment> comments) {
 		this.comments = comments;
 	}
+
 }
