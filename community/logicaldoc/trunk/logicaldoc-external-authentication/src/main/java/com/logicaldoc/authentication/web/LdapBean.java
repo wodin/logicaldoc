@@ -22,6 +22,12 @@ public class LdapBean {
 
 	private BasicLDAPContextSource contextSource;
 
+	protected String password;
+
+	public boolean isPasswordEmpty() {
+		return password == null || "".equals(password);
+	}
+
 	public LDAPContextSourceConfig getContextSourceConfig() {
 		return contextSourceConfig;
 	}
@@ -32,6 +38,23 @@ public class LdapBean {
 
 	public void setUserGroupContext(LDAPUserGroupContext userGroupContext) {
 		this.userGroupContext = userGroupContext;
+	}
+
+	public String getPassword() {
+		if (password == null) {
+			password = getContextSourceConfig().getPassword();
+		}
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String changePassword() {
+		password = null;
+		getContextSourceConfig().setPassword(null);
+		return null;
 	}
 
 	public String save() {
@@ -50,14 +73,17 @@ public class LdapBean {
 			contextSource.setUserAuthenticationPattern(contextSourceConfig.getUserAuthenticationPattern());
 			pbean.setProperty(propertyPrefix + ".username", contextSourceConfig.getUserName());
 			contextSource.setUserName(contextSourceConfig.getUserName());
+			if (contextSourceConfig.getPassword() == null)
+				contextSourceConfig.setPassword("");
+			else
+				contextSourceConfig.setPassword(password);
 			pbean.setProperty(propertyPrefix + ".password", contextSourceConfig.getPassword());
 			contextSource.setPassword(contextSourceConfig.getPassword());
 			pbean.setProperty(propertyPrefix + ".base", contextSourceConfig.getBase());
 			contextSource.setBase(contextSourceConfig.getBase());
 			pbean.setProperty(propertyPrefix + ".enabled", contextSourceConfig.getEnabled());
 			pbean.setProperty(propertyPrefix + ".authentication", contextSourceConfig.getAuthentication());
-			
-			
+
 			// Save user group settings
 			pbean.setProperty(propertyPrefix + ".userIdentiferAttribute", userGroupContext.getUserIdentiferAttribute());
 			pbean.setProperty(propertyPrefix + ".logonAttribute", userGroupContext.getLogonAttribute());
@@ -80,6 +106,7 @@ public class LdapBean {
 
 	public void setContextSourceConfig(LDAPContextSourceConfig contextSourceConfig) {
 		this.contextSourceConfig = contextSourceConfig;
+		this.password=contextSourceConfig.getPassword();
 	}
 
 	public String getPropertyPrefix() {
