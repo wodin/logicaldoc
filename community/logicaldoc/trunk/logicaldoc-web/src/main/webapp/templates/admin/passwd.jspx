@@ -45,7 +45,7 @@
 					<ice:panelGroup>
 						<ice:inputSecret id="repass" value="#{userForm.repass}"
 							tabindex="1" maxlength="30" size="30" required="true">
-							<f:validateLength minimum="#{SecurityForm.passwordSize}" maximum="30" />
+							<f:validateLength minimum="#{securityForm.passwordSize}" maximum="30" />
 						</ice:inputSecret>
 						<ice:message for="repass" />
 					</ice:panelGroup>
