@@ -306,7 +306,7 @@
 							value="#{msgs['password.size']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
-						<ice:inputText id="passwordSize" tabindex="1"
+						<ice:inputText id="passwordSize"
 							value="#{securityForm.passwordSize}" />
 						<ice:message for="passwordSize" />
 					</ice:panelGroup>
@@ -315,7 +315,7 @@
 						<ice:outputLabel for="passwordTtl" value="#{msgs['password.ttl']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
-						<ice:inputText id="passwordTtl" tabindex="1"
+						<ice:inputText id="passwordTtl"
 							value="#{securityForm.passwordTtl}" />
 						<ice:message for="passwordTtl" />
 					</ice:panelGroup>
