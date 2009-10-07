@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tools.zip.ZipEntry;
@@ -31,11 +32,30 @@ public class ZipUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static boolean unzip(String zipsource, String target) {
+		return unzip(zipsource, target, "Cp850");
+	}
+
+	/**
+	 * This method extracts all entries of a zip-file specifying the encoding.
+	 * 
+	 * @param zipsource Path of the zip-file.
+	 * @param target Path of the extracted files.
+	 * @param encoding Encoding for file names. If empty, will be used the
+	 *        platform's native encoding for file names.
+	 * @return True if successfully extracted.
+	 */
+	@SuppressWarnings("unchecked")
+	public static boolean unzip(String zipsource, String target, String encoding) {
 		boolean result = true;
 		try {
 			if (!target.endsWith("/"))
 				target = target + "/";
-			ZipFile zip = new ZipFile(zipsource, "Cp850");
+			ZipFile zip = null;
+			if (StringUtils.isNotEmpty(encoding.trim())) {
+				zip = new ZipFile(zipsource, encoding);
+			} else {
+				zip = new ZipFile(zipsource);
+			}
 			Enumeration entries = zip.getEntries();
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = (ZipEntry) entries.nextElement();
@@ -57,7 +77,7 @@ public class ZipUtil {
 	 * @param entry Name of the entry to be extracted.
 	 * @return True if successfully extracted.
 	 */
-	public static boolean unzip(String zipsource, String target, String entry) {
+	public static boolean unzipEntry(String zipsource, String target, String entry) {
 		boolean result = true;
 
 		try {
