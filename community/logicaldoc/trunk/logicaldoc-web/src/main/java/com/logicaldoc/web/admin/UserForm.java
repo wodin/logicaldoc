@@ -322,9 +322,9 @@ public class UserForm {
 	public String savePassword() {
 		return save(true);
 	}
-	
+
 	public PropertiesBean getConfig() {
-		return (PropertiesBean)Context.getInstance().getBean("ContextProperties");
+		return (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 	}
 
 	private String save(boolean withPassword) {
@@ -346,7 +346,6 @@ public class UserForm {
 				if (withPassword) {
 					if (!getPassword().equals(getRepass())) {
 						Messages.addLocalizedError("msg.jsp.adduser.repass");
-
 						return null;
 					}
 
@@ -371,9 +370,6 @@ public class UserForm {
 					String password = new PasswordGenerator().generate(getConfig().getInt("password.size"));
 					user.setDecodedPassword(password);
 					dao.store(user);
-
-					// Notify the user by email
-					notifyAccount(user, password);
 				}
 
 				GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
@@ -401,6 +397,10 @@ public class UserForm {
 					Messages.addLocalizedError("errors.action.saveuser.notstored");
 				} else {
 					Messages.addLocalizedInfo("msg.action.changeuser");
+					
+					// Notify the user by email
+					if (createNew)
+						notifyAccount(user, password);
 				}
 
 				UsersRecordsManager recordsManager = ((UsersRecordsManager) FacesUtil.accessBeanFromFacesContext(
