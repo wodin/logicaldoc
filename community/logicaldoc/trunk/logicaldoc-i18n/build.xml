@@ -79,12 +79,13 @@
 			<sequential>
 				<for list="${locales}" param="locale">
 					<sequential>
+						<mkdir dir="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}properties"/>
 						<exec executable="python" dir="./translate-toolkit/translate/convert/">
 							<arg value="po2prop.py" />
 							<arg value="-t" />
 							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}_en.properties" />
 							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}po${file.separator}@{bundle}${file.separator}@{bundle}-@{locale}.po" />
-							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}po${file.separator}@{bundle}${file.separator}@{bundle}_@{locale}.properties" />
+							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}properties${file.separator}@{bundle}_@{locale}.properties" />
 						</exec>
 					</sequential>
 				</for>
