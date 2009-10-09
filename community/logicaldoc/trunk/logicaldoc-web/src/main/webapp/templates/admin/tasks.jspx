@@ -130,7 +130,7 @@
 						</ice:column>
 					</ice:dataTable>
 					
-					<ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
 						<ldoc:paginator table="tasksList"
 							label="#{msgs['paginator.simple']}" />
 						<br />

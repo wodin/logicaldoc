@@ -33,7 +33,7 @@
 
 			<br />
 			<ice:panelGrid columns="2" style="width: 100%;">
-				<ice:panelGroup>
+				<ice:panelGroup style="text-align:left;">
 					<ldoc:paginator table="parameters"
 						label="#{msgs['paginator.simple']}" />
 					<br />
