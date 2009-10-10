@@ -10,6 +10,22 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC CE 4.6 (2009-10-10; logicaldoc-4.6)
+===============
+Improved French Localization (Thanks to Manuel Le Boette, Maxime Leboeuf and François Blondel)
+Support for CCs in email sending
+Extended attributes are now typed(Double, Integer, String, Date)
+Automatic notification when the zip import is completed
+Improvement in webservice methods
+Fixed stop-words reading problem with native characters
+WebDAV: creation of a new version when document update (Works on WebDrive)
+New configuration mode for scheduled Tasks
+Solved the problem of excessive memory allocation when Tasks too close
+Active Directory full compliance and easy configuration (Enterprise edition)
+New Datiled view of the search results (Enterprise edition)
+Improved parametric search (Enterprise edition)
+
+
 LogicalDOC CE 4.5 (2009-06-10; logicaldoc-4.5)
 ===============
 Added LDAP integration
