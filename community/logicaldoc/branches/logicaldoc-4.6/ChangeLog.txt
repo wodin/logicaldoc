@@ -12,6 +12,10 @@
 
 LogicalDOC CE 4.6 (2009-10-10; logicaldoc-4.6)
 ===============
+Active Directory full compliance and easy configuration (Enterprise edition)
+New Datailed view of the search results (Enterprise edition)
+Improved parametric search (Enterprise edition)
+DATABASE CHANGES: This release is not compatible with the database of LogicalDOC 4.5!
 Improved French Localization (Thanks to Manuel Le Boette, Maxime Leboeuf and François Blondel)
 Support for CCs in email sending
 Extended attributes are now typed(Double, Integer, String, Date)
@@ -21,9 +25,8 @@ Fixed stop-words reading problem with native characters
 WebDAV: creation of a new version when document update (Works on WebDrive)
 New configuration mode for scheduled Tasks
 Solved the problem of excessive memory allocation when Tasks too close
-Active Directory full compliance and easy configuration (Enterprise edition)
-New Datiled view of the search results (Enterprise edition)
-Improved parametric search (Enterprise edition)
+Changes to web-service with new methods
+New Option in the GUI to disable the access via WebDAV or Web Services
 
 
 LogicalDOC CE 4.5 (2009-06-10; logicaldoc-4.5)
