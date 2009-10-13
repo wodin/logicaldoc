@@ -37,7 +37,7 @@
           <p>In LogicalDOC &egrave; possibile ricercare un documento in tre diverse modalit&agrave;:<br>
             1. Ricerca veloce<br>
             2. <a href="#advanced">Ricerca avanzata</a><br>
-            3. <a href="#parametric">Ricerca per parametri</a> (solo edizione Enterprise)</p>
+            3. <a href="#parametric">Ricerca per parametri</a></p>
           <h3>Ricerca veloce </h3>
           <br>
           La maschera di ricerca semplice &egrave; sempre presente ed accessibile in qualsiasi momento nella parte superiore della finestra.<br>
@@ -128,19 +128,36 @@
           <div>
             <div align="center"><img src="images/searchadvanced01.gif" width="500" height="513"></div>
           </div>
-          <h3><a name="parametric" id="parametric"></a>Ricerca per parametri (solo edizione Enterprise)</h3>
+          <h3><a name="parametric" id="parametric"></a>Ricerca per parametri</h3>
             <p>In LogicalDOC sotto la voce di men&ugrave; <span class="style5">Ricerche</span> &egrave; possibile visualizzare la
               pagina di ricerca per parametri. Questa funzionalit&agrave; consente all'utente di
             poter ricercare documenti in base ai valori contenuti in diversi parametri. La
             ricerca viene effettuata solo sui metadati dei documenti e, a differenza della
-            ricerca avanzata, vengono presi in esame tutti i documenti indicizzati e non. In
-            particolare, &egrave; possibile utilizzare il carattere speciale &ldquo;%&rdquo; per poter effettuare
-            ricerche pi&ugrave; sofisticate; ad esempio, se volete ricercare i documenti che nel
-            valore di protocollo inizino con la stringa &ldquo;fattura&rdquo;, allora sar&agrave; sufficiente
-            scrivere nell'apposito campo di ricerca &ldquo;fattura%&rdquo;. Se, invece, la stringa deve
-            essere contenuta nel valore del protocollo, allora sar&agrave; sufficiente scrivere
-            nell'apposito campo di ricerca &ldquo;%fattura%&rdquo;.</p>
-            <p>&nbsp;</p>
+            ricerca avanzata, vengono presi in esame tutti i documenti indicizzati e non. Per effettuare una ricerca paramentrica l'utente semplicemente aggiunge e
+rimuove una condizione applicabile su ogni possibile metadato di un
+documento. Come in una query SQL, la condizione può essere posta in 'and'
+o in 'or' rispetto alle altre precedentemente inserite. L'utente, infatti, attraverso
+la prima tendina sceglie la composizione voluta (and/or). Nella seconda
+tendina l'utente sceglie il campo sul quale verrà effettuata la ricerca.
+Successivamente l'utente può scegliere l'operatore (uguale, diverso, maggiore
+di, minore di) e poi definisce il valore che deve avere il campo. In particolare,
+se l'utente vuole cercare tutti i documenti di una specifica classe
+documentale, l'elenco di tutte le classi documentali disponibili verrà
+visualizzato nell'ultima tendina; in questo modo l'utnete può selezionare la
+classe documentale e aggiungere la condizione di ricerca. A questo punto tutti
+gli attributi della classe documentale scelta saranno selezionabili nella tendina
+dei campi per definire un'altra condizione. Se l'utente rimuove la condizione
+sulla classe documentale, allora i relativi attributi non saranno più visualizzati
+nella seconda tendina. Analogamente, se l'utente vuole cercare i documenti di
+una cerca lingua, la lista di tutte le lingue disponibili comparirà nell'ultima
+tendina. Infine, se l'utente vuole cercare i documenti presenti all'interno di una
+specifica cartella, l'utente sceglie il campo 'Cartella' fra tutti quelli disponibili e
+poi seleziona la specifica cartella cliccando il pulsante 'Sfoglia'.</p>
+          <p><br>
+          </p>
+          <div>
+            <div align="center"><img src="images/searchparametric01.gif" width="520" height="178"></div>
+          </div>
             <p>&nbsp;</p>
             <p>              </p>
                 </p>

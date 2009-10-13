@@ -2,7 +2,7 @@
 <html><!-- InstanceBegin template="/Templates/logicaldoc-help.dwt" codeOutsideHTMLIsLocked="false" -->
   <head>
   <!-- InstanceBeginEditable name="doctitle" -->
-  <title>Manutenzione archivio</title>
+  <title>Manutenzione database</title>
   <!-- InstanceEndEditable -->
   <link href="css/help.css" rel="stylesheet" type="text/css">
   <!-- InstanceBeginEditable name="head" -->
@@ -29,44 +29,44 @@
                 <tbody>
                   <tr>
                     <td valign="middle">
-                    <h1><!-- InstanceBeginEditable name="TitleRegion" -->Manutenzione archivio (solo edizione Enterprise)<!-- InstanceEndEditable --></h1></td>
+                    <h1><!-- InstanceBeginEditable name="TitleRegion" -->Manutenzione database<!-- InstanceEndEditable --></h1></td>
                   </tr>
                 </tbody>
               </table>
               <!-- InstanceBeginEditable name="ContentRegion" -->
               <p>In LogicalDOC l'amministratore del sistema pu&ograve; effettuare la manutenzione
-                dell'archivio documentale selezionando la voce di men&ugrave; <span class="style1">Archivio</span> e poi
-                <span class="style1">Manutenzione archivio</span>. Viene cos&igrave; visualizzata una pagina con i dati
-                riguardanti la dimensione dell'archivio documentale, il numero totale dei
+                del database documentale selezionando la voce di men&ugrave; <span class="style1">Sistema</span> e poi
+                <span class="style1">Manutenzione database</span>. Viene cos&igrave; visualizzata una pagina con i dati
+                riguardanti la dimensione del database documentale, il numero totale dei
                 documenti, la dimensione occupata da tutti i documenti cancellati e il numero
                 dei documenti cancellati.<br> <br>
               </p>
              			    <center>
-			      <img src="images/archivemaintenance_01.gif" width="558" height="179" heigth="197">
+			      <img src="images/databasemaintenance_01.gif" width="450" height="126" heigth="197">
 			      <br>
-			      Figura 51: Manutenzione archivio
+			      Figura 57: Manutenzione database
                 </center>
               <p>Questa funzionalit&agrave; viene fornita all'amministratore perch&eacute; in LogicalDOC la
                 cancellazione di un documento &egrave; solo un'operazione logica, che non
                 comporta una cancellazione fisica dal disco n&eacute; dal database. Le operazioni
-                che possono essere compiute sull'archivio sono due: la cancellazione fisica
+                che possono essere compiute sul database documentale sono due: la cancellazione fisica
                 dei documenti e il recupero di documenti cancellati logicamente. Nel primo
-                caso, premendo il pulsante <span class="style1">Pulisci Archivio</span>, dopo un messaggio di avviso,
-                viene lanciata l'esecuzione della operazione pianificata <span class="style1">Pulizia Archivio</span>, che
+                caso, premendo il pulsante <span class="style1">Pulisci Database</span>, dopo un messaggio di avviso,
+                viene lanciata l'esecuzione della operazione pianificata <span class="style1">Pulizia Database</span>, che
                 va a cancellare fisicamente e dal database tutti i documenti precedentemente
                 cancellati solo logicamente. Nel secondo caso, premendo il pulsante
                 <span class="style1">Recupera</span>, si consente di recuperare i documenti precedentemente cancellati
                 logicamente dall'applicazione: viene visualizzato un elenco paginato di tutti i
                 documenti cancellati, selezionare i documenti che si vogliono riportare
-                nell'applicazione e premere il pulsante Recupera. Questi documenti verranno
+                nell'applicazione e premere il pulsante <span class="style1">Recupera</span>. Questi documenti verranno
                 riportati nella stessa cartella in cui erano presenti quando erano stati
                 cancellati, esattamente come avviene nel sistema operativo Windows quando,
               all'interno del Cestino, si effettua il ripristino di un documento.<br>
               </p>
               <center>
-			      <p><img src="images/archivemaintenance_02.gif" width="310" height="288" heigth="197">
+			      <p><img src="images/databasemaintenance_02.gif" width="310" height="288" heigth="197">
 			        <br>
-			      Figura 52: Recupero documenti cancellati<br>
+			      Figura 58: Recupero documenti cancellati<br>
 </p>
 		      </center>
 			           <div align="center">
@@ -76,7 +76,7 @@
                 <td height="25">&nbsp;</td>
               </tr><tr>
                 <td colspan="2" class="noteBody">Si consiglia all'amministratore del sistema di gestire adeguatamente
-                  l'archivio documentale ripulendolo periodicamente, in quanto i documenti
+                  il database documentale ripulendolo periodicamente, in quanto i documenti
                   cancellati solo logicamente potrebbero raggiungere una dimensione
                   eccessiva che andrebbe a ridurre notevolmente lo spazio su disco della
                 vostra macchina.</td>
@@ -84,7 +84,7 @@
             </table>
           </div>
               <p>Come gi&agrave; accennato precedentemente, &egrave; presente in LogicalDOC
-                l'operazione pianificata <span class="style1">Pulizia Archivio</span> che periodicamente va a cancellare
+                l'operazione pianificata <span class="style1">Pulizia Database</span> che periodicamente va a cancellare
                 tutti i documenti cancellati dagli utenti di LogicalDOC. Se non desiderate che
                 questo avvenga in automatico occorre disabilitare la procedura dal pannello
               di gestione delle <span class="style1"><a href="tasks.html">Operazioni Pianificate</a></span>.</p>
