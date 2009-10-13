@@ -36,7 +36,7 @@
           <p>In LogicalDOC you can search a document in three different ways:<br>
             1. Quick search<br>
             2. <a href="#advanced">Advanced search</a><br>
-            3. <a href="#parametric">Parametric search</a> (Enterprise Edition only)</p>
+            3. <a href="#parametric">Parametric search</a></p>
            <h3>Simple search  </h3> 
           <br>
           The simple search mask is always present and accessible any time in the upper part of the window.<br>
@@ -148,18 +148,32 @@ document. <br>
           <div>
             <div align="center"><img src="images/searchadvanced01.gif" height="493" width="480"></div>
           </div>
-          <h3><a name="parametric" id="parametric"></a>Parametric search  (Enterprise Edition only)</h3>
+          <h3><a name="parametric" id="parametric"></a>Parametric search</h3>
             <p>In LogicalDOC, under <span class="style5">Searches</span> menu you can view the parametric
 search page. This feature allows the user to search for documents that
 contain specific values on their metadata. The search is performed only on
 the metadata of the document and unlike the advanced search, all
 documents are taken into consideration, including those not already
-indexed. In particular, you can use the special character "%" to perform
-more sophisticated searches; for example, if you want to search for
-documents that have a custom ID with the string "invoice" at the
-beginning, then simply type "invoice%" into the "Custom ID" search field. If
-the searched string is contained in the custom ID, simply type "%invoice%"
-into the "Custom ID" search field.</p>
+indexed. To perform a parametric search the user simply add and remove a search
+criterion over all the document's metadata. Like a database query the
+inserting criteria can be in 'and' or in 'or' with the other ones. The user, in fact,
+can choose the preferred criteria composition ('and'/'or') through the first scroll
+menu. In the second scroll menu the user can select the field over will be
+perform the search. Next the user can choose the operator (equal, not equal,
+greater than, lesser than, ecc.) and then the field value. In particular, if the
+user wants to search all documents with a specific template, the list of all created templates will be showed in the last scroll menu, so he can choose
+the template and then add the criterion. After that, all the template's attributes
+can be selectable into the field scroll menu for another criterion. If the user
+deletes the criterion over the template, all its attribute will be no longer on the
+field list. Similarly to the template field, if the user wants to search all
+documents with a specific language, the list of all languages will appear in the
+last scroll menu. Finally, if the user wants to search documents inside a
+specific folder, he choose the 'Folder' metadata in the field scroll menu and
+then he select the specific folder clicking on the 'Browse...' button.</p>
+		<p>&nbsp;</p>
+          <div>
+            <div align="center"><img src="images/searchparametric01.gif" height="249" width="749"></div>
+          </div>
             <p>&nbsp;</p>
        </p>
           <!-- InstanceEndEditable --></div></td>
