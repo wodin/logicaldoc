@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.logicaldoc</groupId>
 		<artifactId>logicaldoc</artifactId>
-		<version>4.6.0</version>
+		<version>5.0.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>logicaldoc-web</artifactId>
@@ -257,12 +257,12 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-util</artifactId>
-			<version>4.6.0</version>
+			<version>5.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-i18n</artifactId>
-			<version>4.6.0</version>
+			<version>5.0.0</version>
 		</dependency>
         <dependency>
 			<groupId>org.hyperic.sigar</groupId>
@@ -272,7 +272,7 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-core</artifactId>
-			<version>4.6.0</version>
+			<version>5.0.0</version>
 			<type>jar</type>
 			<scope>provided</scope>
 			<exclusions>
