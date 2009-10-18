@@ -133,10 +133,8 @@ public class TaskScheduling {
 		// The following loop 'while' is needed to update the next execution
 		// time of the task into the Task list page
 		if (DoubleTrigger.MODE_CRON.equals(getMode())) {
-			while (trigger.getNextFireTime().getTime() < System.currentTimeMillis()) {
-				((DoubleTrigger) trigger).setNextFireTime(trigger.getFireTimeAfter(previousFireTime));
-			}
-			return trigger.getNextFireTime();
+			((DoubleTrigger) trigger).setNextFireTime(trigger.getFireTimeAfter(previousFireTime));
+			return trigger.getFireTimeAfter(previousFireTime);
 		} else {
 			if (previousFireTime != null) {
 				long next = previousFireTime.getTime()
