@@ -25,14 +25,14 @@
 		<f:facet name="header">
 			
 			<ice:panelGrid width="100%" cellpadding="0" cellspacing="0" columns="2" style="text-align: center;">
-                <ice:outputText style="color: #FFFFFF;" value="#{msgs['logicaldoc-workflow.editor_errors']}"/>
+                <ice:outputText style="color: #FFFFFF;" value="#{msgs['workflow.editor_errors']}"/>
            		<ice:commandButton image="/skins/default/images/workflow/editor/close.gif" action="#{WorkflowTemplateManager.closeErrorMessageWindow}"/>
             </ice:panelGrid>
 			
 		</f:facet>
 
 		<f:facet name="body">
-        			<h:outputText value="#{msgs['logicaldoc-workflow.editor_errors_text']}"/>
+        			<h:outputText value="#{msgs['workflow.editor_errors_text']}"/>
         			<br />
 		
 			
@@ -51,7 +51,7 @@
 				<ice:panelGroup styleClass="rightToolSite">
 					<ice:commandLink action="#{WorkflowTemplateManager.createNewWorkflowTemplate}">
 					<nobr>			<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/new_template.gif"/>
-						<ice:outputText value="#{msgs['logicaldoc-workflow.editor_template_new']}"/></nobr>
+						<ice:outputText value="#{msgs['workflow.editor_template_new']}"/></nobr>
 					</ice:commandLink>
 				</ice:panelGroup>
 			</td>
@@ -72,7 +72,7 @@
 					<ice:panelGroup styleClass="rightToolSitePanel">
 						<ice:commandLink action="#{WorkflowTemplateManager.loadWorkflowTemplate}">
 							<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/load.gif"/>
-							<ice:outputText value="#{msgs['logicaldoc-workflow.editor_template_load']}"/>
+							<ice:outputText value="#{msgs['load']}"/>
 						</ice:commandLink>
 					</ice:panelGroup>
 					
@@ -81,50 +81,50 @@
 								<ice:panelGroup styleClass="rightToolSite"  style="padding-right:10px;" rendered="#{not empty WorkflowTemplateManager.persistenceTemplate}">
 									<ice:commandLink action="#{WorkflowTemplateManager.saveCurrentWorkflowTemplate}">
 										<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/save.gif"/>
-										<ice:outputText value="#{msgs['logicaldoc-workflow.editor_template_save']}"/>
+										<ice:outputText value="#{msgs['save']}"/>
 									</ice:commandLink>
 								</ice:panelGroup>
 								
 								<ice:panelGroup styleClass="deactivatedRightToolSite" rendered="#{empty WorkflowTemplateManager.persistenceTemplate}">
 									<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/save_dis.gif"/>
-									<ice:outputText value="#{msgs['logicaldoc-workflow.editor_template_save']}"/>
+									<ice:outputText value="#{msgs['workflow.editor_template_save']}"/>
 								</ice:panelGroup>
 									
 								<ice:panelGroup styleClass="rightToolSite" rendered="#{not empty WorkflowTemplateManager.persistenceTemplate.id}">
 									<ice:commandLink action="#{WorkflowTemplateManager.deployWorkflowTemplate}">
 										<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/deploy.gif"/>
-										<ice:outputText value="#{msgs['logicaldoc-workflow.editor_template_deploy']}"/>
+										<ice:outputText value="#{msgs['deploy']}"/>
 									</ice:commandLink>
 								</ice:panelGroup>
 								
 								<ice:panelGroup styleClass="deactivatedRightToolSite" rendered="#{empty WorkflowTemplateManager.persistenceTemplate.id}">
 									<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/deploy_dis.gif"/>
-									<ice:outputText value="#{msgs['logicaldoc-workflow.editor_template_deploy']}"/>
+									<ice:outputText value="#{msgs['deploy']}"/>
 								</ice:panelGroup>
 									
 								<ice:panelGroup styleClass="rightToolSite" rendered="#{not empty WorkflowTemplateManager.persistenceTemplate.id}">
 									<ice:commandLink action="#{WorkflowTemplateManager.deleteWorkflowTemplate}">
 										<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/delete.gif"/>
-										<ice:outputText value="#{msgs['logicaldoc-workflow.editor_template_remove']}"/>
+										<ice:outputText value="#{msgs['remove']}"/>
 									</ice:commandLink>
 								</ice:panelGroup>
 								
 								<ice:panelGroup styleClass="deactivatedRightToolSite" rendered="#{ empty WorkflowTemplateManager.persistenceTemplate.id}">
 									<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/delete_dis.gif"/>
-									<ice:outputText value="#{msgs['logicaldoc-workflow.editor_template_remove']}"/>
+									<ice:outputText value="#{msgs['remove']}"/>
 								</ice:panelGroup>
 								
 									
 								<ice:panelGroup styleClass="rightToolSite" rendered="#{not empty WorkflowTemplateManager.persistenceTemplate}">
 									<ice:commandLink action="#{WorkflowTemplateManager.closeCurrentWorkflowTemplate}">
 										<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/template_close.gif"/>
-										<ice:outputText value="#{msgs['logicaldoc-workflow.editor_template_close']}"/>
+										<ice:outputText value="#{msgs['close']}"/>
 									</ice:commandLink>
 								</ice:panelGroup>
-								
+
 								<ice:panelGroup styleClass="deactivatedRightToolSite" rendered="#{ empty WorkflowTemplateManager.persistenceTemplate}">
 									<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/template_close_dis.gif"/>
-									<ice:outputText value="#{msgs['logicaldoc-workflow.editor_template_close']}"/>
+									<ice:outputText value="#{msgs['close']}"/>
 								</ice:panelGroup>
 					
 					
@@ -142,7 +142,7 @@
 							>
 							<f:param name="workflowType" value="WorkflowTask"/>	
 							<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/menu_task.gif"/>
-							<ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_addtask']}"/>
+							<ice:outputText value="#{msgs['workflow.editor_component_addtask']}"/>
 						</ice:commandLink>
 					</ice:panelGroup>
 					<ice:panelGroup styleClass="rightToolSite"  style="margin-top:4px;">
@@ -150,7 +150,7 @@
 							>
 							<f:param name="workflowType" value="EndState"/>	
 							<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/menu_endstate.gif"/>
-							<ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_addendstate']}"/>
+							<ice:outputText value="#{msgs['workflow.editor_component_addendstate']}"/>
 						</ice:commandLink>
 					</ice:panelGroup>
 					
@@ -159,7 +159,7 @@
 							>
 							<f:param name="workflowType" value="Fork"/>	
 							<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/menu_fork.gif"/>
-							<ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_addfork']}"/>
+							<ice:outputText value="#{msgs['workflow.editor_component_addfork']}"/>
 						</ice:commandLink>
 					</ice:panelGroup>	
 					
@@ -168,7 +168,7 @@
 							>
 							<f:param name="workflowType" value="Join"/>	
 							<ice:graphicImage styleClass="linkImage" value="/skins/default/images/workflow/editor/menu_join.gif"/>
-							<ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_addjoin']}"/>
+							<ice:outputText value="#{msgs['workflow.editor_component_addjoin']}"/>
 						</ice:commandLink>
 					</ice:panelGroup>
 					
@@ -204,22 +204,22 @@
 											<ice:panelCollapsible id="workflowSettingsPanel" expanded="true" >
 									            <f:facet name="header">
 									                <ice:panelGroup>
-									                    <ice:outputText  value="#{msgs['logicaldoc-workflow.editor_settings']}"/>
+									                    <ice:outputText  value="#{msgs['workflow.editor_settings']}"/>
 									                </ice:panelGroup>
 									            </f:facet>
 									  
-												#{msgs['logicaldoc-workflow.editor_workflowname']}: <ice:inputText value="#{WorkflowTemplateManager.persistenceTemplate.name}"/><br/>
+												#{msgs['workflow.editor_workflowname']}: <ice:inputText value="#{WorkflowTemplateManager.persistenceTemplate.name}"/><br/>
 											
-												#{msgs['logicaldoc-workflow.editor_workflowdescription']}:<br/> <ice:inputTextarea id="testing"  style="width:95%; height:100px; font-size:10px"  value="#{WorkflowTemplateManager.workflowTemplate.description}"/>
+												#{msgs['workflow.editor_workflowdescription']}:<br/> <ice:inputTextarea id="testing"  style="width:95%; height:100px; font-size:10px"  value="#{WorkflowTemplateManager.workflowTemplate.description}"/>
 											<br/>
-												#{msgs['logicaldoc-workflow.editor_taskassignment']}<br/>
+												#{msgs['workflow.editor_taskassignment']}<br/>
 												<hr/>
-												#{msgs['logicaldoc-workflow.editor_email_subject']}: <ice:inputText value="#{WorkflowTemplateManager.workflowTemplate.assignmentMailMessage.subject}"/>
-												<br/>#{msgs['logicaldoc-workflow.editor_email_body']}: <ice:inputTextarea style="width:95%; height:100px; font-size:10px" value="#{WorkflowTemplateManager.workflowTemplate.assignmentMailMessage.body}"/>
-												<br/>#{msgs['logicaldoc-workflow.editor_reminder']}<br/>
+												#{msgs['subject']}: <ice:inputText value="#{WorkflowTemplateManager.workflowTemplate.assignmentMailMessage.subject}"/>
+												<br/>#{msgs['body']}: <ice:inputTextarea style="width:95%; height:100px; font-size:10px" value="#{WorkflowTemplateManager.workflowTemplate.assignmentMailMessage.body}"/>
+												<br/>#{msgs['reminder']}<br/>
 												<hr/>
-												#{msgs['logicaldoc-workflow.editor_email_subject']}: <ice:inputText value="#{WorkflowTemplateManager.workflowTemplate.reminderMailMessage.subject}"/>
-												<br/>#{msgs['logicaldoc-workflow.editor_email_body']}: <ice:inputTextarea style="width:95%; height:100px; font-size:10px" value="#{WorkflowTemplateManager.workflowTemplate.reminderMailMessage.body}"/>
+												#{msgs['subject']}: <ice:inputText value="#{WorkflowTemplateManager.workflowTemplate.reminderMailMessage.subject}"/>
+												<br/>#{msgs['body']}: <ice:inputTextarea style="width:95%; height:100px; font-size:10px" value="#{WorkflowTemplateManager.workflowTemplate.reminderMailMessage.body}"/>
 											</ice:panelCollapsible>
 											
 											<!-- ****** -->
@@ -230,15 +230,15 @@
 												<ice:panelCollapsible  expanded="true">
 										            <f:facet name="header">
 										                <ice:panelGroup>
-										                    <ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_task']}"/>
+										                    <ice:outputText value="#{msgs['task']}"/>
 										                </ice:panelGroup>
 										            </f:facet>
 									        
 													<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0"  width="100%" columns="1" rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
 											
-													    <ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_task_name']}"/><ice:inputText style="width:95%" id="name" value="#{WorkflowTemplateManager.selectedComponent.name}"/>
+													    <ice:outputText value="#{msgs['name']}"/><ice:inputText style="width:95%" id="name" value="#{WorkflowTemplateManager.selectedComponent.name}"/>
 														
-														<ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_task_description']}"/>
+														<ice:outputText value="#{msgs['description']}"/>
 														<ice:inputTextarea  style="width:95%; height:100px; font-size:10px" value="#{WorkflowTemplateManager.selectedComponent.description}"/>
 														
 													</ice:panelGrid>	
@@ -246,17 +246,17 @@
 												<ice:panelCollapsible id="panelEscalation" expanded="true">
 													<f:facet name="header">
 										                <ice:panelGroup>
-										                    <ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_task_escalation']}"/>
+										                    <ice:outputText value="#{msgs['workflow.editor_component_task_escalation']}"/>
 										                </ice:panelGroup>
 										            </f:facet>
 													<ice:panelGrid cellpadding="0" cellspacing="0" columns="4" style="height:40px">
 														<ice:graphicImage styleClass="symbol" value="/skins/default/images/workflow/editor/calendar.gif"/>
-														<ice:outputLabel for="dueDate" value="#{msgs['logicaldoc-workflow.editor_component_task_duedate']}"/><ice:inputText style="width:24px;" value="#{WorkflowTemplateManager.selectedComponent.dueDateValue}"/>
+														<ice:outputLabel for="dueDate" value="#{msgs['duedate']}"/><ice:inputText style="width:24px;" value="#{WorkflowTemplateManager.selectedComponent.dueDateValue}"/>
 														<h:selectOneMenu value="#{WorkflowTemplateManager.selectedComponent.dueDateUnit}">
 															<f:selectItems value="#{WorkflowTemplateManager.timeUnits}"/>
 														</h:selectOneMenu>
 														<ice:graphicImage styleClass="symbol" value="/skins/default/images/workflow/editor/repeat.gif"/>
-														<ice:outputLabel for="remindTime" value="#{msgs['logicaldoc-workflow.editor_component_task_remindtime']}"/><ice:inputText style="width:24px;" value="#{WorkflowTemplateManager.selectedComponent.remindTimeValue}"/>
+														<ice:outputLabel for="remindTime" value="#{msgs['workflow.editor_component_task_remindtime']}"/><ice:inputText style="width:24px;" value="#{WorkflowTemplateManager.selectedComponent.remindTimeValue}"/>
 														<h:selectOneMenu value="#{WorkflowTemplateManager.selectedComponent.remindTimeUnit}">
 															<f:selectItems value="#{WorkflowTemplateManager.timeUnits}"/>
 														</h:selectOneMenu>
@@ -269,13 +269,13 @@
 												<ice:panelCollapsible id="panelAssignees" expanded="true">
 													<f:facet name="header">
 										                <ice:panelGroup>
-										                    <ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_task_participants']}"/>
+										                    <ice:outputText value="#{msgs['workflow.editor_component_task_participants']}"/>
 										                </ice:panelGroup>
 										            </f:facet>
 													<ui:repeat value="#{WorkflowTemplateManager.selectedComponent.assignees}" var="assignment">
 														
 														<ice:panelGrid columns="2" cellpadding="0" cellspacing="0">
-															<ice:commandLink title="#{msgs['logicaldoc-workflow.editor_component_task_removeassignment']}" actionListener="#{WorkflowTemplateManager.controller.removeAssignment}">
+															<ice:commandLink title="#{msgs['workflow.editor_component_task_removeassignment']}" actionListener="#{WorkflowTemplateManager.controller.removeAssignment}">
 																<f:param name="assignment" value="#{assignment}"/>
 																<f:param name="workflowComponent" value="#{workflowComponent}"/>
 																<ice:graphicImage styleClass="symbol" value="/skins/default/images/workflow/editor/user_remove.gif"/>			
@@ -289,20 +289,20 @@
 													<ice:commandLink actionListener="#{WorkflowTemplateManager.controller.addAssignment}">
 														<f:param name="workflowTask" value="#{WorkflowTemplateManager.selectedComponent}"/>
 														<ice:graphicImage styleClass="symbol" value="/skins/default/images/workflow/editor/user_add.gif"/>
-														<ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_task_addassignment']}"/>
+														<ice:outputText value="#{msgs['workflow.editor_component_task_addassignment']}"/>
 													</ice:commandLink>
 													<ice:panelGroup/>
 												</ice:panelCollapsible>
 												<ice:panelCollapsible id="panelTransition" expanded="true">
 													<f:facet name="header">
 										                <ice:panelGroup>
-										                    <ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_task_transitions']}"/>
+										                    <ice:outputText value="#{msgs['workflow.editor_component_task_transitions']}"/>
 										                </ice:panelGroup>
 										            </f:facet>
 													
 													<ui:repeat value="#{WorkflowTemplateManager.selectedComponent.transitions}" var="transition">
 														<ice:outputText/>
-														<ice:commandLink title="#{msgs['logicaldoc-workflow.editor_component_task_removetransition']}" actionListener="#{WorkflowTemplateManager.controller.removeTransition}">
+														<ice:commandLink title="#{msgs['workflow.editor_component_task_removetransition']}" actionListener="#{WorkflowTemplateManager.controller.removeTransition}">
 															<f:param name="transition" value="#{transition}"/>
 															<ice:graphicImage styleClass="symbol" value="/skins/default/images/workflow/editor/transition_remove.gif"/>
 														</ice:commandLink>
@@ -321,7 +321,7 @@
 												
 													<ice:commandLink action="#{WorkflowTemplateManager.selectedComponent.controller.addTransition}">
 														<ice:graphicImage styleClass="symbol" value="/skins/default/images/workflow/editor/transition_add.gif"/>
-														<ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_task_addtransition']}"/>
+														<ice:outputText value="#{msgs['workflow.editor_component_task_addtransition']}"/>
 													</ice:commandLink>
 												
 												</ice:panelCollapsible>
@@ -335,14 +335,14 @@
 												<ice:panelCollapsible expanded="true">
 													<f:facet name="header">
 										                <ice:panelGroup>
-										                    <ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_join']}"/>
+										                    <ice:outputText value="#{msgs['join']}"/>
 										                </ice:panelGroup>
 										            </f:facet>
 											            
 													<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="2" rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
 														
 														
-														<ice:outputLabel for="name" value="#{msgs['logicaldoc-workflow.editor_component_join_name']}"><ice:inputText id="name" value="#{WorkflowTemplateManager.selectedComponent.name}"/></ice:outputLabel>
+														<ice:outputLabel for="name" value="#{msgs['name']}"><ice:inputText id="name" value="#{WorkflowTemplateManager.selectedComponent.name}"/></ice:outputLabel>
 														
 														
 													</ice:panelGrid>	
@@ -357,11 +357,11 @@
 												<ice:panelCollapsible expanded="true">
 													<f:facet name="header">
 										                <ice:panelGroup>
-										                    <ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_fork']}"/>
+										                    <ice:outputText value="#{msgs['fork']}"/>
 										                </ice:panelGroup>
 										            </f:facet>
 										           	<ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="2" rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
-														<ice:outputLabel for="name" value="#{msgs['logicaldoc-workflow.editor_component_fork_name']}"><ice:inputText id="name" value="#{WorkflowTemplateManager.selectedComponent.name}"/></ice:outputLabel>	
+														<ice:outputLabel for="name" value="#{msgs['name']}"><ice:inputText id="name" value="#{WorkflowTemplateManager.selectedComponent.name}"/></ice:outputLabel>	
 													</ice:panelGrid>
 										        </ice:panelCollapsible>
 													
@@ -376,7 +376,7 @@
 												<ice:panelCollapsible  expanded="true">
 													<f:facet name="header">
 										                <ice:panelGroup>
-										                    <ice:outputText value="#{msgs['logicaldoc-workflow.editor_component_endstate']}"/>
+										                    <ice:outputText value="#{msgs['workflow.editor_component_endstate']}"/>
 										                </ice:panelGroup>
 										            </f:facet>
 										            <ice:panelGrid columnClasses="hightAlignment" cellpadding="0" cellspacing="0" columns="2" rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
@@ -419,7 +419,7 @@
 																			hoverclass="seriesHover" >
 																				
 																				<ice:panelGroup rendered="#{empty workflowComponent.name}">
-																					<i>#{msgs['logicaldoc-workflow.editor_aa_noname']}</i>
+																					<i>#{msgs['workflow.editor_aa_noname']}</i>
 																				</ice:panelGroup>
 																				<ice:panelGroup rendered="#{not empty workflowComponent.name}">
 																					
@@ -428,11 +428,11 @@
 																				</ice:panelGroup>
 																			
 																			
-																				<ice:commandLink onclick="if(window.confirm('Do you really want to to delete this WorkflowComponent?') == 0)return false;" actionListener="#{WorkflowTemplateManager.deleteWorkflowComponent}"  value="#{msgs['logicaldoc-workflow.editor_aa_delete']}">
+																				<ice:commandLink onclick="if(window.confirm('Do you really want to to delete this WorkflowComponent?') == 0)return false;" actionListener="#{WorkflowTemplateManager.deleteWorkflowComponent}"  value="#{msgs['delete']}">
 																					<f:param name="component" value="#{workflowComponent}"/>
 																				</ice:commandLink>
 																					
-																			<ice:commandLink actionListener="#{WorkflowTemplateManager.selectComponent}" value="#{msgs['logicaldoc-workflow.editor_aa_edit']}">
+																			<ice:commandLink actionListener="#{WorkflowTemplateManager.selectComponent}" value="#{msgs['edit']}">
 																				<f:param name="component" value="#{workflowComponent}"/>
 																			</ice:commandLink>
 																	</ice:panelGroup>
@@ -467,7 +467,7 @@
 																				dropTarget="true" >
 																				#{transition.destination.name} 
 																				<br/>
-																				<ice:commandLink onclick="if(window.confirm('#{msgs['logicaldoc-workflow.editor_component_delete_confirmation']}') == 0)return false;" actionListener="#{workflowComponent.controller.removeDestinationFromTransition}" value="#{msgs['logicaldoc-workflow.editor_aa_delete']}">
+																				<ice:commandLink onclick="if(window.confirm('#{msgs['workflow.editor_component_delete_confirmation']}') == 0)return false;" actionListener="#{workflowComponent.controller.removeDestinationFromTransition}" value="#{msgs['delete']}">
 																					<f:param name="transition" value="#{transition}"/>
 																				</ice:commandLink>
 																 			</ice:panelGroup>
@@ -497,7 +497,7 @@
 																 			<ice:panelGroup styleClass="dropClass">
 																 			
 																 				#{workflowTask.name} <br/>
-																				<ice:commandLink onclick="if(window.confirm('#{msgs['logicaldoc-workflow.editor_component_delete_confirmation']}?') == 0)return false;" actionListener="#{workflowComponent.controller.removeTask}" value="#{msgs['logicaldoc-workflow.editor_aa_delete']}">
+																				<ice:commandLink onclick="if(window.confirm('#{msgs['workflow.editor_component_delete_confirmation']}?') == 0)return false;" actionListener="#{workflowComponent.controller.removeTask}" value="#{msgs['delete']}">
 																					<f:param name="workflowTask" value="#{workflowTask}"/>
 																					<f:param name="workflowComponent" value="#{workflowComponent}"/>
 																				</ice:commandLink>
@@ -532,7 +532,7 @@
 															 			<ice:panelGroup styleClass="dropClass" rendered="#{not empty workflowComponent.destination}">
 															 				#{workflowComponent.destination.name}
 															 				<br/>
-															 				<ice:commandLink onclick="if(window.confirm('#{msgs['logicaldoc-workflow.editor_component_delete_confirmation']}?') == 0)return false;" actionListener="#{workflowComponent.controller.removeTask}" value="#{msgs['logicaldoc-workflow.editor_aa_delete']}">
+															 				<ice:commandLink onclick="if(window.confirm('#{msgs['workflow.editor_component_delete_confirmation']}?') == 0)return false;" actionListener="#{workflowComponent.controller.removeTask}" value="#{msgs['delete']}">
 																				<f:param name="workflowComponent" value="#{workflowComponent}"/>
 																			</ice:commandLink>
 															 				
@@ -572,11 +572,11 @@
 			
 				<f:facet name="header">
 					  <ice:panelGroup>
-					   		<ice:outputText value="#{msgs['logicaldoc-workflow.editor_development']}"/>
+					   		<ice:outputText value="#{msgs['development']}"/>
 					   </ice:panelGroup>
 				 </f:facet>
 				
-				#{msgs['logicaldoc-workflow.editor_jpdl_generated']}: <br />
+				#{msgs['workflow.editor_jpdl_generated']}: <br />
 				<ice:inputTextarea style="height:500px; width:400px"
 				value="#{WorkflowTemplateManager.XMLData}">
 	

@@ -57,8 +57,6 @@ public class StartWorkflowWizard implements TabChangeListener {
 
 	private WorkflowService workflowService;
 
-	private String workingDir;
-
 	private Integer priority;
 
 	private WorkflowTask workflowTask;
@@ -68,19 +66,19 @@ public class StartWorkflowWizard implements TabChangeListener {
 	private DocumentNavigation documentNavigation;
 
 	private XStream xStream;
-	
+
 	private DocumentsRecordsManager documentsRecordsManager;
-	
+
 	/**
 	 * Binding used by example to listen
 	 */
 	private PanelTabSet tabSet;
 
-	private boolean workflowStartSuccess;
-
 	public StartWorkflowWizard() {
-		this.documentsRecordsManager = (DocumentsRecordsManager)FacesUtil.accessBeanFromFacesContext("documentsRecordsManager", FacesContext.getCurrentInstance(), log);
-		
+		this.documentsRecordsManager = (DocumentsRecordsManager) FacesUtil
+				.accessBeanFromFacesContext("documentsRecordsManager",
+						FacesContext.getCurrentInstance(), log);
+
 		workflowTransformService = (WorkflowTransformService) Context
 				.getInstance().getBean("workflowTransformService");
 		workflowTemplateLoader = (WorkflowTemplateLoader) Context.getInstance()
@@ -90,20 +88,20 @@ public class StartWorkflowWizard implements TabChangeListener {
 		this.documentNavigation = (DocumentNavigation) FacesUtil
 				.accessBeanFromFacesContext("documentNavigation", FacesContext
 						.getCurrentInstance(), log);
-		
+
 	}
 
 	public void setXStream(XStream stream) {
 		xStream = stream;
-		
+
 	}
-	
+
 	public void init() {
 		this.persistenceTemplate = null;
 		this.priority = null;
 		this.workflowTask = null;
-		
-		if(tabSet != null)
+
+		if (tabSet != null)
 			setupAllPanels(true);
 	}
 
@@ -147,7 +145,7 @@ public class StartWorkflowWizard implements TabChangeListener {
 	public void rowSelectionListener(RowSelectorEvent event) {
 
 		setupAllPanels(false);
-		
+
 		this.workflowDefinition = this.workflowService.getAllDefinitions().get(
 				event.getRow());
 
@@ -174,20 +172,22 @@ public class StartWorkflowWizard implements TabChangeListener {
 	public String startWorkflow() {
 
 		Map<String, Serializable> properties = new HashMap<String, Serializable>();
-		
-		properties.put(WorkflowConstants.VAR_TEMPLATE, (Serializable)xStream.toXML(this.workflowTemplate));
-	
+
+		properties.put(WorkflowConstants.VAR_TEMPLATE, (Serializable) xStream
+				.toXML(this.workflowTemplate));
+
 		Set<Long> documents = new LinkedHashSet<Long>();
-		
-		for(DocumentRecord doc : this.documentsRecordsManager.getSelection())
+
+		for (DocumentRecord doc : this.documentsRecordsManager.getSelection())
 			documents.add(doc.getDocId());
-		
-		properties.put(WorkflowConstants.VAR_DOCUMENTS, (Serializable)documents);
-		
+
+		properties.put(WorkflowConstants.VAR_DOCUMENTS,
+				(Serializable) documents);
+
 		WorkflowInstance instance = this.workflowService.startWorkflow(
 				workflowDefinition, properties);
 		this.workflowService.signal(instance.getId());
-		
+
 		this.documentNavigation.showDocuments();
 		return null;
 	}
@@ -216,7 +216,6 @@ public class StartWorkflowWizard implements TabChangeListener {
 		if (currentTab < 6) {
 			tabSet.setSelectedIndex(currentTab);
 
-			
 			List<UIComponent> panels = tabSet.getChildren();
 
 			for (int i = 1; i < panels.size(); i++) {
@@ -224,8 +223,7 @@ public class StartWorkflowWizard implements TabChangeListener {
 
 				panel.setDisabled(t);
 			}
-			
-			
+
 		}
 	}
 
