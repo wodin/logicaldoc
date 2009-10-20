@@ -8,67 +8,67 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.workflow.editor.controll.EditController;
 import com.logicaldoc.workflow.editor.message.DeployMessage;
 
-
 public class WorkflowTask extends BaseWorkflowModel {
-	
+
+	private static final long serialVersionUID = 1L;
+
 	private String description;
-	
+
 	private Integer dueDateValue = 0;
-	
+
 	private String dueDateUnit;
-	
+
 	private Integer remindTimeValue = 0;
-	
+
 	private String remindTimeUnit;
-	
+
 	private List<Assignee> assignees;
-	
+
 	private List<Transition> transitions = new LinkedList<Transition>();
-	
+
 	private boolean parallelProcessingSupported;
-	
-	
+
 	public List<Transition> getTransitions() {
 		return transitions;
 	}
-	
-	public WorkflowTask(){
+
+	public WorkflowTask() {
 		this.assignees = new ArrayList<Assignee>();
 	}
-	
-	public WorkflowTask(WorkflowTask workflowTask){
+
+	public WorkflowTask(WorkflowTask workflowTask) {
 		this.copy(workflowTask);
-		
+
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public String getDueDateUnit() {
 		return dueDateUnit;
 	}
-	
+
 	public void setRemindTimeUnit(String remindTimeUnit) {
 		this.remindTimeUnit = remindTimeUnit;
 	}
-	
+
 	public void setDueDateUnit(String dueDateUnit) {
 		this.dueDateUnit = dueDateUnit;
 	}
-	
+
 	public String getRemindTimeUnit() {
 		return remindTimeUnit;
 	}
-	
-	public void addAssignee(){
+
+	public void addAssignee() {
 		this.assignees.add(new Assignee());
 	}
-	
+
 	public void setAssignees(List<Assignee> assignes) {
 		this.assignees = assignes;
 	}
@@ -76,46 +76,46 @@ public class WorkflowTask extends BaseWorkflowModel {
 	public List<Assignee> getAssignees() {
 		return assignees;
 	}
-	
+
 	public void setRemindTimeValue(Integer remindTimeValue) {
 		this.remindTimeValue = remindTimeValue;
 	}
-	
+
 	public Integer getRemindTimeValue() {
 		return remindTimeValue;
 	}
-	
+
 	public void setDueDateValue(Integer dueDateValue) {
 		this.dueDateValue = dueDateValue;
 	}
-	
+
 	public Integer getDueDateValue() {
 		return dueDateValue;
 	}
-	
+
 	public void setParallelProcessingSupported(
 			boolean parallelProcessingSupported) {
 		this.parallelProcessingSupported = parallelProcessingSupported;
 	}
-	
+
 	public boolean getParallelProcessingSupported() {
 		return parallelProcessingSupported;
 	}
-	
+
 	public boolean isParallelProcessingSupported() {
 		return parallelProcessingSupported;
 	}
-	
+
 	@Override
 	public String getImage() {
 		return "task.png";
 	}
-	
+
 	@Override
 	public String getTemplate() {
 		return "task";
 	}
-	
+
 	public void addTransition(Transition _transition) {
 
 		for (Transition transition : this.transitions) {
@@ -132,19 +132,20 @@ public class WorkflowTask extends BaseWorkflowModel {
 		this.transitions.add(_transition);
 
 	}
-	
+
 	@Override
 	public EditController getController() {
-		
-		EditController controller = (EditController)Context.getInstance().getBean("workflowTaskController");
+
+		EditController controller = (EditController) Context.getInstance()
+				.getBean("workflowTaskController");
 		controller.initialize(this);
 		return controller;
 	}
-	
+
 	@Override
 	public BaseWorkflowModel copy(BaseWorkflowModel baseWorkflowModel) {
 		super.copy(baseWorkflowModel);
-		
+
 		WorkflowTask workflowTask = (WorkflowTask) baseWorkflowModel;
 		this.dueDateValue = workflowTask.dueDateValue;
 		this.dueDateUnit = workflowTask.dueDateUnit;
@@ -155,39 +156,44 @@ public class WorkflowTask extends BaseWorkflowModel {
 		this.transitions = workflowTask.transitions;
 		return this;
 	}
-	
+
 	@Override
 	public boolean isPossibleStartState() {
 		return true;
 	}
-	
+
 	@Override
 	public String getType() {
 		return "task";
 	}
-	
+
 	@Override
 	public void checkForDeploy(List<DeployMessage> failures) {
-		
-		if(dueDateValue < 0){
-			failures.add(new DeployMessage(this, "You have entered a negative due date."));
+
+		if (dueDateValue < 0) {
+			failures.add(new DeployMessage(this,
+					"You have entered a negative due date."));
 		}
-		
-		if(remindTimeValue < 0){
-			failures.add(new DeployMessage(this, "You have entered a negative remind time."));
+
+		if (remindTimeValue < 0) {
+			failures.add(new DeployMessage(this,
+					"You have entered a negative remind time."));
 		}
-		
-		if(this.remindTimeValue > 0 && (this.dueDateValue == 0)){
-			failures.add(new DeployMessage(this, "You have entered a remindTime but without specifiying a duedate. "));
+
+		if (this.remindTimeValue > 0 && (this.dueDateValue == 0)) {
+			failures
+					.add(new DeployMessage(this,
+							"You have entered a remindTime but without specifiying a duedate. "));
 		}
-		
-		if(getTransitions().size() == 0){
-			failures.add(new DeployMessage(this, "A Task without any transition is not possible "));
+
+		if (getTransitions().size() == 0) {
+			failures.add(new DeployMessage(this,
+					"A Task without any transition is not possible "));
 		}
-		
-		for(Transition transition : getTransitions()){
+
+		for (Transition transition : getTransitions()) {
 			transition.checkForDeploy(failures);
 		}
 	}
-	
+
 }

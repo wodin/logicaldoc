@@ -1,6 +1,5 @@
 package com.logicaldoc.workflow.persistence;
 
-import java.io.Serializable;
 
 public class WorkflowPersistenceEMailTemplate {
 	

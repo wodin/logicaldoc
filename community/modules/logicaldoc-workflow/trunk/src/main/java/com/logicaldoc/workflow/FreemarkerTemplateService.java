@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.web.document.DocumentRecord;
@@ -29,8 +28,6 @@ public class FreemarkerTemplateService implements TemplateService {
 
 	private UserDAO userDAO;
 
-	private DocumentDAO documentDAO;
-
 	private WorkflowService workflowService;
 
 	public void setWorkflowService(WorkflowService workflowService) {
@@ -41,18 +38,14 @@ public class FreemarkerTemplateService implements TemplateService {
 		this.userDAO = userDAO;
 	}
 
-	public void setDocumentDAO(DocumentDAO documentDAO) {
-		this.documentDAO = documentDAO;
-	}
-
 	public String transformToString(String text,
 			Map<String, Object> modelProperties) {
 
 		Template template = null;
 
 		try {
-			template = new Template(UUID.randomUUID().toString() + ".ftl", new StringReader(text),
-					new Configuration());
+			template = new Template(UUID.randomUUID().toString() + ".ftl",
+					new StringReader(text), new Configuration());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -66,14 +59,14 @@ public class FreemarkerTemplateService implements TemplateService {
 
 	}
 
-	public String transformWorkflowInstance(WorkflowInstance workflowInstance, WorkflowTemplate workflowDefinition, String msg){
+	public String transformWorkflowInstance(WorkflowInstance workflowInstance,
+			WorkflowTemplate workflowDefinition, String msg) {
 		HashMap modelProperties = new HashMap();
 		mapWorkflowDocumentsToWorkflowModel(modelProperties, workflowInstance);
-		
-		return this.transformToString(msg,
-				modelProperties);
+
+		return this.transformToString(msg, modelProperties);
 	}
-	
+
 	public String transformWorkflowTask(WorkflowTask workflowTask,
 			WorkflowInstance workflowInstance,
 			WorkflowTaskInstance workflowTaskInstance, String msg) {
@@ -99,7 +92,7 @@ public class FreemarkerTemplateService implements TemplateService {
 
 		for (int i = 0; i < assignees.size(); i++) {
 			User _user = userDAO.findByUserName(assignees.get(i));
-			if(_user == null)
+			if (_user == null)
 				continue;
 			txt_assignee += _user.getFirstName() + " " + _user.getName();
 			txt_assignee_rev += _user.getName() + " " + _user.getFirstName();
@@ -118,14 +111,12 @@ public class FreemarkerTemplateService implements TemplateService {
 
 		modelProperties.put("taskname", workflowTask.getName());
 
-		mapWorkflowDocumentsToWorkflowModel(modelProperties, workflowInstance);		
-		
-		return this.transformToString(msg,
-				modelProperties);
+		mapWorkflowDocumentsToWorkflowModel(modelProperties, workflowInstance);
+
+		return this.transformToString(msg, modelProperties);
 
 	}
 
-	
 	private void mapWorkflowDocumentsToWorkflowModel(Map modelProperties,
 			WorkflowInstance workflowInstance) {
 		Set<DocumentRecord> documentSet = (Set<DocumentRecord>) workflowInstance
@@ -173,6 +164,5 @@ public class FreemarkerTemplateService implements TemplateService {
 				"hello <#list test as x>"
 						+ "${x}<#if x_has_next>,</#if></#list>", test));
 	}
-
 
 }

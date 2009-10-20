@@ -13,26 +13,26 @@ public class PersistenceFactory extends DbPersistenceServiceFactory {
 
 	private static final long serialVersionUID = 4845270442669524870L;
 
-	public PersistenceFactory(){
+	public PersistenceFactory() {
 		setTransactionEnabled(false);
 	}
-	
+
 	/**
 	 * 
-  		Setting up following properties:
- 
-      <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-	  <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-	  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/jbpm_test</property>
-	  <property name="hibernate.connection.username"></property>
-	  <property name="hibernate.connection.password"></property>
-			 
+	 * Setting up following properties:
+	 * 
+	 * <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+	 * <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+	 * <property
+	 * name="hibernate.connection.url">jdbc:mysql://localhost:3306/jbpm_test</property>
+	 * <property name="hibernate.connection.username"></property> <property
+	 * name="hibernate.connection.password"></property>
+	 * 
 	 */
 	@Override
 	public synchronized Configuration getConfiguration() {
 
 		Context ctx = Context.getInstance();
-		Configuration config = new Configuration();
 		PropertiesPlaceHolder cfgPlaceHolder = (PropertiesPlaceHolder) ctx
 				.getBean("PropertyPlaceholderConfigurer");
 		Properties properties = null;
