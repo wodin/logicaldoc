@@ -136,7 +136,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			log.debug("Stored version " + version.getVersion());
 
 			// create history entry for this checkin event
-			createHistoryEntry(document, user, History.EVENT_CHECKEDIN, "");
+			historyDAO.createDocumentHistory(document, user, History.EVENT_CHECKEDIN, "");
 
 			// create search index entry
 			if (immediateIndexing)
@@ -176,7 +176,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		documentDAO.store(document);
 
 		// create history entry for this checkout event
-		createHistoryEntry(document, user, historyEvent, comment);
+		historyDAO.createDocumentHistory(document, user, historyEvent, comment);
 
 		log.debug("locked document " + docId);
 	}
@@ -384,7 +384,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				versionDAO.store(version);
 
 				/* create history entry */
-				createHistoryEntry(doc, user, History.EVENT_CHANGED, "");
+				historyDAO.createDocumentHistory(doc, user, History.EVENT_CHANGED, "");
 			} else {
 				throw new Exception("Document is immutable");
 			}
@@ -400,28 +400,6 @@ public class DocumentManagerImpl implements DocumentManager {
 		indexer.addFile(getDocumentFile(document), document);
 		document.setIndexed(1);
 		documentDAO.store(document);
-	}
-
-	/** Creates history entry saying username has checked in document (id) */
-	private void createHistoryEntry(Document doc, User user, String eventType, String comment) {
-
-		History history = new History();
-		history.setDocId(doc.getId());
-		history.setTitle(doc.getTitle());
-		history.setVersion(doc.getVersion());
-
-		history.setPath(doc.getFolder().getPathExtended() + "/" + doc.getFolder().getText());
-		history.setPath(history.getPath().replaceAll("//", "/"));
-		history.setPath(history.getPath().replaceFirst("/menu.documents/", "/"));
-		history.setPath(history.getPath().replaceFirst("/menu.documents", "/"));
-
-		history.setDate(new Date());
-		history.setUserId(user.getId());
-		history.setUserName(user.getFullName());
-		history.setEvent(eventType);
-		history.setComment(comment);
-
-		historyDAO.store(history);
 	}
 
 	@Override
@@ -447,7 +425,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			setUniqueFilename(doc);
 			documentDAO.store(doc);
 
-			createHistoryEntry(doc, user, History.EVENT_MOVED, "");
+			historyDAO.createDocumentHistory(doc, user, History.EVENT_MOVED, "");
 			Version version = Version.create(doc, user, "", Version.EVENT_MOVED, Version.VERSION_TYPE.NEW_SUBVERSION);
 			versionDAO.store(version);
 
@@ -566,7 +544,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			/* store the document */
 			store(doc, content);
 
-			createHistoryEntry(doc, user, History.EVENT_STORED, "");
+			historyDAO.createDocumentHistory(doc, user, History.EVENT_STORED, "");
 
 			File file = getDocumentFile(doc);
 			if (immediateIndexing) {
@@ -655,7 +633,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		documentDAO.store(document);
 
 		// create history entry for this UNLOCK event
-		createHistoryEntry(document, user, History.EVENT_UNLOCKED, comment);
+		historyDAO.createDocumentHistory(document, user, History.EVENT_UNLOCKED, comment);
 
 		log.debug("Unlocked document " + docId);
 	}
@@ -665,7 +643,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Document document = documentDAO.findById(docId);
 		if (document.getImmutable() == 0) {
 			documentDAO.makeImmutable(docId);
-			createHistoryEntry(document, user, History.EVENT_IMMUTABLE, reason);
+			historyDAO.createDocumentHistory(document, user, History.EVENT_IMMUTABLE, reason);
 			log.debug("The document " + docId + " has been marked as immutable ");
 		} else {
 			throw new Exception("Document is immutable");
@@ -785,7 +763,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(doc);
 
 			// create history entry for this RENAMED event
-			createHistoryEntry(doc, user, History.EVENT_RENAMED, "");
+			historyDAO.createDocumentHistory(doc, user, History.EVENT_RENAMED, "");
 
 			Version version = Version.create(doc, user, "", Version.EVENT_RENAMED, Version.VERSION_TYPE.NEW_SUBVERSION);
 			versionDAO.store(version);

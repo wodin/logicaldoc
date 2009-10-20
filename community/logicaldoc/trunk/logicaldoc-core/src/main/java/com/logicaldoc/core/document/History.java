@@ -10,6 +10,7 @@ import com.logicaldoc.core.PersistentObject;
  * @author Marco Meschieri - Logical Objects
  */
 public class History extends PersistentObject {
+	// Events on documents
 	public final static String EVENT_STORED = "event.stored";
 
 	public final static String EVENT_CHANGED = "event.changed";
@@ -19,20 +20,36 @@ public class History extends PersistentObject {
 	public final static String EVENT_CHECKEDOUT = "event.checkedout";
 
 	public static final String EVENT_IMMUTABLE = "event.makeimmutable";
-	
+
 	public static final String EVENT_RENAMED = "event.renamed";
 
 	public static final String EVENT_DOWNLOADED = "event.downloaded";
-	
+
 	public final static String EVENT_MOVED = "event.moved";
-	
+
 	public final static String EVENT_LOCKED = "event.locked";
-	
+
 	public final static String EVENT_UNLOCKED = "event.unlocked";
-	
+
 	public final static String EVENT_ARCHIVED = "event.archived";
-	
-	private long docId;
+
+	// Events on folders
+	public final static String EVENT_FOLDER_CREATED = "event.folder.created";
+
+	public final static String EVENT_FOLDER_RENAMED = "event.folder.renamed";
+
+	public final static String EVENT_FOLDER_PERMISSION = "event.folder.permission";
+
+	// Events on sub-folders
+	public final static String EVENT_FOLDER_SUBFOLDER_CREATED = "event.folder.subfolder.created";
+
+	public final static String EVENT_FOLDER_SUBFOLDER_RENAMED = "event.folder.subfolder.renamed";
+
+	public final static String EVENT_FOLDER_SUBFOLDER_PERMISSION = "event.folder.subfolder.permission";
+
+	private Long docId;
+
+	private long folderId;
 
 	private long userId;
 
@@ -45,11 +62,11 @@ public class History extends PersistentObject {
 	private String comment = null;
 
 	private String title = null;
-	
+
 	private String version = null;
-	
+
 	private String path = null;
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -102,14 +119,14 @@ public class History extends PersistentObject {
 	/**
 	 * @return Returns the docId.
 	 */
-	public long getDocId() {
+	public Long getDocId() {
 		return docId;
 	}
 
 	/**
 	 * @param docId The docId to set.
 	 */
-	public void setDocId(long docId) {
+	public void setDocId(Long docId) {
 		this.docId = docId;
 	}
 
@@ -147,5 +164,13 @@ public class History extends PersistentObject {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public long getFolderId() {
+		return folderId;
+	}
+
+	public void setFolderId(long folderId) {
+		this.folderId = folderId;
 	}
 }
