@@ -18,19 +18,24 @@ public class WorkflowTaskInstanceInfo extends WorkflowTaskInstance {
 				.getInstance().getBean("templateService");
 
 		WorkflowInstance workflowInstance = workflowService
-				.getWorkflowInstanceByTaskInstance(workflowTaskInstance.getId(), FETCH_TYPE.INFO);
+				.getWorkflowInstanceByTaskInstance(
+						workflowTaskInstance.getId(), FETCH_TYPE.INFO);
 
-		WorkflowTemplate workflowTemplate = (WorkflowTemplate)workflowInstance.getProperties().get(WorkflowConstants.VAR_TEMPLATE);
-		
-		WorkflowTask workflowTask = (WorkflowTask)workflowTemplate.getWorkflowComponentById((String)getProperties().get(WorkflowConstants.VAR_TASKID));
-		
+		WorkflowTemplate workflowTemplate = (WorkflowTemplate) workflowInstance
+				.getProperties().get(WorkflowConstants.VAR_TEMPLATE);
+
+		WorkflowTask workflowTask = (WorkflowTask) workflowTemplate
+				.getWorkflowComponentById((String) getProperties().get(
+						WorkflowConstants.VAR_TASKID));
+
 		workflowInstance.getProperties().get(WorkflowConstants.VAR_TEMPLATE);
-		
-		String taskDescription = templateService.transformWorkflowTask(workflowTask, workflowInstance, 
-				this, workflowTask.getDescription());
-		
+
+		String taskDescription = templateService.transformWorkflowTask(
+				workflowTask, workflowInstance, this, workflowTask
+						.getDescription());
+
 		getProperties().put(WorkflowConstants.VAR_DESCRIPTION, taskDescription);
-		
+
 	}
 
 	@Override

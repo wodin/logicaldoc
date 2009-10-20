@@ -20,7 +20,7 @@
 		<tr>
 			<td valign="top">
 			<h3><ice:outputText
-				value="#{msgs['logicaldoc-workflow.mytasks.assigned']}:" />
+				value="#{msgs['workflow.mytasks.assigned']}:" />
 			</h3>
 			<ice:dataTable id="taskInstanceList" var="taskInstance"
 				value="#{WorkflowManager.taskInstances}" rows="15"
@@ -45,7 +45,7 @@
 				</ice:column>
 			</ice:dataTable> <br />
 			<h3><ice:outputText
-				value="#{msgs['logicaldoc-workflow.mytasks.pooled']}:" />
+				value="#{msgs['workflow.mytasks.pooled']}:" />
 			</h3>
 			<ice:dataTable id="pooledTaskInstanceList" var="taskInstance"
 				value="#{WorkflowManager.pooledTaskInstances}" rows="15"
@@ -85,7 +85,7 @@
 			</ice:dataTable></td>
 			<td valign="top">
 				<h3><ice:outputText
-				value="#{msgs['logicaldoc-workflow.tasklist_suspended']}:" />
+				value="#{msgs['workflow.tasklist_suspended']}:" />
 			</h3>
 			<ice:dataTable id="suspendedTaskInstanceList" var="taskInstance"
 				value="#{WorkflowManager.suspendedTaskInstances}" rows="15"
@@ -116,7 +116,7 @@
 			</td>
 			<td valign="top">
 				<h3><ice:outputText
-				value="#{msgs['logicaldoc-workflow.tasklist_suspended']}:" />
+				value="#{msgs['workflow.tasklist_suspended']}:" />
 			</h3>
 			<ice:dataTable id="suspendedTaskInstanceList" var="taskInstance"
 				value="#{WorkflowManager.suspendedTaskInstances}" rows="15"
@@ -150,7 +150,7 @@
 		<tr>
 			<td colspan="2">
 				<h3><ice:outputText
-				value="#{msgs['logicaldoc-workflow.tasklist_admin']}:" />
+				value="#{msgs['workflow.tasklist_admin']}:" />
 			</h3>
 			<ice:dataTable id="adminTasks" var="taskInstance"
 				value="#{WorkflowManager.adminTasks}" rendered="#{not empty WorkflowManager.adminTasks}" rows="15"
