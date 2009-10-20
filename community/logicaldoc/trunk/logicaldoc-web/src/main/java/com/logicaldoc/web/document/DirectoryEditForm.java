@@ -3,6 +3,8 @@ package com.logicaldoc.web.document;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -64,6 +66,9 @@ public class DirectoryEditForm {
 					directory.setDisplayText(folderName);
 					directory.getMenu().setText(folderName);
 					dao.store(directory.getMenu());
+					HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+					historyDAO.createFolderHistory(directory.getMenu(), SessionManagement.getUser(),
+							History.EVENT_FOLDER_RENAMED, "");
 					documentNavigation.refresh();
 				}
 			} catch (Exception e) {
@@ -106,6 +111,9 @@ public class DirectoryEditForm {
 				if (!stored) {
 					Messages.addLocalizedError("errors.action.savefolder.notstored");
 				} else {
+					//Add a folder history entry
+					HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+					historyDAO.createFolderHistory(menu, SessionManagement.getUser(), History.EVENT_FOLDER_CREATED, "");
 					Messages.addLocalizedInfo("msg.action.savefolder");
 				}
 

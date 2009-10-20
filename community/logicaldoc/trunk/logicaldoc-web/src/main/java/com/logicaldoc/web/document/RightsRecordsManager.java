@@ -14,6 +14,8 @@ import javax.faces.model.SelectItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
@@ -402,7 +404,7 @@ public class RightsRecordsManager {
 				} else {
 					mg.setWorkflow(0);
 				}
-				
+
 				boolean stored = mdao.store(folder, false);
 				if (!stored) {
 					sqlerrors = true;
@@ -424,6 +426,10 @@ public class RightsRecordsManager {
 			log.error("SQL errors saving permissions on folder " + folder.getText());
 			throw new Exception("SQL errors saving permissions on folder " + folder.getText());
 		}
+
+		// Add a folder history entry
+		HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+		historyDAO.createFolderHistory(folder, SessionManagement.getUser(), History.EVENT_FOLDER_PERMISSION, "");
 
 		if (recursive) {
 			// recursively apply permissions to all submenus where the user has
