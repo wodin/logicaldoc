@@ -28,9 +28,11 @@ import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
+import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.LuceneDocument;
@@ -213,6 +215,8 @@ public class DmsServiceImpl implements DmsService {
 			throw new Exception("error");
 		} else {
 			log.info("Created folder " + name);
+			HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+			historyDAO.createFolderHistory(menu, user, History.EVENT_FOLDER_CREATED, "");
 		}
 
 		return Long.toString(menu.getId());
@@ -542,6 +546,8 @@ public class DmsServiceImpl implements DmsService {
 		} else {
 			menu.setText(name);
 			dao.store(menu);
+			HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+			historyDAO.createFolderHistory(menu, user, History.EVENT_FOLDER_RENAMED, "");
 			return String.valueOf(menu.getId());
 		}
 	}
@@ -623,7 +629,7 @@ public class DmsServiceImpl implements DmsService {
 			return AuthenticationChain.getSessionId();
 		else
 			throw new Exception("Unable to create a new session");
-		
+
 	}
 
 	@Override
@@ -634,10 +640,10 @@ public class DmsServiceImpl implements DmsService {
 	@Override
 	public void indexDocument(String sid, long id) throws Exception {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc=docDao.findById(id);
-		if(doc==null)
-			throw new Exception("Document "+id+" not found");
-		
+		Document doc = docDao.findById(id);
+		if (doc == null)
+			throw new Exception("Document " + id + " not found");
+
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		manager.reindex(doc, doc.getLocale());
 	}
