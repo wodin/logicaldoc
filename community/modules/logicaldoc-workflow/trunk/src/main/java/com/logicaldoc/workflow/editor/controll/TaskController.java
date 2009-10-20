@@ -13,7 +13,6 @@ import javax.faces.model.SelectItem;
 import com.icesoft.faces.component.ext.HtmlCommandLink;
 import com.icesoft.faces.component.selectinputtext.SelectInputText;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.workflow.editor.model.Assignee;
 import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
@@ -24,20 +23,15 @@ import com.logicaldoc.workflow.editor.model.WorkflowTask;
 public class TaskController extends DragAndDropSupportController {
 
 	private UserDAO userDAO;
-	
-	private GroupDAO groupDAO;
-	
+
 	private WorkflowTask workflowTask;
 
 	private List<String> possibleAssignments = new LinkedList<String>();
 
-	public void setGroupDAO(GroupDAO groupDAO) {
-		this.groupDAO = groupDAO;
-	}
-	
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
+
 	@Override
 	public void initialize(BaseWorkflowModel workflowModel) {
 		this.workflowTask = (WorkflowTask) workflowModel;
@@ -59,21 +53,26 @@ public class TaskController extends DragAndDropSupportController {
 			// get the number of displayable records from the component
 			SelectInputText autoComplete = (SelectInputText) event
 					.getComponent();
-			
+
 			String currentValue = autoComplete.getValue().toString();
-			List<User> matchedUsers = userDAO.findByWhere("_entity.userName like concat(?,'%') OR _entity.firstName like concat(?,'%') OR _entity.name like concat(?,'%')", new Object[] { currentValue, currentValue, currentValue },null);
-			
+			List<User> matchedUsers = userDAO
+					.findByWhere(
+							"_entity.userName like concat(?,'%') OR _entity.firstName like concat(?,'%') OR _entity.name like concat(?,'%')",
+							new Object[] { currentValue, currentValue,
+									currentValue }, null);
+
 			possibleAssignments = new LinkedList<String>();
-			for(User user : matchedUsers){
+			for (User user : matchedUsers) {
 				possibleAssignments.add(user.getUserName());
 			}
 
 			if (autoComplete.getSelectedItem() != null) {
-			//	Assignee assignee = this.possibleAssignments.get(autoComplete.getSelectedItem().getValue());
+				// Assignee assignee =
+				// this.possibleAssignments.get(autoComplete.getSelectedItem().getValue());
 				// fire effect to draw attention
 
-				//assignee.setValue(this.possibleAssignments.get(autoComplete.getSelectedItem().getValue()));
-				
+				// assignee.setValue(this.possibleAssignments.get(autoComplete.getSelectedItem().getValue()));
+
 			} else {
 
 			}
@@ -84,9 +83,7 @@ public class TaskController extends DragAndDropSupportController {
 	public List<SelectItem> getPossibleAssignments() {
 		List<SelectItem> items = new LinkedList<SelectItem>();
 		int c = 0;
-		
-		
-		
+
 		for (String assignee : possibleAssignments) {
 			items.add(new SelectItem(c++, assignee));
 		}
@@ -94,38 +91,35 @@ public class TaskController extends DragAndDropSupportController {
 	}
 
 	public void removeAssignment(ActionEvent actionEvent) {
-		UICommand commandLink = (UICommand) actionEvent
-				.getSource();
+		UICommand commandLink = (UICommand) actionEvent.getSource();
 		Object val = ((UIParameter) commandLink.getChildren().get(0))
 				.getValue();
-		
+
 		Object val2 = ((UIParameter) commandLink.getChildren().get(1))
-		.getValue();
+				.getValue();
 
 		if ((val instanceof Assignee) == false)
 			throw new WorkflowEditorException(
 					"The passed Assignment does not match to Assignee");
 
 		if ((val2 instanceof WorkflowTask) == false)
-			throw new WorkflowEditorException(
-					"No passed WorkflowTask");
+			throw new WorkflowEditorException("No passed WorkflowTask");
 
 		WorkflowTask wfTask = (WorkflowTask) val2;
 		wfTask.getAssignees().remove(val);
 	}
 
 	public void addAssignment(ActionEvent actionEvent) {
-		UIComponent commandLink = (UIComponent) actionEvent
-				.getSource();
+		UIComponent commandLink = (UIComponent) actionEvent.getSource();
 		Object val = ((UIParameter) commandLink.getChildren().get(0))
 				.getValue();
 
 		if ((val instanceof WorkflowTask) == false)
 			throw new WorkflowEditorException(
 					"The passed Assignment does not match to WorkflowTask");
-		
-		WorkflowTask task = (WorkflowTask)val;
-		
+
+		WorkflowTask task = (WorkflowTask) val;
+
 		task.addAssignee();
 	}
 

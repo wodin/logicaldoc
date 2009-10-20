@@ -8,6 +8,8 @@ import com.logicaldoc.workflow.editor.message.DeployMessage;
 
 public class Join extends BaseWorkflowModel {
 
+	private static final long serialVersionUID = 1L;
+
 	private BaseWorkflowModel destination;
 
 	@Override
@@ -39,12 +41,12 @@ public class Join extends BaseWorkflowModel {
 	public BaseWorkflowModel getDestination() {
 		return destination;
 	}
-	
+
 	@Override
 	public boolean isPossibleStartState() {
 		return false;
 	}
-	
+
 	@Override
 	public String getType() {
 		return "join";
@@ -52,9 +54,10 @@ public class Join extends BaseWorkflowModel {
 
 	@Override
 	public void checkForDeploy(List<DeployMessage> failures) {
-		
-		if(this.getDestination() == null)
-			failures.add(new DeployMessage(this, "No destination has been specified"));
-		
+
+		if (this.getDestination() == null)
+			failures.add(new DeployMessage(this,
+					"No destination has been specified"));
+
 	}
 }

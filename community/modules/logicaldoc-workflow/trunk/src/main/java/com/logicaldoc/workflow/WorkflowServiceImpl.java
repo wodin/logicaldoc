@@ -8,9 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jbpm.graph.exe.Token;
 
-import com.logicaldoc.workflow.editor.WorkflowTemplateLoader;
 import com.logicaldoc.workflow.exception.WorkflowException;
 import com.logicaldoc.workflow.model.FetchModel;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
@@ -27,25 +25,24 @@ public class WorkflowServiceImpl implements WorkflowService {
 	protected static Log logger = LogFactory.getLog(WorkflowServiceImpl.class);
 
 	private WorkflowEngine workflowComponent;
-	
+
 	private WorkflowTransformService workflowTransformService;
 
-	private WorkflowTemplateLoader workflowTemplateLoader;
-	
 	public void setWorkflowTransformService(
 			WorkflowTransformService workflowTransformService) {
 		this.workflowTransformService = workflowTransformService;
 	}
-	
+
 	public void setWorkflowComponent(WorkflowEngine workflowComponent) {
 		this.workflowComponent = workflowComponent;
 	}
 
 	@Override
 	public void deployWorkflow(WorkflowTemplate workflowTemplate) {
-		
-		Serializable definition = (Serializable)this.workflowTransformService.fromObjectToWorkflowDefinition(workflowTemplate);
-		
+
+		Serializable definition = (Serializable) this.workflowTransformService
+				.fromObjectToWorkflowDefinition(workflowTemplate);
+
 		try {
 			workflowComponent.deployWorkflow(workflowTemplate, definition);
 		} catch (Exception e) {
@@ -56,12 +53,14 @@ public class WorkflowServiceImpl implements WorkflowService {
 
 	@Override
 	public void endTask(String taskId, String transitionName) {
-		
-		WorkflowTaskInstance taskInstance = workflowComponent.getTaskInstanceById(taskId);
-		taskInstance.getProperties().put(WorkflowConstants.VAR_OUTCOME, transitionName);
-		
+
+		WorkflowTaskInstance taskInstance = workflowComponent
+				.getTaskInstanceById(taskId);
+		taskInstance.getProperties().put(WorkflowConstants.VAR_OUTCOME,
+				transitionName);
+
 		workflowComponent.updateTaskInstance(taskInstance);
-		
+
 		workflowComponent.processTaskToEnd(taskId, transitionName);
 	}
 
@@ -70,11 +69,13 @@ public class WorkflowServiceImpl implements WorkflowService {
 		workflowComponent.undeployWorkflow(processId);
 	}
 
-	public WorkflowInstance startWorkflow(WorkflowDefinition workflowDefinition, Map<String, Serializable> properties) {
-		
-		WorkflowInstance workflowInstance = workflowComponent
-				.startWorkflow(workflowDefinition.getDefinitionId(), properties);
-		
+	public WorkflowInstance startWorkflow(
+			WorkflowDefinition workflowDefinition,
+			Map<String, Serializable> properties) {
+
+		WorkflowInstance workflowInstance = workflowComponent.startWorkflow(
+				workflowDefinition.getDefinitionId(), properties);
+
 		return workflowInstance;
 	}
 
@@ -87,15 +88,16 @@ public class WorkflowServiceImpl implements WorkflowService {
 	}
 
 	@Override
-	public WorkflowTaskInstance getTaskInstanceByTaskId(String id, FETCH_TYPE fetch_type) {
+	public WorkflowTaskInstance getTaskInstanceByTaskId(String id,
+			FETCH_TYPE fetch_type) {
 
 		WorkflowTaskInstance taskInstance = workflowComponent
 				.getTaskInstanceById(id);
-		
-		if(fetch_type.equals(FETCH_TYPE.FORUPDATE))
-			return  taskInstance;
-		
-		else 
+
+		if (fetch_type.equals(FETCH_TYPE.FORUPDATE))
+			return taskInstance;
+
+		else
 			return new WorkflowTaskInstanceInfo(taskInstance);
 	}
 
@@ -121,16 +123,17 @@ public class WorkflowServiceImpl implements WorkflowService {
 	}
 
 	@Override
-	public WorkflowInstance getWorkflowInstanceById(String workflowinstanceId, FetchModel.FETCH_TYPE fetch_type) {
-		
+	public WorkflowInstance getWorkflowInstanceById(String workflowinstanceId,
+			FetchModel.FETCH_TYPE fetch_type) {
+
 		WorkflowInstance workflowInstance = workflowComponent
 				.getWorkflowInstanceById(workflowinstanceId);
-		
-		if(fetch_type.equals(FetchModel.FETCH_TYPE.FORUPDATE))
+
+		if (fetch_type.equals(FetchModel.FETCH_TYPE.FORUPDATE))
 			return workflowInstance;
-		
+
 		else
-			return new WorkflowInstanceInfo( workflowInstance );
+			return new WorkflowInstanceInfo(workflowInstance);
 	}
 
 	@Override
@@ -142,7 +145,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 	public void updateWorkflow(WorkflowInstance workflowInstance) {
 		workflowComponent.updateWorkflowInstance(workflowInstance);
 	}
-	
+
 	@Override
 	public void updateWorkflow(WorkflowTaskInstance taskInstance) {
 		workflowComponent.updateTaskInstance(taskInstance);
@@ -152,99 +155,105 @@ public class WorkflowServiceImpl implements WorkflowService {
 	public void deleteAllActiveWorkflows() {
 		this.workflowComponent.deleteAllActiveWorkflows();
 	}
-	
-	public List<WorkflowTaskInstance> getTaskInstancesForUser(String username){
+
+	public List<WorkflowTaskInstance> getTaskInstancesForUser(String username) {
 		return this.workflowComponent.getAllActionTasksByUser(username);
 	}
-	
-	public List<WorkflowTaskInstance> getSuspendedTaskInstancesForUser(String username){
+
+	public List<WorkflowTaskInstance> getSuspendedTaskInstancesForUser(
+			String username) {
 		return this.workflowComponent.getAllSuspendedTaskInstances(username);
 	}
-	
+
 	@Override
 	public List<WorkflowTaskInstance> getPooledTaskInstancesForUser(
 			String username) {
 		return this.workflowComponent.getAllActionPooledTasksByUser(username);
 	}
-	
-	public void assign(String taskId, String assignee){
-		this.workflowComponent.assignUserToTask(taskId, assignee);	
+
+	public void assign(String taskId, String assignee) {
+		this.workflowComponent.assignUserToTask(taskId, assignee);
 	}
-	
-	public List<WorkflowTaskInstance> getWorkflowTasks(WorkflowInstance workflowInstance, WorkflowTaskInstance.STATE taskState,  TASK_SORT sort){
-		
-		List<WorkflowTaskInstance> workflowTaskInstances = this.workflowComponent.getTaskInstancesByActiveWorkflow(workflowInstance.getId());
+
+	public List<WorkflowTaskInstance> getWorkflowTasks(
+			WorkflowInstance workflowInstance,
+			WorkflowTaskInstance.STATE taskState, TASK_SORT sort) {
+
+		List<WorkflowTaskInstance> workflowTaskInstances = this.workflowComponent
+				.getTaskInstancesByActiveWorkflow(workflowInstance.getId());
 		List<WorkflowTaskInstance> instances = new LinkedList<WorkflowTaskInstance>();
-		
-		for(WorkflowTaskInstance taskInstance : workflowTaskInstances){
-			
 
-			
-			if(taskInstance.getState().equals(WorkflowTaskInstance.STATE.ALL) == false){
-				if(taskInstance.getState().equals(taskState) == false)
+		for (WorkflowTaskInstance taskInstance : workflowTaskInstances) {
+
+			if (taskInstance.getState().equals(WorkflowTaskInstance.STATE.ALL) == false) {
+				if (taskInstance.getState().equals(taskState) == false)
 					continue;
 			}
-			
+
 			instances.add(taskInstance);
-			
-		}
-		
-		for(int i = 0; i < instances.size()-1; i++){
-			
-			for(int j = 0; j < instances.size()-1; j++){
-				
-				WorkflowTaskInstance currentElement = instances.get(j);
-				WorkflowTaskInstance nextElement = instances.get(j+1);
-				
-				Date currentDate = (Date)currentElement.getProperties().get(WorkflowConstants.VAR_ENDDATE);
-				Date nextDate = (Date)nextElement.getProperties().get(WorkflowConstants.VAR_ENDDATE); 
-				
-				if(currentDate == null || nextDate == null)
-					continue;
-				
-				if(sort.equals(TASK_SORT.ASC)){
 
-					//the current date is before the second date 
-					if(nextDate.after(currentDate))
+		}
+
+		for (int i = 0; i < instances.size() - 1; i++) {
+
+			for (int j = 0; j < instances.size() - 1; j++) {
+
+				WorkflowTaskInstance currentElement = instances.get(j);
+				WorkflowTaskInstance nextElement = instances.get(j + 1);
+
+				Date currentDate = (Date) currentElement.getProperties().get(
+						WorkflowConstants.VAR_ENDDATE);
+				Date nextDate = (Date) nextElement.getProperties().get(
+						WorkflowConstants.VAR_ENDDATE);
+
+				if (currentDate == null || nextDate == null)
+					continue;
+
+				if (sort.equals(TASK_SORT.ASC)) {
+
+					// the current date is before the second date
+					if (nextDate.after(currentDate))
 						continue;
-						
+
 					instances.set(j, nextElement);
-					instances.set(j+1, currentElement);
-				
-				}
-				else {
-					if(nextDate.before(currentDate))
+					instances.set(j + 1, currentElement);
+
+				} else {
+					if (nextDate.before(currentDate))
 						continue;
-					
+
 					instances.set(j, nextElement);
-					instances.set(j+1, currentElement);
-					
+					instances.set(j + 1, currentElement);
+
 				}
-				
+
 			}
 		}
-		
+
 		return instances;
-		
+
 	}
-	
-	public List<WorkflowTaskInstance> getWorkflowHistory(WorkflowInstance workflowInstance){
-		return this.getWorkflowTasks(workflowInstance, WorkflowTaskInstance.STATE.DONE, TASK_SORT.ASC);
+
+	public List<WorkflowTaskInstance> getWorkflowHistory(
+			WorkflowInstance workflowInstance) {
+		return this.getWorkflowTasks(workflowInstance,
+				WorkflowTaskInstance.STATE.DONE, TASK_SORT.ASC);
 	}
-	
-	public WorkflowInstance getWorkflowInstanceByTaskInstance(String workflowTaskId, FetchModel.FETCH_TYPE fetch_type){
-		WorkflowInstance workflowInstance = this.workflowComponent.getWorkflowInstanceByTaskInstance(workflowTaskId);
-		
-		if(fetch_type.equals(FetchModel.FETCH_TYPE.FORUPDATE))
+
+	public WorkflowInstance getWorkflowInstanceByTaskInstance(
+			String workflowTaskId, FetchModel.FETCH_TYPE fetch_type) {
+		WorkflowInstance workflowInstance = this.workflowComponent
+				.getWorkflowInstanceByTaskInstance(workflowTaskId);
+
+		if (fetch_type.equals(FetchModel.FETCH_TYPE.FORUPDATE))
 			return workflowInstance;
-		
-		else 
+
+		else
 			return new WorkflowInstanceInfo(workflowInstance);
 	}
-	
-	public List<WorkflowInstance> getAllWorkflows(){
+
+	public List<WorkflowInstance> getAllWorkflows() {
 		return this.workflowComponent.getAllWorkflows();
 	}
-
 
 }

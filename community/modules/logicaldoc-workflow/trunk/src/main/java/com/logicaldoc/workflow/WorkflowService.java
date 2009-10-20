@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import org.jbpm.graph.exe.Token;
-
 import com.logicaldoc.workflow.model.FetchModel;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;

@@ -13,7 +13,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import com.logicaldoc.workflow.editor.WorkflowTemplateLoader.WORKFLOW_STAGE;
 import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
 
 public class WorkflowTemplateLoaderDAO extends HibernateDaoSupport implements

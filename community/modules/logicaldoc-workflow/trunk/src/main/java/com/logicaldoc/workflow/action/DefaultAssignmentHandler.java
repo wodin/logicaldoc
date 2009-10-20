@@ -24,15 +24,12 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.workflow.TemplateService;
 import com.logicaldoc.workflow.WorkflowConstants;
 import com.logicaldoc.workflow.WorkflowFactory;
-import com.logicaldoc.workflow.WorkflowService;
 import com.logicaldoc.workflow.WorkflowUtil;
 import com.logicaldoc.workflow.editor.model.WorkflowTask;
 import com.logicaldoc.workflow.model.WorkflowInstanceInfo;
-import com.logicaldoc.workflow.model.WorkflowTaskInstance;
 import com.logicaldoc.workflow.model.WorkflowTaskInstanceInfo;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
 import com.logicaldoc.workflow.model.script.UserScriptObject;
-import com.thoughtworks.xstream.XStream;
 
 public class DefaultAssignmentHandler extends AbstractAssignmentHandler{
 
@@ -48,14 +45,10 @@ public class DefaultAssignmentHandler extends AbstractAssignmentHandler{
 	 */
 	private static final long serialVersionUID = -2251308861234738682L;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void executeImpl(List<String> assignees, ExecutionContext executionContext) {
-		
-		XStream xsStream = new XStream();
-		
 	
-		WorkflowService workflowService = (WorkflowService) Context.getInstance().getBean("workflowService");
-		
 		WorkflowTemplate workflowTemplate = getWorkflowTransformService().retrieveWorkflowModels((Serializable)executionContext.getVariable(WorkflowConstants.VAR_TEMPLATE));
 		
 		WorkflowTask workflowTask = WorkflowUtil.getWorkflowTaskById(executionContext.getNode().getName(), workflowTemplate.getWorkflowComponents());

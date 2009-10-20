@@ -7,9 +7,10 @@ import com.logicaldoc.workflow.editor.message.DeployMessage;
 
 public class EndState extends BaseWorkflowModel{
 
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public EditController getController() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
