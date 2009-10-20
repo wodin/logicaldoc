@@ -257,12 +257,12 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-util</artifactId>
-			<version>5.0.0</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-i18n</artifactId>
-			<version>5.0.0</version>
+			<version>${project.version}</version>
 		</dependency>
         <dependency>
 			<groupId>org.hyperic.sigar</groupId>
@@ -272,7 +272,7 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-core</artifactId>
-			<version>5.0.0</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 			<scope>provided</scope>
 			<exclusions>
