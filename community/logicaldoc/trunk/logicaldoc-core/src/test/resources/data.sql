@@ -156,16 +156,16 @@ insert into ld_tag
 values     (2,'ask');
 
 insert into ld_history 
-				(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version)
-values     (1,'2008-10-22',0,1,5,1,'2006-12-20','author','data test 01','reason test 01','1.0');
+				(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified)
+values     (1,'2008-10-22',0,1,5,1,'2006-12-20','author','data test 01','reason test 01','1.0',0);
 
 insert into ld_history 
-			    (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version)
-values     (2,'2008-10-22',0,2,5,1,'2006-12-25','author','data test 02','reason test 02','1.0');
+			    (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified)
+values     (2,'2008-10-22',0,2,5,1,'2006-12-25','author','data test 02','reason test 02','1.0',0);
 
 insert into ld_history 
-			   (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version)
-values     (3,'2008-10-22',0,1,5,3,'2006-12-27','sebastian','data test 03','reason test 03','1.0');
+			   (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified)
+values     (3,'2008-10-22',0,1,5,3,'2006-12-27','sebastian','data test 03','reason test 03','1.0',1);
 
 insert into ld_systemmessage
 values     (1,'2008-10-22',0,'admin','sebastian','message text1','subject1','2008-10-22',5,3,1,0);

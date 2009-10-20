@@ -67,6 +67,8 @@ public class History extends PersistentObject {
 
 	private String path = null;
 
+	private int notified = 0;
+
 	public String getTitle() {
 		return title;
 	}
@@ -172,5 +174,13 @@ public class History extends PersistentObject {
 
 	public void setFolderId(long folderId) {
 		this.folderId = folderId;
+	}
+
+	public int getNotified() {
+		return notified;
+	}
+
+	public void setNotified(int notified) {
+		this.notified = notified;
 	}
 }
