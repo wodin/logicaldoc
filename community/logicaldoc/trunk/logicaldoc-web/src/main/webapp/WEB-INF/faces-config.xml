@@ -251,6 +251,14 @@
 		</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
+  
+    <managed-bean>
+        <managed-bean-name>folderToolbar</managed-bean-name>
+        <managed-bean-class>
+          com.logicaldoc.web.document.FolderToolbar
+        </managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
 
 	<!-- New document creation wizard -->
 	<managed-bean>
