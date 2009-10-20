@@ -125,6 +125,9 @@
 				<property name="sessionFactory">
 					<ref bean="SessionFactory" />
 				</property>
+                <property name="menuDAO">
+                  <ref bean="MenuDAO" />
+                </property>
 			</bean>
 		</property>
 	</bean>
@@ -508,4 +511,5 @@
 		class="com.logicaldoc.core.security.authentication.BasicAuthentication">
 		<property name="userDAO" ref="UserDAO" />
 	</bean>
+    
 </beans>

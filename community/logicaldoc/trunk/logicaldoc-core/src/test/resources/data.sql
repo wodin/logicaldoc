@@ -57,6 +57,10 @@ insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
 values     (1100,'2008-10-22',1,'menu.admin.1100',1000,1,'administration.gif','/',5,null,0);
 
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
+values     (1200,'2009-10-19',0,'test',5,1,'administration.gif','/5',5,null,0);
+
 insert into ld_menugroup
 			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
 values     (100,1,1,0,0,0,0,0,0,0,0,0,0);
@@ -152,16 +156,16 @@ insert into ld_tag
 values     (2,'ask');
 
 insert into ld_history 
-				(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version)
-values     (1,'2008-10-22',0,1,1,'2006-12-20','author','data test 01','reason test 01','1.0');
+				(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version)
+values     (1,'2008-10-22',0,1,5,1,'2006-12-20','author','data test 01','reason test 01','1.0');
 
 insert into ld_history 
-			    (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version)
-values     (2,'2008-10-22',0,2,1,'2006-12-25','author','data test 02','reason test 02','1.0');
+			    (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version)
+values     (2,'2008-10-22',0,2,5,1,'2006-12-25','author','data test 02','reason test 02','1.0');
 
 insert into ld_history 
-			   (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version)
-values     (3,'2008-10-22',0,1,3,'2006-12-27','sebastian','data test 03','reason test 03','1.0');
+			   (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version)
+values     (3,'2008-10-22',0,1,5,3,'2006-12-27','sebastian','data test 03','reason test 03','1.0');
 
 insert into ld_systemmessage
 values     (1,'2008-10-22',0,'admin','sebastian','message text1','subject1','2008-10-22',5,3,1,0);
