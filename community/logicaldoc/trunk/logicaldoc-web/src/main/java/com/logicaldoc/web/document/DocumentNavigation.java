@@ -461,4 +461,12 @@ public class DocumentNavigation extends NavigationBean {
 		recordsManager.refresh(docId);
 		setSelectedPanel(new PageContentBean(getViewMode()));
 	}
+
+	public String getFolderExportLink() {
+		return "zip-export?menuId=" + selectedDir.getMenuId();
+	}
+
+	public String getFolderRssLink() {
+		return "folder_rss?folderId=" + selectedDir.getMenuId();
+	}
 }

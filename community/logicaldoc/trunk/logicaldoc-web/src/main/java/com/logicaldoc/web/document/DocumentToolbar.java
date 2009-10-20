@@ -55,7 +55,7 @@ public class DocumentToolbar {
 		command.setIcon("actions_copy.png");
 		command.setActionBinding(FacesUtil.createActionMethodBinding("documentsRecordsManager.copyToClipboard"));
 		command.setRenderedBinding(FacesUtil.createValueBinding("documentsRecordsManager.count>0"));
-		
+
 		command = new DocumentCommand();
 		commands.add(command);
 		command.setTitle(Messages.getMessage("clipboard.move"));
@@ -69,7 +69,8 @@ public class DocumentToolbar {
 		commands.add(command);
 		command.setTitle(Messages.getMessage("document.immutable.make"));
 		command.setIcon("actions_immutability.png");
-		command.setActionBinding(FacesUtil.createActionMethodBinding("documentsRecordsManager.requestImmutabilityComment"));
+		command.setActionBinding(FacesUtil
+				.createActionMethodBinding("documentsRecordsManager.requestImmutabilityComment"));
 		command.setRenderedBinding(FacesUtil
 				.createValueBinding("documentNavigation.selectedDir.manageImmutabilityEnabled"));
 
@@ -92,7 +93,14 @@ public class DocumentToolbar {
 			if (StringUtils.isNotEmpty(ext.getParameter("confirm").valueAsString()))
 				command.setConfirmation(Messages.getMessage(ext.getParameter("confirm").valueAsString()));
 			command.setIcon(ext.getParameter("icon").valueAsString());
-			command.setActionBinding(FacesUtil.createActionMethodBinding(ext.getParameter("action").valueAsString()));
+			if (StringUtils.isNotEmpty(ext.getParameter("link").valueAsString())) {
+				command.setLinkBinding(FacesUtil.createValueBinding(ext.getParameter("link").valueAsString()));
+			}
+			if (StringUtils.isNotEmpty(ext.getParameter("target").valueAsString()))
+				command.setTarget(ext.getParameter("target").valueAsString());
+			if (StringUtils.isNotEmpty(ext.getParameter("action").valueAsString()))
+				command.setActionBinding(FacesUtil
+						.createActionMethodBinding(ext.getParameter("action").valueAsString()));
 			command.setRenderedBinding(FacesUtil.createValueBinding(ext.getParameter("rendered").valueAsString()));
 		}
 	}
