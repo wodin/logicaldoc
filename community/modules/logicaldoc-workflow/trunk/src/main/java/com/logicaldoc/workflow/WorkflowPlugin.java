@@ -78,7 +78,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 			WorkflowTemplateLoader workflowTemplateLoader = (WorkflowTemplateLoader) ctx
 					.getBean(WorkflowTemplateLoader.class);
 			
-			System.out.println("Setting up jBPM-Template-Dictionary");
+			log.debug("Setting up jBPM-Template-Dictionary");
 			
 			workflowTemplateLoader.setTemplatesDirectory(templatesDirectory);
 			
@@ -90,7 +90,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 			JobExecutor jobExecutor = jbpmConfiguration.getJobExecutor();
 			
 			if(jobExecutor.isStarted() == false){
-				System.out.println("Starting jBPM Timer...");
+				log.info("Starting jBPM Timer...");
 				jobExecutor.setJbpmConfiguration(jbpmConfiguration);
 				jobExecutor.start();
 			}
@@ -103,7 +103,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 	protected void install() throws Exception {
 		super.install();
-		System.out.println("installing Workflow-Module...");
+		log.info("installing Workflow-Module...");
 		InstallationEvent installationEvent = new InstallationEvent();
 		installationEvent.setTemplatesDirectory(resolveDataPath("templates"));
 		Context.addListener(installationEvent);
@@ -120,6 +120,5 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 		VariableEvent variableEvent = new VariableEvent();
 		variableEvent.setTemplatesDirectory(resolveDataPath("templates"));
 		Context.addListener(variableEvent);
-		
 	}
 }
