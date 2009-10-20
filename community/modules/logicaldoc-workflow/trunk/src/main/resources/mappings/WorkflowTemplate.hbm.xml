@@ -1,14 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping default-lazy="false" >
-	<class name="com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate" table="ld_workflowtemplate" >
-	<!-- 	<cache usage="read-write" include="non-lazy" /> -->
+<hibernate-mapping default-lazy="false">
+	<class
+		name="com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate"
+		table="ld_workflowtemplate">
 		<id name="id" type="long" column="ld_id" unsaved-value="0">
 			<generator class="increment" />
 		</id>
-		
-		<property name="name" type="string" column="ld_name" not-null="true" length="30" />
-		<property name="deployed" type="boolean" column="ld_deployed" not-null="false" />	
+		<property name="name" type="string" column="ld_name"
+			not-null="true" length="30" />
+		<property name="deployed" type="boolean" column="ld_deployed"
+			not-null="false" />
 	</class>
 </hibernate-mapping>
