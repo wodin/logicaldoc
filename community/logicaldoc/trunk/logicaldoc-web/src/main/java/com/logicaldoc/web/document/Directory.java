@@ -47,6 +47,8 @@ public class Directory extends PageContentBean {
 	
 	private Boolean archiveEnabled = null;
 
+	private Boolean workflowEnabled = null;
+	
 	private String pathExtended;
 
 	// True if all childs were loaded from db
@@ -184,5 +186,13 @@ public class Directory extends PageContentBean {
 		}
 		return archiveEnabled.booleanValue();
 	}
-
+	
+	public boolean isWorkflowEnabled() {
+		if (workflowEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			workflowEnabled = new Boolean(mdao.isPermissionEnabled(Permission.WORKFLOW, getMenuId(), SessionManagement
+					.getUserId()));
+		}
+		return workflowEnabled.booleanValue();
+	}
 }

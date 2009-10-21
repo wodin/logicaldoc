@@ -2,8 +2,6 @@ package com.logicaldoc.web.document;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -287,28 +285,10 @@ public class DocumentRecord extends MenuBarBean {
 			// Add extended menues
 			// Acquire the 'DocumentContextMenu' extensions of the core plugin
 			PluginRegistry registry = PluginRegistry.getInstance();
-			Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "DocumentMenu");
-
-			// Sort the extensions according to ascending position
-			List<Extension> sortedExts = new ArrayList<Extension>();
-			for (Extension extension : exts) {
-				sortedExts.add(extension);
-			}
-			Collections.sort(sortedExts, new Comparator<Extension>() {
-				public int compare(Extension e1, Extension e2) {
-					int position1 = Integer.parseInt(e1.getParameter("position").valueAsString());
-					int position2 = Integer.parseInt(e2.getParameter("position").valueAsString());
-					if (position1 < position2)
-						return -1;
-					else if (position1 > position2)
-						return 1;
-					else
-						return 0;
-				}
-			});
+			Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "DocumentMenu", null);
 
 			Set<Permission> permissions = menuDAO.getEnabledPermissions(folder.getId(), userId);
-			for (Extension ext : sortedExts) {
+			for (Extension ext : exts) {
 				if (StringUtils.isNotEmpty(ext.getParameter("permission").valueAsString())) {
 					Permission permission = Permission.valueOf(ext.getParameter("permission").valueAsString());
 					if (!permissions.contains(permission))
