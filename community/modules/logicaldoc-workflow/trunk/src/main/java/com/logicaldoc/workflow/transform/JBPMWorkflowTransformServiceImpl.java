@@ -14,7 +14,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Element;
 
-import com.logicaldoc.workflow.debug.TRANSMITTER;
 import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
 import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
@@ -75,8 +74,6 @@ public class JBPMWorkflowTransformServiceImpl implements
 		}
 		
 		String stringData = this.retrieveStringFromXMLElement(processDefininiton);
-		//DEBUG
-		TRANSMITTER.XML_DATA = stringData;
 
 		return stringData;
 	}

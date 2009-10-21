@@ -21,10 +21,11 @@ import com.icesoft.faces.component.ext.HtmlCommandLink;
 import com.icesoft.faces.component.ext.HtmlPanelGroup;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.document.DocumentNavigation;
+import com.logicaldoc.web.document.DocumentsRecordsManager;
+import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.FacesUtil;
 import com.logicaldoc.workflow.WorkflowService;
-import com.logicaldoc.workflow.debug.TRANSMITTER;
 import com.logicaldoc.workflow.editor.controll.DragAndDropSupportController;
 import com.logicaldoc.workflow.editor.controll.EditController;
 import com.logicaldoc.workflow.editor.controll.DragAndDropSupportController.Container;
@@ -115,7 +116,6 @@ public class WorkflowTemplateManager {
 
 	@SuppressWarnings("unchecked")
 	public void initializing() {
-		TRANSMITTER.XML_DATA = "";
 		this.workflowTemplate = new WorkflowTemplate();
 		this.persistenceTemplate = new WorkflowPersistenceTemplate();
 		this.workflowService = (WorkflowService) Context.getInstance().getBean(
@@ -179,6 +179,14 @@ public class WorkflowTemplateManager {
 	}
 
 	public String setupWorkflow() {
+		DocumentsRecordsManager documentsRecordsManager = (DocumentsRecordsManager) FacesUtil
+		.accessBeanFromFacesContext("documentsRecordsManager",
+				FacesContext.getCurrentInstance(), log);
+		if(documentsRecordsManager.getSelection().isEmpty()){
+			Messages.addLocalizedWarn("noselection");
+			return null;
+		}
+		
 		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil
 				.accessBeanFromFacesContext("documentNavigation", FacesContext
 						.getCurrentInstance(), log));
@@ -412,13 +420,6 @@ public class WorkflowTemplateManager {
 		return null;
 	}
 
-	public String getXMLData() {
-		return TRANSMITTER.XML_DATA;
-	}
-
-	public void setXMLData(String s) {
-
-	}
 
 	public List<SelectItem> getPossibleStartStates() {
 		List<SelectItem> possibleStartStates = new LinkedList<SelectItem>();
