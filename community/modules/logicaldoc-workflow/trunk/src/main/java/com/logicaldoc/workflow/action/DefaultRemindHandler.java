@@ -87,7 +87,7 @@ public class DefaultRemindHandler extends BaseEventAction {
 		ad.setAddress(assignee.getEmail());
 		recipients.add(ad);
 
-		String subject = workflowTemplate.getReminderMailMessage().getSubject();
+		String subject = workflowTemplate.getReminderMessage().getSubject();
 
 		if (subject == null
 				|| (subject != null && subject.trim().length() == 0))
@@ -105,7 +105,7 @@ public class DefaultRemindHandler extends BaseEventAction {
 						new WorkflowTaskInstanceInfo(WorkflowFactory
 								.createTaskInstance(executionContext
 										.getTaskInstance())), workflowTemplate
-								.getReminderMailMessage().getBody());
+								.getReminderMessage().getBody());
 
 		eMail.setSubject(subject);
 		eMail.setRecipients(recipients);

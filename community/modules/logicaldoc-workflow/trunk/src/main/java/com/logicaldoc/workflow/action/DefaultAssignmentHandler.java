@@ -96,13 +96,13 @@ public class DefaultAssignmentHandler extends AbstractAssignmentHandler{
 											WorkflowFactory
 							.createTaskInstance(executionContext
 									.getTaskInstance())), workflowTemplate
-							.getAssignmentMailMessage().getBody());
+							.getAssignmentMessage().getBody());
 			
 			
 			eMail.setMessageText(assignmentText);
 			eMail.setRecipients( addresses );
 			
-			String subject =  workflowTemplate.getAssignmentMailMessage().getSubject();
+			String subject =  workflowTemplate.getAssignmentMessage().getSubject();
 			
 			if(subject == null || (subject != null && subject.trim().length() == 0))
 				subject = "No subect specified";
