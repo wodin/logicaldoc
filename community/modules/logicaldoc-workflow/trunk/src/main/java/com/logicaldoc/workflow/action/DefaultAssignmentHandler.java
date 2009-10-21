@@ -121,9 +121,7 @@ public class DefaultAssignmentHandler extends AbstractAssignmentHandler{
 
 		
 		try {
-		//	System.out.println(eMail.getMessageText());
 			mailSender.send(eMail);
-			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
