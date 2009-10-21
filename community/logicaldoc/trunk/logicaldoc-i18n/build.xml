@@ -39,7 +39,7 @@
 					<arg value="prop2po.py" />
 					<arg value="--duplicates=merge" />
 					<arg value="-P" />
-					<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}_en.properties" />
+					<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}.properties" />
 					<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}po${file.separator}@{bundle}${file.separator}@{bundle}.pot" />
 				</exec>
 			</sequential>
@@ -54,7 +54,7 @@
 							<arg value="prop2po.py" />
 							<arg value="--duplicates=merge" />
 							<arg value="-t" />
-							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}_en.properties" />
+							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}.properties" />
 							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}classes${file.separator}i18n${file.separator}@{bundle}_@{locale}.properties" />
 							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}po${file.separator}@{bundle}${file.separator}@{locale}.po" />
 						</exec>
@@ -83,7 +83,7 @@
 						<exec executable="python" dir="./translate-toolkit/translate/convert/">
 							<arg value="po2prop.py" />
 							<arg value="-t" />
-							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}_en.properties" />
+							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}.properties" />
 							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}po${file.separator}@{bundle}${file.separator}@{bundle}-@{locale}.po" />
 							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}properties${file.separator}@{bundle}_@{locale}.properties" />
 						</exec>
