@@ -47,5 +47,4 @@ public class WorkflowPersistenceTemplate {
 	public boolean isDeployed() {
 		return deployed;
 	}
-
 }

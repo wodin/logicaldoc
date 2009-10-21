@@ -18,9 +18,9 @@ public class WorkflowTemplate extends BaseWorkflowModel {
 
 	private String startState;
 
-	private EMailMessage assignmentMailMessage;
+	private Message assignmentMessage;
 
-	private EMailMessage reminderMailMessage;
+	private Message reminderMessage;
 
 	private List<BaseWorkflowModel> workflowComponents = new LinkedList<BaseWorkflowModel>();
 
@@ -31,8 +31,8 @@ public class WorkflowTemplate extends BaseWorkflowModel {
 	}
 
 	public WorkflowTemplate() {
-		this.assignmentMailMessage = new EMailMessage("", "");
-		this.reminderMailMessage = new EMailMessage("", "");
+		this.assignmentMessage = new Message("", "");
+		this.reminderMessage = new Message("", "");
 	}
 
 	public void setWorkflowComponents(List<BaseWorkflowModel> workflowComponents) {
@@ -67,20 +67,20 @@ public class WorkflowTemplate extends BaseWorkflowModel {
 		this.startState = startState;
 	}
 
-	public void setAssignmentMailMessage(EMailMessage assignmentMailMessage) {
-		this.assignmentMailMessage = assignmentMailMessage;
+	public void setAssignmentMessage(Message assignmentMessage) {
+		this.assignmentMessage = assignmentMessage;
 	}
 
-	public EMailMessage getAssignmentMailMessage() {
-		return assignmentMailMessage;
+	public Message getAssignmentMessage() {
+		return assignmentMessage;
 	}
 
-	public void setReminderMailMessage(EMailMessage reminderMailMessage) {
-		this.reminderMailMessage = reminderMailMessage;
+	public void setReminderMessage(Message reminderMessage) {
+		this.reminderMessage = reminderMessage;
 	}
 
-	public EMailMessage getReminderMailMessage() {
-		return reminderMailMessage;
+	public Message getReminderMessage() {
+		return reminderMessage;
 	}
 
 	public BaseWorkflowModel getWorkflowComponentById(String id) {
