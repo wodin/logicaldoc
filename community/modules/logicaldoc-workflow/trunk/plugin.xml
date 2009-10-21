@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<plugin id="workflow" version="5.0.0" class="com.logicaldoc.workflowPlugin">
+<plugin id="logicaldoc-workflow" version="5.0.0" class="com.logicaldoc.workflow.WorkflowPlugin">
 	<requires>
 		<import plugin-id="logicaldoc-core" />
 	</requires>
@@ -45,19 +45,15 @@
 		<library id="javassist" path="lib/javassist-3.8.0.GA.jar" type="code">
 			<export prefix="*" />
 		</library>
-		
-		
    	</runtime>
 	
-	<extension plugin-id="logicaldoc-core" point-id="DocumentMenu" id="startworkflow">
-		<parameter id="id" value="startworkflow"/>
-		<parameter id="action" value="#{WorkflowTemplateManager.setupWorkflow}"/>
+	<extension plugin-id="logicaldoc-core" point-id="DocumentToolbar" id="workflowToolbar">
+		<parameter id="action" value="WorkflowTemplateManager.setupWorkflow"/>
 		<parameter id="title" value="workflow.startworkflow"/>
-		<parameter id="icon" value="workflow.png"/>
-		<parameter id="target" value=""/>
-		<parameter id="permission" value="WORKFLOW"/>
-		<parameter id="readonly" value="false"/>
-		<parameter id="position" value="10"/>
+		<parameter id="rendered" value="#{documentNavigation.selectedDir.workflowEnabled}" />
+		<parameter id="position" value="50" />
+		<parameter id="icon" value="actions_workflow.png" />
+		<parameter id="confirm" value="" />
 	</extension>
 	
 	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="workflowDbInit">
