@@ -13,6 +13,12 @@ import com.logicaldoc.util.event.SystemEventStatus;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 import com.logicaldoc.workflow.editor.WorkflowTemplateLoader;
 
+/**
+ * Entry-point for the Workflow plug-in
+ * 
+ * @author Sebastian Wenzky
+ * @since 5.0
+ */
 @SuppressWarnings("unused")
 public class WorkflowPlugin extends LogicalDOCPlugin {
 
@@ -32,17 +38,18 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 		}
 
 		@Override
-		public void processEvent() {	
+		public void processEvent() {
 			Context ctx = Context.getInstance();
 			WorkflowTemplateLoader workflowTemplateLoader = (WorkflowTemplateLoader) ctx
 					.getBean(WorkflowTemplateLoader.class);
 			workflowTemplateLoader.setTemplatesDirectory(templatesDirectory);
 
 			// Create JBPM database schema
-			//JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
-			//jbpmInstallConfig.dropSchema();
-			//jbpmInstallConfig.createSchema();
-			
+			// JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration)
+			// ctx.getBean("jbpmConfiguration");
+			// jbpmInstallConfig.dropSchema();
+			// jbpmInstallConfig.createSchema();
+
 			templatesDirectory.mkdirs();
 			templatesDirectory.mkdir();
 		}
@@ -77,19 +84,19 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 			Context ctx = Context.getInstance();
 			WorkflowTemplateLoader workflowTemplateLoader = (WorkflowTemplateLoader) ctx
 					.getBean(WorkflowTemplateLoader.class);
-			
+
 			log.debug("Setting up jBPM-Template-Dictionary");
-			
+
 			workflowTemplateLoader.setTemplatesDirectory(templatesDirectory);
-			
+
 			templatesDirectory.mkdirs();
 			templatesDirectory.mkdir();
-			
+
 			JbpmConfiguration jbpmConfiguration = (JbpmConfiguration) ctx.getBean("jbpmConfiguration");
-			
+
 			JobExecutor jobExecutor = jbpmConfiguration.getJobExecutor();
-			
-			if(jobExecutor.isStarted() == false){
+
+			if (jobExecutor.isStarted() == false) {
 				log.info("Starting jBPM Timer...");
 				jobExecutor.setJbpmConfiguration(jbpmConfiguration);
 				jobExecutor.start();

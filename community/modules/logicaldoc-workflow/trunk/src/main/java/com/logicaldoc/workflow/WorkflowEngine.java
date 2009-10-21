@@ -18,7 +18,6 @@ import com.logicaldoc.workflow.model.WorkflowTemplate;
  * that manages the relying processes.
  * 
  * @author Sebastian Wenzky
- * 
  */
 public interface WorkflowEngine {
 

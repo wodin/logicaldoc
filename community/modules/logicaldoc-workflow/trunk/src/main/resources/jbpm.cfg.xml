@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jbpm-configuration>
-
 	<jbpm-context>
 		<service name='persistence'
 			factory='com.logicaldoc.workflow.PersistenceFactory' />
