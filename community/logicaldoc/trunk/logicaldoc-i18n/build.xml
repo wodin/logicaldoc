@@ -13,7 +13,7 @@
 		<echo message="${pom.artifactId} is deployed" />
 	</target>
 
-	<target name="puryfy" depends="init-all">
+	<target name="purify" depends="init-all">
 		<echo>Purify all bundles</echo>
 		<java classname="com.logicaldoc.i18n.PurifyRB">
 			<classpath>
