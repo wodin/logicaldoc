@@ -13,6 +13,15 @@
 		<echo message="${pom.artifactId} is deployed" />
 	</target>
 
+	<target name="puryfy" depends="init-all">
+		<echo>Purify all bundles</echo>
+		<java classname="com.logicaldoc.i18n.PurifyRB">
+			<classpath>
+				<pathelement location="target/classes" />
+			</classpath>
+		</java>
+	</target>
+	
 	<target name="prop2po" depends="init-all">
 		<!--copy todir="src/main/resources/i18n" flatten="true">
 			<fileset dir="${logicaldoc.devroot}">
@@ -22,15 +31,7 @@
 			</fileset>
 		</copy-->
 		<delete file="target/po" failonerror="no" />
-
-
-		<echo>Purify all bundles</echo>
-		<java classname="com.logicaldoc.i18n.PurifyRB">
-			<classpath>
-				<pathelement location="target/classes" />
-			</classpath>
-		</java>
-
+		
 		<echo>Produce the mater pots</echo>
 		<for list="${bundles}" param="bundle">
 			<sequential>
