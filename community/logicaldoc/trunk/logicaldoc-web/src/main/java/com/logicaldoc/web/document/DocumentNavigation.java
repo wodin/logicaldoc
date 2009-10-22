@@ -478,4 +478,12 @@ public class DocumentNavigation extends NavigationBean {
 	public String getFolderRssLink() {
 		return "folder_rss?folderId=" + selectedDir.getMenuId();
 	}
+
+	public String history() {
+		setSelectedPanel(new PageContentBean("historyDir"));
+		HistoryRecordsManager historyRecordsManager = ((HistoryRecordsManager) FacesUtil.accessBeanFromFacesContext(
+				"historyRecordsManager", FacesContext.getCurrentInstance(), log));
+		historyRecordsManager.selectFolder(getSelectedDir().getMenu());
+		return null;
+	}
 }
