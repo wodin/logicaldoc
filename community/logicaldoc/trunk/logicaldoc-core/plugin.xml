@@ -343,4 +343,15 @@
       <parameter id="confirm" value="" />
       <parameter id="target" value="_blank" />
     </extension>
+    
+    <extension plugin-id="logicaldoc-core" point-id="FolderToolbar" id="folderHistory">
+      <parameter id="action" value="documentNavigation.history" />
+      <parameter id="link" value="" />
+      <parameter id="title" value="history" />
+      <parameter id="rendered" value="true" />
+      <parameter id="position" value="70" />
+      <parameter id="icon" value="folder_history.png" />
+      <parameter id="confirm" value="" />
+      <parameter id="target" value="" />
+    </extension>
 </plugin>
