@@ -14,6 +14,7 @@ import com.icesoft.faces.component.ext.HtmlCommandLink;
 import com.icesoft.faces.component.selectinputtext.SelectInputText;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.workflow.editor.model.Assignee;
 import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
 import com.logicaldoc.workflow.editor.model.Transition;
@@ -21,16 +22,9 @@ import com.logicaldoc.workflow.editor.model.WorkflowEditorException;
 import com.logicaldoc.workflow.editor.model.WorkflowTask;
 
 public class TaskController extends DragAndDropSupportController {
-
-	private UserDAO userDAO;
-
 	private WorkflowTask workflowTask;
 
 	private List<String> possibleAssignments = new LinkedList<String>();
-
-	public void setUserDAO(UserDAO userDAO) {
-		this.userDAO = userDAO;
-	}
 
 	@Override
 	public void initialize(BaseWorkflowModel workflowModel) {
@@ -51,15 +45,14 @@ public class TaskController extends DragAndDropSupportController {
 		if (event.getComponent() instanceof SelectInputText) {
 
 			// get the number of displayable records from the component
-			SelectInputText autoComplete = (SelectInputText) event
-					.getComponent();
+			SelectInputText autoComplete = (SelectInputText) event.getComponent();
 
 			String currentValue = autoComplete.getValue().toString();
+			UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 			List<User> matchedUsers = userDAO
 					.findByWhere(
 							"_entity.userName like concat(?,'%') OR _entity.firstName like concat(?,'%') OR _entity.name like concat(?,'%')",
-							new Object[] { currentValue, currentValue,
-									currentValue }, null);
+							new Object[] { currentValue, currentValue, currentValue }, null);
 
 			possibleAssignments = new LinkedList<String>();
 			for (User user : matchedUsers) {
@@ -92,15 +85,12 @@ public class TaskController extends DragAndDropSupportController {
 
 	public void removeAssignment(ActionEvent actionEvent) {
 		UICommand commandLink = (UICommand) actionEvent.getSource();
-		Object val = ((UIParameter) commandLink.getChildren().get(0))
-				.getValue();
+		Object val = ((UIParameter) commandLink.getChildren().get(0)).getValue();
 
-		Object val2 = ((UIParameter) commandLink.getChildren().get(1))
-				.getValue();
+		Object val2 = ((UIParameter) commandLink.getChildren().get(1)).getValue();
 
 		if ((val instanceof Assignee) == false)
-			throw new WorkflowEditorException(
-					"The passed Assignment does not match to Assignee");
+			throw new WorkflowEditorException("The passed Assignment does not match to Assignee");
 
 		if ((val2 instanceof WorkflowTask) == false)
 			throw new WorkflowEditorException("No passed WorkflowTask");
@@ -111,12 +101,10 @@ public class TaskController extends DragAndDropSupportController {
 
 	public void addAssignment(ActionEvent actionEvent) {
 		UIComponent commandLink = (UIComponent) actionEvent.getSource();
-		Object val = ((UIParameter) commandLink.getChildren().get(0))
-				.getValue();
+		Object val = ((UIParameter) commandLink.getChildren().get(0)).getValue();
 
 		if ((val instanceof WorkflowTask) == false)
-			throw new WorkflowEditorException(
-					"The passed Assignment does not match to WorkflowTask");
+			throw new WorkflowEditorException("The passed Assignment does not match to WorkflowTask");
 
 		WorkflowTask task = (WorkflowTask) val;
 
@@ -136,30 +124,25 @@ public class TaskController extends DragAndDropSupportController {
 	}
 
 	public void removeTransition(ActionEvent actionEvent) {
-		UIParameter param = ((UIParameter) ((UIComponent) actionEvent
-				.getSource()).getChildren().get(0));
+		UIParameter param = ((UIParameter) ((UIComponent) actionEvent.getSource()).getChildren().get(0));
 
 		Object val = param.getValue();
 
 		if ((val instanceof Transition) == false)
-			throw new WorkflowEditorException(
-					"Passed Parameter does not match to a Transition");
+			throw new WorkflowEditorException("Passed Parameter does not match to a Transition");
 
 		this.workflowTask.getTransitions().remove(val);
 	}
 
 	@Override
 	public void droppedObject(Container container) {
-		addTaskDestinationToTransition(container.draggedObject,
-				container.droppingZone);
+		addTaskDestinationToTransition(container.draggedObject, container.droppingZone);
 	}
 
-	private void addTaskDestinationToTransition(
-			BaseWorkflowModel draggedObject, BaseWorkflowModel droppedZone) {
+	private void addTaskDestinationToTransition(BaseWorkflowModel draggedObject, BaseWorkflowModel droppedZone) {
 
 		if ((droppedZone instanceof Transition) == false)
-			throw new WorkflowEditorException(
-					"Drop-Zone must be a Transition and nothing else");
+			throw new WorkflowEditorException("Drop-Zone must be a Transition and nothing else");
 
 		Transition transition = (Transition) droppedZone;
 		transition.setDestination(draggedObject);
@@ -171,9 +154,8 @@ public class TaskController extends DragAndDropSupportController {
 		UIParameter param = (UIParameter) commandLink.getChildren().get(0);
 
 		if ((param.getValue() instanceof BaseWorkflowModel) == false)
-			throw new WorkflowEditorException(
-					"Given Parameter must be a base of "
-							+ BaseWorkflowModel.class.getSimpleName());
+			throw new WorkflowEditorException("Given Parameter must be a base of "
+					+ BaseWorkflowModel.class.getSimpleName());
 
 		Transition transition = (Transition) param.getValue();
 		transition.setDestination(null);

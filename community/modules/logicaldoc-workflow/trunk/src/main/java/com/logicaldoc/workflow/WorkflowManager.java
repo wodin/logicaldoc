@@ -50,6 +50,7 @@ public class WorkflowManager {
 	private WorkflowTaskInstance workingWorkflowTaskinstance;
 	
 	private WorkflowInstance workingWorkflowInstance;
+	
 	private NavigationBean navigationBean;
 
 	private DirectoryTreeModel directoryModel;
@@ -246,6 +247,7 @@ public class WorkflowManager {
 		return selectedResourceFolder;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<DocumentRecord> getSelectedFolderItems(){
 		List<DocumentRecord> records = new LinkedList<DocumentRecord>();
 		
@@ -280,6 +282,7 @@ public class WorkflowManager {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void appendDocument(ActionEvent actionEvent){
 		UIComponent component = (UIComponent)actionEvent.getSource();
 		DocumentRecord selectedDocumentRecord = (DocumentRecord)((UIParameter)component.getChildren().get(0)).getValue();

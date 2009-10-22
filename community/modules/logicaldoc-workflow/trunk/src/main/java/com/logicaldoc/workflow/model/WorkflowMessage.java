@@ -6,13 +6,13 @@ package com.logicaldoc.workflow.model;
  * @author Sebastian Wenzky
  * @since 5.0
  */
-public class Message {
+public class WorkflowMessage {
 
 	private String subject;
 
 	private String body;
 
-	public Message(String subject, String body) {
+	public WorkflowMessage(String subject, String body) {
 		this.subject = subject;
 		this.body = body;
 	}

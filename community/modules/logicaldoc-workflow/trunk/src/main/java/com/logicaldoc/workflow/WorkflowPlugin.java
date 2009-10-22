@@ -8,6 +8,7 @@ import org.jbpm.JbpmConfiguration;
 import org.jbpm.job.executor.JobExecutor;
 
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.event.SystemEvent;
 import com.logicaldoc.util.event.SystemEventStatus;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
@@ -120,6 +121,13 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 		File dest = new File(System.getProperty("logicaldoc.app.rootdir"));
 		log.info("Copy web resources from " + src.getPath() + " to " + dest.getPath());
 		FileUtils.copyDirectory(src, dest);
+		
+		// Add some workflow defaults
+		PropertiesBean pbean = new PropertiesBean();
+		pbean.setProperty("workflow.assignment.handler", "com.logicaldoc.workflow.action.DefaultAssignmentHandler");
+		pbean.setProperty("workflow.remind.handler", "com.logicaldoc.workflow.action.DefaultRemindHandler");
+		pbean.write();
+
 	}
 
 	@Override
