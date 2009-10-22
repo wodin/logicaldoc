@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.History;
-import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -65,10 +64,14 @@ public class DirectoryEditForm {
 				} else {
 					directory.setDisplayText(folderName);
 					directory.getMenu().setText(folderName);
-					dao.store(directory.getMenu());
-					HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-					historyDAO.createFolderHistory(directory.getMenu(), SessionManagement.getUser(),
-							History.EVENT_FOLDER_RENAMED, "");
+					// Add a folder history entry
+					History history = new History();
+					history.setUserId(SessionManagement.getUserId());
+					history.setUserName(SessionManagement.getUsername());
+					history.setEvent(History.EVENT_FOLDER_RENAMED);
+					history.setSessionId(SessionManagement.getCurrentUserSessionId());
+					dao.store(directory.getMenu(), history);
+
 					documentNavigation.refresh();
 				}
 			} catch (Exception e) {
@@ -89,7 +92,12 @@ public class DirectoryEditForm {
 			MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 			try {
-				Menu menu = dao.createFolder(parent, getFolderName());
+				// Add a folder history entry
+				History transaction = new History();
+				transaction.setUserId(SessionManagement.getUserId());
+				transaction.setUserName(SessionManagement.getUsername());
+				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+				Menu menu = dao.createFolder(parent, getFolderName(), transaction);
 				menu.getMenuGroups().clear();
 				for (MenuGroup mg : parent.getMenuGroups()) {
 					MenuGroup clone = mg.clone();
@@ -111,9 +119,6 @@ public class DirectoryEditForm {
 				if (!stored) {
 					Messages.addLocalizedError("errors.action.savefolder.notstored");
 				} else {
-					//Add a folder history entry
-					HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-					historyDAO.createFolderHistory(menu, SessionManagement.getUser(), History.EVENT_FOLDER_CREATED, "");
 					Messages.addLocalizedInfo("msg.action.savefolder");
 				}
 

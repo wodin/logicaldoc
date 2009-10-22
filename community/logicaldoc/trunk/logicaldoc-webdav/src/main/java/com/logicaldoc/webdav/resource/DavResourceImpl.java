@@ -80,9 +80,9 @@ public class DavResourceImpl implements DavResource {
 		this.factory = factory;
 		this.config = config;
 		this.session = session;
-		
+
 		resourceService = (ResourceService) Context.getInstance().getBean("ResourceService");
-		if (this.resource != null){
+		if (this.resource != null) {
 			this.isCollection = this.resource.isFolder();
 			this.resource.setRequestedPerson(Long.parseLong(session.getObject("id").toString()));
 		}
@@ -225,8 +225,7 @@ public class DavResourceImpl implements DavResource {
 	 * 
 	 * @see DavResource#spool(OutputContext)
 	 * @see ResourceConfig#getIOManager()
-	 * @throws IOException
-	 *             if the export fails.
+	 * @throws IOException if the export fails.
 	 */
 	public void spool(OutputContext outputContext) throws IOException {
 		if (exists() && outputContext != null) {
@@ -438,11 +437,10 @@ public class DavResourceImpl implements DavResource {
 		}
 
 		try {
-			Resource resource = resourceService.getResource(member.getLocator().getResourcePath(), this.resource
-					.getRequestedPerson());
+			Resource resource = resourceService.getResource(member.getLocator().getResourcePath(), session);
 			// set the requesting person
 			resource.setRequestedPerson(this.resource.getRequestedPerson());
-			resourceService.deleteResource(resource);
+			resourceService.deleteResource(resource, session);
 		} catch (DavException de) {
 			throw de;
 		} catch (Exception e) {
@@ -462,12 +460,11 @@ public class DavResourceImpl implements DavResource {
 		}
 
 		try {
-			Resource res = resourceService.getResource(destination.getLocator().getResourcePath(), this.resource
-					.getRequestedPerson());
+			Resource res = resourceService.getResource(destination.getLocator().getResourcePath(), session);
 			if (res != null) {
 				res.setName(this.resource.getName());
 				Resource parentResource = resourceService.getParentResource(res);
-				resourceService.move(this.resource, parentResource);
+				resourceService.move(this.resource, parentResource, session);
 			} else {
 				String name = destination.getLocator().getResourcePath();
 				name = name.substring(name.lastIndexOf("/") + 1, name.length()).replace("/default", "");
@@ -476,7 +473,7 @@ public class DavResourceImpl implements DavResource {
 						this.resource.getRequestedPerson());
 				this.resource.setName(name);
 
-				resourceService.move(this.resource, parentResource);
+				resourceService.move(this.resource, parentResource, session);
 			}
 		} catch (DavException de) {
 			throw de;
@@ -505,8 +502,7 @@ public class DavResourceImpl implements DavResource {
 		}
 
 		try {
-			Resource res = resourceService.getResource(destination.getLocator().getResourcePath(), this.resource
-					.getRequestedPerson());
+			Resource res = resourceService.getResource(destination.getLocator().getResourcePath(), session);
 			log.debug("res = " + res);
 
 			if (res != null) {
@@ -516,7 +512,7 @@ public class DavResourceImpl implements DavResource {
 				log.debug("destResource.getID() = " + destResource.getID());
 				log.debug("destResource.getPath() = " + destResource.getPath());
 
-				resourceService.copyResource(destResource, this.resource);
+				resourceService.copyResource(destResource, this.resource, session);
 			} else {
 				log.debug("res IS NULL");
 				String name = destination.getLocator().getResourcePath();
@@ -533,7 +529,7 @@ public class DavResourceImpl implements DavResource {
 				log.debug("this.resource.getName() = " + this.resource.getName());
 				log.debug("this.resource.getPath() = " + this.resource.getPath());
 
-				resourceService.copyResource(destResource, this.resource);
+				resourceService.copyResource(destResource, this.resource, session);
 			}
 		} catch (DavException de) {
 			throw de;

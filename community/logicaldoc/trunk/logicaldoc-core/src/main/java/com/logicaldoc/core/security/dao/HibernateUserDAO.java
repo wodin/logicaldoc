@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.io.CryptUtil;
 
@@ -25,6 +26,8 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	private UserDocDAO userDocDAO;
 
+	private UserHistoryDAO userHistoryDAO;
+
 	// Password time to live
 	private int passwordTtl = 90;
 
@@ -33,42 +36,11 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		super.log = LogFactory.getLog(HibernateUserDAO.class);
 	}
 
-	public UserDocDAO getUserDocDAO() {
-		return userDocDAO;
-	}
-
-	public void setUserDocDAO(UserDocDAO userDocDAO) {
-		this.userDocDAO = userDocDAO;
-	}
-
 	/**
 	 * @see com.logicaldoc.core.security.dao.UserDAO#delete(long)
 	 */
 	public boolean delete(long userId) {
-		boolean result = true;
-
-		try {
-			User user = (User) getHibernateTemplate().get(User.class, userId);
-			Group userGroup = user.getUserGroup();
-			if (user != null) {
-				userDocDAO.deleteByUserId(userId);
-				user.setDeleted(1);
-				user.setUserName(user.getUserName() + "." + user.getId());
-				getHibernateTemplate().saveOrUpdate(user);
-			}
-
-			// Delete the user's group
-			if (userGroup != null) {
-				GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
-				groupDAO.delete(userGroup.getId());
-			}
-		} catch (Throwable e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-			result = false;
-		}
-
-		return result;
+		return delete(userId, null);
 	}
 
 	/**
@@ -111,6 +83,11 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	 * @see com.logicaldoc.core.security.dao.UserDAO#store(com.logicaldoc.core.security.User)
 	 */
 	public boolean store(User user) {
+		return store(user, null);
+	}
+
+	@Override
+	public boolean store(User user, UserHistory transaction) {
 		boolean result = true;
 
 		try {
@@ -128,6 +105,8 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 				groupDAO.store(grp);
 				user.getGroups().add(grp);
 				getHibernateTemplate().saveOrUpdate(user);
+
+				saveUserHistory(user, transaction);
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -147,7 +126,8 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		try {
 			User user = findByUserName(username);
 			// Check the password match
-			if ((user == null) || !user.getPassword().equals(CryptUtil.cryptString(password)) || user.getType()!=User.TYPE_DEFAULT) {
+			if ((user == null) || !user.getPassword().equals(CryptUtil.cryptString(password))
+					|| user.getType() != User.TYPE_DEFAULT) {
 				result = false;
 			}
 
@@ -217,10 +197,70 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	@Override
 	public int count() {
-		List<Object> result = findByJdbcQuery("select count(*) from ld_user where ld_type=0 and not(ld_deleted=1)", 1, null);
+		List<Object> result = findByJdbcQuery("select count(*) from ld_user where ld_type=0 and not(ld_deleted=1)", 1,
+				null);
 		if (result.get(0) instanceof Integer)
 			return ((Integer) result.get(0)).intValue();
 		else
 			return ((Long) result.get(0)).intValue();
+	}
+
+	@Override
+	public boolean delete(long userId, UserHistory transaction) {
+		boolean result = true;
+
+		try {
+			User user = (User) getHibernateTemplate().get(User.class, userId);
+			Group userGroup = user.getUserGroup();
+			if (user != null) {
+				userDocDAO.deleteByUserId(userId);
+				user.setDeleted(1);
+				user.setUserName(user.getUserName() + "." + user.getId());
+				getHibernateTemplate().saveOrUpdate(user);
+			}
+
+			// Delete the user's group
+			if (userGroup != null) {
+				GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+				groupDAO.delete(userGroup.getId());
+			}
+
+			saveUserHistory(user, transaction);
+		} catch (Throwable e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+			result = false;
+		}
+
+		return result;
+	}
+
+	private void saveUserHistory(User user, UserHistory transaction) {
+		if (transaction == null)
+			return;
+
+		transaction.setUserId(user.getId());
+		transaction.setUserName(user.getFullName());
+
+		transaction.setDate(user.getLastModified());
+		transaction.setNotified(0);
+
+		userHistoryDAO.store(transaction);
+	}
+
+	public UserHistoryDAO getUserHistoryDAO() {
+		return userHistoryDAO;
+	}
+
+	public void setUserHistoryDAO(UserHistoryDAO userHistoryDAO) {
+		this.userHistoryDAO = userHistoryDAO;
+	}
+
+	public UserDocDAO getUserDocDAO() {
+		return userDocDAO;
+	}
+
+	public void setUserDocDAO(UserDocDAO userDocDAO) {
+		this.userDocDAO = userDocDAO;
 	}
 }

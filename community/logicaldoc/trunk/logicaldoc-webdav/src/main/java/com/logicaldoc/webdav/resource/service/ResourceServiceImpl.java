@@ -19,6 +19,7 @@ import org.apache.jackrabbit.webdav.DavServletResponse;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -33,6 +34,7 @@ import com.logicaldoc.webdav.context.ImportContext;
 import com.logicaldoc.webdav.exception.DavResourceIOException;
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.resource.model.ResourceImpl;
+import com.logicaldoc.webdav.session.DavSession;
 
 /**
  * 
@@ -102,8 +104,7 @@ public class ResourceServiceImpl implements ResourceService {
 		return resource;
 	}
 
-	private Resource marshallDocument(Document document) {
-
+	private Resource marshallDocument(Document document, DavSession session) {
 		Resource resource = new ResourceImpl();
 		resource.setID(new Long(document.getId()).toString());
 		// We cannot use the title because it can contain
@@ -117,6 +118,7 @@ public class ResourceServiceImpl implements ResourceService {
 				|| document.getStatus() == Document.DOC_LOCKED);
 		resource.setVersionLabel(document.getVersion());
 		resource.setAuthor(document.getPublisher());
+		resource.setSession(session);
 
 		return resource;
 	}
@@ -141,14 +143,15 @@ public class ResourceServiceImpl implements ResourceService {
 		Collection<Document> documents = documentDAO.findByFolder(folderID);
 		for (Iterator<Document> iterator = documents.iterator(); iterator.hasNext();) {
 			Document document = iterator.next();
-			resourceList.add(marshallDocument(document));
+			resourceList.add(marshallDocument(document, null));
 		}
 
 		return resourceList;
 	}
 
-	public Resource getResource(String requestPath, long userId) throws DavException {
+	public Resource getResource(String requestPath, DavSession session) throws DavException {
 
+		long userId = (Long) session.getObject("id");
 		if (requestPath == null)
 			requestPath = "/";
 
@@ -189,7 +192,7 @@ public class ResourceServiceImpl implements ResourceService {
 			throw new DavException(DavServletResponse.SC_FORBIDDEN,
 					"You have no appropriated rights to read this document");
 
-		return marshallDocument(document);
+		return marshallDocument(document, session);
 	}
 
 	public Resource getParentResource(String resourcePath, long userId) {
@@ -223,10 +226,11 @@ public class ResourceServiceImpl implements ResourceService {
 		super.finalize();
 	}
 
-	public Resource createResource(Resource parentResource, String name, boolean isCollection, ImportContext context)
-			throws DavException {
-	
+	public Resource createResource(Resource parentResource, String name, boolean isCollection, ImportContext context,
+			DavSession session) throws DavException {
+
 		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource.getID()));
+		String sid = (String) session.getObject("sid");
 
 		if (isCollection) {
 			// check permission to add folder
@@ -234,7 +238,14 @@ public class ResourceServiceImpl implements ResourceService {
 			if (!addChildEnabled) {
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Add Folder not granted to this user");
 			}
-			Menu createdMenu = menuDAO.createFolder(parentMenu, name);
+
+			User user = (User) session.getObject("user");
+			// Add a folder history entry
+			History transaction = new History();
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+			transaction.setSessionId(sid);
+			Menu createdMenu = menuDAO.createFolder(parentMenu, name, transaction);
 			return this.marshallFolder(createdMenu, parentResource.getRequestedPerson());
 		}
 
@@ -249,7 +260,15 @@ public class ResourceServiceImpl implements ResourceService {
 		InputStream is = context.getInputStream();
 		try {
 			try {
-				documentManager.create(is, name, parentMenu, user, user.getLocale(), false);
+				// Create the document history event
+				History transaction = new History();
+				transaction.setSessionId(sid);
+				transaction.setEvent(History.EVENT_STORED);
+				transaction.setComment("");
+				transaction.setUserId(user.getId());
+				transaction.setUserName(user.getFullName());
+
+				documentManager.create(is, name, parentMenu, user, user.getLocale(), false, transaction);
 			} catch (Exception e) {
 				log.error(e);
 			} finally {
@@ -262,9 +281,10 @@ public class ResourceServiceImpl implements ResourceService {
 		return null;
 	}
 
-	public void updateResource(Resource resource, ImportContext context) throws DavException {
+	public void updateResource(Resource resource, ImportContext context, DavSession session) throws DavException {
 		User user = userDAO.findById(resource.getRequestedPerson());
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
+		String sid = (String) session.getObject("sid");
 
 		try {
 			// verify the write permission on the parent folder
@@ -277,10 +297,16 @@ public class ResourceServiceImpl implements ResourceService {
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "User didn't locked the document");
 			}
 
-			
-			
+			// Create the document history event
+			History transaction = new History();
+			transaction.setSessionId(sid);
+			transaction.setEvent(History.EVENT_CHECKEDIN);
+			transaction.setComment("");
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+
 			documentManager.checkin(Long.parseLong(resource.getID()), context.getInputStream(), resource.getName(),
-					user, VERSION_TYPE.NEW_SUBVERSION, "", false);
+					user, VERSION_TYPE.NEW_SUBVERSION, "", false, transaction);
 
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -296,7 +322,7 @@ public class ResourceServiceImpl implements ResourceService {
 		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(parentMenu.getId(), name, null);
 		if (!docs.isEmpty()) {
 			Document document = docs.iterator().next();
-			return marshallDocument(document);
+			return marshallDocument(document, null);
 		}
 		return null;
 	}
@@ -309,7 +335,8 @@ public class ResourceServiceImpl implements ResourceService {
 		return null;
 	}
 
-	public Resource move(Resource source, Resource destination) throws DavException {
+	public Resource move(Resource source, Resource destination, DavSession session) throws DavException {
+		String sid = (String) session.getObject("sid");
 
 		if (source.isFolder()) {
 			if (!source.isRenameEnabled())
@@ -324,6 +351,15 @@ public class ResourceServiceImpl implements ResourceService {
 				throw new UnsupportedOperationException();
 
 			currentMenu.setText(source.getName());
+
+			User user = (User) session.getObject("user");
+			// Add a folder history entry
+			History transaction = new History();
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+			transaction.setEvent(History.EVENT_FOLDER_RENAMED);
+			transaction.setSessionId(sid);
+			menuDAO.store(currentMenu, transaction);
 
 			if (destination != null)
 				currentMenu.setParentId(Long.parseLong(destination.getID()));
@@ -348,10 +384,18 @@ public class ResourceServiceImpl implements ResourceService {
 			documentDAO.initialize(document);
 			User user = userDAO.findById(source.getRequestedPerson());
 
+			// Create the document history event
+			History transaction = new History();
+			transaction.setSessionId(sid);
+			transaction.setComment("");
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+
 			if (!source.getName().equals(document.getFileName())) {
 				// we are doing a file rename
 				try {
-					documentManager.rename(document, user, source.getName(), false);
+					transaction.setEvent(History.EVENT_RENAMED);
+					documentManager.rename(document, user, source.getName(), false, transaction);
 				} catch (Exception e) {
 					log.warn(e.getMessage(), e);
 					throw new RuntimeException(e);
@@ -365,27 +409,34 @@ public class ResourceServiceImpl implements ResourceService {
 				Menu menu = menuDAO.findById(Long.parseLong(destination.getID()));
 
 				try {
-					documentManager.moveToFolder(document, menu, user);
+					transaction.setEvent(History.EVENT_MOVED);
+					documentManager.moveToFolder(document, menu, user, transaction);
 				} catch (Exception e) {
 					log.warn(e.getMessage(), e);
 				}
 			}
 
-			return this.marshallDocument(document);
+			return this.marshallDocument(document, session);
 		}
 	}
 
-	public void deleteResource(Resource resource) throws DavException {
+	public void deleteResource(Resource resource, DavSession session) throws DavException {
+		String sid = (String) session.getObject("sid");
+		Menu menu = menuDAO.findById(Long.parseLong(resource.getID()));
+		User user = userDAO.findById(resource.getRequestedPerson());
+
+		// Add a folder history entry
+		History transaction = new History();
+		transaction.setUserId(user.getId());
+		transaction.setUserName(user.getFullName());
+		transaction.setSessionId(sid);
 		try {
 			if (resource.isFolder()) {
-
 				if (!resource.isDeleteEnabled())
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
-				Menu menu = menuDAO.findById(Long.parseLong(resource.getID()));
-				User user = userDAO.findById(resource.getRequestedPerson());
-
-				List<Menu> notDeletableFolders = documentManager.deleteFolder(menu, user);
+				transaction.setEvent(History.EVENT_FOLDER_DELETED);
+				List<Menu> notDeletableFolders = documentManager.deleteFolder(menu, user, transaction);
 				if (notDeletableFolders.size() > 0) {
 					throw new RuntimeException("Unable to delete some subfolders.");
 				}
@@ -394,7 +445,7 @@ public class ResourceServiceImpl implements ResourceService {
 				Resource parent = getParentResource(resource);
 				if (!parent.isWriteEnabled())
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
-
+				transaction.setEvent(History.EVENT_DELETED);
 				documentDAO.delete(Long.parseLong(resource.getID()));
 			}
 		} catch (DavException de) {
@@ -404,7 +455,8 @@ public class ResourceServiceImpl implements ResourceService {
 		}
 	}
 
-	public void copyResource(Resource destinationResource, Resource resource) throws DavException {
+	public void copyResource(Resource destinationResource, Resource resource, DavSession session) throws DavException {
+		String sid = (String) session.getObject("sid");
 
 		if (resource.isFolder() == true) {
 			throw new RuntimeException("FolderCopy not supported");
@@ -418,8 +470,13 @@ public class ResourceServiceImpl implements ResourceService {
 				Menu menu = menuDAO.findById(Long.parseLong(destinationResource.getID()));
 
 				User user = userDAO.findById(resource.getRequestedPerson());
+				// Create the document history event
+				History transaction = new History();
+				transaction.setSessionId(sid);
+				transaction.setEvent(History.EVENT_STORED);
+				transaction.setComment("");
 
-				documentManager.copyToFolder(document, menu, user);
+				documentManager.copyToFolder(document, menu, user, transaction);
 			} catch (DavException de) {
 				log.info(de.getMessage(), de);
 				throw de;
@@ -470,7 +527,8 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	@Override
-	public void checkout(Resource resource) throws DavException {
+	public void checkout(Resource resource, DavSession session) throws DavException {
+		String sid = (String) session.getObject("sid");
 
 		User user = userDAO.findById(resource.getRequestedPerson());
 
@@ -480,7 +538,15 @@ public class ResourceServiceImpl implements ResourceService {
 			throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to checkout resource.");
 
 		try {
-			documentManager.checkout(Long.parseLong(resource.getID()), user);
+			// Create the document history event
+			History transaction = new History();
+			transaction.setSessionId(sid);
+			transaction.setEvent(History.EVENT_CHECKEDOUT);
+			transaction.setComment("");
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+
+			documentManager.checkout(Long.parseLong(resource.getID()), user, transaction);
 		} catch (NumberFormatException e) {
 			throw new RuntimeException(e);
 		} catch (Exception e) {
@@ -507,7 +573,7 @@ public class ResourceServiceImpl implements ResourceService {
 		Arrays.sort(sortIt);
 
 		for (Version version : sortIt) {
-			Resource res = marshallDocument(document);
+			Resource res = marshallDocument(document, null);
 			res.setVersionLabel(version.getVersion());
 			res.setVersionDate(version.getDate());
 			res.setAuthor(version.getUsername());
@@ -518,10 +584,19 @@ public class ResourceServiceImpl implements ResourceService {
 		return resourceHistory;
 	}
 
-	public void uncheckout(Resource resource) {
+	public void uncheckout(Resource resource, DavSession session) {
+		String sid = (String) session.getObject("sid");
 		try {
 			User user = userDAO.findById(resource.getRequestedPerson());
-			documentManager.unlock(Long.parseLong(resource.getID()), user, "");
+			// Create the document history event
+			History transaction = new History();
+			transaction.setSessionId(sid);
+			transaction.setEvent(History.EVENT_UNLOCKED);
+			transaction.setComment("");
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+
+			documentManager.unlock(Long.parseLong(resource.getID()), user, transaction);
 
 			resource.setIsCheckedOut(false);
 

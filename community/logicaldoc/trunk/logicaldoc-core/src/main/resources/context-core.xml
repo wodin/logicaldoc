@@ -43,6 +43,9 @@
 				<property name="userDocDAO">
 					<ref bean="UserDocDAO" />
 				</property>
+                 <property name="userHistoryDAO">
+                    <ref bean="UserHistoryDAO" />
+                </property>
 			</bean>
 		</property>
 	</bean>
@@ -61,6 +64,9 @@
 				<property name="userDAO">
 					<ref bean="UserDAO" />
 				</property>
+                <property name="historyDAO">
+                    <ref bean="HistoryDAO" />
+                </property>
 			</bean>
 		</property>
 	</bean>
@@ -125,9 +131,6 @@
 				<property name="sessionFactory">
 					<ref bean="SessionFactory" />
 				</property>
-                <property name="menuDAO">
-                  <ref bean="MenuDAO" />
-                </property>
 			</bean>
 		</property>
 	</bean>
@@ -320,9 +323,6 @@
 				<property name="documentTemplateDAO">
 					<ref bean="DocumentTemplateDAO" />
 				</property>
-				<property name="historyDAO">
-					<ref bean="HistoryDAO" />
-				</property>
 				<property name="storer" ref="Storer" />
 				<property name="indexer">
 					<ref bean="Indexer" />
@@ -511,5 +511,19 @@
 		class="com.logicaldoc.core.security.authentication.BasicAuthentication">
 		<property name="userDAO" ref="UserDAO" />
 	</bean>
-    
+  
+    <bean id="UserHistoryDAO" parent="ApplicationBaseTransactionProxy"
+        abstract="false" lazy-init="default" autowire="default"
+        dependency-check="default">
+        <property name="target">
+          <bean
+            class="com.logicaldoc.core.security.dao.HibernateUserHistoryDAO"
+            abstract="false" lazy-init="default" autowire="default"
+            dependency-check="default">
+                <property name="sessionFactory">
+                  <ref bean="SessionFactory" />
+                </property>
+          </bean>
+        </property>
+    </bean>
 </beans>

@@ -13,6 +13,8 @@ import java.util.StringTokenizer;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
@@ -30,6 +32,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 	private UserDAO userDAO;
 
+	private HistoryDAO historyDAO;
+
 	private HibernateMenuDAO() {
 		super(Menu.class);
 		super.log = LogFactory.getLog(HibernateMenuDAO.class);
@@ -45,10 +49,16 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 	@Override
 	public boolean store(Menu menu) {
-		return store(menu, true);
+		return store(menu, true, null);
 	}
 
-	public boolean store(Menu menu, boolean updatePathExtended) {
+	@Override
+	public boolean store(Menu menu, History transaction) {
+		return store(menu, true, transaction);
+	}
+
+	@Override
+	public boolean store(Menu menu, boolean updatePathExtended, History transaction) {
 		boolean result = true;
 
 		try {
@@ -68,6 +78,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				// We need to update the path extended
 				updatePathExtended(menu, !oldText.equals(menu.getText()) || !menu.getPathExtended().equals(oldPathExt));
 			}
+
+			saveFolderHistory(menu, transaction);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			result = false;
@@ -426,8 +438,63 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return findByWhere(query.toString(), null);
 	}
 
+	/**
+	 * Utility method that logs into the DB the transaction that involved the
+	 * passed folder. The transaction must be provided with userId and userName.
+	 * 
+	 * @param folder
+	 * @param transaction
+	 */
+	private void saveFolderHistory(Menu folder, History transaction) {
+		if (transaction == null)
+			return;
+
+		transaction.setNotified(0);
+		transaction.setFolderId(folder.getId());
+		transaction.setTitle(folder.getText());
+		transaction.setPath(folder.getPathExtended() + "/" + folder.getText());
+		transaction.setPath(transaction.getPath().replaceAll("//", "/"));
+		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents/", "/"));
+		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents", "/"));
+		transaction.setDate(folder.getLastModified());
+
+		historyDAO.store(transaction);
+
+		// Check if is necessary to add a new history entry for the parent
+		// folder. This operation is not recursive, because we want to notify
+		// only the parent folder.
+		if (folder.getId() != folder.getParentId()) {
+			Menu parent = findById(folder.getParentId());
+			History parentHistory = new History();
+			parentHistory.setFolderId(parent.getId());
+			parentHistory.setTitle(parent.getText());
+
+			parentHistory.setPath(parent.getPathExtended() + "/" + parent.getText() + "/" + folder.getText());
+			parentHistory.setPath(parentHistory.getPath().replaceAll("//", "/"));
+			parentHistory.setPath(parentHistory.getPath().replaceFirst("/menu.documents/", "/"));
+			parentHistory.setPath(parentHistory.getPath().replaceFirst("/menu.documents", "/"));
+
+			parentHistory.setDate(folder.getLastModified());
+			parentHistory.setUserId(transaction.getUserId());
+			parentHistory.setUserName(transaction.getUserName());
+			if (transaction.getEvent().equals(History.EVENT_FOLDER_CREATED)) {
+				parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_CREATED);
+			} else if (transaction.getEvent().equals(History.EVENT_FOLDER_RENAMED)) {
+				parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_RENAMED);
+			} else if (transaction.getEvent().equals(History.EVENT_FOLDER_PERMISSION)) {
+				parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_PERMISSION);
+			} else if (transaction.getEvent().equals(History.EVENT_FOLDER_DELETED)) {
+				parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_DELETED);
+			}
+			parentHistory.setComment("");
+			parentHistory.setSessionId(transaction.getSessionId());
+
+			historyDAO.store(parentHistory);
+		}
+	}
+
 	@Override
-	public Menu createFolder(Menu parent, String name) {
+	public Menu createFolder(Menu parent, String name, History transaction) {
 		Menu menu = new Menu();
 		menu.setText(name);
 		menu.setParentId(parent.getId());
@@ -440,8 +507,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 
 		setUniqueFolderName(menu);
-
-		if (store(menu) == false)
+		if (transaction != null)
+			transaction.setEvent(History.EVENT_FOLDER_CREATED);
+		if (store(menu, transaction) == false)
 			return null;
 		return menu;
 	}
@@ -462,7 +530,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	}
 
 	@Override
-	public Menu createFolders(Menu parent, String path) {
+	public Menu createFolders(Menu parent, String path, History transaction) {
 		StringTokenizer st = new StringTokenizer(path, "/", false);
 
 		Menu menu = parent;
@@ -471,7 +539,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			List<Menu> childs = findByText(menu, name, Menu.MENUTYPE_DIRECTORY);
 			Menu dir;
 			if (childs.isEmpty())
-				dir = createFolder(menu, name);
+				dir = createFolder(menu, name, transaction);
 			else {
 				dir = childs.iterator().next();
 			}
@@ -713,5 +781,44 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 
 		return ids;
+	}
+
+	public HistoryDAO getHistoryDAO() {
+		return historyDAO;
+	}
+
+	public void setHistoryDAO(HistoryDAO historyDAO) {
+		this.historyDAO = historyDAO;
+	}
+
+	@Override
+	public void deleteAll(List<Menu> menus, History transaction) {
+		for (Menu menu : menus) {
+			try {
+				menu.setDeleted(1);
+				History deleteHistory = (History) transaction.clone();
+				deleteHistory.setEvent(History.EVENT_FOLDER_DELETED);
+				store(menu, deleteHistory);
+			} catch (CloneNotSupportedException e) {
+				log.error(e.getMessage(), e);
+			}
+		}
+
+	}
+
+	@Override
+	public boolean delete(long menuId, History transaction) {
+		boolean result = true;
+		try {
+			Menu menu = (Menu) getHibernateTemplate().get(Menu.class, menuId);
+			menu.setDeleted(1);
+			store(menu, transaction);
+		} catch (Throwable e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+			result = false;
+		}
+
+		return result;
 	}
 }

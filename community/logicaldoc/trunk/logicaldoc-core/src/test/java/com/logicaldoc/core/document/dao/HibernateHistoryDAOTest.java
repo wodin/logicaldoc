@@ -70,7 +70,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		assertNotNull(histories);
 		assertEquals(0, histories.size());
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void testFindByFolderId() {
 		Collection histories = dao.findByFolderId(5);
@@ -82,7 +82,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		assertNotNull(histories);
 		assertEquals(0, histories.size());
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void testCreateDocumentHistory() {
 		History history = new History();
@@ -100,56 +100,12 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		history.setComment("The document has been created.");
 
 		dao.store(history);
-		
+
 		Collection histories = dao.findByDocId(1);
 		assertNotNull(histories);
 		assertEquals(3, histories.size());
 	}
-	
-	@SuppressWarnings("unchecked")
-	public void testCreateFolderHistory() {
-		History history = new History();
-		history.setFolderId(1200);
-		history.setTitle("folder_test");
 
-		history.setPath("/" + "minnie");
-
-		Date date = new Date();
-		history.setDate(date);
-		history.setUserId(1);
-		history.setUserName("paolo");
-		history.setEvent(History.EVENT_FOLDER_CREATED);
-		history.setComment("The folder has been created.");
-
-		dao.store(history);
-		
-		//Store the history for the parent fodler
-		History parentHistory = new History();
-		parentHistory.setFolderId(5);
-		parentHistory.setTitle("Documenti");
-
-		parentHistory.setPath("/");
-		parentHistory.setPath(parentHistory.getPath().replaceAll("//", "/"));
-		parentHistory.setPath(parentHistory.getPath().replaceFirst("/menu.documents/", "/"));
-		parentHistory.setPath(parentHistory.getPath().replaceFirst("/menu.documents", "/"));
-
-		parentHistory.setDate(date);
-		parentHistory.setUserId(1);
-		parentHistory.setUserName("alle");
-		parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_CREATED);
-		parentHistory.setComment("A sub-folder has been created.");
-		
-		dao.store(parentHistory);
-		
-		Collection histories = dao.findByFolderId(1200);
-		assertNotNull(histories);
-		assertEquals(1, histories.size());
-		
-		histories = dao.findByFolderId(5);
-		assertNotNull(histories);
-		assertEquals(4, histories.size());
-	}
-	
 	@SuppressWarnings("unchecked")
 	public void testStore() {
 		History history = new History();
@@ -161,7 +117,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		history.setEvent("test History store");
 
 		assertTrue(dao.store(history));
-		
+
 		History folderHistory = new History();
 		folderHistory.setFolderId(5);
 		folderHistory.setDate(DateBean.dateFromCompactString("20061220"));

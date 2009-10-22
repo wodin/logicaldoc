@@ -15,12 +15,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.document.History;
-import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserDoc;
+import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -262,19 +261,17 @@ public class UsersRecordsManager extends SortableList {
 						userDocDao.delete(userDoc.getDocId(), user.getId());
 					}
 
-					// delete all history entries connected to this user
-					HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-					Collection<History> historyColl = historyDAO.findByUserId(user.getId());
-					Iterator<History> historyIter = historyColl.iterator();
-
-					while (historyIter.hasNext()) {
-						History history = historyIter.next();
-						historyDAO.delete(history.getId());
-					}
-
 					manager.removeUserFromAllGroups(toBeDeletedUser);
 
-					boolean deleted = dao.delete(user.getId());
+					// Create the user history event
+					UserHistory transaction = new UserHistory();
+					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+					transaction.setEvent(UserHistory.EVENT_USER_DELETED);
+					transaction.setComment("");
+					transaction.setUserId(SessionManagement.getUserId());
+					transaction.setUserName(SessionManagement.getUsername());
+
+					boolean deleted = dao.delete(user.getId(), transaction);
 
 					if (!deleted) {
 						Messages.addLocalizedError("errors.action.deleteuser");

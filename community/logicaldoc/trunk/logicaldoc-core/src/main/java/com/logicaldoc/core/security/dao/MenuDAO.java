@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.logicaldoc.core.PersistentObjectDAO;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
 
@@ -178,9 +179,10 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	 * 
 	 * @param parent The parent menu
 	 * @param name The folder name
+	 * @transaction optional transaction entry to log the event
 	 * @return The newly created folder
 	 */
-	public Menu createFolder(Menu parent, String name);
+	public Menu createFolder(Menu parent, String name, History transaction);
 
 	/**
 	 * Creates the folder for the specified path. All unexisting nodes specified
@@ -188,10 +190,11 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	 * 
 	 * @param parent The parent menu
 	 * @param path The folder path(for example /dog/cat/mouse)
+	 * @transaction optional transaction entry to log the event
 	 * 
 	 * @return The created folder
 	 */
-	public Menu createFolders(Menu parent, String path);
+	public Menu createFolders(Menu parent, String path, History transaction);
 
 	/**
 	 * Returns a List of menus being a parent of the given menu. The list is
@@ -241,7 +244,31 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	 * 
 	 * @param menu menu to be stored.
 	 * @param updatePathExtended true if you want to update menu path extended
+	 * @param optional transaction entry to log the event
 	 * @return True if successfully stored in a database.
 	 */
-	public boolean store(Menu menu, boolean updatePathExtended);
+	public boolean store(Menu menu, boolean updatePathExtended, History transaction);
+
+	/**
+	 * Same as store(Menu, boolean, History) with updatePathExtended=true
+	 */
+	public boolean store(Menu menu, History transaction);
+
+	/**
+	 * For each folder, save the folder delete history entry for each folder and
+	 * delete the folder
+	 * 
+	 * @param menu List of menu to be delete
+	 * @param transaction entry to log the event on each folder
+	 */
+	public void deleteAll(List<Menu> menus, History transaction);
+
+	/**
+	 * This method deletes the menu object and insert a new menu history entry.
+	 * 
+	 * @param menuId The id of the menu to delete
+	 * @param transaction entry to log the event
+	 * @return True if successfully deleted from the database.
+	 */
+	public boolean delete(long menuId, History transaction);
 }

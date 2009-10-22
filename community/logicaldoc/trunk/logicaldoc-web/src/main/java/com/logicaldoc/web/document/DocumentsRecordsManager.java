@@ -26,6 +26,7 @@ import com.icesoft.faces.component.ext.RowSelectorEvent;
 import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.UserDoc;
@@ -117,10 +118,9 @@ public class DocumentsRecordsManager extends SortableList {
 	 * @param directoryId
 	 */
 	public void selectDirectory(long directoryId) {
-		this.table=null;
+		this.table = null;
 		selectedDirectory = directoryId;
 		selection.clear();
-
 
 		// initiate the list
 		if (documents != null) {
@@ -276,7 +276,15 @@ public class DocumentsRecordsManager extends SortableList {
 							lockedSome = true;
 							continue;
 						}
-						dao.delete(record.getDocId());
+						// Create the document history event
+						History transaction = new History();
+						transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+						transaction.setEvent(History.EVENT_DELETED);
+						transaction.setComment("");
+						transaction.setUserId(SessionManagement.getUserId());
+						transaction.setUserName(SessionManagement.getUsername());
+
+						dao.delete(record.getDocId(), transaction);
 						deletedSome = true;
 					} catch (AccessControlException e) {
 						Messages.addLocalizedWarn("document.write.nopermission");
@@ -356,7 +364,14 @@ public class DocumentsRecordsManager extends SortableList {
 							lockedSome = true;
 							continue;
 						}
-						manager.makeImmutable(record.getDocId(), SessionManagement.getUser(), operationComment);
+
+						// Create the document history event
+						History transaction = new History();
+						transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+						transaction.setEvent(History.EVENT_IMMUTABLE);
+						transaction.setComment(operationComment);
+
+						manager.makeImmutable(record.getDocId(), SessionManagement.getUser(), transaction);
 						immutableSome = true;
 					}
 				}
@@ -457,8 +472,15 @@ public class DocumentsRecordsManager extends SortableList {
 								lockedSome = true;
 								continue;
 							}
+
+							// Create the document history event
+							History transaction = new History();
+							transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+							transaction.setEvent(History.EVENT_MOVED);
+							transaction.setComment("");
+
 							docManager.moveToFolder(record.getDocument(), selectedMenuFolder, SessionManagement
-									.getUser());
+									.getUser(), transaction);
 						}
 						if (skippedSome || lockedSome)
 							Messages.addLocalizedWarn("document.paste.warn");
@@ -495,8 +517,14 @@ public class DocumentsRecordsManager extends SortableList {
 				if (menuDao.isWriteEnable(selectedDirectory, userId)) {
 					try {
 						for (DocumentRecord record : clipboard) {
+							// Create the document history event
+							History transaction = new History();
+							transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+							transaction.setEvent(History.EVENT_STORED);
+							transaction.setComment("");
+
 							docManager.copyToFolder(record.getDocument(), selectedMenuFolder, SessionManagement
-									.getUser());
+									.getUser(), transaction);
 						}
 					} catch (AccessControlException e) {
 						Messages.addLocalizedWarn("document.write.nopermission");
@@ -615,7 +643,7 @@ public class DocumentsRecordsManager extends SortableList {
 						importer.setTags(inputFile.getTags());
 						log.debug("importing: = " + destFile.getPath());
 						importer.process(destFile, LocaleUtil.toLocale(zipLanguage), parent, userId, inputFile
-								.getTemplate(), encoding);
+								.getTemplate(), encoding, SessionManagement.getCurrentUserSessionId());
 						try {
 							FileUtils.forceDelete(destFile);
 						} catch (IOException e) {

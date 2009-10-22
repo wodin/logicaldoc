@@ -3,6 +3,10 @@ package com.logicaldoc.core.security;
 import java.util.Date;
 import java.util.UUID;
 
+import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.security.dao.UserHistoryDAO;
+import com.logicaldoc.util.Context;
+
 /**
  * A single user session with it's unique identifier and the reference to the
  * user
@@ -24,6 +28,8 @@ public class UserSession implements Comparable<UserSession> {
 	private String id;
 
 	private String userName;
+
+	private long userId;
 
 	private int status = STATUS_OPEN;
 
@@ -55,17 +61,32 @@ public class UserSession implements Comparable<UserSession> {
 	public void setExpired() {
 		this.status = STATUS_EXPIRED;
 		externalSession = null;
+		// Add a user history entry
+		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
+		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_TIMEOUT, "", id);
 	}
 
 	public void setClosed() {
 		this.status = STATUS_CLOSED;
 		externalSession = null;
+		// Add a user history entry
+		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
+		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_LOGOUT, "", id);
 	}
 
 	UserSession(String userName) {
 		super();
 		this.id = UUID.randomUUID().toString();
 		this.userName = userName;
+		// Set the userid
+		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
+		User user = userDAO.findByUserName(userName);
+		this.userId = user.getId();
+		// Add a user history entry
+		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_LOGIN, "", id);
 	}
 
 	public String getUserName() {
@@ -133,5 +154,13 @@ public class UserSession implements Comparable<UserSession> {
 
 	public void setUserObject(Object userObject) {
 		this.userObject = userObject;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 }

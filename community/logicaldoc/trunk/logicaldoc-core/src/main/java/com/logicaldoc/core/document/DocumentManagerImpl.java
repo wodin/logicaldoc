@@ -22,7 +22,6 @@ import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
-import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.core.searchengine.LuceneDocument;
@@ -51,8 +50,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	private DocumentListenerManager listenerManager;
 
-	private HistoryDAO historyDAO;
-
 	private VersionDAO versionDAO;
 
 	private MenuDAO menuDAO;
@@ -73,20 +70,16 @@ public class DocumentManagerImpl implements DocumentManager {
 		this.documentTemplateDAO = documentTemplateDAO;
 	}
 
-	public void setHistoryDAO(HistoryDAO historyDAO) {
-		this.historyDAO = historyDAO;
-	}
-
 	public void setIndexer(Indexer indexer) {
 		this.indexer = indexer;
 	}
 
 	@Override
 	public void checkin(long docId, File file, String filename, User user, VERSION_TYPE versionType,
-			String versionDesc, boolean immediateIndexing) throws Exception {
+			String versionDesc, boolean immediateIndexing, History transaction) throws Exception {
 		FileInputStream is = new FileInputStream(file);
 		try {
-			checkin(docId, is, filename, user, versionType, versionDesc, immediateIndexing);
+			checkin(docId, is, filename, user, versionType, versionDesc, immediateIndexing, transaction);
 		} finally {
 			is.close();
 		}
@@ -94,7 +87,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void checkin(long docId, InputStream fileInputStream, String filename, User user, VERSION_TYPE versionType,
-			String versionDesc, boolean immediateIndexing) throws Exception {
+			String versionDesc, boolean immediateIndexing, History transaction) throws Exception {
 		// identify the document and menu
 		Document document = documentDAO.findById(docId);
 
@@ -135,8 +128,9 @@ public class DocumentManagerImpl implements DocumentManager {
 			versionDAO.store(version);
 			log.debug("Stored version " + version.getVersion());
 
-			// create history entry for this checkin event
-			historyDAO.createDocumentHistory(document, user, History.EVENT_CHECKEDIN, "");
+			// Modify document history entry
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
 
 			// create search index entry
 			if (immediateIndexing)
@@ -155,17 +149,12 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void checkout(long docId, User user) throws Exception {
-		lock(docId, Document.DOC_CHECKED_OUT, History.EVENT_CHECKEDOUT, user, "");
+	public void checkout(long docId, User user, History transaction) throws Exception {
+		lock(docId, Document.DOC_CHECKED_OUT, user, transaction);
 	}
 
 	@Override
-	public void lock(long docId, int status, User user, String comment) throws Exception {
-		lock(docId, status, History.EVENT_LOCKED, user, comment);
-	}
-
-	@Override
-	public void lock(long docId, int status, String historyEvent, User user, String comment) throws Exception {
+	public void lock(long docId, int status, User user, History transaction) throws Exception {
 		Document document = documentDAO.findById(docId);
 		if (document.getStatus() != Document.DOC_UNLOCKED)
 			throw new Exception("Document is locked");
@@ -173,43 +162,46 @@ public class DocumentManagerImpl implements DocumentManager {
 		document.setLockUserId(user.getId());
 		document.setStatus(status);
 		document.setFolder(document.getFolder());
-		documentDAO.store(document);
 
-		// create history entry for this checkout event
-		historyDAO.createDocumentHistory(document, user, historyEvent, comment);
+		// Modify document history entry
+		transaction.setUserId(user.getId());
+		transaction.setUserName(user.getFullName());
+		documentDAO.store(document, transaction);
 
 		log.debug("locked document " + docId);
 	}
 
 	@Override
-	public Document create(File file, String filename, Menu folder, User user, Locale locale, boolean immediateIndexing)
-			throws Exception {
-		return create(file, filename, folder, user, locale, "", null, "", "", "", "", "", null, immediateIndexing);
+	public Document create(File file, String filename, Menu folder, User user, Locale locale,
+			boolean immediateIndexing, History transaction) throws Exception {
+		return create(file, filename, folder, user, locale, "", null, "", "", "", "", "", null, immediateIndexing,
+				transaction);
 	}
 
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale,
-			boolean immediateIndexing) throws Exception {
+			boolean immediateIndexing, History transaction) throws Exception {
 		String title = filename;
 		if (StringUtils.isNotEmpty(filename) && filename.lastIndexOf(".") > 0)
 			title = filename.substring(0, filename.lastIndexOf("."));
-		return create(content, filename, folder, user, locale, title, null, "", "", "", "", "", null, immediateIndexing);
+		return create(content, filename, folder, user, locale, title, null, "", "", "", "", "", null,
+				immediateIndexing, transaction);
 	}
 
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> tags, boolean immediateIndexing) throws Exception {
+			String versionDesc, Set<String> tags, boolean immediateIndexing, History transaction) throws Exception {
 		return create(content, filename, folder, user, locale, title, sourceDate, source, sourceAuthor, sourceType,
-				coverage, versionDesc, tags, null, null, immediateIndexing);
+				coverage, versionDesc, tags, null, null, immediateIndexing, transaction);
 	}
 
 	@Override
 	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> tags, boolean immediateIndexing) throws Exception {
+			String versionDesc, Set<String> tags, boolean immediateIndexing, History transaction) throws Exception {
 		return create(file, filename, folder, user, locale, title, sourceDate, source, sourceAuthor, sourceType,
-				coverage, versionDesc, tags, null, null, immediateIndexing);
+				coverage, versionDesc, tags, null, null, immediateIndexing, transaction);
 	}
 
 	private void store(Document doc, InputStream content) throws IOException {
@@ -319,7 +311,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
 			String sourceType, String coverage, Locale locale, Set<String> tags, String sourceId, String object,
-			String recipient, Long templateId, Map<String, ExtendedAttribute> attributes) throws Exception {
+			String recipient, Long templateId, Map<String, ExtendedAttribute> attributes, History transaction)
+			throws Exception {
 		try {
 			if (doc.getImmutable() == 0) {
 				doc.setTitle(title);
@@ -380,11 +373,13 @@ public class DocumentManagerImpl implements DocumentManager {
 				Version version = Version.create(doc, user, "", Version.EVENT_CHANGED,
 						Version.VERSION_TYPE.NEW_SUBVERSION);
 
-				documentDAO.store(doc);
+				// Modify document history entry
+				transaction.setUserId(user.getId());
+				transaction.setUserName(user.getFullName());
+				documentDAO.store(doc, transaction);
+
 				versionDAO.store(version);
 
-				/* create history entry */
-				historyDAO.createDocumentHistory(doc, user, History.EVENT_CHANGED, "");
 			} else {
 				throw new Exception("Document is immutable");
 			}
@@ -414,7 +409,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void moveToFolder(Document doc, Menu folder, User user) throws Exception {
+	public void moveToFolder(Document doc, Menu folder, User user, History transaction) throws Exception {
 		if (folder.equals(doc.getFolder()))
 			return;
 
@@ -423,9 +418,12 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc.setFolder(folder);
 			setUniqueTitle(doc);
 			setUniqueFilename(doc);
-			documentDAO.store(doc);
 
-			historyDAO.createDocumentHistory(doc, user, History.EVENT_MOVED, "");
+			// Modify document history entry
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+			documentDAO.store(doc, transaction);
+
 			Version version = Version.create(doc, user, "", Version.EVENT_MOVED, Version.VERSION_TYPE.NEW_SUBVERSION);
 			versionDAO.store(version);
 
@@ -450,9 +448,10 @@ public class DocumentManagerImpl implements DocumentManager {
 	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
-			boolean immediateIndexing) throws Exception {
+			boolean immediateIndexing, History transaction) throws Exception {
 		return create(file, filename, folder, user, locale, title, sourceDate, source, sourceAuthor, sourceType,
-				coverage, versionDesc, tags, templateId, extendedAttributes, null, null, null, null, immediateIndexing);
+				coverage, versionDesc, tags, templateId, extendedAttributes, null, null, null, null, immediateIndexing,
+				transaction);
 
 	}
 
@@ -460,17 +459,18 @@ public class DocumentManagerImpl implements DocumentManager {
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
-			boolean immediateIndexing) throws Exception {
+			boolean immediateIndexing, History transaction) throws Exception {
 		return create(content, filename, folder, user, locale, title, sourceDate, source, sourceAuthor, sourceType,
-				coverage, versionDesc, tags, templateId, extendedAttributes, null, null, null, null, immediateIndexing);
+				coverage, versionDesc, tags, templateId, extendedAttributes, null, null, null, null, immediateIndexing,
+				transaction);
 	}
 
 	@Override
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
-			String sourceId, String object, String recipient, String customId, boolean immediateIndexing)
-			throws Exception {
+			String sourceId, String object, String recipient, String customId, boolean immediateIndexing,
+			History transaction) throws Exception {
 
 		try {
 			Document doc = new Document();
@@ -539,12 +539,14 @@ public class DocumentManagerImpl implements DocumentManager {
 					}
 				}
 			}
-			documentDAO.store(doc);
 
-			/* store the document */
+			// Modify document history entry
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+			documentDAO.store(doc, transaction);
+
+			/* store the document into filesystem*/
 			store(doc, content);
-
-			historyDAO.createDocumentHistory(doc, user, History.EVENT_STORED, "");
 
 			File file = getDocumentFile(doc);
 			if (immediateIndexing) {
@@ -609,7 +611,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 	}
 
-	public Document copyToFolder(Document doc, Menu folder, User user) throws Exception {
+	public Document copyToFolder(Document doc, Menu folder, User user, History transaction) throws Exception {
 		File sourceFile = storer.getFile(doc.getId(), doc.getFileVersion());
 
 		// initialize the document
@@ -619,31 +621,35 @@ public class DocumentManagerImpl implements DocumentManager {
 		try {
 			return create(is, doc.getFileName(), folder, user, doc.getLocale(), doc.getTitle(), doc.getSourceDate(),
 					doc.getSource(), doc.getSourceAuthor(), doc.getSourceType(), doc.getCoverage(), "", null, null,
-					null, false);
+					null, false, transaction);
 		} finally {
 			is.close();
 		}
 	}
 
 	@Override
-	public void unlock(long docId, User user, String comment) throws Exception {
+	public void unlock(long docId, User user, History transaction) throws Exception {
 		Document document = documentDAO.findById(docId);
 		document.setLockUserId(null);
 		document.setStatus(Document.DOC_UNLOCKED);
-		documentDAO.store(document);
 
-		// create history entry for this UNLOCK event
-		historyDAO.createDocumentHistory(document, user, History.EVENT_UNLOCKED, comment);
+		// Modify document history entry
+		transaction.setUserId(user.getId());
+		transaction.setUserName(user.getFullName());
+		documentDAO.store(document, transaction);
 
 		log.debug("Unlocked document " + docId);
 	}
 
 	@Override
-	public void makeImmutable(long docId, User user, String reason) throws Exception {
+	public void makeImmutable(long docId, User user, History transaction) throws Exception {
 		Document document = documentDAO.findById(docId);
 		if (document.getImmutable() == 0) {
-			documentDAO.makeImmutable(docId);
-			historyDAO.createDocumentHistory(document, user, History.EVENT_IMMUTABLE, reason);
+			// Modify document history entry
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+			documentDAO.makeImmutable(docId, transaction);
+
 			log.debug("The document " + docId + " has been marked as immutable ");
 		} else {
 			throw new Exception("Document is immutable");
@@ -651,7 +657,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public List<Menu> deleteFolder(Menu folder, User user) throws Exception {
+	public List<Menu> deleteFolder(Menu folder, User user, History transaction) throws Exception {
 		List<Menu> deletableFolders = new ArrayList<Menu>();
 		List<Menu> notDeletableFolders = new ArrayList<Menu>();
 		List<Document> deletableDocs = new ArrayList<Document>();
@@ -710,8 +716,12 @@ public class DocumentManagerImpl implements DocumentManager {
 					parent = menuDAO.findById(parent.getParentId());
 				}
 			}
-			menuDAO.deleteAll(deletableFolders);
-			documentDAO.deleteAll(deletableDocs);
+
+			// Modify document history entry
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+			menuDAO.deleteAll(deletableFolders, transaction);
+			documentDAO.deleteAll(deletableDocs, transaction);
 			return notDeletableFolders;
 		} catch (Throwable e) {
 			log.error(e);
@@ -723,8 +733,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
-			String sourceId, String object, String recipient, String customId, boolean immediateIndexing)
-			throws Exception {
+			String sourceId, String object, String recipient, String customId, boolean immediateIndexing,
+			History transaction) throws Exception {
 		String _title = title;
 
 		if (StringUtils.isEmpty(title)) {
@@ -740,13 +750,13 @@ public class DocumentManagerImpl implements DocumentManager {
 		try {
 			return create(is, filename, folder, user, locale, _title, sourceDate, source, sourceAuthor, sourceType,
 					coverage, versionDesc, tags, templateId, extendedAttributes, sourceId, object, recipient, customId,
-					immediateIndexing);
+					immediateIndexing, transaction);
 		} finally {
 			is.close();
 		}
 	}
 
-	public void rename(Document doc, User user, String newName, boolean title) throws Exception {
+	public void rename(Document doc, User user, String newName, boolean title, History transaction) throws Exception {
 		if (doc.getImmutable() == 0) {
 			documentDAO.initialize(doc);
 			if (title) {
@@ -760,10 +770,11 @@ public class DocumentManagerImpl implements DocumentManager {
 				setUniqueFilename(doc);
 			}
 			doc.setIndexed(0);
-			documentDAO.store(doc);
 
-			// create history entry for this RENAMED event
-			historyDAO.createDocumentHistory(doc, user, History.EVENT_RENAMED, "");
+			// Modify document history entry
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+			documentDAO.store(doc, transaction);
 
 			Version version = Version.create(doc, user, "", Version.EVENT_RENAMED, Version.VERSION_TYPE.NEW_SUBVERSION);
 			versionDAO.store(version);

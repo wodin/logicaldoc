@@ -4,13 +4,19 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.logicaldoc.core.AbstractCoreTestCase;
+
 /**
  * Test case for the <code>SessionManager</code>
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 4.6
  */
-public class SessionManagerTest {
+public class SessionManagerTest extends AbstractCoreTestCase {
+
+	public SessionManagerTest(String name) {
+		super(name);
+	}
 
 	@Test
 	public void testNewSession() {

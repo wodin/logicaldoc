@@ -24,6 +24,7 @@ import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -342,6 +343,7 @@ public class UserForm {
 
 				user.setEmail(user.getEmail().toLowerCase());
 				user.setPasswordExpires(passwordExpires ? 1 : 0);
+				UserHistory history = null;
 
 				if (withPassword) {
 					if (!getPassword().equals(getRepass())) {
@@ -354,6 +356,14 @@ public class UserForm {
 						user.setDecodedPassword(getPassword());
 						user.setPasswordChanged(new Date());
 
+						history = new UserHistory();
+						history.setDate(new Date());
+						history.setUserId(user.getId());
+						history.setUserName(user.getFullName());
+						history.setEvent(UserHistory.EVENT_USER_PASSWORDCHANGED);
+						history.setComment("");
+						history.setSessionId(SessionManagement.getCurrentUserSessionId());
+
 						// Notify the user by email
 						notifyAccount(user, getPassword());
 					}
@@ -365,7 +375,6 @@ public class UserForm {
 				manager.removeUserFromAllGroups(user);
 
 				if (createNew) {
-					
 					// Generate an initial password
 					String password = new PasswordGenerator().generate(getConfig().getInt("password.size"));
 					user.setDecodedPassword(password);
@@ -391,13 +400,13 @@ public class UserForm {
 
 				manager.assignUserToGroups(user, ids);
 
-				boolean stored = dao.store(user);
+				boolean stored = dao.store(user, history);
 
 				if (!stored) {
 					Messages.addLocalizedError("errors.action.saveuser.notstored");
 				} else {
 					Messages.addLocalizedInfo("msg.action.changeuser");
-					
+
 					// Notify the user by email
 					if (createNew)
 						notifyAccount(user, password);

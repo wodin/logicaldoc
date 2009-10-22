@@ -7,9 +7,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.io.CryptUtil;
+import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 
 /**
@@ -46,16 +48,27 @@ public class PasswordBean {
 				return null;
 			}
 
+			UserHistory history = null;
+
 			if (StringUtils.isNotEmpty(getPassword()) && !user.getPassword().equals(getPassword())) {
 				// The password was changed
 				user.setDecodedPassword(getPassword());
 				user.setPasswordChanged(new Date());
+				// Add a user history entry
+				history = new UserHistory();
+				history.setDate(new Date());
+				history.setUserId(user.getId());
+				history.setUserName(user.getFullName());
+				history.setEvent(UserHistory.EVENT_USER_PASSWORDCHANGED);
+				history.setComment("");
+				history.setSessionId(SessionManagement.getCurrentUserSessionId());
 			}
 
 			user.setRepass("");
 
 			UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-			boolean stored = dao.store(user);
+
+			boolean stored = dao.store(user, history);
 
 			if (!stored) {
 				Messages.addLocalizedError("errors.action.saveuser.notstored");

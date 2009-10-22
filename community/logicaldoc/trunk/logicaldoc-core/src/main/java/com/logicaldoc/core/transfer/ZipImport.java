@@ -16,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -57,6 +58,8 @@ public class ZipImport {
 
 	private boolean notifyUser = true;
 
+	protected String sessionId = null;
+
 	public ZipImport() {
 	}
 
@@ -72,10 +75,11 @@ public class ZipImport {
 		this.immediateIndexing = immediateIndexing;
 	}
 
-	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId) {
+	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId, String sessionId) {
 		this.zipFile = zipsource;
 		this.locale = locale;
 		this.templateId = templateId;
+		this.sessionId = sessionId;
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		this.user = userDao.findById(userId);
@@ -116,9 +120,9 @@ public class ZipImport {
 			sendNotificationMessage();
 	}
 
-	public void process(String zipsource, Locale locale, Menu parent, long userId, Long templateId) {
+	public void process(String zipsource, Locale locale, Menu parent, long userId, Long templateId, String sessionId) {
 		File srcfile = new File(zipsource);
-		process(srcfile, locale, parent, userId, templateId);
+		process(srcfile, locale, parent, userId, templateId, sessionId);
 	}
 
 	/**
@@ -132,8 +136,15 @@ public class ZipImport {
 	protected void addEntry(File file, Menu parent) {
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		String menuName = file.getName();
-		if (file.isDirectory()) { // creates a logicaldoc folder
-			Menu menu = dao.createFolder(parent, menuName);
+		History transaction = new History();
+		transaction.setUserId(user.getId());
+		transaction.setUserName(user.getFullName());
+		transaction.setSessionId(sessionId);
+
+		if (file.isDirectory()) {
+			// creates a logicaldoc folder
+
+			Menu menu = dao.createFolder(parent, menuName, transaction);
 
 			File[] files = file.listFiles();
 
@@ -164,8 +175,10 @@ public class ZipImport {
 			// creates a document
 			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 			try {
+				transaction.setEvent(History.EVENT_STORED);
+				transaction.setComment("");
 				docManager.create(file, file.getName(), parent, user, locale, "", null, "", "", "", "", "", tagSet,
-						templateId, null, immediateIndexing);
+						templateId, null, immediateIndexing, transaction);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -185,7 +198,7 @@ public class ZipImport {
 		sysmess.setRecipient(user.getUserName());
 		ResourceBundle bundle = ResourceBundle.getBundle("/i18n/application", user.getLocale());
 		sysmess.setSubject(bundle.getString("zip.import.subject"));
-		String message=bundle.getString("zip.import.body");
+		String message = bundle.getString("zip.import.body");
 		String body = MessageFormat.format(message, new String[] { zipFile.getName() });
 		sysmess.setMessageText(body);
 		sysmess.setSentDate(now);

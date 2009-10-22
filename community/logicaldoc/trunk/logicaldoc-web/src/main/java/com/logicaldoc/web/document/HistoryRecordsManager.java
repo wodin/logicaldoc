@@ -48,7 +48,7 @@ public class HistoryRecordsManager {
 		try {
 			HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			histories = historyDAO.findByDocId(doc.getId());
-			Collections.sort(histories,new Comparator<History>(){
+			Collections.sort(histories, new Comparator<History>() {
 				@Override
 				public int compare(History o1, History o2) {
 					return o2.getDate().compareTo(o1.getDate());

@@ -15,7 +15,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.History;
-import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
@@ -245,7 +244,7 @@ public class RightsRecordsManager {
 			menu.getMenuGroups().add(mg);
 		}
 
-		mdao.store(menu, false);
+		mdao.store(menu, false, null);
 		initRights(menu.getId());
 	}
 
@@ -269,7 +268,7 @@ public class RightsRecordsManager {
 			menu.getMenuGroups().remove(mg);
 		}
 
-		mdao.store(menu, false);
+		mdao.store(menu, false, null);
 		initRights(menu.getId());
 	}
 
@@ -405,7 +404,14 @@ public class RightsRecordsManager {
 					mg.setWorkflow(0);
 				}
 
-				boolean stored = mdao.store(folder, false);
+				// Add a folder history entry
+				History history = new History();
+				history.setUserId(SessionManagement.getUserId());
+				history.setUserName(SessionManagement.getUsername());
+				history.setEvent(History.EVENT_FOLDER_PERMISSION);
+				history.setSessionId(SessionManagement.getCurrentUserSessionId());
+
+				boolean stored = mdao.store(folder, false, history);
 				if (!stored) {
 					sqlerrors = true;
 				}
@@ -413,7 +419,14 @@ public class RightsRecordsManager {
 				if (mg != null) {
 					folder.getMenuGroups().remove(mg);
 
-					boolean deleted = mdao.store(folder, false);
+					// Add a folder history entry
+					History history = new History();
+					history.setUserId(SessionManagement.getUserId());
+					history.setUserName(SessionManagement.getUsername());
+					history.setEvent(History.EVENT_FOLDER_PERMISSION);
+					history.setSessionId(SessionManagement.getCurrentUserSessionId());
+
+					boolean deleted = mdao.store(folder, false, history);
 
 					if (!deleted) {
 						sqlerrors = true;
@@ -426,11 +439,6 @@ public class RightsRecordsManager {
 			log.error("SQL errors saving permissions on folder " + folder.getText());
 			throw new Exception("SQL errors saving permissions on folder " + folder.getText());
 		}
-
-		// Add a folder history entry
-		HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-		historyDAO.createFolderHistory(folder, SessionManagement.getUser(), History.EVENT_FOLDER_PERMISSION, "");
-
 		if (recursive) {
 			// recursively apply permissions to all submenus where the user has
 			// security management permission

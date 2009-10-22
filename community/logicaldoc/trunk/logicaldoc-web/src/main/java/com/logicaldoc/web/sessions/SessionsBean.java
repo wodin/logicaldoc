@@ -30,6 +30,6 @@ public class SessionsBean {
 	}
 
 	public String getCurrentSessionId() {
-		return SessionManagement.getrCurrentUserSessionId();
+		return SessionManagement.getCurrentUserSessionId();
 	}
 }

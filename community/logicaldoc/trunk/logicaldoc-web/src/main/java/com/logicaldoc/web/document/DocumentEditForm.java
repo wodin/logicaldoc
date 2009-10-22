@@ -24,6 +24,7 @@ import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
@@ -540,10 +541,16 @@ public class DocumentEditForm {
 					duplicateCustomId = true;
 					return "customIdDuplicated";
 				} else {
+					// Create the document history event
+					History transaction = new History();
+					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+					transaction.setEvent(History.EVENT_STORED);
+					transaction.setComment("");
+
 					Document doc = documentManager.create(file, filename, folder, SessionManagement.getUser(),
 							LocaleUtil.toLocale(language), title, getSourceDate(), source, sourceAuthor, sourceType,
 							coverage, versionDesc, tgs, template, attrs, sourceId, object, recipient, getCustomId(),
-							immediateIndexing);
+							immediateIndexing, transaction);
 					if (StringUtils.isNotEmpty(doc.getCustomId()))
 						Messages.addInfo(Messages.getMessage("document.inserted", doc.getCustomId()));
 				}
@@ -601,8 +608,15 @@ public class DocumentEditForm {
 						}
 					}
 
+					// Create the document history event
+					History transaction = new History();
+					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+					transaction.setEvent(History.EVENT_CHANGED);
+					transaction.setComment("");
+
 					documentManager.update(doc, user, title, source, sourceAuthor, sourceDate, sourceType, coverage,
-							LocaleUtil.toLocale(language), tgs, sourceId, object, recipient, template, attrs);
+							LocaleUtil.toLocale(language), tgs, sourceId, object, recipient, template, attrs,
+							transaction);
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 					Messages.addError(e.getMessage());
@@ -704,11 +718,17 @@ public class DocumentEditForm {
 			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
 
 				try {
+					// Create the document history event
+					History transaction = new History();
+					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+					transaction.setEvent(History.EVENT_UNLOCKED);
+					transaction.setComment("");
+					
 					// Unchekout the document; throws an exception if something
 					// goes wrong
 					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 							DocumentManager.class);
-					documentManager.unlock(document.getId(), SessionManagement.getUser(), null);
+					documentManager.unlock(document.getId(), SessionManagement.getUser(), transaction);
 
 					/* create positive log message */
 					Messages.addLocalizedInfo("document.action.unlocked");
@@ -770,12 +790,19 @@ public class DocumentEditForm {
 					}
 
 					try {
+						// Create the document history event
+						History transaction = new History();
+						transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+						transaction.setEvent(History.EVENT_CHECKEDIN);
+						transaction.setComment("");
+
 						// checkin the document; throws an exception if
 						// something goes wrong
 						DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 								DocumentManager.class);
 						documentManager.checkin(document.getId(), new FileInputStream(file), fileName,
-								SessionManagement.getUser(), versionType, this.versionDesc, immediateIndexing);
+								SessionManagement.getUser(), versionType, this.versionDesc, immediateIndexing,
+								transaction);
 
 						/* create positive log message */
 						Messages.addLocalizedInfo("msg.action.savedoc");

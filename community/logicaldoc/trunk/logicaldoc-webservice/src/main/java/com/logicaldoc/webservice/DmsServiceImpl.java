@@ -32,7 +32,6 @@ import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
-import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.LuceneDocument;
@@ -91,11 +90,20 @@ public class DmsServiceImpl implements DmsService {
 				// Get file to upload inputStream
 				InputStream stream = content.getInputStream();
 
+				// Create the document history event
+				History transaction = new History();
+				transaction.setSessionId(sid);
+				transaction.setEvent(History.EVENT_CHECKEDIN);
+				transaction.setComment("");
+				transaction.setUserId(user.getId());
+				transaction.setUserName(user.getFullName());
+
 				// checkin the document; throws an exception if
 				// something goes wrong
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				documentManager.checkin(document.getId(), stream, filename, user, versionType, description, false);
+				documentManager.checkin(document.getId(), stream, filename, user, versionType, description, false,
+						transaction);
 
 				/* create positive log message */
 				log.info("Document " + id + " checked in");
@@ -119,8 +127,16 @@ public class DmsServiceImpl implements DmsService {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(id);
 		checkWriteEnable(user, doc.getFolder().getId());
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSessionId(sid);
+		transaction.setEvent(History.EVENT_CHECKEDOUT);
+		transaction.setComment("");
+		transaction.setUserId(user.getId());
+		transaction.setUserName(user.getFullName());
+
 		DocumentManager DocumentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		DocumentManager.checkout(id, user);
+		DocumentManager.checkout(id, user, transaction);
 		return "ok";
 	}
 
@@ -173,12 +189,20 @@ public class DmsServiceImpl implements DmsService {
 		// Get file to upload inputStream
 		InputStream stream = content.getInputStream();
 
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSessionId(sid);
+		transaction.setEvent(History.EVENT_STORED);
+		transaction.setComment("");
+		transaction.setUserId(user.getId());
+		transaction.setUserName(user.getFullName());
+
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
 		try {
 			Document doc = documentManager.create(stream, filename, folder, user, LocaleUtil.toLocale(language), null,
 					date, source, author, sourceType, coverage, versionDesc, tgs, template != null ? template.getId()
-							: null, attributes, sourceId, object, recipient, customId, false);
+							: null, attributes, sourceId, object, recipient, customId, false, transaction);
 			return String.valueOf(doc.getId());
 		} finally {
 			stream.close();
@@ -208,15 +232,19 @@ public class DmsServiceImpl implements DmsService {
 
 		boolean stored = dao.store(menu);
 		menu.setPath(parentMenu.getPath() + "/" + parentMenu.getId());
-		stored = dao.store(menu);
+		// Add a folder history entry
+		History transaction = new History();
+		transaction.setUserId(user.getId());
+		transaction.setUserName(user.getFullName());
+		transaction.setEvent(History.EVENT_FOLDER_CREATED);
+		transaction.setSessionId(sid);
+		stored = dao.store(menu, transaction);
 
 		if (!stored) {
 			log.error("Folder " + name + " not created");
 			throw new Exception("error");
 		} else {
 			log.info("Created folder " + name);
-			HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-			historyDAO.createFolderHistory(menu, user, History.EVENT_FOLDER_CREATED, "");
 		}
 
 		return Long.toString(menu.getId());
@@ -231,7 +259,14 @@ public class DmsServiceImpl implements DmsService {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(id);
 		checkWriteEnable(user, doc.getFolder().getId());
-		docDao.delete(id);
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSessionId(sid);
+		transaction.setEvent(History.EVENT_DELETED);
+		transaction.setComment("");
+		transaction.setUserId(user.getId());
+		transaction.setUserName(user.getFullName());
+		docDao.delete(id, transaction);
 		return "ok";
 	}
 
@@ -244,7 +279,13 @@ public class DmsServiceImpl implements DmsService {
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		checkWriteEnable(user, folder);
 		try {
-			mdao.delete(folder);
+			// Add a folder history entry
+			History transaction = new History();
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+			transaction.setEvent(History.EVENT_FOLDER_DELETED);
+			transaction.setSessionId(sid);
+			mdao.delete(folder, transaction);
 			return "ok";
 		} catch (Exception e) {
 			log.error("Some elements were not deleted");
@@ -545,9 +586,13 @@ public class DmsServiceImpl implements DmsService {
 			throw new Exception("duplicate folder name " + name);
 		} else {
 			menu.setText(name);
-			dao.store(menu);
-			HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-			historyDAO.createFolderHistory(menu, user, History.EVENT_FOLDER_RENAMED, "");
+			// Add a folder history entry
+			History transaction = new History();
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+			transaction.setEvent(History.EVENT_FOLDER_RENAMED);
+			transaction.setSessionId(sid);
+			dao.store(menu, transaction);
 			return String.valueOf(menu.getId());
 		}
 	}
@@ -591,11 +636,19 @@ public class DmsServiceImpl implements DmsService {
 			}
 		}
 
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSessionId(sid);
+		transaction.setEvent(History.EVENT_CHANGED);
+		transaction.setComment("");
+		transaction.setUserId(user.getId());
+		transaction.setUserName(user.getFullName());
+
 		DocumentTemplateDAO templDao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		DocumentTemplate template = templDao.findByName(templateName);
 		manager.update(doc, user, title, source, sourceAuthor, sdate, sourceType, coverage, LocaleUtil
 				.toLocale(language), setTags, sourceId, object, recipient, template != null ? template.getId() : null,
-				attributes);
+				attributes, transaction);
 		return Long.toString(doc.getId());
 	}
 

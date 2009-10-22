@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.searchengine.store.Storer;
@@ -185,8 +186,15 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		user.setId(1);
 		Version version = Version.create(doc, user, "comment", Version.EVENT_CHECKIN, VERSION_TYPE.OLD_VERSION);
 
+		History transaction = new History();
+		transaction.setFolderId(menu.getId());
+		transaction.setDocId(doc.getId());
+		transaction.setEvent(History.EVENT_STORED);
+		transaction.setUserId(1);
+		transaction.setNotified(0);
+
 		assertTrue(docFile.exists());
-		assertTrue(dao.store(doc));
+		assertTrue(dao.store(doc, transaction));
 
 		assertTrue(docFile.exists());
 		assertEquals(5, doc.getId());
@@ -194,7 +202,13 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertNotNull(doc);
 		dao.initialize(doc);
 
-		dao.store(doc);
+		transaction = new History();
+		transaction.setFolderId(menu.getId());
+		transaction.setDocId(doc.getId());
+		transaction.setEvent(History.EVENT_CHANGED);
+		transaction.setUserId(1);
+		transaction.setNotified(0);
+		dao.store(doc, transaction);
 
 		docFile = storer.getFile(doc, doc.getFileVersion(), null);
 		FileUtils.forceMkdir(docFile.getParentFile());
@@ -327,7 +341,12 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testMakeImmutable() {
-		dao.makeImmutable(2);
+		History transaction = new History();
+		transaction.setFolderId(103);
+		transaction.setDocId(2L);
+		transaction.setUserId(1);
+		transaction.setNotified(0);
+		dao.makeImmutable(2, transaction);
 		assertEquals(1, dao.findById(2).getImmutable());
 	}
 

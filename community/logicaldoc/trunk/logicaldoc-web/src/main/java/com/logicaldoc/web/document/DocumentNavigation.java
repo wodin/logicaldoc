@@ -18,6 +18,7 @@ import com.logicaldoc.core.document.DiscussionComment;
 import com.logicaldoc.core.document.DiscussionThread;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.searchengine.Result;
@@ -289,7 +290,15 @@ public class DocumentNavigation extends NavigationBean {
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		try {
-			List<Menu> notDeletableFolders = manager.deleteFolder(selectedDir.getMenu(), SessionManagement.getUser());
+			// Create the folder history event. It will be used by the
+			// 'deleteAll' methods of MenuDAO and DocumentDAO. The event will be
+			// set by DAOs.
+			History transaction = new History();
+			transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+			transaction.setComment("");
+
+			List<Menu> notDeletableFolders = manager.deleteFolder(selectedDir.getMenu(), SessionManagement.getUser(),
+					transaction);
 			if (notDeletableFolders.size() > 0)
 				Messages.addLocalizedWarn("errors.action.deletefolder");
 			else
