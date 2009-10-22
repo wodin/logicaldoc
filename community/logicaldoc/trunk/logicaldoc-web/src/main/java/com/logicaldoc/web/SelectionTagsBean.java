@@ -288,6 +288,8 @@ public class SelectionTagsBean {
 		items.add(new SelectItem("folder", Messages.getMessage("folder")));
 		items.add(new SelectItem("date", Messages.getMessage("msg.jsp.publishedon")));
 		items.add(new SelectItem("creation", Messages.getMessage("document.createdon")));
+		items.add(new SelectItem("creator", Messages.getMessage("document.createdfrom")));
+		items.add(new SelectItem("publisher", Messages.getMessage("document.publishedfrom")));
 		items.add(new SelectItem("sourceDate", Messages.getMessage("date")));
 		items.add(new SelectItem("source", Messages.getMessage("document.source")));
 		items.add(new SelectItem("sourceAuthor", Messages.getMessage("document.author")));
