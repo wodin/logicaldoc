@@ -7,6 +7,7 @@ import java.util.List;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.workflow.editor.controll.EditController;
 import com.logicaldoc.workflow.editor.message.DeployMessage;
+import com.logicaldoc.workflow.model.ModelConfiguration;
 
 public class WorkflowTask extends BaseWorkflowModel {
 
@@ -135,9 +136,8 @@ public class WorkflowTask extends BaseWorkflowModel {
 
 	@Override
 	public EditController getController() {
-
-		EditController controller = (EditController) Context.getInstance()
-				.getBean("workflowTaskController");
+		EditController controller = ((ModelConfiguration) Context.getInstance()
+				.getBean(ModelConfiguration.class)).getControllers().get("WorkflowTask");
 		controller.initialize(this);
 		return controller;
 	}

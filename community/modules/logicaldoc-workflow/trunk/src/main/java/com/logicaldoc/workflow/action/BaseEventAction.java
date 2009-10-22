@@ -10,10 +10,8 @@ import com.logicaldoc.workflow.transform.WorkflowTransformService;
 
 public abstract class BaseEventAction implements ActionHandler {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8272469489065687967L;
+
 	private WorkflowTransformService workflowTransformService;
 
 	public BaseEventAction() {

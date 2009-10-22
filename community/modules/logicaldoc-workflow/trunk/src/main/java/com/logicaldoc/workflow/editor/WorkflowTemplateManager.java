@@ -1,6 +1,5 @@
 package com.logicaldoc.workflow.editor;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,6 +25,7 @@ import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.FacesUtil;
 import com.logicaldoc.workflow.WorkflowService;
+import com.logicaldoc.workflow.debug.TRANSMITTER;
 import com.logicaldoc.workflow.editor.controll.DragAndDropSupportController;
 import com.logicaldoc.workflow.editor.controll.EditController;
 import com.logicaldoc.workflow.editor.controll.DragAndDropSupportController.Container;
@@ -33,6 +33,7 @@ import com.logicaldoc.workflow.editor.message.DeployMessage;
 import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
 import com.logicaldoc.workflow.editor.model.WorkflowEditorException;
 import com.logicaldoc.workflow.editor.model.WorkflowTask;
+import com.logicaldoc.workflow.model.ModelConfiguration;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
 import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
@@ -50,7 +51,7 @@ public class WorkflowTemplateManager {
 
 	private XStream xstream = new XStream();
 
-	private HashMap<String, EditController> instantiatedCmponents = new HashMap<String, EditController>();
+	private ModelConfiguration modelConfiguration;
 
 	protected static Log log = LogFactory.getLog(WorkflowTemplateManager.class);
 
@@ -65,6 +66,13 @@ public class WorkflowTemplateManager {
 	private Long workflowTemplateId;
 
 	private List<DeployMessage> errorMessages;
+
+	public String getXMLData() {
+		return TRANSMITTER.XML_DATA;
+	}
+
+	public void setXMLData(String data) {
+	}
 
 	public WorkflowTemplateManager() {
 		this.initializing();
@@ -82,8 +90,7 @@ public class WorkflowTemplateManager {
 		this.workflowService = workflowService;
 	}
 
-	public void setWorkflowTransformService(
-			WorkflowTransformService workflowTransformService) {
+	public void setWorkflowTransformService(WorkflowTransformService workflowTransformService) {
 		this.workflowTransformService = workflowTransformService;
 	}
 
@@ -99,32 +106,17 @@ public class WorkflowTemplateManager {
 		this.xstream = xstream;
 	}
 
-	public void setWorkflowTemplateLoader(
-			WorkflowTemplateLoader workflowTemplateLoader) {
+	public void setWorkflowTemplateLoader(WorkflowTemplateLoader workflowTemplateLoader) {
 		this.workflowTemplateLoader = workflowTemplateLoader;
-	}
-
-	public void setBPMModelController(
-			HashMap<String, EditController> bpmModelController) {
-		this.instantiatedCmponents = bpmModelController;
-	}
-
-	public void setInstantiioatedCmponents(
-			HashMap<String, EditController> instantiatedCmponents) {
-		this.instantiatedCmponents = instantiatedCmponents;
 	}
 
 	@SuppressWarnings("unchecked")
 	public void initializing() {
 		this.workflowTemplate = new WorkflowTemplate();
 		this.persistenceTemplate = new WorkflowPersistenceTemplate();
-		this.workflowService = (WorkflowService) Context.getInstance().getBean(
-				"workflowService");
-		this.workflowTransformService = (WorkflowTransformService) Context
-				.getInstance().getBean("workflowTransformService");
-		this.instantiatedCmponents = (HashMap<String, EditController>) Context
-				.getInstance().getBean("bpmModelController");
-
+		this.workflowService = (WorkflowService) Context.getInstance().getBean("workflowService");
+		this.workflowTransformService = (WorkflowTransformService) Context.getInstance().getBean(
+				"workflowTransformService");
 	}
 
 	public List<SelectItem> getTimeUnits() {
@@ -142,32 +134,24 @@ public class WorkflowTemplateManager {
 	}
 
 	public String addWorkflowComponent(ActionEvent ae) {
-		UIParameter param = (UIParameter) ((UIComponent) ae.getSource())
-				.getChildren().get(0);
-		EditController editController = this.instantiatedCmponents.get(param
-				.getValue());
+		UIParameter param = (UIParameter) ((UIComponent) ae.getSource()).getChildren().get(0);
+		EditController editController = modelConfiguration.getControllers().get(param.getValue());
 
-		if (editController == null)
-			throw new WorkflowEditorException(
-					"No match with an instantiated controller");
-
-		BaseWorkflowModel workflowModel = editController.instantiateNew();
-
-		this.workflowTemplate.getWorkflowComponents().add(workflowModel);
-
+		if (editController == null) {
+			Messages.addLocalizedError("feature.enterprise");
+		} else {
+			BaseWorkflowModel workflowModel = editController.instantiateNew();
+			this.workflowTemplate.getWorkflowComponents().add(workflowModel);
+		}
 		return null;
 	}
 
 	public String removeWorkflowComponent() {
-		HttpServletRequest request = (HttpServletRequest) FacesContext
-				.getCurrentInstance().getExternalContext().getRequest();
-		BaseWorkflowModel baseWorkflowModel = (BaseWorkflowModel) request
-				.getAttribute("component");
-
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+				.getRequest();
+		BaseWorkflowModel baseWorkflowModel = (BaseWorkflowModel) request.getAttribute("component");
 		this.workflowTemplate.getWorkflowComponents().remove(baseWorkflowModel);
-
 		return null;
-
 	}
 
 	public List<BaseWorkflowModel> getWorkflowComponents() {
@@ -180,20 +164,17 @@ public class WorkflowTemplateManager {
 
 	public String setupWorkflow() {
 		DocumentsRecordsManager documentsRecordsManager = (DocumentsRecordsManager) FacesUtil
-		.accessBeanFromFacesContext("documentsRecordsManager",
-				FacesContext.getCurrentInstance(), log);
-		if(documentsRecordsManager.getSelection().isEmpty()){
+				.accessBeanFromFacesContext("documentsRecordsManager", FacesContext.getCurrentInstance(), log);
+		if (documentsRecordsManager.getSelection().isEmpty()) {
 			Messages.addLocalizedWarn("noselection");
 			return null;
 		}
-		
-		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil
-				.accessBeanFromFacesContext("documentNavigation", FacesContext
-						.getCurrentInstance(), log));
-		documentNavigation.setSelectedPanel(new PageContentBean(
-				"workflow/wizard"));
-		StartWorkflowWizard startWorkflowWizard = (StartWorkflowWizard) Context
-				.getInstance().getBean("StartWorkflowWizard");
+
+		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
+				"documentNavigation", FacesContext.getCurrentInstance(), log));
+		documentNavigation.setSelectedPanel(new PageContentBean("workflow/wizard"));
+		StartWorkflowWizard startWorkflowWizard = (StartWorkflowWizard) Context.getInstance().getBean(
+				"StartWorkflowWizard");
 		startWorkflowWizard.init();
 
 		return null;
@@ -229,9 +210,8 @@ public class WorkflowTemplateManager {
 				continue;
 
 			if ((param.getValue() instanceof BaseWorkflowModel) == false)
-				throw new WorkflowEditorException(
-						"Given Parameter must be a base of "
-								+ BaseWorkflowModel.class.getSimpleName());
+				throw new WorkflowEditorException("Given Parameter must be a base of "
+						+ BaseWorkflowModel.class.getSimpleName());
 
 			baseWorkflowModel = (BaseWorkflowModel) param.getValue();
 
@@ -239,8 +219,7 @@ public class WorkflowTemplateManager {
 		}
 
 		if (baseWorkflowModel == null)
-			throw new WorkflowEditorException(
-					"No BaseWorkflowModel has been passed");
+			throw new WorkflowEditorException("No BaseWorkflowModel has been passed");
 
 		// if we have an existing workflowmodel we have to call invalidate
 
@@ -265,8 +244,7 @@ public class WorkflowTemplateManager {
 	public void dragObject(DragEvent event) {
 		if (event.getEventType() == DndEvent.DRAGGING) {
 			if (draggedObject == null)
-				draggedObject = (BaseWorkflowModel) ((HtmlPanelGroup) event
-						.getComponent()).getDragValue();
+				draggedObject = (BaseWorkflowModel) ((HtmlPanelGroup) event.getComponent()).getDragValue();
 		} else if ((event.getEventType() == DndEvent.DRAG_CANCEL)) {
 			draggedObject = null;
 		}
@@ -278,8 +256,7 @@ public class WorkflowTemplateManager {
 
 	public void dropObject(DropEvent event) {
 		if (event.getEventType() == DndEvent.DROPPED) {
-			BaseWorkflowModel droppedZone = (BaseWorkflowModel) ((HtmlPanelGroup) event
-					.getComponent()).getDropValue();
+			BaseWorkflowModel droppedZone = (BaseWorkflowModel) ((HtmlPanelGroup) event.getComponent()).getDropValue();
 			BaseWorkflowModel draggedObject = this.draggedObject;
 			this.draggedObject = null;
 
@@ -288,10 +265,12 @@ public class WorkflowTemplateManager {
 			cnt.droppingZone = droppedZone;
 
 			try {
-				DragAndDropSupportController dndController = ((DragAndDropSupportController) this.instantiatedCmponents
-						.get(cnt.droppingZone.getClass().getSimpleName()));
-
-				dndController.droppedObject(cnt);
+				DragAndDropSupportController dndController = modelConfiguration.getControllers().get(
+						cnt.droppingZone.getClass().getSimpleName());
+				if (dndController == null)
+					Messages.addLocalizedError("feature.enterprise");
+				else
+					dndController.droppedObject(cnt);
 			} catch (Exception e) {
 				throw new WorkflowEditorException(e);
 			}
@@ -302,10 +281,8 @@ public class WorkflowTemplateManager {
 	public List<SelectItem> getAvailableWorkflowTemplates() {
 		List<SelectItem> workflowTemplates = new LinkedList<SelectItem>();
 
-		for (WorkflowPersistenceTemplate template : this.workflowTemplateLoader
-				.getAvailableWorkflowTemplates())
-			workflowTemplates.add(new SelectItem(template.getId(), template
-					.getName()));
+		for (WorkflowPersistenceTemplate template : this.workflowTemplateLoader.getAvailableWorkflowTemplates())
+			workflowTemplates.add(new SelectItem(template.getId(), template.getName()));
 
 		return workflowTemplates;
 
@@ -313,8 +290,7 @@ public class WorkflowTemplateManager {
 
 	public void deleteWorkflowComponent(ActionEvent actionEvent) {
 		UIComponent component = (UIComponent) actionEvent.getSource();
-		BaseWorkflowModel model = (BaseWorkflowModel) ((UIParameter) component
-				.getChildren().get(0)).getValue();
+		BaseWorkflowModel model = (BaseWorkflowModel) ((UIParameter) component.getChildren().get(0)).getValue();
 
 		this.workflowTemplate.getWorkflowComponents().remove(model);
 	}
@@ -325,8 +301,7 @@ public class WorkflowTemplateManager {
 
 		String xmlData = xstream.toXML(this.workflowTemplate);
 		this.persistenceTemplate.setXmldata(xmlData);
-		Long id = this.workflowTemplateLoader.saveWorkflowTemplate(
-				this.persistenceTemplate,
+		Long id = this.workflowTemplateLoader.saveWorkflowTemplate(this.persistenceTemplate,
 				WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
 		this.persistenceTemplate.setId(id);
 
@@ -360,9 +335,8 @@ public class WorkflowTemplateManager {
 
 	public String deleteWorkflowTemplate() {
 
-		WorkflowPersistenceTemplate workflowTemplate = this.workflowTemplateLoader
-				.loadWorkflowTemplate(this.workflowTemplateId,
-						WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
+		WorkflowPersistenceTemplate workflowTemplate = this.workflowTemplateLoader.loadWorkflowTemplate(
+				this.workflowTemplateId, WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
 
 		this.workflowTemplateLoader.deleteWorkflowTemplate(workflowTemplate);
 
@@ -381,12 +355,10 @@ public class WorkflowTemplateManager {
 		this.errorMessages = new LinkedList<DeployMessage>();
 
 		if (this.workflowTemplate.getWorkflowComponents().size() == 0)
-			this.errorMessages.add(new DeployMessage(this.workflowTemplate,
-					"No workflow-component have been added"));
+			this.errorMessages.add(new DeployMessage(this.workflowTemplate, "No workflow-component have been added"));
 
 		boolean workflowTaskExist = false;
-		for (BaseWorkflowModel model : this.workflowTemplate
-				.getWorkflowComponents()) {
+		for (BaseWorkflowModel model : this.workflowTemplate.getWorkflowComponents()) {
 
 			if (model instanceof WorkflowTask)
 				workflowTaskExist = true;
@@ -412,32 +384,27 @@ public class WorkflowTemplateManager {
 		 * this.workflowService.undeployWorkflow(definition.getDefinitionId()); }
 		 */
 
-		this.persistenceTemplate.setXmldata(xstream
-				.toXML(this.workflowTemplate));
+		this.persistenceTemplate.setXmldata(xstream.toXML(this.workflowTemplate));
 		this.workflowTemplateLoader.deployWorkflowTemplate(persistenceTemplate);
 		this.workflowService.deployWorkflow(this.workflowTemplate);
 
 		return null;
 	}
 
-
 	public List<SelectItem> getPossibleStartStates() {
 		List<SelectItem> possibleStartStates = new LinkedList<SelectItem>();
 
-		for (BaseWorkflowModel model : this.workflowTemplate
-				.getWorkflowComponents()) {
+		for (BaseWorkflowModel model : this.workflowTemplate.getWorkflowComponents()) {
 
 			if (model.isPossibleStartState())
-				possibleStartStates.add(new SelectItem(model.getId(), model
-						.getName()));
+				possibleStartStates.add(new SelectItem(model.getId(), model.getName()));
 		}
 
 		return possibleStartStates;
 	}
 
 	public void undeployAllDefinitions() {
-		List<WorkflowDefinition> definitions = this.workflowService
-				.getAllDefinitions();
+		List<WorkflowDefinition> definitions = this.workflowService.getAllDefinitions();
 		for (WorkflowDefinition def : definitions) {
 			this.workflowService.undeployWorkflow(def.getDefinitionId());
 		}
@@ -454,13 +421,11 @@ public class WorkflowTemplateManager {
 			return null;
 
 		this.initializing();
-		this.persistenceTemplate = this.workflowTemplateLoader
-				.loadWorkflowTemplate(this.workflowTemplateId,
-						WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
+		this.persistenceTemplate = this.workflowTemplateLoader.loadWorkflowTemplate(this.workflowTemplateId,
+				WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
 		if (this.persistenceTemplate.getXmldata() != null
 				&& ((String) this.persistenceTemplate.getXmldata()).getBytes().length > 0) {
-			this.workflowTemplate = this.workflowTransformService
-					.fromWorkflowDefinitionToObject(persistenceTemplate);
+			this.workflowTemplate = this.workflowTransformService.fromWorkflowDefinitionToObject(persistenceTemplate);
 		}
 
 		return null;
@@ -476,5 +441,9 @@ public class WorkflowTemplateManager {
 
 	public void closeErrorMessageWindow() {
 		this.errorMessages = null;
+	}
+
+	public void setModelConfiguration(ModelConfiguration modelConfiguration) {
+		this.modelConfiguration = modelConfiguration;
 	}
 }

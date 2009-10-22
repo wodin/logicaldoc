@@ -1,11 +1,13 @@
 package com.logicaldoc.workflow.transform;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
 import com.logicaldoc.workflow.editor.model.Transition;
 import com.logicaldoc.workflow.editor.model.WorkflowTask;
@@ -37,8 +39,15 @@ public class JBPMWorkflowTask implements TransformModel {
 		// still in development...
 
 		Element assignmentNode = wr.createElement("assignment");
-		assignmentNode.setAttribute("class",
-				"com.logicaldoc.workflow.action.DefaultAssignmentHandler");
+		try {
+			PropertiesBean pbean = new PropertiesBean();
+			assignmentNode.setAttribute("class",
+			pbean.getProperty("workflow.assignment.handler"));
+		} catch (IOException e) {
+			assignmentNode.setAttribute("class",
+			"com.logicaldoc.workflow.action.DefaultAssignmentHandler");
+		}
+		
 		Element taskId = wr.createElement("taskId");
 		taskId.setTextContent(workflowTask.getId());
 		assignmentNode.appendChild(taskId);
@@ -105,8 +114,15 @@ public class JBPMWorkflowTask implements TransformModel {
 			}
 
 			Element actionTimer = wr.createElement("action");
-			actionTimer.setAttribute("class",
-					"com.logicaldoc.workflow.action.DefaultRemindHandler");
+			
+			try {
+				PropertiesBean pbean = new PropertiesBean();
+				actionTimer.setAttribute("class",
+				pbean.getProperty("workflow.remind.handler"));
+			} catch (IOException e) {
+				actionTimer.setAttribute("class",
+				"com.logicaldoc.workflow.action.DefaultRemindHandler");
+			}
 			timer.appendChild(actionTimer);
 
 			task.appendChild(timer);

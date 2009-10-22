@@ -47,6 +47,28 @@
 		</library>
    	</runtime>
 	
+	<extension-point id="WorkflowModel">
+        <parameter-def id="name" />
+		<parameter-def id="controller" />
+		<parameter-def id="transformer" />
+	</extension-point>
+		
+	<extension plugin-id="logicaldoc-workflow" point-id="WorkflowModel"  id="taskWorkflowModel">
+		<parameter id="name" value="WorkflowTask"/>
+		<parameter id="controller" value="com.logicaldoc.workflow.editor.controll.TaskController"/>
+		<parameter id="transformer" value="com.logicaldoc.workflow.transform.JBPMWorkflowTask"/>
+	</extension>
+	<extension plugin-id="logicaldoc-workflow" point-id="WorkflowModel"  id="transitionWorkflowModel">
+		<parameter id="name" value="Transition"/>
+		<parameter id="controller" value="com.logicaldoc.workflow.editor.controll.TransitionController"/>
+		<parameter id="transformer" value=""/>
+	</extension>
+	<extension plugin-id="logicaldoc-workflow" point-id="WorkflowModel"  id="endstateWorkflowModel">
+		<parameter id="name" value="EndState"/>
+		<parameter id="controller" value="com.logicaldoc.workflow.editor.controll.EndStateController"/>
+		<parameter id="transformer" value="com.logicaldoc.workflow.transform.JBPMEndState"/>
+	</extension>
+
 	<extension plugin-id="logicaldoc-core" point-id="DocumentToolbar" id="workflowToolbar">
 		<parameter id="action" value="WorkflowTemplateManager.setupWorkflow"/>
 		<parameter id="title" value="workflow.startworkflow"/>
