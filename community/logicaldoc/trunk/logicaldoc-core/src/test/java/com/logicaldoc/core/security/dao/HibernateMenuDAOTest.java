@@ -7,6 +7,7 @@ import java.util.Set;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
@@ -53,14 +54,25 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		// Load an existing menu and modify it
 		menu = dao.findById(15);
 		assertEquals("search.advanced", menu.getText());
-		dao.store(menu);
+		
+		History transaction = new History();
+		transaction.setFolderId(menu.getId());
+		transaction.setEvent(History.EVENT_FOLDER_RENAMED);
+		transaction.setUserId(1);
+		transaction.setNotified(0);
+		dao.store(menu, transaction);
 
 		menu = dao.findById(23);
 		dao.store(menu);
 
 		menu = dao.findById(18);
 		menu.setText("xxxx");
-		dao.store(menu);
+		transaction = new History();
+		transaction.setFolderId(menu.getId());
+		transaction.setEvent(History.EVENT_FOLDER_RENAMED);
+		transaction.setUserId(1);
+		transaction.setNotified(0);
+		dao.store(menu, transaction);
 		menu = dao.findById(15);
 
 		menu.getMenuGroups().remove(menu.getMenuGroup(3));
@@ -77,12 +89,12 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 
 		menu = dao.findById(101);
 		menu.setText("pippo2");
-		assertTrue(dao.store(menu, false));
+		assertTrue(dao.store(menu, false, null));
 		menu = dao.findById(102);
 		assertEquals("/menu.home/menu.admin/pippo/", menu.getPathExtended());
 		
 		menu = dao.findById(102);
-		dao.store(menu, true);
+		dao.store(menu, true, null);
 		assertEquals("/menu.home/menu.admin/pippo2/", menu.getPathExtended());
 	}
 
@@ -279,14 +291,14 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 
 	public void testCreateDirectories() throws Exception {
 		Menu docsMenu = dao.findById(Menu.MENUID_DOCUMENTS);
-		Menu menu = dao.createFolders(docsMenu, "/pippo/pluto/paperino");
+		Menu menu = dao.createFolders(docsMenu, "/pippo/pluto/paperino", null);
 		assertEquals("paperino", menu.getText());
 		menu = dao.findById(menu.getParentId());
 		assertEquals("pluto", menu.getText());
 		menu = dao.findById(menu.getParentId());
 		assertEquals("pippo", menu.getText());
 
-		menu = dao.createFolders(docsMenu, "/pippo/pluto/paperino");
+		menu = dao.createFolders(docsMenu, "/pippo/pluto/paperino", null);
 		assertEquals("paperino", menu.getText());
 		menu = dao.findById(menu.getParentId());
 		assertEquals("pluto", menu.getText());

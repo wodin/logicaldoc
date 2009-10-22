@@ -96,7 +96,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		this.historyDAO = historyDAO;
 	}
 
-	public boolean delete(long docId) {
+	public boolean delete(long docId, History transaction) {
 		boolean result = true;
 		try {
 			Document doc = (Document) getHibernateTemplate().get(Document.class, docId);
@@ -113,12 +113,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					getHibernateTemplate().saveOrUpdate(discussion);
 				}
 
-				// Remove history
-				for (History history : historyDAO.findByDocId(docId)) {
-					history.setDeleted(1);
-					getHibernateTemplate().saveOrUpdate(history);
-				}
-
 				// Remove links
 				for (DocumentLink link : linkDAO.findByDocId(docId)) {
 					link.setDeleted(1);
@@ -130,7 +124,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				doc.setDeleted(1);
 				if (doc.getCustomId() != null)
 					doc.setCustomId(doc.getCustomId() + "." + doc.getId());
-				store(doc);
+				store(doc, transaction);
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -195,8 +189,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return findIdsByWhere(query.toString(), null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public boolean store(final Document doc) {
+		return store(doc, null);
+	}
+
+	@SuppressWarnings("unchecked")
+	public boolean store(final Document doc, final History transaction) {
 		boolean result = true;
 		try {
 			Set<String> src = doc.getTags();
@@ -240,6 +238,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			// Perhaps some listener may have modified the document
 			getHibernateTemplate().saveOrUpdate(doc);
+
+			saveDocumentHistory(doc, transaction);
 		} catch (Throwable e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -754,14 +754,14 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
-	public void makeImmutable(long docId) {
+	public void makeImmutable(long docId, History transaction) {
 		Document doc = null;
 		try {
 			doc = findById(docId);
 			initialize(doc);
 			doc.setImmutable(1);
 			doc.setStatus(Document.DOC_UNLOCKED);
-			store(doc);
+			store(doc, transaction);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -770,9 +770,16 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
-	public void deleteAll(Collection<Document> documents) {
+	public void deleteAll(Collection<Document> documents, History transaction) {
 		for (Document document : documents) {
-			delete(document.getId());
+			try {
+				History deleteHistory = (History) transaction.clone();
+				deleteHistory.setEvent(History.EVENT_DELETED);
+				delete(document.getId(), deleteHistory);
+			} catch (CloneNotSupportedException e) {
+				if (log.isErrorEnabled())
+					log.error(e.getMessage(), e);
+			}
 		}
 
 	}
@@ -783,5 +790,24 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	public void setStorer(Storer storer) {
 		this.storer = storer;
+	}
+
+	private void saveDocumentHistory(Document doc, History transaction) {
+		if (transaction == null)
+			return;
+		transaction.setDocId(doc.getId());
+		transaction.setFolderId(doc.getFolder().getId());
+		transaction.setTitle(doc.getTitle());
+		transaction.setVersion(doc.getVersion());
+
+		transaction.setPath(doc.getFolder().getPathExtended() + "/" + doc.getFolder().getText());
+		transaction.setPath(transaction.getPath().replaceAll("//", "/"));
+		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents/", "/"));
+		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents", "/"));
+
+		transaction.setDate(doc.getLastModified());
+		transaction.setNotified(0);
+
+		historyDAO.store(transaction);
 	}
 }

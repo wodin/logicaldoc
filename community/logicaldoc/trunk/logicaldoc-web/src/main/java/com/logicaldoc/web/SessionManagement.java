@@ -33,7 +33,7 @@ public class SessionManagement {
 		return result;
 	}
 	
-	public static String getrCurrentUserSessionId(){
+	public static String getCurrentUserSessionId(){
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		Map<String, Object> session = facesContext.getExternalContext().getSessionMap();
 		String sid = (String) session.get(Constants.USER_SESSION);

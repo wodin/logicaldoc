@@ -16,6 +16,7 @@ import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
 import com.logicaldoc.core.document.DocumentManager;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -42,15 +43,18 @@ public class InMemoryZipImport extends ZipImport {
 	public InMemoryZipImport() {
 	}
 
-	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId) {
+	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId, String sessionId) {
 		// process the files in the zip using UTF-8 encoding for file names
-		process(zipsource, locale, parent, userId, templateId, "UTF-8");
+		process(zipsource, locale, parent, userId, templateId, "UTF-8", sessionId);
 	}
 
-	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId, String encoding) {
+	@SuppressWarnings("unchecked")
+	public void process(File zipsource, Locale locale, Menu parent, long userId, Long templateId, String encoding,
+			String sessionId) {
 		this.zipFile = zipsource;
 		this.locale = locale;
 		this.templateId = templateId;
+		this.sessionId = sessionId;
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		this.user = userDao.findById(userId);
@@ -92,10 +96,15 @@ public class InMemoryZipImport extends ZipImport {
 
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
+		History transaction = new History();
+		transaction.setSessionId(sessionId);
+		transaction.setUserId(user.getId());
+		transaction.setUserName(user.getFullName());
+
 		if (ze.isDirectory()) {
 			// creates a logicaldoc folder
 			String folderPath = FilenameUtils.getFullPathNoEndSeparator(ze.getName());
-			dao.createFolders(parent, folderPath);
+			dao.createFolders(parent, folderPath, transaction);
 		} else {
 			InputStream stream = zip.getInputStream(ze);
 			File docFile = new File(ze.getName());
@@ -104,7 +113,7 @@ public class InMemoryZipImport extends ZipImport {
 
 			// ensure to have the proper folder to upload the file into
 			String folderPath = FilenameUtils.getFullPathNoEndSeparator(ze.getName());
-			Menu documentPath = dao.createFolders(parent, folderPath);
+			Menu documentPath = dao.createFolders(parent, folderPath, transaction);
 
 			Set<String> tagSet = null;
 			if (extractTags) {
@@ -134,8 +143,11 @@ public class InMemoryZipImport extends ZipImport {
 			try {
 				// Reopen the stream (the parser has closed it)
 				stream = zip.getInputStream(ze);
+
+				transaction.setEvent(History.EVENT_STORED);
+				transaction.setComment("");
 				docManager.create(stream, filename, documentPath, user, locale, doctitle, null, "", "", "", "", "",
-						tagSet, templateId, null, immediateIndexing);
+						tagSet, templateId, null, immediateIndexing, transaction);
 			} catch (Exception e) {
 				logger.error("InMemoryZipImport addEntry failed", e);
 			} finally {

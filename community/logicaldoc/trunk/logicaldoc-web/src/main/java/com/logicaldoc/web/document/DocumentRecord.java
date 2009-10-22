@@ -20,6 +20,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DownloadTicket;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
@@ -351,10 +352,15 @@ public class DocumentRecord extends MenuBarBean {
 		try {
 			if (mdao.isWriteEnable(folder.getId(), userId)) {
 				if (document.getStatus() == Document.DOC_UNLOCKED) {
+					// Create the document history event
+					History transaction = new History();
+					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+					transaction.setEvent(History.EVENT_CHECKEDOUT);
+					transaction.setComment("");
+
 					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 							DocumentManager.class);
-
-					documentManager.checkout(document.getId(), SessionManagement.getUser());
+					documentManager.checkout(document.getId(), SessionManagement.getUser(), transaction);
 					loadDocument();
 					createMenuItems();
 
@@ -610,11 +616,17 @@ public class DocumentRecord extends MenuBarBean {
 		Document document = getDocument();
 		if (document.getStatus() != Document.DOC_UNLOCKED) {
 			try {
+				// Create the document history event
+				History transaction = new History();
+				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+				transaction.setEvent(History.EVENT_UNLOCKED);
+				transaction.setComment("");
+
 				// Unlock the document; throws an exception if something
 				// goes wrong
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				documentManager.unlock(document.getId(), SessionManagement.getUser(), null);
+				documentManager.unlock(document.getId(), SessionManagement.getUser(), transaction);
 
 				loadDocument();
 				createMenuItems();

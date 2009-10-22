@@ -3,6 +3,8 @@ package com.logicaldoc.webdav.resource.model;
 import java.io.InputStream;
 import java.util.Date;
 
+import com.logicaldoc.webdav.session.DavSession;
+
 /**
  * Main-Class that contains all information about one particular resource within
  * logicalDOC. Important attributes are ID, Name, RequestedPerson <b>ID</b>
@@ -92,5 +94,9 @@ public interface Resource {
 	public void setCreationDate(Date creation);
 
 	public Date getCreationDate();
+
+	public DavSession getSession();
+
+	public void setSession(DavSession session);
 
 }

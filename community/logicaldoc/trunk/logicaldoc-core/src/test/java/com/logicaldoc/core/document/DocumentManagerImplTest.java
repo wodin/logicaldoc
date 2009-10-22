@@ -36,9 +36,14 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 	public void testMakeImmutable() throws Exception {
 		User user = userDao.findByUserName("admin");
 		Document doc = docDao.findById(1);
-		String comment = "pippo_reason";
 		assertNotNull(doc);
-		documentManager.makeImmutable(doc.getId(), user, comment);
+		History transaction = new History();
+		transaction.setFolderId(103);
+		transaction.setDocId(doc.getId());
+		transaction.setUserId(1);
+		transaction.setNotified(0);
+		transaction.setComment("pippo_reason");
+		documentManager.makeImmutable(doc.getId(), user, transaction);
 		doc = docDao.findById(1);
 		assertEquals(1, doc.getImmutable());
 		doc.setFileName("ciccio");
@@ -53,11 +58,16 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 
 	public void testLock() throws Exception {
 		User user = userDao.findByUserName("admin");
-		documentManager.unlock(1L, user, "");
+		History transaction = new History();
+		transaction.setFolderId(103);
+		transaction.setDocId(1L);
+		transaction.setUserId(1);
+		transaction.setNotified(0);
+		documentManager.unlock(1L, user, transaction);
 		Document doc = docDao.findById(1);
-		String comment = "pippo_reason";
 		assertNotNull(doc);
-		documentManager.lock(doc.getId(), 2, user, comment);
+		transaction.setComment("pippo_reason");
+		documentManager.lock(doc.getId(), 2, user, transaction);
 		doc = docDao.findById(1);
 		assertEquals(2, doc.getStatus());
 		assertEquals(1L, doc.getLockUserId().longValue());

@@ -27,100 +27,79 @@ import com.logicaldoc.webdav.session.DavSession;
  */
 public class ResourceFactoryImpl implements DavResourceFactory {
 
-	private static final Pattern versionRequestPattern = Pattern
-			.compile("/vstore/([0-9].[0-9])/(.*)");
+	private static final Pattern versionRequestPattern = Pattern.compile("/vstore/([0-9].[0-9])/(.*)");
 
 	private final ResourceConfig resourceConfig;
+
 	private ResourceService resourceService;
 
 	public ResourceFactoryImpl(LockManager lockMgr) {
-		this.resourceConfig = (ResourceConfig) Context.getInstance().getBean(
-				"ResourceConfig");
-		this.resourceService = (ResourceService) Context.getInstance().getBean(
-				"ResourceService");
+		this.resourceConfig = (ResourceConfig) Context.getInstance().getBean("ResourceConfig");
+		this.resourceService = (ResourceService) Context.getInstance().getBean("ResourceService");
 	}
 
-	public ResourceFactoryImpl(LockManager lockMgr,
-			ResourceConfig resourceConfig) {
-		this.resourceConfig = (resourceConfig != null) ? resourceConfig
-				: (ResourceConfig) Context.getInstance().getBean(
-						"ResourceConfig");
-		this.resourceService = (ResourceService) Context.getInstance().getBean(
-				"ResourceService");
+	public ResourceFactoryImpl(LockManager lockMgr, ResourceConfig resourceConfig) {
+		this.resourceConfig = (resourceConfig != null) ? resourceConfig : (ResourceConfig) Context.getInstance()
+				.getBean("ResourceConfig");
+		this.resourceService = (ResourceService) Context.getInstance().getBean("ResourceService");
 	}
 
-	public DavResource createResource(DavResourceLocator locator,
-			DavServletRequest request, DavServletResponse response)
+	public DavResource createResource(DavResourceLocator locator, DavServletRequest request, DavServletResponse response)
 			throws DavException {
-		return createResource(locator, request, response, (DavSession) request
-				.getDavSession());
+		return createResource(locator, request, response, (DavSession) request.getDavSession());
 	}
 
-	public DavResource createResource(DavResourceLocator locator,
-			DavServletRequest request, DavServletResponse response,
-			DavSession session) throws DavException {
+	public DavResource createResource(DavResourceLocator locator, DavServletRequest request,
+			DavServletResponse response, DavSession session) throws DavException {
 
 		try {
 			String resourcePath = locator.getResourcePath();
-			Matcher matcher = versionRequestPattern.matcher(locator
-					.getResourcePath());
+			Matcher matcher = versionRequestPattern.matcher(locator.getResourcePath());
 
 			String version = null;
 			if (matcher.matches() == true) {
 				version = matcher.group(1);
-				resourcePath = resourcePath.replaceFirst("/vstore/" + version,
-						"");
+				resourcePath = resourcePath.replaceFirst("/vstore/" + version, "");
 			}
 
-			Resource repositoryResource = resourceService.getResource(
-					resourcePath, new Long(session.getObject("id").toString()));
+			Resource repositoryResource = resourceService.getResource(resourcePath, session);
 
 			DavResource resource;
 			if (repositoryResource == null) {
-				boolean isCollection = DavMethods
-						.isCreateCollectionRequest(request);
+				boolean isCollection = DavMethods.isCreateCollectionRequest(request);
 				resource = createNullResource(locator, session, isCollection);
 			} else {
 				repositoryResource.setVersionLabel(version);
 
-				repositoryResource.setRequestedPerson(Long.parseLong(session
-						.getObject("id").toString()));
-				resource = new VersionControlledResourceImpl(locator, this,
-						session, resourceConfig, repositoryResource);
+				repositoryResource.setRequestedPerson(Long.parseLong(session.getObject("id").toString()));
+				resource = new VersionControlledResourceImpl(locator, this, session, resourceConfig, repositoryResource);
 			}
 
 			return resource;
 		} catch (Exception e) {
-			throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR,
-					e);
+			throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR, e);
 		}
 	}
 
-	public DavResource createResource(DavResourceLocator locator,
-			DavSession session) throws DavException {
+	public DavResource createResource(DavResourceLocator locator, DavSession session) throws DavException {
 		try {
-			Resource resource = resourceService.getResource(locator
-					.getResourcePath(), new Long(session.getObject("id")
-					.toString()));
+			Resource resource = resourceService.getResource(locator.getResourcePath(), session);
 
 			return createResource(locator, session, resource);
 		} catch (Exception e) {
-			throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR,
-					e);
+			throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR, e);
 		}
 	}
 
-	private DavResource createNullResource(DavResourceLocator locator,
-			DavSession session, boolean isCollection) throws DavException {
+	private DavResource createNullResource(DavResourceLocator locator, DavSession session, boolean isCollection)
+			throws DavException {
 
-		return new VersionControlledResourceImpl(locator, this, session,
-				resourceConfig, isCollection);
+		return new VersionControlledResourceImpl(locator, this, session, resourceConfig, isCollection);
 	}
 
-	public DavResource createResource(DavResourceLocator locator,
-			DavSession session, Resource resource) throws DavException {
+	public DavResource createResource(DavResourceLocator locator, DavSession session, Resource resource)
+			throws DavException {
 
-		return new VersionControlledResourceImpl(locator, this, session,
-				resourceConfig, resource);
+		return new VersionControlledResourceImpl(locator, this, session, resourceConfig, resource);
 	}
 }

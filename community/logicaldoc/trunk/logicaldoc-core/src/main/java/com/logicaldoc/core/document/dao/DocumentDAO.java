@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.History;
 
 /**
  * This class is a DAO-service for documents.
@@ -220,14 +221,36 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * document if it was locked.
 	 * 
 	 * @param docId
+	 * @param transaction entry to log the event
 	 */
-	public void makeImmutable(long docId);
+	public void makeImmutable(long docId, History transaction);
 
 	/**
 	 * Deletes all documents form the database and modifies the custom ids of
 	 * all documents
 	 * 
 	 * @param documents The documents to be deleted
+	 * @param transaction entry to log the event
 	 */
-	public void deleteAll(Collection<Document> documents);
+	public void deleteAll(Collection<Document> documents, History transaction);
+
+	/**
+	 * This method persists the document object and insert a new document
+	 * history entry.
+	 * 
+	 * @param doc
+	 * @param transaction entry to log the event
+	 * @return True if successfully stored in a database.
+	 */
+	public boolean store(final Document doc, final History transaction);
+
+	/**
+	 * This method deletes the document object and insert a new document history
+	 * entry.
+	 * 
+	 * @param docId The id of the document to delete
+	 * @param transaction entry to log the event
+	 * @return True if successfully deleted from the database.
+	 */
+	public boolean delete(long docId, History transaction);
 }

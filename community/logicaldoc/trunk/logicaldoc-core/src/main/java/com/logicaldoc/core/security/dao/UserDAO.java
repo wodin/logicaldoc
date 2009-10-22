@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserHistory;
 
 /**
  * This class is a DAO-service for User-objects.
@@ -72,4 +73,22 @@ public interface UserDAO extends PersistentObjectDAO<User> {
 	public int getPasswordTtl();
 
 	public void setPasswordTtl(int passwordTtl);
+
+	/**
+	 * This method deletes the user object and insert a new user history entry.
+	 * 
+	 * @param userId The id of the user to delete
+	 * @param transaction entry to log the event
+	 * @return True if successfully deleted from the database.
+	 */
+	public boolean delete(long userId, UserHistory transaction);
+
+	/**
+	 * This method persists the user object and insert a new user history entry.
+	 * 
+	 * @param user
+	 * @param transaction entry to log the event
+	 * @return True if successfully stored in a database.
+	 */
+	public boolean store(final User user, final UserHistory transaction);
 }

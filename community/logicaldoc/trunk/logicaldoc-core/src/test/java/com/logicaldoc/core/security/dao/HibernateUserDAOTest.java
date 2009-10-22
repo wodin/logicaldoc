@@ -9,6 +9,7 @@ import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.util.io.CryptUtil;
 
 /**
@@ -152,6 +153,11 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 		user.setName("claus");
 		user.setFirstName("valca");
 		user.setEmail("valca@acme.com");
+		UserHistory transaction = new UserHistory();
+		transaction.setEvent(UserHistory.EVENT_USER_LOGIN);
+		transaction.setUserId(user.getId());
+		transaction.setNotified(0);
+		dao.store(user, transaction);
 		assertTrue(dao.store(user));
 		assertTrue(groupDao.findByName(user.getUserGroupName()) != null);
 		manager.assignUserToGroups(user, new long[] { 1 });
@@ -165,7 +171,11 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 
 		user = dao.findById(1);
 		user.setDecodedPassword("xxxpwd");
-		dao.store(user);
+		transaction = new UserHistory();
+		transaction.setEvent(UserHistory.EVENT_USER_PASSWORDCHANGED);
+		transaction.setUserId(user.getId());
+		transaction.setNotified(0);
+		dao.store(user, transaction);
 		manager.assignUserToGroups(user, new long[] { 1, 2 });
 		assertEquals(3, user.getGroups().size());
 		user = dao.findById(1);
@@ -181,10 +191,9 @@ public class HibernateUserDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testCount() {
-		assertEquals(5,dao.count());
+		assertEquals(5, dao.count());
 	}
 
-	
 	public void isPasswordExpired() {
 		assertFalse(dao.isPasswordExpired("admin"));
 		User user = dao.findByUserName("boss");

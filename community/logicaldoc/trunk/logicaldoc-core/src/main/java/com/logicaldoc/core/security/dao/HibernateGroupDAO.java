@@ -206,7 +206,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 
 		if (!menu.getMenuGroups().contains(mgroup))
 			menu.getMenuGroups().add(mgroup);
-		menuDAO.store(menu, false);
+		menuDAO.store(menu, false, null);
 	}
 
 	/**

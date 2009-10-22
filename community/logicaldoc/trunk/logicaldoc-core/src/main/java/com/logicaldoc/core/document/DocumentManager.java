@@ -32,10 +32,12 @@ public interface DocumentManager {
 	 *        the old version
 	 * @param versionDesc a change description
 	 * @param immediateIndexing if true the document is immediately indexed
+	 * @param transaction entry to log the event
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
 	public void checkin(long docId, InputStream fileInputStream, String filename, User user,
-			Version.VERSION_TYPE versionType, String versionDesc, boolean immediateIndexing) throws Exception;
+			Version.VERSION_TYPE versionType, String versionDesc, boolean immediateIndexing, History transaction)
+			throws Exception;
 
 	/**
 	 * Checks in the given document
@@ -48,19 +50,21 @@ public interface DocumentManager {
 	 *        the old version
 	 * @param versionDesc a change description
 	 * @param immediateIndexing if true the document is immediately indexed
+	 * @param transaction entry to log the event
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
 	void checkin(long docId, File file, String filename, User user, VERSION_TYPE versionType, String versionDesc,
-			boolean immediateIndexing) throws Exception;
+			boolean immediateIndexing, History transaction) throws Exception;
 
 	/**
 	 * Checks out the given document
 	 * 
 	 * @param docId the document to be checked out
 	 * @param user the user downloading the document
+	 * @param transaction entry to log the event
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public void checkout(long docId, User user) throws Exception;
+	public void checkout(long docId, User user, History history) throws Exception;
 
 	/**
 	 * Locks the given document
@@ -69,33 +73,20 @@ public interface DocumentManager {
 	 * @param status the lock type (used to populate status attribute of the
 	 *        document)
 	 * @param user the user requesting the lock
-	 * @param comment optional comment
+	 * @param transaction entry to log the event
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public void lock(long docId, int status, User user, String comment) throws Exception;
-
-	/**
-	 * Locks the given document
-	 * 
-	 * @param docId the document to be locked
-	 * @param status the lock type (used to populate status attribute of the
-	 *        document)
-	 * @param historyEvent The event that caused the lock
-	 * @param user the user requesting the lock
-	 * @param comment optional comment
-	 * @throws Exception if an error occurs, this exception is thrown
-	 */
-	public void lock(long docId, int status, String historyEvent, User user, String comment) throws Exception;
+	public void lock(long docId, int status, User user, History transaction) throws Exception;
 
 	/**
 	 * UNChecks out the given document
 	 * 
 	 * @param docId the document to be unchecked out
 	 * @param user the user uncheking the document
-	 * @param comment optional comment
+	 * @param transaction entry to log the event
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public void unlock(long docId, User user, String comment) throws Exception;
+	public void unlock(long docId, User user, History transaction) throws Exception;
 
 	/**
 	 * Creates a new document in the parent menu
@@ -106,11 +97,12 @@ public interface DocumentManager {
 	 * @param user the current user
 	 * @param locale the document's language
 	 * @param immediateIndexing if true the document is immediately indexed
+	 * @param transaction entry to log the event
 	 * @return The newly created document
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public Document create(File file, String filename, Menu folder, User user, Locale locale, boolean immediateIndexing)
-			throws Exception;
+	public Document create(File file, String filename, Menu folder, User user, Locale locale,
+			boolean immediateIndexing, History transaction) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -130,12 +122,13 @@ public interface DocumentManager {
 	 * @param versionDesc
 	 * @param tags
 	 * @param immediateIndexing
+	 * @param transaction entry to log the event
 	 * @return The created document
 	 * @throws Exception
 	 */
 	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> tags, boolean immediateIndexing) throws Exception;
+			String versionDesc, Set<String> tags, boolean immediateIndexing, History transaction) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -157,13 +150,14 @@ public interface DocumentManager {
 	 * @param templateId
 	 * @param extendedAttributes
 	 * @param immediateIndexing if true the document is immediately indexed
+	 * @param transaction entry to log the event
 	 * @return The created document
 	 * @throws Exception
 	 */
 	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
-			boolean immediateIndexing) throws Exception;
+			boolean immediateIndexing, History transaction) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -189,14 +183,15 @@ public interface DocumentManager {
 	 * @param recipient
 	 * @param customId
 	 * @param immediateIndexing if true the document is immediately indexed
+	 * @param transaction entry to log the event
 	 * @return The created document
 	 * @throws Exception
 	 */
 	public Document create(File file, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
-			String sourceId, String object, String recipient, String customId, boolean immediateIndexing)
-			throws Exception;
+			String sourceId, String object, String recipient, String customId, boolean immediateIndexing,
+			History transaction) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -222,14 +217,15 @@ public interface DocumentManager {
 	 * @param recipient
 	 * @param customId
 	 * @param immediateIndexing if true the document is immediately indexed
+	 * @param transaction entry to log the event
 	 * @return The created document
 	 * @throws Exception
 	 */
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
-			String sourceId, String object, String recipient, String customId, boolean immediateIndexing)
-			throws Exception;
+			String sourceId, String object, String recipient, String customId, boolean immediateIndexing,
+			History transaction) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -251,13 +247,14 @@ public interface DocumentManager {
 	 * @param templateId
 	 * @param extendedAttributes
 	 * @param immediateIndexing if true the document is immediately indexed
+	 * @param transaction entry to log the event
 	 * @return The created document
 	 * @throws Exception
 	 */
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
 			String versionDesc, Set<String> tags, Long templateId, Map<String, ExtendedAttribute> extendedAttributes,
-			boolean immediateIndexing) throws Exception;
+			boolean immediateIndexing, History transaction) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -277,12 +274,13 @@ public interface DocumentManager {
 	 * @param versionDesc
 	 * @param tags
 	 * @param immediateIndexing if true the document is immediately indexed
+	 * @param transaction entry to log the event
 	 * @return The created document
 	 * @throws Exception
 	 */
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale, String title,
 			Date sourceDate, String source, String sourceAuthor, String sourceType, String coverage,
-			String versionDesc, Set<String> tags, boolean immediateIndexing) throws Exception;
+			String versionDesc, Set<String> tags, boolean immediateIndexing, History transaction) throws Exception;
 
 	/**
 	 * Creates a new Document. Saves the information provided. That also
@@ -294,11 +292,12 @@ public interface DocumentManager {
 	 * @param user
 	 * @param locale
 	 * @param immediateIndexing if true the document is immediately indexed
-	 * @return
+	 * @param transaction entry to log the event
+	 * @return The created document
 	 * @throws Exception
 	 */
 	public Document create(InputStream content, String filename, Menu folder, User user, Locale locale,
-			boolean immediateIndexing) throws Exception;
+			boolean immediateIndexing, History transaction) throws Exception;
 
 	/**
 	 * Obtains the document's file
@@ -380,19 +379,36 @@ public interface DocumentManager {
 	 * @param user The user requesting the operation
 	 * @param newName The new title/filename of the document
 	 * @param title True if the title must be renamed, False for the filename
+	 * @param transaction entry to log the event
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public void rename(Document doc, User user, String newName, boolean title) throws Exception;
+	public void rename(Document doc, User user, String newName, boolean title, History transaction) throws Exception;
 
 	/**
 	 * Updates an existing document and marks it to be re-indexed
 	 * 
 	 * @param doc The document to be updated
-	 * @throws Exception
+	 * @param user
+	 * @param title
+	 * @param source
+	 * @param sourceAuthor
+	 * @param sourceDate
+	 * @param sourceType
+	 * @param coverage
+	 * @param locale
+	 * @param tags
+	 * @param sourceId
+	 * @param object
+	 * @param recipient
+	 * @param templateId
+	 * @param attributes
+	 * @param transaction entry to log the event
+	 * @throws Exception if an error occurs, this exception is thrown
 	 */
 	public void update(Document doc, User user, String title, String source, String sourceAuthor, Date sourceDate,
 			String sourceType, String coverage, Locale locale, Set<String> tags, String sourceId, String object,
-			String recipient, Long templateId, Map<String, ExtendedAttribute> attributes) throws Exception;
+			String recipient, Long templateId, Map<String, ExtendedAttribute> attributes, History transaction)
+			throws Exception;
 
 	/**
 	 * Retrieves the full-text document content
@@ -410,14 +426,14 @@ public interface DocumentManager {
 
 	/**
 	 * Marks the document, with the given docId, as immutable and save the given
-	 * reason on the document history
+	 * document history
 	 * 
 	 * @param docId
 	 * @param user
-	 * @param reason
+	 * @param transaction entry to log the event
 	 * @throws Exception
 	 */
-	public void makeImmutable(long docId, User user, String reason) throws Exception;
+	public void makeImmutable(long docId, User user, History transaction) throws Exception;
 
 	/**
 	 * Moves a document to the specified folder. All stores(db, file system,
@@ -426,9 +442,10 @@ public interface DocumentManager {
 	 * @param doc The document to move
 	 * @param folder The target folder
 	 * @param user
+	 * @param transaction entry to log the event
 	 * @throws Exception
 	 */
-	public void moveToFolder(Document doc, Menu folder, User user) throws Exception;
+	public void moveToFolder(Document doc, Menu folder, User user, History transaction) throws Exception;
 
 	/**
 	 * Copy a document to the specified folder.
@@ -436,10 +453,11 @@ public interface DocumentManager {
 	 * @param doc The document to move
 	 * @param folder The target folder
 	 * @param user
+	 * @param transaction entry to log the event
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document copyToFolder(Document doc, Menu folder, User user) throws Exception;
+	public Document copyToFolder(Document doc, Menu folder, User user, History transaction) throws Exception;
 
 	/**
 	 * Delete a folder and all its sub-folders that a user can delete. After
@@ -449,9 +467,10 @@ public interface DocumentManager {
 	 * 
 	 * @param menu Folder to delete
 	 * @param user User that wants to delete the folder
+	 * @param transaction entry to log the event
 	 * @return List of folders that the user cannot delete(permissions, o
 	 *         immutable documents presents)
 	 * @throws Exception
 	 */
-	public List<Menu> deleteFolder(Menu menu, User user) throws Exception;
+	public List<Menu> deleteFolder(Menu menu, User user, History transaction) throws Exception;
 }
