@@ -282,7 +282,7 @@ public class DocumentsRecordsManager extends SortableList {
 						transaction.setEvent(History.EVENT_DELETED);
 						transaction.setComment("");
 						transaction.setUserId(SessionManagement.getUserId());
-						transaction.setUserName(SessionManagement.getUsername());
+						transaction.setUserName(SessionManagement.getUser().getFullName());
 
 						dao.delete(record.getDocId(), transaction);
 						deletedSome = true;
