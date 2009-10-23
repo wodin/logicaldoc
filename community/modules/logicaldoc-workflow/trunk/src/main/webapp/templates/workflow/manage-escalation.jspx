@@ -1,0 +1,20 @@
+<?xml version = '1.0'?>
+<!-- 
+ 
+ @author Marco Meschieri - Logical Objects
+ @since 5.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf">
+
+	<ice:panelGroup>
+		<ice:outputText value="#{msgs['feature.enterprise']}"
+			styleClass="iceMsgError" />
+	</ice:panelGroup>
+</jsp:root>

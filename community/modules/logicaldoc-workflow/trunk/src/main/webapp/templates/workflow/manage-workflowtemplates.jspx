@@ -305,35 +305,14 @@
 
 									</ice:panelGrid>
 								</ice:panelCollapsible>
-								<ice:panelCollapsible id="panelEscalation" expanded="true">
+								<ice:panelCollapsible id="panelEscalation" expanded="false">
 									<f:facet name="header">
 										<ice:panelGroup>
 											<ice:outputText
 												value="#{msgs['workflow.editor_component_task_escalation']}" />
 										</ice:panelGroup>
 									</f:facet>
-									<ice:panelGrid cellpadding="0" cellspacing="0" columns="4"
-										style="height:40px">
-										<ice:graphicImage styleClass="symbol"
-											value="/skins/default/images/workflow/editor/calendar.gif" />
-										<ice:outputLabel for="dueDate" value="#{msgs['duedate']}" />
-										<ice:inputText style="width:24px;"
-											value="#{WorkflowTemplateManager.selectedComponent.dueDateValue}" />
-										<h:selectOneMenu
-											value="#{WorkflowTemplateManager.selectedComponent.dueDateUnit}">
-											<f:selectItems value="#{WorkflowTemplateManager.timeUnits}" />
-										</h:selectOneMenu>
-										<ice:graphicImage styleClass="symbol"
-											value="/skins/default/images/workflow/editor/repeat.gif" />
-										<ice:outputLabel for="remindTime"
-											value="#{msgs['workflow.editor_component_task_remindtime']}" />
-										<ice:inputText style="width:24px;"
-											value="#{WorkflowTemplateManager.selectedComponent.remindTimeValue}" />
-										<h:selectOneMenu
-											value="#{WorkflowTemplateManager.selectedComponent.remindTimeUnit}">
-											<f:selectItems value="#{WorkflowTemplateManager.timeUnits}" />
-										</h:selectOneMenu>
-									</ice:panelGrid>
+									<ui:include src="/templates/workflow/manage-escalation.jspx" />
 								</ice:panelCollapsible>
 
 								<!-- Assignees -->
