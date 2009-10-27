@@ -102,7 +102,7 @@
 						rendered="#{empty WorkflowTemplateManager.persistenceTemplate}">
 						<ice:graphicImage styleClass="linkImage"
 							value="/skins/default/images/workflow/editor/save_dis.gif" />
-						<ice:outputText value="#{msgs['workflow.editor_template_save']}" />
+						<ice:outputText value="#{msgs['save']}" />
 					</ice:panelGroup>
 
 					<ice:panelGroup styleClass="rightToolSite"
