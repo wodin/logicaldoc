@@ -6,13 +6,16 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
+import org.springframework.jdbc.object.SqlUpdate;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.communication.SystemMessage;
+import com.logicaldoc.util.StringUtil;
+import com.logicaldoc.util.sql.SqlUtil;
 
 /**
  * Hibernate implementation of <code>SystemMessageDAO</code>
@@ -31,21 +34,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	 */
 	@SuppressWarnings("unchecked")
 	public List<SystemMessage> findByRecipient(String recipient) {
-		List<SystemMessage> coll = new ArrayList<SystemMessage>();
-
-		try {
-			DetachedCriteria dt = DetachedCriteria.forClass(SystemMessage.class);
-			dt.add(Property.forName("recipient").eq(recipient));
-			dt.addOrder(Order.desc("sentDate"));
-
-			coll = (List<SystemMessage>) getHibernateTemplate().findByCriteria(dt);
-			coll = collectGarbage(coll, false);
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
-		}
-
-		return coll;
+		return findByWhere("_entity.recipient = '" + SqlUtil.doubleQuotes(recipient)+"'", null, "order by _entity.sentDate asc");
 	}
 
 	/**
@@ -54,19 +43,7 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	@SuppressWarnings("unchecked")
 	public int getCount(String recipient) {
 		int count = 0;
-
-		try {
-			DetachedCriteria dt = DetachedCriteria.forClass(SystemMessage.class);
-			dt.add(Property.forName("recipient").eq(recipient));
-			dt.add(Property.forName("read").eq(new Integer(0)));
-
-			Collection<SystemMessage> coll = (Collection<SystemMessage>) getHibernateTemplate().findByCriteria(dt);
-			count = coll.size();
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				logger.error(e.getMessage(), e);
-		}
-
+     	count = findIdsByWhere("_entity.recipient='" + SqlUtil.doubleQuotes(recipient) + "' and _entity.read =" + new Integer(0), null).size();
 		return count;
 	}
 

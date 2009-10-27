@@ -1,13 +1,9 @@
 package com.logicaldoc.core.security.dao;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Property;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.User;
@@ -25,19 +21,7 @@ public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHi
 	 */
 	@SuppressWarnings("unchecked")
 	public List<UserHistory> findByUserId(long userId) {
-		List<UserHistory> coll = new ArrayList<UserHistory>();
-
-		try {
-			DetachedCriteria dt = DetachedCriteria.forClass(UserHistory.class);
-			dt.add(Property.forName("userId").eq(userId));
-			dt.addOrder(Order.asc("date"));
-			coll = (List<UserHistory>) getHibernateTemplate().findByCriteria(dt);
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage());
-		}
-
-		return coll;
+		return findByWhere("_entity.userId =" + userId, null, "order by _entity.date asc");
 	}
 
 	/**
