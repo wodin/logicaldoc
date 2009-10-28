@@ -457,6 +457,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents/", "/"));
 		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents", "/"));
 		transaction.setDate(folder.getLastModified());
+		transaction.setComment("");
 
 		historyDAO.store(transaction);
 
@@ -488,6 +489,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			}
 			parentHistory.setComment("");
 			parentHistory.setSessionId(transaction.getSessionId());
+			parentHistory.setComment(transaction.getComment());
 
 			historyDAO.store(parentHistory);
 		}
