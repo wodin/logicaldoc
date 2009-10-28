@@ -3,9 +3,7 @@ package com.logicaldoc.core.document.dao;
 import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
-import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
-import com.logicaldoc.core.security.User;
 
 /**
  * DAO for <code>History</code> handling.
@@ -37,4 +35,11 @@ public interface HistoryDAO extends PersistentObjectDAO<History> {
 	 * @return list of histories ordered by date
 	 */
 	public List<History> findByFolderId(long folderId);
+
+	/**
+	 * This method selects all histories not notified yet.
+	 * 
+	 * @return list of histories ordered by date
+	 */
+	public List<History> findNotNotified();
 }

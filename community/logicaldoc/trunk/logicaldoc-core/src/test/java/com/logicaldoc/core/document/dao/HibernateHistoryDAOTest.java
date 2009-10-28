@@ -140,4 +140,20 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		assertEquals(hStored.getUserName(), "sebastian");
 		assertEquals(hStored.getEvent(), "test History store");
 	}
+
+	@SuppressWarnings("unchecked")
+	public void testFindNotNotified() {
+		Collection histories = dao.findNotNotified();
+		assertNotNull(histories);
+		assertEquals(2, histories.size());
+
+		History history = dao.findById(1);
+		dao.initialize(history);
+		history.setNotified(1);
+		dao.store(history);
+
+		histories = dao.findNotNotified();
+		assertNotNull(histories);
+		assertEquals(1, histories.size());
+	}
 }

@@ -23,7 +23,6 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 	/**
 	 * @see com.logicaldoc.core.document.dao.HistoryDAO#findByDocId(long)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<History> findByDocId(long docId) {
 		return findByWhere("_entity.docId =" + docId, null, "order by _entity.date asc");
 	}
@@ -31,7 +30,6 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 	/**
 	 * @see com.logicaldoc.core.document.dao.HistoryDAO#findByUserId(long)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<History> findByUserId(long userId) {
 		return findByWhere("_entity.userId =" + userId, null, "order by _entity.date asc");
 	}
@@ -39,8 +37,12 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 	/**
 	 * @see com.logicaldoc.core.document.dao.HistoryDAO#findByFolderId(long)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<History> findByFolderId(long folderId) {
 		return findByWhere("_entity.folderId =" + folderId, null, "order by _entity.date asc");
+	}
+
+	@Override
+	public List<History> findNotNotified() {
+		return findByWhere("_entity.notified = 0", null, "order by _entity.date asc");
 	}
 }
