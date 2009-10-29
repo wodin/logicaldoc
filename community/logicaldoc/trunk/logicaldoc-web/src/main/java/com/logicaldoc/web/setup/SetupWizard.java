@@ -160,7 +160,8 @@ public class SetupWizard implements TabChangeListener {
 			pbean.setProperty("jdbc.url", dbdata.getDburl());
 			pbean.setProperty("jdbc.username", dbdata.getUser());
 			pbean.setProperty("jdbc.password", dbdata.getPswd());
-
+			pbean.setProperty("jdbc.dbms", dbdata.getDbms().toLowerCase());
+			
 			if (StringUtils.isNotEmpty(dbdata.getValidationQuery())) {
 				pbean.setProperty("jdbc.validationQuery", dbdata.getValidationQuery());
 			} else {
