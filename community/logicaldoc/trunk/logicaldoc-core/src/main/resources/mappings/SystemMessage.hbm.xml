@@ -10,7 +10,6 @@
         <timestamp name="lastModified" column="ld_lastmodified" />
         <property name="deleted" type="int" column="ld_deleted" not-null="true" />
 		<property name="author" type="string" column="ld_author" length="255" />
-		<property name="recipient" type="string" column="ld_recipient" length="255" />
 		<property name="messageText" type="string" column="ld_messagetext" length="2000" />
 		<property name="subject" type="string" column="ld_subject" length="255" />
 		<property name="sentDate" type="timestamp" column="ld_sentdate" not-null="true" />
@@ -18,5 +17,18 @@
 		<property name="prio" type="int" column="ld_prio" />
 		<property name="confirmation" type="int" column="ld_confirmation" />
         <property name="read" type="int" column="ld_red" not-null="true"/>
+        <property name="lastNotified" type="timestamp" column="ld_lastnotified" />
+        <property name="status" type="int" column="ld_status" not-null="true" />
+        <property name="trials" type="int" column="ld_trials" />
+        <property name="type" type="int" column="ld_type" not-null="true" />
+        <set name="recipients" table="ld_recipient" cascade="all">
+            <key column="ld_messageid" />
+            <composite-element class="com.logicaldoc.core.communication.Recipient">
+                 <property name="name" type="string" column="ld_name" not-null="true"/>
+                 <property name="address" type="string" column="ld_address" not-null="true"/>
+                 <property name="mode" type="string" column="ld_mode" not-null="true"/>
+                 <property name="type" type="int" column="ld_type" not-null="true"/>
+            </composite-element>
+        </set>
 	</class>
 </hibernate-mapping>

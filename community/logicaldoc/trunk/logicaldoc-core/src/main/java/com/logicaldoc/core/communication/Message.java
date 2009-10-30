@@ -1,6 +1,8 @@
 package com.logicaldoc.core.communication;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.logicaldoc.core.PersistentObject;
 
@@ -13,15 +15,24 @@ import com.logicaldoc.core.PersistentObject;
  */
 public abstract class Message extends PersistentObject {
 
+	public final static int TYPE_SYSTEM = 0;
+
+	public final static int TYPE_NOTIFICATION = 1;
+
 	private String messageText = "";
 
 	private String author = "";
 
 	private String subject = "";
 
+	// The message creation date
 	private Date sentDate = new Date();
 
 	private int read = 0; // 0 - false; 1 - true
+
+	private int type = TYPE_SYSTEM;
+
+	protected Set<Recipient> recipients = new HashSet<Recipient>();
 
 	public String getMessageText() {
 		return messageText;
@@ -61,5 +72,21 @@ public abstract class Message extends PersistentObject {
 
 	public void setSentDate(Date sentDate) {
 		this.sentDate = sentDate;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public Set<Recipient> getRecipients() {
+		return recipients;
+	}
+
+	public void setRecipients(Set<Recipient> recipients) {
+		this.recipients = recipients;
 	}
 }

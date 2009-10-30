@@ -4,41 +4,74 @@ package com.logicaldoc.core.communication;
  * @author Michael Scholz
  */
 public class Recipient {
+	public final static int TYPE_SYSTEM = 0;
 
-    private String name = "";
+	public final static int TYPE_EMAIL = 1;
 
-    private String address = "";
+	public final static String MODE_EMAIL_TO = "TO";
 
-    public Recipient() {
-    }
+	public final static String MODE_EMAIL_CC = "CC";
 
-    public String getName() {
-        return name;
-    }
+	public final static String MODE_EMAIL_BCC = "BCC";
 
-    public String getAddress() {
-        return address;
-    }
+	// The login
+	private String name = "";
 
-    public void setName(String nme) {
-        name = nme;
-    }
+	// The system login or the email address
+	private String address = "";
 
-    public void setAddress(String addr) {
-        address = addr;
-    }
-    
-    @Override
-    public boolean equals(Object arg0) {
-        if (!(arg0 instanceof Recipient))
-            return false;
-        Recipient other = (Recipient) arg0;
-        return other.getAddress().equals(address);
-    }
+	// The recipient mode (for the system message is not useful, for the email
+	// can be To, CC, CCN, ecc.)
+	private String mode = "";
 
-    @Override
-    public int hashCode() {
-        return address.hashCode();
-    }    
+	// The recipient type (i.e. system, user, group, email)
+	private int type = TYPE_SYSTEM;
 
+	public Recipient() {
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setName(String nme) {
+		name = nme;
+	}
+
+	public void setAddress(String addr) {
+		address = addr;
+	}
+
+	@Override
+	public boolean equals(Object arg0) {
+		if (!(arg0 instanceof Recipient))
+			return false;
+		Recipient other = (Recipient) arg0;
+		return other.getAddress().equals(address);
+	}
+
+	@Override
+	public int hashCode() {
+		return address.hashCode();
+	}
+
+	public String getMode() {
+		return mode;
+	}
+
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
 }
