@@ -29,11 +29,11 @@ public class EMail extends Message {
 	// The e-mail account used to fetch this message
 	private long accountId;
 
-	private Set<Recipient> recipients = new HashSet<Recipient>();
-
 	private Map<Integer, EMailAttachment> attachments = new HashMap<Integer, EMailAttachment>();
 
 	private Set<Recipient> recipientsCC = new HashSet<Recipient>();
+
+	private Set<Recipient> recipientsBCC = new HashSet<Recipient>();
 
 	public EMail() {
 	}
@@ -60,10 +60,6 @@ public class EMail extends Message {
 
 	public String getUserName() {
 		return userName;
-	}
-
-	public Set<Recipient> getRecipients() {
-		return recipients;
 	}
 
 	public void setAuthorAddress(String address) {
@@ -105,6 +101,10 @@ public class EMail extends Message {
 	public InternetAddress[] getAddressesCC() throws Exception {
 		return getAddresses(recipientsCC);
 	}
+	
+	public InternetAddress[] getAddressesBCC() throws Exception {
+		return getAddresses(recipientsBCC);
+	}
 
 	private InternetAddress[] getAddresses(Collection<Recipient> recipients) throws AddressException {
 		InternetAddress[] recs = new InternetAddress[recipients.size()];
@@ -124,23 +124,23 @@ public class EMail extends Message {
 		return attachments.size();
 	}
 
-	public void setRecipients(Set<Recipient> recipients) {
-		this.recipients = recipients;
-	}
-
 	public void setAttachments(Map<Integer, EMailAttachment> attachments) {
 		this.attachments = attachments;
 	}
 
 	public void parseRecipients(String str) {
-		xx(str, recipients);
+		parse(str, recipients);
 	}
 
 	public void parseRecipientsCC(String str) {
-		xx(str, recipientsCC);
+		parse(str, recipientsCC);
+	}
+	
+	public void parseRecipientsBCC(String str) {
+		parse(str, recipientsBCC);
 	}
 
-	private void xx(String str, Collection<Recipient> recipients) {
+	private void parse(String str, Collection<Recipient> recipients) {
 		StringTokenizer st = new StringTokenizer(str.trim().toLowerCase(), ", ;", false);
 		recipients.clear();
 		while (st.hasMoreTokens()) {
@@ -148,6 +148,7 @@ public class EMail extends Message {
 			Recipient recipient = new Recipient();
 			recipient.setAddress(token);
 			recipient.setName(token);
+			recipient.setType(Recipient.TYPE_EMAIL);
 			recipients.add(recipient);
 		}
 	}
@@ -158,5 +159,13 @@ public class EMail extends Message {
 
 	public void setRecipientsCC(Set<Recipient> recipientsCC) {
 		this.recipientsCC = recipientsCC;
+	}
+
+	public Set<Recipient> getRecipientsBCC() {
+		return recipientsBCC;
+	}
+
+	public void setRecipientsBCC(Set<Recipient> recipientsBCC) {
+		this.recipientsBCC = recipientsBCC;
 	}
 }
