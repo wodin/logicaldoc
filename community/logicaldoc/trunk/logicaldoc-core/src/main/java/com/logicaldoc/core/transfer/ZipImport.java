@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -13,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.document.DocumentManager;
@@ -193,9 +195,16 @@ public class ZipImport {
 	protected void sendNotificationMessage() {
 		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
 		Date now = new Date();
+		Recipient recipient = new Recipient();
+		recipient.setName(user.getUserName());
+		recipient.setAddress(user.getUserName());
+		recipient.setType(SystemMessage.TYPE_SYSTEM);
+		recipient.setMode("");
+		Set<Recipient> recipients = new HashSet<Recipient>();
+		recipients.add(recipient);
 		SystemMessage sysmess = new SystemMessage();
 		sysmess.setAuthor("SYSTEM");
-		sysmess.setRecipient(user.getUserName());
+		sysmess.setRecipients(recipients);
 		ResourceBundle bundle = ResourceBundle.getBundle("/i18n/application", user.getLocale());
 		sysmess.setSubject(bundle.getString("zip.import.subject"));
 		String message = bundle.getString("zip.import.body");
