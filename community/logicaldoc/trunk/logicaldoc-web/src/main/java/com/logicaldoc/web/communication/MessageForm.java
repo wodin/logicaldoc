@@ -1,12 +1,15 @@
 package com.logicaldoc.web.communication;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.security.User;
@@ -31,6 +34,8 @@ public class MessageForm {
 	private boolean readOnly = true;
 
 	private boolean confirmation = false;
+
+	private String recipientInserted = "";
 
 	public SystemMessage getMessage() {
 		return message;
@@ -79,12 +84,21 @@ public class MessageForm {
 		if (SessionManagement.isValid()) {
 			try {
 				UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-				String recipient = message.getRecipient();
-				User user = udao.findByUserName(recipient);
+				User user = udao.findByUserName(recipientInserted);
 				if (user != null) {
 					message.setAuthor(SessionManagement.getUsername());
 					message.setSentDate(new Date());
-
+					message.setStatus(SystemMessage.STATUS_NEW);
+					message.setType(SystemMessage.TYPE_SYSTEM);
+					message.setLastNotified(new Date());
+					Recipient recipient = new Recipient();
+					recipient.setName(recipientInserted);
+					recipient.setAddress(recipientInserted);
+					recipient.setType(SystemMessage.TYPE_SYSTEM);
+					recipient.setMode("message");
+					Set<Recipient> recipients = new HashSet<Recipient>();
+					recipients.add(recipient);
+					message.setRecipients(recipients);
 					SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
 					boolean stored = smdao.store(message);
 
@@ -105,7 +119,15 @@ public class MessageForm {
 		} else {
 			return "login";
 		}
-		
+
 		return back();
+	}
+
+	public String getRecipientInserted() {
+		return recipientInserted;
+	}
+
+	public void setRecipientInserted(String recipientInserted) {
+		this.recipientInserted = recipientInserted;
 	}
 }

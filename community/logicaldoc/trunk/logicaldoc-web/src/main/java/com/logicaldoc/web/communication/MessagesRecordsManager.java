@@ -3,14 +3,17 @@ package com.logicaldoc.web.communication;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.util.Context;
@@ -64,7 +67,7 @@ public class MessagesRecordsManager {
 	 */
 	public String listMessages() {
 		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
-		messages = smdao.findByRecipient(SessionManagement.getUsername());
+		messages = smdao.findByRecipient(SessionManagement.getUsername(), SystemMessage.TYPE_SYSTEM);
 		smdao.deleteExpiredMessages(SessionManagement.getUsername());
 
 		PageContentBean content = new PageContentBean("messages", "communication/messages");
@@ -124,18 +127,25 @@ public class MessagesRecordsManager {
 		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
 		SystemMessage record = (SystemMessage) map.get("messageRecord");
 		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
-
+		smdao.initialize(record);
 		if (record.getRead() == 0) {
 			record.setRead(1);
 			smdao.store(record);
 
 			if (record.getConfirmation() == 1) {
 				Date date = new Date();
+				Recipient recipient = new Recipient();
+				recipient.setName(record.getAuthor());
+				recipient.setAddress(record.getAuthor());
+				recipient.setType(SystemMessage.TYPE_SYSTEM);
+				recipient.setMode("");
+				Set<Recipient> recipients = new HashSet<Recipient>();
+				recipients.add(recipient);
 				SystemMessage sysmess = new SystemMessage();
 				sysmess.setAuthor("SYSTEM");
-				sysmess.setRecipient(record.getAuthor());
+				sysmess.setRecipients(recipients);
 				sysmess.setSubject("Confirmation");
-				sysmess.setMessageText("To: " + record.getRecipient() + "\nMessage: " + record.getMessageText());
+				sysmess.setMessageText("To: " + recipient.getName() + "\nMessage: " + record.getMessageText());
 				sysmess.setSentDate(date);
 				sysmess.setRead(0);
 				sysmess.setConfirmation(0);
@@ -185,7 +195,7 @@ public class MessagesRecordsManager {
 
 	public int getToBeReadCount() {
 		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
-		int smcount = smdao.getCount(SessionManagement.getUsername());
+		int smcount = smdao.getCount(SessionManagement.getUsername(), SystemMessage.TYPE_SYSTEM);
 
 		return smcount;
 	}
