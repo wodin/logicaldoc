@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
@@ -36,6 +37,8 @@ public class MessageForm {
 	private boolean confirmation = false;
 
 	private String recipientInserted = "";
+	
+	private UIInput recipientInsertedInput = null;
 
 	public SystemMessage getMessage() {
 		return message;
@@ -44,6 +47,8 @@ public class MessageForm {
 	public void setMessage(SystemMessage message) {
 		this.message = message;
 		confirmation = message.getConfirmation() != 0;
+		recipientInserted = "";
+		FacesUtil.forceRefresh(recipientInsertedInput);
 	}
 
 	public String back() {
@@ -129,5 +134,13 @@ public class MessageForm {
 
 	public void setRecipientInserted(String recipientInserted) {
 		this.recipientInserted = recipientInserted;
+	}
+
+	public UIInput getRecipientInsertedInput() {
+		return recipientInsertedInput;
+	}
+
+	public void setRecipientInsertedInput(UIInput recipientInsertedInput) {
+		this.recipientInsertedInput = recipientInsertedInput;
 	}
 }

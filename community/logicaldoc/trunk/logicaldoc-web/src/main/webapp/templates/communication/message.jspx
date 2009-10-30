@@ -30,23 +30,19 @@
 			<ice:panelGrid columns="2"
 				onkeypress="return submitOnEnter(buttonSave, event);"
 				style="text-align: left;">
-				<ice:panelGroup styleClass="outputLabel">
-					<ice:outputLabel for="recipient"
-						value="#{msgs['recipient']}*" />
+				<ice:panelGroup styleClass="outputLabel"
+					rendered="#{!messageForm.readOnly}">
+					<ice:outputLabel for="recipient" value="#{msgs['recipient']}*" />
 				</ice:panelGroup>
 				<ice:panelGroup rendered="#{!messageForm.readOnly}">
 					<ice:inputText id="recipient"
 						label="#{msgs['errors.header.alert.key']}" tabindex="1"
-						maxlength="100" size="20" value="#{messageForm.message.recipient}"
+						maxlength="100" size="20" value="#{messageForm.recipientInserted}"
+						binding="#{messageForm.recipientInsertedInput}"
 						onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
 						required="true" />
 					<ice:message for="recipient" />
 				</ice:panelGroup>
-				<ice:panelGroup rendered="#{messageForm.readOnly}">
-					<ice:outputText value="#{messageForm.message.recipient}"
-						style="font-weight:bold" />
-				</ice:panelGroup>
-
 
 				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="subject" value="#{msgs['subject']}*" />
@@ -126,8 +122,8 @@
 		</ice:panelGroup>
 		<hr />
 		<ice:panelGroup styleClass="commands">
-			<ice:commandButton value="&lt;&lt; #{msgs['back']}"
-				immediate="true" partialSubmit="true" action="#{messageForm.back}" />
+			<ice:commandButton value="&lt;&lt; #{msgs['back']}" immediate="true"
+				partialSubmit="true" action="#{messageForm.back}" />
 			<ice:commandButton value="#{msgs['send']}" id="save"
 				action="#{messageForm.save}" rendered="#{!messageForm.readOnly}"
 				tabindex="1" />
