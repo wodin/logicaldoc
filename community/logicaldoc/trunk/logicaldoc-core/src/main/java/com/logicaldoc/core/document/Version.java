@@ -1,5 +1,6 @@
 package com.logicaldoc.core.document;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -8,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.util.config.PropertiesBean;
 
 /**
  * This class represents versions.
@@ -103,8 +105,15 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 	 *      VersionImpl.VERSION_TYPE)
 	 */
 	private String getNewVersionName(String oldVersionName, VERSION_TYPE versionType) {
-		if (StringUtils.isEmpty(oldVersionName))
-			return "1.0";
+		if (StringUtils.isEmpty(oldVersionName)){
+			PropertiesBean config;
+			try {
+				config = new PropertiesBean();
+				return config.getProperty("document.startversion");
+			} catch (IOException e) {
+				return "1.0";
+			}
+		}
 
 		String release = oldVersionName.substring(0, oldVersionName.indexOf("."));
 		String version = oldVersionName.substring(oldVersionName.lastIndexOf(".") + 1);
