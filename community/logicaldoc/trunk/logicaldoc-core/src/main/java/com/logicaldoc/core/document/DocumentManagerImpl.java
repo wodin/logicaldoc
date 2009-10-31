@@ -33,6 +33,7 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.PropertiesBean;
 
 /**
  * Basic Implementation of <code>DocumentManager</code>
@@ -57,6 +58,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	private Indexer indexer;
 
 	private Storer storer;
+	
+	private PropertiesBean config;
 
 	public void setListenerManager(DocumentListenerManager listenerManager) {
 		this.listenerManager = listenerManager;
@@ -505,8 +508,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc.setCreatorId(user.getId());
 			doc.setStatus(Document.DOC_UNLOCKED);
 			doc.setType(type);
-			doc.setVersion("1.0");
-			doc.setFileVersion("1.0");
+			doc.setVersion(config.getProperty("document.startversion"));
+			doc.setFileVersion(doc.getVersion());
 			doc.setSource(source);
 			doc.setSourceAuthor(sourceAuthor);
 			doc.setSourceType(sourceType);
@@ -798,5 +801,9 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void setStorer(Storer storer) {
 		this.storer = storer;
+	}
+
+	public void setConfig(PropertiesBean config) {
+		this.config = config;
 	}
 }
