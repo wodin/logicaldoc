@@ -14,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -151,8 +152,9 @@ public class LoginForm {
 			log.info("User " + authUsername + " logged out.");
 
 			HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
-			if (session != null && session.getAttribute(Constants.AUTH_USERNAME)!=null)
-				session.invalidate();
+			if (session != null && session.getAttribute(Constants.USER_SESSION)!=null){
+				SessionManager.getInstance().kill((String)session.getAttribute(Constants.USER_SESSION));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(e.getMessage(), e);
