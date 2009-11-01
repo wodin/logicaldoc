@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.logicaldoc</groupId>
     <artifactId>logicaldoc-parent-pom</artifactId>
-    <version>12</version>
+    <version>13</version>
   </parent>
 	<groupId>com.logicaldoc</groupId>
 	<artifactId>logicaldoc</artifactId>
