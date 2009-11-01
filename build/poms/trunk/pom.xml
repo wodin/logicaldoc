@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>12</version>
+  <version>13</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -341,13 +341,13 @@
    <dependency>
       <groupId>org.icefaces</groupId>
       <artifactId>icefaces-comps</artifactId>
-      <version>1.7.2.SP1</version>
+      <version>1.8.2</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.icefaces</groupId>
       <artifactId>icefaces-facelets</artifactId>
-      <version>1.7.2.SP1</version>
+      <version>1.8.2</version>
       <type>jar</type>
       <exclusions>
         <exclusion>
@@ -367,7 +367,7 @@
     <dependency>
       <groupId>org.icefaces</groupId>
       <artifactId>icefaces</artifactId>
-      <version>1.7.2.SP1</version>
+      <version>1.8.2</version>
       <type>jar</type>
       <exclusions>
         <exclusion>
