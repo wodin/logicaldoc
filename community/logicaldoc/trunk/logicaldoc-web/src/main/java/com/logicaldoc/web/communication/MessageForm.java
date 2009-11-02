@@ -99,7 +99,7 @@ public class MessageForm {
 					Recipient recipient = new Recipient();
 					recipient.setName(recipientInserted);
 					recipient.setAddress(recipientInserted);
-					recipient.setType(SystemMessage.TYPE_SYSTEM);
+					recipient.setType(Recipient.TYPE_SYSTEM);
 					recipient.setMode("message");
 					Set<Recipient> recipients = new HashSet<Recipient>();
 					recipients.add(recipient);

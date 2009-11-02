@@ -137,7 +137,7 @@ public class MessagesRecordsManager {
 				Recipient recipient = new Recipient();
 				recipient.setName(record.getAuthor());
 				recipient.setAddress(record.getAuthor());
-				recipient.setType(SystemMessage.TYPE_SYSTEM);
+				recipient.setType(Recipient.TYPE_SYSTEM);
 				recipient.setMode("");
 				Set<Recipient> recipients = new HashSet<Recipient>();
 				recipients.add(recipient);

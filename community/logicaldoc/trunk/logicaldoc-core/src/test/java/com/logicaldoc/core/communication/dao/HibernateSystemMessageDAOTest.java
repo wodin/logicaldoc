@@ -101,13 +101,13 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTestCase {
 		Recipient recipient = new Recipient();
 		recipient.setName("pippo");
 		recipient.setAddress("pippo");
-		recipient.setType(0);
+		recipient.setType(Recipient.TYPE_SYSTEM);
 		recipient.setMode("test1");
 		recipients.add(recipient);
 		recipient = new Recipient();
 		recipient.setName("paperino");
 		recipient.setAddress("paperino");
-		recipient.setType(1);
+		recipient.setType(Recipient.TYPE_EMAIL);
 		recipient.setMode("test2");
 		recipients.add(recipient);
 
