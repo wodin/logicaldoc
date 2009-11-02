@@ -3,6 +3,7 @@ package com.logicaldoc.workflow.action;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -94,12 +95,19 @@ public class DefaultAssignmentHandler extends AbstractAssignmentHandler {
 			if (subject == null || (subject != null && subject.trim().length() == 0))
 				subject = "No subect specified";
 
+			Recipient recipient = new Recipient();
+			recipient.setName(user.getUserName());
+			recipient.setAddress(user.getUserName());
+			recipient.setType(SystemMessage.TYPE_SYSTEM);
+			Set<Recipient> recipients = new HashSet<Recipient>();
+			recipients.add(recipient);
+
 			SystemMessage message = new SystemMessage();
 			message.setAuthor("[BPM] - " + workflowTemplate.getName());
-			message.setRecipient(user.getUserName());
 			message.setMessageText(assignmentText);
 			message.setSentDate(new Date());
 			message.setSubject(subject);
+			message.setRecipients(recipients);
 
 			systemMessageDAO.store(message);
 		}
