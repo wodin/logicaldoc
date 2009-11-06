@@ -619,8 +619,6 @@ public class DocumentRecord extends MenuBarBean {
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
-				transaction.setEvent(History.EVENT_UNLOCKED);
-				transaction.setComment("");
 
 				// Unlock the document; throws an exception if something
 				// goes wrong

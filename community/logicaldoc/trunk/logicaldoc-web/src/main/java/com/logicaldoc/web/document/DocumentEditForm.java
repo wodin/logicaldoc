@@ -611,6 +611,8 @@ public class DocumentEditForm {
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+					// TODO How can I know if the document was simply renamed or
+					// if some metadata was changed?
 					transaction.setEvent(History.EVENT_CHANGED);
 					transaction.setComment("");
 
@@ -721,9 +723,7 @@ public class DocumentEditForm {
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
-					transaction.setEvent(History.EVENT_UNLOCKED);
-					transaction.setComment("");
-					
+
 					// Unchekout the document; throws an exception if something
 					// goes wrong
 					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
@@ -793,8 +793,6 @@ public class DocumentEditForm {
 						// Create the document history event
 						History transaction = new History();
 						transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
-						transaction.setEvent(History.EVENT_CHECKEDIN);
-						transaction.setComment("");
 
 						// checkin the document; throws an exception if
 						// something goes wrong
