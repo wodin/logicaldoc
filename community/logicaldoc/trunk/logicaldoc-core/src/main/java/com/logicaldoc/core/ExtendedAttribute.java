@@ -22,7 +22,7 @@ public class ExtendedAttribute {
 
 	private String stringValue;
 
-	private Integer intValue;
+	private Long intValue;
 
 	private Double doubleValue;
 
@@ -40,11 +40,11 @@ public class ExtendedAttribute {
 		this.stringValue = stringValue;
 	}
 
-	public Integer getIntValue() {
+	public Long getIntValue() {
 		return intValue;
 	}
 
-	public void setIntValue(Integer intValue) {
+	public void setIntValue(Long intValue) {
 		this.intValue = intValue;
 	}
 
@@ -73,7 +73,7 @@ public class ExtendedAttribute {
 	}
 
 	/**
-	 * Gets the attribute value. It can be as String, Integer, Double or Date.
+	 * Gets the attribute value. It can be as String, Long, Double or Date.
 	 * 
 	 * @return The attribute value as Object.
 	 */
@@ -92,7 +92,7 @@ public class ExtendedAttribute {
 	}
 
 	/**
-	 * Sets the attribute value. It can be as String, Integer, Double or Date.
+	 * Sets the attribute value. It can be as String, Long, Double or Date.
 	 * 
 	 * @param value The attribute value.
 	 */
@@ -100,9 +100,9 @@ public class ExtendedAttribute {
 		if (value instanceof String) {
 			this.type = TYPE_STRING;
 			setStringValue((String) value);
-		} else if (value instanceof Integer) {
+		} else if (value instanceof Long) {
 			this.type = TYPE_INT;
-			setIntValue((Integer) value);
+			setIntValue((Long) value);
 		} else if (value instanceof Double) {
 			this.type = TYPE_DOUBLE;
 			setDoubleValue((Double) value);
@@ -111,7 +111,7 @@ public class ExtendedAttribute {
 			setDateValue((Date) value);
 		} else {
 			System.out.println("Value: " + value.getClass());
-			throw new IllegalArgumentException("No a String, Integer, Double or Date value");
+			throw new IllegalArgumentException("No a String, Long, Double or Date value");
 		}
 	}
 
