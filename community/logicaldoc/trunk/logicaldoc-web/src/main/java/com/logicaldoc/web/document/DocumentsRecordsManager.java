@@ -368,7 +368,6 @@ public class DocumentsRecordsManager extends SortableList {
 						// Create the document history event
 						History transaction = new History();
 						transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
-						transaction.setEvent(History.EVENT_IMMUTABLE);
 						transaction.setComment(operationComment);
 
 						manager.makeImmutable(record.getDocId(), SessionManagement.getUser(), transaction);
@@ -476,8 +475,6 @@ public class DocumentsRecordsManager extends SortableList {
 							// Create the document history event
 							History transaction = new History();
 							transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
-							transaction.setEvent(History.EVENT_MOVED);
-							transaction.setComment("");
 
 							docManager.moveToFolder(record.getDocument(), selectedMenuFolder, SessionManagement
 									.getUser(), transaction);
