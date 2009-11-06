@@ -58,7 +58,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	private Indexer indexer;
 
 	private Storer storer;
-	
+
 	private PropertiesBean config;
 
 	public void setListenerManager(DocumentListenerManager listenerManager) {
@@ -134,6 +134,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			// Modify document history entry
 			transaction.setUserId(user.getId());
 			transaction.setUserName(user.getFullName());
+			transaction.setEvent(History.EVENT_CHECKEDIN);
 
 			// create search index entry
 			if (immediateIndexing)
@@ -318,6 +319,12 @@ public class DocumentManagerImpl implements DocumentManager {
 			throws Exception {
 		try {
 			if (doc.getImmutable() == 0) {
+				History renameTransaction = null;
+				if (!doc.getTitle().equals(title) && title != null) {
+					renameTransaction = (History) transaction.clone();
+					renameTransaction.setEvent(History.EVENT_RENAMED);
+				}
+
 				doc.setTitle(title);
 				doc.setSource(source);
 				doc.setSourceId(sourceId);
@@ -380,6 +387,8 @@ public class DocumentManagerImpl implements DocumentManager {
 				transaction.setUserId(user.getId());
 				transaction.setUserName(user.getFullName());
 				documentDAO.store(doc, transaction);
+				if (renameTransaction != null)
+					documentDAO.store(doc, renameTransaction);
 
 				versionDAO.store(version);
 
@@ -425,6 +434,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			// Modify document history entry
 			transaction.setUserId(user.getId());
 			transaction.setUserName(user.getFullName());
+			transaction.setEvent(History.EVENT_MOVED);
 			documentDAO.store(doc, transaction);
 
 			Version version = Version.create(doc, user, "", Version.EVENT_MOVED, Version.VERSION_TYPE.NEW_SUBVERSION);
@@ -548,7 +558,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			transaction.setUserName(user.getFullName());
 			documentDAO.store(doc, transaction);
 
-			/* store the document into filesystem*/
+			/* store the document into filesystem */
 			store(doc, content);
 
 			File file = getDocumentFile(doc);
@@ -639,6 +649,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		// Modify document history entry
 		transaction.setUserId(user.getId());
 		transaction.setUserName(user.getFullName());
+		transaction.setEvent(History.EVENT_UNLOCKED);
 		documentDAO.store(document, transaction);
 
 		log.debug("Unlocked document " + docId);
@@ -651,6 +662,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			// Modify document history entry
 			transaction.setUserId(user.getId());
 			transaction.setUserName(user.getFullName());
+			transaction.setEvent(History.EVENT_IMMUTABLE);
 			documentDAO.makeImmutable(docId, transaction);
 
 			log.debug("The document " + docId + " has been marked as immutable ");
@@ -777,6 +789,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			// Modify document history entry
 			transaction.setUserId(user.getId());
 			transaction.setUserName(user.getFullName());
+			transaction.setEvent(History.EVENT_RENAMED);
 			documentDAO.store(doc, transaction);
 
 			Version version = Version.create(doc, user, "", Version.EVENT_RENAMED, Version.VERSION_TYPE.NEW_SUBVERSION);
