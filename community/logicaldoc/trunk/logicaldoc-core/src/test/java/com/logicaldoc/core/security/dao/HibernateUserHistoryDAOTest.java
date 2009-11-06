@@ -1,4 +1,4 @@
-package com.logicaldoc.core.document.dao;
+package com.logicaldoc.core.security.dao;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -6,13 +6,12 @@ import java.util.Iterator;
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.i18n.DateBean;
 import com.logicaldoc.core.security.UserHistory;
-import com.logicaldoc.core.security.dao.UserHistoryDAO;
 
 /**
  * Test case for <code>HibernateUserHistoryDAO</code>
  * 
- * @author Alessandro Gasparini - Logical Objects
- * @since 3.0
+ * @author Matteo Caruso - Logical Objects
+ * @since 5.0
  */
 public class HibernateUserHistoryDAOTest extends AbstractCoreTestCase {
 
@@ -88,5 +87,22 @@ public class HibernateUserHistoryDAOTest extends AbstractCoreTestCase {
 		assertEquals(hStored.getDate().getTime(), DateBean.dateFromCompactString("20061220").getTime());
 		assertEquals(hStored.getUserName(), "sebastian");
 		assertEquals(hStored.getEvent(), "second test User History store");
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testCleanOldHistories() {
+		UserHistory history = dao.findById(1);
+		assertNotNull(history);
+
+		Collection histories = dao.findAll();
+		assertNotNull(histories);
+		assertEquals(3, histories.size());
+
+		dao.cleanOldHistories(5);
+
+		history = dao.findById(1);
+		assertNull(history);
+		histories = dao.findAll();
+		assertEquals(0, histories.size());
 	}
 }
