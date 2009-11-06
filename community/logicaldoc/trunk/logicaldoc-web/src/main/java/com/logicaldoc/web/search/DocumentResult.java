@@ -77,9 +77,13 @@ public class DocumentResult extends DocumentRecord implements Result {
 	}
 
 	public String getPath() {
-		return document.getFolder().getPath();
+		return getDocument().getFolder().getPath();
 	}
 
+	public String getSource() {
+		return getDocument().getSource();
+	}
+	
 	public Integer getRed() {
 		return result.getRed();
 	}

@@ -131,6 +131,7 @@
 						style="color: #008000; text-decoration: underline; font-size: 12px;">
 						<h:outputText value="#{entry.documentPath}" />
 					</ice:commandLink>
+					<br/><ice:outputText style="font-style:italic; font-size: 10px;" value="#{entry.source}" />
 				</ice:panelGroup>
 
 			</ice:panelGroup>
