@@ -85,7 +85,7 @@
 	</extension>
 	
 	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="jbpmInit">
-		<parameter id="position" value="10" />
+		<parameter id="position" value="11" />
 		<parameter id="name" value="jbpm" />
 		<parameter id="sqlFile" value="sql/jbpm.jpdl.sql" />
 	</extension>
