@@ -42,7 +42,7 @@
 					<ice:message for="#{id}" />
 				</ice:panelGroup>
 
-				<ice:panelGroup style="text-align:center">
+				<ice:panelGroup style="text-align:center" rendered="#{showFilter eq 'true'}">
 					<ice:outputLabel for="filter" value="#{msgs['filter']}" />
 				</ice:panelGroup>
 
