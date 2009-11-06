@@ -93,10 +93,6 @@ public class DmsServiceImpl implements DmsService {
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(sid);
-				transaction.setEvent(History.EVENT_CHECKEDIN);
-				transaction.setComment("");
-				transaction.setUserId(user.getId());
-				transaction.setUserName(user.getFullName());
 
 				// checkin the document; throws an exception if
 				// something goes wrong
@@ -639,6 +635,8 @@ public class DmsServiceImpl implements DmsService {
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
+		// TODO How can I know if the document was simply renamed or
+		// if some metadata was changed?
 		transaction.setEvent(History.EVENT_CHANGED);
 		transaction.setComment("");
 		transaction.setUserId(user.getId());
