@@ -300,10 +300,6 @@ public class ResourceServiceImpl implements ResourceService {
 			// Create the document history event
 			History transaction = new History();
 			transaction.setSessionId(sid);
-			transaction.setEvent(History.EVENT_CHECKEDIN);
-			transaction.setComment("");
-			transaction.setUserId(user.getId());
-			transaction.setUserName(user.getFullName());
 
 			documentManager.checkin(Long.parseLong(resource.getID()), context.getInputStream(), resource.getName(),
 					user, VERSION_TYPE.NEW_SUBVERSION, "", false, transaction);
@@ -387,14 +383,10 @@ public class ResourceServiceImpl implements ResourceService {
 			// Create the document history event
 			History transaction = new History();
 			transaction.setSessionId(sid);
-			transaction.setComment("");
-			transaction.setUserId(user.getId());
-			transaction.setUserName(user.getFullName());
 
 			if (!source.getName().equals(document.getFileName())) {
 				// we are doing a file rename
 				try {
-					transaction.setEvent(History.EVENT_RENAMED);
 					documentManager.rename(document, user, source.getName(), false, transaction);
 				} catch (Exception e) {
 					log.warn(e.getMessage(), e);
@@ -409,7 +401,6 @@ public class ResourceServiceImpl implements ResourceService {
 				Menu menu = menuDAO.findById(Long.parseLong(destination.getID()));
 
 				try {
-					transaction.setEvent(History.EVENT_MOVED);
 					documentManager.moveToFolder(document, menu, user, transaction);
 				} catch (Exception e) {
 					log.warn(e.getMessage(), e);
@@ -591,10 +582,6 @@ public class ResourceServiceImpl implements ResourceService {
 			// Create the document history event
 			History transaction = new History();
 			transaction.setSessionId(sid);
-			transaction.setEvent(History.EVENT_UNLOCKED);
-			transaction.setComment("");
-			transaction.setUserId(user.getId());
-			transaction.setUserName(user.getFullName());
 
 			documentManager.unlock(Long.parseLong(resource.getID()), user, transaction);
 
