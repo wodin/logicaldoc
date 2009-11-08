@@ -329,6 +329,7 @@ public class UserForm {
 	}
 
 	private String save(boolean withPassword) {
+		String decodedPassword=getPassword();
 		if (SessionManagement.isValid()) {
 			try {
 				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -365,7 +366,7 @@ public class UserForm {
 						history.setSessionId(SessionManagement.getCurrentUserSessionId());
 
 						// Notify the user by email
-						notifyAccount(user, getPassword());
+						notifyAccount(user, decodedPassword);
 					}
 
 					user.setRepass("");
@@ -376,8 +377,8 @@ public class UserForm {
 
 				if (createNew) {
 					// Generate an initial password
-					String password = new PasswordGenerator().generate(getConfig().getInt("password.size"));
-					user.setDecodedPassword(password);
+					decodedPassword = new PasswordGenerator().generate(getConfig().getInt("password.size"));
+					user.setDecodedPassword(decodedPassword);
 					dao.store(user);
 				}
 
@@ -409,7 +410,7 @@ public class UserForm {
 
 					// Notify the user by email
 					if (createNew)
-						notifyAccount(user, password);
+						notifyAccount(user, decodedPassword);
 				}
 
 				UsersRecordsManager recordsManager = ((UsersRecordsManager) FacesUtil.accessBeanFromFacesContext(
