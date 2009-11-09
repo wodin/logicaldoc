@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.History;
-import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
@@ -429,15 +427,11 @@ public class RightsRecordsManager {
 		} else {
 			// Add a folder history entry
 			History history = new History();
-			history.setFolderId(folder.getId());
 			history.setUserId(SessionManagement.getUserId());
 			history.setUserName(SessionManagement.getUser().getFullName());
 			history.setEvent(History.EVENT_FOLDER_PERMISSION);
-			history.setNotified(0);
-			history.setDate(new Date());
 			history.setSessionId(SessionManagement.getCurrentUserSessionId());
-			HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-			historyDAO.store(history);
+			mdao.store(folder, history);
 		}
 		if (recursive) {
 			// recursively apply permissions to all submenus where the user has
