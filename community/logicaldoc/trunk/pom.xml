@@ -119,12 +119,6 @@
       <layout>default</layout>
     </repository>
     <repository>
-      <id>maven-repository</id>
-      <name>maven-repository.dev.java.net</name>
-      <url>https://maven-repository.dev.java.net/repository</url>
-      <layout>legacy</layout>
-    </repository>
-    <repository>
       <id>logicaldoc</id>
       <name>LogicalDOC Repository</name>
       <url>http://logicaldoc.sourceforge.net/maven</url>
