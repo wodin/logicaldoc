@@ -20,9 +20,12 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-			<title>#{StyleBean.productName}  #{StyleBean.productRelease}</title>
-			<link type="image/x-icon" href="#{facesContext.externalContext.requestContextPath}#{StyleBean.imagesPath}/favicon.ico" rel="shortcut icon"/>
-			<ice:outputText style="padding-top:0px; padding-bottom:0px;" value="#{StyleBean.style}" escape="false" />
+			<title>#{StyleBean.productName} #{StyleBean.productRelease}</title>
+			<link type="image/x-icon"
+				href="#{facesContext.externalContext.requestContextPath}#{StyleBean.imagesPath}/favicon.ico"
+				rel="shortcut icon" />
+			<ice:outputText style="padding-top:0px; padding-bottom:0px;"
+				value="#{StyleBean.style}" escape="false" />
 			<ice:outputStyle href="#{StyleBean.cssPath}/system.css" />
 		</head>
 		<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0"
@@ -36,10 +39,15 @@
 			<div class="system_bg">
 				<div class="system_info">
 					<br />
-					<ice:outputText value="#{msgs['connection.lost']}" styleClass="system_info" />
+					<ice:outputText value="#{msgs['connection.lost']}"
+						styleClass="system_info" />
 					<br />
 					<br />
-					<b><ice:graphicImage value="#{StyleBean.imagesPath}/expand.png" style="text-align: left; vertical-align: top;" /><ice:outputLink value="#{facesContext.externalContext.requestContextPath}" styleClass="system_link" style="font-size: 12px; text-decoration: underline; color: #0a3266;">#{msgs['connection.reload']}</ice:outputLink>
+					<b><ice:graphicImage value="#{StyleBean.imagesPath}/expand.png"
+							style="text-align: left; vertical-align: top;" /> <ice:outputLink
+							value="#{facesContext.externalContext.requestContextPath}/login.iface"
+							styleClass="system_link"
+							style="font-size: 12px; text-decoration: underline; color: #0a3266;">#{msgs['connection.reload']}</ice:outputLink>
 					</b>
 				</div>
 			</div>

@@ -61,8 +61,11 @@ part2.className = 'hidden';
 						<ice:outputText styleClass="system_info">&#160;&#160;#{msgs['connection.sorry']}</ice:outputText>
 						<br />
 						<br />
-						<ice:commandLink styleClass="system_link" action="#{loginForm.logout}">#{msgs['connection.login']}</ice:commandLink>
-
+						<ice:graphicImage value="#{StyleBean.imagesPath}/expand.png" style="text-align: left; vertical-align: top;" />
+						<ice:outputLink
+							value="#{facesContext.externalContext.requestContextPath}/login.iface"
+							styleClass="system_link"
+							style="font-size: 12px; text-decoration: underline; color: #0a3266;">#{msgs['connection.login']}</ice:outputLink>
 						<br />
 						<br />
 						<a class="system_link" href="javascript:toggle();">show errors</a>
