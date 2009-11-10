@@ -76,6 +76,8 @@
 		<parameter id="position" value="50" />
 		<parameter id="icon" value="actions_workflow.png" />
 		<parameter id="confirm" value="" />
+		<parameter id="link" value="" />
+		<parameter id="target" value="" />
 	</extension>
 	
 	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="workflowDbInit">
