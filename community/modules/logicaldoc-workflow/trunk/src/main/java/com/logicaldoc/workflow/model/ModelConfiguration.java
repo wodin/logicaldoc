@@ -10,7 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
 
 import com.logicaldoc.util.PluginRegistry;
-import com.logicaldoc.workflow.editor.controll.DragAndDropSupportController;
+import com.logicaldoc.workflow.editor.controll.EditController;
 import com.logicaldoc.workflow.transform.TransformModel;
 
 /**
@@ -27,7 +27,7 @@ public class ModelConfiguration {
 
 	private Map<String, TransformModel> transformers = new HashMap<String, TransformModel>();
 
-	private Map<String, DragAndDropSupportController> controllers = new HashMap<String, DragAndDropSupportController>();
+	private Map<String, EditController> controllers = new HashMap<String, EditController>();
 
 	public Map<String, TransformModel> getTransformers() {
 		if (transformers.isEmpty())
@@ -35,7 +35,7 @@ public class ModelConfiguration {
 		return transformers;
 	}
 
-	public Map<String, DragAndDropSupportController> getControllers() {
+	public Map<String, EditController> getControllers() {
 		if (controllers.isEmpty())
 			init();
 		return controllers;
@@ -61,8 +61,7 @@ public class ModelConfiguration {
 			String controllerClass = ext.getParameter("controller").valueAsString();
 			try {
 				if (StringUtils.isNotEmpty(controllerClass)) {
-					DragAndDropSupportController controller = (DragAndDropSupportController) Class.forName(
-							controllerClass).newInstance();
+					EditController controller = (EditController) Class.forName(controllerClass).newInstance();
 					controllers.put(name, controller);
 				}
 			} catch (Throwable t) {

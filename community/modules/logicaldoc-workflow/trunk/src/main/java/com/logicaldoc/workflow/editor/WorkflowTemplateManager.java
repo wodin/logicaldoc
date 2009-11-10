@@ -135,6 +135,7 @@ public class WorkflowTemplateManager {
 
 	public String addWorkflowComponent(ActionEvent ae) {
 		UIParameter param = (UIParameter) ((UIComponent) ae.getSource()).getChildren().get(0);
+		
 		EditController editController = modelConfiguration.getControllers().get(param.getValue());
 
 		if (editController == null) {
@@ -265,12 +266,12 @@ public class WorkflowTemplateManager {
 			cnt.droppingZone = droppedZone;
 
 			try {
-				DragAndDropSupportController dndController = modelConfiguration.getControllers().get(
+				EditController dndController = modelConfiguration.getControllers().get(
 						cnt.droppingZone.getClass().getSimpleName());
 				if (dndController == null)
 					Messages.addLocalizedError("feature.enterprise");
-				else
-					dndController.droppedObject(cnt);
+				else if(dndController instanceof DragAndDropSupportController)
+					((DragAndDropSupportController)dndController).droppedObject(cnt);
 			} catch (Exception e) {
 				throw new WorkflowEditorException(e);
 			}
