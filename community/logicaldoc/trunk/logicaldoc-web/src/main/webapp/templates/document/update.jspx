@@ -249,7 +249,7 @@
 						<ice:panelGroup
 							rendered="#{!fieldPreferences['edit.source.hidden'] and (documentForm.readOnly or fieldPreferences['edit.source.readonly'])}">
 							<input type="text" class="iceInpTxt disabled"
-								value="#{documentForm.source}" axlength="255" />
+								value="#{documentForm.source}" length="255" />
 						</ice:panelGroup>
 						<ice:message for="source" />
 					</ice:panelGroup>
