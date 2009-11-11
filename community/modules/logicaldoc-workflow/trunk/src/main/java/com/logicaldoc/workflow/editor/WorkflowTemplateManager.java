@@ -303,6 +303,8 @@ public class WorkflowTemplateManager {
 		BaseWorkflowModel model = (BaseWorkflowModel) ((UIParameter) component.getChildren().get(0)).getValue();
 
 		this.workflowTemplate.getWorkflowComponents().remove(model);
+		this.component = null;
+		showWorkflowSettings = true;
 	}
 
 	public String saveCurrentWorkflowTemplate() {
