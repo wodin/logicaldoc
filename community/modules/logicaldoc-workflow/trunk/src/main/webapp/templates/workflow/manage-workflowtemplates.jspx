@@ -53,8 +53,7 @@
 				<ice:panelGroup styleClass="rightToolSite">
 					<ice:commandLink
 						action="#{WorkflowTemplateManager.createNewWorkflowTemplate}">
-						<nobr>
-						<ice:graphicImage styleClass="linkImage"
+						<nobr> <ice:graphicImage styleClass="linkImage"
 							value="/skins/default/images/workflow/editor/new_template.gif" />
 						<ice:outputText value="#{msgs['workflow.editor_template_new']}" /></nobr>
 					</ice:commandLink>
@@ -64,8 +63,9 @@
 			<td valign="top" width="1"
 				style="background-image: url('/skins/default/images/workflow/editor/menu_gradient.jpg');">
 
-				<ice:selectOneMenu
-					value="#{WorkflowTemplateManager.workflowTemplateId}">
+				<ice:selectOneMenu id="workflowTemplateId"
+					value="#{WorkflowTemplateManager.workflowTemplateId}"
+					valueChangeListener="#{WorkflowTemplateManager.load}" partialSubmit="true">
 					<f:selectItems
 						value="#{WorkflowTemplateManager.availableWorkflowTemplates}" />
 				</ice:selectOneMenu>
@@ -245,7 +245,8 @@
 					<tr>
 						<td valign="top" width="340">
 
-							<ice:panelCollapsible id="workflowSettingsPanel" expanded="true">
+							<ice:panelCollapsible id="workflowSettingsPanel"
+								expanded="#{WorkflowTemplateManager.showWorkflowSettings}">
 								<f:facet name="header">
 									<ice:panelGroup>
 										<ice:outputText value="#{msgs['workflow.editor_settings']}" />
