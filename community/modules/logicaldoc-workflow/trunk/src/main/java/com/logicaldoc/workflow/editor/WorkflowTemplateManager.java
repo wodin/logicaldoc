@@ -7,6 +7,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
@@ -66,6 +67,8 @@ public class WorkflowTemplateManager {
 	private Long workflowTemplateId;
 
 	private List<DeployMessage> errorMessages;
+
+	private boolean showWorkflowSettings = true;
 
 	public String getXMLData() {
 		return TRANSMITTER.XML_DATA;
@@ -135,7 +138,7 @@ public class WorkflowTemplateManager {
 
 	public String addWorkflowComponent(ActionEvent ae) {
 		UIParameter param = (UIParameter) ((UIComponent) ae.getSource()).getChildren().get(0);
-		
+
 		EditController editController = modelConfiguration.getControllers().get(param.getValue());
 
 		if (editController == null) {
@@ -234,6 +237,8 @@ public class WorkflowTemplateManager {
 		// initializing the controller
 		this.controller.initialize(baseWorkflowModel);
 
+		showWorkflowSettings = false;
+
 	}
 
 	public String saveComponent() {
@@ -270,8 +275,8 @@ public class WorkflowTemplateManager {
 						cnt.droppingZone.getClass().getSimpleName());
 				if (dndController == null)
 					Messages.addLocalizedError("feature.enterprise");
-				else if(dndController instanceof DragAndDropSupportController)
-					((DragAndDropSupportController)dndController).droppedObject(cnt);
+				else if (dndController instanceof DragAndDropSupportController)
+					((DragAndDropSupportController) dndController).droppedObject(cnt);
 			} catch (Exception e) {
 				throw new WorkflowEditorException(e);
 			}
@@ -446,5 +451,18 @@ public class WorkflowTemplateManager {
 
 	public void setModelConfiguration(ModelConfiguration modelConfiguration) {
 		this.modelConfiguration = modelConfiguration;
+	}
+
+	public boolean isShowWorkflowSettings() {
+		return showWorkflowSettings;
+	}
+
+	public void setShowWorkflowSettings(boolean showWorkflowSettings) {
+		this.showWorkflowSettings = showWorkflowSettings;
+	}
+
+	public void load(ValueChangeEvent event) {
+		this.workflowTemplateId = Long.parseLong(event.getNewValue().toString());
+		loadWorkflowTemplate();
 	}
 }
