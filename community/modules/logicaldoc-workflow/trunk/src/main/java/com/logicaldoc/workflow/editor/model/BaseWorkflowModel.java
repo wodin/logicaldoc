@@ -17,6 +17,8 @@ public abstract class BaseWorkflowModel implements Serializable {
 	private String name;
 
 	private List<Transition> transitions = new LinkedList<Transition>();
+	
+	private boolean selected = false;
 
 	public List<Transition> getTransitions() {
 		return transitions;
@@ -48,6 +50,14 @@ public abstract class BaseWorkflowModel implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 
 	public abstract String getType();

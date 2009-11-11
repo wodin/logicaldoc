@@ -201,6 +201,8 @@ public class WorkflowTemplateManager {
 
 		HtmlCommandLink commandLink = (HtmlCommandLink) actionEvent.getSource();
 
+		removeSelection();
+
 		BaseWorkflowModel baseWorkflowModel = null;
 
 		for (UIComponent component : commandLink.getChildren()) {
@@ -231,11 +233,13 @@ public class WorkflowTemplateManager {
 			this.controller.invalidate();
 
 		this.component = baseWorkflowModel;
+		this.component.setSelected(true);
 
 		this.controller = baseWorkflowModel.getController();
 
 		// initializing the controller
-		this.controller.initialize(baseWorkflowModel);
+		if (this.controller != null)
+			this.controller.initialize(baseWorkflowModel);
 
 		showWorkflowSettings = false;
 
@@ -464,5 +468,11 @@ public class WorkflowTemplateManager {
 	public void load(ValueChangeEvent event) {
 		this.workflowTemplateId = Long.parseLong(event.getNewValue().toString());
 		loadWorkflowTemplate();
+	}
+
+	public void removeSelection() {
+		for (BaseWorkflowModel baseWorkflowModel : getWorkflowComponents()) {
+			baseWorkflowModel.setSelected(false);
+		}
 	}
 }
