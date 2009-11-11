@@ -65,7 +65,8 @@
 
 				<ice:selectOneMenu id="workflowTemplateId"
 					value="#{WorkflowTemplateManager.workflowTemplateId}"
-					valueChangeListener="#{WorkflowTemplateManager.load}" partialSubmit="true">
+					valueChangeListener="#{WorkflowTemplateManager.load}"
+					partialSubmit="true">
 					<f:selectItems
 						value="#{WorkflowTemplateManager.availableWorkflowTemplates}" />
 				</ice:selectOneMenu>
@@ -495,7 +496,7 @@
 															</td>
 															<td>
 																<ice:panelGroup
-																	style="background-image: url(/skins/default/images/workflow/workflowComponentGradient.png);border:1px solid #cccccc; z-index:10; width:200px; height: 30px; cursor:move;"
+																	styleClass="#{workflowComponent.selected ? 'componentSelected':'componentNotSelected'}"
 																	draggable="true" dragMask="hover_start, hover_end"
 																	dropTarget="true"
 																	dragListener="#{WorkflowTemplateManager.dragObject}"
