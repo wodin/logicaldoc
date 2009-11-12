@@ -192,6 +192,17 @@
 						<ice:message for="groupBase" />
 					</ice:panelGroup>
 				</ice:panelGrid>
+				
+				<ice:panelGroup style="text-align:right; white-space:nowrap;">
+					<ice:outputLabel for="language"
+						value="#{msgs['msg.jsp.adduser.language']}" />
+				</ice:panelGroup>
+				<ice:panelGroup style="text-align:left;">
+					<ice:selectOneMenu styleClass="selectTagMenu"
+						value="#{LdapBean.userAttributeMapper.defaultLanguage}">
+						<f:selectItems value="#{selectionTags.languages}" />
+					</ice:selectOneMenu>
+				</ice:panelGroup>
 			</ice:panelGroup>
 			<hr />
 			<ice:panelGroup styleClass="commands">

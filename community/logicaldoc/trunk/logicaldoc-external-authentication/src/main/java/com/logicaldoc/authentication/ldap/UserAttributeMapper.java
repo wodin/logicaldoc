@@ -18,6 +18,8 @@ public class UserAttributeMapper implements AttributesMapper {
 
 	private LDAPUserGroupContext ldapUserGroupContext;
 
+	private String defaultLanguage="en";
+		
 	public void setLdapUserGroupContext(LDAPUserGroupContext ldapUserGroupContext) {
 		this.ldapUserGroupContext = ldapUserGroupContext;
 	}
@@ -57,9 +59,9 @@ public class UserAttributeMapper implements AttributesMapper {
 
 		val = attributes.get("c");
 		if (val != null)
-			user.setLanguage(val.get().toString());
+			user.setLanguage(val.get().toString().toLowerCase());
 		else
-			user.setLanguage("en");
+			user.setLanguage(defaultLanguage);
 
 		val = attributes.get("mail");
 		if (val != null)
@@ -81,5 +83,13 @@ public class UserAttributeMapper implements AttributesMapper {
 		ldapUser.user = user;
 
 		return ldapUser;
+	}
+
+	public String getDefaultLanguage() {
+		return defaultLanguage;
+	}
+
+	public void setDefaultLanguage(String defaultLanguage) {
+		this.defaultLanguage = defaultLanguage;
 	}
 }

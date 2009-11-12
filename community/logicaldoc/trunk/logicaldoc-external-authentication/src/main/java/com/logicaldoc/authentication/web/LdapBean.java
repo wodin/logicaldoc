@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.logicaldoc.authentication.ldap.BasicLDAPContextSource;
 import com.logicaldoc.authentication.ldap.LDAPContextSourceConfig;
 import com.logicaldoc.authentication.ldap.LDAPUserGroupContext;
+import com.logicaldoc.authentication.ldap.UserAttributeMapper;
 import com.logicaldoc.util.config.PropertiesBean;
 
 /**
@@ -22,6 +23,8 @@ public class LdapBean {
 
 	private BasicLDAPContextSource contextSource;
 
+	private UserAttributeMapper userAttributeMapper;
+	
 	protected String password;
 
 	public boolean isPasswordEmpty() {
@@ -94,6 +97,9 @@ public class LdapBean {
 			pbean.setProperty(propertyPrefix + ".userBase", userGroupContext.getUserBaseString());
 			pbean.setProperty(propertyPrefix + ".groupBase", userGroupContext.getGroupBaseString());
 
+			// Save attribute mapper settings
+			pbean.setProperty(propertyPrefix + ".defaultLanguage", userAttributeMapper.getDefaultLanguage());
+			
 			pbean.write();
 
 			LdapMessages.addLocalizedInfo("msg.action.savesettings");
@@ -119,5 +125,13 @@ public class LdapBean {
 
 	public void setContextSource(BasicLDAPContextSource contextSource) {
 		this.contextSource = contextSource;
+	}
+
+	public UserAttributeMapper getUserAttributeMapper() {
+		return userAttributeMapper;
+	}
+
+	public void setUserAttributeMapper(UserAttributeMapper userAttributeMapper) {
+		this.userAttributeMapper = userAttributeMapper;
 	}
 }
