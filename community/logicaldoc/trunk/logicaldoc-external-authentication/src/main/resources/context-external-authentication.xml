@@ -51,6 +51,8 @@
 
 	<bean id="LDAPBasicUserMapper"
 		class="com.logicaldoc.authentication.ldap.UserAttributeMapper">
+		<property name="defaultLanguage"
+			value="${ldap.defaultLanguage}" />
 		<property name="ldapUserGroupContext"
 			ref="LDAPUserGroupContext" />
 	</bean>
@@ -130,11 +132,12 @@
 			value="${schedule.interval.LDAPSynchroniser}" />
 	</bean>
 
-	<bean id="LdapBean" 
+	<bean id="LdapBean"
 		class="com.logicaldoc.authentication.web.LdapBean" scope="session">
 		<property name="userGroupContext" ref="LDAPUserGroupContext" />
 		<property name="contextSourceConfig"
 			ref="LDAPContextSourceConfig" />
+		<property name="userAttributeMapper" ref="LDAPBasicUserMapper" />
 		<property name="contextSource" ref="LDAPContextSource" />
 	</bean>
 </beans>

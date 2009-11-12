@@ -69,6 +69,7 @@ public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 		pbean.setProperty("ldap.base", " ");
 		pbean.setProperty("ldap.authentication", "basic");
 		pbean.setProperty("ldap.enabled", "false");
+		pbean.setProperty("ldap.defaultLanguage", "en");
 		pbean.write();
 	}
 }
