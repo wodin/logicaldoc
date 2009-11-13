@@ -106,8 +106,8 @@
 			<value></value>
 		</managed-property>
 		<managed-property>
-			<property-name>navigation</property-name>
-			<value>#{navigation}</value>
+			<property-name>menuBar</property-name>
+			<value>#{menuBar}</value>
 		</managed-property>
 	</managed-bean>
 
