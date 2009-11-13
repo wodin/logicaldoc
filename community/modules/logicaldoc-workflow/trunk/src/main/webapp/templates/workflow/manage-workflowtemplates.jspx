@@ -292,7 +292,8 @@
 
 							<ice:panelGroup
 								rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'task'}">
-								<ice:panelCollapsible expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
+								<ice:panelCollapsible
+									expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
 									<f:facet name="header">
 										<ice:panelGroup>
 											<ice:outputText value="#{msgs['workflow.task']}" />
@@ -326,7 +327,8 @@
 
 								<!-- Assignees -->
 
-								<ice:panelCollapsible id="panelAssignees" expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
+								<ice:panelCollapsible id="panelAssignees"
+									expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
 									<f:facet name="header">
 										<ice:panelGroup>
 											<ice:outputText
@@ -366,7 +368,8 @@
 									</ice:commandLink>
 									<ice:panelGroup />
 								</ice:panelCollapsible>
-								<ice:panelCollapsible id="panelTransition" expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
+								<ice:panelCollapsible id="panelTransition"
+									expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
 									<f:facet name="header">
 										<ice:panelGroup>
 											<ice:outputText
@@ -405,7 +408,8 @@
 
 							<ice:panelGroup
 								rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'join'}">
-								<ice:panelCollapsible expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
+								<ice:panelCollapsible
+									expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
 									<f:facet name="header">
 										<ice:panelGroup>
 											<ice:outputText value="#{msgs['join']}" />
@@ -433,7 +437,8 @@
 
 							<ice:panelGroup
 								rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'fork'}">
-								<ice:panelCollapsible expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
+								<ice:panelCollapsible
+									expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
 									<f:facet name="header">
 										<ice:panelGroup>
 											<ice:outputText value="#{msgs['fork']}" />
@@ -458,7 +463,8 @@
 
 							<ice:panelGroup
 								rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'endState'}">
-								<ice:panelCollapsible expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
+								<ice:panelCollapsible
+									expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
 									<f:facet name="header">
 										<ice:panelGroup>
 											<ice:outputText
@@ -523,8 +529,8 @@
 																				</ice:panelGroup>
 
 
-																	<ice:commandLink
-																		onclick="if(window.confirm('Do you really want to to delete this WorkflowComponent?') == 0)return false;"
+																	<ice:commandLink style="padding-right: 6px;"
+																		onclick="if(window.confirm(&quot;#{msgs['workflow.editor_component_delete_confirmation']}&quot;) == 0)return false;"
 																		actionListener="#{WorkflowTemplateManager.deleteWorkflowComponent}"
 																		value="#{msgs['delete']}">
 																		<f:param name="component" value="#{workflowComponent}" />
@@ -574,7 +580,7 @@
 																				#{transition.destination.name} 
 																				<br />
 																			<ice:commandLink
-																				onclick="if(window.confirm('#{msgs['workflow.editor_component_delete_confirmation']}') == 0)return false;"
+																				onclick="if(window.confirm(&quot;#{msgs['workflow.editor_component_delete_confirmation']}&quot;) == 0)return false;"
 																				actionListener="#{workflowComponent.controller.removeDestinationFromTransition}"
 																				value="#{msgs['delete']}">
 																				<f:param name="transition" value="#{transition}" />
@@ -613,7 +619,7 @@
 																 			
 																 				#{workflowTask.name} <br />
 																			<ice:commandLink
-																				onclick="if(window.confirm('#{msgs['workflow.editor_component_delete_confirmation']}?') == 0)return false;"
+																				onclick="if(window.confirm(&quot;#{msgs['workflow.editor_component_delete_confirmation']}&quot;) == 0)return false;"
 																				actionListener="#{workflowComponent.controller.removeTask}"
 																				value="#{msgs['delete']}">
 																				<f:param name="workflowTask" value="#{workflowTask}" />
@@ -660,7 +666,7 @@
 															 				#{workflowComponent.destination.name}
 															 				<br />
 																		<ice:commandLink
-																			onclick="if(window.confirm('#{msgs['workflow.editor_component_delete_confirmation']}?') == 0)return false;"
+																			onclick="if(window.confirm(&quot;#{msgs['workflow.editor_component_delete_confirmation']}&quot;) == 0)return false;"
 																			actionListener="#{workflowComponent.controller.removeTask}"
 																			value="#{msgs['delete']}">
 																			<f:param name="workflowComponent"
@@ -711,24 +717,25 @@
 			</f:facet>
 				
 				#{msgs['workflow.editor_jpdl_generated']}: <br />
-			<ice:inputTextarea style="height:500px; width:400px"
+			<ice:inputTextarea style="height:600px; width:500px"
 				value="#{WorkflowTemplateManager.XMLData}">
 
 			</ice:inputTextarea>
-
+			<br />
 			<ice:commandButton
+				onclick="if(window.confirm(&quot;#{msgs['workflow.editor_components_delete_confirmation']}&quot;) == 0)return false;"
 				action="#{WorkflowTemplateManager.removeAllWorkflowComponents}"
-				value="Remove All Components"></ice:commandButton>
-
+				value="#{msgs['workflow.editor_components_delete']}"></ice:commandButton>
+				
 			<ice:commandButton
-				onclick="if(window.confirm('Do you really want to to undeploy all Definitions?') == 0)return false;"
+				onclick="if(window.confirm(&quot;#{msgs['workflow.editor_undeploy_confirmation']}&quot;) == 0)return false;"
 				action="#{WorkflowTemplateManager.undeployAllDefinitions}"
-				value="Undeploy all workflowdefinitions"></ice:commandButton>
+				value="#{msgs['workflow.editor_undeploy']}"></ice:commandButton>
 
 			<ice:commandButton
-				onclick="if(window.confirm('Do you really want to to delete all Instances ?') == 0)return false;"
+				onclick="if(window.confirm(&quot;#{msgs['workflow.editor_delete_instances_confirmation']}&quot;) == 0)return false;"
 				action="#{WorkflowTemplateManager.deleteAllActiveWorkflows}"
-				value="rm -rf WorkflowInstances "></ice:commandButton>
+				value="#{msgs['workflow.editor_delete_instances']}"></ice:commandButton>
 
 		</ice:panelCollapsible>
 	</ice:panelGroup>
