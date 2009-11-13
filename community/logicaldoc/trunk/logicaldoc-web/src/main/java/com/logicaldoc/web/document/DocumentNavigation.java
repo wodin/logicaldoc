@@ -341,7 +341,7 @@ public class DocumentNavigation extends NavigationBean {
 		PageContentBean page = new PageContentBean("advancedSearch", "search/advancedSearch");
 		page.setContentTitle(Messages.getMessage("search.advanced"));
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
-		page.setIcon(style.getImagePath("extsearch.gif"));
+		page.setIcon(style.getImagePath("search.png"));
 
 		SearchForm form = ((SearchForm) FacesUtil.accessBeanFromFacesContext("searchForm", FacesContext
 				.getCurrentInstance(), log));
