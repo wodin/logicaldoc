@@ -193,10 +193,6 @@
   </init-param>
  </servlet>
  <servlet-mapping>
-  <servlet-name>inputFileFrame</servlet-name>
-  <url-pattern>/inputFileFrame</url-pattern>
- </servlet-mapping>
- <servlet-mapping>
   <servlet-name>uploadServlet</servlet-name>
   <url-pattern>/uploadHtml</url-pattern>
  </servlet-mapping>
