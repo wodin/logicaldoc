@@ -9,51 +9,56 @@ import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 
-
 /**
  * Form for directories editing
- *
- * @author Marco Meschieri
- * @version $Id:$
- * @since ###release###
+ * 
+ * @author Marco Meschieri - Logical Objects
+ * @since 4.6
  */
 public class FoldersForm {
-    protected static Log log = LogFactory.getLog(FoldersForm.class);
-    private String docDir = "";
-    private String indexDir = "";
-    private String userDir = "";
-    private String importDir = "";
-    private String exportDir = "";
+	protected static Log log = LogFactory.getLog(FoldersForm.class);
 
-    public FoldersForm() {
-        reload();
-    }
+	private String docDir = "";
 
-    public String getDocDir() {
-        return docDir;
-    }
+	private String indexDir = "";
 
-    public void setDocDir(String docDir) {
-        this.docDir = docDir;
-    }
+	private String userDir = "";
 
-    public String getIndexDir() {
-        return indexDir;
-    }
+	private String importDir = "";
 
-    public void setIndexDir(String indexDir) {
-        this.indexDir = indexDir;
-    }
+	private String exportDir = "";
 
-    public String getUserDir() {
-        return userDir;
-    }
+	private String pluginDir = "";
 
-    public void setUserDir(String userDir) {
-        this.userDir = userDir;
-    }
-    
-    public String getImportDir() {
+	public FoldersForm() {
+		reload();
+	}
+
+	public String getDocDir() {
+		return docDir;
+	}
+
+	public void setDocDir(String docDir) {
+		this.docDir = docDir;
+	}
+
+	public String getIndexDir() {
+		return indexDir;
+	}
+
+	public void setIndexDir(String indexDir) {
+		this.indexDir = indexDir;
+	}
+
+	public String getUserDir() {
+		return userDir;
+	}
+
+	public void setUserDir(String userDir) {
+		this.userDir = userDir;
+	}
+
+	public String getImportDir() {
 		return importDir;
 	}
 
@@ -69,46 +74,54 @@ public class FoldersForm {
 		this.exportDir = exportDir;
 	}
 
-    private void reload() {
-        SettingsConfig conf = (SettingsConfig) Context.getInstance()
-                                                      .getBean(SettingsConfig.class);
-        docDir = conf.getValue("docdir");
-        indexDir = conf.getValue("indexdir");
-        userDir = conf.getValue("userdir");
-        importDir = conf.getValue("importdir");
-        exportDir = conf.getValue("exportdir");
-    }
+	public String getPluginDir() {
+		return pluginDir;
+	}
 
-    public String save() {
-        if (SessionManagement.isValid()) {
-            try {
-                SettingsConfig conf = (SettingsConfig) Context.getInstance()
-                                                              .getBean(SettingsConfig.class);
-                conf.setValue("docdir", docDir);
-                conf.setValue("indexdir", indexDir);
-                conf.setValue("userdir", userDir);
-                conf.setValue("importdir", importDir);
-                conf.setValue("exportdir", exportDir);
+	public void setPluginDir(String pluginDir) {
+		this.pluginDir = pluginDir;
+	}
 
-                PropertiesBean pbean = (PropertiesBean)Context.getInstance().getBean("ContextProperties");
-    			pbean.setProperty("conf.docdir", docDir);
-    			pbean.setProperty("conf.indexdir", indexDir);
-    			pbean.setProperty("conf.userdir", userDir);
-    			pbean.setProperty("conf.importdir", importDir);
-    			pbean.setProperty("conf.exportdir", exportDir);
-    			pbean.write();
-                
-                Messages.addLocalizedInfo("msg.action.savesettings");
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                Messages.addLocalizedError("errors.action.savesettings");
-            }
-        } else {
-            return "login";
-        }
+	private void reload() {
+		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
+		docDir = conf.getValue("docdir");
+		indexDir = conf.getValue("indexdir");
+		userDir = conf.getValue("userdir");
+		importDir = conf.getValue("importdir");
+		exportDir = conf.getValue("exportdir");
+		pluginDir = conf.getValue("plugindir");
+	}
 
-        reload();
+	public String save() {
+		if (SessionManagement.isValid()) {
+			try {
+				SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
+				conf.setValue("docdir", docDir);
+				conf.setValue("indexdir", indexDir);
+				conf.setValue("userdir", userDir);
+				conf.setValue("importdir", importDir);
+				conf.setValue("exportdir", exportDir);
+				conf.setValue("plugindir", pluginDir);
 
-        return null;
-    }
+				PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+				pbean.setProperty("conf.docdir", docDir);
+				pbean.setProperty("conf.indexdir", indexDir);
+				pbean.setProperty("conf.userdir", userDir);
+				pbean.setProperty("conf.importdir", importDir);
+				pbean.setProperty("conf.exportdir", exportDir);
+				pbean.setProperty("conf.plugindir", pluginDir);
+				pbean.write();
+
+				Messages.addLocalizedInfo("msg.action.savesettings");
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				Messages.addLocalizedError("errors.action.savesettings");
+			}
+		} else {
+			return "login";
+		}
+
+		reload();
+		return null;
+	}
 }

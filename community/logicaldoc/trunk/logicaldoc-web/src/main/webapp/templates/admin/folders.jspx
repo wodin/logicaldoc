@@ -63,6 +63,15 @@
                             required="true" size="80" />
                         <ice:message for="exportDir" />
                     </ice:panelGroup>
+                    
+                    <ice:panelGroup style="text-align:right">
+                        <ice:outputLabel for="pluginDir" value="plugindir" />
+                    </ice:panelGroup>
+                    <ice:panelGroup>
+                        <ice:inputText id="pluginDir" value="#{foldersForm.pluginDir}" tabindex="1"
+                            required="true" size="80" />
+                        <ice:message for="pluginDir" />
+                    </ice:panelGroup>
                 </ice:panelGrid>
             </ice:panelGroup>
 			<hr/>
