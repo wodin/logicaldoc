@@ -129,6 +129,10 @@ public class SetupWizard implements TabChangeListener {
 			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 			indexer.createIndexes();
 
+			
+			// Initialize plugins
+			com.logicaldoc.util.PluginRegistry.getInstance().init();
+			
 			next();
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
