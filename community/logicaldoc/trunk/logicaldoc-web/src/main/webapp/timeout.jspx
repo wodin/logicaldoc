@@ -21,8 +21,11 @@
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 			<title>#{StyleBean.productName} #{StyleBean.productRelease}</title>
-			<link type="image/x-icon" href="#{facesContext.externalContext.requestContextPath}#{StyleBean.imagesPath}/favicon.ico" rel="shortcut icon"/>
-			<ice:outputText style="padding-top:0px; padding-bottom:0px;" value="#{StyleBean.style}" escape="false" />
+			<link type="image/x-icon"
+				href="#{facesContext.externalContext.requestContextPath}#{StyleBean.imagesPath}/favicon.ico"
+				rel="shortcut icon" />
+			<ice:outputText style="padding-top:0px; padding-bottom:0px;"
+				value="#{StyleBean.style}" escape="false" />
 			<ice:outputStyle href="#{StyleBean.cssPath}/system.css" />
 		</head>
 		<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0"
@@ -40,12 +43,13 @@
 						value="#{msgs['connection.lost']}" />
 					<br />
 					<br />
-					<b>
-    <ice:form id="logoutForm">
-		<ice:commandLink action="#{loginForm.logout}" styleClass="system_link" style="font-size: 12px; text-decoration: underline; color: #0a3266;">
-			<ice:graphicImage value="#{StyleBean.imagesPath}/expand.png" style="text-align: left; vertical-align: middle; border: none; padding-right:5px;"/><ice:outputText value="#{msgs['connection.reload']}" style="font-size: 12px; text-decoration: underline; color:  #0a3266;"/>
-		</ice:commandLink>
-	</ice:form>
+					<b> <ice:graphicImage
+							value="#{StyleBean.imagesPath}/expand.png"
+							style="text-align: left; vertical-align: middle; border: none; padding-right:5px;" />
+						<ice:outputLink
+							value="#{facesContext.externalContext.requestContextPath}/login.iface"
+							styleClass="system_link"
+							style="font-size: 12px; text-decoration: underline; color: #0a3266;">#{msgs['connection.reload']}</ice:outputLink>
 					</b>
 				</div>
 			</div>

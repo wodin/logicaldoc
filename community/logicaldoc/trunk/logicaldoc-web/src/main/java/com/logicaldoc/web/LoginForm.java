@@ -24,7 +24,7 @@ import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.i18n.Messages;
-import com.logicaldoc.web.navigation.NavigationBean;
+import com.logicaldoc.web.navigation.MenuBarBean;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.password.PasswordBean;
 import com.logicaldoc.web.util.Constants;
@@ -45,7 +45,7 @@ public class LoginForm {
 
 	private String j_username;
 
-	private NavigationBean navigation;
+	private MenuBarBean menuBar;
 
 	private Boolean setupPerformed;
 
@@ -118,7 +118,8 @@ public class LoginForm {
 				page.setDisplayText(Messages.getMessage("home"));
 				page.setIcon(style.getImagePath("home.png"));
 			}
-			navigation.setSelectedPanel(page);
+			menuBar.getNavigation().setSelectedPanel(page);
+			menuBar.getModel().clear();
 
 			return "loginSuccess";
 		} else if (userDao.isPasswordExpired(j_username)) {
@@ -152,8 +153,8 @@ public class LoginForm {
 			log.info("User " + authUsername + " logged out.");
 
 			HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
-			if (session != null && session.getAttribute(Constants.USER_SESSION)!=null){
-				SessionManager.getInstance().kill((String)session.getAttribute(Constants.USER_SESSION));
+			if (session != null && session.getAttribute(Constants.USER_SESSION) != null) {
+				SessionManager.getInstance().kill((String) session.getAttribute(Constants.USER_SESSION));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -205,8 +206,12 @@ public class LoginForm {
 		this.j_username = j_username;
 	}
 
-	public void setNavigation(NavigationBean navigation) {
-		this.navigation = navigation;
+	public MenuBarBean getMenuBar() {
+		return menuBar;
+	}
+
+	public void setMenuBar(MenuBarBean menuBar) {
+		this.menuBar = menuBar;
 	}
 
 	public boolean isNotInitialized() {
