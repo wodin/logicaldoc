@@ -30,7 +30,7 @@ public interface WorkflowEngine {
 	public void undeployWorkflow(final String workflowname);
 
 	/**
-	 * Deploying of a workflow-processdedinition.
+	 * Deploying of a workflow-process definition.
 	 * 
 	 * @param _processDefinition
 	 *            The serialized content of the processedefinition.

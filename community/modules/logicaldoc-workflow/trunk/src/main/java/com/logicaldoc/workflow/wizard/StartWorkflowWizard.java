@@ -30,13 +30,13 @@ import com.logicaldoc.web.document.DocumentsRecordsManager;
 import com.logicaldoc.web.util.FacesUtil;
 import com.logicaldoc.workflow.WorkflowConstants;
 import com.logicaldoc.workflow.WorkflowService;
-import com.logicaldoc.workflow.editor.WorkflowTemplateLoader;
-import com.logicaldoc.workflow.editor.WorkflowTemplateLoader.WORKFLOW_STAGE;
+import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplate;
+import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO;
+import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO.WORKFLOW_STAGE;
 import com.logicaldoc.workflow.editor.model.WorkflowTask;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
-import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
 import com.logicaldoc.workflow.transform.WorkflowTransformService;
 import com.thoughtworks.xstream.XStream;
 
@@ -51,7 +51,7 @@ public class StartWorkflowWizard implements TabChangeListener {
 
 	private WorkflowDefinition workflowDefinition;
 
-	private WorkflowTemplateLoader workflowTemplateLoader;
+	private WorkflowPersistenceTemplateDAO workflowTemplateDao;
 
 	private WorkflowTransformService workflowTransformService;
 
@@ -75,19 +75,15 @@ public class StartWorkflowWizard implements TabChangeListener {
 	private PanelTabSet tabSet;
 
 	public StartWorkflowWizard() {
-		this.documentsRecordsManager = (DocumentsRecordsManager) FacesUtil
-				.accessBeanFromFacesContext("documentsRecordsManager",
-						FacesContext.getCurrentInstance(), log);
+		this.documentsRecordsManager = (DocumentsRecordsManager) FacesUtil.accessBeanFromFacesContext(
+				"documentsRecordsManager", FacesContext.getCurrentInstance(), log);
 
-		workflowTransformService = (WorkflowTransformService) Context
-				.getInstance().getBean("workflowTransformService");
-		workflowTemplateLoader = (WorkflowTemplateLoader) Context.getInstance()
-				.getBean("WorkflowTemplateLoader");
-		workflowService = (WorkflowService) Context.getInstance().getBean(
-				"workflowService");
-		this.documentNavigation = (DocumentNavigation) FacesUtil
-				.accessBeanFromFacesContext("documentNavigation", FacesContext
-						.getCurrentInstance(), log);
+		workflowTransformService = (WorkflowTransformService) Context.getInstance().getBean("workflowTransformService");
+		workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance().getBean(
+				"WorkflowPersistenceTemplateDAO");
+		workflowService = (WorkflowService) Context.getInstance().getBean("workflowService");
+		this.documentNavigation = (DocumentNavigation) FacesUtil.accessBeanFromFacesContext("documentNavigation",
+				FacesContext.getCurrentInstance(), log);
 
 	}
 
@@ -124,17 +120,11 @@ public class StartWorkflowWizard implements TabChangeListener {
 		return priority;
 	}
 
-	public void setWorkflowTemplateLoader(
-			WorkflowTemplateLoader workflowTemplateLoader) {
-		this.workflowTemplateLoader = workflowTemplateLoader;
-	}
-
 	public void setWorkflowService(WorkflowService workflowService) {
 		this.workflowService = workflowService;
 	}
 
-	public void setPersistenceTemplate(
-			WorkflowPersistenceTemplate persistenceTemplate) {
+	public void setPersistenceTemplate(WorkflowPersistenceTemplate persistenceTemplate) {
 		this.persistenceTemplate = persistenceTemplate;
 	}
 
@@ -146,12 +136,10 @@ public class StartWorkflowWizard implements TabChangeListener {
 
 		setupAllPanels(false);
 
-		this.workflowDefinition = this.workflowService.getAllDefinitions().get(
-				event.getRow());
+		this.workflowDefinition = this.workflowService.getAllDefinitions().get(event.getRow());
 
-		WorkflowPersistenceTemplate workflowPersistenceTemplate = this.workflowTemplateLoader
-				.loadWorkflowTemplate(this.workflowDefinition.getName(),
-						WORKFLOW_STAGE.DEPLOYED);
+		WorkflowPersistenceTemplate workflowPersistenceTemplate = this.workflowTemplateDao.load(
+				this.workflowDefinition.getName(), WORKFLOW_STAGE.DEPLOYED);
 
 		this.workflowTemplate = this.workflowTransformService
 				.fromWorkflowDefinitionToObject(workflowPersistenceTemplate);
@@ -173,19 +161,16 @@ public class StartWorkflowWizard implements TabChangeListener {
 
 		Map<String, Serializable> properties = new HashMap<String, Serializable>();
 
-		properties.put(WorkflowConstants.VAR_TEMPLATE, (Serializable) xStream
-				.toXML(this.workflowTemplate));
+		properties.put(WorkflowConstants.VAR_TEMPLATE, (Serializable) xStream.toXML(this.workflowTemplate));
 
 		Set<Long> documents = new LinkedHashSet<Long>();
 
 		for (DocumentRecord doc : this.documentsRecordsManager.getSelection())
 			documents.add(doc.getDocId());
 
-		properties.put(WorkflowConstants.VAR_DOCUMENTS,
-				(Serializable) documents);
+		properties.put(WorkflowConstants.VAR_DOCUMENTS, (Serializable) documents);
 
-		WorkflowInstance instance = this.workflowService.startWorkflow(
-				workflowDefinition, properties);
+		WorkflowInstance instance = this.workflowService.startWorkflow(workflowDefinition, properties);
 		this.workflowService.signal(instance.getId());
 
 		this.documentNavigation.showDocuments();
@@ -239,14 +224,11 @@ public class StartWorkflowWizard implements TabChangeListener {
 	/**
 	 * Called when the table binding's tab focus changes.
 	 * 
-	 * @param tabChangeEvent
-	 *            used to set the tab focus.
-	 * @throws AbortProcessingException
-	 *             An exception that may be thrown by event listeners to
-	 *             terminate the processing of the current event.
+	 * @param tabChangeEvent used to set the tab focus.
+	 * @throws AbortProcessingException An exception that may be thrown by event
+	 *         listeners to terminate the processing of the current event.
 	 */
-	public void processTabChange(TabChangeEvent tabChangeEvent)
-			throws AbortProcessingException {
+	public void processTabChange(TabChangeEvent tabChangeEvent) throws AbortProcessingException {
 		log.info("processTabChange: sss = " + tabChangeEvent.getNewTabIndex());
 	}
 
@@ -262,8 +244,7 @@ public class StartWorkflowWizard implements TabChangeListener {
 	/**
 	 * Set a tabbed pane object which will be bound to this object
 	 * 
-	 * @param tabSet
-	 *            new PanelTabSet object.
+	 * @param tabSet new PanelTabSet object.
 	 */
 	public void setTabSet(PanelTabSet tabSet) {
 		this.tabSet = tabSet;
@@ -278,11 +259,14 @@ public class StartWorkflowWizard implements TabChangeListener {
 	 */
 	public void changeAssignments(ActionEvent actionEvent) {
 		UIComponent cmp = (UIComponent) actionEvent.getSource();
-		this.workflowTask = (WorkflowTask) ((UIParameter) cmp.getChildren()
-				.get(0)).getValue();
+		this.workflowTask = (WorkflowTask) ((UIParameter) cmp.getChildren().get(0)).getValue();
 	}
 
 	public WorkflowTask getWorkflowTask() {
 		return workflowTask;
+	}
+
+	public void setWorkflowTemplateDao(WorkflowPersistenceTemplateDAO workflowTemplateDao) {
+		this.workflowTemplateDao = workflowTemplateDao;
 	}
 }

@@ -126,7 +126,8 @@
 					<ice:panelGroup styleClass="rightToolSite"
 						rendered="#{not empty WorkflowTemplateManager.persistenceTemplate.id}">
 						<ice:commandLink
-							action="#{WorkflowTemplateManager.deleteWorkflowTemplate}">
+							action="#{WorkflowTemplateManager.deleteWorkflowTemplate}"
+							onclick="if (!confirm(&quot;#{msgs['delete.question']}&quot;)) return false;">
 							<ice:graphicImage styleClass="linkImage"
 								value="/skins/default/images/workflow/editor/delete.gif" />
 							<ice:outputText value="#{msgs['remove']}" />
@@ -213,7 +214,7 @@
 					</ice:panelGroup>
 
 					<ice:panelGrid columns="2">
-						<h:outputText value="#{editor_statstateeditor_statstate}" />
+						<h:outputText value="#{msgs['workflow.editor_statstate']}" />
 						<h:selectOneMenu
 							value="#{WorkflowTemplateManager.workflowTemplate.startState}">
 							<f:selectItems
@@ -255,28 +256,34 @@
 								</f:facet>
 									  
 												#{msgs['workflow.editor_workflowname']}: <ice:inputText
-									value="#{WorkflowTemplateManager.persistenceTemplate.name}" />
+									value="#{WorkflowTemplateManager.persistenceTemplate.name}"
+									binding="#{WorkflowTemplateManager.nameInput}" />
 								<br />
 											
 												#{msgs['workflow.editor_workflowdescription']}:<br />
 								<ice:inputTextarea id="testing"
 									style="width:95%; height:100px; font-size:10px"
-									value="#{WorkflowTemplateManager.workflowTemplate.description}" />
+									value="#{WorkflowTemplateManager.workflowTemplate.description}"
+									binding="#{WorkflowTemplateManager.descriptionInput}" />
 								<br />
 												#{msgs['workflow.editor_taskassignment']}<br />
 								<hr />
 												#{msgs['subject']}: <ice:inputText
-									value="#{WorkflowTemplateManager.workflowTemplate.assignmentMessage.subject}" />
+									value="#{WorkflowTemplateManager.workflowTemplate.assignmentMessage.subject}"
+									binding="#{WorkflowTemplateManager.assignmentSubjectInput}" />
 								<br />#{msgs['body']}: <ice:inputTextarea
 									style="width:95%; height:100px; font-size:10px"
-									value="#{WorkflowTemplateManager.workflowTemplate.assignmentMessage.body}" />
+									value="#{WorkflowTemplateManager.workflowTemplate.assignmentMessage.body}"
+									binding="#{WorkflowTemplateManager.assignmentBodyInput}" />
 								<br />#{msgs['reminder']}<br />
 								<hr />
 												#{msgs['subject']}: <ice:inputText
-									value="#{WorkflowTemplateManager.workflowTemplate.reminderMessage.subject}" />
+									value="#{WorkflowTemplateManager.workflowTemplate.reminderMessage.subject}"
+									binding="#{WorkflowTemplateManager.reminderSubjectInput}" />
 								<br />#{msgs['body']}: <ice:inputTextarea
 									style="width:95%; height:100px; font-size:10px"
-									value="#{WorkflowTemplateManager.workflowTemplate.reminderMessage.body}" />
+									value="#{WorkflowTemplateManager.workflowTemplate.reminderMessage.body}"
+									binding="#{WorkflowTemplateManager.reminderBodyInput}" />
 							</ice:panelCollapsible>
 
 							<!-- ****** -->
@@ -285,7 +292,7 @@
 
 							<ice:panelGroup
 								rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'task'}">
-								<ice:panelCollapsible expanded="true">
+								<ice:panelCollapsible expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
 									<f:facet name="header">
 										<ice:panelGroup>
 											<ice:outputText value="#{msgs['workflow.task']}" />
@@ -319,7 +326,7 @@
 
 								<!-- Assignees -->
 
-								<ice:panelCollapsible id="panelAssignees" expanded="true">
+								<ice:panelCollapsible id="panelAssignees" expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
 									<f:facet name="header">
 										<ice:panelGroup>
 											<ice:outputText
@@ -359,7 +366,7 @@
 									</ice:commandLink>
 									<ice:panelGroup />
 								</ice:panelCollapsible>
-								<ice:panelCollapsible id="panelTransition" expanded="true">
+								<ice:panelCollapsible id="panelTransition" expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
 									<f:facet name="header">
 										<ice:panelGroup>
 											<ice:outputText
@@ -398,7 +405,7 @@
 
 							<ice:panelGroup
 								rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'join'}">
-								<ice:panelCollapsible expanded="true">
+								<ice:panelCollapsible expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
 									<f:facet name="header">
 										<ice:panelGroup>
 											<ice:outputText value="#{msgs['join']}" />
@@ -426,7 +433,7 @@
 
 							<ice:panelGroup
 								rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'fork'}">
-								<ice:panelCollapsible expanded="true">
+								<ice:panelCollapsible expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
 									<f:facet name="header">
 										<ice:panelGroup>
 											<ice:outputText value="#{msgs['fork']}" />
@@ -451,7 +458,7 @@
 
 							<ice:panelGroup
 								rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'endState'}">
-								<ice:panelCollapsible expanded="true">
+								<ice:panelCollapsible expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
 									<f:facet name="header">
 										<ice:panelGroup>
 											<ice:outputText
@@ -692,37 +699,37 @@
 
 	</ice:panelGroup>
 
-	<ice:panelCollapsible id="panelEndpointBasic" expanded="false"
-		style="width:600px;">
+	<ice:panelGroup
+		rendered="#{not empty WorkflowTemplateManager.persistenceTemplate}">
+		<ice:panelCollapsible id="panelEndpointBasic" expanded="false"
+			style="width:600px;">
 
-		<f:facet name="header">
-			<ice:panelGroup>
-				<ice:outputText value="#{msgs['development']}" />
-			</ice:panelGroup>
-		</f:facet>
+			<f:facet name="header">
+				<ice:panelGroup>
+					<ice:outputText value="#{msgs['development']}" />
+				</ice:panelGroup>
+			</f:facet>
 				
 				#{msgs['workflow.editor_jpdl_generated']}: <br />
-		<ice:inputTextarea style="height:500px; width:400px"
-			value="#{WorkflowTemplateManager.XMLData}">
+			<ice:inputTextarea style="height:500px; width:400px"
+				value="#{WorkflowTemplateManager.XMLData}">
 
-		</ice:inputTextarea>
+			</ice:inputTextarea>
 
-		<ice:commandButton
-			action="#{WorkflowTemplateManager.removeAllWorkflowComponents}"
-			value="Remove All Components"></ice:commandButton>
+			<ice:commandButton
+				action="#{WorkflowTemplateManager.removeAllWorkflowComponents}"
+				value="Remove All Components"></ice:commandButton>
 
-		<ice:commandButton
-			onclick="if(window.confirm('Do you really want to to undeploy all Definitions?') == 0)return false;"
-			action="#{WorkflowTemplateManager.undeployAllDefinitions}"
-			value="Undeploy all workflowdefinitions"></ice:commandButton>
+			<ice:commandButton
+				onclick="if(window.confirm('Do you really want to to undeploy all Definitions?') == 0)return false;"
+				action="#{WorkflowTemplateManager.undeployAllDefinitions}"
+				value="Undeploy all workflowdefinitions"></ice:commandButton>
 
-		<ice:commandButton
-			onclick="if(window.confirm('Do you really want to to delete all Instances ?') == 0)return false;"
-			action="#{WorkflowTemplateManager.deleteAllActiveWorkflows}"
-			value="rm -rf WorkflowInstances "></ice:commandButton>
+			<ice:commandButton
+				onclick="if(window.confirm('Do you really want to to delete all Instances ?') == 0)return false;"
+				action="#{WorkflowTemplateManager.deleteAllActiveWorkflows}"
+				value="rm -rf WorkflowInstances "></ice:commandButton>
 
-	</ice:panelCollapsible>
-
-
-
+		</ice:panelCollapsible>
+	</ice:panelGroup>
 </jsp:root>
