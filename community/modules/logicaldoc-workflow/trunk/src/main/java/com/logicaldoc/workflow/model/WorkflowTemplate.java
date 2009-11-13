@@ -108,27 +108,23 @@ public class WorkflowTemplate extends BaseWorkflowModel {
 		}
 
 		if (endState == false) {
-			failures
-					.add(new DeployMessage(this, "No endstate have been added"));
+			failures.add(new DeployMessage(this, "No endstate have been added"));
 		}
 	}
 
 	@Override
 	public EditController getController() {
-		throw new UnsupportedOperationException(
-				"Controller does not exists for this type of WorkflowComponent");
+		throw new UnsupportedOperationException("Controller does not exists for this type of WorkflowComponent");
 	}
 
 	@Override
 	public String getImage() {
-		throw new UnsupportedOperationException(
-				"Image does not exists for this type of WorkflowComponent");
+		throw new UnsupportedOperationException("Image does not exists for this type of WorkflowComponent");
 	}
 
 	@Override
 	public String getTemplate() {
-		throw new UnsupportedOperationException(
-				"template does not exists for this type of WorkflowComponent");
+		throw new UnsupportedOperationException("template does not exists for this type of WorkflowComponent");
 	}
 
 	@Override
@@ -138,7 +134,6 @@ public class WorkflowTemplate extends BaseWorkflowModel {
 
 	@Override
 	public boolean isPossibleStartState() {
-		throw new UnsupportedOperationException(
-				"not enddstate can be entered by this component");
+		throw new UnsupportedOperationException("not enddstate can be entered by this component");
 	}
 }

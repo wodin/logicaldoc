@@ -14,10 +14,10 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Element;
 
 import com.logicaldoc.workflow.debug.TRANSMITTER;
+import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplate;
 import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;
 import com.logicaldoc.workflow.model.ModelConfiguration;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
-import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
 import com.thoughtworks.xstream.XStream;
 
 public class JBPMWorkflowTransformServiceImpl implements WorkflowTransformService {

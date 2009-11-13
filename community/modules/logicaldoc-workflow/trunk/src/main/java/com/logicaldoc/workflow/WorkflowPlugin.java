@@ -12,7 +12,7 @@ import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.event.SystemEvent;
 import com.logicaldoc.util.event.SystemEventStatus;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
-import com.logicaldoc.workflow.editor.WorkflowTemplateLoader;
+import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO;
 
 /**
  * Entry-point for the Workflow plug-in
@@ -41,9 +41,9 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 		@Override
 		public void processEvent() {
 			Context ctx = Context.getInstance();
-			WorkflowTemplateLoader workflowTemplateLoader = (WorkflowTemplateLoader) ctx
-					.getBean(WorkflowTemplateLoader.class);
-			workflowTemplateLoader.setTemplatesDirectory(templatesDirectory);
+			WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) ctx
+					.getBean(WorkflowPersistenceTemplateDAO.class);
+			workflowTemplateDao.setTemplatesDirectory(templatesDirectory);
 
 			// Create JBPM database schema
 			// JbpmConfiguration jbpmInstallConfig = (JbpmConfiguration)
@@ -83,12 +83,12 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 		@Override
 		public void processEvent() {
 			Context ctx = Context.getInstance();
-			WorkflowTemplateLoader workflowTemplateLoader = (WorkflowTemplateLoader) ctx
-					.getBean(WorkflowTemplateLoader.class);
+			WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) ctx
+					.getBean(WorkflowPersistenceTemplateDAO.class);
 
 			log.debug("Setting up jBPM-Template-Dictionary");
 
-			workflowTemplateLoader.setTemplatesDirectory(templatesDirectory);
+			workflowTemplateDao.setTemplatesDirectory(templatesDirectory);
 
 			templatesDirectory.mkdirs();
 			templatesDirectory.mkdir();

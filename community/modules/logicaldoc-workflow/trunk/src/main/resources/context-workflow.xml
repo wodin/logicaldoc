@@ -28,12 +28,12 @@
 			ref="workflowTransformService" />
 	</bean>
 
-	<bean id="WorkflowTemplateLoader"
+	<bean id="WorkflowPersistenceTemplateDAO"
 		parent="ApplicationBaseTransactionProxy" abstract="false"
 		lazy-init="default" autowire="default" dependency-check="default">
 		<property name="target">
 			<bean
-				class="com.logicaldoc.workflow.editor.WorkflowTemplateLoaderDAO"
+				class="com.logicaldoc.workflow.editor.HibernateWorkflowPersistenceTemplateDAO"
 				abstract="false" lazy-init="default" autowire="default"
 				dependency-check="default">
 				<property name="sessionFactory">
@@ -67,8 +67,8 @@
 	<bean id="WorkflowTemplateManager"
 		class="com.logicaldoc.workflow.editor.WorkflowTemplateManager"
 		scope="session">
-		<property name="workflowTemplateLoader"
-			ref="WorkflowTemplateLoader" />
+		<property name="workflowTemplateDao"
+			ref="WorkflowPersistenceTemplateDAO" />
 		<property name="modelConfiguration" ref="ModelConfiguration" />
 	</bean>
 

@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -37,7 +38,6 @@ import com.logicaldoc.workflow.editor.model.WorkflowTask;
 import com.logicaldoc.workflow.model.ModelConfiguration;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowTemplate;
-import com.logicaldoc.workflow.persistence.WorkflowPersistenceTemplate;
 import com.logicaldoc.workflow.transform.WorkflowTransformService;
 import com.logicaldoc.workflow.wizard.StartWorkflowWizard;
 import com.thoughtworks.xstream.XStream;
@@ -60,7 +60,7 @@ public class WorkflowTemplateManager {
 
 	private EditController controller;
 
-	private WorkflowTemplateLoader workflowTemplateLoader;
+	private WorkflowPersistenceTemplateDAO workflowTemplateDao;
 
 	private WorkflowTemplate workflowTemplate;
 
@@ -70,7 +70,21 @@ public class WorkflowTemplateManager {
 
 	private boolean showWorkflowSettings = true;
 
+	private UIInput nameInput = null;
+
+	private UIInput descriptionInput = null;
+
+	private UIInput assignmentSubjectInput = null;
+
+	private UIInput assignmentBodyInput = null;
+
+	private UIInput reminderSubjectInput = null;
+
+	private UIInput reminderBodyInput = null;
+
 	public String getXMLData() {
+		this.workflowTransformService.fromObjectToWorkflowDefinition(this.workflowTemplate);
+
 		return TRANSMITTER.XML_DATA;
 	}
 
@@ -109,10 +123,6 @@ public class WorkflowTemplateManager {
 		this.xstream = xstream;
 	}
 
-	public void setWorkflowTemplateLoader(WorkflowTemplateLoader workflowTemplateLoader) {
-		this.workflowTemplateLoader = workflowTemplateLoader;
-	}
-
 	@SuppressWarnings("unchecked")
 	public void initializing() {
 		this.workflowTemplate = new WorkflowTemplate();
@@ -120,10 +130,10 @@ public class WorkflowTemplateManager {
 		this.workflowService = (WorkflowService) Context.getInstance().getBean("workflowService");
 		this.workflowTransformService = (WorkflowTransformService) Context.getInstance().getBean(
 				"workflowTransformService");
+		showWorkflowSettings = true;
 	}
 
 	public List<SelectItem> getTimeUnits() {
-
 		List<SelectItem> timeValues = new LinkedList<SelectItem>();
 		timeValues.add(new SelectItem("Minute"));
 		timeValues.add(new SelectItem("Hour"));
@@ -291,11 +301,10 @@ public class WorkflowTemplateManager {
 	public List<SelectItem> getAvailableWorkflowTemplates() {
 		List<SelectItem> workflowTemplates = new LinkedList<SelectItem>();
 
-		for (WorkflowPersistenceTemplate template : this.workflowTemplateLoader.getAvailableWorkflowTemplates())
+		for (WorkflowPersistenceTemplate template : this.workflowTemplateDao.findAll())
 			workflowTemplates.add(new SelectItem(template.getId(), template.getName()));
 
 		return workflowTemplates;
-
 	}
 
 	public void deleteWorkflowComponent(ActionEvent actionEvent) {
@@ -313,9 +322,9 @@ public class WorkflowTemplateManager {
 
 		String xmlData = xstream.toXML(this.workflowTemplate);
 		this.persistenceTemplate.setXmldata(xmlData);
-		Long id = this.workflowTemplateLoader.saveWorkflowTemplate(this.persistenceTemplate,
-				WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
-		this.persistenceTemplate.setId(id);
+		this.workflowTemplateDao.save(this.persistenceTemplate, WorkflowPersistenceTemplateDAO.WORKFLOW_STAGE.SAVED);
+		this.persistenceTemplate.setDescription(this.workflowTemplate.getDescription());
+		this.persistenceTemplate.setStartState(this.workflowTemplate.getStartState());
 
 		return null;
 	}
@@ -324,12 +333,11 @@ public class WorkflowTemplateManager {
 		this.persistenceTemplate = null;
 		this.workflowTemplate = null;
 		this.workflowTemplateId = null;
-
 	}
 
 	public String createNewWorkflowTemplate() {
-
 		initializing();
+		reset();
 
 		return null;
 	}
@@ -339,7 +347,6 @@ public class WorkflowTemplateManager {
 	}
 
 	public String closeCurrentWorkflowTemplate() {
-
 		setAllItemsToNull();
 
 		return null;
@@ -347,10 +354,10 @@ public class WorkflowTemplateManager {
 
 	public String deleteWorkflowTemplate() {
 
-		WorkflowPersistenceTemplate workflowTemplate = this.workflowTemplateLoader.loadWorkflowTemplate(
-				this.workflowTemplateId, WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
+		WorkflowPersistenceTemplate workflowTemplate = this.workflowTemplateDao.load(this.workflowTemplateId,
+				WorkflowPersistenceTemplateDAO.WORKFLOW_STAGE.SAVED);
 
-		this.workflowTemplateLoader.deleteWorkflowTemplate(workflowTemplate);
+		this.workflowTemplateDao.delete(workflowTemplate);
 
 		if (this.persistenceTemplate.getId() == workflowTemplate.getId())
 			initializing();
@@ -389,15 +396,14 @@ public class WorkflowTemplateManager {
 		// TODO:we should add API-improvements to handle more clearer this
 		// List<WorkflowDefinition> definitions =
 		// this.workflowService.getAllDefinitions();
-
-		/*
-		 * for (WorkflowDefinition definition : definitions) { if
-		 * (definition.getName().equals(workflowTemplate.getName()))
-		 * this.workflowService.undeployWorkflow(definition.getDefinitionId()); }
-		 */
+		//
+		// for (WorkflowDefinition definition : definitions) {
+		// if (definition.getName().equals(workflowTemplate.getName()))
+		// this.workflowService.undeployWorkflow(definition.getDefinitionId());
+		// }
 
 		this.persistenceTemplate.setXmldata(xstream.toXML(this.workflowTemplate));
-		this.workflowTemplateLoader.deployWorkflowTemplate(persistenceTemplate);
+		this.workflowTemplateDao.deploy(persistenceTemplate);
 		this.workflowService.deployWorkflow(this.workflowTemplate);
 
 		return null;
@@ -428,19 +434,35 @@ public class WorkflowTemplateManager {
 	}
 
 	public String loadWorkflowTemplate() {
-
 		if (this.workflowTemplateId == 0)
 			return null;
 
-		this.initializing();
-		this.persistenceTemplate = this.workflowTemplateLoader.loadWorkflowTemplate(this.workflowTemplateId,
-				WorkflowTemplateLoader.WORKFLOW_STAGE.SAVED);
-		if (this.persistenceTemplate.getXmldata() != null
-				&& ((String) this.persistenceTemplate.getXmldata()).getBytes().length > 0) {
-			this.workflowTemplate = this.workflowTransformService.fromWorkflowDefinitionToObject(persistenceTemplate);
-		}
+		try {
+			this.initializing();
+			this.persistenceTemplate = this.workflowTemplateDao.load(this.workflowTemplateId,
+					WorkflowPersistenceTemplateDAO.WORKFLOW_STAGE.SAVED);
+			if (this.persistenceTemplate.getXmldata() != null
+					&& ((String) this.persistenceTemplate.getXmldata()).getBytes().length > 0) {
+				this.workflowTemplate = this.workflowTransformService
+						.fromWorkflowDefinitionToObject(persistenceTemplate);
+			}
 
+			reset();
+			removeSelection();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
 		return null;
+	}
+
+	private void reset() {
+		this.component = null;
+		FacesUtil.forceRefresh(nameInput);
+		FacesUtil.forceRefresh(descriptionInput);
+		FacesUtil.forceRefresh(assignmentSubjectInput);
+		FacesUtil.forceRefresh(assignmentBodyInput);
+		FacesUtil.forceRefresh(reminderSubjectInput);
+		FacesUtil.forceRefresh(reminderBodyInput);
 	}
 
 	public WorkflowTemplate getWorkflowTemplate() {
@@ -467,14 +489,68 @@ public class WorkflowTemplateManager {
 		this.showWorkflowSettings = showWorkflowSettings;
 	}
 
-	public void load(ValueChangeEvent event) {
-		this.workflowTemplateId = Long.parseLong(event.getNewValue().toString());
-		loadWorkflowTemplate();
+	public String load(ValueChangeEvent event) {
+		if (event != null)
+			this.workflowTemplateId = Long.parseLong(event.getNewValue().toString());
+
+		return loadWorkflowTemplate();
 	}
 
 	public void removeSelection() {
 		for (BaseWorkflowModel baseWorkflowModel : getWorkflowComponents()) {
 			baseWorkflowModel.setSelected(false);
 		}
+	}
+
+	public UIInput getReminderBodyInput() {
+		return reminderBodyInput;
+	}
+
+	public void setReminderBodyInput(UIInput reminderBodyInput) {
+		this.reminderBodyInput = reminderBodyInput;
+	}
+
+	public UIInput getNameInput() {
+		return nameInput;
+	}
+
+	public void setNameInput(UIInput nameInput) {
+		this.nameInput = nameInput;
+	}
+
+	public UIInput getDescriptionInput() {
+		return descriptionInput;
+	}
+
+	public void setDescriptionInput(UIInput descriptionInput) {
+		this.descriptionInput = descriptionInput;
+	}
+
+	public UIInput getReminderSubjectInput() {
+		return reminderSubjectInput;
+	}
+
+	public void setReminderSubjectInput(UIInput reminderSubjectInput) {
+		this.reminderSubjectInput = reminderSubjectInput;
+	}
+
+	public UIInput getAssignmentSubjectInput() {
+		return assignmentSubjectInput;
+	}
+
+	public void setAssignmentSubjectInput(UIInput assignmentSubjectInput) {
+		this.assignmentSubjectInput = assignmentSubjectInput;
+	}
+
+	public UIInput getAssignmentBodyInput() {
+		return assignmentBodyInput;
+	}
+
+	public void setAssignmentBodyInput(UIInput assignmentBodyInput) {
+		this.assignmentBodyInput = assignmentBodyInput;
+	}
+
+	public void setWorkflowTemplateDao(WorkflowPersistenceTemplateDAO workflowTemplateDao) {
+		this.workflowTemplateDao = workflowTemplateDao;
 	}
 }
