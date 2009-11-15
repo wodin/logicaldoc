@@ -2,6 +2,7 @@ package com.logicaldoc.web.setup;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
@@ -17,6 +18,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.java.plugin.PluginClassLoader;
+import org.java.plugin.registry.PluginDescriptor;
 import org.springframework.util.Log4jConfigurer;
 
 import com.icesoft.faces.component.paneltabset.PanelTab;
@@ -32,6 +35,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.DBMSConfigurator;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 import com.logicaldoc.web.ApplicationInitializer;
 
 /**
@@ -130,8 +134,19 @@ public class SetupWizard implements TabChangeListener {
 			indexer.createIndexes();
 
 			
-			// Initialize plugins
-			com.logicaldoc.util.PluginRegistry.getInstance().init();
+			// Initialize plugins filesystem
+			Collection<PluginDescriptor> descriptors = com.logicaldoc.util.PluginRegistry.getInstance().getPlugins();
+			for (PluginDescriptor descriptor : descriptors) {
+				try {
+					File file=new File(pluginDir,descriptor.getId());
+					file.mkdirs();
+					file.mkdir();
+					file=new File(file,"plugin.properties");
+					file.createNewFile();
+				} catch (Exception e) {
+					e.printStackTrace();
+				} 
+			}
 			
 			next();
 		} catch (Throwable e) {
