@@ -18,15 +18,10 @@ import com.logicaldoc.util.plugin.LogicalDOCPlugin;
  * Particular implementation of the plugin registry for the Tomcat servlet
  * container
  * 
- * @author Marco Meschieri
- * @version $Id$
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class PluginRegistry extends com.logicaldoc.util.PluginRegistry {
-
-	public void setupPlugins() {
-		
-	}
 
 	protected void initPlugins(Map<String, Identity> plugins) {
 		System.out.println("Intialising plugins");
