@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
@@ -68,6 +69,8 @@ public class StartWorkflowWizard implements TabChangeListener {
 	private XStream xStream;
 
 	private DocumentsRecordsManager documentsRecordsManager;
+
+	private boolean rowSelected = false;
 
 	/**
 	 * Binding used by example to listen
@@ -135,11 +138,13 @@ public class StartWorkflowWizard implements TabChangeListener {
 	public void rowSelectionListener(RowSelectorEvent event) {
 
 		setupAllPanels(false);
+		
+		rowSelected = true;
 
 		this.workflowDefinition = this.workflowService.getAllDefinitions().get(event.getRow());
 
-		WorkflowPersistenceTemplate workflowPersistenceTemplate = this.workflowTemplateDao.load(
-				this.workflowDefinition.getName(), WORKFLOW_STAGE.DEPLOYED);
+		WorkflowPersistenceTemplate workflowPersistenceTemplate = this.workflowTemplateDao.load(this.workflowDefinition
+				.getName(), WORKFLOW_STAGE.DEPLOYED);
 
 		this.workflowTemplate = this.workflowTransformService
 				.fromWorkflowDefinitionToObject(workflowPersistenceTemplate);
@@ -151,7 +156,13 @@ public class StartWorkflowWizard implements TabChangeListener {
 	}
 
 	public String cancel() {
-
+		this.persistenceTemplate = null;
+		this.priority = null;
+		this.workflowTask = null;
+		this.workflowDefinition = null;
+		this.workflowTemplate = null;
+		rowSelected = false;
+		this.documentsRecordsManager.unselectAll();
 		this.documentNavigation.showDocuments();
 
 		return null;
@@ -171,9 +182,13 @@ public class StartWorkflowWizard implements TabChangeListener {
 		properties.put(WorkflowConstants.VAR_DOCUMENTS, (Serializable) documents);
 
 		WorkflowInstance instance = this.workflowService.startWorkflow(workflowDefinition, properties);
-		this.workflowService.signal(instance.getId());
+		if (instance != null) {
+			this.workflowService.signal(instance.getId());
+			this.documentNavigation.showDocuments();
+		}
 
-		this.documentNavigation.showDocuments();
+		documentsRecordsManager.getSelection().clear();
+
 		return null;
 	}
 
@@ -268,5 +283,13 @@ public class StartWorkflowWizard implements TabChangeListener {
 
 	public void setWorkflowTemplateDao(WorkflowPersistenceTemplateDAO workflowTemplateDao) {
 		this.workflowTemplateDao = workflowTemplateDao;
+	}
+
+	public boolean isRowSelected() {
+		return rowSelected;
+	}
+
+	public void setRowSelected(boolean rowSelected) {
+		this.rowSelected = rowSelected;
 	}
 }
