@@ -19,8 +19,6 @@
 		<ice:panelGroup
 			style="margin-left:30px; margin-bottom:8px; margin-top:4px; width:580px;">
 
-			<ice:messages />
-
 			<ice:panelTabSet id="staticTabSetPnl"
 				binding="#{StartWorkflowWizard.tabSet}" selectedIndex="0"
 				tabPlacement="top"
@@ -36,7 +34,7 @@
 
 							<ice:column>
 
-								<ice:rowSelector id="selected"
+								<ice:rowSelector id="selected" value="#{StartWorkflowWizard.rowSelected}"
 									selectionListener="#{StartWorkflowWizard.rowSelectionListener}"
 									preStyleOnSelection="true" />
 
@@ -325,8 +323,9 @@
 			<ice:panelGroup styleClass="commands">
 				<ice:commandButton value="#{msgs['cancel']}" partialSubmit="true"
 					immediate="true" action="#{StartWorkflowWizard.cancel}" />
-				<ice:commandButton value="#{msgs['workflow.wiard_startworkflow']}"
+				<ice:commandButton value="#{msgs['workflow.wizard_startworkflow']}"
 					id="startWorkflow" tabindex="1"
+					disabled="#{StartWorkflowWizard.workflowDefinition == null ? 'true' : 'false'}"
 					action="#{StartWorkflowWizard.startWorkflow}" />
 			</ice:panelGroup>
 		</ice:panelGroup>
