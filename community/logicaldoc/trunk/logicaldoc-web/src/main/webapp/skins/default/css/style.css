@@ -157,7 +157,7 @@ em { /*font-size:14px;*/
 
 .navConnectionStatus {
 	position: absolute;
-	top: 60px;
+	top: 73px;
 	right: 0;
 }
 
@@ -820,14 +820,6 @@ em { /*font-size:14px;*/
 	color: #999999;
 }
 
-.dataScrollerTable {
-	
-}
-
-.dataPaginatorTable {
-	
-}
-
 .sortableHeader {
 	text-align: left;
 }
@@ -1296,7 +1288,7 @@ DIV#center {
 */
 #header {
 	color: #DDDDDD;
-	font-size: 12px;
+	font-size: 11px; 
 }
 
 .topShadow {
@@ -1304,29 +1296,12 @@ DIV#center {
 }
 
 .headerTop {
-	height: 60px;
+	height: 56px;
 	width: 100%;
-	background-image: url(images/header-bg.jpg);
+	background-image: url(images/header_top_bg.gif);
 	background-repeat: repeat-x;
-	background-position: top left
-}
-
-.navigationTop {
-	left: 0 px;
-	top: 71px;
-	width: 100%;
-	text-align: left;
-}
-
-#headerInfo {
-	position: absolute;
-	top: 15px;
-	right: 10px;
-}
-
-.headerInfoText {
-	color: #AAAAAA;
-	font-size: 12px;
+	background-position: top left;
+	border-bottom:1px solid #5F767F;
 }
 
 .headerLogo {
@@ -1335,58 +1310,147 @@ DIV#center {
 	border: 0px solid;
 	float: left;
 }
-
-#logout {
-	position: absolute;
-	top: 33px;
-	right: 10px;
+.quickSearch{
+	float: right;
+	padding-right: 100px;
+	margin-top: 5px;
 }
 
-.logoutLink {
-	color: #b11a1a;
+.headerRight {
+	float:right;
+	margin-right: 30px;
+	margin-top: 20px;
+}
+
+#headerInfo {
+	float: left;
+}
+
+.headerInfoText {
+	color: #FFFFFF;
+	font-size: 11px;
+	font-weight: normal;
+}
+
+.separator {
+	color:#999;
+	font-size: 11px;
+	font-weight: normal;
+	padding-left: 5px;
+	padding-right: 10px;
+}
+
+#logout {
+	float:left;
+	padding-top:2px;
+}
+
+.logoutLink, .logoutLink a {
+	color: #fcce77;
+	font-size: 11px;
+	font-weight: normal;
+	text-decoration: underline;
+}
+
+/*
+------------ Main menu ----------
+*/
+
+/* Navigation bar */
+.navigationTop {
+	left: 0 px;
+	top: 71px;
+	width: 100%;
+	height: 26px;
+	text-align: left;
+	border-top:1px solid #2d444f; 
+	border-bottom:1px solid #2d444f; 
+	background-color: #666e73;
+	background-image: url(images/nav1_bg.gif);
+	background-repeat: repeat-x;
+	background-attachment: scroll;
+    background-position: 0pt 100%;
+    padding:0 30px;
+}
+.nav-bar {
 	font-size: 12px;
-	font-weight: bold;
-	vertical-align: top;
+}
+
+/* Barra principale colore sfondo */
+.nav-barItem .iceCmdLnk {
+	background-color: transparent;
+}
+
+.nav-barItem a {
+	background:url(images/nav1_sep.gif) no-repeat 100% 0;
+	border-right: none; 
+	height: 20px;
+	padding-top: 5px;
+	padding-bottom: 1px;
+	padding-right: 14px;
+	padding-left: 14px;
+}
+
+
+/* Barra principale aspetto testo */
+.nav-barItem .iceCmdLnk .iceOutTxt {
+	color: #fff;
+	font-size: 12px;
+}
+
+/* Barra principale colore sfondo menu attivo */
+.nav-barItem a:hover {
+	background:url(images/nav1_sep.gif) no-repeat 100% 0;
+	border-right: none; 
+}
+
+/* Barra principale colore testo menu attivo */
+.nav-barItem a:hover .iceOutTxt {
+	color: #d6e2e5;
+}
+
+.nav-barSubMenu {
+	background-color: #e3ecee;
+}
+
+.nav-barSubMenu .iceCmdLnk, .nav-barSubMenu .iceLink {
+	padding-left: 12px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background-color: transparent;
+	background-image: url(images/nav2_link_bg.gif);
+	background-repeat: repeat-x;
+	background-attachment: scroll;
+	background-position: 0pt 100%;
+}
+.nav-barSubMenu .iceCmdLnk .iceOutTxt {
+	color: #2f2f2f;
+	font-size: 12px;
+}
+
+.nav-barSubMenu .iceMnuItmLabel, .nav-barSubMenu .iceMnuBarItemLabel {
+	color: #2f2f2f;
+	font-size: 12px;
+}
+
+/* colore di sfondo sub-menu hover */
+.nav-barSubMenu a:hover {
+	background-color: #cddbde;
+}
+/* colore testo sub-menu hover */
+.nav-barSubMenu a:hover .iceOutTxt, .nav-barSubMenu a:hover .iceMnuItmLabel {
+	color: #2f2f2f;
 }
 
 /*
 ------------ Search ----------
 */
-.quickSearch {
-	position: absolute;
-	top: 5px;
-	left: 400px;
-	height: 40px;
-}
-
-.boxSearch {
-	background-image: url(images/box_search_bg_db.gif);
-	background-repeat: no-repeat;
-	background-position: 0px 5px;
-	padding-left: 10px;
-	padding-top: 5px;
-	/* padding-bottom: 4px; */
-	padding-bottom: 3px;
-	white-space: nowrap;
-	width: 250px;
-}
-
-.searchField {
-	font-size: 11px;
-	color: #666666;
-	width: 200px;
-	border: 1px solid #FFFFFF;
-	vertical-align: top;
-	margin-top: 2px;
-	padding-top: 1px;
-	float: left;
-}
-
-.submitImage {
-	background-image: none;
-	width: 25px;
-	height: 21px;
-	border: none;
+input.input-text {
+padding-top: 2px;
+padding-right: 2px;
+padding-bottom: 2px;
+padding-left: 2px;
+width: 220px;
 }
 
 .searchOptionsTD {
@@ -1399,32 +1463,32 @@ DIV#center {
 .searchOptions {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 11px;
-	color: #AAAAAA;
+	color: #FFFFFF;
 	text-align: left;
 	vertical-align: top;
 	border: none;
 	border-width: 0px;
+	margin-right: 3px;
 }
 
 .searchOptions input {
 	margin: 0px;
 	padding: 0px;
-	width: 1em;
-	height: 1em;
+	margin-right: 2px;
 	vertical-align: middle;
-}
+} 
 
 .tdLinks {
 	padding-left: 8px;
 	padding-top: 3px;
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 11px;
+	font-size: 0.8em;
 	text-align: left;
 	vertical-align: top;
 }
 
 .searchLink {
-	color: #AAAAAA;
+	color: #FFFFFF;
 }
 
 .resultTable,.similarTable {
@@ -1667,6 +1731,12 @@ homePlainTblColHdr1 homePlainTblHdr
 
 .LDLargeMenuItem {
 	padding-right: 10px;
+}
+
+.nav-barSubMenu .LDLargeMenuItem {
+	width: auto;
+	font-size: 12px;
+	padding-right: 0px;
 }
 
 .folderMenuVrt {
