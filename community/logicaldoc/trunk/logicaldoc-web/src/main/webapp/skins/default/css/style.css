@@ -316,31 +316,29 @@ em { /*font-size:14px;*/
 	width: 100%;
 }
 
+.browseMain {
+	width: 100%;
+}
+
 /* encapsulates the folder element and restricts it to the given size */
 .browseLeft {
 	width: 250px;
-	height: 400px;
-	overflow: scroll;
+	overflow: auto;
 	vertical-align: top;
 }
 
-.browseMain {
-	width: 100%;
-	overflow: scroll;
+.browseRight {
 	vertical-align: top;
 }
 
 .folderContainer {
-	width: 230px;
-	height: 400px;
-	overflow: auto;
+	width: 240px;
 }
 
 .treeContainer_horizontal {
 	border: 1px solid #dedede;
 	width: 400px;
 	height: 280px;
-	overflow: scroll;
 }
 
 .documentsPanel {

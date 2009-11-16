@@ -13,22 +13,14 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGrid"
-	columns="2" style="width: 100%;" columnClasses="browseLeft,browseMain"
+	columns="2" style="width: 100%;" columnClasses="browseLeft,browseRight" styleClass="browseXXX"
 	cellpadding="4">
 
 	<ice:panelGrid columns="1">
 		<ice:panelGroup style="display: inline;"
 			rendered="#{documentNavigation.selectedDir != null}">
 			<ice:form id="editFolderForm"
-				style="border:0px; margin:0px; padding:0px;">
-				<ldoc:folderselector useIcon="true"
-					directoryModel="#{documentNavigation.directoryModel}"
-					showSelector="#{documentNavigation.showFolderSelector}"
-					openListener="#{documentNavigation.openFolderSelector}"
-					confirmListener="#{documentNavigation.folderSelected}"
-					cancelListener="#{documentNavigation.cancelFolderSelector}"
-					closeListener="#{documentNavigation.closeFolderSelector}" />
-
+				style="border:none; margin:0px; padding:0px;">
 				<f:subview id="folderToolbar">
 					<ui:include src="/templates/document/folderToolbar.jspx" />
 				</f:subview>
