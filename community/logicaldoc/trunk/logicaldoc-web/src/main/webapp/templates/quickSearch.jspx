@@ -27,13 +27,12 @@ function clearSearch(element, label) {
 		<table id="headerSearch" border="0" cellpadding="0" cellspacing="0">
 			<tbody>
 				<tr>
-					<td class="boxSearch">
-						<ice:inputText id="query" value="#{searchForm.query}"
-							maxlength="100" size="35" styleClass="searchField"
+					<td>
+						<ice:inputText id="query" styleClass="input-text" value="#{searchForm.query}"
 							onclick="javascript:clearSearch(this,'#{msgs.search}...');" />
 						<ice:commandButton id="quickSearch"
 							image="#{StyleBean.imagesPath}/spacer.gif"
-							action="#{searchForm.quickSearch}" styleClass="submitImage" />
+							action="#{searchForm.quickSearch}" />	
 					</td>
 					<td class="tdLinks" rowspan="2">
 						<ice:commandLink value="#{msgs['search.advanced']}"

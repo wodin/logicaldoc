@@ -14,7 +14,5 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
 	id="headerInfo">
-	<ice:outputText styleClass="headerInfoText"
-		value="#{msgs['username']}: "></ice:outputText>
-	<ice:outputText styleClass="headerInfoText" value="#{authUser}"></ice:outputText>
+	<ice:outputText styleClass="headerInfoText" value="Logged in as " /><ice:outputText styleClass="headerInfoText" value="#{authUser}" /><ice:outputText styleClass="separator" value="|" />
 </jsp:root>

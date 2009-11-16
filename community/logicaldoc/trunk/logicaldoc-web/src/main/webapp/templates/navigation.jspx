@@ -16,8 +16,8 @@
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
 	id="navigationMenuForm">
 	<!-- main menu declaration -->
-	<ice:menuBar id="menu" orientation="#{menuBar.orientation}"
-		immediate="true" style="font-size: 14px;">
+	<ice:menuBar id="menu" styleClass="nav-bar" orientation="#{menuBar.orientation}"
+		immediate="true" noIcons="true">
 		<ice:menuItems value="#{menuBar.model}" />
 	</ice:menuBar>
 </jsp:root>
