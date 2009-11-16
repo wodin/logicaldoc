@@ -120,16 +120,21 @@ public class MenuBarBean {
 	 * @return
 	 */
 	protected void createMenuItems() {
+		System.out.println("createMenuItems()");
+		
 		model.clear();
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		long userId = SessionManagement.getUserId();
 		PageContentBean page = new PageContentBean("home", "home");
-		page.setContentTitle(Messages.getMessage("home"));
-		page.setDisplayText(Messages.getMessage("home"));
+		//page.setContentTitle(Messages.getMessage("home"));
+		page.setContentTitle(Messages.getMessage("dashboard"));
+		page.setDisplayText(Messages.getMessage("dashboard"));
 		page.setIcon(style.getImagePath("home.png"));
 
-		MenuItem item = createMenuItem(" " + Messages.getMessage("home"), null, "#{menuBar.primaryListener}", null,
-				null, style.getImagePath("home.png"), false, null, null, page);
+//		MenuItem item = createMenuItem(" " + Messages.getMessage("home"), null, "#{menuBar.primaryListener}", null,
+//				null, style.getImagePath("home.png"), false, null, null, page);
+		MenuItem item = createMenuItem(" " + Messages.getMessage("dashboard"), null, "#{menuBar.primaryListener}", null,
+		null, style.getImagePath("home.png"), false, null, null, page);
 		model.add(item);
 
 		try {
