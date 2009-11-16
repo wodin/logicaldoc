@@ -113,9 +113,11 @@ public class LoginForm {
 
 			if (page == null) {
 				// Show the home page
+				System.out.println("page == null, show the home page");
 				page = new PageContentBean("home", "home");
-				page.setContentTitle(Messages.getMessage("home"));
-				page.setDisplayText(Messages.getMessage("home"));
+				//page.setContentTitle(Messages.getMessage("home"));
+				page.setContentTitle(Messages.getMessage("dashboard"));
+				page.setDisplayText(Messages.getMessage("dashboard"));
 				page.setIcon(style.getImagePath("home.png"));
 			}
 			menuBar.getNavigation().setSelectedPanel(page);
