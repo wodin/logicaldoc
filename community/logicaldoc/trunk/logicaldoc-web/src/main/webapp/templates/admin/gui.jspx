@@ -108,6 +108,18 @@
 				</ice:selectOneMenu>
 				<ice:outputLabel value="#{msgs['document.perpage']}" for="pagesize" />
 			</ice:panelGroup>
+			
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="categoryTree"
+					value="Tree View:  " />
+			</ice:panelGroup>
+			<ice:panelGroup style="margin-top:0px; padding-top:0px;">
+				<ice:selectOneMenu id="categoryTree"
+					value="#{guiBean.categoryTree}">
+					<f:selectItem itemValue="0" itemLabel="Complete"/>
+					<f:selectItem itemValue="1" itemLabel="Light"/>
+				</ice:selectOneMenu>
+			</ice:panelGroup>
 
 		</ice:panelGrid>
 

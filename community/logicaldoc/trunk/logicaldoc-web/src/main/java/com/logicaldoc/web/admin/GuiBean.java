@@ -42,6 +42,8 @@ public class GuiBean {
 	private Integer thumbnailQuality = null;
 
 	private Integer thumbnailScale = null;
+	
+	private Integer categoryTree = null;
 
 	private Integer pageSize = null;
 
@@ -125,6 +127,7 @@ public class GuiBean {
 			thumbnailScale = Integer.parseInt(config.getProperty("gui.thumbnail.scale"));
 			thumbnailQuality = Integer.parseInt(config.getProperty("gui.thumbnail.quality"));
 			pageSize = Integer.parseInt(config.getProperty("gui.page.size"));
+			categoryTree = Integer.parseInt(config.getProperty("gui.category.tree"));
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
@@ -162,6 +165,7 @@ public class GuiBean {
 			config.setProperty("gui.thumbnail.quality", thumbnailQuality.toString());
 			config.setProperty("gui.thumbnail.scale", thumbnailScale.toString());
 			config.setProperty("gui.page.size", pageSize.toString());
+			config.setProperty("gui.category.tree", categoryTree.toString());
 			config.write();
 			Messages.addLocalizedInfo("msg.action.savesettings");
 		} catch (IOException e) {
@@ -195,5 +199,15 @@ public class GuiBean {
 
 	public void setThumbnailQuality(Integer thumbnailQuality) {
 		this.thumbnailQuality = thumbnailQuality;
+	}
+
+	public Integer getCategoryTree() {
+		if (categoryTree == null)
+			init();
+		return categoryTree;
+	}
+
+	public void setCategoryTree(Integer categoryTree) {
+		this.categoryTree = categoryTree;
 	}
 }
