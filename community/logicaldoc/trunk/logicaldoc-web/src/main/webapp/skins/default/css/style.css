@@ -1296,15 +1296,16 @@ DIV#center {
 .headerTop {
 	height: 56px;
 	width: 100%;
-	background-image: url(images/header_top_bg.gif);
+	background-image: url(images/blu01a.gif);
 	background-repeat: repeat-x;
 	background-position: top left;
-	border-bottom:1px solid #5F767F;
+	/*border-bottom:1px solid #5F767F; */
+	border-bottom:1px solid #58759b;
 }
 
 .headerLogo {
-	margin-left: 4px;
-	margin-top: 4px;
+	margin-left: 27px;
+	margin-top: 10px;
 	border: 0px solid;
 	float: left;
 }
@@ -1361,10 +1362,11 @@ DIV#center {
 	width: 100%;
 	height: 26px;
 	text-align: left;
-	border-top:1px solid #2d444f; 
+	/*border-top:1px solid #2d444f; */
+	border-top:1px solid #374960;
 	border-bottom:1px solid #2d444f; 
 	background-color: #666e73;
-	background-image: url(images/nav1_bg.gif);
+	background-image: url(images/nav1_bg.gif); 
 	background-repeat: repeat-x;
 	background-attachment: scroll;
     background-position: 0pt 100%;
