@@ -13,7 +13,7 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGrid"
-	columns="2" style="width: 100%;" columnClasses="browseLeft,browseRight" styleClass="browseXXX"
+	columns="2" style="width: 100%;" columnClasses="browseLeft,browseRight" styleClass="browseMain"
 	cellpadding="4">
 
 	<ice:panelGrid columns="1">
