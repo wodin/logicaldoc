@@ -157,8 +157,9 @@ em { /*font-size:14px;*/
 
 .navConnectionStatus {
 	position: absolute;
-	top: 73px;
+	top: 80px;
 	right: 0;
+	z-index: 10;
 }
 
 .labelSelector {
@@ -253,8 +254,22 @@ em { /*font-size:14px;*/
 
 /* Main border layout for template */
 .mainBorderLayout {
-	vertical-align: top;
+	min-width:960px;
 	width: 100%;
+	vertical-align: top;
+}
+
+.mainBorderLayoutCenter {
+	min-height: 450px;
+	background-color: #ffffff;
+	background-image: url(images/simple_container_bg.gif);
+	background-repeat: repeat-x;
+	background-attachment: scroll;
+	background-position: 0% 0%;
+	padding-top: 10px;
+	/*padding-right: 27px;
+	padding-bottom: 0pt;
+	padding-left: 27px; */
 }
 
 .icePnlBrdrNorth {
@@ -280,14 +295,7 @@ em { /*font-size:14px;*/
 .icePageCenter {
 	background-color: #FFFFFF;
 	vertical-align: top;
-}
-
-.mainWindow { /*clear: right;*/
-	
-}
-
-.mainWindow .icePnlStk { /*width: 100%;*/
-	
+	border: 1px solid green;
 }
 
 .footer {
