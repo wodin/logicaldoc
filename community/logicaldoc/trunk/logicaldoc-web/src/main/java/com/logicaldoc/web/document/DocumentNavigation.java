@@ -126,6 +126,7 @@ public class DocumentNavigation extends NavigationBean {
 		if (!this.viewMode.equals(viewModeP)) {
 			this.viewMode = viewModeP;
 			refresh();
+			selectDirectory(getSelectedDir());
 		}
 	}
 
@@ -312,6 +313,9 @@ public class DocumentNavigation extends NavigationBean {
 		selectDirectory(folder.getId());
 		highlightDocument(docId);
 		setSelectedPanel(new PageContentBean(getViewMode()));
+
+		if ("tree".equals(getFolderView()) && getDirectoryModel() != null)
+			getDirectoryModel().openFolder(folder.getId());
 
 		// Show the documents browsing panel
 		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
