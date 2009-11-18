@@ -1186,17 +1186,17 @@ em { /*font-size:14px;*/
 .iceCmdLnk .folderTreeSelectedtrue {
 	background-color: #f5d6c7;
 	padding-top: 1px;
-    padding-bottom: 2px;
-    padding-left: 3px;
-    padding-right: 3px;
+    padding-bottom: 1px;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 .iceCmdLnk .folderTreeSelectedfalse {
 	background-color: #fff;
 	padding-top: 1px;
-    padding-bottom: 2px;
-    padding-left: 3px;
-    padding-right: 3px;
+    padding-bottom: 1px;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 .iceCmdLnk .folderTreeSelectedtrue {
