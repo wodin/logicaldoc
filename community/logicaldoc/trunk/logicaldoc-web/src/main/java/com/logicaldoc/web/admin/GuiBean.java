@@ -42,8 +42,8 @@ public class GuiBean {
 	private Integer thumbnailQuality = null;
 
 	private Integer thumbnailScale = null;
-	
-	private Integer categoryTree = null;
+
+	private String viewModeFolder;
 
 	private Integer pageSize = null;
 
@@ -127,7 +127,7 @@ public class GuiBean {
 			thumbnailScale = Integer.parseInt(config.getProperty("gui.thumbnail.scale"));
 			thumbnailQuality = Integer.parseInt(config.getProperty("gui.thumbnail.quality"));
 			pageSize = Integer.parseInt(config.getProperty("gui.page.size"));
-			categoryTree = Integer.parseInt(config.getProperty("gui.category.tree"));
+			viewModeFolder = config.getProperty("gui.viewmode.folder");
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
@@ -165,7 +165,7 @@ public class GuiBean {
 			config.setProperty("gui.thumbnail.quality", thumbnailQuality.toString());
 			config.setProperty("gui.thumbnail.scale", thumbnailScale.toString());
 			config.setProperty("gui.page.size", pageSize.toString());
-			config.setProperty("gui.category.tree", categoryTree.toString());
+			config.setProperty("gui.viewmode.folder", viewModeFolder);
 			config.write();
 			Messages.addLocalizedInfo("msg.action.savesettings");
 		} catch (IOException e) {
@@ -201,13 +201,13 @@ public class GuiBean {
 		this.thumbnailQuality = thumbnailQuality;
 	}
 
-	public Integer getCategoryTree() {
-		if (categoryTree == null)
+	public String getViewModeFolder() {
+		if (viewModeFolder == null)
 			init();
-		return categoryTree;
+		return viewModeFolder;
 	}
 
-	public void setCategoryTree(Integer categoryTree) {
-		this.categoryTree = categoryTree;
+	public void setViewModeFolder(String viewModeFolder) {
+		this.viewModeFolder = viewModeFolder;
 	}
 }
