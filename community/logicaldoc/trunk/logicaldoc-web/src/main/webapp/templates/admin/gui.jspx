@@ -116,8 +116,8 @@
 			<ice:panelGroup style="margin-top:0px; padding-top:0px;">
 				<ice:selectOneMenu id="categoryTree"
 					value="#{guiBean.categoryTree}">
-					<f:selectItem itemValue="0" itemLabel="Complete"/>
-					<f:selectItem itemValue="1" itemLabel="Light"/>
+					<f:selectItem itemValue="simple" itemLabel="Simple"/>
+					<f:selectItem itemValue="tree" itemLabel="Tree"/>
 				</ice:selectOneMenu>
 			</ice:panelGroup>
 

@@ -75,9 +75,9 @@ public class DocumentNavigation extends NavigationBean {
 	private boolean showFolderSelector = false;
 
 	private String viewMode = null;
-	
-	private String treeView;
-	
+
+	private String folderView;
+
 	// binding to component
 	private Tree treeComponent;
 
@@ -95,17 +95,16 @@ public class DocumentNavigation extends NavigationBean {
 		}
 		return directoryModel;
 	}
-	
+
 	/**
 	 * Sets the tree component binding.
 	 * 
-	 * @param treeComponent
-	 *            tree component to bind to
+	 * @param treeComponent tree component to bind to
 	 */
 	public void setTreeComponent(Tree treeComponent) {
 		this.treeComponent = treeComponent;
 	}
-	
+
 	/**
 	 * Gets the tree component binding.
 	 * 
@@ -141,17 +140,14 @@ public class DocumentNavigation extends NavigationBean {
 			viewMode = "simple";
 		return viewMode;
 	}
-	
-	public String getTreeView() {
-		if (treeView == null) {
+
+	public String getFolderView() {
+		if (folderView == null) {
 			GuiBean guiBean = ((GuiBean) FacesUtil.accessBeanFromFacesContext("guiBean", FacesContext
 					.getCurrentInstance(), log));
-			if (guiBean.getCategoryTree() == 0) 
-				treeView = "treeComplete";
-			else 
-				treeView = "treeLight";
+			folderView = guiBean.getViewModeFolder();
 		}
-		return treeView;
+		return folderView;
 	}
 
 	public List<MenuItem> getFolderItems() {
@@ -526,7 +522,7 @@ public class DocumentNavigation extends NavigationBean {
 		historyRecordsManager.selectFolder(getSelectedDir().getMenu());
 		return null;
 	}
-	
+
 	public void nodeClicked(ActionEvent event) {
 		System.out.println("nodeClicked");
 		Tree tree = (Tree) event.getSource();
@@ -538,5 +534,5 @@ public class DocumentNavigation extends NavigationBean {
 		}
 		refresh();
 	}
-	
+
 }
