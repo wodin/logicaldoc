@@ -1163,7 +1163,7 @@ em { /*font-size:14px;*/
 	font-family: Tahoma, Verdana, Arial;
 	font-size: 12px;
 	display: inline;
-	background-color: #FCE19D;
+	padding-left: 2px;
 	text-decoration: none;
 }
 
@@ -1171,8 +1171,34 @@ em { /*font-size:14px;*/
 	font-family: Tahoma, Verdana, Arial;
 	font-size: 12px;
 	display: inline;
+	padding-left: 2px;
 	text-decoration: none;
 }
+
+.noDecorationRow a:hover {
+    text-decoration: none;
+}
+
+.iceCmdLnk .folderTreeSelectedtrue {
+	background-color: #f5d6c7;
+	padding-top: 1px;
+    padding-bottom: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.iceCmdLnk .folderTreeSelectedfalse {
+	background-color: #fff;
+	padding-top: 1px;
+    padding-bottom: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.iceCmdLnk .folderTreeSelectedtrue {
+	text-decoration: none;
+}
+
 
 /*
 ------------ File Upload ----------
