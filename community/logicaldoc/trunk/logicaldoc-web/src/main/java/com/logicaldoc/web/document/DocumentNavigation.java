@@ -189,14 +189,16 @@ public class DocumentNavigation extends NavigationBean {
 	}
 
 	public void refresh() {
-		if ("tree".equals(getFolderView())) {
+		if ("tree".equals(getFolderView()) && getDirectoryModel().getSelectedNode() != null) {
 			DefaultMutableTreeNode node = getDirectoryModel().getSelectedNode();
+			node.getParent();
 			IceUserObject userObject = (IceUserObject) node.getUserObject();
-			if (userObject.isExpanded()) {
+			if (userObject != null && userObject.isExpanded()) {
 				directoryModel.reload(node);
 			}
+		} else {
+			selectDirectory(getSelectedDir());
 		}
-		selectDirectory(getSelectedDir());
 	}
 
 	/**
@@ -545,6 +547,16 @@ public class DocumentNavigation extends NavigationBean {
 	public void nodeClicked(ActionEvent event) {
 		Tree tree = (Tree) event.getSource();
 		DefaultMutableTreeNode node = tree.getNavigatedNode();
+		node = treeComponent.getNavigatedNode();
+		IceUserObject userObject = (IceUserObject) node.getUserObject();
+		if (userObject.isExpanded()) {
+			directoryModel.reload(node);
+		}
+		refresh();
+	}
+
+	public void nodeClicked() {
+		DefaultMutableTreeNode node = treeComponent.getNavigatedNode();
 		IceUserObject userObject = (IceUserObject) node.getUserObject();
 		if (userObject.isExpanded()) {
 			directoryModel.reload(node);
