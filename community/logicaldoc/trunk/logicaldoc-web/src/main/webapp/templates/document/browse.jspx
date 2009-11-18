@@ -28,7 +28,8 @@
 		</ice:panelGroup>
 		<ice:panelGroup styleClass="folderContainer">
 			<f:subview id="scSub1">
-				<ui:include src="/templates/document/folders.jspx" />
+				<ui:include
+					src="/templates/document/#{documentNavigation.treeView}.jspx" />
 			</f:subview>
 		</ice:panelGroup>
 	</ice:panelGrid>

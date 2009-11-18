@@ -9,11 +9,14 @@ import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.icesoft.faces.component.tree.IceUserObject;
+import com.icesoft.faces.component.tree.Tree;
 import com.logicaldoc.core.document.DiscussionComment;
 import com.logicaldoc.core.document.DiscussionThread;
 import com.logicaldoc.core.document.Document;
@@ -30,6 +33,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
+import com.logicaldoc.web.admin.GuiBean;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.MenuItem;
 import com.logicaldoc.web.navigation.NavigationBean;
@@ -71,6 +75,11 @@ public class DocumentNavigation extends NavigationBean {
 	private boolean showFolderSelector = false;
 
 	private String viewMode = null;
+	
+	private String treeView;
+	
+	// binding to component
+	private Tree treeComponent;
 
 	/**
 	 * Default constructor of the tree. The root node of the tree is created at
@@ -85,6 +94,25 @@ public class DocumentNavigation extends NavigationBean {
 			loadTree();
 		}
 		return directoryModel;
+	}
+	
+	/**
+	 * Sets the tree component binding.
+	 * 
+	 * @param treeComponent
+	 *            tree component to bind to
+	 */
+	public void setTreeComponent(Tree treeComponent) {
+		this.treeComponent = treeComponent;
+	}
+	
+	/**
+	 * Gets the tree component binding.
+	 * 
+	 * @return tree component binding
+	 */
+	public Tree getTreeComponent() {
+		return treeComponent;
 	}
 
 	public boolean isShowFolderSelector() {
@@ -108,11 +136,22 @@ public class DocumentNavigation extends NavigationBean {
 				PropertiesBean config = new PropertiesBean();
 				viewMode = config.getProperty("gui.viewmode.browsing");
 			} catch (IOException e) {
-
 			}
 		if (StringUtils.isEmpty(viewMode))
 			viewMode = "simple";
 		return viewMode;
+	}
+	
+	public String getTreeView() {
+		if (treeView == null) {
+			GuiBean guiBean = ((GuiBean) FacesUtil.accessBeanFromFacesContext("guiBean", FacesContext
+					.getCurrentInstance(), log));
+			if (guiBean.getCategoryTree() == 0) 
+				treeView = "treeComplete";
+			else 
+				treeView = "treeLight";
+		}
+		return treeView;
 	}
 
 	public List<MenuItem> getFolderItems() {
@@ -214,6 +253,7 @@ public class DocumentNavigation extends NavigationBean {
 	}
 
 	public void onSelectDirectory(ActionEvent event) {
+		System.out.println("onSelectDirectory");
 		Directory dir = null;
 		if (event.getSource() instanceof MenuItem) {
 			dir = (Directory) ((MenuItem) event.getSource()).getUserObject();
@@ -486,4 +526,17 @@ public class DocumentNavigation extends NavigationBean {
 		historyRecordsManager.selectFolder(getSelectedDir().getMenu());
 		return null;
 	}
+	
+	public void nodeClicked(ActionEvent event) {
+		System.out.println("nodeClicked");
+		Tree tree = (Tree) event.getSource();
+		DefaultMutableTreeNode node = tree.getNavigatedNode();
+		System.out.println("node = " + node);
+		IceUserObject userObject = (IceUserObject) node.getUserObject();
+		if (userObject.isExpanded()) {
+			directoryModel.reload(node);
+		}
+		refresh();
+	}
+	
 }
