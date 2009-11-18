@@ -71,7 +71,6 @@ public class DirectoryEditForm {
 					history.setEvent(History.EVENT_FOLDER_RENAMED);
 					history.setSessionId(SessionManagement.getCurrentUserSessionId());
 					dao.store(directory.getMenu(), history);
-
 					documentNavigation.refresh();
 				}
 			} catch (Exception e) {
@@ -122,7 +121,7 @@ public class DirectoryEditForm {
 					Messages.addLocalizedInfo("msg.action.savefolder");
 				}
 
-				documentNavigation.refresh();
+				documentNavigation.nodeClicked();
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addLocalizedError("errors.action.savefolder.notstored");
