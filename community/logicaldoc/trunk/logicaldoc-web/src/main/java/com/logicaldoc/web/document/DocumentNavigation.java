@@ -63,6 +63,8 @@ import com.logicaldoc.web.util.FacesUtil;
  */
 public class DocumentNavigation extends NavigationBean {
 
+	private static final String FOLDER_VIEW_TREE = "tree";
+
 	protected static Log log = LogFactory.getLog(DocumentNavigation.class);
 
 	// list for the dynamic menus w/ getter & setter
@@ -190,7 +192,7 @@ public class DocumentNavigation extends NavigationBean {
 	}
 
 	public void refresh() {
-		if ("tree".equals(getFolderView()) && getDirectoryModel().getSelectedNode() != null) {
+		if (FOLDER_VIEW_TREE.equals(getFolderView()) && getDirectoryModel().getSelectedNode() != null) {
 			DefaultMutableTreeNode node = getDirectoryModel().getSelectedNode();
 			node.getParent();
 			IceUserObject userObject = (IceUserObject) node.getUserObject();
@@ -314,7 +316,7 @@ public class DocumentNavigation extends NavigationBean {
 		highlightDocument(docId);
 		setSelectedPanel(new PageContentBean(getViewMode()));
 
-		if ("tree".equals(getFolderView()) && getDirectoryModel() != null)
+		if (FOLDER_VIEW_TREE.equals(getFolderView()) && getDirectoryModel() != null)
 			getDirectoryModel().openFolder(folder.getId());
 
 		// Show the documents browsing panel
@@ -361,7 +363,7 @@ public class DocumentNavigation extends NavigationBean {
 
 		Directory parent = new Directory(menuDao.findById(getSelectedDir().getMenu().getParentId()));
 
-		if ("tree".equals(getFolderView())) {
+		if (FOLDER_VIEW_TREE.equals(getFolderView())) {
 			directoryModel.removeNodeFromParent(directoryModel.getSelectedNode());
 		}
 
@@ -560,10 +562,12 @@ public class DocumentNavigation extends NavigationBean {
 	}
 
 	public void nodeClicked() {
-		DefaultMutableTreeNode node = treeComponent.getNavigatedNode();
-		IceUserObject userObject = (IceUserObject) node.getUserObject();
-		if (userObject.isExpanded()) {
-			directoryModel.reload(node);
+		if (FOLDER_VIEW_TREE.equals(getFolderView())) {
+			DefaultMutableTreeNode node = treeComponent.getNavigatedNode();
+			IceUserObject userObject = (IceUserObject) node.getUserObject();
+			if (userObject.isExpanded()) {
+				directoryModel.reload(node);
+			}
 		}
 		refresh();
 	}

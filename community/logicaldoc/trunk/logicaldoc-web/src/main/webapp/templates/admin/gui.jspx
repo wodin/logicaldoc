@@ -110,14 +110,14 @@
 			</ice:panelGroup>
 			
 			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="categoryTree"
-					value="Tree View:  " />
+				<ice:outputLabel for="viewModeFolder"
+					value="#{msgs['gui.viewmodefolder']}:" />
 			</ice:panelGroup>
 			<ice:panelGroup style="margin-top:0px; padding-top:0px;">
-				<ice:selectOneMenu id="categoryTree"
-					value="#{guiBean.categoryTree}">
-					<f:selectItem itemValue="simple" itemLabel="Simple"/>
-					<f:selectItem itemValue="tree" itemLabel="Tree"/>
+				<ice:selectOneMenu id="viewModeFolder"
+					value="#{guiBean.viewModeFolder}">
+					<f:selectItem itemValue="simple" itemLabel="#{msgs['viewmode.simple']}"/>
+					<f:selectItem itemValue="tree" itemLabel="#{msgs['tree']}"/>
 				</ice:selectOneMenu>
 			</ice:panelGroup>
 
