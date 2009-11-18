@@ -1,0 +1,34 @@
+<?xml version = '1.0'?>
+<!-- 
+ The documents navigation metaphore
+  
+ @author Marco Meschieri
+ @version $Id: tree.jspx,v 1.9 2007/10/16 16:12:10 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:cnt="http://www.contineo.org/jsf" jsfc="ice:form" id="documentNavigationForm">
+          
+	<ice:tree id="tree" value="#{documentNavigation.model}" var="item"
+		hideRootNode="false" hideNavigation="false"
+		binding="#{documentNavigation.treeComponent}"
+		imageDir="#{styleBean.imageDirectory}" immediate="true" actionListener="#{documentNavigation.nodeClicked}">
+		<ice:treeNode>
+			<f:facet name="icon">
+				<ice:panelGroup style="display: inline;" styleClass="#{item.userObject.selected ? 'selected-tree-node' : 'tree-node'}">
+					<ice:commandLink actionListener="#{item.userObject.onSelect}">
+						<ice:outputText value="#{item.userObject.displayText}" />
+						<ice:outputText value="(#{item.userObject.count})" />
+					</ice:commandLink>
+				</ice:panelGroup>
+			</f:facet>
+		</ice:treeNode>
+	</ice:tree>
+	 
+</jsp:root>
