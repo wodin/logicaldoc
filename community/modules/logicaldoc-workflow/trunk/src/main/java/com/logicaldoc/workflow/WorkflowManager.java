@@ -83,7 +83,7 @@ public class WorkflowManager {
 		this.documentDAO = (DocumentDAO) FacesUtil.accessBeanFromFacesContext("DocumentDAO", FacesContext
 				.getCurrentInstance(), log);
 
-		this.userDAO = (UserDAO) Context.getInstance().getBean("UserDAO");
+		this.userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 	}
 
 	public void setNewAssignment(String newAssignment) {

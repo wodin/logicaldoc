@@ -23,7 +23,7 @@ import com.logicaldoc.workflow.transform.WorkflowTransformService;
 
 public class WorkflowServiceImpl implements WorkflowService {
 
-	protected static Log logger = LogFactory.getLog(WorkflowServiceImpl.class);
+	protected static Log log = LogFactory.getLog(WorkflowServiceImpl.class);
 
 	private WorkflowEngine workflowComponent;
 
@@ -70,10 +70,10 @@ public class WorkflowServiceImpl implements WorkflowService {
 	public WorkflowInstance startWorkflow(WorkflowDefinition workflowDefinition, Map<String, Serializable> properties) {
 		WorkflowInstance workflowInstance = null;
 		if (workflowDefinition != null && !workflowDefinition.getDefinitionId().isEmpty()) {
-			System.out.println("workflowComponent: " + workflowComponent);
-			System.out.println("workflowDefinition: " + workflowDefinition);
-			System.out.println("workflowDefinition.getDefinitionId()" + workflowDefinition.getDefinitionId());
-			System.out.println("properties size: " + properties.size());
+			log.info("workflowComponent: " + workflowComponent);
+			log.info("workflowDefinition: " + workflowDefinition);
+			log.info("workflowDefinition.getDefinitionId()" + workflowDefinition.getDefinitionId());
+			log.info("properties size: " + properties.size());
 
 			workflowInstance = workflowComponent.startWorkflow(workflowDefinition.getDefinitionId(), properties);
 		} else {
