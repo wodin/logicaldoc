@@ -504,8 +504,12 @@
 													<table>
 														<tr>
 															<td>
-																<ice:graphicImage
-																	value="/skins/default/images/workflow/#{workflowComponent.image}" />
+																<ice:panelGroup hoverclass="targetClass"
+																	dropListener="#{WorkflowTemplateManager.moveObject}"
+																	dropValue="#{workflowComponent}" dropTarget="true">
+																	<ice:graphicImage
+																		value="/skins/default/images/workflow/#{workflowComponent.image}" />
+																</ice:panelGroup>
 															</td>
 															<td>
 																<ice:panelGroup
@@ -521,12 +525,12 @@
 																		rendered="#{empty workflowComponent.name}">
 																		<i>#{msgs['workflow.editor_aa_noname']}</i>
 																	</ice:panelGroup>
+
 																	<ice:panelGroup
 																		rendered="#{not empty workflowComponent.name}">
 																					
 																					#{workflowComponent.name}
-							
-																				</ice:panelGroup>
+							    									</ice:panelGroup>
 
 
 																	<ice:commandLink style="padding-right: 6px;"
@@ -726,7 +730,7 @@
 				onclick="if(window.confirm(&quot;#{msgs['workflow.editor_components_delete_confirmation']}&quot;) == 0)return false;"
 				action="#{WorkflowTemplateManager.removeAllWorkflowComponents}"
 				value="#{msgs['workflow.editor_components_delete']}"></ice:commandButton>
-				
+
 			<ice:commandButton
 				onclick="if(window.confirm(&quot;#{msgs['workflow.editor_undeploy_confirmation']}&quot;) == 0)return false;"
 				action="#{WorkflowTemplateManager.undeployAllDefinitions}"

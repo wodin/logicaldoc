@@ -160,7 +160,7 @@ public class WorkflowTemplateManager {
 			this.workflowTemplate.getWorkflowComponents().add(workflowModel);
 			selectComponent(workflowModel);
 		}
-		
+
 		return null;
 	}
 
@@ -302,7 +302,20 @@ public class WorkflowTemplateManager {
 				throw new WorkflowEditorException(e);
 			}
 		}
+	}
 
+	public void moveObject(DropEvent event) {
+		if (event.getEventType() == DndEvent.DROPPED && this.draggedObject != null) {
+			BaseWorkflowModel droppedZone = (BaseWorkflowModel) ((HtmlPanelGroup) event.getComponent()).getDropValue();
+			System.out.println("Dropped zone: " + droppedZone.getName());
+			BaseWorkflowModel draggedObject = this.draggedObject;
+			System.out.println("Dragged object: " + draggedObject.getName());
+
+			this.workflowTemplate.getWorkflowComponents().remove(draggedObject);
+			int index = this.workflowTemplate.getWorkflowComponents().indexOf(droppedZone);
+			this.workflowTemplate.getWorkflowComponents().add(index, draggedObject);
+			this.draggedObject = null;
+		}
 	}
 
 	public List<SelectItem> getAvailableWorkflowTemplates() {
