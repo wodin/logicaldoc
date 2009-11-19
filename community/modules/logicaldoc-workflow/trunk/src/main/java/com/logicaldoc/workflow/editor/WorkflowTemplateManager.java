@@ -307,9 +307,7 @@ public class WorkflowTemplateManager {
 	public void moveObject(DropEvent event) {
 		if (event.getEventType() == DndEvent.DROPPED && this.draggedObject != null) {
 			BaseWorkflowModel droppedZone = (BaseWorkflowModel) ((HtmlPanelGroup) event.getComponent()).getDropValue();
-			System.out.println("Dropped zone: " + droppedZone.getName());
 			BaseWorkflowModel draggedObject = this.draggedObject;
-			System.out.println("Dragged object: " + draggedObject.getName());
 
 			this.workflowTemplate.getWorkflowComponents().remove(draggedObject);
 			int index = this.workflowTemplate.getWorkflowComponents().indexOf(droppedZone);
