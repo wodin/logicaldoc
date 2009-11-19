@@ -154,9 +154,13 @@ public class WorkflowTemplateManager {
 		if (editController == null) {
 			Messages.addLocalizedError("feature.enterprise");
 		} else {
+			removeSelection();
 			BaseWorkflowModel workflowModel = editController.instantiateNew();
+			workflowModel.setSelected(true);
 			this.workflowTemplate.getWorkflowComponents().add(workflowModel);
+			selectComponent(workflowModel);
 		}
+		
 		return null;
 	}
 
@@ -239,6 +243,10 @@ public class WorkflowTemplateManager {
 
 		// if we have an existing workflowmodel we have to call invalidate
 
+		selectComponent(baseWorkflowModel);
+	}
+
+	private void selectComponent(BaseWorkflowModel baseWorkflowModel) {
 		if (this.controller != null)
 			this.controller.invalidate();
 
@@ -252,7 +260,6 @@ public class WorkflowTemplateManager {
 			this.controller.initialize(baseWorkflowModel);
 
 		showWorkflowSettings = false;
-
 	}
 
 	public String saveComponent() {
