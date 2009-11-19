@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -21,6 +23,8 @@ import com.logicaldoc.workflow.editor.model.WorkflowTask;
  * 
  */
 public class JBPMWorkflowTask implements TransformModel {
+
+	protected static Log log = LogFactory.getLog(JBPMWorkflowTask.class);
 
 	@Override
 	public Object open(TransformContext ctx) {
@@ -41,13 +45,11 @@ public class JBPMWorkflowTask implements TransformModel {
 		Element assignmentNode = wr.createElement("assignment");
 		try {
 			PropertiesBean pbean = new PropertiesBean();
-			assignmentNode.setAttribute("class",
-			pbean.getProperty("workflow.assignment.handler"));
+			assignmentNode.setAttribute("class", pbean.getProperty("workflow.assignment.handler"));
 		} catch (IOException e) {
-			assignmentNode.setAttribute("class",
-			"com.logicaldoc.workflow.action.DefaultAssignmentHandler");
+			assignmentNode.setAttribute("class", "com.logicaldoc.workflow.action.DefaultAssignmentHandler");
 		}
-		
+
 		Element taskId = wr.createElement("taskId");
 		taskId.setTextContent(workflowTask.getId());
 		assignmentNode.appendChild(taskId);
@@ -56,8 +58,7 @@ public class JBPMWorkflowTask implements TransformModel {
 		Element initialEvent = wr.createElement("event");
 		initialEvent.setAttribute("type", "task-create");
 		Element initialActionEvent = wr.createElement("action");
-		initialActionEvent.setAttribute("class",
-				"com.logicaldoc.workflow.action.TaskSetupHandler");
+		initialActionEvent.setAttribute("class", "com.logicaldoc.workflow.action.TaskSetupHandler");
 		initialEvent.appendChild(initialActionEvent);
 
 		taskId = wr.createElement("taskId");
@@ -77,8 +78,7 @@ public class JBPMWorkflowTask implements TransformModel {
 		 * assigneeStringList+=assignees.get(idx).getValue(); if(idx+1 !=
 		 * assignees.size()) assigneeStringList+=","; }
 		 * 
-		 * assignment.setAttribute("pooled-actors", assigneeStringList);
-		 *  }
+		 * assignment.setAttribute("pooled-actors", assigneeStringList); }
 		 * 
 		 * task.appendChild(assignment);
 		 */
@@ -86,8 +86,7 @@ public class JBPMWorkflowTask implements TransformModel {
 		/**
 		 * Escalation management
 		 */
-		if (workflowTask.getDueDateValue() != null
-				&& workflowTask.getDueDateValue() > 0) {
+		if (workflowTask.getDueDateValue() != null && workflowTask.getDueDateValue() > 0) {
 			Integer dueDateValue = workflowTask.getDueDateValue();
 			String dueDateUnit = workflowTask.getDueDateUnit();
 
@@ -97,11 +96,9 @@ public class JBPMWorkflowTask implements TransformModel {
 
 			Element timer = wr.createElement("timer");
 			timer.setAttribute("name", UUID.randomUUID().toString());
-			timer.setAttribute("duedate", dueDateValue + " "
-					+ dueDateUnit.toLowerCase());
+			timer.setAttribute("duedate", dueDateValue + " " + dueDateUnit.toLowerCase());
 
-			if (workflowTask.getRemindTimeValue() != null
-					&& workflowTask.getRemindTimeValue() > 0) {
+			if (workflowTask.getRemindTimeValue() != null && workflowTask.getRemindTimeValue() > 0) {
 				Integer reminderValue = workflowTask.getRemindTimeValue();
 				String reminderUnit = workflowTask.getRemindTimeUnit();
 
@@ -109,19 +106,16 @@ public class JBPMWorkflowTask implements TransformModel {
 				if (reminderValue > 1)
 					reminderUnit += "s";
 
-				timer.setAttribute("repeat", reminderValue + " "
-						+ reminderUnit.toLowerCase());
+				timer.setAttribute("repeat", reminderValue + " " + reminderUnit.toLowerCase());
 			}
 
 			Element actionTimer = wr.createElement("action");
-			
+
 			try {
 				PropertiesBean pbean = new PropertiesBean();
-				actionTimer.setAttribute("class",
-				pbean.getProperty("workflow.remind.handler"));
+				actionTimer.setAttribute("class", pbean.getProperty("workflow.remind.handler"));
 			} catch (IOException e) {
-				actionTimer.setAttribute("class",
-				"com.logicaldoc.workflow.action.DefaultRemindHandler");
+				actionTimer.setAttribute("class", "com.logicaldoc.workflow.action.DefaultRemindHandler");
 			}
 			timer.appendChild(actionTimer);
 
@@ -140,16 +134,13 @@ public class JBPMWorkflowTask implements TransformModel {
 		for (Transition transitionModel : transitions) {
 
 			if (transitionModel.getDestination() == null) {
-				System.out.println("WARN: Destination is null for "
-						+ transitionModel.getName() + " in "
-						+ workflowTask.getName());
+				log.warn("Destination is null for " + transitionModel.getName() + " in " + workflowTask.getName());
 				continue;
 			}
 
 			Element transition = wr.createElement("transition");
 			transition.setAttribute("name", transitionModel.getName());
-			transition.setAttribute("to", transitionModel.getDestination()
-					.getId());
+			transition.setAttribute("to", transitionModel.getDestination().getId());
 
 			taskNode.appendChild(transition);
 		}

@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.web.document.DocumentRecord;
@@ -26,6 +29,8 @@ import freemarker.template.Template;
 @SuppressWarnings("unchecked")
 public class FreemarkerTemplateService implements TemplateService {
 
+	protected static Log log = LogFactory.getLog(FreemarkerTemplateService.class);
+
 	private UserDAO userDAO;
 
 	private WorkflowService workflowService;
@@ -38,14 +43,12 @@ public class FreemarkerTemplateService implements TemplateService {
 		this.userDAO = userDAO;
 	}
 
-	public String transformToString(String text,
-			Map<String, Object> modelProperties) {
+	public String transformToString(String text, Map<String, Object> modelProperties) {
 
 		Template template = null;
 
 		try {
-			template = new Template(UUID.randomUUID().toString() + ".ftl",
-					new StringReader(text), new Configuration());
+			template = new Template(UUID.randomUUID().toString() + ".ftl", new StringReader(text), new Configuration());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -59,31 +62,28 @@ public class FreemarkerTemplateService implements TemplateService {
 
 	}
 
-	public String transformWorkflowInstance(WorkflowInstance workflowInstance,
-			WorkflowTemplate workflowDefinition, String msg) {
+	public String transformWorkflowInstance(WorkflowInstance workflowInstance, WorkflowTemplate workflowDefinition,
+			String msg) {
 		HashMap modelProperties = new HashMap();
 		mapWorkflowDocumentsToWorkflowModel(modelProperties, workflowInstance);
 
 		return this.transformToString(msg, modelProperties);
 	}
 
-	public String transformWorkflowTask(WorkflowTask workflowTask,
-			WorkflowInstance workflowInstance,
+	public String transformWorkflowTask(WorkflowTask workflowTask, WorkflowInstance workflowInstance,
 			WorkflowTaskInstance workflowTaskInstance, String msg) {
 
 		HashMap modelProperties = new HashMap();
 
 		// assignee are set as multiple since we can not decide at definition
 		// times how many persons can colaborate on that task
-		Object assignee = workflowTaskInstance.getProperties().get(
-				WorkflowConstants.VAR_OWNER);
+		Object assignee = workflowTaskInstance.getProperties().get(WorkflowConstants.VAR_OWNER);
 		List<String> assignees = new LinkedList<String>();
 
 		if (assignee != null)
 			assignees.add(assignee.toString());
 		else
-			assignees = (List<String>) workflowTaskInstance.getProperties()
-					.get(WorkflowConstants.VAR_POOLEDACTORS);
+			assignees = (List<String>) workflowTaskInstance.getProperties().get(WorkflowConstants.VAR_POOLEDACTORS);
 
 		String txt_assignee = "";
 		String txt_assignee_rev = "";
@@ -117,12 +117,10 @@ public class FreemarkerTemplateService implements TemplateService {
 
 	}
 
-	private void mapWorkflowDocumentsToWorkflowModel(Map modelProperties,
-			WorkflowInstance workflowInstance) {
-		Set<DocumentRecord> documentSet = (Set<DocumentRecord>) workflowInstance
-				.getProperties().get(WorkflowConstants.VAR_DOCUMENTS);
-		DocumentRecord[] documentRecords = documentSet
-				.toArray(new DocumentRecord[] {});
+	private void mapWorkflowDocumentsToWorkflowModel(Map modelProperties, WorkflowInstance workflowInstance) {
+		Set<DocumentRecord> documentSet = (Set<DocumentRecord>) workflowInstance.getProperties().get(
+				WorkflowConstants.VAR_DOCUMENTS);
+		DocumentRecord[] documentRecords = documentSet.toArray(new DocumentRecord[] {});
 
 		String txt_doclist = "";
 
@@ -138,13 +136,11 @@ public class FreemarkerTemplateService implements TemplateService {
 		modelProperties.put("documents_objectlist", documentSet);
 	}
 
-	public String transformWorkflowTask(WorkflowTask workflowTask,
-			WorkflowTaskInstance workflowTaskInstance) {
-		WorkflowInstance workflowInstance = this.workflowService
-				.getWorkflowInstanceByTaskInstance(
-						workflowTaskInstance.getId(), FETCH_TYPE.INFO);
-		return this.transformWorkflowTask(workflowTask, workflowInstance,
-				workflowTaskInstance, workflowTask.getDescription());
+	public String transformWorkflowTask(WorkflowTask workflowTask, WorkflowTaskInstance workflowTaskInstance) {
+		WorkflowInstance workflowInstance = this.workflowService.getWorkflowInstanceByTaskInstance(workflowTaskInstance
+				.getId(), FETCH_TYPE.INFO);
+		return this.transformWorkflowTask(workflowTask, workflowInstance, workflowTaskInstance, workflowTask
+				.getDescription());
 	}
 
 	public static void main(String[] args) {
@@ -160,9 +156,8 @@ public class FreemarkerTemplateService implements TemplateService {
 		tesa.add("sdsada");
 		tesa.add("gold");
 		test.put("test", tesa);
-		System.out.println(templateService.transformToString(
-				"hello <#list test as x>"
-						+ "${x}<#if x_has_next>,</#if></#list>", test));
+		log.info(templateService.transformToString("hello <#list test as x>" + "${x}<#if x_has_next>,</#if></#list>",
+				test));
 	}
 
 }

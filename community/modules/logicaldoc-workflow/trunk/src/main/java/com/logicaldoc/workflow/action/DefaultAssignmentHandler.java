@@ -55,11 +55,11 @@ public class DefaultAssignmentHandler extends AbstractAssignmentHandler {
 		WorkflowTask workflowTask = WorkflowUtil.getWorkflowTaskById(executionContext.getNode().getName(),
 				workflowTemplate.getWorkflowComponents());
 
-		UserDAO userDAO = (UserDAO) Context.getInstance().getBean("UserDAO");
+		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 
-		DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean("DocumentDAO");
+		DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 
-		SystemMessageDAO systemMessageDAO = (SystemMessageDAO) Context.getInstance().getBean("SystemMessageDAO");
+		SystemMessageDAO systemMessageDAO = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
 
 		Set<Long> documentRecords = (Set<Long>) executionContext.getVariable(WorkflowConstants.VAR_DOCUMENTS);
 
