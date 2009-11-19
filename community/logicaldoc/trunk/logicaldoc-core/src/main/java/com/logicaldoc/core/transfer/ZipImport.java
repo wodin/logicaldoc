@@ -30,6 +30,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.TagUtil;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.ZipUtil;
+import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 
 /**
  * This is an import utilities that imports documents stored in a zip archive.
@@ -159,8 +160,8 @@ public class ZipImport {
 				AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
 
 				// also extract tags and save on document
-				Parser parser = ParserFactory.getParser(file, locale);
-				parser.parse(file, locale, null);
+				Parser parser = ParserFactory.getParser(file, file.getName(), locale, null);
+				parser.parse(file);
 				String words = parser.getTags();
 				if (StringUtils.isEmpty(words)) {
 					try {

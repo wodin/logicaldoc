@@ -2,7 +2,6 @@ package com.logicaldoc.core.text.parser;
 
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.Locale;
 
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.rtf.RTFEditorKit;
@@ -22,7 +21,7 @@ public class RTFParser extends AbstractParser {
 	protected static Log log = LogFactory.getLog(RTFParser.class);
 
 	@Override
-	public void parse(InputStream input, Locale locale, String encoding) {
+	public void parse(InputStream input) {
 		try {
 			RTFEditorKit rek = new RTFEditorKit();
 			DefaultStyledDocument doc = new DefaultStyledDocument();

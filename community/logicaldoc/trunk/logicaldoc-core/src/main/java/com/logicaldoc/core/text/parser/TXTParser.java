@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -30,7 +29,7 @@ public class TXTParser extends AbstractParser {
 	protected static Log log = LogFactory.getLog(TXTParser.class);
 
 	@Override
-	public void parse(File file, Locale locale, String encoding) {
+	public void parse(File file) {
 
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
@@ -38,32 +37,29 @@ public class TXTParser extends AbstractParser {
 			fis = new FileInputStream(file);
 			bis = new BufferedInputStream(fis);
 
-			String msEncoding = null;
-			if (StringUtils.isEmpty(encoding)) {
+			if (StringUtils.isEmpty(getEncoding())) {
 				// Determine the most probable encoding
 				try {
 					CharsetDetector cd = new CharsetDetector();
 					cd.setText(bis);
 					CharsetMatch cm = cd.detect();
 					if (cm != null) {
-						if (Charset.isSupported(cm.getName())) 
-							msEncoding = cm.getName();
+						if (Charset.isSupported(cm.getName()))
+							setEncoding(cm.getName());
 					}
 				} catch (Throwable th) {
 					log.warn("Error during TXT charset detection", th);
-				} 
-			} else {
-				msEncoding = encoding;
+				}
 			}
-			parse(bis, locale, msEncoding);
+			parse(bis);
 		} catch (Exception ex) {
 			log.warn("Failed to extract TXT text content", ex);
 			content = "";
 		} finally {
 			try {
-				if (bis != null) 
+				if (bis != null)
 					bis.close();
-				if (fis != null) 
+				if (fis != null)
 					fis.close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -72,13 +68,13 @@ public class TXTParser extends AbstractParser {
 	}
 
 	@Override
-	public void parse(InputStream input, Locale locale, String encoding) {
+	public void parse(InputStream input) {
 		try {
-			if (encoding != null)
-				content = StringUtil.writeToString(new InputStreamReader(input, encoding));
+			if (getEncoding() != null)
+				content = StringUtil.writeToString(new InputStreamReader(input, getEncoding()));
 		} catch (UnsupportedEncodingException e) {
-			log.warn("Unsupported encoding '" + encoding + "', using default (" + System.getProperty("file.encoding")
-					+ ") instead.");
+			log.warn("Unsupported encoding '" + getEncoding() + "', using default ("
+					+ System.getProperty("file.encoding") + ") instead.");
 		} catch (IOException e) {
 			log.warn(e.getMessage(), e);
 		}

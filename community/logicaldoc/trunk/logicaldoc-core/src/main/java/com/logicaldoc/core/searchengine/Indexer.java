@@ -112,7 +112,7 @@ public class Indexer {
 		Locale locale = doc.getLocale();
 		if (locale == null)
 			locale = Locale.ENGLISH;
-		Parser parser = ParserFactory.getParser(file, locale, null, doc.getFileExtension());
+		Parser parser = ParserFactory.getParser(file, doc.getFileName(), locale, null);
 		if (parser == null) {
 			return;
 		}

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -22,6 +21,12 @@ public abstract class AbstractParser implements Parser {
 	protected static Log log = LogFactory.getLog(AbstractParser.class);
 
 	protected String content = "";
+
+	protected String filename;
+
+	protected Locale locale;
+
+	protected String encoding;
 
 	@Override
 	public String getAuthor() {
@@ -53,15 +58,38 @@ public abstract class AbstractParser implements Parser {
 		return "";
 	}
 
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+
+	public String getEncoding() {
+		return encoding;
+	}
+
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
 	@Override
-	public void parse(File file, Locale locale, String encoding) {
+	public void parse(File file) {
 		String enc = "UTF-8";
-		if (StringUtils.isNotEmpty(encoding))
-			enc = encoding;
 		InputStream is = null;
 		try {
 			is = new FileInputStream(file);
-			parse(is, locale, enc);
+			setEncoding(enc);
+			parse(is);
 		} catch (FileNotFoundException e) {
 			log.error(e.getMessage());
 		} finally {

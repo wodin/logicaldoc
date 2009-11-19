@@ -2,7 +2,6 @@ package com.logicaldoc.core.text.parser;
 
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,7 +22,7 @@ public class XLSParser extends AbstractParser {
 	protected static Log log = LogFactory.getLog(XLSParser.class);
 
 	@Override
-	public void parse(InputStream input, Locale locale, String encoding) {
+	public void parse(InputStream input) {
 		try {
 			POIFSFileSystem fs = new POIFSFileSystem(input);
 			String tmp = new ExcelExtractor(fs).getText();

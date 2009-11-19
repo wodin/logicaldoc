@@ -126,7 +126,7 @@ public class NewDocWizard {
 				if (inputFile.isExtractTags()) {
 					// Parses the file where it is already stored
 					Locale locale = new Locale(inputFile.getLanguage());
-					Parser parser = ParserFactory.getParser(file, locale);
+					Parser parser = ParserFactory.getParser(file, inputFile.getFileName(), locale, null);
 					String content = parser.getContent();
 					if ((tags != null) && !tags.trim().equals("")) {
 						docForm.setTags(tags);
