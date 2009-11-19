@@ -611,8 +611,6 @@ public class DocumentEditForm {
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
-					// TODO How can I know if the document was simply renamed or
-					// if some metadata was changed?
 					transaction.setEvent(History.EVENT_CHANGED);
 					transaction.setComment("");
 
