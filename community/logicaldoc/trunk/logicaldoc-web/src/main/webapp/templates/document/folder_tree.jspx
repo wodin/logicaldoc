@@ -15,18 +15,22 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions" jsfc="ice:form"
 	id="documentNavigationForm">
 
-	<ice:tree id="accountTree" value="#{documentNavigation.directoryModel}"
+	<ice:tree id="accountTree" 
+	    value="#{documentNavigation.directoryModel}"
 		var="item" hideRootNode="false" hideNavigation="false"
 		imageDir="#{StyleBean.imageDirectory}" immediate="true"
-		binding="#{documentNavigation.treeComponent}"
+		binding="#{documentNavigation.treeComponent}" styleClass="noDecoration"
 		actionListener="#{documentNavigation.nodeClicked}">
 		<ice:treeNode>
-			<f:facet name="icon">
+			<f:facet name="content">
 				<ice:panelGroup style="display: inline">
-					<ice:graphicImage value="#{item.userObject.icon}" />
+				    <ice:graphicImage value="#{StyleBean.imagesPath}/tree/folder_explore.png" rendered="#{item.userObject.leaf}" />
+				    <ice:graphicImage value="#{StyleBean.imagesPath}/tree/folder_explore.png" rendered="#{item.userObject.leaf==false and item.userObject.expanded}" />
+				    <ice:graphicImage value="#{StyleBean.imagesPath}/tree/folder.png" rendered="#{item.userObject.leaf==false and item.userObject.expanded==false}" />
 					<ice:commandLink
-						actionListener="#{item.userObject.onSelect}">
-						<ice:outputText value="#{item.userObject.displayText}" />
+						actionListener="#{item.userObject.onSelect}">			
+						<ice:outputText value="#{item.userObject.displayText}"
+							styleClass="folderTreeSelected#{documentNavigation.selectedDir.pathExtended eq item.userObject.pathExtended}" />
 					</ice:commandLink>
 				</ice:panelGroup>
 			</f:facet>
