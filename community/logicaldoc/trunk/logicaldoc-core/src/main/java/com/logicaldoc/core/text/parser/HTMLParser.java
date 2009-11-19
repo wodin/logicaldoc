@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.Charset;
-import java.util.Locale;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -41,13 +40,14 @@ public class HTMLParser extends AbstractParser {
 	 */
 	protected static Log log = LogFactory.getLog(HTMLParser.class);
 
-	public void parse(File file, Locale locale, String encoding) {
+	public void parse(File file) {
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(file);
 			String enc = getCharEncoding(fis);
 			fis = new FileInputStream(file);
-			parse(fis, null, enc);
+			setEncoding(enc);
+			parse(fis);
 		} catch (Exception ex) {
 			log.warn("Failed to extract HTML text content", ex);
 		}
@@ -77,7 +77,7 @@ public class HTMLParser extends AbstractParser {
 	}
 
 	@Override
-	public void parse(InputStream input, Locale locale, String encoding) {
+	public void parse(InputStream input) {
 		try {
 			TransformerFactory factory = TransformerFactory.newInstance();
 			Transformer transformer = factory.newTransformer();
@@ -97,8 +97,8 @@ public class HTMLParser extends AbstractParser {
 			SAXResult result = new SAXResult(new DefaultHandler());
 
 			Reader reader;
-			if (encoding != null) {
-				reader = new InputStreamReader(input, encoding);
+			if (getEncoding() != null) {
+				reader = new InputStreamReader(input, getEncoding());
 			} else {
 				reader = new InputStreamReader(input);
 			}

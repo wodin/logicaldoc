@@ -1,10 +1,7 @@
 package com.logicaldoc.core.text.parser;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.io.StringReader;
-import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,11 +23,11 @@ import com.logicaldoc.util.StringUtil;
  * @since 3.5
  */
 public class DOCParser extends AbstractParser {
-	
+
 	protected static Log log = LogFactory.getLog(DOCParser.class);
 
 	@Override
-	public void parse(InputStream input, Locale locale, String encoding) {
+	public void parse(InputStream input) {
 		try {
 			String tmp = new WordExtractor(input).getText();
 

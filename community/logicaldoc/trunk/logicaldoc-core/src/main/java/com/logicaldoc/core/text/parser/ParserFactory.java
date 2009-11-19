@@ -108,16 +108,16 @@ public class ParserFactory {
 		}
 	}
 
-	public static Parser getParser(File file, Locale locale, String encoding, String extension) {
+	public static Parser getParser(File file, String filename, Locale locale, String encoding) {
 		if (parsers.isEmpty())
 			init();
 
-		String ext = extension;
+		String ext = filename != null ? FilenameUtils.getExtension(filename) : null;
 		if (StringUtils.isEmpty(ext)) {
-			String filename = file.getName().toLowerCase();
-			ext = FilenameUtils.getExtension(filename);
+			String fileName = file.getName().toLowerCase();
+			ext = FilenameUtils.getExtension(fileName);
 		} else {
-			ext = extension.toLowerCase();
+			ext = ext.toLowerCase();
 		}
 
 		Parser parser = null;
@@ -143,20 +143,18 @@ public class ParserFactory {
 				parser = new DummyParser();
 			}
 		}
-		parser.parse(file, locale, encoding);
+		parser.setFilename(filename);
+		parser.setLocale(locale);
+		parser.setEncoding(encoding);
+		parser.parse(file);
 		return parser;
 	}
 
-	public static Parser getParser(String filename, String extension) {
+	public static Parser getParser(String filename) {
 		if (parsers.isEmpty())
 			init();
 
-		String ext = extension;
-		if (StringUtils.isEmpty(ext)) {
-			ext = FilenameUtils.getExtension(filename);
-		} else {
-			ext = extension.toLowerCase();
-		}
+		String ext = FilenameUtils.getExtension(filename).toLowerCase();
 
 		Parser parser = null;
 		Class parserClass = parsers.get(ext);
@@ -171,30 +169,7 @@ public class ParserFactory {
 			log.warn("No registered parser for extension " + ext);
 			parser = new DummyParser();
 		}
-
+		parser.setFilename(filename);
 		return parser;
-	}
-
-	/**
-	 * Factory methods for parsers, the correct parser will be instantiated
-	 * depending on the file extension.
-	 * 
-	 * @param file
-	 * @param locale
-	 * @return
-	 */
-	public static Parser getParser(File file, Locale locale) {
-		return getParser(file, locale, null, null);
-	}
-
-	/**
-	 * Factory methods for parsers, the correct parser will be instantiated
-	 * depending on the file extension.
-	 * 
-	 * @param file
-	 * @return
-	 */
-	public static Parser getParser(File file) {
-		return getParser(file, null, null, null);
 	}
 }

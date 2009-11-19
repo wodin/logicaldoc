@@ -75,10 +75,9 @@ public class PDFParser extends AbstractParser {
 	}
 
 	@Override
-	public void parse(InputStream input, Locale locale, String encoding) {
+	public void parse(InputStream input) {
 		try {
-			org.pdfbox.pdfparser.PDFParser parser = new org.pdfbox.pdfparser.PDFParser(
-					new BufferedInputStream(input));
+			org.pdfbox.pdfparser.PDFParser parser = new org.pdfbox.pdfparser.PDFParser(new BufferedInputStream(input));
 			try {
 				parser.parse();
 				PDDocument document = parser.getPDDocument();
@@ -88,8 +87,7 @@ public class PDFParser extends AbstractParser {
 				stripper.setLineSeparator("\n");
 				stripper.writeText(document, writer);
 
-				content = StringUtil.writeToString(new CharArrayReader(writer
-						.toCharArray()));
+				content = StringUtil.writeToString(new CharArrayReader(writer.toCharArray()));
 			} finally {
 				try {
 					PDDocument doc = parser.getPDDocument();
@@ -107,7 +105,7 @@ public class PDFParser extends AbstractParser {
 	}
 
 	@Override
-	public void parse(File file, Locale locale, String encoding) {
+	public void parse(File file) {
 		log.error("Parsing file " + file.getPath());
 
 		author = "";
@@ -119,8 +117,7 @@ public class PDFParser extends AbstractParser {
 
 		try {
 			InputStream is = new FileInputStream(file);
-			org.pdfbox.pdfparser.PDFParser parser = new org.pdfbox.pdfparser.PDFParser(
-					is);
+			org.pdfbox.pdfparser.PDFParser parser = new org.pdfbox.pdfparser.PDFParser(is);
 
 			if (parser != null) {
 				parser.parse();
@@ -131,17 +128,13 @@ public class PDFParser extends AbstractParser {
 			pdfDocument = parser.getPDDocument();
 
 			if (pdfDocument == null) {
-				throw new Exception("Can not get pdf document "
-						+ file.getName() + " for parsing");
+				throw new Exception("Can not get pdf document " + file.getName() + " for parsing");
 			}
 
 			try {
-				PDDocumentInformation information = pdfDocument
-						.getDocumentInformation();
+				PDDocumentInformation information = pdfDocument.getDocumentInformation();
 				if (information == null) {
-					throw new Exception(
-							"Can not get information from pdf document "
-									+ file.getName());
+					throw new Exception("Can not get information from pdf document " + file.getName());
 				}
 
 				author = information.getAuthor();
@@ -181,6 +174,7 @@ public class PDFParser extends AbstractParser {
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
+				e.printStackTrace();
 			}
 
 			// create a tmp output stream with the size of the content.
@@ -196,9 +190,9 @@ public class PDFParser extends AbstractParser {
 				stripper.writeText(pdfDocument, writer);
 			} catch (IOException e) {
 				log.error("Unable to decrypt pdf document");
+				e.printStackTrace();
 				writer.write("encrypted document");
-				title = file.getName().substring(0,
-						file.getName().lastIndexOf('.'));
+				title = file.getName().substring(0, file.getName().lastIndexOf('.'));
 				author = "";
 			}
 			writer.flush();
@@ -208,6 +202,7 @@ public class PDFParser extends AbstractParser {
 			out.close();
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
+			ex.printStackTrace();
 		} finally {
 			try {
 				if (pdfDocument != null) {
@@ -215,6 +210,7 @@ public class PDFParser extends AbstractParser {
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
+				e.printStackTrace();
 			}
 		}
 	}

@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
 import java.util.zip.GZIPInputStream;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -22,16 +20,14 @@ public class ZABWParser extends AbstractParser {
 	protected static Log log = LogFactory.getLog(ZABWParser.class);
 
 	@Override
-	public void parse(File file, Locale locale, String encoding) {
+	public void parse(File file) {
 		String enc = "UTF-8";
-		if (StringUtils.isNotEmpty(encoding))
-			enc = encoding;
-
 		FileInputStream stream = null;
 		try {
 			stream = new FileInputStream(file);
 			GZIPInputStream gis = new GZIPInputStream(stream);
-			parse(gis, null, enc);
+			setEncoding(enc);
+			parse(gis);
 		} catch (Exception ex) {
 			log.warn("Failed to extract Compressed AbiWord text content", ex);
 		} finally {
@@ -44,10 +40,10 @@ public class ZABWParser extends AbstractParser {
 	}
 
 	@Override
-	public void parse(InputStream input, Locale locale, String encoding) {
+	public void parse(InputStream input) {
 		try {
 			AbiWordParser parser = new AbiWordParser();
-			parser.parse(input, locale, encoding);
+			parser.parse(input);
 			content = parser.getContent();
 		} catch (Exception e) {
 			log.warn("Failed to extract AbiWord Compressed zabw text content", e);

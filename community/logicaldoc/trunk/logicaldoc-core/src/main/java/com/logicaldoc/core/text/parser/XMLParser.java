@@ -5,7 +5,6 @@ import java.io.CharArrayWriter;
 import java.io.FilterInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.Locale;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -34,7 +33,7 @@ public class XMLParser extends AbstractParser {
 	protected static Log log = LogFactory.getLog(XMLParser.class);
 
 	@Override
-	public void parse(InputStream input, Locale locale, String encoding) {
+	public void parse(InputStream input) {
 		try {
 			CharArrayWriter writer = new CharArrayWriter();
 			ExtractorHandler handler = new ExtractorHandler(writer);
@@ -53,12 +52,12 @@ public class XMLParser extends AbstractParser {
 				public void close() {
 				}
 			});
-			if (encoding != null) {
+			if (getEncoding() != null) {
 				try {
-					Charset.forName(encoding);
-					source.setEncoding(encoding);
+					Charset.forName(getEncoding());
+					source.setEncoding(getEncoding());
 				} catch (Exception e) {
-					log.warn("Unsupported encoding '" + encoding + "', using default ("
+					log.warn("Unsupported encoding '" + getEncoding() + "', using default ("
 							+ System.getProperty("file.encoding") + ") instead.");
 				}
 			}

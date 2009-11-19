@@ -120,10 +120,10 @@ public class InMemoryZipImport extends ZipImport {
 				AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(AnalyzerManager.class);
 
 				// also extract tags and save on document
-				Parser parser = ParserFactory.getParser(filename, null);
+				Parser parser = ParserFactory.getParser(filename);
 				// This reader will be automatically closed by method
 				// parser.readText
-				parser.parse(stream, null, null);
+				parser.parse(stream);
 				String words = parser.getTags();
 				if (StringUtils.isEmpty(words)) {
 					try {

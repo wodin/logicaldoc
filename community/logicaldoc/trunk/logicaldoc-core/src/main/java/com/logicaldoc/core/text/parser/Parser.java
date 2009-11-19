@@ -22,14 +22,33 @@ public interface Parser {
 	public String getTitle();
 
 	/**
+	 * The original file name of the content to be parsed
+	 */
+	public String getFilename();
+
+	public void setFilename(String filename);
+
+	/**
+	 * The locale of the content to be parsed
+	 */
+	public Locale getLocale();
+
+	public void setLocale(Locale locale);
+
+	/**
+	 * The character encoding of the content to be parsed
+	 */
+	public String getEncoding();
+
+	public void setEncoding(String encoding);
+
+	/**
 	 * Same as the other method that accept an input stream, use this when you
 	 * have a file rather than a stream.
 	 * 
 	 * @param file
-	 * @param locale
-	 * @param encoding
 	 */
-	public void parse(File file, Locale locale, String encoding);
+	public void parse(File file);
 
 	/**
 	 * Extracts content for the text content of the given binary document. The
@@ -55,10 +74,6 @@ public interface Parser {
 	 * does not need to be thread-safe.
 	 * 
 	 * @param input binary document from which to extract text
-	 * @param encoding the character encoding of the binary data, or
-	 *        <code>null</code> if not available
-	 * @return locale the locale of the document, or <code>null</code> if not
-	 *         available
 	 */
-	public void parse(InputStream input, Locale locale, String encoding);
+	public void parse(InputStream input);
 }

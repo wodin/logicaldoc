@@ -22,7 +22,7 @@ public class PPTParser extends AbstractParser {
 	protected static Log log = LogFactory.getLog(PPTParser.class);
 
 	@Override
-	public void parse(InputStream input, Locale locale, String encoding) {
+	public void parse(InputStream input) {
 		try {
 			PowerPointExtractor extractor = new PowerPointExtractor(input);
 			String tmp = extractor.getText(true, true);

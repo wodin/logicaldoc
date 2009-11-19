@@ -18,14 +18,14 @@ public class IconSelector {
 			icon = "pdf.png";
 		else if (ext.equals("txt") || ext.equals("properties"))
 			icon = "text.png";
-		else if (ext.equals("doc") || ext.equals("odt") || ext.equals("docx") || ext.equals("rtf") || ext.equals("ott") || ext.equals("sxw")
-				|| ext.equals("wpd") || ext.equals("kwd") || ext.equals("dot"))
+		else if (ext.equals("doc") || ext.equals("odt") || ext.equals("docx") || ext.equals("rtf") || ext.equals("ott")
+				|| ext.equals("sxw") || ext.equals("wpd") || ext.equals("kwd") || ext.equals("dot"))
 			icon = "word.png";
-		else if (ext.equals("xls") || ext.equals("ods") || ext.equals("xslx") || ext.equals("xlt") || ext.equals("ots") || ext.equals("sxc")
-				|| ext.equals("dbf") || ext.equals("ksp") || ext.equals("odb"))
+		else if (ext.equals("xls") || ext.equals("ods") || ext.equals("xslx") || ext.equals("xlt") || ext.equals("ots")
+				|| ext.equals("sxc") || ext.equals("dbf") || ext.equals("ksp") || ext.equals("odb"))
 			icon = "excel.png";
-		else if (ext.equals("ppt") || ext.equals("odp") || ext.equals("pptx") || ext.equals("pps") || ext.equals("otp") || ext.equals("pot")
-				|| ext.equals("sxi") || ext.equals("kpr"))
+		else if (ext.equals("ppt") || ext.equals("odp") || ext.equals("pptx") || ext.equals("pps") || ext.equals("otp")
+				|| ext.equals("pot") || ext.equals("sxi") || ext.equals("kpr"))
 			icon = "powerpoint.png";
 		else if (ext.equals("jpg") || ext.equals("gif") || ext.equals("png") || ext.equals("bmp") || ext.equals("tif")
 				|| ext.equals("tiff") || ext.equals("psd"))
@@ -39,6 +39,8 @@ public class IconSelector {
 			icon = "zip.png";
 		else if (ext.equals("dwg"))
 			icon = "dwg.gif";
+		else if (ext.equals("p7m") || ext.equals("m7m"))
+			icon = "p7m.png";
 		else
 			icon = "generic.png";
 

@@ -2,7 +2,6 @@ package com.logicaldoc.core.text.parser;
 
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -71,7 +70,7 @@ public class OpenOfficeParser extends AbstractParser {
 	}
 
 	@Override
-	public void parse(InputStream input, Locale locale, String encoding) {
+	public void parse(InputStream input) {
 		try {
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			saxParserFactory.setValidating(false);
@@ -99,5 +98,4 @@ public class OpenOfficeParser extends AbstractParser {
 			log.warn("Failed to extract OpenOffice text content", e);
 		}
 	}
-
 }
