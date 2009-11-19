@@ -1179,7 +1179,12 @@ em { /*font-size:14px;*/
 	text-decoration: none;
 }
 
-.noDecorationRow a:hover {
+.folderTree {
+	width: 100%;
+	overflow: auto;
+}
+
+.folderTree a:hover {
     text-decoration: none;
 }
 
@@ -1777,7 +1782,12 @@ homePlainTblColHdr1 homePlainTblHdr
 	padding-right: 0px;
 }
 
-.folderMenuVrt {
+.folderSimpleCntr {
+	width: 100%;
+	overflow: auto;
+}
+	
+.folderSimpleVrt {
 	background-color: #dddddd;
 }
 
@@ -1785,7 +1795,7 @@ homePlainTblColHdr1 homePlainTblHdr
 	width: auto;
 }
 
-.folderMenuVrtItem {
+.folderSimpleVrtItem {
 	padding-right: 5px;
 	border-top: 1px solid white;
 }

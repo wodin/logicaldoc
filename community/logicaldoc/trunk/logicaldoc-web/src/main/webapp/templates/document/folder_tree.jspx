@@ -15,11 +15,11 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions" jsfc="ice:form"
 	id="documentNavigationForm">
 
-	<ice:tree id="accountTree" 
+	<ice:tree id="folder-tree" 
 	    value="#{documentNavigation.directoryModel}"
 		var="item" hideRootNode="false" hideNavigation="false"
 		imageDir="#{StyleBean.imageDirectory}" immediate="true"
-		binding="#{documentNavigation.treeComponent}" styleClass="noDecoration"
+		binding="#{documentNavigation.treeComponent}" styleClass="folderTree"
 		actionListener="#{documentNavigation.nodeClicked}">
 		<ice:treeNode>
 			<f:facet name="content">
