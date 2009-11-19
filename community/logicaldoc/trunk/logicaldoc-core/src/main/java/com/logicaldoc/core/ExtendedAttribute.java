@@ -110,7 +110,6 @@ public class ExtendedAttribute {
 			this.type = TYPE_DATE;
 			setDateValue((Date) value);
 		} else {
-			System.out.println("Value: " + value.getClass());
 			throw new IllegalArgumentException("No a String, Long, Double or Date value");
 		}
 	}
