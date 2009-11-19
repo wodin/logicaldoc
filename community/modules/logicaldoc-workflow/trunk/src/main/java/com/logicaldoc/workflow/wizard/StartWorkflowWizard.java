@@ -71,6 +71,8 @@ public class StartWorkflowWizard implements TabChangeListener {
 	private DocumentsRecordsManager documentsRecordsManager;
 
 	private boolean rowSelected = false;
+	
+	private UIInput descriptionInput = null;
 
 	/**
 	 * Binding used by example to listen
@@ -87,7 +89,7 @@ public class StartWorkflowWizard implements TabChangeListener {
 		workflowService = (WorkflowService) Context.getInstance().getBean("workflowService");
 		this.documentNavigation = (DocumentNavigation) FacesUtil.accessBeanFromFacesContext("documentNavigation",
 				FacesContext.getCurrentInstance(), log);
-
+		FacesUtil.forceRefresh(descriptionInput);
 	}
 
 	public void setXStream(XStream stream) {
@@ -99,6 +101,7 @@ public class StartWorkflowWizard implements TabChangeListener {
 		this.persistenceTemplate = null;
 		this.priority = null;
 		this.workflowTask = null;
+		FacesUtil.forceRefresh(descriptionInput);
 
 		if (tabSet != null)
 			setupAllPanels(true);
@@ -188,6 +191,7 @@ public class StartWorkflowWizard implements TabChangeListener {
 		}
 
 		documentsRecordsManager.getSelection().clear();
+		cancel();
 
 		return null;
 	}
@@ -291,5 +295,13 @@ public class StartWorkflowWizard implements TabChangeListener {
 
 	public void setRowSelected(boolean rowSelected) {
 		this.rowSelected = rowSelected;
+	}
+
+	public UIInput getDescriptionInput() {
+		return descriptionInput;
+	}
+
+	public void setDescriptionInput(UIInput descriptionInput) {
+		this.descriptionInput = descriptionInput;
 	}
 }
