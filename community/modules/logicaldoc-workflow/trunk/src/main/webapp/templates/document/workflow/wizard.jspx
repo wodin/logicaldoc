@@ -34,7 +34,8 @@
 
 							<ice:column>
 
-								<ice:rowSelector id="selected" value="#{StartWorkflowWizard.rowSelected}"
+								<ice:rowSelector id="selected"
+									value="#{StartWorkflowWizard.rowSelected}"
 									selectionListener="#{StartWorkflowWizard.rowSelectionListener}"
 									preStyleOnSelection="true" />
 
@@ -69,7 +70,8 @@
 											<br />
 
 							<ice:inputTextarea
-								value="#{StartWorkflowWizard.workflowDefinition.description}" />
+								value="#{StartWorkflowWizard.workflowDefinition.description}"
+								binding="#{StartWorkflowWizard.descriptionInput}" />
 
 							<br />
 										
