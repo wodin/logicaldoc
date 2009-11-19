@@ -131,7 +131,6 @@ public class PersonalDataForm {
 	}
 
 	public String save() {
-		if (SessionManagement.isValid()) {
 			try {
 				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 				User user = SessionManagement.getUser();
@@ -155,20 +154,12 @@ public class PersonalDataForm {
 				}
 
 				user.getGroupIds();
-
-				UsersRecordsManager recordsManager = ((UsersRecordsManager) FacesUtil.accessBeanFromFacesContext(
-						"usersRecordsManager", FacesContext.getCurrentInstance(), log));
-				recordsManager.reload();
-				recordsManager.setSelectedPanel("list");
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addLocalizedError("errors.action.saveuser.notstored");
 			}
 
 			return null;
-		} else {
-			return "login";
-		}
 	}
 
 	public String getPhone2() {
