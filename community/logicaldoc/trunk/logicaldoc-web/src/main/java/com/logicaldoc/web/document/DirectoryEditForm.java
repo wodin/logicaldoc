@@ -72,6 +72,7 @@ public class DirectoryEditForm {
 					history.setSessionId(SessionManagement.getCurrentUserSessionId());
 					dao.store(directory.getMenu(), history);
 					documentNavigation.refresh();
+					documentNavigation.selectDirectory(directory);
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -122,6 +123,7 @@ public class DirectoryEditForm {
 				}
 
 				documentNavigation.nodeClicked();
+				documentNavigation.selectDirectory(documentNavigation.getSelectedDir());
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addLocalizedError("errors.action.savefolder.notstored");
