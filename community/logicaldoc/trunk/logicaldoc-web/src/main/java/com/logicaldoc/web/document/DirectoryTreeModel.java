@@ -23,7 +23,9 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
+import com.logicaldoc.web.admin.GuiBean;
 import com.logicaldoc.web.i18n.Messages;
+import com.logicaldoc.web.util.FacesUtil;
 
 /**
  * A tree model specialized for LogicalDOC's directories and menues
@@ -33,6 +35,8 @@ import com.logicaldoc.web.i18n.Messages;
  */
 public class DirectoryTreeModel extends DefaultTreeModel {
 	private static final long serialVersionUID = 1L;
+
+	private static final String FOLDER_VIEW_TREE = "tree";
 
 	protected static Log log = LogFactory.getLog(DirectoryTreeModel.class);
 
@@ -123,7 +127,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		Menu rootMenu = menuDao.findById(rootMenuId);
 		Directory rootObject = new Directory(rootMenu);
 		if (useMenuIcons) {
-			StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+			StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 			rootObject.setIcon(style.getImagePath(rootMenu.getIcon()));
 		} else {
 			rootObject.setIcon(StyleBean.XP_BRANCH_CONTRACTED_ICON);
@@ -254,7 +258,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		String label = Messages.getMessage(dir.getText());
 		branchObject.setDisplayText(label);
 		branchObject.setContentTitle(label);
-		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		if (useMenuIcons) {
 			branchObject.setIcon(style.getImagePath(dir.getIcon()));
 		} else {
@@ -371,23 +375,29 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	 * @param folderId The folder folder id
 	 */
 	public void openFolder(long folderId) {
-		// Reset the tree
-		init();
-
-		// Now try to construct the minimal portion of the tree, just to show
-		// opened folder
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu folderMenu = menuDao.findById(folderId);
-		Collection<Menu> parents = menuDao.findParents(folderId);
-		DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) getRoot();
-		long userId = SessionManagement.getUserId();
-		for (Menu folderParent : parents) {
-			if (folderParent.getId() == rootMenuId)
-				continue;
-			parentNode = addDir(userId, parentNode, folderParent, 0);
+		GuiBean guiBean = ((GuiBean) FacesUtil.accessBeanFromFacesContext("guiBean", FacesContext.getCurrentInstance(),
+				log));
+		String folderView = guiBean.getViewModeFolder();
+		if (!folderView.equals(FOLDER_VIEW_TREE)) {
+			// Reset the tree
+			init();
+			// Now try to construct the minimal portion of the tree, just to
+			// show opened folder
+			MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			Menu folderMenu = menuDao.findById(folderId);
+			Collection<Menu> parents = menuDao.findParents(folderId);
+			DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) getRoot();
+			long userId = SessionManagement.getUserId();
+			for (Menu folderParent : parents) {
+				if (folderParent.getId() == rootMenuId)
+					continue;
+				parentNode = addDir(userId, parentNode, folderParent, 0);
+			}
+			parentNode = addDir(userId, parentNode, folderMenu, 0);
+			expandNodePath(parentNode);
+		} else {
+			selectDirectory(folderId);
 		}
-		parentNode = addDir(userId, parentNode, folderMenu, 0);
-		expandNodePath(parentNode);
 	}
 
 	public void onSelectDirectory(ActionEvent event) {

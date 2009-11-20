@@ -28,9 +28,9 @@
 				    <ice:graphicImage value="#{StyleBean.imagesPath}/tree/folder_explore.png" rendered="#{item.userObject.leaf==false and item.userObject.expanded}" />
 				    <ice:graphicImage value="#{StyleBean.imagesPath}/tree/folder.png" rendered="#{item.userObject.leaf==false and item.userObject.expanded==false}" />
 					<ice:commandLink
-						actionListener="#{item.userObject.onSelect}">			
+						actionListener="#{item.userObject.onSelect}">
 						<ice:outputText value="#{item.userObject.displayText}"
-							styleClass="folderTreeSelected#{documentNavigation.selectedDir.pathExtended eq item.userObject.pathExtended}" />
+							styleClass="folderTreeSelected#{item.userObject.selected}" />	
 					</ice:commandLink>
 				</ice:panelGroup>
 			</f:facet>
