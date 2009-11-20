@@ -196,10 +196,7 @@ public class DocumentNavigation extends NavigationBean {
 			DefaultMutableTreeNode node = getDirectoryModel().getSelectedNode();
 			IceUserObject userObject = (IceUserObject) node.getUserObject();
 			if (userObject != null && userObject.isExpanded()) {
-				if (node.getParent() != null)
-					directoryModel.reload(node.getParent());
-				else
-					directoryModel.reload(node);
+				directoryModel.reload(node, -1);
 			}
 		} else {
 			selectDirectory(getSelectedDir());
