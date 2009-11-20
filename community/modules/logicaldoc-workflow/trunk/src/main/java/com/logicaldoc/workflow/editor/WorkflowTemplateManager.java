@@ -135,13 +135,13 @@ public class WorkflowTemplateManager {
 
 	public List<SelectItem> getTimeUnits() {
 		List<SelectItem> timeValues = new LinkedList<SelectItem>();
-		timeValues.add(new SelectItem("Minute"));
-		timeValues.add(new SelectItem("Hour"));
-		timeValues.add(new SelectItem("Business Hour"));
-		timeValues.add(new SelectItem("Day"));
-		timeValues.add(new SelectItem("Business Day"));
-		timeValues.add(new SelectItem("Week"));
-		timeValues.add(new SelectItem("Business Week"));
+		timeValues.add(new SelectItem(Messages.getMessage("minute")));
+		timeValues.add(new SelectItem(Messages.getMessage("hour")));
+		timeValues.add(new SelectItem(Messages.getMessage("hour.business")));
+		timeValues.add(new SelectItem(Messages.getMessage("day")));
+		timeValues.add(new SelectItem(Messages.getMessage("day.business")));
+		timeValues.add(new SelectItem(Messages.getMessage("week")));
+		timeValues.add(new SelectItem(Messages.getMessage("week.business")));
 
 		return timeValues;
 	}
