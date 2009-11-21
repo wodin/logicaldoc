@@ -21,7 +21,9 @@
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 			<title>#{StyleBean.productName} #{StyleBean.productRelease}</title>
-			<link type="image/x-icon" href="#{facesContext.externalContext.requestContextPath}#{StyleBean.imagesPath}/favicon.ico" rel="shortcut icon"/>
+			<link type="image/x-icon"
+				href="#{facesContext.externalContext.requestContextPath}#{StyleBean.imagesPath}/favicon.ico"
+				rel="shortcut icon" />
 			<ice:outputText style="padding-top:0px; padding-bottom:0px;"
 				value="#{StyleBean.style}" escape="false" />
 			<ice:outputStyle href="#{StyleBean.cssPath}/style.css" />
@@ -29,7 +31,8 @@
 		<body
 			style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif;">
 			<br />
-			<ice:form id="renewPassword">
+			<ice:form id="renewPassword"
+				rendered="#{not (ContextProperties.runlevel eq 'demo')}">
 				<ice:panelGroup styleClass="center formBorderHighlight"
 					style="width: 500px;">
 					<ice:panelGrid columns="2" style="width:100%;">
@@ -95,6 +98,10 @@
 					</ice:panelGroup>
 				</ice:panelGroup>
 			</ice:form>
+			<ice:panelGroup styleClass="center"
+				rendered="#{ContextProperties.runlevel eq 'demo'}">
+				<ice:outputText value="#{msgs['runlevel.demo.notavailable']}" />
+			</ice:panelGroup>
 		</body>
 	</html>
 </jsp:root>
