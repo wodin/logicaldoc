@@ -15,6 +15,9 @@
 	<f:loadBundle basename="i18n.application" var="msgs" />
 
 	<br />
+	<ice:panelGroup styleClass="loginMessage" rendered="#{ContextProperties.runlevel eq 'demo'}">
+		<ice:outputText styleClass="loginMessage"	value="#{msgs['runlevel.demo']}" />
+	</ice:panelGroup>
 	<ice:panelGroup styleClass="loginMessage" rendered="#{loginForm.notInitialized}">
 		<ice:outputLink styleClass="system_link" value="#{facesContext.externalContext.requestContextPath}/setup/"><ice:outputText styleClass="loginMessage" value="#{msgs['setup.reminder']}" /></ice:outputLink>
 	</ice:panelGroup>
