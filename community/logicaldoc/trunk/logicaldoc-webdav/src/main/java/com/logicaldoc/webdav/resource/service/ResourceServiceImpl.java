@@ -76,14 +76,14 @@ public class ResourceServiceImpl implements ResourceService {
 	public ResourceServiceImpl() {
 	}
 
-	private Resource marshallFolder(Menu menu, long userId) {
-
+	private Resource marshallFolder(Menu menu, long userId, DavSession session) {
 		Resource resource = new ResourceImpl();
 		resource.setID(new Long(menu.getId()).toString());
 		resource.setContentLength(new Long(0));
 		resource.setName(menu.getText());
 		resource.setPath(menu.getPathExtended());
 		resource.setLastModified(menu.getLastModified());
+		resource.setSession(session);
 		resource.isFolder(true);
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -136,7 +136,7 @@ public class ResourceServiceImpl implements ResourceService {
 		if (folders != null) {
 			for (Iterator<Menu> iterator = folders.iterator(); iterator.hasNext();) {
 				Menu currentMenu = iterator.next();
-				resourceList.add(marshallFolder(currentMenu, parentResource.getRequestedPerson()));
+				resourceList.add(marshallFolder(currentMenu, parentResource.getRequestedPerson(), null));
 			}
 		}
 
@@ -177,7 +177,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 		// if this resource request is a folder
 		if (menu != null)
-			return marshallFolder(menu, userId);
+			return marshallFolder(menu, userId, session);
 
 		Resource parentMenu = this.getParentResource(currentStablePath, userId);
 
@@ -218,7 +218,7 @@ public class ResourceServiceImpl implements ResourceService {
 		resourcePath = resourcePath + "/";
 
 		Menu menu = menuDAO.findFolder(name, resourcePath);
-		return marshallFolder(menu, userId);
+		return marshallFolder(menu, userId, null);
 	}
 
 	@Override
@@ -230,7 +230,9 @@ public class ResourceServiceImpl implements ResourceService {
 			DavSession session) throws DavException {
 
 		Menu parentMenu = menuDAO.findById(Long.parseLong(parentResource.getID()));
-		String sid = (String) session.getObject("sid");
+		String sid = null;
+		if (session != null)
+			sid = (String) session.getObject("sid");
 
 		if (isCollection) {
 			// check permission to add folder
@@ -246,7 +248,7 @@ public class ResourceServiceImpl implements ResourceService {
 			transaction.setUserName(user.getFullName());
 			transaction.setSessionId(sid);
 			Menu createdMenu = menuDAO.createFolder(parentMenu, name, transaction);
-			return this.marshallFolder(createdMenu, parentResource.getRequestedPerson());
+			return this.marshallFolder(createdMenu, parentResource.getRequestedPerson(), session);
 		}
 
 		// check permission to add document
@@ -361,7 +363,7 @@ public class ResourceServiceImpl implements ResourceService {
 				currentMenu.setParentId(Long.parseLong(destination.getID()));
 
 			menuDAO.store(currentMenu);
-			return this.marshallFolder(currentMenu, source.getRequestedPerson());
+			return this.marshallFolder(currentMenu, source.getRequestedPerson(), session);
 
 		} else {
 
@@ -481,7 +483,7 @@ public class ResourceServiceImpl implements ResourceService {
 	@Override
 	public Resource getParentResource(Resource resource) {
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
-		return this.marshallFolder(document.getFolder(), resource.getRequestedPerson());
+		return this.marshallFolder(document.getFolder(), resource.getRequestedPerson(), null);
 	}
 
 	@Override
