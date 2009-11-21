@@ -41,7 +41,7 @@ public class ParametersForm {
 			} else if (name.startsWith("product") || name.startsWith("skin") || name.startsWith("conf")
 					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp")
 					|| name.startsWith("gui") || name.startsWith("password") || name.startsWith("ad")
-					|| name.startsWith("webservice") || name.startsWith("webdav"))
+					|| name.startsWith("webservice") || name.startsWith("webdav") || name.startsWith("runlevel"))
 				continue;
 
 			sortedSet.add(key.toString());
