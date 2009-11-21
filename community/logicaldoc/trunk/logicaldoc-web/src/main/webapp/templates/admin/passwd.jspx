@@ -16,7 +16,8 @@
 	id="userForm">
 
 	<ice:panelGroup styleClass="center formBorderHighlight"
-		style="width: 500px;">
+		style="width: 500px;"
+		rendered="#{not (ContextProperties.runlevel eq 'demo')}">
 		<ice:panelGroup>
 			<!-- Login data -->
 			<ice:panelGroup>
@@ -27,13 +28,13 @@
 				</h3>
 				<ice:panelGrid columns="2">
 					<ice:panelGroup styleClass="outputLabel">
-						<ice:outputLabel for="password"
-							value="#{msgs['password']}*" />
+						<ice:outputLabel for="password" value="#{msgs['password']}*" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputSecret id="password" value="#{userForm.password}"
 							tabindex="1" maxlength="30" size="30" required="true">
-							<f:validateLength minimum="#{securityForm.passwordSize}" maximum="30" />
+							<f:validateLength minimum="#{securityForm.passwordSize}"
+								maximum="30" />
 						</ice:inputSecret>
 						<ice:message for="password" />
 					</ice:panelGroup>
@@ -45,7 +46,8 @@
 					<ice:panelGroup>
 						<ice:inputSecret id="repass" value="#{userForm.repass}"
 							tabindex="1" maxlength="30" size="30" required="true">
-							<f:validateLength minimum="#{securityForm.passwordSize}" maximum="30" />
+							<f:validateLength minimum="#{securityForm.passwordSize}"
+								maximum="30" />
 						</ice:inputSecret>
 						<ice:message for="repass" />
 					</ice:panelGroup>
@@ -59,5 +61,10 @@
 			<ice:commandButton value="#{msgs['save']}"
 				action="#{userForm.savePassword}" id="save" tabindex="1" />
 		</ice:panelGroup>
+	</ice:panelGroup>
+
+	<ice:panelGroup styleClass="center"
+		rendered="#{ContextProperties.runlevel eq 'demo'}">
+		<ice:outputText value="#{msgs['runlevel.demo.notavailable']}" />
 	</ice:panelGroup>
 </jsp:root>
