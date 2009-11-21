@@ -124,6 +124,7 @@ public class MenuGroup {
 		mg.setBulkExport(bulkExport);
 		mg.setSign(sign);
 		mg.setArchive(archive);
+		mg.setWorkflow(workflow);
 		return mg;
 	}
 
