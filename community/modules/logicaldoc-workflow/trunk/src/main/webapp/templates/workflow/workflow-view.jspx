@@ -30,7 +30,7 @@
 
 	<ice:panelGroup styleClass="center formBorderHighlight"
 		style="width: 900px;">
-			<ice:panelPopup modal="true" clientOnly="true" draggable="false"
+		<ice:panelPopup modal="true" clientOnly="true" draggable="false"
 			rendered="#{not empty WorkflowManager.taskController}"
 			visible="#{not empty WorkflowManager.taskController}">
 			<f:facet name="header">
@@ -417,14 +417,15 @@
 					<ice:panelGroup
 						rendered="#{ WorkflowManager.selectedWorkflowTaskInstance.properties['ld_taskstate'] == 'started'}">
 
-						<ldoc:folderselector useIcon="true"
-							directoryModel="#{WorkflowManager.directoryModel}"
-							showSelector="#{WorkflowManager.showFolderSelector}"
-							openListener="#{WorkflowManager.openFolderSelector}"
-							confirmListener="#{WorkflowManager.folderSelected}"
-							cancelListener="#{WorkflowManager.cancelFolderSelector}"
-							closeListener="#{WorkflowManager.closeFolderSelector}" />
-
+						<ice:panelGroup style="text-align:left;">
+							<ldoc:folderselector useIcon="true"
+								directoryModel="#{WorkflowManager.directoryModel}"
+								showSelector="#{WorkflowManager.showFolderSelector}"
+								openListener="#{WorkflowManager.openFolderSelector}"
+								confirmListener="#{WorkflowManager.folderSelected}"
+								cancelListener="#{WorkflowManager.cancelFolderSelector}"
+								closeListener="#{WorkflowManager.closeFolderSelector}" />
+						</ice:panelGroup>
 
 
 						<ice:dataTable id="resourceList" width="97%"
