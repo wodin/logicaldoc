@@ -52,7 +52,7 @@
 		</ice:panelGroup>
 
 		<ice:panelGroup>
-			<ice:messages globalOnly="true" />
+			<ice:messages id="browseMessages" globalOnly="true" infoClass="infoMessage" warnClass="warnMessage" errorClass="errorMessage" />
 			<f:subview id="w-documents">
 				<ui:include
 					src="/templates/document/#{documentNavigation.selectedPanel.contentName}.jspx" />

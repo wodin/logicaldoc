@@ -1240,7 +1240,54 @@ em { /*font-size:14px;*/
 	color: #FF9900;
 }
 
-.commands { /* float: right; */
+
+#browseMessages {
+	border: 1px solid #959595;
+	background-color: #efefef;
+	font-size: 11px;
+    font-weight: bold;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 10px;
+    margin-left: 0px; 
+}
+
+#browseMessages li {
+	list-style: none;
+	list-style-position: inside;
+}
+
+.infoMessage {
+	color: #3d6611;
+	background-image: url("images/success.png");
+	background-repeat: no-repeat;
+	padding-left: 20px; 
+	margin-left: 0px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+.errorMessage {
+	color: #df280a;
+	background-image: url("images/error.png");
+	background-repeat: no-repeat;
+	padding-left: 20px; 
+	margin-left: 0px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+.warnMessage {
+	color: #806526;
+	background-image: url("images/warning.png");
+	background-repeat: no-repeat;
+	padding-left: 20px; 
+	margin-left: 0px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+.commands {
 	text-align: left;
 	margin-right: 0px;
 	padding-right: 0px;
