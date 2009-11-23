@@ -15,7 +15,7 @@
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGrid"
 	columns="2" style="width: 100%;" columnClasses="browseLeft,browseRight" styleClass="browseMain"
 	cellpadding="4">
-
+		
 	<ice:panelGrid columns="1">
 		<ice:panelGroup style="display: inline;"
 			rendered="#{documentNavigation.selectedDir != null}">
@@ -35,7 +35,7 @@
 	</ice:panelGrid>
 
 	<ice:panelGroup styleClass="documentsPanel">
-		<ice:panelGroup styleClass="breadcrumb">
+	        <ice:panelGroup id="breadcrumb">
 			<ice:form>
 				<ice:panelSeries style="display: inline;" var="folder"
 					value="#{documentNavigation.breadcrumb}">
@@ -43,14 +43,12 @@
 						actionListener="#{documentNavigation.onSelectDirectory}">
 						<f:param name="directoryId" value="#{folder.menuId}" />
 						<ice:outputText value="#{folder.displayText}"
-							styleClass="breadcrumbLink" />
-					</ice:commandLink>&amp;raquo;
+							styleClass="breadcrumbLink" rendered="#{folder.selected == false}" />
+						<ice:outputText value="#{folder.displayText}" styleClass="breadcrumbUnlink" rendered="#{folder.selected}" />	
+					</ice:commandLink><ice:graphicImage value="#{StyleBean.imagesPath}/arrow2.gif" rendered="#{folder.selected == false}" style="padding-right:4px; padding-bottom: 1px; padding-left: 3px;" /> 
 				</ice:panelSeries>
 			</ice:form>
-			<ice:graphicImage value="#{StyleBean.imagesPath}/spacer.gif"
-				style="border: 0px solid;" height="0px" width="480px" title="" />
-		</ice:panelGroup>
-
+	</ice:panelGroup>
 		<ice:panelGroup>
 			<ice:messages id="browseMessages" globalOnly="true" infoClass="infoMessage" warnClass="warnMessage" errorClass="errorMessage" />
 			<f:subview id="w-documents">

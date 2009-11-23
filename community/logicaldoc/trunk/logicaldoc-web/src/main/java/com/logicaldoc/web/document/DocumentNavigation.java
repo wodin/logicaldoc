@@ -173,12 +173,16 @@ public class DocumentNavigation extends NavigationBean {
 		try {
 			if (getSelectedDir() != null) {
 				Directory currentDir = getSelectedDir();
+				int counter = 0;
 				while (currentDir.getMenuId() != Menu.MENUID_DOCUMENTS) {
 					breadcrumb.add(currentDir);
 					currentDir = new Directory(menuDao.findById(currentDir.getMenu().getParentId()));
+					counter++;
 				}
 				Directory rootDir = new Directory(menuDao.findById(Menu.MENUID_DOCUMENTS));
 				rootDir.setDisplayText(Messages.getMessage(rootDir.getMenu().getText()));
+				if (counter == 0)
+					rootDir.setSelected(true);
 				breadcrumb.add(rootDir);
 			}
 		} catch (RuntimeException e) {
