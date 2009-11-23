@@ -5,4 +5,6 @@ svn checkout https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community
 svn checkout https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community/modules/logicaldoc-lang-pt_br/trunk logicaldoc-lang-pt_br
 svn checkout https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community/modules/logicaldoc-lang-zh/trunk logicaldoc-lang-zh
 svn checkout https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community/modules/logicaldoc-lang-ro/trunk logicaldoc-lang-ro
+svn checkout https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community/modules/logicaldoc-lang-hu/trunk logicaldoc-lang-hu
+svn checkout https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community/modules/logicaldoc-lang-ru/trunk logicaldoc-lang-ru
 svn checkout https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community/modules/logicaldoc-workflow/trunk logicaldoc-workflow
