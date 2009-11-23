@@ -118,7 +118,7 @@ public class DirectoryEditForm {
 				boolean stored = dao.store(menu);
 
 				if (!stored) {
-					Messages.addLocalizedError("errors.action.savefolder.notstored");
+					Messages.addLocalizedError("folder.error.notstored");
 				} else {
 					Messages.addLocalizedInfo("msg.action.savefolder");
 				}
@@ -127,7 +127,7 @@ public class DirectoryEditForm {
 				documentNavigation.selectDirectory(documentNavigation.getSelectedDir());
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
-				Messages.addLocalizedError("errors.action.savefolder.notstored");
+				Messages.addLocalizedError("folder.error.notstored");
 			}
 
 			return null;
