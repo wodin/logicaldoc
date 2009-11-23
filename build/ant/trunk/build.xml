@@ -54,7 +54,7 @@
   <target name="prepare-sql-package">
     <copy todir="${logicaldoc.devroot}/logicaldoc-sql" flatten="true">
       <fileset dir="${logicaldoc.devroot}">
-        <include name="**/src/main/**/logicaldoc-*.sql*" />
+        <include name="**/src/main/**/*.sql*" />
       </fileset>
     </copy>
     <zip destfile="${logicaldoc.devroot}/logicaldoc-sql.zip" basedir="${logicaldoc.devroot}/logicaldoc-sql"   />
