@@ -464,34 +464,38 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		// Check if is necessary to add a new history entry for the parent
 		// folder. This operation is not recursive, because we want to notify
 		// only the parent folder.
-		if (folder.getId() != folder.getParentId()) {
+		if (folder.getId() != folder.getParentId() && folder.getId() != Menu.MENUID_DOCUMENTS) {
 			Menu parent = findById(folder.getParentId());
-			History parentHistory = new History();
-			parentHistory.setFolderId(parent.getId());
-			parentHistory.setTitle(parent.getText());
+			// The parent menu can be 'null' when the user wants to delete a
+			// folder with subfolders under it (method 'deleteAll()').
+			if (parent != null) {
+				History parentHistory = new History();
+				parentHistory.setFolderId(parent.getId());
+				parentHistory.setTitle(parent.getText());
 
-			parentHistory.setPath(parent.getPathExtended() + "/" + parent.getText() + "/" + folder.getText());
-			parentHistory.setPath(parentHistory.getPath().replaceAll("//", "/"));
-			parentHistory.setPath(parentHistory.getPath().replaceFirst("/menu.documents/", "/"));
-			parentHistory.setPath(parentHistory.getPath().replaceFirst("/menu.documents", "/"));
+				parentHistory.setPath(parent.getPathExtended() + "/" + parent.getText() + "/" + folder.getText());
+				parentHistory.setPath(parentHistory.getPath().replaceAll("//", "/"));
+				parentHistory.setPath(parentHistory.getPath().replaceFirst("/menu.documents/", "/"));
+				parentHistory.setPath(parentHistory.getPath().replaceFirst("/menu.documents", "/"));
 
-			parentHistory.setDate(folder.getLastModified());
-			parentHistory.setUserId(transaction.getUserId());
-			parentHistory.setUserName(transaction.getUserName());
-			if (transaction.getEvent().equals(History.EVENT_FOLDER_CREATED)) {
-				parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_CREATED);
-			} else if (transaction.getEvent().equals(History.EVENT_FOLDER_RENAMED)) {
-				parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_RENAMED);
-			} else if (transaction.getEvent().equals(History.EVENT_FOLDER_PERMISSION)) {
-				parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_PERMISSION);
-			} else if (transaction.getEvent().equals(History.EVENT_FOLDER_DELETED)) {
-				parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_DELETED);
+				parentHistory.setDate(folder.getLastModified());
+				parentHistory.setUserId(transaction.getUserId());
+				parentHistory.setUserName(transaction.getUserName());
+				if (transaction.getEvent().equals(History.EVENT_FOLDER_CREATED)) {
+					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_CREATED);
+				} else if (transaction.getEvent().equals(History.EVENT_FOLDER_RENAMED)) {
+					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_RENAMED);
+				} else if (transaction.getEvent().equals(History.EVENT_FOLDER_PERMISSION)) {
+					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_PERMISSION);
+				} else if (transaction.getEvent().equals(History.EVENT_FOLDER_DELETED)) {
+					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_DELETED);
+				}
+				parentHistory.setComment("");
+				parentHistory.setSessionId(transaction.getSessionId());
+				parentHistory.setComment(transaction.getComment());
+
+				historyDAO.store(parentHistory);
 			}
-			parentHistory.setComment("");
-			parentHistory.setSessionId(transaction.getSessionId());
-			parentHistory.setComment(transaction.getComment());
-
-			historyDAO.store(parentHistory);
 		}
 	}
 
