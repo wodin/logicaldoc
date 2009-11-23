@@ -51,26 +51,14 @@ public class TaskController extends DragAndDropSupportController {
 			UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 			List<User> matchedUsers = userDAO
 					.findByWhere(
-							"_entity.userName like concat(?,'%') OR _entity.firstName like concat(?,'%') OR _entity.name like concat(?,'%')",
+							"_entity.type = 0 and (_entity.userName like concat(?,'%') OR _entity.firstName like concat(?,'%') OR _entity.name like concat(?,'%'))",
 							new Object[] { currentValue, currentValue, currentValue }, null);
 
 			possibleAssignments = new LinkedList<String>();
 			for (User user : matchedUsers) {
 				possibleAssignments.add(user.getUserName());
 			}
-
-			if (autoComplete.getSelectedItem() != null) {
-				// Assignee assignee =
-				// this.possibleAssignments.get(autoComplete.getSelectedItem().getValue());
-				// fire effect to draw attention
-
-				// assignee.setValue(this.possibleAssignments.get(autoComplete.getSelectedItem().getValue()));
-
-			} else {
-
-			}
 		}
-
 	}
 
 	public List<SelectItem> getPossibleAssignments() {
