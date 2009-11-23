@@ -1445,6 +1445,13 @@ DIV#center {
 ------------ Main menu ----------
 */
 
+#historyBack {
+	position: absolute;
+	left: 10px;
+	top: 63px;
+}
+
+
 /* Navigation bar */
 .navigationTop {
 	left: 0 px;
@@ -1858,14 +1865,24 @@ homePlainTblColHdr1 homePlainTblHdr
 	color: #919191;
 }
 
-.breadcrumb {
-	background-color: #eeeeee;
+#breadcrumb {
+	position: absolute;
+	top: 105px;
+	left: 20px;
+	z-index: 10;
 }
 
 .breadcrumbLink {
-	font-family: Tahoma, Verdana, Arial;
 	font-size: 12px;
-	font-weight: bold;
+	font-weight: normal;
+	color: #1968b3;
+	text-decoration: underline;
+}
+.breadcrumbUnlink {
+	font-size: 12px;
+	font-weight: normal;
+	color: #000;
+	text-decoration: none;
 }
 
 /* discussions */
