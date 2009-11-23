@@ -508,7 +508,7 @@ public class WorkflowTemplateManager {
 	}
 
 	public String load(ValueChangeEvent event) {
-		if (event != null)
+		if (event != null && event.getNewValue() != null)
 			this.workflowTemplateId = Long.parseLong(event.getNewValue().toString());
 
 		return loadWorkflowTemplate();
