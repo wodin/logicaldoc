@@ -95,7 +95,7 @@
 										<h:outputText
 											value="#{WorkflowManager.selectedWorkflowInstance.name}" />
 
-										<ice:outputText value="#{msgs['name']}: " />
+										<ice:outputText value="#{msgs['description']}: " />
 										<h:outputText
 											value="#{WorkflowManager.selectedWorkflowInstance.properties['ld_description']}" />
 
@@ -128,7 +128,7 @@
 									<ice:panelGrid columnClasses="class1, class2" columns="2"
 										style="border:1px solid #cccccc;width:100%">
 
-										<ice:outputText value="#{msgs['name']}: " />
+										<ice:outputText value="#{msgs['id']}: " />
 										<h:outputText
 											value="#{WorkflowManager.selectedWorkflowTaskInstance.name}" />
 
@@ -417,14 +417,20 @@
 					<ice:panelGroup
 						rendered="#{ WorkflowManager.selectedWorkflowTaskInstance.properties['ld_taskstate'] == 'started'}">
 
+
+
 						<ice:panelGroup style="text-align:left;">
-							<ldoc:folderselector useIcon="true"
-								directoryModel="#{WorkflowManager.directoryModel}"
-								showSelector="#{WorkflowManager.showFolderSelector}"
-								openListener="#{WorkflowManager.openFolderSelector}"
-								confirmListener="#{WorkflowManager.folderSelected}"
-								cancelListener="#{WorkflowManager.cancelFolderSelector}"
-								closeListener="#{WorkflowManager.closeFolderSelector}" />
+							<ice:panelGrid columns="2">
+								<ice:outputText
+									value="#{msgs['workflow.runtime_appenddocuments']}: " style="padding: 10px 5px 0px 0px;"/>
+								<ldoc:folderselector useIcon="true"
+									directoryModel="#{WorkflowManager.directoryModel}"
+									showSelector="#{WorkflowManager.showFolderSelector}"
+									openListener="#{WorkflowManager.openFolderSelector}"
+									confirmListener="#{WorkflowManager.folderSelected}"
+									cancelListener="#{WorkflowManager.cancelFolderSelector}"
+									closeListener="#{WorkflowManager.closeFolderSelector}" />
+							</ice:panelGrid>
 						</ice:panelGroup>
 
 
