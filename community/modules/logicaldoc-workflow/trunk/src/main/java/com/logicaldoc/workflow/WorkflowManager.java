@@ -146,16 +146,6 @@ public class WorkflowManager {
 		return this.workflowService.getPooledTaskInstancesForUser(username);
 	}
 
-	public void showWorkflowHistoryHistory(ActionEvent actionEvent) {
-		UIComponent component = (UIComponent) actionEvent.getSource();
-		WorkflowTaskInstance workflowTaskInstance = (WorkflowTaskInstance) ((UIParameter) component.getChildren()
-				.get(0)).getValue();
-		WorkflowInstance instance = this.workflowService.getWorkflowInstanceByTaskInstance(
-				workflowTaskInstance.getId(), FETCH_TYPE.FORUPDATE);
-
-		this.taskHistory = this.workflowService.getWorkflowHistory(instance);
-	}
-
 	public List<WorkflowTaskInstance> getWorkflowHistory() {
 		return this.taskHistory = this.workflowService.getWorkflowHistory(this.workflowInstance);
 	}
