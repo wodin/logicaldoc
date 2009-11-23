@@ -32,7 +32,7 @@
 		</copy-->
 		<delete file="target/po" failonerror="no" />
 		
-		<echo>Produce the mater pots</echo>
+		<echo>Produce the master pots</echo>
 		<for list="${bundles}" param="bundle">
 			<sequential>
 				<mkdir dir="target/po/@{bundle}" />
