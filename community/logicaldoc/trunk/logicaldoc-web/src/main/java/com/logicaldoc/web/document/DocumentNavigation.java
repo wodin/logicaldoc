@@ -192,9 +192,13 @@ public class DocumentNavigation extends NavigationBean {
 	}
 
 	public void refresh() {
-		if (FOLDER_VIEW_TREE.equals(getFolderView()) && getDirectoryModel().getSelectedNode() != null) {
-			DefaultMutableTreeNode node = getDirectoryModel().getSelectedNode();
-			directoryModel.reload(node, -1);
+		if (FOLDER_VIEW_TREE.equals(getFolderView())) {
+			if (getDirectoryModel().getSelectedNode() != null) {
+				DefaultMutableTreeNode node = getDirectoryModel().getSelectedNode();
+				directoryModel.reload(node, -1);
+			} else {
+				directoryModel.reload();
+			}
 		} else {
 			selectDirectory(getSelectedDir());
 			directoryModel.reload();
@@ -453,6 +457,7 @@ public class DocumentNavigation extends NavigationBean {
 
 	void loadTree() {
 		directoryModel = new DirectoryTreeModel();
+		selectDirectory(Menu.MENUID_DOCUMENTS);
 	}
 
 	public void openFolderSelector(ActionEvent e) {
