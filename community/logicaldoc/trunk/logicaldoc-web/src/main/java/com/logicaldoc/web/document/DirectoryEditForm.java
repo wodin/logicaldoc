@@ -60,7 +60,6 @@ public class DirectoryEditForm {
 			try {
 				if (dao.findByMenuTextAndParentId(folderName, directory.getMenu().getParentId()).size() > 0) {
 					Messages.addLocalizedWarn("errors.folder.duplicate");
-					System.out.println("Warning Folder duplicate!!!");
 					documentNavigation.refresh();
 				} else {
 					directory.setDisplayText(folderName);
