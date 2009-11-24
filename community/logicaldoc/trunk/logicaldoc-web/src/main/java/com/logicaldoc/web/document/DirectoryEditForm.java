@@ -122,8 +122,8 @@ public class DirectoryEditForm {
 					Messages.addLocalizedInfo("msg.action.savefolder");
 				}
 
-				documentNavigation.nodeClicked();
-				documentNavigation.selectDirectory(documentNavigation.getSelectedDir());
+				documentNavigation.refresh();
+				documentNavigation.selectDirectory(new Directory(menu));
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addLocalizedError("folder.error.notstored");
