@@ -51,7 +51,7 @@
 
 				<ice:panelGroup styleClass="outputLabel">
 					<ice:outputLabel for="street"
-						value="#{msgs['msg.jsp.adduser.street']}" />
+						value="#{msgs['msg.jsp.adduser.address']}" />
 				</ice:panelGroup>
 				<ice:panelGroup>
 					<ice:inputText id="street" value="#{personalDataForm.street}"
