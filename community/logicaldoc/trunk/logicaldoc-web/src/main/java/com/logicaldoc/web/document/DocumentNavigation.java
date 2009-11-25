@@ -339,7 +339,7 @@ public class DocumentNavigation extends NavigationBean {
 		return null;
 	}
 
-	private void highlightDocument(long docId) {
+	public void highlightDocument(long docId) {
 		// Notify the records manager
 		DocumentsRecordsManager recordsManager = ((DocumentsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"documentsRecordsManager", FacesContext.getCurrentInstance(), log));
