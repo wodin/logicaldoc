@@ -24,9 +24,8 @@
 		<ice:treeNode>
 			<f:facet name="content">
 				<ice:panelGroup style="display: inline">
-				    <ice:graphicImage value="#{StyleBean.imagesPath}/tree/folder_explore.png" rendered="#{item.userObject.leaf}" />
-				    <ice:graphicImage value="#{StyleBean.imagesPath}/tree/folder_explore.png" rendered="#{item.userObject.leaf==false and item.userObject.expanded}" />
-				    <ice:graphicImage value="#{StyleBean.imagesPath}/tree/folder.png" rendered="#{item.userObject.leaf==false and item.userObject.expanded==false}" />
+				    <ice:graphicImage value="#{StyleBean.imagesPath}/tree/folder.png" rendered="#{item.userObject.expanded==false}" />
+				    <ice:graphicImage value="#{StyleBean.imagesPath}/tree/folder_open.png" rendered="#{item.userObject.expanded}" />
 					<ice:commandLink
 						actionListener="#{item.userObject.onSelect}">
 						<ice:outputText value="#{item.userObject.displayText}"
