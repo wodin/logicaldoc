@@ -393,6 +393,7 @@ public class WorkflowManager {
 			DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 					"documentNavigation", FacesContext.getCurrentInstance(), log));
 			documentNavigation.selectDirectory(folder.getId());
+			documentNavigation.highlightDocument(docId);
 			documentNavigation.setSelectedPanel(new PageContentBean(documentNavigation.getViewMode()));
 
 			// Show the documents browsing panel
