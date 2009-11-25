@@ -287,8 +287,10 @@ public class DocumentNavigation extends NavigationBean {
 		recordsManager.selectDirectory(directory.getMenu().getId());
 		setSelectedPanel(new PageContentBean(getViewMode()));
 
-		if (directoryModel != null)
+		if (directoryModel != null){
 			directoryModel.selectDirectory(directory);
+			nodeClicked();
+		}
 	}
 
 	public void selectDirectory(long directoryId) {
@@ -563,19 +565,14 @@ public class DocumentNavigation extends NavigationBean {
 	}
 
 	public void nodeClicked(ActionEvent event) {
-		Tree tree = (Tree) event.getSource();
-		DefaultMutableTreeNode node = tree.getNavigatedNode();
-		node = treeComponent.getNavigatedNode();
-		IceUserObject userObject = (IceUserObject) node.getUserObject();
-		if (userObject.isExpanded()) {
-			directoryModel.reload(node);
-		}
-		refresh();
+		nodeClicked();
 	}
 
 	public void nodeClicked() {
 		if (FOLDER_VIEW_TREE.equals(getFolderView())) {
 			DefaultMutableTreeNode node = treeComponent.getNavigatedNode();
+			if(node==null)
+				node=treeComponent.getCurrentNode();
 			if (node != null) {
 				IceUserObject userObject = (IceUserObject) node.getUserObject();
 				if (userObject.isExpanded()) {
@@ -583,6 +580,5 @@ public class DocumentNavigation extends NavigationBean {
 				}
 			}
 		}
-		refresh();
 	}
 }
