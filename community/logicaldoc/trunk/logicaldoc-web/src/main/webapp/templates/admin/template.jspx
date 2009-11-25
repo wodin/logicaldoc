@@ -80,7 +80,7 @@
 						<ice:panelGrid columns="3" cellpadding="2">
 							<ice:panelGroup style="width:20px" />
 							<ice:panelGroup styleClass="outputLabel" style="text-align:right">
-								<ice:outputLabel value="#{msgs['name']}*" />
+								<ice:outputLabel value="#{msgs['name.attribute']}*" />
 							</ice:panelGroup>
 							<ice:panelGroup style="float:left">
 								<ice:inputText id="name_attribute" styleClass="smallInputTex"
