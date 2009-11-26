@@ -34,7 +34,7 @@ public class GenerateFiles {
 
 	private List<File> folders = new ArrayList<File>();
 
-	private List<File> files = new ArrayList<File>();
+	private long filesCount = 0;
 
 	private File rootFolder;
 
@@ -46,7 +46,7 @@ public class GenerateFiles {
 
 	private int foldersPercentage = 2;
 
-	private int filesTotal = 1000;
+	private long filesTotal = 1000;
 
 	private int maxSubFolders = 5;
 
@@ -149,11 +149,11 @@ public class GenerateFiles {
 	/**
 	 * Retrieves the total number of files
 	 */
-	public int getFilesTotal() {
+	public long getFilesTotal() {
 		return filesTotal;
 	}
 
-	public void setFilesTotal(int filesTotal) {
+	public void setFilesTotal(long filesTotal) {
 		this.filesTotal = filesTotal;
 	}
 
@@ -253,14 +253,14 @@ public class GenerateFiles {
 
 		foldersTotal = (int) ((double) (filesTotal * foldersPercentage) / (double) 100);
 		folders.clear();
-		files.clear();
+		filesCount = 0;
 		rootFolder.mkdirs();
 		rootFolder.mkdir();
 
 		while (folders.size() < foldersTotal)
 			createTree(rootFolder, 0);
 
-		while (files.size() < filesTotal)
+		while (filesCount < filesTotal)
 			createFiles();
 
 		log.fatal("End of files generation");
@@ -302,9 +302,9 @@ public class GenerateFiles {
 		for (File folder : folders) {
 			int count = 0;
 			int subFiles = generateRandomInt(maxFilesPerFolders);
-			for (int i = 0; i < subFiles && files.size() < filesTotal; i++) {
+			for (int i = 0; i < subFiles && filesCount < filesTotal; i++) {
 				File file;
-				long docId = startDocId + files.size();
+				long docId = startDocId + filesCount;
 				if (logicalDocLayout) {
 					file = new File(folder, filePrefix + Long.toString(docId));
 					file.mkdir();
@@ -312,13 +312,15 @@ public class GenerateFiles {
 				} else {
 					file = new File(folder, filePrefix + (docId) + TXT);
 				}
-				writeFile(file);
-				files.add(file);
-				if (files.size() % 100 == 0)
-					log.info("Created file " + file.getName());
+				if (!file.exists())
+					writeFile(file);
+				filesCount++;
+				if (filesCount % 100 == 0)
+					log.info("Total created files: " + filesCount);
+
 				count++;
 			}
-			if (files.size() >= filesTotal)
+			if (filesCount >= filesTotal)
 				return;
 		}
 	}
@@ -359,9 +361,5 @@ public class GenerateFiles {
 
 	public List<File> getFolders() {
 		return folders;
-	}
-
-	public List<File> getFiles() {
-		return files;
 	}
 }
