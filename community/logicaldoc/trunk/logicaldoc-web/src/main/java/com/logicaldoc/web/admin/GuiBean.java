@@ -45,6 +45,8 @@ public class GuiBean {
 
 	private String viewModeFolder;
 
+	private String tagcloudMode;
+
 	private Integer pageSize = null;
 
 	public String getPath() {
@@ -128,6 +130,7 @@ public class GuiBean {
 			thumbnailQuality = Integer.parseInt(config.getProperty("gui.thumbnail.quality"));
 			pageSize = Integer.parseInt(config.getProperty("gui.page.size"));
 			viewModeFolder = config.getProperty("gui.viewmode.folder");
+			tagcloudMode = config.getProperty("gui.tagcloudmode");
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
@@ -166,6 +169,7 @@ public class GuiBean {
 			config.setProperty("gui.thumbnail.scale", thumbnailScale.toString());
 			config.setProperty("gui.page.size", pageSize.toString());
 			config.setProperty("gui.viewmode.folder", viewModeFolder);
+			config.setProperty("gui.tagcloudmode", tagcloudMode);
 			config.write();
 			Messages.addLocalizedInfo("msg.action.savesettings");
 		} catch (IOException e) {
@@ -209,5 +213,15 @@ public class GuiBean {
 
 	public void setViewModeFolder(String viewModeFolder) {
 		this.viewModeFolder = viewModeFolder;
+	}
+
+	public String getTagcloudMode() {
+		if (tagcloudMode == null)
+			init();
+		return tagcloudMode;
+	}
+
+	public void setTagcloudMode(String tagcloudMode) {
+		this.tagcloudMode = tagcloudMode;
 	}
 }

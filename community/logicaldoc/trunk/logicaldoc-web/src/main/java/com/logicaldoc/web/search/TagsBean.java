@@ -173,11 +173,11 @@ public class TagsBean extends SortableList {
 		 * Handles the selection of this tag
 		 */
 		public String select() {
-			if (SessionManagement.isValid()) {
 				try {
 					selectedWord = word;
 
 					long userId = SessionManagement.getUserId();
+					
 					DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 					Set<Long> docIds = docDao.findDocIdByUserIdAndTag(userId, word);
 
@@ -197,9 +197,6 @@ public class TagsBean extends SortableList {
 				}
 
 				return null;
-			} else {
-				return "login";
-			}
 		}
 	}
 
