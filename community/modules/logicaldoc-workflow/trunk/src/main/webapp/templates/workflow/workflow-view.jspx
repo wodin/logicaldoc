@@ -34,7 +34,6 @@
 			rendered="#{not empty WorkflowManager.taskController}"
 			visible="#{not empty WorkflowManager.taskController}">
 			<f:facet name="header">
-
 				<ice:panelGrid width="100%" cellpadding="0" cellspacing="0"
 					columns="2" style="text-align: center;">
 					<ice:outputText style="color: #FFFFFF;"
@@ -43,7 +42,6 @@
 						image="/skins/default/images/workflow/editor/close.gif"
 						actionListener="#{WorkflowManager.closeReassignmentDialog}" />
 				</ice:panelGrid>
-
 			</f:facet>
 
 			<f:facet name="body">
