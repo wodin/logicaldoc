@@ -371,7 +371,7 @@
 		<managed-bean-class>
 			com.logicaldoc.web.search.TagsBean
 		</managed-bean-class>
-		<managed-bean-scope>request</managed-bean-scope>
+		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 
 	<!-- Directory form -->

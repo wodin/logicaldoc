@@ -121,6 +121,17 @@
 				</ice:selectOneMenu>
 			</ice:panelGroup>
 
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="tagcloudMode"
+					value="#{msgs['tagcloud.view']}:" />
+			</ice:panelGroup>
+			<ice:panelGroup style="margin-top:0px; padding-top:0px;">
+				<ice:selectOneMenu id="tagcloudMode"
+					value="#{guiBean.tagcloudMode}">
+					<f:selectItem itemValue="simple" itemLabel="#{msgs['viewmode.simple']}"/>
+					<f:selectItem itemValue="3D" itemLabel="3D"/>
+				</ice:selectOneMenu>
+			</ice:panelGroup>
 		</ice:panelGrid>
 
 		<hr />

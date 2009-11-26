@@ -1,16 +1,23 @@
 package com.logicaldoc.web;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
+
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.document.DiscussionComment;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
@@ -36,6 +43,9 @@ public class HomeBean {
 	private boolean lastLockedExpanded = false;
 
 	private boolean tagCloudsExpanded = true;
+
+	// Last loaded tags, key is the tag
+	private Map<String, TagCloud> tags = new HashMap<String, TagCloud>();
 
 	public boolean isMessagesExpanded() {
 		return messagesExpanded;
@@ -102,6 +112,29 @@ public class HomeBean {
 		}
 
 		return lastDownloads;
+	}
+
+	/**
+	 * Used for graphical representation of tag cloud
+	 */
+	public String getTagCloudUrls() {
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+				.getRequest();
+		StringBuffer sb = new StringBuffer("<tags>");
+		if (tags.isEmpty())
+			getTagClouds();
+		for (TagCloud tag : tags.values()) {
+			 sb.append("<a href='" + request.getScheme() + "://" + request.getServerName() + ":"
+					+ request.getServerPort() + request.getContextPath() + "/main.iface?tag=" + tag.getTag()
+					+ "' title='" + tag.getTag() + "' rel='tag' style='font-size: " + (tag.getScale() + 4) + "pt;'>"
+					+ tag.getTag() + "</a>");
+		}
+		sb.append("</tags>");
+		try {
+			return URLEncoder.encode(sb.toString(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return "";
+		}
 	}
 
 	/**
@@ -176,15 +209,27 @@ public class HomeBean {
 		this.lastDownloadsExpanded = lastDownloadsExpanded;
 	}
 
+	public String getSelectTag() {
+		TagCloud tag = tags.get(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(
+				"tag"));
+		if (tag != null) {
+			tag.select();
+			JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "window.location.reload();");
+		}
+		return null;
+	}
+
 	/**
 	 * Generate tag clouds from lists of tags
 	 */
-	public List<TagCloud> getTagClouds() {
-		List<TagCloud> tags = new ArrayList<TagCloud>();
+	public Collection<TagCloud> getTagClouds() {
+		tags = new HashMap<String, TagCloud>();
+		List<TagCloud> list = new ArrayList<TagCloud>();
+
 		GenericDAO gendao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
 		Generic generic = gendao.findByAlternateKey("tagcloud", "-");
 		if (generic == null)
-			return tags;
+			return tags.values();
 		else
 			gendao.initialize(generic);
 
@@ -193,14 +238,15 @@ public class HomeBean {
 			StringTokenizer st = new StringTokenizer(generic.getValue(tag).toString(), "|", false);
 			tc.setOccurence(Integer.parseInt(st.nextToken()));
 			tc.setScale(Integer.parseInt(st.nextToken()));
-			tags.add(tc);
+			tags.put(tag, tc);
+			list.add(tc);
 		}
 
 		// Sort the tags collection by name
 		Comparator<TagCloud> compName = new TagCloudComparatorName();
-		Collections.sort(tags, compName);
+		Collections.sort(list, compName);
 
-		return tags;
+		return list;
 	}
 
 	public boolean isTagCloudsExpanded() {

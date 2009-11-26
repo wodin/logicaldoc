@@ -1,5 +1,6 @@
 package com.logicaldoc.core.document;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,6 +13,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
 import com.logicaldoc.core.task.Task;
+import com.logicaldoc.util.config.PropertiesBean;
 
 /**
  * This task generate all data needed by the tag cloud panel.
@@ -97,9 +99,18 @@ public class TagCloudGenerator extends Task {
 		Collections.sort(tags, compOccurrence);
 		Collections.reverse(tags);
 
-		// keep only the first 30 elements
-		if (tags.size() > 30)
-			tags = tags.subList(0, 30);
+		// keep only the first N elements
+		int n = 30;
+		PropertiesBean config;
+		try {
+			config = new PropertiesBean();
+			n = config.getInt("tagcloud.maxtags");
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
+
+		if (tags.size() > n)
+			tags = tags.subList(0, n);
 
 		// Find the Max frequency
 		int maxValue = tags.get(0).getOccurence();
