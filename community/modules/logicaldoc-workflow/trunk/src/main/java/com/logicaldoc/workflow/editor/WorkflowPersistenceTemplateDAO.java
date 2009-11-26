@@ -1,6 +1,5 @@
 package com.logicaldoc.workflow.editor;
 
-import java.io.File;
 import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
@@ -71,13 +70,6 @@ public interface WorkflowPersistenceTemplateDAO extends PersistentObjectDAO<Work
 	 * @param persistenceTemplate The persistence workflow template
 	 */
 	public void deploy(WorkflowPersistenceTemplate persistenceTemplate);
-
-	/**
-	 * This method sets the templates directory.
-	 * 
-	 * @param templatesDirectory The directory of the templates.
-	 */
-	public void setTemplatesDirectory(File templatesDirectory);
 
 	/**
 	 * This method loads all the workflow already deployed..

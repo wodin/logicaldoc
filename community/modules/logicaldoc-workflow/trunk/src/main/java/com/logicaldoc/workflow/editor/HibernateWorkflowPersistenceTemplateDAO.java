@@ -12,6 +12,8 @@ import java.util.List;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.util.PluginRegistry;
+import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 import com.logicaldoc.util.sql.SqlUtil;
 
 /**
@@ -24,8 +26,6 @@ import com.logicaldoc.util.sql.SqlUtil;
 public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistentObjectDAO<WorkflowPersistenceTemplate>
 		implements WorkflowPersistenceTemplateDAO {
 
-	private File templatesDirectory;
-
 	protected HibernateWorkflowPersistenceTemplateDAO() {
 		super(WorkflowPersistenceTemplate.class);
 		super.log = LogFactory.getLog(WorkflowPersistenceTemplateDAO.class);
@@ -36,7 +36,7 @@ public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistent
 	}
 
 	private File resolveSystemPath(WorkflowPersistenceTemplate template, String sfx) {
-		File file = new File(templatesDirectory, template.getId() + ((sfx != null) ? "-" + sfx : "") + ".jbpm");
+		File file = new File(getTemplatesDirectory(), template.getId() + ((sfx != null) ? "-" + sfx : "") + ".jbpm");
 		file.getParentFile().mkdirs();
 
 		log.info("workflowFile=" + file.getPath());
@@ -134,13 +134,6 @@ public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistent
 	}
 
 	/**
-	 * @see com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO#setTemplatesDirectory(java.io.File)
-	 */
-	public void setTemplatesDirectory(File templatesDirectory) {
-		this.templatesDirectory = templatesDirectory;
-	}
-
-	/**
 	 * @see com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO#deploy(com.logicaldoc.workflow.editor.WorkflowPersistenceTemplate)
 	 */
 	public void deploy(WorkflowPersistenceTemplate persistenceTemplate) {
@@ -186,5 +179,23 @@ public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistent
 		WorkflowPersistenceTemplate pt = findByWhere("_entity.name ='" + SqlUtil.doubleQuotes(name) + "'", null).get(0);
 		return this.load(pt.getId(), workflow_stage);
 
+	}
+
+	/**
+	 * Computes the directory in which all jbpm files must be maintained, that
+	 * is the plugin dir
+	 */
+	private File getTemplatesDirectory() {
+		File file = new File("");
+		try {
+			LogicalDOCPlugin workflowPlugin = (LogicalDOCPlugin) PluginRegistry.getInstance().getManager().getPlugin(
+					"logicaldoc-workflow");
+			file = workflowPlugin.resolveDataPath("templates");
+			if (!file.exists())
+				file.mkdir();
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+		}
+		return file;
 	}
 }
