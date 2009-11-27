@@ -6,244 +6,243 @@ import com.icesoft.faces.component.tree.IceUserObject;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.web.StyleBean;
 
-
 /**
  * <p>
  * The PageContentBean class is responsible for holding state information which
  * will allow a TreeNavigation and NavigationBean display dynamic content.
  * </p>
- *
- * @author Marco Meschieri
- * @version $Id: PageContentBean.java,v 1.10 2006/09/03 11:40:19 marco Exp $
+ * 
+ * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
 public class PageContentBean extends IceUserObject {
-    private Menu menu;
+	private Menu menu;
 
-    // template, default panel to make visible in a panel stack
-    private String contentName = "";
+	// template, default panel to make visible in a panel stack
+	private String contentName = "";
 
-    // text to be displayed in navigation link
-    private String displayText;
+	// text to be displayed in navigation link
+	private String displayText;
 
-    // title information to be displayed
-    private String contentTitle;
-    private String template = "";
-    private boolean pageContent = true;
+	// title information to be displayed
+	private String contentTitle;
 
-    // view reference to control the visible content
-    private NavigationBean navigationBean;
+	private String template = "";
 
-    public PageContentBean(String contentName) {
-        this();
-        setIcon("skins/default/images/spacer.gif");
-        this.contentName = contentName;
-    }
+	private boolean pageContent = true;
 
-    public PageContentBean(String contentName, String template) {
-        this(contentName);
-        this.template = template;
-    }
+	// view reference to control the visible content
+	private NavigationBean navigationBean;
 
-    public PageContentBean() {
-        super(null);
-        init();
-    }
+	public PageContentBean(String contentName) {
+		this();
+		setIcon("skins/default/images/spacer.gif");
+		this.contentName = contentName;
+	}
 
-    public PageContentBean(Menu menu) {
-        this();
-        this.menu = menu;
-    }
+	public PageContentBean(String contentName, String template) {
+		this(contentName);
+		this.template = template;
+	}
 
-    /**
-     * Initialize internationalization.
-     */
-    private void init() {
-        setBranchContractedIcon(StyleBean.XP_BRANCH_CONTRACTED_ICON);
-        setBranchExpandedIcon(StyleBean.XP_BRANCH_EXPANDED_ICON);
-        setLeafIcon(StyleBean.XP_BRANCH_CONTRACTED_ICON);
-        setExpanded(false);
-        setLeaf(false);
-        setIcon("skins/default/images/spacer.gif");
-    }
+	public PageContentBean() {
+		super(null);
+		init();
+	}
 
-    /**
-     * Gets the navigation callback.
-     *
-     * @return NavigationBean.
-     */
-    public NavigationBean getNavigationSelection() {
-        return navigationBean;
-    }
+	public PageContentBean(Menu menu) {
+		this();
+		this.menu = menu;
+	}
 
-    /**
-     * Sets the navigation callback.
-     *
-     * @param navigationBean controls selected panel state.
-     */
-    public void setNavigationSelection(NavigationBean navigationBean) {
-        this.navigationBean = navigationBean;
-    }
+	/**
+	 * Initialize internationalization.
+	 */
+	private void init() {
+		setBranchContractedIcon(StyleBean.XP_BRANCH_CONTRACTED_ICON);
+		setBranchExpandedIcon(StyleBean.XP_BRANCH_EXPANDED_ICON);
+		setLeafIcon(StyleBean.XP_BRANCH_CONTRACTED_ICON);
+		setExpanded(false);
+		setLeaf(false);
+		setIcon("skins/default/images/spacer.gif");
+	}
 
-    /**
-     * Gets the template name to display in the showcase.jspx. The template is a
-     * panel in a panel stack which will be made visible.
-     *
-     * @return panel stack template name.
-     */
-    public String getContentName() {
-        return contentName;
-    }
+	/**
+	 * Gets the navigation callback.
+	 * 
+	 * @return NavigationBean.
+	 */
+	public NavigationBean getNavigationSelection() {
+		return navigationBean;
+	}
 
-    /**
-     * Sets the template name to be displayed when selected in tree. Selection
-     * will only occur if pageContent is true.
-     *
-     * @param contentName valid panel name in showcase.jspx
-     */
-    public void setContentName(String templateName) {
-        this.contentName = templateName;
-    }
+	/**
+	 * Sets the navigation callback.
+	 * 
+	 * @param navigationBean controls selected panel state.
+	 */
+	public void setNavigationSelection(NavigationBean navigationBean) {
+		this.navigationBean = navigationBean;
+	}
 
-    /**
-     * Gets the menu display text. This text will be shown in the navigation
-     * control.
-     *
-     * @return menu display text.
-     */
-    public String getDisplayText() {
-        return displayText;
-    }
+	/**
+	 * Gets the template name to display in the showcase.jspx. The template is a
+	 * panel in a panel stack which will be made visible.
+	 * 
+	 * @return panel stack template name.
+	 */
+	public String getContentName() {
+		return contentName;
+	}
 
-    /**
-     * Sets the text to be displayed in the menu. This text string must match a
-     * resource property in
-     * com.icesoft.icefaces.samples.showcase.resources.messages
-     *
-     * @param displayText menu text to display
-     */
-    public void setDisplayText(String menuDisplayText) {
-        this.displayText = menuDisplayText;
-        setText(getDisplayText());
-    }
+	/**
+	 * Sets the template name to be displayed when selected in tree. Selection
+	 * will only occur if pageContent is true.
+	 * 
+	 * @param contentName valid panel name in showcase.jspx
+	 */
+	public void setContentName(String templateName) {
+		this.contentName = templateName;
+	}
 
-    /**
-     * Get the text to be displayed as the content title. This text string must
-     * match resource property in
-     * com.icesoft.icefaces.samples.showcase.resources.messages
-     *
-     * @return menu content title
-     */
-    public String getContentTitle() {
-        return contentTitle;
-    }
+	/**
+	 * Gets the menu display text. This text will be shown in the navigation
+	 * control.
+	 * 
+	 * @return menu display text.
+	 */
+	public String getDisplayText() {
+		return displayText;
+	}
 
-    /**
-     * Sets the menu content title.
-     *
-     * @param contentTitle menu content title name.
-     */
-    public void setContentTitle(String menuContentTitle) {
-        this.contentTitle = menuContentTitle;
-    }
+	/**
+	 * Sets the text to be displayed in the menu. This text string must match a
+	 * resource property in
+	 * com.icesoft.icefaces.samples.showcase.resources.messages
+	 * 
+	 * @param displayText menu text to display
+	 */
+	public void setDisplayText(String menuDisplayText) {
+		this.displayText = menuDisplayText;
+		setText(getDisplayText());
+	}
 
-    public String getTemplate() {
-        return template;
-    }
+	/**
+	 * Get the text to be displayed as the content title. This text string must
+	 * match resource property in
+	 * com.icesoft.icefaces.samples.showcase.resources.messages
+	 * 
+	 * @return menu content title
+	 */
+	public String getContentTitle() {
+		return contentTitle;
+	}
 
-    /**
-     * This is necessary for the Facelets version of component-showcase. Unlike
-     * the JSP version of component-showcase, which uses static includes, the
-     * Facelets version uses dynamic inclusion tied to an EL expression, which
-     * will call getMenuContentInclusionFile().
-     *
-     * @param template The server-side path to the file to be included
-     */
-    public void setTemplate(String menuContentInclusionFile) {
-        this.template = menuContentInclusionFile;
-    }
+	/**
+	 * Sets the menu content title.
+	 * 
+	 * @param contentTitle menu content title name.
+	 */
+	public void setContentTitle(String menuContentTitle) {
+		this.contentTitle = menuContentTitle;
+	}
 
-    /**
-     * Does the node contain content.
-     *
-     * @return true if the page contains content; otherwise, false.
-     */
-    public boolean isPageContent() {
-        return pageContent;
-    }
+	public String getTemplate() {
+		return template;
+	}
 
-    /**
-     * Sets the page content.
-     *
-     * @param pageContent True if the page contains content; otherwise, false.
-     */
-    public void setPageContent(boolean pageContent) {
-        this.pageContent = pageContent;
-    }
+	/**
+	 * This is necessary for the Facelets version of component-showcase. Unlike
+	 * the JSP version of component-showcase, which uses static includes, the
+	 * Facelets version uses dynamic inclusion tied to an EL expression, which
+	 * will call getMenuContentInclusionFile().
+	 * 
+	 * @param template The server-side path to the file to be included
+	 */
+	public void setTemplate(String menuContentInclusionFile) {
+		this.template = menuContentInclusionFile;
+	}
 
-    public Menu getMenu() {
-        return menu;
-    }
+	/**
+	 * Does the node contain content.
+	 * 
+	 * @return true if the page contains content; otherwise, false.
+	 */
+	public boolean isPageContent() {
+		return pageContent;
+	}
 
-    public long getMenuId() {
-        if (menu != null) {
-            return menu.getId();
-        } else {
-            return -1;
-        }
-    }
+	/**
+	 * Sets the page content.
+	 * 
+	 * @param pageContent True if the page contains content; otherwise, false.
+	 */
+	public void setPageContent(boolean pageContent) {
+		this.pageContent = pageContent;
+	}
 
-    public void setMenu(Menu menu) {
-        this.menu = menu;
-    }
+	public Menu getMenu() {
+		return menu;
+	}
 
-    public String getIcon() {
-        return icon;
-    }
+	public long getMenuId() {
+		if (menu != null) {
+			return menu.getId();
+		} else {
+			return -1;
+		}
+	}
 
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
+	public void setMenu(Menu menu) {
+		this.menu = menu;
+	}
 
-    /**
-     * Item selection handler
-     */
-    public void onSelect(ActionEvent event) {
-        if (isPageContent()) {
-            if (navigationBean == null) {
-                return;
-            }
+	public String getIcon() {
+		return icon;
+	}
 
-            // only toggle the branch expansion if we have already selected the
-            // node
-            if (navigationBean.getSelectedPanel().equals(this)) {
-                // toggle the branch node expansion
-                setExpanded(!isExpanded());
-            }
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
 
-            navigationBean.setSelectedPanel(this);
-        }
-        // Otherwise toggle the node visibility, only changes the state
-        // of the nodes with children.
-        else {
-            setExpanded(!isExpanded());
-        }
-    }
+	/**
+	 * Item selection handler
+	 */
+	public void onSelect(ActionEvent event) {
+		if (isPageContent()) {
+			if (navigationBean == null) {
+				return;
+			}
 
-    @Override
-    public boolean equals(Object obj) {
-        PageContentBean other = (PageContentBean) obj;
+			// only toggle the branch expansion if we have already selected the
+			// node
+			if (navigationBean.getSelectedPanel().equals(this)) {
+				// toggle the branch node expansion
+				setExpanded(!isExpanded());
+			}
 
-        if ((other != null) && (other.getContentName() != null) &&
-                (contentName != null)) {
-            return this.contentName.equals(other.getContentName());
-        } else {
-            return false;
-        }
-    }
+			navigationBean.setSelectedPanel(this);
+		}
+		// Otherwise toggle the node visibility, only changes the state
+		// of the nodes with children.
+		else {
+			setExpanded(!isExpanded());
+		}
+	}
 
-    @Override
-    public String toString() {
-        return displayText;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		PageContentBean other = (PageContentBean) obj;
+
+		if ((other != null) && (other.getContentName() != null) && (contentName != null)) {
+			return this.contentName.equals(other.getContentName());
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public String toString() {
+		return displayText;
+	}
 }
