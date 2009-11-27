@@ -30,7 +30,6 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.TagUtil;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.ZipUtil;
-import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 
 /**
  * This is an import utilities that imports documents stored in a zip archive.
