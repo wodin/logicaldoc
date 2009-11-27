@@ -6,27 +6,30 @@
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ice="http://www.icesoft.com/icefaces/component"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:c="http://java.sun.com/jstl/core"
-    xmlns:fn="http://java.sun.com/jsp/jstl/functions" jsfc="f:view" locale="#{language}">
-    <f:loadBundle basename="i18n.application" var="msgs" />
-    <f:loadBundle basename="i18n.localeInformation" var="loc" />
-    <ice:outputDeclaration doctypeRoot="HTML"
-        doctypePublic="-//W3C//DTD HTML 4.01 Transitional//EN"
-        doctypeSystem="http://www.w3.org/TR/html4/loose.dtd" />
-    <html>
-        <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-            <title>#{StyleBean.productName}  #{StyleBean.productRelease}</title>
-            <link type="image/x-icon" href="#{facesContext.externalContext.requestContextPath}#{StyleBean.imagesPath}/favicon.ico" rel="shortcut icon"/>
-            <ice:outputText style="padding-top:0px; padding-bottom:0px;"
-                value="#{StyleBean.style}" escape="false" />
-            <ice:outputStyle href="#{StyleBean.cssPath}/style.css" />
-            <ice:outputStyle href="#{StyleBean.cssPath}/system.css" />
-            <script type="text/javascript" language="javascript">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions" jsfc="f:view"
+	locale="#{language}">
+	<f:loadBundle basename="i18n.application" var="msgs" />
+	<f:loadBundle basename="i18n.localeInformation" var="loc" />
+	<ice:outputDeclaration doctypeRoot="HTML"
+		doctypePublic="-//W3C//DTD HTML 4.01 Transitional//EN"
+		doctypeSystem="http://www.w3.org/TR/html4/loose.dtd" />
+	<html>
+		<head>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+			<title>#{StyleBean.productName} #{StyleBean.productRelease}</title>
+			<link type="image/x-icon"
+				href="#{facesContext.externalContext.requestContextPath}#{StyleBean.imagesPath}/favicon.ico"
+				rel="shortcut icon" />
+			<ice:outputText style="padding-top:0px; padding-bottom:0px;"
+				value="#{StyleBean.style}" escape="false" />
+			<ice:outputStyle href="#{StyleBean.cssPath}/style.css" />
+			<ice:outputStyle href="#{StyleBean.cssPath}/system.css" />
+			<script type="text/javascript" language="javascript">
   function noErrorMessages () { return true; }
   window.onerror = noErrorMessages;
             
@@ -65,60 +68,63 @@
     }
   }
 </script>
-		<c:if test="${empty authUser}">
-			<script type="text/javascript" language="javascript">
+			<c:if test="${empty authUser}">
+				<script type="text/javascript" language="javascript">
   			   window.location = 'timeout.iface';
   			</script>
-		</c:if>
-        </head>
-        <body>
-            <!--
+			</c:if>
+		</head>
+		<body>
+			<!--
             This is the main formating table which represents a layout view for
             the application components.  The components are pretty straightforward:
             header, left menu, and body components.  Follow the includes
             to see each individual components makeup.
         -->
-            <ice:panelBorder layout="hide east west" border="0" cellpadding="0"
-                cellspacing="0" styleClass="mainBorderLayout">
+			<ice:panelBorder layout="hide east west" border="0" cellpadding="0"
+				cellspacing="0" styleClass="mainBorderLayout">
 
-                <f:facet name="north">
-                    <ice:panelGroup>
-                        <ui:include src="/templates/header.jspx" />
-                    </ice:panelGroup>
-                </f:facet>
+				<f:facet name="north">
+					<ice:panelGroup>
+						<ui:include src="/templates/header.jspx" />
+					</ice:panelGroup>
+				</f:facet>
 
-                <f:facet name="center">
-                    <ice:panelGroup>
-                        <!--
-                       Main Component content;
-                       controls which content to display for the respective navigation
-                    -->
-
-                        <ice:panelGrid styleClass="navConnectionStatus"
-                            columnClasses="statusLeft, statusRight" columns="2">
-                            <!-- Connection Status -->
-                            <ice:outputConnectionStatus showPopupOnDisconnect="true"/>
-                        </ice:panelGrid>
-                        
-                        <ice:form id="historyBack" rendered="#{navigation.historySize>1}">
-            				<ice:commandLink action="#{navigation.back}"
-                                title="#{msgs['back']}" style="float: left;">
-                                <ice:graphicImage value="#{StyleBean.imagesPath}/historyBack.png"
-                                    style="border: 0px solid;" alt="#{msgs['back']}" />
-                            </ice:commandLink>
-                        </ice:form>
-
+				<f:facet name="center">
+					<ice:panelGroup>
 						<ice:form>
 							<ui:include src="/templates/breadcrumb.jspx" />
 						</ice:form>
 
-                        <ice:panelGroup styleClass="mainWindow"
-                            rendered="#{!empty (navigation.selectedPanel.template)}">
-                            <ui:include
-                                src="/templates/#{navigation.selectedPanel.template}.jspx" />
-                        </ice:panelGroup>
-                    </ice:panelGroup>
-                </f:facet>
+						<!--
+                       Main Component content;
+                       controls which content to display for the respective navigation
+                    -->
+
+						<ice:panelGrid id="navConnectionStatus"
+							columnClasses="statusLeft, statusRight" columns="2">
+							<!-- Connection Status -->
+							<ice:outputConnectionStatus showPopupOnDisconnect="true" />
+						</ice:panelGrid>
+
+						<ice:form id="historyBack" rendered="#{navigation.historySize>1}">
+							<ice:commandLink action="#{navigation.back}"
+								title="#{msgs['back']}" style="float: left;">
+								<ice:graphicImage
+									value="#{StyleBean.imagesPath}/historyBack.png"
+									style="border: 0px solid;" alt="#{msgs['back']}" />
+							</ice:commandLink>
+						</ice:form>
+
+
+
+						<ice:panelGroup styleClass="mainWindow"
+							rendered="#{!empty (navigation.selectedPanel.template)}">
+							<ui:include
+								src="/templates/#{navigation.selectedPanel.template}.jspx" />
+						</ice:panelGroup>
+					</ice:panelGroup>
+				</f:facet>
 
 			</ice:panelBorder>
 		</body>

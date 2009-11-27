@@ -159,9 +159,9 @@ em { /*font-size:14px;*/
 	top: 0;
 }
 
-.navConnectionStatus {
+#navConnectionStatus {
 	position: absolute;
-	top: 80px;
+	top: 45px;
 	right: 0;
 	z-index: 10;
 }
@@ -270,7 +270,7 @@ em { /*font-size:14px;*/
 	background-repeat: repeat-x;
 	background-attachment: scroll;
 	background-position: 0% 0%;
-	padding-top: 20px;
+	padding-top: 40px;
 	/*padding-right: 27px;
 	padding-bottom: 0pt;
 	padding-left: 27px; */
@@ -1867,9 +1867,10 @@ homePlainTblColHdr1 homePlainTblHdr
 
 #breadcrumb {
 	position: absolute;
-	top: 102px;
+	top: 95px;
 	left: 20px;
 	z-index: 10;
+	border: 1px red;
 }
 
 .breadcrumbLink {

@@ -14,7 +14,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
 
-	<ice:panelGroup id="breadcrumb">
+	<div id="breadcrumb">
 		<ice:panelSeries style="display: inline;" var="crumb"
 			value="#{menuBar.breadcrumb}"
 			rendered="#{navigation.selectedPanel.menuId != 5}">
@@ -43,5 +43,5 @@
 				rendered="#{folder.selected == false}"
 				style="padding-right:4px; padding-bottom: 1px; padding-left: 3px;" />
 		</ice:panelSeries>
-	</ice:panelGroup>
+	</div>
 </jsp:root>
