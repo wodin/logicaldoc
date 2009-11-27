@@ -48,6 +48,10 @@
 		scope="session">
 		<property name="XStream" ref="xStream" />
 	</bean>
+  
+    <bean id="workflowTaskController"
+        class="com.logicaldoc.workflow.editor.controll.TaskController">
+    </bean>
 
 	<bean id="ModelConfiguration"
 		class="com.logicaldoc.workflow.model.ModelConfiguration" />

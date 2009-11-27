@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.jbpm.graph.exe.ExecutionContext;
 
-import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.dao.SystemMessageDAO;
@@ -69,8 +68,6 @@ public class DefaultAssignmentHandler extends AbstractAssignmentHandler {
 			documents.add(documentDAO.findById(docId));
 
 		TemplateService templateService = (TemplateService) Context.getInstance().getBean("templateService");
-
-		EMail eMail = new EMail();
 
 		Map<String, Object> modelProperties = new HashMap<String, Object>();
 		modelProperties.put("documents", documents);
