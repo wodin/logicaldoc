@@ -337,6 +337,8 @@ em { /*font-size:14px;*/
 	width: 250px;
 	overflow: auto;
 	vertical-align: top;
+	/*border: 1px solid red;
+	min-height: 470px; */
 }
 
 .browseRight {
@@ -345,6 +347,8 @@ em { /*font-size:14px;*/
 
 .folderContainer {
 	width: 240px;
+	/*border: 1px solid blue; 
+	min-height: 420px; */
 }
 
 .treeContainer_horizontal {
@@ -1181,6 +1185,7 @@ em { /*font-size:14px;*/
 
 .folderTree {
 	width: 100%;
+	min-height: 320px;
 	overflow: auto;
 }
 
