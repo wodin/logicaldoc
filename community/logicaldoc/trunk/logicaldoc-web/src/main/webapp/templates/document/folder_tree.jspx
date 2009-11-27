@@ -18,7 +18,7 @@
 	<ice:tree id="folder-tree" 
 	    value="#{documentNavigation.directoryModel}"
 		var="item" hideRootNode="false" hideNavigation="false"
-		imageDir="#{StyleBean.imageDirectory}" immediate="true"
+		imageDir="#{StyleBean.imagesPath}/tree/" immediate="true"
 		binding="#{documentNavigation.treeComponent}" styleClass="folderTree"
 		actionListener="#{documentNavigation.nodeClicked}">
 		<ice:treeNode>
