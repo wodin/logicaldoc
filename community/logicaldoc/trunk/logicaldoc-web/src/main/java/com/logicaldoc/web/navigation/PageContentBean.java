@@ -209,6 +209,7 @@ public class PageContentBean extends IceUserObject {
 	 * Item selection handler
 	 */
 	public void onSelect(ActionEvent event) {
+		
 		if (isPageContent()) {
 			if (navigationBean == null) {
 				return;

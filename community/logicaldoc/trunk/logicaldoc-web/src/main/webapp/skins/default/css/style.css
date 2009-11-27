@@ -1544,6 +1544,45 @@ DIV#center {
 	color: #2f2f2f;
 }
 
+
+
+/* TOP-menu Highlight
+/* Barra principale colore sfondo */
+.LDHightlightItem .iceCmdLnk {
+	background-color: #ff8723;
+}
+
+.LDHightlightItem a {
+	background:url(images/nav1_sep.gif) no-repeat 100% 0;
+	border-right: none; 
+	height: 20px;
+	padding-top: 5px;
+	padding-bottom: 1px;
+	padding-right: 14px;
+	padding-left: 14px;
+}
+
+
+/* Barra principale aspetto testo */
+.LDHightlightItem .iceCmdLnk .iceOutTxt {
+	color: #fff;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+/* Barra principale colore sfondo menu hover */
+.LDHightlightItem a:hover {
+	background:url(images/nav1_sep.gif) no-repeat 100% 0;
+	background-color: #ff8723;
+	border-right: none; 
+}
+
+/* Barra principale colore testo menu hover */
+.LDHightlightItem a:hover .iceOutTxt {
+	color: #d6e2e5;
+}
+
+
 /*
 ------------ Search ----------
 */

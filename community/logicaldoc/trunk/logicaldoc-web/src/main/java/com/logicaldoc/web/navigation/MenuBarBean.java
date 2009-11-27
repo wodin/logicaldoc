@@ -3,14 +3,18 @@ package com.logicaldoc.web.navigation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.faces.component.UIComponent;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.icesoft.faces.component.menubar.MenuItems;
+import com.icesoft.faces.context.effects.Highlight;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
@@ -92,8 +96,16 @@ public class MenuBarBean {
 	 * @param e the event that fired the listener
 	 */
 	public void primaryListener(ActionEvent e) {
+		
 		MenuItem menu = (MenuItem) e.getSource();
 
+		// highlight 2nd level parent menu
+		try {
+			highlightSecondLevelMenu(menu);
+		} catch (RuntimeException e1) {
+			e1.printStackTrace();
+		}
+		
 		if (StringUtils.isNotEmpty(menu.getContent().getTemplate())) {
 			navigation.setSelectedPanel(menu.getContent());
 
@@ -110,6 +122,30 @@ public class MenuBarBean {
 			// revert the list
 			Collections.reverse(breadcrumb);
 		}
+	}
+
+	private void highlightSecondLevelMenu(MenuItem menu) {
+		
+		// I get the second level menu
+		MenuItem current = menu;
+		
+		while (current.getParent() != null && current.getParent() instanceof MenuItem) {
+			current = (MenuItem) current.getParent();
+		}
+		
+		// I get the father to set all the children highlight = false
+		MenuItems root = (MenuItems) current.getParent();
+		
+		List topMenus = root.prepareChildren();
+		for (Object object : topMenus) {
+			if (object instanceof MenuItem) {
+				MenuItem topMenu = (MenuItem) object;
+				topMenu.setStyleClass(null);
+			}
+		}
+		
+		// activates the hightlight on the menu selected
+		current.setStyleClass("LDHightlight");
 	}
 
 	/**
@@ -186,6 +222,7 @@ public class MenuBarBean {
 	}
 
 	private void createMenuStructure(Menu menu, MenuItem parent) {
+		
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		PageContentBean page;
 		MenuItem item;
@@ -233,6 +270,7 @@ public class MenuBarBean {
 
 	protected MenuItem createMenuItem(String label, String id, String actionListener, String action, String link,
 			String icon, boolean immediate, String target, String styleClass, PageContentBean content) {
+		
 		MenuItem menuItem = new MenuItem();
 		menuItem.setValue(label);
 
