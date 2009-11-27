@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jbpm.graph.exe.ExecutionContext;
 
 import com.logicaldoc.core.communication.Recipient;
@@ -39,6 +41,8 @@ import com.logicaldoc.workflow.model.script.UserScriptObject;
  */
 public class DefaultAssignmentHandler extends AbstractAssignmentHandler {
 	private static final long serialVersionUID = -2251308861234738682L;
+
+	protected static Log log = LogFactory.getLog(DefaultAssignmentHandler.class);
 
 	@Override
 	public void init() {
@@ -72,8 +76,8 @@ public class DefaultAssignmentHandler extends AbstractAssignmentHandler {
 		Map<String, Object> modelProperties = new HashMap<String, Object>();
 		modelProperties.put("documents", documents);
 
+		LinkedHashSet<Recipient> addresses = new LinkedHashSet<Recipient>();
 		for (String assignee : assignees) {
-			LinkedHashSet<Recipient> addresses = new LinkedHashSet<Recipient>();
 			Recipient ad = new Recipient();
 
 			User user = userDAO.findByUserName(assignee);
