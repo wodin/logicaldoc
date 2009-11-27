@@ -629,6 +629,7 @@ public class DocumentsRecordsManager extends SortableList {
 				inputFile.deleteUploadDir();
 
 				final long userId = SessionManagement.getUserId();
+				final String sessionId = SessionManagement.getCurrentUserSessionId();
 				// Prepare the import thread
 				Thread zipImporter = new Thread(new Runnable() {
 					public void run() {
@@ -640,7 +641,7 @@ public class DocumentsRecordsManager extends SortableList {
 						importer.setTags(inputFile.getTags());
 						log.debug("importing: = " + destFile.getPath());
 						importer.process(destFile, LocaleUtil.toLocale(zipLanguage), parent, userId, inputFile
-								.getTemplate(), encoding, SessionManagement.getCurrentUserSessionId());
+								.getTemplate(), encoding, sessionId);
 						try {
 							FileUtils.forceDelete(destFile);
 						} catch (IOException e) {
