@@ -351,12 +351,16 @@ public class WorkflowManager {
 	}
 
 	public void setupNewAssignment(ActionEvent actionEvent) {
-		WorkflowTaskInstance taskInstance = this.workflowService.getTaskInstanceByTaskId(this.workflowTaskInstance
-				.getId(), FETCH_TYPE.FORUPDATE);
-		taskInstance.getProperties().put(WorkflowConstants.VAR_OWNER, this.newAssignment);
-		this.workflowService.updateWorkflow(taskInstance);
+		try {
+			WorkflowTaskInstance taskInstance = this.workflowService.getTaskInstanceByTaskId(this.workflowTaskInstance
+					.getId(), FETCH_TYPE.FORUPDATE);
+			taskInstance.getProperties().put(WorkflowConstants.VAR_OWNER, this.newAssignment);
+			this.workflowService.updateWorkflow(taskInstance);
 
-		this.navigationBean.back();
+			this.navigationBean.back();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 
 	public List<WorkflowTaskInstance> getAdminTasks() {

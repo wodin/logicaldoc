@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,6 +17,7 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.node.EndState;
+import org.jbpm.taskmgmt.exe.PooledActor;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.springmodules.workflow.jbpm31.JbpmCallback;
 import org.springmodules.workflow.jbpm31.JbpmTemplate;
@@ -375,10 +377,9 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 
 					// updating actor
 					if (key.equals(WorkflowConstants.VAR_OWNER)) {
-
 						if (val == null)
 							taskInstance.setActorId(null);
-						else if (taskInstance.getActorId().equals(val) == false)
+						else if (!val.equals(taskInstance.getActorId()))
 							taskInstance.setActorId(val.toString());
 					}
 

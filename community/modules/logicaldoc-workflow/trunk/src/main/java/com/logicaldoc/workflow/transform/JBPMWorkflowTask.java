@@ -120,7 +120,6 @@ public class JBPMWorkflowTask implements TransformModel {
 			timer.appendChild(actionTimer);
 
 			task.appendChild(timer);
-
 		}
 
 		/**
