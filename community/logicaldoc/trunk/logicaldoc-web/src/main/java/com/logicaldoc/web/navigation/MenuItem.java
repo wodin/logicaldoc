@@ -10,6 +10,7 @@ package com.logicaldoc.web.navigation;
  * @since 3.0
  */
 public class MenuItem extends com.icesoft.faces.component.menubar.MenuItem {
+	
     private PageContentBean content = new PageContentBean("blank");
 
     //A generic placeholder for needed informations
