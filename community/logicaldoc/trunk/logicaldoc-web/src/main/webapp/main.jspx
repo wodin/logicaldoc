@@ -108,11 +108,10 @@
                             </ice:commandLink>
                         </ice:form>
 
-						<h2>
-                            <ice:graphicImage value="#{navigation.selectedPanel.icon}"
-                                style="border: 0px solid;" />
-                            <ice:outputText value=" #{navigation.selectedPanel.contentTitle}" />
-                        </h2>
+						<ice:form>
+							<ui:include src="/templates/breadcrumb.jspx" />
+						</ice:form>
+
                         <ice:panelGroup styleClass="mainWindow"
                             rendered="#{!empty (navigation.selectedPanel.template)}">
                             <ui:include

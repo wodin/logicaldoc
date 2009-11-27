@@ -13,9 +13,9 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGrid"
-	columns="2" style="width: 100%;" columnClasses="browseLeft,browseRight" styleClass="browseMain"
-	cellpadding="4">
-		
+	columns="2" style="width: 100%;" columnClasses="browseLeft,browseRight"
+	styleClass="browseMain" cellpadding="4">
+
 	<ice:panelGrid columns="1">
 		<ice:panelGroup style="display: inline;"
 			rendered="#{documentNavigation.selectedDir != null}">
@@ -35,27 +35,14 @@
 	</ice:panelGrid>
 
 	<ice:panelGroup styleClass="documentsPanel">
-	        <ice:panelGroup id="breadcrumb">
-			<ice:form>
-				<ice:panelSeries style="display: inline;" var="folder"
-					value="#{documentNavigation.breadcrumb}">
-					<ice:commandLink
-						actionListener="#{documentNavigation.onSelectDirectory}">
-						<f:param name="directoryId" value="#{folder.menuId}" />
-						<ice:outputText value="#{folder.displayText}"
-							styleClass="breadcrumbLink" rendered="#{folder.selected == false}" />
-						<ice:outputText value="#{folder.displayText}" styleClass="breadcrumbUnlink" rendered="#{folder.selected}" />	
-					</ice:commandLink><ice:graphicImage value="#{StyleBean.imagesPath}/arrow2.gif" rendered="#{folder.selected == false}" style="padding-right:4px; padding-bottom: 1px; padding-left: 3px;" /> 
-				</ice:panelSeries>
-			</ice:form>
-	</ice:panelGroup>
 		<ice:panelGroup>
-			<ice:messages id="browseMessages" globalOnly="true" infoClass="infoMessage" warnClass="warnMessage" errorClass="errorMessage" />
+			<ice:messages id="browseMessages" globalOnly="true"
+				infoClass="infoMessage" warnClass="warnMessage"
+				errorClass="errorMessage" />
 			<f:subview id="w-documents">
 				<ui:include
 					src="/templates/document/#{documentNavigation.selectedPanel.contentName}.jspx" />
 			</f:subview>
 		</ice:panelGroup>
-
 	</ice:panelGroup>
 </jsp:root>

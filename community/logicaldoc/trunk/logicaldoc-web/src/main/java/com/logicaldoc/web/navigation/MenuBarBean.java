@@ -2,6 +2,7 @@ package com.logicaldoc.web.navigation;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;
@@ -42,6 +43,8 @@ public class MenuBarBean {
 
 	// list for the dynamic menus w/ getter & setter
 	protected List<MenuItem> model = new ArrayList<MenuItem>();
+
+	protected List<MenuItem> breadcrumb = new ArrayList<MenuItem>();
 
 	private NavigationBean navigation;
 
@@ -93,6 +96,19 @@ public class MenuBarBean {
 
 		if (StringUtils.isNotEmpty(menu.getContent().getTemplate())) {
 			navigation.setSelectedPanel(menu.getContent());
+
+			// Prepare the new breadcrumb
+			breadcrumb.clear();
+			breadcrumb.add(menu);
+
+			MenuItem current = menu;
+			while (current.getParent() != null && current.getParent() instanceof MenuItem) {
+				current = (MenuItem) current.getParent();
+				breadcrumb.add(current);
+			}
+			
+			// revert the list
+			Collections.reverse(breadcrumb);
 		}
 	}
 
@@ -129,8 +145,8 @@ public class MenuBarBean {
 		page.setDisplayText(Messages.getMessage("dashboard"));
 		page.setIcon(style.getImagePath("home.png"));
 
-		MenuItem item = createMenuItem(" " + Messages.getMessage("dashboard"), null, "#{menuBar.primaryListener}", null,
-		null, style.getImagePath("home.png"), false, null, null, page);
+		MenuItem item = createMenuItem(" " + Messages.getMessage("dashboard"), null, "#{menuBar.primaryListener}",
+				null, null, style.getImagePath("home.png"), false, null, null, page);
 		model.add(item);
 
 		try {
@@ -175,6 +191,12 @@ public class MenuBarBean {
 		MenuItem item;
 		page = new PageContentBean("m-" + Long.toString(menu.getId()));
 
+		if (menu.getType() == Menu.MENUTYPE_MENU) {
+			page.setMenu(menu);
+			page.setContentTitle(Messages.getMessage(menu.getText()));
+			page.setText(menu.getText());
+		}
+
 		if (StringUtils.isNotEmpty(menu.getRef())) {
 			page.setTemplate(menu.getRef());
 		}
@@ -182,7 +204,7 @@ public class MenuBarBean {
 		page.setContentTitle(Messages.getMessage(menu.getText()));
 		page.setIcon(style.getImagePath(menu.getIcon()));
 
-		item = createMenuItem(" " + Messages.getMessage(menu.getText()), "m-" + Long.toString(menu.getId()),
+		item = createMenuItem(Messages.getMessage(menu.getText()), "m-" + Long.toString(menu.getId()),
 				"#{menuBar.primaryListener}", null, null, (menu.getIcon() != null) ? style.getImagePath(menu.getIcon())
 						: null, false, null, null, page);
 
@@ -261,5 +283,9 @@ public class MenuBarBean {
 
 	public NavigationBean getNavigation() {
 		return navigation;
+	}
+
+	public List<MenuItem> getBreadcrumb() {
+		return breadcrumb;
 	}
 }

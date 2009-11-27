@@ -270,7 +270,7 @@ em { /*font-size:14px;*/
 	background-repeat: repeat-x;
 	background-attachment: scroll;
 	background-position: 0% 0%;
-	padding-top: 10px;
+	padding-top: 20px;
 	/*padding-right: 27px;
 	padding-bottom: 0pt;
 	padding-left: 27px; */
@@ -1867,7 +1867,7 @@ homePlainTblColHdr1 homePlainTblHdr
 
 #breadcrumb {
 	position: absolute;
-	top: 105px;
+	top: 102px;
 	left: 20px;
 	z-index: 10;
 }
