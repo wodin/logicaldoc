@@ -1549,11 +1549,14 @@ DIV#center {
 /* TOP-menu Highlight
 /* Barra principale colore sfondo */
 .LDHightlightItem .iceCmdLnk {
-	background-color: #ff8723;
+	background-color: transparent;
 }
 
 .LDHightlightItem a {
-	background:url(images/nav1_sep.gif) no-repeat 100% 0;
+	background-image: url(images/nav1_active.gif);
+	background-repeat: repeat-x;
+	background-attachment: scroll;
+	background-position: 0pt 100%;
 	border-right: none; 
 	height: 20px;
 	padding-top: 5px;
@@ -1572,8 +1575,10 @@ DIV#center {
 
 /* Barra principale colore sfondo menu hover */
 .LDHightlightItem a:hover {
-	background:url(images/nav1_sep.gif) no-repeat 100% 0;
-	background-color: #ff8723;
+	background-image: url(images/nav1_active.gif);
+	background-repeat: repeat-x;
+	background-attachment: scroll;
+	background-position: 0pt 100%;
 	border-right: none; 
 }
 
