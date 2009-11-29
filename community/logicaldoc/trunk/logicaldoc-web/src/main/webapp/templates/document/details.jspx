@@ -107,7 +107,7 @@
 							styleClass="immutable" value=" #{documentRecord.displayTitle}" />
 					</ice:outputLink>
 				</ice:panelGroup>
-				<ice:menuPopup id="pop" value="#{documentRecord.docId}"
+				<ice:menuPopup styleClass="documentMenu" id="pop" value="#{documentRecord.docId}"
 					orientation="vertical" rendered="#{documentRecord.documentFound}">
 					<ice:menuItems value="#{documentRecord.model}" />
 				</ice:menuPopup>
