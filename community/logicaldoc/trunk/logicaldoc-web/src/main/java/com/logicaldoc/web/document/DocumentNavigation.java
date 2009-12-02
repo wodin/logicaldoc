@@ -205,7 +205,8 @@ public class DocumentNavigation extends NavigationBean {
 			}
 		} else {
 			selectDirectory(getSelectedDir());
-			directoryModel.reload();
+			if (directoryModel != null)
+				directoryModel.reload();
 		}
 	}
 
@@ -287,7 +288,8 @@ public class DocumentNavigation extends NavigationBean {
 		recordsManager.selectDirectory(directory.getMenu().getId());
 		setSelectedPanel(new PageContentBean(getViewMode()));
 
-		if (directoryModel != null){
+		if (directoryModel != null) {
+			directoryModel.reload();
 			directoryModel.selectDirectory(directory);
 			nodeClicked();
 		}
@@ -393,11 +395,6 @@ public class DocumentNavigation extends NavigationBean {
 				FacesContext.getCurrentInstance(), log));
 		form.setDirectory(getSelectedDir());
 
-		if ("simple".equals(getFolderView())) {
-			loadTree();
-		} else {
-
-		}
 		return null;
 	}
 
@@ -456,8 +453,6 @@ public class DocumentNavigation extends NavigationBean {
 		form.setMenuGroup(groups);
 		form.setFolderName("");
 
-		if ("simple".equals(getFolderView()))
-			loadTree();
 		return null;
 	}
 
@@ -571,8 +566,8 @@ public class DocumentNavigation extends NavigationBean {
 	public void nodeClicked() {
 		if (FOLDER_VIEW_TREE.equals(getFolderView())) {
 			DefaultMutableTreeNode node = treeComponent.getNavigatedNode();
-			if(node==null)
-				node=treeComponent.getCurrentNode();
+			if (node == null)
+				node = treeComponent.getCurrentNode();
 			if (node != null) {
 				IceUserObject userObject = (IceUserObject) node.getUserObject();
 				if (userObject.isExpanded()) {
