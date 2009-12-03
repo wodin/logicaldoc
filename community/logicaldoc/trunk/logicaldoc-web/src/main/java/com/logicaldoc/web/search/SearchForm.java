@@ -430,7 +430,6 @@ public class SearchForm extends SortableList {
 		template = null;
 		maxHits = hitsPerBlock;
 		searchHits();
-		showLastSearch();
 		return null;
 	}
 
@@ -445,6 +444,7 @@ public class SearchForm extends SortableList {
 	public String showLastSearch() {
 		PageContentBean page = new PageContentBean(getViewMode(), "search/" + getViewMode());
 		page.setContentTitle(Messages.getMessage("searches"));
+		page.setText(Messages.getMessage("searches"));
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		page.setIcon(style.getImagePath("search.png"));
 		menuBar.selectItem("m-18", page);
@@ -570,12 +570,7 @@ public class SearchForm extends SortableList {
 			}
 
 			setDocumentResult(docResult);
-
-			PageContentBean page = new PageContentBean(getViewMode(), "search/" + getViewMode());
-			page.setContentTitle(Messages.getMessage("search.advanced"));
-			StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
-			page.setIcon(style.getImagePath("search.png"));
-			menuBar.selectItem("m-15", page);
+			showLastSearch();
 		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
