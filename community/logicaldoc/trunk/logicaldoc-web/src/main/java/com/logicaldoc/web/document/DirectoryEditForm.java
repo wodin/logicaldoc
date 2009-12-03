@@ -73,6 +73,12 @@ public class DirectoryEditForm {
 					dao.store(directory.getMenu(), history);
 					documentNavigation.refresh();
 					documentNavigation.selectDirectory(directory);
+
+					if (DocumentNavigation.FOLDER_VIEW_TREE.equals(documentNavigation.getFolderView())) {
+						Directory dir = (Directory) documentNavigation.getDirectoryModel().getSelectedNode()
+								.getUserObject();
+						dir.setDisplayText(folderName);
+					}
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
