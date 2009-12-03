@@ -360,6 +360,9 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	 * @param node the leaf node to expand
 	 */
 	private void expandNodePath(DefaultMutableTreeNode node) {
+		if (node == null)
+			return;
+		
 		IceUserObject obj = (IceUserObject) node.getUserObject();
 		obj.setExpanded(true);
 

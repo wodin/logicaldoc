@@ -63,7 +63,7 @@ import com.logicaldoc.web.util.FacesUtil;
  */
 public class DocumentNavigation extends NavigationBean {
 
-	private static final String FOLDER_VIEW_TREE = "tree";
+	public static final String FOLDER_VIEW_TREE = "tree";
 
 	protected static Log log = LogFactory.getLog(DocumentNavigation.class);
 
@@ -289,7 +289,6 @@ public class DocumentNavigation extends NavigationBean {
 		setSelectedPanel(new PageContentBean(getViewMode()));
 
 		if (directoryModel != null) {
-			directoryModel.reload();
 			directoryModel.selectDirectory(directory);
 			nodeClicked();
 		}
