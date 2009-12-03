@@ -17,12 +17,6 @@
     id="insertDirForm" style="width: 95%">
 
     <ice:panelGroup styleClass="formBorderHighlight">
-        <h3>
-            <ice:outputText value="#{msgs['msg.jsp.createfolder']}" />
-            <br />
-            <br />
-        </h3>
-
         <ice:panelGroup>
             <!-- Core data -->
             <ice:panelGroup>
