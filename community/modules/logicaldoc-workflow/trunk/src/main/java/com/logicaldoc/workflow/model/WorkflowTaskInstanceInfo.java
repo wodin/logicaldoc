@@ -26,18 +26,23 @@ public class WorkflowTaskInstanceInfo extends WorkflowTaskInstance {
 
 		workflowInstance.getProperties().get(WorkflowConstants.VAR_TEMPLATE);
 
-		String taskDescription = templateService.transformWorkflowTask(workflowTask, workflowInstance, this,
-				workflowTask.getDescription());
+		if (workflowTask != null) {
+			String taskDescription = templateService.transformWorkflowTask(workflowTask, workflowInstance, this,
+					workflowTask.getDescription());
 
-		getProperties().put(WorkflowConstants.VAR_DESCRIPTION, taskDescription);
+			getProperties().put(WorkflowConstants.VAR_DESCRIPTION, taskDescription);
 
-		String taskDueDateValue = templateService.transformWorkflowTask(workflowTask, workflowInstance, this,
-				workflowTask.getDueDateValue().toString());
+			String taskDueDateValue = templateService.transformWorkflowTask(workflowTask, workflowInstance, this,
+					workflowTask.getDueDateValue().toString());
 
-		String taskDueDateUnit = templateService.transformWorkflowTask(workflowTask, workflowInstance, this,
-				workflowTask.getDueDateUnit());
+			String taskDueDateUnit = templateService.transformWorkflowTask(workflowTask, workflowInstance, this,
+					workflowTask.getDueDateUnit());
 
-		getProperties().put(WorkflowConstants.VAR_DUEDATE, taskDueDateValue + " " + taskDueDateUnit);
+			getProperties().put(WorkflowConstants.VAR_DUEDATE, taskDueDateValue + " " + taskDueDateUnit);
+		}else{
+			getProperties().put(WorkflowConstants.VAR_DESCRIPTION, "");
+			getProperties().put(WorkflowConstants.VAR_DUEDATE, "");
+		}
 	}
 
 	@Override

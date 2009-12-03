@@ -61,7 +61,7 @@
 
 
 				<ice:panelTab id="phase2" rendered="true" disabled="true"
-					label="Workflow Settings">
+					label="#{msgs['workflow.wizard_tab_workflowsettings']}">
 					<div>
 						<ice:panelGroup style="width: 100%;">
 											
