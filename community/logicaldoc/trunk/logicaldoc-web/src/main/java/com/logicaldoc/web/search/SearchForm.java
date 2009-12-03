@@ -48,7 +48,7 @@ import com.logicaldoc.web.document.Directory;
 import com.logicaldoc.web.document.DirectoryTreeModel;
 import com.logicaldoc.web.document.DocumentRecord;
 import com.logicaldoc.web.i18n.Messages;
-import com.logicaldoc.web.navigation.NavigationBean;
+import com.logicaldoc.web.navigation.MenuBarBean;
 import com.logicaldoc.web.navigation.PageContentBean;
 
 /**
@@ -124,7 +124,7 @@ public class SearchForm extends SortableList {
 
 	private Collection<SelectItem> extendedAttributesItems = new ArrayList<SelectItem>();
 
-	private NavigationBean navigation;
+	private MenuBarBean menuBar;
 
 	private Search lastSearch = null;
 
@@ -429,7 +429,9 @@ public class SearchForm extends SortableList {
 		excludeFromResult = null;
 		template = null;
 		maxHits = hitsPerBlock;
-		return searchHits();
+		searchHits();
+		showLastSearch();
+		return null;
 	}
 
 	/**
@@ -440,6 +442,15 @@ public class SearchForm extends SortableList {
 		return searchHits();
 	}
 
+	public String showLastSearch() {
+		PageContentBean page = new PageContentBean(getViewMode(), "search/" + getViewMode());
+		page.setContentTitle(Messages.getMessage("searches"));
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
+		page.setIcon(style.getImagePath("search.png"));
+		menuBar.selectItem("m-18", page);
+		return null;
+	}
+
 	/**
 	 * Execute the search.
 	 * 
@@ -448,136 +459,127 @@ public class SearchForm extends SortableList {
 	 * </p>
 	 */
 	public String searchHits() {
+		try {
+			long userId = SessionManagement.getUserId();
 
-		if (SessionManagement.isValid()) {
+			SearchOptions opt = new SearchOptions();
+			ArrayList<String> fields = new ArrayList<String>();
 
-			try {
-				long userId = SessionManagement.getUserId();
-
-				SearchOptions opt = new SearchOptions();
-				ArrayList<String> fields = new ArrayList<String>();
-
-				if (isContent()) {
-					fields.add(LuceneDocument.FIELD_CONTENT);
-				}
-
-				if (isTags()) {
-					fields.add(LuceneDocument.FIELD_TAGS);
-				}
-
-				if (isSource()) {
-					fields.add(LuceneDocument.FIELD_SOURCE);
-				}
-
-				if (isSourceAuthor()) {
-					fields.add(LuceneDocument.FIELD_SOURCE_AUTHOR);
-				}
-
-				if (isSourceType()) {
-					fields.add(LuceneDocument.FIELD_SOURCE_TYPE);
-				}
-
-				if (isCoverage()) {
-					fields.add(LuceneDocument.FIELD_COVERAGE);
-				}
-
-				if (isTitle()) {
-					fields.add(LuceneDocument.FIELD_TITLE);
-				}
-
-				if (isCustomId()) {
-					fields.add(LuceneDocument.FIELD_CUSTOM_ID);
-				}
-
-				if (template != null && template.longValue() > 0) {
-					opt.setTemplate(template);
-					for (String attribute : extendedAttributes) {
-						fields.add("ext_" + attribute);
-					}
-				} else {
-					opt.setTemplate(null);
-				}
-
-				String[] flds = (String[]) fields.toArray(new String[fields.size()]);
-				opt.setFields(flds);
-
-				ArrayList<String> languages = new ArrayList<String>();
-
-				if ("all".equals(language)) {
-					List<String> langs = LanguageManager.getInstance().getLanguagesAsString();
-					languages.addAll(langs);
-				} else {
-					languages.add(language);
-				}
-
-				String[] langs = (String[]) languages.toArray(new String[languages.size()]);
-				opt.setLanguages(langs);
-
-				opt.setFuzzy(isFuzzy());
-				opt.setQueryStr(getQuery(), getPhrase(), getAny(), getNots());
-				opt.setFormat(getFormat());
-
-				if ((getPublishingDateFrom() != null) && (getPublishingDateTo() != null)) {
-					opt.setDateFrom(getPublishingDateFrom());
-					opt.setDateTo(getPublishingDateTo());
-				}
-				if ((getSourceDateFrom() != null) && (getSourceDateTo() != null)) {
-					opt.setSourceDateFrom(getSourceDateFrom());
-					opt.setSourceDateTo(getSourceDateTo());
-				}
-				if ((getCreationDateFrom() != null) && (getCreationDateTo() != null)) {
-					opt.setCreationFrom(getCreationDateFrom());
-					opt.setCreationTo(getCreationDateTo());
-				}
-
-				// The user inputs sizes in KB while in the index we use bytes
-				if (getSizeMin() != null && getSizeMin().intValue() > 0)
-					opt.setSizeMin(getSizeMin() * 1024);
-				if (getSizeMax() != null && getSizeMax().intValue() > 0)
-					opt.setSizeMax(getSizeMax() * 1024);
-				opt.setUserId(userId);
-
-				if (StringUtils.isNotEmpty(getPath())) {
-					opt.setPath(getPath());
-					{
-						if (isSearchInSubPath())
-							opt.setSearchInSubPath(true);
-					}
-				}
-
-				Locale searchLocale = "all".equals(language) ? SessionManagement.getLocale() : LocaleUtil
-						.toLocale(language);
-				lastSearch = new Search(opt, searchLocale);
-				lastSearch.setMaxHits(maxHits);
-
-				List<Result> result = lastSearch.search();
-
-				List<DocumentResult> docResult = new ArrayList<DocumentResult>();
-
-				for (Result myResult : result) {
-					if (excludeFromResult != null && excludeFromResult.longValue() == myResult.getDocId())
-						continue;
-					DocumentResult dr = new DocumentResult(myResult);
-					docResult.add(dr);
-				}
-
-				setDocumentResult(docResult);
-
-				// PageContentBean page = new PageContentBean("result",
-				// "search/result");
-				PageContentBean page = new PageContentBean(getViewMode(), "search/" + getViewMode());
-				StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
-				page.setIcon(style.getImagePath("search.png"));
-				page.setContentTitle(Messages.getMessage("search.result"));
-				navigation.setSelectedPanel(page);
-			} catch (Throwable e) {
-				logger.error(e.getMessage(), e);
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
+			if (isContent()) {
+				fields.add(LuceneDocument.FIELD_CONTENT);
 			}
-		} else {
-			return "login";
-		}
 
+			if (isTags()) {
+				fields.add(LuceneDocument.FIELD_TAGS);
+			}
+
+			if (isSource()) {
+				fields.add(LuceneDocument.FIELD_SOURCE);
+			}
+
+			if (isSourceAuthor()) {
+				fields.add(LuceneDocument.FIELD_SOURCE_AUTHOR);
+			}
+
+			if (isSourceType()) {
+				fields.add(LuceneDocument.FIELD_SOURCE_TYPE);
+			}
+
+			if (isCoverage()) {
+				fields.add(LuceneDocument.FIELD_COVERAGE);
+			}
+
+			if (isTitle()) {
+				fields.add(LuceneDocument.FIELD_TITLE);
+			}
+
+			if (isCustomId()) {
+				fields.add(LuceneDocument.FIELD_CUSTOM_ID);
+			}
+
+			if (template != null && template.longValue() > 0) {
+				opt.setTemplate(template);
+				for (String attribute : extendedAttributes) {
+					fields.add("ext_" + attribute);
+				}
+			} else {
+				opt.setTemplate(null);
+			}
+
+			String[] flds = (String[]) fields.toArray(new String[fields.size()]);
+			opt.setFields(flds);
+
+			ArrayList<String> languages = new ArrayList<String>();
+
+			if ("all".equals(language)) {
+				List<String> langs = LanguageManager.getInstance().getLanguagesAsString();
+				languages.addAll(langs);
+			} else {
+				languages.add(language);
+			}
+
+			String[] langs = (String[]) languages.toArray(new String[languages.size()]);
+			opt.setLanguages(langs);
+
+			opt.setFuzzy(isFuzzy());
+			opt.setQueryStr(getQuery(), getPhrase(), getAny(), getNots());
+			opt.setFormat(getFormat());
+
+			if ((getPublishingDateFrom() != null) && (getPublishingDateTo() != null)) {
+				opt.setDateFrom(getPublishingDateFrom());
+				opt.setDateTo(getPublishingDateTo());
+			}
+			if ((getSourceDateFrom() != null) && (getSourceDateTo() != null)) {
+				opt.setSourceDateFrom(getSourceDateFrom());
+				opt.setSourceDateTo(getSourceDateTo());
+			}
+			if ((getCreationDateFrom() != null) && (getCreationDateTo() != null)) {
+				opt.setCreationFrom(getCreationDateFrom());
+				opt.setCreationTo(getCreationDateTo());
+			}
+
+			// The user inputs sizes in KB while in the index we use bytes
+			if (getSizeMin() != null && getSizeMin().intValue() > 0)
+				opt.setSizeMin(getSizeMin() * 1024);
+			if (getSizeMax() != null && getSizeMax().intValue() > 0)
+				opt.setSizeMax(getSizeMax() * 1024);
+			opt.setUserId(userId);
+
+			if (StringUtils.isNotEmpty(getPath())) {
+				opt.setPath(getPath());
+				{
+					if (isSearchInSubPath())
+						opt.setSearchInSubPath(true);
+				}
+			}
+
+			Locale searchLocale = "all".equals(language) ? SessionManagement.getLocale() : LocaleUtil
+					.toLocale(language);
+			lastSearch = new Search(opt, searchLocale);
+			lastSearch.setMaxHits(maxHits);
+
+			List<Result> result = lastSearch.search();
+
+			List<DocumentResult> docResult = new ArrayList<DocumentResult>();
+
+			for (Result myResult : result) {
+				if (excludeFromResult != null && excludeFromResult.longValue() == myResult.getDocId())
+					continue;
+				DocumentResult dr = new DocumentResult(myResult);
+				docResult.add(dr);
+			}
+
+			setDocumentResult(docResult);
+
+			PageContentBean page = new PageContentBean(getViewMode(), "search/" + getViewMode());
+			page.setContentTitle(Messages.getMessage("search.advanced"));
+			StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
+			page.setIcon(style.getImagePath("search.png"));
+			menuBar.selectItem("m-15", page);
+		} catch (Throwable e) {
+			logger.error(e.getMessage(), e);
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
+		}
 		return null;
 	}
 
@@ -732,17 +734,19 @@ public class SearchForm extends SortableList {
 		page.setContentTitle(Messages.getMessage("search.advanced"));
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		page.setIcon(style.getImagePath("search.png"));
-		navigation.setSelectedPanel(page);
-
+		menuBar.selectItem("m-15", page);
 		return null;
 	}
 
-	public void setNavigation(NavigationBean navigation) {
-		this.navigation = navigation;
+	public void setMenuBar(MenuBarBean menuBar) {
+		this.menuBar = menuBar;
 	}
 
 	public boolean isMoreHitsPresent() {
-		return lastSearch.isMoreHitsPresent();
+		if (lastSearch != null)
+			return lastSearch.isMoreHitsPresent();
+		else
+			return false;
 	}
 
 	public int getHitsPerBlock() {
@@ -750,11 +754,17 @@ public class SearchForm extends SortableList {
 	}
 
 	public int getEstimatedHitsNumber() {
-		return lastSearch.getEstimatedHitsNumber();
+		if (lastSearch != null)
+			return lastSearch.getEstimatedHitsNumber();
+		else
+			return 0;
 	}
 
 	public long getExecTime() {
-		return lastSearch.getExecTime();
+		if (lastSearch != null)
+			return lastSearch.getExecTime();
+		else
+			return 0;
 	}
 
 	public Date getPublishingDateFrom() {
@@ -1043,7 +1053,7 @@ public class SearchForm extends SortableList {
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		page.setIcon(style.getImagePath("search.png"));
 		page.setContentTitle(Messages.getMessage("search.result"));
-		navigation.setSelectedPanel(page);
+		menuBar.selectItem("m-15", page);
 	}
 
 	public void setViewMode(String viewModeP) {

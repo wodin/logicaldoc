@@ -3,10 +3,10 @@ package com.logicaldoc.web.navigation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.faces.component.UIComponent;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,7 +14,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.icesoft.faces.component.menubar.MenuItems;
-import com.icesoft.faces.context.effects.Highlight;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
@@ -49,6 +48,9 @@ public class MenuBarBean {
 	protected List<MenuItem> model = new ArrayList<MenuItem>();
 
 	protected List<MenuItem> breadcrumb = new ArrayList<MenuItem>();
+
+	// For fast items retrieval
+	protected Map<String, MenuItem> itemCache = new HashMap<String, MenuItem>();
 
 	private NavigationBean navigation;
 
@@ -90,24 +92,42 @@ public class MenuBarBean {
 	}
 
 	/**
+	 * Selects the menu item, using the item ID but shows the passede page
+	 * content(if any).
+	 * 
+	 * @param menu The item to open
+	 * @param page Overrides what specified by the menu
+	 */
+	public void selectItem(String itemId, PageContentBean page) {
+		MenuItem item = itemCache.get(itemId);
+		if (item != null)
+			selectItem(item, page);
+	}
+
+	/**
 	 * Identify the ID of the element that fired the event and return it in a
 	 * form suitable for display.
 	 * 
 	 * @param e the event that fired the listener
 	 */
 	public void primaryListener(ActionEvent e) {
-		
 		MenuItem menu = (MenuItem) e.getSource();
+		selectItem(menu, null);
+	}
 
-		// highlight 2nd level parent menu
-		try {
-			highlightSecondLevelMenu(menu);
-		} catch (RuntimeException e1) {
-			e1.printStackTrace();
-		}
-		
-		if (StringUtils.isNotEmpty(menu.getContent().getTemplate())) {
-			navigation.setSelectedPanel(menu.getContent());
+	/**
+	 * Selects the menu item and shows the passed page content(if any)
+	 * 
+	 * @param menu The item to open
+	 * @param page Overrides what specified by the menu
+	 */
+	public void selectItem(MenuItem menu, PageContentBean page) {
+		PageContentBean content = menu.getContent();
+		if (page != null)
+			content = page;
+
+		if (StringUtils.isNotEmpty(content.getTemplate())) {
+			navigation.setSelectedPanel(content);
 
 			// Prepare the new breadcrumb
 			breadcrumb.clear();
@@ -118,24 +138,31 @@ public class MenuBarBean {
 				current = (MenuItem) current.getParent();
 				breadcrumb.add(current);
 			}
-			
+
 			// revert the list
 			Collections.reverse(breadcrumb);
+
+			// highlight 2nd level parent menu
+			try {
+				highlightParentMenu(menu);
+			} catch (RuntimeException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 
-	private void highlightSecondLevelMenu(MenuItem menu) {
-		
+	private void highlightParentMenu(MenuItem menu) {
+
 		// I get the second level menu
 		MenuItem current = menu;
-		
+
 		while (current.getParent() != null && current.getParent() instanceof MenuItem) {
 			current = (MenuItem) current.getParent();
 		}
-		
+
 		// I get the father to set all the children highlight = false
 		MenuItems root = (MenuItems) current.getParent();
-		
+
 		List topMenus = root.prepareChildren();
 		for (Object object : topMenus) {
 			if (object instanceof MenuItem) {
@@ -143,7 +170,7 @@ public class MenuBarBean {
 				topMenu.setStyleClass(null);
 			}
 		}
-		
+
 		// activates the hightlight on the menu selected
 		current.setStyleClass("LDHightlight");
 	}
@@ -172,8 +199,9 @@ public class MenuBarBean {
 	 * @return
 	 */
 	protected void createMenuItems() {
-
 		model.clear();
+		itemCache.clear();
+
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		long userId = SessionManagement.getUserId();
 		PageContentBean page = new PageContentBean("home", "home");
@@ -181,9 +209,10 @@ public class MenuBarBean {
 		page.setDisplayText(Messages.getMessage("dashboard"));
 		page.setIcon(style.getImagePath("home.png"));
 
-		MenuItem item = createMenuItem(" " + Messages.getMessage("dashboard"), null, "#{menuBar.primaryListener}",
-				null, null, style.getImagePath("home.png"), false, null, null, page);
+		MenuItem item = createMenuItem(Messages.getMessage("dashboard"), null, "#{menuBar.primaryListener}", null,
+				null, style.getImagePath("home.png"), false, null, null, page);
 		model.add(item);
+		itemCache.put(item.getId(), item);
 
 		try {
 			if (userId > 0) {
@@ -199,30 +228,32 @@ public class MenuBarBean {
 			logger.error(t.getMessage(), t);
 		}
 
-		MenuItem helpMenu = createMenuItem(" " + Messages.getMessage("help"), "m-help", "#{menuBar.primaryListener}",
-				null, null, style.getImagePath("help.png"), false, null, null);
+		MenuItem helpMenu = createMenuItem(Messages.getMessage("help"), "m-help", "#{menuBar.primaryListener}", null,
+				null, style.getImagePath("help.png"), false, null, null);
 
 		String helpUrl = style.getProductHelp();
-		helpMenu.getChildren().add(
-				createMenuItem(" " + Messages.getMessage("help.online"), "m-helpcontents", null, null, helpUrl, style
-						.getImagePath("help.png"), false, "_blank", null));
-		helpMenu.getChildren().add(
-				createMenuItem(" " + Messages.getMessage("bug.report"), "m-bugreport", null, null,
-						"http://bugs.logicaldoc.com", style.getImagePath("bug.png"), false, "_blank", null));
+		item = createMenuItem(Messages.getMessage("help.online"), "m-helpcontents", null, null, helpUrl, style
+				.getImagePath("help.png"), false, "_blank", null);
+		helpMenu.getChildren().add(item);
+		itemCache.put(item.getId(), item);
+
+		item = createMenuItem(Messages.getMessage("bug.report"), "m-bugreport", null, null,
+				"http://bugs.logicaldoc.com", style.getImagePath("bug.png"), false, "_blank", null);
+		helpMenu.getChildren().add(item);
+		itemCache.put(item.getId(), item);
 
 		PageContentBean infoPage = new PageContentBean("info", "info");
 		infoPage.setContentTitle(Messages.getMessage("info"));
 
 		String product = style.getProductName();
-		helpMenu.getChildren().add(
-				createMenuItem(" " + Messages.getMessage("about") + " " + product, "m-about",
-						"#{menuBar.primaryListener}", null, null, style.getImagePath("info.png"), false, null,
-						"LDLargeMenuItem", infoPage));
+		item = createMenuItem(Messages.getMessage("about") + " " + product, "m-about", "#{menuBar.primaryListener}",
+				null, null, style.getImagePath("info.png"), false, null, "LDLargeMenuItem", infoPage);
+		helpMenu.getChildren().add(item);
+		itemCache.put(item.getId(), item);
 		model.add(helpMenu);
 	}
 
 	private void createMenuStructure(Menu menu, MenuItem parent) {
-		
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		PageContentBean page;
 		MenuItem item;
@@ -250,6 +281,7 @@ public class MenuBarBean {
 		} else {
 			parent.getChildren().add(item);
 		}
+		itemCache.put(item.getId(), item);
 
 		// For 'Documents' menu, skip children
 		if (menu.getId() != Menu.MENUID_DOCUMENTS) {
@@ -270,7 +302,7 @@ public class MenuBarBean {
 
 	protected MenuItem createMenuItem(String label, String id, String actionListener, String action, String link,
 			String icon, boolean immediate, String target, String styleClass, PageContentBean content) {
-		
+
 		MenuItem menuItem = new MenuItem();
 		menuItem.setValue(label);
 
