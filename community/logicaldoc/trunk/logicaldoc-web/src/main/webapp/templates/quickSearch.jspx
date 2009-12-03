@@ -39,7 +39,7 @@ function clearSearch(element, label) {
 							styleClass="searchLink" action="#{searchForm.advanced}" />
 						<br />
 						<ice:commandLink value="#{msgs['search.last']}"
-							styleClass="searchLink" action="#{searchForm.search}" />
+							styleClass="searchLink" action="#{searchForm.showLastSearch}" />
 					</td>
 				</tr>
 				<tr>
