@@ -48,7 +48,8 @@ public class FreemarkerTemplateService implements TemplateService {
 		Template template = null;
 
 		try {
-			template = new Template(UUID.randomUUID().toString() + ".ftl", new StringReader(text), new Configuration());
+			template = new Template(UUID.randomUUID().toString() + ".ftl", text != null ? new StringReader(text) : new StringReader(""),
+					new Configuration());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

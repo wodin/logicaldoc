@@ -28,6 +28,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.web.document.DocumentNavigation;
 import com.logicaldoc.web.document.DocumentRecord;
 import com.logicaldoc.web.document.DocumentsRecordsManager;
+import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.util.FacesUtil;
 import com.logicaldoc.workflow.WorkflowConstants;
 import com.logicaldoc.workflow.WorkflowService;
@@ -110,9 +111,9 @@ public class StartWorkflowWizard implements TabChangeListener {
 	public List<SelectItem> getPriorities() {
 
 		List<SelectItem> priorities = new LinkedList<SelectItem>();
-		priorities.add(new SelectItem(0, "Low"));
-		priorities.add(new SelectItem(1, "Medium"));
-		priorities.add(new SelectItem(2, "High"));
+		priorities.add(new SelectItem(0, Messages.getMessage("low")));
+		priorities.add(new SelectItem(1, Messages.getMessage("medium")));
+		priorities.add(new SelectItem(2, Messages.getMessage("high")));
 
 		return priorities;
 

@@ -20,6 +20,9 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.springmodules.workflow.jbpm31.JbpmCallback;
 import org.springmodules.workflow.jbpm31.JbpmTemplate;
 
+import com.logicaldoc.util.Context;
+import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplate;
+import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO;
 import com.logicaldoc.workflow.exception.WorkflowException;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
@@ -206,15 +209,20 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 
 				List<ProcessDefinition> processDefinitions = context.getGraphSession().findLatestProcessDefinitions();
 				for (ProcessDefinition definition : processDefinitions) {
-
-					definitions.add(WorkflowFactory.createWorkflowDefinition(definition));
-
+					// Must be listed to the user (into the workflow wizard) only the workflow definitions
+					// associated to existing workflow template
+					WorkflowPersistenceTemplateDAO workflowDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
+							.getBean(WorkflowPersistenceTemplateDAO.class);
+					List<String> allTemplateNames = new ArrayList<String>();
+					for (WorkflowPersistenceTemplate template : workflowDao.findAllDeployed()) {
+						allTemplateNames.add(template.getName());
+					}
+					if (allTemplateNames.contains(definition.getName()))
+						definitions.add(WorkflowFactory.createWorkflowDefinition(definition));
 				}
 				return definitions;
 			}
-
 		});
-
 	}
 
 	@Override
