@@ -73,6 +73,8 @@ public class StyleBean {
 
 	private String productYear;
 
+	private String productBugs;
+
 	/**
 	 * Creates a new instance of the StyleBean.
 	 */
@@ -92,21 +94,31 @@ public class StyleBean {
 		try {
 			PropertiesBean context = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 			skin = context.getProperty("skin");
+			
 			productName = context.getProperty("skin." + skin + ".product.name");
 			if (StringUtils.isEmpty(productName))
 				productName = context.getProperty("product.name");
+			
 			productUrl = context.getProperty("skin." + skin + ".product.url");
 			if (StringUtils.isEmpty(productUrl))
 				productUrl = context.getProperty("product.url");
+			
 			productHelp = context.getProperty("skin." + skin + ".product.help");
 			if (StringUtils.isEmpty(productHelp))
 				productHelp = context.getProperty("product.help");
+			
+			productBugs = context.getProperty("skin." + skin + ".product.bugs");
+			if (StringUtils.isEmpty(productBugs))
+				productBugs = context.getProperty("product.bugs");
+			
 			productYear = context.getProperty("skin." + skin + ".product.year");
 			if (StringUtils.isEmpty(productYear))
 				productYear = context.getProperty("product.year");
+			
 			productVendor = context.getProperty("skin." + skin + ".product.vendor");
 			if (StringUtils.isEmpty(productVendor))
 				productVendor = context.getProperty("product.vendor");
+			
 			productRelease = context.getProperty("skin." + skin + ".product.release");
 			if (StringUtils.isEmpty(productRelease))
 				productRelease = context.getProperty("product.release");
@@ -246,5 +258,13 @@ public class StyleBean {
 
 	public String getProductVendor() {
 		return productVendor;
+	}
+
+	public String getProductBugs() {
+		return productBugs;
+	}
+
+	public void setProductBugs(String productBugs) {
+		this.productBugs = productBugs;
 	}
 }
