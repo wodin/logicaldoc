@@ -237,8 +237,9 @@ public class MenuBarBean {
 		helpMenu.getChildren().add(item);
 		itemCache.put(item.getId(), item);
 
+		String bugsUrl = style.getProductBugs();
 		item = createMenuItem(Messages.getMessage("bug.report"), "m-bugreport", null, null,
-				"http://bugs.logicaldoc.com", style.getImagePath("bug.png"), false, "_blank", null);
+				bugsUrl, style.getImagePath("bug.png"), false, "_blank", null);
 		helpMenu.getChildren().add(item);
 		itemCache.put(item.getId(), item);
 
