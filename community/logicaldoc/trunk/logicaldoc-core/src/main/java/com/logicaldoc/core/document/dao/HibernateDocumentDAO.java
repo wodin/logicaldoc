@@ -686,7 +686,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public long getDocumentCount(boolean computeDeleted) {
+	public long count(boolean computeDeleted) {
 		long count = 0;
 		try {
 			String query = "select count(*) from ld_document A ";
@@ -809,5 +809,38 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		transaction.setNotified(0);
 
 		historyDAO.store(transaction);
+	}
+
+	@Override
+	public long countByIndexed(int indexed) {
+		long count = 0;
+		try {
+			String query = "select count(*) from ld_document A where A.ld_deleted=0 ";
+			query += " and A.ld_indexed=" + indexed;
+
+			Connection con = null;
+			Statement stmt = null;
+			ResultSet rs = null;
+
+			try {
+				con = getSession().connection();
+				stmt = con.createStatement();
+				rs = stmt.executeQuery(query.toString());
+				while (rs.next()) {
+					count = rs.getLong(1);
+				}
+			} finally {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return count;
 	}
 }
