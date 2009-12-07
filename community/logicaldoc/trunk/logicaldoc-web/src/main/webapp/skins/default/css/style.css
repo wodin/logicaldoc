@@ -216,7 +216,7 @@ em { /*font-size:14px;*/
 	vertical-align: top;
 }
 
-.contentLayoutGridColumn { /*border: 1px dashed #CCCCCC;*/
+.contentLayoutGridColumn { 
 	vertical-align: top;
 }
 
@@ -361,6 +361,7 @@ em { /*font-size:14px;*/
 	width: 100%;
 }
 
+/*
 .iceMnuItmLabel,.iceMnuBarItemLabel {
 	font-family: Arial, Helvetica, sans-serif;
 	padding-top: 4px;
@@ -368,7 +369,7 @@ em { /*font-size:14px;*/
 	display: inline;
 	color: #333333;
 	font-size: 12px;
-}
+} */
 
 /* main layout*/
 .selectionLabelColumn {
@@ -1153,11 +1154,6 @@ em { /*font-size:14px;*/
 	color: black;
 }
 
-/* document context menu row selected */
-.documentMenuVrtItem span {
-	color: black;
-}
-
 /*
 ------------ Documents tree ----------
 */
@@ -1724,6 +1720,8 @@ width: 220px;
 /*
 ---------- Various Adjustements for display correctly the Document context menu when document selected -------
 */
+
+/*
 .cntDocumentMenu .iceMnuItm a:hover {
 	color: black;
 	background-color: #2A6CC2;
@@ -1737,6 +1735,7 @@ width: 220px;
 .iceRowSelSelectedMouseOver .cntDocumentMenu span {
 	color: black;
 }
+*/
 
 /*
 --- Home Page -----
@@ -1934,8 +1933,35 @@ homePlainTblColHdr1 homePlainTblHdr
 	border: none;
 }
 
+/* Document Contextual Menu */
 
+.documentVrtTopSubMenu {
+	width: 170px;
+}
+.iceMnuPopVrtItem { 
+    width: 170px;
+}
 
+.documentVrtItem a {
+/*color: #f0f0f0; */
+font-size: 12px;
+padding-left: 5px;
+font-family: "Segoe UI", "Tahoma", "Bitstream Vera Sans", "DejaVu Sans", Arial;
+background-image: url("images/contextMenuBack.gif"); 
+background-repeat: repeat-y;
+}
+
+.documentVrtItem a:hover {
+background-color: none;
+background-image: url("images/contextSelBack.gif");
+background-repeat: repeat-x;
+}
+
+/* document context menu row selected */
+.documentVrtItem span {
+	color: black;
+	margin-left: 7px; 
+}
 
 
 
