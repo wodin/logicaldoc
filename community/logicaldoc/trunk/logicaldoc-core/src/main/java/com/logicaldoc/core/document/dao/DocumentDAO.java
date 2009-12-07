@@ -199,7 +199,7 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * 
 	 * @param computeDeleted If true, even deleted documents are considered
 	 */
-	public long getDocumentCount(boolean computeDeleted);
+	public long count(boolean computeDeleted);
 
 	/**
 	 * Finds all documents by the indexed state. Order by ascending lastModifed
@@ -208,6 +208,11 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @return Collection of all documents
 	 */
 	public List<Document> findByIndexed(int indexed);
+	
+	/**
+	 * Counts the number of documents indexed or not
+	 */
+	public long countByIndexed(int indexed);
 
 	/**
 	 * Restores a previously deleted document

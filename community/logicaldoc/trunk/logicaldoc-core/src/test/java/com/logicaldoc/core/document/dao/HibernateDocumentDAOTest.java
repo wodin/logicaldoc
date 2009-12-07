@@ -327,9 +327,14 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(123701L, dao.getTotalSize(false));
 	}
 
-	public void testGetDocumentCount() {
-		assertEquals(4L, dao.getDocumentCount(true));
-		assertEquals(2L, dao.getDocumentCount(false));
+	public void testCount() {
+		assertEquals(4L, dao.count(true));
+		assertEquals(2L, dao.count(false));
+	}
+
+	public void testCountByIndexed() {
+		assertEquals(1L, dao.countByIndexed(0));
+		assertEquals(1L, dao.countByIndexed(1));
 	}
 
 	public void testRestore() {
