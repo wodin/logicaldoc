@@ -138,7 +138,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	/**
 	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findByUserId(long)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Long> findByUserId(long userId) {
 		Collection<Menu> menus = menuDAO.findByUserId(userId);
 		if (menus.isEmpty())
@@ -160,7 +159,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	/**
 	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findLockedByUserId(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Document> findLockedByUserId(long userId) {
 		return findByWhere("_entity.lockUserId = " + userId + " and not(_entity.status=" + Document.DOC_UNLOCKED + ")",
 				null);
@@ -181,7 +179,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	/**
 	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findDocIdByTag(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Long> findDocIdByTag(String tag) {
 		StringBuilder query = new StringBuilder();
 		query.append("'" + SqlUtil.doubleQuotes(tag) + "'");
@@ -193,7 +190,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return store(doc, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public boolean store(final Document doc, final History transaction) {
 		boolean result = true;
 		try {
@@ -503,13 +499,11 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return coll;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> findDocIdByFolder(long folderId) {
 		return findIdsByWhere("_entity.folder.id = " + Long.toString(folderId), null);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByFolder(long folderId) {
 		return findByWhere("_entity.folder.id = " + Long.toString(folderId), null);
@@ -548,7 +542,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return coll;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByFileNameAndParentFolderId(long folderId, String fileName, Long excludeId) {
 		String query = "_entity.folder.id = " + folderId + " and lower(_entity.fileName) like '"
@@ -558,7 +551,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return findByWhere(query, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findByTitleAndParentFolderId(long folderId, String title, Long excludeId) {
 		String query = "_entity.folder.id = " + folderId + " and lower(_entity.title) like '"
