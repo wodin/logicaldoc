@@ -320,12 +320,15 @@ public class DocumentNavigation extends NavigationBean {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document document = docDao.findById(docId);
 		Menu folder = document.getFolder();
+
+		if (FOLDER_VIEW_TREE.equals(getFolderView()) && getDirectoryModel() != null) {
+			getDirectoryModel().openFolder(folder.getId());
+			getDirectoryModel().selectDirectory(folder.getId());
+		}
+
 		selectDirectory(folder.getId());
 		highlightDocument(docId);
 		setSelectedPanel(new PageContentBean(getViewMode()));
-
-		if (FOLDER_VIEW_TREE.equals(getFolderView()) && getDirectoryModel() != null)
-			getDirectoryModel().openFolder(folder.getId());
 
 		// Show the documents browsing panel
 		NavigationBean navigation = ((NavigationBean) FacesUtil.accessBeanFromFacesContext("navigation", FacesContext
@@ -563,7 +566,7 @@ public class DocumentNavigation extends NavigationBean {
 	}
 
 	public void nodeClicked() {
-		if (FOLDER_VIEW_TREE.equals(getFolderView()) && treeComponent!=null) {
+		if (FOLDER_VIEW_TREE.equals(getFolderView()) && treeComponent != null) {
 			DefaultMutableTreeNode node = treeComponent.getNavigatedNode();
 			if (node == null)
 				node = treeComponent.getCurrentNode();
