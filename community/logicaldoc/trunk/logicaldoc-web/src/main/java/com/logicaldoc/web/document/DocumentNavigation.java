@@ -563,7 +563,7 @@ public class DocumentNavigation extends NavigationBean {
 	}
 
 	public void nodeClicked() {
-		if (FOLDER_VIEW_TREE.equals(getFolderView())) {
+		if (FOLDER_VIEW_TREE.equals(getFolderView()) && treeComponent!=null) {
 			DefaultMutableTreeNode node = treeComponent.getNavigatedNode();
 			if (node == null)
 				node = treeComponent.getCurrentNode();
