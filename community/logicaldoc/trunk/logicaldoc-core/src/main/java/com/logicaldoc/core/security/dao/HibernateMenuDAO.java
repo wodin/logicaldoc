@@ -81,6 +81,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 			saveFolderHistory(menu, transaction);
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error(e.getMessage(), e);
 			result = false;
 		}
@@ -236,7 +237,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	/**
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#isWriteEnable(long, long)
 	 */
-	@SuppressWarnings("unchecked")
 	public boolean isWriteEnable(long menuId, long userId) {
 		return isPermissionEnabled(Permission.WRITE, menuId, userId);
 	}
@@ -296,11 +296,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 	/**
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findMenuIdByUserId(long)
-	 *      <b>NOTE:</b> This implementation performs direct JDBC query, this
-	 *      is required in order to obtain acceptable performances during
-	 *      searches.
+	 *      <b>NOTE:</b> This implementation performs direct JDBC query, this is
+	 *      required in order to obtain acceptable performances during searches.
 	 */
-	@SuppressWarnings( { "unchecked", "deprecation" })
 	public Set<Long> findMenuIdByUserId(long userId) {
 		return findMenuIdByUserIdAndPermission(userId, Permission.READ, null);
 	}
@@ -528,7 +526,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Menu> findByMenuTextAndParentId(String text, long parentId) {
 		return findByWhere("_entity.parentId = " + parentId + " and _entity.text like '" + SqlUtil.doubleQuotes(text)
@@ -604,7 +601,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#isPermissionEnabled(java.lang.String,
 	 *      long, long)
 	 */
-	@SuppressWarnings("unchecked")
 	public boolean isPermissionEnabled(Permission permission, long menuId, long userId) {
 		Set<Permission> permissions = getEnabledPermissions(menuId, userId);
 		return permissions.contains(permission);
@@ -619,7 +615,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Menu findFolder(String folderName, String pathExtended) {
 		List<Menu> specified_menu = findByWhere("_entity.text = '" + SqlUtil.doubleQuotes(folderName)
@@ -801,10 +796,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	public void deleteAll(List<Menu> menus, History transaction) {
 		for (Menu menu : menus) {
 			try {
-				menu.setDeleted(1);
 				History deleteHistory = (History) transaction.clone();
 				deleteHistory.setEvent(History.EVENT_FOLDER_DELETED);
-				store(menu, deleteHistory);
+				delete(menu.getId(), deleteHistory);
 			} catch (CloneNotSupportedException e) {
 				log.error(e.getMessage(), e);
 			}
