@@ -48,7 +48,8 @@ import com.logicaldoc.web.util.FacesUtil;
  * <p>
  * The <code>DocumentsRecordsManager</code> class is responsible for
  * constructing the list of <code>DocumentRecord</code> beans which will be
- * bound to a ice:dataTable JSF component. <p/>
+ * bound to a ice:dataTable JSF component.
+ * <p/>
  * <p>
  * Large data sets could be handle by adding a ice:dataPaginator. Alternatively
  * the dataTable could also be hidden and the dataTable could be added to
@@ -698,7 +699,7 @@ public class DocumentsRecordsManager extends SortableList {
 
 	protected void selectHighlightedDocument(long docId) {
 		selection.clear();
-
+		
 		// Iterate of the the list of documents in selected folder, when i find
 		// the one I put it on the list of those selected
 		for (DocumentRecord document : documents) {
