@@ -41,7 +41,8 @@ import com.logicaldoc.web.util.FacesUtil;
 /**
  * The <code>DocumentRecord</code> class contains the base information for an
  * entry in a data table. This class is meant to represent a model and should
- * only contain base document data <p/>
+ * only contain base document data
+ * <p/>
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
@@ -645,7 +646,11 @@ public class DocumentRecord extends MenuBarBean {
 			// Unlock the document; throws an exception if something
 			// goes wrong
 			DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-			documentManager.lock(document.getId(), Document.DOC_LOCKED, SessionManagement.getUser(), null);
+			// Create the document history event
+			History transaction = new History();
+			transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+			transaction.setEvent(History.EVENT_LOCKED);
+			documentManager.lock(document.getId(), Document.DOC_LOCKED, SessionManagement.getUser(), transaction);
 
 			loadDocument();
 			createMenuItems();
