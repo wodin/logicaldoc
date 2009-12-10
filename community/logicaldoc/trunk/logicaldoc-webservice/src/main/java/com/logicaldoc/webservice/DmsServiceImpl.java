@@ -17,12 +17,17 @@ import java.util.TreeSet;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.annotation.Resource;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.cxf.transport.http.AbstractHTTPDestination;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Document;
@@ -59,6 +64,9 @@ import com.logicaldoc.util.TagUtil;
 public class DmsServiceImpl implements DmsService {
 
 	protected static Log log = LogFactory.getLog(DmsServiceImpl.class);
+
+	@Resource
+	private WebServiceContext context;
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#checkin(java.lang.String, long,
@@ -596,8 +604,8 @@ public class DmsServiceImpl implements DmsService {
 	@Override
 	public String update(String sid, long id, String title, String source, String sourceAuthor, String sourceDate,
 			String sourceType, String coverage, String language, String[] tags, String sourceId, String object,
-			String recipient, String templateName, @WebParam(name = "extendedAttribute")
-			Attribute[] extendedAttribute) throws Exception {
+			String recipient, String templateName, @WebParam(name = "extendedAttribute") Attribute[] extendedAttribute)
+			throws Exception {
 		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(id);
@@ -676,7 +684,10 @@ public class DmsServiceImpl implements DmsService {
 	public String login(String username, String password) throws Exception {
 		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
 				AuthenticationChain.class);
-		if (authenticationChain.authenticate(username, password))
+		MessageContext ctx = context.getMessageContext();
+		HttpServletRequest request = (HttpServletRequest) ctx.get(AbstractHTTPDestination.HTTP_REQUEST);
+
+		if (authenticationChain.authenticate(username, password, request.getRemoteAddr()))
 			return AuthenticationChain.getSessionId();
 		else
 			throw new Exception("Unable to create a new session");

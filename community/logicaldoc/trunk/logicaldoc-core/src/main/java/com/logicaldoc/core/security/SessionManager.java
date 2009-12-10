@@ -43,8 +43,7 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	 * @return
 	 */
 	public synchronized String newSession(String username, Object userObject) {
-		UserSession session = new UserSession(username);
-		session.setUserObject(userObject);
+		UserSession session = new UserSession(username, userObject);
 		put(session.getId(), session);
 		log.warn("Created new session " + session.getId() + " for user '" + username + "'");
 		cleanClosedSessions();

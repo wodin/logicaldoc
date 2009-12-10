@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
@@ -58,11 +59,14 @@ public class LoginForm {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
 				AuthenticationChain.class);
-		if (authenticationChain.authenticate(j_username, j_password)) {
+
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
+		
+		if (authenticationChain.authenticate(j_username, j_password, request.getRemoteAddr())) {
 			User user = userDao.findByUserName(j_username);
 			log.info("User " + j_username + " logged in.");
 
-			FacesContext facesContext = FacesContext.getCurrentInstance();
 			Map<String, Object> session = facesContext.getExternalContext().getSessionMap();
 
 			session.put(Constants.AUTH_USERID, user.getId());

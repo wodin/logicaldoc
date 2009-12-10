@@ -144,7 +144,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			if (request.getHeader(DavConstants.HEADER_AUTHORIZATION) != null) {
 				Credentials credentials = AuthenticationUtil.authenticate(webdavRequest);
 				username = credentials.getUserName();
-				String combinedUserId = request.getRemoteHost() + "-" + credentials.getUserName();
+				String combinedUserId = request.getRemoteAddr() + "-" + credentials.getUserName();
 	
 				// Check the credentials
 				if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword())) {
