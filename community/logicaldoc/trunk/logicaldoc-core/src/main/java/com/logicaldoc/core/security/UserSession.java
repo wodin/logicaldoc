@@ -76,17 +76,21 @@ public class UserSession implements Comparable<UserSession> {
 		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_LOGOUT, "", id);
 	}
 
-	UserSession(String userName) {
+	UserSession(String userName, Object userObject) {
 		super();
 		this.id = UUID.randomUUID().toString();
 		this.userName = userName;
+		this.userObject = userObject;
+
 		// Set the userid
 		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
 		User user = userDAO.findByUserName(userName);
 		this.userId = user.getId();
+
 		// Add a user history entry
-		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_LOGIN, "", id);
+		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_LOGIN,
+				userObject != null ? userObject.toString() : "", id);
 	}
 
 	public String getUserName() {
