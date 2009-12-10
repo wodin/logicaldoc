@@ -38,8 +38,11 @@ public class WorkflowTaskInstanceInfo extends WorkflowTaskInstance {
 			String taskDueDateUnit = templateService.transformWorkflowTask(workflowTask, workflowInstance, this,
 					workflowTask.getDueDateUnit());
 
-			getProperties().put(WorkflowConstants.VAR_DUEDATE, taskDueDateValue + " " + taskDueDateUnit);
-		}else{
+			if (taskDueDateValue != null && taskDueDateUnit != null && !taskDueDateUnit.equals(""))
+				getProperties().put(WorkflowConstants.VAR_DUEDATE, taskDueDateValue + " " + taskDueDateUnit);
+			else
+				getProperties().put(WorkflowConstants.VAR_DUEDATE, "");
+		} else {
 			getProperties().put(WorkflowConstants.VAR_DESCRIPTION, "");
 			getProperties().put(WorkflowConstants.VAR_DUEDATE, "");
 		}
