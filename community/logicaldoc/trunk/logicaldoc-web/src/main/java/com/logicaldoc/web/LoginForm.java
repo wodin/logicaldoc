@@ -62,7 +62,7 @@ public class LoginForm {
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-		
+
 		if (authenticationChain.authenticate(j_username, j_password, request.getRemoteAddr())) {
 			User user = userDao.findByUserName(j_username);
 			log.info("User " + j_username + " logged in.");
@@ -76,7 +76,7 @@ public class LoginForm {
 			// Gets language option pressed
 
 			Locale locale = user.getLocale();
-			if (language.equals("default")) {
+			if (language == null || language.equals("default")) {
 				language = user.getLanguage();
 			} else {
 				locale = LocaleUtil.toLocale(language);
