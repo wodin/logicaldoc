@@ -23,8 +23,6 @@ public class SearchOptions {
 
 	private String format = "";
 
-	private boolean fuzzy = false;
-
 	private boolean searchInSubPath = false;
 
 	private long userId = -1;
@@ -69,10 +67,6 @@ public class SearchOptions {
 		return format;
 	}
 
-	public boolean getFuzzy() {
-		return fuzzy;
-	}
-
 	public long getUserId() {
 		return userId;
 	}
@@ -86,18 +80,7 @@ public class SearchOptions {
 	}
 
 	public void setQueryStr(String query, String phrase, String any, String not) {
-		if (fuzzy) {
-			StringParser sp = new StringParser(query);
-			Collection<String> collquery = sp.getWordTable();
-			Iterator<String> iter = collquery.iterator();
-
-			while (iter.hasNext()) {
-				String word = iter.next();
-				queryStr += word + "~ ";
-			}
-		} else {
-			queryStr = query;
-		}
+		queryStr = query;
 
 		if ((phrase != null) && !phrase.equals("")) {
 			queryStr += " \"" + phrase + "\"";
@@ -119,10 +102,6 @@ public class SearchOptions {
 				}
 
 				queryStr += " " + word;
-
-				if (fuzzy) {
-					queryStr += "~";
-				}
 			}
 		}
 
@@ -133,10 +112,6 @@ public class SearchOptions {
 
 	public void setFormat(String form) {
 		format = form;
-	}
-
-	public void setFuzzy(boolean fuz) {
-		fuzzy = fuz;
 	}
 
 	public void setUserId(long userId) {

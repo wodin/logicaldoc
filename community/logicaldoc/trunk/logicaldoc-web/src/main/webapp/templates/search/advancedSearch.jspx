@@ -244,13 +244,8 @@
 				<ice:message for="publishingDateTo" />
 			</ice:panelGroup>
 
-			<ice:panelGroup styleClass="outputLabel">
-				<ice:outputLabel for="fuzzy" value="#{msgs['msg.jsp.fuzzysearch']}" />
-			</ice:panelGroup>
-			<ice:panelGroup>
-				<ice:selectBooleanCheckbox id="fuzzy" value="#{searchForm.fuzzy}"
-					tabindex="1" />
-			</ice:panelGroup>
+			<ice:panelGroup />
+			<ice:panelGroup />
 			<ice:panelGroup>
                     &amp;nbsp;
                 </ice:panelGroup>
