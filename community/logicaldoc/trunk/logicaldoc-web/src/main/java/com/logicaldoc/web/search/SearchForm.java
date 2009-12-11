@@ -98,8 +98,6 @@ public class SearchForm extends SortableList {
 
 	private Date creationDateTo;
 
-	private boolean fuzzy = false;
-
 	private boolean content = true;
 
 	private boolean tags = true;
@@ -219,14 +217,6 @@ public class SearchForm extends SortableList {
 
 	public void setFormat(String format) {
 		this.format = format;
-	}
-
-	public boolean isFuzzy() {
-		return fuzzy;
-	}
-
-	public void setFuzzy(boolean fuzzy) {
-		this.fuzzy = fuzzy;
 	}
 
 	public boolean isTags() {
@@ -410,7 +400,6 @@ public class SearchForm extends SortableList {
 		format = "all";
 		path = null;
 		parentPathDescr = null;
-		fuzzy = false;
 		content = true;
 		tags = true;
 		source = false;
@@ -521,7 +510,6 @@ public class SearchForm extends SortableList {
 			String[] langs = (String[]) languages.toArray(new String[languages.size()]);
 			opt.setLanguages(langs);
 
-			opt.setFuzzy(isFuzzy());
 			opt.setQueryStr(getQuery(), getPhrase(), getAny(), getNots());
 			opt.setFormat(getFormat());
 
@@ -626,7 +614,6 @@ public class SearchForm extends SortableList {
 				format = "all";
 				path = null;
 				parentPathDescr = null;
-				fuzzy = false;
 				content = true;
 				tags = true;
 				source = false;
@@ -703,7 +690,6 @@ public class SearchForm extends SortableList {
 		creationDateTo = null;
 		sizeMin = null;
 		sizeMax = null;
-		fuzzy = false;
 		content = false;
 		tags = false;
 		source = false;
