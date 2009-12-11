@@ -155,13 +155,16 @@
 					</ice:panelGroup>
 				</ice:column>
 			</ice:dataTable>
-
-			<ice:panelGroup style="width:70%">
-				<br />
-				<ldoc:paginator table="documentsList"
-					label="#{msgs['paginator.simple']}" />
-				<br />
-			</ice:panelGroup>
+			<br />
+			<ice:panelGrid columns="2" style="width: 100%;">
+				<ice:panelGroup style="float:left;">
+					<ldoc:paginator table="documentsList"
+						label="#{msgs['paginator.simple']}" />
+					<br />
+				</ice:panelGroup>
+				
+				<ice:panelGroup />
+			</ice:panelGrid>
 		</ice:panelGroup>
 
 		<ice:panelGroup
