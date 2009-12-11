@@ -17,7 +17,7 @@
 
 
 		<ice:panelGroup
-			style="margin-left:30px; margin-bottom:8px; margin-top:4px; width:580px;">
+			style="margin-left:30px; margin-bottom:8px; margin-top:4px; width:550px;">
 
 			<ice:panelTabSet id="staticTabSetPnl"
 				binding="#{StartWorkflowWizard.tabSet}" selectedIndex="0"
@@ -63,7 +63,7 @@
 				<ice:panelTab id="phase2" rendered="true" disabled="true"
 					label="#{msgs['workflow.wizard_tab_workflowsettings']}">
 					<div>
-						<ice:panelGroup style="width: 100%;">
+						<ice:panelGroup style="width: 350px;">
 											
 											#{msgs['workflow.wizard_manage']} #{StartWorkflowWizard.workflowDefinition.name} 
 											
@@ -78,20 +78,20 @@
 											#{msgs['workflow.priority']}
 											
 											<ice:panelGroup styleClass="selectionRadioGroup"
-								style="width: 95%;">
+								style="width: 350;">
 								<ice:selectOneMenu value="#{StartWorkflowWizard.priority}">
 									<f:selectItems value="#{StartWorkflowWizard.priorities}" />
 								</ice:selectOneMenu>
 							</ice:panelGroup>
 						</ice:panelGroup>
-						<ice:panelGroup styleClass="alignRight">
-							<ice:dataTable id="documentsList" width="97%"
+						<ice:panelGroup styleClass="alignLeft">
+							<ice:dataTable id="documentsList" width="300"
 								value="#{documentsRecordsManager.selection}"
 								var="documentRecord"
 								sortColumn="#{documentsRecordsManager.sortColumn}"
 								sortAscending="#{documentsRecordsManager.ascending}"
 								cellpadding="0"
-								columnClasses="selectionColumn,titleColumn,dateColumn">
+								columnClasses="titleColumn,dateColumn">
 
 								<!-- Title -->
 								<ice:column>
