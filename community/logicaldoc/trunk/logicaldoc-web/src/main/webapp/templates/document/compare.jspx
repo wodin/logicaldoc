@@ -315,7 +315,7 @@
 	<hr />
 	<ice:panelGroup styleClass="commands">
 		<ice:commandButton value="&lt;&lt; #{msgs['back']}"
-			partialSubmit="true" immediate="true"
+			partialSubmit="true" immediate="true" styleClass="backBtn"
 			action="#{versionsRecordsManager.backToList}" />
 	</ice:panelGroup>
 </jsp:root>

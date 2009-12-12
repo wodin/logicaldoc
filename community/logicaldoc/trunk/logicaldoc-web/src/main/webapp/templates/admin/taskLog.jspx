@@ -25,7 +25,7 @@
 	<ice:form>
 		<ice:panelGroup styleClass="commands">
 			<input class="iceCmdBtn" type="button" value="Refresh" onclick='document.getElementById("logFrame").src="#{facesContext.externalContext.requestContextPath}/log?appender=#{tasksRecordsManager.appender}"' />
-			<ice:commandButton value="#{msgs['back']}"
+			<ice:commandButton value="#{msgs['back']}" styleClass="backBtn"
 				action="#{tasksRecordsManager.list}" partialSubmit="true" />
 		</ice:panelGroup>
 	</ice:form>

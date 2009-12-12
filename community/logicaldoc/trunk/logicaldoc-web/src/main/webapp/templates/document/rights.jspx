@@ -236,11 +236,11 @@
 		<br />
 		<hr />
 		<ice:panelGroup styleClass="commands">
-			<ice:commandButton value="&lt;&lt; #{msgs['back']}"
+			<ice:commandButton value="&lt;&lt; #{msgs['back']}" styleClass="backBtn"
 				action="#{rightsRecordsManager.back}"
 				rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
 			<ice:commandButton value="#{msgs['cancel']}"
-				action="#{rightsRecordsManager.back}"
+				action="#{rightsRecordsManager.back}" 
 				rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
 			<ice:commandButton value="#{msgs['save']}"
 				action="#{rightsRecordsManager.save}" />
