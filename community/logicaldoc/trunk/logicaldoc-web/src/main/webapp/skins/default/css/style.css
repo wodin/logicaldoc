@@ -1937,8 +1937,8 @@ homePlainTblColHdr1 homePlainTblHdr
 .mpopupVrtItem a {
 font-size: 12px;
 padding-left: 12px;
-padding-top: 5px;
-padding-bottom: 5px; 
+padding-top: 4px;
+padding-bottom: 4px; 
 font-family: Arial;
 margin-bottom: 0px;
 background-color: #e3ecee;
@@ -1955,9 +1955,6 @@ background-color: #cddbde;
 /* fixes document context menu row hover */
 .mpopupVrtItem span {
 	color: black;
-	/*margin-left: 6px;
-	margin-top: 6px;
-    margin-bottom: 6px; */
 }
 
 
