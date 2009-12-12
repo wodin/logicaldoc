@@ -93,7 +93,7 @@
 						</ice:outputText>)
 					</ice:outputLink>
 				</ice:panelGroup>
-				<ice:menuPopup styleClass="document" id="pop" value="#{documentRecord.docId}"
+				<ice:menuPopup styleClass="mpopup" id="pop" noIcons="true" value="#{documentRecord.docId}"
 					orientation="vertical" rendered="#{documentRecord.documentFound}">
 					<ice:menuItems value="#{documentRecord.model}" />
 				</ice:menuPopup>

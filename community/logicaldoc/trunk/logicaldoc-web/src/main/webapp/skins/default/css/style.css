@@ -1934,33 +1934,30 @@ homePlainTblColHdr1 homePlainTblHdr
 }
 
 /* Document Contextual Menu */
-
-.documentVrtTopSubMenu {
-	width: 170px;
-}
-.iceMnuPopVrtItem { 
-    width: 170px;
-}
-
-.documentVrtItem a {
+.mpopupVrtItem a {
 font-size: 12px;
-padding-left: 5px;
-font-family: "Segoe UI", Tahoma, "Bitstream Vera Sans", "DejaVu Sans", Arial;
-background-image: url("images/contextMenuBack.gif"); 
-background-repeat: repeat-y;
+padding-left: 12px;
+padding-top: 5px;
+padding-bottom: 5px; 
+font-family: Arial;
 margin-bottom: 0px;
-}
-
-.documentVrtItem a:hover {
-background-color: none;
-background-image: url("images/contextSelBack.gif");
+background-color: #e3ecee;
+background-image: url(images/nav2_link_bg.gif);
 background-repeat: repeat-x;
+background-attachment: scroll;
+background-position: 0pt 100%;
 }
 
-/* document context menu row selected */
-.documentVrtItem span {
+.mpopupVrtItem a:hover {
+background-color: #cddbde;
+}
+
+/* fixes document context menu row hover */
+.mpopupVrtItem span {
 	color: black;
-	margin-left: 8px; 
+	/*margin-left: 6px;
+	margin-top: 6px;
+    margin-bottom: 6px; */
 }
 
 

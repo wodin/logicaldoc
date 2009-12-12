@@ -70,7 +70,7 @@
 							value="#{StyleBean.imagesPath}/stop.png"
 							title="#{msgs['document.immutable']}" />
 					</ice:outputLink>
-					<ice:menuPopup id="pop" value="#{entry.docId}">
+					<ice:menuPopup styleClass="mpopup" id="pop" noIcons="true" value="#{entry.docId}">
 						<ice:menuItems value="#{entry.model}" />
 					</ice:menuPopup>
 				</ice:panelGroup>
