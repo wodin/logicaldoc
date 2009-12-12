@@ -124,10 +124,10 @@
 	<ice:form>
 		<ice:panelGroup styleClass="commands">
 			<hr />
-			<ice:commandButton value="&lt;&lt; #{msgs['back']}" immediate="true"
+			<ice:commandButton value="&lt;&lt; #{msgs['back']}" styleClass="backBtn" immediate="true"
 				partialSubmit="false" action="#{documentNavigation.showDocuments}"
 				rendered="#{empty (discussionsManager.selectedThread)}" />
-			<ice:commandButton value="&lt;&lt; #{msgs['back']}" immediate="true"
+			<ice:commandButton value="&lt;&lt; #{msgs['back']}" styleClass="backBtn" immediate="true"
 				partialSubmit="false" action="#{discussionsManager.back}"
 				rendered="#{!empty (discussionsManager.selectedThread)}" />
 		</ice:panelGroup>

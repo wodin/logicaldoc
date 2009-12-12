@@ -1277,30 +1277,6 @@ em { /*font-size:14px;*/
 	padding-right: 0px;
 }
 
-.commands .iceCmdBtn {
-	background-image: url("images/btngyptn.gif");
-	background-repeat: repeat-x;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 11px;
-	border: 1px solid #949494;
-	margin: 3px;
-	padding-left: 3px;
-	padding-right: 3px;
-	height: 22px;
-}
-
-.command .iceCmdBtn {
-	background-image: url("images/btngyptn.gif");
-	background-repeat: repeat-x;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 11px;
-	border: 1px solid #949494;
-	margin: 3px;
-	padding-left: 3px;
-	padding-right: 3px;
-	height: 22px;
-}
-
 .commands a.iceLink:link,.commands a.iceLink:hover,.commands a.iceLink:visited,.commands a.iceLink:active
 	{
 	color: #C0C0C0;
@@ -1957,7 +1933,48 @@ background-color: #cddbde;
 	color: black;
 }
 
+/* New Style 5.0 for buttons */
+.commands .iceCmdBtn {
+	border: 1px solid #ed6502;
+	border-right-color: #a04300;
+	border-bottom-color: #a04300;
+	background-image: url("images/btn_bg.gif");
+	background-repeat: repeat-x;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #ffffff;
+	padding-top: 1px;
+	padding-right: 7px;
+	padding-bottom: 1px;
+	padding-left: 7px;
+	white-space: nowrap;
+}
 
+.commands .iceCmdBtn:hover {
+background-color: #f77c16;
+background-image: url(images/btn_over_bg.gif);
+background-repeat: repeat-x;
+background-attachment: scroll;
+background-position: 0pt 0pt;
+}
 
+.commands .backBtn {
+border: 1px solid #cccccc;
+border-right-color: #aaaaaa;
+border-bottom-color: #aaaaaa;
+border-left-color-value: #cccccc;
+background-color: #ffffff;
+background-image: url(images/btn_back_bg.gif);
+color: #555555;
+}
 
-
+.commands .backBtn:hover {
+border: 1px solid #cccccc;
+border-right-color: #aaaaaa;
+border-bottom-color: #aaaaaa;
+border-left-color-value: #cccccc;
+background-color: #ffffff;
+background-image: url(images/btn_back_bg.gif);
+color: #555555;
+}

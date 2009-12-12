@@ -106,7 +106,7 @@
 				</ice:dataTable>
 			</ice:panelGroup>
 			<ice:panelGroup styleClass="commands">
-				<ice:commandButton value="&lt;&lt; #{msgs['back']}"
+				<ice:commandButton value="&lt;&lt; #{msgs['back']}" styleClass="backBtn"
 					partialSubmit="true" action="#{documentNavigation.showDocuments}" />
 			</ice:panelGroup>
 		</ice:panelGroup>
