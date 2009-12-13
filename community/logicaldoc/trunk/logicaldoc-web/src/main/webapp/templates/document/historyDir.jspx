@@ -88,7 +88,7 @@
 	<br />
 	<ice:form>
 		<ice:panelGroup styleClass="commands">
-			<ice:commandButton value="&lt;&lt; #{msgs['back']}" styleClass="backBtn"
+			<ice:commandButton value="#{msgs['back']}" styleClass="backBtn"
 				partialSubmit="true" action="#{documentNavigation.showDocuments}" />
 		</ice:panelGroup>
 	</ice:form>
