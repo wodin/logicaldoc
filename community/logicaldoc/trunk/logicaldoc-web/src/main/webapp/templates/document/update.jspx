@@ -186,7 +186,7 @@
 							url="thumbnail?docId=#{documentForm.record.document.id}&amp;versionId=#{documentForm.record.document.fileVersion}" />
 						<br />
 						<ice:commandButton value="#{msgs['enlarge']}"
-							action="#{documentForm.openDocumentPreview}" />
+							action="#{documentForm.openDocumentPreview}" styleClass="standardBtn" />
 					</ice:panelGroup>
 				</ice:panelGroup>
 			</ice:panelGrid>

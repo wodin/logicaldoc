@@ -25,7 +25,7 @@
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="parentPath" value="#{msgs['menu']}:  " />
 					</ice:panelGroup>
-					<ice:panelGroup style="display: inline;">
+					<ice:panelGroup style="display: inline;" styleClass="commands">
 						<ice:inputHidden id="parentPath" value="#{securityForm.path}" />
 						<ice:outputText
 							value="#{securityForm.directoryModel.selectedDir.pathExtended}  "

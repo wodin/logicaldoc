@@ -1934,7 +1934,7 @@ background-color: #cddbde;
 }
 
 /* New Style 5.0 for buttons */
-.commands .iceCmdBtn {
+.commands .iceCmdBtn, .standardBtn {
 	border: 1px solid #ed6502;
 	border-right-color: #a04300;
 	border-bottom-color: #a04300;
@@ -1951,7 +1951,7 @@ background-color: #cddbde;
 	white-space: nowrap;
 }
 
-.commands .iceCmdBtn:hover {
+.commands .iceCmdBtn:hover, .standardBtn:hover {
 background-color: #f77c16;
 background-image: url(images/btn_over_bg.gif);
 background-repeat: repeat-x;
@@ -1982,3 +1982,5 @@ color: #555555;
 padding-left:27px; 
 }
 
+.iceCmdBtn {
+}
