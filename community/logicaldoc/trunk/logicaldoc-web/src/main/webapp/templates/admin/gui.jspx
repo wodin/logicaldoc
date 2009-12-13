@@ -24,7 +24,7 @@
 				<ice:outputLabel for="parentPath"
 					value="#{msgs['gui.entrypage']}:  " />
 			</ice:panelGroup>
-			<ice:panelGroup style="display: inline;">
+			<ice:panelGroup style="display: inline;" styleClass="commands">
 				<ice:inputHidden id="parentPath" value="#{guiBean.path}" />
 				<ice:outputText
 					value="#{guiBean.directoryModel.selectedDir.pathExtended}  "

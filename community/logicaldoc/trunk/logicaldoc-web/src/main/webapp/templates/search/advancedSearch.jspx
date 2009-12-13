@@ -93,10 +93,10 @@
 				<ice:outputLabel for="parentPath"
 					value="#{msgs['advancedSearch.searchin']}" />
 			</ice:panelGroup>
-			<ice:panelGroup style="display: inline;">
+			<ice:panelGroup style="display: inline;" styleClass="commands">
 				<ice:inputHidden id="parentPath" value="#{searchForm.path}" />
 				<ice:outputText id="parentPathDescr"
-					value="#{searchForm.parentPathDescr}  " maxlength="255" />
+					value="#{searchForm.parentPathDescr}  " />
 				<ldoc:folderselector style="float:right;"
 					directoryModel="#{searchForm.directoryModel}"
 					showSelector="#{searchForm.showFolderSelector}"
