@@ -1959,14 +1959,16 @@ background-attachment: scroll;
 background-position: 0pt 0pt;
 }
 
+/* Back button */
 .commands .backBtn {
 border: 1px solid #cccccc;
 border-right-color: #aaaaaa;
 border-bottom-color: #aaaaaa;
 border-left-color-value: #cccccc;
 background-color: #ffffff;
-background-image: url(images/btn_back_bg.gif);
+background-image: url(images/btn_back_bg2.gif);
 color: #555555;
+padding-left:27px; 
 }
 
 .commands .backBtn:hover {
@@ -1975,6 +1977,8 @@ border-right-color: #aaaaaa;
 border-bottom-color: #aaaaaa;
 border-left-color-value: #cccccc;
 background-color: #ffffff;
-background-image: url(images/btn_back_bg.gif);
+background-image: url(images/btn_back_bg2.gif);
 color: #555555;
+padding-left:27px; 
 }
+
