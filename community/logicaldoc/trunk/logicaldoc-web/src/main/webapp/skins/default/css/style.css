@@ -1960,7 +1960,7 @@ background-position: 0pt 0pt;
 }
 
 /* Back button */
-.commands .backBtn {
+.commands .backBtn, .commands .backBtn:hover {
 border: 1px solid #cccccc;
 border-right-color: #aaaaaa;
 border-bottom-color: #aaaaaa;
@@ -1971,13 +1971,7 @@ color: #555555;
 padding-left:27px; 
 }
 
-.commands .backBtn:hover {
-border: 1px solid #cccccc;
-border-right-color: #aaaaaa;
-border-bottom-color: #aaaaaa;
-border-left-color-value: #cccccc;
-background-color: #ffffff;
-background-image: url(images/btn_back_bg2.gif);
-color: #555555;
+.commands .saveBtn, .commands .saveBtn:hover {
+background-image: url(images/btn_save_bg.gif);
 padding-left:27px; 
 }
