@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import net.sf.jmimemagic.Magic;
 import net.sf.jmimemagic.MagicMatch;
@@ -171,5 +172,11 @@ public class ParserFactory {
 		}
 		parser.setFilename(filename);
 		return parser;
+	}
+
+	public static Set<String> getExtensions() {
+		if (parsers.isEmpty())
+			init();
+		return parsers.keySet();
 	}
 }
