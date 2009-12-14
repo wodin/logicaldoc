@@ -127,8 +127,8 @@ public class DocumentNavigation extends NavigationBean {
 	public void setViewMode(String viewModeP) {
 		if (!this.viewMode.equals(viewModeP)) {
 			this.viewMode = viewModeP;
-			refresh();
 			selectDirectory(getSelectedDir());
+			refresh();
 		}
 	}
 
