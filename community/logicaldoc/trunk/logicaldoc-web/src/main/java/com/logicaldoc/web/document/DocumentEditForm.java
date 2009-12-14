@@ -758,68 +758,64 @@ public class DocumentEditForm {
 		InputFileBean fileForm = ((InputFileBean) application.createValueBinding("#{inputFile}").getValue(
 				FacesContext.getCurrentInstance()));
 
-		if (SessionManagement.isValid()) {
-			Document document = record.getDocument();
-			File file = fileForm.getFile();
+		Document document = record.getDocument();
+		File file = fileForm.getFile();
 
-			if (document.getStatus() == Document.DOC_CHECKED_OUT) {
-				if (file != null) {
-					// check that we have a valid file for storing as new
-					// version
-					String fileName = fileForm.getFileName();
+		if (document.getStatus() == Document.DOC_CHECKED_OUT) {
+			if (file != null) {
+				// check that we have a valid file for storing as new
+				// version
+				String fileName = fileForm.getFileName();
 
-					// if checkOriginalFileName is selected verify that the
-					// uploaded file has correct fileName
-					if (isCheckOriginalFilename()) {
-						if (!fileName.equals(document.getFileName())) {
-							log.info("Filename of the checked-in document(" + fileName
-									+ ") is different from the original filename (" + document.getFileName() + ")");
-							String localizedMessage = Messages.getMessage("checkin.originalfilename", document
-									.getFileName());
-							Messages.addError(localizedMessage, "iFile");
-							return null;
-						}
+				// if checkOriginalFileName is selected verify that the
+				// uploaded file has correct fileName
+				if (isCheckOriginalFilename()) {
+					if (!fileName.equals(document.getFileName())) {
+						log.info("Filename of the checked-in document(" + fileName
+								+ ") is different from the original filename (" + document.getFileName() + ")");
+						String localizedMessage = Messages.getMessage("checkin.originalfilename", document
+								.getFileName());
+						Messages.addError(localizedMessage, "iFile");
+						return null;
 					}
-
-					// determines the kind of version to create
-					Version.VERSION_TYPE versionType = Version.VERSION_TYPE.NEW_SUBVERSION;
-					if (isMajorUpdate()) {
-						versionType = Version.VERSION_TYPE.NEW_RELEASE;
-					}
-
-					try {
-						// Create the document history event
-						History transaction = new History();
-						transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
-
-						// checkin the document; throws an exception if
-						// something goes wrong
-						DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
-								DocumentManager.class);
-						documentManager.checkin(document.getId(), new FileInputStream(file), fileName,
-								SessionManagement.getUser(), versionType, this.versionDesc, immediateIndexing,
-								transaction);
-
-						/* create positive log message */
-						Messages.addLocalizedInfo("msg.action.savedoc");
-						fileForm.reset();
-					} catch (Exception e) {
-						log.error(e.getMessage(), e);
-						Messages.addLocalizedError("errors.action.savedoc");
-					}
-				} else {
-					Messages.addLocalizedError("errors.nofile");
 				}
-			}
-			reset();
-		} else {
-			return "login";
-		}
 
-		DocumentNavigation documentNavigation = ((DocumentNavigation) application.createValueBinding(
-				"#{documentNavigation}").getValue(FacesContext.getCurrentInstance()));
-		documentNavigation.showDocuments();
-		documentNavigation.refresh();
+				// determines the kind of version to create
+				Version.VERSION_TYPE versionType = Version.VERSION_TYPE.NEW_SUBVERSION;
+				if (isMajorUpdate()) {
+					versionType = Version.VERSION_TYPE.NEW_RELEASE;
+				}
+
+				try {
+					// Create the document history event
+					History transaction = new History();
+					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+
+					// checkin the document; throws an exception if
+					// something goes wrong
+					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
+							DocumentManager.class);
+					documentManager.checkin(document.getId(), new FileInputStream(file), fileName, SessionManagement
+							.getUser(), versionType, this.versionDesc, immediateIndexing, transaction);
+
+					/* create positive log message */
+					Messages.addLocalizedInfo("msg.action.savedoc");
+					fileForm.reset();
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+					Messages.addLocalizedError("errors.action.savedoc");
+				}
+			} else {
+				Messages.addLocalizedError("errors.nofile");
+			}
+		}
+		
+		DocumentNavigation navigation = ((DocumentNavigation) application.createValueBinding("#{documentNavigation}")
+				.getValue(FacesContext.getCurrentInstance()));
+		navigation.showDocuments();
+		navigation.refresh(record.getDocId());
+		
+		reset();
 		return null;
 	}
 
