@@ -83,7 +83,7 @@
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="#{msgs['cancel']}" id="abort"
 				partialSubmit="true" immediate="true" action="#{newDocWizard.abort}" />
-			<ice:commandButton value="#{msgs['next']} >>" id="next"
+			<ice:commandButton styleClass="saveBtn" value="#{msgs['continue']}" id="next"
 				action="#{newDocWizard.next}" onclick="disabled=true;setFocus('');"
 				rendered="#{newDocWizard.showUpload==true and inputFile.ready==true}" />
 			<ice:commandButton value="#{msgs['save']}" id="save"
