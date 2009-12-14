@@ -23,11 +23,11 @@
 
 	<ice:form id="versionsForm">
 		<!-- Basic table -->
-		<ice:panelGroup styleClass="formBorderHighlight" style="width:97%;">
+		<ice:panelGroup styleClass="formBorderHighlight" style="width:102%;">
 			<ice:panelGroup>
 				<ice:dataTable id="versionData"
 					value="#{versionsRecordsManager.versions}" var="versionRecord"
-					cellpadding="0" width="97%" rows="2000"
+					cellpadding="0" rows="2000"
 					columnClasses="dateColumn,titleColumn,numberColumn,numberColumn,dateColumn,titleColumn,titleColumn">
 
 					<!-- publisher column -->
