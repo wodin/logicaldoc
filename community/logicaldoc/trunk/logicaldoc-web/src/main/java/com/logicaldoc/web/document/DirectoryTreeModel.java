@@ -308,6 +308,12 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 	public void selectDirectory(long id) {
 		selectedDir = directories.get(id);
+		if (selectedDir == null) {
+			// Perhaps the node was not already visited, so try to load the
+			// entire tree
+			reloadAll();
+			selectedDir = directories.get(id);
+		}
 		selectDirectory(selectedDir);
 	}
 
@@ -362,7 +368,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	private void expandNodePath(DefaultMutableTreeNode node) {
 		if (node == null)
 			return;
-		
+
 		IceUserObject obj = (IceUserObject) node.getUserObject();
 		obj.setExpanded(true);
 
