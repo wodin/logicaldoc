@@ -736,15 +736,17 @@ public class DocumentEditForm {
 					Messages.addLocalizedError("errors.action.savedoc");
 				}
 			}
-			reset();
+			
 		} else {
 			return "login";
 		}
 
 		DocumentNavigation documentNavigation = ((DocumentNavigation) application.createValueBinding(
 				"#{documentNavigation}").getValue(FacesContext.getCurrentInstance()));
-		documentNavigation.setSelectedPanel(new PageContentBean("documents"));
-		documentNavigation.refresh();
+		documentNavigation.setSelectedPanel(new PageContentBean(documentNavigation.getViewMode()));
+		documentNavigation.refresh(record.getDocId());
+		
+		reset();
 		return null;
 	}
 
