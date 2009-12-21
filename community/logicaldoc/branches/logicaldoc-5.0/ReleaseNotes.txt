@@ -1,0 +1,28 @@
+The LogicalDoc team is pleased to announce the availability of the new release 
+of LogicalDOC Enterprise, that brings you new and exciting features.
+
+Among other things, these are the major new features:
+
+Workflow: Visual Business Process editor directly accessible from the web browser
+Workflow: Multiple task assignments
+Workflow: Support for activities start and stop
+History on document folders
+New graphical layout
+Document navigation through a folders tree
+Configurable first version number
+3D (Cumulus) Tag Cloud
+New graphical layout more lighter and sleek
+Improvements in the ergonomics of the GUI
+
+For details of changes see the ChangeLog.
+
+Report any bugs you find using the bug tracker
+http://bugs.logicaldoc.com
+
+You can discuss issues in the user forum
+https://sourceforge.net/forum/forum.php?forum_id=865524
+
+
+The LogicalDOC development Team 
+
+
