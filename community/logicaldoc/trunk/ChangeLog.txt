@@ -10,6 +10,40 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC CE 5.0 (2009-12-19; logicaldoc-5.0)
+===============
+Upgrade to the latest ICEfaces version (JSF-Ajax)
+Workflow: Visual Business Process editor directly available from the web
+Workflow: Multiple task assignments
+Workflow: Support for activities start and stop
+New graphical layout more lighter and sleek
+Improvements in the ergonomics of the GUI
+History on document folders
+Document navigation through a folders tree
+Configurable first version number
+3D (Cumulus) Tag Cloud
+Fully tested with MySQL 5.1
+
+
+LogicalDOC CE 4.6 (2009-10-10; logicaldoc-4.6)
+===============
+Active Directory full compliance and easy configuration (Enterprise edition)
+New Datailed view of the search results (Enterprise edition)
+Improved parametric search (Enterprise edition)
+DATABASE CHANGES: This release is not compatible with the database of LogicalDOC 4.5!
+Improved French Localization (Thanks to Manuel Le Boette, Maxime Leboeuf and François Blondel)
+Support for CCs in email sending
+Extended attributes are now typed(Double, Integer, String, Date)
+Automatic notification when the zip import is completed
+Improvement in webservice methods
+Fixed stop-words reading problem with native characters
+WebDAV: creation of a new version when document update (Works on WebDrive)
+New configuration mode for scheduled Tasks
+Solved the problem of excessive memory allocation when Tasks too close
+Changes to web-service with new methods
+New Option in the GUI to disable the access via WebDAV or Web Services
+
+
 LogicalDOC CE 4.5 (2009-06-10; logicaldoc-4.5)
 ===============
 Added LDAP integration
@@ -33,15 +67,8 @@ WebDAV: full implementation
 File names: Handle all asian and arabic charsets
 Seup procecude: Fixed schema creation on external db
 Interface fixes
-
-LogicalDOC CE 4.0 RC2 (2009-01-08; logicaldoc-4.0RC2)
-===============
 Ability to define fields viewable and editable by group of users
 WebDAV: implemented rename on the Document's filename
-
-
-LogicalDOC CE 4.0 RC1 (2008-12-12; logicaldoc-4.0RC1)
-===============
 New WebDAV accessible interface (Thanks to Sebastian Wenzky)
 Heavily Refactored DB-schema
 New Templates on document with custom attributes
