@@ -1,0 +1,509 @@
+<?xml version = '1.0'?>
+<!-- 
+ Shows the tasks assigned to the current user
+ 
+ @author Marco Meschieri - Logical Objects
+ @since 4.6
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	styleClass="center" style="width: 900px;">
+
+	<ice:outputStyle href="/skins/default/css/workflow.css" />
+
+	<style>
+.class1 {
+	text-align: left;
+	width: 100px;
+}
+
+.class2 {
+	text-align: left;
+}
+</style>
+
+	<ice:panelGroup styleClass="center formBorderHighlight"
+		style="width: 900px;">
+		<ice:panelPopup modal="true" clientOnly="true" draggable="false"
+			rendered="#{not empty WorkflowManager.taskController}"
+			visible="#{not empty WorkflowManager.taskController}">
+			<f:facet name="header">
+				<ice:panelGrid width="100%" cellpadding="0" cellspacing="0"
+					columns="2" style="text-align: center;">
+					<ice:outputText style="color: #FFFFFF;"
+						value="#{msgs['workflow.runtime_reassignment']}" />
+					<ice:commandButton
+						image="/skins/default/images/workflow/editor/close.gif"
+						actionListener="#{WorkflowManager.closeReassignmentDialog}" />
+				</ice:panelGrid>
+			</f:facet>
+
+			<f:facet name="body">
+				<ice:panelGrid columns="2" cellpadding="0" cellspacing="0">
+					<ice:selectInputText rows="10" width="300"
+						value="#{WorkflowManager.newAssignment}"
+						valueChangeListener="#{WorkflowManager.taskController.selectInputValueChanged}">
+						<f:selectItems
+							value="#{WorkflowManager.taskController.possibleAssignments}" />
+					</ice:selectInputText>
+					<ice:commandButton
+						actionListener="#{WorkflowManager.setupNewAssignment}"
+						value="#{msgs['workflow.runtime_reassignment']}"></ice:commandButton>
+				</ice:panelGrid>
+
+			</f:facet>
+
+		</ice:panelPopup>
+
+		<br />
+		<h3>
+			<!-- 
+		<ice:outputText
+			value="Workflow-Instance" />
+		 -->
+		</h3>
+		<table align="center" cellpadding="5">
+
+			<tr>
+
+				<td>
+					<!-- WorkflowInstance -->
+					<ice:panelGroup
+						rendered="#{not empty WorkflowManager.selectedWorkflowInstance}">
+						<table cellpadding="0" cellspacing="0" width="500">
+							<tr>
+								<td
+									style="background-image: url('/skins/default/images/workflow/editor/menu_gradient.jpg');"
+									height="30" width="1">
+									<ice:outputText value="#{msgs['workflow']}" />
+								</td>
+							</tr>
+							<tr>
+								<td
+									style="background-image: url('/skins/default/images/workflow/editor/editor_gradient.jpg'); background-repeat: repeat-x">
+									<ice:panelGrid columnClasses="class1, class2" columns="2"
+										style="border:1px solid #cccccc;width:100%">
+										<ice:outputText value="#{msgs['name']}: " />
+										<h:outputText
+											value="#{WorkflowManager.selectedWorkflowInstance.name}" />
+
+										<ice:outputText value="#{msgs['description']}: " />
+										<h:outputText
+											value="#{WorkflowManager.selectedWorkflowInstance.properties['ld_description']}" />
+
+										<ice:outputText value="#{msgs['startdate']}: " />
+										<ice:outputText
+											value="#{WorkflowManager.selectedWorkflowInstance.startDate} " />
+
+										<ice:outputText value="#{msgs['enddate']}: " />
+										<ice:outputText
+											value="#{WorkflowManager.selectedWorkflowInstance.endDate} " />
+									</ice:panelGrid>
+								</td>
+							</tr>
+						</table>
+
+					</ice:panelGroup>
+					<ice:panelGroup
+						rendered="#{not empty WorkflowManager.selectedWorkflowTaskInstance}">
+						<table cellpadding="0" cellspacing="0" width="100%">
+							<tr>
+								<td
+									style="background-image: url('/skins/default/images/workflow/editor/menu_gradient.jpg');"
+									height="30" width="1">
+									<ice:outputText value="#{msgs['workflow.task']}" />
+								</td>
+							</tr>
+							<tr>
+								<td
+									style="background-image: url('/skins/default/images/workflow/editor/editor_gradient.jpg'); background-repeat: repeat-x">
+									<ice:panelGrid columnClasses="class1, class2" columns="2"
+										style="border:1px solid #cccccc;width:100%">
+
+										<ice:outputText value="#{msgs['id']}: " />
+										<h:outputText
+											value="#{WorkflowManager.selectedWorkflowTaskInstance.name}" />
+
+										<ice:outputText value="#{msgs['name']}: " />
+										<h:outputText
+											value="#{WorkflowManager.selectedWorkflowTaskInstance.properties['ld_description']}" />
+
+										<ice:outputText
+											value="#{msgs['workflow.possibleassignments']}:"
+											rendered="#{not empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_pooledActors'] and empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_owner']}" />
+
+										<ice:panelGroup
+											rendered="#{not empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_pooledActors'] and empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_owner']}">
+											<ui:repeat
+												value="#{WorkflowManager.selectedWorkflowTaskInstance.properties['ld_pooledActors']}"
+												var="actor">
+												#{actor}, 
+										</ui:repeat>
+										</ice:panelGroup>
+
+
+										<ice:outputText value="#{msgs['assignee']}: "
+											rendered="#{ not empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_owner']}" />
+										<h:outputText
+											rendered="#{ not empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_owner']}"
+											value="#{WorkflowManager.selectedWorkflowTaskInstance.properties['ld_owner']}" />
+
+
+										<ice:outputText value="#{msgs['startdate']}: " />
+										<h:outputText
+											value="#{WorkflowManager.selectedWorkflowTaskInstance.properties['ld_startdate']}" />
+
+										<ice:outputText value="#{msgs['duedate']}: " />
+										<h:outputText
+											value="#{WorkflowManager.selectedWorkflowTaskInstance.properties['ld_duedate']}" />
+
+										<ice:outputText value="#{msgs['enddate']}: " />
+										<h:outputText
+											value="#{WorkflowManager.selectedWorkflowTaskInstance.properties['ld_enddate']}" />
+									</ice:panelGrid>
+								</td>
+							</tr>
+						</table>
+					</ice:panelGroup>
+				</td>
+
+				<td valign="top">
+					<!-- Actionlist -->
+					<table
+						style="background-image: url('/skins/default/images/workflow/editor/editor_gradient.jpg'); background-repeat: repeat-x;">
+
+						<tr>
+							<td width="150">
+								<ice:outputText
+									rendered="#{not empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_enddate']}"
+									value="#{msgs['workflow.runtime_task_ended']}" />
+								<ice:panelGroup
+									rendered="#{ empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_enddate']}">
+
+									<ice:commandButton
+										value="#{msgs['workflow.runtime_task_reassign']}"
+										actionListener="#{WorkflowManager.openReassignmentDialog}">
+									</ice:commandButton>
+
+									<ice:commandButton
+										value="#{msgs['workflow.runtime_task_start']}"
+										rendered="#{empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_startdate']}"
+										action="#{WorkflowManager.startTask}" />
+
+									<ice:commandButton
+										value="#{msgs['workflow.runtime_task_suspend']}"
+										rendered="#{WorkflowManager.selectedWorkflowTaskInstance.properties['ld_taskstate'] == 'started'}"
+										action="#{WorkflowManager.suspendTask}" />
+
+									<ice:commandButton
+										value="#{msgs['workflow.runtime_task_resume']}"
+										rendered="#{WorkflowManager.selectedWorkflowTaskInstance.properties['ld_taskstate'] == 'suspended'}"
+										action="#{WorkflowManager.resumeTask}" />
+
+									<ice:commandButton value="#{msgs['save']}"
+										action="#{WorkflowManager.saveState}">
+									</ice:commandButton>
+									<br />
+
+									<ice:commandButton
+										value="#{msgs['workflow.runtime_task_take']}"
+										rendered="#{not empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_pooledActors'] and empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_owner']}"
+										actionListener="#{WorkflowManager.assign}">
+										<f:param name="taskInstance" value="#{taskInstance}" />
+									</ice:commandButton>
+
+									<ice:commandButton
+										value="#{msgs['workflow.runtime_task_turnback']}"
+										rendered="#{not empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_pooledActors'] and not empty WorkflowManager.selectedWorkflowTaskInstance.properties['ld_owner']}"
+										actionListener="#{WorkflowManager.turnBackToPool}">
+									</ice:commandButton>
+
+									<ice:panelGroup
+										rendered="#{WorkflowManager.selectedWorkflowTaskInstance.properties['ld_taskstate'] == 'started'}">
+										<ui:repeat
+											value="#{WorkflowManager.selectedWorkflowTaskInstance.transitions}"
+											var="transition">
+
+											<ice:commandButton value="#{transition.name}"
+												actionListener="#{WorkflowManager.endTask}">
+												<f:param name="taskInstance" value="#{taskInstance}" />
+												<f:param name="transition" value="#{transition}" />
+											</ice:commandButton>
+											<br />
+										</ui:repeat>
+									</ice:panelGroup>
+
+								</ice:panelGroup>
+							</td>
+						</tr>
+
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<ice:panelGroup
+						rendered="#{not empty WorkflowManager.selectedWorkflowTaskInstance}">
+						<table cellpadding="0" cellspacing="0" width="500" align="center">
+							<tr>
+								<td
+									style="background-image: url('/skins/default/images/workflow/editor/menu_gradient.jpg');"
+									height="30" width="1">
+									<ice:outputText value="#{msgs['history']}" />
+								</td>
+							</tr>
+							<tr>
+								<td
+									style="background-image: url('/skins/default/images/workflow/editor/editor_gradient.jpg'); background-repeat: repeat-x; border: 1px solid #cccccc; width: 100%">
+									<ice:dataTable id="workflowHistory" var="taskInstance"
+										style="width:95%" value="#{WorkflowManager.workflowHistory}"
+										rendered="#{not empty WorkflowManager.workflowHistory}"
+										rows="15">
+										<ice:column>
+											<f:facet name="header">
+												<ice:outputText id="column1" value="Id" />
+											</f:facet>
+											<ice:outputText id="Number" value="#{taskInstance.id}" />
+										</ice:column>
+
+										<ice:column>
+											<f:facet name="header">
+												<ice:outputText id="column2" value="#{msgs['name']}" />
+											</f:facet>
+											<ice:outputText id="name" value="#{taskInstance.name} " />
+										</ice:column>
+
+										<ice:column>
+											<f:facet name="header">
+												<ice:outputText id="column3" value="#{msgs['assignee']}" />
+											</f:facet>
+
+											<h:outputText value="#{taskInstance.properties['ld_owner']}" />
+
+										</ice:column>
+
+										<ice:column>
+											<f:facet name="header">
+												<ice:outputText id="column3"
+													value="#{msgs['workflow.task_transition_taken']}" />
+											</f:facet>
+											
+											#{taskInstance.properties['ld_outcome']}
+										</ice:column>
+									</ice:dataTable>
+								</td>
+							</tr>
+						</table>
+					</ice:panelGroup>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table cellpadding="0" cellspacing="0" width="500" align="center">
+						<tr>
+							<td
+								style="background-image: url('/skins/default/images/workflow/editor/menu_gradient.jpg');"
+								height="30" width="1">
+								<ice:outputText value="#{msgs['comment']}" />
+							</td>
+						</tr>
+						<tr>
+							<td align="left"
+								style="background-image: url('/skins/default/images/workflow/editor/editor_gradient.jpg'); background-repeat: repeat-x; border: 1px solid #cccccc; width: 100%">
+
+								<ice:inputTextarea
+									disabled="#{ not empty WorkflowManager.workingWorkflowTaskinstance.properties['ld_enddate']}"
+									style="width:95%; height:50px; font-size:10px"
+									value="#{WorkflowManager.workingWorkflowTaskinstance.properties['ld_comment']}">
+
+								</ice:inputTextarea>
+
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<ice:panelGroup
+						rendered="#{not empty WorkflowManager.selectedWorkflowTaskInstance }">
+						<table cellpadding="0" cellspacing="0" width="500" align="center">
+							<tr>
+								<td
+									style="background-image: url('/skins/default/images/workflow/editor/menu_gradient.jpg');"
+									height="30" width="1">
+									<ice:outputText value="#{msgs['workflow.runtime_documents']}" />
+								</td>
+							</tr>
+							<tr>
+								<td
+									style="background-image: url('/skins/default/images/workflow/editor/editor_gradient.jpg'); background-repeat: repeat-x; border: 1px solid #cccccc; width: 100%">
+
+									<ice:dataTable id="documentsList" width="97%"
+										value="#{WorkflowManager.selectedWorkflowInstance.properties['ld_documents']}"
+										var="documentRecord" cellpadding="0"
+										columnClasses="selectionColumn,dateColumn,titleColumn">
+
+										<!-- Last Modified -->
+										<ice:column>
+											<f:facet name="header">
+												<ice:commandSortHeader columnName="lastmodified"
+													arrow="true">
+													<ice:outputText value="#{msgs['lastmodified']}"
+														style="text-decoration: underline;" />
+												</ice:commandSortHeader>
+											</f:facet>
+											<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}">
+												<ice:outputText value="#{documentRecord.lastModified}"
+													title="#{msgs['msg.jsp.popup']}">
+													<f:convertDateTime pattern="#{loc.dateFormatHM}"
+														timeZone="#{StyleBean.timeZone}" />
+												</ice:outputText>
+											</ice:panelGroup>
+										</ice:column>
+
+										<!-- Title -->
+										<ice:column>
+											<f:facet name="header">
+												<ice:commandSortHeader columnName="title" arrow="true">
+													<ice:outputText value="#{msgs['document.title']}"
+														style="text-decoration: underline;" />
+												</ice:commandSortHeader>
+											</f:facet>
+											<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}">
+												<ice:graphicImage
+													value="#{StyleBean.imagesPath}/#{documentRecord.icon}" />
+												<ice:outputLink
+													value="download?docId=#{documentRecord.docId}"
+													target="_blank">
+													<ice:outputText
+														rendered="#{documentRecord.document.immutable == 0}"
+														value=" #{documentRecord.displayTitle}" />
+													<ice:outputText
+														rendered="#{documentRecord.document.immutable == 1}"
+														styleClass="immutable"
+														value=" #{documentRecord.displayTitle}" />
+															&amp;nbsp;(<ice:outputText
+														value="#{documentRecord.document.fileSize}"
+														title="#{msgs['msg.jsp.popup']}"
+														style="white-space:nowrap;">
+														<f:converter converterId="logicaldoc.FileSizeConverter" />
+													</ice:outputText>)
+											</ice:outputLink>
+												<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
+													action="#{WorkflowManager.openInFolder}">
+													<ice:graphicImage
+														value="#{StyleBean.imagesPath}/folder_into16.png"
+														styleClass="iconSmall"
+														alt="#{msgs['msg.jsp.openinfolder']}" />
+												</ice:commandLink>
+											</ice:panelGroup>
+										</ice:column>
+									</ice:dataTable>
+								</td>
+							</tr>
+						</table>
+					</ice:panelGroup>
+
+					<ice:panelGroup
+						rendered="#{ WorkflowManager.selectedWorkflowTaskInstance.properties['ld_taskstate'] == 'started'}">
+
+
+
+						<ice:panelGroup style="text-align:left;">
+							<ice:panelGrid columns="2">
+								<ice:outputText
+									value="#{msgs['workflow.runtime_appenddocuments']}: " style="padding: 10px 5px 0px 0px;"/>
+								<ldoc:folderselector useIcon="true"
+									directoryModel="#{WorkflowManager.directoryModel}"
+									showSelector="#{WorkflowManager.showFolderSelector}"
+									openListener="#{WorkflowManager.openFolderSelector}"
+									confirmListener="#{WorkflowManager.folderSelected}"
+									cancelListener="#{WorkflowManager.cancelFolderSelector}"
+									closeListener="#{WorkflowManager.closeFolderSelector}" />
+							</ice:panelGrid>
+						</ice:panelGroup>
+
+
+						<ice:dataTable id="resourceList" width="97%"
+							rendered="#{not empty WorkflowManager.selectedResourceFolder}"
+							value="#{WorkflowManager.selectedFolderItems}"
+							var="documentRecord" cellpadding="0"
+							columnClasses="selectionColumn,titleColumn,dateColumn">
+
+
+							<ice:column>
+								<f:facet name="header">
+
+									<ice:outputText value="" />
+
+								</f:facet>
+
+								<ice:commandButton value="#{msgs['append']}"
+									actionListener="#{WorkflowManager.appendDocument}">
+									<f:param value="#{documentRecord}" />
+								</ice:commandButton>
+
+							</ice:column>
+
+							<ice:column>
+								<f:facet name="header">
+									<ice:commandSortHeader columnName="title" arrow="true">
+										<ice:outputText value="#{msgs['document.title']}"
+											style="text-decoration: underline;" />
+									</ice:commandSortHeader>
+								</f:facet>
+								<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}">
+									<ice:graphicImage
+										value="#{StyleBean.imagesPath}/#{documentRecord.icon}" />
+
+									<ice:outputText
+										rendered="#{documentRecord.document.immutable == 0}"
+										value=" #{documentRecord.displayTitle}" />
+									<ice:outputText
+										rendered="#{documentRecord.document.immutable == 1}"
+										styleClass="immutable" value=" #{documentRecord.displayTitle}" />
+											&amp;nbsp;(<ice:outputText
+										value="#{documentRecord.document.fileSize}"
+										title="#{msgs['msg.jsp.popup']}" style="white-space:nowrap;">
+										<f:converter converterId="logicaldoc.FileSizeConverter" />
+									</ice:outputText>)
+									</ice:panelGroup>
+
+							</ice:column>
+
+
+							<ice:column>
+								<f:facet name="header">
+									<ice:commandSortHeader columnName="lastmodified" arrow="true">
+										<ice:outputText value="#{msgs['lastmodified']}"
+											style="text-decoration: underline;" />
+									</ice:commandSortHeader>
+								</f:facet>
+								<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}">
+									<ice:outputText value="#{documentRecord.lastModified}"
+										title="#{msgs['msg.jsp.popup']}">
+										<f:convertDateTime pattern="#{loc.dateFormatHM}"
+											timeZone="#{StyleBean.timeZone}" />
+									</ice:outputText>
+								</ice:panelGroup>
+							</ice:column>
+						</ice:dataTable>
+					</ice:panelGroup>
+				</td>
+			</tr>
+		</table>
+		<hr />
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['back']}" styleClass="backBtn"
+				action="#{WorkflowManager.abort}" partialSubmit="true" />
+		</ice:panelGroup>
+	</ice:panelGroup>
+</jsp:root>

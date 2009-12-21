@@ -1,0 +1,99 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="logicaldoc-workflow" version="5.0.0" class="com.logicaldoc.workflow.WorkflowPlugin">
+	<requires>
+		<import plugin-id="logicaldoc-core" />
+	</requires>
+
+	<runtime>
+		<library id="logicaldoc-workflow" path="classes/" type="code">
+			<export prefix="*" />
+		</library>
+		
+		<library id="bsh" path="lib/bsh-2.0b1.jar" type="code">
+			<export prefix="*" />
+		</library>	
+			
+		<library id="jbpm-identity" path="lib/jbpm-identity-3.2.3.jar" type="code">
+			<export prefix="*"/>
+		</library>
+		
+		<library id="jbpm-jpdl" path="lib/jbpm-jpdl-3.2.3.jar" type="code">
+			<export prefix="*"/>
+		</library>
+		
+		<library id="spring-modules-jbpm31" path="lib/spring-modules-jbpm31-0.8.jar" type="code">
+			<export prefix="*" />
+		</library>
+		
+		<library id="jcr" path="lib/jcr-1.0.1.jar" type="code">
+			<export prefix="*" />
+		</library>
+		
+		<library id="xstream" path="lib/xstream-1.3.1.jar" type="code">
+			<export prefix="*" />
+		</library>
+		
+		<library id="xpp3" path="lib/xpp3_min-1.1.4c.jar" type="code">
+			<export prefix="*" />
+		</library>
+		
+		<library id="freemarker" path="lib/freemarker-2.3.15.jar" type="code">
+			<export prefix="*" />
+		</library>
+		
+		<library id="javassist" path="lib/javassist-3.8.0.GA.jar" type="code">
+			<export prefix="*" />
+		</library>
+   	</runtime>
+	
+	<extension-point id="WorkflowModel">
+        <parameter-def id="name" />
+		<parameter-def id="controller" />
+		<parameter-def id="transformer" />
+	</extension-point>
+		
+	<extension plugin-id="logicaldoc-workflow" point-id="WorkflowModel"  id="taskWorkflowModel">
+		<parameter id="name" value="WorkflowTask"/>
+		<parameter id="controller" value="com.logicaldoc.workflow.editor.controll.TaskController"/>
+		<parameter id="transformer" value="com.logicaldoc.workflow.transform.JBPMWorkflowTask"/>
+	</extension>
+	<extension plugin-id="logicaldoc-workflow" point-id="WorkflowModel"  id="transitionWorkflowModel">
+		<parameter id="name" value="Transition"/>
+		<parameter id="controller" value="com.logicaldoc.workflow.editor.controll.TransitionController"/>
+		<parameter id="transformer" value=""/>
+	</extension>
+	<extension plugin-id="logicaldoc-workflow" point-id="WorkflowModel"  id="endstateWorkflowModel">
+		<parameter id="name" value="EndState"/>
+		<parameter id="controller" value="com.logicaldoc.workflow.editor.controll.EndStateController"/>
+		<parameter id="transformer" value="com.logicaldoc.workflow.transform.JBPMEndState"/>
+	</extension>
+
+	<extension plugin-id="logicaldoc-core" point-id="DocumentToolbar" id="workflowToolbar">
+		<parameter id="action" value="WorkflowTemplateManager.setupWorkflow"/>
+		<parameter id="title" value="workflow.startworkflow"/>
+		<parameter id="rendered" value="#{documentNavigation.selectedDir.workflowEnabled}" />
+		<parameter id="position" value="50" />
+		<parameter id="icon" value="actions_workflow.png" />
+		<parameter id="confirm" value="" />
+		<parameter id="link" value="" />
+		<parameter id="target" value="" />
+	</extension>
+	
+	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="workflowDbInit">
+		<parameter id="position" value="10" />
+		<parameter id="name" value="logicaldoc-workflow" />
+		<parameter id="sqlFile" value="sql/logicaldoc-workflow.sql" />
+	</extension>
+	
+	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="jbpmInit">
+		<parameter id="position" value="11" />
+		<parameter id="name" value="jbpm" />
+		<parameter id="sqlFile" value="sql/jbpm.jpdl.sql" />
+	</extension>
+	
+    <extension plugin-id="logicaldoc-core" point-id="DatabaseMapping" id="worklow">
+        <parameter id="mapping" value="classpath*:org/jbpm/**/*.hbm.xml"/>
+        <parameter id="position" value="2"/>
+    </extension>
+</plugin>
