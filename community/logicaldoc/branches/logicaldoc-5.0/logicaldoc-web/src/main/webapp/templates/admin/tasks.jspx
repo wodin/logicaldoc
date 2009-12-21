@@ -1,0 +1,157 @@
+<?xml version = '1.0'?>
+<!-- 
+ Tasks listing
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.5.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+	styleClass="center" style="width: 80%">
+
+	<ice:messages globalOnly="true" />
+	<ice:panelGroup>
+		<ice:panelGroup id="list"
+			rendered="#{tasksRecordsManager.selectedPanel=='list'}">
+			<ice:form id="tasksForm">
+
+				<!-- Basic table -->
+				<ice:panelGroup styleClass="formBorderHighlight">
+					<ice:dataTable id="tasksList" value="#{tasksRecordsManager.tasks}"
+						var="task" cellpadding="0" rows="10"
+						columnClasses="titleColumn,dateColumn,titleColumn,dateColumn,selectionColumn,dateColumn">
+
+						<!-- Name -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['task.name']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{task.displayName} " />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Previous fire -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:panelGroup>
+									<ice:outputText value="#{msgs['task.previousStartTime']}" style="white-space:nowrap;"/>
+									<br />
+									<ice:outputText value="#{msgs['task.nextStartTime']}" style="white-space:nowrap;"/>
+								</ice:panelGroup>
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{task.task.scheduling.previousFireTime}"
+									title="#{msgs['task.previousStartTime']}">
+									<f:convertDateTime pattern="#{loc.dateFormat}"
+										timeZone="#{timezone}" />
+								</ice:outputText>
+								<br />
+								<ice:outputText value="#{task.task.scheduling.nextFireTime}"
+									title="#{msgs['task.nextStartTime']}">
+									<f:convertDateTime pattern="#{loc.dateFormat}"
+										timeZone="#{timezone}" />
+								</ice:outputText>
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Scheduling -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['task.scheduling']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:commandLink action="#{tasksRecordsManager.editScheduling}"
+									title="#{msgs['task.scheduling.edit']}">
+									<ice:outputText value="#{task.task.scheduling.cronExpression} " rendered="#{task.task.scheduling.mode eq 'cron'}"/>
+									<ice:outputText value="#{msgs['each']} #{task.task.scheduling.intervalSeconds} #{msgs['seconds']}" rendered="#{task.task.scheduling.mode eq 'simple'}"/>
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Enabled -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['enabled']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:commandButton image="#{StyleBean.imagesPath}/bullet_red.png"
+									action="#{task.enable}" styleClass=""
+									rendered="#{!task.task.scheduling.enabled}"
+									title="#{msgs['disabled']}: #{msgs['enable']}" />
+								<ice:commandButton image="#{StyleBean.imagesPath}/bullet_green.png"
+									action="#{task.disable}" styleClass=""
+									rendered="#{task.task.scheduling.enabled}"
+									title="#{msgs['enabled']}: #{msgs['disable']}" />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Execution -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['task.execution']}" />
+							</f:facet>
+							<ice:panelGrid columns="2">
+								<ice:panelGroup>
+									<ice:outputProgress styleClass="iceOutProgSmall"
+										value="#{task.task.completionPercentage}"
+										indeterminate="#{task.task.indeterminate}" />
+								</ice:panelGroup>
+								<ice:panelGroup>
+									<ice:commandButton
+										image="#{StyleBean.imagesPath}/idle_task.gif"
+										action="#{tasksRecordsManager.start}" styleClass=""
+										rendered="#{task.task.status==0 and task.task.scheduling.enabled}"
+										title="#{msgs['task.idle']}: #{msgs['task.start']}" />
+									<ice:commandButton
+										image="#{StyleBean.imagesPath}/running_task.gif"
+										action="#{tasksRecordsManager.stop}" styleClass=""
+										rendered="#{task.task.status==1 and task.task.scheduling.enabled}"
+										title="#{msgs['task.running']}: #{msgs['task.stop']}" />
+								</ice:panelGroup>
+							</ice:panelGrid>
+						</ice:column>
+
+						<!-- Log -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['task.log']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:commandButton image="#{StyleBean.imagesPath}/logging.png"
+									action="#{tasksRecordsManager.log}" />
+							</ice:panelGroup>
+						</ice:column>
+					</ice:dataTable>
+					
+					<ice:panelGroup style="text-align:left;">
+						<ldoc:paginator table="tasksList"
+							label="#{msgs['paginator.simple']}" />
+						<br />
+					</ice:panelGroup>
+				</ice:panelGroup>
+			</ice:form>
+		</ice:panelGroup>
+
+		<ice:panelGroup id="scheduling" styleClass="center"
+			rendered="#{tasksRecordsManager.selectedPanel=='scheduling'}">
+			<f:subview id="w-scheduling">
+				<ui:include src="/templates/admin/scheduling.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+
+		<ice:panelGroup id="log" styleClass="center"
+			rendered="#{tasksRecordsManager.selectedPanel=='log'}">
+			<f:subview id="w-scheduling">
+				<ui:include src="/templates/admin/taskLog.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+	</ice:panelGroup>
+</jsp:root>
+

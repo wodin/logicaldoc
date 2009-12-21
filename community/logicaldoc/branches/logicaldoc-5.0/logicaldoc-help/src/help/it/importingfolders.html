@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- InstanceBegin template="/Templates/contineo-help.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Cartelle di importazione</title>
+<!-- InstanceEndEditable -->
+<link href="css/help.css" rel="stylesheet" type="text/css">
+<!-- InstanceBeginEditable name="head" -->
+<style type="text/css">
+<!--
+.style4 {
+	color: #000000;
+	font-weight: bold;
+}
+-->
+</style>
+<!-- InstanceEndEditable -->
+</head>
+<body>
+<table summary="content" border="0" cellpadding="0" cellspacing="0" width="100%">
+  <!--================= start Content==================-->
+  <tbody>
+    <tr>
+      <td align="left" width="10"><img alt="" src="images/spacer.gif" class="spacer" height="1" width="10" /></td>
+      <td align="left" width="100%"><div class="content">
+          <table class="title" width="100%">
+            <tbody>
+              <tr>
+                <td valign="middle"><h1><!-- InstanceBeginEditable name="TitleRegion" -->Cartelle di importazione<!-- InstanceEndEditable --></h1></td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- InstanceBeginEditable name="ContentRegion" -->
+          <p>Quando LogicalDOC viene installato all'interno di una rete costituita anche da
+            altri computer che condividono cartelle, &egrave; possibile importare
+            automaticamente tutti i documenti condivisi mediante la funzione <span class="style4">Cartelle di importazione</span>. Questa caratteristica di LogicalDOC funziona con tutte le normali condivisioni
+            Windows ed anche con le condivisioni SAMBA che &egrave; possibile configurare sui
+          sistemi UNIX/Linux. L'utente pu&ograve; inoltre importare automaticamente i documenti presenti in cartelle locali del computer. <br> 
+          Accedete dall'amministrazione alla sezione <span class="style4">Cartelle di importazione</span>. In questa sezione viene visualizzato l'elenco delle cartelle remote e locali attualmente impostate. In alto sulla sinistra sono presenti due icone: la prima <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.12</span></a> consente di importare documenti da una cartella remota, la seconda, invece, consente di importare documenti da una cartella locale presente nel server/computer che ospita LogicalDOC. Le pagine di impostazione e modifica delle due tipologie di cartelle sono identiche, ma nella pagina di importazione da cartelle locali non bisogna fornire username e password. L'utente può abilitare, disabilitare o cancellare ogni cartella. Cliccando su 'test'
+è inoltre possibile verificare se la cartella precedentemente configurata è
+ancora esistente ed è raggiungibile da LogicalDOC.</p>
+		   <p>
+             			    <center>
+			      <img src="images/importingfolders_01.gif" width="632" height="227" heigth="197">
+			      <br>
+			      Figura 50: Elenco delle cartelle remote e locali	          
+   			    </center>
+		  </p>
+          <h3>Configurazione delle cartelle remote</h3>	
+          <p>All'interno della tabella di elenco delle cartelle, ogni elemento riporta l'indirizzo della condivisione e i controlli che servono
+            per modificare il dato.<br>
+            Con l'icona <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.5</span></a> si possono editare tutte le informazioni, con <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.10</span></a> si pu&ograve;
+            cambiare lo stato in attivo/disattivo e ovviamente con <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.6</span></a> &egrave; possibile
+            cancellare la condivisione.<br>
+            In alto sulla sinistra &egrave; predisposta un'icona <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.12</span></a> per l'inserimento di nuove
+            cartelle, cliccando su tale icona viene mostrata la scheda di
+            inserimento/modifica. <br>
+          </p>
+		  
+		  		  <p>
+             			    <center>
+			      <img src="images/importingfolders_02.gif" width="635" height="406" heigth="197">
+			      <br>
+			      Figura 51: Impostazioni di una cartella remota		          
+   			                </center>
+		  </p>
+		  
+                  <p>La parte superiore della scheda consente di inserire i dati di connessione alla
+                    cartella ed in particolare:<ul>
+                    <li>Percorso sul computer remoto</li>
+                    <li>Username (opzionale)</li>
+                    <li>Password (opzionale)</li>
+		  </ul>
+          <p>Il percorso remoto rappresenta la cartella che viene condivisa sul computer
+                    remoto, &egrave; possibile fare un copia e incolla dal path visualizzato in Esplora
+                    Risorse di Windows.<br>
+                    La figura di esempio mostra la configurazione della cartella
+                    remota \\192.168.0.255\docs.<br>
+                    Qualora la cartella remota fosse protetta, &egrave; anche possibile impostare
+                    username e password per l'autenticazione.<br>
+                    La parte inferiore della scheda consente di impostare le informazioni per
+                    l'immagazzinamento dei documenti e quindi:		            </p>
+                    <ul>
+                    <li>Le estensioni consentite(separate da virgola)</li>
+                    <li>La lingua in cui verranno importati i documenti</li>
+                    <li>Il livello di profondit&agrave;</li>
+                    <li>La dimensione massima dei file</li>
+                    <li>L'estrazione delle parole chiave dai documenti</li>
+                    <li>Il template dei documenti importati</li>
+                    <li>La cartella dell'archivio documentale in cui salvare i documenti</li>
+		  </ul>
+					
+          <p>Una volta salvate le impostazioni, ad intervalli regolari la cartella remota e
+                    tutte le sue sotto-cartelle fino al livello di profondit&agrave; impostato, verranno
+                    esplorate alla ricerca di documenti. I soli documenti con estensione ammessa
+                    verranno indicizzati e inseriti nell'archivio documentale a partire dalla cartella
+                    in archivio impostata.<br>
+                    E' importante considerare il fatto che tutte le sotto-cartelle della condivisione
+                    remota verranno replicate anche nell'archivio documentale di LogicalDOC.<br>
+                    Cliccando sul pulsante <span class="style4">Svuota cache</span> &egrave; possibile immagazzinare nuovamente
+                    tutti i documenti presenti nella cartella remota.                    </p>
+
+                              </p>
+							  <br>
+          			            <div align="center">
+            <table width="90%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="180" height="25" class="noteHeader"><img src="images/note_ico.gif" width="10" height="10" hspace="4">Nota:</td>
+                <td height="25">&nbsp;</td>
+              </tr
+              ><tr>
+                <td colspan="2" class="noteBody">Le sole cartelle remote attive verranno ispezionate ad intervalli di
+                tempo regolari da un'operazione pianificata in background.</td>
+              </tr>
+            </table>
+          </div>
+		  
+                                <p>&nbsp;</p>
+                                <p>&nbsp;</p>
+          <!-- InstanceEndEditable --></div></td>
+      <td width="10"><img alt="" src="images/spacer.gif" class="spacer" height="1" width="10" /></td>
+    </tr>
+    <!--================= end Content==================-->
+  </tbody>
+</table>
+</body>
+<!-- InstanceEnd -->
+</html>

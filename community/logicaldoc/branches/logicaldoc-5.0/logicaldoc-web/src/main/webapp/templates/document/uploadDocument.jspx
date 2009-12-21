@@ -1,0 +1,93 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page shows the upload document wizard
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="uploadForm">
+	<ice:panelGroup styleClass="formBorderHighlight">
+		<ice:panelGroup visible="#{newDocWizard.showUpload}">
+			<h3>
+				<ice:outputText value="#{msgs['msg.jsp.uploadfile']}" />
+				<br />
+				<br />
+			</h3>
+			<!-- Language selection -->
+			<ice:panelGrid columns="2">
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="lang"
+						value="#{msgs['language']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:selectOneMenu id="lang" styleClass="selectTagMenu"
+						value="#{inputFile.language}">
+						<f:selectItems value="#{selectionTags.languages}" />
+					</ice:selectOneMenu>
+					<br />
+				</ice:panelGroup>
+			</ice:panelGrid>
+
+			<!-- Tags extraction -->
+			<ice:panelGroup>
+				<br />
+				<ice:selectBooleanCheckbox value="#{inputFile.extractTags}"
+					id="tag" />
+				<ice:outputLabel for="tag" value=" #{msgs['tags.extract']}" />
+				&amp;nbsp;&amp;nbsp;
+				<ice:selectBooleanCheckbox value="#{inputFile.immediateIndexing}"
+					id="indexing" />
+				<ice:outputLabel for="indexing" value=" #{msgs['indexing.immediate']}" />
+				<br />
+				<br />
+			</ice:panelGroup>
+
+			<!-- File selection -->
+			<ice:panelGroup>
+				<ice:outputText
+					value="#{msgs['upload.filename']}: #{inputFile.fileName}"
+					style="padding-left:8px;" escape="false">
+		
+				</ice:outputText>
+				<br />
+				<br />
+				<ice:inputFile styleClass="inputFile" id="inputFile1"
+					progressRender="true" progressListener="#{inputFile.progress}"
+					actionListener="#{inputFile.action}" inputTextSize="30"
+					label="#{msgs['upload.button']}" style="width: 612px"/>
+				<ice:outputProgress id="pro1" value="#{inputFile.percent}" />
+				<ice:outputText value="#{msgs['upload.clicktoproceed']}" 
+				    rendered="#{newDocWizard.showUpload==true and inputFile.ready==true}" />
+				<ice:panelGroup>
+					<ice:messages globalOnly="false" showDetail="true"
+						showSummary="false" />
+				</ice:panelGroup>
+			</ice:panelGroup>
+		</ice:panelGroup>
+
+		<ice:panelGroup rendered="#{!newDocWizard.showUpload}">
+			<f:subview id="w-editDoc">
+				<ui:include src="/templates/document/insert.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+
+		<hr />
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['cancel']}" id="abort"
+				partialSubmit="true" immediate="true" action="#{newDocWizard.abort}" />
+			<ice:commandButton styleClass="saveBtn" value="#{msgs['continue']}" id="next"
+				action="#{newDocWizard.next}" onclick="disabled=true;setFocus('');"
+				rendered="#{newDocWizard.showUpload==true and inputFile.ready==true}" />
+			<ice:commandButton value="#{msgs['save']}" id="save"
+				action="#{newDocWizard.save}" rendered="#{!newDocWizard.showUpload}" />
+		</ice:panelGroup>
+	</ice:panelGroup>
+</jsp:root>
