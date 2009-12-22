@@ -681,9 +681,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public long count(boolean computeDeleted) {
 		long count = 0;
 		try {
-			String query = "select count(*) from ld_document A ";
+			String query = "select count(*) from ld_document A  where ";
+			//For performance issues on InnoDB tables, we always use the where clause
 			if (!computeDeleted) {
-				query += " where A.ld_deleted=0";
+				query += " A.ld_deleted=0";
+			}else{
+				query += " A.ld_deleted>0";
 			}
 
 			Connection con = null;
