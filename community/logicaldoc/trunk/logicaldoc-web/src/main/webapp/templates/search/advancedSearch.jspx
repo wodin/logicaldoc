@@ -35,7 +35,9 @@
 			</ice:panelGroup>
 			<ice:panelGroup>
 				<ice:inputText id="query" value="#{searchForm.query}" tabindex="1"
-					maxlength="255" size="50" partialSubmit="true" />
+					maxlength="255" size="50" partialSubmit="true" style="margin-right: 50px;" />
+				<ice:commandButton type="submit" styleClass="standardBtn" value="#{msgs['search']}"
+					id="save01" tabindex="1" action="#{searchForm.search}" />	
 			</ice:panelGroup>
 
 			<ice:panelGroup styleClass="outputLabel">
