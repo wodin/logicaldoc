@@ -37,30 +37,30 @@ public class Directory extends PageContentBean {
 
 	private boolean selected = false;
 
-	private long count = 0; 
+	private long count = 0;
 
 	private Boolean writeEnabled = null;
 
 	private Boolean addChildEnabled = null;
 
 	private Boolean manageSecurityEnabled = null;
-	
+
 	private Boolean manageImmutabilityEnabled = null;
 
 	private Boolean deleteEnabled = null;
 
 	private Boolean renameEnabled = null;
-	
+
 	private Boolean bulkImportEnabled = null;
 
 	private Boolean bulkExportEnabled = null;
-	
+
 	private Boolean archiveEnabled = null;
 
 	private Boolean workflowEnabled = null;
-	
+
 	private String pathExtended;
-	
+
 	// list for the dynamic menus w/ getter & setter
 	protected List<MenuItem> menuItems = new ArrayList<MenuItem>();
 
@@ -73,7 +73,7 @@ public class Directory extends PageContentBean {
 			setDisplayText(menu.getText());
 		else
 			setDisplayText("");
-		StyleBean style=(StyleBean)Context.getInstance().getBean(StyleBean.class);
+		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		setIcon(style.getImagePath(menu.getIcon()));
 	}
 
@@ -99,11 +99,11 @@ public class Directory extends PageContentBean {
 	@Override
 	public void onSelect(ActionEvent event) {
 		getDocumentNavigation();
-		
+
 		// refresh menu items
 		createMenuItems();
 	}
-	
+
 	public String edit() {
 		DocumentNavigation navigation = getDocumentNavigation();
 		return navigation.edit();
@@ -113,25 +113,25 @@ public class Directory extends PageContentBean {
 		DocumentNavigation navigation = getDocumentNavigation();
 		return navigation.rights();
 	}
-	
+
 	public String newDirectory() {
 		DocumentNavigation navigation = getDocumentNavigation();
 		return navigation.newDirectory();
 	}
-	
+
 	public String searchInFolder() {
 		DocumentNavigation navigation = getDocumentNavigation();
-		return navigation.searchInFolder();		
+		return navigation.searchInFolder();
 	}
-	
+
 	public String delete() {
 		DocumentNavigation navigation = getDocumentNavigation();
-		return navigation.delete();			
+		return navigation.delete();
 	}
-	
+
 	public String history() {
 		DocumentNavigation navigation = getDocumentNavigation();
-		return navigation.history();		
+		return navigation.history();
 	}
 
 	private DocumentNavigation getDocumentNavigation() {
@@ -183,12 +183,12 @@ public class Directory extends PageContentBean {
 		}
 		return manageSecurityEnabled.booleanValue();
 	}
-	
+
 	public boolean isManageImmutabilityEnabled() {
 		if (manageImmutabilityEnabled == null) {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			manageImmutabilityEnabled = new Boolean(mdao.isPermissionEnabled(Permission.MANAGE_IMMUTABILITY, getMenuId(),
-					SessionManagement.getUserId()));
+			manageImmutabilityEnabled = new Boolean(mdao.isPermissionEnabled(Permission.MANAGE_IMMUTABILITY,
+					getMenuId(), SessionManagement.getUserId()));
 		}
 		return manageImmutabilityEnabled.booleanValue();
 	}
@@ -210,25 +210,25 @@ public class Directory extends PageContentBean {
 		}
 		return renameEnabled.booleanValue();
 	}
-	
+
 	public boolean isBulkImportEnabled() {
 		if (bulkImportEnabled == null) {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			bulkImportEnabled = new Boolean(mdao.isPermissionEnabled(Permission.BULK_IMPORT, getMenuId(), SessionManagement
-					.getUserId()));
+			bulkImportEnabled = new Boolean(mdao.isPermissionEnabled(Permission.BULK_IMPORT, getMenuId(),
+					SessionManagement.getUserId()));
 		}
 		return bulkImportEnabled.booleanValue();
 	}
-	
+
 	public boolean isBulkExportEnabled() {
 		if (bulkExportEnabled == null) {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			bulkExportEnabled = new Boolean(mdao.isPermissionEnabled(Permission.BULK_EXPORT, getMenuId(), SessionManagement
-					.getUserId()));
+			bulkExportEnabled = new Boolean(mdao.isPermissionEnabled(Permission.BULK_EXPORT, getMenuId(),
+					SessionManagement.getUserId()));
 		}
 		return bulkExportEnabled.booleanValue();
 	}
-	
+
 	public boolean isArchiveEnabled() {
 		if (archiveEnabled == null) {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -237,7 +237,7 @@ public class Directory extends PageContentBean {
 		}
 		return archiveEnabled.booleanValue();
 	}
-	
+
 	public boolean isWorkflowEnabled() {
 		if (workflowEnabled == null) {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -246,7 +246,7 @@ public class Directory extends PageContentBean {
 		}
 		return workflowEnabled.booleanValue();
 	}
-	
+
 	public List<MenuItem> getMenuItems() {
 		if (menuItems.isEmpty()) {
 			createMenuItems();
@@ -264,14 +264,9 @@ public class Directory extends PageContentBean {
 	 * @return
 	 */
 	protected void createMenuItems() {
-
-//		System.out.println("###########");
-//		System.out.println("#####################");
-//		System.out.println("createMenuItems() for directory: " + getMenu().getId() + ", \"" + getDisplayText() + "\"");
-
 		menuItems.clear();
 
-		// Acquire the 'FolderToolbar' extensions of the core plug-in
+		// Acquire the 'FolderMenu' extensions of the core plug-in
 		PluginRegistry registry = PluginRegistry.getInstance();
 		Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "FolderMenu", null);
 
@@ -285,33 +280,24 @@ public class Directory extends PageContentBean {
 				item.setAction(FacesUtil.createActionMethodBinding(ext.getParameter("action").valueAsString()));
 			}
 
-//			System.out.println("target: " + ext.getParameter("target").valueAsString());
-//			System.out.println("action: " + ext.getParameter("action").valueAsString());
-//			System.out.println("confirm: " + ext.getParameter("confirm").valueAsString());
-//			System.out.println("link: " + ext.getParameter("link").valueAsString());
-//			System.out.println("rendered: " + ext.getParameter("rendered").valueAsString());
-
 			if (StringUtils.isNotEmpty(ext.getParameter("link").valueAsString())) {
 				ValueBinding linkBinding = FacesUtil.createValueBinding(ext.getParameter("link").valueAsString());
 				if (linkBinding != null) {
 					String linkValue = (String) linkBinding.getValue(FacesContext.getCurrentInstance());
-//					System.out.println("linkValue: " + linkValue);
 					item.setLink(linkValue);
 				}
 			}
-			
+
 			ValueBinding renderedBinding = FacesUtil.createValueBinding(ext.getParameter("rendered").valueAsString());
 			if (renderedBinding != null) {
 				Boolean rendered = (Boolean) renderedBinding.getValue(FacesContext.getCurrentInstance());
-//				System.out.println("rendered_2: " + rendered);
 				if (rendered != null)
 					item.setRendered(rendered);
 			}
-			
+
 			if (StringUtils.isNotEmpty(ext.getParameter("confirm").valueAsString())) {
-//				System.out.println("confirm: " + ext.getParameter("confirm").valueAsString());
 				String confirmMessage = Messages.getMessage(ext.getParameter("confirm").valueAsString());
-				item.setOnclick("if (!confirm('" + confirmMessage +"')) {return false;}");
+				item.setOnclick("if (!confirm('" + confirmMessage + "')) {return false;}");
 			}
 			item.getAttributes().put("myAttibute", "myValue");
 
