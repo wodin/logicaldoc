@@ -168,7 +168,7 @@ public class ServletDocUtil {
 			encodedFileName = "=?UTF-8?B?" + new String(Base64.encodeBase64(filename.getBytes("UTF-8")), "UTF-8")
 					+ "?=";
 		}
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\"");
+		//response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\"");
 	}
 
 	/**
