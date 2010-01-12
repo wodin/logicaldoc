@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>15</version>
+  <version>16</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -248,7 +248,6 @@
         <artifactId>hibernate-annotations</artifactId>
         <version>3.3.1.GA</version>
       </dependency>
-      
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
@@ -259,7 +258,6 @@
         <artifactId>slf4j-log4j12</artifactId>
         <version>1.5.8</version>
       </dependency>
-      
       <dependency>
         <groupId>net.sf.ehcache</groupId>
         <artifactId>ehcache</artifactId>
@@ -344,79 +342,99 @@
         <artifactId>quartz</artifactId>
         <version>1.6.5</version>
       </dependency>
-   <dependency>
-      <groupId>org.icefaces</groupId>
-      <artifactId>icefaces-comps</artifactId>
-      <version>1.8.2</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.icefaces</groupId>
-      <artifactId>icefaces-facelets</artifactId>
-      <version>1.8.2</version>
-      <type>jar</type>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.el</groupId>
-          <artifactId>el-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>backport-util-concurrent</groupId>
-          <artifactId>backport-util-concurrent</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.icefaces</groupId>
-      <artifactId>icefaces</artifactId>
-      <version>1.8.2</version>
-      <type>jar</type>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.el</groupId>
-          <artifactId>el-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>backport-util-concurrent</groupId>
-          <artifactId>backport-util-concurrent</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>javax.faces</groupId>
-      <artifactId>jsf-api</artifactId>
-      <version>1.2_09</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>javax.faces</groupId>
-      <artifactId>jsf-impl</artifactId>
-      <version>1.2_09</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>bouncycastle</groupId>
-      <artifactId>bcmail-jdk14</artifactId>
-      <version>137</version>
-    </dependency>
-    <dependency>
-      <groupId>bouncycastle</groupId>
-      <artifactId>bcprov-jdk14</artifactId>
-      <version>137</version>
-    </dependency>
-    <dependency>
-      <groupId>bouncycastle</groupId>
-      <artifactId>bctsp-jdk14</artifactId>
-      <version>137</version>
-    </dependency>
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-servlet</artifactId>
+        <version>2.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-user</artifactId>
+        <version>2.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.smartgwt</groupId>
+        <artifactId>smartgwt</artifactId>
+        <version>2.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.smartgwt</groupId>
+        <artifactId>smartgwt-skins</artifactId>
+        <version>2.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.icefaces</groupId>
+        <artifactId>icefaces-comps</artifactId>
+        <version>1.8.2</version>
+        <type>jar</type>
+      </dependency>
+      <dependency>
+        <groupId>org.icefaces</groupId>
+        <artifactId>icefaces-facelets</artifactId>
+        <version>1.8.2</version>
+        <type>jar</type>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.el</groupId>
+            <artifactId>el-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>backport-util-concurrent</groupId>
+            <artifactId>backport-util-concurrent</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.icefaces</groupId>
+        <artifactId>icefaces</artifactId>
+        <version>1.8.2</version>
+        <type>jar</type>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.el</groupId>
+            <artifactId>el-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>backport-util-concurrent</groupId>
+            <artifactId>backport-util-concurrent</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>javax.faces</groupId>
+        <artifactId>jsf-api</artifactId>
+        <version>1.2_09</version>
+        <type>jar</type>
+      </dependency>
+      <dependency>
+        <groupId>javax.faces</groupId>
+        <artifactId>jsf-impl</artifactId>
+        <version>1.2_09</version>
+        <type>jar</type>
+      </dependency>
+      <dependency>
+        <groupId>bouncycastle</groupId>
+        <artifactId>bcmail-jdk14</artifactId>
+        <version>137</version>
+      </dependency>
+      <dependency>
+        <groupId>bouncycastle</groupId>
+        <artifactId>bcprov-jdk14</artifactId>
+        <version>137</version>
+      </dependency>
+      <dependency>
+        <groupId>bouncycastle</groupId>
+        <artifactId>bctsp-jdk14</artifactId>
+        <version>137</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <repositories>
@@ -445,6 +463,10 @@
       <id>jboss</id>
       <name>Jboss Repository</name>
       <url>http://repository.jboss.com/maven2</url>
+    </repository>
+    <repository>
+      <id>smartgwt</id>
+      <url>http://www.smartclient.com/maven2</url>
     </repository>
   </repositories>
   <distributionManagement>
