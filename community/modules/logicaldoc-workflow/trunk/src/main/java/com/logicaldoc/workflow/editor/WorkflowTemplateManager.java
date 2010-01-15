@@ -20,6 +20,11 @@ import com.icesoft.faces.component.dragdrop.DragEvent;
 import com.icesoft.faces.component.dragdrop.DropEvent;
 import com.icesoft.faces.component.ext.HtmlCommandLink;
 import com.icesoft.faces.component.ext.HtmlPanelGroup;
+import com.icesoft.faces.component.selectinputtext.SelectInputText;
+import com.logicaldoc.core.security.Group;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.GroupDAO;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.document.DocumentNavigation;
 import com.logicaldoc.web.document.DocumentsRecordsManager;
@@ -81,6 +86,12 @@ public class WorkflowTemplateManager {
 	private UIInput reminderSubjectInput = null;
 
 	private UIInput reminderBodyInput = null;
+
+	private List<String> possibleSupervisors = new LinkedList<String>();
+
+	private UIInput supervisorInput = null;
+
+	private boolean showSupervisorSettings = false;
 
 	public String getXMLData() {
 		this.workflowTransformService.fromObjectToWorkflowDefinition(this.workflowTemplate);
@@ -481,6 +492,51 @@ public class WorkflowTemplateManager {
 		FacesUtil.forceRefresh(assignmentBodyInput);
 		FacesUtil.forceRefresh(reminderSubjectInput);
 		FacesUtil.forceRefresh(reminderBodyInput);
+		FacesUtil.forceRefresh(supervisorInput);
+	}
+
+	public void removeSupervisor(ActionEvent actionEvent) {
+		this.workflowTemplate.setSupervisor("");
+		showSupervisorSettings = false;
+	}
+
+	public void addSupervisor(ActionEvent actionEvent) {
+		showSupervisorSettings = true;
+	}
+
+	public void selectSupervisorChanged(ValueChangeEvent event) {
+		if (event.getComponent() instanceof SelectInputText) {
+			// get the number of displayable records from the component
+			SelectInputText autoComplete = (SelectInputText) event.getComponent();
+
+			String currentValue = autoComplete.getValue().toString();
+			UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+			List<User> matchedUsers = userDAO
+					.findByWhere(
+							"_entity.type = 0 and (_entity.userName like concat(?,'%') OR _entity.firstName like concat(?,'%') OR _entity.name like concat(?,'%'))",
+							new Object[] { currentValue, currentValue, currentValue }, null);
+
+			List<Group> matchedGroups = groupDAO.findByWhere("_entity.type = 0 and _entity.name like concat(?,'%')",
+					new Object[] { currentValue, }, null);
+
+			possibleSupervisors = new LinkedList<String>();
+			for (User user : matchedUsers) {
+				possibleSupervisors.add(user.getUserName());
+			}
+			for (Group group : matchedGroups) {
+				if (!possibleSupervisors.contains(group.getName()))
+					possibleSupervisors.add(group.getName());
+			}
+		}
+	}
+
+	public List<SelectItem> getPossibleSupervisors() {
+		List<SelectItem> items = new LinkedList<SelectItem>();
+		for (String supervisor : possibleSupervisors) {
+			items.add(new SelectItem(supervisor, supervisor));
+		}
+		return items;
 	}
 
 	public WorkflowTemplate getWorkflowTemplate() {
@@ -570,5 +626,21 @@ public class WorkflowTemplateManager {
 
 	public void setWorkflowTemplateDao(WorkflowPersistenceTemplateDAO workflowTemplateDao) {
 		this.workflowTemplateDao = workflowTemplateDao;
+	}
+
+	public boolean isShowSupervisorSettings() {
+		return showSupervisorSettings;
+	}
+
+	public void setShowSupervisorSettings(boolean showSupervisorSettings) {
+		this.showSupervisorSettings = showSupervisorSettings;
+	}
+
+	public UIInput getSupervisorInput() {
+		return supervisorInput;
+	}
+
+	public void setSupervisorInput(UIInput supervisorInput) {
+		this.supervisorInput = supervisorInput;
 	}
 }

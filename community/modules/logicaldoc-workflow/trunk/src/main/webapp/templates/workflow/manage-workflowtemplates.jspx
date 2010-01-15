@@ -246,7 +246,6 @@
 				<table>
 					<tr>
 						<td valign="top" width="340">
-
 							<ice:panelCollapsible id="workflowSettingsPanel"
 								expanded="#{WorkflowTemplateManager.showWorkflowSettings}">
 								<f:facet name="header">
@@ -284,8 +283,18 @@
 									style="width:95%; height:100px; font-size:10px"
 									value="#{WorkflowTemplateManager.workflowTemplate.reminderMessage.body}"
 									binding="#{WorkflowTemplateManager.reminderBodyInput}" />
-							</ice:panelCollapsible>
 
+								<ice:panelCollapsible id="panelSupervisors" expanded="true">
+									<f:facet name="header">
+										<ice:panelGroup>
+											<ice:outputText
+												value="#{msgs['workflow.editor_settings_supervisors']}" />
+										</ice:panelGroup>
+									</f:facet>
+									<ui:include src="/templates/workflow/supervisors.jspx" />
+								</ice:panelCollapsible>
+								<ice:panelGroup style="height: 10px" />
+							</ice:panelCollapsible>
 							<!-- ****** -->
 							<!--  Task  -->
 							<!-- ****** -->
