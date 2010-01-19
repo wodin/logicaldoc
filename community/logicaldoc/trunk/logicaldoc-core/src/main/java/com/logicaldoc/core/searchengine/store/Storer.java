@@ -30,8 +30,7 @@ public interface Storer {
 	 * @param docId The document identifier
 	 */
 	public void delete(long docId);
-	
-	
+
 	/**
 	 * Finds the folder where all document's files are stored
 	 * 
@@ -39,7 +38,7 @@ public interface Storer {
 	 * @return The document's folder
 	 */
 	public File getDirectory(long docId);
-	
+
 	/**
 	 * Finds a specific file of a stored document
 	 * 
@@ -47,7 +46,7 @@ public interface Storer {
 	 * @return The document's file
 	 */
 	public File getFile(long docId, String filename);
-	
+
 	/**
 	 * Obtains the document's file for the specified version
 	 * 
@@ -58,4 +57,12 @@ public interface Storer {
 	 * @return The document file
 	 */
 	public File getFile(Document doc, String fileVersion, String suffix);
+
+	/**
+	 * Deletes from the document storage all the files related to a deleted
+	 * document version
+	 * 
+	 * @param docId The document identifier
+	 */
+	public void clean(long docId);
 }

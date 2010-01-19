@@ -28,4 +28,14 @@ public interface VersionDAO extends PersistentObjectDAO<Version> {
 	 * @return The list of versions ordered by descending date
 	 */
 	public List<Version> findByDocId(long docId);
+
+	/**
+	 * This method persists the given version. Checks if is necessary to delete
+	 * some document versions reading the context property
+	 * 'document.maxversions'
+	 * 
+	 * @param version version to be stored.
+	 * @return True if successfully stored in a database.
+	 */
+	public boolean store(Version version);
 }
