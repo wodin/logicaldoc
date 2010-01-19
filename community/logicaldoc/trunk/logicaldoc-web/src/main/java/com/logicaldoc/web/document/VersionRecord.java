@@ -42,6 +42,8 @@ public class VersionRecord extends Version {
 	private void load() {
 		VersionDAO versionDAO = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 		this.wrappedVersion = versionDAO.findById(wrappedVersionId);
+		if(this.wrappedVersion==null)
+			this.wrappedVersion=new Version();
 	}
 
 	public VersionRecord(Version version) {

@@ -3,6 +3,8 @@ package com.logicaldoc.core.searchengine.store;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -76,7 +78,7 @@ public class FSStorer implements Storer {
 		File docDir = getDirectory(docId);
 		return new File(docDir, filename);
 	}
-	
+
 	@Override
 	public File getFile(Document doc, String fileVersion, String suffix) {
 		/*
@@ -99,5 +101,27 @@ public class FSStorer implements Storer {
 		if (StringUtils.isNotEmpty(suffix))
 			filename += "-" + suffix;
 		return getFile(doc.getId(), filename);
+	}
+
+	@Override
+	public void clean(long docId) {
+		File docDir = getDirectory(docId);
+		File[] listFiles = docDir.listFiles();
+		List<String> deletedVersions = new ArrayList<String>();
+		if (listFiles != null) {
+			for (int i = 0; i < listFiles.length; i++) {
+				if (listFiles[i].isFile() && listFiles[i].getName().endsWith(".deleted")) {
+					String version = listFiles[i].getName().substring(0, listFiles[i].getName().indexOf(".deleted"));
+					deletedVersions.add(version);
+					listFiles[i].delete();
+				}
+			}
+			for (String deletedVersion : deletedVersions) {
+				for (int i = 0; i < listFiles.length; i++) {
+					if (listFiles[i].isFile() && listFiles[i].getName().startsWith(deletedVersion + "-"))
+						listFiles[i].delete();
+				}
+			}
+		}
 	}
 }

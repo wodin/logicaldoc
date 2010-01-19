@@ -16,6 +16,8 @@ public class HibernateVersionDAOTest extends AbstractCoreTestCase {
 	// Instance under test
 	private VersionDAO dao;
 
+	private DocumentDAO docDao;
+
 	public HibernateVersionDAOTest(String name) {
 		super(name);
 	}
@@ -26,6 +28,7 @@ public class HibernateVersionDAOTest extends AbstractCoreTestCase {
 		// Retrieve the instance under test from spring context. Make sure that
 		// it is an HibernateVersionDAO
 		dao = (VersionDAO) context.getBean("VersionDAO");
+		docDao = (DocumentDAO) context.getBean("DocumentDAO");
 	}
 
 	public void testFindByDocumentId() {
@@ -48,5 +51,19 @@ public class HibernateVersionDAOTest extends AbstractCoreTestCase {
 
 		version = dao.findByVersion(1, "xxxx");
 		assertNull(version);
+	}
+
+	public void testStore() {
+		Version version = new Version();
+		version.setId(3);
+		version.setDeleted(0);
+		version.setLastModified(null);
+		version.setComment("pippo");
+		version.setUserId(1);
+		version.setUsername("matteo");
+		version.setDocument(docDao.findById(1));
+		assertTrue(dao.store(version));
+		assertNotNull(dao.findById(2));
+		assertNull(dao.findById(1));
 	}
 }
