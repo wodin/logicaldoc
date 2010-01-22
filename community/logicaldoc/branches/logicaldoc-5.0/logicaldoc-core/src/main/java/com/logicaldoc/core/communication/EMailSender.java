@@ -86,7 +86,9 @@ public class EMailSender {
 	 * @throws Exception
 	 */
 	public void send(EMail email) throws Exception {
+		
 		Properties props = new Properties();
+		props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.smtp.host", host);
 		props.put("mail.smtp.auth", "true");
 
