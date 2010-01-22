@@ -115,7 +115,7 @@
 							style="border: 0px solid; padding-right: 3px;" />
 						<ice:outputLink value="download?docId=#{entry.docId}"
 							target="_blank">
-							<ice:outputText value="#{entry.title}" />
+							<ice:outputText value="#{entry.displayTitle}" />
 						</ice:outputLink>
 						<ice:graphicImage style="margin-left: 5px;"
 							rendered="#{entry.document.immutable == 1}"
@@ -162,7 +162,7 @@
 						label="#{msgs['paginator.simple']}" />
 					<br />
 				</ice:panelGroup>
-				
+
 				<ice:panelGroup />
 			</ice:panelGrid>
 		</ice:panelGroup>
