@@ -96,6 +96,9 @@ public class NewDocWizard {
 
 				// Gets file to upload name
 				String filename = inputFile.getFileName();
+				if ("".equals(filename.trim())) {
+					filename = inputFile.getFile().getName();
+				}
 
 				String title = "";
 				String author = "";
