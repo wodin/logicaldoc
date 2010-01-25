@@ -131,7 +131,6 @@ public class ServletDocUtil {
 		}
 
 		if (user != null && StringUtils.isEmpty(suffix)) {
-
 			// Add an history entry to track the download of the document
 			History history = new History();
 			history.setDocId(docId);
@@ -168,7 +167,7 @@ public class ServletDocUtil {
 			encodedFileName = "=?UTF-8?B?" + new String(Base64.encodeBase64(filename.getBytes("UTF-8")), "UTF-8")
 					+ "?=";
 		}
-		//response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\"");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\"");
 	}
 
 	/**
