@@ -71,7 +71,7 @@ public class DirectoryEditForm {
 					history.setEvent(History.EVENT_FOLDER_RENAMED);
 					history.setSessionId(SessionManagement.getCurrentUserSessionId());
 					// To avoid a 'org.hibernate.StaleObjectStateException', we
-					// must retrieve the menu from database
+					// must retrieve the menu from database.
 					Menu menu = dao.findById(directory.getMenuId());
 					dao.store(menu, history);
 					documentNavigation.refresh();
