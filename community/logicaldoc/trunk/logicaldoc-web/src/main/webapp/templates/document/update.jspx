@@ -423,7 +423,7 @@
 								<ice:inputText id="int" value="#{entry.attribute.intValue}"
 									binding="#{documentForm.intValueInput}" maxlength="255"
 									required="#{entry.attribute.mandatory == 1 ? 'true': 'false'}"
-									rendered="#{!documentForm.readOnly}">
+									disabled="#{documentForm.readOnly}">
 								</ice:inputText>
 							</ice:panelGroup>
 
