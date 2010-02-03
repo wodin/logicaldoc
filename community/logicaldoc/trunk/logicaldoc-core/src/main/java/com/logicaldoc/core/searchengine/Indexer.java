@@ -25,6 +25,7 @@ import org.apache.lucene.search.Searcher;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
 
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.text.parser.Parser;
@@ -41,6 +42,8 @@ public class Indexer {
 	protected static Log log = LogFactory.getLog(Indexer.class);
 
 	private SettingsConfig settingsConfig;
+
+	private DocumentDAO documentDao;
 
 	private Indexer() {
 	}
@@ -62,6 +65,7 @@ public class Indexer {
 	public synchronized void addFile(File file, com.logicaldoc.core.document.Document document, String content,
 			Locale locale) throws Exception {
 		LuceneDocument lDoc = new LuceneDocument(document);
+		log.info("document: " + document.getId());
 		try {
 			log.info("addFile: " + file.toString());
 			Document doc = lDoc.getDocument(file, content);
@@ -109,21 +113,34 @@ public class Indexer {
 	 * @throws Exception
 	 */
 	public synchronized void addFile(File file, com.logicaldoc.core.document.Document doc) throws Exception {
-		Locale locale = doc.getLocale();
+		com.logicaldoc.core.document.Document document = doc;
+
+		Locale locale = document.getLocale();
 		if (locale == null)
 			locale = Locale.ENGLISH;
-		Parser parser = ParserFactory.getParser(file, doc.getFileName(), locale, null);
+		Parser parser = ParserFactory.getParser(file, document.getFileName(), locale, null);
 		if (parser == null) {
 			return;
 		}
 
 		String content = parser.getContent();
 
-		if (log.isInfoEnabled()) {
-			log.info("addFile " + doc.getId() + " " + doc.getTitle() + " " + doc.getFileVersion() + " "
-					+ doc.getPublisher() + " " + doc.getStatus() + " " + doc.getSource() + " " + doc.getSourceAuthor());
+		if (document.getDocRef() != null) {
+			// This is a shortcut
+			document = documentDao.findById(document.getDocRef());
+			documentDao.initialize(document);
+			document = (com.logicaldoc.core.document.Document) document.clone();
+			document.setId(doc.getId());
+			document.setDocRef(doc.getDocRef());
 		}
-		addFile(file, doc, content, locale);
+
+		if (log.isInfoEnabled()) {
+			log.info("addFile " + document.getId() + " " + document.getTitle() + " " + document.getFileVersion() + " "
+					+ document.getPublisher() + " " + document.getStatus() + " " + document.getSource() + " "
+					+ document.getSourceAuthor());
+		}
+
+		addFile(file, document, content, locale);
 	}
 
 	/**
@@ -400,5 +417,9 @@ public class Indexer {
 			indexPath.mkdir();
 			new IndexWriter(indexPath, LanguageManager.getInstance().getLanguage(locale).getAnalyzer(), true);
 		}
+	}
+
+	public void setDocumentDao(DocumentDAO documentDao) {
+		this.documentDao = documentDao;
 	}
 }

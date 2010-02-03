@@ -62,6 +62,8 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 
 	private static final long serialVersionUID = -8726695805361483901L;
 
+	private DavResource getResource = null;
+
 	/**
 	 * Default value for the 'WWW-Authenticate' header, that is set, if request
 	 * results in a {@link DavServletResponse#SC_UNAUTHORIZED 401
@@ -314,6 +316,8 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	 */
 	protected void doGet(WebdavRequest request, WebdavResponse response, DavResource resource) throws IOException {
 		log.debug("get");
+
+		getResource = resource;
 		spoolResource(request, response, resource, true);
 	}
 
@@ -453,7 +457,13 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			status = DavServletResponse.SC_CREATED;
 		}
 
-		parentResource.addMember(resource, getInputContext(request, request.getInputStream()));
+		if (getResource != null) {
+			// We must do a copy
+			getResource.copy(resource, true);
+		} else {
+			parentResource.addMember(resource, getInputContext(request, request.getInputStream()));
+		}
+		getResource = null;
 		response.setStatus(status);
 	}
 

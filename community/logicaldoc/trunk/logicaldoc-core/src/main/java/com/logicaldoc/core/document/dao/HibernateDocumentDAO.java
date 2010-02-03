@@ -268,6 +268,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				}
 				query.append(") and lower(B.ld_tag) like '");
 				query.append(firstLetter.toLowerCase()).append("%' ");
+				query.append("union select distinct B.ld_tag, D.ld_id from ld_tag B, ld_document D"
+						+ " where D.LD_DELETED = 0 and B.ld_docid = D.LD_DOCREF and lower(B.ld_tag) like '");
+				query.append(firstLetter.toLowerCase()).append("%' ");
 
 				Connection con = null;
 				Statement stmt = null;
@@ -417,6 +420,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				}
 				query.append(")");
 				query.append(" AND lower(D.ld_tag)='" + SqlUtil.doubleQuotes(tag) + "'");
+
+				query
+						.append("union select distinct(C.ld_id) from ld_document C, ld_tag D where C.ld_docref=D.ld_docid AND C.ld_deleted=0 AND lower(D.ld_tag)='"
+								+ SqlUtil.doubleQuotes(tag) + "'");
 
 				Connection con = null;
 				Statement stmt = null;
@@ -682,11 +689,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		long count = 0;
 		try {
 			String query = "select count(*) from ld_document A  where ";
-			//For performance issues on InnoDB tables, we always use the where clause
+			// For performance issues on InnoDB tables, we always use the where
+			// clause
 			if (!computeDeleted) {
 				query += " A.ld_deleted=0";
-			}else{
-				query += " A.ld_deleted>0";
+			} else {
+				query += " A.ld_deleted>=0";
 			}
 
 			Connection con = null;
@@ -837,5 +845,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				log.error(e.getMessage(), e);
 		}
 		return count;
+	}
+
+	@Override
+	public List<Long> findShortcutIds(long docId) {
+		return findIdsByWhere("_entity.docRef = " + Long.toString(docId), null);
 	}
 }

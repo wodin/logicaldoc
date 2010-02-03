@@ -256,14 +256,16 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindTagss() {
 		Collection<String> tags = dao.findTags("a", 1);
 		assertNotNull(tags);
-		assertEquals(2, tags.size());
+		// There is also the shortcut
+		assertEquals(3, tags.size());
 		assertTrue(tags.contains("abc"));
 	}
 
 	public void testFindDocIdByUserIdAndTag() {
 		Collection<Long> ids = dao.findDocIdByUserIdAndTag(1, "abc");
 		assertNotNull(ids);
-		assertEquals(1, ids.size());
+		// There is also the shortcut
+		assertEquals(2, ids.size());
 		assertEquals(new Long(1), ids.iterator().next());
 
 		ids = dao.findDocIdByUserIdAndTag(1, "xxx");
@@ -368,5 +370,16 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, dao.findByLockUserAndStatus(1L, null).size());
 		assertEquals(0, dao.findByLockUserAndStatus(1L, Document.DOC_CHECKED_OUT).size());
 		assertEquals(0, dao.findByLockUserAndStatus(987541L, null).size());
+	}
+
+	public void testFindShortcutIds() {
+		Collection<Long> ids = dao.findShortcutIds(1);
+		assertNotNull(ids);
+		assertEquals(1, ids.size());
+		assertTrue(ids.contains(new Long(2)));
+
+		ids = dao.findShortcutIds(3);
+		assertNotNull(ids);
+		assertEquals(0, ids.size());
 	}
 }

@@ -336,6 +336,15 @@ public class DmsServiceImpl implements DmsService {
 
 		// Populate document's metadata
 		DocumentInfo info = new DocumentInfo();
+
+		if (doc.getDocRef() != null) {
+			long docRef = doc.getDocRef();
+			// The requested document is a shortcut
+			doc = docDao.findById(doc.getDocRef());
+			docDao.initialize(doc);
+			info.setDocRef(docRef);
+		}
+
 		try {
 			info.setId(doc.getId());
 			info.setTitle(doc.getTitle());
@@ -353,6 +362,7 @@ public class DmsServiceImpl implements DmsService {
 			info.setFilename(doc.getFileName());
 			info.setCustomId(doc.getCustomId());
 			info.setSourceId(doc.getSourceId());
+			info.setRecipient(doc.getRecipient());
 			info.setObject(doc.getObject());
 
 			if (doc.getTags() != null) {

@@ -41,7 +41,12 @@ public class DocumentResult extends DocumentRecord implements Result {
 		this.result = result;
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		super.document = docDao.findById(result.getDocId());
-		super.docId = document.getId();
+		if (document.getDocRef() != null) {
+			// This document is a shortcut, so load the referenced doc
+			super.shortcut = document;
+			super.document = docDao.findById(document.getDocRef());
+		}
+		setDocId(document.getId());
 	}
 
 	public Date getDate() {
@@ -83,7 +88,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 	public String getSource() {
 		return getDocument().getSource();
 	}
-	
+
 	public Integer getRed() {
 		return result.getRed();
 	}
@@ -109,6 +114,10 @@ public class DocumentResult extends DocumentRecord implements Result {
 
 	public String getType() {
 		return result.getType();
+	}
+
+	public long getDocRef() {
+		return result.getDocRef();
 	}
 
 	/**
@@ -241,7 +250,6 @@ public class DocumentResult extends DocumentRecord implements Result {
 
 	@Override
 	public void setDocId(long docId) {
-		// TODO Auto-generated method stub
-
+		result.setDocId(docId);
 	}
 }

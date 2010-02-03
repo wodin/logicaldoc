@@ -403,6 +403,8 @@ public class ResourceServiceImpl implements ResourceService {
 				Menu menu = menuDAO.findById(Long.parseLong(destination.getID()));
 
 				try {
+					if (document.getDocRef() != null)
+						transaction.setEvent(History.EVENT_SHORTCUT_MOVED);
 					documentManager.moveToFolder(document, menu, user, transaction);
 				} catch (Exception e) {
 					log.warn(e.getMessage(), e);
@@ -439,6 +441,12 @@ public class ResourceServiceImpl implements ResourceService {
 				if (!parent.isWriteEnabled())
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 				transaction.setEvent(History.EVENT_DELETED);
+				// Check if there are some shortcuts associated to the
+				// deleting document. All the shortcuts must be deleted.
+				if (documentDAO.findShortcutIds(Long.parseLong(resource.getID())).size() > 0)
+					for (Long shortcutId : documentDAO.findShortcutIds(Long.parseLong(resource.getID()))) {
+						documentDAO.delete(shortcutId);
+					}
 				documentDAO.delete(Long.parseLong(resource.getID()));
 			}
 		} catch (DavException de) {
@@ -469,7 +477,12 @@ public class ResourceServiceImpl implements ResourceService {
 				transaction.setEvent(History.EVENT_STORED);
 				transaction.setComment("");
 
-				documentManager.copyToFolder(document, menu, user, transaction);
+				if (document.getDocRef() != null) {
+					document = documentDAO.findById(document.getDocRef());
+					documentManager.createShortcut(document, menu, user, transaction);
+				} else {
+					documentManager.copyToFolder(document, menu, user, transaction);
+				}
 			} catch (DavException de) {
 				log.info(de.getMessage(), de);
 				throw de;

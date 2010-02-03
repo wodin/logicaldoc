@@ -110,8 +110,11 @@
 
 						<ice:outputText value="&amp;nbsp;&amp;nbsp;" escape="false" />
 
-						<ice:graphicImage
+						<ice:graphicImage rendered="#{empty(entry.shortcut)}"
 							value="#{StyleBean.imagesPath}/#{entry.document.icon}"
+							style="border: 0px solid; padding-right: 3px;" />
+						<ice:graphicImage rendered="#{!empty(entry.shortcut)}"
+							value="#{StyleBean.imagesPath}/shortcut.png"
 							style="border: 0px solid; padding-right: 3px;" />
 						<ice:outputLink value="download?docId=#{entry.docId}"
 							target="_blank">

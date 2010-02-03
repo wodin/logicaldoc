@@ -55,9 +55,9 @@ public class IndexerTask extends Task {
 			log.info("Found a total of " + size + " documents to be indexed");
 
 			List<Long> ids = documentDao.findIdsByWhere("indexed=0", null);
-			
+
 			for (Long id : ids) {
-				Document document=documentDao.findById(id);
+				Document document = documentDao.findById(id);
 				try {
 					documentDao.initialize(document);
 					documentManager.reindex(document, document.getLocale());
@@ -68,7 +68,7 @@ public class IndexerTask extends Task {
 				} finally {
 					next();
 				}
-				if(interruptRequested)
+				if (interruptRequested)
 					return;
 			}
 		} finally {

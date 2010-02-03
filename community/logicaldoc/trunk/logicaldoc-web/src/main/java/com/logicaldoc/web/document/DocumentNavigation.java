@@ -38,6 +38,7 @@ import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.MenuItem;
 import com.logicaldoc.web.navigation.NavigationBean;
 import com.logicaldoc.web.navigation.PageContentBean;
+import com.logicaldoc.web.search.DocumentResult;
 import com.logicaldoc.web.search.SearchForm;
 import com.logicaldoc.web.util.FacesUtil;
 
@@ -311,10 +312,16 @@ public class DocumentNavigation extends NavigationBean {
 
 		long docId = 0;
 
-		if (entry instanceof Result) {
-			docId = ((Result) entry).getDocId();
+		if (entry instanceof Result) {	
+			if (((DocumentResult) entry).getShortcut() != null)
+				docId = ((DocumentResult) entry).getShortcut().getId();
+			else
+				docId = ((DocumentResult) entry).getDocId();
 		} else if (entry instanceof DocumentRecord) {
-			docId = ((DocumentRecord) entry).getDocId();
+			if (((DocumentRecord) entry).getShortcut() != null)
+				docId = ((DocumentRecord) entry).getShortcut().getId();
+			else
+				docId = ((DocumentRecord) entry).getDocId();
 		}
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);

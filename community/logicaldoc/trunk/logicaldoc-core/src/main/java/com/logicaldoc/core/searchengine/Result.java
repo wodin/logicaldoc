@@ -11,8 +11,11 @@ import java.util.Date;
 public interface Result {
 	public long getDocId();
 
+	// If the document is a shortcut, this is the original document id
+	public long getDocRef();
+
 	public void setDocId(long docId);
-	
+
 	public String getTitle();
 
 	public String getSummary();
@@ -21,7 +24,7 @@ public interface Result {
 
 	public String getIcon();
 
-	//The file size in bytes
+	// The file size in bytes
 	public long getSize();
 
 	public Integer getScore();
@@ -33,7 +36,7 @@ public interface Result {
 	public int getLengthCategory();
 
 	public Date getDate();
-	
+
 	public Date getCreation();
 
 	public int getDateCategory();
@@ -45,15 +48,15 @@ public interface Result {
 	public void setTitle(String title);
 
 	public void setDate(Date date);
-	
+
 	public void setCustomId(String customId);
-	
+
 	public String getCustomId();
-	
+
 	public void setCreation(Date creation);
 
 	public void setSourceDate(Date date);
-	
+
 	public void setSize(long sze);
 
 	public void setType(String typ);

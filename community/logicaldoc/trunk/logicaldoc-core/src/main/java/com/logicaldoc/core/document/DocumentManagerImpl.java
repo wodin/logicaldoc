@@ -235,6 +235,16 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			doc.setIndexed(0);
 			documentDAO.store(doc);
+
+			// Check if there are some shortcuts associated to the indexing
+			// document. They must be re-indexed.
+			List<Long> shortcutIds = documentDAO.findShortcutIds(doc.getId());
+			for (Long shortcutId : shortcutIds) {
+				Document shortcutDoc = documentDAO.findById(shortcutId);
+				indexer.deleteDocument(String.valueOf(shortcutId), doc.getLocale());
+				shortcutDoc.setIndexed(0);
+				documentDAO.store(shortcutDoc);
+			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -274,6 +284,13 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public String getDocumentContent(Document doc) {
 		String content = null;
+
+		// Check if the document is a shortcut
+		if (doc.getDocRef() != null) {
+			long docId = doc.getDocRef();
+			doc = documentDAO.findById(docId);
+		}
+
 		File file = getDocumentFile(doc);
 
 		// Parses the file where it is already stored
@@ -292,20 +309,40 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	@Override
 	public void reindex(Document doc, Locale originalLocale) throws Exception {
+		// If the 'doc' is a shortcut, it must not be re-indexed, because it is
+		// re-indexed when it is analyzed the referenced doc
+		if (doc.getDocRef() != null)
+			return;
+
 		/* get search index entry */
 		Locale locale = doc.getLocale();
 
 		// Extract the content from the file
 		String content = getDocumentContent(doc);
 
-		// Remove the document from the index
-		indexer.deleteDocument(String.valueOf(doc.getId()), originalLocale);
+		// The document must be re-indexed
 		doc.setIndexed(0);
 		documentDAO.store(doc);
+
+		// Check if there are some shortcuts associated to the indexing
+		// document. They must be re-indexed.
+		List<Long> shortcutIds = documentDAO.findShortcutIds(doc.getId());
+		for (Long shortcutId : shortcutIds) {
+			Document shortcutDoc = documentDAO.findById(shortcutId);
+			shortcutDoc.setIndexed(0);
+			documentDAO.store(shortcutDoc);
+		}
 
 		// Add the document to the index (lucene 2.x doesn't support the update
 		// operation)
 		File file = getDocumentFile(doc);
+
+		for (Long shortcutId : shortcutIds) {
+			Document shortcutDoc = documentDAO.findById(shortcutId);
+			indexer.addFile(getDocumentFile(doc), shortcutDoc);
+			shortcutDoc.setIndexed(1);
+			documentDAO.store(shortcutDoc);
+		}
 
 		indexer.addFile(file, doc, content, locale);
 		doc.setIndexed(1);
@@ -338,9 +375,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setCoverage(coverage);
 				doc.setRecipient(recipient);
 
-				// Always remove the document from index, so that it can be
-				// re-indexed
-				indexer.deleteDocument(Long.toString(doc.getId()), doc.getLocale());
+				// The document must be re-indexed
 				doc.setIndexed(0);
 
 				// Intercept locale changes
@@ -392,6 +427,14 @@ public class DocumentManagerImpl implements DocumentManager {
 
 				versionDAO.store(version);
 
+				// Check if there are some shortcuts associated to the indexing
+				// document. They must be re-indexed.
+				List<Long> shortcutIds = documentDAO.findShortcutIds(doc.getId());
+				for (Long shortcutId : shortcutIds) {
+					Document shortcutDoc = documentDAO.findById(shortcutId);
+					shortcutDoc.setIndexed(0);
+					documentDAO.store(shortcutDoc);
+				}
 			} else {
 				throw new Exception("Document is immutable");
 			}
@@ -403,15 +446,29 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	/** Creates a new search index entry for the given document */
 	private void createIndexEntry(Document document) throws Exception {
-		indexer.deleteDocument(String.valueOf(document.getId()), document.getLocale());
 		indexer.addFile(getDocumentFile(document), document);
 		document.setIndexed(1);
 		documentDAO.store(document);
+
+		// Check if there are some shortcuts associated to the indexing
+		// document. They must be re-indexed.
+		List<Long> shortcutIds = documentDAO.findShortcutIds(document.getId());
+		for (Long shortcutId : shortcutIds) {
+			Document shortcutDoc = documentDAO.findById(shortcutId);
+			indexer.addFile(getDocumentFile(document), shortcutDoc);
+			shortcutDoc.setIndexed(1);
+			documentDAO.store(shortcutDoc);
+		}
 	}
 
 	@Override
 	public String getDocumentContent(long docId) {
 		Document doc = documentDAO.findById(docId);
+		// Check if the document is a shortcut
+		if (doc.getDocRef() != null) {
+			docId = doc.getDocRef();
+			doc = documentDAO.findById(docId);
+		}
 		org.apache.lucene.document.Document luceneDoc = indexer.getDocument(Long.toString(docId), doc.getLocale());
 		// If not found, search the document using it's menu id
 		if (luceneDoc != null)
@@ -434,7 +491,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			// Modify document history entry
 			transaction.setUserId(user.getId());
 			transaction.setUserName(user.getFullName());
-			transaction.setEvent(History.EVENT_MOVED);
+			if (transaction.getEvent().trim().isEmpty())
+				transaction.setEvent(History.EVENT_MOVED);
 			documentDAO.store(doc, transaction);
 
 			Version version = Version.create(doc, user, "", Version.EVENT_MOVED, Version.VERSION_TYPE.NEW_SUBVERSION);
@@ -445,11 +503,24 @@ public class DocumentManagerImpl implements DocumentManager {
 				org.apache.lucene.document.Document indexDocument = null;
 				indexDocument = indexer.getDocument(String.valueOf(doc.getId()), doc.getLocale());
 				if (indexDocument != null) {
-					indexer.deleteDocument(String.valueOf(doc.getId()), doc.getLocale());
 					indexDocument.removeField(LuceneDocument.FIELD_PATH);
 					indexDocument.add(new Field(LuceneDocument.FIELD_PATH, doc.getPath(), Field.Store.YES,
 							Field.Index.UN_TOKENIZED));
 					indexer.addDocument(indexDocument, doc.getLocale());
+
+					// Make the same operation for the shortcuts
+					if (documentDAO.findShortcutIds(doc.getId()).size() > 0) {
+						org.apache.lucene.document.Document shortcutIndexDocument = null;
+						for (Long shortcutId : documentDAO.findShortcutIds(doc.getId())) {
+							shortcutIndexDocument = indexer.getDocument(String.valueOf(shortcutId), doc.getLocale());
+							if (shortcutIndexDocument != null) {
+								shortcutIndexDocument.removeField(LuceneDocument.FIELD_PATH);
+								shortcutIndexDocument.add(new Field(LuceneDocument.FIELD_PATH, doc.getPath(),
+										Field.Store.YES, Field.Index.UN_TOKENIZED));
+								indexer.addDocument(shortcutIndexDocument, doc.getLocale());
+							}
+						}
+					}
 				}
 			}
 		} else {
@@ -625,10 +696,16 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	public Document copyToFolder(Document doc, Menu folder, User user, History transaction) throws Exception {
-		File sourceFile = storer.getFile(doc.getId(), doc.getFileVersion());
-
 		// initialize the document
 		documentDAO.initialize(doc);
+		if (doc.getDocRef() != null) {
+			return createShortcut(doc, folder, user, transaction);
+		}
+		
+		log.info("*****document: " + doc.getId());
+		log.info("*****document docref: " + doc.getDocRef());
+		
+		File sourceFile = storer.getFile(doc.getId(), doc.getFileVersion());
 
 		InputStream is = new FileInputStream(sourceFile);
 		try {
@@ -772,35 +849,118 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	public void rename(Document doc, User user, String newName, boolean title, History transaction) throws Exception {
-		if (doc.getImmutable() == 0) {
-			documentDAO.initialize(doc);
+		Document document = doc;
+		if (doc.getDocRef() != null) {
+			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			document = docDao.findById(doc.getDocRef());
+		}
+
+		if (document.getImmutable() == 0) {
+			documentDAO.initialize(document);
 			if (title) {
-				doc.setTitle(newName);
-				setUniqueTitle(doc);
+				document.setTitle(newName);
+				setUniqueTitle(document);
 			} else {
-				doc.setFileName(newName.trim());
+				document.setFileName(newName.trim());
 				String extension = FilenameUtils.getExtension(newName.trim());
 				if (StringUtils.isNotEmpty(extension))
-					doc.setType(FilenameUtils.getExtension(newName));
-				setUniqueFilename(doc);
+					document.setType(FilenameUtils.getExtension(newName));
+				setUniqueFilename(document);
 			}
-			doc.setIndexed(0);
+			document.setIndexed(0);
 
 			// Modify document history entry
 			transaction.setUserId(user.getId());
 			transaction.setUserName(user.getFullName());
 			transaction.setEvent(History.EVENT_RENAMED);
-			documentDAO.store(doc, transaction);
+			documentDAO.store(document, transaction);
 
-			Version version = Version.create(doc, user, "", Version.EVENT_RENAMED, Version.VERSION_TYPE.NEW_SUBVERSION);
+			Version version = Version.create(document, user, "", Version.EVENT_RENAMED,
+					Version.VERSION_TYPE.NEW_SUBVERSION);
 			versionDAO.store(version);
 
-			// The document needs to be reindexed
-			indexer.deleteDocument(Long.toString(doc.getId()), doc.getLocale());
+			// Check if there are some shortcuts associated to the indexing
+			// document. They must be re-indexed.
+			List<Long> shortcutIds = documentDAO.findShortcutIds(document.getId());
+			for (Long shortcutId : shortcutIds) {
+				Document shortcutDoc = documentDAO.findById(shortcutId);
+				shortcutDoc.setIndexed(0);
+				documentDAO.store(shortcutDoc);
+			}
 
-			log.debug("Document filename renamed: " + doc.getId());
+			log.debug("Document filename renamed: " + document.getId());
 		} else {
 			throw new Exception("Document is immutable");
+		}
+	}
+
+	@Override
+	public Document createShortcut(Document doc, Menu folder, User user, History transaction) throws Exception {
+		try {
+			// initialize the document
+			documentDAO.initialize(doc);
+
+			Document shortcut = new Document();
+			shortcut.setFolder(folder);
+			shortcut.setFileName(doc.getFileName());
+			shortcut.setDate(new Date());
+
+			String fallbackTitle = doc.getFileName();
+			String type = "unknown";
+			int lastDotIndex = doc.getFileName().lastIndexOf(".");
+			if (lastDotIndex > 0) {
+				fallbackTitle = doc.getFileName().substring(0, lastDotIndex);
+				type = doc.getFileName().substring(lastDotIndex + 1).toLowerCase();
+			}
+
+			if (StringUtils.isNotEmpty(doc.getTitle())) {
+				shortcut.setTitle(doc.getTitle());
+			} else {
+				shortcut.setTitle(fallbackTitle);
+			}
+
+			setUniqueTitle(shortcut);
+			setUniqueFilename(shortcut);
+
+			if (doc.getSourceDate() != null)
+				shortcut.setSourceDate(doc.getSourceDate());
+			else
+				shortcut.setSourceDate(shortcut.getDate());
+			shortcut.setPublisher(user.getFullName());
+			shortcut.setPublisherId(user.getId());
+			shortcut.setCreator(user.getFullName());
+			shortcut.setCreatorId(user.getId());
+			shortcut.setStatus(Document.DOC_UNLOCKED);
+			shortcut.setType(type);
+			shortcut.setSource(doc.getSource());
+			shortcut.setSourceAuthor(doc.getSourceAuthor());
+			shortcut.setSourceType(doc.getSourceType());
+			shortcut.setCoverage(doc.getCoverage());
+			shortcut.setLocale(doc.getLocale());
+			shortcut.setObject(doc.getObject());
+			shortcut.setSourceId(doc.getSourceId());
+			shortcut.setRecipient(doc.getRecipient());
+
+			// Set the Doc Reference
+			if (doc.getDocRef() == null) {
+				// Set the docref as the id of the original document
+				shortcut.setDocRef(doc.getId());
+			} else {
+				// The doc is a shortcut, so we still copy a shortcut
+				shortcut.setDocRef(doc.getDocRef());
+			}
+
+			// Modify document history entry
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+			transaction.setEvent(History.EVENT_SHORTCUT_STORED);
+
+			documentDAO.store(shortcut, transaction);
+
+			return shortcut;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw e;
 		}
 	}
 

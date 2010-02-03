@@ -72,7 +72,7 @@ public class StartWorkflowWizard implements TabChangeListener {
 	private DocumentsRecordsManager documentsRecordsManager;
 
 	private boolean rowSelected = false;
-	
+
 	private UIInput descriptionInput = null;
 
 	/**
@@ -142,7 +142,7 @@ public class StartWorkflowWizard implements TabChangeListener {
 	public void rowSelectionListener(RowSelectorEvent event) {
 
 		setupAllPanels(false);
-		
+
 		rowSelected = true;
 
 		this.workflowDefinition = this.workflowService.getAllDefinitions().get(event.getRow());
@@ -180,8 +180,9 @@ public class StartWorkflowWizard implements TabChangeListener {
 
 		Set<Long> documents = new LinkedHashSet<Long>();
 
-		for (DocumentRecord doc : this.documentsRecordsManager.getSelection())
+		for (DocumentRecord doc : this.documentsRecordsManager.getSelection()) {
 			documents.add(doc.getDocId());
+		}
 
 		properties.put(WorkflowConstants.VAR_DOCUMENTS, (Serializable) documents);
 

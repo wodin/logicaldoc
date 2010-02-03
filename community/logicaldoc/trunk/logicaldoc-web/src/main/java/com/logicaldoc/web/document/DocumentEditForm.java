@@ -623,6 +623,9 @@ public class DocumentEditForm {
 				} finally {
 					if (!duplicateCustomId) {
 						navigation.refresh(record.getDocId());
+						// Since the shortcut implementation, we must refresh
+						// the current navigation directory
+						navigation.selectDirectory(navigation.getSelectedDir());
 						navigation.showDocuments();
 						reset();
 					}
@@ -736,7 +739,7 @@ public class DocumentEditForm {
 					Messages.addLocalizedError("errors.action.savedoc");
 				}
 			}
-			
+
 		} else {
 			return "login";
 		}
@@ -745,7 +748,7 @@ public class DocumentEditForm {
 				"#{documentNavigation}").getValue(FacesContext.getCurrentInstance()));
 		documentNavigation.setSelectedPanel(new PageContentBean(documentNavigation.getViewMode()));
 		documentNavigation.refresh(record.getDocId());
-		
+
 		reset();
 		return null;
 	}
@@ -811,12 +814,12 @@ public class DocumentEditForm {
 				Messages.addLocalizedError("errors.nofile");
 			}
 		}
-		
+
 		DocumentNavigation navigation = ((DocumentNavigation) application.createValueBinding("#{documentNavigation}")
 				.getValue(FacesContext.getCurrentInstance()));
 		navigation.showDocuments();
 		navigation.refresh(record.getDocId());
-		
+
 		reset();
 		return null;
 	}
