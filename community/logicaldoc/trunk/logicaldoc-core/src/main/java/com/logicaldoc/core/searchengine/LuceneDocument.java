@@ -48,6 +48,8 @@ public class LuceneDocument {
 
 	public static final String FIELD_CUSTOM_ID = "customId";
 
+	public static final String FIELD_DOCREF = "docRef";
+
 	private File file = null;
 
 	private Document doc;
@@ -126,6 +128,9 @@ public class LuceneDocument {
 				Field.Store.YES, Field.Index.UN_TOKENIZED));
 		doc.add(new Field(FIELD_CREATION, document.getCreation() != null ? DateBean.toCompactString(document
 				.getCreation()) : "", Field.Store.YES, Field.Index.UN_TOKENIZED));
+		if (document.getDocRef() != null && document.getDocRef() > 0)
+			doc.add(new Field(FIELD_DOCREF, Long.toString(document.getDocRef()), Field.Store.YES,
+					Field.Index.UN_TOKENIZED));
 	}
 
 	protected void setPath() {
@@ -146,9 +151,8 @@ public class LuceneDocument {
 	protected void setExtendedAttributes() {
 		for (String attribute : document.getAttributeNames()) {
 			ExtendedAttribute ext = document.getExtendedAttribute(attribute);
-			//Skip all non-string attributes
-			if (ext.getType() == ExtendedAttribute.TYPE_STRING
-					&& StringUtils.isNotEmpty(ext.getStringValue())) {
+			// Skip all non-string attributes
+			if (ext.getType() == ExtendedAttribute.TYPE_STRING && StringUtils.isNotEmpty(ext.getStringValue())) {
 				// Prefix all extended attributes with 'ext_' in order to avoid
 				// collisions with standard fields
 				doc.add(new Field("ext_" + attribute, ext.getStringValue(), Field.Store.NO, Field.Index.TOKENIZED));

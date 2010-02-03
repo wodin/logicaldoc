@@ -126,8 +126,8 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	/**
 	 * This method enlists documents linked to the given document.
 	 * <p>
-	 * <b>Important:</b> The attribute <code>direction</code> defines the
-	 * search logic as follows:
+	 * <b>Important:</b> The attribute <code>direction</code> defines the search
+	 * logic as follows:
 	 * <ul>
 	 * <li>1: docId will be compared to link's document1</li>
 	 * <li>2: docId will be compared to link's document2</li>
@@ -208,7 +208,7 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @return Collection of all documents
 	 */
 	public List<Document> findByIndexed(int indexed);
-	
+
 	/**
 	 * Counts the number of documents indexed or not
 	 */
@@ -258,4 +258,12 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @return True if successfully deleted from the database.
 	 */
 	public boolean delete(long docId, History transaction);
+
+	/**
+	 * Gets the ids of all shortcuts associated to the document with the given
+	 * docId
+	 * 
+	 * @param docId The document Id
+	 */
+	public List<Long> findShortcutIds(long docId);
 }

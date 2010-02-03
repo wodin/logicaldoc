@@ -247,6 +247,7 @@
         <parameter id="position" value="5" />
     </extension>
     
+    <!-- start  document icons -->
     <extension plugin-id="logicaldoc-core" point-id="DocumentIcons" id="indexedIcon">
     	<parameter id="action" value="" />
     	<parameter id="link" value="#{documentRecord.downloadTextLink}" />
@@ -287,7 +288,6 @@
 		<parameter id="target" value="" />
 		<parameter id="confirm" value="" />
 	</extension>
-  
       <!-- end document icons -->
     <!-- Start folder toolbar -->
     <extension plugin-id="logicaldoc-core" point-id="FolderToolbar" id="folderSearch">
@@ -384,4 +384,17 @@
       <parameter id="confirm" value="" />
       <parameter id="target" value="" />
     </extension>
+    
+    <!-- Start Document Toolbar -->
+    <extension plugin-id="logicaldoc-core" point-id="DocumentToolbar" id="shortcutToolbar">
+		<parameter id="action" value="documentsRecordsManager.pasteAsShortcut" />
+		<parameter id="link" value="" />
+        <parameter id="target" value="" />		
+		<parameter id="title" value="clipboard.pasteasshortcut" />
+		<parameter id="rendered" value="documentsRecordsManager.clipboardSize gt 0 and documentNavigation.selectedDir.writeEnabled and documentsRecordsManager.guiRequest=='copy'" />
+		<parameter id="position" value="100" />
+		<parameter id="icon" value="actions_pasteasshortcut.png" />
+		<parameter id="confirm" value="" />
+	</extension>
+    <!-- end Document Toolbar -->
 </plugin>

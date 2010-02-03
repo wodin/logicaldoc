@@ -473,4 +473,16 @@ public interface DocumentManager {
 	 * @throws Exception
 	 */
 	public List<Menu> deleteFolder(Menu menu, User user, History transaction) throws Exception;
+
+	/**
+	 * Create a shortcut associated to the given doc to the specified folder.
+	 * 
+	 * @param doc The document for which will be created the shortcut
+	 * @param folder The target folder
+	 * @param user
+	 * @param transaction entry to log the event
+	 * @return The created document
+	 * @throws Exception
+	 */
+	public Document createShortcut(Document doc, Menu folder, User user, History transaction) throws Exception;
 }

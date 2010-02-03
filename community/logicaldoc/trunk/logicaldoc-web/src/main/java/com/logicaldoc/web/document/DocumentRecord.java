@@ -63,6 +63,8 @@ public class DocumentRecord extends MenuBarBean {
 
 	protected Document document;
 
+	protected Document shortcut;
+
 	private String documentPath;
 
 	protected long docId;
@@ -101,7 +103,7 @@ public class DocumentRecord extends MenuBarBean {
 	}
 
 	public long getDocId() {
-		return docId;
+		return getDocument().getId();
 	}
 
 	public String getCustomId() {
@@ -169,15 +171,25 @@ public class DocumentRecord extends MenuBarBean {
 
 	@Override
 	public boolean equals(Object arg0) {
+		DocumentRecord other = (DocumentRecord) arg0;
 		if (getDocument() == null || arg0 == null)
 			return false;
-		return document.getId() == ((DocumentRecord) arg0).getDocument().getId();
+		if (document.getId() == other.getDocument().getId() && shortcut != null) {
+			// The id is the same, are we inspecting a shortcut
+			return shortcut.equals(other.getShortcut());
+		} else {
+			return document.getId() == other.getDocument().getId();
+		}
 	}
 
 	public String getDocumentPath() {
 		if (StringUtils.isEmpty(documentPath)) {
 			try {
-				Menu folder = getDocument().getFolder();
+				Menu folder = null;
+				if (shortcut != null)
+					folder = shortcut.getFolder();
+				else
+					folder = getDocument().getFolder();
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 				List<Menu> parentColl = menuDao.findParents(folder.getId());
 				parentColl.add(folder);
@@ -215,12 +227,15 @@ public class DocumentRecord extends MenuBarBean {
 	 * 
 	 * @see com.logicaldoc.web.navigation.MenuBarBean#createMenuItems()
 	 */
-	@SuppressWarnings("unchecked")
 	protected void createMenuItems() {
 		model.clear();
 		long userId = SessionManagement.getUserId();
 		MenuDAO menuDAO = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Menu folder = getDocument().getFolder();
+		// Since the document shortcut implementation, the folder is not the
+		// document folder, but the current navigation folder
+		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
+				"documentNavigation", FacesContext.getCurrentInstance(), log));
+		Menu folder = documentNavigation.getSelectedDir().getMenu();
 		Document document = getDocument();
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 
@@ -310,7 +325,6 @@ public class DocumentRecord extends MenuBarBean {
 						null));
 			}
 		} catch (Exception e) {
-
 		}
 	}
 
@@ -338,7 +352,7 @@ public class DocumentRecord extends MenuBarBean {
 	 */
 	public boolean isLinked() {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		return docDao.findLinkedDocuments(docId, null, null).size() > 0;
+		return docDao.findLinkedDocuments(getDocId(), null, null).size() > 0;
 	}
 
 	/**
@@ -554,7 +568,7 @@ public class DocumentRecord extends MenuBarBean {
 		String ticketid = CryptUtil.cryptString(temp);
 		DownloadTicket ticket = new DownloadTicket();
 		ticket.setTicketId(ticketid);
-		ticket.setDocId(docId);
+		ticket.setDocId(getDocId());
 		ticket.setUserId(userId);
 
 		// Store the ticket
@@ -680,6 +694,11 @@ public class DocumentRecord extends MenuBarBean {
 		this.document = docDao.findById(docId);
 		if (this.document == null || this.document.getDeleted() == 1)
 			this.document = new Document();
+		else if (this.document.getDocRef() != null) {
+			// This document is a shortcut, so load the referenced doc
+			this.shortcut = document;
+			this.document = docDao.findById(document.getDocRef());
+		}
 	}
 
 	/**
@@ -706,5 +725,9 @@ public class DocumentRecord extends MenuBarBean {
 
 	public int getExportStatus() {
 		return document.getExportStatus();
+	}
+
+	public Document getShortcut() {
+		return shortcut;
 	}
 }

@@ -30,7 +30,7 @@ public class History extends AbstractHistory {
 	public final static String EVENT_UNLOCKED = "event.unlocked";
 
 	public final static String EVENT_ARCHIVED = "event.archived";
-	
+
 	public final static String EVENT_DELETED = "event.deleted";
 
 	// Events on folders
@@ -39,7 +39,7 @@ public class History extends AbstractHistory {
 	public final static String EVENT_FOLDER_RENAMED = "event.folder.renamed";
 
 	public final static String EVENT_FOLDER_PERMISSION = "event.folder.permission";
-	
+
 	public final static String EVENT_FOLDER_DELETED = "event.folder.deleted";
 
 	// Events on sub-folders
@@ -48,8 +48,15 @@ public class History extends AbstractHistory {
 	public final static String EVENT_FOLDER_SUBFOLDER_RENAMED = "event.folder.subfolder.renamed";
 
 	public final static String EVENT_FOLDER_SUBFOLDER_PERMISSION = "event.folder.subfolder.permission";
-	
+
 	public final static String EVENT_FOLDER_SUBFOLDER_DELETED = "event.folder.subfolder.deleted";
+
+	// Events on shortcuts
+	public final static String EVENT_SHORTCUT_STORED = "event.shortcut.stored";
+
+	public final static String EVENT_SHORTCUT_MOVED = "event.shortcut.moved";
+
+	public final static String EVENT_SHORTCUT_DELETED = "event.shortcut.deleted";
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {

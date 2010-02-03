@@ -37,13 +37,13 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	public static final int DOC_UNLOCKED = 0;
 
 	public static final int DOC_CHECKED_OUT = 1;
-	
+
 	public static final int DOC_LOCKED = 2;
 
 	public static final int EXPORT_UNLOCKED = 0;
-	
+
 	public static final int EXPORT_LOCKED = 1;
-	
+
 	private long fileSize = 0;
 
 	/**
@@ -56,13 +56,13 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	private int status = DOC_UNLOCKED;
 
 	private int exportStatus = EXPORT_UNLOCKED;
-	
+
 	private String title;
 
 	private String version;
 
 	private String exportVersion;
-	
+
 	private String fileVersion;
 
 	private Date date;
@@ -118,9 +118,11 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	private String recipient;
 
 	private String exportName;
-	
+
 	private Long exportId = null;
-	
+
+	private Long docRef;
+
 	public AbstractDocument() {
 		super();
 	}
@@ -520,12 +522,12 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	public void setCreator(String creator) {
 		this.creator = creator;
 	}
-	
-	public Locale getLocale(){
+
+	public Locale getLocale() {
 		return LocaleUtil.toLocale(getLanguage());
 	}
-	
-	public void setLocale(Locale locale){
+
+	public void setLocale(Locale locale) {
 		setLanguage(locale.toString());
 	}
 
@@ -555,7 +557,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	}
 
 	/**
-	 * The last archive name in which the document was exported 
+	 * The last archive name in which the document was exported
 	 */
 	public String getExportName() {
 		return exportName;
@@ -566,7 +568,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	}
 
 	/**
-	 * The last archive in which the document was exported 
+	 * The last archive in which the document was exported
 	 */
 	public Long getExportId() {
 		return exportId;
@@ -574,5 +576,16 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	public void setExportId(Long exportId) {
 		this.exportId = exportId;
+	}
+
+	/**
+	 * If the document is an alias, it is the id of the referenced document
+	 */
+	public Long getDocRef() {
+		return docRef;
+	}
+
+	public void setDocRef(Long docRef) {
+		this.docRef = docRef;
 	}
 }

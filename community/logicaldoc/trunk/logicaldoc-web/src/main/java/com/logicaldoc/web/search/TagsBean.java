@@ -173,30 +173,29 @@ public class TagsBean extends SortableList {
 		 * Handles the selection of this tag
 		 */
 		public String select() {
-				try {
-					selectedWord = word;
+			try {
+				selectedWord = word;
 
-					long userId = SessionManagement.getUserId();
-					
-					DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-					Set<Long> docIds = docDao.findDocIdByUserIdAndTag(userId, word);
+				long userId = SessionManagement.getUserId();
 
-					reqop = "tag";
-					documents.clear();
-					tags.clear();
+				DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+				Set<Long> docIds = docDao.findDocIdByUserIdAndTag(userId, word);
 
-					for (Long id : docIds) {
-						DocumentRecord record = new DocumentRecord(id, null, null);
+				reqop = "tag";
+				documents.clear();
+				tags.clear();
 
-						if (!documents.contains(record)) {
-							documents.add(record);
-						}
+				for (Long id : docIds) {
+					DocumentRecord record = new DocumentRecord(id, null, null);
+					if (!documents.contains(record)) {
+						documents.add(record);
 					}
-				} catch (Exception e) {
-					log.error(e.getMessage(), e);
 				}
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
 
-				return null;
+			return null;
 		}
 	}
 

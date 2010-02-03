@@ -486,7 +486,7 @@ public class SearchForm extends SortableList {
 				fields.add(LuceneDocument.FIELD_CUSTOM_ID);
 			}
 
-			if (template != null && template.longValue() > 0) {
+			if (template != null && template.longValue() != 0) {
 				opt.setTemplate(template);
 				for (String attribute : extendedAttributes) {
 					fields.add("ext_" + attribute);

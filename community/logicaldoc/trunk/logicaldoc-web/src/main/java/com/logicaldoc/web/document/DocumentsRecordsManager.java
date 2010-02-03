@@ -264,6 +264,22 @@ public class DocumentsRecordsManager extends SortableList {
 				boolean lockedSome = false;
 				for (DocumentRecord record : selection) {
 					try {
+						// Create the document history event
+						History transaction = new History();
+						transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+						transaction.setEvent(History.EVENT_DELETED);
+						transaction.setComment("");
+						transaction.setUserId(SessionManagement.getUserId());
+						transaction.setUserName(SessionManagement.getUser().getFullName());
+
+						// If it is a shortcut, we delete only the shortcut
+						if (record.getShortcut() != null) {
+							transaction.setEvent(History.EVENT_SHORTCUT_DELETED);
+							dao.delete(record.getShortcut().getId(), transaction);
+							deletedSome = true;
+							continue;
+						}
+
 						// The document of the selected documentRecord must be
 						// not immutable
 						if (record.getDocument().getImmutable() == 1) {
@@ -277,14 +293,12 @@ public class DocumentsRecordsManager extends SortableList {
 							lockedSome = true;
 							continue;
 						}
-						// Create the document history event
-						History transaction = new History();
-						transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
-						transaction.setEvent(History.EVENT_DELETED);
-						transaction.setComment("");
-						transaction.setUserId(SessionManagement.getUserId());
-						transaction.setUserName(SessionManagement.getUser().getFullName());
-
+						// Check if there are some shortcuts associated to the
+						// deleting document. All the shortcuts must be deleted.
+						if (dao.findShortcutIds(record.getDocId()).size() > 0)
+							for (Long shortcutId : dao.findShortcutIds(record.getDocId())) {
+								dao.delete(shortcutId);
+							}
 						dao.delete(record.getDocId(), transaction);
 						deletedSome = true;
 					} catch (AccessControlException e) {
@@ -459,23 +473,34 @@ public class DocumentsRecordsManager extends SortableList {
 						boolean skippedSome = false;
 						boolean lockedSome = false;
 						for (DocumentRecord record : clipboard) {
-							// The document of the selected documentRecord must
+							// Create the document history event
+							History transaction = new History();
+							transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+
+							if (record.getShortcut() != null) {
+								if (record.getDocument().getFolder().getId() != selectedMenuFolder.getId()) {
+									transaction.setEvent(History.EVENT_SHORTCUT_MOVED);
+									docManager.moveToFolder(record.getShortcut(), selectedMenuFolder, SessionManagement
+											.getUser(), transaction);
+								} else
+									Messages.addLocalizedWarn("warn.action.moveshortcut");
+								continue;
+							}
+							// The document of the selected documentRecord
+							// must
 							// be not immutable
 							if (record.getDocument().getImmutable() == 1) {
 								skippedSome = true;
 								continue;
 							}
-							// The document of the selected documentRecord must
+							// The document of the selected documentRecord
+							// must
 							// be not locked
 							if (record.getDocument().getStatus() != Document.DOC_UNLOCKED
 									|| record.getDocument().getExportStatus() != Document.EXPORT_UNLOCKED) {
 								lockedSome = true;
 								continue;
 							}
-
-							// Create the document history event
-							History transaction = new History();
-							transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 
 							docManager.moveToFolder(record.getDocument(), selectedMenuFolder, SessionManagement
 									.getUser(), transaction);
@@ -521,8 +546,16 @@ public class DocumentsRecordsManager extends SortableList {
 							transaction.setEvent(History.EVENT_STORED);
 							transaction.setComment("");
 
-							docManager.copyToFolder(record.getDocument(), selectedMenuFolder, SessionManagement
-									.getUser(), transaction);
+							if (record.getShortcut() == null) {
+								docManager.copyToFolder(record.getDocument(), selectedMenuFolder, SessionManagement
+										.getUser(), transaction);
+							} else {
+								if (record.getDocument().getFolder().getId() != selectedMenuFolder.getId())
+									docManager.copyToFolder(record.getShortcut(), selectedMenuFolder, SessionManagement
+											.getUser(), transaction);
+								else
+									Messages.addLocalizedWarn("warn.action.moveshortcut");
+							}
 						}
 					} catch (AccessControlException e) {
 						Messages.addLocalizedWarn("document.write.nopermission");
@@ -672,6 +705,48 @@ public class DocumentsRecordsManager extends SortableList {
 	}
 
 	/**
+	 * Copy documents inside the clipboard into the current directory as alias
+	 */
+	public String pasteAsShortcut() {
+		if (SessionManagement.isValid()) {
+			if (!clipboard.isEmpty()) {
+				long userId = SessionManagement.getUserId();
+				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+				Menu selectedMenuFolder = menuDao.findById(selectedDirectory);
+				DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+
+				if (menuDao.isWriteEnable(selectedDirectory, userId)) {
+					try {
+						for (DocumentRecord record : clipboard) {
+							// Create the document history event
+							History transaction = new History();
+							transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+							transaction.setEvent(History.EVENT_STORED);
+							transaction.setComment(Messages.getMessage("document.shortcut.comment"));
+
+							docManager.createShortcut(record.getDocument(), selectedMenuFolder, SessionManagement
+									.getUser(), transaction);
+						}
+					} catch (AccessControlException e) {
+						Messages.addLocalizedWarn("document.write.nopermission");
+					} catch (Exception e) {
+						Messages.addLocalizedError("errors.action.createshortcut");
+						log.error("Exception creating the shortcut: " + e.getMessage(), e);
+					}
+					clipboard.clear();
+				} else {
+					Messages.addLocalizedWarn("document.write.nopermission");
+				}
+				refresh();
+			}
+
+			return null;
+		} else {
+			return "login";
+		}
+	}
+
+	/**
 	 * Retrieves the list of last accessed documents from the database
 	 */
 	public List<DocumentRecord> getLastDocs() {
@@ -699,11 +774,15 @@ public class DocumentsRecordsManager extends SortableList {
 
 	protected void selectHighlightedDocument(long docId) {
 		selection.clear();
-		
-		// Iterate of the the list of documents in selected folder, when i find
+
+		// Iterate of the the list of documents in selected folder, when I find
 		// the one I put it on the list of those selected
 		for (DocumentRecord document : documents) {
 			if (document.getDocId() == docId) {
+				document.setSelected(true);
+				selection.add(document);
+				break;
+			} else if (document.getShortcut() != null && document.getShortcut().getId() == docId) {
 				document.setSelected(true);
 				selection.add(document);
 				break;

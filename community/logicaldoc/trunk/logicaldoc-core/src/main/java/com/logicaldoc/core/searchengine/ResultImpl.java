@@ -27,6 +27,8 @@ public class ResultImpl implements Serializable, Result {
 
 	private long size = 0;
 
+	private long docRef = 0;
+
 	private Date date = new Date();
 
 	private Date sourceDate = null;
@@ -333,5 +335,10 @@ public class ResultImpl implements Serializable, Result {
 	@Override
 	public void setCustomId(String customId) {
 		this.customId = customId;
+	}
+
+	@Override
+	public long getDocRef() {
+		return docRef;
 	}
 }

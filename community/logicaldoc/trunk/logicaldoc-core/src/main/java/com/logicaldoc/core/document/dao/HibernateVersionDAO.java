@@ -56,9 +56,9 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 
 	@Override
 	public boolean store(Version version) {
-		super.store(version);
 		boolean result = true;
 		try {
+			super.store(version);
 			// Checks the context property 'document.maxversions'
 			PropertiesBean bean = new PropertiesBean();
 			int maxVersions = bean.getInt("document.maxversions");

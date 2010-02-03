@@ -61,7 +61,11 @@
 						target="_blank"
 						style="color: #333399; text-decoration: underline;"
 						title="#{msgs['msg.jsp.popup']}">
-						<ice:graphicImage value="#{StyleBean.imagesPath}/#{entry.icon}"
+						<ice:graphicImage rendered="#{empty(entry.shortcut)}"
+							value="#{StyleBean.imagesPath}/#{entry.icon}"
+							styleClass="iconSmall" title="#{msgs['msg.jsp.popup']}" />
+						<ice:graphicImage rendered="#{!empty(entry.shortcut)}"
+							value="#{StyleBean.imagesPath}/shortcut.png"
 							styleClass="iconSmall" title="#{msgs['msg.jsp.popup']}" />
 						<ice:outputText value=" " />
 						<ice:outputText value="#{entry.title}" style="color: #333399;" />
@@ -70,7 +74,8 @@
 							value="#{StyleBean.imagesPath}/stop.png"
 							title="#{msgs['document.immutable']}" />
 					</ice:outputLink>
-					<ice:menuPopup styleClass="mpopup" id="pop" noIcons="true" value="#{entry.docId}">
+					<ice:menuPopup styleClass="mpopup" id="pop" noIcons="true"
+						value="#{entry.docId}">
 						<ice:menuItems value="#{entry.model}" />
 					</ice:menuPopup>
 				</ice:panelGroup>
@@ -131,7 +136,9 @@
 						style="color: #008000; text-decoration: underline; font-size: 12px;">
 						<h:outputText value="#{entry.documentPath}" />
 					</ice:commandLink>
-					<br/><ice:outputText style="font-style:italic; font-size: 10px;" value="#{entry.source}" />
+					<br />
+					<ice:outputText style="font-style:italic; font-size: 10px;"
+						value="#{entry.source}" />
 				</ice:panelGroup>
 
 			</ice:panelGroup>

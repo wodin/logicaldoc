@@ -12,6 +12,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.FileUtil;
@@ -81,18 +83,27 @@ public class FSStorer implements Storer {
 
 	@Override
 	public File getFile(Document doc, String fileVersion, String suffix) {
+		Document document = doc;
+
 		/*
 		 * All versions of a document are stored in the same directory as the
 		 * current version, but the filename is the version number without
 		 * extension, e.g. "docId/2.1"
 		 */
 		String filename;
+		if (doc.getDocRef() != null) {
+			// The shortcut document doesn't have the 'fileversion' and the
+			// 'version'
+			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			document = docDao.findById(doc.getDocRef());
+		}
+		
 		if (StringUtils.isEmpty(fileVersion))
-			filename = doc.getFileVersion();
+			filename = document.getFileVersion();
 		else
 			filename = fileVersion;
 		if (StringUtils.isEmpty(filename))
-			filename = doc.getVersion();
+			filename = document.getVersion();
 
 		/*
 		 * Document's related resources are stored with a suffix, e.g.
@@ -100,7 +111,8 @@ public class FSStorer implements Storer {
 		 */
 		if (StringUtils.isNotEmpty(suffix))
 			filename += "-" + suffix;
-		return getFile(doc.getId(), filename);
+
+		return getFile(document.getId(), filename);
 	}
 
 	@Override
