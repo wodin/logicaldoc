@@ -702,9 +702,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			return createShortcut(doc, folder, user, transaction);
 		}
 		
-		log.info("*****document: " + doc.getId());
-		log.info("*****document docref: " + doc.getDocRef());
-		
 		File sourceFile = storer.getFile(doc.getId(), doc.getFileVersion());
 
 		InputStream is = new FileInputStream(sourceFile);
