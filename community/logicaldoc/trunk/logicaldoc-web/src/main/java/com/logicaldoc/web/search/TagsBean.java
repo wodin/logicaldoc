@@ -185,7 +185,10 @@ public class TagsBean extends SortableList {
 				documents.clear();
 				tags.clear();
 
-				for (Long id : docIds) {
+				List<Long> ids = new ArrayList<Long>(docIds);
+				Collections.sort(ids);
+
+				for (Long id : ids) {
 					DocumentRecord record = new DocumentRecord(id, null, null);
 					if (!documents.contains(record)) {
 						documents.add(record);
