@@ -48,7 +48,7 @@
       <groupId>com.logicaldoc</groupId>
       <artifactId>logicaldoc-web</artifactId>
       <type>jar</type>
-      <version>5.5.0</version>
+      <version>${project.version}</version>
       <scope>provided</scope>
       <classifier>api</classifier>
     </dependency>
