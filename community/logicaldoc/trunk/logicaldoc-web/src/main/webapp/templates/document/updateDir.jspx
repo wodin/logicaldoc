@@ -32,9 +32,8 @@
                             value="#{msgs['msg.jsp.foldername']}*" />
                     </ice:panelGroup>
                     <ice:panelGroup>
-                        <ice:inputText id="folderName"
+                        <ice:inputText id="folderName" actionListener="#{directoryForm.update}"
                             value="#{directoryForm.folderName}"
-                            onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
                             maxlength="255" size="50"
                             required="true" />
                         <ice:message for="folderName" />

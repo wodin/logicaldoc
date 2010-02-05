@@ -1,5 +1,7 @@
 package com.logicaldoc.web.document;
 
+import javax.faces.event.ActionEvent;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -20,7 +22,7 @@ import com.logicaldoc.web.i18n.Messages;
 public class DirectoryEditForm {
 	protected static Log log = LogFactory.getLog(DirectoryEditForm.class);
 
-	private String folderName;
+	private String folderName = "";
 
 	private Directory directory;
 
@@ -146,5 +148,13 @@ public class DirectoryEditForm {
 
 	public void setDocumentNavigation(DocumentNavigation documentNavigation) {
 		this.documentNavigation = documentNavigation;
+	}
+
+	public void insert(ActionEvent event) {
+		insert();
+	}
+	
+	public void update(ActionEvent event) {
+		update();
 	}
 }
