@@ -24,7 +24,7 @@ public class ImageThumbnailBuilder implements ThumbnailBuilder {
 
 
 	@Override
-	public void build(File src, String srcFileName, int size, File dest, int scaleAlgorithm, float compressionQuality) throws IOException {
+	public synchronized void build(File src, String srcFileName, int size, File dest, int scaleAlgorithm, float compressionQuality) throws IOException {
 		BufferedImage bsrc = ImageIO.read(src);
 
 		Image destImg = null;
@@ -59,5 +59,8 @@ public class ImageThumbnailBuilder implements ThumbnailBuilder {
 		IIOImage image = new IIOImage(bdest, null, null);
 		writer.write(null, image, iwp);
 		writer.dispose();
+		
+		writer = null;
+		image = null;
 	}
 }

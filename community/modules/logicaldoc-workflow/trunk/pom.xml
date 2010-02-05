@@ -23,6 +23,10 @@
           <artifactId>pdfbox</artifactId>
         </exclusion>
         <exclusion>
+          <groupId>org.icepdf</groupId>
+          <artifactId>icepdf-core</artifactId>
+        </exclusion>    
+        <exclusion>
           <groupId>org.apache.lucene</groupId>
           <artifactId>lucene-core</artifactId>
         </exclusion>
