@@ -331,4 +331,14 @@ public class SelectionTagsBean {
 
 		return items.toArray(new SelectItem[0]);
 	}
+
+	/**
+	 * Gets the option items for SMTP connection security
+	 */
+	public SelectItem[] getConnectionSecurity() {
+		return new SelectItem[] { new SelectItem(0, Messages.getMessage("smtp.connectionSecurity.0")),
+				new SelectItem(1, Messages.getMessage("smtp.connectionSecurity.1")),
+				new SelectItem(2, Messages.getMessage("smtp.connectionSecurity.2")),
+				new SelectItem(3, Messages.getMessage("smtp.connectionSecurity.3")) };
+	}
 }

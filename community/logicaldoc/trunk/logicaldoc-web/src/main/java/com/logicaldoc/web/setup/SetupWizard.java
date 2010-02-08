@@ -18,7 +18,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.java.plugin.PluginClassLoader;
 import org.java.plugin.registry.PluginDescriptor;
 import org.springframework.util.Log4jConfigurer;
 
@@ -35,7 +34,6 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.DBMSConfigurator;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.config.SettingsConfig;
-import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 import com.logicaldoc.web.ApplicationInitializer;
 
 /**
@@ -54,7 +52,7 @@ public class SetupWizard implements TabChangeListener {
 	private String selectedDBMS;
 
 	private String defaultLanguage;
-	
+
 	/**
 	 * Binding used by example to listen
 	 */
@@ -133,21 +131,20 @@ public class SetupWizard implements TabChangeListener {
 			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 			indexer.createIndexes();
 
-			
 			// Initialize plugins filesystem
 			Collection<PluginDescriptor> descriptors = com.logicaldoc.util.PluginRegistry.getInstance().getPlugins();
 			for (PluginDescriptor descriptor : descriptors) {
 				try {
-					File file=new File(pluginDir,descriptor.getId());
+					File file = new File(pluginDir, descriptor.getId());
 					file.mkdirs();
 					file.mkdir();
-					file=new File(file,"plugin.properties");
+					file = new File(file, "plugin.properties");
 					file.createNewFile();
 				} catch (Exception e) {
 					e.printStackTrace();
-				} 
+				}
 			}
-			
+
 			next();
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
@@ -180,7 +177,7 @@ public class SetupWizard implements TabChangeListener {
 			pbean.setProperty("jdbc.username", dbdata.getUser());
 			pbean.setProperty("jdbc.password", dbdata.getPswd());
 			pbean.setProperty("jdbc.dbms", dbdata.getDbms().toLowerCase());
-			
+
 			if (StringUtils.isNotEmpty(dbdata.getValidationQuery())) {
 				pbean.setProperty("jdbc.validationQuery", dbdata.getValidationQuery());
 			} else {
@@ -232,7 +229,6 @@ public class SetupWizard implements TabChangeListener {
 		next();
 	}
 
-
 	private void initDB(ConnectionData dbdata) {
 		// Reload the application context in order to reconnect DAOs to the
 		// database
@@ -248,10 +244,10 @@ public class SetupWizard implements TabChangeListener {
 		if (init.testConnection()) {
 			// connection success
 			init.init();
-			
-			//if a default language was specified, set it for all users
-			if(StringUtils.isNotEmpty(defaultLanguage)){
-				init.executeSql("update ld_user set ld_language='"+defaultLanguage+"';");
+
+			// if a default language was specified, set it for all users
+			if (StringUtils.isNotEmpty(defaultLanguage)) {
+				init.executeSql("update ld_user set ld_language='" + defaultLanguage + "';");
 			}
 		} else {
 			// connection failure
@@ -289,6 +285,8 @@ public class SetupWizard implements TabChangeListener {
 			pbean.setProperty("smtp.username", smtpData.getUsername());
 			pbean.setProperty("smtp.password", smtpData.getPassword());
 			pbean.setProperty("smtp.sender", smtpData.getSender());
+			pbean.setProperty("smtp.authEncripted", smtpData.isAuthEncripted() ? "true" : "false");
+			pbean.setProperty("smtp.connectionSecurity", Integer.toString(smtpData.getConnectionSecurity()));
 			pbean.write();
 
 			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
@@ -297,6 +295,8 @@ public class SetupWizard implements TabChangeListener {
 			sender.setUsername(smtpData.getUsername());
 			sender.setPassword(smtpData.getPassword());
 			sender.setSender(smtpData.getSender());
+			sender.setAuthEncripted(smtpData.isAuthEncripted() ? true : false);
+			sender.setConnectionSecurity(smtpData.getConnectionSecurity());
 
 			log.info("SMTP configuration data written successfully.");
 		} catch (Exception e) {
@@ -418,5 +418,5 @@ public class SetupWizard implements TabChangeListener {
 	public void setDefaultLanguage(String defaultLanguage) {
 		this.defaultLanguage = defaultLanguage;
 	}
-	
+
 }

@@ -16,7 +16,9 @@
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 			<title>#{StyleBean.productName} #{StyleBean.productRelease}</title>
-			<link type="image/x-icon" href="#{facesContext.externalContext.requestContextPath}#{StyleBean.imagesPath}/favicon.ico" rel="shortcut icon"/>
+			<link type="image/x-icon"
+				href="#{facesContext.externalContext.requestContextPath}#{StyleBean.imagesPath}/favicon.ico"
+				rel="shortcut icon" />
 			<ice:outputText style="padding-top:0px; padding-bottom:0px;"
 				value="#{StyleBean.style}" escape="false" />
 			<ice:outputStyle href="#{StyleBean.cssPath}/style.css" />
@@ -125,7 +127,7 @@
 								<ice:panelTab id="phase3" rendered="true" disabled="true"
 									label="#{msgs['setup.phase3']}">
 									<ice:panelGroup id="setupInternalDB"
-										rendered="#{setupWizard.dbms eq 'intern'}" >
+										rendered="#{setupWizard.dbms eq 'intern'}">
 										<ice:panelGroup style="width: 100%;">
 											<h3 style="font-size: 10pt;">
 												<ice:outputText value="#{msgs['setup.dbconf']}" />
@@ -149,14 +151,15 @@
 										<br />
 									</ice:panelGroup>
 
-									<ice:panelGrid columns="2" rendered="#{setupWizard.dbms ne 'intern'}">
+									<ice:panelGrid columns="2"
+										rendered="#{setupWizard.dbms ne 'intern'}">
 										<ice:panelGroup>
 											<ice:outputText value="#{msgs['setup.dbconf.type']}" />
 										</ice:panelGroup>
 										<ice:panelGroup>
 											<ice:outputText value="#{msgs['setup.dbconf.conn']}" />
 										</ice:panelGroup>
-										
+
 										<ice:panelGroup>
 											<ice:selectOneListbox id="SlctDBMS"
 												value="#{setupWizard.selectedDBMS}" partialSubmit="true"
@@ -217,7 +220,8 @@
 
 									<ice:panelGroup style="width: 100%;">
 										<ice:panelGroup styleClass="outputLabel">
-											<ice:outputLabel for="language" value="#{msgs['language.default']}" />
+											<ice:outputLabel for="language"
+												value="#{msgs['language.default']}" />
 										</ice:panelGroup>
 										<ice:panelGroup>
 											<ice:selectOneMenu styleClass="selectTagMenu"
@@ -277,6 +281,31 @@
 														value="#{setupWizard.smtpData.password}" />
 												</ice:panelGroup>
 
+												<!-- Connection security -->
+												<ice:panelGroup style="text-align:left;">
+													<ice:outputLabel for="connectionSecurity"
+														value="#{msgs['smtp.connectionSecurity']}" />
+												</ice:panelGroup>
+												<ice:panelGroup style="text-align:left;">
+													<ice:selectOneMenu styleClass="selectTagMenu"
+														style="width:180px;"
+														value="#{setupWizard.smtpData.connectionSecurity}">
+														<f:selectItems value="#{selectionTags.connectionSecurity}" />
+													</ice:selectOneMenu>
+												</ice:panelGroup>
+
+												<!-- Use secure authentication -->
+												<ice:panelGroup style="text-align:left;">
+													<ice:outputLabel for="authEncripted"
+														value="#{msgs['smtp.authEncripted']} " />
+												</ice:panelGroup>
+												<ice:panelGroup style="text-align:left;">
+													<ice:selectBooleanCheckbox
+														value="#{setupWizard.smtpData.authEncripted}"
+														partialSubmit="true" immediate="true" />
+												</ice:panelGroup>
+
+
 												<ice:panelGroup style="text-align:right;">
 													<ice:outputLabel for="sender" value="#{msgs['sender']}" />
 												</ice:panelGroup>
@@ -287,6 +316,8 @@
 													</ice:inputText>
 													<ice:message for="sender" />
 												</ice:panelGroup>
+
+
 											</ice:panelGrid>
 										</ice:panelGroup>
 										<ice:panelGroup styleClass="alignRight">

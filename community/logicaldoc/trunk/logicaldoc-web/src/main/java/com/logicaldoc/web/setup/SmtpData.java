@@ -7,15 +7,28 @@ package com.logicaldoc.web.setup;
  * @since 4.0
  */
 public class SmtpData {
+
+	public static final int SECURITY_NONE = 0;
+
+	public static final int SECURITY_TLS_IF_AVAILABLE = 1;
+
+	public static final int SECURITY_TLS = 2;
+
+	public static final int SECURITY_SSL = 3;
+
 	private String host = "localhost";
 
 	private Integer port = new Integer(25);
 
-	private String username="";
+	private String username = "";
 
-	private String password="";
+	private String password = "";
 
-	private String sender="logicaldoc@acme.com";
+	private String sender = "logicaldoc@acme.com";
+
+	private boolean authEncripted = false;
+
+	private int connectionSecurity = SECURITY_NONE;
 
 	public String getHost() {
 		return host;
@@ -57,4 +70,19 @@ public class SmtpData {
 		this.password = password;
 	}
 
+	public boolean isAuthEncripted() {
+		return authEncripted;
+	}
+
+	public void setAuthEncripted(boolean authEncripted) {
+		this.authEncripted = authEncripted;
+	}
+
+	public int getConnectionSecurity() {
+		return connectionSecurity;
+	}
+
+	public void setConnectionSecurity(int connectionSecurity) {
+		this.connectionSecurity = connectionSecurity;
+	}
 }
