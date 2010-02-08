@@ -24,6 +24,14 @@ import org.apache.commons.lang.StringUtils;
  */
 public class EMailSender {
 
+	public static final int SECURITY_NONE = 0;
+
+	public static final int SECURITY_TLS_IF_AVAILABLE = 1;
+
+	public static final int SECURITY_TLS = 2;
+
+	public static final int SECURITY_SSL = 3;
+
 	private String host = "localhost";
 
 	private String sender = "logicaldoc@acme.com";
@@ -33,6 +41,10 @@ public class EMailSender {
 	private String password = "";
 
 	private int port = 25;
+
+	private boolean authEncripted = false;
+
+	private int connectionSecurity = SECURITY_NONE;
 
 	public EMailSender() {
 	}
@@ -86,11 +98,29 @@ public class EMailSender {
 	 * @throws Exception
 	 */
 	public void send(EMail email) throws Exception {
-		
 		Properties props = new Properties();
-		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.host", host);
-		props.put("mail.smtp.auth", "true");
+		if (authEncripted) {
+			// The 'smtps' protocol must be used
+			props.put("mail.transport.protocol", "smtps");
+			props.put("mail.smtps.host", host);
+			props.put("mail.smtps.auth", "true");
+			if (connectionSecurity == SECURITY_TLS_IF_AVAILABLE)
+				props.put("mail.smtps.starttls.enable", "true");
+			if (connectionSecurity == SECURITY_TLS)
+				props.put("mail.smtps.starttls.required", "true");
+			if (connectionSecurity == SECURITY_SSL)
+				props.put("mail.smtps.ssl.enable", "true");
+		} else {
+			props.put("mail.transport.protocol", "smtp");
+			props.put("mail.smtp.host", host);
+			props.put("mail.smtp.auth", "true");
+			if (connectionSecurity == SECURITY_TLS_IF_AVAILABLE)
+				props.put("mail.smtp.starttls.enable", "true");
+			if (connectionSecurity == SECURITY_TLS)
+				props.put("mail.smtp.starttls.required", "true");
+			if (connectionSecurity == SECURITY_SSL)
+				props.put("mail.smtp.ssl.enable", "true");
+		}
 
 		Session sess = Session.getDefaultInstance(props);
 		javax.mail.Message message = new MimeMessage(sess);
@@ -125,8 +155,14 @@ public class EMailSender {
 			mpMessage.addBodyPart(part);
 		}
 		message.setContent(mpMessage);
-		
-		Transport trans = sess.getTransport("smtp");
+
+		// TODO Here check if SMTP or SMTPS
+		Transport trans = null;
+		if (authEncripted)
+			trans = sess.getTransport("smtps");
+		else
+			trans = sess.getTransport("smtp");
+
 		if (StringUtils.isEmpty(username)) {
 			trans.connect(host, port, null, null);
 		} else {
@@ -136,5 +172,21 @@ public class EMailSender {
 		Address[] adr = message.getAllRecipients();
 		trans.sendMessage(message, adr);
 		trans.close();
+	}
+
+	public boolean isAuthEncripted() {
+		return authEncripted;
+	}
+
+	public void setAuthEncripted(boolean authEncripted) {
+		this.authEncripted = authEncripted;
+	}
+
+	public int getConnectionSecurity() {
+		return connectionSecurity;
+	}
+
+	public void setConnectionSecurity(int connectionSecurity) {
+		this.connectionSecurity = connectionSecurity;
 	}
 }

@@ -53,8 +53,7 @@
 					</ice:panelGroup>
 
 					<ice:panelGroup styleClass="outputLabel">
-						<ice:outputLabel for="username"
-							value="#{msgs['username']}" />
+						<ice:outputLabel for="username" value="#{msgs['username']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="username" value="#{smtpForm.username}"
@@ -63,8 +62,7 @@
 					</ice:panelGroup>
 
 					<ice:panelGroup styleClass="outputLabel">
-						<ice:outputLabel for="password"
-							value="#{msgs['password']}" />
+						<ice:outputLabel for="password" value="#{msgs['password']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputSecret id="password" value="#{smtpForm.password}"
@@ -79,9 +77,30 @@
 						<ice:message for="password" />
 					</ice:panelGroup>
 
+					<!-- Connection security -->
+					<ice:panelGroup style="text-align:left;">
+						<ice:outputLabel for="connectionSecurity"
+							value="#{msgs['smtp.connectionSecurity']}" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+						<ice:selectOneMenu styleClass="selectTagMenu" style="width:180px;"
+							value="#{smtpForm.connectionSecurity}">
+							<f:selectItems value="#{selectionTags.connectionSecurity}" />
+						</ice:selectOneMenu>
+					</ice:panelGroup>
+
+					<!-- Use secure authentication -->
+					<ice:panelGroup style="text-align:left;">
+						<ice:outputLabel for="authEncripted"
+							value="#{msgs['smtp.authEncripted']} " />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+						<ice:selectBooleanCheckbox value="#{smtpForm.authEncripted}"
+							partialSubmit="true" immediate="true" />
+					</ice:panelGroup>
+
 					<ice:panelGroup styleClass="outputLabel">
-						<ice:outputLabel for="senderAddress"
-							value="#{msgs['email']}" />
+						<ice:outputLabel for="senderAddress" value="#{msgs['email']}" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText id="senderAddress" tabindex="1"

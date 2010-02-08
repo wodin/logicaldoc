@@ -75,7 +75,7 @@ public class SmtpForm {
 			try {
 				EMailSender sender = getSender();
 
-				PropertiesBean pbean = (PropertiesBean)Context.getInstance().getBean("ContextProperties");
+				PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 				pbean.setProperty("smtp.host", sender.getHost());
 				pbean.setProperty("smtp.port", Integer.toString(sender.getPort()));
 				pbean.setProperty("smtp.username", StringUtils.isNotEmpty(sender.getUsername()) ? sender.getUsername()
@@ -90,6 +90,8 @@ public class SmtpForm {
 					pbean.setProperty("smtp.password", "");
 					getSender().setPassword("");
 				}
+				pbean.setProperty("smtp.authEncripted", sender.isAuthEncripted() ? "true" : "false");
+				pbean.setProperty("smtp.connectionSecurity", Integer.toString(sender.getConnectionSecurity()));
 				pbean.write();
 
 				deletePassword = false;
@@ -115,5 +117,21 @@ public class SmtpForm {
 		// JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(),
 		// "window.location.reload(false);");
 		return null;
+	}
+
+	public int getConnectionSecurity() {
+		return getSender().getConnectionSecurity();
+	}
+
+	public void setConnectionSecurity(int connectionSecurity) {
+		getSender().setConnectionSecurity(connectionSecurity);
+	}
+
+	public boolean isAuthEncripted() {
+		return getSender().isAuthEncripted();
+	}
+
+	public void setAuthEncripted(boolean authEncripted) {
+		getSender().setAuthEncripted(authEncripted);
 	}
 }
