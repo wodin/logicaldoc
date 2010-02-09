@@ -162,7 +162,6 @@ public class EMailSender {
 		}
 		message.setContent(mpMessage);
 
-		// TODO Here check if SMTP or SMTPS
 		Transport trans = null;
 		if (authEncripted)
 			trans = sess.getTransport("smtps");
