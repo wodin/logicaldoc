@@ -108,8 +108,11 @@ public class EMailSender {
 				props.put("mail.smtps.starttls.enable", "true");
 			if (connectionSecurity == SECURITY_TLS)
 				props.put("mail.smtps.starttls.required", "true");
-			if (connectionSecurity == SECURITY_SSL)
+			if (connectionSecurity == SECURITY_SSL) {
+				// Necessary property to send e-mails with SSL
+				props.put("mail.smtps.starttls.enable", "true");
 				props.put("mail.smtps.ssl.enable", "true");
+			}
 		} else {
 			props.put("mail.transport.protocol", "smtp");
 			props.put("mail.smtp.host", host);
@@ -118,8 +121,11 @@ public class EMailSender {
 				props.put("mail.smtp.starttls.enable", "true");
 			if (connectionSecurity == SECURITY_TLS)
 				props.put("mail.smtp.starttls.required", "true");
-			if (connectionSecurity == SECURITY_SSL)
+			if (connectionSecurity == SECURITY_SSL) {
+				// Necessary property to send e-mails with SSL
+				props.put("mail.smtp.starttls.enable", "true");
 				props.put("mail.smtp.ssl.enable", "true");
+			}
 		}
 
 		Session sess = Session.getDefaultInstance(props);
