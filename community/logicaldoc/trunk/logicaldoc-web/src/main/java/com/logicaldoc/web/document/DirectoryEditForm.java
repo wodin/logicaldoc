@@ -58,7 +58,6 @@ public class DirectoryEditForm {
 	public String update() {
 		if (SessionManagement.isValid()) {
 			MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-
 			try {
 				if (dao.findByMenuTextAndParentId(folderName, directory.getMenu().getParentId()).size() > 0) {
 					Messages.addLocalizedWarn("errors.folder.duplicate");
@@ -66,16 +65,24 @@ public class DirectoryEditForm {
 				} else {
 					directory.setDisplayText(folderName);
 					directory.getMenu().setText(folderName);
+					// To avoid a 'org.hibernate.StaleObjectStateException', we
+					// must retrieve the menu from database.
+					Menu menu = dao.findById(directory.getMenuId());
+					menu.setText(folderName);
 					// Add a folder history entry
 					History history = new History();
 					history.setUserId(SessionManagement.getUserId());
 					history.setUserName(SessionManagement.getUser().getFullName());
 					history.setEvent(History.EVENT_FOLDER_RENAMED);
 					history.setSessionId(SessionManagement.getCurrentUserSessionId());
-					// To avoid a 'org.hibernate.StaleObjectStateException', we
-					// must retrieve the menu from database.
-					Menu menu = dao.findById(directory.getMenuId());
-					dao.store(menu, history);
+
+					boolean stored = dao.store(menu, history);
+					if (!stored) {
+						Messages.addLocalizedError("folder.error.notupdated");
+					} else {
+						Messages.addLocalizedInfo("msg.action.updatefolder");
+					}
+
 					documentNavigation.refresh();
 					documentNavigation.selectDirectory(directory);
 
@@ -150,10 +157,18 @@ public class DirectoryEditForm {
 		this.documentNavigation = documentNavigation;
 	}
 
+	/**
+	 * This method registers the keyboard 'Enter' button during the folder
+	 * creation .
+	 */
 	public void insert(ActionEvent event) {
 		insert();
 	}
-	
+
+	/**
+	 * This method registers the keyboard 'Enter' button during the folder
+	 * editing .
+	 */
 	public void update(ActionEvent event) {
 		update();
 	}
