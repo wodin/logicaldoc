@@ -508,7 +508,8 @@ public class WorkflowTemplateManager {
 		if (event.getComponent() instanceof SelectInputText) {
 			// get the number of displayable records from the component
 			SelectInputText autoComplete = (SelectInputText) event.getComponent();
-
+			if (autoComplete == null)
+				return;
 			String currentValue = autoComplete.getValue().toString();
 			UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 			GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
@@ -564,10 +565,12 @@ public class WorkflowTemplateManager {
 	}
 
 	public String load(ValueChangeEvent event) {
-		if (event != null && event.getNewValue() != null)
+		showSupervisorSettings = false;
+		if (event != null && event.getNewValue() != null && this.workflowTemplateId != null) {
 			this.workflowTemplateId = Long.parseLong(event.getNewValue().toString());
-
-		return loadWorkflowTemplate();
+			return loadWorkflowTemplate();
+		} else
+			return null;
 	}
 
 	public void removeSelection() {
