@@ -32,6 +32,8 @@ public class ExtendedAttribute {
 
 	private int mandatory = 0;
 
+	private int position = 0;
+
 	public String getStringValue() {
 		return stringValue;
 	}
@@ -126,5 +128,16 @@ public class ExtendedAttribute {
 
 	public void setMandatory(int mandatory) {
 		this.mandatory = mandatory;
+	}
+
+	/**
+	 * This is the position of the attribute into the attributes list.
+	 */
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
 	}
 }

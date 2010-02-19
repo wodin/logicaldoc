@@ -55,12 +55,13 @@
 
     <many-to-one name="document" class="com.logicaldoc.core.document.Document" column="ld_documentid" />
 
-    <map name="attributes" table="ld_version_ext" lazy="true" cascade="all">
+    <map name="attributes" table="ld_version_ext" lazy="true" cascade="all" order-by="ld_position asc">
       <key column="ld_versionid" />
       <map-key type="string" column="ld_name" length="255" />
       <composite-element class="com.logicaldoc.core.ExtendedAttribute">
-        <property name="mandatory" type="int" column="ld_mandatory" not-null="true" />
+        <property name="mandatory" type="int" column="ld_mandatory" not-null="true"/>
         <property name="type" type="int" column="ld_type" not-null="true" />
+        <property name="position" type="int" column="ld_position" not-null="true"/>
         <property name="stringValue" type="string" column="ld_stringvalue" length="4000" />
         <property name="intValue" type="long" column="ld_intvalue" />
         <property name="doubleValue" type="double" column="ld_doublevalue" />

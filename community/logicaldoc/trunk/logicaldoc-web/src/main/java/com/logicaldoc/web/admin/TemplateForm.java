@@ -2,8 +2,12 @@ package com.logicaldoc.web.admin;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.faces.component.UIInput;
+import javax.faces.component.UISelectOne;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
@@ -41,6 +45,8 @@ public class TemplateForm {
 
 	private int type = ExtendedAttribute.TYPE_STRING;
 
+	private UISelectOne selectListInput = null;
+
 	private UIInput newAttributeInput = null;
 
 	private UIInput typeInput = null;
@@ -50,6 +56,10 @@ public class TemplateForm {
 	private UIInput nameInput = null;
 
 	private UIInput descriptionInput = null;
+
+	// Utility map to restore the old positions of the template extended
+	// attributes
+	private Map<String, Integer> attributesPositions = new HashMap<String, Integer>();
 
 	public DocumentTemplate getTemplate() {
 		return template;
@@ -66,6 +76,9 @@ public class TemplateForm {
 	public void setTemplate(DocumentTemplate template) {
 		this.template = template;
 		init();
+		for (String name : template.getAttributeNames()) {
+			attributesPositions.put(name, template.getAttributes().get(name).getPosition());
+		}
 	}
 
 	private void init() {
@@ -81,6 +94,10 @@ public class TemplateForm {
 
 	public void setTemplateAttributes(Collection<SelectItem> templateAttributes) {
 		this.templateAttributes = templateAttributes;
+	}
+
+	public int getTemplateAttributesCount() {
+		return templateAttributes.size();
 	}
 
 	public String getSelectedAttribute() {
@@ -111,6 +128,15 @@ public class TemplateForm {
 		template.getAttributes().remove(selectedAttribute);
 		newAttribute = null;
 		mandatory = false;
+		type = ExtendedAttribute.TYPE_STRING;
+		init();
+		return null;
+	}
+
+	public String cleanAttributes() {
+		newAttribute = null;
+		mandatory = false;
+		selectedAttribute = null;
 		type = ExtendedAttribute.TYPE_STRING;
 		init();
 		return null;
@@ -159,6 +185,16 @@ public class TemplateForm {
 		FacesUtil.forceRefresh(typeInput);
 		FacesUtil.forceRefresh(newAttributeInput);
 
+		// Restore the old positions of the template extended attributes
+		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+		dao.initialize(template);
+		for (String name : template.getAttributeNames()) {
+			ExtendedAttribute extAttribute = template.getAttributes().get(name);
+			extAttribute.setPosition(attributesPositions.get(name));
+		}
+		dao.store(template);
+		init();
+
 		TemplatesRecordsManager recordsManager = ((TemplatesRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"templatesRecordsManager", FacesContext.getCurrentInstance(), log));
 		recordsManager.list();
@@ -197,6 +233,8 @@ public class TemplateForm {
 	}
 
 	public void selectAttribute(ValueChangeEvent event) {
+		if (event.getNewValue() == null)
+			return;
 		FacesUtil.forceRefresh(mandatoryInput);
 		FacesUtil.forceRefresh(typeInput);
 		FacesUtil.forceRefresh(newAttributeInput);
@@ -205,8 +243,66 @@ public class TemplateForm {
 			ExtendedAttribute attribute = template.getAttributes().get(newAttribute);
 			mandatory = attribute.getMandatory() == 1 ? true : false;
 			type = attribute.getType();
+			selectedAttribute = event.getNewValue().toString();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Moves the selected attribute up of one position
+	 */
+	public String attributeUp() {
+		if (selectedAttribute == null || selectedAttribute.trim().isEmpty())
+			return null;
+		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+		dao.initialize(template);
+		ExtendedAttribute attribute = template.getAttributes().get(selectedAttribute);
+		int oldPosition = attribute.getPosition();
+		ExtendedAttribute otherAttribute = template.getAttributeAtPosition(oldPosition - 1);
+		if (otherAttribute != null) {
+			attribute.setPosition(oldPosition - 1);
+			otherAttribute.setPosition(oldPosition);
+			dao.store(template);
+			reloadTemplateAttributesList();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Reload the template attributes list to visualise to the user the correct
+	 * order of the template attributes
+	 */
+	private void reloadTemplateAttributesList() {
+		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+		List<Object> strings = dao.findByJdbcQuery("select ld_name from LD_TEMPLATE_EXT where LD_TEMPLATEID = '"
+				+ template.getId() + "' order by LD_POSITION", 1, null);
+		templateAttributes.clear();
+		for (Object obj : strings) {
+			templateAttributes.add(new SelectItem(String.valueOf(obj), String.valueOf(obj)));
+		}
+	}
+
+	/**
+	 * Moves the selected attribute down of one position
+	 */
+	public String attributeDown() {
+		if (selectedAttribute == null || selectedAttribute.trim().isEmpty())
+			return null;
+		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+		dao.initialize(template);
+		ExtendedAttribute attribute = template.getAttributes().get(selectedAttribute);
+		int oldPosition = attribute.getPosition();
+		ExtendedAttribute otherAttribute = template.getAttributeAtPosition(oldPosition + 1);
+		if (otherAttribute != null) {
+			attribute.setPosition(oldPosition + 1);
+			otherAttribute.setPosition(oldPosition);
+			dao.store(template);
+			reloadTemplateAttributesList();
+		}
+
+		return null;
 	}
 
 	public UIInput getNewAttributeInput() {
@@ -231,5 +327,13 @@ public class TemplateForm {
 
 	public void setDescriptionInput(UIInput descriptionInput) {
 		this.descriptionInput = descriptionInput;
+	}
+
+	public UISelectOne getSelectListInput() {
+		return selectListInput;
+	}
+
+	public void setSelectListInput(UISelectOne selectListInput) {
+		this.selectListInput = selectListInput;
 	}
 }
