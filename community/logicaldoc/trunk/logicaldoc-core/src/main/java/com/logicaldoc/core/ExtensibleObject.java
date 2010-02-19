@@ -1,6 +1,8 @@
 package com.logicaldoc.core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,7 +49,23 @@ public abstract class ExtensibleObject extends PersistentObject {
 	}
 
 	public void removeAttribute(String name) {
-		if(attributes.containsKey(name))
+		if (attributes.containsKey(name))
 			attributes.remove(name);
+	}
+
+	public ExtendedAttribute getAttributeAtPosition(int position) {
+		if (position < 0)
+			return null;
+		List<ExtendedAttribute> extendedAttributes = new ArrayList<ExtendedAttribute>(attributes.values());
+		if (position >= extendedAttributes.size())
+			return null;
+		ExtendedAttribute attribute = null;
+		for (ExtendedAttribute extendedAttribute : extendedAttributes) {
+			if (extendedAttribute.getPosition() == position) {
+				attribute = extendedAttribute;
+				break;
+			}
+		}
+		return attribute;
 	}
 }

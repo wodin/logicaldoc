@@ -13,10 +13,11 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
-	id="userForm">
+	id="templateForm">
 
 	<ice:panelGroup styleClass="formBorderHighlight"
-		style="text-align:left">
+		style="text-align:left" id="edit"
+			rendered="#{templatesRecordsManager.selectedPanel=='edit'}">
 		<ice:panelGroup>
 			<!-- Template data -->
 			<ice:panelGroup>
@@ -35,8 +36,9 @@
 							</ice:panelGroup>
 							<ice:panelGroup>
 								<ice:inputText id="name" value="#{templateForm.template.name}"
-									binding="#{templateForm.nameInput}" maxlength="255"
-									styleClass="smallInputText" required="true" />
+									disabled="#{!empty (templateForm.template.name)}"
+									binding="#{templateForm.nameInput}" maxlength="255" size="25"
+									required="true" />
 								<ice:message for="name" />
 							</ice:panelGroup>
 
@@ -47,8 +49,8 @@
 							<ice:panelGroup>
 								<ice:inputText id="description"
 									value="#{templateForm.template.description}"
-									binding="#{templateForm.descriptionInput}"
-									styleClass="smallInputText" maxlength="500" />
+									binding="#{templateForm.descriptionInput}" maxlength="500"
+									size="25" />
 								<ice:message for="description" />
 							</ice:panelGroup>
 
@@ -57,11 +59,23 @@
 									value="#{msgs['template.attributes']}" />
 							</ice:panelGroup>
 							<ice:panelGroup>
-								<ice:selectOneListbox style="width: 135px" partialSubmit="true"
-									value="#{templateForm.selectedAttribute}"
-									valueChangeListener="#{templateForm.selectAttribute}">
-									<f:selectItems value="#{templateForm.templateAttributes}" />
-								</ice:selectOneListbox>
+								<ice:panelGrid columns="2">
+									<ice:selectOneListbox style="width: 135px" partialSubmit="true"
+										value="#{templateForm.selectedAttribute}"
+										valueChangeListener="#{templateForm.selectAttribute}"
+										binding="#{templateForm.selectListInput}">
+										<f:selectItems value="#{templateForm.templateAttributes}"/>
+									</ice:selectOneListbox>
+									<ice:panelGrid columns="1"
+										rendered="#{templateForm.templateAttributesCount > 0}">
+										<ice:commandButton
+											image="#{StyleBean.imagesPath}/up_green.png"
+											action="#{templateForm.attributeUp}" />
+										<ice:commandButton style="margin-top: 5px"
+											image="#{StyleBean.imagesPath}/down_green.png"
+											action="#{templateForm.attributeDown}" />
+									</ice:panelGrid>
+								</ice:panelGrid>
 							</ice:panelGroup>
 							<ice:panelGroup />
 
@@ -84,8 +98,9 @@
 							</ice:panelGroup>
 							<ice:panelGroup style="float:left">
 								<ice:inputText id="name_attribute" styleClass="smallInputTex"
-									value="#{templateForm.newAttribute}" maxlength="255"
-									required="true" />
+									value="#{templateForm.newAttribute}"
+									disabled="#{!empty (templateForm.newAttribute)}"
+									maxlength="255" required="true" />
 								<ice:message for="name_attribute" />
 							</ice:panelGroup>
 							<ice:panelGroup style="width:20px" />
@@ -101,17 +116,26 @@
 								<ice:outputLabel value="#{msgs['type']}" />
 							</ice:panelGroup>
 							<ice:panelGroup style="float:left">
-								<ice:selectOneMenu id="dispRows" value="#{templateForm.type}">
+								<ice:selectOneMenu id="dispRows" value="#{templateForm.type}"
+									disabled="#{!empty (templateForm.newAttribute)}">
 									<f:selectItems value="#{selectionTags.extendedTypes}" />
 								</ice:selectOneMenu>
 							</ice:panelGroup>
 							<ice:panelGroup style="width:20px" />
 							<ice:panelGroup style="width:20px" />
 							<ice:panelGroup styleClass="commands">
-								<ice:commandButton value="#{msgs['addupdate']}"
-									action="#{templateForm.addAttribute}" />
-								<ice:commandButton value="#{msgs['remove']}"
-									action="#{templateForm.removeAttributes}" />
+								<ice:panelGrid columns="2">
+									<ice:commandButton value="#{msgs['addupdate']}"
+										action="#{templateForm.addAttribute}" />
+									<ice:commandButton value="#{msgs['clean']}"
+										action="#{templateForm.cleanAttributes}" />
+									<ice:commandButton value="#{msgs['remove']}"
+										style="margin-top: 5px"
+										rendered="#{templateForm.template.id == 0}"
+										onclick="if (!confirm(&quot;#{msgs['delete.question']}&quot;)) return false;"
+										action="#{templateForm.removeAttributes}" />
+									<ice:panelGroup style="width:20px" />
+								</ice:panelGrid>
 							</ice:panelGroup>
 						</ice:panelGrid>
 
@@ -119,51 +143,5 @@
 				</ice:panelGrid>
 			</ice:panelGroup>
 		</ice:panelGroup>
-
 	</ice:panelGroup>
-
-	<!--
-<ice:form>
-	<ice:panelGrid columns="2" cellpadding="2">
-						<ice:panelGroup styleClass="outputLabel" style="text-align:right">
-							<ice:outputLabel value="#{msgs['name']}*" />
-						</ice:panelGroup>
-						<ice:panelGroup style="float:left">
-							<ice:inputText id="name_attribute" styleClass="smallInputTex"
-								value="#{templateForm.newAttribute}" 
-								 maxlength="255"
-								required="true" />
-							<ice:message for="name_attribute" />
-						</ice:panelGroup>
-						<ice:panelGroup styleClass="outputLabel" style="text-align:right">
-							<ice:outputLabel id="mandatory"
-								value="#{msgs['mandatory.attribute']}" />
-						</ice:panelGroup>
-						<ice:panelGroup style="float:left">
-							<ice:selectBooleanCheckbox value="#{templateForm.mandatory}"
-								/>
-						</ice:panelGroup>
-						<ice:panelGroup styleClass="outputLabel" style="text-align:right">
-							<ice:outputLabel value="#{msgs['type']}" />
-						</ice:panelGroup>
-						<ice:panelGroup style="float:left">
-							<ice:selectOneMenu id="dispRows" value="#{templateForm.type}"
-								>
-								<f:selectItem itemValue="0" itemLabel="#{msgs['string']}" />
-								<f:selectItem itemValue="3" itemLabel="#{msgs['date']}" />
-							</ice:selectOneMenu>
-						</ice:panelGroup>
-					</ice:panelGrid>
-										<ice:panelGrid columns="2" cellpadding="2">
-						<ice:panelGroup>
-							<ice:commandButton value="#{msgs['addupdate']}"
-								action="#{templateForm.addAttribute}" />
-						</ice:panelGroup>
-						<ice:panelGroup>
-							<ice:commandButton value="#{msgs['remove']}"
-								action="#{templateForm.removeAttributes}" />
-						</ice:panelGroup>
-					</ice:panelGrid>
-</ice:form>
--->
 </jsp:root>
