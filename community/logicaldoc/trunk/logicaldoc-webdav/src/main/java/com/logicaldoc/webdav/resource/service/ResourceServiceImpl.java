@@ -136,7 +136,8 @@ public class ResourceServiceImpl implements ResourceService {
 		if (folders != null) {
 			for (Iterator<Menu> iterator = folders.iterator(); iterator.hasNext();) {
 				Menu currentMenu = iterator.next();
-				resourceList.add(marshallFolder(currentMenu, parentResource.getRequestedPerson(), null));
+				if (menuDAO.isReadEnable(currentMenu.getId(), parentResource.getRequestedPerson()))
+					resourceList.add(marshallFolder(currentMenu, parentResource.getRequestedPerson(), null));
 			}
 		}
 
