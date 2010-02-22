@@ -51,8 +51,8 @@ public class Messages extends AbstractMap<String, String> {
 			try {
 				ResourceBundle bundle = ResourceBundle.getBundle(path, locale);
 				return bundle.getString(key);
-			} catch (Exception e) {
-				// Continue
+			} catch (Throwable e) {
+				return key;
 			}
 		}
 
