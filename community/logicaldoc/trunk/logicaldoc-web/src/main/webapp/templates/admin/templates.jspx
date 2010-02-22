@@ -98,7 +98,7 @@
 		</ice:panelGroup>
 
 		<ice:panelGroup styleClass="center"
-			rendered="#{templatesRecordsManager.selectedPanel=='edit'}">
+			rendered="#{templatesRecordsManager.selectedPanel!='list'}">
 			<f:subview id="w-template">
 				<ui:include src="/templates/admin/template.jspx" />
 			</f:subview>
