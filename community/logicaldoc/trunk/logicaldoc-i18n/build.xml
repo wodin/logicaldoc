@@ -1,4 +1,4 @@
-<project name="logicaldoc-i18n" default="prop2po" basedir="." xmlns:artifact="urn:maven-artifact-ant">
+<project name="logicaldoc-i18n" default="po2prop2js" basedir="." xmlns:artifact="urn:maven-artifact-ant">
 	<property file="${user.home}/logicaldoc-dev.properties" />
 	<property file="src/main/resources/i18n/i18n.properties" />
 	<import file="${logicaldoc.devroot}/build/ant/build.xml" />
@@ -21,7 +21,16 @@
 			</classpath>
 		</java>
 	</target>
-	
+
+	<target name="prop2js" depends="init-all">
+		<echo>Produce javascripts</echo>
+		<java classname="com.logicaldoc.i18n.PropertiesToJavascript">
+			<classpath>
+				<pathelement location="target/classes" />
+			</classpath>
+		</java>
+	</target>
+
 	<target name="prop2po" depends="init-all">
 		<!--copy todir="src/main/resources/i18n" flatten="true">
 			<fileset dir="${logicaldoc.devroot}">
@@ -31,7 +40,7 @@
 			</fileset>
 		</copy-->
 		<delete file="target/po" failonerror="no" />
-		
+
 		<echo>Produce the master pots</echo>
 		<for list="${bundles}" param="bundle">
 			<sequential>
@@ -72,7 +81,7 @@
 		</tar>
 	</target>
 
-	
+
 	<target name="po2prop" depends="init-all">
 		<echo>Produce the properties bak</echo>
 		<mkdir dir="target/po" />
@@ -80,7 +89,7 @@
 			<sequential>
 				<for list="${locales}" param="locale">
 					<sequential>
-						<mkdir dir="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}properties"/>
+						<mkdir dir="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}properties" />
 						<exec executable="python" dir="./translate-toolkit/translate/convert/">
 							<arg value="po2prop.py" />
 							<arg value="-t" />
@@ -92,5 +101,8 @@
 				</for>
 			</sequential>
 		</for>
+	</target>
+
+	<target name="po2prop2js" depends="po2prop,prop2js">
 	</target>
 </project>
