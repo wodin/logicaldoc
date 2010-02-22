@@ -52,7 +52,7 @@ public class Messages extends AbstractMap<String, String> {
 				ResourceBundle bundle = ResourceBundle.getBundle(path, locale);
 				return bundle.getString(key);
 			} catch (Throwable e) {
-				return key;
+				
 			}
 		}
 
