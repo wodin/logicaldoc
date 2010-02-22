@@ -16,8 +16,7 @@
 	id="templateForm">
 
 	<ice:panelGroup styleClass="formBorderHighlight"
-		style="text-align:left" id="edit"
-			rendered="#{templatesRecordsManager.selectedPanel=='edit'}">
+		style="text-align:left">
 		<ice:panelGroup>
 			<!-- Template data -->
 			<ice:panelGroup>
@@ -64,7 +63,7 @@
 										value="#{templateForm.selectedAttribute}"
 										valueChangeListener="#{templateForm.selectAttribute}"
 										binding="#{templateForm.selectListInput}">
-										<f:selectItems value="#{templateForm.templateAttributes}"/>
+										<f:selectItems value="#{templateForm.templateAttributes}" />
 									</ice:selectOneListbox>
 									<ice:panelGrid columns="1"
 										rendered="#{templateForm.templateAttributesCount > 0}">
