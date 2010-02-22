@@ -10,7 +10,7 @@ import java.util.Date;
  * @author Matteo Caruso - Logical Objects
  * @since 4.5.1
  */
-public class ExtendedAttribute implements Comparable {
+public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 
 	public static final int TYPE_STRING = 0;
 
@@ -142,8 +142,7 @@ public class ExtendedAttribute implements Comparable {
 	}
 
 	@Override
-	public int compareTo(Object o) {
-		ExtendedAttribute other = (ExtendedAttribute) o;
-		return new Integer(getPosition()).compareTo(other.getPosition());
+	public int compareTo(ExtendedAttribute o) {
+		return new Integer(getPosition()).compareTo(o.getPosition());
 	}
 }
