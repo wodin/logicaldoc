@@ -33,7 +33,7 @@
 			sortAscending="#{documentsRecordsManager.ascending}" cellpadding="0"
 			rows="#{documentsRecordsManager.displayedRows}"
 			binding="#{documentsRecordsManager.table}"
-			columnClasses="selectionColumn,dateColumn,titleColumn,selectionColumn,dateColumn,dateColumn,numberColumn">
+			columnClasses="selectionColumn,dateColumn,titleColumn,dateColumn,selectionColumn,dateColumn,dateColumn,numberColumn">
 
 			<!-- selection column -->
 			<ice:column>
@@ -128,8 +128,7 @@
 					rendered="#{!empty(documentRecord.docId) and !empty(documentRecord.shortcut)}">
 					<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
 						menuPopup="popscut">
-						<ice:graphicImage
-							value="#{StyleBean.imagesPath}/shortcut.png" />
+						<ice:graphicImage value="#{StyleBean.imagesPath}/shortcut.png" />
 						<ice:outputLink
 							value="download?docId=#{documentRecord.document.id}"
 							target="_blank" title="#{msgs['msg.jsp.popup']}">
@@ -146,6 +145,19 @@
 						rendered="#{documentRecord.documentFound}">
 						<ice:menuItems value="#{documentRecord.model}" />
 					</ice:menuPopup>
+				</ice:panelGroup>
+			</ice:column>
+
+			<!-- Version -->
+			<ice:column>
+				<f:facet name="header">
+					<ice:commandSortHeader columnName="version" arrow="true">
+						<ice:outputText value="#{msgs['version']}"
+							style="text-decoration: underline; white-space: nowrap;" />
+					</ice:commandSortHeader>
+				</f:facet>
+				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}">
+					<ice:outputText value="#{documentRecord.document.version}" />
 				</ice:panelGroup>
 			</ice:column>
 

@@ -1095,6 +1095,12 @@ public class SearchForm extends SortableList {
 					String id1 = c1.getCustomId() != null ? c1.getCustomId() : "";
 					String id2 = c2.getCustomId() != null ? c2.getCustomId() : "";
 					return ascending ? id1.compareTo(id2) : id2.compareTo(id1);
+				} else if (column.equals("version")) {
+					String version1 = c1.getDocument().getVersion() != null ? c1.getDocument().getVersion()
+							.toLowerCase() : "";
+					String version2 = c2.getDocument().getVersion() != null ? c2.getDocument().getVersion()
+							.toLowerCase() : "";
+					return ascending ? version1.compareTo(version2) : version2.compareTo(version1);
 				} else
 					return 0;
 			}
