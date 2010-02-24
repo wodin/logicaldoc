@@ -75,7 +75,6 @@ public class DocumentPreview extends HttpServlet {
 			try {
 				thumbManaher.createTumbnail(docDao.findById(docId), fileVersion);
 			} catch (Throwable t) {
-				t.printStackTrace();
 				log.error(t.getMessage(), t);
 			}
 		}
