@@ -113,6 +113,11 @@ public class TemplateForm {
 		if (StringUtils.isNotEmpty(newAttribute)) {
 			ExtendedAttribute attribute = new ExtendedAttribute();
 			attribute.setMandatory(mandatory ? 1 : 0);
+			if (template.getAttributeNames().size() > 0) {
+				attribute.setPosition(getMajorPosition(template) + 1);
+			} else {
+				attribute.setPosition(0);
+			}
 			attribute.setType(getType());
 			DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 			dao.initialize(template);
@@ -335,5 +340,16 @@ public class TemplateForm {
 
 	public void setSelectListInput(UISelectOne selectListInput) {
 		this.selectListInput = selectListInput;
+	}
+
+	public int getMajorPosition(DocumentTemplate template) {
+		int majorPosition = 0;
+		for (String attrName : template.getAttributeNames()) {
+			ExtendedAttribute extAttribute = template.getAttributes().get(attrName);
+			if (extAttribute.getPosition() > majorPosition)
+				majorPosition = extAttribute.getPosition();
+		}
+
+		return majorPosition;
 	}
 }
