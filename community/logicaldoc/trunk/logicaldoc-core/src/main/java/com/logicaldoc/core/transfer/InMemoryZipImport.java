@@ -68,6 +68,12 @@ public class InMemoryZipImport extends ZipImport {
 			while (zipEntries.hasMoreElements()) {
 				zipe = (ZipEntry) zipEntries.nextElement();
 				try {
+					// Avoid import of unnecessary folders or file
+					if (zipe.isDirectory() && zipe.getName().startsWith("__MAC")) {
+						continue;
+					} else if (!zipe.isDirectory() && (zipe.getName().startsWith(".") || zipe.getName().contains("/."))) {
+						continue;
+					}
 					addEntry(zip, zipe, parent);
 				} catch (IOException e) {
 					logger.warn("InMemoryZipImport unable to import ZIP entry", e);
@@ -93,7 +99,6 @@ public class InMemoryZipImport extends ZipImport {
 	 * @throws ZipException
 	 */
 	protected void addEntry(ZipFile zip, ZipEntry ze, Menu parent) throws ZipException, IOException {
-
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 		History transaction = new History();
