@@ -134,7 +134,6 @@ public class WorkflowTemplateManager {
 		this.xstream = xstream;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void initializing() {
 		this.workflowTemplate = new WorkflowTemplate();
 		this.persistenceTemplate = new WorkflowPersistenceTemplate();

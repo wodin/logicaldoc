@@ -3,9 +3,6 @@ package com.logicaldoc.workflow.model;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.faces.component.UIInput;
-
-import com.logicaldoc.web.util.FacesUtil;
 import com.logicaldoc.workflow.editor.controll.EditController;
 import com.logicaldoc.workflow.editor.message.DeployMessage;
 import com.logicaldoc.workflow.editor.model.BaseWorkflowModel;

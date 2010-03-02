@@ -1,5 +1,7 @@
 package com.logicaldoc.workflow;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -41,7 +43,9 @@ import com.logicaldoc.workflow.model.Transition;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
 import com.logicaldoc.workflow.model.WorkflowInstance;
 import com.logicaldoc.workflow.model.WorkflowTaskInstance;
+import com.logicaldoc.workflow.model.WorkflowTemplate;
 import com.logicaldoc.workflow.model.FetchModel.FETCH_TYPE;
+import com.logicaldoc.workflow.transform.WorkflowTransformService;
 
 public class WorkflowManager {
 	protected static Log log = LogFactory.getLog(WorkflowManager.class);
@@ -375,6 +379,44 @@ public class WorkflowManager {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Retrieves all the active tasks of the workflow for which the current user
+	 * (not administator) is the supervisor.
+	 */
+	public List<WorkflowTaskInstance> getSupervisorWorkflowTasks() {
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+
+		String username = (String) session.getAttribute(Constants.AUTH_USERNAME);
+		User currentUser = this.userDAO.findByUserName(username);
+		List<String> groupUserNames = new ArrayList<String>();
+		for (Group group : currentUser.getGroups()) {
+			groupUserNames.add(group.getName());
+		}
+
+		WorkflowTransformService workflowTransformService = (WorkflowTransformService) Context.getInstance().getBean(
+				"workflowTransformService");
+		List<WorkflowInstance> allWorkflowInstances = this.workflowService.getAllWorkflows();
+		WorkflowInstance supervisorWorkflowInstance = null;
+
+		for (WorkflowInstance workflowInstance : allWorkflowInstances) {
+			Object workflowTemplateXML = workflowInstance.getProperties().get(WorkflowConstants.VAR_TEMPLATE);
+			WorkflowTemplate workflowTemplate = workflowTransformService
+					.retrieveWorkflowModels((Serializable) workflowTemplateXML);
+			if (workflowTemplate.getSupervisor() != null && !workflowTemplate.getSupervisor().trim().isEmpty()) {
+				if (username.equals(workflowTemplate.getSupervisor())
+						|| groupUserNames.contains(workflowTemplate.getSupervisor())) {
+					supervisorWorkflowInstance = workflowInstance;
+					break;
+				}
+			}
+		}
+
+		if (supervisorWorkflowInstance != null) {
+			return this.workflowService.getTaskInstancesByWorkflowInstanceId(supervisorWorkflowInstance.getId());
+		} else
+			return null;
 	}
 
 	/**
