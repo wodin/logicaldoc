@@ -29,6 +29,14 @@
 						columnClasses="tableCol">
 						<ice:column>
 							<f:facet name="header">
+								<ice:outputText id="column0" value="#{msgs['workflow.editor_workflowname']}" />
+							</f:facet>
+							<ice:outputText id="workflowname"
+								value="#{taskInstance.workflowName}" />
+						</ice:column>
+						
+						<ice:column>
+							<f:facet name="header">
 								<ice:outputText id="column1" value="#{msgs['id']}" />
 							</f:facet>
 							<ice:outputText id="Number" value="#{taskInstance.id}" />
@@ -51,6 +59,14 @@
 					<ice:dataTable id="pooledTaskInstanceList" var="taskInstance"
 						value="#{WorkflowManager.pooledTaskInstances}" rows="15"
 						columnClasses="tableCol">
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText id="column0" value="#{msgs['workflow.editor_workflowname']}" />
+							</f:facet>
+							<ice:outputText id="workflowname"
+								value="#{taskInstance.workflowName}" />
+						</ice:column>
+						
 						<ice:column>
 							<f:facet name="header">
 								<ice:outputText id="column1" value="#{msgs['id']}" />
@@ -91,6 +107,14 @@
 						columnClasses="tableCol">
 						<ice:column>
 							<f:facet name="header">
+								<ice:outputText id="column0" value="#{msgs['workflow.editor_workflowname']}" />
+							</f:facet>
+							<ice:outputText id="workflowname"
+								value="#{taskInstance.workflowName}" />
+						</ice:column>
+						
+						<ice:column>
+							<f:facet name="header">
 								<ice:outputText id="column1" value="#{msgs['id']}" />
 							</f:facet>
 							<ice:outputText id="Number" value="#{taskInstance.id}" />
@@ -122,6 +146,14 @@
 						value="#{WorkflowManager.adminTasks}"
 						rendered="#{not empty WorkflowManager.adminTasks and authUserId == 1}"
 						rows="15" columnClasses="tableCol">
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText id="column0" value="#{msgs['workflow.editor_workflowname']}" />
+							</f:facet>
+							<ice:outputText id="workflowname"
+								value="#{taskInstance.workflowName}" />
+						</ice:column>
+						
 						<ice:column>
 							<f:facet name="header">
 								<ice:outputText id="column1" value="#{msgs['id']}" />
@@ -173,6 +205,14 @@
 						value="#{WorkflowManager.supervisorWorkflowTasks}"
 						rendered="#{not empty (WorkflowManager.supervisorWorkflowTasks) and authUserId != 1}"
 						rows="15" columnClasses="tableCol">
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText id="column0" value="#{msgs['workflow.editor_workflowname']}" />
+							</f:facet>
+							<ice:outputText id="workflowname"
+								value="#{taskInstance.workflowName}" />
+						</ice:column>
+
 						<ice:column>
 							<f:facet name="header">
 								<ice:outputText id="column1" value="#{msgs['id']}" />

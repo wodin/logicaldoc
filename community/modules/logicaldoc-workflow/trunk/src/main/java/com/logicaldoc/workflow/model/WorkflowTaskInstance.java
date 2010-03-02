@@ -5,12 +5,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.logicaldoc.util.Context;
+import com.logicaldoc.workflow.WorkflowService;
+
 public class WorkflowTaskInstance implements FetchModel {
 
 	public static enum STATE {
-		OPEN("open"), CANCELED("canceled"), DONE("done"), ALL("all"), NOT_YET_STARTED(
-				"not_yet_started"), SUSPENDED("suspended"), STARTED("started"), RESUME(
-				"resume");
+		OPEN("open"), CANCELED("canceled"), DONE("done"), ALL("all"), NOT_YET_STARTED("not_yet_started"), SUSPENDED(
+				"suspended"), STARTED("started"), RESUME("resume");
 		private final String val; // Message string
 
 		STATE(String val) {
@@ -86,8 +88,7 @@ public class WorkflowTaskInstance implements FetchModel {
 		this.transitions = workflowTaskInstance.transitions;
 
 		if (workflowTaskInstance.properties != null) {
-			for (Map.Entry<String, Object> entry : workflowTaskInstance.properties
-					.entrySet()) {
+			for (Map.Entry<String, Object> entry : workflowTaskInstance.properties.entrySet()) {
 				this.properties.put((String) entry.getKey(), entry.getValue());
 			}
 		}
@@ -96,6 +97,18 @@ public class WorkflowTaskInstance implements FetchModel {
 	@Override
 	public boolean isUpdateable() {
 		return true;
+	}
+
+	/**
+	 * The name of the workflow to which the current task instance belongs.
+	 */
+	public String getWorkflowName() {
+		WorkflowService workflowService = (WorkflowService) Context.getInstance().getBean("workflowService");
+		WorkflowInstance workflowInstance = workflowService.getWorkflowInstanceByTaskInstance(id, FETCH_TYPE.INFO);
+		if (workflowInstance != null)
+			return workflowInstance.getName();
+		else
+			return "";
 	}
 
 }
