@@ -5,23 +5,20 @@ import java.awt.image.ColorModel;
 import java.awt.image.RenderedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Hashtable;
-
-import javax.media.jai.JAI;
-import javax.media.jai.RenderedOp;
 
 import com.sun.media.jai.codec.FileSeekableStream;
 import com.sun.media.jai.codec.ImageCodec;
 import com.sun.media.jai.codec.ImageDecoder;
-import com.sun.media.jai.codec.ImageEncoder;
 import com.sun.media.jai.codec.SeekableStream;
-import com.sun.media.jai.codec.TIFFDirectory;
-import com.sun.media.jai.codec.TIFFEncodeParam;
-import com.sun.media.jai.codec.TIFFField;
 
+/**
+ * This builder uses JAI and it is able to handle TIFF.
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 5.1
+ */
 public class TiffThumbnailBuilder extends ImageThumbnailBuilder {
 	@Override
 	public synchronized void build(File src, String srcFileName, int size, File dest, int scaleAlgorithm,
@@ -30,35 +27,6 @@ public class TiffThumbnailBuilder extends ImageThumbnailBuilder {
 			readTiff(src, dest, size, scaleAlgorithm, compressionQuality);
 		} catch (Exception e) {
 		}
-	}
-
-	public static void mergeTiffFiles(File file, File destFile) throws Exception {
-
-		RenderedOp firstPage = JAI.create("fileload", file.getCanonicalPath());
-
-		TIFFEncodeParam param = new TIFFEncodeParam();
-		int comp = getCompression(firstPage);
-		System.out.println("Compression is : " + comp);
-		param.setCompression(comp);
-
-		OutputStream out = new FileOutputStream(destFile);
-
-		ImageEncoder encoder = ImageCodec.createImageEncoder("JPEG", out, param);
-
-		encoder.encode(firstPage);
-
-		firstPage.dispose();
-		out.close();
-	}
-
-	private static int getCompression(RenderedOp op) throws Exception {
-		int TAG_COMPRESSION = 259;
-		TIFFDirectory dir = (TIFFDirectory) op.getProperty("tiff_directory");
-		if (dir.isTagPresent(TAG_COMPRESSION)) {
-			TIFFField compField = dir.getField(TAG_COMPRESSION);
-			return compField.getAsInt(0);
-		}
-		return 0;
 	}
 
 	public void readTiff(File file, File dest, int size, int scaleAlgorithm, float compressionQuality)
@@ -71,25 +39,31 @@ public class TiffThumbnailBuilder extends ImageThumbnailBuilder {
 		resizeAndSave(size, dest, scaleAlgorithm, compressionQuality, bsrc);
 	}
 
-	public BufferedImage convertRenderedImage(RenderedImage img) {
-		if (img instanceof BufferedImage) {
-			return (BufferedImage) img;
+	/**
+	 * Converts the given RenderedImage into a BufferedImage
+	 * 
+	 * @param image The RenderedImage image
+	 * @return The BufferedImage image
+	 */
+	private BufferedImage convertRenderedImage(RenderedImage image) {
+		if (image instanceof BufferedImage) {
+			return (BufferedImage) image;
 		}
 
-		ColorModel cm = img.getColorModel();
-		int width = img.getWidth();
-		int height = img.getHeight();
+		ColorModel cm = image.getColorModel();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		WritableRaster raster = cm.createCompatibleWritableRaster(width, height);
 		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
 		Hashtable<String, Object> properties = new Hashtable<String, Object>();
-		String[] keys = img.getPropertyNames();
+		String[] keys = image.getPropertyNames();
 		if (keys != null) {
 			for (int i = 0; i < keys.length; i++) {
-				properties.put(keys[i], img.getProperty(keys[i]));
+				properties.put(keys[i], image.getProperty(keys[i]));
 			}
 		}
 		BufferedImage result = new BufferedImage(cm, raster, isAlphaPremultiplied, properties);
-		img.copyData(raster);
+		image.copyData(raster);
 
 		return result;
 	}
