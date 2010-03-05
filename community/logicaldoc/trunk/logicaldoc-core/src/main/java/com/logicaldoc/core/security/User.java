@@ -26,6 +26,12 @@ public class User extends PersistentObject implements Serializable {
 
 	public static int TYPE_SYSTEM = 1;
 
+	public static int SOURCE_DEFAULT = 0;
+
+	public static int SOURCE_LDAP = 1;
+
+	public static int SOURCE_ACTIVE_DIRECTORY = 2;
+
 	private static final long serialVersionUID = 8093874904302301982L;
 
 	private String userName = "";
@@ -72,6 +78,8 @@ public class User extends PersistentObject implements Serializable {
 
 	// Only for GUI
 	private String repass;
+
+	private int source = 0;
 
 	public User() {
 	}
@@ -335,5 +343,20 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setPasswordExpires(int passwordExpires) {
 		this.passwordExpires = passwordExpires;
+	}
+
+	/**
+	 * The source from which the user has been created
+	 * 
+	 * @see User#SOURCE_DEFAULT
+	 * @see User#SOURCE_LDAP
+	 * @see User#SOURCE_ACTIVE_DIRECTORY
+	 */
+	public int getSource() {
+		return source;
+	}
+
+	public void setSource(int source) {
+		this.source = source;
 	}
 }

@@ -78,6 +78,11 @@
     <parameter-def id="class" />
     <parameter-def id="position" />
   </extension-point>
+  <extension-point id="UserListener">
+    <parameter-def id="class" />
+    <parameter-def id="position" />
+  </extension-point>
+
   <extension-point id="Authentication">
     <parameter-def id="providerId" />
     <parameter-def id="position" />

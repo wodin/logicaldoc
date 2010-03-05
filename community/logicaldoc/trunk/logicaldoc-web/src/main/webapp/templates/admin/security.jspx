@@ -18,8 +18,9 @@
 
 	<ice:messages globalOnly="true" />
 
-	<ice:panelTabSet tabPlacement="top" selectedIndex="0">
-		<ice:panelTab rendered="true" label="#{msgs['menu']}">
+	<ice:panelTabSet id="staticTabSetPnl" tabPlacement="top"
+		selectedIndex="0">
+		<ice:panelTab id="phase1" rendered="true" label="#{msgs['menu']}">
 			<ice:panelGroup>
 				<ice:panelGrid columns="2">
 					<ice:panelGroup styleClass="outputLabel">
@@ -278,7 +279,7 @@
 								disabled="#{!rule.enabled||rule.groupName=='admin'}" />
 						</ice:panelGroup>
 					</ice:column>
-					
+
 					<!-- workflow -->
 					<ice:column styleClass="center">
 						<f:facet name="header">
@@ -298,7 +299,7 @@
 					action="#{securityRightsRecordsManager.save}" />
 			</ice:panelGroup>
 		</ice:panelTab>
-		<ice:panelTab rendered="true" label="#{msgs['password']}">
+		<ice:panelTab id="phase2" rendered="true" label="#{msgs['password']}">
 			<ice:panelGroup>
 				<ice:panelGrid columns="2">
 					<ice:panelGroup styleClass="outputLabel">
@@ -326,6 +327,61 @@
 			<ice:panelGroup styleClass="commands">
 				<ice:commandButton value="#{msgs['save']}"
 					action="#{securityForm.save}" />
+			</ice:panelGroup>
+		</ice:panelTab>
+		<ice:panelTab id="phase3" rendered="true"
+			label="#{msgs['notifications']}">
+			<ice:panelGroup>
+				<!-- 
+				<f:facet name="header">
+					<ice:panelGroup>
+						<h3>
+							<ice:outputText id="messagesHeader"
+								value="#{msgs['notifications.usercreation']}" />
+						</h3>
+					</ice:panelGroup>
+				</f:facet>
+				<ui:repeat value="#{securityForm.notificationUsers}"
+					var="notificationUser">
+
+					<ice:panelGrid columns="2" cellpadding="0" cellspacing="0">
+						<ice:commandLink
+							title="#{msgs['notifications.usercreation.removeuser']}"
+							actionListener="#{securityForm.removeUser}">
+							<f:param name="notificationUserId" value="#{notificationUser.id}" />
+							<ice:graphicImage styleClass="symbol"
+								value="/skins/default/images/workflow/editor/user_remove.gif" />
+						</ice:commandLink>
+						<ice:selectInputText id="AutoCmpTxt" rows="10" width="300"
+							value="#{notificationUser.value}"
+							valueChangeListener="#{securityForm.selectInputValueChanged}">
+							<f:selectItems id="AutoCmpTxtItms"
+								value="#{securityForm.possibleUsers}" />
+						</ice:selectInputText>
+					</ice:panelGrid>
+				</ui:repeat>
+				<ice:commandLink actionListener="#{securityForm.addUser}">
+					<ice:graphicImage styleClass="symbol"
+						value="/skins/default/images/workflow/editor/user_add.gif" />
+					<ice:outputText
+						value="#{msgs['notifications.usercreation.adduser']}" />
+				</ice:commandLink>
+-->
+				<ice:panelGrid columns="2">
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="auditUser"
+							value="#{msgs['notifications.usercreation']}:" />
+					</ice:panelGroup>
+					<ice:selectInputText id="AutoCmpTxt" rows="10" width="300"
+						value="#{securityForm.auditUserString}">
+					</ice:selectInputText>
+				</ice:panelGrid>
+			</ice:panelGroup>
+			<br />
+			<hr />
+			<ice:panelGroup styleClass="commands">
+				<ice:commandButton value="#{msgs['save']}"
+					action="#{securityForm.saveNotificationsSettings}" />
 			</ice:panelGroup>
 		</ice:panelTab>
 	</ice:panelTabSet>

@@ -1,6 +1,7 @@
 package com.logicaldoc.web.admin;
 
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -37,6 +38,10 @@ public class SecurityForm {
 	private int passwordSize;
 
 	private int passwordTtl;
+
+	private String auditUser;
+
+	private String auditUserString = "";
 
 	public String getPath() {
 		return path;
@@ -132,5 +137,49 @@ public class SecurityForm {
 		} catch (IOException e) {
 			Messages.addLocalizedError("errors.error");
 		}
+	}
+
+	public String getAuditUser() {
+		return getConfig().getProperty("audit.user");
+	}
+
+	public void setAuditUser(String auditUser) {
+		this.auditUser = auditUser;
+	}
+
+	/**
+	 * Store the usernames given by the user to the parameter 'audit.user'
+	 */
+	public void saveNotificationsSettings() {
+		try {
+			auditUser = "";
+			StringTokenizer st = new StringTokenizer(auditUserString.trim().toLowerCase(), ", ;", false);
+			while (st.hasMoreTokens()) {
+				String token = st.nextToken();
+				auditUser = auditUser + token + ", ";
+			}
+			if (auditUser.trim().endsWith(","))
+				auditUser = auditUser.substring(0, auditUser.lastIndexOf(","));
+
+			PropertiesBean context = getConfig();
+			context.setProperty("audit.user", auditUser.trim());
+			context.write();
+
+			Messages.addLocalizedInfo("notifications.settings");
+		} catch (IOException e) {
+			Messages.addLocalizedError("errors.error");
+		}
+	}
+
+	public String getAuditUserString() {
+		if (auditUserString == null || auditUserString.trim().isEmpty()) {
+			return getAuditUser();
+		} else
+			return auditUserString;
+
+	}
+
+	public void setAuditUserString(String auditUserString) {
+		this.auditUserString = auditUserString;
 	}
 }

@@ -94,7 +94,6 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 	/**
 	 * @see com.logicaldoc.core.security.dao.GroupDAO#findByName(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public Group findByName(String name) {
 		Group group = null;
 		Collection<Group> coll = findByWhere("_entity.name = '" + SqlUtil.doubleQuotes(name) + "'", null);
