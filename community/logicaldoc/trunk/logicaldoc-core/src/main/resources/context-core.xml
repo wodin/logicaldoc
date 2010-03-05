@@ -37,6 +37,9 @@
         <property name="userHistoryDAO">
           <ref bean="UserHistoryDAO" />
         </property>
+        <property name="listenerManager">
+          <ref bean="UserListenerManager" />
+        </property>
       </bean>
     </property>
   </bean>
@@ -290,6 +293,9 @@
   </bean>
 
   <bean id="DocumentListenerManager" class="com.logicaldoc.core.document.DocumentListenerManager">
+  </bean>
+  
+    <bean id="UserListenerManager" class="com.logicaldoc.core.security.UserListenerManager">
   </bean>
 
   <bean id="ThumbnailManager" class="com.logicaldoc.core.document.thumbnail.ThumbnailManager">

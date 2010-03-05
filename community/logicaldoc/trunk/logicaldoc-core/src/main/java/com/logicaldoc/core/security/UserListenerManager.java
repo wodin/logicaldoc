@@ -1,4 +1,4 @@
-package com.logicaldoc.core.document;
+package com.logicaldoc.core.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,23 +13,23 @@ import org.java.plugin.registry.Extension;
 import com.logicaldoc.util.PluginRegistry;
 
 /**
- * A manager for document listeners. It's internals are initialized from the extension
- * point 'DocumentListener' of the core plugin.
+ * A manager for user listeners. It's internals are initialized from the
+ * extension point 'UserListener' of the core plugin.
  * 
- * @author Marco Meschieri - Logical Objects
- * @since 4.0
+ * @author Matteo Caruso - Logical Objects
+ * @since 5.1
  */
-public class DocumentListenerManager {
-	protected static Log log = LogFactory.getLog(DocumentListenerManager.class);
+public class UserListenerManager {
+	protected static Log log = LogFactory.getLog(UserListenerManager.class);
 
-	private List<DocumentListener> listeners = null;
+	private List<UserListener> listeners = null;
 
 	public void init() {
-		listeners = new ArrayList<DocumentListener>();
+		listeners = new ArrayList<UserListener>();
 
-		// Acquire the 'DocumentListener' extensions of the core plugin
+		// Acquire the 'UserListener' extensions of the core plugin
 		PluginRegistry registry = PluginRegistry.getInstance();
-		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "DocumentListener");
+		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "UserListener");
 
 		// Sort the extensions according to ascending position
 		List<Extension> sortedExts = new ArrayList<Extension>();
@@ -55,11 +55,11 @@ public class DocumentListenerManager {
 				Class clazz = Class.forName(className);
 				// Try to instantiate the listener
 				Object listener = clazz.newInstance();
-				if (!(listener instanceof DocumentListener))
+				if (!(listener instanceof UserListener))
 					throw new Exception("The specified listener " + className
-							+ " doesn't implement DocumentListener interface");
-				listeners.add((DocumentListener) listener);
-				log.info("Added new document listener " + className + " position "
+							+ " doesn't implement UserListener interface");
+				listeners.add((UserListener) listener);
+				log.info("Added new user listener " + className + " position "
 						+ ext.getParameter("position").valueAsString());
 			} catch (Throwable e) {
 				log.error(e.getMessage());
@@ -70,7 +70,7 @@ public class DocumentListenerManager {
 	/**
 	 * The ordered list of listeners
 	 */
-	public List<DocumentListener> getListeners() {
+	public List<UserListener> getListeners() {
 		if (listeners == null)
 			init();
 		return listeners;

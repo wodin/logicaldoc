@@ -3,8 +3,10 @@ package com.logicaldoc.core.security.dao;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.LogFactory;
@@ -13,6 +15,8 @@ import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;
+import com.logicaldoc.core.security.UserListener;
+import com.logicaldoc.core.security.UserListenerManager;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.io.CryptUtil;
 
@@ -27,6 +31,8 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	private UserDocDAO userDocDAO;
 
 	private UserHistoryDAO userHistoryDAO;
+
+	private UserListenerManager listenerManager;
 
 	// Password time to live
 	private int passwordTtl = 90;
@@ -73,7 +79,6 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	 * @see com.logicaldoc.core.security.dao.UserDAO#findByUserNameAndName(java.lang.String,
 	 *      java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<User> findByUserNameAndName(String username, String name) {
 		return findByWhere("lower(_entity.name) like ? and _entity.userName like ?", new Object[] { name.toLowerCase(),
 				username }, null);
@@ -91,7 +96,15 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		boolean result = true;
 
 		try {
+			Map<String, Object> dictionary = new HashMap<String, Object>();
+
+			log.debug("Invoke listeners before store");
+			for (UserListener listener : listenerManager.getListeners()) {
+				listener.beforeStore(user, dictionary);
+			}
+
 			getHibernateTemplate().saveOrUpdate(user);
+
 			String userGroupName = "_user_" + Long.toString(user.getId());
 			GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 			Group grp = groupDAO.findByName(userGroupName);
@@ -104,11 +117,18 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 				grp.setUsers(users);
 				groupDAO.store(grp);
 				user.getGroups().add(grp);
+
 				getHibernateTemplate().saveOrUpdate(user);
 
 				saveUserHistory(user, transaction);
 			}
+			
+			log.debug("Invoke listeners after store");
+			for (UserListener listener : listenerManager.getListeners()) {
+				listener.afterStore(user, dictionary);
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 			result = false;
@@ -262,5 +282,9 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	public void setUserDocDAO(UserDocDAO userDocDAO) {
 		this.userDocDAO = userDocDAO;
+	}
+
+	public void setListenerManager(UserListenerManager listenerManager) {
+		this.listenerManager = listenerManager;
 	}
 }
