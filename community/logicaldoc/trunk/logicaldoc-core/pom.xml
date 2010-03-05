@@ -263,7 +263,17 @@
       <groupId>org.icepdf</groupId>
       <artifactId>icepdf-core</artifactId>
       <version>4.0.0</version>
-   </dependency>
+    </dependency>
+    <dependency>
+      <groupId>javax.media.jai</groupId>
+      <artifactId>jai-core</artifactId>
+      <version>1.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.media.jai</groupId>
+      <artifactId>jai-codec</artifactId>
+      <version>1.2.1</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

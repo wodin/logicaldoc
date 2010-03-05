@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -22,10 +23,16 @@ import javax.imageio.stream.FileImageOutputStream;
  */
 public class ImageThumbnailBuilder implements ThumbnailBuilder {
 
-
 	@Override
-	public synchronized void build(File src, String srcFileName, int size, File dest, int scaleAlgorithm, float compressionQuality) throws IOException {
+	public synchronized void build(File src, String srcFileName, int size, File dest, int scaleAlgorithm,
+			float compressionQuality) throws IOException {
 		BufferedImage bsrc = ImageIO.read(src);
+
+		resizeAndSave(size, dest, scaleAlgorithm, compressionQuality, bsrc);
+	}
+
+	public void resizeAndSave(int size, File dest, int scaleAlgorithm, float compressionQuality, BufferedImage bsrc)
+			throws FileNotFoundException, IOException {
 
 		Image destImg = null;
 		if (bsrc.getWidth() >= bsrc.getHeight()) {
