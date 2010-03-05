@@ -78,7 +78,6 @@
     <parameter-def id="class" />
     <parameter-def id="position" />
   </extension-point>
-
   <extension-point id="Authentication">
     <parameter-def id="providerId" />
     <parameter-def id="position" />
@@ -228,6 +227,14 @@
   <extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="bmpThumb">
     <parameter id="extension" value="bmp" />
     <parameter id="class" value="com.logicaldoc.core.document.thumbnail.ImageThumbnailBuilder" />
+  </extension>
+  <extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="tifThumb">
+    <parameter id="extension" value="tif" />
+    <parameter id="class" value="com.logicaldoc.core.document.thumbnail.TiffThumbnailBuilder" />
+  </extension>
+    <extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="tiffThumb">
+    <parameter id="extension" value="tiff" />
+    <parameter id="class" value="com.logicaldoc.core.document.thumbnail.TiffThumbnailBuilder" />
   </extension>
   <extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="pdfThumb">
     <parameter id="extension" value="pdf" />
