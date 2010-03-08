@@ -1,0 +1,162 @@
+<?xml version = '1.0'?>
+<!-- 
+ Shows the workflow histories
+ 
+ @author Matteo Caruso - Logical Objects
+ @since 5.1
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	styleClass="center" style="width: 900px;">
+
+	<ice:outputStyle href="/skins/default/css/workflow.css" />
+
+	<style>
+.class1 {
+	text-align: left;
+	width: 100px;
+}
+
+.class2 {
+	text-align: left;
+}
+</style>
+
+	<ice:panelGroup styleClass="formBorderHighlight"
+		style="text-align:left;">
+		<ice:messages />
+		<ice:panelCollapsible id="messagesPanel" expanded="true"
+			styleClass="pnlClpsbl">
+			<f:facet name="header">
+				<ice:panelGroup styleClass="expandableStateIndicator">
+					<h3>
+						<ice:outputText id="messagesHeader"
+							value="#{msgs['workflow.history']}" />
+					</h3>
+				</ice:panelGroup>
+			</f:facet>
+			<f:subview id="w-histories">
+
+				<!-- Insert the scroll panel for template and for instance -->
+
+			</f:subview>
+			<br />
+		</ice:panelCollapsible>
+		<br />
+		<!-- Workflow History Table -->
+		<ice:panelGroup styleClass="formBorderHighlight"
+			rendered="#{LastChangesBean.count > 0}">
+			<ice:dataTable id="lastChangesList"
+				value="#{LastChangesBean.lastChanges}" var="historyRecord"
+				cellpadding="0" styleClass="center"
+				sortColumn="#{LastChangesBean.sortColumn}"
+				sortAscending="#{LastChangesBean.ascending}"
+				rows="#{LastChangesBean.displayedRows}"
+				columnClasses="titleColumn,dateColumn,titleColumn,titleColumn,titleColumn,titleColumn">
+
+				<!-- Event column -->
+				<ice:column styleClass="nowrap center">
+					<f:facet name="header">
+						<ice:commandSortHeader columnName="event" arrow="true">
+							<ice:outputText value="#{msgs['event']}" />
+						</ice:commandSortHeader>
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{historyRecord.event}"
+							title="#{historyRecord.comment}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Date column -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:commandSortHeader columnName="date" arrow="true">
+							<ice:outputText value="#{msgs['date']}" />
+						</ice:commandSortHeader>
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{historyRecord.date}">
+							<f:convertDateTime pattern="#{loc.dateFormatHM}"
+								timeZone="#{StyleBean.timeZone}" />
+						</ice:outputText>
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- User column -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:commandSortHeader columnName="user" arrow="true">
+							<ice:outputText value="#{msgs['user']}" />
+						</ice:commandSortHeader>
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{historyRecord.userName}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Folder column -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:commandSortHeader columnName="folder" arrow="true">
+							<ice:outputText value="#{msgs['folder']}" />
+						</ice:commandSortHeader>
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{historyRecord.folder}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Document column -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:commandSortHeader columnName="document" arrow="true">
+							<ice:outputText value="#{msgs['document']}" />
+						</ice:commandSortHeader>
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{historyRecord.document}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Session ID column -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['session.id']}" />
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{historyRecord.sessionId}" />
+					</ice:panelGroup>
+				</ice:column>
+
+			</ice:dataTable>
+			<br />
+			<ice:panelGrid columns="2" style="width: 100%;">
+				<ice:panelGroup>
+					<ldoc:paginator table="lastChangesList"
+						label="#{msgs['paginator.simple']}" />
+				</ice:panelGroup>
+
+				<ice:panelGroup style="float:right">
+					<ice:selectOneMenu id="dispRows"
+						value="#{LastChangesBean.displayedRows}" partialSubmit="true">
+						<f:selectItem itemValue="10" />
+						<f:selectItem itemValue="25" />
+						<f:selectItem itemValue="50" />
+					</ice:selectOneMenu>
+					<ice:outputLabel value="#{msgs['document.perpage']}" for="dispRows"
+						style="white-space: nowrap;" />
+				</ice:panelGroup>
+			</ice:panelGrid>
+		</ice:panelGroup>
+	</ice:panelGroup>
+	<ice:panelGroup styleClass="formBorderHighlight"
+		rendered="#{LastChangesBean.count &lt; 1}">
+		<ice:outputText value="#{msgs['noelements']}" />
+	</ice:panelGroup>
+</jsp:root>

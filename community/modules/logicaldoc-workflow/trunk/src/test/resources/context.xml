@@ -78,6 +78,7 @@
         <value>/mappings/DocumentTemplate.hbm.xml</value>
         <value>/mappings/SystemMessage.hbm.xml</value>
         <value>/mappings/WorkflowPersistenceTemplate.hbm.xml</value>
+        <value>/mappings/WorkflowHistory.hbm.xml</value>
       </list>
     </property>
 
@@ -126,6 +127,17 @@
     lazy-init="default" autowire="default" dependency-check="default">
     <property name="target">
       <bean class="com.logicaldoc.workflow.editor.HibernateWorkflowPersistenceTemplateDAO" abstract="false"
+        lazy-init="default" autowire="default" dependency-check="default">
+        <property name="sessionFactory">
+          <ref bean="SessionFactory" />
+        </property>
+      </bean>
+    </property>
+  </bean>
+  <bean id="WorkflowHistoryDAO" parent="ApplicationBaseTransactionProxy" abstract="false" lazy-init="default"
+    autowire="default" dependency-check="default">
+    <property name="target">
+      <bean class="com.logicaldoc.workflow.editor.HibernateWorkflowHistoryDAO" abstract="false"
         lazy-init="default" autowire="default" dependency-check="default">
         <property name="sessionFactory">
           <ref bean="SessionFactory" />
