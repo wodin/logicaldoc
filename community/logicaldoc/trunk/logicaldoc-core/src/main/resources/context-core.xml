@@ -37,7 +37,7 @@
         <property name="userHistoryDAO">
           <ref bean="UserHistoryDAO" />
         </property>
-        <property name="listenerManager">
+        <property name="userListenerManager">
           <ref bean="UserListenerManager" />
         </property>
       </bean>

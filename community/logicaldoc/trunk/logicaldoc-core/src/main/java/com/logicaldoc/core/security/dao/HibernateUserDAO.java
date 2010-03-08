@@ -32,7 +32,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 	private UserHistoryDAO userHistoryDAO;
 
-	private UserListenerManager listenerManager;
+	private UserListenerManager userListenerManager;
 
 	// Password time to live
 	private int passwordTtl = 90;
@@ -99,7 +99,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 			Map<String, Object> dictionary = new HashMap<String, Object>();
 
 			log.debug("Invoke listeners before store");
-			for (UserListener listener : listenerManager.getListeners()) {
+			for (UserListener listener : userListenerManager.getListeners()) {
 				listener.beforeStore(user, dictionary);
 			}
 
@@ -124,7 +124,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 			}
 
 			log.debug("Invoke listeners after store");
-			for (UserListener listener : listenerManager.getListeners()) {
+			for (UserListener listener : userListenerManager.getListeners()) {
 				listener.afterStore(user, dictionary);
 			}
 		} catch (Exception e) {
@@ -286,11 +286,11 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		this.userDocDAO = userDocDAO;
 	}
 
-	public void setListenerManager(UserListenerManager listenerManager) {
-		this.listenerManager = listenerManager;
+	public void setUserListenerManager(UserListenerManager userListenerManager) {
+		this.userListenerManager = userListenerManager;
 	}
 
-	public UserListenerManager getListenerManager() {
-		return listenerManager;
+	public UserListenerManager getUserListenerManager() {
+		return userListenerManager;
 	}
 }
