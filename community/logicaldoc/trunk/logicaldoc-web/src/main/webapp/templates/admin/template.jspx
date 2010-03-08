@@ -20,12 +20,8 @@
 		<ice:panelGroup>
 			<!-- Template data -->
 			<ice:panelGroup>
-				<h3>
-					<ice:outputText value="#{msgs['template']}" />
-					&amp;nbsp;
-					<ice:outputText value="#{templateForm.template.name}" />
-					<br />
-					<br />
+				<h3> <ice:outputText value="#{msgs['template']}" /> &amp;nbsp;
+				<ice:outputText value="#{templateForm.template.name}" /> <br /> <br />
 				</h3>
 				<ice:panelGrid columns="5">
 					<ice:form>
@@ -59,8 +55,9 @@
 							</ice:panelGroup>
 							<ice:panelGroup>
 								<ice:panelGrid columns="2">
-									<ice:selectOneListbox style="width: 135px" partialSubmit="true"
-										value="#{templateForm.selectedAttribute}"
+									<ice:selectOneListbox id="attributes" style="width: 135px"
+										size="#{templateForm.templateAttributesCount > 1 ? templateForm.templateAttributesCount : 2}"
+										partialSubmit="true" value="#{templateForm.selectedAttribute}"
 										valueChangeListener="#{templateForm.selectAttribute}"
 										binding="#{templateForm.selectListInput}">
 										<f:selectItems value="#{templateForm.templateAttributes}" />
@@ -130,9 +127,9 @@
 										action="#{templateForm.cleanAttributes}" />
 									<ice:commandButton value="#{msgs['remove']}"
 										style="margin-top: 5px"
-										rendered="#{templateForm.template.id == 0}"
+										rendered="#{empty (templateForm.attributesPositions)}"
 										onclick="if (!confirm(&quot;#{msgs['delete.question']}&quot;)) return false;"
-										action="#{templateForm.removeAttributes}" />
+										action="#{templateForm.removeAttribute}" />
 									<ice:panelGroup style="width:20px" />
 								</ice:panelGrid>
 							</ice:panelGroup>
