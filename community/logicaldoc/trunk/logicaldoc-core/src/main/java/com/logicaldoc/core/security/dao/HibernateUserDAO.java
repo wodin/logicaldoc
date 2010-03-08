@@ -122,7 +122,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 				saveUserHistory(user, transaction);
 			}
-			
+
 			log.debug("Invoke listeners after store");
 			for (UserListener listener : listenerManager.getListeners()) {
 				listener.afterStore(user, dictionary);
@@ -219,6 +219,8 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	public int count() {
 		List<Object> result = findByJdbcQuery("select count(*) from ld_user where ld_type=0 and not(ld_deleted=1)", 1,
 				null);
+		if (result == null || result.isEmpty())
+			return 0;
 		if (result.get(0) instanceof Integer)
 			return ((Integer) result.get(0)).intValue();
 		else
