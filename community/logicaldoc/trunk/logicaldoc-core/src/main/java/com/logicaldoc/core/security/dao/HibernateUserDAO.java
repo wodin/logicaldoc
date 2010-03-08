@@ -287,4 +287,8 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	public void setListenerManager(UserListenerManager listenerManager) {
 		this.listenerManager = listenerManager;
 	}
+
+	public UserListenerManager getListenerManager() {
+		return listenerManager;
+	}
 }
