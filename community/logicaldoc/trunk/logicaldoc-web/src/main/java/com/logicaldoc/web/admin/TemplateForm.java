@@ -194,8 +194,14 @@ public class TemplateForm {
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		dao.initialize(template);
 		for (String name : template.getAttributeNames()) {
+			System.err.println("attribute name: '" + name + "'");
 			ExtendedAttribute extAttribute = template.getAttributes().get(name);
-			extAttribute.setPosition(attributesPositions.get(name));
+			if (extAttribute != null) {
+				Integer attrpos = attributesPositions.get(name);
+				extAttribute.setPosition(attrpos);
+//				if (attrpos != null)
+//					extAttribute.setPosition(attrpos);
+			}
 		}
 		dao.store(template);
 		init();
