@@ -239,9 +239,6 @@
 			<ice:commandButton value="#{msgs['back']}" styleClass="backBtn"
 				action="#{rightsRecordsManager.back}"
 				rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
-			<ice:commandButton value="#{msgs['cancel']}"
-				action="#{rightsRecordsManager.back}" 
-				rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
 			<ice:commandButton value="#{msgs['save']}"
 				action="#{rightsRecordsManager.save}" />
 		</ice:panelGroup>
