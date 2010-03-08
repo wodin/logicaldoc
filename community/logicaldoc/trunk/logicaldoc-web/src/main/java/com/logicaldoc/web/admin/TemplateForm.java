@@ -127,7 +127,11 @@ public class TemplateForm {
 		return null;
 	}
 
-	public String removeAttributes() {
+	/**
+	 * Remove the selected attribute. The user can remove an attribute only
+	 * during the template creation.
+	 */
+	public String removeAttribute() {
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		dao.initialize(template);
 		template.getAttributes().remove(selectedAttribute);
@@ -143,7 +147,6 @@ public class TemplateForm {
 		mandatory = false;
 		selectedAttribute = null;
 		type = ExtendedAttribute.TYPE_STRING;
-		init();
 		return null;
 	}
 
@@ -167,6 +170,7 @@ public class TemplateForm {
 			FacesUtil.forceRefresh(mandatoryInput);
 			FacesUtil.forceRefresh(typeInput);
 			FacesUtil.forceRefresh(newAttributeInput);
+			attributesPositions.clear();
 
 			TemplatesRecordsManager recordsManager = ((TemplatesRecordsManager) FacesUtil.accessBeanFromFacesContext(
 					"templatesRecordsManager", FacesContext.getCurrentInstance(), log));
@@ -193,18 +197,22 @@ public class TemplateForm {
 		// Restore the old positions of the template extended attributes
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		dao.initialize(template);
-		for (String name : template.getAttributeNames()) {
-			System.err.println("attribute name: '" + name + "'");
-			ExtendedAttribute extAttribute = template.getAttributes().get(name);
-			if (extAttribute != null) {
-				Integer attrpos = attributesPositions.get(name);
-				extAttribute.setPosition(attrpos);
-//				if (attrpos != null)
-//					extAttribute.setPosition(attrpos);
+		if (!attributesPositions.isEmpty()) {
+			// The template already exists, so we have to restore the old
+			// attributes positions
+			for (String name : template.getAttributeNames()) {
+				ExtendedAttribute extAttribute = template.getAttributes().get(name);
+				extAttribute.setPosition(attributesPositions.get(name));
 			}
+			dao.store(template);
+		} else {
+			// The user had started to create a template adding one or more
+			// attributes, but then changed his mind, so the template must be
+			// removed
+			dao.delete(template.getId());
 		}
-		dao.store(template);
 		init();
+		attributesPositions.clear();
 
 		TemplatesRecordsManager recordsManager = ((TemplatesRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"templatesRecordsManager", FacesContext.getCurrentInstance(), log));
@@ -357,5 +365,9 @@ public class TemplateForm {
 		}
 
 		return majorPosition;
+	}
+
+	public Map<String, Integer> getAttributesPositions() {
+		return attributesPositions;
 	}
 }
