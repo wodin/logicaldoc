@@ -15,7 +15,6 @@
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
 	id="tagsForm">
 
-
 	<ice:panelGroup style="text-align: center;">
 		<ice:form>
 			<br />
@@ -32,9 +31,9 @@
 				<ice:outputLabel for="manualchar"
 					value="#{msgs['tags.otherchar']}: " />
 				<ice:inputText id="manualchar" value="#{tags.manualchar}" size="1"
-					maxlength="1" required="true" />
+					maxlength="1" required="true" style="margin-right: 10px;" />
 				<ice:commandButton value="#{msgs['search']}"
-					action="#{tags.showWordsbychar}" />
+					action="#{tags.showWordsbychar}" styleClass="standardBtn" />
 			</ice:panelGroup>
 		</ice:form>
 	</ice:panelGroup>
