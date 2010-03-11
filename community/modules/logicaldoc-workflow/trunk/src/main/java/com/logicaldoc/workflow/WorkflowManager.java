@@ -413,7 +413,7 @@ public class WorkflowManager {
 	}
 
 	/**
-	 * Retrieves all the active tasks of the workflow for which the current user
+	 * Retrieves all the tasks of the workflow for which the current user
 	 * (not administator) is the supervisor.
 	 */
 	public List<WorkflowTaskInstance> getSupervisorWorkflowTasks() {
@@ -429,7 +429,10 @@ public class WorkflowManager {
 		WorkflowTransformService workflowTransformService = (WorkflowTransformService) Context.getInstance().getBean(
 				"workflowTransformService");
 		List<WorkflowInstance> allWorkflowInstances = this.workflowService.getAllWorkflows();
-		WorkflowInstance supervisorWorkflowInstance = null;
+		// A single workflow can have more than one instances, so a supervisor
+		// can
+		// supervise more than one workflow instances.
+		List<WorkflowInstance> supervisorWorkflowInstance = new ArrayList<WorkflowInstance>();
 
 		for (WorkflowInstance workflowInstance : allWorkflowInstances) {
 			Object workflowTemplateXML = workflowInstance.getProperties().get(WorkflowConstants.VAR_TEMPLATE);
@@ -438,14 +441,18 @@ public class WorkflowManager {
 			if (workflowTemplate.getSupervisor() != null && !workflowTemplate.getSupervisor().trim().isEmpty()) {
 				if (username.equals(workflowTemplate.getSupervisor())
 						|| groupUserNames.contains(workflowTemplate.getSupervisor())) {
-					supervisorWorkflowInstance = workflowInstance;
-					break;
+					supervisorWorkflowInstance.add(workflowInstance);
 				}
 			}
 		}
 
-		if (supervisorWorkflowInstance != null) {
-			return this.workflowService.getTaskInstancesByWorkflowInstanceId(supervisorWorkflowInstance.getId());
+		List<WorkflowTaskInstance> supervisorWorkflowTasks = new ArrayList<WorkflowTaskInstance>();
+		if (supervisorWorkflowInstance != null && !supervisorWorkflowInstance.isEmpty()) {
+			for (WorkflowInstance workflowInstance : supervisorWorkflowInstance) {
+				supervisorWorkflowTasks.addAll(this.workflowService
+						.getTaskInstancesByWorkflowInstanceId(workflowInstance.getId()));
+			}
+			return supervisorWorkflowTasks;
 		} else
 			return null;
 	}
