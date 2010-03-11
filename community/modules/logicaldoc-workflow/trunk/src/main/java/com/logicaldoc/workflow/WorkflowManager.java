@@ -301,6 +301,37 @@ public class WorkflowManager {
 	public List<WorkflowTaskInstance> getSuspendedTaskInstances() {
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 		String username = (String) session.getAttribute(Constants.AUTH_USERNAME);
+
+		// If the current user is an 'admin' user, he must see all the suspended
+		// task instances
+		User currentUser = this.userDAO.findByUserName(username);
+		for (Group group : currentUser.getGroups()) {
+			if (group.getName().equals("admin"))
+				return this.workflowService.getSuspendedTaskInstances();
+		}
+
+		// Checks if the current user is the workflow supervisor, so he must see
+		// the suspended tasks for the workflow and his suspended tasks of other
+		// workflows
+		List<WorkflowTaskInstance> suspendedTaskInstances = new ArrayList<WorkflowTaskInstance>();
+		List<WorkflowTaskInstance> supervisorTaskInstances = getSupervisorWorkflowTasks();
+		if (supervisorTaskInstances != null) {
+			// The current user is a workflow supervisor
+			for (WorkflowTaskInstance workflowTaskInstance : this.workflowService.getSuspendedTaskInstances()) {
+				if (supervisorTaskInstances.contains(workflowTaskInstance))
+					suspendedTaskInstances.add(workflowTaskInstance);
+			}
+			// Maybe the supervisor user has some suspended tasks of other
+			// workflows
+			for (WorkflowTaskInstance workflowTaskInstance : this.workflowService
+					.getSuspendedTaskInstancesForUser(username)) {
+				if (!suspendedTaskInstances.contains(workflowTaskInstance))
+					suspendedTaskInstances.add(workflowTaskInstance);
+			}
+
+			return suspendedTaskInstances;
+		}
+
 		return this.workflowService.getSuspendedTaskInstancesForUser(username);
 	}
 
@@ -375,7 +406,7 @@ public class WorkflowManager {
 
 		for (Group group : currentUser.getGroups()) {
 			if (group.getName().equals("admin"))
-				return this.workflowService.getAllActiveTaskInstances();
+				return this.workflowService.getAllTaskInstances();
 		}
 
 		return null;

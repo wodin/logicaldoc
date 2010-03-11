@@ -209,7 +209,8 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 
 				List<ProcessDefinition> processDefinitions = context.getGraphSession().findLatestProcessDefinitions();
 				for (ProcessDefinition definition : processDefinitions) {
-					// Must be listed to the user (into the workflow wizard) only the workflow definitions
+					// Must be listed to the user (into the workflow wizard)
+					// only the workflow definitions
 					// associated to existing workflow template
 					WorkflowPersistenceTemplateDAO workflowDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
 							.getBean(WorkflowPersistenceTemplateDAO.class);
@@ -248,7 +249,7 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<WorkflowTaskInstance> getAllTaskInstances() {
+	public List<WorkflowTaskInstance> getAllActiveTaskInstances() {
 		return (List<WorkflowTaskInstance>) this.jbpmTemplate.execute(
 
 		new JbpmCallback() {
@@ -258,6 +259,31 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 				Query query = context.getSession().createQuery(
 						" select ti from org.jbpm.taskmgmt.exe.TaskInstance as ti"
 								+ " where ti.isSuspended != true and ti.isOpen = true");
+
+				List<TaskInstance> list = query.list();
+
+				List<WorkflowTaskInstance> workflowTaskInstances = new ArrayList<WorkflowTaskInstance>();
+
+				for (TaskInstance taskInstance : list)
+					workflowTaskInstances.add(WorkflowFactory.createTaskInstance(taskInstance));
+
+				return workflowTaskInstances;
+
+			}
+		});
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<WorkflowTaskInstance> getAllTaskInstances() {
+		return (List<WorkflowTaskInstance>) this.jbpmTemplate.execute(
+
+		new JbpmCallback() {
+
+			public List<WorkflowTaskInstance> doInJbpm(JbpmContext context) throws JbpmException {
+
+				Query query = context.getSession().createQuery(
+						" select ti from org.jbpm.taskmgmt.exe.TaskInstance as ti" + " where ti.isOpen = true");
 
 				List<TaskInstance> list = query.list();
 
@@ -568,6 +594,26 @@ public class JBPMWorkflowEngine implements WorkflowEngine {
 					workflowInstances.add(WorkflowFactory.createWorkflowInstance(instance));
 
 				return workflowInstances;
+			}
+		});
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<WorkflowTaskInstance> getAllSuspendedTaskInstances() {
+		return (List<WorkflowTaskInstance>) this.jbpmTemplate.execute(new JbpmCallback() {
+
+			public List<WorkflowTaskInstance> doInJbpm(JbpmContext context) throws JbpmException {
+
+				List<TaskInstance> taskInstances = context.getSession().createQuery(
+						"from org.jbpm.taskmgmt.exe.TaskInstance as ti "
+								+ "where ti.isSuspended = true and ti.isOpen = true").list();
+
+				List<WorkflowTaskInstance> workflowTaskInstances = new LinkedList<WorkflowTaskInstance>();
+
+				for (TaskInstance instance : taskInstances)
+					workflowTaskInstances.add(WorkflowFactory.createTaskInstance(instance));
+
+				return workflowTaskInstances;
 			}
 		});
 	}
