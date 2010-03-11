@@ -104,6 +104,14 @@ public class WorkflowServiceImpl implements WorkflowService {
 
 	@Override
 	public List<WorkflowTaskInstance> getAllActiveTaskInstances() {
+		List<WorkflowTaskInstance> taskInstances = workflowComponent.getAllActiveTaskInstances();
+
+		return taskInstances;
+
+	}
+
+	@Override
+	public List<WorkflowTaskInstance> getAllTaskInstances() {
 		List<WorkflowTaskInstance> taskInstances = workflowComponent.getAllTaskInstances();
 
 		return taskInstances;
@@ -154,6 +162,10 @@ public class WorkflowServiceImpl implements WorkflowService {
 
 	public List<WorkflowTaskInstance> getTaskInstancesForUser(String username) {
 		return this.workflowComponent.getAllActionTasksByUser(username);
+	}
+
+	public List<WorkflowTaskInstance> getSuspendedTaskInstances() {
+		return this.workflowComponent.getAllSuspendedTaskInstances();
 	}
 
 	public List<WorkflowTaskInstance> getSuspendedTaskInstancesForUser(String username) {
