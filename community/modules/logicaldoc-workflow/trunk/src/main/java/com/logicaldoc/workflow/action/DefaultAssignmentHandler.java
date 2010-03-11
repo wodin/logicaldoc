@@ -92,9 +92,15 @@ public class DefaultAssignmentHandler extends AbstractAssignmentHandler {
 							.createWorkflowInstance(executionContext.getProcessInstance())),
 							new WorkflowTaskInstanceInfo(WorkflowFactory.createTaskInstance(executionContext
 									.getTaskInstance())), workflowTemplate.getAssignmentMessage().getBody());
+			if (assignmentText == null || assignmentText.trim().isEmpty()) {
+				// The task-assignment of the workflow is not correctly defined
+				assignmentText = "No Workflow Task Assignment text specified on the configuration of the workflow '"
+						+ workflowTemplate.getName() + "'";
+			}
+
 			String subject = workflowTemplate.getAssignmentMessage().getSubject();
 			if (subject == null || (subject != null && subject.trim().length() == 0))
-				subject = "No subect specified";
+				subject = "No Workflow Task Assignment subject specified";
 
 			Recipient recipient = new Recipient();
 			Set<Recipient> recipients = new HashSet<Recipient>();
