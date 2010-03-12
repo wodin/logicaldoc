@@ -2,6 +2,8 @@ package com.logicaldoc.web.admin;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +39,7 @@ public class TemplateForm {
 
 	private DocumentTemplate template;
 
-	private Collection<SelectItem> templateAttributes = new ArrayList<SelectItem>();
+	private List<SelectItem> templateAttributes = new ArrayList<SelectItem>();;
 
 	private String selectedAttribute = "";
 
@@ -87,8 +89,19 @@ public class TemplateForm {
 
 	private void init() {
 		templateAttributes.clear();
-		for (String attr : template.getAttributeNames()) {
-			templateAttributes.add(new SelectItem(attr, attr));
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		for (String key : template.getAttributes().keySet()) {
+			ExtendedAttribute attribute = template.getAttributes().get(key);
+			items.add(new SelectItem(attribute.getPosition(), key));
+			Collections.sort(items, new Comparator<SelectItem>() {
+				public int compare(SelectItem arg0, SelectItem arg1) {
+					int sort = ((Integer) arg0.getValue()).compareTo((Integer) (arg1.getValue()));
+					return sort;
+				}
+			});
+		}
+		for (SelectItem selectItem : items) {
+			templateAttributes.add(new SelectItem(selectItem.getLabel(), selectItem.getLabel()));
 		}
 	}
 
@@ -96,7 +109,7 @@ public class TemplateForm {
 		return templateAttributes;
 	}
 
-	public void setTemplateAttributes(Collection<SelectItem> templateAttributes) {
+	public void setTemplateAttributes(List<SelectItem> templateAttributes) {
 		this.templateAttributes = templateAttributes;
 	}
 
@@ -128,7 +141,7 @@ public class TemplateForm {
 		if (StringUtils.isNotEmpty(newAttribute)) {
 			ExtendedAttribute attribute = new ExtendedAttribute();
 			attribute.setMandatory(mandatory ? 1 : 0);
-			if (template.getAttributeNames().size() > 0) {
+			if (getTemplateAttributesCount() > 0) {
 				attribute.setPosition(getMajorPosition(template) + 1);
 			} else {
 				attribute.setPosition(0);
@@ -279,7 +292,6 @@ public class TemplateForm {
 			type = attribute.getType();
 			selectedAttribute = event.getNewValue().toString();
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -291,6 +303,8 @@ public class TemplateForm {
 			return null;
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		dao.initialize(template);
+		System.out.println("selectedAttribute: " + selectedAttribute);
+
 		ExtendedAttribute attribute = template.getAttributes().get(selectedAttribute);
 		int oldPosition = attribute.getPosition();
 		ExtendedAttribute otherAttribute = template.getAttributeAtPosition(oldPosition - 1);
