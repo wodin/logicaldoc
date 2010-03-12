@@ -303,8 +303,6 @@ public class TemplateForm {
 			return null;
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		dao.initialize(template);
-		System.out.println("selectedAttribute: " + selectedAttribute);
-
 		ExtendedAttribute attribute = template.getAttributes().get(selectedAttribute);
 		int oldPosition = attribute.getPosition();
 		ExtendedAttribute otherAttribute = template.getAttributeAtPosition(oldPosition - 1);
