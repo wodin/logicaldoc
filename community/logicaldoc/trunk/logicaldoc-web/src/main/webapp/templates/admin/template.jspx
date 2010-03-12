@@ -20,8 +20,12 @@
 		<ice:panelGroup>
 			<!-- Template data -->
 			<ice:panelGroup>
-				<h3> <ice:outputText value="#{msgs['template']}" /> &amp;nbsp;
-				<ice:outputText value="#{templateForm.template.name}" /> <br /> <br />
+				<h3>
+					<ice:outputText value="#{msgs['template']}" />
+					&amp;nbsp;
+					<ice:outputText value="#{templateForm.template.name}" />
+					<br />
+					<br />
 				</h3>
 				<ice:panelGrid columns="5">
 					<ice:form>
@@ -95,7 +99,7 @@
 							<ice:panelGroup style="float:left">
 								<ice:inputText id="name_attribute" styleClass="smallInputTex"
 									value="#{templateForm.newAttribute}"
-									disabled="#{!empty (templateForm.newAttribute)}"
+									disabled="#{!empty (templateForm.newAttribute) and templateForm.attributeNameValid}"
 									maxlength="255" required="true" />
 								<ice:message for="name_attribute" />
 							</ice:panelGroup>
@@ -113,7 +117,7 @@
 							</ice:panelGroup>
 							<ice:panelGroup style="float:left">
 								<ice:selectOneMenu id="dispRows" value="#{templateForm.type}"
-									disabled="#{!empty (templateForm.newAttribute)}">
+									disabled="#{!empty (templateForm.newAttribute) and templateForm.attributeNameValid}">
 									<f:selectItems value="#{selectionTags.extendedTypes}" />
 								</ice:selectOneMenu>
 							</ice:panelGroup>

@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.component.UIInput;
 import javax.faces.component.UISelectOne;
@@ -61,6 +63,8 @@ public class TemplateForm {
 	// attributes
 	private Map<String, Integer> attributesPositions = new HashMap<String, Integer>();
 
+	private boolean attributeNameValid = true;
+
 	public DocumentTemplate getTemplate() {
 		return template;
 	}
@@ -109,7 +113,18 @@ public class TemplateForm {
 	}
 
 	public String addAttribute() {
-		newAttribute = newAttribute.trim().toLowerCase();
+		newAttribute = newAttribute.trim();
+		// New Attribute Name Validation
+		Pattern pattern = Pattern.compile("(\\w+\\p{Space}?+)+?");
+		Matcher m = pattern.matcher(newAttribute);
+		boolean matchFound = m.matches();
+		if (!matchFound) {
+			Messages.addLocalizedWarn("template.attribute.notvalid");
+			attributeNameValid = false;
+			return null;
+		}
+		attributeNameValid = true;
+
 		if (StringUtils.isNotEmpty(newAttribute)) {
 			ExtendedAttribute attribute = new ExtendedAttribute();
 			attribute.setMandatory(mandatory ? 1 : 0);
@@ -369,5 +384,9 @@ public class TemplateForm {
 
 	public Map<String, Integer> getAttributesPositions() {
 		return attributesPositions;
+	}
+
+	public boolean isAttributeNameValid() {
+		return attributeNameValid;
 	}
 }
