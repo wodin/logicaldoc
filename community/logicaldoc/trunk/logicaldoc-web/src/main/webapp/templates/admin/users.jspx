@@ -48,7 +48,7 @@
 						var="user" cellpadding="0" rows="15" width="97%"
 						sortColumn="#{usersRecordsManager.sortColumn}"
 						sortAscending="#{usersRecordsManager.ascending}"
-						columnClasses="dateColumn,dateColumn,titleColumn,smallColumn,smallColumn,smallColumn,smallColumn">
+						columnClasses="dateColumn,titleColumn,titleColumn,smallColumn,smallColumn,smallColumn,smallColumn">
 
 						<!-- Username -->
 						<ice:column>
@@ -64,7 +64,7 @@
 						</ice:column>
 
 						<!-- Name -->
-						<ice:column style="width: 150px;">
+						<ice:column>
 							<f:facet name="header">
 								<ice:commandSortHeader columnName="name">
 									<ice:outputText value="#{msgs['msg.jsp.adduser.name']}"
