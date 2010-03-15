@@ -7,6 +7,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sf.jmimemagic.Magic;
+import net.sf.jmimemagic.MagicMatch;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.java.plugin.registry.Extension;
@@ -40,8 +43,20 @@ public class ThumbnailManager {
 	public void createTumbnail(Document document, String fileVersion) throws IOException {
 		ThumbnailBuilder builder = getBuilders().get(document.getFileExtension());
 
-		if (builder == null)
-			return;
+		if (builder == null) {
+			log.warn("No registered thumbnail for extension " + document.getFileExtension());
+			try {
+				MagicMatch match = Magic.getMagicMatch(documentManager.getDocumentFile(document), true);
+				if ("text/plain".equals(match.getMimeType())) {
+					log.warn("Try to convert as plain text");
+					builder = getBuilders().get("txt");
+				} else {
+					return;
+				}
+			} catch (Exception e) {
+				return;
+			}
+		}
 
 		int size = 150;
 		try {
