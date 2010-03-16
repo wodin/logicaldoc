@@ -137,7 +137,12 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		rootObject.setContentTitle(null);
 		rootObject.setPageContent(true);
 
-		String label = Messages.getMessage(rootMenu.getText());
+		String label = null;
+		if (rootMenu.getId() == Menu.MENUID_DOCUMENTS)
+			label = Messages.getMessage(rootMenu.getText());
+		else
+			label = rootMenu.getText();
+
 		rootObject.setDisplayText(label);
 		rootObject.setContentTitle(label);
 		rootObject.setPathExtended(label);
@@ -255,7 +260,12 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 		// Component menu item
 		Directory branchObject = new Directory(dir);
-		String label = Messages.getMessage(dir.getText());
+		String label = null;
+		if (dir.getId() == Menu.MENUID_DOCUMENTS)
+			label = Messages.getMessage(dir.getText());
+		else
+			label = dir.getText();
+		
 		branchObject.setDisplayText(label);
 		branchObject.setContentTitle(label);
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
