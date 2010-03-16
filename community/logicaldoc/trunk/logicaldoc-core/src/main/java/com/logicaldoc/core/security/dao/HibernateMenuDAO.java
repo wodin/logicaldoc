@@ -454,7 +454,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		transaction.setPath(transaction.getPath().replaceAll("//", "/"));
 		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents/", "/"));
 		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents", "/"));
-		transaction.setDate(folder.getLastModified());
 		transaction.setComment("");
 
 		historyDAO.store(transaction);
@@ -476,7 +475,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				parentHistory.setPath(parentHistory.getPath().replaceFirst("/menu.documents/", "/"));
 				parentHistory.setPath(parentHistory.getPath().replaceFirst("/menu.documents", "/"));
 
-				parentHistory.setDate(folder.getLastModified());
 				parentHistory.setUserId(transaction.getUserId());
 				parentHistory.setUserName(transaction.getUserName());
 				if (transaction.getEvent().equals(History.EVENT_FOLDER_CREATED)) {

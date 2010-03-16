@@ -17,7 +17,7 @@ public class AbstractHistory extends PersistentObject {
 
 	private long userId;
 
-	private Date date = null;
+	private Date date = new Date();
 
 	private String userName = "";
 

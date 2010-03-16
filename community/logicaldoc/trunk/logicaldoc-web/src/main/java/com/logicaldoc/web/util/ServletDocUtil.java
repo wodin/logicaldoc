@@ -142,7 +142,6 @@ public class ServletDocUtil {
 			history.setPath(history.getPath().replaceFirst("/menu.documents/", "/"));
 			history.setPath(history.getPath().replaceFirst("/menu.documents", "/"));
 
-			history.setDate(new Date());
 			history.setEvent(History.EVENT_DOWNLOADED);
 			history.setUserId(user.getId());
 			history.setUserName(user.getFullName());
