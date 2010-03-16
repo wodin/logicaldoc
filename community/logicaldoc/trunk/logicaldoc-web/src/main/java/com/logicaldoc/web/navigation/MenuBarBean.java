@@ -92,7 +92,7 @@ public class MenuBarBean {
 	}
 
 	/**
-	 * Selects the menu item, using the item ID but shows the passede page
+	 * Selects the menu item, using the item ID but shows the passed page
 	 * content(if any).
 	 * 
 	 * @param menu The item to open
@@ -125,6 +125,9 @@ public class MenuBarBean {
 		PageContentBean content = menu.getContent();
 		if (page != null)
 			content = page;
+		if (content.getMenuId() == -1) {
+			content.setMenuId(Long.parseLong(menu.getMenuId()));
+		}
 
 		if (StringUtils.isNotEmpty(content.getTemplate())) {
 			navigation.setSelectedPanel(content);
@@ -238,8 +241,8 @@ public class MenuBarBean {
 		itemCache.put(item.getId(), item);
 
 		String bugsUrl = style.getProductBugs();
-		item = createMenuItem(Messages.getMessage("bug.report"), "m-bugreport", null, null,
-				bugsUrl, style.getImagePath("bug.png"), false, "_blank", null);
+		item = createMenuItem(Messages.getMessage("bug.report"), "m-bugreport", null, null, bugsUrl, style
+				.getImagePath("bug.png"), false, "_blank", null);
 		helpMenu.getChildren().add(item);
 		itemCache.put(item.getId(), item);
 

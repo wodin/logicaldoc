@@ -20,13 +20,13 @@
 			rendered="#{navigation.selectedPanel.menuId != 5}">
 			<ice:commandLink actionListener=" ">
 				<ice:outputText value="#{crumb.value}" styleClass="breadcrumbLink"
-					rendered="#{!(crumb.value eq navigation.selectedPanel.contentTitle)}" />
+					rendered="#{!(crumb.menuId eq navigation.selectedPanel.menuId)}" />
 				<ice:outputText value="#{crumb.value}" styleClass="breadcrumbUnlink"
-					rendered="#{crumb.value eq navigation.selectedPanel.contentTitle}" />
+					rendered="#{crumb.menuId eq navigation.selectedPanel.menuId}" />
 			</ice:commandLink>
 			<ice:graphicImage value="#{StyleBean.imagesPath}/arrow2.gif"
 				style="padding-right:4px; padding-bottom: 1px; padding-left: 3px;"
-				rendered="#{!(crumb.value eq navigation.selectedPanel.contentTitle)}" />
+				rendered="#{!(crumb.menuId eq navigation.selectedPanel.menuId)}" />
 		</ice:panelSeries>
 		<ice:panelSeries style="display: inline;" var="folder"
 			value="#{documentNavigation.breadcrumb}"

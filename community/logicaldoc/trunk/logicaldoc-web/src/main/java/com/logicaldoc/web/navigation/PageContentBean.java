@@ -18,6 +18,8 @@ import com.logicaldoc.web.StyleBean;
 public class PageContentBean extends IceUserObject {
 	private Menu menu;
 
+	private long menuId;
+
 	// template, default panel to make visible in a panel stack
 	private String contentName = "";
 
@@ -187,14 +189,20 @@ public class PageContentBean extends IceUserObject {
 
 	public long getMenuId() {
 		if (menu != null) {
-			return menu.getId();
-		} else {
+			menuId = menu.getId();
+			return menuId;
+		} else if (menuId != 0) {
+			return menuId;
+		} else
 			return -1;
-		}
 	}
 
 	public void setMenu(Menu menu) {
 		this.menu = menu;
+	}
+
+	public void setMenuId(long menuId) {
+		this.menuId = menuId;
 	}
 
 	public String getIcon() {
@@ -209,7 +217,7 @@ public class PageContentBean extends IceUserObject {
 	 * Item selection handler
 	 */
 	public void onSelect(ActionEvent event) {
-		
+
 		if (isPageContent()) {
 			if (navigationBean == null) {
 				return;
