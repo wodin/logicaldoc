@@ -31,4 +31,8 @@ public class MenuItem extends com.icesoft.faces.component.menubar.MenuItem {
 	public void setUserObject(Object userObject) {
 		this.userObject = userObject;
 	}
+	
+	public String getMenuId(){
+		return this.getId().replace("m-", "").trim();
+	}
 }
