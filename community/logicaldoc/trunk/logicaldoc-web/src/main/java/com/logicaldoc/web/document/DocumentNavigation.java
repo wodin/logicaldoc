@@ -180,7 +180,7 @@ public class DocumentNavigation extends NavigationBean {
 					currentDir = new Directory(menuDao.findById(currentDir.getMenu().getParentId()));
 					counter++;
 				}
-				Directory rootDir = new Directory(menuDao.findById(Menu.MENUID_DOCUMENTS));
+				Directory rootDir = new Directory(menuDao.findById(Menu.MENUID_DOCUMENTS));	
 				rootDir.setDisplayText(Messages.getMessage(rootDir.getMenu().getText()));
 				if (counter == 0)
 					rootDir.setSelected(true);
