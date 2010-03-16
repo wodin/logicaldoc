@@ -56,7 +56,6 @@ public class PasswordBean {
 				user.setPasswordChanged(new Date());
 				// Add a user history entry
 				history = new UserHistory();
-				history.setDate(new Date());
 				history.setUserId(user.getId());
 				history.setUserName(user.getFullName());
 				history.setEvent(UserHistory.EVENT_USER_PASSWORDCHANGED);

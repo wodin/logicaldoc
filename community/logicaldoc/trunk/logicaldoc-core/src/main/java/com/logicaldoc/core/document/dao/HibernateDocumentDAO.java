@@ -808,7 +808,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents/", "/"));
 		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents", "/"));
 
-		transaction.setDate(doc.getLastModified());
 		transaction.setNotified(0);
 
 		historyDAO.store(transaction);
