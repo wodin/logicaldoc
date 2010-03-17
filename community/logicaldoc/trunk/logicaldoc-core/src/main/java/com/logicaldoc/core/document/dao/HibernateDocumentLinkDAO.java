@@ -44,7 +44,6 @@ public class HibernateDocumentLinkDAO extends HibernatePersistentObjectDAO<Docum
 		return findByWhere(query.toString(), new Object[] { docId, docId }, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public DocumentLink findByDocIdsAndType(long docId1, long docId2, String type) {
 		if (type == null)

@@ -35,7 +35,6 @@ public class HibernateDownloadTicketDAO extends HibernatePersistentObjectDAO<Dow
 	/**
 	 * @see com.logicaldoc.core.document.dao.DownloadTicketDAO#deleteByTicketId(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public boolean deleteByTicketId(String ticketid) {
 		boolean result = true;
 		try {
