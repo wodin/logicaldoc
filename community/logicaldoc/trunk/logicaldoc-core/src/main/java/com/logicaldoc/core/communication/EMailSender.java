@@ -99,11 +99,13 @@ public class EMailSender {
 	 */
 	public void send(EMail email) throws Exception {
 		Properties props = new Properties();
+		if (!StringUtils.isEmpty(username))
+			props.put("mail.smtp.auth", "true");
+
 		if (authEncripted) {
 			// The 'smtps' protocol must be used
 			props.put("mail.transport.protocol", "smtps");
 			props.put("mail.smtps.host", host);
-			props.put("mail.smtps.auth", "true");
 			if (connectionSecurity == SECURITY_TLS_IF_AVAILABLE)
 				props.put("mail.smtps.starttls.enable", "true");
 			if (connectionSecurity == SECURITY_TLS)
@@ -116,7 +118,6 @@ public class EMailSender {
 		} else {
 			props.put("mail.transport.protocol", "smtp");
 			props.put("mail.smtp.host", host);
-			props.put("mail.smtp.auth", "true");
 			if (connectionSecurity == SECURITY_TLS_IF_AVAILABLE)
 				props.put("mail.smtp.starttls.enable", "true");
 			if (connectionSecurity == SECURITY_TLS)
