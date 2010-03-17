@@ -1,9 +1,5 @@
 package com.logicaldoc.core.document.dao;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.logging.LogFactory;
