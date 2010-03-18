@@ -41,6 +41,10 @@ public class ResultImpl implements Serializable, Result {
 
 	private Integer red = new Integer(0);
 
+	private String source;
+
+	private String path;
+
 	public ResultImpl() {
 	}
 
@@ -340,5 +344,27 @@ public class ResultImpl implements Serializable, Result {
 	@Override
 	public long getDocRef() {
 		return docRef;
+	}
+
+	/**
+	 * @see com.logicaldoc.core.searchengine.Result#getSource()
+	 */
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	/**
+	 * @see com.logicaldoc.core.searchengine.Result#getPath()
+	 */
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 }

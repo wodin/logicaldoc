@@ -82,11 +82,11 @@ public class DocumentResult extends DocumentRecord implements Result {
 	}
 
 	public String getPath() {
-		return getDocument().getFolder().getPath();
+		return result.getPath();
 	}
 
 	public String getSource() {
-		return getDocument().getSource();
+		return result.getSource();
 	}
 
 	public Integer getRed() {
@@ -251,5 +251,15 @@ public class DocumentResult extends DocumentRecord implements Result {
 	@Override
 	public void setDocId(long docId) {
 		result.setDocId(docId);
+	}
+
+	@Override
+	public void setPath(String path) {
+		throw new UnsupportedOperationException("setPath method unsupported");
+	}
+
+	@Override
+	public void setSource(String source) {
+		throw new UnsupportedOperationException("setSource method unsupported");
 	}
 }

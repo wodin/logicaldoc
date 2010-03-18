@@ -45,6 +45,10 @@ public interface Result {
 
 	public int getDocType();
 
+	public String getSource();
+
+	public String getPath();
+
 	public void setTitle(String title);
 
 	public void setDate(Date date);
@@ -62,6 +66,10 @@ public interface Result {
 	public void setType(String typ);
 
 	public void setSummary(String summary);
+
+	public void setSource(String source);
+
+	public void setPath(String path);
 
 	public void createScore(float score);
 }

@@ -525,6 +525,8 @@ public class DmsServiceImpl implements DmsService {
 			newRes.setType(res.getType());
 			newRes.setScore(res.getScore());
 			newRes.setCustomId(res.getCustomId());
+			newRes.setSource(res.getSource());
+			newRes.setPath(res.getPath());
 			result.add(newRes);
 		}
 

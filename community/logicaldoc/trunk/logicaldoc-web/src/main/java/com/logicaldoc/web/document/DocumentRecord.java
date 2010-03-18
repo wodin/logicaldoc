@@ -730,4 +730,12 @@ public class DocumentRecord extends MenuBarBean {
 	public Document getShortcut() {
 		return shortcut;
 	}
+
+	public String getSource() {
+		return getDocument().getSource();
+	}
+
+	public String getPath() {
+		return getDocument().getPath();
+	}
 }
