@@ -114,7 +114,7 @@ public class LuceneDocument {
 	}
 
 	protected void setDocData() {
-		doc.add(new Field(FIELD_SOURCE, document.getSource() != null ? document.getSource() : "", Field.Store.NO,
+		doc.add(new Field(FIELD_SOURCE, document.getSource() != null ? document.getSource() : "", Field.Store.YES,
 				Field.Index.TOKENIZED));
 		doc.add(new Field(FIELD_SOURCE_AUTHOR, document.getSourceAuthor() != null ? document.getSourceAuthor() : "",
 				Field.Store.NO, Field.Index.TOKENIZED));
