@@ -20,8 +20,12 @@ public class Result {
 	private long size;
 
 	private int score = 0;
-	
+
 	private String customId;
+
+	private String source;
+
+	private String path;
 
 	public String getDate() {
 		return date;
@@ -85,5 +89,21 @@ public class Result {
 
 	public void setCustomId(String customId) {
 		this.customId = customId;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 }
