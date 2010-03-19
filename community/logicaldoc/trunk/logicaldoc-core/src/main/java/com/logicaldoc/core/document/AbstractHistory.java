@@ -23,7 +23,7 @@ public class AbstractHistory extends PersistentObject {
 
 	private String event = "";
 
-	private String comment = null;
+	private String comment = "";
 
 	private String title = null;
 
@@ -32,7 +32,7 @@ public class AbstractHistory extends PersistentObject {
 	private String path = null;
 
 	private int notified = 0;
-	
+
 	private String sessionId = "";
 
 	public String getTitle() {

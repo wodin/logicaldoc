@@ -422,8 +422,11 @@ public class DocumentManagerImpl implements DocumentManager {
 				transaction.setUserId(user.getId());
 				transaction.setUserName(user.getFullName());
 				documentDAO.store(doc, transaction);
-				if (renameTransaction != null)
+				if (renameTransaction != null) {
+					renameTransaction.setUserId(user.getId());
+					renameTransaction.setUserName(user.getFullName());
 					documentDAO.store(doc, renameTransaction);
+				}
 
 				versionDAO.store(version);
 
@@ -701,7 +704,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		if (doc.getDocRef() != null) {
 			return createShortcut(doc, folder, user, transaction);
 		}
-		
+
 		File sourceFile = storer.getFile(doc.getId(), doc.getFileVersion());
 
 		InputStream is = new FileInputStream(sourceFile);
