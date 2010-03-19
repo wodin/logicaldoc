@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -159,7 +158,7 @@ public class ServletDocUtil {
 		// Encode the filename
 		String userAgent = request.getHeader("User-Agent");
 		String encodedFileName = null;
-		if (userAgent.contains("MSIE") || userAgent.contains("Opera")) {
+		if (userAgent.contains("MSIE") || userAgent.contains("Opera") || userAgent.contains("Safari")) {
 			encodedFileName = URLEncoder.encode(filename, "UTF-8");
 			encodedFileName = encodedFileName.replace("+", "%20");
 		} else {
