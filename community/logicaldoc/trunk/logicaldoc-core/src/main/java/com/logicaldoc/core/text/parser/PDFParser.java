@@ -12,7 +12,6 @@ import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -106,7 +105,7 @@ public class PDFParser extends AbstractParser {
 
 	@Override
 	public void parse(File file) {
-		log.error("Parsing file " + file.getPath());
+		log.info("Parsing file " + file.getPath());
 
 		author = "";
 		title = "";
