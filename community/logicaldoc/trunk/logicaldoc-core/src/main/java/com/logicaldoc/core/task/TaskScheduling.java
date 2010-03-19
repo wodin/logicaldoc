@@ -218,6 +218,8 @@ public class TaskScheduling {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		load();
 	}
 
 	/**
