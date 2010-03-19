@@ -41,12 +41,16 @@ public class DocumentResult extends DocumentRecord implements Result {
 		this.result = result;
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		super.document = docDao.findById(result.getDocId());
-		if (document.getDocRef() != null) {
-			// This document is a shortcut, so load the referenced doc
-			super.shortcut = document;
-			super.document = docDao.findById(document.getDocRef());
+		if (document != null) {
+			if (document.getDocRef() != null) {
+				// This document is a shortcut, so load the referenced doc
+				super.shortcut = document;
+				super.document = docDao.findById(document.getDocRef());
+			}
+			setDocId(document.getId());
+		} else {
+			setDocId(result.getDocId());
 		}
-		setDocId(document.getId());
 	}
 
 	public Date getDate() {
@@ -127,20 +131,24 @@ public class DocumentResult extends DocumentRecord implements Result {
 	 */
 	protected void createMenuItems() {
 		model.clear();
-		Menu folder = document.getFolder();
-		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
-		model.add(createMenuItem(Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,
-				"#{entry.versions}", null, style.getImagePath("versions.png"), true, "_blank", null));
-		model.add(createMenuItem(" " + Messages.getMessage("document.discussions"), "discussions-" + document.getId(),
-				null, "#{entry.discussions}", null, style.getImagePath("comments.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getId(), null,
-				"#{entry.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(), null,
-				"#{entry.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("info"), "info-" + folder.getId(), null, "#{entry.info}", null,
-				style.getImagePath("info.png"), true, "_blank", null));
-		model.add(createMenuItem(Messages.getMessage("history"), "history-" + folder.getId(), null, "#{entry.history}",
-				null, style.getImagePath("history.png"), true, "_blank", null));
+
+		if (document != null) {
+			Menu folder = document.getFolder();
+			StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
+			model.add(createMenuItem(Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,
+					"#{entry.versions}", null, style.getImagePath("versions.png"), true, "_blank", null));
+			model.add(createMenuItem(" " + Messages.getMessage("document.discussions"), "discussions-"
+					+ document.getId(), null, "#{entry.discussions}", null, style.getImagePath("comments.png"), true,
+					"_blank", null));
+			model.add(createMenuItem(Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getId(), null,
+					"#{entry.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank", null));
+			model.add(createMenuItem(Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(), null,
+					"#{entry.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
+			model.add(createMenuItem(Messages.getMessage("info"), "info-" + folder.getId(), null, "#{entry.info}",
+					null, style.getImagePath("info.png"), true, "_blank", null));
+			model.add(createMenuItem(Messages.getMessage("history"), "history-" + folder.getId(), null,
+					"#{entry.history}", null, style.getImagePath("history.png"), true, "_blank", null));
+		}
 	}
 
 	public void showDocumentPath() {
