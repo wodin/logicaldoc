@@ -83,6 +83,10 @@ public class Indexer {
 	 * @throws Exception
 	 */
 	public void addDocument(Document doc, Locale locale) throws Exception {
+		//First of all, remove old entries if any
+		deleteDocument(doc.getField(LuceneDocument.FIELD_DOC_ID).stringValue(), locale);
+		
+		//Then add the record in the index
 		String indexdir = settingsConfig.getValue("indexdir");
 		Language language = LanguageManager.getInstance().getLanguage(locale);
 		Analyzer analyzer = language.getAnalyzer();
