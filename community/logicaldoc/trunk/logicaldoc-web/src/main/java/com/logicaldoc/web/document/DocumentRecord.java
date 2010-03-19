@@ -698,6 +698,8 @@ public class DocumentRecord extends MenuBarBean {
 			// This document is a shortcut, so load the referenced doc
 			this.shortcut = document;
 			this.document = docDao.findById(document.getDocRef());
+			if (this.document == null)
+				this.document = new Document();
 		}
 	}
 
