@@ -125,9 +125,11 @@ public class MenuBarBean {
 		PageContentBean content = menu.getContent();
 		if (page != null)
 			content = page;
-		if (content.getMenuId() == -1) {
-			content.setMenuId(Long.parseLong(menu.getMenuId()));
-		}
+		if (content.getMenuId() == -1)
+			try {
+				content.setMenuId(Long.parseLong(menu.getMenuId()));
+			} catch (NumberFormatException e) {
+			}
 
 		if (StringUtils.isNotEmpty(content.getTemplate())) {
 			navigation.setSelectedPanel(content);
