@@ -133,21 +133,25 @@ public class DocumentResult extends DocumentRecord implements Result {
 		model.clear();
 
 		if (document != null) {
-			Menu folder = document.getFolder();
-			StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
-			model.add(createMenuItem(Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,
-					"#{entry.versions}", null, style.getImagePath("versions.png"), true, "_blank", null));
-			model.add(createMenuItem(" " + Messages.getMessage("document.discussions"), "discussions-"
-					+ document.getId(), null, "#{entry.discussions}", null, style.getImagePath("comments.png"), true,
-					"_blank", null));
-			model.add(createMenuItem(Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getId(), null,
-					"#{entry.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank", null));
-			model.add(createMenuItem(Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(), null,
-					"#{entry.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
-			model.add(createMenuItem(Messages.getMessage("info"), "info-" + folder.getId(), null, "#{entry.info}",
-					null, style.getImagePath("info.png"), true, "_blank", null));
-			model.add(createMenuItem(Messages.getMessage("history"), "history-" + folder.getId(), null,
-					"#{entry.history}", null, style.getImagePath("history.png"), true, "_blank", null));
+			try {
+				Menu folder = document.getFolder();
+				StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
+				model.add(createMenuItem(Messages.getMessage("msg.jsp.versions"), "versions-" + folder.getId(), null,
+						"#{entry.versions}", null, style.getImagePath("versions.png"), true, "_blank", null));
+				model.add(createMenuItem(" " + Messages.getMessage("document.discussions"), "discussions-"
+						+ document.getId(), null, "#{entry.discussions}", null, style.getImagePath("comments.png"),
+						true, "_blank", null));
+				model.add(createMenuItem(Messages.getMessage("msg.jsp.sendasemail"), "sendasmail-" + folder.getId(),
+						null, "#{entry.sendAsEmail}", null, style.getImagePath("editmail.png"), true, "_blank", null));
+				model.add(createMenuItem(Messages.getMessage("msg.jsp.sendticket"), "sendticket-" + folder.getId(),
+						null, "#{entry.sendAsTicket}", null, style.getImagePath("ticket.png"), true, "_blank", null));
+				model.add(createMenuItem(Messages.getMessage("info"), "info-" + folder.getId(), null, "#{entry.info}",
+						null, style.getImagePath("info.png"), true, "_blank", null));
+				model.add(createMenuItem(Messages.getMessage("history"), "history-" + folder.getId(), null,
+						"#{entry.history}", null, style.getImagePath("history.png"), true, "_blank", null));
+			} catch (Throwable t) {
+				return;
+			}
 		}
 	}
 
