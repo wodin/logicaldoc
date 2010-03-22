@@ -15,7 +15,6 @@ import javax.faces.context.FacesContext;
 import org.java.plugin.registry.Extension;
 
 import com.logicaldoc.util.PluginRegistry;
-import com.logicaldoc.util.config.FacesConfigurator;
 
 
 /**
