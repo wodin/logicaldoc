@@ -33,7 +33,7 @@
 			sortAscending="#{documentsRecordsManager.ascending}" cellpadding="0"
 			rows="#{documentsRecordsManager.displayedRows}"
 			binding="#{documentsRecordsManager.table}"
-			columnClasses="selectionColumn,dateColumn,titleColumn,dateColumn,selectionColumn,dateColumn,dateColumn,numberColumn">
+			columnClasses="selectionColumn,dateColumn,titleColumn,dateColumn,selectionColumn,dateColumn,dateColumn,dateColumn">
 
 			<!-- selection column -->
 			<ice:column>
@@ -151,7 +151,8 @@
 							style="text-decoration: underline; white-space: nowrap;" />
 					</ice:commandSortHeader>
 				</f:facet>
-				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}">
+				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
+					style="text-align:right;">
 					<ice:outputText value="#{documentRecord.document.version}" />
 				</ice:panelGroup>
 			</ice:column>
@@ -219,10 +220,10 @@
 					</ice:commandSortHeader>
 				</f:facet>
 				<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}"
-					style="text-align: right;" menuPopup="pop"
+					style="white-space: nowrap; text-align: right;" menuPopup="pop"
 					rendered="#{empty(documentRecord.shortcut)}">
 					<ice:outputText value="#{documentRecord.document.fileSize}"
-						title="#{msgs['msg.jsp.popup']}" style="white-space: nowrap;">
+						title="#{msgs['msg.jsp.popup']}">
 						<f:converter converterId="logicaldoc.FileSizeConverterKB" />
 					</ice:outputText>
 				</ice:panelGroup>
