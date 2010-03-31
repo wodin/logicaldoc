@@ -322,8 +322,8 @@ public class TemplateForm {
 	 */
 	private void reloadTemplateAttributesList() {
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
-		List<Object> strings = dao.findByJdbcQuery("select ld_name from LD_TEMPLATE_EXT where LD_TEMPLATEID = '"
-				+ template.getId() + "' order by LD_POSITION", 1, null);
+		List<Object> strings = dao.findByJdbcQuery("select ld_name from ld_template_ext where ld_templateid = '"
+				+ template.getId() + "' order by ld_position", 1, null);
 		templateAttributes.clear();
 		for (Object obj : strings) {
 			templateAttributes.add(new SelectItem(String.valueOf(obj), String.valueOf(obj)));
