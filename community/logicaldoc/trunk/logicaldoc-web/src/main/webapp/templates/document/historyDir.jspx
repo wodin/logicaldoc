@@ -16,8 +16,7 @@
 	styleClass="formBorderHighlight">
 	<h3>
 		<ice:outputText
-			value="#{msgs['history']} - #{historyRecordsManager.selectedFolder.text}" />
-		<br />
+			value="#{msgs['history']} - #{historyRecordsManager.selectedFolder.id == 5 ? msgs['menu.documents'] : historyRecordsManager.selectedFolder.text}" />
 		<br />
 	</h3>
 
@@ -84,8 +83,6 @@
 			</ice:panelGroup>
 		</ice:form>
 	</f:subview>
-
-	<br />
 	<ice:form>
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="#{msgs['back']}" styleClass="backBtn"

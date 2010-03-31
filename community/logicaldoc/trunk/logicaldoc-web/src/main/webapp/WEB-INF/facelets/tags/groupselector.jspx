@@ -25,18 +25,18 @@
 				</ice:panelGroup>
 
 				<ice:panelGroup rendered="#{allowMultipleSelection eq 'true'}">
-					<ice:selectManyMenu id="#{id}" style="width:#{fn:length(size) == 0 ? '125' : size}px;"
+					<ice:selectManyMenu id="#{id}" style="width:#{fn:length(large) == 0 ? '125' : large}px;"
 						styleClass="#{fn:length(styleClass) == 0 ? 'selectManyMenu' : styleClass}"
-						value="#{value}" required="#{required=='true'}">
+						value="#{value}" required="#{required=='true'}" size="#{size}">
 						<f:selectItems value="#{items}" />
 					</ice:selectManyMenu>
 					<ice:message for="#{id}" />
 				</ice:panelGroup>
 
 				<ice:panelGroup rendered="#{allowMultipleSelection eq 'false'}">
-					<ice:selectOneListbox id="#{id}" style="width:#{fn:length(size) == 0 ? '125' : size}px;"
+					<ice:selectOneListbox id="#{id}" style="width:#{fn:length(large) == 0 ? '125' : large}px;"
 						styleClass="#{fn:length(styleClass) == 0  ? 'selectManyMenu' : styleClass}"
-						value="#{value}" required="#{required=='true'}">
+						value="#{value}" required="#{required=='true'}" size="#{size}">
 						<f:selectItems value="#{items}" />
 					</ice:selectOneListbox>
 					<ice:message for="#{id}" />
