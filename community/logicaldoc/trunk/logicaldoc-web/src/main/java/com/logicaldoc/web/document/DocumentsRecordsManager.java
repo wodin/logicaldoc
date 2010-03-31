@@ -120,6 +120,7 @@ public class DocumentsRecordsManager extends SortableList {
 	 */
 	public void selectDirectory(long directoryId) {
 		this.table = null;
+		this.panels = null;
 		selectedDirectory = directoryId;
 		selection.clear();
 
