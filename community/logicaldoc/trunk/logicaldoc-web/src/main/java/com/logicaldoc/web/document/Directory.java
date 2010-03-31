@@ -138,6 +138,14 @@ public class Directory extends PageContentBean {
 		// Documents record manager binding
 		DocumentNavigation navigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
 				"documentNavigation", FacesContext.getCurrentInstance(), log));
+		if (navigation.getSelectedDir().getMenuId() != this.getMenuId()) {
+			// The user has selected a new folder
+			// Notify the records manager and show the first page of the
+			// documents paginator
+			DocumentsRecordsManager recordsManager = ((DocumentsRecordsManager) FacesUtil.accessBeanFromFacesContext(
+					"documentsRecordsManager", FacesContext.getCurrentInstance(), log));
+			recordsManager.getTable().setFirst(0);
+		}
 		navigation.selectDirectory(this);
 		return navigation;
 	}
