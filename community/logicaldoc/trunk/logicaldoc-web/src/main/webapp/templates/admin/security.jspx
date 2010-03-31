@@ -82,7 +82,7 @@
 
 							<!-- Facelets seem not to work correctly inside a tab -->
 							<!-- ldoc:groupselector id="grp1" showFilter="true"
-								styleClass="selectManyMenuBig" allowMultipleSelection="true" size="199"
+								styleClass="selectManyMenuBig" allowMultipleSelection="true" large="199"
 								label="#{msgs['entity.available']}"
 								items="#{securityRightsRecordsManager.availableGroups}"
 								value="#{securityRightsRecordsManager.selectedAvailableGroups}"
@@ -130,7 +130,7 @@
 							</ice:panelGroup>
 
 							<!-- Facelets seem not to work correctly inside a tab -->
-							<!-- ldoc:groupselector id="grp2" showFilter="true" size="199"
+							<!-- ldoc:groupselector id="grp2" showFilter="true" large="199"
 								styleClass="selectManyMenuBig" allowMultipleSelection="true"
 								label="#{msgs['entity.allowed']}"
 								items="#{securityRightsRecordsManager.allowedGroups}"

@@ -43,7 +43,7 @@
 						<br />
 						<ldoc:groupselector id="grp1" showFilter="true"
 							styleClass="selectManyMenuBig" allowMultipleSelection="true"
-							label="#{msgs['entity.available']}" size="199"
+							label="#{msgs['entity.available']}" large="199"
 							items="#{rightsRecordsManager.availableGroups}"
 							value="#{rightsRecordsManager.selectedAvailableGroups}"
 							filterValue="#{rightsRecordsManager.availableGroupFilter}"
@@ -69,7 +69,7 @@
 						<br />
 						<ldoc:groupselector id="grp2" showFilter="true"
 							styleClass="selectManyMenuBig" allowMultipleSelection="true"
-							label="#{msgs['entity.allowed']}" size="199"
+							label="#{msgs['entity.allowed']}" large="199"
 							items="#{rightsRecordsManager.allowedGroups}"
 							value="#{rightsRecordsManager.selectedAllowedGroups}"
 							filterValue="#{rightsRecordsManager.allowedGroupFilter}"
