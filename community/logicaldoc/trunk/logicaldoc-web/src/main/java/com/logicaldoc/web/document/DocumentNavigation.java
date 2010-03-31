@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.icesoft.faces.component.ext.HtmlDataTable;
 import com.icesoft.faces.component.tree.IceUserObject;
 import com.icesoft.faces.component.tree.Tree;
 import com.logicaldoc.core.document.DiscussionComment;
@@ -128,8 +129,18 @@ public class DocumentNavigation extends NavigationBean {
 	public void setViewMode(String viewModeP) {
 		if (!this.viewMode.equals(viewModeP)) {
 			this.viewMode = viewModeP;
+			// Notify the records manager
+			DocumentsRecordsManager recordsManager = ((DocumentsRecordsManager) FacesUtil.accessBeanFromFacesContext(
+					"documentsRecordsManager", FacesContext.getCurrentInstance(), log));
+			// Get the current documents page displayed
+			int first = recordsManager.getTable().getFirst();
+
 			selectDirectory(getSelectedDir());
 			refresh();
+
+			// Set the correct page to be displayed
+			recordsManager.setTable(new HtmlDataTable());
+			recordsManager.getTable().setFirst(first);
 		}
 	}
 
@@ -180,7 +191,7 @@ public class DocumentNavigation extends NavigationBean {
 					currentDir = new Directory(menuDao.findById(currentDir.getMenu().getParentId()));
 					counter++;
 				}
-				Directory rootDir = new Directory(menuDao.findById(Menu.MENUID_DOCUMENTS));	
+				Directory rootDir = new Directory(menuDao.findById(Menu.MENUID_DOCUMENTS));
 				rootDir.setDisplayText(Messages.getMessage(rootDir.getMenu().getText()));
 				if (counter == 0)
 					rootDir.setSelected(true);
@@ -312,7 +323,7 @@ public class DocumentNavigation extends NavigationBean {
 
 		long docId = 0;
 
-		if (entry instanceof Result) {	
+		if (entry instanceof Result) {
 			if (((DocumentResult) entry).getShortcut() != null)
 				docId = ((DocumentResult) entry).getShortcut().getId();
 			else
@@ -574,9 +585,11 @@ public class DocumentNavigation extends NavigationBean {
 
 	public void nodeClicked() {
 		if (FOLDER_VIEW_TREE.equals(getFolderView()) && treeComponent != null) {
-			DefaultMutableTreeNode node = treeComponent.getNavigatedNode();
-			if (node == null)
-				node = treeComponent.getCurrentNode();
+			// DefaultMutableTreeNode node = treeComponent.getNavigatedNode();
+			// if (node == null) {
+			// node = treeComponent.getCurrentNode();
+			// }
+			DefaultMutableTreeNode node = directoryModel.getSelectedNode();
 			if (node != null) {
 				IceUserObject userObject = (IceUserObject) node.getUserObject();
 				if (userObject.isExpanded()) {
