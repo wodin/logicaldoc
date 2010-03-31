@@ -110,11 +110,6 @@
 							<ice:outputText
 								rendered="#{documentRecord.document.immutable == 1}"
 								styleClass="immutable" value=" #{documentRecord.displayTitle}" />
-						&amp;nbsp;(<ice:outputText
-								value="#{documentRecord.document.fileSize}"
-								title="#{msgs['msg.jsp.popup']}" style="white-space:nowrap;">
-								<f:converter converterId="logicaldoc.FileSizeConverter" />
-							</ice:outputText>)
 						</ice:outputLink>
 					</ice:panelGroup>
 					<ice:menuPopup styleClass="mpopup" id="pop" noIcons="true"
