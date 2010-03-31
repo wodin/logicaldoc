@@ -15,6 +15,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * SMTP E-Mail sender service
@@ -34,6 +36,8 @@ public class EMailSender {
 
 	private int port = 25;
 
+	private static Log log=LogFactory.getLog(EMailSender.class);
+	
 	public EMailSender() {
 	}
 
@@ -86,12 +90,14 @@ public class EMailSender {
 	 * @throws Exception
 	 */
 	public void send(EMail email) throws Exception {
-		
 		Properties props = new Properties();
-		props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.smtp.host", host);
-		props.put("mail.smtp.auth", "true");
-
+		if (!StringUtils.isEmpty(username)) {
+		   props.put("mail.smtp.auth", "true");
+		   log.error("Not using authentication");
+		}  
+		
+		
 		Session sess = Session.getDefaultInstance(props);
 		javax.mail.Message message = new MimeMessage(sess);
 		String frm = email.getAuthorAddress();
