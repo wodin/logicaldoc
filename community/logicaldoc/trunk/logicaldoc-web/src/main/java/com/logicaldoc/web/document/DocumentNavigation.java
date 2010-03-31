@@ -16,6 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.icesoft.faces.component.ext.HtmlDataTable;
+import com.icesoft.faces.component.panelseries.PanelSeries;
 import com.icesoft.faces.component.tree.IceUserObject;
 import com.icesoft.faces.component.tree.Tree;
 import com.logicaldoc.core.document.DiscussionComment;
@@ -85,6 +86,9 @@ public class DocumentNavigation extends NavigationBean {
 	// binding to component
 	private Tree treeComponent;
 
+	// the last documents list page visualized by the user
+	private int lastPageNumber = 0;
+
 	/**
 	 * Default constructor of the tree. The root node of the tree is created at
 	 * this point.
@@ -132,15 +136,31 @@ public class DocumentNavigation extends NavigationBean {
 			// Notify the records manager
 			DocumentsRecordsManager recordsManager = ((DocumentsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 					"documentsRecordsManager", FacesContext.getCurrentInstance(), log));
-			// Get the current documents page displayed
-			int first = recordsManager.getTable().getFirst();
+			if (recordsManager.getTable() != null)
+				// Get the current documents page displayed as 'simple' or
+				// 'details'
+				lastPageNumber = recordsManager.getTable().getFirst();
+			else if (recordsManager.getPanels() != null)
+				// Get the current documents page displayed as 'icons' or
+				// 'iconslarge'
+				lastPageNumber = recordsManager.getPanels().getFirst();
+
+			if (viewMode.contains("icons")) {
+				recordsManager.setPanels(new PanelSeries());
+				recordsManager.getPanels().setFirst(lastPageNumber);
+			}
 
 			selectDirectory(getSelectedDir());
 			refresh();
 
 			// Set the correct page to be displayed
-			recordsManager.setTable(new HtmlDataTable());
-			recordsManager.getTable().setFirst(first);
+			if (!viewMode.contains("icons")) {
+				recordsManager.setTable(new HtmlDataTable());
+				recordsManager.getTable().setFirst(lastPageNumber);
+			} else {
+				recordsManager.setPanels(new PanelSeries());
+				recordsManager.getPanels().setFirst(lastPageNumber);
+			}
 		}
 	}
 
