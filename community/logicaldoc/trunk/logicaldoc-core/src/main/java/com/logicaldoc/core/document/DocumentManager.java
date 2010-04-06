@@ -485,4 +485,17 @@ public interface DocumentManager {
 	 * @throws Exception
 	 */
 	public Document createShortcut(Document doc, Menu folder, User user, History transaction) throws Exception;
+	
+	
+	/**
+	 * Move a folder from one parent folder to another
+	 * 
+	 * @param folderToMove The folder to move
+	 * @param destParentFolder The target folder
+	 * @param user User that wants to delete the folder
+	 * @param transaction entry to log the event
+	 * @throws Exception
+	 */
+	public void moveFolder(Menu folderToMove, Menu destParentFolder, User user, History transaction) throws Exception;
+
 }
