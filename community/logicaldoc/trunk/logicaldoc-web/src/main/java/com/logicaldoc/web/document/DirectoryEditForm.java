@@ -103,6 +103,7 @@ public class DirectoryEditForm {
 		}
 	}
 
+
 	public String insert() {
 		Menu parent = documentNavigation.getSelectedDir().getMenu();
 
