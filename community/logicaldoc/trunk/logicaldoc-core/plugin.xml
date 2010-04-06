@@ -383,6 +383,16 @@
     <parameter id="position" value="10" />
     <parameter id="confirm" value="" />
   </extension>
+  
+  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderDelete">
+    <parameter id="action" value="item.userObject.deleteDirectory" />
+    <parameter id="link" value="" />
+    <parameter id="target" value="" />
+    <parameter id="title" value="delete" />
+    <parameter id="rendered" value="item.userObject.menuId != 5  and item.userObject.deleteEnabled" />
+    <parameter id="position" value="50" />
+    <parameter id="confirm" value="" />
+  </extension>
 
   <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderExport">
     <parameter id="action" value="" />
