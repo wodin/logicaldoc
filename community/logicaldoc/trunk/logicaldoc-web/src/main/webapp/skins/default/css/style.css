@@ -25,13 +25,13 @@ a:link,a:hover,a:visited,a:active {
 }
 
 input.disabled {
-	background:#EEE;
-	color:#888888;
+	background: #EEE;
+	color: #888888;
 }
 
 disabled {
-	background:#EEE;
-	color:#888888;
+	background: #EEE;
+	color: #888888;
 }
 
 img {
@@ -216,7 +216,7 @@ em { /*font-size:14px;*/
 	vertical-align: top;
 }
 
-.contentLayoutGridColumn { 
+.contentLayoutGridColumn {
 	vertical-align: top;
 }
 
@@ -258,7 +258,7 @@ em { /*font-size:14px;*/
 
 /* Main border layout for template */
 .mainBorderLayout {
-	min-width:960px;
+	min-width: 960px;
 	width: 100%;
 	vertical-align: top;
 }
@@ -347,6 +347,7 @@ em { /*font-size:14px;*/
 
 .folderContainer {
 	width: 240px;
+	height: 500px;
 	/*border: 1px solid blue; 
 	min-height: 420px; */
 }
@@ -369,9 +370,7 @@ em { /*font-size:14px;*/
 	display: inline;
 	color: #333333;
 	font-size: 12px;
-} */
-
-/* main layout*/
+} */ /* main layout*/
 .selectionLabelColumn {
 	white-space: nowrap;
 }
@@ -517,7 +516,6 @@ em { /*font-size:14px;*/
 .tabPanelControls td input,.tabPanelControls td label {
 	vertical-align: middle;
 }
-
 
 .dragDropImageSrc {
 	cursor: move;
@@ -1174,13 +1172,17 @@ em { /*font-size:14px;*/
 }
 
 .folderTree {
-	width: 100%;
-	min-height: 320px;
-	overflow: auto;
+	width: 240px;
+	height: 500px;
+	/*width: 100%;
+	min-height: 320px;*/
+	/*overflow: auto;*/
+	overflow-x: scroll;
+	overflow-y: scroll;
 }
 
 .folderTree a:hover {
-    text-decoration: none;
+	text-decoration: none;
 }
 
 .iceCmdLnk .folderTreeSelectedfalse {
@@ -1191,7 +1193,6 @@ em { /*font-size:14px;*/
 	background-color: #f5d6c7;
 	text-decoration: none;
 }
-
 
 /*
 ------------ File Upload ----------
@@ -1224,16 +1225,15 @@ em { /*font-size:14px;*/
 	color: #FF9900;
 }
 
-
 #browseMessages {
 	border: 1px solid #959595;
 	background-color: #efefef;
 	font-size: 11px;
-    font-weight: bold;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    padding-left: 10px;
-    margin-left: 0px; 
+	font-weight: bold;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 10px;
+	margin-left: 0px;
 }
 
 #browseMessages li {
@@ -1245,7 +1245,7 @@ em { /*font-size:14px;*/
 	color: #3d6611;
 	background-image: url("images/success.png");
 	background-repeat: no-repeat;
-	padding-left: 20px; 
+	padding-left: 20px;
 	margin-left: 0px;
 	padding-top: 1px;
 	padding-bottom: 1px;
@@ -1255,7 +1255,7 @@ em { /*font-size:14px;*/
 	color: #df280a;
 	background-image: url("images/error.png");
 	background-repeat: no-repeat;
-	padding-left: 20px; 
+	padding-left: 20px;
 	margin-left: 0px;
 	padding-top: 1px;
 	padding-bottom: 1px;
@@ -1265,7 +1265,7 @@ em { /*font-size:14px;*/
 	color: #806526;
 	background-image: url("images/warning.png");
 	background-repeat: no-repeat;
-	padding-left: 20px; 
+	padding-left: 20px;
 	margin-left: 0px;
 	padding-top: 1px;
 	padding-bottom: 1px;
@@ -1336,7 +1336,7 @@ DIV#center {
 */
 #header {
 	color: #DDDDDD;
-	font-size: 11px; 
+	font-size: 11px;
 }
 
 .topShadow {
@@ -1350,7 +1350,7 @@ DIV#center {
 	background-image: url(images/blu01a.gif);
 	background-repeat: repeat-x;
 	background-position: top left;
-	border-bottom:1px solid #58759b;
+	border-bottom: 1px solid #58759b;
 }
 
 .headerLogo {
@@ -1359,14 +1359,15 @@ DIV#center {
 	border: 0px solid;
 	float: left;
 }
-.quickSearch{
+
+.quickSearch {
 	float: right;
 	padding-right: 100px;
 	margin-top: 5px;
 }
 
 .headerRight {
-	float:right;
+	float: right;
 	margin-right: 30px;
 	margin-top: 20px;
 }
@@ -1382,7 +1383,7 @@ DIV#center {
 }
 
 .separator {
-	color:#999;
+	color: #999;
 	font-size: 11px;
 	font-weight: normal;
 	padding-left: 5px;
@@ -1390,11 +1391,11 @@ DIV#center {
 }
 
 #logout {
-	float:left;
-	padding-top:2px;
+	float: left;
+	padding-top: 2px;
 }
 
-.logoutLink, .logoutLink a {
+.logoutLink,.logoutLink a {
 	color: #fcce77;
 	font-size: 11px;
 	font-weight: normal;
@@ -1404,13 +1405,11 @@ DIV#center {
 /*
 ------------ Main menu ----------
 */
-
 #historyBack {
 	position: absolute;
 	left: 10px;
 	top: 63px;
 }
-
 
 /* Navigation bar */
 .navigationTop {
@@ -1419,15 +1418,15 @@ DIV#center {
 	width: 100%;
 	height: 26px;
 	text-align: left;
-	border-top:1px solid #374960;
-	border-bottom:1px solid #2d444f; 
+	border-top: 1px solid #374960;
+	border-bottom: 1px solid #2d444f;
 	background-color: #666e73;
-	background-image: url(images/nav1_bg.gif); 
+	background-image: url(images/nav1_bg.gif);
 	background-repeat: repeat-x;
 	background-attachment: scroll;
-    background-position: 0pt 100%;
+	background-position: 0pt 100%;
 }
-	
+
 .nav-bar {
 	font-size: 12px;
 	padding-left: 30px;
@@ -1439,15 +1438,14 @@ DIV#center {
 }
 
 .nav-barItem a {
-	background:url(images/nav1_sep.gif) no-repeat 100% 0;
-	border-right: none; 
+	background: url(images/nav1_sep.gif) no-repeat 100% 0;
+	border-right: none;
 	height: 20px;
 	padding-top: 5px;
 	padding-bottom: 1px;
 	padding-right: 14px;
 	padding-left: 14px;
 }
-
 
 /* Barra principale aspetto testo */
 .nav-barItem .iceCmdLnk .iceOutTxt {
@@ -1457,8 +1455,8 @@ DIV#center {
 
 /* Barra principale colore sfondo menu attivo */
 .nav-barItem a:hover {
-	background:url(images/nav1_sep.gif) no-repeat 100% 0;
-	border-right: none; 
+	background: url(images/nav1_sep.gif) no-repeat 100% 0;
+	border-right: none;
 }
 
 /* Barra principale colore testo menu attivo */
@@ -1470,7 +1468,7 @@ DIV#center {
 	background-color: #e3ecee;
 }
 
-.nav-barSubMenu .iceCmdLnk, .nav-barSubMenu .iceLink {
+.nav-barSubMenu .iceCmdLnk,.nav-barSubMenu .iceLink {
 	padding-left: 12px;
 	padding-top: 5px;
 	padding-bottom: 5px;
@@ -1480,12 +1478,13 @@ DIV#center {
 	background-attachment: scroll;
 	background-position: 0pt 100%;
 }
+
 .nav-barSubMenu .iceCmdLnk .iceOutTxt {
 	color: #2f2f2f;
 	font-size: 12px;
 }
 
-.nav-barSubMenu .iceMnuItmLabel, .nav-barSubMenu .iceMnuBarItemLabel {
+.nav-barSubMenu .iceMnuItmLabel,.nav-barSubMenu .iceMnuBarItemLabel {
 	color: #2f2f2f;
 	font-size: 12px;
 }
@@ -1494,12 +1493,12 @@ DIV#center {
 .nav-barSubMenu a:hover {
 	background-color: #cddbde;
 }
+
 /* colore testo sub-menu hover */
-.nav-barSubMenu a:hover .iceOutTxt, .nav-barSubMenu a:hover .iceMnuItmLabel {
+.nav-barSubMenu a:hover .iceOutTxt,.nav-barSubMenu a:hover .iceMnuItmLabel
+	{
 	color: #2f2f2f;
 }
-
-
 
 /* TOP-menu Highlight
 /* Barra principale colore sfondo */
@@ -1512,14 +1511,13 @@ DIV#center {
 	background-repeat: repeat-x;
 	background-attachment: scroll;
 	background-position: 0pt 100%;
-	border-right: none; 
+	border-right: none;
 	height: 20px;
 	padding-top: 5px;
 	padding-bottom: 1px;
 	padding-right: 14px;
 	padding-left: 14px;
 }
-
 
 /* Barra principale aspetto testo */
 .LDHightlightItem .iceCmdLnk .iceOutTxt {
@@ -1534,7 +1532,7 @@ DIV#center {
 	background-repeat: repeat-x;
 	background-attachment: scroll;
 	background-position: 0pt 100%;
-	border-right: none; 
+	border-right: none;
 }
 
 /* Barra principale colore testo menu hover */
@@ -1542,16 +1540,15 @@ DIV#center {
 	color: #d6e2e5;
 }
 
-
 /*
 ------------ Search ----------
 */
 input.input-text {
-padding-top: 2px;
-padding-right: 2px;
-padding-bottom: 2px;
-padding-left: 2px;
-width: 220px;
+	padding-top: 2px;
+	padding-right: 2px;
+	padding-bottom: 2px;
+	padding-left: 2px;
+	width: 220px;
 }
 
 .searchOptionsTD {
@@ -1577,7 +1574,7 @@ width: 220px;
 	padding: 0px;
 	margin-right: 2px;
 	vertical-align: middle;
-} 
+}
 
 .tdLinks {
 	padding-left: 8px;
@@ -1695,9 +1692,7 @@ width: 220px;
 
 /*
 ---------- Various Adjustements for display correctly the Document context menu when document selected -------
-*/
-
-/*
+*/ /*
 .cntDocumentMenu .iceMnuItm a:hover {
 	color: black;
 	background-color: #2A6CC2;
@@ -1711,9 +1706,7 @@ width: 220px;
 .iceRowSelSelectedMouseOver .cntDocumentMenu span {
 	color: black;
 }
-*/
-
-/*
+*/ /*
 --- Home Page -----
 */
 .homeLayoutRootTable {
@@ -1847,7 +1840,7 @@ homePlainTblColHdr1 homePlainTblHdr
 	width: 100%;
 	overflow: auto;
 }
-	
+
 .folderSimpleVrt {
 	background-color: #dddddd;
 }
@@ -1886,6 +1879,7 @@ homePlainTblColHdr1 homePlainTblHdr
 	color: #1968b3;
 	text-decoration: underline;
 }
+
 .breadcrumbUnlink {
 	font-size: 12px;
 	font-weight: normal;
@@ -1899,7 +1893,8 @@ homePlainTblColHdr1 homePlainTblHdr
 	padding: 2px;
 	margin-bottom: 5px;
 }
-.discussionCommentColumn{
+
+.discussionCommentColumn {
 	padding-left: 0px;
 	padding-right: 0px;
 	padding-top: 0px;
@@ -1911,21 +1906,21 @@ homePlainTblColHdr1 homePlainTblHdr
 
 /* Document Contextual Menu */
 .mpopupVrtItem a {
-font-size: 12px;
-padding-left: 12px;
-padding-top: 4px;
-padding-bottom: 4px; 
-font-family: Arial;
-margin-bottom: 0px;
-background-color: #e3ecee;
-background-image: url(images/nav2_link_bg.gif);
-background-repeat: repeat-x;
-background-attachment: scroll;
-background-position: 0pt 100%;
+	font-size: 12px;
+	padding-left: 12px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	font-family: Arial;
+	margin-bottom: 0px;
+	background-color: #e3ecee;
+	background-image: url(images/nav2_link_bg.gif);
+	background-repeat: repeat-x;
+	background-attachment: scroll;
+	background-position: 0pt 100%;
 }
 
 .mpopupVrtItem a:hover {
-background-color: #cddbde;
+	background-color: #cddbde;
 }
 
 /* fixes document context menu row hover */
@@ -1934,7 +1929,7 @@ background-color: #cddbde;
 }
 
 /* New Style 5.0 for buttons */
-.commands .iceCmdBtn, .standardBtn {
+.commands .iceCmdBtn,.standardBtn {
 	border: 1px solid #ed6502;
 	border-right-color: #a04300;
 	border-bottom-color: #a04300;
@@ -1952,27 +1947,27 @@ background-color: #cddbde;
 	white-space: nowrap;
 }
 
-.commands .iceCmdBtn:hover, .standardBtn:hover {
-background-color: #f77c16;
-background-image: url(images/btn_over_bg.gif);
-background-repeat: repeat-x;
-background-attachment: scroll;
-background-position: 0pt 0pt;
+.commands .iceCmdBtn:hover,.standardBtn:hover {
+	background-color: #f77c16;
+	background-image: url(images/btn_over_bg.gif);
+	background-repeat: repeat-x;
+	background-attachment: scroll;
+	background-position: 0pt 0pt;
 }
 
 /* Back button */
-.commands .backBtn, .commands .backBtn:hover {
-border: 1px solid #cccccc;
-border-right-color: #aaaaaa;
-border-bottom-color: #aaaaaa;
-border-left-color-value: #cccccc;
-background-color: #ffffff;
-background-image: url(images/btn_back_bg2.gif);
-color: #555555;
-padding-left:27px; 
+.commands .backBtn,.commands .backBtn:hover {
+	border: 1px solid #cccccc;
+	border-right-color: #aaaaaa;
+	border-bottom-color: #aaaaaa;
+	border-left-color-value: #cccccc;
+	background-color: #ffffff;
+	background-image: url(images/btn_back_bg2.gif);
+	color: #555555;
+	padding-left: 27px;
 }
 
-.commands .saveBtn, .commands .saveBtn:hover {
-background-image: url(images/btn_save_bg.gif);
-padding-left:27px; 
+.commands .saveBtn,.commands .saveBtn:hover {
+	background-image: url(images/btn_save_bg.gif);
+	padding-left: 27px;
 }
