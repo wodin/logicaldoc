@@ -495,6 +495,17 @@ public class DocumentNavigation extends NavigationBean {
 
 		return null;
 	}
+	
+	
+	public String deleteDirectory() {
+		
+		setSelectedPanel(new PageContentBean("deleteDir"));
+		DirectoryEditForm form = ((DirectoryEditForm) FacesUtil.accessBeanFromFacesContext("directoryForm",
+				FacesContext.getCurrentInstance(), log));
+		form.setDirectory(getSelectedDir());
+
+		return null;
+	}
 
 	void loadTree() {
 		directoryModel = new DirectoryTreeModel();
