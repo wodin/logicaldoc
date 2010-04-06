@@ -330,17 +330,6 @@
     <parameter id="target" value="" />
   </extension>
 
-  <extension plugin-id="logicaldoc-core" point-id="FolderToolbar" id="folderDelete">
-    <parameter id="action" value="documentNavigation.selectedDir.delete" />
-    <parameter id="link" value="" />
-    <parameter id="target" value="" />
-    <parameter id="title" value="delete" />
-    <parameter id="rendered" value="documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.deleteEnabled" />
-    <parameter id="position" value="80" />
-    <parameter id="icon" value="folder_delete.png" />
-    <parameter id="confirm" value="msg.question.deletedoc" />
-  </extension>
-
   <!-- end folder toolbar -->
 
   <!-- Start folder menu -->
