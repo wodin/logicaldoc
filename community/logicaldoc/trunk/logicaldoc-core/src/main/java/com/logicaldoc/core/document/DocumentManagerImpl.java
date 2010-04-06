@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -978,5 +979,78 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void setConfig(PropertiesBean config) {
 		this.config = config;
+	}
+
+	public void moveFolder(Menu folderToMove, Menu destParentFolder, User user, History transaction)
+			throws Exception {
+		
+		// Occorre spostare la cartella
+		folderToMove.setParentId(destParentFolder.getId());
+		
+		List<Long> foldersInvolved = new ArrayList<Long>();
+		
+//		System.out.println("destParentFolder ID: " + destParentFolder.getId());
+//		System.out.println("destParentFolder Path: " + destParentFolder.getPath());
+		
+		String oldPath = new String(folderToMove.getPath());
+//		System.out.println("folderToMove Before Path: " + oldPath);
+		folderToMove.setPath(destParentFolder.getPath() + "/" + destParentFolder.getId());
+		String newPath = folderToMove.getPath();
+//		System.out.println("folderToMove After Path: " + newPath);
+		
+		// a) Salvo la cartella attuale
+		
+		// Modify folder history entry
+		transaction.setUserId(user.getId());
+		transaction.setUserName(user.getFullName());
+		transaction.setEvent(History.EVENT_FOLDER_MOVED);
+		
+		menuDAO.store(folderToMove, transaction);
+		
+		foldersInvolved.add(folderToMove.getId());
+		
+		// b) E' necessario modificare tutti i path delle cartelle figlie; 
+		// potrebbe essere fatto con una operazione SQL diretta
+		List<Menu> childrenFolders = menuDAO.findByParentId(folderToMove.getId());
+		
+//		System.out.println("ChildrenFolders:");
+		for (Menu childDir : childrenFolders) {
+//			System.out.println(childDir.getId());
+//			System.out.println(childDir.getText());
+//			System.out.println("childDir.getPath(): " + childDir.getPath());
+			
+			String childPath = childDir.getPath();
+			childPath = childPath.substring(oldPath.length(), childPath.length());
+			childPath = newPath + childPath;
+//			System.out.println("childPath: " + childPath);
+			childDir.setPath(childPath);
+			
+//			System.out.println("Old PathExtended: " + childDir.getPathExtended());
+			menuDAO.store(childDir);
+//			System.out.println("new PathExtended: " + childDir.getPathExtended());
+			// NOTA: è necessario modificare il path extended ??
+			// Dai test eseguiti Sembra di NO. (03/04/2010)
+			
+			foldersInvolved.add(childDir.getId());
+		}
+		
+//		System.out.println("END ChildrenFolders:");
+	
+		
+		// 2) valutare se modificare tutti i path dei documenti contenuti;
+		// NON è necessario perchè il path del documento è calcolato sulla base del folder parent
+		
+		// 3) Devo impostare tutti i documenti figli come da RE-indicizzare
+		
+		StringBuilder sb = new StringBuilder();
+		for (Iterator iterator = foldersInvolved.iterator(); iterator.hasNext();) {
+			Long folderId = (Long) iterator.next();
+			sb.append(folderId);
+			if (iterator.hasNext())
+				sb.append(",");
+		}
+//		System.out.println("Folders ids: " + sb);
+		
+		documentDAO.bulkUpdate("set ld_indexed=0 where ld_folderid in (" +sb +")", null);
 	}
 }
