@@ -169,7 +169,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 		initCollections();
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu docMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
-		PageContentBean panel = new PageContentBean("m-" + docMenu.getId(), "document/browse");
+		PageContentBean panel = new PageContentBean(docMenu.getId(), "document/browse");
 		panel.setContentTitle(Messages.getMessage(docMenu.getText()));
 		navigation.setSelectedPanel(panel);
 	}

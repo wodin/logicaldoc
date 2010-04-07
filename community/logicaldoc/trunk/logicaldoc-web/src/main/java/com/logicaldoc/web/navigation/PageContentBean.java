@@ -36,9 +36,18 @@ public class PageContentBean extends IceUserObject {
 	// view reference to control the visible content
 	private NavigationBean navigationBean;
 
+	public PageContentBean(long menuId) {
+		this("m-" + menuId);
+		this.menuId = menuId;
+	}
+
+	public PageContentBean(long menuId, String template) {
+		this("m-" + menuId, template);
+		this.menuId = menuId;
+	}
+
 	public PageContentBean(String contentName) {
 		this();
-		setIcon("skins/default/images/spacer.gif");
 		this.contentName = contentName;
 	}
 
