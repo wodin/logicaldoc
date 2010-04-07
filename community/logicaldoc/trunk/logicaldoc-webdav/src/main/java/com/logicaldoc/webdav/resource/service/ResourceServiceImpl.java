@@ -338,81 +338,122 @@ public class ResourceServiceImpl implements ResourceService {
 		String sid = (String) session.getObject("sid");
 
 		if (source.isFolder()) {
-			if (!source.isRenameEnabled())
-				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not granted to this user");
+			return folderRenameOrMove(source, destination, session, sid);
+		} else {
+			return fileRenameOrMove(source, destination, session, sid);
+		}
+	}
 
-			Menu currentMenu = menuDAO.findById(Long.parseLong(source.getID()));
+	private Resource fileRenameOrMove(Resource source, Resource destination,
+			DavSession session, String sid) throws DavException {
+		// The source is a file so the requested operation can be: file rename/file move
+		
+		// if the destination is null we can't do anything
+		if (destination == null)
+			throw new UnsupportedOperationException();
 
-			long currentParentFolder = currentMenu.getParentId();
-			long destinationParentFolder = Long.parseLong(destination.getID());
-			// renaming is allowed
-			if (currentParentFolder != destinationParentFolder)
-				throw new UnsupportedOperationException();
+		// verify the write permission on source folders
+		Resource folder = getParentResource(source);
 
-			currentMenu.setText(source.getName());
+		boolean writeEnabled = folder.isWriteEnabled();
+		if (!writeEnabled)
+			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not granted to this user");
 
+		Document document = documentDAO.findById(Long.parseLong(source.getID()));
+		documentDAO.initialize(document);
+		User user = userDAO.findById(source.getRequestedPerson());
+
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSessionId(sid);
+
+		if (!source.getName().equals(document.getFileName())) {
+			// we are doing a file rename
+			try {
+				documentManager.rename(document, user, source.getName(), false, transaction);
+			} catch (Exception e) {
+				log.warn(e.getMessage(), e);
+				throw new RuntimeException(e);
+			}
+		} else {
+			// moving the document to another folder
+			boolean destWriteEnabled = destination.isWriteEnabled();
+			if (!destWriteEnabled)
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Write Rights not granted to this user");
+
+			Menu menu = menuDAO.findById(Long.parseLong(destination.getID()));
+
+			try {
+				if (document.getDocRef() != null)
+					transaction.setEvent(History.EVENT_SHORTCUT_MOVED);
+				documentManager.moveToFolder(document, menu, user, transaction);
+			} catch (Exception e) {
+				log.warn(e.getMessage(), e);
+			}
+		}
+
+		return this.marshallDocument(document, session);
+	}
+
+	private Resource folderRenameOrMove(Resource source, Resource destination,
+			DavSession session, String sid) throws DavException {
+		
+		if (!source.isRenameEnabled())
+			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not granted to this user");
+
+		Menu currentMenu = menuDAO.findById(Long.parseLong(source.getID()));
+
+		long currentParentFolder = currentMenu.getParentId();
+		long destinationParentFolder = Long.parseLong(destination.getID());
+		
+		// distinction between folder move and folder rename
+		if (currentParentFolder != destinationParentFolder) {
+		   // Folder Move
+			
+			Menu destParentMenu = menuDAO.findById(Long.parseLong(destination.getID()));
+			
+			// check the delete on the parent of the source to move
+			Resource sourceParent = getParentResource(source);
+			if (!sourceParent.isDeleteEnabled())
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");			
+			
+			// verify the addchild permission on destination folders
+			boolean addchildEnabled = destination.isAddChildEnabled();
+			if (!addchildEnabled)
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "AddChild Rights not granted to this user");
+		   
 			User user = (User) session.getObject("user");
 			// Add a folder history entry
 			History transaction = new History();
-			transaction.setUserId(user.getId());
-			transaction.setUserName(user.getFullName());
-			transaction.setEvent(History.EVENT_FOLDER_RENAMED);
 			transaction.setSessionId(sid);
-			menuDAO.store(currentMenu, transaction);
-
-			if (destination != null)
-				currentMenu.setParentId(Long.parseLong(destination.getID()));
-
-			menuDAO.store(currentMenu);
-			return this.marshallFolder(currentMenu, source.getRequestedPerson(), session);
-
-		} else {
-
-			// if the destination is null we can't do anything
-			if (destination == null)
-				throw new UnsupportedOperationException();
-
-			// verify the write permission on source folders
-			Resource folder = getParentResource(source);
-
-			boolean writeEnabled = folder.isWriteEnabled();
-			if (!writeEnabled)
-				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not granted to this user");
-
-			Document document = documentDAO.findById(Long.parseLong(source.getID()));
-			documentDAO.initialize(document);
-			User user = userDAO.findById(source.getRequestedPerson());
-
-			// Create the document history event
-			History transaction = new History();
-			transaction.setSessionId(sid);
-
-			if (!source.getName().equals(document.getFileName())) {
-				// we are doing a file rename
-				try {
-					documentManager.rename(document, user, source.getName(), false, transaction);
-				} catch (Exception e) {
-					log.warn(e.getMessage(), e);
-					throw new RuntimeException(e);
-				}
-			} else {
-				// moving the document to another folder
-				boolean destWriteEnabled = destination.isWriteEnabled();
-				if (!destWriteEnabled)
-					throw new DavException(DavServletResponse.SC_FORBIDDEN, "Write Rights not granted to this user");
-
-				Menu menu = menuDAO.findById(Long.parseLong(destination.getID()));
-
-				try {
-					if (document.getDocRef() != null)
-						transaction.setEvent(History.EVENT_SHORTCUT_MOVED);
-					documentManager.moveToFolder(document, menu, user, transaction);
-				} catch (Exception e) {
-					log.warn(e.getMessage(), e);
-				}
+			
+			// we are doing a file rename
+			try {
+				documentManager.moveFolder(currentMenu, destParentMenu, user, transaction);
+			} catch (Exception e) {
+				log.warn(e.getMessage(), e);
+				throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR, "Error during Folder Move");
 			}
+			
+			return this.marshallFolder(currentMenu, source.getRequestedPerson(), session);
+		} else {
+		  // Folder Rename
+		currentMenu.setText(source.getName());
 
-			return this.marshallDocument(document, session);
+		User user = (User) session.getObject("user");
+		// Add a folder history entry
+		History transaction = new History();
+		transaction.setUserId(user.getId());
+		transaction.setUserName(user.getFullName());
+		transaction.setEvent(History.EVENT_FOLDER_RENAMED);
+		transaction.setSessionId(sid);
+		menuDAO.store(currentMenu, transaction);
+
+		if (destination != null)
+			currentMenu.setParentId(Long.parseLong(destination.getID()));
+
+		menuDAO.store(currentMenu);
+		return this.marshallFolder(currentMenu, source.getRequestedPerson(), session);
 		}
 	}
 
