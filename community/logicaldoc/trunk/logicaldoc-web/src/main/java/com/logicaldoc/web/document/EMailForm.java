@@ -33,7 +33,7 @@ public class EMailForm {
 	private String author;
 
 	private String recipient;
-	
+
 	private String recipientCC;
 
 	private String subject;
@@ -142,12 +142,12 @@ public class EMailForm {
 					sender.send(email);
 					Messages.addLocalizedInfo("email.sent");
 				} catch (Exception ex) {
-					log.error(ex.getMessage(), ex);
+					log.warn(ex.getMessage(), ex);
 					Messages.addLocalizedError("email.error");
 				}
 				setAuthor(user.getEmail());
 			} catch (Exception e) {
-				log.error(e.getMessage(), e);
+				log.warn(e.getMessage(), e);
 				Messages.addLocalizedError("email.error");
 			}
 		} else {
