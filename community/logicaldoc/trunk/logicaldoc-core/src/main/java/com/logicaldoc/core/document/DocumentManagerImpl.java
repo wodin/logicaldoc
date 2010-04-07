@@ -674,6 +674,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 	}
 
+
 	/**
 	 * Avoid Filename duplications in the same folder
 	 */
@@ -997,6 +998,9 @@ public class DocumentManagerImpl implements DocumentManager {
 		folderToMove.setPath(destParentFolder.getPath() + "/" + destParentFolder.getId());
 		String newPath = folderToMove.getPath();
 //		System.out.println("folderToMove After Path: " + newPath);
+		
+		// Ensure unique folder name in a folder
+		menuDAO.setUniqueFolderName(folderToMove);
 		
 		// a) Salvo la cartella attuale
 		

@@ -271,4 +271,6 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	 * @return True if successfully deleted from the database.
 	 */
 	public boolean delete(long menuId, History transaction);
+
+	public void setUniqueFolderName(Menu menu);
 }

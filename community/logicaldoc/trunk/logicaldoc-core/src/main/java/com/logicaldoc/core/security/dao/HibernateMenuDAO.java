@@ -516,7 +516,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return menu;
 	}
 
-	private void setUniqueFolderName(Menu menu) {
+	@Override
+	public void setUniqueFolderName(Menu menu) {
 		int counter = 1;
 		String folderName = menu.getText();
 		while (findByMenuTextAndParentId(menu.getText(), menu.getParentId()).size() > 0) {
