@@ -5,9 +5,12 @@ import javax.faces.event.ActionEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
+import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
@@ -29,6 +32,12 @@ public class DirectoryEditForm {
 	private long[] menuGroup;
 
 	private DocumentNavigation documentNavigation;
+	
+	private boolean showFolderSelector = false;
+	
+	private DirectoryTreeModel directoryModel;
+
+	private long destParentId;
 
 	public Directory getDirectory() {
 		return directory;
@@ -53,6 +62,98 @@ public class DirectoryEditForm {
 
 	public void setFolderName(String folderName) {
 		this.folderName = folderName;
+	}
+	
+
+	public void openFolderSelector(ActionEvent e) {
+		showFolderSelector = true;
+	}
+
+	public void closeFolderSelector(ActionEvent e) {
+		showFolderSelector = false;
+	}
+	
+	public void cancelFolderSelector(ActionEvent e) {
+		directoryModel.cancelSelection();
+		destParentId = 0;
+		showFolderSelector = false;
+	}
+	
+	public void folderSelected(ActionEvent e) {
+		showFolderSelector = false;
+		Directory dir = directoryModel.getSelectedDir();
+		destParentId = dir.getMenuId();
+	}
+
+	public boolean isShowFolderSelector() {
+		return showFolderSelector;
+	}
+
+	public void setShowFolderSelector(boolean showFolderSelector) {
+		this.showFolderSelector = showFolderSelector;
+	}
+
+	public void setDirectoryModel(DirectoryTreeModel directoryModel) {
+		this.directoryModel = directoryModel;
+	}
+
+	public DirectoryTreeModel getDirectoryModel() {
+		if (directoryModel == null) {
+			loadTree();
+		}
+		return directoryModel;
+	}
+
+	void loadTree() {
+		directoryModel = new DirectoryTreeModel();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @since 5.1
+	 */
+	public String move() {
+		Menu folderToMove = documentNavigation.getSelectedDir().getMenu();
+
+		if (SessionManagement.isValid()) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+
+			try {
+				DocumentManager docman = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+				User user = SessionManagement.getUser();
+				
+				Menu destParentFolder = mdao.findById(destParentId);
+				
+				// Check delete permission on the folder parent of folderToMove
+				Menu sourceParent = mdao.findById(folderToMove.getParentId());
+				boolean sourceParentDeleteEnabled = mdao.isPermissionEnabled(Permission.DELETE, sourceParent.getId(), user.getId());
+				if (!sourceParentDeleteEnabled)
+					throw new SecurityException("No rights to delete folder");	
+				
+				// Check addChild permission on destParentFolder
+				boolean addchildEnabled = mdao.isPermissionEnabled(Permission.ADD_CHILD, destParentFolder.getId(), user.getId());
+				if (!addchildEnabled)
+					throw new SecurityException("AddChild Rights not granted to this user");
+				
+
+				// Add a folder history entry
+				History transaction = new History();
+				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+				
+				docman.moveFolder(folderToMove, destParentFolder, user, transaction);
+
+				documentNavigation.refresh();
+				documentNavigation.selectDirectory(new Directory(destParentFolder));
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				Messages.addLocalizedError("folder.error.notstored");
+			}
+
+			return null;
+		} else {
+			return "login";
+		}
 	}
 
 	public String update() {
@@ -173,4 +274,13 @@ public class DirectoryEditForm {
 	public void update(ActionEvent event) {
 		update();
 	}
+
+	public long getDestParentId() {
+		return destParentId;
+	}
+
+	public void setDestParentId(long destParentId) {
+		this.destParentId = destParentId;
+	}
+
 }

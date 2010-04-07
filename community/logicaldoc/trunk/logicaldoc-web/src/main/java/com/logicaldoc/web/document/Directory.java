@@ -119,9 +119,22 @@ public class Directory extends PageContentBean {
 		return navigation.newDirectory();
 	}
 	
+	/**
+	 * @return
+	 * @since 5.1
+	 */
 	public String deleteDirectory() {
 		DocumentNavigation navigation = getDocumentNavigation();
 		return navigation.deleteDirectory();
+	}
+	
+	/**
+	 * @return
+	 * @since 5.1
+	 */
+	public String moveDirectory() {
+		DocumentNavigation navigation = getDocumentNavigation();
+		return navigation.moveDirectory();
 	}
 
 	public String searchInFolder() {
