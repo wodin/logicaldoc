@@ -374,7 +374,7 @@ public class DocumentNavigation extends NavigationBean {
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu documentsMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
 
-		PageContentBean panel = new PageContentBean("m-" + documentsMenu.getId(), "document/browse");
+		PageContentBean panel = new PageContentBean(documentsMenu.getId(), "document/browse");
 		panel.setContentTitle(Messages.getMessage(documentsMenu.getText()));
 		navigation.setSelectedPanel(panel);
 
@@ -495,10 +495,9 @@ public class DocumentNavigation extends NavigationBean {
 
 		return null;
 	}
-	
-	
+
 	public String deleteDirectory() {
-		
+
 		setSelectedPanel(new PageContentBean("deleteDir"));
 		DirectoryEditForm form = ((DirectoryEditForm) FacesUtil.accessBeanFromFacesContext("directoryForm",
 				FacesContext.getCurrentInstance(), log));
@@ -568,7 +567,7 @@ public class DocumentNavigation extends NavigationBean {
 
 		Menu documentsMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
 
-		PageContentBean panel = new PageContentBean("m-" + documentsMenu.getId(), "document/browse");
+		PageContentBean panel = new PageContentBean(documentsMenu.getId(), "document/browse");
 		panel.setContentTitle(Messages.getMessage(documentsMenu.getText()));
 		navigation.setSelectedPanel(panel);
 
@@ -616,11 +615,10 @@ public class DocumentNavigation extends NavigationBean {
 
 	public void nodeClicked() {
 		if (FOLDER_VIEW_TREE.equals(getFolderView()) && treeComponent != null) {
-			// DefaultMutableTreeNode node = treeComponent.getNavigatedNode();
-			// if (node == null) {
-			// node = treeComponent.getCurrentNode();
-			// }
-			DefaultMutableTreeNode node = directoryModel.getSelectedNode();
+			DefaultMutableTreeNode node = treeComponent.getNavigatedNode();
+			if (treeComponent.getCurrentNode() != null
+					&& treeComponent.getCurrentNode().equals(directoryModel.getSelectedNode()))
+				node = directoryModel.getSelectedNode();
 			if (node != null) {
 				IceUserObject userObject = (IceUserObject) node.getUserObject();
 				if (userObject.isExpanded()) {

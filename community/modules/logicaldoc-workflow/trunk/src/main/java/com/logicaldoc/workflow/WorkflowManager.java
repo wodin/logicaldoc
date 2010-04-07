@@ -485,7 +485,7 @@ public class WorkflowManager {
 					FacesContext.getCurrentInstance(), log));
 			Menu documentsMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
 
-			PageContentBean panel = new PageContentBean("m-" + documentsMenu.getId(), "document/browse");
+			PageContentBean panel = new PageContentBean(documentsMenu.getId(), "document/browse");
 			panel.setContentTitle(Messages.getMessage(documentsMenu.getText()));
 			navigation.setSelectedPanel(panel);
 		} else {

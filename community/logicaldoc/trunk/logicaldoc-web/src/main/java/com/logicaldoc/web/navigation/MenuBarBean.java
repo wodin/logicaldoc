@@ -263,7 +263,7 @@ public class MenuBarBean {
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		PageContentBean page;
 		MenuItem item;
-		page = new PageContentBean("m-" + Long.toString(menu.getId()));
+		page = new PageContentBean(menu.getId());
 
 		if (menu.getType() == Menu.MENUTYPE_MENU) {
 			page.setMenu(menu);

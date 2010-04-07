@@ -101,7 +101,7 @@ public class LoginForm {
 					MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 					Menu menu = menuDao.findById(Long.parseLong(entrypage));
 					if (menu != null && menuDao.isReadEnable(menu.getId(), user.getId())) {
-						page = new PageContentBean("m-" + Long.toString(menu.getId()));
+						page = new PageContentBean(menu.getId());
 						if (StringUtils.isNotEmpty(menu.getRef())) {
 							page.setTemplate(menu.getRef());
 						}
