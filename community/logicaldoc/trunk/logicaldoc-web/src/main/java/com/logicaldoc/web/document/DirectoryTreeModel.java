@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpServletRequest;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -55,6 +56,8 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 	private boolean useMenuIcons = false;
 
+	private boolean running = false;
+
 	public DirectoryTreeModel(long rootMenuId, int menuType) {
 		super(new DefaultMutableTreeNode());
 		this.rootMenuId = rootMenuId;
@@ -84,7 +87,35 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 	public void reloadAll() {
 		init();
-		reload((DefaultMutableTreeNode) getRoot(), -1);
+		running = true;
+	
+		Thread reloadTh = new Thread() {
+			@Override
+			public void run() {
+				try {
+					reload((DefaultMutableTreeNode) getRoot(), -1);
+				} catch (Exception e) {
+				}
+				running = false;
+			}
+		};
+		reloadTh.start();
+
+		HttpServletRequest request=(HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		long timeToWait = Long.parseLong(request.getSession().getServletContext().getInitParameter("com.icesoft.faces.connectionTimeout"))-5000;
+		int counter = 0;
+		while (counter < timeToWait) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+
+			}
+			if (running)
+				counter+=1000;
+			else
+				break;
+		}
+		reloadTh.interrupt();
 	}
 
 	public void reload(DefaultMutableTreeNode node, int depth) {
@@ -201,9 +232,11 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	 */
 	public void selectDirectory(Directory directory) {
 		selectedDir = directory;
-		selectedDir.setSelected(true);
-		setTreeSelectedState((DefaultMutableTreeNode) getRoot());
-		expandNodePath(selectedNode);
+		if (selectedDir != null) {
+			selectedDir.setSelected(true);
+			setTreeSelectedState((DefaultMutableTreeNode) getRoot());
+			expandNodePath(selectedNode);
+		}
 	}
 
 	/**
@@ -293,6 +326,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 					return menu1.getText().compareTo(menu2.getText());
 				}
 			});
+
 			for (Menu child : children) {
 				branchObject.setLeaf(false);
 
