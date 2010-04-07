@@ -369,7 +369,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 		log.debug("doPropFind");
 		if (log.isDebugEnabled())
 			log.debug("[READ] FINDING "
-					+ (resource.isCollection() ? "DOCUMENTS WITHING THE FOLDER " : "JUST THE DOCUMENT ")
+					+ (resource.isCollection() ? "DOCUMENTS WITHIN THE FOLDER " : "JUST THE DOCUMENT ")
 					+ resource.getDisplayName());
 
 		if (!resource.exists()) {
