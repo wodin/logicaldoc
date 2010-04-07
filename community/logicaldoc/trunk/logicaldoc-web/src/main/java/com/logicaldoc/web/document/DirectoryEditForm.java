@@ -163,6 +163,7 @@ public class DirectoryEditForm {
 				
 				// ricarico l'albero delle cartelle
 				documentNavigation.getDirectoryModel().reloadAll();
+				documentNavigation.refresh();
 				documentNavigation.selectDirectory(new Directory(destParentFolder));
 				
 				// reset destParentId 
