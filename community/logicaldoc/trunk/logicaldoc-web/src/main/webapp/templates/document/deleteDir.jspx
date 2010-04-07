@@ -42,6 +42,8 @@
                 </ice:panelGrid>
             </ice:panelGroup>
         </ice:panelGroup>
+		<br />
+		<br />
 		<hr />
         <ice:panelGroup styleClass="commands">
             <ice:commandButton value="#{msgs['cancel']}"
