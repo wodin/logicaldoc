@@ -65,7 +65,7 @@ public class TemplateForm {
 	// attributes
 	private Map<String, Integer> attributesPositions = new HashMap<String, Integer>();
 
-	private boolean attributeNameValid = true;
+	private boolean attributeNameValid = false;
 
 	public DocumentTemplate getTemplate() {
 		return template;
@@ -89,6 +89,7 @@ public class TemplateForm {
 
 	private void init() {
 		templateAttributes.clear();
+		attributeNameValid = false;
 		List<SelectItem> items = new ArrayList<SelectItem>();
 		for (String key : template.getAttributes().keySet()) {
 			ExtendedAttribute attribute = template.getAttributes().get(key);
@@ -136,6 +137,7 @@ public class TemplateForm {
 			attributeNameValid = false;
 			return null;
 		}
+		// Now the attribute name is certainly valid
 		attributeNameValid = true;
 
 		if (StringUtils.isNotEmpty(newAttribute)) {
@@ -231,7 +233,10 @@ public class TemplateForm {
 				// attributes positions
 				for (String name : template.getAttributeNames()) {
 					ExtendedAttribute extAttribute = template.getAttributes().get(name);
-					extAttribute.setPosition(attributesPositions.get(name));
+					if (attributesPositions.get(name) != null)
+						extAttribute.setPosition(attributesPositions.get(name));
+					else
+						template.getAttributes().remove(name);
 				}
 				dao.store(template);
 			} else {
