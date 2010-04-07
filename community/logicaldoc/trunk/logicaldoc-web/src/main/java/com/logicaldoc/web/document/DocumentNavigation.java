@@ -629,4 +629,13 @@ public class DocumentNavigation extends NavigationBean {
 			}
 		}
 	}
+
+	public String moveDirectory() {
+		setSelectedPanel(new PageContentBean("moveDir"));
+		DirectoryEditForm form = ((DirectoryEditForm) FacesUtil.accessBeanFromFacesContext("directoryForm",
+				FacesContext.getCurrentInstance(), log));
+		form.setDirectory(getSelectedDir());
+
+		return null;
+	}
 }
