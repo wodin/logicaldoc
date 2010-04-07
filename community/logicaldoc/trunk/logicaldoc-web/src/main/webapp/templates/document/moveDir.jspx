@@ -39,7 +39,14 @@
 					<ice:panelGroup>
 						<ice:outputText value="#{directoryForm.folderName}" />
 					</ice:panelGroup>
-
+					
+					<ice:panelGroup>
+						<br />
+					</ice:panelGroup>
+					<ice:panelGroup>
+					 	<br />
+					</ice:panelGroup>
+					
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="destParentId"
 							value="#{msgs['targetfolder']}" />
@@ -61,11 +68,12 @@
 				</ice:panelGrid>
 			</ice:panelGroup>
 		</ice:panelGroup>
+		<br />
 		<hr />
 		<ice:panelGroup styleClass="commands">
 			<ice:commandButton value="#{msgs['cancel']}" partialSubmit="true"
 				immediate="true" action="#{newDocWizard.abort}" />
-			<ice:commandButton value="#{msgs['move']}"
+			<ice:commandButton value="#{msgs['confirm']}"
 				action="#{directoryForm.move}" />
 		</ice:panelGroup>
 	</ice:panelGroup>

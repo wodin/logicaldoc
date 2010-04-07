@@ -39,6 +39,8 @@ public class DirectoryEditForm {
 
 	private long destParentId;
 
+	private boolean treeChanged;
+
 	public Directory getDirectory() {
 		return directory;
 	}
@@ -98,8 +100,9 @@ public class DirectoryEditForm {
 	}
 
 	public DirectoryTreeModel getDirectoryModel() {
-		if (directoryModel == null) {
+		if (directoryModel == null || treeChanged) {
 			loadTree();
+			treeChanged = false;
 		}
 		return directoryModel;
 	}
@@ -119,11 +122,24 @@ public class DirectoryEditForm {
 		if (SessionManagement.isValid()) {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
+			// Check destParentId MUST BE <> 0 (initial value)
+			if (destParentId == 0)
+				return null;
+			
 			try {
 				DocumentManager docman = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 				User user = SessionManagement.getUser();
 				
 				Menu destParentFolder = mdao.findById(destParentId);
+				
+				// Check destParentId: Must be different from the current folder parentId
+				if (destParentId == folderToMove.getParentId())
+					throw new SecurityException("No Changes");
+				
+				// Check destParentId: Must be different from the current folder Id
+				// A folder cannot be children of herself
+				if (destParentId == folderToMove.getId())
+					throw new SecurityException("Not Allowed");
 				
 				// Check delete permission on the folder parent of folderToMove
 				Menu sourceParent = mdao.findById(folderToMove.getParentId());
@@ -142,9 +158,16 @@ public class DirectoryEditForm {
 				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 				
 				docman.moveFolder(folderToMove, destParentFolder, user, transaction);
-
-				documentNavigation.refresh();
+				
+				// ricarico l'albero delle cartelle
+				documentNavigation.getDirectoryModel().reloadAll();
 				documentNavigation.selectDirectory(new Directory(destParentFolder));
+				
+				// reset destParentId 
+				destParentId = 0;
+				
+				// set the directoryModel to be reloaded
+				treeChanged = true;
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				Messages.addLocalizedError("folder.error.notstored");
