@@ -225,19 +225,21 @@ public class TemplateForm {
 		// Restore the old positions of the template extended attributes
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		dao.initialize(template);
-		if (!attributesPositions.isEmpty()) {
-			// The template already exists, so we have to restore the old
-			// attributes positions
-			for (String name : template.getAttributeNames()) {
-				ExtendedAttribute extAttribute = template.getAttributes().get(name);
-				extAttribute.setPosition(attributesPositions.get(name));
+		if (template.getAttributeNames().size() > 0) {
+			if (!attributesPositions.isEmpty()) {
+				// The template already exists, so we have to restore the old
+				// attributes positions
+				for (String name : template.getAttributeNames()) {
+					ExtendedAttribute extAttribute = template.getAttributes().get(name);
+					extAttribute.setPosition(attributesPositions.get(name));
+				}
+				dao.store(template);
+			} else {
+				// The user had started to create a template adding one or more
+				// attributes, but then changed his mind, so the template must
+				// be removed.
+				dao.delete(template.getId());
 			}
-			dao.store(template);
-		} else {
-			// The user had started to create a template adding one or more
-			// attributes, but then changed his mind, so the template must be
-			// removed
-			dao.delete(template.getId());
 		}
 		init();
 		attributesPositions.clear();
