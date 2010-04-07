@@ -333,36 +333,6 @@
   <!-- end folder toolbar -->
 
   <!-- Start folder menu -->
-  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderEdit">
-    <parameter id="action" value="item.userObject.edit" />
-    <parameter id="link" value="" />
-    <parameter id="target" value="" />
-    <parameter id="title" value="edit" />
-    <parameter id="rendered" value="item.userObject.menuId != 5 and item.userObject.renameEnabled" />
-    <parameter id="position" value="60" />
-    <parameter id="confirm" value="" />
-  </extension>
-
-  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderRights">
-    <parameter id="action" value="item.userObject.rights" />
-    <parameter id="link" value="" />
-    <parameter id="target" value="" />
-    <parameter id="title" value="rights" />
-    <parameter id="rendered" value="item.userObject.manageSecurityEnabled" />
-    <parameter id="position" value="80" />
-    <parameter id="confirm" value="" />
-  </extension>
-
-  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderAdd">
-    <parameter id="action" value="item.userObject.newDirectory" />
-    <parameter id="link" value="" />
-    <parameter id="target" value="" />
-    <parameter id="title" value="msg.jsp.createfolder" />
-    <parameter id="rendered" value="item.userObject.addChildEnabled" />
-    <parameter id="position" value="40" />
-    <parameter id="confirm" value="" />
-  </extension>
-
   <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderSearch">
     <parameter id="action" value="item.userObject.searchInFolder" />
     <parameter id="link" value="" />
@@ -373,13 +343,53 @@
     <parameter id="confirm" value="" />
   </extension>
   
+  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderHistory">
+    <parameter id="action" value="item.userObject.history" />
+    <parameter id="link" value="" />
+    <parameter id="title" value="history" />
+    <parameter id="rendered" value="true" />
+    <parameter id="position" value="20" />
+    <parameter id="confirm" value="" />
+    <parameter id="target" value="" />
+  </extension>
+  
+  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderAdd">
+    <parameter id="action" value="item.userObject.newDirectory" />
+    <parameter id="link" value="" />
+    <parameter id="target" value="" />
+    <parameter id="title" value="folder.new" />
+    <parameter id="rendered" value="item.userObject.addChildEnabled" />
+    <parameter id="position" value="40" />
+    <parameter id="confirm" value="" />
+  </extension>
+  
+  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderMove">
+    <parameter id="action" value="item.userObject.moveDirectory" />
+    <parameter id="link" value="" />
+    <parameter id="target" value="" />
+    <parameter id="title" value="folder.move" />
+    <parameter id="rendered" value="item.userObject.menuId != 5 and item.userObject.deleteEnabled" />
+    <parameter id="position" value="45" />
+    <parameter id="confirm" value="" />
+  </extension>
+  
   <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderDelete">
     <parameter id="action" value="item.userObject.deleteDirectory" />
     <parameter id="link" value="" />
     <parameter id="target" value="" />
     <parameter id="title" value="delete" />
-    <parameter id="rendered" value="item.userObject.menuId != 5  and item.userObject.deleteEnabled" />
+    <parameter id="rendered" value="item.userObject.menuId != 5 and item.userObject.deleteEnabled" />
     <parameter id="position" value="50" />
+    <parameter id="confirm" value="" />
+  </extension>
+  
+  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderEdit">
+    <parameter id="action" value="item.userObject.edit" />
+    <parameter id="link" value="" />
+    <parameter id="target" value="" />
+    <parameter id="title" value="rename" />
+    <parameter id="rendered" value="item.userObject.menuId != 5 and item.userObject.renameEnabled" />
+    <parameter id="position" value="60" />
     <parameter id="confirm" value="" />
   </extension>
 
@@ -392,16 +402,18 @@
     <parameter id="confirm" value="" />
     <parameter id="target" value="_blank" />
   </extension>
-
-  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderHistory">
-    <parameter id="action" value="item.userObject.history" />
+  
+  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderRights">
+    <parameter id="action" value="item.userObject.rights" />
     <parameter id="link" value="" />
-    <parameter id="title" value="history" />
-    <parameter id="rendered" value="true" />
-    <parameter id="position" value="20" />
-    <parameter id="confirm" value="" />
     <parameter id="target" value="" />
+    <parameter id="title" value="rights" />
+    <parameter id="rendered" value="item.userObject.manageSecurityEnabled" />
+    <parameter id="position" value="80" />
+    <parameter id="confirm" value="" />
   </extension>
+
+
 
   <!-- Start Document Toolbar -->
   <extension plugin-id="logicaldoc-core" point-id="DocumentToolbar" id="shortcutToolbar">
