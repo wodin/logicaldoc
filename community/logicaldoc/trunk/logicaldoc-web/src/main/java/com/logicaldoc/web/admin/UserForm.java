@@ -588,7 +588,7 @@ public class UserForm {
 			sender.send(email);
 			Messages.addLocalizedInfo("email.notify.account.sent");
 		} catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
+			log.warn(ex.getMessage(), ex);
 			Messages.addWarn(Messages.getMessage("email.notify.account.error", user.getEmail()));
 		}
 	}
