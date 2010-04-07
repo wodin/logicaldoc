@@ -123,8 +123,10 @@ public class DirectoryEditForm {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 
 			// Check destParentId MUST BE <> 0 (initial value)
-			if (destParentId == 0)
+			if (destParentId == 0) {
+				Messages.addLocalizedError("folder.error.notupdated");
 				return null;
+			}
 			
 			try {
 				DocumentManager docman = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
@@ -168,9 +170,11 @@ public class DirectoryEditForm {
 				
 				// set the directoryModel to be reloaded
 				treeChanged = true;
+				
+				Messages.addLocalizedInfo("msg.action.updatefolder");
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
-				Messages.addLocalizedError("folder.error.notstored");
+				Messages.addLocalizedError("folder.error.notupdated");
 			}
 
 			return null;
