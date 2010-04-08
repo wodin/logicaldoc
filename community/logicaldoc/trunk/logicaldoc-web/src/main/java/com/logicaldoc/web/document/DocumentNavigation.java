@@ -615,15 +615,19 @@ public class DocumentNavigation extends NavigationBean {
 
 	public void nodeClicked() {
 		if (FOLDER_VIEW_TREE.equals(getFolderView()) && treeComponent != null) {
-			DefaultMutableTreeNode node = treeComponent.getNavigatedNode();
-			if (treeComponent.getCurrentNode() != null
-					&& treeComponent.getCurrentNode().equals(directoryModel.getSelectedNode()))
-				node = directoryModel.getSelectedNode();
-			if (node != null) {
-				IceUserObject userObject = (IceUserObject) node.getUserObject();
-				if (userObject.isExpanded()) {
-					directoryModel.reload(node);
+			try {
+				DefaultMutableTreeNode node = treeComponent.getNavigatedNode();
+				if (treeComponent.getCurrentNode() != null
+						&& treeComponent.getCurrentNode().equals(directoryModel.getSelectedNode()))
+					node = directoryModel.getSelectedNode();
+				if (node != null) {
+					IceUserObject userObject = (IceUserObject) node.getUserObject();
+					if (userObject.isExpanded()) {
+						directoryModel.reload(node);
+					}
 				}
+			} catch (Throwable t) {
+				log.warn(t.getMessage());
 			}
 		}
 	}
