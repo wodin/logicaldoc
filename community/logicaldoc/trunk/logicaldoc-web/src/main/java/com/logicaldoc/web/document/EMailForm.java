@@ -134,7 +134,7 @@ public class EMailForm {
 				email.setSubject(getSubject());
 				email.setUserName(user.getUserName());
 
-				if (getSelectedDocument() != null)
+				if (getSelectedDocument() != null && !this.text.trim().startsWith("URL:"))
 					createAttachment(email);
 
 				try {
