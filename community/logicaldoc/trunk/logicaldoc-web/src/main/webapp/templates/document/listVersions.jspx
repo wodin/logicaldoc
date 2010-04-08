@@ -23,7 +23,7 @@
 
 	<ice:form id="versionsForm">
 		<!-- Basic table -->
-		<ice:panelGroup styleClass="formBorderHighlight" style="width:102%;">
+		<ice:panelGroup style="width:102%;">
 			<ice:panelGroup>
 				<ice:dataTable id="versionData"
 					value="#{versionsRecordsManager.versions}" var="versionRecord"

@@ -23,9 +23,11 @@
 		<ice:outputText
 			rendered="#{linksRecordsManager.selectedLink.document1.id!=linksRecordsManager.selectedDocument.id || linksRecordsManager.selectedLink.document1.id==linksRecordsManager.selectedLink.document2.id}"
 			value="#{linksRecordsManager.selectedLink.document1.title}" />
+		<br />
+		<br />
 	</h3>
 
-	<ice:panelGroup styleClass="formBorderHighlight">
+	<ice:panelGroup>
 		<ice:panelGroup>
 			<!-- Read only data -->
 			<ice:panelGroup>

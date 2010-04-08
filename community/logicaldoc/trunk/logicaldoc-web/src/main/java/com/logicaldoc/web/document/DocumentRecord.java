@@ -560,7 +560,7 @@ public class DocumentRecord extends MenuBarBean {
 				.getCurrentInstance(), log));
 		emailForm.reset();
 		emailForm.setAuthor(SessionManagement.getUser().getEmail());
-		emailForm.setSelectedDocument(null);
+		emailForm.setSelectedDocument(getDocument());
 
 		// Prepare a new download ticket
 		long userId = SessionManagement.getUserId();

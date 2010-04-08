@@ -23,7 +23,7 @@
 
 	<ice:form id="linksForm">
 		<!-- Basic table -->
-		<ice:panelGroup styleClass="formBorderHighlight">
+		<ice:panelGroup>
 			<ice:panelGroup>
 				<ice:dataTable id="versionData" value="#{linksRecordsManager.links}"
 					var="link" cellpadding="0" width="97%" rows="2000"

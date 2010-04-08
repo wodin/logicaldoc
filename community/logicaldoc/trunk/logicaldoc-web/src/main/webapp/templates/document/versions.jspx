@@ -13,24 +13,27 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
-	<ice:panelGroup id="listVersions"
-		rendered="#{versionsRecordsManager.showList}">
-		<f:subview id="w-listVersions">
-			<ui:include src="/templates/document/listVersions.jspx" />
-		</f:subview>
-	</ice:panelGroup>
+	<ice:panelGroup styleClass="formBorderHighlight">
 
-	<ice:panelGroup id="updateVersion"
-		rendered="#{!versionsRecordsManager.showList and !versionsRecordsManager.showCompare}">
-		<f:subview id="w-updateVersion">
-			<ui:include src="/templates/document/updateVersion.jspx" />
-		</f:subview>
-	</ice:panelGroup>
-	
-	<ice:panelGroup id="compareVersions"
-		rendered="#{versionsRecordsManager.showCompare}">
-		<f:subview id="w-compareVersions">
-			<ui:include src="/templates/document/compare.jspx" />
-		</f:subview>
+		<ice:panelGroup id="listVersions"
+			rendered="#{versionsRecordsManager.showList}">
+			<f:subview id="w-listVersions">
+				<ui:include src="/templates/document/listVersions.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+
+		<ice:panelGroup id="updateVersion"
+			rendered="#{!versionsRecordsManager.showList and !versionsRecordsManager.showCompare}">
+			<f:subview id="w-updateVersion">
+				<ui:include src="/templates/document/updateVersion.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+
+		<ice:panelGroup id="compareVersions"
+			rendered="#{versionsRecordsManager.showCompare}">
+			<f:subview id="w-compareVersions">
+				<ui:include src="/templates/document/compare.jspx" />
+			</f:subview>
+		</ice:panelGroup>
 	</ice:panelGroup>
 </jsp:root>
