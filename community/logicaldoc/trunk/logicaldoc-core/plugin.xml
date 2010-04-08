@@ -367,7 +367,7 @@
     <parameter id="action" value="item.userObject.moveDirectory" />
     <parameter id="link" value="" />
     <parameter id="target" value="" />
-    <parameter id="title" value="folder.move" />
+    <parameter id="title" value="move" />
     <parameter id="rendered" value="item.userObject.menuId != 5 and item.userObject.deleteEnabled" />
     <parameter id="position" value="45" />
     <parameter id="confirm" value="" />
