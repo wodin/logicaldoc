@@ -550,6 +550,18 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			query += " and not(_entity.id = " + excludeId + ")";
 		return findByWhere(query, null);
 	}
+	
+	@Override
+	public boolean existsFilename(long folderId, String filename, Long excludeId) {
+		String query = "select count(*) from ld_document where ld_folderid = " + folderId
+				+ " and lower(ld_filename) like '" + SqlUtil.doubleQuotes(filename.toLowerCase()) + "'";
+		if (excludeId != null)
+			query += " and not(ld_id = " + excludeId + ")";
+		List<Object> result = findByJdbcQuery(query, 1, null);
+
+		return ((Integer) result.get(0)).intValue() > 0;
+	}
+	
 
 	@Override
 	public List<Document> findByTitleAndParentFolderId(long folderId, String title, Long excludeId) {
@@ -558,6 +570,17 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
 		return findByWhere(query, null);
+	}
+
+	@Override
+	public boolean existsTitle(long folderId, String title, Long excludeId) {
+		String query = "select count(*) from ld_document where ld_folderid = " + folderId
+				+ " and lower(ld_title) like '" + SqlUtil.doubleQuotes(title.toLowerCase()) + "'";
+		if (excludeId != null)
+			query += " and not(ld_id = " + excludeId + ")";
+		List<Object> result = findByJdbcQuery(query, 1, null);
+
+		return ((Integer) result.get(0)).intValue() > 0;
 	}
 
 	@Override

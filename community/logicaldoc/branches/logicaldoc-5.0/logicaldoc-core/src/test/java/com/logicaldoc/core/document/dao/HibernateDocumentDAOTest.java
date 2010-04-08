@@ -287,6 +287,16 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertEquals(1, documents.size());
 	}
 
+	public void testExistsTitle() {
+		assertTrue(dao.existsTitle(103, "testDocname", null));
+		assertFalse(dao.existsTitle(103, "jkaghfdj", null));
+	}
+	
+	public void testExistsFilename() {
+		assertTrue(dao.existsFilename(103, "pippo", null));
+		assertFalse(dao.existsFilename(103, "jkaghfdj", null));
+	}
+	
 	public void testFindLinkedDocuments() {
 		Collection<Document> docs = dao.findLinkedDocuments(1, null, null);
 		assertNotNull(docs);

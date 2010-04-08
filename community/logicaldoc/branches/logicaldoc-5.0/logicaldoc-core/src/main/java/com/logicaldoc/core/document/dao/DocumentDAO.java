@@ -165,6 +165,11 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 */
 	public List<Document> findByTitleAndParentFolderId(long folderId, String title, Long excludeId);
 
+	public boolean existsTitle(long folderId, String title, Long excludeId);
+	
+	public boolean existsFilename(long folderId, String title, Long excludeId);
+	
+	
 	/**
 	 * Initializes lazy loaded collections
 	 * 
