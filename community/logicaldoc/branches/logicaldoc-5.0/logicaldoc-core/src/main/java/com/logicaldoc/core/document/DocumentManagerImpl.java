@@ -486,6 +486,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			History transaction) throws Exception {
 
 		try {
+			log.info("++1");
+			
 			Document doc = new Document();
 			doc.setFolder(folder);
 			doc.setFileName(filename);
@@ -506,8 +508,11 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 
 			setUniqueTitle(doc);
-			setUniqueFilename(doc);
-
+			
+			//TODO impossible to end if a lot of docs have the same filename in the folder
+			//setUniqueFilename(doc);
+			
+			
 			if (sourceDate != null)
 				doc.setSourceDate(sourceDate);
 			else
@@ -532,7 +537,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setCustomId(customId);
 			if (tags != null)
 				doc.setTags(tags);
-
+			
 			/* Set template and extended attributes */
 			if (templateId != null && templateId.longValue() != 0) {
 				DocumentTemplate template = documentTemplateDAO.findById(templateId);
