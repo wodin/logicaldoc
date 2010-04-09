@@ -1,0 +1,37 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page is the document editing form
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ice="http://www.icesoft.com/icefaces/component"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form" id="updateForm">
+
+    <ice:panelGroup styleClass="formBorderHighlight">
+        <ice:panelGroup>
+            <f:subview id="w-update">
+                <ui:include src="/templates/document/update.jspx" />
+            </f:subview>
+        </ice:panelGroup>
+        
+        <hr />
+
+        <ice:panelGroup styleClass="commands">
+            <ice:commandButton value="#{msgs['back']}"
+                partialSubmit="true" styleClass="backBtn"
+                action="#{newDocWizard.abort}" />        
+            <ice:commandButton value="#{msgs['cancel']}"
+                partialSubmit="true"
+                action="#{newDocWizard.abort}" />
+            <ice:commandButton value="#{msgs['save']}"
+                action="#{documentForm.update}" rendered="#{!documentForm.readOnly}" />
+        </ice:panelGroup>
+    </ice:panelGroup>
+</jsp:root>

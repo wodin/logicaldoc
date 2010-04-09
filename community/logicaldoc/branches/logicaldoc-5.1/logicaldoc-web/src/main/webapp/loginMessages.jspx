@@ -1,0 +1,24 @@
+<?xml version = '1.0'?>
+<!-- 
+ Login messages page
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions" jsfc="ice:panelGroup">
+	<f:loadBundle basename="i18n.application" var="msgs" />
+
+	<br />
+	<ice:panelGroup styleClass="loginMessage" rendered="#{ContextProperties.runlevel eq 'demo'}">
+		<ice:outputText styleClass="loginMessage"	value="#{msgs['runlevel.demo']}" />
+	</ice:panelGroup>
+	<ice:panelGroup styleClass="loginMessage" rendered="#{loginForm.notInitialized}">
+		<ice:outputLink styleClass="system_link" value="#{facesContext.externalContext.requestContextPath}/setup/"><ice:outputText styleClass="loginMessage" value="#{msgs['setup.reminder']}" /></ice:outputLink>
+	</ice:panelGroup>
+</jsp:root>

@@ -1,0 +1,153 @@
+<?xml version = '1.0'?>
+<!-- 
+ User's personal data
+  
+ @author Marco Meschieri
+ @version $Id: user.jspx,v 1.1 2007/10/16 16:12:10 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="personalDataForm">
+
+	<ice:panelGroup styleClass="center formBorderHighlight"
+		style="width: 600px;">
+		<ice:messages globalOnly="true" />
+
+		<!-- Personal data -->
+		<ice:panelGroup>
+			<ice:panelGrid columns="5"
+				onkeypress="return submitOnEnter('personalDataForm:save', event);">
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="firstName"
+						value="#{msgs['msg.jsp.adduser.firstname']}*" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="firstName"
+						label="#{msgs['errors.header.alert.key']}"
+						value="#{personalDataForm.firstName}" tabindex="1"
+						onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+						maxlength="30" size="30" required="true" />
+					<ice:message for="firstName" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="name"
+						value="#{msgs['msg.jsp.adduser.lastname']}*" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="name" label="#{msgs['errors.header.alert.key']}"
+						value="#{personalDataForm.name}" tabindex="1"
+						onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+						maxlength="30" size="30" required="true" />
+					<ice:message for="name" />
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="street"
+						value="#{msgs['msg.jsp.adduser.address']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="street" value="#{personalDataForm.street}"
+						tabindex="1" partialSubmit="true" maxlength="100" size="30" />
+					<ice:message for="street" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="postalCode"
+						value="#{msgs['msg.jsp.adduser.postalcode']}" />
+				</ice:panelGroup>
+				<ice:panelGroup style="text-align: left;">
+					<ice:inputText id="postalCode"
+						value="#{personalDataForm.postalCode}" partialSubmit="true"
+						tabindex="1" maxlength="10" size="10" />
+					<ice:message for="postalCode" />
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="city" value="#{msgs['msg.jsp.adduser.city']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="city" value="#{personalDataForm.city}"
+						tabindex="1" maxlength="30" size="30" partialSubmit="true" />
+					<ice:message for="city" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="country"
+						value="#{msgs['msg.jsp.adduser.country']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="country" value="#{personalDataForm.country}"
+						tabindex="1" maxlength="30" size="30" partialSubmit="true" />
+					<ice:message for="country" />
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="language"
+						value="#{msgs['msg.jsp.adduser.language']}" />
+				</ice:panelGroup>
+				<ice:panelGroup style="text-align: left;">
+					<ice:selectOneMenu styleClass="selectTagMenu" tabindex="1"
+						value="#{personalDataForm.language}" partialSubmit="true">
+						<f:selectItems value="#{selectionTags.languages}" />
+					</ice:selectOneMenu>
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="email" value="#{msgs['email']}*" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="email"
+						label="#{msgs['errors.header.alert.key']}"
+						value="#{personalDataForm.email}" tabindex="1" maxlength="100"
+						size="30"
+						onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+						required="true">
+						<f:validator validatorId="validator.email" />
+					</ice:inputText>
+					<ice:message for="email" />
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="phone"
+						value="#{msgs['msg.jsp.adduser.phone']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="phone" value="#{personalDataForm.phone}"
+						tabindex="1" maxlength="30" size="30" partialSubmit="true" />
+					<ice:message for="phone" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="phone2"
+						value="#{msgs['msg.jsp.adduser.phone2']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="phone2" value="#{personalDataForm.phone2}"
+						tabindex="1" maxlength="30" size="30" partialSubmit="true" />
+					<ice:message for="phone2" />
+				</ice:panelGroup>
+			</ice:panelGrid>
+		</ice:panelGroup>
+		<hr />
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['save']}" tabindex="1"
+				action="#{personalDataForm.save}" id="save" />
+		</ice:panelGroup>
+	</ice:panelGroup>
+
+	<script defer="defer" type="text/javascript" language="javascript">
+      /**
+       * Set initial focus
+       */
+      document.getElementById('personalDataForm:firstName').focus();
+    </script>
+
+</jsp:root>

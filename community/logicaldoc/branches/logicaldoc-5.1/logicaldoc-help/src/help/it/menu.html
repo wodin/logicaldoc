@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Untitled Document</title>
+<link href="css/help.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_changeProp(objName,x,theProp,theValue) { //v6.0
+  var obj = MM_findObj(objName);
+  if (obj && (theProp.indexOf("style.")==-1 || obj.style)){
+    if (theValue == true || theValue == false)
+      eval("obj."+theProp+"="+theValue);
+    else eval("obj."+theProp+"='"+theValue+"'");
+    
+    /* 
+     alert(obj.className);
+     obj.className = "menupagetitle";
+     alert(obj.className);
+    */
+  }
+}
+//-->
+</script>
+</head>
+<body>
+<!--================= start Menu items ==================-->
+<div class="menu">
+  <div class="menutitle">LogicalDOC Guida all'utilizzo </div>
+  <div class="menuitemgroup">
+    <div class="menuitem"><a href="introduction.html" target="mainFrame">Introduzione</a></div>
+    <div class="menutitle">Primi Passi </div>
+    <div class="menuitemgroup">
+      <div class="menuitem" id="stepsNew"><a href="steps.html" target="mainFrame" onClick="MM_changeProp('steps','','style.color','#ff0000','DIV')">Nozioni fondamentali </a></div>
+    </div>
+    <div class="menutitle"><a href="documentmanagement.html" target="mainFrame">Gestione Documenti</a></div>
+    <div class="menuitemgroup">
+	  <div class="menuitem"> <a href="folders.html" target="mainFrame">Cartelle</a> </div>
+      <div class="menuitem"> <a href="adddocument.html" target="mainFrame">Aggiungere un Documento</a> </div>
+      <div class="menuitem"> <a href="documentoperations.html" target="mainFrame">Operazioni sul Documento</a></div>
+      <div class="menuitem"> <a href="importfolder.html" target="mainFrame">Importare da archivio .ZIP</a></div>
+    </div>
+    <div class="menutitle"><a href="search.html" target="mainFrame">Ricercare</a></div>
+    <div class="menuitemgroup">
+      <div class="menuitem"><a href="search.html" target="mainFrame">Ricerca veloce </a></div>
+      <div class="menuitem"><a href="search.html#advanced" target="mainFrame">Ricerca avanzata </a></div>
+	  <div class="menuitem"><a href="search.html#parametric" target="mainFrame">Ricerca per parametri</a></div>
+      <div class="menuitem"><a href="showkeywords.html" target="mainFrame">Visualizzazione Parole Chiave</a></div>
+    </div>
+    <div class="menutitle">Comunicare</div>
+    <div class="menuitemgroup">
+      <div class="menuitem"> <a href="addsysmess.html" target="mainFrame">Inviare Messaggi</a></div>
+      <div class="menuitem"><a href="showsysmess.html" target="mainFrame">Ricevere Messaggi</a></div>
+      <div class="menuitem"> <a href="emaildocument.html" target="mainFrame">Inviare Documenti via e-mail</a> </div>
+    </div>
+    <div class="menutitle">Amministrazione</div>
+    <div class="menuitemgroup">
+      <div class="menuitem"> <a href="users.html" target="mainFrame">Gestione Utenti</a> </div>
+      <div class="menuitem"> <a href="groups.html" target="mainFrame">Gestione Gruppi</a> </div>
+	   <div class="menuitem"> <a href="security.html" target="mainFrame">Sicurezza</a> </div>
+	   <div class="menuitem"> <a href="templates.html" target="mainFrame">Classe documentale</a> </div>
+       <div class="menuitem"> <a href="configsmtp.html" target="mainFrame">Configurare impostazioni smtp</a> </div>
+      <div class="menuitem"><a href="emailaccounts.html" target="mainFrame">Acquisire Documenti da mailbox</a></div>
+      <div class="menuitem"><a href="importingfolders.html" title="Disponibile in LogicalDOC Enterprise Edition" target="mainFrame">Importazione da Cartelle</a></div>
+	  <div class="menuitem"><a href="customids.html" target="mainFrame">Protocollazione</a> </div>
+	  <div class="menuitem"><a href="branding.html" target="mainFrame">Branding</a> </div>
+	   <div class="menuitem"><a href="tasks.html" target="mainFrame">Operazioni Pianificate</a></div>
+	   <div class="menuitem"><a href="databasemaintenance.html" target="mainFrame">Manutenzione database</a> </div>
+	    <div class="menuitem"> <a href="gui.html" target="mainFrame">GUI</a> </div>
+		 <div class="menuitem"> <a href="parameters.html" target="mainFrame">Parametri</a> </div>
+		  <div class="menuitem"> <a href="ldap.html" target="mainFrame">LDAP</a> </div>
+		  <div class="menuitem"> <a href="activedirectory.html" target="mainFrame">Active Directory</a> </div>
+		  <div class="menuitem"> <a href="usersessions.html" target="mainFrame">Sessioni utente</a> </div>
+		  <div class="menuitem"> <a href="systemrestart.html" target="mainFrame">Riavvio del sistema</a> </div>
+		  <div class="menuitem"> <a href="webservice.html" target="mainFrame">Web Service</a> </div>
+		  <div class="menuitem"> <a href="webdav.html" target="mainFrame">WebDAV</a> </div>
+		  <div class="menuitem"> <a href="localization.html" target="mainFrame">Localizzazione</a> </div>
+    </div>
+  </div>
+</div>
+<!--================= end Menu items ==================-->
+</body>
+</html>
