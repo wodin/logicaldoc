@@ -1,0 +1,68 @@
+@CHARSET "ISO-8859-1";
+
+.targetClass {
+	background-image:
+		url(/skins/default/images/workflow/workflowDestinationGradient.png);
+	width: 150px;
+	height: 30px;
+}
+
+.dropClass {
+	margin-bottom: 4px;
+	background-image:
+		url(/skins/default/images/workflow/workflowDestinationGradient.png);
+	border: 1px solid #cccccc;
+	width: 150px;
+	height: 30px;
+}
+
+.hightAlignment {
+	vertical-align: top;
+}
+
+.rightToolSite,.deactivatedRightToolSite,.rightToolSitePanel {
+	border-right: 1px solid #FFCC00;
+	padding-right: 4px;
+	float: left;
+	margin-right: 4px;
+}
+
+.rightToolSitePanel {
+	padding-right: 10px;
+	border-right: 2px solid #FFCC00;
+}
+
+.deactivatedRightToolSite {
+	cursor: default;
+}
+
+.linkImage {
+	vertical-align: middle;
+	border: 0px;
+	padding-right: 4px;
+}
+
+.symbol {
+	border: 0px;
+	padding-right: 4px;
+}
+
+.componentSelected {
+	background-image:
+		url(/skins/default/images/workflow/workflowComponentGradient.png);
+	border: 1px solid #0000FF;
+	z-index: 10;
+	width: 200px;
+	height: 30px;
+	cursor: move;
+}
+
+.componentNotSelected {
+	background-image:
+		url(/skins/default/images/workflow/workflowComponentGradient.png);
+	border: 1px solid #cccccc;
+	z-index: 10;
+	width: 200px;
+	height: 30px;
+	cursor: move;
+}

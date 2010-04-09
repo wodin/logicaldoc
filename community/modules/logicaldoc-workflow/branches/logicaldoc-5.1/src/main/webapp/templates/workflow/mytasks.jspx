@@ -1,0 +1,161 @@
+<?xml version = '1.0'?>
+<!-- 
+ Shows the tasks assigned to the current user
+ 
+ @author Marco Meschieri - Logical Objects
+ @since 5.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	styleClass="center" style="width: 900px;">
+
+	<ice:outputStyle href="/skins/default/css/workflow.css" />
+	<ice:panelGroup styleClass="center formBorderHighlight"
+		style="width: 900px;">
+		<table align="center">
+			<tr>
+				<td valign="top" align="left">
+					<h3>
+						<ice:outputText value="#{msgs['workflow.mytasks.assigned']}:" />
+					</h3>
+					<ice:dataTable id="taskInstanceList" var="taskInstance"
+						value="#{WorkflowManager.taskInstances}" rows="15"
+						columnClasses="tableCol">
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText id="column1" value="#{msgs['id']}" />
+							</f:facet>
+							<ice:outputText id="Number" value="#{taskInstance.id}" />
+						</ice:column>
+
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText id="column2" value="#{msgs['name']}" />
+							</f:facet>
+							<ice:commandLink value="#{taskInstance.name}"
+								actionListener="#{WorkflowManager.showTaskDetails}">
+								<f:param name="instanceId" value="#{taskInstance.id}" />
+							</ice:commandLink>
+						</ice:column>
+					</ice:dataTable>
+					<br />
+					<h3>
+						<ice:outputText value="#{msgs['workflow.mytasks.pooled']}:" />
+					</h3>
+					<ice:dataTable id="pooledTaskInstanceList" var="taskInstance"
+						value="#{WorkflowManager.pooledTaskInstances}" rows="15"
+						columnClasses="tableCol">
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText id="column1" value="#{msgs['id']}" />
+							</f:facet>
+							<ice:outputText id="Number" value="#{taskInstance.id}" />
+						</ice:column>
+
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText id="column2" value="#{msgs['name']}" />
+							</f:facet>
+							<ice:outputText id="name" value="#{taskInstance.name} " />
+						</ice:column>
+
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText id="column3" value="Pooled Assignees" />
+							</f:facet>
+							<ui:repeat value="#{taskInstance.properties['ld_pooledActors']}"
+								var="actor">
+								#{actor}, 
+				</ui:repeat>
+						</ice:column>
+						<ice:column>
+							<ice:commandLink value="#{taskInstance.name}"
+								actionListener="#{WorkflowManager.showTaskDetails}">
+								<f:param name="instanceId" value="#{taskInstance.id}" />
+							</ice:commandLink>
+						</ice:column>
+					</ice:dataTable>
+				</td>
+				<td valign="top" align="left">
+					<h3>
+						<ice:outputText value="#{msgs['workflow.tasklist_suspended']}:" />
+					</h3>
+					<ice:dataTable id="suspendedTaskInstanceList" var="taskInstance"
+						value="#{WorkflowManager.suspendedTaskInstances}" rows="15"
+						columnClasses="tableCol">
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText id="column1" value="#{msgs['id']}" />
+							</f:facet>
+							<ice:outputText id="Number" value="#{taskInstance.id}" />
+						</ice:column>
+
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText id="column2" value="#{msgs['name']}" />
+							</f:facet>
+							<ice:outputText id="name" value="#{taskInstance.name} " />
+						</ice:column>
+
+						<ice:column>
+							<ice:commandLink value="#{taskInstance.name}"
+								actionListener="#{WorkflowManager.showTaskDetails}">
+								<f:param name="instanceId" value="#{taskInstance.id}" />
+							</ice:commandLink>
+						</ice:column>
+					</ice:dataTable>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3" align="left">
+					<h3>
+						<ice:outputText value="#{msgs['workflow.tasklist_admin']}:"
+							rendered="#{not empty WorkflowManager.adminTasks and authUserId == 1}" />
+					</h3>
+					<ice:dataTable id="adminTasks" var="taskInstance"
+						value="#{WorkflowManager.adminTasks}"
+						rendered="#{not empty WorkflowManager.adminTasks and authUserId == 1}" rows="15"
+						columnClasses="tableCol">
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText id="column1" value="#{msgs['id']}" />
+							</f:facet>
+							<ice:outputText id="Number" value="#{taskInstance.id}" />
+						</ice:column>
+
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText id="column2" value="#{msgs['name']}" />
+							</f:facet>
+							<ice:outputText id="name" value="#{taskInstance.name}" />
+						</ice:column>
+
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText id="column3"
+									value="#{msgs['workflow.pooledassignees']}" />
+							</f:facet>
+							<ui:repeat value="#{taskInstance.properties['ld_pooledActors']}"
+								var="actor">
+								#{actor}, 
+				</ui:repeat>
+						</ice:column>
+
+						<ice:column>
+							<ice:commandLink value="#{taskInstance.name}"
+								actionListener="#{WorkflowManager.showTaskDetails}">
+								<f:param name="instanceId" value="#{taskInstance.id}" />
+							</ice:commandLink>
+						</ice:column>
+					</ice:dataTable>
+				</td>
+			</tr>
+		</table>
+	</ice:panelGroup>
+</jsp:root>

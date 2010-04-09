@@ -1,0 +1,746 @@
+<?xml version = '1.0'?>
+<!-- 
+ 
+ @author Sebastian Wenzky
+ @since 4.5
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form">
+
+	<script language="javascript" type="text/javascript"
+		src="/js/workflow.js" />
+
+
+	<ice:outputStyle href="/skins/default/css/workflow.css" />
+
+
+	<ice:panelPopup modal="true" clientOnly="true" draggable="false"
+		visible="#{not empty WorkflowTemplateManager.errorMessages}">
+		<f:facet name="header">
+			<ice:panelGrid width="100%" cellpadding="0" cellspacing="0"
+				columns="2" style="text-align: center;">
+				<ice:outputText style="color: #FFFFFF;"
+					value="#{msgs['workflow.editor_errors']}" />
+				<ice:commandButton
+					image="/skins/default/images/workflow/editor/close.gif"
+					action="#{WorkflowTemplateManager.closeErrorMessageWindow}" />
+			</ice:panelGrid>
+		</f:facet>
+
+		<f:facet name="body">
+			<h:outputText value="#{msgs['workflow.editor_errors_text']}" />
+			<br />
+			<ui:repeat value="#{WorkflowTemplateManager.errorMessages}"
+				var="message">
+	        				#{message.model.name}: #{message.message} <br />
+			</ui:repeat>
+		</f:facet>
+	</ice:panelPopup>
+
+	<ice:messages globalOnly="true" />
+
+	<table cellpadding="3" cellspacing="0" width="100%">
+		<tr>
+			<td
+				style="background-image: url('/skins/default/images/workflow/editor/menu_gradient.jpg');"
+				width="1">
+				<ice:panelGroup styleClass="rightToolSite">
+					<ice:commandLink
+						action="#{WorkflowTemplateManager.createNewWorkflowTemplate}">
+						<nobr> <ice:graphicImage styleClass="linkImage"
+							value="/skins/default/images/workflow/editor/new_template.gif" />
+						<ice:outputText value="#{msgs['workflow.editor_template_new']}" /></nobr>
+					</ice:commandLink>
+				</ice:panelGroup>
+			</td>
+
+			<td valign="top" width="1"
+				style="background-image: url('/skins/default/images/workflow/editor/menu_gradient.jpg');">
+
+				<ice:selectOneMenu id="workflowTemplateId"
+					value="#{WorkflowTemplateManager.workflowTemplateId}"
+					valueChangeListener="#{WorkflowTemplateManager.load}"
+					partialSubmit="true">
+					<f:selectItems
+						value="#{WorkflowTemplateManager.availableWorkflowTemplates}" />
+				</ice:selectOneMenu>
+
+
+			</td>
+			<td
+				style="background-image: url('/skins/default/images/workflow/editor/menu_gradient.jpg');">
+				<ice:panelGroup>
+
+					<ice:panelGroup styleClass="rightToolSitePanel">
+						<ice:commandLink
+							action="#{WorkflowTemplateManager.loadWorkflowTemplate}">
+							<ice:graphicImage styleClass="linkImage"
+								value="/skins/default/images/workflow/editor/load.gif" />
+							<ice:outputText value="#{msgs['load']}" />
+						</ice:commandLink>
+					</ice:panelGroup>
+
+
+
+					<ice:panelGroup styleClass="rightToolSite"
+						style="padding-right:10px;"
+						rendered="#{not empty WorkflowTemplateManager.persistenceTemplate}">
+						<ice:commandLink
+							action="#{WorkflowTemplateManager.saveCurrentWorkflowTemplate}">
+							<ice:graphicImage styleClass="linkImage"
+								value="/skins/default/images/workflow/editor/save.gif" />
+							<ice:outputText value="#{msgs['save']}" />
+						</ice:commandLink>
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="deactivatedRightToolSite"
+						rendered="#{empty WorkflowTemplateManager.persistenceTemplate}">
+						<ice:graphicImage styleClass="linkImage"
+							value="/skins/default/images/workflow/editor/save_dis.gif" />
+						<ice:outputText value="#{msgs['save']}" />
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="rightToolSite"
+						rendered="#{not empty WorkflowTemplateManager.persistenceTemplate.id}">
+						<ice:commandLink
+							action="#{WorkflowTemplateManager.deployWorkflowTemplate}">
+							<ice:graphicImage styleClass="linkImage"
+								value="/skins/default/images/workflow/editor/deploy.gif" />
+							<ice:outputText value="#{msgs['deploy']}" />
+						</ice:commandLink>
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="deactivatedRightToolSite"
+						rendered="#{empty WorkflowTemplateManager.persistenceTemplate.id}">
+						<ice:graphicImage styleClass="linkImage"
+							value="/skins/default/images/workflow/editor/deploy_dis.gif" />
+						<ice:outputText value="#{msgs['deploy']}" />
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="rightToolSite"
+						rendered="#{not empty WorkflowTemplateManager.persistenceTemplate.id}">
+						<ice:commandLink
+							action="#{WorkflowTemplateManager.deleteWorkflowTemplate}"
+							onclick="if (!confirm(&quot;#{msgs['delete.question']}&quot;)) return false;">
+							<ice:graphicImage styleClass="linkImage"
+								value="/skins/default/images/workflow/editor/delete.gif" />
+							<ice:outputText value="#{msgs['remove']}" />
+						</ice:commandLink>
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="deactivatedRightToolSite"
+						rendered="#{ empty WorkflowTemplateManager.persistenceTemplate.id}">
+						<ice:graphicImage styleClass="linkImage"
+							value="/skins/default/images/workflow/editor/delete_dis.gif" />
+						<ice:outputText value="#{msgs['remove']}" />
+					</ice:panelGroup>
+
+
+					<ice:panelGroup styleClass="rightToolSite"
+						rendered="#{not empty WorkflowTemplateManager.persistenceTemplate}">
+						<ice:commandLink
+							action="#{WorkflowTemplateManager.closeCurrentWorkflowTemplate}">
+							<ice:graphicImage styleClass="linkImage"
+								value="/skins/default/images/workflow/editor/template_close.gif" />
+							<ice:outputText value="#{msgs['close']}" />
+						</ice:commandLink>
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="deactivatedRightToolSite"
+						rendered="#{ empty WorkflowTemplateManager.persistenceTemplate}">
+						<ice:graphicImage styleClass="linkImage"
+							value="/skins/default/images/workflow/editor/template_close_dis.gif" />
+						<ice:outputText value="#{msgs['close']}" />
+					</ice:panelGroup>
+
+
+				</ice:panelGroup>
+
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3" height="22" valign="top" bgcolor="#C4DAEE">
+
+				<ice:panelGroup
+					rendered="#{not empty WorkflowTemplateManager.persistenceTemplate}">
+
+					<ice:panelGroup styleClass="rightToolSite" style="margin-top:4px;">
+						<ice:commandLink
+							actionListener="#{WorkflowTemplateManager.addWorkflowComponent}">
+							<f:param name="workflowType" value="WorkflowTask" />
+							<ice:graphicImage styleClass="linkImage"
+								value="/skins/default/images/workflow/editor/menu_task.gif" />
+							<ice:outputText
+								value="#{msgs['workflow.editor_component_addtask']}" />
+						</ice:commandLink>
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="rightToolSite" style="margin-top:4px;">
+						<ice:commandLink
+							actionListener="#{WorkflowTemplateManager.addWorkflowComponent}">
+							<f:param name="workflowType" value="EndState" />
+							<ice:graphicImage styleClass="linkImage"
+								value="/skins/default/images/workflow/editor/menu_endstate.gif" />
+							<ice:outputText
+								value="#{msgs['workflow.editor_component_addendstate']}" />
+						</ice:commandLink>
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="rightToolSite" style="margin-top:4px;">
+						<ice:commandLink
+							actionListener="#{WorkflowTemplateManager.addWorkflowComponent}">
+							<f:param name="workflowType" value="Fork" />
+							<ice:graphicImage styleClass="linkImage"
+								value="/skins/default/images/workflow/editor/menu_fork.gif" />
+							<ice:outputText
+								value="#{msgs['workflow.editor_component_addfork']}" />
+						</ice:commandLink>
+					</ice:panelGroup>
+
+					<ice:panelGroup styleClass="rightToolSite" style="margin-top:4px;">
+						<ice:commandLink
+							actionListener="#{WorkflowTemplateManager.addWorkflowComponent}">
+							<f:param name="workflowType" value="Join" />
+							<ice:graphicImage styleClass="linkImage"
+								value="/skins/default/images/workflow/editor/menu_join.gif" />
+							<ice:outputText
+								value="#{msgs['workflow.editor_component_addjoin']}" />
+						</ice:commandLink>
+					</ice:panelGroup>
+
+					<ice:panelGrid columns="2">
+						<h:outputText value="#{msgs['workflow.editor_statstate']}" />
+						<h:selectOneMenu
+							value="#{WorkflowTemplateManager.workflowTemplate.startState}">
+							<f:selectItems
+								value="#{WorkflowTemplateManager.possibleStartStates}" />
+						</h:selectOneMenu>
+					</ice:panelGrid>
+
+				</ice:panelGroup>
+			</td>
+		</tr>
+
+	</table>
+
+
+
+	<ice:panelGroup
+		rendered="#{not empty WorkflowTemplateManager.persistenceTemplate}"
+		style="background-image:url('/skins/default/images/workflow/editor/editor_gradient.jpg'); background-repeat:repeat-x">
+
+		<!-- ************************************************************************ -->
+		<!-- START - Following code should be migrated into a single jspx file - START-->
+		<!-- ************************************************************************ -->
+
+		<ice:panelGrid columns="3"
+			rendered="#{not empty WorkflowTemplateManager.persistenceTemplate}">
+			<!-- Left Taskbar -->
+			<ice:panelGroup>
+
+				<table>
+					<tr>
+						<td valign="top" width="340">
+
+							<ice:panelCollapsible id="workflowSettingsPanel"
+								expanded="#{WorkflowTemplateManager.showWorkflowSettings}">
+								<f:facet name="header">
+									<ice:panelGroup>
+										<ice:outputText value="#{msgs['workflow.editor_settings']}" />
+									</ice:panelGroup>
+								</f:facet>
+									  
+												#{msgs['workflow.editor_workflowname']}: <ice:inputText
+									value="#{WorkflowTemplateManager.persistenceTemplate.name}"
+									binding="#{WorkflowTemplateManager.nameInput}" />
+								<br />
+											
+												#{msgs['workflow.editor_workflowdescription']}:<br />
+								<ice:inputTextarea id="testing"
+									style="width:95%; height:100px; font-size:10px"
+									value="#{WorkflowTemplateManager.workflowTemplate.description}"
+									binding="#{WorkflowTemplateManager.descriptionInput}" />
+								<br />
+												#{msgs['workflow.editor_taskassignment']}<br />
+								<hr />
+												#{msgs['subject']}: <ice:inputText
+									value="#{WorkflowTemplateManager.workflowTemplate.assignmentMessage.subject}"
+									binding="#{WorkflowTemplateManager.assignmentSubjectInput}" />
+								<br />#{msgs['body']}: <ice:inputTextarea
+									style="width:95%; height:100px; font-size:10px"
+									value="#{WorkflowTemplateManager.workflowTemplate.assignmentMessage.body}"
+									binding="#{WorkflowTemplateManager.assignmentBodyInput}" />
+								<br />#{msgs['reminder']}<br />
+								<hr />
+												#{msgs['subject']}: <ice:inputText
+									value="#{WorkflowTemplateManager.workflowTemplate.reminderMessage.subject}"
+									binding="#{WorkflowTemplateManager.reminderSubjectInput}" />
+								<br />#{msgs['body']}: <ice:inputTextarea
+									style="width:95%; height:100px; font-size:10px"
+									value="#{WorkflowTemplateManager.workflowTemplate.reminderMessage.body}"
+									binding="#{WorkflowTemplateManager.reminderBodyInput}" />
+							</ice:panelCollapsible>
+
+							<!-- ****** -->
+							<!--  Task  -->
+							<!-- ****** -->
+
+							<ice:panelGroup
+								rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'task'}">
+								<ice:panelCollapsible
+									expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
+									<f:facet name="header">
+										<ice:panelGroup>
+											<ice:outputText value="#{msgs['workflow.task']}" />
+										</ice:panelGroup>
+									</f:facet>
+
+									<ice:panelGrid columnClasses="hightAlignment" cellpadding="0"
+										cellspacing="0" width="100%" columns="1"
+										rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
+
+										<ice:outputText value="#{msgs['name']}" />
+										<ice:inputText style="width:95%" id="name"
+											value="#{WorkflowTemplateManager.selectedComponent.name}" />
+
+										<ice:outputText value="#{msgs['description']}" />
+										<ice:inputTextarea
+											style="width:95%; height:100px; font-size:10px"
+											value="#{WorkflowTemplateManager.selectedComponent.description}" />
+
+									</ice:panelGrid>
+								</ice:panelCollapsible>
+								<ice:panelCollapsible id="panelEscalation" expanded="false">
+									<f:facet name="header">
+										<ice:panelGroup>
+											<ice:outputText
+												value="#{msgs['workflow.editor_component_task_escalation']}" />
+										</ice:panelGroup>
+									</f:facet>
+									<ui:include src="/templates/workflow/manage-escalation.jspx" />
+								</ice:panelCollapsible>
+
+								<!-- Assignees -->
+
+								<ice:panelCollapsible id="panelAssignees"
+									expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
+									<f:facet name="header">
+										<ice:panelGroup>
+											<ice:outputText
+												value="#{msgs['workflow.editor_component_task_participants']}" />
+										</ice:panelGroup>
+									</f:facet>
+									<ui:repeat
+										value="#{WorkflowTemplateManager.selectedComponent.assignees}"
+										var="assignment">
+
+										<ice:panelGrid columns="2" cellpadding="0" cellspacing="0">
+											<ice:commandLink
+												title="#{msgs['workflow.editor_component_task_removeassignment']}"
+												actionListener="#{WorkflowTemplateManager.controller.removeAssignment}">
+												<f:param name="assignment" value="#{assignment}" />
+												<f:param name="workflowComponent"
+													value="#{workflowComponent}" />
+												<ice:graphicImage styleClass="symbol"
+													value="/skins/default/images/workflow/editor/user_remove.gif" />
+											</ice:commandLink>
+											<ice:selectInputText id="AutoCmpTxt" rows="10" width="300"
+												value="#{assignment.value}"
+												valueChangeListener="#{WorkflowTemplateManager.controller.selectInputValueChanged}">
+												<f:selectItems id="AutoCmpTxtItms"
+													value="#{WorkflowTemplateManager.controller.possibleAssignments}" />
+											</ice:selectInputText>
+										</ice:panelGrid>
+									</ui:repeat>
+									<ice:commandLink
+										actionListener="#{WorkflowTemplateManager.controller.addAssignment}">
+										<f:param name="workflowTask"
+											value="#{WorkflowTemplateManager.selectedComponent}" />
+										<ice:graphicImage styleClass="symbol"
+											value="/skins/default/images/workflow/editor/user_add.gif" />
+										<ice:outputText
+											value="#{msgs['workflow.editor_component_task_addassignment']}" />
+									</ice:commandLink>
+									<ice:panelGroup />
+								</ice:panelCollapsible>
+								<ice:panelCollapsible id="panelTransition"
+									expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
+									<f:facet name="header">
+										<ice:panelGroup>
+											<ice:outputText
+												value="#{msgs['workflow.editor_component_task_transitions']}" />
+										</ice:panelGroup>
+									</f:facet>
+
+									<ui:repeat
+										value="#{WorkflowTemplateManager.selectedComponent.transitions}"
+										var="transition">
+										<ice:outputText />
+										<nobr> <ice:commandLink
+											title="#{msgs['workflow.editor_component_task_removetransition']}"
+											actionListener="#{WorkflowTemplateManager.controller.removeTransition}">
+											<f:param name="transition" value="#{transition}" />
+											<ice:graphicImage styleClass="symbol"
+												value="/skins/default/images/workflow/editor/transition_remove.gif" />
+										</ice:commandLink> <ice:inputText value="#{transition.name}" /> </nobr>
+									</ui:repeat>
+									<br />
+
+									<ice:commandLink
+										action="#{WorkflowTemplateManager.selectedComponent.controller.addTransition}">
+										<ice:graphicImage styleClass="symbol"
+											value="/skins/default/images/workflow/editor/transition_add.gif" />
+										<ice:outputText
+											value="#{msgs['workflow.editor_component_task_addtransition']}" />
+									</ice:commandLink>
+
+								</ice:panelCollapsible>
+							</ice:panelGroup>
+
+							<!-- ****** -->
+							<!--  Join  -->
+							<!-- ****** -->
+
+							<ice:panelGroup
+								rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'join'}">
+								<ice:panelCollapsible
+									expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
+									<f:facet name="header">
+										<ice:panelGroup>
+											<ice:outputText value="#{msgs['join']}" />
+										</ice:panelGroup>
+									</f:facet>
+
+									<ice:panelGrid columnClasses="hightAlignment" cellpadding="0"
+										cellspacing="0" columns="2"
+										rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
+
+
+										<ice:outputLabel for="name" value="#{msgs['name']}">
+											<ice:inputText id="name"
+												value="#{WorkflowTemplateManager.selectedComponent.name}" />
+										</ice:outputLabel>
+
+
+									</ice:panelGrid>
+								</ice:panelCollapsible>
+							</ice:panelGroup>
+
+							<!-- ****** -->
+							<!--  Fork  -->
+							<!-- ****** -->
+
+							<ice:panelGroup
+								rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'fork'}">
+								<ice:panelCollapsible
+									expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
+									<f:facet name="header">
+										<ice:panelGroup>
+											<ice:outputText value="#{msgs['fork']}" />
+										</ice:panelGroup>
+									</f:facet>
+									<ice:panelGrid columnClasses="hightAlignment" cellpadding="0"
+										cellspacing="0" columns="2"
+										rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
+										<ice:outputLabel for="name" value="#{msgs['name']}">
+											<ice:inputText id="name"
+												value="#{WorkflowTemplateManager.selectedComponent.name}" />
+										</ice:outputLabel>
+									</ice:panelGrid>
+								</ice:panelCollapsible>
+
+							</ice:panelGroup>
+
+
+							<!-- *********** -->
+							<!--  End-State  -->
+							<!-- *********** -->
+
+							<ice:panelGroup
+								rendered="#{not empty WorkflowTemplateManager.selectedComponent and WorkflowTemplateManager.selectedComponent.template == 'endState'}">
+								<ice:panelCollapsible
+									expanded="#{!WorkflowTemplateManager.showWorkflowSettings}">
+									<f:facet name="header">
+										<ice:panelGroup>
+											<ice:outputText
+												value="#{msgs['workflow.editor_component_endstate']}" />
+										</ice:panelGroup>
+									</f:facet>
+									<ice:panelGrid columnClasses="hightAlignment" cellpadding="0"
+										cellspacing="0" columns="2"
+										rendered="#{ WorkflowTemplateManager.selectedComponent != null}">
+
+										<ice:outputLabel for="name"
+											value="#{editor_component_endstate_name}">
+											<ice:inputText id="name"
+												value="#{WorkflowTemplateManager.selectedComponent.name}" />
+										</ice:outputLabel>
+
+									</ice:panelGrid>
+								</ice:panelCollapsible>
+
+							</ice:panelGroup>
+						</td>
+						<td valign="top">
+
+							<ui:repeat value="#{WorkflowTemplateManager.workflowComponents}"
+								var="workflowComponent">
+
+								<ice:panelGrid columnClasses="hightAlignment" cellpadding="0"
+									cellspacing="0" columns="2">
+
+									<h:panelGrid
+										columns="#{WorkflowTemplateManager.workflowComponentSize}">
+										<table>
+											<tr>
+												<td valign="top">
+
+													<f:param name="workflow" value="#{workflowComponent}" />
+													<table>
+														<tr>
+															<td>
+																<ice:panelGroup hoverclass="targetClass"
+																	dropListener="#{WorkflowTemplateManager.moveObject}"
+																	dropValue="#{workflowComponent}" dropTarget="true">
+																	<ice:graphicImage
+																		value="/skins/default/images/workflow/#{workflowComponent.image}" />
+																</ice:panelGroup>
+															</td>
+															<td>
+																<ice:panelGroup
+																	styleClass="#{workflowComponent.selected ? 'componentSelected':'componentNotSelected'}"
+																	draggable="true" dragMask="hover_start, hover_end"
+																	dropTarget="true"
+																	dragListener="#{WorkflowTemplateManager.dragObject}"
+																	dragValue="#{workflowComponent}"
+																	dragOptions="dragGhost" dropMask="hover_start"
+																	hoverclass="seriesHover">
+
+																	<ice:panelGroup
+																		rendered="#{empty workflowComponent.name}">
+																		<i>#{msgs['workflow.editor_aa_noname']}</i>
+																	</ice:panelGroup>
+
+																	<ice:panelGroup
+																		rendered="#{not empty workflowComponent.name}">
+																					
+																					#{workflowComponent.name}
+							    									</ice:panelGroup>
+
+
+																	<ice:commandLink style="padding-right: 6px;"
+																		onclick="if(window.confirm(&quot;#{msgs['workflow.editor_component_delete_confirmation']}&quot;) == 0)return false;"
+																		actionListener="#{WorkflowTemplateManager.deleteWorkflowComponent}"
+																		value="#{msgs['delete']}">
+																		<f:param name="component" value="#{workflowComponent}" />
+																	</ice:commandLink>
+
+																	<ice:commandLink
+																		actionListener="#{WorkflowTemplateManager.selectComponent}"
+																		value="#{msgs['edit']}">
+																		<f:param name="component" value="#{workflowComponent}" />
+																	</ice:commandLink>
+																</ice:panelGroup>
+															</td>
+														</tr>
+													</table>
+												</td>
+
+
+												<td>
+													<ice:panelGroup
+														rendered="#{ not (workflowComponent.type == 'endState') &amp;&amp; not (workflowComponent.type == 'join')}">
+														<ui:repeat value="#{workflowComponent.transitions}"
+															var="transition">
+															<ice:panelGroup
+																style="background-image:url(/skins/default/images/workflow/transition.png); background-position:right bottom; background-repeat:no-repeat; vertical-align:bottom;text-align:right; height:30px; line-height:30px; border-bottom:1px solid #cccccc; width:100px; ">
+																<h:outputText value="#{transition.name}" />
+															</ice:panelGroup>
+														</ui:repeat>
+													</ice:panelGroup>
+												</td>
+												<td>
+
+													<!-- Task -->
+
+													<ice:panelGroup
+														rendered="#{workflowComponent.template == 'task'}">
+														<ui:repeat value="#{workflowComponent.transitions}"
+															var="transition">
+															<table>
+																<tr>
+																	<td width="100" height="30">
+
+																		<ice:panelGroup
+																			rendered="#{not empty transition.destination}"
+																			dropListener="#{WorkflowTemplateManager.dropObject}"
+																			dropValue="#{transition}" styleClass="dropClass"
+																			dropTarget="true">
+																				#{transition.destination.name} 
+																				<br />
+																			<ice:commandLink
+																				onclick="if(window.confirm(&quot;#{msgs['workflow.editor_component_delete_confirmation']}&quot;) == 0)return false;"
+																				actionListener="#{workflowComponent.controller.removeDestinationFromTransition}"
+																				value="#{msgs['delete']}">
+																				<f:param name="transition" value="#{transition}" />
+																			</ice:commandLink>
+																		</ice:panelGroup>
+
+																		<ice:panelGroup
+																			rendered="#{empty transition.destination}"
+																			hoverclass="targetClass"
+																			dropListener="#{WorkflowTemplateManager.dropObject}"
+																			dropValue="#{transition}"
+																			style="height:30px; width:150px; padding:1px; "
+																			dropTarget="true">
+
+
+																		</ice:panelGroup>
+
+
+																	</td>
+																</tr>
+															</table>
+														</ui:repeat>
+
+													</ice:panelGroup>
+
+													<!-- Fork -->
+													<ice:panelGroup
+														rendered="#{workflowComponent.template == 'fork'}">
+														<table>
+															<tr>
+
+																<ui:repeat value="#{workflowComponent.workflowTasks}"
+																	var="workflowTask">
+																	<td>
+																		<ice:panelGroup styleClass="dropClass">
+																 			
+																 				#{workflowTask.name} <br />
+																			<ice:commandLink
+																				onclick="if(window.confirm(&quot;#{msgs['workflow.editor_component_delete_confirmation']}&quot;) == 0)return false;"
+																				actionListener="#{workflowComponent.controller.removeTask}"
+																				value="#{msgs['delete']}">
+																				<f:param name="workflowTask" value="#{workflowTask}" />
+																				<f:param name="workflowComponent"
+																					value="#{workflowComponent}" />
+																			</ice:commandLink>
+
+																		</ice:panelGroup>
+																	</td>
+																</ui:repeat>
+																<td>
+																	<ice:panelGroup hoverclass="targetClass"
+																		dropListener="#{WorkflowTemplateManager.dropObject}"
+																		dropValue="#{workflowComponent}"
+																		style="height: 30px; width:100px;  border-bottom:1px solid #cccccc;  "
+																		dropTarget="true">
+																	</ice:panelGroup>
+																</td>
+
+															</tr>
+														</table>
+													</ice:panelGroup>
+
+													<!-- Join -->
+
+													<ice:panelGroup
+														rendered="#{workflowComponent.template == 'join'}">
+														<table>
+															<tr>
+																<td>
+
+																	<ice:panelGroup
+																		rendered="#{empty workflowComponent.destination}"
+																		hoverclass="targetClass"
+																		dropListener="#{WorkflowTemplateManager.dropObject}"
+																		dropValue="#{workflowComponent}"
+																		style="height: 30px; width:100px;  border-bottom:1px solid #cccccc;  "
+																		dropTarget="true">
+
+																	</ice:panelGroup>
+
+																	<ice:panelGroup styleClass="dropClass"
+																		rendered="#{not empty workflowComponent.destination}">
+															 				#{workflowComponent.destination.name}
+															 				<br />
+																		<ice:commandLink
+																			onclick="if(window.confirm(&quot;#{msgs['workflow.editor_component_delete_confirmation']}&quot;) == 0)return false;"
+																			actionListener="#{workflowComponent.controller.removeTask}"
+																			value="#{msgs['delete']}">
+																			<f:param name="workflowComponent"
+																				value="#{workflowComponent}" />
+																		</ice:commandLink>
+
+																	</ice:panelGroup>
+																</td>
+															</tr>
+														</table>
+													</ice:panelGroup>
+												</td>
+
+											</tr>
+										</table>
+									</h:panelGrid>
+								</ice:panelGrid>
+
+							</ui:repeat>
+						</td>
+					</tr>
+				</table>
+			</ice:panelGroup>
+		</ice:panelGrid>
+
+
+
+
+
+
+
+
+		<!-- ************************************************************************ -->
+		<!-- END - Following code should be migrated into a single jspx file - END    -->
+		<!-- ************************************************************************ -->
+
+	</ice:panelGroup>
+
+	<ice:panelGroup
+		rendered="#{not empty WorkflowTemplateManager.persistenceTemplate}">
+		<ice:panelCollapsible id="panelEndpointBasic" expanded="false"
+			style="width:600px;">
+
+			<f:facet name="header">
+				<ice:panelGroup>
+					<ice:outputText value="#{msgs['development']}" />
+				</ice:panelGroup>
+			</f:facet>
+				
+				#{msgs['workflow.editor_jpdl_generated']}: <br />
+			<ice:inputTextarea style="height:600px; width:500px"
+				value="#{WorkflowTemplateManager.XMLData}">
+
+			</ice:inputTextarea>
+			<br />
+			<ice:commandButton
+				onclick="if(window.confirm(&quot;#{msgs['workflow.editor_components_delete_confirmation']}&quot;) == 0)return false;"
+				action="#{WorkflowTemplateManager.removeAllWorkflowComponents}"
+				value="#{msgs['workflow.editor_components_delete']}"></ice:commandButton>
+
+			<ice:commandButton
+				onclick="if(window.confirm(&quot;#{msgs['workflow.editor_undeploy_confirmation']}&quot;) == 0)return false;"
+				action="#{WorkflowTemplateManager.undeployAllDefinitions}"
+				value="#{msgs['workflow.editor_undeploy']}"></ice:commandButton>
+
+			<ice:commandButton
+				onclick="if(window.confirm(&quot;#{msgs['workflow.editor_delete_instances_confirmation']}&quot;) == 0)return false;"
+				action="#{WorkflowTemplateManager.deleteAllActiveWorkflows}"
+				value="#{msgs['workflow.editor_delete_instances']}"></ice:commandButton>
+
+		</ice:panelCollapsible>
+	</ice:panelGroup>
+</jsp:root>
