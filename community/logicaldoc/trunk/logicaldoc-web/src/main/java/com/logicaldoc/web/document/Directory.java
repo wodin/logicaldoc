@@ -118,7 +118,7 @@ public class Directory extends PageContentBean {
 		DocumentNavigation navigation = getDocumentNavigation();
 		return navigation.newDirectory();
 	}
-	
+
 	/**
 	 * @return
 	 * @since 5.1
@@ -127,7 +127,7 @@ public class Directory extends PageContentBean {
 		DocumentNavigation navigation = getDocumentNavigation();
 		return navigation.deleteDirectory();
 	}
-	
+
 	/**
 	 * @return
 	 * @since 5.1
@@ -162,7 +162,10 @@ public class Directory extends PageContentBean {
 			// documents paginator
 			DocumentsRecordsManager recordsManager = ((DocumentsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 					"documentsRecordsManager", FacesContext.getCurrentInstance(), log));
-			recordsManager.getTable().setFirst(0);
+			if (recordsManager.getTable() != null)
+				recordsManager.getTable().setFirst(0);
+			else if (recordsManager.getPanels() != null)
+				recordsManager.getPanels().setFirst(0);
 		}
 		navigation.selectDirectory(this);
 		return navigation;
