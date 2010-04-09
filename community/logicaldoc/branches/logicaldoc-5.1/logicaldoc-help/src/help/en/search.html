@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html><!-- InstanceBegin template="/Templates/logicaldoc-help.dwt" codeOutsideHTMLIsLocked="false" --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- InstanceBeginEditable name="doctitle" -->
+<style type="text/css">
+<!--
+.style5 {
+	color: #000000;
+	font-weight: bold;
+}
+-->
+</style>
+<title>Search</title><!-- InstanceEndEditable -->
+
+  
+  
+
+
+  <link href="css/help.css" rel="stylesheet" type="text/css"><!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable --></head><body>
+    <table summary="content" border="0" cellpadding="0" cellspacing="0" width="100%">
+      <!--================= start Content==================-->
+      <tbody>
+        <tr>
+          <td align="left" width="10">
+            <img alt="" src="images/spacer.gif" class="spacer" height="1" width="10"></td>
+          <td align="left" width="100%">
+            <div class="content">
+              <table class="title" width="100%">
+                <tbody>
+                  <tr>
+                    <td valign="middle">
+                      <h1><!-- InstanceBeginEditable name="TitleRegion" -->Search<!-- InstanceEndEditable --></h1></td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- InstanceBeginEditable name="ContentRegion" -->
+          <p>In LogicalDOC you can search a document in three different ways:<br>
+            1. Quick search<br>
+            2. <a href="#advanced">Advanced search</a><br>
+            3. <a href="#parametric">Parametric search</a></p>
+           <h3>Simple search  </h3> 
+          <br>
+          The simple search mask is always present and accessible any time in the upper part of the window.<br>
+          It is important to specify the language in which the desired search has to be executed.
+          As a start, the system proposes the default Document language for the customer (in English).  By pressing on icon <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.2</span></a> system will search for the entered word.<br>
+          Simple search will find only documents archived in the base language (and not documents in other languages).<br>
+          If you want to search on documents written in any language, it is necessary to select the option "All documents".<br> 
+          <br>
+          <br>
+          <div>
+            <div align="center"><img src="images/simplesearch.jpg" height="59" width="382"><br>
+            </div>
+          </div>
+          <br>
+          <div align="center">
+            <table border="0" cellpadding="0" cellspacing="0" width="90%">
+              <tbody><tr>
+                <td class="noteHeader" height="25" width="180"><img src="images/note_ico.gif" height="10" hspace="4" width="10">Note:</td> 
+                <td height="25"> </td> 
+              </tr>
+              <tr>
+                <td colspan="2" class="noteBody">Searching for documents using only one language is fastest than
+                 the same search carried out on All documents.</td> 
+              </tr>
+            </tbody></table>
+          </div>
+          <br>
+          <br>
+          Of every found element you can see the title, an extract of the containing text with the found words,
+          the dimension in KBytes, a score and a link for: 
+          
+          <ul> 
+            <li>Download the document (title of the document)  <br> 
+            </li>
+            <li>Select the document in  folder (Show path -&gt; click on the link path) </li> 
+            <li>Show similar documents</li> 
+            <li>Use the Document's Tools menu (Right Click on the title of the document) </li>
+          </ul>
+          <p>          The result presentation is shown in the form of a list ordered by the score reached.<br>
+          The score is calculated on the frequency of the tried terms (or words with common root) of the text of the files.  <br> 
+          <br>
+          <br>
+          </p>
+          <div>
+            <div align="center"><img src="images/searchresults.gif" height="390" width="879"></div>
+          </div>
+          <p>In case of multiple results, the system will produce more pages than shown. The rest can be
+           consulted pressing the cursor keys on the lower screen side to right of the results page.  <br> 
+            <br>
+            <strong>Search on more words.</strong><br>
+            It is possible to search at the same time on more terms. Specifying, as an example, "future remote control" in
+            the search field, there will become found, not only all documents that have the words indicated in the text, but
+            also the documents that contain 2 of the 3 words or a single one of the 3 words.<br>
+            We will see, besides, the documents that contain the words derived from "control": control, controlled,
+             controller, those derived from "remote": remotelly and those which have future as root.  <br> 
+            <br>
+            <strong>Use logical operators</strong> <br>
+            In the simple search form it is already possible to use operators.<br>
+            Using characters like "<strong>+</strong> and <strong>-</strong>" it is possible to execute searches on obliged
+            terms and using exclusion. As an example, composing the phrase "contracted +future -plan", the system will search
+            all the documents that have the "future" word compulsorily and that compulsorily they do not contain the word
+            "plan", while the "contracted" term comes inserted as optional.<br>
+            A simple search for "contracted activity" instead, will find all the documents in which one of the 2 terms appears
+            at least.<br>
+            A search like "activity -contracted", will produce all the documents that contain the word "activity"
+            and, at the same time, do not contain the "contracted" word.  <br>
+            Searching <strong>"+red +mario"</strong> is equivalent to <strong>red AND mario "</strong>. That means that we
+            will try all the documents in which the bothd words red and mario appear.<br>
+            It is also possible to explain these searches, as an example, "future AND project NOT development" is
+            equivalent to "+future +project -development".<br>
+            When there are used logical operators like AND, OR, NOT, it is necessary to keep in mind that they must be
+            written compulsorily in upper case.  </p>
+             <h3><a name="advanced" />Advanced search</h3> 
+          <br>
+          The mask for advanced search is accessible pressing the link <span class="style5">Advanced Search</span>, present to the right side of the
+          simple search form in the uppper side of the window. The difference regarding the simple search is that such mask lets you specify, in a simple way, complex and active
+          search criteria.  Moreover, you can view the advanced search
+page under <span class="style5">Searches</span> menu. <br> 
+          <br>
+          <br>
+          <div>
+            <div align="center"><img src="images/searchadvanced00.jpg" height="56" width="360"></div>
+          </div>
+          <br>
+          This feature allows the user to search for one or more words
+through different search criteria. The search is performed on the contents
+and metadata of indexed documents and only on the search fields
+selected in checkbox. In addition, you can restrict your search only to a
+folder and, eventually, to its subfolders; you can search also among the
+attributes of a specific template (document type) associated with the searched
+document. <br>
+          Using the advance search, it is possible to try simple words or phrases. Some words can moreover be excluded
+          from the search or to activate an approximate search.<br> 
+          The result can be narrowed based on the dimension, the date and the format of documents.<br> 
+          <br>
+          Among the important aspects of such search:<br> 
+          <ul>
+            <li>the advance possibility of searching for terms that concur to express complex filters<br> 
+            </li>
+            <li>searching for documents dimension</li> 
+            <li>searching for document data (entered using the insertion/modification mask of the document)</li> 
+            <li>searching for publication date (last modification of the document)</li> 
+          </ul>
+          <br>
+          The result of this procedure of advanced search shows the same form as the one for simple searchs and the
+          documents are accessible in the same ways. 
+          <p><br>
+          </p>
+          <div>
+            <div align="center"><img src="images/searchadvanced01.gif" height="493" width="480"></div>
+          </div>
+          <h3><a name="parametric" id="parametric"></a>Parametric search</h3>
+            <p>In LogicalDOC, under <span class="style5">Searches</span> menu you can view the parametric
+search page. This feature allows the user to search for documents that
+contain specific values on their metadata. The search is performed only on
+the metadata of the document and unlike the advanced search, all
+documents are taken into consideration, including those not already
+indexed. To perform a parametric search the user simply add and remove a search
+criterion over all the document's metadata. Like a database query the
+inserting criteria can be in 'and' or in 'or' with the other ones. The user, in fact,
+can choose the preferred criteria composition ('and'/'or') through the first scroll
+menu. In the second scroll menu the user can select the field over will be
+perform the search. Next the user can choose the operator (equal, not equal,
+greater than, lesser than, ecc.) and then the field value. In particular, if the
+user wants to search all documents with a specific template, the list of all created templates will be showed in the last scroll menu, so he can choose
+the template and then add the criterion. After that, all the template's attributes
+can be selectable into the field scroll menu for another criterion. If the user
+deletes the criterion over the template, all its attribute will be no longer on the
+field list. Similarly to the template field, if the user wants to search all
+documents with a specific language, the list of all languages will appear in the
+last scroll menu. Finally, if the user wants to search documents inside a
+specific folder, he choose the 'Folder' metadata in the field scroll menu and
+then he select the specific folder clicking on the 'Browse...' button.</p>
+		<p>&nbsp;</p>
+          <div>
+            <div align="center"><img src="images/searchparametric01.gif" height="249" width="749"></div>
+          </div>
+            <p>&nbsp;</p>
+       </p>
+          <!-- InstanceEndEditable --></div></td>
+          <td width="10">
+            <img alt="" src="images/spacer.gif" class="spacer" height="1" width="10"></td>
+        </tr>
+        <!--================= end Content==================-->
+      </tbody>
+    </table>
+  <!-- InstanceEnd --></body></html>

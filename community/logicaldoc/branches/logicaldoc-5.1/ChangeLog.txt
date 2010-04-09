@@ -1,0 +1,85 @@
+    __                _            __   ____  __      _           __
+   / /   ____  ____ _(_)________ _/ /  / __ \/ /_    (_)__  _____/ /______
+  / /   / __ \/ __ `/ / ___/ __ `/ /  / / / / __ \  / / _ \/ ___/ __/ ___/
+ / /___/ /_/ / /_/ / / /__/ /_/ / /  / /_/ / /_/ / / /  __/ /__/ /_(__  )
+/_____/\____/\__, /_/\___/\__,_/_/   \____/_.___/_/ /\___/\___/\__/____/
+            /____/                             /___/
+
+                    http://www.logicalobjects.com
+                      http://www.logicaldoc.com                    
+
+                     LogicalDOC Community Edition
+
+LogicalDOC CE 5.0 (2009-12-19; logicaldoc-5.0)
+===============
+Upgrade to the latest ICEfaces version (JSF-Ajax)
+Workflow: Visual Business Process editor directly available from the web
+Workflow: Multiple task assignments
+Workflow: Support for activities start and stop
+New graphical layout more lighter and sleek
+Improvements in the ergonomics of the GUI
+History on document folders
+Document navigation through a folders tree
+Configurable first version number
+3D (Cumulus) Tag Cloud
+Fully tested with MySQL 5.1
+
+
+LogicalDOC CE 4.6 (2009-10-10; logicaldoc-4.6)
+===============
+Active Directory full compliance and easy configuration (Enterprise edition)
+New Datailed view of the search results (Enterprise edition)
+Improved parametric search (Enterprise edition)
+DATABASE CHANGES: This release is not compatible with the database of LogicalDOC 4.5!
+Improved French Localization (Thanks to Manuel Le Boette, Maxime Leboeuf and François Blondel)
+Support for CCs in email sending
+Extended attributes are now typed(Double, Integer, String, Date)
+Automatic notification when the zip import is completed
+Improvement in webservice methods
+Fixed stop-words reading problem with native characters
+WebDAV: creation of a new version when document update (Works on WebDrive)
+New configuration mode for scheduled Tasks
+Solved the problem of excessive memory allocation when Tasks too close
+Changes to web-service with new methods
+New Option in the GUI to disable the access via WebDAV or Web Services
+
+
+LogicalDOC CE 4.5 (2009-06-10; logicaldoc-4.5)
+===============
+Added LDAP integration
+User: added enabled property
+User: password expiration
+Document: Improved metadata informationj
+Document: Full versioning and diff system
+Document: Document first page preview
+Collaboration: Implemented duiscussion forum on document
+Browsing: Different view modes in browsing and search pages
+Added support for language variants
+Configurable entry page
+Multiple recipients for download tickets
+Fixed group deletion
+Fixed documents per page setting
+
+
+LogicalDOC CE 4.0 (2009-01-30; logicaldoc-4.0)
+===============
+WebDAV: full implementation
+File names: Handle all asian and arabic charsets
+Seup procecude: Fixed schema creation on external db
+Interface fixes
+Ability to define fields viewable and editable by group of users
+WebDAV: implemented rename on the Document's filename
+New WebDAV accessible interface (Thanks to Sebastian Wenzky)
+Heavily Refactored DB-schema
+New Templates on document with custom attributes
+Tested with 1M (1.000.000) loaded documents
+New Indexing deferred scheduled tasks
+New Tag-cloud generation deferred scheduled tasks
+Improved the versioning system (checkin page)
+New User editing interface
+New Group editing interface
+New Permission assigment on folder (previously we had permission by file)
+Improved Tag browsing
+New Permission management on menus
+New Support for eastern Europe charsets
+New Possibility to mark a document as immutable
