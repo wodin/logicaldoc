@@ -1,5 +1,0 @@
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page">
-  <!-- 
-  Only to make ICEfaces happy, often ICEfaces 1.7.2 searches for this space without any reason.
-   -->
-</jsp:root>
