@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans SYSTEM "spring-beans-2.0.dtd">
+<beans default-lazy-init="false" default-autowire="no" default-dependency-check="none">
+  <import resource="classpath*:context-core.xml" />
+
+  <!-- This post processor ensures placeholders substitutions -->
+  <bean id="PropertyPlaceholderConfigurer"
+    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" lazy-init="false" abstract="false">
+    <property name="locations">
+      <list>
+        <value>classpath*:context.properties</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="ContextProperties" class="com.logicaldoc.util.config.PropertiesBean"></bean>
+
+  <bean id="Context" class="com.logicaldoc.util.Context" abstract="false" lazy-init="default" autowire="default"
+    dependency-check="default" />
+
+  <bean id="SettingsConfig" class="com.logicaldoc.util.config.SettingsConfig" abstract="false" lazy-init="default"
+    autowire="default" dependency-check="default">
+    <property name="settings">
+      <props>
+        <prop key="docdir">${user.home}/logicaldoc/data/docs/</prop>
+        <prop key="docdir.category">directory</prop>
+        <prop key="indexdir">${user.home}/logicaldoc/data/index/</prop>
+        <prop key="indexdir.category">directory</prop>
+        <prop key="userdir">${user.home}/logicaldoc/data/users/</prop>
+        <prop key="userdir.category">directory</prop>
+        <prop key="sxcontent">content.xml</prop>
+        <prop key="sxcontent.category">search</prop>
+        <prop key="kocontent">maindoc.xml</prop>
+        <prop key="kocontent.category">search</prop>
+        <prop key="enablerest">false</prop>
+        <prop key="enablerest.category">webservice</prop>
+      </props>
+    </property>
+  </bean>
+
+  <!-- DataSource -->
+  <bean id="DataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <property name="driverClassName">
+      <value>org.hsqldb.jdbcDriver</value>
+    </property>
+    <property name="url">
+      <value>jdbc:hsqldb:mem:logicaldoc</value>
+    </property>
+    <property name="username">
+      <value>sa</value>
+    </property>
+    <property name="password">
+      <value></value>
+    </property>
+    <property name="initialSize" value="3" />
+    <property name="validationQuery">
+      <value></value>
+    </property>
+  </bean>
+
+  <!-- Hibernate SessionFactory -->
+  <bean id="SessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" abstract="false"
+    lazy-init="default" autowire="default" dependency-check="default">
+    <property name="dataSource">
+      <ref bean="DataSource" />
+    </property>
+
+    <!-- property name="mappingLocations"><value>classpath*:**/*.hbm.xml</value></property-->
+    <property name="mappingResources">
+      <list>
+        <value>/mappings/User.hbm.xml</value>
+        <value>/mappings/Menu.hbm.xml</value>
+        <value>/mappings/Group.hbm.xml</value>
+        <value>/mappings/UserDoc.hbm.xml</value>
+        <value>/mappings/DownloadTicket.hbm.xml</value>
+        <value>/mappings/History.hbm.xml</value>
+        <value>/mappings/Document.hbm.xml</value>
+        <value>/mappings/DocumentTemplate.hbm.xml</value>
+        <value>/mappings/SystemMessage.hbm.xml</value>
+        <value>/mappings/WorkflowPersistenceTemplate.hbm.xml</value>
+        <value>/mappings/WorkflowHistory.hbm.xml</value>
+      </list>
+    </property>
+
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+        <prop key="hibernate.cache.use_second_level_cache">true</prop>
+        <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+      </props>
+    </property>
+  </bean>
+
+  <!--Transaction management-->
+  <bean id="TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" abstract="false"
+    lazy-init="default" autowire="default" dependency-check="default">
+    <property name="sessionFactory">
+      <ref bean="SessionFactory" />
+    </property>
+  </bean>
+
+  <!--Transactional proxy-->
+  <bean id="ApplicationBaseTransactionProxy"
+    class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true" abstract="false"
+    autowire="default" dependency-check="default">
+    <property name="transactionManager">
+      <ref bean="TransactionManager" />
+    </property>
+    <property name="transactionAttributes">
+      <props>
+        <prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+        <prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+        <prop key="load*">PROPAGATION_REQUIRED,readOnly</prop>
+        <prop key="has*">PROPAGATION_REQUIRED,readOnly</prop>
+        <prop key="initialize">PROPAGATION_REQUIRED,readOnly</prop>
+        <prop key="exists">PROPAGATION_REQUIRED,readOnly</prop>
+        <prop key="store*">PROPAGATION_REQUIRED</prop>
+        <prop key="insert*">PROPAGATION_REQUIRED</prop>
+        <prop key="update*">PROPAGATION_REQUIRED</prop>
+        <prop key="delete*">PROPAGATION_REQUIRED</prop>
+        <prop key="remove*">PROPAGATION_REQUIRED</prop>
+        <prop key="assign*">PROPAGATION_REQUIRED</prop>
+      </props>
+    </property>
+  </bean>
+  <bean id="WorkflowPersistenceTemplateDAO" parent="ApplicationBaseTransactionProxy" abstract="false"
+    lazy-init="default" autowire="default" dependency-check="default">
+    <property name="target">
+      <bean class="com.logicaldoc.workflow.editor.HibernateWorkflowPersistenceTemplateDAO" abstract="false"
+        lazy-init="default" autowire="default" dependency-check="default">
+        <property name="sessionFactory">
+          <ref bean="SessionFactory" />
+        </property>
+      </bean>
+    </property>
+  </bean>
+  <bean id="WorkflowHistoryDAO" parent="ApplicationBaseTransactionProxy" abstract="false" lazy-init="default"
+    autowire="default" dependency-check="default">
+    <property name="target">
+      <bean class="com.logicaldoc.workflow.editor.HibernateWorkflowHistoryDAO" abstract="false"
+        lazy-init="default" autowire="default" dependency-check="default">
+        <property name="sessionFactory">
+          <ref bean="SessionFactory" />
+        </property>
+      </bean>
+    </property>
+  </bean>
+</beans>
