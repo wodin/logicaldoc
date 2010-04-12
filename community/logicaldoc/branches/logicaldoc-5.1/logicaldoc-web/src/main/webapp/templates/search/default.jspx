@@ -1,0 +1,166 @@
+<?xml version = '1.0'?>
+<!-- 
+ Documents result list table - Default
+  
+ @author Marco Meschieri - Logical Objects
+ @since 4.5
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form">
+
+	<ice:panelGroup styleClass="center"
+		rendered="#{searchForm.moreHitsPresent}">
+		<strong><ice:outputFormat
+				value="#{msgs['results.moreHits1']}" escape="false">
+				<f:param value="#{searchForm.estimatedHitsNumber}" />
+			</ice:outputFormat> </strong>
+		<ice:outputText value="  " />
+
+		<ice:commandLink styleClass="iceMsgsWarn"
+			action="#{searchForm.searchMore}">
+			<ice:outputFormat value="#{msgs['results.moreHits2']}" escape="false">
+				<f:param value="#{searchForm.hitsPerBlock}" />
+			</ice:outputFormat>
+		</ice:commandLink>
+		<br />
+		<br />
+	</ice:panelGroup>
+
+	<!-- Basic table -->
+	<ice:panelGroup styleClass="result_pager">
+		<ice:dataPaginator for="result" rowsCountVar="rowsCount"
+			displayedRowsCountVar="displayedRowsCountVar"
+			firstRowIndexVar="firstRowIndex" lastRowIndexVar="lastRowIndex"
+			pageCountVar="pageCount" pageIndexVar="pageIndex">
+			<ice:outputFormat value="#{msgs['search.paginator']}" escape="false">
+				<f:param value="#{firstRowIndex}" />
+				<f:param value="#{lastRowIndex}" />
+				<f:param value="#{searchForm.query}" />
+				<f:param value="#{searchForm.execTime/1000}" />
+			</ice:outputFormat>
+			<br />
+		</ice:dataPaginator>
+	</ice:panelGroup>
+	<br />
+
+	<!-- Table with results -->
+	<ice:dataTable id="result" value="#{searchForm.documentResult}"
+		var="entry" cellpadding="0" rows="#{searchForm.hitsPerPage}"
+		columnClasses="resultColumn" styleClass="resultTable">
+		<ice:column>
+			<ice:panelGroup>
+
+				<ice:panelGroup menuPopup="pop">
+					<ice:outputLink value="download?docId=#{entry.docId}"
+						target="_blank"
+						style="color: #333399; text-decoration: underline;"
+						title="#{msgs['msg.jsp.popup']}">
+						<ice:graphicImage rendered="#{empty(entry.shortcut)}"
+							value="#{StyleBean.imagesPath}/#{entry.icon}"
+							styleClass="iconSmall" title="#{msgs['msg.jsp.popup']}" />
+						<ice:graphicImage rendered="#{!empty(entry.shortcut)}"
+							value="#{StyleBean.imagesPath}/shortcut.png"
+							styleClass="iconSmall" title="#{msgs['msg.jsp.popup']}" />
+						<ice:outputText value=" " />
+						<ice:outputText value="#{entry.title}" style="color: #333399;" />
+						<ice:graphicImage style="margin-left: 5px;" styleClass="iconSmall"
+							rendered="#{entry.document.immutable == 1}"
+							value="#{StyleBean.imagesPath}/stop.png"
+							title="#{msgs['document.immutable']}" />
+					</ice:outputLink>
+					<ice:menuPopup styleClass="mpopup" id="pop" noIcons="true"
+						value="#{entry.docId}">
+						<ice:menuItems value="#{entry.model}" />
+					</ice:menuPopup>
+				</ice:panelGroup>
+
+				<ice:outputText value="#{entry.summary}" escape="false" />
+
+				<ice:panelGrid columns="3">
+					<ice:panelGroup styleClass="resultInfo" style="color: #555555;">
+						<h:outputText value="#{msgs['size']}: " />
+						<ice:outputText value="#{entry.size}"
+							title="#{msgs['msg.jsp.popup']}">
+							<f:converter converterId="logicaldoc.FileSizeConverter" />
+						</ice:outputText>
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="resultInfo">
+						<table cellspacing="0" cellpadding="0" border="0"
+							style="color: #555555;">
+							<tr>
+								<td nowrap="nowrap">
+									<ice:outputText value=" - " />
+									<h:outputText value="#{msgs['score']}: " />
+									<ice:outputText value="&amp;nbsp;" escape="false" />
+								</td>
+								<td nowrap="nowrap"
+									style="vertical-align: top; padding-top: 4px;">
+									<ice:graphicImage value="#{StyleBean.imagesPath}/dotblue.gif"
+										style="width: #{entry.score}px; height: 8px" />
+								</td>
+								<td nowrap="nowrap"
+									style="vertical-align: top; padding-top: 4px;">
+									<ice:graphicImage value="#{StyleBean.imagesPath}/dotgrey.gif"
+										style="width: #{entry.red}px; height: 8px" />
+								</td>
+								<td nowrap="nowrap">
+									<ice:outputText value="&amp;nbsp;" escape="false" />
+									<h:outputText value="#{entry.score}" />
+									%
+									<ice:outputText value=" - " />
+								</td>
+							</tr>
+						</table>
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="resultInfo">
+						<ice:commandLink action="#{searchForm.searchSimilar}"
+							value="#{msgs['msg.jsp.similardocs']}"
+							style="color: #7777CC; text-decoration: underline;" />
+						<h:outputText value=" - " />
+						<ice:commandLink action="#{searchForm.showDocumentPath}"
+							value="#{msgs['msg.jsp.showpath']}"
+							style="color: #7777CC; text-decoration: underline;" />
+					</ice:panelGroup>
+				</ice:panelGrid>
+
+				<ice:panelGroup styleClass="resultInfo" visible="#{entry.showPath}"
+					rendered="#{entry.showPath}">
+					<ice:commandLink action="#{documentNavigation.openInFolder}"
+						title="#{msgs['msg.jsp.openinfolder']}"
+						style="color: #008000; text-decoration: underline; font-size: 12px;">
+						<h:outputText value="#{entry.documentPath}" />
+					</ice:commandLink>
+					<br />
+					<ice:outputText style="font-style:italic; font-size: 10px;"
+						value="#{entry.source}" />
+				</ice:panelGroup>
+
+			</ice:panelGroup>
+		</ice:column>
+	</ice:dataTable>
+
+	<br />
+
+	<ice:panelGrid columns="2" style="width: 100%;">
+		<ice:panelGroup>
+			<ldoc:paginator table="result" label="#{msgs['paginator.simple']}" />
+			<br />
+		</ice:panelGroup>
+
+		<ice:panelGroup style="margin-top:0px; padding-top:0px;">
+			<ice:outputLabel value="#{msgs['viewmode']}" for="viewMode" />
+			<ice:selectOneMenu id="viewMode" value="#{searchForm.viewMode}"
+				valueChangeListener="#{searchForm.onSelectViewMode}"
+				partialSubmit="true">
+				<f:selectItems value="#{selectionTags.viewModesSearch}" />
+			</ice:selectOneMenu>
+		</ice:panelGroup>
+	</ice:panelGrid>
+
+</jsp:root>

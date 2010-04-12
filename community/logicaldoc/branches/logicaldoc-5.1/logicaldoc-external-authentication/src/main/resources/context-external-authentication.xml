@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<bean id="LDAPUserGroupContext"
+		class="com.logicaldoc.authentication.ldap.LDAPUserGroupContext">
+		<property name="userIdentiferAttribute"
+			value="${ldap.userIdentiferAttribute}" />
+		<property name="logonAttribute" value="${ldap.logonAttribute}" />
+		<property name="userClass" value="${ldap.userClass}" />
+		<property name="groupClass" value="${ldap.groupClass}" />
+		<property name="groupIdentiferAttribute"
+			value="${ldap.groupIdentiferAttribute}" />
+		<property name="userBaseString" value="${ldap.userBase}" />
+		<property name="groupBaseString" value="${ldap.groupBase}" />
+	</bean>
+
+	<bean id="LDAPContextSourceConfig"
+		class="com.logicaldoc.authentication.ldap.LDAPContextSourceConfig">
+		<property name="url" value="${ldap.url}" />
+		<property name="realm" value="${ldap.realm}" />
+		<property name="currentDN" value="${ldap.currentDN}" />
+		<property name="userAuthenticationPattern"
+			value="${ldap.authenticationPattern}" />
+		<property name="userName" value="${ldap.username}" />
+		<property name="password" value="${ldap.password}" />
+		<property name="base" value="${ldap.base}" />
+		<property name="enabled" value="${ldap.enabled}" />
+		<property name="authentication" value="${ldap.authentication}" />
+	</bean>
+
+	<!-- Simple Authentication -->
+	<bean id="LDAPContextSource"
+		class="com.logicaldoc.authentication.ldap.BasicLDAPContextSource"
+		scope="prototype">
+		<property name="configuration" ref="LDAPContextSourceConfig" />
+		<property name="userGroupContext" ref="LDAPUserGroupContext" />
+	</bean>
+
+	<!-- DIGEST-MD5 Authentication -->
+	<bean id="LDAPContextSource-MD5"
+		class="com.logicaldoc.authentication.ldap.DigestMD5LdapContextSource"
+		scope="prototype">
+		<property name="configuration" ref="ADContextSourceConfig" />
+		<property name="userGroupContext" ref="ADUserGroupContext" />
+	</bean>
+
+	<bean id="LdapTemplate"
+		class="org.springframework.ldap.LdapTemplate" scope="prototype">
+		<constructor-arg ref="LDAPContextSource" />
+	</bean>
+
+	<bean id="LDAPBasicUserMapper"
+		class="com.logicaldoc.authentication.ldap.UserAttributeMapper">
+		<property name="defaultLanguage"
+			value="${ldap.defaultLanguage}" />
+		<property name="ldapUserGroupContext"
+			ref="LDAPUserGroupContext" />
+	</bean>
+
+	<bean id="basicGroupMapper"
+		class="com.logicaldoc.authentication.ldap.GroupAttributeMapper">
+	</bean>
+
+	<bean id="LDAPUserGroupDAO"
+		class="com.logicaldoc.authentication.ldap.UserGroupDAO">
+		<property name="ldapUserGroupContext"
+			ref="LDAPUserGroupContext" />
+		<property name="ldapTemplate" ref="LdapTemplate" />
+		<property name="userMapper" ref="LDAPBasicUserMapper" />
+		<property name="groupMapper" ref="basicGroupMapper" />
+	</bean>
+
+	<bean id="LDAPAuthentication"
+		class="com.logicaldoc.authentication.ldap.LDAPAuthentication">
+		<lookup-method name="obtainNewLdapContextSource"
+			bean="LDAPContextSource" />
+		<lookup-method name="obtainNewMD5LdapContextSource"
+			bean="LDAPContextSource-MD5" />
+		<property name="ldapUserGroupContext"
+			ref="LDAPUserGroupContext" />
+		<property name="userGroupDao" ref="LDAPUserGroupDAO" />
+		<property name="synchroniser" ref="LDAPSynchroniser" />
+		<property name="userDao" ref="UserDAO" />
+		<property name="config" ref="LDAPContextSourceConfig" />
+		<property name="notValidatedUsers">
+			<list>
+				<value>admin</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="LDAPSynchroniser"
+		class="com.logicaldoc.authentication.ldap.LDAPSynchroniser">
+		<property name="userDao" ref="UserDAO" />
+		<property name="groupDao" ref="GroupDAO" />
+		<property name="userGroupDao" ref="LDAPUserGroupDAO" />
+	</bean>
+
+	<bean id="LDAPSynchroniserJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="LDAPSynchroniser" />
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="LDAPSynchroniserTrigger"
+		class="com.logicaldoc.util.quartz.DoubleTrigger">
+		<property name="jobDetail" ref="LDAPSynchroniserJob" />
+		<property name="cronTrigger" ref="CronLDAPSynchroniserTrigger" />
+		<property name="simpleTrigger"
+			ref="SimpleLDAPSynchroniserTrigger" />
+		<property name="mode" value="${schedule.mode.LDAPSynchroniser}" />
+	</bean>
+
+	<bean id="CronLDAPSynchroniserTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="LDAPSynchroniserJob" />
+		<property name="cronExpression"
+			value="${schedule.cron.LDAPSynchroniser}" />
+	</bean>
+
+	<bean id="SimpleLDAPSynchroniserTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="LDAPSynchroniserJob" />
+		<property name="startDelay"
+			value="${schedule.delay.LDAPSynchroniser}" />
+		<property name="repeatInterval"
+			value="${schedule.interval.LDAPSynchroniser}" />
+	</bean>
+
+	<bean id="LdapBean"
+		class="com.logicaldoc.authentication.web.LdapBean" scope="session">
+		<property name="userGroupContext" ref="LDAPUserGroupContext" />
+		<property name="contextSourceConfig"
+			ref="LDAPContextSourceConfig" />
+		<property name="userAttributeMapper" ref="LDAPBasicUserMapper" />
+		<property name="contextSource" ref="LDAPContextSource" />
+	</bean>
+</beans>

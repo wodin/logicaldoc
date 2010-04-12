@@ -1,0 +1,108 @@
+<project name="logicaldoc-i18n" default="po2prop2js" basedir="." xmlns:artifact="urn:maven-artifact-ant">
+	<property file="${user.home}/logicaldoc-dev.properties" />
+	<property file="src/main/resources/i18n/i18n.properties" />
+	<import file="${logicaldoc.devroot}/build/ant/build.xml" />
+
+	<target name="deploy" depends="init-all" description="Updates a deployed webapp">
+		<echo message="Deploying ${pom.artifactId} to webapp" />
+		<copy todir="${logicaldoc.webroot}/WEB-INF/classes/i18n" verbose="true">
+			<fileset dir="src/main/resources/i18n">
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+		<echo message="${pom.artifactId} is deployed" />
+	</target>
+
+	<target name="purify" depends="init-all">
+		<echo>Purify all bundles</echo>
+		<java classname="com.logicaldoc.i18n.PurifyRB">
+			<classpath>
+				<pathelement location="target/classes" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="prop2js" depends="init-all">
+		<echo>Produce javascripts</echo>
+		<java classname="com.logicaldoc.i18n.PropertiesToJavascript">
+			<classpath>
+				<pathelement location="target/classes" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="prop2po" depends="init-all">
+		<!--copy todir="src/main/resources/i18n" flatten="true">
+			<fileset dir="${logicaldoc.devroot}">
+				<exclude name="**/logicaldoc-i18n/**" />
+				<include name="**/src/main/**/application*.properties" />
+				<include name="**/src/main/**/*Message*.properties" />
+			</fileset>
+		</copy-->
+		<delete file="target/po" failonerror="no" />
+
+		<echo>Produce the master pots</echo>
+		<for list="${bundles}" param="bundle">
+			<sequential>
+				<mkdir dir="target/po/@{bundle}" />
+				<exec executable="python" dir="./translate-toolkit/translate/convert/" description="Generate the PO template">
+					<arg value="prop2po.py" />
+					<arg value="--duplicates=merge" />
+					<arg value="-P" />
+					<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}.properties" />
+					<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}po${file.separator}@{bundle}${file.separator}@{bundle}.pot" />
+				</exec>
+			</sequential>
+		</for>
+
+		<echo>Create the translated pos</echo>
+		<for list="${bundles}" param="bundle">
+			<sequential>
+				<for list="${locales}" param="locale">
+					<sequential>
+						<exec executable="python" dir="./translate-toolkit/translate/convert/" description="Generate translated POs">
+							<arg value="prop2po.py" />
+							<arg value="--duplicates=merge" />
+							<arg value="-t" />
+							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}.properties" />
+							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}classes${file.separator}i18n${file.separator}@{bundle}_@{locale}.properties" />
+							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}po${file.separator}@{bundle}${file.separator}@{locale}.po" />
+						</exec>
+					</sequential>
+				</for>
+			</sequential>
+		</for>
+
+		<delete dir="target/po/i18n" failonerror="no" />
+
+		<tar destfile="target/${pom.artifactId}-${pom.version}.tar">
+			<tarfileset dir="target/po" preserveLeadingSlashes="true">
+			</tarfileset>
+		</tar>
+	</target>
+
+
+	<target name="po2prop" depends="init-all">
+		<echo>Produce the properties bak</echo>
+		<mkdir dir="target/po" />
+		<for list="${bundles}" param="bundle">
+			<sequential>
+				<for list="${locales}" param="locale">
+					<sequential>
+						<mkdir dir="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}properties" />
+						<exec executable="python" dir="./translate-toolkit/translate/convert/">
+							<arg value="po2prop.py" />
+							<arg value="-t" />
+							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}src${file.separator}main${file.separator}resources${file.separator}i18n${file.separator}@{bundle}.properties" />
+							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}po${file.separator}@{bundle}${file.separator}@{bundle}-@{locale}.po" />
+							<arg value="${logicaldoc.devroot}${file.separator}community${file.separator}logicaldoc${file.separator}logicaldoc-i18n${file.separator}target${file.separator}properties${file.separator}@{bundle}_@{locale}.properties" />
+						</exec>
+					</sequential>
+				</for>
+			</sequential>
+		</for>
+	</target>
+
+	<target name="po2prop2js" depends="po2prop,prop2js">
+	</target>
+</project>

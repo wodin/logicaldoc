@@ -1,0 +1,184 @@
+<?xml version = '1.0'?>
+<!-- 
+ Vocabulary of all stored tags
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+	id="tagsForm">
+
+	<ice:panelGroup style="text-align: center;">
+		<ice:form>
+			<br />
+			<ice:panelSeries var="letter" value="#{tags.letters}">
+				<ice:commandLink action="#{letter.select}">
+					<ice:outputText value="#{letter.letter}"
+						style="font-weight: bold; padding-right: 15px;" />
+				</ice:commandLink>
+			</ice:panelSeries>
+		</ice:form>
+		<br />
+		<ice:form>
+			<ice:panelGroup>
+				<ice:outputLabel for="manualchar"
+					value="#{msgs['tags.otherchar']}: " />
+				<ice:inputText id="manualchar" value="#{tags.manualchar}" size="1"
+					maxlength="1" required="true" style="margin-right: 10px;" />
+				<ice:commandButton value="#{msgs['search']}"
+					action="#{tags.showWordsbychar}" styleClass="standardBtn" />
+			</ice:panelGroup>
+		</ice:form>
+	</ice:panelGroup>
+
+	<br />
+
+	<!-- Words table -->
+	<ice:form>
+		<ice:panelGroup rendered="#{tags.tagsCount > 0}">
+			<!-- Table with results -->
+			<ice:dataTable id="words" value="#{tags.tags}" var="tag"
+				cellpadding="0" rows="99999" styleClass="center"
+				sortColumn="#{tags.sortColumn}" sortAscending="#{tags.ascending}">
+				<ice:column>
+					<f:facet name="header">
+						<ice:commandSortHeader columnName="tagName">
+							<ice:outputText value="Tag" style="text-decoration: underline;" />
+						</ice:commandSortHeader>
+					</f:facet>
+					<ice:panelGroup>
+						<ice:commandLink action="#{tag.select}">
+							<ice:outputText value="#{tag.word}" />
+						</ice:commandLink>
+					</ice:panelGroup>
+				</ice:column>
+
+				<ice:column>
+					<f:facet name="header">
+						<ice:commandSortHeader columnName="documentsCount">
+							<ice:outputText value="#{msgs['tags.documentcount']}"
+								style="text-decoration: underline;" />
+						</ice:commandSortHeader>
+					</f:facet>
+					<ice:panelGroup>
+						<ice:outputText value="#{tag.count}" />
+					</ice:panelGroup>
+				</ice:column>
+			</ice:dataTable>
+		</ice:panelGroup>
+
+		<!-- Documents table -->
+		<ice:panelGroup rendered="#{tags.documentsCount > 0}"
+			styleClass="center calBorderHighlight"
+			style="width:70%; font-size: 14px;">
+			<ice:panelGroup style="text-align: center;">
+				<h3>
+					<ice:outputText value="#{msgs['tags.dispdocs']}" />
+					&amp;nbsp; '#{tags.selectedWord}'
+				</h3>
+			</ice:panelGroup>
+			<br />
+			<ice:dataTable id="documentsList" styleClass="center"
+				value="#{tags.documents}" var="entry" cellpadding="0" rows="10"
+				sortColumn="#{tags.dh.sortColumn}"
+				sortAscending="#{tags.dh.ascending}"
+				columnClasses="titleColumn,dateColumn,numberColumn">
+
+				<!-- Name -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:commandSortHeader columnName="title" arrow="true">
+							<ice:outputText value="#{msgs['document.title']}"
+								style="text-decoration: underline;" />
+						</ice:commandSortHeader>
+					</f:facet>
+					<ice:panelGroup>
+						<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
+							action="#{documentNavigation.openInFolder}">
+							<ice:graphicImage
+								value="#{StyleBean.imagesPath}/folder_into16.png"
+								styleClass="iconSmall" alt="#{msgs['msg.jsp.openinfolder']}" />
+						</ice:commandLink>
+
+						<ice:outputText value="&amp;nbsp;&amp;nbsp;" escape="false" />
+
+						<ice:graphicImage rendered="#{empty(entry.shortcut)}"
+							value="#{StyleBean.imagesPath}/#{entry.document.icon}"
+							style="border: 0px solid; padding-right: 3px;" />
+						<ice:graphicImage rendered="#{!empty(entry.shortcut)}"
+							value="#{StyleBean.imagesPath}/shortcut.png"
+							style="border: 0px solid; padding-right: 3px;" />
+						<ice:outputLink value="download?docId=#{entry.docId}"
+							target="_blank">
+							<ice:outputText value="#{entry.displayTitle}" />
+						</ice:outputLink>
+						<ice:graphicImage style="margin-left: 5px;"
+							rendered="#{entry.document.immutable == 1}"
+							value="#{StyleBean.imagesPath}/stop.png"
+							title="#{msgs['document.immutable']}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Date -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:commandSortHeader columnName="date" arrow="true">
+							<ice:outputText value="#{msgs['lastmodified']}"
+								style="text-decoration: underline;" />
+						</ice:commandSortHeader>
+					</f:facet>
+					<ice:panelGroup>
+						<ice:outputText value="#{entry.lastModified}">
+							<f:convertDateTime pattern="#{loc.dateFormatHM}"
+								timeZone="#{StyleBean.timeZone}" />
+						</ice:outputText>
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Size -->
+				<ice:column>
+					<f:facet name="header">
+						<ice:commandSortHeader columnName="size" arrow="true">
+							<ice:outputText value="#{msgs['size']}"
+								style="text-decoration: underline;" />
+						</ice:commandSortHeader>
+					</f:facet>
+					<ice:panelGroup style="text-align: right; white-space: nowrap;">
+						<ice:outputText value="#{entry.document.fileSize}">
+							<f:converter converterId="logicaldoc.FileSizeConverterKB" />
+						</ice:outputText>
+					</ice:panelGroup>
+				</ice:column>
+			</ice:dataTable>
+			<br />
+			<ice:panelGrid columns="2" style="width: 100%;">
+				<ice:panelGroup style="float:left;">
+					<ldoc:paginator table="documentsList"
+						label="#{msgs['paginator.simple']}" />
+					<br />
+				</ice:panelGroup>
+
+				<ice:panelGroup />
+			</ice:panelGrid>
+		</ice:panelGroup>
+
+		<ice:panelGroup
+			rendered="#{(tags.reqop eq 'letter') and (tags.tagsCount == 0)}"
+			style="text-align: center;">
+			<ice:outputText value="#{msgs['tags.notag']}" />
+		</ice:panelGroup>
+		<ice:panelGroup
+			rendered="#{(tags.reqop eq 'tag') and (tags.documentsCount == 0)}"
+			style="text-align: center;">
+			<ice:outputText value="No documents found for the tag specified" />
+		</ice:panelGroup>
+		<br />
+	</ice:form>
+</jsp:root>

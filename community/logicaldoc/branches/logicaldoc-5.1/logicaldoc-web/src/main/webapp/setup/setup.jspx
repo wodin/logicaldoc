@@ -1,0 +1,381 @@
+<!-- 
+ Setup page
+  
+ @author Alessandro Gasparini - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ice="http://www.icesoft.com/icefaces/component" jsfc="f:view"
+	locale="#{language}">
+	<f:loadBundle basename="i18n.application" var="msgs" />
+	<ice:outputDeclaration doctypeRoot="html"
+		doctypePublic="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctypeSystem="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+			<title>#{StyleBean.productName} #{StyleBean.productRelease}</title>
+			<link type="image/x-icon"
+				href="#{facesContext.externalContext.requestContextPath}#{StyleBean.imagesPath}/favicon.ico"
+				rel="shortcut icon" />
+			<ice:outputText style="padding-top:0px; padding-bottom:0px;"
+				value="#{StyleBean.style}" escape="false" />
+			<ice:outputStyle href="#{StyleBean.cssPath}/style.css" />
+			<script type="text/javascript" language="javascript">
+  function noErrorMessages () { return true; }
+  window.onerror = noErrorMessages;
+            
+  /**
+   *  Handles the default action for a form, used when the enter key is pressed
+   */ 
+  function submitOnEnter(id,e){
+     var keycode;
+     if (window.event) keycode = window.event.keyCode;
+     else if (e) keycode = e.which;
+     else return true;
+ 
+     if (keycode == 13) {
+       document.getElementById(id).click();
+       return false;
+     }
+     else
+       return true;
+  }
+</script>
+		</head>
+		<body
+			style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif;">
+			<ice:panelBorder border="0" cellpadding="0" cellspacing="0"
+				styleClass="loginBorderLayout">
+				<f:facet name="center">
+					<ice:form id="setupWizard"
+						style="border: 1px solid #DDDDDD; width:630px; border-style:ridge;">
+
+						<ice:panelGrid columns="2" style="width:100%;">
+							<ice:graphicImage url="#{StyleBean.imagesPath}/logo.gif"
+								style="padding-left: 10px;" />
+							<ice:outputText value="#{msgs['setup.systemsetup']}"
+								style="font-size: 20px; font-weight: bold; font-family: Trebuchet MS, Tahoma, Myriad; color:#7F7F7F;" />
+						</ice:panelGrid>
+
+						<ice:panelGroup
+							style="margin-left:30px; margin-bottom:8px; margin-top:4px; width:580px;">
+
+							<ice:messages />
+
+							<ice:panelTabSet id="staticTabSetPnl"
+								binding="#{setupWizard.tabSet}" selectedIndex="0"
+								tabPlacement="top"
+								tabChangeListener="#{setupWizard.processTabChange}">
+
+								<!-- 1st panel: Choose Working Dir -->
+								<ice:panelTab id="phase1" rendered="true"
+									label="#{msgs['setup.phase1']}">
+									<div style="height: 150px;">
+										<ice:panelGroup style="height: 90%; width: 100%;">
+											<h3 style="font-size: 10pt;">
+												<ice:outputLabel for="workingDir"
+													value="#{msgs['setup.workdir']}" />
+											</h3>
+											<br />
+											<ice:inputText id="workingDir" tabindex="1" maxlength="80"
+												size="80"
+												onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:0:continue', event);"
+												value="#{setupWizard.workingDir}" />
+										</ice:panelGroup>
+										<ice:panelGroup styleClass="alignRight">
+											<ice:commandButton type="submit" tabindex="1"
+												value="#{msgs['continue']}"
+												action="#{setupWizard.makeWorkingDir}" id="continue" />
+										</ice:panelGroup>
+									</div>
+								</ice:panelTab>
+
+								<!-- 2nd panel: Choose DB -->
+								<ice:panelTab id="phase2" rendered="true" disabled="true"
+									label="#{msgs['setup.phase2']}">
+									<div style="height: 150px;">
+										<ice:panelGroup style="height: 90%; width: 100%;">
+											<h3 style="font-size: 10pt;">
+												<ice:outputLabel for="dbType"
+													value="#{msgs['setup.dbconf']}" />
+											</h3>
+											<br />
+											<ice:panelGroup styleClass="selectionRadioGroup"
+												style="width: 95%;">
+												<ice:selectOneRadio id="dbType" value="#{setupWizard.dbms}"
+													tabindex="1" layout="pageDirection"
+													onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:1:continue', event);"
+													style="text-align: left; font-size: 10pt;">
+													<f:selectItem id="intern" tabindex="1"
+														itemLabel="#{msgs['setup.internaldb']}" itemValue="intern" />
+													<f:selectItem id="extern" tabindex="1"
+														itemLabel="#{msgs['setup.externaldb']}" itemValue="extern" />
+												</ice:selectOneRadio>
+											</ice:panelGroup>
+										</ice:panelGroup>
+										<ice:panelGroup styleClass="alignRight">
+											<ice:commandButton type="submit" tabindex="1"
+												value="#{msgs['continue']}"
+												action="#{setupWizard.loadDBPath}" id="continue" />
+										</ice:panelGroup>
+									</div>
+								</ice:panelTab>
+
+								<!-- 3rd panel: Configure DB -->
+								<ice:panelTab id="phase3" rendered="true" disabled="true"
+									label="#{msgs['setup.phase3']}">
+									<ice:panelGroup id="setupInternalDB"
+										rendered="#{setupWizard.dbms eq 'intern'}">
+										<ice:panelGroup style="width: 100%;">
+											<h3 style="font-size: 10pt;">
+												<ice:outputText value="#{msgs['setup.dbconf']}" />
+											</h3>
+											<br />
+											<ice:outputLabel for="internDBPath"
+												value="#{msgs['setup.internaldb.path']}" />
+											<br />
+											<ice:inputText id="internDBPath" tabindex="1"
+												onkeypress="return submitOnEnter('setupWizard:staticTabSetPnl:2:continue', event);"
+												value="#{setupWizard.internDBPath}" size="80" maxlength="80" />
+											<br />
+											<br />
+										</ice:panelGroup>
+									</ice:panelGroup>
+
+									<ice:panelGroup rendered="#{setupWizard.dbms ne 'intern'}">
+										<h3 style="font-size: 10pt;">
+											<ice:outputText value="#{msgs['setup.dbconf']}" />
+										</h3>
+										<br />
+									</ice:panelGroup>
+
+									<ice:panelGrid columns="2"
+										rendered="#{setupWizard.dbms ne 'intern'}">
+										<ice:panelGroup>
+											<ice:outputText value="#{msgs['setup.dbconf.type']}" />
+										</ice:panelGroup>
+										<ice:panelGroup>
+											<ice:outputText value="#{msgs['setup.dbconf.conn']}" />
+										</ice:panelGroup>
+
+										<ice:panelGroup>
+											<ice:selectOneListbox id="SlctDBMS"
+												value="#{setupWizard.selectedDBMS}" partialSubmit="true"
+												tabindex="1"
+												valueChangeListener="#{setupWizard.dbmsChanged}">
+												<f:selectItem itemValue="Firebird" itemLabel="Firebird 2.1" />
+												<f:selectItem itemValue="Hsqldb" itemLabel="HSQLDB 1.8" />
+												<f:selectItem itemValue="MsSQLServer"
+													itemLabel="Microsoft SQL Server 2000" />
+												<f:selectItem itemValue="MySQL" itemLabel="MySQL 4.1/5.0" />
+												<f:selectItem itemValue="Oracle"
+													itemLabel="Oracle 8i/9i/10i" />
+												<f:selectItem itemValue="PostgreSQL"
+													itemLabel="PostgreSQL 8.x" />
+											</ice:selectOneListbox>
+										</ice:panelGroup>
+										<ice:panelGroup>
+											<ice:panelGrid columns="2"
+												style="font-family: Arial, Helvetica, sans-serif; font-size: 8pt; font-weight: bold;">
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="clazz"
+														value="#{msgs['setup.dbconf.driver']}" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="clazz"
+														binding="#{setupWizard.cdata.classInput}" tabindex="1"
+														value="#{setupWizard.cdata.clazz}" />
+												</ice:panelGroup>
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="dburl" value="URL" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="dburl"
+														binding="#{setupWizard.cdata.dburlInput}" tabindex="1"
+														value="#{setupWizard.cdata.dburl}" size="35" />
+												</ice:panelGroup>
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="user"
+														value="#{msgs['setup.dbconf.username']}" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="user"
+														binding="#{setupWizard.cdata.userInput}" tabindex="1"
+														value="#{setupWizard.cdata.user}" />
+												</ice:panelGroup>
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="pswd"
+														value="#{msgs['setup.dbconf.password']}" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="pswd"
+														binding="#{setupWizard.cdata.passwordInput}" tabindex="1"
+														value="#{setupWizard.cdata.pswd}" />
+												</ice:panelGroup>
+											</ice:panelGrid>
+										</ice:panelGroup>
+									</ice:panelGrid>
+
+									<ice:panelGroup style="width: 100%;">
+										<ice:panelGroup styleClass="outputLabel">
+											<ice:outputLabel for="language"
+												value="#{msgs['language.default']}" />
+										</ice:panelGroup>
+										<ice:panelGroup>
+											<ice:selectOneMenu styleClass="selectTagMenu"
+												value="#{setupWizard.defaultLanguage}">
+												<f:selectItems value="#{selectionTags.languages}" />
+											</ice:selectOneMenu>
+										</ice:panelGroup>
+									</ice:panelGroup>
+
+									<br />
+									<ice:panelGroup styleClass="alignRight">
+										<ice:commandButton type="submit" value="#{msgs['continue']}"
+											action="#{setupWizard.createDB}" id="continue" />
+									</ice:panelGroup>
+								</ice:panelTab>
+
+								<!-- 4th panel: db initialization -->
+								<ice:panelTab id="phase4" rendered="true" disabled="true"
+									label="#{msgs['setup.phase4']}">
+									<ice:panelGroup>
+										<ice:panelGroup style="height: 90%; width: 100%;">
+											<h3 style="font-size: 10pt;">
+												<ice:outputText value="#{msgs['setup.smtpconf']}" />
+											</h3>
+											<br />
+											<ice:panelGrid columns="2"
+												style="font-family: Arial, Helvetica, sans-serif; font-size: 8pt; font-weight: bold;">
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="host" value="#{msgs['host']}" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="host" tabindex="1"
+														value="#{setupWizard.smtpData.host}" size="60" />
+												</ice:panelGroup>
+
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="port" value="#{msgs['port']}" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="port" tabindex="1"
+														value="#{setupWizard.smtpData.port}" />
+												</ice:panelGroup>
+
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="username" value="#{msgs['username']}" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="username" tabindex="1"
+														value="#{setupWizard.smtpData.username}" />
+												</ice:panelGroup>
+
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="password" value="#{msgs['password']}" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="password" tabindex="1"
+														value="#{setupWizard.smtpData.password}" />
+												</ice:panelGroup>
+
+												<!-- Connection security -->
+												<ice:panelGroup style="text-align:left;">
+													<ice:outputLabel for="connectionSecurity"
+														value="#{msgs['smtp.connectionSecurity']}" />
+												</ice:panelGroup>
+												<ice:panelGroup style="text-align:left;">
+													<ice:selectOneMenu styleClass="selectTagMenu"
+														style="width:180px;"
+														value="#{setupWizard.smtpData.connectionSecurity}">
+														<f:selectItems value="#{selectionTags.connectionSecurity}" />
+													</ice:selectOneMenu>
+												</ice:panelGroup>
+
+												<!-- Use secure authentication -->
+												<ice:panelGroup style="text-align:left;">
+													<ice:outputLabel for="authEncripted"
+														value="#{msgs['smtp.authEncripted']} " />
+												</ice:panelGroup>
+												<ice:panelGroup style="text-align:left;">
+													<ice:selectBooleanCheckbox
+														value="#{setupWizard.smtpData.authEncripted}"
+														partialSubmit="true" immediate="true" />
+												</ice:panelGroup>
+
+
+												<ice:panelGroup style="text-align:right;">
+													<ice:outputLabel for="sender" value="#{msgs['sender']}" />
+												</ice:panelGroup>
+												<ice:panelGroup>
+													<ice:inputText id="sender" tabindex="1"
+														value="#{setupWizard.smtpData.sender}">
+														<f:validator validatorId="validator.email" />
+													</ice:inputText>
+													<ice:message for="sender" />
+												</ice:panelGroup>
+
+
+											</ice:panelGrid>
+										</ice:panelGroup>
+										<ice:panelGroup styleClass="alignRight">
+											<ice:commandButton type="submit" tabindex="1"
+												value="#{msgs['continue']}"
+												action="#{setupWizard.writeSmtpSettings}" id="continue" />
+										</ice:panelGroup>
+									</ice:panelGroup>
+								</ice:panelTab>
+
+
+								<!-- 5th panel: db initialization -->
+								<ice:panelTab id="phase5" rendered="true" disabled="true"
+									label="#{msgs['setup.phase5']}">
+									<ice:panelGroup rendered="#{setupWizard.setupSuccess}">
+										<h3 style="font-size: 10pt;">
+											<ice:outputFormat value="#{msgs['setup.success']}">
+												<f:param value="#{ContextProperties['product.name']}" />
+											</ice:outputFormat>
+										</h3>
+										<br />
+										<ice:outputText value="#{msgs['setup.login']}" />:
+										   <br />
+										<br />
+										<b>#{msgs['setup.dbconf.username']}:</b> admin<br />
+										<b>#{msgs['setup.dbconf.password']}:</b> admin<br />
+										<br />
+										<ice:outputText value="#{msgs['setup.remember']}" />
+										<br />
+										<br />
+										<ice:panelGroup styleClass="alignRight">
+											<ice:commandButton value="#{msgs['setup.click']}"
+												action="#{loginForm.logout}" />
+										</ice:panelGroup>
+									</ice:panelGroup>
+									<ice:panelGroup rendered="#{setupWizard.setupSuccess == false}"
+										style="height:150px;">
+										<h3 style="font-size: 10pt;">
+											<ice:outputText value="#{msgs['setup.warning']}" />
+										</h3>
+										<br />
+										<ice:outputText value="#{msgs['setup.warning1']}" />
+										<br />
+										<br />
+										<ice:outputText value="#{msgs['setup.warning2']}" />
+										<br />
+										<br />
+										<br />
+										<ice:commandButton type="submit" value="#{msgs['back']}"
+											action="#{setupWizard.prev}" id="back" />
+									</ice:panelGroup>
+								</ice:panelTab>
+							</ice:panelTabSet>
+
+						</ice:panelGroup>
+					</ice:form>
+				</f:facet>
+			</ice:panelBorder>
+		</body>
+	</html>
+</jsp:root>

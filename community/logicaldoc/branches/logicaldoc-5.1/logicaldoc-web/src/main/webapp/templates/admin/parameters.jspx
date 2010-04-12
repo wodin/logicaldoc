@@ -1,0 +1,50 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page allows the editing of application's parameters
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form">
+	<ice:panelGroup styleClass="center formBorderHighlight" style="width:600px;">
+		<ice:messages globalOnly="true" />
+		<ice:panelGroup>
+			<ice:dataTable value="#{parametersForm.keys}"
+				id="parameters" var="entry" columnClasses="numberColumn,titleColumn"
+				rows="15">
+				<ice:column>
+					<ice:panelGroup style="text-align:left;">
+						<ice:outputText value="#{parametersForm.paramName}" />
+					</ice:panelGroup>
+				</ice:column>
+				<ice:column>
+					<ice:panelGroup>
+						<ice:inputText value="#{parametersForm.config[entry]}" size="60" readonly="#{parametersForm.readonly}"/>
+					</ice:panelGroup>
+				</ice:column>
+			</ice:dataTable>
+
+			<br />
+			<ice:panelGrid columns="2" style="width: 100%;">
+				<ice:panelGroup style="text-align:left;">
+					<ldoc:paginator table="parameters"
+						label="#{msgs['paginator.simple']}" />
+					<br />
+				</ice:panelGroup>
+			</ice:panelGrid>
+
+			<hr />
+			<ice:panelGroup styleClass="commands">
+				<ice:commandButton value="#{msgs['save']}" tabindex="1" id="save"
+					action="#{parametersForm.save}" />
+			</ice:panelGroup>
+		</ice:panelGroup>
+	</ice:panelGroup>
+</jsp:root>

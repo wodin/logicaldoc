@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><!-- InstanceBegin template="/Templates/logicaldoc-help.dwt" codeOutsideHTMLIsLocked="false" -->
+  <head>
+  <!-- InstanceBeginEditable name="doctitle" -->
+<title>Acquisire Documenti da mailbox</title>
+<!-- InstanceEndEditable -->
+  <link href="css/help.css" rel="stylesheet" type="text/css">
+  <!-- InstanceBeginEditable name="head" -->
+  <style type="text/css">
+<!--
+.style1 {
+	color: #000000;
+	font-weight: bold;
+}
+-->
+  </style>
+  <!-- InstanceEndEditable -->
+  </head>
+  <body>
+    <table summary="content" border="0" cellpadding="0" cellspacing="0" width="100%">
+      <!--================= start Content==================-->
+      <tbody>
+        <tr>
+          <td align="left" width="10">
+            <img alt="" src="images/spacer.gif" class="spacer" height="1" width="10" /></td>
+          <td align="left" width="100%">
+            <div class="content">
+              <table class="title" width="100%">
+                <tbody>
+                  <tr>
+                    <td valign="middle">
+                      <h1><!-- InstanceBeginEditable name="TitleRegion" -->Acquisire Documenti da mailbox<!-- InstanceEndEditable --></h1></td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- InstanceBeginEditable name="ContentRegion" -->
+          <p>LogicalDOC &egrave; in grado di archiviare e-mail e relativi allegati da caselle di posta remote. E' possibile configurare un certo numero di caselle per l'acquisizione. <br>
+            Ad intervalli regolari il sistema ispezioner&agrave; queste caselle email alla ricerca di nuovi messaggi che verranno automaticamente acquisiti ed inseriti nell'archivio come documenti.</p>
+          <h3>Configurazione delle caselle</h3>
+          <p>Accedete alla pagina <span class="style1">Amministrazione --&gt; E-Mail accounts</span>. In questa sezione
+            viene visualizzato l'elenco delle
+            caselle attualmente impostate.<br>
+            <br>
+          <div align="center"><img src="images/emailaccounts01.gif" width="220" height="223"></div>
+          <p>Nella parte centrale vengono visualizzati tutte le mailbox (caselle di posta elettronica) registrate nel sistema. <br>
+            Al primo accesso naturalmente  questa lista sar&agrave; vuota.</p>
+          <p>
+          <div>
+            <div align="center"><img src="images/emailaccounts03.gif" width="510" height="133"><br>
+		      Figura 47: Lista delle caselle di posta</div>
+          </div>
+          <p>            Per creare il collegamento ad una nuova casella selezionate l'icona in altro a sinistra <span class="style1">Crea 
+            Account E-Mail</span>.<br>
+            La maschera di inserimento dell'account di posta è divisa in due schede: <span class="style1">Dati
+dell'Account</span> e <span class="style1">Filtri</span>. La prima scheda consente di impostare i normali
+parametri richiesti per il collegamento ad una casella POP3. In particolare, nel
+caso di server IMAP è possibile definire la cartella dalla quale verranno
+scaricati i messaggi di posta.<br><br>
+          </p>
+		               			    <center>
+			      <img src="images/emailaccounts_03.gif" width="508" height="306">
+			      <br>
+			      Figura 48: Maschera di impostazione account di posta
+			                        </center>
+          
+          <br>
+          <br>
+          La sezione <span class="style1">Immagazzinamento</span> raccoglie tutte le informazioni necessarie al
+          trattamento dei messaggi in relazione all'archivio documentale ed in particolare:
+          <ul>
+            <li><span class="style1">Tipi consentiti</span> contiene un elenco di estensioni separate da virgola che
+              definisce i soli tipi di attachment che possono essere scaricati<br>
+            </li>
+            <li><span class="style1"> Lingua</span> imposta la lingua con cui vengono analizzati i testi dei messaggi<br>
+            </li>
+            <li><span class="style1">Cartella destinazione</span> &egrave; la cartella in cui i messaggi ed i relativi allegati 
+              verranno salvati come documenti.<br>
+            </li>
+          </ul>
+		  <p> La seconda scheda consente di impostare uno o più filtri. In questo modo
+l'utente può definire la carteIla, all'interno di LogicalDOC, nella quale verranno
+scaricati i messaggi di posta che rispettano i vincoli impostati nel filtro. <br> <br>
+		  </p>
+		   <div align="center"> <img src="images/emailaccounts_04.gif" height="202" width="500"> <br>
+		      Figura 49: Impostazione dei filtri sull'account di posta</div>
+           <br>
+          <p>I nuovi messaggi che arrivano nella casella di posta verranno scaricati e
+            salvati come documenti nella cartella impostata. Allo stesso modo gli allegati
+            verranno archiviati come collegati documento principale che contiene il corpo
+            del messaggio di posta. Selezionando, quindi, il documento principale con il
+            tasto destro, sar&agrave; possibile visualizzare i relativi allegati nella pagina
+            raggiungibile selezionando la voce del men&ugrave; contestuale <span class="style1">Collegamenti</span>. <br>
+              <br>
+            <br>
+          </p>
+          <div align="center">
+            <table width="90%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="180" height="25" class="noteHeader"><img src="images/note_ico.gif" width="10" height="10" hspace="4">Nota:</td>
+                <td height="25">&nbsp;</td>
+              </tr
+              >
+              <tr>
+                <td colspan="2" class="noteBody">Le sole caselle di posta abilitate verranno ispezionate ad intervalli di
+                  tempo regolari da un processo in background.<br>
+Se si desidera che le e-mail rimangano sul server verificare che il campo <span class="style1">Elimina dalla casella</span> sia impostato su &quot;no&quot;.<br>
+Le sole caselle di posta abilitate verranno ispezionate ad intervalli di
+tempo regolari dall'operazione pianificata <span class="style1">Acquisizione Email</span>. </td>
+              </tr>
+            </table>
+            <br>
+            <br>
+          </div>
+          </p>
+          <p>&nbsp; </p>
+          <!-- InstanceEndEditable --></div></td>
+          <td width="10">
+            <img alt="" src="images/spacer.gif" class="spacer" height="1" width="10" /></td>
+        </tr>
+        <!--================= end Content==================-->
+      </tbody>
+    </table>
+  </body>
+  <!-- InstanceEnd --></html>

@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><!-- InstanceBegin template="/Templates/logicaldoc-help.dwt" codeOutsideHTMLIsLocked="false" -->
+  <head>
+  <!-- InstanceBeginEditable name="doctitle" -->
+<title>Ricerca</title>
+<!-- InstanceEndEditable -->
+  <link href="css/help.css" rel="stylesheet" type="text/css">
+  <!-- InstanceBeginEditable name="head" -->
+<style type="text/css">
+<!--
+.style5 {
+	color: #000000;
+	font-weight: bold;
+}
+-->
+</style>
+  <!-- InstanceEndEditable -->
+  </head>
+  <body>
+    <table summary="content" border="0" cellpadding="0" cellspacing="0" width="100%">
+      <!--================= start Content==================-->
+      <tbody>
+        <tr>
+          <td align="left" width="10">
+            <img alt="" src="images/spacer.gif" class="spacer" height="1" width="10" /></td>
+          <td align="left" width="100%">
+            <div class="content">
+              <table class="title" width="100%">
+                <tbody>
+                  <tr>
+                    <td valign="middle">
+                      <h1><!-- InstanceBeginEditable name="TitleRegion" -->Ricerca<!-- InstanceEndEditable --></h1></td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- InstanceBeginEditable name="ContentRegion" -->
+          <p>In LogicalDOC &egrave; possibile ricercare un documento in tre diverse modalit&agrave;:<br>
+            1. Ricerca veloce<br>
+            2. <a href="#advanced">Ricerca avanzata</a><br>
+            3. <a href="#parametric">Ricerca per parametri</a></p>
+          <h3>Ricerca veloce </h3>
+          <br>
+          La maschera di ricerca semplice &egrave; sempre presente ed accessibile in qualsiasi momento nella parte superiore della finestra.<br>
+          E' importante specificare la lingua in cui si vuole eseguire la ricerca. Di base il sistema propone la lingua di default dell'utente (Documenti in Italiano). Premendo sull'icona <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.2</span></a> viene eseguita la ricerca per la parola inserita. <br>
+          Avviando la ricerca semplice verr&agrave; ricercato solamente all'interno dell'archivio nella lingua di base (e non sui documenti in altre lingue).<br>
+          Se invece vorremo ricercare sui documenti scritti in qualsiasi lingua occorre selezionare l'opzione &quot;Tutti i documenti&quot;.<br>
+          <br>
+          <br>
+          <div>
+            <div align="center"><img src="images/simplesearch.gif" width="378" height="60"><br>
+            </div>
+          </div>
+          <br>
+          <div align="center">
+            <table width="90%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="180" height="25" class="noteHeader"><img src="images/note_ico.gif" width="10" height="10" hspace="4">Nota:</td>
+                <td height="25">&nbsp;</td>
+              </tr
+              >
+              <tr>
+                <td colspan="2" class="noteBody">La ricerca sui documenti in un'unica lingua &egrave; di norma molto pi&ugrave; veloce che una ricerca effettuata su Tutti i  documenti.</td>
+              </tr>
+            </table>
+          </div>
+          <br>
+          <br>
+          Di ogni elemento trovato vengono mostrati il titolo, un estratto del testo contenente le parole cercate, la dimensione in KBytes, un punteggio di score ed i link per:
+          </p>
+          <ul>
+            <li>Scaricare il documento (titolo del documento) <br>
+            </li>
+            <li>Evidenziare il documento nella cartella (Mostra percorso -- &gt; click su link percorso) </li>
+            <li>Visualizzare documenti simili</li>
+            <li>Utilizzare il men&ugrave; Strumenti ridotto del documento (Click Destro sul titolo documento) </li>
+          </ul>
+          <br>
+          La presentazione dei risultati avviene in forma di una lista ordinata sulla base del punteggio di score.<br>
+          Il punteggio di score viene calcolato sulla frequenza dei termini cercati (o di parole con radice comune) all'interno del testo dei files. <br>
+          <br>
+          <br>
+          <div>
+            <div align="center"><img src="images/searchresults.gif" width="883" height="472"></div>
+          </div>
+          <p>In caso di molteplici risultati il sistema produrr&agrave; pi&ugrave; pagine di risultati che potranno essere consultate premendo i tasti cursore in basso a destra della pagina dei risultati. <br>
+            <br>
+            <strong>Ricercare su pi&ugrave; parole.</strong><br>
+            E' possibile ricercare su pi&ugrave; termini contemporaneamente, specificando ad esempio &quot;controllo remoto futura&quot; nel campo di ricerca verranno trovati tutti i documenti che hanno le parole indicate nel testo, non solo, verranno mostrati anche i documenti che contengono 2 delle 3 parole oppure 1 sola delle 3 parole.<br>
+            Verrano inoltre mostrati i documenti che contengono le parole derivate da controllo es: controllare, controllato, controllore, quelle derivate da remoto: remotamente, remotissimmo e quelle che hanno come radice futur cio&egrave; futuro, futura. <br>
+            <br>
+            <strong>Utilizzare gli operatori logici </strong><br>
+            Nella form di ricerca semplice &egrave; gi&agrave; possibile utilizzare operatori per la ricerca.<br>
+            Utilizzando i caratteri &quot;<strong>+</strong>&quot; e &quot;<strong>-</strong>&quot; &egrave; possibile eseguire ricerche su termini obbligati ed in esclusione. Ad esempio componendo la frase &quot;contratto +futura -progetto&quot; 
+            il sistema ricercher&agrave; tutti i documenti che hanno tassativamente la parola &quot;futura&quot; e che tassativamente non contengono la parola &quot;progetto&quot;, mentre il termine &quot;contratto&quot; viene inserito come opzionale.<br>
+            Una ricerca semplice &quot;futura rapportini&quot; invece trover&agrave; tutti i documenti in cui compare almeno uno dei 2 termini.<br>
+            Una ricerca del tipo &quot;attivit&agrave; -contratto&quot; produrr&agrave; tutti i documenti che contengono la parola &quot;attivit&agrave;&quot; e che contemporaneamente non contengono la parola &quot;contratto&quot;. <br>
+            Ricercare <strong>&quot;+rossi +mario&quot;</strong> equivale a &quot; <strong>rossi AND mario&quot;</strong> cio&egrave; significa che cercheremo tutti i documenti in cui compaiono entrambe le parole rossi e mario.<br>
+            E' anche possibile esplicitare direttamente queste ricerche ad esempio &quot;futura AND progetto NOT sviluppo&quot; equivale a &quot;+futura +progetto -sviluppo&quot;.<br>
+            Quando si utilizzano operatori logici come AND, OR, NOT occorre tenere presente che devono essere scritti tassativamente in maiuscolo. </p>
+          <h3><a name="advanced"></a>Ricerca avanzata</h3>
+          <br>
+          In LogicalDOC sotto la voce di men&ugrave; <span class="style5">Ricerche</span> &egrave; possibile visualizzare la
+          pagina di ricerca avanzata.<br>
+          La funzionalit&agrave; &egrave; inoltre accessibile premendo il link <span class="style5">Ricerca avanzata</span> presente a fianco della form di ricerca semplice nella parte superiore della finestra.<br>
+          <br>
+          <br>
+          <div>
+            <div align="center"><img src="images/searchadvanced00.gif" width="378" height="60"></div>
+          </div>
+          <br>
+          La differenza rispetto alla ricerca semplice &egrave; che tale maschera consente di specificare in modo semplice criteri di ricerca complessi ed attivi contemporanemente. <br>
+          Utilizzando la ricerca estesa  &egrave; possibile cercare parole semplici o frasi. Si possono inoltre escludere  alcune parole dalla ricerca oppure attivare una ricerca approssimata.<br>
+          I risultati possono essere ristretti in base alla dimensione, alla data e al formato dei documenti.<br>
+          <br>
+          Tra gli aspetti rilevanti di tale ricerca:<br>
+          <ul>
+            <li>la possibilit&agrave; di ricerca avanzate per termini che consente di esprimere filtri complessi<br>
+            </li>
+            <li>la ricercare 
+              per dimensione del documenti</li>
+            <li>la ricerca per data del documento (gestibile nella maschera di inserimento/modifica documento)</li>
+            <li>la ricerca per data di pubblicazione (ultima modifica al documento)</li>
+          </ul>
+          <br>
+          Il prodotto della procedura di ricerca avanzata viene presentato nella stessa forma di quello della ricerca semplice ed i documenti sono accessibili con le stesse modalit&agrave;.
+          <p><br>
+          </p>
+          <div>
+            <div align="center"><img src="images/searchadvanced01.gif" width="500" height="513"></div>
+          </div>
+          <h3><a name="parametric" id="parametric"></a>Ricerca per parametri</h3>
+            <p>In LogicalDOC sotto la voce di men&ugrave; <span class="style5">Ricerche</span> &egrave; possibile visualizzare la
+              pagina di ricerca per parametri. Questa funzionalit&agrave; consente all'utente di
+            poter ricercare documenti in base ai valori contenuti in diversi parametri. La
+            ricerca viene effettuata solo sui metadati dei documenti e, a differenza della
+            ricerca avanzata, vengono presi in esame tutti i documenti indicizzati e non. Per effettuare una ricerca paramentrica l'utente semplicemente aggiunge e
+rimuove una condizione applicabile su ogni possibile metadato di un
+documento. Come in una query SQL, la condizione può essere posta in 'and'
+o in 'or' rispetto alle altre precedentemente inserite. L'utente, infatti, attraverso
+la prima tendina sceglie la composizione voluta (and/or). Nella seconda
+tendina l'utente sceglie il campo sul quale verrà effettuata la ricerca.
+Successivamente l'utente può scegliere l'operatore (uguale, diverso, maggiore
+di, minore di) e poi definisce il valore che deve avere il campo. In particolare,
+se l'utente vuole cercare tutti i documenti di una specifica classe
+documentale, l'elenco di tutte le classi documentali disponibili verrà
+visualizzato nell'ultima tendina; in questo modo l'utnete può selezionare la
+classe documentale e aggiungere la condizione di ricerca. A questo punto tutti
+gli attributi della classe documentale scelta saranno selezionabili nella tendina
+dei campi per definire un'altra condizione. Se l'utente rimuove la condizione
+sulla classe documentale, allora i relativi attributi non saranno più visualizzati
+nella seconda tendina. Analogamente, se l'utente vuole cercare i documenti di
+una cerca lingua, la lista di tutte le lingue disponibili comparirà nell'ultima
+tendina. Infine, se l'utente vuole cercare i documenti presenti all'interno di una
+specifica cartella, l'utente sceglie il campo 'Cartella' fra tutti quelli disponibili e
+poi seleziona la specifica cartella cliccando il pulsante 'Sfoglia'.</p>
+          <p><br>
+          </p>
+          <div>
+            <div align="center"><img src="images/searchparametric01.gif" width="520" height="178"></div>
+          </div>
+            <p>&nbsp;</p>
+            <p>              </p>
+                </p>
+              <!-- InstanceEndEditable --></div></td>
+          <td width="10">
+            <img alt="" src="images/spacer.gif" class="spacer" height="1" width="10" /></td>
+        </tr>
+        <!--================= end Content==================-->
+      </tbody>
+    </table>
+  </body>
+  <!-- InstanceEnd --></html>

@@ -1,0 +1,61 @@
+<?xml version = '1.0'?>
+<!-- 
+ Directory's insert form
+  
+ @author Marco Meschieri
+ @version $Id: insertDir.jspx,v 1.2 2006/08/29 16:33:46 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="insertForm" style="width: 95%">
+	<ice:panelGroup styleClass="formBorderHighlight">
+		<h3>
+			<ice:outputText value="#{msgs['msg.jsp.createfolder']}" />
+			<br />
+			<br />
+		</h3>
+		<ice:panelGroup>
+			<!-- Core data -->
+			<ice:panelGroup>
+				<h3>
+					<ice:outputText value="#{msgs['msg.jsp.folderdata']}" />
+					<br />
+					<br />
+				</h3>
+				<ice:panelGrid columns="2">
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="folderName"
+							value="#{msgs['msg.jsp.foldername']}*" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText actionListener="#{directoryForm.insert}"
+							id="folderName" value="#{directoryForm.folderName}" tabindex="1"
+							maxlength="255" size="50" required="true" />
+						<ice:message for="folderName" />
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+			<hr />
+			<ice:panelGroup styleClass="commands">
+				<ice:commandButton value="#{msgs['cancel']}" partialSubmit="true"
+					immediate="true" action="#{newDocWizard.abort}" />
+				<ice:commandButton value="#{msgs['save']}" tabindex="1" id="save"
+					action="#{directoryForm.insert}" />
+			</ice:panelGroup>
+		</ice:panelGroup>
+	</ice:panelGroup>
+	<script language="JavaScript1.2">
+	function microsoftKeyPress() {
+    	if (window.event.keyCode == 13)
+        alert('Enter pressed');
+}
+		      
+		</script>
+</jsp:root>
