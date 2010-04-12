@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+
+  <!-- jBPM configuration -->
+  <bean id="jbpmConfiguration" class="org.springmodules.workflow.jbpm31.LocalJbpmConfigurationFactoryBean">
+    <property name="sessionFactory" ref="SessionFactory" />
+    <property name="configuration" value="classpath:/jbpm.cfg.xml" />
+    <property name="createSchema" value="false" />
+  </bean>
+
+
+  <bean id="jbpmTemplate" class="org.springmodules.workflow.jbpm31.JbpmTemplate">
+    <constructor-arg ref="jbpmConfiguration" />
+  </bean>
+
+  <bean id="jbpmWorkflowEngine" class="com.logicaldoc.workflow.JBPMWorkflowEngine">
+    <property name="jbpmTemplate" ref="jbpmTemplate" />
+  </bean>
+
+  <bean id="workflowService" class="com.logicaldoc.workflow.WorkflowServiceImpl">
+    <property name="workflowComponent" ref="jbpmWorkflowEngine" />
+    <property name="workflowTransformService" ref="workflowTransformService" />
+  </bean>
+
+  <bean id="WorkflowPersistenceTemplateDAO" parent="ApplicationBaseTransactionProxy" abstract="false" lazy-init="default"
+    autowire="default" dependency-check="default">
+    <property name="target">
+      <bean class="com.logicaldoc.workflow.editor.HibernateWorkflowPersistenceTemplateDAO" abstract="false"
+        lazy-init="default" autowire="default" dependency-check="default">
+        <property name="sessionFactory">
+          <ref bean="SessionFactory" />
+        </property>
+      </bean>
+    </property>
+  </bean>
+
+  <bean id="WorkflowHistoryDAO" parent="ApplicationBaseTransactionProxy" abstract="false" lazy-init="default"
+    autowire="default" dependency-check="default">
+    <property name="target">
+      <bean class="com.logicaldoc.workflow.editor.HibernateWorkflowHistoryDAO" abstract="false"
+        lazy-init="default" autowire="default" dependency-check="default">
+        <property name="sessionFactory">
+          <ref bean="SessionFactory" />
+        </property>
+      </bean>
+    </property>
+  </bean>
+
+  <bean id="StartWorkflowWizard" class="com.logicaldoc.workflow.wizard.StartWorkflowWizard" scope="session">
+    <property name="XStream" ref="xStream" />
+  </bean>
+
+  <bean id="workflowTaskController" class="com.logicaldoc.workflow.editor.controll.TaskController">
+  </bean>
+
+  <bean id="ModelConfiguration" class="com.logicaldoc.workflow.model.ModelConfiguration" />
+
+  <bean id="workflowTransformService" class="com.logicaldoc.workflow.transform.JBPMWorkflowTransformServiceImpl">
+    <property name="XStream" ref="xStream" />
+    <property name="modelConfiguration" ref="ModelConfiguration" />
+  </bean>
+
+  <bean id="xStream" class="com.thoughtworks.xstream.XStream" />
+
+
+  <!-- JSF beans -->
+
+  <!-- Home bean -->
+  <bean id="WorkflowTemplateManager" class="com.logicaldoc.workflow.editor.WorkflowTemplateManager" scope="session">
+    <property name="workflowTemplateDao" ref="WorkflowPersistenceTemplateDAO" />
+    <property name="modelConfiguration" ref="ModelConfiguration" />
+  </bean>
+
+  <bean id="WorkflowManager" class="com.logicaldoc.workflow.WorkflowManager" scope="session" />
+
+  <bean id="templateService" class=" com.logicaldoc.workflow.FreemarkerTemplateService">
+    <property name="userDAO" ref="UserDAO" />
+    <property name="workflowService" ref="workflowService" />
+  </bean>
+</beans>
