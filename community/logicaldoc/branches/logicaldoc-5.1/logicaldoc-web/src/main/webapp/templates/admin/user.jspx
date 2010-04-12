@@ -1,0 +1,235 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page is the document editing form
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form">
+
+	<ice:panelGroup styleClass="center formBorderHighlight"
+		style="text-align:left; width: 600px;">
+
+		<ice:panelGroup>
+			<!-- Login data -->
+			<ice:panelGroup>
+				<h3>
+					<ice:outputText value="#{msgs['msg.jsp.adduser.logindata']}" />
+					<br />
+					<br />
+				</h3>
+				<ice:panelGrid columns="5">
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="userName"
+							value="#{msgs['username']}*" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="userName" value="#{userForm.user.userName}"
+							maxlength="255" required="true" disabled="#{!userForm.createNew}" />
+						<ice:message for="userName" />
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="passwordExpires"
+							value="#{msgs['password.expires']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+					    <ice:selectBooleanCheckbox id="passwordExpires" value="#{userForm.passwordExpires}" binding="#{userForm.passwordExpiresControl}" disabled="#{userForm.user.userName eq 'admin'}"/>
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+		</ice:panelGroup>
+
+		<!-- Personal data -->
+		<ice:panelGroup>
+			<hr />
+			<h3>
+				<ice:outputText value="#{msgs['msg.jsp.adduser.personaldata']}" />
+				<br />
+				<br />
+			</h3>
+			<ice:panelGrid columns="5">
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="firstName"
+						value="#{msgs['msg.jsp.adduser.firstname']}*" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="firstName" value="#{userForm.user.firstName}"
+						maxlength="30" required="true"
+						binding="#{userForm.firstNameControl}" />
+					<ice:message for="firstName" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="name"
+						value="#{msgs['msg.jsp.adduser.lastname']}*" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="name" value="#{userForm.user.name}"
+						maxlength="30" required="true" binding="#{userForm.nameControl}" />
+					<ice:message for="name" />
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="street"
+						value="#{msgs['msg.jsp.adduser.address']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="street" value="#{userForm.user.street}"
+						maxlength="100" binding="#{userForm.streetControl}" />
+					<ice:message for="street" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="postalCode"
+						value="#{msgs['msg.jsp.adduser.postalcode']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="postalCode" value="#{userForm.user.postalcode}"
+						maxlength="10" binding="#{userForm.postalCodeControl}" />
+					<ice:message for="postalCode" />
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="city" value="#{msgs['msg.jsp.adduser.city']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="city" value="#{userForm.user.city}"
+						maxlength="30" binding="#{userForm.cityControl}" />
+					<ice:message for="city" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="country"
+						value="#{msgs['msg.jsp.adduser.country']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="country" value="#{userForm.user.country}"
+						maxlength="30" binding="#{userForm.countryControl}" />
+					<ice:message for="country" />
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="language"
+						value="#{msgs['msg.jsp.adduser.language']}" />
+				</ice:panelGroup>
+				<ice:panelGroup style="text-align:left;">
+					<ice:selectOneMenu styleClass="selectTagMenu"
+						value="#{userForm.user.language}"
+						binding="#{userForm.languageControl}">
+						<f:selectItems value="#{selectionTags.languages}" />
+					</ice:selectOneMenu>
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="state" value="#{msgs['state']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="state" value="#{userForm.user.state}"
+						maxlength="100" binding="#{userForm.stateControl}">
+					</ice:inputText>
+					<ice:message for="state" />
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="phone"
+						value="#{msgs['msg.jsp.adduser.phone']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="phone" value="#{userForm.user.telephone}"
+						maxlength="30" binding="#{userForm.phoneControl}" />
+					<ice:message for="phone" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="email" value="#{msgs['email']}*" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="email" value="#{userForm.user.email}"
+						maxlength="100" required="true" binding="#{userForm.emailControl}">
+						<f:validator validatorId="validator.email" />
+					</ice:inputText>
+					<ice:message for="email" />
+				</ice:panelGroup>
+				
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputLabel for="phone2"
+						value="#{msgs['msg.jsp.adduser.phone2']}" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="phone2" value="#{userForm.user.telephone2}"
+						maxlength="30" binding="#{userForm.phone2Control}" />
+					<ice:message for="phone2" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup />
+				<ice:panelGroup />
+			</ice:panelGrid>
+		</ice:panelGroup>
+
+		<!-- Group affiliation -->
+		<ice:panelGroup>
+			<hr />
+			<h3>
+				<ice:outputText value="#{msgs['msg.jsp.adduser.groupaffiliation']}" />
+				<br />
+				<br />
+			</h3>
+			<ice:panelGrid columns="5">
+				<ice:panelGroup>
+					<ldoc:groupselector id="grp1" showFilter="true" allowMultipleSelection="true"
+						label="#{msgs['group.available']}" large="131"
+						items="#{userForm.availableGroups}"
+						value="#{userForm.selectedAvailableGroups}"
+						filterValue="#{userForm.availableGroupFilter}"
+						filterListener="#{userForm.filterAvailableGroups}" />
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="commands">
+					<ice:panelGrid columns="1">
+						<ice:panelGroup>
+							<ice:commandButton value="&gt;&gt;"
+								action="#{userForm.assignGroups}" partialSubmit="true"
+								immediate="false" />
+						</ice:panelGroup>
+						<ice:panelGroup>
+							<ice:commandButton value="&lt;&lt;"
+								action="#{userForm.unassignGroups}" partialSubmit="true"
+								immediate="false" />
+						</ice:panelGroup>
+					</ice:panelGrid>
+				</ice:panelGroup>
+
+				<ice:panelGroup>
+					<ldoc:groupselector id="grp2" showFilter="true" allowMultipleSelection="true"
+						label="#{msgs['group.assigned']}" large="131"
+						items="#{userForm.allowedGroups}"
+						value="#{userForm.selectedAllowedGroups}"
+						filterValue="#{userForm.allowedGroupFilter}"
+						filterListener="#{userForm.filterAllowedGroups}" />
+				</ice:panelGroup>
+
+				<ice:panelGroup />
+				<ice:panelGroup />
+			</ice:panelGrid>
+		</ice:panelGroup>
+
+		<hr />
+
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['cancel']}"
+				action="#{usersRecordsManager.list}" partialSubmit="true"
+				immediate="true" />
+			<ice:commandButton value="#{msgs['save']}" action="#{userForm.save}"
+				id="save" />
+		</ice:panelGroup>
+
+	</ice:panelGroup>
+</jsp:root>

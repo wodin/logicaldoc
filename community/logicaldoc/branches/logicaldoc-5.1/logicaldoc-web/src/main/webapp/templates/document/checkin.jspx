@@ -1,0 +1,102 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page shows the upload document wizard
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="uploadForm">
+
+	<h2>
+		<ice:outputText value="#{msgs['checkin']}" style="padding-left:8px;" />
+	</h2>
+
+	<ice:messages globalOnly="true" />
+
+	<ice:panelGroup styleClass="formBorderHighlight">
+		<ice:panelGroup>
+
+			<!-- File selection -->
+			<ice:panelGroup>
+				<b><ice:outputText value="#{documentForm.title}" />
+				</b>
+			</ice:panelGroup>
+
+			<br />
+			<br />
+
+			<!-- File selection -->
+			<ice:panelGroup>
+				<ice:inputFile id="iFile" styleClass="inputFile"
+					progressRender="true" progressListener="#{inputFile.progress}"
+					actionListener="#{inputFile.action}" inputTextSize="45"
+					label="#{msgs['upload.button']}" />
+				<ice:outputProgress id="pro" value="#{inputFile.percent}" />
+				<ice:outputText
+					value="#{msgs['upload.filename']}: #{inputFile.fileName}" escape="false">
+				</ice:outputText>
+				<br />
+				<ice:messages for="iFile" />
+			</ice:panelGroup>
+
+			<br />
+
+
+			<!-- Description -->
+			<ice:panelGrid columns="2">
+				<!-- Version type selection -->
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputText value="#{msgs['checkin.majorupdate']}"
+						style="padding-left:8px;" />
+				</ice:panelGroup>
+				<ice:selectBooleanCheckbox value="#{documentForm.majorUpdate}" />
+
+				<br />
+				<br />
+
+				<!-- Version description -->
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputText value="#{msgs['msg.jsp.versiondesc']}*"
+						style="padding-left:8px;" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:inputText id="versiondesc" value="#{documentForm.versionDesc}"
+						maxlength="250" size="38" required="true" />
+					<ice:message for="versiondesc" />
+				</ice:panelGroup>
+
+				<br />
+				<br />
+
+				<!-- Check fileName -->
+				<ice:panelGroup styleClass="outputLabel">
+					<ice:outputText value="#{msgs['checkin.checkoriginalfilename']}"
+						style="padding-left:8px;" />
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox
+						value="#{documentForm.checkOriginalFilename}" />
+				</ice:panelGroup>
+			</ice:panelGrid>
+		</ice:panelGroup>
+		<hr />
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['back']}" styleClass="backBtn" partialSubmit="true"
+				immediate="true" action="#{newDocWizard.abort}" />
+			<ice:commandButton value="#{msgs['checkin.cancelcheckout']}"
+				action="#{documentForm.uncheckout}" partialSubmit="true"
+				immediate="true" />
+			<ice:commandButton value="#{msgs['checkin']}"
+				action="#{documentForm.checkin}"
+				disabled="#{inputFile.percent!=100}" />
+		</ice:panelGroup>
+	</ice:panelGroup>
+</jsp:root>

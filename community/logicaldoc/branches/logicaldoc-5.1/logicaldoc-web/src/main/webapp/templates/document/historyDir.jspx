@@ -1,0 +1,92 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page lists histories of a folder
+  
+ @author Matteo Caruso - Logical Objects
+ @since 5.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+	styleClass="formBorderHighlight">
+	<h3>
+		<ice:outputText
+			value="#{msgs['history']} - #{historyRecordsManager.selectedFolder.id == 5 ? msgs['menu.documents'] : historyRecordsManager.selectedFolder.text}" />
+		<br />
+	</h3>
+
+	<f:subview id="w-history">
+		<ice:form>
+			<ice:panelGroup style="width:97%;">
+				<!-- histories -->
+				<ice:panelGroup>
+					<ice:dataTable id="histories"
+						value="#{historyRecordsManager.folderHistories}" var="history"
+						cellpadding="0" width="100%" rows="10"
+						columnClasses="dateColumn,dateColumn,titleColumn,dateColumn,numberColumn">
+
+						<!-- author column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['user']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{history.userName}" />
+							</ice:panelGroup>
+						</ice:column>
+						
+						<!-- date column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['date']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{history.date}">
+									<f:convertDateTime pattern="#{loc.dateFormat}" timeZone="#{StyleBean.timeZone}" />
+								</ice:outputText>
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- event column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['event']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{msgs[history.event]}" />
+							</ice:panelGroup>
+						</ice:column>
+						
+						<!-- comment column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['comment']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{history.comment}" />
+							</ice:panelGroup>
+						</ice:column>
+
+					</ice:dataTable>
+
+					<ice:panelGroup>
+						<ldoc:paginator table="histories"
+							label="#{msgs['paginator.simple']}" />
+						<br />
+					</ice:panelGroup>
+				</ice:panelGroup>
+			</ice:panelGroup>
+		</ice:form>
+	</f:subview>
+	<ice:form>
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['back']}" styleClass="backBtn"
+				partialSubmit="true" action="#{documentNavigation.showDocuments}" />
+		</ice:panelGroup>
+	</ice:form>
+</jsp:root>

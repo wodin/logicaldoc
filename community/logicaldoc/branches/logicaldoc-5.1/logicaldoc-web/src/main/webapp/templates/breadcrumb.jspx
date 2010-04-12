@@ -1,0 +1,47 @@
+<?xml version = '1.0'?>
+<!-- 
+ Navigation breadcrumb
+  
+ @author Marco Meschieri - Logical Objects
+ @since 5.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
+
+	<div id="breadcrumb">
+		<ice:panelSeries style="display: inline;" var="crumb"
+			value="#{menuBar.breadcrumb}"
+			rendered="#{navigation.selectedPanel.menuId != 5}">
+			<ice:commandLink actionListener=" ">
+				<ice:outputText value="#{crumb.value}" styleClass="breadcrumbLink"
+					rendered="#{!(crumb.menuId eq navigation.selectedPanel.menuId)}" />
+				<ice:outputText value="#{crumb.value}" styleClass="breadcrumbUnlink"
+					rendered="#{crumb.menuId eq navigation.selectedPanel.menuId}" />
+			</ice:commandLink>
+			<ice:graphicImage value="#{StyleBean.imagesPath}/arrow2.gif"
+				style="padding-right:4px; padding-bottom: 1px; padding-left: 3px;"
+				rendered="#{!(crumb.menuId eq navigation.selectedPanel.menuId)}" />
+		</ice:panelSeries>
+		<ice:panelSeries style="display: inline;" var="folder"
+			value="#{documentNavigation.breadcrumb}"
+			rendered="#{navigation.selectedPanel.menuId == 5}">
+			<ice:commandLink
+				actionListener="#{documentNavigation.onSelectDirectory}">
+				<f:param name="directoryId" value="#{folder.menuId}" />
+				<ice:outputText value="#{folder.displayText}"
+					styleClass="breadcrumbLink" rendered="#{folder.selected == false}" />
+				<ice:outputText value="#{folder.displayText}"
+					styleClass="breadcrumbUnlink" rendered="#{folder.selected}" />
+			</ice:commandLink>
+			<ice:graphicImage value="#{StyleBean.imagesPath}/arrow2.gif"
+				rendered="#{folder.selected == false}"
+				style="padding-right:4px; padding-bottom: 1px; padding-left: 3px;" />
+		</ice:panelSeries>
+	</div>
+</jsp:root>

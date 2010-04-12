@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><!-- InstanceBegin template="/Templates/logicaldoc-help.dwt" codeOutsideHTMLIsLocked="false" -->
+  <head>
+  <!-- InstanceBeginEditable name="doctitle" -->
+<title>Gestione Utenti</title>
+<!-- InstanceEndEditable -->
+  <link href="css/help.css" rel="stylesheet" type="text/css">
+  <!-- InstanceBeginEditable name="head" -->
+  <style type="text/css">
+<!--
+.style2 {
+	color: #000000;
+	font-weight: bold;
+}
+.style3 {color: #FF6600}
+-->
+  </style>
+  <!-- InstanceEndEditable -->
+  </head>
+  <body>
+    <table summary="content" border="0" cellpadding="0" cellspacing="0" width="100%">
+      <!--================= start Content==================-->
+      <tbody>
+        <tr>
+          <td align="left" width="10">
+            <img alt="" src="images/spacer.gif" class="spacer" height="1" width="10" /></td>
+          <td align="left" width="100%">
+            <div class="content">
+              <table class="title" width="100%">
+                <tbody>
+                  <tr>
+                    <td valign="middle">
+                      <h1><!-- InstanceBeginEditable name="TitleRegion" -->Gestione Utenti <!-- InstanceEndEditable --></h1></td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- InstanceBeginEditable name="ContentRegion" -->
+          <p>Accedendo all'amministrazione mediante l'omonimo men&ugrave;, &egrave; possibile
+            cliccare sulla gestione degli utenti(sotto-men&ugrave; 'Utente').			    </p>
+          <p>
+            <center>
+              <img src="images/users_01.gif" width="524" height="201" heigth="197">
+              <br>
+              Figura 36: Amministrazione degli utenti
+            </center>
+          </p>
+          <p>Una volta selezionato il men&ugrave; <span class="style2">Utente</span> viene visualizzato l'elenco degli utenti
+            correntemente caricati nel sistema. Il sistema consente di ricercare e filtrare
+            uno specifico utente attraverso la textbox <span class="style2">Nome Utente</span>; vengono cos&igrave;
+            visualizzati solo gli utenti contenenti nel loro nome le lettere digitate.</p>
+          <h3>Creazione di un nuovo utente</h3>
+          <p>Selezionando l'icona <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.3</span></a> posta in alto a sinistra prima dell'elenco degli utenti,
+            verr&agrave; mostrata la maschera di inserimento di un nuovo utente. La maschera di
+            inserimento contiene tutti i dati descrittivi di un certo utente. <br> Alcuni dati sono
+            obbligatori ed in particolare:<br>          
+          <p style="padding-left:40px;">
+            1. username <br>
+            2. nome<br>
+            3. cognome<br>
+            4. lingua<br>
+            5. e-mail<br>
+            6. gruppi di appartenenza          
+          <p>
+            Ogni utente pu&ograve; appartenere ad uno o pi&ugrave; gruppi, i criteri di sicurezza sono
+            sempre espressi in relazione ai gruppi e mai ai singoli utenti. Per assegnare
+            un utente ad un gruppo &egrave; necessario spostare tale gruppo dall'elenco dei
+            gruppi disponibili all'elenco dei gruppi assegnati mediante l'apposito pulsante <span class="style2">&gt;&gt;</span>. Nel caso in cui si voglia riportare un gruppo nell'elenco di quelli disponibili
+            premete il pulsante <span class="style2">&lt;&lt;</span>. Per selezionare pi&ugrave; gruppi tenere premuto il tasto
+SHIFT mentre con il mouse si cliccano i gruppi.          </p>
+			<p>
+            <center>
+              <img src="images/users_02.gif" width="437" height="400">
+              <br>
+              Figura 37: Maschera di inserimento nuovo Utente
+            </center>
+          </p>
+		  <p> È presente, inoltre, la checkbox <span class="style2">Scadenza password</span> che consente di assegnare una durata di validità alla password assegnata all'utente. Terminati i giorni di validità, quando l'utente tenta di accedere al sistema cliccando sul pulsante Login, gli compare una pagina con il seguente avviso <span class="style2">La tua password è scaduta, inserisci una nuova password compilando la
+scheda sottostante.</span> e in cui l'utente deve digitare la vecchia password e poi digitare una nuova password; se l'utente ha digitato correttamente la vecchia password e ha fornito una nuova password con una lunghezza corretta (parametro <span class="style2">password.size</span>), allora l'utente potrà accedere nuovamente a LogicalDOC con la nuova password. </p>
+			<p>
+            <center>
+              <img src="images/users_03.gif" width="420" height="227">
+              <br>
+              Figura 38: Pagina di aggiornamento password
+              </center>
+          </p>
+          <p>Normalmente la durata della password è di 90 giorni, ma tale parametro di configurazione può essere modificato nella pagina Amministrazione --> Sicurezza --> Sicurezza. Nelle stessa pagina è possibile stabilire la lunghezza minima della password. <br> Quando viene cliccato il pulsante <span class="style2">Salva</span>, se tutti i campi obbligatori sono stati
+            correttamente definiti e se sono stati impostati i parametri di configurazione di
+            SMTP (men&ugrave; <span class="style2">Amministrazione</span>), l'utente viene creato, viene inserito nel
+            database e riceve nella sua casella di posta elettronica una e-mail di
+            benvenuto in LogicalDOC contenente lo username e la password creata del
+            sistema. Tale password potr&agrave; essere modificata dall'utente attraverso la
+            pagina di <span class="style2">Cambia password</span> (men&ugrave; <span class="style2">Dati personali</span>) e dall'Amministratore
+            cliccando l'icona <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.4</span></a> relativa all'utente nella pagina di elenco degli utenti
+            presenti nel sistema.</p>
+		  <p>&nbsp;</p>
+		            <div align="center">
+            <table width="90%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="180" height="25" class="noteHeader"><img src="images/note_ico.gif" width="10" height="10" hspace="4">Nota:</td>
+                <td height="25">&nbsp;</td>
+              </tr
+              >
+              <tr>
+                <td colspan="2" class="noteBody">Il modello di sicurezza implementato da LogicalDOC consente di
+                  esprimere politiche di sicurezza in merito alla visibilit&agrave; o meno dei documenti
+                  e di altre aree dell'applicazione. Questi criteri di sicurezza sono espressi
+                  unicamente in relazione ai gruppi, cosicch&eacute; ciascun utente eredita i privilegi
+                di accesso assegnati ai gruppi di cui egli fa parte.</td>
+              </tr>
+            </table>
+          </div>
+          <h3>Modifica di un utente</h3>
+              <p>Ciascun elemento dell'elenco degli utenti possiede fino a tre icone con le quali                &egrave; possibile procedere alla modifica, al cambio password o alla cancellazione.<br>
+                Cliccando sull'icona <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.5</span></a> viene visualizzata la stessa maschera descritta per
+                l'inserimento: l'unica differenza consiste nel fatto che in questo caso viene
+                effettuata un'operazione di modifica invece che di inserimento.<br>
+                L'icona <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.4</span></a> serve per cambiare la password all'utente.<br>
+                Come ovvio, un click sull'icona <a href="images/icons03menu.gif" target="_blank"><span class="iconref">3.6</span></a> determina l'eliminazione dell'utente.
+              <p>&nbsp;</p>
+              <!-- InstanceEndEditable --></div></td>
+          <td width="10">
+            <img alt="" src="images/spacer.gif" class="spacer" height="1" width="10" /></td>
+        </tr>
+        <!--================= end Content==================-->
+      </tbody>
+    </table>
+  </body>
+  <!-- InstanceEnd --></html>
