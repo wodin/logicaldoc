@@ -1,6 +1,9 @@
 package com.logicaldoc.workflow;
 
 import com.logicaldoc.core.document.AbstractHistory;
+import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.util.Context;
+import com.logicaldoc.web.i18n.Messages;
 
 /**
  * History entry due to an event on a workflow.
@@ -21,9 +24,11 @@ public class WorkflowHistory extends AbstractHistory {
 
 	public final static String EVENT_WORKFLOW_TASK_SUSPENDED = "event.workflow.task.suspended";
 
+	public final static String EVENT_WORKFLOW_TASK_RESUMED = "event.workflow.task.resumed";
+
 	public final static String EVENT_WORKFLOW_TASK_REASSIGNED = "event.workflow.task.reassigned";
 
-	public final static String EVENT_WORKFLOW_TASK_DOCAPPENDED = "event.workflow.task.docappended";
+	public final static String EVENT_WORKFLOW_DOCAPPENDED = "event.workflow.docappended";
 
 	private long templateId;
 
@@ -43,5 +48,21 @@ public class WorkflowHistory extends AbstractHistory {
 
 	public void setInstanceId(String instanceId) {
 		this.instanceId = instanceId;
+	}
+
+	public String getDocument() {
+		if (this.docId != null && this.docId > 0) {
+			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			return docDao.findById(this.docId).getTitle();
+		} else
+			return "";
+	}
+
+	public String getEventMessage() {
+		String event = getEvent();
+		if (event != null && !event.trim().isEmpty())
+			return Messages.getMessage(event);
+		else
+			return "";
 	}
 }

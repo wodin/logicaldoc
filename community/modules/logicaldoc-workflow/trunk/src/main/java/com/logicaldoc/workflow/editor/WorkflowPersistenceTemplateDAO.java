@@ -77,4 +77,12 @@ public interface WorkflowPersistenceTemplateDAO extends PersistentObjectDAO<Work
 	 * @return A list of persistence workflow template
 	 */
 	public List<WorkflowPersistenceTemplate> findAllDeployed();
+
+	/**
+	 * This method finds a worekflow template by name.
+	 * 
+	 * @param name Name of the workflow template.
+	 * @return WorkflowPersistenceTemplate with given name.
+	 */
+	public WorkflowPersistenceTemplate findByName(String name);
 }

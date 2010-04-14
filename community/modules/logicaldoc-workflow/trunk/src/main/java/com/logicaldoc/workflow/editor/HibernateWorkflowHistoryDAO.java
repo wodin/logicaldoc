@@ -1,5 +1,9 @@
 package com.logicaldoc.workflow.editor;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,7 +49,70 @@ public class HibernateWorkflowHistoryDAO extends HibernatePersistentObjectDAO<Wo
 	public List<WorkflowHistory> findByTemplateIdAndInstanceId(long templateId, String instanceId) {
 		String query = "_entity.templateId = " + templateId + " and lower(_entity.instanceId) = '"
 				+ SqlUtil.doubleQuotes(instanceId.toLowerCase()) + "'";
-		return findByWhere(query, "order by _entity.lastModified asc");
+		return findByWhere(query, "order by _entity.date desc");
 	}
 
+	@Override
+	public List<String> findInstanceIds() {
+		List<String> coll = new ArrayList<String>();
+		try {
+			String query = "select distinct(A.ld_instanceid) from ld_workflowhistory A where A.ld_deleted=0";
+
+			Connection con = null;
+			Statement stmt = null;
+			ResultSet rs = null;
+
+			try {
+				con = getSession().connection();
+				stmt = con.createStatement();
+				rs = stmt.executeQuery(query.toString());
+				while (rs.next()) {
+					coll.add(rs.getString(1));
+				}
+			} finally {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return coll;
+	}
+
+	@Override
+	public List<Long> findTemplateIds() {
+		List<Long> coll = new ArrayList<Long>();
+		try {
+			String query = "select distinct(A.ld_templateid) from ld_workflowhistory A where A.ld_deleted=0";
+
+			Connection con = null;
+			Statement stmt = null;
+			ResultSet rs = null;
+
+			try {
+				con = getSession().connection();
+				stmt = con.createStatement();
+				rs = stmt.executeQuery(query.toString());
+				while (rs.next()) {
+					coll.add(rs.getLong(1));
+				}
+			} finally {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return coll;
+	}
 }

@@ -5,11 +5,17 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.util.Context;
+import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
+import com.logicaldoc.workflow.editor.WorkflowHistoryDAO;
+import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplate;
+import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO;
 import com.logicaldoc.workflow.exception.WorkflowException;
 import com.logicaldoc.workflow.model.FetchModel;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
@@ -76,6 +82,47 @@ public class WorkflowServiceImpl implements WorkflowService {
 			log.info("properties size: " + properties.size());
 
 			workflowInstance = workflowComponent.startWorkflow(workflowDefinition.getDefinitionId(), properties);
+
+			// Create the workflow history event
+			WorkflowHistoryDAO workflowHistoryDao = (WorkflowHistoryDAO) Context.getInstance().getBean(
+					WorkflowHistoryDAO.class);
+			WorkflowHistory transaction = new WorkflowHistory();
+			WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
+					.getBean(WorkflowPersistenceTemplateDAO.class);
+
+			WorkflowPersistenceTemplate template = workflowTemplateDao.findByName(workflowInstance.getName());
+
+			transaction.setTemplateId(template.getId());
+			transaction.setTemplateId(template.getId());
+			transaction.setInstanceId(workflowInstance.getId());
+			transaction.setDate(new Date());
+			transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+			transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_START);
+			transaction.setComment("");
+			transaction.setUserId(SessionManagement.getUserId());
+			transaction.setUserName(SessionManagement.getUser().getFullName());
+
+			workflowHistoryDao.store(transaction);
+
+			// Create a workflow history for each document associated to this
+			// workflow instance
+			Set<Long> docIds = (Set<Long>) workflowInstance.getProperties().get(WorkflowConstants.VAR_DOCUMENTS);
+
+			for (Long docId : docIds) {
+				// Create the workflow history event
+				WorkflowHistory docAppended = new WorkflowHistory();
+				docAppended.setTemplateId(template.getId());
+				docAppended.setInstanceId(workflowInstance.getId());
+				docAppended.setDate(new Date());
+				docAppended.setSessionId(SessionManagement.getCurrentUserSessionId());
+				docAppended.setEvent(WorkflowHistory.EVENT_WORKFLOW_DOCAPPENDED);
+				docAppended.setDocId(docId);
+				docAppended.setComment("");
+				docAppended.setUserId(SessionManagement.getUserId());
+				docAppended.setUserName(SessionManagement.getUser().getFullName());
+
+				workflowHistoryDao.store(docAppended);
+			}
 		} else {
 			Messages.addLocalizedWarn("noselection");
 		}
@@ -143,6 +190,26 @@ public class WorkflowServiceImpl implements WorkflowService {
 	@Override
 	public void stopWorkflow(String processInstanceId) {
 		workflowComponent.stopWorkflow(processInstanceId);
+
+		// Create the workflow history event
+		WorkflowHistoryDAO workflowHistoryDao = (WorkflowHistoryDAO) Context.getInstance().getBean(
+				WorkflowHistoryDAO.class);
+		WorkflowHistory transaction = new WorkflowHistory();
+		WorkflowInstance instance = getWorkflowInstanceById(processInstanceId, FETCH_TYPE.INFO);
+		WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
+				.getBean(WorkflowPersistenceTemplateDAO.class);
+		WorkflowPersistenceTemplate template = workflowTemplateDao.findByName(instance.getName());
+
+		transaction.setTemplateId(template.getId());
+		transaction.setInstanceId(processInstanceId);
+		transaction.setDate(new Date());
+		transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+		transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_END);
+		transaction.setComment("");
+		transaction.setUserId(SessionManagement.getUserId());
+		transaction.setUserName(SessionManagement.getUser().getFullName());
+
+		workflowHistoryDao.store(transaction);
 	}
 
 	@Override

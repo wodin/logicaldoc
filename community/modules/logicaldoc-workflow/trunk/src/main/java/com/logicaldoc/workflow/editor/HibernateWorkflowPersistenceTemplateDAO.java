@@ -198,4 +198,16 @@ public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistent
 		}
 		return file;
 	}
+
+	@Override
+	public WorkflowPersistenceTemplate findByName(String name) {
+		WorkflowPersistenceTemplate template = null;
+		List<WorkflowPersistenceTemplate> coll = findByWhere("_entity.name = '" + SqlUtil.doubleQuotes(name) + "'",
+				null);
+		if (coll.size() > 0) {
+			template = coll.iterator().next();
+		}
+
+		return template;
+	}
 }

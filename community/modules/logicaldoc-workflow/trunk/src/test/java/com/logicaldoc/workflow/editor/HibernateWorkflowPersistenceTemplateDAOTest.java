@@ -126,4 +126,15 @@ public class HibernateWorkflowPersistenceTemplateDAOTest extends AbstractWorkflo
 		assertEquals(0, workflows.size());
 		assertTrue(!workflows.contains(dao.findById(3)));
 	}
+
+	public void testFindByName() {
+		WorkflowPersistenceTemplate template = dao.findByName("workflow1");
+		assertNotNull(template);
+		assertEquals(1, template.getId());
+		assertEquals("workflow1", template.getName());
+		assertEquals("pippo", template.getStartState());
+
+		template = dao.findByName("xxx");
+		assertNull(template);
+	}
 }

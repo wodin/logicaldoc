@@ -64,6 +64,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 		PropertiesBean pbean = new PropertiesBean();
 		pbean.setProperty("workflow.assignment.handler", "com.logicaldoc.workflow.action.DefaultAssignmentHandler");
 		pbean.setProperty("workflow.remind.handler", "com.logicaldoc.workflow.action.DefaultRemindHandler");
+		pbean.setProperty("history.workflow.ttl", "90");
 		pbean.write();
 	}
 

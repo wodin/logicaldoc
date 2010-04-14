@@ -3,6 +3,10 @@ package com.logicaldoc.workflow.model;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+
+import com.logicaldoc.web.document.DocumentRecord;
+import com.logicaldoc.workflow.WorkflowConstants;
 
 public class WorkflowInstance implements FetchModel {
 
@@ -17,6 +21,9 @@ public class WorkflowInstance implements FetchModel {
 	private String name;
 
 	private Map<String, Object> properties = new HashMap<String, Object>();
+
+	// indicates if the instance is selected
+	private boolean selected = false;
 
 	public Date getEndDate() {
 		return endDate;
@@ -82,11 +89,32 @@ public class WorkflowInstance implements FetchModel {
 		this.startDate = workflowInstance.startDate;
 
 		if (workflowInstance.properties != null) {
-			for (Map.Entry<String, Object> entry : workflowInstance.properties
-					.entrySet()) {
+			for (Map.Entry<String, Object> entry : workflowInstance.properties.entrySet()) {
 				this.properties.put((String) entry.getKey(), entry.getValue());
 			}
 		}
+	}
 
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	public String getDocuments() {
+		Set<DocumentRecord> documents = (Set<DocumentRecord>) getProperties().get(WorkflowConstants.VAR_DOCUMENTS);
+		String txt_doclist = "";
+
+		for (DocumentRecord documentRecord : documents) {
+			txt_doclist += documentRecord.getTitle();
+			txt_doclist += ", ";
+		}
+
+		if (txt_doclist.trim().endsWith(","))
+			return txt_doclist.trim().substring(0, txt_doclist.lastIndexOf(","));
+		else
+			return txt_doclist.trim();
 	}
 }
