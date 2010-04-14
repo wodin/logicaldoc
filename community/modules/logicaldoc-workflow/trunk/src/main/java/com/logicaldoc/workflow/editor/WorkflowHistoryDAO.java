@@ -28,4 +28,13 @@ public interface WorkflowHistoryDAO extends PersistentObjectDAO<WorkflowHistory>
 	 */
 	public void createWorkflowHistory(User user, String eventType, String comment, String sessionId);
 
+	/**
+	 * Get all instances ids.
+	 */
+	public List<String> findInstanceIds();
+	
+	/**
+	 * Get all template ids.
+	 */
+	public List<Long> findTemplateIds();
 }

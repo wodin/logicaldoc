@@ -1,5 +1,6 @@
 package com.logicaldoc.workflow.editor;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.logicaldoc.workflow.AbstractWorkflowTestCase;
@@ -32,4 +33,19 @@ public class HibernateWorkflowHistoryDAOTest extends AbstractWorkflowTestCase {
 		assertEquals(0, histories.size());
 	}
 
+	public void testFindTemplateIds() {
+		Collection<Long> ids = dao.findTemplateIds();
+		assertNotNull(ids);
+		assertEquals(1, ids.size());
+		assertTrue(ids.contains(new Long(1)));
+		assertFalse(ids.contains(new Long(2)));
+	}
+
+	public void testFindInstanceIds() {
+		Collection<String> ids = dao.findInstanceIds();
+		assertNotNull(ids);
+		assertEquals(1, ids.size());
+		assertTrue(ids.contains("1"));
+		assertFalse(ids.contains("2"));
+	}
 }

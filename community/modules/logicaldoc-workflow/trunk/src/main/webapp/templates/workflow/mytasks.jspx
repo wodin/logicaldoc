@@ -29,12 +29,13 @@
 						columnClasses="tableCol">
 						<ice:column>
 							<f:facet name="header">
-								<ice:outputText id="column0" value="#{msgs['workflow.editor_workflowname']}" />
+								<ice:outputText id="column0"
+									value="#{msgs['workflow.editor_workflowname']}" />
 							</f:facet>
 							<ice:outputText id="workflowname"
 								value="#{taskInstance.workflowName}" />
 						</ice:column>
-						
+
 						<ice:column>
 							<f:facet name="header">
 								<ice:outputText id="column1" value="#{msgs['id']}" />
@@ -61,12 +62,13 @@
 						columnClasses="tableCol">
 						<ice:column>
 							<f:facet name="header">
-								<ice:outputText id="column0" value="#{msgs['workflow.editor_workflowname']}" />
+								<ice:outputText id="column0"
+									value="#{msgs['workflow.editor_workflowname']}" />
 							</f:facet>
 							<ice:outputText id="workflowname"
 								value="#{taskInstance.workflowName}" />
 						</ice:column>
-						
+
 						<ice:column>
 							<f:facet name="header">
 								<ice:outputText id="column1" value="#{msgs['id']}" />
@@ -107,12 +109,13 @@
 						columnClasses="tableCol">
 						<ice:column>
 							<f:facet name="header">
-								<ice:outputText id="column0" value="#{msgs['workflow.editor_workflowname']}" />
+								<ice:outputText id="column0"
+									value="#{msgs['workflow.editor_workflowname']}" />
 							</f:facet>
 							<ice:outputText id="workflowname"
 								value="#{taskInstance.workflowName}" />
 						</ice:column>
-						
+
 						<ice:column>
 							<f:facet name="header">
 								<ice:outputText id="column1" value="#{msgs['id']}" />
@@ -148,12 +151,13 @@
 						rows="15" columnClasses="tableCol">
 						<ice:column>
 							<f:facet name="header">
-								<ice:outputText id="column0" value="#{msgs['workflow.editor_workflowname']}" />
+								<ice:outputText id="column0"
+									value="#{msgs['workflow.editor_workflowname']}" />
 							</f:facet>
 							<ice:outputText id="workflowname"
 								value="#{taskInstance.workflowName}" />
 						</ice:column>
-						
+
 						<ice:column>
 							<f:facet name="header">
 								<ice:outputText id="column1" value="#{msgs['id']}" />
@@ -207,7 +211,8 @@
 						rows="15" columnClasses="tableCol">
 						<ice:column>
 							<f:facet name="header">
-								<ice:outputText id="column0" value="#{msgs['workflow.editor_workflowname']}" />
+								<ice:outputText id="column0"
+									value="#{msgs['workflow.editor_workflowname']}" />
 							</f:facet>
 							<ice:outputText id="workflowname"
 								value="#{taskInstance.workflowName}" />
@@ -255,5 +260,11 @@
 				</td>
 			</tr>
 		</table>
+		<hr />
+		<ice:panelGroup styleClass="commands"
+			rendered="#{(not empty (WorkflowManager.adminTasks) and authUserId == 1) or (not empty (WorkflowManager.supervisorWorkflowTasks) and authUserId != 1)}">
+			<ice:commandButton value="#{msgs['history']}"
+				action="#{WorkflowManager.showHistory}" partialSubmit="true" />
+		</ice:panelGroup>
 	</ice:panelGroup>
 </jsp:root>

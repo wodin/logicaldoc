@@ -11,7 +11,7 @@ import com.logicaldoc.core.PersistentObject;
  * @since 5.0
  */
 public class AbstractHistory extends PersistentObject {
-	private Long docId;
+	protected Long docId;
 
 	private long folderId;
 

@@ -2,6 +2,10 @@ package com.logicaldoc.workflow;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -12,6 +16,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -19,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.icesoft.faces.component.ext.RowSelectorEvent;
+import com.icesoft.faces.context.effects.JavascriptContext;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Group;
@@ -38,6 +45,9 @@ import com.logicaldoc.web.navigation.NavigationBean;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.Constants;
 import com.logicaldoc.web.util.FacesUtil;
+import com.logicaldoc.workflow.editor.WorkflowHistoryDAO;
+import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplate;
+import com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO;
 import com.logicaldoc.workflow.editor.controll.TaskController;
 import com.logicaldoc.workflow.model.Transition;
 import com.logicaldoc.workflow.model.WorkflowDefinition;
@@ -77,6 +87,20 @@ public class WorkflowManager {
 	private String newAssignment = null;
 
 	private UserDAO userDAO;
+
+	private Long selectedWorkflowTemplateId = 0L;
+
+	private String selectedWorkflowInstanceId;
+
+	private List<SelectItem> workflowTemplates = new LinkedList<SelectItem>();
+
+	private ArrayList<WorkflowInstance> workflowInstances;
+
+	private ArrayList<WorkflowHistory> histories;
+
+	private int displayedRows = 10;
+
+	private boolean multipleSelection = true;
 
 	public WorkflowManager() {
 		this.workflowService = (WorkflowService) Context.getInstance().getBean("workflowService");
@@ -123,6 +147,43 @@ public class WorkflowManager {
 		this.workflowService.endTask(this.workflowTaskInstance.getId(), transition.getName());
 
 		setupTaskPage(this.workflowTaskInstance.getId());
+
+		// Create the workflow history event
+		WorkflowHistoryDAO workflowHistoryDao = (WorkflowHistoryDAO) Context.getInstance().getBean(
+				WorkflowHistoryDAO.class);
+		WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
+				.getBean(WorkflowPersistenceTemplateDAO.class);
+		WorkflowHistory transaction = new WorkflowHistory();
+		WorkflowInstance instance = this.workflowService.getWorkflowInstanceByTaskInstance(this.workflowTaskInstance
+				.getId(), FETCH_TYPE.INFO);
+		WorkflowPersistenceTemplate template = workflowTemplateDao.findByName(instance.getName());
+
+		transaction.setTemplateId(template.getId());
+		transaction.setInstanceId(instance.getId());
+		transaction.setDate(new Date());
+		transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+		transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_TASK_END);
+		transaction.setComment("");
+		transaction.setUserId(SessionManagement.getUserId());
+		transaction.setUserName(SessionManagement.getUser().getFullName());
+
+		workflowHistoryDao.store(transaction);
+
+		// Check if it is the last task of the workflow instance, so check if
+		// the workflow instance is ended
+		if (instance.getEndDate() != null) {
+			WorkflowHistory instanceEnded = new WorkflowHistory();
+			instanceEnded.setTemplateId(template.getId());
+			instanceEnded.setInstanceId(instance.getId());
+			instanceEnded.setDate(new Date());
+			instanceEnded.setSessionId(SessionManagement.getCurrentUserSessionId());
+			instanceEnded.setEvent(WorkflowHistory.EVENT_WORKFLOW_END);
+			instanceEnded.setComment("");
+			instanceEnded.setUserId(SessionManagement.getUserId());
+			instanceEnded.setUserName(SessionManagement.getUser().getFullName());
+
+			workflowHistoryDao.store(instanceEnded);
+		}
 	}
 
 	public List<WorkflowTaskInstance> getTaskInstances() {
@@ -296,6 +357,27 @@ public class WorkflowManager {
 
 		records.add(selectedDocumentRecord);
 
+		// Create the workflow history event
+		WorkflowHistoryDAO workflowHistoryDao = (WorkflowHistoryDAO) Context.getInstance().getBean(
+				WorkflowHistoryDAO.class);
+		WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
+				.getBean(WorkflowPersistenceTemplateDAO.class);
+		WorkflowHistory transaction = new WorkflowHistory();
+		WorkflowInstance instance = this.workflowService.getWorkflowInstanceByTaskInstance(this.workflowTaskInstance
+				.getId(), FETCH_TYPE.INFO);
+		WorkflowPersistenceTemplate template = workflowTemplateDao.findByName(instance.getName());
+
+		transaction.setTemplateId(template.getId());
+		transaction.setInstanceId(instance.getId());
+		transaction.setDate(new Date());
+		transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+		transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_DOCAPPENDED);
+		transaction.setDocId(selectedDocumentRecord.getDocId());
+		transaction.setComment("");
+		transaction.setUserId(SessionManagement.getUserId());
+		transaction.setUserName(SessionManagement.getUser().getFullName());
+
+		workflowHistoryDao.store(transaction);
 	}
 
 	public List<WorkflowTaskInstance> getSuspendedTaskInstances() {
@@ -351,6 +433,27 @@ public class WorkflowManager {
 		this.workflowService.updateWorkflow(this.workflowTaskInstance);
 
 		this.setupTaskPage(workingWorkflowTaskinstance.getId());
+
+		// Create the workflow history event
+		WorkflowHistoryDAO workflowHistoryDao = (WorkflowHistoryDAO) Context.getInstance().getBean(
+				WorkflowHistoryDAO.class);
+		WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
+				.getBean(WorkflowPersistenceTemplateDAO.class);
+		WorkflowHistory transaction = new WorkflowHistory();
+		WorkflowInstance instance = this.workflowService.getWorkflowInstanceByTaskInstance(this.workflowTaskInstance
+				.getId(), FETCH_TYPE.INFO);
+		WorkflowPersistenceTemplate template = workflowTemplateDao.findByName(instance.getName());
+
+		transaction.setTemplateId(template.getId());
+		transaction.setInstanceId(instance.getId());
+		transaction.setDate(new Date());
+		transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+		transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_TASK_START);
+		transaction.setComment("");
+		transaction.setUserId(SessionManagement.getUserId());
+		transaction.setUserName(SessionManagement.getUser().getFullName());
+
+		workflowHistoryDao.store(transaction);
 	}
 
 	public void resumeTask() {
@@ -359,6 +462,27 @@ public class WorkflowManager {
 		this.workflowService.updateWorkflow(workflowTaskInstance);
 
 		this.setupTaskPage(workingWorkflowTaskinstance.getId());
+
+		// Create the workflow history event
+		WorkflowHistoryDAO workflowHistoryDao = (WorkflowHistoryDAO) Context.getInstance().getBean(
+				WorkflowHistoryDAO.class);
+		WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
+				.getBean(WorkflowPersistenceTemplateDAO.class);
+		WorkflowHistory transaction = new WorkflowHistory();
+		WorkflowInstance instance = this.workflowService.getWorkflowInstanceByTaskInstance(this.workflowTaskInstance
+				.getId(), FETCH_TYPE.INFO);
+		WorkflowPersistenceTemplate template = workflowTemplateDao.findByName(instance.getName());
+
+		transaction.setTemplateId(template.getId());
+		transaction.setInstanceId(instance.getId());
+		transaction.setDate(new Date());
+		transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+		transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_TASK_RESUMED);
+		transaction.setComment("");
+		transaction.setUserId(SessionManagement.getUserId());
+		transaction.setUserName(SessionManagement.getUser().getFullName());
+
+		workflowHistoryDao.store(transaction);
 	}
 
 	public void suspendTask() {
@@ -367,6 +491,27 @@ public class WorkflowManager {
 		this.workflowService.updateWorkflow(workflowTaskInstance);
 
 		this.setupTaskPage(workingWorkflowTaskinstance.getId());
+
+		// Create the workflow history event
+		WorkflowHistoryDAO workflowHistoryDao = (WorkflowHistoryDAO) Context.getInstance().getBean(
+				WorkflowHistoryDAO.class);
+		WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
+				.getBean(WorkflowPersistenceTemplateDAO.class);
+		WorkflowHistory transaction = new WorkflowHistory();
+		WorkflowInstance instance = this.workflowService.getWorkflowInstanceByTaskInstance(this.workflowTaskInstance
+				.getId(), FETCH_TYPE.INFO);
+		WorkflowPersistenceTemplate template = workflowTemplateDao.findByName(instance.getName());
+
+		transaction.setTemplateId(template.getId());
+		transaction.setInstanceId(instance.getId());
+		transaction.setDate(new Date());
+		transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+		transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_TASK_SUSPENDED);
+		transaction.setComment("");
+		transaction.setUserId(SessionManagement.getUserId());
+		transaction.setUserName(SessionManagement.getUser().getFullName());
+
+		workflowHistoryDao.store(transaction);
 	}
 
 	public WorkflowInstance getWorkingWorkflowInstance() {
@@ -392,6 +537,28 @@ public class WorkflowManager {
 			taskInstance.getProperties().put(WorkflowConstants.VAR_OWNER, this.newAssignment);
 			this.workflowService.updateWorkflow(taskInstance);
 
+			// Create the workflow history event
+			WorkflowHistoryDAO workflowHistoryDao = (WorkflowHistoryDAO) Context.getInstance().getBean(
+					WorkflowHistoryDAO.class);
+			WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
+					.getBean(WorkflowPersistenceTemplateDAO.class);
+			WorkflowHistory transaction = new WorkflowHistory();
+			WorkflowInstance instance = this.workflowService.getWorkflowInstanceByTaskInstance(
+					this.workflowTaskInstance.getId(), FETCH_TYPE.INFO);
+			WorkflowPersistenceTemplate template = workflowTemplateDao.findByName(instance.getName());
+
+			transaction.setTemplateId(template.getId());
+			transaction.setInstanceId(instance.getId());
+			transaction.setDate(new Date());
+			transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+			transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_TASK_REASSIGNED);
+			transaction.setComment("Workflow Task " + this.workflowTaskInstance.getName() + " reassigned to "
+					+ this.newAssignment);
+			transaction.setUserId(SessionManagement.getUserId());
+			transaction.setUserName(SessionManagement.getUser().getFullName());
+
+			workflowHistoryDao.store(transaction);
+
 			this.navigationBean.back();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -413,8 +580,8 @@ public class WorkflowManager {
 	}
 
 	/**
-	 * Retrieves all the tasks of the workflow for which the current user
-	 * (not administator) is the supervisor.
+	 * Retrieves all the tasks of the workflow for which the current user (not
+	 * administator) is the supervisor.
 	 */
 	public List<WorkflowTaskInstance> getSupervisorWorkflowTasks() {
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
@@ -498,7 +665,258 @@ public class WorkflowManager {
 	}
 
 	public String abort() {
+		this.selectedWorkflowTemplateId = 0L;
+		this.selectedWorkflowInstanceId = "0";
+		if (workflowTemplates != null)
+			workflowTemplates.clear();
+		if (workflowInstances != null)
+			workflowInstances.clear();
+		if (histories != null)
+			histories.clear();
+
 		this.navigationBean.back();
 		return null;
+	}
+
+	public String showHistory() {
+		PageContentBean contentBean = new PageContentBean();
+		contentBean.setTemplate("workflow/workflow-history");
+		contentBean.setPageContent(true);
+
+		this.navigationBean.setSelectedPanel(contentBean);
+
+		return null;
+	}
+
+	public List<SelectItem> getWorkflowTemplates() {
+		WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
+				.getBean(WorkflowPersistenceTemplateDAO.class);
+
+		WorkflowHistoryDAO workflowHistoryDao = (WorkflowHistoryDAO) Context.getInstance().getBean(
+				WorkflowHistoryDAO.class);
+
+		List<Long> historyTemplates = workflowHistoryDao.findTemplateIds();
+
+		if (workflowTemplates.isEmpty()) {
+			for (Long templateId : historyTemplates) {
+				WorkflowPersistenceTemplate template = workflowTemplateDao.findById(templateId);
+				if (template != null)
+					workflowTemplates.add(new SelectItem(template.getId(), template.getName()));
+			}
+
+			if (workflowTemplates.size() > 0)
+				workflowTemplates.add(0, new SelectItem(0, "Choose a template"));
+		}
+
+		return workflowTemplates;
+	}
+
+	public void templateSelected(ValueChangeEvent event) {
+		if (event != null && event.getNewValue() != null) {
+			this.selectedWorkflowTemplateId = Long.parseLong(event.getNewValue().toString());
+			if (workflowInstances != null)
+				workflowInstances.clear();
+			if (histories != null)
+				histories.clear();
+			reloadInstances();
+		}
+	}
+
+	// public void instanceSelected(ValueChangeEvent event) {
+	// if (event != null && event.getNewValue() != null) {
+	// this.selectedWorkflowInstanceId = event.getNewValue().toString();
+	// if (this.selectedWorkflowInstanceId.equals("0")) {
+	// if (histories != null)
+	// histories.clear();
+	// } else {
+	// reload();
+	// }
+	// }
+	// }
+
+	public List<WorkflowInstance> getWorkflowInstances() {
+		reloadInstances();
+		return workflowInstances;
+	}
+
+	public void search() {
+		reload();
+	}
+
+	public void reset() {
+		this.selectedWorkflowTemplateId = 0L;
+		this.selectedWorkflowInstanceId = "0";
+		workflowTemplates.clear();
+		workflowInstances.clear();
+		histories.clear();
+		JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "window.location.reload(false);");
+	}
+
+	// /**
+	// * Sorts the list of histories data and the list of histories.
+	// */
+	// @SuppressWarnings("unchecked")
+	// protected void sort(final String column, final boolean ascending) {
+	// log.debug("invoked WorkflowManager.sort()");
+	// log.debug("sort on column: " + column);
+	// log.debug("sort ascending: " + ascending);
+	//
+	// Comparator comparator = new Comparator() {
+	// public int compare(Object o1, Object o2) {
+	//
+	// WorkflowHistory c1 = (WorkflowHistory) o1;
+	// WorkflowHistory c2 = (WorkflowHistory) o2;
+	// if (column == null) {
+	// return 0;
+	// }
+	// if (column.equals("date")) {
+	// return ascending ? c1.getDate().compareTo(c2.getDate()) :
+	// c2.getDate().compareTo(c1.getDate());
+	// } else if (column.equals("event")) {
+	// return ascending ? c1.getEvent().compareTo(c2.getEvent()) :
+	// c2.getEvent().compareTo(c1.getEvent());
+	// } else if (column.equals("user")) {
+	// return ascending ? c1.getUserName().compareTo(c2.getUserName()) :
+	// c2.getUserName().compareTo(
+	// c1.getUserName());
+	// } else if (column.equals("document")) {
+	// return ascending ? c1.getDocument().compareTo(c2.getDocument()) :
+	// c2.getDocument().compareTo(
+	// c1.getDocument());
+	// } else
+	// return 0;
+	// }
+	// };
+	//
+	// Collections.sort(histories, comparator);
+	// }
+
+	public void reloadInstances() {
+		// initiate the list
+		if (workflowInstances != null) {
+			workflowInstances.clear();
+		} else {
+			workflowInstances = new ArrayList<WorkflowInstance>();
+		}
+
+		WorkflowHistoryDAO workflowHistoryDao = (WorkflowHistoryDAO) Context.getInstance().getBean(
+				WorkflowHistoryDAO.class);
+		if (this.selectedWorkflowTemplateId > 0L && workflowInstances.isEmpty()) {
+			List<String> historyInstances = workflowHistoryDao.findInstanceIds();
+			WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
+					.getBean(WorkflowPersistenceTemplateDAO.class);
+			for (String workflowInstanceId : historyInstances) {
+				WorkflowInstance instance = this.workflowService.getWorkflowInstanceById(workflowInstanceId,
+						FETCH_TYPE.INFO);
+				String templateName = ((WorkflowTemplate) instance.getProperties().get(WorkflowConstants.VAR_TEMPLATE))
+						.getName();
+				WorkflowPersistenceTemplate template = workflowTemplateDao.findByName(templateName);
+				if (template != null && template.getId() == this.selectedWorkflowTemplateId) {
+					if (this.selectedWorkflowInstanceId != null && !this.selectedWorkflowInstanceId.isEmpty()
+							&& this.selectedWorkflowInstanceId.equals(instance.getId()))
+						instance.setSelected(true);
+					workflowInstances.add(instance);
+				}
+			}
+		}
+		if (workflowInstances != null && workflowInstances.size() > 1) {
+			Collections.sort(workflowInstances, new Comparator<WorkflowInstance>() {
+				@Override
+				public int compare(WorkflowInstance arg0, WorkflowInstance arg1) {
+					return new Integer(arg1.getId()).compareTo(new Integer(arg0.getId()));
+				}
+			});
+		}
+
+	}
+
+	public void reload() {
+		// initiate the list
+		if (histories != null) {
+			histories.clear();
+		} else {
+			histories = new ArrayList<WorkflowHistory>();
+		}
+
+		try {
+			WorkflowHistoryDAO workflowHistoryDao = (WorkflowHistoryDAO) Context.getInstance().getBean(
+					WorkflowHistoryDAO.class);
+			Collection<WorkflowHistory> tmphistories = workflowHistoryDao.findByTemplateIdAndInstanceId(
+					this.selectedWorkflowTemplateId, this.selectedWorkflowInstanceId);
+
+			for (WorkflowHistory history : tmphistories) {
+				histories.add(history);
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			Messages.addLocalizedError("errors.error");
+		}
+	}
+
+	/**
+	 * Gets the list of workflow histories which will be used by the
+	 * ice:dataTable component.
+	 */
+	public List<WorkflowHistory> getHistories() {
+		reload();
+		return histories;
+	}
+
+	public int getHistoriesCount() {
+		if (histories == null || histories.isEmpty()) {
+			return 0;
+		} else {
+			return histories.size();
+		}
+	}
+
+	public int getWorkflowInstancesCount() {
+		if (workflowInstances == null || workflowInstances.isEmpty()) {
+			return 0;
+		} else {
+			return workflowInstances.size();
+		}
+	}
+
+	public int getDisplayedRows() {
+		return displayedRows;
+	}
+
+	public void setDisplayedRows(int displayedRows) {
+		if (displayedRows != this.displayedRows)
+			JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "window.location.reload(false);");
+		this.displayedRows = displayedRows;
+	}
+
+	public void selectRow(RowSelectorEvent e) {
+		WorkflowInstance instance = workflowInstances.get(e.getRow());
+		this.selectedWorkflowInstanceId = instance.getId();
+
+		reloadInstances();
+		reload();
+	}
+
+	public Long getSelectedWorkflowTemplateId() {
+		return selectedWorkflowTemplateId;
+	}
+
+	public void setSelectedWorkflowTemplateId(Long selectedWorkflowTemplateId) {
+		this.selectedWorkflowTemplateId = selectedWorkflowTemplateId;
+	}
+
+	public String getSelectedWorkflowInstanceId() {
+		return selectedWorkflowInstanceId;
+	}
+
+	public void setSelectedWorkflowInstanceId(String selectedWorkflowInstanceId) {
+		this.selectedWorkflowInstanceId = selectedWorkflowInstanceId;
+	}
+
+	public boolean isMultipleSelection() {
+		return multipleSelection;
+	}
+
+	public void setMultipleSelection(boolean multipleSelection) {
+		this.multipleSelection = multipleSelection;
 	}
 }
