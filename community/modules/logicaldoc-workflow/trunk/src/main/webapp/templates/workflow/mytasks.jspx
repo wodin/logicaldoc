@@ -260,9 +260,10 @@
 				</td>
 			</tr>
 		</table>
-		<hr />
+
 		<ice:panelGroup styleClass="commands"
 			rendered="#{(not empty (WorkflowManager.adminTasks) and authUserId == 1) or (not empty (WorkflowManager.supervisorWorkflowTasks) and authUserId != 1)}">
+			<hr />
 			<ice:commandButton value="#{msgs['history']}"
 				action="#{WorkflowManager.showHistory}" partialSubmit="true" />
 		</ice:panelGroup>
