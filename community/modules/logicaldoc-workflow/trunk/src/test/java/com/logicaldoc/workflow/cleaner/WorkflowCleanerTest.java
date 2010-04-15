@@ -38,4 +38,20 @@ public class WorkflowCleanerTest extends AbstractWorkflowTestCase {
 		rs.next();
 		assertEquals(3, rs.getInt(1));
 	}
+	
+	public void testCleanHistory() throws Exception {
+		Connection con = ds.getConnection();
+		con.commit();
+		ResultSet rs = con.createStatement().executeQuery("select count(*) from ld_workflowhistory");
+		rs.next();
+		assertEquals(3, rs.getInt(1));
+
+		cleaner.clean();
+		con.commit();
+
+		// Check database cleanup
+		rs = con.createStatement().executeQuery("select count(*) from ld_workflowhistory");
+		rs.next();
+		assertEquals(0, rs.getInt(1));
+	}
 }

@@ -3,8 +3,11 @@ package com.logicaldoc.workflow.editor;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.logging.LogFactory;
@@ -114,5 +117,24 @@ public class HibernateWorkflowHistoryDAO extends HibernatePersistentObjectDAO<Wo
 				log.error(e.getMessage(), e);
 		}
 		return coll;
+	}
+
+	@Override
+	public void cleanOldHistories(int ttl) {
+		if (ttl > 0) {
+			Date date = new Date();
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(date);
+			cal.add(Calendar.DAY_OF_MONTH, -ttl);
+			date = cal.getTime();
+			// Retrieve all old user histories
+			List<Object> histories = super.findByJdbcQuery(
+					"select ld_id from ld_workflowhistory where ld_deleted = 0 and ld_date < '"
+							+ new Timestamp(date.getTime()) + "'", 1, null);
+			for (Object id : histories) {
+				Long historyId = (Long) id;
+				super.bulkUpdate("set ld_deleted = 1 where ld_id = " + historyId, null);
+			}
+		}
 	}
 }

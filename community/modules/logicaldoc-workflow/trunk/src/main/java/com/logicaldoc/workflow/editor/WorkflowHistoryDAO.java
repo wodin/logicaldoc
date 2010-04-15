@@ -37,4 +37,13 @@ public interface WorkflowHistoryDAO extends PersistentObjectDAO<WorkflowHistory>
 	 * Get all template ids.
 	 */
 	public List<Long> findTemplateIds();
+	
+	/**
+	 * This method deletes all the workflow history entries oldest than the given days
+	 * from now. If <code>ttl</code> is 0 or -1, the cancellation is not made.
+	 * 
+	 * @param ttl The maximum number of days over which the history is
+	 *        considered old
+	 */
+	public void cleanOldHistories(int ttl);
 }
