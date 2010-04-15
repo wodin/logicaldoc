@@ -30,7 +30,6 @@ public class HibernateUserHistoryDAOTest extends AbstractCoreTestCase {
 		dao = (UserHistoryDAO) context.getBean("UserHistoryDAO");
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testDelete() {
 		Collection<UserHistory> histories = (Collection<UserHistory>) dao.findByUserId(1);
 		assertNotNull(histories);
@@ -58,7 +57,6 @@ public class HibernateUserHistoryDAOTest extends AbstractCoreTestCase {
 		assertEquals(0, histories.size());
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testStore() {
 		UserHistory userHistory = new UserHistory();
 		userHistory.setDate(DateBean.dateFromCompactString("20061220"));
