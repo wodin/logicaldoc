@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
@@ -235,6 +236,16 @@ public class LoginForm {
 		}
 
 		return true;
+	}
+
+	public boolean isAdmin() {
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		User user = userDao.findByUserName(SessionManagement.getUsername());
+		for (Group group : user.getGroups()) {
+			if (group.getName().equals("admin"))
+				return true;
+		}
+		return false;
 	}
 
 }
