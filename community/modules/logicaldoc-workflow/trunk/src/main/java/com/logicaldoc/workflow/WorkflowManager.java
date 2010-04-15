@@ -700,12 +700,12 @@ public class WorkflowManager {
 		if (workflowTemplates.isEmpty()) {
 			for (Long templateId : historyTemplates) {
 				WorkflowPersistenceTemplate template = workflowTemplateDao.findById(templateId);
-				if (template != null)
+				if (template != null && isUserAuthorized(template))
 					workflowTemplates.add(new SelectItem(template.getId(), template.getName()));
 			}
 
 			if (workflowTemplates.size() > 0)
-				workflowTemplates.add(0, new SelectItem(0, "Choose a template"));
+				workflowTemplates.add(0, new SelectItem(0, Messages.getMessage("workflow.history.choosetemplate")));
 		}
 
 		return workflowTemplates;
@@ -721,18 +721,6 @@ public class WorkflowManager {
 			reloadInstances();
 		}
 	}
-
-	// public void instanceSelected(ValueChangeEvent event) {
-	// if (event != null && event.getNewValue() != null) {
-	// this.selectedWorkflowInstanceId = event.getNewValue().toString();
-	// if (this.selectedWorkflowInstanceId.equals("0")) {
-	// if (histories != null)
-	// histories.clear();
-	// } else {
-	// reload();
-	// }
-	// }
-	// }
 
 	public List<WorkflowInstance> getWorkflowInstances() {
 		reloadInstances();
@@ -752,45 +740,6 @@ public class WorkflowManager {
 		JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), "window.location.reload(false);");
 	}
 
-	// /**
-	// * Sorts the list of histories data and the list of histories.
-	// */
-	// @SuppressWarnings("unchecked")
-	// protected void sort(final String column, final boolean ascending) {
-	// log.debug("invoked WorkflowManager.sort()");
-	// log.debug("sort on column: " + column);
-	// log.debug("sort ascending: " + ascending);
-	//
-	// Comparator comparator = new Comparator() {
-	// public int compare(Object o1, Object o2) {
-	//
-	// WorkflowHistory c1 = (WorkflowHistory) o1;
-	// WorkflowHistory c2 = (WorkflowHistory) o2;
-	// if (column == null) {
-	// return 0;
-	// }
-	// if (column.equals("date")) {
-	// return ascending ? c1.getDate().compareTo(c2.getDate()) :
-	// c2.getDate().compareTo(c1.getDate());
-	// } else if (column.equals("event")) {
-	// return ascending ? c1.getEvent().compareTo(c2.getEvent()) :
-	// c2.getEvent().compareTo(c1.getEvent());
-	// } else if (column.equals("user")) {
-	// return ascending ? c1.getUserName().compareTo(c2.getUserName()) :
-	// c2.getUserName().compareTo(
-	// c1.getUserName());
-	// } else if (column.equals("document")) {
-	// return ascending ? c1.getDocument().compareTo(c2.getDocument()) :
-	// c2.getDocument().compareTo(
-	// c1.getDocument());
-	// } else
-	// return 0;
-	// }
-	// };
-	//
-	// Collections.sort(histories, comparator);
-	// }
-
 	public void reloadInstances() {
 		// initiate the list
 		if (workflowInstances != null) {
@@ -808,8 +757,10 @@ public class WorkflowManager {
 			for (String workflowInstanceId : historyInstances) {
 				WorkflowInstance instance = this.workflowService.getWorkflowInstanceById(workflowInstanceId,
 						FETCH_TYPE.INFO);
-				String templateName = ((WorkflowTemplate) instance.getProperties().get(WorkflowConstants.VAR_TEMPLATE))
-						.getName();
+				WorkflowTemplate workflowTemplate = (WorkflowTemplate) instance.getProperties().get(
+						WorkflowConstants.VAR_TEMPLATE);
+
+				String templateName = workflowTemplate.getName();
 				WorkflowPersistenceTemplate template = workflowTemplateDao.findByName(templateName);
 				if (template != null && template.getId() == this.selectedWorkflowTemplateId) {
 					if (this.selectedWorkflowInstanceId != null && !this.selectedWorkflowInstanceId.isEmpty()
@@ -894,6 +845,88 @@ public class WorkflowManager {
 
 		reloadInstances();
 		reload();
+	}
+
+	/**
+	 * Checks if the current user is a supervisor of one or more workflow.
+	 * 
+	 * @return true if exists at least a workflow instance (active or ended) of
+	 *         the workflow for which the current user is a supervisor.
+	 */
+	public boolean isUserSupervisor() {
+		boolean isSupervisor = false;
+
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+
+		String username = (String) session.getAttribute(Constants.AUTH_USERNAME);
+		User currentUser = this.userDAO.findByUserName(username);
+		List<String> groupUserNames = new ArrayList<String>();
+		for (Group group : currentUser.getGroups()) {
+			groupUserNames.add(group.getName());
+		}
+
+		WorkflowTransformService workflowTransformService = (WorkflowTransformService) Context.getInstance().getBean(
+				"workflowTransformService");
+		List<WorkflowInstance> allWorkflowInstances = this.workflowService.getAllWorkflows();
+
+		for (WorkflowInstance workflowInstance : allWorkflowInstances) {
+			Object workflowTemplateXML = workflowInstance.getProperties().get(WorkflowConstants.VAR_TEMPLATE);
+			WorkflowTemplate workflowTemplate = workflowTransformService
+					.retrieveWorkflowModels((Serializable) workflowTemplateXML);
+			if (workflowTemplate.getSupervisor() != null && !workflowTemplate.getSupervisor().trim().isEmpty()) {
+				if (username.equals(workflowTemplate.getSupervisor())
+						|| groupUserNames.contains(workflowTemplate.getSupervisor())) {
+					isSupervisor = true;
+					break;
+				}
+			}
+		}
+
+		return isSupervisor;
+	}
+
+	/**
+	 * Checks if the current user is authorized to see of the given workflow.
+	 * The users authorized are the admins and the sueprvisors.
+	 * 
+	 * @return true if the current user is authorized to see of the given
+	 *         workflow.
+	 */
+	public boolean isUserAuthorized(WorkflowPersistenceTemplate template) {
+		boolean isSupervisor = false;
+
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+
+		String username = (String) session.getAttribute(Constants.AUTH_USERNAME);
+		User currentUser = this.userDAO.findByUserName(username);
+		for (Group group : currentUser.getGroups()) {
+			if (group.getName().equals("admin"))
+				return true;
+		}
+		List<String> groupUserNames = new ArrayList<String>();
+		for (Group group : currentUser.getGroups()) {
+			groupUserNames.add(group.getName());
+		}
+
+		WorkflowTransformService workflowTransformService = (WorkflowTransformService) Context.getInstance().getBean(
+				"workflowTransformService");
+		List<WorkflowInstance> allWorkflowInstances = this.workflowService.getAllWorkflows();
+
+		for (WorkflowInstance workflowInstance : allWorkflowInstances) {
+			Object workflowTemplateXML = workflowInstance.getProperties().get(WorkflowConstants.VAR_TEMPLATE);
+			WorkflowTemplate workflowTemplate = workflowTransformService
+					.retrieveWorkflowModels((Serializable) workflowTemplateXML);
+			if (workflowTemplate.getSupervisor() != null && !workflowTemplate.getSupervisor().trim().isEmpty()
+					&& workflowTemplate.getName().equals(template.getName())) {
+				if (username.equals(workflowTemplate.getSupervisor())
+						|| groupUserNames.contains(workflowTemplate.getSupervisor())) {
+					isSupervisor = true;
+					break;
+				}
+			}
+		}
+
+		return isSupervisor;
 	}
 
 	public Long getSelectedWorkflowTemplateId() {

@@ -112,7 +112,7 @@
 				<!-- Documents column -->
 				<ice:column styleClass="center">
 					<f:facet name="header">
-						<ice:outputText value="#{msgs['document']}" />
+						<ice:outputText value="#{msgs['menu.documents']}" />
 					</f:facet>
 					<ice:panelGroup style="text-align:left">
 						<ice:outputText value="#{instance.documents}" />
