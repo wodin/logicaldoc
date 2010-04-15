@@ -48,4 +48,21 @@ public class HibernateWorkflowHistoryDAOTest extends AbstractWorkflowTestCase {
 		assertTrue(ids.contains("1"));
 		assertFalse(ids.contains("2"));
 	}
+
+	@SuppressWarnings("unchecked")
+	public void testCleanOldHistories() {
+		WorkflowHistory history = dao.findById(1);
+		assertNotNull(history);
+
+		Collection histories = dao.findAll();
+		assertNotNull(histories);
+		assertEquals(2, histories.size());
+
+		dao.cleanOldHistories(5);
+
+		history = dao.findById(1);
+		assertNull(history);
+		histories = dao.findAll();
+		assertEquals(0, histories.size());
+	}
 }
