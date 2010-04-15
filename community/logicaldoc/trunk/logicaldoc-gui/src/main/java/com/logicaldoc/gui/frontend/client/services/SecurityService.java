@@ -21,6 +21,16 @@ public interface SecurityService extends RemoteService {
 	public GUIUser login(String username, String password);
 
 	/**
+	 * Changes the password of a user
+	 * 
+	 * @param userId The user Identifier
+	 * @param oldPassword
+	 * @param newPassword
+	 * @return 0 if all is ok, otherwise a positive number
+	 */
+	public int changePassword(long userId, String oldPassword, String newPassword);
+
+	/**
 	 * Logs out the current user
 	 */
 	public void logout(String sid);
