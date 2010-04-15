@@ -1,5 +1,9 @@
 package com.logicaldoc.core.document.dao;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.logging.LogFactory;
@@ -44,5 +48,43 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 	@Override
 	public List<History> findNotNotified() {
 		return findByWhere("_entity.notified = 0", null, "order by _entity.date asc");
+	}
+
+	@Override
+	public void cleanOldDocumentHistories(int ttl) {
+		if (ttl > 0) {
+			Date date = new Date();
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(date);
+			cal.add(Calendar.DAY_OF_MONTH, -ttl);
+			date = cal.getTime();
+			// Retrieve all old user histories
+			List<Object> histories = super.findByJdbcQuery(
+					"select ld_id from ld_history where ld_deleted = 0 and ld_docid > 0 and ld_date < '"
+							+ new Timestamp(date.getTime()) + "'", 1, null);
+			for (Object id : histories) {
+				Long historyId = (Long) id;
+				super.bulkUpdate("set ld_deleted = 1 where ld_id = " + historyId, null);
+			}
+		}
+	}
+
+	@Override
+	public void cleanOldFolderHistories(int ttl) {
+		if (ttl > 0) {
+			Date date = new Date();
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(date);
+			cal.add(Calendar.DAY_OF_MONTH, -ttl);
+			date = cal.getTime();
+			// Retrieve all old user histories
+			List<Object> histories = super.findByJdbcQuery(
+					"select ld_id from ld_history where ld_deleted = 0 and ld_docid is null and ld_date < '"
+							+ new Timestamp(date.getTime()) + "'", 1, null);
+			for (Object id : histories) {
+				Long historyId = (Long) id;
+				super.bulkUpdate("set ld_deleted = 1 where ld_id = " + historyId, null);
+			}
+		}
 	}
 }

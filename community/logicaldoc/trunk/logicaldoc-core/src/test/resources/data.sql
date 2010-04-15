@@ -165,7 +165,7 @@ values     (2,'2008-10-22',0,2,5,1,'2006-12-25','author','data test 02','reason 
 
 insert into ld_history 
 			   (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified)
-values     (3,'2008-10-22',0,1,5,3,'2006-12-27','sebastian','data test 03','reason test 03','1.0',1);
+values     (3,'2008-10-22',0,null,5,3,'2006-12-27','sebastian','data test 03','reason test 03','1.0',1);
 
 insert into ld_systemmessage
 				(ld_id, ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type)

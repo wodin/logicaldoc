@@ -142,7 +142,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 		coll = dao.findLastModifiedByUserId(3, 10);
 		assertNotNull(coll);
-		assertEquals(1, coll.size());
+		assertEquals(0, coll.size());
 	}
 
 	public void testFindDocIdByTag() {

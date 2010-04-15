@@ -31,7 +31,6 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		dao = (HistoryDAO) context.getBean("HistoryDAO");
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testDelete() {
 		Collection<History> histories = (Collection<History>) dao.findByUserId(1);
 		assertNotNull(histories);
@@ -51,7 +50,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 	public void testFindByDocId() {
 		Collection histories = dao.findByDocId(1);
 		assertNotNull(histories);
-		assertEquals(2, histories.size());
+		assertEquals(1, histories.size());
 
 		// Try with unexisting docId
 		histories = dao.findByDocId(99);
@@ -103,10 +102,9 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 
 		Collection histories = dao.findByDocId(1);
 		assertNotNull(histories);
-		assertEquals(3, histories.size());
+		assertEquals(2, histories.size());
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testStore() {
 		History history = new History();
 		history.setDocId(1L);
@@ -154,6 +152,40 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 
 		histories = dao.findNotNotified();
 		assertNotNull(histories);
+		assertEquals(1, histories.size());
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testCleanOldFolderHistories() {
+		History history = dao.findById(3);
+		assertNotNull(history);
+
+		Collection histories = dao.findAll();
+		assertNotNull(histories);
+		assertEquals(3, histories.size());
+
+		dao.cleanOldFolderHistories(5);
+
+		history = dao.findById(3);
+		assertNull(history);
+		histories = dao.findAll();
+		assertEquals(2, histories.size());
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testCleanOldDocumentHistories() {
+		History history = dao.findById(1);
+		assertNotNull(history);
+
+		Collection histories = dao.findAll();
+		assertNotNull(histories);
+		assertEquals(3, histories.size());
+
+		dao.cleanOldDocumentHistories(5);
+
+		history = dao.findById(1);
+		assertNull(history);
+		histories = dao.findAll();
 		assertEquals(1, histories.size());
 	}
 }
