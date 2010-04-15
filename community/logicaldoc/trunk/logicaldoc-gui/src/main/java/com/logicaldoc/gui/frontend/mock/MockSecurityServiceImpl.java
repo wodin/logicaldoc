@@ -18,7 +18,7 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public GUIUser login(String username, String password, String lang) {
+	public GUIUser login(String username, String password) {
 		if ("admin".equals(username)) {
 			GUIUser user = new GUIUser();
 			user.setUserName(username);
@@ -46,5 +46,10 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	@Override
 	public GUIRight[] getSecurityEntities(String sid) {
 		return null;
+	}
+
+	@Override
+	public int changePassword(long userId, String oldPassword, String newPassword) {
+		return 0;
 	}
 }
