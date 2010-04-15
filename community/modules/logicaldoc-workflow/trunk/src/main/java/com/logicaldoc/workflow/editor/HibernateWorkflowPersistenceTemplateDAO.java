@@ -207,7 +207,8 @@ public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistent
 		if (coll.size() > 0) {
 			template = coll.iterator().next();
 		}
-
+		if (template != null && template.getDeleted() == 1)
+			template = null;
 		return template;
 	}
 }

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.logicaldoc.web.document.DocumentRecord;
 import com.logicaldoc.workflow.WorkflowConstants;
 
@@ -113,8 +115,8 @@ public class WorkflowInstance implements FetchModel {
 		}
 
 		if (txt_doclist.trim().endsWith(","))
-			return txt_doclist.trim().substring(0, txt_doclist.lastIndexOf(","));
+			return StringUtils.abbreviate(txt_doclist.trim().substring(0, txt_doclist.lastIndexOf(",")), 90);
 		else
-			return txt_doclist.trim();
+			return StringUtils.abbreviate(txt_doclist.trim(), 90);
 	}
 }
