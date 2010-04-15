@@ -1,0 +1,428 @@
+<html>
+<head><meta charset="UTF-8" /><script>
+var $gwt_version = "2.0.3";
+var $wnd = parent;
+var $doc = $wnd.document;
+var $moduleName, $moduleBase;
+var $strongName = 'D1B2CA2A650B9158FEF315C51CBA6E7A';
+var $stats = $wnd.__gwtStatsEvent ? function(a) {return $wnd.__gwtStatsEvent(a);} : null,
+$sessionId = $wnd.__gwtStatsSessionId ? $wnd.__gwtStatsSessionId : null;
+$stats && $stats({moduleName:'common',sessionId:$sessionId,subSystem:'startup',evtGroup:'moduleStartup',millis:(new Date()).getTime(),type:'moduleEvalStart'});
+</script></head>
+<body>
+<script><!--
+var _;
+function nullMethod(){
+}
+
+function Object_0(){
+}
+
+_ = Object_0.prototype = {};
+_.typeMarker$ = nullMethod;
+_.typeId$ = 1;
+function $setStackTrace(stackTrace){
+  var c, copy, i;
+  copy = initDim(_3Ljava_lang_StackTraceElement_2_classLit, 0, 0, stackTrace.length, 0);
+  for (i = 0 , c = stackTrace.length; i < c; ++i) {
+    if (!stackTrace[i]) {
+      throw $NullPointerException(new NullPointerException);
+    }
+    copy[i] = stackTrace[i];
+  }
+}
+
+function Throwable(){
+}
+
+_ = Throwable.prototype = new Object_0;
+_.typeId$ = 3;
+function Exception(){
+}
+
+_ = Exception.prototype = new Throwable;
+_.typeId$ = 4;
+function RuntimeException(){
+}
+
+_ = RuntimeException.prototype = new Exception;
+_.typeId$ = 5;
+function $JavaScriptException(this$static, e){
+  $fillInStackTrace();
+  this$static.e = e;
+  $createStackTrace(this$static);
+  return this$static;
+}
+
+function JavaScriptException(){
+}
+
+_ = JavaScriptException.prototype = new RuntimeException;
+_.typeId$ = 6;
+_.e = null;
+function Scheduler(){
+}
+
+_ = Scheduler.prototype = new Object_0;
+_.typeId$ = 0;
+function entry_0(jsFunction){
+  return function(){
+    return entry0(jsFunction, this, arguments);
+  }
+  ;
+}
+
+function entry0(jsFunction, thisObj, arguments_0){
+  var initialEntry;
+  initialEntry = entryDepth++ == 0;
+  try {
+    return jsFunction.apply(thisObj, arguments_0);
+  }
+   finally {
+    initialEntry && $flushFinallyCommands(($clinit_12() , INSTANCE));
+    --entryDepth;
+  }
+}
+
+var entryDepth = 0;
+function $clinit_12(){
+  $clinit_12 = nullMethod;
+  INSTANCE = $SchedulerImpl(new SchedulerImpl);
+}
+
+function $SchedulerImpl(this$static){
+  $clinit_12();
+  this$static.flusher = $SchedulerImpl$1(new SchedulerImpl$1, this$static);
+  $SchedulerImpl$2(new SchedulerImpl$2, this$static);
+  this$static.deferredCommands = [];
+  this$static.incrementalCommands = [];
+  this$static.finallyCommands = [];
+  return this$static;
+}
+
+function $flushFinallyCommands(this$static){
+  var oldFinally;
+  oldFinally = this$static.finallyCommands;
+  this$static.finallyCommands = [];
+  runScheduledTasks(oldFinally, this$static.finallyCommands);
+}
+
+function $flushPostEventPumpCommands(this$static){
+  var oldDeferred;
+  oldDeferred = this$static.deferredCommands;
+  this$static.deferredCommands = [];
+  runScheduledTasks(oldDeferred, this$static.incrementalCommands);
+  this$static.incrementalCommands = runRepeatingTasks(this$static.incrementalCommands);
+}
+
+function $isWorkQueued(this$static){
+  return this$static.deferredCommands.length > 0 || this$static.incrementalCommands.length > 0;
+}
+
+function execute(cmd){
+  return cmd.execute();
+}
+
+function runRepeatingTasks(tasks){
+  var canceledSomeTasks, i, length_0, newTasks, start, t;
+  canceledSomeTasks = false;
+  length_0 = tasks.length;
+  start = (new Date).getTime();
+  while ((new Date).getTime() - start < 100) {
+    for (i = 0; i < length_0; ++i) {
+      t = tasks[i];
+      if (!t) {
+        continue;
+      }
+      if (!t[0].execute()) {
+        tasks[i] = null;
+        canceledSomeTasks = true;
+      }
+    }
+  }
+  if (canceledSomeTasks) {
+    newTasks = [];
+    for (i = 0; i < length_0; ++i) {
+      if (!tasks[i]) {
+        continue;
+      }
+      newTasks[newTasks.length] = tasks[i];
+    }
+    return newTasks;
+  }
+   else {
+    return tasks;
+  }
+}
+
+function runScheduledTasks(tasks, rescheduled){
+  var $e0, i, j, t;
+  for (i = 0 , j = tasks.length; i < j; ++i) {
+    t = tasks[i];
+    try {
+      t[1]?t[0].execute() && (rescheduled[rescheduled.length] = t , undefined):t[0].nullMethod();
+    }
+     catch ($e0) {
+      $e0 = caught($e0);
+      if (!instanceOf($e0, 2))
+        throw $e0;
+    }
+  }
+}
+
+function scheduleFixedDelayImpl(cmd, delayMs){
+  $clinit_12();
+  $wnd.setTimeout(function(){
+    var ret = $entry(execute)(cmd);
+    ret && $wnd.setTimeout(arguments.callee, delayMs);
+  }
+  , delayMs);
+}
+
+function SchedulerImpl(){
+}
+
+_ = SchedulerImpl.prototype = new Scheduler;
+_.typeId$ = 0;
+_.flushRunning = false;
+_.shouldBeRunning = false;
+var INSTANCE;
+function $SchedulerImpl$1(this$static, this$0){
+  this$static.this$0 = this$0;
+  return this$static;
+}
+
+function execute_0(){
+  this.this$0.flushRunning = true;
+  $flushPostEventPumpCommands(this.this$0);
+  this.this$0.flushRunning = false;
+  return this.this$0.shouldBeRunning = $isWorkQueued(this.this$0);
+}
+
+function SchedulerImpl$1(){
+}
+
+_ = SchedulerImpl$1.prototype = new Object_0;
+_.execute = execute_0;
+_.typeId$ = 0;
+_.this$0 = null;
+function $SchedulerImpl$2(this$static, this$0){
+  this$static.this$0 = this$0;
+  return this$static;
+}
+
+function execute_1(){
+  this.this$0.flushRunning && scheduleFixedDelayImpl(this.this$0.flusher, 1);
+  return this.this$0.shouldBeRunning;
+}
+
+function SchedulerImpl$2(){
+}
+
+_ = SchedulerImpl$2.prototype = new Object_0;
+_.execute = execute_1;
+_.typeId$ = 0;
+_.this$0 = null;
+function extractNameFromToString(fnToString){
+  var index, start, toReturn;
+  toReturn = '';
+  fnToString = $trim(fnToString);
+  index = fnToString.indexOf('(');
+  if (index != -1) {
+    start = fnToString.indexOf('function') == 0?8:0;
+    toReturn = $trim(fnToString.substr(start, index - start));
+  }
+  return toReturn.length > 0?toReturn:'anonymous';
+}
+
+function splice(arr, length_0){
+  arr.length >= length_0 && arr.splice(0, length_0);
+  return arr;
+}
+
+function $createStackTrace(e){
+  var i, j, stack, stackTrace;
+  stack = $inferFrom(instanceOfJso(e.e)?dynamicCastJso(e.e):null);
+  stackTrace = initDim(_3Ljava_lang_StackTraceElement_2_classLit, 0, 0, stack.length, 0);
+  for (i = 0 , j = stackTrace.length; i < j; ++i) {
+    stackTrace[i] = $StackTraceElement(new StackTraceElement, 'Unknown', stack[i], 'Unknown source', 0);
+  }
+  $setStackTrace(stackTrace);
+}
+
+function $fillInStackTrace(){
+  var i, j, stack, stackTrace;
+  stack = splice($inferFrom($makeException()), 2);
+  stackTrace = initDim(_3Ljava_lang_StackTraceElement_2_classLit, 0, 0, stack.length, 0);
+  for (i = 0 , j = stackTrace.length; i < j; ++i) {
+    stackTrace[i] = $StackTraceElement(new StackTraceElement, 'Unknown', stack[i], 'Unknown source', 0);
+  }
+  $setStackTrace(stackTrace);
+}
+
+function $makeException(){
+  try {
+    null.a();
+  }
+   catch (e) {
+    return e;
+  }
+}
+
+function $inferFrom(e){
+  var i, j, stack;
+  stack = e && e.stack?e.stack.split('\n'):[];
+  for (i = 0 , j = stack.length; i < j; ++i) {
+    stack[i] = extractNameFromToString(stack[i]);
+  }
+  return stack;
+}
+
+function createFromSeed(seedType, length_0){
+  var array = new Array(length_0);
+  if (seedType > 0) {
+    var value = [null, 0, false, [0, 0]][seedType];
+    for (var i = 0; i < length_0; ++i) {
+      array[i] = value;
+    }
+  }
+  return array;
+}
+
+function initDim(arrayClass, typeId, queryId, length_0, seedType){
+  var result;
+  result = createFromSeed(seedType, length_0);
+  $clinit_21();
+  wrapArray(result, expandoNames_0, expandoValues_0);
+  result.typeId$ = typeId;
+  return result;
+}
+
+function Array_0(){
+}
+
+_ = Array_0.prototype = new Object_0;
+_.typeId$ = 0;
+_.length = 0;
+function $clinit_21(){
+  $clinit_21 = nullMethod;
+  expandoNames_0 = [];
+  expandoValues_0 = [];
+  initExpandos(new Array_0, expandoNames_0, expandoValues_0);
+}
+
+function initExpandos(protoType, expandoNames, expandoValues){
+  var i = 0, value;
+  for (var name_0 in protoType) {
+    if (value = protoType[name_0]) {
+      expandoNames[i] = name_0;
+      expandoValues[i] = value;
+      ++i;
+    }
+  }
+}
+
+function wrapArray(array, expandoNames, expandoValues){
+  $clinit_21();
+  for (var i = 0, c = expandoNames.length; i < c; ++i) {
+    array[expandoNames[i]] = expandoValues[i];
+  }
+}
+
+var expandoNames_0, expandoValues_0;
+function canCast(srcId, dstId){
+  return srcId && !!typeIdArray[srcId][dstId];
+}
+
+function dynamicCastJso(src){
+  if (src != null && (src.typeMarker$ == nullMethod || src.typeId$ == 2)) {
+    throw $ClassCastException(new ClassCastException);
+  }
+  return src;
+}
+
+function instanceOf(src, dstId){
+  return src != null && canCast(src.typeId$, dstId);
+}
+
+function instanceOfJso(src){
+  return src != null && src.typeMarker$ != nullMethod && src.typeId$ != 2;
+}
+
+var typeIdArray = [{}, {}, {1:1}, {3:1}, {3:1}, {2:1, 3:1}, {2:1, 3:1}, {2:1, 3:1}, {2:1, 3:1}, {3:1}, {3:1}, {2:1, 3:1}, {2:1, 3:1}];
+function init(){
+  !!$stats && $stats({moduleName:$moduleName, sessionId:$sessionId, subSystem:'startup', evtGroup:'moduleStartup', millis:(new Date).getTime(), type:'onModuleLoadStart', className:'com.logicaldoc.gui.common.client.Common'});
+}
+
+function caught(e){
+  if (e != null && canCast(e.typeId$, 3)) {
+    return e;
+  }
+  return $JavaScriptException(new JavaScriptException, e);
+}
+
+function Class(){
+}
+
+_ = Class.prototype = new Object_0;
+_.typeId$ = 0;
+function $ClassCastException(this$static){
+  $fillInStackTrace();
+  return this$static;
+}
+
+function ClassCastException(){
+}
+
+_ = ClassCastException.prototype = new RuntimeException;
+_.typeId$ = 11;
+function $NullPointerException(this$static){
+  $fillInStackTrace();
+  return this$static;
+}
+
+function NullPointerException(){
+}
+
+_ = NullPointerException.prototype = new RuntimeException;
+_.typeId$ = 12;
+function $StackTraceElement(this$static, className, methodName, fileName, lineNumber){
+  return this$static;
+}
+
+function StackTraceElement(){
+}
+
+_ = StackTraceElement.prototype = new Object_0;
+_.typeId$ = 0;
+function $trim(this$static){
+  if (this$static.length == 0 || this$static[0] > ' ' && this$static[this$static.length - 1] > ' ') {
+    return this$static;
+  }
+  var r1 = this$static.replace(/^(\s*)/, '');
+  var r2 = r1.replace(/\s*$/, '');
+  return r2;
+}
+
+_ = String.prototype;
+_.typeId$ = 2;
+var $entry = entry_0;
+function gwtOnLoad(errFn, modName, modBase){
+  $moduleName = modName;
+  $moduleBase = modBase;
+  if (errFn)
+    try {
+      $entry(init)();
+    }
+     catch (e) {
+      errFn(modName);
+    }
+   else {
+    $entry(init)();
+  }
+}
+
+var _3Ljava_lang_StackTraceElement_2_classLit = new Class;
+$stats && $stats({moduleName:'common',sessionId:$sessionId,subSystem:'startup',evtGroup:'moduleStartup',millis:(new Date()).getTime(),type:'moduleEvalEnd'});
+if ($wnd.common) $wnd.common.onScriptLoad();
+--></script></body></html>

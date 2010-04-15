@@ -1,0 +1,23 @@
+<!--
+ Describes the API archive
+  
+ @author Marco Meschieri - Logical Objects
+ @version 3.0
+-->
+<assembly>
+	<id>api</id>
+	<formats>
+		<format>jar</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>war/WEB-INF/classes</directory>
+			<outputDirectory>/</outputDirectory>
+			<excludes>
+              <exclude>i18n</exclude>
+              <exclude>context.properties</exclude>
+            </excludes>
+		</fileSet>
+	</fileSets>
+</assembly>
