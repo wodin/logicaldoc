@@ -14,6 +14,8 @@ public class GUIFolder implements Serializable {
 
 	private long id;
 
+	private long parentId;
+
 	private String description;
 
 	private String name;
@@ -78,5 +80,13 @@ public class GUIFolder implements Serializable {
 
 	public void setRights(GUIRight[] rights) {
 		this.rights = rights;
+	}
+
+	public long getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(long parentId) {
+		this.parentId = parentId;
 	}
 }

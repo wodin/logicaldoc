@@ -65,6 +65,7 @@ public class PropertiesPanel extends FolderDetailTab {
 		pathItem.setTitle(I18N.getMessage("path"));
 		pathItem.setValue(folder.getPathExtended());
 		pathItem.addChangedHandler(changedHandler);
+		pathItem.setWidth(300);
 		pathItem.setDisabled(true);
 
 		items.add(idItem);

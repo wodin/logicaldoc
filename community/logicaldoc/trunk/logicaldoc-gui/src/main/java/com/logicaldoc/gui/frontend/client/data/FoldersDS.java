@@ -1,8 +1,10 @@
 package com.logicaldoc.gui.frontend.client.data;
 
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
@@ -28,9 +30,12 @@ public class FoldersDS extends DataSource {
 		parentId.setForeignKey("FoldersDS.id");
 		parentId.setRootValue("-1");
 
-		setFields(nameField, folderId, parentId);
+		DataSourceBooleanField add = new DataSourceBooleanField(Constants.PERMISSION_ADD);
+		DataSourceBooleanField delete = new DataSourceBooleanField(Constants.PERMISSION_DELETE);
 
-		setDataURL("data/folders.xml?sid="+Session.getInstance().getSid());
+		setFields(nameField, folderId, parentId, add, delete);
+
+		setDataURL("data/folders.xml?sid=" + Session.getInstance().getSid());
 		setClientOnly(false);
 	}
 }
