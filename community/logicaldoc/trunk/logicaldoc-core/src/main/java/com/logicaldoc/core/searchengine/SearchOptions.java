@@ -1,8 +1,18 @@
 package com.logicaldoc.core.searchengine;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 
 import com.logicaldoc.core.text.StringParser;
 
@@ -11,9 +21,19 @@ import com.logicaldoc.core.text.StringParser;
  * 
  * @author Michael Scholz
  */
-public class SearchOptions {
+public class SearchOptions implements Serializable, Comparable<SearchOptions> {
+
+	private static final long serialVersionUID = 1L;
+
+	public static final int TYPE_FULLTEXT = 0;
+
+	public static final int TYPE_PARAMETRIC = 1;
+
+	private int type = TYPE_FULLTEXT;
 
 	private String queryStr = "";
+
+	private String queryLanguage = Locale.ENGLISH.getLanguage();
 
 	// Min size in bytes
 	private Long sizeMin = null;
@@ -33,6 +53,9 @@ public class SearchOptions {
 
 	private String[] languages = null;
 
+	// Useful for parametric searches
+	private Object[] parameters = null;
+
 	private Date dateFrom = null;
 
 	private Date dateTo = null;
@@ -46,6 +69,10 @@ public class SearchOptions {
 	private Date creationTo = null;
 
 	private Long template = null;
+
+	private String name = "";
+
+	private String description = "";
 
 	/** Creates a new instance of SearchOptions */
 	public SearchOptions() {
@@ -212,5 +239,74 @@ public class SearchOptions {
 
 	public void setDateFrom(Date dateFrom) {
 		this.dateFrom = dateFrom;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public String getQueryLanguage() {
+		return queryLanguage;
+	}
+
+	public void setQueryLanguage(String queryLanguage) {
+		this.queryLanguage = queryLanguage;
+	}
+
+	public Object[] getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(Object[] parameters) {
+		this.parameters = parameters;
+	}
+
+	public static SearchOptions read(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
+		SearchOptions searchOptions = null;
+		// Deserialize from a file
+		ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+		try {
+			// Deserialize the object
+			searchOptions = (SearchOptions) in.readObject();
+		} finally {
+			in.close();
+		}
+		return searchOptions;
+	}
+
+	public void write(File file) throws FileNotFoundException, IOException {
+		// Serialize to a file
+		ObjectOutput out = new ObjectOutputStream(new FileOutputStream(file));
+		try {
+			out.writeObject(this);
+		} finally {
+			out.flush();
+			out.close();
+		}
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Override
+	public int compareTo(SearchOptions o) {
+		return this.getName().compareTo(o.getName());
 	}
 }

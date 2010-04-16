@@ -507,9 +507,10 @@ public class DmsServiceImpl implements DmsService {
 		opt.setQueryStr(query);
 		opt.setUserId(user.getId());
 		opt.setFormat("all");
+		opt.setQueryLanguage(queryLanguage);
 
 		// Execute the search
-		Search lastSearch = new Search(opt, LocaleUtil.toLocale(queryLanguage));
+		Search lastSearch = new Search(opt);
 		lastSearch.setMaxHits(maxHits);
 		List<com.logicaldoc.core.searchengine.Result> tmp = lastSearch.search();
 

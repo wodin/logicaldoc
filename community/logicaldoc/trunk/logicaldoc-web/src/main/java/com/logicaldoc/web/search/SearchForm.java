@@ -543,27 +543,33 @@ public class SearchForm extends SortableList {
 
 			Locale searchLocale = "all".equals(language) ? SessionManagement.getLocale() : LocaleUtil
 					.toLocale(language);
-			lastSearch = new Search(opt, searchLocale);
-			lastSearch.setMaxHits(maxHits);
+			opt.setQueryLanguage(searchLocale.getLanguage());
 
-			List<Result> result = lastSearch.search();
-
-			List<DocumentResult> docResult = new ArrayList<DocumentResult>();
-
-			for (Result myResult : result) {
-				if (excludeFromResult != null && excludeFromResult.longValue() == myResult.getDocId())
-					continue;
-				DocumentResult dr = new DocumentResult(myResult);
-				docResult.add(dr);
-			}
-
-			setDocumentResult(docResult);
-			showLastSearch();
+			search(opt);
 		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
 		}
 		return null;
+	}
+
+	public void search(SearchOptions opt) {
+		lastSearch = new Search(opt);
+		lastSearch.setMaxHits(maxHits);
+
+		List<Result> result = lastSearch.search();
+
+		List<DocumentResult> docResult = new ArrayList<DocumentResult>();
+
+		for (Result myResult : result) {
+			if (excludeFromResult != null && excludeFromResult.longValue() == myResult.getDocId())
+				continue;
+			DocumentResult dr = new DocumentResult(myResult);
+			docResult.add(dr);
+		}
+
+		setDocumentResult(docResult);
+		showLastSearch();
 	}
 
 	public boolean isCustomId() {
@@ -1115,5 +1121,9 @@ public class SearchForm extends SortableList {
 
 	public void setSelectedAll(boolean selectedAll) {
 		this.selectedAll = selectedAll;
+	}
+	
+	public Search getLastSearch() {
+		return lastSearch;
 	}
 }

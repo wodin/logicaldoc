@@ -49,17 +49,14 @@ public class Search {
 
 	private SearchOptions options;
 
-	private Locale locale;
-
 	private List<Result> results = new ArrayList<Result>();
 
 	private int estimatedHitsNumber = 0;
 
 	private long execTime = 0;
 
-	public Search(SearchOptions opt, Locale locale) {
+	public Search(SearchOptions opt) {
 		this.options = opt;
-		this.locale = locale;
 	}
 
 	public List<Result> search() {
@@ -91,7 +88,8 @@ public class Search {
 			}
 
 			MultiSearcher multiSearcher = new MultiSearcher(searcher);
-			Analyzer analyzer = LanguageManager.getInstance().getLanguage(locale).getAnalyzer();
+			Analyzer analyzer = LanguageManager.getInstance().getLanguage(new Locale(options.getQueryLanguage()))
+					.getAnalyzer();
 
 			if (options.getFields() == null) {
 				String[] fields = new String[] { LuceneDocument.FIELD_CONTENT, LuceneDocument.FIELD_TAGS };
