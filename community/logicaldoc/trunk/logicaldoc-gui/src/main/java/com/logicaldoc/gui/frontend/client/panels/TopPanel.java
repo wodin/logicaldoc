@@ -19,7 +19,7 @@ public class TopPanel extends HLayout {
 		setHeight(45);
 
 		// Prepare the logo image to be shown inside the banner
-		Image logoImage = new Image(Util.imageUrl("application/logo_head.png"));
+		Image logoImage = new Image(Util.imageUrl("brand/logo_head.png"));
 		logoImage.setStyleName("topLogo");
 		addMember(logoImage);
 

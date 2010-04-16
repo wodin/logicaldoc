@@ -35,7 +35,8 @@ public class MockDownloadServlet extends HttpServlet {
 			if ("true".equals(request.getParameter("downloadText")))
 				response.getWriter().write("Document text");
 			else {
-				RequestDispatcher rd = request.getRequestDispatcher("/skins/default/images/preview_na.gif");
+				RequestDispatcher rd = request
+						.getRequestDispatcher("frontend/sc/skins/LogicalDOC/images/application/preview_na.gif");
 				rd.forward(request, response);
 			}
 		} catch (Exception e) {

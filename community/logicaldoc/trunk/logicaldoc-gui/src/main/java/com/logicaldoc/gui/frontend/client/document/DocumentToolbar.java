@@ -96,6 +96,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				public void onClick(ClickEvent event) {
 					final DocumentsUploader uploader = new DocumentsUploader();
 					uploader.show();
+					event.cancel();
 				}
 			});
 		} else {
