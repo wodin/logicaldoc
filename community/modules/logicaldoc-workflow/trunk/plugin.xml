@@ -3,7 +3,6 @@
 <plugin id="logicaldoc-workflow" version="5.2.0" class="com.logicaldoc.workflow.WorkflowPlugin">
 	<requires>
 		<import plugin-id="logicaldoc-core" />
-		<import plugin-id="logicaldoc-impex" />
 	</requires>
 
 	<runtime>
@@ -97,9 +96,4 @@
         <parameter id="mapping" value="classpath*:org/jbpm/**/*.hbm.xml"/>
         <parameter id="position" value="2"/>
     </extension>
-    
-    <extension plugin-id="logicaldoc-impex" point-id="Cleaner" id="workflowCleaner">
-		<parameter id="class" value="com.logicaldoc.workflow.WorkflowCleaner" />
-		<parameter id="position" value="110" />
-	</extension>
 </plugin>
