@@ -56,13 +56,6 @@
       <scope>provided</scope>
       <classifier>api</classifier>
     </dependency>
-    <dependency>
-      <groupId>com.logicaldoc</groupId>
-      <artifactId>logicaldoc-impex</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-      <scope>provided</scope>
-    </dependency>
 
     <dependency>
       <groupId>org.freemarker</groupId>
