@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.panels;
 
 import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.frontend.client.security.LoginInfo;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.layout.HLayout;
 

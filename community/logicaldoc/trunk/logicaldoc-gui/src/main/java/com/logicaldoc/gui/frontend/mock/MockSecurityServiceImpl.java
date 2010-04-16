@@ -32,6 +32,14 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 			user.setGroups(new String[] { "admin" });
 			user.setFirstName("Marco");
 			user.setName("Meschieri");
+			user.setExpired(false);
+			user.setPasswordMinLenght(8);
+			return user;
+		} else if ("author".equals(username)) {
+			GUIUser user = new GUIUser();
+			user.setId(100);
+			user.setExpired(true);
+			user.setPasswordMinLenght(8);
 			return user;
 		} else {
 			return null;

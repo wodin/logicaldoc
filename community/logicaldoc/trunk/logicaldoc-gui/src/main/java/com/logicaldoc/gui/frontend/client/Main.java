@@ -9,8 +9,8 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
-import com.logicaldoc.gui.frontend.client.panels.LoginPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
+import com.logicaldoc.gui.frontend.client.security.LoginPanel;
 import com.smartgwt.client.util.SC;
 
 /**

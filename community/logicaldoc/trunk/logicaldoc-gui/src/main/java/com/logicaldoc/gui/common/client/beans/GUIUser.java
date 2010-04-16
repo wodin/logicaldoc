@@ -28,6 +28,8 @@ public class GUIUser implements Serializable {
 
 	private boolean expired = true;
 
+	private int passwordMinLenght = 0;
+
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
@@ -109,5 +111,13 @@ public class GUIUser implements Serializable {
 
 	public void setExpired(boolean expired) {
 		this.expired = expired;
+	}
+
+	public int getPasswordMinLenght() {
+		return passwordMinLenght;
+	}
+
+	public void setPasswordMinLenght(int passwordMinLenght) {
+		this.passwordMinLenght = passwordMinLenght;
 	}
 }
