@@ -36,11 +36,11 @@ public class Util {
 	/**
 	 * Generates HTML image code with style.
 	 * 
-	 * @param imageUrl the url of the icon image
+	 * @param imageName the image name
 	 * @return the resultant HTML
 	 */
-	public static String imageHTML(String imageUrl) {
-		return imageHTML(imageUrl, "");
+	public static String imageHTML(String imageName) {
+		return imageHTML(imageName, "");
 	}
 
 	/**

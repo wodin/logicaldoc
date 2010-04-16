@@ -33,6 +33,10 @@ public class Messages extends AbstractMap<String, String> {
 	public Messages() {
 	}
 
+	public static String getMessage(String key, String lang) {
+		return getMessage(key, new Locale(lang));
+	}
+
 	public static String getMessage(String key, Locale locale) {
 		if (bundles.isEmpty()) {
 			// Acquire the 'ResourceBundle' extensions of the core plugin
@@ -52,7 +56,7 @@ public class Messages extends AbstractMap<String, String> {
 				ResourceBundle bundle = ResourceBundle.getBundle(path, locale);
 				return bundle.getString(key);
 			} catch (Throwable e) {
-				
+
 			}
 		}
 
@@ -70,11 +74,6 @@ public class Messages extends AbstractMap<String, String> {
 			}
 		}
 		return getMessage(key, locale);
-	}
-
-	public static String getMessage(String key, String val0) {
-		String msg = getMessage(key);
-		return MessageFormat.format(msg, new Object[] { val0 });
 	}
 
 	public static String getMessage(String key, Object[] values) {

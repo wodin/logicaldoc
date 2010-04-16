@@ -8,19 +8,17 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.util.EmailValidator;
-import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.gui.setup.client.services.SetupServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -37,7 +35,6 @@ import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.validator.RequiredIfFunction;
 import com.smartgwt.client.widgets.form.validator.RequiredIfValidator;
-import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -125,14 +122,12 @@ public class Setup implements EntryPoint {
 
 		// Prepare the heading panel with Logo and Title
 		// Prepare the logo image to be shown inside the login form
-		HLayout header = new HLayout();
-		Image logoImage = new Image(Util.imageUrl("brand/logo.png"));
-		logoImage.setHeight("40px");
-		HTML title = new HTML(I18N.getMessage("setup"));
-		title.setStyleName("setupHeader");
-		header.addMember(logoImage);
-		header.addMember(title);
-		header.setMembersMargin(5);
+		Label header = new Label(I18N.getMessage("setup"));
+		header.setStyleName("setupHeader");
+		header.setIcon("[SKIN]/brand/logo.png");
+		header.setIconWidth(205);
+		header.setIconHeight(40);
+		header.setHeight(45);
 
 		// Prepare a panel to layout setup components
 		VLayout layout = new VLayout();
