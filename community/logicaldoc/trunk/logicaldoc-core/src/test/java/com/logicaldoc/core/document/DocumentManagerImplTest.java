@@ -17,13 +17,13 @@ import com.logicaldoc.core.security.dao.UserDAO;
  * @since 3.5
  */
 public class DocumentManagerImplTest extends AbstractCoreTestCase {
-	
+
 	private DocumentDAO docDao;
 
 	private UserDAO userDao;
-	
+
 	private MenuDAO menuDao;
-	
+
 	private HistoryDAO historyDao;
 
 	// Instance under test
@@ -84,204 +84,139 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		assertEquals(2, doc.getStatus());
 		assertEquals(1L, doc.getLockUserId().longValue());
 	}
-	
-	
-	
+
 	public void testMoveFolder_Simple() throws Exception {
 		// first create a folder a
-		// create folder b 
+		// create folder b
 		// create folder c children of b
 		// move folder c to parent a
-		
+
 		Menu docsMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
 		Menu menuA = menuDao.createFolder(docsMenu, "folderA", null);
 		Menu menuB = menuDao.createFolder(docsMenu, "folderB", null);
 		Menu menuC = menuDao.createFolder(menuB, "folderC", null);
-		
+
 		User user = userDao.findByUserName("admin");
-		
+
 		History transaction = new History();
 		transaction.setNotified(0);
 		transaction.setComment("");
-		
+
 		documentManager.moveFolder(menuC, menuA, user, transaction);
-		
+
 		List<Menu> menuList = menuDao.findChildren(menuA.getId());
 		assertTrue(menuList.size() == 1);
-		
+
 		for (Menu menu : menuList) {
 			System.out.println(menu.getId());
-			System.out.println(menu.getPath());
-			System.out.println(menu.getPathExtended());
 		}
-		
+
 		assertTrue(menuList.contains(menuC));
 	}
-	
-	
+
 	public void testMoveFolder_Up() throws Exception {
-		// first create a folder a
-		// create folder b 
-		// create folder c children of b
-		// create folder d children of c
-		// create folder e children of c
-		// move folder c to parent a
-		
 		Menu docsMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
 		Menu menuA = menuDao.createFolder(docsMenu, "folderA", null);
 		Menu menuB = menuDao.createFolder(docsMenu, "folderB", null);
 		Menu menuC = menuDao.createFolder(menuB, "folderC", null);
 		menuDao.createFolder(menuC, "folderD", null);
 		menuDao.createFolder(menuC, "folderE", null);
-		
+
 		User user = userDao.findByUserName("admin");
-		
+
 		History transaction = new History();
 		transaction.setNotified(0);
 		transaction.setComment("");
-		
+
 		documentManager.moveFolder(menuC, menuA, user, transaction);
-		
+
 		List<Menu> menuList = menuDao.findChildren(menuA.getId());
 		assertTrue(menuList.size() == 1);
-		
-//		for (Menu menu : menuList) {
-//			System.out.println(menu.getId());
-//			System.out.println(menu.getText());
-//			System.out.println(menu.getPath());
-//			System.out.println(menu.getPathExtended());
-//		}
-		
+
+		// for (Menu menu : menuList) {
+		// System.out.println(menu.getId());
+		// System.out.println(menu.getText());
+		// System.out.println(menu.getPath());
+		// System.out.println(menu.getPathExtended());
+		// }
+
 		assertTrue(menuList.contains(menuC));
-		
+
 		menuList = menuDao.findChildren(menuB.getId());
 		assertTrue(menuList.size() == 0);
 	}
-	
-	
-	
+
 	public void testMoveFolder_UpWithDocuments() throws Exception {
-		
-		// first create a folder a
-		// create folder b 
-		// create folder c children of b
-		// create folder d children of c
-		// create folder e children of c
-		
-		// add a document to folder c
-		// add a document to folder d
-		// add a document to folder e
-		
-		// move folder c to parent a
-		
 		Menu docsMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
 		Menu menuA = menuDao.createFolder(docsMenu, "folderA", null);
 		Menu menuB = menuDao.createFolder(docsMenu, "folderB", null);
 		Menu menuC = menuDao.createFolder(menuB, "folderC", null);
 		Menu menuD = menuDao.createFolder(menuC, "folderD", null);
 		menuDao.createFolder(menuC, "folderE", null);
-		
+
 		Document doc = docDao.findById(1);
 		docDao.initialize(doc);
 		doc.setFolder(menuC);
 		doc.setIndexed(1);
 		docDao.store(doc);
-		
+
 		Document doc2 = docDao.findById(2);
 		docDao.initialize(doc2);
 		doc2.setFolder(menuD);
 		doc2.setIndexed(1);
 		docDao.store(doc2);
-		
+
 		User user = userDao.findByUserName("admin");
-		
+
 		History transaction = new History();
 		transaction.setNotified(0);
 		transaction.setComment("");
-		
+
 		documentManager.moveFolder(menuC, menuA, user, transaction);
-		
+
 		List<Menu> menuList = menuDao.findChildren(menuA.getId());
 		assertTrue(menuList.size() == 1);
-		
-//		for (Menu menu : menuList) {
-//			System.out.println(menu.getId());
-//			System.out.println(menu.getText());
-//			System.out.println(menu.getPath());
-//			System.out.println(menu.getPathExtended());
-//		}
-		
+
 		assertTrue(menuList.contains(menuC));
-		
+
 		menuList = menuDao.findChildren(menuB.getId());
 		assertTrue(menuList.size() == 0);
-		
+
 		List<Document> docs = docDao.findByIndexed(0);
-		System.out.println("docs NOT indexed:" + docs.size());
-		assertTrue(docs.size() > 0);
-		
-		for (Document document : docs) {
-			System.out.println(document);
-		}
-		
-		assertTrue(docs.contains(doc));
-		assertTrue(docs.contains(doc2));
-		
-		Document foundDoc = docs.get(0);
-		System.out.println("foundDoc.getPath(): " + foundDoc.getPath());
-		assertEquals(foundDoc.getPath(), "/5/1201/1203");
-		
+		assertEquals(0, docs.size());
+
 		// Check the history creation
 		List<History> folderHistory = historyDao.findByFolderId(menuC.getId());
-		System.out.println("folderHistory: " + folderHistory);
-		System.out.println("folderHistory.size(): " + folderHistory.size());
 		assertTrue(folderHistory.size() > 0);
-		
+
 		boolean eventPresent = false;
-        for (History history : folderHistory) {
+		for (History history : folderHistory) {
 			if (history.getEvent().equals(History.EVENT_FOLDER_MOVED))
 				eventPresent = true;
 		}
-        assertTrue(eventPresent);
+		assertTrue(eventPresent);
 	}
-	
-	
-	public void testMoveFolder_Down() throws Exception {
 
-		// create folder b 
-		// create folder c children of b
-		// create folder d children of c
-		// create folder e children of c
-		// create folder f children of e
-		// move folder e to parent d
-		
+	public void testMoveFolder_Down() throws Exception {
 		Menu docsMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
 		Menu menuB = menuDao.createFolder(docsMenu, "folderB", null);
 		Menu menuC = menuDao.createFolder(menuB, "folderC", null);
 		Menu menuD = menuDao.createFolder(menuC, "folderD", null);
 		Menu menuE = menuDao.createFolder(menuC, "folderE", null);
 		menuDao.createFolder(menuE, "folderF", null);
-		
+
 		User user = userDao.findByUserName("admin");
-		
+
 		History transaction = new History();
 		transaction.setNotified(0);
 		transaction.setComment("");
-		
+
 		documentManager.moveFolder(menuE, menuD, user, transaction);
-		
+
 		List<Menu> menuList = menuDao.findChildren(menuD.getId());
 		assertTrue(menuList.size() == 1);
-		
-//		for (Menu menu : menuList) {
-//			System.out.println(menu.getId());
-//			System.out.println(menu.getText());
-//			System.out.println(menu.getPath());
-//			System.out.println(menu.getPathExtended());
-//		}
-		
 		assertTrue(menuList.contains(menuE));
-		
+
 		menuList = menuDao.findChildren(menuC.getId());
 		assertTrue(menuList.size() == 1);
 	}

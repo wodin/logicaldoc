@@ -69,7 +69,7 @@ public class Indexer {
 		try {
 			log.info("addFile: " + file.toString());
 			Document doc = lDoc.getDocument(file, content);
-			log.info("doc path: " + doc.getField(LuceneDocument.FIELD_PATH).stringValue());
+			log.info("doc path: " + doc.getField(LuceneDocument.FIELD_FOLDER_ID).stringValue());
 			addDocument(doc, locale);
 		} catch (Throwable e) {
 			log.error("Exception addFile: " + e.getLocalizedMessage(), e);

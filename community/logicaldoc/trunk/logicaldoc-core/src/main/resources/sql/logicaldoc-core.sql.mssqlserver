@@ -12,7 +12,7 @@ create table ld_group_ext (ld_groupid bigint not null, ld_mandatory int not null
 create table ld_history (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, ld_docid bigint, ld_folderid bigint not null, ld_userid bigint, ld_date datetime, ld_username varchar(255), ld_event varchar(255), ld_comment varchar(4000), ld_version varchar(10), ld_title varchar(255), ld_path varchar(4000), ld_notified int not null, ld_sessionid varchar(255), primary key (ld_id));
 create table ld_tag (ld_docid bigint not null, ld_tag varchar(255));
 create table ld_link (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, ld_type varchar(255) not null, ld_docid1 bigint, ld_docid2 bigint, primary key (ld_id));
-create table ld_menu (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, ld_text varchar(255), ld_parentid bigint not null, ld_sort int, ld_icon varchar(255), ld_path varchar(255), ld_pathextended varchar(4000), ld_type int not null, ld_ref varchar(255), ld_size bigint, primary key (ld_id));
+create table ld_menu (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, ld_text varchar(255), ld_parentid bigint not null, ld_sort int, ld_icon varchar(255), ld_type int not null, ld_ref varchar(255), ld_size bigint, primary key (ld_id));
 create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint not null, ld_write int not null, ld_addchild int not null, ld_managesecurity int not null, ld_manageimmutability int not null, ld_delete int not null, ld_rename int not null, ld_bulkimport int not null, ld_bulkexport int not null, ld_sign int not null, ld_archive int not null, ld_workflow int not null, primary key (ld_menuid, ld_groupid, ld_write, ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow));
 create table ld_recipient (ld_messageid bigint not null, ld_name varchar(255) not null, ld_address varchar(255) not null, ld_mode varchar(255) not null, ld_type int not null, primary key (ld_messageid, ld_name, ld_address, ld_mode, ld_type));
 create table ld_systemmessage (ld_id bigint not null, ld_lastmodified datetime not null, ld_deleted int not null, ld_author varchar(255), ld_messagetext varchar(2000), ld_subject varchar(255), ld_sentdate datetime not null, ld_datescope int, ld_prio int, ld_confirmation int, ld_red int not null, ld_lastnotified datetime, ld_status int not null, ld_trials int, ld_type int not null, primary key (ld_id));
@@ -64,101 +64,101 @@ alter table ld_version add constraint FK_VERSION_USER foreign key (ld_userid) re
 
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (1,CURRENT_TIMESTAMP,0,'menu.home',1,1,'home.png','/',1,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (1,CURRENT_TIMESTAMP,0,'menu.home',1,1,'home.png',1,null,0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (2,CURRENT_TIMESTAMP,0,'menu.admin',1,1,'administration.png','/',1,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (2,CURRENT_TIMESTAMP,0,'menu.admin',1,1,'administration.png',1,null,0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (4,CURRENT_TIMESTAMP,0,'menu.personal',1,3,'personal.png','/',1,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (4,CURRENT_TIMESTAMP,0,'menu.personal',1,3,'personal.png',1,null,0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size, ld_pathextended)
-values     (5,CURRENT_TIMESTAMP,0,'menu.documents',1,4,'documents.png','/',1,'document/browse',0, '/');
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (5,CURRENT_TIMESTAMP,0,'menu.documents',1,4,'documents.png',1,'document/browse',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (9,CURRENT_TIMESTAMP,0,'admin.security',2,3,'password.png','/2',1,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (9,CURRENT_TIMESTAMP,0,'admin.security',2,3,'password.png',1,null,0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (6,CURRENT_TIMESTAMP,0,'menu.user',9,5,'user.png','/9',1,'admin/users',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (6,CURRENT_TIMESTAMP,0,'menu.user',9,5,'user.png',1,'admin/users',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (7,CURRENT_TIMESTAMP,0,'menu.group',9,10,'group.png','/9',1,'admin/groups',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (7,CURRENT_TIMESTAMP,0,'menu.group',9,10,'group.png',1,'admin/groups',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (-1,CURRENT_TIMESTAMP,0,'admin.security',9,15,'password.png','/9',1,'admin/security',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (-1,CURRENT_TIMESTAMP,0,'admin.security',9,15,'password.png',1,'admin/security',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (14,CURRENT_TIMESTAMP,0,'task.tasks',2,10,'task_scheduler.png','/2',1,'admin/tasks',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (14,CURRENT_TIMESTAMP,0,'task.tasks',2,10,'task_scheduler.png',1,'admin/tasks',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (-2,CURRENT_TIMESTAMP,0,'system',2,1,'system.png','/2',1,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (-2,CURRENT_TIMESTAMP,0,'system',2,1,'system.png',1,null,0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (3,CURRENT_TIMESTAMP,0,'clients',2,2,'connect.png','/2',1,'admin/clients',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (3,CURRENT_TIMESTAMP,0,'clients',2,2,'connect.png',1,'admin/clients',0);
 
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (17,CURRENT_TIMESTAMP,0,'directory',-2,5,'folders.png','/-2',1,'admin/folders',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (17,CURRENT_TIMESTAMP,0,'directory',-2,5,'folders.png',1,'admin/folders',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (8,CURRENT_TIMESTAMP,0,'menu.logging',-2,10,'logging.png','/-2',1,'admin/logs',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (8,CURRENT_TIMESTAMP,0,'menu.logging',-2,10,'logging.png',1,'admin/logs',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (25,CURRENT_TIMESTAMP,0,'menu.searchengine',-2,15,'search.png','/-2',1,'admin/searchEngine',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (25,CURRENT_TIMESTAMP,0,'menu.searchengine',-2,15,'search.png',1,'admin/searchEngine',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (23,CURRENT_TIMESTAMP,0,'smtp',-2,25,'mail_preferences.png','/-2',1,'admin/smtp',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (23,CURRENT_TIMESTAMP,0,'smtp',-2,25,'mail_preferences.png',1,'admin/smtp',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (11,CURRENT_TIMESTAMP,0,'menu.gui',-2,30,'gui.png','/-2',1,'admin/gui',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (11,CURRENT_TIMESTAMP,0,'menu.gui',-2,30,'gui.png',1,'admin/gui',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (10,CURRENT_TIMESTAMP,0,'parameters',-2,35,'parameters.png','/-2',1,'admin/parameters',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (10,CURRENT_TIMESTAMP,0,'parameters',-2,35,'parameters.png',1,'admin/parameters',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (13,CURRENT_TIMESTAMP,0,'menu.messages',4,1,'message.png','/4',1,'communication/messages',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (13,CURRENT_TIMESTAMP,0,'menu.messages',4,1,'message.png',1,'communication/messages',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (16,CURRENT_TIMESTAMP,0,'menu.changepassword',4,3,'password.png','/4',1,'settings/password',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (16,CURRENT_TIMESTAMP,0,'menu.changepassword',4,3,'password.png',1,'settings/password',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (19,CURRENT_TIMESTAMP,0,'menu.editme',4,4,'user.png','/4',1,'settings/personalData',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (19,CURRENT_TIMESTAMP,0,'menu.editme',4,4,'user.png',1,'settings/personalData',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (21,CURRENT_TIMESTAMP,0,'templates',2,4,'template.png','/2',1,'admin/templates',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (21,CURRENT_TIMESTAMP,0,'templates',2,4,'template.png',1,'admin/templates',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (18,CURRENT_TIMESTAMP,0,'searches',1,6,'search.png','/1',1,null,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (18,CURRENT_TIMESTAMP,0,'searches',1,6,'search.png',1,null,0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (26,CURRENT_TIMESTAMP,0,'tags',18,5,'tags.png','/1/18',1,'search/tags',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (26,CURRENT_TIMESTAMP,0,'tags',18,5,'tags.png',1,'search/tags',0);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_path,ld_type,ld_ref,ld_size)
-values     (15,CURRENT_TIMESTAMP,0,'search.advanced',18,5,'search.png','/1/18',1,'search/advancedSearch',0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (15,CURRENT_TIMESTAMP,0,'search.advanced',18,5,'search.png',1,'search/advancedSearch',0);
 
 
 insert into ld_group

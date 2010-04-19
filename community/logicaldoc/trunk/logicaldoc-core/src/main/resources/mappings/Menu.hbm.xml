@@ -13,8 +13,6 @@
 		<property name="parentId" type="long" column="ld_parentid" not-null="true" />
 		<property name="sort" type="int" column="ld_sort" />
 		<property name="icon" type="string" column="ld_icon" length="255" />
-		<property name="path" type="string" column="ld_path" length="255" />
-		<property name="pathExtended" type="string" column="ld_pathextended" length="4000" />
 		<property name="type" type="int" column="ld_type" not-null="true"/>
 		<property name="ref" type="string" column="ld_ref" length="255" />
 		<property name="size" type="long" column="ld_size" />
