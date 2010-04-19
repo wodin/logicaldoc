@@ -736,8 +736,4 @@ public class DocumentRecord extends MenuBarBean {
 	public String getSource() {
 		return getDocument().getSource();
 	}
-
-	public String getPath() {
-		return getDocument().getPath();
-	}
 }

@@ -80,8 +80,6 @@ public class SearchForm extends SortableList {
 
 	private String format = "all";
 
-	private String path = null;
-
 	private Long sizeMin = null;
 
 	private Long sizeMax = null;
@@ -149,6 +147,8 @@ public class SearchForm extends SortableList {
 	private String viewMode = null;
 
 	private boolean selectedAll;
+
+	private Directory dir = null;
 
 	// Set of selected rows
 	private Set<DocumentRecord> selection = new HashSet<DocumentRecord>();
@@ -398,7 +398,7 @@ public class SearchForm extends SortableList {
 		any = "";
 		nots = "";
 		format = "all";
-		path = null;
+		dir = null;
 		parentPathDescr = null;
 		content = true;
 		tags = true;
@@ -533,12 +533,10 @@ public class SearchForm extends SortableList {
 				opt.setSizeMax(getSizeMax() * 1024);
 			opt.setUserId(userId);
 
-			if (StringUtils.isNotEmpty(getPath())) {
-				opt.setPath(getPath());
-				{
-					if (isSearchInSubPath())
-						opt.setSearchInSubPath(true);
-				}
+			if (dir != null) {
+				opt.setFolderId(dir.getMenuId());
+				if (isSearchInSubPath())
+					opt.setSearchInSubPath(true);
 			}
 
 			Locale searchLocale = "all".equals(language) ? SessionManagement.getLocale() : LocaleUtil
@@ -618,7 +616,7 @@ public class SearchForm extends SortableList {
 				any = "";
 				nots = "";
 				format = "all";
-				path = null;
+				dir = null;
 				parentPathDescr = null;
 				content = true;
 				tags = true;
@@ -686,7 +684,7 @@ public class SearchForm extends SortableList {
 		any = "";
 		nots = "";
 		format = "all";
-		path = null;
+		dir = null;
 		parentPathDescr = null;
 		publishingDateFrom = null;
 		publishingDateTo = null;
@@ -887,18 +885,15 @@ public class SearchForm extends SortableList {
 	public void cancelFolderSelector(ActionEvent e) {
 		directoryModel.cancelSelection();
 		showFolderSelector = false;
-		path = null;
+		dir = null;
 		parentPathDescr = null;
 	}
 
 	public void folderSelected(ActionEvent e) {
 		showFolderSelector = false;
 
-		Directory dir = directoryModel.getSelectedDir();
+		dir = directoryModel.getSelectedDir();
 
-		Menu menu = dir.getMenu();
-		String dirPath = menu.getPath() + "/" + menu.getId();
-		setPath(dirPath.replaceAll("//", "/"));
 		parentPathDescr = dir.getMenu().getText();
 		if (dir.getMenu().getType() == Menu.MENUTYPE_MENU)
 			parentPathDescr = Messages.getMessage(dir.getMenu().getText());
@@ -910,14 +905,6 @@ public class SearchForm extends SortableList {
 
 	public void setParentPathDescr(String parentPathDescr) {
 		this.parentPathDescr = parentPathDescr;
-	}
-
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String parentPath) {
-		this.path = parentPath;
 	}
 
 	public Collection<SelectItem> getExtendedAttributesItems() {

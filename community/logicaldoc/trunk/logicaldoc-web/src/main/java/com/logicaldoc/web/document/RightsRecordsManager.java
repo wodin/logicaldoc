@@ -244,7 +244,7 @@ public class RightsRecordsManager {
 			menu.getMenuGroups().add(mg);
 		}
 
-		mdao.store(menu, false, null);
+		mdao.store(menu);
 		initRights(menu.getId());
 	}
 
@@ -268,7 +268,7 @@ public class RightsRecordsManager {
 			menu.getMenuGroups().remove(mg);
 		}
 
-		mdao.store(menu, false, null);
+		mdao.store(menu);
 		initRights(menu.getId());
 	}
 
@@ -404,7 +404,7 @@ public class RightsRecordsManager {
 					mg.setWorkflow(0);
 				}
 
-				boolean stored = mdao.store(folder, false, null);
+				boolean stored = mdao.store(folder);
 				if (!stored) {
 					sqlerrors = true;
 				}
@@ -412,7 +412,7 @@ public class RightsRecordsManager {
 				if (mg != null) {
 					folder.getMenuGroups().remove(mg);
 
-					boolean deleted = mdao.store(folder, false, null);
+					boolean deleted = mdao.store(folder);
 
 					if (!deleted) {
 						sqlerrors = true;

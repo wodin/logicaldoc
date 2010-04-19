@@ -235,7 +235,6 @@ public class DmsServiceImpl implements DmsService {
 		menu.setMenuGroup(parentMenu.getMenuGroupIds());
 
 		boolean stored = dao.store(menu);
-		menu.setPath(parentMenu.getPath() + "/" + parentMenu.getId());
 		// Add a folder history entry
 		History transaction = new History();
 		transaction.setUserId(user.getId());

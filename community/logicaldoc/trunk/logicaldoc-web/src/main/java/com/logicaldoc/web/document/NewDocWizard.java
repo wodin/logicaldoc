@@ -86,13 +86,9 @@ public class NewDocWizard {
 				// Get folder that called AddDocAction
 				Menu folder = documentNavigation.getSelectedDir().getMenu();
 
-				// Makes path
-				String path = new StringBuilder(folder.getPath()).append("/").append(folder.getId()).toString();
-
 				// Makes new Menu
 				Menu menu = new Menu();
 				menu.setParentId(folder.getId());
-				menu.setPath(path);
 
 				// Gets file to upload name
 				String filename = inputFile.getFileName();
