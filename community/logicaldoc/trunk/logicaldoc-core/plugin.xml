@@ -41,10 +41,10 @@
     <library id="bcmail" path="lib/bcmail-jdk16-139.jar" type="code">
       <export prefix="*" />
     </library>
-    <library id="poi" path="lib/poi-3.0.2-FINAL.jar" type="code">
+    <library id="poi" path="lib/poi-3.6.jar" type="code">
       <export prefix="*" />
     </library>
-    <library id="poi-scratchpad" path="lib/poi-scratchpad-3.0.2-FINAL.jar" type="code">
+    <library id="poi-scratchpad" path="lib/poi-scratchpad-3.6.jar" type="code">
       <export prefix="*" />
     </library>
     <library id="jmimemagic" path="lib/jmimemagic-0.1.2.jar" type="code">
