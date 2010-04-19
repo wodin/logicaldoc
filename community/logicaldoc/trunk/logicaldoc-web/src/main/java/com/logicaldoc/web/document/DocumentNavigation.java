@@ -490,6 +490,8 @@ public class DocumentNavigation extends NavigationBean {
 
 		form.setMenuGroup(groups);
 		form.setFolderName("");
+		form.setFolderDescription("");
+		form.refresh();
 
 		return null;
 	}

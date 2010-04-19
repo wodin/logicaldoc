@@ -30,15 +30,30 @@
 					<br />
 				</h3>
 				<ice:panelGrid columns="2">
+					<!-- Name -->
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="folderName"
 							value="#{msgs['msg.jsp.foldername']}*" />
 					</ice:panelGroup>
 					<ice:panelGroup>
 						<ice:inputText actionListener="#{directoryForm.insert}"
-							id="folderName" value="#{directoryForm.folderName}" tabindex="1"
-							maxlength="255" size="50" required="true" />
+							style="width:174px;" id="folderName"
+							value="#{directoryForm.folderName}" tabindex="1" maxlength="255"
+							size="50" required="true" />
 						<ice:message for="folderName" />
+					</ice:panelGroup>
+
+					<!-- Description -->
+					<ice:panelGroup style="text-align:right">
+						<ice:outputLabel for="description" value="#{msgs['description']}" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+						<ice:inputText id="description" style="width:174px;"
+							actionListener="#{directoryForm.insert}"
+							value="#{directoryForm.folderDescription}"
+							binding="#{directoryForm.folderDescriptionInput}"
+							styleClass="smallInputText" maxlength="500" />
+						<ice:message for="description" />
 					</ice:panelGroup>
 				</ice:panelGrid>
 			</ice:panelGroup>

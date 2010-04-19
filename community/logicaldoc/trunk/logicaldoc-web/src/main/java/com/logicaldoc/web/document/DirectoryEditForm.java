@@ -1,5 +1,8 @@
 package com.logicaldoc.web.document;
 
+import java.util.List;
+
+import javax.faces.component.UIInput;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.logging.Log;
@@ -15,6 +18,7 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
+import com.logicaldoc.web.util.FacesUtil;
 
 /**
  * Base form for directory editing
@@ -32,14 +36,18 @@ public class DirectoryEditForm {
 	private long[] menuGroup;
 
 	private DocumentNavigation documentNavigation;
-	
+
 	private boolean showFolderSelector = false;
-	
+
 	private DirectoryTreeModel directoryModel;
 
 	private long destParentId;
 
 	private boolean treeChanged;
+
+	private String folderDescription = "";
+
+	private UIInput folderDescriptionInput = null;
 
 	public Directory getDirectory() {
 		return directory;
@@ -48,6 +56,12 @@ public class DirectoryEditForm {
 	public void setDirectory(Directory directory) {
 		this.directory = directory;
 		this.folderName = directory.getMenu().getText();
+		this.folderDescription = directory.getMenu().getDescription();
+		refresh();
+	}
+
+	public void refresh() {
+		FacesUtil.forceRefresh(folderDescriptionInput);
 	}
 
 	public long[] getMenuGroup() {
@@ -65,7 +79,6 @@ public class DirectoryEditForm {
 	public void setFolderName(String folderName) {
 		this.folderName = folderName;
 	}
-	
 
 	public void openFolderSelector(ActionEvent e) {
 		showFolderSelector = true;
@@ -74,13 +87,13 @@ public class DirectoryEditForm {
 	public void closeFolderSelector(ActionEvent e) {
 		showFolderSelector = false;
 	}
-	
+
 	public void cancelFolderSelector(ActionEvent e) {
 		directoryModel.cancelSelection();
 		destParentId = 0;
 		showFolderSelector = false;
 	}
-	
+
 	public void folderSelected(ActionEvent e) {
 		showFolderSelector = false;
 		Directory dir = directoryModel.getSelectedDir();
@@ -110,7 +123,7 @@ public class DirectoryEditForm {
 	void loadTree() {
 		directoryModel = new DirectoryTreeModel();
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -127,51 +140,54 @@ public class DirectoryEditForm {
 				Messages.addLocalizedError("folder.error.notupdated");
 				return null;
 			}
-			
+
 			try {
 				DocumentManager docman = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 				User user = SessionManagement.getUser();
-				
+
 				Menu destParentFolder = mdao.findById(destParentId);
-				
-				// Check destParentId: Must be different from the current folder parentId
+
+				// Check destParentId: Must be different from the current folder
+				// parentId
 				if (destParentId == folderToMove.getParentId())
 					throw new SecurityException("No Changes");
-				
-				// Check destParentId: Must be different from the current folder Id
+
+				// Check destParentId: Must be different from the current folder
+				// Id
 				// A folder cannot be children of herself
 				if (destParentId == folderToMove.getId())
 					throw new SecurityException("Not Allowed");
-				
+
 				// Check delete permission on the folder parent of folderToMove
 				Menu sourceParent = mdao.findById(folderToMove.getParentId());
-				boolean sourceParentDeleteEnabled = mdao.isPermissionEnabled(Permission.DELETE, sourceParent.getId(), user.getId());
+				boolean sourceParentDeleteEnabled = mdao.isPermissionEnabled(Permission.DELETE, sourceParent.getId(),
+						user.getId());
 				if (!sourceParentDeleteEnabled)
-					throw new SecurityException("No rights to delete folder");	
-				
+					throw new SecurityException("No rights to delete folder");
+
 				// Check addChild permission on destParentFolder
-				boolean addchildEnabled = mdao.isPermissionEnabled(Permission.ADD_CHILD, destParentFolder.getId(), user.getId());
+				boolean addchildEnabled = mdao.isPermissionEnabled(Permission.ADD_CHILD, destParentFolder.getId(), user
+						.getId());
 				if (!addchildEnabled)
 					throw new SecurityException("AddChild Rights not granted to this user");
-				
 
 				// Add a folder history entry
 				History transaction = new History();
 				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
-				
+
 				docman.moveFolder(folderToMove, destParentFolder, user, transaction);
-				
+
 				// ricarico l'albero delle cartelle
 				documentNavigation.getDirectoryModel().reloadAll();
 				documentNavigation.refresh();
 				documentNavigation.selectDirectory(new Directory(destParentFolder));
-				
-				// reset destParentId 
+
+				// reset destParentId
 				destParentId = 0;
-				
+
 				// set the directoryModel to be reloaded
 				treeChanged = true;
-				
+
 				Messages.addLocalizedInfo("msg.action.updatefolder");
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -188,38 +204,41 @@ public class DirectoryEditForm {
 		if (SessionManagement.isValid()) {
 			MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			try {
-				if (dao.findByMenuTextAndParentId(folderName, directory.getMenu().getParentId()).size() > 0) {
+				List<Menu> folders = dao.findByMenuTextAndParentId(folderName, directory.getMenu().getParentId());
+				if (folders.size() > 0 && folders.get(0).getId() != directory.getMenuId()) {
 					Messages.addLocalizedWarn("errors.folder.duplicate");
 					documentNavigation.refresh();
+					return null;
+				}
+				directory.setDisplayText(folderName);
+				directory.getMenu().setText(folderName);
+				directory.getMenu().setDescription(folderDescription);
+				// To avoid a 'org.hibernate.StaleObjectStateException', we
+				// must retrieve the menu from database.
+				Menu menu = dao.findById(directory.getMenuId());
+				menu.setText(folderName);
+				menu.setDescription(folderDescription);
+				// Add a folder history entry
+				History history = new History();
+				history.setUserId(SessionManagement.getUserId());
+				history.setUserName(SessionManagement.getUser().getFullName());
+				history.setEvent(History.EVENT_FOLDER_RENAMED);
+				history.setSessionId(SessionManagement.getCurrentUserSessionId());
+
+				boolean stored = dao.store(menu, history);
+				if (!stored) {
+					Messages.addLocalizedError("folder.error.notupdated");
 				} else {
-					directory.setDisplayText(folderName);
-					directory.getMenu().setText(folderName);
-					// To avoid a 'org.hibernate.StaleObjectStateException', we
-					// must retrieve the menu from database.
-					Menu menu = dao.findById(directory.getMenuId());
-					menu.setText(folderName);
-					// Add a folder history entry
-					History history = new History();
-					history.setUserId(SessionManagement.getUserId());
-					history.setUserName(SessionManagement.getUser().getFullName());
-					history.setEvent(History.EVENT_FOLDER_RENAMED);
-					history.setSessionId(SessionManagement.getCurrentUserSessionId());
+					Messages.addLocalizedInfo("msg.action.updatefolder");
+				}
 
-					boolean stored = dao.store(menu, history);
-					if (!stored) {
-						Messages.addLocalizedError("folder.error.notupdated");
-					} else {
-						Messages.addLocalizedInfo("msg.action.updatefolder");
-					}
+				documentNavigation.refresh();
+				documentNavigation.selectDirectory(directory);
 
-					documentNavigation.refresh();
-					documentNavigation.selectDirectory(directory);
-
-					if (DocumentNavigation.FOLDER_VIEW_TREE.equals(documentNavigation.getFolderView())) {
-						Directory dir = (Directory) documentNavigation.getDirectoryModel().getSelectedNode()
-								.getUserObject();
-						dir.setDisplayText(folderName);
-					}
+				if (DocumentNavigation.FOLDER_VIEW_TREE.equals(documentNavigation.getFolderView())) {
+					Directory dir = (Directory) documentNavigation.getDirectoryModel().getSelectedNode()
+							.getUserObject();
+					dir.setDisplayText(folderName);
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -231,7 +250,6 @@ public class DirectoryEditForm {
 			return "login";
 		}
 	}
-
 
 	public String insert() {
 		Menu parent = documentNavigation.getSelectedDir().getMenu();
@@ -261,6 +279,8 @@ public class DirectoryEditForm {
 				if (!menu.getMenuGroups().contains(mg)) {
 					menu.getMenuGroups().add(mg);
 				}
+
+				menu.setDescription(folderDescription);
 
 				boolean stored = dao.store(menu);
 
@@ -311,4 +331,19 @@ public class DirectoryEditForm {
 		this.destParentId = destParentId;
 	}
 
+	public String getFolderDescription() {
+		return folderDescription;
+	}
+
+	public void setFolderDescription(String folderDescription) {
+		this.folderDescription = folderDescription;
+	}
+
+	public UIInput getFolderDescriptionInput() {
+		return folderDescriptionInput;
+	}
+
+	public void setFolderDescriptionInput(UIInput folderDescriptionInput) {
+		this.folderDescriptionInput = folderDescriptionInput;
+	}
 }
