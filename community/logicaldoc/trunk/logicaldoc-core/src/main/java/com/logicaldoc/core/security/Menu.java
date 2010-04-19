@@ -46,6 +46,8 @@ public class Menu extends PersistentObject {
 
 	private String ref = "";
 
+	private String description = "";
+	
 	protected Set<MenuGroup> menuGroups = new HashSet<MenuGroup>();
 
 	public Menu() {
@@ -163,5 +165,13 @@ public class Menu extends PersistentObject {
 
 	public void setSize(long size) {
 		this.size = size;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

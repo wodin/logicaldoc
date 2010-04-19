@@ -387,7 +387,7 @@
     <parameter id="action" value="item.userObject.edit" />
     <parameter id="link" value="" />
     <parameter id="target" value="" />
-    <parameter id="title" value="rename" />
+    <parameter id="title" value="edit" />
     <parameter id="rendered" value="item.userObject.menuId != 5 and item.userObject.renameEnabled" />
     <parameter id="position" value="60" />
     <parameter id="confirm" value="" />
