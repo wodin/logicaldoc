@@ -146,7 +146,6 @@ public class LoginForm {
 	 * 
 	 * @return "login" if the user was succesfully logged off
 	 */
-	@SuppressWarnings("unchecked")
 	public String logout() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 
