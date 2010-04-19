@@ -1,22 +1,24 @@
 package com.logicaldoc.webapp.security;
 
+import java.io.File;
 import java.util.Date;
 
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.CryptUtil;
 import com.logicaldoc.web.SessionManagement;
 
@@ -34,7 +36,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public GUIRight[] getSecurityEntities(String sid) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -44,11 +45,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
 				AuthenticationChain.class);
 
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-
 		GUIUser guiUser = new GUIUser();
-		if (authenticationChain.authenticate(username, password, request.getRemoteAddr())) {
+		if (authenticationChain.authenticate(username, password, getThreadLocalRequest().getRemoteAddr())) {
 			User user = userDao.findByUserName(username);
 			guiUser.setFirstName(user.getFirstName());
 			guiUser.setId(user.getId());
@@ -72,7 +70,18 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public void logout(String sid) {
-		// TODO Auto-generated method stub
+		try {
+			UserSession session = SessionManager.getInstance().get(sid);
+			if (session == null)
+				return;
+
+			SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
+			FileUtils.deleteDirectory(new File(conf.getValue("userdir") + "/" + session.getUserName() + "/temp"));
+
+			log.info("User " + session.getUserName() + " logged out.");
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 
 	@Override

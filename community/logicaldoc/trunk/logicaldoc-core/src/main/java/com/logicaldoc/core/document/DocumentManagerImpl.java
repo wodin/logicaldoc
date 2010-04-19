@@ -508,7 +508,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				if (indexDocument != null) {
 					indexDocument.removeField(LuceneDocument.FIELD_FOLDER_ID);
 					indexDocument.add(new Field(LuceneDocument.FIELD_FOLDER_ID, Long.toString(doc.getFolder().getId()),
-							Field.Store.YES, Field.Index.UN_TOKENIZED));
+							Field.Store.YES, Field.Index.NOT_ANALYZED));
 					indexer.addDocument(indexDocument, doc.getLocale());
 
 					// Make the same operation for the shortcuts
@@ -519,7 +519,7 @@ public class DocumentManagerImpl implements DocumentManager {
 							if (shortcutIndexDocument != null) {
 								shortcutIndexDocument.removeField(LuceneDocument.FIELD_FOLDER_ID);
 								shortcutIndexDocument.add(new Field(LuceneDocument.FIELD_FOLDER_ID, Long.toString(doc
-										.getFolder().getId()), Field.Store.YES, Field.Index.UN_TOKENIZED));
+										.getFolder().getId()), Field.Store.YES, Field.Index.NOT_ANALYZED));
 								indexer.addDocument(shortcutIndexDocument, doc.getLocale());
 							}
 						}

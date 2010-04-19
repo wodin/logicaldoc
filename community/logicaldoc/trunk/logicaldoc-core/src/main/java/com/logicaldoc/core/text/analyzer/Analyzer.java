@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.BreakIterator;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,11 +47,11 @@ public class Analyzer extends WordRanker {
 	 * 
 	 * @param stopwords - Map of stop words.
 	 */
-	final static Map<String, String> getAsMap(String[] stopwords) {
-		Hashtable<String, String> stoptable = new Hashtable<String, String>(stopwords.length);
+	final static Map<String, String> getAsMap(Set<String> stopwords) {
+		Hashtable<String, String> stoptable = new Hashtable<String, String>();
 
-		for (int i = 0; i < stopwords.length; i++) {
-			stoptable.put(stopwords[i], stopwords[i]);
+		for (String stopword : stopwords) {
+			stoptable.put(stopword, stopword);
 		}
 
 		return stoptable;

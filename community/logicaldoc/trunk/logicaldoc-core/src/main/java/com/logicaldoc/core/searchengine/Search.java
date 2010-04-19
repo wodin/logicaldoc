@@ -18,13 +18,13 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.misc.ChainedFilter;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MultiSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
@@ -42,6 +42,8 @@ import com.logicaldoc.util.config.SettingsConfig;
  * @author Michael Scholz
  */
 public class Search {
+	private static final int UPPER_SEARCH_LIMIT = 1000;
+
 	protected static Log log = LogFactory.getLog(Search.class);
 
 	private int maxHits = 40;
@@ -85,7 +87,7 @@ public class Search {
 
 			for (int i = 0; i < languages.length; i++) {
 				String lang = languages[i];
-				searcher[i] = new IndexSearcher(indexPath + lang + "/");
+				searcher[i] = new IndexSearcher(Indexer.getIndexDirectory(lang));
 			}
 
 			MultiSearcher multiSearcher = new MultiSearcher(searcher);
@@ -99,12 +101,13 @@ public class Search {
 
 			multiSearcher.setSimilarity(new SquareSimilarity());
 
-			MultiFieldQueryParser parser = new MultiFieldQueryParser(options.getFields(), analyzer);
+			MultiFieldQueryParser parser = new MultiFieldQueryParser(Indexer.LUCENE_VERSION, options.getFields(),
+					analyzer);
 
 			Query query = parser.parse(options.getQueryStr());
 
 			log.info("Full-text search");
-			Hits hits = null;
+			TopDocs hits = null;
 
 			ArrayList<Filter> filters = new ArrayList<Filter>();
 
@@ -131,15 +134,15 @@ public class Search {
 			}
 
 			if (filters.isEmpty()) {
-				hits = multiSearcher.search(query);
+				hits = multiSearcher.search(query, UPPER_SEARCH_LIMIT);
 			} else {
 				ChainedFilter chainedFilter = new ChainedFilter(filters.toArray(new Filter[0]), ChainedFilter.AND);
-				hits = multiSearcher.search(query, chainedFilter);
+				hits = multiSearcher.search(query, chainedFilter, UPPER_SEARCH_LIMIT);
 			}
 
 			log.info("End of Full-text search");
 
-			estimatedHitsNumber = hits.length();
+			estimatedHitsNumber = hits.totalHits;
 
 			/*
 			 * We have to see what folders the user can access. But we need do
@@ -169,14 +172,14 @@ public class Search {
 			Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter(
 					"<font style='background-color:#FFFF00'>", "</font>"), new QueryScorer(query));
 
-			for (int i = 0; i < hits.length(); i++) {
+			for (int i = 0; i < hits.totalHits; i++) {
 				if (results.size() == maxHits) {
 					// The maximum number of hits was reached for a quick query
 					moreHitsPresent = true;
 					break;
 				}
 
-				Document doc = hits.doc(i);
+				Document doc = multiSearcher.doc(hits.scoreDocs[i].doc);
 				String path = doc.get(LuceneDocument.FIELD_FOLDER_ID);
 				long folderId = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
 
@@ -215,7 +218,7 @@ public class Search {
 					result.setSource(doc.get(LuceneDocument.FIELD_SOURCE));
 					result.setPath(doc.get(LuceneDocument.FIELD_FOLDER_ID));
 					result.setSummary(summary);
-					result.createScore(hits.score(i));
+					result.createScore(hits.scoreDocs[i].score);
 
 					if (result.isRelevant(options)) {
 						results.add(result);
