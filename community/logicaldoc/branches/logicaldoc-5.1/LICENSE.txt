@@ -1,5 +1,5 @@
 ===============================================
-   L O G I C A L D O C (TM) 5.0
+   L O G I C A L D O C (TM) 5.1
 
 Quick Enterprise Document Management
 License Agreement
@@ -7,7 +7,7 @@ License Agreement
 
 LogicalDOC source code is distributed under GNU LGPLv3
 http://www.opensource.org/licenses/lgpl-3.0.html 
-You may copy, adapt, and redistribute LogicalDOC 5.0
+You may copy, adapt, and redistribute LogicalDOC 5.1
 for commercial or non-commercial use.
 
 When copying, adapting, or redistributing this document
@@ -18,5 +18,6 @@ If you reproduce or distribute the document without making
 any substantive modifications to its content, 
 please use the following attribution line:
 
-Copyright 2009-2010 Logical Objects.
-All rights reserved.
+Copyright 2008-2010 Logical Objects Srl. All rights reserved.
+http://www.logicalobjects.com
+LogicalDOC is a trademark of Logical Objects Srl.
