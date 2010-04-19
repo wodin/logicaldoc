@@ -10,6 +10,24 @@
 
                      LogicalDOC Community Edition
 
+LogicalDOC CE 5.1 (2010-04-12; logicaldoc-5.1)
+===============
+Introduced the concept of 'document shortcut'
+Contextual menu on folders
+Added security connection management for SMTP
+Upgrade to Lucene 2.9.2
+Improved MAC OS X support
+Improved the import from ZIP for MAC OS X (system folder exclusion)
+Added version column in detailed view
+Added a config parameter to setup the maximum number of retained versions
+Ability to move folders
+Preview of TIFF documents (images)
+Improved the preview of PDF documents
+Updated translations for the basic languages (Thanks to the Translators on Launchpad)
+Solved some bugs on WebDAV (reading permission on folders)
+Ability to move folder via WebDAV
+
+
 LogicalDOC CE 5.0 (2009-12-19; logicaldoc-5.0)
 ===============
 Upgrade to the latest ICEfaces version (JSF-Ajax)

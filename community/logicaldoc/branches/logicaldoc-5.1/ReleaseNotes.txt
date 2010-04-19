@@ -1,18 +1,24 @@
-The LogicalDoc team is pleased to announce the availability of the new release 
-of LogicalDOC Enterprise, that brings you new and exciting features.
+This new release of LogicalDOC 5.1 introduces some important and interesting 
+changes.
 
-Among other things, these are the major new features:
+The most important of these is the ability to define schortcut on documents. 
+This feature enables the administrator to allows a user, that doesn't have the 
+permissions to consult and/or edit a document, to visualize and modify however 
+the document infos through them shortcut inserted into a folder accessible by 
+the user.
 
-Workflow: Visual Business Process editor directly accessible from the web browser
-Workflow: Multiple task assignments
-Workflow: Support for activities start and stop
-History on document folders
-New graphical layout
-Document navigation through a folders tree
-Configurable first version number
-3D (Cumulus) Tag Cloud
-New graphical layout more lighter and sleek
-Improvements in the ergonomics of the GUI
+The second notable feature is certainly the ability to move a folder and all 
+its contents to another folder. This feature is now available also in the 
+WebDAV interface.
+
+Another change is the introduction of the contextual menu on folders and the 
+improved visualization of complex folders. The contextual menu provides access 
+from a single point to all the administrative functions on folders, that 
+allows a user interface cleaner and more efficient.
+
+In addition to these features has been enhanced the support for Mac OS X 
+(Safari), particularly on deleting folders, content layout and documents 
+preview.
 
 For details of changes see the ChangeLog.
 
@@ -20,9 +26,8 @@ Report any bugs you find using the bug tracker
 http://bugs.logicaldoc.com
 
 You can discuss issues in the user forum
-https://sourceforge.net/forum/forum.php?forum_id=865524
+http://forums.logicaldoc.com
 
 
-The LogicalDOC development Team 
-
+The LogicalDOC development Team
 
