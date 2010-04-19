@@ -1,6 +1,7 @@
 package com.logicaldoc.core.i18n;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,6 +12,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Locale;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -18,19 +20,10 @@ public class LanguageTest {
 
 	@Test
 	public void testLoadStopwords() throws IOException {
-		
-		//convertFiles();
-		
-		//fail("Not yet implemented");
 		Language language = new Language(Locale.FRENCH);
-		String[] swords = language.getStopWords();
-		System.out.println(swords.length);
-//		for (int i = 0; i < swords.length; i++) {
-//			System.out.println(swords[i]);
-//		}
-		
+		Set<String> swords = language.getStopWords();
 		assertNotNull(swords);
-		assertEquals(126, swords.length);
+		assertEquals(126, swords.size());
 	}
 	
 	private void convertFiles() throws IOException {
@@ -69,6 +62,5 @@ public class LanguageTest {
 			br.close();
 			fr.close();
 		}
-	}
-	
+	}	
 }

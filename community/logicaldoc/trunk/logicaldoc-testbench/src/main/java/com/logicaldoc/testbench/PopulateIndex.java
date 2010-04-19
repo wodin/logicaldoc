@@ -18,6 +18,9 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriter.MaxFieldLength;
+import org.apache.lucene.store.NIOFSDirectory;
+import org.apache.lucene.util.Version;
 
 /**
  * Generates database records browsing an existing filesystem in LogicalDOC's
@@ -37,7 +40,7 @@ public class PopulateIndex {
 
 	public static final String FIELD_TYPE = "type";
 
-	public static final String FIELD_PATH = "path";
+	public static final String FIELD_FOLDERID = "folderId";
 
 	public static final String FIELD_SOURCE_TYPE = "sourceType";
 
@@ -127,11 +130,10 @@ public class PopulateIndex {
 		log.fatal("Start of index population");
 		count = 0;
 		Locale locale = new Locale(language);
-		Analyzer analyzer = new SnowballAnalyzer(locale.getDisplayName(Locale.ENGLISH), Util.getStopwordsMap().get(
-				language));
+		Analyzer analyzer = new SnowballAnalyzer(Version.LUCENE_30, locale.getDisplayName(Locale.ENGLISH));
 
 		try {
-			writer = new IndexWriter(indexFolder, analyzer, false);
+			writer = new IndexWriter(new NIOFSDirectory(indexFolder), analyzer, false, MaxFieldLength.UNLIMITED);
 			writer.setRAMBufferSizeMB(ramBuffer);
 			addDocuments(tempFolder, "/");
 			writer.optimize();
@@ -200,28 +202,30 @@ public class PopulateIndex {
 			return -1;
 
 		Document doc = new Document();
-		doc.add(new Field(FIELD_DOC_ID, String.valueOf(id), Field.Store.YES, Field.Index.UN_TOKENIZED));
-		doc.add(new Field(FIELD_TITLE, title, Field.Store.YES, Field.Index.TOKENIZED));
-		doc.add(new Field(FIELD_SIZE, String.valueOf(filesize), Field.Store.YES, Field.Index.UN_TOKENIZED));
-		doc.add(new Field(FIELD_SOURCE, "LogicalDOC", Field.Store.NO, Field.Index.TOKENIZED));
-		doc.add(new Field(FIELD_SOURCE_AUTHOR, "admin", Field.Store.NO, Field.Index.TOKENIZED));
-		doc.add(new Field(FIELD_SOURCE_TYPE, "type", Field.Store.NO, Field.Index.TOKENIZED));
-		doc.add(new Field(FIELD_COVERAGE, "test", Field.Store.NO, Field.Index.TOKENIZED));
+		doc.add(new Field(FIELD_DOC_ID, String.valueOf(id), Field.Store.YES, Field.Index.NOT_ANALYZED));
+		doc.add(new Field(FIELD_TITLE, title, Field.Store.YES, Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_SIZE, String.valueOf(filesize), Field.Store.YES, Field.Index.NOT_ANALYZED));
+		doc.add(new Field(FIELD_SOURCE, "LogicalDOC", Field.Store.NO, Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_SOURCE_AUTHOR, "admin", Field.Store.NO, Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_SOURCE_TYPE, "type", Field.Store.NO, Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_COVERAGE, "test", Field.Store.NO, Field.Index.ANALYZED));
 		DateFormat df = new SimpleDateFormat("yyyyMMdd");
 		doc.add(new Field(FIELD_SOURCE_DATE, df.format(docFile.lastModified()), Field.Store.YES,
-				Field.Index.UN_TOKENIZED));
-		doc.add(new Field(FIELD_DATE, df.format(docFile.lastModified()), Field.Store.YES, Field.Index.UN_TOKENIZED));
-		doc.add(new Field(FIELD_TYPE, type, Field.Store.YES, Field.Index.UN_TOKENIZED));
-		doc.add(new Field(FIELD_PATH, path, Field.Store.YES, Field.Index.UN_TOKENIZED));
+				Field.Index.NOT_ANALYZED));
+		doc.add(new Field(FIELD_DATE, df.format(docFile.lastModified()), Field.Store.YES, Field.Index.NOT_ANALYZED));
+		doc.add(new Field(FIELD_TYPE, type, Field.Store.YES, Field.Index.NOT_ANALYZED));
+
+		File xx = new File(path);
+		doc.add(new Field(FIELD_FOLDERID, xx.getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 
 		String content = Util.parse(docFile);
-		doc.add(new Field(FIELD_CONTENT, content, Field.Store.YES, Field.Index.TOKENIZED));
+		doc.add(new Field(FIELD_CONTENT, content, Field.Store.YES, Field.Index.ANALYZED));
 
-		doc.add(new Field(FIELD_TAGS, Util.extractWordsAsString(5, content), Field.Store.YES, Field.Index.TOKENIZED));
+		doc.add(new Field(FIELD_TAGS, Util.extractWordsAsString(5, content), Field.Store.YES, Field.Index.ANALYZED));
 
-		doc.add(new Field(FIELD_CREATION, df.format(new Date().getTime()), Field.Store.YES, Field.Index.UN_TOKENIZED));
-		doc.add(new Field(FIELD_CUSTOM_ID, String.valueOf(id), Field.Store.YES, Field.Index.UN_TOKENIZED));
-		doc.add(new Field(FIELD_TEMPLATE_ID, " ", Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field(FIELD_CREATION, df.format(new Date().getTime()), Field.Store.YES, Field.Index.ANALYZED));
+		doc.add(new Field(FIELD_CUSTOM_ID, String.valueOf(id), Field.Store.YES, Field.Index.NOT_ANALYZED));
+		doc.add(new Field(FIELD_TEMPLATE_ID, " ", Field.Store.YES, Field.Index.NOT_ANALYZED));
 
 		writer.addDocument(doc);
 

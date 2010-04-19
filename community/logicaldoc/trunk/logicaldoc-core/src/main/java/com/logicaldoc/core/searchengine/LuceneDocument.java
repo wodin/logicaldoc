@@ -90,9 +90,9 @@ public class LuceneDocument {
 	}
 
 	public void setDocId() {
-		doc.add(new Field(FIELD_DOC_ID, String.valueOf(document.getId()), Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field(FIELD_DOC_ID, String.valueOf(document.getId()), Field.Store.YES, Field.Index.NOT_ANALYZED));
 		if (StringUtils.isNotEmpty(document.getCustomId()))
-			doc.add(new Field(FIELD_CUSTOM_ID, document.getCustomId(), Field.Store.YES, Field.Index.UN_TOKENIZED));
+			doc.add(new Field(FIELD_CUSTOM_ID, document.getCustomId(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
 
 	/**
@@ -105,48 +105,48 @@ public class LuceneDocument {
 	}
 
 	protected void setTitle() {
-		doc.add(new Field(FIELD_TITLE, document.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
+		doc.add(new Field(FIELD_TITLE, document.getTitle(), Field.Store.YES, Field.Index.ANALYZED));
 	}
 
 	protected void setSize() {
 		// Save the size in bytes
-		doc.add(new Field(FIELD_SIZE, Long.toString(file.length()), Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field(FIELD_SIZE, Long.toString(file.length()), Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
 
 	protected void setDocData() {
 		doc.add(new Field(FIELD_SOURCE, document.getSource() != null ? document.getSource() : "", Field.Store.YES,
-				Field.Index.TOKENIZED));
+				Field.Index.ANALYZED));
 		doc.add(new Field(FIELD_SOURCE_AUTHOR, document.getSourceAuthor() != null ? document.getSourceAuthor() : "",
-				Field.Store.NO, Field.Index.TOKENIZED));
+				Field.Store.NO, Field.Index.ANALYZED));
 		doc.add(new Field(FIELD_SOURCE_TYPE, document.getSourceType() != null ? document.getSourceType() : "",
-				Field.Store.NO, Field.Index.TOKENIZED));
+				Field.Store.NO, Field.Index.ANALYZED));
 		doc.add(new Field(FIELD_COVERAGE, document.getCoverage() != null ? document.getCoverage() : "", Field.Store.NO,
-				Field.Index.TOKENIZED));
+				Field.Index.ANALYZED));
 		doc.add(new Field(FIELD_SOURCE_DATE, document.getSourceDate() != null ? DateBean.toCompactString(document
-				.getSourceDate()) : "", Field.Store.YES, Field.Index.UN_TOKENIZED));
+				.getSourceDate()) : "", Field.Store.YES, Field.Index.NOT_ANALYZED));
 		doc.add(new Field(FIELD_DATE, document.getDate() != null ? DateBean.toCompactString(document.getDate()) : "",
-				Field.Store.YES, Field.Index.UN_TOKENIZED));
+				Field.Store.YES, Field.Index.NOT_ANALYZED));
 		doc.add(new Field(FIELD_CREATION, document.getCreation() != null ? DateBean.toCompactString(document
-				.getCreation()) : "", Field.Store.YES, Field.Index.UN_TOKENIZED));
+				.getCreation()) : "", Field.Store.YES, Field.Index.NOT_ANALYZED));
 		if (document.getDocRef() != null && document.getDocRef() > 0)
 			doc.add(new Field(FIELD_DOCREF, Long.toString(document.getDocRef()), Field.Store.YES,
-					Field.Index.UN_TOKENIZED));
+					Field.Index.NOT_ANALYZED));
 	}
 
 	protected void setFolder() {
 		doc.add(new Field(FIELD_FOLDER_ID, Long.toString(document.getFolder().getId()), Field.Store.YES,
-				Field.Index.UN_TOKENIZED));
+				Field.Index.NOT_ANALYZED));
 	}
 
 	protected void setType() {
 		String type = FilenameUtils.getExtension(document.getFileName());
-		doc.add(new Field(FIELD_TYPE, type, Field.Store.YES, Field.Index.UN_TOKENIZED));
+		doc.add(new Field(FIELD_TYPE, type, Field.Store.YES, Field.Index.NOT_ANALYZED));
 	}
 
 	protected void setTemplate() {
 		if (document.getTemplate() != null)
 			doc.add(new Field(FIELD_TEMPLATE_ID, Long.toString(document.getTemplate().getId()), Field.Store.YES,
-					Field.Index.UN_TOKENIZED));
+					Field.Index.NOT_ANALYZED));
 	}
 
 	protected void setExtendedAttributes() {
@@ -156,16 +156,16 @@ public class LuceneDocument {
 			if (ext.getType() == ExtendedAttribute.TYPE_STRING && StringUtils.isNotEmpty(ext.getStringValue())) {
 				// Prefix all extended attributes with 'ext_' in order to avoid
 				// collisions with standard fields
-				doc.add(new Field("ext_" + attribute, ext.getStringValue(), Field.Store.NO, Field.Index.TOKENIZED));
+				doc.add(new Field("ext_" + attribute, ext.getStringValue(), Field.Store.NO, Field.Index.ANALYZED));
 			}
 		}
 	}
 
 	protected void setContent(String content) {
-		doc.add(new Field(FIELD_CONTENT, content, Field.Store.YES, Field.Index.TOKENIZED));
+		doc.add(new Field(FIELD_CONTENT, content, Field.Store.YES, Field.Index.ANALYZED));
 	}
 
 	protected void setTags() {
-		doc.add(new Field(FIELD_TAGS, document.getTagsString(), Field.Store.YES, Field.Index.TOKENIZED));
+		doc.add(new Field(FIELD_TAGS, document.getTagsString(), Field.Store.YES, Field.Index.ANALYZED));
 	}
 }

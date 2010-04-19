@@ -18,12 +18,14 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
-import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
+import org.apache.lucene.store.NIOFSDirectory;
+import org.apache.lucene.util.Version;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.i18n.Language;
@@ -39,9 +41,13 @@ import com.logicaldoc.util.config.SettingsConfig;
  */
 public class Indexer {
 
+	private static final String WRITE_LOCK = "write.lock";
+
+	public static final Version LUCENE_VERSION = Version.LUCENE_30;
+
 	protected static Log log = LogFactory.getLog(Indexer.class);
 
-	private SettingsConfig settingsConfig;
+	private static SettingsConfig settingsConfig;
 
 	private DocumentDAO documentDao;
 
@@ -49,7 +55,7 @@ public class Indexer {
 	}
 
 	public void setSettingsConfig(SettingsConfig settingsConfig) {
-		this.settingsConfig = settingsConfig;
+		Indexer.settingsConfig = settingsConfig;
 	}
 
 	/**
@@ -83,17 +89,16 @@ public class Indexer {
 	 * @throws Exception
 	 */
 	public void addDocument(Document doc, Locale locale) throws Exception {
-		//First of all, remove old entries if any
+		// First of all, remove old entries if any
 		deleteDocument(doc.getField(LuceneDocument.FIELD_DOC_ID).stringValue(), locale);
-		
-		//Then add the record in the index
+
+		// Then add the record in the index
 		String indexdir = settingsConfig.getValue("indexdir");
 		Language language = LanguageManager.getInstance().getLanguage(locale);
 		Analyzer analyzer = language.getAnalyzer();
 		IndexWriter writer = null;
 		try {
-			File indexPath = new File(indexdir, language.getIndex());
-			writer = new IndexWriter(indexPath, analyzer, false);
+			writer = new IndexWriter(getIndexDirectory(language), analyzer, IndexWriter.MaxFieldLength.UNLIMITED);
 			writer.setSimilarity(new SquareSimilarity());
 			writer.addDocument(doc);
 		} catch (Exception e) {
@@ -104,7 +109,7 @@ public class Indexer {
 				try {
 					writer.close();
 				} catch (Exception e) {
-					log.error("Error closing index: " + language.getIndex() + ", " + e.getMessage(), e);
+					log.error("Error closing index: " + language + ", " + e.getMessage(), e);
 				}
 		}
 	}
@@ -151,11 +156,10 @@ public class Indexer {
 	 * Launch optimization on a single Lucene Index identified by the language
 	 */
 	protected synchronized void optimize(Language language) {
-		String indexdir = settingsConfig.getValue("indexdir");
 		try {
 			Analyzer analyzer = language.getAnalyzer();
-			File indexPath = new File(indexdir, language.getIndex());
-			IndexWriter writer = new IndexWriter(indexPath, analyzer, false);
+			IndexWriter writer = new IndexWriter(getIndexDirectory(language), analyzer,
+					IndexWriter.MaxFieldLength.UNLIMITED);
 			writer.optimize();
 			writer.close();
 		} catch (Exception e) {
@@ -175,8 +179,8 @@ public class Indexer {
 			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
 			for (Language language : languages) {
 				Analyzer analyzer = language.getAnalyzer();
-				File indexPath = new File(indexdir, language.getIndex());
-				IndexWriter writer = new IndexWriter(indexPath, analyzer, false);
+				IndexWriter writer = new IndexWriter(getIndexDirectory(language), analyzer,
+						IndexWriter.MaxFieldLength.UNLIMITED);
 				writer.optimize();
 				writer.close();
 			}
@@ -193,11 +197,9 @@ public class Indexer {
 	 * @param locale - Locale of the document.
 	 */
 	public synchronized void deleteDocument(String docId, Locale locale) {
-		String indexdir = settingsConfig.getValue("indexdir");
 		Language language = LanguageManager.getInstance().getLanguage(locale);
-		File indexPath = new File(indexdir, language.getIndex());
 		try {
-			IndexReader reader = IndexReader.open(indexPath);
+			IndexReader reader = IndexReader.open(getIndexDirectory(language), false);
 			reader.deleteDocuments(new Term(LuceneDocument.FIELD_DOC_ID, docId));
 			reader.close();
 		} catch (IOException ioe) {
@@ -211,12 +213,12 @@ public class Indexer {
 	 * @param docIds Collection of document identifiers
 	 */
 	public void deleteDocuments(Collection<Long> docIds) {
-		List<File> indexes = getIndexes();
-		for (File index : indexes) {
+		List<Directory> indexes = getIndexDirectories();
+		for (Directory index : indexes) {
 			for (Long docId : docIds) {
 				IndexReader reader = null;
 				try {
-					reader = IndexReader.open(index);
+					reader = IndexReader.open(index, false);
 					reader.deleteDocuments(new Term(LuceneDocument.FIELD_DOC_ID, Long.toString(docId)));
 				} catch (IOException ioe) {
 					log.error("deleteDocument " + ioe.getMessage(), ioe);
@@ -233,26 +235,18 @@ public class Indexer {
 	}
 
 	public Document getDocument(String docId, Locale locale) {
-		String indexdir = settingsConfig.getValue("indexdir");
 		Language language = LanguageManager.getInstance().getLanguage(locale);
-		File indexPath = new File(indexdir, language.getIndex());
 		try {
-			IndexReader reader = IndexReader.open(indexPath);
+			IndexReader reader = IndexReader.open(getIndexDirectory(language), true);
 			Searcher searcher = new IndexSearcher(reader);
 
 			// Compose a query for menuId
-			QueryParser parser = new QueryParser(LuceneDocument.FIELD_DOC_ID, new KeywordAnalyzer());
+			QueryParser parser = new QueryParser(LUCENE_VERSION, LuceneDocument.FIELD_DOC_ID, new KeywordAnalyzer());
 			Query query = parser.parse(docId);
-			Hits hits = searcher.search(query);
+			TopDocs hits = searcher.search(query, 1);
+			if (hits.totalHits > 0)
+				return searcher.doc(hits.scoreDocs[0].doc);
 
-			// Iterate through the results:
-			for (int i = 0; i < hits.length(); i++) {
-				Document hitDoc = hits.doc(i);
-				if (hitDoc.get(LuceneDocument.FIELD_DOC_ID).equals(docId)) {
-					return hitDoc;
-				}
-			}
-			searcher.search(query);
 			reader.close();
 		} catch (Exception e) {
 			log.error("getDocument " + e.getMessage(), e);
@@ -264,28 +258,32 @@ public class Indexer {
 	 * This method can unlock a locked index.
 	 */
 	public synchronized void unlock() {
-		List<File> indexes = getIndexes();
-		for (File index : indexes) {
-			IndexReader ir = null;
+		List<Directory> indexes = getIndexDirectories();
+		for (Directory index : indexes) {
 			try {
-				FSDirectory fsindexdir = FSDirectory.getDirectory(index);
-				ir = IndexReader.open(fsindexdir);
-				IndexReader.unlock(fsindexdir);
+				IndexWriter.unlock(index);
 			} catch (Exception e) {
-				log.error("getCount " + e.getMessage(), e);
+				log.error("unlock " + e.getMessage(), e);
 			} finally {
-				if (ir != null)
-					try {
-						ir.close();
-					} catch (IOException e) {
-					}
-				File lockFile = new File(index, "write.lock");
+				try {
+					index.clearLock(WRITE_LOCK);
+					if (index.fileExists(WRITE_LOCK))
+						index.deleteFile(WRITE_LOCK);
+				} catch (IOException e) {
+					log.error("Unable to delete lock file write.lock", e);
+				}
+			}
+		}
+
+		// For further security try to delete lock files
+		List<File> dirs = getIndexFolders();
+		for (File file : dirs) {
+			try {
+				File lockFile = new File(file, WRITE_LOCK);
 				if (lockFile.exists())
-					try {
-						FileUtils.forceDelete(lockFile);
-					} catch (IOException e) {
-						log.error(e.getMessage());
-					}
+					FileUtils.forceDelete(lockFile);
+			} catch (Exception e) {
+				log.error("unlock " + e.getMessage(), e);
 			}
 		}
 	}
@@ -298,24 +296,15 @@ public class Indexer {
 	public boolean isLocked() {
 		boolean result = false;
 
-		List<File> indexes = getIndexes();
-		for (File index : indexes) {
-			IndexReader ir = null;
+		List<Directory> indexes = getIndexDirectories();
+		for (Directory index : indexes) {
 			try {
-				FSDirectory fsindexdir = FSDirectory.getDirectory(index);
-				ir = IndexReader.open(fsindexdir);
-				if (IndexReader.isLocked(fsindexdir)) {
+				if (IndexWriter.isLocked(index)) {
 					result = true;
 					break;
 				}
 			} catch (Exception e) {
 				log.error("getCount " + e.getMessage(), e);
-			} finally {
-				if (ir != null)
-					try {
-						ir.close();
-					} catch (IOException e) {
-					}
 			}
 		}
 		return result;
@@ -327,11 +316,11 @@ public class Indexer {
 	 */
 	public int getCount() {
 		int count = 0;
-		List<File> indexes = getIndexes();
-		for (File index : indexes) {
+		List<Directory> indexes = getIndexDirectories();
+		for (Directory index : indexes) {
 			IndexReader ir = null;
 			try {
-				ir = IndexReader.open(index);
+				ir = IndexReader.open(index, true);
 				count += ir.numDocs();
 				ir.close();
 			} catch (Exception e) {
@@ -359,7 +348,7 @@ public class Indexer {
 	 * Drops all indexes (one per language)
 	 */
 	public void dropIndexes() {
-		List<File> indexes = getIndexes();
+		List<File> indexes = getIndexFolders();
 		for (File index : indexes) {
 			try {
 				FileUtils.deleteDirectory(index);
@@ -369,21 +358,50 @@ public class Indexer {
 		}
 	}
 
-	/**
-	 * Get all indexes dirs
-	 */
-	public List<File> getIndexes() {
-		List<File> dirs = new ArrayList<File>();
+	static Directory getIndexDirectory(String name) throws IOException {
+		return new NIOFSDirectory(getIndexFolder(name));
+	}
+
+	static Directory getIndexDirectory(Language language) throws IOException {
+		return getIndexDirectory(language.toString());
+	}
+
+	static File getIndexFolder(String name) throws IOException {
 		File indexdir = new File(settingsConfig.getValue("indexdir"));
+		return new File(indexdir, name);
+	}
+
+	/**
+	 * Get all indexes folders
+	 */
+	public List<File> getIndexFolders() {
+		List<File> dirs = new ArrayList<File>();
 		try {
 			// Get languages from LanguageManager
 			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
 			for (Language language : languages) {
-				File indexPath = new File(indexdir, language.getIndex());
+				File indexPath = getIndexFolder(language.toString());
 				dirs.add(indexPath);
 			}
 		} catch (Exception e) {
-			log.error("getIndexes " + e.getMessage(), e);
+			log.error("getIndexFolders " + e.getMessage(), e);
+		}
+		return dirs;
+	}
+
+	/**
+	 * Get all indexes directoried
+	 */
+	public List<Directory> getIndexDirectories() {
+		List<Directory> dirs = new ArrayList<Directory>();
+		try {
+			// Get languages from LanguageManager
+			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
+			for (Language language : languages) {
+				dirs.add(getIndexDirectory(language));
+			}
+		} catch (Exception e) {
+			log.error("getIndexDirectories " + e.getMessage(), e);
 		}
 		return dirs;
 	}
@@ -401,25 +419,35 @@ public class Indexer {
 	 * Create all indexes (one per language)
 	 */
 	public void createIndexes() {
-		String indexdir = settingsConfig.getValue("indexdir");
-
 		try {
 			// Get languages from LanguageManager
 			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
 			for (Language language : languages) {
-				createIndex(new File(indexdir, language.getIndex()), language.getLocale());
+				createIndex(language);
 			}
 		} catch (Exception e) {
 			log.error("createIndexes " + e.getMessage(), e);
 		}
 	}
 
-	public static void createIndex(File indexPath, Locale locale) throws CorruptIndexException,
-			LockObtainFailedException, IOException {
+	public static void createIndex(Language language) throws CorruptIndexException, LockObtainFailedException,
+			IOException {
+		File indexPath = getIndexFolder(language.toString());
 		if (!indexPath.exists()) {
 			indexPath.mkdirs();
 			indexPath.mkdir();
-			new IndexWriter(indexPath, LanguageManager.getInstance().getLanguage(locale).getAnalyzer(), true);
+			IndexWriter writer = null;
+			try {
+				writer = new IndexWriter(getIndexDirectory(language), language.getAnalyzer(), true,
+						IndexWriter.MaxFieldLength.UNLIMITED);
+			} finally {
+				try {
+					writer.close();
+					IndexWriter.unlock(getIndexDirectory(language));
+				} catch (Exception e) {
+					log.warn(e.getMessage());
+				}
+			}
 		}
 	}
 

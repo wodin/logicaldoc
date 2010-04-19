@@ -12,9 +12,12 @@ import java.util.Locale;
 import junit.framework.TestCase;
 
 import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
+import org.apache.lucene.analysis.tokenattributes.TermAttributeImpl;
+import org.apache.lucene.util.AttributeImpl;
 import org.junit.Test;
 
 import com.logicaldoc.core.i18n.Language;
+import com.logicaldoc.core.searchengine.Indexer;
 
 public class AnalyzeFileTest extends TestCase {
 
@@ -22,7 +25,7 @@ public class AnalyzeFileTest extends TestCase {
 
 	public AnalyzeFileTest() {
 		Language language = new Language(new Locale("it"));
-		sbitAnal = new SnowballAnalyzer("Italian", language.getStopWords());
+		sbitAnal = new SnowballAnalyzer(Indexer.LUCENE_VERSION, "Italian", language.getStopWords());
 	}
 
 	/**
@@ -36,11 +39,19 @@ public class AnalyzeFileTest extends TestCase {
 		TokenStream ts = a.tokenStream("dummy", new StringReader(input));
 		List<String> resultList = new ArrayList<String>();
 		while (true) {
-			Token token = ts.next();
-			if (token == null)
+			boolean ret = ts.incrementToken();
+			if (!ret){
+				ts.end();
 				break;
-			resultList.add(token.termText());
+			}
+			java.util.Iterator<AttributeImpl> attributes = ts.getAttributeImplsIterator();
+			while (attributes.hasNext()) {
+				AttributeImpl att=attributes.next();
+				if(att instanceof TermAttributeImpl)
+				  resultList.add(((TermAttributeImpl)att).term());
+			}
 		}
+		ts.close();
 		return resultList.toArray(new String[0]);
 	}
 

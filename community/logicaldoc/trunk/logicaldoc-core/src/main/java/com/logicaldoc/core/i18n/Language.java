@@ -4,10 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -16,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
 
+import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.util.io.ResourceUtil;
 
 /**
@@ -30,7 +29,7 @@ public class Language {
 
 	private Locale locale;
 
-	private String[] stopWords = new String[0];
+	private Set<String> stopWords = new HashSet<String>();
 
 	private Analyzer analyzer;
 
@@ -61,18 +60,12 @@ public class Language {
 	}
 
 	/**
-	 * Retrieves the full text index name for this language
-	 */
-	public String getIndex() {
-		return locale.toString();
-	}
-
-	/**
-	 * Populates the field stopWords reading the resource /stopwords/stopwords_<locale>.txt
+	 * Populates the field stopWords reading the resource
+	 * /stopwords/stopwords_<locale>.txt
 	 */
 	void loadStopwords() {
 		try {
-			List<String> swlist = new ArrayList<String>();
+			Set<String> swSet = new HashSet<String>();
 			String stopwordsResource = "/stopwords/stopwords_" + getLocale().toString() + ".txt";
 			InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(stopwordsResource);
 			if (is == null)
@@ -81,42 +74,43 @@ public class Language {
 			InputStreamReader isr = new InputStreamReader(is, "UTF-8");
 			BufferedReader br = new BufferedReader(isr);
 			String line = null;
-			while((line = br.readLine()) != null) {
+			while ((line = br.readLine()) != null) {
 				line = line.trim();
 				if (line.indexOf("|") != -1) {
 					line = line.substring(0, line.indexOf("|"));
 					line = line.trim();
 				}
-				if (line != null && line.length() > 0) {
-					swlist.add(line);
+				if (line != null && line.length() > 0 && !swSet.contains(line)) {
+					swSet.add(line);
 				}
 			}
 
-			stopWords = (String[]) swlist.toArray(new String[0]);
+			stopWords = swSet;
 		} catch (Throwable e) {
 			log.warn(e.getMessage());
 		}
 	}
-	
+
 	/**
-	 * Populates the field charsets reading the resource /charsets/charset_<locale>.txt
+	 * Populates the field charsets reading the resource
+	 * /charsets/charset_<locale>.txt
 	 */
 	private void loadCharsets() {
 		try {
 			String charsetResource = "/charsets/charset_" + getLocale().toString() + ".txt";
 			String buf = ResourceUtil.readAsString(charsetResource);
-			charset=buf.toCharArray();
+			charset = buf.toCharArray();
 		} catch (Throwable e) {
 			log.warn(e.getMessage());
 			charset = new char[] {};
 		}
 	}
-	
-	public String[] getStopWords() {
+
+	public Set<String> getStopWords() {
 		return stopWords;
 	}
 
-	public void setStopWords(String[] stopWords) {
+	public void setStopWords(Set<String> stopWords) {
 		this.stopWords = stopWords;
 	}
 
@@ -134,7 +128,7 @@ public class Language {
 			// Try to instantiate the specified analyzer
 			Class aClass = null;
 			try {
-				aClass = getClass().forName(analyzerClass);
+				aClass = Class.forName(analyzerClass);
 			} catch (Throwable t) {
 				log.error(analyzerClass + " not found");
 			}
@@ -169,7 +163,8 @@ public class Language {
 		}
 
 		if (analyzer == null) {
-			analyzer = new SnowballAnalyzer(getLocale().getDisplayName(Locale.ENGLISH), getStopWords());
+			analyzer = new SnowballAnalyzer(Indexer.LUCENE_VERSION, getLocale().getDisplayName(Locale.ENGLISH),
+					getStopWords());
 			log.debug("Using default snawball analyzer");
 		}
 
@@ -186,5 +181,10 @@ public class Language {
 
 	public void setCharset(char[] charset) {
 		this.charset = charset;
+	}
+
+	@Override
+	public String toString() {
+		return locale.toString();
 	}
 }
