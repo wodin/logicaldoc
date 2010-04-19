@@ -49,35 +49,15 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 	@Override
 	public boolean store(Menu menu) {
-		return store(menu, true, null);
+		return store(menu, null);
 	}
 
 	@Override
 	public boolean store(Menu menu, History transaction) {
-		return store(menu, true, transaction);
-	}
-
-	@Override
-	public boolean store(Menu menu, boolean updatePathExtended, History transaction) {
 		boolean result = true;
 
 		try {
-			List<Object> old = (List<Object>) findByJdbcQuery(
-					"select ld_text,ld_pathextended from ld_menu where ld_id=?", 2, new Object[] { menu.getId() });
-			String oldText = menu.getText();
-			String oldPathExt = menu.getPathExtended();
-			if (!old.isEmpty()) {
-				oldText = (String) (((Object[]) old.get(0))[0]);
-				oldPathExt = (String) (((Object[]) old.get(0))[1]);
-			}
-
-			menu.setPath(menu.getPath().replaceAll("//", "/"));
 			getHibernateTemplate().saveOrUpdate(menu);
-
-			if (updatePathExtended) {
-				// We need to update the path extended
-				updatePathExtended(menu, !oldText.equals(menu.getText()) || !menu.getPathExtended().equals(oldPathExt));
-			}
 
 			saveFolderHistory(menu, transaction);
 		} catch (Exception e) {
@@ -436,6 +416,22 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return findByWhere(query.toString(), null);
 	}
 
+	@Override
+	public String computePathExtended(long menuId) {
+		Menu menu = findById(menuId);
+		if(menu==null)
+			return null;
+		String path = menu.getText();
+		while (menu != null && menu.getId() != menu.getParentId() && menu.getId() != Menu.MENUID_DOCUMENTS) {
+			menu = findById(menu.getParentId());
+			if (menu != null)
+				path = (menu.getId() != Menu.MENUID_DOCUMENTS ? menu.getText() : "") + "/" + path;
+		}
+		if (!path.startsWith("/"))
+			path = "/" + path;
+		return path;
+	}
+
 	/**
 	 * Utility method that logs into the DB the transaction that involved the
 	 * passed folder. The transaction must be provided with userId and userName.
@@ -450,10 +446,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		transaction.setNotified(0);
 		transaction.setFolderId(folder.getId());
 		transaction.setTitle(folder.getText());
-		transaction.setPath(folder.getPathExtended() + "/" + folder.getText());
-		transaction.setPath(transaction.getPath().replaceAll("//", "/"));
-		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents/", "/"));
-		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents", "/"));
+		transaction.setPath(computePathExtended(folder.getId()));
 		transaction.setComment("");
 
 		historyDAO.store(transaction);
@@ -469,11 +462,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				History parentHistory = new History();
 				parentHistory.setFolderId(parent.getId());
 				parentHistory.setTitle(parent.getText());
-
-				parentHistory.setPath(parent.getPathExtended() + "/" + parent.getText() + "/" + folder.getText());
-				parentHistory.setPath(parentHistory.getPath().replaceAll("//", "/"));
-				parentHistory.setPath(parentHistory.getPath().replaceFirst("/menu.documents/", "/"));
-				parentHistory.setPath(parentHistory.getPath().replaceFirst("/menu.documents", "/"));
+				parentHistory.setPath(computePathExtended(folder.getId()));
 
 				parentHistory.setUserId(transaction.getUserId());
 				parentHistory.setUserName(transaction.getUserName());
@@ -502,7 +491,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		menu.setParentId(parent.getId());
 		menu.setSort(0);
 		menu.setIcon("folder.png");
-		menu.setPath(parent.getPath() + "/" + parent.getId());
 		menu.setType(Menu.MENUTYPE_DIRECTORY);
 		for (MenuGroup mg : parent.getMenuGroups()) {
 			menu.getMenuGroups().add(mg);
@@ -567,60 +555,12 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	}
 
 	/**
-	 * This utility method updates all pathExtended attributes of the hierarchy
-	 * starting from the specified menu
-	 */
-	private void updatePathExtended(Menu menu, boolean recursive) {
-		// Prepare the pathExtended for this menu
-		StringBuffer pathExtended = new StringBuffer("/");
-		List<Menu> parents = findParents(menu.getId());
-		for (Menu parent : parents) {
-			pathExtended.append(parent.getText());
-			pathExtended.append("/");
-		}
-		// Set it and save
-		menu.setPathExtended(pathExtended.toString().replaceAll("//", "/"));
-
-		try {
-			getHibernateTemplate().saveOrUpdate(menu);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-
-		// Recursively invoke the method on all direct children
-		if (recursive) {
-			List<Menu> children = findByParentId(menu.getId());
-			for (Menu child : children) {
-				updatePathExtended(child, recursive);
-			}
-		}
-	}
-
-	/**
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#isPermissionEnabled(java.lang.String,
 	 *      long, long)
 	 */
 	public boolean isPermissionEnabled(Permission permission, long menuId, long userId) {
 		Set<Permission> permissions = getEnabledPermissions(menuId, userId);
 		return permissions.contains(permission);
-	}
-
-	@Override
-	public List<Menu> findFoldersByPathExtended(String path) {
-		List<Menu> specified_menu = new ArrayList<Menu>();
-		specified_menu = (List<Menu>) findByWhere("_entity.pathExtended = '" + SqlUtil.doubleQuotes(path) + "'", null);
-		if (specified_menu != null && specified_menu.size() > 0)
-			return specified_menu;
-		return null;
-	}
-
-	@Override
-	public Menu findFolder(String folderName, String pathExtended) {
-		List<Menu> specified_menu = findByWhere("_entity.text = '" + SqlUtil.doubleQuotes(folderName)
-				+ "' AND _entity.pathExtended = '" + SqlUtil.doubleQuotes(pathExtended) + "'", null);
-		if (specified_menu != null && specified_menu.size() > 0)
-			return specified_menu.iterator().next();
-		return null;
 	}
 
 	@Override
@@ -819,5 +759,23 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 
 		return result;
+	}
+
+	@Override
+	public Menu findFolder(String folderName, String pathExtended) {
+		StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
+		Menu parent = findById(Menu.MENUID_DOCUMENTS);
+		while (st.hasMoreTokens()) {
+			List<Menu> list = findByText(parent, st.nextToken(), Menu.MENUTYPE_DIRECTORY);
+			if (list.isEmpty())
+				return null;
+			parent = list.get(0);
+
+		}
+
+		List<Menu> specified_menu = findByText(parent, folderName, Menu.MENUTYPE_DIRECTORY);
+		if (specified_menu != null && specified_menu.size() > 0)
+			return specified_menu.iterator().next();
+		return null;
 	}
 }

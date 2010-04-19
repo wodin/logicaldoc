@@ -24,7 +24,7 @@ public class LuceneDocument {
 
 	public static final String FIELD_TYPE = "type";
 
-	public static final String FIELD_PATH = "path";
+	public static final String FIELD_FOLDER_ID = "folderId";
 
 	public static final String FIELD_SOURCE_TYPE = "sourceType";
 
@@ -83,7 +83,7 @@ public class LuceneDocument {
 		setType();
 		setContent(content);
 		setTags();
-		setPath();
+		setFolder();
 		setTemplate();
 		setExtendedAttributes();
 		return doc;
@@ -133,8 +133,9 @@ public class LuceneDocument {
 					Field.Index.UN_TOKENIZED));
 	}
 
-	protected void setPath() {
-		doc.add(new Field(FIELD_PATH, document.getPath(), Field.Store.YES, Field.Index.UN_TOKENIZED));
+	protected void setFolder() {
+		doc.add(new Field(FIELD_FOLDER_ID, Long.toString(document.getFolder().getId()), Field.Store.YES,
+				Field.Index.UN_TOKENIZED));
 	}
 
 	protected void setType() {

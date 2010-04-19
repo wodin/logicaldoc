@@ -40,10 +40,6 @@ public class Menu extends PersistentObject {
 
 	private String icon = "";
 
-	private String path = "";
-
-	private String pathExtended = "";
-
 	private int type = 2;
 
 	private long size = 0;
@@ -63,17 +59,6 @@ public class Menu extends PersistentObject {
 		return text;
 	}
 
-	/**
-	 * Same as path but in this case the menu text is used instead
-	 */
-	public String getPathExtended() {
-		return pathExtended;
-	}
-
-	public void setPathExtended(String pathExtended) {
-		this.pathExtended = pathExtended;
-	}
-
 	public long getParentId() {
 		return parentId;
 	}
@@ -84,10 +69,6 @@ public class Menu extends PersistentObject {
 
 	public String getIcon() {
 		return icon;
-	}
-
-	public String getPath() {
-		return path;
 	}
 
 	public int getType() {
@@ -129,10 +110,6 @@ public class Menu extends PersistentObject {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
 	}
 
 	public void setType(int type) {

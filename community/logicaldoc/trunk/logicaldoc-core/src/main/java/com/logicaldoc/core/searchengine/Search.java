@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -20,7 +21,6 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MultiSearcher;
-import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.Searcher;
@@ -31,6 +31,7 @@ import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 
 import com.logicaldoc.core.i18n.DateBean;
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
@@ -114,14 +115,19 @@ public class Search {
 				filters.add(new QueryWrapperFilter(templateQuery));
 			}
 
-			if (options.getPath() != null) {
-				// Prepare filter for path field
-				Term pathTerm = new Term(LuceneDocument.FIELD_PATH, options.getPath());
-				Query pathQuery = new TermQuery(pathTerm);
-				if (options.isSearchInSubPath()) {
-					pathQuery = new PrefixQuery(pathTerm);
-				}
-				filters.add(new QueryWrapperFilter(pathQuery));
+			/*
+			 * We need to check the permissions against the DB only if the user
+			 * performs a search on the whole archive or if he wants to search
+			 * in a tree of folders.
+			 */
+			boolean searchInSingleFolder = (options.getFolderId() != null && !options.isSearchInSubPath());
+
+			if (searchInSingleFolder) {
+				// Not searching in sub-folders so only search for a match on
+				// the folderId
+				Term folderTerm = new Term(LuceneDocument.FIELD_FOLDER_ID, Long.toString(options.getFolderId()));
+				Query folderQuery = new TermQuery(folderTerm);
+				filters.add(new QueryWrapperFilter(folderQuery));
 			}
 
 			if (filters.isEmpty()) {
@@ -135,11 +141,27 @@ public class Search {
 
 			estimatedHitsNumber = hits.length();
 
-			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			log.info("DB search");
-			Set<Long> accessibleMenus = mdao.findMenuIdByUserId(options.getUserId());
-
-			log.info("End of DB search");
+			/*
+			 * We have to see what folders the user can access. But we need do
+			 * perform this check only if the search is not restricted to one
+			 * folder only.
+			 */
+			Set<Long> accessibleIds = new HashSet<Long>();
+			if (options.getFolderId() != null)
+				accessibleIds.add(options.getFolderId());
+			if (searchInSingleFolder) {
+				accessibleIds.add(options.getFolderId());
+			} else {
+				log.info("DB search");
+				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+				if (options.getFolderId() == null)
+					accessibleIds = mdao.findMenuIdByUserId(options.getUserId());
+				else {
+					accessibleIds = mdao.findMenuIdByUserId(options.getUserId(), options.getFolderId(),
+							Menu.MENUTYPE_DIRECTORY);
+				}
+				log.info("End of DB search");
+			}
 
 			int maxNumFragmentsRequired = 4;
 			String fragmentSeparator = "&nbsp;...&nbsp;";
@@ -155,12 +177,12 @@ public class Search {
 				}
 
 				Document doc = hits.doc(i);
-				String path = doc.get(LuceneDocument.FIELD_PATH);
+				String path = doc.get(LuceneDocument.FIELD_FOLDER_ID);
 				long folderId = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
 
 				// When user can see document with menuId then put it into
 				// result-collection.
-				if (accessibleMenus.contains(folderId)) {
+				if (accessibleIds.contains(folderId)) {
 					String size = doc.get(LuceneDocument.FIELD_SIZE);
 
 					if (size.equals("0")) {
@@ -191,7 +213,7 @@ public class Search {
 					result.setType(doc.get(LuceneDocument.FIELD_TYPE));
 					result.setCustomId(doc.get(LuceneDocument.FIELD_CUSTOM_ID));
 					result.setSource(doc.get(LuceneDocument.FIELD_SOURCE));
-					result.setPath(doc.get(LuceneDocument.FIELD_PATH));
+					result.setPath(doc.get(LuceneDocument.FIELD_FOLDER_ID));
 					result.setSummary(summary);
 					result.createScore(hits.score(i));
 

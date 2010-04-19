@@ -391,11 +391,6 @@ public abstract class AbstractDocument extends ExtensibleObject {
 		tags = new HashSet<String>();
 	}
 
-	public String getPath() {
-		return (getFolder().getPath() + (getFolder().getPath().endsWith("/") ? "" : "/") + getFolder().getId())
-				.replaceAll("//", "/");
-	}
-
 	public String getFileExtension() {
 		return getFileName().substring(getFileName().lastIndexOf(".") + 1).toLowerCase();
 	}

@@ -205,23 +205,6 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	public List<Menu> findParents(long menuId);
 
 	/**
-	 * Retrieval of all menus that exists under a specific pathextended
-	 * 
-	 * @param pathExtended
-	 * @return
-	 */
-	public List<Menu> findFoldersByPathExtended(String pathExtended);
-
-	/**
-	 * Retrieval of a folder by the parent extended path
-	 * 
-	 * @param folderName
-	 * @param pathExtended
-	 * @return
-	 */
-	public Menu findFolder(String folderName, String pathExtended);
-
-	/**
 	 * Restores a previously deleted menu
 	 * 
 	 * @param menuId The menu identifier
@@ -240,17 +223,7 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	public List<Menu> findByMenuTextAndParentId(String text, long parentId);
 
 	/**
-	 * This method persists the menu object and updates its path extended
-	 * 
-	 * @param menu menu to be stored.
-	 * @param updatePathExtended true if you want to update menu path extended
-	 * @param optional transaction entry to log the event
-	 * @return True if successfully stored in a database.
-	 */
-	public boolean store(Menu menu, boolean updatePathExtended, History transaction);
-
-	/**
-	 * Same as store(Menu, boolean, History) with updatePathExtended=true
+	 * Same as store(Menu, boolean, History)
 	 */
 	public boolean store(Menu menu, History transaction);
 
@@ -273,4 +246,22 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	public boolean delete(long menuId, History transaction);
 
 	public void setUniqueFolderName(Menu menu);
+
+	/**
+	 * Dinamically the path extended for the specified menu. The path extended
+	 * is a human readable path in the form: /folder1/folder2/folder3
+	 * 
+	 * @param menuId
+	 * @return
+	 */
+	public String computePathExtended(long menuId);
+	
+	/**
+	 * Retrieval of a folder by the parent extended path
+	 * 
+	 * @param folderName
+	 * @param pathExtended
+	 * @return
+	 */
+	public Menu findFolder(String folderName, String pathExtended);
 }

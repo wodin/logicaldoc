@@ -47,7 +47,7 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	private long userId = -1;
 
-	private String path = null;
+	private Long folderId = null;
 
 	private String[] fields = null;
 
@@ -201,14 +201,6 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 		this.sourceDateTo = sourceDateTo;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	public String getPath() {
-		return path;
-	}
-
 	public boolean isSearchInSubPath() {
 		return searchInSubPath;
 	}
@@ -239,6 +231,14 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public void setDateFrom(Date dateFrom) {
 		this.dateFrom = dateFrom;
+	}
+
+	public Long getFolderId() {
+		return folderId;
+	}
+
+	public void setFolderId(Long folderId) {
+		this.folderId = folderId;
 	}
 
 	public int getType() {
