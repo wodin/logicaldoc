@@ -87,9 +87,6 @@ public class SecurityForm {
 	public void folderSelected(ActionEvent e) {
 		showFolderSelector = false;
 		Directory dir = directoryModel.getSelectedDir();
-		Menu menu = dir.getMenu();
-		String dirPath = menu.getPath() + "/" + menu.getId();
-		setPath(dirPath);
 		RightsRecordsManager manager = ((RightsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"securityRightsRecordsManager", FacesContext.getCurrentInstance(), log));
 		manager.selectDirectory(dir);

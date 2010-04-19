@@ -641,9 +641,7 @@ public class DocumentsRecordsManager extends SortableList {
 
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 				final Menu parent = menuDao.findById(selectedDirectory);
-				log.debug("parent.getMenuId() = " + parent.getId());
-				log.debug("parent.getMenuPath() = " + parent.getPath());
-
+				
 				SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 				String path = conf.getValue("userdir");
 

@@ -28,6 +28,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserDoc;
+import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.MimeTypeConfig;
@@ -136,11 +137,8 @@ public class ServletDocUtil {
 			history.setTitle(doc.getTitle());
 			history.setVersion(doc.getVersion());
 
-			history.setPath(doc.getFolder().getPathExtended() + "/" + doc.getFolder().getText());
-			history.setPath(history.getPath().replaceAll("//", "/"));
-			history.setPath(history.getPath().replaceFirst("/menu.documents/", "/"));
-			history.setPath(history.getPath().replaceFirst("/menu.documents", "/"));
-
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			history.setPath(mdao.computePathExtended(doc.getFolder().getId()));
 			history.setEvent(History.EVENT_DOWNLOADED);
 			history.setUserId(user.getId());
 			history.setUserName(user.getFullName());

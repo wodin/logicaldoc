@@ -29,8 +29,6 @@ public class GuiBean {
 
 	private DirectoryTreeModel directoryModel;
 
-	private String path = "";
-
 	private boolean showFolderSelector = false;
 
 	private String viewModeBrowsing;
@@ -48,10 +46,6 @@ public class GuiBean {
 	private String tagcloudMode;
 
 	private Integer pageSize = null;
-
-	public String getPath() {
-		return path;
-	}
 
 	public Integer getThumbnailSize() {
 		if (thumbnailSize == null)
@@ -81,10 +75,6 @@ public class GuiBean {
 
 	public void setViewModeSearch(String viewModeSearch) {
 		this.viewModeSearch = viewModeSearch;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
 	}
 
 	public void openFolderSelector(ActionEvent e) {
@@ -140,9 +130,6 @@ public class GuiBean {
 		showFolderSelector = false;
 
 		Directory dir = directoryModel.getSelectedDir();
-		Menu menu = dir.getMenu();
-		String dirPath = menu.getPath() + "/" + menu.getId();
-		setPath(dirPath);
 		RightsRecordsManager manager = ((RightsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"securityRightsRecordsManager", FacesContext.getCurrentInstance(), log));
 		manager.selectDirectory(dir);
@@ -150,7 +137,6 @@ public class GuiBean {
 
 	public void cancelFolderSelector(ActionEvent e) {
 		directoryModel.cancelSelection();
-		path = "";
 		RightsRecordsManager manager = ((RightsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"securityRightsRecordsManager", FacesContext.getCurrentInstance(), log));
 		manager.cleanSelection();

@@ -79,7 +79,7 @@ public class PropertiesPanel extends FolderDetailTab {
 
 	boolean validate() {
 		vm.validate();
-		folder.setName(vm.getValueAsString("name"));
+		folder.setName(vm.getValueAsString("name").replaceAll("/", ""));
 		folder.setDescription(vm.getValueAsString("description"));
 		return !vm.hasErrors();
 	}

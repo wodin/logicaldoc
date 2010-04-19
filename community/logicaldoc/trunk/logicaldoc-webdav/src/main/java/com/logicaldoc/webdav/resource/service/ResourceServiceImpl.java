@@ -81,7 +81,7 @@ public class ResourceServiceImpl implements ResourceService {
 		resource.setID(new Long(menu.getId()).toString());
 		resource.setContentLength(new Long(0));
 		resource.setName(menu.getText());
-		resource.setPath(menu.getPathExtended());
+		resource.setPath(menuDAO.computePathExtended(menu.getId()));
 		resource.setLastModified(menu.getLastModified());
 		resource.setSession(session);
 		resource.isFolder(true);
@@ -344,10 +344,11 @@ public class ResourceServiceImpl implements ResourceService {
 		}
 	}
 
-	private Resource fileRenameOrMove(Resource source, Resource destination,
-			DavSession session, String sid) throws DavException {
-		// The source is a file so the requested operation can be: file rename/file move
-		
+	private Resource fileRenameOrMove(Resource source, Resource destination, DavSession session, String sid)
+			throws DavException {
+		// The source is a file so the requested operation can be: file
+		// rename/file move
+
 		// if the destination is null we can't do anything
 		if (destination == null)
 			throw new UnsupportedOperationException();
@@ -395,9 +396,9 @@ public class ResourceServiceImpl implements ResourceService {
 		return this.marshallDocument(document, session);
 	}
 
-	private Resource folderRenameOrMove(Resource source, Resource destination,
-			DavSession session, String sid) throws DavException {
-		
+	private Resource folderRenameOrMove(Resource source, Resource destination, DavSession session, String sid)
+			throws DavException {
+
 		if (!source.isRenameEnabled())
 			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not granted to this user");
 
@@ -405,28 +406,28 @@ public class ResourceServiceImpl implements ResourceService {
 
 		long currentParentFolder = currentMenu.getParentId();
 		long destinationParentFolder = Long.parseLong(destination.getID());
-		
+
 		// distinction between folder move and folder rename
 		if (currentParentFolder != destinationParentFolder) {
-		   // Folder Move
-			
+			// Folder Move
+
 			Menu destParentMenu = menuDAO.findById(Long.parseLong(destination.getID()));
-			
+
 			// check the delete on the parent of the source to move
 			Resource sourceParent = getParentResource(source);
 			if (!sourceParent.isDeleteEnabled())
-				throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");			
-			
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
+
 			// verify the addchild permission on destination folders
 			boolean addchildEnabled = destination.isAddChildEnabled();
 			if (!addchildEnabled)
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "AddChild Rights not granted to this user");
-		   
+
 			User user = (User) session.getObject("user");
 			// Add a folder history entry
 			History transaction = new History();
 			transaction.setSessionId(sid);
-			
+
 			// we are doing a file rename
 			try {
 				documentManager.moveFolder(currentMenu, destParentMenu, user, transaction);
@@ -434,26 +435,26 @@ public class ResourceServiceImpl implements ResourceService {
 				log.warn(e.getMessage(), e);
 				throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR, "Error during Folder Move");
 			}
-			
+
 			return this.marshallFolder(currentMenu, source.getRequestedPerson(), session);
 		} else {
-		  // Folder Rename
-		currentMenu.setText(source.getName());
+			// Folder Rename
+			currentMenu.setText(source.getName());
 
-		User user = (User) session.getObject("user");
-		// Add a folder history entry
-		History transaction = new History();
-		transaction.setUserId(user.getId());
-		transaction.setUserName(user.getFullName());
-		transaction.setEvent(History.EVENT_FOLDER_RENAMED);
-		transaction.setSessionId(sid);
-		menuDAO.store(currentMenu, transaction);
+			User user = (User) session.getObject("user");
+			// Add a folder history entry
+			History transaction = new History();
+			transaction.setUserId(user.getId());
+			transaction.setUserName(user.getFullName());
+			transaction.setEvent(History.EVENT_FOLDER_RENAMED);
+			transaction.setSessionId(sid);
+			menuDAO.store(currentMenu, transaction);
 
-		if (destination != null)
-			currentMenu.setParentId(Long.parseLong(destination.getID()));
+			if (destination != null)
+				currentMenu.setParentId(Long.parseLong(destination.getID()));
 
-		menuDAO.store(currentMenu);
-		return this.marshallFolder(currentMenu, source.getRequestedPerson(), session);
+			menuDAO.store(currentMenu);
+			return this.marshallFolder(currentMenu, source.getRequestedPerson(), session);
 		}
 	}
 
