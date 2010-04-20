@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.SessionObserver;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.search.SearchPanel;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -24,6 +25,8 @@ public class MainPanel extends VLayout implements SessionObserver {
 
 	private static final int TAB_DOCUMENTS = 0;
 
+	private static final int TAB_SEARCH = 1;
+
 	private TabSet tabSet = new TabSet();
 
 	public MainPanel() {
@@ -38,6 +41,8 @@ public class MainPanel extends VLayout implements SessionObserver {
 		tabSet.setHeight("*");
 		Tab documentsTab = new Tab(I18N.getMessage("documents"));
 		tabSet.addTab(documentsTab);
+		Tab searchTab = new Tab(I18N.getMessage("search"));
+		tabSet.addTab(searchTab);
 
 		addMember(topPanel);
 		addMember(tabSet);
@@ -58,5 +63,6 @@ public class MainPanel extends VLayout implements SessionObserver {
 	@Override
 	public void onUserLoggedIn(GUIUser user) {
 		tabSet.getTabs()[TAB_DOCUMENTS].setPane(DocumentsPanel.getInstance());
+		tabSet.getTabs()[TAB_SEARCH].setPane(SearchPanel.getInstance());
 	}
 }

@@ -1,14 +1,13 @@
-package com.logicaldoc.gui.frontend.client.document;
+package com.logicaldoc.gui.frontend.client.search;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
-import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.frontend.client.Log;
-import com.logicaldoc.gui.frontend.client.folder.FolderDetailsPanel;
+import com.logicaldoc.gui.frontend.client.document.DocumentDetailsPanel;
+import com.logicaldoc.gui.frontend.client.document.DocumentsListPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -19,12 +18,12 @@ import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
- * This panel implements the browser on the documents archive
+ * This panel is used to show the user a list of search results
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class DocumentsPanel extends HLayout implements FolderObserver {
+public class SearchPanel extends HLayout {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
@@ -36,22 +35,15 @@ public class DocumentsPanel extends HLayout implements FolderObserver {
 
 	private Canvas detailPanel;
 
-	private static DocumentsPanel instance;
-
-	private DocumentToolbar toolbar;
+	private static SearchPanel instance;
 
 	private VLayout right = new VLayout();
 
-	private GUIFolder folder;
-
-	private DocumentsPanel() {
-		// Register to folders events
-		Session.getInstance().addFolderObserver(this);
-
+	private SearchPanel() {
 		setWidth100();
 
 		// Prepare the collapsible menu
-		DocumentsMenu leftMenu = new DocumentsMenu();
+		SearchMenu leftMenu = new SearchMenu();
 		leftMenu.setWidth(280);
 		leftMenu.setShowResizeBar(true);
 
@@ -63,14 +55,10 @@ public class DocumentsPanel extends HLayout implements FolderObserver {
 		content.addMember(listingPanel);
 
 		// Add a details panel under the listing one
-		detailPanel = new Label("&nbsp;" + I18N.getMessage("selectfolderordoc"));
+		detailPanel = new Label("&nbsp;" + I18N.getMessage("selectadocument"));
 		details.setAlign(Alignment.CENTER);
 		details.addMember(detailPanel);
 
-		toolbar = new DocumentToolbar();
-		toolbar.setWidth100();
-
-		right.addMember(toolbar);
 		right.addMember(content);
 		right.addMember(details);
 
@@ -80,9 +68,9 @@ public class DocumentsPanel extends HLayout implements FolderObserver {
 		setShowEdges(true);
 	}
 
-	public static DocumentsPanel getInstance() {
+	public static SearchPanel getInstance() {
 		if (instance == null)
-			instance = new DocumentsPanel();
+			instance = new SearchPanel();
 		return instance;
 	}
 
@@ -106,29 +94,17 @@ public class DocumentsPanel extends HLayout implements FolderObserver {
 
 			@Override
 			public void onSuccess(GUIDocument result) {
-				toolbar.update(result);
 				((DocumentDetailsPanel) detailPanel).setDocument(result);
 				details.redraw();
 			}
 		});
 	}
 
-	@Override
-	public void onFolderSelect(GUIFolder folder) {
-		this.folder = folder;
-		refresh();
-	}
-
 	public void refresh() {
 		content.removeMember(listingPanel);
 		listingPanel.destroy();
-		listingPanel = new DocumentsListPanel(folder);
+		listingPanel = new HLayout();
 		content.addMember(listingPanel);
 		content.redraw();
-
-		detailPanel.destroy();
-		detailPanel = new FolderDetailsPanel(folder);
-		details.addMember(detailPanel);
-		details.redraw();
 	}
 }

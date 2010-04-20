@@ -552,9 +552,9 @@ public class SearchForm extends SortableList {
 	}
 
 	public void search(SearchOptions opt) {
+		opt.setMaxHits(maxHits);
 		lastSearch = new Search(opt);
-		lastSearch.setMaxHits(maxHits);
-
+	
 		List<Result> result = lastSearch.search();
 
 		List<DocumentResult> docResult = new ArrayList<DocumentResult>();
