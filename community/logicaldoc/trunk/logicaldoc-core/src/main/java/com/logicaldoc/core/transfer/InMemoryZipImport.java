@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Menu;
@@ -143,7 +144,7 @@ public class InMemoryZipImport extends ZipImport {
 				tagSet = TagUtil.extractTags(tags);
 			}
 
-			// creates a document
+			// create a document
 			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 			try {
 				// Reopen the stream (the parser has closed it)
@@ -151,8 +152,17 @@ public class InMemoryZipImport extends ZipImport {
 
 				transaction.setEvent(History.EVENT_STORED);
 				transaction.setComment("");
-				docManager.create(stream, filename, documentPath, user, locale, doctitle, null, "", "", "", "", "",
-						tagSet, templateId, null, immediateIndexing, transaction);
+				transaction.setUser(user);
+
+				Document doc = new Document();
+				doc.setFileName(filename);
+				doc.setLocale(locale);
+				doc.setFolder(documentPath);
+				doc.setTitle(doctitle);
+				doc.setTags(tagSet);
+				doc.setTemplateId(templateId);
+
+				docManager.create(stream, doc, transaction, immediateIndexing);
 			} catch (Exception e) {
 				logger.error("InMemoryZipImport addEntry failed", e);
 			} finally {
@@ -160,5 +170,4 @@ public class InMemoryZipImport extends ZipImport {
 			}
 		}
 	}
-
 }

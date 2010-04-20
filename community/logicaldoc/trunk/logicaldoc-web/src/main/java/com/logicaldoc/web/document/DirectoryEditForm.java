@@ -174,8 +174,9 @@ public class DirectoryEditForm {
 				// Add a folder history entry
 				History transaction = new History();
 				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+				transaction.setUser(user);
 
-				docman.moveFolder(folderToMove, destParentFolder, user, transaction);
+				docman.moveFolder(folderToMove, destParentFolder, transaction);
 
 				// ricarico l'albero delle cartelle
 				documentNavigation.getDirectoryModel().reloadAll();

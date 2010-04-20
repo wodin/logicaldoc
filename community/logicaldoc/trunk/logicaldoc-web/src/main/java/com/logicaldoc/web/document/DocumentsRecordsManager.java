@@ -385,8 +385,9 @@ public class DocumentsRecordsManager extends SortableList {
 						History transaction = new History();
 						transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 						transaction.setComment(operationComment);
+						transaction.setUser(SessionManagement.getUser());
 
-						manager.makeImmutable(record.getDocId(), SessionManagement.getUser(), transaction);
+						manager.makeImmutable(record.getDocId(), transaction);
 						immutableSome = true;
 					}
 				}
@@ -477,12 +478,12 @@ public class DocumentsRecordsManager extends SortableList {
 							// Create the document history event
 							History transaction = new History();
 							transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+							transaction.setUser(SessionManagement.getUser());
 
 							if (record.getShortcut() != null) {
 								if (record.getDocument().getFolder().getId() != selectedMenuFolder.getId()) {
 									transaction.setEvent(History.EVENT_SHORTCUT_MOVED);
-									docManager.moveToFolder(record.getShortcut(), selectedMenuFolder, SessionManagement
-											.getUser(), transaction);
+									docManager.moveToFolder(record.getShortcut(), selectedMenuFolder, transaction);
 								} else
 									Messages.addLocalizedWarn("warn.action.moveshortcut");
 								continue;
@@ -503,8 +504,7 @@ public class DocumentsRecordsManager extends SortableList {
 								continue;
 							}
 
-							docManager.moveToFolder(record.getDocument(), selectedMenuFolder, SessionManagement
-									.getUser(), transaction);
+							docManager.moveToFolder(record.getDocument(), selectedMenuFolder, transaction);
 						}
 						if (skippedSome || lockedSome)
 							Messages.addLocalizedWarn("document.paste.warn");
@@ -546,14 +546,13 @@ public class DocumentsRecordsManager extends SortableList {
 							transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 							transaction.setEvent(History.EVENT_STORED);
 							transaction.setComment("");
+							transaction.setUser(SessionManagement.getUser());
 
 							if (record.getShortcut() == null) {
-								docManager.copyToFolder(record.getDocument(), selectedMenuFolder, SessionManagement
-										.getUser(), transaction);
+								docManager.copyToFolder(record.getDocument(), selectedMenuFolder, transaction);
 							} else {
 								if (record.getDocument().getFolder().getId() != selectedMenuFolder.getId())
-									docManager.copyToFolder(record.getShortcut(), selectedMenuFolder, SessionManagement
-											.getUser(), transaction);
+									docManager.copyToFolder(record.getShortcut(), selectedMenuFolder, transaction);
 								else
 									Messages.addLocalizedWarn("warn.action.moveshortcut");
 							}
@@ -641,7 +640,7 @@ public class DocumentsRecordsManager extends SortableList {
 
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 				final Menu parent = menuDao.findById(selectedDirectory);
-				
+
 				SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 				String path = conf.getValue("userdir");
 
@@ -722,9 +721,9 @@ public class DocumentsRecordsManager extends SortableList {
 							transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 							transaction.setEvent(History.EVENT_STORED);
 							transaction.setComment(Messages.getMessage("document.shortcut.comment"));
+							transaction.setUser(SessionManagement.getUser());
 
-							docManager.createShortcut(record.getDocument(), selectedMenuFolder, SessionManagement
-									.getUser(), transaction);
+							docManager.createShortcut(record.getDocument(), selectedMenuFolder, transaction);
 						}
 					} catch (AccessControlException e) {
 						Messages.addLocalizedWarn("document.write.nopermission");

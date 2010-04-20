@@ -398,9 +398,9 @@ public class DocumentNavigation extends NavigationBean {
 			History transaction = new History();
 			transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 			transaction.setComment("");
+			transaction.setUser(SessionManagement.getUser());
 
-			List<Menu> notDeletableFolders = manager.deleteFolder(selectedDir.getMenu(), SessionManagement.getUser(),
-					transaction);
+			List<Menu> notDeletableFolders = manager.deleteFolder(selectedDir.getMenu(), transaction);
 			if (notDeletableFolders.size() > 0)
 				Messages.addLocalizedWarn("errors.action.deletefolder");
 			else

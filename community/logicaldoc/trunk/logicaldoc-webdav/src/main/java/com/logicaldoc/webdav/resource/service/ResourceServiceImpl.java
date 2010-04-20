@@ -268,10 +268,14 @@ public class ResourceServiceImpl implements ResourceService {
 				transaction.setSessionId(sid);
 				transaction.setEvent(History.EVENT_STORED);
 				transaction.setComment("");
-				transaction.setUserId(user.getId());
-				transaction.setUserName(user.getFullName());
+				transaction.setUser(user);
 
-				documentManager.create(is, name, parentMenu, user, user.getLocale(), false, transaction);
+				Document doc = new Document();
+				doc.setFileName(name);
+				doc.setFolder(parentMenu);
+				doc.setLocale(user.getLocale());
+
+				documentManager.create(is, doc, transaction, false);
 			} catch (Exception e) {
 				log.error(e);
 			} finally {
@@ -303,10 +307,11 @@ public class ResourceServiceImpl implements ResourceService {
 			// Create the document history event
 			History transaction = new History();
 			transaction.setSessionId(sid);
+			transaction.setUser(user);
+			transaction.setComment("");
 
 			documentManager.checkin(Long.parseLong(resource.getID()), context.getInputStream(), resource.getName(),
-					user, VERSION_TYPE.NEW_SUBVERSION, "", false, transaction);
-
+					VERSION_TYPE.NEW_SUBVERSION, false, transaction);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (DavException de) {
@@ -367,11 +372,12 @@ public class ResourceServiceImpl implements ResourceService {
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
+		transaction.setUser(user);
 
 		if (!source.getName().equals(document.getFileName())) {
 			// we are doing a file rename
 			try {
-				documentManager.rename(document, user, source.getName(), false, transaction);
+				documentManager.rename(document, source.getName(), false, transaction);
 			} catch (Exception e) {
 				log.warn(e.getMessage(), e);
 				throw new RuntimeException(e);
@@ -387,7 +393,7 @@ public class ResourceServiceImpl implements ResourceService {
 			try {
 				if (document.getDocRef() != null)
 					transaction.setEvent(History.EVENT_SHORTCUT_MOVED);
-				documentManager.moveToFolder(document, menu, user, transaction);
+				documentManager.moveToFolder(document, menu, transaction);
 			} catch (Exception e) {
 				log.warn(e.getMessage(), e);
 			}
@@ -427,10 +433,11 @@ public class ResourceServiceImpl implements ResourceService {
 			// Add a folder history entry
 			History transaction = new History();
 			transaction.setSessionId(sid);
+			transaction.setUser(user);
 
 			// we are doing a file rename
 			try {
-				documentManager.moveFolder(currentMenu, destParentMenu, user, transaction);
+				documentManager.moveFolder(currentMenu, destParentMenu, transaction);
 			} catch (Exception e) {
 				log.warn(e.getMessage(), e);
 				throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR, "Error during Folder Move");
@@ -468,13 +475,15 @@ public class ResourceServiceImpl implements ResourceService {
 		transaction.setUserId(user.getId());
 		transaction.setUserName(user.getFullName());
 		transaction.setSessionId(sid);
+		transaction.setUser(user);
+
 		try {
 			if (resource.isFolder()) {
 				if (!resource.isDeleteEnabled())
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
 				transaction.setEvent(History.EVENT_FOLDER_DELETED);
-				List<Menu> notDeletableFolders = documentManager.deleteFolder(menu, user, transaction);
+				List<Menu> notDeletableFolders = documentManager.deleteFolder(menu, transaction);
 				if (notDeletableFolders.size() > 0) {
 					throw new RuntimeException("Unable to delete some subfolders.");
 				}
@@ -519,12 +528,13 @@ public class ResourceServiceImpl implements ResourceService {
 				transaction.setSessionId(sid);
 				transaction.setEvent(History.EVENT_STORED);
 				transaction.setComment("");
+				transaction.setUser(user);
 
 				if (document.getDocRef() != null) {
 					document = documentDAO.findById(document.getDocRef());
-					documentManager.createShortcut(document, menu, user, transaction);
+					documentManager.createShortcut(document, menu, transaction);
 				} else {
-					documentManager.copyToFolder(document, menu, user, transaction);
+					documentManager.copyToFolder(document, menu, transaction);
 				}
 			} catch (DavException de) {
 				log.info(de.getMessage(), de);
@@ -592,10 +602,9 @@ public class ResourceServiceImpl implements ResourceService {
 			transaction.setSessionId(sid);
 			transaction.setEvent(History.EVENT_CHECKEDOUT);
 			transaction.setComment("");
-			transaction.setUserId(user.getId());
-			transaction.setUserName(user.getFullName());
+			transaction.setUser(user);
 
-			documentManager.checkout(Long.parseLong(resource.getID()), user, transaction);
+			documentManager.checkout(Long.parseLong(resource.getID()), transaction);
 		} catch (NumberFormatException e) {
 			throw new RuntimeException(e);
 		} catch (Exception e) {
@@ -640,8 +649,9 @@ public class ResourceServiceImpl implements ResourceService {
 			// Create the document history event
 			History transaction = new History();
 			transaction.setSessionId(sid);
+			transaction.setUser(user);
 
-			documentManager.unlock(Long.parseLong(resource.getID()), user, transaction);
+			documentManager.unlock(Long.parseLong(resource.getID()), transaction);
 
 			resource.setIsCheckedOut(false);
 

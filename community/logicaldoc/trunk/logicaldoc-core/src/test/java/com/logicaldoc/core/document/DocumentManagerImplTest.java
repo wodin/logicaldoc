@@ -51,11 +51,12 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		assertNotNull(doc);
 		History transaction = new History();
 		transaction.setFolderId(103);
+		transaction.setUser(user);
 		transaction.setDocId(doc.getId());
 		transaction.setUserId(1);
 		transaction.setNotified(0);
 		transaction.setComment("pippo_reason");
-		documentManager.makeImmutable(doc.getId(), user, transaction);
+		documentManager.makeImmutable(doc.getId(), transaction);
 		doc = docDao.findById(1);
 		assertEquals(1, doc.getImmutable());
 		doc.setFileName("ciccio");
@@ -72,25 +73,21 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		User user = userDao.findByUserName("admin");
 		History transaction = new History();
 		transaction.setFolderId(103);
+		transaction.setUser(user);
 		transaction.setDocId(1L);
 		transaction.setUserId(1);
 		transaction.setNotified(0);
-		documentManager.unlock(1L, user, transaction);
+		documentManager.unlock(1L, transaction);
 		Document doc = docDao.findById(1);
 		assertNotNull(doc);
 		transaction.setComment("pippo_reason");
-		documentManager.lock(doc.getId(), 2, user, transaction);
+		documentManager.lock(doc.getId(), 2, transaction);
 		doc = docDao.findById(1);
 		assertEquals(2, doc.getStatus());
 		assertEquals(1L, doc.getLockUserId().longValue());
 	}
 
 	public void testMoveFolder_Simple() throws Exception {
-		// first create a folder a
-		// create folder b
-		// create folder c children of b
-		// move folder c to parent a
-
 		Menu docsMenu = menuDao.findById(Menu.MENUID_DOCUMENTS);
 		Menu menuA = menuDao.createFolder(docsMenu, "folderA", null);
 		Menu menuB = menuDao.createFolder(docsMenu, "folderB", null);
@@ -101,8 +98,9 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		History transaction = new History();
 		transaction.setNotified(0);
 		transaction.setComment("");
+		transaction.setUser(user);
 
-		documentManager.moveFolder(menuC, menuA, user, transaction);
+		documentManager.moveFolder(menuC, menuA, transaction);
 
 		List<Menu> menuList = menuDao.findChildren(menuA.getId());
 		assertTrue(menuList.size() == 1);
@@ -127,19 +125,12 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		History transaction = new History();
 		transaction.setNotified(0);
 		transaction.setComment("");
+		transaction.setUser(user);
 
-		documentManager.moveFolder(menuC, menuA, user, transaction);
+		documentManager.moveFolder(menuC, menuA, transaction);
 
 		List<Menu> menuList = menuDao.findChildren(menuA.getId());
 		assertTrue(menuList.size() == 1);
-
-		// for (Menu menu : menuList) {
-		// System.out.println(menu.getId());
-		// System.out.println(menu.getText());
-		// System.out.println(menu.getPath());
-		// System.out.println(menu.getPathExtended());
-		// }
-
 		assertTrue(menuList.contains(menuC));
 
 		menuList = menuDao.findChildren(menuB.getId());
@@ -171,8 +162,9 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		History transaction = new History();
 		transaction.setNotified(0);
 		transaction.setComment("");
+		transaction.setUser(user);
 
-		documentManager.moveFolder(menuC, menuA, user, transaction);
+		documentManager.moveFolder(menuC, menuA, transaction);
 
 		List<Menu> menuList = menuDao.findChildren(menuA.getId());
 		assertTrue(menuList.size() == 1);
@@ -210,8 +202,9 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		History transaction = new History();
 		transaction.setNotified(0);
 		transaction.setComment("");
+		transaction.setUser(user);
 
-		documentManager.moveFolder(menuE, menuD, user, transaction);
+		documentManager.moveFolder(menuE, menuD, transaction);
 
 		List<Menu> menuList = menuDao.findChildren(menuD.getId());
 		assertTrue(menuList.size() == 1);

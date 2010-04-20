@@ -3,6 +3,7 @@ package com.logicaldoc.core.document;
 import java.util.Date;
 
 import com.logicaldoc.core.PersistentObject;
+import com.logicaldoc.core.security.User;
 
 /**
  * Superclass for history entries
@@ -35,6 +36,9 @@ public class AbstractHistory extends PersistentObject {
 
 	private String sessionId = "";
 
+	//Not persistent
+	private User user;
+	
 	public String getTitle() {
 		return title;
 	}
@@ -156,5 +160,15 @@ public class AbstractHistory extends PersistentObject {
 
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+		setUserId(user.getId());
+		setUserName(user.getFullName());
 	}
 }

@@ -545,12 +545,33 @@ public class DocumentEditForm {
 					History transaction = new History();
 					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 					transaction.setEvent(History.EVENT_STORED);
-					transaction.setComment("");
+					transaction.setComment(versionDesc);
+					transaction.setUser(SessionManagement.getUser());
 
-					Document doc = documentManager.create(file, filename, folder, SessionManagement.getUser(),
-							LocaleUtil.toLocale(language), title, getSourceDate(), source, sourceAuthor, sourceType,
-							coverage, versionDesc, tgs, template, attrs, sourceId, object, recipient, getCustomId(),
-							immediateIndexing, transaction);
+					Document doc = new Document();
+					doc.setFileName(filename);
+					doc.setFolder(folder);
+					doc.setLocale(LocaleUtil.toLocale(language));
+					doc.setTitle(title);
+					doc.setSourceDate(getSourceDate());
+					doc.setSource(source);
+					doc.setSourceAuthor(sourceAuthor);
+					doc.setSourceType(sourceType);
+					doc.setCoverage(coverage);
+					doc.setTags(tgs);
+					doc.setSourceId(sourceId);
+					doc.setObject(object);
+					doc.setRecipient(recipient);
+					doc.setCustomId(getCustomId());
+
+					DocumentTemplateDAO templateDAO = (DocumentTemplateDAO) Context.getInstance().getBean(
+							DocumentTemplateDAO.class);
+					if (template != null) {
+						doc.setTemplate(templateDAO.findById(template));
+						doc.setAttributes(attrs);
+					}
+
+					doc = documentManager.create(file, doc, transaction, immediateIndexing);
 					if (StringUtils.isNotEmpty(doc.getCustomId()))
 						Messages.addInfo(Messages.getMessage("document.inserted", doc.getCustomId()));
 				}
@@ -613,10 +634,24 @@ public class DocumentEditForm {
 					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 					transaction.setEvent(History.EVENT_CHANGED);
 					transaction.setComment("");
+					transaction.setUser(user);
 
-					documentManager.update(doc, user, title, source, sourceAuthor, sourceDate, sourceType, coverage,
-							LocaleUtil.toLocale(language), tgs, sourceId, object, recipient, template, attrs,
-							transaction);
+					Document docVO = new Document();
+					docVO.setTitle(title);
+					docVO.setSource(source);
+					docVO.setSourceAuthor(sourceAuthor);
+					docVO.setSourceDate(sourceDate);
+					docVO.setSourceType(sourceType);
+					docVO.setCoverage(coverage);
+					docVO.setLocale(LocaleUtil.toLocale(language));
+					docVO.setTags(tgs);
+					docVO.setSourceId(sourceId);
+					docVO.setObject(object);
+					docVO.setRecipient(recipient);
+					docVO.setTemplateId(template);
+					docVO.setAttributes(attrs);
+
+					documentManager.update(doc, docVO, transaction);
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 					Messages.addError(e.getMessage());
@@ -724,12 +759,13 @@ public class DocumentEditForm {
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+					transaction.setUser(SessionManagement.getUser());
 
 					// Unchekout the document; throws an exception if something
 					// goes wrong
 					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 							DocumentManager.class);
-					documentManager.unlock(document.getId(), SessionManagement.getUser(), transaction);
+					documentManager.unlock(document.getId(), transaction);
 
 					/* create positive log message */
 					Messages.addLocalizedInfo("document.action.unlocked");
@@ -795,13 +831,15 @@ public class DocumentEditForm {
 					// Create the document history event
 					History transaction = new History();
 					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+					transaction.setUser(SessionManagement.getUser());
+					transaction.setComment(this.versionDesc);
 
 					// checkin the document; throws an exception if
 					// something goes wrong
 					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 							DocumentManager.class);
-					documentManager.checkin(document.getId(), new FileInputStream(file), fileName, SessionManagement
-							.getUser(), versionType, this.versionDesc, immediateIndexing, transaction);
+					documentManager.checkin(document.getId(), new FileInputStream(file), fileName, versionType,
+							immediateIndexing, transaction);
 
 					/* create positive log message */
 					Messages.addLocalizedInfo("msg.action.savedoc");
