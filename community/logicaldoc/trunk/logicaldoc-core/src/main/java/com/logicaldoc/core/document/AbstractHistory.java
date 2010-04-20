@@ -36,9 +36,9 @@ public class AbstractHistory extends PersistentObject {
 
 	private String sessionId = "";
 
-	//Not persistent
+	// Not persistent
 	private User user;
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -166,6 +166,9 @@ public class AbstractHistory extends PersistentObject {
 		return user;
 	}
 
+	/**
+	 * This setter also sets the userId and userName
+	 */
 	public void setUser(User user) {
 		this.user = user;
 		setUserId(user.getId());

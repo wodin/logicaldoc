@@ -20,9 +20,9 @@ import com.logicaldoc.core.communication.dao.SystemMessageDAO;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.core.text.parser.Parser;
@@ -137,7 +137,7 @@ public class ZipImport {
 	 * @param parent
 	 */
 	protected void addEntry(File file, Menu parent) {
-		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		String menuName = file.getName();
 		History transaction = new History();
 		transaction.setUserId(user.getId());
@@ -147,7 +147,7 @@ public class ZipImport {
 		if (file.isDirectory()) {
 			// creates a logicaldoc folder
 
-			Menu menu = dao.createFolder(parent, menuName, transaction);
+			Menu menu = dao.create(parent, menuName, transaction);
 
 			File[] files = file.listFiles();
 

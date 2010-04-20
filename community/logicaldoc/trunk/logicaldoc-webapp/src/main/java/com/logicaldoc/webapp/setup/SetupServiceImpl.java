@@ -41,11 +41,9 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 
 	@Override
 	public void setup(SetupInfo data) {
-		System.out.println("***1");
 		File repoFolder = new File(data.getRepositoryFolder());
 		try {
 			makeWorkingDir(repoFolder);
-			System.out.println("***2");
 			writeDBConfig(data);
 			writeSmtpConfig(data);
 		} catch (Exception e) {

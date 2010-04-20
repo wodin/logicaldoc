@@ -18,8 +18,8 @@ import org.apache.tools.zip.ZipFile;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.core.text.parser.Parser;
@@ -100,7 +100,7 @@ public class InMemoryZipImport extends ZipImport {
 	 * @throws ZipException
 	 */
 	protected void addEntry(ZipFile zip, ZipEntry ze, Menu parent) throws ZipException, IOException {
-		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
 		History transaction = new History();
 		transaction.setSessionId(sessionId);
@@ -110,7 +110,7 @@ public class InMemoryZipImport extends ZipImport {
 		if (ze.isDirectory()) {
 			// creates a logicaldoc folder
 			String folderPath = FilenameUtils.getFullPathNoEndSeparator(ze.getName());
-			dao.createFolders(parent, folderPath, transaction);
+			dao.create(parent, folderPath, transaction);
 		} else {
 			InputStream stream = zip.getInputStream(ze);
 			File docFile = new File(ze.getName());
@@ -119,7 +119,7 @@ public class InMemoryZipImport extends ZipImport {
 
 			// ensure to have the proper folder to upload the file into
 			String folderPath = FilenameUtils.getFullPathNoEndSeparator(ze.getName());
-			Menu documentPath = dao.createFolders(parent, folderPath, transaction);
+			Menu documentPath = dao.create(parent, folderPath, transaction);
 
 			Set<String> tagSet = null;
 			if (extractTags) {

@@ -22,10 +22,10 @@ import com.icesoft.faces.component.tree.Tree;
 import com.logicaldoc.core.document.DiscussionComment;
 import com.logicaldoc.core.document.DiscussionThread;
 import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.searchengine.Result;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
@@ -389,8 +389,7 @@ public class DocumentNavigation extends NavigationBean {
 	}
 
 	public String delete() {
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
 			// Create the folder history event. It will be used by the
 			// 'deleteAll' methods of MenuDAO and DocumentDAO. The event will be
@@ -400,7 +399,7 @@ public class DocumentNavigation extends NavigationBean {
 			transaction.setComment("");
 			transaction.setUser(SessionManagement.getUser());
 
-			List<Menu> notDeletableFolders = manager.deleteFolder(selectedDir.getMenu(), transaction);
+			List<Menu> notDeletableFolders = folderDao.delete(selectedDir.getMenu(), transaction);
 			if (notDeletableFolders.size() > 0)
 				Messages.addLocalizedWarn("errors.action.deletefolder");
 			else
@@ -410,7 +409,7 @@ public class DocumentNavigation extends NavigationBean {
 			log.error(e.getMessage(), e);
 		}
 
-		Directory parent = new Directory(menuDao.findById(getSelectedDir().getMenu().getParentId()));
+		Directory parent = new Directory(folderDao.findById(getSelectedDir().getMenu().getParentId()));
 
 		if (FOLDER_VIEW_TREE.equals(getFolderView())) {
 			DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) directoryModel.getSelectedNode().getParent();

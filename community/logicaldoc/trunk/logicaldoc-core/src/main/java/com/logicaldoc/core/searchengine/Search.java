@@ -160,7 +160,7 @@ public class Search {
 				if (options.getFolderId() == null)
 					accessibleIds = mdao.findMenuIdByUserId(options.getUserId());
 				else {
-					accessibleIds = mdao.findMenuIdByUserId(options.getUserId(), options.getFolderId(),
+					accessibleIds = mdao.findIdByUserId(options.getUserId(), options.getFolderId(),
 							Menu.MENUTYPE_DIRECTORY);
 				}
 				log.info("End of DB search");

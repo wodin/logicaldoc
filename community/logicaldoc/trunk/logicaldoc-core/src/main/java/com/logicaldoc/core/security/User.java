@@ -167,6 +167,15 @@ public class User extends PersistentObject implements Serializable {
 		return groupNames;
 	}
 
+	public boolean isInGroup(String groupName) {
+		String[] names = getGroupNames();
+		for (int i = 0; i < names.length; i++) {
+			if (groupName.equals(names[i]))
+				return true;
+		}
+		return false;
+	}
+
 	public void setUserName(String uname) {
 		userName = uname;
 	}

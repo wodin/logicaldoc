@@ -250,21 +250,21 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testFindMenuIdByUserIdIntInteger() {
-		Collection<Long> ids = dao.findMenuIdByUserId(1, 101, null);
+		Collection<Long> ids = dao.findIdByUserId(1, 101, null);
 		assertNotNull(ids);
 		assertEquals(1, ids.size());
 		assertTrue(ids.contains(103L));
 
-		ids = dao.findMenuIdByUserId(1, 101, Menu.MENUTYPE_DIRECTORY);
+		ids = dao.findIdByUserId(1, 101, Menu.MENUTYPE_DIRECTORY);
 		assertNotNull(ids);
 		assertEquals(1, ids.size());
 
-		ids = dao.findMenuIdByUserId(1, 101, 50);
+		ids = dao.findIdByUserId(1, 101, 50);
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 
 		// Try with unexisting user
-		ids = dao.findMenuIdByUserId(99, 101, null);
+		ids = dao.findIdByUserId(99, 101, null);
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 	}
@@ -281,23 +281,6 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertEquals(27, menus.size());
 		menus = dao.findByGroupId(10);
 		assertEquals(0, menus.size());
-	}
-
-	public void testCreateDirectories() throws Exception {
-		Menu docsMenu = dao.findById(Menu.MENUID_DOCUMENTS);
-		Menu menu = dao.createFolders(docsMenu, "/pippo/pluto/paperino", null);
-		assertEquals("paperino", menu.getText());
-		menu = dao.findById(menu.getParentId());
-		assertEquals("pluto", menu.getText());
-		menu = dao.findById(menu.getParentId());
-		assertEquals("pippo", menu.getText());
-
-		menu = dao.createFolders(docsMenu, "/pippo/pluto/paperino", null);
-		assertEquals("paperino", menu.getText());
-		menu = dao.findById(menu.getParentId());
-		assertEquals("pluto", menu.getText());
-		menu = dao.findById(menu.getParentId());
-		assertEquals("pippo", menu.getText());
 	}
 
 	public void testFindParents() {
@@ -321,13 +304,13 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertNotNull(menu);
 	}
 
-	public void testFindByMenuTextAndParentId() {
-		List<Menu> menus = dao.findByMenuTextAndParentId("%menu.admin%", 1);
+	public void testFindByTextAndParentId() {
+		List<Menu> menus = dao.findByTextAndParentId("%menu.admin%", 1);
 		assertEquals(3, menus.size());
 		assertTrue(menus.contains(dao.findById(99)));
 		assertTrue(menus.contains(dao.findById(100)));
 		assertTrue(menus.contains(dao.findById(2)));
-		menus = dao.findByMenuTextAndParentId("text", 100);
+		menus = dao.findByTextAndParentId("text", 100);
 		assertEquals(dao.findById(101), menus.get(0));
 	}
 
@@ -349,21 +332,5 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertEquals("/test", dao.computePathExtended(1200));
 		assertEquals("/menu.home/menu.admin/text/menu.admin", dao.computePathExtended(103));
 		assertEquals("/menu.home/menu.admin/system/menu.gui", dao.computePathExtended(11));
-	}
-
-	@Test
-	public void testFindFolder() {
-		Menu folder = dao.findFolder("test", "/");
-		assertNotNull(folder);
-		assertEquals("test", folder.getText());
-		assertEquals(1200, folder.getId());
-
-		folder = dao.findFolder("xyz", "/test/abc");
-		assertNotNull(folder);
-		assertEquals("xyz", folder.getText());
-		assertEquals(1202, folder.getId());
-
-		folder = dao.findFolder("qqq", "/test/abc");
-		assertNull(folder);
 	}
 }
