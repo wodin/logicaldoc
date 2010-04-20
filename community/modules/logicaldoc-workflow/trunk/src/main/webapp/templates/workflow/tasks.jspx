@@ -22,7 +22,7 @@
 			<tr>
 				<td valign="top" align="left">
 					<h3>
-						<ice:outputText value="#{msgs['workflow.mytasks.assigned']}:" />
+						<ice:outputText value="#{msgs['workflow.tasks.assigned']}:" />
 					</h3>
 					<ice:dataTable id="taskInstanceList" var="taskInstance"
 						value="#{WorkflowManager.taskInstances}" rows="15"
@@ -55,7 +55,7 @@
 					</ice:dataTable>
 					<br />
 					<h3>
-						<ice:outputText value="#{msgs['workflow.mytasks.pooled']}:" />
+						<ice:outputText value="#{msgs['workflow.tasks.pooled']}:" />
 					</h3>
 					<ice:dataTable id="pooledTaskInstanceList" var="taskInstance"
 						value="#{WorkflowManager.pooledTaskInstances}" rows="15"
