@@ -30,6 +30,6 @@ public class PostsDS extends DataSource {
 
 		setFields(id, title, user, indent, message, date, replyPath);
 		setClientOnly(true);
-		setDataURL("data/posts.xml?sid=" + Session.getInstance().getSid() + "&discussionId=" + discussionId);
+		setDataURL("data/posts.xml?sid=" + Session.get().getSid() + "&discussionId=" + discussionId);
 	}
 }

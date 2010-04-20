@@ -28,6 +28,6 @@ public class DiscussionsDS extends DataSource {
 
 		setFields(id, title, user, posts, visits, lastPost);
 		setClientOnly(true);
-		setDataURL("data/discussions.xml?sid=" + Session.getInstance().getSid() + "&docId=" + docId);
+		setDataURL("data/discussions.xml?sid=" + Session.get().getSid() + "&docId=" + docId);
 	}
 }

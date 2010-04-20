@@ -29,6 +29,6 @@ public class LinksDS extends DataSource {
 
 		setFields(id, folderId, title, icon, direction, type);
 		setClientOnly(true);
-		setDataURL("data/links.xml?sid=" + Session.getInstance().getSid() + "&docId=" + docId);
+		setDataURL("data/links.xml?sid=" + Session.get().getSid() + "&docId=" + docId);
 	}
 }

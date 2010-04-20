@@ -57,12 +57,16 @@ public class MainPanel extends VLayout implements SessionObserver {
 			}
 		});
 
-		Session.getInstance().addSessionObserver(this);
+		Session.get().addSessionObserver(this);
 	}
 
 	@Override
 	public void onUserLoggedIn(GUIUser user) {
-		tabSet.getTabs()[TAB_DOCUMENTS].setPane(DocumentsPanel.getInstance());
-		tabSet.getTabs()[TAB_SEARCH].setPane(SearchPanel.getInstance());
+		tabSet.getTabs()[TAB_DOCUMENTS].setPane(DocumentsPanel.get());
+		tabSet.getTabs()[TAB_SEARCH].setPane(SearchPanel.get());
+	}
+
+	public void selectSearchTab() {
+		tabSet.selectTab(TAB_SEARCH);
 	}
 }

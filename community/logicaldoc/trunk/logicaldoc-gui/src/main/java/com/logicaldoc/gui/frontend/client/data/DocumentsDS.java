@@ -46,6 +46,6 @@ public class DocumentsDS extends DataSource {
 		setFields(id, title, size, publisher, version, docref, lastModified, published, created, creator, customId,
 				icon, immutable, indexed, locked, lockUserId, filename, status);
 		setClientOnly(true);
-		setDataURL("data/documents.xml?sid=" + Session.getInstance().getSid() + "&folderId=" + folderId);
+		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId=" + folderId);
 	}
 }

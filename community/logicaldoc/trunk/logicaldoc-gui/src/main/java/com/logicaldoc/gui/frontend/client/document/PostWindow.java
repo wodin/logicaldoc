@@ -49,7 +49,7 @@ public class PostWindow extends Window {
 			public void onClick(ClickEvent event) {
 				vm.validate();
 				if (!vm.hasErrors()) {
-					documentService.replyPost(Session.getInstance().getSid(), PostWindow.this.discussionId,
+					documentService.replyPost(Session.get().getSid(), PostWindow.this.discussionId,
 							PostWindow.this.replyTo, vm.getValueAsString("title"), vm.getValueAsString("message"),
 							new AsyncCallback<Integer>() {
 
@@ -81,7 +81,7 @@ public class PostWindow extends Window {
 			public void onClick(ClickEvent event) {
 				vm.validate();
 				if (!vm.hasErrors()) {
-					documentService.startDiscussion(Session.getInstance().getSid(), docId,
+					documentService.startDiscussion(Session.get().getSid(), docId,
 							vm.getValueAsString("title"), vm.getValueAsString("message"), new AsyncCallback<Long>() {
 
 								@Override

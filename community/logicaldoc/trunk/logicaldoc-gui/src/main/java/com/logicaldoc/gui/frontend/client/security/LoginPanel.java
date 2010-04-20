@@ -157,7 +157,7 @@ public class LoginPanel extends VLayout {
 									new ChangePassword(user).show();
 								}
 							} else {
-								Session.getInstance().setUser(user);
+								Session.get().setUser(user);
 								Main.get().showMain();
 							}
 						} else {

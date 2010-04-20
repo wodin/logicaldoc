@@ -23,7 +23,7 @@ public class FolderHistoryDS extends DataSource {
 
 		setFields(user, date, event, comment);
 		setClientOnly(true);
-		setDataURL("data/folderhistory.xml?sid=" + Session.getInstance().getSid() + "&id=" + folderId + "&lang="
+		setDataURL("data/folderhistory.xml?sid=" + Session.get().getSid() + "&id=" + folderId + "&lang="
 				+ I18N.getLanguage());
 	}
 }

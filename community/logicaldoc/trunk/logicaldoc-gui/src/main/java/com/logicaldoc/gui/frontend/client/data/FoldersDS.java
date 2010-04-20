@@ -35,7 +35,7 @@ public class FoldersDS extends DataSource {
 
 		setFields(nameField, folderId, parentId, add, delete);
 
-		setDataURL("data/folders.xml?sid=" + Session.getInstance().getSid());
+		setDataURL("data/folders.xml?sid=" + Session.get().getSid());
 		setClientOnly(false);
 	}
 }

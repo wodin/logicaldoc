@@ -29,7 +29,7 @@ public class VersionsDS extends DataSource {
 
 		setFields(id, user, event, version, fileVersion, date, comment);
 		setClientOnly(true);
-		setDataURL("data/versions.xml?sid=" + Session.getInstance().getSid() + "&docId=" + docId + "&lang="
+		setDataURL("data/versions.xml?sid=" + Session.get().getSid() + "&docId=" + docId + "&lang="
 				+ I18N.getLanguage());
 	}
 }

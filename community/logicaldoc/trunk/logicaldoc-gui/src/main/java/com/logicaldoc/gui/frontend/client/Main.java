@@ -11,7 +11,6 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
-import com.smartgwt.client.util.SC;
 
 /**
  * The Frontend entry point
@@ -68,12 +67,8 @@ public class Main implements EntryPoint {
 		Window.setMargin("0px");
 
 		loginPanel = new LoginPanel();
+		mainPanel = new MainPanel();
 
-		try {
-			mainPanel = new MainPanel();
-		} catch (Throwable t) {
-			SC.warn(t.getMessage());
-		}
 		RootPanel.get().add(loginPanel);
 
 		// Remove the loading frame
@@ -88,5 +83,9 @@ public class Main implements EntryPoint {
 	public void showMain() {
 		mainPanel.show();
 		loginPanel.hide();
+	}
+
+	public MainPanel getMainPanel() {
+		return mainPanel;
 	}
 }

@@ -35,6 +35,6 @@ public class RightsDS extends DataSource {
 		setFields(entityId, entity, read, write, delete, add, workflow, sign, _import, export, immutable, rename,
 				security, archive);
 		setClientOnly(true);
-		setDataURL("data/rights.xml?sid=" + Session.getInstance().getSid() + "&folderId=" + folderId);
+		setDataURL("data/rights.xml?sid=" + Session.get().getSid() + "&folderId=" + folderId);
 	}
 }

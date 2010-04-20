@@ -120,8 +120,8 @@ public class EmailWindow extends Window {
 					mail.setMessage(vm.getValueAsString("message"));
 					mail.setSendAdTicket("true".equals(vm.getValueAsString("sendticket")));
 					mail.setDocId(EmailWindow.this.docId);
-					mail.setUser(Session.getInstance().getUser());
-					documentService.sendAsEmail(Session.getInstance().getSid(), mail, new AsyncCallback<String>() {
+					mail.setUser(Session.get().getUser());
+					documentService.sendAsEmail(Session.get().getSid(), mail, new AsyncCallback<String>() {
 
 						@Override
 						public void onFailure(Throwable caught) {

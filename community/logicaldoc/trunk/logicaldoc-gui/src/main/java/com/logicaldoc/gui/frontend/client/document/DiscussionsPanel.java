@@ -120,7 +120,7 @@ public class DiscussionsPanel extends DocumentDetailTab {
 				});
 
 				// Administrators only can delete a post
-				if (Session.getInstance().getUser().isMemberOf("admin")) {
+				if (Session.get().getUser().isMemberOf("admin")) {
 					contextMenu.setItems(showPostsItem, deleteItem);
 				} else {
 					contextMenu.setItems(showPostsItem);
@@ -145,7 +145,7 @@ public class DiscussionsPanel extends DocumentDetailTab {
 			@Override
 			public void execute(Boolean value) {
 				if (value) {
-					documentService.deleteDiscussions(Session.getInstance().getSid(), ids, new AsyncCallback<Void>() {
+					documentService.deleteDiscussions(Session.get().getSid(), ids, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
@@ -165,7 +165,7 @@ public class DiscussionsPanel extends DocumentDetailTab {
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute("id", Long.toString(id));
 		record.setAttribute("title", title);
-		record.setAttribute("user", Session.getInstance().getUser().getFullName());
+		record.setAttribute("user", Session.get().getUser().getFullName());
 		listGrid.addData(record);
 	}
 

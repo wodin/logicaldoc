@@ -49,7 +49,7 @@ public class HistoryPanel extends FolderDetailTab {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				Window.open("download?sid="+Session.getInstance().getSid()+"&docId=" + folder.getId() + "&versionId=" + record.getAttribute("version")
+				Window.open("download?sid="+Session.get().getSid()+"&docId=" + folder.getId() + "&versionId=" + record.getAttribute("version")
 						+ "&open=true", "_blank", "");
 			}
 		});

@@ -70,7 +70,7 @@ public class FoldersTreePanel extends TreeGrid {
 			@Override
 			public void onCellClick(CellClickEvent event) {
 
-				service.getFolder(Session.getInstance().getSid(), Long.parseLong(event.getRecord()
+				service.getFolder(Session.get().getSid(), Long.parseLong(event.getRecord()
 						.getAttributeAsString("id")), new AsyncCallback<GUIFolder>() {
 
 					@Override
@@ -80,7 +80,7 @@ public class FoldersTreePanel extends TreeGrid {
 
 					@Override
 					public void onSuccess(GUIFolder result) {
-						Session.getInstance().setCurrentFolder(result);
+						Session.get().setCurrentFolder(result);
 					}
 				});
 			}
@@ -117,7 +117,7 @@ public class FoldersTreePanel extends TreeGrid {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.delete(Session.getInstance().getSid(), id, new AsyncCallback<Void>() {
+							service.delete(Session.get().getSid(), id, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -170,7 +170,7 @@ public class FoldersTreePanel extends TreeGrid {
 		data.setName(I18N.getMessage("newfolder"));
 		data.setParentId(Long.parseLong(selectedNode.getAttributeAsString("id")));
 
-		service.save(Session.getInstance().getSid(), data, new AsyncCallback<GUIFolder>() {
+		service.save(Session.get().getSid(), data, new AsyncCallback<GUIFolder>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -189,7 +189,7 @@ public class FoldersTreePanel extends TreeGrid {
 				}
 				getTree().add(newNode, selectedNode);
 				selectRecord(newNode);
-				Session.getInstance().setCurrentFolder(newFolder);
+				Session.get().setCurrentFolder(newFolder);
 			}
 		});
 	}

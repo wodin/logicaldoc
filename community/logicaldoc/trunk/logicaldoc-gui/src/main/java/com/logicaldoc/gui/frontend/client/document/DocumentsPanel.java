@@ -46,7 +46,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver {
 
 	private DocumentsPanel() {
 		// Register to folders events
-		Session.getInstance().addFolderObserver(this);
+		Session.get().addFolderObserver(this);
 
 		setWidth100();
 
@@ -80,7 +80,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver {
 		setShowEdges(true);
 	}
 
-	public static DocumentsPanel getInstance() {
+	public static DocumentsPanel get() {
 		if (instance == null)
 			instance = new DocumentsPanel();
 		return instance;
@@ -98,7 +98,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver {
 			details.addMember(detailPanel);
 		}
 
-		documentService.getById(Session.getInstance().getSid(), docId, new AsyncCallback<GUIDocument>() {
+		documentService.getById(Session.get().getSid(), docId, new AsyncCallback<GUIDocument>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
