@@ -520,7 +520,8 @@ public class DmsServiceImpl implements DmsService {
 		opt.setUserId(user.getId());
 		opt.setFormat("all");
 		opt.setQueryLanguage(queryLanguage);
-
+		opt.setMaxHits(maxHits);
+		
 		// Execute the search
 		opt.setMaxHits(maxHits);
 		Search lastSearch = new Search(opt);
