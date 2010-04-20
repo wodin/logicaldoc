@@ -1,0 +1,79 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page is used for the bookmark editing form
+  
+ @author Matteo Caruso - Logical Objects
+ @since 5.2
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="bookmarkForm" styleClass="center" style="width: 300px">
+
+	<ice:panelGroup styleClass="formBorderHighlight"
+		style="text-align:left">
+		<ice:panelGroup id="edit"
+			rendered="#{bookmarkBean.selectedPanel=='edit'}">
+			<!-- Archive data -->
+			<ice:panelGroup>
+				<h3>
+					<ice:outputText value="#{msgs['bookmark']}" />
+					&amp;nbsp;
+					<ice:outputText value="#{bookmarkBean.selectedBookmark.title}" />
+					<br />
+					<br />
+				</h3>
+				<ice:panelGrid columns="2">
+
+					<!-- Title -->
+					<ice:panelGroup style="text-align:right">
+						<ice:outputLabel for="title" value="#{msgs['name']}*" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+						<ice:inputText id="title" style="width:174px;"
+							value="#{bookmarkBean.selectedBookmark.title}"
+							binding="#{bookmarkBean.titleInput}" styleClass="smallInputText"
+							required="true">
+						</ice:inputText>
+						<ice:message for="title" />
+					</ice:panelGroup>
+
+					<!-- Description -->
+					<ice:panelGroup style="text-align:right">
+						<ice:outputLabel for="description" value="#{msgs['description']}" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+						<ice:inputText id="description" style="width:174px;"
+							value="#{bookmarkBean.selectedBookmark.description}"
+							binding="#{bookmarkBean.descriptionInput}"
+							styleClass="smallInputText" maxlength="500" />
+						<ice:message for="description" />
+					</ice:panelGroup>
+
+					<!-- Path -->
+					<ice:panelGroup style="text-align:right;">
+						<ice:outputLabel for="type" value="#{msgs['path']}" style="padding-right:5px;" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+						<ice:outputText style="width:180px;"
+							value="#{bookmarkBean.selectedBookmark.path}">
+						</ice:outputText>
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+
+			<hr />
+			<ice:panelGroup styleClass="commands">
+				<ice:commandButton value="#{msgs['back']}" styleClass="backBtn"
+					action="#{bookmarkBean.abort}" immediate="true" />
+				<ice:commandButton value="#{msgs['save']}"
+					action="#{bookmarkBean.save}" id="save" />
+			</ice:panelGroup>
+		</ice:panelGroup>
+	</ice:panelGroup>
+</jsp:root>

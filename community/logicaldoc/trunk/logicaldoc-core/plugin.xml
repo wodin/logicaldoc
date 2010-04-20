@@ -240,7 +240,7 @@
     <parameter id="extension" value="tif" />
     <parameter id="class" value="com.logicaldoc.core.document.thumbnail.TiffThumbnailBuilder" />
   </extension>
-    <extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="tiffThumb">
+  <extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="tiffThumb">
     <parameter id="extension" value="tiff" />
     <parameter id="class" value="com.logicaldoc.core.document.thumbnail.TiffThumbnailBuilder" />
   </extension>
@@ -342,7 +342,7 @@
     <parameter id="position" value="10" />
     <parameter id="confirm" value="" />
   </extension>
-  
+
   <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderHistory">
     <parameter id="action" value="item.userObject.history" />
     <parameter id="link" value="" />
@@ -352,7 +352,7 @@
     <parameter id="confirm" value="" />
     <parameter id="target" value="" />
   </extension>
-  
+
   <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderAdd">
     <parameter id="action" value="item.userObject.newDirectory" />
     <parameter id="link" value="" />
@@ -362,7 +362,7 @@
     <parameter id="position" value="40" />
     <parameter id="confirm" value="" />
   </extension>
-  
+
   <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderMove">
     <parameter id="action" value="item.userObject.moveDirectory" />
     <parameter id="link" value="" />
@@ -372,7 +372,7 @@
     <parameter id="position" value="45" />
     <parameter id="confirm" value="" />
   </extension>
-  
+
   <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderDelete">
     <parameter id="action" value="item.userObject.deleteDirectory" />
     <parameter id="link" value="" />
@@ -382,7 +382,7 @@
     <parameter id="position" value="50" />
     <parameter id="confirm" value="" />
   </extension>
-  
+
   <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderEdit">
     <parameter id="action" value="item.userObject.edit" />
     <parameter id="link" value="" />
@@ -402,7 +402,7 @@
     <parameter id="confirm" value="" />
     <parameter id="target" value="_blank" />
   </extension>
-  
+
   <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderRights">
     <parameter id="action" value="item.userObject.rights" />
     <parameter id="link" value="" />
@@ -425,6 +425,17 @@
       value="documentsRecordsManager.clipboardSize gt 0 and documentNavigation.selectedDir.writeEnabled and documentsRecordsManager.guiRequest=='copy'" />
     <parameter id="position" value="100" />
     <parameter id="icon" value="actions_pasteasshortcut.png" />
+    <parameter id="confirm" value="" />
+  </extension>
+
+  <extension plugin-id="logicaldoc-core" point-id="DocumentToolbar" id="bookmarkToolbar">
+    <parameter id="action" value="bookmarkBean.saveBookmarks" />
+    <parameter id="link" value="" />
+    <parameter id="target" value="" />
+    <parameter id="title" value="clipboard.saveBookmark" />
+    <parameter id="rendered" value="true" />
+    <parameter id="position" value="110" />
+    <parameter id="icon" value="actions_bookmarks.png" />
     <parameter id="confirm" value="" />
   </extension>
   <!-- end Document Toolbar -->
