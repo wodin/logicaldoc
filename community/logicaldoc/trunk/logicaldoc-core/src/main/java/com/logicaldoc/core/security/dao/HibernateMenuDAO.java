@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.apache.commons.logging.LogFactory;
 
@@ -34,7 +33,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 	private HistoryDAO historyDAO;
 
-	private HibernateMenuDAO() {
+	protected HibernateMenuDAO() {
 		super(Menu.class);
 		super.log = LogFactory.getLog(HibernateMenuDAO.class);
 	}
@@ -267,9 +266,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findTextByMenuId(long)
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#findTextById(long)
 	 */
-	public String findTextByMenuId(long menuId) {
+	public String findTextById(long menuId) {
 		Menu menu = this.findById(menuId);
 		return menu.getText();
 	}
@@ -340,13 +339,13 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	}
 
 	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findMenuIdByUserId(long,
-	 *      long, java.lang.Integer) <b>NOTE:</b> This implementation performs
-	 *      direct JDBC query, this is required in order to obtain acceptable
+	 * @see com.logicaldoc.core.security.dao.MenuDAO#findIdByUserId(long, long,
+	 *      java.lang.Integer) <b>NOTE:</b> This implementation performs direct
+	 *      JDBC query, this is required in order to obtain acceptable
 	 *      performances during searches.
 	 */
 	@SuppressWarnings( { "unchecked", "deprecation" })
-	public Set<Long> findMenuIdByUserId(long userId, long parentId, Integer type) {
+	public Set<Long> findIdByUserId(long userId, long parentId, Integer type) {
 		Set<Long> ids = new HashSet<Long>();
 		try {
 			User user = userDAO.findById(userId);
@@ -419,7 +418,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	@Override
 	public String computePathExtended(long menuId) {
 		Menu menu = findById(menuId);
-		if(menu==null)
+		if (menu == null)
 			return null;
 		String path = menu.getText();
 		while (menu != null && menu.getId() != menu.getParentId() && menu.getId() != Menu.MENUID_DOCUMENTS) {
@@ -485,57 +484,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	}
 
 	@Override
-	public Menu createFolder(Menu parent, String name, History transaction) {
-		Menu menu = new Menu();
-		menu.setText(name);
-		menu.setParentId(parent.getId());
-		menu.setSort(0);
-		menu.setIcon("folder.png");
-		menu.setType(Menu.MENUTYPE_DIRECTORY);
-		for (MenuGroup mg : parent.getMenuGroups()) {
-			menu.getMenuGroups().add(mg);
-		}
-
-		setUniqueFolderName(menu);
-		if (transaction != null)
-			transaction.setEvent(History.EVENT_FOLDER_CREATED);
-		if (store(menu, transaction) == false)
-			return null;
-		return menu;
-	}
-
-	@Override
-	public void setUniqueFolderName(Menu menu) {
-		int counter = 1;
-		String folderName = menu.getText();
-		while (findByMenuTextAndParentId(menu.getText(), menu.getParentId()).size() > 0) {
-			menu.setText(folderName + "(" + (counter++) + ")");
-		}
-	}
-
-	@Override
-	public List<Menu> findByMenuTextAndParentId(String text, long parentId) {
+	public List<Menu> findByTextAndParentId(String text, long parentId) {
 		return findByWhere("_entity.parentId = " + parentId + " and _entity.text like '" + SqlUtil.doubleQuotes(text)
 				+ "'", null);
-	}
-
-	@Override
-	public Menu createFolders(Menu parent, String path, History transaction) {
-		StringTokenizer st = new StringTokenizer(path, "/", false);
-
-		Menu menu = parent;
-		while (st.hasMoreTokens()) {
-			String name = st.nextToken();
-			List<Menu> childs = findByText(menu, name, Menu.MENUTYPE_DIRECTORY);
-			Menu dir;
-			if (childs.isEmpty())
-				dir = createFolder(menu, name, transaction);
-			else {
-				dir = childs.iterator().next();
-			}
-			menu = dir;
-		}
-		return menu;
 	}
 
 	@Override
@@ -759,23 +710,5 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		}
 
 		return result;
-	}
-
-	@Override
-	public Menu findFolder(String folderName, String pathExtended) {
-		StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
-		Menu parent = findById(Menu.MENUID_DOCUMENTS);
-		while (st.hasMoreTokens()) {
-			List<Menu> list = findByText(parent, st.nextToken(), Menu.MENUTYPE_DIRECTORY);
-			if (list.isEmpty())
-				return null;
-			parent = list.get(0);
-
-		}
-
-		List<Menu> specified_menu = findByText(parent, folderName, Menu.MENUTYPE_DIRECTORY);
-		if (specified_menu != null && specified_menu.size() > 0)
-			return specified_menu.iterator().next();
-		return null;
 	}
 }

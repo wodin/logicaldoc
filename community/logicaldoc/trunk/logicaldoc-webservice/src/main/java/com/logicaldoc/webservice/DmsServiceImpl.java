@@ -611,7 +611,7 @@ public class DmsServiceImpl implements DmsService {
 		if (menu == null)
 			throw new Exception("cannot find folder " + folder);
 
-		if (dao.findByMenuTextAndParentId(name, menu.getParentId()).size() > 0) {
+		if (dao.findByTextAndParentId(name, menu.getParentId()).size() > 0) {
 			throw new Exception("duplicate folder name " + name);
 		} else {
 			menu.setText(name);

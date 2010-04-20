@@ -8,8 +8,8 @@ import javax.faces.event.ActionEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.Permission;
@@ -133,7 +133,7 @@ public class DirectoryEditForm {
 		Menu folderToMove = documentNavigation.getSelectedDir().getMenu();
 
 		if (SessionManagement.isValid()) {
-			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
 			// Check destParentId MUST BE <> 0 (initial value)
 			if (destParentId == 0) {
@@ -142,10 +142,9 @@ public class DirectoryEditForm {
 			}
 
 			try {
-				DocumentManager docman = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 				User user = SessionManagement.getUser();
 
-				Menu destParentFolder = mdao.findById(destParentId);
+				Menu destParentFolder = folderDao.findById(destParentId);
 
 				// Check destParentId: Must be different from the current folder
 				// parentId
@@ -159,14 +158,14 @@ public class DirectoryEditForm {
 					throw new SecurityException("Not Allowed");
 
 				// Check delete permission on the folder parent of folderToMove
-				Menu sourceParent = mdao.findById(folderToMove.getParentId());
-				boolean sourceParentDeleteEnabled = mdao.isPermissionEnabled(Permission.DELETE, sourceParent.getId(),
+				Menu sourceParent = folderDao.findById(folderToMove.getParentId());
+				boolean sourceParentDeleteEnabled = folderDao.isPermissionEnabled(Permission.DELETE, sourceParent.getId(),
 						user.getId());
 				if (!sourceParentDeleteEnabled)
 					throw new SecurityException("No rights to delete folder");
 
 				// Check addChild permission on destParentFolder
-				boolean addchildEnabled = mdao.isPermissionEnabled(Permission.ADD_CHILD, destParentFolder.getId(), user
+				boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD_CHILD, destParentFolder.getId(), user
 						.getId());
 				if (!addchildEnabled)
 					throw new SecurityException("AddChild Rights not granted to this user");
@@ -176,7 +175,7 @@ public class DirectoryEditForm {
 				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 				transaction.setUser(user);
 
-				docman.moveFolder(folderToMove, destParentFolder, transaction);
+				folderDao.move(folderToMove, destParentFolder, transaction);
 
 				// ricarico l'albero delle cartelle
 				documentNavigation.getDirectoryModel().reloadAll();
@@ -205,7 +204,7 @@ public class DirectoryEditForm {
 		if (SessionManagement.isValid()) {
 			MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			try {
-				List<Menu> folders = dao.findByMenuTextAndParentId(folderName, directory.getMenu().getParentId());
+				List<Menu> folders = dao.findByTextAndParentId(folderName, directory.getMenu().getParentId());
 				if (folders.size() > 0 && folders.get(0).getId() != directory.getMenuId()) {
 					Messages.addLocalizedWarn("errors.folder.duplicate");
 					documentNavigation.refresh();
@@ -256,7 +255,7 @@ public class DirectoryEditForm {
 		Menu parent = documentNavigation.getSelectedDir().getMenu();
 
 		if (SessionManagement.isValid()) {
-			MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
 			try {
 				// Add a folder history entry
@@ -264,7 +263,7 @@ public class DirectoryEditForm {
 				transaction.setUserId(SessionManagement.getUserId());
 				transaction.setUserName(SessionManagement.getUser().getFullName());
 				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
-				Menu menu = dao.createFolder(parent, getFolderName(), transaction);
+				Menu menu = folderDao.create(parent, getFolderName(), transaction);
 				menu.getMenuGroups().clear();
 				for (MenuGroup mg : parent.getMenuGroups()) {
 					MenuGroup clone = mg.clone();
@@ -283,7 +282,7 @@ public class DirectoryEditForm {
 
 				menu.setDescription(folderDescription);
 
-				boolean stored = dao.store(menu);
+				boolean stored = folderDao.store(menu);
 
 				if (!stored) {
 					Messages.addLocalizedError("folder.error.notstored");

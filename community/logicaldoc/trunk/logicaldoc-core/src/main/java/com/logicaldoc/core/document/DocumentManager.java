@@ -247,20 +247,6 @@ public interface DocumentManager {
 	public Document copyToFolder(Document doc, Menu folder, History transaction) throws Exception;
 
 	/**
-	 * Delete a folder and all its sub-folders that a user can delete. After
-	 * recovering of all sub-folders inside the folder, will be canceled all
-	 * folders for which the user has the delete permission or there isn't an
-	 * immutable document inside it.
-	 * 
-	 * @param menu Folder to delete
-	 * @param transaction entry to log the event (set the user)
-	 * @return List of folders that the user cannot delete(permissions, o
-	 *         immutable documents presents)
-	 * @throws Exception
-	 */
-	public List<Menu> deleteFolder(Menu menu, History transaction) throws Exception;
-
-	/**
 	 * Create a shortcut associated to the given doc to the specified folder.
 	 * 
 	 * @param doc The document for which will be created the shortcut
@@ -270,15 +256,4 @@ public interface DocumentManager {
 	 * @throws Exception
 	 */
 	public Document createShortcut(Document doc, Menu folder, History transaction) throws Exception;
-
-	/**
-	 * Move a folder from one parent folder to another
-	 * 
-	 * @param folderToMove The folder to move
-	 * @param destParentFolder The target folder
-	 * @param transaction entry to log the event (set the user)
-	 * @throws Exception
-	 */
-	public void moveFolder(Menu folderToMove, Menu destParentFolder, History transaction) throws Exception;
-
 }

@@ -5,7 +5,7 @@
 
 	<bean id="ResourceService" class="com.logicaldoc.webdav.resource.service.ResourceServiceImpl">
 		<property name="documentDAO" ref="DocumentDAO"/>
-		<property name="menuDAO" ref="MenuDAO"/>
+		<property name="folderDAO" ref="FolderDAO"/>
 		<property name="documentManager" ref="DocumentManager"/>
 		<property name="userDAO" ref="UserDAO"/>
 		<property name="versionDAO" ref="VersionDAO"/>

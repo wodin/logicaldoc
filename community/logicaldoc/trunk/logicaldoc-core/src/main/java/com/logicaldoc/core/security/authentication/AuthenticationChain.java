@@ -53,7 +53,7 @@ public class AuthenticationChain implements AuthenticationProvider {
 
 		return loggedIn;
 	}
-	
+
 	/**
 	 * Try to authenticate the user without creating a new session
 	 * 
@@ -124,6 +124,10 @@ public class AuthenticationChain implements AuthenticationProvider {
 			providers.add((AuthenticationProvider) context
 					.getBean(extension.getParameter("providerId").valueAsString()));
 		}
+
+		if (sortedExts.isEmpty())
+			providers.add((AuthenticationProvider) context.getBean("BasicAuthentication"));
+
 		log.info("Authentication chain initialized");
 	}
 

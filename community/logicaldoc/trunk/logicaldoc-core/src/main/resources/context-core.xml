@@ -66,6 +66,21 @@
 		</property>
 	</bean>
 
+	<bean id="FolderDAO" parent="ApplicationBaseTransactionProxy"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="target">
+			<bean class="com.logicaldoc.core.document.dao.HibernateFolderDAO"
+				abstract="false" lazy-init="default" autowire="default"
+				dependency-check="default">
+				<property name="sessionFactory" ref="SessionFactory" />
+				<property name="userDAO" ref="UserDAO" />
+				<property name="historyDAO" ref="HistoryDAO" />
+				<property name="documentDAO" ref="DocumentDAO" />
+			</bean>
+		</property>
+	</bean>
+
 	<bean id="UserDocDAO" parent="ApplicationBaseTransactionProxy"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">

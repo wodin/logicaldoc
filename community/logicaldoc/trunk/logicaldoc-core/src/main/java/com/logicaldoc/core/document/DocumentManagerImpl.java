@@ -692,81 +692,6 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public List<Menu> deleteFolder(Menu folder, History transaction) throws Exception {
-		assert (folder != null);
-		assert (transaction != null);
-		assert (transaction.getUser() != null);
-
-		List<Menu> deletableFolders = new ArrayList<Menu>();
-		List<Menu> notDeletableFolders = new ArrayList<Menu>();
-		List<Document> deletableDocs = new ArrayList<Document>();
-
-		Set<Long> deletableIds = menuDAO.findMenuIdByUserIdAndPermission(transaction.getUserId(), Permission.DELETE,
-				Menu.MENUTYPE_DIRECTORY);
-
-		if (deletableIds.contains(folder.getId())) {
-			deletableFolders.add(folder);
-		} else {
-			notDeletableFolders.add(folder);
-			return notDeletableFolders;
-		}
-
-		try {
-			// Retrieve all the sub-folders
-			List<Menu> subfolders = menuDAO.findByParentId(folder.getId());
-
-			for (Menu subfolder : subfolders) {
-				if (deletableIds.contains(subfolder.getId())) {
-					deletableFolders.add(subfolder);
-				} else {
-					notDeletableFolders.add(subfolder);
-				}
-			}
-
-			for (Menu deletableFolder : deletableFolders) {
-				boolean foundDocImmutable = false;
-				boolean foundDocLocked = false;
-				List<Document> docs = documentDAO.findByFolder(deletableFolder.getId());
-
-				for (Document doc : docs) {
-					if (doc.getImmutable() == 1) {
-						foundDocImmutable = true;
-						continue;
-					}
-					if (doc.getStatus() != Document.DOC_UNLOCKED || doc.getExportStatus() != Document.EXPORT_UNLOCKED) {
-						foundDocLocked = true;
-						continue;
-					}
-					deletableDocs.add(doc);
-				}
-				if (foundDocImmutable || foundDocLocked) {
-					notDeletableFolders.add(deletableFolder);
-				}
-			}
-
-			// Avoid deletion of the entire path of an undeletable folder
-			for (Menu notDeletable : notDeletableFolders) {
-				Menu parent = notDeletable;
-				while (true) {
-					if (deletableFolders.contains(parent))
-						deletableFolders.remove(parent);
-					if (parent.equals(folder))
-						break;
-					parent = menuDAO.findById(parent.getParentId());
-				}
-			}
-
-			// Modify document history entry
-			menuDAO.deleteAll(deletableFolders, transaction);
-			documentDAO.deleteAll(deletableDocs, transaction);
-			return notDeletableFolders;
-		} catch (Throwable e) {
-			log.error(e);
-			return notDeletableFolders;
-		}
-	}
-
-	@Override
 	public void rename(Document doc, String newName, boolean title, History transaction) throws Exception {
 		assert (doc != null);
 		assert (transaction != null);
@@ -902,24 +827,5 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void setConfig(PropertiesBean config) {
 		this.config = config;
-	}
-
-	@Override
-	public void moveFolder(Menu folderToMove, Menu destParentFolder, History transaction) throws Exception {
-		assert (folderToMove != null);
-		assert (destParentFolder != null);
-		assert (transaction != null);
-		assert (transaction.getUser() != null);
-
-		// Change the parent folder
-		folderToMove.setParentId(destParentFolder.getId());
-
-		// Ensure unique folder name in a folder
-		menuDAO.setUniqueFolderName(folderToMove);
-
-		// Modify folder history entry
-		transaction.setEvent(History.EVENT_FOLDER_MOVED);
-
-		menuDAO.store(folderToMove, transaction);
 	}
 }

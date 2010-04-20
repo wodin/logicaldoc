@@ -20,7 +20,6 @@ import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.CryptUtil;
-import com.logicaldoc.web.SessionManagement;
 
 /**
  * Implementation of the SecurityService
@@ -46,7 +45,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				AuthenticationChain.class);
 
 		GUIUser guiUser = new GUIUser();
-		if (authenticationChain.authenticate(username, password, getThreadLocalRequest().getRemoteAddr())) {
+		if (authenticationChain.authenticate(username, password,
+				getThreadLocalRequest() != null ? getThreadLocalRequest().getRemoteAddr() : "")) {
 			User user = userDao.findByUserName(username);
 			guiUser.setFirstName(user.getFirstName());
 			guiUser.setId(user.getId());
@@ -74,6 +74,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			UserSession session = SessionManager.getInstance().get(sid);
 			if (session == null)
 				return;
+			SessionManager.getInstance().kill(sid);
 
 			SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 			FileUtils.deleteDirectory(new File(conf.getValue("userdir") + "/" + session.getUserName() + "/temp"));
@@ -102,11 +103,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			user.setPasswordChanged(new Date());
 			// Add a user history entry
 			history = new UserHistory();
-			history.setUserId(user.getId());
-			history.setUserName(user.getFullName());
+			history.setUser(user);
 			history.setEvent(UserHistory.EVENT_USER_PASSWORDCHANGED);
 			history.setComment("");
-			history.setSessionId(SessionManagement.getCurrentUserSessionId());
 			user.setRepass("");
 
 			UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
