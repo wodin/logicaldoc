@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.panels;
+package com.logicaldoc.gui.frontend.client.document;
 
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.frontend.client.folder.FoldersTreePanel;

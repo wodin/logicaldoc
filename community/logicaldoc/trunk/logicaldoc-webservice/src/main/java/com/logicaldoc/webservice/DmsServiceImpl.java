@@ -522,8 +522,8 @@ public class DmsServiceImpl implements DmsService {
 		opt.setQueryLanguage(queryLanguage);
 
 		// Execute the search
+		opt.setMaxHits(maxHits);
 		Search lastSearch = new Search(opt);
-		lastSearch.setMaxHits(maxHits);
 		List<com.logicaldoc.core.searchengine.Result> tmp = lastSearch.search();
 
 		// Prepares the result array
