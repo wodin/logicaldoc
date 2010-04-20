@@ -76,7 +76,7 @@ public interface FolderDAO extends MenuDAO {
 	 *         immutable documents presents)
 	 * @throws Exception
 	 */
-	public List<Menu> delete(Menu folder, History transaction) throws Exception;
+	public List<Menu> deleteTree(Menu folder, History transaction) throws Exception;
 
 	public void setUniqueName(Menu folder);
 }

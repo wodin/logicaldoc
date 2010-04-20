@@ -2,6 +2,8 @@ package com.logicaldoc.core.document.dao;
 
 import java.util.Collection;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,10 +18,6 @@ import com.logicaldoc.core.document.DocumentTemplate;
  */
 public class HibernateDocumentTemplateDAOTest extends AbstractCoreTestCase {
 
-	public HibernateDocumentTemplateDAOTest(String name) {
-		super(name);
-	}
-
 	private DocumentTemplateDAO dao;
 
 	@Before
@@ -33,40 +31,40 @@ public class HibernateDocumentTemplateDAOTest extends AbstractCoreTestCase {
 
 	@Test
 	public void testDelete() {
-		assertTrue(dao.delete(1));
+		Assert.assertTrue(dao.delete(1));
 		DocumentTemplate template = dao.findById(1);
-		assertNull(template);
+		Assert.assertNull(template);
 	}
 
 	@Test
 	public void testFindAll() {
 		Collection<DocumentTemplate> templates = dao.findAll();
-		assertNotNull(templates);
-		assertEquals(2, templates.size());
+		Assert.assertNotNull(templates);
+		Assert.assertEquals(2, templates.size());
 	}
 
 	@Test
 	public void testFindById() {
 		DocumentTemplate template = dao.findById(1);
-		assertNotNull(template);
-		assertEquals(1, template.getId());
-		assertEquals("test1", template.getName());
-		assertTrue(template.getAttributes().containsKey("attr1"));
+		Assert.assertNotNull(template);
+		Assert.assertEquals(1, template.getId());
+		Assert.assertEquals("test1", template.getName());
+		Assert.assertTrue(template.getAttributes().containsKey("attr1"));
 
 		// Try with unexisting template
 		template = dao.findById(99);
-		assertNull(template);
+		Assert.assertNull(template);
 	}
 
 	@Test
 	public void testFindByName() {
 		DocumentTemplate template = dao.findByName("test1");
-		assertNotNull(template);
-		assertEquals(1, template.getId());
-		assertEquals("test1", template.getName());
+		Assert.assertNotNull(template);
+		Assert.assertEquals(1, template.getId());
+		Assert.assertEquals("test1", template.getName());
 
 		template = dao.findByName("xxx");
-		assertNull(template);
+		Assert.assertNull(template);
 	}
 
 	@Test
@@ -75,12 +73,12 @@ public class HibernateDocumentTemplateDAOTest extends AbstractCoreTestCase {
 		template.setName("test3");
 		template.setValue("a1", "v1");
 		template.setValue("a2", "v2");
-		assertTrue(dao.store(template));
-		assertEquals(3, template.getId());
+		Assert.assertTrue(dao.store(template));
+		Assert.assertEquals(3, template.getId());
 		template = dao.findById(3);
-		assertEquals(3, template.getId());
-		assertEquals("test3", template.getName());
-		assertTrue(template.getAttributes().containsKey("a1"));
-		assertTrue(template.getAttributes().containsKey("a2"));
+		Assert.assertEquals(3, template.getId());
+		Assert.assertEquals("test3", template.getName());
+		Assert.assertTrue(template.getAttributes().containsKey("a1"));
+		Assert.assertTrue(template.getAttributes().containsKey("a2"));
 	}
 }

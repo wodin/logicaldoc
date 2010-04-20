@@ -51,9 +51,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	private DocumentListenerManager listenerManager;
 
 	private VersionDAO versionDAO;
-
-	private MenuDAO menuDAO;
-
+	
 	private Indexer indexer;
 
 	private Storer storer;
@@ -815,10 +813,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void setVersionDAO(VersionDAO versionDAO) {
 		this.versionDAO = versionDAO;
-	}
-
-	public void setMenuDAO(MenuDAO menuDAO) {
-		this.menuDAO = menuDAO;
 	}
 
 	public void setStorer(Storer storer) {

@@ -7,11 +7,13 @@ import java.sql.ResultSet;
 
 import javax.sql.DataSource;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
 import org.hsqldb.util.SqlFile;
 import org.hsqldb.util.SqlTool.SqlToolException;
+import org.junit.After;
+import org.junit.Before;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -28,7 +30,7 @@ import com.logicaldoc.util.io.FileUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public abstract class AbstractCoreTestCase extends TestCase {
+public abstract class AbstractCoreTestCase {
 
 	protected ApplicationContext context;
 
@@ -46,12 +48,8 @@ public abstract class AbstractCoreTestCase extends TestCase {
 		System.setProperty("LOGICALDOC_REPOSITORY", "target");
 	}
 
-	/**
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-
+	@Before
+	public void setUp() throws Exception {
 		tempDir = new File("target/tmp");
 
 		userHome = System.getProperty("user.home");
@@ -82,12 +80,8 @@ public abstract class AbstractCoreTestCase extends TestCase {
 		FileUtil.copyResource(classpath, new File(destinationPath));
 	}
 
-	/**
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
-
+	@After
+	public void tearDown() throws Exception {
 		destroyDatabase();
 		((AbstractApplicationContext) context).close();
 
@@ -116,15 +110,6 @@ public abstract class AbstractCoreTestCase extends TestCase {
 	}
 
 	/**
-	 * Constructor for AbstractCoreTest.
-	 * 
-	 * @param name
-	 */
-	public AbstractCoreTestCase(String name) {
-		super(name);
-	}
-
-	/**
 	 * Creates an in-memory test database
 	 * 
 	 * @throws SqlToolException
@@ -149,7 +134,7 @@ public abstract class AbstractCoreTestCase extends TestCase {
 			ResultSet rs = con.createStatement().executeQuery("select * from ld_menu where ld_id=1");
 			rs.next();
 
-			assertEquals(1, rs.getInt(1));
+			Assert.assertEquals(1, rs.getInt(1));
 		} finally {
 			if (con != null)
 				con.close();

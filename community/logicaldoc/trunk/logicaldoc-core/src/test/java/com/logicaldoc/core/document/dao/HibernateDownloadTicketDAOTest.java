@@ -5,6 +5,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.DownloadTicket;
 
@@ -19,11 +24,8 @@ public class HibernateDownloadTicketDAOTest extends AbstractCoreTestCase {
 	// Instance under test
 	private DownloadTicketDAO dao;
 
-	public HibernateDownloadTicketDAOTest(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 
 		// Retrieve the instance under test from spring context. Make sure that
@@ -31,58 +33,64 @@ public class HibernateDownloadTicketDAOTest extends AbstractCoreTestCase {
 		dao = (DownloadTicketDAO) context.getBean("DownloadTicketDAO");
 	}
 
+	@Test
 	public void testDelete() {
 		DownloadTicket ticket = dao.findByTicketId("1");
-		assertNotNull(ticket);
-		assertTrue(dao.deleteByTicketId("1"));
+		Assert.assertNotNull(ticket);
+		Assert.assertTrue(dao.deleteByTicketId("1"));
 		ticket = dao.findByTicketId("1");
-		assertNull(ticket);
+		Assert.assertNull(ticket);
 	}
 
+	@Test
 	public void testDeleteByDocId() {
 		DownloadTicket ticket = dao.findByTicketId("1");
-		assertNotNull(ticket);
-		assertEquals(1, ticket.getDocId());
+		Assert.assertNotNull(ticket);
+		Assert.assertEquals(1, ticket.getDocId());
 		ticket = dao.findByTicketId("3");
-		assertNotNull(ticket);
-		assertEquals(1, ticket.getDocId());
+		Assert.assertNotNull(ticket);
+		Assert.assertEquals(1, ticket.getDocId());
 
-		assertTrue(dao.deleteByDocId(1));
+		Assert.assertTrue(dao.deleteByDocId(1));
 		ticket = dao.findByTicketId("1");
-		assertNull(ticket);
+		Assert.assertNull(ticket);
 		ticket = dao.findByTicketId("3");
-		assertNull(ticket);
+		Assert.assertNull(ticket);
 	}
 
+	@Test
 	public void testDeleteOlder() throws ParseException {
 		List<DownloadTicket> tickets = dao.findAll();
-		assertEquals(3, tickets.size());
+		Assert.assertEquals(3, tickets.size());
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		dao.deleteOlder(df.parse("11/12/2008"));
 		tickets = dao.findAll();
-		assertEquals(1, tickets.size());
+		Assert.assertEquals(1, tickets.size());
 	}
 
+	@Test
 	public void testFindByTicketId() {
 		DownloadTicket ticket = dao.findByTicketId("1");
-		assertNotNull(ticket);
-		assertEquals(1, ticket.getUserId());
-		assertEquals(1, ticket.getDocId());
+		Assert.assertNotNull(ticket);
+		Assert.assertEquals(1, ticket.getUserId());
+		Assert.assertEquals(1, ticket.getDocId());
 
 		ticket = dao.findByTicketId("99");
-		assertNull(ticket);
+		Assert.assertNull(ticket);
 	}
 
+	@Test
 	public void testFindById() {
 		DownloadTicket ticket = dao.findById(1);
-		assertNotNull(ticket);
-		assertEquals(1, ticket.getUserId());
-		assertEquals(1, ticket.getDocId());
+		Assert.assertNotNull(ticket);
+		Assert.assertEquals(1, ticket.getUserId());
+		Assert.assertEquals(1, ticket.getDocId());
 
 		ticket = dao.findById(99);
-		assertNull(ticket);
+		Assert.assertNull(ticket);
 	}
 
+	@Test
 	public void testStore() {
 		DownloadTicket ticket = new DownloadTicket();
 		ticket.setDocId(1);
@@ -91,7 +99,7 @@ public class HibernateDownloadTicketDAOTest extends AbstractCoreTestCase {
 		dao.store(ticket);
 
 		DownloadTicket storedTicket = dao.findByTicketId("5");
-		assertNotNull(storedTicket);
-		assertEquals(ticket, storedTicket);
+		Assert.assertNotNull(storedTicket);
+		Assert.assertEquals(ticket, storedTicket);
 	}
 }

@@ -399,7 +399,7 @@ public class DocumentNavigation extends NavigationBean {
 			transaction.setComment("");
 			transaction.setUser(SessionManagement.getUser());
 
-			List<Menu> notDeletableFolders = folderDao.delete(selectedDir.getMenu(), transaction);
+			List<Menu> notDeletableFolders = folderDao.deleteTree(selectedDir.getMenu(), transaction);
 			if (notDeletableFolders.size() > 0)
 				Messages.addLocalizedWarn("errors.action.deletefolder");
 			else

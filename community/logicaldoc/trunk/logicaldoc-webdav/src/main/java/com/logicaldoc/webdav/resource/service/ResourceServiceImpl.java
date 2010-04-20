@@ -480,7 +480,7 @@ public class ResourceServiceImpl implements ResourceService {
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
 				transaction.setEvent(History.EVENT_FOLDER_DELETED);
-				List<Menu> notDeletableFolders = folderDAO.delete(menu, transaction);
+				List<Menu> notDeletableFolders = folderDAO.deleteTree(menu, transaction);
 				if (notDeletableFolders.size() > 0) {
 					throw new RuntimeException("Unable to delete some subfolders.");
 				}

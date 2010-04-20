@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import junit.framework.Assert;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 
@@ -13,14 +16,7 @@ public class SearchOptionsTest extends AbstractCoreTestCase {
 
 	protected static Log log = LogFactory.getLog(SearchOptionsTest.class);
 
-	public SearchOptionsTest(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
+	@Test
 	public void testWrite() throws FileNotFoundException, IOException, ClassNotFoundException {
 		File file = new File(tempDir, "query.ser");
 
@@ -41,16 +37,16 @@ public class SearchOptionsTest extends AbstractCoreTestCase {
 
 		SearchOptions opt2 = SearchOptions.read(file);
 
-		assertEquals("prova test", opt2.getQueryStr());
-		assertEquals("italiano", opt2.getQueryLanguage());
-		assertEquals(1, opt2.getTemplate().longValue());
-		assertEquals(3000, opt2.getSizeMax().longValue());
-		assertEquals(2, opt2.getSizeMin().longValue());
-		assertEquals(SearchOptions.TYPE_FULLTEXT, opt2.getType());
-		assertEquals(1, opt2.getUserId());
+		Assert.assertEquals("prova test", opt2.getQueryStr());
+		Assert.assertEquals("italiano", opt2.getQueryLanguage());
+		Assert.assertEquals(1, opt2.getTemplate().longValue());
+		Assert.assertEquals(3000, opt2.getSizeMax().longValue());
+		Assert.assertEquals(2, opt2.getSizeMin().longValue());
+		Assert.assertEquals(SearchOptions.TYPE_FULLTEXT, opt2.getType());
+		Assert.assertEquals(1, opt2.getUserId());
 		for (int i = 0; i < langs.length; i++) {
-			assertEquals(opt.getLanguages()[i], opt2.getLanguages()[i]);
+			Assert.assertEquals(opt.getLanguages()[i], opt2.getLanguages()[i]);
 		}
-		assertEquals("it", opt2.getLanguages()[0]);
+		Assert.assertEquals("it", opt2.getLanguages()[0]);
 	}
 }

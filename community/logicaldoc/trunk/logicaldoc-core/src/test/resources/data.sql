@@ -93,6 +93,22 @@ insert into ld_menugroup
 			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
 values     (99,1,0,0,0,0,0,0,0,0,0,0,0);
 
+insert into ld_menugroup
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (1200,1,1,1,1,1,1,1,1,1,1,1,1);
+
+insert into ld_menugroup
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (1201,1,1,1,1,1,1,1,1,1,1,1,1);
+
+insert into ld_menugroup
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (1202,1,1,1,1,1,1,1,1,1,1,1,1);
+
+insert into ld_menugroup
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (1203,1,1,1,1,1,1,1,1,1,1,1,1);
+
 insert into ld_usergroup
            (ld_userid,ld_groupid)
 values     (3,1);

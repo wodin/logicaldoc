@@ -11,10 +11,6 @@ public class HibernateSequenceDAOTest extends AbstractCoreTestCase {
 	// Instance under test
 	private SequenceDAO dao;
 
-	public HibernateSequenceDAOTest(String name) {
-		super(name);
-	}
-
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();

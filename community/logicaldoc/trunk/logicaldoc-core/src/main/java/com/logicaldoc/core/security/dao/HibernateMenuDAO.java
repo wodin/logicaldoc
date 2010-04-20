@@ -420,7 +420,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		Menu menu = findById(menuId);
 		if (menu == null)
 			return null;
-		String path = menu.getText();
+		String path = menuId != Menu.MENUID_DOCUMENTS ? menu.getText() : "";
 		while (menu != null && menu.getId() != menu.getParentId() && menu.getId() != Menu.MENUID_DOCUMENTS) {
 			menu = findById(menu.getParentId());
 			if (menu != null)

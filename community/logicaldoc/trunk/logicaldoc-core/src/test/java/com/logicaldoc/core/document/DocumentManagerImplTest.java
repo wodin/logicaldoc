@@ -1,5 +1,9 @@
 package com.logicaldoc.core.document;
 
+import junit.framework.Assert;
+
+import org.junit.Test;
+
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.User;
@@ -20,12 +24,8 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 	// Instance under test
 	private DocumentManager documentManager;
 
-	public DocumentManagerImplTest(String name) {
-		super(name);
-	}
-
 	@Override
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		docDao = (DocumentDAO) context.getBean("DocumentDAO");
 		userDao = (UserDAO) context.getBean("UserDAO");
@@ -34,10 +34,11 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		documentManager = (DocumentManager) context.getBean("DocumentManager");
 	}
 
+	@Test
 	public void testMakeImmutable() throws Exception {
 		User user = userDao.findByUserName("admin");
 		Document doc = docDao.findById(1);
-		assertNotNull(doc);
+		Assert.assertNotNull(doc);
 		History transaction = new History();
 		transaction.setFolderId(103);
 		transaction.setUser(user);
@@ -47,17 +48,18 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		transaction.setComment("pippo_reason");
 		documentManager.makeImmutable(doc.getId(), transaction);
 		doc = docDao.findById(1);
-		assertEquals(1, doc.getImmutable());
+		Assert.assertEquals(1, doc.getImmutable());
 		doc.setFileName("ciccio");
 		docDao.initialize(doc);
 		docDao.store(doc);
-		assertEquals("pippo", doc.getFileName());
+		Assert.assertEquals("pippo", doc.getFileName());
 		doc.setImmutable(0);
 		docDao.store(doc);
 		docDao.findById(doc.getId());
-		assertEquals(1, doc.getImmutable());
+		Assert.assertEquals(1, doc.getImmutable());
 	}
 
+	@Test
 	public void testLock() throws Exception {
 		User user = userDao.findByUserName("admin");
 		History transaction = new History();
@@ -68,11 +70,11 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		transaction.setNotified(0);
 		documentManager.unlock(1L, transaction);
 		Document doc = docDao.findById(1);
-		assertNotNull(doc);
+		Assert.assertNotNull(doc);
 		transaction.setComment("pippo_reason");
 		documentManager.lock(doc.getId(), 2, transaction);
 		doc = docDao.findById(1);
-		assertEquals(2, doc.getStatus());
-		assertEquals(1L, doc.getLockUserId().longValue());
+		Assert.assertEquals(2, doc.getStatus());
+		Assert.assertEquals(1L, doc.getLockUserId().longValue());
 	}
 }
