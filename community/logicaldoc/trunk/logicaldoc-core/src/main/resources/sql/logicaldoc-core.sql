@@ -1,3 +1,4 @@
+create table ld_bookmark (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_userid bigint not null, ld_docid bigint not null, ld_title varchar(255) not null, ld_description varchar(4000), ld_position int not null, ld_filetype varchar(40), primary key (ld_id));
 create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not null, ld_deleted int not null, ld_immutable int not null, ld_customid varchar(700), ld_title varchar(255), ld_version varchar(10), ld_fileversion varchar(10), ld_date timestamp, ld_creation timestamp not null, ld_publisher varchar(255), ld_publisherid bigint not null, ld_creator varchar(255), ld_creatorid bigint not null, ld_status int, ld_type varchar(255), ld_lockuserid bigint, ld_source varchar(4000), ld_sourceauthor varchar(255), ld_sourcedate timestamp, ld_sourceid varchar(1000), ld_sourcetype varchar(255), ld_object varchar(1000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), ld_filesize bigint, ld_indexed int not null, ld_signed int not null, ld_digest varchar(255), ld_recipient varchar(1000), ld_folderid bigint, ld_templateid bigint, ld_exportstatus int not null, ld_exportid bigint, ld_exportname varchar(255), ld_exportversion varchar(10), ld_docref bigint, primary key (ld_id));
 create table ld_document_ext (ld_docid bigint not null, ld_mandatory int not null, ld_type int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp, ld_name varchar(255) not null, primary key (ld_docid, ld_name));
 create table ld_dcomment (ld_threadid bigint not null, ld_replyto int, ld_replypath varchar(255), ld_userid bigint not null, ld_username varchar(255), ld_date timestamp, ld_subject varchar(255), ld_body varchar(4000), ld_deleted int not null, ld_id int not null, primary key (ld_threadid, ld_id));
@@ -157,6 +158,10 @@ insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
 values     (15,CURRENT_TIMESTAMP,0,'search.advanced',18,5,'search.png',1,'search/advancedSearch',0);
 
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
+values     (20,CURRENT_TIMESTAMP,0,'menu.bookmarks',4,20,'bookmarks.png',1,'settings/bookmarks',0);
+
 
 insert into ld_group
 values     (1,CURRENT_TIMESTAMP,0,'admin','Group of admins',0);
@@ -250,6 +255,9 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_manag
 values     (-1,1,0,0,1,1,0,0,1,1,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (20,1,0,0,1,1,0,0,1,1,0,0,0);
+
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
 values     (1,2,0,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
@@ -280,6 +288,9 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_manag
 values     (15,2,1,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (20,2,0,0,0,0,0,0,0,0,0,0,0);
+
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
 values     (1,3,0,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
@@ -296,6 +307,11 @@ values     (16,3,0,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
 values     (19,3,0,0,0,0,0,0,0,0,0,0,0);
+
+insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (20,3,0,0,0,0,0,0,0,0,0,0,0);
+
+
 
 insert into ld_group_ext (ld_groupid, ld_mandatory, ld_position, ld_type, ld_stringvalue, ld_name)
 values (1, 0, 0, 0, '110110','preference.field.customId');

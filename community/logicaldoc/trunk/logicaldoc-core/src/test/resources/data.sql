@@ -278,3 +278,19 @@ values     (2,'2008-10-22',0,1,'2006-12-25','author','data test 02','reason test
 insert into ld_user_history 
 			    (ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_notified)
 values     (3,'2008-10-22',0,3,'2006-12-27','sebastian','data test 03','reason test 03',1);
+
+insert into ld_bookmark
+		(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_docid, ld_title, ld_description, ld_position)
+values		(1,'2010-04-19',0,1,1,'book1','this is a bookmark 1',1);
+
+insert into ld_bookmark
+		(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_docid, ld_title, ld_description, ld_position)
+values		(2,'2010-04-19',0,1,2,'book2','this is a bookmark 2',2);
+
+insert into ld_bookmark
+		(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_docid, ld_title, ld_description, ld_position)
+values		(3,'2010-04-19',0,2,1,'book3','this is a bookmark 3',3);
+
+insert into ld_bookmark
+		(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_docid, ld_title, ld_description, ld_position)
+values		(4,'2010-04-19',1,2,2,'book4','this is a bookmark 4',4);

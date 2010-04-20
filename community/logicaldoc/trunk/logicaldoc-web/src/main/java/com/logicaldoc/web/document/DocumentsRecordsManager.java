@@ -770,6 +770,10 @@ public class DocumentsRecordsManager extends SortableList {
 		return lastdocs;
 	}
 
+	public String createBookmarks() {
+		return null;
+	}
+
 	protected void selectHighlightedDocument(long docId) {
 		selection.clear();
 

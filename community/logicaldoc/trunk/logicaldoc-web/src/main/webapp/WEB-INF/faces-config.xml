@@ -589,7 +589,15 @@
 		</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
-
+  
+    <managed-bean>
+      <managed-bean-name>bookmarkBean</managed-bean-name>
+      <managed-bean-class>
+        com.logicaldoc.web.document.BookmarkBean
+      </managed-bean-class>
+      <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+  
 	<navigation-rule>
 		<description>Login</description>
 		<from-view-id>/login</from-view-id>
