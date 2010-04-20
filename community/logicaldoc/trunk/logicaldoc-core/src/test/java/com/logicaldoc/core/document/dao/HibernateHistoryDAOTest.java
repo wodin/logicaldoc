@@ -4,6 +4,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
+import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.i18n.DateBean;
@@ -19,11 +24,8 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 	// Instance under test
 	private HistoryDAO dao;
 
-	public HibernateHistoryDAOTest(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 
 		// Retrieve the instance under test from spring context. Make sure that
@@ -31,58 +33,63 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		dao = (HistoryDAO) context.getBean("HistoryDAO");
 	}
 
+	@Test
 	public void testDelete() {
 		Collection<History> histories = (Collection<History>) dao.findByUserId(1);
-		assertNotNull(histories);
-		assertEquals(2, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(2, histories.size());
 
 		for (History history : histories) {
 			boolean result = dao.delete(history.getId());
-			assertTrue(result);
+			Assert.assertTrue(result);
 		}
 
 		histories = (Collection<History>) dao.findByUserId(4);
-		assertNotNull(histories);
-		assertEquals(0, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(0, histories.size());
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testFindByDocId() {
 		Collection histories = dao.findByDocId(1);
-		assertNotNull(histories);
-		assertEquals(1, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(1, histories.size());
 
 		// Try with unexisting docId
 		histories = dao.findByDocId(99);
-		assertNotNull(histories);
-		assertEquals(0, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(0, histories.size());
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testFindByUserId() {
 		Collection histories = dao.findByUserId(1);
-		assertNotNull(histories);
-		assertEquals(2, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(2, histories.size());
 
 		// Try with unexisting user
 		histories = dao.findByUserId(99);
-		assertNotNull(histories);
-		assertEquals(0, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(0, histories.size());
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testFindByFolderId() {
 		Collection histories = dao.findByFolderId(5);
-		assertNotNull(histories);
-		assertEquals(3, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(3, histories.size());
 
 		// Try with unexisting folderId
 		histories = dao.findByFolderId(99);
-		assertNotNull(histories);
-		assertEquals(0, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(0, histories.size());
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testCreateDocumentHistory() {
 		History history = new History();
 		history.setDocId(1L);
@@ -101,10 +108,11 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		dao.store(history);
 
 		Collection histories = dao.findByDocId(1);
-		assertNotNull(histories);
-		assertEquals(2, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(2, histories.size());
 	}
 
+	@Test
 	public void testStore() {
 		History history = new History();
 		history.setDocId(1L);
@@ -114,7 +122,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		history.setUserId(3);
 		history.setEvent("test History store");
 
-		assertTrue(dao.store(history));
+		Assert.assertTrue(dao.store(history));
 
 		History folderHistory = new History();
 		folderHistory.setFolderId(5);
@@ -123,27 +131,28 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		folderHistory.setUserId(3);
 		folderHistory.setEvent("test History store");
 
-		assertTrue(dao.store(folderHistory));
+		Assert.assertTrue(dao.store(folderHistory));
 
 		// Test the stored history
 		Collection<History> histories = (Collection<History>) dao.findByUserId(3);
-		assertNotNull(histories);
-		assertFalse(histories.isEmpty());
+		Assert.assertNotNull(histories);
+		Assert.assertFalse(histories.isEmpty());
 
 		Iterator<History> itHist = histories.iterator();
 		History hStored = itHist.next();
-		assertTrue(hStored.equals(folderHistory));
-		assertEquals(hStored.getFolderId(), 5);
-		assertEquals(hStored.getDate().getTime(), DateBean.dateFromCompactString("20061220").getTime());
-		assertEquals(hStored.getUserName(), "sebastian");
-		assertEquals(hStored.getEvent(), "test History store");
+		Assert.assertTrue(hStored.equals(folderHistory));
+		Assert.assertEquals(hStored.getFolderId(), 5);
+		Assert.assertEquals(hStored.getDate().getTime(), DateBean.dateFromCompactString("20061220").getTime());
+		Assert.assertEquals(hStored.getUserName(), "sebastian");
+		Assert.assertEquals(hStored.getEvent(), "test History store");
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testFindNotNotified() {
 		Collection histories = dao.findNotNotified();
-		assertNotNull(histories);
-		assertEquals(2, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(2, histories.size());
 
 		History history = dao.findById(1);
 		dao.initialize(history);
@@ -151,41 +160,43 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		dao.store(history);
 
 		histories = dao.findNotNotified();
-		assertNotNull(histories);
-		assertEquals(1, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(1, histories.size());
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testCleanOldFolderHistories() {
 		History history = dao.findById(3);
-		assertNotNull(history);
+		Assert.assertNotNull(history);
 
 		Collection histories = dao.findAll();
-		assertNotNull(histories);
-		assertEquals(3, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(3, histories.size());
 
 		dao.cleanOldFolderHistories(5);
 
 		history = dao.findById(3);
-		assertNull(history);
+		Assert.assertNull(history);
 		histories = dao.findAll();
-		assertEquals(2, histories.size());
+		Assert.assertEquals(2, histories.size());
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testCleanOldDocumentHistories() {
 		History history = dao.findById(1);
-		assertNotNull(history);
+		Assert.assertNotNull(history);
 
 		Collection histories = dao.findAll();
-		assertNotNull(histories);
-		assertEquals(3, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(3, histories.size());
 
 		dao.cleanOldDocumentHistories(5);
 
 		history = dao.findById(1);
-		assertNull(history);
+		Assert.assertNull(history);
 		histories = dao.findAll();
-		assertEquals(1, histories.size());
+		Assert.assertEquals(1, histories.size());
 	}
 }

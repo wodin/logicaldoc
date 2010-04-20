@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 
@@ -12,14 +13,7 @@ public class SearchTest extends AbstractCoreTestCase {
 
 	protected static Log log = LogFactory.getLog(SearchTest.class);
 
-	public SearchTest(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
+	@Test
 	public void testSearch() {
 		SearchOptions opt = new SearchOptions();
 

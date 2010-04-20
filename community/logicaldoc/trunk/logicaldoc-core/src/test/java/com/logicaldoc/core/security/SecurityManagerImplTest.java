@@ -3,6 +3,11 @@ package com.logicaldoc.core.security;
 import java.util.ArrayList;
 import java.util.Set;
 
+import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -21,11 +26,8 @@ public class SecurityManagerImplTest extends AbstractCoreTestCase {
 
 	private GroupDAO groupDAO;
 
-	public SecurityManagerImplTest(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 
 		manager = (SecurityManager) context.getBean("SecurityManager");
@@ -33,6 +35,7 @@ public class SecurityManagerImplTest extends AbstractCoreTestCase {
 		groupDAO = (GroupDAO) context.getBean("GroupDAO");
 	}
 
+	@Test
 	public void testAssignUsersToGroup() {
 		ArrayList<User> users = new ArrayList<User>();
 		users.add(userDAO.findByUserName("test"));
@@ -40,18 +43,19 @@ public class SecurityManagerImplTest extends AbstractCoreTestCase {
 		Group group = groupDAO.findByName("author");
 		manager.assignUsersToGroup(users, group);
 		User user = userDAO.findByUserName("test");
-		assertTrue(user.getGroups().contains(group));
+		Assert.assertTrue(user.getGroups().contains(group));
 		user = userDAO.findByUserName("admin");
-		assertTrue(user.getGroups().contains(group));
+		Assert.assertTrue(user.getGroups().contains(group));
 
 		group = groupDAO.findByName("guest");
 		manager.assignUsersToGroup(users, group);
 		user = userDAO.findByUserName("test");
-		assertTrue(user.getGroups().contains(group));
+		Assert.assertTrue(user.getGroups().contains(group));
 		user = userDAO.findByUserName("admin");
-		assertTrue(user.getGroups().contains(group));
+		Assert.assertTrue(user.getGroups().contains(group));
 	}
 
+	@Test
 	public void testRemoveUsersFromGroup() {
 		ArrayList<User> users = new ArrayList<User>();
 		users.add(userDAO.findByUserName("test"));
@@ -59,18 +63,19 @@ public class SecurityManagerImplTest extends AbstractCoreTestCase {
 		Group group = groupDAO.findByName("author");
 		manager.removeUsersFromGroup(users, group);
 		User user = userDAO.findByUserName("test");
-		assertFalse(user.getGroups().contains(group));
+		Assert.assertFalse(user.getGroups().contains(group));
 		user = userDAO.findByUserName("admin");
-		assertFalse(user.getGroups().contains(group));
+		Assert.assertFalse(user.getGroups().contains(group));
 
 		group = groupDAO.findByName("guest");
 		manager.removeUsersFromGroup(users, group);
 		user = userDAO.findByUserName("test");
-		assertFalse(user.getGroups().contains(group));
+		Assert.assertFalse(user.getGroups().contains(group));
 		user = userDAO.findByUserName("admin");
-		assertFalse(user.getGroups().contains(group));
+		Assert.assertFalse(user.getGroups().contains(group));
 	}
 
+	@Test
 	public void testRemoveAllUsersFromGroup() {
 		// create a new group which extends author
 		Group authorGroup = groupDAO.findByName("author");
@@ -82,7 +87,7 @@ public class SecurityManagerImplTest extends AbstractCoreTestCase {
 		groupDAO.insert(editorGroup, authorGroup.getId());
 
 		// create 4 new users
-		// assign the newly created users to the editor group		
+		// assign the newly created users to the editor group
 		User user = new User();
 		user.setUserName("test1");
 		user.setDecodedPassword("xxxpwd");
@@ -106,15 +111,16 @@ public class SecurityManagerImplTest extends AbstractCoreTestCase {
 		user.setDecodedPassword("xxxpwd");
 		userDAO.store(user);
 		manager.assignUserToGroup(user, editorGroup);
-		
+
 		// remove all users from mthe group editors
 		manager.removeAllUsersFromGroup(editorGroup);
-		
+
 		// check
 		User userf = userDAO.findByUserName("test4");
-		assertFalse(userf.getGroups().contains(editorGroup));
+		Assert.assertFalse(userf.getGroups().contains(editorGroup));
 	}
 
+	@Test
 	public void testAssignUserToGroups() {
 		User user = new User();
 		user.setUserName("zzz");
@@ -122,23 +128,26 @@ public class SecurityManagerImplTest extends AbstractCoreTestCase {
 		userDAO.store(user);
 	}
 
+	@Test
 	public void testGetAllowedGroups() {
 		Set<Group> groups = manager.getAllowedGroups(5);
-		assertNotNull(groups);
-		assertTrue(groups.contains(groupDAO.findByName("admin")));
-		assertTrue(groups.contains(groupDAO.findByName("author")));
-		assertTrue(groups.contains(groupDAO.findByName("guest")));
+		Assert.assertNotNull(groups);
+		Assert.assertTrue(groups.contains(groupDAO.findByName("admin")));
+		Assert.assertTrue(groups.contains(groupDAO.findByName("author")));
+		Assert.assertTrue(groups.contains(groupDAO.findByName("guest")));
 	}
 
+	@Test
 	public void testIsMemberOfLongLong() {
-		assertTrue(manager.isMemberOf(1, 1));
-		assertFalse(manager.isMemberOf(1, 1234));
-		assertFalse(manager.isMemberOf(1, 2));
+		Assert.assertTrue(manager.isMemberOf(1, 1));
+		Assert.assertFalse(manager.isMemberOf(1, 1234));
+		Assert.assertFalse(manager.isMemberOf(1, 2));
 	}
 
+	@Test
 	public void testIsMemberOfLongString() {
-		assertTrue(manager.isMemberOf(1, "admin"));
-		assertFalse(manager.isMemberOf(1, "xyz"));
-		assertFalse(manager.isMemberOf(1, "author"));
+		Assert.assertTrue(manager.isMemberOf(1, "admin"));
+		Assert.assertFalse(manager.isMemberOf(1, "xyz"));
+		Assert.assertFalse(manager.isMemberOf(1, "author"));
 	}
 }

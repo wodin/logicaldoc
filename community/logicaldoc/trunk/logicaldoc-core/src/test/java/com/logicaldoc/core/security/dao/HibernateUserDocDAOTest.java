@@ -6,6 +6,11 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
+import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.security.UserDoc;
 
@@ -19,11 +24,8 @@ public class HibernateUserDocDAOTest extends AbstractCoreTestCase {
 	// Instance under test
 	private UserDocDAO dao;
 
-	public HibernateUserDocDAOTest(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 
 		// Retrieve the instance under test from spring context. Make sure that
@@ -31,73 +33,81 @@ public class HibernateUserDocDAOTest extends AbstractCoreTestCase {
 		dao = (UserDocDAO) context.getBean("UserDocDAO");
 	}
 
+	@Test
 	public void testDeleteLongLong() {
-		assertTrue(dao.exists(1, 1));
+		Assert.assertTrue(dao.exists(1, 1));
 		dao.delete(1, 1);
-		assertFalse(dao.exists(1, 1));
+		Assert.assertFalse(dao.exists(1, 1));
 	}
 
+	@Test
 	public void testExists() {
-		assertTrue(dao.exists(1, 1));
-		assertFalse(dao.exists(99, 1));
-		assertFalse(dao.exists(1, 99));
+		Assert.assertTrue(dao.exists(1, 1));
+		Assert.assertFalse(dao.exists(99, 1));
+		Assert.assertFalse(dao.exists(1, 99));
 	}
 
+	@Test
 	public void testFindByMinDate() {
 		UserDoc doc = dao.findByMinDate(1);
-		assertNotNull(doc);
-		assertEquals(1, doc.getDocId());
-		assertEquals(1, doc.getUserId());
+		Assert.assertNotNull(doc);
+		Assert.assertEquals(1, doc.getDocId());
+		Assert.assertEquals(1, doc.getUserId());
 
 		// Try with unexisting username
 		doc = dao.findByMinDate(99);
-		assertNull(doc);
+		Assert.assertNull(doc);
 	}
 
+	@Test
 	public void testFindByUserId() {
 		Collection<UserDoc> col = dao.findByUserId(1);
-		assertNotNull(col);
-		assertEquals(2, col.size());
+		Assert.assertNotNull(col);
+		Assert.assertEquals(2, col.size());
 
 		// Try with unexisting user
 		col = dao.findByUserId(99);
-		assertNotNull(col);
-		assertTrue(col.isEmpty());
+		Assert.assertNotNull(col);
+		Assert.assertTrue(col.isEmpty());
 	}
 
+	@Test
 	public void testFindByDocID() {
 		Collection<UserDoc> col = dao.findByDocId(1);
-		assertNotNull(col);
-		assertEquals(1, col.size());
+		Assert.assertNotNull(col);
+		Assert.assertEquals(1, col.size());
 
 		// Try with unexisting document
 		col = dao.findByDocId(9999);
-		assertNotNull(col);
-		assertTrue(col.isEmpty());
+		Assert.assertNotNull(col);
+		Assert.assertTrue(col.isEmpty());
 	}
 
+	@Test
 	public void testDeleteLong() {
 		Collection<UserDoc> col = dao.findByDocId(1);
-		assertNotNull(col);
-		assertEquals(1, col.size());
+		Assert.assertNotNull(col);
+		Assert.assertEquals(1, col.size());
 
-		assertTrue(dao.deleteByDocId(1));
+		Assert.assertTrue(dao.deleteByDocId(1));
 
 		col = dao.findByDocId(1);
-		assertNotNull(col);
-		assertEquals(0, col.size());
+		Assert.assertNotNull(col);
+		Assert.assertEquals(0, col.size());
 	}
 
+	@Test
 	public void testGetCount() {
-		assertEquals(2, dao.getCount(1));
+		Assert.assertEquals(2, dao.getCount(1));
 
 		// Try with unexisting user
-		assertEquals(0, dao.getCount(99));
+		Assert.assertEquals(0, dao.getCount(99));
 	}
 
+	@Test
 	public void testStore() throws ParseException {
-		assertTrue(dao.exists(1, 1));
-		assertEquals(2, dao.getCount(1));
+		Assert.assertTrue(dao.exists(1, 1));
+		Assert.assertEquals(2, dao.getCount(1));
 
 		// store 3 more docs
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -106,11 +116,11 @@ public class HibernateUserDocDAOTest extends AbstractCoreTestCase {
 			doc.setDocId(1);
 			doc.setUserId(1);
 			doc.setDate(df.parse("2007-01-0" + i));
-			assertTrue(dao.store(doc));
-			assertTrue(dao.exists(1, 1));
+			Assert.assertTrue(dao.store(doc));
+			Assert.assertTrue(dao.exists(1, 1));
 		}
 
-		assertEquals(5, dao.getCount(1));
+		Assert.assertEquals(5, dao.getCount(1));
 
 		// When the fifth doc is stored, the oldest must be deleted
 		UserDoc doc = new UserDoc();
@@ -118,6 +128,6 @@ public class HibernateUserDocDAOTest extends AbstractCoreTestCase {
 		doc.setUserId(4);
 		doc.setDate(new Date());
 		dao.store(doc);
-		assertTrue(dao.exists(2, 4));
+		Assert.assertTrue(dao.exists(2, 4));
 	}
 }

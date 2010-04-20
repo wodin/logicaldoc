@@ -14,10 +14,6 @@ import com.logicaldoc.core.AbstractCoreTestCase;
  */
 public class SessionManagerTest extends AbstractCoreTestCase {
 
-	public SessionManagerTest(String name) {
-		super(name);
-	}
-
 	@Test
 	public void testNewSession() {
 		SessionManager sm = SessionManager.getInstance();
