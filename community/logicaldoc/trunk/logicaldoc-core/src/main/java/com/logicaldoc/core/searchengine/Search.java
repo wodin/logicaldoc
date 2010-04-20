@@ -46,8 +46,6 @@ public class Search {
 
 	protected static Log log = LogFactory.getLog(Search.class);
 
-	private int maxHits = 40;
-
 	private boolean moreHitsPresent = false;
 
 	private SearchOptions options;
@@ -173,7 +171,7 @@ public class Search {
 					"<font style='background-color:#FFFF00'>", "</font>"), new QueryScorer(query));
 
 			for (int i = 0; i < hits.totalHits; i++) {
-				if (results.size() == maxHits) {
+				if (results.size() == options.getMaxHits()) {
 					// The maximum number of hits was reached for a quick query
 					moreHitsPresent = true;
 					break;
@@ -245,14 +243,6 @@ public class Search {
 
 	public void setMoreHitsPresent(boolean moreHitsPresent) {
 		this.moreHitsPresent = moreHitsPresent;
-	}
-
-	public int getMaxHits() {
-		return maxHits;
-	}
-
-	public void setMaxHits(int maxHits) {
-		this.maxHits = maxHits;
 	}
 
 	public int getEstimatedHitsNumber() {

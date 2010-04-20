@@ -29,6 +29,8 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public static final int TYPE_PARAMETRIC = 1;
 
+	private int maxHits = 40;
+
 	private int type = TYPE_FULLTEXT;
 
 	private String queryStr = "";
@@ -308,5 +310,13 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 	@Override
 	public int compareTo(SearchOptions o) {
 		return this.getName().compareTo(o.getName());
+	}
+
+	public int getMaxHits() {
+		return maxHits;
+	}
+
+	public void setMaxHits(int maxHits) {
+		this.maxHits = maxHits;
 	}
 }
