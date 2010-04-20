@@ -162,7 +162,7 @@ public class DocumentsListPanel extends HLayout {
 					ListGridRecord record = event.getRecord();
 					if ("indexed".equals(record.getAttribute("indexed"))) {
 						String id = list.getSelectedRecord().getAttribute("id");
-						Window.open("download?sid=" + Session.getInstance().getSid() + "&docId=" + id
+						Window.open("download?sid=" + Session.get().getSid() + "&docId=" + id
 								+ "&downloadText=true", "_self", "");
 					}
 				}
@@ -173,14 +173,14 @@ public class DocumentsListPanel extends HLayout {
 		list.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChanged(SelectionEvent event) {
-				DocumentsPanel.getInstance().onSelectedDocument(Long.parseLong(event.getRecord().getAttribute("id")));
+				DocumentsPanel.get().onSelectedDocument(Long.parseLong(event.getRecord().getAttribute("id")));
 			}
 		});
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				Menu contextMenu = setupContextMenu(Session.getInstance().getCurrentFolder());
+				Menu contextMenu = setupContextMenu(Session.get().getCurrentFolder());
 				contextMenu.showContextMenu();
 				event.cancel();
 			}
@@ -190,7 +190,7 @@ public class DocumentsListPanel extends HLayout {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				Window.open("download?sid=" + Session.getInstance().getSid() + "&docId=" + id + "&open=true", "_blank",
+				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true", "_blank",
 						"");
 			}
 		});
@@ -207,7 +207,7 @@ public class DocumentsListPanel extends HLayout {
 		downloadItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				Window.open("download?sid=" + Session.getInstance().getSid() + "&sid=" + Session.getInstance().getSid()
+				Window.open("download?sid=" + Session.get().getSid() + "&sid=" + Session.get().getSid()
 						+ "&docId=" + id, "_self", "");
 			}
 		});
@@ -246,7 +246,7 @@ public class DocumentsListPanel extends HLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							documentService.delete(Session.getInstance().getSid(), ids, new AsyncCallback<Void>() {
+							documentService.delete(Session.get().getSid(), ids, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -307,7 +307,7 @@ public class DocumentsListPanel extends HLayout {
 					inIds[i++] = doc.getId();
 				}
 
-				documentService.linkDocuments(Session.getInstance().getSid(), inIds, outIds, new AsyncCallback<Void>() {
+				documentService.linkDocuments(Session.get().getSid(), inIds, outIds, new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -346,7 +346,7 @@ public class DocumentsListPanel extends HLayout {
 						if (value.isEmpty())
 							SC.warn(I18N.getMessage("commentrequired"));
 						else
-							documentService.makeImmutable(Session.getInstance().getSid(), ids, value,
+							documentService.makeImmutable(Session.get().getSid(), ids, value,
 									new AsyncCallback<Void>() {
 										@Override
 										public void onFailure(Throwable caught) {
@@ -385,7 +385,7 @@ public class DocumentsListPanel extends HLayout {
 					@Override
 					public void execute(String value) {
 						if (value != null)
-							documentService.lock(Session.getInstance().getSid(), ids, value, new AsyncCallback<Void>() {
+							documentService.lock(Session.get().getSid(), ids, value, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -395,7 +395,7 @@ public class DocumentsListPanel extends HLayout {
 								public void onSuccess(Void result) {
 									for (ListGridRecord record : selection) {
 										record.setAttribute("locked", "document_lock");
-										record.setAttribute("lockUserId", Session.getInstance().getUser().getId());
+										record.setAttribute("lockUserId", Session.get().getUser().getId());
 										list.refreshRow(list.getRecordIndex(record));
 									}
 								}
@@ -418,7 +418,7 @@ public class DocumentsListPanel extends HLayout {
 					ids[j] = Long.parseLong(selection[j].getAttribute("id"));
 				}
 
-				documentService.unlock(Session.getInstance().getSid(), ids, new AsyncCallback<Void>() {
+				documentService.unlock(Session.get().getSid(), ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -462,8 +462,8 @@ public class DocumentsListPanel extends HLayout {
 				if (record.getAttribute("locked").equals("blank") || !record.getAttribute("immutable").equals("blank")) {
 					Long lockUser = record.getAttribute("lockUserId") != null ? Long.parseLong(record
 							.getAttribute("lockUserId")) : Long.MIN_VALUE;
-					if (Session.getInstance().getUser().getId() == lockUser.longValue()
-							|| Session.getInstance().getUser().getUserName().equals("admin"))
+					if (Session.get().getUser().getId() == lockUser.longValue()
+							|| Session.get().getUser().getUserName().equals("admin"))
 						enableUnlock = false;
 				}
 			}
@@ -476,7 +476,7 @@ public class DocumentsListPanel extends HLayout {
 					if (selection == null)
 						return;
 					final long id = Long.parseLong(selection.getAttribute("id"));
-					documentService.checkout(Session.getInstance().getSid(), id, new AsyncCallback<Void>() {
+					documentService.checkout(Session.get().getSid(), id, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
@@ -485,10 +485,10 @@ public class DocumentsListPanel extends HLayout {
 						@Override
 						public void onSuccess(Void result) {
 							selection.setAttribute("locked", "document_lock");
-							selection.setAttribute("lockUserId", Session.getInstance().getUser().getId());
+							selection.setAttribute("lockUserId", Session.get().getUser().getId());
 							selection.setAttribute("status", Constants.DOC_CHECKED_OUT);
 							list.refreshRow(list.getRecordIndex(selection));
-							Window.open("../download?sid=" + Session.getInstance().getSid() + "&docId=" + id, "_blank",
+							Window.open("../download?sid=" + Session.get().getSid() + "&docId=" + id, "_blank",
 									"");
 						}
 					});

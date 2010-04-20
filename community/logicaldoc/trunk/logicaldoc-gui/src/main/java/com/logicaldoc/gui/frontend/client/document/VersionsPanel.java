@@ -74,7 +74,7 @@ public class VersionsPanel extends DocumentDetailTab {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				Window.open("download?sid=" + Session.getInstance().getSid() + "&docId=" + document.getId()
+				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + document.getId()
 						+ "&versionId=" + record.getAttribute("version") + "&open=true", "_blank", "");
 			}
 		});
@@ -103,7 +103,7 @@ public class VersionsPanel extends DocumentDetailTab {
 				if (selection == null || selection.length != 2)
 					SC.warn(I18N.getMessage("select2versions"));
 
-				documentService.getVersionsById(Session.getInstance().getSid(), Long.parseLong(selection[0]
+				documentService.getVersionsById(Session.get().getSid(), Long.parseLong(selection[0]
 						.getAttribute("id")), Long.parseLong(selection[1].getAttribute("id")),
 						new AsyncCallback<GUIVersion[]>() {
 							@Override

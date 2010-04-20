@@ -35,7 +35,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		addSeparator();
 		addButton(add);
 		update(null);
-		Session.getInstance().addFolderObserver(this);
+		Session.get().addFolderObserver(this);
 	}
 
 	/**
@@ -48,21 +48,21 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			download.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					Window.open("download?sid=" + Session.getInstance().getSid() + "&sid="
-							+ Session.getInstance().getSid() + "&docId=" + document.getId(), "_self", "");
+					Window.open("download?sid=" + Session.get().getSid() + "&sid="
+							+ Session.get().getSid() + "&docId=" + document.getId(), "_self", "");
 				}
 			});
 		} else {
 			download.setIcon(Util.imageUrl("application/download_gray.png"));
 		}
 
-		if (document != null && Session.getInstance().isFeatureEnabled("Feature_9")) {
+		if (document != null && Session.get().isFeatureEnabled("Feature_9")) {
 			rss.setTooltip(I18N.getMessage("rssfeed"));
 			rss.setIcon(Util.imageUrl("application/rss.png"));
 			rss.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					Window.open("doc_rss?sid=" + Session.getInstance().getSid() + "&docId=" + document.getId(),
+					Window.open("doc_rss?sid=" + Session.get().getSid() + "&docId=" + document.getId(),
 							"_blank", "");
 				}
 			});
@@ -71,13 +71,13 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			rss.setIcon(Util.imageUrl("application/rss_gray.png"));
 		}
 
-		if (document != null && Session.getInstance().isFeatureEnabled("Feature_8")) {
+		if (document != null && Session.get().isFeatureEnabled("Feature_8")) {
 			pdf.setTooltip(I18N.getMessage("exportpdf"));
 			pdf.setIcon(Util.imageUrl("application/pdf.png"));
 			pdf.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					Window.open("convertpdf?sid=" + Session.getInstance().getSid() + "&docId=" + document.getId()
+					Window.open("convertpdf?sid=" + Session.get().getSid() + "&docId=" + document.getId()
 							+ "&version=" + document.getVersion(), "_blank", "");
 				}
 			});
@@ -86,7 +86,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			pdf.setIcon(Util.imageUrl("application/pdf_gray.png"));
 		}
 
-		GUIFolder folder = Session.getInstance().getCurrentFolder();
+		GUIFolder folder = Session.get().getCurrentFolder();
 
 		if (folder != null && folder.hasPermission(Constants.PERMISSION_WRITE)) {
 			add.setTooltip(I18N.getMessage("adddocuments"));

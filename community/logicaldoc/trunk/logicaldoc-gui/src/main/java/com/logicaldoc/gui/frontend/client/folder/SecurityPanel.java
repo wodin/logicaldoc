@@ -159,7 +159,7 @@ public class SecurityPanel extends FolderDetailTab {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				folderService.applyRightsToTree(Session.getInstance().getSid(), folder.getId(),
+				folderService.applyRightsToTree(Session.get().getSid(), folder.getId(),
 						new AsyncCallback<Void>() {
 
 							@Override

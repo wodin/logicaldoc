@@ -2,6 +2,9 @@ package com.logicaldoc.gui.frontend.client.panels;
 
 import com.google.gwt.user.client.ui.Anchor;
 import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
+import com.logicaldoc.gui.frontend.client.search.Search;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -21,7 +24,7 @@ import com.smartgwt.client.widgets.layout.HLayout;
 public class QuickSearch extends HLayout {
 	public QuickSearch() {
 		final DynamicForm form = new DynamicForm();
-		TextItem searchBox = new TextItem();
+		TextItem searchBox = new TextItem("expression");
 		searchBox.setShowTitle(false);
 		searchBox.setDefaultValue(I18N.getMessage("search") + "...");
 		searchBox.setLength(30);
@@ -29,8 +32,13 @@ public class QuickSearch extends HLayout {
 		searchBox.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
-				if ("enter".equals(event.getKeyName().toLowerCase()))
-					form.submit();
+				if ("enter".equals(event.getKeyName().toLowerCase())) {
+					GUISearchOptions options = Search.get().getOptions();
+					options.setMaxHits(40);
+					options.setExpression(form.getValueAsString("expression"));
+					options.setQueryLanguage(Session.get().getLanguage());
+					Search.get().search();
+				}
 			}
 		});
 		searchBox.addClickHandler(new ClickHandler() {

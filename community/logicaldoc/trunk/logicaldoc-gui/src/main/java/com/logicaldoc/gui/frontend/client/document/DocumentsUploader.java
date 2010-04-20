@@ -114,7 +114,7 @@ public class DocumentsUploader extends Window {
 		if (!vm.validate())
 			return;
 
-		documentService.addDocuments(Session.getInstance().getSid(), getLanguage(), getImportZip(),
+		documentService.addDocuments(Session.get().getSid(), getLanguage(), getImportZip(),
 				new AsyncCallback<Void>() {
 
 					@Override
@@ -124,7 +124,7 @@ public class DocumentsUploader extends Window {
 
 					@Override
 					public void onSuccess(Void result) {
-						DocumentsPanel.getInstance().refresh();
+						DocumentsPanel.get().refresh();
 						destroy();
 					}
 				});

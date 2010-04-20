@@ -245,7 +245,7 @@ public class DocumentDetailsPanel extends VLayout {
 	public void onSave() {
 		if (validate()) {
 			document.setVersionComment(saveForm.getValueAsString("versionComment"));
-			documentService.save(Session.getInstance().getSid(), document, new AsyncCallback<GUIDocument>() {
+			documentService.save(Session.get().getSid(), document, new AsyncCallback<GUIDocument>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					saveForm.setValue("versionComment", "");
@@ -254,7 +254,7 @@ public class DocumentDetailsPanel extends VLayout {
 
 				@Override
 				public void onSuccess(GUIDocument result) {
-					DocumentsPanel.getInstance().onSavedDocument(result);
+					DocumentsPanel.get().onSavedDocument(result);
 					savePanel.setVisible(false);
 					saveForm.setValue("versionComment", "");
 				}

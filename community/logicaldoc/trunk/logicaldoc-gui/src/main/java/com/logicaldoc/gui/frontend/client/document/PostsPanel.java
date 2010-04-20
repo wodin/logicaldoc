@@ -129,7 +129,7 @@ public class PostsPanel extends DocumentDetailTab {
 				});
 
 				// Administrators only can delete a post
-				if (Session.getInstance().getUser().isMemberOf("admin")) {
+				if (Session.get().getUser().isMemberOf("admin")) {
 					contextMenu.setItems(replyItem, deleteItem);
 				} else {
 					contextMenu.setItems(replyItem);
@@ -153,7 +153,7 @@ public class PostsPanel extends DocumentDetailTab {
 			@Override
 			public void execute(Boolean value) {
 				if (value) {
-					documentService.deletePosts(Session.getInstance().getSid(), discussionId, ids,
+					documentService.deletePosts(Session.get().getSid(), discussionId, ids,
 							new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {

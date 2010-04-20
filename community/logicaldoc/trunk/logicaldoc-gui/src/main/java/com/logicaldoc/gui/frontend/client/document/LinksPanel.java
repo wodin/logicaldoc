@@ -73,7 +73,7 @@ public class LinksPanel extends DocumentDetailTab {
 		ListGridField title = new ListGridField("title", I18N.getMessage("title"), 200);
 		title.setCanEdit(false);
 
-		GUIFolder folder = Session.getInstance().getCurrentFolder();
+		GUIFolder folder = Session.get().getCurrentFolder();
 
 		listGrid = new ListGrid();
 		listGrid.setCanFreezeFields(true);
@@ -92,7 +92,7 @@ public class LinksPanel extends DocumentDetailTab {
 				public void onEditComplete(EditCompleteEvent event) {
 					long id = Long.parseLong(event.getOldRecord().getAttribute("id"));
 					String type = (String) event.getNewValues().get("type");
-					documentService.updateLink(Session.getInstance().getSid(), id, type, new AsyncCallback<Void>() {
+					documentService.updateLink(Session.get().getSid(), id, type, new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
@@ -127,7 +127,7 @@ public class LinksPanel extends DocumentDetailTab {
 								@Override
 								public void execute(Boolean value) {
 									if (value) {
-										documentService.deleteLinks(Session.getInstance().getSid(), ids,
+										documentService.deleteLinks(Session.get().getSid(), ids,
 												new AsyncCallback<Void>() {
 													@Override
 													public void onFailure(Throwable caught) {
@@ -156,7 +156,7 @@ public class LinksPanel extends DocumentDetailTab {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = listGrid.getSelectedRecord().getAttribute("id");
-				Window.open("download?sid=" + Session.getInstance().getSid() + "&docId=" + id + "&open=true", "_blank",
+				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true", "_blank",
 						"");
 			}
 		});

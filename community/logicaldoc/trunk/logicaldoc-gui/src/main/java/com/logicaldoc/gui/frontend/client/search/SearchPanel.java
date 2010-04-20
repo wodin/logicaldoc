@@ -48,7 +48,7 @@ public class SearchPanel extends HLayout {
 		leftMenu.setShowResizeBar(true);
 
 		// Initialize the listing panel as placeholder
-		listingPanel = new Label("&nbsp;" + I18N.getMessage("selectfolder"));
+		listingPanel = new HitsListPanel();
 		content.setAlign(Alignment.CENTER);
 		content.setHeight("51%");
 		content.setShowResizeBar(true);
@@ -68,7 +68,7 @@ public class SearchPanel extends HLayout {
 		setShowEdges(true);
 	}
 
-	public static SearchPanel getInstance() {
+	public static SearchPanel get() {
 		if (instance == null)
 			instance = new SearchPanel();
 		return instance;
@@ -86,7 +86,7 @@ public class SearchPanel extends HLayout {
 			details.addMember(detailPanel);
 		}
 
-		documentService.getById(Session.getInstance().getSid(), docId, new AsyncCallback<GUIDocument>() {
+		documentService.getById(Session.get().getSid(), docId, new AsyncCallback<GUIDocument>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
@@ -98,13 +98,5 @@ public class SearchPanel extends HLayout {
 				details.redraw();
 			}
 		});
-	}
-
-	public void refresh() {
-		content.removeMember(listingPanel);
-		listingPanel.destroy();
-		listingPanel = new HLayout();
-		content.addMember(listingPanel);
-		content.redraw();
 	}
 }

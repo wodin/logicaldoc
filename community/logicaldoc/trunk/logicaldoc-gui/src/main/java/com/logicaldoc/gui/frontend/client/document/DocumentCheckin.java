@@ -129,7 +129,7 @@ public class DocumentCheckin extends Window {
 		if (!vm.validate())
 			return;
 
-		documentService.checkin(Session.getInstance().getSid(), docId, "true"
+		documentService.checkin(Session.get().getSid(), docId, "true"
 				.equals(vm.getValueAsString("majorversion")), new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {

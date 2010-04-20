@@ -83,6 +83,11 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>SearchService</servlet-name>
+		<servlet-class>com.logicaldoc.gui.frontend.mock.MockSearchServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>SetupService</servlet-name>
 		<servlet-class>com.logicaldoc.webapp.setup.SetupServiceImpl</servlet-class>
 	</servlet>
@@ -203,6 +208,11 @@
 	<servlet-mapping>
 		<servlet-name>FolderService</servlet-name>
 		<url-pattern>/frontend/folder</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SearchService</servlet-name>
+		<url-pattern>/frontend/search</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

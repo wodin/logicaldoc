@@ -7,7 +7,6 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
- * 
  */
 public interface FolderObserver {
 	/**

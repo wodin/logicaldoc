@@ -1,7 +1,6 @@
 package com.logicaldoc.gui.frontend.client.search;
 
 import com.logicaldoc.gui.common.client.I18N;
-import com.logicaldoc.gui.frontend.client.folder.FoldersTreePanel;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.HTMLFlow;
@@ -15,8 +14,6 @@ import com.smartgwt.client.widgets.layout.SectionStackSection;
  * @since 6.0
  */
 public class SearchMenu extends SectionStack {
-
-	private FoldersTreePanel foldersTree;
 
 	public SearchMenu() {
 		HTMLFlow htmlFlow = new HTMLFlow();

@@ -167,7 +167,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		if (templateId == null)
 			return;
 
-		documentService.getAttributes(Session.getInstance().getSid(), templateId,
+		documentService.getAttributes(Session.get().getSid(), templateId,
 				new AsyncCallback<GUIExtendedAttribute[]>() {
 					@Override
 					public void onFailure(Throwable caught) {

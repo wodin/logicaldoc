@@ -23,7 +23,9 @@ public class Session {
 
 	private Set<FolderObserver> folderObservers = new HashSet<FolderObserver>();
 
-	public static Session getInstance() {
+	private String language;
+	
+	public static Session get() {
 		if (instance == null)
 			instance = new Session();
 		return instance;
@@ -79,5 +81,13 @@ public class Session {
 				return true;
 		}
 		return false;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 }

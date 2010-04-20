@@ -24,7 +24,7 @@ public class DocumentHistoryDS extends DataSource {
 
 		setFields(user, date, event, comment, version);
 		setClientOnly(true);
-		setDataURL("data/documenthistory.xml?sid=" + Session.getInstance().getSid() + "&id=" + docId + "&lang="
+		setDataURL("data/documenthistory.xml?sid=" + Session.get().getSid() + "&id=" + docId + "&lang="
 				+ I18N.getLanguage());
 	}
 }

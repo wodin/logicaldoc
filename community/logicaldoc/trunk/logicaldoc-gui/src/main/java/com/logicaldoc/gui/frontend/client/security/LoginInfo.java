@@ -36,14 +36,14 @@ public class LoginInfo extends HLayout implements SessionObserver {
 		logout.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-				securityService.logout(Session.getInstance().getSid(), new AsyncCallback<Void>() {
+				securityService.logout(Session.get().getSid(), new AsyncCallback<Void>() {
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
 					}
 
 					@Override
 					public void onSuccess(Void arg0) {
-						Session.getInstance().close();
+						Session.get().close();
 						String base = GWT.getHostPageBaseURL();
 						redirect(base + (base.endsWith("/") ? "frontend.jsp" : "/frontend.jsp"));
 					}
@@ -51,7 +51,7 @@ public class LoginInfo extends HLayout implements SessionObserver {
 			}
 		});
 		addMember(logout);
-		Session.getInstance().addSessionObserver(this);
+		Session.get().addSessionObserver(this);
 	}
 
 	@Override

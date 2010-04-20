@@ -171,7 +171,7 @@ public class FolderDetailsPanel extends VLayout {
 			// Apply all rights
 			folder.setRights(securityPanel.getRights());
 
-			folderService.save(Session.getInstance().getSid(), folder, new AsyncCallback<GUIFolder>() {
+			folderService.save(Session.get().getSid(), folder, new AsyncCallback<GUIFolder>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);
