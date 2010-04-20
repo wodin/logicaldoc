@@ -372,10 +372,11 @@ public class DocumentRecord extends MenuBarBean {
 					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 					transaction.setEvent(History.EVENT_CHECKEDOUT);
 					transaction.setComment("");
+					transaction.setUser(SessionManagement.getUser());
 
 					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 							DocumentManager.class);
-					documentManager.checkout(document.getId(), SessionManagement.getUser(), transaction);
+					documentManager.checkout(document.getId(), transaction);
 					loadDocument();
 					createMenuItems();
 
@@ -634,12 +635,13 @@ public class DocumentRecord extends MenuBarBean {
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
-
+				transaction.setUser(SessionManagement.getUser());
+				
 				// Unlock the document; throws an exception if something
 				// goes wrong
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				documentManager.unlock(document.getId(), SessionManagement.getUser(), transaction);
+				documentManager.unlock(document.getId(), transaction);
 
 				loadDocument();
 				createMenuItems();
@@ -664,7 +666,8 @@ public class DocumentRecord extends MenuBarBean {
 			History transaction = new History();
 			transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 			transaction.setEvent(History.EVENT_LOCKED);
-			documentManager.lock(document.getId(), Document.DOC_LOCKED, SessionManagement.getUser(), transaction);
+			transaction.setUser(SessionManagement.getUser());
+			documentManager.lock(document.getId(), Document.DOC_LOCKED, transaction);
 
 			loadDocument();
 			createMenuItems();

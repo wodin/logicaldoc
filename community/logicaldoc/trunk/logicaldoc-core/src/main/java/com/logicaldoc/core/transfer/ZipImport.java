@@ -17,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.dao.SystemMessageDAO;
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Menu;
@@ -179,10 +180,17 @@ public class ZipImport {
 			try {
 				transaction.setEvent(History.EVENT_STORED);
 				transaction.setComment("");
-				docManager.create(file, file.getName(), parent, user, locale, "", null, "", "", "", "", "", tagSet,
-						templateId, null, immediateIndexing, transaction);
+				transaction.setUser(user);
+
+				Document doc = new Document();
+				doc.setFileName(file.getName());
+				doc.setLocale(locale);
+				doc.setFolder(parent);
+				doc.setTags(tagSet);
+				doc.setTemplateId(templateId);
+				docManager.create(file, doc, transaction, immediateIndexing);
 			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
+				logger.error("InMemoryZipImport addEntry failed", e);
 			}
 		}
 	}

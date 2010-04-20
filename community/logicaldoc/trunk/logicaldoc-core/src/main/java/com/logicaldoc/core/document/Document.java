@@ -11,6 +11,9 @@ import org.apache.commons.beanutils.BeanUtils;
  * @since 1.0
  */
 public class Document extends AbstractDocument {
+	// Useful but not persisted
+	public Long templateId;
+
 	public Document() {
 	}
 
@@ -25,5 +28,18 @@ public class Document extends AbstractDocument {
 			e.printStackTrace();
 		}
 		return cloned;
+	}
+
+	public Long getTemplateId() {
+		if (templateId != null)
+			return templateId;
+		else if (getTemplate() != null)
+			return getTemplate().getId();
+		else
+			return null;
+	}
+
+	public void setTemplateId(Long templateId) {
+		this.templateId = templateId;
 	}
 }

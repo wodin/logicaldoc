@@ -101,13 +101,14 @@ public class DmsServiceImpl implements DmsService {
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(sid);
+				transaction.setUser(user);
+				transaction.setComment(description);
 
 				// checkin the document; throws an exception if
 				// something goes wrong
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				documentManager.checkin(document.getId(), stream, filename, user, versionType, description, false,
-						transaction);
+				documentManager.checkin(document.getId(), stream, filename, versionType, false, transaction);
 
 				/* create positive log message */
 				log.info("Document " + id + " checked in");
@@ -136,11 +137,10 @@ public class DmsServiceImpl implements DmsService {
 		transaction.setSessionId(sid);
 		transaction.setEvent(History.EVENT_CHECKEDOUT);
 		transaction.setComment("");
-		transaction.setUserId(user.getId());
-		transaction.setUserName(user.getFullName());
+		transaction.setUser(user);
 
 		DocumentManager DocumentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		DocumentManager.checkout(id, user, transaction);
+		DocumentManager.checkout(id, transaction);
 		return "ok";
 	}
 
@@ -197,16 +197,29 @@ public class DmsServiceImpl implements DmsService {
 		History transaction = new History();
 		transaction.setSessionId(sid);
 		transaction.setEvent(History.EVENT_STORED);
-		transaction.setComment("");
-		transaction.setUserId(user.getId());
-		transaction.setUserName(user.getFullName());
+		transaction.setComment(versionDesc);
+		transaction.setUser(user);
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
 		try {
-			Document doc = documentManager.create(stream, filename, folder, user, LocaleUtil.toLocale(language), null,
-					date, source, author, sourceType, coverage, versionDesc, tgs, template != null ? template.getId()
-							: null, attributes, sourceId, object, recipient, customId, false, transaction);
+			Document doc = new Document();
+			doc.setFileName(filename);
+			doc.setFolder(folder);
+			doc.setLocale(LocaleUtil.toLocale(language));
+			doc.setSourceDate(date);
+			doc.setSource(source);
+			doc.setSourceAuthor(author);
+			doc.setSourceType(sourceType);
+			doc.setCoverage(coverage);
+			doc.setTags(tgs);
+			doc.setTemplate(template);
+			doc.setAttributes(attributes);
+			doc.setSourceId(sourceId);
+			doc.setObject(object);
+			doc.setCustomId(customId);
+
+			doc = documentManager.create(stream, doc, transaction, false);
 			return String.valueOf(doc.getId());
 		} finally {
 			stream.close();
@@ -655,18 +668,29 @@ public class DmsServiceImpl implements DmsService {
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
-		// TODO How can I know if the document was simply renamed or
-		// if some metadata was changed?
 		transaction.setEvent(History.EVENT_CHANGED);
 		transaction.setComment("");
-		transaction.setUserId(user.getId());
-		transaction.setUserName(user.getFullName());
+		transaction.setUser(user);
 
 		DocumentTemplateDAO templDao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		DocumentTemplate template = templDao.findByName(templateName);
-		manager.update(doc, user, title, source, sourceAuthor, sdate, sourceType, coverage, LocaleUtil
-				.toLocale(language), setTags, sourceId, object, recipient, template != null ? template.getId() : null,
-				attributes, transaction);
+
+		Document docVO = new Document();
+		docVO.setTitle(title);
+		docVO.setSource(source);
+		docVO.setSourceAuthor(sourceAuthor);
+		docVO.setSourceDate(sdate);
+		docVO.setSourceType(sourceType);
+		docVO.setCoverage(coverage);
+		docVO.setLocale(LocaleUtil.toLocale(language));
+		docVO.setTags(setTags);
+		docVO.setSourceId(sourceId);
+		docVO.setObject(object);
+		docVO.setRecipient(recipient);
+		docVO.setTemplate(template);
+		docVO.setAttributes(attributes);
+
+		manager.update(doc, docVO, transaction);
 		return Long.toString(doc.getId());
 	}
 
