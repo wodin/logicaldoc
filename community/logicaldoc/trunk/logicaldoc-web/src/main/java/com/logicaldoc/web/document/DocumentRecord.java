@@ -92,6 +92,11 @@ public class DocumentRecord extends MenuBarBean {
 		super();
 	}
 
+	public DocumentRecord(Document document) {
+		super();
+		this.document = document;
+	}
+	
 	public Document getDocument() {
 		if (document == null)
 			loadDocument();

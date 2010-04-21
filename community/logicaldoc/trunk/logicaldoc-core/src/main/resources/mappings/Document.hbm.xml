@@ -42,6 +42,7 @@
 		<property name="exportName" type="string" column="ld_exportname" length="255" />
 		<property name="exportVersion" type="string" column="ld_exportversion" length="10" />
         <property name="docRef" type="long" column="ld_docref" />
+        <property name="deleteUserId" type="long" column="ld_deleteuserid" />
 
 		<many-to-one name="folder" class="com.logicaldoc.core.security.Menu" column="ld_folderid" />
 		<many-to-one name="template" class="com.logicaldoc.core.document.DocumentTemplate" column="ld_templateid" />

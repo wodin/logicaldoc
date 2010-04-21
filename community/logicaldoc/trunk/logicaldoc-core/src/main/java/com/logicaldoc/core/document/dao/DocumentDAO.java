@@ -266,4 +266,13 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @param docId The document Id
 	 */
 	public List<Long> findShortcutIds(long docId);
+
+	/**
+	 * Finds all deleted docs of a specific user.
+	 * 
+	 * @param userId The user that performed the deletion
+	 * @param maxHits Optional defines the max number of returned hits
+	 * @return The documents list ordered by descending lastModified
+	 */
+	public List<Document> findDeleted(long userId, Integer maxHits);
 }

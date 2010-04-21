@@ -122,6 +122,16 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	private Long exportId = null;
 
 	private Long docRef;
+	
+	private Long deleteUserId;
+
+	public Long getDeleteUserId() {
+		return deleteUserId;
+	}
+
+	public void setDeleteUserId(Long deleteUserId) {
+		this.deleteUserId = deleteUserId;
+	}
 
 	public AbstractDocument() {
 		super();

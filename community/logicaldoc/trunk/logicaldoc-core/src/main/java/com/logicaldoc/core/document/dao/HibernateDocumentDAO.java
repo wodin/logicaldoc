@@ -4,8 +4,10 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -97,6 +99,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	public boolean delete(long docId, History transaction) {
+		assert (transaction != null);
+		assert (transaction.getUser() != null);
 		boolean result = true;
 		try {
 			Document doc = (Document) getHibernateTemplate().get(Document.class, docId);
@@ -122,6 +126,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				userDocDAO.deleteByDocId(docId);
 
 				doc.setDeleted(1);
+				doc.setDeleteUserId(transaction.getUserId());
 				if (doc.getCustomId() != null)
 					doc.setCustomId(doc.getCustomId() + "." + doc.getId());
 				store(doc, transaction);
@@ -844,5 +849,40 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public List<Long> findShortcutIds(long docId) {
 		return findIdsByWhere("_entity.docRef = " + Long.toString(docId), null);
+	}
+
+	@Override
+	public List<Document> findDeleted(long userId, Integer maxHits) {
+		List<Document> results = new ArrayList<Document>();
+		try {
+			List<Object> result = findByJdbcQuery(
+					"select A.ld_id,A.ld_title,A.ld_lastmodified,A.ld_filename from ld_document as A, ld_menu as B where A.ld_folderid=B.ld_id and B.ld_deleted=0 and A.ld_deleted=1 and A.ld_deleteuserid = "
+							+ userId + " order by A.ld_lastmodified desc", 4, null);
+
+			int i = 0;
+			for (Object object : result) {
+				if (i >= maxHits.intValue())
+					break;
+				Object[] record = (Object[]) object;
+
+				Document docDeleted = new Document();
+				// Id
+				docDeleted.setId((Long) record[0]);
+				// Title
+				docDeleted.setTitle((String) record[1]);
+				// Last modified
+				docDeleted.setLastModified(new Date(((Timestamp) record[2]).getTime()));
+				// File name
+				docDeleted.setFileName((String) record[3]);
+
+				// Add the document to the List
+				results.add(docDeleted);
+				i++;
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+
+		return results;
 	}
 }
