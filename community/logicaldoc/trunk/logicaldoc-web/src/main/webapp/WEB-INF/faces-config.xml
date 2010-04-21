@@ -597,6 +597,15 @@
       </managed-bean-class>
       <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    
+    <managed-bean>
+      <managed-bean-name>trashBean</managed-bean-name>
+      <managed-bean-class>
+        com.logicaldoc.web.document.TrashBean
+      </managed-bean-class>
+      <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
   
 	<navigation-rule>
 		<description>Login</description>

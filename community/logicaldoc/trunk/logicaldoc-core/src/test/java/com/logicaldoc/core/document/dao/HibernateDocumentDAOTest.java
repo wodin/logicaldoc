@@ -182,7 +182,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.setFileVersion("1.0");
 
 		// Prepare the document file for digest computation
-		File docFile = storer.getFile(5L, doc.getFileVersion());
+		File docFile = storer.getFile(7L, doc.getFileVersion());
 		FileUtils.forceMkdir(docFile.getParentFile());
 		Writer out = new FileWriter(docFile);
 		out.write("Questo file serve per fare il test del digest su un documento");
@@ -209,8 +209,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Assert.assertTrue(dao.store(doc, transaction));
 
 		Assert.assertTrue(docFile.exists());
-		Assert.assertEquals(5, doc.getId());
-		doc = dao.findById(5);
+		Assert.assertEquals(7, doc.getId());
+		doc = dao.findById(7);
 		Assert.assertNotNull(doc);
 		dao.initialize(doc);
 
@@ -230,7 +230,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		out.close();
 		Assert.assertTrue(docFile.exists());
 
-		Assert.assertEquals(5, doc.getId());
+		Assert.assertEquals(7, doc.getId());
 		Assert.assertEquals(3, doc.getTags().size());
 		Assert.assertTrue(doc.getTags().contains("pluto"));
 		Assert.assertTrue(doc.getTags().contains("123456789123456789123456789"));
@@ -240,13 +240,13 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Assert.assertEquals(doc.getDigest(), digest);
 
 		// Try to change the version comment
-		doc = dao.findById(5);
+		doc = dao.findById(7);
 		dao.initialize(doc);
 		version.setComment("xxxx");
 		version.setVersion("1.0");
 		version.setUserId(1);
 		dao.store(doc);
-		doc = dao.findById(5);
+		doc = dao.findById(7);
 		dao.initialize(doc);
 
 		// Load an existing document and modify it
@@ -331,7 +331,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindDeletedDocIds() {
 		List<Long> coll = dao.findDeletedDocIds();
 		Assert.assertNotNull(coll);
-		Assert.assertEquals(2, coll.size());
+		Assert.assertEquals(4, coll.size());
 		Assert.assertTrue(coll.contains(new Long(3)));
 		Assert.assertTrue(coll.contains(new Long(4)));
 	}
@@ -340,18 +340,18 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindDeletedDocs() {
 		List<Document> coll = dao.findDeletedDocs();
 		Assert.assertNotNull(coll);
-		Assert.assertEquals(2, coll.size());
+		Assert.assertEquals(4, coll.size());
 	}
 
 	@Test
 	public void testGetTotalSize() {
-		Assert.assertEquals(368391L, dao.getTotalSize(true));
+		Assert.assertEquals(613081L, dao.getTotalSize(true));
 		Assert.assertEquals(123701L, dao.getTotalSize(false));
 	}
 
 	@Test
 	public void testCount() {
-		Assert.assertEquals(4L, dao.count(true));
+		Assert.assertEquals(6L, dao.count(true));
 		Assert.assertEquals(2L, dao.count(false));
 	}
 
@@ -408,5 +408,32 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		ids = dao.findShortcutIds(3);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(0, ids.size());
+	}
+
+	@Test
+	public void testFindDeleted() {
+		List<Document> deletedDocs = dao.findDeleted(1, 5);
+		Assert.assertNotNull(deletedDocs);
+		Assert.assertEquals(3, deletedDocs.size());
+		Assert.assertEquals("TXT", deletedDocs.get(0).getType());
+		Assert.assertEquals("DELETED 2", deletedDocs.get(0).getTitle());
+		Assert.assertEquals("PDF", deletedDocs.get(1).getType());
+		Assert.assertEquals("DELETED 1", deletedDocs.get(1).getTitle());
+		Assert.assertEquals("DOC", deletedDocs.get(2).getType());
+		Assert.assertEquals("DELETED 3", deletedDocs.get(2).getTitle());
+
+		deletedDocs = dao.findDeleted(2, 4);
+		Assert.assertNotNull(deletedDocs);
+		Assert.assertEquals(1, deletedDocs.size());
+		Assert.assertEquals("TIFF", deletedDocs.get(0).getType());
+		Assert.assertEquals("DELETED 4", deletedDocs.get(0).getTitle());
+
+		deletedDocs = dao.findDeleted(1, 2);
+		Assert.assertNotNull(deletedDocs);
+		Assert.assertEquals(2, deletedDocs.size());
+		Assert.assertEquals("TXT", deletedDocs.get(0).getType());
+		Assert.assertEquals("DELETED 2", deletedDocs.get(0).getTitle());
+		Assert.assertEquals("PDF", deletedDocs.get(1).getType());
+		Assert.assertEquals("DELETED 1", deletedDocs.get(1).getTitle());
 	}
 }

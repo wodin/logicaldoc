@@ -52,6 +52,7 @@
     <property name="exportId" type="long" column="ld_exportid" />
     <property name="exportName" type="string" column="ld_exportname" length="255" />
     <property name="exportVersion" type="string" column="ld_exportversion" length="10" />
+    <property name="deleteUserId" type="long" column="ld_deleteuserid" />
 
     <many-to-one name="document" class="com.logicaldoc.core.document.Document" column="ld_documentid" />
 
