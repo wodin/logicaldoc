@@ -19,6 +19,6 @@ public class FileSizeCellFormatter implements CellFormatter {
 		else if (value instanceof Integer)
 			return Util.formatSize(((Integer) value).doubleValue());
 		else
-			return null;
+			return Util.formatSize(0L);
 	}
 }

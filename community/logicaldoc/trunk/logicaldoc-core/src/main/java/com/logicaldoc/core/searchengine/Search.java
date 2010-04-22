@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
@@ -69,11 +70,12 @@ public class Search {
 		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 
 		try {
-			String[] languages = options.getLanguages();
-			if ((languages == null) || (languages.length == 0)) {
+			String[] languages = null;
+			if (StringUtils.isEmpty(options.getLanguage())) {
 				List<String> tmp = LanguageManager.getInstance().getLanguagesAsString();
 				languages = (String[]) tmp.toArray(new String[0]);
-				options.setLanguages(languages);
+			} else {
+				languages = new String[] { options.getLanguage() };
 			}
 
 			Searcher[] searcher = new Searcher[languages.length];

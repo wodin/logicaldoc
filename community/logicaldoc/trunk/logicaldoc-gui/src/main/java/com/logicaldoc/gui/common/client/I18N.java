@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.common.client;
 
+import java.util.LinkedHashMap;
+
 import com.google.gwt.i18n.client.Dictionary;
 
 /**
@@ -38,5 +40,15 @@ public class I18N {
 
 	public static void setLanguage(String language) {
 		I18N.language = language;
+	}
+	
+	public static LinkedHashMap<String, String> getSupportedLanguages(){
+		LinkedHashMap<String, String> languages = new LinkedHashMap<String, String>();
+		languages.put("en", I18N.getMessage("langen"));
+		languages.put("es", I18N.getMessage("langes"));
+		languages.put("it", I18N.getMessage("langit"));
+		languages.put("de", I18N.getMessage("langde"));
+		languages.put("fr", I18N.getMessage("langfr"));
+		return languages;
 	}
 }

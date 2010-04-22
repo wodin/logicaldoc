@@ -1,6 +1,5 @@
 package com.logicaldoc.core.searchengine;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -16,12 +15,7 @@ public class SearchTest extends AbstractCoreTestCase {
 	@Test
 	public void testSearch() {
 		SearchOptions opt = new SearchOptions();
-
-		ArrayList<String> languages = new ArrayList<String>();
-
-		String[] langs = (String[]) languages.toArray(new String[languages.size()]);
-		opt.setLanguages(langs);
-
+		opt.setLanguage(null);
 		opt.setQueryStr("prova test", "", "", "");
 
 		Search search = new Search(opt);

@@ -40,7 +40,7 @@ public class GUISearchOptions implements Serializable {
 
 	private String[] fields = null;
 
-	private String[] languages = null;
+	private String language = null;
 
 	// // Useful for parametric searches
 	// private Serializable[] parameters = null;
@@ -111,12 +111,12 @@ public class GUISearchOptions implements Serializable {
 		fields[fields.length] = s;
 	}
 
-	public String[] getLanguages() {
-		return languages;
+	public String getLanguage() {
+		return language;
 	}
 
-	public void setLanguages(String[] languages) {
-		this.languages = languages;
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	public Date getDateTo() {
@@ -215,13 +215,13 @@ public class GUISearchOptions implements Serializable {
 		this.queryLanguage = queryLanguage;
 	}
 
-//	public Serializable[] getParameters() {
-//		return parameters;
-//	}
-//
-//	public void setParameters(Serializable[] parameters) {
-//		this.parameters = parameters;
-//	}
+	// public Serializable[] getParameters() {
+	// return parameters;
+	// }
+	//
+	// public void setParameters(Serializable[] parameters) {
+	// this.parameters = parameters;
+	// }
 
 	public String getName() {
 		return name;
@@ -245,5 +245,9 @@ public class GUISearchOptions implements Serializable {
 
 	public void setMaxHits(int maxHits) {
 		this.maxHits = maxHits;
+	}
+
+	public boolean isFulltext() {
+		return getType() == TYPE_FULLTEXT;
 	}
 }

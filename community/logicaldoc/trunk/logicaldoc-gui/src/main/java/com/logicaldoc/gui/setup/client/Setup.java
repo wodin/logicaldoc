@@ -245,20 +245,14 @@ public class Setup implements EntryPoint {
 	private Tab setupLanguage(final ValuesManager vm) {
 		Tab languageTab = new Tab();
 		languageTab.setTitle(I18N.getMessage(LANGUAGE));
-		LinkedHashMap<String, String> languages = new LinkedHashMap<String, String>();
-		languages.put("english", I18N.getMessage("english"));
-		languages.put("spanish", I18N.getMessage("spanish"));
-		languages.put("italian", I18N.getMessage("italian"));
-		languages.put("german", I18N.getMessage("german"));
-		languages.put("french", I18N.getMessage("french"));
-
+		
 		SelectItem languageItem = new SelectItem();
-		languageItem.setValueMap(languages);
+		languageItem.setValueMap(I18N.getSupportedLanguages());
 		languageItem.setName(LANGUAGE);
 		languageItem.setTitle(I18N.getMessage("defaultlang"));
 		languageItem.setRequired(true);
 		languageItem.setWrapTitle(false);
-		languageItem.setDefaultValue("english");
+		languageItem.setDefaultValue("en");
 		final DynamicForm languageForm = new DynamicForm();
 		languageForm.setID("languageForm");
 		languageForm.setValuesManager(vm);

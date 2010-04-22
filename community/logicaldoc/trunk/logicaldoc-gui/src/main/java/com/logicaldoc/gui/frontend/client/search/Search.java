@@ -23,7 +23,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 public class Search {
 	private static Search instance;
 
-	private ListGridRecord[] lastResult;
+	private ListGridRecord[] lastResult = new ListGridRecord[0];
 
 	private GUISearchOptions options = new GUISearchOptions();
 
@@ -80,10 +80,11 @@ public class Search {
 					record.setAttribute("date", hit.getDate());
 					record.setAttribute("customId", hit.getCustomId());
 					record.setAttribute("folderId", hit.getFolderId());
+					record.setAttribute("icon", hit.getType());
 				}
 
 				for (SearchObserver observer : observers) {
-					observer.onResult();
+					observer.onSearchArrived();
 				}
 			}
 

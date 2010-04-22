@@ -11,5 +11,5 @@ public interface SearchObserver {
 	/**
 	 * Invoked when a new result is returned by the server.
 	 */
-	public void onResult();
+	public void onSearchArrived();
 }

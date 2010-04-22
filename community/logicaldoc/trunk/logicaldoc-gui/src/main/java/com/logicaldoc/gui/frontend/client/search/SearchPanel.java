@@ -43,7 +43,7 @@ public class SearchPanel extends HLayout {
 		setWidth100();
 
 		// Prepare the collapsible menu
-		SearchMenu leftMenu = new SearchMenu();
+		SearchMenu leftMenu = SearchMenu.get();
 		leftMenu.setWidth(280);
 		leftMenu.setShowResizeBar(true);
 

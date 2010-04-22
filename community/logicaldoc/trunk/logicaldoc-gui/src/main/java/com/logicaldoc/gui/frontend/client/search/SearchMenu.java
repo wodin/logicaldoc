@@ -15,10 +15,17 @@ import com.smartgwt.client.widgets.layout.SectionStackSection;
  */
 public class SearchMenu extends SectionStack {
 
-	public SearchMenu() {
-		HTMLFlow htmlFlow = new HTMLFlow();
-		htmlFlow.setOverflow(Overflow.AUTO);
-		htmlFlow.setPadding(10);
+	private static final int FULLTEXT_SECTION = 0;
+
+	private static SearchMenu instance;
+
+	public static SearchMenu get() {
+		if (instance == null)
+			instance = new SearchMenu();
+		return instance;
+	}
+
+	private SearchMenu() {
 
 		String contents = "<b>Severity 1</b> - Critical problem<br>System is unavailable in production or "
 				+ "is corrupting data, and the error severely impacts the user's operations."
@@ -27,14 +34,26 @@ public class SearchMenu extends SectionStack {
 				+ "<br><br><b>Severity 3</b> - Minor problem<br>Inability to use a function of the "
 				+ "system occurs, but it does not seriously affect the user's operations.";
 
-		htmlFlow.setContents(contents);
+		HTMLFlow html2 = new HTMLFlow();
+		html2.setOverflow(Overflow.AUTO);
+		html2.setPadding(10);
+		html2.setContents(contents);
 
 		setVisibilityMode(VisibilityMode.MUTEX);
 		setWidth100();
 
-		SectionStackSection savedSearches = new SectionStackSection(I18N.getMessage("savedsearches"));
-		savedSearches.setExpanded(true);
-		savedSearches.addItem(htmlFlow);
-		addSection(savedSearches);
+		SectionStackSection fulltextSection = new SectionStackSection(I18N.getMessage("fulltextsearches"));
+		fulltextSection.setExpanded(true);
+		fulltextSection.addItem(new FulltextForm());
+		addSection(fulltextSection);
+
+		SectionStackSection savedSection = new SectionStackSection(I18N.getMessage("savedsearches"));
+		savedSection.setExpanded(false);
+		savedSection.addItem(html2);
+		addSection(savedSection);
+	}
+
+	public void openFulltextSection() {
+		expandSection(FULLTEXT_SECTION);
 	}
 }

@@ -31,7 +31,6 @@ import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
-import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Result;
 import com.logicaldoc.core.searchengine.Search;
@@ -497,18 +496,11 @@ public class SearchForm extends SortableList {
 
 			String[] flds = (String[]) fields.toArray(new String[fields.size()]);
 			opt.setFields(flds);
-
-			ArrayList<String> languages = new ArrayList<String>();
-
 			if ("all".equals(language)) {
-				List<String> langs = LanguageManager.getInstance().getLanguagesAsString();
-				languages.addAll(langs);
+				opt.setLanguage(null);
 			} else {
-				languages.add(language);
+				opt.setLanguage(language);
 			}
-
-			String[] langs = (String[]) languages.toArray(new String[languages.size()]);
-			opt.setLanguages(langs);
 
 			opt.setQueryStr(getQuery(), getPhrase(), getAny(), getNots());
 			opt.setFormat(getFormat());
@@ -554,7 +546,7 @@ public class SearchForm extends SortableList {
 	public void search(SearchOptions opt) {
 		opt.setMaxHits(maxHits);
 		lastSearch = new Search(opt);
-	
+
 		List<Result> result = lastSearch.search();
 
 		List<DocumentResult> docResult = new ArrayList<DocumentResult>();
@@ -1109,7 +1101,7 @@ public class SearchForm extends SortableList {
 	public void setSelectedAll(boolean selectedAll) {
 		this.selectedAll = selectedAll;
 	}
-	
+
 	public Search getLastSearch() {
 		return lastSearch;
 	}

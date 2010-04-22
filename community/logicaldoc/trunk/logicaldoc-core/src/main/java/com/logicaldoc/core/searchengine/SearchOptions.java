@@ -53,7 +53,7 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	private String[] fields = null;
 
-	private String[] languages = null;
+	private String language = null;
 
 	// Useful for parametric searches
 	private Object[] parameters = null;
@@ -153,14 +153,6 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public void addField(String s) {
 		fields[fields.length] = s;
-	}
-
-	public String[] getLanguages() {
-		return languages;
-	}
-
-	public void setLanguages(String[] languages) {
-		this.languages = languages;
 	}
 
 	public Date getDateTo() {
@@ -318,5 +310,17 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public void setMaxHits(int maxHits) {
 		this.maxHits = maxHits;
+	}
+
+	public boolean isFulltext() {
+		return getType() == TYPE_FULLTEXT;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 }
