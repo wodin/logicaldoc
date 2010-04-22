@@ -33,9 +33,9 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	private int type = TYPE_FULLTEXT;
 
-	private String queryStr = "";
+	private String expression = "";
 
-	private String queryLanguage = Locale.ENGLISH.getLanguage();
+	private String expressionLanguage = Locale.ENGLISH.getLanguage();
 
 	// Min size in bytes
 	private Long sizeMin = null;
@@ -88,10 +88,6 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 		this.template = template;
 	}
 
-	public String getQueryStr() {
-		return queryStr;
-	}
-
 	public String getFormat() {
 		return format;
 	}
@@ -104,15 +100,15 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 		return fields;
 	}
 
-	public void setQueryStr(String query) {
-		queryStr = query;
+	public void setExpression(String expr) {
+		this.expression = expr;
 	}
 
-	public void setQueryStr(String query, String phrase, String any, String not) {
-		queryStr = query;
+	public void setExpression(String expr, String phrase, String any, String not) {
+		this.expression = expr;
 
 		if ((phrase != null) && !phrase.equals("")) {
-			queryStr += " \"" + phrase + "\"";
+			expression += " \"" + phrase + "\"";
 		}
 
 		if ((any != null) && !any.equals("")) {
@@ -125,17 +121,17 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 				String word = iter.next();
 
 				if (!first) {
-					queryStr += " OR";
+					expression += " OR";
 				} else {
 					first = false;
 				}
 
-				queryStr += " " + word;
+				expression += " " + word;
 			}
 		}
 
 		if ((not != null) && !not.equals("")) {
-			queryStr += " NOT (" + not + ")";
+			expression += " NOT (" + not + ")";
 		}
 	}
 
@@ -243,14 +239,6 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 		this.type = type;
 	}
 
-	public String getQueryLanguage() {
-		return queryLanguage;
-	}
-
-	public void setQueryLanguage(String queryLanguage) {
-		this.queryLanguage = queryLanguage;
-	}
-
 	public Object[] getParameters() {
 		return parameters;
 	}
@@ -322,5 +310,17 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	public String getExpressionLanguage() {
+		return expressionLanguage;
+	}
+
+	public void setExpressionLanguage(String expressionLanguage) {
+		this.expressionLanguage = expressionLanguage;
+	}
+
+	public String getExpression() {
+		return expression;
 	}
 }

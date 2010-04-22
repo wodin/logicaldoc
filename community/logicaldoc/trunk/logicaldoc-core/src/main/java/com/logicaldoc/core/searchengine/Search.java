@@ -91,7 +91,7 @@ public class Search {
 			}
 
 			MultiSearcher multiSearcher = new MultiSearcher(searcher);
-			Analyzer analyzer = LanguageManager.getInstance().getLanguage(new Locale(options.getQueryLanguage()))
+			Analyzer analyzer = LanguageManager.getInstance().getLanguage(new Locale(options.getExpressionLanguage()))
 					.getAnalyzer();
 
 			if (options.getFields() == null) {
@@ -104,7 +104,7 @@ public class Search {
 			MultiFieldQueryParser parser = new MultiFieldQueryParser(Indexer.LUCENE_VERSION, options.getFields(),
 					analyzer);
 
-			Query query = parser.parse(options.getQueryStr());
+			Query query = parser.parse(options.getExpression());
 
 			log.info("Full-text search");
 			TopDocs hits = null;

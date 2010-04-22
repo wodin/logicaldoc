@@ -16,7 +16,7 @@ public class SearchTest extends AbstractCoreTestCase {
 	public void testSearch() {
 		SearchOptions opt = new SearchOptions();
 		opt.setLanguage(null);
-		opt.setQueryStr("prova test", "", "", "");
+		opt.setExpression("prova test", "", "", "");
 
 		Search search = new Search(opt);
 		List<Result> results = search.search();

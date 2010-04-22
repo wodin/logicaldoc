@@ -24,8 +24,8 @@ public class SearchOptionsTest extends AbstractCoreTestCase {
 
 		opt.setLanguage("it");
 
-		opt.setQueryStr("prova test");
-		opt.setQueryLanguage("italiano");
+		opt.setExpression("prova test");
+		opt.setExpressionLanguage("italiano");
 		opt.setTemplate(1L);
 		opt.setSizeMax(3000L);
 		opt.setSizeMin(2L);
@@ -36,8 +36,8 @@ public class SearchOptionsTest extends AbstractCoreTestCase {
 
 		SearchOptions opt2 = SearchOptions.read(file);
 
-		Assert.assertEquals("prova test", opt2.getQueryStr());
-		Assert.assertEquals("italiano", opt2.getQueryLanguage());
+		Assert.assertEquals("prova test", opt2.getExpression());
+		Assert.assertEquals("italiano", opt2.getExpressionLanguage());
 		Assert.assertEquals(1, opt2.getTemplate().longValue());
 		Assert.assertEquals(3000, opt2.getSizeMax().longValue());
 		Assert.assertEquals(2, opt2.getSizeMin().longValue());
