@@ -427,8 +427,7 @@ public class RightsRecordsManager {
 		} else {
 			// Add a folder history entry
 			History history = new History();
-			history.setUserId(SessionManagement.getUserId());
-			history.setUserName(SessionManagement.getUser().getFullName());
+			history.setUser(SessionManagement.getUser());
 			history.setEvent(History.EVENT_FOLDER_PERMISSION);
 			history.setSessionId(SessionManagement.getCurrentUserSessionId());
 			mdao.store(folder, history);

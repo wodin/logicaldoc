@@ -140,8 +140,7 @@ public class ZipImport {
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		String menuName = file.getName();
 		History transaction = new History();
-		transaction.setUserId(user.getId());
-		transaction.setUserName(user.getFullName());
+		transaction.setUser(user);
 		transaction.setSessionId(sessionId);
 
 		if (file.isDirectory()) {

@@ -99,8 +99,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 			transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 			transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_START);
 			transaction.setComment("");
-			transaction.setUserId(SessionManagement.getUserId());
-			transaction.setUserName(SessionManagement.getUser().getFullName());
+			transaction.setUser(SessionManagement.getUser());
 
 			workflowHistoryDao.store(transaction);
 
@@ -118,8 +117,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 				docAppended.setEvent(WorkflowHistory.EVENT_WORKFLOW_DOCAPPENDED);
 				docAppended.setDocId(docId);
 				docAppended.setComment("");
-				docAppended.setUserId(SessionManagement.getUserId());
-				docAppended.setUserName(SessionManagement.getUser().getFullName());
+				docAppended.setUser(SessionManagement.getUser());
 
 				workflowHistoryDao.store(docAppended);
 			}
@@ -206,8 +204,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 		transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 		transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_END);
 		transaction.setComment("");
-		transaction.setUserId(SessionManagement.getUserId());
-		transaction.setUserName(SessionManagement.getUser().getFullName());
+		transaction.setUser(SessionManagement.getUser());
 
 		workflowHistoryDao.store(transaction);
 	}

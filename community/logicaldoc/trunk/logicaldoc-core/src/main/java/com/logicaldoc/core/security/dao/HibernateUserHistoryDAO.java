@@ -34,8 +34,7 @@ public class HibernateUserHistoryDAO extends HibernatePersistentObjectDAO<UserHi
 	public void createUserHistory(User user, String eventType, String comment, String sessionId) {
 		UserHistory history = new UserHistory();
 
-		history.setUserId(user.getId());
-		history.setUserName(user.getFullName());
+		history.setUser(user);
 		history.setEvent(eventType);
 		history.setComment(comment);
 		if (sessionId != null)

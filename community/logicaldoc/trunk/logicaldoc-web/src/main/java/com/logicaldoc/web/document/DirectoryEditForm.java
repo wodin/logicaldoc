@@ -220,8 +220,7 @@ public class DirectoryEditForm {
 				menu.setDescription(folderDescription);
 				// Add a folder history entry
 				History history = new History();
-				history.setUserId(SessionManagement.getUserId());
-				history.setUserName(SessionManagement.getUser().getFullName());
+				history.setUser(SessionManagement.getUser());
 				history.setEvent(History.EVENT_FOLDER_RENAMED);
 				history.setSessionId(SessionManagement.getCurrentUserSessionId());
 
@@ -260,8 +259,7 @@ public class DirectoryEditForm {
 			try {
 				// Add a folder history entry
 				History transaction = new History();
-				transaction.setUserId(SessionManagement.getUserId());
-				transaction.setUserName(SessionManagement.getUser().getFullName());
+				transaction.setUser(SessionManagement.getUser());
 				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 				Menu menu = folderDao.create(parent, getFolderName(), transaction);
 				menu.getMenuGroups().clear();

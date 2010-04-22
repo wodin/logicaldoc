@@ -104,7 +104,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		boolean result = true;
 		try {
 			Document doc = (Document) getHibernateTemplate().get(Document.class, docId);
-			if (doc != null && doc.getImmutable() == 0) {
+			if (doc != null && doc.getImmutable() == 0
+					|| (doc != null && doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin"))) {
 				// Remove versions
 				for (Version version : versionDAO.findByDocId(docId)) {
 					version.setDeleted(1);

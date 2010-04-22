@@ -37,6 +37,7 @@ import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
+import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Search;
@@ -249,8 +250,7 @@ public class DmsServiceImpl implements DmsService {
 		boolean stored = dao.store(menu);
 		// Add a folder history entry
 		History transaction = new History();
-		transaction.setUserId(user.getId());
-		transaction.setUserName(user.getFullName());
+		transaction.setUser(user);
 		transaction.setEvent(History.EVENT_FOLDER_CREATED);
 		transaction.setSessionId(sid);
 		stored = dao.store(menu, transaction);
@@ -273,14 +273,16 @@ public class DmsServiceImpl implements DmsService {
 		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(id);
+		if (doc.getImmutable() == 1 && !user.isInGroup("admin"))
+			throw new Exception("the document is immutable");
+
 		checkWriteEnable(user, doc.getFolder().getId());
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
 		transaction.setEvent(History.EVENT_DELETED);
 		transaction.setComment("");
-		transaction.setUserId(user.getId());
-		transaction.setUserName(user.getFullName());
+		transaction.setUser(user);
 		docDao.delete(id, transaction);
 		return "ok";
 	}
@@ -291,16 +293,15 @@ public class DmsServiceImpl implements DmsService {
 	 */
 	public String deleteFolder(String sid, long folder) throws Exception {
 		User user = validateSession(sid);
-		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		checkWriteEnable(user, folder);
 		try {
 			// Add a folder history entry
 			History transaction = new History();
-			transaction.setUserId(user.getId());
-			transaction.setUserName(user.getFullName());
+			transaction.setUser(user);
 			transaction.setEvent(History.EVENT_FOLDER_DELETED);
 			transaction.setSessionId(sid);
-			mdao.delete(folder, transaction);
+			folderDao.deleteTree(folder, transaction);
 			return "ok";
 		} catch (Exception e) {
 			log.error("Some elements were not deleted");
@@ -608,8 +609,7 @@ public class DmsServiceImpl implements DmsService {
 			menu.setText(name);
 			// Add a folder history entry
 			History transaction = new History();
-			transaction.setUserId(user.getId());
-			transaction.setUserName(user.getFullName());
+			transaction.setUser(user);
 			transaction.setEvent(History.EVENT_FOLDER_RENAMED);
 			transaction.setSessionId(sid);
 			dao.store(menu, transaction);
@@ -627,7 +627,8 @@ public class DmsServiceImpl implements DmsService {
 		Document doc = docDao.findById(id);
 		if (doc == null)
 			throw new Exception("unexisting document " + id);
-		if (doc.getImmutable() == 1)
+
+		if (doc.getImmutable() == 1 && !user.isInGroup("admin"))
 			throw new Exception("the document is immutable");
 
 		// Initialize the lazy loaded collections

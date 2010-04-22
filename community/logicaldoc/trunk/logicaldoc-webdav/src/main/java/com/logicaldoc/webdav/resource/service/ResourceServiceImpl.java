@@ -242,8 +242,7 @@ public class ResourceServiceImpl implements ResourceService {
 			User user = (User) session.getObject("user");
 			// Add a folder history entry
 			History transaction = new History();
-			transaction.setUserId(user.getId());
-			transaction.setUserName(user.getFullName());
+			transaction.setUser(user);
 			transaction.setSessionId(sid);
 			Menu createdMenu = folderDAO.create(parentMenu, name, transaction);
 			return this.marshallFolder(createdMenu, parentResource.getRequestedPerson(), session);
@@ -300,6 +299,9 @@ public class ResourceServiceImpl implements ResourceService {
 					&& (user.getId() != document.getLockUserId() && !"admin".equals(user.getUserName()))) {
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "User didn't locked the document");
 			}
+
+			if (document.getImmutable() == 1 && !user.isInGroup("admin"))
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "The document is immutable");
 
 			// Create the document history event
 			History transaction = new History();
@@ -363,8 +365,11 @@ public class ResourceServiceImpl implements ResourceService {
 			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Rename Rights not granted to this user");
 
 		Document document = documentDAO.findById(Long.parseLong(source.getID()));
-		documentDAO.initialize(document);
 		User user = userDAO.findById(source.getRequestedPerson());
+		if (document.getImmutable() == 1 && !user.isInGroup("admin"))
+			throw new DavException(DavServletResponse.SC_FORBIDDEN, "The document is immutable");
+
+		documentDAO.initialize(document);
 
 		// Create the document history event
 		History transaction = new History();
@@ -448,8 +453,7 @@ public class ResourceServiceImpl implements ResourceService {
 			User user = (User) session.getObject("user");
 			// Add a folder history entry
 			History transaction = new History();
-			transaction.setUserId(user.getId());
-			transaction.setUserName(user.getFullName());
+			transaction.setUser(user);
 			transaction.setEvent(History.EVENT_FOLDER_RENAMED);
 			transaction.setSessionId(sid);
 			folderDAO.store(currentMenu, transaction);
@@ -469,8 +473,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 		// Add a folder history entry
 		History transaction = new History();
-		transaction.setUserId(user.getId());
-		transaction.setUserName(user.getFullName());
+		transaction.setUser(user);
 		transaction.setSessionId(sid);
 		transaction.setUser(user);
 
@@ -490,6 +493,11 @@ public class ResourceServiceImpl implements ResourceService {
 				if (!parent.isWriteEnabled())
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 				transaction.setEvent(History.EVENT_DELETED);
+
+				if (documentDAO.findById(Long.parseLong(resource.getID())).getImmutable() == 1
+						&& !user.isInGroup("admin"))
+					throw new DavException(DavServletResponse.SC_FORBIDDEN, "The document is immutable");
+
 				// Check if there are some shortcuts associated to the
 				// deleting document. All the shortcuts must be deleted.
 				if (documentDAO.findShortcutIds(Long.parseLong(resource.getID())).size() > 0)
@@ -520,6 +528,11 @@ public class ResourceServiceImpl implements ResourceService {
 				Menu menu = folderDAO.findById(Long.parseLong(destinationResource.getID()));
 
 				User user = userDAO.findById(resource.getRequestedPerson());
+
+				if (documentDAO.findById(Long.parseLong(resource.getID())).getImmutable() == 1
+						&& !user.isInGroup("admin"))
+					throw new DavException(DavServletResponse.SC_FORBIDDEN, "The document is immutable");
+
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(sid);
@@ -665,5 +678,4 @@ public class ResourceServiceImpl implements ResourceService {
 	public void setFolderDAO(FolderDAO folderDAO) {
 		this.folderDAO = folderDAO;
 	}
-
 }

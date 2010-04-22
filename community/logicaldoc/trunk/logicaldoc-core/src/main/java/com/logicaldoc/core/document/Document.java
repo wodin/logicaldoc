@@ -1,8 +1,9 @@
 package com.logicaldoc.core.document;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.HashSet;
 
-import org.apache.commons.beanutils.BeanUtils;
+import com.logicaldoc.core.ExtendedAttribute;
 
 /**
  * Basic concrete implementation of <code>AbstractDocument</code>
@@ -20,13 +21,47 @@ public class Document extends AbstractDocument {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Document cloned = new Document();
-		try {
-			BeanUtils.copyProperties(cloned, this);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+
+		cloned.setImmutable(getImmutable());
+		cloned.setTitle(getTitle());
+		cloned.setVersion(getVersion());
+		cloned.setFileVersion(getFileVersion());
+		cloned.setDate(getDate());
+		cloned.setPublisher(getPublisher());
+		cloned.setPublisherId(getPublisherId());
+		cloned.setCreator(getCreator());
+		cloned.setCreatorId(getCreatorId());
+		cloned.setStatus(getStatus());
+		cloned.setType(getType());
+		cloned.setLockUserId(getLockUserId());
+		cloned.setSource(getSource());
+		cloned.setSourceAuthor(getSourceAuthor());
+		cloned.setSourceDate(getSourceDate());
+		cloned.setSourceId(getSourceId());
+		cloned.setSourceType(getSourceType());
+		cloned.setObject(getObject());
+		cloned.setCoverage(getCoverage());
+		cloned.setLanguage(getLanguage());
+		cloned.setFileName(getFileName());
+		cloned.setFileSize(getFileSize());
+		if (getIndexed() != 1)
+			cloned.setIndexed(getIndexed());
+		cloned.setDigest(getDigest());
+		cloned.setRecipient(getRecipient());
+		cloned.setDocRef(getDocRef());
+		cloned.setFolder(getFolder());
+		cloned.setTemplate(getTemplate());
+
+		cloned.setAttributes(new HashMap<String, ExtendedAttribute>());
+		for (String name : getAttributes().keySet()) {
+			cloned.getAttributes().put(name, getAttributes().get(name));
 		}
+
+		cloned.setTags(new HashSet<String>());
+		for (String tag : getTags()) {
+			cloned.getTags().add(tag);
+		}
+
 		return cloned;
 	}
 
