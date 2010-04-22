@@ -140,8 +140,7 @@ public class ServletDocUtil {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			history.setPath(mdao.computePathExtended(doc.getFolder().getId()));
 			history.setEvent(History.EVENT_DOWNLOADED);
-			history.setUserId(user.getId());
-			history.setUserName(user.getFullName());
+			history.setUser(user);
 
 			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			hdao.store(history);

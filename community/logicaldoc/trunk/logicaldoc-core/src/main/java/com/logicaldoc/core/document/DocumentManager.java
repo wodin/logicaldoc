@@ -2,10 +2,10 @@ package com.logicaldoc.core.document;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Locale;
 
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
+import com.logicaldoc.core.searchengine.store.Storer;
 import com.logicaldoc.core.security.Menu;
 
 /**
@@ -256,4 +256,6 @@ public interface DocumentManager {
 	 * @throws Exception
 	 */
 	public Document createShortcut(Document doc, Menu folder, History transaction) throws Exception;
+
+	public void setStorer(Storer storer);
 }

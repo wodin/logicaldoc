@@ -109,6 +109,11 @@ public class HibernateFolderDAO extends HibernateMenuDAO implements FolderDAO {
 	}
 
 	@Override
+	public List<Menu> deleteTree(long folderId, History transaction) throws Exception {
+		return deleteTree(findById(folderId), transaction);
+	}
+
+	@Override
 	public List<Menu> deleteTree(Menu folder, History transaction) throws Exception {
 		assert (folder != null);
 		assert (transaction != null);

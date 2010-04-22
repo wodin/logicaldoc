@@ -66,8 +66,7 @@ public class History extends AbstractHistory {
 		history.setDate(getDate());
 		history.setDocId(getDocId());
 		history.setFolderId(getFolderId());
-		history.setUserId(getUserId());
-		history.setUserName(getUserName());
+		history.setUser(getUser());
 		history.setEvent(getEvent());
 		history.setComment(getComment());
 		history.setTitle(getTitle());

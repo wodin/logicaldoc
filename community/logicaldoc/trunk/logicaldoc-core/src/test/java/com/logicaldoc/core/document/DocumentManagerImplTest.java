@@ -5,7 +5,10 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.DummyStorer;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.FolderDAO;
+import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 
@@ -21,6 +24,8 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 
 	private UserDAO userDao;
 
+	private FolderDAO folderDao;
+
 	// Instance under test
 	private DocumentManager documentManager;
 
@@ -29,9 +34,32 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		super.setUp();
 		docDao = (DocumentDAO) context.getBean("DocumentDAO");
 		userDao = (UserDAO) context.getBean("UserDAO");
+		folderDao = (FolderDAO) context.getBean("FolderDAO");
 
 		// Make sure that this is a DocumentManagerImpl instance
 		documentManager = (DocumentManager) context.getBean("DocumentManager");
+		documentManager.setStorer(new DummyStorer());
+	}
+
+	@Test
+	public void testCopyToFolder() throws Exception {
+		User user = userDao.findByUserName("admin");
+		Document doc = docDao.findById(1);
+		Assert.assertNotNull(doc);
+		Menu folder = doc.getFolder();
+		Assert.assertEquals(103, folder.getId());
+
+		History transaction = new History();
+		transaction.setFolderId(103);
+		transaction.setUser(user);
+		transaction.setDocId(doc.getId());
+		transaction.setUserId(1);
+		transaction.setNotified(0);
+		transaction.setComment("pippo_reason");
+
+		Menu newFolder = folderDao.findById(Menu.MENUID_HOME);
+		docDao.initialize(doc);
+		Document newDoc = documentManager.copyToFolder(doc, newFolder, transaction);
 	}
 
 	@Test

@@ -268,8 +268,7 @@ public class UsersRecordsManager extends SortableList {
 					transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 					transaction.setEvent(UserHistory.EVENT_USER_DELETED);
 					transaction.setComment("");
-					transaction.setUserId(SessionManagement.getUserId());
-					transaction.setUserName(SessionManagement.getUser().getFullName());
+					transaction.setUser(SessionManagement.getUser());
 
 					boolean deleted = dao.delete(user.getId(), transaction);
 

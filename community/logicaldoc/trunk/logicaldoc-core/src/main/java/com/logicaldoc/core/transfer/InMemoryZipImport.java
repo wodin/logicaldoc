@@ -104,8 +104,7 @@ public class InMemoryZipImport extends ZipImport {
 
 		History transaction = new History();
 		transaction.setSessionId(sessionId);
-		transaction.setUserId(user.getId());
-		transaction.setUserName(user.getFullName());
+		transaction.setUser(user);
 
 		if (ze.isDirectory()) {
 			// creates a logicaldoc folder

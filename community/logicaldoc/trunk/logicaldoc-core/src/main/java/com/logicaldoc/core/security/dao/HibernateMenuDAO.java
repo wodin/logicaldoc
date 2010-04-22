@@ -463,8 +463,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				parentHistory.setTitle(parent.getText());
 				parentHistory.setPath(computePathExtended(folder.getId()));
 
-				parentHistory.setUserId(transaction.getUserId());
-				parentHistory.setUserName(transaction.getUserName());
+				parentHistory.setUser(transaction.getUser());
 				if (transaction.getEvent().equals(History.EVENT_FOLDER_CREATED)) {
 					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_CREATED);
 				} else if (transaction.getEvent().equals(History.EVENT_FOLDER_RENAMED)) {

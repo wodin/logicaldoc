@@ -41,7 +41,6 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Generic findByAlternateKey(String type, String subtype) {
 		Generic generic = null;
@@ -53,7 +52,6 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 		return generic;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Generic> findByTypeAndSubtype(String type, String subtype) {
 		String query = " 1=1 ";

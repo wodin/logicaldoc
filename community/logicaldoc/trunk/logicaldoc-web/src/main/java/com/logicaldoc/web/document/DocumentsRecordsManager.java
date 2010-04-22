@@ -270,8 +270,7 @@ public class DocumentsRecordsManager extends SortableList {
 						transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 						transaction.setEvent(History.EVENT_DELETED);
 						transaction.setComment("");
-						transaction.setUserId(SessionManagement.getUserId());
-						transaction.setUserName(SessionManagement.getUser().getFullName());
+						transaction.setUser(SessionManagement.getUser());
 
 						// If it is a shortcut, we delete only the shortcut
 						if (record.getShortcut() != null) {
@@ -283,7 +282,7 @@ public class DocumentsRecordsManager extends SortableList {
 
 						// The document of the selected documentRecord must be
 						// not immutable
-						if (record.getDocument().getImmutable() == 1) {
+						if (record.getDocument().getImmutable() == 1 && !transaction.getUser().isInGroup("admin")) {
 							skippedSome = true;
 							continue;
 						}
@@ -305,6 +304,7 @@ public class DocumentsRecordsManager extends SortableList {
 					} catch (AccessControlException e) {
 						Messages.addLocalizedWarn("document.write.nopermission");
 					} catch (Exception e) {
+						e.printStackTrace();
 						Messages.addLocalizedError("errors.action.deleteitem");
 					}
 				}
@@ -491,7 +491,7 @@ public class DocumentsRecordsManager extends SortableList {
 							// The document of the selected documentRecord
 							// must
 							// be not immutable
-							if (record.getDocument().getImmutable() == 1) {
+							if (record.getDocument().getImmutable() == 1 && !transaction.getUser().isInGroup("admin")) {
 								skippedSome = true;
 								continue;
 							}

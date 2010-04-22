@@ -34,8 +34,7 @@ public class HibernateWorkflowHistoryDAO extends HibernatePersistentObjectDAO<Wo
 		WorkflowHistory history = new WorkflowHistory();
 
 		history.setDate(new Date());
-		history.setUserId(user.getId());
-		history.setUserName(user.getFullName());
+		history.setUser(user);
 		history.setEvent(eventType);
 		history.setComment(comment);
 		if (sessionId != null)

@@ -26,6 +26,7 @@ import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.PluginRegistry;
@@ -96,7 +97,7 @@ public class DocumentRecord extends MenuBarBean {
 		super();
 		this.document = document;
 	}
-	
+
 	public Document getDocument() {
 		if (document == null)
 			loadDocument();
@@ -235,6 +236,7 @@ public class DocumentRecord extends MenuBarBean {
 	protected void createMenuItems() {
 		model.clear();
 		long userId = SessionManagement.getUserId();
+		User user = SessionManagement.getUser();
 		MenuDAO menuDAO = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		// Since the document shortcut implementation, the folder is not the
 		// document folder, but the current navigation folder
@@ -246,7 +248,6 @@ public class DocumentRecord extends MenuBarBean {
 
 		try {
 			if ((menuDAO.isWriteEnable(folder.getId(), userId)) && (document.getImmutable() == 0)) {
-
 				// Checkin/checkout an lock/unlock
 				if (document.getStatus() == Document.DOC_UNLOCKED) {
 					model.add(createMenuItem(" " + Messages.getMessage("checkout"), "checkout-" + document.getId(),
@@ -278,6 +279,11 @@ public class DocumentRecord extends MenuBarBean {
 				model.add(createMenuItem(" " + Messages.getMessage("link.pasteas"), "pastelink-" + document.getId(),
 						null, "#{documentRecord.pasteAsLink}", null, style.getImagePath("paste_link.png"), true, null,
 						null));
+			}
+
+			if (document.getImmutable() == 1 && user.isInGroup("admin")) {
+				model.add(createMenuItem(" " + Messages.getMessage("edit"), "edit-" + document.getId(), null,
+						"#{documentRecord.edit}", null, style.getImagePath("document_edit.png"), true, null, null));
 			}
 
 			model
@@ -641,7 +647,7 @@ public class DocumentRecord extends MenuBarBean {
 				History transaction = new History();
 				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 				transaction.setUser(SessionManagement.getUser());
-				
+
 				// Unlock the document; throws an exception if something
 				// goes wrong
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()

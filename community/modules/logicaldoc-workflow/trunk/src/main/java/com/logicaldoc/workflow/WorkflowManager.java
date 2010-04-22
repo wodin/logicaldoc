@@ -164,8 +164,7 @@ public class WorkflowManager {
 		transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 		transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_TASK_END);
 		transaction.setComment("");
-		transaction.setUserId(SessionManagement.getUserId());
-		transaction.setUserName(SessionManagement.getUser().getFullName());
+		transaction.setUser(SessionManagement.getUser());
 
 		workflowHistoryDao.store(transaction);
 
@@ -179,8 +178,7 @@ public class WorkflowManager {
 			instanceEnded.setSessionId(SessionManagement.getCurrentUserSessionId());
 			instanceEnded.setEvent(WorkflowHistory.EVENT_WORKFLOW_END);
 			instanceEnded.setComment("");
-			instanceEnded.setUserId(SessionManagement.getUserId());
-			instanceEnded.setUserName(SessionManagement.getUser().getFullName());
+			instanceEnded.setUser(SessionManagement.getUser());
 
 			workflowHistoryDao.store(instanceEnded);
 		}
@@ -374,8 +372,7 @@ public class WorkflowManager {
 		transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_DOCAPPENDED);
 		transaction.setDocId(selectedDocumentRecord.getDocId());
 		transaction.setComment("");
-		transaction.setUserId(SessionManagement.getUserId());
-		transaction.setUserName(SessionManagement.getUser().getFullName());
+		transaction.setUser(SessionManagement.getUser());
 
 		workflowHistoryDao.store(transaction);
 	}
@@ -450,8 +447,7 @@ public class WorkflowManager {
 		transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 		transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_TASK_START);
 		transaction.setComment("");
-		transaction.setUserId(SessionManagement.getUserId());
-		transaction.setUserName(SessionManagement.getUser().getFullName());
+		transaction.setUser(SessionManagement.getUser());
 
 		workflowHistoryDao.store(transaction);
 	}
@@ -479,8 +475,7 @@ public class WorkflowManager {
 		transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 		transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_TASK_RESUMED);
 		transaction.setComment("");
-		transaction.setUserId(SessionManagement.getUserId());
-		transaction.setUserName(SessionManagement.getUser().getFullName());
+		transaction.setUser(SessionManagement.getUser());
 
 		workflowHistoryDao.store(transaction);
 	}
@@ -508,8 +503,7 @@ public class WorkflowManager {
 		transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 		transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_TASK_SUSPENDED);
 		transaction.setComment("");
-		transaction.setUserId(SessionManagement.getUserId());
-		transaction.setUserName(SessionManagement.getUser().getFullName());
+		transaction.setUser(SessionManagement.getUser());
 
 		workflowHistoryDao.store(transaction);
 	}
@@ -554,8 +548,7 @@ public class WorkflowManager {
 			transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_TASK_REASSIGNED);
 			transaction.setComment("Workflow Task " + this.workflowTaskInstance.getName() + " reassigned to "
 					+ this.newAssignment);
-			transaction.setUserId(SessionManagement.getUserId());
-			transaction.setUserName(SessionManagement.getUser().getFullName());
+			transaction.setUser(SessionManagement.getUser());
 
 			workflowHistoryDao.store(transaction);
 

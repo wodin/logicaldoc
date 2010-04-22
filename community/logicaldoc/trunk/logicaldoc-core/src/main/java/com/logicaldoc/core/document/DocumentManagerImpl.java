@@ -4,13 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -27,8 +25,6 @@ import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.store.Storer;
 import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.Permission;
-import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
 import com.logicaldoc.util.Context;
@@ -51,7 +47,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	private DocumentListenerManager listenerManager;
 
 	private VersionDAO versionDAO;
-	
+
 	private Indexer indexer;
 
 	private Storer storer;
@@ -324,7 +320,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		assert (doc != null);
 		assert (docVO != null);
 		try {
-			if (doc.getImmutable() == 0) {
+			if (doc.getImmutable() == 0 || ((doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin")))) {
 				History renameTransaction = null;
 				if (!doc.getTitle().equals(docVO.getTitle()) && docVO.getTitle() != null) {
 					renameTransaction = (History) transaction.clone();
@@ -453,7 +449,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		if (folder.equals(doc.getFolder()))
 			return;
 
-		if (doc.getImmutable() == 0) {
+		if (doc.getImmutable() == 0 || ((doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin")))) {
 			documentDAO.initialize(doc);
 			doc.setFolder(folder);
 			setUniqueTitle(doc);
@@ -588,9 +584,9 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			log.debug("Stored version " + vers.getVersion());
 			return docVO;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
-			throw e;
+			throw new Exception(e);
 		}
 	}
 
@@ -701,7 +697,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			document = docDao.findById(doc.getDocRef());
 		}
 
-		if (document.getImmutable() == 0) {
+		if (document.getImmutable() == 0
+				|| ((doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin")))) {
 			documentDAO.initialize(document);
 			if (title) {
 				document.setTitle(newName);

@@ -261,9 +261,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 		if (transaction == null)
 			return;
 
-		transaction.setUserId(user.getId());
-		transaction.setUserName(user.getFullName());
-
+		transaction.setUser(user);
 		transaction.setNotified(0);
 
 		userHistoryDAO.store(transaction);

@@ -358,8 +358,7 @@ public class UserForm {
 						user.setPasswordChanged(new Date());
 
 						history = new UserHistory();
-						history.setUserId(user.getId());
-						history.setUserName(user.getFullName());
+						history.setUser(user);
 						history.setEvent(UserHistory.EVENT_USER_PASSWORDCHANGED);
 						history.setComment("");
 						history.setSessionId(SessionManagement.getCurrentUserSessionId());
