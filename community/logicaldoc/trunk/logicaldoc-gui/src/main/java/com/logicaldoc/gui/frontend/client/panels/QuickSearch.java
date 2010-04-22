@@ -1,11 +1,9 @@
 package com.logicaldoc.gui.frontend.client.panels;
 
-import com.google.gwt.user.client.ui.Anchor;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.frontend.client.search.Search;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -27,7 +25,7 @@ public class QuickSearch extends HLayout {
 		TextItem searchBox = new TextItem("expression");
 		searchBox.setShowTitle(false);
 		searchBox.setDefaultValue(I18N.getMessage("search") + "...");
-		searchBox.setLength(30);
+		searchBox.setWidth(200);
 		form.setFields(new FormItem[] { searchBox });
 		searchBox.addKeyPressHandler(new KeyPressHandler() {
 			@Override
@@ -35,6 +33,7 @@ public class QuickSearch extends HLayout {
 				if ("enter".equals(event.getKeyName().toLowerCase())) {
 					GUISearchOptions options = Search.get().getOptions();
 					options.setMaxHits(40);
+					options.setType(GUISearchOptions.TYPE_FULLTEXT);
 					options.setExpression(form.getValueAsString("expression"));
 					options.setQueryLanguage(Session.get().getLanguage());
 					Search.get().search();
@@ -50,16 +49,5 @@ public class QuickSearch extends HLayout {
 			}
 		});
 		addMember(form);
-
-		Anchor options = new Anchor();
-		options.setText(I18N.getMessage("options"));
-		options.setStyleName("searchOptions");
-		options.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
-			@Override
-			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-				SC.warn("Implement a popup with search otions");
-			}
-		});
-		addMember(options);
 	}
 }

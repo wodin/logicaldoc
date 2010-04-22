@@ -15,7 +15,7 @@ public class GUIResultHit implements Serializable {
 
 	private String summary;
 
-	private String docType;
+	private String type;
 
 	private String customId;
 
@@ -43,12 +43,12 @@ public class GUIResultHit implements Serializable {
 		this.summary = summary;
 	}
 
-	public String getDocType() {
-		return docType;
+	public String getType() {
+		return type;
 	}
 
-	public void setDocType(String docType) {
-		this.docType = docType;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getCustomId() {

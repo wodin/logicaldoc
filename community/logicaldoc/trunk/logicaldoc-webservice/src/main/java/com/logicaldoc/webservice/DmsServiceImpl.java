@@ -38,7 +38,6 @@ import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
-import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
@@ -501,21 +500,12 @@ public class DmsServiceImpl implements DmsService {
 		String[] flds = (String[]) fields.toArray(new String[fields.size()]);
 		opt.setFields(flds);
 
-		ArrayList<String> languages = new ArrayList<String>();
 		if (StringUtils.isEmpty(indexLanguage)) {
-			// Collection<Language> langs =
-			// LanguageManager.getInstance().getLanguages();
-			// for (Language language : langs) {
-			// languages.add(language.getLanguage());
-			// }
-			List<String> langs = LanguageManager.getInstance().getLanguagesAsString();
-			languages.addAll(langs);
+			opt.setLanguage(null);
 		} else {
-			languages.add(indexLanguage);
+			opt.setLanguage(indexLanguage);
 		}
 
-		String[] langs = (String[]) languages.toArray(new String[languages.size()]);
-		opt.setLanguages(langs);
 		opt.setQueryStr(query);
 		opt.setUserId(user.getId());
 		opt.setFormat("all");

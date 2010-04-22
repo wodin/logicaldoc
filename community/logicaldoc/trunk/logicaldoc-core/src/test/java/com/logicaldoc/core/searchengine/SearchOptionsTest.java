@@ -22,8 +22,7 @@ public class SearchOptionsTest extends AbstractCoreTestCase {
 
 		SearchOptions opt = new SearchOptions();
 
-		String[] langs = new String[] { "it", "en", "de" };
-		opt.setLanguages(langs);
+		opt.setLanguage("it");
 
 		opt.setQueryStr("prova test");
 		opt.setQueryLanguage("italiano");
@@ -44,9 +43,5 @@ public class SearchOptionsTest extends AbstractCoreTestCase {
 		Assert.assertEquals(2, opt2.getSizeMin().longValue());
 		Assert.assertEquals(SearchOptions.TYPE_FULLTEXT, opt2.getType());
 		Assert.assertEquals(1, opt2.getUserId());
-		for (int i = 0; i < langs.length; i++) {
-			Assert.assertEquals(opt.getLanguages()[i], opt2.getLanguages()[i]);
-		}
-		Assert.assertEquals("it", opt2.getLanguages()[0]);
 	}
 }

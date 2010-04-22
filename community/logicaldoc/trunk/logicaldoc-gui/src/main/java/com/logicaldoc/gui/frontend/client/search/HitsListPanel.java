@@ -7,20 +7,21 @@ import com.logicaldoc.gui.common.client.util.DateCellFormatter;
 import com.logicaldoc.gui.common.client.util.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.Main;
-import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
+import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.grid.events.CellClickEvent;
-import com.smartgwt.client.widgets.grid.events.CellClickHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * This panel shows a list of search results in a tabular way.
@@ -28,9 +29,12 @@ import com.smartgwt.client.widgets.layout.HLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class HitsListPanel extends HLayout implements SearchObserver {
+public class HitsListPanel extends VLayout implements SearchObserver {
 
 	private ListGrid list;
+
+	// Shows informations about the last search
+	private HLayout reportPanel;
 
 	public HitsListPanel() {
 		ListGridField id = new ListGridField("id");
@@ -104,8 +108,29 @@ public class HitsListPanel extends HLayout implements SearchObserver {
 		ListGridField filename = new ListGridField("filename", I18N.getMessage("filename"), 200);
 		filename.setHidden(true);
 
+		ListGridField folderId = new ListGridField("folderId", I18N.getMessage("folder"), 200);
+		folderId.setHidden(true);
+
 		ListGridField lockUserId = new ListGridField("lockUserId", " ", 24);
 		lockUserId.setHidden(true);
+
+		ListGridField score = new ListGridField("score", I18N.getMessage("score"), 120);
+		score.setCellFormatter(new CellFormatter() {
+
+			@Override
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				int score = record.getAttributeAsInt("score");
+				int red = 100 - score > 0 ? 100 - score : 0;
+				return "<img src='" + Util.imageUrl("application/dotblue.gif") + "' style='width: " + score
+						+ "px; height: 8px' title='" + score + "'/>" + "<img src='"
+						+ Util.imageUrl("application/dotgrey.gif") + "' style='width: " + red
+						+ "px; height: 8px' title='" + score + "%%'/>";
+			}
+
+		});
+
+		ListGridField summary = new ListGridField("summary", I18N.getMessage("summary"));
+		summary.setWidth(300);
 
 		list = new ListGrid() {
 			@Override
@@ -121,36 +146,40 @@ public class HitsListPanel extends HLayout implements SearchObserver {
 				}
 			}
 		};
+
+		list.setCanExpandRecords(true);
+		list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
+		list.setDetailField("summary");
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
-		list.setAutoFetchData(true);
-		list.setSelectionType(SelectionStyle.MULTIPLE);
-		list.setFields(indexed, locked, immutable, icon, title, size, lastModified, version, publisher, published,
-				creator, created, customId, filename);
-		addMember(list);
+		list.setSelectionType(SelectionStyle.SINGLE);
+		list.setShowRowNumbers(true);
+		list.setWrapCells(true);
+		list.setFields(id, folderId, score, icon, title, customId, size);
 
-		list.addCellClickHandler(new CellClickHandler() {
-			@Override
-			public void onCellClick(CellClickEvent event) {
-				if ("indexed".equals(list.getFieldName(event.getColNum()))) {
-					ListGridRecord record = event.getRecord();
-					if ("indexed".equals(record.getAttribute("indexed"))) {
-						String id = list.getSelectedRecord().getAttribute("id");
-						Window.open("download?sid=" + Session.get().getSid() + "&docId=" + id + "&downloadText=true",
-								"_self", "");
-					}
-				}
-			}
-
-		});
-
-		list.addSelectionChangedHandler(new SelectionChangedHandler() {
-			@Override
-			public void onSelectionChanged(SelectionEvent event) {
-				DocumentsPanel.get().onSelectedDocument(Long.parseLong(event.getRecord().getAttribute("id")));
-			}
-		});
+		// list.addCellClickHandler(new CellClickHandler() {
+		// @Override
+		// public void onCellClick(CellClickEvent event) {
+		// if ("indexed".equals(list.getFieldName(event.getColNum()))) {
+		// ListGridRecord record = event.getRecord();
+		// if ("indexed".equals(record.getAttribute("indexed"))) {
+		// String id = list.getSelectedRecord().getAttribute("id");
+		// Window.open("download?sid=" + Session.get().getSid() + "&docId=" + id
+		// + "&downloadText=true",
+		// "_self", "");
+		// }
+		// }
+		// }
+		//
+		// });
+		//
+		// list.addSelectionChangedHandler(new SelectionChangedHandler() {
+		// @Override
+		// public void onSelectionChanged(SelectionEvent event) {
+		// DocumentsPanel.get().onSelectedDocument(Long.parseLong(event.getRecord().getAttribute("id")));
+		// }
+		// });
 
 		// list.addCellContextClickHandler(new CellContextClickHandler() {
 		// @Override
@@ -170,12 +199,39 @@ public class HitsListPanel extends HLayout implements SearchObserver {
 			}
 		});
 
+		reportPanel = new HLayout();
+		reportPanel.setHeight(20);
+		reportPanel.setWidth100();
+		reportPanel.setStyleName("warn");
+		Button expandButton = new Button(I18N.getMessage("showsnippets"));
+		expandButton.setMargin(2);
+		expandButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				expandVisibleRows();
+			}
+		});
+		reportPanel.addMember(expandButton);
+
+		addMember(reportPanel);
+		addMember(list);
+
 		Search.get().addObserver(this);
 	}
 
+	protected void expandVisibleRows() {
+		Integer[] rows = list.getVisibleRows();
+		if (rows[0] == -1 || rows[1] == -1)
+			return;
+		for (int i = rows[0]; i < rows[1]; i++) {
+			list.expandRecord(list.getRecord(i));
+		}
+	}
+
 	@Override
-	public void onResult() {
-		list.setRecords(Search.get().getLastResult());
+	public void onSearchArrived() {
+		ListGridRecord[] result = Search.get().getLastResult();
+		list.setRecords(result);
 		Main.get().getMainPanel().selectSearchTab();
 	}
 
