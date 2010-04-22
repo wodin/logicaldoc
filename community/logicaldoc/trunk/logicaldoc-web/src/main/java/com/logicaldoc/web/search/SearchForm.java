@@ -502,7 +502,7 @@ public class SearchForm extends SortableList {
 				opt.setLanguage(language);
 			}
 
-			opt.setQueryStr(getQuery(), getPhrase(), getAny(), getNots());
+			opt.setExpression(getQuery(), getPhrase(), getAny(), getNots());
 			opt.setFormat(getFormat());
 
 			if ((getPublishingDateFrom() != null) && (getPublishingDateTo() != null)) {
@@ -533,7 +533,7 @@ public class SearchForm extends SortableList {
 
 			Locale searchLocale = "all".equals(language) ? SessionManagement.getLocale() : LocaleUtil
 					.toLocale(language);
-			opt.setQueryLanguage(searchLocale.getLanguage());
+			opt.setExpressionLanguage(searchLocale.getLanguage());
 
 			search(opt);
 		} catch (Throwable e) {
