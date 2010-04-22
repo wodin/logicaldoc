@@ -1,4 +1,4 @@
-package com.logicaldoc.core;
+package com.logicaldoc.core.document;
 
 import java.io.File;
 import java.io.InputStream;
@@ -6,7 +6,7 @@ import java.io.InputStream;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.searchengine.store.Storer;
 
-public class DummyStorer implements Storer {
+public class MockStorer implements Storer {
 
 	@Override
 	public void clean(long docId) {

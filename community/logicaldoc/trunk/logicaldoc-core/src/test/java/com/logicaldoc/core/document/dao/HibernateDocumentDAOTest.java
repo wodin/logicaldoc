@@ -52,7 +52,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 	@Test
 	public void testDelete() {
-		Assert.assertTrue(dao.delete(1,null));
+		Assert.assertTrue(dao.delete(1));
 		Document doc = dao.findById(1);
 		Assert.assertNull(doc);
 	}
@@ -383,7 +383,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 	@Test
 	public void testFindLockedByUserId() {
-		Assert.assertEquals(2, dao.findLockedByUserId(3).size());
+		Assert.assertEquals(1, dao.findLockedByUserId(3).size());
 		Assert.assertEquals(0, dao.findLockedByUserId(1).size());
 		Assert.assertEquals(0, dao.findLockedByUserId(987541).size());
 	}
@@ -391,8 +391,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	@Test
 	public void testFindByLockUserAndStatus() {
 		Assert.assertEquals(2, dao.findByLockUserAndStatus(3L, null).size());
-		Assert.assertEquals(2, dao.findByLockUserAndStatus(3L, Document.DOC_CHECKED_OUT).size());
-		Assert.assertEquals(2, dao.findByLockUserAndStatus(null, Document.DOC_CHECKED_OUT).size());
+		Assert.assertEquals(1, dao.findByLockUserAndStatus(3L, Document.DOC_CHECKED_OUT).size());
+		Assert.assertEquals(1, dao.findByLockUserAndStatus(null, Document.DOC_CHECKED_OUT).size());
 		Assert.assertEquals(0, dao.findByLockUserAndStatus(1L, null).size());
 		Assert.assertEquals(0, dao.findByLockUserAndStatus(1L, Document.DOC_CHECKED_OUT).size());
 		Assert.assertEquals(0, dao.findByLockUserAndStatus(987541L, null).size());
@@ -414,25 +414,21 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindDeleted() {
 		List<Document> deletedDocs = dao.findDeleted(1, 5);
 		Assert.assertNotNull(deletedDocs);
-		Assert.assertEquals(3, deletedDocs.size());
-		Assert.assertEquals("pippo", deletedDocs.get(0).getFileName());
-		Assert.assertEquals("DELETED 2", deletedDocs.get(0).getTitle());
-		Assert.assertEquals("pluto", deletedDocs.get(1).getFileName());
-		Assert.assertEquals("DELETED 1", deletedDocs.get(1).getTitle());
-		Assert.assertEquals("paperino", deletedDocs.get(2).getFileName());
-		Assert.assertEquals("DELETED 3", deletedDocs.get(2).getTitle());
+		Assert.assertEquals(2, deletedDocs.size());
+		Assert.assertEquals("pluto", deletedDocs.get(0).getFileName());
+		Assert.assertEquals("DELETED 1", deletedDocs.get(0).getTitle());
+		Assert.assertEquals("paperino", deletedDocs.get(1).getFileName());
+		Assert.assertEquals("DELETED 3", deletedDocs.get(1).getTitle());
 
 		deletedDocs = dao.findDeleted(2, 4);
 		Assert.assertNotNull(deletedDocs);
 		// The size is 0 because the document folderid is deleted
 		Assert.assertEquals(0, deletedDocs.size());
 
-		deletedDocs = dao.findDeleted(1, 2);
+		deletedDocs = dao.findDeleted(1, 1);
 		Assert.assertNotNull(deletedDocs);
-		Assert.assertEquals(2, deletedDocs.size());
-		Assert.assertEquals("pippo", deletedDocs.get(0).getFileName());
-		Assert.assertEquals("DELETED 2", deletedDocs.get(0).getTitle());
-		Assert.assertEquals("pluto", deletedDocs.get(1).getFileName());
-		Assert.assertEquals("DELETED 1", deletedDocs.get(1).getTitle());
+		Assert.assertEquals(1, deletedDocs.size());
+		Assert.assertEquals("pluto", deletedDocs.get(0).getFileName());
+		Assert.assertEquals("DELETED 1", deletedDocs.get(0).getTitle());
 	}
 }
