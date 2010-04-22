@@ -506,12 +506,12 @@ public class DmsServiceImpl implements DmsService {
 			opt.setLanguage(indexLanguage);
 		}
 
-		opt.setQueryStr(query);
+		opt.setExpression(query);
 		opt.setUserId(user.getId());
 		opt.setFormat("all");
-		opt.setQueryLanguage(queryLanguage);
+		opt.setExpressionLanguage(queryLanguage);
 		opt.setMaxHits(maxHits);
-		
+
 		// Execute the search
 		opt.setMaxHits(maxHits);
 		Search lastSearch = new Search(opt);
