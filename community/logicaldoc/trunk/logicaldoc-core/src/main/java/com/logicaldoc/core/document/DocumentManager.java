@@ -95,9 +95,9 @@ public interface DocumentManager {
 	 * Creates a new Document. Saves the information provided. That also
 	 * includes updating the search index for example.
 	 * 
-	 * @param file The document's file
+	 * @param content The document's content
 	 * @param docVO The value object containing the document's metadata
-	 * @param transaction The trandaction metadata (remember to set the user and
+	 * @param transaction The transaction metadata (remember to set the user and
 	 *        the comment)
 	 * @param immediateIndexing True if the document must be indexed immediately
 	 * @return The newly created document
@@ -213,6 +213,13 @@ public interface DocumentManager {
 	 * indexed)
 	 */
 	public void deleteFromIndex(Document doc);
+
+	/**
+	 * Utility method used to declare that a document must not be taken into
+	 * consideration by the indexer. If the document was previously indexed it
+	 * is removed from the index.
+	 */
+	public void markAsUnindexable(Document doc);
 
 	/**
 	 * Marks the document, with the given docId, as immutable and save the given

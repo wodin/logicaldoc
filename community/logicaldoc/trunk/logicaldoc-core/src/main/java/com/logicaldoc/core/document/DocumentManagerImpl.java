@@ -697,8 +697,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			document = docDao.findById(doc.getDocRef());
 		}
 
-		if (document.getImmutable() == 0
-				|| ((doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin")))) {
+		if (document.getImmutable() == 0 || ((doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin")))) {
 			documentDAO.initialize(document);
 			if (title) {
 				document.setTitle(newName);
@@ -818,5 +817,11 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void setConfig(PropertiesBean config) {
 		this.config = config;
+	}
+
+	@Override
+	public void markAsUnindexable(Document doc) {
+		// TODO Auto-generated method stub
+
 	}
 }
