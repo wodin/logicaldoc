@@ -1,9 +1,9 @@
 <?xml version = '1.0'?>
 <!-- 
- Webservice configuration page
+ Index options configuration page
   
- @author Marco Meschieri - Logical Objects
- @since 4.6
+ @author Matteo Caruso - Logical Objects
+ @since 5.2
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:f="http://java.sun.com/jsf/core"
