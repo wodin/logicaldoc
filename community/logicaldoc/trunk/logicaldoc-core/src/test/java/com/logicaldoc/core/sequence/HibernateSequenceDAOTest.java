@@ -1,10 +1,13 @@
 package com.logicaldoc.core.sequence;
 
+import java.util.Collection;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.generic.Generic;
 
 public class HibernateSequenceDAOTest extends AbstractCoreTestCase {
 
@@ -43,5 +46,12 @@ public class HibernateSequenceDAOTest extends AbstractCoreTestCase {
 		for (int i = 1; i <= 20; i++) {
 			Assert.assertEquals(i, dao.next("test2"));
 		}
+	}
+
+	@Test
+	public void testFindByName() {
+		Collection<Generic> sequences = dao.findByName("customid-");
+		Assert.assertNotNull(sequences);
+		Assert.assertEquals(2, sequences.size());
 	}
 }

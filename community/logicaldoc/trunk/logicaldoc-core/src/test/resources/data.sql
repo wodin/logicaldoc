@@ -259,6 +259,10 @@ insert into ld_generic(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, 
 values(2, '2008-11-19',0,'a','a2','str1','str2',10,11,1.5,1.6,'2008-11-20','2008-11-20');
 insert into ld_generic(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1, ld_integer2, ld_double1, ld_double2, ld_date1, ld_date2)
 values(3, '2008-11-19',1,'a.3','a2.3','str1','str2',10,11,1.5,1.6,'2008-11-20','2008-11-20');
+insert into ld_generic(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1, ld_integer2, ld_double1, ld_double2, ld_date1, ld_date2)
+values(4, '2010-04-23',0,'sequence','customid-year_seq','str1','str2',10,11,1.5,1.6,'2008-11-20','2008-11-20');
+insert into ld_generic(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1, ld_integer2, ld_double1, ld_double2, ld_date1, ld_date2)
+values(5, '2010-04-23',0,'sequence','customid-month_seq','str1','str2',10,11,1.5,1.6,'2008-11-20','2008-11-20');
 
 insert into ld_dthread (ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_creation, ld_creatorid, ld_creatorname, ld_lastpost, ld_subject, ld_replies, ld_views)
 values(1, '2009-04-01',0,1,'2009-04-01',1,'Admin','2009-04-03','subject',2,1);
