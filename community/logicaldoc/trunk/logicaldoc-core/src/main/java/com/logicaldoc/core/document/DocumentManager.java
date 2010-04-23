@@ -215,11 +215,25 @@ public interface DocumentManager {
 	public void deleteFromIndex(Document doc);
 
 	/**
-	 * Utility method used to declare that a document must not be taken into
-	 * consideration by the indexer. If the document was previously indexed it
-	 * is removed from the index.
+	 * Utility method used to declare that:
+	 * <ol>
+	 * <li>a document must be taken into consideration by the indexer (status =
+	 * AbstractDocument.INDEX_TO_INDEX).</li>
+	 * <li>a document must not be taken into consideration by the indexer
+	 * (status = AbstractDocument.INDEX_SKIP). If the document was previously
+	 * indexed it is removed from the index.</li>
+	 * </ol>
+	 * 
+	 * Status:
+	 * <ol>
+	 * <li>AbstractDocument.INDEX_TO_INDEX</li>
+	 * <li>AbstractDocument.INDEX_SKIP</li>
+	 * </ol>
+	 * 
+	 * @param doc The document for which will be changed the indexer status.
+	 * @param status The new document indexer status.
 	 */
-	public void markAsUnindexable(Document doc);
+	public void changeIndexingStatus(Document doc, int status);
 
 	/**
 	 * Marks the document, with the given docId, as immutable and save the given

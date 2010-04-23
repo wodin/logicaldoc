@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import com.icesoft.faces.component.ext.HtmlCommandLink;
 import com.icesoft.faces.component.ext.RowSelectorEvent;
 import com.icesoft.faces.context.effects.JavascriptContext;
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
@@ -104,6 +105,8 @@ public class DocumentsRecordsManager extends SortableList {
 	private UIData table;
 
 	private UIData panels;
+
+	private boolean indexable = false;
 
 	public DocumentsRecordsManager() {
 		// We don't sort by default
@@ -339,7 +342,7 @@ public class DocumentsRecordsManager extends SortableList {
 					for (DocumentRecord record : selection) {
 						if (record.getDocument().getImmutable() == 0) {
 							documentNotImmutable = true;
-							continue;
+							break;
 						}
 					}
 					if (documentNotImmutable) {
@@ -827,6 +830,70 @@ public class DocumentsRecordsManager extends SortableList {
 		}
 	}
 
+	/**
+	 * Shows the document unindexable options page
+	 */
+	public String showIndexOptions() {
+		log.debug("start document indexable/unindexable marking");
+		DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
+				"documentNavigation", FacesContext.getCurrentInstance(), log));
+
+		if (SessionManagement.isValid()) {
+			if (!selection.isEmpty()) {
+				log.debug("show the unindexable options page");
+				documentNavigation.setSelectedPanel(new PageContentBean("indexOptions"));
+			} else {
+				Messages.addLocalizedWarn("noselection");
+			}
+
+			return null;
+		} else {
+			return "login";
+		}
+	}
+
+	/**
+	 * Marks as indexable/unindexable all selected documents
+	 */
+	public String saveIndexOption() {
+		if (SessionManagement.isValid()) {
+			try {
+				DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+				int indexableCount = 0;
+				int unindexableCount = 0;
+				for (DocumentRecord record : selection) {
+					if (indexable) {
+						manager.changeIndexingStatus(record.getDocument(), AbstractDocument.INDEX_TO_INDEX);
+						indexableCount++;
+					} else {
+						manager.changeIndexingStatus(record.getDocument(), AbstractDocument.INDEX_SKIP);
+						unindexableCount++;
+					}
+				}
+
+				if (indexableCount > 0)
+					Messages.addLocalizedInfo(Messages.getMessage("document.index.operation.indexable.message",
+							new Object[] { indexableCount }));
+				if (unindexableCount > 0)
+					Messages.addLocalizedInfo(Messages.getMessage("document.index.operation.unindexable.message",
+							new Object[] { unindexableCount }));
+				refresh();
+
+				DocumentNavigation documentNavigation = ((DocumentNavigation) FacesUtil.accessBeanFromFacesContext(
+						"documentNavigation", FacesContext.getCurrentInstance(), log));
+				documentNavigation.refresh();
+				documentNavigation.showDocuments();
+			} catch (Throwable e) {
+				log.error(e.getMessage(), e);
+				Messages.addError(e.getMessage());
+			}
+		} else {
+			return "login";
+		}
+
+		return null;
+	}
+
 	public boolean isSelectedAll() {
 		return selectedAll;
 	}
@@ -942,5 +1009,13 @@ public class DocumentsRecordsManager extends SortableList {
 
 	public void setTable(UIData table) {
 		this.table = table;
+	}
+
+	public boolean isIndexable() {
+		return indexable;
+	}
+
+	public void setIndexable(boolean indexable) {
+		this.indexable = indexable;
 	}
 }
