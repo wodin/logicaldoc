@@ -13,7 +13,7 @@ import com.logicaldoc.web.i18n.Messages;
 
 /**
  * A JSF compliant validator that validates strings allowing only letters,
- * numbers, and '-' '_' special characters.
+ * numbers, and '_' special characters.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 4.5
@@ -28,7 +28,7 @@ public class SimpleStringValidator implements Validator {
 		String str = (String) value;
 		
 		// Set the email pattern string
-		Pattern p = Pattern.compile("[\\w\\-]*");
+		Pattern p = Pattern.compile("[\\w_]*");
 
 		// Match the given string with the pattern
 		Matcher m = p.matcher(str);
