@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.Log;
@@ -95,7 +95,7 @@ public class LoginPanel extends VLayout {
 		usernameItem.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
-				if ("enter".equals(event.getKeyName().toLowerCase()))
+				if (event.getKeyName() != null && "enter".equals(event.getKeyName().toLowerCase()))
 					onLogin();
 			}
 		});
@@ -106,7 +106,7 @@ public class LoginPanel extends VLayout {
 		passwordItem.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
-				if ("enter".equals(event.getKeyName().toLowerCase()))
+				if (event.getKeyName() != null && "enter".equals(event.getKeyName().toLowerCase()))
 					onLogin();
 			}
 		});
@@ -144,22 +144,18 @@ public class LoginPanel extends VLayout {
 
 	private void onLogin() {
 		securityService.login((String) usernameItem.getValue(), (String) passwordItem.getValue(),
-				new AsyncCallback<GUIUser>() {
+				new AsyncCallback<GUISession>() {
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
 					}
 
 					@Override
-					public void onSuccess(GUIUser user) {
-						if (user != null) {
-							if (user.isExpired()) {
-								if (user.isExpired()) {
-									new ChangePassword(user).show();
-								}
-							} else {
-								Session.get().setUser(user);
-								Main.get().showMain();
-							}
+					public void onSuccess(GUISession session) {
+						if (session.isLoggedIn()) {
+							Session.get().init(session);
+							Main.get().showMain();
+						} else if (session.getUser() != null && session.getUser().isExpired()) {
+							new ChangePassword(session.getUser()).show();
 						} else {
 							SC.warn(I18N.getMessage("accesdenied"));
 						}

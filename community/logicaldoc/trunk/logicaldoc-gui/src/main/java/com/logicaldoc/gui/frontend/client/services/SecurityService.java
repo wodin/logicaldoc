@@ -3,7 +3,7 @@ package com.logicaldoc.gui.frontend.client.services;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
-import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.beans.GUISession;
 
 /**
  * The client side stub for the Security Service. This service gives all needed
@@ -16,9 +16,9 @@ public interface SecurityService extends RemoteService {
 	 * 
 	 * @param username
 	 * @param password
-	 * @return The logged-in user or null if not authenticated
+	 * @return The newly created session
 	 */
-	public GUIUser login(String username, String password);
+	public GUISession login(String username, String password);
 
 	/**
 	 * Changes the password of a user

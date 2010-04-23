@@ -22,7 +22,7 @@ public class GUISearchOptions implements Serializable {
 
 	private String expression = "";
 
-	private String queryLanguage = "en";
+	private String expressionLanguage = "en";
 
 	// Min size in bytes
 	private Long sizeMin = null;
@@ -208,11 +208,11 @@ public class GUISearchOptions implements Serializable {
 	}
 
 	public String getQueryLanguage() {
-		return queryLanguage;
+		return expressionLanguage;
 	}
 
-	public void setQueryLanguage(String queryLanguage) {
-		this.queryLanguage = queryLanguage;
+	public void setExpressionLanguage(String queryLanguage) {
+		this.expressionLanguage = queryLanguage;
 	}
 
 	// public Serializable[] getParameters() {

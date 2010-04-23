@@ -44,7 +44,7 @@ public class SearchPanel extends HLayout {
 
 		// Prepare the collapsible menu
 		SearchMenu leftMenu = SearchMenu.get();
-		leftMenu.setWidth(280);
+		leftMenu.setWidth(350);
 		leftMenu.setShowResizeBar(true);
 
 		// Initialize the listing panel as placeholder

@@ -27,11 +27,13 @@ public class MockTemplatesDataServlet extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
 
-		writer.print("<template>");
-		writer.print("<id>-1</id>");
-		writer.print("<name> </name>");
-		writer.print("</template>");
-		
+		if ("true".equals(request.getParameter("withempty"))) {
+			writer.print("<template>");
+			writer.print("<id></id>");
+			writer.print("<name> </name>");
+			writer.print("</template>");
+		}
+
 		// Add 5 dummy templates
 		for (int i = 0; i < 5; i++) {
 			writer.print("<template>");

@@ -80,6 +80,7 @@ public class Search {
 					record.setAttribute("date", hit.getDate());
 					record.setAttribute("customId", hit.getCustomId());
 					record.setAttribute("folderId", hit.getFolderId());
+					record.setAttribute("size", hit.getSize());
 					record.setAttribute("icon", hit.getType());
 				}
 
@@ -97,5 +98,9 @@ public class Search {
 
 	public long getTime() {
 		return time;
+	}
+
+	public boolean isEmpty() {
+		return (getLastResult() == null || getLastResult().length == 0);
 	}
 }

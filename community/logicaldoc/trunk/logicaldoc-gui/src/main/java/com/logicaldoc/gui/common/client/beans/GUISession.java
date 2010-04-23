@@ -1,0 +1,54 @@
+package com.logicaldoc.gui.common.client.beans;
+
+import java.io.Serializable;
+
+/**
+ * Informations about the session created on the server side.
+ * 
+ * @author Marco Meschieri - Logical Objects
+ * @since 6.0
+ */
+public class GUISession implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	private GUIUser user;
+
+	private String[] features = new String[0];
+
+	private boolean loggedIn=false;
+	
+	private String sid;
+	
+	public GUIUser getUser() {
+		return user;
+	}
+
+	public void setUser(GUIUser user) {
+		this.user = user;
+	}
+
+	public String[] getFeatures() {
+		return features;
+	}
+
+	public void setFeatures(String[] features) {
+		this.features = features;
+	}
+
+	public boolean isLoggedIn() {
+		return loggedIn;
+	}
+
+	public void setLoggedIn(boolean loggedIn) {
+		this.loggedIn = loggedIn;
+	}
+
+	public String getSid() {
+		return sid;
+	}
+
+	public void setSid(String sid) {
+		this.sid = sid;
+	}
+}

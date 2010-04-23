@@ -14,17 +14,15 @@ public class GUIUser implements Serializable {
 
 	private String userName;
 
-	private String sid;
-
 	private long id = 0;
-
-	private String[] features = new String[0];
 
 	private String[] groups = new String[0];
 
 	private String firstName;
 
 	private String name;
+
+	private String language = "en";
 
 	private boolean expired = true;
 
@@ -38,28 +36,12 @@ public class GUIUser implements Serializable {
 		return userName;
 	}
 
-	public String getSid() {
-		return sid;
-	}
-
-	public void setSid(String sid) {
-		this.sid = sid;
-	}
-
 	public long getId() {
 		return id;
 	}
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String[] getFeatures() {
-		return features;
-	}
-
-	public void setFeatures(String[] features) {
-		this.features = features;
 	}
 
 	public String[] getGroups() {
@@ -119,5 +101,13 @@ public class GUIUser implements Serializable {
 
 	public void setPasswordMinLenght(int passwordMinLenght) {
 		this.passwordMinLenght = passwordMinLenght;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 }

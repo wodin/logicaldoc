@@ -11,8 +11,8 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.Log;
-import com.logicaldoc.gui.frontend.client.data.LanguagesDS;
 import com.logicaldoc.gui.frontend.client.data.TemplatesDS;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -71,21 +71,11 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		sourceItem.setValue(document.getSource());
 		sourceItem.addChangedHandler(changedHandler);
 
-		DateItem sourceDate = new DateItem("sourceDate");
-		sourceDate.setName("date");
-		sourceDate.setTitle(I18N.getMessage("date"));
+		DateItem sourceDate = ItemFactory.newDateItem("date", I18N.getMessage("date"));
 		sourceDate.setValue(document.getSourceDate());
-		sourceDate.setUseTextField(true);
-		sourceDate.setUseMask(true);
 		sourceDate.addChangedHandler(changedHandler);
 
-		SelectItem languageItem = new SelectItem();
-		languageItem.setName("language");
-		languageItem.setTitle(I18N.getMessage("language"));
-		languageItem.setOptionDataSource(LanguagesDS.getInstance());
-		languageItem.setDisplayField("name");
-		languageItem.setValueField("locale");
-		languageItem.setValue(document.getLanguage());
+		SelectItem languageItem = ItemFactory.newLanguageSelector("language", false);
 		languageItem.addChangedHandler(changedHandler);
 
 		TextItem authorItem = new TextItem();
@@ -122,14 +112,14 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		templateItem.setDisplayField("name");
 		templateItem.setValueField("id");
 		templateItem.setPickListWidth(250);
-		templateItem.setOptionDataSource(TemplatesDS.getInstance());
+		templateItem.setOptionDataSource(TemplatesDS.getInstanceWithEmpty());
 		templateItem.addChangedHandler(changedHandler);
 		if (document.getTemplateId() != null)
 			templateItem.setValue(document.getTemplateId().toString());
 		templateItem.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
-				if (event.getValue() != null && !"".equals(event.getValue())){
+				if (event.getValue() != null && !"".equals(event.getValue())) {
 					document.setAttributes(new GUIExtendedAttribute[0]);
 					prepareExtendedAttributes(new Long(event.getValue().toString()));
 				}
@@ -167,60 +157,55 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		if (templateId == null)
 			return;
 
-		documentService.getAttributes(Session.get().getSid(), templateId,
-				new AsyncCallback<GUIExtendedAttribute[]>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+		documentService.getAttributes(Session.get().getSid(), templateId, new AsyncCallback<GUIExtendedAttribute[]>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
 
-					@Override
-					public void onSuccess(GUIExtendedAttribute[] result) {
-						List<FormItem> items = new ArrayList<FormItem>();
-						for (GUIExtendedAttribute att : result) {
-							// We cannot use spaces in items name
-							String itemName = "_" + att.getName().replaceAll(" ", "___");
-							if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
-								TextItem item = new TextItem(itemName, att.getName());
-								if (document.getValue(att.getName()) != null)
-									item.setValue((String) document.getValue(att.getName()));
-								item.setRequired(att.isMandatory());
-								item.addChangedHandler(changedHandler);
-								items.add(item);
-							} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
-								IntegerItem item = new IntegerItem();
-								item.setName(itemName);
-								item.setTitle(att.getName());
-								if (document.getValue(att.getName()) != null)
-									item.setValue((Long) document.getValue(att.getName()));
-								item.setRequired(att.isMandatory());
-								item.addChangedHandler(changedHandler);
-								items.add(item);
-							} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
-								FloatItem item = new FloatItem();
-								item.setName(itemName);
-								item.setTitle(att.getName());
-								if (document.getValue(att.getName()) != null)
-									item.setValue((Double) document.getValue(att.getName()));
-								item.setRequired(att.isMandatory());
-								item.addChangedHandler(changedHandler);
-								items.add(item);
-							} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
-								DateItem item = new DateItem();
-								item.setName(itemName);
-								item.setTitle(att.getName());
-								if (document.getValue(att.getName()) != null)
-									item.setValue((Date) document.getValue(att.getName()));
-								item.setUseTextField(true);
-								item.setUseMask(true);
-								item.setRequired(att.isMandatory());
-								item.addChangedHandler(changedHandler);
-								items.add(item);
-							}
-						}
-						form2.setItems(items.toArray(new FormItem[0]));
+			@Override
+			public void onSuccess(GUIExtendedAttribute[] result) {
+				List<FormItem> items = new ArrayList<FormItem>();
+				for (GUIExtendedAttribute att : result) {
+					// We cannot use spaces in items name
+					String itemName = "_" + att.getName().replaceAll(" ", "___");
+					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
+						TextItem item = new TextItem(itemName, att.getName());
+						if (document.getValue(att.getName()) != null)
+							item.setValue((String) document.getValue(att.getName()));
+						item.setRequired(att.isMandatory());
+						item.addChangedHandler(changedHandler);
+						items.add(item);
+					} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
+						IntegerItem item = new IntegerItem();
+						item.setName(itemName);
+						item.setTitle(att.getName());
+						if (document.getValue(att.getName()) != null)
+							item.setValue((Long) document.getValue(att.getName()));
+						item.setRequired(att.isMandatory());
+						item.addChangedHandler(changedHandler);
+						items.add(item);
+					} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+						FloatItem item = new FloatItem();
+						item.setName(itemName);
+						item.setTitle(att.getName());
+						if (document.getValue(att.getName()) != null)
+							item.setValue((Double) document.getValue(att.getName()));
+						item.setRequired(att.isMandatory());
+						item.addChangedHandler(changedHandler);
+						items.add(item);
+					} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
+						DateItem item = ItemFactory.newDateItem(itemName, att.getName());
+						if (document.getValue(att.getName()) != null)
+							item.setValue((Date) document.getValue(att.getName()));
+						item.setRequired(att.isMandatory());
+						item.addChangedHandler(changedHandler);
+						items.add(item);
 					}
-				});
+				}
+				form2.setItems(items.toArray(new FormItem[0]));
+			}
+		});
 	}
 
 	@SuppressWarnings("unchecked")
