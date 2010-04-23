@@ -1,5 +1,9 @@
 package com.logicaldoc.core.sequence;
 
+import java.util.List;
+
+import com.logicaldoc.core.generic.Generic;
+
 /**
  * Utility DAO that can manage sequences persisted on the DB
  * <p>
@@ -26,5 +30,10 @@ public interface SequenceDAO {
 	 * @param value The initial value
 	 */
 	public void reset(String sequence, int value);
-
+	
+	
+	/**
+	 * Finds all sequences whose name starts with the passed name
+	 */
+	public List<Generic> findByName(String name);
 }

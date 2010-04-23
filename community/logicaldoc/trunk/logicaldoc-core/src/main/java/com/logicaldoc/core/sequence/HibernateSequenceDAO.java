@@ -1,17 +1,19 @@
 package com.logicaldoc.core.sequence;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.util.sql.SqlUtil;
 
 /**
- * Hibernate implementation of <code>SequenceDAO</code>.
- * </p>
- * Sequences are implemented ad Generics whose type is 'sequence' and subtype is
- * the sequence name.
+ * Hibernate implementation of <code>SequenceDAO</code>. </p> Sequences are
+ * implemented ad Generics whose type is 'sequence' and subtype is the sequence
+ * name.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
@@ -56,5 +58,13 @@ public class HibernateSequenceDAO extends HibernateDaoSupport implements Sequenc
 			genericDao.store(generic);
 			return generic.getInteger1();
 		}
+	}
+
+	@Override
+	public List<Generic> findByName(String name) {
+		String query = " 1=1 ";
+		query += " and _entity.type like '" + SqlUtil.doubleQuotes(TYPE) + "' ";
+		query += " and _entity.subtype like '" + SqlUtil.doubleQuotes(name) + "%' ";
+		return genericDao.findByWhere(query, null);
 	}
 }
