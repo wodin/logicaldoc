@@ -60,4 +60,6 @@ public final class Constants {
 	public static final String SMTP_SECURITY_TLS = "2";
 
 	public static final String SMTP_SECURITY_SSL = "3";
+
+	public static final String KEY_ENTER = "enter";
 }

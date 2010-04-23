@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.util.EmailValidator;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.gui.setup.client.services.SetupServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -246,13 +247,10 @@ public class Setup implements EntryPoint {
 		Tab languageTab = new Tab();
 		languageTab.setTitle(I18N.getMessage(LANGUAGE));
 		
-		SelectItem languageItem = new SelectItem();
-		languageItem.setValueMap(I18N.getSupportedLanguages());
-		languageItem.setName(LANGUAGE);
+		SelectItem languageItem = ItemFactory.newLanguageSelector(LANGUAGE, false);
 		languageItem.setTitle(I18N.getMessage("defaultlang"));
 		languageItem.setRequired(true);
-		languageItem.setWrapTitle(false);
-		languageItem.setDefaultValue("en");
+		
 		final DynamicForm languageForm = new DynamicForm();
 		languageForm.setID("languageForm");
 		languageForm.setValuesManager(vm);

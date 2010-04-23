@@ -9,6 +9,7 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 
@@ -61,19 +62,18 @@ public class PropertiesPanel extends FolderDetailTab {
 		descriptionItem.setValue(folder.getDescription());
 		descriptionItem.addChangedHandler(changedHandler);
 
-		TextItem pathItem = new TextItem("path");
+		StaticTextItem pathItem = new StaticTextItem("path");
 		pathItem.setTitle(I18N.getMessage("path"));
 		pathItem.setValue(folder.getPathExtended());
 		pathItem.addChangedHandler(changedHandler);
 		pathItem.setWidth(300);
-		pathItem.setDisabled(true);
 
 		items.add(idItem);
 		items.add(nameItem);
 		items.add(descriptionItem);
 		items.add(pathItem);
 
-		form.setItems(idItem, nameItem, descriptionItem, pathItem);
+		form.setItems(pathItem, idItem, nameItem, descriptionItem);
 		addMember(form);
 	}
 

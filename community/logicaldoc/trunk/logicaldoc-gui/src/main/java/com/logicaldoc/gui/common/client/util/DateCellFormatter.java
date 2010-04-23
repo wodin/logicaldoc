@@ -3,6 +3,7 @@ package com.logicaldoc.gui.common.client.util;
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.smartgwt.client.widgets.grid.CellFormatter;

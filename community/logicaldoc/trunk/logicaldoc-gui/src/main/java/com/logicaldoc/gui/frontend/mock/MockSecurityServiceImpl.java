@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
+import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 
@@ -18,31 +19,38 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public GUIUser login(String username, String password) {
+	public GUISession login(String username, String password) {
+		GUISession session = new GUISession();
+		session.setLoggedIn(false);
 		if ("admin".equals(username)) {
 			GUIUser user = new GUIUser();
+			session.setUser(user);
 			user.setUserName(username);
-			user.setSid("sid" + new Date().getTime());
+			session.setSid("sid" + new Date().getTime());
 
 			String[] features = new String[30];
 			for (int i = 0; i < 30; i++) {
 				features[i] = "Feature_" + i;
 			}
-			user.setFeatures(features);
+			session.setFeatures(features);
 			user.setGroups(new String[] { "admin" });
 			user.setFirstName("Marco");
 			user.setName("Meschieri");
 			user.setExpired(false);
 			user.setPasswordMinLenght(8);
-			return user;
+			session.setLoggedIn(true);
+			return session;
 		} else if ("author".equals(username)) {
 			GUIUser user = new GUIUser();
 			user.setId(100);
 			user.setExpired(true);
 			user.setPasswordMinLenght(8);
-			return user;
+			session.setUser(user);
+			session.setLoggedIn(false);
+			return session;
 		} else {
-			return null;
+			session.setLoggedIn(false);
+			return session;
 		}
 	}
 

@@ -26,6 +26,14 @@ public class I18N {
 		return tmp.replaceAll("\\{0\\}", val);
 	}
 
+	public static String getMessage(String key, String[] vals) {
+		String tmp = getMessage(key);
+		for (int i = 0; i < vals.length; i++) {
+			tmp = tmp.replaceAll("\\{" + i + "\\}", vals[i]);
+		}
+		return tmp;
+	}
+
 	public static String getFormat(String key) {
 		try {
 			return Dictionary.getDictionary("format_i18n").get(key);
@@ -41,9 +49,11 @@ public class I18N {
 	public static void setLanguage(String language) {
 		I18N.language = language;
 	}
-	
-	public static LinkedHashMap<String, String> getSupportedLanguages(){
+
+	public static LinkedHashMap<String, String> getSupportedLanguages(boolean addEmpty) {
 		LinkedHashMap<String, String> languages = new LinkedHashMap<String, String>();
+		if (addEmpty)
+			languages.put("", " ");
 		languages.put("en", I18N.getMessage("langen"));
 		languages.put("es", I18N.getMessage("langes"));
 		languages.put("it", I18N.getMessage("langit"));

@@ -1,8 +1,10 @@
 package com.logicaldoc.gui.frontend.client.search;
 
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.util.DateCellFormatter;
 import com.logicaldoc.gui.common.client.util.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -11,7 +13,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
@@ -20,8 +22,9 @@ import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.toolbar.ToolStrip;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
  * This panel shows a list of search results in a tabular way.
@@ -33,16 +36,29 @@ public class HitsListPanel extends VLayout implements SearchObserver {
 
 	private ListGrid list;
 
-	// Shows informations about the last search
-	private HLayout reportPanel;
+	private ToolStrip toolStrip;
 
 	public HitsListPanel() {
+		initialize();
+		Search.get().addObserver(this);
+	}
+
+	private void initialize() {
+		if (list != null) {
+			list.destroy();
+			removeMember(list);
+		}
+		if (toolStrip != null) {
+			toolStrip.destroy();
+			removeMember(toolStrip);
+		}
+
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
-		ListGridField title = new ListGridField("title", I18N.getMessage("title"), 200);
+		ListGridField title = new ListGridField("title", I18N.getMessage("title"), 300);
 
-		ListGridField size = new ListGridField("size", I18N.getMessage("size"), 70);
+		ListGridField size = new ListGridField("size", I18N.getMessage("size"), 90);
 		size.setAlign(Alignment.CENTER);
 		size.setType(ListGridFieldType.FLOAT);
 		size.setCellFormatter(new FileSizeCellFormatter());
@@ -116,17 +132,15 @@ public class HitsListPanel extends VLayout implements SearchObserver {
 
 		ListGridField score = new ListGridField("score", I18N.getMessage("score"), 120);
 		score.setCellFormatter(new CellFormatter() {
-
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
 				int score = record.getAttributeAsInt("score");
 				int red = 100 - score > 0 ? 100 - score : 0;
 				return "<img src='" + Util.imageUrl("application/dotblue.gif") + "' style='width: " + score
-						+ "px; height: 8px' title='" + score + "'/>" + "<img src='"
+						+ "px; height: 8px' title='" + score + "%'/>" + "<img src='"
 						+ Util.imageUrl("application/dotgrey.gif") + "' style='width: " + red
-						+ "px; height: 8px' title='" + score + "%%'/>";
+						+ "px; height: 8px' title='" + score + "%'/>";
 			}
-
 		});
 
 		ListGridField summary = new ListGridField("summary", I18N.getMessage("summary"));
@@ -199,24 +213,41 @@ public class HitsListPanel extends VLayout implements SearchObserver {
 			}
 		});
 
-		reportPanel = new HLayout();
-		reportPanel.setHeight(20);
-		reportPanel.setWidth100();
-		reportPanel.setStyleName("warn");
-		Button expandButton = new Button(I18N.getMessage("showsnippets"));
-		expandButton.setMargin(2);
-		expandButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				expandVisibleRows();
-			}
-		});
-		reportPanel.addMember(expandButton);
+		/*
+		 * Prepare the toolbar displaying search statistics
+		 */
+		if (!Search.get().isEmpty()) {
+			toolStrip = new ToolStrip();
+			toolStrip.setHeight(20);
+			toolStrip.setWidth100();
+			ToolStripButton showSnippets = new ToolStripButton();
+			showSnippets.setTitle(I18N.getMessage("showsnippets"));
+			toolStrip.addButton(showSnippets);
+			showSnippets.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					expandVisibleRows();
+				}
+			});
 
-		addMember(reportPanel);
+			toolStrip.addFill();
+			GUISearchOptions options = Search.get().getOptions();
+			NumberFormat format = NumberFormat.getFormat("#.###");
+			Label resultLabel = new Label(I18N.getMessage("resultstat", new String[] { options.getExpression(),
+					format.format((double)Search.get().getTime()/(double)1000) }));
+			resultLabel.setWrap(false);
+			resultLabel.setAlign(Alignment.RIGHT);
+			resultLabel.setMargin(5);
+			toolStrip.addMember(resultLabel);
+			addMember(toolStrip);
+		} else {
+			toolStrip = null;
+		}
+
 		addMember(list);
 
-		Search.get().addObserver(this);
+		ListGridRecord[] result = Search.get().getLastResult();
+		list.setRecords(result);
 	}
 
 	protected void expandVisibleRows() {
@@ -230,8 +261,7 @@ public class HitsListPanel extends VLayout implements SearchObserver {
 
 	@Override
 	public void onSearchArrived() {
-		ListGridRecord[] result = Search.get().getLastResult();
-		list.setRecords(result);
+		initialize();
 		Main.get().getMainPanel().selectSearchTab();
 	}
 

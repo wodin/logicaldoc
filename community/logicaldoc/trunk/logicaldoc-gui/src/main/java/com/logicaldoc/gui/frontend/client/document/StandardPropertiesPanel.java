@@ -7,6 +7,7 @@ import java.util.Map;
 import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.data.TagsDS;
 import com.smartgwt.client.types.TitleOrientation;
@@ -74,11 +75,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		customIdItem.addChangedHandler(changedHandler);
 		customIdItem.setRequired(true);
 
-		DateItem creationItem = new DateItem("creation");
-		creationItem.setTitle(I18N.getMessage("createdon"));
+		DateItem creationItem = ItemFactory.newDateItem("creation", I18N.getMessage("createdon"));
 		creationItem.setValue(document.getCreation());
-		creationItem.setUseTextField(true);
-		creationItem.setUseMask(true);
 		creationItem.setShowPickerIcon(false);
 		creationItem.setDisabled(true);
 
@@ -87,11 +85,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		creatorItem.setValue(document.getCreator());
 		creatorItem.setDisabled(true);
 
-		DateItem dateItem = new DateItem("date");
-		dateItem.setTitle(I18N.getMessage("publishedon"));
+		DateItem dateItem=ItemFactory.newDateItem("date", I18N.getMessage("publishedon"));
 		dateItem.setValue(document.getDate());
-		dateItem.setUseTextField(true);
-		dateItem.setUseMask(true);
 		dateItem.setShowPickerIcon(false);
 		dateItem.setDisabled(true);
 

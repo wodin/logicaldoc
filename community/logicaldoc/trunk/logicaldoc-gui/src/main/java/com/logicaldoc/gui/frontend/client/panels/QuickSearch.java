@@ -1,7 +1,6 @@
 package com.logicaldoc.gui.frontend.client.panels;
 
 import com.logicaldoc.gui.common.client.I18N;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -30,12 +29,12 @@ public class QuickSearch extends HLayout {
 		searchBox.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
+				if (event.getKeyName() == null)
+					return;
 				if ("enter".equals(event.getKeyName().toLowerCase())) {
 					GUISearchOptions options = Search.get().getOptions();
-					options.setMaxHits(40);
 					options.setType(GUISearchOptions.TYPE_FULLTEXT);
 					options.setExpression(form.getValueAsString("expression"));
-					options.setQueryLanguage(Session.get().getLanguage());
 					Search.get().search();
 				}
 			}
