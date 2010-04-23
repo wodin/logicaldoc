@@ -334,6 +334,9 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	public String getTagsString() {
 		StringBuffer sb = new StringBuffer();
+		if (tags == null)
+			return sb.toString();
+
 		Iterator<String> iter = tags.iterator();
 		boolean start = true;
 

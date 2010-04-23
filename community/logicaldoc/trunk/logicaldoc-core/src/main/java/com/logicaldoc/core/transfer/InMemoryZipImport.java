@@ -109,7 +109,7 @@ public class InMemoryZipImport extends ZipImport {
 		if (ze.isDirectory()) {
 			// creates a logicaldoc folder
 			String folderPath = FilenameUtils.getFullPathNoEndSeparator(ze.getName());
-			dao.create(parent, folderPath, transaction);
+			dao.createPath(parent, folderPath, transaction);
 		} else {
 			InputStream stream = zip.getInputStream(ze);
 			File docFile = new File(ze.getName());
@@ -118,7 +118,7 @@ public class InMemoryZipImport extends ZipImport {
 
 			// ensure to have the proper folder to upload the file into
 			String folderPath = FilenameUtils.getFullPathNoEndSeparator(ze.getName());
-			Menu documentPath = dao.create(parent, folderPath, transaction);
+			Menu documentPath = dao.createPath(parent, folderPath, transaction);
 
 			Set<String> tagSet = null;
 			if (extractTags) {
