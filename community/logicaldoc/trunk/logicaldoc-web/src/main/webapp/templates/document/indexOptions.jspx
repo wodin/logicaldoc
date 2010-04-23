@@ -40,6 +40,8 @@
 		<hr />
 
 		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['back']}" styleClass="backBtn"
+				action="#{documentsRecordsManager.back}" immediate="true" />
 			<ice:commandButton value="#{msgs['save']}"
 				action="#{documentsRecordsManager.saveIndexOption}" />
 		</ice:panelGroup>
