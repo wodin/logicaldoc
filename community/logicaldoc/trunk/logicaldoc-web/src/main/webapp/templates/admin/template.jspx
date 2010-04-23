@@ -37,7 +37,9 @@
 								<ice:inputText id="name" value="#{templateForm.template.name}"
 									disabled="#{!empty (templateForm.template.name)}"
 									binding="#{templateForm.nameInput}" maxlength="255" size="25"
-									required="true" />
+									required="true">
+									<f:validator validatorId="validator.simplestring" />
+								</ice:inputText>
 								<ice:message for="name" />
 							</ice:panelGroup>
 
