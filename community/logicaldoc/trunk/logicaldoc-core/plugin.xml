@@ -456,7 +456,7 @@
     <parameter id="title" value="document.index.settings" />
     <parameter id="rendered" value="documentNavigation.selectedDir.writeEnabled" />
     <parameter id="position" value="120" />
-    <parameter id="icon" value="actions_unindexable.png" />
+    <parameter id="icon" value="actions_index.png" />
     <parameter id="confirm" value="" />
   </extension>
   <!-- end Document Toolbar -->
