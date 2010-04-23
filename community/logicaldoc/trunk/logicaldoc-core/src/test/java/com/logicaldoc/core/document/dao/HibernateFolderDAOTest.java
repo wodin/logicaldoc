@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Menu;
@@ -157,13 +158,13 @@ public class HibernateFolderDAOTest extends AbstractCoreTestCase {
 		Document doc = docDao.findById(1);
 		docDao.initialize(doc);
 		doc.setFolder(menuC);
-		doc.setIndexed(1);
+		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
 		docDao.store(doc);
 
 		Document doc2 = docDao.findById(2);
 		docDao.initialize(doc2);
 		doc2.setFolder(menuD);
-		doc2.setIndexed(1);
+		doc2.setIndexed(AbstractDocument.INDEX_INDEXED);
 		docDao.store(doc2);
 
 		User user = userDao.findByUserName("admin");

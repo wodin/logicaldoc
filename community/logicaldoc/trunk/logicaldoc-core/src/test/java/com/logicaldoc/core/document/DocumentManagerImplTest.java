@@ -226,7 +226,7 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		transaction.setComment("pippo_reason");
 
 		documentManager.checkout(1L, transaction);
-		
+
 		File file = documentManager.getDocumentFile(1L);
 
 		Document doc = docDao.findById(1);
@@ -241,10 +241,23 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
 
-		Assert.assertEquals(0, doc.getIndexed());
+		Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX, doc.getIndexed());
 		Assert.assertEquals(0, doc.getSigned());
 		Assert.assertEquals(Document.DOC_UNLOCKED, doc.getStatus());
-
 	}
 
+	@Test
+	public void testChangeIndexingStatus() {
+		Document doc = docDao.findById(1);
+		Assert.assertNotNull(doc);
+		Assert.assertEquals(AbstractDocument.INDEX_INDEXED, doc.getIndexed());
+		documentManager.changeIndexingStatus(doc, AbstractDocument.INDEX_SKIP);
+		Assert.assertEquals(AbstractDocument.INDEX_SKIP, doc.getIndexed());
+
+		doc = docDao.findById(2);
+		Assert.assertNotNull(doc);
+		Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX, doc.getIndexed());
+		documentManager.changeIndexingStatus(doc, AbstractDocument.INDEX_SKIP);
+		Assert.assertEquals(AbstractDocument.INDEX_SKIP, doc.getIndexed());
+	}
 }

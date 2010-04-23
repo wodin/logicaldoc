@@ -44,6 +44,12 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	public static final int EXPORT_LOCKED = 1;
 
+	public static final int INDEX_TO_INDEX = 0;
+
+	public static final int INDEX_INDEXED = 1;
+
+	public static final int INDEX_SKIP = 2;
+
 	private long fileSize = 0;
 
 	/**
@@ -99,7 +105,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	private String fileName;
 
-	private int indexed = 0;
+	private int indexed = INDEX_TO_INDEX;
 
 	private int signed = 0;
 
@@ -122,7 +128,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	private Long exportId = null;
 
 	private Long docRef;
-	
+
 	private Long deleteUserId;
 
 	public Long getDeleteUserId() {
@@ -592,5 +598,9 @@ public abstract class AbstractDocument extends ExtensibleObject {
 
 	public void setDocRef(Long docRef) {
 		this.docRef = docRef;
+	}
+
+	public boolean isToIndex() {
+		return indexed == INDEX_TO_INDEX;
 	}
 }

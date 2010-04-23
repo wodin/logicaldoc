@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -54,7 +55,7 @@ public class IndexerTask extends Task {
 			size = documentDao.countByIndexed(0);
 			log.info("Found a total of " + size + " documents to be indexed");
 
-			List<Long> ids = documentDao.findIdsByWhere("indexed=0", null);
+			List<Long> ids = documentDao.findIdsByWhere("_entity.indexed = " + AbstractDocument.INDEX_TO_INDEX, null);
 
 			for (Long id : ids) {
 				Document document = documentDao.findById(id);

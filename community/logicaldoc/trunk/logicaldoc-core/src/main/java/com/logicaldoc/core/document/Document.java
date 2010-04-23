@@ -44,7 +44,7 @@ public class Document extends AbstractDocument {
 		cloned.setLanguage(getLanguage());
 		cloned.setFileName(getFileName());
 		cloned.setFileSize(getFileSize());
-		if (getIndexed() != 1)
+		if (getIndexed() != INDEX_INDEXED)
 			cloned.setIndexed(getIndexed());
 		cloned.setDigest(getDigest());
 		cloned.setRecipient(getRecipient());

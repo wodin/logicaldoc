@@ -306,6 +306,16 @@
     <parameter id="target" value="" />
     <parameter id="confirm" value="" />
   </extension>
+  <extension plugin-id="logicaldoc-core" point-id="DocumentIcons" id="unindexableIcon">
+    <parameter id="action" value="" />
+    <parameter id="link" value="#{documentRecord.downloadTextLink}" />
+    <parameter id="title" value="document.unindexable" />
+    <parameter id="rendered" value="documentRecord.document.indexed==2" />
+    <parameter id="position" value="30" />
+    <parameter id="icon" value="unindexable.png" />
+    <parameter id="target" value="_blank" />
+    <parameter id="confirm" value="" />
+  </extension>
   <!-- end document icons -->
   <!-- Start folder toolbar -->
   <extension plugin-id="logicaldoc-core" point-id="FolderToolbar" id="folderSearch">
@@ -436,6 +446,17 @@
     <parameter id="rendered" value="true" />
     <parameter id="position" value="110" />
     <parameter id="icon" value="actions_bookmarks.png" />
+    <parameter id="confirm" value="" />
+  </extension>
+  
+  <extension plugin-id="logicaldoc-core" point-id="DocumentToolbar" id="indexToolbar">
+    <parameter id="action" value="documentsRecordsManager.showIndexOptions" />
+    <parameter id="link" value="" />
+    <parameter id="target" value="" />    
+    <parameter id="title" value="document.index.settings" />
+    <parameter id="rendered" value="documentNavigation.selectedDir.writeEnabled" />
+    <parameter id="position" value="120" />
+    <parameter id="icon" value="actions_unindexable.png" />
     <parameter id="confirm" value="" />
   </extension>
   <!-- end Document Toolbar -->

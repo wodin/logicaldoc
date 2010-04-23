@@ -101,7 +101,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				listener.beforeCheckin(document, dictionary);
 			}
 
-			document.setIndexed(0);
+			document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 			document.setSigned(0);
 			documentDAO.store(document);
 
@@ -187,8 +187,6 @@ public class DocumentManagerImpl implements DocumentManager {
 	 */
 	@Override
 	public void deleteFromIndex(Document doc) {
-		if (doc.getImmutable() == 1)
-			return;
 		try {
 			long docId = doc.getId();
 
@@ -197,7 +195,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				indexer.deleteDocument(String.valueOf(docId), doc.getLocale());
 			}
 
-			doc.setIndexed(0);
+			doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 			documentDAO.store(doc);
 
 			// Check if there are some shortcuts associated to the indexing
@@ -206,7 +204,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			for (Long shortcutId : shortcutIds) {
 				Document shortcutDoc = documentDAO.findById(shortcutId);
 				indexer.deleteDocument(String.valueOf(shortcutId), doc.getLocale());
-				shortcutDoc.setIndexed(0);
+				shortcutDoc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 				documentDAO.store(shortcutDoc);
 			}
 		} catch (Exception e) {
@@ -285,7 +283,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		String content = getDocumentContent(doc);
 
 		// The document must be re-indexed
-		doc.setIndexed(0);
+		doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 		documentDAO.store(doc);
 
 		// Check if there are some shortcuts associated to the indexing
@@ -293,7 +291,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		List<Long> shortcutIds = documentDAO.findShortcutIds(doc.getId());
 		for (Long shortcutId : shortcutIds) {
 			Document shortcutDoc = documentDAO.findById(shortcutId);
-			shortcutDoc.setIndexed(0);
+			shortcutDoc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 			documentDAO.store(shortcutDoc);
 		}
 
@@ -304,12 +302,12 @@ public class DocumentManagerImpl implements DocumentManager {
 		for (Long shortcutId : shortcutIds) {
 			Document shortcutDoc = documentDAO.findById(shortcutId);
 			indexer.addFile(getDocumentFile(doc), shortcutDoc);
-			shortcutDoc.setIndexed(1);
+			shortcutDoc.setIndexed(AbstractDocument.INDEX_INDEXED);
 			documentDAO.store(shortcutDoc);
 		}
 
 		indexer.addFile(file, doc, content, locale);
-		doc.setIndexed(1);
+		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
 		documentDAO.store(doc);
 	}
 
@@ -338,7 +336,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setRecipient(docVO.getRecipient());
 
 				// The document must be re-indexed
-				doc.setIndexed(0);
+				doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 
 				// Intercept locale changes
 				doc.setLocale(docVO.getLocale());
@@ -396,7 +394,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				List<Long> shortcutIds = documentDAO.findShortcutIds(doc.getId());
 				for (Long shortcutId : shortcutIds) {
 					Document shortcutDoc = documentDAO.findById(shortcutId);
-					shortcutDoc.setIndexed(0);
+					shortcutDoc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 					documentDAO.store(shortcutDoc);
 				}
 			} else {
@@ -411,7 +409,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	/** Creates a new search index entry for the given document */
 	private void createIndexEntry(Document document) throws Exception {
 		indexer.addFile(getDocumentFile(document), document);
-		document.setIndexed(1);
+		document.setIndexed(AbstractDocument.INDEX_INDEXED);
 		documentDAO.store(document);
 
 		// Check if there are some shortcuts associated to the indexing
@@ -420,7 +418,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		for (Long shortcutId : shortcutIds) {
 			Document shortcutDoc = documentDAO.findById(shortcutId);
 			indexer.addFile(getDocumentFile(document), shortcutDoc);
-			shortcutDoc.setIndexed(1);
+			shortcutDoc.setIndexed(AbstractDocument.INDEX_INDEXED);
 			documentDAO.store(shortcutDoc);
 		}
 	}
@@ -464,7 +462,7 @@ public class DocumentManagerImpl implements DocumentManager {
 					Version.VERSION_TYPE.NEW_SUBVERSION);
 			versionDAO.store(version);
 
-			if (doc.getIndexed() == 1) {
+			if (doc.getIndexed() == AbstractDocument.INDEX_INDEXED) {
 				Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 				org.apache.lucene.document.Document indexDocument = null;
 				indexDocument = indexer.getDocument(String.valueOf(doc.getId()), doc.getLocale());
@@ -571,7 +569,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				/* create search index entry */
 				Locale loc = docVO.getLocale();
 				indexer.addFile(file, docVO, getDocumentContent(docVO), loc);
-				docVO.setIndexed(1);
+				docVO.setIndexed(AbstractDocument.INDEX_INDEXED);
 			}
 			docVO.setFileSize(file.length());
 
@@ -709,7 +707,7 @@ public class DocumentManagerImpl implements DocumentManager {
 					document.setType(FilenameUtils.getExtension(newName));
 				setUniqueFilename(document);
 			}
-			document.setIndexed(0);
+			document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 
 			// Modify document history entry
 			transaction.setEvent(History.EVENT_RENAMED);
@@ -724,7 +722,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			List<Long> shortcutIds = documentDAO.findShortcutIds(document.getId());
 			for (Long shortcutId : shortcutIds) {
 				Document shortcutDoc = documentDAO.findById(shortcutId);
-				shortcutDoc.setIndexed(0);
+				shortcutDoc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 				documentDAO.store(shortcutDoc);
 			}
 
@@ -820,8 +818,19 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void markAsUnindexable(Document doc) {
-		// TODO Auto-generated method stub
+	public void changeIndexingStatus(Document doc, int status) {
+		assert (status != AbstractDocument.INDEX_INDEXED);
 
+		if (status == AbstractDocument.INDEX_SKIP && doc.getIndexed() == AbstractDocument.INDEX_SKIP)
+			return;
+		if (status == AbstractDocument.INDEX_TO_INDEX
+				&& (doc.getIndexed() == AbstractDocument.INDEX_TO_INDEX || doc.getIndexed() == AbstractDocument.INDEX_INDEXED))
+			return;
+
+		documentDAO.initialize(doc);
+		if (status == AbstractDocument.INDEX_SKIP && doc.getIndexed() == AbstractDocument.INDEX_INDEXED)
+			deleteFromIndex(doc);
+		doc.setIndexed(status);
+		documentDAO.store(doc);
 	}
 }
