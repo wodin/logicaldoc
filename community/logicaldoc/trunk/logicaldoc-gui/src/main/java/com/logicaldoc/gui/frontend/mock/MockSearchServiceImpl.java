@@ -41,6 +41,11 @@ public class MockSearchServiceImpl extends RemoteServiceServlet implements Searc
 			hit.setScore(73);
 			hit.setSize(123562);
 		}
+		
+		if(options.getMaxHits()<=40)
+			result.setHasMore(true);
+		else
+			result.setHasMore(false);
 		return result;
 	}
 }

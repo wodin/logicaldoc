@@ -33,14 +33,13 @@ public class PropertiesPanel extends FolderDetailTab {
 	}
 
 	private void refresh() {
-		vm.clearValues();
-		vm.cancel();
-		vm.clearErrors(false);
+		vm = new ValuesManager();
 
 		if (form != null)
 			form.destroy();
 
-		removeChild(form);
+		if (contains(form))
+			removeChild(form);
 		form = new DynamicForm();
 		form.setValuesManager(vm);
 		form.setTitleOrientation(TitleOrientation.LEFT);

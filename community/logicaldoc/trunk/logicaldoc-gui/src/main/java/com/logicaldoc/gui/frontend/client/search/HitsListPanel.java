@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.util.DateCellFormatter;
 import com.logicaldoc.gui.common.client.util.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.Main;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ExpansionMode;
@@ -18,6 +19,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -45,12 +47,11 @@ public class HitsListPanel extends VLayout implements SearchObserver {
 
 	private void initialize() {
 		if (list != null) {
-			list.destroy();
-			removeMember(list);
+			list.clear();
 		}
+
 		if (toolStrip != null) {
-			toolStrip.destroy();
-			removeMember(toolStrip);
+			toolStrip.clear();
 		}
 
 		ListGridField id = new ListGridField("id");
@@ -146,31 +147,33 @@ public class HitsListPanel extends VLayout implements SearchObserver {
 		ListGridField summary = new ListGridField("summary", I18N.getMessage("summary"));
 		summary.setWidth(300);
 
-		list = new ListGrid() {
-			@Override
-			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
-				if (getFieldName(colNum).equals("title")) {
-					if ("stop".equals(record.getAttribute("immutable"))) {
-						return "color: #888888; font-style: italic;";
+		if (list == null) {
+			list = new ListGrid() {
+				@Override
+				protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
+					if (getFieldName(colNum).equals("title")) {
+						if ("stop".equals(record.getAttribute("immutable"))) {
+							return "color: #888888; font-style: italic;";
+						} else {
+							return super.getCellCSSText(record, rowNum, colNum);
+						}
 					} else {
 						return super.getCellCSSText(record, rowNum, colNum);
 					}
-				} else {
-					return super.getCellCSSText(record, rowNum, colNum);
 				}
-			}
-		};
+			};
 
-		list.setCanExpandRecords(true);
-		list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
-		list.setDetailField("summary");
-		list.setShowRecordComponents(true);
-		list.setShowRecordComponentsByCell(true);
-		list.setCanFreezeFields(true);
-		list.setSelectionType(SelectionStyle.SINGLE);
-		list.setShowRowNumbers(true);
-		list.setWrapCells(true);
-		list.setFields(id, folderId, score, icon, title, customId, size);
+			list.setCanExpandRecords(true);
+			list.setExpansionMode(ExpansionMode.DETAIL_FIELD);
+			list.setDetailField("summary");
+			list.setShowRecordComponents(true);
+			list.setShowRecordComponentsByCell(true);
+			list.setCanFreezeFields(true);
+			list.setSelectionType(SelectionStyle.SINGLE);
+			list.setShowRowNumbers(true);
+			list.setWrapCells(true);
+			list.setFields(id, folderId, score, icon, title, customId, size);
+		}
 
 		// list.addCellClickHandler(new CellClickHandler() {
 		// @Override
@@ -216,38 +219,72 @@ public class HitsListPanel extends VLayout implements SearchObserver {
 		/*
 		 * Prepare the toolbar displaying search statistics
 		 */
-		if (!Search.get().isEmpty()) {
-			toolStrip = new ToolStrip();
-			toolStrip.setHeight(20);
-			toolStrip.setWidth100();
-			ToolStripButton showSnippets = new ToolStripButton();
-			showSnippets.setTitle(I18N.getMessage("showsnippets"));
-			toolStrip.addButton(showSnippets);
-			showSnippets.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					expandVisibleRows();
-				}
-			});
-
-			toolStrip.addFill();
-			GUISearchOptions options = Search.get().getOptions();
-			NumberFormat format = NumberFormat.getFormat("#.###");
-			Label resultLabel = new Label(I18N.getMessage("resultstat", new String[] { options.getExpression(),
-					format.format((double)Search.get().getTime()/(double)1000) }));
-			resultLabel.setWrap(false);
-			resultLabel.setAlign(Alignment.RIGHT);
-			resultLabel.setMargin(5);
-			toolStrip.addMember(resultLabel);
-			addMember(toolStrip);
-		} else {
-			toolStrip = null;
-		}
-
+		prepareToolbar();
 		addMember(list);
 
 		ListGridRecord[] result = Search.get().getLastResult();
 		list.setRecords(result);
+	}
+
+	/**
+	 * Prepares the toolbar containing the search report and a set of buttons
+	 */
+	private void prepareToolbar() {
+		if (toolStrip == null)
+			toolStrip = new ToolStrip();
+		else {
+			toolStrip.removeMembers(toolStrip.getMembers());
+		}
+		if (Search.get().isEmpty())
+			toolStrip.setVisible(false);
+		else
+			toolStrip.setVisible(true);
+
+		toolStrip.setHeight(20);
+		toolStrip.setWidth100();
+		toolStrip.addSpacer(2);
+		ToolStripButton showSnippets = new ToolStripButton();
+		showSnippets.setTitle(I18N.getMessage("showsnippets"));
+		toolStrip.addButton(showSnippets);
+		showSnippets.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				expandVisibleRows();
+			}
+		});
+
+		if (Search.get().isHasMore()) {
+			toolStrip.addSeparator();
+			final IntegerItem repeatNumber = new IntegerItem();
+			repeatNumber.setName("repeatNumber");
+			repeatNumber.setHint("hits");
+			repeatNumber.setShowTitle(false);
+			repeatNumber.setDefaultValue(40);
+			repeatNumber.setWidth(40);
+			
+			ToolStripButton repeat = new ToolStripButton();
+			repeat.setTitle(I18N.getMessage("repeatsearchinlcuding"));
+			toolStrip.addButton(repeat);
+			toolStrip.addFormItem(repeatNumber);
+			repeat.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					GUISearchOptions opt = Search.get().getOptions();
+					opt.setMaxHits(opt.getMaxHits() + (Integer) repeatNumber.getValue());
+					Search.get().search();
+				}
+			});
+		}
+		toolStrip.addFill();
+		GUISearchOptions options = Search.get().getOptions();
+		NumberFormat format = NumberFormat.getFormat("#.###");
+		Label resultLabel = new Label(I18N.getMessage("resultstat", new String[] { options.getExpression(),
+				format.format((double) Search.get().getTime() / (double) 1000) }));
+		resultLabel.setWrap(false);
+		resultLabel.setAlign(Alignment.RIGHT);
+		resultLabel.setMargin(5);
+		toolStrip.addMember(resultLabel);
+		addMember(toolStrip);
 	}
 
 	protected void expandVisibleRows() {
@@ -263,6 +300,9 @@ public class HitsListPanel extends VLayout implements SearchObserver {
 	public void onSearchArrived() {
 		initialize();
 		Main.get().getMainPanel().selectSearchTab();
+		if (Search.get().isHasMore()) {
+			Log.info(I18N.getMessage("possiblemorehits"), I18N.getMessage("possiblemorehitsdetail"));
+		}
 	}
 
 	// /**
@@ -361,7 +401,7 @@ public class HitsListPanel extends VLayout implements SearchObserver {
 	// ListGridRecord selection = list.getSelectedRecord();
 	// if (selection == null)
 	// return;
-	// // TODO implement
+	// TODO implement
 	// SC.warn("To be Implemented");
 	// }
 	// });

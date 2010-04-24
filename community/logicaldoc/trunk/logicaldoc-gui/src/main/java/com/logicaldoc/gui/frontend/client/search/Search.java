@@ -33,6 +33,8 @@ public class Search {
 
 	private long time;
 
+	private boolean hasMore = false;
+
 	private Search() {
 	}
 
@@ -67,6 +69,7 @@ public class Search {
 			public void onSuccess(GUIResult result) {
 				time = result.getTime();
 				lastResult = new ListGridRecord[result.getHits().length];
+				hasMore = result.isHasMore();
 				for (int i = 0; i < result.getHits().length; i++) {
 					GUIResultHit hit = result.getHits()[i];
 					ListGridRecord record = new ListGridRecord();
@@ -102,5 +105,13 @@ public class Search {
 
 	public boolean isEmpty() {
 		return (getLastResult() == null || getLastResult().length == 0);
+	}
+
+	public boolean isHasMore() {
+		return hasMore;
+	}
+
+	public void setHasMore(boolean hasMore) {
+		this.hasMore = hasMore;
 	}
 }

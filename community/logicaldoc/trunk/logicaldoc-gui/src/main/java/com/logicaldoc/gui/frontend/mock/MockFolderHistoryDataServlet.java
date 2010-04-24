@@ -34,19 +34,19 @@ public class MockFolderHistoryDataServlet extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
 
-		writer.print("<document>");
+		writer.print("<history>");
 		writer.print("<user>Marco Meschieri</user>");
 		writer.print("<event>Subfolder created</event>");
 		writer.print("<date>2010-10-26T11:32:23</date>");
 		writer.print("<comment>comment</comment>");
-		writer.print("</document>");
+		writer.print("</history>");
 
-		writer.print("<document>");
+		writer.print("<history>");
 		writer.print("<user>Marco Meschieri</user>");
 		writer.print("<event>Subfolder created</event>");
 		writer.print("<date>2010-10-26T11:32:23</date>");
 		writer.print("<comment>comment</comment>");
-		writer.print("</document>");
+		writer.print("</history>");
 
 		writer.write("</list>");
 	}

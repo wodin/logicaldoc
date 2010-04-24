@@ -26,7 +26,6 @@ public class SearchMenu extends SectionStack {
 	}
 
 	private SearchMenu() {
-
 		String contents = "<b>Severity 1</b> - Critical problem<br>System is unavailable in production or "
 				+ "is corrupting data, and the error severely impacts the user's operations."
 				+ "<br><br><b>Severity 2</b> - Major problem<br>An important function of the system "

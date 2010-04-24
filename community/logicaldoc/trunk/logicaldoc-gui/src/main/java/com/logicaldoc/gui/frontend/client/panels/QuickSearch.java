@@ -35,6 +35,7 @@ public class QuickSearch extends HLayout {
 					GUISearchOptions options = Search.get().getOptions();
 					options.setType(GUISearchOptions.TYPE_FULLTEXT);
 					options.setExpression(form.getValueAsString("expression"));
+					options.setMaxHits(40);
 					Search.get().search();
 				}
 			}

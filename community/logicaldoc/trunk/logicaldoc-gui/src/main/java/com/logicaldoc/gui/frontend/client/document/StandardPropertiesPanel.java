@@ -52,13 +52,13 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 	private void refresh() {
 		vm.clearValues();
-		vm.cancel();
 		vm.clearErrors(false);
 
 		if (form1 != null)
 			form1.destroy();
 
-		removeChild(form1);
+		if (contains(form1))
+			removeChild(form1);
 		form1 = new DynamicForm();
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.TOP);
@@ -85,7 +85,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		creatorItem.setValue(document.getCreator());
 		creatorItem.setDisabled(true);
 
-		DateItem dateItem=ItemFactory.newDateItem("date", I18N.getMessage("publishedon"));
+		DateItem dateItem = ItemFactory.newDateItem("date", I18N.getMessage("publishedon"));
 		dateItem.setValue(document.getDate());
 		dateItem.setShowPickerIcon(false);
 		dateItem.setDisabled(true);
@@ -135,7 +135,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		 */
 		if (form2 != null)
 			form2.destroy();
-		removeChild(form2);
+		if (contains(form2))
+			removeChild(form2);
 		form2 = new DynamicForm();
 		form2.setValuesManager(vm);
 		items.clear();
@@ -187,7 +188,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 	private void prepareRightPanel() {
 		if (rightPanel != null) {
 			rightPanel.destroy();
-			removeMember(rightPanel);
+			if (contains(rightPanel))
+				removeMember(rightPanel);
 		}
 		rightPanel = new VLayout();
 		rightPanel.setMembersMargin(5);

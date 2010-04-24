@@ -207,7 +207,7 @@ public class GUISearchOptions implements Serializable {
 		this.type = type;
 	}
 
-	public String getQueryLanguage() {
+	public String getExpressionLanguage() {
 		return expressionLanguage;
 	}
 
