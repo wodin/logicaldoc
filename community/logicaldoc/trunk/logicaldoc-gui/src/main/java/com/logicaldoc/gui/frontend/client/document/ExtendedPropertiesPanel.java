@@ -53,13 +53,13 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 
 	private void refresh() {
 		vm.clearValues();
-		vm.cancel();
 		vm.clearErrors(false);
 
 		if (form1 != null)
 			form1.destroy();
 
-		removeChild(form1);
+		if (contains(form1))
+			removeChild(form1);
 		form1 = new DynamicForm();
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.TOP);
@@ -148,7 +148,8 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 	private void prepareExtendedAttributes(Long templateId) {
 		if (form2 != null)
 			form2.destroy();
-		removeChild(form2);
+		if (contains(form2))
+			removeChild(form2);
 		form2 = new DynamicForm();
 		form2.setValuesManager(vm);
 		form2.setTitleOrientation(TitleOrientation.TOP);

@@ -44,7 +44,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class FulltextForm extends VLayout {
+public class FulltextForm extends VLayout implements SearchObserver {
 	private static final String BLANK_PLACEHOLDER = "___";
 
 	private static final String BEFORE = "before";
@@ -76,7 +76,6 @@ public class FulltextForm extends VLayout {
 		form.setValuesManager(vm);
 		form.setTitleOrientation(TitleOrientation.LEFT);
 		form.setNumCols(4);
-		form.setColWidths(80, 100, 80.80);
 		form.setWidth(300);
 
 		TextItem expression = new TextItem("expression");
@@ -169,6 +168,8 @@ public class FulltextForm extends VLayout {
 
 		prepareExtendedAttributes(null);
 		addMember(extForm);
+
+		Search.get().addObserver(this);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -258,15 +259,14 @@ public class FulltextForm extends VLayout {
 	 * Prepare the second form for the extended attributes
 	 */
 	private void prepareExtendedAttributes(Long templateId) {
-		if (extForm != null)
-			extForm.destroy();
+		if (extForm != null && contains(extForm))
+			removeMember(extForm);
 
-		removeChild(extForm);
+		extForm = new DynamicForm();
 		extForm.setVisible(false);
 		extForm = new DynamicForm();
 		extForm.setTitleOrientation(TitleOrientation.LEFT);
 		extForm.setNumCols(4);
-		extForm.setColWidths(80, 100, 80.80);
 		extForm.setWidth(300);
 		addMember(extForm);
 
@@ -317,5 +317,11 @@ public class FulltextForm extends VLayout {
 				extForm.setItems(items.toArray(new FormItem[0]));
 			}
 		});
+	}
+
+	@Override
+	public void onSearchArrived() {
+		if (Search.get().getOptions().getType() == GUISearchOptions.TYPE_FULLTEXT)
+			vm.setValue("expression", Search.get().getOptions().getExpression());
 	}
 }

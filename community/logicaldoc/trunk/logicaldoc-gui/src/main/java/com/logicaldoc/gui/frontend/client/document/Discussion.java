@@ -21,7 +21,7 @@ public class Discussion extends DocumentDetailTab {
 	}
 
 	private void initGUI() {
-		if (panel != null)
+		if (panel != null && contains(panel))
 			removeMember(panel);
 		addMember(panel);
 	}

@@ -87,7 +87,6 @@ public class LoginPanel extends VLayout {
 		// Prepare the Form and all its fields
 		final DynamicForm form = new DynamicForm();
 		form.setAlign(Alignment.CENTER);
-		form.setAutoFocus(true);
 
 		usernameItem.setTitle(I18N.getMessage("username"));
 		usernameItem.setRequired(true);
@@ -138,8 +137,9 @@ public class LoginPanel extends VLayout {
 		outer.setPadding(2);
 
 		vPanel.addMember(outer);
-
-		usernameItem.setSelectOnFocus(true);
+		form.focusInItem(usernameItem);
+		form.setAutoFocus(true);
+		form.focus();
 	}
 
 	private void onLogin() {

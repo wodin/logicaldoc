@@ -29,6 +29,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	private ToolStripButton add = new ToolStripButton();
 
 	public DocumentToolbar() {
+		setHeight(25);
 		addButton(download);
 		addButton(rss);
 		addButton(pdf);

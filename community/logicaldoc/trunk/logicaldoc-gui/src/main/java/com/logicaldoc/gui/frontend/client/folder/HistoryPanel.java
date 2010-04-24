@@ -5,7 +5,7 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.util.DateCellFormatter;
-import com.logicaldoc.gui.frontend.client.data.DocumentHistoryDS;
+import com.logicaldoc.gui.frontend.client.data.FolderHistoryDS;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -22,7 +22,7 @@ import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
  */
 public class HistoryPanel extends FolderDetailTab {
 
-	private DocumentHistoryDS dataSource;
+	private FolderHistoryDS dataSource;
 
 	private ListGrid listGrid;
 
@@ -40,7 +40,7 @@ public class HistoryPanel extends FolderDetailTab {
 		listGrid = new ListGrid();
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
-		dataSource = new DocumentHistoryDS(folder.getId());
+		dataSource = new FolderHistoryDS(folder.getId());
 		listGrid.setDataSource(dataSource);
 		listGrid.setFields(user, event, date, comment);
 		addMember(listGrid);
@@ -49,8 +49,8 @@ public class HistoryPanel extends FolderDetailTab {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				Window.open("download?sid="+Session.get().getSid()+"&docId=" + folder.getId() + "&versionId=" + record.getAttribute("version")
-						+ "&open=true", "_blank", "");
+				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + folder.getId() + "&versionId="
+						+ record.getAttribute("version") + "&open=true", "_blank", "");
 			}
 		});
 	}

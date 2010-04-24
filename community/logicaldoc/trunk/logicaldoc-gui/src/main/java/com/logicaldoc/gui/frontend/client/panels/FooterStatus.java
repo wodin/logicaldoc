@@ -19,13 +19,13 @@ public class FooterStatus extends HLayout {
 
 	private Label statusLabel = new Label("");
 
-	private String detail = "";
+	private static String detail = "";
 
-	private String message = "";
+	private static String message = "";
 
-	private String severity;
+	private static String severity;
 
-	private Date date;
+	private static Date date;
 
 	private FooterStatus() {
 		setWidth100();
@@ -35,7 +35,10 @@ public class FooterStatus extends HLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.getFormat(Constants.FORMAT_DATE));
-				Label label = new Label(formatter.format((Date) date) + ": <b>" + message + "</b><br><br>"
+				Date dt=FooterStatus.this.date;
+				if(dt==null)
+					dt=new Date();
+				Label label = new Label(formatter.format(dt) + ": <b>" + message + "</b><br><br>"
 						+ (detail != null ? detail : ""));
 				label.setWidth100();
 				label.setHeight100();
