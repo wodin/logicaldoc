@@ -34,8 +34,7 @@ public class Log {
 	}
 
 	public static void info(String message, String detail) {
-		if (message == null || "".equals(message))
-			FooterStatus.getInstance().info(message, detail);
+		FooterStatus.getInstance().info(message, detail);
 		GWT.log("info message: " + message, null);
 	}
 }

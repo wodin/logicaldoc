@@ -2269,15 +2269,15 @@ a.calMonthEventLink:active {color:blue; text-decoration:none}
 }
 
 .footerInfo {
-	
+	color: #2FB5FF;
 }
 
 .footerError {
-	color: red;
+	color: #EF4A4A;
 }
 
 .footerWarn {
-	color: orange;
+	color: #FFCB3F;
 }
 
 .immutable {
