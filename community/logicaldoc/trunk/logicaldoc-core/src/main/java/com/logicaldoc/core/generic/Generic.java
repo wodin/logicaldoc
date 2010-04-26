@@ -2,6 +2,8 @@ package com.logicaldoc.core.generic;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.logicaldoc.core.ExtensibleObject;
 
 /**
@@ -130,5 +132,9 @@ public class Generic extends ExtensibleObject implements Comparable<Generic> {
 			return getType().compareTo(o.getType());
 		else
 			return getSubtype().compareTo(o.getSubtype());
+	}
+	
+	public String getDisplayString1(){
+		return StringUtils.abbreviate(getString1(), 65);
 	}
 }
