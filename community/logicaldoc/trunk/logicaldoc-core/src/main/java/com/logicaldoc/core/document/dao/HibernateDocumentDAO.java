@@ -33,6 +33,7 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.store.Storer;
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.util.sql.SqlUtil;
 
@@ -60,6 +61,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	private DocumentListenerManager listenerManager;
 
 	private Storer storer;
+
+	private PropertiesBean config;
 
 	private HibernateDocumentDAO() {
 		super(Document.class);
@@ -219,6 +222,13 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			log.debug("Invoke listeners before store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
 				listener.beforeStore(doc, dictionary);
+			}
+
+			if (doc.getId() == 0) {
+				// This is the first creation so check if it is indexable
+				if (!FileUtil.matches(doc.getFileName(), config.getProperty("index.includes"), config
+						.getProperty("index.excludes")))
+					doc.setIndexed(Document.INDEX_SKIP);
 			}
 
 			// Save the document
@@ -885,5 +895,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 
 		return results;
+	}
+
+	public void setConfig(PropertiesBean config) {
+		this.config = config;
 	}
 }
