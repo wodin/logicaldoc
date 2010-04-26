@@ -13,7 +13,6 @@ public class TagsDS extends DataSource {
 	private static TagsDS instance;
 
 	private TagsDS() {
-		setID("TagsDS");
 		setTitleField("word");
 		setRecordXPath("/list/tag");
 		DataSourceTextField tagField = new DataSourceTextField("word");

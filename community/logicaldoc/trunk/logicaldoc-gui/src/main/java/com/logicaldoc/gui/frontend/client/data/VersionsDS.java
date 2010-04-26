@@ -14,7 +14,6 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class VersionsDS extends DataSource {
 	public VersionsDS(long docId) {
-		setID("VersionsDS");
 		setRecordXPath("/list/version");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);

@@ -14,7 +14,6 @@ public class UsersDS extends DataSource {
 	private static UsersDS instance;
 
 	private UsersDS() {
-		setID("UsersDS");
 		setTitleField("username");
 		setRecordXPath("/list/user");
 		DataSourceTextField id = new DataSourceTextField("id", I18N.getMessage("id"));

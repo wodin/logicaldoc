@@ -14,7 +14,6 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class DocumentHistoryDS extends DataSource {
 	public DocumentHistoryDS(long docId) {
-		setID("DocumentHistoryDS");
 		setRecordXPath("/list/history");
 		DataSourceTextField user = new DataSourceTextField("user");
 		DataSourceDateTimeField date = new DataSourceDateTimeField("date");

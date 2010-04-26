@@ -13,7 +13,6 @@ public class LanguagesDS extends DataSource {
 	private static LanguagesDS instance;
 
 	public LanguagesDS() {
-		setID("LanguagesDS");
 		setTitleField("language");
 		setRecordXPath("/list/language");
 

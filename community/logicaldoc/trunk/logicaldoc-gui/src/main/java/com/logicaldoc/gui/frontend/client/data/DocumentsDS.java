@@ -16,7 +16,6 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class DocumentsDS extends DataSource {
 	public DocumentsDS(long folderId) {
-		setID("DocumentsDS");
 		setTitleField("title");
 		setRecordXPath("/list/document");
 		DataSourceTextField title = new DataSourceTextField("title");

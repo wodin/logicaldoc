@@ -1,4 +1,4 @@
-package com.logicaldoc.core.searchengine.store;
+package com.logicaldoc.core.store;
 
 import java.io.File;
 import java.io.IOException;

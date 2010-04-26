@@ -15,7 +15,6 @@ public class TemplatesDS extends DataSource {
 	private static TemplatesDS instanceWithEmpty;
 
 	private TemplatesDS(boolean withEmpty) {
-		setID("TemplatesDS");
 		setTitleField("template");
 		setRecordXPath("/list/template");
 		DataSourceTextField idField = new DataSourceTextField("id");

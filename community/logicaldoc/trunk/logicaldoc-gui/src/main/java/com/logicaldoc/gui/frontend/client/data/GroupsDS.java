@@ -14,7 +14,6 @@ public class GroupsDS extends DataSource {
 	private static GroupsDS instance;
 
 	private GroupsDS() {
-		setID("GroupsDS");
 		setTitleField("name");
 		setRecordXPath("/list/group");
 		DataSourceTextField id = new DataSourceTextField("id", I18N.getMessage("id"));

@@ -26,13 +26,13 @@ import com.logicaldoc.core.document.DocumentListener;
 import com.logicaldoc.core.document.DocumentListenerManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
-import com.logicaldoc.core.searchengine.store.Storer;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
+import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.util.sql.SqlUtil;
 

@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.util.Locale;
 
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
-import com.logicaldoc.core.searchengine.store.Storer;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.store.Storer;
 
 /**
  * A general manager for documents handling issues

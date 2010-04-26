@@ -70,43 +70,51 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		sourceItem.setTitle(I18N.getMessage("source"));
 		sourceItem.setValue(document.getSource());
 		sourceItem.addChangedHandler(changedHandler);
+		sourceItem.setDisabled(!document.isWrite());
 
 		DateItem sourceDate = ItemFactory.newDateItem("date", I18N.getMessage("date"));
 		sourceDate.setValue(document.getSourceDate());
 		sourceDate.addChangedHandler(changedHandler);
+		sourceDate.setDisabled(!document.isWrite());
 
 		SelectItem languageItem = ItemFactory.newLanguageSelector("language", false);
 		languageItem.addChangedHandler(changedHandler);
+		languageItem.setDisabled(!document.isWrite());
 
 		TextItem authorItem = new TextItem();
 		authorItem.setName("author");
 		authorItem.setTitle(I18N.getMessage("author"));
 		authorItem.setValue(document.getSourceAuthor());
 		authorItem.addChangedHandler(changedHandler);
+		authorItem.setDisabled(!document.isWrite());
 
 		TextItem typeItem = new TextItem();
 		typeItem.setName("type");
 		typeItem.setTitle(I18N.getMessage("type"));
 		typeItem.setValue(document.getSourceType());
 		typeItem.addChangedHandler(changedHandler);
+		typeItem.setDisabled(!document.isWrite());
 
 		TextItem recipientItem = new TextItem();
 		recipientItem.setName("recipient");
 		recipientItem.setTitle(I18N.getMessage("recipient"));
 		recipientItem.setValue(document.getRecipient());
 		recipientItem.addChangedHandler(changedHandler);
+		recipientItem.setDisabled(!document.isWrite());
 
 		TextItem objectItem = new TextItem();
 		objectItem.setName("object");
 		objectItem.setTitle(I18N.getMessage("object"));
 		objectItem.setValue(document.getObject());
 		objectItem.addChangedHandler(changedHandler);
+		objectItem.setDisabled(!document.isWrite());
 
 		TextItem coverageItem = new TextItem();
 		coverageItem.setName("coverage");
 		coverageItem.setTitle(I18N.getMessage("coverage"));
 		coverageItem.setValue(document.getCoverage());
 		coverageItem.addChangedHandler(changedHandler);
+		coverageItem.setDisabled(!document.isWrite());
 
 		SelectItem templateItem = new SelectItem("template", I18N.getMessage("template"));
 		templateItem.setDisplayField("name");
@@ -114,6 +122,8 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		templateItem.setPickListWidth(250);
 		templateItem.setOptionDataSource(TemplatesDS.getInstanceWithEmpty());
 		templateItem.addChangedHandler(changedHandler);
+		templateItem.setDisabled(!document.isWrite());
+
 		if (document.getTemplateId() != null)
 			templateItem.setValue(document.getTemplateId().toString());
 		templateItem.addChangedHandler(new ChangedHandler() {
@@ -176,6 +186,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 							item.setValue((String) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
+						item.setDisabled(!document.isWrite());
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
 						IntegerItem item = new IntegerItem();
@@ -185,6 +196,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 							item.setValue((Long) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
+						item.setDisabled(!document.isWrite());
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
 						FloatItem item = new FloatItem();
@@ -194,6 +206,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 							item.setValue((Double) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
+						item.setDisabled(!document.isWrite());
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
 						DateItem item = ItemFactory.newDateItem(itemName, att.getName());
@@ -201,6 +214,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 							item.setValue((Date) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
+						item.setDisabled(!document.isWrite());
 						items.add(item);
 					}
 				}
