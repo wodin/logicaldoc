@@ -6,51 +6,69 @@
  @since 3.0
 -->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ice="http://www.icesoft.com/icefaces/component"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:c="http://java.sun.com/jstl/core"
-    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-    xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
-    id="searchEngineForm">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="searchEngineForm" styleClass="center" style="width: 600px;">
 
-    <ice:panelGroup styleClass="center formBorderHighlight"
-        style="width: 600px;">
-        <ice:panelGroup>
-            <ice:panelGroup>
-                <ice:panelGrid columns="2" onkeypress="return submitOnEnter('searchEngineForm:save', event);" >
-                    <ice:panelGroup styleClass="outputLabel">
-                        <ice:outputLabel value="#{msgs['msg.jsp.indexdir']}:" />
-                    </ice:panelGroup>
-                    <ice:panelGroup>
-                        <ice:outputText value="#{indexInfo.indexDir}" />
-                    </ice:panelGroup>
-                    <ice:panelGroup styleClass="outputLabel">
-                        <ice:outputLabel value="#{msgs['msg.jsp.doccount']}:" />
-                    </ice:panelGroup>
-                    <ice:panelGroup>
-                        <ice:outputText value="#{indexInfo.docCount}" />
-                    </ice:panelGroup>
-                    <ice:panelGroup styleClass="outputLabel">
-                        <ice:outputLabel value="#{msgs['locked']}:" />
-                    </ice:panelGroup>
-                    <ice:panelGroup>
-                        <ice:selectBooleanCheckbox value="#{indexInfo.locked}" tabindex="1"
-                            disabled="true" />
-                    </ice:panelGroup>
-                </ice:panelGrid>
-            </ice:panelGroup>
-        </ice:panelGroup>
+	<ice:messages globalOnly="true" />
+	<ice:panelGroup styleClass="center formBorderHighlight"
+		style="width: 600px;">
+		<ice:panelGroup>
+			<ice:panelGroup>
+				<ice:panelGrid columns="2"
+					onkeypress="return submitOnEnter('searchEngineForm:save', event);">
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['msg.jsp.indexdir']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{indexInfo.indexDir}" />
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['msg.jsp.doccount']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{indexInfo.docCount}" />
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel value="#{msgs['locked']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:selectBooleanCheckbox value="#{indexInfo.locked}"
+							tabindex="1" disabled="true" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+						<ice:outputLabel for="includes" value="#{msgs['include']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+						<ice:inputText id="includes" value="#{indexInfo.includes}"
+							maxlength="255" />
+						<ice:message for="includes" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+						<ice:outputLabel for="excludes" value="#{msgs['exclude']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+						<ice:inputText id="excludes" value="#{indexInfo.excludes}"
+							maxlength="255" />
+						<ice:message for="excludes" />
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+		</ice:panelGroup>
 		<hr />
-        <ice:panelGroup styleClass="commands">
-            <ice:commandButton value="#{msgs['msg.jsp.unlock']}"
-                tabindex="1"
-                partialSubmit="true"
-                action="#{indexInfo.unlock}" />
-            <ice:commandButton value="#{msgs['msg.jsp.indexall']}"
-                tabindex="1" id="save"
-                action="#{indexInfo.recreate}" visible="#{!indexInfo.locked}" />
-        </ice:panelGroup>
-    </ice:panelGroup>
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['msg.jsp.unlock']}" tabindex="1"
+				partialSubmit="true" action="#{indexInfo.unlock}" />
+			<ice:commandButton value="#{msgs['msg.jsp.indexall']}" tabindex="1"
+				id="save" action="#{indexInfo.recreate}"
+				visible="#{!indexInfo.locked}" />
+			<ice:commandButton value="#{msgs['save']}"
+					action="#{indexInfo.save}" id="save" />
+		</ice:panelGroup>
+	</ice:panelGroup>
 </jsp:root>

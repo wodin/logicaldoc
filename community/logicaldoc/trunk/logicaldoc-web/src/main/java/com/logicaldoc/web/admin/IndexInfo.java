@@ -1,5 +1,6 @@
 package com.logicaldoc.web.admin;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -11,6 +12,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
@@ -24,6 +26,10 @@ public class IndexInfo {
 	protected static Log log = LogFactory.getLog(IndexInfo.class);
 
 	private Indexer indexer;
+
+	private String includes = "";
+
+	private String excludes = "";
 
 	public IndexInfo() {
 		indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
@@ -118,5 +124,39 @@ public class IndexInfo {
 
 	public boolean getLocked() {
 		return indexer.isLocked();
+	}
+
+	public String getIncludes() {
+		PropertiesBean config = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		includes = config.getProperty("index.includes");
+		return includes;
+	}
+
+	public String getExcludes() {
+		PropertiesBean config = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		excludes = config.getProperty("index.excludes");
+		return excludes;
+	}
+
+	public String save() {
+		PropertiesBean config = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		config.setProperty("index.includes", includes);
+		config.setProperty("index.excludes", excludes);
+		try {
+			config.write();
+		} catch (IOException e) {
+		}
+		
+		Messages.addLocalizedInfo("msg.action.savesettings");
+
+		return null;
+	}
+
+	public void setIncludes(String includes) {
+		this.includes = includes;
+	}
+
+	public void setExcludes(String excludes) {
+		this.excludes = excludes;
 	}
 }
