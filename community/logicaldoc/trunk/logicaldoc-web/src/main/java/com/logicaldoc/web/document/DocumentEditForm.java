@@ -573,7 +573,8 @@ public class DocumentEditForm {
 
 					doc = documentManager.create(file, doc, transaction, immediateIndexing);
 					if (StringUtils.isNotEmpty(doc.getCustomId()))
-						Messages.addInfo(Messages.getMessage("document.inserted", doc.getCustomId()));
+						Messages.addLocalizedInfo(Messages.getMessage("document.inserted", new Object[] { doc
+								.getCustomId() }));
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -686,57 +687,66 @@ public class DocumentEditForm {
 		// Author
 		if (fieldPreferences.get(page + ".sourceAuthor.mandatory") && StringUtils.isBlank(getSourceAuthor())) {
 			valid = false;
-			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.author")));
+			Messages.addError(Messages.getMessage("error.required", new Object[] { Messages
+					.getMessage("document.author") }));
 		}
 		// Coverage
 		if (fieldPreferences.get(page + ".coverage.mandatory") && StringUtils.isBlank(getCoverage())) {
 			valid = false;
-			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.coverage")));
+			Messages.addError(Messages.getMessage("error.required", new Object[] { Messages
+					.getMessage("document.coverage") }));
 		}
 		// Custom ID
 		if (fieldPreferences.get(page + ".customId.mandatory") && StringUtils.isBlank(getCustomId())) {
 			valid = false;
-			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.customid")));
+			Messages.addError(Messages.getMessage("error.required", new Object[] { Messages
+					.getMessage("document.customid") }));
 		}
 		// Date
 		if (fieldPreferences.get(page + ".sourceDate.mandatory") && getSourceDate() == null) {
 			valid = false;
-			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("msg.jsp.sourcedate")));
+			Messages.addError(Messages.getMessage("error.required", new Object[] { Messages
+					.getMessage("msg.jsp.sourcedate") }));
 		}
 		// Document type
 		if (fieldPreferences.get(page + ".sourceType.mandatory") && StringUtils.isBlank(getSourceType())) {
 			valid = false;
-			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.type")));
+			Messages.addError(Messages.getMessage("error.required",
+					new Object[] { Messages.getMessage("document.type") }));
 		}
 		// Object
 		if (fieldPreferences.get(page + ".object.mandatory") && StringUtils.isBlank(getObject())) {
 			valid = false;
-			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.object")));
+			Messages.addError(Messages.getMessage("error.required", new Object[] { Messages
+					.getMessage("document.object") }));
 		}
 		// Recipient
 		if (fieldPreferences.get(page + ".recipient.mandatory") && StringUtils.isBlank(getRecipient())) {
 			valid = false;
-			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.recipient")));
+			Messages.addError(Messages.getMessage("error.required", new Object[] { Messages
+					.getMessage("document.recipient") }));
 		}
 		// Source
 		if (fieldPreferences.get(page + ".source.mandatory") && StringUtils.isBlank(getSource())) {
 			valid = false;
-			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.source")));
+			Messages.addError(Messages.getMessage("error.required", new Object[] { Messages
+					.getMessage("document.source") }));
 		}
 		// Source ID
 		if (fieldPreferences.get(page + ".sourceId.mandatory") && StringUtils.isBlank(getSourceId())) {
 			valid = false;
-			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("document.sourceid")));
+			Messages.addError(Messages.getMessage("error.required", new Object[] { Messages
+					.getMessage("document.sourceid") }));
 		}
 		// Tags
 		if (fieldPreferences.get(page + ".tags.mandatory") && StringUtils.isBlank(getTags())) {
 			valid = false;
-			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("tags")));
+			Messages.addError(Messages.getMessage("error.required", new Object[] { Messages.getMessage("tags") }));
 		}
 		// Template
 		if (fieldPreferences.get(page + ".template.mandatory") && (getTemplate() == 0 || getTemplate() == null)) {
 			valid = false;
-			Messages.addError(Messages.getMessage("error.required", Messages.getMessage("template")));
+			Messages.addError(Messages.getMessage("error.required", new Object[] { Messages.getMessage("template") }));
 		}
 
 		return valid;
@@ -814,9 +824,9 @@ public class DocumentEditForm {
 					if (!fileName.equals(document.getFileName())) {
 						log.info("Filename of the checked-in document(" + fileName
 								+ ") is different from the original filename (" + document.getFileName() + ")");
-						String localizedMessage = Messages.getMessage("checkin.originalfilename", document
-								.getFileName());
-						Messages.addError(localizedMessage, "iFile");
+						String localizedMessage = Messages.getMessage("checkin.originalfilename",
+								new Object[] { document.getFileName() });
+						Messages.addLocalizedError(localizedMessage, "iFile");
 						return null;
 					}
 				}
