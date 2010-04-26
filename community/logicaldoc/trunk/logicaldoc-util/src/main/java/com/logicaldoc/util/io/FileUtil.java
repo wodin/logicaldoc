@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,10 +13,12 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.tools.ant.types.selectors.SelectorUtils;
 
 /**
  * This class manages I/O operations with files.
@@ -294,5 +295,45 @@ public class FileUtil {
 		NumberFormat nf = new DecimalFormat("###,###,##0.0", new DecimalFormatSymbols(locale));
 		displaySize = nf.format((double) size / 1024) + " KB";
 		return displaySize;
+	}
+
+	/**
+	 * Check if a given filename matches the <code>includes</code> and not the
+	 * <code>excludes</code>
+	 * 
+	 * @param filename The filename to consider
+	 * @param includes comma-separated list of includes expressions (eg.
+	 *        *.doc,*dummy*)
+	 * @param excludes comma-separated list of excludeses expressions (eg.
+	 *        *.doc,*dummy*)
+	 * @return true only if the passed filename matches the includes and not the
+	 *         excludes
+	 */
+	public static boolean matches(String filename, String includes, String excludes) {
+		StringTokenizer st;
+
+		// First of all check if the filename must be excluded
+		if (StringUtils.isNotEmpty(excludes)) {
+			st = new StringTokenizer(excludes, ",", false);
+			while (st.hasMoreTokens()) {
+				String tk = st.nextToken();
+				if (SelectorUtils.match(tk, filename, false))
+					return false;
+			}
+		}
+
+		// Then check if the filename must can be included
+		if (StringUtils.isNotEmpty(includes)) {
+			st = new StringTokenizer(includes, ",", false);
+			while (st.hasMoreTokens()) {
+				String tk = st.nextToken();
+				if (SelectorUtils.match(tk, filename, false)) {
+					return true;
+				}
+			}
+		} else
+			return true;
+
+		return false;
 	}
 }

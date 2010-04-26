@@ -173,7 +173,6 @@ public class Indexer {
 	public synchronized void optimize() {
 		log.warn("Started optimization for all indexes");
 
-		String indexdir = settingsConfig.getValue("indexdir");
 		try {
 			// Get languages from LanguageManager
 			Collection<Language> languages = LanguageManager.getInstance().getLanguages();
