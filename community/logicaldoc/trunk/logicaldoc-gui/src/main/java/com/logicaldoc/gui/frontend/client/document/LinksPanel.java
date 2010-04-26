@@ -66,7 +66,7 @@ public class LinksPanel extends DocumentDetailTab {
 		icon.setCanSort(false);
 		icon.setAlign(Alignment.CENTER);
 		icon.setShowDefaultContextMenu(false);
-		icon.setImageURLPrefix(Util.imagePrefix());
+		icon.setImageURLPrefix(Util.imagePrefix() + "application/");
 		icon.setImageURLSuffix(".png");
 		icon.setCanEdit(false);
 
@@ -101,12 +101,12 @@ public class LinksPanel extends DocumentDetailTab {
 
 						@Override
 						public void onSuccess(Void result) {
-							//Nothing to do
+							// Nothing to do
 						}
 					});
 				}
 			});
-			
+
 			listGrid.addCellContextClickHandler(new CellContextClickHandler() {
 				@Override
 				public void onCellContextClick(CellContextClickEvent event) {
@@ -123,25 +123,26 @@ public class LinksPanel extends DocumentDetailTab {
 								ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 							}
 
-							SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new BooleanCallback() {
-								@Override
-								public void execute(Boolean value) {
-									if (value) {
-										documentService.deleteLinks(Session.get().getSid(), ids,
-												new AsyncCallback<Void>() {
-													@Override
-													public void onFailure(Throwable caught) {
-														Log.serverError(caught);
-													}
+							SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"),
+									new BooleanCallback() {
+										@Override
+										public void execute(Boolean value) {
+											if (value) {
+												documentService.deleteLinks(Session.get().getSid(), ids,
+														new AsyncCallback<Void>() {
+															@Override
+															public void onFailure(Throwable caught) {
+																Log.serverError(caught);
+															}
 
-													@Override
-													public void onSuccess(Void result) {
-														listGrid.removeSelectedData();
-													}
-												});
-									}
-								}
-							});
+															@Override
+															public void onSuccess(Void result) {
+																listGrid.removeSelectedData();
+															}
+														});
+											}
+										}
+									});
 						}
 					});
 					contextMenu.setItems(deleteItem);
@@ -151,13 +152,12 @@ public class LinksPanel extends DocumentDetailTab {
 				}
 			});
 		}
-		
+
 		listGrid.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = listGrid.getSelectedRecord().getAttribute("id");
-				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true", "_blank",
-						"");
+				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true", "_blank", "");
 			}
 		});
 	}

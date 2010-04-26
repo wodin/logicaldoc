@@ -98,7 +98,6 @@ public class DocumentDetailsPanel extends VLayout {
 		tabSet.setHeight100();
 
 		Tab propertiesTab = new Tab(I18N.getMessage("properties"));
-		propertiesTab.setID("stdProps");
 		propertiesTabPanel = new HLayout();
 		propertiesTabPanel.setWidth100();
 		propertiesTabPanel.setHeight100();
@@ -106,7 +105,6 @@ public class DocumentDetailsPanel extends VLayout {
 		tabSet.addTab(propertiesTab);
 
 		Tab extendedPropertiesTab = new Tab(I18N.getMessage("propertiesext"));
-		extendedPropertiesTab.setID("extProps");
 		extendedPropertiesTabPanel = new HLayout();
 		extendedPropertiesTabPanel.setWidth100();
 		extendedPropertiesTabPanel.setHeight100();
@@ -114,7 +112,6 @@ public class DocumentDetailsPanel extends VLayout {
 		tabSet.addTab(extendedPropertiesTab);
 
 		Tab linksTab = new Tab(I18N.getMessage("links"));
-		linksTab.setID("links");
 		linksTabPanel = new HLayout();
 		linksTabPanel.setWidth100();
 		linksTabPanel.setHeight100();
@@ -122,7 +119,6 @@ public class DocumentDetailsPanel extends VLayout {
 		tabSet.addTab(linksTab);
 
 		Tab discussionTab = new Tab(I18N.getMessage("discussions"));
-		discussionTab.setID("discussions");
 		discussionTabPanel = new HLayout();
 		discussionTabPanel.setWidth100();
 		discussionTabPanel.setHeight100();
@@ -130,7 +126,6 @@ public class DocumentDetailsPanel extends VLayout {
 		tabSet.addTab(discussionTab);
 
 		Tab versionsTab = new Tab(I18N.getMessage("versions"));
-		versionsTab.setID("versions");
 		versionsTabPanel = new HLayout();
 		versionsTabPanel.setWidth100();
 		versionsTabPanel.setHeight100();
@@ -138,7 +133,6 @@ public class DocumentDetailsPanel extends VLayout {
 		tabSet.addTab(versionsTab);
 
 		Tab historyTab = new Tab(I18N.getMessage("history"));
-		historyTab.setID("documentHistory");
 		historyTabPanel = new HLayout();
 		historyTabPanel.setWidth100();
 		historyTabPanel.setHeight100();
@@ -156,7 +150,8 @@ public class DocumentDetailsPanel extends VLayout {
 		 */
 		if (propertiesPanel != null) {
 			propertiesPanel.destroy();
-			propertiesTabPanel.removeMember(propertiesPanel);
+			if (propertiesTabPanel.contains(propertiesPanel))
+				propertiesTabPanel.removeMember(propertiesPanel);
 		}
 
 		ChangedHandler changeHandler = new ChangedHandler() {
@@ -173,7 +168,8 @@ public class DocumentDetailsPanel extends VLayout {
 		 */
 		if (extendedPropertiesPanel != null) {
 			extendedPropertiesPanel.destroy();
-			extendedPropertiesTabPanel.removeMember(extendedPropertiesPanel);
+			if (extendedPropertiesTabPanel.contains(extendedPropertiesPanel))
+				extendedPropertiesTabPanel.removeMember(extendedPropertiesPanel);
 		}
 		extendedPropertiesPanel = new ExtendedPropertiesPanel(document, changeHandler);
 		extendedPropertiesTabPanel.addMember(extendedPropertiesPanel);
@@ -183,7 +179,8 @@ public class DocumentDetailsPanel extends VLayout {
 		 */
 		if (versionsPanel != null) {
 			versionsPanel.destroy();
-			versionsTabPanel.removeMember(versionsPanel);
+			if (versionsTabPanel.contains(versionsPanel))
+				versionsTabPanel.removeMember(versionsPanel);
 		}
 		versionsPanel = new VersionsPanel(document);
 		versionsTabPanel.addMember(versionsPanel);
@@ -193,7 +190,8 @@ public class DocumentDetailsPanel extends VLayout {
 		 */
 		if (historyPanel != null) {
 			historyPanel.destroy();
-			historyTabPanel.removeMember(historyPanel);
+			if (historyTabPanel.contains(historyPanel))
+				historyTabPanel.removeMember(historyPanel);
 		}
 		historyPanel = new HistoryPanel(document);
 		historyTabPanel.addMember(historyPanel);
@@ -203,7 +201,8 @@ public class DocumentDetailsPanel extends VLayout {
 		 */
 		if (linksPanel != null) {
 			linksPanel.destroy();
-			linksTabPanel.removeMember(linksPanel);
+			if (linksTabPanel.contains(linksPanel))
+				linksTabPanel.removeMember(linksPanel);
 		}
 		linksPanel = new LinksPanel(document);
 		linksTabPanel.addMember(linksPanel);
@@ -213,7 +212,8 @@ public class DocumentDetailsPanel extends VLayout {
 		 */
 		if (discussionPanel != null) {
 			discussionPanel.destroy();
-			discussionTabPanel.removeMember(discussionPanel);
+			if (discussionTabPanel.contains(discussionPanel))
+				discussionTabPanel.removeMember(discussionPanel);
 		}
 		discussionPanel = new Discussion(document);
 		discussionTabPanel.addMember(discussionPanel);

@@ -24,6 +24,8 @@ import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
@@ -173,6 +175,13 @@ public class HitsListPanel extends VLayout implements SearchObserver {
 			list.setShowRowNumbers(true);
 			list.setWrapCells(true);
 			list.setFields(id, folderId, score, icon, title, customId, size);
+
+			list.addSelectionChangedHandler(new SelectionChangedHandler() {
+				@Override
+				public void onSelectionChanged(SelectionEvent event) {
+					SearchPanel.get().onSelectedDocument(Long.parseLong(event.getRecord().getAttribute("id")));
+				}
+			});
 		}
 
 		// list.addCellClickHandler(new CellClickHandler() {
@@ -261,7 +270,7 @@ public class HitsListPanel extends VLayout implements SearchObserver {
 			repeatNumber.setShowTitle(false);
 			repeatNumber.setDefaultValue(40);
 			repeatNumber.setWidth(40);
-			
+
 			ToolStripButton repeat = new ToolStripButton();
 			repeat.setTitle(I18N.getMessage("repeatsearchinlcuding"));
 			toolStrip.addButton(repeat);

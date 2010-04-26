@@ -13,7 +13,6 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class RightsDS extends DataSource {
 	public RightsDS(long folderId) {
-		setID("RightsDS");
 		setTitleField("entity");
 		setRecordXPath("/list/right");
 		DataSourceTextField entity = new DataSourceTextField("entity");

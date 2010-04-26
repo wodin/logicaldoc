@@ -3,8 +3,7 @@ package com.logicaldoc.core.document;
 import java.io.File;
 import java.io.InputStream;
 
-import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.searchengine.store.Storer;
+import com.logicaldoc.core.store.Storer;
 
 public class MockStorer implements Storer {
 

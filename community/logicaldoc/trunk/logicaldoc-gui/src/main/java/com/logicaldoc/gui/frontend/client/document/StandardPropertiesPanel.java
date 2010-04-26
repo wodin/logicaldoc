@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.ui.Image;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -74,6 +75,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		customIdItem.setValue(document.getCustomId());
 		customIdItem.addChangedHandler(changedHandler);
 		customIdItem.setRequired(true);
+		customIdItem.setDisabled(!document.isWrite());
 
 		DateItem creationItem = ItemFactory.newDateItem("creation", I18N.getMessage("createdon"));
 		creationItem.setValue(document.getCreation());
@@ -100,7 +102,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		titleItem.setValue(document.getTitle());
 		titleItem.addChangedHandler(changedHandler);
 		titleItem.setRequired(true);
-
+		titleItem.setDisabled(!document.isWrite());
+		
 		TextItem versionItem = new TextItem("version");
 		versionItem.setTitle(I18N.getMessage("version"));
 		versionItem.setValue(document.getVersion());
@@ -148,7 +151,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		tagItem.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
-				if ("enter".equals(event.getKeyName().toLowerCase())) {
+				if (Constants.KEY_ENTER.equals(event.getKeyName().toLowerCase())) {
 					document.addTag(tagItem.getValue().toString().trim());
 					tagItem.clearValue();
 					refresh();

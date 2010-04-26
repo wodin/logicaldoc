@@ -18,10 +18,10 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.Version.VERSION_TYPE;
-import com.logicaldoc.core.searchengine.store.Storer;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.io.FileUtil;
 
 /**

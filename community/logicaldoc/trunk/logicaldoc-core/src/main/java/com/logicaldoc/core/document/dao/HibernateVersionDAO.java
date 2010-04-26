@@ -10,7 +10,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Version;
-import com.logicaldoc.core.searchengine.store.Storer;
+import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.config.PropertiesBean;
 
 import edu.emory.mathcs.backport.java.util.Collections;

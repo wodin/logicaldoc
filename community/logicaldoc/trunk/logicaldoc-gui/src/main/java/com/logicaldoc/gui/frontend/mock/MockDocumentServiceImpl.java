@@ -39,6 +39,11 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 		document.setTemplateId(1L);
 		document.setTemplate("template1");
 		document.setStatus(Document.DOC_UNLOCKED);
+		if (docId % 2 == 0)
+			document.setPermissions(new String[] { "read", "write", "addChild", "manageSecurity", "delete", "rename",
+					"bulkImport", "bulkExport", "sign", "archive", "workflow", "manageImmutability" });
+		else
+			document.setPermissions(new String[] { "read" });
 		return document;
 	}
 

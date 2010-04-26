@@ -13,7 +13,6 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class LinksDS extends DataSource {
 	public LinksDS(long docId) {
-		setID("LinksDS");
 		setTitleField("title");
 		setRecordXPath("/list/link");
 		DataSourceTextField title = new DataSourceTextField("title");

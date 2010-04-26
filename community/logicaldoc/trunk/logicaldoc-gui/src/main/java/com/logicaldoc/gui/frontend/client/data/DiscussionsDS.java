@@ -14,7 +14,6 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class DiscussionsDS extends DataSource {
 	public DiscussionsDS(long docId) {
-		setID("DiscussionsDS");
 		setRecordXPath("/list/discussion");
 		DataSourceTextField title = new DataSourceTextField("title");
 		DataSourceTextField id = new DataSourceTextField("id");
