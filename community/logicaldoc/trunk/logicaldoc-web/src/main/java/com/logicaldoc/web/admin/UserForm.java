@@ -329,7 +329,7 @@ public class UserForm {
 	}
 
 	private String save(boolean withPassword) {
-		String decodedPassword=getPassword();
+		String decodedPassword = getPassword();
 		if (SessionManagement.isValid()) {
 			try {
 				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -588,7 +588,7 @@ public class UserForm {
 			Messages.addLocalizedInfo("email.notify.account.sent");
 		} catch (Exception ex) {
 			log.warn(ex.getMessage(), ex);
-			Messages.addWarn(Messages.getMessage("email.notify.account.error", user.getEmail()));
+			Messages.addWarn(Messages.getMessage("email.notify.account.error", new Object[] { user.getEmail() }));
 		}
 	}
 

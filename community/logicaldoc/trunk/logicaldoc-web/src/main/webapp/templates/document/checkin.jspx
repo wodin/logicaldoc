@@ -44,7 +44,7 @@
 					value="#{msgs['upload.filename']}: #{inputFile.fileName}" escape="false">
 				</ice:outputText>
 				<br />
-				<ice:messages for="iFile" />
+				<ice:messages id="iFile" />
 			</ice:panelGroup>
 
 			<br />

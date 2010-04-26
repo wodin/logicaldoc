@@ -26,8 +26,6 @@
 	   }
 	</script>
 
-	<ice:messages />
-
 	<ice:panelTabSet tabPlacement="top">
 		<!-- Core data -->
 		<ice:panelTab rendered="true" label="#{msgs['document.core']}">
