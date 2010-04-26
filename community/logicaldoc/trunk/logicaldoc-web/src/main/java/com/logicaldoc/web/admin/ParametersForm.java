@@ -42,7 +42,7 @@ public class ParametersForm {
 					|| name.startsWith("ldap") || name.startsWith("schedule") || name.startsWith("smtp")
 					|| name.startsWith("gui") || name.startsWith("password") || name.startsWith("ad")
 					|| name.startsWith("webservice") || name.startsWith("webdav") || name.startsWith("runlevel")
-					|| name.startsWith("stat"))
+					|| name.startsWith("stat") || name.startsWith("index"))
 				continue;
 
 			sortedSet.add(key.toString());
