@@ -205,6 +205,7 @@
 					<ref bean="DocumentListenerManager" />
 				</property>
 				<property name="storer" ref="Storer" />
+                <property name="config" ref="ContextProperties" />
 			</bean>
 		</property>
 	</bean>

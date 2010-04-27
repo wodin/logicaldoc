@@ -226,7 +226,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			if (doc.getId() == 0) {
 				// This is the first creation so check if it is indexable
-				if (!FileUtil.matches(doc.getFileName(), config.getProperty("index.includes"), config
+				if (!FileUtil.matches(doc.getFileName(), config.getProperty("index.includes") == null ? "" : config
+						.getProperty("index.includes"), config.getProperty("index.excludes") == null ? "" : config
 						.getProperty("index.excludes")))
 					doc.setIndexed(Document.INDEX_SKIP);
 			}
