@@ -3,8 +3,6 @@ package com.logicaldoc.gui.common.client.beans;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.logicaldoc.gui.common.client.Constants;
-
 /**
  * Representation of a single document handled by the GUI
  * 
@@ -68,23 +66,13 @@ public class GUIDocument implements Serializable {
 
 	private String versionComment;
 
-	private String folder;
+	private GUIFolder folder;
 
 	private String icon = "generic";
 
 	private Long lockUserId;
 
 	private int status = 0;
-
-	private String[] permissions = new String[] {};
-
-	public boolean isWrite() {
-		for (String permission : permissions) {
-			if (Constants.PERMISSION_WRITE.equals(permission))
-				return true;
-		}
-		return false;
-	}
 
 	public long getId() {
 		return id;
@@ -351,14 +339,6 @@ public class GUIDocument implements Serializable {
 		this.versionComment = versionComment;
 	}
 
-	public String getFolder() {
-		return folder;
-	}
-
-	public void setFolder(String folder) {
-		this.folder = folder;
-	}
-
 	public GUIExtendedAttribute setValue(String name, Object value) {
 		GUIExtendedAttribute[] tmp = new GUIExtendedAttribute[attributes.length + 1];
 		int i = 0;
@@ -408,11 +388,11 @@ public class GUIDocument implements Serializable {
 		this.status = status;
 	}
 
-	public String[] getPermissions() {
-		return permissions;
+	public GUIFolder getFolder() {
+		return folder;
 	}
 
-	public void setPermissions(String[] permissions) {
-		this.permissions = permissions;
+	public void setFolder(GUIFolder folder) {
+		this.folder = folder;
 	}
 }

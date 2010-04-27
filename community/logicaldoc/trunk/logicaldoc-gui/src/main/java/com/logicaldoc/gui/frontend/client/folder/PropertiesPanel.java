@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.folder;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.smartgwt.client.types.TitleOrientation;
@@ -45,10 +46,9 @@ public class PropertiesPanel extends FolderDetailTab {
 		form.setTitleOrientation(TitleOrientation.LEFT);
 		List<FormItem> items = new ArrayList<FormItem>();
 
-		TextItem idItem = new TextItem();
+		StaticTextItem idItem = new StaticTextItem();
 		idItem.setTitle(I18N.getMessage("id"));
 		idItem.setValue(folder.getId());
-		idItem.setDisabled(true);
 
 		TextItem nameItem = new TextItem("name");
 		nameItem.setTitle(I18N.getMessage("name"));
@@ -67,12 +67,10 @@ public class PropertiesPanel extends FolderDetailTab {
 		pathItem.addChangedHandler(changedHandler);
 		pathItem.setWidth(300);
 
-		items.add(idItem);
-		items.add(nameItem);
-		items.add(descriptionItem);
-		items.add(pathItem);
-
-		form.setItems(pathItem, idItem, nameItem, descriptionItem);
+		if (folder.getId() == Constants.DOCUMENTS_FOLDERID)
+			form.setItems(idItem, pathItem);
+		else
+			form.setItems(idItem, pathItem, nameItem, descriptionItem);
 		addMember(form);
 	}
 

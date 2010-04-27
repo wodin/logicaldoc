@@ -2,6 +2,8 @@ package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
 
+import com.logicaldoc.gui.common.client.Constants;
+
 /**
  * Represents a folder from the GUI view
  * 
@@ -20,11 +22,13 @@ public class GUIFolder implements Serializable {
 
 	private String name;
 
-	private String pathExtended;
-
 	private String[] permissions = new String[] {};
 
 	private GUIRight[] rights = new GUIRight[] {};
+
+	private GUIFolder[] path = null;
+
+	private String pathExtended;
 
 	public long getId() {
 		return id;
@@ -40,6 +44,10 @@ public class GUIFolder implements Serializable {
 
 	public void setPermissions(String[] permissions) {
 		this.permissions = permissions;
+	}
+
+	public boolean isWrite() {
+		return hasPermission(Constants.PERMISSION_WRITE);
 	}
 
 	public boolean hasPermission(String permission) {
@@ -88,5 +96,19 @@ public class GUIFolder implements Serializable {
 
 	public void setParentId(long parentId) {
 		this.parentId = parentId;
+	}
+
+	public GUIFolder[] getPath() {
+		return path;
+	}
+
+	public void setPath(GUIFolder[] path) {
+		this.path = path;
+		this.pathExtended = "";
+		for (GUIFolder folder : path) {
+			if (folder.getId() != Constants.DOCUMENTS_FOLDERID)
+				pathExtended += "/" + folder.getName();
+		}
+		pathExtended += "/" + getName();
 	}
 }

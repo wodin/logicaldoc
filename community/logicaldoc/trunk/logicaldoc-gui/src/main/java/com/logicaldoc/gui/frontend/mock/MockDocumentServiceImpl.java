@@ -7,6 +7,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 
@@ -39,11 +40,16 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 		document.setTemplateId(1L);
 		document.setTemplate("template1");
 		document.setStatus(Document.DOC_UNLOCKED);
+		GUIFolder folder = new GUIFolder();
+		folder.setName("Folder " + docId);
+		folder.setId(docId);
 		if (docId % 2 == 0)
-			document.setPermissions(new String[] { "read", "write", "addChild", "manageSecurity", "delete", "rename",
+			folder.setPermissions(new String[] { "read", "write", "addChild", "manageSecurity", "delete", "rename",
 					"bulkImport", "bulkExport", "sign", "archive", "workflow", "manageImmutability" });
 		else
-			document.setPermissions(new String[] { "read" });
+			folder.setPermissions(new String[] { "read" });
+		
+		document.setFolder(folder);
 		return document;
 	}
 

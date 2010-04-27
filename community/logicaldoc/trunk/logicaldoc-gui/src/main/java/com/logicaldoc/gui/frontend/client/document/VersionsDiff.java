@@ -65,7 +65,8 @@ public class VersionsDiff extends Window {
 		records.add(new DiffRecord(I18N.getMessage("size"), Util.formatSize(version1.getSize()), Util
 				.formatSize(version2.getSize())));
 		records.add(new DiffRecord(I18N.getMessage("recipient"), version1.getRecipient(), version2.getRecipient()));
-		records.add(new DiffRecord(I18N.getMessage("folder"), version1.getFolder(), version2.getFolder()));
+		records.add(new DiffRecord(I18N.getMessage("folder"), version1.getFolder().getName(), version2.getFolder()
+				.getName()));
 		records.add(new DiffRecord(I18N.getMessage("tags"), version1.getTagsString(), version2.getTagsString()));
 		records.add(new DiffRecord(I18N.getMessage("template"), version1.getTemplate(), version2.getTemplate()));
 		printExtendedAttributes(records, version1, version2);

@@ -35,6 +35,10 @@ public class Log {
 
 	public static void info(String message, String detail) {
 		FooterStatus.getInstance().info(message, detail);
-		GWT.log("info message: " + message, null);
+		GWT.log("info: " + message, null);
+	}
+	
+	public static void debug(String message) {
+		GWT.log("debug: " + message, null);
 	}
 }

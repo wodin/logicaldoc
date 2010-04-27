@@ -47,4 +47,8 @@ public class DocumentsMenu extends SectionStack {
 		trashSection.addItem(htmlFlow);
 		addSection(trashSection);
 	}
+
+	public void openFolder(long folderId) {
+		foldersTree.openFolder(folderId);
+	}
 }

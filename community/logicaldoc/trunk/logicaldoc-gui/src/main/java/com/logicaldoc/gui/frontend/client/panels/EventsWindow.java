@@ -55,7 +55,7 @@ public class EventsWindow extends Window {
 				if (GUIEvent.WARNING.equals(record.getAttribute("severity")))
 					return "color: #FFCB3F";
 				else
-					return "color: #2FB5FF";
+					return "color: #577ED0";
 			}
 		};
 		grid.setWidth100();

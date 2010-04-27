@@ -159,19 +159,18 @@ public class SecurityPanel extends FolderDetailTab {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				folderService.applyRightsToTree(Session.get().getSid(), folder.getId(),
-						new AsyncCallback<Void>() {
+				folderService.applyRightsToTree(Session.get().getSid(), folder.getId(), new AsyncCallback<Void>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(Void result) {
+					@Override
+					public void onSuccess(Void result) {
 
-							}
-						});
+					}
+				});
 			}
 		});
 

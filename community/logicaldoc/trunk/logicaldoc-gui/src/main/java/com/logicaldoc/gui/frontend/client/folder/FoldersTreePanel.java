@@ -37,6 +37,8 @@ public class FoldersTreePanel extends TreeGrid {
 
 	private static FoldersTreePanel instance = new FoldersTreePanel();
 
+	private FoldersDS dataSource;
+
 	private FoldersTreePanel() {
 		setWidth100();
 		setBorder("0px");
@@ -50,7 +52,8 @@ public class FoldersTreePanel extends TreeGrid {
 		setCanDragRecordsOut(false);
 		setAutoFetchData(true);
 		setLoadDataOnDemand(true);
-		setDataSource(new FoldersDS());
+		dataSource = new FoldersDS(null);
+		setDataSource(dataSource);
 		setCanSelectAll(false);
 
 		ListGridField name = new ListGridField("name");
@@ -61,28 +64,30 @@ public class FoldersTreePanel extends TreeGrid {
 			public void onCellContextClick(CellContextClickEvent event) {
 				Menu contextMenu = setupContextMenu();
 				contextMenu.showContextMenu();
-				event.cancel();
+				if (event != null)
+					event.cancel();
 			}
 		});
 
 		// Handle the click on a folder to show the contained documents
 		addCellClickHandler(new CellClickHandler() {
 			@Override
-			public void onCellClick(CellClickEvent event) {
+			public void onCellClick(final CellClickEvent event) {
 
-				service.getFolder(Session.get().getSid(), Long.parseLong(event.getRecord()
-						.getAttributeAsString("id")), new AsyncCallback<GUIFolder>() {
+				service.getFolder(Session.get().getSid(), Long.parseLong(event.getRecord().getAttributeAsString("id")),
+						false, new AsyncCallback<GUIFolder>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
 
-					@Override
-					public void onSuccess(GUIFolder result) {
-						Session.get().setCurrentFolder(result);
-					}
-				});
+							@Override
+							public void onSuccess(GUIFolder result) {
+								result.setPathExtended(getPath(result.getId()));
+								Session.get().setCurrentFolder(result);
+							}
+						});
 			}
 		});
 	}
@@ -94,15 +99,10 @@ public class FoldersTreePanel extends TreeGrid {
 		TreeNode selectedNode = (TreeNode) getSelectedRecord();
 		final long id = Long.parseLong(selectedNode.getAttribute("id"));
 		boolean add = selectedNode.getAttributeAsBoolean(Constants.PERMISSION_ADD);
-		boolean delete = selectedNode.getAttributeAsBoolean(Constants.PERMISSION_DELETE);
 
 		TreeNode parentNode = getTree().getParent(selectedNode);
-		final long parentId;
-		boolean parentAdd = false;
 		boolean parentDelete = false;
 		if (parentNode != null) {
-			parentId = Long.parseLong(selectedNode.getAttribute("id"));
-			parentAdd = selectedNode.getAttributeAsBoolean(Constants.PERMISSION_ADD);
 			parentDelete = selectedNode.getAttributeAsBoolean(Constants.PERMISSION_DELETE);
 		}
 
@@ -142,6 +142,16 @@ public class FoldersTreePanel extends TreeGrid {
 			}
 		});
 
+		MenuItem reloadItem = new MenuItem();
+		reloadItem.setTitle(I18N.getMessage("reload"));
+		reloadItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				onReload();
+			}
+		});
+
+		if (id == Constants.DOCUMENTS_FOLDERID)
+			items.add(reloadItem);
 		if (add)
 			items.add(addItem);
 		if (id != 5 && parentDelete)
@@ -155,6 +165,67 @@ public class FoldersTreePanel extends TreeGrid {
 		return instance;
 	}
 
+	/**
+	 * Opens the tree to show the specified folder.
+	 */
+	public void openFolder(final long folderId) {
+		getTree().closeAll();
+
+		TreeNode openedNode = getTree().find("id", Long.toString(folderId));
+		if (openedNode != null) {
+			// The node to open was already navigated, the lucky case
+			TreeNode[] parents = getTree().getParents(openedNode);
+			getTree().openFolders(parents);
+			getTree().openFolder(openedNode);
+		} else {
+			service.getFolder(Session.get().getSid(), folderId, true, new AsyncCallback<GUIFolder>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					Log.serverError(caught);
+				}
+
+				@Override
+				public void onSuccess(GUIFolder folder) {
+					TreeNode parent = getTree().getRoot();
+					for (GUIFolder fld : folder.getPath()) {
+						TreeNode node = new TreeNode(fld.getName());
+						node.setAttribute("id", Long.toString(fld.getId()));
+						node.setAttribute(Constants.PERMISSION_ADD, fld.hasPermission(Constants.PERMISSION_ADD));
+						node.setAttribute(Constants.PERMISSION_DELETE, fld.hasPermission(Constants.PERMISSION_DELETE));
+						getTree().add(node, parent);
+						parent = node;
+					}
+					TreeNode node = new TreeNode(folder.getName());
+					node.setAttribute("id", Long.toString(folder.getId()));
+					node.setAttribute(Constants.PERMISSION_ADD, Boolean.toString(folder
+							.hasPermission(Constants.PERMISSION_ADD)));
+					node.setAttribute(Constants.PERMISSION_DELETE, Boolean.toString(folder
+							.hasPermission(Constants.PERMISSION_DELETE)));
+					getTree().add(node, parent);
+					parent = node;
+
+					getTree().openFolders(getTree().getParents(parent));
+					getTree().openFolder(parent);
+					folder.setPathExtended(getPath(folderId));
+					Session.get().setCurrentFolder(folder);
+				}
+			});
+		}
+	}
+
+	private String getPath(long folderId) {
+		TreeNode selectedNode = getTree().find("id", Long.toString(folderId));
+		String path = "";
+		TreeNode[] parents = getTree().getParents(selectedNode);
+		for (int i = parents.length - 1; i >= 0; i--) {
+			if (parents[i].getName() != null && !"/".equals(parents[i].getName()))
+				path += "/" + parents[i].getName();
+		}
+		path += "/" + (selectedNode.getName().equals("/") ? "" : selectedNode.getName());
+		return path;
+	}
+
 	public void onSavedFolder(GUIFolder folder) {
 		TreeNode selectedNode = getTree().find("id", Long.toString(folder.getId()));
 		if (selectedNode != null) {
@@ -162,6 +233,13 @@ public class FoldersTreePanel extends TreeGrid {
 			selectedNode.setName(folder.getName());
 			getTree().reloadChildren(selectedNode);
 		}
+	}
+
+	private void onReload() {
+		TreeNode rootNode = getTree().find("id", "5");
+		removeData(rootNode);
+		setDataSource(dataSource);
+		fetchData();
 	}
 
 	private void onCreate() {
@@ -189,8 +267,15 @@ public class FoldersTreePanel extends TreeGrid {
 				}
 				getTree().add(newNode, selectedNode);
 				selectRecord(newNode);
+				newFolder.setPathExtended(getPath(newFolder.getId()));
 				Session.get().setCurrentFolder(newFolder);
 			}
 		});
+	}
+
+	@Override
+	public void enable() {
+		super.enable();
+		getTree().setReportCollisions(false);
 	}
 }

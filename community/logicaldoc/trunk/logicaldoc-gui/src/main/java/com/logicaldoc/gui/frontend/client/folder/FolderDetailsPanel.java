@@ -84,7 +84,6 @@ public class FolderDetailsPanel extends VLayout {
 		tabSet.addTab(propertiesTab);
 
 		Tab securityTab = new Tab(I18N.getMessage("security"));
-		securityTab.setID("foldersecurity");
 		securityTabPanel = new HLayout();
 		securityTabPanel.setWidth100();
 		securityTabPanel.setHeight100();
@@ -92,7 +91,6 @@ public class FolderDetailsPanel extends VLayout {
 		tabSet.addTab(securityTab);
 
 		Tab historyTab = new Tab(I18N.getMessage("history"));
-		historyTab.setID("folderhistory");
 		historyTabPanel = new HLayout();
 		historyTabPanel.setWidth100();
 		historyTabPanel.setHeight100();

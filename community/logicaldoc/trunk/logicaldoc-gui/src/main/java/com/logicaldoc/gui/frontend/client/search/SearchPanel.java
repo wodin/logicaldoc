@@ -7,7 +7,6 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.document.DocumentDetailsPanel;
-import com.logicaldoc.gui.frontend.client.document.DocumentsListPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -31,7 +30,7 @@ public class SearchPanel extends HLayout {
 
 	private Layout details = new VLayout();
 
-	private Canvas listingPanel;
+	private HitsListPanel listingPanel;
 
 	private Canvas detailPanel;
 
@@ -74,15 +73,11 @@ public class SearchPanel extends HLayout {
 		return instance;
 	}
 
-	public void onSavedDocument(GUIDocument document) {
-		((DocumentsListPanel) listingPanel).updateSelectedRecord(document);
-	}
-
 	public void onSelectedDocument(long docId) {
 		if (!(detailPanel instanceof DocumentDetailsPanel)) {
 			details.removeMember(detailPanel);
 			detailPanel.destroy();
-			detailPanel = new DocumentDetailsPanel();
+			detailPanel = new DocumentDetailsPanel(listingPanel);
 			details.addMember(detailPanel);
 		}
 

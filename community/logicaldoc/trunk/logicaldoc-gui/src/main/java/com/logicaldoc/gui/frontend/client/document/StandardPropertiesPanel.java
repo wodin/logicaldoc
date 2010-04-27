@@ -75,7 +75,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		customIdItem.setValue(document.getCustomId());
 		customIdItem.addChangedHandler(changedHandler);
 		customIdItem.setRequired(true);
-		customIdItem.setDisabled(!document.isWrite());
+		customIdItem.setDisabled(!document.getFolder().isWrite());
 
 		DateItem creationItem = ItemFactory.newDateItem("creation", I18N.getMessage("createdon"));
 		creationItem.setValue(document.getCreation());
@@ -102,8 +102,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		titleItem.setValue(document.getTitle());
 		titleItem.addChangedHandler(changedHandler);
 		titleItem.setRequired(true);
-		titleItem.setDisabled(!document.isWrite());
-		
+		titleItem.setDisabled(!document.getFolder().isWrite());
+
 		TextItem versionItem = new TextItem("version");
 		versionItem.setTitle(I18N.getMessage("version"));
 		versionItem.setValue(document.getVersion());

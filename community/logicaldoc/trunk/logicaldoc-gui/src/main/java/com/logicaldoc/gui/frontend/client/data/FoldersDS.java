@@ -15,8 +15,12 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class FoldersDS extends DataSource {
-	public FoldersDS() {
-		setID("FoldersDS");
+
+	public FoldersDS(String id) {
+		String dsId = id;
+		if (dsId == null)
+			dsId = "FoldersDS";
+		setID(dsId);
 		setTitleField("name");
 		setRecordXPath("/list/folder");
 		DataSourceTextField nameField = new DataSourceTextField("name", I18N.getMessage("name"), 255);
@@ -27,7 +31,7 @@ public class FoldersDS extends DataSource {
 
 		DataSourceTextField parentId = new DataSourceTextField("parent", "Parent ID");
 		parentId.setRequired(true);
-		parentId.setForeignKey("FoldersDS.id");
+		parentId.setForeignKey(dsId + ".id");
 		parentId.setRootValue("-1");
 
 		DataSourceBooleanField add = new DataSourceBooleanField(Constants.PERMISSION_ADD);

@@ -33,9 +33,10 @@ public interface FolderService extends RemoteService {
 	 * Gets the Folder initializing the permissions.
 	 * 
 	 * @param folderId The folder identifier
+	 * @param boolean True if the complete path must be retrieved
 	 * @return The Folder bean
 	 */
-	public GUIFolder getFolder(String sid, long folderId);
+	public GUIFolder getFolder(String sid, long folderId, boolean computePath);
 
 	/**
 	 * Deletes the folder and the subtree

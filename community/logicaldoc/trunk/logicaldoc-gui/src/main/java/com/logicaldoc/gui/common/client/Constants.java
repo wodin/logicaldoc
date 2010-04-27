@@ -20,6 +20,8 @@ public final class Constants {
 	public static final String SESSIONS = "sessions";
 
 	public static final long ROOT_FOLDERID = -1;
+	
+	public static final long DOCUMENTS_FOLDERID = 5;
 
 	public static final String FORMAT_DATE = "date";
 
