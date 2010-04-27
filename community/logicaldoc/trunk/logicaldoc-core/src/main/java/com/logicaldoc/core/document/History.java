@@ -1,7 +1,5 @@
 package com.logicaldoc.core.document;
 
-import com.logicaldoc.core.communication.Message;
-
 /**
  * Registers an event on folder or document
  * 
@@ -43,7 +41,7 @@ public class History extends AbstractHistory {
 	public final static String EVENT_FOLDER_PERMISSION = "event.folder.permission";
 
 	public final static String EVENT_FOLDER_DELETED = "event.folder.deleted";
-	
+
 	public final static String EVENT_FOLDER_MOVED = "event.folder.moved";
 
 	// Events on sub-folders
