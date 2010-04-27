@@ -22,7 +22,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class SearchPanel extends HLayout {
+public class SearchPanel extends HLayout implements SearchObserver {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
@@ -54,7 +54,7 @@ public class SearchPanel extends HLayout {
 		content.addMember(listingPanel);
 
 		// Add a details panel under the listing one
-		detailPanel = new Label("&nbsp;" + I18N.getMessage("selectadocument"));
+		detailPanel = new Label("&nbsp;" + I18N.getMessage("selectahit"));
 		details.setAlign(Alignment.CENTER);
 		details.addMember(detailPanel);
 
@@ -65,6 +65,8 @@ public class SearchPanel extends HLayout {
 		addMember(right);
 
 		setShowEdges(true);
+
+		Search.get().addObserver(this);
 	}
 
 	public static SearchPanel get() {
@@ -73,25 +75,36 @@ public class SearchPanel extends HLayout {
 		return instance;
 	}
 
-	public void onSelectedDocument(long docId) {
-		if (!(detailPanel instanceof DocumentDetailsPanel)) {
+	public void onSelectedHit(long docId) {
+		if (details.contains(detailPanel))
 			details.removeMember(detailPanel);
-			detailPanel.destroy();
+		detailPanel.destroy();
+		if (docId > 0)
 			detailPanel = new DocumentDetailsPanel(listingPanel);
-			details.addMember(detailPanel);
-		}
+		else
+			detailPanel = new Label("&nbsp;" + I18N.getMessage("selectahit"));
 
-		documentService.getById(Session.get().getSid(), docId, new AsyncCallback<GUIDocument>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
+		details.addMember(detailPanel);
 
-			@Override
-			public void onSuccess(GUIDocument result) {
-				((DocumentDetailsPanel) detailPanel).setDocument(result);
-				details.redraw();
-			}
-		});
+		if (docId > 0 && (detailPanel instanceof DocumentDetailsPanel))
+			documentService.getById(Session.get().getSid(), docId, new AsyncCallback<GUIDocument>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					Log.serverError(caught);
+				}
+
+				@Override
+				public void onSuccess(GUIDocument result) {
+					if (detailPanel instanceof DocumentDetailsPanel) {
+						((DocumentDetailsPanel) detailPanel).setDocument(result);
+						details.redraw();
+					}
+				}
+			});
+	}
+
+	@Override
+	public void onSearchArrived() {
+		onSelectedHit(-1);
 	}
 }

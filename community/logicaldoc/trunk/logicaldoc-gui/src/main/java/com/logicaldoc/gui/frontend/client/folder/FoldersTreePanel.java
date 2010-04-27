@@ -171,47 +171,39 @@ public class FoldersTreePanel extends TreeGrid {
 	public void openFolder(final long folderId) {
 		getTree().closeAll();
 
-		TreeNode openedNode = getTree().find("id", Long.toString(folderId));
-		if (openedNode != null) {
-			// The node to open was already navigated, the lucky case
-			TreeNode[] parents = getTree().getParents(openedNode);
-			getTree().openFolders(parents);
-			getTree().openFolder(openedNode);
-		} else {
-			service.getFolder(Session.get().getSid(), folderId, true, new AsyncCallback<GUIFolder>() {
+		service.getFolder(Session.get().getSid(), folderId, true, new AsyncCallback<GUIFolder>() {
 
-				@Override
-				public void onFailure(Throwable caught) {
-					Log.serverError(caught);
-				}
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
 
-				@Override
-				public void onSuccess(GUIFolder folder) {
-					TreeNode parent = getTree().getRoot();
-					for (GUIFolder fld : folder.getPath()) {
-						TreeNode node = new TreeNode(fld.getName());
-						node.setAttribute("id", Long.toString(fld.getId()));
-						node.setAttribute(Constants.PERMISSION_ADD, fld.hasPermission(Constants.PERMISSION_ADD));
-						node.setAttribute(Constants.PERMISSION_DELETE, fld.hasPermission(Constants.PERMISSION_DELETE));
-						getTree().add(node, parent);
-						parent = node;
-					}
-					TreeNode node = new TreeNode(folder.getName());
-					node.setAttribute("id", Long.toString(folder.getId()));
-					node.setAttribute(Constants.PERMISSION_ADD, Boolean.toString(folder
-							.hasPermission(Constants.PERMISSION_ADD)));
-					node.setAttribute(Constants.PERMISSION_DELETE, Boolean.toString(folder
-							.hasPermission(Constants.PERMISSION_DELETE)));
+			@Override
+			public void onSuccess(GUIFolder folder) {
+				TreeNode parent = getTree().getRoot();
+				for (GUIFolder fld : folder.getPath()) {
+					TreeNode node = new TreeNode(fld.getName());
+					node.setAttribute("id", Long.toString(fld.getId()));
+					node.setAttribute(Constants.PERMISSION_ADD, fld.hasPermission(Constants.PERMISSION_ADD));
+					node.setAttribute(Constants.PERMISSION_DELETE, fld.hasPermission(Constants.PERMISSION_DELETE));
 					getTree().add(node, parent);
 					parent = node;
-
-					getTree().openFolders(getTree().getParents(parent));
-					getTree().openFolder(parent);
-					folder.setPathExtended(getPath(folderId));
-					Session.get().setCurrentFolder(folder);
 				}
-			});
-		}
+				TreeNode node = new TreeNode(folder.getName());
+				node.setAttribute("id", Long.toString(folder.getId()));
+				node.setAttribute(Constants.PERMISSION_ADD, Boolean.toString(folder
+						.hasPermission(Constants.PERMISSION_ADD)));
+				node.setAttribute(Constants.PERMISSION_DELETE, Boolean.toString(folder
+						.hasPermission(Constants.PERMISSION_DELETE)));
+				getTree().add(node, parent);
+				parent = node;
+
+				getTree().openFolders(getTree().getParents(parent));
+				getTree().openFolder(parent);
+				folder.setPathExtended(getPath(folderId));
+				Session.get().setCurrentFolder(folder);
+			}
+		});
 	}
 
 	private String getPath(long folderId) {
