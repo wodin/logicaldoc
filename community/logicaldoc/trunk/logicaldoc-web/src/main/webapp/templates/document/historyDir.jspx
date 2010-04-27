@@ -28,7 +28,7 @@
 					<ice:dataTable id="histories"
 						value="#{historyRecordsManager.folderHistories}" var="history"
 						cellpadding="0" width="100%" rows="10"
-						columnClasses="dateColumn,dateColumn,titleColumn,dateColumn,numberColumn">
+						columnClasses="dateColumn,dateColumn,titleColumn,titleColumn,titleColumn,dateColumn,numberColumn">
 
 						<!-- author column -->
 						<ice:column>
@@ -39,7 +39,7 @@
 								<ice:outputText value="#{history.userName}" />
 							</ice:panelGroup>
 						</ice:column>
-						
+
 						<!-- date column -->
 						<ice:column>
 							<f:facet name="header">
@@ -47,7 +47,8 @@
 							</f:facet>
 							<ice:panelGroup>
 								<ice:outputText value="#{history.date}">
-									<f:convertDateTime pattern="#{loc.dateFormat}" timeZone="#{StyleBean.timeZone}" />
+									<f:convertDateTime pattern="#{loc.dateFormat}"
+										timeZone="#{StyleBean.timeZone}" />
 								</ice:outputText>
 							</ice:panelGroup>
 						</ice:column>
@@ -61,7 +62,28 @@
 								<ice:outputText value="#{msgs[history.event]}" />
 							</ice:panelGroup>
 						</ice:column>
-						
+
+						<!-- name column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['name']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{history.title}"
+									title="#{history.title}" />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- folder column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['folder']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{history.path}" title="#{history.path}" />
+							</ice:panelGroup>
+						</ice:column>
+
 						<!-- comment column -->
 						<ice:column>
 							<f:facet name="header">
