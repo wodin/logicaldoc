@@ -1,5 +1,7 @@
 package com.logicaldoc.core.document;
 
+import com.logicaldoc.core.communication.Message;
+
 /**
  * Registers an event on folder or document
  * 
