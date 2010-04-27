@@ -74,4 +74,8 @@ public class MainPanel extends VLayout implements SessionObserver {
 		if (Search.get().getOptions().isFulltext())
 			SearchMenu.get().openFulltextSection();
 	}
+
+	public void selectDocumentsTab() {
+		tabSet.selectTab(TAB_DOCUMENTS);
+	}
 }

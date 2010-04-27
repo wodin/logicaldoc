@@ -38,7 +38,7 @@ public class MockFoldersDataServlet extends HttpServlet {
 			writer.print("<folder>");
 			writer.print("<id>5</id>");
 			writer.print("<parent>" + parent + "</parent>");
-			writer.print("<name>Documents</name>");
+			writer.print("<name>/</name>");
 			writer.print("</folder>");
 		} else {
 			for (int i = 0; i < 10; i++) {

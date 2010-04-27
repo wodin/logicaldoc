@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.mock;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 
@@ -24,11 +25,17 @@ public class MockFolderServiceImpl extends RemoteServiceServlet implements Folde
 	}
 
 	@Override
-	public GUIFolder getFolder(String sid, long folderId) {
+	public GUIFolder getFolder(String sid, long folderId, boolean computePath) {
 		GUIFolder folder = new GUIFolder();
 		folder.setId(folderId);
-		folder.setName("Folder " + folderId);
-		folder.setPathExtended("/" + folder.getName());
+		folder.setName(folderId != Constants.DOCUMENTS_FOLDERID ? "Folder " + folderId : "/");
+
+		if (computePath) {
+			GUIFolder[] path = new GUIFolder[] { getFolder(sid, 5, false), getFolder(sid, 1007, false),
+					getFolder(sid, 2009, false) };
+			folder.setPath(path);
+		}
+
 		if (folderId % 2 == 0)
 			folder.setPermissions(new String[] { "read", "write", "addChild", "manageSecurity", "delete", "rename",
 					"bulkImport", "bulkExport", "sign", "archive", "workflow", "manageImmutability" });

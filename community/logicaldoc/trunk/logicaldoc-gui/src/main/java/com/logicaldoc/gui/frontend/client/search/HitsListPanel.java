@@ -4,12 +4,15 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.util.DateCellFormatter;
 import com.logicaldoc.gui.common.client.util.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.Main;
+import com.logicaldoc.gui.frontend.client.document.DocumentObserver;
+import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -24,9 +27,14 @@ import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
@@ -36,7 +44,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class HitsListPanel extends VLayout implements SearchObserver {
+public class HitsListPanel extends VLayout implements SearchObserver, DocumentObserver {
 
 	private ListGrid list;
 
@@ -184,38 +192,14 @@ public class HitsListPanel extends VLayout implements SearchObserver {
 			});
 		}
 
-		// list.addCellClickHandler(new CellClickHandler() {
-		// @Override
-		// public void onCellClick(CellClickEvent event) {
-		// if ("indexed".equals(list.getFieldName(event.getColNum()))) {
-		// ListGridRecord record = event.getRecord();
-		// if ("indexed".equals(record.getAttribute("indexed"))) {
-		// String id = list.getSelectedRecord().getAttribute("id");
-		// Window.open("download?sid=" + Session.get().getSid() + "&docId=" + id
-		// + "&downloadText=true",
-		// "_self", "");
-		// }
-		// }
-		// }
-		//
-		// });
-		//
-		// list.addSelectionChangedHandler(new SelectionChangedHandler() {
-		// @Override
-		// public void onSelectionChanged(SelectionEvent event) {
-		// DocumentsPanel.get().onSelectedDocument(Long.parseLong(event.getRecord().getAttribute("id")));
-		// }
-		// });
-
-		// list.addCellContextClickHandler(new CellContextClickHandler() {
-		// @Override
-		// public void onCellContextClick(CellContextClickEvent event) {
-		// Menu contextMenu =
-		// setupContextMenu(Session.getInstance().getCurrentFolder());
-		// contextMenu.showContextMenu();
-		// event.cancel();
-		// }
-		// });
+		list.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				Menu contextMenu = setupContextMenu();
+				contextMenu.showContextMenu();
+				event.cancel();
+			}
+		});
 
 		list.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
@@ -314,23 +298,42 @@ public class HitsListPanel extends VLayout implements SearchObserver {
 		}
 	}
 
-	// /**
-	// * Prepares the context menu.
-	// */
-	// private Menu setupContextMenu(GUIFolder folder) {
-	// Menu contextMenu = new Menu();
-	// List<MenuItem> items = new ArrayList<MenuItem>();
-	// MenuItem downloadItem = new MenuItem();
-	// downloadItem.setTitle(I18N.getMessage("download"));
-	// downloadItem.addClickHandler(new
-	// com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	// public void onClick(MenuItemClickEvent event) {
-	// String id = list.getSelectedRecord().getAttribute("id");
-	// Window.open("download?sid=" + Session.getInstance().getSid() + "&sid=" +
-	// Session.getInstance().getSid()
-	// + "&docId=" + id, "_self", "");
-	// }
-	// });
+	/**
+	 * Updates the selected record with new data
+	 */
+	public void updateSelectedRecord(GUIDocument document) {
+		ListGridRecord selectedRecord = list.getSelectedRecord();
+		if (selectedRecord != null) {
+			selectedRecord.setAttribute("title", document.getTitle());
+			selectedRecord.setAttribute("customId", document.getCustomId());
+			selectedRecord.setAttribute("size", document.getSize());
+			list.refreshRow(list.getRecordIndex(selectedRecord));
+		}
+	}
+
+	@Override
+	public void onDocumentSaved(GUIDocument document) {
+		updateSelectedRecord(document);
+	}
+
+	/**
+	 * Prepares the context menu.
+	 */
+	private Menu setupContextMenu() {
+		Menu contextMenu = new Menu();
+		MenuItem openInFolder = new MenuItem();
+		openInFolder.setTitle(I18N.getMessage("openinfolder"));
+		openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				ListGridRecord record = list.getSelectedRecord();
+				DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")));
+			}
+		});
+
+		contextMenu.setItems(openInFolder);
+
+		return contextMenu;
+	}
 	//
 	// MenuItem copyItem = new MenuItem();
 	// copyItem.setTitle(I18N.getMessage("copy"));

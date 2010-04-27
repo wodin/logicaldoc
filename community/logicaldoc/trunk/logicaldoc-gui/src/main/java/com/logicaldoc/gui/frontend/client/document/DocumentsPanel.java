@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.frontend.client.Log;
+import com.logicaldoc.gui.frontend.client.Main;
 import com.logicaldoc.gui.frontend.client.folder.FolderDetailsPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -24,7 +25,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class DocumentsPanel extends HLayout implements FolderObserver {
+public class DocumentsPanel extends HLayout implements FolderObserver, DocumentObserver {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
@@ -44,6 +45,8 @@ public class DocumentsPanel extends HLayout implements FolderObserver {
 
 	private GUIFolder folder;
 
+	private DocumentsMenu leftMenu;
+
 	private DocumentsPanel() {
 		// Register to folders events
 		Session.get().addFolderObserver(this);
@@ -51,7 +54,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver {
 		setWidth100();
 
 		// Prepare the collapsible menu
-		DocumentsMenu leftMenu = new DocumentsMenu();
+		leftMenu = new DocumentsMenu();
 		leftMenu.setWidth(280);
 		leftMenu.setShowResizeBar(true);
 
@@ -86,15 +89,20 @@ public class DocumentsPanel extends HLayout implements FolderObserver {
 		return instance;
 	}
 
-	public void onSavedDocument(GUIDocument document) {
+	public void onDocumentSaved(GUIDocument document) {
 		((DocumentsListPanel) listingPanel).updateSelectedRecord(document);
+	}
+
+	public void openInFolder(long folderId) {
+		leftMenu.openFolder(folderId);
+		Main.get().getMainPanel().selectDocumentsTab();
 	}
 
 	public void onSelectedDocument(long docId) {
 		if (!(detailPanel instanceof DocumentDetailsPanel)) {
 			details.removeMember(detailPanel);
 			detailPanel.destroy();
-			detailPanel = new DocumentDetailsPanel();
+			detailPanel = new DocumentDetailsPanel(this);
 			details.addMember(detailPanel);
 		}
 

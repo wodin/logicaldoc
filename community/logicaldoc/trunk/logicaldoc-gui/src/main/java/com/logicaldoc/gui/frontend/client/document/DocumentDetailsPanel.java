@@ -63,9 +63,13 @@ public class DocumentDetailsPanel extends VLayout {
 	TabSet tabSet = new TabSet();
 
 	private DynamicForm saveForm;
+	
+	private DocumentObserver observer;
 
-	public DocumentDetailsPanel() {
+	public DocumentDetailsPanel(DocumentObserver observer) {
 		super();
+		this.observer=observer;
+		
 		setHeight100();
 		setWidth100();
 		setMembersMargin(10);
@@ -254,7 +258,7 @@ public class DocumentDetailsPanel extends VLayout {
 
 				@Override
 				public void onSuccess(GUIDocument result) {
-					DocumentsPanel.get().onSavedDocument(result);
+					observer.onDocumentSaved(result);
 					savePanel.setVisible(false);
 					saveForm.setValue("versionComment", "");
 				}
