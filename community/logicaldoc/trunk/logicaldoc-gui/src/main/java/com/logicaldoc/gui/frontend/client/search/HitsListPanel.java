@@ -11,8 +11,10 @@ import com.logicaldoc.gui.common.client.util.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.Main;
+import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentObserver;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.document.EmailWindow;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -187,7 +189,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			list.addSelectionChangedHandler(new SelectionChangedHandler() {
 				@Override
 				public void onSelectionChanged(SelectionEvent event) {
-					SearchPanel.get().onSelectedDocument(Long.parseLong(event.getRecord().getAttribute("id")));
+					SearchPanel.get().onSelectedHit(Long.parseLong(event.getRecord().getAttribute("id")));
 				}
 			});
 		}
@@ -212,7 +214,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		/*
 		 * Prepare the toolbar displaying search statistics
 		 */
-		prepareToolbar();
+		setupToolbar();
 		addMember(list);
 
 		ListGridRecord[] result = Search.get().getLastResult();
@@ -222,7 +224,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	/**
 	 * Prepares the toolbar containing the search report and a set of buttons
 	 */
-	private void prepareToolbar() {
+	private void setupToolbar() {
 		if (toolStrip == null)
 			toolStrip = new ToolStrip();
 		else {
@@ -330,80 +332,42 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		});
 
-		contextMenu.setItems(openInFolder);
+		MenuItem copyItem = new MenuItem();
+		copyItem.setTitle(I18N.getMessage("copy"));
+		copyItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				ListGridRecord[] selection = list.getSelection();
+				if (selection == null)
+					return;
+				for (int i = 0; i < selection.length; i++) {
+					String id = selection[i].getAttribute("id");
+					GUIDocument document = new GUIDocument();
+					document.setId(Long.parseLong(id));
+					document.setTitle(selection[i].getAttribute("title"));
+					document.setIcon(selection[i].getAttribute("icon"));
+					Clipboard.getInstance().add(document);
+				}
+			}
+		});
+
+		MenuItem sendMailItem = new MenuItem();
+		sendMailItem.setTitle(I18N.getMessage("sendmail"));
+		sendMailItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				ListGridRecord selection = list.getSelectedRecord();
+				if (selection == null)
+					return;
+				EmailWindow window = new EmailWindow(Long.parseLong(selection.getAttribute("id")), selection
+						.getAttribute("title"));
+				window.show();
+			}
+		});
+
+		contextMenu.setItems(copyItem, sendMailItem, openInFolder);
 
 		return contextMenu;
 	}
-	//
-	// MenuItem copyItem = new MenuItem();
-	// copyItem.setTitle(I18N.getMessage("copy"));
-	// copyItem.addClickHandler(new
-	// com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	// public void onClick(MenuItemClickEvent event) {
-	// ListGridRecord[] selection = list.getSelection();
-	// if (selection == null)
-	// return;
-	// for (int i = 0; i < selection.length; i++) {
-	// String id = selection[i].getAttribute("id");
-	// GUIDocument document = new GUIDocument();
-	// document.setId(Long.parseLong(id));
-	// document.setTitle(selection[i].getAttribute("title"));
-	// document.setIcon(selection[i].getAttribute("icon"));
-	// Clipboard.getInstance().add(document);
-	// }
-	// }
-	// });
-	//
-	// MenuItem deleteItem = new MenuItem();
-	// deleteItem.setTitle(I18N.getMessage("delete"));
-	// deleteItem.addClickHandler(new
-	// com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	// public void onClick(MenuItemClickEvent event) {
-	// ListGridRecord[] selection = list.getSelection();
-	// if (selection == null || selection.length == 0)
-	// return;
-	// final long[] ids = new long[selection.length];
-	// for (int i = 0; i < selection.length; i++) {
-	// ids[i] = Long.parseLong(selection[i].getAttribute("id"));
-	// }
-	//
-	// SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new
-	// BooleanCallback() {
-	// @Override
-	// public void execute(Boolean value) {
-	// if (value) {
-	// documentService.delete(Session.getInstance().getSid(), ids, new
-	// AsyncCallback<Void>() {
-	// @Override
-	// public void onFailure(Throwable caught) {
-	// Log.serverError(caught);
-	// }
-	//
-	// @Override
-	// public void onSuccess(Void result) {
-	// list.removeSelectedData();
-	// }
-	// });
-	// }
-	// }
-	// });
-	// }
-	// });
-	//
-	// MenuItem sendMailItem = new MenuItem();
-	// sendMailItem.setTitle(I18N.getMessage("sendmail"));
-	// sendMailItem.addClickHandler(new
-	// com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	// public void onClick(MenuItemClickEvent event) {
-	// ListGridRecord selection = list.getSelectedRecord();
-	// if (selection == null)
-	// return;
-	// EmailWindow window = new
-	// EmailWindow(Long.parseLong(selection.getAttribute("id")), selection
-	// .getAttribute("title"));
-	// window.show();
-	// }
-	// });
+
 	//
 	// MenuItem similarItem = new MenuItem();
 	// similarItem.setTitle(I18N.getMessage("similardocuments"));
