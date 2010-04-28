@@ -151,6 +151,15 @@ public class Menu extends PersistentObject {
 		}
 	}
 
+	/**
+	 *  Adds a new element, substituting a precedin one with the same groupId.
+	 */
+	public void addMenuGroup(MenuGroup mg) {
+		MenuGroup m=getMenuGroup(mg.getGroupId());
+		getMenuGroups().remove(m);
+		getMenuGroups().add(mg);
+	}
+	
 	public MenuGroup getMenuGroup(long groupId) {
 		for (MenuGroup mg : menuGroups) {
 			if (mg.getGroupId() == groupId)

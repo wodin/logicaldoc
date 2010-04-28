@@ -534,6 +534,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 		try {
 			User user = userDAO.findById(userId);
+
 			Set<Group> groups = user.getGroups();
 			if (groups.isEmpty())
 				return permissions;

@@ -164,4 +164,50 @@ public class MenuGroup {
 	public void setWorkflow(int workflow) {
 		this.workflow = workflow;
 	}
+
+	/**
+	 * Parsing each permission and creates the integer representation
+	 * 
+	 * @return Permissions settings as integer representation.
+	 */
+	public int getPermissions() {
+		StringBuffer sb = new StringBuffer("1");
+		sb.append(getWrite() == 1 ? "1" : "0");
+		sb.append(getAddChild() == 1 ? "1" : "0");
+		sb.append(getManageSecurity() == 1 ? "1" : "0");
+		sb.append(getManageImmutability() == 1 ? "1" : "0");
+		sb.append(getDelete() == 1 ? "1" : "0");
+		sb.append(getRename() == 1 ? "1" : "0");
+		sb.append(getBulkImport() == 1 ? "1" : "0");
+		sb.append(getBulkExport() == 1 ? "1" : "0");
+		sb.append(getSign() == 1 ? "1" : "0");
+		sb.append(getArchive() == 1 ? "1" : "0");
+		sb.append(getWorkflow() == 1 ? "1" : "0");
+
+		return Integer.parseInt(sb.toString(), 2);
+	}
+
+	/**
+	 * Set each permission evaluating the given integer representation.
+	 * 
+	 * @param permissions permissions mask(the last slot is for the 'read'
+	 *        permission and it is not evaluated)
+	 */
+	public void setPermissions(int permissions) {
+		setWrite(Permission.WRITE.match(permissions) ? 1 : 0);
+		setAddChild(Permission.ADD_CHILD.match(permissions) ? 1 : 0);
+		setManageSecurity(Permission.MANAGE_SECURITY.match(permissions) ? 1 : 0);
+		setManageImmutability(Permission.MANAGE_IMMUTABILITY.match(permissions) ? 1 : 0);
+		setDelete(Permission.DELETE.match(permissions) ? 1 : 0);
+		setRename(Permission.RENAME.match(permissions) ? 1 : 0);
+		setBulkImport(Permission.BULK_IMPORT.match(permissions) ? 1 : 0);
+		setBulkExport(Permission.BULK_EXPORT.match(permissions) ? 1 : 0);
+		setSign(Permission.SIGN.match(permissions) ? 1 : 0);
+		setArchive(Permission.ARCHIVE.match(permissions) ? 1 : 0);
+		setWorkflow(Permission.WORKFLOW.match(permissions) ? 1 : 0);
+		
+		System.out.println("*************************** set permissions!!! ");
+		
+		System.out.println("*************************** write: "+getWrite());
+	}
 }
