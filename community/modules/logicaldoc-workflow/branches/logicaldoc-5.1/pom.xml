@@ -8,13 +8,14 @@
   </parent>
   <artifactId>logicaldoc-workflow</artifactId>
   <name>logicaldoc-workflow</name>
+  <version>5.1.1</version>
   <url>http://www.logicaldoc.com</url>
   <packaging>jar</packaging>
   <dependencies>
     <dependency>
       <groupId>com.logicaldoc</groupId>
       <artifactId>logicaldoc-core</artifactId>
-      <version>${project.version}</version>
+      <version>5.1.0</version>
       <type>jar</type>
       <scope>provided</scope>
       <exclusions>
@@ -52,16 +53,9 @@
       <groupId>com.logicaldoc</groupId>
       <artifactId>logicaldoc-web</artifactId>
       <type>jar</type>
-      <version>${project.version}</version>
+      <version>5.1.0</version>
       <scope>provided</scope>
       <classifier>api</classifier>
-    </dependency>
-    <dependency>
-      <groupId>com.logicaldoc</groupId>
-      <artifactId>logicaldoc-impex</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -120,13 +114,13 @@
     <dependency>
       <groupId>com.logicaldoc</groupId>
       <artifactId>logicaldoc-core</artifactId>
-      <version>${project.version}</version>
+      <version>5.1.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.logicaldoc</groupId>
       <artifactId>logicaldoc-util</artifactId>
-      <version>${project.version}</version>
+      <version>5.1.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
