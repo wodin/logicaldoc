@@ -11,6 +11,7 @@
 	</parent>
 	<artifactId>logicaldoc-web</artifactId>
 	<name>logicaldoc-web</name>
+	<version>5.1.1</version>
 	<packaging>war</packaging>
 	<dependencies>
 		<dependency>
@@ -261,12 +262,12 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-util</artifactId>
-			<version>${project.version}</version>
+			<version>5.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-i18n</artifactId>
-			<version>${project.version}</version>
+			<version>5.1.0</version>
 		</dependency>
         <dependency>
 			<groupId>org.hyperic.sigar</groupId>
@@ -276,7 +277,7 @@
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-core</artifactId>
-			<version>${project.version}</version>
+			<version>5.1.0</version>
 			<type>jar</type>
 			<scope>provided</scope>
 			<exclusions>
@@ -362,7 +363,7 @@
 										logicaldoc-core
 									</artifactId>
 									<version>
-										${project.version}
+										5.1.0
 									</version>
 									<type>zip</type>
 									<classifier>plugin</classifier>
@@ -377,7 +378,7 @@
 										logicaldoc-webservice
 									</artifactId>
 									<version>
-										${project.version}
+										5.1.0
 									</version>
 									<type>zip</type>
 									<classifier>plugin</classifier>
@@ -392,7 +393,7 @@
 										logicaldoc-webdav
 									</artifactId>
 									<version>
-										${project.version}
+										5.1.0
 									</version>
 									<type>zip</type>
 									<classifier>plugin</classifier>
@@ -407,7 +408,7 @@
 										logicaldoc-external-authentication
 									</artifactId>
 									<version>
-										${project.version}
+										5.1.0
 									</version>
 									<type>zip</type>
 									<classifier>plugin</classifier>
