@@ -1,20 +1,24 @@
 package com.logicaldoc.gui.frontend.client.search;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
-import com.logicaldoc.gui.common.client.util.DateCellFormatter;
-import com.logicaldoc.gui.common.client.util.FileSizeCellFormatter;
+import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
+import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.Main;
-import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
+import com.logicaldoc.gui.frontend.client.document.DocumentContextMenu;
 import com.logicaldoc.gui.frontend.client.document.DocumentObserver;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
-import com.logicaldoc.gui.frontend.client.document.EmailWindow;
+import com.logicaldoc.gui.frontend.client.services.FolderService;
+import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -51,6 +55,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	private ListGrid list;
 
 	private ToolStrip toolStrip;
+
+	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
 	public HitsListPanel() {
 		initialize();
@@ -197,8 +203,30 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				Menu contextMenu = setupContextMenu();
-				contextMenu.showContextMenu();
+				folderService.getFolder(Session.get().getSid(), Long.parseLong(event.getRecord().getAttributeAsString(
+						"folderId")), false, new AsyncCallback<GUIFolder>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIFolder folder) {
+						Menu contextMenu = new DocumentContextMenu(folder, list);
+						MenuItem openInFolder = new MenuItem();
+						openInFolder.setTitle(I18N.getMessage("openinfolder"));
+						openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+							public void onClick(MenuItemClickEvent event) {
+								ListGridRecord record = list.getSelectedRecord();
+								DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")));
+							}
+						});
+						contextMenu.addItem(openInFolder);
+						contextMenu.showContextMenu();
+					}
+
+				});
 				event.cancel();
 			}
 		});
@@ -316,56 +344,6 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	@Override
 	public void onDocumentSaved(GUIDocument document) {
 		updateSelectedRecord(document);
-	}
-
-	/**
-	 * Prepares the context menu.
-	 */
-	private Menu setupContextMenu() {
-		Menu contextMenu = new Menu();
-		MenuItem openInFolder = new MenuItem();
-		openInFolder.setTitle(I18N.getMessage("openinfolder"));
-		openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord record = list.getSelectedRecord();
-				DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")));
-			}
-		});
-
-		MenuItem copyItem = new MenuItem();
-		copyItem.setTitle(I18N.getMessage("copy"));
-		copyItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] selection = list.getSelection();
-				if (selection == null)
-					return;
-				for (int i = 0; i < selection.length; i++) {
-					String id = selection[i].getAttribute("id");
-					GUIDocument document = new GUIDocument();
-					document.setId(Long.parseLong(id));
-					document.setTitle(selection[i].getAttribute("title"));
-					document.setIcon(selection[i].getAttribute("icon"));
-					Clipboard.getInstance().add(document);
-				}
-			}
-		});
-
-		MenuItem sendMailItem = new MenuItem();
-		sendMailItem.setTitle(I18N.getMessage("sendmail"));
-		sendMailItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord selection = list.getSelectedRecord();
-				if (selection == null)
-					return;
-				EmailWindow window = new EmailWindow(Long.parseLong(selection.getAttribute("id")), selection
-						.getAttribute("title"));
-				window.show();
-			}
-		});
-
-		contextMenu.setItems(copyItem, sendMailItem, openInFolder);
-
-		return contextMenu;
 	}
 
 	//

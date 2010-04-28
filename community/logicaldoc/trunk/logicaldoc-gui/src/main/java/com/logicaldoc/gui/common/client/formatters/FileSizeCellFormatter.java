@@ -1,5 +1,6 @@
-package com.logicaldoc.gui.common.client.util;
+package com.logicaldoc.gui.common.client.formatters;
 
+import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 

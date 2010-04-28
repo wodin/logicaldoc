@@ -14,6 +14,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.FolderSelector;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.data.TemplatesDS;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -21,6 +22,7 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
@@ -162,8 +164,19 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			}
 		});
 
+		final FolderSelector folder = new FolderSelector();
+		folder.setColSpan(3);
+
+		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.getMessage("searchinsubfolders"));
+		subfolders.setColSpan(3);
+		subfolders.setShowIfCondition(new FormItemIfFunction() {
+			public boolean execute(FormItem item, Object value, DynamicForm form) {
+				return folder.getValue() != null && !"".equals(folder.getValue());
+			}
+		});
+
 		form.setItems(expression, search, language, sizeOperator, size, dateSelector, dateOperator, date, template,
-				searchin);
+				folder, subfolders, searchin);
 		addMember(form);
 
 		prepareExtendedAttributes(null);
@@ -249,8 +262,12 @@ public class FulltextForm extends VLayout implements SearchObserver {
 				fields.add("ext_" + tmp);
 			}
 		}
-
 		options.setFields(fields.toArray(new String[0]));
+
+		if (vm.getValueAsString("folder") != null && !"".equals(vm.getValueAsString("folder"))) {
+			options.setFolderId(Long.parseLong(vm.getValueAsString("folder")));
+			options.setSearchInSubPath(new Boolean(vm.getValueAsString("subfolders")).booleanValue());
+		}
 
 		Search.get().search();
 	}

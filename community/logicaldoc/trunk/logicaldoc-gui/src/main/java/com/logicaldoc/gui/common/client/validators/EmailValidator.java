@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.common.client.util;
+package com.logicaldoc.gui.common.client.validators;
 
 import com.logicaldoc.gui.common.client.I18N;
 import com.smartgwt.client.widgets.form.validator.RegExpValidator;
