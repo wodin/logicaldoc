@@ -10,7 +10,7 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
-import com.logicaldoc.gui.common.client.util.DateCellFormatter;
+import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.data.VersionsDS;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;

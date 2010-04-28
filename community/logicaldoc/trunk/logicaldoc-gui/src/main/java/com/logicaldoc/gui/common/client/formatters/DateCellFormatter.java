@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.common.client.util;
+package com.logicaldoc.gui.common.client.formatters;
 
 import java.util.Date;
 

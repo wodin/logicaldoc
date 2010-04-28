@@ -5,7 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
-import com.logicaldoc.gui.common.client.util.EmailsValidator;
+import com.logicaldoc.gui.common.client.validators.EmailsValidator;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.panels.FooterStatus;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;

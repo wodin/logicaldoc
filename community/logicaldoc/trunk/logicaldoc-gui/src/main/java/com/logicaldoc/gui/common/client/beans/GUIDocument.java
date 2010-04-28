@@ -74,6 +74,8 @@ public class GUIDocument implements Serializable {
 
 	private int status = 0;
 
+	private int immutable = 0;
+
 	public long getId() {
 		return id;
 	}
@@ -394,5 +396,13 @@ public class GUIDocument implements Serializable {
 
 	public void setFolder(GUIFolder folder) {
 		this.folder = folder;
+	}
+
+	public int getImmutable() {
+		return immutable;
+	}
+
+	public void setImmutable(int immutable) {
+		this.immutable = immutable;
 	}
 }

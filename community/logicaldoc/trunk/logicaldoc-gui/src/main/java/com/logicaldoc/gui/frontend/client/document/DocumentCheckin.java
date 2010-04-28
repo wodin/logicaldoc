@@ -6,6 +6,7 @@ import gwtupload.client.IUploadStatus.Status;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.frontend.client.Log;
@@ -22,6 +23,8 @@ import com.smartgwt.client.widgets.form.fields.SubmitItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.grid.ListGrid;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 /**
  * This popup window is used to upload a checked-out document to the server.
@@ -42,9 +45,9 @@ public class DocumentCheckin extends Window {
 
 	private String fileName;
 
-	private DocumentsListPanel documentsGrid;
+	private ListGrid documentsGrid;
 
-	public DocumentCheckin(long docId, String filename, DocumentsListPanel documentsGrid) {
+	public DocumentCheckin(long docId, String filename, ListGrid documentsGrid) {
 		this.docId = docId;
 		this.fileName = filename;
 		this.documentsGrid = documentsGrid;
@@ -129,19 +132,24 @@ public class DocumentCheckin extends Window {
 		if (!vm.validate())
 			return;
 
-		documentService.checkin(Session.get().getSid(), docId, "true"
-				.equals(vm.getValueAsString("majorversion")), new AsyncCallback<Void>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
+		documentService.checkin(Session.get().getSid(), docId, "true".equals(vm.getValueAsString("majorversion")),
+				new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-			@Override
-			public void onSuccess(Void result) {
-				documentsGrid.markAsCheckedIn();
-				destroy();
-			}
-		});
+					@Override
+					public void onSuccess(Void result) {
+						ListGridRecord selection = documentsGrid.getSelectedRecord();
+						if (selection == null)
+							return;
+						selection.setAttribute("locked", "blank");
+						selection.setAttribute("status", Constants.DOC_UNLOCKED);
+						documentsGrid.refreshRow(documentsGrid.getRecordIndex(selection));
+						destroy();
+					}
+				});
 	}
 
 	public String getLanguage() {

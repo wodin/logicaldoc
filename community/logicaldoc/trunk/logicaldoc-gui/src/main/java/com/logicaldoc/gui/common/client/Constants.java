@@ -64,4 +64,6 @@ public final class Constants {
 	public static final String SMTP_SECURITY_SSL = "3";
 
 	public static final String KEY_ENTER = "enter";
+
+	public static final String GROUP_ADMIN = "admin";
 }

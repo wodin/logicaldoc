@@ -2,7 +2,7 @@ package com.logicaldoc.gui.frontend.client.panels;
 
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIEvent;
-import com.logicaldoc.gui.common.client.util.DateCellFormatter;
+import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
