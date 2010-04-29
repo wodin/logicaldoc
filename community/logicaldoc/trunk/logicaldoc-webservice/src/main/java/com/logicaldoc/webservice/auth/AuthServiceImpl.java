@@ -24,6 +24,12 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
 
+/**
+ * Auth Web Service Implementation
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 5.2
+ */
 @WebService(endpointInterface = "com.logicaldoc.webservice.auth.AuthService", serviceName = "AuthService")
 public class AuthServiceImpl extends AbstractService implements AuthService {
 
