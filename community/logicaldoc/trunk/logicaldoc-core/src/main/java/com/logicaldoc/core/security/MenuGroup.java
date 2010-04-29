@@ -205,9 +205,5 @@ public class MenuGroup {
 		setSign(Permission.SIGN.match(permissions) ? 1 : 0);
 		setArchive(Permission.ARCHIVE.match(permissions) ? 1 : 0);
 		setWorkflow(Permission.WORKFLOW.match(permissions) ? 1 : 0);
-		
-		System.out.println("*************************** set permissions!!! ");
-		
-		System.out.println("*************************** write: "+getWrite());
 	}
 }
