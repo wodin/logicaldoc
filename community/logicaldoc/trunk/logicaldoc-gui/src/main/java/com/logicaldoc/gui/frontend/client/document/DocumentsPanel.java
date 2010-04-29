@@ -47,6 +47,9 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	private DocumentsMenu leftMenu;
 
+	// The document that must be hilighted
+	private Long hiliteDocId = null;
+
 	private DocumentsPanel() {
 		// Register to folders events
 		Session.get().addFolderObserver(this);
@@ -93,7 +96,10 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		((DocumentsListPanel) listingPanel).updateSelectedRecord(document);
 	}
 
-	public void openInFolder(long folderId) {
+	public void openInFolder(long folderId, long docId) {
+		// Save the information about the document that will be hilighted by
+		// habler onFolderSelect
+		hiliteDocId = docId;
 		leftMenu.openFolder(folderId);
 		Main.get().getMainPanel().selectDocumentsTab();
 	}
@@ -115,8 +121,10 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 			@Override
 			public void onSuccess(GUIDocument result) {
 				toolbar.update(result);
-				((DocumentDetailsPanel) detailPanel).setDocument(result);
-				details.redraw();
+				if (detailPanel instanceof DocumentDetailsPanel) {
+					((DocumentDetailsPanel) detailPanel).setDocument(result);
+					details.redraw();
+				}
 			}
 		});
 	}
@@ -130,13 +138,19 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	public void refresh() {
 		content.removeMember(listingPanel);
 		listingPanel.destroy();
-		listingPanel = new DocumentsListPanel(folder);
+		listingPanel = new DocumentsListPanel(folder, hiliteDocId);
 		content.addMember(listingPanel);
 		content.redraw();
 
-		detailPanel.destroy();
-		detailPanel = new FolderDetailsPanel(folder);
-		details.addMember(detailPanel);
-		details.redraw();
+		if (hiliteDocId != null)
+			onSelectedDocument(hiliteDocId);
+		else {
+			detailPanel.destroy();
+			detailPanel = new FolderDetailsPanel(folder);
+			details.addMember(detailPanel);
+			details.redraw();
+		}
+		
+		hiliteDocId = null;
 	}
 }

@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.mock;
+package com.logicaldoc.gui.common.server.mock;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class MockDiscussionsDataServlet extends HttpServlet {
+public class MockLinksDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -17,7 +17,7 @@ public class MockDiscussionsDataServlet extends HttpServlet {
 			IOException {
 
 		long docId = Long.parseLong(request.getParameter("docId"));
-		System.out.println("*** discussions for docId=" + docId);
+		System.out.println("*** links for docId=" + docId);
 
 		String sid = (String) request.getParameter("sid");
 		if (sid == null)
@@ -32,15 +32,15 @@ public class MockDiscussionsDataServlet extends HttpServlet {
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
-		for (int i = 0; i < 20; i++) {
-			writer.print("<discussion>");
+		for (int i = 0; i < 200; i++) {
+			writer.print("<link>");
 			writer.print("<id>" + Long.toString(docId + 1000 + i) + "</id>");
-			writer.print("<title>Discussion " + Long.toString(docId + 1000 + i) + "</title>");
-			writer.print("<user>Marco Meschieri</user>");
-			writer.print("<posts>3</posts>");
-			writer.print("<visits>53</visits>");
-			writer.print("<lastPost>2010-10-26T11:32:23</lastPost>");
-			writer.print("</discussion>");
+			writer.print("<folderId>" + Long.toString(docId + 1000 + i) + "</folderId>");
+			writer.print("<icon>word</icon>");
+			writer.print("<title>Title " + Long.toString(docId + 1000 + i) + "</title>");
+			writer.print("<type>default</type>");
+			writer.print("<direction>inout</direction>");
+			writer.print("</link>");
 		}
 		writer.write("</list>");
 	}

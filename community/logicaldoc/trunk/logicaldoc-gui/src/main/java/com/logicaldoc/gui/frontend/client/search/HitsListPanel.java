@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.Main;
 import com.logicaldoc.gui.frontend.client.document.DocumentContextMenu;
@@ -23,7 +24,6 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
@@ -55,6 +55,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	private ListGrid list;
 
 	private ToolStrip toolStrip;
+
+	private InfoPanel infoPanel;
 
 	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
@@ -219,7 +221,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 						openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 							public void onClick(MenuItemClickEvent event) {
 								ListGridRecord record = list.getSelectedRecord();
-								DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")));
+								DocumentsPanel.get().openInFolder(
+										Long.parseLong(record.getAttributeAsString("folderId")),
+										Long.parseLong(record.getAttributeAsString("id")));
 							}
 						});
 						contextMenu.addItem(openInFolder);
@@ -239,14 +243,32 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		});
 
-		/*
-		 * Prepare the toolbar displaying search statistics
-		 */
+		// Prepare the toolbar with some buttons
 		setupToolbar();
-		addMember(list);
+
+		if (infoPanel == null) {
+			infoPanel = new InfoPanel(" ");
+			addMember(infoPanel);
+		}
+
+		if (Search.get().isEmpty())
+			infoPanel.setVisible(false);
+		else
+			infoPanel.setVisible(true);
+
+		// Prepare a stack for 2 sections the Title with search time and the
+		// list of hits
+		GUISearchOptions options = Search.get().getOptions();
+		NumberFormat format = NumberFormat.getFormat("#.###");
+		String stats = I18N.getMessage("resultstat", new String[] { options.getExpression(),
+				format.format((double) Search.get().getTime() / (double) 1000) });
+		infoPanel.setMessage(stats);
 
 		ListGridRecord[] result = Search.get().getLastResult();
 		list.setRecords(result);
+
+		if (!contains(list))
+			addMember(list);
 	}
 
 	/**
@@ -286,27 +308,40 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			repeatNumber.setWidth(40);
 
 			ToolStripButton repeat = new ToolStripButton();
-			repeat.setTitle(I18N.getMessage("repeatsearchinlcuding"));
+			repeat.setTitle(I18N.getMessage("repeatsearchadding"));
 			toolStrip.addButton(repeat);
 			toolStrip.addFormItem(repeatNumber);
 			repeat.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
+					if (!repeatNumber.validate())
+						return;
 					GUISearchOptions opt = Search.get().getOptions();
 					opt.setMaxHits(opt.getMaxHits() + (Integer) repeatNumber.getValue());
 					Search.get().search();
 				}
 			});
 		}
+
+		toolStrip.addSeparator();
+		ToolStripButton save = new ToolStripButton();
+		save.setTitle(I18N.getMessage("save"));
+		save.setIcon("[SKIN]/application/drive_disk.png");
+		toolStrip.addButton(save);
+		showSnippets.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				// TODO implement
+			}
+		});
+		if (!Session.get().isFeatureEnabled("ENTERPRISE")) {
+			save.setDisabled(true);
+			save.setTooltip(I18N.getMessage("featuredisabled"));
+		}
+
+		toolStrip.addButton(save);
+
 		toolStrip.addFill();
-		GUISearchOptions options = Search.get().getOptions();
-		NumberFormat format = NumberFormat.getFormat("#.###");
-		Label resultLabel = new Label(I18N.getMessage("resultstat", new String[] { options.getExpression(),
-				format.format((double) Search.get().getTime() / (double) 1000) }));
-		resultLabel.setWrap(false);
-		resultLabel.setAlign(Alignment.RIGHT);
-		resultLabel.setMargin(5);
-		toolStrip.addMember(resultLabel);
 		addMember(toolStrip);
 	}
 
@@ -345,291 +380,4 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	public void onDocumentSaved(GUIDocument document) {
 		updateSelectedRecord(document);
 	}
-
-	//
-	// MenuItem similarItem = new MenuItem();
-	// similarItem.setTitle(I18N.getMessage("similardocuments"));
-	// similarItem.addClickHandler(new
-	// com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	// public void onClick(MenuItemClickEvent event) {
-	// ListGridRecord selection = list.getSelectedRecord();
-	// if (selection == null)
-	// return;
-	// TODO implement
-	// SC.warn("To be Implemented");
-	// }
-	// });
-	//
-	// MenuItem linksItem = new MenuItem();
-	// linksItem.setTitle(I18N.getMessage("connectaslinks"));
-	// linksItem.addClickHandler(new
-	// com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	// public void onClick(MenuItemClickEvent event) {
-	// ListGridRecord[] selection = list.getSelection();
-	// if (selection == null || selection.length == 0 ||
-	// Clipboard.getInstance().isEmpty())
-	// return;
-	//
-	// final long[] outIds = new long[selection.length];
-	// for (int j = 0; j < selection.length; j++) {
-	// outIds[j] = Long.parseLong(selection[j].getAttribute("id"));
-	// }
-	//
-	// final long[] inIds = new long[Clipboard.getInstance().size()];
-	// int i = 0;
-	// for (GUIDocument doc : Clipboard.getInstance()) {
-	// inIds[i++] = doc.getId();
-	// }
-	//
-	// documentService.linkDocuments(Session.getInstance().getSid(), inIds,
-	// outIds, new AsyncCallback<Void>() {
-	//
-	// @Override
-	// public void onFailure(Throwable caught) {
-	// Log.serverError(caught);
-	// }
-	//
-	// @Override
-	// public void onSuccess(Void result) {
-	// // Nothing to do
-	// }
-	//
-	// });
-	// }
-	// });
-	//
-	// MenuItem immutableItem = new MenuItem();
-	// immutableItem.setTitle(I18N.getMessage("makeimmutable"));
-	// immutableItem.addClickHandler(new
-	// com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	// public void onClick(MenuItemClickEvent event) {
-	// final ListGridRecord[] selection = list.getSelection();
-	// if (selection == null)
-	// return;
-	// final long[] ids = new long[selection.length];
-	// for (int j = 0; j < selection.length; j++) {
-	// ids[j] = Long.parseLong(selection[j].getAttribute("id"));
-	// }
-	//
-	// Dialog dialogProperties = new Dialog();
-	// SC.askforValue(I18N.getMessage("warning"),
-	// I18N.getMessage("immutableadvice"), "", new ValueCallback() {
-	//
-	// @Override
-	// public void execute(String value) {
-	// if (value == null)
-	// return;
-	//
-	// if (value.isEmpty())
-	// SC.warn(I18N.getMessage("commentrequired"));
-	// else
-	// documentService.makeImmutable(Session.getInstance().getSid(), ids, value,
-	// new AsyncCallback<Void>() {
-	// @Override
-	// public void onFailure(Throwable caught) {
-	// Log.serverError(caught);
-	// }
-	//
-	// @Override
-	// public void onSuccess(Void result) {
-	// for (ListGridRecord record : selection) {
-	// record.setAttribute("immutable", "stop");
-	// list.refreshRow(list.getRecordIndex(record));
-	// }
-	// }
-	// });
-	// }
-	//
-	// }, dialogProperties);
-	// }
-	// });
-	//
-	// MenuItem lockItem = new MenuItem();
-	// lockItem.setTitle(I18N.getMessage("lock"));
-	// lockItem.addClickHandler(new
-	// com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	// public void onClick(MenuItemClickEvent event) {
-	// final ListGridRecord[] selection = list.getSelection();
-	// if (selection == null)
-	// return;
-	// final long[] ids = new long[selection.length];
-	// for (int j = 0; j < selection.length; j++) {
-	// ids[j] = Long.parseLong(selection[j].getAttribute("id"));
-	// }
-	//
-	// Dialog dialogProperties = new Dialog();
-	// SC.askforValue(I18N.getMessage("warning"), I18N.getMessage("lockadvice"),
-	// "", new ValueCallback() {
-	//
-	// @Override
-	// public void execute(String value) {
-	// if (value != null)
-	// documentService.lock(Session.getInstance().getSid(), ids, value, new
-	// AsyncCallback<Void>() {
-	// @Override
-	// public void onFailure(Throwable caught) {
-	// Log.serverError(caught);
-	// }
-	//
-	// @Override
-	// public void onSuccess(Void result) {
-	// for (ListGridRecord record : selection) {
-	// record.setAttribute("locked", "document_lock");
-	// record.setAttribute("lockUserId",
-	// Session.getInstance().getUser().getId());
-	// list.refreshRow(list.getRecordIndex(record));
-	// }
-	// }
-	// });
-	// }
-	//
-	// }, dialogProperties);
-	// }
-	// });
-	//
-	// MenuItem unlockItem = new MenuItem();
-	// unlockItem.setTitle(I18N.getMessage("unlock"));
-	// unlockItem.addClickHandler(new
-	// com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	// public void onClick(MenuItemClickEvent event) {
-	// final ListGridRecord[] selection = list.getSelection();
-	// if (selection == null)
-	// return;
-	// final long[] ids = new long[selection.length];
-	// for (int j = 0; j < selection.length; j++) {
-	// ids[j] = Long.parseLong(selection[j].getAttribute("id"));
-	// }
-	//
-	// documentService.unlock(Session.getInstance().getSid(), ids, new
-	// AsyncCallback<Void>() {
-	// @Override
-	// public void onFailure(Throwable caught) {
-	// Log.serverError(caught);
-	// }
-	//
-	// @Override
-	// public void onSuccess(Void result) {
-	// for (ListGridRecord record : selection) {
-	// record.setAttribute("locked", "blank");
-	// record.setAttribute("status", Constants.DOC_UNLOCKED);
-	// list.refreshRow(list.getRecordIndex(record));
-	// }
-	// }
-	// });
-	// }
-	// });
-	//
-	// if (list.getSelection().length == 1)
-	// items.add(downloadItem);
-	//
-	// items.add(copyItem);
-	// if (folder.hasPermission(Constants.PERMISSION_DELETE))
-	// items.add(deleteItem);
-	//
-	// if (list.getSelection().length == 1) {
-	// items.add(sendMailItem);
-	// items.add(similarItem);
-	// }
-	//
-	// if (folder.hasPermission(Constants.PERMISSION_WRITE)) {
-	// items.add(linksItem);
-	//
-	// boolean enableLock = true;
-	// boolean enableUnlock = true;
-	//
-	// ListGridRecord[] selection = list.getSelection();
-	// for (ListGridRecord record : selection) {
-	// if (!record.getAttribute("locked").equals("blank") ||
-	// !record.getAttribute("immutable").equals("blank")) {
-	// enableLock = false;
-	// }
-	// if (record.getAttribute("locked").equals("blank") ||
-	// !record.getAttribute("immutable").equals("blank")) {
-	// Long lockUser = record.getAttribute("lockUserId") != null ?
-	// Long.parseLong(record
-	// .getAttribute("lockUserId")) : Long.MIN_VALUE;
-	// if (Session.getInstance().getUser().getId() == lockUser.longValue()
-	// || Session.getInstance().getUser().getUserName().equals("admin"))
-	// enableUnlock = false;
-	// }
-	// }
-	//
-	// MenuItem checkoutItem = new MenuItem();
-	// checkoutItem.setTitle(I18N.getMessage("checkout"));
-	// checkoutItem.addClickHandler(new
-	// com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	// public void onClick(MenuItemClickEvent event) {
-	// final ListGridRecord selection = list.getSelectedRecord();
-	// if (selection == null)
-	// return;
-	// final long id = Long.parseLong(selection.getAttribute("id"));
-	// documentService.checkout(Session.getInstance().getSid(), id, new
-	// AsyncCallback<Void>() {
-	// @Override
-	// public void onFailure(Throwable caught) {
-	// Log.serverError(caught);
-	// }
-	//
-	// @Override
-	// public void onSuccess(Void result) {
-	// selection.setAttribute("locked", "document_lock");
-	// selection.setAttribute("lockUserId",
-	// Session.getInstance().getUser().getId());
-	// selection.setAttribute("status", Constants.DOC_CHECKED_OUT);
-	// list.refreshRow(list.getRecordIndex(selection));
-	// Window.open("../download?sid=" + Session.getInstance().getSid() +
-	// "&docId=" + id, "_blank",
-	// "");
-	// }
-	// });
-	// }
-	// });
-	//
-	// MenuItem checkinItem = new MenuItem();
-	// checkinItem.setTitle(I18N.getMessage("checkin"));
-	// checkinItem.addClickHandler(new
-	// com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	// public void onClick(MenuItemClickEvent event) {
-	// ListGridRecord selection = list.getSelectedRecord();
-	// if (selection == null)
-	// return;
-	// long id = Long.parseLong(selection.getAttribute("id"));
-	// String filename = selection.getAttributeAsString("filename");
-	// DocumentCheckin checkin = new DocumentCheckin(id, filename,
-	// ResultListPanel.this);
-	// checkin.show();
-	// }
-	// });
-	//
-	// if (enableLock) {
-	// items.add(lockItem);
-	// items.add(checkoutItem);
-	// }
-	//
-	// if (enableUnlock) {
-	// if (selection.length == 1
-	// && Constants.DOC_CHECKED_OUT ==
-	// Integer.parseInt(selection[0].getAttribute("status")))
-	// items.add(checkinItem);
-	// items.add(unlockItem);
-	// }
-	// }
-	//
-	// if (folder.hasPermission(Constants.PERMISSION_IMMUTABLE)) {
-	// boolean enableImmutable = true;
-	// ListGridRecord[] selection = list.getSelection();
-	// for (ListGridRecord record : selection) {
-	// if (!record.getAttribute("locked").equals("blank") ||
-	// !record.getAttribute("immutable").equals("blank"))
-	// enableImmutable = false;
-	// }
-	//
-	// if (enableImmutable)
-	// items.add(immutableItem);
-	// }
-	//
-	// contextMenu.setItems(items.toArray(new MenuItem[0]));
-	//
-	// return contextMenu;
-	// }
 }

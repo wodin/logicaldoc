@@ -28,10 +28,11 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 			user.setUserName(username);
 			session.setSid("sid" + new Date().getTime());
 
-			String[] features = new String[30];
+			String[] features = new String[31];
 			for (int i = 0; i < 30; i++) {
 				features[i] = "Feature_" + i;
 			}
+			features[30] = "ENTERPRISE";
 			session.setFeatures(features);
 			user.setGroups(new String[] { "admin" });
 			user.setFirstName("Marco");

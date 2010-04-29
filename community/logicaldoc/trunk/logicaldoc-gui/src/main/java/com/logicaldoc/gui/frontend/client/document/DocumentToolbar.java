@@ -7,7 +7,6 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
-import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
@@ -28,8 +27,56 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	private ToolStripButton add = new ToolStripButton();
 
+	private GUIDocument document;
+
 	public DocumentToolbar() {
-		setHeight(25);
+		download.setTooltip(I18N.getMessage("download"));
+		download.setIcon("[SKIN]/application/download.png");
+		download.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (document == null)
+					return;
+				Window.open("download?sid=" + Session.get().getSid() + "&sid=" + Session.get().getSid() + "&docId="
+						+ document.getId(), "_self", "");
+			}
+		});
+
+		rss.setIcon("[SKIN]/application/rss.png");
+		rss.setTooltip(I18N.getMessage("rssfeed"));
+		if (!Session.get().isFeatureEnabled("Feature_9"))
+			rss.setTooltip(I18N.getMessage("featuredisabled"));
+		rss.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Window.open("doc_rss?sid=" + Session.get().getSid() + "&docId=" + document.getId(), "_blank", "");
+			}
+		});
+
+		pdf.setTooltip(I18N.getMessage("exportpdf"));
+		pdf.setIcon("[SKIN]/application/pdf.png");
+		if (!Session.get().isFeatureEnabled("Feature_8"))
+			pdf.setTooltip(I18N.getMessage("featuredisabled"));
+		pdf.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Window.open("convertpdf?sid=" + Session.get().getSid() + "&docId=" + document.getId() + "&version="
+						+ document.getVersion(), "_blank", "");
+			}
+		});
+
+		add.setTooltip(I18N.getMessage("adddocuments"));
+		add.setIcon("[SKIN]/application/document_add.png");
+		add.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				final DocumentsUploader uploader = new DocumentsUploader();
+				uploader.show();
+				event.cancel();
+			}
+		});
+
+		setHeight(27);
 		addButton(download);
 		addButton(rss);
 		addButton(pdf);
@@ -43,66 +90,32 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	 * Updates the toolbar state on the basis of the passed document
 	 */
 	public void update(final GUIDocument document) {
-		if (document != null) {
-			download.setTooltip(I18N.getMessage("download"));
-			download.setIcon(Util.imageUrl("application/download.png"));
-			download.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					Window.open("download?sid=" + Session.get().getSid() + "&sid="
-							+ Session.get().getSid() + "&docId=" + document.getId(), "_self", "");
-				}
-			});
+		this.document = document;
+
+		if (document == null) {
+			download.setDisabled(true);
 		} else {
-			download.setIcon(Util.imageUrl("application/download_gray.png"));
+			download.setDisabled(false);
 		}
 
 		if (document != null && Session.get().isFeatureEnabled("Feature_9")) {
-			rss.setTooltip(I18N.getMessage("rssfeed"));
-			rss.setIcon(Util.imageUrl("application/rss.png"));
-			rss.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					Window.open("doc_rss?sid=" + Session.get().getSid() + "&docId=" + document.getId(),
-							"_blank", "");
-				}
-			});
+			rss.setDisabled(false);
 		} else {
-			rss.setTooltip(I18N.getMessage("featuredisabled"));
-			rss.setIcon(Util.imageUrl("application/rss_gray.png"));
+			rss.setDisabled(true);
 		}
 
 		if (document != null && Session.get().isFeatureEnabled("Feature_8")) {
-			pdf.setTooltip(I18N.getMessage("exportpdf"));
-			pdf.setIcon(Util.imageUrl("application/pdf.png"));
-			pdf.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					Window.open("convertpdf?sid=" + Session.get().getSid() + "&docId=" + document.getId()
-							+ "&version=" + document.getVersion(), "_blank", "");
-				}
-			});
+			pdf.setDisabled(false);
 		} else {
-			pdf.setTooltip(I18N.getMessage("featuredisabled"));
-			pdf.setIcon(Util.imageUrl("application/pdf_gray.png"));
+			pdf.setDisabled(true);
 		}
 
 		GUIFolder folder = Session.get().getCurrentFolder();
 
 		if (folder != null && folder.hasPermission(Constants.PERMISSION_WRITE)) {
-			add.setTooltip(I18N.getMessage("adddocuments"));
-			add.setIcon(Util.imageUrl("application/document_add.png"));
-			add.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					final DocumentsUploader uploader = new DocumentsUploader();
-					uploader.show();
-					event.cancel();
-				}
-			});
+			add.setDisabled(false);
 		} else {
-			add.setTooltip(I18N.getMessage("featuredisabled"));
-			add.setIcon(Util.imageUrl("application/document_add_gray.png"));
+			add.setDisabled(true);
 		}
 	}
 

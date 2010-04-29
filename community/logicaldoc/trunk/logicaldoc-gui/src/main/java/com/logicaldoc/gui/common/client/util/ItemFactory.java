@@ -25,7 +25,6 @@ public class ItemFactory {
 		date.setUseMask(true);
 		date.setShowPickerIcon(true);
 		date.setWidth(90);
-		date.setEndRow(true);
 		date.setName(name);
 		date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
 		return date;

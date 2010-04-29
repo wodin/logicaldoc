@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.data;
+package com.logicaldoc.gui.common.client.data;
 
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
@@ -12,18 +12,17 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class DocumentHistoryDS extends DataSource {
-	public DocumentHistoryDS(long docId) {
+public class FolderHistoryDS extends DataSource {
+	public FolderHistoryDS(long folderId) {
 		setRecordXPath("/list/history");
 		DataSourceTextField user = new DataSourceTextField("user");
 		DataSourceDateTimeField date = new DataSourceDateTimeField("date");
 		DataSourceTextField event = new DataSourceTextField("event");
 		DataSourceTextField comment = new DataSourceTextField("comment");
-		DataSourceTextField version = new DataSourceTextField("version");
 
-		setFields(user, date, event, comment, version);
+		setFields(user, date, event, comment);
 		setClientOnly(true);
-		setDataURL("data/documenthistory.xml?sid=" + Session.get().getSid() + "&id=" + docId + "&lang="
+		setDataURL("data/folderhistory.xml?sid=" + Session.get().getSid() + "&id=" + folderId + "&lang="
 				+ I18N.getLanguage());
 	}
 }

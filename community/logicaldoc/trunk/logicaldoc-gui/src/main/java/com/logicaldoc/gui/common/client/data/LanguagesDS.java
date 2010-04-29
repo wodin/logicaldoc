@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.data;
+package com.logicaldoc.gui.common.client.data;
 
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
