@@ -2289,3 +2289,7 @@ a.calMonthEventLink:active {color:blue; text-decoration:none}
   margin-left: 5px;
   margin-top: 10px;
 }
+
+.infoPanel {
+	background-color: #DDDDDD;
+}

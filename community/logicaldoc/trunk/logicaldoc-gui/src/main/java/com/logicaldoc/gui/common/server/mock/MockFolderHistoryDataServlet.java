@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.mock;
+package com.logicaldoc.gui.common.server.mock;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,16 +8,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class MockLinksDataServlet extends HttpServlet {
+public class MockFolderHistoryDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
+		System.out.println("*** history");
 
-		long docId = Long.parseLong(request.getParameter("docId"));
-		System.out.println("*** links for docId=" + docId);
+		long folderId = Long.parseLong(request.getParameter("id"));
+		String lang = request.getParameter("lang");
 
 		String sid = (String) request.getParameter("sid");
 		if (sid == null)
@@ -32,16 +33,21 @@ public class MockLinksDataServlet extends HttpServlet {
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
-		for (int i = 0; i < 200; i++) {
-			writer.print("<link>");
-			writer.print("<id>" + Long.toString(docId + 1000 + i) + "</id>");
-			writer.print("<folderId>" + Long.toString(docId + 1000 + i) + "</folderId>");
-			writer.print("<icon>word</icon>");
-			writer.print("<title>Title " + Long.toString(docId + 1000 + i) + "</title>");
-			writer.print("<type>default</type>");
-			writer.print("<direction>inout</direction>");
-			writer.print("</link>");
-		}
+
+		writer.print("<history>");
+		writer.print("<user>Marco Meschieri</user>");
+		writer.print("<event>Subfolder created</event>");
+		writer.print("<date>2010-10-26T11:32:23</date>");
+		writer.print("<comment>comment</comment>");
+		writer.print("</history>");
+
+		writer.print("<history>");
+		writer.print("<user>Marco Meschieri</user>");
+		writer.print("<event>Subfolder created</event>");
+		writer.print("<date>2010-10-26T11:32:23</date>");
+		writer.print("<comment>comment</comment>");
+		writer.print("</history>");
+
 		writer.write("</list>");
 	}
 }

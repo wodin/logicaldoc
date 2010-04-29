@@ -8,9 +8,9 @@ import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
-import com.logicaldoc.gui.frontend.client.data.TagsDS;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -61,6 +61,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		if (contains(form1))
 			removeChild(form1);
 		form1 = new DynamicForm();
+		form1.setNumCols(2);
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.TOP);
 		List<FormItem> items = new ArrayList<FormItem>();
@@ -126,8 +127,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		items.add(titleItem);
 		items.add(fileNameItem);
 		items.add(creationItem);
-		items.add(creatorItem);
 		items.add(dateItem);
+		items.add(creatorItem);
 		items.add(publisherItem);
 
 		form1.setItems(items.toArray(new FormItem[0]));

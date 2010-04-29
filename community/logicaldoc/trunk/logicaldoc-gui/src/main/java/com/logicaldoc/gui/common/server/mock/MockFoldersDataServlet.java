@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.mock;
+package com.logicaldoc.gui.common.server.mock;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,9 +43,9 @@ public class MockFoldersDataServlet extends HttpServlet {
 		} else {
 			for (int i = 0; i < 10; i++) {
 				writer.print("<folder>");
-				writer.print("<id>" + (parent + 1000 + (i*50)) + "</id>");
+				writer.print("<id>" + (parent + 1000 + i) + "</id>");
 				writer.print("<parent>" + parent + "</parent>");
-				writer.print("<name>Folder " + (parent + 1000 + (i*50)) + "</name>");
+				writer.print("<name>Folder " + (parent + 1000 + i) + "</name>");
 				writer.print("<" + Constants.PERMISSION_ADD + ">true</" + Constants.PERMISSION_ADD + ">");
 				writer.print("<" + Constants.PERMISSION_DELETE + ">true</" + Constants.PERMISSION_DELETE + ">");
 				writer.print("</folder>");

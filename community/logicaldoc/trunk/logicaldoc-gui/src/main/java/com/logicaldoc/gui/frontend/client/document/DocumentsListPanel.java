@@ -5,10 +5,13 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.data.DocumentsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.util.Util;
-import com.logicaldoc.gui.frontend.client.data.DocumentsDS;
+import com.logicaldoc.gui.common.client.widgets.InfoPanel;
+import com.smartgwt.client.data.Record;
+import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
@@ -21,9 +24,11 @@ import com.smartgwt.client.widgets.grid.events.CellClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
+import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
+import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
-import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 
 /**
@@ -32,12 +37,14 @@ import com.smartgwt.client.widgets.menu.Menu;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class DocumentsListPanel extends HLayout {
+public class DocumentsListPanel extends VLayout {
 	private DocumentsDS dataSource;
 
 	private ListGrid list;
 
-	public DocumentsListPanel(GUIFolder folder) {
+	private InfoPanel infoPanel;
+
+	public DocumentsListPanel(GUIFolder folder, final Long hiliteDoc) {
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
@@ -135,6 +142,11 @@ public class DocumentsListPanel extends HLayout {
 		list.setDataSource(dataSource);
 		list.setFields(indexed, locked, immutable, icon, title, size, lastModified, version, publisher, published,
 				creator, created, customId, filename);
+
+		// Prepare a panel containing a title and the documents list
+		infoPanel = new InfoPanel("");
+
+		addMember(infoPanel);
 		addMember(list);
 
 		list.addCellClickHandler(new CellClickHandler() {
@@ -149,7 +161,6 @@ public class DocumentsListPanel extends HLayout {
 					}
 				}
 			}
-
 		});
 
 		list.addSelectionChangedHandler(new SelectionChangedHandler() {
@@ -173,6 +184,15 @@ public class DocumentsListPanel extends HLayout {
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
 				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true", "_blank", "");
+			}
+		});
+
+		list.addDataArrivedHandler(new DataArrivedHandler() {
+			@Override
+			public void onDataArrived(DataArrivedEvent event) {
+				infoPanel.setMessage(I18N.getMessage("thisfoldercontains", Integer.toString(list.getTotalRows())));
+				if (hiliteDoc != null)
+					DocumentsListPanel.this.hiliteDocument(hiliteDoc);
 			}
 		});
 	}
@@ -200,6 +220,15 @@ public class DocumentsListPanel extends HLayout {
 			selectedRecord.setAttribute("creator", document.getCreator());
 			selectedRecord.setAttribute("created", document.getCreation());
 			list.updateData(selectedRecord);
+		}
+	}
+
+	public void hiliteDocument(long docId) {
+		list.deselectAllRecords();
+		RecordList rlist = list.getDataAsRecordList();
+		Record record = rlist.find("id", Long.toString(docId));
+		if (record != null) {
+			list.selectSingleRecord(record);
 		}
 	}
 }

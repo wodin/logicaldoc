@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.data;
+package com.logicaldoc.gui.common.client.data;
 
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;

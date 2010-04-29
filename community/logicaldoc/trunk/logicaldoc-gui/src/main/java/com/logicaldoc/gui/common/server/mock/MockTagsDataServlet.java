@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.mock;
+package com.logicaldoc.gui.common.server.mock;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,15 +8,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class MockUsersDataServlet extends HttpServlet {
+public class MockTagsDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		System.out.println("*** Data users");
-
+		System.out.println("*** Data tags");
+		
 		response.setContentType("text/xml");
 
 		// Headers required by Internet Explorer
@@ -26,15 +26,10 @@ public class MockUsersDataServlet extends HttpServlet {
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
-		
-		// Add 5 dummy users
-		for (int i = 0; i < 5; i++) {
-			writer.print("<user>");
-			writer.print("<id>" + i + "</id>");
-			writer.print("<groupId>" + (-i) + "</groupId>");
-			writer.print("<username>User " + i + "</username>");
-			writer.print("<label>Marco Meschieri " + i + "</label>");
-			writer.print("</user>");
+		for (int i = 0; i < 1000; i++) {
+			writer.print("<tag>");
+			writer.print("<word>tag" + i + "</word>");
+			writer.print("</tag>");
 		}
 		writer.write("</list>");
 	}

@@ -1,7 +1,7 @@
 package com.logicaldoc.gui.common.client.widgets;
 
 import com.logicaldoc.gui.common.client.I18N;
-import com.logicaldoc.gui.frontend.client.data.FoldersDS;
+import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IPickTreeItem;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
