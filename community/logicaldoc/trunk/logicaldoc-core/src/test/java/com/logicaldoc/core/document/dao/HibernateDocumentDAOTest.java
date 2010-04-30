@@ -17,7 +17,6 @@ import com.logicaldoc.core.AbstractCoreTestCase;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
-import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -196,7 +195,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.addTag("123456789123456789123456789");
 		User user = new User();
 		user.setId(1);
-		Version version = Version.create(doc, user, "comment", Version.EVENT_CHECKIN, VERSION_TYPE.OLD_VERSION);
+		Version version = Version.create(doc, user, "comment", Version.EVENT_CHECKIN, true);
 
 		History transaction = new History();
 		transaction.setFolderId(menu.getId());

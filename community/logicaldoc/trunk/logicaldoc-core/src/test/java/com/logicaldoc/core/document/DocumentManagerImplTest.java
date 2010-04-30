@@ -235,7 +235,7 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 
 		Assert.assertEquals(Document.DOC_CHECKED_OUT, doc.getStatus());
 
-		documentManager.checkin(1L, file, "pippo", Version.VERSION_TYPE.NEW_RELEASE, false, transaction);
+		documentManager.checkin(1L, file, "pippo", true, false, transaction);
 
 		doc = docDao.findById(1);
 		Assert.assertNotNull(doc);

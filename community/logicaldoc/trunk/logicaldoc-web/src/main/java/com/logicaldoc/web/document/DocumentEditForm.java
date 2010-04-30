@@ -832,9 +832,9 @@ public class DocumentEditForm {
 				}
 
 				// determines the kind of version to create
-				Version.VERSION_TYPE versionType = Version.VERSION_TYPE.NEW_SUBVERSION;
+				boolean release = false;
 				if (isMajorUpdate()) {
-					versionType = Version.VERSION_TYPE.NEW_RELEASE;
+					release = true;
 				}
 
 				try {
@@ -848,7 +848,7 @@ public class DocumentEditForm {
 					// something goes wrong
 					DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(
 							DocumentManager.class);
-					documentManager.checkin(document.getId(), new FileInputStream(file), fileName, versionType,
+					documentManager.checkin(document.getId(), new FileInputStream(file), fileName, release,
 							immediateIndexing, transaction);
 
 					/* create positive log message */

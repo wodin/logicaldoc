@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Locale;
 
-import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.store.Storer;
 
@@ -22,14 +21,13 @@ public interface DocumentManager {
 	 * @param docId the document to be checked in
 	 * @param fileInputStream input stream pointing to the new document version
 	 * @param filename new filename (can also be the old one)
-	 * @param versionType specifies if this is a new release, a subversion or
-	 *        the old version
-	 * @param versionDesc a change description
+	 * @param release True if this is a new release(eg: 2.0) rather than a
+	 *        subversion(eg: 1.1)
 	 * @param immediateIndexing if true the document is immediately indexed
 	 * @param transaction entry to log the event, set the user and comment
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public void checkin(long docId, InputStream fileInputStream, String filename, Version.VERSION_TYPE versionType,
+	public void checkin(long docId, InputStream fileInputStream, String filename, boolean release,
 			boolean immediateIndexing, History transaction) throws Exception;
 
 	/**
@@ -38,14 +36,13 @@ public interface DocumentManager {
 	 * @param docId the document to be checked in
 	 * @param file of the new document version
 	 * @param filename new filename (can also be the old one)
-	 * @param versionType specifies if this is a new release, a subversion or
-	 *        the old version
-	 * @param versionDesc a change description
+	 * @param release True if this is a new release(eg: 2.0) rather than a
+	 *        subversion(eg: 1.1)
 	 * @param immediateIndexing if true the document is immediately indexed
 	 * @param transaction entry to log the event, set the user and comment
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	void checkin(long docId, File file, String filename, VERSION_TYPE versionType, boolean immediateIndexing,
+	void checkin(long docId, File file, String filename, boolean release, boolean immediateIndexing,
 			History transaction) throws Exception;
 
 	/**
