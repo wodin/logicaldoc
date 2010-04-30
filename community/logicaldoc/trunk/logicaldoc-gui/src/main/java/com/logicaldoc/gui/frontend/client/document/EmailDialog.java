@@ -32,12 +32,12 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class EmailWindow extends Window {
+public class EmailDialog extends Window {
 	private long docId;
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	public EmailWindow(long docId, String docTitle) {
+	public EmailDialog(long docId, String docTitle) {
 		super();
 		this.docId = docId;
 
@@ -119,7 +119,7 @@ public class EmailWindow extends Window {
 					mail.setObject(vm.getValueAsString("object"));
 					mail.setMessage(vm.getValueAsString("message"));
 					mail.setSendAdTicket("true".equals(vm.getValueAsString("sendticket")));
-					mail.setDocId(EmailWindow.this.docId);
+					mail.setDocId(EmailDialog.this.docId);
 					mail.setUser(Session.get().getUser());
 					documentService.sendAsEmail(Session.get().getSid(), mail, new AsyncCallback<String>() {
 

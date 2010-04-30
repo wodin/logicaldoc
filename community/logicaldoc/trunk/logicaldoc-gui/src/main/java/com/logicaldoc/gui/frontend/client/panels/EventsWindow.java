@@ -53,7 +53,7 @@ public class EventsWindow extends Window {
 				if (GUIEvent.ERROR.equals(record.getAttribute("severity")))
 					return "color: #EF4A4A";
 				if (GUIEvent.WARNING.equals(record.getAttribute("severity")))
-					return "color: #FFCB3F";
+					return "color: #FFBE0F";
 				else
 					return "color: #577ED0";
 			}
@@ -72,9 +72,9 @@ public class EventsWindow extends Window {
 		ListGridField detail = new ListGridField("detail", I18N.getMessage("detail"), 300);
 		detail.setCanSort(false);
 
-		ListGridField severity = new ListGridField("severity", I18N.getMessage("severity"), 60);
+		ListGridField severityLabel = new ListGridField("severityLabel", I18N.getMessage("severity"), 60);
 
-		grid.setFields(date, severity, detail);
+		grid.setFields(date, severityLabel, detail);
 		grid.setCanResizeFields(true);
 		addItem(grid);
 	}
@@ -83,7 +83,8 @@ public class EventsWindow extends Window {
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute("date", event.getDate());
 		record.setAttribute("detail", event.getDetail());
-		record.setAttribute("severity", I18N.getMessage(event.getSeverity()));
+		record.setAttribute("severity", event.getSeverity());
+		record.setAttribute("severityLabel", I18N.getMessage(event.getSeverity()));
 		grid.addData(record);
 		grid.sort("date", SortDirection.DESCENDING);
 	}

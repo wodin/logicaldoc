@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.mock;
+package com.logicaldoc.gui.common.server.mock;
 
 import gwtupload.server.UploadAction;
 import gwtupload.server.exceptions.UploadActionException;
@@ -41,8 +41,8 @@ public class MockUploadServlet extends UploadAction {
 	 */
 	@Override
 	public String executeAction(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
-		System.out.println("** servlet session:"+request.getSession().getId());
-		
+		System.out.println("** servlet session:" + request.getSession().getId());
+
 		String path = getServletContext().getRealPath("/upload/" + request.getSession().getId());
 		File uploadFolder = new File(path);
 

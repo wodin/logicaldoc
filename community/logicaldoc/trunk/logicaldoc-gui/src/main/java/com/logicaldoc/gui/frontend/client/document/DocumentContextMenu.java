@@ -105,7 +105,7 @@ public class DocumentContextMenu extends Menu {
 				ListGridRecord selection = list.getSelectedRecord();
 				if (selection == null)
 					return;
-				EmailWindow window = new EmailWindow(Long.parseLong(selection.getAttribute("id")), selection
+				EmailDialog window = new EmailDialog(Long.parseLong(selection.getAttribute("id")), selection
 						.getAttribute("title"));
 				window.show();
 			}
