@@ -20,17 +20,15 @@ public interface DmsService {
 	 * @param password The password
 	 * @return The newly created session identifier(sid)
 	 */
-	public String login(@WebParam(name = "username")
-	String username, @WebParam(name = "password")
-	String password) throws Exception;
+	public String login(@WebParam(name = "username") String username, @WebParam(name = "password") String password)
+			throws Exception;
 
 	/**
 	 * Closes a user session.
 	 * 
 	 * @param sid The session identifier
 	 */
-	public void logout(@WebParam(name = "sid")
-	String sid);
+	public void logout(@WebParam(name = "sid") String sid);
 
 	/**
 	 * Create a new folder with a given name and under a specific folder. It
@@ -43,10 +41,8 @@ public interface DmsService {
 	 *         created
 	 * @throws Exception
 	 */
-	public String createFolder(@WebParam(name = "sid")
-	String sid, @WebParam(name = "name")
-	String name, @WebParam(name = "parent")
-	long parent) throws Exception;
+	public String createFolder(@WebParam(name = "sid") String sid, @WebParam(name = "name") String name,
+			@WebParam(name = "parent") long parent) throws Exception;
 
 	/**
 	 * Deletes an existing folder and all it's contained elements
@@ -57,9 +53,8 @@ public interface DmsService {
 	 *         occurred)
 	 * @throws Exception
 	 */
-	public String deleteFolder(@WebParam(name = "sid")
-	String sid, @WebParam(name = "folder")
-	long folder) throws Exception;
+	public String deleteFolder(@WebParam(name = "sid") String sid, @WebParam(name = "folder") long folder)
+			throws Exception;
 
 	/**
 	 * Create a new document. The user can completely customize the document
@@ -87,46 +82,29 @@ public interface DmsService {
 	 * @return The document identifier or 'error' if some errors occurred)
 	 * @throws Exception
 	 */
-	public String createDocument(@WebParam(name = "sid")
-	String sid, @WebParam(name = "folder")
-	long folder, @WebParam(name = "docTitle")
-	String docTitle, @WebParam(name = "source")
-	String source, @WebParam(name = "sourceDate")
-	String sourceDate, @WebParam(name = "sourceAuthor")
-	String author, @WebParam(name = "sourceType")
-	String sourceType, @WebParam(name = "coverage")
-	String coverage, @WebParam(name = "language")
-	String language, @WebParam(name = "tags")
-	String tags, @WebParam(name = "versionDesc")
-	String versionDesc, @WebParam(name = "filename")
-	String filename, @WebParam(name = "content")
-	DataHandler content, @WebParam(name = "templateName")
-	String templateName, @WebParam(name = "templateFields")
-	Attribute[] extendedAttributes, @WebParam(name = "sourceId")
-	String sourceId, @WebParam(name = "object")
-	String object, @WebParam(name = "recipient")
-	String recipient, @WebParam(name = "customId")
-	String customId) throws Exception;
+	public String createDocument(@WebParam(name = "sid") String sid, @WebParam(name = "folder") long folder,
+			@WebParam(name = "docTitle") String docTitle, @WebParam(name = "source") String source,
+			@WebParam(name = "sourceDate") String sourceDate, @WebParam(name = "sourceAuthor") String author,
+			@WebParam(name = "sourceType") String sourceType, @WebParam(name = "coverage") String coverage,
+			@WebParam(name = "language") String language, @WebParam(name = "tags") String tags,
+			@WebParam(name = "versionDesc") String versionDesc, @WebParam(name = "filename") String filename,
+			@WebParam(name = "content") DataHandler content, @WebParam(name = "templateName") String templateName,
+			@WebParam(name = "templateFields") Attribute[] extendedAttributes,
+			@WebParam(name = "sourceId") String sourceId, @WebParam(name = "object") String object,
+			@WebParam(name = "recipient") String recipient, @WebParam(name = "customId") String customId)
+			throws Exception;
 
 	/**
 	 * Updates an existing document and marks it to be re-indexed
 	 */
-	public String update(@WebParam(name = "sid")
-	String sid, @WebParam(name = "id")
-	long id, @WebParam(name = "title")
-	String title, @WebParam(name = "source")
-	String source, @WebParam(name = "sourceAuthor")
-	String sourceAuthor, @WebParam(name = "sourceDate")
-	String sourceDate, @WebParam(name = "sourceType")
-	String sourceType, @WebParam(name = "coverage")
-	String coverage, @WebParam(name = "language")
-	String language, @WebParam(name = "tags")
-	String[] tags, @WebParam(name = "sourceId")
-	String sourceId, @WebParam(name = "object")
-	String object, @WebParam(name = "recipient")
-	String recipient, @WebParam(name = "templateName")
-	String templateName, @WebParam(name = "templateFields")
-	Attribute[] extendedAttribute) throws Exception;
+	public String update(@WebParam(name = "sid") String sid, @WebParam(name = "id") long id,
+			@WebParam(name = "title") String title, @WebParam(name = "source") String source,
+			@WebParam(name = "sourceAuthor") String sourceAuthor, @WebParam(name = "sourceDate") String sourceDate,
+			@WebParam(name = "sourceType") String sourceType, @WebParam(name = "coverage") String coverage,
+			@WebParam(name = "language") String language, @WebParam(name = "tags") String[] tags,
+			@WebParam(name = "sourceId") String sourceId, @WebParam(name = "object") String object,
+			@WebParam(name = "recipient") String recipient, @WebParam(name = "templateName") String templateName,
+			@WebParam(name = "templateFields") Attribute[] extendedAttribute) throws Exception;
 
 	/**
 	 * Downloads a document. The document content is sent as attachment
@@ -138,10 +116,8 @@ public interface DmsService {
 	 * @return The requested document's binary
 	 * @throws Exception
 	 */
-	public DataHandler downloadDocument(@WebParam(name = "sid")
-	String sid, @WebParam(name = "id")
-	long id, @WebParam(name = "version")
-	String version) throws Exception;
+	public DataHandler downloadDocument(@WebParam(name = "sid") String sid, @WebParam(name = "id") long id,
+			@WebParam(name = "version") String version) throws Exception;
 
 	/**
 	 * Retrieves the document meta-data
@@ -151,9 +127,8 @@ public interface DmsService {
 	 * @return
 	 * @throws Exception
 	 */
-	public DocumentInfo downloadDocumentInfo(@WebParam(name = "sid")
-	String sid, @WebParam(name = "id")
-	long id) throws Exception;
+	public DocumentInfo downloadDocumentInfo(@WebParam(name = "sid") String sid, @WebParam(name = "id") long id)
+			throws Exception;
 
 	/**
 	 * Requests the indexing of a particular document. If the document is
@@ -163,9 +138,7 @@ public interface DmsService {
 	 * @param id
 	 * @throws Exception
 	 */
-	public void indexDocument(@WebParam(name = "sid")
-	String sid, @WebParam(name = "id")
-	long id) throws Exception;
+	public void indexDocument(@WebParam(name = "sid") String sid, @WebParam(name = "id") long id) throws Exception;
 
 	/**
 	 * Renames a folder
@@ -175,10 +148,8 @@ public interface DmsService {
 	 * @param name the new name for the folder
 	 * @throws Exception
 	 */
-	public String renameFolder(@WebParam(name = "sid")
-	String sid, @WebParam(name = "folder")
-	long folder, @WebParam(name = "name")
-	String name) throws Exception;
+	public String renameFolder(@WebParam(name = "sid") String sid, @WebParam(name = "folder") long folder,
+			@WebParam(name = "name") String name) throws Exception;
 
 	/**
 	 * Downloads folder metadata
@@ -187,9 +158,8 @@ public interface DmsService {
 	 * @param folder The folder identifier
 	 * @throws Exception
 	 */
-	public FolderContent downloadFolderContent(@WebParam(name = "sid")
-	String sid, @WebParam(name = "folder")
-	long folder) throws Exception;
+	public FolderContent downloadFolderContent(@WebParam(name = "sid") String sid,
+			@WebParam(name = "folder") long folder) throws Exception;
 
 	/**
 	 * Deletes an existing document with the given identifier
@@ -199,9 +169,7 @@ public interface DmsService {
 	 * @return A return code('ok' if all went ok)
 	 * @throws Exception
 	 */
-	public String deleteDocument(@WebParam(name = "sid")
-	String sid, @WebParam(name = "id")
-	long id) throws Exception;
+	public String deleteDocument(@WebParam(name = "sid") String sid, @WebParam(name = "id") long id) throws Exception;
 
 	/**
 	 * Marks the document as checked out
@@ -211,9 +179,7 @@ public interface DmsService {
 	 * @return A return code('ok' if all went ok)
 	 * @throws Exception
 	 */
-	public String checkout(@WebParam(name = "sid")
-	String sid, @WebParam(name = "id")
-	long id) throws Exception;
+	public String checkout(@WebParam(name = "sid") String sid, @WebParam(name = "id") long id) throws Exception;
 
 	/**
 	 * Uploads a new version of an already checked out document
@@ -227,13 +193,10 @@ public interface DmsService {
 	 * @return ok if all went right
 	 * @throws Exception
 	 */
-	public String checkin(@WebParam(name = "sid")
-	String sid, @WebParam(name = "id")
-	long id, @WebParam(name = "filename")
-	String filename, @WebParam(name = "description")
-	String description, @WebParam(name = "type")
-	String type, @WebParam(name = "content")
-	DataHandler content) throws Exception;
+	public String checkin(@WebParam(name = "sid") String sid, @WebParam(name = "id") long id,
+			@WebParam(name = "filename") String filename, @WebParam(name = "description") String description,
+			@WebParam(name = "release") boolean release, @WebParam(name = "content") DataHandler content)
+			throws Exception;
 
 	/**
 	 * Search for a documents
@@ -249,12 +212,9 @@ public interface DmsService {
 	 * @return The objects representing the search result
 	 * @throws Exception
 	 */
-	public SearchResult search(@WebParam(name = "sid")
-	String sid, @WebParam(name = "query")
-	String query, @WebParam(name = "indexLanguage")
-	String indexLanguage, @WebParam(name = "queryLanguage")
-	String queryLanguage, @WebParam(name = "maxHits")
-	int maxHits, @WebParam(name = "templateName")
-	String templateName, @WebParam(name = "templateFields")
-	String[] templateFields) throws Exception;
+	public SearchResult search(@WebParam(name = "sid") String sid, @WebParam(name = "query") String query,
+			@WebParam(name = "indexLanguage") String indexLanguage,
+			@WebParam(name = "queryLanguage") String queryLanguage, @WebParam(name = "maxHits") int maxHits,
+			@WebParam(name = "templateName") String templateName,
+			@WebParam(name = "templateFields") String[] templateFields) throws Exception;
 }

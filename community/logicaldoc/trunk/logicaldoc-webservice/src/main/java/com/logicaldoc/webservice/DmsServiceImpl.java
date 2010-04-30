@@ -70,10 +70,10 @@ public class DmsServiceImpl implements DmsService {
 
 	/**
 	 * @see com.logicaldoc.webservice.DmsService#checkin(java.lang.String, long,
-	 *      java.lang.String, java.lang.String, java.lang.String,
+	 *      java.lang.String, java.lang.String, boolean,
 	 *      javax.activation.DataHandler)
 	 */
-	public String checkin(String sid, long id, String filename, String description, String type, DataHandler content)
+	public String checkin(String sid, long id, String filename, String description, boolean release, DataHandler content)
 			throws Exception {
 		User user = validateSession(sid);
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -83,16 +83,6 @@ public class DmsServiceImpl implements DmsService {
 		checkWriteEnable(user, folder.getId());
 
 		if (document.getStatus() == Document.DOC_CHECKED_OUT) {
-			// determines the kind of version to create
-			Version.VERSION_TYPE versionType;
-
-			if ("release".equals(type)) {
-				versionType = Version.VERSION_TYPE.NEW_RELEASE;
-			} else if ("subversion".equals(type)) {
-				versionType = Version.VERSION_TYPE.NEW_SUBVERSION;
-			} else {
-				versionType = Version.VERSION_TYPE.OLD_VERSION;
-			}
 
 			try {
 				// Get file to upload inputStream
@@ -108,7 +98,7 @@ public class DmsServiceImpl implements DmsService {
 				// something goes wrong
 				DocumentManager documentManager = (DocumentManager) Context.getInstance()
 						.getBean(DocumentManager.class);
-				documentManager.checkin(document.getId(), stream, filename, versionType, false, transaction);
+				documentManager.checkin(document.getId(), stream, filename, release, false, transaction);
 
 				/* create positive log message */
 				log.info("Document " + id + " checked in");
@@ -117,7 +107,7 @@ public class DmsServiceImpl implements DmsService {
 				throw new Exception(e);
 			}
 		} else {
-			throw new Exception("document not checked out");
+			throw new Exception("document not checked in");
 		}
 
 		return "ok";
