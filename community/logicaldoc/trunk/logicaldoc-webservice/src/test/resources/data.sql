@@ -87,7 +87,7 @@ values     (100,-3,1,1,0,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup
 			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
-values     (103,1,1,0,0,0,0,0,0,0,0,0,0);
+values     (103,1,1,0,0,0,1,1,0,0,0,0,0);
 
 insert into ld_menugroup
 			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
@@ -134,7 +134,7 @@ values     (10,'2008-10-22',0,'testGroup','Group for tests',0);
 
 insert into ld_document
            (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus)
-values     (1,'2008-10-22',0,0,'a','testDocname','1.0','2006-12-19','2006-12-19','myself',1,0,'PDF',3,'source','sourceauthor1','2008-12-19','sourcetype1','coverage1','en','pippo',1356,1,103,0,'',1,0);
+values     (1,'2008-10-22',0,0,'a','testDocname','1.0','2006-12-19','2006-12-19','myself',1,0,'PDF',1,'source','sourceauthor1','2008-12-19','sourcetype1','coverage1','en','pippo',1356,1,103,0,'',1,0);
 
 insert into ld_document
            (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_sourcedate,ld_sourcetype,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_docref)
