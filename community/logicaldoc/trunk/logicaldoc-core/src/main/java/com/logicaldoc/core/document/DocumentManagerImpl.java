@@ -17,7 +17,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.document.Field;
 
 import com.logicaldoc.core.ExtendedAttribute;
-import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
@@ -71,18 +70,18 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void checkin(long docId, File file, String filename, VERSION_TYPE versionType, boolean immediateIndexing,
+	public void checkin(long docId, File file, String filename, boolean release, boolean immediateIndexing,
 			History transaction) throws Exception {
 		FileInputStream is = new FileInputStream(file);
 		try {
-			checkin(docId, is, filename, versionType, immediateIndexing, transaction);
+			checkin(docId, is, filename, release, immediateIndexing, transaction);
 		} finally {
 			is.close();
 		}
 	}
 
 	@Override
-	public void checkin(long docId, InputStream fileInputStream, String filename, VERSION_TYPE versionType,
+	public void checkin(long docId, InputStream fileInputStream, String filename, boolean release,
 			boolean immediateIndexing, History transaction) throws Exception {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
@@ -121,7 +120,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// create new version
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
-					Version.EVENT_CHECKIN, versionType);
+					Version.EVENT_CHECKIN, release);
 			if (documentDAO.store(document) == false)
 				throw new Exception();
 
@@ -162,7 +161,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		if (document.getStatus() != Document.DOC_UNLOCKED)
 			throw new Exception("Document is locked");
 
-		document.setLockUserId(transaction.getUserId());
+		document.setLockUserId(transaction.getUser().getId());
 		document.setStatus(status);
 		document.setFolder(document.getFolder());
 
@@ -378,7 +377,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 				// create a new version
 				Version version = Version.create(doc, transaction.getUser(), transaction.getComment(),
-						Version.EVENT_CHANGED, Version.VERSION_TYPE.NEW_SUBVERSION);
+						Version.EVENT_CHANGED, false);
 
 				// Modify document history entry
 				documentDAO.store(doc, transaction);
@@ -459,7 +458,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(doc, transaction);
 
 			Version version = Version.create(doc, transaction.getUser(), transaction.getComment(), Version.EVENT_MOVED,
-					Version.VERSION_TYPE.NEW_SUBVERSION);
+					false);
 			versionDAO.store(version);
 
 			if (doc.getIndexed() == AbstractDocument.INDEX_INDEXED) {
@@ -577,7 +576,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// Store the initial version (default 1.0)
 			Version vers = Version.create(docVO, transaction.getUser(), transaction.getComment(), Version.EVENT_STORED,
-					Version.VERSION_TYPE.OLD_VERSION);
+					true);
 			versionDAO.store(vers);
 
 			log.debug("Stored version " + vers.getVersion());
@@ -714,7 +713,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.store(document, transaction);
 
 			Version version = Version.create(document, transaction.getUser(), transaction.getComment(),
-					Version.EVENT_RENAMED, Version.VERSION_TYPE.NEW_SUBVERSION);
+					Version.EVENT_RENAMED, false);
 			versionDAO.store(version);
 
 			// Check if there are some shortcuts associated to the indexing

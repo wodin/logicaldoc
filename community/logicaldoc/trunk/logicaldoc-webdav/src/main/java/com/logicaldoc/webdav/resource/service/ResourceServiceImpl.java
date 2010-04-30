@@ -21,7 +21,6 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
-import com.logicaldoc.core.document.Version.VERSION_TYPE;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
@@ -310,7 +309,7 @@ public class ResourceServiceImpl implements ResourceService {
 			transaction.setComment("");
 
 			documentManager.checkin(Long.parseLong(resource.getID()), context.getInputStream(), resource.getName(),
-					VERSION_TYPE.NEW_SUBVERSION, false, transaction);
+					false, false, transaction);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (DavException de) {
