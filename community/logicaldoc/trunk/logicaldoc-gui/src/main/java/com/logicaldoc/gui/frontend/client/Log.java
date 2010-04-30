@@ -33,11 +33,21 @@ public class Log {
 		GWT.log("Server error: " + m, caught);
 	}
 
+	public static void warn(String message, String detail) {
+		FooterStatus.getInstance().warn(message, detail);
+		GWT.log("warn: " + message, null);
+	}
+
+	public static void error(String message, String detail, Throwable caught) {
+		FooterStatus.getInstance().error(message, detail);
+		GWT.log("info: " + message, caught);
+	}
+
 	public static void info(String message, String detail) {
 		FooterStatus.getInstance().info(message, detail);
 		GWT.log("info: " + message, null);
 	}
-	
+
 	public static void debug(String message) {
 		GWT.log("debug: " + message, null);
 	}

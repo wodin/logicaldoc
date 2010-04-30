@@ -7,4 +7,6 @@ import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 public interface SearchServiceAsync {
 
 	void search(String sid, GUISearchOptions options, AsyncCallback<GUIResult> callback);
+
+	void save(String sid, GUISearchOptions options, AsyncCallback<Boolean> callback);
 }

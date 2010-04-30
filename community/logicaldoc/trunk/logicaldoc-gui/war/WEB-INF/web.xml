@@ -23,7 +23,7 @@
 	<servlet>
 		<servlet-name>UploadServlet</servlet-name>
 		<!-- This is the default servlet, it puts files in session -->
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockUploadServlet</servlet-class>
+		<servlet-class>com.logicaldoc.gui.common.server.mock.MockUploadServlet</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -143,7 +143,7 @@
 
 	<servlet>
 		<servlet-name>MockServlet</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockServlet</servlet-class>
+		<servlet-class>com.logicaldoc.gui.common.server.mock.MockServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>

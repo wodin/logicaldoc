@@ -22,4 +22,13 @@ public interface SearchService extends RemoteService {
 	 * @return Result hits and statistics
 	 */
 	public GUIResult search(String sid, GUISearchOptions options);
+
+	/**
+	 * Saves the search options in the user's working dir
+	 * 
+	 * @param sid The current user session
+	 * @param options The search options
+	 * @return true if the operation was successful and there were no duplicates
+	 */
+	public boolean save(String sid, GUISearchOptions options);
 }

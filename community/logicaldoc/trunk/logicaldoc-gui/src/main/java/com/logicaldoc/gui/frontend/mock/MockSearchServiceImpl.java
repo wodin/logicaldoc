@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.mock;
 import java.util.Date;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUIResultHit;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
@@ -41,11 +40,16 @@ public class MockSearchServiceImpl extends RemoteServiceServlet implements Searc
 			hit.setScore(73);
 			hit.setSize(123562);
 		}
-		
-		if(options.getMaxHits()<=40)
+
+		if (options.getMaxHits() <= 40)
 			result.setHasMore(true);
 		else
 			result.setHasMore(false);
 		return result;
+	}
+
+	@Override
+	public boolean save(String sid, GUISearchOptions options) {
+		return true;
 	}
 }

@@ -192,7 +192,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			list.setSelectionType(SelectionStyle.SINGLE);
 			list.setShowRowNumbers(true);
 			list.setWrapCells(true);
-			list.setFields(id, folderId, score, icon, title, customId, size);
+			list.setFields(id, folderId, icon, title, customId, size, score);
 
 			list.addSelectionChangedHandler(new SelectionChangedHandler() {
 				@Override
@@ -298,6 +298,24 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		});
 
+		toolStrip.addSeparator();
+		ToolStripButton save = new ToolStripButton();
+		save.setTitle(I18N.getMessage("save"));
+		save.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				SaveDialog dialog = new SaveDialog();
+				dialog.show();
+			}
+		});
+		toolStrip.addButton(save);
+
+		if (!Session.get().isFeatureEnabled("ENTERPRISE")) {
+			save.setDisabled(true);
+			save.setTooltip(I18N.getMessage("featuredisabled"));
+		}
+		toolStrip.addButton(save);
+
 		if (Search.get().isHasMore()) {
 			toolStrip.addSeparator();
 			final IntegerItem repeatNumber = new IntegerItem();
@@ -323,24 +341,6 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			});
 		}
 
-		toolStrip.addSeparator();
-		ToolStripButton save = new ToolStripButton();
-		save.setTitle(I18N.getMessage("save"));
-		save.setIcon("[SKIN]/application/drive_disk.png");
-		toolStrip.addButton(save);
-		showSnippets.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				// TODO implement
-			}
-		});
-		if (!Session.get().isFeatureEnabled("ENTERPRISE")) {
-			save.setDisabled(true);
-			save.setTooltip(I18N.getMessage("featuredisabled"));
-		}
-
-		toolStrip.addButton(save);
-
 		toolStrip.addFill();
 		addMember(toolStrip);
 	}
@@ -359,7 +359,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		initialize();
 		Main.get().getMainPanel().selectSearchTab();
 		if (Search.get().isHasMore()) {
-			Log.info(I18N.getMessage("possiblemorehits"), I18N.getMessage("possiblemorehitsdetail"));
+			Log.warn(I18N.getMessage("possiblemorehits"), I18N.getMessage("possiblemorehitsdetail"));
 		}
 	}
 
