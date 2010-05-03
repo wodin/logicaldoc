@@ -320,7 +320,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			toolStrip.addSeparator();
 			final IntegerItem repeatNumber = new IntegerItem();
 			repeatNumber.setName("repeatNumber");
-			repeatNumber.setHint("hits");
+			repeatNumber.setHint(I18N.getMessage("hits"));
 			repeatNumber.setShowTitle(false);
 			repeatNumber.setDefaultValue(40);
 			repeatNumber.setWidth(40);
@@ -379,5 +379,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	@Override
 	public void onDocumentSaved(GUIDocument document) {
 		updateSelectedRecord(document);
+	}
+
+	@Override
+	public void onOptionsChanged(GUISearchOptions newOptions) {
 	}
 }

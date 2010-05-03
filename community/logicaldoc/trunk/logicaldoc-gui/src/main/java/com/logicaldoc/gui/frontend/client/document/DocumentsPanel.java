@@ -29,7 +29,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	private Layout content = new VLayout();
+	private Layout listing = new VLayout();
 
 	private Layout details = new VLayout();
 
@@ -50,6 +50,8 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	// The document that must be hilighted
 	private Long hiliteDocId = null;
 
+	private Integer maxRows;
+
 	private DocumentsPanel() {
 		// Register to folders events
 		Session.get().addFolderObserver(this);
@@ -63,10 +65,10 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 		// Initialize the listing panel as placeholder
 		listingPanel = new Label("&nbsp;" + I18N.getMessage("selectfolder"));
-		content.setAlign(Alignment.CENTER);
-		content.setHeight("51%");
-		content.setShowResizeBar(true);
-		content.addMember(listingPanel);
+		listing.setAlign(Alignment.CENTER);
+		listing.setHeight("51%");
+		listing.setShowResizeBar(true);
+		listing.addMember(listingPanel);
 
 		// Add a details panel under the listing one
 		detailPanel = new Label("&nbsp;" + I18N.getMessage("selectfolderordoc"));
@@ -77,7 +79,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		toolbar.setWidth100();
 
 		right.addMember(toolbar);
-		right.addMember(content);
+		right.addMember(listing);
 		right.addMember(details);
 
 		addMember(leftMenu);
@@ -136,11 +138,18 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	}
 
 	public void refresh() {
-		content.removeMember(listingPanel);
+		refresh(null);
+	}
+
+	public void refresh(Integer maxRows) {
+		if (maxRows != null && maxRows > 0)
+			this.maxRows = maxRows;
+
+		listing.removeMember(listingPanel);
 		listingPanel.destroy();
-		listingPanel = new DocumentsListPanel(folder, hiliteDocId);
-		content.addMember(listingPanel);
-		content.redraw();
+		listingPanel = new DocumentsListPanel(folder, hiliteDocId, this.maxRows);
+		listing.addMember(listingPanel);
+		listing.redraw();
 
 		if (hiliteDocId != null)
 			onSelectedDocument(hiliteDocId);
@@ -150,7 +159,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 			details.addMember(detailPanel);
 			details.redraw();
 		}
-		
+
 		hiliteDocId = null;
 	}
 }

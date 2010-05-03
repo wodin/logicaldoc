@@ -43,9 +43,9 @@ public class SearchMenu extends SectionStack {
 
 		SectionStackSection savedSection = new SectionStackSection(I18N.getMessage("savedsearches"));
 		savedSection.setExpanded(false);
-		if (!Session.get().isFeatureEnabled("ENTERPRISE"))
-			savedSection.addItem(disabled);
-		else
+		if (Session.get().isFeatureEnabled("ENTERPRISE")) {
+			savedSection.addItem(SavedSearchesPanel.get());
+		} else
 			savedSection.addItem(disabled);
 		addSection(savedSection);
 	}

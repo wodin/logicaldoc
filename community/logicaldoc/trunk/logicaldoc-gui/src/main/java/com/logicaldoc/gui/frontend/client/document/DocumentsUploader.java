@@ -58,7 +58,7 @@ public class DocumentsUploader extends Window {
 		SelectItem languageItem = new SelectItem();
 		languageItem.setName("language");
 		languageItem.setTitle(I18N.getMessage("language"));
-		languageItem.setOptionDataSource(LanguagesDS.getInstance());
+		languageItem.setOptionDataSource(LanguagesDS.get());
 		languageItem.setDisplayField("name");
 		languageItem.setValueField("locale");
 		languageItem.setRequired(true);

@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.document.DocumentDetailsPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -106,5 +107,10 @@ public class SearchPanel extends HLayout implements SearchObserver {
 	@Override
 	public void onSearchArrived() {
 		onSelectedHit(-1);
+	}
+
+	@Override
+	public void onOptionsChanged(GUISearchOptions newOptions) {
+		
 	}
 }

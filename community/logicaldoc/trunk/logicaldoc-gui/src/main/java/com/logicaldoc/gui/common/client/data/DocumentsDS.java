@@ -15,7 +15,10 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class DocumentsDS extends DataSource {
-	public DocumentsDS(long folderId) {
+
+	private static final Integer MAX_ROWS = 100;
+
+	public DocumentsDS(long folderId, Integer maxRows) {
 		setTitleField("title");
 		setRecordXPath("/list/document");
 		DataSourceTextField title = new DataSourceTextField("title");
@@ -45,6 +48,7 @@ public class DocumentsDS extends DataSource {
 		setFields(id, title, size, publisher, version, docref, lastModified, published, created, creator, customId,
 				icon, immutable, indexed, locked, lockUserId, filename, status);
 		setClientOnly(true);
-		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId=" + folderId);
+		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId=" + folderId + "&maxRows="
+				+ (maxRows != null ? maxRows : MAX_ROWS));
 	}
 }

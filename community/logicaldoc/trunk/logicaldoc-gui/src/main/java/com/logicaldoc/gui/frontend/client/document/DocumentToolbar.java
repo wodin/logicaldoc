@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
@@ -82,6 +83,28 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		addButton(pdf);
 		addSeparator();
 		addButton(add);
+
+		addSeparator();
+		final IntegerItem maxRows = new IntegerItem();
+		maxRows.setName("maxRows");
+		maxRows.setHint(I18N.getMessage("elements"));
+		maxRows.setShowTitle(false);
+		maxRows.setDefaultValue(100);
+		maxRows.setWidth(40);
+
+		ToolStripButton show = new ToolStripButton();
+		show.setTitle(I18N.getMessage("display"));
+		addButton(show);
+		addFormItem(maxRows);
+		show.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (maxRows.validate()) {
+					DocumentsPanel.get().refresh((Integer) maxRows.getValue());
+				}
+			}
+		});
+
 		update(null);
 		Session.get().addFolderObserver(this);
 	}

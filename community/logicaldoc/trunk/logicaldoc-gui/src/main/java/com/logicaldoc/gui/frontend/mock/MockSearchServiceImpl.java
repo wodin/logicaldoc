@@ -52,4 +52,17 @@ public class MockSearchServiceImpl extends RemoteServiceServlet implements Searc
 	public boolean save(String sid, GUISearchOptions options) {
 		return true;
 	}
+
+	@Override
+	public void delete(String sid, String[] names) {
+
+	}
+
+	@Override
+	public GUISearchOptions load(String sid, String name) {
+		GUISearchOptions options = new GUISearchOptions();
+		options.setName(name);
+		options.setExpression("saved search");
+		return options;
+	}
 }

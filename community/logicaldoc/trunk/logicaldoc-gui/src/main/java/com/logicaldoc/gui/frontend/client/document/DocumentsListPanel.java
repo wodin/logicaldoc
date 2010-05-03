@@ -44,7 +44,7 @@ public class DocumentsListPanel extends VLayout {
 
 	private InfoPanel infoPanel;
 
-	public DocumentsListPanel(GUIFolder folder, final Long hiliteDoc) {
+	public DocumentsListPanel(GUIFolder folder, final Long hiliteDoc, Integer maxRows) {
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
@@ -138,7 +138,7 @@ public class DocumentsListPanel extends VLayout {
 		list.setCanFreezeFields(true);
 		list.setAutoFetchData(true);
 		list.setSelectionType(SelectionStyle.MULTIPLE);
-		dataSource = new DocumentsDS(folder.getId());
+		dataSource = new DocumentsDS(folder.getId(), maxRows);
 		list.setDataSource(dataSource);
 		list.setFields(indexed, locked, immutable, icon, title, size, lastModified, version, publisher, published,
 				creator, created, customId, filename);
@@ -190,7 +190,7 @@ public class DocumentsListPanel extends VLayout {
 		list.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				infoPanel.setMessage(I18N.getMessage("thisfoldercontains", Integer.toString(list.getTotalRows())));
+				infoPanel.setMessage(I18N.getMessage("showndocuments", Integer.toString(list.getTotalRows())));
 				if (hiliteDoc != null)
 					DocumentsListPanel.this.hiliteDocument(hiliteDoc);
 			}
@@ -230,5 +230,9 @@ public class DocumentsListPanel extends VLayout {
 		if (record != null) {
 			list.selectSingleRecord(record);
 		}
+	}
+
+	public ListGrid getList() {
+		return list;
 	}
 }

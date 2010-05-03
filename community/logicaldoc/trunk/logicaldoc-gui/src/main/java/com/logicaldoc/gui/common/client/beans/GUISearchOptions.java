@@ -36,7 +36,7 @@ public class GUISearchOptions implements Serializable {
 
 	private long userId = -1;
 
-	private Long folderId = null;
+	private Long folder = null;
 
 	private String[] fields = null;
 
@@ -62,6 +62,8 @@ public class GUISearchOptions implements Serializable {
 	private String name = "";
 
 	private String description = "";
+
+	private String folderName;
 
 	/** Creates a new instance of SearchOptions */
 	public GUISearchOptions() {
@@ -191,12 +193,14 @@ public class GUISearchOptions implements Serializable {
 		this.dateFrom = dateFrom;
 	}
 
-	public Long getFolderId() {
-		return folderId;
+	public Long getFolder() {
+		return folder;
 	}
 
-	public void setFolderId(Long folderId) {
-		this.folderId = folderId;
+	public void setFolder(Long folder) {
+		this.folder = folder;
+		if (folder == null)
+			folderName = null;
 	}
 
 	public int getType() {
@@ -249,5 +253,13 @@ public class GUISearchOptions implements Serializable {
 
 	public boolean isFulltext() {
 		return getType() == TYPE_FULLTEXT;
+	}
+
+	public String getFolderName() {
+		return folderName;
+	}
+
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
 	}
 }

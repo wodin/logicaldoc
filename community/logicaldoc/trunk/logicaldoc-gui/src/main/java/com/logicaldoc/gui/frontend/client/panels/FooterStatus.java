@@ -22,25 +22,15 @@ import com.smartgwt.client.widgets.layout.HLayout;
 public class FooterStatus extends HLayout {
 	private static FooterStatus instance = new FooterStatus();
 
-	private Label statusLabel = new Label("");
-
 	List<GUIEvent> events = new ArrayList<GUIEvent>();
+
+	private Label statusLabel;
 
 	private FooterStatus() {
 		setWidth100();
 		setAlign(Alignment.RIGHT);
 		setMargin(2);
 		setMembersMargin(2);
-		statusLabel.setStyleName("footerInfo");
-		statusLabel.setWrap(false);
-		statusLabel.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				EventsWindow.get().show();
-				statusLabel.setContents("");
-			}
-		});
-		addMember(statusLabel);
 
 		Image icon = new Image(Util.imageUrl("application/logging.png"));
 		icon.setWidth("16px");
@@ -48,7 +38,8 @@ public class FooterStatus extends HLayout {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent arg0) {
 				EventsWindow.get().show();
-				statusLabel.setContents("");
+				if (statusLabel != null)
+					statusLabel.setContents("");
 			}
 		});
 		addMember(icon);
@@ -58,9 +49,25 @@ public class FooterStatus extends HLayout {
 		return instance;
 	}
 
+	private void prepareLabel(final String text, String style) {
+		if (statusLabel != null && contains(statusLabel))
+			removeMember(statusLabel);
+		statusLabel = new Label(text);
+		addMember(statusLabel, 0);
+
+		statusLabel.setStyleName(style);
+		statusLabel.setWrap(false);
+		statusLabel.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				EventsWindow.get().show();
+				statusLabel.setContents("");
+			}
+		});
+	}
+
 	public void error(String message, String detail) {
-		statusLabel.setStyleName("footerError");
-		statusLabel.setContents(message);
+		prepareLabel(message, "footerError");
 		GUIEvent event = new GUIEvent();
 		event.setMessage(message);
 		event.setDetail(detail != null ? detail : message);
@@ -69,8 +76,7 @@ public class FooterStatus extends HLayout {
 	}
 
 	public void warn(String message, String detail) {
-		statusLabel.setStyleName("footerWarn");
-		statusLabel.setContents(message);
+		prepareLabel(message, "footerWarn");
 		GUIEvent event = new GUIEvent();
 		event.setMessage(message);
 		event.setDetail(detail != null ? detail : message);
@@ -79,9 +85,7 @@ public class FooterStatus extends HLayout {
 	}
 
 	public void info(String message, String detail) {
-		statusLabel.setStyleName("footerInfo");
-		statusLabel.setContents(message);
-		statusLabel.redraw();
+		prepareLabel(message, "footerInfo");
 		GUIEvent event = new GUIEvent();
 		event.setMessage(message);
 		event.setDetail(detail != null ? detail : message);

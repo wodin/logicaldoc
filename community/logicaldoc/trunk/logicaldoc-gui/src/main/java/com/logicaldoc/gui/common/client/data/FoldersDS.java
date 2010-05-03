@@ -16,6 +16,14 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class FoldersDS extends DataSource {
 
+	private static FoldersDS instance;
+
+	public static FoldersDS get() {
+		if (instance == null)
+			instance = new FoldersDS(null);
+		return instance;
+	}
+
 	public FoldersDS(String id) {
 		String dsId = id;
 		if (dsId == null)

@@ -125,7 +125,13 @@
 		<servlet-class>
 			com.logicaldoc.gui.common.server.mock.MockTemplatesDataServlet</servlet-class>
 	</servlet>
-
+	
+	<servlet>
+		<servlet-name>SavedSearchesData</servlet-name>
+		<servlet-class>
+			com.logicaldoc.gui.common.server.mock.MockSavedSearchesDataServlet</servlet-class>
+	</servlet>
+	
 	<servlet>
 		<servlet-name>Thumbnail</servlet-name>
 		<servlet-class>com.logicaldoc.gui.common.server.mock.MockThumbnailServlet</servlet-class>
@@ -179,6 +185,11 @@
 	<servlet-mapping>
 		<servlet-name>TagsData</servlet-name>
 		<url-pattern>/data/tags.xml</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SavedSearchesData</servlet-name>
+		<url-pattern>/data/savedsearches.xml</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

@@ -31,4 +31,21 @@ public interface SearchService extends RemoteService {
 	 * @return true if the operation was successful and there were no duplicates
 	 */
 	public boolean save(String sid, GUISearchOptions options);
+
+	/**
+	 * Deletes a previously saved search
+	 * 
+	 * @param sid The current user session
+	 * @param names The saved search names
+	 */
+	public void delete(String sid, String[] names);
+
+	/**
+	 * Loads a saved search
+	 * 
+	 * @param sid The current user session
+	 * @param name The saved search name
+	 * @return
+	 */
+	public GUISearchOptions load(String sid, String name);
 }
