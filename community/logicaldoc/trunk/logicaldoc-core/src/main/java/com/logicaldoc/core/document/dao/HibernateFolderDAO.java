@@ -99,7 +99,6 @@ public class HibernateFolderDAO extends HibernateMenuDAO implements FolderDAO {
 		if (isInPath(source.getId(), target.getId()))
 			throw new IllegalArgumentException("Cannot move a dolder inside the same path");
 
-		
 		// Change the parent folder
 		source.setParentId(target.getId());
 
@@ -193,8 +192,7 @@ public class HibernateFolderDAO extends HibernateMenuDAO implements FolderDAO {
 
 	@Override
 	public List<Menu> find(String name) {
-		// invoca il metodo findByText del menu dao con i % intorno al name
-		return null;
+		return findByText(null, "%" + name + "%", Menu.MENUTYPE_DIRECTORY, false);
 	}
 
 	public boolean isInPath(long folderId, long targetId) {
