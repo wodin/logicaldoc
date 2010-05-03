@@ -326,7 +326,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			repeatNumber.setWidth(40);
 
 			ToolStripButton repeat = new ToolStripButton();
-			repeat.setTitle(I18N.getMessage("repeatsearchadding"));
+			repeat.setTitle(I18N.getMessage("display"));
 			toolStrip.addButton(repeat);
 			toolStrip.addFormItem(repeatNumber);
 			repeat.addClickHandler(new ClickHandler() {
