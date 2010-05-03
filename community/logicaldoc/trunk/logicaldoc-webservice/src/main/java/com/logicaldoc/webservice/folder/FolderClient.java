@@ -27,8 +27,8 @@ public class FolderClient implements FolderService {
 	}
 
 	@Override
-	public WSFolder create(String sid, String name, long parentId) throws Exception {
-		return client.create(sid, name, parentId);
+	public WSFolder create(String sid, WSFolder folder) throws Exception {
+		return client.create(sid, folder);
 	}
 
 	@Override

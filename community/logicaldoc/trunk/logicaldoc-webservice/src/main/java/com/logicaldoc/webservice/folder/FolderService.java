@@ -16,13 +16,12 @@ public interface FolderService {
 	 * a value object containing the folder's metadata.
 	 * 
 	 * @param sid Session identifier
-	 * @param name The folder name
-	 * @param parentId The folder id of the parent folder
+	 * @param folder value object containing the folder's metadata
 	 * @return The value object containing the folder's metadata.
 	 * @throws Exception
 	 */
-	public WSFolder create(@WebParam(name = "sid") String sid, @WebParam(name = "name") String name,
-			@WebParam(name = "parentId") long parentId) throws Exception;;
+	public WSFolder create(@WebParam(name = "sid") String sid, @WebParam(name = "folder") WSFolder folder)
+			throws Exception;;
 
 	/**
 	 * Deletes an existing folder with the given identifier.
@@ -67,7 +66,7 @@ public interface FolderService {
 			throws Exception;
 
 	/**
-	 * Test if a folder identifier is valid.
+	 * Test if a folder identifier is readable.
 	 * 
 	 * @param sid Session identifier
 	 * @param folderId The folder id

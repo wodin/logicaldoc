@@ -55,7 +55,7 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		docDao.initialize(doc);
 		docDao.initialize(newDoc);
 
-		WSDocument wsDoc = new WSDocument().fromDocument(newDoc);
+		WSDocument wsDoc = WSDocument.fromDocument(newDoc);
 		Assert.assertEquals(2, wsDoc.getId());
 		wsDoc.setId(1);
 		Assert.assertEquals(1, wsDoc.getId());
@@ -108,17 +108,18 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		docDao.initialize(newDoc);
 
 		Assert.assertNull(docDao.findById(50));
-		WSDocument wsDoc = new WSDocument().fromDocument(newDoc);
+		WSDocument wsDoc = WSDocument.fromDocument(newDoc);
 		Assert.assertEquals(2, wsDoc.getId());
 		wsDoc.setId(50);
+		wsDoc.setTitle("document test");
 		File file = new File("pom.xml");
 		docServiceImpl.create("", wsDoc, new DataHandler(new FileDataSource(file)));
 
-		Document doc = docDao.findById(7);
+		Document doc = docDao.findByTitleAndParentFolderId(wsDoc.getFolderId(), wsDoc.getTitle(), null).get(0);
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
 
-		Assert.assertEquals("testDocname2(1)", doc.getTitle());
+		Assert.assertEquals("document test", doc.getTitle());
 		Assert.assertEquals("sourceauthor2", doc.getSourceAuthor());
 		Assert.assertEquals("sourcetype2", doc.getSourceType());
 		Assert.assertEquals("coverage2", doc.getCoverage());

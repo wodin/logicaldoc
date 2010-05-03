@@ -49,16 +49,26 @@ public class FolderServiceImplTest extends AbstractWebServiceTestCase {
 
 	@Test
 	public void testCreate() throws Exception {
-		WSFolder wsFolder = folderServiceImpl.create("", "test", 103);
+		WSFolder wsFolderTest = new WSFolder();
+		wsFolderTest.setText("folder test");
+		wsFolderTest.setDescription("descr folder test");
+		wsFolderTest.setParentId(103);
+
+		WSFolder wsFolder = folderServiceImpl.create("", wsFolderTest);
 		Assert.assertNotNull(wsFolder);
-		Assert.assertEquals("test", wsFolder.getText());
+		Assert.assertEquals("folder test", wsFolder.getText());
 		Assert.assertEquals(103, wsFolder.getParentId());
+
+		Menu createdMenu = folderDao.findByTextAndParentId("folder test", 103).get(0);
+		Assert.assertNotNull(createdMenu);
+		Assert.assertEquals("folder test", createdMenu.getText());
+		Assert.assertEquals("descr folder test", createdMenu.getDescription());
 	}
 
 	@Test
 	public void testDelete() throws Exception {
-		folderServiceImpl.delete("", 1200);
-		Menu menu = folderDao.findById(1200);
+		folderServiceImpl.delete("", 1201);
+		Menu menu = folderDao.findById(1201);
 		Assert.assertNull(menu);
 	}
 
@@ -87,7 +97,7 @@ public class FolderServiceImplTest extends AbstractWebServiceTestCase {
 		Assert.assertEquals(103, wsFolder.getId());
 		Assert.assertEquals("menu.admin", wsFolder.getText());
 		Assert.assertEquals(101, wsFolder.getParentId());
-		Assert.assertEquals(3, wsFolder.getType());
+		Assert.assertEquals("description", wsFolder.getDescription());
 	}
 
 	@Test
