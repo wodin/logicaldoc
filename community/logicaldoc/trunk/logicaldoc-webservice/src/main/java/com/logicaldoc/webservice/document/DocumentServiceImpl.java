@@ -62,7 +62,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 		doc = documentManager.create(stream, doc, transaction, false);
 
-		return new WSDocument().fromDocument(doc);
+		return WSDocument.fromDocument(doc);
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		checkReadEnable(user, doc.getFolder().getId());
 
 		docDao.initialize(doc);
-		return new WSDocument().fromDocument(doc);
+		return WSDocument.fromDocument(doc);
 	}
 
 	@Override
@@ -306,7 +306,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		WSDocument[] wsDocs = new WSDocument[docs.size()];
 		for (int i = 0; i < docs.size(); i++) {
 			docDao.initialize(docs.get(i));
-			wsDocs[i] = new WSDocument().fromDocument(docs.get(i));
+			wsDocs[i] = WSDocument.fromDocument(docs.get(i));
 		}
 
 		return wsDocs;
@@ -327,7 +327,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		WSDocument[] wsVersions = new WSDocument[versions.size()];
 		for (int i = 0; i < versions.size(); i++) {
 			versDao.initialize(versions.get(i));
-			wsVersions[i] = new WSDocument().fromDocument(versions.get(i));
+			wsVersions[i] = WSDocument.fromDocument(versions.get(i));
 		}
 
 		return wsVersions;

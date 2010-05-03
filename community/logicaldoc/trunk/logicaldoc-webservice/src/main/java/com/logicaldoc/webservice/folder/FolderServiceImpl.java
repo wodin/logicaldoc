@@ -24,15 +24,16 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	public static Log log = LogFactory.getLog(FolderServiceImpl.class);
 
 	@Override
-	public WSFolder create(String sid, String name, long parentId) throws Exception {
+	public WSFolder create(String sid, WSFolder folder) throws Exception {
 		User user = validateSession(sid);
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Menu parentMenu = folderDao.findById(parentId);
-		checkWriteEnable(user, parentId);
+		Menu parentMenu = folderDao.findById(folder.getParentId());
+		checkPermission(Permission.ADD_CHILD, user, folder.getParentId());
 
 		Menu menu = new Menu();
-		menu.setText(name);
-		menu.setParentId(parentId);
+		menu.setText(folder.getText());
+		menu.setDescription(folder.getDescription());
+		menu.setParentId(folder.getParentId());
 		menu.setSort(1);
 		menu.setIcon("folder.png");
 		menu.setType(Menu.MENUTYPE_DIRECTORY);
@@ -48,20 +49,22 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		stored = folderDao.store(menu, transaction);
 
 		if (!stored) {
-			log.error("Folder " + name + " not created");
+			log.error("Folder " + menu.getText() + " not created");
 			throw new Exception("error");
 		} else {
-			log.info("Created folder " + name);
+			log.info("Created folder " + menu.getText());
 		}
 
-		return new WSFolder().fromFolder(menu);
+		return WSFolder.fromFolder(menu);
 	}
 
 	@Override
 	public void delete(String sid, long folderId) throws Exception {
 		User user = validateSession(sid);
-		checkWriteEnable(user, folderId);
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		Menu folder = folderDao.findById(folderId);
+		Menu parentMenu = folderDao.findById(folder.getParentId());
+		checkPermission(Permission.DELETE, user, parentMenu.getParentId());
 		try {
 			// Add a folder history entry
 			History transaction = new History();
@@ -83,7 +86,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		Menu folder = folderDao.findById(folderId);
 		folderDao.initialize(folder);
 
-		return new WSFolder().fromFolder(folder);
+		return WSFolder.fromFolder(folder);
 	}
 
 	@Override
@@ -104,7 +107,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		WSFolder[] wsFolders = new WSFolder[folders.size()];
 		for (int i = 0; i < folders.size(); i++) {
 			folderDao.initialize(folders.get(i));
-			wsFolders[i] = new WSFolder().fromFolder(folders.get(i));
+			wsFolders[i] = WSFolder.fromFolder(folders.get(i));
 		}
 
 		return wsFolders;

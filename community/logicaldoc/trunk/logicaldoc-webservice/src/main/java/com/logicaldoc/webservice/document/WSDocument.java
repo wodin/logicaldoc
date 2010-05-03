@@ -138,19 +138,22 @@ public class WSDocument {
 
 	private String language;
 
-	public WSDocument fromDocument(AbstractDocument document) {
-
+	public static WSDocument fromDocument(AbstractDocument document) {
+		WSDocument wsDoc=new WSDocument();
+		
 		// Populate extended attributes
+		Attribute[] extendedAttributes=new Attribute[0];
 		if (document.getAttributes() != null && document.getAttributes().size() > 0) {
-			Attribute[] extendedAttributes = new Attribute[document.getAttributeNames().size()];
+			extendedAttributes = new Attribute[document.getAttributeNames().size()];
 			int i = 0;
 			for (String name : document.getAttributeNames()) {
 				extendedAttributes[i++] = new Attribute(name, document.getExtendedAttribute(name));
 			}
 		}
 
+		String[] tags=new String[0];
 		if (document.getTags() != null && document.getTags().size() > 0) {
-			String[] tags = new String[document.getTags().size()];
+			tags = new String[document.getTags().size()];
 			List<String> docTags = new ArrayList<String>(document.getTags());
 			if (docTags != null && docTags.size() > 0) {
 				for (int j = 0; j < docTags.size(); j++) {
@@ -159,7 +162,8 @@ public class WSDocument {
 			}
 		}
 
-		WSDocument wsDoc = new WSDocument();
+		
+		
 		wsDoc.setId(document.getId());
 		wsDoc.setTitle(document.getTitle());
 		wsDoc.setSource(document.getSource());
@@ -251,7 +255,8 @@ public class WSDocument {
 		doc.setCoverage(coverage);
 		doc.setTags(setTags);
 		doc.setTemplate(template);
-		doc.setTemplateId(template.getId());
+		if (template != null)
+			doc.setTemplateId(template.getId());
 		doc.setAttributes(attributes);
 		doc.setSourceId(sourceId);
 		doc.setObject(object);
@@ -607,7 +612,7 @@ public class WSDocument {
 		return null;
 	}
 
-	private String convertDateToString(Date date) {
+	private static String convertDateToString(Date date) {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			return df.format(date);
