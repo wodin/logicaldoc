@@ -45,4 +45,6 @@ public interface DocumentServiceAsync {
 	void checkin(String sid, long docId, boolean major, AsyncCallback<Void> callback);
 
 	void linkDocuments(String sid, long[] inDocIds, long[] outDocIds, AsyncCallback<Void> callback);
+
+	void restore(String sid, long docId, AsyncCallback<Void> callback);
 }

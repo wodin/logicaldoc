@@ -128,4 +128,9 @@ public interface DocumentService extends RemoteService {
 	 * @param major True if this is a major version
 	 */
 	public void checkin(String sid, long docId, boolean major);
+
+	/**
+	 * Restores a given document
+	 */
+	public void restore(String sid, long docId);
 }

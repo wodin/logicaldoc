@@ -88,6 +88,7 @@ public class DocumentsListPanel extends VLayout {
 		created.setCellFormatter(new DateCellFormatter());
 
 		ListGridField customId = new ListGridField("customId", I18N.getMessage("customid"), 110);
+		customId.setType(ListGridFieldType.TEXT);
 
 		ListGridField immutable = new ListGridField("immutable", " ", 24);
 		immutable.setType(ListGridFieldType.IMAGE);

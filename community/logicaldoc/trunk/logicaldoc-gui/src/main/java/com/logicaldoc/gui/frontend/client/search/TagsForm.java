@@ -3,12 +3,10 @@ package com.logicaldoc.gui.frontend.client.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.data.TagsDS;
-import com.logicaldoc.gui.frontend.client.services.SearchService;
-import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -19,10 +17,15 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 /**
  * This panel shows the saved searches of the user
@@ -33,8 +36,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class TagsForm extends VLayout {
 
 	private ListGrid tags;
-
-	private SearchServiceAsync service = (SearchServiceAsync) GWT.create(SearchService.class);
 
 	private static TagsForm instance;
 
@@ -100,19 +101,48 @@ public class TagsForm extends VLayout {
 		tags.setHeight100();
 		tags.setAutoFetchData(true);
 		tags.setFields(word, count);
+		tags.setSelectionType(SelectionStyle.SINGLE);
 		addMember(tags);
 
 		tags.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				GUISearchOptions options = new GUISearchOptions();
-				options.setType(GUISearchOptions.TYPE_TAGS);
-				options.setExpression(record.getAttributeAsString("word"));
-				Search.get().setOptions(options);
-				Search.get().search();
+				executeSearch(record);
 			}
 		});
+
+		tags.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				showContextMenu();
+				event.cancel();
+			}
+		});
+	}
+
+	private void executeSearch(ListGridRecord record) {
+		GUISearchOptions options = new GUISearchOptions();
+		options.setType(GUISearchOptions.TYPE_TAGS);
+		options.setExpression(record.getAttributeAsString("word"));
+		Search.get().setOptions(options);
+		Search.get().search();
+	}
+
+	private void showContextMenu() {
+		Menu contextMenu = new Menu();
+
+		MenuItem execute = new MenuItem();
+		execute.setTitle(I18N.getMessage("execute"));
+		execute.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				ListGridRecord selection = tags.getSelectedRecord();
+				executeSearch(selection);
+			}
+		});
+
+		contextMenu.setItems(execute);
+		contextMenu.showContextMenu();
 	}
 
 	private void onLetterSelect(String letter) {

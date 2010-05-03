@@ -43,7 +43,6 @@ public class MockDocumentsDataServlet extends HttpServlet {
 			writer.print("<docref></docref>");
 			writer.print("<icon>word</icon>");
 			writer.print("<title>Title " + Long.toString(folderId + 1000 + i) + "</title>");
-			writer.print("<customId></customId>");
 			writer.print("<version>1.0</version>");
 			writer.print("<lastModified>2010-10-26T11:32:23</lastModified>");
 			writer.print("<published>2010-02-12T11:32:23</published>");
