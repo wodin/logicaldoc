@@ -136,7 +136,7 @@ public class DirectoryEditForm {
 			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
 			// Check destParentId MUST BE <> 0 (initial value)
-			if (destParentId == 0) {
+			if (destParentId == 0 || folderDao.isInPath(folderToMove.getId(), destParentId)) {
 				Messages.addLocalizedError("folder.error.notupdated");
 				return null;
 			}
@@ -159,14 +159,14 @@ public class DirectoryEditForm {
 
 				// Check delete permission on the folder parent of folderToMove
 				Menu sourceParent = folderDao.findById(folderToMove.getParentId());
-				boolean sourceParentDeleteEnabled = folderDao.isPermissionEnabled(Permission.DELETE, sourceParent.getId(),
-						user.getId());
+				boolean sourceParentDeleteEnabled = folderDao.isPermissionEnabled(Permission.DELETE, sourceParent
+						.getId(), user.getId());
 				if (!sourceParentDeleteEnabled)
 					throw new SecurityException("No rights to delete folder");
 
 				// Check addChild permission on destParentFolder
-				boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD_CHILD, destParentFolder.getId(), user
-						.getId());
+				boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD_CHILD, destParentFolder.getId(),
+						user.getId());
 				if (!addchildEnabled)
 					throw new SecurityException("AddChild Rights not granted to this user");
 
