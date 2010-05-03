@@ -85,6 +85,12 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>GarbageData</servlet-name>
+		<servlet-class>
+			com.logicaldoc.gui.common.server.mock.MockGarbageDataServlet</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>LinksData</servlet-name>
 		<servlet-class>
 			com.logicaldoc.gui.common.server.mock.MockLinksDataServlet</servlet-class>
@@ -218,6 +224,11 @@
 	<servlet-mapping>
 		<servlet-name>DocumentsData</servlet-name>
 		<url-pattern>/data/documents.xml</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>GarbageData</servlet-name>
+		<url-pattern>/data/garbage.xml</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

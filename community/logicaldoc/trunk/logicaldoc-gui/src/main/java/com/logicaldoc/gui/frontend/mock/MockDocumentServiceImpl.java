@@ -48,7 +48,7 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 					"bulkImport", "bulkExport", "sign", "archive", "workflow", "manageImmutability" });
 		else
 			folder.setPermissions(new String[] { "read" });
-		
+
 		document.setFolder(folder);
 		return document;
 	}
@@ -221,6 +221,11 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 
 	@Override
 	public void linkDocuments(String sid, long[] inDocIds, long[] outDocIds) {
+		return;
+	}
+
+	@Override
+	public void restore(String sid, long docId) {
 		return;
 	}
 }
