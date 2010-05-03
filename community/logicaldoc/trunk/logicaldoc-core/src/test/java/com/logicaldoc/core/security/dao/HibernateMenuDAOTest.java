@@ -134,18 +134,26 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		Menu menu = menus.iterator().next();
 		Assert.assertEquals("menu.admin", menu.getText());
 
-		menus = (List<Menu>) dao.findByText(null, "menu.admin", new Integer(1));
+		menus = (List<Menu>) dao.findByText(null, "menu.admin", new Integer(1), true);
 		Assert.assertNotNull(menus);
 		Assert.assertEquals(1, menus.size());
 
 		Menu parent = dao.findById(Menu.MENUID_HOME);
-		menus = (List<Menu>) dao.findByText(parent, "menu.admin", 1);
+		menus = (List<Menu>) dao.findByText(parent, "menu.admin", 1, true);
 		Assert.assertNotNull(menus);
 		Assert.assertEquals(1, menus.size());
 
-		menus = (List<Menu>) dao.findByText(null, "menu.admin", 3);
+		menus = (List<Menu>) dao.findByText(null, "menu.admin", 3, true);
 		Assert.assertNotNull(menus);
 		Assert.assertEquals(2, menus.size());
+		
+		menus = (List<Menu>) dao.findByText(null, "abc", 3, true);
+		Assert.assertNotNull(menus);
+		Assert.assertEquals(0, menus.size());
+		
+		menus = (List<Menu>) dao.findByText(null, "abc", 3, false);
+		Assert.assertNotNull(menus);
+		Assert.assertEquals(1, menus.size());
 
 		// Try with unexisting text
 		menus = dao.findByText("xxxxx");

@@ -31,9 +31,10 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	 * @param parent The parent menu(optional)
 	 * @param text The menutext to search for
 	 * @param type The menu type(optional)
+	 * @param caseSensitive
 	 * @return List of menus with given menu text.
 	 */
-	public List<Menu> findByText(Menu parent, String text, Integer type);
+	public List<Menu> findByText(Menu parent, String text, Integer type, boolean caseSensitive);
 
 	/**
 	 * Finds authorized menus for a user.

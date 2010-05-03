@@ -63,7 +63,7 @@ values     (1200,'2009-10-19',0,'test',5,1,'administration.gif',3,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (1201,'2009-10-19',0,'abc',1200,1,'administration.gif',3,null,0);
+values     (1201,'2009-10-19',0,'ABC',1200,1,'administration.gif',3,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)

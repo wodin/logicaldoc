@@ -50,7 +50,7 @@ public class HibernateFolderDAO extends HibernateMenuDAO implements FolderDAO {
 		Menu menu = parent;
 		while (st.hasMoreTokens()) {
 			String name = st.nextToken();
-			List<Menu> childs = findByText(menu, name, Menu.MENUTYPE_DIRECTORY);
+			List<Menu> childs = findByText(menu, name, Menu.MENUTYPE_DIRECTORY, true);
 			Menu dir;
 			if (childs.isEmpty())
 				dir = create(menu, name, transaction);
@@ -67,14 +67,14 @@ public class HibernateFolderDAO extends HibernateMenuDAO implements FolderDAO {
 		StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
 		Menu parent = findById(Menu.MENUID_DOCUMENTS);
 		while (st.hasMoreTokens()) {
-			List<Menu> list = findByText(parent, st.nextToken(), Menu.MENUTYPE_DIRECTORY);
+			List<Menu> list = findByText(parent, st.nextToken(), Menu.MENUTYPE_DIRECTORY, true);
 			if (list.isEmpty())
 				return null;
 			parent = list.get(0);
 
 		}
 
-		List<Menu> specified_menu = findByText(parent, name, Menu.MENUTYPE_DIRECTORY);
+		List<Menu> specified_menu = findByText(parent, name, Menu.MENUTYPE_DIRECTORY, true);
 		if (specified_menu != null && specified_menu.size() > 0)
 			return specified_menu.iterator().next();
 		return null;
@@ -96,6 +96,10 @@ public class HibernateFolderDAO extends HibernateMenuDAO implements FolderDAO {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 
+		if (isInPath(source.getId(), target.getId()))
+			throw new IllegalArgumentException("Cannot move a dolder inside the same path");
+
+		
 		// Change the parent folder
 		source.setParentId(target.getId());
 
@@ -185,5 +189,19 @@ public class HibernateFolderDAO extends HibernateMenuDAO implements FolderDAO {
 
 	public void setDocumentDAO(DocumentDAO documentDAO) {
 		this.documentDAO = documentDAO;
+	}
+
+	@Override
+	public List<Menu> find(String name) {
+		// invoca il metodo findByText del menu dao con i % intorno al name
+		return null;
+	}
+
+	public boolean isInPath(long folderId, long targetId) {
+		for (Menu menu : findParents(targetId)) {
+			if (menu.getId() == folderId)
+				return true;
+		}
+		return false;
 	}
 }

@@ -147,18 +147,20 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * Finds that document that lies under a specific folder (given by the id)
 	 * an with a given fileName(like operator is used)
 	 * 
-	 * @param folderId
+	 * @param folderId The folder id (it can be null).
 	 * @param fileName
 	 * @param excludeId Optional id of a document that must not be considered
-	 * @return
+	 * @return The list of documents with the given fileName. If the folder id
+	 *         is null, the searched document can belong to any folder in the
+	 *         repository.
 	 */
-	public List<Document> findByFileNameAndParentFolderId(long folderId, String fileName, Long excludeId);
+	public List<Document> findByFileNameAndParentFolderId(Long folderId, String fileName, Long excludeId);
 
 	/**
 	 * Finds that document that lies under a specific folder (given by the id)
 	 * an with a given title(like operator is used)
 	 * 
-	 * @param folderId
+	 * @param folderId The folder id (it can be null).
 	 * @param title
 	 * @param excludeId Optional id of a document that must not be considered
 	 * @return
