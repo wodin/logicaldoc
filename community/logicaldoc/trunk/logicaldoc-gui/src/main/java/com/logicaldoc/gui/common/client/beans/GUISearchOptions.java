@@ -15,6 +15,8 @@ public class GUISearchOptions implements Serializable {
 	public static final int TYPE_FULLTEXT = 0;
 
 	public static final int TYPE_PARAMETRIC = 1;
+	
+	public static final int TYPE_TAGS = 2;
 
 	private int maxHits = 40;
 

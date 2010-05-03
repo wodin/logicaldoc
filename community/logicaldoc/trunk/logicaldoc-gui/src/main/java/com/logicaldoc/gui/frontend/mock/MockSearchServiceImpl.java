@@ -22,23 +22,26 @@ public class MockSearchServiceImpl extends RemoteServiceServlet implements Searc
 	public GUIResult search(String sid, GUISearchOptions options) {
 		GUIResult result = new GUIResult();
 		result.setTime(132);
-		result.setHasMore(true);
-		result.setHits(new GUIResultHit[options.getMaxHits()]);
 
-		for (int i = 0; i < options.getMaxHits(); i++) {
-			GUIResultHit hit = new GUIResultHit();
-			result.getHits()[i] = hit;
-			hit.setId(i + 1000);
-			hit.setFolderId(new Long(i + 1000));
-			hit.setDate(new Date());
-			hit.setCreation(new Date());
-			hit.setTitle("Document " + hit.getId());
-			hit.setCustomId("custom " + hit.getId());
-			hit.setType("word");
-			hit
-					.setSummary("<font style='background-color: rgb(255, 255, 0);'>LogicalDOC</font> Enterprise Edition is the best choice among all document  management solutions. Its&nbsp;...&nbsp; in your environment in a non-invasive way. Thanks to <font style='background-color: rgb(255, 255, 0);'>LogicalDOC</font> Enterprise Edition you are: Autonomous Free Secure The <font style='background-color: rgb(255, 255, 0);'>LogicalDOC</font>  interface is so  intuitive that you do not need  training.  You can view it as an external  disk and work through drag and  drop as you're used to. <font style='background-color: rgb(255, 255, 0);'>LogicalDOC</font> automatically");
-			hit.setScore(73);
-			hit.setSize(123562);
+		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT || options.getType() == GUISearchOptions.TYPE_TAGS) {
+			result.setHasMore(true);
+			result.setHits(new GUIResultHit[options.getMaxHits()]);
+
+			for (int i = 0; i < options.getMaxHits(); i++) {
+				GUIResultHit hit = new GUIResultHit();
+				result.getHits()[i] = hit;
+				hit.setId(i + 1000);
+				hit.setFolderId(new Long(i + 1000));
+				hit.setDate(new Date());
+				hit.setCreation(new Date());
+				hit.setTitle("Document " + hit.getId());
+				hit.setCustomId("custom " + hit.getId());
+				hit.setType("word");
+				hit
+						.setSummary("<font style='background-color: rgb(255, 255, 0);'>LogicalDOC</font> Enterprise Edition is the best choice among all document  management solutions. Its&nbsp;...&nbsp; in your environment in a non-invasive way. Thanks to <font style='background-color: rgb(255, 255, 0);'>LogicalDOC</font> Enterprise Edition you are: Autonomous Free Secure The <font style='background-color: rgb(255, 255, 0);'>LogicalDOC</font>  interface is so  intuitive that you do not need  training.  You can view it as an external  disk and work through drag and  drop as you're used to. <font style='background-color: rgb(255, 255, 0);'>LogicalDOC</font> automatically");
+				hit.setScore(73);
+				hit.setSize(123562);
+			}
 		}
 
 		if (options.getMaxHits() <= 40)

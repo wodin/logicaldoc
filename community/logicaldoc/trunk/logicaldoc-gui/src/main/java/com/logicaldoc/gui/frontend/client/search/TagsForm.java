@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.data.TagsDS;
-import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -96,33 +93,24 @@ public class TagsForm extends VLayout {
 
 		addMember(vocabulary);
 
-		ListGridField name = new ListGridField("name", I18N.getMessage("name"),200);
+		ListGridField word = new ListGridField("word", I18N.getMessage("tag"), 200);
 		ListGridField count = new ListGridField("count", I18N.getMessage("count"), 50);
 		tags = new ListGrid();
 		tags.setWidth100();
 		tags.setHeight100();
 		tags.setAutoFetchData(true);
-		tags.setFields(name, count);
+		tags.setFields(word, count);
 		addMember(tags);
 
 		tags.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				service.load(Session.get().getSid(), record.getAttributeAsString("name"),
-						new AsyncCallback<GUISearchOptions>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(GUISearchOptions options) {
-								Search.get().setOptions(options);
-								Search.get().search();
-							}
-						});
+				GUISearchOptions options = new GUISearchOptions();
+				options.setType(GUISearchOptions.TYPE_TAGS);
+				options.setExpression(record.getAttributeAsString("word"));
+				Search.get().setOptions(options);
+				Search.get().search();
 			}
 		});
 	}
