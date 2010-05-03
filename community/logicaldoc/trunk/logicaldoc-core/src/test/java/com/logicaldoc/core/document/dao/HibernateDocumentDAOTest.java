@@ -179,6 +179,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		doc.setValue("att_1", "val 1");
 		doc.setFileName("test.txt");
 		doc.setFileVersion("1.0");
+		doc.setVersion("1.0");
 
 		// Prepare the document file for digest computation
 		File docFile = storer.getFile(7L, doc.getFileVersion());
@@ -191,6 +192,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		String digest = FileUtil.computeDigest(docFile);
 		System.out.println("Saved file " + docFile.getPath());
 
+		Assert.assertEquals("1.0", doc.getFileVersion());
+		
 		// Try a long tag
 		doc.addTag("123456789123456789123456789");
 		User user = new User();
@@ -205,6 +208,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		transaction.setNotified(0);
 
 		Assert.assertTrue(docFile.exists());
+		Assert.assertEquals("1.0", doc.getFileVersion());
 		Assert.assertTrue(dao.store(doc, transaction));
 
 		Assert.assertTrue(docFile.exists());
@@ -265,7 +269,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	}
 
 	@Test
-	public void testFindTagss() {
+	public void testFindTags() {
 		Collection<String> tags = dao.findTags("a", 1);
 		Assert.assertNotNull(tags);
 		// There is also the shortcut
@@ -302,6 +306,38 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Collection<Document> documents = dao.findByTitleAndParentFolderId(103, "testDocname", null);
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(1, documents.size());
+	}
+
+	@Test
+	public void testFindByFileNameAndParentFolderId() {
+		Collection<Document> documents = dao.findByFileNameAndParentFolderId(103L, "pluto", null);
+		Assert.assertNotNull(documents);
+		Assert.assertEquals(1, documents.size());
+
+		documents = dao.findByFileNameAndParentFolderId(103L, "PLUTO", null);
+		Assert.assertNotNull(documents);
+		Assert.assertEquals(1, documents.size());
+
+		documents = dao.findByFileNameAndParentFolderId(103L, "paperino", null);
+		Assert.assertNotNull(documents);
+		Assert.assertEquals(0, documents.size());
+
+		Document doc = dao.findById(1);
+		Assert.assertNotNull(doc);
+		dao.initialize(doc);
+		doc.setFileName("pluto");
+		doc.setFolder(menuDao.findById(99));
+		dao.store(doc);
+		Assert.assertEquals("pluto", doc.getFileName());
+		Assert.assertEquals(99, doc.getFolder().getId());
+
+		documents = dao.findByFileNameAndParentFolderId(103L, "pluto", null);
+		Assert.assertNotNull(documents);
+		Assert.assertEquals(1, documents.size());
+
+		documents = dao.findByFileNameAndParentFolderId(null, "pluto", null);
+		Assert.assertNotNull(documents);
+		Assert.assertEquals(2, documents.size());
 	}
 
 	@Test
