@@ -27,7 +27,6 @@ public class SearchMenu extends SectionStack {
 	}
 
 	private SearchMenu() {
-
 		HTMLFlow disabled = new HTMLFlow();
 		disabled.setOverflow(Overflow.AUTO);
 		disabled.setPadding(10);
@@ -41,6 +40,10 @@ public class SearchMenu extends SectionStack {
 		fulltextSection.addItem(new FulltextForm());
 		addSection(fulltextSection);
 
+		SectionStackSection tagsSection = new SectionStackSection(I18N.getMessage("tags"));
+		tagsSection.addItem(TagsForm.get());
+		addSection(tagsSection);
+		
 		SectionStackSection savedSection = new SectionStackSection(I18N.getMessage("savedsearches"));
 		savedSection.setExpanded(false);
 		if (Session.get().isFeatureEnabled("ENTERPRISE")) {

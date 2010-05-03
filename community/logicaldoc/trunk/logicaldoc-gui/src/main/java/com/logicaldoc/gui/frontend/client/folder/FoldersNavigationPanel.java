@@ -1,9 +1,7 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
@@ -107,7 +105,6 @@ public class FoldersNavigationPanel extends TreeGrid {
 		}
 
 		Menu contextMenu = new Menu();
-		List<MenuItem> items = new ArrayList<MenuItem>();
 
 		MenuItem search = new MenuItem();
 		search.setTitle(I18N.getMessage("search"));
@@ -120,7 +117,6 @@ public class FoldersNavigationPanel extends TreeGrid {
 				Main.get().getMainPanel().selectSearchTab();
 			}
 		});
-		items.add(search);
 
 		MenuItem delete = new MenuItem();
 		delete.setTitle(I18N.getMessage("delete"));
@@ -155,9 +151,9 @@ public class FoldersNavigationPanel extends TreeGrid {
 			}
 		});
 
-		MenuItem reloadItem = new MenuItem();
-		reloadItem.setTitle(I18N.getMessage("reload"));
-		reloadItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem reload = new MenuItem();
+		reload.setTitle(I18N.getMessage("reload"));
+		reload.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				onReload();
 			}
@@ -172,16 +168,37 @@ public class FoldersNavigationPanel extends TreeGrid {
 			}
 		});
 
-		if (id == Constants.DOCUMENTS_FOLDERID)
-			items.add(reloadItem);
-		if (add)
-			items.add(addItem);
-		if (id != Constants.DOCUMENTS_FOLDERID && parentDelete) {
-			items.add(delete);
-			items.add(move);
+		MenuItem rss = new MenuItem();
+		rss.setTitle(I18N.getMessage("rssfeed"));
+		if (!Session.get().isFeatureEnabled("Feature_9")) {
+			rss.setEnabled(false);
 		}
-		contextMenu.setItems(items.toArray(new MenuItem[0]));
+		rss.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				Window.open("folder_rss?sid=" + Session.get().getSid() + "&folderId=" + id, "_blank", "");
+			}
+		});
 
+		MenuItem exportZip = new MenuItem();
+		exportZip.setTitle(I18N.getMessage("exportzip"));
+		exportZip.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				Window.open("zip-export?sid=" + Session.get().getSid() + "&folderId=" + id, "_blank", "");
+			}
+		});
+
+		if (id != Constants.DOCUMENTS_FOLDERID)
+			reload.setEnabled(false);
+		if (!add)
+			addItem.setEnabled(false);
+		if (id == Constants.DOCUMENTS_FOLDERID || !parentDelete) {
+			delete.setEnabled(false);
+			move.setEnabled(false);
+		}
+		if (id == Constants.DOCUMENTS_FOLDERID)
+			exportZip.setEnabled(false);
+		
+		contextMenu.setItems(reload, search, addItem, delete, move, exportZip);
 		return contextMenu;
 	}
 

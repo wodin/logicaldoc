@@ -1,15 +1,11 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -44,7 +40,6 @@ public class PropertiesPanel extends FolderDetailTab {
 		form = new DynamicForm();
 		form.setValuesManager(vm);
 		form.setTitleOrientation(TitleOrientation.LEFT);
-		List<FormItem> items = new ArrayList<FormItem>();
 
 		StaticTextItem idItem = new StaticTextItem();
 		idItem.setTitle(I18N.getMessage("id"));

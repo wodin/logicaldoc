@@ -15,9 +15,14 @@ public class MockTagsDataServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		System.out.println("*** Data tags");
-		
 		response.setContentType("text/xml");
+
+		System.out.println("*** Data tags");
+		String sid = (String) request.getParameter("sid");
+		if (sid == null)
+			throw new IOException("Invalid session");
+
+		String firstLetter = (String) request.getParameter("firstLetter");
 
 		// Headers required by Internet Explorer
 		response.setHeader("Pragma", "public");
@@ -28,7 +33,13 @@ public class MockTagsDataServlet extends HttpServlet {
 		writer.write("<list>");
 		for (int i = 0; i < 1000; i++) {
 			writer.print("<tag>");
-			writer.print("<word>tag" + i + "</word>");
+			if (firstLetter != null) {
+				writer.print("<word>" + firstLetter.charAt(0) + "tag" + i + "</word>");
+				writer.print("<count>" + i + "</count>");
+			} else {
+				writer.print("<word>tag" + i + "</word>");
+				writer.print("<count></count>");
+			}
 			writer.print("</tag>");
 		}
 		writer.write("</list>");
