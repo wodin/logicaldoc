@@ -94,6 +94,13 @@ public interface FolderDAO extends MenuDAO {
 
 	public void setUniqueName(Menu folder);
 
+	/**
+	 * Useful method that allows to find all folders that contains the given
+	 * name into their text.
+	 * 
+	 * @param name The name to be found
+	 * @return List of folders that contains the given name into their text.
+	 */
 	public List<Menu> find(String name);
 
 	/**

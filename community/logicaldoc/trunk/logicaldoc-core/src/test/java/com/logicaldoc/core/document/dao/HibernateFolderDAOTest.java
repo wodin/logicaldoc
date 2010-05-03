@@ -70,12 +70,12 @@ public class HibernateFolderDAOTest extends AbstractCoreTestCase {
 		Assert.assertEquals("test", folder.getText());
 		Assert.assertEquals(1200, folder.getId());
 
-		folder = dao.find("xyz", "/test/abc");
+		folder = dao.find("xyz", "/test/ABC");
 		Assert.assertNotNull(folder);
 		Assert.assertEquals("xyz", folder.getText());
 		Assert.assertEquals(1202, folder.getId());
 
-		folder = dao.find("qqq", "/test/abc");
+		folder = dao.find("qqq", "/test/ABC");
 		Assert.assertNull(folder);
 	}
 
@@ -229,5 +229,25 @@ public class HibernateFolderDAOTest extends AbstractCoreTestCase {
 	public void testIsInPath() throws Exception {
 		Assert.assertTrue(dao.isInPath(100, 103));
 		Assert.assertFalse(dao.isInPath(102, 1202));
+	}
+	
+	@Test
+	public void testFind2() {
+		List<Menu> folders = dao.find("menu.admin");
+		Assert.assertNotNull(folders);
+		Assert.assertEquals(2, folders.size());
+		Menu menu = dao.findById(100);
+		Menu menu2 = dao.findById(103);
+		Assert.assertTrue(folders.contains(menu));
+		Assert.assertTrue(folders.contains(menu2));
+
+		folders = dao.find("menu.adminxx");
+		Assert.assertEquals(1, folders.size());
+		Assert.assertTrue(folders.contains(menu));
+		Assert.assertFalse(folders.contains(menu2));
+
+		folders = dao.find("qqqxxx");
+		Assert.assertNotNull(folders);
+		Assert.assertEquals(0, folders.size());
 	}
 }
