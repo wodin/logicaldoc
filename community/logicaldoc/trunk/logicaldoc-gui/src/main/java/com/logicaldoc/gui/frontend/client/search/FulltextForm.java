@@ -69,6 +69,8 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
+	private FolderSelector folder;
+
 	public FulltextForm() {
 		setHeight100();
 		setMembersMargin(5);
@@ -164,7 +166,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			}
 		});
 
-		final FolderSelector folder = new FolderSelector();
+		folder = new FolderSelector();
 		folder.setColSpan(3);
 
 		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.getMessage("searchinsubfolders"));
@@ -193,7 +195,6 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		Map<String, Object> values = vm.getValues();
 
 		GUISearchOptions options = new GUISearchOptions();
-		Search.get().setOptions(options);
 		options.setMaxHits(40);
 		options.setType(GUISearchOptions.TYPE_FULLTEXT);
 		options.setExpression(vm.getValueAsString("expression"));
@@ -264,11 +265,12 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		}
 		options.setFields(fields.toArray(new String[0]));
 
-		if (vm.getValueAsString("folder") != null && !"".equals(vm.getValueAsString("folder"))) {
-			options.setFolderId(Long.parseLong(vm.getValueAsString("folder")));
-			options.setSearchInSubPath(new Boolean(vm.getValueAsString("subfolders")).booleanValue());
-		}
+		options.setFolder(folder.getFolderId());
+		options.setFolderName(folder.getFolderName());
 
+		options.setSearchInSubPath(new Boolean(vm.getValueAsString("subfolders")).booleanValue());
+
+		Search.get().setOptions(options);
 		Search.get().search();
 	}
 
@@ -338,7 +340,14 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 	@Override
 	public void onSearchArrived() {
-		if (Search.get().getOptions().getType() == GUISearchOptions.TYPE_FULLTEXT)
-			vm.setValue("expression", Search.get().getOptions().getExpression());
+
+	}
+
+	@Override
+	public void onOptionsChanged(GUISearchOptions newOptions) {
+		if (newOptions.getType() == GUISearchOptions.TYPE_FULLTEXT) {
+			vm.setValue("expression", newOptions.getExpression());
+			folder.setFolder(newOptions.getFolder(), newOptions.getFolderName());
+		}
 	}
 }

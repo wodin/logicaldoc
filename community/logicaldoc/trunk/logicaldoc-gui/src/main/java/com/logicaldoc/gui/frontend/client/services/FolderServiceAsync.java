@@ -12,4 +12,6 @@ public interface FolderServiceAsync {
 	void delete(String sid, long folderId, AsyncCallback<Void> callback);
 
 	void getFolder(String sid, long folderId, boolean computePath, AsyncCallback<GUIFolder> callback);
+
+	void move(String sid, long folderId, long targetId, AsyncCallback<Void> callback);
 }

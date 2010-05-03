@@ -48,4 +48,10 @@ public class MockFolderServiceImpl extends RemoteServiceServlet implements Folde
 	public void delete(String sid, long folderId) {
 
 	}
+
+	@Override
+	public void move(String sid, long folderId, long targetId) {
+		// TODO Auto-generated method stub
+		
+	}
 }

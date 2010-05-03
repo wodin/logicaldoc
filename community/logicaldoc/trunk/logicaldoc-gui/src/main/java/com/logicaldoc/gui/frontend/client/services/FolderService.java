@@ -42,4 +42,9 @@ public interface FolderService extends RemoteService {
 	 * Deletes the folder and the subtree
 	 */
 	public void delete(String sid, long folderId);
+
+	/**
+	 * Moves a folder under a target folder
+	 */
+	public void move(String sid, long folderId, long targetId);
 }

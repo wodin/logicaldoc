@@ -11,6 +11,8 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.frontend.client.Log;
+import com.logicaldoc.gui.frontend.client.Main;
+import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.util.BooleanCallback;
@@ -32,14 +34,12 @@ import com.smartgwt.client.widgets.tree.TreeNode;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class FoldersTreePanel extends TreeGrid {
+public class FoldersNavigationPanel extends TreeGrid {
 	private FolderServiceAsync service = (FolderServiceAsync) GWT.create(FolderService.class);
 
-	private static FoldersTreePanel instance = new FoldersTreePanel();
+	private static FoldersNavigationPanel instance = new FoldersNavigationPanel();
 
-	private FoldersDS dataSource;
-
-	private FoldersTreePanel() {
+	private FoldersNavigationPanel() {
 		setWidth100();
 		setBorder("0px");
 		setBodyStyleName("normal");
@@ -52,8 +52,7 @@ public class FoldersTreePanel extends TreeGrid {
 		setCanDragRecordsOut(false);
 		setAutoFetchData(true);
 		setLoadDataOnDemand(true);
-		dataSource = new FoldersDS(null);
-		setDataSource(dataSource);
+		setDataSource(FoldersDS.get());
 		setCanSelectAll(false);
 
 		ListGridField name = new ListGridField("name");
@@ -96,22 +95,36 @@ public class FoldersTreePanel extends TreeGrid {
 	 * Prepares the context menu.
 	 */
 	private Menu setupContextMenu() {
-		TreeNode selectedNode = (TreeNode) getSelectedRecord();
+		final TreeNode selectedNode = (TreeNode) getSelectedRecord();
 		final long id = Long.parseLong(selectedNode.getAttribute("id"));
+		final String name = selectedNode.getAttribute("name");
 		boolean add = selectedNode.getAttributeAsBoolean(Constants.PERMISSION_ADD);
 
-		TreeNode parentNode = getTree().getParent(selectedNode);
+		final TreeNode parentNode = getTree().getParent(selectedNode);
 		boolean parentDelete = false;
 		if (parentNode != null) {
-			parentDelete = selectedNode.getAttributeAsBoolean(Constants.PERMISSION_DELETE);
+			parentDelete = parentNode.getAttributeAsBoolean(Constants.PERMISSION_DELETE);
 		}
 
 		Menu contextMenu = new Menu();
 		List<MenuItem> items = new ArrayList<MenuItem>();
 
-		MenuItem deleteItem = new MenuItem();
-		deleteItem.setTitle(I18N.getMessage("delete"));
-		deleteItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem search = new MenuItem();
+		search.setTitle(I18N.getMessage("search"));
+		search.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				Search.get().getOptions().setFolder(id);
+				Search.get().getOptions().setFolderName(name);
+				Search.get().getOptions().setSearchInSubPath(false);
+				Search.get().setOptions(Search.get().getOptions());
+				Main.get().getMainPanel().selectSearchTab();
+			}
+		});
+		items.add(search);
+
+		MenuItem delete = new MenuItem();
+		delete.setTitle(I18N.getMessage("delete"));
+		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new BooleanCallback() {
 					@Override
@@ -150,18 +163,29 @@ public class FoldersTreePanel extends TreeGrid {
 			}
 		});
 
+		MenuItem move = new MenuItem();
+		move.setTitle(I18N.getMessage("move"));
+		move.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				MoveDialog dialog = new MoveDialog();
+				dialog.show();
+			}
+		});
+
 		if (id == Constants.DOCUMENTS_FOLDERID)
 			items.add(reloadItem);
 		if (add)
 			items.add(addItem);
-		if (id != 5 && parentDelete)
-			items.add(deleteItem);
+		if (id != Constants.DOCUMENTS_FOLDERID && parentDelete) {
+			items.add(delete);
+			items.add(move);
+		}
 		contextMenu.setItems(items.toArray(new MenuItem[0]));
 
 		return contextMenu;
 	}
 
-	public static FoldersTreePanel getInstance() {
+	public static FoldersNavigationPanel get() {
 		return instance;
 	}
 
@@ -230,7 +254,7 @@ public class FoldersTreePanel extends TreeGrid {
 	private void onReload() {
 		TreeNode rootNode = getTree().find("id", "5");
 		removeData(rootNode);
-		setDataSource(dataSource);
+		setDataSource(FoldersDS.get());
 		fetchData();
 	}
 
@@ -253,6 +277,10 @@ public class FoldersTreePanel extends TreeGrid {
 				TreeNode newNode = new TreeNode(newFolder.getName());
 				newNode.setAttribute("name", newFolder.getName());
 				newNode.setAttribute("id", Long.toString(newFolder.getId()));
+				newNode.setAttribute(Constants.PERMISSION_ADD, selectedNode
+						.getAttributeAsBoolean(Constants.PERMISSION_ADD));
+				newNode.setAttribute(Constants.PERMISSION_DELETE, selectedNode
+						.getAttributeAsBoolean(Constants.PERMISSION_DELETE));
 
 				if (!getTree().isOpen(selectedNode)) {
 					getTree().openFolder(selectedNode);
@@ -269,5 +297,38 @@ public class FoldersTreePanel extends TreeGrid {
 	public void enable() {
 		super.enable();
 		getTree().setReportCollisions(false);
+	}
+
+	/**
+	 * Moves the currently selected folder to the new parent folder
+	 * 
+	 * @param targetFolderId The parent folder
+	 */
+	public void moveTo(long targetFolderId) {
+		final TreeNode selected = (TreeNode) getSelectedRecord();
+		final TreeNode target = getTree().findById(Long.toString(targetFolderId));
+		if (target != null && !target.getAttributeAsBoolean(Constants.PERMISSION_ADD)) {
+			SC.warn("addforbidden");
+			return;
+		}
+
+		Log.debug("move folder " + selected.getAttribute("id"));
+
+		service.move(Session.get().getSid(), Long.parseLong(selected.getAttribute("id")), targetFolderId,
+				new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void ret) {
+						getTree().remove(selected);
+						if (target != null) {
+							getTree().add(selected, target);
+						}
+					}
+				});
 	}
 }

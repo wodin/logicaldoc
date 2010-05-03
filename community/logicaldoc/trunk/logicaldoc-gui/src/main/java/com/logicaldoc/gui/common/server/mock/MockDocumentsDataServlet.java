@@ -16,6 +16,7 @@ public class MockDocumentsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 
+		int maxRows = Integer.parseInt(request.getParameter("maxRows"));
 		long folderId = Long.parseLong(request.getParameter("folderId"));
 		System.out.println("*** folderId=" + folderId);
 
@@ -32,7 +33,10 @@ public class MockDocumentsDataServlet extends HttpServlet {
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
-		for (int i = 0; i < 200; i++) {
+		
+		System.out.println("*maxRows="+maxRows);
+		
+		for (int i = 0; i < maxRows; i++) {
 			writer.print("<document>");
 			writer.print("<id>" + Long.toString(folderId + 1000 + i) + "</id>");
 			writer.print("<customId>" + Long.toString(folderId + 1000 + i) + "</customId>");

@@ -12,7 +12,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 public class LanguagesDS extends DataSource {
 	private static LanguagesDS instance;
 
-	public LanguagesDS() {
+	private LanguagesDS() {
 		setTitleField("language");
 		setRecordXPath("/list/language");
 
@@ -25,7 +25,7 @@ public class LanguagesDS extends DataSource {
 		setClientOnly(true);
 	}
 
-	public static LanguagesDS getInstance() {
+	public static LanguagesDS get() {
 		if (instance == null)
 			instance = new LanguagesDS();
 		return instance;

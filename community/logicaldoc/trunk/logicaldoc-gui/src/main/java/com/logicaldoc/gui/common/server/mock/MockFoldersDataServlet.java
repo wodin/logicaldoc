@@ -39,13 +39,15 @@ public class MockFoldersDataServlet extends HttpServlet {
 			writer.print("<id>5</id>");
 			writer.print("<parent>" + parent + "</parent>");
 			writer.print("<name>/</name>");
+			writer.print("<" + Constants.PERMISSION_ADD + ">true</" + Constants.PERMISSION_ADD + ">");
+			writer.print("<" + Constants.PERMISSION_DELETE + ">true</" + Constants.PERMISSION_DELETE + ">");
 			writer.print("</folder>");
 		} else {
 			for (int i = 0; i < 10; i++) {
 				writer.print("<folder>");
-				writer.print("<id>" + (parent + 1000 + i) + "</id>");
+				writer.print("<id>" + parent + "" + i + "</id>");
 				writer.print("<parent>" + parent + "</parent>");
-				writer.print("<name>Folder " + (parent + 1000 + i) + "</name>");
+				writer.print("<name>Folder " + parent + "" + i + "</name>");
 				writer.print("<" + Constants.PERMISSION_ADD + ">true</" + Constants.PERMISSION_ADD + ">");
 				writer.print("<" + Constants.PERMISSION_DELETE + ">true</" + Constants.PERMISSION_DELETE + ">");
 				writer.print("</folder>");

@@ -34,7 +34,7 @@ public class SaveDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.getMessage("savesearch"));
 		setWidth(350);
-		setHeight(150);
+		setHeight(100);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -66,7 +66,7 @@ public class SaveDialog extends Window {
 			public void onClick(ClickEvent event) {
 				vm.validate();
 				if (!vm.hasErrors()) {
-					GUISearchOptions options = Search.get().getOptions();
+					final GUISearchOptions options = Search.get().getOptions();
 					options.setName(vm.getValueAsString("name"));
 					options.setDescription(vm.getValueAsString("description"));
 					searchService.save(Session.get().getSid(), Search.get().getOptions(), new AsyncCallback<Boolean>() {
@@ -81,6 +81,8 @@ public class SaveDialog extends Window {
 							if (!b)
 								SC.warn(I18N.getMessage("duplicateelement"));
 							else {
+								SavedSearchesPanel.get().addEntry(vm.getValueAsString("name"), vm.getValueAsString("description"), options.getType() == GUISearchOptions.TYPE_FULLTEXT ? I18N
+										.getMessage("fulltext") : I18N.getMessage("parametric") );
 								destroy();
 							}
 						}
