@@ -224,4 +224,10 @@ public class HibernateFolderDAOTest extends AbstractCoreTestCase {
 		menuList = dao.findChildren(menuC.getId());
 		Assert.assertTrue(menuList.size() == 1);
 	}
+	
+	@Test
+	public void testIsInPath() throws Exception {
+		Assert.assertTrue(dao.isInPath(100, 103));
+		Assert.assertFalse(dao.isInPath(102, 1202));
+	}
 }

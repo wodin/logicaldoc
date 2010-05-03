@@ -398,7 +398,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findByText(java.lang.String)
 	 */
 	public List<Menu> findByText(String text) {
-		return findByText(null, text, null);
+		return findByText(null, text, null, true);
 	}
 
 	/**
@@ -406,8 +406,13 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 *      java.lang.String, java.lang.Integer)
 	 */
 	@Override
-	public List<Menu> findByText(Menu parent, String text, Integer type) {
-		StringBuffer query = new StringBuffer("_entity.text like '" + SqlUtil.doubleQuotes(text) + "' ");
+	public List<Menu> findByText(Menu parent, String text, Integer type, boolean caseSensitive) {
+		StringBuffer query = null;
+		if (caseSensitive)
+			query = new StringBuffer("_entity.text like '" + SqlUtil.doubleQuotes(text) + "' ");
+		else
+			query = new StringBuffer("lower(_entity.text) like '" + SqlUtil.doubleQuotes(text.toLowerCase()) + "' ");
+
 		if (parent != null)
 			query.append(" AND _entity.parentId = " + parent.getId());
 		if (type != null)

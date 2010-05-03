@@ -77,7 +77,7 @@ public interface FolderDAO extends MenuDAO {
 	 * @throws Exception
 	 */
 	public List<Menu> deleteTree(Menu folder, History transaction) throws Exception;
-	
+
 	/**
 	 * Delete a folder and all its sub-folders that a user can delete. After
 	 * recovering of all sub-folders inside the folder, will be canceled all
@@ -93,4 +93,17 @@ public interface FolderDAO extends MenuDAO {
 	public List<Menu> deleteTree(long folderId, History transaction) throws Exception;
 
 	public void setUniqueName(Menu folder);
+
+	public List<Menu> find(String name);
+
+	/**
+	 * Checks if a folder with the given folderId is parent of the folder with
+	 * the given targetId
+	 * 
+	 * @param folderId The folder to be checked
+	 * @param targetId The target folder
+	 * @return True if the folder with the given folderId is parent of the
+	 *         folder with the given targetId
+	 */
+	public boolean isInPath(long folderId, long targetId);
 }
