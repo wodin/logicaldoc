@@ -95,7 +95,8 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	}
 
 	public void onDocumentSaved(GUIDocument document) {
-		((DocumentsListPanel) listingPanel).updateSelectedRecord(document);
+		if (listingPanel != null && listingPanel instanceof DocumentsListPanel)
+			((DocumentsListPanel) listingPanel).updateSelectedRecord(document);
 	}
 
 	public void openInFolder(long folderId, long docId) {

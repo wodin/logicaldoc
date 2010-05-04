@@ -75,7 +75,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			toolStrip.clear();
 		}
 
-		ListGridField id = new ListGridField("id");
+		ListGridField id = new ListGridField("id", 60);
 		id.setHidden(true);
 
 		ListGridField title = new ListGridField("title", I18N.getMessage("title"), 300);
@@ -84,6 +84,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		size.setAlign(Alignment.CENTER);
 		size.setType(ListGridFieldType.FLOAT);
 		size.setCellFormatter(new FileSizeCellFormatter());
+		size.setCanFilter(false);
 
 		ListGridField icon = new ListGridField("icon", " ", 24);
 		icon.setType(ListGridFieldType.IMAGE);
@@ -92,6 +93,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		icon.setShowDefaultContextMenu(false);
 		icon.setImageURLPrefix(Util.imagePrefix() + "/application/");
 		icon.setImageURLSuffix(".png");
+		icon.setCanFilter(false);
 
 		ListGridField version = new ListGridField("version", I18N.getMessage("version"), 55);
 		version.setAlign(Alignment.CENTER);
@@ -100,6 +102,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		lastModified.setAlign(Alignment.CENTER);
 		lastModified.setType(ListGridFieldType.DATE);
 		lastModified.setCellFormatter(new DateCellFormatter());
+		lastModified.setCanFilter(false);
 
 		ListGridField publisher = new ListGridField("publisher", I18N.getMessage("publisher"), 90);
 		publisher.setAlign(Alignment.CENTER);
@@ -108,14 +111,17 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		published.setAlign(Alignment.CENTER);
 		published.setType(ListGridFieldType.DATE);
 		published.setCellFormatter(new DateCellFormatter());
+		published.setCanFilter(false);
 
 		ListGridField creator = new ListGridField("creator", I18N.getMessage("creator"), 90);
 		creator.setAlign(Alignment.CENTER);
+		creator.setCanFilter(false);
 
 		ListGridField created = new ListGridField("created", I18N.getMessage("createdon"), 110);
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
 		created.setCellFormatter(new DateCellFormatter());
+		created.setCanFilter(false);
 
 		ListGridField customId = new ListGridField("customId", I18N.getMessage("customid"), 110);
 
@@ -126,6 +132,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		immutable.setShowDefaultContextMenu(false);
 		immutable.setImageURLPrefix(Util.imagePrefix() + "/application/");
 		immutable.setImageURLSuffix(".png");
+		immutable.setCanFilter(false);
 
 		ListGridField indexed = new ListGridField("indexed", " ", 24);
 		indexed.setType(ListGridFieldType.IMAGE);
@@ -134,6 +141,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		indexed.setShowDefaultContextMenu(false);
 		indexed.setImageURLPrefix(Util.imagePrefix() + "/application/");
 		indexed.setImageURLSuffix(".png");
+		indexed.setCanFilter(false);
 
 		ListGridField locked = new ListGridField("locked", " ", 24);
 		locked.setType(ListGridFieldType.IMAGE);
@@ -142,26 +150,34 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		locked.setShowDefaultContextMenu(false);
 		locked.setImageURLPrefix(Util.imagePrefix() + "/application/");
 		locked.setImageURLSuffix(".png");
+		locked.setCanFilter(false);
 
 		ListGridField filename = new ListGridField("filename", I18N.getMessage("filename"), 200);
 		filename.setHidden(true);
 
 		ListGridField folderId = new ListGridField("folderId", I18N.getMessage("folder"), 200);
 		folderId.setHidden(true);
+		folderId.setCanFilter(false);
 
 		ListGridField lockUserId = new ListGridField("lockUserId", " ", 24);
 		lockUserId.setHidden(true);
+		lockUserId.setCanFilter(false);
 
 		ListGridField score = new ListGridField("score", I18N.getMessage("score"), 120);
+		score.setCanFilter(false);
 		score.setCellFormatter(new CellFormatter() {
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
-				int score = record.getAttributeAsInt("score");
-				int red = 100 - score > 0 ? 100 - score : 0;
-				return "<img src='" + Util.imageUrl("application/dotblue.gif") + "' style='width: " + score
-						+ "px; height: 8px' title='" + score + "%'/>" + "<img src='"
-						+ Util.imageUrl("application/dotgrey.gif") + "' style='width: " + red
-						+ "px; height: 8px' title='" + score + "%'/>";
+				try {
+					int score = record.getAttributeAsInt("score");
+					int red = 100 - score > 0 ? 100 - score : 0;
+					return "<img src='" + Util.imageUrl("application/dotblue.gif") + "' style='width: " + score
+							+ "px; height: 8px' title='" + score + "%'/>" + "<img src='"
+							+ Util.imageUrl("application/dotgrey.gif") + "' style='width: " + red
+							+ "px; height: 8px' title='" + score + "%'/>";
+				} catch (Throwable e) {
+					return "";
+				}
 			}
 		});
 

@@ -80,6 +80,7 @@ public class TrashPanel extends VLayout {
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setDataSource(GarbageDS.get());
 		list.setShowFilterEditor(true);
+		list.setFilterOnKeypress(true); 
 		addMember(list);
 
 		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {

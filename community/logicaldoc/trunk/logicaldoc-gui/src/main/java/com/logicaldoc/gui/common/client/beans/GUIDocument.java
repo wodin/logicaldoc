@@ -62,6 +62,8 @@ public class GUIDocument implements Serializable {
 
 	private Date lastModified;
 
+	private String pathExtended;
+
 	private GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[0];
 
 	private String versionComment;
@@ -404,5 +406,13 @@ public class GUIDocument implements Serializable {
 
 	public void setImmutable(int immutable) {
 		this.immutable = immutable;
+	}
+
+	public String getPathExtended() {
+		return pathExtended;
+	}
+
+	public void setPathExtended(String pathExtended) {
+		this.pathExtended = pathExtended;
 	}
 }
