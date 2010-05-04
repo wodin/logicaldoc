@@ -64,74 +64,68 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		form1.setNumCols(2);
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.TOP);
-		List<FormItem> items = new ArrayList<FormItem>();
 
-		TextItem idItem = new TextItem();
-		idItem.setTitle(I18N.getMessage("id"));
-		idItem.setValue(document.getId());
-		idItem.setDisabled(true);
+		StaticTextItem path = new StaticTextItem("path", I18N.getMessage("path"));
+		path.setValue(document.getPathExtended());
+		path.setWrap(false);
+		path.setTitleOrientation(TitleOrientation.LEFT);
+		path.setEndRow(true);
 
-		TextItem customIdItem = new TextItem("customId");
-		customIdItem.setTitle(I18N.getMessage("customid"));
-		customIdItem.setValue(document.getCustomId());
-		customIdItem.addChangedHandler(changedHandler);
-		customIdItem.setRequired(true);
-		customIdItem.setDisabled(!update);
+		TextItem id = new TextItem();
+		id.setTitle(I18N.getMessage("id"));
+		id.setValue(document.getId());
+		id.setDisabled(true);
 
-		DateItem creationItem = ItemFactory.newDateItem("creation", I18N.getMessage("createdon"));
-		creationItem.setValue(document.getCreation());
-		creationItem.setShowPickerIcon(false);
-		creationItem.setDisabled(true);
+		TextItem customId = new TextItem("customId");
+		customId.setTitle(I18N.getMessage("customid"));
+		customId.setValue(document.getCustomId());
+		customId.addChangedHandler(changedHandler);
+		customId.setRequired(true);
+		customId.setDisabled(!update);
 
-		TextItem creatorItem = new TextItem("creator");
-		creatorItem.setTitle(I18N.getMessage("creator"));
-		creatorItem.setValue(document.getCreator());
-		creatorItem.setDisabled(true);
+		DateItem creation = ItemFactory.newDateItem("creation", I18N.getMessage("createdon"));
+		creation.setValue(document.getCreation());
+		creation.setShowPickerIcon(false);
+		creation.setDisabled(true);
 
-		DateItem dateItem = ItemFactory.newDateItem("date", I18N.getMessage("publishedon"));
-		dateItem.setValue(document.getDate());
-		dateItem.setShowPickerIcon(false);
-		dateItem.setDisabled(true);
+		TextItem creator = new TextItem("creator");
+		creator.setTitle(I18N.getMessage("creator"));
+		creator.setValue(document.getCreator());
+		creator.setDisabled(true);
 
-		TextItem publisherItem = new TextItem("publisher");
-		publisherItem.setTitle(I18N.getMessage("publisher"));
-		publisherItem.setValue(document.getPublisher());
-		publisherItem.setDisabled(true);
+		DateItem date = ItemFactory.newDateItem("date", I18N.getMessage("publishedon"));
+		date.setValue(document.getDate());
+		date.setShowPickerIcon(false);
+		date.setDisabled(true);
 
-		TextItem titleItem = new TextItem("title");
-		titleItem.setTitle(I18N.getMessage("title"));
-		titleItem.setValue(document.getTitle());
-		titleItem.addChangedHandler(changedHandler);
-		titleItem.setRequired(true);
-		titleItem.setDisabled(!update);
+		TextItem publisher = new TextItem("publisher");
+		publisher.setTitle(I18N.getMessage("publisher"));
+		publisher.setValue(document.getPublisher());
+		publisher.setDisabled(true);
 
-		TextItem versionItem = new TextItem("version");
-		versionItem.setTitle(I18N.getMessage("version"));
-		versionItem.setValue(document.getVersion());
-		versionItem.setDisabled(true);
+		TextItem title = new TextItem("title");
+		title.setTitle(I18N.getMessage("title"));
+		title.setValue(document.getTitle());
+		title.addChangedHandler(changedHandler);
+		title.setRequired(true);
+		title.setDisabled(!update);
 
-		TextItem fileVersionItem = new TextItem("fileVersion");
-		fileVersionItem.setTitle(I18N.getMessage("fileversion"));
-		fileVersionItem.setValue(document.getFileVersion());
-		fileVersionItem.setDisabled(true);
+		TextItem version = new TextItem("version");
+		version.setTitle(I18N.getMessage("version"));
+		version.setValue(document.getVersion());
+		version.setDisabled(true);
 
-		TextItem fileNameItem = new TextItem("fileName");
-		fileNameItem.setTitle(I18N.getMessage("filename"));
-		fileNameItem.setValue(document.getFileName());
-		fileNameItem.setDisabled(true);
+		TextItem fileVersion = new TextItem("fileVersion");
+		fileVersion.setTitle(I18N.getMessage("fileversion"));
+		fileVersion.setValue(document.getFileVersion());
+		fileVersion.setDisabled(true);
 
-		items.add(idItem);
-		items.add(customIdItem);
-		items.add(versionItem);
-		items.add(fileVersionItem);
-		items.add(titleItem);
-		items.add(fileNameItem);
-		items.add(creationItem);
-		items.add(dateItem);
-		items.add(creatorItem);
-		items.add(publisherItem);
+		TextItem filename = new TextItem("fileName");
+		filename.setTitle(I18N.getMessage("filename"));
+		filename.setValue(document.getFileName());
+		filename.setDisabled(true);
 
-		form1.setItems(items.toArray(new FormItem[0]));
+		form1.setItems(path, id, customId, version, title, fileVersion, filename, creation, date, creator, publisher);
 		addMember(form1);
 
 		/*
@@ -143,7 +137,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			removeChild(form2);
 		form2 = new DynamicForm();
 		form2.setValuesManager(vm);
-		items.clear();
+
+		List<FormItem> items = new ArrayList<FormItem>();
 		final ComboBoxItem tagItem = new ComboBoxItem("tag");
 		tagItem.addChangedHandler(changedHandler);
 		tagItem.setTitle(I18N.getMessage("tag"));

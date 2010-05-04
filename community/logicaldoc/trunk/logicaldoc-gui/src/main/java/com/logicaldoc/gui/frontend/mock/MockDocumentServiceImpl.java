@@ -41,6 +41,7 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 		document.setTemplateId(1L);
 		document.setTemplate("template1");
 		document.setStatus(Document.DOC_UNLOCKED);
+		document.setPathExtended("/Folder 1/Folder 2/Folder 3/Folder 4");
 		GUIFolder folder = new GUIFolder();
 		folder.setName("Folder " + docId);
 		folder.setId(docId);

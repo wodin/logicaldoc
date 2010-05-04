@@ -375,6 +375,6 @@ public class DocumentContextMenu extends Menu {
 		if (!enableImmutable)
 			immutable.setEnabled(false);
 
-		setItems(download, copy, delete, sendMail, similar, links, checkout, checkin, lock, unlockItem, immutable);
+		setItems(download, copy, delete, bookmark, sendMail, similar, links, checkout, checkin, lock, unlockItem, immutable);
 	}
 }

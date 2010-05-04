@@ -17,6 +17,8 @@ import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.validator.LengthRangeValidator;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -86,6 +88,7 @@ public class BookmarksPanel extends VLayout {
 		list.setFields(icon, name, description);
 		list.setDataSource(BookmarksDS.get());
 		list.setShowFilterEditor(true);
+		list.setFilterOnKeypress(true); 
 		addMember(list);
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
@@ -94,6 +97,16 @@ public class BookmarksPanel extends VLayout {
 				showContextMenu();
 				event.cancel();
 			}
+		});
+
+		list.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				ListGridRecord record = list.getSelectedRecord();
+				DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttributeAsString("docId")));
+			}
+
 		});
 
 		list.addEditCompleteHandler(new EditCompleteHandler() {
