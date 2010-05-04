@@ -26,6 +26,12 @@ public class DocumentsMenu extends SectionStack {
 		foldersSection.addItem(foldersTree);
 		addSection(foldersSection);
 
+		SectionStackSection bookmarksSection = new SectionStackSection(I18N.getMessage("bookmarks"));
+		bookmarksSection.setExpanded(false);
+		bookmarksSection.setCanCollapse(true);
+		bookmarksSection.addItem(BookmarksPanel.get());
+		addSection(bookmarksSection);
+
 		SectionStackSection trashSection = new SectionStackSection(I18N.getMessage("trash"));
 		trashSection.setExpanded(false);
 		trashSection.setCanCollapse(true);

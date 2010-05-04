@@ -44,16 +44,20 @@ public class DocumentsListPanel extends VLayout {
 
 	private InfoPanel infoPanel;
 
+	private boolean filters;
+
 	public DocumentsListPanel(GUIFolder folder, final Long hiliteDoc, Integer maxRows) {
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
 		ListGridField title = new ListGridField("title", I18N.getMessage("title"), 200);
+		title.setCanFilter(true);
 
 		ListGridField size = new ListGridField("size", I18N.getMessage("size"), 70);
 		size.setAlign(Alignment.CENTER);
 		size.setType(ListGridFieldType.FLOAT);
 		size.setCellFormatter(new FileSizeCellFormatter());
+		size.setCanFilter(false);
 
 		ListGridField icon = new ListGridField("icon", " ", 24);
 		icon.setType(ListGridFieldType.IMAGE);
@@ -62,33 +66,41 @@ public class DocumentsListPanel extends VLayout {
 		icon.setShowDefaultContextMenu(false);
 		icon.setImageURLPrefix(Util.imagePrefix() + "/application/");
 		icon.setImageURLSuffix(".png");
+		icon.setCanFilter(false);
 
 		ListGridField version = new ListGridField("version", I18N.getMessage("version"), 55);
 		version.setAlign(Alignment.CENTER);
+		version.setCanFilter(true);
 
 		ListGridField lastModified = new ListGridField("lastModified", I18N.getMessage("lastmodified"), 110);
 		lastModified.setAlign(Alignment.CENTER);
 		lastModified.setType(ListGridFieldType.DATE);
 		lastModified.setCellFormatter(new DateCellFormatter());
+		lastModified.setCanFilter(false);
 
 		ListGridField publisher = new ListGridField("publisher", I18N.getMessage("publisher"), 90);
 		publisher.setAlign(Alignment.CENTER);
+		publisher.setCanFilter(true);
 
 		ListGridField published = new ListGridField("published", I18N.getMessage("publishedon"), 110);
 		published.setAlign(Alignment.CENTER);
 		published.setType(ListGridFieldType.DATE);
 		published.setCellFormatter(new DateCellFormatter());
+		published.setCanFilter(false);
 
 		ListGridField creator = new ListGridField("creator", I18N.getMessage("creator"), 90);
 		creator.setAlign(Alignment.CENTER);
+		creator.setCanFilter(true);
 
 		ListGridField created = new ListGridField("created", I18N.getMessage("createdon"), 110);
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
 		created.setCellFormatter(new DateCellFormatter());
+		created.setCanFilter(false);
 
 		ListGridField customId = new ListGridField("customId", I18N.getMessage("customid"), 110);
 		customId.setType(ListGridFieldType.TEXT);
+		customId.setCanFilter(false);
 
 		ListGridField immutable = new ListGridField("immutable", " ", 24);
 		immutable.setType(ListGridFieldType.IMAGE);
@@ -97,6 +109,7 @@ public class DocumentsListPanel extends VLayout {
 		immutable.setShowDefaultContextMenu(false);
 		immutable.setImageURLPrefix(Util.imagePrefix() + "/application/");
 		immutable.setImageURLSuffix(".png");
+		immutable.setCanFilter(false);
 
 		ListGridField indexed = new ListGridField("indexed", " ", 24);
 		indexed.setType(ListGridFieldType.IMAGE);
@@ -105,6 +118,7 @@ public class DocumentsListPanel extends VLayout {
 		indexed.setShowDefaultContextMenu(false);
 		indexed.setImageURLPrefix(Util.imagePrefix() + "/application/");
 		indexed.setImageURLSuffix(".png");
+		indexed.setCanFilter(false);
 
 		ListGridField locked = new ListGridField("locked", " ", 24);
 		locked.setType(ListGridFieldType.IMAGE);
@@ -113,12 +127,15 @@ public class DocumentsListPanel extends VLayout {
 		locked.setShowDefaultContextMenu(false);
 		locked.setImageURLPrefix(Util.imagePrefix() + "/application/");
 		locked.setImageURLSuffix(".png");
+		locked.setCanFilter(false);
 
 		ListGridField filename = new ListGridField("filename", I18N.getMessage("filename"), 200);
 		filename.setHidden(true);
+		filename.setCanFilter(true);
 
 		ListGridField lockUserId = new ListGridField("lockUserId", " ", 24);
 		lockUserId.setHidden(true);
+		lockUserId.setCanFilter(false);
 
 		list = new ListGrid() {
 			@Override
@@ -235,5 +252,10 @@ public class DocumentsListPanel extends VLayout {
 
 	public ListGrid getList() {
 		return list;
+	}
+
+	public void toggleFilters() {
+		list.setShowFilterEditor(!filters);
+		filters = !filters;
 	}
 }

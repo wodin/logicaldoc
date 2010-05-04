@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
@@ -227,5 +228,20 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	@Override
 	public void restore(String sid, long docId) {
 		return;
+	}
+
+	@Override
+	public void addBookmarks(String sid, long[] docIds) {
+
+	}
+
+	@Override
+	public void deleteBookmarks(String sid, long[] bookmarkIds) {
+
+	}
+
+	@Override
+	public void updateBookmark(String sid, GUIBookmark bookmark) {
+
 	}
 }

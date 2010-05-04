@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
@@ -47,4 +48,10 @@ public interface DocumentServiceAsync {
 	void linkDocuments(String sid, long[] inDocIds, long[] outDocIds, AsyncCallback<Void> callback);
 
 	void restore(String sid, long docId, AsyncCallback<Void> callback);
+
+	void addBookmarks(String sid, long[] docIds, AsyncCallback<Void> callback);
+
+	void deleteBookmarks(String sid, long[] bookmarkIds, AsyncCallback<Void> callback);
+
+	void updateBookmark(String sid, GUIBookmark bookmark, AsyncCallback<Void> callback);
 }

@@ -29,6 +29,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -318,24 +319,27 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 		if (Search.get().isHasMore()) {
 			toolStrip.addSeparator();
-			final IntegerItem repeatNumber = new IntegerItem();
-			repeatNumber.setName("repeatNumber");
-			repeatNumber.setHint(I18N.getMessage("hits"));
-			repeatNumber.setShowTitle(false);
-			repeatNumber.setDefaultValue(40);
-			repeatNumber.setWidth(40);
+			final IntegerItem maxRows = new IntegerItem();
+			maxRows.setName("repeatNumber");
+			maxRows.setHint(I18N.getMessage("hits"));
+			maxRows.setShowTitle(false);
+			maxRows.setDefaultValue(40);
+			maxRows.setWidth(40);
+			IntegerRangeValidator intValidator = new IntegerRangeValidator();
+			intValidator.setMin(1);
+			maxRows.setValidators(intValidator);
 
 			ToolStripButton repeat = new ToolStripButton();
 			repeat.setTitle(I18N.getMessage("display"));
 			toolStrip.addButton(repeat);
-			toolStrip.addFormItem(repeatNumber);
+			toolStrip.addFormItem(maxRows);
 			repeat.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					if (!repeatNumber.validate())
+					if (!maxRows.validate())
 						return;
 					GUISearchOptions opt = Search.get().getOptions();
-					opt.setMaxHits(opt.getMaxHits() + (Integer) repeatNumber.getValue());
+					opt.setMaxHits(opt.getMaxHits() + (Integer) maxRows.getValue());
 					Search.get().search();
 				}
 			});

@@ -7,9 +7,11 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.smartgwt.client.types.SelectionType;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
@@ -92,16 +94,32 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		maxRows.setDefaultValue(100);
 		maxRows.setWidth(40);
 
-		ToolStripButton show = new ToolStripButton();
-		show.setTitle(I18N.getMessage("display"));
-		addButton(show);
+		IntegerRangeValidator intValidator = new IntegerRangeValidator();
+		intValidator.setMin(1);
+		maxRows.setValidators(intValidator);
+
+		ToolStripButton display = new ToolStripButton();
+		display.setTitle(I18N.getMessage("display"));
+		addButton(display);
 		addFormItem(maxRows);
-		show.addClickHandler(new ClickHandler() {
+		display.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (maxRows.validate()) {
 					DocumentsPanel.get().refresh((Integer) maxRows.getValue());
 				}
+			}
+		});
+
+		addSeparator();
+		ToolStripButton filter = new ToolStripButton();
+		filter.setActionType(SelectionType.CHECKBOX);  
+		filter.setTitle(I18N.getMessage("filter"));
+		addButton(filter);
+		filter.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				DocumentsPanel.get().toggleFilters();
 			}
 		});
 

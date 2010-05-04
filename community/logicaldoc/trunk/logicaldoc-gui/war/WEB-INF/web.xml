@@ -91,6 +91,12 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>BookmarksData</servlet-name>
+		<servlet-class>
+			com.logicaldoc.gui.common.server.mock.MockBookmarksDataServlet</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>LinksData</servlet-name>
 		<servlet-class>
 			com.logicaldoc.gui.common.server.mock.MockLinksDataServlet</servlet-class>
@@ -229,6 +235,11 @@
 	<servlet-mapping>
 		<servlet-name>GarbageData</servlet-name>
 		<url-pattern>/data/garbage.xml</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>BookmarksData</servlet-name>
+		<url-pattern>/data/bookmarks.xml</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

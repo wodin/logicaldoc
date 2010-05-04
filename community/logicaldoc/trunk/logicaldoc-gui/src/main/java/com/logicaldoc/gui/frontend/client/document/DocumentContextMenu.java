@@ -1,8 +1,5 @@
 package com.logicaldoc.gui.frontend.client.document;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -36,10 +33,11 @@ public class DocumentContextMenu extends Menu {
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	public DocumentContextMenu(final GUIFolder folder, final ListGrid list) {
-		List<MenuItem> items = new ArrayList<MenuItem>();
-		MenuItem downloadItem = new MenuItem();
-		downloadItem.setTitle(I18N.getMessage("download"));
-		downloadItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		final ListGridRecord[] selection = list.getSelection();
+
+		MenuItem download = new MenuItem();
+		download.setTitle(I18N.getMessage("download"));
+		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
 				Window.open("download?sid=" + Session.get().getSid() + "&sid=" + Session.get().getSid() + "&docId="
@@ -47,11 +45,10 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
-		MenuItem copyItem = new MenuItem();
-		copyItem.setTitle(I18N.getMessage("copy"));
-		copyItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem copy = new MenuItem();
+		copy.setTitle(I18N.getMessage("copy"));
+		copy.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] selection = list.getSelection();
 				if (selection == null)
 					return;
 				for (int i = 0; i < selection.length; i++) {
@@ -65,11 +62,10 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
-		MenuItem deleteItem = new MenuItem();
-		deleteItem.setTitle(I18N.getMessage("delete"));
-		deleteItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem delete = new MenuItem();
+		delete.setTitle(I18N.getMessage("delete"));
+		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] selection = list.getSelection();
 				if (selection == null || selection.length == 0)
 					return;
 				final long[] ids = new long[selection.length];
@@ -89,8 +85,7 @@ public class DocumentContextMenu extends Menu {
 
 								@Override
 								public void onSuccess(Void result) {
-									ListGridRecord[] records = list.getSelection();
-									for (ListGridRecord record : records) {
+									for (ListGridRecord record : selection) {
 										TrashPanel.get().appendRecord(record);
 									}
 									list.removeSelectedData();
@@ -102,36 +97,35 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
-		MenuItem sendMailItem = new MenuItem();
-		sendMailItem.setTitle(I18N.getMessage("sendmail"));
-		sendMailItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem sendMail = new MenuItem();
+		sendMail.setTitle(I18N.getMessage("sendmail"));
+		sendMail.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord selection = list.getSelectedRecord();
-				if (selection == null)
+				ListGridRecord record = list.getSelectedRecord();
+				if (record == null)
 					return;
-				EmailDialog window = new EmailDialog(Long.parseLong(selection.getAttribute("id")), selection
+				EmailDialog window = new EmailDialog(Long.parseLong(record.getAttribute("id")), record
 						.getAttribute("title"));
 				window.show();
 			}
 		});
 
-		MenuItem similarItem = new MenuItem();
-		similarItem.setTitle(I18N.getMessage("similardocuments"));
-		similarItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem similar = new MenuItem();
+		similar.setTitle(I18N.getMessage("similardocuments"));
+		similar.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord selection = list.getSelectedRecord();
-				if (selection == null)
+				ListGridRecord record = list.getSelectedRecord();
+				if (record == null)
 					return;
 				// TODO implement
 				SC.warn("To be Implemented");
 			}
 		});
 
-		MenuItem linksItem = new MenuItem();
-		linksItem.setTitle(I18N.getMessage("connectaslinks"));
-		linksItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem links = new MenuItem();
+		links.setTitle(I18N.getMessage("connectaslinks"));
+		links.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] selection = list.getSelection();
 				if (selection == null || selection.length == 0 || Clipboard.getInstance().isEmpty())
 					return;
 
@@ -162,11 +156,10 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
-		MenuItem immutableItem = new MenuItem();
-		immutableItem.setTitle(I18N.getMessage("makeimmutable"));
-		immutableItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem immutable = new MenuItem();
+		immutable.setTitle(I18N.getMessage("makeimmutable"));
+		immutable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				final ListGridRecord[] selection = list.getSelection();
 				if (selection == null)
 					return;
 				final long[] ids = new long[selection.length];
@@ -206,11 +199,10 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
-		MenuItem lockItem = new MenuItem();
-		lockItem.setTitle(I18N.getMessage("lock"));
-		lockItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem lock = new MenuItem();
+		lock.setTitle(I18N.getMessage("lock"));
+		lock.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				final ListGridRecord[] selection = list.getSelection();
 				if (selection == null)
 					return;
 				final long[] ids = new long[selection.length];
@@ -249,7 +241,6 @@ public class DocumentContextMenu extends Menu {
 		unlockItem.setTitle(I18N.getMessage("unlock"));
 		unlockItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				final ListGridRecord[] selection = list.getSelection();
 				if (selection == null)
 					return;
 				final long[] ids = new long[selection.length];
@@ -275,106 +266,115 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
-		if (list.getSelection().length == 1)
-			items.add(downloadItem);
-
-		items.add(copyItem);
-		if (folder.hasPermission(Constants.PERMISSION_DELETE))
-			items.add(deleteItem);
-
-		if (list.getSelection().length == 1) {
-			items.add(sendMailItem);
-			items.add(similarItem);
-		}
-
-		if (folder.hasPermission(Constants.PERMISSION_WRITE)) {
-			items.add(linksItem);
-
-			boolean enableLock = true;
-			boolean enableUnlock = true;
-
-			ListGridRecord[] selection = list.getSelection();
-			if (selection != null)
-				for (ListGridRecord record : selection) {
-					if (!"blank".equals(record.getAttribute("locked"))
-							|| !"blank".equals(record.getAttribute("immutable"))) {
-						enableLock = false;
+		MenuItem checkout = new MenuItem();
+		checkout.setTitle(I18N.getMessage("checkout"));
+		checkout.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				ListGridRecord record = list.getSelectedRecord();
+				if (record == null)
+					return;
+				final long id = Long.parseLong(record.getAttribute("id"));
+				documentService.checkout(Session.get().getSid(), id, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
 					}
-					if ("blank".equals(record.getAttribute("locked"))
-							|| !"blank".equals(record.getAttribute("immutable"))) {
-						Long lockUser = record.getAttribute("lockUserId") != null ? Long.parseLong(record
-								.getAttribute("lockUserId")) : Long.MIN_VALUE;
-						if (Session.get().getUser().getId() == lockUser.longValue()
-								|| Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN))
-							enableUnlock = false;
+
+					@Override
+					public void onSuccess(Void result) {
+						ListGridRecord record = list.getSelectedRecord();
+						record.setAttribute("locked", "document_lock");
+						record.setAttribute("lockUserId", Session.get().getUser().getId());
+						record.setAttribute("status", Constants.DOC_CHECKED_OUT);
+						list.refreshRow(list.getRecordIndex(record));
+						Window.open("../download?sid=" + Session.get().getSid() + "&docId=" + id, "_blank", "");
 					}
-				}
-
-			MenuItem checkoutItem = new MenuItem();
-			checkoutItem.setTitle(I18N.getMessage("checkout"));
-			checkoutItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-				public void onClick(MenuItemClickEvent event) {
-					final ListGridRecord selection = list.getSelectedRecord();
-					if (selection == null)
-						return;
-					final long id = Long.parseLong(selection.getAttribute("id"));
-					documentService.checkout(Session.get().getSid(), id, new AsyncCallback<Void>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
-						}
-
-						@Override
-						public void onSuccess(Void result) {
-							selection.setAttribute("locked", "document_lock");
-							selection.setAttribute("lockUserId", Session.get().getUser().getId());
-							selection.setAttribute("status", Constants.DOC_CHECKED_OUT);
-							list.refreshRow(list.getRecordIndex(selection));
-							Window.open("../download?sid=" + Session.get().getSid() + "&docId=" + id, "_blank", "");
-						}
-					});
-				}
-			});
-
-			MenuItem checkinItem = new MenuItem();
-			checkinItem.setTitle(I18N.getMessage("checkin"));
-			checkinItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-				public void onClick(MenuItemClickEvent event) {
-					ListGridRecord selection = list.getSelectedRecord();
-					if (selection == null)
-						return;
-					long id = Long.parseLong(selection.getAttribute("id"));
-					String filename = selection.getAttributeAsString("filename");
-					DocumentCheckin checkin = new DocumentCheckin(id, filename, list);
-					checkin.show();
-				}
-			});
-
-			if (enableLock) {
-				items.add(lockItem);
-				items.add(checkoutItem);
+				});
 			}
+		});
 
-			if (enableUnlock) {
-				if (selection.length == 1
-						&& Constants.DOC_CHECKED_OUT == Integer.parseInt(selection[0].getAttribute("status")))
-					items.add(checkinItem);
-				items.add(unlockItem);
+		MenuItem checkin = new MenuItem();
+		checkin.setTitle(I18N.getMessage("checkin"));
+		checkin.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				ListGridRecord selection = list.getSelectedRecord();
+				if (selection == null)
+					return;
+				long id = Long.parseLong(selection.getAttribute("id"));
+				String filename = selection.getAttributeAsString("filename");
+				DocumentCheckin checkin = new DocumentCheckin(id, filename, list);
+				checkin.show();
 			}
-		}
+		});
+
+		MenuItem bookmark = new MenuItem();
+		bookmark.setTitle(I18N.getMessage("bookmark"));
+		bookmark.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				ListGridRecord[] selection = list.getSelection();
+				if (selection == null || selection.length == 0)
+					return;
+				long[] ids = new long[selection.length];
+				for (int i = 0; i < selection.length; i++) {
+					ids[i] = Long.parseLong(selection[i].getAttributeAsString("id"));
+				}
+			}
+		});
+
+		boolean enableLock = true;
+		boolean enableUnlock = true;
+		boolean enableImmutable = false;
+
+		if (selection != null)
+			for (ListGridRecord record : selection) {
+				if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
+					enableLock = false;
+				}
+				if ("blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
+					Long lockUser = record.getAttribute("lockUserId") != null ? Long.parseLong(record
+							.getAttribute("lockUserId")) : Long.MIN_VALUE;
+					if (Session.get().getUser().getId() == lockUser.longValue()
+							|| Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN))
+						enableUnlock = false;
+				}
+			}
 
 		if (folder.hasPermission(Constants.PERMISSION_IMMUTABLE)) {
-			boolean enableImmutable = true;
-			ListGridRecord[] selection = list.getSelection();
+			enableImmutable = true;
 			for (ListGridRecord record : selection) {
 				if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable")))
 					enableImmutable = false;
 			}
-
-			if (enableImmutable)
-				items.add(immutableItem);
 		}
 
-		setItems(items.toArray(new MenuItem[0]));
+		if (list.getSelection().length != 1) {
+			download.setEnabled(false);
+			sendMail.setEnabled(false);
+			similar.setEnabled(false);
+		}
+
+		if (!folder.hasPermission(Constants.PERMISSION_DELETE))
+			delete.setEnabled(false);
+
+		if (!folder.hasPermission(Constants.PERMISSION_WRITE)) {
+			links.setEnabled(false);
+		}
+
+		if (!enableLock) {
+			lock.setEnabled(false);
+			checkout.setEnabled(false);
+		}
+
+		if (!enableUnlock) {
+			if (!(selection.length == 1 && Constants.DOC_CHECKED_OUT == Integer.parseInt(selection[0]
+					.getAttribute("status"))))
+				checkin.setEnabled(false);
+			unlockItem.setEnabled(false);
+		}
+
+		if (!enableImmutable)
+			immutable.setEnabled(false);
+
+		setItems(download, copy, delete, sendMail, similar, links, checkout, checkin, lock, unlockItem, immutable);
 	}
 }
