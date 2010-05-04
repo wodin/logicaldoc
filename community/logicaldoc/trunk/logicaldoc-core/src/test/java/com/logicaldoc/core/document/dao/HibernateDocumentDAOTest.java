@@ -293,6 +293,27 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(0, ids.size());
 	}
+	
+	@Test
+	public void testFindByUserIdAndTag() {
+		List<Document> ids = dao.findByUserIdAndTag(1, "abc");
+		Assert.assertNotNull(ids);
+		// There is also the shortcut
+		Assert.assertEquals(2, ids.size());
+		Assert.assertEquals(1L, ids.get(0).getId());
+
+		ids = dao.findByUserIdAndTag(1, "xxx");
+		Assert.assertNotNull(ids);
+		Assert.assertEquals(0, ids.size());
+		
+		ids = dao.findByUserIdAndTag(1, "ask");
+		Assert.assertNotNull(ids);
+		Assert.assertEquals(1, ids.size());
+
+		ids = dao.findByUserIdAndTag(99, "abc");
+		Assert.assertNotNull(ids);
+		Assert.assertEquals(0, ids.size());
+	}
 
 	@Test
 	public void testFindLastDownloadsByUserId() {
