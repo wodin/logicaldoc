@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
@@ -133,4 +134,19 @@ public interface DocumentService extends RemoteService {
 	 * Restores a given document
 	 */
 	public void restore(String sid, long docId);
+
+	/**
+	 * Adds new bookmarks
+	 */
+	public void addBookmarks(String sid, long[] docIds);
+
+	/**
+	 * Deletes a set of bookmarks
+	 */
+	public void deleteBookmarks(String sid, long[] bookmarkIds);
+
+	/**
+	 * Updates a single bookmark's data
+	 */
+	public void updateBookmark(String sid, GUIBookmark bookmark);
 }

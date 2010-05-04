@@ -45,7 +45,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	private GUIFolder folder;
 
-	private DocumentsMenu leftMenu;
+	private DocumentsMenu documentsMenu;
 
 	// The document that must be hilighted
 	private Long hiliteDocId = null;
@@ -59,9 +59,9 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		setWidth100();
 
 		// Prepare the collapsible menu
-		leftMenu = new DocumentsMenu();
-		leftMenu.setWidth(280);
-		leftMenu.setShowResizeBar(true);
+		documentsMenu = new DocumentsMenu();
+		documentsMenu.setWidth(280);
+		documentsMenu.setShowResizeBar(true);
 
 		// Initialize the listing panel as placeholder
 		listingPanel = new Label("&nbsp;" + I18N.getMessage("selectfolder"));
@@ -82,7 +82,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		right.addMember(listing);
 		right.addMember(details);
 
-		addMember(leftMenu);
+		addMember(documentsMenu);
 		addMember(right);
 
 		setShowEdges(true);
@@ -102,7 +102,8 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		// Save the information about the document that will be hilighted by
 		// habler onFolderSelect
 		hiliteDocId = docId;
-		leftMenu.openFolder(folderId);
+		documentsMenu.openFolder(folderId);
+		documentsMenu.expandSection(0);
 		Main.get().getMainPanel().selectDocumentsTab();
 	}
 
@@ -161,5 +162,11 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		}
 
 		hiliteDocId = null;
+	}
+
+	public void toggleFilters() {
+		if (listingPanel instanceof DocumentsListPanel) {
+			((DocumentsListPanel) listingPanel).toggleFilters();
+		}
 	}
 }

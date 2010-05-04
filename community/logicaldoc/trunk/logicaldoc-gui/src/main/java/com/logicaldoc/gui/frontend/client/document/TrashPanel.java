@@ -51,6 +51,7 @@ public class TrashPanel extends VLayout {
 		id.setHidden(true);
 
 		ListGridField title = new ListGridField("title", I18N.getMessage("title"), 150);
+		title.setCanFilter(true);
 
 		ListGridField icon = new ListGridField("icon", " ", 24);
 		icon.setType(ListGridFieldType.IMAGE);
@@ -59,15 +60,18 @@ public class TrashPanel extends VLayout {
 		icon.setShowDefaultContextMenu(false);
 		icon.setImageURLPrefix(Util.imagePrefix() + "/application/");
 		icon.setImageURLSuffix(".png");
+		icon.setCanFilter(false);
 
 		ListGridField lastModified = new ListGridField("lastModified", I18N.getMessage("lastmodified"), 110);
 		lastModified.setAlign(Alignment.CENTER);
 		lastModified.setType(ListGridFieldType.DATE);
 		lastModified.setCellFormatter(new DateCellFormatter());
+		lastModified.setCanFilter(false);
 
 		ListGridField customId = new ListGridField("customId", I18N.getMessage("customid"), 110);
 		customId.setType(ListGridFieldType.TEXT);
-		
+		customId.setCanFilter(true);
+
 		list = new ListGrid();
 		list.setWidth100();
 		list.setHeight100();
@@ -75,6 +79,7 @@ public class TrashPanel extends VLayout {
 		list.setFields(icon, title, customId, lastModified);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setDataSource(GarbageDS.get());
+		list.setShowFilterEditor(true);
 		addMember(list);
 
 		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
@@ -120,7 +125,7 @@ public class TrashPanel extends VLayout {
 		Menu contextMenu = new Menu();
 
 		MenuItem execute = new MenuItem();
-		execute.setTitle(I18N.getMessage("execute"));
+		execute.setTitle(I18N.getMessage("restore"));
 		execute.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
