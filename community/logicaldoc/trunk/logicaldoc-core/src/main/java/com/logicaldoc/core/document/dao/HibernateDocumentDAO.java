@@ -377,9 +377,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			if (precoll.isEmpty())
 				return coll;
 
-			StringBuffer query = new StringBuffer("select distinct(_entity) from Document _entity  ");
+			StringBuffer query = new StringBuffer("select distinct(_entity) from Document _entity, Menu _menu ");
 			query.append(" left outer join _menu.menuGroups as _group ");
-			query.append(" where _group.groupId in (");
+			query.append(" where _entity.folder.id = _menu.id ");
+			query.append(" and _group.groupId in (");
 
 			boolean first = true;
 			while (iter.hasNext()) {
@@ -400,7 +401,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			while (iter2.hasNext()) {
 				if (!first)
 					query.append(",");
-				query.append("'" + iter.next() + "'");
+				query.append("'" + iter2.next() + "'");
 				first = false;
 			}
 			query.append(")");
