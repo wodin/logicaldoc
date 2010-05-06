@@ -26,7 +26,7 @@ import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.FolderDAO;
-import com.logicaldoc.core.searchengine.Result;
+import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.GroupDAO;
@@ -343,7 +343,7 @@ public class DocumentNavigation extends NavigationBean {
 
 		long docId = 0;
 
-		if (entry instanceof Result) {
+		if (entry instanceof Hit) {
 			if (((DocumentResult) entry).getShortcut() != null)
 				docId = ((DocumentResult) entry).getShortcut().getId();
 			else

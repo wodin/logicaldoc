@@ -1,5 +1,12 @@
 package com.logicaldoc.webservice;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 
@@ -7,9 +14,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.dao.FolderDAO;
+import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 
@@ -41,10 +50,15 @@ public class AbstractService {
 	 * @throws Exception
 	 */
 	protected User validateSession(String sid) throws Exception {
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		if (!validateSession) {
 			User user = new User();
 			user.setId(1);
 			user.setName("admin");
+			Set<Group> groups = new HashSet<Group>();
+			GroupDAO grpDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+			groups.add(grpDao.findById(1));
+			user.setGroups(groups);
 			return user;
 		}
 
@@ -54,7 +68,6 @@ public class AbstractService {
 			SessionManager.getInstance().renew(sid);
 		}
 		String username = SessionManager.getInstance().get(sid).getUserName();
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = userDao.findByUserName(username);
 		if (user == null)
 			throw new Exception("User " + username + "not found");
@@ -82,5 +95,33 @@ public class AbstractService {
 			log.error(message);
 			throw new Exception(message);
 		}
+	}
+
+	public static String convertDateToString(Date date) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			return df.format(date);
+		} catch (Exception e) {
+			df = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				return df.format(date);
+			} catch (Exception e1) {
+			}
+		}
+		return null;
+	}
+
+	public static Date convertStringToDate(String date) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			return df.parse(date);
+		} catch (ParseException e) {
+			df = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				return df.parse(date);
+			} catch (ParseException e1) {
+			}
+		}
+		return null;
 	}
 }

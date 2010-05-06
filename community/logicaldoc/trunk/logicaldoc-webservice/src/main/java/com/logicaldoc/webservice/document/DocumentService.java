@@ -2,6 +2,7 @@ package com.logicaldoc.webservice.document;
 
 import javax.activation.DataHandler;
 import javax.jws.WebParam;
+import javax.jws.WebResult;
 import javax.jws.WebService;
 
 /**
@@ -24,6 +25,7 @@ public interface DocumentService {
 	 * @return The value object containing the document's metadata.
 	 * @throws Exception
 	 */
+	@WebResult(name = "document")
 	public WSDocument create(@WebParam(name = "sid") String sid, @WebParam(name = "document") WSDocument document,
 			@WebParam(name = "content") DataHandler content) throws Exception;;
 
@@ -84,6 +86,7 @@ public interface DocumentService {
 	 * @return A value object containing the document's metadata.
 	 * @throws Exception
 	 */
+	@WebResult(name = "document")
 	public WSDocument getDocument(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
 			throws Exception;
 
@@ -167,6 +170,7 @@ public interface DocumentService {
 	 * @return Array of versions
 	 * @throws Exception
 	 */
+	@WebResult(name = "document")
 	public WSDocument[] getVersions(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
 			throws Exception;
 
@@ -179,6 +183,7 @@ public interface DocumentService {
 	 * 
 	 * @throws Exception
 	 */
+	@WebResult(name = "document")
 	public WSDocument[] list(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
 }

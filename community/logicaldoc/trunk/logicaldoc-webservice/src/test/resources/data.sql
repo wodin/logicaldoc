@@ -36,7 +36,7 @@ values     (99,'2008-10-22',0,'menu.admin',1,1,'administration.gif',5,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (100,'2008-10-22',0,'menu.admin',1,1,'administration.gif',3,null,0);
+values     (100,'2008-10-22',0,'menu.adminxxx',1,1,'administration.gif',3,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
@@ -193,6 +193,9 @@ values     (1,'ghi');
 
 insert into ld_tag
 values     (2,'ask');
+
+insert into ld_tag
+values     (3,'ask');
 
 insert into ld_history 
 				(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified)

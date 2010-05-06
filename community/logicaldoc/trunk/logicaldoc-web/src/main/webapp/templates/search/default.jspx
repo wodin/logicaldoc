@@ -107,7 +107,7 @@
 								<td nowrap="nowrap"
 									style="vertical-align: top; padding-top: 4px;">
 									<ice:graphicImage value="#{StyleBean.imagesPath}/dotgrey.gif"
-										style="width: #{entry.red}px; height: 8px" />
+										style="width: #{100-entry.score}px; height: 8px" />
 								</td>
 								<td nowrap="nowrap">
 									<ice:outputText value="&amp;nbsp;" escape="false" />

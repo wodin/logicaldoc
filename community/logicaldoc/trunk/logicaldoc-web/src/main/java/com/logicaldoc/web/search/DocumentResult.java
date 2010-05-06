@@ -8,8 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.searchengine.Result;
-import com.logicaldoc.core.searchengine.SearchOptions;
+import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
@@ -27,16 +26,16 @@ import com.logicaldoc.web.util.FacesUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class DocumentResult extends DocumentRecord implements Result {
+public class DocumentResult extends DocumentRecord implements Hit {
 	private static final long serialVersionUID = 24242424L;
 
 	protected static Log log = LogFactory.getLog(DocumentResult.class);
 
-	private Result result;
+	private Hit result;
 
 	private boolean showPath;
 
-	public DocumentResult(Result result) {
+	public DocumentResult(Hit result) {
 		super();
 		this.result = result;
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -57,10 +56,6 @@ public class DocumentResult extends DocumentRecord implements Result {
 		return result.getDate();
 	}
 
-	public int getDateCategory() {
-		return result.getDateCategory();
-	}
-
 	public long getDocId() {
 		return result.getDocId();
 	}
@@ -69,16 +64,12 @@ public class DocumentResult extends DocumentRecord implements Result {
 		return result.getDocType();
 	}
 
-	public Integer getScore() {
+	public int getScore() {
 		return result.getScore();
 	}
 
 	public String getIcon() {
 		return result.getIcon();
-	}
-
-	public int getLengthCategory() {
-		return result.getLengthCategory();
 	}
 
 	public String getTitle() {
@@ -93,10 +84,6 @@ public class DocumentResult extends DocumentRecord implements Result {
 		return result.getSource();
 	}
 
-	public Integer getRed() {
-		return result.getRed();
-	}
-
 	public long getSize() {
 		return (long) result.getSize();
 	}
@@ -109,7 +96,7 @@ public class DocumentResult extends DocumentRecord implements Result {
 	 * Teturns the the summary properly escaped for the results page. The Lucene
 	 * Hilights are preserved.
 	 * 
-	 * @see com.logicaldoc.core.searchengine.Result#getSummary()
+	 * @see com.logicaldoc.core.searchengine.Hit#getSummary()
 	 */
 	public String getSummary() {
 		String summary = result.getSummary();
@@ -207,14 +194,22 @@ public class DocumentResult extends DocumentRecord implements Result {
 	public void setScore(Double score) {
 	}
 
-	@Override
-	public void setTitle(String name) {
-		throw new UnsupportedOperationException("setName method unsupported");
+	public String getCustomId() {
+		return result.getCustomId();
+	}
+
+	public void setIcon(String icon) {
+		result.setIcon(icon);
 	}
 
 	@Override
-	public void createScore(float score) {
-		throw new UnsupportedOperationException("createScore method unsupported");
+	public long getFolderId() {
+		return result.getFolderId();
+	}
+
+	@Override
+	public void setTitle(String name) {
+		throw new UnsupportedOperationException("setTitle method unsupported");
 	}
 
 	@Override
@@ -235,11 +230,6 @@ public class DocumentResult extends DocumentRecord implements Result {
 	@Override
 	public void setType(String typ) {
 		throw new UnsupportedOperationException("setType method unsupported");
-	}
-
-	@Override
-	public boolean isRelevant(SearchOptions opt) {
-		return result.isRelevant(opt);
 	}
 
 	@Override
@@ -273,5 +263,20 @@ public class DocumentResult extends DocumentRecord implements Result {
 	@Override
 	public void setSource(String source) {
 		throw new UnsupportedOperationException("setSource method unsupported");
+	}
+
+	@Override
+	public void setScore(int score) {
+		throw new UnsupportedOperationException("setScore method unsupported");
+	}
+
+	@Override
+	public void setFolderId(long folderId) {
+		throw new UnsupportedOperationException("setFolderId method unsupported");
+	}
+
+	@Override
+	public void setDocRef(long docRef) {
+		throw new UnsupportedOperationException("setDocRef method unsupported");
 	}
 }
