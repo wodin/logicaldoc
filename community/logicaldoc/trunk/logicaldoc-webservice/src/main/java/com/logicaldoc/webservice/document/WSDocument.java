@@ -1,8 +1,5 @@
 package com.logicaldoc.webservice.document;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +22,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
+import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.Attribute;
 
 /**
@@ -138,11 +136,28 @@ public class WSDocument {
 
 	private String language;
 
+	// Contains the snippet search text
+	private String summary;
+
+	private int dateCategory;
+
+	private int docType;
+
+	private Integer score;
+
+	private String icon;
+
+	private int lengthCategory;
+
+	private String path;
+
+	private long size;
+
 	public static WSDocument fromDocument(AbstractDocument document) {
-		WSDocument wsDoc=new WSDocument();
-		
+		WSDocument wsDoc = new WSDocument();
+
 		// Populate extended attributes
-		Attribute[] extendedAttributes=new Attribute[0];
+		Attribute[] extendedAttributes = new Attribute[0];
 		if (document.getAttributes() != null && document.getAttributes().size() > 0) {
 			extendedAttributes = new Attribute[document.getAttributeNames().size()];
 			int i = 0;
@@ -151,7 +166,7 @@ public class WSDocument {
 			}
 		}
 
-		String[] tags=new String[0];
+		String[] tags = new String[0];
 		if (document.getTags() != null && document.getTags().size() > 0) {
 			tags = new String[document.getTags().size()];
 			List<String> docTags = new ArrayList<String>(document.getTags());
@@ -162,8 +177,6 @@ public class WSDocument {
 			}
 		}
 
-		
-		
 		wsDoc.setId(document.getId());
 		wsDoc.setTitle(document.getTitle());
 		wsDoc.setSource(document.getSource());
@@ -180,7 +193,7 @@ public class WSDocument {
 		wsDoc.setExtendedAttributes(extendedAttributes);
 		String sourceDate = null;
 		if (document.getSourceDate() != null)
-			sourceDate = convertDateToString(document.getSourceDate());
+			sourceDate = AbstractService.convertDateToString(document.getSourceDate());
 		wsDoc.setSourceDate(sourceDate);
 		wsDoc.setImmutable(document.getImmutable());
 		if (document.getFolder() != null)
@@ -191,7 +204,7 @@ public class WSDocument {
 		wsDoc.setFileVersion(document.getFileVersion());
 		String date = null;
 		if (document.getDate() != null)
-			date = convertDateToString(document.getDate());
+			date = AbstractService.convertDateToString(document.getDate());
 		wsDoc.setDate(date);
 		wsDoc.setPublisher(document.getPublisher());
 		wsDoc.setPublisherId(document.getPublisherId());
@@ -247,7 +260,7 @@ public class WSDocument {
 		doc.setLocale(LocaleUtil.toLocale(language));
 		Date sdate = null;
 		if (StringUtils.isNotEmpty(sourceDate))
-			sdate = convertXMLToDate(sourceDate);
+			sdate = AbstractService.convertStringToDate(sourceDate);
 		doc.setSourceDate(sdate);
 		doc.setSource(source);
 		doc.setSourceAuthor(sourceAuthor);
@@ -270,7 +283,7 @@ public class WSDocument {
 		doc.setFileVersion(fileVersion);
 		Date newdate = null;
 		if (StringUtils.isNotEmpty(date))
-			newdate = convertXMLToDate(date);
+			newdate = AbstractService.convertStringToDate(date);
 		doc.setDate(newdate);
 		doc.setPublisher(publisher);
 		doc.setPublisherId(publisherId);
@@ -598,31 +611,67 @@ public class WSDocument {
 		this.language = language;
 	}
 
-	private Date convertXMLToDate(String date) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		try {
-			return df.parse(date);
-		} catch (ParseException e) {
-			df = new SimpleDateFormat("yyyy-MM-dd");
-			try {
-				return df.parse(date);
-			} catch (ParseException e1) {
-			}
-		}
-		return null;
+	public String getSummary() {
+		return summary;
 	}
 
-	private static String convertDateToString(Date date) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		try {
-			return df.format(date);
-		} catch (Exception e) {
-			df = new SimpleDateFormat("yyyy-MM-dd");
-			try {
-				return df.format(date);
-			} catch (Exception e1) {
-			}
-		}
-		return null;
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+	public int getDateCategory() {
+		return dateCategory;
+	}
+
+	public void setDateCategory(int dateCategory) {
+		this.dateCategory = dateCategory;
+	}
+
+	public int getDocType() {
+		return docType;
+	}
+
+	public void setDocType(int docType) {
+		this.docType = docType;
+	}
+
+	public Integer getScore() {
+		return score;
+	}
+
+	public void setScore(Integer score) {
+		this.score = score;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public int getLengthCategory() {
+		return lengthCategory;
+	}
+
+	public void setLengthCategory(int lengthCategory) {
+		this.lengthCategory = lengthCategory;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public long getSize() {
+		return size;
+	}
+
+	public void setSize(long size) {
+		this.size = size;
 	}
 }

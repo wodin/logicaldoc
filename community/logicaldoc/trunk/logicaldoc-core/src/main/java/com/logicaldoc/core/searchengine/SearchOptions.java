@@ -9,12 +9,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Locale;
-
-import com.logicaldoc.core.text.StringParser;
 
 /**
  * Search options
@@ -27,208 +21,41 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public static final int TYPE_FULLTEXT = 0;
 
-	public static final int TYPE_PARAMETRIC = 1;
+	public static final int TYPE_TAG = 1;
 
-	private int maxHits = 40;
+	protected int maxHits = 40;
 
 	private int type = TYPE_FULLTEXT;
 
-	private String expression = "";
+	protected String expression = "";
 
-	private String expressionLanguage = Locale.ENGLISH.getLanguage();
+	protected String name = "";
 
-	// Min size in bytes
-	private Long sizeMin = null;
+	protected String description = "";
 
-	// Max size in bytes
-	private Long sizeMax = null;
-
-	private String format = "";
-
-	private boolean searchInSubPath = false;
+	private Object[] parameters = null;
 
 	private long userId = -1;
 
-	private Long folderId = null;
+	public Object[] getParameters() {
+		return parameters;
+	}
 
-	private String[] fields = null;
-
-	private String language = null;
-
-	// Useful for parametric searches
-	private Object[] parameters = null;
-
-	private Date dateFrom = null;
-
-	private Date dateTo = null;
-
-	private Date sourceDateFrom = null;
-
-	private Date sourceDateTo = null;
-
-	private Date creationFrom = null;
-
-	private Date creationTo = null;
-
-	private Long template = null;
-
-	private String name = "";
-
-	private String description = "";
+	public void setParameters(Object[] parameters) {
+		this.parameters = parameters;
+	}
 
 	/** Creates a new instance of SearchOptions */
-	public SearchOptions() {
+	public SearchOptions(int type) {
+		this.type = type;
 	}
 
-	public Long getTemplate() {
-		return template;
-	}
-
-	public void setTemplate(Long template) {
-		this.template = template;
-	}
-
-	public String getFormat() {
-		return format;
-	}
-
-	public long getUserId() {
-		return userId;
-	}
-
-	public String[] getFields() {
-		return fields;
+	/** Necessary constructor for the Search Web Service */
+	protected SearchOptions() {
 	}
 
 	public void setExpression(String expr) {
 		this.expression = expr;
-	}
-
-	public void setExpression(String expr, String phrase, String any, String not) {
-		this.expression = expr;
-
-		if ((phrase != null) && !phrase.equals("")) {
-			expression += " \"" + phrase + "\"";
-		}
-
-		if ((any != null) && !any.equals("")) {
-			boolean first = true;
-			StringParser sp = new StringParser(any);
-			Collection<String> collany = sp.getWordTable();
-			Iterator<String> iter = collany.iterator();
-
-			while (iter.hasNext()) {
-				String word = iter.next();
-
-				if (!first) {
-					expression += " OR";
-				} else {
-					first = false;
-				}
-
-				expression += " " + word;
-			}
-		}
-
-		if ((not != null) && !not.equals("")) {
-			expression += " NOT (" + not + ")";
-		}
-	}
-
-	public void setFormat(String form) {
-		format = form;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-
-	public void setFields(String[] flds) {
-		fields = flds;
-	}
-
-	public void addField(String s) {
-		fields[fields.length] = s;
-	}
-
-	public Date getDateTo() {
-		return dateTo;
-	}
-
-	public void setDateTo(Date dateTo) {
-		this.dateTo = dateTo;
-	}
-
-	public Long getSizeMin() {
-		return sizeMin;
-	}
-
-	public void setSizeMin(Long sizeMin) {
-		this.sizeMin = sizeMin;
-	}
-
-	public Long getSizeMax() {
-		return sizeMax;
-	}
-
-	public void setSizeMax(Long sizeMax) {
-		this.sizeMax = sizeMax;
-	}
-
-	public Date getSourceDateFrom() {
-		return sourceDateFrom;
-	}
-
-	public void setSourceDateFrom(Date sourceDateFrom) {
-		this.sourceDateFrom = sourceDateFrom;
-	}
-
-	public Date getSourceDateTo() {
-		return sourceDateTo;
-	}
-
-	public void setSourceDateTo(Date sourceDateTo) {
-		this.sourceDateTo = sourceDateTo;
-	}
-
-	public boolean isSearchInSubPath() {
-		return searchInSubPath;
-	}
-
-	public void setSearchInSubPath(boolean searchInSubPath) {
-		this.searchInSubPath = searchInSubPath;
-	}
-
-	public Date getCreationTo() {
-		return creationTo;
-	}
-
-	public void setCreationTo(Date creationTo) {
-		this.creationTo = creationTo;
-	}
-
-	public Date getCreationFrom() {
-		return creationFrom;
-	}
-
-	public void setCreationFrom(Date creationFrom) {
-		this.creationFrom = creationFrom;
-	}
-
-	public Date getDateFrom() {
-		return dateFrom;
-	}
-
-	public void setDateFrom(Date dateFrom) {
-		this.dateFrom = dateFrom;
-	}
-
-	public Long getFolderId() {
-		return folderId;
-	}
-
-	public void setFolderId(Long folderId) {
-		this.folderId = folderId;
 	}
 
 	public int getType() {
@@ -237,14 +64,6 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 
 	public void setType(int type) {
 		this.type = type;
-	}
-
-	public Object[] getParameters() {
-		return parameters;
-	}
-
-	public void setParameters(Object[] parameters) {
-		this.parameters = parameters;
 	}
 
 	public static SearchOptions read(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -304,23 +123,15 @@ public class SearchOptions implements Serializable, Comparable<SearchOptions> {
 		return getType() == TYPE_FULLTEXT;
 	}
 
-	public String getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-
-	public String getExpressionLanguage() {
-		return expressionLanguage;
-	}
-
-	public void setExpressionLanguage(String expressionLanguage) {
-		this.expressionLanguage = expressionLanguage;
-	}
-
 	public String getExpression() {
 		return expression;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 }

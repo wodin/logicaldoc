@@ -9,12 +9,14 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.searchengine.Hit;
+import com.logicaldoc.core.searchengine.Search;
+import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.components.SortableList;
@@ -176,20 +178,25 @@ public class TagsBean extends SortableList {
 			try {
 				selectedWord = word;
 
-				long userId = SessionManagement.getUserId();
-
-				DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-				Set<Long> docIds = docDao.findDocIdByUserIdAndTag(userId, word);
-
 				reqop = "tag";
 				documents.clear();
 				tags.clear();
 
-				List<Long> ids = new ArrayList<Long>(docIds);
-				Collections.sort(ids);
+				SearchOptions opt = new SearchOptions(1);
+				opt.setUserId(SessionManagement.getUserId());
+				opt.setExpression(word);
 
-				for (Long id : ids) {
-					DocumentRecord record = new DocumentRecord(id, null, null);
+				Search lastSearch = Search.get(opt);
+				try {
+					lastSearch.search();
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				}
+
+				List<Hit> result = lastSearch.getHits();
+
+				for (Hit res : result) {
+					DocumentRecord record = new DocumentRecord(res.getDocId(), null, null);
 					if (!documents.contains(record)) {
 						documents.add(record);
 					}

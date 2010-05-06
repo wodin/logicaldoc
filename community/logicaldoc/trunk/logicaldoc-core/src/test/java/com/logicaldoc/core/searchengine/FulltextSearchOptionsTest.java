@@ -6,21 +6,17 @@ import java.io.IOException;
 
 import junit.framework.Assert;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
 
-public class SearchOptionsTest extends AbstractCoreTestCase {
-
-	protected static Log log = LogFactory.getLog(SearchOptionsTest.class);
+public class FulltextSearchOptionsTest extends AbstractCoreTestCase {
 
 	@Test
 	public void testWrite() throws FileNotFoundException, IOException, ClassNotFoundException {
 		File file = new File(tempDir, "query.ser");
 
-		SearchOptions opt = new SearchOptions();
+		FulltextSearchOptions opt = new FulltextSearchOptions();
 
 		opt.setLanguage("it");
 
@@ -34,7 +30,7 @@ public class SearchOptionsTest extends AbstractCoreTestCase {
 
 		opt.write(file);
 
-		SearchOptions opt2 = SearchOptions.read(file);
+		FulltextSearchOptions opt2 = (FulltextSearchOptions) SearchOptions.read(file);
 
 		Assert.assertEquals("prova test", opt2.getExpression());
 		Assert.assertEquals("italiano", opt2.getExpressionLanguage());

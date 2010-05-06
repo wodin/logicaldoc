@@ -1,6 +1,7 @@
 package com.logicaldoc.webservice.folder;
 
 import javax.jws.WebParam;
+import javax.jws.WebResult;
 import javax.jws.WebService;
 
 /**
@@ -20,6 +21,7 @@ public interface FolderService {
 	 * @return The value object containing the folder's metadata.
 	 * @throws Exception
 	 */
+	@WebResult(name = "folder")
 	public WSFolder create(@WebParam(name = "sid") String sid, @WebParam(name = "folder") WSFolder folder)
 			throws Exception;;
 
@@ -62,6 +64,7 @@ public interface FolderService {
 	 * @return A value object containing the folder's metadata.
 	 * @throws Exception
 	 */
+	@WebResult(name = "folder")
 	public WSFolder getFolder(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
 
@@ -84,6 +87,7 @@ public interface FolderService {
 	 * @return Array of folders contained in the folder
 	 * @throws Exception
 	 */
+	@WebResult(name = "folder")
 	public WSFolder[] list(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
 }

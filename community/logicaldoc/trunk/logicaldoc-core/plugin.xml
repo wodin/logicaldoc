@@ -173,6 +173,11 @@
     <parameter-def id="position" />
   </extension-point>
 
+  <extension-point id="Search">
+    <parameter-def id="type" />
+    <parameter-def id="class" />
+  </extension-point>
+
   <extension plugin-id="logicaldoc-core" point-id="Authentication" id="BasicAuthentication">
     <parameter id="providerId" value="BasicAuthentication" />
     <parameter id="position" value="1" />
@@ -448,11 +453,11 @@
     <parameter id="icon" value="actions_bookmarks.png" />
     <parameter id="confirm" value="" />
   </extension>
-  
+
   <extension plugin-id="logicaldoc-core" point-id="DocumentToolbar" id="indexToolbar">
     <parameter id="action" value="documentsRecordsManager.showIndexOptions" />
     <parameter id="link" value="" />
-    <parameter id="target" value="" />    
+    <parameter id="target" value="" />
     <parameter id="title" value="document.index.settings" />
     <parameter id="rendered" value="documentNavigation.selectedDir.writeEnabled" />
     <parameter id="position" value="120" />
@@ -460,4 +465,14 @@
     <parameter id="confirm" value="" />
   </extension>
   <!-- end Document Toolbar -->
+  
+  <extension plugin-id="logicaldoc-core" point-id="Search" id="fulltextSearch">
+    <parameter id="type" value="0" />
+    <parameter id="class" value="com.logicaldoc.core.searchengine.FulltextSearch" />
+  </extension>
+  
+  <extension plugin-id="logicaldoc-core" point-id="Search" id="tagSearch">
+    <parameter id="type" value="1" />
+    <parameter id="class" value="com.logicaldoc.core.searchengine.TagSearch" />
+  </extension>
 </plugin>

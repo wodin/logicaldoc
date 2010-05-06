@@ -39,9 +39,9 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
+import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Search;
-import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
@@ -463,7 +463,7 @@ public class DmsServiceImpl implements DmsService {
 		User user = validateSession(sid);
 
 		SearchResult searchResult = new SearchResult();
-		SearchOptions opt = new SearchOptions();
+		FulltextSearchOptions opt = new FulltextSearchOptions();
 		ArrayList<String> fields = new ArrayList<String>();
 		fields.add(LuceneDocument.FIELD_CONTENT);
 		fields.add(LuceneDocument.FIELD_TAGS);
@@ -505,12 +505,14 @@ public class DmsServiceImpl implements DmsService {
 
 		// Execute the search
 		opt.setMaxHits(maxHits);
-		Search lastSearch = new Search(opt);
-		List<com.logicaldoc.core.searchengine.Result> tmp = lastSearch.search();
+
+		Search lastSearch = Search.get(opt);
+		lastSearch.search();
+		List<com.logicaldoc.core.searchengine.Hit> tmp = lastSearch.getHits();
 
 		// Prepares the result array
 		ArrayList<Result> result = new ArrayList<Result>();
-		for (com.logicaldoc.core.searchengine.Result res : tmp) {
+		for (com.logicaldoc.core.searchengine.Hit res : tmp) {
 			Result newRes = new Result();
 			newRes.setId(res.getDocId());
 			newRes.setDate(convertDateToXML(res.getDate()));

@@ -31,8 +31,9 @@ import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
+import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.LuceneDocument;
-import com.logicaldoc.core.searchengine.Result;
+import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.Menu;
@@ -384,9 +385,9 @@ public class SearchForm extends SortableList {
 	 * 
 	 * @return
 	 */
-	public Map<String, Result> getResultMap() {
-		Map<String, Result> map = new HashMap<String, Result>();
-		for (Result result : lastSearch.getResults()) {
+	public Map<String, Hit> getResultMap() {
+		Map<String, Hit> map = new HashMap<String, Hit>();
+		for (Hit result : lastSearch.getHits()) {
 			map.put(Long.toString(result.getDocId()), result);
 		}
 		return map;
@@ -450,7 +451,7 @@ public class SearchForm extends SortableList {
 		try {
 			long userId = SessionManagement.getUserId();
 
-			SearchOptions opt = new SearchOptions();
+			FulltextSearchOptions opt = new FulltextSearchOptions();
 			ArrayList<String> fields = new ArrayList<String>();
 
 			if (isContent()) {
@@ -545,13 +546,19 @@ public class SearchForm extends SortableList {
 
 	public void search(SearchOptions opt) {
 		opt.setMaxHits(maxHits);
-		lastSearch = new Search(opt);
+		lastSearch = Search.get(opt);
 
-		List<Result> result = lastSearch.search();
+		try {
+			lastSearch.search();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		List<Hit> result = lastSearch.getHits();
 
 		List<DocumentResult> docResult = new ArrayList<DocumentResult>();
 
-		for (Result myResult : result) {
+		for (Hit myResult : result) {
 			if (excludeFromResult != null && excludeFromResult.longValue() == myResult.getDocId())
 				continue;
 			DocumentResult dr = new DocumentResult(myResult);
@@ -588,7 +595,7 @@ public class SearchForm extends SortableList {
 			long docId;
 
 			if (map.containsKey("entry")) {
-				Result entry = (Result) map.get("entry");
+				Hit entry = (Hit) map.get("entry");
 				docId = entry.getDocId();
 			} else {
 				DocumentRecord entry = (DocumentRecord) map.get("documentRecord");

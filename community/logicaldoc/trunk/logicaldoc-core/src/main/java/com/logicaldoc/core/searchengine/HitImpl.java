@@ -10,10 +10,12 @@ import com.logicaldoc.core.util.IconSelector;
  * 
  * @author Michael Scholz, Marco Meschieri, Alessandro Gasparini
  */
-public class ResultImpl implements Serializable, Result {
+public class HitImpl implements Serializable, Hit {
 	private static final long serialVersionUID = 1L;
 
-	private Long docId = new Long(0);
+	private long docId = 0;
+
+	private long folderId = 0;
 
 	private String title = "";
 
@@ -35,21 +37,17 @@ public class ResultImpl implements Serializable, Result {
 
 	private Date creation = null;
 
-	private Integer length = new Integer(0);
-
-	private Integer score = new Integer(0);
-
-	private Integer red = new Integer(0);
+	private int score = 0;
 
 	private String source;
 
 	private String path;
 
-	public ResultImpl() {
+	public HitImpl() {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getDocId()
+	 * @see com.logicaldoc.core.searchengine.Hit.Result#getDocId()
 	 */
 	public long getDocId() {
 		return docId;
@@ -60,28 +58,28 @@ public class ResultImpl implements Serializable, Result {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getTitle()
+	 * @see com.logicaldoc.core.searchengine.Hit.Result#getTitle()
 	 */
 	public String getTitle() {
 		return title;
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getSummary()
+	 * @see com.logicaldoc.core.searchengine.Hit.Result#getSummary()
 	 */
 	public String getSummary() {
 		return summary;
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getType()
+	 * @see com.logicaldoc.core.searchengine.Hit.Result#getType()
 	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getIcon()
+	 * @see com.logicaldoc.core.searchengine.Hit.Result#getIcon()
 	 */
 	public String getIcon() {
 		String icon = IconSelector.selectIcon("");
@@ -93,24 +91,22 @@ public class ResultImpl implements Serializable, Result {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getSize()
+	 * @see com.logicaldoc.core.searchengine.Hit.Result#getSize()
 	 */
 	public long getSize() {
 		return size;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getGreen()
-	 */
-	public Integer getScore() {
+	public int getScore() {
 		return score;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getRed()
-	 */
-	public Integer getRed() {
-		return red;
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public void setDocRef(long docRef) {
+		this.docRef = docRef;
 	}
 
 	public void setTitle(String title) {
@@ -156,143 +152,19 @@ public class ResultImpl implements Serializable, Result {
 		this.size = size;
 	}
 
-	public void createScore(float score) {
-		float temp = score * 100;
-		int tgreen = Math.round(temp);
-
-		if (tgreen < 1) {
-			tgreen = 1;
-		}
-
-		this.score = new Integer(tgreen);
-		temp = 100 - (score * 100);
-
-		int tred = Math.round(temp);
-
-		if (tred > 99) {
-			tred = 99;
-		}
-
-		red = new Integer(tred);
-	}
-
-	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#isRelevant(com.logicaldoc.core.searchengine.search.SearchOptions,
-	 *      java.util.Date)
-	 */
-	public boolean isRelevant(SearchOptions opt) {
-		boolean result = true;
-
-		if ((opt.getFormat() != null) && !opt.getFormat().equals("all")) {
-			if (!type.toLowerCase().equals(opt.getFormat())) {
-				result = false;
-			}
-		}
-
-		if (opt.getSizeMin() != null && size < opt.getSizeMin().longValue())
-			result = false;
-
-		if (opt.getSizeMax() != null && size > opt.getSizeMax().longValue())
-			result = false;
-
-		if (opt.getCreationFrom() != null) {
-			if (creation.before(opt.getCreationFrom()))
-				result = false;
-		}
-
-		if (opt.getCreationTo() != null) {
-			if (creation.after(opt.getDateTo()))
-				result = false;
-		}
-
-		if (opt.getDateTo() != null) {
-			if (date.after(opt.getDateTo()))
-				result = false;
-		}
-
-		if (opt.getDateFrom() != null && date != null) {
-			if (date.before(opt.getDateFrom()))
-				result = false;
-		}
-
-		if (opt.getSourceDateFrom() != null && sourceDate != null) {
-			if (sourceDate.before(opt.getSourceDateFrom()))
-				result = false;
-		}
-
-		if (opt.getSourceDateTo() != null && sourceDate != null) {
-			if (sourceDate.after(opt.getSourceDateTo()))
-				result = false;
-		}
-
-		return result;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getLengthCategory()
-	 */
-	public int getLengthCategory() {
-		int len = length.intValue();
-
-		if (len > 60000) {
-			return 5;
-		}
-
-		if (len > 18000) {
-			return 4;
-		}
-
-		if (len > 3000) {
-			return 3;
-		}
-
-		if (len > 600) {
-			return 2;
-		}
-
-		return 1;
-	}
-
 	public void setDate(Date d) {
 		date = d;
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getDate()
+	 * @see com.logicaldoc.core.searchengine.Hit.Result#getDate()
 	 */
 	public Date getDate() {
 		return date;
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getDateCategory()
-	 */
-	public int getDateCategory() {
-		long diff = new Date().getTime() - date.getTime();
-		long days = diff / 1000 / 60 / 60 / 24; // 1000-sec , 60-min , 60-h ,
-		// 24-day
-
-		if (days < 8) {
-			return 0;
-		}
-
-		if (days < 29) {
-			return 1;
-		}
-
-		if (days < 92) {
-			return 2;
-		}
-
-		if (days < 366) {
-			return 3;
-		}
-
-		return 4;
-	}
-
-	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getSourceDate()
+	 * @see com.logicaldoc.core.searchengine.Hit.Result#getSourceDate()
 	 */
 	public Date getSourceDate() {
 		return sourceDate;
@@ -303,7 +175,7 @@ public class ResultImpl implements Serializable, Result {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.search.Result#getDocType()
+	 * @see com.logicaldoc.core.searchengine.Hit.Result#getDocType()
 	 */
 	public int getDocType() {
 		if (type.equals("PDF") || type.equals("DOC") || type.equals("TXT") || type.equals("RTF") || type.equals("HTML")
@@ -347,7 +219,7 @@ public class ResultImpl implements Serializable, Result {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.Result#getSource()
+	 * @see com.logicaldoc.core.searchengine.Hit#getSource()
 	 */
 	public String getSource() {
 		return source;
@@ -358,7 +230,7 @@ public class ResultImpl implements Serializable, Result {
 	}
 
 	/**
-	 * @see com.logicaldoc.core.searchengine.Result#getPath()
+	 * @see com.logicaldoc.core.searchengine.Hit#getPath()
 	 */
 	public String getPath() {
 		return path;
@@ -366,5 +238,17 @@ public class ResultImpl implements Serializable, Result {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public long getFolderId() {
+		return folderId;
+	}
+
+	public void setFolderId(long folderId) {
+		this.folderId = folderId;
 	}
 }

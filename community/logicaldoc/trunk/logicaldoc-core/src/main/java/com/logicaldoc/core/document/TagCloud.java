@@ -23,6 +23,10 @@ public class TagCloud {
 		this.occurence = occurence;
 	}
 
+	/** Necessary constructor for the Search Web Service */
+	public TagCloud() {
+	}
+
 	public String getTag() {
 		return tag;
 	}

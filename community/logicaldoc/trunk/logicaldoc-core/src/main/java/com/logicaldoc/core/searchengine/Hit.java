@@ -6,9 +6,10 @@ import java.util.Date;
  * Search result
  * 
  * @author Marco Meschieri - Logical Objects
- * @since 3.5
+ * @since 5.2
  */
-public interface Result {
+public interface Hit {
+
 	public long getDocId();
 
 	// If the document is a shortcut, this is the original document id
@@ -27,19 +28,11 @@ public interface Result {
 	// The file size in bytes
 	public long getSize();
 
-	public Integer getScore();
-
-	public Integer getRed();
-
-	public boolean isRelevant(SearchOptions opt);
-
-	public int getLengthCategory();
+	public int getScore();
 
 	public Date getDate();
 
 	public Date getCreation();
-
-	public int getDateCategory();
 
 	public Date getSourceDate();
 
@@ -48,6 +41,8 @@ public interface Result {
 	public String getSource();
 
 	public String getPath();
+
+	public long getFolderId();
 
 	public void setTitle(String title);
 
@@ -71,5 +66,11 @@ public interface Result {
 
 	public void setPath(String path);
 
-	public void createScore(float score);
+	public void setScore(int score);
+
+	public void setIcon(String icon);
+
+	public void setFolderId(long folderId);
+
+	public void setDocRef(long docRef);
 }
