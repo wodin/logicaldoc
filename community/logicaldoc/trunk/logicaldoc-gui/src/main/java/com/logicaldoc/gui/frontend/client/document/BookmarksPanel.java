@@ -88,7 +88,7 @@ public class BookmarksPanel extends VLayout {
 		list.setFields(icon, name, description);
 		list.setDataSource(BookmarksDS.get());
 		list.setShowFilterEditor(true);
-		list.setFilterOnKeypress(true); 
+		list.setFilterOnKeypress(true);
 		addMember(list);
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
@@ -104,7 +104,7 @@ public class BookmarksPanel extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
-				DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttributeAsString("docId")));
+				DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttributeAsString("docId")), true);
 			}
 
 		});

@@ -102,4 +102,25 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 		user.setGroups(new GUIGroup[] { group });
 		return user;
 	}
+
+	@Override
+	public void deleteGroup(String sid, long groupId) {
+
+	}
+
+	@Override
+	public GUIGroup getGroup(String sid, long groupId) {
+		GUIGroup group = new GUIGroup();
+		group.setId(groupId);
+		group.setName("Group " + groupId);
+		group.setDescription("Description " + groupId);
+		return group;
+	}
+
+	@Override
+	public GUIGroup saveGroup(String sid, GUIGroup group) {
+		if (group.getId() == 0)
+			group.setId(9999);
+		return group;
+	}
 }

@@ -35,5 +35,12 @@ public class SecurityMenu extends VLayout {
 				AdminPanel.get().setContent(new UsersPanel());
 			}
 		});
+
+		groups.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new GroupsPanel());
+			}
+		});
 	}
 }

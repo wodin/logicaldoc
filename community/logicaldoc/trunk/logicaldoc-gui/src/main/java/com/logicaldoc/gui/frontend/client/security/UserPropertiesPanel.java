@@ -47,8 +47,10 @@ public class UserPropertiesPanel extends HLayout {
 	private ChangedHandler changedHandler;
 
 	public UserPropertiesPanel(GUIUser user, ChangedHandler changedHandler) {
-		if (user == null)
+		if (user == null) {
 			setMembers(UsersPanel.SELECT_USER);
+			return;
+		}
 
 		this.user = user;
 		this.changedHandler = changedHandler;
@@ -197,7 +199,7 @@ public class UserPropertiesPanel extends HLayout {
 		final ComboBoxItem group = new ComboBoxItem("group");
 		group.setTitle(I18N.getMessage("group"));
 		group.setPickListWidth(250);
-		group.setOptionDataSource(GroupsDS.getInstance());
+		group.setOptionDataSource(GroupsDS.get());
 		group.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {

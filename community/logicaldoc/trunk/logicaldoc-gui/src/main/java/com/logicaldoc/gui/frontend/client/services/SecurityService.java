@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -52,9 +53,24 @@ public interface SecurityService extends RemoteService {
 	 * Creates or updates a user
 	 */
 	public GUIUser saveUser(String sid, GUIUser user);
-	
+
 	/**
 	 * Loads a given user from the database
 	 */
 	public GUIUser getUser(String sid, long userId);
+
+	/**
+	 * Loads a given group from the database
+	 */
+	public GUIGroup getGroup(String sid, long groupId);
+
+	/**
+	 * Creates or updates a group
+	 */
+	public GUIGroup saveGroup(String sid, GUIGroup group);
+
+	/**
+	 * Deletes a given group
+	 */
+	public void deleteGroup(String sid, long groupId);
 }
