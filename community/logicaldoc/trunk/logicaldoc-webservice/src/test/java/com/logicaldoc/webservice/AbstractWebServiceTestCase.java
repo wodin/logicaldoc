@@ -1,13 +1,17 @@
 package com.logicaldoc.webservice;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
 import javax.sql.DataSource;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
@@ -18,8 +22,6 @@ import org.junit.Before;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import com.logicaldoc.util.io.FileUtil;
 
 /**
  * Abstract test case for the Web Service module. This class initialises a test
@@ -39,23 +41,29 @@ public class AbstractWebServiceTestCase extends TestCase {
 
 	protected File coreSchemaFile;
 
-	protected File webServiceSchemaFile;
+	protected File wsSchemaFile;
 
 	protected File dataFile;
 
 	private String userHome;
 
 	static {
-		System.setProperty("LOGICALDOC_REPOSITORY", "target");
+		System.setProperty("LOGICALDOC_HOME", "target");
 	}
 
 	@Before
-	public void setUp() throws Exception {
-		tempDir = new File("target/tmp");
+	protected void setUp() throws Exception {
+		super.setUp();
 
 		userHome = System.getProperty("user.home");
 		System.setProperty("user.home", tempDir.getPath());
-		context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
+
+		try {
+			context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+
 		createTestDirs();
 		createTestDatabase();
 	}
@@ -69,22 +77,49 @@ public class AbstractWebServiceTestCase extends TestCase {
 		}
 		tempDir.mkdirs();
 
+		assertTrue(tempDir.exists() && tempDir.isDirectory());
+
 		coreSchemaFile = new File(tempDir, "logicaldoc-core.sql");
-		webServiceSchemaFile = new File(tempDir, "logicaldoc-webservice.sql");
+		wsSchemaFile = new File(tempDir, "logicaldoc-webservice.sql");
 		dataFile = new File(tempDir, "data.sql");
 
 		// Copy sql files
 		copyResource("/sql/logicaldoc-core.sql", coreSchemaFile.getCanonicalPath());
-		copyResource("/sql/logicaldoc-webservice.sql", webServiceSchemaFile.getCanonicalPath());
+		copyResource("/sql/logicaldoc-webservice.sql", wsSchemaFile.getCanonicalPath());
 		copyResource("/data.sql", dataFile.getCanonicalPath());
 	}
 
 	protected void copyResource(String classpath, String destinationPath) throws IOException {
-		FileUtil.copyResource(classpath, new File(destinationPath));
+		copyResource(classpath, new File(destinationPath));
+	}
+
+	/**
+	 * Copy a resource from the classpath into a file
+	 * 
+	 * @param classpath The classpath specification
+	 * @param out The target file
+	 * @throws IOException
+	 */
+	protected void copyResource(String classpath, File out) throws IOException {
+		InputStream is = new BufferedInputStream(this.getClass().getResource(classpath).openStream());
+		OutputStream os = new BufferedOutputStream(new FileOutputStream(out));
+		try {
+			for (;;) {
+				int b = is.read();
+				if (b == -1)
+					break;
+				os.write(b);
+			}
+		} finally {
+			is.close();
+			os.close();
+		}
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	protected void tearDown() throws Exception {
+		super.tearDown();
+
 		destroyDatabase();
 		((AbstractApplicationContext) context).close();
 
@@ -99,16 +134,14 @@ public class AbstractWebServiceTestCase extends TestCase {
 		Connection con = null;
 		try {
 			con = ds.getConnection();
-			con.createStatement().execute("SHUTDOWN IMMEDIATELY");
+			con.createStatement().execute("shutdown");
 		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
 			try {
 				if (con != null)
 					con.close();
 			} catch (Exception ex) {
-				ex.printStackTrace();
 			}
+			e.printStackTrace();
 		}
 	}
 
@@ -128,7 +161,7 @@ public class AbstractWebServiceTestCase extends TestCase {
 			// Load schema
 			SqlFile sqlFile = new SqlFile(coreSchemaFile, false, null);
 			sqlFile.execute(con, false);
-			sqlFile = new SqlFile(webServiceSchemaFile, false, null);
+			sqlFile = new SqlFile(wsSchemaFile, false, null);
 			sqlFile.execute(con, false);
 
 			// Load data
@@ -139,11 +172,26 @@ public class AbstractWebServiceTestCase extends TestCase {
 			ResultSet rs = con.createStatement().executeQuery("select * from ld_menu where ld_id=1");
 			rs.next();
 
-			Assert.assertEquals(1, rs.getInt(1));
+			assertEquals(1, rs.getInt(1));
 		} finally {
 			if (con != null)
 				con.close();
 		}
 	}
 
+	// To avoid error on maven test
+	public void testDummy() throws Exception {
+		Connection con = null;
+		try {
+			con = ds.getConnection();
+			// Test the connection
+			ResultSet rs = con.createStatement().executeQuery("select * from ld_menu where ld_id=1");
+			rs.next();
+
+			assertEquals(1, rs.getInt(1));
+		} finally {
+			if (con != null)
+				con.close();
+		}
+	}
 }
