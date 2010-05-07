@@ -25,17 +25,23 @@ public class MockUsersDataServlet extends HttpServlet {
 		response.setHeader("Expires", "0");
 
 		PrintWriter writer = response.getWriter();
-		writer.write("<list>");
+		writer.print("<list>");
 		
-		// Add 5 dummy users
-		for (int i = 0; i < 5; i++) {
+		// Add 15 dummy users
+		for (int i = 0; i < 15; i++) {
 			writer.print("<user>");
 			writer.print("<id>" + i + "</id>");
-			writer.print("<groupId>" + (-i) + "</groupId>");
 			writer.print("<username>User " + i + "</username>");
 			writer.print("<label>Marco Meschieri " + i + "</label>");
+			writer.print("<groupId>" + (-i) + "</groupId>");
+			writer.print("<active>0</active>");
+			writer.print("<name>Meschieri</name>");
+			writer.print("<firstName>Marco</firstName>");
+			writer.print("<email>m.meschieri@logicalobjects.it</email>");
+			writer.print("<phone>059 2345634</phone>");
+			writer.print("<cell>338 923453245</cell>");
 			writer.print("</user>");
 		}
-		writer.write("</list>");
+		writer.print("</list>");
 	}
 }

@@ -5,7 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
-import com.logicaldoc.gui.common.client.validators.EmailsValidator;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.panels.FooterStatus;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -66,18 +66,11 @@ public class EmailDialog extends Window {
 		emailForm.setWidth(350);
 		emailForm.setMargin(5);
 
-		TextItem recipients = new TextItem();
-		recipients.setName("recipients");
-		recipients.setTitle(I18N.getMessage("recipients"));
-		recipients.setRequired(true);
-		recipients.setValidators(new EmailsValidator());
+		TextItem recipients = ItemFactory.newEmailItem("recipients", I18N.getMessage("recipients"), true);
 		recipients.setWidth(300);
+		recipients.setRequired(true);
 
-		TextItem cc = new TextItem();
-		cc.setName("cc");
-		cc.setTitle(I18N.getMessage("cc"));
-		cc.setValidators(new EmailsValidator());
-		cc.setWidth(300);
+		TextItem cc = ItemFactory.newEmailItem("cc", I18N.getMessage("cc"), true);
 
 		TextItem object = new TextItem();
 		object.setName("object");

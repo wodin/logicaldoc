@@ -3,9 +3,12 @@ package com.logicaldoc.gui.common.client.util;
 import java.util.LinkedHashMap;
 
 import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.validators.EmailValidator;
+import com.logicaldoc.gui.common.client.validators.EmailsValidator;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 
 /**
  * Collection of useful factory methods for form items.
@@ -65,12 +68,26 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newLanguageSelector(String name, boolean withEmpty) {
-		SelectItem languageItem = new SelectItem();
-		languageItem.setValueMap(I18N.getSupportedLanguages(withEmpty));
-		languageItem.setName(name);
-		languageItem.setTitle(I18N.getMessage("language"));
-		languageItem.setWrapTitle(false);
-		languageItem.setDefaultValue("en");
-		return languageItem;
+		SelectItem item = new SelectItem();
+		item.setValueMap(I18N.getSupportedLanguages(withEmpty));
+		item.setName(name);
+		item.setTitle(I18N.getMessage("language"));
+		item.setWrapTitle(false);
+		item.setDefaultValue("en");
+		return item;
+	}
+
+	public static TextItem newEmailItem(String name, String title, boolean multiple) {
+		TextItem item = new TextItem();
+		item.setName(name);
+		if (title != null)
+			item.setTitle(title);
+		else
+			item.setShowTitle(false);
+		if (multiple)
+			item.setValidators(new EmailsValidator());
+		else
+			item.setValidators(new EmailValidator());
+		return item;
 	}
 }

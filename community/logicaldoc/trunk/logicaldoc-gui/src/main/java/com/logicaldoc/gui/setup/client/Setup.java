@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.common.client.validators.EmailValidator;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.gui.setup.client.services.SetupServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -229,11 +228,9 @@ public class Setup implements EntryPoint {
 		valueMap.put(Constants.SMTP_SECURITY_TLS_IF_AVAILABLE, "TLS if available");
 		smtpConnectionSecurity.setValueMap(valueMap);
 
-		TextItem smtpSender = new TextItem();
-		smtpSender.setTitle(I18N.getMessage("sender"));
-		smtpSender.setName(SMTP_SENDER);
+		TextItem smtpSender = ItemFactory.newEmailItem(SMTP_SENDER, I18N.getMessage("sender"), false);
+		smtpSender.setWidth(300);
 		smtpSender.setWrapTitle(false);
-		smtpSender.setValidators(new EmailValidator());
 
 		smtpForm.setFields(smtpHost, smtpPort, smtpUsername, smtpPassword, smtpSender, smtpConnectionSecurity,
 				smtpSecureAuth);
@@ -246,11 +243,11 @@ public class Setup implements EntryPoint {
 	private Tab setupLanguage(final ValuesManager vm) {
 		Tab languageTab = new Tab();
 		languageTab.setTitle(I18N.getMessage(LANGUAGE));
-		
+
 		SelectItem languageItem = ItemFactory.newLanguageSelector(LANGUAGE, false);
 		languageItem.setTitle(I18N.getMessage("defaultlang"));
 		languageItem.setRequired(true);
-		
+
 		final DynamicForm languageForm = new DynamicForm();
 		languageForm.setID("languageForm");
 		languageForm.setValuesManager(vm);

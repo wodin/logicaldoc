@@ -13,6 +13,8 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
+import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
@@ -26,6 +28,7 @@ import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -39,15 +42,32 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 	private DynamicForm form2 = new DynamicForm();
 
+	private VLayout container = new VLayout();
+
+	private HLayout formsContainer = new HLayout();
+
 	private VLayout rightPanel = new VLayout();
 
 	private ValuesManager vm = new ValuesManager();
+
+	private Canvas path;
 
 	public StandardPropertiesPanel(GUIDocument document, ChangedHandler changedHandler) {
 		super(document, changedHandler);
 		setWidth100();
 		setHeight100();
-		setMembersMargin(20);
+		container.setWidth100();
+		container.setMembersMargin(5);
+		addMember(container);
+
+		path = new Label(I18N.getMessage("path") + ": " + document.getPathExtended());
+		path.setWidth100();
+		path.setHeight(15);
+
+		formsContainer.setWidth100();
+		formsContainer.setMembersMargin(10);
+		
+		container.setMembers(path, formsContainer);
 		refresh();
 	}
 
@@ -58,18 +78,13 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		if (form1 != null)
 			form1.destroy();
 
-		if (contains(form1))
-			removeChild(form1);
+		if (formsContainer.contains(form1))
+			formsContainer.removeChild(form1);
+
 		form1 = new DynamicForm();
 		form1.setNumCols(2);
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.TOP);
-
-		StaticTextItem path = new StaticTextItem("path", I18N.getMessage("path"));
-		path.setValue(document.getPathExtended());
-		path.setWrap(false);
-		path.setTitleOrientation(TitleOrientation.LEFT);
-		path.setEndRow(true);
 
 		TextItem id = new TextItem();
 		id.setTitle(I18N.getMessage("id"));
@@ -125,8 +140,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		filename.setValue(document.getFileName());
 		filename.setDisabled(true);
 
-		form1.setItems(path, id, customId, version, title, fileVersion, filename, creation, date, creator, publisher);
-		addMember(form1);
+		form1.setItems(id, customId, version, title, fileVersion, filename, creation, date, creator, publisher);
+		formsContainer.addMember(form1);
 
 		/*
 		 * Prepare the second form for the tags
@@ -176,7 +191,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		}
 
 		form2.setItems(items.toArray(new FormItem[0]));
-		addMember(form2);
+		formsContainer.addMember(form2);
 
 		prepareRightPanel();
 	}
@@ -199,7 +214,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		rightPanel.addMember(preview);
 
-		addMember(rightPanel);
+		formsContainer.addMember(rightPanel);
 	}
 
 	@SuppressWarnings("unchecked")
