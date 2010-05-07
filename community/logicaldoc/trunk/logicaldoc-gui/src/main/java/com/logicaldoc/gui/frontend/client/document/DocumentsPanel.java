@@ -108,7 +108,14 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		Main.get().getMainPanel().selectDocumentsTab();
 	}
 
-	public void onSelectedDocument(long docId) {
+	/**
+	 * Shows the document details
+	 * 
+	 * @param docId
+	 * @param clearSelection true if you want to deselect all records in the
+	 *        list
+	 */
+	public void onSelectedDocument(long docId, final boolean clearSelection) {
 		if (!(detailPanel instanceof DocumentDetailsPanel)) {
 			details.removeMember(detailPanel);
 			detailPanel.destroy();
@@ -129,6 +136,8 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 					((DocumentDetailsPanel) detailPanel).setDocument(result);
 					details.redraw();
 				}
+				if (clearSelection)
+					((DocumentsListPanel) listingPanel).getList().deselectAllRecords();
 			}
 		});
 	}
@@ -154,7 +163,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		listing.redraw();
 
 		if (hiliteDocId != null)
-			onSelectedDocument(hiliteDocId);
+			onSelectedDocument(hiliteDocId, false);
 		else {
 			detailPanel.destroy();
 			detailPanel = new FolderDetailsPanel(folder);

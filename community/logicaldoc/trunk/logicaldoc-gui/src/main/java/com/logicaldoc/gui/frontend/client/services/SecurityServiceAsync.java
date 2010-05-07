@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -19,4 +20,10 @@ public interface SecurityServiceAsync {
 	void saveUser(String sid, GUIUser user, AsyncCallback<GUIUser> callback);
 
 	void getUser(String sid, long userId, AsyncCallback<GUIUser> callback);
+
+	void getGroup(String sid, long groupId, AsyncCallback<GUIGroup> callback);
+
+	void deleteGroup(String sid, long groupId, AsyncCallback<Void> callback);
+
+	void saveGroup(String sid, GUIGroup group, AsyncCallback<GUIGroup> callback);
 }

@@ -30,7 +30,7 @@ public class GroupsDS extends DataSource {
 		setClientOnly(true);
 	}
 
-	public static GroupsDS getInstance() {
+	public static GroupsDS get() {
 		if (instance == null)
 			instance = new GroupsDS();
 		return instance;

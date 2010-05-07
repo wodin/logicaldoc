@@ -190,7 +190,7 @@ public class SecurityPanel extends FolderDetailTab {
 		group.setDisplayField("name");
 		group.setPickListWidth(300);
 		group.setPickListFields(name, description);
-		group.setOptionDataSource(GroupsDS.getInstance());
+		group.setOptionDataSource(GroupsDS.get());
 		groupForm.setItems(group);
 
 		buttons.addMember(groupForm);

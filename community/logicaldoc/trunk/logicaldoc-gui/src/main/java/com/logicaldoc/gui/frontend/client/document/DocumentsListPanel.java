@@ -156,7 +156,7 @@ public class DocumentsListPanel extends VLayout {
 		list.setCanFreezeFields(true);
 		list.setAutoFetchData(true);
 		list.setSelectionType(SelectionStyle.MULTIPLE);
-		list.setFilterOnKeypress(true);  
+		list.setFilterOnKeypress(true);
 		dataSource = new DocumentsDS(folder.getId(), maxRows);
 		list.setDataSource(dataSource);
 		list.setFields(indexed, locked, immutable, icon, title, size, lastModified, version, publisher, published,
@@ -185,7 +185,9 @@ public class DocumentsListPanel extends VLayout {
 		list.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChanged(SelectionEvent event) {
-				DocumentsPanel.get().onSelectedDocument(Long.parseLong(event.getRecord().getAttribute("id")));
+				ListGridRecord record = list.getSelectedRecord();
+				if (record != null)
+					DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttribute("id")), false);
 			}
 		});
 
