@@ -133,6 +133,12 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>UserHistoryData</servlet-name>
+		<servlet-class>
+			com.logicaldoc.gui.frontend.mock.MockUserHistoryDataServlet</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>LanguagesData</servlet-name>
 		<servlet-class>
 			com.logicaldoc.gui.frontend.mock.MockLanguagesDataServlet</servlet-class>
@@ -270,6 +276,11 @@
 	<servlet-mapping>
 		<servlet-name>FolderHistoryData</servlet-name>
 		<url-pattern>/data/folderhistory.xml</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>FolderHistoryData</servlet-name>
+		<url-pattern>/data/userhistory.xml</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

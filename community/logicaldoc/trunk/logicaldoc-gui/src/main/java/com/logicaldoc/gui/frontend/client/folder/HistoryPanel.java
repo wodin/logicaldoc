@@ -36,13 +36,16 @@ public class HistoryPanel extends FolderDetailTab {
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
 		ListGridField comment = new ListGridField("comment", I18N.getMessage("comment"));
+		ListGridField title = new ListGridField("title", I18N.getMessage("title"));
+		ListGridField path = new ListGridField("path", I18N.getMessage("path"));
+		ListGridField sid = new ListGridField("sid", I18N.getMessage("sid"));
 
 		listGrid = new ListGrid();
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
 		dataSource = new FolderHistoryDS(folder.getId());
 		listGrid.setDataSource(dataSource);
-		listGrid.setFields(user, event, date, comment);
+		listGrid.setFields(user, event, date, comment, title, path, sid);
 		addMember(listGrid);
 
 		listGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {

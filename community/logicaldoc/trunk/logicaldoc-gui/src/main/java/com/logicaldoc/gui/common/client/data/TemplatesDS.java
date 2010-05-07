@@ -17,15 +17,15 @@ public class TemplatesDS extends DataSource {
 	private TemplatesDS(boolean withEmpty) {
 		setTitleField("template");
 		setRecordXPath("/list/template");
-		DataSourceTextField idField = new DataSourceTextField("id");
-		idField.setPrimaryKey(true);
-		DataSourceTextField nameField = new DataSourceTextField("name");
-		setFields(idField, nameField);
+		DataSourceTextField id = new DataSourceTextField("id");
+		id.setPrimaryKey(true);
+		DataSourceTextField name = new DataSourceTextField("name");
+		setFields(id, name);
 		setDataURL("data/templates.xml" + (withEmpty ? "?withempty=true" : ""));
 		setClientOnly(true);
 	}
 
-	public static TemplatesDS getInstance() {
+	public static TemplatesDS get() {
 		if (instance == null)
 			instance = new TemplatesDS(false);
 		return instance;

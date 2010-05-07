@@ -1,7 +1,7 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.I18N;
 import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
@@ -14,23 +14,28 @@ public class UsersDS extends DataSource {
 	private static UsersDS instance;
 
 	private UsersDS() {
-		setTitleField("username");
+		setTitleField("label");
 		setRecordXPath("/list/user");
-		DataSourceTextField id = new DataSourceTextField("id", I18N.getMessage("id"));
-		id.setPrimaryKey(true);
-		id.setHidden(true);
 
-		DataSourceTextField username = new DataSourceTextField("username", I18N.getMessage("username"));
+		DataSourceTextField id = new DataSourceTextField("id");
+		id.setPrimaryKey(true);
+
+		DataSourceTextField username = new DataSourceTextField("username");
 		DataSourceTextField groupId = new DataSourceTextField("groupId");
 		DataSourceTextField label = new DataSourceTextField("label");
+		DataSourceImageField active = new DataSourceImageField("active");
+		DataSourceTextField name = new DataSourceTextField("name");
+		DataSourceTextField firstName = new DataSourceTextField("firstName");
+		DataSourceTextField email = new DataSourceTextField("email");
+		DataSourceTextField phone = new DataSourceTextField("phone");
+		DataSourceTextField cell = new DataSourceTextField("cell");
 
-		setFields(id, username, label, groupId);
+		setFields(id, username, label, groupId, active, name, firstName, email, phone, cell);
 		setDataURL("data/users.xml");
-
 		setClientOnly(true);
 	}
 
-	public static UsersDS getInstance() {
+	public static UsersDS get() {
 		if (instance == null)
 			instance = new UsersDS();
 		return instance;

@@ -1,35 +1,27 @@
-package com.logicaldoc.gui.frontend.client.document;
+package com.logicaldoc.gui.frontend.client.security;
 
-import com.google.gwt.user.client.Window;
 import com.logicaldoc.gui.common.client.I18N;
-import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIDocument;
-import com.logicaldoc.gui.common.client.data.DocumentHistoryDS;
+import com.logicaldoc.gui.common.client.data.UserHistoryDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
- * This panel shows the history of a document
+ * This panel shows the history of a user
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class HistoryPanel extends DocumentDetailTab {
+public class UserHistoryPanel extends VLayout {
 
-	private DocumentHistoryDS dataSource;
+	private UserHistoryDS dataSource;
 
 	private ListGrid listGrid;
 
-	public HistoryPanel(final GUIDocument document) {
-		super(document, null);
-
-		ListGridField user = new ListGridField("user", I18N.getMessage("user"), 100);
+	public UserHistoryPanel(long userId) {
 		ListGridField event = new ListGridField("event", I18N.getMessage("event"), 200);
 		ListGridField version = new ListGridField("version", I18N.getMessage("version"), 70);
 		ListGridField date = new ListGridField("date", I18N.getMessage("date"), 110);
@@ -44,19 +36,10 @@ public class HistoryPanel extends DocumentDetailTab {
 		listGrid = new ListGrid();
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
-		dataSource = new DocumentHistoryDS(document.getId());
+		dataSource = new UserHistoryDS(userId);
 		listGrid.setDataSource(dataSource);
-		listGrid.setFields(user, event, date, comment, version, title, path, sid);
+		listGrid.setFields(event, date, comment, version, title, path, sid);
 		addMember(listGrid);
-
-		listGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
-			@Override
-			public void onCellDoubleClick(CellDoubleClickEvent event) {
-				ListGridRecord record = event.getRecord();
-				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + document.getId() + "&versionId="
-						+ record.getAttribute("version") + "&open=true", "_blank", "");
-			}
-		});
 	}
 
 	@Override

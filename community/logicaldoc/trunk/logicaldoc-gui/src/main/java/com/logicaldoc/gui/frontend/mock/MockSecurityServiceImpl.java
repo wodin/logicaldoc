@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.mock;
 import java.util.Date;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -34,7 +35,11 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 			}
 			features[30] = "ENTERPRISE";
 			session.setFeatures(features);
-			user.setGroups(new String[] { "admin" });
+			GUIGroup group = new GUIGroup();
+			group.setId(1);
+			group.setName("admin");
+			group.setDescription("Administrators");
+			user.setGroups(new GUIGroup[] { group });
 			user.setFirstName("Marco");
 			user.setName("Meschieri");
 			user.setExpired(false);
@@ -68,5 +73,33 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	@Override
 	public int changePassword(long userId, String oldPassword, String newPassword) {
 		return 0;
+	}
+
+	@Override
+	public void deleteUser(String sid, long userId) {
+
+	}
+
+	@Override
+	public GUIUser saveUser(String sid, GUIUser user) {
+		if (user.getId() == 0)
+			user.setId(9999);
+		return user;
+	}
+
+	@Override
+	public GUIUser getUser(String sid, long userId) {
+		GUIUser user = new GUIUser();
+		user.setId(userId);
+		user.setUserName("admin");
+		user.setName("Meschieri");
+		user.setFirstName("Marco");
+		user.setEmail("m.meschieri@logicalobjects.it");
+		GUIGroup group = new GUIGroup();
+		group.setId(1);
+		group.setName("admin");
+		group.setDescription("Administrators");
+		user.setGroups(new GUIGroup[] { group });
+		return user;
 	}
 }

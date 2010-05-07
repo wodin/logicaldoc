@@ -231,7 +231,7 @@ public class SecurityPanel extends FolderDetailTab {
 		user.setDisplayField("username");
 		user.setPickListWidth(300);
 		user.setPickListFields(username, label);
-		user.setOptionDataSource(UsersDS.getInstance());
+		user.setOptionDataSource(UsersDS.get());
 		userForm.setItems(user);
 
 		buttons.addMember(userForm);

@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISession;
+import com.logicaldoc.gui.common.client.beans.GUIUser;
 
 /**
  * The client side stub for the Security Service. This service gives all needed
@@ -41,4 +42,19 @@ public interface SecurityService extends RemoteService {
 	 * user's groups.
 	 */
 	public GUIRight[] getSecurityEntities(String sid);
+
+	/**
+	 * Deletes a given user
+	 */
+	public void deleteUser(String sid, long userId);
+
+	/**
+	 * Creates or updates a user
+	 */
+	public GUIUser saveUser(String sid, GUIUser user);
+	
+	/**
+	 * Loads a given user from the database
+	 */
+	public GUIUser getUser(String sid, long userId);
 }

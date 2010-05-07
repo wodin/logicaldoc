@@ -16,7 +16,7 @@ public class GUIUser implements Serializable {
 
 	private long id = 0;
 
-	private String[] groups = new String[0];
+	private GUIGroup[] groups = new GUIGroup[0];
 
 	private String firstName;
 
@@ -27,6 +27,26 @@ public class GUIUser implements Serializable {
 	private boolean expired = true;
 
 	private int passwordMinLenght = 0;
+
+	private boolean passwordExpires = false;
+
+	private String address;
+
+	private String postalCode;
+
+	private String city;
+
+	private String country;
+
+	private String state;
+
+	private String phone;
+
+	private String email;
+
+	private String cell;
+
+	private boolean enabled = true;
 
 	public void setUserName(String userName) {
 		this.userName = userName;
@@ -44,17 +64,17 @@ public class GUIUser implements Serializable {
 		this.id = id;
 	}
 
-	public String[] getGroups() {
+	public GUIGroup[] getGroups() {
 		return groups;
 	}
 
-	public void setGroups(String[] groups) {
+	public void setGroups(GUIGroup[] groups) {
 		this.groups = groups;
 	}
 
 	public boolean isMemberOf(String group) {
-		for (String g : groups) {
-			if (group.equals(g))
+		for (GUIGroup g : groups) {
+			if (group.equals(g.getName()))
 				return true;
 		}
 		return false;
@@ -109,5 +129,108 @@ public class GUIUser implements Serializable {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	public boolean isPasswordExpires() {
+		return passwordExpires;
+	}
+
+	public void setPasswordExpires(boolean passwordExpires) {
+		this.passwordExpires = passwordExpires;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getCell() {
+		return cell;
+	}
+
+	public void setCell(String cell) {
+		this.cell = cell;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public void addGroup(GUIGroup group) {
+		if (!isMemberOf(group.getName())) {
+			GUIGroup[] tmp = new GUIGroup[groups.length + 1];
+			for (int i = 0; i < groups.length; i++) {
+				tmp[i] = groups[i];
+			}
+			tmp[groups.length] = group;
+			groups = tmp;
+		}
+	}
+
+	public void removeGroup(String groupName) {
+		if (isMemberOf(groupName)) {
+			GUIGroup[] tmp = new GUIGroup[groups.length - 1];
+			int i = 0;
+			for (GUIGroup g : groups) {
+				if (!g.getName().equals(groupName))
+					tmp[i++] = g;
+			}
+			groups = tmp;
+		}
 	}
 }
