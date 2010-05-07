@@ -161,6 +161,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		if (document.getStatus() != Document.DOC_UNLOCKED)
 			throw new Exception("Document is locked");
 
+		documentDAO.initialize(document);
 		document.setLockUserId(transaction.getUser().getId());
 		document.setStatus(status);
 		document.setFolder(document.getFolder());
@@ -655,6 +656,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		assert (transaction.getUser() != null);
 
 		Document document = documentDAO.findById(docId);
+		documentDAO.initialize(document);
 		document.setLockUserId(null);
 		document.setStatus(Document.DOC_UNLOCKED);
 
