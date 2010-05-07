@@ -128,94 +128,97 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	 */
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.debug("Received WebDAV request");
-
-		WebdavRequest webdavRequest = new WebdavRequestImpl(request, getLocatorFactory());
-
-		// DeltaV requires 'Cache-Control' header for all methods except
-		// 'VERSION-CONTROL' and 'REPORT'.
-		int methodCode = DavMethods.getMethodCode(request.getMethod());
-		boolean noCache = DavMethods.isDeltaVMethod(webdavRequest)
-				&& !(DavMethods.DAV_VERSION_CONTROL == methodCode || DavMethods.DAV_REPORT == methodCode);
-		WebdavResponse webdavResponse = new WebdavResponseImpl(response, noCache);
-
-		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
-				AuthenticationChain.class);
-		String sid = null;
-		String username = null;
 		try {
-			if (request.getHeader(DavConstants.HEADER_AUTHORIZATION) != null) {
-				Credentials credentials = AuthenticationUtil.authenticate(webdavRequest);
-				username = credentials.getUserName();
-				String combinedUserId = request.getRemoteAddr() + "-" + credentials.getUserName();
-	
-				// Check the credentials
-				if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword())) {
+			WebdavRequest webdavRequest = new WebdavRequestImpl(request, getLocatorFactory());
+
+			// DeltaV requires 'Cache-Control' header for all methods except
+			// 'VERSION-CONTROL' and 'REPORT'.
+			int methodCode = DavMethods.getMethodCode(request.getMethod());
+			boolean noCache = DavMethods.isDeltaVMethod(webdavRequest)
+					&& !(DavMethods.DAV_VERSION_CONTROL == methodCode || DavMethods.DAV_REPORT == methodCode);
+			WebdavResponse webdavResponse = new WebdavResponseImpl(response, noCache);
+
+			AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
+					AuthenticationChain.class);
+			String sid = null;
+			String username = null;
+			try {
+				if (request.getHeader(DavConstants.HEADER_AUTHORIZATION) != null) {
+					Credentials credentials = AuthenticationUtil.authenticate(webdavRequest);
+					username = credentials.getUserName();
+					String combinedUserId = request.getRemoteAddr() + "-" + credentials.getUserName();
+
+					// Check the credentials
+					if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword())) {
+						AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
+						return;
+					}
+
+					for (UserSession session : SessionManager.getInstance().getSessionsByUserObject(combinedUserId)) {
+						if (SessionManager.getInstance().isValid(session.getId())) {
+							SessionManager.getInstance().renew(session.getId());
+							sid = session.getId();
+							break;
+						}
+					}
+					// No active session found, new login required
+					if (sid == null) {
+						boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(), credentials
+								.getPassword(), combinedUserId);
+						if (isLoggedOn == false) {
+							AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
+							return;
+						} else {
+							sid = AuthenticationChain.getSessionId();
+						}
+					}
+				} else {
 					AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
 					return;
 				}
 
-				for (UserSession session : SessionManager.getInstance().getSessionsByUserObject(combinedUserId)) {
-					if (SessionManager.getInstance().isValid(session.getId())) {
-						SessionManager.getInstance().renew(session.getId());
-						sid = session.getId();
-						break;
-					}
+				DavSessionImpl davSession = new DavSessionImpl();
+				davSession.putObject("sid", sid);
+				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+				User user = dao.findByUserName(username);
+				davSession.putObject("id", user.getId());
+				davSession.putObject("user", user);
+
+				webdavRequest.setDavSession(davSession);
+
+				String path = webdavRequest.getRequestLocator().getResourcePath();
+				if (path.startsWith("/store") == false && path.startsWith("/vstore") == false)
+					throw new DavException(DavServletResponse.SC_NOT_FOUND);
+
+				// check matching if=header for lock-token relevant operations
+				DavResource resource = getResourceFactory().createResource(webdavRequest.getRequestLocator(),
+						webdavRequest, webdavResponse, davSession);
+
+				if (!isPreconditionValid(webdavRequest, resource)) {
+					webdavResponse.sendError(DavServletResponse.SC_PRECONDITION_FAILED);
+					return;
 				}
-				// No active session found, new login required
-				if (sid == null) {
-					boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(), credentials
-							.getPassword(), combinedUserId);
-					if (isLoggedOn == false) {
-						AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
-						return;
-					} else {
-						sid = AuthenticationChain.getSessionId();
-					}
+				if (!execute(webdavRequest, webdavResponse, methodCode, resource)) {
+					super.service(request, response);
 				}
-			} else {
-				AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
-				return;
+
+			} catch (DavException e) {
+				log.error(e.getMessage(), e);
+				if (e.getErrorCode() != HttpServletResponse.SC_UNAUTHORIZED) {
+					webdavResponse.sendError(e);
+				}
+			} catch (Throwable e) {
+				log.error(e.getMessage(), e);
+				throw new RuntimeException(e);
+			} finally {
+
 			}
 
-			DavSessionImpl davSession = new DavSessionImpl();
-			davSession.putObject("sid", sid);
-			UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-			User user = dao.findByUserName(username);
-			davSession.putObject("id", user.getId());
-			davSession.putObject("user", user);
-
-			webdavRequest.setDavSession(davSession);
-
-			String path = webdavRequest.getRequestLocator().getResourcePath();
-			if (path.startsWith("/store") == false && path.startsWith("/vstore") == false)
-				throw new DavException(DavServletResponse.SC_NOT_FOUND);
-
-			// check matching if=header for lock-token relevant operations
-			DavResource resource = getResourceFactory().createResource(webdavRequest.getRequestLocator(),
-					webdavRequest, webdavResponse, davSession);
-
-			if (!isPreconditionValid(webdavRequest, resource)) {
-				webdavResponse.sendError(DavServletResponse.SC_PRECONDITION_FAILED);
-				return;
-			}
-			if (!execute(webdavRequest, webdavResponse, methodCode, resource)) {
-				super.service(request, response);
-			}
-
-		} catch (DavException e) {
-			log.error(e.getMessage(), e);
-			if (e.getErrorCode() != HttpServletResponse.SC_UNAUTHORIZED) {
-				webdavResponse.sendError(e);
-			}
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
-			throw new RuntimeException(e);
-		} finally {
-
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
 		}
-
-		response.getOutputStream().flush();
-		response.getOutputStream().close();
 	}
 
 	/**
@@ -373,6 +376,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 					+ resource.getDisplayName());
 
 		if (!resource.exists()) {
+			log.warn("Resource not found: " + resource.getResourcePath());
 			response.sendError(DavServletResponse.SC_NOT_FOUND);
 			return;
 		}

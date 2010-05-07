@@ -344,13 +344,14 @@ public class DavResourceImpl implements DavResource {
 			try {
 				parentloc = locator.getFactory().createResourceLocator(locator.getPrefix(), "/", parentPath);
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 
 			try {
 				parent = factory.createResource(parentloc, session);
 			} catch (DavException e) {
 				// should not occur
+				log.error(e.getMessage(), e);
 			}
 		}
 		return parent;
@@ -390,8 +391,10 @@ public class DavResourceImpl implements DavResource {
 			}
 
 			catch (DavException e) {
+				log.error(e.getMessage());
 				throw new RuntimeException(e);
 			} catch (Exception e) {
+				log.error(e.getMessage());
 				throw new RuntimeException(e);
 			}
 		}

@@ -45,8 +45,6 @@ public class ResourceServiceImpl implements ResourceService {
 
 	protected static Log log = LogFactory.getLog(ResourceServiceImpl.class);
 
-	private static final String FOLDER_PREFIX = "menu.documents";
-
 	private DocumentDAO documentDAO;
 
 	private VersionDAO versionDAO;
@@ -147,6 +145,7 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public Resource getResource(String requestPath, DavSession session) throws DavException {
+		log.debug("Find DAV resource: " + requestPath);
 
 		long userId = (Long) session.getObject("id");
 		if (requestPath == null)
@@ -157,7 +156,7 @@ public class ResourceServiceImpl implements ResourceService {
 		if (requestPath.length() > 0 && requestPath.substring(0, 1).equals("/"))
 			requestPath = requestPath.substring(1);
 
-		String path = "/" + FOLDER_PREFIX + "/" + requestPath;
+		String path = "/" + requestPath;
 		String currentStablePath = path;
 		String name = null;
 		int lastidx = path.lastIndexOf("/");
@@ -165,21 +164,23 @@ public class ResourceServiceImpl implements ResourceService {
 			name = path.substring(lastidx + 1, path.length());
 			path = path.substring(0, lastidx + 1);
 		}
-		if (path.equals("/" + FOLDER_PREFIX + "/") && name.equals("")) {
-			name = FOLDER_PREFIX;
-			path = "/";
-		}
 
-		Menu menu = folderDAO.find(name, path);
+		Menu menu = null;
+
+		if (path.equals("/") && name.equals("")) {
+			menu = folderDAO.findById(Menu.MENUID_DOCUMENTS);
+		} else
+			menu = folderDAO.find(name, path);
 
 		// if this resource request is a folder
 		if (menu != null)
 			return marshallFolder(menu, userId, session);
 
-		Resource parentMenu = this.getParentResource(currentStablePath, userId);
+		Resource parentFolder = this.getParentResource(currentStablePath, userId);
 
-		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(Long.parseLong(parentMenu.getID()),
+		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(Long.parseLong(parentFolder.getID()),
 				name, null);
+
 		if (docs.isEmpty())
 			return null;
 		Document document = docs.iterator().next();
@@ -192,29 +193,36 @@ public class ResourceServiceImpl implements ResourceService {
 		return marshallDocument(document, session);
 	}
 
+	/**
+	 * @see com.logicaldoc.webdav.resource.service.ResourceService#getParentResource(java.lang.String,
+	 *      long)
+	 */
 	public Resource getParentResource(String resourcePath, long userId) {
+		log.debug("Find parent DAV resource: " + resourcePath);
 
-		resourcePath = resourcePath.replace("/store", "").replace("/vstore", "");
-		if (resourcePath.startsWith("/" + FOLDER_PREFIX + "/") == false)
-			resourcePath = "/" + FOLDER_PREFIX + resourcePath;
+		resourcePath = resourcePath.replaceFirst("/store", "").replaceFirst("/vstore", "");
+		if (!resourcePath.startsWith("/"))
+			resourcePath = "/" + resourcePath;
 
 		String name = "";
-		String path = resourcePath;
-		for (int i = 0; i < 2; i++) {
-			int lastidx = resourcePath.lastIndexOf("/");
-			if (lastidx > -1) {
-				name = resourcePath.substring(lastidx + 1, resourcePath.length());
-				resourcePath = resourcePath.substring(0, lastidx);
-			}
-			if (path.equals("/" + FOLDER_PREFIX + "/") && name.equals("")) {
-				name = FOLDER_PREFIX;
-				resourcePath = "";
-				break;
-			}
+		resourcePath = resourcePath.substring(0, resourcePath.lastIndexOf('/'));
+		if (!resourcePath.isEmpty()) {
+			name = resourcePath.substring(resourcePath.lastIndexOf('/'));
+			resourcePath = resourcePath.substring(0, resourcePath.lastIndexOf('/'));
 		}
-		resourcePath = resourcePath + "/";
 
-		Menu menu = folderDAO.find(name, resourcePath);
+		resourcePath = resourcePath + "/";
+		if (name.startsWith("/"))
+			name = name.substring(1);
+
+		log.debug("Find DMS resource " + name + " in path " + resourcePath);
+
+		Menu menu = null;
+		if ("/".equals(resourcePath.trim()) && "".equals(name))
+			menu = folderDAO.findById(Menu.MENUID_DOCUMENTS);
+		else
+			menu = folderDAO.find(name, resourcePath);
+
 		return marshallFolder(menu, userId, null);
 	}
 
