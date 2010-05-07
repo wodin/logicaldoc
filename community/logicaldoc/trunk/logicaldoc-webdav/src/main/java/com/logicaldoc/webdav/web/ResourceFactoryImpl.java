@@ -3,6 +3,8 @@ package com.logicaldoc.webdav.web;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavMethods;
 import org.apache.jackrabbit.webdav.DavResource;
@@ -16,6 +18,7 @@ import com.logicaldoc.webdav.resource.DavResourceFactory;
 import com.logicaldoc.webdav.resource.VersionControlledResourceImpl;
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.resource.service.ResourceService;
+import com.logicaldoc.webdav.resource.service.ResourceServiceImpl;
 import com.logicaldoc.webdav.session.DavSession;
 
 /**
@@ -27,6 +30,8 @@ import com.logicaldoc.webdav.session.DavSession;
  */
 public class ResourceFactoryImpl implements DavResourceFactory {
 
+	protected static Log log = LogFactory.getLog(ResourceFactoryImpl.class);
+	
 	private static final Pattern versionRequestPattern = Pattern.compile("/vstore/([0-9].[0-9])/(.*)");
 
 	private final ResourceConfig resourceConfig;
@@ -77,6 +82,7 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 
 			return resource;
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 			throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR, e);
 		}
 	}
