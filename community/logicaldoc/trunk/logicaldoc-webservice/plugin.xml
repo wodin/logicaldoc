@@ -11,46 +11,46 @@
 		<library id="asm" path="lib/asm-2.2.3.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="cxf-api" path="lib/cxf-api-2.1.9.jar" type="code">
+		<library id="cxf-api" path="lib/cxf-api-2.2.7.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="cxf-common-schemas" path="lib/cxf-common-schemas-2.1.9.jar" type="code">
+		<library id="cxf-common-schemas" path="lib/cxf-common-schemas-2.2.7.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="cxf-common-utilities" path="lib/cxf-common-utilities-2.1.9.jar" type="code">
+		<library id="cxf-common-utilities" path="lib/cxf-common-utilities-2.2.7.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="cxf-rt-bindings-soap" path="lib/cxf-rt-bindings-soap-2.1.9.jar" type="code">
+		<library id="cxf-rt-bindings-soap" path="lib/cxf-rt-bindings-soap-2.2.7.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="cxf-rt-bindings-xml" path="lib/cxf-rt-bindings-xml-2.1.9.jar" type="code">
+		<library id="cxf-rt-bindings-xml" path="lib/cxf-rt-bindings-xml-2.2.7.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="cxf-rt-core" path="lib/cxf-rt-core-2.1.9.jar" type="code">
+		<library id="cxf-rt-core" path="lib/cxf-rt-core-2.2.7.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="cxf-rt-databinding-jaxb" path="lib/cxf-rt-databinding-jaxb-2.1.9.jar" type="code">
+		<library id="cxf-rt-databinding-jaxb" path="lib/cxf-rt-databinding-jaxb-2.2.7.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="cxf-rt-frontend-jaxws" path="lib/cxf-rt-frontend-jaxws-2.1.9.jar" type="code">
+		<library id="cxf-rt-frontend-jaxws" path="lib/cxf-rt-frontend-jaxws-2.2.7.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="cxf-rt-frontend-simple" path="lib/cxf-rt-frontend-simple-2.1.9.jar" type="code">
+		<library id="cxf-rt-frontend-simple" path="lib/cxf-rt-frontend-simple-2.2.7.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="cxf-rt-transports-http" path="lib/cxf-rt-transports-http-2.1.9.jar" type="code">
+		<library id="cxf-rt-transports-http" path="lib/cxf-rt-transports-http-2.2.7.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="cxf-rt-ws-addr" path="lib/cxf-rt-ws-addr-2.1.9.jar" type="code">
+		<library id="cxf-rt-ws-addr" path="lib/cxf-rt-ws-addr-2.2.7.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="cxf-tools-common" path="lib/cxf-tools-common-2.1.9.jar" type="code">
+		<library id="cxf-tools-common" path="lib/cxf-tools-common-2.2.7.jar" type="code">
 			<export prefix="*" />
 		</library>
 		<library id="jaxb-api" path="lib/jaxb-api-2.1.jar" type="code">
 			<export prefix="*" />
 		</library>
-		<library id="jaxb-impl" path="lib/jaxb-impl-2.1.9.jar" type="code">
+		<library id="jaxb-impl" path="lib/jaxb-impl-2.1.12.jar" type="code">
 			<export prefix="*" />
 		</library>
 		<library id="wsdl4j" path="lib/wsdl4j-1.6.2.jar" type="code">

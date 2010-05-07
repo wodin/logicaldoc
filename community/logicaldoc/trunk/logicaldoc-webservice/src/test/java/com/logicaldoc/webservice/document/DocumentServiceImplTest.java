@@ -93,10 +93,12 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 	@Test
 	public void testLock() throws Exception {
 		docServiceImpl.unlock("", 1);
+
+		docServiceImpl.lock("", 1);
+
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
-		docServiceImpl.lock("", 1);
-		doc = docDao.findById(1);
+		docDao.initialize(doc);
 		Assert.assertEquals(2, doc.getStatus());
 		Assert.assertEquals(1L, doc.getLockUserId().longValue());
 	}
