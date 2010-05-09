@@ -66,7 +66,7 @@ public class GroupsPanel extends VLayout {
 
 		// Initialize the listing panel as placeholder
 		listing.setAlign(Alignment.CENTER);
-		listing.setHeight("65%");
+		listing.setHeight("55%");
 		listing.setShowResizeBar(true);
 
 		ListGridField id = new ListGridField("id", 50);

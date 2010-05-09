@@ -26,4 +26,8 @@ public interface SecurityServiceAsync {
 	void deleteGroup(String sid, long groupId, AsyncCallback<Void> callback);
 
 	void saveGroup(String sid, GUIGroup group, AsyncCallback<GUIGroup> callback);
+
+	void removeFromGroup(String sid, long groupId, long[] docIds, AsyncCallback<Void> callback);
+
+	void addUserToGroup(String sid, long groupId, long userId, AsyncCallback<Void> callback);
 }

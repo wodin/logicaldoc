@@ -10,9 +10,9 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
-import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.RightsDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
@@ -177,20 +177,12 @@ public class SecurityPanel extends FolderDetailTab {
 		buttons.addMember(new HTML("<span style='width: 10px' />"));
 
 		// Prepare some items for the combo-boxes
-		ListGridField name = new ListGridField("name");
-		ListGridField description = new ListGridField("description");
 		ListGridField username = new ListGridField("username");
 		ListGridField label = new ListGridField("label");
 
 		// Prepare the combo and button for adding a new Group
 		final DynamicForm groupForm = new DynamicForm();
-		final ComboBoxItem group = new ComboBoxItem("group");
-		group.setTitle(I18N.getMessage("group"));
-		group.setValueField("id");
-		group.setDisplayField("name");
-		group.setPickListWidth(300);
-		group.setPickListFields(name, description);
-		group.setOptionDataSource(GroupsDS.get());
+		final ComboBoxItem group = ItemFactory.newGroupSelector("group", I18N.getMessage("group"));
 		groupForm.setItems(group);
 
 		buttons.addMember(groupForm);

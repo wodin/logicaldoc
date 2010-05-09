@@ -3,12 +3,16 @@ package com.logicaldoc.gui.common.client.util;
 import java.util.LinkedHashMap;
 
 import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.data.GroupsDS;
+import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.validators.EmailValidator;
 import com.logicaldoc.gui.common.client.validators.EmailsValidator;
 import com.smartgwt.client.types.DateDisplayFormat;
+import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.grid.ListGridField;
 
 /**
  * Collection of useful factory methods for form items.
@@ -89,5 +93,31 @@ public class ItemFactory {
 		else
 			item.setValidators(new EmailValidator());
 		return item;
+	}
+
+	public static ComboBoxItem newGroupSelector(String name, String title) {
+		ComboBoxItem group = new ComboBoxItem(name);
+		group.setTitle(I18N.getMessage(title));
+		group.setValueField("id");
+		group.setDisplayField("name");
+		group.setPickListWidth(300);
+		ListGridField n = new ListGridField("name");
+		ListGridField description = new ListGridField("description");
+		group.setPickListFields(n, description);
+		group.setOptionDataSource(GroupsDS.get());
+		return group;
+	}
+
+	public static ComboBoxItem newUserSelector(String name, String title) {
+		ComboBoxItem user = new ComboBoxItem(name);
+		user.setTitle(title);
+		ListGridField username = new ListGridField("username");
+		ListGridField label = new ListGridField("label");
+		user.setValueField("id");
+		user.setDisplayField("username");
+		user.setPickListWidth(300);
+		user.setPickListFields(username, label);
+		user.setOptionDataSource(UsersDS.get());
+		return user;
 	}
 }
