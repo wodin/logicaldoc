@@ -213,11 +213,11 @@ public class UsersPanel extends VLayout {
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
 
-		ListGridRecord record = list.getSelectedRecord();
+		final ListGridRecord record = list.getSelectedRecord();
 		final long id = Long.parseLong(record.getAttributeAsString("id"));
 
 		MenuItem delete = new MenuItem();
-		delete.setTitle(I18N.getMessage("delete"));
+		delete.setTitle(I18N.getMessage("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new BooleanCallback() {
@@ -243,11 +243,20 @@ public class UsersPanel extends VLayout {
 			}
 		});
 
+		MenuItem password = new MenuItem();
+		password.setTitle(I18N.getMessage("changepassword"));
+		password.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				SetPassword dialog = new SetPassword(Long.parseLong(record.getAttributeAsString("id")));
+				dialog.show();
+			}
+		});
+
 		if ("admin".equals(record.getAttributeAsString("username"))) {
 			delete.setEnabled(false);
 		}
 
-		contextMenu.setItems(delete);
+		contextMenu.setItems(password, delete);
 		contextMenu.showContextMenu();
 	}
 }

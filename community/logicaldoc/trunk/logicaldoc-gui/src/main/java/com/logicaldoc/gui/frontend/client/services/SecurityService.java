@@ -26,10 +26,11 @@ public interface SecurityService extends RemoteService {
 	 * Changes the password of a user
 	 * 
 	 * @param userId The user Identifier
-	 * @param oldPassword
+	 * @param oldPassword can be null
 	 * @param newPassword
-	 * @return 0 if all is ok, 1 if the password is incorrect, otherwise a
-	 *         positive number grater than 1
+	 * @return 0 if all is ok, 1 if the password is incorrect, 2 if the new
+	 *         password cannot be notified, otherwise a positive number grater
+	 *         than 2
 	 */
 	public int changePassword(long userId, String oldPassword, String newPassword);
 

@@ -10,7 +10,6 @@
 
 	<inherits name="com.smartgwt.SmartGwtNoScript" />
 	<inherits name="com.smartgwt.tools.SmartGwtTools" />
-	<inherits name="com.smartclient.theme.logicaldoc.LogicalDOCResources" />
 
 	<!-- Include GWTUpload library -->
 	<inherits name="gwtupload.GWTUpload" />
