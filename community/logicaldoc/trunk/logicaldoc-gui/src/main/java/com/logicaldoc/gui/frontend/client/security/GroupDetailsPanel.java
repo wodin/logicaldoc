@@ -32,7 +32,7 @@ public class GroupDetailsPanel extends VLayout {
 
 	private Layout propertiesTabPanel;
 
-	private Layout historyTabPanel;
+	private Layout usersTabPanel;
 
 	private GroupPropertiesPanel propertiesPanel;
 
@@ -44,7 +44,7 @@ public class GroupDetailsPanel extends VLayout {
 
 	private GroupsPanel groupsPanel;
 
-	private UserHistoryPanel historyPanel;
+	private GroupUsersPanel usersPanel;
 
 	public GroupDetailsPanel(GroupsPanel groupsPanel) {
 		super();
@@ -52,8 +52,7 @@ public class GroupDetailsPanel extends VLayout {
 
 		setHeight100();
 		setWidth100();
-		setMembersMargin(10);
-
+		
 		savePanel = new HLayout();
 		savePanel.setHeight(20);
 		savePanel.setVisible(false);
@@ -78,18 +77,16 @@ public class GroupDetailsPanel extends VLayout {
 
 		Tab propertiesTab = new Tab(I18N.getMessage("properties"));
 		propertiesTabPanel = new HLayout();
-		propertiesTabPanel.setWidth100();
 		propertiesTabPanel.setHeight100();
 		propertiesTab.setPane(propertiesTabPanel);
 		tabSet.addTab(propertiesTab);
 
-		// Tab historyTab = new Tab(I18N.getMessage("history"));
-		// historyTabPanel = new HLayout();
-		// historyTabPanel.setWidth100();
-		// historyTabPanel.setHeight100();
-		// historyTab.setPane(historyTabPanel);
-		// tabSet.addTab(historyTab);
-		
+		Tab usersTab = new Tab(I18N.getMessage("users"));
+		usersTabPanel = new HLayout();
+		usersTabPanel.setHeight100();
+		usersTab.setPane(usersTabPanel);
+		tabSet.addTab(usersTab);
+
 		addMember(tabSet);
 	}
 
@@ -116,16 +113,16 @@ public class GroupDetailsPanel extends VLayout {
 		propertiesPanel = new GroupPropertiesPanel(group, changeHandler);
 		propertiesTabPanel.addMember(propertiesPanel);
 
-		// /*
-		// * Prepare the history tab
-		// */
-		// if (historyPanel != null) {
-		// historyPanel.destroy();
-		// if (historyTabPanel.contains(historyPanel))
-		// historyTabPanel.removeMember(historyPanel);
-		// }
-		// historyPanel = new UserHistoryPanel(group.getId());
-		// historyTabPanel.addMember(historyPanel);
+		/*
+		 * Prepare the history tab
+		 */
+		if (usersPanel != null) {
+			usersPanel.destroy();
+			if (usersTabPanel.contains(usersPanel))
+				usersTabPanel.removeMember(usersPanel);
+		}
+		usersPanel = new GroupUsersPanel(group.getId());
+		usersTabPanel.addMember(usersPanel);
 	}
 
 	public GUIGroup getGroup() {
@@ -138,7 +135,6 @@ public class GroupDetailsPanel extends VLayout {
 	}
 
 	public void onModified() {
-		Log.debug("***");
 		savePanel.setVisible(true);
 	}
 

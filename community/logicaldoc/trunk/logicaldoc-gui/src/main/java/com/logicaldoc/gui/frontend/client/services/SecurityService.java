@@ -73,4 +73,14 @@ public interface SecurityService extends RemoteService {
 	 * Deletes a given group
 	 */
 	public void deleteGroup(String sid, long groupId);
+
+	/**
+	 * Removes users from a group
+	 */
+	public void removeFromGroup(String sid, long groupId, long[] docIds);
+
+	/**
+	 * Adds a user to a group
+	 */
+	public void addUserToGroup(String sid, long groupId, long userId);
 }

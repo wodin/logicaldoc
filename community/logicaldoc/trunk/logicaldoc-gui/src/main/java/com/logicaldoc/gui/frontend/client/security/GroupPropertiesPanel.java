@@ -4,9 +4,11 @@ import java.util.Map;
 
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -27,11 +29,11 @@ public class GroupPropertiesPanel extends HLayout {
 	private ChangedHandler changedHandler;
 
 	public GroupPropertiesPanel(GUIGroup group, ChangedHandler changedHandler) {
-		if (group == null){
+		if (group == null) {
 			setMembers(GroupsPanel.SELECT_GROUP);
 			return;
 		}
-			
+
 		this.group = group;
 		this.changedHandler = changedHandler;
 		setWidth100();
@@ -74,7 +76,12 @@ public class GroupPropertiesPanel extends HLayout {
 		if (!readonly)
 			description.addChangedHandler(changedHandler);
 
-		form1.setItems(id, name, description);
+		ComboBoxItem inherit = ItemFactory.newGroupSelector("inherit", I18N.getMessage("inheritgroup"));
+		inherit.setVisible(!readonly);
+		if (!readonly)
+			inherit.addChangedHandler(changedHandler);
+
+		form1.setItems(id, name, description, inherit);
 		addMember(form1);
 
 	}
@@ -86,6 +93,10 @@ public class GroupPropertiesPanel extends HLayout {
 		if (!vm.hasErrors()) {
 			group.setDescription((String) values.get("description"));
 			group.setName((String) values.get("name"));
+			if (values.get("inherit") != null)
+				group.setInheritGroupId(Long.parseLong((String) values.get("inherit")));
+			else
+				group.setInheritGroupId(null);
 		}
 		return !vm.hasErrors();
 	}

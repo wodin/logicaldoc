@@ -123,4 +123,14 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 			group.setId(9999);
 		return group;
 	}
+
+	@Override
+	public void addUserToGroup(String sid, long groupId, long userId) {
+
+	}
+
+	@Override
+	public void removeFromGroup(String sid, long groupId, long[] docIds) {
+
+	}
 }

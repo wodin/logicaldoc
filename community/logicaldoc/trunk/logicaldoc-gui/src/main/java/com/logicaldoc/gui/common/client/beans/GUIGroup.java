@@ -18,6 +18,9 @@ public class GUIGroup implements Serializable {
 
 	private String description;
 
+	// Optional group from which to import policies
+	private Long inheritGroupId;
+
 	public long getId() {
 		return id;
 	}
@@ -40,5 +43,13 @@ public class GUIGroup implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Long getInheritGroupId() {
+		return inheritGroupId;
+	}
+
+	public void setInheritGroupId(Long inheritGroupId) {
+		this.inheritGroupId = inheritGroupId;
 	}
 }

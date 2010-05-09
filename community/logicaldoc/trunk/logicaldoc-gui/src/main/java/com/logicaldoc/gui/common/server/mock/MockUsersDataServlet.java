@@ -24,9 +24,11 @@ public class MockUsersDataServlet extends HttpServlet {
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
 
+		String groupId = request.getParameter("groupId");
+
 		PrintWriter writer = response.getWriter();
 		writer.print("<list>");
-		
+
 		// Add 15 dummy users
 		for (int i = 0; i < 15; i++) {
 			writer.print("<user>");
