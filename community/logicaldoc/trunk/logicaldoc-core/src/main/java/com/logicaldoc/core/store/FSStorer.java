@@ -83,6 +83,14 @@ public class FSStorer implements Storer {
 
 	@Override
 	public File getFile(Document doc, String fileVersion, String suffix) {
+		return getFile(doc.getId(), fileVersion, suffix);
+	}
+
+	@Override
+	public File getFile(long docId, String fileVersion, String suffix) {
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+
+		Document doc = docDao.findById(docId);
 		Document document = doc;
 
 		/*
@@ -94,10 +102,9 @@ public class FSStorer implements Storer {
 		if (doc.getDocRef() != null) {
 			// The shortcut document doesn't have the 'fileversion' and the
 			// 'version'
-			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 			document = docDao.findById(doc.getDocRef());
 		}
-		
+
 		if (StringUtils.isEmpty(fileVersion))
 			filename = document.getFileVersion();
 		else

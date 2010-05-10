@@ -8,7 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
+import com.logicaldoc.core.security.User;
 
 /**
  * Test case for <code>HibernateVersionDAO</code>
@@ -33,7 +35,8 @@ public class HibernateVersionDAOTest extends AbstractCoreTestCase {
 		docDao = (DocumentDAO) context.getBean("DocumentDAO");
 	}
 
-	@Test public void testFindByDocumentId() {
+	@Test
+	public void testFindByDocumentId() {
 		List<Version> versions = dao.findByDocId(1);
 		Assert.assertEquals(2, versions.size());
 		Assert.assertTrue(versions.contains(dao.findByVersion(1, "testVersion")));
@@ -46,7 +49,8 @@ public class HibernateVersionDAOTest extends AbstractCoreTestCase {
 		Assert.assertEquals(0, versions.size());
 	}
 
-	@Test public void testFindByVersion() {
+	@Test
+	public void testFindByVersion() {
 		Version version = dao.findByVersion(1, "testVersion2");
 		Assert.assertNotNull(version);
 		Assert.assertEquals("testVersion2", version.getVersion());
@@ -55,7 +59,8 @@ public class HibernateVersionDAOTest extends AbstractCoreTestCase {
 		Assert.assertNull(version);
 	}
 
-	@Test public void testStore() {
+	@Test
+	public void testStore() {
 		Version version = new Version();
 		version.setId(3);
 		version.setDeleted(0);
@@ -63,9 +68,19 @@ public class HibernateVersionDAOTest extends AbstractCoreTestCase {
 		version.setComment("pippo");
 		version.setUserId(1);
 		version.setUsername("matteo");
-		version.setDocument(docDao.findById(1));
+		version.setDocId(1);
 		Assert.assertTrue(dao.store(version));
 		Assert.assertNotNull(dao.findById(2));
 		Assert.assertNull(dao.findById(1));
+
+		Document doc = docDao.findById(1);
+		docDao.initialize(doc);
+		User user = new User();
+		user.setId(1);
+		user.setUserName("admin");
+		user.setName("xx");
+		user.setFirstName("xx");
+		version = Version.create(doc, user, "", Version.EVENT_STORED, true);
+		dao.store(version);
 	}
 }

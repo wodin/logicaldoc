@@ -39,6 +39,8 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 	private long folderId;
 
+	private long docId;
+
 	private String folderName;
 
 	private Long templateId;
@@ -46,8 +48,6 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 	private String templateName;
 
 	private String tgs;
-
-	private Document document;
 
 	private String event;
 
@@ -178,26 +178,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 	/**
 	 * Factory method that creates a Version and replicate all given document's
 	 * properties.<br />
-	 * The new version and fileVersion will be setted in both Document and
-	 * Version<br/>
-	 * <br/>
-	 * <b>Important:</b> The created Version is not persistent
-	 * 
-	 * @param document The document to be versioned
-	 * @param user The user who made the changes
-	 * @param comment The version comment
-	 * @param event The event that caused the new release
-	 * @return The newly created version
-	 */
-	public static Version create(Document document, User user, String comment, String event) {
-		return create(document, user, comment, event, true, false);
-	}
-
-	/**
-	 * Factory method that creates a Version and replicate all given document's
-	 * properties.<br />
-	 * The new version and fileVersion will be setted in both Document and
-	 * Version<br/>
+	 * The new version and fileVersion will be set in both Document and Version<br/>
 	 * <br/>
 	 * <b>Important:</b> The created Version is not persistent
 	 * 
@@ -207,14 +188,10 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 	 * @param event The event that caused the new release
 	 * @param release True if this is a new release(eg: 2.0) rather than a
 	 *        subversion(eg: 1.1)
+	 * @param initial True if this is an initial release
 	 * @return The newly created version
 	 */
 	public static Version create(Document document, User user, String comment, String event, boolean release) {
-		return create(document, user, comment, event, release, true);
-	}
-
-	private static Version create(Document document, User user, String comment, String event, boolean release,
-			boolean initial) {
 		Version version = new Version();
 		try {
 			BeanUtils.copyProperties(version, document);
@@ -245,15 +222,14 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		version.setFolderId(document.getFolder().getId());
 		version.setFolderName(document.getFolder().getText());
 		version.setTgs(document.getTagsString());
-		version.setDocument(document);
+		version.setDocId(document.getId());
 
-		String newVersionName=document.getVersion();
-		if (!initial) {
+		String newVersionName = document.getVersion();
+		if (!event.equals(Version.EVENT_STORED)) {
 			newVersionName = version.getNewVersionName(document.getVersion(), release);
 			version.setVersion(newVersionName);
 			document.setVersion(newVersionName);
-		} else
-			version.setVersion(document.getVersion());
+		}
 
 		// If the file changed, than the file version must be changed also
 		if (Version.EVENT_CHECKIN.equals(event) || Version.EVENT_STORED.equals(event)
@@ -270,14 +246,6 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 	public void setTgs(String tgs) {
 		this.tgs = tgs;
-	}
-
-	public Document getDocument() {
-		return document;
-	}
-
-	public void setDocument(Document document) {
-		this.document = document;
 	}
 
 	public String getEvent() {
@@ -302,5 +270,13 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 
 	public void setCreatorId(long creatorId) {
 		this.creatorId = creatorId;
+	}
+
+	public long getDocId() {
+		return docId;
+	}
+
+	public void setDocId(long docId) {
+		this.docId = docId;
 	}
 }

@@ -37,4 +37,9 @@ public class MockStorer implements Storer {
 		return true;
 	}
 
+	@Override
+	public File getFile(long docId, String fileVersion, String suffix) {
+		return new File("pom.xml");
+	}
+
 }
