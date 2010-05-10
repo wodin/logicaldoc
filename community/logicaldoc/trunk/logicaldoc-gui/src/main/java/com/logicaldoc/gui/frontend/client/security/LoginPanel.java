@@ -38,11 +38,11 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class LoginPanel extends VLayout {
 
-	private SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
+	protected SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
 
-	private TextItem usernameItem = new TextItem();
+	protected TextItem username = new TextItem();
 
-	private PasswordItem passwordItem = new PasswordItem();
+	protected PasswordItem password = new PasswordItem();
 
 	public LoginPanel() {
 		setDefaultLayoutAlign(Alignment.CENTER);
@@ -88,10 +88,10 @@ public class LoginPanel extends VLayout {
 		final DynamicForm form = new DynamicForm();
 		form.setAlign(Alignment.CENTER);
 
-		usernameItem.setTitle(I18N.getMessage("username"));
-		usernameItem.setRequired(true);
-		usernameItem.setWrapTitle(false);
-		usernameItem.addKeyPressHandler(new KeyPressHandler() {
+		username.setTitle(I18N.getMessage("username"));
+		username.setRequired(true);
+		username.setWrapTitle(false);
+		username.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName() != null && "enter".equals(event.getKeyName().toLowerCase()))
@@ -99,10 +99,10 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
-		passwordItem.setTitle(I18N.getMessage("password"));
-		passwordItem.setRequired(true);
-		passwordItem.setWrapTitle(false);
-		passwordItem.addKeyPressHandler(new KeyPressHandler() {
+		password.setTitle(I18N.getMessage("password"));
+		password.setRequired(true);
+		password.setWrapTitle(false);
+		password.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName() != null && "enter".equals(event.getKeyName().toLowerCase()))
@@ -110,7 +110,7 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
-		form.setFields(new FormItem[] { usernameItem, passwordItem });
+		form.setFields(new FormItem[] { username, password });
 
 		IButton loginButton = new IButton(I18N.getMessage("login"));
 		loginButton.addClickHandler(new ClickHandler() {
@@ -137,13 +137,13 @@ public class LoginPanel extends VLayout {
 		outer.setPadding(2);
 
 		vPanel.addMember(outer);
-		form.focusInItem(usernameItem);
+		form.focusInItem(username);
 		form.setAutoFocus(true);
 		form.focus();
 	}
 
-	private void onLogin() {
-		securityService.login((String) usernameItem.getValue(), (String) passwordItem.getValue(),
+	protected void onLogin() {
+		securityService.login((String) username.getValue(), (String) password.getValue(),
 				new AsyncCallback<GUISession>() {
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
