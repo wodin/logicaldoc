@@ -37,6 +37,9 @@ public class Main implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
+		if (RootPanel.get("loadingWrapper") == null)
+			return;
+		
 		GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 
 			@Override
