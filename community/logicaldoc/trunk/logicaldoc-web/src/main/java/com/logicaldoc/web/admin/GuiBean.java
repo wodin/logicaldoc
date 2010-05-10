@@ -47,6 +47,8 @@ public class GuiBean {
 
 	private Integer pageSize = null;
 
+	private String path = "";
+
 	public Integer getThumbnailSize() {
 		if (thumbnailSize == null)
 			init();
@@ -137,6 +139,7 @@ public class GuiBean {
 
 	public void cancelFolderSelector(ActionEvent e) {
 		directoryModel.cancelSelection();
+		path = "";
 		RightsRecordsManager manager = ((RightsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"securityRightsRecordsManager", FacesContext.getCurrentInstance(), log));
 		manager.cleanSelection();
@@ -209,5 +212,13 @@ public class GuiBean {
 
 	public void setTagcloudMode(String tagcloudMode) {
 		this.tagcloudMode = tagcloudMode;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 }
