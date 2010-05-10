@@ -18,9 +18,9 @@ import com.logicaldoc.gui.frontend.client.security.LoginPanel;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class Main implements EntryPoint {
+public class Frontend implements EntryPoint {
 
-	private static Main instance;
+	private static Frontend instance;
 
 	private LoginPanel loginPanel;
 
@@ -29,7 +29,7 @@ public class Main implements EntryPoint {
 	/**
 	 * @return singleton Main instance
 	 */
-	public static Main get() {
+	public static Frontend get() {
 		return instance;
 	}
 
