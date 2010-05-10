@@ -34,7 +34,15 @@ public class MainPanel extends VLayout implements SessionObserver {
 
 	private Tab administrationTab;
 
-	public MainPanel() {
+	private static MainPanel instance;
+
+	public static MainPanel get() {
+		if (instance == null)
+			instance = new MainPanel();
+		return instance;
+	}
+
+	private MainPanel() {
 		setWidth100();
 		setHeight100();
 
@@ -49,7 +57,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 		searchTab = new Tab(I18N.getMessage("search"));
 		tabSet.addTab(searchTab);
 		administrationTab = new Tab(I18N.getMessage("administration"));
-		
+
 		addMember(topPanel);
 		addMember(tabSet);
 		addMember(new FooterPanel());
@@ -71,7 +79,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 		documentsTab.setPane(DocumentsPanel.get());
 		searchTab.setPane(SearchPanel.get());
 		administrationTab.setPane(AdminPanel.get());
-		
+
 		if (user.isMemberOf("admin")) {
 			tabSet.addTab(administrationTab);
 		}

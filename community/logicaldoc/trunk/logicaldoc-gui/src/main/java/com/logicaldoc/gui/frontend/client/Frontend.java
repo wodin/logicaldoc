@@ -39,7 +39,7 @@ public class Frontend implements EntryPoint {
 	public void onModuleLoad() {
 		if (RootPanel.get("loadingWrapper") == null)
 			return;
-		
+
 		GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 
 			@Override
@@ -70,7 +70,7 @@ public class Frontend implements EntryPoint {
 		Window.setMargin("0px");
 
 		loginPanel = new LoginPanel();
-		mainPanel = new MainPanel();
+		mainPanel = MainPanel.get();
 
 		RootPanel.get().add(loginPanel);
 
@@ -86,9 +86,5 @@ public class Frontend implements EntryPoint {
 	public void showMain() {
 		mainPanel.show();
 		loginPanel.hide();
-	}
-
-	public MainPanel getMainPanel() {
-		return mainPanel;
 	}
 }
