@@ -9,7 +9,8 @@
     </id>
     <timestamp name="lastModified" column="ld_lastmodified" />
     <property name="deleted" type="int" column="ld_deleted" not-null="true" />
-
+    
+    <property name="docId" type="long" column="ld_documentid" not-null="true" />
     <property name="immutable" type="int" column="ld_immutable" not-null="true" />
     <property name="customId" type="string" column="ld_customid" length="700" />
     <property name="title" type="string" column="ld_title" length="255" />
@@ -54,8 +55,7 @@
     <property name="exportVersion" type="string" column="ld_exportversion" length="10" />
     <property name="deleteUserId" type="long" column="ld_deleteuserid" />
 
-    <many-to-one name="document" class="com.logicaldoc.core.document.Document" column="ld_documentid" />
-
+   
     <map name="attributes" table="ld_version_ext" lazy="true" cascade="all" order-by="ld_position asc">
       <key column="ld_versionid" />
       <map-key type="string" column="ld_name" length="255" />

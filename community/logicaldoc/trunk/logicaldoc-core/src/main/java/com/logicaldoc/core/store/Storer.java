@@ -59,6 +59,17 @@ public interface Storer {
 	public File getFile(Document doc, String fileVersion, String suffix);
 
 	/**
+	 * Obtains the document's file for the specified version
+	 * 
+	 * @param docId The document identifier
+	 * @param fileVersion The file version (use null for the latest version)
+	 * @param suffix The file suffix (use null if you want the exact document
+	 *        file)
+	 * @return The document file
+	 */
+	public File getFile(long docId, String fileVersion, String suffix);
+
+	/**
 	 * Deletes from the document storage all the files related to a deleted
 	 * document version
 	 * 
