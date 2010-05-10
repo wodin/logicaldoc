@@ -11,7 +11,7 @@ import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.Log;
-import com.logicaldoc.gui.frontend.client.Main;
+import com.logicaldoc.gui.frontend.client.Frontend;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -153,7 +153,7 @@ public class LoginPanel extends VLayout {
 					public void onSuccess(GUISession session) {
 						if (session.isLoggedIn()) {
 							Session.get().init(session);
-							Main.get().showMain();
+							Frontend.get().showMain();
 						} else if (session.getUser() != null && session.getUser().isExpired()) {
 							new ChangePassword(session.getUser()).show();
 						} else {

@@ -9,7 +9,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.frontend.client.Log;
-import com.logicaldoc.gui.frontend.client.Main;
+import com.logicaldoc.gui.frontend.client.Frontend;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
@@ -114,7 +114,7 @@ public class FoldersNavigationPanel extends TreeGrid {
 				Search.get().getOptions().setFolderName(name);
 				Search.get().getOptions().setSearchInSubPath(false);
 				Search.get().setOptions(Search.get().getOptions());
-				Main.get().getMainPanel().selectSearchTab();
+				Frontend.get().getMainPanel().selectSearchTab();
 			}
 		});
 

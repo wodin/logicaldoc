@@ -8,7 +8,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.frontend.client.Log;
-import com.logicaldoc.gui.frontend.client.Main;
+import com.logicaldoc.gui.frontend.client.Frontend;
 import com.logicaldoc.gui.frontend.client.folder.FolderDetailsPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -105,7 +105,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		hiliteDocId = docId;
 		documentsMenu.openFolder(folderId);
 		documentsMenu.expandSection(0);
-		Main.get().getMainPanel().selectDocumentsTab();
+		Frontend.get().getMainPanel().selectDocumentsTab();
 	}
 
 	/**
