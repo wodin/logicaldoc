@@ -63,7 +63,7 @@
 	<servlet>
 		<servlet-name>UploadServlet</servlet-name>
 		<!-- This is the default servlet, it puts files in session -->
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockUploadServlet</servlet-class>
+		<servlet-class>com.logicaldoc.gui.common.server.mock.MockUploadServlet</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -94,51 +94,51 @@
 
 	<servlet>
 		<servlet-name>TagsData</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockTagsDataServlet</servlet-class>
+		<servlet-class>com.logicaldoc.gui.common.server.mock.MockTagsDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>GroupsData</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockGroupsDataServlet</servlet-class>
+		<servlet-class>com.logicaldoc.gui.common.server.mock.MockGroupsDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>UsersData</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockUsersDataServlet</servlet-class>
+		<servlet-class>com.logicaldoc.gui.common.server.mock.MockUsersDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>FoldersData</servlet-name>
 		<servlet-class>
-			com.logicaldoc.gui.frontend.mock.MockFoldersDataServlet</servlet-class>
+			com.logicaldoc.gui.common.server.mock.MockFoldersDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>DocumentsData</servlet-name>
 		<servlet-class>
-			com.logicaldoc.gui.frontend.mock.MockDocumentsDataServlet</servlet-class>
+			com.logicaldoc.gui.common.server.mock.MockDocumentsDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>LinksData</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockLinksDataServlet</servlet-class>
+		<servlet-class>com.logicaldoc.gui.common.server.mock.MockLinksDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>DiscussionsData</servlet-name>
 		<servlet-class>
-			com.logicaldoc.gui.frontend.mock.MockDiscussionsDataServlet</servlet-class>
+			com.logicaldoc.gui.common.server.mock.MockDiscussionsDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>PostsData</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockPostsDataServlet</servlet-class>
+		<servlet-class>com.logicaldoc.gui.common.server.mock.MockPostsDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>VersionsData</servlet-name>
 		<servlet-class>
-			com.logicaldoc.gui.frontend.mock.MockVersionsDataServlet</servlet-class>
+			com.logicaldoc.gui.common.server.mock.MockVersionsDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -150,7 +150,7 @@
 	<servlet>
 		<servlet-name>FolderHistoryData</servlet-name>
 		<servlet-class>
-			com.logicaldoc.gui.frontend.mock.MockFolderHistoryDataServlet</servlet-class>
+			com.logicaldoc.gui.common.server.mock.MockFolderHistoryDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -162,12 +162,12 @@
 	<servlet>
 		<servlet-name>TemplatesData</servlet-name>
 		<servlet-class>
-			com.logicaldoc.gui.frontend.mock.MockTemplatesDataServlet</servlet-class>
+			com.logicaldoc.gui.common.server.mock.MockTemplatesDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>Thumbnail</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockThumbnailServlet</servlet-class>
+		<servlet-class>com.logicaldoc.gui.common.server.mock.MockThumbnailServlet</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -177,12 +177,12 @@
 
 	<servlet>
 		<servlet-name>RightsData</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockRightsDataServlet</servlet-class>
+		<servlet-class>com.logicaldoc.gui.common.server.mock.MockRightsDataServlet</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>MockServlet</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockServlet</servlet-class>
+		<servlet-class>com.logicaldoc.gui.common.server.mock.MockServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>

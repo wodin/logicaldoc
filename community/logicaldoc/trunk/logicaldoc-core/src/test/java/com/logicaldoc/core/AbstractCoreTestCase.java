@@ -77,7 +77,11 @@ public abstract class AbstractCoreTestCase {
 	}
 
 	protected void copyResource(String classpath, String destinationPath) throws IOException {
-		FileUtil.copyResource(classpath, new File(destinationPath));
+		try {
+			FileUtil.copyResource(classpath, new File(destinationPath));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@After

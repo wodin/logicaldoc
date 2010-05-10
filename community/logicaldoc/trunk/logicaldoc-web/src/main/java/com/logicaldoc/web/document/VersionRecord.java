@@ -6,6 +6,7 @@ import javax.faces.context.FacesContext;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.FacesUtil;
@@ -18,6 +19,8 @@ import com.logicaldoc.web.util.FacesUtil;
  */
 public class VersionRecord extends Version {
 	private Version wrappedVersion;
+
+	private Document document;
 
 	private long wrappedVersionId;
 
@@ -41,9 +44,13 @@ public class VersionRecord extends Version {
 
 	private void load() {
 		VersionDAO versionDAO = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+		DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+
 		this.wrappedVersion = versionDAO.findById(wrappedVersionId);
-		if(this.wrappedVersion==null)
-			this.wrappedVersion=new Version();
+		if (this.wrappedVersion == null)
+			this.wrappedVersion = new Version();
+		else
+			document = documentDAO.findById(wrappedVersion.getDocId());
 	}
 
 	public VersionRecord(Version version) {
@@ -220,7 +227,7 @@ public class VersionRecord extends Version {
 	public Document getDocument() {
 		if (wrappedVersion == null)
 			load();
-		return wrappedVersion.getDocument();
+		return document;
 	}
 
 	public long getId() {
@@ -231,5 +238,9 @@ public class VersionRecord extends Version {
 
 	public long getWrappedVersionId() {
 		return wrappedVersionId;
+	}
+
+	public long getDocId() {
+		return wrappedVersion.getDocId();
 	}
 }
