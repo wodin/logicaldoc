@@ -14,10 +14,10 @@ import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.Log;
-import com.logicaldoc.gui.frontend.client.Frontend;
 import com.logicaldoc.gui.frontend.client.document.DocumentContextMenu;
 import com.logicaldoc.gui.frontend.client.document.DocumentObserver;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -377,7 +377,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	@Override
 	public void onSearchArrived() {
 		initialize();
-		Frontend.get().getMainPanel().selectSearchTab();
+		MainPanel.get().selectSearchTab();
 		if (Search.get().isHasMore()) {
 			Log.warn(I18N.getMessage("possiblemorehits"), I18N.getMessage("possiblemorehitsdetail"));
 		}
