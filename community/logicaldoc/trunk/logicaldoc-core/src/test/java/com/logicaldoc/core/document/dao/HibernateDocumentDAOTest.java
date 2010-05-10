@@ -208,7 +208,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		transaction.setNotified(0);
 
 		Assert.assertTrue(docFile.exists());
-		Assert.assertEquals("1.0", doc.getFileVersion());
+		Assert.assertEquals("2.0", doc.getFileVersion());
 		Assert.assertTrue(dao.store(doc, transaction));
 
 		Assert.assertTrue(docFile.exists());
@@ -223,7 +223,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		transaction.setEvent(History.EVENT_CHANGED);
 		transaction.setUserId(1);
 		transaction.setNotified(0);
-		dao.store(doc, transaction);
 
 		docFile = storer.getFile(doc, doc.getFileVersion(), null);
 		FileUtils.forceMkdir(docFile.getParentFile());
@@ -232,6 +231,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		out.flush();
 		out.close();
 		Assert.assertTrue(docFile.exists());
+		dao.store(doc, transaction);
 
 		Assert.assertEquals(7, doc.getId());
 		Assert.assertEquals(3, doc.getTags().size());
