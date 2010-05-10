@@ -8,12 +8,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -50,11 +52,24 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		if (authenticationChain.authenticate(username, password,
 				getThreadLocalRequest() != null ? getThreadLocalRequest().getRemoteAddr() : "")) {
 			User user = userDao.findByUserName(username);
+			userDao.initialize(user);
+
 			guiUser.setFirstName(user.getFirstName());
 			guiUser.setId(user.getId());
 			guiUser.setLanguage(user.getLanguage());
 			guiUser.setName(user.getName());
-			guiUser.setGroups(user.getGroupNames());
+
+			GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
+			int i = 0;
+			for (Group g : user.getGroups()) {
+				groups[i] = new GUIGroup();
+				groups[i].setId(g.getId());
+				groups[i].setName(g.getName());
+				groups[i].setDescription(g.getDescription());
+				i++;
+			}
+			guiUser.setGroups(groups);
+
 			guiUser.setUserName(username);
 			guiUser.setExpired(false);
 			session.setSid(AuthenticationChain.getSessionId());
@@ -128,5 +143,53 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			log.error(e.getMessage(), e);
 			return 1;
 		}
+	}
+
+	@Override
+	public void addUserToGroup(String sid, long groupId, long userId) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteGroup(String sid, long groupId) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteUser(String sid, long userId) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public GUIGroup getGroup(String sid, long groupId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GUIUser getUser(String sid, long userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void removeFromGroup(String sid, long groupId, long[] docIds) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public GUIGroup saveGroup(String sid, GUIGroup group) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GUIUser saveUser(String sid, GUIUser user) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
