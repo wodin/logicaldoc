@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.mock;
 import java.util.Date;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.logicaldoc.core.document.Document;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
@@ -40,7 +39,7 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 		document.setLanguage("it");
 		document.setTemplateId(1L);
 		document.setTemplate("template1");
-		document.setStatus(Document.DOC_UNLOCKED);
+		document.setStatus(0);
 		document.setPathExtended("/Folder 1/Folder 2/Folder 3/Folder 4");
 		GUIFolder folder = new GUIFolder();
 		folder.setName("Folder " + docId);
