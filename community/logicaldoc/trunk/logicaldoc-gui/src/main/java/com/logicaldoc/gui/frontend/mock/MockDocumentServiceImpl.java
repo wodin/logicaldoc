@@ -121,6 +121,10 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 		version.setValue("attrA", "valA");
 		version.setValue("attrB", new Date());
 		version.setValue("attrC", 123.6);
+		GUIFolder folder = new GUIFolder();
+		folder.setName("Folder " + id1);
+		folder.setId(id1);
+		version.setFolder(folder);
 		result[0] = version;
 
 		version = new GUIVersion();
@@ -144,6 +148,10 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 		version.setTemplate("template1");
 		version.setValue("attrA", "valA");
 		version.setValue("attrB", new Date());
+		folder = new GUIFolder();
+		folder.setName("Folder " + id2);
+		folder.setId(id2);
+		version.setFolder(folder);
 		result[1] = version;
 
 		return result;
