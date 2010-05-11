@@ -362,7 +362,6 @@
         <groupId>gwtupload</groupId>
         <artifactId>gwtupload</artifactId>
         <version>0.5.7</version>
-        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.smartgwt</groupId>
