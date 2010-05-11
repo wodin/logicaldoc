@@ -66,7 +66,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		formsContainer.setWidth100();
 		formsContainer.setMembersMargin(10);
-		
+
 		container.setMembers(path, formsContainer);
 		refresh();
 	}
@@ -155,7 +155,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		List<FormItem> items = new ArrayList<FormItem>();
 		final ComboBoxItem tagItem = new ComboBoxItem("tag");
-		tagItem.addChangedHandler(changedHandler);
 		tagItem.setTitle(I18N.getMessage("tag"));
 		tagItem.setPickListWidth(250);
 		tagItem.setOptionDataSource(TagsDS.getInstance());
@@ -165,6 +164,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 				if (Constants.KEY_ENTER.equals(event.getKeyName().toLowerCase())) {
 					document.addTag(tagItem.getValue().toString().trim());
 					tagItem.clearValue();
+					changedHandler.onChanged(null);
 					refresh();
 				}
 			}
