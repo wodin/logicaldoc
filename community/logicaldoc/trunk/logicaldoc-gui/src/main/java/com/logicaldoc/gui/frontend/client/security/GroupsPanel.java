@@ -72,7 +72,7 @@ public class GroupsPanel extends VLayout {
 		ListGridField id = new ListGridField("id", 50);
 		id.setHidden(true);
 
-		ListGridField name = new ListGridField("name", I18N.getMessage(""), 150);
+		ListGridField name = new ListGridField("name", I18N.getMessage("name"), 150);
 		name.setCanFilter(true);
 
 		ListGridField description = new ListGridField("description", I18N.getMessage("description"), 200);
