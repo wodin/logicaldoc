@@ -100,9 +100,10 @@ public class VersionsPanel extends DocumentDetailTab {
 			public void onClick(MenuItemClickEvent event) {
 				// Detect the two selected records
 				ListGridRecord[] selection = listGrid.getSelection();
-				if (selection == null || selection.length != 2)
+				if (selection == null || selection.length != 2){
 					SC.warn(I18N.getMessage("select2versions"));
-
+				    return;
+				}
 				documentService.getVersionsById(Session.get().getSid(), Long.parseLong(selection[0]
 						.getAttribute("id")), Long.parseLong(selection[1].getAttribute("id")),
 						new AsyncCallback<GUIVersion[]>() {

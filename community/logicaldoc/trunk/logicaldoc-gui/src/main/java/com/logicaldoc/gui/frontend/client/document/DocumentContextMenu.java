@@ -366,8 +366,9 @@ public class DocumentContextMenu extends Menu {
 		}
 
 		if (!enableUnlock) {
-			if (!(selection.length == 1 && Constants.DOC_CHECKED_OUT == Integer.parseInt(selection[0]
-					.getAttribute("status"))))
+			if (selection[0].getAttribute("status") == null
+					|| !(selection.length == 1 && Constants.DOC_CHECKED_OUT == Integer.parseInt(selection[0]
+							.getAttribute("status"))))
 				checkin.setEnabled(false);
 			unlockItem.setEnabled(false);
 		}
@@ -375,6 +376,7 @@ public class DocumentContextMenu extends Menu {
 		if (!enableImmutable)
 			immutable.setEnabled(false);
 
-		setItems(download, copy, delete, bookmark, sendMail, similar, links, checkout, checkin, lock, unlockItem, immutable);
+		setItems(download, copy, delete, bookmark, sendMail, similar, links, checkout, checkin, lock, unlockItem,
+				immutable);
 	}
 }
