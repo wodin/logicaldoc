@@ -65,20 +65,14 @@ public class GUISecuritySettings implements Serializable {
 		if (notifiedUsers.length == 0)
 			return;
 
-		Log.debug("***notifiedUsers: " + notifiedUsers.length);
-
 		GUIUser[] tmp = new GUIUser[notifiedUsers.length - 1];
 		int i = 0;
 		for (GUIUser u : notifiedUsers) {
-			Log.debug("***u: " + u.getUserName());
-			Log.debug("***username: " + username);
-
 			if (!u.getUserName().equals(username)) {
 				Log.debug("add!!!");
 				tmp[i] = u;
 				i++;
 			}
-			Log.debug("i: " + i);
 		}
 		notifiedUsers = tmp;
 	}
