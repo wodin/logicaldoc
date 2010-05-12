@@ -42,7 +42,7 @@ public class TopPanel extends HLayout {
 		// addMember(console);
 
 		// Place login informations
-		LoginInfo loginInfo = new LoginInfo();
+		LoginInfo loginInfo = new LoginInfo("");
 		loginInfo.setWidth("200px");
 		loginInfo.setAlign(Alignment.RIGHT);
 		addMember(loginInfo);
