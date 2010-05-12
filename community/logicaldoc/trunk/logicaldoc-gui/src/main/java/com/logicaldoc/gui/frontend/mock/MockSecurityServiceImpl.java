@@ -3,7 +3,9 @@ package com.logicaldoc.gui.frontend.mock;
 import java.util.Date;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.gui.common.client.beans.GUIADSettings;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
+import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
@@ -151,6 +153,26 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 
 	@Override
 	public void saveSettings(String sid, GUISecuritySettings settings) {
-		
+
+	}
+
+	@Override
+	public GUILdapSettings[] loadExtAuthSettings(String sid) {
+		GUILdapSettings[] settings = new GUILdapSettings[2];
+
+		// TODO set sui due settings da aggiungere
+		GUILdapSettings ldapSettings = new GUILdapSettings();
+
+		GUILdapSettings adSettings = new GUIADSettings();
+
+		settings[0] = ldapSettings;
+		settings[1] = adSettings;
+
+		return settings;
+	}
+
+	@Override
+	public void saveExtAuthSettings(String sid, GUILdapSettings ldapSettings, GUIADSettings adSettings) {
+
 	}
 }

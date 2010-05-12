@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.validators.EmailsValidator;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
+import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -118,5 +119,19 @@ public class ItemFactory {
 		user.setPickListFields(username, label);
 		user.setOptionDataSource(UsersDS.get());
 		return user;
+	}
+
+	public static RadioGroupItem newBooleanSelector(String name, String title) {
+		RadioGroupItem radioGroupItem = new RadioGroupItem();
+		radioGroupItem.setName(name);
+		radioGroupItem.setVertical(false);
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put("yes", I18N.getMessage("yes"));
+		map.put("no", I18N.getMessage("no"));
+		radioGroupItem.setValueMap(map);
+		radioGroupItem.setRedrawOnChange(true);
+		radioGroupItem.setTitle(title);
+		radioGroupItem.setWidth(80);
+		return radioGroupItem;
 	}
 }
