@@ -38,8 +38,12 @@ public class SecurityMenu extends VLayout {
 		Button security = new Button(I18N.getMessage("security"));
 		security.setWidth100();
 		security.setHeight(25);
+		
+		Button extAuth = new Button(I18N.getMessage("extauth"));
+		extAuth.setWidth100();
+		extAuth.setHeight(25);
 
-		setMembers(users, groups, security);
+		setMembers(users, groups, security, extAuth);
 
 		users.addClickHandler(new ClickHandler() {
 			@Override
@@ -71,6 +75,13 @@ public class SecurityMenu extends VLayout {
 					}
 
 				});
+			}
+		});
+		
+		extAuth.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new ExtAuthPanel());
 			}
 		});
 	}
