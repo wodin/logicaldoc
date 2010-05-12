@@ -191,7 +191,6 @@ public class UserPropertiesPanel extends HLayout {
 		if (contains(form2))
 			removeChild(form2);
 		form2 = new DynamicForm();
-//		form2.setValuesManager(vm);
 
 		List<FormItem> items = new ArrayList<FormItem>();
 		final ComboBoxItem group = new ComboBoxItem("group");
