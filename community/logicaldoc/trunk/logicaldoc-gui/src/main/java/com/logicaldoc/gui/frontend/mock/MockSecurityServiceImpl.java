@@ -5,6 +5,7 @@ import java.util.Date;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
+import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
@@ -132,5 +133,24 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	@Override
 	public void removeFromGroup(String sid, long groupId, long[] docIds) {
 
+	}
+
+	@Override
+	public GUISecuritySettings loadSettings(String sid) {
+		GUISecuritySettings settings = new GUISecuritySettings();
+		settings.setPwdExpiration(60);
+		settings.setPwdSize(8);
+		GUIUser user = new GUIUser();
+		user.setId(1);
+		user.setUserName("admin");
+		user.setName("Caruso");
+		user.setFirstName("Matteo");
+		settings.setNotifiedUsers(new GUIUser[] { user });
+		return settings;
+	}
+
+	@Override
+	public void saveSettings(String sid, GUISecuritySettings settings) {
+		
 	}
 }

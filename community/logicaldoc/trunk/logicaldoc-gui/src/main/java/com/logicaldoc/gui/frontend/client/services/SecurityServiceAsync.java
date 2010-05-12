@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.services;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
+import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 
@@ -30,4 +31,8 @@ public interface SecurityServiceAsync {
 	void removeFromGroup(String sid, long groupId, long[] docIds, AsyncCallback<Void> callback);
 
 	void addUserToGroup(String sid, long groupId, long userId, AsyncCallback<Void> callback);
+
+	void loadSettings(String sid, AsyncCallback<GUISecuritySettings> callback);
+
+	void saveSettings(String sid, GUISecuritySettings settings, AsyncCallback<Void> callback);
 }

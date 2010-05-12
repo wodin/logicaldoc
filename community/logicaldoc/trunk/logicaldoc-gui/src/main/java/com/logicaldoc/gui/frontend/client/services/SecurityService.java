@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
+import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 
@@ -84,4 +85,14 @@ public interface SecurityService extends RemoteService {
 	 * Adds a user to a group
 	 */
 	public void addUserToGroup(String sid, long groupId, long userId);
+	
+	/**
+	 * Saves security settings
+	 */
+	public void saveSettings(String sid, GUISecuritySettings settings);
+	
+	/**
+	 * Loads security settings
+	 */
+	public GUISecuritySettings loadSettings(String sid);
 }
