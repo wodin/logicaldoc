@@ -19,7 +19,6 @@ import com.smartgwt.client.widgets.grid.ListGridField;
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
- * 
  */
 public class ItemFactory {
 	public static DateItem newDateItem(String name, String title) {

@@ -10,8 +10,8 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
-import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.Frontend;
+import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -21,7 +21,6 @@ import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
@@ -110,7 +109,7 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
-		form.setFields(new FormItem[] { username, password });
+		form.setFields(username, password);
 
 		IButton loginButton = new IButton(I18N.getMessage("login"));
 		loginButton.addClickHandler(new ClickHandler() {

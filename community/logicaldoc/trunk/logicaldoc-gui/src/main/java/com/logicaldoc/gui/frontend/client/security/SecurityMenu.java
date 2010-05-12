@@ -1,7 +1,14 @@
 package com.logicaldoc.gui.frontend.client.security;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
+import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
+import com.logicaldoc.gui.frontend.client.services.SecurityService;
+import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -14,6 +21,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class SecurityMenu extends VLayout {
+	private SecurityServiceAsync service = (SecurityServiceAsync) GWT.create(SecurityService.class);
 
 	public SecurityMenu() {
 		setMargin(10);
@@ -27,7 +35,11 @@ public class SecurityMenu extends VLayout {
 		groups.setWidth100();
 		groups.setHeight(25);
 
-		setMembers(users, groups);
+		Button security = new Button(I18N.getMessage("security"));
+		security.setWidth100();
+		security.setHeight(25);
+
+		setMembers(users, groups, security);
 
 		users.addClickHandler(new ClickHandler() {
 			@Override
@@ -40,6 +52,25 @@ public class SecurityMenu extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				AdminPanel.get().setContent(new GroupsPanel());
+			}
+		});
+
+		security.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				service.loadSettings(Session.get().getSid(), new AsyncCallback<GUISecuritySettings>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUISecuritySettings settings) {
+						AdminPanel.get().setContent(new SecuritySettingsPanel(settings));
+					}
+
+				});
 			}
 		});
 	}

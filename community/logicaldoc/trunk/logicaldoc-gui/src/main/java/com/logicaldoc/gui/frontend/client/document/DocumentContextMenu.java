@@ -63,7 +63,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem delete = new MenuItem();
-		delete.setTitle(I18N.getMessage("delete"));
+		delete.setTitle(I18N.getMessage("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null || selection.length == 0)

@@ -134,6 +134,9 @@ public class GUIDocument implements Serializable {
 		String[] tmp = new String[tags.length + 1];
 		int i = 0;
 		for (String tg : tags) {
+			// Skip if the tag already exists
+			if (tg.equals(tag))
+				return;
 			tmp[i++] = tg;
 		}
 		tmp[i] = tag;
@@ -141,6 +144,9 @@ public class GUIDocument implements Serializable {
 	}
 
 	public void removeTag(String tag) {
+		if (tags.length == 0)
+			return;
+
 		String[] tmp = new String[tags.length - 1];
 		int i = 0;
 		for (String tg : tags) {

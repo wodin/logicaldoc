@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -21,11 +20,10 @@ import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
-import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
 
@@ -186,33 +184,31 @@ public class UserPropertiesPanel extends HLayout {
 		addMember(form1);
 
 		/*
-		 * Prepare the second form for the tags
+		 * Prepare the second form for the groups
 		 */
 		if (form2 != null)
 			form2.destroy();
 		if (contains(form2))
 			removeChild(form2);
 		form2 = new DynamicForm();
-		form2.setValuesManager(vm);
+//		form2.setValuesManager(vm);
 
 		List<FormItem> items = new ArrayList<FormItem>();
 		final ComboBoxItem group = new ComboBoxItem("group");
 		group.setTitle(I18N.getMessage("group"));
 		group.setPickListWidth(250);
 		group.setOptionDataSource(GroupsDS.get());
-		group.addKeyPressHandler(new KeyPressHandler() {
+		group.addChangedHandler(new ChangedHandler() {
 			@Override
-			public void onKeyPress(KeyPressEvent event) {
-				if (Constants.KEY_ENTER.equals(event.getKeyName().toLowerCase())) {
-					ListGridRecord record = group.getSelectedRecord();
-					GUIGroup group = new GUIGroup();
-					group.setId(Long.parseLong(record.getAttributeAsString("id")));
-					group.setName(record.getAttributeAsString("name"));
-					group.setDescription(record.getAttributeAsString("description"));
-					user.addGroup(group);
-					refresh();
-					changedHandler.onChanged(null);
-				}
+			public void onChanged(ChangedEvent event) {
+				ListGridRecord record = group.getSelectedRecord();
+				GUIGroup group = new GUIGroup();
+				group.setId(Long.parseLong(record.getAttributeAsString("id")));
+				group.setName(record.getAttributeAsString("name"));
+				group.setDescription(record.getAttributeAsString("description"));
+				user.addGroup(group);
+				refresh();
+				changedHandler.onChanged(null);
 			}
 		});
 		items.add(group);

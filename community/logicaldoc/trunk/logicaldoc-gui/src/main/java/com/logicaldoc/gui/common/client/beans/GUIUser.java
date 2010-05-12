@@ -223,6 +223,9 @@ public class GUIUser implements Serializable {
 	}
 
 	public void removeGroup(String groupName) {
+		if (groups.length == 0)
+			return;
+
 		if (isMemberOf(groupName)) {
 			GUIGroup[] tmp = new GUIGroup[groups.length - 1];
 			int i = 0;

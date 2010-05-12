@@ -11,12 +11,10 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.data.RightsDS;
-import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
-import com.smartgwt.client.types.FormItemType;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.util.BooleanCallback;
@@ -216,14 +214,7 @@ public class SecurityPanel extends FolderDetailTab {
 		});
 
 		final DynamicForm userForm = new DynamicForm();
-		final ComboBoxItem user = new ComboBoxItem("user");
-		user.setTitle(I18N.getMessage("user"));
-		user.setType(FormItemType.COMBOBOX_ITEM.getValue());
-		user.setValueField("id");
-		user.setDisplayField("username");
-		user.setPickListWidth(300);
-		user.setPickListFields(username, label);
-		user.setOptionDataSource(UsersDS.get());
+		final ComboBoxItem user = ItemFactory.newUserSelector("user", I18N.getMessage("user"));
 		userForm.setItems(user);
 
 		buttons.addMember(userForm);
