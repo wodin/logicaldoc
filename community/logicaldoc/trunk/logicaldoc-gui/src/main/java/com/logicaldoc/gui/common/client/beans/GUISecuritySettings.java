@@ -4,6 +4,12 @@ import java.io.Serializable;
 
 import com.logicaldoc.gui.frontend.client.Log;
 
+/**
+ * Security Settings bean as used in the GUI
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.0
+ */
 public class GUISecuritySettings implements Serializable {
 
 	private static final long serialVersionUID = 1L;

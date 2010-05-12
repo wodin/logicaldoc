@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
@@ -38,7 +39,7 @@ public class SecurityMenu extends VLayout {
 		Button security = new Button(I18N.getMessage("security"));
 		security.setWidth100();
 		security.setHeight(25);
-		
+
 		Button extAuth = new Button(I18N.getMessage("extauth"));
 		extAuth.setWidth100();
 		extAuth.setHeight(25);
@@ -77,11 +78,23 @@ public class SecurityMenu extends VLayout {
 				});
 			}
 		});
-		
+
 		extAuth.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new ExtAuthPanel());
+				service.loadExtAuthSettings(Session.get().getSid(), new AsyncCallback<GUILdapSettings[]>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUILdapSettings[] settings) {
+						AdminPanel.get().setContent(new ExtAuthPanel(settings));
+					}
+
+				});
 			}
 		});
 	}
