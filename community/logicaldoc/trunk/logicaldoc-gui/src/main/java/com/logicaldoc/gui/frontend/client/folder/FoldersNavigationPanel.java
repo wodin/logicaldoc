@@ -52,6 +52,7 @@ public class FoldersNavigationPanel extends TreeGrid {
 		setLoadDataOnDemand(true);
 		setDataSource(FoldersDS.get());
 		setCanSelectAll(false);
+		setShowConnectors(true);
 
 		ListGridField name = new ListGridField("name");
 		setFields(name);

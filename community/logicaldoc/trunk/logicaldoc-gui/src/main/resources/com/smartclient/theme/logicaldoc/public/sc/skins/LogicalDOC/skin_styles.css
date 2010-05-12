@@ -2293,3 +2293,7 @@ a.calMonthEventLink:active {color:blue; text-decoration:none}
 .infoPanel {
 	background-color: #DDDDDD;
 }
+
+.officelogout {
+	color: #536CDF;
+}
