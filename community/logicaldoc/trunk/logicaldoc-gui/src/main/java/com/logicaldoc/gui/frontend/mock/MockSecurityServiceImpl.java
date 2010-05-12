@@ -160,10 +160,36 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	public GUILdapSettings[] loadExtAuthSettings(String sid) {
 		GUILdapSettings[] settings = new GUILdapSettings[2];
 
-		// TODO set sui due settings da aggiungere
 		GUILdapSettings ldapSettings = new GUILdapSettings();
+		ldapSettings.setImplementation("basic");
+		ldapSettings.setEnabled(true);
+		ldapSettings.setUrl("ldap://localhost:10389");
+		ldapSettings.setUsername("pluto");
+		ldapSettings.setPwd("paperino");
+		ldapSettings.setRealm("realm");
+		ldapSettings.setDN("dn1");
+		ldapSettings.setBase("base");
+		ldapSettings.setUserIdentifierAttr("attr1");
+		ldapSettings.setGrpIdentifierAttr("attr2");
+		ldapSettings.setLogonAttr("logon");
+		ldapSettings.setAuthPattern("pattern");
+		ldapSettings.setUserClass("userclass");
+		ldapSettings.setGrpClass("grpClass");
+		ldapSettings.setUsersBaseNode("usersBaseNode");
+		ldapSettings.setGrpsBaseNode("grpsBaseNode");
+		ldapSettings.setLanguage("it");
 
-		GUILdapSettings adSettings = new GUIADSettings();
+		GUIADSettings adSettings = new GUIADSettings();
+		adSettings.setImplementation("md5");
+		adSettings.setEnabled(false);
+		adSettings.setDomain("domain");
+		adSettings.setHost("host");
+		adSettings.setPort(9080);
+		adSettings.setUsername("minnie");
+		adSettings.setPwd("topolino");
+		adSettings.setUsersBaseNode("usersBaseNode2");
+		adSettings.setGrpsBaseNode("grpsBaseNode2");
+		adSettings.setLanguage("fr");
 
 		settings[0] = ldapSettings;
 		settings[1] = adSettings;
