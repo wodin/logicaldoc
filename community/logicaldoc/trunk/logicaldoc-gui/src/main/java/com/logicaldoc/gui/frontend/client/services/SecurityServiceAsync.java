@@ -43,9 +43,4 @@ public interface SecurityServiceAsync {
 			AsyncCallback<Void> callback);
 
 	void loadExtAuthSettings(String sid, AsyncCallback<GUILdapSettings[]> callback);
-
-	void loadWSSettings(String sid, AsyncCallback<GUIWebServiceSettings[]> callback);
-
-	void saveWSSettings(String sid, GUIWebServiceSettings wsSettings, GUIWebServiceSettings webDavSettings,
-			AsyncCallback<Void> callback);
 }

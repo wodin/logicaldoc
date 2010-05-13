@@ -10,7 +10,6 @@ import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
-import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 
 /**
@@ -200,30 +199,6 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 
 	@Override
 	public void saveExtAuthSettings(String sid, GUILdapSettings ldapSettings, GUIADSettings adSettings) {
-
-	}
-
-	@Override
-	public GUIWebServiceSettings[] loadWSSettings(String sid) {
-		GUIWebServiceSettings[] settings = new GUIWebServiceSettings[2];
-
-		GUIWebServiceSettings wsSettings = new GUIWebServiceSettings();
-		wsSettings.setEnabled(true);
-		wsSettings.setUrl("http://demo.logicaldoc.com:80/logicaldoc/services/Dms");
-		wsSettings.setDescriptor("http://demo.logicaldoc.com:80/logicaldoc/services/Dms?wsdl");
-
-		GUIWebServiceSettings wdSettings = new GUIWebServiceSettings();
-		wdSettings.setEnabled(false);
-		wdSettings.setUrl("http://demo.logicaldoc.com:80/logicaldoc/webdav/store");
-
-		settings[0] = wsSettings;
-		settings[1] = wdSettings;
-
-		return settings;
-	}
-
-	@Override
-	public void saveWSSettings(String sid, GUIWebServiceSettings wsSettings, GUIWebServiceSettings webDavSettings) {
 
 	}
 }

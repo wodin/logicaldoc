@@ -147,6 +147,8 @@ public class SecuritySettingsPanel extends VLayout {
 		}
 
 		notificationsForm = new DynamicForm();
+		notificationsForm.setColWidths(1, "*");
+		notificationsForm.setMargin(3);
 
 		final ComboBoxItem user = ItemFactory.newUserSelector("notificationUsers", I18N.getMessage("user"));
 		List<FormItem> items = new ArrayList<FormItem>();
