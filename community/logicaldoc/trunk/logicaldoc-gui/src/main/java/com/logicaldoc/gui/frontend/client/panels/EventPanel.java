@@ -114,7 +114,7 @@ public class EventPanel extends HLayout {
 	}
 
 	public boolean isShowLog() {
-		return log.isVisible();
+		return log != null && log.isVisible();
 	}
 
 	public void setShowLog(boolean showLog) {
@@ -122,7 +122,7 @@ public class EventPanel extends HLayout {
 	}
 
 	public boolean isShowClose() {
-		return close.isVisible();
+		return close != null && close.isVisible();
 	}
 
 	public void setShowClose(boolean showClose) {

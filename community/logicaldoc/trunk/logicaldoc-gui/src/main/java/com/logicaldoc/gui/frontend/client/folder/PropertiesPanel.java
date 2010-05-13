@@ -45,16 +45,16 @@ public class PropertiesPanel extends FolderDetailTab {
 		idItem.setTitle(I18N.getMessage("id"));
 		idItem.setValue(folder.getId());
 
-		TextItem nameItem = new TextItem("name");
-		nameItem.setTitle(I18N.getMessage("name"));
-		nameItem.setValue(folder.getName());
-		nameItem.addChangedHandler(changedHandler);
-		nameItem.setRequired(true);
+		TextItem name = new TextItem("name");
+		name.setTitle(I18N.getMessage("name"));
+		name.setValue(folder.getName());
+		name.addChangedHandler(changedHandler);
+		name.setRequired(true);
 
-		TextItem descriptionItem = new TextItem("description");
-		descriptionItem.setTitle(I18N.getMessage("description"));
-		descriptionItem.setValue(folder.getDescription());
-		descriptionItem.addChangedHandler(changedHandler);
+		TextItem description = new TextItem("description");
+		description.setTitle(I18N.getMessage("description"));
+		description.setValue(folder.getDescription());
+		description.addChangedHandler(changedHandler);
 
 		StaticTextItem pathItem = new StaticTextItem("path");
 		pathItem.setTitle(I18N.getMessage("path"));
@@ -62,10 +62,15 @@ public class PropertiesPanel extends FolderDetailTab {
 		pathItem.addChangedHandler(changedHandler);
 		pathItem.setWidth(300);
 
+		if(folder.hasPermission(Constants.PERMISSION_RENAME)){
+			name.setDisabled(true);
+			description.setDisabled(true);
+		}
+		
 		if (folder.getId() == Constants.DOCUMENTS_FOLDERID)
 			form.setItems(idItem, pathItem);
 		else
-			form.setItems(idItem, pathItem, nameItem, descriptionItem);
+			form.setItems(idItem, pathItem, name, description);
 		addMember(form);
 	}
 

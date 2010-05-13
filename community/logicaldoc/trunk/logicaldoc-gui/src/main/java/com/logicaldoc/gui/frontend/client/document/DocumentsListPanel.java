@@ -157,7 +157,7 @@ public class DocumentsListPanel extends VLayout {
 		list.setAutoFetchData(true);
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setFilterOnKeypress(true);
-		dataSource = new DocumentsDS(folder.getId(), maxRows);
+		dataSource = new DocumentsDS(folder.getId(), null, maxRows);
 		list.setDataSource(dataSource);
 		list.setFields(indexed, locked, immutable, icon, title, size, lastModified, version, publisher, published,
 				creator, created, customId, filename);

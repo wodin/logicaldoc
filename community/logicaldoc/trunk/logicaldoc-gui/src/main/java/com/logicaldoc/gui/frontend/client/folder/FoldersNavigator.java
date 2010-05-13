@@ -32,12 +32,12 @@ import com.smartgwt.client.widgets.tree.TreeNode;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class FoldersNavigationPanel extends TreeGrid {
+public class FoldersNavigator extends TreeGrid {
 	private FolderServiceAsync service = (FolderServiceAsync) GWT.create(FolderService.class);
 
-	private static FoldersNavigationPanel instance = new FoldersNavigationPanel();
+	private static FoldersNavigator instance = new FoldersNavigator();
 
-	private FoldersNavigationPanel() {
+	private FoldersNavigator() {
 		setWidth100();
 		setBorder("0px");
 		setBodyStyleName("normal");
@@ -203,7 +203,7 @@ public class FoldersNavigationPanel extends TreeGrid {
 		return contextMenu;
 	}
 
-	public static FoldersNavigationPanel get() {
+	public static FoldersNavigator get() {
 		return instance;
 	}
 
@@ -228,6 +228,8 @@ public class FoldersNavigationPanel extends TreeGrid {
 					node.setAttribute("id", Long.toString(fld.getId()));
 					node.setAttribute(Constants.PERMISSION_ADD, fld.hasPermission(Constants.PERMISSION_ADD));
 					node.setAttribute(Constants.PERMISSION_DELETE, fld.hasPermission(Constants.PERMISSION_DELETE));
+					node.setAttribute(Constants.PERMISSION_RENAME, fld.hasPermission(Constants.PERMISSION_RENAME));
+	
 					getTree().add(node, parent);
 					parent = node;
 				}
@@ -237,6 +239,8 @@ public class FoldersNavigationPanel extends TreeGrid {
 						.hasPermission(Constants.PERMISSION_ADD)));
 				node.setAttribute(Constants.PERMISSION_DELETE, Boolean.toString(folder
 						.hasPermission(Constants.PERMISSION_DELETE)));
+				node.setAttribute(Constants.PERMISSION_RENAME, Boolean.toString(folder
+						.hasPermission(Constants.PERMISSION_RENAME)));
 				getTree().add(node, parent);
 				parent = node;
 
@@ -299,6 +303,8 @@ public class FoldersNavigationPanel extends TreeGrid {
 						.getAttributeAsBoolean(Constants.PERMISSION_ADD));
 				newNode.setAttribute(Constants.PERMISSION_DELETE, selectedNode
 						.getAttributeAsBoolean(Constants.PERMISSION_DELETE));
+				newNode.setAttribute(Constants.PERMISSION_RENAME, selectedNode
+						.getAttributeAsBoolean(Constants.PERMISSION_RENAME));
 
 				if (!getTree().isOpen(selectedNode)) {
 					getTree().openFolder(selectedNode);

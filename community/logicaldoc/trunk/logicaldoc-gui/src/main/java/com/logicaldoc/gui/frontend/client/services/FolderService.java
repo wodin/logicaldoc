@@ -20,6 +20,11 @@ public interface FolderService extends RemoteService {
 	 * @return The saved folder
 	 */
 	public GUIFolder save(String sid, GUIFolder folder);
+	
+	/**
+	 * Renames the given folder
+	 */
+	public void rename(String sid, long folderId, String name);
 
 	/**
 	 * Applies all security settings to a tree of folders

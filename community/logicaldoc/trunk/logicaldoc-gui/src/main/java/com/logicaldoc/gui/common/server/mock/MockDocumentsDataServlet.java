@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 public class MockDocumentsDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -17,7 +19,11 @@ public class MockDocumentsDataServlet extends HttpServlet {
 			IOException {
 
 		int maxRows = Integer.parseInt(request.getParameter("maxRows"));
-		long folderId = Long.parseLong(request.getParameter("folderId"));
+		long folderId = 0;
+		if (StringUtils.isNotEmpty("folderId"))
+			folderId = Long.parseLong(request.getParameter("folderId"));
+		String filename = request.getParameter("filename");
+
 		System.out.println("*** folderId=" + folderId);
 
 		String sid = (String) request.getParameter("sid");
@@ -33,9 +39,9 @@ public class MockDocumentsDataServlet extends HttpServlet {
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
-		
-		System.out.println("*maxRows="+maxRows);
-		
+
+		System.out.println("*maxRows=" + maxRows);
+
 		for (int i = 0; i < maxRows; i++) {
 			writer.print("<document>");
 			writer.print("<id>" + Long.toString(folderId + 1000 + i) + "</id>");
@@ -53,7 +59,10 @@ public class MockDocumentsDataServlet extends HttpServlet {
 			writer.print("<immutable>blank</immutable>");
 			writer.print("<indexed>indexed</indexed>");
 			writer.print("<locked>blank</locked>");
-			writer.print("<filename>Title " + Long.toString(folderId + 1000 + i) + ".doc</filename>");
+			if (StringUtils.isEmpty(filename))
+				writer.print("<filename>Title " + Long.toString(folderId + 1000 + i) + ".doc</filename>");
+			else
+				writer.print("<filename>Title " + filename + Long.toString(folderId + 1000 + i) + ".doc</filename>");
 			writer.print("<status>0</status>");
 			writer.print("</document>");
 		}

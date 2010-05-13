@@ -177,7 +177,7 @@ public class FolderDetailsPanel extends VLayout {
 
 				@Override
 				public void onSuccess(GUIFolder result) {
-					FoldersNavigationPanel.get().onSavedFolder(result);
+					FoldersNavigator.get().onSavedFolder(result);
 					savePanel.setVisible(false);
 				}
 			});
