@@ -1,336 +1,322 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-	<description>LogicalDOC - Document Management System</description>
-	<display-name>LogicalDOC</display-name>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+  <description>LogicalDOC - Document Management System</description>
+  <display-name>LogicalDOC</display-name>
 
-	<context-param>
-		<!-- max size of the upload request -->
-		<param-name>maxSize</param-name>
-		<param-value>3145728</param-value>
-	</context-param>
-	<context-param>
-		<!--
-			Useful in development mode to slow down the uploads in fast networks.
-			Put the number of milliseconds to sleep in each block received in the
-			server. false or 0, means don't use slow uploads
-		-->
-		<param-name>slowUploads</param-name>
-		<param-value>10</param-value>
-	</context-param>
+  <context-param>
+    <!-- max size of the upload request -->
+    <param-name>maxSize</param-name>
+    <param-value>3145728</param-value>
+  </context-param>
+  <context-param>
+    <!--
+      Useful in development mode to slow down the uploads in fast networks. Put the number of milliseconds to sleep in
+      each block received in the server. false or 0, means don't use slow uploads
+    -->
+    <param-name>slowUploads</param-name>
+    <param-value>10</param-value>
+  </context-param>
 
-	<servlet>
-		<servlet-name>UploadServlet</servlet-name>
-		<!-- This is the default servlet, it puts files in session -->
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockUploadServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>UploadServlet</servlet-name>
+    <!-- This is the default servlet, it puts files in session -->
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockUploadServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>SecurityService</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.frontend.mock.MockSecurityServiceImpl</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>SecurityService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.mock.MockSecurityServiceImpl</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>DocumentService</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.frontend.mock.MockDocumentServiceImpl</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>DocumentService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.mock.MockDocumentServiceImpl</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>FolderService</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockFolderServiceImpl</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>FolderService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.mock.MockFolderServiceImpl</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>SearchService</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockSearchServiceImpl</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>SearchService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.mock.MockSearchServiceImpl</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>SetupService</servlet-name>
-		<servlet-class>com.logicaldoc.gui.setup.mock.MockSetupServiceImpl</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>SetupService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.setup.mock.MockSetupServiceImpl</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>TagsData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockTagsDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>SettingService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.mock.MockSettingServiceImpl</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>GroupsData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockGroupsDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>TagsData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockTagsDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>UsersData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockUsersDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>GroupsData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockGroupsDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>FoldersData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockFoldersDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>UsersData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockUsersDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>DocumentsData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockDocumentsDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>FoldersData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockFoldersDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>GarbageData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockGarbageDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>DocumentsData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockDocumentsDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>BookmarksData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockBookmarksDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>GarbageData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockGarbageDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>LinksData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockLinksDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>BookmarksData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockBookmarksDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>DiscussionsData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockDiscussionsDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>LinksData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockLinksDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>PostsData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockPostsDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>DiscussionsData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockDiscussionsDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>VersionsData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockVersionsDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>PostsData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockPostsDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>DocumentHistoryData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.frontend.mock.MockDocumentHistoryDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>VersionsData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockVersionsDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>FolderHistoryData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockFolderHistoryDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>DocumentHistoryData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.mock.MockDocumentHistoryDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>UserHistoryData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.frontend.mock.MockUserHistoryDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>FolderHistoryData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockFolderHistoryDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>LanguagesData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.frontend.mock.MockLanguagesDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>UserHistoryData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.mock.MockUserHistoryDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>TemplatesData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockTemplatesDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>LanguagesData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.mock.MockLanguagesDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>SavedSearchesData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockSavedSearchesDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>TemplatesData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockTemplatesDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>Thumbnail</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockThumbnailServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>SavedSearchesData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockSavedSearchesDataServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>Download</servlet-name>
-		<servlet-class>com.logicaldoc.gui.frontend.mock.MockDownloadServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>Thumbnail</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockThumbnailServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>RightsData</servlet-name>
-		<servlet-class>
-			com.logicaldoc.gui.common.server.mock.MockRightsDataServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>Download</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.mock.MockDownloadServlet</servlet-class>
+  </servlet>
 
-	<servlet>
-		<servlet-name>MockServlet</servlet-name>
-		<servlet-class>com.logicaldoc.gui.common.server.mock.MockServlet</servlet-class>
-	</servlet>
+  <servlet>
+    <servlet-name>RightsData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockRightsDataServlet</servlet-class>
+  </servlet>
 
-	<servlet-mapping>
-		<servlet-name>UploadServlet</servlet-name>
-		<url-pattern>*.gupld</url-pattern>
-	</servlet-mapping>
+  <servlet>
+    <servlet-name>MockServlet</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockServlet</servlet-class>
+  </servlet>
 
-	<servlet-mapping>
-		<servlet-name>SecurityService</servlet-name>
-		<url-pattern>/frontend/security</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UploadServlet</servlet-name>
+    <url-pattern>*.gupld</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>DocumentService</servlet-name>
-		<url-pattern>/frontend/document</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SecurityService</servlet-name>
+    <url-pattern>/frontend/security</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>SetupService</servlet-name>
-		<url-pattern>/setup/setup</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DocumentService</servlet-name>
+    <url-pattern>/frontend/document</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>FolderService</servlet-name>
-		<url-pattern>/frontend/folder</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SetupService</servlet-name>
+    <url-pattern>/setup/setup</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>SearchService</servlet-name>
-		<url-pattern>/frontend/search</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FolderService</servlet-name>
+    <url-pattern>/frontend/folder</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>TagsData</servlet-name>
-		<url-pattern>/data/tags.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SearchService</servlet-name>
+    <url-pattern>/frontend/search</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>SavedSearchesData</servlet-name>
-		<url-pattern>/data/savedsearches.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SettingService</servlet-name>
+    <url-pattern>/frontend/setting</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>GroupsData</servlet-name>
-		<url-pattern>/data/groups.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>TagsData</servlet-name>
+    <url-pattern>/data/tags.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>UsersData</servlet-name>
-		<url-pattern>/data/users.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SavedSearchesData</servlet-name>
+    <url-pattern>/data/savedsearches.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>FoldersData</servlet-name>
-		<url-pattern>/data/folders.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GroupsData</servlet-name>
+    <url-pattern>/data/groups.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>DocumentsData</servlet-name>
-		<url-pattern>/data/documents.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UsersData</servlet-name>
+    <url-pattern>/data/users.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>GarbageData</servlet-name>
-		<url-pattern>/data/garbage.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FoldersData</servlet-name>
+    <url-pattern>/data/folders.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>BookmarksData</servlet-name>
-		<url-pattern>/data/bookmarks.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DocumentsData</servlet-name>
+    <url-pattern>/data/documents.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>LinksData</servlet-name>
-		<url-pattern>/data/links.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GarbageData</servlet-name>
+    <url-pattern>/data/garbage.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>DiscussionsData</servlet-name>
-		<url-pattern>/data/discussions.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>BookmarksData</servlet-name>
+    <url-pattern>/data/bookmarks.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>PostsData</servlet-name>
-		<url-pattern>/data/posts.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>LinksData</servlet-name>
+    <url-pattern>/data/links.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>VersionsData</servlet-name>
-		<url-pattern>/data/versions.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DiscussionsData</servlet-name>
+    <url-pattern>/data/discussions.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>DocumentHistoryData</servlet-name>
-		<url-pattern>/data/documenthistory.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>PostsData</servlet-name>
+    <url-pattern>/data/posts.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>FolderHistoryData</servlet-name>
-		<url-pattern>/data/folderhistory.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>VersionsData</servlet-name>
+    <url-pattern>/data/versions.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>FolderHistoryData</servlet-name>
-		<url-pattern>/data/userhistory.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DocumentHistoryData</servlet-name>
+    <url-pattern>/data/documenthistory.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>LanguagesData</servlet-name>
-		<url-pattern>/data/languages.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FolderHistoryData</servlet-name>
+    <url-pattern>/data/folderhistory.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>TemplatesData</servlet-name>
-		<url-pattern>/data/templates.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FolderHistoryData</servlet-name>
+    <url-pattern>/data/userhistory.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>RightsData</servlet-name>
-		<url-pattern>/data/rights.xml</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>LanguagesData</servlet-name>
+    <url-pattern>/data/languages.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>Thumbnail</servlet-name>
-		<url-pattern>/thumbnail</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>TemplatesData</servlet-name>
+    <url-pattern>/data/templates.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>Download</servlet-name>
-		<url-pattern>/download</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RightsData</servlet-name>
+    <url-pattern>/data/rights.xml</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>MockServlet</servlet-name>
-		<url-pattern>/convertpdf</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Thumbnail</servlet-name>
+    <url-pattern>/thumbnail</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>MockServlet</servlet-name>
-		<url-pattern>/doc_rss</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Download</servlet-name>
+    <url-pattern>/download</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>MockServlet</servlet-name>
-		<url-pattern>/folder_rss</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MockServlet</servlet-name>
+    <url-pattern>/convertpdf</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>MockServlet</servlet-name>
-		<url-pattern>/zip-export</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MockServlet</servlet-name>
+    <url-pattern>/doc_rss</url-pattern>
+  </servlet-mapping>
 
-	<!-- Welcome files -->
-	<welcome-file-list>
-		<welcome-file>frontend.jsp</welcome-file>
-	</welcome-file-list>
+  <servlet-mapping>
+    <servlet-name>MockServlet</servlet-name>
+    <url-pattern>/folder_rss</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>MockServlet</servlet-name>
+    <url-pattern>/zip-export</url-pattern>
+  </servlet-mapping>
+
+  <!-- Welcome files -->
+  <welcome-file-list>
+    <welcome-file>frontend.jsp</welcome-file>
+  </welcome-file-list>
 
 </web-app>

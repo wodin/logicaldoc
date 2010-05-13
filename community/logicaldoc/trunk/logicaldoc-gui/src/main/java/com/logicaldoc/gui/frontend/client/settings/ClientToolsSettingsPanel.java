@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.security;
+package com.logicaldoc.gui.frontend.client.settings;
 
 import java.util.Map;
 
@@ -9,8 +9,8 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.Log;
-import com.logicaldoc.gui.frontend.client.services.SecurityService;
-import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.SettingService;
+import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -30,7 +30,7 @@ import com.smartgwt.client.widgets.tab.TabSet;
  * @since 6.0
  */
 public class ClientToolsSettingsPanel extends VLayout {
-	private SecurityServiceAsync service = (SecurityServiceAsync) GWT.create(SecurityService.class);
+	private SettingServiceAsync service = (SettingServiceAsync) GWT.create(SettingService.class);
 
 	private ValuesManager vm = new ValuesManager();
 

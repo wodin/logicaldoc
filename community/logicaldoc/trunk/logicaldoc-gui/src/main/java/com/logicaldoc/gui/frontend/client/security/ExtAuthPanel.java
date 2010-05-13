@@ -63,6 +63,7 @@ public class ExtAuthPanel extends VLayout {
 		DynamicForm ldapForm = new DynamicForm();
 		ldapForm.setValuesManager(vm);
 		ldapForm.setTitleOrientation(TitleOrientation.TOP);
+		ldapForm.setColWidths(100, 100);
 
 		// Implementation
 		RadioGroupItem implementation = ItemFactory.newBooleanSelector("implementation", I18N
@@ -180,6 +181,7 @@ public class ExtAuthPanel extends VLayout {
 			DynamicForm activeDirForm = new DynamicForm();
 			activeDirForm.setValuesManager(vm);
 			activeDirForm.setTitleOrientation(TitleOrientation.TOP);
+			activeDirForm.setColWidths(100, 100);
 
 			// Implementation
 			RadioGroupItem adImplementation = ItemFactory.newBooleanSelector("adimplementation", I18N

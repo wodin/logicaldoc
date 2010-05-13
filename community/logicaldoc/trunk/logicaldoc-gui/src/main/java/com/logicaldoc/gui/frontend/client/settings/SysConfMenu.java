@@ -1,14 +1,16 @@
-package com.logicaldoc.gui.frontend.client.security;
+package com.logicaldoc.gui.frontend.client.settings;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.gui.frontend.client.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
-import com.logicaldoc.gui.frontend.client.services.SecurityService;
-import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.SettingService;
+import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -21,7 +23,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class SysConfMenu extends VLayout {
-	private SecurityServiceAsync service = (SecurityServiceAsync) GWT.create(SecurityService.class);
+	private SettingServiceAsync service = (SettingServiceAsync) GWT.create(SettingService.class);
 
 	public SysConfMenu() {
 		setMargin(10);
@@ -60,44 +62,42 @@ public class SysConfMenu extends VLayout {
 			}
 		});
 
-		// parameters.addClickHandler(new ClickHandler() {
-		// @Override
-		// public void onClick(ClickEvent event) {
-		// service.loadSettings(Session.get().getSid(), new
-		// AsyncCallback<GUISecuritySettings>() {
-		//
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// Log.serverError(caught);
-		// }
-		//
-		// @Override
-		// public void onSuccess(GUISecuritySettings settings) {
-		// AdminPanel.get().setContent(new SecuritySettingsPanel(settings));
-		// }
-		//
-		// });
-		// }
-		// });
+		parameters.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				service.loadSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
 
-		// email.addClickHandler(new ClickHandler() {
-		// @Override
-		// public void onClick(ClickEvent event) {
-		// service.loadExtAuthSettings(Session.get().getSid(), new
-		// AsyncCallback<GUILdapSettings[]>() {
-		//
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// Log.serverError(caught);
-		// }
-		//
-		// @Override
-		// public void onSuccess(GUILdapSettings[] settings) {
-		// AdminPanel.get().setContent(new ExtAuthPanel(settings));
-		// }
-		//
-		// });
-		// }
-		// });
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIParameter[] settings) {
+						AdminPanel.get().setContent(new ParametersSettingsPanel(settings));
+					}
+
+				});
+			}
+		});
+
+		email.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				service.loadEmailSettings(Session.get().getSid(), new AsyncCallback<GUIEmailSettings>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIEmailSettings settings) {
+						AdminPanel.get().setContent(new EmailPanel(settings));
+					}
+
+				});
+			}
+		});
 	}
 }
