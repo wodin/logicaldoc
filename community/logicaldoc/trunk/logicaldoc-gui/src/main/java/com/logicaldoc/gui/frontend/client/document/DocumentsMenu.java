@@ -1,7 +1,7 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import com.logicaldoc.gui.common.client.I18N;
-import com.logicaldoc.gui.frontend.client.folder.FoldersNavigationPanel;
+import com.logicaldoc.gui.frontend.client.folder.FoldersNavigator;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
@@ -14,7 +14,7 @@ import com.smartgwt.client.widgets.layout.SectionStackSection;
  */
 public class DocumentsMenu extends SectionStack {
 
-	private FoldersNavigationPanel foldersTree;
+	private FoldersNavigator foldersTree;
 
 	public DocumentsMenu() {
 		setVisibilityMode(VisibilityMode.MUTEX);
@@ -22,7 +22,7 @@ public class DocumentsMenu extends SectionStack {
 
 		SectionStackSection foldersSection = new SectionStackSection(I18N.getMessage("folders"));
 		foldersSection.setExpanded(true);
-		foldersTree = FoldersNavigationPanel.get();
+		foldersTree = FoldersNavigator.get();
 		foldersSection.addItem(foldersTree);
 		addSection(foldersSection);
 

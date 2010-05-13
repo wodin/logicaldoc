@@ -43,7 +43,7 @@ public class MoveDialog extends Dialog {
 		move.setTitle(I18N.getMessage("move"));
 		move.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				FoldersNavigationPanel.get().moveTo(
+				FoldersNavigator.get().moveTo(
 						Long.parseLong(folders.getSelectedRecord().getAttributeAsString("id")));
 				destroy();
 			}

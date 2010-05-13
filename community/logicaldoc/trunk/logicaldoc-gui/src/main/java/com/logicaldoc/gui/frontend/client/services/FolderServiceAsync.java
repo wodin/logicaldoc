@@ -14,4 +14,6 @@ public interface FolderServiceAsync {
 	void getFolder(String sid, long folderId, boolean computePath, AsyncCallback<GUIFolder> callback);
 
 	void move(String sid, long folderId, long targetId, AsyncCallback<Void> callback);
+
+	void rename(String sid, long folderId, String name, AsyncCallback<Void> callback);
 }
