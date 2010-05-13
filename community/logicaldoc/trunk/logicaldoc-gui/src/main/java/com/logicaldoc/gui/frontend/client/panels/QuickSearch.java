@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.panels;
 
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.frontend.client.search.Search;
@@ -41,7 +42,7 @@ public class QuickSearch extends HLayout {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName() == null)
 					return;
-				if ("enter".equals(event.getKeyName().toLowerCase())) {
+				if (Constants.KEY_ENTER.equals(event.getKeyName().toLowerCase())) {
 					search();
 				}
 			}
