@@ -16,7 +16,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
- * This panel shows the saved searches of the user
+ * This panel shows the administration security menu
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
