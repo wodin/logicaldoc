@@ -55,6 +55,7 @@ public class EventPanel extends HLayout {
 				setVisible(false);
 			}
 		});
+		close.setVisible(false);
 
 		addMember(log);
 		addMember(close);

@@ -45,8 +45,9 @@ public class FoldersDS extends DataSource {
 		DataSourceBooleanField add = new DataSourceBooleanField(Constants.PERMISSION_ADD);
 		DataSourceBooleanField delete = new DataSourceBooleanField(Constants.PERMISSION_DELETE);
 		DataSourceBooleanField rename = new DataSourceBooleanField(Constants.PERMISSION_RENAME);
+		DataSourceBooleanField write = new DataSourceBooleanField(Constants.PERMISSION_WRITE);
 
-		setFields(nameField, folderId, parentId, add, delete, rename);
+		setFields(nameField, folderId, parentId, add, delete, rename, write);
 
 		setDataURL("data/folders.xml?sid=" + Session.get().getSid());
 		setClientOnly(false);
