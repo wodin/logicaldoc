@@ -7,7 +7,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.Log;
-import com.logicaldoc.gui.frontend.client.panels.FooterStatus;
+import com.logicaldoc.gui.frontend.client.panels.EventPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
@@ -125,9 +125,9 @@ public class EmailDialog extends Window {
 						@Override
 						public void onSuccess(String result) {
 							if ("ok".equals(result)) {
-								FooterStatus.getInstance().info("Message sent", null);
+								EventPanel.get().info("Message sent", null);
 							} else {
-								FooterStatus.getInstance().error("Message not sent", null);
+								EventPanel.get().error("Message not sent", null);
 							}
 							destroy();
 						}

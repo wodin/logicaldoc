@@ -46,7 +46,7 @@ public class FooterPanel extends HLayout implements ClipboardObserver {
 		// And the size label
 		slot.addMember(clipboardSize);
 
-		slot = FooterStatus.getInstance();
+		slot = EventPanel.get();
 		slot.setWidth100();
 		addMember(slot);
 
