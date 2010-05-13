@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 
 /**
  * The client side stub for the Security Service. This service gives all needed
@@ -107,4 +108,14 @@ public interface SecurityService extends RemoteService {
 	 * Loads external authentication settings
 	 */
 	public GUILdapSettings[] loadExtAuthSettings(String sid);
+
+	/**
+	 * Saves web services and webdav settings
+	 */
+	public void saveWSSettings(String sid, GUIWebServiceSettings wsSettings, GUIWebServiceSettings webDavSettings);
+
+	/**
+	 * Loads external authentication settings
+	 */
+	public GUIWebServiceSettings[] loadWSSettings(String sid);
 }

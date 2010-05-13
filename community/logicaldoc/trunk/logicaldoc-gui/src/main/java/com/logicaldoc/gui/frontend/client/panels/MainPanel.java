@@ -46,6 +46,10 @@ public class MainPanel extends VLayout implements SessionObserver {
 		setWidth100();
 		setHeight100();
 
+		Session.get().addSessionObserver(this);
+	}
+
+	private void initGUI() {
 		Layout topPanel = new TopPanel();
 
 		tabSet.setTabBarPosition(Side.TOP);
@@ -70,12 +74,12 @@ public class MainPanel extends VLayout implements SessionObserver {
 				redraw();
 			}
 		});
-
-		Session.get().addSessionObserver(this);
 	}
 
 	@Override
 	public void onUserLoggedIn(GUIUser user) {
+		initGUI();
+		
 		documentsTab.setPane(DocumentsPanel.get());
 		searchTab.setPane(SearchPanel.get());
 		administrationTab.setPane(AdminPanel.get());
