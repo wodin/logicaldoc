@@ -20,7 +20,7 @@ public class MockDocumentsDataServlet extends HttpServlet {
 
 		int maxRows = Integer.parseInt(request.getParameter("maxRows"));
 		long folderId = 0;
-		if (StringUtils.isNotEmpty("folderId"))
+		if (StringUtils.isNotEmpty(request.getParameter("folderId")))
 			folderId = Long.parseLong(request.getParameter("folderId"));
 		String filename = request.getParameter("filename");
 
