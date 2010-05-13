@@ -3,10 +3,9 @@ package com.logicaldoc.gui.frontend.client.panels;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.beans.GUIEvent;
-import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -19,33 +18,51 @@ import com.smartgwt.client.widgets.layout.HLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class FooterStatus extends HLayout {
-	private static FooterStatus instance = new FooterStatus();
+public class EventPanel extends HLayout {
+	private static EventPanel instance;
 
 	List<GUIEvent> events = new ArrayList<GUIEvent>();
 
 	private Label statusLabel;
 
-	private FooterStatus() {
+	private Img log;
+
+	private Img close;
+
+	private EventPanel() {
+		setHeight(20);
 		setWidth100();
 		setAlign(Alignment.RIGHT);
 		setMargin(2);
 		setMembersMargin(2);
 
-		Image icon = new Image(Util.imageUrl("application/logging.png"));
-		icon.setWidth("16px");
-		icon.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
+		log = new Img("[SKINIMG]/application/logging.png");
+		log.setWidth("16px");
+		log.addClickHandler(new ClickHandler() {
 			@Override
-			public void onClick(com.google.gwt.event.dom.client.ClickEvent arg0) {
+			public void onClick(ClickEvent event) {
 				EventsWindow.get().show();
 				if (statusLabel != null)
 					statusLabel.setContents("");
 			}
 		});
-		addMember(icon);
+
+		close = new Img("[SKINIMG]/application/delete.png");
+		close.setWidth("16px");
+		close.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				setVisible(false);
+			}
+		});
+
+		addMember(log);
+		addMember(close);
 	}
 
-	public static FooterStatus getInstance() {
+	public static EventPanel get() {
+		if (instance == null)
+			instance = new EventPanel();
 		return instance;
 	}
 
@@ -73,6 +90,7 @@ public class FooterStatus extends HLayout {
 		event.setDetail(detail != null ? detail : message);
 		event.setSeverity(GUIEvent.ERROR);
 		EventsWindow.get().addEvent(event);
+		setVisible(true);
 	}
 
 	public void warn(String message, String detail) {
@@ -82,6 +100,7 @@ public class FooterStatus extends HLayout {
 		event.setDetail(detail != null ? detail : message);
 		event.setSeverity(GUIEvent.WARNING);
 		EventsWindow.get().addEvent(event);
+		setVisible(true);
 	}
 
 	public void info(String message, String detail) {
@@ -91,5 +110,22 @@ public class FooterStatus extends HLayout {
 		event.setDetail(detail != null ? detail : message);
 		event.setSeverity(GUIEvent.INFO);
 		EventsWindow.get().addEvent(event);
+		setVisible(true);
+	}
+
+	public boolean isShowLog() {
+		return log.isVisible();
+	}
+
+	public void setShowLog(boolean showLog) {
+		this.log.setVisible(showLog);
+	}
+
+	public boolean isShowClose() {
+		return close.isVisible();
+	}
+
+	public void setShowClose(boolean showClose) {
+		this.close.setVisible(showClose);
 	}
 }

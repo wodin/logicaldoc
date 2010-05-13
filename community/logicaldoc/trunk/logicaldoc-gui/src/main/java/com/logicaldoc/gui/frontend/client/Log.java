@@ -2,7 +2,7 @@ package com.logicaldoc.gui.frontend.client;
 
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.I18N;
-import com.logicaldoc.gui.frontend.client.panels.FooterStatus;
+import com.logicaldoc.gui.frontend.client.panels.EventPanel;
 
 /**
  * Represents a client work session
@@ -29,22 +29,22 @@ public class Log {
 		String m = message;
 		if (message == null || "".equals(message))
 			m = caught.getMessage() != null ? caught.getMessage() : "";
-		FooterStatus.getInstance().error(I18N.getMessage("servererror"), m);
+		EventPanel.get().error(I18N.getMessage("servererror"), m);
 		GWT.log("Server error: " + m, caught);
 	}
 
 	public static void warn(String message, String detail) {
-		FooterStatus.getInstance().warn(message, detail);
+		EventPanel.get().warn(message, detail);
 		GWT.log("warn: " + message, null);
 	}
 
 	public static void error(String message, String detail, Throwable caught) {
-		FooterStatus.getInstance().error(message, detail);
+		EventPanel.get().error(message, detail);
 		GWT.log("info: " + message, caught);
 	}
 
 	public static void info(String message, String detail) {
-		FooterStatus.getInstance().info(message, detail);
+		EventPanel.get().info(message, detail);
 		GWT.log("info: " + message, null);
 	}
 
