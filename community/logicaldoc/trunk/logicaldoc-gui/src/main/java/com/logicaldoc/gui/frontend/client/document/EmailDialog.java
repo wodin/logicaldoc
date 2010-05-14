@@ -11,6 +11,7 @@ import com.logicaldoc.gui.frontend.client.panels.EventPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
+import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
@@ -50,7 +51,7 @@ public class EmailDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.getMessage("sendmail"));
-		setWidth(400);
+		setWidth(290);
 		setHeight(280);
 		setCanDragResize(true);
 		setIsModal(true);
@@ -60,30 +61,33 @@ public class EmailDialog extends Window {
 		setAutoSize(true);
 
 		final ValuesManager vm = new ValuesManager();
-		final DynamicForm emailForm = new DynamicForm();
-		emailForm.setID("emailform");
-		emailForm.setValuesManager(vm);
-		emailForm.setWidth(350);
-		emailForm.setMargin(5);
+		final DynamicForm form = new DynamicForm();
+		form.setID("emailform");
+		form.setValuesManager(vm);
+		form.setWidth(280);
+		form.setMargin(5);
+		form.setTitleOrientation(TitleOrientation.TOP);
+		form.setNumCols(1);
 
 		TextItem recipients = ItemFactory.newEmailItem("recipients", I18N.getMessage("recipients"), true);
-		recipients.setWidth(300);
+		recipients.setWidth(250);
 		recipients.setRequired(true);
 
 		TextItem cc = ItemFactory.newEmailItem("cc", I18N.getMessage("cc"), true);
+		cc.setWidth(250);
 
 		TextItem object = new TextItem();
 		object.setName("object");
 		object.setTitle(I18N.getMessage("object"));
 		object.setRequired(true);
 		object.setValue(docTitle);
-		object.setWidth(300);
+		object.setWidth(250);
 
 		final TextAreaItem message = new TextAreaItem();
 		message.setName("message");
 		message.setTitle(I18N.getMessage("message"));
 		message.setValue("");
-		message.setWidth(300);
+		message.setWidth(250);
 
 		final CheckboxItem ticket = new CheckboxItem();
 		ticket.setName("sendticket");
@@ -136,7 +140,7 @@ public class EmailDialog extends Window {
 			}
 		});
 
-		emailForm.setFields(recipients, cc, object, ticket, message, sendItem);
-		addItem(emailForm);
+		form.setFields(recipients, cc, object, ticket, message, sendItem);
+		addItem(form);
 	}
 }
