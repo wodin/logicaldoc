@@ -7,7 +7,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.DiscussionsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
-import com.logicaldoc.gui.frontend.client.Log;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.DataSource;

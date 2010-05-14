@@ -9,7 +9,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUIResultHit;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
-import com.logicaldoc.gui.frontend.client.Log;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
