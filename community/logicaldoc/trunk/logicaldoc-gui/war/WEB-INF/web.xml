@@ -53,6 +53,11 @@
     <servlet-name>SettingService</servlet-name>
     <servlet-class>com.logicaldoc.gui.frontend.mock.MockSettingServiceImpl</servlet-class>
   </servlet>
+  
+  <servlet>
+    <servlet-name>SystemService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.mock.MockSystemServiceImpl</servlet-class>
+  </servlet>
 
   <servlet>
     <servlet-name>TagsData</servlet-name>
@@ -67,6 +72,11 @@
   <servlet>
     <servlet-name>UsersData</servlet-name>
     <servlet-class>com.logicaldoc.gui.common.server.mock.MockUsersDataServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>SessionsData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockSessionsDataServlet</servlet-class>
   </servlet>
 
   <servlet>
@@ -193,6 +203,11 @@
     <servlet-name>SettingService</servlet-name>
     <url-pattern>/frontend/setting</url-pattern>
   </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>SystemService</servlet-name>
+    <url-pattern>/frontend/system</url-pattern>
+  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>TagsData</servlet-name>
@@ -212,6 +227,11 @@
   <servlet-mapping>
     <servlet-name>UsersData</servlet-name>
     <url-pattern>/data/users.xml</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>SessionsData</servlet-name>
+    <url-pattern>/data/sessions.xml</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.administration;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.frontend.client.security.SecurityMenu;
 import com.logicaldoc.gui.frontend.client.settings.SysConfMenu;
+import com.logicaldoc.gui.frontend.client.system.SystemMenu;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
@@ -27,8 +28,13 @@ public class AdminMenu extends SectionStack {
 		setVisibilityMode(VisibilityMode.MUTEX);
 		setWidth100();
 
+		SectionStackSection systemSection = new SectionStackSection(I18N.getMessage("system"));
+		systemSection.setExpanded(true);
+		systemSection.addItem(new SystemMenu());
+		addSection(systemSection);
+
 		SectionStackSection securitySection = new SectionStackSection(I18N.getMessage("security"));
-		securitySection.setExpanded(true);
+		securitySection.setExpanded(false);
 		securitySection.addItem(new SecurityMenu());
 		addSection(securitySection);
 

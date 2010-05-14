@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.data;
 
 import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
@@ -25,7 +26,7 @@ public class GroupsDS extends DataSource {
 		DataSourceTextField label = new DataSourceTextField("label");
 
 		setFields(id, name, description, label);
-		setDataURL("data/groups.xml");
+		setDataURL("data/groups.xml?sid=" + Session.get().getSid());
 
 		setClientOnly(true);
 	}

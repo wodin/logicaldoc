@@ -185,7 +185,7 @@ public class GroupsPanel extends VLayout {
 		final long id = Long.parseLong(record.getAttributeAsString("id"));
 
 		MenuItem delete = new MenuItem();
-		delete.setTitle(I18N.getMessage("delete"));
+		delete.setTitle(I18N.getMessage("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new BooleanCallback() {

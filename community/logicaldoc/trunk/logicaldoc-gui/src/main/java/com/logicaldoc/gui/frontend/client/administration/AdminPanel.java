@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.administration;
 
+import com.logicaldoc.gui.frontend.client.system.GeneralPanel;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -28,6 +29,8 @@ public class AdminPanel extends HLayout {
 
 		addMember(leftMenu);
 		addMember(right);
+		
+		setContent(new GeneralPanel());
 	}
 
 	public void setContent(Canvas content) {

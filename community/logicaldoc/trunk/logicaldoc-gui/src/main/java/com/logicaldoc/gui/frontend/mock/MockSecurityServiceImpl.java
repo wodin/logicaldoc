@@ -201,4 +201,9 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	public void saveExtAuthSettings(String sid, GUILdapSettings ldapSettings, GUIADSettings adSettings) {
 
 	}
+
+	@Override
+	public void kill(String sid) {
+		
+	}
 }

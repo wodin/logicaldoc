@@ -160,7 +160,7 @@ public class BookmarksPanel extends VLayout {
 		}
 
 		MenuItem delete = new MenuItem();
-		delete.setTitle(I18N.getMessage("delete"));
+		delete.setTitle(I18N.getMessage("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				final ListGridRecord[] selection = list.getSelection();

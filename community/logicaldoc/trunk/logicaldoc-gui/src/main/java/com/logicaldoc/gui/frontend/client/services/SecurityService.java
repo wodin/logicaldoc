@@ -107,4 +107,9 @@ public interface SecurityService extends RemoteService {
 	 * Loads external authentication settings
 	 */
 	public GUILdapSettings[] loadExtAuthSettings(String sid);
+
+	/**
+	 * Kill the session with the given sid.
+	 */
+	public void kill(String sid);
 }

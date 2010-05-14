@@ -114,7 +114,7 @@ public class SavedSearchesPanel extends VLayout {
 		});
 
 		MenuItem delete = new MenuItem();
-		delete.setTitle(I18N.getMessage("delete"));
+		delete.setTitle(I18N.getMessage("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord[] selection = listGrid.getSelection();

@@ -102,7 +102,7 @@ public class DiscussionsPanel extends DocumentDetailTab {
 			public void onCellContextClick(CellContextClickEvent event) {
 				Menu contextMenu = new Menu();
 				MenuItem deleteItem = new MenuItem();
-				deleteItem.setTitle(I18N.getMessage("delete"));
+				deleteItem.setTitle(I18N.getMessage("ddelete"));
 				deleteItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 					public void onClick(MenuItemClickEvent event) {
 						deleteSelection();
