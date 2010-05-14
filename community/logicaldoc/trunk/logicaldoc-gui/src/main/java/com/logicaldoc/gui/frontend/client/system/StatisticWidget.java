@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.system;
 import com.rednels.ofcgwt.client.ChartWidget;
 import com.rednels.ofcgwt.client.model.ChartData;
 import com.rednels.ofcgwt.client.model.elements.PieChart;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * Visualizes some statistics as a pie chart
@@ -10,8 +11,8 @@ import com.rednels.ofcgwt.client.model.elements.PieChart;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class StatisticsPie extends ChartWidget {
-	public StatisticsPie(String title) {
+public class StatisticWidget extends ChartWidget {
+	public StatisticWidget(String title) {
 		super();
 		ChartData cd = new ChartData(title, "font-size: 14px; font-family: Verdana; text-align: center;");
 		cd.setBackgroundColour("#ffffff");
@@ -30,6 +31,7 @@ public class StatisticsPie extends ChartWidget {
 
 		cd.addElements(pie);
 		setSize("200", "200");
+
 		setJsonData(cd.toString());
 	}
 }
