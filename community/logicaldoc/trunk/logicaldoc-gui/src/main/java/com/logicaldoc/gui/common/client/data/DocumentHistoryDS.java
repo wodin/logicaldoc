@@ -3,7 +3,9 @@ package com.logicaldoc.gui.common.client.data;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
+import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
@@ -13,17 +15,35 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class DocumentHistoryDS extends DataSource {
-	public DocumentHistoryDS(long docId) {
+	private static final int MAX_ROWS = 100;
+
+	public DocumentHistoryDS(long docId, Integer maxRows) {
+		init("data/documenthistory.xml?sid=" + Session.get().getSid() + "&id=" + docId + "&lang=" + I18N.getLanguage()
+				+ "&maxRows=" + (maxRows != null ? maxRows : MAX_ROWS));
+	}
+
+	public DocumentHistoryDS(long userId, String event, Integer maxRows) {
+		init("data/documenthistory.xml?sid=" + Session.get().getSid() + "&userId=" + userId + "&event=" + event
+				+ "&lang=" + I18N.getLanguage() + "&maxRows=" + (maxRows != null ? maxRows : MAX_ROWS));
+	}
+
+	private void init(String url) {
 		setRecordXPath("/list/history");
 		DataSourceTextField user = new DataSourceTextField("user");
 		DataSourceDateTimeField date = new DataSourceDateTimeField("date");
 		DataSourceTextField event = new DataSourceTextField("event");
 		DataSourceTextField comment = new DataSourceTextField("comment");
 		DataSourceTextField version = new DataSourceTextField("version");
+		DataSourceTextField title = new DataSourceTextField("title");
+		DataSourceImageField icon = new DataSourceImageField("icon");
+		DataSourceBooleanField checked = new DataSourceBooleanField("checked");
+		DataSourceTextField documentId = new DataSourceTextField("docId");
+		DataSourceTextField folderId = new DataSourceTextField("folderId");
+		DataSourceTextField userId = new DataSourceTextField("userId");
 
-		setFields(user, date, event, comment, version);
+		setFields(user, date, event, comment, version, title, icon, checked, documentId, folderId, userId);
 		setClientOnly(true);
-		setDataURL("data/documenthistory.xml?sid=" + Session.get().getSid() + "&id=" + docId + "&lang="
-				+ I18N.getLanguage());
+
+		setDataURL(url);
 	}
 }

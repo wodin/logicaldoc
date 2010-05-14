@@ -44,7 +44,7 @@ public class HistoryPanel extends DocumentDetailTab {
 		listGrid = new ListGrid();
 		listGrid.setCanFreezeFields(true);
 		listGrid.setAutoFetchData(true);
-		dataSource = new DocumentHistoryDS(document.getId());
+		dataSource = new DocumentHistoryDS(document.getId(), null);
 		listGrid.setDataSource(dataSource);
 		listGrid.setFields(user, event, date, comment, version, title, path, sid);
 		addMember(listGrid);

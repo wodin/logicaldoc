@@ -15,7 +15,7 @@ public class I18N {
 
 	public static String getMessage(String key) {
 		try {
-			return Dictionary.getDictionary("frontend_i18n").get(key);
+			return Dictionary.getDictionary("frontend_i18n").get(key.replaceAll("\\.", "_"));
 		} catch (Throwable t) {
 			return key;
 		}

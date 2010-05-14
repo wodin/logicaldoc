@@ -16,20 +16,26 @@ public class MockDocumentHistoryDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		System.out.println("*** history");
-
-		long docId = Long.parseLong(request.getParameter("id"));
-		String lang = request.getParameter("lang");
-
-		String sid = (String) request.getParameter("sid");
-		if (sid == null)
-			throw new IOException("Invalid session");
-
 		response.setContentType("text/xml");
 
 		// Headers required by Internet Explorer
 		response.setHeader("Pragma", "public");
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
+
+		String sid = (String) request.getParameter("sid");
+		if (sid == null)
+			throw new IOException("Invalid session");
+
+		if (request.getParameter("id") != null)
+			documentHistory(request, response);
+		else if (request.getParameter("userId") != null)
+			userHistory(request, response);
+	}
+
+	private void documentHistory(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		long docId = Long.parseLong(request.getParameter("id"));
+		String lang = request.getParameter("lang");
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
@@ -40,6 +46,9 @@ public class MockDocumentHistoryDataServlet extends HttpServlet {
 		writer.print("<version>1.1</version>");
 		writer.print("<date>2010-10-26T11:32:23</date>");
 		writer.print("<comment>comment</comment>");
+		writer.print("<title>Document 1</title>");
+		writer.print("<icon>word</icon>");
+		writer.print("<checked>false</checked>");
 		writer.print("</history>");
 
 		writer.print("<history>");
@@ -48,6 +57,46 @@ public class MockDocumentHistoryDataServlet extends HttpServlet {
 		writer.print("<version>1.0</version>");
 		writer.print("<date>2010-10-26T11:32:23</date>");
 		writer.print("<comment>comment</comment>");
+		writer.print("<title>Document 2</title>");
+		writer.print("<icon>word</icon>");
+		writer.print("<checked>false</checked>");
+		writer.print("</history>");
+
+		writer.write("</list>");
+	}
+
+	private void userHistory(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		long userId = Long.parseLong(request.getParameter("userId"));
+		String event = request.getParameter("event");
+		String lang = request.getParameter("lang");
+
+		PrintWriter writer = response.getWriter();
+		writer.write("<list>");
+
+		writer.print("<history>");
+		writer.print("<user>Marco Meschieri</user>");
+		writer.print("<event>checkin</event>");
+		writer.print("<version>1.1</version>");
+		writer.print("<date>2010-10-26T11:32:23</date>");
+		writer.print("<comment>comment</comment>");
+		writer.print("<title>Document 1</title>");
+		writer.print("<icon>word</icon>");
+		writer.print("<checked>false</checked>");
+		writer.print("<userId>" + userId + "</userId>");
+		writer.print("<folderId>5</folderId>");
+		writer.print("</history>");
+
+		writer.print("<history>");
+		writer.print("<user>Marco Meschieri</user>");
+		writer.print("<event>Document Creation</event>");
+		writer.print("<version>1.0</version>");
+		writer.print("<date>2010-10-26T11:32:23</date>");
+		writer.print("<comment>comment</comment>");
+		writer.print("<title>Document 2</title>");
+		writer.print("<icon>word</icon>");
+		writer.print("<checked>false</checked>");
+		writer.print("<userId>" + userId + "</userId>");
+		writer.print("<folderId>5</folderId>");
 		writer.print("</history>");
 
 		writer.write("</list>");

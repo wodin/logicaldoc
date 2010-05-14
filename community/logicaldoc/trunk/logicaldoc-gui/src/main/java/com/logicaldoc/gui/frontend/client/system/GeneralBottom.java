@@ -61,33 +61,33 @@ public class GeneralBottom extends HLayout {
 		systemForm.setColWidths(1, "*");
 
 		StaticTextItem productName = new StaticTextItem();
-		productName.setName("");
+		productName.setName("productName");
 		productName.setTitle("");
 		productName.setValue("<b>" + Util.getContext().get("product_name") + "</b>");
 
 		StaticTextItem version = new StaticTextItem();
-		version.setName("");
+		version.setName("version");
 		version.setTitle("");
 		version.setValue(I18N.getMessage("version") + " " + Util.getContext().get("product_release"));
 
 		StaticTextItem vendor = new StaticTextItem();
-		vendor.setName("");
+		vendor.setName("vendor");
 		vendor.setTitle("");
 		vendor.setValue("&copy; " + Util.getContext().get("product_vendor"));
 
 		StaticTextItem address = new StaticTextItem();
-		address.setName("");
+		address.setName("address");
 		address.setTitle("");
 		address.setValue(Util.getContext().get("product_vendor_address"));
 
 		StaticTextItem capAndCity = new StaticTextItem();
-		capAndCity.setName("");
+		capAndCity.setName("capAndCity");
 		capAndCity.setTitle("");
 		capAndCity.setValue(Util.getContext().get("product_vendor_cap") + "  "
 				+ Util.getContext().get("product_vendor_city"));
 
 		StaticTextItem country = new StaticTextItem();
-		country.setName("");
+		country.setName("country");
 		country.setTitle("");
 		country.setValue(Util.getContext().get("product_vendor_country"));
 
