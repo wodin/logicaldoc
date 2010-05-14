@@ -2,8 +2,6 @@ package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
 
-import com.logicaldoc.gui.frontend.client.Log;
-
 /**
  * Security Settings bean as used in the GUI
  * 
@@ -69,7 +67,6 @@ public class GUISecuritySettings implements Serializable {
 		int i = 0;
 		for (GUIUser u : notifiedUsers) {
 			if (!u.getUserName().equals(username)) {
-				Log.debug("add!!!");
 				tmp[i] = u;
 				i++;
 			}
