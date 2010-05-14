@@ -1,8 +1,7 @@
-package com.logicaldoc.gui.frontend.client;
+package com.logicaldoc.gui.common.client.log;
 
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.I18N;
-import com.logicaldoc.gui.frontend.client.panels.EventPanel;
 
 /**
  * Represents a client work session
