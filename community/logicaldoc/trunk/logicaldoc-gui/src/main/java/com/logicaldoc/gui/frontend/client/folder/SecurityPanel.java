@@ -87,7 +87,7 @@ public class SecurityPanel extends FolderDetailTab {
 		immutable.setType(ListGridFieldType.BOOLEAN);
 		immutable.setCanEdit(true);
 
-		ListGridField delete = new ListGridField("delete", I18N.getMessage("delete"), 60);
+		ListGridField delete = new ListGridField("delete", I18N.getMessage("ddelete"), 60);
 		delete.setType(ListGridFieldType.BOOLEAN);
 		delete.setCanEdit(true);
 
@@ -289,7 +289,7 @@ public class SecurityPanel extends FolderDetailTab {
 		Menu contextMenu = new Menu();
 
 		MenuItem deleteItem = new MenuItem();
-		deleteItem.setTitle(I18N.getMessage("delete"));
+		deleteItem.setTitle(I18N.getMessage("ddelete"));
 		deleteItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord[] selection = list.getSelection();

@@ -8,7 +8,6 @@ import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
-import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 
 public interface SecurityServiceAsync {
 	public void login(String username, String password, AsyncCallback<GUISession> callback);
@@ -43,4 +42,6 @@ public interface SecurityServiceAsync {
 			AsyncCallback<Void> callback);
 
 	void loadExtAuthSettings(String sid, AsyncCallback<GUILdapSettings[]> callback);
+
+	void kill(String sid, AsyncCallback<Void> callback);
 }

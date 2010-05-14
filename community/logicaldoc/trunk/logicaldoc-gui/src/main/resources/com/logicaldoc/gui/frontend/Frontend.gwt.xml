@@ -3,6 +3,7 @@
 <module rename-to="frontend">
     <inherits name="com.logicaldoc.gui.common.Common" />
     <inherits name="com.smartclient.theme.logicaldoc.LogicalDOCResources" />
+    <inherits name="com.rednels.ofcgwt.OFCGWT" />
     
     <!-- Compile for firefox only more fastly for developement  
 	<set-property name="user.agent" value="gecko"/> -->  
