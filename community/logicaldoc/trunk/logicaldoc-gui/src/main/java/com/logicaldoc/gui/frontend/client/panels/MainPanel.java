@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.SessionObserver;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
+import com.logicaldoc.gui.frontend.client.dashboard.DashboardPanel;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.search.SearchMenu;
@@ -31,6 +32,8 @@ public class MainPanel extends VLayout implements SessionObserver {
 	private Tab documentsTab;
 
 	private Tab searchTab;
+	
+	private Tab dashboardTab;
 
 	private Tab administrationTab;
 
@@ -60,6 +63,8 @@ public class MainPanel extends VLayout implements SessionObserver {
 		tabSet.addTab(documentsTab);
 		searchTab = new Tab(I18N.getMessage("search"));
 		tabSet.addTab(searchTab);
+		dashboardTab = new Tab(I18N.getMessage("dashboard"));
+		tabSet.addTab(dashboardTab);
 		administrationTab = new Tab(I18N.getMessage("administration"));
 
 		addMember(topPanel);
@@ -82,6 +87,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 		
 		documentsTab.setPane(DocumentsPanel.get());
 		searchTab.setPane(SearchPanel.get());
+		dashboardTab.setPane(DashboardPanel.get());
 		administrationTab.setPane(AdminPanel.get());
 
 		if (user.isMemberOf("admin")) {

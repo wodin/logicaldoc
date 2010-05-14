@@ -11,5 +11,6 @@ import com.logicaldoc.gui.common.client.I18N;
 public class FeatureDisabled extends HTMLPanel {
 	public FeatureDisabled() {
 		super("<b>" + I18N.getMessage("featuredisabled") + "</b>");
+		setBackgroundColor("#F8FFBF");
 	}
 }
