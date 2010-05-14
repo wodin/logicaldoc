@@ -3,8 +3,6 @@ package com.logicaldoc.gui.frontend.client.settings;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import net.sourceforge.htmlunit.corejs.javascript.Context;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
