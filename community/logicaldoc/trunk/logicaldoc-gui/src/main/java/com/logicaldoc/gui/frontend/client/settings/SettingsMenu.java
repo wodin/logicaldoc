@@ -22,10 +22,10 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class SysConfMenu extends VLayout {
+public class SettingsMenu extends VLayout {
 	private SettingServiceAsync service = (SettingServiceAsync) GWT.create(SettingService.class);
 
-	public SysConfMenu() {
+	public SettingsMenu() {
 		setMargin(10);
 		setMembersMargin(5);
 
@@ -41,7 +41,7 @@ public class SysConfMenu extends VLayout {
 		email.setWidth100();
 		email.setHeight(25);
 
-		setMembers(clientTools, parameters, email);
+		setMembers(clientTools, email, parameters);
 
 		clientTools.addClickHandler(new ClickHandler() {
 			@Override

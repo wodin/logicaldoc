@@ -36,12 +36,12 @@ public class DocumentHistoryDS extends DataSource {
 		DataSourceTextField version = new DataSourceTextField("version");
 		DataSourceTextField title = new DataSourceTextField("title");
 		DataSourceImageField icon = new DataSourceImageField("icon");
-		DataSourceBooleanField checked = new DataSourceBooleanField("checked");
+		DataSourceBooleanField _new = new DataSourceBooleanField("new");
 		DataSourceTextField documentId = new DataSourceTextField("docId");
 		DataSourceTextField folderId = new DataSourceTextField("folderId");
 		DataSourceTextField userId = new DataSourceTextField("userId");
 
-		setFields(user, date, event, comment, version, title, icon, checked, documentId, folderId, userId);
+		setFields(user, date, event, comment, version, title, icon, _new, documentId, folderId, userId);
 		setClientOnly(true);
 
 		setDataURL(url);

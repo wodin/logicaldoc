@@ -8,12 +8,14 @@ import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -72,22 +74,22 @@ public class TagsForm extends VLayout {
 
 		final DynamicForm form2 = new DynamicForm();
 		form2.setNumCols(3);
-		TextItem otherChar = new TextItem("otherchar", I18N.getMessage("otherchar"));
-		otherChar.setRequired(true);
-		otherChar.setLength(1);
-		otherChar.setWidth(50);
-		otherChar.setEndRow(false);
-		ButtonItem search = new ButtonItem("search", I18N.getMessage("search"));
-		search.addClickHandler(new ClickHandler() {
 
-			@Override
-			public void onClick(ClickEvent event) {
+		PickerIcon searchPicker = new PickerIcon(PickerIcon.SEARCH, new FormItemClickHandler() {
+			public void onFormItemClick(FormItemIconClickEvent event) {
 				if (!form2.validate())
 					return;
 				onLetterSelect(form2.getValueAsString("otherchar"));
 			}
 		});
-		form2.setItems(otherChar, search);
+
+		TextItem otherChar = new TextItem("otherchar", I18N.getMessage("otherchar"));
+		otherChar.setRequired(true);
+		otherChar.setLength(1);
+		otherChar.setWidth(50);
+		otherChar.setEndRow(false);
+		otherChar.setIcons(searchPicker);
+		form2.setItems(otherChar);
 
 		vocabulary.addMember(form1);
 		vocabulary.addMember(form2);
@@ -99,7 +101,6 @@ public class TagsForm extends VLayout {
 		tags = new ListGrid();
 		tags.setWidth100();
 		tags.setHeight100();
-		tags.setAutoFetchData(true);
 		tags.setFields(word, count);
 		tags.setSelectionType(SelectionStyle.SINGLE);
 		addMember(tags);

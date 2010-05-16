@@ -174,10 +174,6 @@ public class SecurityPanel extends FolderDetailTab {
 
 		buttons.addMember(new HTML("<span style='width: 10px' />"));
 
-		// Prepare some items for the combo-boxes
-		ListGridField username = new ListGridField("username");
-		ListGridField label = new ListGridField("label");
-
 		// Prepare the combo and button for adding a new Group
 		final DynamicForm groupForm = new DynamicForm();
 		final ComboBoxItem group = ItemFactory.newGroupSelector("group", I18N.getMessage("group"));
