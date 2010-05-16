@@ -74,6 +74,8 @@ public class History extends AbstractHistory {
 		history.setPath(getPath());
 		history.setNotified(getNotified());
 		history.setSessionId(getSessionId());
+		history.setNew(getNew());
+		history.setFilename(getFilename());
 
 		return history;
 	}

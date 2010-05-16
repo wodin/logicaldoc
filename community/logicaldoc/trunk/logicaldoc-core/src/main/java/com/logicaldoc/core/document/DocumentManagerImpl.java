@@ -130,6 +130,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// Modify document history entry
 			transaction.setEvent(History.EVENT_CHECKEDIN);
+			transaction.setFilename(document.getFileName());
 
 			// create search index entry
 			if (immediateIndexing)
