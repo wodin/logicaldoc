@@ -48,7 +48,8 @@ public class MockDocumentHistoryDataServlet extends HttpServlet {
 		writer.print("<comment>comment</comment>");
 		writer.print("<title>Document 1</title>");
 		writer.print("<icon>word</icon>");
-		writer.print("<checked>false</checked>");
+		writer.print("<new>false</new>");
+		writer.print("<docId>" + docId + "</docId>");
 		writer.print("</history>");
 
 		writer.print("<history>");
@@ -59,7 +60,8 @@ public class MockDocumentHistoryDataServlet extends HttpServlet {
 		writer.print("<comment>comment</comment>");
 		writer.print("<title>Document 2</title>");
 		writer.print("<icon>word</icon>");
-		writer.print("<checked>false</checked>");
+		writer.print("<new>false</new>");
+		writer.print("<docId>" + docId + "</docId>");
 		writer.print("</history>");
 
 		writer.write("</list>");
@@ -69,35 +71,26 @@ public class MockDocumentHistoryDataServlet extends HttpServlet {
 		long userId = Long.parseLong(request.getParameter("userId"));
 		String event = request.getParameter("event");
 		String lang = request.getParameter("lang");
+		int maxRows = Integer.parseInt(request.getParameter("maxRows"));
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
 
-		writer.print("<history>");
-		writer.print("<user>Marco Meschieri</user>");
-		writer.print("<event>checkin</event>");
-		writer.print("<version>1.1</version>");
-		writer.print("<date>2010-10-26T11:32:23</date>");
-		writer.print("<comment>comment</comment>");
-		writer.print("<title>Document 1</title>");
-		writer.print("<icon>word</icon>");
-		writer.print("<checked>false</checked>");
-		writer.print("<userId>" + userId + "</userId>");
-		writer.print("<folderId>5</folderId>");
-		writer.print("</history>");
-
-		writer.print("<history>");
-		writer.print("<user>Marco Meschieri</user>");
-		writer.print("<event>Document Creation</event>");
-		writer.print("<version>1.0</version>");
-		writer.print("<date>2010-10-26T11:32:23</date>");
-		writer.print("<comment>comment</comment>");
-		writer.print("<title>Document 2</title>");
-		writer.print("<icon>word</icon>");
-		writer.print("<checked>false</checked>");
-		writer.print("<userId>" + userId + "</userId>");
-		writer.print("<folderId>5</folderId>");
-		writer.print("</history>");
+		for (int i = 0; i < maxRows; i++) {
+			writer.print("<history>");
+			writer.print("<user>Marco Meschieri</user>");
+			writer.print("<event>checkin</event>");
+			writer.print("<version>1." + i + "</version>");
+			writer.print("<date>2010-10-26T11:32:23</date>");
+			writer.print("<comment>comment</comment>");
+			writer.print("<title>Document " + i + "</title>");
+			writer.print("<icon>word</icon>");
+			writer.print("<new>" + (i % 2 == 0) + "</new>");
+			writer.print("<userId>" + userId + "</userId>");
+			writer.print("<folderId>5</folderId>");
+			writer.print("<docId>" + i + "</docId>");
+			writer.print("</history>");
+		}
 
 		writer.write("</list>");
 	}

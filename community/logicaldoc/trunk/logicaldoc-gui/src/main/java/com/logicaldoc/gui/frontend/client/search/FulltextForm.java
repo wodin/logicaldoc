@@ -24,11 +24,11 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -36,6 +36,8 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -82,11 +84,19 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		form.setNumCols(4);
 		form.setWidth(300);
 
+		PickerIcon searchPicker = new PickerIcon(PickerIcon.SEARCH, new FormItemClickHandler() {
+			public void onFormItemClick(FormItemIconClickEvent event) {
+				search();
+			}
+		});
+
 		TextItem expression = new TextItem("expression");
 		expression.setColSpan(2);
 		expression.setRequired(true);
 		expression.setTitle(I18N.getMessage("expression"));
 		expression.setValue(I18N.getMessage("search") + "...");
+		expression.setIcons(searchPicker);
+		expression.setEndRow(true);
 		expression.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
@@ -102,15 +112,6 @@ public class FulltextForm extends VLayout implements SearchObserver {
 				if ((I18N.getMessage("search") + "...").equals(event.getItem().getValue())) {
 					event.getItem().setValue("");
 				}
-			}
-		});
-		ButtonItem search = new ButtonItem("search");
-		search.setTitle(I18N.getMessage("search"));
-		search.setStartRow(false);
-		search.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				search();
 			}
 		});
 
@@ -177,7 +178,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			}
 		});
 
-		form.setItems(expression, search, language, sizeOperator, size, dateSelector, dateOperator, date, template,
+		form.setItems(expression, language, sizeOperator, size, dateSelector, dateOperator, date, template,
 				folder, subfolders, searchin);
 		addMember(form);
 

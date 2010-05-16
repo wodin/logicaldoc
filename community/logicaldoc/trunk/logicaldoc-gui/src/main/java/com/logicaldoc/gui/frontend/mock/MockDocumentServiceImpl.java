@@ -252,4 +252,9 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	public void updateBookmark(String sid, GUIBookmark bookmark) {
 
 	}
+
+	@Override
+	public void markHistoryAsRead(String sid, String event) {
+
+	}
 }

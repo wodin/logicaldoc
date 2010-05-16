@@ -20,7 +20,7 @@ public final class Constants {
 	public static final String SESSIONS = "sessions";
 
 	public static final long ROOT_FOLDERID = -1;
-	
+
 	public static final long DOCUMENTS_FOLDERID = 5;
 
 	public static final String FORMAT_DATE = "date";
@@ -66,6 +66,14 @@ public final class Constants {
 	public static final String KEY_ENTER = "enter";
 
 	public static final String GROUP_ADMIN = "admin";
-	
+
 	public final static String EVENT_LOCKED = "event.locked";
+
+	public final static String EVENT_CHECKEDOUT = "event.checkedout";
+
+	public static final String EVENT_DOWNLOADED = "event.downloaded";
+	
+	public final static String EVENT_CHANGED = "event.changed";
+
+	public final static String EVENT_CHECKEDIN = "event.checkedin";
 }

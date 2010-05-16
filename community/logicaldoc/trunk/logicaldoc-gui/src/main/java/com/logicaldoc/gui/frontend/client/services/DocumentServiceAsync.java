@@ -54,4 +54,6 @@ public interface DocumentServiceAsync {
 	void deleteBookmarks(String sid, long[] bookmarkIds, AsyncCallback<Void> callback);
 
 	void updateBookmark(String sid, GUIBookmark bookmark, AsyncCallback<Void> callback);
+
+	void markHistoryAsRead(String sid, String event, AsyncCallback<Void> callback);
 }

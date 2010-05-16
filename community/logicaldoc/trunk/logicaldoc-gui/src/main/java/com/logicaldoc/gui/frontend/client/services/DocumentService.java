@@ -149,4 +149,13 @@ public interface DocumentService extends RemoteService {
 	 * Updates a single bookmark's data
 	 */
 	public void updateBookmark(String sid, GUIBookmark bookmark);
+
+	/**
+	 * Marks as read the histories related to the current user and the given
+	 * event.
+	 * 
+	 * @param sid The session identifier
+	 * @param event The history event to mark as read
+	 */
+	public void markHistoryAsRead(String sid, String event);
 }
