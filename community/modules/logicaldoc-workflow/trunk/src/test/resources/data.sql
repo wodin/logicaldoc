@@ -97,13 +97,13 @@ insert into ld_workflowtemplate
 values		(4,'2009-11-25',1,'workflow4','this is the workflow4',1,'minnie');
 
 insert into ld_workflowhistory 
-				(ld_id, ld_lastmodified, ld_deleted, ld_date, ld_event, ld_comment, ld_docid, ld_userid, ld_username, ld_templateid, ld_instanceid)
-values      (1,'2008-10-22',0,'2006-12-27','start workflow','test',1,2,'matteo',1,'1');
+				(ld_id, ld_lastmodified, ld_deleted, ld_date, ld_event, ld_comment, ld_docid, ld_userid, ld_username, ld_templateid, ld_instanceid, ld_new)
+values      (1,'2008-10-22',0,'2006-12-27','start workflow','test',1,2,'matteo',1,'1',1);
 
 insert into ld_workflowhistory 
-				(ld_id, ld_lastmodified, ld_deleted, ld_date, ld_event, ld_comment, ld_docid, ld_userid, ld_username, ld_templateid, ld_instanceid)
-values      (2,'2008-10-22',0,'2006-12-27','stop workflow','test',1,2,'matteo',1,'1');
+				(ld_id, ld_lastmodified, ld_deleted, ld_date, ld_event, ld_comment, ld_docid, ld_userid, ld_username, ld_templateid, ld_instanceid, ld_new)
+values      (2,'2008-10-22',0,'2006-12-27','stop workflow','test',1,2,'matteo',1,'1',1);
 
 insert into ld_workflowhistory 
-				(ld_id, ld_lastmodified, ld_deleted, ld_date, ld_event, ld_comment, ld_docid, ld_userid, ld_username, ld_templateid, ld_instanceid)
-values      (3,'2008-10-22',1,'2006-12-27','DELETED','test',1,2,'matteo',1,'2');
+				(ld_id, ld_lastmodified, ld_deleted, ld_date, ld_event, ld_comment, ld_docid, ld_userid, ld_username, ld_templateid, ld_instanceid, ld_new)
+values      (3,'2008-10-22',1,'2006-12-27','DELETED','test',1,2,'matteo',1,'2',1);
