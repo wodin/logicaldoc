@@ -91,6 +91,7 @@ public class DocumentManagerImplTest extends AbstractCoreTestCase {
 		transaction.setUserId(1);
 		transaction.setNotified(0);
 		transaction.setComment("pippo_reason");
+		transaction.setFilename(doc.getFileName());
 
 		Menu newFolder = folderDao.findById(Menu.MENUID_HOME);
 		docDao.initialize(doc);

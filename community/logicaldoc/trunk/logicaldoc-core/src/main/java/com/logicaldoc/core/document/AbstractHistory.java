@@ -36,6 +36,10 @@ public class AbstractHistory extends PersistentObject {
 
 	private String sessionId = "";
 
+	private int _new = 1;
+
+	private String filename = null;
+
 	// Not persistent
 	private User user;
 
@@ -173,5 +177,21 @@ public class AbstractHistory extends PersistentObject {
 		this.user = user;
 		setUserId(user.getId());
 		setUserName(user.getFullName());
+	}
+
+	public int getNew() {
+		return _new;
+	}
+
+	public void setNew(int _new) {
+		this._new = _new;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 }

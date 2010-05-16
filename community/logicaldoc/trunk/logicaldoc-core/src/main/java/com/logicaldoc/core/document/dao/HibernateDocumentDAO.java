@@ -822,6 +822,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		transaction.setFolderId(doc.getFolder().getId());
 		transaction.setTitle(doc.getTitle());
 		transaction.setVersion(doc.getVersion());
+		transaction.setFilename(doc.getFileName());
 		transaction.setPath(menuDAO.computePathExtended(doc.getFolder().getId()));
 		transaction.setNotified(0);
 
