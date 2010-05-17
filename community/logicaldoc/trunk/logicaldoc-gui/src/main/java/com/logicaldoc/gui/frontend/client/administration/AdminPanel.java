@@ -29,7 +29,7 @@ public class AdminPanel extends HLayout {
 
 		addMember(leftMenu);
 		addMember(right);
-		
+
 		setContent(new GeneralPanel());
 	}
 

@@ -62,6 +62,19 @@ public class Util {
 	}-*/;
 
 	/**
+	 * Format number percentage.
+	 * 
+	 * @param value The value to be formatted.
+	 * @param fixed The number of decimal places.
+	 * @return The formated value.
+	 */
+	public static native String formatPercentage(double value, int fixed) /*-{
+		str = value.toFixed(fixed);
+
+		return str+"%";
+	}-*/;
+
+	/**
 	 * Get browser language
 	 * 
 	 * @return The language in ISO 639 format.

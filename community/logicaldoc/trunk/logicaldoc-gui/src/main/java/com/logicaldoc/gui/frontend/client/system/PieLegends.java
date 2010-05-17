@@ -1,11 +1,18 @@
 package com.logicaldoc.gui.frontend.client.system;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.frontend.client.services.SystemService;
+import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
+import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
-
 
 /**
  * Shows the charts legends
@@ -15,55 +22,99 @@ import com.smartgwt.client.widgets.layout.HLayout;
  */
 public class PieLegends extends HLayout {
 
+	private SystemServiceAsync service = (SystemServiceAsync) GWT.create(SystemService.class);
+
 	public PieLegends() {
 		super();
-		setMembersMargin(30);
+		setMembersMargin(50);
 		setHeight(100);
 		setWidth100();
 
-		// addMember(prepareLegend());
-		// addMember(prepareLegend());
-		// addMember(prepareLegend());
+		service.getStatistics(Session.get().getSid(), new AsyncCallback<GUIParameter[][]>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(GUIParameter[][] parameters) {
+				addMember(prepareLegend(parameters[0], 1));
+				addMember(prepareLegend(parameters[1], 2));
+				addMember(prepareLegend(parameters[2], 3));
+			}
+		});
 	}
 
-	private DynamicForm prepareLegend() {
+	private DynamicForm prepareLegend(GUIParameter[] parameters, int type) {
+
+		// Calculate the total value
+		double count = 0;
+		for (GUIParameter parameter : parameters) {
+			if (parameter == null)
+				break;
+
+			count += Double.parseDouble(parameter.getValue());
+		}
+
 		DynamicForm systemForm = new DynamicForm();
 		systemForm.setWidth("33%");
 		systemForm.setColWidths(25, "*");
+		systemForm.setTitleOrientation(TitleOrientation.LEFT);
+		systemForm.setWrapItemTitles(false);
+		systemForm.setMargin(8);
+		systemForm.setNumCols(2);
 
-		StaticTextItem productName = new StaticTextItem();
-		productName.setName("productName");
-		productName.setTitle("");
-		productName.setValue("<b>" + Util.getContext().get("product_name") + "</b>");
+		StaticTextItem[] items = null;
+		if (type == 1)
+			// Repository
+			items = new StaticTextItem[8];
+		else if (type == 2)
+			// Documents
+			items = new StaticTextItem[4];
+		else if (type == 3)
+			// Folders
+			items = new StaticTextItem[4];
 
-		StaticTextItem version = new StaticTextItem();
-		version.setName("version");
-		version.setTitle("");
-		version.setValue(I18N.getMessage("version") + " " + Util.getContext().get("product_release"));
+		int i = 0;
+		for (GUIParameter parameter : parameters) {
+			if (parameter == null)
+				break;
 
-		StaticTextItem vendor = new StaticTextItem();
-		vendor.setName("vendor");
-		vendor.setTitle("");
-		vendor.setValue("&copy; " + Util.getContext().get("product_vendor"));
+			StaticTextItem item = new StaticTextItem();
+			item.setName(parameter.getName());
+			item.setTitle(parameter.toString());
+			if (type == 1)
+				item.setValue(Util.formatSize(Long.parseLong(parameter.getValue())) + " ( "
+						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
+			else if (type == 2)
+				item.setValue(parameter.getValue() + " documents" + " ( "
+						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
+			else if (type == 3)
+				item.setValue(parameter.getValue() + " folders" + " ( "
+						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
 
-		StaticTextItem address = new StaticTextItem();
-		address.setName("address");
-		address.setTitle("");
-		address.setValue(Util.getContext().get("product_vendor_address"));
+			item.setRequired(true);
+			item.setShouldSaveValue(false);
+			items[i] = item;
+			i++;
+		}
 
-		StaticTextItem capAndCity = new StaticTextItem();
-		capAndCity.setName("capAndCity");
-		capAndCity.setTitle("");
-		capAndCity.setValue(Util.getContext().get("product_vendor_cap") + "  "
-				+ Util.getContext().get("product_vendor_city"));
+		StaticTextItem total = new StaticTextItem();
+		total.setName("total");
+		total.setTitle(I18N.getMessage("total"));
+		if (type == 1)
+			total.setValue(Util.formatSize(count));
+		else if (type == 2)
+			total.setValue((int) count + " documents");
+		else if (type == 3)
+			total.setValue((int) count + " folders");
+		total.setRequired(true);
+		total.setShouldSaveValue(false);
+		items[i] = total;
 
-		StaticTextItem country = new StaticTextItem();
-		country.setName("country");
-		country.setTitle("");
-		country.setValue(Util.getContext().get("product_vendor_country"));
+		systemForm.setItems(items);
 
-		systemForm.setItems(productName, version, vendor, address, capAndCity, country);
 		return systemForm;
 	}
-
 }
