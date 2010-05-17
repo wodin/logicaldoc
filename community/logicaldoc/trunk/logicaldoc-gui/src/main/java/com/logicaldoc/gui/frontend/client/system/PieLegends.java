@@ -88,10 +88,10 @@ public class PieLegends extends HLayout {
 				item.setValue(Util.formatSize(Long.parseLong(parameter.getValue())) + " ( "
 						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
 			else if (type == 2)
-				item.setValue(parameter.getValue() + " documents" + " ( "
+				item.setValue(parameter.getValue() + " " + I18N.getMessage("documents").toLowerCase() + " " + "( "
 						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
 			else if (type == 3)
-				item.setValue(parameter.getValue() + " folders" + " ( "
+				item.setValue(parameter.getValue() + " " + I18N.getMessage("folders").toLowerCase() + " " + " ( "
 						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
 
 			item.setRequired(true);
@@ -106,9 +106,9 @@ public class PieLegends extends HLayout {
 		if (type == 1)
 			total.setValue(Util.formatSize(count));
 		else if (type == 2)
-			total.setValue((int) count + " documents");
+			total.setValue((int) count + " " + I18N.getMessage("documents").toLowerCase());
 		else if (type == 3)
-			total.setValue((int) count + " folders");
+			total.setValue((int) count + " " + I18N.getMessage("folders").toLowerCase());
 		total.setRequired(true);
 		total.setShouldSaveValue(false);
 		items[i] = total;
