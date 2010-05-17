@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.data.DocumentHistoryDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.Record;
@@ -18,8 +19,8 @@ import com.smartgwt.client.types.DragAppearance;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HeaderControl;
+import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -69,7 +70,7 @@ public class HistoryPortlet extends Portlet {
 		list = new ListGrid() {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
-				if (!record.getAttributeAsBoolean("new")) {
+				if (record.getAttributeAsBoolean("new")) {
 					return "font-weight: bold;";
 				} else {
 					return super.getCellCSSText(record, rowNum, colNum);
@@ -90,12 +91,9 @@ public class HistoryPortlet extends Portlet {
 		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
-				SC.say("dbclick");
-				// ListGridRecord record = event.getRecord();
-				// Window.open("download?sid=" + Session.get().getSid() +
-				// "&docId=" + document.getId() + "&versionId="
-				// + record.getAttribute("version") + "&open=true", "_blank",
-				// "");
+				Record record = event.getRecord();
+				DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")),
+						Long.parseLong(record.getAttributeAsString("docId")));
 			}
 		});
 
@@ -127,7 +125,22 @@ public class HistoryPortlet extends Portlet {
 			}
 		});
 
-		setHeaderControls(HeaderControls.MINIMIZE_BUTTON, HeaderControls.HEADER_LABEL, markAsRead);
+		String iconUrl = Util.imageUrl("blank.gif");
+		if (eventCode.equals(Constants.EVENT_CHECKEDOUT))
+			iconUrl = Util.imageUrl("application/page_edit.png");
+		else if (eventCode.equals(Constants.EVENT_LOCKED))
+			iconUrl = Util.imageUrl("application/document_lock.png");
+		else if (eventCode.equals(Constants.EVENT_DOWNLOADED))
+			iconUrl = Util.imageUrl("application/download.png");
+		else if (eventCode.equals(Constants.EVENT_CHECKEDIN))
+			iconUrl = Util.imageUrl("application/document_add.png");
+		else if (eventCode.equals(Constants.EVENT_CHANGED))
+			iconUrl = Util.imageUrl("application/edit.png");
+
+		HeaderIcon portletIcon = new HeaderIcon(iconUrl);
+
+		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL, HeaderControls.MINIMIZE_BUTTON,
+				markAsRead);
 
 		// Count the total of events and the total of unchecked events
 		list.addDataArrivedHandler(new DataArrivedHandler() {
@@ -140,11 +153,17 @@ public class HistoryPortlet extends Portlet {
 						unread++;
 				}
 
-				String title = I18N.getMessage(eventCode + "docs", Integer.toString(list.getTotalRows()));
+				int total = list.getTotalRows();
+				String title = I18N.getMessage(eventCode + "docs", Integer.toString(total));
 				if (unread > 0)
 					title = "<b>" + title + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + I18N.getMessage("news")
 							+ ": " + unread + "</b>";
 				setTitle(title);
+
+				if (Constants.EVENT_LOCKED.equals(eventCode))
+					Session.get().getUser().setLockedDocs(total);
+				else if (Constants.EVENT_CHECKEDOUT.equals(eventCode))
+					Session.get().getUser().setCheckedOutDocs(total);
 			}
 		});
 

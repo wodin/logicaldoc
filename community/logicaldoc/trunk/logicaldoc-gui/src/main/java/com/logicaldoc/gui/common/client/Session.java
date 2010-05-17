@@ -49,10 +49,11 @@ public class Session {
 	public void init(GUISession session) {
 		this.session = session;
 		setLanguage(session.getUser().getLanguage());
-		if (session.isLoggedIn())
+		if (session.isLoggedIn()) {
 			for (SessionObserver listener : sessionObservers) {
 				listener.onUserLoggedIn(session.getUser());
 			}
+		}
 	}
 
 	public void addSessionObserver(SessionObserver observer) {
