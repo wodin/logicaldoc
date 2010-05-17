@@ -15,14 +15,15 @@ public class GeneralPanel extends VLayout {
 		setHeight100();
 		setMembersMargin(10);
 
-		PieCharts charts = new PieCharts();
-		//charts.setHeight("21%");
+		PieStats charts = new PieStats();
+		charts.setHeight("22%");
 
 		PieLegends legends = new PieLegends();
+		legends.setHeight(180);
 		legends.setShowResizeBar(true);
 
 		GeneralBottom bottom = new GeneralBottom();
-		bottom.setHeight(220);
+		bottom.setHeight(250);
 
 		setMembers(charts, legends, bottom);
 	}

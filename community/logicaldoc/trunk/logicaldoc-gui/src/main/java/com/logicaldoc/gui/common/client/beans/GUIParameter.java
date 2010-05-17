@@ -2,6 +2,8 @@ package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
 
+import com.logicaldoc.gui.common.client.I18N;
+
 public class GUIParameter implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -9,6 +11,8 @@ public class GUIParameter implements Serializable {
 	private String name;
 
 	private String value;
+
+	private String label;
 
 	public GUIParameter() {
 	}
@@ -33,5 +37,20 @@ public class GUIParameter implements Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public String toString() {
+		if (label != null)
+			return I18N.getMessage(label);
+		else
+			return I18N.getMessage(name);
 	}
 }

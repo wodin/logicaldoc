@@ -1,10 +1,7 @@
 package com.logicaldoc.gui.frontend.client.system;
 
-import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
-import com.logicaldoc.gui.frontend.client.services.SystemService;
-import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -17,7 +14,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class SystemMenu extends VLayout {
-	private SystemServiceAsync service = (SystemServiceAsync) GWT.create(SystemService.class);
 
 	public SystemMenu() {
 		setMargin(10);
@@ -36,8 +32,6 @@ public class SystemMenu extends VLayout {
 		log.setHeight(25);
 
 		setMembers(general, lastChanges, log);
-		
-//		AdminPanel.get().setContent(new GeneralPanel());
 
 		general.addClickHandler(new ClickHandler() {
 			@Override
