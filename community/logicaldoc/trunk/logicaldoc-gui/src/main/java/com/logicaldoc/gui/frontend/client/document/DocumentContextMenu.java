@@ -228,6 +228,8 @@ public class DocumentContextMenu extends Menu {
 										record.setAttribute("locked", "document_lock");
 										record.setAttribute("lockUserId", Session.get().getUser().getId());
 										list.refreshRow(list.getRecordIndex(record));
+										Session.get().getUser().setLockedDocs(
+												Session.get().getUser().getLockedDocs() + ids.length);
 									}
 								}
 							});
@@ -260,6 +262,8 @@ public class DocumentContextMenu extends Menu {
 							record.setAttribute("locked", "blank");
 							record.setAttribute("status", Constants.DOC_UNLOCKED);
 							list.refreshRow(list.getRecordIndex(record));
+							Session.get().getUser().setLockedDocs(
+									Session.get().getUser().getLockedDocs() - ids.length);
 						}
 					}
 				});
@@ -283,10 +287,11 @@ public class DocumentContextMenu extends Menu {
 					@Override
 					public void onSuccess(Void result) {
 						ListGridRecord record = list.getSelectedRecord();
-						record.setAttribute("locked", "document_lock");
+						record.setAttribute("locked", "page_edit");
 						record.setAttribute("lockUserId", Session.get().getUser().getId());
 						record.setAttribute("status", Constants.DOC_CHECKED_OUT);
 						list.refreshRow(list.getRecordIndex(record));
+						Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
 						Window.open("../download?sid=" + Session.get().getSid() + "&docId=" + id, "_blank", "");
 					}
 				});

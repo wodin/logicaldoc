@@ -147,6 +147,7 @@ public class DocumentCheckin extends Window {
 						selection.setAttribute("locked", "blank");
 						selection.setAttribute("status", Constants.DOC_UNLOCKED);
 						documentsGrid.refreshRow(documentsGrid.getRecordIndex(selection));
+						Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() - 1);
 						destroy();
 					}
 				});

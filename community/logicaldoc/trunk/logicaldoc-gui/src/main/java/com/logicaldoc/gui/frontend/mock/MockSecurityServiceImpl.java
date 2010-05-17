@@ -47,6 +47,8 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 			user.setName("Meschieri");
 			user.setExpired(false);
 			user.setPasswordMinLenght(8);
+			user.setLockedDocs(5);
+			user.setCheckedOutDocs(1);
 			session.setLoggedIn(true);
 			return session;
 		} else if ("author".equals(username)) {
@@ -204,6 +206,6 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 
 	@Override
 	public void kill(String sid) {
-		
+
 	}
 }

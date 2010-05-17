@@ -106,4 +106,8 @@ public class MainPanel extends VLayout implements SessionObserver {
 	public void selectDocumentsTab() {
 		tabSet.selectTab(documentsTab);
 	}
+	
+	public void selectDashboardTab() {
+		tabSet.selectTab(dashboardTab);
+	}
 }

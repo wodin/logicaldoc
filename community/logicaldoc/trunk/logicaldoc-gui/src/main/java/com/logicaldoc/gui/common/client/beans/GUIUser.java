@@ -1,6 +1,8 @@
 package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User bean as used in the GUI
@@ -47,6 +49,16 @@ public class GUIUser implements Serializable {
 	private String cell;
 
 	private boolean enabled = true;
+
+	private int checkedOutDocs = 0;
+
+	private int lockedDocs = 0;
+
+	private int tasks = 0;
+
+	private int messages = 0;
+
+	private Set<UserObserver> observers = new HashSet<UserObserver>();
 
 	public void setUserName(String userName) {
 		this.userName = userName;
@@ -235,5 +247,51 @@ public class GUIUser implements Serializable {
 			}
 			groups = tmp;
 		}
+	}
+
+	public int getCheckedOutDocs() {
+		return checkedOutDocs;
+	}
+
+	public void setCheckedOutDocs(int checkedOutDocs) {
+		notifyObservers();
+		this.checkedOutDocs = checkedOutDocs;
+	}
+
+	public int getLockedDocs() {
+		return lockedDocs;
+	}
+
+	public void setLockedDocs(int lockedDocs) {
+		notifyObservers();
+		this.lockedDocs = lockedDocs;
+	}
+
+	public int getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(int tasks) {
+		notifyObservers();
+		this.tasks = tasks;
+	}
+
+	public int getMessages() {
+		return messages;
+	}
+
+	public void setMessages(int messages) {
+		this.messages = messages;
+		notifyObservers();
+	}
+
+	public void notifyObservers() {
+		for (UserObserver listener : observers) {
+			listener.onUserChanged(this);
+		}
+	}
+	
+	public void addObserver(UserObserver observer){
+		observers.add(observer);
 	}
 }
