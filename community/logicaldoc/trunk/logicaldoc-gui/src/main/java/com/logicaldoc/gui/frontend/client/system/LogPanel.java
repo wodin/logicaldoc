@@ -18,14 +18,15 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class LogPanel extends VLayout {
-	public LogPanel() {
+	public LogPanel(String appender) {
 		setHeight100();
 
 		final HTMLPane htmlPane = new HTMLPane();
 		htmlPane.setWidth100();
 		htmlPane.setHeight100();
 		htmlPane.setShowEdges(true);
-		htmlPane.setContentsURL(GWT.getHostPageBaseURL() + "log?sid=" + Session.get().getSid() + "&appender=DMS");
+		htmlPane.setContentsURL(GWT.getHostPageBaseURL() + "log?sid=" + Session.get().getSid() + "&appender="
+				+ appender);
 		htmlPane.setContentsType(ContentsType.PAGE);
 
 		HStack hStack = new HStack();
