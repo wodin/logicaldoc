@@ -1,6 +1,10 @@
 package com.logicaldoc.gui.frontend.mock;
 
+import java.util.Date;
+import java.util.UUID;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 
@@ -88,7 +92,7 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 
 		GUIParameter pluginsDirSize = new GUIParameter();
 		pluginsDirSize.setName("plugins");
-		//  In hosted mode we cannot read from a folder on the hard disk.
+		// In hosted mode we cannot read from a folder on the hard disk.
 		// File pluginsDir = new
 		// File("/C:/Users/Matteo/logicaldoc1005/data/plugins/");
 		// if (pluginsDir.exists())
@@ -101,7 +105,7 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 
 		GUIParameter dbDirSize = new GUIParameter();
 		dbDirSize.setName("database");
-		//  In hosted mode we cannot read from a folder on the hard disk.
+		// In hosted mode we cannot read from a folder on the hard disk.
 		// File dbDir = new File("/C:/Users/Matteo/logicaldoc1005/db/");
 		// if (dbDir.exists())
 		// dbDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(dbDir)));
@@ -115,7 +119,7 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		logsDirSize.setName("logs");
 		logsDirSize.setValue(Long.toString(1042081));
 		parameters[0][7] = logsDirSize;
-		
+
 		// Documents statistics
 		GUIParameter notIndexed = new GUIParameter();
 		notIndexed.setName("notindexed");
@@ -128,7 +132,7 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 
 		GUIParameter indexed = new GUIParameter();
 		indexed.setName("indexed");
-		//  In hosted mode we cannot read from a folder on the hard disk.
+		// In hosted mode we cannot read from a folder on the hard disk.
 		// File docDir = new File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
 		// File userDir = new
 		// File("/C:/Users/Matteo/logicaldoc1005/data/users/");
@@ -143,7 +147,7 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		GUIParameter deletedDocs = new GUIParameter();
 		deletedDocs.setName("docstrash");
 		deletedDocs.setLabel("trash");
-		//  In hosted mode we cannot read from a folder on the hard disk.
+		// In hosted mode we cannot read from a folder on the hard disk.
 		// File indexDir = new
 		// File("/C:/Users/Matteo/logicaldoc1005/data/index/");
 		// if (indexDir.exists())
@@ -167,7 +171,7 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 
 		GUIParameter empty = new GUIParameter();
 		empty.setName("empty");
-		//  In hosted mode we cannot read from a folder on the hard disk.
+		// In hosted mode we cannot read from a folder on the hard disk.
 		// File docDir = new File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
 		// File userDir = new
 		// File("/C:/Users/Matteo/logicaldoc1005/data/users/");
@@ -182,7 +186,7 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		GUIParameter deletedFolders = new GUIParameter();
 		deletedFolders.setName("folderstrash");
 		deletedFolders.setLabel("trash");
-		//  In hosted mode we cannot read from a folder on the hard disk.
+		// In hosted mode we cannot read from a folder on the hard disk.
 		// File indexDir = new
 		// File("/C:/Users/Matteo/logicaldoc1005/data/index/");
 		// if (indexDir.exists())
@@ -194,6 +198,33 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		parameters[2][2] = deletedFolders;
 
 		return parameters;
+	}
+
+	@Override
+	public GUIHistory[] search(String sid, String userName, Date from, Date till, int maxResult, String historySid,
+			String event[]) {
+		GUIHistory[] histories = new GUIHistory[maxResult];
+
+		for (int i = 0; i < maxResult; i++) {
+			GUIHistory history = new GUIHistory();
+			if (i % 2 == 0)
+				history.setEvent("event.stored");
+			else
+				history.setEvent("event.folder.created");
+			history.setDate(new Date());
+			history.setUserName("Mario Rossi");
+			if (i % 2 == 0)
+				history.setTitle("document" + i);
+			else
+				history.setTitle("folder" + i);
+			history.setFolderId(5);
+			history.setPath("/5/folder" + i);
+			history.setSessionId(UUID.randomUUID().toString());
+
+			histories[i] = history;
+		}
+
+		return histories;
 	}
 
 }

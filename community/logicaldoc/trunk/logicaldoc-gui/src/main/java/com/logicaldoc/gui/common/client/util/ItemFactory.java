@@ -134,4 +134,14 @@ public class ItemFactory {
 		radioGroupItem.setWidth(80);
 		return radioGroupItem;
 	}
+
+	public static SelectItem newMultipleSelector(String name, String title) {
+		SelectItem selectItemMultipleGrid = new SelectItem();
+		selectItemMultipleGrid.setName(name);
+		selectItemMultipleGrid.setTitle(title);
+		selectItemMultipleGrid.setMultiple(true);
+		selectItemMultipleGrid.setValueMap("");
+		return selectItemMultipleGrid;
+	}
+
 }
