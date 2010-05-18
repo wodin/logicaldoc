@@ -32,7 +32,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 	private Tab documentsTab;
 
 	private Tab searchTab;
-	
+
 	private Tab dashboardTab;
 
 	private Tab administrationTab;
@@ -84,7 +84,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 	@Override
 	public void onUserLoggedIn(GUIUser user) {
 		initGUI();
-		
+
 		documentsTab.setPane(DocumentsPanel.get());
 		searchTab.setPane(SearchPanel.get());
 		dashboardTab.setPane(DashboardPanel.get());
@@ -106,7 +106,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 	public void selectDocumentsTab() {
 		tabSet.selectTab(documentsTab);
 	}
-	
+
 	public void selectDashboardTab() {
 		tabSet.selectTab(dashboardTab);
 	}
