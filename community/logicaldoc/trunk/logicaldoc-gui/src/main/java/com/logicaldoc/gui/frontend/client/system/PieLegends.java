@@ -26,8 +26,7 @@ public class PieLegends extends HLayout {
 
 	public PieLegends() {
 		super();
-		setMembersMargin(50);
-		setHeight(100);
+		setMembersMargin(20);
 		setWidth100();
 
 		service.getStatistics(Session.get().getSid(), new AsyncCallback<GUIParameter[][]>() {
@@ -68,7 +67,7 @@ public class PieLegends extends HLayout {
 		StaticTextItem[] items = null;
 		if (type == 1)
 			// Repository
-			items = new StaticTextItem[8];
+			items = new StaticTextItem[9];
 		else if (type == 2)
 			// Documents
 			items = new StaticTextItem[4];

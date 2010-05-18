@@ -27,12 +27,11 @@ public class StatisticWidget extends ChartWidget {
 		for (GUIParameter parameter : parameters) {
 			if (parameter == null)
 				break;
-
 			pie.addSlices(new PieChart.Slice(Integer.parseInt(parameter.getValue()), parameter.toString()));
 		}
 
 		cd.addElements(pie);
-		setSize("220", "220");
+		setSize("200", "200");
 
 		setJsonData(cd.toString());
 	}

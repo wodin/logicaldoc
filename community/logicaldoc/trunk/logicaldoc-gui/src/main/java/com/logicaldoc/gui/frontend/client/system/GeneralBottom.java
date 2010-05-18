@@ -8,7 +8,6 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
@@ -29,17 +28,18 @@ public class GeneralBottom extends HLayout {
 		Tab system = new Tab();
 		system.setTitle(I18N.getMessage("system"));
 
-		VLayout form = new VLayout();
+		HLayout form = new HLayout();
 		form.setWidth(200);
-		form.setHeight(300);
 
 		DynamicForm systemForm = new DynamicForm();
+		systemForm.setWidth(300);
 		systemForm.setColWidths(1, "*");
 
 		StaticTextItem productName = new StaticTextItem();
 		productName.setName("productName");
 		productName.setShouldSaveValue(false);
 		productName.setTitle("");
+		productName.setWrapTitle(false);
 		productName.setValue("<b>" + Util.getContext().get("product_name") + "</b>");
 
 		StaticTextItem version = new StaticTextItem();
