@@ -50,7 +50,7 @@ public class SystemMenu extends VLayout {
 		log.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new LogPanel());
+				AdminPanel.get().setContent(new LogPanel("DMS"));
 			}
 		});
 	}
