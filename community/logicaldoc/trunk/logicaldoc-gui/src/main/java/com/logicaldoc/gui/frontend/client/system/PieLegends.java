@@ -24,6 +24,12 @@ public class PieLegends extends HLayout {
 
 	private SystemServiceAsync service = (SystemServiceAsync) GWT.create(SystemService.class);
 
+	private static final int STATS_REPOSITORY = 0;
+
+	private static final int STATS_DOCUMENTS = 1;
+
+	private static final int STATS_FOLDERS = 2;
+
 	public PieLegends() {
 		super();
 		setMembersMargin(20);
@@ -38,9 +44,9 @@ public class PieLegends extends HLayout {
 
 			@Override
 			public void onSuccess(GUIParameter[][] parameters) {
-				addMember(prepareLegend(parameters[0], 1));
-				addMember(prepareLegend(parameters[1], 2));
-				addMember(prepareLegend(parameters[2], 3));
+				addMember(prepareLegend(parameters[0], STATS_REPOSITORY));
+				addMember(prepareLegend(parameters[1], STATS_DOCUMENTS));
+				addMember(prepareLegend(parameters[2], STATS_FOLDERS));
 			}
 		});
 	}
@@ -65,13 +71,13 @@ public class PieLegends extends HLayout {
 		systemForm.setNumCols(2);
 
 		StaticTextItem[] items = null;
-		if (type == 1)
+		if (type == STATS_REPOSITORY)
 			// Repository
 			items = new StaticTextItem[9];
-		else if (type == 2)
+		else if (type == STATS_DOCUMENTS)
 			// Documents
 			items = new StaticTextItem[4];
-		else if (type == 3)
+		else if (type == STATS_FOLDERS)
 			// Folders
 			items = new StaticTextItem[4];
 
@@ -83,13 +89,13 @@ public class PieLegends extends HLayout {
 			StaticTextItem item = new StaticTextItem();
 			item.setName(parameter.getName());
 			item.setTitle(parameter.toString());
-			if (type == 1)
+			if (type == STATS_REPOSITORY)
 				item.setValue(Util.formatSize(Long.parseLong(parameter.getValue())) + " ( "
 						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
-			else if (type == 2)
+			else if (type == STATS_DOCUMENTS)
 				item.setValue(parameter.getValue() + " " + I18N.getMessage("documents").toLowerCase() + " " + "( "
 						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
-			else if (type == 3)
+			else if (type == STATS_FOLDERS)
 				item.setValue(parameter.getValue() + " " + I18N.getMessage("folders").toLowerCase() + " " + " ( "
 						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
 
@@ -102,11 +108,11 @@ public class PieLegends extends HLayout {
 		StaticTextItem total = new StaticTextItem();
 		total.setName("total");
 		total.setTitle(I18N.getMessage("total"));
-		if (type == 1)
+		if (type == STATS_REPOSITORY)
 			total.setValue(Util.formatSize(count));
-		else if (type == 2)
+		else if (type == STATS_DOCUMENTS)
 			total.setValue((int) count + " " + I18N.getMessage("documents").toLowerCase());
-		else if (type == 3)
+		else if (type == STATS_FOLDERS)
 			total.setValue((int) count + " " + I18N.getMessage("folders").toLowerCase());
 		total.setRequired(true);
 		total.setShouldSaveValue(false);
