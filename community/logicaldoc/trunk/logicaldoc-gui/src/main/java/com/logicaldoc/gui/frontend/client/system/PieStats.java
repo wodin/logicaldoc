@@ -11,7 +11,7 @@ import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 /**
- * Shows the charts pies
+ * Shows the charts pies.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
@@ -24,8 +24,7 @@ public class PieStats extends HLayout {
 		super();
 		setMembersMargin(30);
 		setWidth100();
-		setHeight("10%");
-		
+
 		service.getStatistics(Session.get().getSid(), new AsyncCallback<GUIParameter[][]>() {
 
 			@Override
