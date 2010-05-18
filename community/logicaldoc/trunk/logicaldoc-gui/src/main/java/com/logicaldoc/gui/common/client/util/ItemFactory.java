@@ -144,4 +144,50 @@ public class ItemFactory {
 		return selectItemMultipleGrid;
 	}
 
+	public static SelectItem newEventsSelector(String name, String title) {
+		SelectItem select = newMultipleSelector(name, title);
+		select.setWidth(300);
+		select.setHeight(150);
+
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		// Document and folder events
+		map.put("event.archived", I18N.getMessage("event.archived"));
+		map.put("event.changed", I18N.getMessage("event.changed"));
+		map.put("event.checkedin", I18N.getMessage("event.checkedin"));
+		map.put("event.checkedout", I18N.getMessage("event.checkedout"));
+		map.put("event.deleted", I18N.getMessage("event.deleted"));
+		map.put("event.downloaded", I18N.getMessage("event.downloaded"));
+		map.put("event.folder.created", I18N.getMessage("event.folder.created"));
+		map.put("event.folder.deleted", I18N.getMessage("event.folder.deleted"));
+		map.put("event.folder.permission", I18N.getMessage("event.folder.permission"));
+		map.put("event.folder.renamed", I18N.getMessage("event.folder.renamed"));
+		map.put("event.folder.subfolder.created", I18N.getMessage("event.folder.subfolder.created"));
+		map.put("event.folder.subfolder.deleted", I18N.getMessage("event.folder.subfolder.deleted"));
+		map.put("event.folder.subfolder.permission", I18N.getMessage("event.folder.subfolder.permission"));
+		map.put("event.folder.subfolder.renamed", I18N.getMessage("event.folder.subfolder.renamed"));
+		map.put("event.makeimmutable", I18N.getMessage("event.makeimmutable"));
+		map.put("event.locked", I18N.getMessage("event.locked"));
+		map.put("event.moved", I18N.getMessage("event.moved"));
+		map.put("event.renamed", I18N.getMessage("event.renamed"));
+		map.put("event.stored", I18N.getMessage("event.stored"));
+		map.put("event.unlocked", I18N.getMessage("event.unlocked"));
+		// User events
+		map.put("event.user.deleted", I18N.getMessage("event.user.deleted"));
+		map.put("event.user.login", I18N.getMessage("event.user.login"));
+		map.put("event.user.logout", I18N.getMessage("event.user.logout"));
+		map.put("event.user.passwordchanged", I18N.getMessage("event.user.passwordchanged"));
+		// Workflow events
+		map.put("event.workflow.start", I18N.getMessage("event.workflow.start"));
+		map.put("event.workflow.end", I18N.getMessage("event.workflow.end"));
+		map.put("event.workflow.task.start", I18N.getMessage("event.workflow.task.start"));
+		map.put("event.workflow.task.end", I18N.getMessage("event.workflow.task.end"));
+		map.put("event.workflow.task.suspended", I18N.getMessage("event.workflow.task.suspended"));
+		map.put("event.workflow.task.resumed", I18N.getMessage("event.workflow.task.resumed"));
+		map.put("event.workflow.task.reassigned", I18N.getMessage("event.workflow.task.reassigned"));
+		map.put("event.workflow.docappended", I18N.getMessage("event.workflow.docappended"));
+
+		select.setValueMap(map);
+
+		return select;
+	}
 }
