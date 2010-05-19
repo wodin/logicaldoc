@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
+import com.logicaldoc.gui.common.client.beans.GUITask;
 
 /**
  * The client side stub for the System Service. This service allows the
@@ -25,6 +26,8 @@ public interface SystemService extends RemoteService {
 	 * <li>The second array is the Documents statistics.</li>
 	 * <li>The third array is the Folders statistics.</li>
 	 * </ol>
+	 * 
+	 * @param sid The current user session
 	 */
 	public GUIParameter[][] getStatistics(String sid);
 
@@ -40,5 +43,13 @@ public interface SystemService extends RemoteService {
 	 * @param event The history events
 	 * @return Result hits and statistics
 	 */
-	public GUIHistory[] search(String sid, String userName, Date from, Date till, int maxResult, String historySid, String[] event);
+	public GUIHistory[] search(String sid, String userName, Date from, Date till, int maxResult, String historySid,
+			String[] event);
+
+	/**
+	 * Retrieves all tasks.
+	 * 
+	 * @param sid The current user session
+	 */
+	public GUITask[] loadTasks(String sid);
 }

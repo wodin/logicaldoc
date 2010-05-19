@@ -4,8 +4,11 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
+import com.logicaldoc.gui.common.client.beans.GUIScheduling;
+import com.logicaldoc.gui.common.client.beans.GUITask;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 
 /**
@@ -17,6 +20,8 @@ import com.logicaldoc.gui.frontend.client.services.SystemService;
 public class MockSystemServiceImpl extends RemoteServiceServlet implements SystemService {
 
 	private static final long serialVersionUID = 1L;
+
+	private static int progress = 0;
 
 	@Override
 	public GUIParameter[][] getStatistics(String sid) {
@@ -227,4 +232,37 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		return histories;
 	}
 
+	@Override
+	public GUITask[] loadTasks(String sid) {
+		System.out.println("*** loadTasks");
+		
+		if (progress >= 100)
+			progress = -1;
+		progress++;
+		
+		GUITask[] tasks = new GUITask[20];
+
+		for (int i = 0; i < tasks.length; i++) {
+			GUITask task = new GUITask();
+
+			task.setName("Task" + i);
+			task.setStatus(1);
+			task.setProgress(progress);
+			task.setSize(0);
+			task.setScheduling(new GUIScheduling("Task" + i));
+			task.setSchedulingLabel(I18N.getMessage("each") + " " + task.getScheduling().getIntervalSeconds() + " "
+					+ I18N.getMessage("seconds"));
+			if (i % 2 == 0)
+				task.getScheduling().setEnabled(true);
+			else
+				task.getScheduling().setEnabled(false);
+
+			if(i==2)
+				task.setStatus(0);
+			
+			tasks[i] = task;
+		}
+
+		return tasks;
+	}
 }
