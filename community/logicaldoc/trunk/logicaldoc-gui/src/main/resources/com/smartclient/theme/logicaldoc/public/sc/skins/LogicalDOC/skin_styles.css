@@ -2297,3 +2297,53 @@ a.calMonthEventLink:active {color:blue; text-decoration:none}
 .officelogout {
 	color: #536CDF;
 }
+
+.cloud1 {
+	font-size: 0.9em;
+	color: #999999;
+}
+
+.cloud2 {
+	font-size: 1.0em;
+	color: #888888;
+}
+
+.cloud3 {
+	font-size: 1.15em;
+	color: #777777;
+}
+
+.cloud4 {
+	font-size: 1.25em;
+	color: #666666;
+}
+
+.cloud5 {
+	font-size: 1.40em;
+	color: #555555;
+}
+
+.cloud6 {
+	font-size: 1.50em;
+	color: #444444;
+}
+
+.cloud7 {
+	font-size: 1.60em;
+	color: #333333;
+}
+
+.cloud8 {
+	font-size: 1.70em;
+	color: #222222;
+}
+
+.cloud9 {
+	font-size: 1.80em;
+	color: #111111;
+}
+
+.cloud10 {
+	font-size: 1.90em;
+	color: #000000;
+}

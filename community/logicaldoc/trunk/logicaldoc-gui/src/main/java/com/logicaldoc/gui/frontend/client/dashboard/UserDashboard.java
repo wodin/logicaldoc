@@ -23,5 +23,6 @@ public class UserDashboard extends PortalLayout {
 		addPortlet(new HistoryPortlet(Constants.EVENT_DOWNLOADED), 0, 2);
 		addPortlet(new HistoryPortlet(Constants.EVENT_CHANGED), 1, 0);
 		addPortlet(new HistoryPortlet(Constants.EVENT_CHECKEDIN), 1, 1);
+		addPortlet(new TagCloudPortlet(), 1, 2);
 	}
 }

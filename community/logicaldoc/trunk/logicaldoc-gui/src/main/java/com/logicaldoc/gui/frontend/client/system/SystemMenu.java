@@ -31,7 +31,7 @@ public class SystemMenu extends VLayout {
 		log.setWidth100();
 		log.setHeight(25);
 
-		Button tasks = new Button(I18N.getMessage("tasks"));
+		Button tasks = new Button(I18N.getMessage("scheduledtasks"));
 		tasks.setWidth100();
 		tasks.setHeight(25);
 
