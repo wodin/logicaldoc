@@ -31,7 +31,11 @@ public class SystemMenu extends VLayout {
 		log.setWidth100();
 		log.setHeight(25);
 
-		setMembers(general, lastChanges, log);
+		Button tasks = new Button(I18N.getMessage("tasks"));
+		tasks.setWidth100();
+		tasks.setHeight(25);
+
+		setMembers(general, lastChanges, log, tasks);
 
 		general.addClickHandler(new ClickHandler() {
 			@Override
@@ -51,6 +55,13 @@ public class SystemMenu extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				AdminPanel.get().setContent(new LogPanel("DMS"));
+			}
+		});
+
+		tasks.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new TasksPanel());
 			}
 		});
 	}
