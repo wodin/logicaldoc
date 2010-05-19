@@ -1,13 +1,12 @@
 package com.logicaldoc.gui.frontend.client.system;
 
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITask;
+import com.logicaldoc.gui.common.client.data.TasksDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -16,9 +15,11 @@ import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.Img;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -31,7 +32,15 @@ import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.tab.TabSet;
+import com.smartgwt.client.widgets.toolbar.ToolStrip;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
+/**
+ * Panel showing the list of sheduled tasks
+ * 
+ * @author Marco Meschieri - Logical Objects
+ * @since 6.0
+ */
 public class TasksPanel extends VLayout {
 	private SystemServiceAsync service = (SystemServiceAsync) GWT.create(SystemService.class);
 
@@ -47,49 +56,9 @@ public class TasksPanel extends VLayout {
 
 	private Timer timer;
 
-	private Img image = null;
-
 	public TasksPanel() {
 		setWidth100();
 		init();
-	}
-
-	private void loadTasksValues() {
-		final Map<String, Object> values = vm.getValues();
-
-		if (vm.validate()) {
-			service.loadTasks(Session.get().getSid(), new AsyncCallback<GUITask[]>() {
-
-				@Override
-				public void onFailure(Throwable caught) {
-					Log.serverError(caught);
-				}
-
-				@Override
-				public void onSuccess(GUITask[] result) {
-					ListGridRecord[] records = getData(result);
-
-					list.setData(records);
-				}
-			});
-		}
-	}
-
-	private ListGridRecord[] getData(GUITask[] result) {
-		ListGridRecord[] records = new ListGridRecord[result.length];
-		for (int i = 0; i < result.length; i++) {
-			ListGridRecord record = new ListGridRecord();
-			record.setAttribute("enabledImage", result[i].getScheduling().isEnabled() ? "bullet_green" : "bullet_red");
-			record.setAttribute("eenabled", result[i].getScheduling().isEnabled());
-			record.setAttribute("name", result[i].getName());
-			record.setAttribute("lastStart", result[i].getScheduling().getPreviousFireTime());
-			record.setAttribute("nextStart", result[i].getScheduling().getNextFireTime());
-			record.setAttribute("scheduling", result[i].getSchedulingLabel());
-			record.setAttribute("execution", result[i].getProgress());
-			record.setAttribute("status", result[i].getStatus());
-			records[i] = record;
-		}
-		return records;
 	}
 
 	private void showContextMenu() {
@@ -125,12 +94,12 @@ public class TasksPanel extends VLayout {
 
 	public void init() {
 		list = new ListGrid();
-
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setShowAllRecords(true);
+		list.setAutoFetchData(true);
 
-		ListGridField enabled = new ListGridField("enabledImage", I18N.getMessage("enabled"), 50);
+		ListGridField enabled = new ListGridField("enabledIcon", " ", 30);
 		enabled.setType(ListGridFieldType.IMAGE);
 		enabled.setCanSort(false);
 		enabled.setAlign(Alignment.CENTER);
@@ -138,9 +107,9 @@ public class TasksPanel extends VLayout {
 		enabled.setImageURLSuffix(".png");
 		enabled.setCanFilter(false);
 
-		ListGridField name = new ListGridField("name", I18N.getMessage("name"), 200);
-		name.setCanFilter(true);
-		name.setCanSort(false);
+		ListGridField label = new ListGridField("label", I18N.getMessage("task"), 200);
+		label.setCanFilter(true);
+		label.setCanSort(false);
 
 		ListGridField lastStart = new ListGridField("lastStart", I18N.getMessage("laststart"), 110);
 		lastStart.setType(ListGridFieldType.DATE);
@@ -156,31 +125,38 @@ public class TasksPanel extends VLayout {
 		nextStart.setAlign(Alignment.CENTER);
 		nextStart.setCanSort(false);
 
-		ListGridField scheduling = new ListGridField("scheduling", I18N.getMessage("scheduling"), 100);
+		ListGridField scheduling = new ListGridField("scheduling", I18N.getMessage("scheduling"), 150);
 		scheduling.setCanFilter(false);
 		scheduling.setAlign(Alignment.CENTER);
 		scheduling.setCanSort(false);
 
-		ListGridField execution = new ListGridField("execution", I18N.getMessage("execution"), 100);
-		execution.setCanFilter(false);
-		execution.setAlign(Alignment.CENTER);
-		execution.setCanSort(false);
-		execution.setCellFormatter(new CellFormatter(){
+		ListGridField progress = new ListGridField("progress", I18N.getMessage("progress"), 100);
+		progress.setCanFilter(false);
+		progress.setAlign(Alignment.CENTER);
+		progress.setCanSort(false);
+		progress.setCellFormatter(new CellFormatter() {
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
-				return value+"%";
+				if (GUITask.STATUS_RUNNING == record.getAttributeAsInt("status")
+						&& record.getAttributeAsBoolean("eenabled") && !record.getAttributeAsBoolean("indeterminate"))
+					return value + "%";
+				else if (GUITask.STATUS_RUNNING == record.getAttributeAsInt("status")
+						&& record.getAttributeAsBoolean("eenabled") && record.getAttributeAsBoolean("indeterminate"))
+					return I18N.getMessage("running");
+				else
+					return "";
 			}
-			
 		});
 
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(enabled, name, lastStart, nextStart, scheduling, execution);
+		list.setFields(enabled, label, lastStart, nextStart, scheduling, progress);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
+		list.setDataSource(TasksDS.get());
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
@@ -190,8 +166,7 @@ public class TasksPanel extends VLayout {
 			}
 		});
 
-		loadTasksValues();
-
+		results.addMember(setupToolbar());
 		results.addMember(list);
 
 		tasksLayout.addMember(results);
@@ -205,32 +180,89 @@ public class TasksPanel extends VLayout {
 		 */
 		timer = new Timer() {
 			public void run() {
-				service.loadTasks(Session.get().getSid(), new AsyncCallback<GUITask[]>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(GUITask[] tasks) {
-						Log.debug("** task: " + tasks.length);
-						// list.setRecords(getData(tasks));
-
-						// list.redraw();
-						for (int i = 0; i < tasks.length; i++) {
-							list.getRecord(i).setAttribute("execution", tasks[i].getProgress());
-						}
-					}
-				});
+				reload();
 			}
 		};
-		timer.scheduleRepeating(1000);
 	}
 
 	@Override
 	public void destroy() {
 		super.destroy();
 		this.timer.cancel();
+	}
+
+	/**
+	 * Updates grid data
+	 */
+	private void reload() {
+		service.loadTasks(Session.get().getSid(), new AsyncCallback<GUITask[]>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(GUITask[] tasks) {
+				Log.debug("Reload tasks");
+				for (int i = 0; i < tasks.length; i++) {
+					list.getRecord(i).setAttribute("progress", tasks[i].getProgress());
+					list.getRecord(i).setAttribute("lastStart", tasks[i].getScheduling().getPreviousFireTime());
+					list.getRecord(i).setAttribute("nextStart", tasks[i].getScheduling().getNextFireTime());
+					list.getRecord(i).setAttribute("status", tasks[i].getStatus());
+					list.getRecord(i).setAttribute("enabledIcon",
+							tasks[i].getScheduling().isEnabled() ? "bullet_green" : "bullet_red");
+					list.getRecord(i).setAttribute("scheduling", tasks[i].getSchedulingLabel());
+					list.updateData(list.getRecord(i));
+				}
+			}
+		});
+	}
+
+	/**
+	 * Prepares the toolbar containing the search report and a set of buttons
+	 */
+	private ToolStrip setupToolbar() {
+		ToolStrip toolStrip = new ToolStrip();
+		toolStrip.setHeight(20);
+		toolStrip.setWidth100();
+
+		ToolStripButton refreshnow = new ToolStripButton();
+		refreshnow.setTitle(I18N.getMessage("refresh"));
+		toolStrip.addButton(refreshnow);
+		refreshnow.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				reload();
+			}
+		});
+		toolStrip.addButton(refreshnow);
+
+		toolStrip.addSeparator();
+		final IntegerItem delay = new IntegerItem();
+		delay.setName("delay");
+		delay.setHint(I18N.getMessage("seconds"));
+		delay.setShowTitle(false);
+		delay.setDefaultValue(10);
+		delay.setWidth(40);
+		IntegerRangeValidator intValidator = new IntegerRangeValidator();
+		intValidator.setMin(1);
+		delay.setValidators(intValidator);
+
+		ToolStripButton refresh = new ToolStripButton();
+		refresh.setTitle(I18N.getMessage("refresheach"));
+		toolStrip.addButton(refresh);
+		toolStrip.addFormItem(delay);
+		refresh.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (!delay.validate())
+					return;
+				timer.cancel();
+				timer.scheduleRepeating(((Integer) delay.getValue()) * 1000);
+			}
+		});
+
+		toolStrip.addFill();
+		return toolStrip;
 	}
 }

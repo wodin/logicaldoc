@@ -1,11 +1,13 @@
 package com.logicaldoc.gui.frontend.mock;
 
 import java.util.Date;
+import java.util.Random;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUIResultHit;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
+import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 
 /**
@@ -67,5 +69,18 @@ public class MockSearchServiceImpl extends RemoteServiceServlet implements Searc
 		options.setName(name);
 		options.setExpression("saved search");
 		return options;
+	}
+
+	@Override
+	public GUITag[] getTagCloud() {
+		GUITag[] cloud = new GUITag[30];
+		Random r = new Random();
+		for (int i = 0; i < cloud.length; i++) {
+			GUITag c = new GUITag();
+			c.setScale(r.nextInt(9) + 1);
+			c.setTag("Tag_" + i);
+			cloud[i] = c;
+		}
+		return cloud;
 	}
 }

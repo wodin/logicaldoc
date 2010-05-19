@@ -28,6 +28,8 @@ public class GUITask implements Serializable {
 
 	private String schedulingLabel;
 
+	private boolean indeterminate = false;
+
 	public int getStatus() {
 		return status;
 	}
@@ -74,5 +76,13 @@ public class GUITask implements Serializable {
 
 	public void setSchedulingLabel(String schedulingLabel) {
 		this.schedulingLabel = schedulingLabel;
+	}
+
+	public boolean isIndeterminate() {
+		return indeterminate;
+	}
+
+	public void setIndeterminate(boolean indeterminate) {
+		this.indeterminate = indeterminate;
 	}
 }

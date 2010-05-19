@@ -259,6 +259,8 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 
 			if(i==2)
 				task.setStatus(0);
+			if(i==4)
+				task.setIndeterminate(true);
 			
 			tasks[i] = task;
 		}

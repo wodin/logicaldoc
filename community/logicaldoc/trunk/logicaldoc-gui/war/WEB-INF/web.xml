@@ -163,6 +163,11 @@
     <servlet-name>RightsData</servlet-name>
     <servlet-class>com.logicaldoc.gui.common.server.mock.MockRightsDataServlet</servlet-class>
   </servlet>
+  
+  <servlet>
+    <servlet-name>TasksData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockTasksDataServlet</servlet-class>
+  </servlet>
 
   <servlet>
     <servlet-name>log</servlet-name>
@@ -307,6 +312,11 @@
   <servlet-mapping>
     <servlet-name>RightsData</servlet-name>
     <url-pattern>/data/rights.xml</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>TasksData</servlet-name>
+    <url-pattern>/data/tasks.xml</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

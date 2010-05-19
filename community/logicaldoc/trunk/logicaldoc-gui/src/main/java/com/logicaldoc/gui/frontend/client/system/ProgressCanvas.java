@@ -10,8 +10,8 @@ public class ProgressCanvas extends HLayout {
 
 	private Progressbar progressBar = new Progressbar();
 
-	public ProgressCanvas() {
-		
+	public ProgressCanvas(int progress) {
+
 		setHeight(15);
 		setAlign(Alignment.CENTER);
 
@@ -38,6 +38,8 @@ public class ProgressCanvas extends HLayout {
 
 		addMember(progressBar);
 		addMember(image);
+
+		setProgress(progress);
 	}
 
 	public void setProgress(int progress) {

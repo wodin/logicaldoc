@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
+import com.logicaldoc.gui.common.client.beans.GUITag;
 
 /**
  * Service responsible of Searches
@@ -48,4 +49,9 @@ public interface SearchService extends RemoteService {
 	 * @return
 	 */
 	public GUISearchOptions load(String sid, String name);
+
+	/**
+	 * Loads the tag cloud from the server
+	 */
+	public GUITag[] getTagCloud();
 }

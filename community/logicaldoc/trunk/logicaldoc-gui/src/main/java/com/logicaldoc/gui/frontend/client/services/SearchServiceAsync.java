@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.services;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
+import com.logicaldoc.gui.common.client.beans.GUITag;
 
 public interface SearchServiceAsync {
 
@@ -13,4 +14,6 @@ public interface SearchServiceAsync {
 	void load(String sid, String name, AsyncCallback<GUISearchOptions> callback);
 
 	void delete(String sid, String[] names, AsyncCallback<Void> callback);
+
+	void getTagCloud(AsyncCallback<GUITag[]> callback);
 }
