@@ -53,6 +53,7 @@ public class FoldersNavigator extends TreeGrid {
 		setDataSource(FoldersDS.get());
 		setCanSelectAll(false);
 		setShowConnectors(true);
+		setBaseStyle("noBorderCell"); 
 
 		ListGridField name = new ListGridField("name");
 		setFields(name);
