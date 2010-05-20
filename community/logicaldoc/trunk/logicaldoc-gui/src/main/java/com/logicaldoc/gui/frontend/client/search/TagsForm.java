@@ -6,6 +6,7 @@ import java.util.List;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.data.TagsDS;
+import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -150,4 +151,26 @@ public class TagsForm extends VLayout {
 		tags.setDataSource(new TagsDS(letter));
 		tags.fetchData();
 	}
+
+	/**
+	 * Launches the search for one tag 
+	 */
+	public static void searchTag(String word) {
+		MainPanel.get().selectSearchTab();
+		SearchMenu.get().openTagsSection();
+		TagsForm.get().onLetterSelect(word.substring(0, 1));
+		GUISearchOptions options = new GUISearchOptions();
+		options.setType(GUISearchOptions.TYPE_TAGS);
+		options.setExpression(word);
+		Search.get().setOptions(options);
+		Search.get().search();
+	}
+
+	/**
+	 * Define the JavaScript function that will call the method searchTag.
+	 * Invoke this method on module load.
+	 */
+	public static native void exportStearchTag() /*-{
+		$wnd.searchTag = @com.logicaldoc.gui.frontend.client.search.TagsForm::searchTag(Ljava/lang/String;);
+	}-*/;
 }

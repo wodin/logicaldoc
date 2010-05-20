@@ -2298,52 +2298,70 @@ a.calMonthEventLink:active {color:blue; text-decoration:none}
 	color: #536CDF;
 }
 
-.cloud1 {
-	font-size: 0.9em;
-	color: #999999;
+.tag a{
+        margin: 0;
+        padding: 1px 2px 0 0;
+        text-decoration: none;
+        color: #777777;
+        font-family: Verdana, Arial, serif, sans-serif;
+        position: relative;
+        float: left;
 }
 
-.cloud2 {
-	font-size: 1.0em;
-	color: #888888;
+.tag a:hover{
+        text-decoration: underline;
 }
 
-.cloud3 {
-	font-size: 1.15em;
-	color: #777777;
+.tag a img{
+        border: none;
 }
 
-.cloud4 {
-	font-size: 1.25em;
-	color: #666666;
+.tag1 a {
+        font-size: 0.7em;
+        font-weight: 100;
 }
 
-.cloud5 {
-	font-size: 1.40em;
-	color: #555555;
+.tag2 a{
+        font-size: 0.8em;
+        font-weight: 200;
 }
 
-.cloud6 {
-	font-size: 1.50em;
-	color: #444444;
+.tag3 a{
+        font-size: 0.9em;
+        font-weight: 300;
 }
 
-.cloud7 {
-	font-size: 1.60em;
-	color: #333333;
+.tag4 a{
+        font-size: 1.0em;
+        font-weight: 400;
 }
 
-.cloud8 {
-	font-size: 1.70em;
-	color: #222222;
+.tag5 a{
+        font-size: 1.2em;
+        font-weight: 500;
 }
 
-.cloud9 {
-	font-size: 1.80em;
-	color: #111111;
+.tag6 a{
+        font-size: 1.3em;
+        font-weight: 600;
 }
 
-.cloud10 {
-	font-size: 1.90em;
-	color: #000000;
+.tag7 a{
+        font-size: 1.4em;
+        font-weight: 700;
+}
+
+.tag8 a{
+        font-size: 1.5em;
+        font-weight: 800;
+}
+
+.tag9 a{
+        font-size: 1.6em;
+        font-weight: 900;
+}
+
+.tag10 a{
+        font-size: 1.7em;
+        font-weight: 900;
 }
