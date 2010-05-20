@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
+import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
 
 /**
@@ -38,6 +39,9 @@ public class Frontend implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
+		//Export some javascripts
+		TagsForm.exportStearchTag();
+		
 		if (RootPanel.get("loadingWrapper") == null)
 			return;
 

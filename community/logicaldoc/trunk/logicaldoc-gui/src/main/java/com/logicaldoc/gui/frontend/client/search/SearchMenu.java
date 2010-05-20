@@ -17,6 +17,8 @@ public class SearchMenu extends SectionStack {
 
 	private static final int FULLTEXT_SECTION = 0;
 
+	private static final int TAGS_SECTION = 1;
+
 	private static SearchMenu instance;
 
 	public static SearchMenu get() {
@@ -49,5 +51,9 @@ public class SearchMenu extends SectionStack {
 
 	public void openFulltextSection() {
 		expandSection(FULLTEXT_SECTION);
+	}
+
+	public void openTagsSection() {
+		expandSection(TAGS_SECTION);
 	}
 }
