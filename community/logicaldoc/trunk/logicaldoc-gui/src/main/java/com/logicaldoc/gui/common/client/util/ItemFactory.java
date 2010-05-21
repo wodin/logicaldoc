@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.validators.EmailValidator;
 import com.logicaldoc.gui.common.client.validators.EmailsValidator;
 import com.smartgwt.client.types.DateDisplayFormat;
+import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
@@ -148,6 +149,7 @@ public class ItemFactory {
 		SelectItem select = newMultipleSelector(name, title);
 		select.setWidth(300);
 		select.setHeight(150);
+		select.setMultipleAppearance(MultipleAppearance.GRID);
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		// Document and folder events

@@ -35,6 +35,8 @@ public class LogPanel extends VLayout {
 		hStack.setMembersMargin(10);
 
 		IButton refresh = new IButton(I18N.getMessage("refresh"));
+		refresh.setWidth(50);
+		refresh.setHeight(25);
 		refresh.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				htmlPane.redraw();

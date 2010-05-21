@@ -234,12 +234,10 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 
 	@Override
 	public GUITask[] loadTasks(String sid) {
-		System.out.println("*** loadTasks");
-		
 		if (progress >= 100)
 			progress = -1;
 		progress++;
-		
+
 		GUITask[] tasks = new GUITask[20];
 
 		for (int i = 0; i < tasks.length; i++) {
@@ -257,14 +255,65 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 			else
 				task.getScheduling().setEnabled(false);
 
-			if(i==2)
+			if (i == 2)
 				task.setStatus(0);
-			if(i==4)
+			if (i == 4)
 				task.setIndeterminate(true);
-			
+
 			tasks[i] = task;
 		}
 
 		return tasks;
+	}
+
+	@Override
+	public boolean startTask(String taskName) {
+
+		return true;
+	}
+
+	@Override
+	public boolean stopTask(String taskName) {
+
+		return true;
+	}
+
+	@Override
+	public GUITask getTaskByName(String sid, String taskName) {
+		GUITask task = new GUITask();
+
+		task.setName("Task 0");
+		task.setStatus(1);
+		task.setProgress(progress);
+		task.setSize(0);
+		task.setScheduling(new GUIScheduling("Task 0"));
+		task.setSchedulingLabel(I18N.getMessage("each") + " " + task.getScheduling().getIntervalSeconds() + " "
+				+ I18N.getMessage("seconds"));
+
+		task.getScheduling().setEnabled(true);
+
+		task.setStatus(0);
+		task.setIndeterminate(false);
+
+		return task;
+	}
+
+	@Override
+	public boolean disableTask(String sid, String taskName) {
+		GUITask task = getTaskByName(sid, taskName);
+		task.getScheduling().setEnabled(false);
+		return true;
+	}
+
+	@Override
+	public boolean enableTask(String sid, String taskName) {
+		GUITask task = getTaskByName(sid, taskName);
+		task.getScheduling().setEnabled(true);
+		return true;
+	}
+
+	@Override
+	public GUITask saveTask(String sid, GUITask task) {
+		return task;
 	}
 }
