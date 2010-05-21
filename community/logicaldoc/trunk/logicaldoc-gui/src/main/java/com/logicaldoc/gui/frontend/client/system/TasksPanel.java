@@ -15,6 +15,8 @@ import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.ValuesManager;
@@ -26,17 +28,18 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
-import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
- * Panel showing the list of sheduled tasks
+ * Panel showing the list of scheduled tasks
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -44,21 +47,27 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 public class TasksPanel extends VLayout {
 	private SystemServiceAsync service = (SystemServiceAsync) GWT.create(SystemService.class);
 
-	private TabSet tabs = new TabSet();
-
 	private Layout results = new VLayout();
 
-	private VLayout tasksLayout = new VLayout();
-
-	private ValuesManager vm = new ValuesManager();
+	private Layout details;
 
 	private ListGrid list;
 
 	private Timer timer;
 
+	private Canvas detailPanel;
+
+	private static TasksPanel instance;
+
 	public TasksPanel() {
 		setWidth100();
 		init();
+	}
+
+	public static TasksPanel get() {
+		if (instance == null)
+			instance = new TasksPanel();
+		return instance;
 	}
 
 	private void showContextMenu() {
@@ -68,27 +77,100 @@ public class TasksPanel extends VLayout {
 		taskExecution.setTitle(I18N.getMessage("execute"));
 		taskExecution.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord record = list.getSelectedRecord();
-				// service.executeTask(Session.get().getSid(),
-				// record.getAttributeAsString("name"),
-				// new AsyncCallback<Void>() {
-				// @Override
-				// public void onFailure(Throwable caught) {
-				// Log.serverError(caught);
-				// }
-				//
-				// @Override
-				// public void onSuccess(Void result) {
-				//
-				// }
-				// });
+				service.stopTask(list.getSelectedRecord().getAttributeAsString("name"), new AsyncCallback<Boolean>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Boolean result) {
+						list.getSelectedRecord().setAttribute("status", GUITask.STATUS_RUNNING);
+						list.updateData(list.getSelectedRecord());
+					}
+				});
 			}
 		});
 
-		if (!list.getSelectedRecord().getAttributeAsBoolean("enabled"))
+		if (GUITask.STATUS_RUNNING == list.getSelectedRecord().getAttributeAsInt("status")
+				|| !list.getSelectedRecord().getAttributeAsBoolean("eenabled"))
 			taskExecution.setEnabled(false);
 
-		contextMenu.setItems(taskExecution);
+		MenuItem taskStop = new MenuItem();
+		taskStop.setTitle(I18N.getMessage("stop"));
+		taskStop.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				service.stopTask(list.getSelectedRecord().getAttributeAsString("name"), new AsyncCallback<Boolean>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Boolean result) {
+						list.getSelectedRecord().setAttribute("status", GUITask.STATUS_IDLE);
+						list.updateData(list.getSelectedRecord());
+					}
+				});
+
+			}
+		});
+
+		if (GUITask.STATUS_IDLE == list.getSelectedRecord().getAttributeAsInt("status")
+				|| !list.getSelectedRecord().getAttributeAsBoolean("eenabled"))
+			taskStop.setEnabled(false);
+
+		MenuItem enableTask = new MenuItem();
+		enableTask.setTitle(I18N.getMessage("enable"));
+		enableTask.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				service.enableTask(Session.get().getSid(), list.getSelectedRecord().getAttributeAsString("name"),
+						new AsyncCallback<Boolean>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(Boolean result) {
+								list.getSelectedRecord().setAttribute("enabledIcon", "bullet_green");
+								list.getSelectedRecord().setAttribute("eenabled", true);
+								list.updateData(list.getSelectedRecord());
+							}
+						});
+
+			}
+		});
+
+		if (list.getSelectedRecord().getAttributeAsBoolean("eenabled"))
+			enableTask.setEnabled(false);
+
+		MenuItem disableTask = new MenuItem();
+		disableTask.setTitle(I18N.getMessage("disable"));
+		disableTask.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				service.disableTask(Session.get().getSid(), list.getSelectedRecord().getAttributeAsString("name"),
+						new AsyncCallback<Boolean>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(Boolean result) {
+								list.getSelectedRecord().setAttribute("enabledIcon", "bullet_red");
+								list.getSelectedRecord().setAttribute("eenabled", false);
+								list.updateData(list.getSelectedRecord());
+							}
+						});
+
+			}
+		});
+
+		if (!list.getSelectedRecord().getAttributeAsBoolean("eenabled"))
+			disableTask.setEnabled(false);
+
+		contextMenu.setItems(taskExecution, taskStop, enableTask, disableTask);
 		contextMenu.showContextMenu();
 	}
 
@@ -166,14 +248,37 @@ public class TasksPanel extends VLayout {
 			}
 		});
 
+		list.addSelectionChangedHandler(new SelectionChangedHandler() {
+			@Override
+			public void onSelectionChanged(SelectionEvent event) {
+				ListGridRecord record = list.getSelectedRecord();
+				if (record != null)
+					service.getTaskByName(Session.get().getSid(), record.getAttribute("name"),
+							new AsyncCallback<GUITask>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(GUITask task) {
+									onSelectedTask(task);
+								}
+							});
+			}
+		});
+
 		results.addMember(setupToolbar());
 		results.addMember(list);
+		results.setShowResizeBar(true);
 
-		tasksLayout.addMember(results);
+		addMember(results);
 
-		tasksLayout.addMember(tabs);
-
-		addMember(tasksLayout);
+		detailPanel = new Label("&nbsp;" + I18N.getMessage("selecttask"));
+		details = new VLayout();
+		details.setAlign(Alignment.CENTER);
+		details.addMember(detailPanel);
+		addMember(details);
 
 		/*
 		 * Create the timer that synchronize the view
@@ -203,14 +308,14 @@ public class TasksPanel extends VLayout {
 
 			@Override
 			public void onSuccess(GUITask[] tasks) {
-				Log.debug("Reload tasks");
 				for (int i = 0; i < tasks.length; i++) {
-					list.getRecord(i).setAttribute("progress", tasks[i].getProgress());
-					list.getRecord(i).setAttribute("lastStart", tasks[i].getScheduling().getPreviousFireTime());
-					list.getRecord(i).setAttribute("nextStart", tasks[i].getScheduling().getNextFireTime());
 					list.getRecord(i).setAttribute("status", tasks[i].getStatus());
 					list.getRecord(i).setAttribute("enabledIcon",
 							tasks[i].getScheduling().isEnabled() ? "bullet_green" : "bullet_red");
+					list.getRecord(i).setAttribute("eenabled", tasks[i].getScheduling().isEnabled());
+					list.getRecord(i).setAttribute("progress", tasks[i].getProgress());
+					list.getRecord(i).setAttribute("lastStart", tasks[i].getScheduling().getPreviousFireTime());
+					list.getRecord(i).setAttribute("nextStart", tasks[i].getScheduling().getNextFireTime());
 					list.getRecord(i).setAttribute("scheduling", tasks[i].getSchedulingLabel());
 					list.updateData(list.getRecord(i));
 				}
@@ -264,5 +369,24 @@ public class TasksPanel extends VLayout {
 
 		toolStrip.addFill();
 		return toolStrip;
+	}
+
+	/**
+	 * Shows the task details
+	 * 
+	 * @param task The task
+	 */
+	public void onSelectedTask(GUITask task) {
+		if (!(detailPanel instanceof TaskDetailPanel)) {
+			details.removeMember(detailPanel);
+			detailPanel.destroy();
+			detailPanel = new TaskDetailPanel();
+			details.addMember(detailPanel);
+		}
+		((TaskDetailPanel) detailPanel).setTask(task);
+	}
+
+	public ListGrid getList() {
+		return list;
 	}
 }

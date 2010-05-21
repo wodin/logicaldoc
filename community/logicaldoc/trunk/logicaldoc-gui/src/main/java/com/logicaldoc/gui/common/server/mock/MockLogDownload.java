@@ -3,7 +3,6 @@ package com.logicaldoc.gui.common.server.mock;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,8 +25,8 @@ public class MockLogDownload extends HttpServlet {
 				if (read > 0)
 					response.getOutputStream().write(buf, 0, read);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Throwable e) {
+			
 		}
 	}
 

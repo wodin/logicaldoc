@@ -52,4 +52,52 @@ public interface SystemService extends RemoteService {
 	 * @param sid The current user session
 	 */
 	public GUITask[] loadTasks(String sid);
+
+	/**
+	 * Starts the task execution.
+	 * 
+	 * @param taskName The task name
+	 * @return True, if the task is correctly started.
+	 */
+	public boolean startTask(String taskName);
+
+	/**
+	 * Stops the task execution.
+	 * 
+	 * @param taskName The task name
+	 * @return True, if the task is correctly stopped.
+	 */
+	public boolean stopTask(String taskName);
+
+	/**
+	 * Retrieves a specific task by its name
+	 */
+	public GUITask getTaskByName(String sid, String taskName);
+
+	/**
+	 * Enables the task.
+	 * 
+	 * @param sid The current user session
+	 * @param taskName The task name
+	 * @return True, if the task is correctly enabled.
+	 */
+	public boolean enableTask(String sid, String taskName);
+
+	/**
+	 * Disables the task.
+	 * 
+	 * @param sid The current user session
+	 * @param taskName The task name
+	 * @return True, if the task is correctly disabled.
+	 */
+	public boolean disableTask(String sid, String taskName);
+
+	/**
+	 * Saves the task.
+	 * 
+	 * @param sid The current user session
+	 * @param task The task to be saved
+	 * @return True, if the task is correctly saved.
+	 */
+	public GUITask saveTask(String sid, GUITask task);
 }
