@@ -210,8 +210,8 @@ public class LastChangesPanel extends VLayout {
 			String sid = (String) values.get("sid");
 			int displayMaxValue = (Integer) values.get("displayMax");
 
-			service.search(Session.get().getSid(), userValue, fromValue, tillValue, displayMaxValue, sid,
-					eventValues, new AsyncCallback<GUIHistory[]>() {
+			service.search(Session.get().getSid(), userValue, fromValue, tillValue, displayMaxValue, sid, eventValues,
+					new AsyncCallback<GUIHistory[]>() {
 
 						@Override
 						public void onFailure(Throwable caught) {

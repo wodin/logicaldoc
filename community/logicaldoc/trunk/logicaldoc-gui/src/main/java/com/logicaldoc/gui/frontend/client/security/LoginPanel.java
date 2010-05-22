@@ -71,7 +71,7 @@ public class LoginPanel extends VLayout {
 		// Prepare the form header that contains the product name and version
 		HTML header = new HTML(context.get("product_name") + " " + context.get("product_release"));
 		header.setStyleName("loginHeader");
-		header.setHeight("10px");
+		header.setHeight("12px");
 
 		// Prepare the logo image to be shown inside the login form
 		Image logoImage = new Image(Util.imageUrl("brand/logo.png"));

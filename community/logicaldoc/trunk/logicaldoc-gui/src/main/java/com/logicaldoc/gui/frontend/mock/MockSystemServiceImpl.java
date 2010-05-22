@@ -248,7 +248,7 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 			task.setProgress(progress);
 			task.setSize(0);
 			task.setScheduling(new GUIScheduling("Task" + i));
-			task.setSchedulingLabel(I18N.getMessage("each") + " " + task.getScheduling().getIntervalSeconds() + " "
+			task.setSchedulingLabel(I18N.getMessage("each") + " " + task.getScheduling().getInterval() + " "
 					+ I18N.getMessage("seconds"));
 			if (i % 2 == 0)
 				task.getScheduling().setEnabled(true);
@@ -287,7 +287,7 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		task.setProgress(progress);
 		task.setSize(0);
 		task.setScheduling(new GUIScheduling("Task 0"));
-		task.setSchedulingLabel(I18N.getMessage("each") + " " + task.getScheduling().getIntervalSeconds() + " "
+		task.setSchedulingLabel(I18N.getMessage("each") + " " + task.getScheduling().getInterval() + " "
 				+ I18N.getMessage("seconds"));
 
 		task.getScheduling().setEnabled(true);
@@ -314,6 +314,14 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 
 	@Override
 	public GUITask saveTask(String sid, GUITask task) {
+		if (task.getScheduling().isSimple()) {
+			task.setSchedulingLabel(I18N.getMessage("each") + " " + task.getScheduling().getInterval() + " "
+					+ I18N.getMessage("seconds"));
+		} else {
+			GUIScheduling s = task.getScheduling();
+			task.setSchedulingLabel(s.getSeconds() + " " + s.getMinutes() + " " + s.getHours() + " "
+					+ s.getDayOfMonth() + " " + s.getMonth() + " " + s.getDayOfWeek());
+		}
 		return task;
 	}
 }

@@ -44,9 +44,11 @@ public class TaskDetailPanel extends VLayout {
 
 	private HLayout savePanel;
 
-	public TaskDetailPanel() {
-		super();
+	private TasksPanel tasksPanel;
 
+	public TaskDetailPanel(TasksPanel tasksPanel) {
+		super();
+		this.tasksPanel = tasksPanel;
 		setHeight100();
 		setWidth100();
 		setMembersMargin(10);
@@ -127,33 +129,23 @@ public class TaskDetailPanel extends VLayout {
 	}
 
 	public void onModified() {
-		Log.debug("modified!!!!");
 		savePanel.setVisible(true);
 	}
 
 	public void onSave() {
-		// if (validate()) {
-		service.saveTask(Session.get().getSid(), task, new AsyncCallback<GUITask>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
+		if (schedulingPanel.validate()) {
+			service.saveTask(Session.get().getSid(), task, new AsyncCallback<GUITask>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					Log.serverError(caught);
+				}
 
-			@Override
-			public void onSuccess(GUITask task) {
-				savePanel.setVisible(false);
-			}
-		});
-		// }
+				@Override
+				public void onSuccess(GUITask task) {
+					tasksPanel.updateSelectedRecord(task);
+					savePanel.setVisible(false);
+				}
+			});
+		}
 	}
-
-	// private boolean validate() {
-	// boolean stdValid = schedulingPanel.validate();
-	// boolean extValid = logPanel.validate();
-	// if (!stdValid)
-	// tabSet.selectTab(0);
-	// else if (!extValid)
-	// tabSet.selectTab(1);
-	// return stdValid && extValid;
-	// }
 }

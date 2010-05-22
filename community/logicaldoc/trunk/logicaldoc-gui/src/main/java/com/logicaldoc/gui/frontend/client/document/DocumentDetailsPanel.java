@@ -27,7 +27,6 @@ import com.smartgwt.client.widgets.tab.TabSet;
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
- * 
  */
 public class DocumentDetailsPanel extends VLayout {
 	private GUIDocument document;
