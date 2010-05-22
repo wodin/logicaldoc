@@ -47,7 +47,9 @@ body {
 		<script src="./context.jsp"></script>
 		<link rel='image/x-icon' href='./images/favicon.ico' />
 		<script type="text/javascript">
-		
+		   // Determine what skin file to load
+           var currentSkin = "LogicalDOC";
+           var isomorphicDir = "frontend/sc/";
         </script>
 	</head>
 	<body>
@@ -65,10 +67,6 @@ body {
 			</div>
 		</div>
 
-		<!-- IMPORTANT : You must set the variable isomorphicDir to [MODULE_NAME]/sc/ so that the SmartGWT resource are correctly resolved -->
-		<script>
-	var isomorphicDir = "frontend/sc/";
-</script>
 		<script type="text/javascript">
 	document.getElementById('loadingTitle').innerHTML = context.product_name
 			+ ' ' + context.product_release;
@@ -94,34 +92,13 @@ body {
 	document.getElementById('loadingMsg').innerHTML = 'Loading Data API...';
 </script>
 		<script src='frontend/sc/modules/ISC_DataBinding.js'></script>
-		<script>
-	function readCookie(name) {
-		var nameEQ = name + "=";
-		var ca = document.cookie.split(';');
-		for ( var i = 0; i < ca.length; i++) {
-			var c = ca[i];
-			while (c.charAt(0) == ' ')
-				c = c.substring(1, c.length);
-			if (c.indexOf(nameEQ) == 0)
-				return c.substring(nameEQ.length, c.length);
-		}
-		return null;
-	}
 
-	// Determine what skin file to load
-	var currentSkin = readCookie('skin_name');
-	if (currentSkin == null)
-		currentSkin = "LogicalDOC";
-</script>
-		<!--load skin-->
-		<script type="text/javascript">
-	document.getElementById('loadingMsg').innerHTML = 'Loading skin...';
+<!--load skin-->
+<script type="text/javascript">document.getElementById('loadingMsg').innerHTML = 'Loading skin...';</script>
+<script type="text/javascript">
+    document.write("<"+"script src=frontend/sc/skins/" + currentSkin + "/load_skin.js?isc_version=7.1.js><"+"/script>");
 </script>
 
-		<script type="text/javascript">
-	document.write("<" + "script src=frontend/sc/skins/" + currentSkin
-			+ "/load_skin.js?isc_version=7.1.js><" + "/script>");
-</script>
 		<!--load localizations-->
 		<script type="text/javascript">
 	document.getElementById('loadingMsg').innerHTML = 'Loading messages...';

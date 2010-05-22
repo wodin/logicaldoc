@@ -30,13 +30,10 @@ public class LogPanel extends VLayout {
 		htmlPane.setContentsType(ContentsType.PAGE);
 
 		HStack hStack = new HStack();
-		hStack.setHeight(50);
 		hStack.setLayoutMargin(10);
 		hStack.setMembersMargin(10);
 
 		IButton refresh = new IButton(I18N.getMessage("refresh"));
-		refresh.setWidth(50);
-		refresh.setHeight(25);
 		refresh.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				htmlPane.redraw();

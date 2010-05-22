@@ -63,16 +63,12 @@ body {
 				</div>
 			</div>
 		</div>
-
-		<!-- IMPORTANT : You must set the variable isomorphicDir to [MODULE_NAME]/sc/ so that the SmartGWT resource are correctly resolved -->
-		<script>
-	var isomorphicDir = "setup/sc/";
-</script>
 		<script type="text/javascript">
 	document.getElementById('loadingTitle').innerHTML = context.product_name
 			+ ' ' + context.product_release;
 </script>
-		<script type="text/javascript">
+
+<script type="text/javascript">
 	document.getElementById('loadingMsg').innerHTML = 'Loading Core API...';
 </script>
 

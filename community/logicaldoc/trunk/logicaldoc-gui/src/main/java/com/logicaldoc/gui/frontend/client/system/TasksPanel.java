@@ -19,7 +19,6 @@ import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.CellFormatter;
@@ -57,17 +56,9 @@ public class TasksPanel extends VLayout {
 
 	private Canvas detailPanel;
 
-	private static TasksPanel instance;
-
 	public TasksPanel() {
 		setWidth100();
 		init();
-	}
-
-	public static TasksPanel get() {
-		if (instance == null)
-			instance = new TasksPanel();
-		return instance;
 	}
 
 	private void showContextMenu() {
@@ -380,7 +371,7 @@ public class TasksPanel extends VLayout {
 		if (!(detailPanel instanceof TaskDetailPanel)) {
 			details.removeMember(detailPanel);
 			detailPanel.destroy();
-			detailPanel = new TaskDetailPanel();
+			detailPanel = new TaskDetailPanel(this);
 			details.addMember(detailPanel);
 		}
 		((TaskDetailPanel) detailPanel).setTask(task);
@@ -388,5 +379,13 @@ public class TasksPanel extends VLayout {
 
 	public ListGrid getList() {
 		return list;
+	}
+
+	/**
+	 * Updates the selected record with the new task data
+	 */
+	public void updateSelectedRecord(GUITask task) {
+		list.getSelectedRecord().setAttribute("scheduling", task.getSchedulingLabel());
+		list.updateData(list.getSelectedRecord());
 	}
 }

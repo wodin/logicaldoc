@@ -44,6 +44,8 @@ public class GUIScheduling implements Serializable {
 
 	private boolean enabled = true;
 
+	private boolean simple = true;
+
 	public GUIScheduling() {
 	}
 
@@ -171,7 +173,11 @@ public class GUIScheduling implements Serializable {
 		this.nextFireTime = nextFireTime;
 	}
 
-	public long getIntervalSeconds() {
-		return interval / 1000;
+	public boolean isSimple() {
+		return simple;
+	}
+
+	public void setSimple(boolean simple) {
+		this.simple = simple;
 	}
 }
