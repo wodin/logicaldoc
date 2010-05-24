@@ -50,7 +50,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	// The document that must be hilighted
 	private Long hiliteDocId = null;
 
-	private Integer maxRows;
+	private Integer max;
 
 	private DocumentsPanel() {
 		// Register to folders events
@@ -152,13 +152,13 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		refresh(null);
 	}
 
-	public void refresh(Integer maxRows) {
-		if (maxRows != null && maxRows > 0)
-			this.maxRows = maxRows;
+	public void refresh(Integer max) {
+		if (max != null && max > 0)
+			this.max = max;
 
 		listing.removeMember(listingPanel);
 		listingPanel.destroy();
-		listingPanel = new DocumentsListPanel(folder, hiliteDocId, this.maxRows);
+		listingPanel = new DocumentsListPanel(folder, hiliteDocId, this.max);
 		listing.addMember(listingPanel);
 		listing.redraw();
 

@@ -89,26 +89,26 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		addButton(add);
 
 		addSeparator();
-		final IntegerItem maxRows = new IntegerItem();
-		maxRows.setName("maxRows");
-		maxRows.setHint(I18N.getMessage("elements"));
-		maxRows.setShowTitle(false);
-		maxRows.setDefaultValue(100);
-		maxRows.setWidth(40);
+		final IntegerItem max = new IntegerItem();
+		max.setName("max");
+		max.setHint(I18N.getMessage("elements"));
+		max.setShowTitle(false);
+		max.setDefaultValue(100);
+		max.setWidth(40);
 
 		IntegerRangeValidator intValidator = new IntegerRangeValidator();
 		intValidator.setMin(1);
-		maxRows.setValidators(intValidator);
+		max.setValidators(intValidator);
 
 		ToolStripButton display = new ToolStripButton();
 		display.setTitle(I18N.getMessage("display"));
 		addButton(display);
-		addFormItem(maxRows);
+		addFormItem(max);
 		display.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (maxRows.validate()) {
-					DocumentsPanel.get().refresh((Integer) maxRows.getValue());
+				if (max.validate()) {
+					DocumentsPanel.get().refresh((Integer) max.getValue());
 				}
 			}
 		});

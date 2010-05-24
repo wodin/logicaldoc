@@ -71,12 +71,12 @@ public class MockDocumentHistoryDataServlet extends HttpServlet {
 		long userId = Long.parseLong(request.getParameter("userId"));
 		String event = request.getParameter("event");
 		String lang = request.getParameter("lang");
-		int maxRows = Integer.parseInt(request.getParameter("maxRows"));
+		int max = Integer.parseInt(request.getParameter("max"));
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
 
-		for (int i = 0; i < maxRows; i++) {
+		for (int i = 0; i < max; i++) {
 			writer.print("<history>");
 			writer.print("<user>Marco Meschieri</user>");
 			writer.print("<event>checkin</event>");
