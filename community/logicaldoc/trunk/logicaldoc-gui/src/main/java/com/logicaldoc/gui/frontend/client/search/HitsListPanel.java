@@ -335,27 +335,27 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 		if (Search.get().isHasMore()) {
 			toolStrip.addSeparator();
-			final IntegerItem maxRows = new IntegerItem();
-			maxRows.setName("repeatNumber");
-			maxRows.setHint(I18N.getMessage("hits"));
-			maxRows.setShowTitle(false);
-			maxRows.setDefaultValue(40);
-			maxRows.setWidth(40);
+			final IntegerItem max = new IntegerItem();
+			max.setName("repeatNumber");
+			max.setHint(I18N.getMessage("hits"));
+			max.setShowTitle(false);
+			max.setDefaultValue(40);
+			max.setWidth(40);
 			IntegerRangeValidator intValidator = new IntegerRangeValidator();
 			intValidator.setMin(1);
-			maxRows.setValidators(intValidator);
+			max.setValidators(intValidator);
 
 			ToolStripButton repeat = new ToolStripButton();
 			repeat.setTitle(I18N.getMessage("display"));
 			toolStrip.addButton(repeat);
-			toolStrip.addFormItem(maxRows);
+			toolStrip.addFormItem(max);
 			repeat.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					if (!maxRows.validate())
+					if (!max.validate())
 						return;
 					GUISearchOptions opt = Search.get().getOptions();
-					opt.setMaxHits(opt.getMaxHits() + (Integer) maxRows.getValue());
+					opt.setMaxHits(opt.getMaxHits() + (Integer) max.getValue());
 					Search.get().search();
 				}
 			});

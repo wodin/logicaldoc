@@ -46,7 +46,7 @@ public class DocumentsListPanel extends VLayout {
 
 	private boolean filters;
 
-	public DocumentsListPanel(GUIFolder folder, final Long hiliteDoc, Integer maxRows) {
+	public DocumentsListPanel(GUIFolder folder, final Long hiliteDoc, Integer max) {
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
@@ -157,7 +157,7 @@ public class DocumentsListPanel extends VLayout {
 		list.setAutoFetchData(true);
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setFilterOnKeypress(true);
-		dataSource = new DocumentsDS(folder.getId(), null, maxRows);
+		dataSource = new DocumentsDS(folder.getId(), null, max);
 		list.setDataSource(dataSource);
 		list.setFields(indexed, locked, immutable, icon, title, size, lastModified, version, publisher, published,
 				creator, created, customId, filename);

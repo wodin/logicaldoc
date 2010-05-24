@@ -48,10 +48,10 @@ public class HistoryPortlet extends Portlet {
 
 	public HistoryPortlet(final String eventCode) {
 		long userId = Session.get().getUser().getId();
-		int maxRows = 1000;
+		int max = 1000;
 		if (Constants.EVENT_DOWNLOADED.equals(eventCode) || Constants.EVENT_CHECKEDIN.equals(eventCode)
 				|| Constants.EVENT_CHANGED.equals(eventCode))
-			maxRows = 10;
+			max = 10;
 
 		ListGridField version = new ListGridField("version", I18N.getMessage("version"), 70);
 		ListGridField date = new ListGridField("date", I18N.getMessage("date"), 110);
@@ -85,7 +85,7 @@ public class HistoryPortlet extends Portlet {
 		list.setSelectionType(SelectionStyle.NONE);
 		list.setHeight100();
 		list.setBorder("0px");
-		dataSource = new DocumentHistoryDS(userId, eventCode, maxRows);
+		dataSource = new DocumentHistoryDS(userId, eventCode, max);
 		list.setDataSource(dataSource);
 		list.setFields(icon, title, version, date);
 

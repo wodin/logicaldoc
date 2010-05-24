@@ -15,16 +15,16 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class DocumentHistoryDS extends DataSource {
-	private static final int MAX_ROWS = 100;
+	private static final int MAX = 100;
 
-	public DocumentHistoryDS(long docId, Integer maxRows) {
+	public DocumentHistoryDS(long docId, Integer max) {
 		init("data/documenthistory.xml?sid=" + Session.get().getSid() + "&id=" + docId + "&lang=" + I18N.getLanguage()
-				+ "&maxRows=" + (maxRows != null ? maxRows : MAX_ROWS));
+				+ "&max=" + (max != null ? max : MAX));
 	}
 
-	public DocumentHistoryDS(long userId, String event, Integer maxRows) {
+	public DocumentHistoryDS(long userId, String event, Integer max) {
 		init("data/documenthistory.xml?sid=" + Session.get().getSid() + "&userId=" + userId + "&event=" + event
-				+ "&lang=" + I18N.getLanguage() + "&maxRows=" + (maxRows != null ? maxRows : MAX_ROWS));
+				+ "&lang=" + I18N.getLanguage() + "&max=" + (max != null ? max : MAX));
 	}
 
 	private void init(String url) {
