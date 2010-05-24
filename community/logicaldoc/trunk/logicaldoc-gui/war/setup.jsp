@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
-	String locale = request.getParameter("locale");
+    String locale = request.getParameter("locale");
 	if (locale == null || "".equals(locale))
 		locale = "";
 %>
@@ -43,11 +43,14 @@ body {
 	font: normal 10px arial, tahoma, sans-serif;
 }
 </style>
+        <LINK REL="STYLESHEET" HREF="./skin/style.css" TYPE="text/css">
 		<!--load context-->
-		<script src="./context.jsp" />
-		<link rel='image/x-icon' href='./images/favicon.ico' />
-		<script>
-		  var defaultFolder = '<%=System.getProperty("user.home").replaceAll("\\\\","/")+"/logicaldoc"%>';	
+		<script src="./context.jsp"></script>
+		<link rel='image/x-icon' href='./skin/images/favicon.ico' />
+		<script type="text/javascript">
+		   // Determine what skin file to load
+           var currentSkin = "Enterprise";
+           var isomorphicDir = "setup/sc/";
         </script>
 	</head>
 	<body>
@@ -55,7 +58,8 @@ body {
 		<div id="loadingWrapper">
 			<div id="loading">
 				<div class="loadingIndicator">
-					<img src="./images/loading.gif" width="16" height="16"
+					<img src="./skin/images/loading.gif" width="16"
+						height="16"
 						style="margin-right: 8px; float: left; vertical-align: top;" />
 					<span id="loadingTitle"></span>
 					<br />
@@ -63,12 +67,12 @@ body {
 				</div>
 			</div>
 		</div>
+
 		<script type="text/javascript">
 	document.getElementById('loadingTitle').innerHTML = context.product_name
 			+ ' ' + context.product_release;
 </script>
-
-<script type="text/javascript">
+		<script type="text/javascript">
 	document.getElementById('loadingMsg').innerHTML = 'Loading Core API...';
 </script>
 
@@ -89,34 +93,13 @@ body {
 	document.getElementById('loadingMsg').innerHTML = 'Loading Data API...';
 </script>
 		<script src='setup/sc/modules/ISC_DataBinding.js'></script>
-		<script>
-	function readCookie(name) {
-		var nameEQ = name + "=";
-		var ca = document.cookie.split(';');
-		for ( var i = 0; i < ca.length; i++) {
-			var c = ca[i];
-			while (c.charAt(0) == ' ')
-				c = c.substring(1, c.length);
-			if (c.indexOf(nameEQ) == 0)
-				return c.substring(nameEQ.length, c.length);
-		}
-		return null;
-	}
 
-	// Determine what skin file to load
-	var currentSkin = readCookie('skin_name');
-	if (currentSkin == null)
-		currentSkin = "LogicalDOC";
-</script>
-		<!--load skin-->
-		<script type="text/javascript">
-	document.getElementById('loadingMsg').innerHTML = 'Loading skin...';
+<!--load skin-->
+<script type="text/javascript">document.getElementById('loadingMsg').innerHTML = 'Loading skin...';</script>
+<script type="text/javascript">
+    document.write("<"+"script src=setup/sc/skins/" + currentSkin + "/load_skin.js?isc_version=7.1.js><"+"/script>");
 </script>
 
-		<script type="text/javascript">
-	document.write("<" + "script src=setup/sc/skins/" + currentSkin
-			+ "/load_skin.js?isc_version=7.1.js><" + "/script>");
-</script>
 		<!--load localizations-->
 		<script type="text/javascript">
 	document.getElementById('loadingMsg').innerHTML = 'Loading messages...';
