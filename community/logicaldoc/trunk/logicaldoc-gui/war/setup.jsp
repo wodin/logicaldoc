@@ -43,7 +43,7 @@ body {
 	font: normal 10px arial, tahoma, sans-serif;
 }
 </style>
-        <LINK REL="STYLESHEET" HREF="./skin/style.css" TYPE="text/css">
+        <link REL="STYLESHEET" HREF="./skin/style.css" TYPE="text/css" />
 		<!--load context-->
 		<script src="./context.jsp"></script>
 		<link rel='image/x-icon' href='./skin/images/favicon.ico' />

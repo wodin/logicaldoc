@@ -95,7 +95,7 @@ public class UsersPanel extends VLayout {
 		active.setCanSort(false);
 		active.setAlign(Alignment.CENTER);
 		active.setShowDefaultContextMenu(false);
-		active.setImageURLPrefix(Util.imagePrefix() + "/application/");
+		active.setImageURLPrefix(Util.imagePrefix());
 		active.setImageURLSuffix(".gif");
 		active.setCanFilter(false);
 

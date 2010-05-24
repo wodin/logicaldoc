@@ -1,7 +1,7 @@
 package com.logicaldoc.gui.frontend.client.panels;
 
 import com.google.gwt.user.client.ui.Image;
-import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.security.LoginInfo;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -19,7 +19,7 @@ public class TopPanel extends HLayout {
 		setHeight(45);
 
 		// Prepare the logo image to be shown inside the banner
-		Image logoImage = new Image(Util.imageUrl("brand/logo_head.png"));
+		Image logoImage = ItemFactory.newImage("logo_head.png");
 		logoImage.setStyleName("topLogo");
 		addMember(logoImage);
 

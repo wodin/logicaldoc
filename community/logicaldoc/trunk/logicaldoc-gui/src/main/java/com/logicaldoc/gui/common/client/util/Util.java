@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.util;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Dictionary;
 
 public class Util {
@@ -30,7 +29,7 @@ public class Util {
 	}
 
 	public static String imagePrefix() {
-		return GWT.getModuleBaseURL() + "skin/images/";
+		return "../skin/images/";
 	}
 
 	/**

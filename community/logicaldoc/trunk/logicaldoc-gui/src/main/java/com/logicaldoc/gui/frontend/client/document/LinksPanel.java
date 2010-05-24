@@ -57,7 +57,7 @@ public class LinksPanel extends DocumentDetailTab {
 		direction.setCanSort(false);
 		direction.setAlign(Alignment.CENTER);
 		direction.setShowDefaultContextMenu(false);
-		direction.setImageURLPrefix(Util.imagePrefix() + "application/document_");
+		direction.setImageURLPrefix(Util.imagePrefix() + "document_");
 		direction.setImageURLSuffix(".png");
 		direction.setCanEdit(false);
 
@@ -66,7 +66,7 @@ public class LinksPanel extends DocumentDetailTab {
 		icon.setCanSort(false);
 		icon.setAlign(Alignment.CENTER);
 		icon.setShowDefaultContextMenu(false);
-		icon.setImageURLPrefix(Util.imagePrefix() + "application/");
+		icon.setImageURLPrefix(Util.imagePrefix());
 		icon.setImageURLSuffix(".png");
 		icon.setCanEdit(false);
 

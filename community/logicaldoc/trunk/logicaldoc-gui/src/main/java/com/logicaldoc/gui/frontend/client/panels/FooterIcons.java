@@ -5,6 +5,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.beans.UserObserver;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.clipboard.ClipboardObserver;
@@ -31,8 +32,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 	private HTML checkoutCount = new HTML("0");
 
 	private FooterIcons() {
-		Img clipboardImage = new Img(Util.imageUrl("application/paste.gif"));
-		clipboardImage.setWidth("16px");
+		Img clipboardImage = ItemFactory.newImg("paste.gif");
 		clipboardImage.setHeight("16px");
 		clipboardImage.addClickHandler(new ClickHandler() {
 			@Override
@@ -43,8 +43,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		});
 		clipboardImage.setCursor(Cursor.HAND);
 
-		Img lockedImage = new Img(Util.imageUrl("application/document_lock.png"));
-		lockedImage.setWidth("16px");
+		Img lockedImage = ItemFactory.newImg("document_lock.png");
 		lockedImage.setHeight("16px");
 		lockedImage.addClickHandler(new ClickHandler() {
 			@Override
@@ -54,8 +53,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		});
 		lockedImage.setCursor(Cursor.HAND);
 
-		Img checkoutImage = new Img(Util.imageUrl("application/page_edit.png"));
-		checkoutImage.setWidth("16px");
+		Img checkoutImage = ItemFactory.newImg("page_edit.png");
 		checkoutImage.setHeight("16px");
 		checkoutImage.addClickHandler(new ClickHandler() {
 			@Override

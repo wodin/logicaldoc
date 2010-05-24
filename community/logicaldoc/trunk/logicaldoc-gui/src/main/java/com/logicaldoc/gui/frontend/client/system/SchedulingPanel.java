@@ -7,6 +7,9 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
@@ -14,6 +17,7 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -33,6 +37,26 @@ public class SchedulingPanel extends VLayout {
 	private GUITask task;
 
 	private boolean simplePolicy;
+
+	private SelectItem maxDuration;
+
+	private IntegerItem cpuIdle;
+
+	private IntegerItem initialDelay;
+
+	private IntegerItem repeatInterval;
+
+	private TextItem seconds;
+
+	private TextItem minutes;
+
+	private TextItem hours;
+
+	private TextItem dayMonth;
+
+	private TextItem month;
+
+	private TextItem dayWeek;
 
 	public SchedulingPanel(GUITask task, ChangedHandler changedHandler) {
 		setWidth100();
@@ -74,12 +98,12 @@ public class SchedulingPanel extends VLayout {
 		});
 
 		// Max Lengths
-		SelectItem maxDuration = new SelectItem();
+		maxDuration = new SelectItem();
 		LinkedHashMap<String, String> opts2 = new LinkedHashMap<String, String>();
 		opts2.put("-1", I18N.getMessage("nolimits"));
-		opts2.put(Long.toString(15 * 60L), I18N.getMessage("15minutes"));
-		opts2.put(Long.toString(60 * 60L), I18N.getMessage("1hour"));
-		opts2.put(Long.toString(5 * 60 * 60L), I18N.getMessage("5hours"));
+		opts2.put(Long.toString(15 * 60L), I18N.getMessage("_15minutes"));
+		opts2.put(Long.toString(60 * 60L), I18N.getMessage("_1hour"));
+		opts2.put(Long.toString(5 * 60 * 60L), I18N.getMessage("_5hours"));
 		maxDuration.setValueMap(opts2);
 		maxDuration.setName("maxDuration");
 		maxDuration.setTitle(I18N.getMessage("maxlengths"));
@@ -87,82 +111,121 @@ public class SchedulingPanel extends VLayout {
 		maxDuration.addChangedHandler(changedHandler);
 
 		// CPU Idle
-		IntegerItem cpuIdle = new IntegerItem();
+		cpuIdle = new IntegerItem();
 		cpuIdle.setName("cpuIdle");
 		cpuIdle.setTitle(I18N.getMessage("schedulingidle"));
 		cpuIdle.setDefaultValue(task.getScheduling().getMinCpuIdle());
 		cpuIdle.addChangedHandler(changedHandler);
+		IntegerRangeValidator cpuIdleValidator = new IntegerRangeValidator();
+		cpuIdleValidator.setMin(-1);
+		cpuIdle.setValidators(cpuIdleValidator);
 
 		// Initial delay
-		IntegerItem initialDelay = new IntegerItem();
+		initialDelay = new IntegerItem();
 		initialDelay.setName("initialDelay");
 		initialDelay.setTitle(I18N.getMessage("initialdelay"));
 		initialDelay.setDefaultValue(new Integer(Long.toString(task.getScheduling().getDelay())));
 		initialDelay.setVisible(simplePolicy);
 		initialDelay.addChangedHandler(changedHandler);
-		initialDelay.setHint(I18N.getMessage("seconds"));
+		initialDelay.setHint(I18N.getMessage("seconds").toLowerCase());
+		initialDelay.setRequired(true);
+		IntegerRangeValidator initialDelayValidator = new IntegerRangeValidator();
+		initialDelayValidator.setMin(1);
+		initialDelay.setValidators(initialDelayValidator);
 
 		// Repeat interval
-		IntegerItem repeatInterval = new IntegerItem();
+		repeatInterval = new IntegerItem();
 		repeatInterval.setName("repeatInterval");
 		repeatInterval.setTitle(I18N.getMessage("repeatinterval"));
 		repeatInterval.setDefaultValue(new Integer(Long.toString(task.getScheduling().getInterval())));
 		repeatInterval.setVisible(simplePolicy);
 		repeatInterval.addChangedHandler(changedHandler);
-		repeatInterval.setHint(I18N.getMessage("seconds"));
+		repeatInterval.setHint(I18N.getMessage("seconds").toLowerCase());
+		repeatInterval.setRequired(true);
+		IntegerRangeValidator repeatIntervalValidator = new IntegerRangeValidator();
+		repeatIntervalValidator.setMin(1);
+		initialDelay.setValidators(repeatIntervalValidator);
 
 		// Seconds
-		TextItem seconds = new TextItem();
+		seconds = new TextItem();
 		seconds.setName("seconds");
 		seconds.setTitle(I18N.getMessage("seconds"));
 		seconds.setDefaultValue(task.getScheduling().getSeconds());
 		seconds.setVisible(!simplePolicy);
 		seconds.addChangedHandler(changedHandler);
+		seconds.setRequired(true);
 
 		// Minutes
-		TextItem minutes = new TextItem();
+		minutes = new TextItem();
 		minutes.setName("minutes");
 		minutes.setTitle(I18N.getMessage("minutes"));
 		minutes.setDefaultValue(task.getScheduling().getMinutes());
 		minutes.setVisible(!simplePolicy);
 		minutes.addChangedHandler(changedHandler);
+		minutes.setRequired(true);
 
 		// Hours
-		TextItem hours = new TextItem();
+		hours = new TextItem();
 		hours.setName("hours");
 		hours.setTitle(I18N.getMessage("hours"));
 		hours.setDefaultValue(task.getScheduling().getHours());
 		hours.setVisible(!simplePolicy);
 		hours.addChangedHandler(changedHandler);
+		hours.setRequired(true);
 
 		// Day of month
-		TextItem dayMonth = new TextItem();
+		dayMonth = new TextItem();
 		dayMonth.setName("dayMonth");
 		dayMonth.setTitle(I18N.getMessage("daymonth"));
 		dayMonth.setDefaultValue(task.getScheduling().getDayOfMonth());
 		dayMonth.setVisible(!simplePolicy);
 		dayMonth.addChangedHandler(changedHandler);
+		dayMonth.setRequired(true);
 
 		// Month
-		TextItem month = new TextItem();
+		month = new TextItem();
 		month.setName("month");
 		month.setTitle(I18N.getMessage("month"));
 		month.setDefaultValue(task.getScheduling().getMonth());
 		month.setVisible(!simplePolicy);
 		month.addChangedHandler(changedHandler);
+		month.setRequired(true);
 
 		// Day of week
-		TextItem dayWeek = new TextItem();
+		dayWeek = new TextItem();
 		dayWeek.setName("dayWeek");
 		dayWeek.setTitle(I18N.getMessage("dayweek"));
 		dayWeek.setDefaultValue(task.getScheduling().getDayOfWeek());
 		dayWeek.setVisible(!simplePolicy);
 		dayWeek.addChangedHandler(changedHandler);
+		dayWeek.setRequired(true);
 
 		form.setItems(simple, initialDelay, repeatInterval, seconds, minutes, hours, dayMonth, month, dayWeek,
 				maxDuration, cpuIdle);
 
-		setMembers(form);
+		IButton restoreDefaults = new IButton();
+		restoreDefaults.setTitle(I18N.getMessage("restoredefaults"));
+		restoreDefaults.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				final Map<String, Object> values = vm.getValues();
+
+				if (vm.validate()) {
+					SchedulingPanel.this.maxDuration.setValue("-1");
+					SchedulingPanel.this.cpuIdle.setValue(-1);
+					SchedulingPanel.this.initialDelay.setValue(1800);
+					SchedulingPanel.this.repeatInterval.setValue(1800);
+					SchedulingPanel.this.seconds.setValue("00");
+					SchedulingPanel.this.minutes.setValue("00");
+					SchedulingPanel.this.hours.setValue("4/4");
+					SchedulingPanel.this.dayMonth.setValue("*");
+					SchedulingPanel.this.month.setValue("*");
+					SchedulingPanel.this.dayWeek.setValue("?");
+				}
+			}
+		});
+
+		setMembers(form, restoreDefaults);
+		setMembersMargin(10);
 
 		return form;
 	}

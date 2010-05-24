@@ -12,7 +12,6 @@ import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
@@ -168,8 +167,7 @@ public class SecuritySettingsPanel extends VLayout {
 		});
 		items.add(user);
 
-		FormItemIcon icon = new FormItemIcon();
-		icon.setSrc(Util.imageUrl("application/delete.png"));
+		FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
 		int i = 0;
 
 		for (GUIUser u : settings.getNotifiedUsers()) {

@@ -2,6 +2,7 @@ package com.logicaldoc.gui.common.client.util;
 
 import java.util.LinkedHashMap;
 
+import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
@@ -9,8 +10,11 @@ import com.logicaldoc.gui.common.client.validators.EmailValidator;
 import com.logicaldoc.gui.common.client.validators.EmailsValidator;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.MultipleAppearance;
+import com.smartgwt.client.widgets.Img;
+import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
+import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -191,5 +195,27 @@ public class ItemFactory {
 		select.setValueMap(map);
 
 		return select;
+	}
+
+	public static Img newImg(String name) {
+		Img img = new Img("../" + Util.imageUrl(name));
+		img.setWidth("16px");
+		return img;
+	}
+
+	public static FormItemIcon newItemIcon(String image) {
+		FormItemIcon icon = new FormItemIcon();
+		icon.setSrc(ItemFactory.newImg(image).getSrc());
+		return icon;
+	}
+
+	public static Image newImage(String image) {
+		Image tmp = new Image(Util.imageUrl(image));
+		return tmp;
+	}
+
+	public static HeaderIcon newHeaderIcon(String image) {
+		HeaderIcon icon = new HeaderIcon(ItemFactory.newImg(image).getSrc());
+		return icon;
 	}
 }

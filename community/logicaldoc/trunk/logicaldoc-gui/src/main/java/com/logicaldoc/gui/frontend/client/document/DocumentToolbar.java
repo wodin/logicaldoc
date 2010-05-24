@@ -7,6 +7,8 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.SelectionType;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -34,7 +36,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	public DocumentToolbar() {
 		download.setTooltip(I18N.getMessage("download"));
-		download.setIcon("[SKIN]/application/download.png");
+		download.setIcon(ItemFactory.newImg("download.png").getSrc());
 		download.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -45,7 +47,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		rss.setIcon("[SKIN]/application/rss.png");
+		rss.setIcon(ItemFactory.newImg("rss.png").getSrc());
 		rss.setTooltip(I18N.getMessage("rssfeed"));
 		if (!Session.get().isFeatureEnabled("Feature_9"))
 			rss.setTooltip(I18N.getMessage("featuredisabled"));
@@ -57,7 +59,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		});
 
 		pdf.setTooltip(I18N.getMessage("exportpdf"));
-		pdf.setIcon("[SKIN]/application/pdf.png");
+		pdf.setIcon(ItemFactory.newImg("pdf.png").getSrc());
 		if (!Session.get().isFeatureEnabled("Feature_8"))
 			pdf.setTooltip(I18N.getMessage("featuredisabled"));
 		pdf.addClickHandler(new ClickHandler() {
@@ -69,7 +71,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		});
 
 		add.setTooltip(I18N.getMessage("adddocuments"));
-		add.setIcon("[SKIN]/application/document_add.png");
+		add.setIcon(ItemFactory.newImg("document_add.png").getSrc());
 		add.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -113,7 +115,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		addSeparator();
 		ToolStripButton filter = new ToolStripButton();
-		filter.setActionType(SelectionType.CHECKBOX);  
+		filter.setActionType(SelectionType.CHECKBOX);
 		filter.setTitle(I18N.getMessage("filter"));
 		addButton(filter);
 		filter.addClickHandler(new ClickHandler() {

@@ -212,8 +212,7 @@ public class UserPropertiesPanel extends HLayout {
 		});
 		items.add(group);
 
-		FormItemIcon icon = new FormItemIcon();
-		icon.setSrc(Util.imageUrl("application/delete.png"));
+		FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
 		int i = 0;
 		for (GUIGroup grp : user.getGroups()) {
 			final StaticTextItem gp = new StaticTextItem();

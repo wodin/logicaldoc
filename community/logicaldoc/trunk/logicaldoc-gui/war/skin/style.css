@@ -5,7 +5,7 @@
 .gwt-HorizontalSplitPanel .hsplitter {
 	cursor: move;
 	border: 0px;
-	background: #91c0ef url(./images/application/vborder.png) repeat-y;
+	background: #91c0ef url(./images/vborder.png) repeat-y;
 }
 
 .loginHeader {
@@ -34,7 +34,7 @@
 
 .topPanel {
 	background-color: #213150;
-	background-image: url(./images/application/blu01a.gif);
+	background-image: url(./images/blu01a.gif);
 	background-repeat: repeat-x;
 	background-position: top left;
 	height: 45px;
