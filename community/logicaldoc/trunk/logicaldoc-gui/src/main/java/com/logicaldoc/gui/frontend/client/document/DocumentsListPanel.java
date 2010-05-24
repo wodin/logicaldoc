@@ -64,7 +64,7 @@ public class DocumentsListPanel extends VLayout {
 		icon.setCanSort(false);
 		icon.setAlign(Alignment.CENTER);
 		icon.setShowDefaultContextMenu(false);
-		icon.setImageURLPrefix(Util.imagePrefix() + "/application/");
+		icon.setImageURLPrefix(Util.imagePrefix());
 		icon.setImageURLSuffix(".png");
 		icon.setCanFilter(false);
 
@@ -107,7 +107,7 @@ public class DocumentsListPanel extends VLayout {
 		immutable.setCanSort(false);
 		immutable.setAlign(Alignment.CENTER);
 		immutable.setShowDefaultContextMenu(false);
-		immutable.setImageURLPrefix(Util.imagePrefix() + "/application/");
+		immutable.setImageURLPrefix(Util.imagePrefix());
 		immutable.setImageURLSuffix(".png");
 		immutable.setCanFilter(false);
 
@@ -116,7 +116,7 @@ public class DocumentsListPanel extends VLayout {
 		indexed.setCanSort(false);
 		indexed.setAlign(Alignment.CENTER);
 		indexed.setShowDefaultContextMenu(false);
-		indexed.setImageURLPrefix(Util.imagePrefix() + "/application/");
+		indexed.setImageURLPrefix(Util.imagePrefix());
 		indexed.setImageURLSuffix(".png");
 		indexed.setCanFilter(false);
 
@@ -125,7 +125,7 @@ public class DocumentsListPanel extends VLayout {
 		locked.setCanSort(false);
 		locked.setAlign(Alignment.CENTER);
 		locked.setShowDefaultContextMenu(false);
-		locked.setImageURLPrefix(Util.imagePrefix() + "/application/");
+		locked.setImageURLPrefix(Util.imagePrefix());
 		locked.setImageURLSuffix(".png");
 		locked.setCanFilter(false);
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.logicaldoc.gui.common.client.beans.GUIEvent;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
@@ -36,8 +37,7 @@ public class EventPanel extends HLayout {
 		setMargin(2);
 		setMembersMargin(2);
 
-		log = new Img("[SKINIMG]/application/logging.png");
-		log.setWidth("16px");
+		log = ItemFactory.newImg("logging.png");
 		log.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -47,8 +47,7 @@ public class EventPanel extends HLayout {
 			}
 		});
 
-		close = new Img("[SKINIMG]/application/delete.png");
-		close.setWidth("16px");
+		close = ItemFactory.newImg("delete.png");
 		close.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

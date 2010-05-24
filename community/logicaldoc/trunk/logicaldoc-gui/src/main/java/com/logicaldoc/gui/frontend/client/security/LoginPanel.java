@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.Frontend;
@@ -74,7 +75,7 @@ public class LoginPanel extends VLayout {
 		header.setHeight("12px");
 
 		// Prepare the logo image to be shown inside the login form
-		Image logoImage = new Image(Util.imageUrl("brand/logo.png"));
+		Image logoImage = ItemFactory.newImage("logo.png");
 		logoImage.setHeight("40px");
 
 		// Prepare the form footer that contains copyright and website link

@@ -58,7 +58,7 @@ public class TrashPanel extends VLayout {
 		icon.setCanSort(false);
 		icon.setAlign(Alignment.CENTER);
 		icon.setShowDefaultContextMenu(false);
-		icon.setImageURLPrefix(Util.imagePrefix() + "/application/");
+		icon.setImageURLPrefix(Util.imagePrefix());
 		icon.setImageURLSuffix(".png");
 		icon.setCanFilter(false);
 

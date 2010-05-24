@@ -170,8 +170,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		});
 		items.add(tagItem);
 
-		FormItemIcon icon = new FormItemIcon();
-		icon.setSrc(Util.imageUrl("application/delete.png"));
+		FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
 		int i = 0;
 		for (String str : document.getTags()) {
 			final StaticTextItem tgItem = new StaticTextItem();

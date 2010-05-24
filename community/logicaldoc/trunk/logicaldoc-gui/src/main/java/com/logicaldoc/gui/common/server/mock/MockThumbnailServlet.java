@@ -24,7 +24,7 @@ public class MockThumbnailServlet extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			RequestDispatcher rd = request.getRequestDispatcher("frontend/sc/skins/LogicalDOC/images/application/preview_na.gif");
+			RequestDispatcher rd = request.getRequestDispatcher("frontend/sc/skins/LogicalDOC/images/preview_na.gif");
 			rd.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();

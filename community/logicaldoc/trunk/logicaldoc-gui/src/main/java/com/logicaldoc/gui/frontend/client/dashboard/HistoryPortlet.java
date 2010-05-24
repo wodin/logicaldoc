@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.DocumentHistoryDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -63,7 +64,7 @@ public class HistoryPortlet extends Portlet {
 		icon.setCanSort(false);
 		icon.setAlign(Alignment.CENTER);
 		icon.setShowDefaultContextMenu(false);
-		icon.setImageURLPrefix(Util.imagePrefix() + "/application/");
+		icon.setImageURLPrefix(Util.imagePrefix());
 		icon.setImageURLSuffix(".png");
 		icon.setCanFilter(false);
 
@@ -125,19 +126,19 @@ public class HistoryPortlet extends Portlet {
 			}
 		});
 
-		String iconUrl = Util.imageUrl("blank.gif");
+		String icn = "blank.gif";
 		if (eventCode.equals(Constants.EVENT_CHECKEDOUT))
-			iconUrl = Util.imageUrl("application/page_edit.png");
+			icn = "page_edit.png";
 		else if (eventCode.equals(Constants.EVENT_LOCKED))
-			iconUrl = Util.imageUrl("application/document_lock.png");
+			icn = "document_lock.png";
 		else if (eventCode.equals(Constants.EVENT_DOWNLOADED))
-			iconUrl = Util.imageUrl("application/download.png");
+			icn = "download.png";
 		else if (eventCode.equals(Constants.EVENT_CHECKEDIN))
-			iconUrl = Util.imageUrl("application/document_add.png");
+			icn = "document_add.png";
 		else if (eventCode.equals(Constants.EVENT_CHANGED))
-			iconUrl = Util.imageUrl("application/edit.png");
+			icn = "edit.png";
 
-		HeaderIcon portletIcon = new HeaderIcon(iconUrl);
+		HeaderIcon portletIcon = ItemFactory.newHeaderIcon(icn);
 
 		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL, HeaderControls.MINIMIZE_BUTTON,
 				markAsRead);

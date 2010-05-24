@@ -8,7 +8,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.common.client.log.Log;
-import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -31,7 +31,7 @@ public class TagCloudPortlet extends Portlet {
 
 	public TagCloudPortlet() {
 		setTitle(I18N.getMessage("tagcloud"));
-		HeaderIcon portletIcon = new HeaderIcon(Util.imageUrl("application/tag_blue.png"));
+		HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
 		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL, HeaderControls.MINIMIZE_BUTTON);
 
 		container.setWidth100();
@@ -55,7 +55,7 @@ public class TagCloudPortlet extends Portlet {
 				for (GUITag tag : cloud) {
 					WordTag wordTag = new WordTag(tag.getTag());
 					wordTag.setNumberOfOccurences(tag.getScale());
-					wordTag.setLink("javascript:window.searchTag(\""+tag.getTag()+"\");");
+					wordTag.setLink("javascript:window.searchTag(\"" + tag.getTag() + "\");");
 					tc.addWord(wordTag);
 				}
 				container.addMember(tc);

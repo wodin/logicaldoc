@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.system;
 
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Img;
@@ -28,9 +29,9 @@ public class ProgressCanvas extends HLayout {
 		// GUITask.STATUS_RUNNING;
 		Img image = new Img();
 		if (enabled && running) {
-			image = new Img(Util.imageUrl("application/paste.gif"));
+			image = ItemFactory.newImg("paste.gif");
 		} else {
-			image = new Img(Util.imageUrl("application/document_lock.png"));
+			image = ItemFactory.newImg("document_lock.png");
 		}
 
 		image.setWidth("16px");

@@ -176,7 +176,7 @@ public class TasksPanel extends VLayout {
 		enabled.setType(ListGridFieldType.IMAGE);
 		enabled.setCanSort(false);
 		enabled.setAlign(Alignment.CENTER);
-		enabled.setImageURLPrefix(Util.imagePrefix() + "/application/");
+		enabled.setImageURLPrefix(Util.imagePrefix());
 		enabled.setImageURLSuffix(".png");
 		enabled.setCanFilter(false);
 
@@ -336,7 +336,7 @@ public class TasksPanel extends VLayout {
 		toolStrip.addSeparator();
 		final IntegerItem delay = new IntegerItem();
 		delay.setName("delay");
-		delay.setHint(I18N.getMessage("seconds"));
+		delay.setHint(I18N.getMessage("seconds").toLowerCase());
 		delay.setShowTitle(false);
 		delay.setDefaultValue(10);
 		delay.setWidth(40);
