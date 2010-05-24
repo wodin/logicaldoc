@@ -30,7 +30,7 @@ public class Util {
 	}
 
 	public static String imagePrefix() {
-		return GWT.getModuleBaseURL() + "sc/skins/" + getContext().get("skin") + "/images/";
+		return GWT.getModuleBaseURL() + "skin/images/";
 	}
 
 	/**
