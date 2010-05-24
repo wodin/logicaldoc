@@ -21,7 +21,7 @@ public class FeatureDisabled extends VLayout {
 		label.setAlign(Alignment.CENTER);
 		label.setValign(VerticalAlignment.CENTER);
 		label.setWrap(false);
-		label.setIcon(Util.imageUrl("Dialog/warn.png"));
+		label.setIcon("[SKIN]/Dialog/warn.png");
 		label.setShowEdges(true);
 		label.setContents("<b>" + I18N.getMessage("featuredisabled") + "</b>");
 		addMember(label);
