@@ -48,7 +48,7 @@ body {
 		<link rel='image/x-icon' href='./images/favicon.ico' />
 		<script type="text/javascript">
 		   // Determine what skin file to load
-           var currentSkin = "LogicalDOC";
+           var currentSkin = "Enteprise";
            var isomorphicDir = "frontend/sc/";
         </script>
 	</head>
