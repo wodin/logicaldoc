@@ -43,9 +43,10 @@ body {
 	font: normal 10px arial, tahoma, sans-serif;
 }
 </style>
+        <LINK REL="STYLESHEET" HREF="./skin/style.css" TYPE="text/css">
 		<!--load context-->
 		<script src="./context.jsp"></script>
-		<link rel='image/x-icon' href='./images/favicon.ico' />
+		<link rel='image/x-icon' href='./skin/images/favicon.ico' />
 		<script type="text/javascript">
 		   // Determine what skin file to load
            var currentSkin = "Enterprise";
@@ -57,7 +58,7 @@ body {
 		<div id="loadingWrapper">
 			<div id="loading">
 				<div class="loadingIndicator">
-					<img src="./images/loading.gif" width="16"
+					<img src="./skin/images/loading.gif" width="16"
 						height="16"
 						style="margin-right: 8px; float: left; vertical-align: top;" />
 					<span id="loadingTitle"></span>
