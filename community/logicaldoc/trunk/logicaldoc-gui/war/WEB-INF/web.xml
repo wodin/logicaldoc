@@ -53,10 +53,15 @@
     <servlet-name>SettingService</servlet-name>
     <servlet-class>com.logicaldoc.gui.frontend.mock.MockSettingServiceImpl</servlet-class>
   </servlet>
-  
+
   <servlet>
     <servlet-name>SystemService</servlet-name>
     <servlet-class>com.logicaldoc.gui.frontend.mock.MockSystemServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>SearchEngineService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.mock.MockSearchEngineServiceImpl</servlet-class>
   </servlet>
 
   <servlet>
@@ -163,7 +168,7 @@
     <servlet-name>RightsData</servlet-name>
     <servlet-class>com.logicaldoc.gui.common.server.mock.MockRightsDataServlet</servlet-class>
   </servlet>
-  
+
   <servlet>
     <servlet-name>TasksData</servlet-name>
     <servlet-class>com.logicaldoc.gui.common.server.mock.MockTasksDataServlet</servlet-class>
@@ -213,10 +218,15 @@
     <servlet-name>SettingService</servlet-name>
     <url-pattern>/frontend/setting</url-pattern>
   </servlet-mapping>
-  
+
   <servlet-mapping>
     <servlet-name>SystemService</servlet-name>
     <url-pattern>/frontend/system</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>SearchEngineService</servlet-name>
+    <url-pattern>/frontend/searchengine</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
@@ -313,7 +323,7 @@
     <servlet-name>RightsData</servlet-name>
     <url-pattern>/data/rights.xml</url-pattern>
   </servlet-mapping>
-  
+
   <servlet-mapping>
     <servlet-name>TasksData</servlet-name>
     <url-pattern>/data/tasks.xml</url-pattern>
