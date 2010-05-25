@@ -12,11 +12,15 @@ public class GUISearchEngine implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String languages = "english, italian, german, french, spanish";
+	private String languages = "en, it, de, fr, es";
 
 	private int entries;
 
 	private boolean locked;
+
+	private String includePatters = "*.doc, *.txt, *.pdf";
+
+	private String excludePatters;
 
 	public String getLanguages() {
 		return languages;
@@ -40,5 +44,21 @@ public class GUISearchEngine implements Serializable {
 
 	public void setLocked(boolean locked) {
 		this.locked = locked;
+	}
+
+	public String getIncludePatters() {
+		return includePatters;
+	}
+
+	public void setIncludePatters(String includePatters) {
+		this.includePatters = includePatters;
+	}
+
+	public String getExcludePatters() {
+		return excludePatters;
+	}
+
+	public void setExcludePatters(String excludePatters) {
+		this.excludePatters = excludePatters;
 	}
 }

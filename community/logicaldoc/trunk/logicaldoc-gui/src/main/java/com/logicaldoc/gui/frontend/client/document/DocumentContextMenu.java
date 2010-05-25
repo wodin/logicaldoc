@@ -228,9 +228,9 @@ public class DocumentContextMenu extends Menu {
 										record.setAttribute("locked", "document_lock");
 										record.setAttribute("lockUserId", Session.get().getUser().getId());
 										list.refreshRow(list.getRecordIndex(record));
-										Session.get().getUser().setLockedDocs(
-												Session.get().getUser().getLockedDocs() + ids.length);
 									}
+									Session.get().getUser().setLockedDocs(
+											Session.get().getUser().getLockedDocs() + ids.length);
 								}
 							});
 					}
@@ -262,9 +262,8 @@ public class DocumentContextMenu extends Menu {
 							record.setAttribute("locked", "blank");
 							record.setAttribute("status", Constants.DOC_UNLOCKED);
 							list.refreshRow(list.getRecordIndex(record));
-							Session.get().getUser().setLockedDocs(
-									Session.get().getUser().getLockedDocs() - ids.length);
 						}
+						Session.get().getUser().setLockedDocs(Session.get().getUser().getLockedDocs() - ids.length);
 					}
 				});
 			}
@@ -326,6 +325,64 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
+		MenuItem markUnindexable = new MenuItem();
+		markUnindexable.setTitle(I18N.getMessage("markunindexable"));
+		markUnindexable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				if (selection == null)
+					return;
+				final long[] ids = new long[selection.length];
+				for (int j = 0; j < selection.length; j++) {
+					ids[j] = Long.parseLong(selection[j].getAttribute("id"));
+				}
+
+				documentService.markUnindexable(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						for (ListGridRecord record : selection) {
+							record.setAttribute("indexed", "unindexable");
+							list.refreshRow(list.getRecordIndex(record));
+						}
+					}
+				});
+			}
+		});
+
+		MenuItem markIndexable = new MenuItem();
+		markIndexable.setTitle(I18N.getMessage("markindexable"));
+		markIndexable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				if (selection == null)
+					return;
+				final long[] ids = new long[selection.length];
+				for (int j = 0; j < selection.length; j++) {
+					ids[j] = Long.parseLong(selection[j].getAttribute("id"));
+				}
+
+				documentService.markIndexable(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						for (ListGridRecord record : selection) {
+							if ("indexed".equals(record.getAttribute("indexed")))
+								continue;
+							record.setAttribute("indexed", "blank");
+							list.refreshRow(list.getRecordIndex(record));
+						}
+					}
+				});
+			}
+		});
+
 		boolean enableLock = true;
 		boolean enableUnlock = true;
 		boolean enableImmutable = false;
@@ -363,6 +420,8 @@ public class DocumentContextMenu extends Menu {
 
 		if (!folder.hasPermission(Constants.PERMISSION_WRITE)) {
 			links.setEnabled(false);
+			markIndexable.setEnabled(false);
+			markUnindexable.setEnabled(false);
 		}
 
 		if (!enableLock) {
@@ -382,6 +441,6 @@ public class DocumentContextMenu extends Menu {
 			immutable.setEnabled(false);
 
 		setItems(download, copy, delete, bookmark, sendMail, similar, links, checkout, checkin, lock, unlockItem,
-				immutable);
+				immutable, markIndexable, markUnindexable);
 	}
 }

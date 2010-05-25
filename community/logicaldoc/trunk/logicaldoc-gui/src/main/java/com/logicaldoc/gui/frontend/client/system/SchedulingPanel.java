@@ -75,9 +75,9 @@ public class SchedulingPanel extends VLayout {
 		form.setValuesManager(vm);
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(3);
-		form.setColWidths(60, 60, 60);
+		form.setColWidths(190, 200, 190);
 		form.setWrapItemTitles(false);
-		form.setWidth(500);
+		form.setWidth(700);
 
 		// Policy
 		final SelectItem simple = new SelectItem();
@@ -154,6 +154,7 @@ public class SchedulingPanel extends VLayout {
 		seconds.setVisible(!simplePolicy);
 		seconds.addChangedHandler(changedHandler);
 		seconds.setRequired(true);
+		seconds.setHint(I18N.getMessage("schedulingsechint"));
 
 		// Minutes
 		minutes = new TextItem();
@@ -163,6 +164,7 @@ public class SchedulingPanel extends VLayout {
 		minutes.setVisible(!simplePolicy);
 		minutes.addChangedHandler(changedHandler);
 		minutes.setRequired(true);
+		minutes.setHint(I18N.getMessage("schedulingsechint"));
 
 		// Hours
 		hours = new TextItem();
@@ -172,6 +174,7 @@ public class SchedulingPanel extends VLayout {
 		hours.setVisible(!simplePolicy);
 		hours.addChangedHandler(changedHandler);
 		hours.setRequired(true);
+		hours.setHint(I18N.getMessage("schedulinghourshint"));
 
 		// Day of month
 		dayMonth = new TextItem();
@@ -181,6 +184,7 @@ public class SchedulingPanel extends VLayout {
 		dayMonth.setVisible(!simplePolicy);
 		dayMonth.addChangedHandler(changedHandler);
 		dayMonth.setRequired(true);
+		dayMonth.setHint(I18N.getMessage("schedulingdaymonthhint"));
 
 		// Month
 		month = new TextItem();
@@ -190,6 +194,7 @@ public class SchedulingPanel extends VLayout {
 		month.setVisible(!simplePolicy);
 		month.addChangedHandler(changedHandler);
 		month.setRequired(true);
+		month.setHint(I18N.getMessage("schedulingmonthhint"));
 
 		// Day of week
 		dayWeek = new TextItem();
@@ -199,6 +204,7 @@ public class SchedulingPanel extends VLayout {
 		dayWeek.setVisible(!simplePolicy);
 		dayWeek.addChangedHandler(changedHandler);
 		dayWeek.setRequired(true);
+		dayWeek.setHint(I18N.getMessage("schedulingdayweekhint"));
 
 		form.setItems(simple, initialDelay, repeatInterval, seconds, minutes, hours, dayMonth, month, dayWeek,
 				maxDuration, cpuIdle);

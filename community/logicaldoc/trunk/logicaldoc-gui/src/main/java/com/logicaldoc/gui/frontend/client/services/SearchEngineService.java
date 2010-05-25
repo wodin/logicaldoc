@@ -26,4 +26,9 @@ public interface SearchEngineService extends RemoteService {
 	 * Reschedule all entries for indexing.
 	 */
 	public GUISearchEngine rescheduleAll(String sid, GUISearchEngine searchEngine);
+
+	/**
+	 * Saves search engine settings
+	 */
+	public void save(String sid, GUISearchEngine searchEngine);
 }

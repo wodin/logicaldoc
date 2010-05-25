@@ -16,7 +16,11 @@ public class MockSearchEngineServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public GUISearchEngine getInfos(String sid) {
-		return new GUISearchEngine();
+		GUISearchEngine searchEngine = new GUISearchEngine();
+		searchEngine.setEntries(556);
+		searchEngine.setLocked(true);
+
+		return searchEngine;
 	}
 
 	@Override
@@ -27,5 +31,10 @@ public class MockSearchEngineServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public GUISearchEngine unlocks(String sid, GUISearchEngine searchEngine) {
 		return new GUISearchEngine();
+	}
+
+	@Override
+	public void save(String sid, GUISearchEngine searchEngine) {
+
 	}
 }

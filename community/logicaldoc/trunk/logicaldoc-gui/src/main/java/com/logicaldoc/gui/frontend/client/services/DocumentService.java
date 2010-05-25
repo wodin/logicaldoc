@@ -158,4 +158,14 @@ public interface DocumentService extends RemoteService {
 	 * @param event The history event to mark as read
 	 */
 	public void markHistoryAsRead(String sid, String event);
+	
+	/**
+	 * Marks a set of documents as unindexable
+	 */
+	public void markUnindexable(String sid, long[] docIds);
+
+	/**
+	 * Marks a set of documents as indexable
+	 */
+	public void markIndexable(String sid, long[] docIds);
 }

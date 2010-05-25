@@ -26,7 +26,7 @@ public class DocumentsDS extends DataSource {
 	 * @param max The marimum number of records (if not specified MAX_ROWS
 	 *        is used)
 	 */
-	public DocumentsDS(Long folderId, String fileFilter, Integer max) {
+	public DocumentsDS(Long folderId, String fileFilter, Integer max, boolean indexable) {
 		setTitleField("title");
 		setRecordXPath("/list/document");
 		DataSourceTextField title = new DataSourceTextField("title");
@@ -58,6 +58,7 @@ public class DocumentsDS extends DataSource {
 		setClientOnly(true);
 		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId="
 				+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "") + "&max="
-				+ (max != null ? max : MAX));
+				+ (max != null ? max : MAX) + "&index="
+				+ (indexable ? "true" : "false"));
 	}
 }

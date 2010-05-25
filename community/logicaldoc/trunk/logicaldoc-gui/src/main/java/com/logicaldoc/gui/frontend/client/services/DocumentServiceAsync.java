@@ -56,4 +56,8 @@ public interface DocumentServiceAsync {
 	void updateBookmark(String sid, GUIBookmark bookmark, AsyncCallback<Void> callback);
 
 	void markHistoryAsRead(String sid, String event, AsyncCallback<Void> callback);
+
+	void markIndexable(String sid, long[] docIds, AsyncCallback<Void> callback);
+
+	void markUnindexable(String sid, long[] docIds, AsyncCallback<Void> callback);
 }

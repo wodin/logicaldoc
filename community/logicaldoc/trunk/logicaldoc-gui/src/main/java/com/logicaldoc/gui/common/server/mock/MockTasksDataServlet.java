@@ -18,8 +18,6 @@ public class MockTasksDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 
-		System.out.println("**** tasks");
-
 		String sid = (String) request.getParameter("sid");
 		if (sid == null)
 			throw new IOException("Invalid session");

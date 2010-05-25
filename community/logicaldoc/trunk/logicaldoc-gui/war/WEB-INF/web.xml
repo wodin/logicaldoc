@@ -175,6 +175,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>ParsersData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.mock.MockParsersDataServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>log</servlet-name>
     <servlet-class>com.logicaldoc.gui.common.server.mock.MockLogDownload</servlet-class>
   </servlet>
@@ -327,6 +332,11 @@
   <servlet-mapping>
     <servlet-name>TasksData</servlet-name>
     <url-pattern>/data/tasks.xml</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ParsersData</servlet-name>
+    <url-pattern>/data/parsers.xml</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

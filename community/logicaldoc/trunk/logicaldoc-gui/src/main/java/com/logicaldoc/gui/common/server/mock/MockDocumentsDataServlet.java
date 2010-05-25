@@ -24,7 +24,7 @@ public class MockDocumentsDataServlet extends HttpServlet {
 			folderId = Long.parseLong(request.getParameter("folderId"));
 		String filename = request.getParameter("filename");
 
-		System.out.println("*** folderId=" + folderId);
+		boolean indexable = "true".equals(request.getParameter("index")) ? true : false;
 
 		String sid = (String) request.getParameter("sid");
 		if (sid == null)
@@ -57,7 +57,10 @@ public class MockDocumentsDataServlet extends HttpServlet {
 			writer.print("<creator>Admin Admin</creator>");
 			writer.print("<size>1234556</size>");
 			writer.print("<immutable>blank</immutable>");
-			writer.print("<indexed>indexed</indexed>");
+			if (indexable)
+				writer.print("<indexed>blank</indexed>");
+			else
+				writer.print("<indexed>indexed</indexed>");
 			writer.print("<locked>blank</locked>");
 			if (StringUtils.isEmpty(filename))
 				writer.print("<filename>Title " + Long.toString(folderId + 1000 + i) + ".doc</filename>");
