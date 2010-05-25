@@ -76,4 +76,11 @@ public final class Constants {
 	public final static String EVENT_CHANGED = "event.changed";
 
 	public final static String EVENT_CHECKEDIN = "event.checkedin";
+	
+	public final static int INDEX_TO_INDEX = 0;
+
+	public final static int INDEX_INDEXED = 1;
+
+	// The document is un-indexable
+	public final static int INDEX_SKIP = 2;
 }

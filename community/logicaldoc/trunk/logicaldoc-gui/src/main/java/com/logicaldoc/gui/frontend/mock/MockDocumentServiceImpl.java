@@ -257,4 +257,15 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	public void markHistoryAsRead(String sid, String event) {
 
 	}
+
+	@Override
+	public void markIndexable(String sid, long[] docIds) {
+		return;
+	}
+
+	@Override
+	public void markUnindexable(String sid, long[] docIds) {
+		// TODO if the document is indexed, it must be removed from the index.
+		return;
+	}
 }

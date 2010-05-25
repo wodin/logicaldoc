@@ -10,4 +10,6 @@ public interface SearchEngineServiceAsync {
 	void rescheduleAll(String sid, GUISearchEngine searchEngine, AsyncCallback<GUISearchEngine> callback);
 
 	void unlocks(String sid, GUISearchEngine searchEngine, AsyncCallback<GUISearchEngine> callback);
+
+	void save(String sid, GUISearchEngine searchEngine, AsyncCallback<Void> callback);
 }

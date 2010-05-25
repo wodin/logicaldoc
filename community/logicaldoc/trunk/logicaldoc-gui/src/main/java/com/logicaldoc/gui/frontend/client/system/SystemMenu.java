@@ -5,12 +5,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
-import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineServiceAsync;
-import com.logicaldoc.gui.frontend.client.settings.ClientToolsSettingsPanel;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -44,7 +42,7 @@ public class SystemMenu extends VLayout {
 		Button tasks = new Button(I18N.getMessage("scheduledtasks"));
 		tasks.setWidth100();
 		tasks.setHeight(25);
-		
+
 		Button searchAndIndexing = new Button(I18N.getMessage("searchandindexing"));
 		searchAndIndexing.setWidth100();
 		searchAndIndexing.setHeight(25);
@@ -78,7 +76,7 @@ public class SystemMenu extends VLayout {
 				AdminPanel.get().setContent(new TasksPanel());
 			}
 		});
-		
+
 		searchAndIndexing.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
