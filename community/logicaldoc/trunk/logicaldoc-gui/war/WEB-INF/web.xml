@@ -63,6 +63,11 @@
     <servlet-name>SearchEngineService</servlet-name>
     <servlet-class>com.logicaldoc.gui.frontend.mock.MockSearchEngineServiceImpl</servlet-class>
   </servlet>
+  
+    <servlet>
+    <servlet-name>TemplateService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.mock.MockTemplateServiceImpl</servlet-class>
+  </servlet>
 
   <servlet>
     <servlet-name>TagsData</servlet-name>
@@ -232,6 +237,11 @@
   <servlet-mapping>
     <servlet-name>SearchEngineService</servlet-name>
     <url-pattern>/frontend/searchengine</url-pattern>
+  </servlet-mapping>
+  
+    <servlet-mapping>
+    <servlet-name>TemplateService</servlet-name>
+    <url-pattern>/frontend/template</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

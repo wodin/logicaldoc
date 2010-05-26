@@ -15,7 +15,6 @@ public class MockTemplatesDataServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		System.out.println("*** Data templates");
 
 		response.setContentType("text/xml");
 
@@ -34,11 +33,12 @@ public class MockTemplatesDataServlet extends HttpServlet {
 			writer.print("</template>");
 		}
 
-		// Add 5 dummy templates
-		for (int i = 0; i < 5; i++) {
+		// Add 30 dummy templates
+		for (int i = 0; i < 30; i++) {
 			writer.print("<template>");
 			writer.print("<id>" + i + "</id>");
-			writer.print("<name>template" + i + "</name>");
+			writer.print("<name>Template" + i + "</name>");
+			writer.print("<description>Description" + i + "</description>");
 			writer.print("</template>");
 		}
 		writer.write("</list>");
