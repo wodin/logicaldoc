@@ -1,0 +1,35 @@
+package com.logicaldoc.gui.frontend.client.template;
+
+import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
+import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.layout.VLayout;
+
+/**
+ * This panel shows the administration document metadata and workflow menu
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.0
+ */
+public class MetadataAndWorkflowMenu extends VLayout {
+
+	public MetadataAndWorkflowMenu() {
+		setMargin(10);
+		setMembersMargin(5);
+
+		Button templates = new Button(I18N.getMessage("templates"));
+		templates.setWidth100();
+		templates.setHeight(25);
+
+		setMembers(templates);
+
+		templates.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new TemplatesPanel());
+			}
+		});
+	}
+}

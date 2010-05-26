@@ -4,6 +4,7 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.frontend.client.security.SecurityMenu;
 import com.logicaldoc.gui.frontend.client.settings.SettingsMenu;
 import com.logicaldoc.gui.frontend.client.system.SystemMenu;
+import com.logicaldoc.gui.frontend.client.template.MetadataAndWorkflowMenu;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
@@ -37,6 +38,11 @@ public class AdminMenu extends SectionStack {
 		securitySection.setExpanded(false);
 		securitySection.addItem(new SecurityMenu());
 		addSection(securitySection);
+		
+		SectionStackSection metadataAndWorkflowSection = new SectionStackSection(I18N.getMessage("metadataandworkflow"));
+		metadataAndWorkflowSection.setExpanded(false);
+		metadataAndWorkflowSection.addItem(new MetadataAndWorkflowMenu());
+		addSection(metadataAndWorkflowSection);
 
 		SectionStackSection sysConfSection = new SectionStackSection(I18N.getMessage("settings"));
 		sysConfSection.setExpanded(false);
