@@ -6,7 +6,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIADSettings;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
-import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -68,11 +67,6 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	@Override
 	public void logout(String sid) {
 
-	}
-
-	@Override
-	public GUIRight[] getSecurityEntities(String sid) {
-		return null;
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.beans.GUIADSettings;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
-import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -43,12 +42,6 @@ public interface SecurityService extends RemoteService {
 	public void logout(String sid);
 
 	/**
-	 * Retrieves the list of all security entities that are ordinary groups and
-	 * user's groups.
-	 */
-	public GUIRight[] getSecurityEntities(String sid);
-
-	/**
 	 * Deletes a given user
 	 */
 	public void deleteUser(String sid, long userId);
@@ -81,7 +74,7 @@ public interface SecurityService extends RemoteService {
 	/**
 	 * Removes users from a group
 	 */
-	public void removeFromGroup(String sid, long groupId, long[] docIds);
+	public void removeFromGroup(String sid, long groupId, long[] userIds);
 
 	/**
 	 * Adds a user to a group
