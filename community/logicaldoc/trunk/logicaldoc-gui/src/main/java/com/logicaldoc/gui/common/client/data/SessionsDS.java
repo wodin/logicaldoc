@@ -11,9 +11,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class SessionsDS extends DataSource {
-	private static SessionsDS instance;
-
-	private SessionsDS() {
+	public SessionsDS() {
 		setTitleField("sid");
 		setRecordXPath("/list/session");
 
@@ -29,11 +27,5 @@ public class SessionsDS extends DataSource {
 		setFields(sid, status, statusLabel, username, created, renew);
 		setDataURL("data/sessions.xml");
 		setClientOnly(true);
-	}
-
-	public static SessionsDS get() {
-		if (instance == null)
-			instance = new SessionsDS();
-		return instance;
 	}
 }
