@@ -11,12 +11,10 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.log.Log;
-import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
-import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.IButton;
@@ -55,23 +53,14 @@ public class TemplatePropertiesPanel extends HLayout {
 
 	private ChangedHandler changedHandler;
 
-	// private LinkedHashMap<String, String> attributesMap = new
-	// LinkedHashMap<String, String>();
-
-	private SelectItem attributes = null;
-
 	private TemplateDetailsPanel detailsPanel;
 
+	// Useful map to retrieve the extended attribute values
 	private Map<String, GUIExtendedAttribute> guiAttributes = new HashMap<String, GUIExtendedAttribute>();
 
 	public String updatingAttributeName = "";
 
-	// private LinkedHashMap<String, String> lastAttributesMap = new
-	// LinkedHashMap<String, String>();
-
-	private ListGrid myList2;
-
-	private ListGridRecord[] attributesGrid = new ListGridRecord[0];
+	private ListGrid attributesList;
 
 	private ListGridRecord[] lastAttributesGrid = new ListGridRecord[0];
 
@@ -91,16 +80,20 @@ public class TemplatePropertiesPanel extends HLayout {
 		this.detailsPanel = detailsPanel;
 		setWidth100();
 		setHeight100();
-		setMembersMargin(20);
+		setMembersMargin(10);
 
-		myList2 = new ListGrid();
-		myList2.setWidth(130);
-		myList2.setHeight(200);
-		myList2.setEmptyMessage("No Records");
-		myList2.setCanAcceptDroppedRecords(true);
-		myList2.setCanReorderRecords(true);
-		ListGridField name = new ListGridField("name", I18N.getMessage("attributes"), 110);
-		myList2.setFields(name);
+		attributesList = new ListGrid();
+		attributesList.setWidth(150);
+		attributesList.setHeight(150);
+		attributesList.setEmptyMessage(I18N.getMessage("norecords"));
+		attributesList.setCanReorderRecords(false);
+		attributesList.setCanSort(false);
+		attributesList.setCanFreezeFields(false);
+		attributesList.setCanGroupBy(false);
+		attributesList.setLeaveScrollbarGap(false);
+		attributesList.setShowHeader(true);
+		ListGridField name = new ListGridField("name", I18N.getMessage("attributes"));
+		attributesList.setFields(name);
 		if (template.getId() != 0)
 			fillAttributesList(template);
 
@@ -118,26 +111,15 @@ public class TemplatePropertiesPanel extends HLayout {
 
 					@Override
 					public void onSuccess(GUIExtendedAttribute[] result) {
-						attributesGrid = new ListGridRecord[result.length];
 						for (int i = 0; i < result.length; i++) {
 							GUIExtendedAttribute att = result[i];
 							ListGridRecord record = new ListGridRecord();
-							attributesGrid[i] = record;
 							record.setAttribute("name", att.getName());
-							// We cannot use spaces in items name
-							String itemName = "_" + att.getName().replaceAll(" ", "___");
-							// attributesMap.put(itemName, att.getName());
 							guiAttributes.put(att.getName(), att);
+							attributesList.getRecordList().add(record);
 						}
-						// attributes.setValueMap(attributesMap);
-
-						myList2.setRecords(attributesGrid);
-
-						// Create the restore attribute grid
-						lastAttributesGrid = new ListGridRecord[attributesGrid.length];
-						for (int i = 0; i < attributesGrid.length; i++) {
-							lastAttributesGrid[i] = attributesGrid[i];
-						}
+						lastAttributesGrid = new ListGridRecord[attributesList.getRecords().length];
+						lastAttributesGrid = attributesList.getRecords();
 					}
 				});
 	}
@@ -180,35 +162,14 @@ public class TemplatePropertiesPanel extends HLayout {
 		if (!readonly)
 			description.addChangedHandler(changedHandler);
 
-		attributes = ItemFactory.newMultipleSelector("attributes", I18N.getMessage("attributes"));
-		attributes.setDisabled(readonly);
-		attributes.setWidth(130);
-		attributes.setHeight(100);
-		attributes.setMultipleAppearance(MultipleAppearance.GRID);
-		attributes.setRowSpan(3);
-
 		form1.setItems(id, name, description);
 		addMember(form1);
+		form1.setWidth(200);
 
-		// attributes.addChangedHandler(new ChangedHandler() {
-		// @Override
-		// public void onChanged(ChangedEvent event) {
-		// if (event.getValue() != null && !"".equals(event.getValue())) {
-		// GUIExtendedAttribute extAttr =
-		// guiAttributes.get(attributesMap.get(event.getValue().toString()));
-		// form2.setValue("attributeName", extAttr.getName());
-		// form2.setValue("mandatory", extAttr.isMandatory());
-		// form2.setValue("type", extAttr.getType());
-		// updatingAttributeName = extAttr.getName();
-		// form2.getField("attributeName").setDisabled(true);
-		// }
-		// }
-		// });
-
-		myList2.addSelectionChangedHandler(new SelectionChangedHandler() {
+		attributesList.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChanged(SelectionEvent event) {
-				Record record = myList2.getSelectedRecord();
+				Record record = attributesList.getSelectedRecord();
 				if (record != null) {
 					String selectedAttributeName = record.getAttributeAsString("name");
 					GUIExtendedAttribute extAttr = guiAttributes.get(selectedAttributeName);
@@ -223,17 +184,16 @@ public class TemplatePropertiesPanel extends HLayout {
 
 		VStack modifyStack = new VStack(3);
 		modifyStack.setWidth(20);
-		modifyStack.setAlign(VerticalAlignment.CENTER);
+		modifyStack.setAlign(VerticalAlignment.TOP);
 
 		TransferImgButton up = new TransferImgButton(TransferImgButton.UP);
 		up.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				ListGridRecord selectedRecord = myList2.getSelectedRecord();
+				ListGridRecord selectedRecord = attributesList.getSelectedRecord();
 				if (selectedRecord != null) {
-					attributes.getSelectedRecord();
-					int idx = myList2.getRecordIndex(selectedRecord);
+					int idx = attributesList.getRecordIndex(selectedRecord);
 					if (idx > 0) {
-						RecordList rs = myList2.getRecordList();
+						RecordList rs = attributesList.getRecordList();
 						rs.removeAt(idx);
 						rs.addAt(selectedRecord, idx - 1);
 					}
@@ -244,11 +204,11 @@ public class TemplatePropertiesPanel extends HLayout {
 		TransferImgButton upFirst = new TransferImgButton(TransferImgButton.UP_FIRST);
 		upFirst.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				ListGridRecord selectedRecord = myList2.getSelectedRecord();
+				ListGridRecord selectedRecord = attributesList.getSelectedRecord();
 				if (selectedRecord != null) {
-					int idx = myList2.getRecordIndex(selectedRecord);
+					int idx = attributesList.getRecordIndex(selectedRecord);
 					if (idx > 0) {
-						RecordList rs = myList2.getRecordList();
+						RecordList rs = attributesList.getRecordList();
 						rs.removeAt(idx);
 						rs.addAt(selectedRecord, 0);
 					}
@@ -259,11 +219,11 @@ public class TemplatePropertiesPanel extends HLayout {
 		TransferImgButton down = new TransferImgButton(TransferImgButton.DOWN);
 		down.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				ListGridRecord selectedRecord = myList2.getSelectedRecord();
+				ListGridRecord selectedRecord = attributesList.getSelectedRecord();
 				if (selectedRecord != null) {
-					RecordList rs = myList2.getRecordList();
+					RecordList rs = attributesList.getRecordList();
 					int numRecords = rs.getLength();
-					int idx = myList2.getRecordIndex(selectedRecord);
+					int idx = attributesList.getRecordIndex(selectedRecord);
 					if (idx < numRecords - 1) {
 						rs.removeAt(idx);
 						rs.addAt(selectedRecord, idx + 1);
@@ -275,14 +235,14 @@ public class TemplatePropertiesPanel extends HLayout {
 		TransferImgButton downLast = new TransferImgButton(TransferImgButton.DOWN_LAST);
 		downLast.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				ListGridRecord selectedRecord = myList2.getSelectedRecord();
+				ListGridRecord selectedRecord = attributesList.getSelectedRecord();
 				if (selectedRecord != null) {
-					RecordList rs = myList2.getRecordList();
+					RecordList rs = attributesList.getRecordList();
 					int numRecords = rs.getLength();
-					int idx = myList2.getRecordIndex(selectedRecord);
+					int idx = attributesList.getRecordIndex(selectedRecord);
 					if (idx < numRecords - 1) {
 						rs.removeAt(idx);
-						rs.addAt(selectedRecord, rs.getLength() - 1);
+						rs.addAt(selectedRecord, rs.getLength());
 					}
 				}
 			}
@@ -293,16 +253,16 @@ public class TemplatePropertiesPanel extends HLayout {
 		modifyStack.addMember(down);
 		modifyStack.addMember(downLast);
 
-		templateInfo.setMembers(myList2, modifyStack);
+		templateInfo.setMembers(attributesList, modifyStack);
 		templateInfo.setMembersMargin(3);
 
 		addMember(templateInfo);
+		templateInfo.setWidth(200);
 
 		/*
 		 * Prepare the second form for adding or updating the extended
 		 * attributes
 		 */
-
 		VLayout attributesLayout = new VLayout();
 
 		if (form2 != null)
@@ -385,6 +345,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		buttons.setMembersMargin(10);
 		attributesLayout.setMembers(form2, buttons);
 		attributesLayout.setMembersMargin(15);
+		attributesLayout.setWidth(250);
 		addMember(attributesLayout);
 	}
 
@@ -400,35 +361,25 @@ public class TemplatePropertiesPanel extends HLayout {
 	}
 
 	private void addAttribute(GUIExtendedAttribute att) {
-		// this.attributesMap.put(att.getName(), att.getName());
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute("name", att.getName());
-//		myList2.setData(newAttributesGrid);
-		myList2.getDataAsRecordList().add(record);
-		
-//		int index = attributesGrid.length;
-		attributesGrid = new ListGridRecord[myList2.getDataAsRecordList().getLength()];
-		for (int i = 0; i < myList2.getDataAsRecordList().getLength(); i++) {
-			attributesGrid[i] = myList2.getRecord(i);
-		}
-
+		attributesList.getDataAsRecordList().add(record);
 		guiAttributes.put(att.getName(), att);
-		// attributes.setValueMap(attributesMap);
 		detailsPanel.getSavePanel().setVisible(true);
 		form2.clearValues();
+		attributesList.deselectRecord(record);
 	}
 
 	private void clean() {
 		form2.clearValues();
 		form2.getField("attributeName").setDisabled(false);
 		updatingAttributeName = "";
-//		attributes.clearValue();
 		detailsPanel.getSavePanel().setVisible(false);
+		attributesList.deselectAllRecords();
 	}
 
 	private void restore() {
-		// attributes.setValueMap(lastAttributesMap);
-		myList2.setData(lastAttributesGrid);
+		attributesList.setData(lastAttributesGrid);
 		clean();
 	}
 }
