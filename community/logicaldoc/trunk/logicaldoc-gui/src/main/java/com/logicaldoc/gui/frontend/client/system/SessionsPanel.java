@@ -12,6 +12,8 @@ import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -39,6 +41,27 @@ public class SessionsPanel extends VLayout {
 	private ListGrid list;
 
 	public SessionsPanel() {
+		refresh();
+
+		HLayout buttons = new HLayout();
+		Button refresh = new Button(I18N.getMessage("refresh"));
+		buttons.addMember(refresh);
+		buttons.setMembersMargin(4);
+		buttons.setWidth100();
+		buttons.setHeight(15);
+		refresh.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				removeMember(list);
+				refresh();
+			}
+		});
+
+		setMembersMargin(5);
+		addMember(buttons);
+	}
+
+	private void refresh() {
 		ListGridField sid = new ListGridField("sid", I18N.getMessage("sid"), 250);
 
 		ListGridField username = new ListGridField("username", I18N.getMessage("username"), 80);
@@ -85,7 +108,8 @@ public class SessionsPanel extends VLayout {
 		list.setCanFreezeFields(true);
 		list.setAutoFetchData(true);
 		list.setSelectionType(SelectionStyle.SINGLE);
-		list.setDataSource(SessionsDS.get());
+		list.setDataSource(new SessionsDS());
+		list.invalidateCache();
 		list.setFields(sid, statusLabel, username, created, renew);
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
@@ -96,21 +120,7 @@ public class SessionsPanel extends VLayout {
 			}
 		});
 
-		HLayout buttons = new HLayout();
-		Button refresh = new Button(I18N.getMessage("refresh"));
-		buttons.addMember(refresh);
-		buttons.setMembersMargin(4);
-		buttons.setWidth100();
-		buttons.setHeight(15);
-		refresh.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				list.fetchData();
-			}
-		});
-
-		setMembersMargin(5);
-		setMembers(list, buttons);
+		addMember(list, 0);
 	}
 
 	private void showContextMenu() {
@@ -120,16 +130,25 @@ public class SessionsPanel extends VLayout {
 		killSession.setTitle(I18N.getMessage("kill"));
 		killSession.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord record = list.getSelectedRecord();
-				service.kill(record.getAttributeAsString("sid"), new AsyncCallback<Void>() {
+				SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmkill"), new BooleanCallback() {
 					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+					public void execute(Boolean value) {
+						if (value) {
+							ListGridRecord record = list.getSelectedRecord();
+							service.kill(record.getAttributeAsString("sid"), new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-					@Override
-					public void onSuccess(Void result) {
-						list.removeSelectedData();
+								@Override
+								public void onSuccess(Void result) {
+									list.getSelectedRecord().setAttribute("statusLabel", "Closed");
+									list.getSelectedRecord().setAttribute("status", "1");
+									list.updateData(list.getSelectedRecord());
+								}
+							});
+						}
 					}
 				});
 			}
