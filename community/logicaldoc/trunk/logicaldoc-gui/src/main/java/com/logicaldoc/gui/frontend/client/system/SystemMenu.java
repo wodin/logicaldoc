@@ -46,8 +46,12 @@ public class SystemMenu extends VLayout {
 		Button searchAndIndexing = new Button(I18N.getMessage("searchandindexing"));
 		searchAndIndexing.setWidth100();
 		searchAndIndexing.setHeight(25);
+		
+		Button folders = new Button(I18N.getMessage("folders"));
+		folders.setWidth100();
+		folders.setHeight(25);
 
-		setMembers(general, lastChanges, log, tasks, searchAndIndexing);
+		setMembers(general, lastChanges, log, tasks, searchAndIndexing, folders);
 
 		general.addClickHandler(new ClickHandler() {
 			@Override
@@ -93,6 +97,13 @@ public class SystemMenu extends VLayout {
 					}
 
 				});
+			}
+		});
+		
+		folders.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new FoldersPanel());
 			}
 		});
 	}

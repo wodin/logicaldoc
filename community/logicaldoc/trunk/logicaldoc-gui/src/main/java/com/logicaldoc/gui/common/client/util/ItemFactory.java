@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.validators.EmailValidator;
 import com.logicaldoc.gui.common.client.validators.EmailsValidator;
+import com.logicaldoc.gui.common.client.validators.SimpleTextValidator;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.widgets.Img;
@@ -217,5 +218,37 @@ public class ItemFactory {
 	public static HeaderIcon newHeaderIcon(String image) {
 		HeaderIcon icon = new HeaderIcon(ItemFactory.newImg(image).getSrc());
 		return icon;
+	}
+
+	/**
+	 * Creates a new TextItem.
+	 * 
+	 * @param name The item name (mandatory)
+	 * @param title The item title (mandatory)
+	 * @param value The item value (optional)
+	 */
+	public static TextItem newTextItem(String name, String title, String value) {
+		TextItem item = new TextItem();
+		item.setName(name);
+		item.setTitle(title);
+		if (value != null)
+			item.setValue(value);
+		else
+			item.setValue("");
+		item.setRequiredMessage(I18N.getMessage("fieldrequired"));
+		return item;
+	}
+
+	/**
+	 * Creates a new TextItem that validates a simple text.
+	 * 
+	 * @param name The item name (mandatory)
+	 * @param title The item title (mandatory)
+	 * @param value The item value (optional)
+	 */
+	public static TextItem newSimpleTextItem(String name, String title, String value) {
+		TextItem item = newTextItem(name, title, value);
+		item.setValidators(new SimpleTextValidator());
+		return item;
 	}
 }

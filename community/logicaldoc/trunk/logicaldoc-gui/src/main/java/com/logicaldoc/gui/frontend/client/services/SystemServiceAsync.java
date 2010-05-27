@@ -27,4 +27,6 @@ public interface SystemServiceAsync {
 	void enableTask(String sid, String taskName, AsyncCallback<Boolean> callback);
 
 	void saveTask(String sid, GUITask task, AsyncCallback<GUITask> callback);
+
+	void saveFolders(String sid, GUIParameter[] folders, AsyncCallback<Void> callback);
 }
