@@ -19,8 +19,8 @@ public class MockSavedSearchesDataServlet extends HttpServlet {
 			IOException {
 		System.out.println("*** saved searches");
 
-		String lang = request.getParameter("lang");
-		ResourceBundle bundle = ResourceBundle.getBundle("i18n.frontend", new Locale(lang));
+		String locale = request.getParameter("locale");
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.frontend", new Locale(locale));
 
 		String sid = (String) request.getParameter("sid");
 		if (sid == null)

@@ -178,18 +178,18 @@ public class Browser {
 	 */
 	private String parseLocale(String language) {
 		StringTokenizer st = new StringTokenizer(language, "-, ");
-		String lang = language;
+		String locale = language;
 		if (st.countTokens() > 1) {
-			lang = st.nextToken();
+			locale = st.nextToken();
 		}
-		if (lang.contains(";"))
-			return lang.substring(0, lang.indexOf(';'));
+		if (locale.contains(";"))
+			return locale.substring(0, locale.indexOf(';'));
 		else
-			return lang;
+			return locale;
 	}
 
 	/**
-	 * Liefert das Länderkürzel der vom Benutzer bevorzugten Sprache.
+	 * Liefert das Lï¿½nderkï¿½rzel der vom Benutzer bevorzugten Sprache.
 	 */
 	public String getLanguage() {
 		return this.language;

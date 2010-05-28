@@ -1,6 +1,6 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.I18N;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
@@ -30,7 +30,7 @@ public class UserHistoryDS extends DataSource {
 
 		setFields(user, date, event, comment, version, title, path, sid, folderId, docId);
 		setClientOnly(true);
-		setDataURL("data/userhistory.xml?sid=" + Session.get().getSid() + "&id=" + userId + "&lang="
-				+ I18N.getLanguage());
+		setDataURL("data/userhistory.xml?sid=" + Session.get().getSid() + "&id=" + userId + "&locale="
+				+ LocaleInfo.getCurrentLocale().getLocaleName());
 	}
 }

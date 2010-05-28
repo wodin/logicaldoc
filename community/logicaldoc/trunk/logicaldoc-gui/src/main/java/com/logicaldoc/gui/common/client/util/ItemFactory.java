@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.validators.EmailValidator;
 import com.logicaldoc.gui.common.client.validators.EmailsValidator;
 import com.logicaldoc.gui.common.client.validators.SimpleTextValidator;
+import com.logicaldoc.gui.frontend.client.Frontend;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.widgets.Img;
@@ -50,9 +51,9 @@ public class ItemFactory {
 	public static SelectItem newDateOperator(String name, String title) {
 		SelectItem dateOperator = new SelectItem();
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put("nolimits", I18N.getMessage("nolimits"));
-		opts.put("before", I18N.getMessage("before"));
-		opts.put("after", I18N.getMessage("after"));
+		opts.put("nolimits", Frontend.messages().nolimits());
+		opts.put("before", Frontend.messages().before());
+		opts.put("after", Frontend.messages().after());
 		dateOperator.setValueMap(opts);
 		dateOperator.setName(name);
 		if (title != null)
@@ -67,9 +68,9 @@ public class ItemFactory {
 	public static SelectItem newSizeOperator(String name, String title) {
 		SelectItem sizeOperator = new SelectItem();
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put("nolimits", I18N.getMessage("nolimits"));
-		opts.put("lessthan", I18N.getMessage("lessthan"));
-		opts.put("greaterthan", I18N.getMessage("greaterthan"));
+		opts.put("nolimits", Frontend.messages().nolimits());
+		opts.put("lessthan", Frontend.messages().lessthan());
+		opts.put("greaterthan", Frontend.messages().greaterthan());
 		sizeOperator.setValueMap(opts);
 		sizeOperator.setName(name);
 		if (title != null)
@@ -85,7 +86,7 @@ public class ItemFactory {
 		SelectItem item = new SelectItem();
 		item.setValueMap(I18N.getSupportedLanguages(withEmpty));
 		item.setName(name);
-		item.setTitle(I18N.getMessage("language"));
+		item.setTitle(Frontend.messages().language());
 		item.setWrapTitle(false);
 		item.setDefaultValue("en");
 		return item;
@@ -136,8 +137,8 @@ public class ItemFactory {
 		radioGroupItem.setName(name);
 		radioGroupItem.setVertical(false);
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put("yes", I18N.getMessage("yes"));
-		map.put("no", I18N.getMessage("no"));
+		map.put("yes", Frontend.messages().yes());
+		map.put("no", Frontend.messages().no());
 		radioGroupItem.setValueMap(map);
 		radioGroupItem.setRedrawOnChange(true);
 		radioGroupItem.setTitle(I18N.getMessage(title));

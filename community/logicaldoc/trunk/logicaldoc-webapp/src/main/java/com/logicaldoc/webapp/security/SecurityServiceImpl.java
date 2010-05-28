@@ -19,6 +19,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.beans.GUIADSettings;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
+import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -319,5 +320,11 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	public void saveSettings(String sid, GUISecuritySettings settings) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public GUIRight[] getSecurityEntities(String sid) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

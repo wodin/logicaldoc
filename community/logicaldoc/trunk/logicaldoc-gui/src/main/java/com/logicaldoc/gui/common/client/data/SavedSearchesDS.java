@@ -1,6 +1,6 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.I18N;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -25,12 +25,13 @@ public class SavedSearchesDS extends DataSource {
 		setRecordXPath("/list/search");
 		DataSourceTextField name = new DataSourceTextField("name");
 		name.setPrimaryKey(true);
-		
+
 		DataSourceTextField type = new DataSourceTextField("typeLabel");
 		DataSourceTextField description = new DataSourceTextField("description");
 
 		setFields(name, type, description);
 		setClientOnly(true);
-		setDataURL("data/savedsearches.xml?sid=" + Session.get().getSid() + "&lang=" + I18N.getLanguage());
+		setDataURL("data/savedsearches.xml?sid=" + Session.get().getSid() + "&locale="
+				+ LocaleInfo.getCurrentLocale().getLocaleName());
 	}
 }

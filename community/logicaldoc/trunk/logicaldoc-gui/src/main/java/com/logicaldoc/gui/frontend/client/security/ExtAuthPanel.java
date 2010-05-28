@@ -11,7 +11,7 @@ import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
-import com.logicaldoc.gui.frontend.client.i18n.FrontendMessages;
+import com.logicaldoc.gui.frontend.client.Frontend;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
@@ -46,13 +46,9 @@ public class ExtAuthPanel extends VLayout {
 
 	private GUIADSettings adSettings;
 
-	private FrontendMessages messages;
-
 	public ExtAuthPanel(GUILdapSettings[] settings) {
 		this.ldapSettings = settings[0];
 		this.adSettings = (GUIADSettings) settings[1];
-
-		messages = GWT.create(FrontendMessages.class);
 
 		setWidth100();
 		setMembersMargin(10);
@@ -88,10 +84,7 @@ public class ExtAuthPanel extends VLayout {
 		TextItem username = ItemFactory.newTextItem("username", "username", this.ldapSettings.getUsername());
 
 		// Password
-		// PasswordItem password = new PasswordItem("password",
-		// I18N.getMessage("password"));
-		// TODO
-		PasswordItem password = new PasswordItem("password", messages.password());
+		PasswordItem password = new PasswordItem("password", Frontend.messages().password());
 		password.setName("password");
 		password.setValue(this.ldapSettings.getPwd());
 

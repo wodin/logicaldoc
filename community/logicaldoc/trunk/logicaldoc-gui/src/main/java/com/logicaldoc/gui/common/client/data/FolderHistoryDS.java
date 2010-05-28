@@ -1,6 +1,6 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.I18N;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
@@ -22,7 +22,8 @@ public class FolderHistoryDS extends DataSource {
 
 		setFields(user, date, event, comment);
 		setClientOnly(true);
-		setDataURL("data/folderhistory.xml?sid=" + Session.get().getSid() + "&id=" + folderId + "&lang="
-				+ I18N.getLanguage());
+
+		setDataURL("data/folderhistory.xml?sid=" + Session.get().getSid() + "&id=" + folderId + "&locale="
+				+ LocaleInfo.getCurrentLocale().getLocaleName());
 	}
 }
