@@ -1,6 +1,6 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.I18N;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
@@ -18,13 +18,13 @@ public class DocumentHistoryDS extends DataSource {
 	private static final int MAX = 100;
 
 	public DocumentHistoryDS(long docId, Integer max) {
-		init("data/documenthistory.xml?sid=" + Session.get().getSid() + "&id=" + docId + "&lang=" + I18N.getLanguage()
-				+ "&max=" + (max != null ? max : MAX));
+		init("data/documenthistory.xml?sid=" + Session.get().getSid() + "&id=" + docId + "&locale="
+				+ LocaleInfo.getCurrentLocale().getLocaleName() + "&max=" + (max != null ? max : MAX));
 	}
 
 	public DocumentHistoryDS(long userId, String event, Integer max) {
 		init("data/documenthistory.xml?sid=" + Session.get().getSid() + "&userId=" + userId + "&event=" + event
-				+ "&lang=" + I18N.getLanguage() + "&max=" + (max != null ? max : MAX));
+				+ "&locale=" + LocaleInfo.getCurrentLocale().getLocaleName() + "&max=" + (max != null ? max : MAX));
 	}
 
 	private void init(String url) {

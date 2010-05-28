@@ -35,7 +35,7 @@ public class MockDocumentHistoryDataServlet extends HttpServlet {
 
 	private void documentHistory(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		long docId = Long.parseLong(request.getParameter("id"));
-		String lang = request.getParameter("lang");
+		String locale = request.getParameter("locale");
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
@@ -70,7 +70,7 @@ public class MockDocumentHistoryDataServlet extends HttpServlet {
 	private void userHistory(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		long userId = Long.parseLong(request.getParameter("userId"));
 		String event = request.getParameter("event");
-		String lang = request.getParameter("lang");
+		String locale = request.getParameter("locale");
 		int max = Integer.parseInt(request.getParameter("max"));
 
 		PrintWriter writer = response.getWriter();

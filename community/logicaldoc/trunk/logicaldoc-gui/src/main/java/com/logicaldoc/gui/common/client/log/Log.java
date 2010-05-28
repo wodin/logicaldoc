@@ -2,6 +2,7 @@ package com.logicaldoc.gui.common.client.log;
 
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.frontend.client.Frontend;
 
 /**
  * Represents a client work session
@@ -28,7 +29,7 @@ public class Log {
 		String m = message;
 		if (message == null || "".equals(message))
 			m = caught.getMessage() != null ? caught.getMessage() : "";
-		EventPanel.get().error(I18N.getMessage("servererror"), m);
+		EventPanel.get().error(Frontend.messages().servererror(), m);
 		GWT.log("Server error: " + m, caught);
 	}
 

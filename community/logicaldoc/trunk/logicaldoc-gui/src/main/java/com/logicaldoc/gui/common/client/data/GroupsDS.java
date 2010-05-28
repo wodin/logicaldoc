@@ -1,7 +1,7 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.frontend.client.Frontend;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
@@ -17,11 +17,11 @@ public class GroupsDS extends DataSource {
 	private GroupsDS() {
 		setTitleField("name");
 		setRecordXPath("/list/group");
-		DataSourceTextField id = new DataSourceTextField("id", I18N.getMessage("id"));
+		DataSourceTextField id = new DataSourceTextField("id", Frontend.messages().id());
 		id.setPrimaryKey(true);
 		id.setHidden(true);
 
-		DataSourceTextField name = new DataSourceTextField("name", I18N.getMessage("name"));
+		DataSourceTextField name = new DataSourceTextField("name", Frontend.messages().name());
 		DataSourceTextField description = new DataSourceTextField("description");
 		DataSourceTextField label = new DataSourceTextField("label");
 

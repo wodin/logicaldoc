@@ -1,8 +1,8 @@
 package com.logicaldoc.gui.common.client.data;
 
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.frontend.client.Frontend;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -31,9 +31,9 @@ public class FoldersDS extends DataSource {
 		setID(dsId);
 		setTitleField("name");
 		setRecordXPath("/list/folder");
-		DataSourceTextField nameField = new DataSourceTextField("name", I18N.getMessage("name"), 255);
+		DataSourceTextField nameField = new DataSourceTextField("name", Frontend.messages().name(), 255);
 
-		DataSourceTextField folderId = new DataSourceTextField("id", I18N.getMessage("id"));
+		DataSourceTextField folderId = new DataSourceTextField("id", Frontend.messages().id());
 		folderId.setPrimaryKey(true);
 		folderId.setRequired(true);
 

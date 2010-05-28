@@ -18,7 +18,7 @@ public class MockFolderHistoryDataServlet extends HttpServlet {
 		System.out.println("*** history");
 
 		long folderId = Long.parseLong(request.getParameter("id"));
-		String lang = request.getParameter("lang");
+		String locale = request.getParameter("locale");
 
 		String sid = (String) request.getParameter("sid");
 		if (sid == null)

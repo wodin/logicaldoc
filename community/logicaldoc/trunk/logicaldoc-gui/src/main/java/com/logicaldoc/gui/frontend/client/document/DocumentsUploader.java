@@ -5,6 +5,7 @@ import gwtupload.client.MultiUploader;
 import gwtupload.client.IUploadStatus.Status;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
@@ -62,7 +63,7 @@ public class DocumentsUploader extends Window {
 		languageItem.setDisplayField("name");
 		languageItem.setValueField("locale");
 		languageItem.setRequired(true);
-		languageItem.setDefaultValue(I18N.getLanguage());
+		languageItem.setDefaultValue(LocaleInfo.getCurrentLocale().getLocaleName());
 
 		BooleanItem zipItem = new BooleanItem();
 		zipItem.setName("zip");
@@ -114,20 +115,19 @@ public class DocumentsUploader extends Window {
 		if (!vm.validate())
 			return;
 
-		documentService.addDocuments(Session.get().getSid(), getLanguage(), getImportZip(),
-				new AsyncCallback<Void>() {
+		documentService.addDocuments(Session.get().getSid(), getLanguage(), getImportZip(), new AsyncCallback<Void>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
 
-					@Override
-					public void onSuccess(Void result) {
-						DocumentsPanel.get().refresh();
-						destroy();
-					}
-				});
+			@Override
+			public void onSuccess(Void result) {
+				DocumentsPanel.get().refresh();
+				destroy();
+			}
+		});
 	}
 
 	public String getLanguage() {

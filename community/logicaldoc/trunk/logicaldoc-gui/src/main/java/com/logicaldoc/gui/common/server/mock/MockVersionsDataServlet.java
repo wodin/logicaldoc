@@ -18,7 +18,7 @@ public class MockVersionsDataServlet extends HttpServlet {
 		System.out.println("*** versions");
 
 		long docId = Long.parseLong(request.getParameter("docId"));
-		String lang = request.getParameter("lang");
+		String locale = request.getParameter("locale");
 
 		String sid = (String) request.getParameter("sid");
 		if (sid == null)
