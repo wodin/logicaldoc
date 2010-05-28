@@ -23,7 +23,6 @@ import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -63,27 +62,15 @@ public class EmailPanel extends VLayout {
 		emailForm.setColWidths(100, 100);
 
 		// SMTP Server
-		TextItem smtpServer = new TextItem();
-		smtpServer.setName("smtpServer");
-		smtpServer.setTitle(I18N.getMessage("smtpserver"));
-		smtpServer.setValue(this.emailSettings.getSmtpServer());
+		TextItem smtpServer = ItemFactory.newTextItem("smtpServer", "smtpserver", this.emailSettings.getSmtpServer());
 		smtpServer.setRequired(true);
 
 		// Port
-		IntegerItem port = new IntegerItem();
-		port.setName("port");
-		port.setTitle(I18N.getMessage("port"));
-		port.setValue(this.emailSettings.getPort());
+		IntegerItem port = ItemFactory.newValidateIntegerItem("port", "port", this.emailSettings.getPort(), 1, null);
 		port.setRequired(true);
-		IntegerRangeValidator portValidator = new IntegerRangeValidator();
-		portValidator.setMin(1);
-		port.setValidators(portValidator);
 
 		// Username
-		TextItem username = new TextItem();
-		username.setName("username");
-		username.setTitle(I18N.getMessage("username"));
-		username.setValue(this.emailSettings.getUsername());
+		TextItem username = ItemFactory.newTextItem("username", "username", this.emailSettings.getUsername());
 
 		// Password
 		PasswordItem password = new PasswordItem("password", I18N.getMessage("password"));
@@ -111,7 +98,7 @@ public class EmailPanel extends VLayout {
 		secureAuth.setValue(emailSettings.isSecureAuth());
 
 		// Sender Email
-		TextItem senderEmail = ItemFactory.newEmailItem("senderEmail", I18N.getMessage("senderemail"), false);
+		TextItem senderEmail = ItemFactory.newEmailItem("senderEmail", "senderemail", false);
 		senderEmail.setValue(this.emailSettings.getSenderEmail());
 
 		emailForm.setItems(smtpServer, port, username, password, connSecurity, secureAuth, senderEmail);

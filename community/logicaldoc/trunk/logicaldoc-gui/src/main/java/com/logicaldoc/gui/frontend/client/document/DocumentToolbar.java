@@ -89,16 +89,11 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		addButton(add);
 
 		addSeparator();
-		final IntegerItem max = new IntegerItem();
-		max.setName("max");
+		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "", null, 1, null);
 		max.setHint(I18N.getMessage("elements"));
 		max.setShowTitle(false);
 		max.setDefaultValue(100);
 		max.setWidth(40);
-
-		IntegerRangeValidator intValidator = new IntegerRangeValidator();
-		intValidator.setMin(1);
-		max.setValidators(intValidator);
 
 		ToolStripButton display = new ToolStripButton();
 		display.setTitle(I18N.getMessage("display"));

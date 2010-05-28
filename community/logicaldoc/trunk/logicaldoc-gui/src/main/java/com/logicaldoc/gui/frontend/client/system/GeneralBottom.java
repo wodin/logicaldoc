@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.system;
 
 import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
@@ -35,43 +36,31 @@ public class GeneralBottom extends HLayout {
 		systemForm.setWidth(300);
 		systemForm.setColWidths(1, "*");
 
-		StaticTextItem productName = new StaticTextItem();
-		productName.setName("productName");
+		StaticTextItem productName = ItemFactory.newStaticTextItem("productName", "", "<b>"
+				+ Util.getContext().get("product_name") + "</b>");
 		productName.setShouldSaveValue(false);
-		productName.setTitle("");
 		productName.setWrapTitle(false);
-		productName.setValue("<b>" + Util.getContext().get("product_name") + "</b>");
 
-		StaticTextItem version = new StaticTextItem();
-		version.setName("version");
-		version.setTitle("");
+		StaticTextItem version = ItemFactory.newStaticTextItem("version", "", I18N.getMessage("version") + " "
+				+ Util.getContext().get("product_release"));
 		version.setShouldSaveValue(false);
-		version.setValue(I18N.getMessage("version") + " " + Util.getContext().get("product_release"));
 
-		StaticTextItem vendor = new StaticTextItem();
-		vendor.setName("vendor");
-		vendor.setTitle("");
+		StaticTextItem vendor = ItemFactory.newStaticTextItem("vendor", "", "&copy; "
+				+ Util.getContext().get("product_vendor"));
 		vendor.setShouldSaveValue(false);
-		vendor.setValue("&copy; " + Util.getContext().get("product_vendor"));
 
-		StaticTextItem address = new StaticTextItem();
-		address.setName("address");
-		address.setTitle("");
+		StaticTextItem address = ItemFactory.newStaticTextItem("address", "", Util.getContext().get(
+				"product_vendor_address"));
 		address.setShouldSaveValue(false);
-		address.setValue(Util.getContext().get("product_vendor_address"));
 
-		StaticTextItem capAndCity = new StaticTextItem();
-		capAndCity.setName("capAndCity");
-		capAndCity.setTitle("");
+		StaticTextItem capAndCity = ItemFactory.newStaticTextItem("capAndCity", "", Util.getContext().get(
+				"product_vendor_cap")
+				+ "  " + Util.getContext().get("product_vendor_city"));
 		capAndCity.setShouldSaveValue(false);
-		capAndCity.setValue(Util.getContext().get("product_vendor_cap") + "  "
-				+ Util.getContext().get("product_vendor_city"));
 
-		StaticTextItem country = new StaticTextItem();
-		country.setName("country");
-		country.setTitle("");
+		StaticTextItem country = ItemFactory.newStaticTextItem("country", "", Util.getContext().get(
+				"product_vendor_country"));
 		country.setShouldSaveValue(false);
-		country.setValue(Util.getContext().get("product_vendor_country"));
 
 		DynamicForm supportForm = new DynamicForm();
 		supportForm.setAlign(Alignment.LEFT);
@@ -89,10 +78,7 @@ public class GeneralBottom extends HLayout {
 		support.setRequired(true);
 		support.setShouldSaveValue(false);
 
-		StaticTextItem installationID = new StaticTextItem();
-		installationID.setName("");
-		installationID.setTitle(I18N.getMessage("installid"));
-		installationID.setValue(Util.getContext().get("id"));
+		StaticTextItem installationID = ItemFactory.newStaticTextItem("", "installid", Util.getContext().get("id"));
 		installationID.setRequired(true);
 		installationID.setShouldSaveValue(false);
 

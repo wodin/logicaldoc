@@ -65,14 +65,11 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		form1.setTitleOrientation(TitleOrientation.TOP);
 		List<FormItem> items = new ArrayList<FormItem>();
 
-		TextItem sourceItem = new TextItem();
-		sourceItem.setName("source");
-		sourceItem.setTitle(I18N.getMessage("source"));
-		sourceItem.setValue(document.getSource());
+		TextItem sourceItem = ItemFactory.newTextItem("source", "source", document.getSource());
 		sourceItem.addChangedHandler(changedHandler);
 		sourceItem.setDisabled(!update);
 
-		DateItem sourceDate = ItemFactory.newDateItem("date", I18N.getMessage("date"));
+		DateItem sourceDate = ItemFactory.newDateItem("date", "date");
 		sourceDate.setValue(document.getSourceDate());
 		sourceDate.addChangedHandler(changedHandler);
 		sourceDate.setDisabled(!update);
@@ -81,38 +78,23 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		languageItem.addChangedHandler(changedHandler);
 		languageItem.setDisabled(!update);
 
-		TextItem authorItem = new TextItem();
-		authorItem.setName("author");
-		authorItem.setTitle(I18N.getMessage("author"));
-		authorItem.setValue(document.getSourceAuthor());
+		TextItem authorItem = ItemFactory.newTextItem("author", "author", document.getSourceAuthor());
 		authorItem.addChangedHandler(changedHandler);
 		authorItem.setDisabled(!update);
 
-		TextItem typeItem = new TextItem();
-		typeItem.setName("type");
-		typeItem.setTitle(I18N.getMessage("type"));
-		typeItem.setValue(document.getSourceType());
+		TextItem typeItem = ItemFactory.newTextItem("type", "type", document.getSourceType());
 		typeItem.addChangedHandler(changedHandler);
 		typeItem.setDisabled(!update);
 
-		TextItem recipientItem = new TextItem();
-		recipientItem.setName("recipient");
-		recipientItem.setTitle(I18N.getMessage("recipient"));
-		recipientItem.setValue(document.getRecipient());
+		TextItem recipientItem = ItemFactory.newTextItem("recipient", "recipient", document.getRecipient());
 		recipientItem.addChangedHandler(changedHandler);
 		recipientItem.setDisabled(!update);
 
-		TextItem objectItem = new TextItem();
-		objectItem.setName("object");
-		objectItem.setTitle(I18N.getMessage("object"));
-		objectItem.setValue(document.getObject());
+		TextItem objectItem = ItemFactory.newTextItem("object", "object", document.getObject());
 		objectItem.addChangedHandler(changedHandler);
 		objectItem.setDisabled(!update);
 
-		TextItem coverageItem = new TextItem();
-		coverageItem.setName("coverage");
-		coverageItem.setTitle(I18N.getMessage("coverage"));
-		coverageItem.setValue(document.getCoverage());
+		TextItem coverageItem = ItemFactory.newTextItem("coverage", "coverage", document.getCoverage());
 		coverageItem.addChangedHandler(changedHandler);
 		coverageItem.setDisabled(!update);
 
@@ -181,7 +163,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 					// We cannot use spaces in items name
 					String itemName = "_" + att.getName().replaceAll(" ", "___");
 					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
-						TextItem item = new TextItem(itemName, att.getName());
+						TextItem item = ItemFactory.newTextItem(itemName, att.getName(), null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((String) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
@@ -189,9 +171,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setDisabled(!update);
 						items.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
-						IntegerItem item = new IntegerItem();
-						item.setName(itemName);
-						item.setTitle(att.getName());
+						IntegerItem item = ItemFactory.newIntegerItem(itemName, att.getName(), null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Long) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());

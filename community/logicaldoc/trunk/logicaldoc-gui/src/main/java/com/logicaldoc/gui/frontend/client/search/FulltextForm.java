@@ -90,11 +90,9 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			}
 		});
 
-		TextItem expression = new TextItem("expression");
+		TextItem expression = ItemFactory.newTextItem("expression", "expression", I18N.getMessage("search") + "...");
 		expression.setColSpan(2);
 		expression.setRequired(true);
-		expression.setTitle(I18N.getMessage("expression"));
-		expression.setValue(I18N.getMessage("search") + "...");
 		expression.setIcons(searchPicker);
 		expression.setEndRow(true);
 		expression.addKeyPressHandler(new KeyPressHandler() {
@@ -120,13 +118,11 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		language.setColSpan(4);
 		language.setEndRow(true);
 
-		SelectItem sizeOperator = ItemFactory.newSizeOperator("sizeOperator", I18N.getMessage("size"));
+		SelectItem sizeOperator = ItemFactory.newSizeOperator("sizeOperator", "size");
 
-		IntegerItem size = new IntegerItem();
+		IntegerItem size = ItemFactory.newIntegerItem("size", " ", null);
 		size.setWidth(60);
-		size.setName("size");
 		size.setShowTitle(false);
-		size.setTitle(" ");
 		size.setHint("(KB)");
 		size.setEndRow(true);
 
@@ -145,9 +141,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 		DateItem date = ItemFactory.newDateItem(DATE, null);
 
-		StaticTextItem searchin = new StaticTextItem();
-		searchin.setName("searchin");
-		searchin.setTitle(I18N.getMessage("searchin"));
+		StaticTextItem searchin = ItemFactory.newStaticTextItem("searchin", "searchin", null);
 		searchin.setColSpan(3);
 		searchin.setEndRow(true);
 
@@ -178,8 +172,8 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			}
 		});
 
-		form.setItems(expression, language, sizeOperator, size, dateSelector, dateOperator, date, template,
-				folder, subfolders, searchin);
+		form.setItems(expression, language, sizeOperator, size, dateSelector, dateOperator, date, template, folder,
+				subfolders, searchin);
 		addMember(form);
 
 		prepareExtendedAttributes(null);
@@ -284,7 +278,6 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 		extForm = new DynamicForm();
 		extForm.setVisible(false);
-		extForm = new DynamicForm();
 		extForm.setTitleOrientation(TitleOrientation.LEFT);
 		extForm.setNumCols(4);
 		extForm.setWidth(300);

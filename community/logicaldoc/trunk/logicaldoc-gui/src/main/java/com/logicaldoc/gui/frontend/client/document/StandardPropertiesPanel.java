@@ -10,7 +10,6 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Canvas;
@@ -86,58 +85,42 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.TOP);
 
-		TextItem id = new TextItem();
-		id.setTitle(I18N.getMessage("id"));
-		id.setValue(document.getId());
+		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(document.getId()));
 		id.setDisabled(true);
 
-		TextItem customId = new TextItem("customId");
-		customId.setTitle(I18N.getMessage("customid"));
-		customId.setValue(document.getCustomId());
+		TextItem customId = ItemFactory.newTextItem("customId", "customid", document.getCustomId());
 		customId.addChangedHandler(changedHandler);
 		customId.setRequired(true);
 		customId.setDisabled(!update);
 
-		DateItem creation = ItemFactory.newDateItem("creation", I18N.getMessage("createdon"));
+		DateItem creation = ItemFactory.newDateItem("creation", "createdon");
 		creation.setValue(document.getCreation());
 		creation.setShowPickerIcon(false);
 		creation.setDisabled(true);
 
-		TextItem creator = new TextItem("creator");
-		creator.setTitle(I18N.getMessage("creator"));
-		creator.setValue(document.getCreator());
+		TextItem creator = ItemFactory.newTextItem("creator", "creator", document.getCreator());
 		creator.setDisabled(true);
 
-		DateItem date = ItemFactory.newDateItem("date", I18N.getMessage("publishedon"));
+		DateItem date = ItemFactory.newDateItem("date", "publishedon");
 		date.setValue(document.getDate());
 		date.setShowPickerIcon(false);
 		date.setDisabled(true);
 
-		TextItem publisher = new TextItem("publisher");
-		publisher.setTitle(I18N.getMessage("publisher"));
-		publisher.setValue(document.getPublisher());
+		TextItem publisher = ItemFactory.newTextItem("publisher", "publisher", document.getPublisher());
 		publisher.setDisabled(true);
 
-		TextItem title = new TextItem("title");
-		title.setTitle(I18N.getMessage("title"));
-		title.setValue(document.getTitle());
+		TextItem title = ItemFactory.newTextItem("title", "title", document.getTitle());
 		title.addChangedHandler(changedHandler);
 		title.setRequired(true);
 		title.setDisabled(!update);
 
-		TextItem version = new TextItem("version");
-		version.setTitle(I18N.getMessage("version"));
-		version.setValue(document.getVersion());
+		TextItem version = ItemFactory.newTextItem("version", "version", document.getVersion());
 		version.setDisabled(true);
 
-		TextItem fileVersion = new TextItem("fileVersion");
-		fileVersion.setTitle(I18N.getMessage("fileversion"));
-		fileVersion.setValue(document.getFileVersion());
+		TextItem fileVersion = ItemFactory.newTextItem("fileVersion", "fileversion", document.getFileVersion());
 		fileVersion.setDisabled(true);
 
-		TextItem filename = new TextItem("fileName");
-		filename.setTitle(I18N.getMessage("filename"));
-		filename.setValue(document.getFileName());
+		TextItem filename = ItemFactory.newTextItem("fileName", "filename", document.getFileName());
 		filename.setDisabled(true);
 
 		form1.setItems(id, customId, version, title, fileVersion, filename, creation, date, creator, publisher);
@@ -173,11 +156,9 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
 		int i = 0;
 		for (String str : document.getTags()) {
-			final StaticTextItem tgItem = new StaticTextItem();
+			final StaticTextItem tgItem = ItemFactory.newStaticTextItem("tag" + i++, "tag", null);
 			tgItem.setDefaultValue(str);
-			tgItem.setName("tag" + i++);
 			tgItem.setIcons(icon);
-			tgItem.setTitle(I18N.getMessage("tag"));
 			tgItem.addIconClickHandler(new IconClickHandler() {
 				public void onIconClick(IconClickEvent event) {
 					document.removeTag((String) tgItem.getValue());

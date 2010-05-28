@@ -176,7 +176,7 @@ public class SecurityPanel extends FolderDetailTab {
 
 		// Prepare the combo and button for adding a new Group
 		final DynamicForm groupForm = new DynamicForm();
-		final ComboBoxItem group = ItemFactory.newGroupSelector("group", I18N.getMessage("group"));
+		final ComboBoxItem group = ItemFactory.newGroupSelector("group", "group");
 		groupForm.setItems(group);
 
 		buttons.addMember(groupForm);
@@ -210,7 +210,7 @@ public class SecurityPanel extends FolderDetailTab {
 		});
 
 		final DynamicForm userForm = new DynamicForm();
-		final ComboBoxItem user = ItemFactory.newUserSelector("user", I18N.getMessage("user"));
+		final ComboBoxItem user = ItemFactory.newUserSelector("user", "user");
 		userForm.setItems(user);
 
 		buttons.addMember(userForm);

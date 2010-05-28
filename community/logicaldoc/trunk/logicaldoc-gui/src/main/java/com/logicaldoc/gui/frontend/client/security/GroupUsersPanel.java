@@ -103,7 +103,7 @@ public class GroupUsersPanel extends VLayout {
 
 		// Prepare the combo and button for adding a new user
 		final DynamicForm userForm = new DynamicForm();
-		final ComboBoxItem user = ItemFactory.newUserSelector("user", I18N.getMessage("user"));
+		final ComboBoxItem user = ItemFactory.newUserSelector("user", "user");
 		userForm.setItems(user);
 
 		buttons.addMember(userForm);

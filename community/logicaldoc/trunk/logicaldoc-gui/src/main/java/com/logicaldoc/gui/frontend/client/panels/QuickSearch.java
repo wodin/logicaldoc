@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.panels;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
@@ -31,7 +32,7 @@ public class QuickSearch extends HLayout {
 			}
 		});
 
-		TextItem searchBox = new TextItem("expression");
+		TextItem searchBox = ItemFactory.newTextItem("expression", "", null);
 		searchBox.setShowTitle(false);
 		searchBox.setDefaultValue(I18N.getMessage("search") + "...");
 		searchBox.setWidth(200);

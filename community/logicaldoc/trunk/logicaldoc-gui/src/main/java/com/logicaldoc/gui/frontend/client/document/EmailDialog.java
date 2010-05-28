@@ -69,18 +69,15 @@ public class EmailDialog extends Window {
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(1);
 
-		TextItem recipients = ItemFactory.newEmailItem("recipients", I18N.getMessage("recipients"), true);
+		TextItem recipients = ItemFactory.newEmailItem("recipients", "recipients", true);
 		recipients.setWidth(250);
 		recipients.setRequired(true);
 
-		TextItem cc = ItemFactory.newEmailItem("cc", I18N.getMessage("cc"), true);
+		TextItem cc = ItemFactory.newEmailItem("cc", "cc", true);
 		cc.setWidth(250);
 
-		TextItem object = new TextItem();
-		object.setName("object");
-		object.setTitle(I18N.getMessage("object"));
+		TextItem object = ItemFactory.newTextItem("object", "object", docTitle);
 		object.setRequired(true);
-		object.setValue(docTitle);
 		object.setWidth(250);
 
 		final TextAreaItem message = new TextAreaItem();

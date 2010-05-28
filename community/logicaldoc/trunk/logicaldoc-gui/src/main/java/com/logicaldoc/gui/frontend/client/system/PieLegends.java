@@ -6,6 +6,7 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
@@ -86,9 +87,7 @@ public class PieLegends extends HLayout {
 			if (parameter == null)
 				break;
 
-			StaticTextItem item = new StaticTextItem();
-			item.setName(parameter.getName());
-			item.setTitle(parameter.toString());
+			StaticTextItem item = ItemFactory.newStaticTextItem(parameter.getName(), parameter.toString(), null);
 			if (type == STATS_REPOSITORY)
 				item.setValue(Util.formatSize(Long.parseLong(parameter.getValue())) + " ( "
 						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
@@ -105,9 +104,7 @@ public class PieLegends extends HLayout {
 			i++;
 		}
 
-		StaticTextItem total = new StaticTextItem();
-		total.setName("total");
-		total.setTitle(I18N.getMessage("total"));
+		StaticTextItem total = ItemFactory.newStaticTextItem("total", "total", null);
 		if (type == STATS_REPOSITORY)
 			total.setValue(Util.formatSize(count));
 		else if (type == STATS_DOCUMENTS)

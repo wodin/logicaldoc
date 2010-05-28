@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.Record;
@@ -26,6 +27,7 @@ import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
@@ -139,25 +141,18 @@ public class TemplatePropertiesPanel extends HLayout {
 		form1 = new DynamicForm();
 		form1.setNumCols(1);
 		form1.setValuesManager(vm);
-		form1.setTitleOrientation(TitleOrientation.TOP);
+		form1.setTitleOrientation(TitleOrientation.LEFT);
 
-		TextItem id = new TextItem();
-		id.setTitle(I18N.getMessage("id"));
+		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(template.getId()));
 		id.setDisabled(true);
-		id.setValue(template.getId());
 
-		TextItem name = new TextItem("name");
-		name.setTitle(I18N.getMessage("name"));
-		name.setValue(template.getName());
+		TextItem name = ItemFactory.newSimpleTextItem("name", I18N.getMessage("name"), template.getName());
 		name.setRequired(true);
 		name.setDisabled(readonly || template.getId() != 0);
 		if (!readonly)
 			name.addChangedHandler(changedHandler);
 
-		TextItem description = new TextItem("description");
-		description.setTitle(I18N.getMessage("description"));
-		description.setValue(template.getDescription());
-		description.setRequired(true);
+		TextItem description = ItemFactory.newTextItem("description", "description", template.getDescription());
 		description.setDisabled(readonly);
 		if (!readonly)
 			description.addChangedHandler(changedHandler);
@@ -274,9 +269,8 @@ public class TemplatePropertiesPanel extends HLayout {
 		form2.setTitleOrientation(TitleOrientation.LEFT);
 
 		// Attribute Name
-		final TextItem attributeName = new TextItem();
-		attributeName.setName("attributeName");
-		attributeName.setTitle(I18N.getMessage("attributename"));
+		final TextItem attributeName = ItemFactory.newSimpleTextItem("attributeName", I18N.getMessage("attributename"),
+				null);
 		attributeName.setRequired(true);
 		PickerIcon cleanPicker = new PickerIcon(PickerIcon.CLEAR, new FormItemClickHandler() {
 			public void onFormItemClick(FormItemIconClickEvent event) {
@@ -311,14 +305,15 @@ public class TemplatePropertiesPanel extends HLayout {
 		addUpdate.setTitle(I18N.getMessage("addupdate"));
 		addUpdate.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				if (attributeName.getValue() != null) {
+				if (attributeName.getValue() != null && !((String) attributeName.getValue()).trim().isEmpty()) {
 					if (updatingAttributeName.trim().isEmpty()) {
 						GUIExtendedAttribute att = new GUIExtendedAttribute();
 						att.setName((String) attributeName.getValue());
 						att.setPosition(0);
 						att.setMandatory((Boolean) mandatory.getValue());
 						att.setType(Integer.parseInt((String) type.getValue()));
-						addAttribute(att);
+						if (form2.validate())
+							addAttribute(att);
 					} else {
 						GUIExtendedAttribute att = guiAttributes.get(updatingAttributeName);
 						att.setMandatory((Boolean) mandatory.getValue());

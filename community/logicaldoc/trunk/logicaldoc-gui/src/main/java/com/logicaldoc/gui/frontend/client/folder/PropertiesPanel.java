@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.folder;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
@@ -41,32 +42,26 @@ public class PropertiesPanel extends FolderDetailTab {
 		form.setValuesManager(vm);
 		form.setTitleOrientation(TitleOrientation.LEFT);
 
-		StaticTextItem idItem = new StaticTextItem();
-		idItem.setTitle(I18N.getMessage("id"));
-		idItem.setValue(folder.getId());
+		StaticTextItem idItem = ItemFactory.newStaticTextItem("id", "id", Long.toString(folder.getId()));
 
-		TextItem name = new TextItem("name");
-		name.setTitle(I18N.getMessage("name"));
-		name.setValue(folder.getName());
+		TextItem name = ItemFactory.newTextItem("name", "name", folder.getName());
 		name.addChangedHandler(changedHandler);
 		name.setRequired(true);
 
-		TextItem description = new TextItem("description");
-		description.setTitle(I18N.getMessage("description"));
-		description.setValue(folder.getDescription());
+		TextItem description = ItemFactory.newTextItem("description", "description", folder.getDescription());
 		description.addChangedHandler(changedHandler);
 
-		StaticTextItem pathItem = new StaticTextItem("path");
+		StaticTextItem pathItem = ItemFactory.newStaticTextItem("path", "path", folder.getPathExtended());
 		pathItem.setTitle(I18N.getMessage("path"));
 		pathItem.setValue(folder.getPathExtended());
 		pathItem.addChangedHandler(changedHandler);
 		pathItem.setWidth(300);
 
-		if(folder.hasPermission(Constants.PERMISSION_RENAME)){
+		if (folder.hasPermission(Constants.PERMISSION_RENAME)) {
 			name.setDisabled(true);
 			description.setDisabled(true);
 		}
-		
+
 		if (folder.getId() == Constants.DOCUMENTS_FOLDERID)
 			form.setItems(idItem, pathItem);
 		else

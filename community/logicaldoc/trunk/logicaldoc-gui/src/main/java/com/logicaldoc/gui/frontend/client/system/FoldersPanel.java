@@ -58,39 +58,24 @@ public class FoldersPanel extends VLayout {
 		docdir.setRequired(true);
 		docdir.setWidth(250);
 
-		TextItem indexdir = new TextItem();
+		TextItem indexdir = ItemFactory.newTextItem("indexdir", "indexdir", Util.getContext().get("conf_indexdir"));
 		indexdir.setWidth(250);
-		indexdir.setName("indexdir");
-		indexdir.setTitle("indexdir");
-		indexdir.setValue(Util.getContext().get("conf_indexdir"));
 		indexdir.setRequired(true);
 
-		TextItem userdir = new TextItem();
+		TextItem userdir = ItemFactory.newTextItem("userdir", "userdir", Util.getContext().get("conf_userdir"));
 		userdir.setWidth(250);
-		userdir.setName("userdir");
-		userdir.setTitle("userdir");
-		userdir.setValue(Util.getContext().get("conf_userdir"));
 		userdir.setRequired(true);
 
-		TextItem plugindir = new TextItem();
+		TextItem plugindir = ItemFactory.newTextItem("plugindir", "plugindir", Util.getContext().get("conf_plugindir"));
 		plugindir.setWidth(250);
-		plugindir.setName("plugindir");
-		plugindir.setTitle("plugindir");
-		plugindir.setValue(Util.getContext().get("conf_plugindir"));
 		plugindir.setRequired(true);
 
-		TextItem importdir = new TextItem();
+		TextItem importdir = ItemFactory.newTextItem("importdir", "importdir", Util.getContext().get("conf_importdir"));
 		importdir.setWidth(250);
-		importdir.setName("importdir");
-		importdir.setTitle("importdir");
-		importdir.setValue(Util.getContext().get("conf_importdir"));
 		importdir.setRequired(true);
 
-		TextItem exportdir = new TextItem();
+		TextItem exportdir = ItemFactory.newTextItem("exportdir", "exportdir", Util.getContext().get("conf_exportdir"));
 		exportdir.setWidth(250);
-		exportdir.setName("exportdir");
-		exportdir.setTitle("exportdir");
-		exportdir.setValue(Util.getContext().get("conf_exportdir"));
 		exportdir.setRequired(true);
 
 		foldersForm.setItems(docdir, indexdir, userdir, plugindir, importdir, exportdir);

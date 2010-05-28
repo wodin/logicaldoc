@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
+import com.logicaldoc.gui.frontend.client.i18n.FrontendMessages;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
@@ -24,7 +25,6 @@ import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -46,9 +46,13 @@ public class ExtAuthPanel extends VLayout {
 
 	private GUIADSettings adSettings;
 
+	private FrontendMessages messages;
+
 	public ExtAuthPanel(GUILdapSettings[] settings) {
 		this.ldapSettings = settings[0];
 		this.adSettings = (GUIADSettings) settings[1];
+
+		messages = GWT.create(FrontendMessages.class);
 
 		setWidth100();
 		setMembersMargin(10);
@@ -66,100 +70,68 @@ public class ExtAuthPanel extends VLayout {
 		ldapForm.setColWidths(100, 100);
 
 		// Implementation
-		RadioGroupItem implementation = ItemFactory.newBooleanSelector("implementation", I18N
-				.getMessage("implementation"));
+		RadioGroupItem implementation = ItemFactory.newBooleanSelector("implementation", "implementation");
 		implementation.setName("implementation");
 		implementation.setValueMap("basic", "md5");
 		implementation.setValue(this.ldapSettings.getImplementation());
 
 		// Enabled
-		RadioGroupItem enabled = ItemFactory.newBooleanSelector("enabled", I18N.getMessage("enabled"));
+		RadioGroupItem enabled = ItemFactory.newBooleanSelector("enabled", "enabled");
 		enabled.setName("enabled");
 		enabled.setValue(this.ldapSettings.isEnabled() ? "yes" : "no");
 
 		// Url
-		TextItem url = new TextItem();
-		url.setName("url");
-		url.setTitle(I18N.getMessage("url"));
-		url.setValue(this.ldapSettings.getUrl());
+		TextItem url = ItemFactory.newTextItem("url", "url", this.ldapSettings.getUrl());
 		url.setRequired(true);
 
 		// Username
-		TextItem username = new TextItem();
-		username.setName("username");
-		username.setTitle(I18N.getMessage("username"));
-		username.setValue(this.ldapSettings.getUsername());
+		TextItem username = ItemFactory.newTextItem("username", "username", this.ldapSettings.getUsername());
 
 		// Password
-		PasswordItem password = new PasswordItem("password", I18N.getMessage("password"));
+		// PasswordItem password = new PasswordItem("password",
+		// I18N.getMessage("password"));
+		// TODO
+		PasswordItem password = new PasswordItem("password", messages.password());
 		password.setName("password");
 		password.setValue(this.ldapSettings.getPwd());
 
 		// Realm
-		TextItem realm = new TextItem();
-		realm.setName("realm");
-		realm.setTitle(I18N.getMessage("realm"));
-		realm.setValue(this.ldapSettings.getRealm());
+		TextItem realm = ItemFactory.newTextItem("realm", "realm", this.ldapSettings.getRealm());
 
 		// DN
-		TextItem dn = new TextItem();
-		dn.setName("dn");
-		dn.setTitle(I18N.getMessage("dn"));
-		dn.setValue(this.ldapSettings.getDN());
+		TextItem dn = ItemFactory.newTextItem("dn", "dn", this.ldapSettings.getDN());
 
 		// Base
-		TextItem base = new TextItem();
-		base.setName("base");
-		base.setTitle(I18N.getMessage("base"));
-		base.setValue(this.ldapSettings.getBase());
+		TextItem base = ItemFactory.newTextItem("base", "base", this.ldapSettings.getBase());
 
 		// User identifier attr.
-		TextItem userIdentifierAttr = new TextItem();
-		userIdentifierAttr.setName("useridentifierattr");
-		userIdentifierAttr.setTitle(I18N.getMessage("useridentifierattr"));
-		userIdentifierAttr.setValue(this.ldapSettings.getUserIdentifierAttr());
+		TextItem userIdentifierAttr = ItemFactory.newTextItem("useridentifierattr", "useridentifierattr",
+				this.ldapSettings.getUserIdentifierAttr());
 
 		// Group identifier attr.
-		TextItem grpIdentifierAttr = new TextItem();
-		grpIdentifierAttr.setName("grpidentifierattr");
-		grpIdentifierAttr.setTitle(I18N.getMessage("grpidentifierattr"));
-		grpIdentifierAttr.setValue(this.ldapSettings.getGrpIdentifierAttr());
+		TextItem grpIdentifierAttr = ItemFactory.newTextItem("grpidentifierattr", "grpidentifierattr",
+				this.ldapSettings.getGrpIdentifierAttr());
 
 		// Logon attr.
-		TextItem logonAttr = new TextItem();
-		logonAttr.setName("logonattr");
-		logonAttr.setTitle(I18N.getMessage("logonattr"));
-		logonAttr.setValue(this.ldapSettings.getLogonAttr());
+		TextItem logonAttr = ItemFactory.newTextItem("logonattr", "logonattr", this.ldapSettings.getLogonAttr());
 
 		// Auth. pattern
-		TextItem authPattern = new TextItem();
-		authPattern.setName("authpattern");
-		authPattern.setTitle(I18N.getMessage("authpattern"));
-		authPattern.setValue(this.ldapSettings.getAuthPattern());
+		TextItem authPattern = ItemFactory
+				.newTextItem("authpattern", "authpattern", this.ldapSettings.getAuthPattern());
 
 		// User class
-		TextItem userClass = new TextItem();
-		userClass.setName("userclass");
-		userClass.setTitle(I18N.getMessage("userclass"));
-		userClass.setValue(this.ldapSettings.getUserClass());
+		TextItem userClass = ItemFactory.newTextItem("userclass", "userclass", this.ldapSettings.getUserClass());
 
 		// Group class
-		TextItem groupClass = new TextItem();
-		groupClass.setName("grpclass");
-		groupClass.setTitle(I18N.getMessage("grpclass"));
-		groupClass.setValue(this.ldapSettings.getGrpClass());
+		TextItem groupClass = ItemFactory.newTextItem("grpclass", "grpclass", this.ldapSettings.getGrpClass());
 
 		// Users base node
-		TextItem usersBaseNode = new TextItem();
-		usersBaseNode.setName("usersbasenode");
-		usersBaseNode.setTitle(I18N.getMessage("usersbasenode"));
-		usersBaseNode.setValue(this.ldapSettings.getUsersBaseNode());
+		TextItem usersBaseNode = ItemFactory.newTextItem("usersbasenode", "usersbasenode", this.ldapSettings
+				.getUsersBaseNode());
 
 		// Groups base node
-		TextItem groupsBaseNode = new TextItem();
-		groupsBaseNode.setName("grpsbasenode");
-		groupsBaseNode.setTitle(I18N.getMessage("grpsbasenode"));
-		groupsBaseNode.setValue(this.ldapSettings.getGrpsBaseNode());
+		TextItem groupsBaseNode = ItemFactory.newTextItem("grpsbasenode", "grpsbasenode", this.ldapSettings
+				.getGrpsBaseNode());
 
 		// Language
 		SelectItem language = ItemFactory.newLanguageSelector("language", false);
@@ -184,46 +156,30 @@ public class ExtAuthPanel extends VLayout {
 			activeDirForm.setColWidths(100, 100);
 
 			// Implementation
-			RadioGroupItem adImplementation = ItemFactory.newBooleanSelector("adimplementation", I18N
-					.getMessage("implementation"));
+			RadioGroupItem adImplementation = ItemFactory.newBooleanSelector("adimplementation", "implementation");
 			adImplementation.setName("adimplementation");
 			adImplementation.setValueMap("basic", "md5");
 			adImplementation.setValue(this.adSettings.getImplementation());
 
 			// Enabled
-			RadioGroupItem adEnabled = ItemFactory.newBooleanSelector("adenabled", I18N.getMessage("enabled"));
+			RadioGroupItem adEnabled = ItemFactory.newBooleanSelector("adenabled", "enabled");
 			adEnabled.setName("adEnabled");
 			adEnabled.setValue(this.adSettings.isEnabled() ? "yes" : "no");
 
 			// Domain
-			TextItem domain = new TextItem();
-			domain.setName("domain");
-			domain.setTitle(I18N.getMessage("domain"));
-			domain.setValue(this.adSettings.getDomain());
+			TextItem domain = ItemFactory.newTextItem("domain", "domain", this.adSettings.getDomain());
 			domain.setRequired(true);
 
 			// Host
-			TextItem host = new TextItem();
-			host.setName("host");
-			host.setTitle(I18N.getMessage("host"));
-			host.setValue(this.adSettings.getHost());
+			TextItem host = ItemFactory.newTextItem("host", "host", this.adSettings.getHost());
 			host.setRequired(true);
 
 			// Port
-			IntegerItem port = new IntegerItem();
-			port.setName("port");
-			port.setTitle(I18N.getMessage("port"));
-			port.setValue(this.adSettings.getPort());
+			IntegerItem port = ItemFactory.newValidateIntegerItem("port", "port", this.adSettings.getPort(), 1, null);
 			port.setRequired(true);
-			IntegerRangeValidator portValidator = new IntegerRangeValidator();
-			portValidator.setMin(1);
-			port.setValidators(portValidator);
 
 			// Username
-			TextItem adUsername = new TextItem();
-			adUsername.setName("adUsername");
-			adUsername.setTitle(I18N.getMessage("username"));
-			adUsername.setValue(this.adSettings.getUsername());
+			TextItem adUsername = ItemFactory.newTextItem("adUsername", "username", this.adSettings.getUsername());
 			adUsername.setRequired(true);
 
 			// Password
@@ -232,17 +188,13 @@ public class ExtAuthPanel extends VLayout {
 			adPassword.setValue(this.adSettings.getPwd());
 
 			// Users base node
-			TextItem adUsersBaseNode = new TextItem();
-			adUsersBaseNode.setName("adUsersBaseNode");
-			adUsersBaseNode.setTitle(I18N.getMessage("usersbasenode"));
-			adUsersBaseNode.setValue(this.adSettings.getUsersBaseNode());
+			TextItem adUsersBaseNode = ItemFactory.newTextItem("adUsersBaseNode", "usersbasenode", this.adSettings
+					.getUsersBaseNode());
 			adUsersBaseNode.setRequired(true);
 
 			// Groups base node
-			TextItem adGroupsBaseNode = new TextItem();
-			adGroupsBaseNode.setName("adGroupsBaseNode");
-			adGroupsBaseNode.setTitle(I18N.getMessage("grpsbasenode"));
-			adGroupsBaseNode.setValue(this.adSettings.getGrpsBaseNode());
+			TextItem adGroupsBaseNode = ItemFactory.newTextItem("adGroupsBaseNode", "grpsbasenode", this.adSettings
+					.getGrpsBaseNode());
 
 			// Language
 			SelectItem adLanguage = ItemFactory.newLanguageSelector("language", false);

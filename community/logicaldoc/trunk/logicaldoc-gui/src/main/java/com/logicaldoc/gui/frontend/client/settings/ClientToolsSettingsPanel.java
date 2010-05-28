@@ -60,7 +60,7 @@ public class ClientToolsSettingsPanel extends VLayout {
 		webServiceForm.setNumCols(1);
 
 		// Enabled
-		RadioGroupItem enabled = ItemFactory.newBooleanSelector("wsEnabled", I18N.getMessage("enabled"));
+		RadioGroupItem enabled = ItemFactory.newBooleanSelector("wsEnabled", "enabled");
 		enabled.setName("wsEnabled");
 		enabled.setValue(this.wsSettings.isEnabled() ? "yes" : "no");
 
@@ -87,7 +87,7 @@ public class ClientToolsSettingsPanel extends VLayout {
 		webDavForm.setNumCols(1);
 
 		// Status
-		RadioGroupItem wdEnabled = ItemFactory.newBooleanSelector("wdEnabled", I18N.getMessage("enabled"));
+		RadioGroupItem wdEnabled = ItemFactory.newBooleanSelector("wdEnabled", "enabled");
 		wdEnabled.setName("wdEnabled");
 		wdEnabled.setValue(this.webDavSettings.isEnabled() ? "yes" : "no");
 

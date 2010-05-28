@@ -16,9 +16,12 @@ import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
 /**
@@ -28,10 +31,11 @@ import com.smartgwt.client.widgets.grid.ListGridField;
  * @since 6.0
  */
 public class ItemFactory {
+
 	public static DateItem newDateItem(String name, String title) {
 		DateItem date = new DateItem(name);
 		if (title != null)
-			date.setTitle(title);
+			date.setTitle(I18N.getMessage(title));
 		else
 			date.setShowTitle(false);
 		date.setUseTextField(true);
@@ -52,7 +56,7 @@ public class ItemFactory {
 		dateOperator.setValueMap(opts);
 		dateOperator.setName(name);
 		if (title != null)
-			dateOperator.setTitle(title);
+			dateOperator.setTitle(I18N.getMessage(title));
 		else
 			dateOperator.setShowTitle(false);
 		dateOperator.setDefaultValue("nolimits");
@@ -69,7 +73,7 @@ public class ItemFactory {
 		sizeOperator.setValueMap(opts);
 		sizeOperator.setName(name);
 		if (title != null)
-			sizeOperator.setTitle(title);
+			sizeOperator.setTitle(I18N.getMessage(title));
 		else
 			sizeOperator.setShowTitle(false);
 		sizeOperator.setDefaultValue("nolimits");
@@ -91,7 +95,7 @@ public class ItemFactory {
 		TextItem item = new TextItem();
 		item.setName(name);
 		if (title != null)
-			item.setTitle(title);
+			item.setTitle(I18N.getMessage(title));
 		else
 			item.setShowTitle(false);
 		if (multiple)
@@ -116,7 +120,7 @@ public class ItemFactory {
 
 	public static ComboBoxItem newUserSelector(String name, String title) {
 		ComboBoxItem user = new ComboBoxItem(name);
-		user.setTitle(title);
+		user.setTitle(I18N.getMessage(title));
 		ListGridField username = new ListGridField("username");
 		ListGridField label = new ListGridField("label");
 		user.setValueField("id");
@@ -136,7 +140,7 @@ public class ItemFactory {
 		map.put("no", I18N.getMessage("no"));
 		radioGroupItem.setValueMap(map);
 		radioGroupItem.setRedrawOnChange(true);
-		radioGroupItem.setTitle(title);
+		radioGroupItem.setTitle(I18N.getMessage(title));
 		radioGroupItem.setWidth(80);
 		return radioGroupItem;
 	}
@@ -144,7 +148,7 @@ public class ItemFactory {
 	public static SelectItem newMultipleSelector(String name, String title) {
 		SelectItem selectItemMultipleGrid = new SelectItem();
 		selectItemMultipleGrid.setName(name);
-		selectItemMultipleGrid.setTitle(title);
+		selectItemMultipleGrid.setTitle(I18N.getMessage(title));
 		selectItemMultipleGrid.setMultiple(true);
 		selectItemMultipleGrid.setValueMap("");
 		return selectItemMultipleGrid;
@@ -230,7 +234,7 @@ public class ItemFactory {
 	public static TextItem newTextItem(String name, String title, String value) {
 		TextItem item = new TextItem();
 		item.setName(name);
-		item.setTitle(title);
+		item.setTitle(I18N.getMessage(title));
 		if (value != null)
 			item.setValue(value);
 		else
@@ -250,5 +254,66 @@ public class ItemFactory {
 		TextItem item = newTextItem(name, title, value);
 		item.setValidators(new SimpleTextValidator());
 		return item;
+	}
+
+	/**
+	 * Creates a new StaticTextItem.
+	 * 
+	 * @param name The item name (mandatory)
+	 * @param title The item title (mandatory)
+	 * @param value The item value (optional)
+	 */
+	public static StaticTextItem newStaticTextItem(String name, String title, String value) {
+		StaticTextItem item = new StaticTextItem();
+		if (name.trim().isEmpty())
+			item.setShouldSaveValue(false);
+		item.setName(name);
+		item.setTitle(I18N.getMessage(title));
+		if (value != null)
+			item.setValue(value);
+		else
+			item.setValue("");
+		return item;
+	}
+
+	/**
+	 * Creates a new IntegerItem.
+	 * 
+	 * @param name The item name (mandatory)
+	 * @param title The item title (mandatory)
+	 * @param value The item value (optional)
+	 */
+	public static IntegerItem newIntegerItem(String name, String title, Integer value) {
+		IntegerItem item = new IntegerItem();
+		item.setName(name);
+		item.setTitle(I18N.getMessage(title));
+		if (value != null)
+			item.setValue(value);
+		item.setRequiredMessage(I18N.getMessage("fieldrequired"));
+		return item;
+	}
+
+	/**
+	 * Creates a new IntegerItem with a range validator.
+	 * 
+	 * @param name The item name (mandatory)
+	 * @param title The item title (mandatory)
+	 * @param value The item value (optional)
+	 * @param min The item minimum value (optional)
+	 * @param min The item maximum value (optional)
+	 */
+	public static IntegerItem newValidateIntegerItem(String name, String title, Integer value, Integer min, Integer max) {
+		IntegerItem item = newIntegerItem(name, title, value);
+		if (min != null || max != null) {
+			IntegerRangeValidator iv = new IntegerRangeValidator();
+			if (min != null)
+				iv.setMin(min);
+			if (max != null)
+				iv.setMax(max);
+			item.setValidators(iv);
+		}
+
+		return item;
+
 	}
 }
