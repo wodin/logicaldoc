@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.data.ParsersDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -107,16 +108,10 @@ public class SearchIndexingPanel extends VLayout {
 		indexingQueueTabPanel.setWidth100();
 		indexingQueueTabPanel.setHeight100();
 
-		final IntegerItem max = new IntegerItem();
-		max.setName("max");
+		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "", maxValue, 1, null);
 		max.setHint(I18N.getMessage("elements"));
 		max.setShowTitle(false);
-		max.setValue(maxValue);
 		max.setWidth(40);
-
-		IntegerRangeValidator intValidator = new IntegerRangeValidator();
-		intValidator.setMin(1);
-		max.setValidators(intValidator);
 
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setWidth100();
@@ -256,8 +251,8 @@ public class SearchIndexingPanel extends VLayout {
 		docsList.setFilterOnKeypress(true);
 		dataSource = new DocumentsDS(null, null, maxValue, true);
 		docsList.setDataSource(dataSource);
-		docsList.setFields(locked, immutable, icon, title, size, lastModified, version, publisher, published,
-				creator, created, customId, filename);
+		docsList.setFields(locked, immutable, icon, title, size, lastModified, version, publisher, published, creator,
+				created, customId, filename);
 
 		indexingQueueTabPanel.setMembers(toolStrip, infoPanel, docsList);
 		indexingQueueTab.setPane(indexingQueueTabPanel);
@@ -327,16 +322,12 @@ public class SearchIndexingPanel extends VLayout {
 		searchEngineForm.setValuesManager(vm);
 
 		// Installed Languages
-		StaticTextItem languages = new StaticTextItem();
-		languages.setName("languages");
-		languages.setTitle(I18N.getMessage("installedlanguages"));
-		languages.setValue(this.searchEngine.getLanguages());
+		StaticTextItem languages = ItemFactory.newStaticTextItem("languages", "installedlanguages", this.searchEngine
+				.getLanguages());
 
 		// Entries count
-		StaticTextItem entries = new StaticTextItem();
-		entries.setName("entries");
-		entries.setTitle(I18N.getMessage("entriescount"));
-		entries.setValue("" + this.searchEngine.getEntries());
+		StaticTextItem entries = ItemFactory.newStaticTextItem("entries", "entriescount", ""
+				+ this.searchEngine.getEntries());
 
 		// Locked
 		CheckboxItem locked = new CheckboxItem();
@@ -347,16 +338,12 @@ public class SearchIndexingPanel extends VLayout {
 		locked.setDefaultValue(this.searchEngine.isLocked());
 
 		// Include Patters
-		TextItem includePatters = new TextItem();
-		includePatters.setName("includePatters");
-		includePatters.setTitle(I18N.getMessage("includepatters"));
+		TextItem includePatters = ItemFactory.newTextItem("includePatters", "includepatters", null);
 		includePatters.setDefaultValue(this.searchEngine.getIncludePatters());
 		includePatters.setHint(I18N.getMessage("separatedcomma"));
 
 		// Exclude Patters
-		TextItem excludePatters = new TextItem();
-		excludePatters.setName("excludePatters");
-		excludePatters.setTitle(I18N.getMessage("excludepatters"));
+		TextItem excludePatters = ItemFactory.newTextItem("excludePatters", "excludepatters", null);
 		excludePatters.setDefaultValue(this.searchEngine.getExcludePatters());
 		excludePatters.setHint(I18N.getMessage("separatedcomma"));
 

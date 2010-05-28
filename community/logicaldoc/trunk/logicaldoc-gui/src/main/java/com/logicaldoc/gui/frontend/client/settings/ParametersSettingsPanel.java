@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
@@ -53,17 +54,14 @@ public class ParametersSettingsPanel extends VLayout {
 		form.setValuesManager(vm);
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(3);
-		form.setColWidths(100, 100, 100);  
+		form.setColWidths(100, 100, 100);
 		form.setWidth(480);
 
 		TextItem[] items = new TextItem[settings.length];
 
 		int i = 0;
 		for (GUIParameter parameter : settings) {
-			TextItem item = new TextItem();
-			item.setName(parameter.getName());
-			item.setTitle(parameter.getName());
-			item.setValue(parameter.getValue());
+			TextItem item = ItemFactory.newTextItem(parameter.getName(), parameter.getName(), parameter.getValue());
 			items[i] = item;
 			i++;
 		}

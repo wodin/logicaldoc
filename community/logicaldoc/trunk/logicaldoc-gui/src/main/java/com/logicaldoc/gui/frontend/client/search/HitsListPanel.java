@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.frontend.client.document.DocumentContextMenu;
@@ -29,7 +30,6 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
-import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -172,9 +172,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 					int score = record.getAttributeAsInt("score");
 					int red = 100 - score > 0 ? 100 - score : 0;
 					return "<img src='" + Util.imageUrl("dotblue.gif") + "' style='width: " + score
-							+ "px; height: 8px' title='" + score + "%'/>" + "<img src='"
-							+ Util.imageUrl("dotgrey.gif") + "' style='width: " + red
-							+ "px; height: 8px' title='" + score + "%'/>";
+							+ "px; height: 8px' title='" + score + "%'/>" + "<img src='" + Util.imageUrl("dotgrey.gif")
+							+ "' style='width: " + red + "px; height: 8px' title='" + score + "%'/>";
 				} catch (Throwable e) {
 					return "";
 				}
@@ -335,15 +334,11 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 		if (Search.get().isHasMore()) {
 			toolStrip.addSeparator();
-			final IntegerItem max = new IntegerItem();
-			max.setName("repeatNumber");
+			final IntegerItem max = ItemFactory.newValidateIntegerItem("repeatNumber", "", null, 1, null);
 			max.setHint(I18N.getMessage("hits"));
 			max.setShowTitle(false);
 			max.setDefaultValue(40);
 			max.setWidth(40);
-			IntegerRangeValidator intValidator = new IntegerRangeValidator();
-			intValidator.setMin(1);
-			max.setValidators(intValidator);
 
 			ToolStripButton repeat = new ToolStripButton();
 			repeat.setTitle(I18N.getMessage("display"));

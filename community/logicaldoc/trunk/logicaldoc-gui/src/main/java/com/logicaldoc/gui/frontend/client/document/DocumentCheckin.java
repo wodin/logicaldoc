@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -76,9 +77,7 @@ public class DocumentCheckin extends Window {
 		filenameItem.setTitle(I18N.getMessage("checkfilename"));
 		filenameItem.setDefaultValue(true);
 
-		TextItem commentItem = new TextItem();
-		commentItem.setName("comment");
-		commentItem.setTitle(I18N.getMessage("comment"));
+		TextItem commentItem = ItemFactory.newTextItem("comment", "comment", null);
 		commentItem.setRequired(true);
 
 		sendButton = new SubmitItem();

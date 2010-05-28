@@ -29,7 +29,6 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
-import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -72,25 +71,15 @@ public class SecuritySettingsPanel extends VLayout {
 		pwdForm.setTitleOrientation(TitleOrientation.TOP);
 		pwdForm.setNumCols(1);
 
-		final IntegerItem pwdSize = new IntegerItem();
-		pwdSize.setName("pwdSize");
+		final IntegerItem pwdSize = ItemFactory.newValidateIntegerItem("pwdSize", "passwdsize", null, 4, null);
 		pwdSize.setRequired(true);
-		pwdSize.setTitle(I18N.getMessage("passwdsize"));
 		pwdSize.setDefaultValue(settings.getPwdSize());
-		IntegerRangeValidator sizeValidator = new IntegerRangeValidator();
-		sizeValidator.setMin(4);
-		pwdSize.setValidators(sizeValidator);
 
-		final IntegerItem pwdExp = new IntegerItem();
-		pwdExp.setName("pwdExp");
-		pwdExp.setTitle(I18N.getMessage("passwdexpiration"));
+		final IntegerItem pwdExp = ItemFactory.newValidateIntegerItem("pwdExp", "passwdexpiration", null, 1, null);
 		pwdExp.setHint(I18N.getMessage("days"));
 		pwdExp.setDefaultValue(settings.getPwdExpiration());
 		pwdExp.setWrapTitle(false);
 		pwdExp.setRequired(true);
-		IntegerRangeValidator expireValidator = new IntegerRangeValidator();
-		expireValidator.setMin(1);
-		pwdExp.setValidators(expireValidator);
 
 		pwdForm.setFields(pwdSize, pwdExp);
 		password.setPane(pwdForm);
@@ -149,7 +138,7 @@ public class SecuritySettingsPanel extends VLayout {
 		notificationsForm.setColWidths(1, "*");
 		notificationsForm.setMargin(3);
 
-		final ComboBoxItem user = ItemFactory.newUserSelector("notificationUsers", I18N.getMessage("user"));
+		final ComboBoxItem user = ItemFactory.newUserSelector("notificationUsers", "user");
 		List<FormItem> items = new ArrayList<FormItem>();
 		user.addChangedHandler(new ChangedHandler() {
 			@Override
@@ -171,11 +160,9 @@ public class SecuritySettingsPanel extends VLayout {
 		int i = 0;
 
 		for (GUIUser u : settings.getNotifiedUsers()) {
-			final StaticTextItem usrItem = new StaticTextItem();
+			final StaticTextItem usrItem = ItemFactory.newStaticTextItem("usr" + i++, "user", null);
 			usrItem.setDefaultValue(u.getUserName());
-			usrItem.setName("usr" + i++);
 			usrItem.setIcons(icon);
-			usrItem.setTitle(I18N.getMessage("user"));
 			usrItem.addIconClickHandler(new IconClickHandler() {
 				public void onIconClick(IconClickEvent event) {
 					settings.removeNotifiedUser((String) usrItem.getValue());

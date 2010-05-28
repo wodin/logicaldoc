@@ -6,6 +6,7 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.validators.SimpleTextValidator;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
@@ -48,16 +49,12 @@ public class SaveDialog extends Window {
 		form.setWidth(350);
 		form.setMargin(5);
 
-		TextItem name = new TextItem();
-		name.setName("name");
-		name.setTitle(I18N.getMessage("name"));
+		TextItem name = ItemFactory.newTextItem("name", "name", null);
 		name.setRequired(true);
 		name.setValidators(new SimpleTextValidator());
 		name.setWidth(100);
 
-		TextItem description = new TextItem();
-		description.setName("description");
-		description.setTitle(I18N.getMessage("description"));
+		TextItem description = ItemFactory.newTextItem("description", "description", null);
 		description.setWidth(300);
 
 		ButtonItem save = new ButtonItem();
@@ -81,8 +78,11 @@ public class SaveDialog extends Window {
 							if (!b)
 								SC.warn(I18N.getMessage("duplicateelement"));
 							else {
-								SavedSearchesPanel.get().addEntry(vm.getValueAsString("name"), vm.getValueAsString("description"), options.getType() == GUISearchOptions.TYPE_FULLTEXT ? I18N
-										.getMessage("fulltext") : I18N.getMessage("parametric") );
+								SavedSearchesPanel.get().addEntry(
+										vm.getValueAsString("name"),
+										vm.getValueAsString("description"),
+										options.getType() == GUISearchOptions.TYPE_FULLTEXT ? I18N
+												.getMessage("fulltext") : I18N.getMessage("parametric"));
 								destroy();
 							}
 						}

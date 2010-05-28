@@ -69,29 +69,23 @@ public class LastChangesPanel extends VLayout {
 		form.setWrapItemTitles(false);
 
 		// Username
-		TextItem user = new TextItem();
-		user.setName("user");
-		user.setTitle(I18N.getMessage("user"));
+		TextItem user = ItemFactory.newTextItem("user", "user", null);
 		user.setColSpan(4);
 
 		// From
-		DateItem fromDate = ItemFactory.newDateItem("fromDate", I18N.getMessage("from"));
+		DateItem fromDate = ItemFactory.newDateItem("fromDate", "from");
 
 		// To
-		DateItem tillDate = ItemFactory.newDateItem("tillDate", I18N.getMessage("till"));
+		DateItem tillDate = ItemFactory.newDateItem("tillDate", "till");
 
 		// Session ID
-		TextItem sessionId = new TextItem();
-		sessionId.setName("sid");
+		TextItem sessionId = ItemFactory.newTextItem("sid", "sid", null);
 		sessionId.setColSpan(4);
-		sessionId.setTitle(I18N.getMessage("sid"));
 
 		// Max results
-		TextItem displayMax = new TextItem();
-		displayMax.setName("displayMax");
+		TextItem displayMax = ItemFactory.newTextItem("displayMax", "displaymax", null);
 		displayMax.setDefaultValue(100);
 		displayMax.setWidth(40);
-		displayMax.setTitle(I18N.getMessage("displaymax"));
 		displayMax.setHint(I18N.getMessage("elements"));
 
 		ButtonItem searchButton = new ButtonItem();

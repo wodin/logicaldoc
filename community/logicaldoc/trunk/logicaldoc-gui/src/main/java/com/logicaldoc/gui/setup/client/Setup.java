@@ -164,10 +164,8 @@ public class Setup implements EntryPoint {
 		final DynamicForm repositoryForm = new DynamicForm();
 		repositoryForm.setID("repositoryForm");
 		repositoryForm.setValuesManager(vm);
-		TextItem repositoryItem = new TextItem();
+		TextItem repositoryItem = ItemFactory.newTextItem(REPOSITORY_FOLDER, "repofolder", null);
 		repositoryItem.setWidth(200);
-		repositoryItem.setName(REPOSITORY_FOLDER);
-		repositoryItem.setTitle(I18N.getMessage("repofolder"));
 		repositoryItem.setRequired(true);
 		repositoryItem.setWrapTitle(false);
 		repositoryItem.setDefaultValue(getDefaultFolder());
@@ -190,19 +188,13 @@ public class Setup implements EntryPoint {
 		smtpForm.setValuesManager(vm);
 		smtpTab.setPane(smtpForm);
 
-		TextItem smtpHost = new TextItem();
-		smtpHost.setTitle(I18N.getMessage("host"));
-		smtpHost.setName(SMTP_HOST);
+		TextItem smtpHost = ItemFactory.newTextItem(SMTP_HOST, "host", null);
 		smtpHost.setWrapTitle(false);
 
-		IntegerItem smtpPort = new IntegerItem();
-		smtpPort.setTitle(I18N.getMessage("port"));
-		smtpPort.setName(SMTP_PORT);
+		IntegerItem smtpPort = ItemFactory.newIntegerItem(SMTP_PORT, "port", null);
 		smtpPort.setWrapTitle(false);
 
-		TextItem smtpUsername = new TextItem();
-		smtpUsername.setTitle(I18N.getMessage("username"));
-		smtpUsername.setName(SMTP_USERNAME);
+		TextItem smtpUsername = ItemFactory.newTextItem(SMTP_USERNAME, "username", null);
 		smtpUsername.setWrapTitle(false);
 
 		PasswordItem smtpPassword = new PasswordItem();
@@ -228,7 +220,7 @@ public class Setup implements EntryPoint {
 		valueMap.put(Constants.SMTP_SECURITY_TLS_IF_AVAILABLE, "TLS if available");
 		smtpConnectionSecurity.setValueMap(valueMap);
 
-		TextItem smtpSender = ItemFactory.newEmailItem(SMTP_SENDER, I18N.getMessage("sender"), false);
+		TextItem smtpSender = ItemFactory.newEmailItem(SMTP_SENDER, "sender", false);
 		smtpSender.setWidth(300);
 		smtpSender.setWrapTitle(false);
 
@@ -322,10 +314,8 @@ public class Setup implements EntryPoint {
 		});
 
 		// The driver for the external DB
-		TextItem dbDriver = new TextItem();
+		TextItem dbDriver = ItemFactory.newTextItem(DB_DRIVER, "driverclass", null);
 		dbDriver.setVisible(false);
-		dbDriver.setTitle(I18N.getMessage("driverclass"));
-		dbDriver.setName(DB_DRIVER);
 		dbDriver.setDefaultValue(engines.get(DB_MYSQL)[1]);
 		dbDriver.setWrapTitle(false);
 		dbDriver.setShowIfCondition(new FormItemIfFunction() {
@@ -336,11 +326,9 @@ public class Setup implements EntryPoint {
 		dbDriver.setValidators(ifValidator);
 
 		// The connection URL to external DB
-		TextItem dbUrl = new TextItem();
+		TextItem dbUrl = ItemFactory.newTextItem(DB_URL, "connectionurl", null);
 		dbUrl.setWidth(200);
 		dbUrl.setVisible(false);
-		dbUrl.setTitle(I18N.getMessage("connectionurl"));
-		dbUrl.setName(DB_URL);
 		dbUrl.setDefaultValue(engines.get(DB_MYSQL)[2]);
 		dbUrl.setWrapTitle(false);
 		dbUrl.setShowIfCondition(new FormItemIfFunction() {
@@ -351,10 +339,8 @@ public class Setup implements EntryPoint {
 		dbUrl.setValidators(ifValidator);
 
 		// The username to access the external DB
-		TextItem dbUsername = new TextItem();
+		TextItem dbUsername = ItemFactory.newTextItem(DB_USERNAME, "username", null);
 		dbUsername.setVisible(false);
-		dbUsername.setTitle(I18N.getMessage("username"));
-		dbUsername.setName(DB_USERNAME);
 		dbUsername.setWrapTitle(false);
 		dbUsername.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {

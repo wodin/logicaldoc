@@ -6,6 +6,7 @@ import java.util.Map;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -17,7 +18,6 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -111,45 +111,28 @@ public class SchedulingPanel extends VLayout {
 		maxDuration.addChangedHandler(changedHandler);
 
 		// CPU Idle
-		cpuIdle = new IntegerItem();
-		cpuIdle.setName("cpuIdle");
-		cpuIdle.setTitle(I18N.getMessage("schedulingidle"));
+		cpuIdle = ItemFactory.newValidateIntegerItem("cpuIdle", "schedulingidle", null, -1, null);
 		cpuIdle.setDefaultValue(task.getScheduling().getMinCpuIdle());
 		cpuIdle.addChangedHandler(changedHandler);
-		IntegerRangeValidator cpuIdleValidator = new IntegerRangeValidator();
-		cpuIdleValidator.setMin(-1);
-		cpuIdle.setValidators(cpuIdleValidator);
 
 		// Initial delay
-		initialDelay = new IntegerItem();
-		initialDelay.setName("initialDelay");
-		initialDelay.setTitle(I18N.getMessage("initialdelay"));
+		initialDelay = ItemFactory.newValidateIntegerItem("initialDelay", "initialdelay", null, 1, null);
 		initialDelay.setDefaultValue(new Integer(Long.toString(task.getScheduling().getDelay())));
 		initialDelay.setVisible(simplePolicy);
 		initialDelay.addChangedHandler(changedHandler);
 		initialDelay.setHint(I18N.getMessage("seconds").toLowerCase());
 		initialDelay.setRequired(true);
-		IntegerRangeValidator initialDelayValidator = new IntegerRangeValidator();
-		initialDelayValidator.setMin(1);
-		initialDelay.setValidators(initialDelayValidator);
 
 		// Repeat interval
-		repeatInterval = new IntegerItem();
-		repeatInterval.setName("repeatInterval");
-		repeatInterval.setTitle(I18N.getMessage("repeatinterval"));
+		repeatInterval = ItemFactory.newValidateIntegerItem("repeatInterval", "repeatinterval", null, 1, null);
 		repeatInterval.setDefaultValue(new Integer(Long.toString(task.getScheduling().getInterval())));
 		repeatInterval.setVisible(simplePolicy);
 		repeatInterval.addChangedHandler(changedHandler);
 		repeatInterval.setHint(I18N.getMessage("seconds").toLowerCase());
 		repeatInterval.setRequired(true);
-		IntegerRangeValidator repeatIntervalValidator = new IntegerRangeValidator();
-		repeatIntervalValidator.setMin(1);
-		initialDelay.setValidators(repeatIntervalValidator);
 
 		// Seconds
-		seconds = new TextItem();
-		seconds.setName("seconds");
-		seconds.setTitle(I18N.getMessage("seconds"));
+		seconds = ItemFactory.newTextItem("seconds", "seconds", null);
 		seconds.setDefaultValue(task.getScheduling().getSeconds());
 		seconds.setVisible(!simplePolicy);
 		seconds.addChangedHandler(changedHandler);
@@ -157,9 +140,7 @@ public class SchedulingPanel extends VLayout {
 		seconds.setHint(I18N.getMessage("schedulingsechint"));
 
 		// Minutes
-		minutes = new TextItem();
-		minutes.setName("minutes");
-		minutes.setTitle(I18N.getMessage("minutes"));
+		minutes = ItemFactory.newTextItem("minutes", "minutes", null);
 		minutes.setDefaultValue(task.getScheduling().getMinutes());
 		minutes.setVisible(!simplePolicy);
 		minutes.addChangedHandler(changedHandler);
@@ -167,9 +148,7 @@ public class SchedulingPanel extends VLayout {
 		minutes.setHint(I18N.getMessage("schedulingsechint"));
 
 		// Hours
-		hours = new TextItem();
-		hours.setName("hours");
-		hours.setTitle(I18N.getMessage("hours"));
+		hours = ItemFactory.newTextItem("hours", "hours", null);
 		hours.setDefaultValue(task.getScheduling().getHours());
 		hours.setVisible(!simplePolicy);
 		hours.addChangedHandler(changedHandler);
@@ -177,9 +156,7 @@ public class SchedulingPanel extends VLayout {
 		hours.setHint(I18N.getMessage("schedulinghourshint"));
 
 		// Day of month
-		dayMonth = new TextItem();
-		dayMonth.setName("dayMonth");
-		dayMonth.setTitle(I18N.getMessage("daymonth"));
+		dayMonth = ItemFactory.newTextItem("dayMonth", "daymonth", null);
 		dayMonth.setDefaultValue(task.getScheduling().getDayOfMonth());
 		dayMonth.setVisible(!simplePolicy);
 		dayMonth.addChangedHandler(changedHandler);
@@ -187,9 +164,7 @@ public class SchedulingPanel extends VLayout {
 		dayMonth.setHint(I18N.getMessage("schedulingdaymonthhint"));
 
 		// Month
-		month = new TextItem();
-		month.setName("month");
-		month.setTitle(I18N.getMessage("month"));
+		month = ItemFactory.newTextItem("month", "month", null);
 		month.setDefaultValue(task.getScheduling().getMonth());
 		month.setVisible(!simplePolicy);
 		month.addChangedHandler(changedHandler);
@@ -197,9 +172,7 @@ public class SchedulingPanel extends VLayout {
 		month.setHint(I18N.getMessage("schedulingmonthhint"));
 
 		// Day of week
-		dayWeek = new TextItem();
-		dayWeek.setName("dayWeek");
-		dayWeek.setTitle(I18N.getMessage("dayweek"));
+		dayWeek = ItemFactory.newTextItem("dayWeek", "dayweek", null);
 		dayWeek.setDefaultValue(task.getScheduling().getDayOfWeek());
 		dayWeek.setVisible(!simplePolicy);
 		dayWeek.addChangedHandler(changedHandler);

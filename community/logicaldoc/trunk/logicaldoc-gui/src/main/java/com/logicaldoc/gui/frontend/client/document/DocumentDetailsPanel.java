@@ -6,6 +6,7 @@ import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Side;
@@ -83,7 +84,8 @@ public class DocumentDetailsPanel extends VLayout {
 				onSave();
 			}
 		});
-		TextItem versionComment = new TextItem("versionComment", I18N.getMessage("versioncomment"));
+		
+		TextItem versionComment = ItemFactory.newTextItem("versionComment", "versioncomment", null);
 		versionComment.setWidth(300);
 		saveForm.setItems(versionComment);
 		savePanel.addMember(saveButton);

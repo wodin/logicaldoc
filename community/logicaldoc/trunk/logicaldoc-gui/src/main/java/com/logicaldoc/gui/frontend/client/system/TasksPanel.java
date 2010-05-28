@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUITask;
 import com.logicaldoc.gui.common.client.data.TasksDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
@@ -20,7 +21,6 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
-import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -334,15 +334,11 @@ public class TasksPanel extends VLayout {
 		toolStrip.addButton(refreshnow);
 
 		toolStrip.addSeparator();
-		final IntegerItem delay = new IntegerItem();
-		delay.setName("delay");
+		final IntegerItem delay = ItemFactory.newValidateIntegerItem("delay", "", null, 1, null);
 		delay.setHint(I18N.getMessage("seconds").toLowerCase());
 		delay.setShowTitle(false);
 		delay.setDefaultValue(10);
 		delay.setWidth(40);
-		IntegerRangeValidator intValidator = new IntegerRangeValidator();
-		intValidator.setMin(1);
-		delay.setValidators(intValidator);
 
 		ToolStripButton refresh = new ToolStripButton();
 		refresh.setTitle(I18N.getMessage("refresheach"));

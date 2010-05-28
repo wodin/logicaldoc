@@ -6,6 +6,7 @@ import java.util.List;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.data.TagsDS;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -60,8 +61,7 @@ public class TagsForm extends VLayout {
 		List<FormItem> items = new ArrayList<FormItem>();
 		String str = "abcdefghijklmnopqrstuvwxyz";
 		for (int i = 0; i < str.length(); i++) {
-			final StaticTextItem item = new StaticTextItem();
-			item.setValue(("" + str.charAt(i)).toUpperCase());
+			final StaticTextItem item = ItemFactory.newStaticTextItem("", "", ("" + str.charAt(i)).toUpperCase());
 			item.setShowTitle(false);
 			item.addClickHandler(new ClickHandler() {
 				@Override
@@ -84,7 +84,7 @@ public class TagsForm extends VLayout {
 			}
 		});
 
-		TextItem otherChar = new TextItem("otherchar", I18N.getMessage("otherchar"));
+		TextItem otherChar = ItemFactory.newTextItem("otherchar", "otherchar", null);
 		otherChar.setRequired(true);
 		otherChar.setLength(1);
 		otherChar.setWidth(50);
@@ -153,7 +153,7 @@ public class TagsForm extends VLayout {
 	}
 
 	/**
-	 * Launches the search for one tag 
+	 * Launches the search for one tag
 	 */
 	public static void searchTag(String word) {
 		MainPanel.get().selectSearchTab();

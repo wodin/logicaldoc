@@ -2,13 +2,13 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import java.util.Map;
 
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
+import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -56,27 +56,21 @@ public class GroupPropertiesPanel extends HLayout {
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.TOP);
 
-		TextItem id = new TextItem();
-		id.setTitle(I18N.getMessage("id"));
+		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(group.getId()));
 		id.setDisabled(true);
-		id.setValue(group.getId());
 
-		TextItem name = new TextItem("name");
-		name.setTitle(I18N.getMessage("name"));
-		name.setValue(group.getName());
+		TextItem name = ItemFactory.newSimpleTextItem("name", "name", group.getName());
 		name.setRequired(true);
 		name.setDisabled(readonly || group.getId() != 0);
 		if (!readonly)
 			name.addChangedHandler(changedHandler);
 
-		TextItem description = new TextItem("description");
-		description.setTitle(I18N.getMessage("description"));
-		description.setValue(group.getDescription());
+		TextItem description = ItemFactory.newTextItem("description", "description", group.getDescription());
 		description.setDisabled(readonly);
 		if (!readonly)
 			description.addChangedHandler(changedHandler);
 
-		ComboBoxItem inherit = ItemFactory.newGroupSelector("inherit", I18N.getMessage("inheritgroup"));
+		ComboBoxItem inherit = ItemFactory.newGroupSelector("inherit", "inheritgroup");
 		inherit.setVisible(!readonly);
 		if (!readonly)
 			inherit.addChangedHandler(changedHandler);

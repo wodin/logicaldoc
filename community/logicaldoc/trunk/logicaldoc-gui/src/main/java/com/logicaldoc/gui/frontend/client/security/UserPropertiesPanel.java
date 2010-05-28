@@ -67,19 +67,18 @@ public class UserPropertiesPanel extends HLayout {
 
 		if (contains(form1))
 			removeChild(form1);
+
 		form1 = new DynamicForm();
 		form1.setNumCols(3);
 		form1.setValuesManager(vm);
+		form1.setWrapItemTitles(false);
 		form1.setTitleOrientation(TitleOrientation.TOP);
 
-		TextItem id = new TextItem();
-		id.setTitle(I18N.getMessage("id"));
+		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(user.getId()));
 		id.setDisabled(true);
-		id.setValue(user.getId());
+		id.setWrap(false);
 
-		TextItem username = new TextItem("username");
-		username.setTitle(I18N.getMessage("username"));
-		username.setValue(user.getUserName());
+		TextItem username = ItemFactory.newSimpleTextItem("username", "username", user.getUserName());
 		username.setRequired(true);
 		username.setDisabled(readonly || user.getId() != 0);
 		if (!readonly)
@@ -99,46 +98,34 @@ public class UserPropertiesPanel extends HLayout {
 			enabled.addChangedHandler(changedHandler);
 		}
 
-		TextItem firstname = new TextItem("firstname");
-		firstname.setTitle(I18N.getMessage("firstname"));
-		firstname.setValue(user.getFirstName());
+		TextItem firstname = ItemFactory.newTextItem("firstname", "firstname", user.getFirstName());
 		firstname.setRequired(true);
 		firstname.setDisabled(readonly);
 		if (!readonly)
 			firstname.addChangedHandler(changedHandler);
 
-		TextItem name = new TextItem("name");
-		name.setTitle(I18N.getMessage("lastname"));
-		name.setValue(user.getName());
+		TextItem name = ItemFactory.newTextItem("name", "lastname", user.getName());
 		name.setRequired(true);
 		name.setDisabled(readonly);
 		if (!readonly)
 			name.addChangedHandler(changedHandler);
 
-		TextItem address = new TextItem("address");
-		address.setTitle(I18N.getMessage("address"));
-		address.setValue(user.getAddress());
+		TextItem address = ItemFactory.newTextItem("address", "address", user.getAddress());
 		address.setDisabled(readonly);
 		if (!readonly)
 			address.addChangedHandler(changedHandler);
 
-		TextItem postalcode = new TextItem("postalcode");
-		postalcode.setTitle(I18N.getMessage("postalcode"));
-		postalcode.setValue(user.getPostalCode());
+		TextItem postalcode = ItemFactory.newTextItem("postalcode", "postalcode", user.getPostalCode());
 		postalcode.setDisabled(readonly);
 		if (!readonly)
 			postalcode.addChangedHandler(changedHandler);
 
-		TextItem city = new TextItem("city");
-		city.setTitle(I18N.getMessage("city"));
-		city.setValue(user.getCity());
+		TextItem city = ItemFactory.newTextItem("city", "city", user.getCity());
 		city.setDisabled(readonly);
 		if (!readonly)
 			city.addChangedHandler(changedHandler);
 
-		TextItem country = new TextItem("country");
-		country.setTitle(I18N.getMessage("country"));
-		country.setValue(user.getCountry());
+		TextItem country = ItemFactory.newTextItem("country", "country", user.getCountry());
 		country.setDisabled(readonly);
 		if (!readonly)
 			country.addChangedHandler(changedHandler);
@@ -150,28 +137,22 @@ public class UserPropertiesPanel extends HLayout {
 		if (!readonly)
 			language.addChangedHandler(changedHandler);
 
-		TextItem state = new TextItem("state");
-		state.setTitle(I18N.getMessage("state"));
-		state.setValue(user.getState());
+		TextItem state = ItemFactory.newTextItem("state", "state", user.getState());
 		state.setDisabled(readonly);
 		if (!readonly)
 			state.addChangedHandler(changedHandler);
 
-		TextItem phone = new TextItem("phone");
-		phone.setTitle(I18N.getMessage("phone"));
-		phone.setValue(user.getPhone());
+		TextItem phone = ItemFactory.newTextItem("phone", "phone", user.getPhone());
 		phone.setDisabled(readonly);
 		if (!readonly)
 			phone.addChangedHandler(changedHandler);
 
-		TextItem cell = new TextItem("cell");
-		cell.setTitle(I18N.getMessage("cell"));
-		cell.setValue(user.getCell());
+		TextItem cell = ItemFactory.newTextItem("cell", "cell", user.getCell());
 		cell.setDisabled(readonly);
 		if (!readonly)
 			cell.addChangedHandler(changedHandler);
 
-		TextItem email = ItemFactory.newEmailItem("email", I18N.getMessage("email"), false);
+		TextItem email = ItemFactory.newEmailItem("email", "email", false);
 		email.setRequired(true);
 		email.setDisabled(readonly);
 		email.setValue(user.getEmail());
@@ -214,12 +195,9 @@ public class UserPropertiesPanel extends HLayout {
 		FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
 		int i = 0;
 		for (GUIGroup grp : user.getGroups()) {
-			final StaticTextItem gp = new StaticTextItem();
-			gp.setValue(grp.getName());
-			gp.setName("group" + i++);
+			final StaticTextItem gp = ItemFactory.newStaticTextItem("group" + i++, "group", grp.getName());
 			if (!("admin".equals(user.getUserName()) && "admin".equals(grp.getName())))
 				gp.setIcons(icon);
-			gp.setTitle(I18N.getMessage("group"));
 			gp.setWrap(false);
 			gp.addIconClickHandler(new IconClickHandler() {
 				public void onIconClick(IconClickEvent event) {

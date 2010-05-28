@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
@@ -81,22 +82,22 @@ public class PostWindow extends Window {
 			public void onClick(ClickEvent event) {
 				vm.validate();
 				if (!vm.hasErrors()) {
-					documentService.startDiscussion(Session.get().getSid(), docId,
-							vm.getValueAsString("title"), vm.getValueAsString("message"), new AsyncCallback<Long>() {
+					documentService.startDiscussion(Session.get().getSid(), docId, vm.getValueAsString("title"), vm
+							.getValueAsString("message"), new AsyncCallback<Long>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-									destroy();
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+							destroy();
+						}
 
-								@Override
-								public void onSuccess(Long result) {
-									PostWindow.this.discussionPanel.onDiscussionAdded(result.longValue(), vm
-											.getValueAsString("title"));
-									destroy();
-								}
-							});
+						@Override
+						public void onSuccess(Long result) {
+							PostWindow.this.discussionPanel.onDiscussionAdded(result.longValue(), vm
+									.getValueAsString("title"));
+							destroy();
+						}
+					});
 				}
 			}
 		});
@@ -129,11 +130,8 @@ public class PostWindow extends Window {
 		postForm.setWidth(350);
 		postForm.setMargin(5);
 
-		TextItem title = new TextItem();
-		title.setName("title");
-		title.setTitle(I18N.getMessage("title"));
+		TextItem title = ItemFactory.newTextItem("title", "title", postTitle);
 		title.setRequired(true);
-		title.setValue(postTitle);
 		title.setWidth(300);
 
 		TextAreaItem message = new TextAreaItem();
