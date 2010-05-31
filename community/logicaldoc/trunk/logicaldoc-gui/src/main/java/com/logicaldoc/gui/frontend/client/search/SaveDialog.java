@@ -2,9 +2,9 @@ package com.logicaldoc.gui.frontend.client.search;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.validators.SimpleTextValidator;
@@ -33,7 +33,7 @@ public class SaveDialog extends Window {
 		super();
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.getMessage("savesearch"));
+		setTitle(I18N.message("savesearch"));
 		setWidth(350);
 		setHeight(100);
 		setCanDragResize(true);
@@ -58,7 +58,7 @@ public class SaveDialog extends Window {
 		description.setWidth(300);
 
 		ButtonItem save = new ButtonItem();
-		save.setTitle(I18N.getMessage("save"));
+		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();
@@ -76,13 +76,13 @@ public class SaveDialog extends Window {
 						@Override
 						public void onSuccess(Boolean b) {
 							if (!b)
-								SC.warn(I18N.getMessage("duplicateelement"));
+								SC.warn(I18N.message("duplicateelement"));
 							else {
 								SavedSearchesPanel.get().addEntry(
 										vm.getValueAsString("name"),
 										vm.getValueAsString("description"),
 										options.getType() == GUISearchOptions.TYPE_FULLTEXT ? I18N
-												.getMessage("fulltext") : I18N.getMessage("parametric"));
+												.message("fulltext") : I18N.message("parametric"));
 								destroy();
 							}
 						}

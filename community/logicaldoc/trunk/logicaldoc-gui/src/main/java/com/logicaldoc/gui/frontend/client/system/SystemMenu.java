@@ -2,9 +2,9 @@ package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
@@ -27,27 +27,27 @@ public class SystemMenu extends VLayout {
 		setMargin(10);
 		setMembersMargin(5);
 
-		Button general = new Button(I18N.getMessage("general"));
+		Button general = new Button(I18N.message("general"));
 		general.setWidth100();
 		general.setHeight(25);
 
-		Button lastChanges = new Button(I18N.getMessage("lastchanges"));
+		Button lastChanges = new Button(I18N.message("lastchanges"));
 		lastChanges.setWidth100();
 		lastChanges.setHeight(25);
 
-		Button log = new Button(I18N.getMessage("log"));
+		Button log = new Button(I18N.message("log"));
 		log.setWidth100();
 		log.setHeight(25);
 
-		Button tasks = new Button(I18N.getMessage("scheduledtasks"));
+		Button tasks = new Button(I18N.message("scheduledtasks"));
 		tasks.setWidth100();
 		tasks.setHeight(25);
 
-		Button searchAndIndexing = new Button(I18N.getMessage("searchandindexing"));
+		Button searchAndIndexing = new Button(I18N.message("searchandindexing"));
 		searchAndIndexing.setWidth100();
 		searchAndIndexing.setHeight(25);
 		
-		Button folders = new Button(I18N.getMessage("folders"));
+		Button folders = new Button(I18N.message("folders"));
 		folders.setWidth100();
 		folders.setHeight(25);
 

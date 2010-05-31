@@ -23,8 +23,6 @@ public final class Constants {
 
 	public static final long DOCUMENTS_FOLDERID = 5;
 
-	public static final String FORMAT_DATE = "date";
-
 	public static final String PERMISSION_DELETE = "delete";
 
 	public static final String PERMISSION_IMMUTABLE = "manageImmutability";

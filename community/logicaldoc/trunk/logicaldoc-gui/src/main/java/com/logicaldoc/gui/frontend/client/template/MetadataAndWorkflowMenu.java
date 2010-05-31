@@ -1,6 +1,6 @@
 package com.logicaldoc.gui.frontend.client.template;
 
-import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -19,7 +19,7 @@ public class MetadataAndWorkflowMenu extends VLayout {
 		setMargin(10);
 		setMembersMargin(5);
 
-		Button templates = new Button(I18N.getMessage("templates"));
+		Button templates = new Button(I18N.message("templates"));
 		templates.setWidth100();
 		templates.setHeight(25);
 

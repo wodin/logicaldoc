@@ -9,11 +9,11 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FolderSelector;
@@ -90,7 +90,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			}
 		});
 
-		TextItem expression = ItemFactory.newTextItem("expression", "expression", I18N.getMessage("search") + "...");
+		TextItem expression = ItemFactory.newTextItem("expression", "expression", I18N.message("search") + "...");
 		expression.setColSpan(2);
 		expression.setRequired(true);
 		expression.setIcons(searchPicker);
@@ -107,7 +107,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		expression.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if ((I18N.getMessage("search") + "...").equals(event.getItem().getValue())) {
+				if ((I18N.message("search") + "...").equals(event.getItem().getValue())) {
 					event.getItem().setValue("");
 				}
 			}
@@ -128,12 +128,12 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 		SelectItem dateSelector = new SelectItem();
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put(CREATEDON, I18N.getMessage(CREATEDON));
-		opts.put(PUBLISHEDON, I18N.getMessage(PUBLISHEDON));
-		opts.put(DATE, I18N.getMessage(DATE));
+		opts.put(CREATEDON, I18N.message(CREATEDON));
+		opts.put(PUBLISHEDON, I18N.message(PUBLISHEDON));
+		opts.put(DATE, I18N.message(DATE));
 		dateSelector.setValueMap(opts);
 		dateSelector.setName("dateSelector");
-		dateSelector.setTitle(I18N.getMessage(DATE));
+		dateSelector.setTitle(I18N.message(DATE));
 		dateSelector.setDefaultValue(CREATEDON);
 		dateSelector.setWidth(80);
 
@@ -145,7 +145,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		searchin.setColSpan(3);
 		searchin.setEndRow(true);
 
-		SelectItem template = new SelectItem("template", I18N.getMessage("template"));
+		SelectItem template = new SelectItem("template", I18N.message("template"));
 		template.setDisplayField("name");
 		template.setValueField("id");
 		template.setPickListWidth(250);
@@ -164,7 +164,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		folder = new FolderSelector();
 		folder.setColSpan(3);
 
-		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.getMessage("searchinsubfolders"));
+		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders"));
 		subfolders.setColSpan(3);
 		subfolders.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
@@ -285,24 +285,24 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 		final List<FormItem> items = new ArrayList<FormItem>();
 
-		CheckboxItem titleFlag = new CheckboxItem("titleFlag", I18N.getMessage("title"));
+		CheckboxItem titleFlag = new CheckboxItem("titleFlag", I18N.message("title"));
 		titleFlag.setValue(true);
 		items.add(titleFlag);
-		CheckboxItem contentFlag = new CheckboxItem("contentFlag", I18N.getMessage("content"));
+		CheckboxItem contentFlag = new CheckboxItem("contentFlag", I18N.message("content"));
 		contentFlag.setValue(true);
 		items.add(contentFlag);
-		CheckboxItem tagsFlag = new CheckboxItem("tagsFlag", I18N.getMessage("tags"));
+		CheckboxItem tagsFlag = new CheckboxItem("tagsFlag", I18N.message("tags"));
 		tagsFlag.setValue(true);
 		items.add(tagsFlag);
-		CheckboxItem customidFlag = new CheckboxItem("customidFlag", I18N.getMessage("customid"));
+		CheckboxItem customidFlag = new CheckboxItem("customidFlag", I18N.message("customid"));
 		items.add(customidFlag);
-		CheckboxItem sourceFlag = new CheckboxItem("sourceFlag", I18N.getMessage("source"));
+		CheckboxItem sourceFlag = new CheckboxItem("sourceFlag", I18N.message("source"));
 		items.add(sourceFlag);
-		CheckboxItem coverageFlag = new CheckboxItem("coverageFlag", I18N.getMessage("coverage"));
+		CheckboxItem coverageFlag = new CheckboxItem("coverageFlag", I18N.message("coverage"));
 		items.add(coverageFlag);
-		CheckboxItem authorFlag = new CheckboxItem("authorFlag", I18N.getMessage("author"));
+		CheckboxItem authorFlag = new CheckboxItem("authorFlag", I18N.message("author"));
 		items.add(authorFlag);
-		CheckboxItem typeFlag = new CheckboxItem("typeFlag", I18N.getMessage("type"));
+		CheckboxItem typeFlag = new CheckboxItem("typeFlag", I18N.message("type"));
 		items.add(typeFlag);
 
 		if (templateId == null || templateId.longValue() <= 0) {

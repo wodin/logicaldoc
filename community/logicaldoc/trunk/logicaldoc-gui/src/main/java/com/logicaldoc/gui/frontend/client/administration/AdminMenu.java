@@ -1,6 +1,6 @@
 package com.logicaldoc.gui.frontend.client.administration;
 
-import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.security.SecurityMenu;
 import com.logicaldoc.gui.frontend.client.settings.SettingsMenu;
 import com.logicaldoc.gui.frontend.client.system.SystemMenu;
@@ -29,22 +29,22 @@ public class AdminMenu extends SectionStack {
 		setVisibilityMode(VisibilityMode.MUTEX);
 		setWidth100();
 
-		SectionStackSection systemSection = new SectionStackSection(I18N.getMessage("system"));
+		SectionStackSection systemSection = new SectionStackSection(I18N.message("system"));
 		systemSection.setExpanded(true);
 		systemSection.addItem(new SystemMenu());
 		addSection(systemSection);
 
-		SectionStackSection securitySection = new SectionStackSection(I18N.getMessage("security"));
+		SectionStackSection securitySection = new SectionStackSection(I18N.message("security"));
 		securitySection.setExpanded(false);
 		securitySection.addItem(new SecurityMenu());
 		addSection(securitySection);
 		
-		SectionStackSection metadataAndWorkflowSection = new SectionStackSection(I18N.getMessage("metadataandworkflow"));
+		SectionStackSection metadataAndWorkflowSection = new SectionStackSection(I18N.message("metadataandworkflow"));
 		metadataAndWorkflowSection.setExpanded(false);
 		metadataAndWorkflowSection.addItem(new MetadataAndWorkflowMenu());
 		addSection(metadataAndWorkflowSection);
 
-		SectionStackSection sysConfSection = new SectionStackSection(I18N.getMessage("settings"));
+		SectionStackSection sysConfSection = new SectionStackSection(I18N.message("settings"));
 		sysConfSection.setExpanded(false);
 		sysConfSection.addItem(new SettingsMenu());
 		addSection(sysConfSection);

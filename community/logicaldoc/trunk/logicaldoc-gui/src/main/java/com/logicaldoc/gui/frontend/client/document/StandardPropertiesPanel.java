@@ -6,9 +6,9 @@ import java.util.Map;
 
 import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.TagsDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
@@ -59,7 +59,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		container.setMembersMargin(5);
 		addMember(container);
 
-		path = new Label(I18N.getMessage("path") + ": " + document.getPathExtended());
+		path = new Label(I18N.message("path") + ": " + document.getPathExtended());
 		path.setWidth100();
 		path.setHeight(15);
 
@@ -137,7 +137,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		List<FormItem> items = new ArrayList<FormItem>();
 		final ComboBoxItem tagItem = new ComboBoxItem("tag");
-		tagItem.setTitle(I18N.getMessage("tag"));
+		tagItem.setTitle(I18N.message("tag"));
 		tagItem.setPickListWidth(250);
 		tagItem.setOptionDataSource(TagsDS.getInstance());
 		tagItem.addKeyPressHandler(new KeyPressHandler() {

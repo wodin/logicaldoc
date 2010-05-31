@@ -1,11 +1,11 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.user.client.Window;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.DocumentHistoryDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -29,17 +29,17 @@ public class HistoryPanel extends DocumentDetailTab {
 	public HistoryPanel(final GUIDocument document) {
 		super(document, null);
 
-		ListGridField user = new ListGridField("user", I18N.getMessage("user"), 100);
-		ListGridField event = new ListGridField("event", I18N.getMessage("event"), 200);
-		ListGridField version = new ListGridField("version", I18N.getMessage("version"), 70);
-		ListGridField date = new ListGridField("date", I18N.getMessage("date"), 110);
+		ListGridField user = new ListGridField("user", I18N.message("user"), 100);
+		ListGridField event = new ListGridField("event", I18N.message("event"), 200);
+		ListGridField version = new ListGridField("version", I18N.message("version"), 70);
+		ListGridField date = new ListGridField("date", I18N.message("date"), 110);
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
-		ListGridField comment = new ListGridField("comment", I18N.getMessage("comment"));
-		ListGridField title = new ListGridField("title", I18N.getMessage("title"));
-		ListGridField path = new ListGridField("path", I18N.getMessage("path"));
-		ListGridField sid = new ListGridField("sid", I18N.getMessage("sid"));
+		ListGridField comment = new ListGridField("comment", I18N.message("comment"));
+		ListGridField title = new ListGridField("title", I18N.message("title"));
+		ListGridField path = new ListGridField("path", I18N.message("path"));
+		ListGridField sid = new ListGridField("sid", I18N.message("sid"));
 
 		listGrid = new ListGrid();
 		listGrid.setCanFreezeFields(true);

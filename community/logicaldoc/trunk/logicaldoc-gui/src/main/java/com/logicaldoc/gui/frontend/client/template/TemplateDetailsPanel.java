@@ -2,9 +2,9 @@ package com.logicaldoc.gui.frontend.client.template;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.TemplateService;
 import com.logicaldoc.gui.frontend.client.services.TemplateServiceAsync;
@@ -54,7 +54,7 @@ public class TemplateDetailsPanel extends VLayout {
 		savePanel.setVisible(false);
 		savePanel.setStyleName("warn");
 		savePanel.setWidth100();
-		Button saveButton = new Button(I18N.getMessage("save"));
+		Button saveButton = new Button(I18N.message("save"));
 		saveButton.setMargin(2);
 		saveButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -71,7 +71,7 @@ public class TemplateDetailsPanel extends VLayout {
 		tabSet.setWidth100();
 		tabSet.setHeight100();
 
-		Tab propertiesTab = new Tab(I18N.getMessage("properties"));
+		Tab propertiesTab = new Tab(I18N.message("properties"));
 		propertiesTabPanel = new HLayout();
 		propertiesTabPanel.setWidth100();
 		propertiesTabPanel.setHeight100();

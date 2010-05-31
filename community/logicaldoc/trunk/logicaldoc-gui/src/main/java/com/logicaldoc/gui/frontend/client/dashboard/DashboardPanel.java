@@ -1,6 +1,6 @@
 package com.logicaldoc.gui.frontend.client.dashboard;
 
-import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -19,10 +19,10 @@ public class DashboardPanel extends VLayout {
 	private DashboardPanel() {
 		TabSet tabSet = new TabSet();
 
-		Tab userTab = new Tab(I18N.getMessage("user"));
+		Tab userTab = new Tab(I18N.message("user"));
 		userTab.setPane(new UserDashboard());
 
-		Tab workflowTab = new Tab(I18N.getMessage("workflow"));
+		Tab workflowTab = new Tab(I18N.message("workflow"));
 		workflowTab.setPane(new FeatureDisabled());
 
 		tabSet.setTabs(userTab, workflowTab);

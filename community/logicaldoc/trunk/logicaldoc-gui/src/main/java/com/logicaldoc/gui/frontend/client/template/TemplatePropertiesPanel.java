@@ -6,10 +6,10 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -87,14 +87,14 @@ public class TemplatePropertiesPanel extends HLayout {
 		attributesList = new ListGrid();
 		attributesList.setWidth(150);
 		attributesList.setHeight(150);
-		attributesList.setEmptyMessage(I18N.getMessage("norecords"));
+		attributesList.setEmptyMessage(I18N.message("norecords"));
 		attributesList.setCanReorderRecords(false);
 		attributesList.setCanSort(false);
 		attributesList.setCanFreezeFields(false);
 		attributesList.setCanGroupBy(false);
 		attributesList.setLeaveScrollbarGap(false);
 		attributesList.setShowHeader(true);
-		ListGridField name = new ListGridField("name", I18N.getMessage("attributes"));
+		ListGridField name = new ListGridField("name", I18N.message("attributes"));
 		attributesList.setFields(name);
 		if (template.getId() != 0)
 			fillAttributesList(template);
@@ -146,7 +146,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(template.getId()));
 		id.setDisabled(true);
 
-		TextItem name = ItemFactory.newSimpleTextItem("name", I18N.getMessage("name"), template.getName());
+		TextItem name = ItemFactory.newSimpleTextItem("name", I18N.message("name"), template.getName());
 		name.setRequired(true);
 		name.setDisabled(readonly || template.getId() != 0);
 		if (!readonly)
@@ -269,7 +269,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		form2.setTitleOrientation(TitleOrientation.LEFT);
 
 		// Attribute Name
-		final TextItem attributeName = ItemFactory.newSimpleTextItem("attributeName", I18N.getMessage("attributename"),
+		final TextItem attributeName = ItemFactory.newSimpleTextItem("attributeName", I18N.message("attributename"),
 				null);
 		attributeName.setRequired(true);
 		PickerIcon cleanPicker = new PickerIcon(PickerIcon.CLEAR, new FormItemClickHandler() {
@@ -283,18 +283,18 @@ public class TemplatePropertiesPanel extends HLayout {
 		// Mandatory
 		final CheckboxItem mandatory = new CheckboxItem();
 		mandatory.setName("mandatory");
-		mandatory.setTitle(I18N.getMessage("mandatory"));
+		mandatory.setTitle(I18N.message("mandatory"));
 		mandatory.setRedrawOnChange(true);
 		mandatory.setWidth(50);
 		mandatory.setDefaultValue(false);
 
 		// Type
-		final SelectItem type = new SelectItem("type", I18N.getMessage("type"));
+		final SelectItem type = new SelectItem("type", I18N.message("type"));
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put("" + GUIExtendedAttribute.TYPE_STRING, I18N.getMessage("string"));
-		map.put("" + GUIExtendedAttribute.TYPE_INT, I18N.getMessage("integer"));
-		map.put("" + GUIExtendedAttribute.TYPE_DOUBLE, I18N.getMessage("decimal"));
-		map.put("" + GUIExtendedAttribute.TYPE_DATE, I18N.getMessage("date"));
+		map.put("" + GUIExtendedAttribute.TYPE_STRING, I18N.message("string"));
+		map.put("" + GUIExtendedAttribute.TYPE_INT, I18N.message("integer"));
+		map.put("" + GUIExtendedAttribute.TYPE_DOUBLE, I18N.message("decimal"));
+		map.put("" + GUIExtendedAttribute.TYPE_DATE, I18N.message("date"));
 		type.setValueMap(map);
 		type.setWrapTitle(false);
 		type.setDefaultValue("" + GUIExtendedAttribute.TYPE_STRING);
@@ -302,7 +302,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		HLayout buttons = new HLayout();
 
 		IButton addUpdate = new IButton();
-		addUpdate.setTitle(I18N.getMessage("addupdate"));
+		addUpdate.setTitle(I18N.message("addupdate"));
 		addUpdate.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (attributeName.getValue() != null && !((String) attributeName.getValue()).trim().isEmpty()) {
@@ -328,7 +328,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		});
 
 		IButton restore = new IButton();
-		restore.setTitle(I18N.getMessage("restore"));
+		restore.setTitle(I18N.message("restore"));
 		restore.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				restore();

@@ -2,7 +2,7 @@ package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
 
-import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 
 public class GUIParameter implements Serializable {
 
@@ -49,8 +49,8 @@ public class GUIParameter implements Serializable {
 
 	public String toString() {
 		if (label != null)
-			return I18N.getMessage(label);
+			return I18N.message(label);
 		else
-			return I18N.getMessage(name);
+			return I18N.message(name);
 	}
 }

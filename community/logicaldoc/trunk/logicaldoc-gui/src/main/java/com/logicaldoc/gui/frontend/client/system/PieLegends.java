@@ -2,9 +2,9 @@ package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -92,10 +92,10 @@ public class PieLegends extends HLayout {
 				item.setValue(Util.formatSize(Long.parseLong(parameter.getValue())) + " ( "
 						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
 			else if (type == STATS_DOCUMENTS)
-				item.setValue(parameter.getValue() + " " + I18N.getMessage("documents").toLowerCase() + " " + "( "
+				item.setValue(parameter.getValue() + " " + I18N.message("documents").toLowerCase() + " " + "( "
 						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
 			else if (type == STATS_FOLDERS)
-				item.setValue(parameter.getValue() + " " + I18N.getMessage("folders").toLowerCase() + " " + " ( "
+				item.setValue(parameter.getValue() + " " + I18N.message("folders").toLowerCase() + " " + " ( "
 						+ Util.formatPercentage((Double.parseDouble(parameter.getValue()) * 100 / count), 2) + " )");
 
 			item.setRequired(true);
@@ -108,9 +108,9 @@ public class PieLegends extends HLayout {
 		if (type == STATS_REPOSITORY)
 			total.setValue(Util.formatSize(count));
 		else if (type == STATS_DOCUMENTS)
-			total.setValue((int) count + " " + I18N.getMessage("documents").toLowerCase());
+			total.setValue((int) count + " " + I18N.message("documents").toLowerCase());
 		else if (type == STATS_FOLDERS)
-			total.setValue((int) count + " " + I18N.getMessage("folders").toLowerCase());
+			total.setValue((int) count + " " + I18N.message("folders").toLowerCase());
 		total.setRequired(true);
 		total.setShouldSaveValue(false);
 		items[i] = total;

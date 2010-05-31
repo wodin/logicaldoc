@@ -2,10 +2,10 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.data.UsersDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
@@ -55,7 +55,7 @@ public class UsersPanel extends VLayout {
 
 	private Layout detailsContainer = new VLayout();
 
-	final static Canvas SELECT_USER = new HTMLPanel("&nbsp;" + I18N.getMessage("selectuser"));
+	final static Canvas SELECT_USER = new HTMLPanel("&nbsp;" + I18N.message("selectuser"));
 
 	private Canvas details = SELECT_USER;
 
@@ -72,22 +72,22 @@ public class UsersPanel extends VLayout {
 		ListGridField id = new ListGridField("id", 50);
 		id.setHidden(true);
 
-		ListGridField username = new ListGridField("username", I18N.getMessage("username"), 100);
+		ListGridField username = new ListGridField("username", I18N.message("username"), 100);
 		username.setCanFilter(true);
 
-		ListGridField name = new ListGridField("name", I18N.getMessage("lastname"), 100);
+		ListGridField name = new ListGridField("name", I18N.message("lastname"), 100);
 		name.setCanFilter(true);
 
-		ListGridField firstName = new ListGridField("firstName", I18N.getMessage("firstname"), 100);
+		ListGridField firstName = new ListGridField("firstName", I18N.message("firstname"), 100);
 		firstName.setCanFilter(true);
 
-		ListGridField phone = new ListGridField("phone", I18N.getMessage("phone"), 90);
+		ListGridField phone = new ListGridField("phone", I18N.message("phone"), 90);
 		phone.setCanFilter(true);
 
-		ListGridField cell = new ListGridField("cell", I18N.getMessage("cell"), 90);
+		ListGridField cell = new ListGridField("cell", I18N.message("cell"), 90);
 		cell.setCanFilter(true);
 
-		ListGridField email = new ListGridField("email", I18N.getMessage("email"), 200);
+		ListGridField email = new ListGridField("email", I18N.message("email"), 200);
 		email.setCanFilter(true);
 
 		ListGridField active = new ListGridField("active", " ", 24);
@@ -121,7 +121,7 @@ public class UsersPanel extends VLayout {
 		toolStrip.setWidth100();
 		toolStrip.addSpacer(2);
 		ToolStripButton add = new ToolStripButton();
-		add.setTitle(I18N.getMessage("adduser"));
+		add.setTitle(I18N.message("adduser"));
 		toolStrip.addButton(add);
 		add.addClickHandler(new ClickHandler() {
 			@Override
@@ -166,7 +166,7 @@ public class UsersPanel extends VLayout {
 		list.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				infoPanel.setMessage(I18N.getMessage("showusers", Integer.toString(list.getTotalRows())));
+				infoPanel.setMessage(I18N.message("showusers", Integer.toString(list.getTotalRows())));
 			}
 		});
 	}
@@ -217,10 +217,10 @@ public class UsersPanel extends VLayout {
 		final long id = Long.parseLong(record.getAttributeAsString("id"));
 
 		MenuItem delete = new MenuItem();
-		delete.setTitle(I18N.getMessage("ddelete"));
+		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new BooleanCallback() {
+				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
@@ -244,7 +244,7 @@ public class UsersPanel extends VLayout {
 		});
 
 		MenuItem password = new MenuItem();
-		password.setTitle(I18N.getMessage("changepassword"));
+		password.setTitle(I18N.message("changepassword"));
 		password.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				SetPassword dialog = new SetPassword(Long.parseLong(record.getAttributeAsString("id")));

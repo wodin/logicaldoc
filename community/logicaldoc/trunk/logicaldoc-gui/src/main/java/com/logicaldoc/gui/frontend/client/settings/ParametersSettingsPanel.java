@@ -4,9 +4,9 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
@@ -47,7 +47,7 @@ public class ParametersSettingsPanel extends VLayout {
 		tabs.setWidth(508);
 		tabs.setHeight(395);
 		Tab tab = new Tab();
-		tab.setTitle(I18N.getMessage("parameters"));
+		tab.setTitle(I18N.message("parameters"));
 		tabs.setTabs(tab);
 
 		DynamicForm form = new DynamicForm();
@@ -69,7 +69,7 @@ public class ParametersSettingsPanel extends VLayout {
 		form.setItems(items);
 
 		IButton save = new IButton();
-		save.setTitle(I18N.getMessage("save"));
+		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				final Map<String, Object> values = vm.getValues();
@@ -89,7 +89,7 @@ public class ParametersSettingsPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void ret) {
-									Log.info(I18N.getMessage("settingssaved"), null);
+									Log.info(I18N.message("settingssaved"), null);
 								}
 							});
 				}

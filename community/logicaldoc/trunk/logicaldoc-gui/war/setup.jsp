@@ -105,8 +105,7 @@ body {
 	document.getElementById('loadingMsg').innerHTML = 'Loading messages...';
 </script>
 		<script type="text/javascript">
-	document.write("<" + "script src='./i18n.jsp?locale=<%=locale%>&bundle=frontend'><" +  "/script>");
-	document.write("<" + "script src='./i18n.jsp?locale=<%=locale%>&bundle=format'><" +  "/script>");
+	document.write("<" + "script src='./i18n.jsp?locale=<%=locale%>&bundle=messages'><" +  "/script>");
 </script>
 		<!--include the nocache JS-->
 		<script type="text/javascript" src="setup/setup.nocache.js"></script>

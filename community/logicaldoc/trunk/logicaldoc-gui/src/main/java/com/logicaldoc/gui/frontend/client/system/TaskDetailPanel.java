@@ -2,9 +2,9 @@ package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITask;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
@@ -54,7 +54,7 @@ public class TaskDetailPanel extends VLayout {
 		setMembersMargin(10);
 
 		savePanel = new HLayout();
-		Button saveButton = new Button(I18N.getMessage("save"));
+		Button saveButton = new Button(I18N.message("save"));
 		saveButton.setMargin(2);
 		saveButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -69,13 +69,13 @@ public class TaskDetailPanel extends VLayout {
 		savePanel.setWidth100();
 		addMember(savePanel);
 
-		Tab schedulingTab = new Tab(I18N.getMessage("scheduling"));
+		Tab schedulingTab = new Tab(I18N.message("scheduling"));
 		schedulingTabPanel = new HLayout();
 		schedulingTabPanel.setWidth100();
 		schedulingTabPanel.setHeight100();
 		schedulingTab.setPane(schedulingTabPanel);
 
-		Tab logTab = new Tab(I18N.getMessage("log"));
+		Tab logTab = new Tab(I18N.message("log"));
 		logTabPanel = new HLayout();
 		logTabPanel.setWidth100();
 		logTabPanel.setHeight100();

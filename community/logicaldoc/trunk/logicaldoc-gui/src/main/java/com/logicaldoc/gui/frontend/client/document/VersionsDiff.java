@@ -5,10 +5,9 @@ import java.util.List;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.Window;
@@ -27,7 +26,7 @@ public class VersionsDiff extends Window {
 	public VersionsDiff(GUIVersion version1, GUIVersion version2) {
 		super();
 
-		setTitle(I18N.getMessage("compare") + " " + version1.getVersion() + " - " + version2.getVersion());
+		setTitle(I18N.message("compare") + " " + version1.getVersion() + " - " + version2.getVersion());
 		setWidth(400);
 		setHeight(300);
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.MAXIMIZE_BUTTON, HeaderControls.MINIMIZE_BUTTON,
@@ -38,37 +37,35 @@ public class VersionsDiff extends Window {
 
 		// Prepare the records, each one is related to a version's attribute
 		ArrayList<DiffRecord> records = new ArrayList<DiffRecord>();
-		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.getFormat(Constants.FORMAT_DATE));
-		records.add(new DiffRecord(I18N.getMessage("versiondate"), formatter.format(version1.getVersionDate()),
-				formatter.format(version2.getVersionDate())));
-		records
-				.add(new DiffRecord(I18N.getMessage("fileversion"), version1.getFileVersion(), version2
-						.getFileVersion()));
-		records.add(new DiffRecord(I18N.getMessage("username"), version1.getUsername(), version2.getUsername()));
-		records.add(new DiffRecord(I18N.getMessage("comment"), version1.getComment(), version2.getComment()));
-		records.add(new DiffRecord(I18N.getMessage("customid"), version1.getCustomId(), version2.getCustomId()));
-		records.add(new DiffRecord(I18N.getMessage("sourceid"), version1.getSourceId(), version2.getSourceId()));
-		records.add(new DiffRecord(I18N.getMessage("title"), version1.getTitle(), version2.getTitle()));
-		records.add(new DiffRecord(I18N.getMessage("language"), version1.getLanguage(), version2.getLanguage()));
-		records.add(new DiffRecord(I18N.getMessage("createdon"), formatter.format(version1.getCreation()), formatter
+		DateTimeFormat formatter = DateTimeFormat.getFormat(I18N.message("format_date"));
+		records.add(new DiffRecord(I18N.message("versiondate"), formatter.format(version1.getVersionDate()), formatter
+				.format(version2.getVersionDate())));
+		records.add(new DiffRecord(I18N.message("fileversion"), version1.getFileVersion(), version2.getFileVersion()));
+		records.add(new DiffRecord(I18N.message("username"), version1.getUsername(), version2.getUsername()));
+		records.add(new DiffRecord(I18N.message("comment"), version1.getComment(), version2.getComment()));
+		records.add(new DiffRecord(I18N.message("customid"), version1.getCustomId(), version2.getCustomId()));
+		records.add(new DiffRecord(I18N.message("sourceid"), version1.getSourceId(), version2.getSourceId()));
+		records.add(new DiffRecord(I18N.message("title"), version1.getTitle(), version2.getTitle()));
+		records.add(new DiffRecord(I18N.message("language"), version1.getLanguage(), version2.getLanguage()));
+		records.add(new DiffRecord(I18N.message("createdon"), formatter.format(version1.getCreation()), formatter
 				.format(version2.getCreation())));
-		records.add(new DiffRecord(I18N.getMessage("creator"), version1.getCreator(), version2.getCreator()));
-		records.add(new DiffRecord(I18N.getMessage("publishedon"), formatter.format(version1.getDate()), formatter
+		records.add(new DiffRecord(I18N.message("creator"), version1.getCreator(), version2.getCreator()));
+		records.add(new DiffRecord(I18N.message("publishedon"), formatter.format(version1.getDate()), formatter
 				.format(version2.getDate())));
-		records.add(new DiffRecord(I18N.getMessage("publisher"), version1.getPublisher(), version2.getPublisher()));
-		records.add(new DiffRecord(I18N.getMessage("source"), version1.getSource(), version2.getSource()));
-		records.add(new DiffRecord(I18N.getMessage("type"), version1.getSourceType(), version2.getSourceType()));
-		records.add(new DiffRecord(I18N.getMessage("author"), version1.getSourceAuthor(), version2.getSourceAuthor()));
-		records.add(new DiffRecord(I18N.getMessage("object"), version1.getObject(), version2.getObject()));
-		records.add(new DiffRecord(I18N.getMessage("coverage"), version1.getCoverage(), version2.getCoverage()));
-		records.add(new DiffRecord(I18N.getMessage("filename"), version1.getFileName(), version2.getFileName()));
-		records.add(new DiffRecord(I18N.getMessage("size"), Util.formatSize(version1.getSize()), Util
-				.formatSize(version2.getSize())));
-		records.add(new DiffRecord(I18N.getMessage("recipient"), version1.getRecipient(), version2.getRecipient()));
-		records.add(new DiffRecord(I18N.getMessage("folder"), version1.getFolder().getName(), version2.getFolder()
+		records.add(new DiffRecord(I18N.message("publisher"), version1.getPublisher(), version2.getPublisher()));
+		records.add(new DiffRecord(I18N.message("source"), version1.getSource(), version2.getSource()));
+		records.add(new DiffRecord(I18N.message("type"), version1.getSourceType(), version2.getSourceType()));
+		records.add(new DiffRecord(I18N.message("author"), version1.getSourceAuthor(), version2.getSourceAuthor()));
+		records.add(new DiffRecord(I18N.message("object"), version1.getObject(), version2.getObject()));
+		records.add(new DiffRecord(I18N.message("coverage"), version1.getCoverage(), version2.getCoverage()));
+		records.add(new DiffRecord(I18N.message("filename"), version1.getFileName(), version2.getFileName()));
+		records.add(new DiffRecord(I18N.message("size"), Util.formatSize(version1.getSize()), Util.formatSize(version2
+				.getSize())));
+		records.add(new DiffRecord(I18N.message("recipient"), version1.getRecipient(), version2.getRecipient()));
+		records.add(new DiffRecord(I18N.message("folder"), version1.getFolder().getName(), version2.getFolder()
 				.getName()));
-		records.add(new DiffRecord(I18N.getMessage("tags"), version1.getTagsString(), version2.getTagsString()));
-		records.add(new DiffRecord(I18N.getMessage("template"), version1.getTemplate(), version2.getTemplate()));
+		records.add(new DiffRecord(I18N.message("tags"), version1.getTagsString(), version2.getTagsString()));
+		records.add(new DiffRecord(I18N.message("template"), version1.getTemplate(), version2.getTemplate()));
 		printExtendedAttributes(records, version1, version2);
 
 		ListGridField name = new ListGridField("name", " ");
@@ -87,7 +84,7 @@ public class VersionsDiff extends Window {
 	}
 
 	private void printExtendedAttributes(ArrayList<DiffRecord> records, GUIVersion version1, GUIVersion version2) {
-		DateTimeFormat dateFormat = DateTimeFormat.getFormat(I18N.getFormat(Constants.FORMAT_DATE));
+		DateTimeFormat dateFormat = DateTimeFormat.getFormat(I18N.message("format_date"));
 		NumberFormat numberFormat = NumberFormat.getDecimalFormat();
 
 		List<String> names = new ArrayList<String>();

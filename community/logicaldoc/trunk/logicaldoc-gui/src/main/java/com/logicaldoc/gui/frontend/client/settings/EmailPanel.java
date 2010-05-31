@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
@@ -53,7 +53,7 @@ public class EmailPanel extends VLayout {
 		tabs.setHeight(250);
 
 		Tab email = new Tab();
-		email.setTitle(I18N.getMessage("email"));
+		email.setTitle(I18N.message("email"));
 
 		DynamicForm emailForm = new DynamicForm();
 		emailForm.setValuesManager(vm);
@@ -73,26 +73,26 @@ public class EmailPanel extends VLayout {
 		TextItem username = ItemFactory.newTextItem("username", "username", this.emailSettings.getUsername());
 
 		// Password
-		PasswordItem password = new PasswordItem("password", I18N.getMessage("password"));
+		PasswordItem password = new PasswordItem("password", I18N.message("password"));
 		password.setName("password");
 		password.setValue(this.emailSettings.getPwd());
 
 		// Connection Security
 		SelectItem connSecurity = new SelectItem();
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put("none", I18N.getMessage("none"));
-		opts.put("tlsAvailable", I18N.getMessage("tlsavailable"));
-		opts.put("tls", I18N.getMessage("tls"));
-		opts.put("ssl", I18N.getMessage("ssl"));
+		opts.put("none", I18N.message("none"));
+		opts.put("tlsAvailable", I18N.message("tlsavailable"));
+		opts.put("tls", I18N.message("tls"));
+		opts.put("ssl", I18N.message("ssl"));
 		connSecurity.setValueMap(opts);
 		connSecurity.setName("connSecurity");
-		connSecurity.setTitle(I18N.getMessage("connsecurity"));
+		connSecurity.setTitle(I18N.message("connsecurity"));
 		connSecurity.setValue(this.emailSettings.getConnSecurity());
 
 		// Use Secure Authentication
 		CheckboxItem secureAuth = new CheckboxItem();
 		secureAuth.setName("secureAuth");
-		secureAuth.setTitle(I18N.getMessage("secureauth"));
+		secureAuth.setTitle(I18N.message("secureauth"));
 		secureAuth.setRedrawOnChange(true);
 		secureAuth.setWidth(50);
 		secureAuth.setValue(emailSettings.isSecureAuth());
@@ -108,7 +108,7 @@ public class EmailPanel extends VLayout {
 		tabs.setTabs(email);
 
 		IButton save = new IButton();
-		save.setTitle(I18N.getMessage("save"));
+		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				final Map<String, Object> values = vm.getValues();
@@ -133,7 +133,7 @@ public class EmailPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void ret) {
-									Log.info(I18N.getMessage("settingssaved"), null);
+									Log.info(I18N.message("settingssaved"), null);
 								}
 							});
 				}

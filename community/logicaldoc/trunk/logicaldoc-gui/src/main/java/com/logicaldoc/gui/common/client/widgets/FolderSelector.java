@@ -1,7 +1,7 @@
 package com.logicaldoc.gui.common.client.widgets;
 
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
@@ -25,7 +25,7 @@ public class FolderSelector extends StaticTextItem {
 
 	public FolderSelector() {
 		setName("folder");
-		setTitle(I18N.getMessage("folder"));
+		setTitle(I18N.message("folder"));
 		setValue("");
 		setRedrawOnChange(true);
 		setValueField("id");

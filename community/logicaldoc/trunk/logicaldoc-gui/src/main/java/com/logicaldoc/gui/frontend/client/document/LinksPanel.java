@@ -4,11 +4,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.LinksDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -48,10 +48,10 @@ public class LinksPanel extends DocumentDetailTab {
 	public LinksPanel(final GUIDocument document) {
 		super(document, null);
 
-		ListGridField type = new ListGridField("type", I18N.getMessage("type"), 100);
+		ListGridField type = new ListGridField("type", I18N.message("type"), 100);
 		type.setCanEdit(true);
 
-		ListGridField direction = new ListGridField("direction", I18N.getMessage("direction"), 50);
+		ListGridField direction = new ListGridField("direction", I18N.message("direction"), 50);
 		direction.setCanSort(false);
 		direction.setType(ListGridFieldType.IMAGE);
 		direction.setCanSort(false);
@@ -70,7 +70,7 @@ public class LinksPanel extends DocumentDetailTab {
 		icon.setImageURLSuffix(".png");
 		icon.setCanEdit(false);
 
-		ListGridField title = new ListGridField("title", I18N.getMessage("title"), 200);
+		ListGridField title = new ListGridField("title", I18N.message("title"), 200);
 		title.setCanEdit(false);
 
 		GUIFolder folder = Session.get().getCurrentFolder();
@@ -112,7 +112,7 @@ public class LinksPanel extends DocumentDetailTab {
 				public void onCellContextClick(CellContextClickEvent event) {
 					Menu contextMenu = new Menu();
 					MenuItem deleteItem = new MenuItem();
-					deleteItem.setTitle(I18N.getMessage("ddelete"));
+					deleteItem.setTitle(I18N.message("ddelete"));
 					deleteItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 						public void onClick(MenuItemClickEvent event) {
 							ListGridRecord[] selection = listGrid.getSelection();
@@ -123,7 +123,7 @@ public class LinksPanel extends DocumentDetailTab {
 								ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 							}
 
-							SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"),
+							SC.ask(I18N.message("question"), I18N.message("confirmdelete"),
 									new BooleanCallback() {
 										@Override
 										public void execute(Boolean value) {

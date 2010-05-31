@@ -6,10 +6,10 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
@@ -64,7 +64,7 @@ public class SecuritySettingsPanel extends VLayout {
 		tabs.setHeight(250);
 
 		Tab password = new Tab();
-		password.setTitle(I18N.getMessage("password"));
+		password.setTitle(I18N.message("password"));
 
 		DynamicForm pwdForm = new DynamicForm();
 		pwdForm.setValuesManager(vm);
@@ -76,7 +76,7 @@ public class SecuritySettingsPanel extends VLayout {
 		pwdSize.setDefaultValue(settings.getPwdSize());
 
 		final IntegerItem pwdExp = ItemFactory.newValidateIntegerItem("pwdExp", "passwdexpiration", null, 1, null);
-		pwdExp.setHint(I18N.getMessage("days"));
+		pwdExp.setHint(I18N.message("days"));
 		pwdExp.setDefaultValue(settings.getPwdExpiration());
 		pwdExp.setWrapTitle(false);
 		pwdExp.setRequired(true);
@@ -84,7 +84,7 @@ public class SecuritySettingsPanel extends VLayout {
 		pwdForm.setFields(pwdSize, pwdExp);
 		password.setPane(pwdForm);
 
-		notifications.setTitle(I18N.getMessage("notifications"));
+		notifications.setTitle(I18N.message("notifications"));
 		notifications.setPane(notificationsPane);
 
 		refreshNotifications();
@@ -92,7 +92,7 @@ public class SecuritySettingsPanel extends VLayout {
 		tabs.setTabs(password, notifications);
 
 		IButton save = new IButton();
-		save.setTitle(I18N.getMessage("save"));
+		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();
@@ -118,7 +118,7 @@ public class SecuritySettingsPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void ret) {
-									Log.info(I18N.getMessage("settingssaved"), null);
+									Log.info(I18N.message("settingssaved"), null);
 								}
 							});
 				}

@@ -2,11 +2,11 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.PostsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -58,9 +58,9 @@ public class PostsPanel extends DocumentDetailTab {
 		addMember(container);
 		container.setMembersMargin(2);
 
-		ListGridField id = new ListGridField("id", I18N.getMessage("id"), 200);
+		ListGridField id = new ListGridField("id", I18N.message("id"), 200);
 		id.setHidden(true);
-		ListGridField title = new ListGridField("title", I18N.getMessage("title"), 150);
+		ListGridField title = new ListGridField("title", I18N.message("title"), 150);
 		title.setCellFormatter(new CellFormatter() {
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
@@ -71,12 +71,12 @@ public class PostsPanel extends DocumentDetailTab {
 				return val;
 			}
 		});
-		ListGridField user = new ListGridField("user", I18N.getMessage("by"), 100);
-		ListGridField date = new ListGridField("date", I18N.getMessage("date"), 110);
+		ListGridField user = new ListGridField("user", I18N.message("by"), 100);
+		ListGridField date = new ListGridField("date", I18N.message("date"), 110);
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
-		ListGridField message = new ListGridField("message", I18N.getMessage("message"), 400);
+		ListGridField message = new ListGridField("message", I18N.message("message"), 400);
 		ListGridField indent = new ListGridField("indent");
 		indent.setHidden(true);
 
@@ -92,7 +92,7 @@ public class PostsPanel extends DocumentDetailTab {
 		container.setHeight100();
 		container.addMember(listGrid);
 
-		Button backToDiscussions = new Button("<< " + I18N.getMessage("back"));
+		Button backToDiscussions = new Button("<< " + I18N.message("back"));
 		container.addMember(backToDiscussions);
 		backToDiscussions.addClickHandler(new ClickHandler() {
 			@Override
@@ -113,7 +113,7 @@ public class PostsPanel extends DocumentDetailTab {
 			public void onCellContextClick(CellContextClickEvent event) {
 				Menu contextMenu = new Menu();
 				MenuItem deleteItem = new MenuItem();
-				deleteItem.setTitle(I18N.getMessage("ddelete"));
+				deleteItem.setTitle(I18N.message("ddelete"));
 				deleteItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 					public void onClick(MenuItemClickEvent event) {
 						deleteSelection();
@@ -121,7 +121,7 @@ public class PostsPanel extends DocumentDetailTab {
 				});
 
 				MenuItem replyItem = new MenuItem();
-				replyItem.setTitle(I18N.getMessage("reply"));
+				replyItem.setTitle(I18N.message("reply"));
 				replyItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 					public void onClick(MenuItemClickEvent event) {
 						replyToPost();
@@ -149,7 +149,7 @@ public class PostsPanel extends DocumentDetailTab {
 			ids[i] = Integer.parseInt(selection[i].getAttribute("id"));
 		}
 
-		SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new BooleanCallback() {
+		SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 			@Override
 			public void execute(Boolean value) {
 				if (value) {

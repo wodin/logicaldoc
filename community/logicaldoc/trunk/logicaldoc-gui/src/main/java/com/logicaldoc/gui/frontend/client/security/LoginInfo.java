@@ -2,8 +2,8 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
@@ -33,7 +33,7 @@ public class LoginInfo extends VLayout {
 		user.setMargin(2);
 		user.setStyleName(stylePrefix + "loginInfo");
 
-		Label logout = new Label(I18N.getMessage("logout"));
+		Label logout = new Label(I18N.message("logout"));
 		logout.setHeight(10);
 		logout.setAlign(Alignment.RIGHT);
 		logout.setStyleName(stylePrefix + "logout");

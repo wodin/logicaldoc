@@ -1,6 +1,6 @@
 package com.logicaldoc.gui.common.client.validators;
 
-import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.widgets.form.validator.RegExpValidator;
 
 /**
@@ -13,7 +13,7 @@ public class EmailValidator extends RegExpValidator {
 
 	public EmailValidator() {
 		super();
-		setErrorMessage(I18N.getMessage("invalidemail"));
+		setErrorMessage(I18N.message("invalidemail"));
 		setExpression("([a-zA-Z0-9_.\\-+])+@(([a-zA-Z0-9\\-])+\\.)+([a-zA-Z0-9\\-])+");
 	}
 }

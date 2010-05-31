@@ -6,11 +6,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.data.RightsDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
@@ -64,54 +64,54 @@ public class SecurityPanel extends FolderDetailTab {
 		entityId.setCanEdit(false);
 		entityId.setHidden(true);
 
-		ListGridField entity = new ListGridField("entity", I18N.getMessage("entity"), 200);
+		ListGridField entity = new ListGridField("entity", I18N.message("entity"), 200);
 		entity.setCanEdit(false);
 
-		ListGridField read = new ListGridField("read", I18N.getMessage("read"), 60);
+		ListGridField read = new ListGridField("read", I18N.message("read"), 60);
 		read.setType(ListGridFieldType.BOOLEAN);
 		read.setCanEdit(false);
 
-		ListGridField write = new ListGridField("write", I18N.getMessage("write"), 60);
+		ListGridField write = new ListGridField("write", I18N.message("write"), 60);
 		write.setType(ListGridFieldType.BOOLEAN);
 		write.setCanEdit(true);
 
-		ListGridField add = new ListGridField("add", I18N.getMessage("addfolder"), 60);
+		ListGridField add = new ListGridField("add", I18N.message("addfolder"), 60);
 		add.setType(ListGridFieldType.BOOLEAN);
 		add.setCanEdit(true);
 
-		ListGridField security = new ListGridField("security", I18N.getMessage("security"), 60);
+		ListGridField security = new ListGridField("security", I18N.message("security"), 60);
 		security.setType(ListGridFieldType.BOOLEAN);
 		security.setCanEdit(true);
 
-		ListGridField immutable = new ListGridField("immutable", I18N.getMessage("immutable"), 60);
+		ListGridField immutable = new ListGridField("immutable", I18N.message("immutable"), 60);
 		immutable.setType(ListGridFieldType.BOOLEAN);
 		immutable.setCanEdit(true);
 
-		ListGridField delete = new ListGridField("delete", I18N.getMessage("ddelete"), 60);
+		ListGridField delete = new ListGridField("delete", I18N.message("ddelete"), 60);
 		delete.setType(ListGridFieldType.BOOLEAN);
 		delete.setCanEdit(true);
 
-		ListGridField rename = new ListGridField("rename", I18N.getMessage("rename"), 60);
+		ListGridField rename = new ListGridField("rename", I18N.message("rename"), 60);
 		rename.setType(ListGridFieldType.BOOLEAN);
 		rename.setCanEdit(true);
 
-		ListGridField _import = new ListGridField("import", I18N.getMessage("import"), 60);
+		ListGridField _import = new ListGridField("import", I18N.message("import"), 60);
 		_import.setType(ListGridFieldType.BOOLEAN);
 		_import.setCanEdit(true);
 
-		ListGridField export = new ListGridField("export", I18N.getMessage("export"), 60);
+		ListGridField export = new ListGridField("export", I18N.message("export"), 60);
 		export.setType(ListGridFieldType.BOOLEAN);
 		export.setCanEdit(true);
 
-		ListGridField sign = new ListGridField("sign", I18N.getMessage("sign"), 60);
+		ListGridField sign = new ListGridField("sign", I18N.message("sign"), 60);
 		sign.setType(ListGridFieldType.BOOLEAN);
 		sign.setCanEdit(true);
 
-		ListGridField archive = new ListGridField("archive", I18N.getMessage("archive"), 60);
+		ListGridField archive = new ListGridField("archive", I18N.message("archive"), 60);
 		archive.setType(ListGridFieldType.BOOLEAN);
 		archive.setCanEdit(true);
 
-		ListGridField workflow = new ListGridField("workflow", I18N.getMessage("workflow"), 60);
+		ListGridField workflow = new ListGridField("workflow", I18N.message("workflow"), 60);
 		workflow.setType(ListGridFieldType.BOOLEAN);
 		workflow.setCanEdit(true);
 
@@ -147,7 +147,7 @@ public class SecurityPanel extends FolderDetailTab {
 		HLayout buttons = new HLayout();
 		container.addMember(buttons);
 
-		Button applyToSubfolders = new Button(I18N.getMessage("applytosubfolders"));
+		Button applyToSubfolders = new Button(I18N.message("applytosubfolders"));
 		buttons.addMember(applyToSubfolders);
 		buttons.setMembersMargin(4);
 		buttons.setWidth100();
@@ -180,7 +180,7 @@ public class SecurityPanel extends FolderDetailTab {
 		groupForm.setItems(group);
 
 		buttons.addMember(groupForm);
-		Button addGroup = new Button(I18N.getMessage("addgroup"));
+		Button addGroup = new Button(I18N.message("addgroup"));
 		buttons.addMember(addGroup);
 		addGroup.addClickHandler(new ClickHandler() {
 
@@ -214,7 +214,7 @@ public class SecurityPanel extends FolderDetailTab {
 		userForm.setItems(user);
 
 		buttons.addMember(userForm);
-		Button addUser = new Button(I18N.getMessage("adduser"));
+		Button addUser = new Button(I18N.message("adduser"));
 		buttons.addMember(addUser);
 		addUser.addClickHandler(new ClickHandler() {
 			@Override
@@ -285,14 +285,14 @@ public class SecurityPanel extends FolderDetailTab {
 		Menu contextMenu = new Menu();
 
 		MenuItem deleteItem = new MenuItem();
-		deleteItem.setTitle(I18N.getMessage("ddelete"));
+		deleteItem.setTitle(I18N.message("ddelete"));
 		deleteItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord[] selection = list.getSelection();
 				if (selection == null || selection.length == 0)
 					return;
 
-				SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new BooleanCallback() {
+				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

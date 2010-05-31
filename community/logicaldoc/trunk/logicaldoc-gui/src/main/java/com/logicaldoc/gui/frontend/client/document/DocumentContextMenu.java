@@ -4,10 +4,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -36,7 +36,7 @@ public class DocumentContextMenu extends Menu {
 		final ListGridRecord[] selection = list.getSelection();
 
 		MenuItem download = new MenuItem();
-		download.setTitle(I18N.getMessage("download"));
+		download.setTitle(I18N.message("download"));
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
@@ -46,7 +46,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem copy = new MenuItem();
-		copy.setTitle(I18N.getMessage("copy"));
+		copy.setTitle(I18N.message("copy"));
 		copy.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null)
@@ -63,7 +63,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem delete = new MenuItem();
-		delete.setTitle(I18N.getMessage("ddelete"));
+		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null || selection.length == 0)
@@ -73,7 +73,7 @@ public class DocumentContextMenu extends Menu {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new BooleanCallback() {
+				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
@@ -98,7 +98,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem sendMail = new MenuItem();
-		sendMail.setTitle(I18N.getMessage("sendmail"));
+		sendMail.setTitle(I18N.message("sendmail"));
 		sendMail.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
@@ -111,7 +111,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem similar = new MenuItem();
-		similar.setTitle(I18N.getMessage("similardocuments"));
+		similar.setTitle(I18N.message("similardocuments"));
 		similar.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
@@ -123,7 +123,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem links = new MenuItem();
-		links.setTitle(I18N.getMessage("connectaslinks"));
+		links.setTitle(I18N.message("connectaslinks"));
 		links.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null || selection.length == 0 || Clipboard.getInstance().isEmpty())
@@ -157,7 +157,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem immutable = new MenuItem();
-		immutable.setTitle(I18N.getMessage("makeimmutable"));
+		immutable.setTitle(I18N.message("makeimmutable"));
 		immutable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null)
@@ -168,7 +168,7 @@ public class DocumentContextMenu extends Menu {
 				}
 
 				Dialog dialogProperties = new Dialog();
-				SC.askforValue(I18N.getMessage("warning"), I18N.getMessage("immutableadvice"), "", new ValueCallback() {
+				SC.askforValue(I18N.message("warning"), I18N.message("immutableadvice"), "", new ValueCallback() {
 
 					@Override
 					public void execute(String value) {
@@ -176,7 +176,7 @@ public class DocumentContextMenu extends Menu {
 							return;
 
 						if (value.isEmpty())
-							SC.warn(I18N.getMessage("commentrequired"));
+							SC.warn(I18N.message("commentrequired"));
 						else
 							documentService.makeImmutable(Session.get().getSid(), ids, value,
 									new AsyncCallback<Void>() {
@@ -200,7 +200,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem lock = new MenuItem();
-		lock.setTitle(I18N.getMessage("lock"));
+		lock.setTitle(I18N.message("lock"));
 		lock.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null)
@@ -211,7 +211,7 @@ public class DocumentContextMenu extends Menu {
 				}
 
 				Dialog dialogProperties = new Dialog();
-				SC.askforValue(I18N.getMessage("warning"), I18N.getMessage("lockadvice"), "", new ValueCallback() {
+				SC.askforValue(I18N.message("warning"), I18N.message("lockadvice"), "", new ValueCallback() {
 
 					@Override
 					public void execute(String value) {
@@ -240,7 +240,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem unlockItem = new MenuItem();
-		unlockItem.setTitle(I18N.getMessage("unlock"));
+		unlockItem.setTitle(I18N.message("unlock"));
 		unlockItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null)
@@ -270,7 +270,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem checkout = new MenuItem();
-		checkout.setTitle(I18N.getMessage("checkout"));
+		checkout.setTitle(I18N.message("checkout"));
 		checkout.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
@@ -298,7 +298,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem checkin = new MenuItem();
-		checkin.setTitle(I18N.getMessage("checkin"));
+		checkin.setTitle(I18N.message("checkin"));
 		checkin.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord selection = list.getSelectedRecord();
@@ -312,7 +312,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem bookmark = new MenuItem();
-		bookmark.setTitle(I18N.getMessage("bookmark"));
+		bookmark.setTitle(I18N.message("bookmark"));
 		bookmark.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord[] selection = list.getSelection();
@@ -326,7 +326,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem markUnindexable = new MenuItem();
-		markUnindexable.setTitle(I18N.getMessage("markunindexable"));
+		markUnindexable.setTitle(I18N.message("markunindexable"));
 		markUnindexable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null)
@@ -354,7 +354,7 @@ public class DocumentContextMenu extends Menu {
 		});
 
 		MenuItem markIndexable = new MenuItem();
-		markIndexable.setTitle(I18N.getMessage("markindexable"));
+		markIndexable.setTitle(I18N.message("markindexable"));
 		markIndexable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null)

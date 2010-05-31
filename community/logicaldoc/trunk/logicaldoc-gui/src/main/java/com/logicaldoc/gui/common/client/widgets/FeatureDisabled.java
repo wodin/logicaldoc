@@ -1,6 +1,6 @@
 package com.logicaldoc.gui.common.client.widgets;
 
-import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
@@ -23,7 +23,7 @@ public class FeatureDisabled extends VLayout {
 		label.setWrap(false);
 		label.setIcon("[SKIN]/Dialog/warn.png");
 		label.setShowEdges(true);
-		label.setContents("<b>" + I18N.getMessage("featuredisabled") + "</b>");
+		label.setContents("<b>" + I18N.message("featuredisabled") + "</b>");
 		addMember(label);
 	}
 }

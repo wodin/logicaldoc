@@ -2,9 +2,9 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -76,7 +76,7 @@ public class DocumentDetailsPanel extends VLayout {
 
 		savePanel = new HLayout();
 		saveForm = new DynamicForm();
-		Button saveButton = new Button(I18N.getMessage("save"));
+		Button saveButton = new Button(I18N.message("save"));
 		saveButton.setMargin(2);
 		saveButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -102,42 +102,42 @@ public class DocumentDetailsPanel extends VLayout {
 		tabSet.setWidth100();
 		tabSet.setHeight100();
 
-		Tab propertiesTab = new Tab(I18N.getMessage("properties"));
+		Tab propertiesTab = new Tab(I18N.message("properties"));
 		propertiesTabPanel = new HLayout();
 		propertiesTabPanel.setWidth100();
 		propertiesTabPanel.setHeight100();
 		propertiesTab.setPane(propertiesTabPanel);
 		tabSet.addTab(propertiesTab);
 
-		Tab extendedPropertiesTab = new Tab(I18N.getMessage("propertiesext"));
+		Tab extendedPropertiesTab = new Tab(I18N.message("propertiesext"));
 		extendedPropertiesTabPanel = new HLayout();
 		extendedPropertiesTabPanel.setWidth100();
 		extendedPropertiesTabPanel.setHeight100();
 		extendedPropertiesTab.setPane(extendedPropertiesTabPanel);
 		tabSet.addTab(extendedPropertiesTab);
 
-		Tab linksTab = new Tab(I18N.getMessage("links"));
+		Tab linksTab = new Tab(I18N.message("links"));
 		linksTabPanel = new HLayout();
 		linksTabPanel.setWidth100();
 		linksTabPanel.setHeight100();
 		linksTab.setPane(linksTabPanel);
 		tabSet.addTab(linksTab);
 
-		Tab discussionTab = new Tab(I18N.getMessage("discussions"));
+		Tab discussionTab = new Tab(I18N.message("discussions"));
 		discussionTabPanel = new HLayout();
 		discussionTabPanel.setWidth100();
 		discussionTabPanel.setHeight100();
 		discussionTab.setPane(discussionTabPanel);
 		tabSet.addTab(discussionTab);
 
-		Tab versionsTab = new Tab(I18N.getMessage("versions"));
+		Tab versionsTab = new Tab(I18N.message("versions"));
 		versionsTabPanel = new HLayout();
 		versionsTabPanel.setWidth100();
 		versionsTabPanel.setHeight100();
 		versionsTab.setPane(versionsTabPanel);
 		tabSet.addTab(versionsTab);
 
-		Tab historyTab = new Tab(I18N.getMessage("history"));
+		Tab historyTab = new Tab(I18N.message("history"));
 		historyTabPanel = new HLayout();
 		historyTabPanel.setWidth100();
 		historyTabPanel.setHeight100();

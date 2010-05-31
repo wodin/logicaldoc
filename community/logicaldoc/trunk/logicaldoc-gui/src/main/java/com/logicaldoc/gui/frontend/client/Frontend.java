@@ -5,12 +5,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
-import com.logicaldoc.gui.frontend.client.i18n.FrontendMessages;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
@@ -29,11 +28,6 @@ public class Frontend implements EntryPoint {
 
 	private MainPanel mainPanel;
 
-	private static FrontendMessages messages;
-
-	public static FrontendMessages messages() {
-		return messages;
-	}
 
 	/**
 	 * @return singleton Main instance
@@ -46,8 +40,6 @@ public class Frontend implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
-		messages = GWT.create(FrontendMessages.class);
-
 		// Export some javascripts
 		TagsForm.exportStearchTag();
 
@@ -76,7 +68,7 @@ public class Frontend implements EntryPoint {
 			// First we initialize language values
 			lang = Util.getBrowserLanguage();
 		}
-		I18N.setLanguage(lang);
+		I18N.setLocale(lang);
 
 		// Get grid of scrollbars, and clear out the window's built-in margin,
 		// because we want to take advantage of the entire client area.
