@@ -1,6 +1,8 @@
 package com.logicaldoc.core.security;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -36,6 +38,19 @@ public class UserSession implements Comparable<UserSession> {
 	private Object externalSession = null;
 
 	private Object userObject = null;
+
+	private Map<String, Object> dictionary = new HashMap<String, Object>();
+
+	public Map<String, Object> getDictionary() {
+		return dictionary;
+	}
+
+	/**
+	 * Map that collects session-bound values
+	 */
+	public void setDictionary(Map<String, Object> dictionary) {
+		this.dictionary = dictionary;
+	}
 
 	public String getId() {
 		return id;
@@ -150,7 +165,8 @@ public class UserSession implements Comparable<UserSession> {
 	}
 
 	/**
-	 * A generic object that is stored within the session
+	 * A generic object that is stored within the session and is thought to be
+	 * used as alternative session identifier
 	 */
 	public Object getUserObject() {
 		return userObject;

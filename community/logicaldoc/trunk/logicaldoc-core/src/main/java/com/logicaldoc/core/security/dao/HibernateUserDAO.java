@@ -157,7 +157,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 			if (isPasswordExpired(username))
 				return false;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 			result = false;
