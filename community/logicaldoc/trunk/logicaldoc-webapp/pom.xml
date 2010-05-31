@@ -248,6 +248,18 @@
 			<artifactId>logicaldoc-i18n</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <dependency>
+			<groupId>com.logicaldoc</groupId>
+			<artifactId>logicaldoc-external-authentication</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+        <dependency>
+            <groupId>com.logicaldoc</groupId>
+            <artifactId>logicaldoc-activedir</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.hyperic.sigar</groupId>
 			<artifactId>sigar</artifactId>
@@ -285,22 +297,6 @@
 				<exclusion>
 					<groupId>org.icepdf</groupId>
 					<artifactId>icepdf-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-highlighter</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-misc</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-snowball</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>org.fontbox</groupId>

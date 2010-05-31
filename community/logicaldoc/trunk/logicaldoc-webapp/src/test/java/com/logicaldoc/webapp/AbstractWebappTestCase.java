@@ -93,6 +93,7 @@ public abstract class AbstractWebappTestCase {
 	 * Destroys the in-memory database
 	 */
 	private void destroyDatabase() {
+		Assert.assertNotNull(ds);
 		Connection con = null;
 		try {
 			con = ds.getConnection();
@@ -117,7 +118,8 @@ public abstract class AbstractWebappTestCase {
 	 */
 	private void createTestDatabase() throws Exception {
 		ds = (DataSource) context.getBean("DataSource");
-
+		Assert.assertNotNull(ds);
+		
 		Connection con = null;
 		try {
 			con = ds.getConnection();
