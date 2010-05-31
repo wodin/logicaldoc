@@ -1,9 +1,10 @@
 package com.logicaldoc.webapp;
 
+import java.util.Locale;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.gui.common.client.i18n.I18N;
 
 /**
  * Base class for services implementation
@@ -12,15 +13,23 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
  * @since 6.0
  */
 public abstract class AbstractService extends RemoteServiceServlet {
-	
+
+	public static final String LOCALE = "locale";
+
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 *  Throws a runtime exception id the given session is invalid
+	 * Throws a runtime exception id the given session is invalid
 	 */
-	protected void validateSession(String sid) {
+	protected UserSession validateSession(String sid) {
 		UserSession session = SessionManager.getInstance().get(sid);
 		if (session == null)
-			throw new RuntimeException(I18N.message("invalidsession"));
+			throw new RuntimeException("Invalid or Expired Session");
+		return session;
+	}
+
+	protected Locale currentLocale(String sid) {
+		UserSession session = validateSession(sid);
+		return (Locale) session.getDictionary().get(LOCALE);
 	}
 }
