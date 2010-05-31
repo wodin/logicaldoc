@@ -80,10 +80,10 @@ public class EmailPanel extends VLayout {
 		// Connection Security
 		SelectItem connSecurity = new SelectItem();
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put("none", I18N.message("none"));
-		opts.put("tlsAvailable", I18N.message("tlsavailable"));
-		opts.put("tls", I18N.message("tls"));
-		opts.put("ssl", I18N.message("ssl"));
+		opts.put("" + GUIEmailSettings.SECURITY_NONE, I18N.message("none"));
+		opts.put("" + GUIEmailSettings.SECURITY_TLS_IF_AVAILABLE, I18N.message("tlsavailable"));
+		opts.put("" + GUIEmailSettings.SECURITY_TLS, I18N.message("tls"));
+		opts.put("" + GUIEmailSettings.SECURITY_SSL, I18N.message("ssl"));
 		connSecurity.setValueMap(opts);
 		connSecurity.setName("connSecurity");
 		connSecurity.setTitle(I18N.message("connsecurity"));
@@ -119,7 +119,8 @@ public class EmailPanel extends VLayout {
 						EmailPanel.this.emailSettings.setPort((Integer) values.get("port"));
 					EmailPanel.this.emailSettings.setUsername((String) values.get("username"));
 					EmailPanel.this.emailSettings.setPwd((String) values.get("password"));
-					EmailPanel.this.emailSettings.setConnSecurity((String) values.get("connSecurity"));
+					EmailPanel.this.emailSettings
+							.setConnSecurity(Integer.parseInt((String) values.get("connSecurity")));
 					EmailPanel.this.emailSettings.setSecureAuth(values.get("secureAuth").equals("yes") ? true : false);
 					EmailPanel.this.emailSettings.setSenderEmail((String) values.get("senderEmail"));
 
