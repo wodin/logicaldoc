@@ -139,7 +139,7 @@
 		<module>logicaldoc-i18n</module>
 		<!--module>logicaldoc-gui</module-->
 		<module>logicaldoc-web</module>
-		<!-- module>logicaldoc-webapp</module -->
+		<module>logicaldoc-webapp</module>
 		<module>logicaldoc-testbench</module>
 	</modules>
 </project>
