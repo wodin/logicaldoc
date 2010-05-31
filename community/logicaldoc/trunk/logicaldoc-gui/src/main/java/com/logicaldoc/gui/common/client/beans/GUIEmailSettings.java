@@ -5,6 +5,14 @@ import java.io.Serializable;
 public class GUIEmailSettings implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final int SECURITY_NONE = 0;
+
+	public static final int SECURITY_TLS_IF_AVAILABLE = 1;
+
+	public static final int SECURITY_TLS = 2;
+
+	public static final int SECURITY_SSL = 3;
 
 	private String smtpServer;
 
@@ -16,7 +24,7 @@ public class GUIEmailSettings implements Serializable {
 
 	private String pwd;
 
-	private String connSecurity;
+	private int connSecurity = SECURITY_NONE;
 
 	private String senderEmail;
 
@@ -60,11 +68,11 @@ public class GUIEmailSettings implements Serializable {
 		this.pwd = pwd;
 	}
 
-	public String getConnSecurity() {
+	public int getConnSecurity() {
 		return connSecurity;
 	}
 
-	public void setConnSecurity(String connSecurity) {
+	public void setConnSecurity(int connSecurity) {
 		this.connSecurity = connSecurity;
 	}
 
