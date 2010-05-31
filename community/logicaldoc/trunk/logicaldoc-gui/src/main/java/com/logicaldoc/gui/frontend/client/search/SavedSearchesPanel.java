@@ -2,10 +2,10 @@ package com.logicaldoc.gui.frontend.client.search;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.data.SavedSearchesDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
@@ -46,9 +46,9 @@ public class SavedSearchesPanel extends VLayout {
 	}
 
 	private SavedSearchesPanel() {
-		ListGridField name = new ListGridField("name", I18N.getMessage("name"), 100);
-		ListGridField type = new ListGridField("type", I18N.getMessage("type"), 70);
-		ListGridField description = new ListGridField("description", I18N.getMessage("description"));
+		ListGridField name = new ListGridField("name", I18N.message("name"), 100);
+		ListGridField type = new ListGridField("type", I18N.message("type"), 70);
+		ListGridField description = new ListGridField("description", I18N.message("description"));
 
 		listGrid = new ListGrid();
 		listGrid.setCanFreezeFields(true);
@@ -92,7 +92,7 @@ public class SavedSearchesPanel extends VLayout {
 		Menu contextMenu = new Menu();
 
 		MenuItem execute = new MenuItem();
-		execute.setTitle(I18N.getMessage("execute"));
+		execute.setTitle(I18N.message("execute"));
 		execute.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord selection = listGrid.getSelectedRecord();
@@ -114,7 +114,7 @@ public class SavedSearchesPanel extends VLayout {
 		});
 
 		MenuItem delete = new MenuItem();
-		delete.setTitle(I18N.getMessage("ddelete"));
+		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord[] selection = listGrid.getSelection();
@@ -125,7 +125,7 @@ public class SavedSearchesPanel extends VLayout {
 					names[i] = selection[i].getAttributeAsString("name");
 				}
 
-				SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new BooleanCallback() {
+				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

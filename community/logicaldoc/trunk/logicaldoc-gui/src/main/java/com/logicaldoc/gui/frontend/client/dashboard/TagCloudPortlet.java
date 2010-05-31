@@ -5,8 +5,8 @@ import gdurelle.tagcloud.client.tags.WordTag;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUITag;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
@@ -30,7 +30,7 @@ public class TagCloudPortlet extends Portlet {
 	private HLayout container = new HLayout();
 
 	public TagCloudPortlet() {
-		setTitle(I18N.getMessage("tagcloud"));
+		setTitle(I18N.message("tagcloud"));
 		HeaderIcon portletIcon = ItemFactory.newHeaderIcon("tag_blue.png");
 		setHeaderControls(new HeaderControl(portletIcon), HeaderControls.HEADER_LABEL, HeaderControls.MINIMIZE_BUTTON);
 

@@ -3,13 +3,12 @@ package com.logicaldoc.gui.common.client.util;
 import java.util.LinkedHashMap;
 
 import com.google.gwt.user.client.ui.Image;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.validators.EmailValidator;
 import com.logicaldoc.gui.common.client.validators.EmailsValidator;
 import com.logicaldoc.gui.common.client.validators.SimpleTextValidator;
-import com.logicaldoc.gui.frontend.client.Frontend;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.widgets.Img;
@@ -36,7 +35,7 @@ public class ItemFactory {
 	public static DateItem newDateItem(String name, String title) {
 		DateItem date = new DateItem(name);
 		if (title != null)
-			date.setTitle(I18N.getMessage(title));
+			date.setTitle(I18N.message(title));
 		else
 			date.setShowTitle(false);
 		date.setUseTextField(true);
@@ -51,13 +50,13 @@ public class ItemFactory {
 	public static SelectItem newDateOperator(String name, String title) {
 		SelectItem dateOperator = new SelectItem();
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put("nolimits", Frontend.messages().nolimits());
-		opts.put("before", Frontend.messages().before());
-		opts.put("after", Frontend.messages().after());
+		opts.put("nolimits", I18N.message("nolimits"));
+		opts.put("before", I18N.message("before"));
+		opts.put("after", I18N.message("after"));
 		dateOperator.setValueMap(opts);
 		dateOperator.setName(name);
 		if (title != null)
-			dateOperator.setTitle(I18N.getMessage(title));
+			dateOperator.setTitle(I18N.message(title));
 		else
 			dateOperator.setShowTitle(false);
 		dateOperator.setDefaultValue("nolimits");
@@ -68,13 +67,13 @@ public class ItemFactory {
 	public static SelectItem newSizeOperator(String name, String title) {
 		SelectItem sizeOperator = new SelectItem();
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put("nolimits", Frontend.messages().nolimits());
-		opts.put("lessthan", Frontend.messages().lessthan());
-		opts.put("greaterthan", Frontend.messages().greaterthan());
+		opts.put("nolimits", I18N.message("nolimits"));
+		opts.put("lessthan", I18N.message("lessthan"));
+		opts.put("greaterthan", I18N.message("greaterthan"));
 		sizeOperator.setValueMap(opts);
 		sizeOperator.setName(name);
 		if (title != null)
-			sizeOperator.setTitle(I18N.getMessage(title));
+			sizeOperator.setTitle(I18N.message(title));
 		else
 			sizeOperator.setShowTitle(false);
 		sizeOperator.setDefaultValue("nolimits");
@@ -86,7 +85,7 @@ public class ItemFactory {
 		SelectItem item = new SelectItem();
 		item.setValueMap(I18N.getSupportedLanguages(withEmpty));
 		item.setName(name);
-		item.setTitle(Frontend.messages().language());
+		item.setTitle(I18N.message("language"));
 		item.setWrapTitle(false);
 		item.setDefaultValue("en");
 		return item;
@@ -96,7 +95,7 @@ public class ItemFactory {
 		TextItem item = new TextItem();
 		item.setName(name);
 		if (title != null)
-			item.setTitle(I18N.getMessage(title));
+			item.setTitle(I18N.message(title));
 		else
 			item.setShowTitle(false);
 		if (multiple)
@@ -108,7 +107,7 @@ public class ItemFactory {
 
 	public static ComboBoxItem newGroupSelector(String name, String title) {
 		ComboBoxItem group = new ComboBoxItem(name);
-		group.setTitle(I18N.getMessage(title));
+		group.setTitle(I18N.message(title));
 		group.setValueField("id");
 		group.setDisplayField("name");
 		group.setPickListWidth(300);
@@ -121,7 +120,7 @@ public class ItemFactory {
 
 	public static ComboBoxItem newUserSelector(String name, String title) {
 		ComboBoxItem user = new ComboBoxItem(name);
-		user.setTitle(I18N.getMessage(title));
+		user.setTitle(I18N.message(title));
 		ListGridField username = new ListGridField("username");
 		ListGridField label = new ListGridField("label");
 		user.setValueField("id");
@@ -137,11 +136,11 @@ public class ItemFactory {
 		radioGroupItem.setName(name);
 		radioGroupItem.setVertical(false);
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put("yes", Frontend.messages().yes());
-		map.put("no", Frontend.messages().no());
+		map.put("yes", I18N.message("yes"));
+		map.put("no", I18N.message("no"));
 		radioGroupItem.setValueMap(map);
 		radioGroupItem.setRedrawOnChange(true);
-		radioGroupItem.setTitle(I18N.getMessage(title));
+		radioGroupItem.setTitle(I18N.message(title));
 		radioGroupItem.setWidth(80);
 		return radioGroupItem;
 	}
@@ -149,7 +148,7 @@ public class ItemFactory {
 	public static SelectItem newMultipleSelector(String name, String title) {
 		SelectItem selectItemMultipleGrid = new SelectItem();
 		selectItemMultipleGrid.setName(name);
-		selectItemMultipleGrid.setTitle(I18N.getMessage(title));
+		selectItemMultipleGrid.setTitle(I18N.message(title));
 		selectItemMultipleGrid.setMultiple(true);
 		selectItemMultipleGrid.setValueMap("");
 		return selectItemMultipleGrid;
@@ -163,40 +162,40 @@ public class ItemFactory {
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		// Document and folder events
-		map.put("event.archived", I18N.getMessage("event.archived"));
-		map.put("event.changed", I18N.getMessage("event.changed"));
-		map.put("event.checkedin", I18N.getMessage("event.checkedin"));
-		map.put("event.checkedout", I18N.getMessage("event.checkedout"));
-		map.put("event.deleted", I18N.getMessage("event.deleted"));
-		map.put("event.downloaded", I18N.getMessage("event.downloaded"));
-		map.put("event.folder.created", I18N.getMessage("event.folder.created"));
-		map.put("event.folder.deleted", I18N.getMessage("event.folder.deleted"));
-		map.put("event.folder.permission", I18N.getMessage("event.folder.permission"));
-		map.put("event.folder.renamed", I18N.getMessage("event.folder.renamed"));
-		map.put("event.folder.subfolder.created", I18N.getMessage("event.folder.subfolder.created"));
-		map.put("event.folder.subfolder.deleted", I18N.getMessage("event.folder.subfolder.deleted"));
-		map.put("event.folder.subfolder.permission", I18N.getMessage("event.folder.subfolder.permission"));
-		map.put("event.folder.subfolder.renamed", I18N.getMessage("event.folder.subfolder.renamed"));
-		map.put("event.makeimmutable", I18N.getMessage("event.makeimmutable"));
-		map.put("event.locked", I18N.getMessage("event.locked"));
-		map.put("event.moved", I18N.getMessage("event.moved"));
-		map.put("event.renamed", I18N.getMessage("event.renamed"));
-		map.put("event.stored", I18N.getMessage("event.stored"));
-		map.put("event.unlocked", I18N.getMessage("event.unlocked"));
+		map.put("event.archived", I18N.message("event.archived"));
+		map.put("event.changed", I18N.message("event.changed"));
+		map.put("event.checkedin", I18N.message("event.checkedin"));
+		map.put("event.checkedout", I18N.message("event.checkedout"));
+		map.put("event.deleted", I18N.message("event.deleted"));
+		map.put("event.downloaded", I18N.message("event.downloaded"));
+		map.put("event.folder.created", I18N.message("event.folder.created"));
+		map.put("event.folder.deleted", I18N.message("event.folder.deleted"));
+		map.put("event.folder.permission", I18N.message("event.folder.permission"));
+		map.put("event.folder.renamed", I18N.message("event.folder.renamed"));
+		map.put("event.folder.subfolder.created", I18N.message("event.folder.subfolder.created"));
+		map.put("event.folder.subfolder.deleted", I18N.message("event.folder.subfolder.deleted"));
+		map.put("event.folder.subfolder.permission", I18N.message("event.folder.subfolder.permission"));
+		map.put("event.folder.subfolder.renamed", I18N.message("event.folder.subfolder.renamed"));
+		map.put("event.makeimmutable", I18N.message("event.makeimmutable"));
+		map.put("event.locked", I18N.message("event.locked"));
+		map.put("event.moved", I18N.message("event.moved"));
+		map.put("event.renamed", I18N.message("event.renamed"));
+		map.put("event.stored", I18N.message("event.stored"));
+		map.put("event.unlocked", I18N.message("event.unlocked"));
 		// User events
-		map.put("event.user.deleted", I18N.getMessage("event.user.deleted"));
-		map.put("event.user.login", I18N.getMessage("event.user.login"));
-		map.put("event.user.logout", I18N.getMessage("event.user.logout"));
-		map.put("event.user.passwordchanged", I18N.getMessage("event.user.passwordchanged"));
+		map.put("event.user.deleted", I18N.message("event.user.deleted"));
+		map.put("event.user.login", I18N.message("event.user.login"));
+		map.put("event.user.logout", I18N.message("event.user.logout"));
+		map.put("event.user.passwordchanged", I18N.message("event.user.passwordchanged"));
 		// Workflow events
-		map.put("event.workflow.start", I18N.getMessage("event.workflow.start"));
-		map.put("event.workflow.end", I18N.getMessage("event.workflow.end"));
-		map.put("event.workflow.task.start", I18N.getMessage("event.workflow.task.start"));
-		map.put("event.workflow.task.end", I18N.getMessage("event.workflow.task.end"));
-		map.put("event.workflow.task.suspended", I18N.getMessage("event.workflow.task.suspended"));
-		map.put("event.workflow.task.resumed", I18N.getMessage("event.workflow.task.resumed"));
-		map.put("event.workflow.task.reassigned", I18N.getMessage("event.workflow.task.reassigned"));
-		map.put("event.workflow.docappended", I18N.getMessage("event.workflow.docappended"));
+		map.put("event.workflow.start", I18N.message("event.workflow.start"));
+		map.put("event.workflow.end", I18N.message("event.workflow.end"));
+		map.put("event.workflow.task.start", I18N.message("event.workflow.task.start"));
+		map.put("event.workflow.task.end", I18N.message("event.workflow.task.end"));
+		map.put("event.workflow.task.suspended", I18N.message("event.workflow.task.suspended"));
+		map.put("event.workflow.task.resumed", I18N.message("event.workflow.task.resumed"));
+		map.put("event.workflow.task.reassigned", I18N.message("event.workflow.task.reassigned"));
+		map.put("event.workflow.docappended", I18N.message("event.workflow.docappended"));
 
 		select.setValueMap(map);
 
@@ -235,12 +234,12 @@ public class ItemFactory {
 	public static TextItem newTextItem(String name, String title, String value) {
 		TextItem item = new TextItem();
 		item.setName(name);
-		item.setTitle(I18N.getMessage(title));
+		item.setTitle(I18N.message(title));
 		if (value != null)
 			item.setValue(value);
 		else
 			item.setValue("");
-		item.setRequiredMessage(I18N.getMessage("fieldrequired"));
+		item.setRequiredMessage(I18N.message("fieldrequired"));
 		return item;
 	}
 
@@ -269,7 +268,7 @@ public class ItemFactory {
 		if (name.trim().isEmpty())
 			item.setShouldSaveValue(false);
 		item.setName(name);
-		item.setTitle(I18N.getMessage(title));
+		item.setTitle(I18N.message(title));
 		if (value != null)
 			item.setValue(value);
 		else
@@ -287,10 +286,10 @@ public class ItemFactory {
 	public static IntegerItem newIntegerItem(String name, String title, Integer value) {
 		IntegerItem item = new IntegerItem();
 		item.setName(name);
-		item.setTitle(I18N.getMessage(title));
+		item.setTitle(I18N.message(title));
 		if (value != null)
 			item.setValue(value);
-		item.setRequiredMessage(I18N.getMessage("fieldrequired"));
+		item.setRequiredMessage(I18N.message("fieldrequired"));
 		return item;
 	}
 

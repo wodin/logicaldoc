@@ -7,10 +7,10 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
@@ -86,10 +86,10 @@ public class LastChangesPanel extends VLayout {
 		TextItem displayMax = ItemFactory.newTextItem("displayMax", "displaymax", null);
 		displayMax.setDefaultValue(100);
 		displayMax.setWidth(40);
-		displayMax.setHint(I18N.getMessage("elements"));
+		displayMax.setHint(I18N.message("elements"));
 
 		ButtonItem searchButton = new ButtonItem();
-		searchButton.setTitle(I18N.getMessage("search"));
+		searchButton.setTitle(I18N.message("search"));
 		searchButton.setEndRow(false);
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -99,7 +99,7 @@ public class LastChangesPanel extends VLayout {
 		});
 
 		ButtonItem resetButton = new ButtonItem();
-		resetButton.setTitle(I18N.getMessage("reset"));
+		resetButton.setTitle(I18N.message("reset"));
 		resetButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -117,7 +117,7 @@ public class LastChangesPanel extends VLayout {
 		eventForm.setColWidths(1, "*");
 
 		// Event
-		SelectItem event = ItemFactory.newEventsSelector("event", I18N.getMessage("event"));
+		SelectItem event = ItemFactory.newEventsSelector("event", I18N.message("event"));
 		event.setColSpan(2);
 		event.setEndRow(true);
 
@@ -134,26 +134,26 @@ public class LastChangesPanel extends VLayout {
 		search.setWidth100();
 		search.setMargin(10);
 
-		ListGridField eventField = new ListGridField("event", I18N.getMessage("event"), 200);
+		ListGridField eventField = new ListGridField("event", I18N.message("event"), 200);
 		eventField.setCanFilter(true);
 
-		ListGridField date = new ListGridField("date", I18N.getMessage("date"), 110);
+		ListGridField date = new ListGridField("date", I18N.message("date"), 110);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
 		date.setCanFilter(false);
 		date.setAlign(Alignment.CENTER);
 
-		ListGridField userField = new ListGridField("user", I18N.getMessage("user"), 100);
+		ListGridField userField = new ListGridField("user", I18N.message("user"), 100);
 		userField.setCanFilter(true);
 		userField.setAlign(Alignment.CENTER);
 
-		ListGridField name = new ListGridField("name", I18N.getMessage("name"), 100);
+		ListGridField name = new ListGridField("name", I18N.message("name"), 100);
 		name.setCanFilter(true);
 
-		ListGridField folder = new ListGridField("folder", I18N.getMessage("folder"), 100);
+		ListGridField folder = new ListGridField("folder", I18N.message("folder"), 100);
 		folder.setCanFilter(true);
 
-		ListGridField sid = new ListGridField("sid", I18N.getMessage("sid"), 250);
+		ListGridField sid = new ListGridField("sid", I18N.message("sid"), 250);
 		sid.setCanFilter(true);
 		sid.setAlign(Alignment.CENTER);
 
@@ -217,7 +217,7 @@ public class LastChangesPanel extends VLayout {
 							ListGridRecord[] records = new ListGridRecord[result.length];
 							for (int i = 0; i < result.length; i++) {
 								ListGridRecord record = new ListGridRecord();
-								record.setAttribute("event", I18N.getMessage(result[i].getEvent()));
+								record.setAttribute("event", I18N.message(result[i].getEvent()));
 								record.setAttribute("date", result[i].getDate());
 								record.setAttribute("user", result[i].getUserName());
 								record.setAttribute("name", result[i].getTitle());

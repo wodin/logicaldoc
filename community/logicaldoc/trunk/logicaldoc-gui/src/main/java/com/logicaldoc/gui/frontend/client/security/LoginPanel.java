@@ -5,9 +5,9 @@ import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISession;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -88,7 +88,7 @@ public class LoginPanel extends VLayout {
 		final DynamicForm form = new DynamicForm();
 		form.setAlign(Alignment.CENTER);
 
-		username.setTitle(I18N.getMessage("username"));
+		username.setTitle(I18N.message("username"));
 		username.setRequired(true);
 		username.setWrapTitle(false);
 		username.addKeyPressHandler(new KeyPressHandler() {
@@ -99,7 +99,7 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
-		password.setTitle(I18N.getMessage("password"));
+		password.setTitle(I18N.message("password"));
 		password.setRequired(true);
 		password.setWrapTitle(false);
 		password.addKeyPressHandler(new KeyPressHandler() {
@@ -112,7 +112,7 @@ public class LoginPanel extends VLayout {
 
 		form.setFields(username, password);
 
-		IButton loginButton = new IButton(I18N.getMessage("login"));
+		IButton loginButton = new IButton(I18N.message("login"));
 		loginButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				onLogin();
@@ -157,7 +157,7 @@ public class LoginPanel extends VLayout {
 						} else if (session.getUser() != null && session.getUser().isExpired()) {
 							new ChangePassword(session.getUser()).show();
 						} else {
-							SC.warn(I18N.getMessage("accesdenied"));
+							SC.warn(I18N.message("accesdenied"));
 						}
 					}
 				});

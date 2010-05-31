@@ -3,9 +3,9 @@ package com.logicaldoc.gui.frontend.client.system;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.IButton;
@@ -82,11 +82,11 @@ public class SchedulingPanel extends VLayout {
 		// Policy
 		final SelectItem simple = new SelectItem();
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put("true", I18N.getMessage("simple"));
-		opts.put("false", I18N.getMessage("advanced"));
+		opts.put("true", I18N.message("simple"));
+		opts.put("false", I18N.message("advanced"));
 		simple.setValueMap(opts);
 		simple.setName("simple");
-		simple.setTitle(I18N.getMessage("policy"));
+		simple.setTitle(I18N.message("policy"));
 		simple.setDefaultValue(Boolean.toString(task.getScheduling().isSimple()));
 		simple.addChangedHandler(new ChangedHandler() {
 			@Override
@@ -100,13 +100,13 @@ public class SchedulingPanel extends VLayout {
 		// Max Lengths
 		maxDuration = new SelectItem();
 		LinkedHashMap<String, String> opts2 = new LinkedHashMap<String, String>();
-		opts2.put("-1", I18N.getMessage("nolimits"));
-		opts2.put(Long.toString(15 * 60L), I18N.getMessage("_15minutes"));
-		opts2.put(Long.toString(60 * 60L), I18N.getMessage("_1hour"));
-		opts2.put(Long.toString(5 * 60 * 60L), I18N.getMessage("_5hours"));
+		opts2.put("-1", I18N.message("nolimits"));
+		opts2.put(Long.toString(15 * 60L), I18N.message("_15minutes"));
+		opts2.put(Long.toString(60 * 60L), I18N.message("_1hour"));
+		opts2.put(Long.toString(5 * 60 * 60L), I18N.message("_5hours"));
 		maxDuration.setValueMap(opts2);
 		maxDuration.setName("maxDuration");
-		maxDuration.setTitle(I18N.getMessage("maxlengths"));
+		maxDuration.setTitle(I18N.message("maxlengths"));
 		maxDuration.setDefaultValue(Long.toString(task.getScheduling().getMaxLength()));
 		maxDuration.addChangedHandler(changedHandler);
 
@@ -120,7 +120,7 @@ public class SchedulingPanel extends VLayout {
 		initialDelay.setDefaultValue(new Integer(Long.toString(task.getScheduling().getDelay())));
 		initialDelay.setVisible(simplePolicy);
 		initialDelay.addChangedHandler(changedHandler);
-		initialDelay.setHint(I18N.getMessage("seconds").toLowerCase());
+		initialDelay.setHint(I18N.message("seconds").toLowerCase());
 		initialDelay.setRequired(true);
 
 		// Repeat interval
@@ -128,7 +128,7 @@ public class SchedulingPanel extends VLayout {
 		repeatInterval.setDefaultValue(new Integer(Long.toString(task.getScheduling().getInterval())));
 		repeatInterval.setVisible(simplePolicy);
 		repeatInterval.addChangedHandler(changedHandler);
-		repeatInterval.setHint(I18N.getMessage("seconds").toLowerCase());
+		repeatInterval.setHint(I18N.message("seconds").toLowerCase());
 		repeatInterval.setRequired(true);
 
 		// Seconds
@@ -137,7 +137,7 @@ public class SchedulingPanel extends VLayout {
 		seconds.setVisible(!simplePolicy);
 		seconds.addChangedHandler(changedHandler);
 		seconds.setRequired(true);
-		seconds.setHint(I18N.getMessage("schedulingsechint"));
+		seconds.setHint(I18N.message("schedulingsechint"));
 
 		// Minutes
 		minutes = ItemFactory.newTextItem("minutes", "minutes", null);
@@ -145,7 +145,7 @@ public class SchedulingPanel extends VLayout {
 		minutes.setVisible(!simplePolicy);
 		minutes.addChangedHandler(changedHandler);
 		minutes.setRequired(true);
-		minutes.setHint(I18N.getMessage("schedulingsechint"));
+		minutes.setHint(I18N.message("schedulingsechint"));
 
 		// Hours
 		hours = ItemFactory.newTextItem("hours", "hours", null);
@@ -153,7 +153,7 @@ public class SchedulingPanel extends VLayout {
 		hours.setVisible(!simplePolicy);
 		hours.addChangedHandler(changedHandler);
 		hours.setRequired(true);
-		hours.setHint(I18N.getMessage("schedulinghourshint"));
+		hours.setHint(I18N.message("schedulinghourshint"));
 
 		// Day of month
 		dayMonth = ItemFactory.newTextItem("dayMonth", "daymonth", null);
@@ -161,7 +161,7 @@ public class SchedulingPanel extends VLayout {
 		dayMonth.setVisible(!simplePolicy);
 		dayMonth.addChangedHandler(changedHandler);
 		dayMonth.setRequired(true);
-		dayMonth.setHint(I18N.getMessage("schedulingdaymonthhint"));
+		dayMonth.setHint(I18N.message("schedulingdaymonthhint"));
 
 		// Month
 		month = ItemFactory.newTextItem("month", "month", null);
@@ -169,7 +169,7 @@ public class SchedulingPanel extends VLayout {
 		month.setVisible(!simplePolicy);
 		month.addChangedHandler(changedHandler);
 		month.setRequired(true);
-		month.setHint(I18N.getMessage("schedulingmonthhint"));
+		month.setHint(I18N.message("schedulingmonthhint"));
 
 		// Day of week
 		dayWeek = ItemFactory.newTextItem("dayWeek", "dayweek", null);
@@ -177,13 +177,13 @@ public class SchedulingPanel extends VLayout {
 		dayWeek.setVisible(!simplePolicy);
 		dayWeek.addChangedHandler(changedHandler);
 		dayWeek.setRequired(true);
-		dayWeek.setHint(I18N.getMessage("schedulingdayweekhint"));
+		dayWeek.setHint(I18N.message("schedulingdayweekhint"));
 
 		form.setItems(simple, initialDelay, repeatInterval, seconds, minutes, hours, dayMonth, month, dayWeek,
 				maxDuration, cpuIdle);
 
 		IButton restoreDefaults = new IButton();
-		restoreDefaults.setTitle(I18N.getMessage("restoredefaults"));
+		restoreDefaults.setTitle(I18N.message("restoredefaults"));
 		restoreDefaults.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				final Map<String, Object> values = vm.getValues();

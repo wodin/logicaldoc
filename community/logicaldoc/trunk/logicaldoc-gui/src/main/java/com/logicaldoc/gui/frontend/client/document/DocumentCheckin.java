@@ -7,8 +7,8 @@ import gwtupload.client.IUploadStatus.Status;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -53,7 +53,7 @@ public class DocumentCheckin extends Window {
 		this.fileName = filename;
 		this.documentsGrid = documentsGrid;
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.getMessage("checkin"));
+		setTitle(I18N.message("checkin"));
 		setWidth(370);
 		setHeight(200);
 		setCanDragResize(true);
@@ -69,19 +69,19 @@ public class DocumentCheckin extends Window {
 
 		BooleanItem versionItem = new BooleanItem();
 		versionItem.setName("majorversion");
-		versionItem.setTitle(I18N.getMessage("majorversion"));
+		versionItem.setTitle(I18N.message("majorversion"));
 
 		BooleanItem filenameItem = new BooleanItem();
 		filenameItem.setWidth(280);
 		filenameItem.setName("checkfilename");
-		filenameItem.setTitle(I18N.getMessage("checkfilename"));
+		filenameItem.setTitle(I18N.message("checkfilename"));
 		filenameItem.setDefaultValue(true);
 
 		TextItem commentItem = ItemFactory.newTextItem("comment", "comment", null);
 		commentItem.setRequired(true);
 
 		sendButton = new SubmitItem();
-		sendButton.setTitle(I18N.getMessage("send"));
+		sendButton.setTitle(I18N.message("send"));
 		sendButton.setDisabled(true);
 		sendButton.setAlign(Alignment.RIGHT);
 		sendButton.addClickHandler(new ClickHandler() {
@@ -118,14 +118,14 @@ public class DocumentCheckin extends Window {
 			}
 			if ("true".equals(vm.getValueAsString("checkfilename")) && !fileName.equals(uploader.getFileName())) {
 				sendButton.setDisabled(true);
-				SC.warn(I18N.getMessage("nosamefilename"));
+				SC.warn(I18N.message("nosamefilename"));
 			}
 		}
 	};
 
 	public void onSend() {
 		if (multiUploader.getSuccessUploads() <= 0) {
-			SC.warn(I18N.getMessage("filerequired"));
+			SC.warn(I18N.message("filerequired"));
 			return;
 		}
 		if (!vm.validate())

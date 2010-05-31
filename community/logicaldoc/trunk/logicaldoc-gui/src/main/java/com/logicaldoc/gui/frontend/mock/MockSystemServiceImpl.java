@@ -4,11 +4,11 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 
 /**
@@ -248,8 +248,8 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 			task.setProgress(progress);
 			task.setSize(0);
 			task.setScheduling(new GUIScheduling("Task" + i));
-			task.setSchedulingLabel(I18N.getMessage("each") + " " + task.getScheduling().getInterval() + " "
-					+ I18N.getMessage("seconds").toLowerCase());
+			task.setSchedulingLabel(I18N.message("each") + " " + task.getScheduling().getInterval() + " "
+					+ I18N.message("seconds").toLowerCase());
 			if (i % 2 == 0)
 				task.getScheduling().setEnabled(true);
 			else
@@ -287,8 +287,8 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		task.setProgress(progress);
 		task.setSize(0);
 		task.setScheduling(new GUIScheduling("Task 0"));
-		task.setSchedulingLabel(I18N.getMessage("each") + " " + task.getScheduling().getInterval() + " "
-				+ I18N.getMessage("seconds").toLowerCase());
+		task.setSchedulingLabel(I18N.message("each") + " " + task.getScheduling().getInterval() + " "
+				+ I18N.message("seconds").toLowerCase());
 
 		task.getScheduling().setEnabled(true);
 
@@ -315,8 +315,8 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 	@Override
 	public GUITask saveTask(String sid, GUITask task) {
 		if (task.getScheduling().isSimple()) {
-			task.setSchedulingLabel(I18N.getMessage("each") + " " + task.getScheduling().getInterval() + " "
-					+ I18N.getMessage("seconds").toLowerCase());
+			task.setSchedulingLabel(I18N.message("each") + " " + task.getScheduling().getInterval() + " "
+					+ I18N.message("seconds").toLowerCase());
 		} else {
 			GUIScheduling s = task.getScheduling();
 			task.setSchedulingLabel(s.getSeconds() + " " + s.getMinutes() + " " + s.getHours() + " "

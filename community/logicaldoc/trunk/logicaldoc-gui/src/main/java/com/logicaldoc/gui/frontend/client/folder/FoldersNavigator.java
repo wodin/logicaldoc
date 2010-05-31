@@ -4,10 +4,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.Search;
@@ -108,7 +108,7 @@ public class FoldersNavigator extends TreeGrid {
 		Menu contextMenu = new Menu();
 
 		MenuItem search = new MenuItem();
-		search.setTitle(I18N.getMessage("search"));
+		search.setTitle(I18N.message("search"));
 		search.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				Search.get().getOptions().setFolder(id);
@@ -120,10 +120,10 @@ public class FoldersNavigator extends TreeGrid {
 		});
 
 		MenuItem delete = new MenuItem();
-		delete.setTitle(I18N.getMessage("ddelete"));
+		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new BooleanCallback() {
+				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
@@ -145,7 +145,7 @@ public class FoldersNavigator extends TreeGrid {
 		});
 
 		MenuItem addItem = new MenuItem();
-		addItem.setTitle(I18N.getMessage("newfolder"));
+		addItem.setTitle(I18N.message("newfolder"));
 		addItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				onCreate();
@@ -153,7 +153,7 @@ public class FoldersNavigator extends TreeGrid {
 		});
 
 		MenuItem reload = new MenuItem();
-		reload.setTitle(I18N.getMessage("reload"));
+		reload.setTitle(I18N.message("reload"));
 		reload.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				onReload();
@@ -161,7 +161,7 @@ public class FoldersNavigator extends TreeGrid {
 		});
 
 		MenuItem move = new MenuItem();
-		move.setTitle(I18N.getMessage("move"));
+		move.setTitle(I18N.message("move"));
 		move.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				MoveDialog dialog = new MoveDialog();
@@ -170,7 +170,7 @@ public class FoldersNavigator extends TreeGrid {
 		});
 
 		MenuItem rss = new MenuItem();
-		rss.setTitle(I18N.getMessage("rssfeed"));
+		rss.setTitle(I18N.message("rssfeed"));
 		if (!Session.get().isFeatureEnabled("Feature_9")) {
 			rss.setEnabled(false);
 		}
@@ -181,7 +181,7 @@ public class FoldersNavigator extends TreeGrid {
 		});
 
 		MenuItem exportZip = new MenuItem();
-		exportZip.setTitle(I18N.getMessage("exportzip"));
+		exportZip.setTitle(I18N.message("exportzip"));
 		exportZip.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				Window.open("zip-export?sid=" + Session.get().getSid() + "&folderId=" + id, "_blank", "");
@@ -283,7 +283,7 @@ public class FoldersNavigator extends TreeGrid {
 	private void onCreate() {
 		TreeNode selectedNode = (TreeNode) getSelectedRecord();
 		GUIFolder data = new GUIFolder();
-		data.setName(I18N.getMessage("newfolder"));
+		data.setName(I18N.message("newfolder"));
 		data.setParentId(Long.parseLong(selectedNode.getAttributeAsString("id")));
 
 		service.save(Session.get().getSid(), data, new AsyncCallback<GUIFolder>() {

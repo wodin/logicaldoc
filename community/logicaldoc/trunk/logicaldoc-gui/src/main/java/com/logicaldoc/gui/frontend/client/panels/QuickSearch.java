@@ -1,8 +1,8 @@
 package com.logicaldoc.gui.frontend.client.panels;
 
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -34,7 +34,7 @@ public class QuickSearch extends HLayout {
 
 		TextItem searchBox = ItemFactory.newTextItem("expression", "", null);
 		searchBox.setShowTitle(false);
-		searchBox.setDefaultValue(I18N.getMessage("search") + "...");
+		searchBox.setDefaultValue(I18N.message("search") + "...");
 		searchBox.setWidth(200);
 		searchBox.setIcons(searchPicker);
 		form.setItems(searchBox);
@@ -51,7 +51,7 @@ public class QuickSearch extends HLayout {
 		searchBox.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if ((I18N.getMessage("search") + "...").equals(event.getItem().getValue())) {
+				if ((I18N.message("search") + "...").equals(event.getItem().getValue())) {
 					event.getItem().setValue("");
 				}
 			}

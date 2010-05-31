@@ -2,8 +2,8 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -45,7 +45,7 @@ public class PostWindow extends Window {
 		this.replyTo = replyTo;
 
 		sendItem = new ButtonItem();
-		sendItem.setTitle(I18N.getMessage("send"));
+		sendItem.setTitle(I18N.message("send"));
 		sendItem.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();
@@ -77,7 +77,7 @@ public class PostWindow extends Window {
 		this.discussionPanel = discussionPanel;
 
 		sendItem = new ButtonItem();
-		sendItem.setTitle(I18N.getMessage("send"));
+		sendItem.setTitle(I18N.message("send"));
 		sendItem.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();
@@ -114,7 +114,7 @@ public class PostWindow extends Window {
 		});
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.getMessage("sendpost"));
+		setTitle(I18N.message("sendpost"));
 		setWidth(400);
 		setHeight(200);
 		setCanDragResize(true);
@@ -137,7 +137,7 @@ public class PostWindow extends Window {
 		TextAreaItem message = new TextAreaItem();
 		message.setName("message");
 		message.setRequired(true);
-		message.setTitle(I18N.getMessage("message"));
+		message.setTitle(I18N.message("message"));
 		message.setValue("");
 		message.setWidth(300);
 

@@ -7,11 +7,11 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -98,7 +98,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		coverageItem.addChangedHandler(changedHandler);
 		coverageItem.setDisabled(!update);
 
-		SelectItem templateItem = new SelectItem("template", I18N.getMessage("template"));
+		SelectItem templateItem = new SelectItem("template", I18N.message("template"));
 		templateItem.setDisplayField("name");
 		templateItem.setValueField("id");
 		templateItem.setPickListWidth(250);

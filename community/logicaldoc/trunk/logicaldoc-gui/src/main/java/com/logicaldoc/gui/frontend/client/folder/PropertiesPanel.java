@@ -1,8 +1,8 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -52,7 +52,7 @@ public class PropertiesPanel extends FolderDetailTab {
 		description.addChangedHandler(changedHandler);
 
 		StaticTextItem pathItem = ItemFactory.newStaticTextItem("path", "path", folder.getPathExtended());
-		pathItem.setTitle(I18N.getMessage("path"));
+		pathItem.setTitle(I18N.message("path"));
 		pathItem.setValue(folder.getPathExtended());
 		pathItem.addChangedHandler(changedHandler);
 		pathItem.setWidth(300);

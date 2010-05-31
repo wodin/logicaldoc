@@ -2,11 +2,11 @@ package com.logicaldoc.gui.frontend.client.settings;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
@@ -29,15 +29,15 @@ public class SettingsMenu extends VLayout {
 		setMargin(10);
 		setMembersMargin(5);
 
-		Button clientTools = new Button(I18N.getMessage("clienttools"));
+		Button clientTools = new Button(I18N.message("clienttools"));
 		clientTools.setWidth100();
 		clientTools.setHeight(25);
 
-		Button parameters = new Button(I18N.getMessage("parameters"));
+		Button parameters = new Button(I18N.message("parameters"));
 		parameters.setWidth100();
 		parameters.setHeight(25);
 
-		Button email = new Button(I18N.getMessage("email"));
+		Button email = new Button(I18N.message("email"));
 		email.setWidth100();
 		email.setHeight(25);
 

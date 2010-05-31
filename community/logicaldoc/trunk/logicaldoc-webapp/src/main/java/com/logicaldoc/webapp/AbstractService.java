@@ -3,7 +3,7 @@ package com.logicaldoc.webapp;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 
 /**
  * Base class for services implementation
@@ -21,6 +21,6 @@ public abstract class AbstractService extends RemoteServiceServlet {
 	protected void validateSession(String sid) {
 		UserSession session = SessionManager.getInstance().get(sid);
 		if (session == null)
-			throw new RuntimeException(I18N.getMessage("invalidsession"));
+			throw new RuntimeException(I18N.message("invalidsession"));
 	}
 }

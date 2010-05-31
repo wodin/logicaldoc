@@ -7,9 +7,9 @@ import gwtupload.client.IUploadStatus.Status;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.LanguagesDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -42,7 +42,7 @@ public class DocumentsUploader extends Window {
 
 	public DocumentsUploader() {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.getMessage("adddocuments"));
+		setTitle(I18N.message("adddocuments"));
 		setWidth(370);
 		setHeight(280);
 		setCanDragResize(true);
@@ -58,7 +58,7 @@ public class DocumentsUploader extends Window {
 
 		SelectItem languageItem = new SelectItem();
 		languageItem.setName("language");
-		languageItem.setTitle(I18N.getMessage("language"));
+		languageItem.setTitle(I18N.message("language"));
 		languageItem.setOptionDataSource(LanguagesDS.get());
 		languageItem.setDisplayField("name");
 		languageItem.setValueField("locale");
@@ -67,10 +67,10 @@ public class DocumentsUploader extends Window {
 
 		BooleanItem zipItem = new BooleanItem();
 		zipItem.setName("zip");
-		zipItem.setTitle(I18N.getMessage("importfromzip"));
+		zipItem.setTitle(I18N.message("importfromzip"));
 
 		sendButton = new SubmitItem();
-		sendButton.setTitle(I18N.getMessage("send"));
+		sendButton.setTitle(I18N.message("send"));
 		sendButton.setDisabled(true);
 		sendButton.setAlign(Alignment.RIGHT);
 		sendButton.addClickHandler(new ClickHandler() {
@@ -109,7 +109,7 @@ public class DocumentsUploader extends Window {
 
 	public void onSend() {
 		if (multiUploader.getSuccessUploads() <= 0) {
-			SC.warn(I18N.getMessage("filerequired"));
+			SC.warn(I18N.message("filerequired"));
 			return;
 		}
 		if (!vm.validate())

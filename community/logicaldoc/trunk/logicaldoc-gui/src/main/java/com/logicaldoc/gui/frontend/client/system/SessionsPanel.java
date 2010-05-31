@@ -2,10 +2,10 @@ package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.SessionsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
@@ -44,7 +44,7 @@ public class SessionsPanel extends VLayout {
 		refresh();
 
 		HLayout buttons = new HLayout();
-		Button refresh = new Button(I18N.getMessage("refresh"));
+		Button refresh = new Button(I18N.message("refresh"));
 		buttons.addMember(refresh);
 		buttons.setMembersMargin(4);
 		buttons.setWidth100();
@@ -62,24 +62,24 @@ public class SessionsPanel extends VLayout {
 	}
 
 	private void refresh() {
-		ListGridField sid = new ListGridField("sid", I18N.getMessage("sid"), 250);
+		ListGridField sid = new ListGridField("sid", I18N.message("sid"), 250);
 
-		ListGridField username = new ListGridField("username", I18N.getMessage("username"), 80);
+		ListGridField username = new ListGridField("username", I18N.message("username"), 80);
 		username.setCanFilter(true);
 
-		ListGridField created = new ListGridField("created", I18N.getMessage("createdon"), 110);
+		ListGridField created = new ListGridField("created", I18N.message("createdon"), 110);
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
 		created.setCellFormatter(new DateCellFormatter());
 		created.setCanFilter(false);
 
-		ListGridField renew = new ListGridField("renew", I18N.getMessage("lastrenew"), 110);
+		ListGridField renew = new ListGridField("renew", I18N.message("lastrenew"), 110);
 		renew.setAlign(Alignment.CENTER);
 		renew.setType(ListGridFieldType.DATE);
 		renew.setCellFormatter(new DateCellFormatter());
 		renew.setCanFilter(false);
 
-		ListGridField statusLabel = new ListGridField("statusLabel", I18N.getMessage("status"), 80);
+		ListGridField statusLabel = new ListGridField("statusLabel", I18N.message("status"), 80);
 		statusLabel.setCanFilter(false);
 
 		list = new ListGrid() {
@@ -127,10 +127,10 @@ public class SessionsPanel extends VLayout {
 		Menu contextMenu = new Menu();
 
 		MenuItem killSession = new MenuItem();
-		killSession.setTitle(I18N.getMessage("kill"));
+		killSession.setTitle(I18N.message("kill"));
 		killSession.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmkill"), new BooleanCallback() {
+				SC.ask(I18N.message("question"), I18N.message("confirmkill"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

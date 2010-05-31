@@ -1,9 +1,8 @@
 package com.logicaldoc.gui.common.client.log;
 
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIEvent;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
-import com.logicaldoc.gui.frontend.client.Frontend;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -41,7 +40,7 @@ public class EventsWindow extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, trash, HeaderControls.CLOSE_BUTTON);
 		setWidth(400);
 		setHeight(200);
-		setTitle(Frontend.messages().lastevents());
+		setTitle(I18N.message("lastevents"));
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -65,15 +64,15 @@ public class EventsWindow extends Window {
 		grid.setCanFreezeFields(false);
 		grid.setCanGroupBy(false);
 
-		ListGridField date = new ListGridField("date", Frontend.messages().date(), 110);
+		ListGridField date = new ListGridField("date", I18N.message("date"), 110);
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
 
-		ListGridField detail = new ListGridField("detail", Frontend.messages().detail(), 300);
+		ListGridField detail = new ListGridField("detail", I18N.message("detail"), 300);
 		detail.setCanSort(false);
 
-		ListGridField severityLabel = new ListGridField("severityLabel", Frontend.messages().severity(), 60);
+		ListGridField severityLabel = new ListGridField("severityLabel", I18N.message("severity"), 60);
 
 		grid.setFields(date, severityLabel, detail);
 		grid.setCanResizeFields(true);
@@ -85,7 +84,7 @@ public class EventsWindow extends Window {
 		record.setAttribute("date", event.getDate());
 		record.setAttribute("detail", event.getDetail());
 		record.setAttribute("severity", event.getSeverity());
-		record.setAttribute("severityLabel", I18N.getMessage(event.getSeverity()));
+		record.setAttribute("severityLabel", I18N.message(event.getSeverity()));
 		grid.addData(record);
 		grid.sort("date", SortDirection.DESCENDING);
 	}

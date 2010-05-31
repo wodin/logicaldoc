@@ -2,8 +2,8 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
@@ -37,7 +37,7 @@ public class SetPassword extends Window {
 		super();
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.getMessage("changepassword"));
+		setTitle(I18N.message("changepassword"));
 		setWidth(300);
 		setHeight(140);
 		setIsModal(true);
@@ -54,27 +54,27 @@ public class SetPassword extends Window {
 
 		MatchesFieldValidator equalsValidator = new MatchesFieldValidator();
 		equalsValidator.setOtherField(NEWPASSWORDAGAIN);
-		equalsValidator.setErrorMessage(I18N.getMessage("passwordnotmatch"));
+		equalsValidator.setErrorMessage(I18N.message("passwordnotmatch"));
 
 		LengthRangeValidator sizeValidator = new LengthRangeValidator();
-		sizeValidator.setErrorMessage(I18N.getMessage("errorfieldminlenght", Integer.toString(Session.get().getUser()
+		sizeValidator.setErrorMessage(I18N.message("errorfieldminlenght", Integer.toString(Session.get().getUser()
 				.getPasswordMinLenght())));
 		sizeValidator.setMin(Session.get().getUser().getPasswordMinLenght());
 
 		PasswordItem newPass = new PasswordItem();
 		newPass.setName(NEWPASSWORD);
-		newPass.setTitle(I18N.getMessage(NEWPASSWORD));
+		newPass.setTitle(I18N.message(NEWPASSWORD));
 		newPass.setRequired(true);
 		newPass.setValidators(equalsValidator, sizeValidator);
 
 		PasswordItem newPassAgain = new PasswordItem();
 		newPassAgain.setName(NEWPASSWORDAGAIN);
-		newPassAgain.setTitle(I18N.getMessage(NEWPASSWORDAGAIN));
+		newPassAgain.setTitle(I18N.message(NEWPASSWORDAGAIN));
 		newPassAgain.setWrapTitle(false);
 		newPassAgain.setRequired(true);
 
 		ButtonItem apply = new ButtonItem();
-		apply.setTitle(I18N.getMessage("apply"));
+		apply.setTitle(I18N.message("apply"));
 		apply.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();
@@ -94,11 +94,11 @@ public class SetPassword extends Window {
 										// Alert the user and maintain the popup
 										// opened
 										if (ret == 1)
-											Log.warn(I18N.getMessage("wrongpassword"), null);
+											Log.warn(I18N.message("wrongpassword"), null);
 										else if (ret == 2)
-											Log.warn(I18N.getMessage("passwdnotnotified"), null);
+											Log.warn(I18N.message("passwdnotnotified"), null);
 										else
-											Log.warn(I18N.getMessage("genericerror"), null);
+											Log.warn(I18N.message("genericerror"), null);
 									}
 									SetPassword.this.destroy();
 								}

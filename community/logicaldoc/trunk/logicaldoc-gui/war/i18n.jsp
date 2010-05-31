@@ -26,7 +26,7 @@
     //Detect the bundle to use
 	String bundle = request.getParameter("bundle");
 	if (bundle == null || "".equals(bundle))
-		bundle = "frontend";
+		bundle = "messages";
 
 	//Detect the locale
 	Browser browser = new Browser(request, session);

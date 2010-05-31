@@ -2,10 +2,10 @@ package com.logicaldoc.gui.frontend.client.template;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
@@ -55,7 +55,7 @@ public class TemplatesPanel extends VLayout {
 
 	private InfoPanel infoPanel;
 
-	final static Canvas SELECT_TEMPLATE = new HTMLPanel("&nbsp;" + I18N.getMessage("selecttemplate"));
+	final static Canvas SELECT_TEMPLATE = new HTMLPanel("&nbsp;" + I18N.message("selecttemplate"));
 
 	public TemplatesPanel() {
 		setWidth100();
@@ -74,11 +74,11 @@ public class TemplatesPanel extends VLayout {
 		ListGridField id = new ListGridField("id", 50);
 		id.setHidden(true);
 
-		ListGridField name = new ListGridField("name", I18N.getMessage("name"), 200);
+		ListGridField name = new ListGridField("name", I18N.message("name"), 200);
 		name.setCanFilter(true);
 		name.setCanSort(false);
 
-		ListGridField description = new ListGridField("description", I18N.getMessage("description"), 300);
+		ListGridField description = new ListGridField("description", I18N.message("description"), 300);
 		description.setCanFilter(true);
 		description.setCanSort(false);
 
@@ -104,7 +104,7 @@ public class TemplatesPanel extends VLayout {
 		toolStrip.setWidth100();
 		toolStrip.addSpacer(2);
 		ToolStripButton add = new ToolStripButton();
-		add.setTitle(I18N.getMessage("addtemplate"));
+		add.setTitle(I18N.message("addtemplate"));
 		toolStrip.addButton(add);
 		add.addClickHandler(new ClickHandler() {
 			@Override
@@ -147,7 +147,7 @@ public class TemplatesPanel extends VLayout {
 		list.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				infoPanel.setMessage(I18N.getMessage("showtemplates", Integer.toString(list.getTotalRows())));
+				infoPanel.setMessage(I18N.message("showtemplates", Integer.toString(list.getTotalRows())));
 			}
 		});
 
@@ -164,10 +164,10 @@ public class TemplatesPanel extends VLayout {
 		final long id = Long.parseLong(record.getAttributeAsString("id"));
 
 		MenuItem delete = new MenuItem();
-		delete.setTitle(I18N.getMessage("ddelete"));
+		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new BooleanCallback() {
+				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

@@ -6,12 +6,12 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.common.client.data.VersionsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -50,15 +50,15 @@ public class VersionsPanel extends DocumentDetailTab {
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
-		ListGridField user = new ListGridField("user", I18N.getMessage("user"), 100);
-		ListGridField event = new ListGridField("event", I18N.getMessage("event"), 200);
-		ListGridField version = new ListGridField("version", I18N.getMessage("version"), 70);
-		ListGridField fileVersion = new ListGridField("fileVersion", I18N.getMessage("fileversion"), 70);
-		ListGridField date = new ListGridField("date", I18N.getMessage("date"), 110);
+		ListGridField user = new ListGridField("user", I18N.message("user"), 100);
+		ListGridField event = new ListGridField("event", I18N.message("event"), 200);
+		ListGridField version = new ListGridField("version", I18N.message("version"), 70);
+		ListGridField fileVersion = new ListGridField("fileVersion", I18N.message("fileversion"), 70);
+		ListGridField date = new ListGridField("date", I18N.message("date"), 110);
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
-		ListGridField comment = new ListGridField("comment", I18N.getMessage("comment"));
+		ListGridField comment = new ListGridField("comment", I18N.message("comment"));
 
 		listGrid = new ListGrid();
 		listGrid.setCanFreezeFields(true);
@@ -95,13 +95,13 @@ public class VersionsPanel extends DocumentDetailTab {
 		contextMenu = new Menu();
 		List<MenuItem> items = new ArrayList<MenuItem>();
 		MenuItem downloadItem = new MenuItem();
-		downloadItem.setTitle(I18N.getMessage("compare"));
+		downloadItem.setTitle(I18N.message("compare"));
 		downloadItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				// Detect the two selected records
 				ListGridRecord[] selection = listGrid.getSelection();
 				if (selection == null || selection.length != 2) {
-					SC.warn(I18N.getMessage("select2versions"));
+					SC.warn(I18N.message("select2versions"));
 					return;
 				}
 				

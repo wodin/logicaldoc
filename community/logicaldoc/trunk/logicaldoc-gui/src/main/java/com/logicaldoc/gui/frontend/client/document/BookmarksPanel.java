@@ -3,10 +3,10 @@ package com.logicaldoc.gui.frontend.client.document;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.data.BookmarksDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -60,11 +60,11 @@ public class BookmarksPanel extends VLayout {
 		LengthRangeValidator validator = new LengthRangeValidator();
 		validator.setMin(1);
 
-		ListGridField name = new ListGridField("name", I18N.getMessage("name"), 80);
+		ListGridField name = new ListGridField("name", I18N.message("name"), 80);
 		name.setCanEdit(true);
 		name.setValidators(validator);
 
-		ListGridField description = new ListGridField("description", I18N.getMessage("description"));
+		ListGridField description = new ListGridField("description", I18N.message("description"));
 		description.setCanEdit(true);
 		description.setValidators(validator);
 
@@ -137,7 +137,7 @@ public class BookmarksPanel extends VLayout {
 		Menu contextMenu = new Menu();
 
 		MenuItem download = new MenuItem();
-		download.setTitle(I18N.getMessage("download"));
+		download.setTitle(I18N.message("download"));
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				download();
@@ -145,7 +145,7 @@ public class BookmarksPanel extends VLayout {
 		});
 
 		MenuItem openInFolder = new MenuItem();
-		openInFolder.setTitle(I18N.getMessage("openinfolder"));
+		openInFolder.setTitle(I18N.message("openinfolder"));
 		openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
@@ -160,7 +160,7 @@ public class BookmarksPanel extends VLayout {
 		}
 
 		MenuItem delete = new MenuItem();
-		delete.setTitle(I18N.getMessage("ddelete"));
+		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				final ListGridRecord[] selection = list.getSelection();
@@ -171,7 +171,7 @@ public class BookmarksPanel extends VLayout {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new BooleanCallback() {
+				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

@@ -4,14 +4,13 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIADSettings;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
-import com.logicaldoc.gui.frontend.client.Frontend;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
@@ -58,7 +57,7 @@ public class ExtAuthPanel extends VLayout {
 		tabs.setHeight(400);
 
 		Tab ldap = new Tab();
-		ldap.setTitle(I18N.getMessage("ldap"));
+		ldap.setTitle(I18N.message("ldap"));
 
 		DynamicForm ldapForm = new DynamicForm();
 		ldapForm.setValuesManager(vm);
@@ -84,7 +83,7 @@ public class ExtAuthPanel extends VLayout {
 		TextItem username = ItemFactory.newTextItem("username", "username", this.ldapSettings.getUsername());
 
 		// Password
-		PasswordItem password = new PasswordItem("password", Frontend.messages().password());
+		PasswordItem password = new PasswordItem("password", I18N.message("password"));
 		password.setName("password");
 		password.setValue(this.ldapSettings.getPwd());
 
@@ -138,7 +137,7 @@ public class ExtAuthPanel extends VLayout {
 		ldap.setPane(ldapForm);
 
 		Tab activeDir = new Tab();
-		activeDir.setTitle(I18N.getMessage("activedirectory"));
+		activeDir.setTitle(I18N.message("activedirectory"));
 		// Checks if the active directory feature is enabled
 		if (!Session.get().isFeatureEnabled("Feature_11")) {
 			activeDir.setPane(new FeatureDisabled());
@@ -176,7 +175,7 @@ public class ExtAuthPanel extends VLayout {
 			adUsername.setRequired(true);
 
 			// Password
-			PasswordItem adPassword = new PasswordItem("password", I18N.getMessage("password"));
+			PasswordItem adPassword = new PasswordItem("password", I18N.message("password"));
 			adPassword.setName("adPassword");
 			adPassword.setValue(this.adSettings.getPwd());
 
@@ -203,7 +202,7 @@ public class ExtAuthPanel extends VLayout {
 		tabs.setTabs(ldap, activeDir);
 
 		IButton save = new IButton();
-		save.setTitle(I18N.getMessage("save"));
+		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				final Map<String, Object> values = vm.getValues();
@@ -249,7 +248,7 @@ public class ExtAuthPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void ret) {
-									Log.info(I18N.getMessage("settingssaved"), null);
+									Log.info(I18N.message("settingssaved"), null);
 								}
 							});
 				}

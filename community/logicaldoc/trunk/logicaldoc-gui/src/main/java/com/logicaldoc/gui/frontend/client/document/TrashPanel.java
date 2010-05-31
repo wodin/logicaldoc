@@ -2,10 +2,10 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.GarbageDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -50,7 +50,7 @@ public class TrashPanel extends VLayout {
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
-		ListGridField title = new ListGridField("title", I18N.getMessage("title"), 150);
+		ListGridField title = new ListGridField("title", I18N.message("title"), 150);
 		title.setCanFilter(true);
 
 		ListGridField icon = new ListGridField("icon", " ", 24);
@@ -62,13 +62,13 @@ public class TrashPanel extends VLayout {
 		icon.setImageURLSuffix(".png");
 		icon.setCanFilter(false);
 
-		ListGridField lastModified = new ListGridField("lastModified", I18N.getMessage("lastmodified"), 110);
+		ListGridField lastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 110);
 		lastModified.setAlign(Alignment.CENTER);
 		lastModified.setType(ListGridFieldType.DATE);
 		lastModified.setCellFormatter(new DateCellFormatter());
 		lastModified.setCanFilter(false);
 
-		ListGridField customId = new ListGridField("customId", I18N.getMessage("customid"), 110);
+		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 		customId.setType(ListGridFieldType.TEXT);
 		customId.setCanFilter(true);
 
@@ -112,7 +112,7 @@ public class TrashPanel extends VLayout {
 			@Override
 			public void onSuccess(Void ret) {
 				list.removeSelectedData();
-				Log.info(I18N.getMessage("documentrestored"), I18N.getMessage("documentrestoreddetail", Long
+				Log.info(I18N.message("documentrestored"), I18N.message("documentrestoreddetail", Long
 						.toString(docId)));
 
 				// If the case force a refresh
@@ -126,7 +126,7 @@ public class TrashPanel extends VLayout {
 		Menu contextMenu = new Menu();
 
 		MenuItem execute = new MenuItem();
-		execute.setTitle(I18N.getMessage("restore"));
+		execute.setTitle(I18N.message("restore"));
 		execute.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();

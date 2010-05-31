@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -84,13 +84,13 @@ public class UserPropertiesPanel extends HLayout {
 		if (!readonly)
 			username.addChangedHandler(changedHandler);
 
-		CheckboxItem expires = new CheckboxItem("expires", I18N.getMessage("passwordexpires"));
+		CheckboxItem expires = new CheckboxItem("expires", I18N.message("passwordexpires"));
 		expires.setValue(user.isPasswordExpires());
 		expires.setDisabled(readonly);
 		if (!readonly)
 			expires.addChangedHandler(changedHandler);
 
-		CheckboxItem enabled = new CheckboxItem("enabled", I18N.getMessage("enabled"));
+		CheckboxItem enabled = new CheckboxItem("enabled", I18N.message("enabled"));
 		enabled.setValue(user.isEnabled());
 		if (readonly || "admin".equals(user.getUserName())) {
 			enabled.setDisabled(true);
@@ -174,7 +174,7 @@ public class UserPropertiesPanel extends HLayout {
 
 		List<FormItem> items = new ArrayList<FormItem>();
 		final ComboBoxItem group = new ComboBoxItem("group");
-		group.setTitle(I18N.getMessage("group"));
+		group.setTitle(I18N.message("group"));
 		group.setPickListWidth(250);
 		group.setOptionDataSource(GroupsDS.get());
 		group.addChangedHandler(new ChangedHandler() {

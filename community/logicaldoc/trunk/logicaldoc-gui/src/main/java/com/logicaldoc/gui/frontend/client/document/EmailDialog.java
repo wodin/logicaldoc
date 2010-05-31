@@ -2,9 +2,9 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.EventPanel;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -50,7 +50,7 @@ public class EmailDialog extends Window {
 		});
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.getMessage("sendmail"));
+		setTitle(I18N.message("sendmail"));
 		setWidth(290);
 		setHeight(280);
 		setCanDragResize(true);
@@ -82,13 +82,13 @@ public class EmailDialog extends Window {
 
 		final TextAreaItem message = new TextAreaItem();
 		message.setName("message");
-		message.setTitle(I18N.getMessage("message"));
+		message.setTitle(I18N.message("message"));
 		message.setValue("");
 		message.setWidth(250);
 
 		final CheckboxItem ticket = new CheckboxItem();
 		ticket.setName("sendticket");
-		ticket.setTitle(I18N.getMessage("sendticket"));
+		ticket.setTitle(I18N.message("sendticket"));
 		ticket.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -102,7 +102,7 @@ public class EmailDialog extends Window {
 		});
 
 		ButtonItem sendItem = new ButtonItem();
-		sendItem.setTitle(I18N.getMessage("send"));
+		sendItem.setTitle(I18N.message("send"));
 		sendItem.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();

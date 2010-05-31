@@ -2,9 +2,9 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
@@ -58,7 +58,7 @@ public class GroupDetailsPanel extends VLayout {
 		savePanel.setVisible(false);
 		savePanel.setStyleName("warn");
 		savePanel.setWidth100();
-		Button saveButton = new Button(I18N.getMessage("save"));
+		Button saveButton = new Button(I18N.message("save"));
 		saveButton.setMargin(2);
 		saveButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -75,13 +75,13 @@ public class GroupDetailsPanel extends VLayout {
 		tabSet.setWidth100();
 		tabSet.setHeight100();
 
-		Tab propertiesTab = new Tab(I18N.getMessage("properties"));
+		Tab propertiesTab = new Tab(I18N.message("properties"));
 		propertiesTabPanel = new HLayout();
 		propertiesTabPanel.setHeight100();
 		propertiesTab.setPane(propertiesTabPanel);
 		tabSet.addTab(propertiesTab);
 
-		Tab usersTab = new Tab(I18N.getMessage("users"));
+		Tab usersTab = new Tab(I18N.message("users"));
 		usersTabPanel = new HLayout();
 		usersTabPanel.setHeight100();
 		usersTab.setPane(usersTabPanel);

@@ -4,13 +4,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -78,9 +78,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		ListGridField id = new ListGridField("id", 60);
 		id.setHidden(true);
 
-		ListGridField title = new ListGridField("title", I18N.getMessage("title"), 300);
+		ListGridField title = new ListGridField("title", I18N.message("title"), 300);
 
-		ListGridField size = new ListGridField("size", I18N.getMessage("size"), 90);
+		ListGridField size = new ListGridField("size", I18N.message("size"), 90);
 		size.setAlign(Alignment.CENTER);
 		size.setType(ListGridFieldType.FLOAT);
 		size.setCellFormatter(new FileSizeCellFormatter());
@@ -95,35 +95,35 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		icon.setImageURLSuffix(".png");
 		icon.setCanFilter(false);
 
-		ListGridField version = new ListGridField("version", I18N.getMessage("version"), 55);
+		ListGridField version = new ListGridField("version", I18N.message("version"), 55);
 		version.setAlign(Alignment.CENTER);
 
-		ListGridField lastModified = new ListGridField("lastModified", I18N.getMessage("lastmodified"), 110);
+		ListGridField lastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 110);
 		lastModified.setAlign(Alignment.CENTER);
 		lastModified.setType(ListGridFieldType.DATE);
 		lastModified.setCellFormatter(new DateCellFormatter());
 		lastModified.setCanFilter(false);
 
-		ListGridField publisher = new ListGridField("publisher", I18N.getMessage("publisher"), 90);
+		ListGridField publisher = new ListGridField("publisher", I18N.message("publisher"), 90);
 		publisher.setAlign(Alignment.CENTER);
 
-		ListGridField published = new ListGridField("published", I18N.getMessage("publishedon"), 110);
+		ListGridField published = new ListGridField("published", I18N.message("publishedon"), 110);
 		published.setAlign(Alignment.CENTER);
 		published.setType(ListGridFieldType.DATE);
 		published.setCellFormatter(new DateCellFormatter());
 		published.setCanFilter(false);
 
-		ListGridField creator = new ListGridField("creator", I18N.getMessage("creator"), 90);
+		ListGridField creator = new ListGridField("creator", I18N.message("creator"), 90);
 		creator.setAlign(Alignment.CENTER);
 		creator.setCanFilter(false);
 
-		ListGridField created = new ListGridField("created", I18N.getMessage("createdon"), 110);
+		ListGridField created = new ListGridField("created", I18N.message("createdon"), 110);
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
 		created.setCellFormatter(new DateCellFormatter());
 		created.setCanFilter(false);
 
-		ListGridField customId = new ListGridField("customId", I18N.getMessage("customid"), 110);
+		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 
 		ListGridField immutable = new ListGridField("immutable", " ", 24);
 		immutable.setType(ListGridFieldType.IMAGE);
@@ -152,10 +152,10 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		locked.setImageURLSuffix(".png");
 		locked.setCanFilter(false);
 
-		ListGridField filename = new ListGridField("filename", I18N.getMessage("filename"), 200);
+		ListGridField filename = new ListGridField("filename", I18N.message("filename"), 200);
 		filename.setHidden(true);
 
-		ListGridField folderId = new ListGridField("folderId", I18N.getMessage("folder"), 200);
+		ListGridField folderId = new ListGridField("folderId", I18N.message("folder"), 200);
 		folderId.setHidden(true);
 		folderId.setCanFilter(false);
 
@@ -163,7 +163,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		lockUserId.setHidden(true);
 		lockUserId.setCanFilter(false);
 
-		ListGridField score = new ListGridField("score", I18N.getMessage("score"), 120);
+		ListGridField score = new ListGridField("score", I18N.message("score"), 120);
 		score.setCanFilter(false);
 		score.setCellFormatter(new CellFormatter() {
 			@Override
@@ -180,7 +180,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		});
 
-		ListGridField summary = new ListGridField("summary", I18N.getMessage("summary"));
+		ListGridField summary = new ListGridField("summary", I18N.message("summary"));
 		summary.setWidth(300);
 
 		if (list == null) {
@@ -233,7 +233,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 					public void onSuccess(GUIFolder folder) {
 						Menu contextMenu = new DocumentContextMenu(folder, list);
 						MenuItem openInFolder = new MenuItem();
-						openInFolder.setTitle(I18N.getMessage("openinfolder"));
+						openInFolder.setTitle(I18N.message("openinfolder"));
 						openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 							public void onClick(MenuItemClickEvent event) {
 								ListGridRecord record = list.getSelectedRecord();
@@ -276,7 +276,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		// list of hits
 		GUISearchOptions options = Search.get().getOptions();
 		NumberFormat format = NumberFormat.getFormat("#.###");
-		String stats = I18N.getMessage("resultstat", new String[] { options.getExpression(),
+		String stats = I18N.message("resultstat", new String[] { options.getExpression(),
 				format.format((double) Search.get().getTime() / (double) 1000) });
 		infoPanel.setMessage(stats);
 
@@ -305,7 +305,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		toolStrip.setWidth100();
 		toolStrip.addSpacer(2);
 		ToolStripButton showSnippets = new ToolStripButton();
-		showSnippets.setTitle(I18N.getMessage("showsnippets"));
+		showSnippets.setTitle(I18N.message("showsnippets"));
 		toolStrip.addButton(showSnippets);
 		showSnippets.addClickHandler(new ClickHandler() {
 			@Override
@@ -316,7 +316,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 		toolStrip.addSeparator();
 		ToolStripButton save = new ToolStripButton();
-		save.setTitle(I18N.getMessage("save"));
+		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -328,20 +328,20 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 		if (!Session.get().isFeatureEnabled("ENTERPRISE")) {
 			save.setDisabled(true);
-			save.setTooltip(I18N.getMessage("featuredisabled"));
+			save.setTooltip(I18N.message("featuredisabled"));
 		}
 		toolStrip.addButton(save);
 
 		if (Search.get().isHasMore()) {
 			toolStrip.addSeparator();
 			final IntegerItem max = ItemFactory.newValidateIntegerItem("repeatNumber", "", null, 1, null);
-			max.setHint(I18N.getMessage("hits"));
+			max.setHint(I18N.message("hits"));
 			max.setShowTitle(false);
 			max.setDefaultValue(40);
 			max.setWidth(40);
 
 			ToolStripButton repeat = new ToolStripButton();
-			repeat.setTitle(I18N.getMessage("display"));
+			repeat.setTitle(I18N.message("display"));
 			toolStrip.addButton(repeat);
 			toolStrip.addFormItem(max);
 			repeat.addClickHandler(new ClickHandler() {
@@ -374,7 +374,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		initialize();
 		MainPanel.get().selectSearchTab();
 		if (Search.get().isHasMore()) {
-			Log.warn(I18N.getMessage("possiblemorehits"), I18N.getMessage("possiblemorehitsdetail"));
+			Log.warn(I18N.message("possiblemorehits"), I18N.message("possiblemorehitsdetail"));
 		}
 	}
 

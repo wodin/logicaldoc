@@ -3,11 +3,11 @@ package com.logicaldoc.gui.frontend.client.system;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITask;
 import com.logicaldoc.gui.common.client.data.TasksDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -65,7 +65,7 @@ public class TasksPanel extends VLayout {
 		Menu contextMenu = new Menu();
 
 		MenuItem taskExecution = new MenuItem();
-		taskExecution.setTitle(I18N.getMessage("execute"));
+		taskExecution.setTitle(I18N.message("execute"));
 		taskExecution.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				service.stopTask(list.getSelectedRecord().getAttributeAsString("name"), new AsyncCallback<Boolean>() {
@@ -88,7 +88,7 @@ public class TasksPanel extends VLayout {
 			taskExecution.setEnabled(false);
 
 		MenuItem taskStop = new MenuItem();
-		taskStop.setTitle(I18N.getMessage("stop"));
+		taskStop.setTitle(I18N.message("stop"));
 		taskStop.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				service.stopTask(list.getSelectedRecord().getAttributeAsString("name"), new AsyncCallback<Boolean>() {
@@ -112,7 +112,7 @@ public class TasksPanel extends VLayout {
 			taskStop.setEnabled(false);
 
 		MenuItem enableTask = new MenuItem();
-		enableTask.setTitle(I18N.getMessage("enable"));
+		enableTask.setTitle(I18N.message("enable"));
 		enableTask.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				service.enableTask(Session.get().getSid(), list.getSelectedRecord().getAttributeAsString("name"),
@@ -137,7 +137,7 @@ public class TasksPanel extends VLayout {
 			enableTask.setEnabled(false);
 
 		MenuItem disableTask = new MenuItem();
-		disableTask.setTitle(I18N.getMessage("disable"));
+		disableTask.setTitle(I18N.message("disable"));
 		disableTask.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				service.disableTask(Session.get().getSid(), list.getSelectedRecord().getAttributeAsString("name"),
@@ -180,30 +180,30 @@ public class TasksPanel extends VLayout {
 		enabled.setImageURLSuffix(".png");
 		enabled.setCanFilter(false);
 
-		ListGridField label = new ListGridField("label", I18N.getMessage("task"), 200);
+		ListGridField label = new ListGridField("label", I18N.message("task"), 200);
 		label.setCanFilter(true);
 		label.setCanSort(false);
 
-		ListGridField lastStart = new ListGridField("lastStart", I18N.getMessage("laststart"), 110);
+		ListGridField lastStart = new ListGridField("lastStart", I18N.message("laststart"), 110);
 		lastStart.setType(ListGridFieldType.DATE);
 		lastStart.setCellFormatter(new DateCellFormatter());
 		lastStart.setCanFilter(false);
 		lastStart.setAlign(Alignment.CENTER);
 		lastStart.setCanSort(false);
 
-		ListGridField nextStart = new ListGridField("nextStart", I18N.getMessage("nextstart"), 110);
+		ListGridField nextStart = new ListGridField("nextStart", I18N.message("nextstart"), 110);
 		nextStart.setType(ListGridFieldType.DATE);
 		nextStart.setCellFormatter(new DateCellFormatter());
 		nextStart.setCanFilter(false);
 		nextStart.setAlign(Alignment.CENTER);
 		nextStart.setCanSort(false);
 
-		ListGridField scheduling = new ListGridField("scheduling", I18N.getMessage("scheduling"), 150);
+		ListGridField scheduling = new ListGridField("scheduling", I18N.message("scheduling"), 150);
 		scheduling.setCanFilter(false);
 		scheduling.setAlign(Alignment.CENTER);
 		scheduling.setCanSort(false);
 
-		ListGridField progress = new ListGridField("progress", I18N.getMessage("progress"), 100);
+		ListGridField progress = new ListGridField("progress", I18N.message("progress"), 100);
 		progress.setCanFilter(false);
 		progress.setAlign(Alignment.CENTER);
 		progress.setCanSort(false);
@@ -215,7 +215,7 @@ public class TasksPanel extends VLayout {
 					return value + "%";
 				else if (GUITask.STATUS_RUNNING == record.getAttributeAsInt("status")
 						&& record.getAttributeAsBoolean("eenabled") && record.getAttributeAsBoolean("indeterminate"))
-					return I18N.getMessage("running");
+					return I18N.message("running");
 				else
 					return "";
 			}
@@ -265,7 +265,7 @@ public class TasksPanel extends VLayout {
 
 		addMember(results);
 
-		detailPanel = new Label("&nbsp;" + I18N.getMessage("selecttask"));
+		detailPanel = new Label("&nbsp;" + I18N.message("selecttask"));
 		details = new VLayout();
 		details.setAlign(Alignment.CENTER);
 		details.addMember(detailPanel);
@@ -323,7 +323,7 @@ public class TasksPanel extends VLayout {
 		toolStrip.setWidth100();
 
 		ToolStripButton refreshnow = new ToolStripButton();
-		refreshnow.setTitle(I18N.getMessage("refresh"));
+		refreshnow.setTitle(I18N.message("refresh"));
 		toolStrip.addButton(refreshnow);
 		refreshnow.addClickHandler(new ClickHandler() {
 			@Override
@@ -335,13 +335,13 @@ public class TasksPanel extends VLayout {
 
 		toolStrip.addSeparator();
 		final IntegerItem delay = ItemFactory.newValidateIntegerItem("delay", "", null, 1, null);
-		delay.setHint(I18N.getMessage("seconds").toLowerCase());
+		delay.setHint(I18N.message("seconds").toLowerCase());
 		delay.setShowTitle(false);
 		delay.setDefaultValue(10);
 		delay.setWidth(40);
 
 		ToolStripButton refresh = new ToolStripButton();
-		refresh.setTitle(I18N.getMessage("refresheach"));
+		refresh.setTitle(I18N.message("refresheach"));
 		toolStrip.addButton(refresh);
 		toolStrip.addFormItem(delay);
 		refresh.addClickHandler(new ClickHandler() {

@@ -2,10 +2,10 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
@@ -28,19 +28,19 @@ public class SecurityMenu extends VLayout {
 		setMargin(10);
 		setMembersMargin(5);
 
-		Button users = new Button(I18N.getMessage("users"));
+		Button users = new Button(I18N.message("users"));
 		users.setWidth100();
 		users.setHeight(25);
 
-		Button groups = new Button(I18N.getMessage("groups"));
+		Button groups = new Button(I18N.message("groups"));
 		groups.setWidth100();
 		groups.setHeight(25);
 
-		Button security = new Button(I18N.getMessage("security"));
+		Button security = new Button(I18N.message("security"));
 		security.setWidth100();
 		security.setHeight(25);
 
-		Button extAuth = new Button(I18N.getMessage("extauth"));
+		Button extAuth = new Button(I18N.message("extauth"));
 		extAuth.setWidth100();
 		extAuth.setHeight(25);
 

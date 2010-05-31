@@ -2,9 +2,9 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.UsersDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -59,22 +59,22 @@ public class GroupUsersPanel extends VLayout {
 		ListGridField id = new ListGridField("id", 50);
 		id.setHidden(true);
 
-		ListGridField username = new ListGridField("username", I18N.getMessage("username"), 100);
+		ListGridField username = new ListGridField("username", I18N.message("username"), 100);
 		username.setCanFilter(true);
 
-		ListGridField name = new ListGridField("name", I18N.getMessage("lastname"), 100);
+		ListGridField name = new ListGridField("name", I18N.message("lastname"), 100);
 		name.setCanFilter(true);
 
-		ListGridField firstName = new ListGridField("firstName", I18N.getMessage("firstname"), 100);
+		ListGridField firstName = new ListGridField("firstName", I18N.message("firstname"), 100);
 		firstName.setCanFilter(true);
 
-		ListGridField phone = new ListGridField("phone", I18N.getMessage("phone"), 90);
+		ListGridField phone = new ListGridField("phone", I18N.message("phone"), 90);
 		phone.setCanFilter(true);
 
-		ListGridField cell = new ListGridField("cell", I18N.getMessage("cell"), 90);
+		ListGridField cell = new ListGridField("cell", I18N.message("cell"), 90);
 		cell.setCanFilter(true);
 
-		ListGridField email = new ListGridField("email", I18N.getMessage("email"), 200);
+		ListGridField email = new ListGridField("email", I18N.message("email"), 200);
 		email.setCanFilter(true);
 
 		ListGridField active = new ListGridField("active", " ", 24);
@@ -107,7 +107,7 @@ public class GroupUsersPanel extends VLayout {
 		userForm.setItems(user);
 
 		buttons.addMember(userForm);
-		Button addUser = new Button(I18N.getMessage("adduser"));
+		Button addUser = new Button(I18N.message("adduser"));
 		buttons.addMember(addUser);
 		addUser.addClickHandler(new ClickHandler() {
 			@Override
@@ -155,7 +155,7 @@ public class GroupUsersPanel extends VLayout {
 		list.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				infoPanel.setMessage(I18N.getMessage("showusers", Integer.toString(list.getTotalRows())));
+				infoPanel.setMessage(I18N.message("showusers", Integer.toString(list.getTotalRows())));
 			}
 		});
 
@@ -174,7 +174,7 @@ public class GroupUsersPanel extends VLayout {
 		final ListGridRecord[] selection = list.getSelection();
 
 		MenuItem remove = new MenuItem();
-		remove.setTitle(I18N.getMessage("removefromgroup"));
+		remove.setTitle(I18N.message("removefromgroup"));
 		remove.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null || selection.length == 0)
@@ -184,7 +184,7 @@ public class GroupUsersPanel extends VLayout {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				SC.ask(I18N.getMessage("question"), I18N.getMessage("confirmdelete"), new BooleanCallback() {
+				SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

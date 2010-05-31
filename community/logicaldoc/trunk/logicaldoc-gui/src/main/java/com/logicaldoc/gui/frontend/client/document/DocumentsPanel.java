@@ -3,10 +3,10 @@ package com.logicaldoc.gui.frontend.client.document;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.FolderObserver;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.folder.FolderDetailsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
@@ -64,14 +64,14 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		documentsMenu.setShowResizeBar(true);
 
 		// Initialize the listing panel as placeholder
-		listingPanel = new Label("&nbsp;" + I18N.getMessage("selectfolder"));
+		listingPanel = new Label("&nbsp;" + I18N.message("selectfolder"));
 		listing.setAlign(Alignment.CENTER);
 		listing.setHeight("51%");
 		listing.setShowResizeBar(true);
 		listing.addMember(listingPanel);
 
 		// Add a details panel under the listing one
-		detailPanel = new Label("&nbsp;" + I18N.getMessage("selectfolderordoc"));
+		detailPanel = new Label("&nbsp;" + I18N.message("selectfolderordoc"));
 		details.setAlign(Alignment.CENTER);
 		details.addMember(detailPanel);
 

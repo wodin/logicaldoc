@@ -10,7 +10,7 @@ import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.gui.setup.client.services.SetupServiceAsync;
@@ -113,7 +113,7 @@ public class Setup implements EntryPoint {
 
 		// This is the button used to confirm each step
 		submit = new IButton();
-		submit.setTitle(I18N.getMessage("next"));
+		submit.setTitle(I18N.message("next"));
 		submit.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				onSubmit();
@@ -122,7 +122,7 @@ public class Setup implements EntryPoint {
 
 		// Prepare the heading panel with Logo and Title
 		// Prepare the logo image to be shown inside the login form
-		Label header = new Label(I18N.getMessage("setup"));
+		Label header = new Label(I18N.message("setup"));
 		header.setStyleName("setupHeader");
 		header.setIcon("[SKIN]/brand/logo.png");
 		header.setIconWidth(205);
@@ -159,7 +159,7 @@ public class Setup implements EntryPoint {
 		// Prepare the tab used to configure the repository where documents and
 		// other data will be stored
 		Tab repositoryTab = new Tab();
-		repositoryTab.setTitle(I18N.getMessage("repository"));
+		repositoryTab.setTitle(I18N.message("repository"));
 
 		final DynamicForm repositoryForm = new DynamicForm();
 		repositoryForm.setID("repositoryForm");
@@ -180,7 +180,7 @@ public class Setup implements EntryPoint {
 	private Tab setupSmtp(final ValuesManager vm) {
 		// Prepare the SMTP connection tab
 		Tab smtpTab = new Tab();
-		smtpTab.setTitle(I18N.getMessage("smtpserver"));
+		smtpTab.setTitle(I18N.message("smtpserver"));
 		final DynamicForm smtpForm = new DynamicForm();
 		smtpForm.setDisabled(true);
 		smtpForm.setID("smtpForm");
@@ -198,18 +198,18 @@ public class Setup implements EntryPoint {
 		smtpUsername.setWrapTitle(false);
 
 		PasswordItem smtpPassword = new PasswordItem();
-		smtpPassword.setTitle(I18N.getMessage("password"));
+		smtpPassword.setTitle(I18N.message("password"));
 		smtpPassword.setName(SMTP_PASSWORD);
 		smtpPassword.setWrapTitle(false);
 
 		BooleanItem smtpSecureAuth = new BooleanItem();
-		smtpSecureAuth.setTitle(I18N.getMessage("secureauth"));
+		smtpSecureAuth.setTitle(I18N.message("secureauth"));
 		smtpSecureAuth.setName(SMTP_SECURE_AUTH);
 		smtpSecureAuth.setWrapTitle(false);
 		smtpSecureAuth.setDefaultValue(false);
 
 		SelectItem smtpConnectionSecurity = new SelectItem();
-		smtpConnectionSecurity.setTitle(I18N.getMessage("connectionsecurity"));
+		smtpConnectionSecurity.setTitle(I18N.message("connectionsecurity"));
 		smtpConnectionSecurity.setName("smtpConnectionSecurity");
 		smtpConnectionSecurity.setDefaultValue(Constants.SMTP_SECURITY_NONE);
 		smtpConnectionSecurity.setWrapTitle(false);
@@ -234,10 +234,10 @@ public class Setup implements EntryPoint {
 	 */
 	private Tab setupLanguage(final ValuesManager vm) {
 		Tab languageTab = new Tab();
-		languageTab.setTitle(I18N.getMessage(LANGUAGE));
+		languageTab.setTitle(I18N.message(LANGUAGE));
 
 		SelectItem languageItem = ItemFactory.newLanguageSelector(LANGUAGE, false);
-		languageItem.setTitle(I18N.getMessage("defaultlang"));
+		languageItem.setTitle(I18N.message("defaultlang"));
 		languageItem.setRequired(true);
 
 		final DynamicForm languageForm = new DynamicForm();
@@ -264,7 +264,7 @@ public class Setup implements EntryPoint {
 				"SELECT 1 FROM DUAL" });
 
 		Tab databaseTab = new Tab();
-		databaseTab.setTitle(I18N.getMessage("database"));
+		databaseTab.setTitle(I18N.message("database"));
 
 		final DynamicForm databaseForm = new DynamicForm();
 		databaseForm.setID("database");
@@ -276,14 +276,14 @@ public class Setup implements EntryPoint {
 		dbType.setWrapTitle(false);
 		dbType.setRequired(true);
 		dbType.setVertical(false);
-		dbType.setValueMap(INTERNAL, I18N.getMessage("external"));
+		dbType.setValueMap(INTERNAL, I18N.message("external"));
 		dbType.setValue(INTERNAL);
 		dbType.setRedrawOnChange(true);
-		dbType.setTitle(I18N.getMessage("dbtype"));
+		dbType.setTitle(I18N.message("dbtype"));
 
 		// The database engine, if the External db was chosen
 		SelectItem dbEngine = new SelectItem();
-		dbEngine.setTitle(I18N.getMessage("dbengine"));
+		dbEngine.setTitle(I18N.message("dbengine"));
 		dbEngine.setWrapTitle(false);
 		dbEngine.setVisible(false);
 		dbEngine.setName(DB_ENGINE);
@@ -351,7 +351,7 @@ public class Setup implements EntryPoint {
 		// The password to access the external DB
 		PasswordItem dbPassword = new PasswordItem();
 		dbPassword.setVisible(false);
-		dbPassword.setTitle(I18N.getMessage("password"));
+		dbPassword.setTitle(I18N.message("password"));
 		dbPassword.setName(DB_PASSWORD);
 		dbPassword.setWrapTitle(false);
 		dbPassword.setShowIfCondition(new FormItemIfFunction() {
@@ -413,7 +413,7 @@ public class Setup implements EntryPoint {
 
 					@Override
 					public void onSuccess(Void arg) {
-						SC.say(I18N.getMessage("installationperformed"), I18N.getMessage("installationend", context
+						SC.say(I18N.message("installationperformed"), I18N.message("installationend", context
 								.get("product_name")));
 					}
 				});
@@ -424,7 +424,7 @@ public class Setup implements EntryPoint {
 				if (step < tabs.getSelectedTabNumber())
 					step++;
 				if (step == 3)
-					submit.setTitle(I18N.getMessage("setup"));
+					submit.setTitle(I18N.message("setup"));
 			}
 		}
 	}

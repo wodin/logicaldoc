@@ -1,13 +1,13 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.user.client.Window;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.smartgwt.client.data.Record;
@@ -50,10 +50,10 @@ public class DocumentsListPanel extends VLayout {
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
-		ListGridField title = new ListGridField("title", I18N.getMessage("title"), 200);
+		ListGridField title = new ListGridField("title", I18N.message("title"), 200);
 		title.setCanFilter(true);
 
-		ListGridField size = new ListGridField("size", I18N.getMessage("size"), 70);
+		ListGridField size = new ListGridField("size", I18N.message("size"), 70);
 		size.setAlign(Alignment.CENTER);
 		size.setType(ListGridFieldType.FLOAT);
 		size.setCellFormatter(new FileSizeCellFormatter());
@@ -68,37 +68,37 @@ public class DocumentsListPanel extends VLayout {
 		icon.setImageURLSuffix(".png");
 		icon.setCanFilter(false);
 
-		ListGridField version = new ListGridField("version", I18N.getMessage("version"), 55);
+		ListGridField version = new ListGridField("version", I18N.message("version"), 55);
 		version.setAlign(Alignment.CENTER);
 		version.setCanFilter(true);
 
-		ListGridField lastModified = new ListGridField("lastModified", I18N.getMessage("lastmodified"), 110);
+		ListGridField lastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 110);
 		lastModified.setAlign(Alignment.CENTER);
 		lastModified.setType(ListGridFieldType.DATE);
 		lastModified.setCellFormatter(new DateCellFormatter());
 		lastModified.setCanFilter(false);
 
-		ListGridField publisher = new ListGridField("publisher", I18N.getMessage("publisher"), 90);
+		ListGridField publisher = new ListGridField("publisher", I18N.message("publisher"), 90);
 		publisher.setAlign(Alignment.CENTER);
 		publisher.setCanFilter(true);
 
-		ListGridField published = new ListGridField("published", I18N.getMessage("publishedon"), 110);
+		ListGridField published = new ListGridField("published", I18N.message("publishedon"), 110);
 		published.setAlign(Alignment.CENTER);
 		published.setType(ListGridFieldType.DATE);
 		published.setCellFormatter(new DateCellFormatter());
 		published.setCanFilter(false);
 
-		ListGridField creator = new ListGridField("creator", I18N.getMessage("creator"), 90);
+		ListGridField creator = new ListGridField("creator", I18N.message("creator"), 90);
 		creator.setAlign(Alignment.CENTER);
 		creator.setCanFilter(true);
 
-		ListGridField created = new ListGridField("created", I18N.getMessage("createdon"), 110);
+		ListGridField created = new ListGridField("created", I18N.message("createdon"), 110);
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
 		created.setCellFormatter(new DateCellFormatter());
 		created.setCanFilter(false);
 
-		ListGridField customId = new ListGridField("customId", I18N.getMessage("customid"), 110);
+		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 		customId.setType(ListGridFieldType.TEXT);
 		customId.setCanFilter(false);
 
@@ -129,7 +129,7 @@ public class DocumentsListPanel extends VLayout {
 		locked.setImageURLSuffix(".png");
 		locked.setCanFilter(false);
 
-		ListGridField filename = new ListGridField("filename", I18N.getMessage("filename"), 200);
+		ListGridField filename = new ListGridField("filename", I18N.message("filename"), 200);
 		filename.setHidden(true);
 		filename.setCanFilter(true);
 
@@ -211,7 +211,7 @@ public class DocumentsListPanel extends VLayout {
 		list.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				infoPanel.setMessage(I18N.getMessage("showndocuments", Integer.toString(list.getTotalRows())));
+				infoPanel.setMessage(I18N.message("showndocuments", Integer.toString(list.getTotalRows())));
 				if (hiliteDoc != null)
 					DocumentsListPanel.this.hiliteDocument(hiliteDoc);
 			}

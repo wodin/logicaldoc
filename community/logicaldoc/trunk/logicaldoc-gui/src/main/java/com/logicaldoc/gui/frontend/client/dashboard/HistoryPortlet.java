@@ -3,10 +3,10 @@ package com.logicaldoc.gui.frontend.client.dashboard;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.DocumentHistoryDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -53,12 +53,12 @@ public class HistoryPortlet extends Portlet {
 				|| Constants.EVENT_CHANGED.equals(eventCode))
 			max = 10;
 
-		ListGridField version = new ListGridField("version", I18N.getMessage("version"), 70);
-		ListGridField date = new ListGridField("date", I18N.getMessage("date"), 110);
+		ListGridField version = new ListGridField("version", I18N.message("version"), 70);
+		ListGridField date = new ListGridField("date", I18N.message("date"), 110);
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
-		ListGridField title = new ListGridField("title", I18N.getMessage("title"));
+		ListGridField title = new ListGridField("title", I18N.message("title"));
 		ListGridField icon = new ListGridField("icon", " ", 24);
 		icon.setType(ListGridFieldType.IMAGE);
 		icon.setCanSort(false);
@@ -120,7 +120,7 @@ public class HistoryPortlet extends Portlet {
 							l.get(i).setAttribute("new", false);
 						}
 						list.redraw();
-						setTitle(I18N.getMessage(eventCode + "docs", Integer.toString(list.getTotalRows())));
+						setTitle(I18N.message(eventCode + "docs", Integer.toString(list.getTotalRows())));
 					}
 				});
 			}
@@ -155,9 +155,9 @@ public class HistoryPortlet extends Portlet {
 				}
 
 				int total = list.getTotalRows();
-				String title = I18N.getMessage(eventCode + "docs", Integer.toString(total));
+				String title = I18N.message(eventCode + "docs", Integer.toString(total));
 				if (unread > 0)
-					title = "<b>" + title + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + I18N.getMessage("news")
+					title = "<b>" + title + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + I18N.message("news")
 							+ ": " + unread + "</b>";
 				setTitle(title);
 

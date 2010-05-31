@@ -2,10 +2,10 @@ package com.logicaldoc.gui.frontend.client.search;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.document.DocumentDetailsPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -55,7 +55,7 @@ public class SearchPanel extends HLayout implements SearchObserver {
 		content.addMember(listingPanel);
 
 		// Add a details panel under the listing one
-		detailPanel = new Label("&nbsp;" + I18N.getMessage("selectahit"));
+		detailPanel = new Label("&nbsp;" + I18N.message("selectahit"));
 		details.setAlign(Alignment.CENTER);
 		details.addMember(detailPanel);
 
@@ -83,7 +83,7 @@ public class SearchPanel extends HLayout implements SearchObserver {
 		if (docId > 0)
 			detailPanel = new DocumentDetailsPanel(listingPanel);
 		else
-			detailPanel = new Label("&nbsp;" + I18N.getMessage("selectahit"));
+			detailPanel = new Label("&nbsp;" + I18N.message("selectahit"));
 
 		details.addMember(detailPanel);
 

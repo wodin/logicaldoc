@@ -4,9 +4,9 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
@@ -52,7 +52,7 @@ public class ClientToolsSettingsPanel extends VLayout {
 		tabs.setHeight(200);
 
 		Tab webService = new Tab();
-		webService.setTitle(I18N.getMessage("webservice"));
+		webService.setTitle(I18N.message("webservice"));
 
 		DynamicForm webServiceForm = new DynamicForm();
 		webServiceForm.setValuesManager(vm);
@@ -66,13 +66,13 @@ public class ClientToolsSettingsPanel extends VLayout {
 
 		// Url
 		LinkItem url = new LinkItem();
-		url.setName(I18N.getMessage("url"));
+		url.setName(I18N.message("url"));
 		url.setLinkTitle(this.wsSettings.getUrl());
 		url.setValue(this.wsSettings.getUrl());
 
 		// Descriptor
 		LinkItem descriptor = new LinkItem();
-		descriptor.setName(I18N.getMessage("descriptor"));
+		descriptor.setName(I18N.message("descriptor"));
 		descriptor.setLinkTitle(this.wsSettings.getDescriptor());
 		descriptor.setValue(this.wsSettings.getDescriptor());
 
@@ -80,7 +80,7 @@ public class ClientToolsSettingsPanel extends VLayout {
 		webService.setPane(webServiceForm);
 
 		Tab webDav = new Tab();
-		webDav.setTitle(I18N.getMessage("webdav"));
+		webDav.setTitle(I18N.message("webdav"));
 		DynamicForm webDavForm = new DynamicForm();
 		webDavForm.setValuesManager(vm);
 		webDavForm.setTitleOrientation(TitleOrientation.TOP);
@@ -93,7 +93,7 @@ public class ClientToolsSettingsPanel extends VLayout {
 
 		// Url
 		LinkItem wdUrl = new LinkItem();
-		wdUrl.setName(I18N.getMessage("url"));
+		wdUrl.setName(I18N.message("url"));
 		wdUrl.setLinkTitle(this.webDavSettings.getUrl());
 		wdUrl.setValue(this.webDavSettings.getUrl());
 
@@ -103,7 +103,7 @@ public class ClientToolsSettingsPanel extends VLayout {
 		tabs.setTabs(webService, webDav);
 
 		IButton save = new IButton();
-		save.setTitle(I18N.getMessage("save"));
+		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				final Map<String, Object> values = vm.getValues();
@@ -125,7 +125,7 @@ public class ClientToolsSettingsPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void ret) {
-									Log.info(I18N.getMessage("settingssaved"), null);
+									Log.info(I18N.message("settingssaved"), null);
 								}
 							});
 				}

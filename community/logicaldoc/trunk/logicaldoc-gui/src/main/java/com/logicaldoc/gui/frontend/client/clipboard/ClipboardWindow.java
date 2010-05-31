@@ -1,7 +1,7 @@
 package com.logicaldoc.gui.frontend.client.clipboard;
 
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
@@ -48,7 +48,7 @@ public class ClipboardWindow extends Window {
 		});
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, trash, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.getMessage("clipboard"));
+		setTitle(I18N.message("clipboard"));
 		setWidth(255);
 		setHeight(200);
 		setCanDragResize(true);

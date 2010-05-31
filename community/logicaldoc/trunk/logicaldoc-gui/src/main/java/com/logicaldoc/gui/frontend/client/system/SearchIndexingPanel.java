@@ -4,13 +4,13 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
 import com.logicaldoc.gui.common.client.data.ParsersDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -103,20 +103,20 @@ public class SearchIndexingPanel extends VLayout {
 	}
 
 	private Tab fillIndexingQueueTab(int maxValue) {
-		Tab indexingQueueTab = new Tab(I18N.getMessage("indexingqueue"));
+		Tab indexingQueueTab = new Tab(I18N.message("indexingqueue"));
 		indexingQueueTabPanel = new VLayout();
 		indexingQueueTabPanel.setWidth100();
 		indexingQueueTabPanel.setHeight100();
 
 		final IntegerItem max = ItemFactory.newValidateIntegerItem("max", "", maxValue, 1, null);
-		max.setHint(I18N.getMessage("elements"));
+		max.setHint(I18N.message("elements"));
 		max.setShowTitle(false);
 		max.setWidth(40);
 
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setWidth100();
 		ToolStripButton display = new ToolStripButton();
-		display.setTitle(I18N.getMessage("display"));
+		display.setTitle(I18N.message("display"));
 		toolStrip.addButton(display);
 		toolStrip.addFormItem(max);
 		display.addClickHandler(new ClickHandler() {
@@ -134,10 +134,10 @@ public class SearchIndexingPanel extends VLayout {
 		ListGridField id = new ListGridField("id");
 		id.setHidden(true);
 
-		ListGridField title = new ListGridField("title", I18N.getMessage("title"), 200);
+		ListGridField title = new ListGridField("title", I18N.message("title"), 200);
 		title.setCanFilter(true);
 
-		ListGridField size = new ListGridField("size", I18N.getMessage("size"), 70);
+		ListGridField size = new ListGridField("size", I18N.message("size"), 70);
 		size.setAlign(Alignment.CENTER);
 		size.setType(ListGridFieldType.FLOAT);
 		size.setCellFormatter(new FileSizeCellFormatter());
@@ -152,37 +152,37 @@ public class SearchIndexingPanel extends VLayout {
 		icon.setImageURLSuffix(".png");
 		icon.setCanFilter(false);
 
-		ListGridField version = new ListGridField("version", I18N.getMessage("version"), 55);
+		ListGridField version = new ListGridField("version", I18N.message("version"), 55);
 		version.setAlign(Alignment.CENTER);
 		version.setCanFilter(true);
 
-		ListGridField lastModified = new ListGridField("lastModified", I18N.getMessage("lastmodified"), 110);
+		ListGridField lastModified = new ListGridField("lastModified", I18N.message("lastmodified"), 110);
 		lastModified.setAlign(Alignment.CENTER);
 		lastModified.setType(ListGridFieldType.DATE);
 		lastModified.setCellFormatter(new DateCellFormatter());
 		lastModified.setCanFilter(false);
 
-		ListGridField publisher = new ListGridField("publisher", I18N.getMessage("publisher"), 90);
+		ListGridField publisher = new ListGridField("publisher", I18N.message("publisher"), 90);
 		publisher.setAlign(Alignment.CENTER);
 		publisher.setCanFilter(true);
 
-		ListGridField published = new ListGridField("published", I18N.getMessage("publishedon"), 110);
+		ListGridField published = new ListGridField("published", I18N.message("publishedon"), 110);
 		published.setAlign(Alignment.CENTER);
 		published.setType(ListGridFieldType.DATE);
 		published.setCellFormatter(new DateCellFormatter());
 		published.setCanFilter(false);
 
-		ListGridField creator = new ListGridField("creator", I18N.getMessage("creator"), 90);
+		ListGridField creator = new ListGridField("creator", I18N.message("creator"), 90);
 		creator.setAlign(Alignment.CENTER);
 		creator.setCanFilter(true);
 
-		ListGridField created = new ListGridField("created", I18N.getMessage("createdon"), 110);
+		ListGridField created = new ListGridField("created", I18N.message("createdon"), 110);
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
 		created.setCellFormatter(new DateCellFormatter());
 		created.setCanFilter(false);
 
-		ListGridField customId = new ListGridField("customId", I18N.getMessage("customid"), 110);
+		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 		customId.setType(ListGridFieldType.TEXT);
 		customId.setCanFilter(false);
 
@@ -204,7 +204,7 @@ public class SearchIndexingPanel extends VLayout {
 		locked.setImageURLSuffix(".png");
 		locked.setCanFilter(false);
 
-		ListGridField filename = new ListGridField("filename", I18N.getMessage("filename"), 200);
+		ListGridField filename = new ListGridField("filename", I18N.message("filename"), 200);
 		filename.setHidden(true);
 		filename.setCanFilter(true);
 
@@ -238,7 +238,7 @@ public class SearchIndexingPanel extends VLayout {
 		docsList.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				infoPanel.setMessage(I18N.getMessage("showndocuments", Integer.toString(docsList.getTotalRows())));
+				infoPanel.setMessage(I18N.message("showndocuments", Integer.toString(docsList.getTotalRows())));
 			}
 		});
 
@@ -260,7 +260,7 @@ public class SearchIndexingPanel extends VLayout {
 	}
 
 	private Tab fillParsersTab() {
-		Tab parsersInfoTab = new Tab(I18N.getMessage("parsersinfo"));
+		Tab parsersInfoTab = new Tab(I18N.message("parsersinfo"));
 		parsersInfoTabPanel = new HLayout();
 		parsersInfoTabPanel.setWidth100();
 		parsersInfoTabPanel.setHeight100();
@@ -283,11 +283,11 @@ public class SearchIndexingPanel extends VLayout {
 		icon.setCanEdit(false);
 		icon.setCanFilter(false);
 
-		ListGridField extension = new ListGridField("extension", I18N.getMessage("extension"), 80);
+		ListGridField extension = new ListGridField("extension", I18N.message("extension"), 80);
 		extension.setCanEdit(false);
 		extension.setValidators(validator);
 
-		ListGridField name = new ListGridField("name", I18N.getMessage("name"));
+		ListGridField name = new ListGridField("name", I18N.message("name"));
 		name.setCanEdit(false);
 		name.setValidators(validator);
 
@@ -309,7 +309,7 @@ public class SearchIndexingPanel extends VLayout {
 	}
 
 	private Tab fillSearchEngineTab() {
-		Tab searchEngineTab = new Tab(I18N.getMessage("searchengine"));
+		Tab searchEngineTab = new Tab(I18N.message("searchengine"));
 		searchEngineTabPanel = new VLayout();
 		searchEngineTabPanel.setWidth100();
 		searchEngineTabPanel.setHeight100();
@@ -332,7 +332,7 @@ public class SearchIndexingPanel extends VLayout {
 		// Locked
 		CheckboxItem locked = new CheckboxItem();
 		locked.setName("locked");
-		locked.setTitle(I18N.getMessage("locked"));
+		locked.setTitle(I18N.message("locked"));
 		locked.setRedrawOnChange(true);
 		locked.setWidth(50);
 		locked.setDefaultValue(this.searchEngine.isLocked());
@@ -340,17 +340,17 @@ public class SearchIndexingPanel extends VLayout {
 		// Include Patters
 		TextItem includePatters = ItemFactory.newTextItem("includePatters", "includepatters", null);
 		includePatters.setDefaultValue(this.searchEngine.getIncludePatters());
-		includePatters.setHint(I18N.getMessage("separatedcomma"));
+		includePatters.setHint(I18N.message("separatedcomma"));
 
 		// Exclude Patters
 		TextItem excludePatters = ItemFactory.newTextItem("excludePatters", "excludepatters", null);
 		excludePatters.setDefaultValue(this.searchEngine.getExcludePatters());
-		excludePatters.setHint(I18N.getMessage("separatedcomma"));
+		excludePatters.setHint(I18N.message("separatedcomma"));
 
 		HLayout buttons = new HLayout();
 
 		IButton save = new IButton();
-		save.setTitle(I18N.getMessage("save"));
+		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				final Map<String, Object> values = vm.getValues();
@@ -370,7 +370,7 @@ public class SearchIndexingPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void ret) {
-									Log.info(I18N.getMessage("settingssaved"), null);
+									Log.info(I18N.message("settingssaved"), null);
 								}
 							});
 				}
@@ -378,7 +378,7 @@ public class SearchIndexingPanel extends VLayout {
 		});
 
 		IButton unlock = new IButton();
-		unlock.setTitle(I18N.getMessage("unlock"));
+		unlock.setTitle(I18N.message("unlock"));
 		unlock.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				service.unlocks(Session.get().getSid(), SearchIndexingPanel.this.searchEngine,
@@ -398,7 +398,7 @@ public class SearchIndexingPanel extends VLayout {
 
 		IButton rescheduleAll = new IButton();
 		rescheduleAll.setAutoFit(true);
-		rescheduleAll.setTitle(I18N.getMessage("rescheduleall"));
+		rescheduleAll.setTitle(I18N.message("rescheduleall"));
 		rescheduleAll.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				service.rescheduleAll(Session.get().getSid(), SearchIndexingPanel.this.searchEngine,
@@ -436,7 +436,7 @@ public class SearchIndexingPanel extends VLayout {
 
 		Menu contextMenu = new Menu();
 		MenuItem markUnindexable = new MenuItem();
-		markUnindexable.setTitle(I18N.getMessage("markunindexable"));
+		markUnindexable.setTitle(I18N.message("markunindexable"));
 		markUnindexable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null)

@@ -1,6 +1,6 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
-import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.widgets.FolderTree;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.Button;
@@ -20,7 +20,7 @@ public class MoveDialog extends Dialog {
 	public MoveDialog() {
 		super();
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.getMessage("move"));
+		setTitle(I18N.message("move"));
 		setWidth(250);
 		setHeight(200);
 		setCanDragResize(true);
@@ -40,7 +40,7 @@ public class MoveDialog extends Dialog {
 		folders.setWidth100();
 
 		Button move = new Button();
-		move.setTitle(I18N.getMessage("move"));
+		move.setTitle(I18N.message("move"));
 		move.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				FoldersNavigator.get().moveTo(

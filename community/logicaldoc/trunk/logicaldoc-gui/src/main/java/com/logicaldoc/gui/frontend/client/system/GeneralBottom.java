@@ -1,6 +1,6 @@
 package com.logicaldoc.gui.frontend.client.system;
 
-import com.logicaldoc.gui.common.client.I18N;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.Alignment;
@@ -27,7 +27,7 @@ public class GeneralBottom extends HLayout {
 		setMembersMargin(10);
 
 		Tab system = new Tab();
-		system.setTitle(I18N.getMessage("system"));
+		system.setTitle(I18N.message("system"));
 
 		HLayout form = new HLayout();
 		form.setWidth(200);
@@ -41,7 +41,7 @@ public class GeneralBottom extends HLayout {
 		productName.setShouldSaveValue(false);
 		productName.setWrapTitle(false);
 
-		StaticTextItem version = ItemFactory.newStaticTextItem("version", "", I18N.getMessage("version") + " "
+		StaticTextItem version = ItemFactory.newStaticTextItem("version", "", I18N.message("version") + " "
 				+ Util.getContext().get("product_release"));
 		version.setShouldSaveValue(false);
 
@@ -71,7 +71,7 @@ public class GeneralBottom extends HLayout {
 		supportForm.setNumCols(1);
 
 		LinkItem support = new LinkItem();
-		support.setName(I18N.getMessage("support"));
+		support.setName(I18N.message("support"));
 		support.setLinkTitle(Util.getContext().get("product_support"));
 		support.setValue("mailto:" + Util.getContext().get("product_support") + "?subject=LogicalDOC Support - UUID("
 				+ Util.getContext().get("id") + ")");
@@ -92,7 +92,7 @@ public class GeneralBottom extends HLayout {
 		system.setPane(form);
 
 		Tab sessions = new Tab();
-		sessions.setTitle(I18N.getMessage("sessions"));
+		sessions.setTitle(I18N.message("sessions"));
 		sessions.setPane(new SessionsPanel());
 
 		tabs.setTabs(system, sessions);

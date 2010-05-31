@@ -3,9 +3,9 @@ package com.logicaldoc.gui.frontend.client.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.data.TagsDS;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.smartgwt.client.types.SelectionStyle;
@@ -97,8 +97,8 @@ public class TagsForm extends VLayout {
 
 		addMember(vocabulary);
 
-		ListGridField word = new ListGridField("word", I18N.getMessage("tag"), 200);
-		ListGridField count = new ListGridField("count", I18N.getMessage("count"), 50);
+		ListGridField word = new ListGridField("word", I18N.message("tag"), 200);
+		ListGridField count = new ListGridField("count", I18N.message("count"), 50);
 		tags = new ListGrid();
 		tags.setWidth100();
 		tags.setHeight100();
@@ -135,7 +135,7 @@ public class TagsForm extends VLayout {
 		Menu contextMenu = new Menu();
 
 		MenuItem execute = new MenuItem();
-		execute.setTitle(I18N.getMessage("execute"));
+		execute.setTitle(I18N.message("execute"));
 		execute.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord selection = tags.getSelectedRecord();

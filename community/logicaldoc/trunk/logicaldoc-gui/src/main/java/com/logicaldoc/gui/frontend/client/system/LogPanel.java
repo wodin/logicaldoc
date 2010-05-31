@@ -1,8 +1,8 @@
 package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
-import com.logicaldoc.gui.common.client.I18N;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.ContentsType;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.IButton;
@@ -33,7 +33,7 @@ public class LogPanel extends VLayout {
 		hStack.setLayoutMargin(10);
 		hStack.setMembersMargin(10);
 
-		IButton refresh = new IButton(I18N.getMessage("refresh"));
+		IButton refresh = new IButton(I18N.message("refresh"));
 		refresh.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				htmlPane.redraw();
