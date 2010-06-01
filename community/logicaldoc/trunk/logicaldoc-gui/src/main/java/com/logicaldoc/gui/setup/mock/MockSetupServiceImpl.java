@@ -16,6 +16,6 @@ public class MockSetupServiceImpl extends RemoteServiceServlet implements SetupS
 
 	@Override
 	public void setup(SetupInfo data) {
-		System.out.println("Received setup request for repository: "+data.getRepositoryFolder());
+		System.out.println("Received setup request for repository: " + data.getRepositoryFolder());
 	}
 }

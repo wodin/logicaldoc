@@ -17,9 +17,9 @@ import com.smartgwt.client.widgets.layout.HLayout;
  * @since 6.0
  */
 public class PieStats extends HLayout {
-	
+
 	private SystemServiceAsync service = (SystemServiceAsync) GWT.create(SystemService.class);
-	
+
 	public PieStats() {
 		super();
 		setMembersMargin(30);

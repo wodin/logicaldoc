@@ -31,7 +31,7 @@
 
 	<filter>
 		<filter-name>Charset Filter</filter-name>
-		<filter-class>com.logicaldoc.webapp.CharsetFilter</filter-class>
+		<filter-class>com.logicaldoc.web.CharsetFilter</filter-class>
 		<init-param>
 			<param-name>requestEncoding</param-name>
 			<param-value>UTF-8</param-value>
@@ -45,7 +45,7 @@
 	</filter-mapping>
 	<!-- Application initializer -->
 	<listener>
-		<listener-class>com.logicaldoc.webapp.ApplicationInitializer</listener-class>
+		<listener-class>com.logicaldoc.web.ApplicationInitializer</listener-class>
 	</listener>
 	<!--
 		Loads the root application context of this web app at startup. Use
@@ -68,8 +68,18 @@
 
 	<servlet>
 		<servlet-name>SecurityService</servlet-name>
-		<servlet-class>com.logicaldoc.webapp.security.SecurityServiceImpl</servlet-class>
+		<servlet-class>com.logicaldoc.web.security.SecurityServiceImpl</servlet-class>
 	</servlet>
+  
+    <servlet>
+        <servlet-name>SystemService</servlet-name>
+        <servlet-class>com.logicaldoc.gui.frontend.mock.MockSystemServiceImpl</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>SearchEngineService</servlet-name>
+        <servlet-class>com.logicaldoc.gui.frontend.mock.MockSearchEngineServiceImpl</servlet-class>
+    </servlet>
 
 	<servlet>
 		<servlet-name>DocumentService</servlet-name>
@@ -86,11 +96,21 @@
 		<servlet-name>SearchService</servlet-name>
 		<servlet-class>com.logicaldoc.gui.frontend.mock.MockSearchServiceImpl</servlet-class>
 	</servlet>
+  
+    <servlet>
+        <servlet-name>SettingService</servlet-name>
+        <servlet-class>com.logicaldoc.gui.frontend.mock.MockSettingServiceImpl</servlet-class>
+    </servlet>
 
 	<servlet>
 		<servlet-name>SetupService</servlet-name>
-		<servlet-class>com.logicaldoc.webapp.setup.SetupServiceImpl</servlet-class>
+		<servlet-class>com.logicaldoc.web.setup.SetupServiceImpl</servlet-class>
 	</servlet>
+  
+    <servlet>
+        <servlet-name>TemplateService</servlet-name>
+        <servlet-class>com.logicaldoc.gui.frontend.mock.MockTemplateServiceImpl</servlet-class>
+    </servlet>
 
 	<servlet>
 		<servlet-name>TagsData</servlet-name>
@@ -164,6 +184,11 @@
 		<servlet-class>
 			com.logicaldoc.gui.common.server.mock.MockTemplatesDataServlet</servlet-class>
 	</servlet>
+  
+    <servlet>
+        <servlet-name>SavedSearchesData</servlet-name>
+        <servlet-class>com.logicaldoc.gui.common.server.mock.MockSavedSearchesDataServlet</servlet-class>
+    </servlet>
 
 	<servlet>
 		<servlet-name>Thumbnail</servlet-name>
@@ -194,6 +219,21 @@
 		<servlet-name>SecurityService</servlet-name>
 		<url-pattern>/frontend/security</url-pattern>
 	</servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SettingService</servlet-name>
+        <url-pattern>/frontend/setting</url-pattern>
+    </servlet-mapping>
+  
+   <servlet-mapping>
+        <servlet-name>SystemService</servlet-name>
+        <url-pattern>/frontend/system</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>SearchEngineService</servlet-name>
+        <url-pattern>/frontend/searchengine</url-pattern>
+   </servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>DocumentService</servlet-name>
@@ -214,6 +254,11 @@
 		<servlet-name>SearchService</servlet-name>
 		<url-pattern>/frontend/search</url-pattern>
 	</servlet-mapping>
+  
+    <servlet-mapping>
+        <servlet-name>TemplateService</servlet-name>
+        <url-pattern>/frontend/template</url-pattern>
+    </servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>TagsData</servlet-name>

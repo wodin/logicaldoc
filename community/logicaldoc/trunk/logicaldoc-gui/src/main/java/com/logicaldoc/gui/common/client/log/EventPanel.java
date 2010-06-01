@@ -37,7 +37,7 @@ public class EventPanel extends HLayout {
 		setMargin(2);
 		setMembersMargin(2);
 
-		log = ItemFactory.newImg("logging.png");
+		log = ItemFactory.newImgIcon("logging.png");
 		log.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -47,7 +47,7 @@ public class EventPanel extends HLayout {
 			}
 		});
 
-		close = ItemFactory.newImg("delete.png");
+		close = ItemFactory.newImgIcon("delete.png");
 		close.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

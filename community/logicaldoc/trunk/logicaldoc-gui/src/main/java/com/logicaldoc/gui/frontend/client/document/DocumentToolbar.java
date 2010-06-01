@@ -34,7 +34,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	public DocumentToolbar() {
 		download.setTooltip(I18N.message("download"));
-		download.setIcon(ItemFactory.newImg("download.png").getSrc());
+		download.setIcon(ItemFactory.newImgIcon("download.png").getSrc());
 		download.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -45,7 +45,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
-		rss.setIcon(ItemFactory.newImg("rss.png").getSrc());
+		rss.setIcon(ItemFactory.newImgIcon("rss.png").getSrc());
 		rss.setTooltip(I18N.message("rssfeed"));
 		if (!Session.get().isFeatureEnabled("Feature_9"))
 			rss.setTooltip(I18N.message("featuredisabled"));
@@ -57,7 +57,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		});
 
 		pdf.setTooltip(I18N.message("exportpdf"));
-		pdf.setIcon(ItemFactory.newImg("pdf.png").getSrc());
+		pdf.setIcon(ItemFactory.newImgIcon("pdf.png").getSrc());
 		if (!Session.get().isFeatureEnabled("Feature_8"))
 			pdf.setTooltip(I18N.message("featuredisabled"));
 		pdf.addClickHandler(new ClickHandler() {
@@ -69,7 +69,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		});
 
 		add.setTooltip(I18N.message("adddocuments"));
-		add.setIcon(ItemFactory.newImg("document_add.png").getSrc());
+		add.setIcon(ItemFactory.newImgIcon("document_add.png").getSrc());
 		add.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

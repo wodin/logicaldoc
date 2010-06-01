@@ -28,9 +28,9 @@ public class ProgressCanvas extends HLayout {
 		// GUITask.STATUS_RUNNING;
 		Img image = new Img();
 		if (enabled && running) {
-			image = ItemFactory.newImg("paste.gif");
+			image = ItemFactory.newImgIcon("paste.gif");
 		} else {
-			image = ItemFactory.newImg("document_lock.png");
+			image = ItemFactory.newImgIcon("document_lock.png");
 		}
 
 		image.setWidth("16px");

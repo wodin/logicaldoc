@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.gui.setup.client.services.SetupServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -124,7 +125,7 @@ public class Setup implements EntryPoint {
 		// Prepare the logo image to be shown inside the login form
 		Label header = new Label(I18N.message("setup"));
 		header.setStyleName("setupHeader");
-		header.setIcon("[SKIN]/brand/logo.png");
+		header.setIcon(Util.imageUrl("logo.png"));
 		header.setIconWidth(205);
 		header.setIconHeight(40);
 		header.setHeight(45);
@@ -189,9 +190,11 @@ public class Setup implements EntryPoint {
 		smtpTab.setPane(smtpForm);
 
 		TextItem smtpHost = ItemFactory.newTextItem(SMTP_HOST, "host", null);
+		smtpHost.setValue("localhost");
 		smtpHost.setWrapTitle(false);
 
 		IntegerItem smtpPort = ItemFactory.newIntegerItem(SMTP_PORT, "port", null);
+		smtpPort.setValue(25);
 		smtpPort.setWrapTitle(false);
 
 		TextItem smtpUsername = ItemFactory.newTextItem(SMTP_USERNAME, "username", null);
@@ -221,8 +224,8 @@ public class Setup implements EntryPoint {
 		smtpConnectionSecurity.setValueMap(valueMap);
 
 		TextItem smtpSender = ItemFactory.newEmailItem(SMTP_SENDER, "sender", false);
-		smtpSender.setWidth(300);
 		smtpSender.setWrapTitle(false);
+		smtpSender.setValue("logicaldoc@acme.com");
 
 		smtpForm.setFields(smtpHost, smtpPort, smtpUsername, smtpPassword, smtpSender, smtpConnectionSecurity,
 				smtpSecureAuth);
@@ -389,7 +392,7 @@ public class Setup implements EntryPoint {
 				data.setSmtpPort((Integer) vm.getValues().get(SMTP_PORT));
 				data.setSmtpUsername(vm.getValueAsString(SMTP_USERNAME));
 				data.setSmtpPassword(vm.getValueAsString(SMTP_PASSWORD));
-				data.setSmtpSender(SMTP_SENDER);
+				data.setSmtpSender(vm.getValueAsString(SMTP_SENDER));
 				data.setSmtpSecureAuth((Boolean) vm.getValues().get(SMTP_SECURE_AUTH));
 				data.setSmtpSecuryConntection(vm.getValueAsString(SMTP_SECURITY_CONNECTION));
 				data.setRepositoryFolder(vm.getValueAsString(REPOSITORY_FOLDER));
@@ -398,10 +401,11 @@ public class Setup implements EntryPoint {
 				if (data.getDbType().equals(INTERNAL)) {
 					data.setDbEngine("Hsqldb");
 					data.setDbDriver("org.hsqldb.jdbcDriver");
-					data.setDbUrl(("jdbc:hsqldb:" + data.getRepositoryFolder() + "/db").replaceAll("//", "/"));
+					data.setDbUrl(("jdbc:hsqldb:" + data.getRepositoryFolder() + "/db/").replaceAll("//", "/"));
 					data.setDbUsername("sa");
 					data.setDbPassword("");
 					data.setDbValidationQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+					data.setDbDialect("org.hibernate.dialect.HSQLDialect");
 				}
 
 				SetupServiceAsync setupService = (SetupServiceAsync) GWT.create(SetupService.class);

@@ -6,6 +6,8 @@ import java.util.Set;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.log.Log;
+import com.smartgwt.client.util.SC;
 
 /**
  * Represents a client work session
@@ -47,12 +49,16 @@ public class Session {
 	}
 
 	public void init(GUISession session) {
-		this.session = session;
-		setLanguage(session.getUser().getLanguage());
-		if (session.isLoggedIn()) {
-			for (SessionObserver listener : sessionObservers) {
-				listener.onUserLoggedIn(session.getUser());
+		try {
+			this.session = session;
+			setLanguage(session.getUser().getLanguage());
+			if (session.isLoggedIn()) {
+				for (SessionObserver listener : sessionObservers) {
+					listener.onUserLoggedIn(session.getUser());
+				}
 			}
+		} catch (Throwable caught) {
+			Log.serverError(caught);
 		}
 	}
 

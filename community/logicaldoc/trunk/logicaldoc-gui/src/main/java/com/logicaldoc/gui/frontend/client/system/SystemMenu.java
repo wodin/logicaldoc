@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineServiceAsync;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -46,7 +47,7 @@ public class SystemMenu extends VLayout {
 		Button searchAndIndexing = new Button(I18N.message("searchandindexing"));
 		searchAndIndexing.setWidth100();
 		searchAndIndexing.setHeight(25);
-		
+
 		Button folders = new Button(I18N.message("folders"));
 		folders.setWidth100();
 		folders.setHeight(25);
@@ -99,7 +100,7 @@ public class SystemMenu extends VLayout {
 				});
 			}
 		});
-		
+
 		folders.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

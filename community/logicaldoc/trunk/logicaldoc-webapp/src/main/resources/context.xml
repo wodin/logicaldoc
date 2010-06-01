@@ -127,7 +127,7 @@
 
 	<!-- Hibernate SessionFactory -->
 	<bean id="SessionFactory"
-		class="com.logicaldoc.webapp.LogicalDOCSessionFactoryBean"
+		class="com.logicaldoc.web.LogicalDOCSessionFactoryBean"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
 		<property name="dataSource">

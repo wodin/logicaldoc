@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
+import com.smartgwt.client.util.SC;
 
 /**
  * The Frontend entry point
@@ -27,7 +28,6 @@ public class Frontend implements EntryPoint {
 	private LoginPanel loginPanel;
 
 	private MainPanel mainPanel;
-
 
 	/**
 	 * @return singleton Main instance
@@ -49,8 +49,8 @@ public class Frontend implements EntryPoint {
 		GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 
 			@Override
-			public void onUncaughtException(Throwable t) {
-				Log.serverError(t);
+			public void onUncaughtException(Throwable caught) {
+				Log.serverError(caught);
 			}
 
 		});

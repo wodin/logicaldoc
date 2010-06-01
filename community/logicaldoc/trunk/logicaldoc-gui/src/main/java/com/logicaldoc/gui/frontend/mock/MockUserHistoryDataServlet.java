@@ -15,8 +15,6 @@ public class MockUserHistoryDataServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		System.out.println("*** history");
-
 		long userId = Long.parseLong(request.getParameter("id"));
 		String locale = request.getParameter("locale");
 

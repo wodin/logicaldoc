@@ -1,4 +1,4 @@
-package com.logicaldoc.webapp;
+package com.logicaldoc.web;
 
 import java.lang.reflect.Method;
 import java.net.URL;
