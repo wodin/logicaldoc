@@ -277,12 +277,7 @@
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
-		<dependency>
-			<groupId>com.logicaldoc</groupId>
-			<artifactId>logicaldoc-web</artifactId>
-			<version>${project.version}</version>
-		  <classifier>api</classifier>
-    </dependency>
+
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-core</artifactId>

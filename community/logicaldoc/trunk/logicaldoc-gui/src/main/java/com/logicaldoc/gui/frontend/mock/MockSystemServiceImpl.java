@@ -27,7 +27,8 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 	public GUIParameter[][] getStatistics(String sid) {
 		GUIParameter[][] parameters = new GUIParameter[3][8];
 
-		// This is the correct mode to retrieve the doc dir path, but, for now,
+		// This is the correct mode to retrieve the doc dir path, but, for
+		// now,
 		// we use directly the doc dir path
 		// String docDirPath = Util.getContext().get("conf_docdir");
 
@@ -36,7 +37,8 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		GUIParameter docDirSize = new GUIParameter();
 		docDirSize.setName("documents");
 		// In hosted mode we cannot read from a folder on the hard disk.
-		// File docDir = new File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
+		// File docDir = new
+		// File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
 		// docDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(docDir)));
 
 		docDirSize.setValue(Long.toString(28642667));
@@ -45,7 +47,8 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		GUIParameter userDirSize = new GUIParameter();
 		userDirSize.setName("users");
 		// In hosted mode we cannot read from a folder on the hard disk.
-		// File docDir = new File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
+		// File docDir = new
+		// File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
 		// File userDir = new
 		// File("/C:/Users/Matteo/logicaldoc1005/data/users/");
 		// if (userDir.exists())
@@ -129,7 +132,8 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		GUIParameter notIndexed = new GUIParameter();
 		notIndexed.setName("notindexed");
 		// In hosted mode we cannot read from a folder on the hard disk.
-		// File docDir = new File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
+		// File docDir = new
+		// File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
 		// docDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(docDir)));
 
 		notIndexed.setValue(Long.toString(5));
@@ -138,7 +142,8 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		GUIParameter indexed = new GUIParameter();
 		indexed.setName("indexed");
 		// In hosted mode we cannot read from a folder on the hard disk.
-		// File docDir = new File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
+		// File docDir = new
+		// File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
 		// File userDir = new
 		// File("/C:/Users/Matteo/logicaldoc1005/data/users/");
 		// if (userDir.exists())
@@ -168,7 +173,8 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		GUIParameter notEmpty = new GUIParameter();
 		notEmpty.setName("withdocs");
 		// In hosted mode we cannot read from a folder on the hard disk.
-		// File docDir = new File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
+		// File docDir = new
+		// File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
 		// docDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(docDir)));
 
 		notEmpty.setValue(Long.toString(13));
@@ -177,7 +183,8 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		GUIParameter empty = new GUIParameter();
 		empty.setName("empty");
 		// In hosted mode we cannot read from a folder on the hard disk.
-		// File docDir = new File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
+		// File docDir = new
+		// File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
 		// File userDir = new
 		// File("/C:/Users/Matteo/logicaldoc1005/data/users/");
 		// if (userDir.exists())

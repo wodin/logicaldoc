@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.common.client.util;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Dictionary;
 
 public class Util {
@@ -19,9 +20,13 @@ public class Util {
 	}
 
 	public static String imageUrl(String imageName) {
-		return imagePrefix() + imageName;
+		return contextPath()+imagePrefix() + imageName;
 	}
 
+	public static String contextPath(){
+		return GWT.getModuleBaseURL().replace(GWT.getModuleName() + "/", ""); 
+	}
+	
 	public static Dictionary getContext() {
 		if (context == null)
 			context = Dictionary.getDictionary("context");
@@ -29,7 +34,7 @@ public class Util {
 	}
 
 	public static String imagePrefix() {
-		return "../skin/images/";
+		return "skin/images/";
 	}
 
 	/**

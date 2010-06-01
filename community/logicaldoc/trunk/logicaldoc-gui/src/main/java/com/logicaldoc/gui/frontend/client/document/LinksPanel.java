@@ -123,26 +123,25 @@ public class LinksPanel extends DocumentDetailTab {
 								ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 							}
 
-							SC.ask(I18N.message("question"), I18N.message("confirmdelete"),
-									new BooleanCallback() {
-										@Override
-										public void execute(Boolean value) {
-											if (value) {
-												documentService.deleteLinks(Session.get().getSid(), ids,
-														new AsyncCallback<Void>() {
-															@Override
-															public void onFailure(Throwable caught) {
-																Log.serverError(caught);
-															}
+							SC.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+								@Override
+								public void execute(Boolean value) {
+									if (value) {
+										documentService.deleteLinks(Session.get().getSid(), ids,
+												new AsyncCallback<Void>() {
+													@Override
+													public void onFailure(Throwable caught) {
+														Log.serverError(caught);
+													}
 
-															@Override
-															public void onSuccess(Void result) {
-																listGrid.removeSelectedData();
-															}
-														});
-											}
-										}
-									});
+													@Override
+													public void onSuccess(Void result) {
+														listGrid.removeSelectedData();
+													}
+												});
+									}
+								}
+							});
 						}
 					});
 					contextMenu.setItems(deleteItem);

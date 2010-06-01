@@ -1,4 +1,4 @@
-package com.logicaldoc.webapp;
+package com.logicaldoc.web;
 
 import java.text.MessageFormat;
 import java.util.AbstractMap;

@@ -1,4 +1,4 @@
-package com.logicaldoc.webapp.security;
+package com.logicaldoc.web.security;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +33,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.CryptUtil;
-import com.logicaldoc.webapp.AbstractService;
+import com.logicaldoc.web.AbstractService;
 
 /**
  * Implementation of the SecurityService
@@ -49,57 +49,62 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	@Override
 	public GUISession login(String username, String password) {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
-				AuthenticationChain.class);
+		try {
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
+					AuthenticationChain.class);
+			
+			GUISession session = new GUISession();
+			GUIUser guiUser = new GUIUser();
+			if (authenticationChain.authenticate(username, password,
+					getThreadLocalRequest() != null ? getThreadLocalRequest().getRemoteAddr() : "")) {
 
-		GUISession session = new GUISession();
-		GUIUser guiUser = new GUIUser();
-		if (authenticationChain.authenticate(username, password,
-				getThreadLocalRequest() != null ? getThreadLocalRequest().getRemoteAddr() : "")) {
-			User user = userDao.findByUserName(username);
-			userDao.initialize(user);
+				User user = userDao.findByUserName(username);
+				userDao.initialize(user);
 
-			guiUser.setFirstName(user.getFirstName());
-			guiUser.setId(user.getId());
-			guiUser.setLanguage(user.getLanguage());
-			guiUser.setName(user.getName());
+				guiUser.setFirstName(user.getFirstName());
+				guiUser.setId(user.getId());
+				guiUser.setLanguage(user.getLanguage());
+				guiUser.setName(user.getName());
 
-			GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
-			int i = 0;
-			for (Group g : user.getGroups()) {
-				groups[i] = new GUIGroup();
-				groups[i].setId(g.getId());
-				groups[i].setName(g.getName());
-				groups[i].setDescription(g.getDescription());
-				i++;
+				GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
+				int i = 0;
+				for (Group g : user.getGroups()) {
+					groups[i] = new GUIGroup();
+					groups[i].setId(g.getId());
+					groups[i].setName(g.getName());
+					groups[i].setDescription(g.getDescription());
+					i++;
+				}
+				guiUser.setGroups(groups);
+
+				guiUser.setUserName(username);
+				guiUser.setExpired(false);
+				session.setSid(AuthenticationChain.getSessionId());
+				session.setUser(guiUser);
+				session.setLoggedIn(true);
+				
+				// Define the current locale
+				UserSession userSession = SessionManager.getInstance().get(session.getSid());
+				userSession.getDictionary().put(LOCALE, user.getLocale());
+			} else if (userDao.isPasswordExpired(username)) {
+				User user = userDao.findByUserName(username);
+				guiUser.setId(user.getId());
+				guiUser.setExpired(true);
+				guiUser.setLanguage(user.getLanguage());
+				session.setUser(guiUser);
+				session.setLoggedIn(false);
+				log.info("User " + username + " password expired");
+			} else {
+				guiUser = null;
+				session.setLoggedIn(false);
+				log.warn("User " + username + " is not valid");
 			}
-			guiUser.setGroups(groups);
-
-			guiUser.setUserName(username);
-			guiUser.setExpired(false);
-			session.setSid(AuthenticationChain.getSessionId());
-			session.setUser(guiUser);
-			session.setLoggedIn(true);
-
-			// Define the current locale
-			UserSession userSession = SessionManager.getInstance().get(session.getSid());
-			userSession.getDictionary().put(LOCALE, user.getLocale());
-		} else if (userDao.isPasswordExpired(username)) {
-			User user = userDao.findByUserName(username);
-			guiUser.setId(user.getId());
-			guiUser.setExpired(true);
-			guiUser.setLanguage(user.getLanguage());
-			session.setUser(guiUser);
-			session.setLoggedIn(false);
-			log.info("User " + username + " password expired");
-		} else {
-			guiUser = null;
-			session.setLoggedIn(false);
-			log.warn("User " + username + " is not valid");
+			return session;
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
-
-		return session;
+return null;
 	}
 
 	@Override
@@ -185,11 +190,15 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		Group group = groupDao.findById(groupId);
 
-		GUIGroup grp = new GUIGroup();
-		grp.setId(groupId);
-		grp.setDescription(group.getDescription());
-		grp.setName(group.getName());
-		return grp;
+		if (group != null) {
+			GUIGroup grp = new GUIGroup();
+			grp.setId(groupId);
+			grp.setDescription(group.getDescription());
+			grp.setName(group.getName());
+			return grp;
+		}
+
+		return null;
 	}
 
 	@Override
@@ -197,37 +206,41 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		validateSession(sid);
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = userDao.findById(userId);
-		userDao.initialize(user);
+		if (user != null) {
+			userDao.initialize(user);
 
-		GUIUser usr = new GUIUser();
-		usr.setId(userId);
-		usr.setAddress(user.getStreet());
-		usr.setCell(user.getTelephone2());
-		usr.setPhone(user.getTelephone());
-		usr.setCity(user.getCity());
-		usr.setCountry(user.getCountry());
-		usr.setEmail(user.getEmail());
-		usr.setEnabled(user.getEnabled() == 1);
-		usr.setFirstName(user.getFirstName());
-		usr.setLanguage(user.getLanguage());
-		usr.setName(user.getName());
-		usr.setPostalCode(user.getPostalcode());
-		usr.setState(user.getState());
-		usr.setUserName(user.getUserName());
+			GUIUser usr = new GUIUser();
+			usr.setId(userId);
+			usr.setAddress(user.getStreet());
+			usr.setCell(user.getTelephone2());
+			usr.setPhone(user.getTelephone());
+			usr.setCity(user.getCity());
+			usr.setCountry(user.getCountry());
+			usr.setEmail(user.getEmail());
+			usr.setEnabled(user.getEnabled() == 1);
+			usr.setFirstName(user.getFirstName());
+			usr.setLanguage(user.getLanguage());
+			usr.setName(user.getName());
+			usr.setPostalCode(user.getPostalcode());
+			usr.setState(user.getState());
+			usr.setUserName(user.getUserName());
 
-		GUIGroup[] grps = new GUIGroup[user.getGroups().size()];
+			GUIGroup[] grps = new GUIGroup[user.getGroups().size()];
 
-		int i = 0;
-		for (Group group : user.getGroups()) {
-			grps[i] = new GUIGroup();
-			grps[i].setId(group.getId());
-			grps[i].setName(group.getName());
-			grps[i].setDescription(group.getDescription());
-			grps[i].setName(group.getName());
-			i++;
+			int i = 0;
+			for (Group group : user.getGroups()) {
+				grps[i] = new GUIGroup();
+				grps[i].setId(group.getId());
+				grps[i].setName(group.getName());
+				grps[i].setDescription(group.getDescription());
+				grps[i].setName(group.getName());
+				i++;
+			}
+
+			return usr;
 		}
 
-		return usr;
+		return null;
 	}
 
 	@Override
@@ -351,7 +364,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		adSettings.setHost(url.substring("ldap://".length(), lastIndex));
 		adSettings.setPort(new Integer(url.substring(lastIndex + 1)));
 		adSettings.setUsername(config.getUserName());
-		adSettings.setPwd(config.getUrl());
+		adSettings.setPwd(config.getPassword());
 		adSettings.setUsersBaseNode(userGroupContext.getUserBaseString());
 		adSettings.setGrpsBaseNode(userGroupContext.getGroupBaseString());
 		adSettings.setLanguage(userAttributeMapper.getDefaultLanguage());
@@ -474,15 +487,14 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	public void saveSettings(String sid, GUISecuritySettings settings) {
 		validateSession(sid);
 
-		GUISecuritySettings securitySettings = new GUISecuritySettings();
 		try {
 			PropertiesBean pbean = new PropertiesBean();
 
-			pbean.setProperty("password.ttl", Integer.toString(securitySettings.getPwdExpiration()));
-			pbean.setProperty("password.size", Integer.toString(securitySettings.getPwdSize()));
+			pbean.setProperty("password.ttl", Integer.toString(settings.getPwdExpiration()));
+			pbean.setProperty("password.size", Integer.toString(settings.getPwdSize()));
 
 			String users = "";
-			for (GUIUser user : securitySettings.getNotifiedUsers()) {
+			for (GUIUser user : settings.getNotifiedUsers()) {
 				users = users + user.getUserName() + ", ";
 			}
 

@@ -18,13 +18,13 @@ public class SetupInfo implements Serializable {
 
 	private String smtpHost;
 
-	private Integer smtpPort;
+	private Integer smtpPort = 25;
 
 	private String smtpUsername;
 
 	private String smtpPassword;
 
-	private String smtpSender;
+	private String smtpSender="logicaldoc@acme.com";
 
 	private boolean smtpSecureAuth = false;
 

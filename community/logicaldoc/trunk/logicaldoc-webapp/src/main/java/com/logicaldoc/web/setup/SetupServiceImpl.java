@@ -1,4 +1,4 @@
-package com.logicaldoc.webapp.setup;
+package com.logicaldoc.web.setup;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,6 +19,7 @@ import org.springframework.util.Log4jConfigurer;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.SystemProperty;
 import com.logicaldoc.core.communication.EMailSender;
+import com.logicaldoc.core.dbinit.PluginDbInit;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.gui.setup.client.SetupInfo;
 import com.logicaldoc.gui.setup.client.services.SetupService;
@@ -26,6 +27,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.ApplicationInitializer;
+import com.smartgwt.client.util.SC;
 
 /**
  * Implements the
@@ -42,13 +44,19 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 	@Override
 	public void setup(SetupInfo data) {
 		File repoFolder = new File(data.getRepositoryFolder());
+		log.warn("Initialize system using repository " + repoFolder);
 		try {
 			makeWorkingDir(repoFolder);
-			writeDBConfig(data);
+			createDB(data);
 			writeSmtpConfig(data);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			throw new RuntimeException(e.getMessage(), e);
+
+			// Reload the application context in order to reconnect DAOs to the
+			// database
+			Context.refresh();
+		} catch (Throwable caught) {
+			SC.warn("Server error setup: " + caught.getMessage());
+			log.error(caught.getMessage(), caught);
+			throw new RuntimeException(caught.getMessage(), caught);
 		}
 		reloadContext();
 	}
@@ -60,20 +68,26 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			pbean.getProperty("smtp.port", data.getSmtpPort() != null ? Integer.toString(data.getSmtpPort()) : "");
 			pbean.setProperty("smtp.username", data.getSmtpUsername() != null ? data.getSmtpUsername() : "");
 			pbean.setProperty("smtp.password", data.getSmtpPassword() != null ? data.getSmtpPassword() : "");
-			pbean.setProperty("smtp.sender", data.getSmtpSender() != null ? data.getSmtpPassword() : "");
+			pbean.setProperty("smtp.sender", data.getSmtpSender() != null ? data.getSmtpSender() : "");
 			pbean.setProperty("smtp.authEncripted", Boolean.toString(data.isSmtpSecureAuth()));
 			pbean.setProperty("smtp.connectionSecurity", data.getSmtpConnectionSecurity() != null ? data
-					.getSmtpConnectionSecurity() : "");
+					.getSmtpConnectionSecurity() : "0");
 			pbean.write();
 
 			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
-			sender.setHost(data.getSmtpHost());
-			sender.setPort(data.getSmtpPort());
-			sender.setUsername(data.getSmtpUsername());
-			sender.setPassword(data.getSmtpPassword());
-			sender.setSender(data.getSmtpSender());
+			if (data.getSmtpHost() != null)
+				sender.setHost(data.getSmtpHost());
+			if (data.getSmtpPort() != null)
+				sender.setPort(data.getSmtpPort());
+			if (data.getSmtpUsername() != null)
+				sender.setUsername(data.getSmtpUsername());
+			if (data.getSmtpPassword() != null)
+				sender.setPassword(data.getSmtpPassword());
+			if (data.getSmtpSender() != null)
+				sender.setSender(data.getSmtpSender());
 			sender.setAuthEncripted(data.isSmtpSecureAuth());
-			sender.setConnectionSecurity(Integer.parseInt(data.getSmtpConnectionSecurity()));
+			if (data.getSmtpConnectionSecurity() != null)
+				sender.setConnectionSecurity(Integer.parseInt(data.getSmtpConnectionSecurity()));
 
 			log.info("SMTP configuration data written successfully.");
 		} catch (Exception e) {
@@ -150,11 +164,17 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		// build phisically the working directory
 		// and change settings config
 		String docDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/data/docs/");
+		FileUtils.forceMkdir(new File(docDir));
 		String indexDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/data/index/");
+		FileUtils.forceMkdir(new File(indexDir));
 		String userDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/data/users/");
+		FileUtils.forceMkdir(new File(userDir));
 		String pluginDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/data/plugins/");
+		FileUtils.forceMkdir(new File(pluginDir));
 		String importDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/impex/in/");
+		FileUtils.forceMkdir(new File(importDir));
 		String exportDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/impex/out/");
+		FileUtils.forceMkdir(new File(exportDir));
 
 		PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 		pbean.setProperty("conf.docdir", docDir);
@@ -186,5 +206,31 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			e.printStackTrace();
 		}
 
+	}
+
+	public void createDB(SetupInfo info) throws Exception {
+		// write the configuration for the db on the general context
+		writeDBConfig(info);
+
+		PluginDbInit init = new PluginDbInit();
+		init.setDbms(info.getDbEngine());
+		init.setDriver(info.getDbDriver());
+		init.setUrl(info.getDbUrl());
+		init.setUsername(info.getDbUsername());
+		init.setPassword(info.getDbPassword());
+
+		if (init.testConnection()) {
+			// connection success
+			init.init();
+
+			// if a default language was specified, set it for all users
+			if (StringUtils.isNotEmpty(info.getLanguage())) {
+				init.executeSql("update ld_user set ld_language='" + info.getLanguage() + "';");
+			}
+		} else {
+			// connection failure
+			log.debug("connection failure");
+			throw new RuntimeException("Database Connection failure.");
+		}
 	}
 }

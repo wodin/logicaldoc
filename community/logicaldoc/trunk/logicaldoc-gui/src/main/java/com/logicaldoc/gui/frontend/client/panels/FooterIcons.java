@@ -32,7 +32,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 	private HTML checkoutCount = new HTML("0");
 
 	private FooterIcons() {
-		Img clipboardImage = ItemFactory.newImg("paste.gif");
+		Img clipboardImage = ItemFactory.newImgIcon("paste.gif");
 		clipboardImage.setHeight("16px");
 		clipboardImage.addClickHandler(new ClickHandler() {
 			@Override
@@ -43,7 +43,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		});
 		clipboardImage.setCursor(Cursor.HAND);
 
-		Img lockedImage = ItemFactory.newImg("document_lock.png");
+		Img lockedImage = ItemFactory.newImgIcon("document_lock.png");
 		lockedImage.setHeight("16px");
 		lockedImage.addClickHandler(new ClickHandler() {
 			@Override
@@ -53,7 +53,7 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		});
 		lockedImage.setCursor(Cursor.HAND);
 
-		Img checkoutImage = ItemFactory.newImg("page_edit.png");
+		Img checkoutImage = ItemFactory.newImgIcon("page_edit.png");
 		checkoutImage.setHeight("16px");
 		checkoutImage.addClickHandler(new ClickHandler() {
 			@Override

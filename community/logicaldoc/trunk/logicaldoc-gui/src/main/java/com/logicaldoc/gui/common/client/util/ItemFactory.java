@@ -2,7 +2,6 @@ package com.logicaldoc.gui.common.client.util;
 
 import java.util.LinkedHashMap;
 
-import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -202,25 +201,25 @@ public class ItemFactory {
 		return select;
 	}
 
-	public static Img newImg(String name) {
-		Img img = new Img("../" + Util.imageUrl(name));
+	public static Img newImgIcon(String name) {
+		Img img = newImg(name);
 		img.setWidth("16px");
+		return img;
+	}
+
+	public static Img newImg(String name) {
+		Img img = new Img(Util.imageUrl(name));
 		return img;
 	}
 
 	public static FormItemIcon newItemIcon(String image) {
 		FormItemIcon icon = new FormItemIcon();
-		icon.setSrc(ItemFactory.newImg(image).getSrc());
+		icon.setSrc(ItemFactory.newImgIcon(image).getSrc());
 		return icon;
 	}
 
-	public static Image newImage(String image) {
-		Image tmp = new Image(Util.imageUrl(image));
-		return tmp;
-	}
-
 	public static HeaderIcon newHeaderIcon(String image) {
-		HeaderIcon icon = new HeaderIcon(ItemFactory.newImg(image).getSrc());
+		HeaderIcon icon = new HeaderIcon(ItemFactory.newImgIcon(image).getSrc());
 		return icon;
 	}
 

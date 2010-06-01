@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -19,6 +18,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -75,8 +75,9 @@ public class LoginPanel extends VLayout {
 		header.setHeight("12px");
 
 		// Prepare the logo image to be shown inside the login form
-		Image logoImage = ItemFactory.newImage("logo.png");
+		Img logoImage = ItemFactory.newImg("logo.png");
 		logoImage.setHeight("40px");
+		logoImage.setWidth("205px");
 
 		// Prepare the form footer that contains copyright and website link
 		HTML footer = new HTML("\u00A9 " + context.get("product_year") + " " + context.get("product_vendor")
@@ -152,8 +153,12 @@ public class LoginPanel extends VLayout {
 					@Override
 					public void onSuccess(GUISession session) {
 						if (session.isLoggedIn()) {
-							Session.get().init(session);
-							Frontend.get().showMain();
+							try {
+								Session.get().init(session);
+								Frontend.get().showMain();
+							} catch (Throwable e) {
+								SC.warn(e.getMessage());
+							}
 						} else if (session.getUser() != null && session.getUser().isExpired()) {
 							new ChangePassword(session.getUser()).show();
 						} else {
