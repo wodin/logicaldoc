@@ -58,7 +58,6 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			log.error(caught.getMessage(), caught);
 			throw new RuntimeException(caught.getMessage(), caught);
 		}
-		reloadContext();
 	}
 
 	public void writeSmtpConfig(SetupInfo data) throws Exception {
@@ -128,8 +127,8 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		// Reload the application context in order to obtain the new value
 		Context.refresh();
 
-		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-		String path = conf.getValue("indexdir");
+		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		String path = conf.getProperty("conf.indexdir");
 		System.out.println();
 
 		if (!path.endsWith(File.pathSeparator)) {
@@ -138,12 +137,12 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 
 		Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 		indexer.createIndexes();
-
+		
 		// Initialize plugins filesystem
 		Collection<PluginDescriptor> descriptors = com.logicaldoc.util.PluginRegistry.getInstance().getPlugins();
 		for (PluginDescriptor descriptor : descriptors) {
 			try {
-				File file = new File(conf.getValue("plugins.dir"), descriptor.getId());
+				File file = new File(conf.getProperty("conf.plugindir"), descriptor.getId());
 				file.mkdirs();
 				file.mkdir();
 				file = new File(file, "plugin.properties");
@@ -206,6 +205,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			e.printStackTrace();
 		}
 
+		reloadContext();
 	}
 
 	public void createDB(SetupInfo info) throws Exception {

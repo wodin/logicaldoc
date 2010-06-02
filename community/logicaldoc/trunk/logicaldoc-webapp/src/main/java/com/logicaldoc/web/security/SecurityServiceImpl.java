@@ -49,62 +49,57 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	@Override
 	public GUISession login(String username, String password) {
-		try {
-			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-			AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
-					AuthenticationChain.class);
-			
-			GUISession session = new GUISession();
-			GUIUser guiUser = new GUIUser();
-			if (authenticationChain.authenticate(username, password,
-					getThreadLocalRequest() != null ? getThreadLocalRequest().getRemoteAddr() : "")) {
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
+				AuthenticationChain.class);
 
-				User user = userDao.findByUserName(username);
-				userDao.initialize(user);
+		GUISession session = new GUISession();
+		GUIUser guiUser = new GUIUser();
+		if (authenticationChain.authenticate(username, password,
+				getThreadLocalRequest() != null ? getThreadLocalRequest().getRemoteAddr() : "")) {
 
-				guiUser.setFirstName(user.getFirstName());
-				guiUser.setId(user.getId());
-				guiUser.setLanguage(user.getLanguage());
-				guiUser.setName(user.getName());
+			User user = userDao.findByUserName(username);
+			userDao.initialize(user);
 
-				GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
-				int i = 0;
-				for (Group g : user.getGroups()) {
-					groups[i] = new GUIGroup();
-					groups[i].setId(g.getId());
-					groups[i].setName(g.getName());
-					groups[i].setDescription(g.getDescription());
-					i++;
-				}
-				guiUser.setGroups(groups);
+			guiUser.setFirstName(user.getFirstName());
+			guiUser.setId(user.getId());
+			guiUser.setLanguage(user.getLanguage());
+			guiUser.setName(user.getName());
 
-				guiUser.setUserName(username);
-				guiUser.setExpired(false);
-				session.setSid(AuthenticationChain.getSessionId());
-				session.setUser(guiUser);
-				session.setLoggedIn(true);
-				
-				// Define the current locale
-				UserSession userSession = SessionManager.getInstance().get(session.getSid());
-				userSession.getDictionary().put(LOCALE, user.getLocale());
-			} else if (userDao.isPasswordExpired(username)) {
-				User user = userDao.findByUserName(username);
-				guiUser.setId(user.getId());
-				guiUser.setExpired(true);
-				guiUser.setLanguage(user.getLanguage());
-				session.setUser(guiUser);
-				session.setLoggedIn(false);
-				log.info("User " + username + " password expired");
-			} else {
-				guiUser = null;
-				session.setLoggedIn(false);
-				log.warn("User " + username + " is not valid");
+			GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
+			int i = 0;
+			for (Group g : user.getGroups()) {
+				groups[i] = new GUIGroup();
+				groups[i].setId(g.getId());
+				groups[i].setName(g.getName());
+				groups[i].setDescription(g.getDescription());
+				i++;
 			}
-			return session;
-		} catch (Throwable e) {
-			e.printStackTrace();
+			guiUser.setGroups(groups);
+
+			guiUser.setUserName(username);
+			guiUser.setExpired(false);
+			session.setSid(AuthenticationChain.getSessionId());
+			session.setUser(guiUser);
+			session.setLoggedIn(true);
+
+			// Define the current locale
+			UserSession userSession = SessionManager.getInstance().get(session.getSid());
+			userSession.getDictionary().put(LOCALE, user.getLocale());
+		} else if (userDao.isPasswordExpired(username)) {
+			User user = userDao.findByUserName(username);
+			guiUser.setId(user.getId());
+			guiUser.setExpired(true);
+			guiUser.setLanguage(user.getLanguage());
+			session.setUser(guiUser);
+			session.setLoggedIn(false);
+			log.info("User " + username + " password expired");
+		} else {
+			guiUser = null;
+			session.setLoggedIn(false);
+			log.warn("User " + username + " is not valid");
 		}
-return null;
+		return session;
 	}
 
 	@Override
