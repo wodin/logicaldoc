@@ -90,8 +90,8 @@ public class ApplicationInitializer implements ServletContextListener {
 	}
 
 	private String initPluginRegistry() {
-		System.setProperty(SystemProperty.LOGICALDOC_PLUGINSREGISTRY, "com.logicaldoc.webapp.PluginRegistry");
-		return "com.logicaldoc.webapp.PluginRegistry";
+		System.setProperty(SystemProperty.LOGICALDOC_PLUGINSREGISTRY, "com.logicaldoc.web.PluginRegistry");
+		return "com.logicaldoc.web.PluginRegistry";
 	}
 
 	public static void saveBootProperties(Properties boot, ServletContext context) {

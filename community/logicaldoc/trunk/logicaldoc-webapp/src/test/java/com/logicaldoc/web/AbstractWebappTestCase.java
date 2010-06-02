@@ -1,4 +1,4 @@
-package com.logicaldoc.webapp;
+package com.logicaldoc.web;
 
 import java.io.File;
 import java.io.IOException;
