@@ -115,7 +115,7 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 		version.setFileVersion("1." + id2);
 		version.setLanguage("it");
 		version.setTemplateId(1L);
-		version.setSize(3457F);
+		version.setFileSize(3457F);
 		version.setTemplate("template1");
 		version.setValue("attrA", "valA");
 		version.setValue("attrB", new Date());
@@ -143,7 +143,7 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 		version.setFileVersion("1.0");
 		version.setLanguage("it");
 		version.setTemplateId(1L);
-		version.setSize(3457F);
+		version.setFileSize(3457F);
 		version.setTemplate("template1");
 		version.setValue("attrA", "valA");
 		version.setValue("attrB", new Date());

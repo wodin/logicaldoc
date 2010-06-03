@@ -1,7 +1,6 @@
 package com.logicaldoc.web.security;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.StringTokenizer;
 
@@ -22,6 +21,7 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIADSettings;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
@@ -320,134 +320,173 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	public GUILdapSettings[] loadExtAuthSettings(String sid) {
 		validateSession(sid);
 
-		LDAPContextSourceConfig config = (LDAPContextSourceConfig) Context.getInstance().getBean(
-				LDAPContextSourceConfig.class);
-
-		LDAPUserGroupContext userGroupContext = (LDAPUserGroupContext) Context.getInstance().getBean(
-				LDAPUserGroupContext.class);
-
-		UserAttributeMapper userAttributeMapper = (UserAttributeMapper) Context.getInstance().getBean(
-				UserAttributeMapper.class);
-
 		GUILdapSettings[] settings = new GUILdapSettings[2];
 
-		GUILdapSettings ldapSettings = new GUILdapSettings();
-		ldapSettings.setImplementation(config.getAuthentication());
-		ldapSettings.setEnabled("true".equals(config.getEnabled()) ? true : false);
-		ldapSettings.setUrl(config.getUrl());
-		ldapSettings.setUsername(config.getUserName());
-		ldapSettings.setPwd(config.getPassword());
-		ldapSettings.setRealm(config.getRealm());
-		ldapSettings.setDN(config.getCurrentDN());
-		ldapSettings.setBase(config.getBase());
-		ldapSettings.setUserIdentifierAttr(userGroupContext.getUserIdentiferAttribute());
-		ldapSettings.setGrpIdentifierAttr(userGroupContext.getGroupIdentiferAttribute());
-		ldapSettings.setLogonAttr(userGroupContext.getLogonAttribute());
-		ldapSettings.setAuthPattern(config.getUserAuthenticationPattern());
-		ldapSettings.setUserClass(userGroupContext.getUserClass());
-		ldapSettings.setGrpClass(userGroupContext.getGroupClass());
-		ldapSettings.setUsersBaseNode(userGroupContext.getUserBaseString());
-		ldapSettings.setGrpsBaseNode(userGroupContext.getGroupBaseString());
-		ldapSettings.setLanguage(userAttributeMapper.getDefaultLanguage());
+		try {
 
-		GUIADSettings adSettings = new GUIADSettings();
-		adSettings.setImplementation(config.getAuthentication());
-		adSettings.setEnabled("true".equals(config.getEnabled()) ? true : false);
-		adSettings.setDomain(config.getRealm());
-		String url = config.getUrl();
-		int lastIndex = url.lastIndexOf(':');
-		adSettings.setHost(url.substring("ldap://".length(), lastIndex));
-		adSettings.setPort(new Integer(url.substring(lastIndex + 1)));
-		adSettings.setUsername(config.getUserName());
-		adSettings.setPwd(config.getPassword());
-		adSettings.setUsersBaseNode(userGroupContext.getUserBaseString());
-		adSettings.setGrpsBaseNode(userGroupContext.getGroupBaseString());
-		adSettings.setLanguage(userAttributeMapper.getDefaultLanguage());
+			LDAPContextSourceConfig config = (LDAPContextSourceConfig) Context.getInstance().getBean(
+					LDAPContextSourceConfig.class);
 
-		settings[0] = ldapSettings;
-		settings[1] = adSettings;
+			LDAPUserGroupContext userGroupContext = (LDAPUserGroupContext) Context.getInstance().getBean(
+					LDAPUserGroupContext.class);
+
+			UserAttributeMapper userAttributeMapper = (UserAttributeMapper) Context.getInstance().getBean(
+					"LDAPBasicUserMapper");
+
+			GUILdapSettings ldapSettings = new GUILdapSettings();
+			ldapSettings.setImplementation(config.getAuthentication());
+			ldapSettings.setEnabled("true".equals(config.getEnabled()) ? true : false);
+			ldapSettings.setUrl(config.getUrl());
+			ldapSettings.setUsername(config.getUserName());
+			ldapSettings.setPwd(config.getPassword());
+			ldapSettings.setRealm(config.getRealm());
+			ldapSettings.setDN(config.getCurrentDN());
+			ldapSettings.setBase(config.getBase());
+			ldapSettings.setUserIdentifierAttr(userGroupContext.getUserIdentiferAttribute());
+			ldapSettings.setGrpIdentifierAttr(userGroupContext.getGroupIdentiferAttribute());
+			ldapSettings.setLogonAttr(userGroupContext.getLogonAttribute());
+			ldapSettings.setAuthPattern(config.getUserAuthenticationPattern());
+			ldapSettings.setUserClass(userGroupContext.getUserClass());
+			ldapSettings.setGrpClass(userGroupContext.getGroupClass());
+			ldapSettings.setUsersBaseNode(userGroupContext.getUserBaseString());
+			ldapSettings.setGrpsBaseNode(userGroupContext.getGroupBaseString());
+			ldapSettings.setLanguage(userAttributeMapper.getDefaultLanguage());
+
+			settings[0] = ldapSettings;
+
+			GUIADSettings adSettings = new GUIADSettings();
+			// Checks if the active directory feature is enabled
+			if (Session.get().isFeatureEnabled("Feature_11")) {
+				
+				System.out.println("Enabled feature 11!!!!");
+
+				LDAPContextSourceConfig adConfig = (LDAPContextSourceConfig) Context.getInstance().getBean(
+						"ADContextSourceConfig");
+
+				LDAPUserGroupContext adUserGroupContext = (LDAPUserGroupContext) Context.getInstance().getBean(
+						"ADUserGroupContext");
+
+				UserAttributeMapper adUserAttributeMapper = (UserAttributeMapper) Context.getInstance().getBean(
+						"ADBasicUserMapper");
+
+				adSettings.setImplementation(adConfig.getAuthentication());
+				adSettings.setEnabled("true".equals(adConfig.getEnabled()) ? true : false);
+				adSettings.setDomain(adConfig.getRealm());
+				String url = adConfig.getUrl();
+				int lastIndex = url.lastIndexOf(':');
+				adSettings.setHost(url.substring("ldap://".length(), lastIndex));
+				adSettings.setPort(new Integer(url.substring(lastIndex + 1)));
+				adSettings.setUsername(adConfig.getUserName());
+				adSettings.setPwd(adConfig.getPassword());
+				adSettings.setUsersBaseNode(adUserGroupContext.getUserBaseString());
+				adSettings.setGrpsBaseNode(adUserGroupContext.getGroupBaseString());
+				adSettings.setLanguage(adUserAttributeMapper.getDefaultLanguage());
+
+				settings[1] = adSettings;
+			} else {
+				// TODO Remove after implementation is completed.
+				System.out.println("NO Enabled feature 11!!!!");
+				
+				settings[1] = ldapSettings;
+			}
+
+			log.info("External Authentication settings data loaded successfully.");
+		} catch (Exception e) {
+			log.error("Exception loading External Authentication settings data: " + e.getMessage(), e);
+		}
 
 		return settings;
 	}
 
 	@Override
 	public void saveExtAuthSettings(String sid, GUILdapSettings ldapSettings, GUIADSettings adSettings) {
+		validateSession(sid);
+
 		BasicLDAPContextSource ldapContextSource = (BasicLDAPContextSource) Context.getInstance().getBean(
 				BasicLDAPContextSource.class);
-		BasicLDAPContextSource adContextSource = (BasicLDAPContextSource) Context.getInstance().getBean(
-				"ADContextSourceConfig");
 		try {
-			PropertiesBean pbean = new PropertiesBean();
+			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 
 			// Save LDAP settings
-			pbean.setProperty("ldap.url", ldapSettings.getUrl());
+			conf.setProperty("ldap.url", ldapSettings.getUrl());
 			ldapContextSource.setUrl(ldapSettings.getUrl());
-			pbean.setProperty("ldap.realm", ldapSettings.getRealm());
+			conf.setProperty("ldap.realm", ldapSettings.getRealm());
 			ldapContextSource.setRealm(ldapSettings.getRealm());
-			pbean.setProperty("ldap.currentDN", ldapSettings.getDN());
+			conf.setProperty("ldap.currentDN", ldapSettings.getDN());
 			ldapContextSource.setCurrentDN(ldapSettings.getDN());
-			pbean.setProperty("ldap.authenticationPattern", ldapSettings.getAuthPattern());
+			conf.setProperty("ldap.authenticationPattern", ldapSettings.getAuthPattern());
 			ldapContextSource.setUserAuthenticationPattern(ldapSettings.getAuthPattern());
-			pbean.setProperty("ldap.username", ldapSettings.getUsername());
+			conf.setProperty("ldap.username", ldapSettings.getUsername());
 			ldapContextSource.setUserName(ldapSettings.getUsername());
-			pbean.setProperty("ldap.password", ldapSettings.getPwd());
+			conf.setProperty("ldap.password", ldapSettings.getPwd());
 			ldapContextSource.setPassword(ldapSettings.getPwd());
-			pbean.setProperty("ldap.base", ldapSettings.getBase());
+			conf.setProperty("ldap.base", ldapSettings.getBase());
 			ldapContextSource.setBase(ldapSettings.getBase());
-			pbean.setProperty("ldap.enabled", ldapSettings.isEnabled() ? "true" : "false");
-			pbean.setProperty("ldap.authentication", ldapSettings.getImplementation());
+			conf.setProperty("ldap.enabled", ldapSettings.isEnabled() ? "true" : "false");
+			conf.setProperty("ldap.authentication", ldapSettings.getImplementation());
 
 			// Save LDAP user group settings
-			pbean.setProperty("ldap.userIdentiferAttribute", ldapSettings.getUserIdentifierAttr());
-			pbean.setProperty("ldap.logonAttribute", ldapSettings.getLogonAttr());
-			pbean.setProperty("ldap.userClass", ldapSettings.getUserClass());
-			pbean.setProperty("ldap.groupClass", ldapSettings.getGrpClass());
-			pbean.setProperty("ldap.groupIdentiferAttribute", ldapSettings.getGrpIdentifierAttr());
-			pbean.setProperty("ldap.userBase", ldapSettings.getUsersBaseNode());
-			pbean.setProperty("ldap.groupBase", ldapSettings.getGrpsBaseNode());
+			conf.setProperty("ldap.userIdentiferAttribute", ldapSettings.getUserIdentifierAttr());
+			conf.setProperty("ldap.logonAttribute", ldapSettings.getLogonAttr());
+			conf.setProperty("ldap.userClass", ldapSettings.getUserClass());
+			conf.setProperty("ldap.groupClass", ldapSettings.getGrpClass());
+			conf.setProperty("ldap.groupIdentiferAttribute", ldapSettings.getGrpIdentifierAttr());
+			conf.setProperty("ldap.userBase", ldapSettings.getUsersBaseNode());
+			conf.setProperty("ldap.groupBase", ldapSettings.getGrpsBaseNode());
 
 			// Save LDAP attribute mapper settings
-			pbean.setProperty("ldap.defaultLanguage", ldapSettings.getLanguage());
+			conf.setProperty("ldap.defaultLanguage", ldapSettings.getLanguage());
 
-			// Save Active Directory settings
-			pbean.setProperty("ad.url", "ldap://" + adSettings.getHost().trim() + ":" + adSettings.getPort());
-			adContextSource.setUrl("ldap://" + adSettings.getHost().trim() + ":" + adSettings.getPort());
-			pbean.setProperty("ad.realm", adSettings.getDomain());
-			adContextSource.setRealm(adSettings.getDomain());
-			String dn = "";
-			StringTokenizer st = new StringTokenizer(adSettings.getDomain(), ".", false);
-			while (st.hasMoreTokens()) {
-				String token = st.nextToken();
-				if (!"".equals(dn))
-					dn += ",";
-				dn += "DC=" + token;
+			// Checks if the active directory feature is enabled
+			if (Session.get().isFeatureEnabled("Feature_11")) {
+				System.out.println("Enabled feature 11!!!!");
+				// DO NOTHING
+			} else {
+				System.out.println("NO Enabled feature 11!!!!");
+				// TODO Modify after completed features management.
+				BasicLDAPContextSource adContextSource = (BasicLDAPContextSource) Context.getInstance().getBean(
+						"ADContextSourceConfig");
+
+				// Save Active Directory settings
+				conf.setProperty("ad.url", "ldap://" + adSettings.getHost().trim() + ":" + adSettings.getPort());
+				adContextSource.setUrl("ldap://" + adSettings.getHost().trim() + ":" + adSettings.getPort());
+				conf.setProperty("ad.realm", adSettings.getDomain());
+				adContextSource.setRealm(adSettings.getDomain());
+				String dn = "";
+				StringTokenizer st = new StringTokenizer(adSettings.getDomain(), ".", false);
+				while (st.hasMoreTokens()) {
+					String token = st.nextToken();
+					if (!"".equals(dn))
+						dn += ",";
+					dn += "DC=" + token;
+				}
+				conf.setProperty("ad.currentDN", dn);
+				adContextSource.setCurrentDN(dn);
+				conf.setProperty("ad.authenticationPattern", "{userName}@" + adSettings.getDomain());
+				adContextSource.setUserAuthenticationPattern("{userName}@" + adSettings.getDomain());
+				conf.setProperty("ad.username", adSettings.getUsername());
+				adContextSource.setUserName(adSettings.getUsername());
+				conf.setProperty("ad.password", adSettings.getPwd());
+				adContextSource.setPassword(adSettings.getPwd());
+				conf.setProperty("ad.base", adSettings.getBase());
+				adContextSource.setBase(adSettings.getBase());
+				conf.setProperty("ad.enabled", adSettings.isEnabled() ? "true" : "false");
+				conf.setProperty("ad.authentication", adSettings.getImplementation());
+
+				// Save Active Directory settings
+				conf.setProperty("ad.userIdentiferAttribute", adSettings.getUserIdentifierAttr());
+				conf.setProperty("ad.logonAttribute", adSettings.getLogonAttr());
+				conf.setProperty("ad.userClass", adSettings.getUserClass());
+				conf.setProperty("ad.groupClass", adSettings.getGrpClass());
+				conf.setProperty("ad.groupIdentiferAttribute", adSettings.getGrpIdentifierAttr());
+				conf.setProperty("ad.userBase", adSettings.getUsersBaseNode() + "," + dn);
+				conf.setProperty("ad.groupBase", adSettings.getGrpsBaseNode() + "," + dn);
+
+				// Save Active Directory attribute mapper settings
+				conf.setProperty("ad.defaultLanguage", adSettings.getLanguage());
 			}
-			pbean.setProperty("ad.currentDN", dn);
-			adContextSource.setCurrentDN(dn);
-			pbean.setProperty("ad.authenticationPattern", "{userName}@" + adSettings.getDomain());
-			adContextSource.setUserAuthenticationPattern("{userName}@" + adSettings.getDomain());
-			pbean.setProperty("ad.username", adSettings.getUsername());
-			adContextSource.setUserName(adSettings.getUsername());
-			pbean.setProperty("ad.password", adSettings.getPwd());
-			adContextSource.setPassword(adSettings.getPwd());
-			pbean.setProperty("ad.base", adSettings.getBase());
-			adContextSource.setBase(adSettings.getBase());
-			pbean.setProperty("ad.enabled", adSettings.isEnabled() ? "true" : "false");
-			pbean.setProperty("ad.authentication", adSettings.getImplementation());
 
-			// Save Active Directory settings
-			pbean.setProperty("ad.userIdentiferAttribute", adSettings.getUserIdentifierAttr());
-			pbean.setProperty("ad.logonAttribute", adSettings.getLogonAttr());
-			pbean.setProperty("ad.userClass", adSettings.getUserClass());
-			pbean.setProperty("ad.groupClass", adSettings.getGrpClass());
-			pbean.setProperty("ad.groupIdentiferAttribute", adSettings.getGrpIdentifierAttr());
-			pbean.setProperty("ad.userBase", adSettings.getUsersBaseNode() + "," + dn);
-			pbean.setProperty("ad.groupBase", adSettings.getGrpsBaseNode() + "," + dn);
-
-			// Save Active Directory attribute mapper settings
-			pbean.setProperty("ad.defaultLanguage", adSettings.getLanguage());
-
-			pbean.write();
+			conf.write();
 
 			log.info("External Authentication data written successfully.");
 		} catch (Exception e) {
@@ -459,10 +498,10 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	public GUISecuritySettings loadSettings(String sid) {
 		validateSession(sid);
 
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		GUISecuritySettings securitySettings = new GUISecuritySettings();
 		try {
-			PropertiesBean pbean = new PropertiesBean();
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 
 			securitySettings.setPwdExpiration(Integer.parseInt(pbean.getProperty("password.ttl")));
 			securitySettings.setPwdSize(Integer.parseInt(pbean.getProperty("password.size")));
@@ -470,9 +509,13 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			while (st.hasMoreTokens()) {
 				String username = st.nextToken();
 				User user = userDao.findByUserName(username);
-				securitySettings.addNotifiedUser(getUser(sid, user.getId()));
+				if (user != null)
+					securitySettings.addNotifiedUser(getUser(sid, user.getId()));
 			}
-		} catch (IOException e) {
+
+			log.info("Security settings data loaded successfully.");
+		} catch (Exception e) {
+			log.error("Exception loading Security settings data: " + e.getMessage(), e);
 		}
 
 		return securitySettings;
@@ -483,18 +526,19 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		validateSession(sid);
 
 		try {
-			PropertiesBean pbean = new PropertiesBean();
+			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 
-			pbean.setProperty("password.ttl", Integer.toString(settings.getPwdExpiration()));
-			pbean.setProperty("password.size", Integer.toString(settings.getPwdSize()));
+			conf.setProperty("password.ttl", Integer.toString(settings.getPwdExpiration()));
+			conf.setProperty("password.size", Integer.toString(settings.getPwdSize()));
 
 			String users = "";
 			for (GUIUser user : settings.getNotifiedUsers()) {
 				users = users + user.getUserName() + ", ";
 			}
 
-			pbean.setProperty("audit.user", users.trim());
-			pbean.write();
+			conf.setProperty("audit.user", users.trim());
+			conf.write();
+
 			log.info("Security settings data written successfully.");
 		} catch (Exception e) {
 			log.error("Exception writing Security settings data: " + e.getMessage(), e);

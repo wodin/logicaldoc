@@ -58,7 +58,7 @@ public class GUIDocument implements Serializable {
 
 	private Long templateId;
 
-	private Float size;
+	private Float fileSize;
 
 	private Date lastModified;
 
@@ -325,12 +325,12 @@ public class GUIDocument implements Serializable {
 		return null;
 	}
 
-	public Float getSize() {
-		return size;
+	public Float getFileSize() {
+		return fileSize;
 	}
 
-	public void setSize(Float size) {
-		this.size = size;
+	public void setFileSize(Float fileSize) {
+		this.fileSize = fileSize;
 	}
 
 	public Date getLastModified() {

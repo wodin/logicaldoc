@@ -2,17 +2,23 @@ package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
 
+/**
+ * Email Settings bean as used in the GUI
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.0
+ */
 public class GUIEmailSettings implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	public static final int SECURITY_NONE = 0;
 
-	public static final int SECURITY_TLS_IF_AVAILABLE = 1;
+	public static final String SECURITY_NONE = "0";
 
-	public static final int SECURITY_TLS = 2;
+	public static final String SECURITY_TLS_IF_AVAILABLE = "1";
 
-	public static final int SECURITY_SSL = 3;
+	public static final String SECURITY_TLS = "2";
+
+	public static final String SECURITY_SSL = "3";
 
 	private String smtpServer;
 
@@ -24,7 +30,7 @@ public class GUIEmailSettings implements Serializable {
 
 	private String pwd;
 
-	private int connSecurity = SECURITY_NONE;
+	private String connSecurity = SECURITY_NONE;
 
 	private String senderEmail;
 
@@ -68,11 +74,11 @@ public class GUIEmailSettings implements Serializable {
 		this.pwd = pwd;
 	}
 
-	public int getConnSecurity() {
+	public String getConnSecurity() {
 		return connSecurity;
 	}
 
-	public void setConnSecurity(int connSecurity) {
+	public void setConnSecurity(String connSecurity) {
 		this.connSecurity = connSecurity;
 	}
 

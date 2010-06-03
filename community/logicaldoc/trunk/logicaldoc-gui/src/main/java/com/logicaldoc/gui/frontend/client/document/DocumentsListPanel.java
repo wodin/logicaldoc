@@ -234,7 +234,7 @@ public class DocumentsListPanel extends VLayout {
 			selectedRecord.setAttribute("title", document.getTitle());
 			selectedRecord.setAttribute("customId", document.getCustomId());
 			selectedRecord.setAttribute("version", document.getVersion());
-			selectedRecord.setAttribute("size", document.getSize());
+			selectedRecord.setAttribute("size", document.getFileSize());
 			selectedRecord.setAttribute("lastModified", document.getLastModified());
 			selectedRecord.setAttribute("publisher", document.getPublisher());
 			selectedRecord.setAttribute("published", document.getDate());

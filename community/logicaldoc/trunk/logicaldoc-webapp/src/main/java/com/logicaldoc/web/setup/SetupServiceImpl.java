@@ -128,7 +128,6 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 
 		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 		String path = conf.getProperty("conf.indexdir");
-		System.out.println();
 
 		if (!path.endsWith(File.pathSeparator)) {
 			path += "/";

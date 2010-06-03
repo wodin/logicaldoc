@@ -14,7 +14,6 @@ import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -48,7 +47,10 @@ public class ExtAuthPanel extends VLayout {
 
 	public ExtAuthPanel(GUILdapSettings[] settings) {
 		this.ldapSettings = settings[0];
-		this.adSettings = (GUIADSettings) settings[1];
+		if (!Session.get().isFeatureEnabled("Feature_11")) {
+			this.adSettings = new GUIADSettings();
+		} else
+			this.adSettings = (GUIADSettings) settings[1];
 
 		setWidth100();
 		setMembersMargin(10);
@@ -227,17 +229,32 @@ public class ExtAuthPanel extends VLayout {
 					ExtAuthPanel.this.ldapSettings.setGrpsBaseNode((String) values.get("grpsbasenode"));
 					ExtAuthPanel.this.ldapSettings.setLanguage((String) values.get("language"));
 
-					ExtAuthPanel.this.adSettings.setImplementation((String) values.get("adImplementation"));
-					ExtAuthPanel.this.adSettings.setEnabled(values.get("adEnabled").equals("yes") ? true : false);
-					ExtAuthPanel.this.adSettings.setDomain((String) values.get("domain"));
-					ExtAuthPanel.this.adSettings.setHost((String) values.get("host"));
-					if (values.get("port") instanceof Integer)
-						ExtAuthPanel.this.adSettings.setPort((Integer) values.get("port"));
-					ExtAuthPanel.this.adSettings.setUsername((String) values.get("adUsername"));
-					ExtAuthPanel.this.adSettings.setPwd((String) values.get("adPassword"));
-					ExtAuthPanel.this.adSettings.setUsersBaseNode((String) values.get("adUsersbasenode"));
-					ExtAuthPanel.this.adSettings.setGrpsBaseNode((String) values.get("adGrpsbasenode"));
-					ExtAuthPanel.this.adSettings.setLanguage((String) values.get("adLanguage"));
+					// Checks if the active directory feature is enabled
+					if (!Session.get().isFeatureEnabled("Feature_11")) {
+						ExtAuthPanel.this.adSettings.setImplementation("md5");
+						ExtAuthPanel.this.adSettings.setEnabled(true);
+						ExtAuthPanel.this.adSettings.setDomain("domain");
+						ExtAuthPanel.this.adSettings.setHost("host");
+						if (values.get("port") instanceof Integer)
+							ExtAuthPanel.this.adSettings.setPort(78);
+						ExtAuthPanel.this.adSettings.setUsername("adUsername");
+						ExtAuthPanel.this.adSettings.setPwd("adPassword");
+						ExtAuthPanel.this.adSettings.setUsersBaseNode("adUsersbasenode");
+						ExtAuthPanel.this.adSettings.setGrpsBaseNode("adGrpsbasenode");
+						ExtAuthPanel.this.adSettings.setLanguage("adLanguage");
+					} else {
+						ExtAuthPanel.this.adSettings.setImplementation((String) values.get("adImplementation"));
+						ExtAuthPanel.this.adSettings.setEnabled(values.get("adEnabled").equals("yes") ? true : false);
+						ExtAuthPanel.this.adSettings.setDomain((String) values.get("domain"));
+						ExtAuthPanel.this.adSettings.setHost((String) values.get("host"));
+						if (values.get("port") instanceof Integer)
+							ExtAuthPanel.this.adSettings.setPort((Integer) values.get("port"));
+						ExtAuthPanel.this.adSettings.setUsername((String) values.get("adUsername"));
+						ExtAuthPanel.this.adSettings.setPwd((String) values.get("adPassword"));
+						ExtAuthPanel.this.adSettings.setUsersBaseNode((String) values.get("adUsersbasenode"));
+						ExtAuthPanel.this.adSettings.setGrpsBaseNode((String) values.get("adGrpsbasenode"));
+						ExtAuthPanel.this.adSettings.setLanguage((String) values.get("adLanguage"));
+					}
 
 					service.saveExtAuthSettings(Session.get().getSid(), ExtAuthPanel.this.ldapSettings,
 							ExtAuthPanel.this.adSettings, new AsyncCallback<Void>() {
