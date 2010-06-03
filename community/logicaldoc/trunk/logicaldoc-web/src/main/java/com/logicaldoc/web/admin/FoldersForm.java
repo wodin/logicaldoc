@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 
@@ -83,34 +82,26 @@ public class FoldersForm {
 	}
 
 	private void reload() {
-		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-		docDir = conf.getValue("docdir");
-		indexDir = conf.getValue("indexdir");
-		userDir = conf.getValue("userdir");
-		importDir = conf.getValue("importdir");
-		exportDir = conf.getValue("exportdir");
-		pluginDir = conf.getValue("plugindir");
+		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		docDir = conf.getProperty("conf.docdir");
+		indexDir = conf.getProperty("conf.indexdir");
+		userDir = conf.getProperty("conf.userdir");
+		importDir = conf.getProperty("conf.importdir");
+		exportDir = conf.getProperty("conf.exportdir");
+		pluginDir = conf.getProperty("conf.plugindir");
 	}
 
 	public String save() {
 		if (SessionManagement.isValid()) {
 			try {
-				SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-				conf.setValue("docdir", docDir);
-				conf.setValue("indexdir", indexDir);
-				conf.setValue("userdir", userDir);
-				conf.setValue("importdir", importDir);
-				conf.setValue("exportdir", exportDir);
-				conf.setValue("plugindir", pluginDir);
-
-				PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
-				pbean.setProperty("conf.docdir", docDir);
-				pbean.setProperty("conf.indexdir", indexDir);
-				pbean.setProperty("conf.userdir", userDir);
-				pbean.setProperty("conf.importdir", importDir);
-				pbean.setProperty("conf.exportdir", exportDir);
-				pbean.setProperty("conf.plugindir", pluginDir);
-				pbean.write();
+				PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+				conf.setProperty("conf.docdir", docDir);
+				conf.setProperty("conf.indexdir", indexDir);
+				conf.setProperty("conf.userdir", userDir);
+				conf.setProperty("conf.importdir", importDir);
+				conf.setProperty("conf.exportdir", exportDir);
+				conf.setProperty("conf.plugindir", pluginDir);
+				conf.write();
 
 				Messages.addLocalizedInfo("msg.action.savesettings");
 			} catch (Exception e) {

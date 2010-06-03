@@ -33,7 +33,6 @@ import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.DBMSConfigurator;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.ApplicationInitializer;
 
 /**
@@ -65,7 +64,6 @@ public class SetupWizard implements TabChangeListener {
 	private boolean setupSuccess;
 
 	public SetupWizard() {
-		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 		String workDir = "${user.home}/logicaldoc";
 
 		// Replacing ${var_name} in elements values with system property value
@@ -94,9 +92,9 @@ public class SetupWizard implements TabChangeListener {
 			pbean.write();
 
 			// Save the LOGICALDOC_REPOSITORY property
-			SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
+			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 			String logicaldocHome = FilenameUtils.separatorsToSystem(workingDir);
-			conf.setValue(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
+			conf.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
 			SystemProperty.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
 
 			ServletContext servletContext = (ServletContext) ((ServletExternalContext) FacesContext
@@ -119,9 +117,9 @@ public class SetupWizard implements TabChangeListener {
 			Context.refresh();
 
 			// Reload the bean for security
-			conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
+			conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 
-			String path = conf.getValue("indexdir");
+			String path = conf.getProperty("conf.indexdir");
 			System.out.println();
 
 			if (!path.endsWith(File.pathSeparator)) {
@@ -256,7 +254,6 @@ public class SetupWizard implements TabChangeListener {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void next() {
 		int currentTab = tabSet.getSelectedIndex();
 		currentTab++;

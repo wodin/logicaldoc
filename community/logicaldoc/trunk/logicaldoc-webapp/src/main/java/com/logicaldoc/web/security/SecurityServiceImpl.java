@@ -31,7 +31,6 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.util.io.CryptUtil;
 import com.logicaldoc.web.AbstractService;
 
@@ -110,8 +109,9 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 				return;
 			SessionManager.getInstance().kill(sid);
 
-			SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-			FileUtils.deleteDirectory(new File(conf.getValue("userdir") + "/" + session.getUserName() + "/temp"));
+			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			FileUtils
+					.deleteDirectory(new File(conf.getProperty("conf.userdir") + "/" + session.getUserName() + "/temp"));
 
 			log.info("User " + session.getUserName() + " logged out.");
 		} catch (Exception e) {

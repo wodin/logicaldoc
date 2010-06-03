@@ -25,7 +25,6 @@ import com.logicaldoc.gui.setup.client.SetupInfo;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.ApplicationInitializer;
 import com.smartgwt.client.util.SC;
 
@@ -137,7 +136,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 
 		Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 		indexer.createIndexes();
-		
+
 		// Initialize plugins filesystem
 		Collection<PluginDescriptor> descriptors = com.logicaldoc.util.PluginRegistry.getInstance().getPlugins();
 		for (PluginDescriptor descriptor : descriptors) {
@@ -185,9 +184,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		pbean.write();
 
 		// Save the LOGICALDOC_REPOSITORY property
-		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
 		String logicaldocHome = FilenameUtils.separatorsToSystem(repoFolder.getPath());
-		conf.setValue(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
 		SystemProperty.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
 
 		ServletContext servletContext = getServletContext();

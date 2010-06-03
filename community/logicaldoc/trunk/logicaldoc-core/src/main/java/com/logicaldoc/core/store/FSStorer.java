@@ -15,7 +15,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.StringUtil;
-import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.io.FileUtil;
 
 /**
@@ -32,17 +32,17 @@ import com.logicaldoc.util.io.FileUtil;
 public class FSStorer implements Storer {
 	protected static Log log = LogFactory.getLog(FSStorer.class);
 
-	private SettingsConfig settingsConfig;
+	private PropertiesBean config;
 
 	public FSStorer() {
 	}
 
-	public SettingsConfig getSettingsConfig() {
-		return settingsConfig;
+	public PropertiesBean getConfig() {
+		return config;
 	}
 
-	public void setSettingsConfig(SettingsConfig settingsConfig) {
-		this.settingsConfig = settingsConfig;
+	public void setConfig(PropertiesBean config) {
+		this.config = config;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class FSStorer implements Storer {
 	@Override
 	public File getDirectory(long docId) {
 		String path = StringUtil.split(Long.toString(docId), '/', 3);
-		path = settingsConfig.getValue("docdir") + "/" + path + "/doc";
+		path = config.getProperty("conf.docdir") + "/" + path + "/doc";
 		return new File(path);
 	}
 

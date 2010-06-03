@@ -32,7 +32,7 @@ import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.config.PropertiesBean;
 
 /**
  * Search specialization for the Full text search.
@@ -48,7 +48,7 @@ public class FulltextSearch extends Search {
 	@Override
 	public void internalSearch() throws Exception {
 		FulltextSearchOptions opt = (FulltextSearchOptions) options;
-		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
+		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 
 		String[] languages = null;
 		if (StringUtils.isEmpty(opt.getLanguage())) {
@@ -59,7 +59,7 @@ public class FulltextSearch extends Search {
 		}
 
 		Searcher[] searcher = new Searcher[languages.length];
-		String indexPath = conf.getValue("indexdir");
+		String indexPath = conf.getProperty("conf.indexdir");
 
 		if (!indexPath.endsWith(File.pathSeparator)) {
 			indexPath += "/";

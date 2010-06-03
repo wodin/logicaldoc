@@ -25,7 +25,7 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.sql.SqlUtil;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.components.SortableList;
@@ -36,7 +36,8 @@ import com.logicaldoc.web.util.FacesUtil;
  * <p>
  * The <code>UsersRecordsManager</code> class is responsible for constructing
  * the list of <code>User</code> beans which will be bound to a ice:dataTable
- * JSF component. <p/>
+ * JSF component.
+ * <p/>
  * <p>
  * Large data sets could be handle by adding a ice:dataPaginator. Alternatively
  * the dataTable could also be hidden and the dataTable could be added to
@@ -277,8 +278,8 @@ public class UsersRecordsManager extends SortableList {
 					} else {
 						Messages.addLocalizedInfo("msg.action.deleteuser");
 
-						SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-						File userdir = new File(conf.getValue("userdir") + "/" + user.getUserName());
+						PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+						File userdir = new File(conf.getProperty("conf.userdir") + "/" + user.getUserName());
 						FileUtils.deleteDirectory(userdir);
 					}
 				} else if (isAdmin && (adminsFound < 2)) {

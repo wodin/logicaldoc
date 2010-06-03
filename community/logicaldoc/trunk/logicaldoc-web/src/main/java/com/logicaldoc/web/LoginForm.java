@@ -24,7 +24,6 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.MenuBarBean;
 import com.logicaldoc.web.navigation.PageContentBean;
@@ -151,8 +150,8 @@ public class LoginForm {
 
 		try {
 			String authUsername = SessionManagement.getUsername();
-			SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-			FileUtils.deleteDirectory(new File(conf.getValue("userdir") + "/" + authUsername + "/temp"));
+			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			FileUtils.deleteDirectory(new File(conf.getProperty("conf.userdir") + "/" + authUsername + "/temp"));
 
 			log.info("User " + authUsername + " logged out.");
 

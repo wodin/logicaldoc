@@ -20,13 +20,13 @@ public class Util {
 	}
 
 	public static String imageUrl(String imageName) {
-		return contextPath()+imagePrefix() + imageName;
+		return imagePrefix() + imageName;
 	}
 
-	public static String contextPath(){
-		return GWT.getModuleBaseURL().replace(GWT.getModuleName() + "/", ""); 
+	public static String contextPath() {
+		return GWT.getModuleBaseURL().replace(GWT.getModuleName() + "/", "");
 	}
-	
+
 	public static Dictionary getContext() {
 		if (context == null)
 			context = Dictionary.getDictionary("context");
@@ -34,7 +34,7 @@ public class Util {
 	}
 
 	public static String imagePrefix() {
-		return "skin/images/";
+		return contextPath() + "skin/images/";
 	}
 
 	/**

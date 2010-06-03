@@ -10,8 +10,8 @@
 	<bean id="Storer" class="${store}"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
-		<property name="settingsConfig">
-			<ref bean="SettingsConfig" />
+		<property name="config">
+			<ref bean="ContextProperties" />
 		</property>
 	</bean>
 
@@ -19,7 +19,7 @@
 	<bean id="Indexer" class="com.logicaldoc.core.searchengine.Indexer"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default" init-method="init">
-		<property name="settingsConfig" ref="SettingsConfig" />
+		<property name="config" ref="ContextProperties" />
 		<property name="documentDao" ref="DocumentDAO" />
 	</bean>
 
