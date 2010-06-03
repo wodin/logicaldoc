@@ -32,7 +32,7 @@ import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.text.parser.Parser;
 import com.logicaldoc.core.text.parser.ParserFactory;
-import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.config.PropertiesBean;
 
 /**
  * Class for indexing files and maintaining indexes.
@@ -47,15 +47,15 @@ public class Indexer {
 
 	protected static Log log = LogFactory.getLog(Indexer.class);
 
-	private static SettingsConfig settingsConfig;
+	private static PropertiesBean config;
 
 	private DocumentDAO documentDao;
 
 	private Indexer() {
 	}
 
-	public void setSettingsConfig(SettingsConfig settingsConfig) {
-		Indexer.settingsConfig = settingsConfig;
+	public void setConfig(PropertiesBean config) {
+		Indexer.config = config;
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class Indexer {
 		deleteDocument(doc.getField(LuceneDocument.FIELD_DOC_ID).stringValue(), locale);
 
 		// Then add the record in the index
-		String indexdir = settingsConfig.getValue("indexdir");
+		String indexdir = config.getProperty("conf.indexdir");
 		Language language = LanguageManager.getInstance().getLanguage(locale);
 		Analyzer analyzer = language.getAnalyzer();
 		IndexWriter writer = null;
@@ -366,7 +366,7 @@ public class Indexer {
 	}
 
 	static File getIndexFolder(String name) throws IOException {
-		File indexdir = new File(settingsConfig.getValue("indexdir"));
+		File indexdir = new File(config.getProperty("conf.indexdir"));
 		return new File(indexdir, name);
 	}
 

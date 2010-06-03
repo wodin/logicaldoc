@@ -23,35 +23,6 @@
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default" />
 
-	<bean id="SettingsConfig"
-		class="com.logicaldoc.util.config.SettingsConfig" abstract="false"
-		lazy-init="default" autowire="default" dependency-check="default">
-		<property name="settings">
-			<props>
-				<prop key="LOGICALDOC_REPOSITORY">${user.home}/logicaldoc</prop>
-				<prop key="LOGICALDOC_REPOSITORY.category">directory</prop>
-				<prop key="docdir">
-					${user.home}/logicaldoc/data/docs/
-				</prop>
-				<prop key="docdir.category">directory</prop>
-				<prop key="indexdir">
-					${user.home}/logicaldoc/data/index/
-				</prop>
-				<prop key="indexdir.category">directory</prop>
-				<prop key="userdir">
-					${user.home}/logicaldoc/data/users/
-				</prop>
-				<prop key="userdir.category">directory</prop>
-				<prop key="sxcontent">content.xml</prop>
-				<prop key="sxcontent.category">search</prop>
-				<prop key="kocontent">maindoc.xml</prop>
-				<prop key="kocontent.category">search</prop>
-				<prop key="enablerest">false</prop>
-				<prop key="enablerest.category">webservice</prop>
-			</props>
-		</property>
-	</bean>
-
 	<bean id="MimeTypeConfig"
 		class="com.logicaldoc.util.config.MimeTypeConfig" abstract="false"
 		lazy-init="default" autowire="default" dependency-check="default">

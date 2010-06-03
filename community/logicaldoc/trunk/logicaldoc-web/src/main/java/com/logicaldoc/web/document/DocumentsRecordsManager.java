@@ -36,7 +36,7 @@ import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.core.transfer.InMemoryZipImport;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.util.config.SettingsConfig;
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.admin.GuiBean;
 import com.logicaldoc.web.components.SortableList;
@@ -644,8 +644,8 @@ public class DocumentsRecordsManager extends SortableList {
 				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 				final Menu parent = menuDao.findById(selectedDirectory);
 
-				SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-				String path = conf.getValue("userdir");
+				PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+				String path = conf.getProperty("conf.userdir");
 
 				if (!path.endsWith("_")) {
 					path += "_";

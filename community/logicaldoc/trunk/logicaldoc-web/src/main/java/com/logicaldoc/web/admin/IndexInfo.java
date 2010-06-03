@@ -13,7 +13,6 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.util.config.SettingsConfig;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 
@@ -36,8 +35,8 @@ public class IndexInfo {
 	}
 
 	public String getIndexDir() {
-		SettingsConfig conf = (SettingsConfig) Context.getInstance().getBean(SettingsConfig.class);
-		return conf.getValue("indexdir");
+		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		return conf.getProperty("conf.indexdir");
 	}
 
 	public String unlock() {
@@ -146,7 +145,7 @@ public class IndexInfo {
 			config.write();
 		} catch (IOException e) {
 		}
-		
+
 		Messages.addLocalizedInfo("msg.action.savesettings");
 
 		return null;
