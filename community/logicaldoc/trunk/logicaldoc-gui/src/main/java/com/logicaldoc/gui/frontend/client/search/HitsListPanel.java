@@ -387,7 +387,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		if (selectedRecord != null) {
 			selectedRecord.setAttribute("title", document.getTitle());
 			selectedRecord.setAttribute("customId", document.getCustomId());
-			selectedRecord.setAttribute("size", document.getSize());
+			selectedRecord.setAttribute("size", document.getFileSize());
 			list.refreshRow(list.getRecordIndex(selectedRecord));
 		}
 	}

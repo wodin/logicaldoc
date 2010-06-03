@@ -13,7 +13,6 @@ import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
-import com.smartgwt.client.util.SC;
 
 /**
  * The Frontend entry point

@@ -62,7 +62,7 @@ public class MockSettingServiceImpl extends RemoteServiceServlet implements Sett
 		email.setPort(8080);
 		email.setUsername("admin");
 		email.setPwd("pippo");
-		email.setConnSecurity(2);
+		email.setConnSecurity(GUIEmailSettings.SECURITY_TLS);
 		email.setSecureAuth(true);
 		email.setSenderEmail("mario@acme.com");
 
