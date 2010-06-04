@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 
 /**
@@ -15,6 +16,8 @@ import com.logicaldoc.core.security.UserSession;
 public abstract class AbstractService extends RemoteServiceServlet {
 
 	public static final String LOCALE = "locale";
+
+	public static final String USER = "user";
 
 	private static final long serialVersionUID = 1L;
 
@@ -31,5 +34,10 @@ public abstract class AbstractService extends RemoteServiceServlet {
 	protected Locale currentLocale(String sid) {
 		UserSession session = validateSession(sid);
 		return (Locale) session.getDictionary().get(LOCALE);
+	}
+
+	protected User getSessionUser(String sid) {
+		UserSession session = validateSession(sid);
+		return (User) session.getDictionary().get(USER);
 	}
 }

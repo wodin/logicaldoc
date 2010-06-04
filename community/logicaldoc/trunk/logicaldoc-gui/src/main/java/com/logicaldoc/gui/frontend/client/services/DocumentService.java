@@ -116,19 +116,22 @@ public interface DocumentService extends RemoteService {
 	 * 
 	 * @param sid The session identifier
 	 * @param language The language applied to all documents
+	 * @param folderId The destination folder identifier
+	 * @param encoding The encoding
 	 * @param importZip If .zip files have to be unpacked and the contained
 	 *        documents imported
 	 */
-	public void addDocuments(String sid, String language, boolean importZip);
+	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip);
 
 	/**
 	 * Checks-in a new document version
 	 * 
 	 * @param sid The session identifier
 	 * @param docId The document to update
+	 * @param commnet The operation comment
 	 * @param major True if this is a major version
 	 */
-	public void checkin(String sid, long docId, boolean major);
+	public void checkin(String sid, long docId, String comment, boolean major);
 
 	/**
 	 * Restores a given document
@@ -158,7 +161,7 @@ public interface DocumentService extends RemoteService {
 	 * @param event The history event to mark as read
 	 */
 	public void markHistoryAsRead(String sid, String event);
-	
+
 	/**
 	 * Marks a set of documents as unindexable
 	 */

@@ -212,7 +212,7 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	}
 
 	@Override
-	public void addDocuments(String sid, String language, boolean importZip) {
+	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip) {
 		System.out.println("** addDocuments");
 		System.out.println("** servlet session:" + getThreadLocalRequest().getSession().getId());
 	}
@@ -223,8 +223,9 @@ public class MockDocumentServiceImpl extends RemoteServiceServlet implements Doc
 	}
 
 	@Override
-	public void checkin(String sid, long docId, boolean major) {
+	public void checkin(String sid, long docId, String comment, boolean major) {
 		System.out.println("** checkin");
+		// per recuperare il nomre della cartella
 		System.out.println("** servlet session:" + getThreadLocalRequest().getSession().getId());
 	}
 

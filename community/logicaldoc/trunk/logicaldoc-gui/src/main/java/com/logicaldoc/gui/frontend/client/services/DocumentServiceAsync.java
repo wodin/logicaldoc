@@ -39,11 +39,12 @@ public interface DocumentServiceAsync {
 
 	void unlock(String sid, long[] ids, AsyncCallback<Void> callback);
 
-	void addDocuments(String sid, String language, boolean importZip, AsyncCallback<Void> callback);
+	void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
+			AsyncCallback<Void> callback);
 
 	void checkout(String sid, long id, AsyncCallback<Void> callback);
 
-	void checkin(String sid, long docId, boolean major, AsyncCallback<Void> callback);
+	void checkin(String sid, long docId, String comment, boolean major, AsyncCallback<Void> callback);
 
 	void linkDocuments(String sid, long[] inDocIds, long[] outDocIds, AsyncCallback<Void> callback);
 
