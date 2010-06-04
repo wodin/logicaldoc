@@ -199,4 +199,25 @@ public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
 		histories = dao.findAll();
 		Assert.assertEquals(1, histories.size());
 	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testFindByUserIdAndEvent() {
+		Collection histories = dao.findByUserIdAndEvent(1, "data test 01");
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(1, histories.size());
+
+		histories = dao.findByUserIdAndEvent(1, "data test 02");
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(1, histories.size());
+
+		histories = dao.findByUserIdAndEvent(2, "data test 02");
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(0, histories.size());
+
+		// Try with unexisting user
+		histories = dao.findByUserIdAndEvent(99, "data test 02");
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(0, histories.size());
+	}
 }

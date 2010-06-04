@@ -62,4 +62,14 @@ public interface HistoryDAO extends PersistentObjectDAO<History> {
 	 *        considered old
 	 */
 	public void cleanOldDocumentHistories(int ttl);
+
+	/**
+	 * This method selects all histories of a given user and related to the
+	 * given event.
+	 * 
+	 * @param userId The user identifier
+	 * @param event The history event
+	 * @return list of histories ordered by date
+	 */
+	public List<History> findByUserIdAndEvent(long userId, String event);
 }
