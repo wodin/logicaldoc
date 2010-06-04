@@ -128,10 +128,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			versionDAO.store(version);
 			log.debug("Stored version " + version.getVersion());
 
-			// Modify document history entry
-			transaction.setEvent(History.EVENT_CHECKEDIN);
-			transaction.setFilename(document.getFileName());
-
 			// create search index entry
 			if (immediateIndexing)
 				createIndexEntry(document);
