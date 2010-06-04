@@ -1,5 +1,7 @@
 package com.logicaldoc.web.security;
 
+import static com.logicaldoc.web.AbstractService.USER;
+
 import java.io.File;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -85,6 +87,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			// Define the current locale
 			UserSession userSession = SessionManager.getInstance().get(session.getSid());
 			userSession.getDictionary().put(LOCALE, user.getLocale());
+			userSession.getDictionary().put(USER, user);
 		} else if (userDao.isPasswordExpired(username)) {
 			User user = userDao.findByUserName(username);
 			guiUser.setId(user.getId());

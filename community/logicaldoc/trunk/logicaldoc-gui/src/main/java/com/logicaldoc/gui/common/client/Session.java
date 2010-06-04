@@ -7,7 +7,6 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.log.Log;
-import com.smartgwt.client.util.SC;
 
 /**
  * Represents a client work session

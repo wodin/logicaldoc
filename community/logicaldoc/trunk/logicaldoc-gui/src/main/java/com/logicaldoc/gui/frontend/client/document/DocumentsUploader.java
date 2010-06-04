@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.LanguagesDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -19,9 +20,11 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.BooleanItem;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.SubmitItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 
@@ -40,6 +43,10 @@ public class DocumentsUploader extends Window {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
+	private boolean zipImport = true;
+
+	private DynamicForm form;
+
 	public DocumentsUploader() {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("adddocuments"));
@@ -52,7 +59,28 @@ public class DocumentsUploader extends Window {
 		setPadding(5);
 		setMembersMargin(3);
 
-		DynamicForm form = new DynamicForm();
+		reloadForm();
+
+		// Create a new uploader panel and attach it to the window
+		multiUploader = new MultiUploader();
+		multiUploader.setStyleName("upload");
+		multiUploader.setHeight("100%");
+		multiUploader.setFileInputPrefix("LDOC");
+		multiUploader.reset();
+
+		addItem(multiUploader);
+
+		// Add a finish handler which will load the image once the upload
+		// finishes
+		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
+	}
+
+	private void reloadForm() {
+		if (form != null) {
+			removeMember(form);
+		}
+
+		form = new DynamicForm();
 		vm = new ValuesManager();
 		form.setValuesManager(vm);
 
@@ -65,9 +93,19 @@ public class DocumentsUploader extends Window {
 		languageItem.setRequired(true);
 		languageItem.setDefaultValue(LocaleInfo.getCurrentLocale().getLocaleName());
 
-		BooleanItem zipItem = new BooleanItem();
+		CheckboxItem zipItem = new CheckboxItem();
 		zipItem.setName("zip");
 		zipItem.setTitle(I18N.message("importfromzip"));
+
+		SelectItem encodingItem = ItemFactory.newEncodingSelector("encoding");
+		encodingItem.setDisabled(zipImport);
+
+		zipItem.addChangeHandler(new ChangeHandler() {
+			public void onChange(ChangeEvent event) {
+				zipImport = !zipImport;
+				reloadForm();
+			}
+		});
 
 		sendButton = new SubmitItem();
 		sendButton.setTitle(I18N.message("send"));
@@ -80,21 +118,9 @@ public class DocumentsUploader extends Window {
 			}
 		});
 
-		form.setItems(languageItem, zipItem, sendButton);
-
-		// Create a new uploader panel and attach it to the window
-		multiUploader = new MultiUploader();
-		multiUploader.setStyleName("upload");
-		multiUploader.setHeight("100%");
-		multiUploader.setFileInputPrefix("LDOC");
-		multiUploader.reset();
+		form.setItems(languageItem, zipItem, encodingItem, sendButton);
 
 		addItem(form);
-		addItem(multiUploader);
-
-		// Add a finish handler which will load the image once the upload
-		// finishes
-		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 	}
 
 	// Load the image in the document and in the case of success attach it to
@@ -115,23 +141,28 @@ public class DocumentsUploader extends Window {
 		if (!vm.validate())
 			return;
 
-		documentService.addDocuments(Session.get().getSid(), getLanguage(), getImportZip(), new AsyncCallback<Void>() {
+		documentService.addDocuments(Session.get().getSid(), getLanguage(), Session.get().getCurrentFolder().getId(),
+				getEncoding(), getImportZip(), new AsyncCallback<Void>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.serverError(caught);
-			}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-			@Override
-			public void onSuccess(Void result) {
-				DocumentsPanel.get().refresh();
-				destroy();
-			}
-		});
+					@Override
+					public void onSuccess(Void result) {
+						DocumentsPanel.get().refresh();
+						destroy();
+					}
+				});
 	}
 
 	public String getLanguage() {
 		return vm.getValueAsString("language");
+	}
+
+	public String getEncoding() {
+		return vm.getValueAsString("encoding");
 	}
 
 	public boolean getImportZip() {
