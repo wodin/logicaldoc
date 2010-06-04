@@ -6,10 +6,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.util.sql.SqlUtil;
 
 /**
  * Hibernate implementation of <code>HistoryDAO</code>
@@ -35,7 +37,7 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 	 * @see com.logicaldoc.core.document.dao.HistoryDAO#findByUserId(long)
 	 */
 	public List<History> findByUserId(long userId) {
-		return findByWhere("_entity.userId =" + userId, null, "order by _entity.date asc");
+		return findByUserIdAndEvent(userId, null);
 	}
 
 	/**
@@ -86,5 +88,14 @@ public class HibernateHistoryDAO extends HibernatePersistentObjectDAO<History> i
 				super.bulkUpdate("set ld_deleted = 1 where ld_id = " + historyId, null);
 			}
 		}
+	}
+
+	@Override
+	public List<History> findByUserIdAndEvent(long userId, String event) {
+		String query = "_entity.userId =" + userId;
+		if (event != null && StringUtils.isNotEmpty(event))
+			query += " and lower(_entity.event) like '" + SqlUtil.doubleQuotes(event.toLowerCase()) + "'";
+
+		return findByWhere(query, null, "order by _entity.date asc");
 	}
 }
