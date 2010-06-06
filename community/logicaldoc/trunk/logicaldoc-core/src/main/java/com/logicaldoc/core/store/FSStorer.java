@@ -58,7 +58,7 @@ public class FSStorer implements Storer {
 	@Override
 	public File getDirectory(long docId) {
 		String path = StringUtil.split(Long.toString(docId), '/', 3);
-		path = config.getProperty("conf.docdir") + "/" + path + "/doc";
+		path = config.getPropertyWithSubstitutions("conf.docdir") + "/" + path + "/doc";
 		return new File(path);
 	}
 

@@ -162,7 +162,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			first = false;
 		}
 		query.append(")");
-		return findIdsByWhere(query.toString(), null);
+		return findIdsByWhere(query.toString(), null, null);
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	 */
 	public List<Document> findLockedByUserId(long userId) {
 		return findByWhere("_entity.lockUserId = " + userId + " and not(_entity.status=" + Document.DOC_UNLOCKED + ")",
-				null);
+				null, null);
 	}
 
 	@Override
@@ -182,7 +182,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			sb.append(" 1=1 ");
 		if (status != null)
 			sb.append(" and _entity.status=" + status);
-		return findByWhere(sb.toString(), null);
+		return findByWhere(sb.toString(), null, null);
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		StringBuilder query = new StringBuilder();
 		query.append("'" + SqlUtil.doubleQuotes(tag) + "'");
 		query.append(" in elements(_entity.tags) ");
-		return findIdsByWhere(query.toString(), null);
+		return findIdsByWhere(query.toString(), null, null);
 	}
 
 	public boolean store(final Document doc) {
@@ -526,12 +526,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public List<Long> findDocIdByFolder(long folderId) {
-		return findIdsByWhere("_entity.folder.id = " + Long.toString(folderId), null);
+		return findIdsByWhere("_entity.folder.id = " + Long.toString(folderId), null, null);
 	}
 
 	@Override
 	public List<Document> findByFolder(long folderId) {
-		return findByWhere("_entity.folder.id = " + Long.toString(folderId), null);
+		return findByWhere("_entity.folder.id = " + Long.toString(folderId), null, null);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -575,7 +575,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
-		return findByWhere(query, null);
+		return findByWhere(query, null, null);
 	}
 
 	@Override
@@ -584,7 +584,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				+ SqlUtil.doubleQuotes(title.toLowerCase()) + "'";
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
-		return findByWhere(query, null);
+		return findByWhere(query, null, null);
 	}
 
 	@Override
@@ -745,7 +745,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public List<Document> findByIndexed(int indexed) {
-		return findByWhere("_entity.indexed=" + indexed, "order by _entity.lastModified asc");
+		return findByWhere("_entity.indexed=" + indexed, "order by _entity.lastModified asc", null);
 	}
 
 	@Override
@@ -763,7 +763,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		Document doc = null;
 		try {
 			String query = "_entity.customId = '" + SqlUtil.doubleQuotes(customId) + "'";
-			List<Document> coll = findByWhere(query, null);
+			List<Document> coll = findByWhere(query, null, null);
 			if (!coll.isEmpty()) {
 				doc = coll.get(0);
 				if (doc.getDeleted() == 1)
@@ -864,7 +864,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public List<Long> findShortcutIds(long docId) {
-		return findIdsByWhere("_entity.docRef = " + Long.toString(docId), null);
+		return findIdsByWhere("_entity.docRef = " + Long.toString(docId), null, null);
 	}
 
 	@Override

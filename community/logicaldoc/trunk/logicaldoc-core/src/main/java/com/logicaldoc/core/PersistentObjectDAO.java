@@ -54,9 +54,10 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * 
 	 * @param where The where clause expression
 	 * @param order The order clause expression
+	 * @param max Maximum results number (optional)
 	 * @return The list of marching entities
 	 */
-	public List<T> findByWhere(String where, String order);
+	public List<T> findByWhere(String where, String order, Integer max);
 
 	/**
 	 * Finds all entities by the given expression. Use _entity alias to
@@ -65,18 +66,20 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @param where The where clause expression
 	 * @param values Parameters used in the where expression
 	 * @param order The order clause expression
+	 * @param max Maximum results number (optional)
 	 * @return The list of marching entities
 	 */
-	public List<T> findByWhere(String where, Object[] values, String order);
+	public List<T> findByWhere(String where, Object[] values, String order, Integer max);
 
 	/**
 	 * Find everything you want from the DB using the ORM query language
 	 * 
 	 * @param query The query to execute
 	 * @param values Array of paramaters
+	 * @param max Maximum results number (optional)
 	 * @return Query result
 	 */
-	public List<Object> findByQuery(String query, Object[] values);
+	public List<Object> findByQuery(String query, Object[] values, Integer max);
 
 	/**
 	 * Finds all entities ids by the given expression. Use _entity alias to
@@ -84,9 +87,10 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * 
 	 * @param where The where clause expression
 	 * @param order The order clause expression
+	 * @param max Maximum results number (optional)
 	 * @return The list of marching entities ids
 	 */
-	public List<Long> findIdsByWhere(String where, String order);
+	public List<Long> findIdsByWhere(String where, String order, Integer max);
 
 	/**
 	 * Finds all entities ids by the given expression. Use _entity alias to
@@ -95,9 +99,10 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @param where The where clause expression
 	 * @param values Parameters used in the where expression
 	 * @param order The order clause expression
+	 * @param max Maximum results number (optional)
 	 * @return The list of marching entities ids
 	 */
-	public List<Long> findIdsByWhere(String where, Object[] values, String order);
+	public List<Long> findIdsByWhere(String where, Object[] values, String order, Integer max);
 
 	/**
 	 * Initialises lazy loaded data such as collections

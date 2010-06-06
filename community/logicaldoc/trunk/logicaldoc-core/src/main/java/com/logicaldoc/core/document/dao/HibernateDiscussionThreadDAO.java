@@ -27,7 +27,8 @@ public class HibernateDiscussionThreadDAO extends HibernatePersistentObjectDAO<D
 
 	@Override
 	public List<DiscussionThread> findByDocId(long docId) {
-		return findByWhere("_entity.docId = ?", new Object[] { new Long(docId) }, "order by _entity.lastPost desc");
+		return findByWhere("_entity.docId = ?", new Object[] { new Long(docId) }, "order by _entity.lastPost desc",
+				null);
 	}
 
 	@Override

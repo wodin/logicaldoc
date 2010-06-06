@@ -61,6 +61,9 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Collection<Document> documents = dao.findAll();
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(2, documents.size());
+		
+		Assert.assertEquals(2, dao.findByWhere("1=1", null, null).size());
+		Assert.assertEquals(1, dao.findByWhere("1=1", null, 1).size());
 	}
 
 	@Test
