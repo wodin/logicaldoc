@@ -51,7 +51,7 @@ public class HibernateWorkflowHistoryDAO extends HibernatePersistentObjectDAO<Wo
 	public List<WorkflowHistory> findByTemplateIdAndInstanceId(long templateId, String instanceId) {
 		String query = "_entity.templateId = " + templateId + " and lower(_entity.instanceId) = '"
 				+ SqlUtil.doubleQuotes(instanceId.toLowerCase()) + "'";
-		return findByWhere(query, "order by _entity.date desc");
+		return findByWhere(query, "order by _entity.date desc", null);
 	}
 
 	@Override

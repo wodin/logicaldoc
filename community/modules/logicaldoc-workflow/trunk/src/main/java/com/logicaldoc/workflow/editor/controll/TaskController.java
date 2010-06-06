@@ -52,7 +52,7 @@ public class TaskController extends DragAndDropSupportController {
 			List<User> matchedUsers = userDAO
 					.findByWhere(
 							"_entity.type = 0 and (_entity.userName like concat(?,'%') OR _entity.firstName like concat(?,'%') OR _entity.name like concat(?,'%'))",
-							new Object[] { currentValue, currentValue, currentValue }, null);
+							new Object[] { currentValue, currentValue, currentValue }, null, null);
 
 			possibleAssignments = new LinkedList<String>();
 			for (User user : matchedUsers) {
