@@ -59,7 +59,7 @@ public class DocumentsDS extends DataSource {
 		setClientOnly(true);
 		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId="
 				+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "") + "&max="
-				+ (max != null ? max : MAX) +  "&index="
+				+ (max != null ? max : MAX) +  "&indexable="
 				+ (indexable!=null ? Boolean.toString(indexable) : ""));
 	}
 }
