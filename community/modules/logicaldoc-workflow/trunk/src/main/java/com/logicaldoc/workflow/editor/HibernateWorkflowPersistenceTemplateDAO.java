@@ -168,7 +168,7 @@ public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistent
 	 * @see com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO#findAllDeployed()
 	 */
 	public List<WorkflowPersistenceTemplate> findAllDeployed() {
-		return findByWhere("_entity.deployed = 1", null);
+		return findByWhere("_entity.deployed = 1", null, null);
 	}
 
 	/**
@@ -176,9 +176,8 @@ public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistent
 	 *      com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO.WORKFLOW_STAGE)
 	 */
 	public WorkflowPersistenceTemplate load(String name, WORKFLOW_STAGE workflow_stage) {
-		WorkflowPersistenceTemplate pt = findByWhere("_entity.name ='" + SqlUtil.doubleQuotes(name) + "'", null).get(0);
+		WorkflowPersistenceTemplate pt = findByWhere("_entity.name ='" + SqlUtil.doubleQuotes(name) + "'", null, null).get(0);
 		return this.load(pt.getId(), workflow_stage);
-
 	}
 
 	/**
@@ -203,7 +202,7 @@ public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistent
 	public WorkflowPersistenceTemplate findByName(String name) {
 		WorkflowPersistenceTemplate template = null;
 		List<WorkflowPersistenceTemplate> coll = findByWhere("_entity.name = '" + SqlUtil.doubleQuotes(name) + "'",
-				null);
+				null, null);
 		if (coll.size() > 0) {
 			template = coll.iterator().next();
 		}

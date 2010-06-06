@@ -515,10 +515,10 @@ public class WorkflowTemplateManager {
 			List<User> matchedUsers = userDAO
 					.findByWhere(
 							"_entity.type = 0 and (_entity.userName like concat(?,'%') OR _entity.firstName like concat(?,'%') OR _entity.name like concat(?,'%'))",
-							new Object[] { currentValue, currentValue, currentValue }, null);
+							new Object[] { currentValue, currentValue, currentValue }, null, null);
 
 			List<Group> matchedGroups = groupDAO.findByWhere("_entity.type = 0 and _entity.name like concat(?,'%')",
-					new Object[] { currentValue, }, null);
+					new Object[] { currentValue, }, null, null);
 
 			possibleSupervisors = new LinkedList<String>();
 			for (User user : matchedUsers) {
