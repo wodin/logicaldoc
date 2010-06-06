@@ -59,7 +59,7 @@ public class FulltextSearch extends Search {
 		}
 
 		Searcher[] searcher = new Searcher[languages.length];
-		String indexPath = conf.getProperty("conf.indexdir");
+		String indexPath = conf.getPropertyWithSubstitutions("conf.indexdir");
 
 		if (!indexPath.endsWith(File.pathSeparator)) {
 			indexPath += "/";

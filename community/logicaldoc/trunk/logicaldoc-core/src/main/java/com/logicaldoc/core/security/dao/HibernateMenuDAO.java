@@ -188,7 +188,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findChildren(long)
 	 */
 	public List<Menu> findChildren(long parentId) {
-		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId }, null);
+		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId }, null, null);
 	}
 
 	/**
@@ -417,7 +417,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			query.append(" AND _entity.parentId = " + parent.getId());
 		if (type != null)
 			query.append(" AND _entity.type = " + type.intValue());
-		return findByWhere(query.toString(), null);
+		return findByWhere(query.toString(), null, null);
 	}
 
 	@Override
@@ -490,7 +490,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	@Override
 	public List<Menu> findByTextAndParentId(String text, long parentId) {
 		return findByWhere("_entity.parentId = " + parentId + " and _entity.text like '" + SqlUtil.doubleQuotes(text)
-				+ "'", null);
+				+ "'", null, null);
 	}
 
 	@Override

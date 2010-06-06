@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -44,11 +45,11 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	}
 
 	public List<T> findAll() {
-		return findByWhere("", "");
+		return findByWhere("", "", null);
 	}
 
 	public List<Long> findAllIds() {
-		return findIdsByWhere("", "");
+		return findIdsByWhere("", "", null);
 	}
 
 	@Override
@@ -67,20 +68,21 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	}
 
 	@Override
-	public List<T> findByWhere(String where, String order) {
-		return findByWhere(where, new Object[0], order);
+	public List<T> findByWhere(String where, String order, Integer max) {
+		return findByWhere(where, new Object[0], order, max);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<T> findByWhere(String where, Object[] values, String order) {
+	public List<T> findByWhere(String where, Object[] values, String order, Integer max) {
 		List<T> coll = new ArrayList<T>();
 		try {
 			String query = "from " + entityClass.getCanonicalName() + " _entity where _entity.deleted=0 "
 					+ (StringUtils.isNotEmpty(where) ? " and (" + where + ") " : " ")
 					+ (StringUtils.isNotEmpty(order) ? order : " ");
 			log.debug("Execute query: " + query);
-			coll = (List<T>) getHibernateTemplate().find(query, values);
+
+			coll = (List<T>) getHibernateTemplate(max).find(query, values);
 		} catch (Exception e) {
 			e.printStackTrace();
 			if (log.isErrorEnabled())
@@ -90,13 +92,13 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	}
 
 	@Override
-	public List<Long> findIdsByWhere(String where, String order) {
-		return findIdsByWhere(where, new Object[0], order);
+	public List<Long> findIdsByWhere(String where, String order, Integer max) {
+		return findIdsByWhere(where, new Object[0], order, max);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Long> findIdsByWhere(String where, Object[] values, String order) {
+	public List<Long> findIdsByWhere(String where, Object[] values, String order, Integer max) {
 		List<Long> coll = new ArrayList<Long>();
 		try {
 			String query = "select _entity.id from " + entityClass.getCanonicalName()
@@ -104,7 +106,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 					+ (StringUtils.isNotEmpty(where) ? " and (" + where + ") " : " ")
 					+ (StringUtils.isNotEmpty(order) ? order : " ");
 			log.debug("Execute query: " + query);
-			coll = (List<Long>) getHibernateTemplate().find(query, values);
+			coll = (List<Long>) getHibernateTemplate(max).find(query, values);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -113,11 +115,11 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Object> findByQuery(String query, Object[] values) {
+	public List<Object> findByQuery(String query, Object[] values, Integer max) {
 		List<Object> coll = new ArrayList<Object>();
 		try {
 			log.debug("Execute query: " + query);
-			coll = (List<Object>) getHibernateTemplate().find(query, values != null ? values : new Object[0]);
+			coll = (List<Object>) getHibernateTemplate(max).find(query, values != null ? values : new Object[0]);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -211,5 +213,19 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	@Override
 	public int bulkUpdate(String expression, Object[] values) {
 		return getHibernateTemplate().bulkUpdate("update " + entityClass.getCanonicalName() + " " + expression, values);
+	}
+
+	/**
+	 * Useful method that creates a template for returnig a maximum number of
+	 * results. If the max results is <1 than the default template is returned.
+	 * 
+	 * @param maxResults The maximum results number
+	 */
+	protected HibernateTemplate getHibernateTemplate(Integer maxResults) {
+		if (maxResults == null || maxResults < 1)
+			return getHibernateTemplate();
+		HibernateTemplate template = new HibernateTemplate(getSessionFactory());
+		template.setMaxResults(maxResults);
+		return template;
 	}
 }

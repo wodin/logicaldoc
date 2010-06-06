@@ -22,12 +22,12 @@ public class HibernateBookmarkDAO extends HibernatePersistentObjectDAO<Bookmark>
 
 	@Override
 	public List<Bookmark> findByUserId(long userId) {
-		return findByWhere("_entity.userId =" + userId, null, "order by _entity.position asc");
+		return findByWhere("_entity.userId =" + userId, null, "order by _entity.position asc", null);
 	}
 
 	@Override
 	public List<Bookmark> findByUserIdAndDocId(long userId, long docId) {
 		return findByWhere("_entity.userId =" + userId + " and _entity.docId =" + docId, null,
-				"order by _entity.position asc");
+				"order by _entity.position asc", null);
 	}
 }

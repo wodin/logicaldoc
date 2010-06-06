@@ -65,6 +65,6 @@ public class HibernateSequenceDAO extends HibernateDaoSupport implements Sequenc
 		String query = " 1=1 ";
 		query += " and _entity.type like '" + SqlUtil.doubleQuotes(TYPE) + "' ";
 		query += " and _entity.subtype like '" + SqlUtil.doubleQuotes(name) + "%' ";
-		return genericDao.findByWhere(query, null);
+		return genericDao.findByWhere(query, null, null);
 	}
 }

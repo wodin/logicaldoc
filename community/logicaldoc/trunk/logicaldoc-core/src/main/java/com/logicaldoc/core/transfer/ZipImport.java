@@ -88,7 +88,7 @@ public class ZipImport {
 		this.user = userDao.findById(userId);
 
 		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
-		String userpath = conf.getProperty("conf.userdir");
+		String userpath = conf.getPropertyWithSubstitutions("conf.userdir");
 
 		if (!userpath.endsWith("_")) {
 			userpath += "_";
