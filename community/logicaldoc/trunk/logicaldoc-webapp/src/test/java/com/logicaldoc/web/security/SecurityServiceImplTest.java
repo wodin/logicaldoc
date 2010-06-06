@@ -15,7 +15,7 @@ import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.web.AbstractWebappTestCase;
-import com.logicaldoc.web.security.SecurityServiceImpl;
+import com.logicaldoc.web.service.SecurityServiceImpl;
 
 public class SecurityServiceImplTest extends AbstractWebappTestCase {
 

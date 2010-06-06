@@ -1,4 +1,4 @@
-package com.logicaldoc.web.document;
+package com.logicaldoc.web.service;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailAttachment;
@@ -47,7 +48,7 @@ import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.TagUtil;
 import com.logicaldoc.util.config.MimeTypeConfig;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.web.AbstractService;
+import com.logicaldoc.web.SessionBean;
 
 /**
  * Implementation of the DocumentService
@@ -55,7 +56,7 @@ import com.logicaldoc.web.AbstractService;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class DocumentServiceImpl extends AbstractService implements DocumentService {
+public class DocumentServiceImpl extends RemoteServiceServlet implements DocumentService {
 
 	private static final long serialVersionUID = 1L;
 
@@ -63,7 +64,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void addBookmarks(String sid, long[] docIds) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		BookmarkDAO bookmarkDao = (BookmarkDAO) Context.getInstance().getBean(BookmarkDAO.class);
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -72,14 +73,14 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		for (long id : docIds) {
 			try {
 				Bookmark bookmark = null;
-				if (bookmarkDao.findByUserIdAndDocId(getSessionUser(sid).getId(), id).size() > 0) {
+				if (bookmarkDao.findByUserIdAndDocId(SessionBean.getSessionUser(sid).getId(), id).size() > 0) {
 					// The bookmark already exists
 					alreadyAdded++;
 				} else {
 					Document doc = dao.findById(id);
 					bookmark = new Bookmark();
 					bookmark.setTitle(doc.getTitle());
-					bookmark.setUserId(getSessionUser(sid).getId());
+					bookmark.setUserId(SessionBean.getSessionUser(sid).getId());
 					bookmark.setDocId(id);
 					bookmark.setFileType(doc.getType());
 					bookmarkDao.store(bookmark);
@@ -102,7 +103,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		File[] uploadedFiles = listUploadedFiles();
 		log.debug("Uploading " + uploadedFiles.length + "files");
@@ -116,12 +117,12 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 					log.debug("file = " + file);
 
 					PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
-					String path = conf.getProperty("conf.userdir");
+					String path = conf.getPropertyWithSubstitutions("conf.userdir");
 
 					if (!path.endsWith("_")) {
 						path += "_";
 					}
-					path += getSessionUser(sid).getUserName() + "_" + File.separator;
+					path += SessionBean.getSessionUser(sid).getUserName() + "_" + File.separator;
 
 					FileUtils.forceMkdir(new File(path));
 
@@ -129,7 +130,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 					final File destFile = new File(path, file.getName());
 					FileUtils.copyFile(file, destFile);
 
-					final long userId = getSessionUser(sid).getId();
+					final long userId = SessionBean.getSessionUser(sid).getId();
 					final String sessionId = sid;
 					final String zipLanguage = language;
 					final String zipEncoding = encoding;
@@ -157,7 +158,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 					History transaction = new History();
 					transaction.setSessionId(sid);
 					transaction.setEvent(History.EVENT_STORED);
-					transaction.setUser(getSessionUser(sid));
+					transaction.setUser(SessionBean.getSessionUser(sid));
 
 					Document doc = new Document();
 					doc.setFileName(file.getName());
@@ -180,7 +181,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void checkin(String sid, long docId, String comment, boolean major) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		File file = listUploadedFiles()[0];
 		log.debug("Checking in file " + file.getName());
@@ -194,7 +195,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(sid);
-				transaction.setUser(getSessionUser(sid));
+				transaction.setUser(SessionBean.getSessionUser(sid));
 				transaction.setComment(comment);
 
 				// checkin the document; throws an exception if
@@ -223,14 +224,14 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void checkout(String sid, long docId) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		// Create the document history event
 		History transaction = new History();
 		transaction.setSessionId(sid);
 		transaction.setEvent(History.EVENT_CHECKEDOUT);
 		transaction.setComment("");
-		transaction.setUser(getSessionUser(sid));
+		transaction.setUser(SessionBean.getSessionUser(sid));
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		try {
@@ -243,7 +244,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void delete(String sid, long[] ids) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		if (ids.length > 0) {
 			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -259,7 +260,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 					transaction.setSessionId(sid);
 					transaction.setEvent(History.EVENT_DELETED);
 					transaction.setComment("");
-					transaction.setUser(getSessionUser(sid));
+					transaction.setUser(SessionBean.getSessionUser(sid));
 
 					// If it is a shortcut, we delete only the shortcut
 					if (doc.getDocRef() != null) {
@@ -310,7 +311,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void deleteBookmarks(String sid, long[] bookmarkIds) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		BookmarkDAO dao = (BookmarkDAO) Context.getInstance().getBean(BookmarkDAO.class);
 		for (long id : bookmarkIds) {
@@ -321,7 +322,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void deleteDiscussions(String sid, long[] ids) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
 		for (long id : ids) {
@@ -331,7 +332,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void deleteLinks(String sid, long[] ids) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		DocumentLinkDAO dao = (DocumentLinkDAO) Context.getInstance().getBean(DocumentLinkDAO.class);
 		for (long id : ids) {
@@ -341,7 +342,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void deletePosts(String sid, long discussionId, int[] postIds) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		try {
 			// TODO the 'postid' is the position of each comment into the
@@ -363,7 +364,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public GUIExtendedAttribute[] getAttributes(String sid, long templateId) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.getInstance()
 				.getBean(DocumentTemplateDAO.class);
@@ -386,7 +387,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public GUIDocument getById(String sid, long docId) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
@@ -433,7 +434,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public GUIVersion[] getVersionsById(String sid, long id1, long id2) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		GUIVersion[] versions = new GUIVersion[2];
 
@@ -505,7 +506,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void linkDocuments(String sid, long[] inDocIds, long[] outDocIds) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		DocumentLinkDAO linkDao = (DocumentLinkDAO) Context.getInstance().getBean(DocumentLinkDAO.class);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -535,7 +536,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void lock(String sid, long[] docIds, String comment) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		// Unlock the document; throws an exception if something
 		// goes wrong
@@ -545,7 +546,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			History transaction = new History();
 			transaction.setSessionId(sid);
 			transaction.setEvent(History.EVENT_LOCKED);
-			transaction.setUser(getSessionUser(sid));
+			transaction.setUser(SessionBean.getSessionUser(sid));
 			for (long id : docIds) {
 				documentManager.lock(id, Document.DOC_LOCKED, transaction);
 			}
@@ -560,7 +561,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void makeImmutable(String sid, long[] docIds, String comment) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		try {
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -582,7 +583,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 					History transaction = new History();
 					transaction.setSessionId(sid);
 					transaction.setComment(comment);
-					transaction.setUser(getSessionUser(sid));
+					transaction.setUser(SessionBean.getSessionUser(sid));
 
 					manager.makeImmutable(id, transaction);
 					immutableSome = true;
@@ -602,10 +603,10 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void markHistoryAsRead(String sid, String event) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-		for (History history : dao.findByUserIdAndEvent(getSessionUser(sid).getId(), event)) {
+		for (History history : dao.findByUserIdAndEvent(SessionBean.getSessionUser(sid).getId(), event)) {
 			dao.initialize(history);
 			history.setNew(0);
 			dao.store(history);
@@ -614,7 +615,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void markIndexable(String sid, long[] docIds) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		try {
 			DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
@@ -637,7 +638,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void markUnindexable(String sid, long[] docIds) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		try {
 			DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
@@ -660,14 +661,14 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public int replyPost(String sid, long discussionId, int replyTo, String title, String message) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		DiscussionComment comment = new DiscussionComment();
 		comment.setReplyTo(replyTo);
 		comment.setSubject(title);
 		comment.setBody(message);
-		comment.setUserId(getSessionUser(sid).getId());
-		comment.setUserName(getSessionUser(sid).getFullName());
+		comment.setUserId(SessionBean.getSessionUser(sid).getId());
+		comment.setUserName(SessionBean.getSessionUser(sid).getFullName());
 		try {
 			DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
 			DiscussionThread thread = dao.findById(discussionId);
@@ -684,7 +685,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void restore(String sid, long docId) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		docDao.restore(docId);
@@ -692,7 +693,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public GUIDocument save(String sid, GUIDocument document) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc;
@@ -732,7 +733,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public String sendAsEmail(String sid, GUIEmail email) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		EMail mail;
 		try {
@@ -796,13 +797,13 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public long startDiscussion(String sid, long docId, String title, String message) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		try {
 			DiscussionThread thread = new DiscussionThread();
 			thread.setDocId(docId);
-			thread.setCreatorId(getSessionUser(sid).getId());
-			thread.setCreatorName(getSessionUser(sid).getFullName());
+			thread.setCreatorId(SessionBean.getSessionUser(sid).getId());
+			thread.setCreatorName(SessionBean.getSessionUser(sid).getFullName());
 			thread.setLastPost(thread.getCreation());
 
 			DiscussionComment firstComment = new DiscussionComment();
@@ -829,13 +830,13 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void unlock(String sid, long[] docIds) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		try {
 			// Create the document history event
 			History transaction = new History();
 			transaction.setSessionId(sid);
-			transaction.setUser(getSessionUser(sid));
+			transaction.setUser(SessionBean.getSessionUser(sid));
 
 			// Unlock the document; throws an exception if something
 			// goes wrong
@@ -854,7 +855,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void updateBookmark(String sid, GUIBookmark bookmark) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		BookmarkDAO bookmarkDao = (BookmarkDAO) Context.getInstance().getBean(BookmarkDAO.class);
 		Bookmark bk;
@@ -873,7 +874,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public void updateLink(String sid, long id, String type) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		DocumentLinkDAO dao = (DocumentLinkDAO) Context.getInstance().getBean(DocumentLinkDAO.class);
 		DocumentLink link = dao.findById(id);

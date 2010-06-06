@@ -2,19 +2,17 @@ package com.logicaldoc.web;
 
 import java.util.Locale;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 
 /**
- * Base class for services implementation
+ * Various methods related to the user session
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public abstract class AbstractService extends RemoteServiceServlet {
-
+public class SessionBean {
 	public static final String LOCALE = "locale";
 
 	public static final String USER = "user";
@@ -24,19 +22,19 @@ public abstract class AbstractService extends RemoteServiceServlet {
 	/**
 	 * Throws a runtime exception id the given session is invalid
 	 */
-	protected UserSession validateSession(String sid) {
+	public static UserSession validateSession(String sid) {
 		UserSession session = SessionManager.getInstance().get(sid);
 		if (session == null)
 			throw new RuntimeException("Invalid or Expired Session");
 		return session;
 	}
 
-	protected Locale currentLocale(String sid) {
+	public static Locale currentLocale(String sid) {
 		UserSession session = validateSession(sid);
 		return (Locale) session.getDictionary().get(LOCALE);
 	}
 
-	protected User getSessionUser(String sid) {
+	public static User getSessionUser(String sid) {
 		UserSession session = validateSession(sid);
 		return (User) session.getDictionary().get(USER);
 	}

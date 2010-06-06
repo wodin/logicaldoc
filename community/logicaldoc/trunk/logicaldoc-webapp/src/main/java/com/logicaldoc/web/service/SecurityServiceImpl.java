@@ -1,6 +1,4 @@
-package com.logicaldoc.web.security;
-
-import static com.logicaldoc.web.AbstractService.USER;
+package com.logicaldoc.web.service;
 
 import java.io.File;
 import java.util.Date;
@@ -10,6 +8,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.authentication.ldap.BasicLDAPContextSource;
 import com.logicaldoc.authentication.ldap.LDAPContextSourceConfig;
 import com.logicaldoc.authentication.ldap.LDAPUserGroupContext;
@@ -34,7 +33,7 @@ import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.io.CryptUtil;
-import com.logicaldoc.web.AbstractService;
+import com.logicaldoc.web.SessionBean;
 
 /**
  * Implementation of the SecurityService
@@ -42,7 +41,7 @@ import com.logicaldoc.web.AbstractService;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class SecurityServiceImpl extends AbstractService implements SecurityService {
+public class SecurityServiceImpl extends RemoteServiceServlet implements SecurityService {
 
 	private static final long serialVersionUID = 1L;
 
@@ -86,8 +85,8 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 			// Define the current locale
 			UserSession userSession = SessionManager.getInstance().get(session.getSid());
-			userSession.getDictionary().put(LOCALE, user.getLocale());
-			userSession.getDictionary().put(USER, user);
+			userSession.getDictionary().put(SessionBean.LOCALE, user.getLocale());
+			userSession.getDictionary().put(SessionBean.USER, user);
 		} else if (userDao.isPasswordExpired(username)) {
 			User user = userDao.findByUserName(username);
 			guiUser.setId(user.getId());
@@ -113,8 +112,8 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			SessionManager.getInstance().kill(sid);
 
 			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
-			FileUtils
-					.deleteDirectory(new File(conf.getProperty("conf.userdir") + "/" + session.getUserName() + "/temp"));
+			FileUtils.deleteDirectory(new File(conf.getPropertyWithSubstitutions("conf.userdir") + "/"
+					+ session.getUserName() + "/temp"));
 
 			log.info("User " + session.getUserName() + " logged out.");
 		} catch (Exception e) {
@@ -160,7 +159,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	@Override
 	public void addUserToGroup(String sid, long groupId, long userId) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -170,21 +169,21 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	@Override
 	public void deleteGroup(String sid, long groupId) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		groupDao.delete(groupId);
 	}
 
 	@Override
 	public void deleteUser(String sid, long userId) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		userDao.delete(userId);
 	}
 
 	@Override
 	public GUIGroup getGroup(String sid, long groupId) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		Group group = groupDao.findById(groupId);
 
@@ -201,7 +200,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	@Override
 	public GUIUser getUser(String sid, long userId) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = userDao.findById(userId);
 		if (user != null) {
@@ -243,7 +242,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	@Override
 	public void removeFromGroup(String sid, long groupId, long[] userIds) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -257,7 +256,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	@Override
 	public GUIGroup saveGroup(String sid, GUIGroup group) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		Group grp;
@@ -277,7 +276,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	@Override
 	public GUIUser saveUser(String sid, GUIUser user) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User usr;
@@ -321,7 +320,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	@Override
 	public GUILdapSettings[] loadExtAuthSettings(String sid) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		GUILdapSettings[] settings = new GUILdapSettings[2];
 
@@ -360,7 +359,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			GUIADSettings adSettings = new GUIADSettings();
 			// Checks if the active directory feature is enabled
 			if (Session.get().isFeatureEnabled("Feature_11")) {
-				
+
 				System.out.println("Enabled feature 11!!!!");
 
 				LDAPContextSourceConfig adConfig = (LDAPContextSourceConfig) Context.getInstance().getBean(
@@ -389,7 +388,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			} else {
 				// TODO Remove after implementation is completed.
 				System.out.println("NO Enabled feature 11!!!!");
-				
+
 				settings[1] = ldapSettings;
 			}
 
@@ -403,7 +402,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	@Override
 	public void saveExtAuthSettings(String sid, GUILdapSettings ldapSettings, GUIADSettings adSettings) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		BasicLDAPContextSource ldapContextSource = (BasicLDAPContextSource) Context.getInstance().getBean(
 				BasicLDAPContextSource.class);
@@ -499,7 +498,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	@Override
 	public GUISecuritySettings loadSettings(String sid) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		GUISecuritySettings securitySettings = new GUISecuritySettings();
 		try {
@@ -526,7 +525,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	@Override
 	public void saveSettings(String sid, GUISecuritySettings settings) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		try {
 			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
