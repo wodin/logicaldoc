@@ -38,7 +38,7 @@ public interface DocumentServiceAsync {
 	void lock(String sid, long[] ids, String comment, AsyncCallback<Void> callback);
 
 	void unlock(String sid, long[] ids, AsyncCallback<Void> callback);
-
+	
 	void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
 			AsyncCallback<Void> callback);
 

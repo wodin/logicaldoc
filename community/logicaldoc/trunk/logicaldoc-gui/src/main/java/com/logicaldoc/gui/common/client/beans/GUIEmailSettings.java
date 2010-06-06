@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public class GUIEmailSettings implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
 	public static final String SECURITY_NONE = "0";
 
