@@ -63,7 +63,7 @@
 
   <servlet>
     <servlet-name>SecurityService</servlet-name>
-    <servlet-class>com.logicaldoc.web.security.SecurityServiceImpl</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.SecurityServiceImpl</servlet-class>
   </servlet>
 
   <servlet>
@@ -78,7 +78,7 @@
 
   <servlet>
     <servlet-name>DocumentService</servlet-name>
-    <servlet-class>com.logicaldoc.gui.frontend.mock.MockDocumentServiceImpl</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.DocumentServiceImpl</servlet-class>
   </servlet>
 
   <servlet>
@@ -93,12 +93,12 @@
 
   <servlet>
     <servlet-name>SettingService</servlet-name>
-    <servlet-class>com.logicaldoc.web.settings.SettingServiceImpl</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.SettingServiceImpl</servlet-class>
   </servlet>
 
   <servlet>
     <servlet-name>SetupService</servlet-name>
-    <servlet-class>com.logicaldoc.web.setup.SetupServiceImpl</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.SetupServiceImpl</servlet-class>
   </servlet>
 
   <servlet>
@@ -128,7 +128,7 @@
 
   <servlet>
     <servlet-name>DocumentsData</servlet-name>
-    <servlet-class>com.logicaldoc.gui.common.server.mock.MockDocumentsDataServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.data.DocumentsDataServlet</servlet-class>
   </servlet>
 
   <servlet>

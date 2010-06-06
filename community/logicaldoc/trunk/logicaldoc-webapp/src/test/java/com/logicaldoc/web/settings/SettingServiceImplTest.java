@@ -11,7 +11,8 @@ import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.web.AbstractWebappTestCase;
-import com.logicaldoc.web.security.SecurityServiceImpl;
+import com.logicaldoc.web.service.SecurityServiceImpl;
+import com.logicaldoc.web.service.SettingServiceImpl;
 
 public class SettingServiceImplTest extends AbstractWebappTestCase {
 

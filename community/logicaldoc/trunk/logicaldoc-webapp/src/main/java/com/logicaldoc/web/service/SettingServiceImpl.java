@@ -1,4 +1,4 @@
-package com.logicaldoc.web.settings;
+package com.logicaldoc.web.service;
 
 import java.util.TreeSet;
 
@@ -7,13 +7,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.web.AbstractService;
+import com.logicaldoc.web.SessionBean;
 
 /**
  * Implementation of the SettingService
@@ -21,7 +22,7 @@ import com.logicaldoc.web.AbstractService;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class SettingServiceImpl extends AbstractService implements SettingService {
+public class SettingServiceImpl extends RemoteServiceServlet implements SettingService {
 
 	private static final long serialVersionUID = 1L;
 
@@ -29,7 +30,7 @@ public class SettingServiceImpl extends AbstractService implements SettingServic
 
 	@Override
 	public GUIEmailSettings loadEmailSettings(String sid) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		GUIEmailSettings emailSettings = new GUIEmailSettings();
 		try {
@@ -55,7 +56,7 @@ public class SettingServiceImpl extends AbstractService implements SettingServic
 
 	@Override
 	public void saveEmailSettings(String sid, GUIEmailSettings settings) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		try {
 			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
@@ -78,7 +79,7 @@ public class SettingServiceImpl extends AbstractService implements SettingServic
 
 	@Override
 	public GUIParameter[] loadSettings(String sid) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		TreeSet<String> sortedSet = new TreeSet<String>();
 		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
@@ -112,7 +113,7 @@ public class SettingServiceImpl extends AbstractService implements SettingServic
 
 	@Override
 	public GUIWebServiceSettings[] loadWSSettings(String sid) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		HttpServletRequest request = this.getThreadLocalRequest();
 		String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
@@ -138,7 +139,7 @@ public class SettingServiceImpl extends AbstractService implements SettingServic
 
 	@Override
 	public void saveSettings(String sid, GUIParameter[] settings) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		try {
 			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
@@ -156,7 +157,7 @@ public class SettingServiceImpl extends AbstractService implements SettingServic
 
 	@Override
 	public void saveWSSettings(String sid, GUIWebServiceSettings wsSettings, GUIWebServiceSettings webDavSettings) {
-		validateSession(sid);
+		SessionBean.validateSession(sid);
 
 		try {
 			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");

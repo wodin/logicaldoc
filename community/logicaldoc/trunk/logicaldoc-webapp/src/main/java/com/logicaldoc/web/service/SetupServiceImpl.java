@@ -1,4 +1,4 @@
-package com.logicaldoc.web.setup;
+package com.logicaldoc.web.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -127,7 +127,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		Context.refresh();
 
 		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
-		String path = conf.getProperty("conf.indexdir");
+		String path = conf.getPropertyWithSubstitutions("conf.indexdir");
 
 		if (!path.endsWith(File.pathSeparator)) {
 			path += "/";
@@ -140,7 +140,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		Collection<PluginDescriptor> descriptors = com.logicaldoc.util.PluginRegistry.getInstance().getPlugins();
 		for (PluginDescriptor descriptor : descriptors) {
 			try {
-				File file = new File(conf.getProperty("conf.plugindir"), descriptor.getId());
+				File file = new File(conf.getPropertyWithSubstitutions("conf.plugindir"), descriptor.getId());
 				file.mkdirs();
 				file.mkdir();
 				file = new File(file, "plugin.properties");
