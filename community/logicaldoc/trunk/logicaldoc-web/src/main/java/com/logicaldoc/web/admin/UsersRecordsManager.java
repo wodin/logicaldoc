@@ -84,7 +84,7 @@ public class UsersRecordsManager extends SortableList {
 					String buf = SqlUtil.doubleQuotes(usersFilter.trim().toLowerCase());
 					tmpusers = dao.findByWhere(" lower(_entity.userName) like '%" + buf
 							+ "%' or lower(_entity.name) like '%" + buf + "%' or lower(_entity.firstName) like '%"
-							+ buf + "%'", null);
+							+ buf + "%'", null, null);
 				} else
 					tmpusers = dao.findAll();
 
@@ -279,7 +279,7 @@ public class UsersRecordsManager extends SortableList {
 						Messages.addLocalizedInfo("msg.action.deleteuser");
 
 						PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
-						File userdir = new File(conf.getProperty("conf.userdir") + "/" + user.getUserName());
+						File userdir = new File(conf.getPropertyWithSubstitutions("conf.userdir") + "/" + user.getUserName());
 						FileUtils.deleteDirectory(userdir);
 					}
 				} else if (isAdmin && (adminsFound < 2)) {

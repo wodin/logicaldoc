@@ -36,7 +36,7 @@ public class IndexInfo {
 
 	public String getIndexDir() {
 		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
-		return conf.getProperty("conf.indexdir");
+		return conf.getPropertyWithSubstitutions("conf.indexdir");
 	}
 
 	public String unlock() {

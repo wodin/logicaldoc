@@ -645,7 +645,7 @@ public class DocumentsRecordsManager extends SortableList {
 				final Menu parent = menuDao.findById(selectedDirectory);
 
 				PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
-				String path = conf.getProperty("conf.userdir");
+				String path = conf.getPropertyWithSubstitutions("conf.userdir");
 
 				if (!path.endsWith("_")) {
 					path += "_";

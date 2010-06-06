@@ -151,7 +151,7 @@ public class LoginForm {
 		try {
 			String authUsername = SessionManagement.getUsername();
 			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
-			FileUtils.deleteDirectory(new File(conf.getProperty("conf.userdir") + "/" + authUsername + "/temp"));
+			FileUtils.deleteDirectory(new File(conf.getPropertyWithSubstitutions("conf.userdir") + "/" + authUsername + "/temp"));
 
 			log.info("User " + authUsername + " logged out.");
 

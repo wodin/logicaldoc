@@ -119,7 +119,7 @@ public class SetupWizard implements TabChangeListener {
 			// Reload the bean for security
 			conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 
-			String path = conf.getProperty("conf.indexdir");
+			String path = conf.getPropertyWithSubstitutions("conf.indexdir");
 			System.out.println();
 
 			if (!path.endsWith(File.pathSeparator)) {

@@ -109,7 +109,7 @@ public class BookmarkBean extends SortableList {
 			Collection<Bookmark> tmpbookmarks = null;
 			if (bookmarksFilter.length() != 0) {
 				tmpbookmarks = bookmarkDao.findByWhere(" lower(_entity.title) like '%" + bookmarksFilter.toLowerCase()
-						+ "%' and _entity.userId = " + SessionManagement.getUserId(), null);
+						+ "%' and _entity.userId = " + SessionManagement.getUserId(), null, null);
 			} else {
 				tmpbookmarks = bookmarkDao.findByUserId(SessionManagement.getUserId());
 			}
