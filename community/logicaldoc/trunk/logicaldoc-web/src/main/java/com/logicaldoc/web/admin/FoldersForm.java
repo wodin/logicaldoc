@@ -83,12 +83,12 @@ public class FoldersForm {
 
 	private void reload() {
 		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
-		docDir = conf.getProperty("conf.docdir");
-		indexDir = conf.getProperty("conf.indexdir");
-		userDir = conf.getProperty("conf.userdir");
-		importDir = conf.getProperty("conf.importdir");
-		exportDir = conf.getProperty("conf.exportdir");
-		pluginDir = conf.getProperty("conf.plugindir");
+		docDir = conf.getPropertyWithSubstitutions("conf.docdir");
+		indexDir = conf.getPropertyWithSubstitutions("conf.indexdir");
+		userDir = conf.getPropertyWithSubstitutions("conf.userdir");
+		importDir = conf.getPropertyWithSubstitutions("conf.importdir");
+		exportDir = conf.getPropertyWithSubstitutions("conf.exportdir");
+		pluginDir = conf.getPropertyWithSubstitutions("conf.plugindir");
 	}
 
 	public String save() {
