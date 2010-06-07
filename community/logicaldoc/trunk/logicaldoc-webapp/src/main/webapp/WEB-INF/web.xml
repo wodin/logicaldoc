@@ -58,7 +58,7 @@
   <servlet>
     <servlet-name>UploadServlet</servlet-name>
     <!-- This is the default servlet, it puts files in session -->
-    <servlet-class>com.logicaldoc.gui.common.server.mock.MockUploadServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.data.UploadServlet</servlet-class>
   </servlet>
 
   <servlet>

@@ -36,7 +36,7 @@ public class MockFolderServiceImpl extends RemoteServiceServlet implements Folde
 			folder.setPath(path);
 		}
 
-		if (folderId % 2 == 0)
+		if (folderId % 2 == 0 || folderId == Constants.DOCUMENTS_FOLDERID)
 			folder.setPermissions(new String[] { "read", "write", "addChild", "manageSecurity", "delete", "rename",
 					"bulkImport", "bulkExport", "sign", "archive", "workflow", "manageImmutability" });
 		else

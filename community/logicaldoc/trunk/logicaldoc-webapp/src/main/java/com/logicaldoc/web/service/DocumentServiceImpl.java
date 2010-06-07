@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.AccessControlException;
 import java.util.Date;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -49,6 +50,7 @@ import com.logicaldoc.util.TagUtil;
 import com.logicaldoc.util.config.MimeTypeConfig;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.SessionBean;
+import com.logicaldoc.web.data.UploadServlet;
 
 /**
  * Implementation of the DocumentService
@@ -105,8 +107,12 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip) {
 		SessionBean.validateSession(sid);
 
+		System.out.println("*** addDocuments!!! ");
+
 		File[] uploadedFiles = listUploadedFiles();
 		log.debug("Uploading " + uploadedFiles.length + "files");
+
+		System.out.println("*** Uploading " + uploadedFiles.length + " files");
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -151,8 +157,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// And launch it
 					zipImporter.start();
 				} else {
+					String title = getFileName(file).substring(0, file.getName().lastIndexOf("."));
 
-					String title = file.getName().substring(0, file.getName().lastIndexOf("."));
+					System.out.println("*** Doc Title " + title);
 
 					// Create the document history event
 					History transaction = new History();
@@ -166,10 +173,15 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					doc.setTitle(title);
 					doc.setFolder(parent);
 
+					System.out.println("*** Doc before creation " + title);
+
 					doc = documentManager.create(file, doc, transaction, false);
 					if (StringUtils.isNotEmpty(doc.getCustomId())) {
 						// TODO Message??
+						System.out.println("*** Doc customid " + doc.getCustomId());
 					}
+
+					System.out.println("*** Doc after creation " + title);
 				}
 			}
 		} catch (Exception e) {
@@ -216,10 +228,28 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	private File[] listUploadedFiles() {
-		String path = getServletContext().getRealPath("/upload/" + getThreadLocalRequest().getSession().getId());
-		File uploadFolder = new File(path);
+		Map<String, File> files = UploadServlet.getReceivedFiles(getThreadLocalRequest());
+		File[] uploadedFiles = new File[files.size()];
+		int i = 0;
+		for (String fileId : files.keySet()) {
+			uploadedFiles[i] = files.get(fileId);
+			i++;
+		}
 
-		return uploadFolder.listFiles();
+		return uploadedFiles;
+	}
+
+	private String getFileName(File file) {
+		Map<String, File> files = UploadServlet.getReceivedFiles(getThreadLocalRequest());
+		String fileName = null;
+		for (String fileId : files.keySet()) {
+			if (file.equals(files.get(fileId))) {
+				fileName = UploadServlet.getReceivedFileNames(getThreadLocalRequest()).get(fileId);
+				break;
+			}
+		}
+
+		return fileName;
 	}
 
 	@Override
