@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionBean;
 
@@ -25,19 +24,7 @@ public class DocumentsDataServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-
-		System.out.println("**** DocumentsDataServlet!!!");
-
-		/*
-		 * Validate the session
-		 */
-		String sid = (String) request.getParameter("sid");
-
-		System.out.println("**** sid: " + sid);
-
-		UserSession session = SessionBean.validateSession(sid);
-
-		System.out.println("**** session: " + session.getId());
+		SessionBean.validateSession(request);
 
 		/*
 		 * Load some filters from the current request

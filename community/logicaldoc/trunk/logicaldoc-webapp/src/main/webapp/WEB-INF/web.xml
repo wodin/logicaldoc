@@ -168,7 +168,7 @@
 
   <servlet>
     <servlet-name>TemplatesData</servlet-name>
-    <servlet-class>com.logicaldoc.gui.common.server.mock.MockTemplatesDataServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.data.TemplatesDataServlet</servlet-class>
   </servlet>
 
   <servlet>

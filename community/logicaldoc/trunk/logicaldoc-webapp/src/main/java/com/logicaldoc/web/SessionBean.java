@@ -2,6 +2,8 @@ package com.logicaldoc.web;
 
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
@@ -19,12 +21,18 @@ public class SessionBean {
 
 	private static final long serialVersionUID = 1L;
 
+	public static UserSession validateSession(HttpServletRequest request) {
+		return validateSession((String) request.getParameter("sid"));
+	}
+
 	/**
 	 * Throws a runtime exception id the given session is invalid
 	 */
 	public static UserSession validateSession(String sid) {
 		UserSession session = SessionManager.getInstance().get(sid);
 		if (session == null)
+			throw new RuntimeException("Invalid Session");
+		if (session.getStatus() != UserSession.STATUS_OPEN)
 			throw new RuntimeException("Invalid or Expired Session");
 		return session;
 	}
