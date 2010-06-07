@@ -27,6 +27,7 @@ import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * This popup window is used to upload documents to the server.
@@ -47,17 +48,17 @@ public class DocumentsUploader extends Window {
 
 	private DynamicForm form;
 
+	private VLayout layout = new VLayout();
+
 	public DocumentsUploader() {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("adddocuments"));
-		setWidth(370);
+		setWidth(390);
 		setHeight(280);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-		setPadding(5);
-		setMembersMargin(3);
 
 		reloadForm();
 
@@ -65,24 +66,31 @@ public class DocumentsUploader extends Window {
 		multiUploader = new MultiUploader();
 		multiUploader.setStyleName("upload");
 		multiUploader.setHeight("100%");
+		multiUploader.setWidth("90%");
 		multiUploader.setFileInputPrefix("LDOC");
 		multiUploader.reset();
-
-		addItem(multiUploader);
 
 		// Add a finish handler which will load the image once the upload
 		// finishes
 		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
+		
+		layout.addMember(multiUploader, 1);
+		layout.setMembersMargin(10);
+		layout.setMargin(25);
+		layout.setHeight(250);
+
+		addChild(layout);
 	}
 
 	private void reloadForm() {
 		if (form != null) {
-			removeMember(form);
+			layout.removeChild(form);
 		}
 
 		form = new DynamicForm();
 		vm = new ValuesManager();
 		form.setValuesManager(vm);
+		form.setHeight(90);
 
 		SelectItem languageItem = new SelectItem();
 		languageItem.setName("language");
@@ -96,6 +104,7 @@ public class DocumentsUploader extends Window {
 		CheckboxItem zipItem = new CheckboxItem();
 		zipItem.setName("zip");
 		zipItem.setTitle(I18N.message("importfromzip"));
+		zipItem.setValue(!zipImport);
 
 		SelectItem encodingItem = ItemFactory.newEncodingSelector("encoding");
 		encodingItem.setDisabled(zipImport);
@@ -120,7 +129,7 @@ public class DocumentsUploader extends Window {
 
 		form.setItems(languageItem, zipItem, encodingItem, sendButton);
 
-		addItem(form);
+		layout.addMember(form, 0);
 	}
 
 	// Load the image in the document and in the case of success attach it to
