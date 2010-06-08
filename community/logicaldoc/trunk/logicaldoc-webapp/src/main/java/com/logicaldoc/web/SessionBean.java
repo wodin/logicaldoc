@@ -46,4 +46,9 @@ public class SessionBean {
 		UserSession session = validateSession(sid);
 		return (User) session.getDictionary().get(USER);
 	}
+	
+	public static User getSessionUser(HttpServletRequest request) {
+		UserSession session = validateSession(request);
+		return (User) session.getDictionary().get(USER);
+	}
 }

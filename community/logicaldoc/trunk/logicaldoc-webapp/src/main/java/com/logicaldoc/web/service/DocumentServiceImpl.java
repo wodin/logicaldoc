@@ -107,18 +107,17 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip) {
 		SessionBean.validateSession(sid);
 
-		System.out.println("*** addDocuments!!! ");
+		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest());
+		log.debug("Uploading " + uploadedFilesMap.size() + " files");
 
-		File[] uploadedFiles = listUploadedFiles();
-		log.debug("Uploading " + uploadedFiles.length + "files");
-
-		System.out.println("*** Uploading " + uploadedFiles.length + " files");
+		Map<String, String> uploadedFileNames = UploadServlet.getReceivedFileNames(getThreadLocalRequest());
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		final Menu parent = menuDao.findById(folderId);
 		try {
-			for (File file : uploadedFiles) {
+			for (String fileId : uploadedFilesMap.keySet()) {
+				File file = uploadedFilesMap.get(fileId);
 				if (file.getName().endsWith(".zip") && importZip) {
 					log.debug("file = " + file);
 
@@ -157,9 +156,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// And launch it
 					zipImporter.start();
 				} else {
-					String title = getFileName(file).substring(0, file.getName().lastIndexOf("."));
-
-					System.out.println("*** Doc Title " + title);
+					String filename = uploadedFileNames.get(fileId);
+					String title = filename.substring(0, filename.lastIndexOf("."));
 
 					// Create the document history event
 					History transaction = new History();
@@ -173,15 +171,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					doc.setTitle(title);
 					doc.setFolder(parent);
 
-					System.out.println("*** Doc before creation " + title);
-
 					doc = documentManager.create(file, doc, transaction, false);
 					if (StringUtils.isNotEmpty(doc.getCustomId())) {
 						// TODO Message??
-						System.out.println("*** Doc customid " + doc.getCustomId());
 					}
-
-					System.out.println("*** Doc after creation " + title);
 				}
 			}
 		} catch (Exception e) {
@@ -195,10 +188,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	public void checkin(String sid, long docId, String comment, boolean major) {
 		SessionBean.validateSession(sid);
 
-		File file = listUploadedFiles()[0];
-		log.debug("Checking in file " + file.getName());
-
+		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest());
+		File file = uploadedFilesMap.values().iterator().next();
 		if (file != null) {
+			log.debug("Checking in file " + file.getName());
 			// check that we have a valid file for storing as new
 			// version
 			String fileName = file.getName();
@@ -225,31 +218,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		} else {
 			// TODO Message?
 		}
-	}
-
-	private File[] listUploadedFiles() {
-		Map<String, File> files = UploadServlet.getReceivedFiles(getThreadLocalRequest());
-		File[] uploadedFiles = new File[files.size()];
-		int i = 0;
-		for (String fileId : files.keySet()) {
-			uploadedFiles[i] = files.get(fileId);
-			i++;
-		}
-
-		return uploadedFiles;
-	}
-
-	private String getFileName(File file) {
-		Map<String, File> files = UploadServlet.getReceivedFiles(getThreadLocalRequest());
-		String fileName = null;
-		for (String fileId : files.keySet()) {
-			if (file.equals(files.get(fileId))) {
-				fileName = UploadServlet.getReceivedFileNames(getThreadLocalRequest()).get(fileId);
-				break;
-			}
-		}
-
-		return fileName;
 	}
 
 	@Override
@@ -756,7 +724,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		doc.setFolder(mdao.findById(document.getFolder().getId()));
 
 		docDao.store(doc);
-		doc.setId(document.getId());
+		document.setId(doc.getId());
 
 		return document;
 	}

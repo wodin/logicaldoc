@@ -269,8 +269,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		grp.setName(group.getName());
 		grp.setDescription(group.getDescription());
 		groupDao.store(grp);
-
 		group.setId(grp.getId());
+		
 		return group;
 	}
 
