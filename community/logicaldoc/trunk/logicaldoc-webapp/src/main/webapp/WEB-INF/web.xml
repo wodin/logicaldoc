@@ -83,7 +83,7 @@
 
   <servlet>
     <servlet-name>FolderService</servlet-name>
-    <servlet-class>com.logicaldoc.gui.frontend.mock.MockFolderServiceImpl</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.FolderServiceImpl</servlet-class>
   </servlet>
 
   <servlet>
@@ -123,7 +123,7 @@
 
   <servlet>
     <servlet-name>FoldersData</servlet-name>
-    <servlet-class>com.logicaldoc.gui.common.server.mock.MockFoldersDataServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.data.FoldersDataServlet</servlet-class>
   </servlet>
 
   <servlet>

@@ -30,22 +30,18 @@ public class DocumentsDataServlet extends HttpServlet {
 		 * Load some filters from the current request
 		 */
 		int max = Integer.parseInt(request.getParameter("max"));
-		System.out.println("**** max: " + max);
 
 		Long folderId = null;
 		if (StringUtils.isNotEmpty(request.getParameter("folderId")))
 			folderId = new Long(request.getParameter("folderId"));
-		System.out.println("**** folderId: " + folderId);
 
 		String filename = null;
 		if (StringUtils.isNotEmpty(request.getParameter("filename")))
 			filename = request.getParameter("filename");
-		System.out.println("**** filename: " + filename);
 
 		Boolean indexable = null;
 		if (StringUtils.isNotEmpty(request.getParameter("indexable")))
 			indexable = new Boolean(request.getParameter("indexable"));
-		System.out.println("**** indexable: " + indexable);
 
 		response.setContentType("text/xml");
 
@@ -87,18 +83,18 @@ public class DocumentsDataServlet extends HttpServlet {
 			writer.print("<document>");
 			writer.print("<id>" + cols[0] + "</id>");
 			if (cols[1] != null)
-				writer.print("<customId>" + cols[1] + "</customId>");
+				writer.print("<customId><![CDATA[" + cols[1] + "]]></customId>");
 			else
 				writer.print("<customId> </customId>");
 			writer.print("<docref>" + cols[2] + "</docref>");
 			writer.print("<icon>" + cols[3] + "</icon>");
-			writer.print("<title>" + cols[4] + "</title>");
+			writer.print("<title><![CDATA[" + cols[4] + "]]></title>");
 			writer.print("<version>" + cols[5] + "</version>");
 			writer.print("<lastModified>" + df.format(cols[6]) + "</lastModified>");
 			writer.print("<published>" + df.format(cols[7]) + "</published>");
-			writer.print("<publisher>" + cols[8] + "</publisher>");
+			writer.print("<publisher><![CDATA[" + cols[8] + "]]></publisher>");
 			writer.print("<created>" + df.format(cols[9]) + "</created>");
-			writer.print("<creator>" + cols[10] + "</creator>");
+			writer.print("<creator><![CDATA[" + cols[10] + "]]></creator>");
 			writer.print("<size>" + cols[11] + "</size>");
 			writer.print("<immutable>" + cols[12] + "</immutable>");
 			writer.print("<indexed>" + cols[13] + "</indexed>");
@@ -106,7 +102,7 @@ public class DocumentsDataServlet extends HttpServlet {
 				writer.print("<locked>" + 1 + "</locked>");
 			else
 				writer.print("<locked>" + 0 + "</locked>");
-			writer.print("<filename>" + cols[15] + "</filename>");
+			writer.print("<filename><![CDATA[" + cols[15] + "]]></filename>");
 			writer.print("<status>" + cols[16] + "</status>");
 			writer.print("</document>");
 		}

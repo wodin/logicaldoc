@@ -31,6 +31,7 @@ public class UploadServlet extends UploadAction {
 	 * Override executeAction to save the received files in a custom place and
 	 * delete this items from session.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public String executeAction(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
 		System.out.println("** upload session:" + request.getSession().getId());
@@ -42,18 +43,26 @@ public class UploadServlet extends UploadAction {
 		if (receivedFiles == null) {
 			receivedFiles = new Hashtable<String, File>();
 			request.getSession().setAttribute(RECEIVEDFILES, receivedFiles);
+		} else {
+			receivedFiles.clear();
 		}
+
 		Map<String, String> receivedContentTypes = (Map<String, String>) request.getSession().getAttribute(
 				RECEIVEDCONTENTTYPES);
 		if (receivedContentTypes == null) {
 			receivedContentTypes = new Hashtable<String, String>();
 			request.getSession().setAttribute(RECEIVEDCONTENTTYPES, receivedContentTypes);
+		} else {
+			receivedContentTypes.clear();
 		}
+
 		Map<String, String> receivedFileNames = (Map<String, String>) request.getSession().getAttribute(
 				RECEIVEDFILENAMES);
 		if (receivedFileNames == null) {
 			receivedFileNames = new Hashtable<String, String>();
 			request.getSession().setAttribute(RECEIVEDFILENAMES, receivedFileNames);
+		} else {
+			receivedFileNames.clear();
 		}
 
 		String path = getServletContext().getRealPath("/upload/" + request.getSession().getId());
@@ -102,6 +111,7 @@ public class UploadServlet extends UploadAction {
 	/**
 	 * Remove a file when the user sends a delete request
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void removeItem(HttpServletRequest request, String fieldName) throws UploadActionException {
 		Map<String, File> receivedFiles = (Map<String, File>) request.getSession().getAttribute(RECEIVEDFILES);
@@ -129,6 +139,7 @@ public class UploadServlet extends UploadAction {
 	/**
 	 * Get the content of an uploaded file
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void getUploadedFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String fieldName = request.getParameter(PARAM_SHOW);
@@ -150,10 +161,12 @@ public class UploadServlet extends UploadAction {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static Map<String, File> getReceivedFiles(HttpServletRequest request) {
 		return (Map<String, File>) request.getSession().getAttribute(RECEIVEDFILES);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static Map<String, String> getReceivedFileNames(HttpServletRequest request) {
 		return (Map<String, String>) request.getSession().getAttribute(RECEIVEDFILENAMES);
 	}

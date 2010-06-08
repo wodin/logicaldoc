@@ -32,11 +32,11 @@ values (-5,5);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (99,'2008-10-22',0,'menu.admin',1,1,'administration.gif',5,null,0);
+values     (99,'2008-10-22',0,'menu.admin1',1,1,'administration.gif',5,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (100,'2008-10-22',0,'menu.admin',1,1,'administration.gif',3,null,0);
+values     (100,'2008-10-22',0,'menu',5,1,'administration.gif',3,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
@@ -44,10 +44,10 @@ values     (101,'2008-10-22',0,'text',100,1,'administration.gif',3,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (102,'2008-10-22',0,'menu.admin',101,1,'administration.gif',5,null,0);
+values     (102,'2008-10-22',0,'menu102',101,1,'administration.gif',3,null,0);
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (103,'2008-10-22',0,'menu.admin',101,1,'administration.gif',3,null,0);
+values     (103,'2008-10-22',0,'menu103',101,1,'administration.gif',3,null,0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
@@ -83,7 +83,15 @@ values     (100,3,1,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup
 			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
-values     (103,1,1,0,0,0,0,0,0,0,0,0,0);
+values     (101,1,1,1,1,1,1,1,1,0,0,0,0);
+
+insert into ld_menugroup
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (102,1,1,0,1,0,0,0,0,0,0,0,0);
+
+insert into ld_menugroup
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (103,1,1,0,1,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup
 			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
