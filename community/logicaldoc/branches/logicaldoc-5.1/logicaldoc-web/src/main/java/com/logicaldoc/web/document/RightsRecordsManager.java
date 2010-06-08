@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.event.ValueChangeEvent;
@@ -133,7 +134,8 @@ public class RightsRecordsManager {
 	 * Initializes the collection of rights. Divides available and allowed
 	 * entities into two column.
 	 * 
-	 * @param menuId The menu that must be evaluated
+	 * @param menuId
+	 *            The menu that must be evaluated
 	 */
 	private void initRights(long menuId) {
 		clean();
@@ -142,28 +144,33 @@ public class RightsRecordsManager {
 		rules = new ArrayList<GroupRule>(10);
 
 		try {
-			GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+			GroupDAO gdao = (GroupDAO) Context.getInstance().getBean(
+					GroupDAO.class);
 			groups = (List<Group>) gdao.findAll();
 			Collections.sort(groups, new Comparator<Group>() {
 				public int compare(Group arg0, Group arg1) {
-					int sort = new Integer(arg0.getType()).compareTo(new Integer(arg1.getType()));
+					int sort = new Integer(arg0.getType())
+							.compareTo(new Integer(arg1.getType()));
 					if (sort == 0) {
 						getEntityLabel(arg0).compareTo(getEntityLabel(arg1));
 					}
 					return sort;
 				}
 			});
-			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
+					MenuDAO.class);
 			Menu menu = mdao.findById(menuId);
 			mdao.initialize(menu);
 			long userId = SessionManagement.getUserId();
-			if (mdao.isPermissionEnabled(Permission.MANAGE_SECURITY, menuId, userId)) {
+			if (mdao.isPermissionEnabled(Permission.MANAGE_SECURITY, menuId,
+					userId)) {
 				Iterator<Group> iter = groups.iterator();
 				while (iter.hasNext()) {
 					Group g = (Group) iter.next();
 					GroupRule gr = new GroupRule();
 					if (g.getType() == Group.TYPE_DEFAULT
-							|| ((g.getType() != Group.TYPE_DEFAULT) && (g.getUsers().iterator().next().getType() == User.TYPE_DEFAULT))) {
+							|| ((g.getType() != Group.TYPE_DEFAULT) && (g
+									.getUsers().iterator().next().getType() == User.TYPE_DEFAULT))) {
 						gr.setGroupName(g.getName());
 						gr.setDisplayName(getEntityLabel(g));
 						gr.setGroupId(g.getId());
@@ -181,11 +188,13 @@ public class RightsRecordsManager {
 							gr.setRename(false);
 							gr.setBulkImport(false);
 							gr.setBulkExport(false);
-							availableGroups.add(new SelectItem(g.getId(), getEntityLabel(g)));
+							availableGroups.add(new SelectItem(g.getId(),
+									getEntityLabel(g)));
 						} else {
 							gr.setRead(true);
 							gr.init(mg);
-							allowedGroups.add(new SelectItem(g.getId(), getEntityLabel(g)));
+							allowedGroups.add(new SelectItem(g.getId(),
+									getEntityLabel(g)));
 							rules.add(gr);
 						}
 
@@ -194,7 +203,8 @@ public class RightsRecordsManager {
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e
+					.getMessage());
 		}
 	}
 
@@ -212,16 +222,23 @@ public class RightsRecordsManager {
 	/**
 	 * Retrieves the label of a entity. There are two types: 'Group' and 'User'
 	 * 
-	 * @param g Group for which the label is recovered
+	 * @param g
+	 *            Group for which the label is recovered
 	 * @return label
 	 */
 	private String getEntityLabel(Group g) {
-		String label = "";
+		String label = ""; 
 		if (g.getType() == Group.TYPE_DEFAULT) {
 			label = Messages.getMessage("group") + ": " + g.getName();
 		} else {
-			User user = g.getUsers().iterator().next();
-			label = Messages.getMessage("user") + ": " + user.getFullName() + " (" + user.getUserName() + ")";
+			Set<User> users = g.getUsers();
+			if (users.isEmpty())
+				label = Messages.getMessage("user") + ": " + g.getName();
+			else {
+				User user = users.iterator().next();
+				label = Messages.getMessage("user") + ": " + user.getFullName()
+						+ " (" + user.getUserName() + ")";
+			}
 		}
 		return label;
 	}
@@ -301,10 +318,12 @@ public class RightsRecordsManager {
 		long userId = SessionManagement.getUserId();
 		try {
 			saveRules(id, userId);
-			Messages.addMessage(FacesMessage.SEVERITY_INFO, Messages.getMessage("msg.action.saverules"), Messages
+			Messages.addMessage(FacesMessage.SEVERITY_INFO, Messages
+					.getMessage("msg.action.saverules"), Messages
 					.getMessage("msg.action.saverules"));
 		} catch (Exception e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Messages.getMessage("errors.action.saverules"), Messages
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Messages
+					.getMessage("errors.action.saverules"), Messages
 					.getMessage("errors.action.saverules"));
 		}
 		documentNavigation.showDocuments();
@@ -422,8 +441,10 @@ public class RightsRecordsManager {
 		}
 
 		if (sqlerrors) {
-			log.error("SQL errors saving permissions on folder " + folder.getText());
-			throw new Exception("SQL errors saving permissions on folder " + folder.getText());
+			log.error("SQL errors saving permissions on folder "
+					+ folder.getText());
+			throw new Exception("SQL errors saving permissions on folder "
+					+ folder.getText());
 		} else {
 			// Add a folder history entry
 			History history = new History();
@@ -461,7 +482,8 @@ public class RightsRecordsManager {
 		availableGroups.clear();
 		for (Group group : groups) {
 			if (group.getType() == Group.TYPE_DEFAULT
-					|| ((group.getType() != Group.TYPE_DEFAULT) && (group.getUsers().iterator().next().getType() == User.TYPE_DEFAULT))) {
+					|| ((group.getType() != Group.TYPE_DEFAULT) && (group
+							.getUsers().iterator().next().getType() == User.TYPE_DEFAULT))) {
 				String username = "";
 				String fullName = "";
 				if (!group.getUsers().isEmpty()) {
@@ -469,11 +491,16 @@ public class RightsRecordsManager {
 					fullName = group.getUsers().iterator().next().getFullName();
 				}
 
-				if ((group.getType() == Group.TYPE_DEFAULT && group.getName().toLowerCase().contains(
-						event.getNewValue().toString().toLowerCase()))
-						|| (group.getType() == Group.TYPE_USER && (username.toLowerCase().contains(
-								event.getNewValue().toString().toLowerCase()) || fullName.toLowerCase().contains(
-								event.getNewValue().toString().toLowerCase())))) {
+				if ((group.getType() == Group.TYPE_DEFAULT && group.getName()
+						.toLowerCase().contains(
+								event.getNewValue().toString().toLowerCase()))
+						|| (group.getType() == Group.TYPE_USER && (username
+								.toLowerCase().contains(
+										event.getNewValue().toString()
+												.toLowerCase()) || fullName
+								.toLowerCase().contains(
+										event.getNewValue().toString()
+												.toLowerCase())))) {
 					// Check if the group is allowed
 					boolean allowed = false;
 					for (SelectItem item : allowedGroups) {
@@ -483,7 +510,8 @@ public class RightsRecordsManager {
 						}
 					}
 					if (!allowed)
-						availableGroups.add(new SelectItem(group.getId(), getEntityLabel(group)));
+						availableGroups.add(new SelectItem(group.getId(),
+								getEntityLabel(group)));
 				}
 			}
 		}
@@ -499,7 +527,8 @@ public class RightsRecordsManager {
 		allowedGroups.clear();
 		for (Group group : groups) {
 			if (group.getType() == Group.TYPE_DEFAULT
-					|| ((group.getType() != Group.TYPE_DEFAULT) && (group.getUsers().iterator().next().getType() == User.TYPE_DEFAULT))) {
+					|| ((group.getType() != Group.TYPE_DEFAULT) && (group
+							.getUsers().iterator().next().getType() == User.TYPE_DEFAULT))) {
 				String username = "";
 				String fullName = "";
 				if (!group.getUsers().isEmpty()) {
@@ -507,11 +536,16 @@ public class RightsRecordsManager {
 					fullName = group.getUsers().iterator().next().getFullName();
 				}
 
-				if ((group.getType() == Group.TYPE_DEFAULT && group.getName().toLowerCase().contains(
-						event.getNewValue().toString().toLowerCase()))
-						|| (group.getType() == Group.TYPE_USER && (username.toLowerCase().contains(
-								event.getNewValue().toString().toLowerCase()) || fullName.toLowerCase().contains(
-								event.getNewValue().toString().toLowerCase())))) {
+				if ((group.getType() == Group.TYPE_DEFAULT && group.getName()
+						.toLowerCase().contains(
+								event.getNewValue().toString().toLowerCase()))
+						|| (group.getType() == Group.TYPE_USER && (username
+								.toLowerCase().contains(
+										event.getNewValue().toString()
+												.toLowerCase()) || fullName
+								.toLowerCase().contains(
+										event.getNewValue().toString()
+												.toLowerCase())))) {
 					// Check if the group is available
 					boolean available = false;
 					for (SelectItem item : availableGroups) {
@@ -521,7 +555,8 @@ public class RightsRecordsManager {
 						}
 					}
 					if (!available)
-						allowedGroups.add(new SelectItem(group.getId(), getEntityLabel(group)));
+						allowedGroups.add(new SelectItem(group.getId(),
+								getEntityLabel(group)));
 				}
 			}
 		}
