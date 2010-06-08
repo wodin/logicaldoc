@@ -170,7 +170,8 @@ public class RightsRecordsManager {
 					GroupRule gr = new GroupRule();
 					if (g.getType() == Group.TYPE_DEFAULT
 							|| ((g.getType() != Group.TYPE_DEFAULT) && (g
-									.getUsers().iterator().next().getType() == User.TYPE_DEFAULT))) {
+									.getUsers().isEmpty() || g.getUsers()
+									.iterator().next().getType() == User.TYPE_DEFAULT))) {
 						gr.setGroupName(g.getName());
 						gr.setDisplayName(getEntityLabel(g));
 						gr.setGroupId(g.getId());
@@ -227,7 +228,7 @@ public class RightsRecordsManager {
 	 * @return label
 	 */
 	private String getEntityLabel(Group g) {
-		String label = ""; 
+		String label = "";
 		if (g.getType() == Group.TYPE_DEFAULT) {
 			label = Messages.getMessage("group") + ": " + g.getName();
 		} else {
