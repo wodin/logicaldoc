@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.event.ValueChangeEvent;
@@ -163,7 +164,7 @@ public class RightsRecordsManager {
 					Group g = (Group) iter.next();
 					GroupRule gr = new GroupRule();
 					if (g.getType() == Group.TYPE_DEFAULT
-							|| ((g.getType() != Group.TYPE_DEFAULT) && (g.getUsers().iterator().next().getType() == User.TYPE_DEFAULT))) {
+							|| ((g.getType() != Group.TYPE_DEFAULT) && (g.getUsers().isEmpty()||g.getUsers().iterator().next().getType() == User.TYPE_DEFAULT))) {
 						gr.setGroupName(g.getName());
 						gr.setDisplayName(getEntityLabel(g));
 						gr.setGroupId(g.getId());
@@ -216,12 +217,18 @@ public class RightsRecordsManager {
 	 * @return label
 	 */
 	private String getEntityLabel(Group g) {
-		String label = "";
+		String label = ""; 
 		if (g.getType() == Group.TYPE_DEFAULT) {
 			label = Messages.getMessage("group") + ": " + g.getName();
 		} else {
-			User user = g.getUsers().iterator().next();
-			label = Messages.getMessage("user") + ": " + user.getFullName() + " (" + user.getUserName() + ")";
+			Set<User> users = g.getUsers();
+			if (users.isEmpty())
+				label = Messages.getMessage("user") + ": " + g.getName();
+			else {
+				User user = users.iterator().next();
+				label = Messages.getMessage("user") + ": " + user.getFullName()
+						+ " (" + user.getUserName() + ")";
+			}
 		}
 		return label;
 	}
