@@ -17,6 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
 
+/**
+ * 
+ * 
+ * @author Marco Meschieri - Logical Objects
+ * @since 6.0
+ */
 public class UploadServlet extends UploadAction {
 
 	private static final long serialVersionUID = 1L;
