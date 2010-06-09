@@ -118,6 +118,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		try {
 			for (String fileId : uploadedFilesMap.keySet()) {
 				File file = uploadedFilesMap.get(fileId);
+
 				if (file.getName().endsWith(".zip") && importZip) {
 					log.debug("file = " + file);
 
@@ -166,7 +167,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					transaction.setUser(SessionBean.getSessionUser(sid));
 
 					Document doc = new Document();
-					doc.setFileName(file.getName());
+					doc.setFileName(filename);
 					doc.setLocale(LocaleUtil.toLocale(language));
 					doc.setTitle(title);
 					doc.setFolder(parent);
@@ -263,7 +264,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// If it is a shortcut, we delete only the shortcut
 					if (doc.getDocRef() != null) {
 						transaction.setEvent(History.EVENT_SHORTCUT_DELETED);
-						doc = dao.findById(doc.getDocRef());
+						// doc = dao.findById(doc.getDocRef());
 						dao.delete(doc.getId(), transaction);
 						deletedSome = true;
 						continue;
@@ -275,8 +276,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						skippedSome = true;
 						continue;
 					}
-					// The document of the selected documentRecord must be
-					// not locked
+
+					// The document must be not locked
 					if (doc.getStatus() != Document.DOC_UNLOCKED || doc.getExportStatus() != Document.EXPORT_UNLOCKED) {
 						lockedSome = true;
 						continue;
@@ -343,10 +344,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		SessionBean.validateSession(sid);
 
 		try {
-			// TODO the 'postid' is the position of each comment into the
-			// thread???
 			DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
 			DiscussionThread thread = dao.findById(discussionId);
+			dao.initialize(thread);
 			DiscussionComment comment = null;
 			for (int postId : postIds) {
 				comment = thread.getComments().get(postId);
@@ -376,6 +376,15 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			att.setPosition(extAttr.getPosition());
 			att.setMandatory(extAttr.getMandatory() == 1 ? true : false);
 			att.setType(extAttr.getType());
+			if (extAttr.getValue() instanceof String)
+				att.setStringValue(extAttr.getStringValue());
+			else if (extAttr.getValue() instanceof Long)
+				att.setIntValue(extAttr.getIntValue());
+			else if (extAttr.getValue() instanceof Double)
+				att.setDoubleValue(extAttr.getDoubleValue());
+			else if (extAttr.getValue() instanceof Date)
+				att.setDateValue(extAttr.getDateValue());
+
 			attributes[i] = att;
 			i++;
 		}
@@ -391,38 +400,41 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		Document doc = docDao.findById(docId);
 
 		if (doc != null) {
+			docDao.initialize(doc);
 			GUIDocument document = new GUIDocument();
-			document.setId(docId);
-			document.setTitle(doc.getTitle());
-			document.setCustomId(doc.getCustomId());
-			document.setTags(doc.getTags().toArray(new String[doc.getTags().size()]));
-			document.setType(doc.getType());
-			document.setFileName(doc.getFileName());
-			document.setVersion(doc.getVersion());
-			document.setCreation(doc.getCreation());
-			document.setCreator(doc.getCreator());
-			document.setDate(doc.getDate());
-			document.setPublisher(doc.getPublisher());
-			document.setFileVersion(doc.getFileVersion());
-			document.setLanguage(doc.getLanguage());
-			document.setTemplateId(doc.getTemplateId());
-			document.setTemplate(doc.getTemplate().getName());
-			document.setStatus(doc.getStatus());
-			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			document.setPathExtended(mdao.computePathExtended(doc.getFolder().getId()));
-			GUIFolder folder = new GUIFolder();
-			Menu docFolder = doc.getFolder();
-			folder.setName(docFolder.getText());
-			folder.setId(docFolder.getId());
+			try {
+				document.setId(docId);
+				document.setTitle(doc.getTitle());
+				document.setCustomId(doc.getCustomId());
+				if (doc.getTags().size() > 0)
+					document.setTags(doc.getTags().toArray(new String[doc.getTags().size()]));
+				else
+					document.setTags(new String[0]);
+				document.setType(doc.getType());
+				document.setFileName(doc.getFileName());
+				document.setVersion(doc.getVersion());
+				document.setCreation(doc.getCreation());
+				document.setCreator(doc.getCreator());
+				document.setDate(doc.getDate());
+				document.setPublisher(doc.getPublisher());
+				document.setFileVersion(doc.getFileVersion());
+				document.setLanguage(doc.getLanguage());
+				document.setTemplateId(doc.getTemplateId());
+				if (doc.getTemplate() != null)
+					document.setTemplate(doc.getTemplate().getName());
+				document.setStatus(doc.getStatus());
+				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+				document.setPathExtended(mdao.computePathExtended(doc.getFolder().getId()));
+				document.setFileSize(new Long(doc.getFileSize()).floatValue());
+				if (doc.getCustomId() != null)
+					document.setCustomId(doc.getCustomId());
+				else
+					document.setCustomId("" + doc.getId());
 
-			// TODO Fixed after complete implementation
-			if (docId % 2 == 0)
-				folder.setPermissions(new String[] { "read", "write", "addChild", "manageSecurity", "delete", "rename",
-						"bulkImport", "bulkExport", "sign", "archive", "workflow", "manageImmutability" });
-			else
-				folder.setPermissions(new String[] { "read" });
-
-			document.setFolder(folder);
+				GUIFolder folder = FolderServiceImpl.getFolder(sid, doc.getFolder().getId());
+				document.setFolder(folder);
+			} catch (Throwable t) {
+			}
 
 			return document;
 		}
@@ -434,70 +446,88 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	public GUIVersion[] getVersionsById(String sid, long id1, long id2) {
 		SessionBean.validateSession(sid);
 
-		GUIVersion[] versions = new GUIVersion[2];
-
 		VersionDAO versDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 		Version docVersion = versDao.findById(id1);
 
-		GUIVersion version = new GUIVersion();
-		version.setUsername(docVersion.getUsername());
-		version.setComment(docVersion.getComment());
-		version.setId(id1);
-		version.setTitle(docVersion.getTitle());
-		version.setCustomId(docVersion.getCustomId());
-		version.setTags(docVersion.getTags().toArray(new String[docVersion.getTags().size()]));
-		version.setType(docVersion.getType());
-		version.setFileName(docVersion.getFileName());
-		version.setVersion(docVersion.getVersion());
-		version.setCreation(docVersion.getCreation());
-		version.setCreator(docVersion.getCreator());
-		version.setDate(docVersion.getDate());
-		version.setPublisher(docVersion.getPublisher());
-		version.setFileVersion(docVersion.getFileVersion());
-		version.setLanguage(docVersion.getLanguage());
-		version.setTemplateId(docVersion.getTemplateId());
-		version.setFileSize(new Float(docVersion.getFileSize()));
-		version.setTemplate(docVersion.getTemplateName());
-		for (String attrName : docVersion.getAttributeNames()) {
-			ExtendedAttribute extAttr = docVersion.getAttributes().get(attrName);
-			version.setValue(attrName, extAttr);
+		GUIVersion version1 = null;
+		if (docVersion != null) {
+			version1 = new GUIVersion();
+			version1.setUsername(docVersion.getUsername());
+			version1.setComment(docVersion.getComment());
+			version1.setId(id1);
+			version1.setTitle(docVersion.getTitle());
+			version1.setCustomId(docVersion.getCustomId());
+			version1.setTags(docVersion.getTags().toArray(new String[docVersion.getTags().size()]));
+			version1.setType(docVersion.getType());
+			version1.setFileName(docVersion.getFileName());
+			version1.setVersion(docVersion.getVersion());
+			version1.setCreation(docVersion.getCreation());
+			version1.setCreator(docVersion.getCreator());
+			version1.setDate(docVersion.getDate());
+			version1.setPublisher(docVersion.getPublisher());
+			version1.setFileVersion(docVersion.getFileVersion());
+			version1.setLanguage(docVersion.getLanguage());
+			version1.setTemplateId(docVersion.getTemplateId());
+			version1.setFileSize(new Float(docVersion.getFileSize()));
+			version1.setTemplate(docVersion.getTemplateName());
+			versDao.initialize(docVersion);
+			for (String attrName : docVersion.getAttributeNames()) {
+				ExtendedAttribute extAttr = docVersion.getAttributes().get(attrName);
+				version1.setValue(attrName, extAttr);
+			}
+			GUIFolder folder1 = new GUIFolder();
+			folder1.setName(docVersion.getFolderName());
+			folder1.setId(docVersion.getFolderId());
+			version1.setFolder(folder1);
 		}
-		GUIFolder folder = new GUIFolder();
-		folder.setName(docVersion.getFolderName());
-		folder.setId(docVersion.getFolderId());
-		version.setFolder(folder);
-		versions[0] = version;
 
 		docVersion = versDao.findById(id2);
 
-		version = new GUIVersion();
-		version.setUsername(docVersion.getUsername());
-		version.setComment(docVersion.getComment());
-		version.setId(id1);
-		version.setTitle(docVersion.getTitle());
-		version.setCustomId(docVersion.getCustomId());
-		version.setTags(docVersion.getTags().toArray(new String[docVersion.getTags().size()]));
-		version.setType(docVersion.getType());
-		version.setFileName(docVersion.getFileName());
-		version.setVersion(docVersion.getVersion());
-		version.setCreation(docVersion.getCreation());
-		version.setCreator(docVersion.getCreator());
-		version.setDate(docVersion.getDate());
-		version.setPublisher(docVersion.getPublisher());
-		version.setFileVersion(docVersion.getFileVersion());
-		version.setLanguage(docVersion.getLanguage());
-		version.setTemplateId(docVersion.getTemplateId());
-		version.setFileSize(new Float(docVersion.getFileSize()));
-		version.setTemplate(docVersion.getTemplateName());
-		for (String attrName : docVersion.getAttributeNames()) {
-			ExtendedAttribute extAttr = docVersion.getAttributes().get(attrName);
-			version.setValue(attrName, extAttr);
+		GUIVersion version2 = null;
+		if (docVersion != null) {
+			version2 = new GUIVersion();
+			version2.setUsername(docVersion.getUsername());
+			version2.setComment(docVersion.getComment());
+			version2.setId(id1);
+			version2.setTitle(docVersion.getTitle());
+			version2.setCustomId(docVersion.getCustomId());
+			version2.setTags(docVersion.getTags().toArray(new String[docVersion.getTags().size()]));
+			version2.setType(docVersion.getType());
+			version2.setFileName(docVersion.getFileName());
+			version2.setVersion(docVersion.getVersion());
+			version2.setCreation(docVersion.getCreation());
+			version2.setCreator(docVersion.getCreator());
+			version2.setDate(docVersion.getDate());
+			version2.setPublisher(docVersion.getPublisher());
+			version2.setFileVersion(docVersion.getFileVersion());
+			version2.setLanguage(docVersion.getLanguage());
+			version2.setTemplateId(docVersion.getTemplateId());
+			version2.setFileSize(new Float(docVersion.getFileSize()));
+			version2.setTemplate(docVersion.getTemplateName());
+			versDao.initialize(docVersion);
+			for (String attrName : docVersion.getAttributeNames()) {
+				ExtendedAttribute extAttr = docVersion.getAttributes().get(attrName);
+				version2.setValue(attrName, extAttr);
+			}
+			GUIFolder folder2 = new GUIFolder();
+			folder2.setName(docVersion.getFolderName());
+			folder2.setId(docVersion.getFolderId());
+			version2.setFolder(folder2);
 		}
-		folder = new GUIFolder();
-		folder.setName(docVersion.getFolderName());
-		folder.setId(docVersion.getFolderId());
-		version.setFolder(folder);
-		versions[1] = version;
+
+		GUIVersion[] versions = null;
+		if (version1 != null && version2 != null) {
+			versions = new GUIVersion[2];
+			versions[0] = version1;
+			versions[1] = version2;
+		} else if (version1 != null && version2 == null) {
+			versions = new GUIVersion[1];
+			versions[0] = version1;
+		} else if (version1 == null && version2 != null) {
+			versions = new GUIVersion[1];
+			versions[0] = version2;
+		} else
+			return null;
 
 		return versions;
 	}
@@ -670,10 +700,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		try {
 			DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
 			DiscussionThread thread = dao.findById(discussionId);
+			dao.initialize(thread);
 			thread.appendComment(comment);
 			dao.store(thread);
 			// TODO Message?
-			return replyTo;
+			return thread.getReplies();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			// TODO Message?
@@ -694,39 +725,58 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		SessionBean.validateSession(sid);
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc;
+		Document doc = null;
 		if (document.getId() != 0) {
 			doc = docDao.findById(document.getId());
 			docDao.initialize(doc);
+			try {
+				Document docVO = new Document();
+				docVO.setTitle(document.getTitle());
+				if (document.getTags().length > 0)
+					docVO.setTags(TagUtil.extractTags(document.getTags().toString()));
+				docVO.setType(document.getType());
+				docVO.setFileName(document.getFileName());
+				docVO.setVersion(document.getVersion());
+				docVO.setCreation(document.getCreation());
+				docVO.setCreator(document.getCreator());
+				docVO.setDate(document.getDate());
+				docVO.setPublisher(document.getPublisher());
+				docVO.setFileVersion(document.getFileVersion());
+				docVO.setLanguage(document.getLanguage());
+				docVO.setFileSize(document.getFileSize().longValue());
+				docVO.setLastModified(new Date());
+				if (document.getTemplateId() != null) {
+					DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.getInstance().getBean(
+							DocumentTemplateDAO.class);
+					DocumentTemplate template = templateDao.findById(document.getTemplateId());
+					docVO.setTemplateId(template.getId());
+					docVO.setTemplate(template);
+				}
+				docVO.setStatus(document.getStatus());
+				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+				docVO.setFolder(mdao.findById(document.getFolder().getId()));
+
+				doc.setCustomId(document.getCustomId());
+
+				// Create the document history event
+				History transaction = new History();
+				transaction.setSessionId(sid);
+				transaction.setEvent(History.EVENT_CHANGED);
+				transaction.setComment("");
+				transaction.setUser(SessionBean.getSessionUser(sid));
+
+				DocumentManager documentManager = (DocumentManager) Context.getInstance()
+						.getBean(DocumentManager.class);
+				documentManager.update(doc, docVO, transaction);
+
+				document.setId(doc.getId());
+			} catch (Throwable t) {
+			}
 		} else
-			doc = new Document();
-
-		doc.setTitle(document.getTitle());
-		doc.setCustomId(document.getCustomId());
-		// TODO It works???
-		doc.setTags(TagUtil.extractTags(document.getTags().toString()));
-		doc.setType(document.getType());
-		doc.setFileName(document.getFileName());
-		doc.setVersion(document.getVersion());
-		doc.setCreation(document.getCreation());
-		doc.setCreator(document.getCreator());
-		doc.setDate(document.getDate());
-		doc.setPublisher(document.getPublisher());
-		doc.setFileVersion(document.getFileVersion());
-		doc.setLanguage(document.getLanguage());
-		DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.getInstance()
-				.getBean(DocumentTemplateDAO.class);
-		DocumentTemplate template = templateDao.findById(document.getTemplateId());
-		doc.setTemplateId(template.getId());
-		doc.setTemplate(template);
-		doc.setStatus(document.getStatus());
-		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		doc.setFolder(mdao.findById(document.getFolder().getId()));
-
-		docDao.store(doc);
-		document.setId(doc.getId());
+			return null;
 
 		return document;
+
 	}
 
 	@Override
@@ -739,7 +789,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			mail.setAccountId(-1);
 			mail.setAuthor(email.getUser().getUserName());
-			// TODO It is correct???
 			mail.setAuthorAddress(email.getUser().getEmail());
 			mail.parseRecipients(email.getRecipients());
 			mail.parseRecipientsCC(email.getCc());
@@ -757,8 +806,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
 				sender.send(mail);
 				return "ok";
-				// TODO Why do not return the email sent message???
-				// I18N.message("email.sent");
 			} catch (Exception ex) {
 				log.warn(ex.getMessage(), ex);
 				return "error";

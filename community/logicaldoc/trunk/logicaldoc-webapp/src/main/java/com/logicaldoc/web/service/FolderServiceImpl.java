@@ -59,8 +59,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		dao.delete(folderId);
 	}
 
-	@Override
-	public GUIFolder getFolder(String sid, long folderId, boolean computePath) {
+	static GUIFolder getFolder(String sid, long folderId){
 		SessionBean.validateSession(sid);
 
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -73,28 +72,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		folder.setName(folderId != Constants.DOCUMENTS_FOLDERID ? menu.getText() : "/");
 		folder.setParentId(menu.getParentId());
 		folder.setDescription(menu.getDescription());
-
-		if (computePath) {
-			String pathExtended = dao.computePathExtended(folderId);
-			StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
-			int elements = st.countTokens();
-			GUIFolder[] path = new GUIFolder[elements];
-			Menu parent = dao.findById(Menu.MENUID_DOCUMENTS);
-			List<Menu> list = new ArrayList<Menu>();
-			int i = 0;
-			while (st.hasMoreTokens()) {
-				String text = st.nextToken();
-				list = dao.findByText(parent, text, Menu.MENUTYPE_DIRECTORY, true);
-				if (list.isEmpty())
-					return null;
-
-				path[i] = getFolder(sid, parent.getId(), false);
-				parent = list.get(0);
-				i++;
-			}
-
-			folder.setPath(path);
-		}
 
 		List<String> permissionsList = new ArrayList<String>();
 		long userId = SessionBean.getSessionUser(sid).getId();
@@ -147,6 +124,35 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		}
 		
 		folder.setRights(rights);
+		return folder;
+	}
+	
+	@Override
+	public GUIFolder getFolder(String sid, long folderId, boolean computePath) {
+		GUIFolder folder=getFolder(sid, folderId);
+		
+		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		if (computePath) {
+			String pathExtended = dao.computePathExtended(folderId);
+			StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
+			int elements = st.countTokens();
+			GUIFolder[] path = new GUIFolder[elements];
+			Menu parent = dao.findById(Menu.MENUID_DOCUMENTS);
+			List<Menu> list = new ArrayList<Menu>();
+			int j = 0;
+			while (st.hasMoreTokens()) {
+				String text = st.nextToken();
+				list = dao.findByText(parent, text, Menu.MENUTYPE_DIRECTORY, true);
+				if (list.isEmpty())
+					return null;
+
+				path[j] = getFolder(sid, parent.getId(), false);
+				parent = list.get(0);
+				j++;
+			}
+
+			folder.setPath(path);
+		}
 
 		return folder;
 	}
