@@ -17,6 +17,12 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionBean;
 
+/**
+ * 
+ * 
+ * @author Marco Meschieri - Logical Objects
+ * @since 6.0
+ */
 public class DocumentsDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -75,9 +81,8 @@ public class DocumentsDataServlet extends HttpServlet {
 		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
 
 		/*
-		 * Iterqte over records composing the response XML document
+		 * Iterate over records composing the response XML document
 		 */
-
 		for (Object record : records) {
 			Object[] cols = (Object[]) record;
 			writer.print("<document>");

@@ -16,6 +16,12 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionBean;
 
+/**
+ * 
+ * 
+ * @author Marco Meschieri - Logical Objects
+ * @since 6.0
+ */
 public class FoldersDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;

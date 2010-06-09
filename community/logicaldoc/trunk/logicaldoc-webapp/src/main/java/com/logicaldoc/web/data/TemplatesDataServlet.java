@@ -13,6 +13,12 @@ import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionBean;
 
+/**
+ * 
+ * 
+ * @author Marco Meschieri - Logical Objects
+ * @since 6.0
+ */
 public class TemplatesDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
