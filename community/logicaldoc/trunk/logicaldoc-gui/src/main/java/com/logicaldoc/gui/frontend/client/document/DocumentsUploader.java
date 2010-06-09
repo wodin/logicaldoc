@@ -5,7 +5,6 @@ import gwtupload.client.MultiUploader;
 import gwtupload.client.IUploadStatus.Status;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.LanguagesDS;
@@ -73,7 +72,7 @@ public class DocumentsUploader extends Window {
 		// Add a finish handler which will load the image once the upload
 		// finishes
 		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
-		
+
 		layout.addMember(multiUploader, 1);
 		layout.setMembersMargin(10);
 		layout.setMargin(25);
@@ -99,7 +98,7 @@ public class DocumentsUploader extends Window {
 		languageItem.setDisplayField("name");
 		languageItem.setValueField("locale");
 		languageItem.setRequired(true);
-		languageItem.setDefaultValue(LocaleInfo.getCurrentLocale().getLocaleName());
+		languageItem.setDefaultValue(I18N.getLocale());
 
 		CheckboxItem zipItem = new CheckboxItem();
 		zipItem.setName("zip");

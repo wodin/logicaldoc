@@ -1,7 +1,7 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.google.gwt.i18n.client.LocaleInfo;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -29,6 +29,6 @@ public class VersionsDS extends DataSource {
 		setFields(id, user, event, version, fileVersion, date, comment);
 		setClientOnly(true);
 		setDataURL("data/versions.xml?sid=" + Session.get().getSid() + "&docId=" + docId + "&locale="
-				+ LocaleInfo.getCurrentLocale().getLocaleName());
+				+ I18N.getLocale());
 	}
 }
