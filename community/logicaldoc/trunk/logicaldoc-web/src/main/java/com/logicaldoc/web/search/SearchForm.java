@@ -358,6 +358,29 @@ public class SearchForm extends SortableList {
 		}
 	}
 
+	public void validateCreationDates(FacesContext context, UIComponent component, Object value)
+			throws ValidatorException {
+
+		if (getCreationDateFrom() == null) {
+			return;
+		}
+
+		Date lowerDate = getCreationDateFrom();
+		Date upperDate = (Date) value;
+
+		if ((lowerDate == null) || (upperDate == null)) {
+			return;
+		}
+
+		if (lowerDate.compareTo(upperDate) > 0) {
+			FacesMessage message = new FacesMessage();
+			message.setDetail(Messages.getMessage("errors.val.twodates"));
+			message.setSummary(Messages.getMessage("errors.val.twodates"));
+			message.setSeverity(FacesMessage.SEVERITY_ERROR);
+			throw new ValidatorException(message);
+		}
+	}
+
 	public void validatePublishingDates(FacesContext context, UIComponent component, Object value)
 			throws ValidatorException {
 		if (getPublishingDateFrom() == null) {
