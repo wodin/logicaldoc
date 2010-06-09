@@ -34,7 +34,6 @@ public class UploadServlet extends UploadAction {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String executeAction(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
-		System.out.println("** upload session:" + request.getSession().getId());
 
 		/**
 		 * Maintain a list with received files and their content types
@@ -43,8 +42,6 @@ public class UploadServlet extends UploadAction {
 		if (receivedFiles == null) {
 			receivedFiles = new Hashtable<String, File>();
 			request.getSession().setAttribute(RECEIVEDFILES, receivedFiles);
-		} else {
-			receivedFiles.clear();
 		}
 
 		Map<String, String> receivedContentTypes = (Map<String, String>) request.getSession().getAttribute(
@@ -52,8 +49,6 @@ public class UploadServlet extends UploadAction {
 		if (receivedContentTypes == null) {
 			receivedContentTypes = new Hashtable<String, String>();
 			request.getSession().setAttribute(RECEIVEDCONTENTTYPES, receivedContentTypes);
-		} else {
-			receivedContentTypes.clear();
 		}
 
 		Map<String, String> receivedFileNames = (Map<String, String>) request.getSession().getAttribute(
@@ -61,8 +56,6 @@ public class UploadServlet extends UploadAction {
 		if (receivedFileNames == null) {
 			receivedFileNames = new Hashtable<String, String>();
 			request.getSession().setAttribute(RECEIVEDFILENAMES, receivedFileNames);
-		} else {
-			receivedFileNames.clear();
 		}
 
 		String path = getServletContext().getRealPath("/upload/" + request.getSession().getId());
@@ -76,12 +69,7 @@ public class UploadServlet extends UploadAction {
 			if (false == item.isFormField()) {
 				OutputStream os = null;
 				try {
-					// System.out.println("** file item name:" +
-					// item.getName());
 					File file = new File(uploadFolder, item.getFieldName());
-					// File file = new File(uploadFolder, item.getName());
-					// item.write(file);
-					// Google App Engine doesn't support disk writing
 					os = new FileOutputStream(file);
 					copyFromInputStreamToOutputStream(item.getInputStream(), os);
 

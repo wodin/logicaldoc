@@ -12,7 +12,6 @@ import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.web.AbstractWebappTestCase;
@@ -26,14 +25,11 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 
 	private FolderDAO folderDao;
 
-	private UserDAO userDao;
-
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
-		userDao = (UserDAO) context.getBean("UserDAO");
 
 		SecurityServiceImpl securityService = new SecurityServiceImpl();
 		session = securityService.login("admin", "admin");
