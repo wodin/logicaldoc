@@ -51,8 +51,8 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 		StringBuffer query = new StringBuffer(
 				"select A.userName, A.event, A.version, A.date, A.comment, A.title, A.filename, A.new, A.folderId, A.docId from History A where 1=1 ");
-		if (request.getParameter("id") != null)
-			query.append(" and A.docId=" + request.getParameter("id"));
+		if (request.getParameter("docId") != null)
+			query.append(" and A.docId=" + request.getParameter("docId"));
 		if (request.getParameter("userId") != null)
 			query.append(" and A.userId=" + request.getParameter("userId"));
 
