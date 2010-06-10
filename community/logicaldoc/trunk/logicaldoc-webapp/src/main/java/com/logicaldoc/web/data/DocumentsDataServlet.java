@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,7 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionBean;
 
@@ -80,11 +83,16 @@ public class DocumentsDataServlet extends HttpServlet {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
 
+		List<Long> docRefIds = new ArrayList<Long>();
 		/*
 		 * Iterate over records composing the response XML document
 		 */
 		for (Object record : records) {
 			Object[] cols = (Object[]) record;
+			if (cols[2] != null) {
+				docRefIds.add((Long) cols[2]);
+				continue;
+			}
 			writer.print("<document>");
 			writer.print("<id>" + cols[0] + "</id>");
 			if (cols[1] != null)
@@ -92,7 +100,28 @@ public class DocumentsDataServlet extends HttpServlet {
 			else
 				writer.print("<customId> </customId>");
 			writer.print("<docref>" + cols[2] + "</docref>");
-			writer.print("<icon>" + cols[3] + "</icon>");
+			if (cols[2] != null)
+				writer.print("<icon>alias</icon>");
+			else if (cols[3].toString().toLowerCase().equals("doc") || cols[3].toString().toLowerCase().equals("docx")
+					|| cols[3].toString().toLowerCase().equals("odt"))
+				writer.print("<icon>word</icon>");
+			else if (cols[3].toString().toLowerCase().equals("ppt"))
+				writer.print("<icon>powerpoint</icon>");
+			else if (cols[3].toString().toLowerCase().equals("pdf"))
+				writer.print("<icon>pdf</icon>");
+			else if (cols[3].toString().toLowerCase().equals("jpeg") || cols[3].toString().toLowerCase().equals("jpg")
+					|| cols[3].toString().toLowerCase().equals("gif") || cols[3].toString().toLowerCase().equals("png")
+					|| cols[3].toString().toLowerCase().equals("tif")
+					|| cols[3].toString().toLowerCase().equals("tiff"))
+				writer.print("<icon>picture</icon>");
+			else if (cols[3].toString().toLowerCase().equals("zip"))
+				writer.print("<icon>zip</icon>");
+			else if (cols[3].toString().toLowerCase().equals("txt"))
+				writer.print("<icon>text</icon>");
+			else if (cols[3].toString().toLowerCase().equals("html") || cols[3].toString().toLowerCase().equals("htm"))
+				writer.print("<icon>html</icon>");
+			else
+				writer.print("<icon>generic</icon>");
 			writer.print("<title><![CDATA[" + cols[4] + "]]></title>");
 			writer.print("<version>" + cols[5] + "</version>");
 			writer.print("<lastModified>" + df.format(cols[6]) + "</lastModified>");
@@ -101,14 +130,60 @@ public class DocumentsDataServlet extends HttpServlet {
 			writer.print("<created>" + df.format(cols[9]) + "</created>");
 			writer.print("<creator><![CDATA[" + cols[10] + "]]></creator>");
 			writer.print("<size>" + cols[11] + "</size>");
-			writer.print("<immutable>" + cols[12] + "</immutable>");
-			writer.print("<indexed>" + cols[13] + "</indexed>");
+			if (Integer.parseInt(cols[12].toString()) == 0)
+				writer.print("<immutable>blank</immutable>");
+			else if (Integer.parseInt(cols[12].toString()) == 1)
+				writer.print("<immutable>stop</immutable>");
+			if (Integer.parseInt(cols[13].toString()) == Constants.INDEX_TO_INDEX)
+				writer.print("<indexed>blank</indexed>");
+			else if (Integer.parseInt(cols[13].toString()) == Constants.INDEX_INDEXED)
+				writer.print("<indexed>indexed</indexed>");
+			else if (Integer.parseInt(cols[13].toString()) == Constants.INDEX_SKIP)
+				writer.print("<indexed>unindexable</indexed>");
 			if (cols[14] != null)
-				writer.print("<locked>" + 1 + "</locked>");
+				writer.print("<locked>document_lock</locked>");
 			else
-				writer.print("<locked>" + 0 + "</locked>");
+				writer.print("<locked>blank</locked>");
 			writer.print("<filename><![CDATA[" + cols[15] + "]]></filename>");
 			writer.print("<status>" + cols[16] + "</status>");
+			writer.print("</document>");
+		}
+
+		// For all alias document, we must retrieve the original documents infos
+		for (Long docRef : docRefIds) {
+			Document doc = dao.findById(docRef);
+			writer.print("<document>");
+			writer.print("<id>" + doc.getId() + "</id>");
+			if (doc.getCustomId() != null)
+				writer.print("<customId><![CDATA[" + doc.getCustomId() + "]]></customId>");
+			else
+				writer.print("<customId> </customId>");
+			writer.print("<docref>" + docRef + "</docref>");
+			writer.print("<icon>alias</icon>");
+			writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
+			writer.print("<version>" + doc.getVersion() + "</version>");
+			writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
+			writer.print("<published>" + df.format(doc.getDate()) + "</published>");
+			writer.print("<publisher><![CDATA[" + doc.getPublisher() + "]]></publisher>");
+			writer.print("<created>" + df.format(doc.getCreation()) + "</created>");
+			writer.print("<creator><![CDATA[" + doc.getCreator() + "]]></creator>");
+			writer.print("<size>" + doc.getFileSize() + "</size>");
+			if (doc.getImmutable() == 0)
+				writer.print("<immutable>blank</immutable>");
+			else if (doc.getImmutable() == 1)
+				writer.print("<immutable>stop</immutable>");
+			if (doc.getIndexed() == Constants.INDEX_TO_INDEX)
+				writer.print("<indexed>blank</indexed>");
+			else if (doc.getIndexed() == Constants.INDEX_INDEXED)
+				writer.print("<indexed>indexed</indexed>");
+			else if (doc.getIndexed() == Constants.INDEX_SKIP)
+				writer.print("<indexed>unindexable</indexed>");
+			if (doc.getLockUserId() != null)
+				writer.print("<locked>document_lock</locked>");
+			else
+				writer.print("<locked>blank</locked>");
+			writer.print("<filename><![CDATA[" + doc.getFileName() + "]]></filename>");
+			writer.print("<status>" + doc.getStatus() + "</status>");
 			writer.print("</document>");
 		}
 

@@ -264,7 +264,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// If it is a shortcut, we delete only the shortcut
 					if (doc.getDocRef() != null) {
 						transaction.setEvent(History.EVENT_SHORTCUT_DELETED);
-						// doc = dao.findById(doc.getDocRef());
 						dao.delete(doc.getId(), transaction);
 						deletedSome = true;
 						continue;
@@ -400,10 +399,15 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		Document doc = docDao.findById(docId);
 
 		if (doc != null) {
-			docDao.initialize(doc);
+			// Check if it is an alias
+			if (doc.getDocRef() != null) {
+				long id = doc.getDocRef();
+				doc = docDao.findById(id);
+			}
 			GUIDocument document = new GUIDocument();
 			try {
-				document.setId(docId);
+				docDao.initialize(doc);
+				document.setId(doc.getId());
 				document.setTitle(doc.getTitle());
 				document.setCustomId(doc.getCustomId());
 				if (doc.getTags().size() > 0)
@@ -434,6 +438,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				GUIFolder folder = FolderServiceImpl.getFolder(sid, doc.getFolder().getId());
 				document.setFolder(folder);
 			} catch (Throwable t) {
+				t.printStackTrace();
 			}
 
 			return document;
@@ -729,12 +734,13 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		if (document.getId() != 0) {
 			doc = docDao.findById(document.getId());
 			docDao.initialize(doc);
+			doc.setCustomId(document.getCustomId());
 			try {
 				Document docVO = new Document();
 				docVO.setTitle(document.getTitle());
 				if (document.getTags().length > 0)
 					docVO.setTags(TagUtil.extractTags(document.getTags().toString()));
-				docVO.setType(document.getType());
+				docVO.setSourceType(document.getSourceType());
 				docVO.setFileName(document.getFileName());
 				docVO.setVersion(document.getVersion());
 				docVO.setCreation(document.getCreation());
@@ -744,19 +750,25 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				docVO.setFileVersion(document.getFileVersion());
 				docVO.setLanguage(document.getLanguage());
 				docVO.setFileSize(document.getFileSize().longValue());
-				docVO.setLastModified(new Date());
+				docVO.setSource(document.getSource());
+				docVO.setRecipient(document.getRecipient());
+				docVO.setObject(document.getObject());
+				docVO.setCoverage(document.getCoverage());
+				docVO.setSourceAuthor(document.getSourceAuthor());
+				docVO.setSourceDate(document.getSourceDate());
+				docVO.setSourceId(document.getSourceId());
 				if (document.getTemplateId() != null) {
-					DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.getInstance().getBean(
-							DocumentTemplateDAO.class);
-					DocumentTemplate template = templateDao.findById(document.getTemplateId());
-					docVO.setTemplateId(template.getId());
-					docVO.setTemplate(template);
+					// DocumentTemplateDAO templateDao = (DocumentTemplateDAO)
+					// Context.getInstance().getBean(
+					// DocumentTemplateDAO.class);
+					// DocumentTemplate template =
+					// templateDao.findById(document.getTemplateId());
+					docVO.setTemplateId(document.getTemplateId());
+					// docVO.setTemplate(template);
 				}
 				docVO.setStatus(document.getStatus());
 				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 				docVO.setFolder(mdao.findById(document.getFolder().getId()));
-
-				doc.setCustomId(document.getCustomId());
 
 				// Create the document history event
 				History transaction = new History();
@@ -771,6 +783,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 				document.setId(doc.getId());
 			} catch (Throwable t) {
+				t.printStackTrace();
 			}
 		} else
 			return null;

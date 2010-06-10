@@ -20,7 +20,7 @@ public interface FolderService extends RemoteService {
 	 * @return The saved folder
 	 */
 	public GUIFolder save(String sid, GUIFolder folder);
-	
+
 	/**
 	 * Renames the given folder
 	 */
@@ -52,4 +52,21 @@ public interface FolderService extends RemoteService {
 	 * Moves a folder under a target folder
 	 */
 	public void move(String sid, long folderId, long targetId);
+
+	/**
+	 * Pastes documents into the target folder.
+	 * 
+	 * @param docIds The documents identifiers.
+	 * @param folderId The target folder identifier.
+	 * @param action The action selectee (Clipboard#COPY or Clipboard#COPY).
+	 */
+	public void paste(String sid, long[] docIds, long folderId, String action);
+
+	/**
+	 * Pastes documents alias into the target folder.
+	 * 
+	 * @param docIds The documents alias identifiers.
+	 * @param folderId The target folder identifier.
+	 */
+	public void pasteAsAlias(String sid, long[] docIds, long folderId);
 }
