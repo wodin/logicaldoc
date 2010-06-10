@@ -97,11 +97,11 @@ public class SetupWizard implements TabChangeListener {
 			conf.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
 			SystemProperty.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
 
-			ServletContext servletContext = (ServletContext) ((ServletExternalContext) FacesContext
-					.getCurrentInstance().getExternalContext()).getContext();
-			Properties boot = ApplicationInitializer.loadBootProperties(servletContext);
-			boot.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
-			ApplicationInitializer.saveBootProperties(boot, servletContext);
+//			ServletContext servletContext = (ServletContext) ((ServletExternalContext) FacesContext
+//					.getCurrentInstance().getExternalContext()).getContext();
+//			Properties boot = ApplicationInitializer.loadBootProperties(servletContext);
+//			boot.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
+//			ApplicationInitializer.saveBootProperties(boot, servletContext);
 
 			// Refresh the current logging location
 			try {

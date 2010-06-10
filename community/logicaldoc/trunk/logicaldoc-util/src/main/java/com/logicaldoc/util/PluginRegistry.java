@@ -2,6 +2,7 @@ package com.logicaldoc.util;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.registry.Extension.Parameter;
 import org.java.plugin.util.ExtendedProperties;
 
+import com.logicaldoc.util.config.PropertiesBean;
+
 /**
  * Central point where plugins are loaded and handled. The class is abstract and
  * must be personalized as needed. The used implementation can be specified with
@@ -35,16 +38,19 @@ import org.java.plugin.util.ExtendedProperties;
  */
 public abstract class PluginRegistry {
 
-	// System property containing the plugin registry implementation to be used
-	public static final String LOGICALDOC_PLUGINSREGISTRY = "logicaldoc.pluginsregistry";
-
 	protected PluginManager manager = null;
 
 	private static PluginRegistry instance;
 
 	public static PluginRegistry getInstance() {
 		if (instance == null) {
-			String pluginregistry = System.getProperty(LOGICALDOC_PLUGINSREGISTRY);
+			String pluginregistry = null;
+			try {
+				PropertiesBean config = new PropertiesBean();
+				pluginregistry = config.getProperty("plugin.registry");
+			} catch (IOException e1) {
+			}
+
 			if (StringUtils.isEmpty(pluginregistry)) {
 				pluginregistry = "com.logicaldoc.util.DefaultPluginRegistry";
 			}
@@ -59,9 +65,17 @@ public abstract class PluginRegistry {
 	}
 
 	/**
-	 * Initializes all found plugins
+	 * Initializes all found plugins using the system variable
+	 * "logicaldoc.app.pluginsdir" as pluginsdir
 	 */
 	public void init() {
+		init(System.getProperty("plugin.pluginsdir"));
+	}
+
+	/**
+	 * Initializes all found plugins
+	 */
+	public void init(String pluginsDir) {
 		ExtendedProperties properties = new ExtendedProperties();
 		properties.put("org.java.plugin.PathResolver", "com.logicaldoc.util.ShadingPathResolver");
 		properties.put("com.logicaldoc.util.ShadingPathResolver.shadowFolder", System
@@ -72,8 +86,7 @@ public abstract class PluginRegistry {
 		ObjectFactory pluginObjectFactory = ObjectFactory.newInstance(properties);
 		manager = pluginObjectFactory.createManager();
 
-		List<PluginManager.PluginLocation> pluginLocations = locatePlugins(System
-				.getProperty("logicaldoc.app.pluginsdir"));
+		List<PluginManager.PluginLocation> pluginLocations = locatePlugins(pluginsDir);
 
 		if (pluginLocations.size() > 0) {
 			Map<String, Identity> plugins = null;
@@ -185,29 +198,30 @@ public abstract class PluginRegistry {
 		}
 		return exts;
 	}
-	
+
 	/**
 	 * Returns the extensions connected to the specified extension point
 	 * 
 	 * @param pluginId The plugin identifier
 	 * @param extensionPoint The extension point id
-	 * @param sortingParameter Extensions will be sorted by this parameter (if null 'position' parameter is used)
+	 * @param sortingParameter Extensions will be sorted by this parameter (if
+	 *        null 'position' parameter is used)
 	 * @return List of connected extensions
 	 */
 	public List<Extension> getSortedExtensions(String pluginId, String extensionPoint, final String sortingParameter) {
-		Collection<Extension> exts = getExtensions(pluginId,extensionPoint);
-		
+		Collection<Extension> exts = getExtensions(pluginId, extensionPoint);
+
 		// Sort the extensions according to ascending position
 		List<Extension> sortedExts = new ArrayList<Extension>();
 		for (Extension extension : exts) {
 			sortedExts.add(extension);
 		}
-		
+
 		Collections.sort(sortedExts, new Comparator<Extension>() {
 			public int compare(Extension e1, Extension e2) {
-				String sortParam="position";
-				if(StringUtils.isNotEmpty(sortingParameter))
-					sortParam=sortingParameter;
+				String sortParam = "position";
+				if (StringUtils.isNotEmpty(sortingParameter))
+					sortParam = sortingParameter;
 				int position1 = Integer.parseInt(e1.getParameter(sortParam).valueAsString());
 				int position2 = Integer.parseInt(e2.getParameter(sortParam).valueAsString());
 				if (position1 < position2)
@@ -220,7 +234,6 @@ public abstract class PluginRegistry {
 		});
 		return sortedExts;
 	}
-	
 
 	/**
 	 * Retrieves the list of registered plugins
@@ -241,24 +254,25 @@ public abstract class PluginRegistry {
 		PluginRegistry registry = PluginRegistry.getInstance();
 		return registry.getManager().getRegistry().getPluginDescriptor(pluginId);
 	}
-	
+
 	/**
-	 * Iterates over all Plugins and checks for database mappings 
-	 * that must be included into the Configuration
+	 * Iterates over all Plugins and checks for database mappings that must be
+	 * included into the Configuration
+	 * 
 	 * @return
 	 */
-	public String[] getMappings(){
+	public String[] getMappings() {
 		PluginRegistry registry = PluginRegistry.getInstance();
 		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "DatabaseMapping");
 		List<String> mappings = new ArrayList<String>();
-		
+
 		for (Extension extension : exts) {
 			Collection<Parameter> parameters = extension.getParameters("mapping");
 			for (Parameter parameter : parameters) {
 				mappings.add(parameter.valueAsString());
 			}
 		}
-		
-		return mappings.toArray(new String[]{});
+
+		return mappings.toArray(new String[] {});
 	}
 }
