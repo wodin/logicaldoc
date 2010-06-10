@@ -19,16 +19,6 @@
         validationQuery="SELECT 1"
     >
     </db>
-    <db name="Firebird"
-        class="org.firebirdsql.jdbc.FBDriver"
-        protocol="jdbc"
-        subprotocol="firebirdsql"
-        port="3050"
-        sample="jdbc:firebirdsql:[&lt;host&gt;[/&lt;3050&gt;:]]&lt;database&gt;?lc_ctype=WIN1252"
-        dialect="org.hibernate.dialect.FirebirdDialect"
-        validationQuery="select count(*) from rdb$database"
-    >
-    </db>
     <db name="Hsqldb"
         class="org.hsqldb.jdbcDriver"
         protocol="jdbc"
@@ -37,16 +27,6 @@
         sample="jdbc:hsqldb:&lt;databaseName&gt;"
         dialect="org.hibernate.dialect.HSQLDialect"
         validationQuery="SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS"
-    >
-    </db>
-    <db name="MsSQLServer"
-        class="net.sourceforge.jtds.jdbc.Driver"
-        protocol="jdbc"
-        subprotocol="jtds:sqlserver"
-        port="1433"
-        sample="jdbc:jtds:sqlserver://&lt;hostname&gt;[:&lt;1433&gt;]/&lt;dbname&gt;"
-        dialect="org.hibernate.dialect.SQLServerDialect"
-        validationQuery="SELECT 1"
     >
     </db>
     <db name="MySQL"
