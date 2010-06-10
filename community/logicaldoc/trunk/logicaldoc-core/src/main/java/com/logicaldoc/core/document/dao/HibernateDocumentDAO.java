@@ -221,7 +221,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			log.debug("Invoke listeners before store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
-				listener.beforeStore(doc, dictionary);
+				listener.beforeStore(doc, transaction, dictionary);
 			}
 
 			if (doc.getId() == 0) {
@@ -246,7 +246,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
-				listener.afterStore(doc, dictionary);
+				listener.afterStore(doc, transaction, dictionary);
 			}
 
 			// Perhaps some listener may have modified the document

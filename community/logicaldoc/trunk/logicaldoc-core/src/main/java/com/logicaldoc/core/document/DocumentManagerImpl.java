@@ -97,7 +97,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			log.debug("Invoke listeners before checkin");
 			for (DocumentListener listener : listenerManager.getListeners()) {
-				listener.beforeCheckin(document, dictionary);
+				listener.beforeCheckin(document, transaction, dictionary);
 			}
 
 			document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
@@ -137,7 +137,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			log.debug("Invoke listeners after store");
 			for (DocumentListener listener : listenerManager.getListeners()) {
-				listener.afterCheckin(document, dictionary);
+				listener.afterCheckin(document, transaction, dictionary);
 			}
 
 			log.debug("Checked in document " + docId);
