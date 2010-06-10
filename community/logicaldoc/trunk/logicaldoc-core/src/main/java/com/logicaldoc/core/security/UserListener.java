@@ -17,19 +17,21 @@ public interface UserListener {
 	 * Called before a user is stored in the database
 	 * 
 	 * @param user The user to be stored
+	 * @param transaction Transaction informations
 	 * @param dictionary Dictionary of the execution pipeline
 	 * 
 	 * @throws Exception
 	 */
-	public void beforeStore(User user, Map<String, Object> dictionary) throws Exception;
+	public void beforeStore(User user, UserHistory transaction, Map<String, Object> dictionary) throws Exception;
 
 	/**
 	 * Called after a user is stored in the database
 	 * 
 	 * @param user The user to be stored
+	 * @param transaction Transaction informations
 	 * @param dictionary Dictionary of the execution pipeline
 	 * 
 	 * @throws Exception
 	 */
-	public void afterStore(User user, Map<String, Object> dictionary) throws Exception;
+	public void afterStore(User user, UserHistory transaction, Map<String, Object> dictionary) throws Exception;
 }
