@@ -55,7 +55,8 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 			query.append(" and A.docId=" + request.getParameter("docId"));
 		if (request.getParameter("userId") != null)
 			query.append(" and A.userId=" + request.getParameter("userId"));
-
+		query.append(" order by A.date asc ");
+		
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
 
