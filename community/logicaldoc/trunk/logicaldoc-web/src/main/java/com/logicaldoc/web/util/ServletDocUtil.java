@@ -31,7 +31,7 @@ import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDocDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.MimeTypeConfig;
+import com.logicaldoc.util.MimeType;
 
 /**
  * Some helper utilities to download/upload a document and its resources. The
@@ -53,22 +53,6 @@ public class ServletDocUtil {
 
 		UserDocDAO uddao = (UserDocDAO) Context.getInstance().getBean(UserDocDAO.class);
 		uddao.store(userdoc);
-	}
-
-	/**
-	 * extracts the mimetype of the file
-	 */
-	public static String getMimeType(String filename) {
-		if (filename == null) {
-			return null;
-		}
-		String extension = FilenameUtils.getExtension(filename);
-		MimeTypeConfig mtc = (MimeTypeConfig) Context.getInstance().getBean(MimeTypeConfig.class);
-		String mimetype = mtc.getMimeApp(extension);
-		if ((mimetype == null) || mimetype.equals("")) {
-			mimetype = "application/octet-stream";
-		}
-		return mimetype;
 	}
 
 	/**
@@ -104,7 +88,7 @@ public class ServletDocUtil {
 		InputStream is = new FileInputStream(file);
 
 		// get the mimetype
-		String mimetype = ServletDocUtil.getMimeType(filename);
+		String mimetype = MimeType.getByFilename(filename);
 		// it seems everything is fine, so we can now start writing to the
 		// response object
 		response.setContentType(mimetype);

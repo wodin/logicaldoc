@@ -34,7 +34,7 @@ public class MockDocumentHistoryDataServlet extends HttpServlet {
 	}
 
 	private void documentHistory(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		long docId = Long.parseLong(request.getParameter("id"));
+		long docId = Long.parseLong(request.getParameter("docId"));
 		String locale = request.getParameter("locale");
 
 		PrintWriter writer = response.getWriter();

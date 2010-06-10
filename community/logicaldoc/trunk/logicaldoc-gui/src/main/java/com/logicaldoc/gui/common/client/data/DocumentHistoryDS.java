@@ -18,7 +18,7 @@ public class DocumentHistoryDS extends DataSource {
 	private static final int MAX = 100;
 
 	public DocumentHistoryDS(long docId, Integer max) {
-		init("data/documenthistory.xml?sid=" + Session.get().getSid() + "&id=" + docId + "&locale=" + I18N.getLocale()
+		init("data/documenthistory.xml?sid=" + Session.get().getSid() + "&docId=" + docId + "&locale=" + I18N.getLocale()
 				+ "&max=" + (max != null ? max : MAX));
 	}
 

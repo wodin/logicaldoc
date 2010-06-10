@@ -46,8 +46,8 @@ import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
+import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.TagUtil;
-import com.logicaldoc.util.config.MimeTypeConfig;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.SessionBean;
 import com.logicaldoc.web.data.UploadServlet;
@@ -839,14 +839,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		att.setFile(file);
 		att.setFileName(doc.getFileName());
 		String extension = doc.getFileExtension();
-		MimeTypeConfig mtc = (MimeTypeConfig) Context.getInstance().getBean(MimeTypeConfig.class);
-		String mimetype = mtc.getMimeApp(extension);
-
-		if ((mimetype == null) || mimetype.equals("")) {
-			mimetype = "application/octet-stream";
-		}
-
-		att.setMimeType(mimetype);
+		att.setMimeType(MimeType.get(extension));
 
 		if (att != null) {
 			email.addAttachment(2, att);

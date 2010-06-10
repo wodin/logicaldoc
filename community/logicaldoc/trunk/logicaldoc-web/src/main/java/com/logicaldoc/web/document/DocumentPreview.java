@@ -20,7 +20,7 @@ import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.thumbnail.ThumbnailManager;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.ServletDocUtil;
+import com.logicaldoc.util.MimeType;
 
 /**
  * This servlet is responsible for document preview. It searches for the
@@ -114,7 +114,7 @@ public class DocumentPreview extends HttpServlet {
 		InputStream is = new FileInputStream(file);
 
 		// get the mimetype
-		String mimetype = ServletDocUtil.getMimeType(filename);
+		String mimetype = MimeType.getByFilename(filename);
 		// it seems everything is fine, so we can now start writing to the
 		// response object
 		response.setContentType(mimetype);

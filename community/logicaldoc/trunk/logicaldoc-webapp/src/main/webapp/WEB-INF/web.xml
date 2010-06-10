@@ -138,7 +138,7 @@
 
   <servlet>
     <servlet-name>DiscussionsData</servlet-name>
-    <servlet-class>com.logicaldoc.gui.common.server.mock.MockDiscussionsDataServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.data.DiscussionsDataServlet</servlet-class>
   </servlet>
 
   <servlet>

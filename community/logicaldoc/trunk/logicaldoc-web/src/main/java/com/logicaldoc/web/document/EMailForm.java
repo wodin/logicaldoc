@@ -16,7 +16,7 @@ import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.MimeTypeConfig;
+import com.logicaldoc.util.MimeType;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.i18n.Messages;
 
@@ -168,13 +168,7 @@ public class EMailForm {
 		att.setFile(file);
 		att.setFileName(selectedDocument.getFileName());
 		String extension = selectedDocument.getFileExtension();
-		MimeTypeConfig mtc = (MimeTypeConfig) Context.getInstance().getBean(MimeTypeConfig.class);
-		String mimetype = mtc.getMimeApp(extension);
-
-		if ((mimetype == null) || mimetype.equals("")) {
-			mimetype = "application/octet-stream";
-		}
-
+		String mimetype = MimeType.get(extension);
 		att.setMimeType(mimetype);
 
 		if (att != null) {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -45,12 +44,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.hyperic.sigar</groupId>
-			<artifactId>sigar</artifactId>
-			<version>1.6.3</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>net.sf.jpf</groupId>
 			<artifactId>jpf-boot</artifactId>
 			<scope>provided</scope>
@@ -79,21 +72,15 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
-			<!--  				
-				<plugin>
+			<!--
+				<plugin> <groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId> </plugin> <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
-				</plugin>
-				<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<configuration>
-				<linkXref>true</linkXref>
-				<sourceEncoding>utf-8</sourceEncoding>
-				<minimumTokens>100</minimumTokens>
-				<targetJdk>1.5</targetJdk>
-				</configuration>
-				</plugin>-->
+				<artifactId>maven-pmd-plugin</artifactId> <configuration>
+				<linkXref>true</linkXref> <sourceEncoding>utf-8</sourceEncoding>
+				<minimumTokens>100</minimumTokens> <targetJdk>1.5</targetJdk>
+				</configuration> </plugin>
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -108,12 +95,11 @@
 					<reportSet>
 						<reports>
 							<report>dependencies</report>
-							<!--  								<report>project-team</report>
-								<report>mailing-list</report>
-								<report>cim</report>
-								<report>issue-tracking</report>
-								<report>license</report>
-								<report>scm</report>-->
+							<!--
+								<report>project-team</report> <report>mailing-list</report>
+								<report>cim</report> <report>issue-tracking</report>
+								<report>license</report> <report>scm</report>
+							-->
 						</reports>
 					</reportSet>
 				</reportSets>

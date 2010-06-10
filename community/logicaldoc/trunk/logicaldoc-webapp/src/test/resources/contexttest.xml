@@ -16,65 +16,11 @@
 	</bean>
 
 	<bean id="ContextProperties"
-		class="com.logicaldoc.util.config.PropertiesBean">
-	</bean>
+		class="com.logicaldoc.util.config.PropertiesBean" />
 
 	<bean id="Context" class="com.logicaldoc.util.Context"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default" />
-
-	<bean id="MimeTypeConfig"
-		class="com.logicaldoc.util.config.MimeTypeConfig" abstract="false"
-		lazy-init="default" autowire="default" dependency-check="default">
-		<property name="mimeTypes">
-			<props>
-				<prop key="pdf">application/pdf</prop>
-				<prop key="doc">application/msword</prop>
-				<prop key="dot">application/msword</prop>
-				<prop key="sxw">application/vnd.sun.xml.writer</prop>
-				<prop key="stw">
-					application/vnd.sun.xml.writer.template
-				</prop>
-				<prop key="sxg">
-					application/vnd.sun.xml.writer.global
-				</prop>
-				<prop key="sxc">application/vnd.sun.xml.calc</prop>
-				<prop key="stc">
-					application/vnd.sun.xml.calc.template
-				</prop>
-				<prop key="sxi">application/vnd.sun.xml.impress</prop>
-				<prop key="sti">
-					application/vnd.sun.xml.impress.template
-				</prop>
-				<prop key="sxd">application/vnd.sun.xml.draw</prop>
-				<prop key="std">
-					application/vnd.sun.xml.draw.template
-				</prop>
-				<prop key="sxm">application/vnd.sun.xml.math</prop>
-				<prop key="kwd">application/x-kword</prop>
-				<prop key="ksp">application/x-kspread</prop>
-				<prop key="kpr">application/x-kpresenter</prop>
-				<prop key="rtf">text/rtf</prop>
-				<prop key="ps">application/postscript</prop>
-				<prop key="xls">application/msexcel</prop>
-				<prop key="xlt">application/msexcel</prop>
-				<prop key="ppt">application/mspowerpoint</prop>
-				<prop key="pps">application/mspowerpoint</prop>
-				<prop key="pot">application/mspowerpoint</prop>
-				<prop key="html">text/html</prop>
-				<prop key="htm">text/html</prop>
-				<prop key="txt">text/plain</prop>
-				<prop key="mail">text/plain</prop>
-				<prop key="dbf">application/msexcel</prop>
-				<prop key="jpg">image/jpeg</prop>
-				<prop key="jpeg">image/jpeg</prop>
-				<prop key="png">image/png</prop>
-				<prop key="gif">image/gif</prop>
-				<prop key="tif">image/tiff</prop>
-				<prop key="tiff">image/tiff</prop>
-			</props>
-		</property>
-	</bean>
 
 	<!-- DataSource -->
 	<bean id="DataSource"
@@ -127,7 +73,6 @@
 			</props>
 		</property>
 	</bean>
-
 
 	<!--Transaction management-->
 	<bean id="TransactionManager"
