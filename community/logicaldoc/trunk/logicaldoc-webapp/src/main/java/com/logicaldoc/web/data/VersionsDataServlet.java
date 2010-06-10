@@ -32,7 +32,6 @@ public class VersionsDataServlet extends HttpServlet {
 			IOException {
 		SessionBean.validateSession(request);
 
-		long docId = Long.parseLong(request.getParameter("docId"));
 		String locale = request.getParameter("locale");
 
 		response.setContentType("text/xml");
