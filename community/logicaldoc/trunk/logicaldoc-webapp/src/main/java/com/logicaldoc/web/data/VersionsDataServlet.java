@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
+import com.logicaldoc.core.document.dao.VersionDAO;
+import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionBean;
 
@@ -22,7 +23,7 @@ import com.logicaldoc.web.SessionBean;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class DiscussionsDataServlet extends HttpServlet {
+public class VersionsDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -30,6 +31,9 @@ public class DiscussionsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		SessionBean.validateSession(request);
+
+		long docId = Long.parseLong(request.getParameter("docId"));
+		String locale = request.getParameter("locale");
 
 		response.setContentType("text/xml");
 
@@ -41,11 +45,11 @@ public class DiscussionsDataServlet extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
 
-		DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
+		VersionDAO dao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 		StringBuffer query = new StringBuffer(
-				"select A.id, A.subject, A.creatorName, A.replies, A.views, A.lastPost from DiscussionThread A where ");
+				"select A.id, A.username, A.event, A.version, A.fileVersion, A.versionDate, A.comment  from Version A where ");
 		query.append(" A.docId=" + request.getParameter("docId"));
-		query.append(" order by A.lastPost desc ");
+		query.append(" order by A.versionDate asc ");
 
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
@@ -55,15 +59,18 @@ public class DiscussionsDataServlet extends HttpServlet {
 		 */
 		for (Object record : records) {
 			Object[] cols = (Object[]) record;
-			writer.print("<discussion>");
+
+			writer.print("<version>");
 			writer.print("<id>" + cols[0] + "</id>");
-			writer.print("<title><![CDATA[" + cols[1] + "]]></title>");
-			writer.print("<user><![CDATA[" + cols[2] + "]]></user>");
-			writer.print("<posts>" + cols[3] + "</posts>");
-			writer.print("<visits>" + cols[4] + "</visits>");
-			writer.print("<lastPost>" + df.format((Date) cols[5]) + "</lastPost>");
-			writer.print("</discussion>");
+			writer.print("<user><![CDATA[" + cols[1] + "]]></user>");
+			writer.print("<event><![CDATA[" + I18N.getMessage((String) cols[2], locale) + "]]></event>");
+			writer.print("<version>" + cols[3] + "</version>");
+			writer.print("<fileVersion>" + cols[4] + "</fileVersion>");
+			writer.print("<date>" + df.format((Date) cols[5]) + "</date>");
+			writer.print("<comment><![CDATA[" + cols[6] + "]]></comment>");
+			writer.print("</version>");
 		}
+
 		writer.write("</list>");
 	}
 }
