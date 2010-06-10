@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.common.server.mock;
+package com.logicaldoc.gui.common.server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,14 +8,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class MockGroupsDataServlet extends HttpServlet {
+public class MockParsersDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		System.out.println("*** Data groups");
+
+		String sid = (String) request.getParameter("sid");
+		if (sid == null)
+			throw new IOException("Invalid session");
 
 		response.setContentType("text/xml");
 
@@ -26,14 +29,16 @@ public class MockGroupsDataServlet extends HttpServlet {
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
-		// Add 5 dummy groups
-		for (int i = 200; i < 205; i++) {
-			writer.print("<group>");
-			writer.print("<id>" + (-i) + "</id>");
-			writer.print("<name>Group " + i + "</name>");
-			writer.print("<description>Description " + i + "</description>");
-			writer.print("<label>Group: Group " + i + "</label>");
-			writer.print("</group>");
+		for (int i = 0; i < 100; i++) {
+			writer.print("<parser>");
+			writer.print("<id>" + Long.toString(100 + i) + "</id>");
+			writer.print("<icon>word</icon>");
+			if(i%2==0)
+				writer.print("<extension>tiff</extension>");
+			else
+				writer.print("<extension>png</extension>");
+			writer.print("<name>Parser p" + i + " </name>");
+			writer.print("</parser>");
 		}
 		writer.write("</list>");
 	}

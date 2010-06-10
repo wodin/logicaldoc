@@ -1,21 +1,22 @@
-package com.logicaldoc.gui.common.server.mock;
+package com.logicaldoc.gui.common.server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class MockUsersDataServlet extends HttpServlet {
+public class MockSessionsDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		System.out.println("*** Data users");
+		System.out.println("*** Data sessions");
 
 		response.setContentType("text/xml");
 
@@ -24,25 +25,24 @@ public class MockUsersDataServlet extends HttpServlet {
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
 
-		String groupId = request.getParameter("groupId");
-
 		PrintWriter writer = response.getWriter();
 		writer.print("<list>");
 
-		// Add 15 dummy users
-		for (int i = 0; i < 15; i++) {
-			writer.print("<user>");
-			writer.print("<id>" + i + "</id>");
+		for (int i = 0; i < 30; i++) {
+			writer.print("<session>");
+			writer.print("<sid>" + UUID.randomUUID().toString() + "</sid>");
+			if (i % 2 == 0) {
+				writer.print("<status>0</status>");
+				writer.print("<statusLabel>Open</statusLabel>");
+			} else {
+				writer.print("<status>2</status>");
+				writer.print("<statusLabel>Closed</statusLabel>");
+			}
 			writer.print("<username>User " + i + "</username>");
-			writer.print("<label>Marco Meschieri " + i + "</label>");
-			writer.print("<groupId>" + (-i) + "</groupId>");
-			writer.print("<active>0</active>");
-			writer.print("<name>Meschieri</name>");
-			writer.print("<firstName>Marco</firstName>");
-			writer.print("<email>m.meschieri@logicalobjects.it</email>");
-			writer.print("<phone>059 2345634</phone>");
-			writer.print("<cell>338 923453245</cell>");
-			writer.print("</user>");
+			writer.print("<created>2010-02-12T11:32:23</created>");
+			writer.print("<renew>2010-02-12T11:32:23</renew>");
+
+			writer.print("</session>");
 		}
 		writer.print("</list>");
 	}

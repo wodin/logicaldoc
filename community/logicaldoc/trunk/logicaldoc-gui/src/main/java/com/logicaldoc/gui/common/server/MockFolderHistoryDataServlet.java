@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.common.server.mock;
+package com.logicaldoc.gui.common.server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,13 +8,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class MockParsersDataServlet extends HttpServlet {
+public class MockFolderHistoryDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
+		System.out.println("*** history");
+
+		long folderId = Long.parseLong(request.getParameter("id"));
+		String locale = request.getParameter("locale");
 
 		String sid = (String) request.getParameter("sid");
 		if (sid == null)
@@ -29,17 +33,21 @@ public class MockParsersDataServlet extends HttpServlet {
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
-		for (int i = 0; i < 100; i++) {
-			writer.print("<parser>");
-			writer.print("<id>" + Long.toString(100 + i) + "</id>");
-			writer.print("<icon>word</icon>");
-			if(i%2==0)
-				writer.print("<extension>tiff</extension>");
-			else
-				writer.print("<extension>png</extension>");
-			writer.print("<name>Parser p" + i + " </name>");
-			writer.print("</parser>");
-		}
+
+		writer.print("<history>");
+		writer.print("<user>Marco Meschieri</user>");
+		writer.print("<event>Subfolder created</event>");
+		writer.print("<date>2010-10-26T11:32:23</date>");
+		writer.print("<comment>comment</comment>");
+		writer.print("</history>");
+
+		writer.print("<history>");
+		writer.print("<user>Marco Meschieri</user>");
+		writer.print("<event>Subfolder created</event>");
+		writer.print("<date>2010-10-26T11:32:23</date>");
+		writer.print("<comment>comment</comment>");
+		writer.print("</history>");
+
 		writer.write("</list>");
 	}
 }

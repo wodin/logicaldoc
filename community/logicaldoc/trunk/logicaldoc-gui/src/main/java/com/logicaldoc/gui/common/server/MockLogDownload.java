@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.common.server.mock;
+package com.logicaldoc.gui.common.server;
 
 import java.io.IOException;
 import java.io.InputStream;

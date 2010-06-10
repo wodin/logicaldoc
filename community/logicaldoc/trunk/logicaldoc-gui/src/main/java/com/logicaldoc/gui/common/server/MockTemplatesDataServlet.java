@@ -1,22 +1,20 @@
-package com.logicaldoc.gui.common.server.mock;
+package com.logicaldoc.gui.common.server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class MockSessionsDataServlet extends HttpServlet {
+public class MockTemplatesDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		System.out.println("*** Data sessions");
 
 		response.setContentType("text/xml");
 
@@ -26,24 +24,23 @@ public class MockSessionsDataServlet extends HttpServlet {
 		response.setHeader("Expires", "0");
 
 		PrintWriter writer = response.getWriter();
-		writer.print("<list>");
+		writer.write("<list>");
 
-		for (int i = 0; i < 30; i++) {
-			writer.print("<session>");
-			writer.print("<sid>" + UUID.randomUUID().toString() + "</sid>");
-			if (i % 2 == 0) {
-				writer.print("<status>0</status>");
-				writer.print("<statusLabel>Open</statusLabel>");
-			} else {
-				writer.print("<status>2</status>");
-				writer.print("<statusLabel>Closed</statusLabel>");
-			}
-			writer.print("<username>User " + i + "</username>");
-			writer.print("<created>2010-02-12T11:32:23</created>");
-			writer.print("<renew>2010-02-12T11:32:23</renew>");
-
-			writer.print("</session>");
+		if ("true".equals(request.getParameter("withempty"))) {
+			writer.print("<template>");
+			writer.print("<id></id>");
+			writer.print("<name> </name>");
+			writer.print("</template>");
 		}
-		writer.print("</list>");
+
+		// Add 30 dummy templates
+		for (int i = 0; i < 30; i++) {
+			writer.print("<template>");
+			writer.print("<id>" + i + "</id>");
+			writer.print("<name>Template" + i + "</name>");
+			writer.print("<description>Description" + i + "</description>");
+			writer.print("</template>");
+		}
+		writer.write("</list>");
 	}
 }
