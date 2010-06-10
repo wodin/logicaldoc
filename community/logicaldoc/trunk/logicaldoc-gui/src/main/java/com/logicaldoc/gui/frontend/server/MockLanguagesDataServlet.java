@@ -1,20 +1,22 @@
-package com.logicaldoc.gui.common.server.mock;
+package com.logicaldoc.gui.frontend.server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class MockTemplatesDataServlet extends HttpServlet {
+public class MockLanguagesDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
+		System.out.println("*** Languages");
 
 		response.setContentType("text/xml");
 
@@ -25,21 +27,12 @@ public class MockTemplatesDataServlet extends HttpServlet {
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
-
-		if ("true".equals(request.getParameter("withempty"))) {
-			writer.print("<template>");
-			writer.print("<id></id>");
-			writer.print("<name> </name>");
-			writer.print("</template>");
-		}
-
-		// Add 30 dummy templates
-		for (int i = 0; i < 30; i++) {
-			writer.print("<template>");
-			writer.print("<id>" + i + "</id>");
-			writer.print("<name>Template" + i + "</name>");
-			writer.print("<description>Description" + i + "</description>");
-			writer.print("</template>");
+		Locale[] locales = Locale.getAvailableLocales();
+		for (int j = 0; j < locales.length; j++) {
+			writer.print("<language>");
+			writer.print("<locale>" + locales[j].toString() + "</locale>");
+			writer.print("<name>" + locales[j].getDisplayLanguage() + "</name>");
+			writer.print("</language>");
 		}
 		writer.write("</list>");
 	}

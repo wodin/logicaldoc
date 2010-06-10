@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.setup.mock;
+package com.logicaldoc.gui.setup.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.setup.client.SetupInfo;

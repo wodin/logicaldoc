@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.common.server.mock;
+package com.logicaldoc.gui.common.server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class MockGarbageDataServlet extends HttpServlet {
+public class MockBookmarksDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -30,14 +30,15 @@ public class MockGarbageDataServlet extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
 		for (int i = 0; i < 100; i++) {
-			writer.print("<document>");
+			writer.print("<bookmark>");
 			writer.print("<id>" + Long.toString(100 + i) + "</id>");
 			writer.print("<icon>word</icon>");
-			writer.print("<title>Title t" + i + "</title>");
-			writer.print("<customId>" + i + "</customId>");
-			writer.print("<lastModified>2010-10-26T11:32:23</lastModified>");
+			writer.print("<name>Title t" + i + "</name>");
+			writer.print("<description>Title t" + i + " description</description>");
+			writer.print("<position>" + i + "</position>");
 			writer.print("<folderId>50</folderId>");
-			writer.print("</document>");
+			writer.print("<docId>" + Long.toString(100 + i) + "</docId>");
+			writer.print("</bookmark>");
 		}
 		writer.write("</list>");
 	}
