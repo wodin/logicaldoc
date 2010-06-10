@@ -188,7 +188,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 * @see com.logicaldoc.core.security.dao.MenuDAO#findChildren(long)
 	 */
 	public List<Menu> findChildren(long parentId) {
-		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId }, null, null);
+		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId }, null,
+				null);
 	}
 
 	/**
@@ -469,7 +470,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				parentHistory.setPath(computePathExtended(folder.getId()));
 
 				parentHistory.setUser(transaction.getUser());
-				if (transaction.getEvent().equals(History.EVENT_FOLDER_CREATED)) {
+				if (transaction.getEvent().equals(History.EVENT_FOLDER_CREATED)
+						|| transaction.getEvent().equals(History.EVENT_FOLDER_MOVED)) {
 					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_CREATED);
 				} else if (transaction.getEvent().equals(History.EVENT_FOLDER_RENAMED)) {
 					parentHistory.setEvent(History.EVENT_FOLDER_SUBFOLDER_RENAMED);
