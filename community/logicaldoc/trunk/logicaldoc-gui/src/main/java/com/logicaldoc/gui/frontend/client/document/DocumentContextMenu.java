@@ -45,12 +45,13 @@ public class DocumentContextMenu extends Menu {
 			}
 		});
 
-		MenuItem copy = new MenuItem();
-		copy.setTitle(I18N.message("copy"));
-		copy.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem cut = new MenuItem();
+		cut.setTitle(I18N.message("cut"));
+		cut.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null)
 					return;
+				Clipboard.getInstance().clear();
 				for (int i = 0; i < selection.length; i++) {
 					String id = selection[i].getAttribute("id");
 					GUIDocument document = new GUIDocument();
@@ -58,6 +59,26 @@ public class DocumentContextMenu extends Menu {
 					document.setTitle(selection[i].getAttribute("title"));
 					document.setIcon(selection[i].getAttribute("icon"));
 					Clipboard.getInstance().add(document);
+					Clipboard.getInstance().setLastAction(Clipboard.CUT);
+				}
+			}
+		});
+
+		MenuItem copy = new MenuItem();
+		copy.setTitle(I18N.message("copy"));
+		copy.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				if (selection == null)
+					return;
+				Clipboard.getInstance().clear();
+				for (int i = 0; i < selection.length; i++) {
+					String id = selection[i].getAttribute("id");
+					GUIDocument document = new GUIDocument();
+					document.setId(Long.parseLong(id));
+					document.setTitle(selection[i].getAttribute("title"));
+					document.setIcon(selection[i].getAttribute("icon"));
+					Clipboard.getInstance().add(document);
+					Clipboard.getInstance().setLastAction(Clipboard.COPY);
 				}
 			}
 		});
@@ -89,6 +110,7 @@ public class DocumentContextMenu extends Menu {
 										TrashPanel.get().appendRecord(record);
 									}
 									list.removeSelectedData();
+									DocumentsPanel.get().showFolderDetails();
 								}
 							});
 						}
@@ -386,11 +408,13 @@ public class DocumentContextMenu extends Menu {
 		boolean enableLock = true;
 		boolean enableUnlock = true;
 		boolean enableImmutable = false;
+		boolean enableDelete = true;
 
 		if (selection != null)
 			for (ListGridRecord record : selection) {
 				if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
 					enableLock = false;
+					cut.setEnabled(false);
 				}
 				if ("blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
 					Long lockUser = record.getAttribute("lockUserId") != null ? Long.parseLong(record
@@ -404,8 +428,9 @@ public class DocumentContextMenu extends Menu {
 		if (folder.hasPermission(Constants.PERMISSION_IMMUTABLE)) {
 			enableImmutable = true;
 			for (ListGridRecord record : selection) {
-				if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable")))
+				if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
 					enableImmutable = false;
+				}
 			}
 		}
 
@@ -415,8 +440,17 @@ public class DocumentContextMenu extends Menu {
 			similar.setEnabled(false);
 		}
 
-		if (!folder.hasPermission(Constants.PERMISSION_DELETE))
-			delete.setEnabled(false);
+		if (!folder.hasPermission(Constants.PERMISSION_DELETE)) {
+			enableDelete = false;
+			cut.setEnabled(false);
+		} else {
+			enableDelete = true;
+			for (ListGridRecord record : selection) {
+				if (!"blank".equals(record.getAttribute("locked")) || !"blank".equals(record.getAttribute("immutable"))) {
+					enableDelete = false;
+				}
+			}
+		}
 
 		if (!folder.hasPermission(Constants.PERMISSION_WRITE)) {
 			links.setEnabled(false);
@@ -424,23 +458,20 @@ public class DocumentContextMenu extends Menu {
 			markUnindexable.setEnabled(false);
 		}
 
-		if (!enableLock) {
-			lock.setEnabled(false);
-			checkout.setEnabled(false);
-		}
-
 		if (!enableUnlock) {
 			if (selection[0].getAttribute("status") == null
 					|| !(selection.length == 1 && Constants.DOC_CHECKED_OUT == Integer.parseInt(selection[0]
 							.getAttribute("status"))))
 				checkin.setEnabled(false);
-			unlockItem.setEnabled(false);
 		}
 
-		if (!enableImmutable)
-			immutable.setEnabled(false);
+		unlockItem.setEnabled(enableUnlock);
+		lock.setEnabled(enableLock);
+		checkout.setEnabled(enableLock);
+		immutable.setEnabled(enableImmutable);
+		delete.setEnabled(enableDelete);
 
-		setItems(download, copy, delete, bookmark, sendMail, similar, links, checkout, checkin, lock, unlockItem,
+		setItems(download, cut, copy, delete, bookmark, sendMail, similar, links, checkout, checkin, lock, unlockItem,
 				immutable, markIndexable, markUnindexable);
 	}
 }

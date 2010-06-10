@@ -1,5 +1,6 @@
 package com.logicaldoc.web.service;
 
+import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,7 +10,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
@@ -19,6 +23,7 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
+import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionBean;
@@ -59,7 +64,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		dao.delete(folderId);
 	}
 
-	static GUIFolder getFolder(String sid, long folderId){
+	static GUIFolder getFolder(String sid, long folderId) {
 		SessionBean.validateSession(sid);
 
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -118,19 +123,20 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			right.setSign(mg.getSign() == 1 ? true : false);
 			right.setArchive(mg.getArchive() == 1 ? true : false);
 			right.setWorkflow(mg.getWorkflow() == 1 ? true : false);
-			
+
 			rights[i] = right;
 			i++;
 		}
-		
+
 		folder.setRights(rights);
+
 		return folder;
 	}
-	
+
 	@Override
 	public GUIFolder getFolder(String sid, long folderId, boolean computePath) {
-		GUIFolder folder=getFolder(sid, folderId);
-		
+		GUIFolder folder = getFolder(sid, folderId);
+
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		if (computePath) {
 			String pathExtended = dao.computePathExtended(folderId);
@@ -259,7 +265,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		menu.setSort(0);
 		menu.setIcon("folder.png");
 		menu.setType(Menu.MENUTYPE_DIRECTORY);
-		for (GUIRight right : folder.getRights()) {
+		GUIFolder parentFolder = getFolder(sid, folder.getParentId());
+		for (GUIRight right : parentFolder.getRights()) {
 			MenuGroup mg = new MenuGroup();
 			mg.setGroupId(right.getEntityId());
 			mg.setWrite(right.isWrite() ? 1 : 0);
@@ -289,13 +296,11 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			return;
 
 		Menu menu = mdao.findById(id);
-		System.out.println("***** menu id: " + menu.getId());
 		boolean sqlerrors = false;
 		menu.clearMenuGroups();
 		for (GUIRight right : rights) {
 			MenuGroup mg = new MenuGroup();
 			mg.setGroupId(right.getEntityId());
-			System.out.println("right.getEntityId(): " + right.getEntityId());
 			mg.setWrite(right.isWrite() ? 1 : 0);
 			mg.setAddChild(right.isAdd() ? 1 : 0);
 			mg.setManageSecurity(right.isSecurity() ? 1 : 0);
@@ -326,6 +331,136 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			history.setEvent(History.EVENT_FOLDER_PERMISSION);
 			history.setSessionId(sid);
 			mdao.store(menu, history);
+		}
+	}
+
+	@Override
+	public void paste(String sid, long[] docIds, long folderId, String action) {
+		if (action.equals(Clipboard.CUT))
+			cut(sid, docIds, folderId);
+		else if (action.equals(Clipboard.COPY))
+			copy(sid, docIds, folderId);
+	}
+
+	private void cut(String sid, long[] docIds, long folderId) {
+		SessionBean.validateSession(sid);
+
+		DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Menu selectedMenuFolder = menuDao.findById(folderId);
+		try {
+			boolean skippedSome = false;
+			boolean lockedSome = false;
+			for (long id : docIds) {
+				Document doc = docDao.findById(id);
+				// Create the document history event
+				History transaction = new History();
+				transaction.setSessionId(sid);
+				transaction.setUser(SessionBean.getSessionUser(sid));
+
+				// Check if the selected document is a shortcut
+				if (doc.getDocRef() != null) {
+					long docId = doc.getDocRef();
+					doc = docDao.findById(docId);
+					if (doc.getFolder().getId() != selectedMenuFolder.getId()) {
+						transaction.setEvent(History.EVENT_SHORTCUT_MOVED);
+						docManager.moveToFolder(doc, selectedMenuFolder, transaction);
+					} else
+						// TODO Message?
+						continue;
+				}
+
+				// The document must be not immutable
+				if (doc.getImmutable() == 1 && !transaction.getUser().isInGroup("admin")) {
+					skippedSome = true;
+					continue;
+				}
+
+				// The document must be not locked
+				if (doc.getStatus() != Document.DOC_UNLOCKED || doc.getExportStatus() != Document.EXPORT_UNLOCKED) {
+					lockedSome = true;
+					continue;
+				}
+
+				docManager.moveToFolder(doc, selectedMenuFolder, transaction);
+			}
+			if (skippedSome || lockedSome) {
+				// TODO Message?
+			}
+		} catch (AccessControlException e) {
+			// TODO Message?
+		} catch (Exception e) {
+			// TODO Message?
+			log.error("Exception moving documents: " + e.getMessage(), e);
+		}
+	}
+
+	private void copy(String sid, long[] docIds, long folderId) {
+		SessionBean.validateSession(sid);
+
+		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		Menu selectedMenuFolder = menuDao.findById(folderId);
+		DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		try {
+			for (long id : docIds) {
+				Document doc = docDao.findById(id);
+				// Create the document history event
+				History transaction = new History();
+				transaction.setSessionId(sid);
+				transaction.setEvent(History.EVENT_STORED);
+				transaction.setComment("");
+				transaction.setUser(SessionBean.getSessionUser(sid));
+
+				if (doc.getDocRef() == null) {
+					docManager.copyToFolder(doc, selectedMenuFolder, transaction);
+				} else {
+					long docId = doc.getDocRef();
+					doc = docDao.findById(docId);
+					if (doc.getFolder().getId() != selectedMenuFolder.getId()) {
+						transaction.setEvent(History.EVENT_SHORTCUT_STORED);
+						docManager.copyToFolder(doc, selectedMenuFolder, transaction);
+					} else {
+						// TODO Message?
+					}
+				}
+			}
+		} catch (AccessControlException e) {
+			// TODO Message?
+		} catch (Exception e) {
+			// TODO Message?
+			log.error("Exception copying documents: " + e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void pasteAsAlias(String sid, long[] docIds, long folderId) {
+		SessionBean.validateSession(sid);
+
+		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		Menu selectedMenuFolder = menuDao.findById(folderId);
+		DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		try {
+			for (long id : docIds) {
+				Document doc = docDao.findById(id);
+				// Create the document history event
+				History transaction = new History();
+				transaction.setSessionId(sid);
+				transaction.setEvent(History.EVENT_SHORTCUT_STORED);
+				transaction.setComment("");
+				transaction.setUser(SessionBean.getSessionUser(sid));
+
+				if (doc.getFolder().getId() != selectedMenuFolder.getId()) {
+					docManager.createShortcut(doc, selectedMenuFolder, transaction);
+				}
+			}
+		} catch (AccessControlException e) {
+			// TODO Message?
+		} catch (Exception e) {
+			// TODO Message?
+			log.error("Exception copying documents alias: " + e.getMessage(), e);
 		}
 	}
 }

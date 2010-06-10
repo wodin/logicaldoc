@@ -5,10 +5,13 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
+import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
@@ -169,6 +172,22 @@ public class FoldersNavigator extends TreeGrid {
 			}
 		});
 
+		MenuItem pasteItem = new MenuItem();
+		pasteItem.setTitle(I18N.message("paste"));
+		pasteItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				onPaste();
+			}
+		});
+
+		MenuItem pasteAsAliasItem = new MenuItem();
+		pasteAsAliasItem.setTitle(I18N.message("pasteasalias"));
+		pasteAsAliasItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				onPasteAsAlias();
+			}
+		});
+
 		MenuItem rss = new MenuItem();
 		rss.setTitle(I18N.message("rssfeed"));
 		if (!Session.get().isFeatureEnabled("Feature_9")) {
@@ -199,7 +218,16 @@ public class FoldersNavigator extends TreeGrid {
 		if (id == Constants.DOCUMENTS_FOLDERID)
 			exportZip.setEnabled(false);
 
-		contextMenu.setItems(reload, search, addItem, delete, move, exportZip);
+		GUIFolder folder = Session.get().getCurrentFolder();
+		if (!folder.hasPermission(Constants.PERMISSION_WRITE) || Clipboard.getInstance().isEmpty()) {
+			pasteItem.setEnabled(false);
+			pasteAsAliasItem.setEnabled(false);
+		}
+
+		if (Clipboard.getInstance().getLastAction().equals(Clipboard.CUT))
+			pasteAsAliasItem.setEnabled(false);
+
+		contextMenu.setItems(reload, search, addItem, delete, pasteItem, pasteAsAliasItem, move, exportZip);
 		return contextMenu;
 	}
 
@@ -229,7 +257,7 @@ public class FoldersNavigator extends TreeGrid {
 					node.setAttribute(Constants.PERMISSION_ADD, fld.hasPermission(Constants.PERMISSION_ADD));
 					node.setAttribute(Constants.PERMISSION_DELETE, fld.hasPermission(Constants.PERMISSION_DELETE));
 					node.setAttribute(Constants.PERMISSION_RENAME, fld.hasPermission(Constants.PERMISSION_RENAME));
-	
+
 					getTree().add(node, parent);
 					parent = node;
 				}
@@ -313,6 +341,57 @@ public class FoldersNavigator extends TreeGrid {
 				selectRecord(newNode);
 				newFolder.setPathExtended(getPath(newFolder.getId()));
 				Session.get().setCurrentFolder(newFolder);
+			}
+		});
+	}
+
+	private void onPaste() {
+		TreeNode selectedNode = (TreeNode) getSelectedRecord();
+		final long folderId = Long.parseLong(selectedNode.getAttribute("id"));
+		final long[] docIds = new long[Clipboard.getInstance().size()];
+		int i = 0;
+		for (GUIDocument doc : Clipboard.getInstance()) {
+			docIds[i++] = doc.getId();
+		}
+
+		service.paste(Session.get().getSid(), docIds, folderId, Clipboard.getInstance().getLastAction(),
+				new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						DocumentsPanel.get().onFolderSelect(Session.get().getCurrentFolder());
+						Clipboard.getInstance().clear();
+						Log.debug("Paste operation completed.");
+					}
+				});
+	}
+
+	private void onPasteAsAlias() {
+		TreeNode selectedNode = (TreeNode) getSelectedRecord();
+		final long folderId = Long.parseLong(selectedNode.getAttribute("id"));
+		final long[] docIds = new long[Clipboard.getInstance().size()];
+		int i = 0;
+		for (GUIDocument doc : Clipboard.getInstance()) {
+			docIds[i++] = doc.getId();
+		}
+
+		service.pasteAsAlias(Session.get().getSid(), docIds, folderId, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				DocumentsPanel.get().onFolderSelect(Session.get().getCurrentFolder());
+				Clipboard.getInstance().clear();
+				Log.debug("Paste as Alias operation completed.");
 			}
 		});
 	}

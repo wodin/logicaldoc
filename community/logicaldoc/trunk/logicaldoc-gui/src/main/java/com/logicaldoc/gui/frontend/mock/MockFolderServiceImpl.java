@@ -58,4 +58,14 @@ public class MockFolderServiceImpl extends RemoteServiceServlet implements Folde
 	public void rename(String sid, long folderId, String name) {
 
 	}
+
+	@Override
+	public void paste(String sid, long[] docIds, long folderId, String action) {
+
+	}
+
+	@Override
+	public void pasteAsAlias(String sid, long[] docIds, long folderId) {
+
+	}
 }

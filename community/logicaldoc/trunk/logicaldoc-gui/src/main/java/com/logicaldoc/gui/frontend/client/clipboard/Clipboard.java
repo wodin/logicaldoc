@@ -13,11 +13,26 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
  * @since 6.0
  */
 public class Clipboard extends HashSet<GUIDocument> {
+
 	private static final long serialVersionUID = 1L;
+
+	public static final String COPY = "copy";
+
+	public static final String CUT = "cut";
 
 	private static Clipboard instance = new Clipboard();
 
 	private Set<ClipboardObserver> observers = new HashSet<ClipboardObserver>();
+
+	private String lastAction = COPY;
+
+	public String getLastAction() {
+		return lastAction;
+	}
+
+	public void setLastAction(String lastAction) {
+		this.lastAction = lastAction;
+	}
 
 	private Clipboard() {
 		super();

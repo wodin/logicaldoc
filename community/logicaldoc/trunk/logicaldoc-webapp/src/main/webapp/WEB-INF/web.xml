@@ -153,7 +153,7 @@
 
   <servlet>
     <servlet-name>DocumentHistoryData</servlet-name>
-    <servlet-class>com.logicaldoc.gui.frontend.mock.MockDocumentHistoryDataServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.data.DocumentHistoryDataServlet</servlet-class>
   </servlet>
 
   <servlet>

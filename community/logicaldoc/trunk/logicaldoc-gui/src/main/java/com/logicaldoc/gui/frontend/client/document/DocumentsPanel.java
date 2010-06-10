@@ -13,7 +13,6 @@ import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -163,6 +162,15 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		listing.addMember(listingPanel);
 		listing.redraw();
 
+		showFolderDetails();
+
+		hiliteDocId = null;
+	}
+
+	/**
+	 * Shows folders data in the details area.
+	 */
+	public void showFolderDetails() {
 		if (hiliteDocId != null)
 			onSelectedDocument(hiliteDocId, false);
 		else {
@@ -171,8 +179,6 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 			details.addMember(detailPanel);
 			details.redraw();
 		}
-
-		hiliteDocId = null;
 	}
 
 	public void toggleFilters() {
