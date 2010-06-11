@@ -872,7 +872,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		List<Document> results = new ArrayList<Document>();
 		try {
 			List<Object> result = findByJdbcQuery(
-					"select A.ld_id,A.ld_title,A.ld_lastmodified,A.ld_filename from ld_document as A, ld_menu as B where A.ld_folderid=B.ld_id and B.ld_deleted=0 and A.ld_deleted=1 and A.ld_deleteuserid = "
+					"select A.ld_id,A.ld_title,A.ld_lastmodified,A.ld_filename,A.ld_folderid from ld_document as A, ld_menu as B where A.ld_folderid=B.ld_id and B.ld_deleted=0 and A.ld_deleted=1 and A.ld_deleteuserid = "
 							+ userId + " order by A.ld_lastmodified desc", 4, null);
 
 			int i = 0;
@@ -890,6 +890,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				docDeleted.setLastModified(new Date(((Timestamp) record[2]).getTime()));
 				// File name
 				docDeleted.setFileName((String) record[3]);
+
+				Menu folder = new Menu();
+				folder.setId((Long) record[4]);
+				docDeleted.setFolder(folder);
 
 				// Add the document to the List
 				results.add(docDeleted);

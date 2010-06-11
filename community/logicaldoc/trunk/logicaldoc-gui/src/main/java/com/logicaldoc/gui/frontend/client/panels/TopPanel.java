@@ -21,6 +21,8 @@ public class TopPanel extends HLayout {
 		// Prepare the logo image to be shown inside the banner
 		Img logoImage = ItemFactory.newImg("logo_head.png");
 		logoImage.setStyleName("topLogo");
+		logoImage.setWidth(205);
+		logoImage.setHeight(40);
 		addMember(logoImage);
 
 		// Place the search box

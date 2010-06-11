@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionBean;
@@ -102,26 +103,9 @@ public class DocumentsDataServlet extends HttpServlet {
 			writer.print("<docref>" + cols[2] + "</docref>");
 			if (cols[2] != null)
 				writer.print("<icon>alias</icon>");
-			else if (cols[3].toString().toLowerCase().equals("doc") || cols[3].toString().toLowerCase().equals("docx")
-					|| cols[3].toString().toLowerCase().equals("odt"))
-				writer.print("<icon>word</icon>");
-			else if (cols[3].toString().toLowerCase().equals("ppt"))
-				writer.print("<icon>powerpoint</icon>");
-			else if (cols[3].toString().toLowerCase().equals("pdf"))
-				writer.print("<icon>pdf</icon>");
-			else if (cols[3].toString().toLowerCase().equals("jpeg") || cols[3].toString().toLowerCase().equals("jpg")
-					|| cols[3].toString().toLowerCase().equals("gif") || cols[3].toString().toLowerCase().equals("png")
-					|| cols[3].toString().toLowerCase().equals("tif")
-					|| cols[3].toString().toLowerCase().equals("tiff"))
-				writer.print("<icon>picture</icon>");
-			else if (cols[3].toString().toLowerCase().equals("zip"))
-				writer.print("<icon>zip</icon>");
-			else if (cols[3].toString().toLowerCase().equals("txt"))
-				writer.print("<icon>text</icon>");
-			else if (cols[3].toString().toLowerCase().equals("html") || cols[3].toString().toLowerCase().equals("htm"))
-				writer.print("<icon>html</icon>");
-			else
-				writer.print("<icon>generic</icon>");
+			else{
+				writer.print("<icon>"+IconSelector.selectIcon((String)cols[3])+"</icon>");
+			}
 			writer.print("<title><![CDATA[" + cols[4] + "]]></title>");
 			writer.print("<version>" + cols[5] + "</version>");
 			writer.print("<lastModified>" + df.format(cols[6]) + "</lastModified>");
