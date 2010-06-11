@@ -171,7 +171,7 @@
 		<dependency>
 			<groupId>oracle</groupId>
 			<artifactId>oracle</artifactId>
-			<version>9.0.2.0.0</version>
+			<version>10.0.2</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
