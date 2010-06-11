@@ -82,6 +82,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>GarbageData</servlet-name>
+    <servlet-class>com.logicaldoc.web.service.GarbageDataServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>FolderService</servlet-name>
     <servlet-class>com.logicaldoc.web.service.FolderServiceImpl</servlet-class>
   </servlet>
@@ -234,6 +239,11 @@
   <servlet-mapping>
     <servlet-name>DocumentService</servlet-name>
     <url-pattern>/frontend/document</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>GarbageData</servlet-name>
+    <url-pattern>/data/garbage.xml</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

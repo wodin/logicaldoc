@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
+import org.apache.commons.io.FilenameUtils;
+
 import com.logicaldoc.core.ExtensibleObject;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.util.IconSelector;
@@ -411,7 +413,7 @@ public abstract class AbstractDocument extends ExtensibleObject {
 	}
 
 	public String getFileExtension() {
-		return getFileName().substring(getFileName().lastIndexOf(".") + 1).toLowerCase();
+		return FilenameUtils.getExtension(getFileName());
 	}
 
 	public DocumentTemplate getTemplate() {
