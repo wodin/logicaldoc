@@ -7,11 +7,15 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
+import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.SearchService;
+import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
@@ -31,6 +35,8 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 public class DocumentContextMenu extends Menu {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
+	private SearchServiceAsync searchService = (SearchServiceAsync) GWT.create(SearchService.class);
 
 	public DocumentContextMenu(final GUIFolder folder, final ListGrid list) {
 		final ListGridRecord[] selection = list.getSelection();
@@ -139,8 +145,19 @@ public class DocumentContextMenu extends Menu {
 				ListGridRecord record = list.getSelectedRecord();
 				if (record == null)
 					return;
-				// TODO implement
-				SC.warn("To be Implemented");
+				Long id = Long.parseLong(record.getAttribute("id"));
+				searchService.getSimilarityOptions(Session.get().getSid(), id, new AsyncCallback<GUISearchOptions>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUISearchOptions options) {
+						Search.get().setOptions(options);
+						Search.get().search();
+					}
+				});
 			}
 		});
 
@@ -344,6 +361,17 @@ public class DocumentContextMenu extends Menu {
 				for (int i = 0; i < selection.length; i++) {
 					ids[i] = Long.parseLong(selection[i].getAttributeAsString("id"));
 				}
+				documentService.addBookmarks(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						// DO NOTHING
+					}
+				});
 			}
 		});
 

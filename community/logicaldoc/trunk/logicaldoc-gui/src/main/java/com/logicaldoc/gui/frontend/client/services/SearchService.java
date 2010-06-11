@@ -54,4 +54,9 @@ public interface SearchService extends RemoteService {
 	 * Loads the tag cloud from the server
 	 */
 	public GUITag[] getTagCloud();
+
+    /**
+     * Computes the options for a similarity search
+     */
+	public GUISearchOptions getSimilarityOptions(String sid, long docId);
 }

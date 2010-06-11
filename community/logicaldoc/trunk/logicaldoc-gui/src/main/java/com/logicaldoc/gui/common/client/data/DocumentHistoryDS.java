@@ -29,10 +29,6 @@ public class DocumentHistoryDS extends DataSource {
 
 	private void init(String url) {
 		setRecordXPath("/list/history");
-		DataSourceTextField id = new DataSourceTextField("id");
-		id.setPrimaryKey(true);
-		id.setHidden(true);
-		id.setRequired(true);
 		DataSourceTextField user = new DataSourceTextField("user");
 		DataSourceDateTimeField date = new DataSourceDateTimeField("date");
 		DataSourceTextField event = new DataSourceTextField("event");
@@ -47,7 +43,7 @@ public class DocumentHistoryDS extends DataSource {
 		DataSourceTextField path = new DataSourceTextField("path");
 		DataSourceTextField sid = new DataSourceTextField("sid");
 
-		setFields(id, user, date, event, comment, version, title, icon, _new, documentId, folderId, userId, path, sid);
+		setFields(user, date, event, comment, version, title, icon, _new, documentId, folderId, userId, path, sid);
 		setClientOnly(true);
 
 		setDataURL(url);

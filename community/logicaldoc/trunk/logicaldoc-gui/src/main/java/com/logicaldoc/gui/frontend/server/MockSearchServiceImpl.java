@@ -79,9 +79,16 @@ public class MockSearchServiceImpl extends RemoteServiceServlet implements Searc
 			GUITag c = new GUITag();
 			c.setScale(r.nextInt(9) + 1);
 			c.setTag("Tag_" + i);
-			c.setCount(r.nextInt(9)*i+5);
+			c.setCount(r.nextInt(9) * i + 5);
 			cloud[i] = c;
 		}
 		return cloud;
+	}
+
+	@Override
+	public GUISearchOptions getSimilarityOptions(String sid, long docId) {
+		GUISearchOptions opt = new GUISearchOptions();
+		opt.setExpression("pippo pluto");
+		return opt;
 	}
 }
