@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Properties;
-
-import javax.servlet.ServletContext;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -25,7 +22,6 @@ import com.logicaldoc.gui.setup.client.SetupInfo;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.web.ApplicationInitializer;
 import com.smartgwt.client.util.SC;
 
 /**
@@ -185,11 +181,6 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		// Save the LOGICALDOC_REPOSITORY property
 		String logicaldocHome = FilenameUtils.separatorsToSystem(repoFolder.getPath());
 		SystemProperty.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
-
-		ServletContext servletContext = getServletContext();
-		Properties boot = ApplicationInitializer.loadBootProperties(servletContext);
-		boot.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
-		ApplicationInitializer.saveBootProperties(boot, servletContext);
 
 		// Refresh the current logging location
 		try {
