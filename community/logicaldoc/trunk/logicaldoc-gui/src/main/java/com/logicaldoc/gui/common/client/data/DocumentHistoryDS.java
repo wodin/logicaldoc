@@ -18,8 +18,8 @@ public class DocumentHistoryDS extends DataSource {
 	private static final int MAX = 100;
 
 	public DocumentHistoryDS(long docId, Integer max) {
-		init("data/documenthistory.xml?sid=" + Session.get().getSid() + "&docId=" + docId + "&locale=" + I18N.getLocale()
-				+ "&max=" + (max != null ? max : MAX));
+		init("data/documenthistory.xml?sid=" + Session.get().getSid() + "&docId=" + docId + "&locale="
+				+ I18N.getLocale() + "&max=" + (max != null ? max : MAX));
 	}
 
 	public DocumentHistoryDS(long userId, String event, Integer max) {
@@ -29,6 +29,10 @@ public class DocumentHistoryDS extends DataSource {
 
 	private void init(String url) {
 		setRecordXPath("/list/history");
+		DataSourceTextField id = new DataSourceTextField("id");
+		id.setPrimaryKey(true);
+		id.setHidden(true);
+		id.setRequired(true);
 		DataSourceTextField user = new DataSourceTextField("user");
 		DataSourceDateTimeField date = new DataSourceDateTimeField("date");
 		DataSourceTextField event = new DataSourceTextField("event");
@@ -40,8 +44,10 @@ public class DocumentHistoryDS extends DataSource {
 		DataSourceTextField documentId = new DataSourceTextField("docId");
 		DataSourceTextField folderId = new DataSourceTextField("folderId");
 		DataSourceTextField userId = new DataSourceTextField("userId");
+		DataSourceTextField path = new DataSourceTextField("path");
+		DataSourceTextField sid = new DataSourceTextField("sid");
 
-		setFields(user, date, event, comment, version, title, icon, _new, documentId, folderId, userId);
+		setFields(id, user, date, event, comment, version, title, icon, _new, documentId, folderId, userId, path, sid);
 		setClientOnly(true);
 
 		setDataURL(url);
