@@ -16,4 +16,6 @@ public interface SearchServiceAsync {
 	void delete(String sid, String[] names, AsyncCallback<Void> callback);
 
 	void getTagCloud(AsyncCallback<GUITag[]> callback);
+
+	void getSimilarityOptions(String sid, long docId, AsyncCallback<GUISearchOptions> callback);
 }

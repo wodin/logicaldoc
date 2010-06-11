@@ -53,8 +53,8 @@ public class TemplatesDataServlet extends HttpServlet {
 		for (DocumentTemplate template : dao.findAll()) {
 			writer.print("<template>");
 			writer.print("<id>" + template.getId() + "</id>");
-			writer.print("<name>" + template.getName() + "</name>");
-			writer.print("<description>" + template.getDescription() + "</description>");
+			writer.print("<name><![CDATA[" + template.getName() + "]]></name>");
+			writer.print("<description><![CDATA[" + template.getDescription() + "]]></description>");
 			writer.print("</template>");
 		}
 

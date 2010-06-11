@@ -122,6 +122,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>SessionsData</servlet-name>
+    <servlet-class>com.logicaldoc.web.data.SessionsDataServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>FoldersData</servlet-name>
     <servlet-class>com.logicaldoc.web.data.FoldersDataServlet</servlet-class>
   </servlet>
@@ -139,6 +144,11 @@
   <servlet>
     <servlet-name>DiscussionsData</servlet-name>
     <servlet-class>com.logicaldoc.web.data.DiscussionsDataServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>BookmarksData</servlet-name>
+    <servlet-class>com.logicaldoc.web.data.BookmarksDataServlet</servlet-class>
   </servlet>
 
   <servlet>
@@ -262,6 +272,11 @@
   </servlet-mapping>
 
   <servlet-mapping>
+    <servlet-name>SessionsData</servlet-name>
+    <url-pattern>/data/sessions.xml</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
     <servlet-name>FoldersData</servlet-name>
     <url-pattern>/data/folders.xml</url-pattern>
   </servlet-mapping>
@@ -274,6 +289,11 @@
   <servlet-mapping>
     <servlet-name>LinksData</servlet-name>
     <url-pattern>/data/links.xml</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>BookmarksData</servlet-name>
+    <url-pattern>/data/bookmarks.xml</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
