@@ -19,9 +19,7 @@ import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
-import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
-import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -37,11 +35,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 
 	private GUISession session;
 
-	private FolderDAO folderDao;
-
 	private DocumentDAO docDao;
-
-	private VersionDAO versDao;
 
 	private DocumentLinkDAO linkDao;
 
@@ -57,9 +51,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 
-		folderDao = (FolderDAO) context.getBean("FolderDAO");
 		docDao = (DocumentDAO) context.getBean("DocumentDAO");
-		versDao = (VersionDAO) context.getBean("VersionDAO");
 		templateDao = (DocumentTemplateDAO) context.getBean("DocumentTemplateDAO");
 		linkDao = (DocumentLinkDAO) context.getBean("DocumentLinkDAO");
 		dthreadDao = (DiscussionThreadDAO) context.getBean("DiscussionThreadDAO");
@@ -115,6 +107,10 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 		Assert.assertEquals(103, doc.getFolder().getId());
 		Assert.assertEquals("menu103", doc.getFolder().getName());
 
+		doc = service.getById(session.getSid(), 3);
+		Assert.assertEquals(3, doc.getId());
+		Assert.assertEquals("testDocname3", doc.getTitle());
+		
 		// Try with unexisting document
 		doc = service.getById(session.getSid(), 99);
 		Assert.assertNull(doc);
@@ -129,11 +125,12 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 		Assert.assertEquals("testDocname", doc.getTitle());
 		Assert.assertEquals("myself", doc.getPublisher());
 
-		doc = service.getById(session.getSid(), 2);
-
+		doc = service.getById(session.getSid(), 3);
+		Assert.assertEquals("testDocname3", doc.getTitle());
+		
 		doc = service.save(session.getSid(), doc);
 		Assert.assertNotNull(doc);
-		Assert.assertEquals("testDocname2", doc.getTitle());
+		Assert.assertEquals("testDocname3", doc.getTitle());
 		Assert.assertEquals("pluto", doc.getFileName());
 	}
 
