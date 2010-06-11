@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.jdom.Element;
 
@@ -81,6 +82,7 @@ public class LoggingConfigurator {
 				if (child.getAttributeValue("name").equals("File")) {
 					String appender = elem.getAttributeValue("name");
 					String file = getFile(appender);
+
 					LoggerProperty logger = new LoggerProperty();
 					logger.setAppender(appender.toLowerCase());
 					logger.setFile(file);
@@ -223,9 +225,35 @@ public class LoggingConfigurator {
 			category.addContent(appender);
 		}
 
-		//Place the new category just before the root category
-		Element rootCategory=xml.getChild("root");
-		xml.getRootElement().addContent(xml.getRootElement().indexOf(rootCategory)-1, category);
+		// Place the new category just before the root category
+		Element rootCategory = xml.getChild("root");
+		xml.getRootElement().addContent(xml.getRootElement().indexOf(rootCategory) - 1, category);
+	}
+
+	/**
+	 * Sets a common path for all file appenders.
+	 * 
+	 * @param rootPath The path to be used
+	 */
+	public void setLogsRoot(String rootPath) {
+		List list = xml.getAllChild("appender");
+		Iterator iter = list.iterator();
+
+		while (iter.hasNext()) {
+			Element elem = (Element) iter.next();
+			List childs = elem.getChildren("param");
+			Iterator children = childs.iterator();
+
+			while (children.hasNext()) {
+				Element child = (Element) children.next();
+
+				if (child.getAttributeValue("name").equals("File")) {
+					String file = child.getAttributeValue("value");
+					file = FilenameUtils.concat(rootPath, FilenameUtils.getName(file));
+					child.getAttribute("value").setValue(file.replaceAll("\\\\", "/"));
+				}
+			}
+		}
 	}
 
 	public boolean write() {

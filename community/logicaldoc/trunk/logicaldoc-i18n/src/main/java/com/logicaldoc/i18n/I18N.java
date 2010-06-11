@@ -21,10 +21,9 @@ public class I18N {
 
 	public static String message(String key, Locale locale) {
 		try {
-			ResourceBundle bundle = ResourceBundle.getBundle("/i18n/messages", locale);
+			ResourceBundle bundle = ResourceBundle.getBundle("i18n.messages", locale);
 			return bundle.getString(key);
 		} catch (Throwable t) {
-
 		}
 
 		return key;
