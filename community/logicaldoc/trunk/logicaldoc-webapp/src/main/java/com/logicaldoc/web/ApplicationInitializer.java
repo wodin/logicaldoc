@@ -7,6 +7,9 @@ import javax.servlet.ServletContextListener;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Log4jConfigurer;
 
+import com.logicaldoc.util.config.LoggingConfigurator;
+import com.logicaldoc.util.config.PropertiesBean;
+
 /**
  * Listener that initialises relevant system stuffs during application startup
  * 
@@ -30,7 +33,14 @@ public class ApplicationInitializer implements ServletContextListener {
 
 		// Initialize logging
 		String log4jPath = context.getRealPath("/WEB-INF/classes/ldoc-log4j.xml");
+
 		try {
+			//Setup the correct logs folder
+			PropertiesBean config = new PropertiesBean();
+			LoggingConfigurator lconf = new LoggingConfigurator();
+			lconf.setLogsRoot(config.getProperty("conf.logdir"));
+			lconf.write();
+			
 			Log4jConfigurer.initLogging(log4jPath);
 		} catch (Throwable e) {
 			e.printStackTrace();
