@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
@@ -29,7 +30,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	private static Log log = LogFactory.getLog(SettingServiceImpl.class);
 
 	@Override
-	public GUIEmailSettings loadEmailSettings(String sid) {
+	public GUIEmailSettings loadEmailSettings(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		GUIEmailSettings emailSettings = new GUIEmailSettings();
@@ -55,7 +56,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public void saveEmailSettings(String sid, GUIEmailSettings settings) {
+	public void saveEmailSettings(String sid, GUIEmailSettings settings) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		try {
@@ -78,7 +79,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] loadSettings(String sid) {
+	public GUIParameter[] loadSettings(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		TreeSet<String> sortedSet = new TreeSet<String>();
@@ -112,7 +113,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIWebServiceSettings[] loadWSSettings(String sid) {
+	public GUIWebServiceSettings[] loadWSSettings(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		HttpServletRequest request = this.getThreadLocalRequest();
@@ -138,7 +139,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public void saveSettings(String sid, GUIParameter[] settings) {
+	public void saveSettings(String sid, GUIParameter[] settings) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		try {
@@ -156,7 +157,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public void saveWSSettings(String sid, GUIWebServiceSettings wsSettings, GUIWebServiceSettings webDavSettings) {
+	public void saveWSSettings(String sid, GUIWebServiceSettings wsSettings, GUIWebServiceSettings webDavSettings)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		try {

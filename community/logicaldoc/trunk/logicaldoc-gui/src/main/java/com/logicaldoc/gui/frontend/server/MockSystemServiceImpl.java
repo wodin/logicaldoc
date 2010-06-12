@@ -340,6 +340,10 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 
 	@Override
 	public GUIInfo getInfo() {
-		return new GUIInfo();
+		/*
+		 * The product version must be taken from context.properties.
+		 */
+		GUIInfo info = new GUIInfo();
+		return info;
 	}
 }

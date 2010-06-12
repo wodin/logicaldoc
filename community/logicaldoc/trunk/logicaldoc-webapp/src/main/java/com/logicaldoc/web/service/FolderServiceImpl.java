@@ -21,6 +21,7 @@ import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
@@ -41,7 +42,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	private static Log log = LogFactory.getLog(FolderServiceImpl.class);
 
 	@Override
-	public void applyRightsToTree(String sid, long folderId) {
+	public void applyRightsToTree(String sid, long folderId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -57,14 +58,14 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public void delete(String sid, long folderId) {
+	public void delete(String sid, long folderId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		dao.delete(folderId);
 	}
 
-	static GUIFolder getFolder(String sid, long folderId) {
+	static GUIFolder getFolder(String sid, long folderId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -134,7 +135,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public GUIFolder getFolder(String sid, long folderId, boolean computePath) {
+	public GUIFolder getFolder(String sid, long folderId, boolean computePath) throws InvalidSessionException {
 		GUIFolder folder = getFolder(sid, folderId);
 
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -164,7 +165,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public void move(String sid, long folderId, long targetId) {
+	public void move(String sid, long folderId, long targetId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
@@ -215,7 +216,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public void rename(String sid, long folderId, String name) {
+	public void rename(String sid, long folderId, String name) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
@@ -248,7 +249,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public GUIFolder save(String sid, GUIFolder folder) {
+	public GUIFolder save(String sid, GUIFolder folder) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
@@ -335,14 +336,14 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public void paste(String sid, long[] docIds, long folderId, String action) {
+	public void paste(String sid, long[] docIds, long folderId, String action) throws InvalidSessionException {
 		if (action.equals(Clipboard.CUT))
 			cut(sid, docIds, folderId);
 		else if (action.equals(Clipboard.COPY))
 			copy(sid, docIds, folderId);
 	}
 
-	private void cut(String sid, long[] docIds, long folderId) {
+	private void cut(String sid, long[] docIds, long folderId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
@@ -396,7 +397,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		}
 	}
 
-	private void copy(String sid, long[] docIds, long folderId) {
+	private void copy(String sid, long[] docIds, long folderId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -435,7 +436,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public void pasteAsAlias(String sid, long[] docIds, long folderId) {
+	public void pasteAsAlias(String sid, long[] docIds, long folderId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
