@@ -22,6 +22,7 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIADSettings;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
@@ -158,7 +159,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void addUserToGroup(String sid, long groupId, long userId) {
+	public void addUserToGroup(String sid, long groupId, long userId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
@@ -168,21 +169,21 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void deleteGroup(String sid, long groupId) {
+	public void deleteGroup(String sid, long groupId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		groupDao.delete(groupId);
 	}
 
 	@Override
-	public void deleteUser(String sid, long userId) {
+	public void deleteUser(String sid, long userId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		userDao.delete(userId);
 	}
 
 	@Override
-	public GUIGroup getGroup(String sid, long groupId) {
+	public GUIGroup getGroup(String sid, long groupId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		Group group = groupDao.findById(groupId);
@@ -199,7 +200,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIUser getUser(String sid, long userId) {
+	public GUIUser getUser(String sid, long userId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = userDao.findById(userId);
@@ -241,7 +242,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void removeFromGroup(String sid, long groupId, long[] userIds) {
+	public void removeFromGroup(String sid, long groupId, long[] userIds) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
@@ -255,7 +256,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIGroup saveGroup(String sid, GUIGroup group) {
+	public GUIGroup saveGroup(String sid, GUIGroup group) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
@@ -270,12 +271,12 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		grp.setDescription(group.getDescription());
 		groupDao.store(grp);
 		group.setId(grp.getId());
-		
+
 		return group;
 	}
 
 	@Override
-	public GUIUser saveUser(String sid, GUIUser user) {
+	public GUIUser saveUser(String sid, GUIUser user) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -319,7 +320,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUILdapSettings[] loadExtAuthSettings(String sid) {
+	public GUILdapSettings[] loadExtAuthSettings(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		GUILdapSettings[] settings = new GUILdapSettings[2];
@@ -401,7 +402,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void saveExtAuthSettings(String sid, GUILdapSettings ldapSettings, GUIADSettings adSettings) {
+	public void saveExtAuthSettings(String sid, GUILdapSettings ldapSettings, GUIADSettings adSettings) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		BasicLDAPContextSource ldapContextSource = (BasicLDAPContextSource) Context.getInstance().getBean(
@@ -497,7 +498,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUISecuritySettings loadSettings(String sid) {
+	public GUISecuritySettings loadSettings(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		GUISecuritySettings securitySettings = new GUISecuritySettings();
@@ -524,7 +525,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void saveSettings(String sid, GUISecuritySettings settings) {
+	public void saveSettings(String sid, GUISecuritySettings settings) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		try {

@@ -12,6 +12,7 @@ import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.web.AbstractWebappTestCase;
@@ -38,7 +39,7 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testSave() {
+	public void testSave() throws InvalidSessionException {
 		GUIFolder folder = service.getFolder(session.getSid(), 100, false);
 
 		folder = service.save(session.getSid(), folder);
@@ -55,7 +56,7 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testRename() {
+	public void testRename() throws InvalidSessionException {
 		Menu menu = folderDao.findById(100);
 		Assert.assertEquals("menu", menu.getText());
 
@@ -66,7 +67,7 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testApplyRightsToTree() {
+	public void testApplyRightsToTree() throws InvalidSessionException {
 		Menu parentMenu = folderDao.findById(101);
 		Assert.assertNotNull(parentMenu);
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 101, 1));
@@ -91,7 +92,7 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testGetFolder() {
+	public void testGetFolder() throws InvalidSessionException {
 		GUIFolder folder = service.getFolder(session.getSid(), 99, false);
 		Assert.assertNotNull(folder);
 		Assert.assertEquals("menu.admin1", folder.getName());
@@ -110,7 +111,7 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testDelete() {
+	public void testDelete() throws InvalidSessionException {
 		service.delete(session.getSid(), 99);
 		Menu menu = folderDao.findById(99);
 		Assert.assertNull(menu);

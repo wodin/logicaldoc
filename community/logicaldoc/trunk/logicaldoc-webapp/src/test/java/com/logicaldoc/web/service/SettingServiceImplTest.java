@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISession;
@@ -30,7 +31,7 @@ public class SettingServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testSaveEmailSettings() {
+	public void testSaveEmailSettings() throws InvalidSessionException {
 		GUIEmailSettings emailSettings = new GUIEmailSettings();
 		emailSettings.setSmtpServer("smtp.logicalobjects.it");
 		emailSettings.setPort(8080);
@@ -44,7 +45,7 @@ public class SettingServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testSaveSettings() {
+	public void testSaveSettings() throws InvalidSessionException {
 		GUIParameter[] params = new GUIParameter[50];
 		for (int i = 0; i < params.length; i++) {
 			GUIParameter p = new GUIParameter("param" + i + "_name", "Value " + i);
@@ -55,7 +56,7 @@ public class SettingServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testSaveWSSettings() {
+	public void testSaveWSSettings() throws InvalidSessionException {
 		GUIWebServiceSettings[] settings = new GUIWebServiceSettings[2];
 
 		GUIWebServiceSettings wsSettings = new GUIWebServiceSettings();

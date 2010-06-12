@@ -21,6 +21,7 @@ import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
@@ -65,7 +66,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testGetVersionsById() {
+	public void testGetVersionsById() throws InvalidSessionException {
 		GUIVersion[] versions = service.getVersionsById(session.getSid(), 1, 2);
 		Assert.assertNotNull(versions);
 		Assert.assertEquals(2, versions.length);
@@ -83,7 +84,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testGetAttributes() {
+	public void testGetAttributes() throws InvalidSessionException {
 		DocumentTemplate template = new DocumentTemplate();
 		template.setName("test3");
 		template.setValue("a1", "v1");
@@ -99,7 +100,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testGetById() {
+	public void testGetById() throws InvalidSessionException {
 		GUIDocument doc = service.getById(session.getSid(), 1);
 		Assert.assertEquals(1, doc.getId());
 		Assert.assertEquals("testDocname", doc.getTitle());
@@ -110,14 +111,14 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 		doc = service.getById(session.getSid(), 3);
 		Assert.assertEquals(3, doc.getId());
 		Assert.assertEquals("testDocname3", doc.getTitle());
-		
+
 		// Try with unexisting document
 		doc = service.getById(session.getSid(), 99);
 		Assert.assertNull(doc);
 	}
 
 	@Test
-	public void testSave() {
+	public void testSave() throws InvalidSessionException {
 		GUIDocument doc = service.getById(session.getSid(), 1);
 
 		doc = service.save(session.getSid(), doc);
@@ -127,7 +128,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 
 		doc = service.getById(session.getSid(), 3);
 		Assert.assertEquals("testDocname3", doc.getTitle());
-		
+
 		doc = service.save(session.getSid(), doc);
 		Assert.assertNotNull(doc);
 		Assert.assertEquals("testDocname3", doc.getTitle());
@@ -135,7 +136,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testUpdateLink() {
+	public void testUpdateLink() throws InvalidSessionException {
 		DocumentLink link = linkDao.findById(1);
 		Assert.assertNotNull(link);
 		Assert.assertEquals("test", link.getType());
@@ -148,7 +149,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testDeleteLinks() {
+	public void testDeleteLinks() throws InvalidSessionException {
 		DocumentLink link = linkDao.findById(1);
 		Assert.assertNotNull(link);
 		Assert.assertEquals("test", link.getType());
@@ -165,7 +166,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testDelete() {
+	public void testDelete() throws InvalidSessionException {
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		Assert.assertEquals("testDocname", doc.getTitle());
@@ -188,7 +189,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testDeleteDiscussions() {
+	public void testDeleteDiscussions() throws InvalidSessionException {
 		DiscussionThread dthread = dthreadDao.findById(1);
 		Assert.assertNotNull(dthread);
 		Assert.assertEquals("subject", dthread.getSubject());
@@ -200,7 +201,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testStartDiscussion() {
+	public void testStartDiscussion() throws InvalidSessionException {
 		List<DiscussionThread> threads = dthreadDao.findByDocId(1L);
 		Assert.assertNotNull(threads);
 		Assert.assertEquals(2, threads.size());
@@ -218,13 +219,13 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testReplyPost() {
+	public void testReplyPost() throws InvalidSessionException {
 		int commentPosition = service.replyPost(session.getSid(), 1L, 1, "pippo", "logicaldoc");
 		Assert.assertEquals(3, commentPosition);
 	}
 
 	@Test
-	public void testDeletePosts() {
+	public void testDeletePosts() throws InvalidSessionException {
 		DiscussionThread dthread = dthreadDao.findById(1);
 		Assert.assertNotNull(dthread);
 		dthreadDao.initialize(dthread);
@@ -242,7 +243,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testMakeImmutable() {
+	public void testMakeImmutable() throws InvalidSessionException {
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		Assert.assertEquals(0, doc.getImmutable());
@@ -259,7 +260,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testLock() {
+	public void testLock() throws InvalidSessionException {
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		Assert.assertEquals(3L, doc.getLockUserId().longValue());
@@ -285,7 +286,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testLinkDocuments() {
+	public void testLinkDocuments() throws InvalidSessionException {
 		service.linkDocuments(session.getSid(), new long[] { 1, 2 }, new long[] { 3, 4 });
 
 		DocumentLink link = linkDao.findByDocIdsAndType(1, 3, "default");
@@ -301,7 +302,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testRestore() {
+	public void testRestore() throws InvalidSessionException {
 		docDao.delete(4);
 		Assert.assertNull(docDao.findById(4));
 		service.restore(session.getSid(), 4);
@@ -309,7 +310,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testBookmarks() {
+	public void testBookmarks() throws InvalidSessionException {
 		service.addBookmarks(session.getSid(), new long[] { 1, 2 });
 
 		Bookmark book = bookDao.findByUserIdAndDocId(1, 1).get(0);
@@ -340,7 +341,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testMarkHistoryAsRead() {
+	public void testMarkHistoryAsRead() throws InvalidSessionException {
 		List<History> histories = historyDao.findByUserIdAndEvent(1, "data test 01");
 		Assert.assertEquals(2, histories.size());
 		Assert.assertEquals(1, histories.get(0).getNew());
@@ -355,7 +356,7 @@ public class DocumentServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testIndexable() {
+	public void testIndexable() throws InvalidSessionException {
 		Document doc1 = docDao.findById(1);
 		Assert.assertNotNull(doc1);
 		Assert.assertEquals(AbstractDocument.INDEX_INDEXED, doc1.getIndexed());

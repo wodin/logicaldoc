@@ -2,11 +2,13 @@ package com.logicaldoc.web.util;
 
 import java.util.Locale;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 
 /**
  * Various methods related to the user session
@@ -21,8 +23,12 @@ public class SessionUtil {
 
 	private static final long serialVersionUID = 1L;
 
-	public static UserSession validateSession(HttpServletRequest request) throws SecurityException {
-		return validateSession((String) request.getParameter("sid"));
+	public static UserSession validateSession(HttpServletRequest request) throws ServletException {
+		try {
+			return validateSession((String) request.getParameter("sid"));
+		} catch (InvalidSessionException e) {
+			throw new ServletException(e);
+		}
 	}
 
 	/**
@@ -30,26 +36,26 @@ public class SessionUtil {
 	 * 
 	 * @throws SecurityException
 	 */
-	public static UserSession validateSession(String sid) throws SecurityException {
+	public static UserSession validateSession(String sid) throws InvalidSessionException {
 		UserSession session = SessionManager.getInstance().get(sid);
 		if (session == null)
-			throw new SecurityException("Invalid Session");
+			throw new InvalidSessionException("Invalid Session");
 		if (session.getStatus() != UserSession.STATUS_OPEN)
-			throw new SecurityException("Invalid or Expired Session");
+			throw new InvalidSessionException("Invalid or Expired Session");
 		return session;
 	}
 
-	public static Locale currentLocale(String sid) throws SecurityException {
+	public static Locale currentLocale(String sid) throws InvalidSessionException {
 		UserSession session = validateSession(sid);
 		return (Locale) session.getDictionary().get(LOCALE);
 	}
 
-	public static User getSessionUser(String sid) throws SecurityException {
+	public static User getSessionUser(String sid) throws InvalidSessionException {
 		UserSession session = validateSession(sid);
 		return (User) session.getDictionary().get(USER);
 	}
 
-	public static User getSessionUser(HttpServletRequest request) throws SecurityException {
+	public static User getSessionUser(HttpServletRequest request) throws ServletException {
 		UserSession session = validateSession(request);
 		return (User) session.getDictionary().get(USER);
 	}

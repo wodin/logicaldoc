@@ -11,6 +11,7 @@ import javax.servlet.ServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -22,9 +23,13 @@ import com.logicaldoc.web.util.SessionUtil;
 public class SessionFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain next) throws IOException,
 			ServletException {
-		String sid=request.getParameter("sid");
+		String sid = request.getParameter("sid");
 		if (StringUtils.isNotEmpty(sid)) {
-			SessionUtil.validateSession(sid);
+			try {
+				SessionUtil.validateSession(sid);
+			} catch (InvalidSessionException e) {
+				throw new ServletException(e);
+			}
 		} else {
 			next.doFilter(request, response);
 		}
