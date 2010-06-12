@@ -15,7 +15,7 @@ public class MockSearchEngineServiceImpl extends RemoteServiceServlet implements
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public GUISearchEngine getInfos(String sid) {
+	public GUISearchEngine getInfo(String sid) {
 		GUISearchEngine searchEngine = new GUISearchEngine();
 		searchEngine.setEntries(556);
 		searchEngine.setLocked(true);

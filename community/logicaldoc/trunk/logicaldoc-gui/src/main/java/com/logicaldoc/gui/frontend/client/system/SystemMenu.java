@@ -85,7 +85,7 @@ public class SystemMenu extends VLayout {
 		searchAndIndexing.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				service.getInfos(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
+				service.getInfo(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

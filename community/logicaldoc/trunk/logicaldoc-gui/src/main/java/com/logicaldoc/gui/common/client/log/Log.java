@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.log;
 
 import com.google.gwt.core.client.GWT;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -33,7 +34,7 @@ public class Log {
 		EventPanel.get().error(I18N.message("servererror"), m);
 		GWT.log("Server error: " + m, caught);
 
-		if (caught instanceof SecurityException) {
+		if (caught instanceof InvalidSessionException) {
 			// Redirect to the module's login page
 			Session.get().close();
 			String base = GWT.getHostPageBaseURL();
