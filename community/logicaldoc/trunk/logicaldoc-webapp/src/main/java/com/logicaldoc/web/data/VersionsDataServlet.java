@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.SessionBean;
+import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * 
@@ -30,7 +30,7 @@ public class VersionsDataServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		SessionBean.validateSession(request);
+		SessionUtil.validateSession(request);
 
 		String locale = request.getParameter("locale");
 

@@ -26,7 +26,7 @@ import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.SessionBean;
+import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * Implementation of the FolderService
@@ -42,14 +42,14 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void applyRightsToTree(String sid, long folderId) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Collection<Menu> submenus = mdao.findByParentId(folderId);
 		GUIFolder folder = getFolder(sid, folderId, false);
 		for (Menu submenu : submenus) {
 			try {
-				saveRules(sid, submenu.getId(), SessionBean.getSessionUser(sid).getId(), folder.getRights());
+				saveRules(sid, submenu.getId(), SessionUtil.getSessionUser(sid).getId(), folder.getRights());
 			} catch (Exception e) {
 			}
 		}
@@ -58,14 +58,14 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void delete(String sid, long folderId) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		dao.delete(folderId);
 	}
 
 	static GUIFolder getFolder(String sid, long folderId) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu menu = dao.findById(folderId);
@@ -79,7 +79,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		folder.setDescription(menu.getDescription());
 
 		List<String> permissionsList = new ArrayList<String>();
-		long userId = SessionBean.getSessionUser(sid).getId();
+		long userId = SessionUtil.getSessionUser(sid).getId();
 		if (dao.isPermissionEnabled(Permission.READ, folderId, userId))
 			permissionsList.add("read");
 		if (dao.isPermissionEnabled(Permission.WRITE, folderId, userId))
@@ -165,7 +165,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void move(String sid, long folderId, long targetId) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
@@ -176,7 +176,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				return;
 			}
 
-			User user = SessionBean.getSessionUser(sid);
+			User user = SessionUtil.getSessionUser(sid);
 
 			Menu destParentFolder = folderDao.findById(targetId);
 			// Check destParentId: Must be different from the current folder
@@ -216,7 +216,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void rename(String sid, long folderId, String name) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
@@ -231,7 +231,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			menu.setText(name);
 			// Add a folder history entry
 			History history = new History();
-			history.setUser(SessionBean.getSessionUser(sid));
+			history.setUser(SessionUtil.getSessionUser(sid));
 			history.setEvent(History.EVENT_FOLDER_RENAMED);
 			history.setSessionId(sid);
 
@@ -249,7 +249,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public GUIFolder save(String sid, GUIFolder folder) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Menu menu;
@@ -327,7 +327,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		} else {
 			// Add a folder history entry
 			History history = new History();
-			history.setUser(SessionBean.getSessionUser(sid));
+			history.setUser(SessionUtil.getSessionUser(sid));
 			history.setEvent(History.EVENT_FOLDER_PERMISSION);
 			history.setSessionId(sid);
 			mdao.store(menu, history);
@@ -343,7 +343,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	private void cut(String sid, long[] docIds, long folderId) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
@@ -357,7 +357,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				// Create the document history event
 				History transaction = new History();
 				transaction.setSessionId(sid);
-				transaction.setUser(SessionBean.getSessionUser(sid));
+				transaction.setUser(SessionUtil.getSessionUser(sid));
 
 				// Check if the selected document is a shortcut
 				if (doc.getDocRef() != null) {
@@ -397,7 +397,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	private void copy(String sid, long[] docIds, long folderId) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu selectedMenuFolder = menuDao.findById(folderId);
@@ -411,7 +411,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				transaction.setSessionId(sid);
 				transaction.setEvent(History.EVENT_STORED);
 				transaction.setComment("");
-				transaction.setUser(SessionBean.getSessionUser(sid));
+				transaction.setUser(SessionUtil.getSessionUser(sid));
 
 				if (doc.getDocRef() == null) {
 					docManager.copyToFolder(doc, selectedMenuFolder, transaction);
@@ -436,7 +436,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void pasteAsAlias(String sid, long[] docIds, long folderId) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu selectedMenuFolder = menuDao.findById(folderId);
@@ -450,7 +450,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				transaction.setSessionId(sid);
 				transaction.setEvent(History.EVENT_SHORTCUT_STORED);
 				transaction.setComment("");
-				transaction.setUser(SessionBean.getSessionUser(sid));
+				transaction.setUser(SessionUtil.getSessionUser(sid));
 
 				if (doc.getFolder().getId() != selectedMenuFolder.getId()) {
 					docManager.createShortcut(doc, selectedMenuFolder, transaction);

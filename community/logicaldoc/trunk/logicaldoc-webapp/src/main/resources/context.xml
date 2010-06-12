@@ -46,7 +46,7 @@
 
 	<!-- Hibernate SessionFactory -->
 	<bean id="SessionFactory"
-		class="com.logicaldoc.web.LogicalDOCSessionFactoryBean"
+		class="com.logicaldoc.util.spring.LogicalDOCSessionFactoryBean"
 		abstract="false" lazy-init="default" autowire="default"
 		dependency-check="default">
 		<property name="dataSource">

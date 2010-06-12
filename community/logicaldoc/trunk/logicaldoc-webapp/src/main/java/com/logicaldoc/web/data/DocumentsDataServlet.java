@@ -19,7 +19,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.SessionBean;
+import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * 
@@ -34,7 +34,7 @@ public class DocumentsDataServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		SessionBean.validateSession(request);
+		SessionUtil.validateSession(request);
 
 		/*
 		 * Load some filters from the current request

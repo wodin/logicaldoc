@@ -12,7 +12,7 @@ import com.logicaldoc.core.document.Bookmark;
 import com.logicaldoc.core.document.dao.BookmarkDAO;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.SessionBean;
+import com.logicaldoc.web.util.SessionUtil;
 
 public class BookmarksDataServlet extends HttpServlet {
 
@@ -21,7 +21,7 @@ public class BookmarksDataServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		UserSession session = SessionBean.validateSession(request);
+		UserSession session = SessionUtil.validateSession(request);
 
 		response.setContentType("text/xml");
 

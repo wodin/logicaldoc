@@ -28,7 +28,7 @@
   </context-param>
 
   <filter>
-    <filter-name>Charset Filter</filter-name>
+    <filter-name>CharsetFilter</filter-name>
     <filter-class>com.logicaldoc.web.CharsetFilter</filter-class>
     <init-param>
       <param-name>requestEncoding</param-name>
@@ -36,11 +36,21 @@
     </init-param>
   </filter>
 
+  <filter>
+    <filter-name>SessionFilter</filter-name>
+    <filter-class>com.logicaldoc.web.SessionFilter</filter-class>
+  </filter>
+
   <!-- mappings -->
   <filter-mapping>
-    <filter-name>Charset Filter</filter-name>
+    <filter-name>SessionFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+  <filter-mapping>
+    <filter-name>CharsetFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
   <!-- Application initializer -->
   <listener>
     <listener-class>com.logicaldoc.web.ApplicationInitializer</listener-class>
