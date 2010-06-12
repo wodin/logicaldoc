@@ -1,4 +1,4 @@
-package com.logicaldoc.web;
+package com.logicaldoc.util.spring;
 
 import java.util.Arrays;
 import java.util.LinkedList;

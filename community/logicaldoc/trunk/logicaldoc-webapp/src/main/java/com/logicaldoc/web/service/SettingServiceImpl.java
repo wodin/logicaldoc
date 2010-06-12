@@ -14,7 +14,7 @@ import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.web.SessionBean;
+import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * Implementation of the SettingService
@@ -30,7 +30,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public GUIEmailSettings loadEmailSettings(String sid) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		GUIEmailSettings emailSettings = new GUIEmailSettings();
 		try {
@@ -56,7 +56,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public void saveEmailSettings(String sid, GUIEmailSettings settings) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		try {
 			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
@@ -79,7 +79,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public GUIParameter[] loadSettings(String sid) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		TreeSet<String> sortedSet = new TreeSet<String>();
 		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
@@ -113,7 +113,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public GUIWebServiceSettings[] loadWSSettings(String sid) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		HttpServletRequest request = this.getThreadLocalRequest();
 		String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
@@ -139,7 +139,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public void saveSettings(String sid, GUIParameter[] settings) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		try {
 			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
@@ -157,7 +157,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public void saveWSSettings(String sid, GUIWebServiceSettings wsSettings, GUIWebServiceSettings webDavSettings) {
-		SessionBean.validateSession(sid);
+		SessionUtil.validateSession(sid);
 
 		try {
 			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");

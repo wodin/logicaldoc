@@ -23,10 +23,6 @@ public class SessionsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 
-		System.out.println("*** Data servlet sessions");
-
-		response.setContentType("text/xml");
-
 		// Headers required by Internet Explorer
 		response.setHeader("Pragma", "public");
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
@@ -34,8 +30,6 @@ public class SessionsDataServlet extends HttpServlet {
 
 		List<UserSession> sessions = SessionManager.getInstance().getSessions();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
-		System.out.println("Sessions: " + sessions.size());
 
 		PrintWriter writer = response.getWriter();
 		writer.print("<list>");

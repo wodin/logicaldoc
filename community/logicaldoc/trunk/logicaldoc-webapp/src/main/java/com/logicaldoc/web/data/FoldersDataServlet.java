@@ -14,7 +14,7 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.SessionBean;
+import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * 
@@ -29,7 +29,7 @@ public class FoldersDataServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		SessionBean.validateSession(request);
+		SessionUtil.validateSession(request);
 
 		long parent = Long.parseLong(request.getParameter("parent"));
 
@@ -55,22 +55,22 @@ public class FoldersDataServlet extends HttpServlet {
 			writer.print("<"
 					+ Constants.PERMISSION_ADD
 					+ ">"
-					+ dao.isPermissionEnabled(Permission.ADD_CHILD, Menu.MENUID_DOCUMENTS, SessionBean.getSessionUser(
+					+ dao.isPermissionEnabled(Permission.ADD_CHILD, Menu.MENUID_DOCUMENTS, SessionUtil.getSessionUser(
 							request).getId()) + "</" + Constants.PERMISSION_ADD + ">");
 			writer.print("<"
 					+ Constants.PERMISSION_DELETE
 					+ ">"
-					+ dao.isPermissionEnabled(Permission.DELETE, Menu.MENUID_DOCUMENTS, SessionBean.getSessionUser(
+					+ dao.isPermissionEnabled(Permission.DELETE, Menu.MENUID_DOCUMENTS, SessionUtil.getSessionUser(
 							request).getId()) + "</" + Constants.PERMISSION_DELETE + ">");
 			writer.print("<"
 					+ Constants.PERMISSION_RENAME
 					+ ">"
-					+ dao.isPermissionEnabled(Permission.RENAME, Menu.MENUID_DOCUMENTS, SessionBean.getSessionUser(
+					+ dao.isPermissionEnabled(Permission.RENAME, Menu.MENUID_DOCUMENTS, SessionUtil.getSessionUser(
 							request).getId()) + "</" + Constants.PERMISSION_RENAME + ">");
 			writer.print("<"
 					+ Constants.PERMISSION_WRITE
 					+ ">"
-					+ dao.isPermissionEnabled(Permission.WRITE, Menu.MENUID_DOCUMENTS, SessionBean.getSessionUser(
+					+ dao.isPermissionEnabled(Permission.WRITE, Menu.MENUID_DOCUMENTS, SessionUtil.getSessionUser(
 							request).getId()) + "</" + Constants.PERMISSION_WRITE + ">");
 			writer.print("</folder>");
 			writer.write("</list>");
@@ -98,22 +98,22 @@ public class FoldersDataServlet extends HttpServlet {
 			writer.print("<"
 					+ Constants.PERMISSION_ADD
 					+ ">"
-					+ dao.isPermissionEnabled(Permission.ADD_CHILD, Long.parseLong(cols[0].toString()), SessionBean
+					+ dao.isPermissionEnabled(Permission.ADD_CHILD, Long.parseLong(cols[0].toString()), SessionUtil
 							.getSessionUser(request).getId()) + "</" + Constants.PERMISSION_ADD + ">");
 			writer.print("<"
 					+ Constants.PERMISSION_DELETE
 					+ ">"
-					+ dao.isPermissionEnabled(Permission.DELETE, Long.parseLong(cols[0].toString()), SessionBean
+					+ dao.isPermissionEnabled(Permission.DELETE, Long.parseLong(cols[0].toString()), SessionUtil
 							.getSessionUser(request).getId()) + "</" + Constants.PERMISSION_DELETE + ">");
 			writer.print("<"
 					+ Constants.PERMISSION_RENAME
 					+ ">"
-					+ dao.isPermissionEnabled(Permission.RENAME, Long.parseLong(cols[0].toString()), SessionBean
+					+ dao.isPermissionEnabled(Permission.RENAME, Long.parseLong(cols[0].toString()), SessionUtil
 							.getSessionUser(request).getId()) + "</" + Constants.PERMISSION_RENAME + ">");
 			writer.print("<"
 					+ Constants.PERMISSION_WRITE
 					+ ">"
-					+ dao.isPermissionEnabled(Permission.WRITE, Long.parseLong(cols[0].toString()), SessionBean
+					+ dao.isPermissionEnabled(Permission.WRITE, Long.parseLong(cols[0].toString()), SessionUtil
 							.getSessionUser(request).getId()) + "</" + Constants.PERMISSION_WRITE + ">");
 			writer.print("</folder>");
 		}

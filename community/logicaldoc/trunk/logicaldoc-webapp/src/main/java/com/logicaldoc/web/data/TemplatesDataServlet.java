@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.SessionBean;
+import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * 
@@ -26,7 +26,7 @@ public class TemplatesDataServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		SessionBean.validateSession(request);
+		SessionUtil.validateSession(request);
 
 		response.setContentType("text/xml");
 

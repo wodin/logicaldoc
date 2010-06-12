@@ -1,9 +1,13 @@
 package com.logicaldoc.web;
 
+import java.io.File;
+import java.io.IOException;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Log4jConfigurer;
 
@@ -35,12 +39,12 @@ public class ApplicationInitializer implements ServletContextListener {
 		String log4jPath = context.getRealPath("/WEB-INF/classes/ldoc-log4j.xml");
 
 		try {
-			//Setup the correct logs folder
+			// Setup the correct logs folder
 			PropertiesBean config = new PropertiesBean();
 			LoggingConfigurator lconf = new LoggingConfigurator();
 			lconf.setLogsRoot(config.getProperty("conf.logdir"));
 			lconf.write();
-			
+
 			Log4jConfigurer.initLogging(log4jPath);
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -60,6 +64,14 @@ public class ApplicationInitializer implements ServletContextListener {
 			Log4jConfigurer.shutdownLogging();
 			Log4jConfigurer.initLogging(log4jPath);
 		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+
+		// Clean the upload folder
+		File uploadDir = new File(context.getRealPath("upload"));
+		try {
+			FileUtils.forceDelete(uploadDir);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

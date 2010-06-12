@@ -15,7 +15,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.SessionBean;
+import com.logicaldoc.web.util.SessionUtil;
 
 public class GarbageDataServlet extends HttpServlet {
 
@@ -24,7 +24,7 @@ public class GarbageDataServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		UserSession session = SessionBean.validateSession(request);
+		UserSession session = SessionUtil.validateSession(request);
 
 		response.setContentType("text/xml");
 

@@ -5,11 +5,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Cursor;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -52,7 +52,7 @@ public class LoginInfo extends VLayout {
 					public void onSuccess(Void arg0) {
 						Session.get().close();
 						String base = GWT.getHostPageBaseURL();
-						redirect(base
+						Util.redirect(base
 								+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName()
 										+ ".jsp"));
 					}
@@ -60,36 +60,9 @@ public class LoginInfo extends VLayout {
 			}
 
 		});
-		// logout.addClickHandler(new
-		// com.google.gwt.event.dom.client.ClickHandler() {
-		// @Override
-		// public void onClick(com.google.gwt.event.dom.client.ClickEvent event)
-		// {
-		// securityService.logout(Session.get().getSid(), new
-		// AsyncCallback<Void>() {
-		// public void onFailure(Throwable caught) {
-		// Log.serverError(caught);
-		// }
-		//
-		// @Override
-		// public void onSuccess(Void arg0) {
-		// Session.get().close();
-		// String base = GWT.getHostPageBaseURL();
-		// redirect(base
-		// + (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" +
-		// GWT.getModuleName()
-		// + ".jsp"));
-		// }
-		// });
-		// }
-		// });
+	
 
 		addMember(user);
 		addMember(logout);
 	}
-
-	native void redirect(String url)
-	/*-{
-		$wnd.location.replace(url);
-	}-*/;
 }
