@@ -4,7 +4,9 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
@@ -13,6 +15,9 @@ import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
+import com.logicaldoc.gui.frontend.client.services.SystemService;
+import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
+import com.smartgwt.client.util.SC;
 
 /**
  * The Frontend entry point
@@ -27,6 +32,8 @@ public class Frontend implements EntryPoint {
 	private LoginPanel loginPanel;
 
 	private MainPanel mainPanel;
+	
+	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
 
 	/**
 	 * @return singleton Main instance
@@ -74,13 +81,23 @@ public class Frontend implements EntryPoint {
 		Window.enableScrolling(false);
 		Window.setMargin("0px");
 
-		loginPanel = new LoginPanel();
 		mainPanel = MainPanel.get();
 
-		RootPanel.get().add(loginPanel);
+		systemService.getInfo(new AsyncCallback<GUIInfo>(){
+			@Override
+			public void onFailure(Throwable error) {
+				SC.warn(error.getMessage());
+			}
 
-		// Remove the loading frame
-		RootPanel.getBodyElement().removeChild(RootPanel.get("loadingWrapper").getElement());
+			@Override
+			public void onSuccess(GUIInfo info) {
+				loginPanel = new LoginPanel(info);
+				RootPanel.get().add(loginPanel);
+
+				// Remove the loading frame
+				RootPanel.getBodyElement().removeChild(RootPanel.get("loadingWrapper").getElement());
+			}
+		});
 	}
 
 	public void showLogin() {

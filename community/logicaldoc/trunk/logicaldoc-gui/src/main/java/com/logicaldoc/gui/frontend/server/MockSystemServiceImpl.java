@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
+import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
@@ -334,6 +335,11 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 
 	@Override
 	public void saveFolders(String sid, GUIParameter[] folders) {
-		// TODO Save the values into the context properties.
+
+	}
+
+	@Override
+	public GUIInfo getInfo() {
+		return new GUIInfo();
 	}
 }

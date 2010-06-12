@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 
 /**
@@ -19,12 +20,12 @@ public interface FolderService extends RemoteService {
 	 * @param folder The folder to save
 	 * @return The saved folder
 	 */
-	public GUIFolder save(String sid, GUIFolder folder);
+	public GUIFolder save(String sid, GUIFolder folder) throws InvalidSessionException;
 
 	/**
 	 * Renames the given folder
 	 */
-	public void rename(String sid, long folderId, String name);
+	public void rename(String sid, long folderId, String name) throws InvalidSessionException;
 
 	/**
 	 * Applies all security settings to a tree of folders
@@ -32,7 +33,7 @@ public interface FolderService extends RemoteService {
 	 * @param sid The session ID
 	 * @param folderId The ID of the root folder
 	 */
-	public void applyRightsToTree(String sid, long folderId);
+	public void applyRightsToTree(String sid, long folderId) throws InvalidSessionException;
 
 	/**
 	 * Gets the Folder initializing the permissions.
@@ -41,17 +42,17 @@ public interface FolderService extends RemoteService {
 	 * @param boolean True if the complete path must be retrieved
 	 * @return The Folder bean
 	 */
-	public GUIFolder getFolder(String sid, long folderId, boolean computePath);
+	public GUIFolder getFolder(String sid, long folderId, boolean computePath) throws InvalidSessionException;
 
 	/**
 	 * Deletes the folder and the subtree
 	 */
-	public void delete(String sid, long folderId);
+	public void delete(String sid, long folderId) throws InvalidSessionException;
 
 	/**
 	 * Moves a folder under a target folder
 	 */
-	public void move(String sid, long folderId, long targetId);
+	public void move(String sid, long folderId, long targetId) throws InvalidSessionException;
 
 	/**
 	 * Pastes documents into the target folder.
@@ -60,7 +61,7 @@ public interface FolderService extends RemoteService {
 	 * @param folderId The target folder identifier.
 	 * @param action The action selectee (Clipboard#COPY or Clipboard#COPY).
 	 */
-	public void paste(String sid, long[] docIds, long folderId, String action);
+	public void paste(String sid, long[] docIds, long folderId, String action) throws InvalidSessionException;
 
 	/**
 	 * Pastes documents alias into the target folder.
@@ -68,5 +69,5 @@ public interface FolderService extends RemoteService {
 	 * @param docIds The documents alias identifiers.
 	 * @param folderId The target folder identifier.
 	 */
-	public void pasteAsAlias(String sid, long[] docIds, long folderId);
+	public void pasteAsAlias(String sid, long[] docIds, long folderId) throws InvalidSessionException;
 }

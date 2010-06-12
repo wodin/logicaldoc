@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
@@ -20,7 +21,7 @@ public interface DocumentService extends RemoteService {
 	/**
 	 * Retrieves a specific document by its ID
 	 */
-	public GUIDocument getById(String sid, long docId);
+	public GUIDocument getById(String sid, long docId) throws InvalidSessionException;
 
 	/**
 	 * Saves the document in the DB
@@ -28,24 +29,24 @@ public interface DocumentService extends RemoteService {
 	 * @param document The document to save
 	 * @return The saved document
 	 */
-	public GUIDocument save(String sid, GUIDocument document);
+	public GUIDocument save(String sid, GUIDocument document) throws InvalidSessionException;
 
 	/**
 	 * Retrieves all attributes of the specified template
 	 */
-	public GUIExtendedAttribute[] getAttributes(String sid, long templateId);
+	public GUIExtendedAttribute[] getAttributes(String sid, long templateId) throws InvalidSessionException;
 
 	/**
 	 * Retrieves two specific versions by its ID
 	 */
-	public GUIVersion[] getVersionsById(String sid, long id1, long id2);
+	public GUIVersion[] getVersionsById(String sid, long id1, long id2) throws InvalidSessionException;
 
 	/**
 	 * Sends a document as email(attachment or download ticket)
 	 * 
 	 * @return "ok" otherwise an error code
 	 */
-	public String sendAsEmail(String sid, GUIEmail email);
+	public String sendAsEmail(String sid, GUIEmail email) throws InvalidSessionException;
 
 	/**
 	 * Updates the links type
@@ -54,62 +55,63 @@ public interface DocumentService extends RemoteService {
 	 * @param id The link identifier
 	 * @param type The new type to be set
 	 */
-	public void updateLink(String sid, long id, String type);
+	public void updateLink(String sid, long id, String type) throws InvalidSessionException;
 
 	/**
 	 * Deletes a selection of links
 	 */
-	public void deleteLinks(String sid, long[] ids);
+	public void deleteLinks(String sid, long[] ids) throws InvalidSessionException;
 
 	/**
 	 * Links a set of documents
 	 */
-	public void linkDocuments(String sid, long[] inDocIds, long[] outDocIds);
+	public void linkDocuments(String sid, long[] inDocIds, long[] outDocIds) throws InvalidSessionException;
 
 	/**
 	 * Deletes a selection of documents
 	 */
-	public void delete(String sid, long[] ids);
+	public void delete(String sid, long[] ids) throws InvalidSessionException;
 
 	/**
 	 * Deletes a selection of discussions
 	 */
-	public void deleteDiscussions(String sid, long[] ids);
+	public void deleteDiscussions(String sid, long[] ids) throws InvalidSessionException;
 
 	/**
 	 * Starts a new discussion on the given document
 	 */
-	public long startDiscussion(String sid, long docId, String title, String message);
+	public long startDiscussion(String sid, long docId, String title, String message) throws InvalidSessionException;
 
 	/**
 	 * Starts a new discussion on the given document
 	 */
-	public int replyPost(String sid, long discussionId, int replyTo, String title, String message);
+	public int replyPost(String sid, long discussionId, int replyTo, String title, String message)
+			throws InvalidSessionException;
 
 	/**
 	 * Deletes a selection of posts
 	 */
-	public void deletePosts(String sid, long discussionId, int[] postIds);
+	public void deletePosts(String sid, long discussionId, int[] postIds) throws InvalidSessionException;
 
 	/**
 	 * Makes immutable a set of documents
 	 */
-	public void makeImmutable(String sid, long[] docIds, String comment);
+	public void makeImmutable(String sid, long[] docIds, String comment) throws InvalidSessionException;
 
 	/**
 	 * Unlocks a set of documents
 	 */
-	public void unlock(String sid, long[] docIds);
+	public void unlock(String sid, long[] docIds) throws InvalidSessionException;
 
 	/**
 	 * Locks a set of documents
 	 */
-	public void lock(String sid, long[] docIds, String comment);
+	public void lock(String sid, long[] docIds, String comment) throws InvalidSessionException;
 
 	/**
 	 * Checks out the document
 	 */
-	public void checkout(String sid, long docId);
+	public void checkout(String sid, long docId) throws InvalidSessionException;
 
 	/**
 	 * Adds new documents previously uploaded
@@ -121,7 +123,8 @@ public interface DocumentService extends RemoteService {
 	 * @param importZip If .zip files have to be unpacked and the contained
 	 *        documents imported
 	 */
-	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip);
+	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip)
+			throws InvalidSessionException;
 
 	/**
 	 * Checks-in a new document version
@@ -131,27 +134,27 @@ public interface DocumentService extends RemoteService {
 	 * @param commnet The operation comment
 	 * @param major True if this is a major version
 	 */
-	public void checkin(String sid, long docId, String comment, boolean major);
+	public void checkin(String sid, long docId, String comment, boolean major) throws InvalidSessionException;
 
 	/**
 	 * Restores a given document
 	 */
-	public void restore(String sid, long docId);
+	public void restore(String sid, long docId) throws InvalidSessionException;
 
 	/**
 	 * Adds new bookmarks
 	 */
-	public void addBookmarks(String sid, long[] docIds);
+	public void addBookmarks(String sid, long[] docIds) throws InvalidSessionException;
 
 	/**
 	 * Deletes a set of bookmarks
 	 */
-	public void deleteBookmarks(String sid, long[] bookmarkIds);
+	public void deleteBookmarks(String sid, long[] bookmarkIds) throws InvalidSessionException;
 
 	/**
 	 * Updates a single bookmark's data
 	 */
-	public void updateBookmark(String sid, GUIBookmark bookmark);
+	public void updateBookmark(String sid, GUIBookmark bookmark) throws InvalidSessionException;
 
 	/**
 	 * Marks as read the histories related to the current user and the given
@@ -160,15 +163,15 @@ public interface DocumentService extends RemoteService {
 	 * @param sid The session identifier
 	 * @param event The history event to mark as read
 	 */
-	public void markHistoryAsRead(String sid, String event);
+	public void markHistoryAsRead(String sid, String event) throws InvalidSessionException;
 
 	/**
 	 * Marks a set of documents as unindexable
 	 */
-	public void markUnindexable(String sid, long[] docIds);
+	public void markUnindexable(String sid, long[] docIds) throws InvalidSessionException;
 
 	/**
 	 * Marks a set of documents as indexable
 	 */
-	public void markIndexable(String sid, long[] docIds);
+	public void markIndexable(String sid, long[] docIds) throws InvalidSessionException;
 }

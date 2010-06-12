@@ -5,7 +5,7 @@ import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 
 public interface SearchEngineServiceAsync {
 
-	void getInfos(String sid, AsyncCallback<GUISearchEngine> callback);
+	void getInfo(String sid, AsyncCallback<GUISearchEngine> callback);
 
 	void rescheduleAll(String sid, GUISearchEngine searchEngine, AsyncCallback<GUISearchEngine> callback);
 

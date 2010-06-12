@@ -4,7 +4,9 @@ import java.util.Date;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
+import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITask;
 
@@ -29,7 +31,7 @@ public interface SystemService extends RemoteService {
 	 * 
 	 * @param sid The current user session
 	 */
-	public GUIParameter[][] getStatistics(String sid);
+	public GUIParameter[][] getStatistics(String sid) throws InvalidSessionException;
 
 	/**
 	 * Performs a search over the last changes.
@@ -44,14 +46,14 @@ public interface SystemService extends RemoteService {
 	 * @return Result hits and statistics
 	 */
 	public GUIHistory[] search(String sid, String userName, Date from, Date till, int maxResult, String historySid,
-			String[] event);
+			String[] event) throws InvalidSessionException;
 
 	/**
 	 * Retrieves all tasks.
 	 * 
 	 * @param sid The current user session
 	 */
-	public GUITask[] loadTasks(String sid);
+	public GUITask[] loadTasks(String sid) throws InvalidSessionException;
 
 	/**
 	 * Starts the task execution.
@@ -72,7 +74,7 @@ public interface SystemService extends RemoteService {
 	/**
 	 * Retrieves a specific task by its name
 	 */
-	public GUITask getTaskByName(String sid, String taskName);
+	public GUITask getTaskByName(String sid, String taskName) throws InvalidSessionException;
 
 	/**
 	 * Enables the task.
@@ -81,7 +83,7 @@ public interface SystemService extends RemoteService {
 	 * @param taskName The task name
 	 * @return True, if the task is correctly enabled.
 	 */
-	public boolean enableTask(String sid, String taskName);
+	public boolean enableTask(String sid, String taskName) throws InvalidSessionException;
 
 	/**
 	 * Disables the task.
@@ -90,7 +92,7 @@ public interface SystemService extends RemoteService {
 	 * @param taskName The task name
 	 * @return True, if the task is correctly disabled.
 	 */
-	public boolean disableTask(String sid, String taskName);
+	public boolean disableTask(String sid, String taskName) throws InvalidSessionException;
 
 	/**
 	 * Saves the task.
@@ -99,10 +101,15 @@ public interface SystemService extends RemoteService {
 	 * @param task The task to be saved
 	 * @return True, if the task is correctly saved.
 	 */
-	public GUITask saveTask(String sid, GUITask task);
-	
+	public GUITask saveTask(String sid, GUITask task) throws InvalidSessionException;
+
 	/**
 	 * Saves folders path
 	 */
-	public void saveFolders(String sid, GUIParameter[] folders);
+	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException;
+
+	/**
+	 * Retrieves the system informations
+	 */
+	public GUIInfo getInfo();
 }

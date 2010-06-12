@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
@@ -18,30 +19,30 @@ public interface SettingService extends RemoteService {
 	/**
 	 * Saves web services and webdav settings
 	 */
-	public void saveWSSettings(String sid, GUIWebServiceSettings wsSettings, GUIWebServiceSettings webDavSettings);
+	public void saveWSSettings(String sid, GUIWebServiceSettings wsSettings, GUIWebServiceSettings webDavSettings) throws InvalidSessionException;
 
 	/**
 	 * Loads web services and webdav settings
 	 */
-	public GUIWebServiceSettings[] loadWSSettings(String sid);
+	public GUIWebServiceSettings[] loadWSSettings(String sid) throws InvalidSessionException;
 
 	/**
 	 * Loads settings
 	 */
-	public GUIParameter[] loadSettings(String sid);
+	public GUIParameter[] loadSettings(String sid) throws InvalidSessionException;
 
 	/**
 	 * Saves settings
 	 */
-	public void saveSettings(String sid, GUIParameter[] settings);
+	public void saveSettings(String sid, GUIParameter[] settings) throws InvalidSessionException;
 
 	/**
 	 * Loads email settings
 	 */
-	public GUIEmailSettings loadEmailSettings(String sid);
+	public GUIEmailSettings loadEmailSettings(String sid) throws InvalidSessionException;
 
 	/**
 	 * Saves email settings
 	 */
-	public void saveEmailSettings(String sid, GUIEmailSettings settings);
+	public void saveEmailSettings(String sid, GUIEmailSettings settings) throws InvalidSessionException;
 }

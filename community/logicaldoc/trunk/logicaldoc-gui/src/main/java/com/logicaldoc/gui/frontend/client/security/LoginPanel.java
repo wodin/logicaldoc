@@ -1,19 +1,20 @@
 package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.Frontend;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.SystemService;
+import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.SC;
@@ -40,11 +41,13 @@ public class LoginPanel extends VLayout {
 
 	protected SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
 
+	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
+
 	protected TextItem username = new TextItem();
 
 	protected PasswordItem password = new PasswordItem();
 
-	public LoginPanel() {
+	public LoginPanel(GUIInfo info) {
 		setDefaultLayoutAlign(Alignment.CENTER);
 		setWidth100();
 		setHeight100();
@@ -57,20 +60,19 @@ public class LoginPanel extends VLayout {
 		hPanel.setHeight100();
 
 		// Panel for vertical centering
-		VLayout vPanel = new VLayout();
-		vPanel.setDefaultLayoutAlign(VerticalAlignment.CENTER);
-		vPanel.setWidth100();
-		vPanel.setHeight(200);
-		hPanel.addMember(vPanel);
+		VLayout content = new VLayout();
+		content.setDefaultLayoutAlign(VerticalAlignment.CENTER);
+		content.setWidth100();
+		content.setHeight(200);
+		hPanel.addMember(content);
 
 		addMember(hPanel);
 
 		// Collect some context infos to define window's and form's title
-		Dictionary context = Util.getContext();
-		WindowUtils.setTitle(context.get("product_name") + " " + context.get("product_release"));
+		WindowUtils.setTitle(info.getProductName() + " " + info.getRelease());
 
 		// Prepare the form header that contains the product name and version
-		HTML header = new HTML(context.get("product_name") + " " + context.get("product_release"));
+		HTML header = new HTML(info.getProductName() + " " + info.getRelease());
 		header.setStyleName("loginHeader");
 		header.setHeight("12px");
 
@@ -80,9 +82,8 @@ public class LoginPanel extends VLayout {
 		logoImage.setWidth("205px");
 
 		// Prepare the form footer that contains copyright and website link
-		HTML footer = new HTML("\u00A9 " + context.get("product_year") + " " + context.get("product_vendor")
-				+ "  &#160; &#8226; &#160; <a href='" + context.get("product_url") + "'>" + context.get("product_url")
-				+ "</a>");
+		HTML footer = new HTML("\u00A9 " + info.getYear() + " " + info.getVendor()
+				+ "  &#160; &#8226; &#160; <a href='" + info.getUrl() + "'>" + info.getUrl() + "</a>");
 		footer.setStyleName("loginFooter");
 
 		// Prepare the Form and all its fields
@@ -137,7 +138,7 @@ public class LoginPanel extends VLayout {
 		outer.addMember(footer);
 		outer.setPadding(2);
 
-		vPanel.addMember(outer);
+		content.addMember(outer);
 		form.focusInItem(username);
 		form.setAutoFocus(true);
 		form.focus();
