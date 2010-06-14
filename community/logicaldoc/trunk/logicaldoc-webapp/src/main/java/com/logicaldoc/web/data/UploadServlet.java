@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
 
 /**
- * 
+ * This servlet is responsible for document uploads operations.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -157,11 +157,17 @@ public class UploadServlet extends UploadAction {
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, File> getReceivedFiles(HttpServletRequest request) {
-		return (Map<String, File>) request.getSession().getAttribute(RECEIVEDFILES);
+		Map<String, File> receivedFiles = (Map<String, File>) request.getSession().getAttribute(RECEIVEDFILES);
+		request.getSession().setAttribute(RECEIVEDFILES, new Hashtable<String, File>());
+		request.getSession().setAttribute(RECEIVEDCONTENTTYPES, new Hashtable<String, String>());
+		return receivedFiles;
 	}
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, String> getReceivedFileNames(HttpServletRequest request) {
-		return (Map<String, String>) request.getSession().getAttribute(RECEIVEDFILENAMES);
+		Map<String, String> receivedFileNames = (Map<String, String>) request.getSession().getAttribute(
+				RECEIVEDFILENAMES);
+		request.getSession().setAttribute(RECEIVEDFILENAMES, new Hashtable<String, String>());
+		return receivedFileNames;
 	}
 }

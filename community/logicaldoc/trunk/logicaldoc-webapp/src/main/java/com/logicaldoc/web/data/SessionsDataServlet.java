@@ -15,6 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.UserSession;
 
+/**
+ * This servlet is responsible for sessions data.
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.0
+ */
 public class SessionsDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
