@@ -268,9 +268,7 @@ public class MenuBarBean {
 
 		if (menu.getType() == Menu.MENUTYPE_MENU) {
 			page.setMenu(menu);
-			logger.debug("menu.getText(): " +menu.getText());
 			page.setContentTitle(Messages.getMessage(menu.getText()));
-			logger.debug("page.getContentTitle(): " +page.getContentTitle());
 			page.setText(menu.getText());
 		}
 
@@ -314,8 +312,6 @@ public class MenuBarBean {
 
 		MenuItem menuItem = new MenuItem();
 		menuItem.setValue(label);
-
-		logger.debug("createMenuItem label: " +label);
 		
 		if (id != null) {
 			menuItem.setId(id);
