@@ -19,8 +19,11 @@ public class FolderHistoryDS extends DataSource {
 		DataSourceDateTimeField date = new DataSourceDateTimeField("date");
 		DataSourceTextField event = new DataSourceTextField("event");
 		DataSourceTextField comment = new DataSourceTextField("comment");
+		DataSourceTextField title = new DataSourceTextField("title");
+		DataSourceTextField path = new DataSourceTextField("path");
+		DataSourceTextField sid = new DataSourceTextField("sid");
 
-		setFields(user, date, event, comment);
+		setFields(user, date, event, comment, title, path, sid);
 		setClientOnly(true);
 
 		setDataURL("data/folderhistory.xml?sid=" + Session.get().getSid() + "&id=" + folderId + "&locale="

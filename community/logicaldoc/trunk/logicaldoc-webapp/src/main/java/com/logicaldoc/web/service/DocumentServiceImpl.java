@@ -432,6 +432,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 				document.setPathExtended(mdao.computePathExtended(doc.getFolder().getId()));
 				document.setFileSize(new Long(doc.getFileSize()).floatValue());
+
 				if (doc.getCustomId() != null)
 					document.setCustomId(doc.getCustomId());
 				else
@@ -440,10 +441,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				GUIFolder folder = FolderServiceImpl.getFolder(sid, doc.getFolder().getId());
 				document.setFolder(folder);
 			} catch (Throwable t) {
-				t.printStackTrace();
 			}
 
 			return document;
+
 		}
 
 		return null;
@@ -912,18 +913,22 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		SessionUtil.validateSession(sid);
 
 		BookmarkDAO bookmarkDao = (BookmarkDAO) Context.getInstance().getBean(BookmarkDAO.class);
-		Bookmark bk;
-		if (bookmark.getId() != 0) {
-			bk = bookmarkDao.findById(bookmark.getId());
-			bookmarkDao.initialize(bk);
-		} else
-			bk = new Bookmark();
+		try {
+			Bookmark bk;
+			if (bookmark.getId() != 0) {
+				bk = bookmarkDao.findById(bookmark.getId());
+				bookmarkDao.initialize(bk);
+			} else
+				return;
 
-		bk.setTitle(bookmark.getName());
-		bk.setDescription(bookmark.getDescription());
+			bk.setTitle(bookmark.getName());
+			bk.setDescription(bookmark.getDescription());
 
-		bookmarkDao.store(bk);
-		bookmark.setId(bk.getId());
+			bookmarkDao.store(bk);
+			bookmark.setId(bk.getId());
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

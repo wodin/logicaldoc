@@ -18,7 +18,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
- * 
+ * This servlet is responsible for document versions data.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0

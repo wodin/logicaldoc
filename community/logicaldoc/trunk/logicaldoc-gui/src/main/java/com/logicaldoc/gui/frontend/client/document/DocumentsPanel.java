@@ -136,6 +136,17 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 					((DocumentDetailsPanel) detailPanel).setDocument(result);
 					details.redraw();
 				}
+
+				// TODO Operations for bookmarks
+				// if (folder == null || folder.getId() !=
+				// result.getFolder().getId()) {
+				// folder = result.getFolder();
+				// }
+				// if (hiliteDocId == null || hiliteDocId != result.getId()) {
+				// hiliteDocId = result.getId();
+				// updateListingPanel();
+				// }
+
 				if (clearSelection)
 					((DocumentsListPanel) listingPanel).getList().deselectAllRecords();
 			}
@@ -156,15 +167,19 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		if (max != null && max > 0)
 			this.max = max;
 
+		updateListingPanel();
+
+		showFolderDetails();
+
+		hiliteDocId = null;
+	}
+
+	private void updateListingPanel() {
 		listing.removeMember(listingPanel);
 		listingPanel.destroy();
 		listingPanel = new DocumentsListPanel(folder, hiliteDocId, this.max);
 		listing.addMember(listingPanel);
 		listing.redraw();
-
-		showFolderDetails();
-
-		hiliteDocId = null;
 	}
 
 	/**

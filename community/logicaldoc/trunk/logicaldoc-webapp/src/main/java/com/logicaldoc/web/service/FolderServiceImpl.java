@@ -73,65 +73,72 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		if (menu == null)
 			return null;
 
-		GUIFolder folder = new GUIFolder();
-		folder.setId(folderId);
-		folder.setName(folderId != Constants.DOCUMENTS_FOLDERID ? menu.getText() : "/");
-		folder.setParentId(menu.getParentId());
-		folder.setDescription(menu.getDescription());
+		try {
+			GUIFolder folder = new GUIFolder();
+			folder.setId(folderId);
+			folder.setName(folderId != Constants.DOCUMENTS_FOLDERID ? menu.getText() : "/");
+			folder.setParentId(menu.getParentId());
+			folder.setDescription(menu.getDescription());
 
-		List<String> permissionsList = new ArrayList<String>();
-		long userId = SessionUtil.getSessionUser(sid).getId();
-		if (dao.isPermissionEnabled(Permission.READ, folderId, userId))
-			permissionsList.add("read");
-		if (dao.isPermissionEnabled(Permission.WRITE, folderId, userId))
-			permissionsList.add(Constants.PERMISSION_WRITE);
-		if (dao.isPermissionEnabled(Permission.ADD_CHILD, folderId, userId))
-			permissionsList.add(Constants.PERMISSION_ADD);
-		if (dao.isPermissionEnabled(Permission.MANAGE_SECURITY, folderId, userId))
-			permissionsList.add(Constants.PERMISSION_SECURITY);
-		if (dao.isPermissionEnabled(Permission.DELETE, folderId, userId))
-			permissionsList.add(Constants.PERMISSION_DELETE);
-		if (dao.isPermissionEnabled(Permission.RENAME, folderId, userId))
-			permissionsList.add(Constants.PERMISSION_RENAME);
-		if (dao.isPermissionEnabled(Permission.BULK_IMPORT, folderId, userId))
-			permissionsList.add(Constants.PERMISSION_IMPORT);
-		if (dao.isPermissionEnabled(Permission.BULK_EXPORT, folderId, userId))
-			permissionsList.add(Constants.PERMISSION_EXPORT);
-		if (dao.isPermissionEnabled(Permission.SIGN, folderId, userId))
-			permissionsList.add(Constants.PERMISSION_SIGN);
-		if (dao.isPermissionEnabled(Permission.ARCHIVE, folderId, userId))
-			permissionsList.add(Constants.PERMISSION_ARCHIVE);
-		if (dao.isPermissionEnabled(Permission.WORKFLOW, folderId, userId))
-			permissionsList.add(Constants.PERMISSION_WORKFLOW);
-		if (dao.isPermissionEnabled(Permission.MANAGE_IMMUTABILITY, folderId, userId))
-			permissionsList.add(Constants.PERMISSION_IMMUTABILITY);
+			List<String> permissionsList = new ArrayList<String>();
+			long userId = SessionUtil.getSessionUser(sid).getId();
+			if (dao.isPermissionEnabled(Permission.READ, folderId, userId))
+				permissionsList.add("read");
+			if (dao.isPermissionEnabled(Permission.WRITE, folderId, userId))
+				permissionsList.add(Constants.PERMISSION_WRITE);
+			if (dao.isPermissionEnabled(Permission.ADD_CHILD, folderId, userId))
+				permissionsList.add(Constants.PERMISSION_ADD);
+			if (dao.isPermissionEnabled(Permission.MANAGE_SECURITY, folderId, userId))
+				permissionsList.add(Constants.PERMISSION_SECURITY);
+			if (dao.isPermissionEnabled(Permission.DELETE, folderId, userId))
+				permissionsList.add(Constants.PERMISSION_DELETE);
+			if (dao.isPermissionEnabled(Permission.RENAME, folderId, userId))
+				permissionsList.add(Constants.PERMISSION_RENAME);
+			if (dao.isPermissionEnabled(Permission.BULK_IMPORT, folderId, userId))
+				permissionsList.add(Constants.PERMISSION_IMPORT);
+			if (dao.isPermissionEnabled(Permission.BULK_EXPORT, folderId, userId))
+				permissionsList.add(Constants.PERMISSION_EXPORT);
+			if (dao.isPermissionEnabled(Permission.SIGN, folderId, userId))
+				permissionsList.add(Constants.PERMISSION_SIGN);
+			if (dao.isPermissionEnabled(Permission.ARCHIVE, folderId, userId))
+				permissionsList.add(Constants.PERMISSION_ARCHIVE);
+			if (dao.isPermissionEnabled(Permission.WORKFLOW, folderId, userId))
+				permissionsList.add(Constants.PERMISSION_WORKFLOW);
+			if (dao.isPermissionEnabled(Permission.MANAGE_IMMUTABILITY, folderId, userId))
+				permissionsList.add(Constants.PERMISSION_IMMUTABILITY);
 
-		folder.setPermissions(permissionsList.toArray(new String[permissionsList.size()]));
+			folder.setPermissions(permissionsList.toArray(new String[permissionsList.size()]));
 
-		int i = 0;
-		GUIRight[] rights = new GUIRight[menu.getMenuGroups().size()];
-		for (MenuGroup mg : menu.getMenuGroups()) {
-			GUIRight right = new GUIRight();
-			right.setEntityId(mg.getGroupId());
-			right.setAdd(mg.getAddChild() == 1 ? true : false);
-			right.setWrite(mg.getWrite() == 1 ? true : false);
-			right.setSecurity(mg.getManageSecurity() == 1 ? true : false);
-			right.setImmutable(mg.getManageImmutability() == 1 ? true : false);
-			right.setDelete(mg.getDelete() == 1 ? true : false);
-			right.setRename(mg.getRename() == 1 ? true : false);
-			right.setImport(mg.getBulkImport() == 1 ? true : false);
-			right.setExport(mg.getBulkExport() == 1 ? true : false);
-			right.setSign(mg.getSign() == 1 ? true : false);
-			right.setArchive(mg.getArchive() == 1 ? true : false);
-			right.setWorkflow(mg.getWorkflow() == 1 ? true : false);
+			int i = 0;
+			GUIRight[] rights = new GUIRight[menu.getMenuGroups().size()];
+			for (MenuGroup mg : menu.getMenuGroups()) {
+				GUIRight right = new GUIRight();
+				right.setEntityId(mg.getGroupId());
+				right.setAdd(mg.getAddChild() == 1 ? true : false);
+				right.setWrite(mg.getWrite() == 1 ? true : false);
+				right.setSecurity(mg.getManageSecurity() == 1 ? true : false);
+				right.setImmutable(mg.getManageImmutability() == 1 ? true : false);
+				right.setDelete(mg.getDelete() == 1 ? true : false);
+				right.setRename(mg.getRename() == 1 ? true : false);
+				right.setImport(mg.getBulkImport() == 1 ? true : false);
+				right.setExport(mg.getBulkExport() == 1 ? true : false);
+				right.setSign(mg.getSign() == 1 ? true : false);
+				right.setArchive(mg.getArchive() == 1 ? true : false);
+				right.setWorkflow(mg.getWorkflow() == 1 ? true : false);
 
-			rights[i] = right;
-			i++;
+				rights[i] = right;
+				i++;
+			}
+
+			folder.setRights(rights);
+
+			return folder;
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		folder.setRights(rights);
-
-		return folder;
+		return null;
 	}
 
 	@Override

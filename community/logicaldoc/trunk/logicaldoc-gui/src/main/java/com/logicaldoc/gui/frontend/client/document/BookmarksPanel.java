@@ -11,6 +11,8 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.FolderService;
+import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
@@ -39,7 +41,9 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
  * @since 6.0
  */
 public class BookmarksPanel extends VLayout {
-	private DocumentServiceAsync service = (DocumentServiceAsync) GWT.create(DocumentService.class);
+	private DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
+	private static FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
 	private ListGrid list;
 
@@ -104,7 +108,7 @@ public class BookmarksPanel extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
-				DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttributeAsString("docId")), true);
+				DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttributeAsString("docId")), false);
 			}
 
 		});
@@ -115,9 +119,18 @@ public class BookmarksPanel extends VLayout {
 				Record record = event.getOldRecord();
 				GUIBookmark bookmark = new GUIBookmark();
 				bookmark.setId(Long.parseLong(record.getAttributeAsString("id")));
-				bookmark.setName((String) event.getNewValues().get("name"));
-				bookmark.setDescription((String) event.getNewValues().get("description"));
-				service.updateBookmark(Session.get().getSid(), bookmark, new AsyncCallback<Void>() {
+				if (((String) event.getNewValues().get("name")) == null
+						|| ((String) event.getNewValues().get("name")).trim().isEmpty())
+					bookmark.setName(record.getAttributeAsString("name"));
+				else
+					bookmark.setName((String) event.getNewValues().get("name"));
+
+				if (((String) event.getNewValues().get("description")) == null)
+					bookmark.setDescription(record.getAttributeAsString("description"));
+				else
+					bookmark.setDescription((String) event.getNewValues().get("description"));
+
+				docService.updateBookmark(Session.get().getSid(), bookmark, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -175,7 +188,7 @@ public class BookmarksPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.deleteBookmarks(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+							docService.deleteBookmarks(Session.get().getSid(), ids, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

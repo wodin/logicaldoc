@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.core.document.Document;
@@ -22,7 +23,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
- * 
+ * This servlet is responsible for documents data.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -103,8 +104,9 @@ public class DocumentsDataServlet extends HttpServlet {
 			writer.print("<docref>" + cols[2] + "</docref>");
 			if (cols[2] != null)
 				writer.print("<icon>alias</icon>");
-			else{
-				writer.print("<icon>"+IconSelector.selectIcon((String)cols[3])+"</icon>");
+			else {
+				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[3]))
+						+ "</icon>");
 			}
 			writer.print("<title><![CDATA[" + cols[4] + "]]></title>");
 			writer.print("<version>" + cols[5] + "</version>");

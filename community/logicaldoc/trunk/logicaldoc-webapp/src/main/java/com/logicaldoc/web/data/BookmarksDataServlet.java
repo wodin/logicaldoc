@@ -14,6 +14,12 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
+/**
+ * This servlet is responsible for document bookmarks data.
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.0
+ */
 public class BookmarksDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
