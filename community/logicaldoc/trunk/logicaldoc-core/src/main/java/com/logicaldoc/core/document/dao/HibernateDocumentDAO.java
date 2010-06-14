@@ -873,7 +873,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		try {
 			List<Object> result = findByJdbcQuery(
 					"select A.ld_id,A.ld_title,A.ld_lastmodified,A.ld_filename,A.ld_folderid from ld_document as A, ld_menu as B where A.ld_folderid=B.ld_id and B.ld_deleted=0 and A.ld_deleted=1 and A.ld_deleteuserid = "
-							+ userId + " order by A.ld_lastmodified desc", 4, null);
+							+ userId + " order by A.ld_lastmodified desc", 5, null);
 
 			int i = 0;
 			for (Object object : result) {
