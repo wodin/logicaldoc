@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -104,7 +105,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 					+ (StringUtils.isNotEmpty(where) ? " and (" + where + ") " : " ")
 					+ (StringUtils.isNotEmpty(order) ? order : " ");
 			log.debug("Execute query: " + query);
-			coll = (List<Long>) getHibernateTemplate().find(query, values);
+			coll = (List<Long>) getHibernateTemplate(1000).find(query, values);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
@@ -112,12 +113,26 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		return coll;
 	}
 
+	/**
+	 * Useful method that creates a template for returnig a maximum number of
+	 * results. If the max results is <1 than the default template is returned.
+	 * 
+	 * @param maxResults The maximum results number
+	 */
+	protected HibernateTemplate getHibernateTemplate(Integer maxResults) {
+		if (maxResults == null || maxResults < 1)
+			return getHibernateTemplate();
+		HibernateTemplate template = new HibernateTemplate(getSessionFactory());
+		template.setMaxResults(maxResults);
+		return template;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Object> findByQuery(String query, Object[] values) {
 		List<Object> coll = new ArrayList<Object>();
 		try {
 			log.debug("Execute query: " + query);
-			coll = (List<Object>) getHibernateTemplate().find(query, values != null ? values : new Object[0]);
+			coll = (List<Object>) getHibernateTemplate(1000).find(query, values != null ? values : new Object[0]);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
