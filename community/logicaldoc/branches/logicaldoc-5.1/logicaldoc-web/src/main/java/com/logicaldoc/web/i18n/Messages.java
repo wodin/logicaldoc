@@ -34,10 +34,12 @@ public class Messages extends AbstractMap<String, String> {
 	}
 
 	public static String getMessage(String key, Locale locale) {
+
 		if (bundles.isEmpty()) {
 			// Acquire the 'ResourceBundle' extensions of the core plugin
 			PluginRegistry registry = PluginRegistry.getInstance();
-			Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "ResourceBundle", null);
+			Collection<Extension> exts = registry.getSortedExtensions(
+					"logicaldoc-core", "ResourceBundle", null);
 
 			for (Extension ext : exts) {
 				bundles.add(ext.getParameter("bundle").valueAsString());
@@ -45,14 +47,11 @@ public class Messages extends AbstractMap<String, String> {
 		}
 
 		// Iterate over bundles in reverse order
-		for (int i = bundles.size() - 1; i >= 0; i--) {
-			String path = bundles.get(i);
-
+		for (String path : bundles) {
 			try {
 				ResourceBundle bundle = ResourceBundle.getBundle(path, locale);
 				return bundle.getString(key);
 			} catch (Throwable e) {
-				
 			}
 		}
 
@@ -123,19 +122,25 @@ public class Messages extends AbstractMap<String, String> {
 		addMessage(FacesMessage.SEVERITY_INFO, null, message, message);
 	}
 
-	public static void addMessage(FacesMessage.Severity severity, String summary, String detail) {
+	public static void addMessage(FacesMessage.Severity severity,
+			String summary, String detail) {
 		addMessage(severity, null, summary, detail);
 	}
 
 	/**
 	 * Adds a message in the jsf queue
 	 * 
-	 * @param severity The severity level
-	 * @param clientId The componentID (null can be accepted)
-	 * @param summary The summary part(bundle key)
-	 * @param detail The detail part(bundle key)
+	 * @param severity
+	 *            The severity level
+	 * @param clientId
+	 *            The componentID (null can be accepted)
+	 * @param summary
+	 *            The summary part(bundle key)
+	 * @param detail
+	 *            The detail part(bundle key)
 	 */
-	public static void addMessage(FacesMessage.Severity severity, String clientId, String summary, String detail) {
+	public static void addMessage(FacesMessage.Severity severity,
+			String clientId, String summary, String detail) {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		FacesMessage message = new FacesMessage(severity, summary, detail);
 		facesContext.addMessage(clientId, message);
