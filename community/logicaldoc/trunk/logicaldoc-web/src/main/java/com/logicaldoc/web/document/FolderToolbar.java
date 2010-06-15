@@ -29,7 +29,7 @@ public class FolderToolbar {
 
 		// Acquire the 'FolderToolbar' extensions of the core plugin
 		PluginRegistry registry = PluginRegistry.getInstance();
-		Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "FolderToolbar", null);
+		Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "FolderMenu", null);
 
 		DocumentCommand command = null;
 		for (Extension ext : exts) {
@@ -40,7 +40,7 @@ public class FolderToolbar {
 				command.setConfirmation(Messages.getMessage(ext.getParameter("confirm").valueAsString()));
 			if (StringUtils.isNotEmpty(ext.getParameter("link").valueAsString())) {
 				command.setLinkBinding(FacesUtil.createValueBinding(ext.getParameter("link").valueAsString()));
-				
+
 			}
 			if (StringUtils.isNotEmpty(ext.getParameter("target").valueAsString()))
 				command.setTarget(ext.getParameter("target").valueAsString());
