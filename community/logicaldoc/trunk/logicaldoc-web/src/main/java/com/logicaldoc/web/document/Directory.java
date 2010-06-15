@@ -1,27 +1,17 @@
 package com.logicaldoc.web.document;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.java.plugin.registry.Extension;
 
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.PluginRegistry;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
-import com.logicaldoc.web.i18n.Messages;
-import com.logicaldoc.web.navigation.MenuItem;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.FacesUtil;
 
@@ -61,9 +51,6 @@ public class Directory extends PageContentBean {
 
 	private String pathExtended;
 
-	// list for the dynamic menus w/ getter & setter
-	protected List<MenuItem> menuItems = new ArrayList<MenuItem>();
-
 	// True if all childs were loaded from db
 	private boolean loaded = false;
 
@@ -101,7 +88,7 @@ public class Directory extends PageContentBean {
 		getDocumentNavigation();
 
 		// refresh menu items
-		createMenuItems();
+		// createMenuItems();
 	}
 
 	public String edit() {
@@ -274,63 +261,5 @@ public class Directory extends PageContentBean {
 					.getUserId()));
 		}
 		return workflowEnabled.booleanValue();
-	}
-
-	public List<MenuItem> getMenuItems() {
-		if (menuItems.isEmpty()) {
-			createMenuItems();
-		}
-		return menuItems;
-	}
-
-	public void setMenuItems(List<MenuItem> model) {
-		this.menuItems = model;
-	}
-
-	/**
-	 * Finds all first-level menus accessible by the current user
-	 * 
-	 * @return
-	 */
-	protected void createMenuItems() {
-		menuItems.clear();
-
-		// Acquire the 'FolderMenu' extensions of the core plug-in
-		PluginRegistry registry = PluginRegistry.getInstance();
-		Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "FolderMenu", null);
-
-		for (Extension ext : exts) {
-
-			MenuItem item = new MenuItem();
-			item.setValue(Messages.getMessage(ext.getParameter("title").valueAsString()));
-			if (StringUtils.isNotEmpty(ext.getParameter("target").valueAsString()))
-				item.setTarget(ext.getParameter("target").valueAsString());
-			if (StringUtils.isNotEmpty(ext.getParameter("action").valueAsString())) {
-				item.setAction(FacesUtil.createActionMethodBinding(ext.getParameter("action").valueAsString()));
-			}
-
-			if (StringUtils.isNotEmpty(ext.getParameter("link").valueAsString())) {
-				ValueBinding linkBinding = FacesUtil.createValueBinding(ext.getParameter("link").valueAsString());
-				if (linkBinding != null) {
-					String linkValue = (String) linkBinding.getValue(FacesContext.getCurrentInstance());
-					item.setLink(linkValue);
-				}
-			}
-
-			ValueBinding renderedBinding = FacesUtil.createValueBinding(ext.getParameter("rendered").valueAsString());
-			if (renderedBinding != null) {
-				Boolean rendered = (Boolean) renderedBinding.getValue(FacesContext.getCurrentInstance());
-				if (rendered != null)
-					item.setRendered(rendered);
-			}
-
-			if (StringUtils.isNotEmpty(ext.getParameter("confirm").valueAsString())) {
-				String confirmMessage = Messages.getMessage(ext.getParameter("confirm").valueAsString());
-				item.setOnclick("if (!confirm('" + confirmMessage + "')) {return false;}");
-			}
-			item.getAttributes().put("myAttibute", "myValue");
-
-			menuItems.add(item);
-		}
 	}
 }
