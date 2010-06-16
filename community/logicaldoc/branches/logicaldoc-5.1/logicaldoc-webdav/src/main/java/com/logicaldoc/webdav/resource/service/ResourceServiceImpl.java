@@ -86,20 +86,20 @@ public class ResourceServiceImpl implements ResourceService {
 		resource.setSession(session);
 		resource.isFolder(true);
 
-		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-
-		// define the security policies for this folder
-		boolean writeEnabled = mdao.isPermissionEnabled(Permission.WRITE, menu.getId(), userId);
-		resource.setWriteEnabled(writeEnabled);
-
-		boolean renameEnabled = mdao.isPermissionEnabled(Permission.RENAME, menu.getId(), userId);
-		resource.setRenameEnabled(renameEnabled);
-
-		boolean deleteEnabled = mdao.isPermissionEnabled(Permission.DELETE, menu.getId(), userId);
-		resource.setDeleteEnabled(deleteEnabled);
-
-		boolean addChildEnabled = mdao.isPermissionEnabled(Permission.ADD_CHILD, menu.getId(), userId);
-		resource.setAddChildEnabled(addChildEnabled);
+//		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+				
+//		// define the security policies for this folder
+//		boolean writeEnabled = mdao.isPermissionEnabled(Permission.WRITE, menu.getId(), userId);
+//		resource.setWriteEnabled(writeEnabled);
+//
+//		boolean renameEnabled = mdao.isPermissionEnabled(Permission.RENAME, menu.getId(), userId);
+//		resource.setRenameEnabled(renameEnabled);
+//
+//		boolean deleteEnabled = mdao.isPermissionEnabled(Permission.DELETE, menu.getId(), userId);
+//		resource.setDeleteEnabled(deleteEnabled);
+//
+//		boolean addChildEnabled = mdao.isPermissionEnabled(Permission.ADD_CHILD, menu.getId(), userId);
+//		resource.setAddChildEnabled(addChildEnabled);
 
 		return resource;
 	}
@@ -132,15 +132,17 @@ public class ResourceServiceImpl implements ResourceService {
 		if (hasAccess == false)
 			return resourceList;
 
-		Collection<Menu> folders = menuDAO.findChildren(folderID);
+		//Find children visible by the current user
+		Collection<Menu> folders = menuDAO.findChildren(folderID, parentResource.getRequestedPerson());
+		
 		if (folders != null) {
 			for (Iterator<Menu> iterator = folders.iterator(); iterator.hasNext();) {
 				Menu currentMenu = iterator.next();
-				if (menuDAO.isReadEnable(currentMenu.getId(), parentResource.getRequestedPerson()))
+				//if (menuDAO.isReadEnable(currentMenu.getId(), parentResource.getRequestedPerson()))
 					resourceList.add(marshallFolder(currentMenu, parentResource.getRequestedPerson(), null));
 			}
 		}
-
+		
 		Collection<Document> documents = documentDAO.findByFolder(folderID);
 		for (Iterator<Document> iterator = documents.iterator(); iterator.hasNext();) {
 			Document document = iterator.next();
@@ -551,7 +553,7 @@ public class ResourceServiceImpl implements ResourceService {
 		String version = resource.getVersionLabel();
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 
-		if (document.getVersion().equals(resource.getVersionLabel()))
+		if (document.getVersion()!=null && document.getVersion().equals(resource.getVersionLabel()))
 			version = null;
 
 		if (document == null) {

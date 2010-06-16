@@ -32,23 +32,53 @@ public class FolderToolbar {
 		Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "FolderToolbar", null);
 
 		DocumentCommand command = null;
+		
+		exts = registry.getSortedExtensions("logicaldoc-core", "FolderMenu", null);
 		for (Extension ext : exts) {
+			if("menuFolderMove".equals(ext.getId()))
+				continue;
+			
 			command = new DocumentCommand();
 			commands.add(command);
 			command.setTitle(Messages.getMessage(ext.getParameter("title").valueAsString()));
 			if (StringUtils.isNotEmpty(ext.getParameter("confirm").valueAsString()))
 				command.setConfirmation(Messages.getMessage(ext.getParameter("confirm").valueAsString()));
 			if (StringUtils.isNotEmpty(ext.getParameter("link").valueAsString())) {
-				command.setLinkBinding(FacesUtil.createValueBinding(ext.getParameter("link").valueAsString()));
-				
+				command.setLinkBinding(FacesUtil.createValueBinding(ext.getParameter("link").valueAsString()));	
 			}
 			if (StringUtils.isNotEmpty(ext.getParameter("target").valueAsString()))
 				command.setTarget(ext.getParameter("target").valueAsString());
-			command.setIcon(ext.getParameter("icon").valueAsString());
-			if (StringUtils.isNotEmpty(ext.getParameter("action").valueAsString()))
+			
+					//ext.getParameter("icon").valueAsString());
+			String action=ext.getParameter("action").valueAsString();
+			if (StringUtils.isNotEmpty(action)){
+				action=action.replaceAll("item.userObject", "documentNavigation");
 				command.setActionBinding(FacesUtil
-						.createActionMethodBinding(ext.getParameter("action").valueAsString()));
-			command.setRenderedBinding(FacesUtil.createValueBinding(ext.getParameter("rendered").valueAsString()));
+						.createActionMethodBinding(action));
+			    command.setRenderedBinding(FacesUtil.createValueBinding(ext.getParameter("rendered").valueAsString()));
+			}
+			String icon="folder_search.png";
+			if("menuFolderSearch".equals(ext.getId()))
+			  icon="folder_search.png";
+			else if("menuFolderHistory".equals(ext.getId()))
+				  icon="folder_history.png";
+			else if("menuFolderAdd".equals(ext.getId()))
+				  icon="folder_add.png";
+			else if("menuFolderDelete".equals(ext.getId()))
+				  icon="folder_delete.png";
+			else if("menuFolderEdit".equals(ext.getId()))
+				  icon="folder_edit.png";
+			else if("menuFolderExport".equals(ext.getId()))
+				  icon="folder_export.png";
+			else if("menuFolderRights".equals(ext.getId()))
+				  icon="folder_lock.png";
+			else if("menuFolderAudit".equals(ext.getId()))
+				  icon="folder_audit.png";
+			else if("menuFolderRSS".equals(ext.getId()))
+				  icon="folder_rss.png";
+			else if("menuFolderWorkflow".equals(ext.getId()))
+				  icon="folder_workflow.png";
+			command.setIcon(icon);
 		}
 	}
 

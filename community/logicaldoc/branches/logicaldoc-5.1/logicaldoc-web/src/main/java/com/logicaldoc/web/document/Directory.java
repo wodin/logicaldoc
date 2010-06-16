@@ -101,7 +101,7 @@ public class Directory extends PageContentBean {
 		getDocumentNavigation();
 
 		// refresh menu items
-		createMenuItems();
+		//createMenuItems();
 	}
 
 	public String edit() {
@@ -277,9 +277,9 @@ public class Directory extends PageContentBean {
 	}
 
 	public List<MenuItem> getMenuItems() {
-		if (menuItems.isEmpty()) {
-			createMenuItems();
-		}
+//		if (menuItems.isEmpty()) {
+//			createMenuItems();
+//		}
 		return menuItems;
 	}
 
@@ -287,50 +287,50 @@ public class Directory extends PageContentBean {
 		this.menuItems = model;
 	}
 
-	/**
-	 * Finds all first-level menus accessible by the current user
-	 * 
-	 * @return
-	 */
-	protected void createMenuItems() {
-		menuItems.clear();
-
-		// Acquire the 'FolderMenu' extensions of the core plug-in
-		PluginRegistry registry = PluginRegistry.getInstance();
-		Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "FolderMenu", null);
-
-		for (Extension ext : exts) {
-
-			MenuItem item = new MenuItem();
-			item.setValue(Messages.getMessage(ext.getParameter("title").valueAsString()));
-			if (StringUtils.isNotEmpty(ext.getParameter("target").valueAsString()))
-				item.setTarget(ext.getParameter("target").valueAsString());
-			if (StringUtils.isNotEmpty(ext.getParameter("action").valueAsString())) {
-				item.setAction(FacesUtil.createActionMethodBinding(ext.getParameter("action").valueAsString()));
-			}
-
-			if (StringUtils.isNotEmpty(ext.getParameter("link").valueAsString())) {
-				ValueBinding linkBinding = FacesUtil.createValueBinding(ext.getParameter("link").valueAsString());
-				if (linkBinding != null) {
-					String linkValue = (String) linkBinding.getValue(FacesContext.getCurrentInstance());
-					item.setLink(linkValue);
-				}
-			}
-
-			ValueBinding renderedBinding = FacesUtil.createValueBinding(ext.getParameter("rendered").valueAsString());
-			if (renderedBinding != null) {
-				Boolean rendered = (Boolean) renderedBinding.getValue(FacesContext.getCurrentInstance());
-				if (rendered != null)
-					item.setRendered(rendered);
-			}
-
-			if (StringUtils.isNotEmpty(ext.getParameter("confirm").valueAsString())) {
-				String confirmMessage = Messages.getMessage(ext.getParameter("confirm").valueAsString());
-				item.setOnclick("if (!confirm('" + confirmMessage + "')) {return false;}");
-			}
-			item.getAttributes().put("myAttibute", "myValue");
-
-			menuItems.add(item);
-		}
-	}
+//	/**
+//	 * Finds all first-level menus accessible by the current user
+//	 * 
+//	 * @return
+//	 */
+//	protected void createMenuItems() {
+//		menuItems.clear();
+//
+//		// Acquire the 'FolderMenu' extensions of the core plug-in
+//		PluginRegistry registry = PluginRegistry.getInstance();
+//		Collection<Extension> exts = registry.getSortedExtensions("logicaldoc-core", "FolderMenu", null);
+//
+//		for (Extension ext : exts) {
+//
+//			MenuItem item = new MenuItem();
+//			item.setValue(Messages.getMessage(ext.getParameter("title").valueAsString()));
+//			if (StringUtils.isNotEmpty(ext.getParameter("target").valueAsString()))
+//				item.setTarget(ext.getParameter("target").valueAsString());
+//			if (StringUtils.isNotEmpty(ext.getParameter("action").valueAsString())) {
+//				item.setAction(FacesUtil.createActionMethodBinding(ext.getParameter("action").valueAsString()));
+//			}
+//
+//			if (StringUtils.isNotEmpty(ext.getParameter("link").valueAsString())) {
+//				ValueBinding linkBinding = FacesUtil.createValueBinding(ext.getParameter("link").valueAsString());
+//				if (linkBinding != null) {
+//					String linkValue = (String) linkBinding.getValue(FacesContext.getCurrentInstance());
+//					item.setLink(linkValue);
+//				}
+//			}
+//
+//			ValueBinding renderedBinding = FacesUtil.createValueBinding(ext.getParameter("rendered").valueAsString());
+//			if (renderedBinding != null) {
+//				Boolean rendered = (Boolean) renderedBinding.getValue(FacesContext.getCurrentInstance());
+//				if (rendered != null)
+//					item.setRendered(rendered);
+//			}
+//
+//			if (StringUtils.isNotEmpty(ext.getParameter("confirm").valueAsString())) {
+//				String confirmMessage = Messages.getMessage(ext.getParameter("confirm").valueAsString());
+//				item.setOnclick("if (!confirm('" + confirmMessage + "')) {return false;}");
+//			}
+//			item.getAttributes().put("myAttibute", "myValue");
+//
+//			menuItems.add(item);
+//		}
+//	}
 }
