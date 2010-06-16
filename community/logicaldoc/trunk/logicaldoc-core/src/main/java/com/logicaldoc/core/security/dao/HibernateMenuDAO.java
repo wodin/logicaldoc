@@ -184,12 +184,48 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		return count;
 	}
 
-	/**
-	 * @see com.logicaldoc.core.security.dao.MenuDAO#findChildren(long)
-	 */
+	@Override
 	public List<Menu> findChildren(long parentId) {
 		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId }, null,
 				null);
+	}
+
+	@Override
+	public List<Menu> findChildren(long parentId, long userId) {
+		List<Menu> coll = new ArrayList<Menu>();
+		try {
+			try {
+				User user = userDAO.findById(userId);
+				Set<Group> groups = user.getGroups();
+				if (groups.isEmpty())
+					return coll;
+				Iterator iter = groups.iterator();
+
+				StringBuffer query = new StringBuffer("select distinct(_entity) from Menu _entity  ");
+				query.append(" left outer join _entity.menuGroups as _group ");
+				query.append(" where _group.groupId in (");
+
+				boolean first = true;
+				while (iter.hasNext()) {
+					if (!first)
+						query.append(",");
+					Group ug = (Group) iter.next();
+					query.append(Long.toString(ug.getId()));
+					first = false;
+				}
+				query.append(") and _entity.parentId=?");
+
+				coll = (List<Menu>) getHibernateTemplate().find(query.toString(), new Object[] { new Long(parentId) });
+				return coll;
+			} catch (Exception e) {
+				if (log.isErrorEnabled())
+					log.error(e.getMessage(), e);
+				return coll;
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return coll;
+		}
 	}
 
 	/**

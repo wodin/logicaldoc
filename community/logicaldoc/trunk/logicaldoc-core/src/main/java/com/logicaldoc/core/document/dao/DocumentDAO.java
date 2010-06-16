@@ -8,6 +8,7 @@ import java.util.Set;
 import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.security.Menu;
 
 /**
  * This class is a DAO-service for documents.

@@ -91,10 +91,21 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	/**
 	 * Finds direct children of a menu.
 	 * 
-	 * @param parentId MenuId of the menu which children are wanted.
-	 * @return List of found menus.
+	 * @param parentId MenuId of the menu which children are wanted
+	 * @return List of found menus
 	 */
 	public List<Menu> findChildren(long parentId);
+
+	/**
+	 * Finds direct children of a menu accessible by the given user.
+	 * 
+	 * @param parentId MenuId of the menu which children are wanted
+	 * @param userId Identifier of the user that mush have read access
+	 * 
+	 * @return List of found menus.
+	 */
+
+	public List<Menu> findChildren(long parentId, long userId);
 
 	/**
 	 * This method is looking up for writing rights for a menu and an user.
