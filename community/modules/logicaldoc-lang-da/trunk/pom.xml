@@ -7,7 +7,7 @@
     <version>5.1.0</version>
   </parent>
   <artifactId>logicaldoc-lang-da</artifactId>
-  <version>5.1.0</version>
+  <version>5.1.1</version>
   <name>logicaldoc-lang-da</name>
   <description>Danish language plugin for LogicalDOC</description>
   <packaging>jar</packaging>
