@@ -155,7 +155,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		assertNotNull(ids);
 		assertEquals(0, ids.size());
 	}
-
+	
 	public void testStore() throws IOException {
 		Document doc = new Document();
 		Menu menu = menuDao.findById(Menu.MENUID_HOME);

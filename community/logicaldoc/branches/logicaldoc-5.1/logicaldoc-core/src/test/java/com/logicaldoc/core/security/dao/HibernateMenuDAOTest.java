@@ -54,7 +54,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		// Load an existing menu and modify it
 		menu = dao.findById(15);
 		assertEquals("search.advanced", menu.getText());
-		
+
 		History transaction = new History();
 		transaction.setFolderId(menu.getId());
 		transaction.setEvent(History.EVENT_FOLDER_RENAMED);
@@ -92,7 +92,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		assertTrue(dao.store(menu, false, null));
 		menu = dao.findById(102);
 		assertEquals("/menu.home/menu.admin/pippo/", menu.getPathExtended());
-		
+
 		menu = dao.findById(102);
 		dao.store(menu, true, null);
 		assertEquals("/menu.home/menu.admin/pippo2/", menu.getPathExtended());
@@ -224,14 +224,18 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	public void testIsPermissionEnabled() {
-		assertFalse(dao.isPermissionEnabled(Permission.WRITE, Menu.MENUID_HOME, 1));
+		assertFalse(dao.isPermissionEnabled(Permission.WRITE, Menu.MENUID_HOME,
+				1));
 		assertTrue(dao.isPermissionEnabled(Permission.WRITE, 26, 1));
-		assertFalse(dao.isPermissionEnabled(Permission.WRITE, Menu.MENUID_HOME, 3));
-		assertFalse(dao.isPermissionEnabled(Permission.WRITE, Menu.MENUID_HOME, 999));
+		assertFalse(dao.isPermissionEnabled(Permission.WRITE, Menu.MENUID_HOME,
+				3));
+		assertFalse(dao.isPermissionEnabled(Permission.WRITE, Menu.MENUID_HOME,
+				999));
 	}
 
 	public void testGetEnabledPermissions() {
-		Set<Permission> permissions = dao.getEnabledPermissions(Menu.MENUID_HOME, 1);
+		Set<Permission> permissions = dao.getEnabledPermissions(
+				Menu.MENUID_HOME, 1);
 		assertEquals(8, permissions.size());
 		assertTrue(permissions.contains(Permission.READ));
 		assertTrue(permissions.contains(Permission.MANAGE_SECURITY));
@@ -339,14 +343,24 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 
 	@Test
 	public void testFindMenuIdByUserIdAndPermission() {
-		Set<Long> ids = dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE, null);
+		Set<Long> ids = dao.findMenuIdByUserIdAndPermission(1,
+				Permission.WRITE, null);
 		assertNotNull(ids);
 		assertEquals(6, ids.size());
-		ids = dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE, Menu.MENUTYPE_MENU);
+		ids = dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE,
+				Menu.MENUTYPE_MENU);
 		assertNotNull(ids);
 		assertEquals(4, ids.size());
-		ids = dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE, Menu.MENUTYPE_DIRECTORY);
+		ids = dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE,
+				Menu.MENUTYPE_DIRECTORY);
 		assertNotNull(ids);
 		assertEquals(2, ids.size());
+	}
+
+	@Test
+	public void testFindChildren() {
+		List<Menu> dirs = dao.findChildren(101L, 1L);
+		assertNotNull(dirs);
+		assertEquals(1, dirs.size());
 	}
 }
