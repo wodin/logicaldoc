@@ -146,11 +146,11 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		menus = (List<Menu>) dao.findByText(null, "menu.admin", 3, true);
 		Assert.assertNotNull(menus);
 		Assert.assertEquals(1, menus.size());
-		
+
 		menus = (List<Menu>) dao.findByText(null, "abc", 3, true);
 		Assert.assertNotNull(menus);
 		Assert.assertEquals(0, menus.size());
-		
+
 		menus = (List<Menu>) dao.findByText(null, "abc", 3, false);
 		Assert.assertNotNull(menus);
 		Assert.assertEquals(1, menus.size());
@@ -360,5 +360,12 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		Assert.assertEquals("/test", dao.computePathExtended(1200));
 		Assert.assertEquals("/menu.home/menu.adminxxx/text/menu.admin", dao.computePathExtended(103));
 		Assert.assertEquals("/menu.home/menu.admin/system/menu.gui", dao.computePathExtended(11));
+	}
+
+	@Test
+	public void testFindChildren() {
+		List<Menu> dirs = dao.findChildren(101L, 1L);
+		Assert.assertNotNull(dirs);
+		Assert.assertEquals(1, dirs.size());
 	}
 }

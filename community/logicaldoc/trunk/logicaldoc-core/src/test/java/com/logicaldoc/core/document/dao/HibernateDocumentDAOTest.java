@@ -168,7 +168,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(0, ids.size());
 	}
-
+	
 	@Test
 	public void testStore() throws IOException {
 		Document doc = new Document();
