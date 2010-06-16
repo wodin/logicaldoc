@@ -22,7 +22,7 @@
 		actionListener="#{documentNavigation.nodeClicked}">
 		<ice:treeNode>
 			<f:facet name="content">
-				<ice:panelGroup style="display: inline" menuPopup="folderPop">
+				<ice:panelGroup style="display: inline">
 					<ice:graphicImage value="#{StyleBean.imagesPath}/tree/folder.png"
 						rendered="#{item.userObject.expanded==false}" />
 					<ice:graphicImage
@@ -33,10 +33,6 @@
 							title="#{item.userObject.displayText}"
 							styleClass="folderTreeSelected#{item.userObject.selected}" />
 					</ice:commandLink>
-					<ice:menuPopup styleClass="mpopup" id="folderPop" noIcons="true"
-						orientation="vertical">
-						<ice:menuItems value="#{item.userObject.menuItems}" />
-					</ice:menuPopup>
 				</ice:panelGroup>
 			</f:facet>
 		</ice:treeNode>

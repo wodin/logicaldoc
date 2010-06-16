@@ -248,7 +248,7 @@ public class DocumentNavigation extends NavigationBean {
 	 * @return
 	 */
 	protected void createMenuItems() {
-		if (selectedDir == null || selectedDir.getMenu() == null)
+		if ( selectedDir == null || selectedDir.getMenu() == null)
 			return;
 
 		folderItems.clear();

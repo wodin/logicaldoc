@@ -317,28 +317,28 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 				+ branchObject.getDisplayText());
 		branchNode.setUserObject(branchObject);
 
-		// Iterate over subdirs
-		if (depth != 0) {
-			List<Menu> children = (List<Menu>) menuDao.findByUserId(userId, dir.getId(), menuType);
-			Collections.sort(children, new Comparator<Menu>() {
-				@Override
-				public int compare(Menu menu1, Menu menu2) {
-					return menu1.getText().compareTo(menu2.getText());
-				}
-			});
-
-			for (Menu child : children) {
-				branchObject.setLeaf(false);
-
-				if (depth > 0) {
-					addDir(userId, branchNode, child, depth - 1);
-				} else if (depth == -1) {
-					addDir(userId, branchNode, child, depth);
-				}
-			}
-		} else {
-			branchObject.setLeaf(menuDao.countByUserId(userId, dir.getId(), menuType) == 0);
-		}
+//		// Iterate over subdirs
+//		if (depth != 0) {
+//			List<Menu> children = (List<Menu>) menuDao.findByUserId(userId, dir.getId(), menuType);
+//			Collections.sort(children, new Comparator<Menu>() {
+//				@Override
+//				public int compare(Menu menu1, Menu menu2) {
+//					return menu1.getText().compareTo(menu2.getText());
+//				}
+//			});
+//
+//			for (Menu child : children) {
+//				branchObject.setLeaf(false);
+//
+//				if (depth > 0) {
+//					addDir(userId, branchNode, child, depth - 1);
+//				} else if (depth == -1) {
+//					addDir(userId, branchNode, child, depth);
+//				}
+//			}
+//		} else {
+//			branchObject.setLeaf(menuDao.countByUserId(userId, dir.getId(), menuType) == 0);
+//		}
 
 		branchObject.setLoaded(true);
 		directories.put(dir.getId(), branchObject);
