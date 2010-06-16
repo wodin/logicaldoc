@@ -14,7 +14,6 @@ import org.java.plugin.registry.PluginDescriptor;
 import org.springframework.util.Log4jConfigurer;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.logicaldoc.core.SystemProperty;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.dbinit.PluginDbInit;
 import com.logicaldoc.core.searchengine.Indexer;
@@ -178,14 +177,9 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		pbean.setProperty("conf.exportdir", exportDir);
 		pbean.write();
 
-		// Save the LOGICALDOC_REPOSITORY property
-		String logicaldocHome = FilenameUtils.separatorsToSystem(repoFolder.getPath());
-		SystemProperty.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
-
 		// Refresh the current logging location
 		try {
-			String rootPath = SystemProperty.getProperty(SystemProperty.LOGICALDOC_APP_ROOTDIR);
-			String log4jPath = rootPath + "/WEB-INF/classes/ldoc-log4j.xml";
+			String log4jPath = getServletContext().getRealPath("/WEB-INF/classes/ldoc-log4j.xml");
 			System.err.println("log4jPath = " + log4jPath);
 			Log4jConfigurer.initLogging(log4jPath);
 		} catch (FileNotFoundException e) {

@@ -27,13 +27,13 @@ public class WebDAVPlugin extends LogicalDOCPlugin {
 		
 		String webappDir = resolvePath("webapp");
 		File src = new File(webappDir);
-		File dest = new File(System.getProperty("logicaldoc.app.rootdir"));
+		File dest = new File(webappDir + "/../../../../");
 
 		log.info("Copy web resources from " + src.getPath() + " to "
 				+ dest.getPath());
 		FileUtils.copyDirectory(src, dest);
 		
-		WebConfigurator config = new WebConfigurator();
+		WebConfigurator config = new WebConfigurator(dest.getPath() + "/WEB-INF/web.xml");
 		config.addServlet(SERVLET_NAME, "com.logicaldoc.webdav.web.WebdavServlet", 4);
 		config.writeXMLDoc();
 		config.addInitParam(SERVLET_NAME, "resource-path-prefix", "/webdav", null);

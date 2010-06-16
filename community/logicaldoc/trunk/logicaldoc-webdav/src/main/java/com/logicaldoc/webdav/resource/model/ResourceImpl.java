@@ -3,6 +3,9 @@ package com.logicaldoc.webdav.resource.model;
 import java.io.InputStream;
 import java.util.Date;
 
+import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.webdav.session.DavSession;
 
 /**
@@ -42,13 +45,13 @@ public class ResourceImpl implements Resource {
 
 	private Date creationDate;
 
-	private boolean writeEnabled;
+	private Boolean writeEnabled;
 
-	private boolean deleteEnabled;
+	private Boolean deleteEnabled;
 
-	private boolean renameEnabled;
+	private Boolean renameEnabled;
 
-	private boolean addChildEnabled;
+	private Boolean addChildEnabled;
 
 	DavSession session;
 
@@ -187,10 +190,22 @@ public class ResourceImpl implements Resource {
 	}
 
 	public boolean isDeleteEnabled() {
+		if (deleteEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
+					MenuDAO.class);
+			this.deleteEnabled=mdao.isPermissionEnabled(Permission.DELETE, Long.parseLong(id),
+					personRequest);
+		}
 		return this.deleteEnabled;
 	}
 
 	public boolean isRenameEnabled() {
+		if (renameEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
+					MenuDAO.class);
+			this.renameEnabled=mdao.isPermissionEnabled(Permission.RENAME, Long.parseLong(id),
+					personRequest);
+		}
 		return this.renameEnabled;
 	}
 
@@ -203,6 +218,12 @@ public class ResourceImpl implements Resource {
 	}
 
 	public boolean isWriteEnabled() {
+		if (writeEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
+					MenuDAO.class);
+			this.writeEnabled=mdao.isPermissionEnabled(Permission.WRITE, Long.parseLong(id),
+					personRequest);
+		}
 		return writeEnabled;
 	}
 
@@ -211,6 +232,12 @@ public class ResourceImpl implements Resource {
 	}
 
 	public boolean isAddChildEnabled() {
+		if (addChildEnabled == null) {
+			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
+					MenuDAO.class);
+			this.addChildEnabled=mdao.isPermissionEnabled(Permission.ADD_CHILD, Long.parseLong(id),
+					personRequest);
+		}
 		return this.addChildEnabled;
 	}
 

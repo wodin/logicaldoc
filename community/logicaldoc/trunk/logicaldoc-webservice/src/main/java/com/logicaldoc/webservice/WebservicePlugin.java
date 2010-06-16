@@ -23,13 +23,13 @@ public class WebservicePlugin extends LogicalDOCPlugin {
 	protected void install() throws Exception {
 		String webappDir = resolvePath("webapp");
 		File src = new File(webappDir);
-		File dest = new File(System.getProperty("logicaldoc.app.rootdir"));
+		File dest = new File(webappDir + "/../../../../");
 
 		log.info("Copy web resources from " + src.getPath() + " to "
 				+ dest.getPath());
 		FileUtils.copyDirectory(src, dest);
 		
-		WebConfigurator config=new WebConfigurator();
+		WebConfigurator config = new WebConfigurator(dest.getPath()+"/WEB-INF/web.xml");
 		config.addServlet("CXFServlet", "com.logicaldoc.webservice.WebserviceServlet");
 		config.writeXMLDoc();
 		config.addServletMapping("CXFServlet", "/services/*");
