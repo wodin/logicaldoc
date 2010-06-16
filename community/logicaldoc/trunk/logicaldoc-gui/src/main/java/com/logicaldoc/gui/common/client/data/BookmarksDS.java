@@ -35,8 +35,9 @@ public class BookmarksDS extends DataSource {
 		DataSourceIntegerField position = new DataSourceIntegerField("position");
 		DataSourceTextField userId = new DataSourceTextField("userId");
 		DataSourceTextField docId = new DataSourceTextField("docId");
+		DataSourceTextField folderId = new DataSourceTextField("folderId");
 
-		setFields(id, name, description, icon, userId, docId, position);
+		setFields(id, name, description, icon, userId, docId, position, folderId);
 		setClientOnly(true);
 		setDataURL("data/bookmarks.xml?sid=" + Session.get().getSid());
 	}

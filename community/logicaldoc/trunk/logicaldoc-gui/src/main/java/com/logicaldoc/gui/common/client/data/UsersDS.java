@@ -22,16 +22,15 @@ public class UsersDS extends DataSource {
 		id.setPrimaryKey(true);
 
 		DataSourceTextField username = new DataSourceTextField("username");
-		DataSourceTextField groupId = new DataSourceTextField("groupId");
 		DataSourceTextField label = new DataSourceTextField("label");
-		DataSourceImageField active = new DataSourceImageField("active");
+		DataSourceImageField enabled = new DataSourceImageField("eenabled");
 		DataSourceTextField name = new DataSourceTextField("name");
 		DataSourceTextField firstName = new DataSourceTextField("firstName");
 		DataSourceTextField email = new DataSourceTextField("email");
 		DataSourceTextField phone = new DataSourceTextField("phone");
 		DataSourceTextField cell = new DataSourceTextField("cell");
 
-		setFields(id, username, label, groupId, active, name, firstName, email, phone, cell);
+		setFields(id, username, label, enabled, name, firstName, email, phone, cell);
 		setDataURL("data/users.xml?sid=" + Session.get().getSid() + (grpId != null ? "&groupId=" + grpId : ""));
 		setClientOnly(true);
 	}

@@ -35,8 +35,7 @@ public class MockUsersDataServlet extends HttpServlet {
 			writer.print("<id>" + i + "</id>");
 			writer.print("<username>User " + i + "</username>");
 			writer.print("<label>Marco Meschieri " + i + "</label>");
-			writer.print("<groupId>" + (-i) + "</groupId>");
-			writer.print("<active>0</active>");
+			writer.print("<eenabled>0</eenabled>");
 			writer.print("<name>Meschieri</name>");
 			writer.print("<firstName>Marco</firstName>");
 			writer.print("<email>m.meschieri@logicalobjects.it</email>");

@@ -179,7 +179,15 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	public void deleteUser(String sid, long userId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		userDao.delete(userId);
+
+		// Create the user history event
+		UserHistory transaction = new UserHistory();
+		transaction.setSessionId(sid);
+		transaction.setEvent(UserHistory.EVENT_USER_DELETED);
+		transaction.setComment("");
+		transaction.setUser(userDao.findById(userId));
+
+		userDao.delete(userId, transaction);
 	}
 
 	@Override
@@ -222,18 +230,18 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setPostalCode(user.getPostalcode());
 			usr.setState(user.getState());
 			usr.setUserName(user.getUserName());
+			usr.setPasswordExpires(user.getPasswordExpires() == 1);
 
 			GUIGroup[] grps = new GUIGroup[user.getGroups().size()];
-
 			int i = 0;
 			for (Group group : user.getGroups()) {
 				grps[i] = new GUIGroup();
 				grps[i].setId(group.getId());
 				grps[i].setName(group.getName());
 				grps[i].setDescription(group.getDescription());
-				grps[i].setName(group.getName());
 				i++;
 			}
+			usr.setGroups(grps);
 
 			return usr;
 		}
@@ -264,12 +272,25 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		if (group.getId() != 0) {
 			grp = groupDao.findById(group.getId());
 			groupDao.initialize(grp);
-		} else
+
+			grp.setName(group.getName());
+			grp.setDescription(group.getDescription());
+			if (group.getInheritGroupId() == null || group.getInheritGroupId().longValue() <= 0) {
+				groupDao.store(grp);
+			} else {
+				groupDao.insert(grp, group.getInheritGroupId().longValue());
+			}
+		} else {
 			grp = new Group();
 
-		grp.setName(group.getName());
-		grp.setDescription(group.getDescription());
-		groupDao.store(grp);
+			grp.setName(group.getName());
+			grp.setDescription(group.getDescription());
+			groupDao.store(grp);
+
+			if (group.getInheritGroupId() != null && group.getInheritGroupId().longValue() > 0)
+				groupDao.inheritACLs(group.getId(), group.getInheritGroupId().longValue());
+		}
+
 		group.setId(grp.getId());
 
 		return group;
@@ -280,35 +301,51 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		SessionUtil.validateSession(sid);
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User usr;
-		if (user.getId() != 0) {
-			usr = userDao.findById(user.getId());
-			userDao.initialize(usr);
-		} else
-			usr = new User();
 
-		usr.setCity(user.getCity());
-		usr.setCountry(user.getCountry());
-		usr.setEmail(user.getEmail());
-		usr.setFirstName(user.getFirstName());
-		usr.setName(user.getName());
-		usr.setLanguage(user.getLanguage());
-		usr.setPostalcode(user.getPostalCode());
-		usr.setState(user.getState());
-		usr.setStreet(user.getAddress());
-		usr.setTelephone(user.getPhone());
-		usr.setTelephone2(user.getCell());
-		usr.setUserName(user.getUserName());
+		try {
+			User usr;
+			if (user.getId() != 0) {
+				usr = userDao.findById(user.getId());
+				userDao.initialize(usr);
+			} else
+				usr = new User();
 
-		userDao.store(usr);
-		user.setId(usr.getId());
+			usr.setCity(user.getCity());
+			usr.setCountry(user.getCountry());
+			usr.setEmail(user.getEmail());
+			usr.setFirstName(user.getFirstName());
+			usr.setName(user.getName());
+			usr.setLanguage(user.getLanguage());
+			usr.setPostalcode(user.getPostalCode());
+			usr.setState(user.getState());
+			usr.setStreet(user.getAddress());
+			usr.setTelephone(user.getPhone());
+			usr.setTelephone2(user.getCell());
+			usr.setUserName(user.getUserName());
+			usr.setEnabled(user.isEnabled() ? 1 : 0);
+			usr.setPasswordExpires(user.isPasswordExpires() ? 1 : 0);
 
-		SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
-		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
-		manager.removeUserFromAllGroups(usr);
-		for (GUIGroup grp : user.getGroups()) {
-			Group g = groupDao.findById(grp.getId());
-			manager.assignUserToGroup(usr, g);
+			userDao.store(usr);
+			user.setId(usr.getId());
+
+			SecurityManager manager = (SecurityManager) Context.getInstance().getBean(SecurityManager.class);
+			GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+			manager.removeUserFromAllGroups(usr);
+			long[] ids = new long[user.getGroups().length];
+			for (int i = 0; i < user.getGroups().length; i++) {
+				ids[i] = user.getGroups()[i].getId();
+			}
+			manager.assignUserToGroups(usr, ids);
+
+			Group adminGroup = groupDao.findByName("admin");
+			// The admin user must always member of admin group
+			if ("admin".equals(user.getUserName()) && !user.isMemberOf("admin")) {
+				manager.assignUserToGroup(usr, adminGroup);
+			}
+			userDao.store(usr);
+
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
 
 		return user;
@@ -402,7 +439,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void saveExtAuthSettings(String sid, GUILdapSettings ldapSettings, GUIADSettings adSettings) throws InvalidSessionException {
+	public void saveExtAuthSettings(String sid, GUILdapSettings ldapSettings, GUIADSettings adSettings)
+			throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
 		BasicLDAPContextSource ldapContextSource = (BasicLDAPContextSource) Context.getInstance().getBean(

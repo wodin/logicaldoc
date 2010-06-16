@@ -2,15 +2,18 @@ package com.logicaldoc.web.data;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.logicaldoc.core.document.Bookmark;
+import org.apache.commons.io.FilenameUtils;
+
 import com.logicaldoc.core.document.dao.BookmarkDAO;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -36,23 +39,35 @@ public class BookmarksDataServlet extends HttpServlet {
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
 
-		BookmarkDAO dao = (BookmarkDAO) Context.getInstance().getBean(BookmarkDAO.class);
-
 		/*
 		 * Iterate over the collection of bookmarks
 		 */
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
-		for (Bookmark bookmark : dao.findByUserId(session.getUserId())) {
+
+		BookmarkDAO dao = (BookmarkDAO) Context.getInstance().getBean(BookmarkDAO.class);
+		StringBuffer query = new StringBuffer(
+				"select A.id, A.fileType, A.title, A.description, A.position, A.userId, A.docId, B.folder.id "
+						+ "from Bookmark A, Document B where A.docId = B.id and A.docId = " + session.getUserId());
+
+		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
+
+		/*
+		 * Iterate over records composing the response XML document
+		 */
+		for (Object record : records) {
+			Object[] cols = (Object[]) record;
+
 			writer.print("<bookmark>");
-			writer.print("<id>" + bookmark.getId() + "</id>");
-			writer.print("<icon>" + bookmark.getIcon() + "</icon>");
-			writer.print("<name><![CDATA[" + bookmark.getTitle() + "]]></name>");
-			writer.print("<description><![CDATA[" + bookmark.getDescription() + "]]></description>");
-			writer.print("<position>" + bookmark.getPosition() + "</position>");
-			writer.print("<userId>" + bookmark.getUserId() + "</userId>");
-			writer.print("<docId>" + bookmark.getDocId() + "</docId>");
+			writer.print("<id>" + cols[0] + "</id>");
+			writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[1])) + "</icon>");
+			writer.print("<name><![CDATA[" + cols[2] + "]]></name>");
+			writer.print("<description><![CDATA[" + cols[3] + "]]></description>");
+			writer.print("<position>" + cols[4] + "</position>");
+			writer.print("<userId>" + cols[5] + "</userId>");
+			writer.print("<docId>" + cols[6] + "</docId>");
+			writer.print("<folderId>" + cols[7] + "</folderId>");
 			writer.print("</bookmark>");
 		}
 		writer.write("</list>");

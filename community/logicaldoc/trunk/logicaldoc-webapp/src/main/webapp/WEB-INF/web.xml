@@ -128,12 +128,12 @@
 
   <servlet>
     <servlet-name>GroupsData</servlet-name>
-    <servlet-class>com.logicaldoc.gui.common.server.MockGroupsDataServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.data.GroupsDataServlet</servlet-class>
   </servlet>
 
   <servlet>
     <servlet-name>UsersData</servlet-name>
-    <servlet-class>com.logicaldoc.gui.common.server.MockUsersDataServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.data.UsersDataServlet</servlet-class>
   </servlet>
 
   <servlet>
@@ -187,6 +187,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>UserHistoryData</servlet-name>
+    <servlet-class>com.logicaldoc.web.data.UserHistoryDataServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>LanguagesData</servlet-name>
     <servlet-class>com.logicaldoc.gui.frontend.server.MockLanguagesDataServlet</servlet-class>
   </servlet>
@@ -213,7 +218,7 @@
 
   <servlet>
     <servlet-name>RightsData</servlet-name>
-    <servlet-class>com.logicaldoc.gui.common.server.MockRightsDataServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.data.RightsDataServlet</servlet-class>
   </servlet>
 
   <servlet>
@@ -339,6 +344,11 @@
   <servlet-mapping>
     <servlet-name>FolderHistoryData</servlet-name>
     <url-pattern>/data/folderhistory.xml</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>UserHistoryData</servlet-name>
+    <url-pattern>/data/userhistory.xml</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

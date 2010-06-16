@@ -18,6 +18,8 @@ public class GUIBookmark implements Serializable {
 
 	private String description;
 
+	private Long folderId;
+
 	public long getId() {
 		return id;
 	}
@@ -40,5 +42,13 @@ public class GUIBookmark implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Long getFolderId() {
+		return folderId;
+	}
+
+	public void setFolderId(Long folderId) {
+		this.folderId = folderId;
 	}
 }

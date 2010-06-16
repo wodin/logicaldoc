@@ -10,6 +10,9 @@ import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
@@ -19,10 +22,10 @@ import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
+import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
 
@@ -33,9 +36,9 @@ import com.smartgwt.client.widgets.layout.HLayout;
  * @since 6.0
  */
 public class UserPropertiesPanel extends HLayout {
-	private DynamicForm form1 = new DynamicForm();
+	private HLayout addingGroup = new HLayout();
 
-	private DynamicForm form2 = new DynamicForm();
+	private DynamicForm form1 = new DynamicForm();
 
 	private ValuesManager vm = new ValuesManager();
 
@@ -90,7 +93,7 @@ public class UserPropertiesPanel extends HLayout {
 		if (!readonly)
 			expires.addChangedHandler(changedHandler);
 
-		CheckboxItem enabled = new CheckboxItem("enabled", I18N.message("enabled"));
+		CheckboxItem enabled = new CheckboxItem("eenabled", I18N.message("enabled"));
 		enabled.setValue(user.isEnabled());
 		if (readonly || "admin".equals(user.getUserName())) {
 			enabled.setDisabled(true);
@@ -166,35 +169,29 @@ public class UserPropertiesPanel extends HLayout {
 		/*
 		 * Prepare the second form for the groups
 		 */
-		if (form2 != null)
-			form2.destroy();
-		if (contains(form2))
-			removeChild(form2);
-		form2 = new DynamicForm();
+		if (addingGroup != null)
+			addingGroup.destroy();
+		if (contains(addingGroup))
+			removeChild(addingGroup);
+		DynamicForm form2 = new DynamicForm();
 
 		List<FormItem> items = new ArrayList<FormItem>();
 		final ComboBoxItem group = new ComboBoxItem("group");
 		group.setTitle(I18N.message("group"));
-		group.setPickListWidth(250);
-		group.setOptionDataSource(GroupsDS.get());
-		group.addChangedHandler(new ChangedHandler() {
-			@Override
-			public void onChanged(ChangedEvent event) {
-				ListGridRecord record = group.getSelectedRecord();
-				GUIGroup group = new GUIGroup();
-				group.setId(Long.parseLong(record.getAttributeAsString("id")));
-				group.setName(record.getAttributeAsString("name"));
-				group.setDescription(record.getAttributeAsString("description"));
-				user.addGroup(group);
-				refresh();
-				changedHandler.onChanged(null);
-			}
-		});
+		group.setValueField("id");
+		group.setDisplayField("name");
+		group.setPickListWidth(300);
+		ListGridField n = new ListGridField("name");
+		ListGridField description = new ListGridField("description");
+		group.setPickListFields(n, description);
+		group.setOptionDataSource(GroupsDS.get(user.getId()));
 		items.add(group);
 
 		FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
 		int i = 0;
 		for (GUIGroup grp : user.getGroups()) {
+			if (grp.getName().contains("_user"))
+				continue;
 			final StaticTextItem gp = ItemFactory.newStaticTextItem("group" + i++, "group", grp.getName());
 			if (!("admin".equals(user.getUserName()) && "admin".equals(grp.getName())))
 				gp.setIcons(icon);
@@ -210,7 +207,31 @@ public class UserPropertiesPanel extends HLayout {
 		}
 
 		form2.setItems(items.toArray(new FormItem[0]));
-		addMember(form2);
+		addingGroup.addMember(form2);
+
+		Button addGroup = new Button(I18N.message("addgroup"));
+		addGroup.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				ListGridRecord selectedRecord = group.getSelectedRecord();
+				if (selectedRecord == null)
+					return;
+
+				if (!user.isMemberOf(selectedRecord.getAttributeAsString("name"))) {
+					GUIGroup group = new GUIGroup();
+					group.setId(Long.parseLong(selectedRecord.getAttributeAsString("id")));
+					group.setName(selectedRecord.getAttributeAsString("name"));
+					group.setDescription(selectedRecord.getAttributeAsString("description"));
+					user.addGroup(group);
+					refresh();
+					changedHandler.onChanged(null);
+				}
+			}
+		});
+		addingGroup.addMember(addGroup);
+
+		addMember(addingGroup);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -220,7 +241,7 @@ public class UserPropertiesPanel extends HLayout {
 		if (!vm.hasErrors()) {
 			user.setUserName((String) values.get("username"));
 			user.setExpired((Boolean) values.get("expires"));
-			user.setEnabled((Boolean) values.get("enabled"));
+			user.setEnabled((Boolean) values.get("eenabled"));
 			user.setName((String) values.get("name"));
 			user.setFirstName((String) values.get("firstname"));
 			user.setAddress((String) values.get("address"));

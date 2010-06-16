@@ -23,14 +23,11 @@ public class UserHistoryPanel extends VLayout {
 
 	public UserHistoryPanel(long userId) {
 		ListGridField event = new ListGridField("event", I18N.message("event"), 200);
-		ListGridField version = new ListGridField("version", I18N.message("version"), 70);
 		ListGridField date = new ListGridField("date", I18N.message("date"), 110);
 		date.setAlign(Alignment.CENTER);
 		date.setType(ListGridFieldType.DATE);
 		date.setCellFormatter(new DateCellFormatter());
 		ListGridField comment = new ListGridField("comment", I18N.message("comment"));
-		ListGridField title = new ListGridField("title", I18N.message("title"));
-		ListGridField path = new ListGridField("path", I18N.message("path"));
 		ListGridField sid = new ListGridField("sid", I18N.message("sid"));
 
 		listGrid = new ListGrid();
@@ -38,7 +35,7 @@ public class UserHistoryPanel extends VLayout {
 		listGrid.setAutoFetchData(true);
 		dataSource = new UserHistoryDS(userId);
 		listGrid.setDataSource(dataSource);
-		listGrid.setFields(event, date, comment, version, title, path, sid);
+		listGrid.setFields(event, date, comment, sid);
 		addMember(listGrid);
 	}
 

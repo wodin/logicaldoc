@@ -12,6 +12,8 @@ import com.logicaldoc.gui.frontend.client.folder.FolderDetailsPanel;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.FolderService;
+import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
@@ -28,6 +30,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class DocumentsPanel extends HLayout implements FolderObserver, DocumentObserver {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
+	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
 	private Layout listing = new VLayout();
 
@@ -137,18 +141,28 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 					details.redraw();
 				}
 
-				// TODO Operations for bookmarks
-				// if (folder == null || folder.getId() !=
-				// result.getFolder().getId()) {
-				// folder = result.getFolder();
-				// }
-				// if (hiliteDocId == null || hiliteDocId != result.getId()) {
-				// hiliteDocId = result.getId();
-				// updateListingPanel();
-				// }
-
 				if (clearSelection)
 					((DocumentsListPanel) listingPanel).getList().deselectAllRecords();
+			}
+		});
+	}
+
+	/**
+	 * Shows the documents list under the folder with the given folderId and
+	 * highlights the document with the given docId
+	 */
+	public void onFolderSelect(long folderId, long docId) {
+		hiliteDocId = docId;
+		folderService.getFolder(Session.get().getSid(), folderId, false, new AsyncCallback<GUIFolder>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(GUIFolder folder) {
+				updateListingPanel(folder, hiliteDocId, max);
 			}
 		});
 	}
@@ -167,17 +181,17 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		if (max != null && max > 0)
 			this.max = max;
 
-		updateListingPanel();
+		updateListingPanel(folder, hiliteDocId, this.max);
 
 		showFolderDetails();
 
 		hiliteDocId = null;
 	}
 
-	private void updateListingPanel() {
+	private void updateListingPanel(GUIFolder folder, Long hiliteDocId, Integer max) {
 		listing.removeMember(listingPanel);
 		listingPanel.destroy();
-		listingPanel = new DocumentsListPanel(folder, hiliteDocId, this.max);
+		listingPanel = new DocumentsListPanel(folder, hiliteDocId, max);
 		listing.addMember(listingPanel);
 		listing.redraw();
 	}
