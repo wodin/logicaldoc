@@ -6,7 +6,7 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
- * Datasource to retrieve all templates. It is based on Xml parsing.
+ * Datasource to retrieve all groups. It is based on Xml parsing.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -14,7 +14,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 public class GroupsDS extends DataSource {
 	private static GroupsDS instance;
 
-	private GroupsDS() {
+	private GroupsDS(Long excludeUserId) {
 		setTitleField("name");
 		setRecordXPath("/list/group");
 		DataSourceTextField id = new DataSourceTextField("id", I18N.message("id"));
@@ -26,14 +26,25 @@ public class GroupsDS extends DataSource {
 		DataSourceTextField label = new DataSourceTextField("label");
 
 		setFields(id, name, description, label);
-		setDataURL("data/groups.xml?sid=" + Session.get().getSid());
+		setDataURL("data/groups.xml?sid=" + Session.get().getSid() + "&locale=" + I18N.getLocale()
+				+ (excludeUserId != null ? "&excludeUserId=" + excludeUserId : ""));
 
 		setClientOnly(true);
 	}
 
 	public static GroupsDS get() {
 		if (instance == null)
-			instance = new GroupsDS();
+			instance = new GroupsDS(null);
 		return instance;
+	}
+
+	/**
+	 * Useful method to retrieve all groups that not contains the user with the
+	 * given excludeUserId.
+	 * 
+	 * @param excludeUserId The user id
+	 */
+	public static GroupsDS get(long excludeUserId) {
+		return new GroupsDS(excludeUserId);
 	}
 }

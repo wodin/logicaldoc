@@ -77,14 +77,14 @@ public class GroupUsersPanel extends VLayout {
 		ListGridField email = new ListGridField("email", I18N.message("email"), 200);
 		email.setCanFilter(true);
 
-		ListGridField active = new ListGridField("active", " ", 24);
-		active.setType(ListGridFieldType.IMAGE);
-		active.setCanSort(false);
-		active.setAlign(Alignment.CENTER);
-		active.setShowDefaultContextMenu(false);
-		active.setImageURLPrefix(Util.imagePrefix());
-		active.setImageURLSuffix(".gif");
-		active.setCanFilter(false);
+		ListGridField enabled = new ListGridField("eenabled", " ", 24);
+		enabled.setType(ListGridFieldType.IMAGE);
+		enabled.setCanSort(false);
+		enabled.setAlign(Alignment.CENTER);
+		enabled.setShowDefaultContextMenu(false);
+		enabled.setImageURLPrefix(Util.imagePrefix());
+		enabled.setImageURLSuffix(".gif");
+		enabled.setCanFilter(false);
 
 		list = new ListGrid();
 		list.setShowRecordComponents(true);
@@ -95,7 +95,7 @@ public class GroupUsersPanel extends VLayout {
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
 		list.setDataSource(UsersDS.get(groupId));
-		list.setFields(id, active, username, firstName, name, email, cell, phone);
+		list.setFields(id, enabled, username, firstName, name, email, cell, phone);
 
 		HLayout buttons = new HLayout();
 		buttons.setHeight(25);
@@ -144,6 +144,7 @@ public class GroupUsersPanel extends VLayout {
 						record.setAttribute("email", selectedRecord.getAttribute("email"));
 						record.setAttribute("phone", selectedRecord.getAttribute("phone"));
 						record.setAttribute("cell", selectedRecord.getAttribute("cell"));
+						record.setAttribute("eenabled", selectedRecord.getAttribute("eenabled"));
 						list.addData(record);
 					}
 				});

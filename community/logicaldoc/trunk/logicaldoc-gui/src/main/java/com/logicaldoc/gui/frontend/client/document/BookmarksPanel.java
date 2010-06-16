@@ -11,8 +11,6 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
-import com.logicaldoc.gui.frontend.client.services.FolderService;
-import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
@@ -42,8 +40,6 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
  */
 public class BookmarksPanel extends VLayout {
 	private DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
-
-	private static FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
 	private ListGrid list;
 
@@ -108,9 +104,10 @@ public class BookmarksPanel extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
+				DocumentsPanel.get().onFolderSelect(Long.parseLong(record.getAttributeAsString("folderId")),
+						Long.parseLong(record.getAttributeAsString("docId")));
 				DocumentsPanel.get().onSelectedDocument(Long.parseLong(record.getAttributeAsString("docId")), false);
 			}
-
 		});
 
 		list.addEditCompleteHandler(new EditCompleteHandler() {

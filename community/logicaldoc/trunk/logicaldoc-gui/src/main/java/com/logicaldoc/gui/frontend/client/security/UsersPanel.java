@@ -90,14 +90,14 @@ public class UsersPanel extends VLayout {
 		ListGridField email = new ListGridField("email", I18N.message("email"), 200);
 		email.setCanFilter(true);
 
-		ListGridField active = new ListGridField("active", " ", 24);
-		active.setType(ListGridFieldType.IMAGE);
-		active.setCanSort(false);
-		active.setAlign(Alignment.CENTER);
-		active.setShowDefaultContextMenu(false);
-		active.setImageURLPrefix(Util.imagePrefix());
-		active.setImageURLSuffix(".gif");
-		active.setCanFilter(false);
+		ListGridField enabled = new ListGridField("eenabled", " ", 24);
+		enabled.setType(ListGridFieldType.IMAGE);
+		enabled.setCanSort(false);
+		enabled.setAlign(Alignment.CENTER);
+		enabled.setShowDefaultContextMenu(false);
+		enabled.setImageURLPrefix(Util.imagePrefix());
+		enabled.setImageURLSuffix(".gif");
+		enabled.setCanFilter(false);
 
 		list = new ListGrid();
 		list.setShowRecordComponents(true);
@@ -108,7 +108,7 @@ public class UsersPanel extends VLayout {
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
 		list.setDataSource(UsersDS.get());
-		list.setFields(id, active, username, firstName, name, email, cell, phone);
+		list.setFields(id, enabled, username, firstName, name, email, cell, phone);
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);
@@ -186,9 +186,9 @@ public class UsersPanel extends VLayout {
 		record.setAttribute("cell", user.getCell());
 		record.setAttribute("phone", user.getPhone());
 		if (user.isEnabled())
-			record.setAttribute("active", "0");
+			record.setAttribute("eenabled", "0");
 		else
-			record.setAttribute("active", "2");
+			record.setAttribute("eenabled", "2");
 
 		if (record.getAttributeAsString("id") != null
 				&& (user.getId() == Long.parseLong(record.getAttributeAsString("id")))) {

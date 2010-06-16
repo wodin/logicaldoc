@@ -74,8 +74,7 @@ public class ExtAuthPanel extends VLayout {
 		implementation.setValue(this.ldapSettings.getImplementation());
 
 		// Enabled
-		RadioGroupItem enabled = ItemFactory.newBooleanSelector("enabled", "enabled");
-		enabled.setName("enabled");
+		RadioGroupItem enabled = ItemFactory.newBooleanSelector("eenabled", "enabled");
 		enabled.setValue(this.ldapSettings.isEnabled() ? "yes" : "no");
 
 		// Url
@@ -212,7 +211,7 @@ public class ExtAuthPanel extends VLayout {
 
 				if (vm.validate()) {
 					ExtAuthPanel.this.ldapSettings.setImplementation((String) values.get("implementation"));
-					ExtAuthPanel.this.ldapSettings.setEnabled(values.get("enabled").equals("yes") ? true : false);
+					ExtAuthPanel.this.ldapSettings.setEnabled(values.get("eenabled").equals("yes") ? true : false);
 					ExtAuthPanel.this.ldapSettings.setUrl((String) values.get("url"));
 					ExtAuthPanel.this.ldapSettings.setUsername((String) values.get("username"));
 					ExtAuthPanel.this.ldapSettings.setPwd((String) values.get("password"));

@@ -17,18 +17,14 @@ public class UserHistoryDS extends DataSource {
 		setRecordXPath("/list/history");
 		DataSourceTextField user = new DataSourceTextField("user");
 
-		DataSourceTextField docId = new DataSourceTextField("docId");
 		DataSourceTextField folderId = new DataSourceTextField("folderId");
 
 		DataSourceDateTimeField date = new DataSourceDateTimeField("date");
 		DataSourceTextField event = new DataSourceTextField("event");
 		DataSourceTextField comment = new DataSourceTextField("comment");
-		DataSourceTextField version = new DataSourceTextField("version");
-		DataSourceTextField title = new DataSourceTextField("title");
-		DataSourceTextField path = new DataSourceTextField("path");
 		DataSourceTextField sid = new DataSourceTextField("sid");
 
-		setFields(user, date, event, comment, version, title, path, sid, folderId, docId);
+		setFields(user, date, event, comment, sid, folderId);
 		setClientOnly(true);
 		setDataURL("data/userhistory.xml?sid=" + Session.get().getSid() + "&id=" + userId + "&locale="
 				+ I18N.getLocale());
