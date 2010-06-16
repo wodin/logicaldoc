@@ -56,7 +56,7 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 		String webappDir = resolvePath("webapp");
 		File src = new File(webappDir);
-		File dest = new File(System.getProperty("logicaldoc.app.rootdir"));
+		File dest = new File(webappDir + "/../../../../");
 		log.info("Copy web resources from " + src.getPath() + " to " + dest.getPath());
 		FileUtils.copyDirectory(src, dest);
 		

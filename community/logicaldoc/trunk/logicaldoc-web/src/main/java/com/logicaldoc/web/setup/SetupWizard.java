@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -26,14 +25,12 @@ import com.icesoft.faces.component.paneltabset.PanelTabSet;
 import com.icesoft.faces.component.paneltabset.TabChangeEvent;
 import com.icesoft.faces.component.paneltabset.TabChangeListener;
 import com.icesoft.faces.webapp.http.servlet.ServletExternalContext;
-import com.logicaldoc.core.SystemProperty;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.dbinit.PluginDbInit;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.DBMSConfigurator;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.web.ApplicationInitializer;
 
 /**
  * @author Alessandro Gasparini - Logical Objects
@@ -91,22 +88,12 @@ public class SetupWizard implements TabChangeListener {
 			pbean.setProperty("conf.exportdir", exportDir);
 			pbean.write();
 
-			// Save the LOGICALDOC_REPOSITORY property
-			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
-			String logicaldocHome = FilenameUtils.separatorsToSystem(workingDir);
-			conf.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
-			SystemProperty.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
-
-//			ServletContext servletContext = (ServletContext) ((ServletExternalContext) FacesContext
-//					.getCurrentInstance().getExternalContext()).getContext();
-//			Properties boot = ApplicationInitializer.loadBootProperties(servletContext);
-//			boot.setProperty(SystemProperty.LOGICALDOC_REPOSITORY, logicaldocHome);
-//			ApplicationInitializer.saveBootProperties(boot, servletContext);
+			ServletContext servletContext = (ServletContext) ((ServletExternalContext) FacesContext
+					.getCurrentInstance().getExternalContext()).getContext();
 
 			// Refresh the current logging location
 			try {
-				String rootPath = SystemProperty.getProperty(SystemProperty.LOGICALDOC_APP_ROOTDIR);
-				String log4jPath = rootPath + "/WEB-INF/classes/ldoc-log4j.xml";
+				String log4jPath = servletContext.getRealPath("/WEB-INF/classes/ldoc-log4j.xml");
 				System.err.println("log4jPath = " + log4jPath);
 				Log4jConfigurer.initLogging(log4jPath);
 			} catch (FileNotFoundException e) {
@@ -117,7 +104,7 @@ public class SetupWizard implements TabChangeListener {
 			Context.refresh();
 
 			// Reload the bean for security
-			conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 
 			String path = conf.getPropertyWithSubstitutions("conf.indexdir");
 			System.out.println();

@@ -16,8 +16,8 @@ public class WebConfigurator extends XMLBean {
 	
 	public static enum INIT_PARAM{ PARAM_OVERWRITE, PARAM_APPEND, PARAM_STOP }
 	
-	public WebConfigurator() {
-		super(System.getProperty("logicaldoc.app.rootdir") + "/WEB-INF/web.xml");
+	public WebConfigurator(String path) {
+		super(path);
 	}
 
 	/**
