@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -18,8 +19,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
-public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> extends HibernateDaoSupport implements
-		PersistentObjectDAO<T> {
+public abstract class HibernatePersistentObjectDAO<T extends PersistentObject>
+		extends HibernateDaoSupport implements PersistentObjectDAO<T> {
 	protected Log log = LogFactory.getLog(HibernatePersistentObjectDAO.class);
 
 	protected Class<T> entityClass;
@@ -71,22 +72,31 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		return findByWhere(where, new Object[0], order);
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
-	public List<T> findByWhere(String where, Object[] values, String order) {
+	public List<T> findByWhere(String where, Object[] values, String order,
+			Integer max) {
 		List<T> coll = new ArrayList<T>();
 		try {
-			String query = "from " + entityClass.getCanonicalName() + " _entity where _entity.deleted=0 "
-					+ (StringUtils.isNotEmpty(where) ? " and (" + where + ") " : " ")
+			String query = "from "
+					+ entityClass.getCanonicalName()
+					+ " _entity where _entity.deleted=0 "
+					+ (StringUtils.isNotEmpty(where) ? " and (" + where + ") "
+							: " ")
 					+ (StringUtils.isNotEmpty(order) ? order : " ");
 			log.debug("Execute query: " + query);
-			coll = (List<T>) getHibernateTemplate().find(query, values);
+			coll = (List<T>) getHibernateTemplate(max).find(query, values);
 		} catch (Exception e) {
 			e.printStackTrace();
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
 		return coll;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<T> findByWhere(String where, Object[] values, String order) {
+		return findByWhere(where, values, order, null);
 	}
 
 	@Override
@@ -97,34 +107,61 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Long> findIdsByWhere(String where, Object[] values, String order) {
+		return findIdsByWhere(where, values, order, null);
+	}
+
+	public List<Long> findIdsByWhere(String where, Object[] values,
+			String order, Integer max) {
 		List<Long> coll = new ArrayList<Long>();
 		try {
-			String query = "select _entity.id from " + entityClass.getCanonicalName()
+			String query = "select _entity.id from "
+					+ entityClass.getCanonicalName()
 					+ " _entity where _entity.deleted = 0 "
-					+ (StringUtils.isNotEmpty(where) ? " and (" + where + ") " : " ")
+					+ (StringUtils.isNotEmpty(where) ? " and (" + where + ") "
+							: " ")
 					+ (StringUtils.isNotEmpty(order) ? order : " ");
 			log.debug("Execute query: " + query);
-			coll = (List<Long>) getHibernateTemplate().find(query, values);
+			coll = (List<Long>) getHibernateTemplate(max).find(query, values);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
 		return coll;
+	}
+
+	/**
+	 * Useful method that creates a template for returnig a maximum number of
+	 * results. If the max results is <1 than the default template is returned.
+	 * 
+	 * @param maxResults
+	 *            The maximum results number
+	 */
+	protected HibernateTemplate getHibernateTemplate(Integer maxResults) {
+		if (maxResults == null || maxResults < 1)
+			return getHibernateTemplate();
+		HibernateTemplate template = new HibernateTemplate(getSessionFactory());
+		template.setMaxResults(maxResults);
+		return template;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Object> findByQuery(String query, Object[] values) {
+		return findByQuery(query, values, null);
+	}
+
+	public List<Object> findByQuery(String query, Object[] values, Integer max) {
 		List<Object> coll = new ArrayList<Object>();
 		try {
 			log.debug("Execute query: " + query);
-			coll = (List<Object>) getHibernateTemplate().find(query, values != null ? values : new Object[0]);
+			coll = (List<Object>) getHibernateTemplate(max).find(query,
+					values != null ? values : new Object[0]);
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
 		return coll;
 	}
-
+	
 	public boolean store(T entity) {
 		boolean result = true;
 		try {
@@ -147,7 +184,8 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public List<Object> findByJdbcQuery(String query, int returnedColumns, Object[] values) {
+	public List<Object> findByJdbcQuery(String query, int returnedColumns,
+			Object[] values) {
 		assert (returnedColumns > 0);
 
 		List<Object> coll = new ArrayList<Object>();
@@ -205,11 +243,14 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 			ids.append(Long.toString(t.getId()));
 		}
 		getHibernateTemplate().bulkUpdate(
-				"update " + entityClass.getCanonicalName() + " set deleted=1 where id in(" + ids.toString() + ")");
+				"update " + entityClass.getCanonicalName()
+						+ " set deleted=1 where id in(" + ids.toString() + ")");
 	}
 
 	@Override
 	public int bulkUpdate(String expression, Object[] values) {
-		return getHibernateTemplate().bulkUpdate("update " + entityClass.getCanonicalName() + " " + expression, values);
+		return getHibernateTemplate().bulkUpdate(
+				"update " + entityClass.getCanonicalName() + " " + expression,
+				values);
 	}
 }

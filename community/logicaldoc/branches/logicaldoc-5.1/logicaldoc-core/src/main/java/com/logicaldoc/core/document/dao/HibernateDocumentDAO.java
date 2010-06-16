@@ -40,7 +40,8 @@ import com.logicaldoc.util.sql.SqlUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document> implements DocumentDAO {
+public class HibernateDocumentDAO extends
+		HibernatePersistentObjectDAO<Document> implements DocumentDAO {
 	private HistoryDAO historyDAO;
 
 	private VersionDAO versionDAO;
@@ -99,7 +100,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public boolean delete(long docId, History transaction) {
 		boolean result = true;
 		try {
-			Document doc = (Document) getHibernateTemplate().get(Document.class, docId);
+			Document doc = (Document) getHibernateTemplate().get(
+					Document.class, docId);
 			if (doc != null && doc.getImmutable() == 0) {
 				// Remove versions
 				for (Version version : versionDAO.findByDocId(docId)) {
@@ -108,7 +110,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				}
 
 				// Remove discussions
-				for (DiscussionThread discussion : discussionDAO.findByDocId(docId)) {
+				for (DiscussionThread discussion : discussionDAO
+						.findByDocId(docId)) {
 					discussion.setDeleted(1);
 					getHibernateTemplate().saveOrUpdate(discussion);
 				}
@@ -160,7 +163,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	 * @see com.logicaldoc.core.document.dao.DocumentDAO#findLockedByUserId(java.lang.String)
 	 */
 	public List<Document> findLockedByUserId(long userId) {
-		return findByWhere("_entity.lockUserId = " + userId + " and not(_entity.status=" + Document.DOC_UNLOCKED + ")",
+		return findByWhere("_entity.lockUserId = " + userId
+				+ " and not(_entity.status=" + Document.DOC_UNLOCKED + ")",
 				null);
 	}
 
@@ -268,8 +272,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				}
 				query.append(") and lower(B.ld_tag) like '");
 				query.append(firstLetter.toLowerCase()).append("%' ");
-				query.append("union select distinct B.ld_tag, D.ld_id from ld_tag B, ld_document D"
-						+ " where D.LD_DELETED = 0 and B.ld_docid = D.LD_DOCREF and lower(B.ld_tag) like '");
+				query
+						.append("union select distinct B.ld_tag, D.ld_id from ld_tag B, ld_document D"
+								+ " where D.LD_DELETED = 0 and B.ld_docid = D.LD_DOCREF and lower(B.ld_tag) like '");
 				query.append(firstLetter.toLowerCase()).append("%' ");
 
 				Connection con = null;
@@ -306,11 +311,14 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		List<Document> coll = new ArrayList<Document>();
 
 		try {
-			StringBuilder query = new StringBuilder("SELECT _history.docId from History _history");
-			query.append(" WHERE _history.userId = " + Long.toString(userId) + " ");
+			StringBuilder query = new StringBuilder(
+					"SELECT _history.docId from History _history");
+			query.append(" WHERE _history.userId = " + Long.toString(userId)
+					+ " ");
 			query.append(" ORDER BY _history.date DESC");
 
-			List<Long> results = (List<Long>) getHibernateTemplate().find(query.toString());
+			List<Long> results = (List<Long>) getHibernateTemplate().find(
+					query.toString());
 			for (Long docid : results) {
 				if (coll.size() >= maxElements)
 					break;
@@ -332,7 +340,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 		try {
 			StringBuilder query = new StringBuilder("SELECT COUNT(tag), tag");
-			query.append(" FROM Document _entity JOIN _entity.tags tag GROUP BY tag");
+			query
+					.append(" FROM Document _entity JOIN _entity.tags tag GROUP BY tag");
 
 			List ssss = getHibernateTemplate().find(query.toString());
 			for (Iterator iter = ssss.iterator(); iter.hasNext();) {
@@ -360,7 +369,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			if (precoll.isEmpty())
 				return coll;
 
-			StringBuffer query = new StringBuffer("select distinct(_entity) from Document _entity  ");
+			StringBuffer query = new StringBuffer(
+					"select distinct(_entity) from Document _entity  ");
 			query.append(" left outer join _menu.menuGroups as _group ");
 			query.append(" where _group.groupId in (");
 
@@ -387,7 +397,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				first = false;
 			}
 			query.append(")");
-			coll = (List<Document>) getHibernateTemplate().find(query.toString());
+			coll = (List<Document>) getHibernateTemplate().find(
+					query.toString());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -419,7 +430,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					first = false;
 				}
 				query.append(")");
-				query.append(" AND lower(D.ld_tag)='" + SqlUtil.doubleQuotes(tag) + "'");
+				query.append(" AND lower(D.ld_tag)='"
+						+ SqlUtil.doubleQuotes(tag) + "'");
 
 				query
 						.append("union select distinct(C.ld_id) from ld_document C, ld_tag D where C.ld_docref=D.ld_docid AND C.ld_deleted=0 AND lower(D.ld_tag)='"
@@ -457,11 +469,13 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		List<Document> coll = new ArrayList<Document>();
 
 		try {
-			StringBuffer query = new StringBuffer("select _userdoc.id.docId from UserDoc _userdoc");
+			StringBuffer query = new StringBuffer(
+					"select _userdoc.id.docId from UserDoc _userdoc");
 			query.append(" where _userdoc.id.userId = ?");
 			query.append(" order by _userdoc.date desc");
 
-			List<Long> results = (List<Long>) getHibernateTemplate().find(query.toString(), userId);
+			List<Long> results = (List<Long>) getHibernateTemplate().find(
+					query.toString(), userId);
 			ArrayList<Long> tmpal = new ArrayList<Long>(results);
 			List<Long> docIds = tmpal;
 
@@ -484,7 +498,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			query.append(")");
 
 			// execute the query
-			List<Document> unorderdColl = (List<Document>) getHibernateTemplate().find(query.toString());
+			List<Document> unorderdColl = (List<Document>) getHibernateTemplate()
+					.find(query.toString());
 
 			// put all elements in a map
 			HashMap<Long, Document> hm = new HashMap<Long, Document>();
@@ -508,28 +523,35 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public List<Long> findDocIdByFolder(long folderId) {
-		return findIdsByWhere("_entity.folder.id = " + Long.toString(folderId), null);
+		return findIdsByWhere("_entity.folder.id = " + Long.toString(folderId),
+				null, null, 1000);
 	}
 
 	@Override
 	public List<Document> findByFolder(long folderId) {
-		return findByWhere("_entity.folder.id = " + Long.toString(folderId), null);
+		return findByWhere("_entity.folder.id = " + Long.toString(folderId),
+				null, null, 1000);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findLinkedDocuments(long docId, String linkType, Integer direction) {
+	public List<Document> findLinkedDocuments(long docId, String linkType,
+			Integer direction) {
 		List<Document> coll = new ArrayList<Document>();
 		StringBuffer query = null;
 		try {
-			query = new StringBuffer("select distinct(_entity) from Document _entity, DocumentLink _link where ");
+			query = new StringBuffer(
+					"select distinct(_entity) from Document _entity, DocumentLink _link where ");
 			if (direction == null) {
-				query.append(" ((_link.document1 = _entity and _link.document1.id = ? )"
-						+ "or (_link.document2 = _entity and _link.document2.id = ? )) ");
+				query
+						.append(" ((_link.document1 = _entity and _link.document1.id = ? )"
+								+ "or (_link.document2 = _entity and _link.document2.id = ? )) ");
 			} else if (direction.intValue() == 1)
-				query.append(" _link.document1 = _entity and _link.document1.id = ? ");
+				query
+						.append(" _link.document1 = _entity and _link.document1.id = ? ");
 			else if (direction.intValue() == 2)
-				query.append(" _link.document2 = _entity and _link.document2.id = ? ");
+				query
+						.append(" _link.document2 = _entity and _link.document2.id = ? ");
 			if (StringUtils.isNotEmpty(linkType)) {
 				query.append(" and _link.type = '");
 				query.append(linkType);
@@ -537,9 +559,11 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			}
 
 			if (direction == null)
-				coll = (List<Document>) getHibernateTemplate().find(query.toString(), new Object[] { docId, docId });
+				coll = (List<Document>) getHibernateTemplate().find(
+						query.toString(), new Object[] { docId, docId });
 			else
-				coll = (List<Document>) getHibernateTemplate().find(query.toString(), new Object[] { docId });
+				coll = (List<Document>) getHibernateTemplate().find(
+						query.toString(), new Object[] { docId });
 
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
@@ -550,8 +574,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
-	public List<Document> findByFileNameAndParentFolderId(long folderId, String fileName, Long excludeId) {
-		String query = "_entity.folder.id = " + folderId + " and lower(_entity.fileName) like '"
+	public List<Document> findByFileNameAndParentFolderId(long folderId,
+			String fileName, Long excludeId) {
+		String query = "_entity.folder.id = " + folderId
+				+ " and lower(_entity.fileName) like '"
 				+ SqlUtil.doubleQuotes(fileName.toLowerCase()) + "'";
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
@@ -559,8 +585,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
-	public List<Document> findByTitleAndParentFolderId(long folderId, String title, Long excludeId) {
-		String query = "_entity.folder.id = " + folderId + " and lower(_entity.title) like '"
+	public List<Document> findByTitleAndParentFolderId(long folderId,
+			String title, Long excludeId) {
+		String query = "_entity.folder.id = " + folderId
+				+ " and lower(_entity.title) like '"
 				+ SqlUtil.doubleQuotes(title.toLowerCase()) + "'";
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
@@ -725,13 +753,15 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public List<Document> findByIndexed(int indexed) {
-		return findByWhere("_entity.indexed=" + indexed, "order by _entity.lastModified asc");
+		return findByWhere("_entity.indexed=" + indexed,
+				"order by _entity.lastModified asc");
 	}
 
 	@Override
 	public void restore(long docId) {
 		super.bulkUpdate("set ld_deleted=0 where ld_id=" + docId, null);
-		List<Object> folders = super.findByJdbcQuery("select ld_folderid from ld_document where ld_id=" + docId, 1,
+		List<Object> folders = super.findByJdbcQuery(
+				"select ld_folderid from ld_document where ld_id=" + docId, 1,
 				null);
 		for (Object id : folders) {
 			menuDAO.restore((Long) id, true);
@@ -742,7 +772,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public Document findByCustomId(String customId) {
 		Document doc = null;
 		try {
-			String query = "_entity.customId = '" + SqlUtil.doubleQuotes(customId) + "'";
+			String query = "_entity.customId = '"
+					+ SqlUtil.doubleQuotes(customId) + "'";
 			List<Document> coll = findByWhere(query, null);
 			if (!coll.isEmpty()) {
 				doc = coll.get(0);
@@ -803,10 +834,13 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		transaction.setTitle(doc.getTitle());
 		transaction.setVersion(doc.getVersion());
 
-		transaction.setPath(doc.getFolder().getPathExtended() + "/" + doc.getFolder().getText());
+		transaction.setPath(doc.getFolder().getPathExtended() + "/"
+				+ doc.getFolder().getText());
 		transaction.setPath(transaction.getPath().replaceAll("//", "/"));
-		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents/", "/"));
-		transaction.setPath(transaction.getPath().replaceFirst("/menu.documents", "/"));
+		transaction.setPath(transaction.getPath().replaceFirst(
+				"/menu.documents/", "/"));
+		transaction.setPath(transaction.getPath().replaceFirst(
+				"/menu.documents", "/"));
 
 		transaction.setNotified(0);
 

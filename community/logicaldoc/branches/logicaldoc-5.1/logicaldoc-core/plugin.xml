@@ -334,7 +334,7 @@
 
   <!-- Start folder menu -->
   <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderSearch">
-    <parameter id="action" value="item.userObject.searchInFolder" />
+    <parameter id="action" value="documentNavigation.searchInFolder" />
     <parameter id="link" value="" />
     <parameter id="target" value="" />
     <parameter id="title" value="search" />
@@ -344,7 +344,7 @@
   </extension>
   
   <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderHistory">
-    <parameter id="action" value="item.userObject.history" />
+    <parameter id="action" value="documentNavigation.history" />
     <parameter id="link" value="" />
     <parameter id="title" value="history" />
     <parameter id="rendered" value="true" />

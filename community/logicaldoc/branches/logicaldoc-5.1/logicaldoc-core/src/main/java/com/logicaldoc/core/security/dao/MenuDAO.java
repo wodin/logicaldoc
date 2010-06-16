@@ -273,4 +273,6 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	public boolean delete(long menuId, History transaction);
 
 	public void setUniqueFolderName(Menu menu);
+	
+	public List<Menu> findChildren(long parentId, long userId);
 }
