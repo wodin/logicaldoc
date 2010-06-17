@@ -65,22 +65,12 @@ public abstract class PluginRegistry {
 	}
 
 	/**
-	 * Initializes all found plugins using the system variable
-	 * "logicaldoc.app.pluginsdir" as pluginsdir
-	 */
-	public void init() {
-		init(System.getProperty("plugin.pluginsdir"));
-	}
-
-	/**
 	 * Initializes all found plugins
 	 */
 	public void init(String pluginsDir) {
 		ExtendedProperties properties = new ExtendedProperties();
 		properties.put("org.java.plugin.PathResolver", "com.logicaldoc.util.ShadingPathResolver");
-		properties.put("com.logicaldoc.util.ShadingPathResolver.shadowFolder", System
-				.getProperty("logicaldoc.app.pluginsdir")
-				+ "/../.plugins");
+		properties.put("com.logicaldoc.util.ShadingPathResolver.shadowFolder", pluginsDir + "/../.plugins");
 		properties.put("com.logicaldoc.util.ShadingPathResolver.unpackMode", "always");
 
 		ObjectFactory pluginObjectFactory = ObjectFactory.newInstance(properties);
