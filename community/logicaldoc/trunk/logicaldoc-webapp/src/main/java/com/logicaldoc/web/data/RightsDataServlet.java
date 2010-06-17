@@ -2,7 +2,6 @@ package com.logicaldoc.web.data;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.logicaldoc.core.security.Group;
+import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.MenuGroup;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
@@ -35,49 +39,42 @@ public class RightsDataServlet extends HttpServlet {
 		response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 		response.setHeader("Expires", "0");
 
+		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+		Menu menu = menuDao.findById(folderId);
+		menuDao.initialize(menu);
+
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
-
-		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		StringBuffer query = new StringBuffer(
-				"select A.groupId, C.name, A.write, A.addChild, A.manageSecurity, A.manageImmutability, A.delete, A.rename, "
-						+ "A.bulkImport, A.bulkExport, A.sign, A.archive, A.workflow "
-						+ "from MenuGroup A, Menu B, Group C where A.menuId = B.id and A.groupId = C.id ");
-		if (folderId != null)
-			query.append(" and B.id=" + folderId);
-
-		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
 
 		/*
 		 * Iterate over records composing the response XML document
 		 */
-		for (Object record : records) {
-			Object[] cols = (Object[]) record;
-
-			writer.print("<right>");
-			writer.print("<entityId>" + cols[0] + "</entityId>");
-			writer.print("<entity><![CDATA[" + cols[1] + "]]></entity>");
-			writer.print("<read>true</read>");
-			writer.print("<write>" + trueOfFalse((Integer) cols[2]) + "</write>");
-			writer.print("<add>" + trueOfFalse((Integer) cols[3]) + "</add>");
-			writer.print("<security>" + trueOfFalse((Integer) cols[4]) + "</security>");
-			writer.print("<immutable>" + trueOfFalse((Integer) cols[5]) + "</immutable>");
-			writer.print("<delete>" + trueOfFalse((Integer) cols[6]) + "</delete>");
-			writer.print("<rename>" + trueOfFalse((Integer) cols[7]) + "</rename>");
-			writer.print("<import>" + trueOfFalse((Integer) cols[8]) + "</import>");
-			writer.print("<export>" + trueOfFalse((Integer) cols[9]) + "</export>");
-			writer.print("<sign>" + trueOfFalse((Integer) cols[10]) + "</sign>");
-			writer.print("<archive>" + trueOfFalse((Integer) cols[11]) + "</archive>");
-			writer.print("<workflow>" + trueOfFalse((Integer) cols[12]) + "</workflow>");
-			writer.print("</right>");
+		for (Group group : groupDao.findAll()) {
+			if (group.getType() == Group.TYPE_DEFAULT
+					|| ((group.getType() != Group.TYPE_DEFAULT) && (group.getUsers().isEmpty() || group.getUsers()
+							.iterator().next().getType() == User.TYPE_DEFAULT))) {
+				MenuGroup menuGroup = menu.getMenuGroup(group.getId());
+				if (menuGroup != null) {
+					writer.print("<right>");
+					writer.print("<entityId>" + group.getId() + "</entityId>");
+					writer.print("<entity><![CDATA[" + group.getName() + "]]></entity>");
+					writer.print("<read>true</read>");
+					writer.print("<write>" + menuGroup.getWrite() + "</write>");
+					writer.print("<add>" + menuGroup.getAddChild() + "</add>");
+					writer.print("<security>" + menuGroup.getManageSecurity() + "</security>");
+					writer.print("<immutable>" + menuGroup.getManageImmutability() + "</immutable>");
+					writer.print("<delete>" + menuGroup.getDelete() + "</delete>");
+					writer.print("<rename>" + menuGroup.getRename() + "</rename>");
+					writer.print("<import>" + menuGroup.getBulkImport() + "</import>");
+					writer.print("<export>" + menuGroup.getBulkExport() + "</export>");
+					writer.print("<sign>" + menuGroup.getSign() + "</sign>");
+					writer.print("<archive>" + menuGroup.getArchive() + "</archive>");
+					writer.print("<workflow>" + menuGroup.getWorkflow() + "</workflow>");
+					writer.print("</right>");
+				}
+			}
 		}
 		writer.write("</list>");
-	}
-
-	private String trueOfFalse(int value) {
-		if (value == 1)
-			return "true";
-		else
-			return "false";
 	}
 }

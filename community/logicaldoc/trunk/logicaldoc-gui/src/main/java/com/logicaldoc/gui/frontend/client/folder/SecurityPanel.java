@@ -95,11 +95,11 @@ public class SecurityPanel extends FolderDetailTab {
 		rename.setType(ListGridFieldType.BOOLEAN);
 		rename.setCanEdit(true);
 
-		ListGridField _import = new ListGridField("import", I18N.message("import"), 60);
+		ListGridField _import = new ListGridField("import", I18N.message("iimport"), 60);
 		_import.setType(ListGridFieldType.BOOLEAN);
 		_import.setCanEdit(true);
 
-		ListGridField export = new ListGridField("export", I18N.message("export"), 60);
+		ListGridField export = new ListGridField("export", I18N.message("eexport"), 60);
 		export.setType(ListGridFieldType.BOOLEAN);
 		export.setCanEdit(true);
 

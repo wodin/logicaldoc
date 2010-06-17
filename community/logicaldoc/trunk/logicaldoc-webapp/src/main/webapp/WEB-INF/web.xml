@@ -123,7 +123,7 @@
 
   <servlet>
     <servlet-name>TagsData</servlet-name>
-    <servlet-class>com.logicaldoc.gui.common.server.MockTagsDataServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.data.TagsDataServlet</servlet-class>
   </servlet>
 
   <servlet>

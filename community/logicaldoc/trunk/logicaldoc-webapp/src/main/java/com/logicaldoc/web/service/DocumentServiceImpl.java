@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.AccessControlException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -48,7 +50,6 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.MimeType;
-import com.logicaldoc.util.TagUtil;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.web.data.UploadServlet;
 import com.logicaldoc.web.util.SessionUtil;
@@ -743,7 +744,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				Document docVO = new Document();
 				docVO.setTitle(document.getTitle());
 				if (document.getTags().length > 0)
-					docVO.setTags(TagUtil.extractTags(document.getTags().toString()));
+					docVO.setTags(new HashSet<String>(Arrays.asList(document.getTags())));
+
 				docVO.setSourceType(document.getSourceType());
 				docVO.setFileName(document.getFileName());
 				docVO.setVersion(document.getVersion());

@@ -10,7 +10,6 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Side;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -64,13 +63,13 @@ public class DocumentDetailsPanel extends VLayout {
 	TabSet tabSet = new TabSet();
 
 	private DynamicForm saveForm;
-	
+
 	private DocumentObserver observer;
 
 	public DocumentDetailsPanel(DocumentObserver observer) {
 		super();
-		this.observer=observer;
-		
+		this.observer = observer;
+
 		setHeight100();
 		setWidth100();
 		setMembersMargin(10);
@@ -85,7 +84,7 @@ public class DocumentDetailsPanel extends VLayout {
 				onSave();
 			}
 		});
-		
+
 		TextItem versionComment = ItemFactory.newTextItem("versionComment", "versioncomment", null);
 		versionComment.setWidth(300);
 		saveForm.setItems(versionComment);
