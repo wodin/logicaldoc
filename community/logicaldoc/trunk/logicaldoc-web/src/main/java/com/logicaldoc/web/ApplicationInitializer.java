@@ -37,9 +37,7 @@ public class ApplicationInitializer implements ServletContextListener {
 		}
 
 		// Prepare the plugins dir
-		String pluginsDir = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/");
-		pluginsDir = StringUtils.removeEnd(pluginsDir, "/");
-		pluginsDir += "/WEB-INF/plugins";
+		String pluginsDir = context.getRealPath("/WEB-INF/plugins");
 
 		// Initialize plugins
 		com.logicaldoc.util.PluginRegistry.getInstance().init(pluginsDir);

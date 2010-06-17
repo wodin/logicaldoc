@@ -8,7 +8,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Log4jConfigurer;
 
 import com.logicaldoc.util.config.LoggingConfigurator;
@@ -51,9 +50,7 @@ public class ApplicationInitializer implements ServletContextListener {
 		}
 
 		// Prepare the plugins dir
-		String pluginsDir = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/");
-		pluginsDir = StringUtils.removeEnd(pluginsDir, "/");
-		pluginsDir += "/WEB-INF/plugins";
+		String pluginsDir = context.getRealPath("/WEB-INF/plugins");
 
 		// Initialize plugins
 		com.logicaldoc.util.PluginRegistry.getInstance().init(pluginsDir);
@@ -70,7 +67,8 @@ public class ApplicationInitializer implements ServletContextListener {
 		// Clean the upload folder
 		File uploadDir = new File(context.getRealPath("upload"));
 		try {
-			FileUtils.forceDelete(uploadDir);
+			if (uploadDir.exists())
+				FileUtils.forceDelete(uploadDir);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
