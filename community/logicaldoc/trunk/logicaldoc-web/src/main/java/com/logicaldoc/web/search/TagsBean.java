@@ -308,9 +308,8 @@ public class TagsBean extends SortableList {
 
 	public void selectWordsByFirstLetter(String lett) {
 		try {
-			long userId = SessionManagement.getUserId();
 			DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			Collection<String> coll = ddao.findTags(lett, userId);
+			Collection<String> coll = ddao.findTags(lett).keySet();
 			Iterator<String> iter = coll.iterator();
 			Hashtable<String, Integer> table = new Hashtable<String, Integer>(coll.size());
 

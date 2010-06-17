@@ -262,62 +262,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return result;
 	}
 
-	@SuppressWarnings( { "unchecked", "deprecation" })
-	public List<String> findTags(String firstLetter, long userId) {
-		List<String> coll = new ArrayList<String>();
-
-		try {
-			User user = userDAO.findById(userId);
-			Collection<Group> precoll = user.getGroups();
-			Iterator iter = precoll.iterator();
-
-			if (!precoll.isEmpty()) {
-				StringBuffer query = new StringBuffer(
-						"select distinct B.ld_tag, A.ld_id from ld_document A, ld_tag B, ld_menugroup C "
-								+ " where A.ld_deleted=0 and A.ld_id = B.ld_docid and A.ld_folderid=C.ld_menuid and C.ld_groupid in (");
-				boolean first = true;
-				while (iter.hasNext()) {
-					if (!first)
-						query.append(",");
-					Group ug = (Group) iter.next();
-					query.append(Long.toString(ug.getId()));
-					first = false;
-				}
-				query.append(") and lower(B.ld_tag) like '");
-				query.append(firstLetter.toLowerCase()).append("%' ");
-				query.append("union select distinct B.ld_tag, D.ld_id from ld_tag B, ld_document D"
-						+ " where D.LD_DELETED = 0 and B.ld_docid = D.LD_DOCREF and lower(B.ld_tag) like '");
-				query.append(firstLetter.toLowerCase()).append("%' ");
-
-				Connection con = null;
-				Statement stmt = null;
-				ResultSet rs = null;
-
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query.toString());
-					while (rs.next()) {
-						coll.add(rs.getString(1));
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
-
-		return coll;
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<Document> findLastModifiedByUserId(long userId, int maxElements) {
 		List<Document> coll = new ArrayList<Document>();
@@ -344,12 +288,15 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<String, Integer> findAllTags() {
+	public Map<String, Integer> findTags(String firstLetter) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 
 		try {
 			StringBuilder query = new StringBuilder("SELECT COUNT(tag), tag");
-			query.append(" FROM Document _entity JOIN _entity.tags tag GROUP BY tag");
+			query.append(" FROM Document _entity JOIN _entity.tags tag ");
+			if (StringUtils.isNotEmpty(firstLetter))
+				query.append(" where lower(tag) like '" + firstLetter.toLowerCase() + "%'");
+			query.append(" GROUP BY tag");
 
 			List ssss = getHibernateTemplate().find(query.toString());
 			for (Iterator iter = ssss.iterator(); iter.hasNext();) {
@@ -365,6 +312,49 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 		return map;
 	}
+
+	// @SuppressWarnings( { "unchecked", "deprecation" })
+	// public List<String> findTags(String firstLetter) {
+	// List<String> coll = new ArrayList<String>();
+	//
+	// try {
+	// StringBuffer query = new
+	// StringBuffer("select distinct B.ld_tag, A.ld_id from ld_document A, ld_tag B "
+	// + " where A.ld_deleted=0 and A.ld_id = B.ld_docid ");
+	// query.append(" and lower(B.ld_tag) like '");
+	// query.append(firstLetter.toLowerCase()).append("%' ");
+	// query.append("union select distinct B.ld_tag, D.ld_id from ld_tag B, ld_document D"
+	// +
+	// " where D.LD_DELETED = 0 and B.ld_docid = D.LD_DOCREF and lower(B.ld_tag) like '");
+	// query.append(firstLetter.toLowerCase()).append("%' ");
+	//
+	// Connection con = null;
+	// Statement stmt = null;
+	// ResultSet rs = null;
+	//
+	// try {
+	// con = getSession().connection();
+	// stmt = con.createStatement();
+	// rs = stmt.executeQuery(query.toString());
+	// while (rs.next()) {
+	// coll.add(rs.getString(1));
+	// }
+	// } finally {
+	// if (rs != null)
+	// rs.close();
+	// if (stmt != null)
+	// stmt.close();
+	// if (con != null)
+	// con.close();
+	// }
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// if (log.isErrorEnabled())
+	// log.error(e.getMessage(), e);
+	// }
+	//
+	// return coll;
+	// }
 
 	@SuppressWarnings("unchecked")
 	@Override
