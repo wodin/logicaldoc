@@ -8,7 +8,6 @@ import java.util.Set;
 import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
-import com.logicaldoc.core.security.Menu;
 
 /**
  * This class is a DAO-service for documents.
@@ -94,17 +93,17 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 */
 	public List<Long> findDocIdByTag(String tag);
 
-	/**
-	 * This method selects all tags starting with a specified letter.
-	 * 
-	 * @param letter - First letter of the wanted tags.
-	 */
-	public Collection<String> findTags(String firstLetter, long userId);
+	// /**
+	// * This method selects all tags starting with a specified letter.
+	// *
+	// * @param letter - First letter of the wanted tags.
+	// */
+	// public Collection<String> findTags(String firstLetter);
 
 	/**
 	 * This method selects all tags and counts the occurrences.
 	 */
-	public Map<String, Integer> findAllTags();
+	public Map<String, Integer> findTags(String firstLetter);
 
 	/**
 	 * Finds authorized documents for a user having a specified tag.

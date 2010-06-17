@@ -273,10 +273,9 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 	@Test
 	public void testFindTags() {
-		Collection<String> tags = dao.findTags("a", 1);
+		Collection<String> tags = dao.findTags("a").keySet();
 		Assert.assertNotNull(tags);
-		// There is also the shortcut
-		Assert.assertEquals(3, tags.size());
+		Assert.assertEquals(2, tags.size());
 		Assert.assertTrue(tags.contains("abc"));
 	}
 

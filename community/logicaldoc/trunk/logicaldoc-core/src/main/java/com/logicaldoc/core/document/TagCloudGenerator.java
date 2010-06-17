@@ -84,7 +84,7 @@ public class TagCloudGenerator extends Task {
 	public List<TagCloud> getTagClouds() {
 		List<TagCloud> tags = new ArrayList<TagCloud>();
 
-		HashMap<String, Integer> tgs = (HashMap<String, Integer>) documentDao.findAllTags();
+		HashMap<String, Integer> tgs = (HashMap<String, Integer>) documentDao.findTags(null);
 		if (tgs.isEmpty())
 			return tags;
 
