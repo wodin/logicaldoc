@@ -63,10 +63,22 @@ public class FoldersNavigator extends TreeGrid {
 		addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				Menu contextMenu = setupContextMenu();
-				contextMenu.showContextMenu();
-				if (event != null)
-					event.cancel();
+				service.getFolder(Session.get().getSid(), Long.parseLong(event.getRecord().getAttributeAsString("id")),
+						true, new AsyncCallback<GUIFolder>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIFolder folder) {
+								Menu contextMenu = setupContextMenu(folder);
+								contextMenu.showContextMenu();
+								// if (event != null)
+								// event.cancel();
+							}
+						});
 			}
 		});
 
@@ -96,17 +108,14 @@ public class FoldersNavigator extends TreeGrid {
 	/**
 	 * Prepares the context menu.
 	 */
-	private Menu setupContextMenu() {
+	private Menu setupContextMenu(GUIFolder folder) {
 		final TreeNode selectedNode = (TreeNode) getSelectedRecord();
 		final long id = Long.parseLong(selectedNode.getAttribute("id"));
 		final String name = selectedNode.getAttribute("name");
-		boolean add = selectedNode.getAttributeAsBoolean(Constants.PERMISSION_ADD);
+
+		GUIFolder parent = folder.getParent();
 
 		final TreeNode parentNode = getTree().getParent(selectedNode);
-		boolean parentDelete = false;
-		if (parentNode != null) {
-			parentDelete = parentNode.getAttributeAsBoolean(Constants.PERMISSION_DELETE);
-		}
 
 		Menu contextMenu = new Menu();
 
@@ -209,16 +218,15 @@ public class FoldersNavigator extends TreeGrid {
 
 		if (id != Constants.DOCUMENTS_FOLDERID)
 			reload.setEnabled(false);
-		if (!add)
+		if (!folder.hasPermission(Constants.PERMISSION_ADD))
 			addItem.setEnabled(false);
-		if (id == Constants.DOCUMENTS_FOLDERID || !parentDelete) {
+		if (id == Constants.DOCUMENTS_FOLDERID || !parent.hasPermission(Constants.PERMISSION_DELETE)) {
 			delete.setEnabled(false);
 			move.setEnabled(false);
 		}
 		if (id == Constants.DOCUMENTS_FOLDERID)
 			exportZip.setEnabled(false);
 
-		GUIFolder folder = Session.get().getCurrentFolder();
 		if (!folder.hasPermission(Constants.PERMISSION_WRITE) || Clipboard.getInstance().isEmpty()) {
 			pasteItem.setEnabled(false);
 			pasteAsAliasItem.setEnabled(false);

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
@@ -29,7 +29,7 @@ public class FoldersDataServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		SessionUtil.validateSession(request);
+		UserSession session = SessionUtil.validateSession(request);
 
 		long parent = Long.parseLong(request.getParameter("parent"));
 
@@ -52,69 +52,24 @@ public class FoldersDataServlet extends HttpServlet {
 			writer.print("<id>" + Menu.MENUID_DOCUMENTS + "</id>");
 			writer.print("<parent>" + parent + "</parent>");
 			writer.print("<name>/</name>");
-			writer.print("<"
-					+ Constants.PERMISSION_ADD
-					+ ">"
-					+ dao.isPermissionEnabled(Permission.ADD_CHILD, Menu.MENUID_DOCUMENTS, SessionUtil.getSessionUser(
-							request).getId()) + "</" + Constants.PERMISSION_ADD + ">");
-			writer.print("<"
-					+ Constants.PERMISSION_DELETE
-					+ ">"
-					+ dao.isPermissionEnabled(Permission.DELETE, Menu.MENUID_DOCUMENTS, SessionUtil.getSessionUser(
-							request).getId()) + "</" + Constants.PERMISSION_DELETE + ">");
-			writer.print("<"
-					+ Constants.PERMISSION_RENAME
-					+ ">"
-					+ dao.isPermissionEnabled(Permission.RENAME, Menu.MENUID_DOCUMENTS, SessionUtil.getSessionUser(
-							request).getId()) + "</" + Constants.PERMISSION_RENAME + ">");
-			writer.print("<"
-					+ Constants.PERMISSION_WRITE
-					+ ">"
-					+ dao.isPermissionEnabled(Permission.WRITE, Menu.MENUID_DOCUMENTS, SessionUtil.getSessionUser(
-							request).getId()) + "</" + Constants.PERMISSION_WRITE + ">");
 			writer.print("</folder>");
 			writer.write("</list>");
 			return;
 		}
-		/*
-		 * Execute the Query
-		 */
-
-		StringBuffer query = new StringBuffer("select A.id, A.parentId, A.text from Menu A where A.type = "
-				+ Menu.MENUTYPE_DIRECTORY + " and A.parentId = " + parent);
-
-		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
 
 		/*
-		 * Iterqte over records composing the response XML document
+		 * Get the visible children
 		 */
+		List<Menu> folders = dao.findChildren(parent, session.getUserId());
 
-		for (Object record : records) {
-			Object[] cols = (Object[]) record;
+		/*
+		 * Iterste over records composing the response XML document
+		 */
+		for (Menu folder : folders) {
 			writer.print("<folder>");
-			writer.print("<id>" + cols[0] + "</id>");
-			writer.print("<parent>" + cols[1] + "</parent>");
-			writer.print("<name><![CDATA[" + cols[2] + "]]></name>");
-			writer.print("<"
-					+ Constants.PERMISSION_ADD
-					+ ">"
-					+ dao.isPermissionEnabled(Permission.ADD_CHILD, Long.parseLong(cols[0].toString()), SessionUtil
-							.getSessionUser(request).getId()) + "</" + Constants.PERMISSION_ADD + ">");
-			writer.print("<"
-					+ Constants.PERMISSION_DELETE
-					+ ">"
-					+ dao.isPermissionEnabled(Permission.DELETE, Long.parseLong(cols[0].toString()), SessionUtil
-							.getSessionUser(request).getId()) + "</" + Constants.PERMISSION_DELETE + ">");
-			writer.print("<"
-					+ Constants.PERMISSION_RENAME
-					+ ">"
-					+ dao.isPermissionEnabled(Permission.RENAME, Long.parseLong(cols[0].toString()), SessionUtil
-							.getSessionUser(request).getId()) + "</" + Constants.PERMISSION_RENAME + ">");
-			writer.print("<"
-					+ Constants.PERMISSION_WRITE
-					+ ">"
-					+ dao.isPermissionEnabled(Permission.WRITE, Long.parseLong(cols[0].toString()), SessionUtil
-							.getSessionUser(request).getId()) + "</" + Constants.PERMISSION_WRITE + ">");
+			writer.print("<id>" + folder.getId() + "</id>");
+			writer.print("<parent>" + folder.getParentId() + "</parent>");
+			writer.print("<name><![CDATA[" + folder.getText() + "]]></name>");
 			writer.print("</folder>");
 		}
 

@@ -345,7 +345,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			userDao.store(usr);
 
 		} catch (Throwable e) {
-			e.printStackTrace();
 		}
 
 		return user;

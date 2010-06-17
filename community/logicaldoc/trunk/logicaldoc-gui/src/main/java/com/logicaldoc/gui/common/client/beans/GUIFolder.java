@@ -111,4 +111,11 @@ public class GUIFolder implements Serializable {
 		}
 		pathExtended += "/" + getName();
 	}
+
+	public GUIFolder getParent() {
+		if (getPath() != null && getPath().length > 0)
+			return getPath()[getPath().length - 1];
+		else
+			return null;
+	}
 }

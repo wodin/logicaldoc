@@ -56,12 +56,12 @@ public class TagsForm extends VLayout {
 		vocabulary.setMargin(5);
 		vocabulary.setMembersMargin(10);
 
-		DynamicForm form1 = new DynamicForm();
+		final DynamicForm form1 = new DynamicForm();
 		form1.setNumCols(9);
 		List<FormItem> items = new ArrayList<FormItem>();
 		String str = "abcdefghijklmnopqrstuvwxyz";
 		for (int i = 0; i < str.length(); i++) {
-			final StaticTextItem item = ItemFactory.newStaticTextItem("", "", ("" + str.charAt(i)).toUpperCase());
+			final StaticTextItem item = ItemFactory.newStaticTextItem("" + i, "", ("" + str.charAt(i)).toUpperCase());
 			item.setShowTitle(false);
 			item.addClickHandler(new ClickHandler() {
 				@Override

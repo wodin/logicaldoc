@@ -4,6 +4,7 @@ import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
@@ -19,6 +20,7 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
@@ -66,7 +68,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	static GUIFolder getFolder(String sid, long folderId) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu menu = dao.findById(folderId);
@@ -80,31 +82,31 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			folder.setParentId(menu.getParentId());
 			folder.setDescription(menu.getDescription());
 
+			Set<Permission> permissions = dao.getEnabledPermissions(folderId, session.getUserId());
 			List<String> permissionsList = new ArrayList<String>();
-			long userId = SessionUtil.getSessionUser(sid).getId();
-			if (dao.isPermissionEnabled(Permission.READ, folderId, userId))
+			if (permissions.contains(Permission.READ))
 				permissionsList.add("read");
-			if (dao.isPermissionEnabled(Permission.WRITE, folderId, userId))
+			if (permissions.contains(Permission.WRITE))
 				permissionsList.add(Constants.PERMISSION_WRITE);
-			if (dao.isPermissionEnabled(Permission.ADD_CHILD, folderId, userId))
+			if (permissions.contains(Permission.ADD_CHILD))
 				permissionsList.add(Constants.PERMISSION_ADD);
-			if (dao.isPermissionEnabled(Permission.MANAGE_SECURITY, folderId, userId))
+			if (permissions.contains(Permission.MANAGE_SECURITY))
 				permissionsList.add(Constants.PERMISSION_SECURITY);
-			if (dao.isPermissionEnabled(Permission.DELETE, folderId, userId))
+			if (permissions.contains(Permission.DELETE))
 				permissionsList.add(Constants.PERMISSION_DELETE);
-			if (dao.isPermissionEnabled(Permission.RENAME, folderId, userId))
+			if (permissions.contains(Permission.RENAME))
 				permissionsList.add(Constants.PERMISSION_RENAME);
-			if (dao.isPermissionEnabled(Permission.BULK_IMPORT, folderId, userId))
+			if (permissions.contains(Permission.BULK_IMPORT))
 				permissionsList.add(Constants.PERMISSION_IMPORT);
-			if (dao.isPermissionEnabled(Permission.BULK_EXPORT, folderId, userId))
+			if (permissions.contains(Permission.BULK_EXPORT))
 				permissionsList.add(Constants.PERMISSION_EXPORT);
-			if (dao.isPermissionEnabled(Permission.SIGN, folderId, userId))
+			if (permissions.contains(Permission.SIGN))
 				permissionsList.add(Constants.PERMISSION_SIGN);
-			if (dao.isPermissionEnabled(Permission.ARCHIVE, folderId, userId))
+			if (permissions.contains(Permission.ARCHIVE))
 				permissionsList.add(Constants.PERMISSION_ARCHIVE);
-			if (dao.isPermissionEnabled(Permission.WORKFLOW, folderId, userId))
+			if (permissions.contains(Permission.WORKFLOW))
 				permissionsList.add(Constants.PERMISSION_WORKFLOW);
-			if (dao.isPermissionEnabled(Permission.MANAGE_IMMUTABILITY, folderId, userId))
+			if (permissions.contains(Permission.MANAGE_IMMUTABILITY))
 				permissionsList.add(Constants.PERMISSION_IMMUTABILITY);
 
 			folder.setPermissions(permissionsList.toArray(new String[permissionsList.size()]));
@@ -134,8 +136,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			return folder;
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 		return null;
@@ -257,89 +257,145 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public GUIFolder save(String sid, GUIFolder folder) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Menu menu;
-		if (folder.getId() != 0) {
-			menu = folderDao.findById(folder.getId());
-			folderDao.initialize(menu);
-		} else
-			menu = new Menu();
+		Boolean savedRules = false;
+		try {
+			Menu menu;
+			if (folder.getId() != 0) {
+				menu = folderDao.findById(folder.getId());
+				folderDao.initialize(menu);
 
-		menu.setText(folder.getName());
-		menu.setParentId(folder.getParentId());
-		menu.setDescription(folder.getDescription());
-		menu.setSort(0);
-		menu.setIcon("folder.png");
-		menu.setType(Menu.MENUTYPE_DIRECTORY);
-		GUIFolder parentFolder = getFolder(sid, folder.getParentId());
-		for (GUIRight right : parentFolder.getRights()) {
-			MenuGroup mg = new MenuGroup();
-			mg.setGroupId(right.getEntityId());
-			mg.setWrite(right.isWrite() ? 1 : 0);
-			mg.setAddChild(right.isAdd() ? 1 : 0);
-			mg.setManageSecurity(right.isSecurity() ? 1 : 0);
-			mg.setManageImmutability(right.isImmutable() ? 1 : 0);
-			mg.setDelete(right.isDelete() ? 1 : 0);
-			mg.setRename(right.isRename() ? 1 : 0);
-			mg.setBulkImport(right.isImport() ? 1 : 0);
-			mg.setBulkExport(right.isExport() ? 1 : 0);
-			mg.setSign(right.isSign() ? 1 : 0);
-			mg.setArchive(right.isArchive() ? 1 : 0);
-			mg.setWorkflow(right.isWorkflow() ? 1 : 0);
-			menu.getMenuGroups().add(mg);
+				menu.setText(folder.getName());
+				menu.setParentId(folder.getParentId());
+				menu.setDescription(folder.getDescription());
+				menu.setSort(0);
+				menu.setIcon("folder.png");
+				menu.setType(Menu.MENUTYPE_DIRECTORY);
+				savedRules = saveRules(sid, folder.getId(), session.getUserId(), folder.getRights());
+				if (!savedRules) {
+					System.out.println("SQL errors saving permissions on folder " + menu.getText());
+					log.error("SQL errors saving permissions on folder " + menu.getText());
+					throw new Exception("SQL errors saving permissions on folder " + menu.getText());
+				} else {
+					// Add a folder history entry
+					History history = new History();
+					history.setUser(SessionUtil.getSessionUser(sid));
+					history.setEvent(History.EVENT_FOLDER_PERMISSION);
+					history.setSessionId(sid);
+					folderDao.store(menu, history);
+				}
+
+				// for (GUIRight right : folder.getRights()) {
+				// MenuGroup mg = new MenuGroup();
+				// mg.setGroupId(right.getEntityId());
+				// mg.setWrite(right.isWrite() ? 1 : 0);
+				// mg.setAddChild(right.isAdd() ? 1 : 0);
+				// mg.setManageSecurity(right.isSecurity() ? 1 : 0);
+				// mg.setManageImmutability(right.isImmutable() ? 1 : 0);
+				// mg.setDelete(right.isDelete() ? 1 : 0);
+				// mg.setRename(right.isRename() ? 1 : 0);
+				// mg.setBulkImport(right.isImport() ? 1 : 0);
+				// mg.setBulkExport(right.isExport() ? 1 : 0);
+				// mg.setSign(right.isSign() ? 1 : 0);
+				// mg.setArchive(right.isArchive() ? 1 : 0);
+				// mg.setWorkflow(right.isWorkflow() ? 1 : 0);
+				// menu.getMenuGroups().add(mg);
+				// }
+			} else {
+				menu = new Menu();
+
+				menu.setText(folder.getName());
+				menu.setParentId(folder.getParentId());
+				menu.setDescription(folder.getDescription());
+				menu.setSort(0);
+				menu.setIcon("folder.png");
+				menu.setType(Menu.MENUTYPE_DIRECTORY);
+				GUIFolder parentFolder = getFolder(sid, folder.getParentId());
+				savedRules = saveRules(sid, folder.getId(), session.getUserId(), parentFolder.getRights());
+				if (!savedRules) {
+					System.out.println("SQL errors saving permissions on folder " + menu.getText());
+					log.error("SQL errors saving permissions on folder " + menu.getText());
+					throw new Exception("SQL errors saving permissions on folder " + menu.getText());
+				} else {
+					folderDao.store(menu);
+				}
+
+				// for (GUIRight right : parentFolder.getRights()) {
+				// MenuGroup mg = new MenuGroup();
+				// mg.setGroupId(right.getEntityId());
+				// mg.setWrite(right.isWrite() ? 1 : 0);
+				// mg.setAddChild(right.isAdd() ? 1 : 0);
+				// mg.setManageSecurity(right.isSecurity() ? 1 : 0);
+				// mg.setManageImmutability(right.isImmutable() ? 1 : 0);
+				// mg.setDelete(right.isDelete() ? 1 : 0);
+				// mg.setRename(right.isRename() ? 1 : 0);
+				// mg.setBulkImport(right.isImport() ? 1 : 0);
+				// mg.setBulkExport(right.isExport() ? 1 : 0);
+				// mg.setSign(right.isSign() ? 1 : 0);
+				// mg.setArchive(right.isArchive() ? 1 : 0);
+				// mg.setWorkflow(right.isWorkflow() ? 1 : 0);
+				// menu.getMenuGroups().add(mg);
+				// }
+			}
+
+			folder.setId(menu.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		folderDao.store(menu);
-		folder.setId(menu.getId());
 
 		return folder;
 	}
 
-	private void saveRules(String sid, long id, long userId, GUIRight[] rights) throws Exception {
+	private boolean saveRules(String sid, long id, long userId, GUIRight[] rights) throws Exception {
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		// Rules can be applied only if the user can manage the security
 		if (!mdao.isPermissionEnabled(Permission.MANAGE_SECURITY, id, userId))
-			return;
+			return false;
 
 		Menu menu = mdao.findById(id);
 		boolean sqlerrors = false;
-		menu.clearMenuGroups();
+		// menu.clearMenuGroups();
 		for (GUIRight right : rights) {
-			MenuGroup mg = new MenuGroup();
-			mg.setGroupId(right.getEntityId());
-			mg.setWrite(right.isWrite() ? 1 : 0);
-			mg.setAddChild(right.isAdd() ? 1 : 0);
-			mg.setManageSecurity(right.isSecurity() ? 1 : 0);
-			mg.setManageImmutability(right.isImmutable() ? 1 : 0);
-			mg.setDelete(right.isDelete() ? 1 : 0);
-			mg.setRename(right.isRename() ? 1 : 0);
-			mg.setBulkImport(right.isImport() ? 1 : 0);
-			mg.setBulkExport(right.isExport() ? 1 : 0);
-			mg.setSign(right.isSign() ? 1 : 0);
-			mg.setArchive(right.isArchive() ? 1 : 0);
-			mg.setWorkflow(right.isWorkflow() ? 1 : 0);
-			menu.getMenuGroups().add(mg);
+			MenuGroup mg = menu.getMenuGroup(right.getEntityId());
+			if (right.isRead()) {
+				if ((mg == null) || mg.getGroupId() != right.getEntityId()) {
+					mg = new MenuGroup();
+					mg.setGroupId(right.getEntityId());
+					menu.getMenuGroups().add(mg);
+				}
 
-			boolean stored = mdao.store(menu);
-			if (!stored) {
-				sqlerrors = true;
+				mg.setWrite(right.isWrite() ? 1 : 0);
+				mg.setAddChild(right.isAdd() ? 1 : 0);
+				mg.setManageSecurity(right.isSecurity() ? 1 : 0);
+				mg.setManageImmutability(right.isImmutable() ? 1 : 0);
+				mg.setDelete(right.isDelete() ? 1 : 0);
+				mg.setRename(right.isRename() ? 1 : 0);
+				mg.setBulkImport(right.isImport() ? 1 : 0);
+				mg.setBulkExport(right.isExport() ? 1 : 0);
+				mg.setSign(right.isSign() ? 1 : 0);
+				mg.setArchive(right.isArchive() ? 1 : 0);
+				mg.setWorkflow(right.isWorkflow() ? 1 : 0);
+
+				boolean stored = mdao.store(menu);
+				if (!stored) {
+					sqlerrors = true;
+				}
+			} else {
+				if (mg != null) {
+					menu.getMenuGroups().remove(mg);
+
+					boolean deleted = mdao.store(menu);
+
+					if (!deleted) {
+						sqlerrors = true;
+					}
+				}
 			}
 		}
 
-		if (sqlerrors) {
-			System.out.println("SQL errors saving permissions on folder " + menu.getText());
-			log.error("SQL errors saving permissions on folder " + menu.getText());
-			throw new Exception("SQL errors saving permissions on folder " + menu.getText());
-		} else {
-			// Add a folder history entry
-			History history = new History();
-			history.setUser(SessionUtil.getSessionUser(sid));
-			history.setEvent(History.EVENT_FOLDER_PERMISSION);
-			history.setSessionId(sid);
-			mdao.store(menu, history);
-		}
+		return !sqlerrors;
 	}
 
 	@Override
