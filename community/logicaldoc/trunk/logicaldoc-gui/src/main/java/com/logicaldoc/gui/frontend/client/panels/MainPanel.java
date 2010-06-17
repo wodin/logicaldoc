@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.dashboard.DashboardPanel;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.menu.MainMenu;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.search.SearchMenu;
 import com.logicaldoc.gui.frontend.client.search.SearchPanel;
@@ -68,6 +69,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 		administrationTab = new Tab(I18N.message("administration"));
 
 		addMember(topPanel);
+		addMember(new MainMenu());
 		addMember(tabSet);
 		addMember(new FooterPanel());
 
