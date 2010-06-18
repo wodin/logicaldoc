@@ -4,8 +4,8 @@
         "http://tuckey.org/res/dtds/urlrewrite3.0.dtd">
 
 <urlrewrite use-query-string="true">
-	<rule match-type="wildcard">
-		<from>*/setup&</from>
-		<to type="redirect">$1/setup.jsp</to>
+	<rule>
+		<from>/setup/$</from>
+		<to type="redirect">%{context-path}/setup.jsp</to>
 	</rule>
 </urlrewrite>
