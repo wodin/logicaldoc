@@ -309,12 +309,12 @@ public class TagsBean extends SortableList {
 	public void selectWordsByFirstLetter(String lett) {
 		try {
 			DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			Collection<String> coll = ddao.findTags(lett).keySet();
-			Iterator<String> iter = coll.iterator();
+			Collection<Object> coll = ddao.findAllTags(lett);
+			Iterator<Object> iter = coll.iterator();
 			Hashtable<String, Integer> table = new Hashtable<String, Integer>(coll.size());
 
 			while (iter.hasNext()) {
-				String tag = iter.next();
+				String tag = (String) iter.next();
 				int count = 1;
 
 				if (table.containsKey(tag)) {

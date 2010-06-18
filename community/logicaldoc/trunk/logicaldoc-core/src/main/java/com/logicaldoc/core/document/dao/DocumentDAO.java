@@ -93,17 +93,18 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 */
 	public List<Long> findDocIdByTag(String tag);
 
-	// /**
-	// * This method selects all tags starting with a specified letter.
-	// *
-	// * @param letter - First letter of the wanted tags.
-	// */
-	// public Collection<String> findTags(String firstLetter);
-
 	/**
 	 * This method selects all tags and counts the occurrences.
 	 */
 	public Map<String, Integer> findTags(String firstLetter);
+
+	/**
+	 * Searches for all tags,
+	 * 
+	 * @param firstLetter Optional first letter hint
+	 * @return The list of all tags in the system
+	 */
+	public List<Object> findAllTags(String firstLetter);
 
 	/**
 	 * Finds authorized documents for a user having a specified tag.

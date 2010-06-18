@@ -288,6 +288,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public Map<String, Integer> findTags(String firstLetter) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 
@@ -313,48 +314,18 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return map;
 	}
 
-	// @SuppressWarnings( { "unchecked", "deprecation" })
-	// public List<String> findTags(String firstLetter) {
-	// List<String> coll = new ArrayList<String>();
-	//
-	// try {
-	// StringBuffer query = new
-	// StringBuffer("select distinct B.ld_tag, A.ld_id from ld_document A, ld_tag B "
-	// + " where A.ld_deleted=0 and A.ld_id = B.ld_docid ");
-	// query.append(" and lower(B.ld_tag) like '");
-	// query.append(firstLetter.toLowerCase()).append("%' ");
-	// query.append("union select distinct B.ld_tag, D.ld_id from ld_tag B, ld_document D"
-	// +
-	// " where D.LD_DELETED = 0 and B.ld_docid = D.LD_DOCREF and lower(B.ld_tag) like '");
-	// query.append(firstLetter.toLowerCase()).append("%' ");
-	//
-	// Connection con = null;
-	// Statement stmt = null;
-	// ResultSet rs = null;
-	//
-	// try {
-	// con = getSession().connection();
-	// stmt = con.createStatement();
-	// rs = stmt.executeQuery(query.toString());
-	// while (rs.next()) {
-	// coll.add(rs.getString(1));
-	// }
-	// } finally {
-	// if (rs != null)
-	// rs.close();
-	// if (stmt != null)
-	// stmt.close();
-	// if (con != null)
-	// con.close();
-	// }
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// if (log.isErrorEnabled())
-	// log.error(e.getMessage(), e);
-	// }
-	//
-	// return coll;
-	// }
+	@Override
+	public List<Object> findAllTags(String firstLetter) {
+		try {
+			StringBuilder query = new StringBuilder("select distinct(A.ld_tag) from ld_tag A ");
+			if (StringUtils.isNotEmpty(firstLetter))
+				query.append("  where lower(ld_tag) like '" + firstLetter.toLowerCase() + "%'");
+			return super.findByJdbcQuery(query.toString(), 1, null);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return new ArrayList<Object>();
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

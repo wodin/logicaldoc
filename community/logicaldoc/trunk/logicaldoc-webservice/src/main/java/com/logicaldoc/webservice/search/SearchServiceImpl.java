@@ -1,6 +1,5 @@
 package com.logicaldoc.webservice.search;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -127,15 +126,12 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 
 	@Override
 	public String[] getTags(String sid) throws Exception {
-		User user = validateSession(sid);
-
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		List<String> tags = new ArrayList<String>(docDao.findTags("", user.getId()));
+		List<Object> tags = docDao.findAllTags(null);
 		String[] wsTags = new String[tags.size()];
 		for (int i = 0; i < tags.size(); i++) {
-			wsTags[i] = tags.get(i);
+			wsTags[i] = (String) tags.get(i);
 		}
-
 		return wsTags;
 	}
 }
