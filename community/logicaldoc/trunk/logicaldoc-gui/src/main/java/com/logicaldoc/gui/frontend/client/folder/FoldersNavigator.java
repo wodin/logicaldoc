@@ -75,10 +75,10 @@ public class FoldersNavigator extends TreeGrid {
 							public void onSuccess(GUIFolder folder) {
 								Menu contextMenu = setupContextMenu(folder);
 								contextMenu.showContextMenu();
-								// if (event != null)
-								// event.cancel();
 							}
 						});
+				if (event != null)
+					event.cancel();
 			}
 		});
 
