@@ -16,6 +16,12 @@ import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
+/**
+ * This servlet is responsible for user history data.
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.0
+ */
 public class UserHistoryDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;

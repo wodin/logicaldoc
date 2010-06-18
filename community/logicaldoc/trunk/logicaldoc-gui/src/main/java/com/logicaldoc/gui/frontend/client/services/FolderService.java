@@ -28,12 +28,14 @@ public interface FolderService extends RemoteService {
 	public void rename(String sid, long folderId, String name) throws InvalidSessionException;
 
 	/**
-	 * Applies all security settings to a tree of folders
+	 * Applies all security settings to folder
 	 * 
 	 * @param sid The session ID
-	 * @param folderId The ID of the root folder
+	 * @param folder The folder that contains the new security settings
+	 * @param recursive If true, the security settings will be applied also to
+	 *        the sub-folders
 	 */
-	public void applyRightsToTree(String sid, long folderId) throws InvalidSessionException;
+	public void applyRights(String sid, GUIFolder folder, boolean recursive) throws InvalidSessionException;
 
 	/**
 	 * Gets the Folder initializing the permissions.

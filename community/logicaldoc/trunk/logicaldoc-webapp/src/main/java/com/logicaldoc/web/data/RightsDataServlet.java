@@ -19,6 +19,12 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
+/**
+ * This servlet is responsible for rights data.
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.0
+ */
 public class RightsDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -59,18 +65,19 @@ public class RightsDataServlet extends HttpServlet {
 					writer.print("<right>");
 					writer.print("<entityId>" + group.getId() + "</entityId>");
 					writer.print("<entity><![CDATA[" + group.getName() + "]]></entity>");
-					writer.print("<read>true</read>");
-					writer.print("<write>" + menuGroup.getWrite() + "</write>");
-					writer.print("<add>" + menuGroup.getAddChild() + "</add>");
-					writer.print("<security>" + menuGroup.getManageSecurity() + "</security>");
-					writer.print("<immutable>" + menuGroup.getManageImmutability() + "</immutable>");
-					writer.print("<delete>" + menuGroup.getDelete() + "</delete>");
-					writer.print("<rename>" + menuGroup.getRename() + "</rename>");
-					writer.print("<import>" + menuGroup.getBulkImport() + "</import>");
-					writer.print("<export>" + menuGroup.getBulkExport() + "</export>");
-					writer.print("<sign>" + menuGroup.getSign() + "</sign>");
-					writer.print("<archive>" + menuGroup.getArchive() + "</archive>");
-					writer.print("<workflow>" + menuGroup.getWorkflow() + "</workflow>");
+					writer.print("<read>" + true + "</read>");
+					writer.print("<write>" + (menuGroup.getWrite() == 1 ? true : false) + "</write>");
+					writer.print("<add>" + (menuGroup.getAddChild() == 1 ? true : false) + "</add>");
+					writer.print("<security>" + (menuGroup.getManageSecurity() == 1 ? true : false) + "</security>");
+					writer.print("<immutable>" + (menuGroup.getManageImmutability() == 1 ? true : false)
+							+ "</immutable>");
+					writer.print("<delete>" + (menuGroup.getDelete() == 1 ? true : false) + "</delete>");
+					writer.print("<rename>" + (menuGroup.getRename() == 1 ? true : false) + "</rename>");
+					writer.print("<import>" + (menuGroup.getBulkImport() == 1 ? true : false) + "</import>");
+					writer.print("<export>" + (menuGroup.getBulkExport() == 1 ? true : false) + "</export>");
+					writer.print("<sign>" + (menuGroup.getSign() == 1 ? true : false) + "</sign>");
+					writer.print("<archive>" + (menuGroup.getArchive() == 1 ? true : false) + "</archive>");
+					writer.print("<workflow>" + (menuGroup.getWorkflow() == 1 ? true : false) + "</workflow>");
 					writer.print("</right>");
 				}
 			}

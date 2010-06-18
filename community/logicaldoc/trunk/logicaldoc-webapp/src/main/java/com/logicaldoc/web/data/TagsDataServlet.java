@@ -13,6 +13,12 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
+/**
+ * This servlet is responsible for document tags data.
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.0
+ */
 public class TagsDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;

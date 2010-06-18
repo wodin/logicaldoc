@@ -16,6 +16,12 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.SessionUtil;
 
+/**
+ * This servlet is responsible for users data.
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.0
+ */
 public class UsersDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;

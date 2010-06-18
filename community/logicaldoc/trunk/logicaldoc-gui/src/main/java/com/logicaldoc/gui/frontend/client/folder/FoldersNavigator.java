@@ -60,6 +60,7 @@ public class FoldersNavigator extends TreeGrid {
 		ListGridField name = new ListGridField("name");
 		setFields(name);
 
+		// Handles the right click on folder name to create the context menu
 		addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
@@ -82,7 +83,7 @@ public class FoldersNavigator extends TreeGrid {
 			}
 		});
 
-		// Handle the click on a folder to show the contained documents
+		// Handles the click on a folder to show the contained documents
 		addCellClickHandler(new CellClickHandler() {
 			@Override
 			public void onCellClick(final CellClickEvent event) {
@@ -114,8 +115,6 @@ public class FoldersNavigator extends TreeGrid {
 		final String name = selectedNode.getAttribute("name");
 
 		GUIFolder parent = folder.getParent();
-
-		final TreeNode parentNode = getTree().getParent(selectedNode);
 
 		Menu contextMenu = new Menu();
 
@@ -321,6 +320,7 @@ public class FoldersNavigator extends TreeGrid {
 		GUIFolder data = new GUIFolder();
 		data.setName(I18N.message("newfolder"));
 		data.setParentId(Long.parseLong(selectedNode.getAttributeAsString("id")));
+		data.setDescription("");
 
 		service.save(Session.get().getSid(), data, new AsyncCallback<GUIFolder>() {
 
@@ -335,12 +335,12 @@ public class FoldersNavigator extends TreeGrid {
 				TreeNode newNode = new TreeNode(newFolder.getName());
 				newNode.setAttribute("name", newFolder.getName());
 				newNode.setAttribute("id", Long.toString(newFolder.getId()));
-				newNode.setAttribute(Constants.PERMISSION_ADD, selectedNode
-						.getAttributeAsBoolean(Constants.PERMISSION_ADD));
-				newNode.setAttribute(Constants.PERMISSION_DELETE, selectedNode
-						.getAttributeAsBoolean(Constants.PERMISSION_DELETE));
-				newNode.setAttribute(Constants.PERMISSION_RENAME, selectedNode
-						.getAttributeAsBoolean(Constants.PERMISSION_RENAME));
+//				newNode.setAttribute(Constants.PERMISSION_ADD, selectedNode
+//						.getAttributeAsBoolean(Constants.PERMISSION_ADD));
+//				newNode.setAttribute(Constants.PERMISSION_DELETE, selectedNode
+//						.getAttributeAsBoolean(Constants.PERMISSION_DELETE));
+//				newNode.setAttribute(Constants.PERMISSION_RENAME, selectedNode
+//						.getAttributeAsBoolean(Constants.PERMISSION_RENAME));
 
 				if (!getTree().isOpen(selectedNode)) {
 					getTree().openFolder(selectedNode);
