@@ -83,7 +83,9 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.DELETE, 103, 1));
 		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.RENAME, 103, 1));
 
-		service.applyRightsToTree(session.getSid(), 101);
+		GUIFolder folder = service.getFolder(session.getSid(), 101, false);
+
+		service.applyRights(session.getSid(), folder, false);
 
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 102, 1));
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 102, 1));

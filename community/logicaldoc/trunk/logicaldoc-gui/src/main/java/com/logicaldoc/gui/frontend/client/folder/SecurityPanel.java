@@ -1,10 +1,7 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
-import java.util.ArrayList;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -23,15 +20,13 @@ import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
-import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
@@ -54,8 +49,8 @@ public class SecurityPanel extends FolderDetailTab {
 
 	private VLayout container = new VLayout();
 
-	public SecurityPanel(final GUIFolder folder, ChangedHandler changedHandler) {
-		super(folder, changedHandler);
+	public SecurityPanel(final GUIFolder folder) {
+		super(folder, null);
 
 		container.setMembersMargin(3);
 		addMember(container);
@@ -128,12 +123,6 @@ public class SecurityPanel extends FolderDetailTab {
 			list.setCanEdit(true);
 			list.setEditEvent(ListGridEditEvent.CLICK);
 			list.setModalEditing(true);
-			list.addEditCompleteHandler(new EditCompleteHandler() {
-				@Override
-				public void onEditComplete(EditCompleteEvent event) {
-					SecurityPanel.this.changedHandler.onChanged(null);
-				}
-			});
 			list.addCellContextClickHandler(new CellContextClickHandler() {
 				@Override
 				public void onCellContextClick(CellContextClickEvent event) {
@@ -147,32 +136,34 @@ public class SecurityPanel extends FolderDetailTab {
 		HLayout buttons = new HLayout();
 		container.addMember(buttons);
 
-		Button applyToSubfolders = new Button(I18N.message("applytosubfolders"));
-		buttons.addMember(applyToSubfolders);
+		Button applyRights = new Button(I18N.message("applyrights"));
+		buttons.addMember(applyRights);
 		buttons.setMembersMargin(4);
 		buttons.setWidth100();
 		buttons.setHeight(20);
-		applyToSubfolders.setWidth(200);
-		applyToSubfolders.addClickHandler(new ClickHandler() {
+		applyRights.setWidth(140);
 
+		// Apply rights also to the sub-folders
+		final DynamicForm applytosubfoldersForm = new DynamicForm();
+		final CheckboxItem applytosubfolders = new CheckboxItem();
+		applytosubfolders.setName("applytosubfolders");
+		applytosubfolders.setTitle(I18N.message("applytosubfolders"));
+		applytosubfolders.setRedrawOnChange(true);
+		applytosubfolders.setWidth(5);
+		applytosubfolders.setValue(false);
+		applytosubfoldersForm.setItems(applytosubfolders);
+		applytosubfoldersForm.setMargin(4);
+		buttons.addMember(applytosubfoldersForm);
+
+		applyRights.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				folderService.applyRightsToTree(Session.get().getSid(), folder.getId(), new AsyncCallback<Void>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-
-					}
-				});
+				onSave((Boolean) applytosubfolders.getValue());
 			}
+
 		});
 
-		buttons.addMember(new HTML("<span style='width: 10px' />"));
+		buttons.addMember(applytosubfoldersForm);
 
 		// Prepare the combo and button for adding a new Group
 		final DynamicForm groupForm = new DynamicForm();
@@ -205,7 +196,6 @@ public class SecurityPanel extends FolderDetailTab {
 				record.setAttribute("entity", "Group: " + selectedRecord.getAttribute("name"));
 				record.setAttribute("read", true);
 				list.addData(record);
-				SecurityPanel.this.changedHandler.onChanged(null);
 			}
 		});
 
@@ -239,7 +229,6 @@ public class SecurityPanel extends FolderDetailTab {
 						+ selectedRecord.getAttribute("username") + ")");
 				record.setAttribute("read", true);
 				list.addData(record);
-				SecurityPanel.this.changedHandler.onChanged(null);
 			}
 		});
 	}
@@ -248,11 +237,13 @@ public class SecurityPanel extends FolderDetailTab {
 	 * Create an array of all right defined
 	 */
 	public GUIRight[] getRights() {
-		ArrayList<GUIRight> tmp = new ArrayList<GUIRight>();
 		ListGridRecord[] records = list.getRecords();
+		GUIRight[] tmp = new GUIRight[records.length];
 
+		int i = 0;
 		for (ListGridRecord record : records) {
 			GUIRight right = new GUIRight();
+
 			right.setEntityId(Long.parseLong(record.getAttribute("entityId")));
 			right.setWrite(record.getAttributeAsBoolean("write"));
 			right.setDelete(record.getAttributeAsBoolean("delete"));
@@ -265,10 +256,12 @@ public class SecurityPanel extends FolderDetailTab {
 			right.setRename(record.getAttributeAsBoolean("rename"));
 			right.setSecurity(record.getAttributeAsBoolean("security"));
 			right.setArchive(record.getAttributeAsBoolean("archive"));
-			tmp.add(right);
+
+			tmp[i] = right;
+			i++;
 		}
 
-		return tmp.toArray(new GUIRight[0]);
+		return tmp;
 	}
 
 	@Override
@@ -297,7 +290,6 @@ public class SecurityPanel extends FolderDetailTab {
 					public void execute(Boolean value) {
 						if (value) {
 							list.removeSelectedData();
-							SecurityPanel.this.changedHandler.onChanged(null);
 						}
 					}
 				});
@@ -306,5 +298,24 @@ public class SecurityPanel extends FolderDetailTab {
 
 		contextMenu.setItems(deleteItem);
 		return contextMenu;
+	}
+
+	public void onSave(boolean recursive) {
+		// Apply all rights
+		folder.setRights(this.getRights());
+
+		folderService.applyRights(Session.get().getSid(), folder, recursive, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+
+			}
+		});
+
 	}
 }

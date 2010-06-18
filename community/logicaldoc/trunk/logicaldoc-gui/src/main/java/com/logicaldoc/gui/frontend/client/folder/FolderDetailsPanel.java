@@ -130,7 +130,7 @@ public class FolderDetailsPanel extends VLayout {
 			securityPanel.destroy();
 			securityTabPanel.removeMember(securityPanel);
 		}
-		securityPanel = new SecurityPanel(folder, changeHandler);
+		securityPanel = new SecurityPanel(folder);
 		securityTabPanel.addMember(securityPanel);
 
 		/*
@@ -166,9 +166,6 @@ public class FolderDetailsPanel extends VLayout {
 
 	public void onSave() {
 		if (validate()) {
-			// Apply all rights
-			folder.setRights(securityPanel.getRights());
-
 			folderService.save(Session.get().getSid(), folder, new AsyncCallback<GUIFolder>() {
 				@Override
 				public void onFailure(Throwable caught) {

@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.data;
 
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
@@ -43,6 +44,6 @@ public class TasksDS extends DataSource {
 
 		setFields(name, label, enabledIcon, enabled, status, scheduling, progress, lastStart, nextStart, indeterminate);
 		setClientOnly(true);
-		setDataURL("data/tasks.xml?sid=" + Session.get().getSid());
+		setDataURL("data/tasks.xml?sid=" + Session.get().getSid() + "&locale=" + I18N.getLocale());
 	}
 }

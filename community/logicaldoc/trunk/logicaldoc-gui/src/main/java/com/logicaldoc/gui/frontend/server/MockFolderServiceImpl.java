@@ -21,7 +21,7 @@ public class MockFolderServiceImpl extends RemoteServiceServlet implements Folde
 	}
 
 	@Override
-	public void applyRightsToTree(String sid, long folderId) {
+	public void applyRights(String sid, GUIFolder folder, boolean recursive) {
 	}
 
 	@Override
