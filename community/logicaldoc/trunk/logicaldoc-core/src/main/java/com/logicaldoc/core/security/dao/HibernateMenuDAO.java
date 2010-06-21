@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -181,8 +182,6 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			if (type != null)
 				query1.append(" and _entity.type = " + type.toString());
 
-			// TODO come mantenere l'ordinamento alla fine?
-			query1.append(" order by _entity.type, _entity.sort, _entity.text");
 			coll = (List<Menu>) getHibernateTemplate().find(query1.toString(), parentId);
 
 			/*
@@ -215,6 +214,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			log.error(e.getMessage(), e);
 		}
 
+		Collections.sort(coll);
 		return coll;
 	}
 

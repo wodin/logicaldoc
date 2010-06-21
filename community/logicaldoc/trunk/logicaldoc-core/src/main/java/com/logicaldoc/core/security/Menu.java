@@ -16,7 +16,7 @@ import com.logicaldoc.core.PersistentObject;
  * @author Marco Meschieri - Logical Objects
  * @version 1.0
  */
-public class Menu extends PersistentObject {
+public class Menu extends PersistentObject implements Comparable<Menu>{
 
 	public static final long MENUID_HOME = 1;
 
@@ -194,5 +194,10 @@ public class Menu extends PersistentObject {
 
 	public void setSecurityRef(Long securityRef) {
 		this.securityRef = securityRef;
+	}
+
+	@Override
+	public int compareTo(Menu o) {
+		return this.text.compareTo(o.text);
 	}
 }
