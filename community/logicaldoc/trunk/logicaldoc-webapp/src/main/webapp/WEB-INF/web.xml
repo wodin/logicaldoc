@@ -119,7 +119,7 @@
 
   <servlet>
     <servlet-name>SearchService</servlet-name>
-    <servlet-class>com.logicaldoc.gui.frontend.server.MockSearchServiceImpl</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.SearchServiceImpl</servlet-class>
   </servlet>
 
   <servlet>

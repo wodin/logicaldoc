@@ -86,7 +86,7 @@ public class MockSearchServiceImpl extends RemoteServiceServlet implements Searc
 	}
 
 	@Override
-	public GUISearchOptions getSimilarityOptions(String sid, long docId) {
+	public GUISearchOptions getSimilarityOptions(String sid, long docId, String locale) {
 		GUISearchOptions opt = new GUISearchOptions();
 		opt.setExpression("pippo pluto");
 		return opt;

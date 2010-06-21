@@ -10,7 +10,7 @@ public class TagCloud {
 
 	private String tag;
 
-	private int occurence;
+	private int count;
 
 	private int scale;
 
@@ -18,9 +18,9 @@ public class TagCloud {
 		this.tag = tag;
 	}
 
-	public TagCloud(String tag, int occurence) {
+	public TagCloud(String tag, int count) {
 		this.tag = tag;
-		this.occurence = occurence;
+		this.count = count;
 	}
 
 	/** Necessary constructor for the Search Web Service */
@@ -35,12 +35,12 @@ public class TagCloud {
 		this.tag = tag;
 	}
 
-	public int getOccurence() {
-		return occurence;
+	public int getCount() {
+		return count;
 	}
 
-	public void setOccurence(int occurence) {
-		this.occurence = occurence;
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 	public int getScale() {
