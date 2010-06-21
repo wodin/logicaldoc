@@ -67,7 +67,7 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 	}
 
 	@Test
-	public void testApplyRightsToTree() throws InvalidSessionException {
+	public void testApplyRights() throws InvalidSessionException {
 		Menu parentMenu = folderDao.findById(101);
 		Assert.assertNotNull(parentMenu);
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 101, 1));
@@ -85,7 +85,7 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 
 		GUIFolder folder = service.getFolder(session.getSid(), 101, false);
 
-		service.applyRights(session.getSid(), folder, false);
+		service.applyRights(session.getSid(), folder, true);
 
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 102, 1));
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 102, 1));
