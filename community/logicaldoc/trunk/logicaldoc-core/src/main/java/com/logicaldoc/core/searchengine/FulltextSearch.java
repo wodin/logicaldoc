@@ -3,10 +3,8 @@ package com.logicaldoc.core.searchengine;
 import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -128,7 +126,7 @@ public class FulltextSearch extends Search {
 		 * perform this check only if the search is not restricted to one folder
 		 * only.
 		 */
-		Set<Long> accessibleIds = new HashSet<Long>();
+		List<Long> accessibleIds = new ArrayList<Long>();
 		if (opt.getFolderId() != null)
 			accessibleIds.add(opt.getFolderId());
 		if (searchInSingleFolder) {

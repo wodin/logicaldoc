@@ -23,6 +23,8 @@ public class Group extends ExtensibleObject implements Serializable {
 
 	private static final long serialVersionUID = 2L;
 
+	public static final long GROUPID_ADMIN = 1;
+
 	public static int TYPE_DEFAULT = 0;
 
 	public static int TYPE_USER = 1;

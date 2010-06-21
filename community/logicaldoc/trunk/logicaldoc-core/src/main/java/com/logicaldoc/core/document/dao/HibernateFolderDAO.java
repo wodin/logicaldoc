@@ -2,7 +2,6 @@ package com.logicaldoc.core.document.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.LogFactory;
@@ -10,7 +9,6 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.dao.HibernateMenuDAO;
 
@@ -31,9 +29,12 @@ public class HibernateFolderDAO extends HibernateMenuDAO implements FolderDAO {
 		menu.setSort(0);
 		menu.setIcon("folder.png");
 		menu.setType(Menu.MENUTYPE_DIRECTORY);
-		for (MenuGroup mg : parent.getMenuGroups()) {
-			menu.getMenuGroups().add(mg);
-		}
+
+
+		if(parent.getSecurityRef()!=null)
+			menu.setSecurityRef(parent.getSecurityRef());
+		else
+			menu.setSecurityRef(parent.getId());
 
 		setUniqueName(menu);
 		if (transaction != null)
@@ -125,7 +126,7 @@ public class HibernateFolderDAO extends HibernateMenuDAO implements FolderDAO {
 		List<Menu> deletableFolders = new ArrayList<Menu>();
 		List<Menu> notDeletableFolders = new ArrayList<Menu>();
 
-		Set<Long> deletableIds = findMenuIdByUserIdAndPermission(transaction.getUserId(), Permission.DELETE,
+		List<Long> deletableIds = findMenuIdByUserIdAndPermission(transaction.getUserId(), Permission.DELETE,
 				Menu.MENUTYPE_DIRECTORY);
 
 		if (deletableIds.contains(folder.getId())) {
