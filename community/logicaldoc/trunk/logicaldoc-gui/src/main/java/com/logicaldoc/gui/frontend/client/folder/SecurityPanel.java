@@ -143,28 +143,27 @@ public class SecurityPanel extends FolderDetailTab {
 		buttons.setHeight(20);
 		applyRights.setWidth(140);
 
-		// Apply rights also to the sub-folders
-		final DynamicForm applytosubfoldersForm = new DynamicForm();
-		final CheckboxItem applytosubfolders = new CheckboxItem();
-		applytosubfolders.setName("applytosubfolders");
-		applytosubfolders.setTitle(I18N.message("applytosubfolders"));
-		applytosubfolders.setRedrawOnChange(true);
-		applytosubfolders.setWidth(5);
-		applytosubfolders.setValue(false);
-		applytosubfoldersForm.setItems(applytosubfolders);
-		applytosubfoldersForm.setMargin(4);
-		buttons.addMember(applytosubfoldersForm);
-
+		Button applyRightsSubfolders = new Button(I18N.message("applytosubfolders"));
+		buttons.addMember(applyRightsSubfolders);
+		buttons.setMembersMargin(4);
+		buttons.setWidth100();
+		buttons.setHeight(20);
+		applyRights.setWidth(140);
+	
 		applyRights.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				onSave((Boolean) applytosubfolders.getValue());
+				onSave(false);
 			}
-
 		});
 
-		buttons.addMember(applytosubfoldersForm);
-
+		applyRightsSubfolders.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				onSave(true);
+			}
+		});
+		
 		// Prepare the combo and button for adding a new Group
 		final DynamicForm groupForm = new DynamicForm();
 		final ComboBoxItem group = ItemFactory.newGroupSelector("group", "group");

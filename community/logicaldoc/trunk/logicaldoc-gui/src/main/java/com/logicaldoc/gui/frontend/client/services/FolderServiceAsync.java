@@ -7,7 +7,7 @@ public interface FolderServiceAsync {
 
 	void save(String sid, GUIFolder folder, AsyncCallback<GUIFolder> callback);
 
-	void applyRights(String sid, GUIFolder folder, boolean recursive, AsyncCallback<Void> callback);
+	void applyRights(String sid, GUIFolder folder, boolean subfolders, AsyncCallback<Void> callback);
 
 	void delete(String sid, long folderId, AsyncCallback<Void> callback);
 
