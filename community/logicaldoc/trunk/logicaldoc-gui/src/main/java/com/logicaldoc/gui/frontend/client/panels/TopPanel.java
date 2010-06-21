@@ -17,7 +17,7 @@ public class TopPanel extends HLayout {
 		setHeight(45);
 
 		// Prepare the logo image to be shown inside the banner
-		Img logoImage = ItemFactory.newImg("logo.png");
+		Img logoImage = ItemFactory.newBrandImg("logo.png");
 		logoImage.setStyleName("logo");
 		logoImage.setWidth(205);
 		logoImage.setHeight(40);
@@ -28,7 +28,7 @@ public class TopPanel extends HLayout {
 		addMember(separator);
 		
 		// Prepare the OEM logo image to be shown inside the banner
-		Img logoOemImage = ItemFactory.newImg("logo_oem.png");
+		Img logoOemImage = ItemFactory.newBrandImg("logo_oem.png");
 		logoOemImage.setStyleName("logo_oem");
 		logoOemImage.setWidth(205);
 		logoOemImage.setHeight(40);

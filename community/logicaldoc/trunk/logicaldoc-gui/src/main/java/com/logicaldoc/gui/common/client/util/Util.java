@@ -23,6 +23,10 @@ public class Util {
 		return imagePrefix() + imageName;
 	}
 
+	public static String brandUrl(String imageName) {
+		return brandPrefix() + imageName;
+	}
+	
 	public static String contextPath() {
 		return GWT.getModuleBaseURL().replace(GWT.getModuleName() + "/", "");
 	}
@@ -35,6 +39,10 @@ public class Util {
 
 	public static String imagePrefix() {
 		return contextPath() + "skin/images/";
+	}
+	
+	public static String brandPrefix() {
+		return contextPath() + "skin/brand/";
 	}
 
 	/**

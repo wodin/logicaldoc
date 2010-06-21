@@ -259,6 +259,11 @@ public class ItemFactory {
 		Img img = new Img(Util.imageUrl(name));
 		return img;
 	}
+	
+	public static Img newBrandImg(String name) {
+		Img img = new Img(Util.brandUrl(name));
+		return img;
+	}
 
 	public static FormItemIcon newItemIcon(String image) {
 		FormItemIcon icon = new FormItemIcon();
