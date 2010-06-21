@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -43,6 +44,11 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			makeWorkingDir(repoFolder);
 			createDB(data);
 			writeSmtpConfig(data);
+
+			// Create a unique installation id
+			PropertiesBean pbean = new PropertiesBean();
+			pbean.setProperty("id", UUID.randomUUID().toString());
+			pbean.write();
 
 			// Reload the application context in order to reconnect DAOs to the
 			// database
@@ -91,7 +97,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 
 	private void writeDBConfig(SetupInfo data) throws Exception {
 		try {
-			PropertiesBean pbean = new PropertiesBean(getClass().getClassLoader().getResource("context.properties"));
+			PropertiesBean pbean = new PropertiesBean();
 			pbean.setProperty("jdbc.driver", data.getDbDriver() != null ? data.getDbDriver() : "");
 			pbean.setProperty("jdbc.url", data.getDbUrl() != null ? data.getDbUrl() : "");
 			pbean.setProperty("jdbc.username", data.getDbUsername() != null ? data.getDbUsername() : "");

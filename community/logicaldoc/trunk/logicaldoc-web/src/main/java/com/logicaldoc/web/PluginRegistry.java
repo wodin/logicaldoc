@@ -2,17 +2,13 @@ package com.logicaldoc.web;
 
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.java.plugin.Plugin;
 import org.java.plugin.PluginClassLoader;
 import org.java.plugin.registry.Identity;
 import org.java.plugin.registry.PluginDescriptor;
-
-import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 
 /**
  * Particular implementation of the plugin registry for the Tomcat servlet
