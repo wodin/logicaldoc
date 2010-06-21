@@ -79,26 +79,6 @@ public class ResourceServiceImpl implements ResourceService {
 		resource.setSession(session);
 		resource.isFolder(true);
 
-		// MenuDAO mdao = (MenuDAO)
-		// Context.getInstance().getBean(MenuDAO.class);
-
-		// // define the security policies for this folder
-		// boolean writeEnabled = mdao.isPermissionEnabled(Permission.WRITE,
-		// menu.getId(), userId);
-		// resource.setWriteEnabled(writeEnabled);
-		//
-		// boolean renameEnabled = mdao.isPermissionEnabled(Permission.RENAME,
-		// menu.getId(), userId);
-		// resource.setRenameEnabled(renameEnabled);
-		//
-		// boolean deleteEnabled = mdao.isPermissionEnabled(Permission.DELETE,
-		// menu.getId(), userId);
-		// resource.setDeleteEnabled(deleteEnabled);
-		//
-		// boolean addChildEnabled =
-		// mdao.isPermissionEnabled(Permission.ADD_CHILD, menu.getId(), userId);
-		// resource.setAddChildEnabled(addChildEnabled);
-
 		return resource;
 	}
 

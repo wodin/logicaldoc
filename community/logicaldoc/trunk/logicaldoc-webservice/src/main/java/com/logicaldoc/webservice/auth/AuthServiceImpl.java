@@ -144,6 +144,8 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		try {
 			Menu folder = folderDao.findById(folderId);
+			if (folder.getSecurityRef() != null)
+				folder = folderDao.findById(folder.getSecurityRef());
 			folderDao.initialize(folder);
 			for (MenuGroup mg : folder.getMenuGroups()) {
 				Group group = groupDao.findById(mg.getGroupId());
