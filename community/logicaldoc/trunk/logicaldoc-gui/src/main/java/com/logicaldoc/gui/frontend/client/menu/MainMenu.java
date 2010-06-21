@@ -4,11 +4,10 @@ import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
-import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
-import com.smartgwt.client.widgets.menu.MenuItemSeparator;
-import com.smartgwt.client.widgets.menu.MenuItemStringFunction;
 import com.smartgwt.client.widgets.menu.events.ClickHandler;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
@@ -26,12 +25,24 @@ public class MainMenu extends ToolStrip {
 		super();
 		setWidth100();
 
-		ToolStripMenuButton menuButton = getFileMenu();
-		addMenuButton(menuButton);
+		ToolStripMenuButton menu = getFileMenu();
+		addMenuButton(menu);
 
-		addSeparator();
+		menu = getToolsMenu();
+		addMenuButton(menu);
 
 		addFill();
+		addSeparator();
+
+		StaticTextItem userInfo = new StaticTextItem();
+		userInfo.setValue(Session.get().getUser().getFullName());
+		userInfo.setShowTitle(false);
+		userInfo.setWrap(false);
+
+		addFormItem(userInfo);
+		addSeparator();
+
+		addFormItem(new SearchBox());
 	}
 
 	private ToolStripMenuButton getFileMenu() {
@@ -39,57 +50,44 @@ public class MainMenu extends ToolStrip {
 		menu.setShowShadow(true);
 		menu.setShadowDepth(3);
 
-		MenuItem newItem = new MenuItem("New", "icons/16/document_plain_new.png", "Ctrl+N");
-		MenuItem openItem = new MenuItem("Open", "icons/16/folder_out.png", "Ctrl+O");
-		MenuItem saveItem = new MenuItem("Save", "icons/16/disk_blue.png", "Ctrl+S");
-		MenuItem saveAsItem = new MenuItem("Save As", "icons/16/save_as.png");
-
-		MenuItem recentDocItem = new MenuItem("Recent Documents", "icons/16/folder_document.png");
-
-		Menu recentDocSubMenu = new Menu();
-		MenuItem dataSM = new MenuItem("data.xml");
-		dataSM.setChecked(true);
-		MenuItem componentSM = new MenuItem("Component Guide.doc");
-		MenuItem ajaxSM = new MenuItem("AJAX.doc");
-		recentDocSubMenu.setItems(dataSM, componentSM, ajaxSM);
-
-		recentDocItem.setSubmenu(recentDocSubMenu);
-
-		MenuItem exportItem = new MenuItem("Export as...", "icons/16/export1.png");
-		Menu exportSM = new Menu();
-		exportSM.setItems(new MenuItem("XML"), new MenuItem("CSV"), new MenuItem("Plain text"));
-		exportItem.setSubmenu(exportSM);
-
-		MenuItem exitItem = new MenuItem(I18N.message("exit"), "icons/16/printer3.png", "Ctrl+Q");
-		exitItem.addClickHandler(new ClickHandler(){
+		MenuItem exitItem = new MenuItem(I18N.message("exit"));
+		exitItem.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				Session.get().close();
 				String base = GWT.getHostPageBaseURL();
 				Util.redirect(base
-						+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName()
-								+ ".jsp"));
-			}	
-		});
-
-		MenuItemSeparator separator = new MenuItemSeparator();
-
-		final MenuItem activateMenu = new MenuItem("Activate");
-		activateMenu.setDynamicTitleFunction(new MenuItemStringFunction() {
-
-			public String execute(final Canvas aTarget, final Menu aMenu, final MenuItem aItem) {
-				if (Math.random() > 0.5) {
-					return "De-Activate Blacklist";
-				} else {
-					return "Activate Blacklist";
-				}
+						+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName() + ".jsp"));
 			}
 		});
 
-		menu.setItems(activateMenu, newItem, openItem, separator, saveItem, saveAsItem, separator, recentDocItem,
-				separator, exportItem, separator, exitItem);
+		menu.setItems(exitItem);
 
-		ToolStripMenuButton menuButton = new ToolStripMenuButton("File", menu);
+		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("file"), menu);
+		menuButton.setWidth(100);
+		return menuButton;
+	}
+
+	private ToolStripMenuButton getToolsMenu() {
+		Menu menu = new Menu();
+		menu.setShowShadow(true);
+		menu.setShadowDepth(3);
+
+		MenuItem develConsole = new MenuItem(I18N.message("develconsole"));
+		develConsole.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				SC.showConsole();
+			}
+		});
+
+		if (!Session.get().getUser().isMemberOf("admin")) {
+			develConsole.setEnabled(false);
+		}
+
+		menu.setItems(develConsole);
+
+		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("tools"), menu);
 		menuButton.setWidth(100);
 		return menuButton;
 	}

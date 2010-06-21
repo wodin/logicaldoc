@@ -1,8 +1,6 @@
 package com.logicaldoc.gui.frontend.client.panels;
 
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.frontend.client.security.LoginInfo;
-import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.layout.HLayout;
 
@@ -19,34 +17,21 @@ public class TopPanel extends HLayout {
 		setHeight(45);
 
 		// Prepare the logo image to be shown inside the banner
-		Img logoImage = ItemFactory.newImg("logo_head.png");
-		logoImage.setStyleName("topLogo");
+		Img logoImage = ItemFactory.newImg("logo.png");
+		logoImage.setStyleName("logo");
 		logoImage.setWidth(205);
 		logoImage.setHeight(40);
 		addMember(logoImage);
-
-		// Place the search box
-		QuickSearch quickSearch = new QuickSearch();
-		quickSearch.setWidth("*");
-		quickSearch.setAlign(Alignment.CENTER);
-		addMember(quickSearch);
-
-		// Anchor console = new Anchor();
-		// console.setText("console");
-		// console.addClickHandler(new
-		// com.google.gwt.event.dom.client.ClickHandler() {
-		// @Override
-		// public void onClick(com.google.gwt.event.dom.client.ClickEvent event)
-		// {
-		// SC.showConsole();
-		// }
-		// });
-		// addMember(console);
-
-		// Place login informations
-		LoginInfo loginInfo = new LoginInfo("");
-		loginInfo.setWidth("200px");
-		loginInfo.setAlign(Alignment.RIGHT);
-		addMember(loginInfo);
+	
+		Img separator = ItemFactory.newImg("blank.png");
+		separator.setWidth100();
+		addMember(separator);
+		
+		// Prepare the OEM logo image to be shown inside the banner
+		Img logoOemImage = ItemFactory.newImg("logo_oem.png");
+		logoOemImage.setStyleName("logo_oem");
+		logoOemImage.setWidth(205);
+		logoOemImage.setHeight(40);
+		addMember(logoOemImage);
 	}
 }

@@ -32,10 +32,10 @@ public interface FolderService extends RemoteService {
 	 * 
 	 * @param sid The session ID
 	 * @param folder The folder that contains the new security settings
-	 * @param recursive If true, the security settings will be applied also to
-	 *        the sub-folders
+	 * @param subfolders If true, the current security settings will be applied
+	 *        to the sub-folders
 	 */
-	public void applyRights(String sid, GUIFolder folder, boolean recursive) throws InvalidSessionException;
+	public void applyRights(String sid, GUIFolder folder, boolean subfolders) throws InvalidSessionException;
 
 	/**
 	 * Gets the Folder initializing the permissions.

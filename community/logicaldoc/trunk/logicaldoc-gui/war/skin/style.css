@@ -40,12 +40,20 @@
 	height: 45px;
 }
 
-.topLogo {
+.logo {
 	margin-left: 5px;
 	margin-top: 5px;
 	border: 0px solid;
 	float: left;
-	width: 200px;
+	width: 205px;
+}
+
+.logo_oem {
+	margin-right: 5px;
+	margin-top: 5px;
+	border: 0px solid;
+	float: right;
+	width: 205px;
 }
 
 .footer {
@@ -57,12 +65,6 @@
 	padding-left: 5px;
 	color: white;
 	cursor: pointer;
-}
-
-.loginInfo {
-	padding-left: 5px;
-	color: white;
-	text-align: right;
 }
 
 .logout {
