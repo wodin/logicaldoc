@@ -52,8 +52,6 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 	private DefaultMutableTreeNode selectedNode;
 
-	private boolean countChildren = false;
-
 	private boolean useMenuIcons = false;
 
 	private boolean running = false;
@@ -69,14 +67,6 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		reload();
 	}
 
-	public boolean isCountChildren() {
-		return countChildren;
-	}
-
-	public void setCountChildren(boolean countChildren) {
-		this.countChildren = countChildren;
-	}
-
 	public boolean isUseMenuIcons() {
 		return useMenuIcons;
 	}
@@ -88,7 +78,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 	public void reloadAll() {
 		init();
 		running = true;
-	
+
 		Thread reloadTh = new Thread() {
 			@Override
 			public void run() {
@@ -101,8 +91,10 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		};
 		reloadTh.start();
 
-		HttpServletRequest request=(HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		long timeToWait = Long.parseLong(request.getSession().getServletContext().getInitParameter("com.icesoft.faces.connectionTimeout"))-5000;
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+				.getRequest();
+		long timeToWait = Long.parseLong(request.getSession().getServletContext().getInitParameter(
+				"com.icesoft.faces.connectionTimeout")) - 5000;
 		int counter = 0;
 		while (counter < timeToWait) {
 			try {
@@ -111,7 +103,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 
 			}
 			if (running)
-				counter+=1000;
+				counter += 1000;
 			else
 				break;
 		}
@@ -138,9 +130,6 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 				addDir(userId, node, menu, depth);
 				dir.setLeaf(false);
 			}
-
-			if (countChildren)
-				dir.setCount(menuDao.countByUserId(userId, dir.getMenuId(), null));
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 		}
@@ -183,8 +172,6 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 		setRoot(rootTreeNode);
 		rootTreeNode.setUserObject(rootObject);
 		directories.put(rootMenu.getId(), rootObject);
-		if (countChildren)
-			rootObject.setCount(menuDao.countByUserId(SessionManagement.getUserId(), rootMenuId, null));
 	}
 
 	public void reload() {
@@ -213,8 +200,6 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 			parentDir = selectedDir;
 		}
 
-		if (countChildren)
-			parentDir.setCount(parentDir.getCount() + 1);
 		parentDir.setLeaf(false);
 
 		DefaultMutableTreeNode parentNode = findDirectoryNode(parentDir.getMenuId(), (DefaultMutableTreeNode) getRoot());
@@ -337,14 +322,12 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 				}
 			}
 		} else {
-			branchObject.setLeaf(menuDao.countByUserId(userId, dir.getId(), menuType) == 0);
+            branchObject.setLeaf(menuDao.findByUserId(userId, dir.getId(), menuType).isEmpty());
 		}
 
 		branchObject.setLoaded(true);
 		directories.put(dir.getId(), branchObject);
 		parent.add(branchNode);
-		if (countChildren)
-			branchObject.setCount(menuDao.countByUserId(userId, dir.getId(), null));
 
 		log.debug("added dir " + branchObject.getDisplayText());
 		return branchNode;

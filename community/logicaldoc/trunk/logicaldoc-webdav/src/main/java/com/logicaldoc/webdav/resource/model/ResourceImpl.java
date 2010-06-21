@@ -2,6 +2,7 @@ package com.logicaldoc.webdav.resource.model;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Set;
 
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -190,22 +191,12 @@ public class ResourceImpl implements Resource {
 	}
 
 	public boolean isDeleteEnabled() {
-		if (deleteEnabled == null) {
-			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
-					MenuDAO.class);
-			this.deleteEnabled=mdao.isPermissionEnabled(Permission.DELETE, Long.parseLong(id),
-					personRequest);
-		}
+		initPermissions();
 		return this.deleteEnabled;
 	}
 
 	public boolean isRenameEnabled() {
-		if (renameEnabled == null) {
-			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
-					MenuDAO.class);
-			this.renameEnabled=mdao.isPermissionEnabled(Permission.RENAME, Long.parseLong(id),
-					personRequest);
-		}
+		initPermissions();
 		return this.renameEnabled;
 	}
 
@@ -218,12 +209,7 @@ public class ResourceImpl implements Resource {
 	}
 
 	public boolean isWriteEnabled() {
-		if (writeEnabled == null) {
-			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
-					MenuDAO.class);
-			this.writeEnabled=mdao.isPermissionEnabled(Permission.WRITE, Long.parseLong(id),
-					personRequest);
-		}
+		initPermissions();
 		return writeEnabled;
 	}
 
@@ -232,12 +218,7 @@ public class ResourceImpl implements Resource {
 	}
 
 	public boolean isAddChildEnabled() {
-		if (addChildEnabled == null) {
-			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(
-					MenuDAO.class);
-			this.addChildEnabled=mdao.isPermissionEnabled(Permission.ADD_CHILD, Long.parseLong(id),
-					personRequest);
-		}
+		initPermissions();
 		return this.addChildEnabled;
 	}
 
@@ -253,4 +234,15 @@ public class ResourceImpl implements Resource {
 		this.session = session;
 	}
 
+	private void initPermissions() {
+		if (writeEnabled != null)
+			return;
+
+		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		Set<Permission> permissions = mdao.getEnabledPermissions(Long.parseLong(id), personRequest);
+		writeEnabled = permissions.contains(Permission.WRITE);
+		deleteEnabled = permissions.contains(Permission.DELETE);
+		renameEnabled = permissions.contains(Permission.RENAME);
+		addChildEnabled = permissions.contains(Permission.ADD_CHILD);
+	}
 }
