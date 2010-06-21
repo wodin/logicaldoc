@@ -71,7 +71,7 @@ public class TagCloudGenerator extends Task {
 		// Iterate over tag clouds and serialize them as extended attributes
 		List<TagCloud> tags = getTagClouds();
 		for (TagCloud tagCloud : tags) {
-			generic.setValue(tagCloud.getTag(), tagCloud.getOccurence() + "|" + tagCloud.getScale());
+			generic.setValue(tagCloud.getTag(), tagCloud.getCount() + "|" + tagCloud.getScale());
 		}
 		genericDao.store(generic);
 
@@ -113,11 +113,11 @@ public class TagCloudGenerator extends Task {
 			tags = tags.subList(0, n);
 
 		// Find the Max frequency
-		int maxValue = tags.get(0).getOccurence();
+		int maxValue = tags.get(0).getCount();
 		log.debug("maxValue = " + maxValue);
 
 		for (TagCloud cloud : tags) {
-			double scale = ((double) cloud.getOccurence()) / maxValue;
+			double scale = ((double) cloud.getCount()) / maxValue;
 			int scaleInt = (int) Math.ceil(scale * 10);
 			cloud.setScale(scaleInt);
 		}
@@ -127,7 +127,7 @@ public class TagCloudGenerator extends Task {
 
 	class TagCloudComparatorOccurrence implements Comparator<TagCloud> {
 		public int compare(TagCloud tc0, TagCloud tc1) {
-			return new Integer(tc0.getOccurence()).compareTo(tc1.getOccurence());
+			return new Integer(tc0.getCount()).compareTo(tc1.getCount());
 		}
 	}
 }

@@ -17,5 +17,5 @@ public interface SearchServiceAsync {
 
 	void getTagCloud(AsyncCallback<GUITag[]> callback);
 
-	void getSimilarityOptions(String sid, long docId, AsyncCallback<GUISearchOptions> callback);
+	void getSimilarityOptions(String sid, long docId, String locale, AsyncCallback<GUISearchOptions> callback);
 }

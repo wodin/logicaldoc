@@ -146,18 +146,19 @@ public class DocumentContextMenu extends Menu {
 				if (record == null)
 					return;
 				Long id = Long.parseLong(record.getAttribute("id"));
-				searchService.getSimilarityOptions(Session.get().getSid(), id, new AsyncCallback<GUISearchOptions>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+				searchService.getSimilarityOptions(Session.get().getSid(), id, I18N.getLocale(),
+						new AsyncCallback<GUISearchOptions>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
 
-					@Override
-					public void onSuccess(GUISearchOptions options) {
-						Search.get().setOptions(options);
-						Search.get().search();
-					}
-				});
+							@Override
+							public void onSuccess(GUISearchOptions options) {
+								Search.get().setOptions(options);
+								Search.get().search();
+							}
+						});
 			}
 		});
 

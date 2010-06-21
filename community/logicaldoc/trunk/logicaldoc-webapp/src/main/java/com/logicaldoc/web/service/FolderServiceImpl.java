@@ -2,7 +2,6 @@ package com.logicaldoc.web.service;
 
 import java.security.AccessControlException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,21 +44,26 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	private static Log log = LogFactory.getLog(FolderServiceImpl.class);
 
 	@Override
-	public void applyRights(String sid, GUIFolder folder, boolean recursive) throws InvalidSessionException {
+	public void applyRights(String sid, GUIFolder folder, boolean subtree) throws InvalidSessionException {
 		UserSession session = SessionUtil.validateSession(sid);
 
 		try {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			saveRules(sid, mdao.findById(folder.getId()), session.getUserId(), folder.getRights());
-
-			if (recursive) {
-				Collection<Menu> submenus = mdao.findByParentId(folder.getId());
-				// recursively apply permissions to all submenus where the user
-				// has security management permission
-				for (Menu submenu : submenus) {
-					saveRules(sid, submenu, session.getUserId(), folder.getRights());
-				}
+			
+			if (subtree) {
+				/*
+				 * Just apply the current security setings to the whole subtree
+				 */
+				History history = new History();
+				history.setUser(SessionUtil.getSessionUser(sid));
+				history.setEvent(History.EVENT_FOLDER_PERMISSION);
+				history.setSessionId(sid);
+				
+				mdao.applyRithtToTree(folder.getId(), history);
+			}else{
+				saveRules(sid, mdao.findById(folder.getId()), session.getUserId(), folder.getRights());
 			}
+			
 		} catch (Throwable e) {
 		}
 	}

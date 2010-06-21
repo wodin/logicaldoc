@@ -59,5 +59,5 @@ public interface SearchService extends RemoteService {
     /**
      * Computes the options for a similarity search
      */
-	public GUISearchOptions getSimilarityOptions(String sid, long docId) throws InvalidSessionException;
+	public GUISearchOptions getSimilarityOptions(String sid, long docId, String locale) throws InvalidSessionException;
 }

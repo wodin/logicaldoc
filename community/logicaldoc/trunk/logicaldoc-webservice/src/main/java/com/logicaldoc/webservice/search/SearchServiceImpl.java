@@ -115,7 +115,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		for (String tag : generic.getAttributeNames()) {
 			TagCloud tc = new TagCloud(tag);
 			StringTokenizer st = new StringTokenizer(generic.getValue(tag).toString(), "|", false);
-			tc.setOccurence(Integer.parseInt(st.nextToken()));
+			tc.setCount(Integer.parseInt(st.nextToken()));
 			tc.setScale(Integer.parseInt(st.nextToken()));
 			tagClouds[i] = tc;
 			i++;
