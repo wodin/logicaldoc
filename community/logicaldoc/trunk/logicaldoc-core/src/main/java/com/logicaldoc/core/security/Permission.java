@@ -1,5 +1,8 @@
 package com.logicaldoc.core.security;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Models a permission, that is the ability to do something
  * <p>
@@ -67,5 +70,22 @@ public enum Permission {
 
 	public boolean match(int permission) {
 		return (permission & mask) != 0;
+	}
+
+	public static Set<Permission> all() {
+		Set<Permission> permissions = new HashSet<Permission>();
+		permissions.add(READ);
+		permissions.add(WRITE);
+		permissions.add(ADD_CHILD);
+		permissions.add(MANAGE_SECURITY);
+		permissions.add(MANAGE_IMMUTABILITY);
+		permissions.add(DELETE);
+		permissions.add(RENAME);
+		permissions.add(BULK_EXPORT);
+		permissions.add(BULK_IMPORT);
+		permissions.add(SIGN);
+		permissions.add(ARCHIVE);
+		permissions.add(WORKFLOW);
+		return permissions;
 	}
 }

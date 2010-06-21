@@ -8,7 +8,9 @@ import com.logicaldoc.core.PersistentObject;
 /**
  * This class represents the key concept of security. A Menu not only models
  * menus but also it is used as an element to build hierarchies. With menugroups
- * you can associate groups to a given menu and grant some permissions.
+ * you can associate groups to a given menu and grant some permissions. Also
+ * setting the recurityRef you can specify another reference menu that contains
+ * the security policies.
  * 
  * @author Michael Scholz
  * @author Marco Meschieri - Logical Objects
@@ -35,6 +37,8 @@ public class Menu extends PersistentObject {
 	private String text = "";
 
 	private long parentId = 0;
+	
+	private Long securityRef;
 
 	private int sort = 0;
 
@@ -47,7 +51,7 @@ public class Menu extends PersistentObject {
 	private String ref = "";
 
 	private String description = "";
-	
+
 	protected Set<MenuGroup> menuGroups = new HashSet<MenuGroup>();
 
 	public Menu() {
@@ -152,14 +156,14 @@ public class Menu extends PersistentObject {
 	}
 
 	/**
-	 *  Adds a new element, substituting a precedin one with the same groupId.
+	 * Adds a new element, substituting a precedin one with the same groupId.
 	 */
 	public void addMenuGroup(MenuGroup mg) {
-		MenuGroup m=getMenuGroup(mg.getGroupId());
+		MenuGroup m = getMenuGroup(mg.getGroupId());
 		getMenuGroups().remove(m);
 		getMenuGroups().add(mg);
 	}
-	
+
 	public MenuGroup getMenuGroup(long groupId) {
 		for (MenuGroup mg : menuGroups) {
 			if (mg.getGroupId() == groupId)
@@ -182,5 +186,13 @@ public class Menu extends PersistentObject {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Long getSecurityRef() {
+		return securityRef;
+	}
+
+	public void setSecurityRef(Long securityRef) {
+		this.securityRef = securityRef;
 	}
 }

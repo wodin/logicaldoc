@@ -102,7 +102,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		List<Long> coll = new ArrayList<Long>();
 		try {
 			String query = "select _entity.id from " + entityClass.getCanonicalName()
-					+ " _entity where _entity.deleted = 0 "
+					+ " _entity where _entity.deleted=0 "
 					+ (StringUtils.isNotEmpty(where) ? " and (" + where + ") " : " ")
 					+ (StringUtils.isNotEmpty(order) ? order : " ");
 			log.debug("Execute query: " + query);

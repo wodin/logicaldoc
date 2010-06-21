@@ -45,14 +45,14 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	public List<Menu> findByUserId(long userId);
 
 	/**
-	 * Finds all menues with a specific permission enabled on the specifies user
+	 * Finds all menues ids with a specific permission enabled on the specifies user
 	 * 
 	 * @param userId The user identifier
 	 * @param permission The permission to check
 	 * @param type The menu type (optional)
 	 * @return
 	 */
-	public Set<Long> findMenuIdByUserIdAndPermission(long userId, Permission permission, Integer type);
+	public List<Long> findMenuIdByUserIdAndPermission(long userId, Permission permission, Integer type);
 
 	/**
 	 * Finds direct children of a menu.
@@ -70,15 +70,6 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	 * @return List of found menus sorted by type, sort, text
 	 */
 	public List<Menu> findByUserId(long userId, long parentId, Integer type);
-
-	/**
-	 * Counts direct children of a menu.
-	 * 
-	 * @param parentId MenuId of the menu which children are wanted.
-	 * @param type The wanted menu type, can be null
-	 * @return The total number of elements
-	 */
-	public long countByUserId(long userId, long parentId, Integer type);
 
 	/**
 	 * Finds all children(direct and indirect) by parentId
@@ -151,7 +142,7 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	 * @param userId ID of the user.
 	 * @return List of selected menuId's.
 	 */
-	public Set<Long> findMenuIdByUserId(long userId);
+	public List<Long> findMenuIdByUserId(long userId);
 
 	/**
 	 * This method selects only the menuId from the menus for which a user is
@@ -162,7 +153,7 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	 * @param type The menu type, can be null
 	 * @return List of selected menuId's.
 	 */
-	public Set<Long> findIdByUserId(long userId, long parentId, Integer type);
+	public List<Long> findIdByUserId(long userId, long parentId, Integer type);
 
 	/**
 	 * returns if a menu is writeable for a user
@@ -179,7 +170,7 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	public boolean hasWriteAccess(Menu menu, long userId);
 
 	/**
-	 * Finds all menus associated to the passed group
+	 * Finds all menus accessible by the passed group
 	 * 
 	 * @param groupId The group id
 	 * @return The List of menus
@@ -243,4 +234,9 @@ public interface MenuDAO extends PersistentObjectDAO<Menu> {
 	 * @return
 	 */
 	public String computePathExtended(long id);
+	
+	/**
+	 * Propagates the security policies of a node to the whole subree 
+	 */
+	public boolean applyRithtToTree(long id, History transaction);
 }
