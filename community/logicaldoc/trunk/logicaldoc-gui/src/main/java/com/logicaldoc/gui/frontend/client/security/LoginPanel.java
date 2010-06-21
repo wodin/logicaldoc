@@ -77,7 +77,7 @@ public class LoginPanel extends VLayout {
 		header.setHeight("12px");
 
 		// Prepare the logo image to be shown inside the login form
-		Img logoImage = ItemFactory.newImg("logo.png");
+		Img logoImage = ItemFactory.newBrandImg("logo.png");
 		logoImage.setHeight("40px");
 		logoImage.setWidth("205px");
 

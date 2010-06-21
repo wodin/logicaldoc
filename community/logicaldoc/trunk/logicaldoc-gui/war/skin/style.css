@@ -34,7 +34,7 @@
 
 .topPanel {
 	background-color: #213150;
-	background-image: url(./images/blu01a.gif);
+	background-image: url(./brand/banner.gif);
 	background-repeat: repeat-x;
 	background-position: top left;
 	height: 45px;
@@ -65,13 +65,6 @@
 	padding-left: 5px;
 	color: white;
 	cursor: pointer;
-}
-
-.logout {
-	color: #fcce77;
-	cursor: pointer;
-	padding-left: 3px;
-	padding-right: 3px;
 }
 
 .warn {
