@@ -90,16 +90,16 @@ public class SecurityManagerImpl implements SecurityManager {
 	 *      com.logicaldoc.core.security.Group)
 	 */
 	public void removeUsersFromGroup(Collection<User> users, Group group) {
-		Set<User> oldUsers=group.getUsers();
+		Set<User> oldUsers = group.getUsers();
 		for (User user : users) {
 			if (oldUsers.contains(user) && !group.getName().equals(user.getUserGroupName())) {
 				user.getGroups().remove(group);
 			}
 		}
-		
-		Set<User> newUsers=new HashSet<User>();
+
+		Set<User> newUsers = new HashSet<User>();
 		for (User user : oldUsers) {
-			if(!users.contains(user))
+			if (!users.contains(user))
 				newUsers.add(user);
 		}
 		group.setUsers(newUsers);
@@ -166,12 +166,17 @@ public class SecurityManagerImpl implements SecurityManager {
 	@Override
 	public Set<Group> getAllowedGroups(long menuId) {
 		Menu menu = menuDAO.findById(menuId);
+		if (menu.getSecurityRef() != null)
+			menu = menuDAO.findById(menu.getSecurityRef());
 		Set<Group> groups = new HashSet<Group>();
 		for (MenuGroup mg : menu.getMenuGroups()) {
 			Group group = groupDAO.findById(mg.getGroupId());
 			if (!groups.contains(group))
 				groups.add(groupDAO.findById(mg.getGroupId()));
 		}
+		Group admin = groupDAO.findById(Group.GROUPID_ADMIN);
+		if (!groups.contains(admin))
+			groups.add(admin);
 		return groups;
 	}
 

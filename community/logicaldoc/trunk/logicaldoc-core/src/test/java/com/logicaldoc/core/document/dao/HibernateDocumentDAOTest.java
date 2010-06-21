@@ -60,9 +60,9 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindAll() {
 		Collection<Document> documents = dao.findAll();
 		Assert.assertNotNull(documents);
-		Assert.assertEquals(2, documents.size());
+		Assert.assertEquals(3, documents.size());
 		
-		Assert.assertEquals(2, dao.findByWhere("1=1", null, null).size());
+		Assert.assertEquals(3, dao.findByWhere("1=1", null, null).size());
 		Assert.assertEquals(1, dao.findByWhere("1=1", null, 1).size());
 	}
 
@@ -100,7 +100,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindByUserId() {
 		Collection<Long> ids = dao.findByUserId(3);
 		Assert.assertNotNull(ids);
-		Assert.assertEquals(2, ids.size());
+		Assert.assertEquals(3, ids.size());
 		Assert.assertTrue(ids.contains(new Long(2)));
 
 		// Try with a user without documents
@@ -113,7 +113,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindDocIdByFolder() {
 		Collection<Long> ids = dao.findDocIdByFolder(103);
 		Assert.assertNotNull(ids);
-		Assert.assertEquals(2, ids.size());
+		Assert.assertEquals(3, ids.size());
 		Assert.assertTrue(ids.contains(new Long(2)));
 
 		ids = dao.findDocIdByFolder(1111);
@@ -125,7 +125,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindByFolder() {
 		Collection<Document> docs = dao.findByFolder(103);
 		Assert.assertNotNull(docs);
-		Assert.assertEquals(2, docs.size());
+		Assert.assertEquals(3, docs.size());
 		Assert.assertTrue(docs.contains(dao.findById(2)));
 
 		docs = dao.findByFolder(1111);
@@ -137,7 +137,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindIndexed() {
 		List<Document> docs = dao.findByIndexed(1);
 		Assert.assertNotNull(docs);
-		Assert.assertEquals(1, docs.size());
+		Assert.assertEquals(2, docs.size());
 		Assert.assertEquals(1, docs.get(0).getId());
 
 		docs = dao.findByIndexed(0);
@@ -287,7 +287,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Assert.assertTrue(tags.contains("abc"));
 		tags = dao.findAllTags(null);
 		Assert.assertNotNull(tags);
-		Assert.assertEquals(4, tags.size());
+		Assert.assertEquals(5, tags.size());
 		Assert.assertTrue(tags.contains("abc"));
 	}
 
@@ -316,6 +316,10 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Assert.assertEquals(2, ids.size());
 		Assert.assertEquals(1L, ids.get(0).getId());
 
+		ids = dao.findByUserIdAndTag(4, "zzz");
+		Assert.assertNotNull(ids);
+		Assert.assertEquals(1, ids.size());
+		
 		ids = dao.findByUserIdAndTag(1, "xxx");
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(0, ids.size());
@@ -347,11 +351,11 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindByFileNameAndParentFolderId() {
 		Collection<Document> documents = dao.findByFileNameAndParentFolderId(103L, "pluto", null);
 		Assert.assertNotNull(documents);
-		Assert.assertEquals(1, documents.size());
+		Assert.assertEquals(2, documents.size());
 
 		documents = dao.findByFileNameAndParentFolderId(103L, "PLUTO", null);
 		Assert.assertNotNull(documents);
-		Assert.assertEquals(1, documents.size());
+		Assert.assertEquals(2, documents.size());
 
 		documents = dao.findByFileNameAndParentFolderId(103L, "paperino", null);
 		Assert.assertNotNull(documents);
@@ -368,11 +372,11 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 		documents = dao.findByFileNameAndParentFolderId(103L, "pluto", null);
 		Assert.assertNotNull(documents);
-		Assert.assertEquals(1, documents.size());
+		Assert.assertEquals(2, documents.size());
 
 		documents = dao.findByFileNameAndParentFolderId(null, "pluto", null);
 		Assert.assertNotNull(documents);
-		Assert.assertEquals(2, documents.size());
+		Assert.assertEquals(3, documents.size());
 	}
 
 	@Test
@@ -401,8 +405,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindDeletedDocIds() {
 		List<Long> coll = dao.findDeletedDocIds();
 		Assert.assertNotNull(coll);
-		Assert.assertEquals(4, coll.size());
-		Assert.assertTrue(coll.contains(new Long(3)));
+		Assert.assertEquals(3, coll.size());
 		Assert.assertTrue(coll.contains(new Long(4)));
 	}
 
@@ -410,25 +413,19 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindDeletedDocs() {
 		List<Document> coll = dao.findDeletedDocs();
 		Assert.assertNotNull(coll);
-		Assert.assertEquals(4, coll.size());
-	}
-
-	@Test
-	public void testGetTotalSize() {
-		Assert.assertEquals(613081L, dao.getTotalSize(true));
-		Assert.assertEquals(123701L, dao.getTotalSize(false));
+		Assert.assertEquals(3, coll.size());
 	}
 
 	@Test
 	public void testCount() {
 		Assert.assertEquals(6L, dao.count(true));
-		Assert.assertEquals(2L, dao.count(false));
+		Assert.assertEquals(3L, dao.count(false));
 	}
 
 	@Test
 	public void testCountByIndexed() {
 		Assert.assertEquals(1L, dao.countByIndexed(0));
-		Assert.assertEquals(1L, dao.countByIndexed(1));
+		Assert.assertEquals(2L, dao.countByIndexed(1));
 	}
 
 	@Test
@@ -453,16 +450,16 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 	@Test
 	public void testFindLockedByUserId() {
-		Assert.assertEquals(1, dao.findLockedByUserId(3).size());
+		Assert.assertEquals(2, dao.findLockedByUserId(3).size());
 		Assert.assertEquals(0, dao.findLockedByUserId(1).size());
 		Assert.assertEquals(0, dao.findLockedByUserId(987541).size());
 	}
 
 	@Test
 	public void testFindByLockUserAndStatus() {
-		Assert.assertEquals(2, dao.findByLockUserAndStatus(3L, null).size());
-		Assert.assertEquals(1, dao.findByLockUserAndStatus(3L, Document.DOC_CHECKED_OUT).size());
-		Assert.assertEquals(1, dao.findByLockUserAndStatus(null, Document.DOC_CHECKED_OUT).size());
+		Assert.assertEquals(3, dao.findByLockUserAndStatus(3L, null).size());
+		Assert.assertEquals(2, dao.findByLockUserAndStatus(3L, Document.DOC_CHECKED_OUT).size());
+		Assert.assertEquals(2, dao.findByLockUserAndStatus(null, Document.DOC_CHECKED_OUT).size());
 		Assert.assertEquals(0, dao.findByLockUserAndStatus(1L, null).size());
 		Assert.assertEquals(0, dao.findByLockUserAndStatus(1L, Document.DOC_CHECKED_OUT).size());
 		Assert.assertEquals(0, dao.findByLockUserAndStatus(987541L, null).size());
@@ -484,11 +481,9 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 	public void testFindDeleted() {
 		List<Document> deletedDocs = dao.findDeleted(1, 5);
 		Assert.assertNotNull(deletedDocs);
-		Assert.assertEquals(2, deletedDocs.size());
-		Assert.assertEquals("pluto", deletedDocs.get(0).getFileName());
-		Assert.assertEquals("DELETED 1", deletedDocs.get(0).getTitle());
-		Assert.assertEquals("paperino", deletedDocs.get(1).getFileName());
-		Assert.assertEquals("DELETED 3", deletedDocs.get(1).getTitle());
+		Assert.assertEquals(1, deletedDocs.size());
+		Assert.assertEquals("paperino", deletedDocs.get(0).getFileName());
+		Assert.assertEquals("DELETED 3", deletedDocs.get(0).getTitle());
 
 		deletedDocs = dao.findDeleted(2, 4);
 		Assert.assertNotNull(deletedDocs);
@@ -498,7 +493,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		deletedDocs = dao.findDeleted(1, 1);
 		Assert.assertNotNull(deletedDocs);
 		Assert.assertEquals(1, deletedDocs.size());
-		Assert.assertEquals("pluto", deletedDocs.get(0).getFileName());
-		Assert.assertEquals("DELETED 1", deletedDocs.get(0).getTitle());
+		Assert.assertEquals("paperino", deletedDocs.get(0).getFileName());
+		Assert.assertEquals("DELETED 3", deletedDocs.get(0).getTitle());
 	}
 }

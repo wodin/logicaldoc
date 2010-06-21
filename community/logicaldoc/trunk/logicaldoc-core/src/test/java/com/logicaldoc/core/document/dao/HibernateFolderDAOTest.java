@@ -235,7 +235,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTestCase {
 	public void testFind2() {
 		List<Menu> folders = dao.find("menu.admin");
 		Assert.assertNotNull(folders);
-		Assert.assertEquals(2, folders.size());
+		Assert.assertEquals(4, folders.size());
 		Menu menu = dao.findById(100);
 		Menu menu2 = dao.findById(103);
 		Assert.assertTrue(folders.contains(menu));
