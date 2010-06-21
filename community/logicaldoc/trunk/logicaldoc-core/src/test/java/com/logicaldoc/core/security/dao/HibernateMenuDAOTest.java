@@ -264,7 +264,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	public void testFindMenuIdByUserId() {
 		Collection<Long> ids = dao.findMenuIdByUserId(4);
 		Assert.assertNotNull(ids);
-		Assert.assertEquals(15, ids.size());
+		Assert.assertEquals(16, ids.size());
 		Assert.assertTrue(ids.contains(104L));
 		Assert.assertTrue(ids.contains(1200L));
 
@@ -360,7 +360,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	public void testFindMenuIdByUserIdAndPermission() {
 		List<Long> ids = dao.findMenuIdByUserIdAndPermission(4, Permission.WRITE, null);
 		Assert.assertNotNull(ids);
-		Assert.assertEquals(7, ids.size());
+		Assert.assertEquals(8, ids.size());
 		Assert.assertTrue(ids.contains(104L));
 		Assert.assertTrue(ids.contains(1200L));
 		ids = dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE, Menu.MENUTYPE_MENU);

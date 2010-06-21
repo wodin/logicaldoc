@@ -11,7 +11,6 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.security.Menu;
-import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -262,21 +261,6 @@ public class DirectoryEditForm {
 				transaction.setUser(SessionManagement.getUser());
 				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
 				Menu menu = folderDao.create(parent, getFolderName(), transaction);
-				menu.getMenuGroups().clear();
-				for (MenuGroup mg : parent.getMenuGroups()) {
-					MenuGroup clone = mg.clone();
-					menu.getMenuGroups().add(clone);
-					if (clone.getGroupId() == SessionManagement.getUser().getUserGroup().getId()) {
-						clone.setManageSecurity(1);
-					}
-				}
-
-				MenuGroup mg = new MenuGroup(SessionManagement.getUser().getUserGroup().getId());
-				mg.setManageSecurity(1);
-
-				if (!menu.getMenuGroups().contains(mg)) {
-					menu.getMenuGroups().add(mg);
-				}
 
 				menu.setDescription(folderDescription);
 

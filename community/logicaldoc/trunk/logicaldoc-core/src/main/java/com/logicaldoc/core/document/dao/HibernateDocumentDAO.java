@@ -26,7 +26,6 @@ import com.logicaldoc.core.document.DocumentListener;
 import com.logicaldoc.core.document.DocumentListenerManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
-import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.MenuDAO;
@@ -331,46 +330,22 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public List<Document> findByUserIdAndTag(long userId, String tag) {
 		List<Document> coll = new ArrayList<Document>();
-		try {
-			User user = userDAO.findById(userId);
-			Collection<Group> precoll = user.getGroups();
-			Iterator<Group> iter = precoll.iterator();
-			if (precoll.isEmpty())
-				return coll;
-
-			StringBuffer query = new StringBuffer("select distinct(_entity) from Document _entity, Menu _menu ");
-			query.append(" left outer join _menu.menuGroups as _group ");
-			query.append(" where _entity.folder.id = _menu.id ");
-			query.append(" and _group.groupId in (");
-
+		Set<Long> ids = findDocIdByUserIdAndTag(userId, tag);
+		StringBuffer buf = new StringBuffer();
+		if (!ids.isEmpty()) {
 			boolean first = true;
-			while (iter.hasNext()) {
+			for (Long id : ids) {
 				if (!first)
-					query.append(",");
-				Group ug = (Group) iter.next();
-				query.append(Long.toString(ug.getId()));
+					buf.append(",");
+				buf.append(id);
 				first = false;
 			}
-			query.append(")");
 
-			Set<Long> ids = findDocIdByUserIdAndTag(userId, tag);
-			Iterator<Long> iter2 = ids.iterator();
-			if (ids.isEmpty())
-				return coll;
-			query.append("and _entity.id in (");
-			first = true;
-			while (iter2.hasNext()) {
-				if (!first)
-					query.append(",");
-				query.append("'" + iter2.next() + "'");
-				first = false;
-			}
+			StringBuffer query = new StringBuffer("select A from Document A where A.id in (");
+			query.append(buf);
 			query.append(")");
 			coll = (List<Document>) getHibernateTemplate().find(query.toString());
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
 		}
-
 		return coll;
 	}
 
@@ -382,47 +357,54 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			User user = userDAO.findById(userId);
 			if (user == null)
 				return ids;
-			Collection<Group> precoll = user.getGroups();
-			Iterator<Group> iter = precoll.iterator();
 
-			if (!precoll.isEmpty()) {
-				StringBuffer query = new StringBuffer(
-						"select distinct(C.ld_id) from ld_menugroup A, ld_document C, ld_tag D "
-								+ " where A.ld_menuid=C.ld_folderid AND C.ld_id=D.ld_docid AND C.ld_deleted=0 AND A.ld_groupid in (");
+			StringBuffer query = new StringBuffer();
+
+			if (user.isInGroup("admin")) {
+				query.append("select distinct(C.ld_id) from ld_document C, ld_tag D "
+						+ " where (C.ld_id=D.ld_docid OR C.ld_docref=D.ld_docid) AND C.ld_deleted=0");
+				query.append(" AND lower(D.ld_tag)='" + SqlUtil.doubleQuotes(tag.toLowerCase()) + "'");
+			} else {
+
+				/*
+				 * Search for all accessible folders
+				 */
+				List<Long> precoll = menuDAO.findMenuIdByUserId(userId);
+				StringBuffer buf = new StringBuffer();
 				boolean first = true;
-				while (iter.hasNext()) {
+				for (Long id : precoll) {
 					if (!first)
-						query.append(",");
-					Group ug = (Group) iter.next();
-					query.append(Long.toString(ug.getId()));
+						buf.append(",");
+					buf.append(id);
 					first = false;
 				}
-				query.append(")");
-				query.append(" AND lower(D.ld_tag)='" + SqlUtil.doubleQuotes(tag) + "'");
 
 				query
-						.append("union select distinct(C.ld_id) from ld_document C, ld_tag D where C.ld_docref=D.ld_docid AND C.ld_deleted=0 AND lower(D.ld_tag)='"
-								+ SqlUtil.doubleQuotes(tag) + "'");
+						.append("select distinct(C.ld_id) from ld_document C, ld_tag D "
+								+ " where (C.ld_id=D.ld_docid OR C.ld_docref=D.ld_docid) AND C.ld_deleted=0 AND C.ld_folderid in (");
+				query.append(buf.toString());
+				query.append(") ");
+				query.append(" AND lower(D.ld_tag)='" + SqlUtil.doubleQuotes(tag.toLowerCase()) + "' ");
+			}
 
-				Connection con = null;
-				Statement stmt = null;
-				ResultSet rs = null;
+			Connection con = null;
+			Statement stmt = null;
+			ResultSet rs = null;
 
-				try {
-					con = getSession().connection();
-					stmt = con.createStatement();
-					rs = stmt.executeQuery(query.toString());
-					while (rs.next()) {
-						ids.add(new Long(rs.getLong(1)));
-					}
-				} finally {
-					if (rs != null)
-						rs.close();
-					if (stmt != null)
-						stmt.close();
-					if (con != null)
-						con.close();
+			try {
+				con = getSession().connection();
+				stmt = con.createStatement();
+				rs = stmt.executeQuery(query.toString());
+				while (rs.next()) {
+					ids.add(new Long(rs.getLong(1)));
 				}
+			} finally {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

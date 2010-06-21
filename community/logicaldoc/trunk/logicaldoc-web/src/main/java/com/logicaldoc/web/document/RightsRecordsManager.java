@@ -156,12 +156,16 @@ public class RightsRecordsManager {
 			});
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			Menu menu = mdao.findById(menuId);
+			if(menu.getSecurityRef()!=null)
+				menu=mdao.findById(menu.getSecurityRef());
 			mdao.initialize(menu);
 			long userId = SessionManagement.getUserId();
 			if (mdao.isPermissionEnabled(Permission.MANAGE_SECURITY, menuId, userId)) {
 				Iterator<Group> iter = groups.iterator();
 				while (iter.hasNext()) {
 					Group g = (Group) iter.next();
+					if (g.getId() == Group.GROUPID_ADMIN)
+						continue;
 					GroupRule gr = new GroupRule();
 					if (g.getType() == Group.TYPE_DEFAULT
 							|| ((g.getType() != Group.TYPE_DEFAULT) && (g.getUsers().isEmpty() || g.getUsers()
@@ -269,7 +273,7 @@ public class RightsRecordsManager {
 
 		for (long grp : selectedAllowedGroups) {
 			// Skip the admin group
-			if (grp == 1)
+			if (grp == Group.GROUPID_ADMIN)
 				continue;
 			MenuGroup mg = new MenuGroup(grp);
 			menu.getMenuGroups().remove(mg);
@@ -333,10 +337,13 @@ public class RightsRecordsManager {
 			return;
 
 		Menu folder = mdao.findById(id);
+		folder.setSecurityRef(null);
 		boolean sqlerrors = false;
 		for (GroupRule rule : rules) {
 			boolean read = rule.getRead();
 			boolean isAdmin = rule.getGroupName().equals("admin");
+			if (isAdmin)
+				continue;
 			MenuGroup mg = folder.getMenuGroup(rule.getGroupId());
 			if (read || isAdmin) {
 				if ((mg == null) || mg.getGroupId() != rule.getGroupId()) {
@@ -440,12 +447,11 @@ public class RightsRecordsManager {
 			mdao.store(folder, history);
 		}
 		if (recursive) {
-			// recursively apply permissions to all submenus where the user has
-			// security management permission
-			Collection<Menu> submenus = mdao.findByParentId(id);
-			for (Menu submenu : submenus) {
-				saveRules(submenu.getId(), userId);
-			}
+			History history = new History();
+			history.setUser(SessionManagement.getUser());
+			history.setEvent(History.EVENT_FOLDER_PERMISSION);
+			history.setSessionId(SessionManagement.getCurrentUserSessionId());
+			mdao.applyRithtToTree(id, history);
 		}
 	}
 
@@ -488,7 +494,7 @@ public class RightsRecordsManager {
 							break;
 						}
 					}
-					if (!allowed)
+					if (!allowed && group.getId() != Group.GROUPID_ADMIN)
 						availableGroups.add(new SelectItem(group.getId(), getEntityLabel(group)));
 				}
 			}
@@ -526,7 +532,7 @@ public class RightsRecordsManager {
 							break;
 						}
 					}
-					if (!available)
+					if (!available && group.getId() != Group.GROUPID_ADMIN)
 						allowedGroups.add(new SelectItem(group.getId(), getEntityLabel(group)));
 				}
 			}
