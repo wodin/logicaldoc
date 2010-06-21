@@ -3,11 +3,11 @@ package com.logicaldoc.gui.frontend.client.system;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -210,32 +210,47 @@ public class SchedulingPanel extends VLayout {
 	}
 
 	boolean validate() {
-		Map<String, Object> values = (Map<String, Object>) vm.getValues();
-		vm.validate();
-		if (!vm.hasErrors()) {
-			GUIScheduling s = task.getScheduling();
-			s.setSimple(new Boolean((String) values.get("simple")));
-			s.setMaxLength(new Long((String) values.get("maxDuration")));
-			s.setMinCpuIdle((Integer) values.get("cpuIdle"));
-
-			if (s.isSimple()) {
-				if (values.get("initialDelay") instanceof String)
-					s.setDelay(Long.parseLong((String) values.get("initialDelay")));
+		try {
+			Map<String, Object> values = (Map<String, Object>) vm.getValues();
+			vm.validate();
+			if (!vm.hasErrors()) {
+				if (((String) values.get("simple")).equals("true"))
+					task.getScheduling().setSimple(true);
 				else
-					s.setDelay((Integer) values.get("initialDelay"));
-
-				if (values.get("repeatInterval") instanceof String)
-					s.setInterval(Long.parseLong((String) values.get("repeatInterval")));
+					task.getScheduling().setSimple(false);
+				task.getScheduling().setMaxLength(Long.parseLong((String) values.get("maxDuration")));
+				int intValue = 0;
+				if (values.get("cpuIdle") instanceof String)
+					intValue = Integer.parseInt((String) values.get("cpuIdle"));
 				else
-					s.setDelay((Integer) values.get("repeatInterval"));
-			} else {
-				s.setSeconds((String) values.get("seconds"));
-				s.setMinutes((String) values.get("minutes"));
-				s.setHours((String) values.get("hours"));
-				s.setDayOfMonth((String) values.get("dayMonth"));
-				s.setMonth((String) values.get("month"));
-				s.setDayOfWeek((String) values.get("dayWeek"));
+					intValue = ((Integer) values.get("cpuIdle")).intValue();
+
+				task.getScheduling().setMinCpuIdle(intValue);
+
+				if (task.getScheduling().isSimple() || ((String) values.get("simple")).equals("true")) {
+					long longValue = 0;
+					if (values.get("initialDelay") instanceof String)
+						longValue = Long.parseLong((String) values.get("initialDelay"));
+					else
+						longValue = ((Integer) values.get("initialDelay")).longValue();
+					task.getScheduling().setDelay(longValue);
+
+					if (values.get("repeatInterval") instanceof String)
+						longValue = Long.parseLong((String) values.get("repeatInterval"));
+					else
+						longValue = ((Integer) values.get("repeatInterval")).longValue();
+					task.getScheduling().setInterval(longValue);
+				} else {
+					task.getScheduling().setSeconds((String) values.get("seconds"));
+					task.getScheduling().setMinutes((String) values.get("minutes"));
+					task.getScheduling().setHours((String) values.get("hours"));
+					task.getScheduling().setDayOfMonth((String) values.get("dayMonth"));
+					task.getScheduling().setMonth((String) values.get("month"));
+					task.getScheduling().setDayOfWeek((String) values.get("dayWeek"));
+				}
 			}
+		} catch (Throwable t) {
+			SC.warn(t.getMessage());
 		}
 		return !vm.hasErrors();
 	}
