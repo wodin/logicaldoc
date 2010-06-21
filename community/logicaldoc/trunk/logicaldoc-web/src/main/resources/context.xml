@@ -5,7 +5,7 @@
 	<import resource="classpath*:context-*.xml" />
 
 	<!-- This post processor ensures placeholders substitutions -->
-	<bean id="PropertyPlaceholderConfigurer" class="com.logicaldoc.core.spring.PropertiesPlaceHolder"
+	<bean id="PropertyPlaceholderConfigurer" class="com.logicaldoc.util.spring.PropertiesPlaceHolder"
 		lazy-init="false" abstract="false" autowire="default"
 		dependency-check="default">
 		<property name="locations">

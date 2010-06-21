@@ -114,7 +114,7 @@
             </ice:panelGroup>
             
             <ice:panelGroup rendered="#{'true' eq ContextProperties['stat.enabled']}">
-              <img style="visibility:hidden" src="#{ContextProperties['stat.url']}/getimg.php?name=#{ContextProperties['product.name']}&amp;release=#{ContextProperties['product.release']}&amp;vendor=#{ContextProperties['product.vendor']}" width="1px" height="1px" border="0"/>
+              <img style="visibility:hidden" src="#{ContextProperties['stat.url']}/getimg.php?name=#{ContextProperties['product.name']}&amp;release=#{ContextProperties['product.release']}&amp;vendor=#{ContextProperties['product.vendor']}&amp;id=#{ContextProperties['id']}" width="1px" height="1px" border="0"/>
             </ice:panelGroup>
         </body>
     

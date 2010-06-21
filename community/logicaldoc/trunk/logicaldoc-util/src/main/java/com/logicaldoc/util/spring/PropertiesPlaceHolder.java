@@ -1,4 +1,4 @@
-package com.logicaldoc.core.spring;
+package com.logicaldoc.util.spring;
 
 import java.io.IOException;
 import java.util.Properties;

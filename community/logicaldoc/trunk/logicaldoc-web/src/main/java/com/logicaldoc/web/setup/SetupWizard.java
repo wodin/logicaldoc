@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -87,6 +88,9 @@ public class SetupWizard implements TabChangeListener {
 			pbean.setProperty("conf.importdir", importDir);
 			pbean.setProperty("conf.exportdir", exportDir);
 			pbean.write();
+
+			// Create a unique installation id
+			pbean.setProperty("id", UUID.randomUUID().toString());
 
 			ServletContext servletContext = (ServletContext) ((ServletExternalContext) FacesContext
 					.getCurrentInstance().getExternalContext()).getContext();

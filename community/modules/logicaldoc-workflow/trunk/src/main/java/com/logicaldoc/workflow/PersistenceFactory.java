@@ -6,7 +6,7 @@ import java.util.Properties;
 import org.hibernate.cfg.Configuration;
 import org.jbpm.persistence.db.DbPersistenceServiceFactory;
 
-import com.logicaldoc.core.spring.PropertiesPlaceHolder;
+import com.logicaldoc.util.spring.PropertiesPlaceHolder;
 import com.logicaldoc.util.Context;
 
 /**
