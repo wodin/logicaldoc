@@ -14,6 +14,8 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.TemplateService;
+import com.logicaldoc.gui.frontend.client.services.TemplateServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.TitleOrientation;
@@ -44,6 +46,8 @@ import com.smartgwt.client.widgets.layout.VStack;
 public class TemplatePropertiesPanel extends HLayout {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
+	private TemplateServiceAsync templateService = (TemplateServiceAsync) GWT.create(TemplateService.class);
 
 	private DynamicForm form1 = new DynamicForm();
 
@@ -97,33 +101,35 @@ public class TemplatePropertiesPanel extends HLayout {
 		ListGridField name = new ListGridField("name", I18N.message("attributes"));
 		attributesList.setFields(name);
 		if (template.getId() != 0)
-			fillAttributesList(template);
+			fillAttributesList(template.getId());
 
 		refresh();
 	}
 
-	private void fillAttributesList(GUITemplate template) {
+	private void fillAttributesList(long templateId) {
 		// Get the template attributes
-		documentService.getAttributes(Session.get().getSid(), template.getId(),
-				new AsyncCallback<GUIExtendedAttribute[]>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+		templateService.getTemplate(Session.get().getSid(), templateId, new AsyncCallback<GUITemplate>() {
 
-					@Override
-					public void onSuccess(GUIExtendedAttribute[] result) {
-						for (int i = 0; i < result.length; i++) {
-							GUIExtendedAttribute att = result[i];
-							ListGridRecord record = new ListGridRecord();
-							record.setAttribute("name", att.getName());
-							guiAttributes.put(att.getName(), att);
-							attributesList.getRecordList().add(record);
-						}
-						lastAttributesGrid = new ListGridRecord[attributesList.getRecords().length];
-						lastAttributesGrid = attributesList.getRecords();
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(GUITemplate template) {
+				if (template.getAttributes() != null && template.getAttributes().length > 0) {
+					for (int i = 0; i < template.getAttributes().length; i++) {
+						GUIExtendedAttribute att = template.getAttributes()[i];
+						ListGridRecord record = new ListGridRecord();
+						record.setAttribute("name", att.getName());
+						guiAttributes.put(att.getName(), att);
+						attributesList.getRecordList().add(record);
 					}
-				});
+					lastAttributesGrid = new ListGridRecord[attributesList.getRecords().length];
+					lastAttributesGrid = attributesList.getRecords();
+				}
+			}
+		});
 	}
 
 	private void refresh() {
@@ -351,6 +357,8 @@ public class TemplatePropertiesPanel extends HLayout {
 		if (!vm.hasErrors()) {
 			template.setName((String) values.get("name"));
 			template.setDescription((String) values.get("description"));
+			if (guiAttributes.size() > 0)
+				template.setAttributes(guiAttributes.values().toArray(new GUIExtendedAttribute[0]));
 		}
 		return !vm.hasErrors();
 	}

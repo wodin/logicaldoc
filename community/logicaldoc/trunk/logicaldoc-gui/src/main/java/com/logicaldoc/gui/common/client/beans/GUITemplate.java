@@ -12,6 +12,8 @@ public class GUITemplate implements Serializable {
 
 	private String description;
 
+	private GUIExtendedAttribute[] attributes;
+
 	public long getId() {
 		return id;
 	}
@@ -34,5 +36,13 @@ public class GUITemplate implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public GUIExtendedAttribute[] getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(GUIExtendedAttribute[] attributes) {
+		this.attributes = attributes;
 	}
 }

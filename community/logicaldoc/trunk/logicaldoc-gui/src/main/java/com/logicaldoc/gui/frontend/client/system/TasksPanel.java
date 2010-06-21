@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.frontend.client.system;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -305,8 +307,15 @@ public class TasksPanel extends VLayout {
 							tasks[i].getScheduling().isEnabled() ? "bullet_green" : "bullet_red");
 					list.getRecord(i).setAttribute("eenabled", tasks[i].getScheduling().isEnabled());
 					list.getRecord(i).setAttribute("progress", tasks[i].getProgress());
-					list.getRecord(i).setAttribute("lastStart", tasks[i].getScheduling().getPreviousFireTime());
-					list.getRecord(i).setAttribute("nextStart", tasks[i].getScheduling().getNextFireTime());
+
+					Date previousFireTime = tasks[i].getScheduling().getPreviousFireTime();
+					if (previousFireTime != null)
+						list.getRecord(i).setAttribute("lastStart", previousFireTime);
+
+					Date nextFireTime = tasks[i].getScheduling().getNextFireTime();
+					if (nextFireTime != null)
+						list.getRecord(i).setAttribute("nextStart", nextFireTime);
+	
 					list.getRecord(i).setAttribute("scheduling", tasks[i].getSchedulingLabel());
 					list.updateData(list.getRecord(i));
 				}

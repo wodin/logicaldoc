@@ -39,7 +39,9 @@ public class TasksDS extends DataSource {
 		DataSourceTextField scheduling = new DataSourceTextField("scheduling");
 		DataSourceIntegerField progress = new DataSourceIntegerField("progress");
 		DataSourceDateTimeField lastStart = new DataSourceDateTimeField("lastStart");
+		lastStart.setRequired(false);
 		DataSourceDateTimeField nextStart = new DataSourceDateTimeField("nextStart");
+		nextStart.setRequired(false);
 		DataSourceBooleanField indeterminate = new DataSourceBooleanField("indeterminate");
 
 		setFields(name, label, enabledIcon, enabled, status, scheduling, progress, lastStart, nextStart, indeterminate);

@@ -94,7 +94,7 @@
 
   <servlet>
     <servlet-name>SystemService</servlet-name>
-    <servlet-class>com.logicaldoc.gui.frontend.server.MockSystemServiceImpl</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.SystemServiceImpl</servlet-class>
   </servlet>
 
   <servlet>
@@ -134,7 +134,7 @@
 
   <servlet>
     <servlet-name>TemplateService</servlet-name>
-    <servlet-class>com.logicaldoc.gui.frontend.server.MockTemplateServiceImpl</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.TemplateServiceImpl</servlet-class>
   </servlet>
 
   <servlet>

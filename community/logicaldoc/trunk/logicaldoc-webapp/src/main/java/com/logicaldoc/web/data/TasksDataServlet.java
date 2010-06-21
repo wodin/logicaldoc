@@ -34,8 +34,6 @@ public class TasksDataServlet extends HttpServlet {
 
 		String locale = request.getParameter("locale");
 
-		System.out.println("TasksDataServlet!!!");
-
 		response.setContentType("text/xml");
 
 		// Headers required by Internet Explorer
@@ -46,15 +44,13 @@ public class TasksDataServlet extends HttpServlet {
 		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-		System.out.println("TaskManager task number: " + manager.getTasks().size());
-
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
 
 		for (Task task : manager.getTasks()) {
 			writer.print("<task>");
-			writer.print("<name>" + task.getName() + "/name>");
-			writer.print("<label>" + I18N.getMessage("task.name." + task.getName(), locale) + "</label>");
+			writer.print("<name><![CDATA[" + task.getName() + "]]></name>");
+			writer.print("<label><![CDATA[" + I18N.getMessage("task.name." + task.getName(), locale) + "]]></label>");
 			if (task.getScheduling().isEnabled()) {
 				writer.print("<eenabled>true</eenabled>");
 				writer.print("<enabledIcon>bullet_green</enabledIcon>");
@@ -67,12 +63,18 @@ public class TasksDataServlet extends HttpServlet {
 				writer.print("<scheduling>" + task.getScheduling().getCronExpression() + "</scheduling>");
 			else if (task.getScheduling().getMode().equals(DoubleTrigger.MODE_SIMPLE))
 				writer.print("<scheduling>" + I18N.getMessage("each", locale) + " "
-						+ task.getScheduling().getIntervalSeconds() + " " + I18N.getMessage("seconds", locale)
-						+ "</scheduling>");
+						+ task.getScheduling().getIntervalSeconds() + " "
+						+ I18N.getMessage("seconds", locale).toLowerCase() + "</scheduling>");
 			writer.print("<progress>" + task.getProgress() + "</progress>");
-			writer.print("<lastStart>" + df.format(task.getScheduling().getPreviousFireTime()) + "</lastStart>");
-			writer.print("<nextStart>" + df.format(task.getScheduling().getNextFireTime()) + "</nextStart>");
-			writer.print("<indeterminate>" + task.isIndeterminate() + "</indeterminate>");
+			if (task.getScheduling().getPreviousFireTime() != null) {
+				writer.print("<lastStart>" + df.format(task.getScheduling().getPreviousFireTime()) + "</lastStart>");
+			}
+
+			if (task.getScheduling().getNextFireTime() != null) {
+				writer.print("<nextStart>" + df.format(task.getScheduling().getNextFireTime()) + "</nextStart>");
+			}
+			writer.print("<indeterminate>" + "" + task.isIndeterminate() + "</indeterminate>");
+
 			writer.print("</task>");
 		}
 		writer.write("</list>");
