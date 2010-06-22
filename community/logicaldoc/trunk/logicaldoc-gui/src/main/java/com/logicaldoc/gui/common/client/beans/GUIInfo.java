@@ -38,6 +38,8 @@ public class GUIInfo implements Serializable {
 
 	// Optional list of messages to be shown to the user
 	private GUIMessage[] messages;
+	
+	private GUILanguage[] supportedLanguages;
 
 	public String getProductName() {
 		return productName;
@@ -141,6 +143,14 @@ public class GUIInfo implements Serializable {
 
 	public void setVendorSupport(String vendorSupport) {
 		this.vendorSupport = vendorSupport;
+	}
+
+	public GUILanguage[] getSupportedLanguages() {
+		return supportedLanguages;
+	}
+
+	public void setSupportedLanguages(GUILanguage[] supportedLanguages) {
+		this.supportedLanguages = supportedLanguages;
 	}
 
 }

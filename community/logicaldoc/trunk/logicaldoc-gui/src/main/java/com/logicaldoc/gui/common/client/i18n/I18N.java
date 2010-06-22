@@ -3,6 +3,7 @@ package com.logicaldoc.gui.common.client.i18n;
 import java.util.LinkedHashMap;
 
 import com.google.gwt.i18n.client.Dictionary;
+import com.logicaldoc.gui.common.client.beans.GUILanguage;
 
 /**
  * Retrieves i18n resources
@@ -12,6 +13,8 @@ import com.google.gwt.i18n.client.Dictionary;
  */
 public class I18N {
 	private static String locale = "en";
+
+	private static GUILanguage[] languages;
 
 	public static String message(String key) {
 		try {
@@ -43,14 +46,21 @@ public class I18N {
 	}
 
 	public static LinkedHashMap<String, String> getSupportedLanguages(boolean addEmpty) {
-		LinkedHashMap<String, String> languages = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		if (addEmpty)
-			languages.put("", " ");
-		languages.put("en", I18N.message("langen"));
-		languages.put("es", I18N.message("langes"));
-		languages.put("it", I18N.message("langit"));
-		languages.put("de", I18N.message("langde"));
-		languages.put("fr", I18N.message("langfr"));
+			map.put("", " ");
+		if (languages != null)
+			for (GUILanguage l : languages) {
+				map.put(l.getCode(), l.getDisplayName());
+			}
+		return map;
+	}
+
+	public GUILanguage[] getLanguages() {
 		return languages;
+	}
+
+	public static void setLanguages(GUILanguage[] languages) {
+		I18N.languages = languages;
 	}
 }

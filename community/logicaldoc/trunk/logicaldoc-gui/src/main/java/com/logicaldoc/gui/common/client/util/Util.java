@@ -30,7 +30,12 @@ public class Util {
 	public static String contextPath() {
 		return GWT.getModuleBaseURL().replace(GWT.getModuleName() + "/", "");
 	}
-
+	
+	public static void changeLocale(String locale) {
+		redirect(contextPath()+GWT.getModuleName()+".jsp?locale="+locale);
+	}
+	
+	
 	public static Dictionary getContext() {
 		if (context == null)
 			context = Dictionary.getDictionary("context");
@@ -128,7 +133,6 @@ public class Util {
 	
 	public static native void redirect(String url)
 	/*-{
-	        $wnd.location.replace(url);
-
+		$wnd.location.replace(url);
 	}-*/; 
 }

@@ -111,5 +111,5 @@ public interface SystemService extends RemoteService {
 	/**
 	 * Retrieves the system informations
 	 */
-	public GUIInfo getInfo();
+	public GUIInfo getInfo(String locale);
 }
