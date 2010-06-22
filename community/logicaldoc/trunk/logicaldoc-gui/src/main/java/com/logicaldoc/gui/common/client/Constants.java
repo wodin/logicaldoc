@@ -81,4 +81,6 @@ public final class Constants {
 
 	// The document is un-indexable
 	public final static int INDEX_SKIP = 2;
+
+	public static final String LOCALE = "locale";
 }

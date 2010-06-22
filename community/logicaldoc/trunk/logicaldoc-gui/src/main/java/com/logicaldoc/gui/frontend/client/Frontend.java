@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -42,8 +43,6 @@ public class Frontend implements EntryPoint {
 		return instance;
 	}
 
-	private static final String LOCALE = "locale";
-
 	@Override
 	public void onModuleLoad() {
 		// Export some javascripts
@@ -53,7 +52,6 @@ public class Frontend implements EntryPoint {
 			return;
 
 		GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-
 			@Override
 			public void onUncaughtException(Throwable caught) {
 				Log.serverError(caught);
@@ -68,8 +66,8 @@ public class Frontend implements EntryPoint {
 
 		// Tries to capture locale parameter
 		String lang;
-		if (loc.getParameter(LOCALE) != null && !loc.getParameter(LOCALE).equals("")) {
-			lang = loc.getParameter(LOCALE);
+		if (loc.getParameter(Constants.LOCALE) != null && !loc.getParameter(Constants.LOCALE).equals("")) {
+			lang = loc.getParameter(Constants.LOCALE);
 		} else {
 			// First we initialize language values
 			lang = Util.getBrowserLanguage();
@@ -92,7 +90,7 @@ public class Frontend implements EntryPoint {
 			@Override
 			public void onSuccess(GUIInfo info) {
 				I18N.init(info);
-				
+
 				loginPanel = new LoginPanel(info);
 				RootPanel.get().add(loginPanel);
 
