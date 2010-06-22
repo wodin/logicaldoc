@@ -2,15 +2,16 @@ package com.logicaldoc.gui.frontend.server;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.UUID;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
-import com.logicaldoc.gui.common.client.beans.GUILanguage;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 
@@ -348,15 +349,34 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		GUIInfo info = new GUIInfo();
 
 		Locale[] locales = Locale.getAvailableLocales();
-		GUILanguage[] languages = new GUILanguage[locales.length];
+		GUIValuePair[] languages = new GUIValuePair[locales.length];
 		for (int i = 0; i < languages.length; i++) {
-			GUILanguage l = new GUILanguage();
+			GUIValuePair l = new GUIValuePair();
 			l.setCode(locales[i].toString());
-			l.setDisplayName(locales[i].getDisplayName());
+			l.setValue(locales[i].getDisplayName());
 			languages[i] = l;
 		}
 		info.setSupportedLanguages(languages);
-		
+		info.setBundle(getBundle(locale));
+
 		return info;
+	}
+
+	@Override
+	public GUIValuePair[] getBundle(String locale) {
+		System.out.println("** locale="+locale);
+		
+		//In production, use our LocaleUtil to instantiate the locale
+		Locale l=new Locale(locale);
+		ResourceBundle rb=ResourceBundle.getBundle("i18n.messages",l);
+		GUIValuePair[] buf=new GUIValuePair[rb.keySet().size()];
+		int i = 0;
+		for (String key : rb.keySet()) {
+			GUIValuePair entry=new GUIValuePair();
+			entry.setCode(key);
+			entry.setValue(rb.getString(key));
+			buf[i++]=entry;
+		}
+		return buf;
 	}
 }
