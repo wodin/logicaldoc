@@ -18,7 +18,6 @@
 			<fileset dir="war">
 				<include name="**" />
 				<exclude name="WEB-INF/lib/**" />
-				<exclude name="WEB-INF/classes/**" />
 			</fileset>
 		</copy>
 		<!--copy todir="${logicaldoc.webroot}/WEB-INF/classes">

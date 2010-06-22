@@ -335,6 +335,7 @@ public class SearchIndexingPanel extends VLayout {
 		locked.setRedrawOnChange(true);
 		locked.setWidth(50);
 		locked.setDefaultValue(this.searchEngine.isLocked());
+		locked.setDisabled(true);
 
 		// Include Patters
 		TextItem includePatters = ItemFactory.newTextItem("includePatters", "includepatters", null);

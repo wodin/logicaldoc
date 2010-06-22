@@ -103,34 +103,38 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public GUIInfo getInfo(String locale) {
 		GUIInfo info = new GUIInfo();
 
-		Properties i18n = new Properties();
 		try {
-			i18n.load(this.getClass().getResourceAsStream("/18n/i18n.properties"));
-		} catch (IOException e) {
-			log.error(e.getMessage());
-		}
+			Properties i18n = new Properties();
+			try {
+				i18n.load(this.getClass().getResourceAsStream("/i18n/i18n.properties"));
+			} catch (IOException e) {
+				log.error(e.getMessage());
+			}
 
-		Locale withLocale = LocaleUtil.toLocale(locale);
-		ArrayList<GUIValuePair> supportedLanguages = new ArrayList<GUIValuePair>();
-		GUIValuePair l = new GUIValuePair();
-		l.setCode("en");
-		l.setValue(Locale.ENGLISH.getDisplayName(withLocale));
-		supportedLanguages.add(l);
-
-		StringTokenizer st = new StringTokenizer(i18n.getProperty("locales"), ",", false);
-		while (st.hasMoreElements()) {
-			String code = (String) st.nextElement();
-			if (code.equals("en"))
-				continue;
-			Locale lc = LocaleUtil.toLocale(code);
-			l = new GUIValuePair();
-			l.setCode(code);
-			l.setValue(lc.getDisplayName(withLocale));
+			Locale withLocale = LocaleUtil.toLocale(locale);
+			ArrayList<GUIValuePair> supportedLanguages = new ArrayList<GUIValuePair>();
+			GUIValuePair l = new GUIValuePair();
+			l.setCode("en");
+			l.setValue(Locale.ENGLISH.getDisplayName(withLocale));
 			supportedLanguages.add(l);
-		}
 
-		info.setSupportedLanguages(supportedLanguages.toArray(new GUIValuePair[0]));
-		info.setBundle(getBundle(locale));
+			StringTokenizer st = new StringTokenizer(i18n.getProperty("locales"), ",", false);
+			while (st.hasMoreElements()) {
+				String code = (String) st.nextElement();
+				if (code.equals("en"))
+					continue;
+				Locale lc = LocaleUtil.toLocale(code);
+				l = new GUIValuePair();
+				l.setCode(code);
+				l.setValue(lc.getDisplayName(withLocale));
+				supportedLanguages.add(l);
+			}
+
+			info.setSupportedLanguages(supportedLanguages.toArray(new GUIValuePair[0]));
+			info.setBundle(getBundle(locale));
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+		}
 
 		return info;
 	}
