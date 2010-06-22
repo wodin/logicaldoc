@@ -95,6 +95,18 @@ values     (103,1,1,0,1,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup
 			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (101,-4,1,1,1,1,1,1,1,0,0,0,0);
+
+insert into ld_menugroup
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (102,-4,1,0,1,0,0,0,0,0,0,0,0);
+
+insert into ld_menugroup
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
+values     (103,-4,1,0,1,0,0,0,0,0,0,0,0);
+
+insert into ld_menugroup
+			   (ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
 values     (103,2,1,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup
