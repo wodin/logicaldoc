@@ -33,7 +33,7 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
 
 		SecurityServiceImpl securityService = new SecurityServiceImpl();
-		session = securityService.login("admin", "admin");
+		session = securityService.login("admin", "admin", null);
 		Assert.assertNotNull(session);
 		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
 	}

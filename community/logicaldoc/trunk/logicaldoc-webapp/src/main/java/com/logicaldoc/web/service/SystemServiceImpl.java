@@ -3,11 +3,18 @@ package com.logicaldoc.web.service;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.dao.DocumentDAO;
@@ -22,9 +29,11 @@ import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.quartz.DoubleTrigger;
 import com.logicaldoc.util.sql.SqlUtil;
@@ -41,6 +50,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	private static final long serialVersionUID = 1L;
 
 	private static int progress = 0;
+
+	private static Log log = LogFactory.getLog(SystemServiceImpl.class);
 
 	@Override
 	public boolean disableTask(String sid, String taskName) throws InvalidSessionException {
@@ -89,8 +100,38 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUIInfo getInfo() {
+	public GUIInfo getInfo(String locale) {
 		GUIInfo info = new GUIInfo();
+
+		Properties i18n = new Properties();
+		try {
+			i18n.load(this.getClass().getResourceAsStream("/18n/i18n.properties"));
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
+
+		Locale withLocale = LocaleUtil.toLocale(locale);
+		ArrayList<GUIValuePair> supportedLanguages = new ArrayList<GUIValuePair>();
+		GUIValuePair l = new GUIValuePair();
+		l.setCode("en");
+		l.setValue(Locale.ENGLISH.getDisplayName(withLocale));
+		supportedLanguages.add(l);
+
+		StringTokenizer st = new StringTokenizer(i18n.getProperty("locales"), ",", false);
+		while (st.hasMoreElements()) {
+			String code = (String) st.nextElement();
+			if (code.equals("en"))
+				continue;
+			Locale lc = LocaleUtil.toLocale(code);
+			l = new GUIValuePair();
+			l.setCode(code);
+			l.setValue(lc.getDisplayName(withLocale));
+			supportedLanguages.add(l);
+		}
+
+		info.setSupportedLanguages(supportedLanguages.toArray(new GUIValuePair[0]));
+		info.setBundle(getBundle(locale));
+
 		return info;
 	}
 
@@ -540,5 +581,20 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	static GUIValuePair[] getBundle(String locale) {
+		// In production, use our LocaleUtil to instantiate the locale
+		Locale l = LocaleUtil.toLocale(locale);
+		ResourceBundle rb = ResourceBundle.getBundle("i18n.messages", l);
+		GUIValuePair[] buf = new GUIValuePair[rb.keySet().size()];
+		int i = 0;
+		for (String key : rb.keySet()) {
+			GUIValuePair entry = new GUIValuePair();
+			entry.setCode(key);
+			entry.setValue(rb.getString(key));
+			buf[i++] = entry;
+		}
+		return buf;
 	}
 }
