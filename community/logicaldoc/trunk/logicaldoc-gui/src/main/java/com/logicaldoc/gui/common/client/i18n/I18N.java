@@ -1,9 +1,10 @@
 package com.logicaldoc.gui.common.client.i18n;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import com.google.gwt.i18n.client.Dictionary;
-import com.logicaldoc.gui.common.client.beans.GUILanguage;
+import com.logicaldoc.gui.common.client.beans.GUIInfo;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 
 /**
  * Retrieves i18n resources
@@ -14,14 +15,22 @@ import com.logicaldoc.gui.common.client.beans.GUILanguage;
 public class I18N {
 	private static String locale = "en";
 
-	private static GUILanguage[] languages;
+	private static GUIValuePair[] languages;
+
+	private static HashMap<String, String> bundle = new HashMap<String, String>();
 
 	public static String message(String key) {
-		try {
-			return Dictionary.getDictionary("messages_i18n").get(key.replaceAll("\\.", "_"));
-		} catch (Throwable t) {
+		// try {
+		// return
+		// Dictionary.getDictionary("messages_i18n").get(key.replaceAll("\\.",
+		// "_"));
+		// } catch (Throwable t) {
+		// return key;
+		// }
+		if (bundle.containsKey(key))
+			return bundle.get(key);
+		else
 			return key;
-		}
 	}
 
 	public static String message(String key, String val) {
@@ -50,17 +59,29 @@ public class I18N {
 		if (addEmpty)
 			map.put("", " ");
 		if (languages != null)
-			for (GUILanguage l : languages) {
-				map.put(l.getCode(), l.getDisplayName());
+			for (GUIValuePair l : languages) {
+				map.put(l.getCode(), l.getValue());
 			}
 		return map;
 	}
 
-	public GUILanguage[] getLanguages() {
+	public GUIValuePair[] getLanguages() {
 		return languages;
 	}
 
-	public static void setLanguages(GUILanguage[] languages) {
+	public static void setLanguages(GUIValuePair[] languages) {
 		I18N.languages = languages;
+	}
+
+	public static void initBundle(GUIValuePair[] messages) {
+		bundle.clear();
+		for (GUIValuePair val : messages) {
+			bundle.put(val.getCode(), val.getValue());
+		}
+	}
+
+	public static void init(GUIInfo info) {
+		setLanguages(info.getSupportedLanguages());
+		initBundle(info.getBundle());
 	}
 }

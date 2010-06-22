@@ -11,7 +11,6 @@ import com.logicaldoc.gui.frontend.client.document.DocumentDetailsPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -112,6 +111,6 @@ public class SearchPanel extends HLayout implements SearchObserver {
 
 	@Override
 	public void onOptionsChanged(GUISearchOptions newOptions) {
-		
+
 	}
 }

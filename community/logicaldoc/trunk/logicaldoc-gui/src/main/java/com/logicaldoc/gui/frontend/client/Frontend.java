@@ -91,8 +91,8 @@ public class Frontend implements EntryPoint {
 
 			@Override
 			public void onSuccess(GUIInfo info) {
-				I18N.setLanguages(info.getSupportedLanguages());
-
+				I18N.init(info);
+				
 				loginPanel = new LoginPanel(info);
 				RootPanel.get().add(loginPanel);
 

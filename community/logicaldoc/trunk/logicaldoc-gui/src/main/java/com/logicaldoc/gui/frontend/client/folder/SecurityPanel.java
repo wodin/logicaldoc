@@ -20,7 +20,6 @@ import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -149,7 +148,7 @@ public class SecurityPanel extends FolderDetailTab {
 		buttons.setWidth100();
 		buttons.setHeight(20);
 		applyRights.setWidth(140);
-	
+
 		applyRights.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -163,7 +162,7 @@ public class SecurityPanel extends FolderDetailTab {
 				onSave(true);
 			}
 		});
-		
+
 		// Prepare the combo and button for adding a new Group
 		final DynamicForm groupForm = new DynamicForm();
 		final ComboBoxItem group = ItemFactory.newGroupSelector("group", "group");

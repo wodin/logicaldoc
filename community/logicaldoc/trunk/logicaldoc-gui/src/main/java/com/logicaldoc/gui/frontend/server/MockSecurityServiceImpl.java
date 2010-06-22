@@ -1,6 +1,10 @@
 package com.logicaldoc.gui.frontend.server;
 
 import java.util.Date;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIADSettings;
@@ -9,6 +13,7 @@ import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 
 /**
@@ -22,11 +27,18 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public GUISession login(String username, String password) {
+	public GUISession login(String username, String password, String locale) {
+		String loc=locale;
+		if(StringUtils.isEmpty(loc))
+			loc="en";
+		
 		GUISession session = new GUISession();
+		session.setBundle(getBundle(loc));
+		
 		session.setLoggedIn(false);
 		if ("admin".equals(username)) {
 			GUIUser user = new GUIUser();
+			user.setLanguage(loc);
 			session.setUser(user);
 			user.setUserName(username);
 			session.setSid("sid" + new Date().getTime());
@@ -55,6 +67,7 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 			user.setId(100);
 			user.setExpired(true);
 			user.setPasswordMinLenght(8);
+			user.setLanguage(loc);
 			session.setUser(user);
 			session.setLoggedIn(false);
 			return session;
@@ -62,6 +75,23 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 			session.setLoggedIn(false);
 			return session;
 		}
+	}
+
+	public GUIValuePair[] getBundle(String locale) {
+		System.out.println("** locale=" + locale);
+
+		// In production, use our LocaleUtil to instantiate the locale
+		Locale l = new Locale(locale);
+		ResourceBundle rb = ResourceBundle.getBundle("i18n.messages", l);
+		GUIValuePair[] buf = new GUIValuePair[rb.keySet().size()];
+		int i = 0;
+		for (String key : rb.keySet()) {
+			GUIValuePair entry = new GUIValuePair();
+			entry.setCode(key);
+			entry.setValue(rb.getString(key));
+			buf[i++] = entry;
+		}
+		return buf;
 	}
 
 	@Override

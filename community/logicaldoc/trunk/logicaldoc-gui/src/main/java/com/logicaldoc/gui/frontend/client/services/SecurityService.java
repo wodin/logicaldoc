@@ -21,9 +21,11 @@ public interface SecurityService extends RemoteService {
 	 * 
 	 * @param username
 	 * @param password
+	 * @param locale
+	 * 
 	 * @return The newly created session
 	 */
-	public GUISession login(String username, String password);
+	public GUISession login(String username, String password, String locale);
 
 	/**
 	 * Changes the password of a user

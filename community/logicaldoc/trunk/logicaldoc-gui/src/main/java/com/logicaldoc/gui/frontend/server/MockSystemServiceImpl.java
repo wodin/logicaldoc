@@ -362,9 +362,8 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		return info;
 	}
 
-	@Override
 	public GUIValuePair[] getBundle(String locale) {
-		System.out.println("** locale="+locale);
+		System.out.println("** get bundle "+locale);
 		
 		//In production, use our LocaleUtil to instantiate the locale
 		Locale l=new Locale(locale);

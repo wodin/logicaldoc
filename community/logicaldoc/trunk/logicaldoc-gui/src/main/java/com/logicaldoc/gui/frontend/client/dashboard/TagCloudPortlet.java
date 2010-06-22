@@ -13,7 +13,6 @@ import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HeaderControl;
 import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
 import com.smartgwt.client.widgets.layout.HLayout;

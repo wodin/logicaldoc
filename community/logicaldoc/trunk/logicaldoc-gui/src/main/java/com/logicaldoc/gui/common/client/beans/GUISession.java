@@ -20,6 +20,8 @@ public class GUISession implements Serializable {
 	
 	private String sid;
 	
+	private GUIValuePair[] bundle;
+	
 	public GUIUser getUser() {
 		return user;
 	}
@@ -50,5 +52,13 @@ public class GUISession implements Serializable {
 
 	public void setSid(String sid) {
 		this.sid = sid;
+	}
+
+	public GUIValuePair[] getBundle() {
+		return bundle;
+	}
+
+	public void setBundle(GUIValuePair[] bundle) {
+		this.bundle = bundle;
 	}
 }
