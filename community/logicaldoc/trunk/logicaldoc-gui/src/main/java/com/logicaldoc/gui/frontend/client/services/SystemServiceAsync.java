@@ -7,6 +7,7 @@ import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITask;
+import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 
 public interface SystemServiceAsync {
 
@@ -32,4 +33,6 @@ public interface SystemServiceAsync {
 	void saveFolders(String sid, GUIParameter[] folders, AsyncCallback<Void> callback);
 
 	void getInfo(String locale, AsyncCallback<GUIInfo> callback);
+
+	void getBundle(String locale, AsyncCallback<GUIValuePair[]> callback);
 }
