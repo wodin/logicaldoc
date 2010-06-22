@@ -35,7 +35,7 @@ public class SecurityServiceImplTest extends AbstractWebappTestCase {
 		userDAO = (UserDAO) context.getBean("UserDAO");
 		groupDAO = (GroupDAO) context.getBean("GroupDAO");
 
-		session = service.login("admin", "admin");
+		session = service.login("admin", "admin", null);
 		Assert.assertNotNull(session);
 		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
 	}
@@ -48,9 +48,9 @@ public class SecurityServiceImplTest extends AbstractWebappTestCase {
 		SessionManager.getInstance().get(session.getSid()).setClosed();
 		Assert.assertEquals(0, SessionManager.getInstance().countOpened());
 
-		session = service.login("admin", "password");
+		session = service.login("admin", "password", null);
 		Assert.assertFalse(session.isLoggedIn());
-		session = service.login("unexisting", "admin");
+		session = service.login("unexisting", "admin", null);
 		Assert.assertFalse(session.isLoggedIn());
 	}
 

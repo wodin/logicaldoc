@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -49,12 +50,13 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	private static Log log = LogFactory.getLog(SecurityServiceImpl.class);
 
 	@Override
-	public GUISession login(String username, String password) {
+	public GUISession login(String username, String password, String locale) {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
 				AuthenticationChain.class);
 
 		GUISession session = new GUISession();
+
 		GUIUser guiUser = new GUIUser();
 		if (authenticationChain.authenticate(username, password,
 				getThreadLocalRequest() != null ? getThreadLocalRequest().getRemoteAddr() : "")) {
@@ -64,7 +66,13 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			guiUser.setFirstName(user.getFirstName());
 			guiUser.setId(user.getId());
-			guiUser.setLanguage(user.getLanguage());
+			if (StringUtils.isEmpty(locale)) {
+				guiUser.setLanguage(user.getLanguage());
+			} else {
+				guiUser.setLanguage(locale);
+			}
+			session.setBundle(SystemServiceImpl.getBundle(guiUser.getLanguage()));
+
 			guiUser.setName(user.getName());
 
 			GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
