@@ -1,11 +1,13 @@
 package com.logicaldoc.gui.frontend.server;
 
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
+import com.logicaldoc.gui.common.client.beans.GUILanguage;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
@@ -339,11 +341,22 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 	}
 
 	@Override
-	public GUIInfo getInfo() {
+	public GUIInfo getInfo(String locale) {
 		/*
 		 * The product version must be taken from context.properties.
 		 */
 		GUIInfo info = new GUIInfo();
+
+		Locale[] locales = Locale.getAvailableLocales();
+		GUILanguage[] languages = new GUILanguage[locales.length];
+		for (int i = 0; i < languages.length; i++) {
+			GUILanguage l = new GUILanguage();
+			l.setCode(locales[i].toString());
+			l.setDisplayName(locales[i].getDisplayName());
+			languages[i] = l;
+		}
+		info.setSupportedLanguages(languages);
+		
 		return info;
 	}
 }

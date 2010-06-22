@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.Frontend;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
@@ -24,7 +25,10 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -112,7 +116,17 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
-		form.setFields(username, password);
+		SelectItem language = ItemFactory.newLanguageSelector("language", true);
+		language.addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				Util.changeLocale(event.getValue().toString());
+			}
+		});
+
+		language.setDefaultValue("");
+
+		form.setFields(username, password, language);
 
 		IButton loginButton = new IButton(I18N.message("login"));
 		loginButton.addClickHandler(new ClickHandler() {

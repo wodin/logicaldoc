@@ -32,7 +32,7 @@ public class Frontend implements EntryPoint {
 	private LoginPanel loginPanel;
 
 	private MainPanel mainPanel;
-	
+
 	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
 
 	/**
@@ -83,7 +83,7 @@ public class Frontend implements EntryPoint {
 
 		mainPanel = MainPanel.get();
 
-		systemService.getInfo(new AsyncCallback<GUIInfo>(){
+		systemService.getInfo(I18N.getLocale(), new AsyncCallback<GUIInfo>() {
 			@Override
 			public void onFailure(Throwable error) {
 				SC.warn(error.getMessage());
@@ -91,6 +91,8 @@ public class Frontend implements EntryPoint {
 
 			@Override
 			public void onSuccess(GUIInfo info) {
+				I18N.setLanguages(info.getSupportedLanguages());
+
 				loginPanel = new LoginPanel(info);
 				RootPanel.get().add(loginPanel);
 

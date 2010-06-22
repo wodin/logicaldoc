@@ -89,6 +89,16 @@ public class ItemFactory {
 		item.setDefaultValue("en");
 		return item;
 	}
+	
+	public static SelectItem newGUILanguageSelector(String name, boolean withEmpty) {
+		SelectItem item = new SelectItem();
+		item.setValueMap(I18N.getSupportedLanguages(withEmpty));
+		item.setName(name);
+		item.setTitle(I18N.message("language"));
+		item.setWrapTitle(false);
+		item.setDefaultValue(I18N.getLocale());
+		return item;
+	}
 
 	public static SelectItem newEncodingSelector(String name) {
 		SelectItem item = new SelectItem();

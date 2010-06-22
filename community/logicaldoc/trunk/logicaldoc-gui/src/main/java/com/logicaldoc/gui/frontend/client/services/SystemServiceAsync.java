@@ -31,5 +31,5 @@ public interface SystemServiceAsync {
 
 	void saveFolders(String sid, GUIParameter[] folders, AsyncCallback<Void> callback);
 
-	void getInfo(AsyncCallback<GUIInfo> callback);
+	void getInfo(String locale, AsyncCallback<GUIInfo> callback);
 }
