@@ -70,18 +70,18 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 	public void testApplyRights() throws InvalidSessionException {
 		Menu parentMenu = folderDao.findById(101);
 		Assert.assertNotNull(parentMenu);
-		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 101, 1));
-		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 101, 1));
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 101, 4));
+		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 101, 4));
 		Menu childFolder1 = folderDao.findById(102);
 		Assert.assertNotNull(childFolder1);
 		Assert.assertEquals(101, childFolder1.getParentId());
-		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.DELETE, 102, 1));
-		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.RENAME, 102, 1));
+		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.DELETE, 102, 4));
+		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.RENAME, 102, 4));
 		Menu childFolder2 = folderDao.findById(103);
 		Assert.assertNotNull(childFolder2);
 		Assert.assertEquals(101, childFolder2.getParentId());
-		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.DELETE, 103, 1));
-		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.RENAME, 103, 1));
+		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.DELETE, 103, 4));
+		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.RENAME, 103, 4));
 
 		GUIFolder folder = service.getFolder(session.getSid(), 101, false);
 
