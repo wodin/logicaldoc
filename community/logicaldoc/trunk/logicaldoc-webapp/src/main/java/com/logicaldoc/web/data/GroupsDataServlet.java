@@ -68,7 +68,7 @@ public class GroupsDataServlet extends HttpServlet {
 			}
 		} else {
 			StringBuffer query = new StringBuffer("select A.id, A.name, A.description "
-					+ "from com.logicaldoc.core.security.Group A where A.type = " + Group.TYPE_DEFAULT);
+					+ "from com.logicaldoc.core.security.Group A where A.deleted = 0 and A.type = " + Group.TYPE_DEFAULT);
 
 			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
 

@@ -192,17 +192,32 @@ public class LastChangesPanel extends VLayout {
 	}
 
 	private void onSearch() {
+		histories.setData(new ListGridRecord[0]);
 		final Map<String, Object> values = vm.getValues();
 
 		if (vm.validate()) {
 			String[] eventValues = new String[0];
 			if (values.get("event") != null)
 				eventValues = values.get("event").toString().trim().toLowerCase().split(",");
-			String userValue = (String) values.get("user");
-			Date fromValue = (Date) values.get("fromDate");
-			Date tillValue = (Date) values.get("tillDate");
-			String sid = (String) values.get("sid");
-			int displayMaxValue = (Integer) values.get("displayMax");
+			String userValue = null;
+			if ((values.get("user") != null))
+				userValue = (String) values.get("user");
+			Date fromValue = null;
+			if (values.get("fromDate") != null)
+				fromValue = (Date) values.get("fromDate");
+			Date tillValue = null;
+			if (values.get("tillDate") != null)
+				tillValue = (Date) values.get("tillDate");
+
+			String sid = null;
+			if (values.get("sid") != null)
+				sid = (String) values.get("sid");
+
+			int displayMaxValue = 0;
+			if (values.get("displayMax") instanceof Integer)
+				displayMaxValue = (Integer) values.get("displayMax");
+			else
+				displayMaxValue = Integer.parseInt((String) values.get("displayMax"));
 
 			service.search(Session.get().getSid(), userValue, fromValue, tillValue, displayMaxValue, sid, eventValues,
 					new AsyncCallback<GUIHistory[]>() {
@@ -214,23 +229,23 @@ public class LastChangesPanel extends VLayout {
 
 						@Override
 						public void onSuccess(GUIHistory[] result) {
-							ListGridRecord[] records = new ListGridRecord[result.length];
-							for (int i = 0; i < result.length; i++) {
-								ListGridRecord record = new ListGridRecord();
-								record.setAttribute("event", I18N.message(result[i].getEvent()));
-								record.setAttribute("date", result[i].getDate());
-								record.setAttribute("user", result[i].getUserName());
-								record.setAttribute("name", result[i].getTitle());
-								record.setAttribute("folder", result[i].getPath());
-								record.setAttribute("sid", result[i].getSessionId());
-								records[i] = record;
+							if (result != null && result.length > 0) {
+								ListGridRecord[] records = new ListGridRecord[result.length];
+								for (int i = 0; i < result.length; i++) {
+									ListGridRecord record = new ListGridRecord();
+									record.setAttribute("event", I18N.message(result[i].getEvent()));
+									record.setAttribute("date", result[i].getDate());
+									record.setAttribute("user", result[i].getUserName());
+									record.setAttribute("name", result[i].getTitle());
+									record.setAttribute("name", result[i].getTitle());
+									record.setAttribute("folder", result[i].getPath());
+									record.setAttribute("sid", result[i].getSessionId());
+									records[i] = record;
+								}
+								histories.setData(records);
 							}
-
-							histories.setData(records);
 						}
-
 					});
-
 		}
 	}
 }

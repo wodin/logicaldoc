@@ -1,9 +1,19 @@
 package com.logicaldoc.web.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Date;
-import java.util.UUID;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.FolderDAO;
+import com.logicaldoc.core.document.dao.HistoryDAO;
+import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.core.task.TaskManager;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
@@ -15,7 +25,9 @@ import com.logicaldoc.gui.common.client.beans.GUITask;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.util.quartz.DoubleTrigger;
+import com.logicaldoc.util.sql.SqlUtil;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -34,13 +46,21 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public boolean disableTask(String sid, String taskName) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
+		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
 		try {
-			GUITask task = getTaskByName(sid, taskName);
+			Task task = null;
+			for (Task t : manager.getTasks()) {
+				if (t.getName().equals(taskName)) {
+					task = t;
+					break;
+				}
+			}
+
 			task.getScheduling().setEnabled(false);
-			saveTask(sid, task);
+			task.getScheduling().save();
+
 			return true;
 		} catch (Throwable e) {
-			e.printStackTrace();
 			return false;
 		}
 	}
@@ -49,13 +69,21 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public boolean enableTask(String sid, String taskName) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
+		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
 		try {
-			GUITask task = getTaskByName(sid, taskName);
+			Task task = null;
+			for (Task t : manager.getTasks()) {
+				if (t.getName().equals(taskName)) {
+					task = t;
+					break;
+				}
+			}
+
 			task.getScheduling().setEnabled(true);
-			saveTask(sid, task);
+			task.getScheduling().save();
+
 			return true;
 		} catch (Throwable e) {
-			e.printStackTrace();
 			return false;
 		}
 	}
@@ -70,189 +98,161 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public GUIParameter[][] getStatistics(String sid) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
+		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+
 		GUIParameter[][] parameters = new GUIParameter[3][8];
 
-		// This is the correct mode to retrieve the doc dir path, but, for
-		// now,
-		// we use directly the doc dir path
-		// String docDirPath = Util.getContext().get("conf_docdir");
+		try {
+			// Repository statistics
+			GUIParameter docDirSize = new GUIParameter();
+			docDirSize.setName("documents");
+			File docDir = new File(conf.getPropertyWithSubstitutions("conf.docdir"));
+			if (docDir.exists())
+				docDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(docDir)));
+			else
+				docDirSize.setValue("0");
 
-		// Repository statistics
+			parameters[0][0] = docDirSize;
 
-		GUIParameter docDirSize = new GUIParameter();
-		docDirSize.setName("documents");
-		// In hosted mode we cannot read from a folder on the hard disk.
-		// File docDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
-		// docDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(docDir)));
+			GUIParameter userDirSize = new GUIParameter();
+			userDirSize.setName("users");
+			File userDir = new File(conf.getPropertyWithSubstitutions("conf.userdir"));
+			if (userDir.exists())
+				userDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(userDir)));
+			else
+				userDirSize.setValue("0");
 
-		docDirSize.setValue(Long.toString(28642667));
-		parameters[0][0] = docDirSize;
+			parameters[0][1] = userDirSize;
 
-		GUIParameter userDirSize = new GUIParameter();
-		userDirSize.setName("users");
-		// In hosted mode we cannot read from a folder on the hard disk.
-		// File docDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
-		// File userDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/data/users/");
-		// if (userDir.exists())
-		// userDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(userDir)));
-		// else
-		// userDirSize.setValue("0");
+			GUIParameter indexDirSize = new GUIParameter();
+			indexDirSize.setName("fulltextindex");
+			File indexDir = new File(conf.getPropertyWithSubstitutions("conf.indexdir"));
+			if (indexDir.exists())
+				indexDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(indexDir)));
+			else
+				indexDirSize.setValue("0");
 
-		userDirSize.setValue(Long.toString(486420));
-		parameters[0][1] = userDirSize;
+			parameters[0][2] = indexDirSize;
 
-		GUIParameter indexDirSize = new GUIParameter();
-		indexDirSize.setName("fulltextindex");
-		// In hosted mode we cannot read from a folder on the hard disk.
-		// File indexDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/data/index/");
-		// if (indexDir.exists())
-		// indexDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(indexDir)));
-		// else
-		// indexDirSize.setValue("0");
+			GUIParameter importDirSize = new GUIParameter();
+			importDirSize.setName("iimport");
+			File importDir = new File(conf.getPropertyWithSubstitutions("conf.importdir"));
+			if (importDir.exists())
+				importDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(importDir)));
+			else
+				importDirSize.setValue("0");
 
-		indexDirSize.setValue(Long.toString(10344480));
-		parameters[0][2] = indexDirSize;
+			parameters[0][3] = importDirSize;
 
-		GUIParameter importDirSize = new GUIParameter();
-		importDirSize.setName("iimport");
-		// In hosted mode we cannot read from a folder on the hard disk.
-		// File importDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/impex/in/");
-		// if (importDir.exists())
-		// importDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(importDir)));
-		// else
-		// importDirSize.setValue("0");
+			GUIParameter exportDirSize = new GUIParameter();
+			exportDirSize.setName("eexport");
+			File exportDir = new File(conf.getPropertyWithSubstitutions("conf.exportdir"));
+			if (exportDir.exists())
+				exportDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(exportDir)));
+			else
+				exportDirSize.setValue("0");
 
-		importDirSize.setValue(Long.toString(21434368));
-		parameters[0][3] = importDirSize;
+			parameters[0][4] = exportDirSize;
 
-		GUIParameter exportDirSize = new GUIParameter();
-		exportDirSize.setName("eexport");
-		// In hosted mode we cannot read from a folder on the hard disk.
-		// File exportDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/impex/out/");
-		// if (exportDir.exists())
-		// exportDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(exportDir)));
-		// else
-		// exportDirSize.setValue("0");
+			GUIParameter pluginsDirSize = new GUIParameter();
+			pluginsDirSize.setName("plugins");
+			File pluginsDir = new File(conf.getPropertyWithSubstitutions("conf.plugindir"));
+			if (pluginsDir.exists())
+				pluginsDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(pluginsDir)));
+			else
+				pluginsDirSize.setValue("0");
 
-		exportDirSize.setValue(Long.toString(1613824));
-		parameters[0][4] = exportDirSize;
+			parameters[0][5] = pluginsDirSize;
 
-		GUIParameter pluginsDirSize = new GUIParameter();
-		pluginsDirSize.setName("plugins");
-		// In hosted mode we cannot read from a folder on the hard disk.
-		// File pluginsDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/data/plugins/");
-		// if (pluginsDir.exists())
-		// pluginsDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(pluginsDir)));
-		// else
-		// pluginsDirSize.setValue("0");
+			GUIParameter dbDirSize = new GUIParameter();
+			dbDirSize.setName("database");
+			File dbDir = new File(conf.getPropertyWithSubstitutions("conf.dbdir"));
+			if (dbDir.exists())
+				dbDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(dbDir)));
+			else
+				dbDirSize.setValue("0");
 
-		pluginsDirSize.setValue(Long.toString(942080));
-		parameters[0][5] = pluginsDirSize;
+			parameters[0][6] = dbDirSize;
 
-		GUIParameter dbDirSize = new GUIParameter();
-		dbDirSize.setName("database");
-		// In hosted mode we cannot read from a folder on the hard disk.
-		// File dbDir = new File("/C:/Users/Matteo/logicaldoc1005/db/");
-		// if (dbDir.exists())
-		// dbDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(dbDir)));
-		// else
-		// dbDirSize.setValue("0");
+			GUIParameter logsDirSize = new GUIParameter();
+			logsDirSize.setName("logs");
+			File logsDir = new File(conf.getPropertyWithSubstitutions("conf.logdir"));
+			if (logsDir.exists())
+				logsDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(logsDir)));
+			else
+				logsDirSize.setValue("0");
 
-		dbDirSize.setValue(Long.toString(11361233));
-		parameters[0][6] = dbDirSize;
+			parameters[0][7] = logsDirSize;
 
-		GUIParameter logsDirSize = new GUIParameter();
-		logsDirSize.setName("logs");
-		logsDirSize.setValue(Long.toString(1042081));
-		parameters[0][7] = logsDirSize;
+			// Documents statistics
+			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			GUIParameter notIndexed = new GUIParameter();
+			notIndexed.setName("notindexed");
+			StringBuilder query = new StringBuilder(
+					"SELECT COUNT(A.id) FROM Document A where A.indexed = 0 and A.deleted = 0 ");
+			List<Object> records = (List<Object>) docDao.findByQuery(query.toString(), null, null);
+			Long count = (Long) records.get(0);
+			notIndexed.setValue(Long.toString(count));
 
-		// Documents statistics
-		GUIParameter notIndexed = new GUIParameter();
-		notIndexed.setName("notindexed");
-		// In hosted mode we cannot read from a folder on the hard disk.
-		// File docDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
-		// docDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(docDir)));
+			parameters[1][0] = notIndexed;
 
-		notIndexed.setValue(Long.toString(5));
-		parameters[1][0] = notIndexed;
+			GUIParameter indexed = new GUIParameter();
+			indexed.setName("indexed");
+			query = new StringBuilder("SELECT COUNT(A.id) FROM Document A where A.indexed = 1 and A.deleted = 0 ");
+			records = (List<Object>) docDao.findByQuery(query.toString(), null, null);
+			count = (Long) records.get(0);
+			indexed.setValue(Long.toString(count));
 
-		GUIParameter indexed = new GUIParameter();
-		indexed.setName("indexed");
-		// In hosted mode we cannot read from a folder on the hard disk.
-		// File docDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
-		// File userDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/data/users/");
-		// if (userDir.exists())
-		// userDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(userDir)));
-		// else
-		// userDirSize.setValue("0");
+			parameters[1][1] = indexed;
 
-		indexed.setValue(Long.toString(20));
-		parameters[1][1] = indexed;
+			GUIParameter deletedDocs = new GUIParameter();
+			deletedDocs.setName("docstrash");
+			deletedDocs.setLabel("trash");
+			query = new StringBuilder("SELECT COUNT(A.id) FROM Document A where A.deleted = 1 ");
+			records = (List<Object>) docDao.findByQuery(query.toString(), null, null);
+			count = (Long) records.get(0);
+			deletedDocs.setValue(Long.toString(count));
 
-		GUIParameter deletedDocs = new GUIParameter();
-		deletedDocs.setName("docstrash");
-		deletedDocs.setLabel("trash");
-		// In hosted mode we cannot read from a folder on the hard disk.
-		// File indexDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/data/index/");
-		// if (indexDir.exists())
-		// indexDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(indexDir)));
-		// else
-		// indexDirSize.setValue("0");
+			parameters[1][2] = deletedDocs;
 
-		deletedDocs.setValue(Long.toString(10));
-		parameters[1][2] = deletedDocs;
+			// Folders statistics
+			GUIParameter notEmptyFolders = new GUIParameter();
+			notEmptyFolders.setName("withdocs");
+			query = new StringBuilder("SELECT COUNT(A.id) FROM Menu A where (A.type = " + Menu.MENUTYPE_DIRECTORY
+					+ " or A.id= " + Menu.MENUID_DOCUMENTS
+					+ " ) and A.deleted = 0 and A.id in (select B.folder.id FROM Document B where B.deleted = 0) ");
+			records = (List<Object>) folderDao.findByQuery(query.toString(), null, null);
+			count = (Long) records.get(0);
+			notEmptyFolders.setValue(Long.toString(count));
 
-		// Folders statistics
+			parameters[2][0] = notEmptyFolders;
 
-		GUIParameter notEmpty = new GUIParameter();
-		notEmpty.setName("withdocs");
-		// In hosted mode we cannot read from a folder on the hard disk.
-		// File docDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
-		// docDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(docDir)));
+			GUIParameter emptyFolders = new GUIParameter();
+			emptyFolders.setName("empty");
+			query = new StringBuilder("SELECT COUNT(A.id) FROM Menu A where (A.type = " + Menu.MENUTYPE_DIRECTORY
+					+ " or A.id= " + Menu.MENUID_DOCUMENTS
+					+ " ) and A.deleted = 0 and A.id not in (select B.folder.id FROM Document B where B.deleted = 0) ");
+			records = (List<Object>) folderDao.findByQuery(query.toString(), null, null);
+			count = (Long) records.get(0);
+			emptyFolders.setValue(Long.toString(count));
 
-		notEmpty.setValue(Long.toString(13));
-		parameters[2][0] = notEmpty;
+			parameters[2][1] = emptyFolders;
 
-		GUIParameter empty = new GUIParameter();
-		empty.setName("empty");
-		// In hosted mode we cannot read from a folder on the hard disk.
-		// File docDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/data/docs/");
-		// File userDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/data/users/");
-		// if (userDir.exists())
-		// userDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(userDir)));
-		// else
-		// userDirSize.setValue("0");
+			GUIParameter deletedFolders = new GUIParameter();
+			deletedFolders.setName("folderstrash");
+			deletedFolders.setLabel("trash");
+			query = new StringBuilder("SELECT COUNT(A.id) FROM Menu A where (A.type = " + Menu.MENUTYPE_DIRECTORY
+					+ " or A.id= " + Menu.MENUID_DOCUMENTS + " ) and A.deleted = 1 ");
+			records = (List<Object>) folderDao.findByQuery(query.toString(), null, null);
+			count = (Long) records.get(0);
+			deletedFolders.setValue(Long.toString(count));
 
-		empty.setValue(Long.toString(46));
-		parameters[2][1] = empty;
+			parameters[2][2] = deletedFolders;
 
-		GUIParameter deletedFolders = new GUIParameter();
-		deletedFolders.setName("folderstrash");
-		deletedFolders.setLabel("trash");
-		// In hosted mode we cannot read from a folder on the hard disk.
-		// File indexDir = new
-		// File("/C:/Users/Matteo/logicaldoc1005/data/index/");
-		// if (indexDir.exists())
-		// indexDirSize.setValue(Long.toString(FileUtils.sizeOfDirectory(indexDir)));
-		// else
-		// indexDirSize.setValue("0");
-
-		deletedFolders.setValue(Long.toString(15));
-		parameters[2][2] = deletedFolders;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 
 		return parameters;
 	}
@@ -277,19 +277,37 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				task.setStatus(tsk.getStatus());
 				task.setProgress((int) tsk.getProgress());
 				task.setSize(tsk.getSize());
-				task.setSchedulingLabel(I18N.message("each") + " " + tsk.getScheduling().getInterval() + " "
-						+ I18N.message("seconds").toLowerCase());
+
 				task.setIndeterminate(tsk.isIndeterminate());
 
 				GUIScheduling scheduling = new GUIScheduling(tsk.getName());
 				scheduling.setEnabled(tsk.getScheduling().isEnabled());
-				scheduling.setDelay(tsk.getScheduling().getDelay());
+				scheduling.setMode(tsk.getScheduling().getMode());
+				if (tsk.getScheduling().getMode().equals(DoubleTrigger.MODE_SIMPLE)) {
+					scheduling.setSimple(true);
+					scheduling.setDelay(tsk.getScheduling().getDelay());
+					scheduling.setInterval(tsk.getScheduling().getIntervalSeconds());
+					task.setSchedulingLabel(I18N.message("each") + " " + tsk.getScheduling().getIntervalSeconds() + " "
+							+ I18N.message("seconds").toLowerCase());
+				} else {
+					scheduling.setSimple(false);
+					scheduling.setSeconds(tsk.getScheduling().getSeconds());
+					scheduling.setMinutes(tsk.getScheduling().getMinutes());
+					scheduling.setHours(tsk.getScheduling().getHours());
+					scheduling.setMonth(tsk.getScheduling().getMonth());
+					scheduling.setDayOfMonth(tsk.getScheduling().getDayOfMonth());
+					scheduling.setDayOfWeek(tsk.getScheduling().getDayOfWeek());
+					task.setSchedulingLabel(tsk.getScheduling().getCronExpression());
+				}
+
+				scheduling.setMaxLength(tsk.getScheduling().getMaxLength());
+				scheduling.setMinCpuIdle((tsk.getScheduling().getMinCpuIdle()));
+
 				task.setScheduling(scheduling);
-				
+
 				return task;
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
 		}
 
 		return null;
@@ -315,11 +333,32 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				task.setStatus(t.getStatus());
 				task.setProgress((int) t.getProgress());
 				task.setSize(t.getSize());
-				task.setScheduling(new GUIScheduling(t.getName()));
-				task.setSchedulingLabel(I18N.message("each") + " " + t.getScheduling().getInterval() + " "
-						+ I18N.message("seconds").toLowerCase());
-				task.getScheduling().setEnabled(t.getScheduling().isEnabled());
 				task.setIndeterminate(t.isIndeterminate());
+
+				GUIScheduling scheduling = new GUIScheduling(t.getName());
+				scheduling.setEnabled(t.getScheduling().isEnabled());
+				scheduling.setMode(t.getScheduling().getMode());
+				if (t.getScheduling().getMode().equals(DoubleTrigger.MODE_SIMPLE)) {
+					scheduling.setSimple(true);
+					scheduling.setDelay(t.getScheduling().getDelay());
+					scheduling.setInterval(t.getScheduling().getIntervalSeconds());
+					task.setSchedulingLabel(I18N.message("each") + " " + t.getScheduling().getIntervalSeconds() + " "
+							+ I18N.message("seconds").toLowerCase());
+				} else if (t.getScheduling().getMode().equals(DoubleTrigger.MODE_CRON)) {
+					scheduling.setSimple(false);
+					scheduling.setSeconds(t.getScheduling().getSeconds());
+					scheduling.setMinutes(t.getScheduling().getMinutes());
+					scheduling.setHours(t.getScheduling().getHours());
+					scheduling.setMonth(t.getScheduling().getMonth());
+					scheduling.setDayOfMonth(t.getScheduling().getDayOfMonth());
+					scheduling.setDayOfWeek(t.getScheduling().getDayOfWeek());
+					task.setSchedulingLabel(t.getScheduling().getCronExpression());
+				}
+
+				scheduling.setMaxLength(t.getScheduling().getMaxLength());
+				scheduling.setMinCpuIdle((t.getScheduling().getMinCpuIdle()));
+
+				task.setScheduling(scheduling);
 
 				tasks[i] = task;
 				i++;
@@ -327,7 +366,6 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			return tasks;
 		} catch (Throwable e) {
-			e.printStackTrace();
 		}
 
 		return null;
@@ -337,14 +375,26 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		// TODO Auto-generated method stub
+		PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
+		try {
+			conf.setProperty("conf.docdir", folders[0].getValue());
+			conf.setProperty("conf.indexdir", folders[1].getValue());
+			conf.setProperty("conf.userdir", folders[2].getValue());
+			conf.setProperty("conf.importdir", folders[4].getValue());
+			conf.setProperty("conf.exportdir", folders[5].getValue());
+			conf.setProperty("conf.plugindir", folders[3].getValue());
+			conf.setProperty("conf.dbdir", folders[6].getValue());
+			conf.setProperty("conf.logdir", folders[7].getValue());
+
+			conf.write();
+		} catch (IOException e) {
+		}
 	}
 
 	@Override
 	public GUITask saveTask(String sid, GUITask task) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		System.out.println("**** save task!!!");
 		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
 
 		try {
@@ -356,14 +406,15 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				}
 			}
 
-			System.out.println("**** tsk: " + tsk.getName());
-
 			if (tsk != null) {
 				tsk.getScheduling().setEnabled(task.getScheduling().isEnabled());
 				if (task.getScheduling().isSimple()) {
 					tsk.getScheduling().setMode(DoubleTrigger.MODE_SIMPLE);
 					tsk.getScheduling().setDelay(task.getScheduling().getDelay());
-					tsk.getScheduling().setInterval(task.getScheduling().getInterval());
+					tsk.getScheduling().setInterval(task.getScheduling().getInterval() * 1000);
+					tsk.getScheduling().setIntervalSeconds(task.getScheduling().getInterval());
+					task.setSchedulingLabel(I18N.message("each") + " " + tsk.getScheduling().getIntervalSeconds() + " "
+							+ I18N.message("seconds").toLowerCase());
 				} else {
 					tsk.getScheduling().setMode(DoubleTrigger.MODE_CRON);
 					tsk.getScheduling().setSeconds(task.getScheduling().getSeconds());
@@ -372,6 +423,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 					tsk.getScheduling().setMonth(task.getScheduling().getMonth());
 					tsk.getScheduling().setDayOfMonth(task.getScheduling().getDayOfMonth());
 					tsk.getScheduling().setDayOfWeek((task.getScheduling().getDayOfWeek()));
+					task.setSchedulingLabel(tsk.getScheduling().getCronExpression());
 				}
 				tsk.getScheduling().setMaxLength(task.getScheduling().getMaxLength());
 				tsk.getScheduling().setMinCpuIdle((task.getScheduling().getMinCpuIdle()));
@@ -381,7 +433,6 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			return task;
 		} catch (Throwable e) {
-			e.printStackTrace();
 		}
 		return null;
 	}
@@ -391,28 +442,67 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			String[] event) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		GUIHistory[] histories = new GUIHistory[maxResult];
+		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+		try {
+			StringBuffer query = new StringBuffer(
+					"select A.userName, A.event, A.date, A.title, A.folderId, A.path, A.sessionId from History A where 1=1 ");
+			if (userName != null && StringUtils.isNotEmpty(userName))
+				query.append(" and lower(A.userName) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
+			if (historySid != null && StringUtils.isNotEmpty(historySid))
+				query.append(" and A.sessionId=" + historySid);
+			if (from != null) {
+				query.append(" and A.date > '" + new Timestamp(from.getTime()) + "'");
+			}
+			if (till != null) {
+				query.append(" and A.date < '" + new Timestamp(till.getTime()) + "'");
+			}
+			if (event.length > 0) {
+				boolean first = true;
+				for (String e : event) {
+					if (first)
+						query.append(" and (");
+					else
+						query.append(" or ");
 
-		for (int i = 0; i < maxResult; i++) {
-			GUIHistory history = new GUIHistory();
-			if (i % 2 == 0)
-				history.setEvent("event.stored");
-			else
-				history.setEvent("event.folder.created");
-			history.setDate(new Date());
-			history.setUserName("Mario Rossi");
-			if (i % 2 == 0)
-				history.setTitle("document" + i);
-			else
-				history.setTitle("folder" + i);
-			history.setFolderId(5);
-			history.setPath("/5/folder" + i);
-			history.setSessionId(UUID.randomUUID().toString());
+					query.append(" A.event = '" + SqlUtil.doubleQuotes(e) + "'");
+					first = false;
+				}
+				query.append(" ) ");
+			}
+			query.append(" order by A.date asc ");
 
-			histories[i] = history;
+			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, maxResult);
+
+			if (records.size() == 0)
+				return null;
+
+			GUIHistory[] histories = new GUIHistory[records.size()];
+
+			int i = 0;
+			for (Object record : records) {
+				Object[] cols = (Object[]) record;
+
+				GUIHistory history = new GUIHistory();
+				history.setUserName((String) cols[0]);
+				history.setEvent((String) cols[1]);
+				history.setDate((Date) cols[2]);
+				if (((String) cols[3]).trim().equals("menu.documents"))
+					history.setTitle("/");
+				else
+					history.setTitle((String) cols[3]);
+				history.setFolderId((Long) cols[4]);
+				history.setPath((String) cols[5]);
+				history.setSessionId((String) cols[6]);
+
+				histories[i] = history;
+				i++;
+			}
+
+			return histories;
+		} catch (Throwable e) {
 		}
 
-		return histories;
+		return null;
 	}
 
 	@Override
@@ -430,7 +520,6 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 	}
@@ -449,7 +538,6 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 	}
