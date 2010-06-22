@@ -71,7 +71,7 @@ public class UsersDataServlet extends HttpServlet {
 			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 			StringBuffer query = new StringBuffer(
 					"select A.id, A.userName, A.enabled, A.name, A.firstName, A.email, A.telephone, A.telephone2 "
-							+ "from com.logicaldoc.core.security.User A");
+							+ "from com.logicaldoc.core.security.User A where A.deleted = 0 ");
 
 			List<Object> records = (List<Object>) userDao.findByQuery(query.toString(), null, null);
 

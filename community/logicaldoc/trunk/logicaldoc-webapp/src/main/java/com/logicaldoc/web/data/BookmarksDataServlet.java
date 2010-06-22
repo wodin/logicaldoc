@@ -49,7 +49,8 @@ public class BookmarksDataServlet extends HttpServlet {
 		BookmarkDAO dao = (BookmarkDAO) Context.getInstance().getBean(BookmarkDAO.class);
 		StringBuffer query = new StringBuffer(
 				"select A.id, A.fileType, A.title, A.description, A.position, A.userId, A.docId, B.folder.id "
-						+ "from Bookmark A, Document B where A.docId = B.id and A.docId = " + session.getUserId());
+						+ "from Bookmark A, Document B where A.deleted = 0 and B.deleted = 0 and A.docId = B.id and A.docId = "
+						+ session.getUserId());
 
 		List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
 

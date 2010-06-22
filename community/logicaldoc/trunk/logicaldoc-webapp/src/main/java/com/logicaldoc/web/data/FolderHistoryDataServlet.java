@@ -40,7 +40,7 @@ public class FolderHistoryDataServlet extends HttpServlet {
 
 		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 		StringBuffer query = new StringBuffer(
-				"select A.userName, A.event, A.date, A.comment, A.title, A.path, A.sessionId from History A where 1=1 ");
+				"select A.userName, A.event, A.date, A.comment, A.title, A.path, A.sessionId from History A where 1=1 and A.deleted = 0 ");
 		if (request.getParameter("id") != null)
 			query.append(" and A.folderId=" + request.getParameter("id"));
 		query.append(" order by A.date asc ");

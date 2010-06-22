@@ -43,7 +43,7 @@ public class DiscussionsDataServlet extends HttpServlet {
 
 		DiscussionThreadDAO dao = (DiscussionThreadDAO) Context.getInstance().getBean(DiscussionThreadDAO.class);
 		StringBuffer query = new StringBuffer(
-				"select A.id, A.subject, A.creatorName, A.replies, A.views, A.lastPost from DiscussionThread A where ");
+				"select A.id, A.subject, A.creatorName, A.replies, A.views, A.lastPost from DiscussionThread A where A.deleted = 0 and ");
 		query.append(" A.docId=" + request.getParameter("docId"));
 		query.append(" order by A.lastPost desc ");
 

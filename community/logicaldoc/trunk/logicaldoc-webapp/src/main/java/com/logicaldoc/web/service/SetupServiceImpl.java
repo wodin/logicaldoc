@@ -175,6 +175,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		FileUtils.forceMkdir(new File(exportDir));
 		String logDir = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/logs/");
 		FileUtils.forceMkdir(new File(logDir));
+		String dbDirectory = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/db/");
 
 		PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 		pbean.setProperty("conf.docdir", docDir);
@@ -184,6 +185,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		pbean.setProperty("conf.importdir", importDir);
 		pbean.setProperty("conf.exportdir", exportDir);
 		pbean.setProperty("conf.logdir", logDir);
+		pbean.setProperty("conf.dbdir", dbDirectory);
 		pbean.write();
 
 		// Refresh the current logging location

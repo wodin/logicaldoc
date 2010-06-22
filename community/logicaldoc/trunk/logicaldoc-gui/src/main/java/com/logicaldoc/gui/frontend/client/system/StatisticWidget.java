@@ -24,13 +24,21 @@ public class StatisticWidget extends ChartWidget {
 		pie.setGradientFill(true);
 		pie.setColours("#ff0000", "#00ff00", "#0000ff", "#ff9900", "#ff00ff");
 
+		boolean showEmptyChart = true;
 		for (GUIParameter parameter : parameters) {
 			if (parameter == null)
 				break;
+			if (Integer.parseInt(parameter.getValue()) > 0)
+				showEmptyChart = false;
 			pie.addSlices(new PieChart.Slice(Integer.parseInt(parameter.getValue()), parameter.toString()));
 		}
 
+		// Maybe all parameters have value = 0, so is visualised a full chart
+		if (showEmptyChart)
+			pie.addSlices(new PieChart.Slice(100, ""));
+
 		cd.addElements(pie);
+
 		setSize("200", "200");
 
 		setJsonData(cd.toString());

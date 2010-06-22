@@ -72,7 +72,7 @@ public class DocumentsDataServlet extends HttpServlet {
 		StringBuffer query = new StringBuffer(
 				"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
 						+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status  "
-						+ "from Document A where 1=1 ");
+						+ "from Document A where 1=1 and A.deleted = 0 ");
 		if (folderId != null)
 			query.append(" and A.folder.id=" + folderId);
 		if (indexable != null)

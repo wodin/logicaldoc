@@ -78,7 +78,15 @@ public class FoldersPanel extends VLayout {
 		exportdir.setWidth(250);
 		exportdir.setRequired(true);
 
-		foldersForm.setItems(docdir, indexdir, userdir, plugindir, importdir, exportdir);
+		TextItem dbdir = ItemFactory.newTextItem("dbdir", "dbdir", Util.getContext().get("conf_dbdir"));
+		dbdir.setWidth(250);
+		dbdir.setRequired(true);
+
+		TextItem logdir = ItemFactory.newTextItem("logdir", "logdir", Util.getContext().get("conf_logdir"));
+		logdir.setWidth(250);
+		logdir.setRequired(true);
+
+		foldersForm.setItems(docdir, indexdir, userdir, plugindir, importdir, exportdir, dbdir, logdir);
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -87,7 +95,7 @@ public class FoldersPanel extends VLayout {
 				final Map<String, Object> values = vm.getValues();
 
 				if (vm.validate()) {
-					GUIParameter[] folders = new GUIParameter[6];
+					GUIParameter[] folders = new GUIParameter[8];
 					GUIParameter docdir = new GUIParameter("docdir", (String) values.get("docdir"));
 					folders[0] = docdir;
 					GUIParameter indexdir = new GUIParameter("indexdir", (String) values.get("indexdir"));
@@ -100,6 +108,10 @@ public class FoldersPanel extends VLayout {
 					folders[4] = importdir;
 					GUIParameter exportdir = new GUIParameter("exportdir", (String) values.get("exportdir"));
 					folders[5] = exportdir;
+					GUIParameter dbdir = new GUIParameter("dbdir", (String) values.get("dbdir"));
+					folders[6] = dbdir;
+					GUIParameter logdir = new GUIParameter("logdir", (String) values.get("logdir"));
+					folders[7] = logdir;
 
 					service.saveFolders(Session.get().getSid(), folders, new AsyncCallback<Void>() {
 
