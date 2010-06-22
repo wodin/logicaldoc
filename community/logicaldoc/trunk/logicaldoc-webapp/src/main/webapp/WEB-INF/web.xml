@@ -99,7 +99,7 @@
 
   <servlet>
     <servlet-name>SearchEngineService</servlet-name>
-    <servlet-class>com.logicaldoc.gui.frontend.server.MockSearchEngineServiceImpl</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.SearchEngineServiceImpl</servlet-class>
   </servlet>
 
   <servlet>
@@ -265,6 +265,10 @@
   <servlet-mapping>
     <servlet-name>SystemService</servlet-name>
     <url-pattern>/frontend/system</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SystemService</servlet-name>
+    <url-pattern>/setup/system</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
