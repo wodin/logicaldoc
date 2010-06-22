@@ -39,8 +39,10 @@ public class GUIInfo implements Serializable {
 	// Optional list of messages to be shown to the user
 	private GUIMessage[] messages;
 	
-	private GUILanguage[] supportedLanguages;
+	private GUIValuePair[] supportedLanguages;
 
+	private GUIValuePair[] bundle;
+	
 	public String getProductName() {
 		return productName;
 	}
@@ -145,12 +147,20 @@ public class GUIInfo implements Serializable {
 		this.vendorSupport = vendorSupport;
 	}
 
-	public GUILanguage[] getSupportedLanguages() {
+	public GUIValuePair[] getSupportedLanguages() {
 		return supportedLanguages;
 	}
 
-	public void setSupportedLanguages(GUILanguage[] supportedLanguages) {
+	public void setSupportedLanguages(GUIValuePair[] supportedLanguages) {
 		this.supportedLanguages = supportedLanguages;
+	}
+
+	public GUIValuePair[] getBundle() {
+		return bundle;
+	}
+
+	public void setBundle(GUIValuePair[] bundle) {
+		this.bundle = bundle;
 	}
 
 }

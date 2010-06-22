@@ -9,7 +9,6 @@ import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.Frontend;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
@@ -27,8 +26,6 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -50,6 +47,8 @@ public class LoginPanel extends VLayout {
 	protected TextItem username = new TextItem();
 
 	protected PasswordItem password = new PasswordItem();
+
+	protected SelectItem language;
 
 	public LoginPanel(GUIInfo info) {
 		setDefaultLayoutAlign(Alignment.CENTER);
@@ -116,14 +115,7 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
-		SelectItem language = ItemFactory.newLanguageSelector("language", true);
-		language.addChangedHandler(new ChangedHandler() {
-			@Override
-			public void onChanged(ChangedEvent event) {
-				Util.changeLocale(event.getValue().toString());
-			}
-		});
-
+		language = ItemFactory.newGUILanguageSelector("language", true);
 		language.setDefaultValue("");
 
 		form.setFields(username, password, language);
@@ -159,7 +151,7 @@ public class LoginPanel extends VLayout {
 	}
 
 	protected void onLogin() {
-		securityService.login((String) username.getValue(), (String) password.getValue(),
+		securityService.login((String) username.getValue(), (String) password.getValue(), (String) language.getValue(),
 				new AsyncCallback<GUISession>() {
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);

@@ -3,17 +3,17 @@ package com.logicaldoc.gui.common.client.beans;
 import java.io.Serializable;
 
 /**
- * A locale representation
+ * General purpose value bean
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class GUILanguage implements Serializable {
+public class GUIValuePair implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String code;
 
-	private String displayName;
+	private String value;
 
 	public String getCode() {
 		return code;
@@ -23,11 +23,11 @@ public class GUILanguage implements Serializable {
 		this.code = code;
 	}
 
-	public String getDisplayName() {
-		return displayName;
+	public String getValue() {
+		return value;
 	}
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+	public void setValue(String value) {
+		this.value = value;
 	}
 }

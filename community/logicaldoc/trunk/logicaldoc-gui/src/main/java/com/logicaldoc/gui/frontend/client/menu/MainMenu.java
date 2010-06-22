@@ -4,6 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.frontend.client.services.SystemService;
+import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.menu.Menu;
@@ -20,6 +22,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
  * @since 6.0
  */
 public class MainMenu extends ToolStrip {
+	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
 
 	public MainMenu() {
 		super();
@@ -38,6 +41,7 @@ public class MainMenu extends ToolStrip {
 		userInfo.setTitle(I18N.message("loggedas"));
 		userInfo.setValue(Session.get().getUser().getFullName());
 		userInfo.setWrap(false);
+		userInfo.setWrapTitle(false);
 
 		addFormItem(userInfo);
 		addSeparator();

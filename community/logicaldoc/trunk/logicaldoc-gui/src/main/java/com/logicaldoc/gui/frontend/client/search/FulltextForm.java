@@ -21,7 +21,6 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.ValuesManager;
@@ -198,7 +197,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			options.setLanguage(null);
 		else
 			options.setLanguage(vm.getValueAsString("language"));
-		options.setExpressionLanguage(Session.get().getLanguage());
+		options.setExpressionLanguage(I18N.getLocale());
 
 		Long size = vm.getValueAsString("size") != null ? new Long(vm.getValueAsString("size")) : null;
 		if (size != null && !NOLIMIT.equals(vm.getValueAsString("sizeOperator"))) {

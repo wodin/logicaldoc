@@ -9,7 +9,6 @@ import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITask;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 
 /**
  * The client side stub for the System Service. This service allows the
@@ -113,6 +112,4 @@ public interface SystemService extends RemoteService {
 	 * Retrieves the system informations
 	 */
 	public GUIInfo getInfo(String locale);
-
-	public GUIValuePair[] getBundle(String locale);
 }

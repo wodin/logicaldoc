@@ -6,6 +6,7 @@ import java.util.Set;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 
 /**
@@ -24,8 +25,6 @@ public class Session {
 	private Set<SessionObserver> sessionObservers = new HashSet<SessionObserver>();
 
 	private Set<FolderObserver> folderObservers = new HashSet<FolderObserver>();
-
-	private String language;
 
 	public static Session get() {
 		if (instance == null)
@@ -50,7 +49,8 @@ public class Session {
 	public void init(GUISession session) {
 		try {
 			this.session = session;
-			setLanguage(session.getUser().getLanguage());
+			I18N.setLocale(session.getUser().getLanguage());
+			I18N.initBundle(session.getBundle());
 			if (session.isLoggedIn()) {
 				for (SessionObserver listener : sessionObservers) {
 					listener.onUserLoggedIn(session.getUser());
@@ -90,13 +90,5 @@ public class Session {
 				return true;
 		}
 		return false;
-	}
-
-	public String getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(String language) {
-		this.language = language;
 	}
 }
