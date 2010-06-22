@@ -18,9 +18,9 @@ public class GUISearchEngine implements Serializable {
 
 	private boolean locked;
 
-	private String includePatters = "*.doc, *.txt, *.pdf";
+	private String includePatters;
 
-	private String excludePatters;
+	private String excludePatters = "*.exe,*.bin,*.iso";
 
 	public String getLanguages() {
 		return languages;

@@ -7,9 +7,9 @@ public interface SearchEngineServiceAsync {
 
 	void getInfo(String sid, AsyncCallback<GUISearchEngine> callback);
 
-	void rescheduleAll(String sid, GUISearchEngine searchEngine, AsyncCallback<GUISearchEngine> callback);
+	void rescheduleAll(String sid, AsyncCallback<Void> callback);
 
-	void unlocks(String sid, GUISearchEngine searchEngine, AsyncCallback<GUISearchEngine> callback);
+	void unlocks(String sid, AsyncCallback<Void> callback);
 
 	void save(String sid, GUISearchEngine searchEngine, AsyncCallback<Void> callback);
 }

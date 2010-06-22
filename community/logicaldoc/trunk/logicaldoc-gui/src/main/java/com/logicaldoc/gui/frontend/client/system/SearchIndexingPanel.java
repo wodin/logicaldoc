@@ -358,7 +358,6 @@ public class SearchIndexingPanel extends VLayout {
 				if (vm.validate()) {
 					SearchIndexingPanel.this.searchEngine.setIncludePatters((String) values.get("includePatters"));
 					SearchIndexingPanel.this.searchEngine.setExcludePatters((String) values.get("excludePatters"));
-					SearchIndexingPanel.this.searchEngine.setLocked(values.get("locked").equals("yes") ? true : false);
 
 					service.save(Session.get().getSid(), SearchIndexingPanel.this.searchEngine,
 							new AsyncCallback<Void>() {
@@ -381,18 +380,18 @@ public class SearchIndexingPanel extends VLayout {
 		unlock.setTitle(I18N.message("unlock"));
 		unlock.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				service.unlocks(Session.get().getSid(), SearchIndexingPanel.this.searchEngine,
-						new AsyncCallback<GUISearchEngine>() {
+				service.unlocks(Session.get().getSid(), new AsyncCallback<Void>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUISearchEngine searchEngine) {
-							}
-						});
+					@Override
+					public void onSuccess(Void ret) {
+						Log.info(I18N.message("settingssaved"), null);
+					}
+				});
 			}
 		});
 
@@ -401,18 +400,18 @@ public class SearchIndexingPanel extends VLayout {
 		rescheduleAll.setTitle(I18N.message("rescheduleall"));
 		rescheduleAll.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				service.rescheduleAll(Session.get().getSid(), SearchIndexingPanel.this.searchEngine,
-						new AsyncCallback<GUISearchEngine>() {
+				service.rescheduleAll(Session.get().getSid(), new AsyncCallback<Void>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUISearchEngine searchEngine) {
-							}
-						});
+					@Override
+					public void onSuccess(Void ret) {
+						Log.info(I18N.message("settingssaved"), null);
+					}
+				});
 			}
 		});
 

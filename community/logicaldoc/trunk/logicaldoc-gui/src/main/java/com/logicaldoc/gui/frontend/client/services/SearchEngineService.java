@@ -21,12 +21,12 @@ public interface SearchEngineService extends RemoteService {
 	/**
 	 * Unlocks the indexer.
 	 */
-	public GUISearchEngine unlocks(String sid, GUISearchEngine searchEngine) throws InvalidSessionException;
+	public void unlocks(String sid) throws InvalidSessionException;
 
 	/**
 	 * Reschedule all entries for indexing.
 	 */
-	public GUISearchEngine rescheduleAll(String sid, GUISearchEngine searchEngine) throws InvalidSessionException;
+	public void rescheduleAll(String sid) throws InvalidSessionException;
 
 	/**
 	 * Saves search engine settings
