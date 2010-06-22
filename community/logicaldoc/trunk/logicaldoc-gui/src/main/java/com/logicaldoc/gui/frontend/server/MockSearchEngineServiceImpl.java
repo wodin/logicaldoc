@@ -24,13 +24,13 @@ public class MockSearchEngineServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public GUISearchEngine rescheduleAll(String sid, GUISearchEngine searchEngine) {
-		return new GUISearchEngine();
+	public void rescheduleAll(String sid) {
+		return;
 	}
 
 	@Override
-	public GUISearchEngine unlocks(String sid, GUISearchEngine searchEngine) {
-		return new GUISearchEngine();
+	public void unlocks(String sid) {
+		return;
 	}
 
 	@Override
