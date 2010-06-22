@@ -76,7 +76,7 @@ public class AuthServiceImplTest extends AbstractWebServiceTestCase {
 
 	@Test
 	public void testGrantUser() throws Exception {
-		User user = userDao.findById(3);
+		User user = userDao.findById(4);
 
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.ADD_CHILD, 100, user.getId()));
 		Assert.assertFalse(folderDao.isPermissionEnabled(Permission.MANAGE_IMMUTABILITY, 100, user.getId()));
@@ -112,7 +112,7 @@ public class AuthServiceImplTest extends AbstractWebServiceTestCase {
 		try {
 			Right[] rights = new Right[0];
 			rights = authServiceImpl.getGrantedUsers("", 100);
-			Assert.assertEquals(1, rights.length);
+			Assert.assertEquals(2, rights.length);
 			Assert.assertEquals(3, rights[0].getId());
 		} catch (Exception e) {
 			e.printStackTrace();
