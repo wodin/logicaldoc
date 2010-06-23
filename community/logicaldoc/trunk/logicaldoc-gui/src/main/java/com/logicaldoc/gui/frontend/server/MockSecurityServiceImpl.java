@@ -28,13 +28,13 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 
 	@Override
 	public GUISession login(String username, String password, String locale) {
-		String loc=locale;
-		if(StringUtils.isEmpty(loc))
-			loc="en";
-		
+		String loc = locale;
+		if (StringUtils.isEmpty(loc))
+			loc = "en";
+
 		GUISession session = new GUISession();
 		session.setBundle(getBundle(loc));
-		
+
 		session.setLoggedIn(false);
 		if ("admin".equals(username)) {
 			GUIUser user = new GUIUser();
@@ -43,12 +43,6 @@ public class MockSecurityServiceImpl extends RemoteServiceServlet implements Sec
 			user.setUserName(username);
 			session.setSid("sid" + new Date().getTime());
 
-			String[] features = new String[31];
-			for (int i = 0; i < 30; i++) {
-				features[i] = "Feature_" + i;
-			}
-			features[30] = "ENTERPRISE";
-			session.setFeatures(features);
 			GUIGroup group = new GUIGroup();
 			group.setId(1);
 			group.setName("admin");

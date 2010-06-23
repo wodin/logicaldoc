@@ -40,7 +40,7 @@
 	height: 45px;
 }
 
-.logo {
+.logo_head {
 	margin-left: 5px;
 	margin-top: 5px;
 	border: 0px solid;
@@ -48,7 +48,7 @@
 	width: 205px;
 }
 
-.logo_oem {
+.logo_head_oem {
 	margin-right: 5px;
 	margin-top: 5px;
 	border: 0px solid;

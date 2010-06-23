@@ -14,28 +14,18 @@ public class GUISession implements Serializable {
 
 	private GUIUser user;
 
-	private String[] features = new String[0];
+	private boolean loggedIn = false;
 
-	private boolean loggedIn=false;
-	
 	private String sid;
-	
+
 	private GUIValuePair[] bundle;
-	
+
 	public GUIUser getUser() {
 		return user;
 	}
 
 	public void setUser(GUIUser user) {
 		this.user = user;
-	}
-
-	public String[] getFeatures() {
-		return features;
-	}
-
-	public void setFeatures(String[] features) {
-		this.features = features;
 	}
 
 	public boolean isLoggedIn() {

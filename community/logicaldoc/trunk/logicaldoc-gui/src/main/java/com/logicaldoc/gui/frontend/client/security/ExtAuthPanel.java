@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIADSettings;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
@@ -47,10 +48,11 @@ public class ExtAuthPanel extends VLayout {
 
 	public ExtAuthPanel(GUILdapSettings[] settings) {
 		this.ldapSettings = settings[0];
-		if (!Session.get().isFeatureEnabled("Feature_11")) {
-			this.adSettings = new GUIADSettings();
-		} else
+
+		if (Feature.enabled(11))
 			this.adSettings = (GUIADSettings) settings[1];
+		else
+			this.adSettings = new GUIADSettings();
 
 		setWidth100();
 		setMembersMargin(10);
@@ -141,7 +143,7 @@ public class ExtAuthPanel extends VLayout {
 		Tab activeDir = new Tab();
 		activeDir.setTitle(I18N.message("activedirectory"));
 		// Checks if the active directory feature is enabled
-		if (!Session.get().isFeatureEnabled("Feature_11")) {
+		if (Feature.enabled(11)) {
 			activeDir.setPane(new FeatureDisabled());
 		} else {
 			DynamicForm activeDirForm = new DynamicForm();
@@ -201,7 +203,9 @@ public class ExtAuthPanel extends VLayout {
 			activeDir.setPane(activeDirForm);
 		}
 
-		tabs.setTabs(ldap, activeDir);
+		tabs.addTab(ldap);
+		if (Feature.visible(11))
+			tabs.addTab(activeDir);
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -229,7 +233,7 @@ public class ExtAuthPanel extends VLayout {
 					ExtAuthPanel.this.ldapSettings.setLanguage((String) values.get("language"));
 
 					// Checks if the active directory feature is enabled
-					if (!Session.get().isFeatureEnabled("Feature_11")) {
+					if (!Feature.enabled(11)) {
 						ExtAuthPanel.this.adSettings.setImplementation("md5");
 						ExtAuthPanel.this.adSettings.setEnabled(true);
 						ExtAuthPanel.this.adSettings.setDomain("domain");

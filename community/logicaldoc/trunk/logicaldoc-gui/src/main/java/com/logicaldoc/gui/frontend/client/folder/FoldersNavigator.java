@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -198,7 +199,7 @@ public class FoldersNavigator extends TreeGrid {
 
 		MenuItem rss = new MenuItem();
 		rss.setTitle(I18N.message("rssfeed"));
-		if (!Session.get().isFeatureEnabled("Feature_9")) {
+		if (!Feature.enabled(9)) {
 			rss.setEnabled(false);
 		}
 		rss.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -235,6 +236,8 @@ public class FoldersNavigator extends TreeGrid {
 			pasteAsAliasItem.setEnabled(false);
 
 		contextMenu.setItems(reload, search, addItem, delete, pasteItem, pasteAsAliasItem, move, exportZip);
+		if(Feature.visible(9))
+			contextMenu.addItem(rss);
 		return contextMenu;
 	}
 

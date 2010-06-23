@@ -7,6 +7,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -90,6 +91,7 @@ public class Frontend implements EntryPoint {
 			@Override
 			public void onSuccess(GUIInfo info) {
 				I18N.init(info);
+				Feature.init(info);
 
 				loginPanel = new LoginPanel(info);
 				RootPanel.get().add(loginPanel);

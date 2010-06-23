@@ -359,22 +359,24 @@ public class MockSystemServiceImpl extends RemoteServiceServlet implements Syste
 		info.setSupportedLanguages(languages);
 		info.setBundle(getBundle(locale));
 
+		info.setFeatures(new String[] { "Feature_8", "Feature_9" });
+
 		return info;
 	}
 
 	public GUIValuePair[] getBundle(String locale) {
-		System.out.println("** get bundle "+locale);
-		
-		//In production, use our LocaleUtil to instantiate the locale
-		Locale l=new Locale(locale);
-		ResourceBundle rb=ResourceBundle.getBundle("i18n.messages",l);
-		GUIValuePair[] buf=new GUIValuePair[rb.keySet().size()];
+		System.out.println("** get bundle " + locale);
+
+		// In production, use our LocaleUtil to instantiate the locale
+		Locale l = new Locale(locale);
+		ResourceBundle rb = ResourceBundle.getBundle("i18n.messages", l);
+		GUIValuePair[] buf = new GUIValuePair[rb.keySet().size()];
 		int i = 0;
 		for (String key : rb.keySet()) {
-			GUIValuePair entry=new GUIValuePair();
+			GUIValuePair entry = new GUIValuePair();
 			entry.setCode(key);
 			entry.setValue(rb.getString(key));
-			buf[i++]=entry;
+			buf[i++] = entry;
 		}
 		return buf;
 	}
