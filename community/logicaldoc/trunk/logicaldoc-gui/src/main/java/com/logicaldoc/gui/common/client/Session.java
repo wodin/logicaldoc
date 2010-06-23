@@ -79,16 +79,4 @@ public class Session {
 			listener.onFolderSelect(folder);
 		}
 	}
-
-	public String[] getFeatures() {
-		return session.getFeatures();
-	}
-
-	public boolean isFeatureEnabled(String feature) {
-		for (String f : session.getFeatures()) {
-			if (f.equals(feature))
-				return true;
-		}
-		return false;
-	}
 }

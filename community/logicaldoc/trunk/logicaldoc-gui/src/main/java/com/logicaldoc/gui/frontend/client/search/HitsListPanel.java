@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -324,13 +325,14 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 				dialog.show();
 			}
 		});
-		toolStrip.addButton(save);
 
-		if (!Session.get().isFeatureEnabled("ENTERPRISE")) {
+		if (!Feature.enabled(12)) {
 			save.setDisabled(true);
 			save.setTooltip(I18N.message("featuredisabled"));
 		}
-		toolStrip.addButton(save);
+
+		if (!Feature.showDisabled())
+			toolStrip.addButton(save);
 
 		if (Search.get().isHasMore()) {
 			toolStrip.addSeparator();

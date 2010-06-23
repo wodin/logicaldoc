@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.user.client.Window;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -47,7 +48,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		rss.setIcon(ItemFactory.newImgIcon("rss.png").getSrc());
 		rss.setTooltip(I18N.message("rssfeed"));
-		if (!Session.get().isFeatureEnabled("Feature_9"))
+		if (!Feature.enabled(9))
 			rss.setTooltip(I18N.message("featuredisabled"));
 		rss.addClickHandler(new ClickHandler() {
 			@Override
@@ -58,7 +59,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		pdf.setTooltip(I18N.message("exportpdf"));
 		pdf.setIcon(ItemFactory.newImgIcon("pdf.png").getSrc());
-		if (!Session.get().isFeatureEnabled("Feature_8"))
+		if (!Feature.enabled(8))
 			pdf.setTooltip(I18N.message("featuredisabled"));
 		pdf.addClickHandler(new ClickHandler() {
 			@Override
@@ -81,8 +82,11 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		setHeight(27);
 		addButton(download);
-		addButton(rss);
-		addButton(pdf);
+		if (Feature.enabled(9))
+			addButton(rss);
+		if (Feature.enabled(8))
+			addButton(pdf);
+
 		addSeparator();
 		addButton(add);
 
@@ -134,25 +138,16 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			download.setDisabled(false);
 		}
 
-		if (document != null && Session.get().isFeatureEnabled("Feature_9")) {
-			rss.setDisabled(false);
-		} else {
-			rss.setDisabled(true);
-		}
+		if (document != null)
+			rss.setDisabled(!Feature.enabled(9));
 
-		if (document != null && Session.get().isFeatureEnabled("Feature_8")) {
-			pdf.setDisabled(false);
-		} else {
-			pdf.setDisabled(true);
-		}
+		if (document != null)
+			pdf.setDisabled(!Feature.enabled(8));
 
 		GUIFolder folder = Session.get().getCurrentFolder();
 
-		if (folder != null && folder.hasPermission(Constants.PERMISSION_WRITE)) {
-			add.setDisabled(false);
-		} else {
-			add.setDisabled(true);
-		}
+		if (folder != null)
+			add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
 	}
 
 	@Override

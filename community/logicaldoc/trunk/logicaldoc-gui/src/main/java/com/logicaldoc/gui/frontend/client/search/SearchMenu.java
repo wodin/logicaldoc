@@ -1,6 +1,6 @@
 package com.logicaldoc.gui.frontend.client.search;
 
-import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.smartgwt.client.types.VisibilityMode;
@@ -42,11 +42,13 @@ public class SearchMenu extends SectionStack {
 
 		SectionStackSection savedSection = new SectionStackSection(I18N.message("savedsearches"));
 		savedSection.setExpanded(false);
-		if (Session.get().isFeatureEnabled("ENTERPRISE")) {
+		if (Feature.enabled(12)) {
 			savedSection.addItem(SavedSearchesPanel.get());
-		} else
+			addSection(savedSection);
+		} else if (Feature.showDisabled()){
 			savedSection.addItem(new FeatureDisabled());
-		addSection(savedSection);
+		    addSection(savedSection);
+		}
 	}
 
 	public void openFulltextSection() {
