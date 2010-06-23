@@ -304,6 +304,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 
 		indexer.addFile(file, doc, content, locale);
+		doc = documentDAO.findById(doc.getId());
 		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
 		documentDAO.store(doc);
 	}

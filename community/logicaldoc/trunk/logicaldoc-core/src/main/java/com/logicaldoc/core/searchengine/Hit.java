@@ -68,8 +68,6 @@ public interface Hit {
 
 	public void setScore(int score);
 
-	public void setIcon(String icon);
-
 	public void setFolderId(long folderId);
 
 	public void setDocRef(Long docRef);
