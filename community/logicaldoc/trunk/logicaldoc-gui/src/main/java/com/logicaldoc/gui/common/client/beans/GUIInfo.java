@@ -39,11 +39,11 @@ public class GUIInfo implements Serializable {
 	// Optional list of messages to be shown to the user
 	private GUIMessage[] messages;
 
-	private GUIValuePair[] supportedLanguages;
+	private GUIValuePair[] supportedLanguages = new GUIValuePair[0];
 
-	private GUIValuePair[] bundle;
+	private GUIValuePair[] bundle = new GUIValuePair[0];
 
-	private String[] features;
+	private String[] features = new String[0];
 
 	public String getProductName() {
 		return productName;
