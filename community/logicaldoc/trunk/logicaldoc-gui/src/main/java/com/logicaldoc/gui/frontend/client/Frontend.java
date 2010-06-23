@@ -11,14 +11,14 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.services.InfoService;
+import com.logicaldoc.gui.common.client.services.InfoServiceAsync;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
-import com.logicaldoc.gui.frontend.client.services.SystemService;
-import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.smartgwt.client.util.SC;
 
 /**
@@ -35,7 +35,7 @@ public class Frontend implements EntryPoint {
 
 	private MainPanel mainPanel;
 
-	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
+	protected InfoServiceAsync infoService = (InfoServiceAsync) GWT.create(InfoService.class);
 
 	/**
 	 * @return singleton Main instance
@@ -82,7 +82,7 @@ public class Frontend implements EntryPoint {
 
 		mainPanel = MainPanel.get();
 
-		systemService.getInfo(I18N.getLocale(), new AsyncCallback<GUIInfo>() {
+		infoService.getInfo(I18N.getLocale(), new AsyncCallback<GUIInfo>() {
 			@Override
 			public void onFailure(Throwable error) {
 				SC.warn(error.getMessage());

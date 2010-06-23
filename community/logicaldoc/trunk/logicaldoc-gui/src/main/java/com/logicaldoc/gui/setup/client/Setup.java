@@ -13,12 +13,12 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.services.InfoService;
+import com.logicaldoc.gui.common.client.services.InfoServiceAsync;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
-import com.logicaldoc.gui.frontend.client.services.SystemService;
-import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.gui.setup.client.services.SetupServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -102,7 +102,7 @@ public class Setup implements EntryPoint {
 
 	private Map<String, String[]> engines = new HashMap<String, String[]>();
 
-	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
+	protected InfoServiceAsync infoService = (InfoServiceAsync) GWT.create(InfoService.class);
 
 	@Override
 	public void onModuleLoad() {
@@ -124,7 +124,7 @@ public class Setup implements EntryPoint {
 		Window.enableScrolling(false);
 		Window.setMargin("0px");
 
-		systemService.getInfo(I18N.getLocale(), new AsyncCallback<GUIInfo>() {
+		infoService.getInfo(I18N.getLocale(), new AsyncCallback<GUIInfo>() {
 			@Override
 			public void onFailure(Throwable error) {
 				SC.warn(error.getMessage());
@@ -167,7 +167,7 @@ public class Setup implements EntryPoint {
 		// Prepare the logo image to be shown inside the login form
 		Label header = new Label(I18N.message("setup"));
 		header.setStyleName("setupHeader");
-		header.setIcon(Util.imageUrl("logo.png"));
+		header.setIcon(Util.brandUrl("logo.png"));
 		header.setIconWidth(205);
 		header.setIconHeight(40);
 		header.setHeight(45);

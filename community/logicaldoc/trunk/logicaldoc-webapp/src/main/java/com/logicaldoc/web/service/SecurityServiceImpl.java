@@ -71,7 +71,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			} else {
 				guiUser.setLanguage(locale);
 			}
-			session.setBundle(SystemServiceImpl.getBundle(guiUser.getLanguage()));
+			session.setBundle(InfoServiceImpl.getBundle(guiUser.getLanguage()));
 
 			guiUser.setName(user.getName());
 
