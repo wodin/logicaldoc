@@ -76,7 +76,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		User user = validateSession(sid);
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		List<Document> docs = docDao.findByUserIdAndTag(user.getId(), tag);
+		List<Document> docs = docDao.findByUserIdAndTag(user.getId(), tag, null);
 		WSDocument[] wsDocs = new WSDocument[docs.size()];
 		for (int i = 0; i < docs.size(); i++) {
 			docDao.initialize(docs.get(i));

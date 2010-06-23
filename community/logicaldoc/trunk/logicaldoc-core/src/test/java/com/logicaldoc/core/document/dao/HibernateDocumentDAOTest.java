@@ -61,7 +61,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Collection<Document> documents = dao.findAll();
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(3, documents.size());
-		
+
 		Assert.assertEquals(3, dao.findByWhere("1=1", null, null).size());
 		Assert.assertEquals(1, dao.findByWhere("1=1", null, 1).size());
 	}
@@ -168,7 +168,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(0, ids.size());
 	}
-	
+
 	@Test
 	public void testStore() throws IOException {
 		Document doc = new Document();
@@ -196,7 +196,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		System.out.println("Saved file " + docFile.getPath());
 
 		Assert.assertEquals("1.0", doc.getFileVersion());
-		
+
 		// Try a long tag
 		doc.addTag("123456789123456789123456789");
 		User user = new User();
@@ -278,7 +278,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Assert.assertEquals(2, tags.size());
 		Assert.assertTrue(tags.contains("abc"));
 	}
-	
+
 	@Test
 	public void testFindAllTags() {
 		Collection<Object> tags = dao.findAllTags("a");
@@ -307,28 +307,28 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(0, ids.size());
 	}
-	
+
 	@Test
 	public void testFindByUserIdAndTag() {
-		List<Document> ids = dao.findByUserIdAndTag(1, "abc");
+		List<Document> ids = dao.findByUserIdAndTag(1, "abc", null);
 		Assert.assertNotNull(ids);
 		// There is also the shortcut
 		Assert.assertEquals(2, ids.size());
 		Assert.assertEquals(1L, ids.get(0).getId());
 
-		ids = dao.findByUserIdAndTag(4, "zzz");
-		Assert.assertNotNull(ids);
-		Assert.assertEquals(1, ids.size());
-		
-		ids = dao.findByUserIdAndTag(1, "xxx");
-		Assert.assertNotNull(ids);
-		Assert.assertEquals(0, ids.size());
-		
-		ids = dao.findByUserIdAndTag(1, "ask");
+		ids = dao.findByUserIdAndTag(4, "zzz", null);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(1, ids.size());
 
-		ids = dao.findByUserIdAndTag(99, "abc");
+		ids = dao.findByUserIdAndTag(1, "xxx", null);
+		Assert.assertNotNull(ids);
+		Assert.assertEquals(0, ids.size());
+
+		ids = dao.findByUserIdAndTag(1, "ask", null);
+		Assert.assertNotNull(ids);
+		Assert.assertEquals(1, ids.size());
+
+		ids = dao.findByUserIdAndTag(99, "abc", null);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(0, ids.size());
 	}

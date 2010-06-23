@@ -111,9 +111,10 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * 
 	 * @param userId ID of the user.
 	 * @param tag Tag of the document
+	 * @param max Optional, defines the maximum records number
 	 * @return Collection of found menus.
 	 */
-	public List<Document> findByUserIdAndTag(long userId, String tag);
+	public List<Document> findByUserIdAndTag(long userId, String tag, Integer max);
 
 	/**
 	 * Finds authorized documents ids for a user having a specified tag.

@@ -29,7 +29,7 @@ public class HitImpl implements Serializable, Hit {
 
 	private long size = 0;
 
-	private long docRef = 0;
+	private Long docRef;
 
 	private Date date = new Date();
 
@@ -105,7 +105,7 @@ public class HitImpl implements Serializable, Hit {
 		this.score = score;
 	}
 
-	public void setDocRef(long docRef) {
+	public void setDocRef(Long docRef) {
 		this.docRef = docRef;
 	}
 
@@ -214,7 +214,7 @@ public class HitImpl implements Serializable, Hit {
 	}
 
 	@Override
-	public long getDocRef() {
+	public Long getDocRef() {
 		return docRef;
 	}
 
