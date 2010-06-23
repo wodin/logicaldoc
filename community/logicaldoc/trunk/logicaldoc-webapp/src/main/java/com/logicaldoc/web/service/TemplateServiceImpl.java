@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.DocumentTemplate;
@@ -25,6 +28,8 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 
 	private static final long serialVersionUID = 1L;
 
+	private static Log log = LogFactory.getLog(TemplateServiceImpl.class);
+
 	@Override
 	public void delete(String sid, long templateId) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
@@ -37,18 +42,14 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 	public GUITemplate save(String sid, GUITemplate template) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
-		System.out.println("templateserviceImpl save!!!");
-
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		try {
 			DocumentTemplate templ;
 			if (template.getId() != 0) {
 				templ = dao.findById(template.getId());
 				dao.initialize(templ);
-				System.out.println("template already exists!!!!");
 			} else {
 				templ = new DocumentTemplate();
-				System.out.println("new template!!!!");
 			}
 
 			templ.setName(template.getName());
@@ -81,7 +82,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 
 			template.setId(templ.getId());
 		} catch (Throwable e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 
 		// TODO Rinumerare gli attributi in base all'ordine nell'array
@@ -129,10 +130,9 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 
 			return templ;
 		} catch (Throwable e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 
 		return null;
-
 	}
 }

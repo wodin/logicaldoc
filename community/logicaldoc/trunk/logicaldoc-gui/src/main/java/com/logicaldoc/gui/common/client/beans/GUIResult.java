@@ -16,7 +16,7 @@ public class GUIResult implements Serializable {
 
 	private boolean hasMore = false;
 
-	private GUIResultHit[] hits;
+	private GUIHit[] hits = new GUIHit[0];
 
 	public long getTime() {
 		return time;
@@ -34,11 +34,11 @@ public class GUIResult implements Serializable {
 		this.hasMore = hasMore;
 	}
 
-	public GUIResultHit[] getHits() {
+	public GUIHit[] getHits() {
 		return hits;
 	}
 
-	public void setHits(GUIResultHit[] hits) {
+	public void setHits(GUIHit[] hits) {
 		this.hits = hits;
 	}
 }

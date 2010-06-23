@@ -77,6 +77,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		SelectItem languageItem = ItemFactory.newLanguageSelector("language", false);
 		languageItem.addChangedHandler(changedHandler);
 		languageItem.setDisabled(!update);
+		languageItem.setValue(document.getLanguage());
 
 		TextItem authorItem = ItemFactory.newTextItem("author", "author", document.getSourceAuthor());
 		authorItem.addChangedHandler(changedHandler);
@@ -209,7 +210,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		vm.validate();
 		if (!vm.hasErrors()) {
 			document.setSource((String) values.get("source"));
-			document.setSourceDate((Date) values.get("sourceDate"));
+			document.setSourceDate((Date) values.get("date"));
 			document.setLanguage((String) values.get("language"));
 			document.setSourceAuthor((String) values.get("author"));
 			document.setSourceType((String) values.get("type"));

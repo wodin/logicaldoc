@@ -21,6 +21,7 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.ValuesManager;
@@ -177,7 +178,6 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		addMember(form);
 
 		prepareExtendedAttributes(null);
-		addMember(extForm);
 
 		Search.get().addObserver(this);
 	}
@@ -233,31 +233,26 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			options.setTemplate(new Long((String) values.get("template")));
 
 		List<String> fields = new ArrayList<String>();
-		if ("true".equals(vm.getValueAsString("titleFlag")))
-			fields.add("title");
-		if ("true".equals(vm.getValueAsString("contentFlag")))
-			fields.add("content");
-		if ("true".equals(vm.getValueAsString("tagsFlag")))
-			fields.add("tags");
-		if ("true".equals(vm.getValueAsString("typeFlag")))
-			fields.add("type");
-		if ("true".equals(vm.getValueAsString("sourceFlag")))
-			fields.add("source");
-		if ("true".equals(vm.getValueAsString("authorFlag")))
-			fields.add("sourceAuthor");
-		if ("true".equals(vm.getValueAsString("coverageFlag")))
-			fields.add("coverage");
-		if ("true".equals(vm.getValueAsString("customidFlag")))
-			fields.add("customId");
 
 		// Now collect all flags from the string extended attributes
 		values = (Map<String, Object>) extForm.getValues();
 		for (String name : values.keySet()) {
-			if (((Boolean) values.get(name)).booleanValue()) {
-				String tmp = name.replaceAll(BLANK_PLACEHOLDER, " ");
-				fields.add("ext_" + tmp);
+			boolean enabled = false;
+			if (values.get(name) instanceof String) {
+				enabled = "true".equals((String) values.get(name));
+			} else
+				enabled = ((Boolean) values.get(name)).booleanValue();
+
+			if (enabled) {
+				String tmp = name;
+				if (!name.endsWith("Flag"))
+					tmp = "ext_" + name.replaceAll(BLANK_PLACEHOLDER, " ");
+				else
+					tmp = tmp.replaceAll("Flag", ": ");
+				fields.add(tmp);
 			}
 		}
+
 		options.setFields(fields.toArray(new String[0]));
 
 		options.setFolder(folder.getFolderId());
@@ -277,7 +272,6 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			removeMember(extForm);
 
 		extForm = new DynamicForm();
-		extForm.setVisible(false);
 		extForm.setTitleOrientation(TitleOrientation.LEFT);
 		extForm.setNumCols(4);
 		extForm.setWidth(300);

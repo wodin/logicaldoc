@@ -70,7 +70,7 @@ public class TasksPanel extends VLayout {
 		taskExecution.setTitle(I18N.message("execute"));
 		taskExecution.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.stopTask(list.getSelectedRecord().getAttributeAsString("name"), new AsyncCallback<Boolean>() {
+				service.startTask(list.getSelectedRecord().getAttributeAsString("name"), new AsyncCallback<Boolean>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -315,7 +315,7 @@ public class TasksPanel extends VLayout {
 					Date nextFireTime = tasks[i].getScheduling().getNextFireTime();
 					if (nextFireTime != null)
 						list.getRecord(i).setAttribute("nextStart", nextFireTime);
-	
+
 					list.getRecord(i).setAttribute("scheduling", tasks[i].getSchedulingLabel());
 					list.updateData(list.getRecord(i));
 				}

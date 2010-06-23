@@ -90,6 +90,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			Indexer indexer = (Indexer) Context.getInstance().getBean(Indexer.class);
 			indexer.unlock();
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -104,6 +105,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 			conf.write();
 		} catch (IOException e) {
+			log.error(e.getMessage(), e);
 		}
 	}
 }

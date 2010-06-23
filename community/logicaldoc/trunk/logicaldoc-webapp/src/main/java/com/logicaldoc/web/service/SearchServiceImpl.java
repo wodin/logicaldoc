@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -24,8 +25,8 @@ import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.text.analyzer.AnalyzerManager;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.beans.GUIHit;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
-import com.logicaldoc.gui.common.client.beans.GUIResultHit;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
@@ -44,7 +45,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(FolderServiceImpl.class);
+	private static Log log = LogFactory.getLog(SearchServiceImpl.class);
 
 	@Override
 	public GUIResult search(String sid, GUISearchOptions options) throws InvalidSessionException {
@@ -68,10 +69,9 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		result.setTime(search.getExecTime());
 		result.setHasMore(search.isMoreHitsPresent());
 
-		List<GUIResultHit> guiResults = new ArrayList<GUIResultHit>();
+		List<GUIHit> guiResults = new ArrayList<GUIHit>();
 		for (Hit hit : hits) {
-			GUIResultHit h = new GUIResultHit();
-			guiResults.add(h);
+			GUIHit h = new GUIHit();
 			h.setId(hit.getDocId());
 			h.setFolderId(hit.getFolderId());
 			h.setDate(hit.getDate());
@@ -82,7 +82,10 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			h.setSummary(hit.getSummary());
 			h.setSize(hit.getSize());
 			h.setScore(hit.getScore());
+			h.setIcon(FilenameUtils.getBaseName(hit.getIcon()));
+			guiResults.add(h);
 		}
+		result.setHits(guiResults.toArray(new GUIHit[guiResults.size()]));
 
 		return result;
 	}

@@ -426,7 +426,15 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				document.setPublisher(doc.getPublisher());
 				document.setFileVersion(doc.getFileVersion());
 				document.setLanguage(doc.getLanguage());
+				document.setSource(doc.getSource());
+				document.setRecipient(doc.getRecipient());
 				document.setTemplateId(doc.getTemplateId());
+				document.setSourceType(doc.getSourceType());
+				document.setObject(doc.getObject());
+				document.setCoverage(doc.getCoverage());
+				document.setSourceAuthor(doc.getSourceAuthor());
+				document.setSourceDate(doc.getSourceDate());
+				document.setSourceId(doc.getSourceId());
 				if (doc.getTemplate() != null)
 					document.setTemplate(doc.getTemplate().getName());
 				document.setStatus(doc.getStatus());

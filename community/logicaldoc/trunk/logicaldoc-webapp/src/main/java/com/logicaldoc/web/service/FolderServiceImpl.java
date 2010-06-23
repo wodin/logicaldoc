@@ -49,7 +49,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 		try {
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-			
+
 			if (subtree) {
 				/*
 				 * Just apply the current security setings to the whole subtree
@@ -58,13 +58,14 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				history.setUser(SessionUtil.getSessionUser(sid));
 				history.setEvent(History.EVENT_FOLDER_PERMISSION);
 				history.setSessionId(sid);
-				
+
 				mdao.applyRithtToTree(folder.getId(), history);
-			}else{
+			} else {
 				saveRules(sid, mdao.findById(folder.getId()), session.getUserId(), folder.getRights());
 			}
-			
+
 		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -143,6 +144,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			return folder;
 		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 
 		return null;
@@ -287,7 +289,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			folder.setId(menu.getId());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 
 		return folder;
@@ -375,6 +377,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			history.setSessionId(sid);
 			mdao.store(folder, history);
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 		}
 		return !sqlerrors;
 	}

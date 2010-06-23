@@ -19,20 +19,12 @@
 				<include name="**" />
 				<exclude name="WEB-INF/lib/**" />
 			</fileset>
+			<!-- This one is for maven -->
+			<!--fileset dir="target/war">
+							<include name="**" />
+							<exclude name="WEB-INF/lib/**" />
+			</fileset-->
 		</copy>
-		<!--copy todir="${logicaldoc.webroot}/WEB-INF/classes">
-			<fileset dir="src/main/resources">
-				<include name="**" />
-				<exclude name="**/context.xml" />
-				<exclude name="**/context.properties" />
-			</fileset>
-		</copy>
-		<copy todir="${logicaldoc.webroot}/WEB-INF/classes" verbose="true">
-			<fileset dir="war/WEB-INF/classes">
-				<include name="**" />
-				<exclude name="**/context.xml"/>
-			</fileset>
-		</copy>-->
 	</target>
 
 	<path id="project.class.path">

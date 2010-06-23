@@ -9,13 +9,15 @@ import java.util.Date;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class GUIResultHit implements Serializable {
+public class GUIHit implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private String summary;
 
 	private String type;
+
+	private String icon;
 
 	private String customId;
 
@@ -123,4 +125,11 @@ public class GUIResultHit implements Serializable {
 		this.score = score;
 	}
 
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
 }
