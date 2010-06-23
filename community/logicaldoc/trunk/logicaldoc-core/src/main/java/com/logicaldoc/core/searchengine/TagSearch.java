@@ -1,11 +1,12 @@
 package com.logicaldoc.core.searchengine;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
+import org.apache.commons.io.FilenameUtils;
+
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
 
 /**
@@ -22,19 +23,22 @@ public class TagSearch extends Search {
 	@Override
 	public void internalSearch() throws Exception {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Set<Long> docIds = docDao.findDocIdByUserIdAndTag(options.getUserId(), options.getExpression());
-
-		List<Long> ids = new ArrayList<Long>(docIds);
-		Collections.sort(ids);
-		for (Long id : ids) {
-			if (hits.size() == options.getMaxHits()) {
-				// The maximum number of hits was reached for a quick query
-				moreHitsPresent = true;
-				break;
-			}
-
+		List<Document> docs = docDao.findByUserIdAndTag(options.getUserId(), options.getExpression(), options
+				.getMaxHits());
+		for (Document doc : docs) {
 			Hit result = new HitImpl();
-			result.setDocId(id);
+			result.setDocId(doc.getId());
+			result.setTitle(doc.getTitle());
+			result.setCustomId(doc.getCustomId());
+			result.setCreation(doc.getCreation());
+			result.setDate(doc.getDate());
+			result.setDocRef(doc.getDocRef());
+			result.setFolderId(doc.getFolder().getId());
+			result.setIcon(FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getType())));
+			result.setSize(doc.getFileSize());
+			result.setSource(doc.getSource());
+			result.setSourceDate(doc.getSourceDate());
+			result.setType(doc.getType());
 			hits.add(result);
 		}
 	}

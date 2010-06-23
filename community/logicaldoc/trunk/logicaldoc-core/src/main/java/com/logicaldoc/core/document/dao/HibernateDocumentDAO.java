@@ -328,7 +328,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findByUserIdAndTag(long userId, String tag) {
+	public List<Document> findByUserIdAndTag(long userId, String tag, Integer max) {
 		List<Document> coll = new ArrayList<Document>();
 		Set<Long> ids = findDocIdByUserIdAndTag(userId, tag);
 		StringBuffer buf = new StringBuffer();
@@ -344,7 +344,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			StringBuffer query = new StringBuffer("select A from Document A where A.id in (");
 			query.append(buf);
 			query.append(")");
-			coll = (List<Document>) getHibernateTemplate().find(query.toString());
+			coll = (List<Document>) getHibernateTemplate(max).find(query.toString());
 		}
 		return coll;
 	}

@@ -13,7 +13,7 @@ public interface Hit {
 	public long getDocId();
 
 	// If the document is a shortcut, this is the original document id
-	public long getDocRef();
+	public Long getDocRef();
 
 	public void setDocId(long docId);
 
@@ -72,5 +72,5 @@ public interface Hit {
 
 	public void setFolderId(long folderId);
 
-	public void setDocRef(long docRef);
+	public void setDocRef(Long docRef);
 }

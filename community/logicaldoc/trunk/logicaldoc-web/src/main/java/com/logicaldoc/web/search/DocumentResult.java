@@ -107,7 +107,7 @@ public class DocumentResult extends DocumentRecord implements Hit {
 		return result.getType();
 	}
 
-	public long getDocRef() {
+	public Long getDocRef() {
 		return result.getDocRef();
 	}
 
@@ -276,7 +276,7 @@ public class DocumentResult extends DocumentRecord implements Hit {
 	}
 
 	@Override
-	public void setDocRef(long docRef) {
+	public void setDocRef(Long docRef) {
 		throw new UnsupportedOperationException("setDocRef method unsupported");
 	}
 }
