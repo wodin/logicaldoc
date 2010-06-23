@@ -23,8 +23,8 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIADSettings;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
@@ -403,7 +403,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			GUIADSettings adSettings = new GUIADSettings();
 			// Checks if the active directory feature is enabled
-			if (Session.get().isFeatureEnabled("Feature_11")) {
+			if (Feature.enabled(11)) {
 
 				System.out.println("Enabled feature 11!!!!");
 
@@ -486,7 +486,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			conf.setProperty("ldap.defaultLanguage", ldapSettings.getLanguage());
 
 			// Checks if the active directory feature is enabled
-			if (Session.get().isFeatureEnabled("Feature_11")) {
+			if (Feature.enabled(11)) {
 				System.out.println("Enabled feature 11!!!!");
 				// DO NOTHING
 			} else {
