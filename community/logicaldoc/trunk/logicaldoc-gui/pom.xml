@@ -13,17 +13,18 @@
   <packaging>war</packaging>
   <properties>
     <gwt.version>2.0.3</gwt.version>
-    <gwt.output.directory>${basedir}/war</gwt.output.directory>
+    <gwt.output.directory>./war</gwt.output.directory>
   </properties>
   <dependencies>
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-servlet</artifactId>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>gwtupload</groupId>
@@ -119,9 +120,9 @@
         <artifactId>gwt-maven-plugin</artifactId>
         <version>1.2</version>
         <configuration>
-          <output>${basedir}/war</output>
-          <webXml>${basedir}/war/WEB-INF/web.xml</webXml>
-          <hostedWebapp>${basedir}/war</hostedWebapp>
+          <webappDirectory>./war</webappDirectory> 
+          <webXml>./war/WEB-INF/web.xml</webXml>
+          <hostedWebapp>./war</hostedWebapp>
           <modules>
             <module>com.logicaldoc.gui.common.Common</module>
             <module>com.logicaldoc.gui.frontend.Frontend</module>
@@ -168,9 +169,6 @@
                 
                 <unzip src="target/${project.artifactId}-${project.version}.war" dest="target/war" />
                 <delete dir="target/war/WEB-INF" />
-                <zip destfile="target/${project.artifactId}-${project.version}.war" basedir="target/war" />
-                
-                <unzip src="target/${project.artifactId}-${project.version}.war" dest="target/war" />
                 <delete dir="target/war/META-INF" />
                 <zip destfile="target/${project.artifactId}-${project.version}.war" basedir="target/war" />
               </tasks>
@@ -183,13 +181,14 @@
         <artifactId>maven-war-plugin</artifactId>
         <!-- Include GWT compiler output in the war -->
         <configuration>
-          <warSourceDirectory>${basedir}/war</warSourceDirectory>
+          <!-- webappDirectory>./war</webappDirectory-->
+          <warSourceDirectory>./war</warSourceDirectory>
           <packagingExcludes>**/WEB-INF</packagingExcludes>
           <useCache>false</useCache>
           <archive>
             <addMavenDescriptor>false</addMavenDescriptor>
           </archive>
-          <webXml>${basedir}/war/WEB-INF/web.xml</webXml>
+          <webXml>./war/WEB-INF/web.xml</webXml>
         </configuration>
       </plugin>
       <!--

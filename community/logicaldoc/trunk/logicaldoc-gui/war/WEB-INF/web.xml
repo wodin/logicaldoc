@@ -60,6 +60,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>InfoService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.MockInfoServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>SearchEngineService</servlet-name>
     <servlet-class>com.logicaldoc.gui.frontend.server.MockSearchEngineServiceImpl</servlet-class>
   </servlet>
@@ -233,9 +238,15 @@
     <servlet-name>SystemService</servlet-name>
     <url-pattern>/frontend/system</url-pattern>
   </servlet-mapping>
+  
   <servlet-mapping>
-    <servlet-name>SystemService</servlet-name>
-    <url-pattern>/setup/system</url-pattern>
+    <servlet-name>InfoService</servlet-name>
+    <url-pattern>/setup/info</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>InfoService</servlet-name>
+    <url-pattern>/frontend/info</url-pattern>
   </servlet-mapping>
   
   <servlet-mapping>

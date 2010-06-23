@@ -104,12 +104,8 @@ body {
 		<script type="text/javascript">
 	document.getElementById('loadingMsg').innerHTML = 'Loading messages...';
 </script>
-
+		
 		<!--include the nocache JS-->
 		<script type="text/javascript" src="setup/setup.nocache.js"></script>
-		
-		<script>
-		  var defaultFolder = '<%=System.getProperty("user.home").replaceAll("\\\\","/")+"/logicaldoc"%>';	
-        </script>
 	</body>
 </html>

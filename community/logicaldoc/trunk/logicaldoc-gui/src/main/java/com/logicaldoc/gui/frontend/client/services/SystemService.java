@@ -6,7 +6,6 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
-import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITask;
 
@@ -107,9 +106,4 @@ public interface SystemService extends RemoteService {
 	 * Saves folders path
 	 */
 	public void saveFolders(String sid, GUIParameter[] folders) throws InvalidSessionException;
-
-	/**
-	 * Retrieves the system informations
-	 */
-	public GUIInfo getInfo(String locale);
 }

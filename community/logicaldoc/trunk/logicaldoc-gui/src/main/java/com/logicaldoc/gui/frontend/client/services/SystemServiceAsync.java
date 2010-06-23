@@ -4,7 +4,6 @@ import java.util.Date;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
-import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITask;
 
@@ -30,6 +29,4 @@ public interface SystemServiceAsync {
 	void saveTask(String sid, GUITask task, AsyncCallback<GUITask> callback);
 
 	void saveFolders(String sid, GUIParameter[] folders, AsyncCallback<Void> callback);
-
-	void getInfo(String locale, AsyncCallback<GUIInfo> callback);
 }
