@@ -5,7 +5,7 @@ import java.util.Random;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
-import com.logicaldoc.gui.common.client.beans.GUIResultHit;
+import com.logicaldoc.gui.common.client.beans.GUIHit;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
@@ -27,10 +27,10 @@ public class MockSearchServiceImpl extends RemoteServiceServlet implements Searc
 
 		if (options.getType() == GUISearchOptions.TYPE_FULLTEXT || options.getType() == GUISearchOptions.TYPE_TAGS) {
 			result.setHasMore(true);
-			result.setHits(new GUIResultHit[options.getMaxHits()]);
+			result.setHits(new GUIHit[options.getMaxHits()]);
 
 			for (int i = 0; i < options.getMaxHits(); i++) {
-				GUIResultHit hit = new GUIResultHit();
+				GUIHit hit = new GUIHit();
 				result.getHits()[i] = hit;
 				hit.setId(i + 1000);
 				hit.setFolderId(new Long(i + 1000));
@@ -38,7 +38,8 @@ public class MockSearchServiceImpl extends RemoteServiceServlet implements Searc
 				hit.setCreation(new Date());
 				hit.setTitle("Document " + hit.getId());
 				hit.setCustomId("custom " + hit.getId());
-				hit.setType("word");
+				hit.setType("doc");
+				hit.setIcon("word");
 				hit
 						.setSummary("<font style='background-color: rgb(255, 255, 0);'>LogicalDOC</font> Enterprise Edition is the best choice among all document  management solutions. Its&nbsp;...&nbsp; in your environment in a non-invasive way. Thanks to <font style='background-color: rgb(255, 255, 0);'>LogicalDOC</font> Enterprise Edition you are: Autonomous Free Secure The <font style='background-color: rgb(255, 255, 0);'>LogicalDOC</font>  interface is so  intuitive that you do not need  training.  You can view it as an external  disk and work through drag and  drop as you're used to. <font style='background-color: rgb(255, 255, 0);'>LogicalDOC</font> automatically");
 				hit.setScore(73);

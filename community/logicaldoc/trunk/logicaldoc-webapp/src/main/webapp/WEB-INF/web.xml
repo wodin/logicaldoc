@@ -229,7 +229,7 @@
 
   <servlet>
     <servlet-name>Download</servlet-name>
-    <servlet-class>com.logicaldoc.gui.frontend.server.MockDownloadServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.data.DownloadServlet</servlet-class>
   </servlet>
 
   <servlet>

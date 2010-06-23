@@ -72,6 +72,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			return true;
 		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -95,6 +96,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			return true;
 		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -296,7 +298,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			parameters[2][2] = deletedFolders;
 
 		} catch (Throwable e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 
 		return parameters;
@@ -353,6 +355,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				return task;
 			}
 		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 
 		return null;
@@ -411,6 +414,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			return tasks;
 		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 
 		return null;
@@ -433,6 +437,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			conf.write();
 		} catch (IOException e) {
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -478,6 +483,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			return task;
 		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -545,6 +551,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			return histories;
 		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 
 		return null;
@@ -565,6 +572,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			return true;
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -583,6 +591,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			return true;
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}

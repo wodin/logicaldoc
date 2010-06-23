@@ -148,6 +148,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		if (folder != null)
 			add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
+		else
+			add.setDisabled(true);
 	}
 
 	@Override

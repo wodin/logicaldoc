@@ -7,7 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
-import com.logicaldoc.gui.common.client.beans.GUIResultHit;
+import com.logicaldoc.gui.common.client.beans.GUIHit;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
@@ -74,7 +74,7 @@ public class Search {
 				lastResult = new ListGridRecord[result.getHits().length];
 				hasMore = result.isHasMore();
 				for (int i = 0; i < result.getHits().length; i++) {
-					GUIResultHit hit = result.getHits()[i];
+					GUIHit hit = result.getHits()[i];
 					ListGridRecord record = new ListGridRecord();
 					lastResult[i] = record;
 					record.setAttribute("title", hit.getTitle());
@@ -87,7 +87,7 @@ public class Search {
 					record.setAttribute("customId", hit.getCustomId());
 					record.setAttribute("folderId", hit.getFolderId());
 					record.setAttribute("size", hit.getSize());
-					record.setAttribute("icon", hit.getType());
+					record.setAttribute("icon", hit.getIcon());
 				}
 
 				for (SearchObserver observer : observers) {
