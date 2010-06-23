@@ -69,6 +69,8 @@ public abstract class Search {
 	 */
 	public final List<Hit> search() {
 		log.info("Launch search");
+		log.info("Expression: "+options.getExpression());
+		
 		Date start = new Date();
 		hits.clear();
 		moreHitsPresent = false;

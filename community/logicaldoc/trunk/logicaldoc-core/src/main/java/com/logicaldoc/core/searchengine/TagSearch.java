@@ -2,11 +2,8 @@ package com.logicaldoc.core.searchengine;
 
 import java.util.List;
 
-import org.apache.commons.io.FilenameUtils;
-
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
 
 /**
@@ -34,7 +31,6 @@ public class TagSearch extends Search {
 			result.setDate(doc.getDate());
 			result.setDocRef(doc.getDocRef());
 			result.setFolderId(doc.getFolder().getId());
-			result.setIcon(FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getType())));
 			result.setSize(doc.getFileSize());
 			result.setSource(doc.getSource());
 			result.setSourceDate(doc.getSourceDate());

@@ -198,10 +198,6 @@ public class DocumentResult extends DocumentRecord implements Hit {
 		return result.getCustomId();
 	}
 
-	public void setIcon(String icon) {
-		result.setIcon(icon);
-	}
-
 	@Override
 	public long getFolderId() {
 		return result.getFolderId();

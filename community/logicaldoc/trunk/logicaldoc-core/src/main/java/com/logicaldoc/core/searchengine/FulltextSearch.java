@@ -81,6 +81,10 @@ public class FulltextSearch extends Search {
 
 		MultiFieldQueryParser parser = new MultiFieldQueryParser(Indexer.LUCENE_VERSION, opt.getFields(), analyzer);
 
+		System.out.println("FulltextSearch Expression : " + opt.getExpression());
+		for (String s : opt.getFields()) {
+			System.out.println("FulltextSearch Expression field: " + s);
+		}
 		Query query = parser.parse(opt.getExpression());
 
 		log.info("Full-text search");
@@ -148,59 +152,61 @@ public class FulltextSearch extends Search {
 		Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter("<font style='background-color:#FFFF00'>",
 				"</font>"), new QueryScorer(query));
 
-		float maxScore = topDocs.scoreDocs[0].score;
-		for (int i = 0; i < topDocs.totalHits; i++) {
-			float score = topDocs.scoreDocs[i].score;
-			if (hits.size() == opt.getMaxHits()) {
-				// The maximum number of hits was reached for a quick query
-				moreHitsPresent = true;
-				break;
-			}
-
-			Document doc = multiSearcher.doc(topDocs.scoreDocs[i].doc);
-			String path = doc.get(LuceneDocument.FIELD_FOLDER_ID);
-			long folderId = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
-
-			// When user can see document with menuId then put it into
-			// result-collection.
-			if (accessibleIds.contains(folderId)) {
-				String size = doc.get(LuceneDocument.FIELD_SIZE);
-
-				if (size.equals("0")) {
-					size = "1";
+		if (topDocs.scoreDocs.length > 0) {
+			float maxScore = topDocs.scoreDocs[0].score;
+			for (int i = 0; i < topDocs.totalHits; i++) {
+				float score = topDocs.scoreDocs[i].score;
+				if (hits.size() == opt.getMaxHits()) {
+					// The maximum number of hits was reached for a quick query
+					moreHitsPresent = true;
+					break;
 				}
 
-				String content = doc.get(LuceneDocument.FIELD_CONTENT);
+				Document doc = multiSearcher.doc(topDocs.scoreDocs[i].doc);
+				String path = doc.get(LuceneDocument.FIELD_FOLDER_ID);
+				long folderId = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
 
-				TokenStream stream = analyzer.tokenStream(LuceneDocument.FIELD_CONTENT, new StringReader(content));
-				String summary = highlighter.getBestFragments(stream, content, maxNumFragmentsRequired,
-						fragmentSeparator);
+				// When user can see document with menuId then put it into
+				// result-collection.
+				if (accessibleIds.contains(folderId)) {
+					String size = doc.get(LuceneDocument.FIELD_SIZE);
 
-				if ((summary == null) || summary.equals("")) {
-					// If no fragments are available, use an extract from
-					// the content
-					content = doc.get(LuceneDocument.FIELD_CONTENT);
-					int summarysize = Math.min(content.length(), 500);
-					summary = content.substring(0, summarysize);
-				}
+					if (size.equals("0")) {
+						size = "1";
+					}
 
-				Hit result = new HitImpl();
-				result.setDocId(Long.parseLong(doc.get(LuceneDocument.FIELD_DOC_ID)));
-				result.setTitle(doc.get(LuceneDocument.FIELD_TITLE));
-				result.setSize(Long.parseLong(size));
-				result.setDate(DateBean.dateFromCompactString(doc.get(LuceneDocument.FIELD_DATE)));
-				result.setSourceDate(DateBean.dateFromCompactString(doc.get(LuceneDocument.FIELD_SOURCE_DATE)));
-				result.setCreation(DateBean.dateFromCompactString(doc.get(LuceneDocument.FIELD_CREATION)));
-				result.setType(doc.get(LuceneDocument.FIELD_TYPE));
-				result.setCustomId(doc.get(LuceneDocument.FIELD_CUSTOM_ID));
-				result.setSource(doc.get(LuceneDocument.FIELD_SOURCE));
-				result.setPath(doc.get(LuceneDocument.FIELD_FOLDER_ID));
-				result.setFolderId(Long.parseLong(doc.get(LuceneDocument.FIELD_FOLDER_ID)));
-				result.setSummary(summary);
-				result.setScore(createScore(maxScore, score));
+					String content = doc.get(LuceneDocument.FIELD_CONTENT);
 
-				if (isRelevant(result)) {
-					hits.add(result);
+					TokenStream stream = analyzer.tokenStream(LuceneDocument.FIELD_CONTENT, new StringReader(content));
+					String summary = highlighter.getBestFragments(stream, content, maxNumFragmentsRequired,
+							fragmentSeparator);
+
+					if ((summary == null) || summary.equals("")) {
+						// If no fragments are available, use an extract from
+						// the content
+						content = doc.get(LuceneDocument.FIELD_CONTENT);
+						int summarysize = Math.min(content.length(), 500);
+						summary = content.substring(0, summarysize);
+					}
+
+					Hit result = new HitImpl();
+					result.setDocId(Long.parseLong(doc.get(LuceneDocument.FIELD_DOC_ID)));
+					result.setTitle(doc.get(LuceneDocument.FIELD_TITLE));
+					result.setSize(Long.parseLong(size));
+					result.setDate(DateBean.dateFromCompactString(doc.get(LuceneDocument.FIELD_DATE)));
+					result.setSourceDate(DateBean.dateFromCompactString(doc.get(LuceneDocument.FIELD_SOURCE_DATE)));
+					result.setCreation(DateBean.dateFromCompactString(doc.get(LuceneDocument.FIELD_CREATION)));
+					result.setType(doc.get(LuceneDocument.FIELD_TYPE));
+					result.setCustomId(doc.get(LuceneDocument.FIELD_CUSTOM_ID));
+					result.setSource(doc.get(LuceneDocument.FIELD_SOURCE));
+					result.setPath(doc.get(LuceneDocument.FIELD_FOLDER_ID));
+					result.setFolderId(Long.parseLong(doc.get(LuceneDocument.FIELD_FOLDER_ID)));
+					result.setSummary(summary);
+					result.setScore(createScore(maxScore, score));
+
+					if (isRelevant(result)) {
+						hits.add(result);
+					}
 				}
 			}
 		}

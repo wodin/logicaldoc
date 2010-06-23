@@ -23,8 +23,6 @@ public class HitImpl implements Serializable, Hit {
 
 	private String type = "";
 
-	private String icon = "";
-
 	private String customId;
 
 	private long size = 0;
@@ -123,29 +121,6 @@ public class HitImpl implements Serializable, Hit {
 
 	public void setType(String typ) {
 		type = typ;
-		icon = "";
-
-		if (type.equals("PDF")) {
-			icon = "pdf.gif";
-		} else if (type.equals("DOC") || type.equals("DOT") || type.equals("RTF") || type.equals("SXW")
-				|| type.equals("TXT") || type.equals("WPD") || type.equals("KWD") || type.equals("ABW")
-				|| type.equals("ZABW") || type.equals("ODT")) {
-			icon = "textdoc.gif";
-		} else if (type.equals("XLS") || type.equals("XLT") || type.equals("SXC") || type.equals("DBF")
-				|| type.equals("KSP") || type.equals("ODS") || type.equals("ODB")) {
-			icon = "tabledoc.gif";
-		} else if (type.equals("PPT") || type.equals("PPS") || type.equals("POT") || type.equals("SXI")
-				|| type.equals("KPR") || type.equals("ODP")) {
-			icon = "presentdoc.gif";
-		} else if (type.equals("APF") || type.equals("BMP") || type.equals("JPEG") || type.equals("DIB")
-				|| type.equals("GIF") || type.equals("JPG") || type.equals("PSD") || type.equals("TIF")
-				|| type.equals("TIFF")) {
-			icon = "picture.gif";
-		} else if (type.equals("HTM") || type.equals("HTML") || type.equals("XML")) {
-			icon = "internet.gif";
-		} else {
-			icon = "document.gif";
-		}
 	}
 
 	public void setSize(long size) {
@@ -238,10 +213,6 @@ public class HitImpl implements Serializable, Hit {
 
 	public void setPath(String path) {
 		this.path = path;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
 	}
 
 	public long getFolderId() {
