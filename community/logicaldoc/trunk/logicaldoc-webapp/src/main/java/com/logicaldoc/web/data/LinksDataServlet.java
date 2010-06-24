@@ -44,7 +44,7 @@ public class LinksDataServlet extends HttpServlet {
 		DocumentDAO dao = (DocumentDAO) context.getBean(DocumentDAO.class);
 		StringBuffer query = new StringBuffer(
 				"select A.id, B.folder.id, A.type, A.document1.id, A.document1.title, A.document1.type, A.document2.id, A.document2.title, A.document2.type "
-						+ "from DocumentLink A, Document B where 1=1 and A.deleted = 0 and B.deleted = 0 ");
+						+ "from DocumentLink A, Document B where A.deleted = 0 and B.deleted = 0 ");
 		if (docId != null) {
 			query.append(" and (A.document1.id = B.id and A.document1.id=" + docId + " )");
 			query.append(" or  (A.document2.id = B.id and A.document2.id=" + docId + " )");

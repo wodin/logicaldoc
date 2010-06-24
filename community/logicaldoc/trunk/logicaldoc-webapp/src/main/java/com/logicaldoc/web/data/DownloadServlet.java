@@ -36,6 +36,13 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.web.util.SessionUtil;
 
+/**
+ * This servlet is responsible for document downloads. It searches for the
+ * attribute docId in any scope and extracts the proper document's content.
+ * 
+ * @author Matteo Caruso - Logical Objects
+ * @since 6.0
+ */
 public class DownloadServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -76,20 +83,25 @@ public class DownloadServlet extends HttpServlet {
 
 			String id = request.getParameter("docId");
 
-			// TODO Non si dovrebbe passare anche il fileversion come parametro
-			// della request???
 			String fileVersion = request.getParameter("versionId");
+			Document doc = null;
+			if (StringUtils.isEmpty(fileVersion)) {
+				DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+				doc = docDao.findById(Long.parseLong(id));
+				fileVersion = doc.getFileVersion();
+			}
 
-			// TODO Non si dovrebbe passare anche il suffix come parametro
-			// della request???
 			String suffix = request.getParameter("suffix");
+			if (StringUtils.isEmpty(suffix)) {
+				suffix = "";
+			}
 
 			log.debug("Download document id=" + id);
 
 			if ("true".equals(downloadText)) {
 				downloadDocumentText(request, response, Long.parseLong(id));
 			} else {
-				downloadDocument(request, response, Long.parseLong(id), "1.0", "", user);
+				downloadDocument(request, response, Long.parseLong(id), fileVersion, suffix, user);
 
 				// add the file to the recent files of the user
 				addToRecentFiles(user.getId(), Long.parseLong(id));
@@ -97,18 +109,6 @@ public class DownloadServlet extends HttpServlet {
 		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
 		}
-
-		// try {
-		// if ("true".equals(request.getParameter("downloadText")))
-		// response.getWriter().write("Document text");
-		// else {
-		// RequestDispatcher rd = request
-		// .getRequestDispatcher("frontend/sc/skins/LogicalDOC/images/preview_na.gif");
-		// rd.forward(request, response);
-		// }
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
 	}
 
 	private void downloadDocument(HttpServletRequest request, HttpServletResponse response, long docId,
