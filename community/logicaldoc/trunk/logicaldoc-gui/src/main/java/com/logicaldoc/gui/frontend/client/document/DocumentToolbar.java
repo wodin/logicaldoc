@@ -41,8 +41,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			public void onClick(ClickEvent event) {
 				if (document == null)
 					return;
-				Window.open("download?sid=" + Session.get().getSid() + "&sid=" + Session.get().getSid() + "&docId="
-						+ document.getId(), "_self", "");
+				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + document.getId(), "_self", "");
 			}
 		});
 

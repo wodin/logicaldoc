@@ -47,7 +47,7 @@ public class VersionsDataServlet extends HttpServlet {
 		VersionDAO dao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 		StringBuffer query = new StringBuffer(
 				"select A.id, A.username, A.event, A.version, A.fileVersion, A.versionDate, A.comment  from Version A where A.deleted = 0 ");
-		query.append(" A.docId=" + request.getParameter("docId"));
+		query.append(" and A.docId=" + request.getParameter("docId"));
 		query.append(" order by A.versionDate asc ");
 
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
