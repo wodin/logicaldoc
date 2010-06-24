@@ -38,6 +38,8 @@ public class EmailDialog extends Window {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
+	private ValuesManager vm = new ValuesManager();
+
 	public EmailDialog(long docId, String docTitle) {
 		super();
 		this.docId = docId;
@@ -60,7 +62,6 @@ public class EmailDialog extends Window {
 		setPadding(5);
 		setAutoSize(true);
 
-		final ValuesManager vm = new ValuesManager();
 		final DynamicForm form = new DynamicForm();
 		form.setID("emailform");
 		form.setValuesManager(vm);
@@ -94,7 +95,7 @@ public class EmailDialog extends Window {
 			public void onChanged(ChangedEvent event) {
 				try {
 					if ("true".equals(event.getValue().toString()))
-						message.setValue(message.getValue() + "\n{ticket}");
+						message.setValue(message.getValue() + "\n\n");
 				} catch (Throwable t) {
 					SC.warn(t.getMessage());
 				}
@@ -114,7 +115,7 @@ public class EmailDialog extends Window {
 					mail.setMessage(vm.getValueAsString("message"));
 					mail.setSendAdTicket("true".equals(vm.getValueAsString("sendticket")));
 					mail.setDocId(EmailDialog.this.docId);
-					mail.setUser(Session.get().getUser());
+
 					documentService.sendAsEmail(Session.get().getSid(), mail, new AsyncCallback<String>() {
 
 						@Override

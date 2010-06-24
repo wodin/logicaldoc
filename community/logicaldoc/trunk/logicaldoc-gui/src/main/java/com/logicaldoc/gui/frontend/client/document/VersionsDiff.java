@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -59,11 +60,12 @@ public class VersionsDiff extends Window {
 		records.add(new DiffRecord(I18N.message("object"), version1.getObject(), version2.getObject()));
 		records.add(new DiffRecord(I18N.message("coverage"), version1.getCoverage(), version2.getCoverage()));
 		records.add(new DiffRecord(I18N.message("filename"), version1.getFileName(), version2.getFileName()));
-		records.add(new DiffRecord(I18N.message("size"), Util.formatSize(version1.getFileSize()), Util.formatSize(version2
-				.getFileSize())));
+		records.add(new DiffRecord(I18N.message("size"), Util.formatSize(version1.getFileSize()), Util
+				.formatSize(version2.getFileSize())));
 		records.add(new DiffRecord(I18N.message("recipient"), version1.getRecipient(), version2.getRecipient()));
-		records.add(new DiffRecord(I18N.message("folder"), version1.getFolder().getName(), version2.getFolder()
-				.getName()));
+		records.add(new DiffRecord(I18N.message("folder"),
+				version1.getFolder().getId() == Constants.DOCUMENTS_FOLDERID ? "/" : version1.getFolder().getName(),
+				version2.getFolder().getId() == Constants.DOCUMENTS_FOLDERID ? "/" : version2.getFolder().getName()));
 		records.add(new DiffRecord(I18N.message("tags"), version1.getTagsString(), version2.getTagsString()));
 		records.add(new DiffRecord(I18N.message("template"), version1.getTemplate(), version2.getTemplate()));
 		printExtendedAttributes(records, version1, version2);

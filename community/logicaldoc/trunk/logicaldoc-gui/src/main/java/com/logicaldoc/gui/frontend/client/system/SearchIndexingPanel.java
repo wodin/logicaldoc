@@ -214,6 +214,8 @@ public class SearchIndexingPanel extends VLayout {
 		docsList = new ListGrid() {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
+				if (record == null)
+					return "";
 				if (getFieldName(colNum).equals("title")) {
 					if ("stop".equals(record.getAttribute("immutable"))) {
 						return "color: #888888; font-style: italic;";
@@ -248,7 +250,7 @@ public class SearchIndexingPanel extends VLayout {
 		docsList.setSelectionType(SelectionStyle.MULTIPLE);
 		docsList.setShowFilterEditor(true);
 		docsList.setFilterOnKeypress(true);
-		dataSource = new DocumentsDS(null, null, maxValue, true);
+		dataSource = new DocumentsDS(null, null, maxValue, false);
 		docsList.setDataSource(dataSource);
 		docsList.setFields(locked, immutable, icon, title, size, lastModified, version, publisher, published, creator,
 				created, customId, filename);

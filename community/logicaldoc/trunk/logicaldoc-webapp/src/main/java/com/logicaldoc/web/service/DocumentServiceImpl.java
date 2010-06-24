@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -27,6 +29,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
+import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.BookmarkDAO;
@@ -34,10 +37,14 @@ import com.logicaldoc.core.document.dao.DiscussionThreadDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
+import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.MenuDAO;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.transfer.InMemoryZipImport;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
@@ -51,6 +58,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.io.CryptUtil;
 import com.logicaldoc.web.data.UploadServlet;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -796,8 +804,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				documentManager.update(doc, docVO, transaction);
 
 				document.setId(doc.getId());
+				document.setLastModified(new Date());
+				document.setVersion(doc.getVersion());
 			} catch (Throwable t) {
-				t.printStackTrace();
+				log.error(t.getMessage(), t);
 			}
 		} else
 			return null;
@@ -808,26 +818,54 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	@Override
 	public String sendAsEmail(String sid, GUIEmail email) throws InvalidSessionException {
-		SessionUtil.validateSession(sid);
+		UserSession session = SessionUtil.validateSession(sid);
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		User user = userDao.findById(session.getUserId());
 
 		EMail mail;
 		try {
 			mail = new EMail();
 
 			mail.setAccountId(-1);
-			mail.setAuthor(email.getUser().getUserName());
-			mail.setAuthorAddress(email.getUser().getEmail());
-			mail.parseRecipients(email.getRecipients());
-			mail.parseRecipientsCC(email.getCc());
+			mail.setAuthor(user.getUserName());
+			mail.setAuthorAddress(user.getEmail());
+			if (StringUtils.isNotEmpty(email.getRecipients()))
+				mail.parseRecipients(email.getRecipients());
+			if (StringUtils.isNotEmpty(email.getCc()))
+				mail.parseRecipientsCC(email.getCc());
 			mail.setFolder("outbox");
 			mail.setMessageText(email.getMessage());
 			mail.setRead(1);
 			mail.setSentDate(new Date());
 			mail.setSubject(email.getObject());
-			mail.setUserName(email.getUser().getUserName());
+			mail.setUserName(user.getUserName());
 
 			if (!email.isSendAdTicket() && email.getDocId() > 0)
 				createAttachment(mail, email.getDocId());
+
+			if (email.isSendAdTicket()) {
+				// Prepare a new download ticket
+				String temp = new Date().toString() + user.getId();
+				String ticketid = CryptUtil.cryptString(temp);
+				DownloadTicket ticket = new DownloadTicket();
+				ticket.setTicketId(ticketid);
+				ticket.setDocId(email.getDocId());
+				ticket.setUserId(user.getId());
+
+				// Store the ticket
+				DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance()
+						.getBean(DownloadTicketDAO.class);
+				ticketDao.store(ticket);
+
+				// Try to clean the DB from old tickets
+				ticketDao.deleteOlder();
+
+				HttpServletRequest request = this.getThreadLocalRequest();
+				String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":"
+						+ request.getServerPort() + request.getContextPath();
+				String address = urlPrefix + "/download-ticket?ticketId=" + ticketid;
+				mail.setMessageText(email.getMessage() + "URL: " + address);
+			}
 
 			try {
 				EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
@@ -838,6 +876,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				return "error";
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.warn(e.getMessage(), e);
 			return "error";
 		}

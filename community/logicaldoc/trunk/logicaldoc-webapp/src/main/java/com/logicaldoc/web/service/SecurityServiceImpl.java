@@ -370,12 +370,11 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		GUILdapSettings[] settings = new GUILdapSettings[2];
 
 		try {
-
 			LDAPContextSourceConfig config = (LDAPContextSourceConfig) Context.getInstance().getBean(
-					LDAPContextSourceConfig.class);
+					"LDAPContextSourceConfig");
 
 			LDAPUserGroupContext userGroupContext = (LDAPUserGroupContext) Context.getInstance().getBean(
-					LDAPUserGroupContext.class);
+					"LDAPUserGroupContext");
 
 			UserAttributeMapper userAttributeMapper = (UserAttributeMapper) Context.getInstance().getBean(
 					"LDAPBasicUserMapper");
@@ -404,9 +403,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			GUIADSettings adSettings = new GUIADSettings();
 			// Checks if the active directory feature is enabled
 			if (Feature.enabled(11)) {
-
-				System.out.println("Enabled feature 11!!!!");
-
 				LDAPContextSourceConfig adConfig = (LDAPContextSourceConfig) Context.getInstance().getBean(
 						"ADContextSourceConfig");
 
@@ -431,9 +427,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 				settings[1] = adSettings;
 			} else {
-				// TODO Remove after implementation is completed.
-				System.out.println("NO Enabled feature 11!!!!");
-
 				settings[1] = ldapSettings;
 			}
 
@@ -451,7 +444,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		SessionUtil.validateSession(sid);
 
 		BasicLDAPContextSource ldapContextSource = (BasicLDAPContextSource) Context.getInstance().getBean(
-				BasicLDAPContextSource.class);
+				"LDAPContextSource");
 		try {
 			PropertiesBean conf = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 
@@ -486,12 +479,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			conf.setProperty("ldap.defaultLanguage", ldapSettings.getLanguage());
 
 			// Checks if the active directory feature is enabled
-			if (Feature.enabled(11)) {
-				System.out.println("Enabled feature 11!!!!");
+			if (!Feature.enabled(11)) {
 				// DO NOTHING
 			} else {
-				System.out.println("NO Enabled feature 11!!!!");
-				// TODO Modify after completed features management.
 				BasicLDAPContextSource adContextSource = (BasicLDAPContextSource) Context.getInstance().getBean(
 						"ADContextSourceConfig");
 
@@ -538,6 +528,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			log.info("External Authentication data written successfully.");
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error("Exception writing External Authentication data: " + e.getMessage(), e);
 		}
 	}

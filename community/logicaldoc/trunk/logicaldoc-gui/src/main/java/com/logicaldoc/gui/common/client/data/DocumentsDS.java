@@ -23,8 +23,8 @@ public class DocumentsDS extends DataSource {
 	 * 
 	 * @param folderId The folder to be listed (optional)
 	 * @param filename A filter on the file nale (optional)
-	 * @param max The marimum number of records (if not specified MAX_ROWS
-	 *        is used)
+	 * @param max The marimum number of records (if not specified MAX_ROWS is
+	 *        used)
 	 * @param indexable The indexable flag
 	 */
 	public DocumentsDS(Long folderId, String fileFilter, Integer max, Boolean indexable) {
@@ -59,7 +59,6 @@ public class DocumentsDS extends DataSource {
 		setClientOnly(true);
 		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&folderId="
 				+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "") + "&max="
-				+ (max != null ? max : MAX) +  "&indexable="
-				+ (indexable!=null ? Boolean.toString(indexable) : ""));
+				+ (max != null ? max : MAX) + "&indexable=" + (indexable != null ? Boolean.toString(indexable) : ""));
 	}
 }

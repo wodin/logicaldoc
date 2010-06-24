@@ -9,7 +9,6 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineServiceAsync;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -71,7 +70,7 @@ public class SystemMenu extends VLayout {
 		log.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new LogPanel("DMS"));
+				AdminPanel.get().setContent(new LogPanel("DMS_WEB"));
 			}
 		});
 
