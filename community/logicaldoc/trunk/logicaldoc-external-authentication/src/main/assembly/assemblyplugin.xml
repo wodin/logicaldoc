@@ -14,7 +14,8 @@
 		<dependencySet>
 			<outputDirectory>lib</outputDirectory>
 			<includes>
-				<include>*:jar:*</include>
+				<include>ldapbp:jar:*</include>
+				<include>spring-ldap:jar:*</include>
 			</includes>
 		</dependencySet>
 	</dependencySets>
