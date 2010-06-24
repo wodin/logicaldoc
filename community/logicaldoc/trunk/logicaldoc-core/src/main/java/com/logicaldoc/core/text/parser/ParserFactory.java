@@ -179,4 +179,10 @@ public class ParserFactory {
 			init();
 		return parsers.keySet();
 	}
+
+	public static Map<String, Class> getParsers() {
+		if (parsers.isEmpty())
+			init();
+		return parsers;
+	}
 }
