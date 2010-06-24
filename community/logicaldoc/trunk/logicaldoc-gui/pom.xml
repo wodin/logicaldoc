@@ -181,7 +181,6 @@
         <artifactId>maven-war-plugin</artifactId>
         <!-- Include GWT compiler output in the war -->
         <configuration>
-          <!-- webappDirectory>./war</webappDirectory-->
           <warSourceDirectory>./war</warSourceDirectory>
           <packagingExcludes>**/WEB-INF</packagingExcludes>
           <useCache>false</useCache>
