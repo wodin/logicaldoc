@@ -143,7 +143,7 @@ public class ExtAuthPanel extends VLayout {
 		Tab activeDir = new Tab();
 		activeDir.setTitle(I18N.message("activedirectory"));
 		// Checks if the active directory feature is enabled
-		if (Feature.enabled(11)) {
+		if (!Feature.enabled(11)) {
 			activeDir.setPane(new FeatureDisabled());
 		} else {
 			DynamicForm activeDirForm = new DynamicForm();
@@ -152,13 +152,13 @@ public class ExtAuthPanel extends VLayout {
 			activeDirForm.setColWidths(100, 100);
 
 			// Implementation
-			RadioGroupItem adImplementation = ItemFactory.newBooleanSelector("adimplementation", "implementation");
+			RadioGroupItem adImplementation = ItemFactory.newBooleanSelector("adImplementation", "implementation");
 			adImplementation.setName("adimplementation");
 			adImplementation.setValueMap("basic", "md5");
 			adImplementation.setValue(this.adSettings.getImplementation());
 
 			// Enabled
-			RadioGroupItem adEnabled = ItemFactory.newBooleanSelector("adenabled", "enabled");
+			RadioGroupItem adEnabled = ItemFactory.newBooleanSelector("adEnabled", "enabled");
 			adEnabled.setName("adEnabled");
 			adEnabled.setValue(this.adSettings.isEnabled() ? "yes" : "no");
 
@@ -226,26 +226,14 @@ public class ExtAuthPanel extends VLayout {
 					ExtAuthPanel.this.ldapSettings.setGrpIdentifierAttr((String) values.get("grpidentifierattr"));
 					ExtAuthPanel.this.ldapSettings.setLogonAttr((String) values.get("logonattr"));
 					ExtAuthPanel.this.ldapSettings.setAuthPattern((String) values.get("authpattern"));
-					ExtAuthPanel.this.ldapSettings.setUserClass((String) values.get("userClass"));
+					ExtAuthPanel.this.ldapSettings.setUserClass((String) values.get("userclass"));
 					ExtAuthPanel.this.ldapSettings.setGrpClass((String) values.get("grpclass"));
 					ExtAuthPanel.this.ldapSettings.setUsersBaseNode((String) values.get("usersbasenode"));
 					ExtAuthPanel.this.ldapSettings.setGrpsBaseNode((String) values.get("grpsbasenode"));
 					ExtAuthPanel.this.ldapSettings.setLanguage((String) values.get("language"));
 
 					// Checks if the active directory feature is enabled
-					if (!Feature.enabled(11)) {
-						ExtAuthPanel.this.adSettings.setImplementation("md5");
-						ExtAuthPanel.this.adSettings.setEnabled(true);
-						ExtAuthPanel.this.adSettings.setDomain("domain");
-						ExtAuthPanel.this.adSettings.setHost("host");
-						if (values.get("port") instanceof Integer)
-							ExtAuthPanel.this.adSettings.setPort(78);
-						ExtAuthPanel.this.adSettings.setUsername("adUsername");
-						ExtAuthPanel.this.adSettings.setPwd("adPassword");
-						ExtAuthPanel.this.adSettings.setUsersBaseNode("adUsersbasenode");
-						ExtAuthPanel.this.adSettings.setGrpsBaseNode("adGrpsbasenode");
-						ExtAuthPanel.this.adSettings.setLanguage("adLanguage");
-					} else {
+					if (Feature.enabled(11)) {
 						ExtAuthPanel.this.adSettings.setImplementation((String) values.get("adImplementation"));
 						ExtAuthPanel.this.adSettings.setEnabled(values.get("adEnabled").equals("yes") ? true : false);
 						ExtAuthPanel.this.adSettings.setDomain((String) values.get("domain"));
@@ -254,8 +242,8 @@ public class ExtAuthPanel extends VLayout {
 							ExtAuthPanel.this.adSettings.setPort((Integer) values.get("port"));
 						ExtAuthPanel.this.adSettings.setUsername((String) values.get("adUsername"));
 						ExtAuthPanel.this.adSettings.setPwd((String) values.get("adPassword"));
-						ExtAuthPanel.this.adSettings.setUsersBaseNode((String) values.get("adUsersbasenode"));
-						ExtAuthPanel.this.adSettings.setGrpsBaseNode((String) values.get("adGrpsbasenode"));
+						ExtAuthPanel.this.adSettings.setUsersBaseNode((String) values.get("adUsersBaseNode"));
+						ExtAuthPanel.this.adSettings.setGrpsBaseNode((String) values.get("adGroupsBaseNode"));
 						ExtAuthPanel.this.adSettings.setLanguage((String) values.get("adLanguage"));
 					}
 

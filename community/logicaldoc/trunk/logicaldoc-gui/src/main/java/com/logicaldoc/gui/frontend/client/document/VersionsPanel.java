@@ -75,7 +75,7 @@ public class VersionsPanel extends DocumentDetailTab {
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
 				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + document.getId() + "&versionId="
-						+ record.getAttribute("version") + "&open=true", "_blank", "");
+						+ record.getAttribute("id") + "&open=true", "_blank", "");
 			}
 		});
 

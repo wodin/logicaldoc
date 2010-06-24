@@ -260,6 +260,8 @@ public class DocumentDetailsPanel extends VLayout {
 				@Override
 				public void onSuccess(GUIDocument result) {
 					observer.onDocumentSaved(result);
+					if (result != null)
+						DocumentsPanel.get().onSelectedDocument(result.getId(), false);
 					savePanel.setVisible(false);
 					saveForm.setValue("versionComment", "");
 				}

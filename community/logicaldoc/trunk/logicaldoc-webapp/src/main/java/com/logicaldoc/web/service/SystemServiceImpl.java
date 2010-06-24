@@ -3,6 +3,7 @@ package com.logicaldoc.web.service;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Menu;
+import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.core.task.TaskManager;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
@@ -445,7 +447,16 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			String[] event) throws InvalidSessionException {
 		SessionUtil.validateSession(sid);
 
+		boolean searchOnUserHistory = false;
+		for (String e : event) {
+			if (e.contains("user")) {
+				searchOnUserHistory = true;
+				break;
+			}
+		}
+
 		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+		List<GUIHistory> histories = new ArrayList<GUIHistory>();
 		try {
 			StringBuffer query = new StringBuffer(
 					"select A.userName, A.event, A.date, A.title, A.folderId, A.path, A.sessionId from History A where 1=1 ");
@@ -476,12 +487,6 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, maxResult);
 
-			if (records.size() == 0)
-				return null;
-
-			GUIHistory[] histories = new GUIHistory[records.size()];
-
-			int i = 0;
 			for (Object record : records) {
 				Object[] cols = (Object[]) record;
 
@@ -497,11 +502,66 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				history.setPath((String) cols[5]);
 				history.setSessionId((String) cols[6]);
 
-				histories[i] = history;
-				i++;
+				histories.add(history);
 			}
 
-			return histories;
+			if (searchOnUserHistory) {
+				UserHistoryDAO userHistoryDao = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
+				try {
+					query = new StringBuffer(
+							"select A.userName, A.event, A.date, A.sessionId from UserHistory A where 1=1 ");
+					if (userName != null && StringUtils.isNotEmpty(userName))
+						query.append(" and lower(A.userName) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase())
+								+ "%'");
+					if (historySid != null && StringUtils.isNotEmpty(historySid))
+						query.append(" and A.sessionId=" + historySid);
+					if (from != null) {
+						query.append(" and A.date > '" + new Timestamp(from.getTime()) + "'");
+					}
+					if (till != null) {
+						query.append(" and A.date < '" + new Timestamp(till.getTime()) + "'");
+					}
+					if (event.length > 0) {
+						boolean first = true;
+						for (String e : event) {
+							if (first)
+								query.append(" and (");
+							else
+								query.append(" or ");
+
+							query.append(" A.event = '" + SqlUtil.doubleQuotes(e) + "'");
+							first = false;
+						}
+						query.append(" ) ");
+					}
+					query.append(" order by A.date asc ");
+
+					records = (List<Object>) userHistoryDao.findByQuery(query.toString(), null, maxResult);
+
+					List<GUIHistory> userHistories = new ArrayList<GUIHistory>();
+
+					for (Object record : records) {
+						Object[] cols = (Object[]) record;
+
+						GUIHistory history = new GUIHistory();
+						history.setUserName((String) cols[0]);
+						history.setEvent((String) cols[1]);
+						history.setDate((Date) cols[2]);
+						history.setTitle("");
+						history.setFolderId(0);
+						history.setPath("");
+						history.setSessionId((String) cols[3]);
+
+						userHistories.add(history);
+					}
+
+					histories.addAll(userHistories);
+				} catch (Throwable e) {
+					log.error(e.getMessage(), e);
+				}
+			}
+
+			return histories.toArray(new GUIHistory[histories.size()]);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}

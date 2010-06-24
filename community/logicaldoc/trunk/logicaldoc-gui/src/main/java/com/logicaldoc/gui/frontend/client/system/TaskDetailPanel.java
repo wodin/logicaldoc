@@ -124,7 +124,7 @@ public class TaskDetailPanel extends VLayout {
 			if (logTabPanel.contains(logPanel))
 				logTabPanel.removeMember(logPanel);
 		}
-		logPanel = new LogPanel(task.getName());
+		logPanel = new LogPanel(task.getName() + "_WEB");
 		logTabPanel.addMember(logPanel);
 	}
 

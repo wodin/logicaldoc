@@ -238,6 +238,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>TicketDownload</servlet-name>
+    <servlet-class>com.logicaldoc.web.data.TicketDownload</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>RightsData</servlet-name>
     <servlet-class>com.logicaldoc.web.data.RightsDataServlet</servlet-class>
   </servlet>
@@ -245,6 +250,16 @@
   <servlet>
     <servlet-name>TasksData</servlet-name>
     <servlet-class>com.logicaldoc.web.data.TasksDataServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>ParsersData</servlet-name>
+    <servlet-class>com.logicaldoc.web.data.ParsersDataServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Log</servlet-name>
+    <servlet-class>com.logicaldoc.web.data.LogDownload</servlet-class>
   </servlet>
 
   <servlet>
@@ -271,11 +286,11 @@
     <servlet-name>SystemService</servlet-name>
     <url-pattern>/frontend/system</url-pattern>
   </servlet-mapping>
- 
+
   <servlet-mapping>
     <servlet-name>InfoService</servlet-name>
     <url-pattern>/frontend/info</url-pattern>
-  </servlet-mapping> 
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>InfoService</servlet-name>
     <url-pattern>/setup/info</url-pattern>
@@ -407,6 +422,11 @@
   </servlet-mapping>
 
   <servlet-mapping>
+    <servlet-name>ParsersData</servlet-name>
+    <url-pattern>/data/parsers.xml</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
     <servlet-name>Thumbnail</servlet-name>
     <url-pattern>/thumbnail</url-pattern>
   </servlet-mapping>
@@ -414,6 +434,16 @@
   <servlet-mapping>
     <servlet-name>Download</servlet-name>
     <url-pattern>/download</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>TicketDownload</servlet-name>
+    <url-pattern>/download-ticket</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Log</servlet-name>
+    <url-pattern>/log</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

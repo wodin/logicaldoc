@@ -24,8 +24,10 @@ import org.apache.tools.ant.filters.StringInputStream;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
+import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserDoc;
 import com.logicaldoc.core.security.UserSession;
@@ -60,35 +62,52 @@ public class DownloadServlet extends HttpServlet {
 	 * @throws IOException if an error occurred
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		UserSession session = SessionUtil.validateSession(request);
 
-		if (request.getParameter("open") == null) {
-			response.setHeader("Pragma", "public");
-			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
-			response.setHeader("Expires", "0");
-			response.setHeader("Content-Disposition", "attachment; filename=\"document.gif\"");
-		}
+		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		VersionDAO versDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+		// Load the user associated to the session
+		User user = udao.findById(session.getUserId());
+		if (user == null)
+			return;
+
+		// Flag indicating to download only indexed text
+		String downloadText = request.getParameter("downloadText");
+		String docId = request.getParameter("docId");
+		String versionId = request.getParameter("versionId");
+		String fileVersion = request.getParameter("fileVersion");
+		String filename = "";
+
+		Version version = null;
+		Document doc = null;
 
 		try {
-			UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			if (!StringUtils.isEmpty(docId))
+				doc = docDao.findById(Long.parseLong(docId));
+			if (!StringUtils.isEmpty(versionId)) {
+				version = versDao.findById(Long.parseLong(versionId));
+				if (doc == null)
+					doc = docDao.findById(version.getDocId());
+			}
 
-			// Load the user associated to the session
-			User user = udao.findById(session.getUserId());
-			if (user == null)
-				return;
+			if (version != null)
+				filename = version.getFileName();
+			else
+				filename = doc.getFileName();
 
-			// Flag indicating to download only indexed text
-			String downloadText = request.getParameter("downloadText");
+			if (request.getParameter("open") == null) {
+				response.setHeader("Pragma", "public");
+				response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
+				response.setHeader("Expires", "0");
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+			}
 
-			String id = request.getParameter("docId");
-
-			String fileVersion = request.getParameter("versionId");
-			Document doc = null;
 			if (StringUtils.isEmpty(fileVersion)) {
-				DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-				doc = docDao.findById(Long.parseLong(id));
-				fileVersion = doc.getFileVersion();
+				if (version != null)
+					fileVersion = version.getFileVersion();
+				else
+					fileVersion = doc.getFileVersion();
 			}
 
 			String suffix = request.getParameter("suffix");
@@ -96,29 +115,26 @@ public class DownloadServlet extends HttpServlet {
 				suffix = "";
 			}
 
-			log.debug("Download document id=" + id);
+			if (version != null)
+				log.debug("Download version id=" + versionId);
+			else
+				log.debug("Download document id=" + docId);
 
 			if ("true".equals(downloadText)) {
-				downloadDocumentText(request, response, Long.parseLong(id));
+				downloadDocumentText(request, response, doc);
 			} else {
-				downloadDocument(request, response, Long.parseLong(id), fileVersion, suffix, user);
+				downloadDocument(request, response, doc, fileVersion, suffix, user);
 
 				// add the file to the recent files of the user
-				addToRecentFiles(user.getId(), Long.parseLong(id));
+				addToRecentFiles(user.getId(), Long.parseLong(docId));
 			}
 		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
 		}
 	}
 
-	private void downloadDocument(HttpServletRequest request, HttpServletResponse response, long docId,
+	private void downloadDocument(HttpServletRequest request, HttpServletResponse response, Document doc,
 			String fileVersion, String suffix, User user) throws FileNotFoundException, IOException {
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = ddao.findById(docId);
-
-		if (doc == null) {
-			throw new FileNotFoundException();
-		}
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		File file = documentManager.getDocumentFile(doc, fileVersion);
@@ -163,7 +179,7 @@ public class DownloadServlet extends HttpServlet {
 		if (user != null && StringUtils.isEmpty(suffix)) {
 			// Add an history entry to track the download of the document
 			History history = new History();
-			history.setDocId(docId);
+			history.setDocId(doc.getId());
 			history.setTitle(doc.getTitle());
 			history.setVersion(doc.getVersion());
 
@@ -216,22 +232,14 @@ public class DownloadServlet extends HttpServlet {
 	 * 
 	 * @param request the current request
 	 * @param response the document is written to this object
-	 * @param docId Id of the document
+	 * @param doc the document
 	 * @param version name of the version; if null the latest version will
 	 *        returned
 	 */
-	private void downloadDocumentText(HttpServletRequest request, HttpServletResponse response, long docId)
+	private void downloadDocumentText(HttpServletRequest request, HttpServletResponse response, Document doc)
 			throws FileNotFoundException, IOException {
 
 		response.setCharacterEncoding("UTF-8");
-
-		// get document
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = ddao.findById(docId);
-
-		if (doc == null) {
-			throw new FileNotFoundException();
-		}
 
 		String mimetype = "text/plain";
 
