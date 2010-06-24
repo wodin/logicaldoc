@@ -202,9 +202,9 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		Long size = vm.getValueAsString("size") != null ? new Long(vm.getValueAsString("size")) : null;
 		if (size != null && !NOLIMIT.equals(vm.getValueAsString("sizeOperator"))) {
 			if (LESSTHAN.equals(vm.getValueAsString("sizeOperator")))
-				options.setSizeMax(size);
+				options.setSizeMax(size*1024);
 			else
-				options.setSizeMin(size);
+				options.setSizeMin(size*1024);
 		}
 
 		String operator = vm.getValueAsString("dateOperator");
@@ -248,7 +248,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 				if (!name.endsWith("Flag"))
 					tmp = "ext_" + name.replaceAll(BLANK_PLACEHOLDER, " ");
 				else
-					tmp = tmp.replaceAll("Flag", ": ");
+					tmp = tmp.replaceAll("Flag", "");
 				fields.add(tmp);
 			}
 		}
@@ -257,7 +257,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 		options.setFolder(folder.getFolderId());
 		options.setFolderName(folder.getFolderName());
-
+		
 		options.setSearchInSubPath(new Boolean(vm.getValueAsString("subfolders")).booleanValue());
 
 		Search.get().setOptions(options);

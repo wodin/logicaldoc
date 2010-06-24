@@ -81,13 +81,8 @@ public class FulltextSearch extends Search {
 
 		MultiFieldQueryParser parser = new MultiFieldQueryParser(Indexer.LUCENE_VERSION, opt.getFields(), analyzer);
 
-		System.out.println("FulltextSearch Expression : " + opt.getExpression());
-		for (String s : opt.getFields()) {
-			System.out.println("FulltextSearch Expression field: " + s);
-		}
 		Query query = parser.parse(opt.getExpression());
 
-		log.info("Full-text search");
 		TopDocs topDocs = null;
 
 		ArrayList<Filter> filters = new ArrayList<Filter>();
@@ -114,6 +109,8 @@ public class FulltextSearch extends Search {
 			filters.add(new QueryWrapperFilter(folderQuery));
 		}
 
+		log.info("Fulltext query: " + query.toString());
+		
 		if (filters.isEmpty()) {
 			topDocs = multiSearcher.search(query, 1000);
 		} else {
@@ -145,6 +142,8 @@ public class FulltextSearch extends Search {
 			}
 			log.info("End of DB search");
 		}
+
+		System.out.println("accessibleIds: " + accessibleIds);
 
 		int maxNumFragmentsRequired = 4;
 		String fragmentSeparator = "&nbsp;...&nbsp;";
@@ -217,7 +216,7 @@ public class FulltextSearch extends Search {
 
 		FulltextSearchOptions opt = (FulltextSearchOptions) options;
 
-		if ((opt.getFormat() != null) && !opt.getFormat().equals("all")) {
+		if (!StringUtils.isEmpty(opt.getFormat()) && !opt.getFormat().equals("all")) {
 			if (!hit.getType().toLowerCase().equals(opt.getFormat())) {
 				result = false;
 			}
