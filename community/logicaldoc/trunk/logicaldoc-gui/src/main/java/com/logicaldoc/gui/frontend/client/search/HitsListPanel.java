@@ -326,13 +326,13 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		});
 
-		if (!Feature.enabled(12)) {
+		if (Feature.enabled(Feature.SAVED_SEARCHES)) {
+			toolStrip.addButton(save);
+		} else if (Feature.showDisabled()) {
 			save.setDisabled(true);
 			save.setTooltip(I18N.message("featuredisabled"));
-		}
-
-		if (!Feature.showDisabled())
 			toolStrip.addButton(save);
+		}
 
 		if (Search.get().isHasMore()) {
 			toolStrip.addSeparator();

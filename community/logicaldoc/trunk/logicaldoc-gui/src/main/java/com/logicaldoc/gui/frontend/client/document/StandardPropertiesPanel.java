@@ -6,10 +6,12 @@ import java.util.Map;
 
 import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Canvas;
@@ -20,6 +22,7 @@ import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -137,6 +140,13 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		form2.setValuesManager(vm);
 
 		List<FormItem> items = new ArrayList<FormItem>();
+
+		SelectItem language = ItemFactory.newLanguageSelector("language", false);
+		language.addChangedHandler(changedHandler);
+		language.setDisabled(!update);
+		language.setValue(document.getLanguage());
+		items.add(language);
+
 		final ComboBoxItem tagItem = new ComboBoxItem("tag");
 		tagItem.setTitle(I18N.message("tag"));
 		tagItem.setPickListWidth(250);
@@ -190,9 +200,12 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		rightPanel.setPadding(4);
 		rightPanel.setAlign(VerticalAlignment.TOP);
 
-		Image preview = new Image("thumbnail?docId=" + document.getId() + "&versionId=" + document.getVersion());
-
-		rightPanel.addMember(preview);
+		if (Feature.enabled(Feature.PREVIEW)) {
+			Image preview = new Image("thumbnail?docId=" + document.getId() + "&versionId=" + document.getVersion());
+			rightPanel.addMember(preview);
+		} else if (Feature.showDisabled()) {
+			rightPanel.addMember(new FeatureDisabled());
+		}
 
 		formsContainer.addMember(rightPanel);
 	}
@@ -204,6 +217,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		if (!vm.hasErrors()) {
 			document.setCustomId((String) values.get("customId"));
 			document.setTitle((String) values.get("title"));
+			document.setLanguage((String) values.get(""));
 			document.clearTags();
 
 			for (String name : values.keySet()) {

@@ -28,7 +28,7 @@ public class MockDownloadServlet extends HttpServlet {
 			response.setHeader("Pragma", "public");
 			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 			response.setHeader("Expires", "0");
-			response.setHeader("Content-Disposition", "attachment; filename=\"document.gif\"");
+			response.setHeader("Content-Disposition", "attachment; filename=\"preview_na.gif\"");
 		}
 
 		try {
@@ -36,7 +36,7 @@ public class MockDownloadServlet extends HttpServlet {
 				response.getWriter().write("Document text");
 			else {
 				RequestDispatcher rd = request
-						.getRequestDispatcher("frontend/sc/skins/LogicalDOC/images/preview_na.gif");
+						.getRequestDispatcher("skins/images/preview_na.gif");
 				rd.forward(request, response);
 			}
 		} catch (Exception e) {

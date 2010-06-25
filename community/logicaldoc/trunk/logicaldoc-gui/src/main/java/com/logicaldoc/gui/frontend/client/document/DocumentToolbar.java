@@ -47,8 +47,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		rss.setIcon(ItemFactory.newImgIcon("rss.png").getSrc());
 		rss.setTooltip(I18N.message("rssfeed"));
-		if (!Feature.enabled(9))
-			rss.setTooltip(I18N.message("featuredisabled"));
 		rss.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -58,6 +56,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		pdf.setTooltip(I18N.message("exportpdf"));
 		pdf.setIcon(ItemFactory.newImgIcon("pdf.png").getSrc());
+	
 		if (!Feature.enabled(8))
 			pdf.setTooltip(I18N.message("featuredisabled"));
 		pdf.addClickHandler(new ClickHandler() {
@@ -81,10 +80,21 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 		setHeight(27);
 		addButton(download);
-		if (Feature.enabled(9))
+		if (Feature.enabled(9)) {
 			addButton(rss);
-		if (Feature.enabled(8))
+		}else if(Feature.showDisabled()){
+			addButton(rss);
+			rss.setDisabled(true);
+			rss.setTooltip(I18N.message("featuredisabled"));
+		}
+
+		if (Feature.enabled(8)) {
 			addButton(pdf);
+		}else{
+			addButton(pdf);
+			pdf.setDisabled(true);
+			pdf.setTooltip(I18N.message("featuredisabled"));
+		}
 
 		addSeparator();
 		addButton(add);
