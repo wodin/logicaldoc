@@ -256,7 +256,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true", "_blank", "");
+				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id
+						+ "&open=true", "_blank", "");
 			}
 		});
 

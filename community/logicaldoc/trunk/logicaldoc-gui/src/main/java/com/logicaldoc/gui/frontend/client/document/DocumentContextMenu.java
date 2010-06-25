@@ -46,7 +46,7 @@ public class DocumentContextMenu extends Menu {
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				Window.open("download?sid=" + Session.get().getSid() + "&sid=" + Session.get().getSid() + "&docId="
+				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&sid=" + Session.get().getSid() + "&docId="
 						+ id, "_self", "");
 			}
 		});
@@ -331,7 +331,7 @@ public class DocumentContextMenu extends Menu {
 						record.setAttribute("status", Constants.DOC_CHECKED_OUT);
 						list.refreshRow(list.getRecordIndex(record));
 						Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
-						Window.open("../download?sid=" + Session.get().getSid() + "&docId=" + id, "_blank", "");
+						Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id, "_blank", "");
 					}
 				});
 			}

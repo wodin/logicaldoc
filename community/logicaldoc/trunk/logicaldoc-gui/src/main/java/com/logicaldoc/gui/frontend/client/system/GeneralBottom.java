@@ -81,6 +81,8 @@ public class GeneralBottom extends HLayout {
 		StaticTextItem installationID = ItemFactory.newStaticTextItem("", "installid", Util.getContext().get("id"));
 		installationID.setRequired(true);
 		installationID.setShouldSaveValue(false);
+		installationID.setWrap(false);
+		installationID.setWrapTitle(false);
 
 		systemForm.setItems(productName, version, vendor, address, capAndCity, country);
 

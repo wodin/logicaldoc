@@ -21,6 +21,7 @@ import com.smartgwt.client.widgets.layout.HLayout;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
+@Deprecated
 public class PieLegends extends HLayout {
 
 	private SystemServiceAsync service = (SystemServiceAsync) GWT.create(SystemService.class);
@@ -70,6 +71,8 @@ public class PieLegends extends HLayout {
 		systemForm.setWrapItemTitles(false);
 		systemForm.setMargin(8);
 		systemForm.setNumCols(2);
+
+		systemForm.setBorder("1px solid blue;");
 
 		StaticTextItem[] items = null;
 		if (type == STATS_REPOSITORY)

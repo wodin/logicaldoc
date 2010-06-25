@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -175,8 +176,8 @@ public class DocumentsListPanel extends VLayout {
 					ListGridRecord record = event.getRecord();
 					if ("indexed".equals(record.getAttribute("indexed"))) {
 						String id = list.getSelectedRecord().getAttribute("id");
-						Window.open("download?sid=" + Session.get().getSid() + "&docId=" + id + "&downloadText=true",
-								"_self", "");
+						Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+								+ id + "&downloadText=true", "_self", "");
 					}
 				}
 			}
@@ -204,7 +205,7 @@ public class DocumentsListPanel extends VLayout {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true", "_blank", "");
+				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true", "_blank", "");
 			}
 		});
 

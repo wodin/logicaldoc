@@ -453,7 +453,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				if (doc.getCustomId() != null)
 					document.setCustomId(doc.getCustomId());
 				else
-					document.setCustomId("" + doc.getId());
+					document.setCustomId("");
 
 				GUIFolder folder = FolderServiceImpl.getFolder(sid, doc.getFolder().getId());
 				document.setFolder(folder);

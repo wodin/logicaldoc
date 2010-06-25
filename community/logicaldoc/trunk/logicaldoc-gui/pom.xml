@@ -33,7 +33,7 @@
     <dependency>
       <groupId>com.smartgwt</groupId>
       <artifactId>smartgwt</artifactId>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.smartgwt</groupId>
@@ -167,11 +167,17 @@
                     <include name="**/*.java" />
                   </fileset>
                 </copy>
+                              
                 <zip destfile="target/${project.artifactId}-${project.version}-api.jar" basedir="target/api" />
                 
                 <unzip src="target/${project.artifactId}-${project.version}.war" dest="target/war" />
+                
                 <delete dir="target/war/WEB-INF" />
                 <delete dir="target/war/META-INF" />
+                <copy todir="target/war/frontend/sc/skins/standard/images/blank.gif" file="./war/skin/images/blank.gif" />
+                <copy todir="target/war/setup/sc/skins/standard/images/blank.gif" file="./war/skin/images/blank.gif" />
+                <copy todir="target/war/common/sc/skins/standard/images/blank.gif" file="./war/skin/images/blank.gif" />
+           
                 <zip destfile="target/${project.artifactId}-${project.version}.war" basedir="target/war" />
               </tasks>
             </configuration>

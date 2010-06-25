@@ -76,7 +76,7 @@ public class Clipboard extends HashSet<GUIDocument> {
 		return false;
 	}
 
-	public ListGridRecord[] getRecords() {
+	 public ListGridRecord[] getRecords() {
 		ListGridRecord[] array = new ListGridRecord[size()];
 		int i = 0;
 		for (GUIDocument document : this) {

@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
+import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -85,8 +86,14 @@ public class LoginPanel extends VLayout {
 		logoImage.setWidth("205px");
 
 		// Prepare the form footer that contains copyright and website link
-		HTML footer = new HTML("\u00A9 " + info.getYear() + " " + info.getVendor()
-				+ "  &#160; &#8226; &#160; <a href='" + info.getUrl() + "'>" + info.getUrl() + "</a>");
+		String htmlString = "\u00A9 " + info.getYear() + " " + info.getVendor() + "  &#160; &#8226; &#160; <a href='"
+				+ info.getUrl() + "'>" + info.getUrl() + "</a>";
+		if (info.getMessages().length > 0) {
+			for (GUIMessage message : info.getMessages()) {
+				htmlString += " <br /> <br /> " + "<a href='" + message.getUrl() + "'>" + message.getMessage() + "</a>";
+			}
+		}
+		HTML footer = new HTML(htmlString, false);
 		footer.setStyleName("loginFooter");
 
 		// Prepare the Form and all its fields
