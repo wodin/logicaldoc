@@ -13,6 +13,12 @@ import com.logicaldoc.gui.common.client.beans.GUIInfo;
  */
 public class Feature {
 
+	public static final int SAVED_SEARCHES = 12;
+	public static final int PREVIEW = 51;
+	public static final int WORKFLOW_BASIC = 52;
+	public static final int BOOKMARKS = 53;
+	
+
 	private static Set<String> features = new HashSet<String>();
 
 	static public void init(GUIInfo info) {
