@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
@@ -41,7 +42,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			public void onClick(ClickEvent event) {
 				if (document == null)
 					return;
-				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + document.getId(), "_self", "");
+				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+						+ document.getId(), "_self", "");
 			}
 		});
 
@@ -50,7 +52,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		rss.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Window.open("doc_rss?sid=" + Session.get().getSid() + "&docId=" + document.getId(), "_blank", "");
+				Window.open(GWT.getHostPageBaseURL() + "doc_rss?sid=" + Session.get().getSid() + "&docId="
+						+ document.getId(), "_blank", "");
 			}
 		});
 
@@ -62,8 +65,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		pdf.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Window.open("convertpdf?sid=" + Session.get().getSid() + "&docId=" + document.getId() + "&version="
-						+ document.getVersion(), "_blank", "");
+				Window.open(GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid() + "&docId="
+						+ document.getId() + "&version=" + document.getVersion(), "_blank", "");
 			}
 		});
 

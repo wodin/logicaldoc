@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
@@ -52,8 +53,8 @@ public class HistoryPanel extends FolderDetailTab {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + folder.getId() + "&versionId="
-						+ record.getAttribute("version") + "&open=true", "_blank", "");
+				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+						+ folder.getId() + "&versionId=" + record.getAttribute("version") + "&open=true", "_blank", "");
 			}
 		});
 	}

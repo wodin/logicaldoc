@@ -204,7 +204,8 @@ public class FoldersNavigator extends TreeGrid {
 		}
 		rss.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				Window.open("folder_rss?sid=" + Session.get().getSid() + "&folderId=" + id, "_blank", "");
+				Window.open(GWT.getHostPageBaseURL() + "folder_rss?sid=" + Session.get().getSid() + "&folderId=" + id,
+						"_blank", "");
 			}
 		});
 
@@ -212,7 +213,8 @@ public class FoldersNavigator extends TreeGrid {
 		exportZip.setTitle(I18N.message("exportzip"));
 		exportZip.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				Window.open("zip-export?sid=" + Session.get().getSid() + "&folderId=" + id, "_blank", "");
+				Window.open(GWT.getHostPageBaseURL() + "zip-export?sid=" + Session.get().getSid() + "&folderId=" + id,
+						"_blank", "");
 			}
 		});
 
@@ -236,7 +238,7 @@ public class FoldersNavigator extends TreeGrid {
 			pasteAsAliasItem.setEnabled(false);
 
 		contextMenu.setItems(reload, search, addItem, delete, pasteItem, pasteAsAliasItem, move, exportZip);
-		if(Feature.visible(9))
+		if (Feature.visible(9))
 			contextMenu.addItem(rss);
 		return contextMenu;
 	}
@@ -338,12 +340,14 @@ public class FoldersNavigator extends TreeGrid {
 				TreeNode newNode = new TreeNode(newFolder.getName());
 				newNode.setAttribute("name", newFolder.getName());
 				newNode.setAttribute("id", Long.toString(newFolder.getId()));
-//				newNode.setAttribute(Constants.PERMISSION_ADD, selectedNode
-//						.getAttributeAsBoolean(Constants.PERMISSION_ADD));
-//				newNode.setAttribute(Constants.PERMISSION_DELETE, selectedNode
-//						.getAttributeAsBoolean(Constants.PERMISSION_DELETE));
-//				newNode.setAttribute(Constants.PERMISSION_RENAME, selectedNode
-//						.getAttributeAsBoolean(Constants.PERMISSION_RENAME));
+				// newNode.setAttribute(Constants.PERMISSION_ADD, selectedNode
+				// .getAttributeAsBoolean(Constants.PERMISSION_ADD));
+				// newNode.setAttribute(Constants.PERMISSION_DELETE,
+				// selectedNode
+				// .getAttributeAsBoolean(Constants.PERMISSION_DELETE));
+				// newNode.setAttribute(Constants.PERMISSION_RENAME,
+				// selectedNode
+				// .getAttributeAsBoolean(Constants.PERMISSION_RENAME));
 
 				if (!getTree().isOpen(selectedNode)) {
 					getTree().openFolder(selectedNode);

@@ -14,7 +14,7 @@ import com.rednels.ofcgwt.client.model.elements.PieChart;
 public class StatisticWidget extends ChartWidget {
 	public StatisticWidget(String title, GUIParameter[] parameters) {
 		super();
-		ChartData cd = new ChartData(title, "font-size: 14px; font-family: Verdana; text-align: center;");
+		ChartData cd = new ChartData(title, "font-size:14px; font-family:Verdana; text-align:center;");
 		cd.setBackgroundColour("#ffffff");
 
 		PieChart pie = new PieChart();

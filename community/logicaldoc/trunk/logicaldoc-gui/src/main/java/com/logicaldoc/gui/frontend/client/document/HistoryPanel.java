@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -55,8 +56,9 @@ public class HistoryPanel extends DocumentDetailTab {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				Window.open("download?sid=" + Session.get().getSid() + "&docId=" + document.getId() + "&versionId="
-						+ record.getAttribute("version") + "&open=true", "_blank", "");
+				Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+						+ document.getId() + "&versionId=" + record.getAttribute("version") + "&open=true", "_blank",
+						"");
 			}
 		});
 	}

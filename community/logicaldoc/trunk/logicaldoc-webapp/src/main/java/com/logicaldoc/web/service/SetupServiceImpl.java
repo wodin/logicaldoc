@@ -22,7 +22,6 @@ import com.logicaldoc.gui.setup.client.SetupInfo;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.smartgwt.client.util.SC;
 
 /**
  * Implements the
@@ -54,7 +53,6 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			// database
 			Context.refresh();
 		} catch (Throwable caught) {
-			SC.warn("Server error setup: " + caught.getMessage());
 			log.error(caught.getMessage(), caught);
 			throw new RuntimeException(caught.getMessage(), caught);
 		}

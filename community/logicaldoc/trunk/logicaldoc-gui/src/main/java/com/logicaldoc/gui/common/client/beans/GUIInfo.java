@@ -37,7 +37,7 @@ public class GUIInfo implements Serializable {
 	private String vendorSupport = "support@logicaldoc.com";
 
 	// Optional list of messages to be shown to the user
-	private GUIMessage[] messages;
+	private GUIMessage[] messages = new GUIMessage[0];
 
 	private GUIValuePair[] supportedLanguages = new GUIValuePair[0];
 
