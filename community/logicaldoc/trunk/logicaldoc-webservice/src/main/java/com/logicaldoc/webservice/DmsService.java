@@ -10,6 +10,7 @@ import javax.jws.WebService;
  * @author Matteo Caruso - Logical Objects
  * @since 3.6
  */
+@Deprecated
 @WebService
 public interface DmsService {
 
