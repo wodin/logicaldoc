@@ -18,6 +18,7 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
  * @author Matteo Caruso - Logical Object
  * @since 3.6
  */
+@Deprecated
 public class DmsClient implements DmsService {
 
 	private DmsService client;

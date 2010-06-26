@@ -6,6 +6,7 @@ package com.logicaldoc.webservice;
  * @author Marco Meschieri - Logical Object
  * @since 3.0
  */
+@Deprecated
 public class FolderContent {
 	private Content[] folder = new Content[] {};
 

@@ -60,6 +60,7 @@ import com.logicaldoc.util.TagUtil;
  * @author Matteo Caruso - Logical Objects
  * @since 3.6.0
  */
+@Deprecated
 @WebService(endpointInterface = "com.logicaldoc.webservice.DmsService", serviceName = "DmsService")
 public class DmsServiceImpl implements DmsService {
 
