@@ -79,6 +79,7 @@ public class SetupWizard implements TabChangeListener {
 			String pluginDir = FilenameUtils.separatorsToSystem(workingDir + "/data/plugins/");
 			String importDir = FilenameUtils.separatorsToSystem(workingDir + "/impex/in/");
 			String exportDir = FilenameUtils.separatorsToSystem(workingDir + "/impex/out/");
+			String logDir = FilenameUtils.separatorsToSystem(workingDir + "/logs");
 
 			PropertiesBean pbean = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 			pbean.setProperty("conf.docdir", docDir);
@@ -87,6 +88,7 @@ public class SetupWizard implements TabChangeListener {
 			pbean.setProperty("conf.plugindir", pluginDir);
 			pbean.setProperty("conf.importdir", importDir);
 			pbean.setProperty("conf.exportdir", exportDir);
+			pbean.setProperty("conf.logdir", logDir);
 			pbean.write();
 
 			// Create a unique installation id

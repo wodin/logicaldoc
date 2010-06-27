@@ -125,7 +125,7 @@ public class PieStats extends HLayout {
 		
 		//Fill empty rows
 		for(;i<9;i ++){
-			StaticTextItem item = ItemFactory.newStaticTextItem(" "+i, " ", null);
+			StaticTextItem item = ItemFactory.newStaticTextItem("_"+i, " ", null);
 			item.setShowTitle(false);
 			items[i]=item;
 		}

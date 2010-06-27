@@ -5,7 +5,7 @@
 	threshold="null" debug="false">
 	<appender name="DMS" class="org.apache.log4j.RollingFileAppender">
 		<param name="File"
-			value="${logicaldoc.repository}/logs/dms.log" />
+			value="${conf.logdir}/logs/dms.log" />
 		<param name="MaxFileSize" value="5MB" />
 		<param name="MaxBackupIndex" value="5" />
 		<param name="Append" value="true" />
@@ -18,7 +18,7 @@
 	<appender name="DMS_WEB"
 		class="org.apache.log4j.RollingFileAppender">
 		<param name="File"
-			value="${logicaldoc.repository}/logs/dms.log.html" />
+			value="${conf.logdir}/logs/dms.log.html" />
 		<param name="MaxFileSize" value="5MB" />
 		<param name="MaxBackupIndex" value="5" />
 		<layout class="com.logicaldoc.web.util.HTMLLayout"></layout>
@@ -27,7 +27,7 @@
 	<appender name="IndexOptimizer"
 		class="org.apache.log4j.RollingFileAppender">
 		<param name="File"
-			value="${logicaldoc.repository}/logs/indexoptimizer.log" />
+			value="${conf.logdir}/logs/indexoptimizer.log" />
 		<param name="MaxFileSize" value="5MB" />
 		<param name="MaxBackupIndex" value="5" />
 		<param name="Append" value="true" />
@@ -40,7 +40,7 @@
 	<appender name="IndexOptimizer_WEB"
 		class="org.apache.log4j.RollingFileAppender">
 		<param name="File"
-			value="${logicaldoc.repository}/logs/indexoptimizer.log.html" />
+			value="${conf.logdir}/logs/indexoptimizer.log.html" />
 		<param name="MaxFileSize" value="5MB" />
 		<param name="MaxBackupIndex" value="5" />
 		<layout class="com.logicaldoc.web.util.HTMLLayout"></layout>
@@ -49,7 +49,7 @@
 	<appender name="TagCloudGenerator"
 		class="org.apache.log4j.RollingFileAppender">
 		<param name="File"
-			value="${logicaldoc.repository}/logs/tagcloudgenerator.log" />
+			value="${conf.logdir}/logs/tagcloudgenerator.log" />
 		<param name="MaxFileSize" value="5MB" />
 		<param name="MaxBackupIndex" value="5" />
 		<param name="Append" value="true" />
@@ -62,7 +62,7 @@
 	<appender name="TagCloudGenerator_WEB"
 		class="org.apache.log4j.RollingFileAppender">
 		<param name="File"
-			value="${logicaldoc.repository}/logs/tagcloudgenerator.log.html" />
+			value="${conf.logdir}/logs/tagcloudgenerator.log.html" />
 		<param name="MaxFileSize" value="5MB" />
 		<param name="MaxBackupIndex" value="5" />
 		<layout class="com.logicaldoc.web.util.HTMLLayout"></layout>
@@ -71,7 +71,7 @@
 	<appender name="IndexerTask"
 		class="org.apache.log4j.RollingFileAppender">
 		<param name="File"
-			value="${logicaldoc.repository}/logs/indexertask.log" />
+			value="${conf.logdir}/logs/indexertask.log" />
 		<param name="MaxFileSize" value="5MB" />
 		<param name="MaxBackupIndex" value="5" />
 		<param name="Append" value="true" />
@@ -84,7 +84,7 @@
 	<appender name="IndexerTask_WEB"
 		class="org.apache.log4j.RollingFileAppender">
 		<param name="File"
-			value="${logicaldoc.repository}/logs/indexertask.log.html" />
+			value="${conf.logdir}/logs/indexertask.log.html" />
 		<param name="MaxFileSize" value="5MB" />
 		<param name="MaxBackupIndex" value="5" />
 		<layout class="com.logicaldoc.web.util.HTMLLayout"></layout>

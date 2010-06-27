@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.template;
 
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.smartgwt.client.widgets.Button;
@@ -23,8 +24,13 @@ public class MetadataAndWorkflowMenu extends VLayout {
 		templates.setWidth100();
 		templates.setHeight(25);
 
-		setMembers(templates);
-
+		if (Feature.visible(Feature.TEMPLATE)) {
+			setMembers(templates);
+			if (!Feature.enabled(Feature.TEMPLATE)) {
+				templates.setDisabled(true);
+				templates.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
 		templates.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

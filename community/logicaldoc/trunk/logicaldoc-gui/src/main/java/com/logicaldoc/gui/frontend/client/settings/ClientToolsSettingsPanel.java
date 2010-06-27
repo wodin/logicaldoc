@@ -4,11 +4,13 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
@@ -100,7 +102,17 @@ public class ClientToolsSettingsPanel extends VLayout {
 		webDavForm.setItems(wdUrl, wdEnabled);
 		webDav.setPane(webDavForm);
 
-		tabs.setTabs(webService, webDav);
+		if (Feature.visible(Feature.WEBSERVICE)) {
+			tabs.addTab(webService);
+			if (!Feature.enabled(Feature.WEBSERVICE))
+				webService.setPane(new FeatureDisabled());
+		}
+
+		if (Feature.visible(Feature.WEBDAV)) {
+			tabs.addTab(webDav);
+			if (!Feature.enabled(Feature.WEBDAV))
+				webDav.setPane(new FeatureDisabled());
+		}
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -132,6 +144,8 @@ public class ClientToolsSettingsPanel extends VLayout {
 			}
 		});
 
-		setMembers(tabs, save);
+		addMember(tabs);
+		if (Feature.enabled(Feature.WEBSERVICE) || Feature.enabled(Feature.WEBDAV))
+			addMember(save);
 	}
 }
