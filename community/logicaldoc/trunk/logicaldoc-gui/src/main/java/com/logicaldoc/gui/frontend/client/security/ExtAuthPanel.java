@@ -142,70 +142,76 @@ public class ExtAuthPanel extends VLayout {
 
 		Tab activeDir = new Tab();
 		activeDir.setTitle(I18N.message("activedirectory"));
-		// Checks if the active directory feature is enabled
-		if (!Feature.enabled(11)) {
-			activeDir.setPane(new FeatureDisabled());
-		} else {
-			DynamicForm activeDirForm = new DynamicForm();
-			activeDirForm.setValuesManager(vm);
-			activeDirForm.setTitleOrientation(TitleOrientation.TOP);
-			activeDirForm.setColWidths(100, 100);
 
-			// Implementation
-			RadioGroupItem adImplementation = ItemFactory.newBooleanSelector("adImplementation", "implementation");
-			adImplementation.setName("adimplementation");
-			adImplementation.setValueMap("basic", "md5");
-			adImplementation.setValue(this.adSettings.getImplementation());
+		DynamicForm activeDirForm = new DynamicForm();
+		activeDirForm.setValuesManager(vm);
+		activeDirForm.setTitleOrientation(TitleOrientation.TOP);
+		activeDirForm.setColWidths(100, 100);
 
-			// Enabled
-			RadioGroupItem adEnabled = ItemFactory.newBooleanSelector("adEnabled", "enabled");
-			adEnabled.setName("adEnabled");
-			adEnabled.setValue(this.adSettings.isEnabled() ? "yes" : "no");
+		// Implementation
+		RadioGroupItem adImplementation = ItemFactory.newBooleanSelector("adImplementation", "implementation");
+		adImplementation.setName("adimplementation");
+		adImplementation.setValueMap("basic", "md5");
+		adImplementation.setValue(this.adSettings.getImplementation());
 
-			// Domain
-			TextItem domain = ItemFactory.newTextItem("domain", "domain", this.adSettings.getDomain());
-			domain.setRequired(true);
+		// Enabled
+		RadioGroupItem adEnabled = ItemFactory.newBooleanSelector("adEnabled", "enabled");
+		adEnabled.setName("adEnabled");
+		adEnabled.setValue(this.adSettings.isEnabled() ? "yes" : "no");
 
-			// Host
-			TextItem host = ItemFactory.newTextItem("host", "host", this.adSettings.getHost());
-			host.setRequired(true);
+		// Domain
+		TextItem domain = ItemFactory.newTextItem("domain", "domain", this.adSettings.getDomain());
+		domain.setRequired(true);
 
-			// Port
-			IntegerItem port = ItemFactory.newValidateIntegerItem("port", "port", this.adSettings.getPort(), 1, null);
-			port.setRequired(true);
+		// Host
+		TextItem host = ItemFactory.newTextItem("host", "host", this.adSettings.getHost());
+		host.setRequired(true);
 
-			// Username
-			TextItem adUsername = ItemFactory.newTextItem("adUsername", "username", this.adSettings.getUsername());
-			adUsername.setRequired(true);
+		// Port
+		IntegerItem port = ItemFactory.newValidateIntegerItem("port", "port", this.adSettings.getPort(), 1, null);
+		port.setRequired(true);
 
-			// Password
-			PasswordItem adPassword = new PasswordItem("password", I18N.message("password"));
-			adPassword.setName("adPassword");
-			adPassword.setValue(this.adSettings.getPwd());
+		// Username
+		TextItem adUsername = ItemFactory.newTextItem("adUsername", "username", this.adSettings.getUsername());
+		adUsername.setRequired(true);
 
-			// Users base node
-			TextItem adUsersBaseNode = ItemFactory.newTextItem("adUsersBaseNode", "usersbasenode", this.adSettings
-					.getUsersBaseNode());
-			adUsersBaseNode.setRequired(true);
+		// Password
+		PasswordItem adPassword = new PasswordItem("password", I18N.message("password"));
+		adPassword.setName("adPassword");
+		adPassword.setValue(this.adSettings.getPwd());
 
-			// Groups base node
-			TextItem adGroupsBaseNode = ItemFactory.newTextItem("adGroupsBaseNode", "grpsbasenode", this.adSettings
-					.getGrpsBaseNode());
+		// Users base node
+		TextItem adUsersBaseNode = ItemFactory.newTextItem("adUsersBaseNode", "usersbasenode", this.adSettings
+				.getUsersBaseNode());
+		adUsersBaseNode.setRequired(true);
 
-			// Language
-			SelectItem adLanguage = ItemFactory.newLanguageSelector("language", false);
-			adLanguage.setName("adLanguage");
-			adLanguage.setValue(this.adSettings.getLanguage());
+		// Groups base node
+		TextItem adGroupsBaseNode = ItemFactory.newTextItem("adGroupsBaseNode", "grpsbasenode", this.adSettings
+				.getGrpsBaseNode());
 
-			activeDirForm.setItems(adImplementation, adEnabled, domain, host, port, adUsername, adPassword,
-					adUsersBaseNode, adGroupsBaseNode, adLanguage);
+		// Language
+		SelectItem adLanguage = ItemFactory.newLanguageSelector("language", false);
+		adLanguage.setName("adLanguage");
+		adLanguage.setValue(this.adSettings.getLanguage());
 
-			activeDir.setPane(activeDirForm);
+		activeDirForm.setItems(adImplementation, adEnabled, domain, host, port, adUsername, adPassword,
+				adUsersBaseNode, adGroupsBaseNode, adLanguage);
+
+		if (Feature.visible(Feature.LDAP)) {
+			tabs.addTab(ldap);
+			if (!Feature.enabled(Feature.LDAP))
+				ldap.setPane(new FeatureDisabled());
+			else
+				ldap.setPane(ldapForm);
 		}
 
-		tabs.addTab(ldap);
-		if (Feature.visible(11))
+		if (Feature.visible(Feature.ACTIVEDIR)) {
 			tabs.addTab(activeDir);
+			if (!Feature.enabled(Feature.ACTIVEDIR))
+				activeDir.setPane(new FeatureDisabled());
+			else
+				activeDir.setPane(activeDirForm);
+		}
 
 		IButton save = new IButton();
 		save.setTitle(I18N.message("save"));
@@ -264,6 +270,9 @@ public class ExtAuthPanel extends VLayout {
 			}
 		});
 
-		setMembers(tabs, save);
+		if (Feature.enabled(Feature.LDAP) || Feature.enabled(Feature.ACTIVEDIR))
+			setMembers(tabs, save);
+		else
+			setMembers(tabs);
 	}
 }

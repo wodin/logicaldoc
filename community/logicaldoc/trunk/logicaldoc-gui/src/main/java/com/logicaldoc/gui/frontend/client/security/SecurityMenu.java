@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
@@ -44,7 +45,14 @@ public class SecurityMenu extends VLayout {
 		extAuth.setWidth100();
 		extAuth.setHeight(25);
 
-		setMembers(users, groups, security, extAuth);
+		if (Feature.visible(Feature.EXTERNAL_AUTH)) {
+			setMembers(users, groups, security, extAuth);
+			if (!Feature.enabled(Feature.EXTERNAL_AUTH)) {
+				extAuth.setDisabled(true);
+				extAuth.setTooltip(I18N.message("featuredisabled"));
+			}
+		} else
+			setMembers(users, groups, security);
 
 		users.addClickHandler(new ClickHandler() {
 			@Override

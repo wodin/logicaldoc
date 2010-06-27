@@ -270,7 +270,7 @@
 			<artifactId>logicaldoc-gui</artifactId>
 			<version>${project.version}</version>
 			<classifier>api</classifier>
-            <exclusions>
+			<exclusions>
 				<exclusion>
 					<groupId>gwt</groupId>
 					<artifactId>gwt-user</artifactId>
@@ -417,6 +417,9 @@
 								<unzip src="target/${project.artifactId}-${project.version}.war"
 									dest="target/war" />
 								<delete dir="target/war/WEB-INF/classes/com/logicaldoc/gui" />
+							    <delete>
+                                      <fileset dir="target/war/WEB-INF/lib" includes="smartgwt*" />
+                                </delete>
 								<zip destfile="target/${project.artifactId}-${project.version}.war"
 									basedir="target/war" />
 							</tasks>

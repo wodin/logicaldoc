@@ -36,7 +36,7 @@ public class MockInfoServiceImpl extends RemoteServiceServlet implements InfoSer
 		info.setSupportedLanguages(languages);
 		info.setBundle(getBundle(locale));
 
-		info.setFeatures(new String[] { "Feature_50" });
+		info.setFeatures(new String[] { "Feature_53", "Feature_56" });
 
 		return info;
 	}

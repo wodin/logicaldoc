@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
@@ -121,12 +122,19 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		items.add(coverageItem);
 		items.add(sourceDate);
 		items.add(authorItem);
-		items.add(templateItem);
+		if (Feature.visible(Feature.TEMPLATE)) {
+			items.add(templateItem);
+			if (!Feature.enabled(Feature.TEMPLATE)) {
+				templateItem.setDisabled(true);
+				templateItem.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
 
 		form1.setItems(items.toArray(new FormItem[0]));
 		addMember(form1);
 
-		prepareExtendedAttributes(document.getTemplateId());
+		if (Feature.enabled(Feature.TEMPLATE))
+			prepareExtendedAttributes(document.getTemplateId());
 	}
 
 	/*
@@ -210,15 +218,18 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			document.setRecipient((String) values.get("recipient"));
 			document.setObject((String) values.get("object"));
 			document.setCoverage((String) values.get("coverage"));
-			if (values.get("template") == null || "".equals((String) values.get("template")))
-				document.setTemplateId(null);
-			else
-				document.setTemplateId(Long.parseLong((String) values.get("template")));
-			for (String name : values.keySet()) {
-				if (name.startsWith("_")) {
-					Object val = values.get(name);
-					String nm = name.substring(1).replaceAll("___", " ");
-					document.setValue(nm, val);
+
+			if (Feature.enabled(Feature.TEMPLATE)) {
+				if (values.get("template") == null || "".equals((String) values.get("template")))
+					document.setTemplateId(null);
+				else
+					document.setTemplateId(Long.parseLong((String) values.get("template")));
+				for (String name : values.keySet()) {
+					if (name.startsWith("_")) {
+						Object val = values.get(name);
+						String nm = name.substring(1).replaceAll("___", " ");
+						document.setValue(nm, val);
+					}
 				}
 			}
 		}

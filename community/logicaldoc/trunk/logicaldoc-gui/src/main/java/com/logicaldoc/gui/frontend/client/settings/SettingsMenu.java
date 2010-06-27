@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.settings;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
@@ -41,7 +42,15 @@ public class SettingsMenu extends VLayout {
 		email.setWidth100();
 		email.setHeight(25);
 
-		setMembers(clientTools, email, parameters);
+		if (Feature.visible(Feature.CLIENT_TOOLS)) {
+			addMember(clientTools);
+			if (!Feature.enabled(Feature.CLIENT_TOOLS)) {
+				clientTools.setDisabled(true);
+				clientTools.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+		addMember(email);
+		addMember(parameters);
 
 		clientTools.addClickHandler(new ClickHandler() {
 			@Override
