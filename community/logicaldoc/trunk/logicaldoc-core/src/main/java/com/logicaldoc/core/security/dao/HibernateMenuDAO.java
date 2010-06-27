@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -153,9 +154,8 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				return coll;
 			if (user.isInGroup("admin"))
 				return findByWhere(
-						"_entity.parentId=" + parentId + (type == null ? "" : (" and _entity.type=" + type)), null,
-						null);
-
+						"_entity.parentId=" + parentId + (type == null ? "" : (" and _entity.type=" + type)),
+						" order by _entity.sort, _entity.text ", null);
 			/*
 			 * Search for all those menues that defines its own security
 			 * policies
@@ -214,7 +214,18 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			log.error(e.getMessage(), e);
 		}
 
-		Collections.sort(coll);
+		Collections.sort(coll, new Comparator<Menu>() {
+			@Override
+			public int compare(Menu o1, Menu o2) {
+				Integer sort1 = new Integer(o1.getSort());
+				Integer sort2 = new Integer(o2.getSort());
+				if (sort1.compareTo(sort2) == 0)
+					return -1 * o1.getText().compareTo(o2.getText());
+				else
+					sort1.compareTo(sort2);
+				return 0;
+			}
+		});
 		return coll;
 	}
 
