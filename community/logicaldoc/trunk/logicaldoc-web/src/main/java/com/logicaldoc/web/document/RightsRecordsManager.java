@@ -156,9 +156,18 @@ public class RightsRecordsManager {
 			});
 			MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 			Menu menu = mdao.findById(menuId);
-			if(menu.getSecurityRef()!=null)
-				menu=mdao.findById(menu.getSecurityRef());
-			mdao.initialize(menu);
+			if(menu.getSecurityRef()!=null){
+				Menu ref=mdao.findById(menu.getSecurityRef());
+				mdao.initialize(ref);
+				
+				//copy all policies from the referenced menu
+				for (MenuGroup mg : ref.getMenuGroups()) {
+					menu.addMenuGroup(mg);
+				}
+				menu=ref;
+			}else{
+			   mdao.initialize(menu);
+			}
 			long userId = SessionManagement.getUserId();
 			if (mdao.isPermissionEnabled(Permission.MANAGE_SECURITY, menuId, userId)) {
 				Iterator<Group> iter = groups.iterator();
@@ -243,11 +252,24 @@ public class RightsRecordsManager {
 	 * 
 	 */
 	public void assignGroups() {
-		if (selectedDirectory == null)
+		if (selectedDirectory == null) 
 			return;
+		
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu menu = mdao.findById(selectedDirectory.getMenu().getId());
+		
+		if(menu.getSecurityRef()!=null){
+			Menu ref=mdao.findById(menu.getSecurityRef());
+			mdao.initialize(ref);
+			
+			//copy all policies from the referenced menu
+			for (MenuGroup mg : ref.getMenuGroups()) {
+				menu.addMenuGroup((MenuGroup)mg.clone());
+			}
+		}
+		
 		for (long grp : selectedAvailableGroups) {
+			System.out.println(""+grp);
 			if (menu.getMenuGroup(grp) != null)
 				continue;
 			MenuGroup mg = new MenuGroup(grp);
@@ -255,6 +277,7 @@ public class RightsRecordsManager {
 			menu.getMenuGroups().add(mg);
 		}
 
+		menu.setSecurityRef(null);
 		mdao.store(menu);
 		initRights(menu.getId());
 	}
@@ -268,9 +291,22 @@ public class RightsRecordsManager {
 		if (selectedDirectory == null)
 			return;
 
+		if (selectedDirectory == null) 
+			return;
+		
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Menu menu = mdao.findById(selectedDirectory.getMenu().getId());
-
+		
+		if(menu.getSecurityRef()!=null){
+			Menu ref=mdao.findById(menu.getSecurityRef());
+			mdao.initialize(ref);
+			
+			//copy all policies from the referenced menu
+			for (MenuGroup mg : ref.getMenuGroups()) {
+				menu.addMenuGroup((MenuGroup)mg.clone());
+			}
+		}
+		
 		for (long grp : selectedAllowedGroups) {
 			// Skip the admin group
 			if (grp == Group.GROUPID_ADMIN)
@@ -279,6 +315,7 @@ public class RightsRecordsManager {
 			menu.getMenuGroups().remove(mg);
 		}
 
+		menu.setSecurityRef(null);
 		mdao.store(menu);
 		initRights(menu.getId());
 	}

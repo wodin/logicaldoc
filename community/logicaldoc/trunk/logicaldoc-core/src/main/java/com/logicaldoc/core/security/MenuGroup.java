@@ -112,7 +112,7 @@ public class MenuGroup {
 	}
 
 	@Override
-	public MenuGroup clone() throws CloneNotSupportedException {
+	public MenuGroup clone() {
 		MenuGroup mg = new MenuGroup(groupId);
 		mg.setAddChild(addChild);
 		mg.setDelete(delete);
