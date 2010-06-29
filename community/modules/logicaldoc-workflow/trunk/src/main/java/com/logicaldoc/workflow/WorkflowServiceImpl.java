@@ -74,58 +74,66 @@ public class WorkflowServiceImpl implements WorkflowService {
 	}
 
 	public WorkflowInstance startWorkflow(WorkflowDefinition workflowDefinition, Map<String, Serializable> properties) {
-		WorkflowInstance workflowInstance = null;
-		if (workflowDefinition != null && !workflowDefinition.getDefinitionId().isEmpty()) {
-			log.info("workflowComponent: " + workflowComponent);
-			log.info("workflowDefinition: " + workflowDefinition);
-			log.info("workflowDefinition.getDefinitionId()" + workflowDefinition.getDefinitionId());
-			log.info("properties size: " + properties.size());
+		
+		WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context
+		.getInstance().getBean(WorkflowPersistenceTemplateDAO.class);
+		
+		try {
+			WorkflowInstance workflowInstance = null;
+			if (workflowDefinition != null && !workflowDefinition.getDefinitionId().isEmpty()) {
+				log.info("workflowComponent: " + workflowComponent);
+				log.info("workflowDefinition: " + workflowDefinition);
+				log.info("workflowDefinition.getDefinitionId()" + workflowDefinition.getDefinitionId());
+				log.info("properties size: " + properties.size());
 
-			workflowInstance = workflowComponent.startWorkflow(workflowDefinition.getDefinitionId(), properties);
+				workflowInstance = workflowComponent.startWorkflow(workflowDefinition.getDefinitionId(), properties);
 
-			// Create the workflow history event
-			WorkflowHistoryDAO workflowHistoryDao = (WorkflowHistoryDAO) Context.getInstance().getBean(
-					WorkflowHistoryDAO.class);
-			WorkflowHistory transaction = new WorkflowHistory();
-			WorkflowPersistenceTemplateDAO workflowTemplateDao = (WorkflowPersistenceTemplateDAO) Context.getInstance()
-					.getBean(WorkflowPersistenceTemplateDAO.class);
-
-			WorkflowPersistenceTemplate template = workflowTemplateDao.findByName(workflowInstance.getName());
-
-			transaction.setTemplateId(template.getId());
-			transaction.setTemplateId(template.getId());
-			transaction.setInstanceId(workflowInstance.getId());
-			transaction.setDate(new Date());
-			transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
-			transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_START);
-			transaction.setComment("");
-			transaction.setUser(SessionManagement.getUser());
-
-			workflowHistoryDao.store(transaction);
-
-			// Create a workflow history for each document associated to this
-			// workflow instance
-			Set<Long> docIds = (Set<Long>) workflowInstance.getProperties().get(WorkflowConstants.VAR_DOCUMENTS);
-
-			for (Long docId : docIds) {
 				// Create the workflow history event
-				WorkflowHistory docAppended = new WorkflowHistory();
-				docAppended.setTemplateId(template.getId());
-				docAppended.setInstanceId(workflowInstance.getId());
-				docAppended.setDate(new Date());
-				docAppended.setSessionId(SessionManagement.getCurrentUserSessionId());
-				docAppended.setEvent(WorkflowHistory.EVENT_WORKFLOW_DOCAPPENDED);
-				docAppended.setDocId(docId);
-				docAppended.setComment("");
-				docAppended.setUser(SessionManagement.getUser());
+				WorkflowHistoryDAO workflowHistoryDao = (WorkflowHistoryDAO) Context.getInstance().getBean(
+						WorkflowHistoryDAO.class);
+				WorkflowHistory transaction = new WorkflowHistory();
+				
 
-				workflowHistoryDao.store(docAppended);
+				WorkflowPersistenceTemplate template = workflowTemplateDao.findByName(workflowInstance.getName());
+
+				transaction.setTemplateId(template.getId());
+				transaction.setTemplateId(template.getId());
+				transaction.setInstanceId(workflowInstance.getId());
+				transaction.setDate(new Date());
+				transaction.setSessionId(SessionManagement.getCurrentUserSessionId());
+				transaction.setEvent(WorkflowHistory.EVENT_WORKFLOW_START);
+				transaction.setComment("");
+				transaction.setUser(SessionManagement.getUser());
+
+				workflowHistoryDao.store(transaction);
+
+				// Create a workflow history for each document associated to
+				// this
+				// workflow instance
+				Set<Long> docIds = (Set<Long>) workflowInstance.getProperties().get(WorkflowConstants.VAR_DOCUMENTS);
+
+				for (Long docId : docIds) {
+					// Create the workflow history event
+					WorkflowHistory docAppended = new WorkflowHistory();
+					docAppended.setTemplateId(template.getId());
+					docAppended.setInstanceId(workflowInstance.getId());
+					docAppended.setDate(new Date());
+					docAppended.setSessionId(SessionManagement.getCurrentUserSessionId());
+					docAppended.setEvent(WorkflowHistory.EVENT_WORKFLOW_DOCAPPENDED);
+					docAppended.setDocId(docId);
+					docAppended.setComment("");
+					docAppended.setUser(SessionManagement.getUser());
+
+					workflowHistoryDao.store(docAppended);
+				}
+			} else {
+				Messages.addLocalizedWarn("noselection");
 			}
-		} else {
-			Messages.addLocalizedWarn("noselection");
-		}
 
-		return workflowInstance;
+			return workflowInstance;
+		} finally {
+			workflowTemplateDao.fixConversionField();
+		}
 	}
 
 	@Override

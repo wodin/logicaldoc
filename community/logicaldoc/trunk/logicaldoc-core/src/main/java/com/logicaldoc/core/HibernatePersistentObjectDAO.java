@@ -3,6 +3,7 @@ package com.logicaldoc.core;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -194,6 +195,35 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> e
 		}
 
 		return coll;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public int jdbcUpdate(String statement) {
+		int ret = 0;
+		try {
+			Connection con = null;
+			ResultSet rs = null;
+			Statement st = null;
+			try {
+				con = getSession().connection();
+				st = con.createStatement();
+				log.debug("Execute statement: " + statement);
+				ret = st.executeUpdate(statement);
+			} finally {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+				if (con != null)
+					con.close();
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+
+		return ret;
 	}
 
 	@Override

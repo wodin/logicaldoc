@@ -85,4 +85,11 @@ public interface WorkflowPersistenceTemplateDAO extends PersistentObjectDAO<Work
 	 * @return WorkflowPersistenceTemplate with given name.
 	 */
 	public WorkflowPersistenceTemplate findByName(String name);
+
+	/**
+	 * This method fixes a jBPM bug. Sometimes jBPM doesn't compile the column
+	 * CONVERTER_ of table JBPM_VARIABLEINSTANCE. In particular this happens for
+	 * the property 'ld_document' that is a set of longs.
+	 */
+	public void fixConversionField();
 }
