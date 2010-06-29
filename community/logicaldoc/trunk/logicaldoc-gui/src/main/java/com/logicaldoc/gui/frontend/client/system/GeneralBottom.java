@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.system;
 
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -37,29 +38,29 @@ public class GeneralBottom extends HLayout {
 		systemForm.setColWidths(1, "*");
 
 		StaticTextItem productName = ItemFactory.newStaticTextItem("productName", "", "<b>"
-				+ Util.getContext().get("product_name") + "</b>");
+				+ Session.get().getInfo().getProductName() + "</b>");
 		productName.setShouldSaveValue(false);
 		productName.setWrapTitle(false);
 
 		StaticTextItem version = ItemFactory.newStaticTextItem("version", "", I18N.message("version") + " "
-				+ Util.getContext().get("product_release"));
+				+ Session.get().getInfo().getRelease());
 		version.setShouldSaveValue(false);
 
 		StaticTextItem vendor = ItemFactory.newStaticTextItem("vendor", "", "&copy; "
-				+ Util.getContext().get("product_vendor"));
+				+ Session.get().getInfo().getVendor());
 		vendor.setShouldSaveValue(false);
 
-		StaticTextItem address = ItemFactory.newStaticTextItem("address", "", Util.getContext().get(
-				"product_vendor_address"));
+		StaticTextItem address = ItemFactory.newStaticTextItem("address", "", Session.get().getInfo()
+				.getVendorAddress());
 		address.setShouldSaveValue(false);
 
-		StaticTextItem capAndCity = ItemFactory.newStaticTextItem("capAndCity", "", Util.getContext().get(
-				"product_vendor_cap")
-				+ "  " + Util.getContext().get("product_vendor_city"));
+		StaticTextItem capAndCity = ItemFactory.newStaticTextItem("capAndCity", "", Session.get().getInfo()
+				.getVendorCap()
+				+ "  " + Session.get().getInfo().getVendorCity());
 		capAndCity.setShouldSaveValue(false);
 
-		StaticTextItem country = ItemFactory.newStaticTextItem("country", "", Util.getContext().get(
-				"product_vendor_country"));
+		StaticTextItem country = ItemFactory.newStaticTextItem("country", "", Session.get().getInfo()
+				.getVendorCountry());
 		country.setShouldSaveValue(false);
 
 		DynamicForm supportForm = new DynamicForm();
@@ -72,13 +73,14 @@ public class GeneralBottom extends HLayout {
 
 		LinkItem support = new LinkItem();
 		support.setName(I18N.message("support"));
-		support.setLinkTitle(Util.getContext().get("product_support"));
-		support.setValue("mailto:" + Util.getContext().get("product_support") + "?subject=LogicalDOC Support - UUID("
-				+ Util.getContext().get("id") + ")");
+		support.setLinkTitle(Session.get().getInfo().getVendorSupport());
+		support.setValue("mailto:" + Session.get().getInfo().getVendorSupport() + "?subject="
+				+ Session.get().getInfo().getProductName() + " Support - ID(" + Util.getContext().get("id") + ")");
 		support.setRequired(true);
 		support.setShouldSaveValue(false);
 
-		StaticTextItem installationID = ItemFactory.newStaticTextItem("", "installid", Util.getContext().get("id"));
+		StaticTextItem installationID = ItemFactory.newStaticTextItem("", "installid", Session.get().getInfo()
+				.getInstallationId());
 		installationID.setRequired(true);
 		installationID.setShouldSaveValue(false);
 		installationID.setWrap(false);

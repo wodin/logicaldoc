@@ -36,6 +36,8 @@ public class GUIInfo implements Serializable {
 
 	private String vendorSupport = "support@logicaldoc.com";
 
+	private String installationId;
+
 	// Optional list of messages to be shown to the user
 	private GUIMessage[] messages = new GUIMessage[0];
 
@@ -171,6 +173,14 @@ public class GUIInfo implements Serializable {
 
 	public void setFeatures(String[] features) {
 		this.features = features;
+	}
+
+	public String getInstallationId() {
+		return installationId;
+	}
+
+	public void setInstallationId(String installationId) {
+		this.installationId = installationId;
 	}
 
 }
