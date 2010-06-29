@@ -12,6 +12,7 @@ import java.util.List;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.PluginRegistry;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
 import com.logicaldoc.util.sql.SqlUtil;
@@ -176,7 +177,8 @@ public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistent
 	 *      com.logicaldoc.workflow.editor.WorkflowPersistenceTemplateDAO.WORKFLOW_STAGE)
 	 */
 	public WorkflowPersistenceTemplate load(String name, WORKFLOW_STAGE workflow_stage) {
-		WorkflowPersistenceTemplate pt = findByWhere("_entity.name ='" + SqlUtil.doubleQuotes(name) + "'", null, null).get(0);
+		WorkflowPersistenceTemplate pt = findByWhere("_entity.name ='" + SqlUtil.doubleQuotes(name) + "'", null, null)
+				.get(0);
 		return this.load(pt.getId(), workflow_stage);
 	}
 
@@ -209,5 +211,13 @@ public class HibernateWorkflowPersistenceTemplateDAO extends HibernatePersistent
 		if (template != null && template.getDeleted() == 1)
 			template = null;
 		return template;
+	}
+
+	@Override
+	public void fixConversionField() {
+		WorkflowPersistenceTemplateDAO dao = (WorkflowPersistenceTemplateDAO) Context.getInstance().getBean(
+				WorkflowPersistenceTemplateDAO.class);
+		dao
+				.jdbcUpdate("update JBPM_VARIABLEINSTANCE set CONVERTER_='R' where NAME_='ld_documents' and CONVERTER_ is null");
 	}
 }
