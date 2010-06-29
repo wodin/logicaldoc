@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -18,6 +19,8 @@ import com.logicaldoc.gui.common.client.log.Log;
 public class Session {
 	private static Session instance;
 
+	private GUIInfo info;
+	
 	private GUISession session;
 
 	private GUIFolder currentFolder;
@@ -78,5 +81,13 @@ public class Session {
 		for (FolderObserver listener : folderObservers) {
 			listener.onFolderSelect(folder);
 		}
+	}
+
+	public GUIInfo getInfo() {
+		return info;
+	}
+
+	public void setInfo(GUIInfo info) {
+		this.info = info;
 	}
 }
