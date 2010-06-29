@@ -49,6 +49,12 @@ public class RightsDataServlet extends HttpServlet {
 		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
 		Menu menu = menuDao.findById(folderId);
 		menuDao.initialize(menu);
+		
+		Menu ref=menu;
+		if(menu.getSecurityRef()!=null){
+			ref=menuDao.findById(menu.getSecurityRef());
+		    menuDao.initialize(ref);
+		}
 
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
@@ -60,7 +66,7 @@ public class RightsDataServlet extends HttpServlet {
 			if (group.getType() == Group.TYPE_DEFAULT
 					|| ((group.getType() != Group.TYPE_DEFAULT) && (group.getUsers().isEmpty() || group.getUsers()
 							.iterator().next().getType() == User.TYPE_DEFAULT))) {
-				MenuGroup menuGroup = menu.getMenuGroup(group.getId());
+				MenuGroup menuGroup = ref.getMenuGroup(group.getId());
 				if (menuGroup != null) {
 					writer.print("<right>");
 					writer.print("<entityId>" + group.getId() + "</entityId>");
