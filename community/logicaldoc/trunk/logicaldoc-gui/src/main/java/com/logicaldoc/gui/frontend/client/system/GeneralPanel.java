@@ -17,14 +17,9 @@ public class GeneralPanel extends VLayout {
 
 		PieStats charts = new PieStats();
 
-		// PieLegends legends = new PieLegends();
-		// legends.setShowResizeBar(true);
-
 		GeneralBottom bottom = new GeneralBottom();
-		bottom.setHeight(210);
+		bottom.setHeight(200);
 
 		setMembers(charts, bottom);
-
-		// setMembers(charts, legends, bottom);
 	}
 }
