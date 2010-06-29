@@ -88,4 +88,9 @@ public enum Permission {
 		permissions.add(WORKFLOW);
 		return permissions;
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

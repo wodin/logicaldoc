@@ -994,6 +994,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 					History tr = (History) transaction.clone();
 					tr.setFolderId(menu.getId());
 					menu.setSecurityRef(securityRef);
+					menu.getMenuGroups().clear();
 					store(menu, tr);
 				}
 				applyRithtToTree(menu.getId(), transaction);

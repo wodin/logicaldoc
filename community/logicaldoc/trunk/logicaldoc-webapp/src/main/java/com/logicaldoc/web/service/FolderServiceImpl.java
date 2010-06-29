@@ -93,35 +93,18 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			Set<Permission> permissions = dao.getEnabledPermissions(folderId, session.getUserId());
 			List<String> permissionsList = new ArrayList<String>();
-			if (permissions.contains(Permission.READ))
-				permissionsList.add("read");
-			if (permissions.contains(Permission.WRITE))
-				permissionsList.add(Constants.PERMISSION_WRITE);
-			if (permissions.contains(Permission.ADD_CHILD))
-				permissionsList.add(Constants.PERMISSION_ADD);
-			if (permissions.contains(Permission.MANAGE_SECURITY))
-				permissionsList.add(Constants.PERMISSION_SECURITY);
-			if (permissions.contains(Permission.DELETE))
-				permissionsList.add(Constants.PERMISSION_DELETE);
-			if (permissions.contains(Permission.RENAME))
-				permissionsList.add(Constants.PERMISSION_RENAME);
-			if (permissions.contains(Permission.BULK_IMPORT))
-				permissionsList.add(Constants.PERMISSION_IMPORT);
-			if (permissions.contains(Permission.BULK_EXPORT))
-				permissionsList.add(Constants.PERMISSION_EXPORT);
-			if (permissions.contains(Permission.SIGN))
-				permissionsList.add(Constants.PERMISSION_SIGN);
-			if (permissions.contains(Permission.ARCHIVE))
-				permissionsList.add(Constants.PERMISSION_ARCHIVE);
-			if (permissions.contains(Permission.WORKFLOW))
-				permissionsList.add(Constants.PERMISSION_WORKFLOW);
-			if (permissions.contains(Permission.MANAGE_IMMUTABILITY))
-				permissionsList.add(Constants.PERMISSION_IMMUTABILITY);
+			for (Permission permission : permissions) {
+				permissionsList.add(permission.toString());
+			}
 
 			folder.setPermissions(permissionsList.toArray(new String[permissionsList.size()]));
 
+			Menu ref=menu;
+			if(menu.getSecurityRef()!=null)
+				ref=dao.findById(menu.getSecurityRef());
+			
 			int i = 0;
-			GUIRight[] rights = new GUIRight[menu.getMenuGroups().size()];
+			GUIRight[] rights = new GUIRight[ref.getMenuGroups().size()];
 			for (MenuGroup mg : menu.getMenuGroups()) {
 				GUIRight right = new GUIRight();
 				right.setEntityId(mg.getGroupId());
@@ -300,6 +283,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 		boolean sqlerrors = false;
 		try {
+			folder.setSecurityRef(null);
 			folder.getMenuGroups().clear();
 			mdao.store(folder);
 			sqlerrors = false;
