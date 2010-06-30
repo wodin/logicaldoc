@@ -275,7 +275,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 	}
 
 	@Test
-	public void testFindMenuIdByUserIdIntInteger() {
+	public void testFindIdByUserId() {
 		Collection<Long> ids = dao.findIdByUserId(1, 101, null);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(3, ids.size());
@@ -389,32 +389,32 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		List<Menu> dirs = dao.findChildren(101L, 1L);
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(3, dirs.size());
-		
+
 		dirs = dao.findChildren(101L, 4L);
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(2, dirs.size());
-		
+
 		dirs = dao.findChildren(5L, 4L);
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(1, dirs.size());
 		Assert.assertTrue(dirs.contains(dao.findById(1200L)));
 	}
-	
+
 	@Test
 	public void testApplyRightsToTree() {
 		History transaction = new History();
-		User user=new User();
+		User user = new User();
 		user.setId(4);
 		transaction.setUser(user);
 		transaction.setNotified(0);
-		
-		Menu menu=dao.findById(1041);
-		Assert.assertTrue(null==menu.getSecurityRef());
+
+		Menu menu = dao.findById(1041);
+		Assert.assertTrue(null == menu.getSecurityRef());
 
 		Assert.assertTrue(dao.applyRithtToTree(101, transaction));
-		menu=dao.findById(104);
-		Assert.assertTrue(101==menu.getSecurityRef());
-		menu=dao.findById(1041);
-		Assert.assertTrue(101==menu.getSecurityRef());
+		menu = dao.findById(104);
+		Assert.assertTrue(101 == menu.getSecurityRef());
+		menu = dao.findById(1041);
+		Assert.assertTrue(101 == menu.getSecurityRef());
 	}
 }

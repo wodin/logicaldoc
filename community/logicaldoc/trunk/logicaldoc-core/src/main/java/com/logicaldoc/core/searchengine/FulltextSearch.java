@@ -143,8 +143,6 @@ public class FulltextSearch extends Search {
 			log.info("End of DB search");
 		}
 
-		System.out.println("accessibleIds: " + accessibleIds);
-
 		int maxNumFragmentsRequired = 4;
 		String fragmentSeparator = "&nbsp;...&nbsp;";
 
