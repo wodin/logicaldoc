@@ -37,6 +37,7 @@ import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
 import com.logicaldoc.web.admin.GuiBean;
 import com.logicaldoc.web.i18n.Messages;
+import com.logicaldoc.web.navigation.MenuBarBean;
 import com.logicaldoc.web.navigation.MenuItem;
 import com.logicaldoc.web.navigation.NavigationBean;
 import com.logicaldoc.web.navigation.PageContentBean;
@@ -462,6 +463,12 @@ public class DocumentNavigation extends NavigationBean {
 		form.setParentPathDescr(currMenu.getText());
 
 		navigation.setSelectedPanel(page);
+
+		// It is necessary to visualise the correct breadcrumb
+		MenuBarBean menuBar = ((MenuBarBean) FacesUtil.accessBeanFromFacesContext("menuBar", FacesContext
+				.getCurrentInstance(), log));
+		menuBar.selectItem("m-15", page);
+
 		return null;
 	}
 

@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
@@ -636,8 +637,12 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 
 		transaction.setNotified(0);
 		transaction.setFolderId(folder.getId());
-		transaction.setTitle(folder.getText());
-		transaction.setPath(computePathExtended(folder.getId()));
+		transaction.setTitle(folder.getId() != Menu.MENUID_DOCUMENTS ? folder.getText() : "/");
+		String deletedFolderPathExtended = null;
+		if (StringUtils.isEmpty(transaction.getPath()))
+			transaction.setPath(computePathExtended(folder.getId()));
+		else
+			deletedFolderPathExtended = transaction.getPath();
 		transaction.setComment("");
 
 		historyDAO.store(transaction);
@@ -648,12 +653,15 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 		if (folder.getId() != folder.getParentId() && folder.getId() != Menu.MENUID_DOCUMENTS) {
 			Menu parent = findById(folder.getParentId());
 			// The parent menu can be 'null' when the user wants to delete a
-			// folder with subfolders under it (method 'deleteAll()').
+			// folder with sub-folders under it (method 'deleteAll()').
 			if (parent != null) {
 				History parentHistory = new History();
 				parentHistory.setFolderId(parent.getId());
-				parentHistory.setTitle(parent.getText());
-				parentHistory.setPath(computePathExtended(folder.getId()));
+				parentHistory.setTitle(parent.getId() != Menu.MENUID_DOCUMENTS ? parent.getText() : "/");
+				if (deletedFolderPathExtended != null)
+					parentHistory.setPath(deletedFolderPathExtended);
+				else
+					parentHistory.setPath(computePathExtended(folder.getId()));
 
 				parentHistory.setUser(transaction.getUser());
 				if (transaction.getEvent().equals(History.EVENT_FOLDER_CREATED)
@@ -951,6 +959,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				History deleteHistory = (History) transaction.clone();
 				deleteHistory.setEvent(History.EVENT_FOLDER_DELETED);
 				deleteHistory.setFolderId(menu.getId());
+				deleteHistory.setPath(computePathExtended(menu.getId()));
 				delete(menu.getId(), deleteHistory);
 			} catch (CloneNotSupportedException e) {
 				log.error(e.getMessage(), e);

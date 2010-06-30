@@ -13,7 +13,7 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
-	styleClass="formBorderHighlight">
+	styleClass="formBorderHighlight" style="width: 770px">
 	<h3>
 		<ice:outputText
 			value="#{msgs['history']} - #{historyRecordsManager.selectedFolder.id == 5 ? msgs['menu.documents'] : historyRecordsManager.selectedFolder.text}" />
@@ -24,11 +24,11 @@
 		<ice:form>
 			<ice:panelGroup style="width:97%;">
 				<!-- histories -->
-				<ice:panelGroup>
+				<ice:panelGroup style="overflow-x: scroll;">
 					<ice:dataTable id="histories"
 						value="#{historyRecordsManager.folderHistories}" var="history"
-						cellpadding="0" width="100%" rows="10"
-						columnClasses="dateColumn,dateColumn,titleColumn,titleColumn,titleColumn,dateColumn,numberColumn">
+						cellpadding="0" width="97%" rows="10"
+						columnClasses="dateColumn,dateColumn,titleColumn,titleColumn,titleColumn,titleColumn">
 
 						<!-- author column -->
 						<ice:column>
@@ -93,14 +93,13 @@
 								<ice:outputText value="#{history.comment}" />
 							</ice:panelGroup>
 						</ice:column>
-
 					</ice:dataTable>
-
-					<ice:panelGroup>
-						<ldoc:paginator table="histories"
-							label="#{msgs['paginator.simple']}" />
-						<br />
-					</ice:panelGroup>
+				</ice:panelGroup>
+				<ice:panelGroup>
+					<br />
+					<ldoc:paginator table="histories"
+						label="#{msgs['paginator.simple']}" />
+					<br />
 				</ice:panelGroup>
 			</ice:panelGroup>
 		</ice:form>

@@ -79,7 +79,7 @@ public class DocumentToolbar {
 		command.setTitle(Messages.getMessage("delete"));
 		command.setIcon("actions_delete.png");
 		command.setActionBinding(FacesUtil.createActionMethodBinding("documentsRecordsManager.deleteSelected"));
-		command.setRenderedBinding(FacesUtil.createValueBinding("documentNavigation.selectedDir.writeEnabled"));
+		command.setRenderedBinding(FacesUtil.createValueBinding("documentsRecordsManager.count>0 and documentNavigation.selectedDir.writeEnabled"));
 		command.setConfirmation(Messages.getMessage("msg.question.deletedoc"));
 
 		// Acquire the 'DocumentToolbar' extensions of the core plugin

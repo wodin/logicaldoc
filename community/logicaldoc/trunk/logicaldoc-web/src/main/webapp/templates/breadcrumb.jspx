@@ -15,6 +15,7 @@
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
 
 	<div id="breadcrumb">
+		<!-- Breadcrumb for menu not Documents -->
 		<ice:panelSeries style="display: inline;" var="crumb"
 			value="#{menuBar.breadcrumb}"
 			rendered="#{navigation.selectedPanel.menuId != 5}">
@@ -28,6 +29,8 @@
 				style="padding-right:4px; padding-bottom: 1px; padding-left: 3px;"
 				rendered="#{!(crumb.menuId eq navigation.selectedPanel.menuId)}" />
 		</ice:panelSeries>
+
+		<!-- Breadcrumb for menu Documents -->
 		<ice:panelSeries style="display: inline;" var="folder"
 			value="#{documentNavigation.breadcrumb}"
 			rendered="#{navigation.selectedPanel.menuId == 5}">
