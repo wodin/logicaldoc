@@ -119,7 +119,7 @@ public class ResourceServiceImpl implements ResourceService {
 			}
 		}
 
-		Collection<Document> documents = documentDAO.findByFolder(folderID);
+		Collection<Document> documents = documentDAO.findByFolder(folderID, null);
 		for (Iterator<Document> iterator = documents.iterator(); iterator.hasNext();) {
 			Document document = iterator.next();
 			resourceList.add(marshallDocument(document, null));

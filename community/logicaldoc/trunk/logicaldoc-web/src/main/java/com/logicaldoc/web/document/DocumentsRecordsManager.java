@@ -135,7 +135,7 @@ public class DocumentsRecordsManager extends SortableList {
 		}
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Collection<Long> docIds = docDao.findDocIdByFolder(directoryId);
+		Collection<Long> docIds = docDao.findDocIdByFolder(directoryId, 1000);
 
 		for (Long id : docIds) {
 			DocumentRecord record;
