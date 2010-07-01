@@ -39,7 +39,7 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @param folderId Folder identifier
 	 * @return Collection of all document id in the folder.
 	 */
-	public List<Long> findDocIdByFolder(long folderId);
+	public List<Long> findDocIdByFolder(long folderId, Integer max);
 
 	/**
 	 * Finds all documents inside the given folder.
@@ -47,7 +47,7 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * @param folderId Folder identifier
 	 * @return Collection of all documents in the folder.
 	 */
-	public List<Document> findByFolder(long folderId);
+	public List<Document> findByFolder(long folderId, Integer max);
 
 	/**
 	 * Finds all documents locked by a user.
