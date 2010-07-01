@@ -2,7 +2,6 @@ package com.logicaldoc.core.document;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Locale;
 
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.store.Storer;
@@ -42,8 +41,8 @@ public interface DocumentManager {
 	 * @param transaction entry to log the event, set the user and comment
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	void checkin(long docId, File file, String filename, boolean release, boolean immediateIndexing,
-			History transaction) throws Exception;
+	void checkin(long docId, File file, String filename, boolean release, boolean immediateIndexing, History transaction)
+			throws Exception;
 
 	/**
 	 * Checks out the given document
@@ -170,11 +169,10 @@ public interface DocumentManager {
 	/**
 	 * Reindexes an existing document in the full-text index.
 	 * 
-	 * @param doc The document to be reindexed
-	 * @param originalLocale The original locale of the document
+	 * @param docId The document to be reindexed
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public void reindex(Document doc, Locale originalLocale) throws Exception;
+	public void reindex(long docId) throws Exception;
 
 	/**
 	 * Rename an existing document title/filename.

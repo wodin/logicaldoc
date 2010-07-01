@@ -196,9 +196,7 @@ public class Indexer {
 	 * @param locale - Locale of the document.
 	 */
 	public synchronized void deleteDocument(String docId, Locale locale) {
-		System.out.println("locale: " + locale);
 		Language language = LanguageManager.getInstance().getLanguage(locale);
-		System.out.println("language string: " + language.toString());
 		try {
 			IndexReader reader = IndexReader.open(getIndexDirectory(language), false);
 			reader.deleteDocuments(new Term(LuceneDocument.FIELD_DOC_ID, docId));

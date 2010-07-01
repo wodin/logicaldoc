@@ -8,6 +8,7 @@ import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -127,7 +128,8 @@ public class NewDocWizard {
 					Locale locale = new Locale(inputFile.getLanguage());
 					Parser parser = ParserFactory.getParser(file, inputFile.getFileName(), locale, null);
 					String content = parser.getContent();
-					if ((tags != null) && !tags.trim().equals("")) {
+					tags = parser.getTags();
+					if (StringUtils.isNotEmpty(tags)) {
 						docForm.setTags(tags);
 					} else {
 						AnalyzerManager analyzer = (AnalyzerManager) Context.getInstance().getBean(

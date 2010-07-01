@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.transfer.ZipExport;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.util.Constants;
 
@@ -52,10 +54,13 @@ public class ExportZip extends HttpServlet {
 					exporter.setAllLevel(true);
 				}
 
+				MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+
 				ByteArrayOutputStream bos = exporter.process(Long.parseLong(menuId), userId.longValue());
 				response.setContentType("application/zip");
 				response.setContentLength(bos.size());
-				response.setHeader("Content-Disposition", "attachment; filename=\"ZipExport.zip\"");
+				response.setHeader("Content-Disposition", "attachment; filename=\""
+						+ menuDao.findById(Long.parseLong(menuId)).getText() + ".zip\"");
 
 				// Headers required by MS Internet Explorer
 				response.setHeader("Pragma", "public");

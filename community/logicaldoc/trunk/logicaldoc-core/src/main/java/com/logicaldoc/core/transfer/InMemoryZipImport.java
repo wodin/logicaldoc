@@ -126,6 +126,7 @@ public class InMemoryZipImport extends ZipImport {
 
 				// also extract tags and save on document
 				Parser parser = ParserFactory.getParser(filename);
+				parser.setEncoding(zip.getEncoding());
 				// This reader will be automatically closed by method
 				// parser.readText
 				parser.parse(stream);

@@ -267,11 +267,15 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void reindex(Document doc, Locale originalLocale) throws Exception {
+	public void reindex(long docId) throws Exception {
+		Document doc = documentDAO.findById(docId);
+
 		// If the 'doc' is a shortcut, it must not be re-indexed, because it is
 		// re-indexed when it is analyzed the referenced doc
 		if (doc.getDocRef() != null)
 			return;
+
+		documentDAO.initialize(doc);
 
 		/* get search index entry */
 		Locale locale = doc.getLocale();
@@ -296,17 +300,17 @@ public class DocumentManagerImpl implements DocumentManager {
 		// operation)
 		File file = getDocumentFile(doc);
 
+		indexer.addFile(file, doc, content, locale);
+		doc = documentDAO.findById(doc.getId());
+		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
+		documentDAO.store(doc);
+
 		for (Long shortcutId : shortcutIds) {
 			Document shortcutDoc = documentDAO.findById(shortcutId);
 			indexer.addFile(getDocumentFile(doc), shortcutDoc);
 			shortcutDoc.setIndexed(AbstractDocument.INDEX_INDEXED);
 			documentDAO.store(shortcutDoc);
 		}
-
-		indexer.addFile(file, doc, content, locale);
-		doc = documentDAO.findById(doc.getId());
-		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
-		documentDAO.store(doc);
 	}
 
 	@Override
@@ -337,7 +341,10 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 
 				// Intercept locale changes
-				doc.setLocale(docVO.getLocale());
+				if (!doc.getLocale().equals(docVO.getLocale())) {
+					indexer.deleteDocument(Long.toString(doc.getId()), doc.getLocale());
+					doc.setLocale(docVO.getLocale());
+				}
 
 				// Ensure unique title in folder
 				setUniqueTitle(doc);
