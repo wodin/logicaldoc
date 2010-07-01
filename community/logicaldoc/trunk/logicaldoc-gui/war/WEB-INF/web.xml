@@ -69,9 +69,14 @@
     <servlet-class>com.logicaldoc.gui.frontend.server.MockSearchEngineServiceImpl</servlet-class>
   </servlet>
   
-    <servlet>
+  <servlet>
     <servlet-name>TemplateService</servlet-name>
     <servlet-class>com.logicaldoc.gui.frontend.server.MockTemplateServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>MessageService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.server.MockMessageServiceImpl</servlet-class>
   </servlet>
 
   <servlet>
@@ -259,9 +264,14 @@
     <url-pattern>/frontend/searchengine</url-pattern>
   </servlet-mapping>
   
-    <servlet-mapping>
+  <servlet-mapping>
     <servlet-name>TemplateService</servlet-name>
     <url-pattern>/frontend/template</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>MessageService</servlet-name>
+    <url-pattern>/frontend/message</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

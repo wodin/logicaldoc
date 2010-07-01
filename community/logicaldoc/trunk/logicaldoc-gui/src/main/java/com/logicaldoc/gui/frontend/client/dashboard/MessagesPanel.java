@@ -1,18 +1,23 @@
 package com.logicaldoc.gui.frontend.client.dashboard;
 
-import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.data.MessagesDS;
-import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
-import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
+import com.logicaldoc.gui.frontend.client.services.MessageService;
+import com.logicaldoc.gui.frontend.client.services.MessageServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.HTMLFlow;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -37,22 +42,22 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @since 6.0
  */
 public class MessagesPanel extends VLayout {
+	private MessageServiceAsync service = (MessageServiceAsync) GWT.create(MessageService.class);
+
 	private ListGrid list;
 
 	private Layout listing = new VLayout();
 
 	private Layout detailsContainer = new VLayout();
 
-	final static Canvas SELECT_MESSAGE = new HTMLPanel("&nbsp;" + I18N.message("selectmessage"));
-
-	private Canvas details = SELECT_MESSAGE;
+	private HTMLFlow messageText = new HTMLFlow();
 
 	public MessagesPanel() {
 		setWidth100();
 
 		// Initialize the listing panel as placeholder
 		listing.setAlign(Alignment.CENTER);
-		listing.setHeight("60%");
+		listing.setHeight("75%");
 		listing.setShowResizeBar(true);
 
 		ListGridField id = new ListGridField("id", 50);
@@ -80,7 +85,7 @@ public class MessagesPanel extends VLayout {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
 				if (getFieldName(colNum).equals("subject")) {
-					if (record.getAttributeAsInt("status").intValue()==0) {
+					if (record.getAttributeAsInt("status").intValue() == 0) {
 						return "font-weight:bold;";
 					} else {
 						return super.getCellCSSText(record, rowNum, colNum);
@@ -94,7 +99,7 @@ public class MessagesPanel extends VLayout {
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setAutoFetchData(true);
-		list.setSelectionType(SelectionStyle.SINGLE);
+		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
 		list.setDataSource(MessagesDS.get());
@@ -103,7 +108,9 @@ public class MessagesPanel extends VLayout {
 		listing.addMember(list);
 
 		detailsContainer.setAlign(Alignment.CENTER);
-		detailsContainer.addMember(details);
+		detailsContainer.addMember(messageText);
+
+		messageText.setContents(I18N.message("selectmessage"));
 
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setHeight(20);
@@ -133,43 +140,36 @@ public class MessagesPanel extends VLayout {
 		list.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChanged(SelectionEvent event) {
-				Record record = list.getSelectedRecord();
-				// TODO Implementare l'invocazione a un servizio
+				final Record record = list.getSelectedRecord();
+				if (record != null)
+					service.getMessage(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
+							new AsyncCallback<GUIMessage>() {
 
-				// if (record != null)
-				// service.getUser(Session.get().getSid(),
-				// Long.parseLong(record.getAttributeAsString("id")),
-				// new AsyncCallback<GUIUser>() {
-				//
-				// @Override
-				// public void onFailure(Throwable caught) {
-				// Log.serverError(caught);
-				// }
-				//
-				// @Override
-				// public void onSuccess(GUIUser user) {
-				// showUserDetails(user);
-				// }
-				// });
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(GUIMessage message) {
+									messageText.setContents(message.getMessage());
+									record.setAttribute("status", 1);
+								}
+							});
 			}
 		});
-	}
-
-	private void showMessage(GUIUser user) {
-		// TODO Implementare la visualizzazione del pannello di dettaglio
-		// if (!(details instanceof UserDetailsPanel)) {
-		// detailsContainer.removeMember(details);
-		// details = new UserDetailsPanel(MessagesPanel.this);
-		// detailsContainer.addMember(details);
-		// }
-		// ((UserDetailsPanel) details).setUser(user);
 	}
 
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
 
-		final ListGridRecord record = list.getSelectedRecord();
-		final long id = Long.parseLong(record.getAttributeAsString("id"));
+		ListGridRecord[] selection = list.getSelection();
+		if (selection == null || selection.length == 0)
+			return;
+		final long[] ids = new long[selection.length];
+		for (int i = 0; i < selection.length; i++) {
+			ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+		}
 
 		MenuItem delete = new MenuItem();
 		delete.setTitle(I18N.message("ddelete"));
@@ -179,21 +179,18 @@ public class MessagesPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							// Implementare la cancellazione del messaggio
-							// service.deleteUser(Session.get().getSid(), id,
-							// new AsyncCallback<Void>() {
-							// @Override
-							// public void onFailure(Throwable caught) {
-							// Log.serverError(caught);
-							// }
-							//
-							// @Override
-							// public void onSuccess(Void result) {
-							// list.removeSelectedData();
-							// list.deselectAllRecords();
-							// showUserDetails(null);
-							// }
-							// });
+							service.delete(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									list.removeSelectedData();
+									list.deselectAllRecords();
+								}
+							});
 						}
 					}
 				});
