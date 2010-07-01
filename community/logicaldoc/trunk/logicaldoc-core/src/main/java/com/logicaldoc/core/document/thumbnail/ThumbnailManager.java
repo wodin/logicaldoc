@@ -87,9 +87,13 @@ public class ThumbnailManager {
 			log.error(t.getMessage());
 		}
 
-		File src = documentManager.getDocumentFile(document, fileVersion);
-		File dest = new File(src.getParentFile(), src.getName() + "-thumb.jpg");
-		builder.build(src, document.getFileName(), size, dest, scaleAlgorithm, quality);
+		try {
+			File src = documentManager.getDocumentFile(document, fileVersion);
+			File dest = new File(src.getParentFile(), src.getName() + "-thumb.jpg");
+			builder.build(src, document.getFileName(), size, dest, scaleAlgorithm, quality);
+		} catch (Exception e) {
+			log.warn("Error creating thumbnail for document: " + document.getTitle());
+		}
 	}
 
 	/**

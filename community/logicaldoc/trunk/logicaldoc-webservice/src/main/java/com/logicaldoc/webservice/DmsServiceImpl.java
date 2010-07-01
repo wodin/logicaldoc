@@ -728,6 +728,6 @@ public class DmsServiceImpl implements DmsService {
 			throw new Exception("Document " + id + " not found");
 
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		manager.reindex(doc, doc.getLocale());
+		manager.reindex(id);
 	}
 }

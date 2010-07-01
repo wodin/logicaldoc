@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.core.document.AbstractDocument;
-import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.task.Task;
@@ -58,10 +57,8 @@ public class IndexerTask extends Task {
 			List<Long> ids = documentDao.findIdsByWhere("_entity.indexed = " + AbstractDocument.INDEX_TO_INDEX, null,
 					null);
 			for (Long id : ids) {
-				Document document = documentDao.findById(id);
 				try {
-					documentDao.initialize(document);
-					documentManager.reindex(document, document.getLocale());
+					documentManager.reindex(id);
 					indexed++;
 				} catch (Throwable e) {
 					log.error(e.getMessage(), e);
