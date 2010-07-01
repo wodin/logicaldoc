@@ -313,7 +313,7 @@ public class WorkflowManager {
 		if (this.selectedResourceFolder == null)
 			return records;
 
-		List<Document> documents = this.documentDAO.findByFolder(this.selectedResourceFolder.getMenuId());
+		List<Document> documents = this.documentDAO.findByFolder(this.selectedResourceFolder.getMenuId(), null);
 
 		for (Document document : documents) {
 

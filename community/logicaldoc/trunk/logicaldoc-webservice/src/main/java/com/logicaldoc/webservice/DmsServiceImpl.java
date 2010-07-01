@@ -440,7 +440,7 @@ public class DmsServiceImpl implements DmsService {
 
 		boolean writeEnable = mdao.isReadEnable(folder, user.getId());
 		DocumentDAO docdao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Collection<Document> docs = docdao.findByFolder(folder);
+		Collection<Document> docs = docdao.findByFolder(folder, null);
 		for (Document document : docs) {
 			Content content = new Content();
 			content.setId(document.getId());
