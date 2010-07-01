@@ -160,7 +160,7 @@ values     (15,CURRENT_TIMESTAMP,0,'search.advanced',18,5,'search.png',1,'search
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
-values     (20,CURRENT_TIMESTAMP,0,'menu.bookmarks',4,20,'bookmarks.png',1,'settings/bookmarks',0);
+values     (-80,CURRENT_TIMESTAMP,0,'menu.bookmarks',4,-80,'bookmarks.png',1,'settings/bookmarks',0);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_sort,ld_icon,ld_type,ld_ref,ld_size)
@@ -217,7 +217,7 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_manag
 values     (15,2,1,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
-values     (20,2,0,0,0,0,0,0,0,0,0,0,0);
+values     (-80,2,0,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
 values     (22,2,0,0,0,0,0,0,0,0,0,0,0);
@@ -241,7 +241,7 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_manag
 values     (19,3,0,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
-values     (20,3,0,0,0,0,0,0,0,0,0,0,0);
+values     (-80,3,0,0,0,0,0,0,0,0,0,0,0);
 
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write , ld_addchild, ld_managesecurity, ld_manageimmutability, ld_delete, ld_rename, ld_bulkimport, ld_bulkexport, ld_sign, ld_archive, ld_workflow)
 values     (22,3,0,0,0,0,0,0,0,0,0,0,0);
