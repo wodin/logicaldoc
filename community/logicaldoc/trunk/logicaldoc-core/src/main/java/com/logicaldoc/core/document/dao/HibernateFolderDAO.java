@@ -151,7 +151,7 @@ public class HibernateFolderDAO extends HibernateMenuDAO implements FolderDAO {
 			for (Menu deletableFolder : deletableFolders) {
 				boolean foundDocImmutable = false;
 				boolean foundDocLocked = false;
-				List<Document> docs = documentDAO.findByFolder(deletableFolder.getId());
+				List<Document> docs = documentDAO.findByFolder(deletableFolder.getId(), null);
 
 				for (Document doc : docs) {
 					if (doc.getImmutable() == 1 && !transaction.getUser().isInGroup("admin")) {

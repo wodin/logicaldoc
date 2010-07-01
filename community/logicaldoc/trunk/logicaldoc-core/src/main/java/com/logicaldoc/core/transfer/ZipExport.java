@@ -117,7 +117,7 @@ public class ZipExport {
 	protected void addFolderDocuments(Menu folder) {
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		Collection<Document> docs = ddao.findByFolder(folder.getId());
+		Collection<Document> docs = ddao.findByFolder(folder.getId(), null);
 
 		for (Document document : docs) {
 			File documentFile = manager.getDocumentFile(document);

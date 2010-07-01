@@ -111,24 +111,24 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 	@Test
 	public void testFindDocIdByFolder() {
-		Collection<Long> ids = dao.findDocIdByFolder(103);
+		Collection<Long> ids = dao.findDocIdByFolder(103, null);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(3, ids.size());
 		Assert.assertTrue(ids.contains(new Long(2)));
 
-		ids = dao.findDocIdByFolder(1111);
+		ids = dao.findDocIdByFolder(1111, null);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(0, ids.size());
 	}
 
 	@Test
 	public void testFindByFolder() {
-		Collection<Document> docs = dao.findByFolder(103);
+		Collection<Document> docs = dao.findByFolder(103, null);
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(3, docs.size());
 		Assert.assertTrue(docs.contains(dao.findById(2)));
 
-		docs = dao.findByFolder(1111);
+		docs = dao.findByFolder(1111, null);
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(0, docs.size());
 	}
