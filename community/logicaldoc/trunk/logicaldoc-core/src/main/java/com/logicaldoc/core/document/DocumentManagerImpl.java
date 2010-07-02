@@ -40,7 +40,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	protected static Log log = LogFactory.getLog(DocumentManagerImpl.class);
 
 	private DocumentDAO documentDAO;
-
+	
 	private DocumentTemplateDAO documentTemplateDAO;
 
 	private DocumentListenerManager listenerManager;

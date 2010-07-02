@@ -128,7 +128,7 @@ public class ThumbnailManager {
 				builders.put(extension, (ThumbnailBuilder) builder);
 				log.info("Added new thumbnail builder " + className + " for extension " + extension);
 			} catch (Throwable e) {
-				log.error(e.getMessage());
+				log.error(e.getMessage(), e);
 			}
 		}
 	}

@@ -30,8 +30,7 @@ public class HibernateFolderDAO extends HibernateMenuDAO implements FolderDAO {
 		menu.setIcon("folder.png");
 		menu.setType(Menu.MENUTYPE_DIRECTORY);
 
-
-		if(parent.getSecurityRef()!=null)
+		if (parent.getSecurityRef() != null)
 			menu.setSecurityRef(parent.getSecurityRef());
 		else
 			menu.setSecurityRef(parent.getId());
@@ -52,6 +51,7 @@ public class HibernateFolderDAO extends HibernateMenuDAO implements FolderDAO {
 		while (st.hasMoreTokens()) {
 			String name = st.nextToken();
 			List<Menu> childs = findByText(menu, name, Menu.MENUTYPE_DIRECTORY, true);
+			System.out.println("childs 0" + childs.get(0));
 			Menu dir;
 			if (childs.isEmpty())
 				dir = create(menu, name, transaction);
