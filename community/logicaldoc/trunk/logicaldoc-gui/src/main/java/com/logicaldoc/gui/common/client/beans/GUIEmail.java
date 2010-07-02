@@ -16,7 +16,7 @@ public class GUIEmail implements Serializable {
 
 	private String cc;
 
-	private String object;
+	private String subject;
 
 	private boolean sendAdTicket = false;
 
@@ -42,12 +42,12 @@ public class GUIEmail implements Serializable {
 		this.cc = cc;
 	}
 
-	public String getObject() {
-		return object;
+	public String getSubject() {
+		return subject;
 	}
 
-	public void setObject(String object) {
-		this.object = object;
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
 	public boolean isSendAdTicket() {

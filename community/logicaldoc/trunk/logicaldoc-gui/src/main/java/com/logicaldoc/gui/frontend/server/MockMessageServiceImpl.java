@@ -13,6 +13,8 @@ import com.logicaldoc.gui.frontend.client.services.MessageService;
  */
 public class MockMessageServiceImpl extends RemoteServiceServlet implements MessageService {
 
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void delete(String sid, long[] ids) throws InvalidSessionException {
 		return;
@@ -24,6 +26,7 @@ public class MockMessageServiceImpl extends RemoteServiceServlet implements Mess
 		message.setId(messageId);
 		message.setMessage("Message text " + messageId);
 		// The message must be marked as read in the DB
+		// Send a notification message to the sender if 'Confirmation' is set
 		return message;
 	}
 
