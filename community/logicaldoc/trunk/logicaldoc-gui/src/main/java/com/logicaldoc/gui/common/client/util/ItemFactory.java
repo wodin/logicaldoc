@@ -89,7 +89,7 @@ public class ItemFactory {
 		item.setDefaultValue("en");
 		return item;
 	}
-	
+
 	public static SelectItem newGUILanguageSelector(String name, boolean withEmpty) {
 		SelectItem item = new SelectItem();
 		item.setValueMap(I18N.getSupportedLanguages(withEmpty));
@@ -211,6 +211,18 @@ public class ItemFactory {
 		return selectItemMultipleGrid;
 	}
 
+	public static SelectItem newPrioritySelector(String name, String title) {
+		SelectItem select = new SelectItem(name, title);
+
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put("0", I18N.message("low"));
+		map.put("1", I18N.message("medium"));
+		map.put("2", I18N.message("high"));
+		select.setValueMap(map);
+		select.setValue("0");
+		return select;
+	}
+
 	public static SelectItem newEventsSelector(String name, String title) {
 		SelectItem select = newMultipleSelector(name, title);
 		select.setWidth(300);
@@ -269,7 +281,7 @@ public class ItemFactory {
 		Img img = new Img(Util.imageUrl(name));
 		return img;
 	}
-	
+
 	public static Img newBrandImg(String name) {
 		Img img = new Img(Util.brandUrl(name));
 		return img;

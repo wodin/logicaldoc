@@ -143,6 +143,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>MessageService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.server.MockMessageServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>TagsData</servlet-name>
     <servlet-class>com.logicaldoc.web.data.TagsDataServlet</servlet-class>
   </servlet>
@@ -258,6 +263,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>MessagesData</servlet-name>
+    <servlet-class>com.logicaldoc.gui.common.server.MockMessagesDataServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>Log</servlet-name>
     <servlet-class>com.logicaldoc.web.data.LogDownload</servlet-class>
   </servlet>
@@ -329,6 +339,11 @@
   <servlet-mapping>
     <servlet-name>TemplateService</servlet-name>
     <url-pattern>/frontend/template</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>MessageService</servlet-name>
+    <url-pattern>/frontend/message</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
@@ -409,6 +424,11 @@
   <servlet-mapping>
     <servlet-name>TemplatesData</servlet-name>
     <url-pattern>/data/templates.xml</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>MessagesData</servlet-name>
+    <url-pattern>/data/messages.xml</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

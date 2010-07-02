@@ -17,7 +17,6 @@ import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HTMLFlow;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -117,12 +116,13 @@ public class MessagesPanel extends VLayout {
 		toolStrip.setWidth100();
 		toolStrip.addSpacer(2);
 		ToolStripButton add = new ToolStripButton();
-		add.setTitle(I18N.message("newmessage"));
+		add.setTitle(I18N.message("sendmessage"));
 		toolStrip.addButton(add);
 		add.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// TODO visualizzare un popup per l'invio del messaggio
+				MessageDialog dialog = new MessageDialog();
+				dialog.show();
 			}
 		});
 		toolStrip.addFill();
