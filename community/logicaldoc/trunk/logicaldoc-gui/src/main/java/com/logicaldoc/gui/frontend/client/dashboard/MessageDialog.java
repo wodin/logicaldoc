@@ -12,12 +12,10 @@ import com.logicaldoc.gui.frontend.client.services.MessageService;
 import com.logicaldoc.gui.frontend.client.services.MessageServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
@@ -37,7 +35,7 @@ import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 public class MessageDialog extends Window {
 	private MessageServiceAsync service = (MessageServiceAsync) GWT.create(MessageService.class);
 
-	private ValuesManager vm = new ValuesManager();
+	private DynamicForm form = new DynamicForm();
 
 	public MessageDialog() {
 		super();
@@ -60,14 +58,12 @@ public class MessageDialog extends Window {
 		setPadding(5);
 		setAutoSize(true);
 
-		final DynamicForm form = new DynamicForm();
-		setValuesManager(vm);
 		form.setWidth(280);
 		form.setMargin(5);
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(1);
 
-		TextItem recipient = ItemFactory.newTextItem("recipient", "recipient","");
+		TextItem recipient = ItemFactory.newTextItem("recipient", "recipient", "");
 		recipient.setWidth(250);
 		recipient.setRequired(true);
 
@@ -97,18 +93,17 @@ public class MessageDialog extends Window {
 		sendItem.setTitle(I18N.message("send"));
 		sendItem.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				vm.validate();
 				form.validate();
-				if (!vm.hasErrors()) {
+				if (!form.hasErrors()) {
 					GUIMessage message = new GUIMessage();
-					message.setRecipient(vm.getValueAsString("recipients"));
-					message.setSubject(vm.getValueAsString("subject"));
-					message.setMessage(vm.getValueAsString("message"));
-					if (vm.getValueAsString("validity") != null)
-						message.setValidity(Integer.parseInt(vm.getValueAsString("validity")));
-					
-					message.setPriority(Integer.parseInt(form.getValue("priority").toString()));			
-					
+					message.setRecipient(form.getValueAsString("recipient"));
+					message.setSubject(form.getValueAsString("subject"));
+					message.setMessage(form.getValueAsString("message"));
+					if (form.getValueAsString("validity") != null)
+						message.setValidity(Integer.parseInt(form.getValueAsString("validity")));
+
+					message.setPriority(Integer.parseInt(form.getValue("priority").toString()));
+
 					service.save(Session.get().getSid(), message, new AsyncCallback<Void>() {
 
 						@Override

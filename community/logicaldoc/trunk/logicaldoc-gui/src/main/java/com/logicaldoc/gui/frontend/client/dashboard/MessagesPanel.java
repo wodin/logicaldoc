@@ -84,7 +84,7 @@ public class MessagesPanel extends VLayout {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
 				if (getFieldName(colNum).equals("subject")) {
-					if (record.getAttributeAsInt("status").intValue() == 0) {
+					if ("false".equals(record.getAttributeAsString("read"))) {
 						return "font-weight:bold;";
 					} else {
 						return super.getCellCSSText(record, rowNum, colNum);
@@ -153,7 +153,8 @@ public class MessagesPanel extends VLayout {
 								@Override
 								public void onSuccess(GUIMessage message) {
 									messageText.setContents(message.getMessage());
-									record.setAttribute("status", 1);
+									record.setAttribute("read", "true");
+									list.updateData(record);
 								}
 							});
 			}

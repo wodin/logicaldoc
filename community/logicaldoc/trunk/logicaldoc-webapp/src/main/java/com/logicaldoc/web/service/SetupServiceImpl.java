@@ -21,6 +21,7 @@ import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.gui.setup.client.SetupInfo;
 import com.logicaldoc.gui.setup.client.services.SetupService;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.LoggingConfigurator;
 import com.logicaldoc.util.config.PropertiesBean;
 
 /**
@@ -48,6 +49,15 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			PropertiesBean pbean = new PropertiesBean();
 			pbean.setProperty("id", UUID.randomUUID().toString());
 			pbean.write();
+
+			// Setup the correct logs folder
+			try {
+				LoggingConfigurator lconf = new LoggingConfigurator();
+				lconf.setLogsRoot(pbean.getProperty("conf.logdir"));
+				lconf.write();
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
 
 			// Reload the application context in order to reconnect DAOs to the
 			// database

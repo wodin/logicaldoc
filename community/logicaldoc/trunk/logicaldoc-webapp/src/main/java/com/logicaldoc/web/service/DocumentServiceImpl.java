@@ -837,7 +837,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			mail.setMessageText(email.getMessage());
 			mail.setRead(1);
 			mail.setSentDate(new Date());
-			mail.setSubject(email.getObject());
+			mail.setSubject(email.getSubject());
 			mail.setUserName(user.getUserName());
 
 			if (!email.isSendAdTicket() && email.getDocId() > 0)

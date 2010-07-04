@@ -4,7 +4,6 @@ import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceImageField;
-import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
@@ -24,7 +23,7 @@ public class MessagesDS extends DataSource {
 	}
 
 	private MessagesDS() {
-		setTitleField("name");
+		setTitleField("subject");
 		setRecordXPath("/list/message");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
@@ -34,9 +33,9 @@ public class MessagesDS extends DataSource {
 		DataSourceImageField priority = new DataSourceImageField("priority");
 		DataSourceTextField from = new DataSourceTextField("from");
 		DataSourceDateTimeField sent = new DataSourceDateTimeField("sent");
-		DataSourceIntegerField status = new DataSourceIntegerField("status");
+		DataSourceTextField read = new DataSourceTextField("read");
 
-		setFields(id, subject, priority, from, sent, status);
+		setFields(id, subject, priority, from, sent, read);
 		setClientOnly(true);
 		setDataURL("data/messages.xml?sid=" + Session.get().getSid());
 	}
