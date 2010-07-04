@@ -144,7 +144,7 @@
 
   <servlet>
     <servlet-name>MessageService</servlet-name>
-    <servlet-class>com.logicaldoc.gui.frontend.server.MockMessageServiceImpl</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.MessageServiceImpl</servlet-class>
   </servlet>
 
   <servlet>
@@ -264,7 +264,7 @@
 
   <servlet>
     <servlet-name>MessagesData</servlet-name>
-    <servlet-class>com.logicaldoc.gui.common.server.MockMessagesDataServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.data.MessagesDataServlet</servlet-class>
   </servlet>
 
   <servlet>

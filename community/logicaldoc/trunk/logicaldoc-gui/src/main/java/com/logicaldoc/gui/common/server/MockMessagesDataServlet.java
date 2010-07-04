@@ -12,8 +12,6 @@ public class MockMessagesDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static int progress = 0;
-
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
@@ -41,15 +39,15 @@ public class MockMessagesDataServlet extends HttpServlet {
 			} else {
 				writer.print("<priority>2</priority>");
 			}
-			
+
 			writer.print("<from>Homer Simpson</from>");
 
 			writer.print("<sent>2010-10-26T11:32:23</sent>");
 
 			if (i != 2)
-				writer.print("<status>1</status>");
+				writer.print("<read>true</read>");
 			else
-				writer.print("<status>0</status>");
+				writer.print("<read>false</read>");
 			writer.print("</message>");
 		}
 		writer.write("</list>");
