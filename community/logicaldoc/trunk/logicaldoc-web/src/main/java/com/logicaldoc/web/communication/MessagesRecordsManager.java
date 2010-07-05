@@ -26,9 +26,9 @@ import com.logicaldoc.web.util.FacesUtil;
 
 /**
  * <p>
- * The <code>MessagesRecordsManager</code> class is responsible for
- * constructing the list of <code>SystemMessage</code> beans which will be
- * bound to a ice:dataTable JSF component.
+ * The <code>MessagesRecordsManager</code> class is responsible for constructing
+ * the list of <code>SystemMessage</code> beans which will be bound to a
+ * ice:dataTable JSF component.
  * </p>
  * <p>
  * Large data sets could be handle by adding a ice:dataPaginator. Alternatively
@@ -67,7 +67,7 @@ public class MessagesRecordsManager {
 	 */
 	public String listMessages() {
 		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
-		messages = smdao.findByRecipient(SessionManagement.getUsername(), SystemMessage.TYPE_SYSTEM);
+		messages = smdao.findByRecipient(SessionManagement.getUsername(), SystemMessage.TYPE_SYSTEM, null);
 		smdao.deleteExpiredMessages(SessionManagement.getUsername());
 
 		PageContentBean content = new PageContentBean("messages", "communication/messages");
@@ -195,7 +195,7 @@ public class MessagesRecordsManager {
 
 	public int getToBeReadCount() {
 		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
-		int smcount = smdao.getCount(SessionManagement.getUsername(), SystemMessage.TYPE_SYSTEM);
+		int smcount = smdao.getCount(SessionManagement.getUsername(), SystemMessage.TYPE_SYSTEM, null);
 
 		return smcount;
 	}

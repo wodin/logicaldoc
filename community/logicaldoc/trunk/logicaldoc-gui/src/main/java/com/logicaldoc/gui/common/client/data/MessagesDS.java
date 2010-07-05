@@ -14,15 +14,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class MessagesDS extends DataSource {
 
-	private static MessagesDS instance;
-
-	public static MessagesDS get() {
-		if (instance == null)
-			instance = new MessagesDS();
-		return instance;
-	}
-
-	private MessagesDS() {
+	public MessagesDS() {
 		setTitleField("subject");
 		setRecordXPath("/list/message");
 		DataSourceTextField id = new DataSourceTextField("id");

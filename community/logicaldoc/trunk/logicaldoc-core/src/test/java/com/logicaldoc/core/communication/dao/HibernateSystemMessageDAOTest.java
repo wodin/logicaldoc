@@ -54,13 +54,13 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTestCase {
 
 	@Test
 	public void testFindByRecipient() {
-		Collection<SystemMessage> coll = dao.findByRecipient("sebastian", SystemMessage.TYPE_SYSTEM);
+		Collection<SystemMessage> coll = dao.findByRecipient("sebastian", SystemMessage.TYPE_SYSTEM, null);
 		Assert.assertEquals(2, coll.size());
-		coll = dao.findByRecipient("marco", 1);
+		coll = dao.findByRecipient("marco", 1, null);
 		Assert.assertEquals(2, coll.size());
-		coll = dao.findByRecipient("paperino", 2);
+		coll = dao.findByRecipient("paperino", 2, null);
 		Assert.assertEquals(1, coll.size());
-		coll = dao.findByRecipient("xxxx", SystemMessage.TYPE_SYSTEM);
+		coll = dao.findByRecipient("xxxx", SystemMessage.TYPE_SYSTEM, null);
 		Assert.assertEquals(0, coll.size());
 	}
 
@@ -75,9 +75,9 @@ public class HibernateSystemMessageDAOTest extends AbstractCoreTestCase {
 
 	@Test
 	public void testGetCount() {
-		Assert.assertEquals(2, dao.getCount("sebastian", SystemMessage.TYPE_SYSTEM));
-		Assert.assertEquals(2, dao.getCount("marco", 1));
-		Assert.assertEquals(0, dao.getCount("admin", SystemMessage.TYPE_SYSTEM));
+		Assert.assertEquals(2, dao.getCount("sebastian", SystemMessage.TYPE_SYSTEM, null));
+		Assert.assertEquals(2, dao.getCount("marco", 1, null));
+		Assert.assertEquals(0, dao.getCount("admin", SystemMessage.TYPE_SYSTEM, null));
 	}
 
 	@Test

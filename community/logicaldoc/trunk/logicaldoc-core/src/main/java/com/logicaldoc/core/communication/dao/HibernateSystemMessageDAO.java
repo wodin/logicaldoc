@@ -30,10 +30,13 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	 *      int)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<SystemMessage> findByRecipient(String recipient, int type) {
+	public List<SystemMessage> findByRecipient(String recipient, int type, Integer read) {
 		String query = "select ld_lastmodified, ld_deleted, ld_author, ld_messagetext, ld_subject, ld_sentdate, ld_datescope, ld_prio, ld_confirmation, ld_red, ld_lastnotified, ld_status, ld_trials, ld_type, ld_id"
 				+ " from ld_systemmessage where ld_deleted = 0 and ld_id IN (select ld_messageid from ld_recipient where ld_name = '"
-				+ SqlUtil.doubleQuotes(recipient) + "' and ld_type = " + type + ") order by ld_sentdate desc";
+				+ SqlUtil.doubleQuotes(recipient) + "' and ld_type = " + type + ")";
+		if (read != null)
+			query = query + " and ld_read=" + read;
+		query = query + " order by ld_sentdate desc";
 
 		List<Object> result = (List<Object>) findByJdbcQuery(query, 15, new Object[] {});
 
@@ -67,15 +70,15 @@ public class HibernateSystemMessageDAO extends HibernatePersistentObjectDAO<Syst
 	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#getCount(java.lang.String,
 	 *      int)
 	 */
-	public int getCount(String recipient, int type) {
-		return findByRecipient(recipient, type).size();
+	public int getCount(String recipient, int type, Integer read) {
+		return findByRecipient(recipient, type, read).size();
 	}
 
 	/**
 	 * @see com.logicaldoc.core.communication.dao.SystemMessageDAO#deleteExpiredMessages(java.lang.String)
 	 */
 	public void deleteExpiredMessages(String recipient) {
-		collectGarbage(findByRecipient(recipient, SystemMessage.TYPE_SYSTEM), true);
+		collectGarbage(findByRecipient(recipient, SystemMessage.TYPE_SYSTEM, null), true);
 	}
 
 	/**

@@ -44,7 +44,7 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 
 		String locale = request.getParameter("locale");
 		int max = Integer.parseInt(request.getParameter("max"));
-
+		
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
 
@@ -55,6 +55,8 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 			query.append(" and A.docId=" + request.getParameter("docId"));
 		if (request.getParameter("userId") != null)
 			query.append(" and A.userId=" + request.getParameter("userId"));
+		if (request.getParameter("event") != null)
+			query.append(" and A.event=" + request.getParameter("event"));
 		query.append(" order by A.date asc ");
 
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

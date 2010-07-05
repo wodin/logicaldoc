@@ -57,7 +57,7 @@ public class PropertiesPanel extends FolderDetailTab {
 		pathItem.addChangedHandler(changedHandler);
 		pathItem.setWidth(300);
 
-		if (folder.hasPermission(Constants.PERMISSION_RENAME)) {
+		if (!folder.hasPermission(Constants.PERMISSION_RENAME)) {
 			name.setDisabled(true);
 			description.setDisabled(true);
 		}
