@@ -14,6 +14,10 @@ import com.logicaldoc.authentication.ldap.BasicLDAPContextSource;
 import com.logicaldoc.authentication.ldap.LDAPContextSourceConfig;
 import com.logicaldoc.authentication.ldap.LDAPUserGroupContext;
 import com.logicaldoc.authentication.ldap.UserAttributeMapper;
+import com.logicaldoc.core.communication.SystemMessage;
+import com.logicaldoc.core.communication.dao.SystemMessageDAO;
+import com.logicaldoc.core.document.AbstractDocument;
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.SessionManager;
@@ -52,6 +56,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	@Override
 	public GUISession login(String username, String password, String locale) {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+
 		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
 				AuthenticationChain.class);
 
@@ -88,6 +95,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			guiUser.setUserName(username);
 			guiUser.setExpired(false);
+
+			guiUser
+					.setLockedDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_LOCKED)
+							.size());
+			guiUser.setCheckedOutDocs(documentDao.findByLockUserAndStatus(user.getId(),
+					AbstractDocument.DOC_CHECKED_OUT).size());
+			guiUser.setUnreadMessages(messageDao.getCount(username, SystemMessage.TYPE_SYSTEM, 0));
+
 			session.setSid(AuthenticationChain.getSessionId());
 			session.setUser(guiUser);
 			session.setLoggedIn(true);

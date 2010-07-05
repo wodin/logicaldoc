@@ -46,7 +46,7 @@ public class MessagesDataServlet extends HttpServlet {
 		SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
 		dao.deleteExpiredMessages(session.getUserName());
 
-		List<SystemMessage> records = dao.findByRecipient(session.getUserName(), SystemMessage.TYPE_SYSTEM);
+		List<SystemMessage> records = dao.findByRecipient(session.getUserName(), SystemMessage.TYPE_SYSTEM, null);
 
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
@@ -63,7 +63,7 @@ public class MessagesDataServlet extends HttpServlet {
 			writer.print("<priority>" + record.getPrio() + "</priority>");
 			writer.print("<from><![CDATA[" + record.getAuthor() + "]]></from>");
 			writer.print("<sent>" + df.format(record.getSentDate()) + "</sent>");
-			writer.print("<read>" + (record.getRead()==1) + "</read>");
+			writer.print("<read>" + (record.getRead() == 1) + "</read>");
 			writer.print("</message>");
 		}
 

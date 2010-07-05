@@ -30,6 +30,8 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 
 	private HTML checkoutCount = new HTML("0");
 
+	private HTML messagesCount = new HTML("0");
+
 	private FooterIcons() {
 		Img clipboardImage = ItemFactory.newImgIcon("paste.gif");
 		clipboardImage.setHeight("16px");
@@ -62,9 +64,20 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		});
 		checkoutImage.setCursor(Cursor.HAND);
 
+		Img messageImage = ItemFactory.newImgIcon("mail.png");
+		messageImage.setHeight("16px");
+		messageImage.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				MainPanel.get().selectDashboardTab();
+			}
+		});
+		checkoutImage.setCursor(Cursor.HAND);
+
 		clipboardSize.setWidth("20px");
 		lockedCount.setWidth("20px");
 		checkoutCount.setWidth("20px");
+		messagesCount.setWidth("20px");
 
 		addMember(clipboardImage);
 		addMember(clipboardSize);
@@ -72,6 +85,8 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		addMember(lockedCount);
 		addMember(checkoutImage);
 		addMember(checkoutCount);
+		addMember(messageImage);
+		addMember(messagesCount);
 
 		Clipboard.getInstance().addObserver(this);
 		Session.get().getUser().addObserver(this);
@@ -98,5 +113,6 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 	public void onUserChanged(GUIUser user) {
 		checkoutCount.setText(Integer.toString(user.getCheckedOutDocs()));
 		lockedCount.setText(Integer.toString(user.getLockedDocs()));
+		messagesCount.setText(Integer.toString(user.getUnreadMessages()));
 	}
 }

@@ -24,6 +24,8 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
+import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
+import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.Layout;
@@ -58,6 +60,76 @@ public class MessagesPanel extends VLayout {
 		listing.setAlign(Alignment.CENTER);
 		listing.setHeight("75%");
 		listing.setShowResizeBar(true);
+
+		initListGrid();
+
+		ToolStrip toolStrip = new ToolStrip();
+		toolStrip.setHeight(20);
+		toolStrip.setWidth100();
+		toolStrip.addSpacer(2);
+		ToolStripButton add = new ToolStripButton();
+		add.setTitle(I18N.message("sendmessage"));
+		toolStrip.addButton(add);
+		add.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				MessageDialog dialog = new MessageDialog();
+				dialog.show();
+			}
+		});
+		ToolStripButton refresh = new ToolStripButton();
+		refresh.setTitle(I18N.message("refresh"));
+		toolStrip.addButton(refresh);
+		refresh.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				initListGrid();
+			}
+		});
+		toolStrip.addFill();
+
+		setMembers(toolStrip, listing, detailsContainer);
+
+		detailsContainer.setAlign(Alignment.CENTER);
+		detailsContainer.addMember(messageText);
+
+		list.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				showContextMenu();
+				event.cancel();
+			}
+		});
+
+		list.addSelectionChangedHandler(new SelectionChangedHandler() {
+			@Override
+			public void onSelectionChanged(SelectionEvent event) {
+				final Record record = list.getSelectedRecord();
+				if (record != null)
+					service.getMessage(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
+							new AsyncCallback<GUIMessage>() {
+
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(GUIMessage message) {
+									messageText.setContents(message.getMessage());
+									record.setAttribute("read", "true");
+									list.updateData(record);
+								}
+							});
+			}
+		});
+	}
+
+	private void initListGrid() {
+		if (list != null) {
+			listing.removeMember(list);
+			list.destroy();
+		}
 
 		ListGridField id = new ListGridField("id", 50);
 		id.setHidden(true);
@@ -101,64 +173,27 @@ public class MessagesPanel extends VLayout {
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
-		list.setDataSource(MessagesDS.get());
+		list.setDataSource(new MessagesDS());
 		list.setFields(id, priority, username, from, sent);
 
 		listing.addMember(list);
-
-		detailsContainer.setAlign(Alignment.CENTER);
-		detailsContainer.addMember(messageText);
-
 		messageText.setContents(I18N.message("selectmessage"));
 
-		ToolStrip toolStrip = new ToolStrip();
-		toolStrip.setHeight(20);
-		toolStrip.setWidth100();
-		toolStrip.addSpacer(2);
-		ToolStripButton add = new ToolStripButton();
-		add.setTitle(I18N.message("sendmessage"));
-		toolStrip.addButton(add);
-		add.addClickHandler(new ClickHandler() {
+		// Count the total unread messages
+		list.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
-				MessageDialog dialog = new MessageDialog();
-				dialog.show();
-			}
-		});
-		toolStrip.addFill();
+			public void onDataArrived(DataArrivedEvent event) {
+				Record[] records = list.getRecordList().toArray();
+				int unread = 0;
+				for (Record record : records) {
+					if ("false".equals(record.getAttributeAsString("read")))
+						unread++;
+				}
 
-		setMembers(toolStrip, listing, detailsContainer);
-
-		list.addCellContextClickHandler(new CellContextClickHandler() {
-			@Override
-			public void onCellContextClick(CellContextClickEvent event) {
-				showContextMenu();
-				event.cancel();
+				Session.get().getUser().setUnreadMessages(unread);
 			}
 		});
 
-		list.addSelectionChangedHandler(new SelectionChangedHandler() {
-			@Override
-			public void onSelectionChanged(SelectionEvent event) {
-				final Record record = list.getSelectedRecord();
-				if (record != null)
-					service.getMessage(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
-							new AsyncCallback<GUIMessage>() {
-
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
-
-								@Override
-								public void onSuccess(GUIMessage message) {
-									messageText.setContents(message.getMessage());
-									record.setAttribute("read", "true");
-									list.updateData(record);
-								}
-							});
-			}
-		});
 	}
 
 	private void showContextMenu() {

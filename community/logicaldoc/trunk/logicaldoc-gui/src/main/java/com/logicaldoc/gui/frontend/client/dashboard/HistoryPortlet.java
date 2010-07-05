@@ -34,7 +34,7 @@ import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.layout.Portlet;
 
 /**
- * Portlet specialized in listing the
+ * Portlet specialized in listing histoty records
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0

@@ -54,6 +54,8 @@ public class GUIUser implements Serializable {
 
 	private int lockedDocs = 0;
 
+	private int unreadMessages = 0;
+
 	private int tasks = 0;
 
 	private int messages = 0;
@@ -62,6 +64,7 @@ public class GUIUser implements Serializable {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+		notifyObservers();
 	}
 
 	public String getUserName() {
@@ -263,8 +266,8 @@ public class GUIUser implements Serializable {
 	}
 
 	public void setLockedDocs(int lockedDocs) {
-		notifyObservers();
 		this.lockedDocs = lockedDocs;
+		notifyObservers();
 	}
 
 	public int getTasks() {
@@ -272,8 +275,8 @@ public class GUIUser implements Serializable {
 	}
 
 	public void setTasks(int tasks) {
-		notifyObservers();
 		this.tasks = tasks;
+		notifyObservers();
 	}
 
 	public int getMessages() {
@@ -290,8 +293,17 @@ public class GUIUser implements Serializable {
 			listener.onUserChanged(this);
 		}
 	}
-	
-	public void addObserver(UserObserver observer){
+
+	public void addObserver(UserObserver observer) {
 		observers.add(observer);
+	}
+
+	public int getUnreadMessages() {
+		return unreadMessages;
+	}
+
+	public void setUnreadMessages(int unreadMessages) {
+		this.unreadMessages = unreadMessages;
+		notifyObservers();
 	}
 }

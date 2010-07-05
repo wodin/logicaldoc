@@ -19,19 +19,21 @@ public interface SystemMessageDAO extends PersistentObjectDAO<SystemMessage> {
 	 * 
 	 * @param recipient The recipient name
 	 * @param type The message type
+	 * @param read Optional flag
 	 * @return The messages list
 	 */
-	public List<SystemMessage> findByRecipient(String recipient, int type);
+	public List<SystemMessage> findByRecipient(String recipient, int type, Integer read);
 
 	/**
 	 * This methods gets the number of messages for the specified recipient and
-	 * type
+	 * type, and optionally a specified read flag
 	 * 
 	 * @param recipient The recipient name
 	 * @param type The message type
+	 * @param read Optional flag
 	 * @return The number of messages
 	 */
-	public int getCount(String recipient, int type);
+	public int getCount(String recipient, int type, Integer read);
 
 	/**
 	 * Removes all system expired messages for the specified recipient
