@@ -111,16 +111,16 @@ public class UserGroupDAO {
 		sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
 		List<LdapUser> users = new LinkedList<LdapUser>();
 
-		ArrayList<String> groupBases = this.ldapUserGroupContext.getUserBase();
+		ArrayList<String> userBases = this.ldapUserGroupContext.getUserBase();
 
-		for (String groupDN : groupBases) {
-			List<LdapUser> groupList = this.ldapTemplate.search(groupDN, "objectClass="
+		for (String userDN : userBases) {
+			List<LdapUser> groupList = this.ldapTemplate.search(userDN, "objectClass="
 					+ ldapUserGroupContext.getUserClass(), sc, this.userMapper);
 
 			// postprocessing user to retrieve users dn
 			for (LdapUser _ldapUser : groupList)
 				_ldapUser.dn = new TrimmedDistinguishedName(ldapUserGroupContext.getUserIdentiferAttribute() + "="
-						+ _ldapUser.rdn + "," + groupDN);
+						+ _ldapUser.rdn + "," + userDN);
 
 			users.addAll(groupList);
 

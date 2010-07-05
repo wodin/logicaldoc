@@ -21,7 +21,7 @@ public class LdapBean {
 
 	private LDAPUserGroupContext userGroupContext;
 
-	private BasicLDAPContextSource contextSource;
+	protected BasicLDAPContextSource contextSource;
 
 	private UserAttributeMapper userAttributeMapper;
 	

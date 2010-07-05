@@ -32,6 +32,7 @@ public class BasicLDAPContextSource extends LdapContextSource {
 		setUserName(config.getUserName());
 		setPassword(config.getPassword());
 		setBase(config.getBase());
+	    
 	}
 
 	public void setUserGroupContext(LDAPUserGroupContext userGroupContext) {
@@ -58,9 +59,7 @@ public class BasicLDAPContextSource extends LdapContextSource {
 			return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.springframework.ldap.support.AbstractContextSource#setupAuthenticatedEnvironment(java.util.Hashtable)
 	 */
 	@SuppressWarnings("unchecked")
@@ -92,14 +91,6 @@ public class BasicLDAPContextSource extends LdapContextSource {
 
 	public String getCurrentDN() {
 		return currentDN;
-	}
-
-	public String getUserName() {
-		return super.userName;
-	}
-
-	public String getPassword() {
-		return super.password;
 	}
 
 	public String getUserAuthenticationPattern() {
