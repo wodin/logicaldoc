@@ -10,7 +10,8 @@ public class IconSelector {
 	/** returns path to menu icon by parsing the provided file extension */
 	public static String selectIcon(String ext) {
 		String icon = "";
-		ext = ext.toLowerCase();
+		if (ext != null)
+			ext = ext.toLowerCase();
 
 		if (ext == null || ext.equalsIgnoreCase(""))
 			icon = "generic.png";
