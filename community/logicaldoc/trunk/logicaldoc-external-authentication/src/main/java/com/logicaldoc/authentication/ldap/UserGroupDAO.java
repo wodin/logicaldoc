@@ -64,8 +64,6 @@ public class UserGroupDAO {
 
 			if (userList.isEmpty() == false) {
 				LdapUser ldapUser = userList.get(0);
-				ldapUser.dn = new TrimmedDistinguishedName(ldapUserGroupContext.getUserIdentiferAttribute() + "="
-						+ ldapUser.rdn + "," + groupDN);
 				return ldapUser;
 			}
 		}
@@ -75,6 +73,7 @@ public class UserGroupDAO {
 
 	/**
 	 * Returning all users being found on userBase List
+	 * 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -89,17 +88,12 @@ public class UserGroupDAO {
 		for (String groupDN : groupBases) {
 			List<LdapGroup> groupList = this.ldapTemplate.search(groupDN, "objectClass="
 					+ this.ldapUserGroupContext.getGroupClass(), sc, this.groupMapper);
-
-			for (LdapGroup _ldapGroup : groupList) {
-				_ldapGroup.dn = new TrimmedDistinguishedName(this.ldapUserGroupContext.getGroupIdentiferAttribute()
-						+ "=" + _ldapGroup.name + "," + groupDN);
-			}
-
 			groups.addAll(groupList);
 		}
 
 		return groups;
 	}
+
 	/**
 	 * Returning all users being found on groupBase List
 	 * 
@@ -114,15 +108,9 @@ public class UserGroupDAO {
 		ArrayList<String> userBases = this.ldapUserGroupContext.getUserBase();
 
 		for (String userDN : userBases) {
-			List<LdapUser> groupList = this.ldapTemplate.search(userDN, "objectClass="
+			List<LdapUser> userList = this.ldapTemplate.search(userDN, "objectClass="
 					+ ldapUserGroupContext.getUserClass(), sc, this.userMapper);
-
-			// postprocessing user to retrieve users dn
-			for (LdapUser _ldapUser : groupList)
-				_ldapUser.dn = new TrimmedDistinguishedName(ldapUserGroupContext.getUserIdentiferAttribute() + "="
-						+ _ldapUser.rdn + "," + userDN);
-
-			users.addAll(groupList);
+			users.addAll(userList);
 
 		}
 

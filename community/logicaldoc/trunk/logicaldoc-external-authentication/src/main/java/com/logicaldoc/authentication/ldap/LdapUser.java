@@ -9,6 +9,6 @@ import com.logicaldoc.core.security.User;
  */
 public class LdapUser {
 	public User user;
-	public TrimmedDistinguishedName dn;
+	public String dn;
 	public String rdn;
 }

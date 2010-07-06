@@ -80,6 +80,8 @@ public class LDAPSynchroniser extends Task {
 		for (LdapGroup ldapGroup : groups)
 			ldapGroupMap.put(ldapGroup.dn.toString(), ldapGroup);
 
+		System.out.println("Users: "+userMap.keySet());
+		
 		// we need a pseudoId as we need a preceding numbering
 		// of groups within users (must be unequal to equals method)
 		int pseudoId = 1;
@@ -91,9 +93,14 @@ public class LDAPSynchroniser extends Task {
 				group.setName(ldapGroup.name);
 				User user = (User) userMap.get(ldapUser.toString().toLowerCase());
 
+				System.out.println("search user: "+ldapUser.toString().toLowerCase());
+				
 				if (user == null)
 					continue;
 
+				System.out.println("user: " + user.getUserName());
+
+				
 				Group _group = ldocGroups.get(ldapGroup.name);
 
 				if (_group == null) {
