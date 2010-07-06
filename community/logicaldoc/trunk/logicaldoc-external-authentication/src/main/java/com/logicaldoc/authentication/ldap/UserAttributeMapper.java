@@ -18,8 +18,8 @@ public class UserAttributeMapper implements AttributesMapper {
 
 	private LDAPUserGroupContext ldapUserGroupContext;
 
-	private String defaultLanguage="en";
-		
+	private String defaultLanguage = "en";
+
 	public void setLdapUserGroupContext(LDAPUserGroupContext ldapUserGroupContext) {
 		this.ldapUserGroupContext = ldapUserGroupContext;
 	}
@@ -52,7 +52,7 @@ public class UserAttributeMapper implements AttributesMapper {
 		val = attributes.get("st");
 		if (val != null)
 			user.setState(val.get().toString());
-		
+
 		val = attributes.get("co");
 		if (val != null)
 			user.setCountry(val.get().toString());
@@ -74,10 +74,19 @@ public class UserAttributeMapper implements AttributesMapper {
 		val = attributes.get("homeTelephoneNumber");
 		if (val != null)
 			user.setTelephone2(val.get().toString());
-		
+
 		val = attributes.get("postalCode");
 		if (val != null)
 			user.setPostalcode(val.get().toString());
+
+		val = attributes.get("DN");
+		if (val != null) {
+			ldapUser.dn = val.get().toString().toLowerCase();
+		} else {
+			val = attributes.get("distinguishedName");
+			if (val != null)
+				ldapUser.dn = val.get().toString().toLowerCase();
+		}
 
 		ldapUser.rdn = attributes.get(ldapUserGroupContext.getUserIdentiferAttribute()).get().toString();
 		ldapUser.user = user;

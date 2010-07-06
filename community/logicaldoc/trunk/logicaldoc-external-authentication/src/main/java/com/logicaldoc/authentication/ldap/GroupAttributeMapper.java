@@ -31,6 +31,15 @@ public class GroupAttributeMapper implements AttributesMapper {
 			}
 		}
 
+		Attribute val = attributes.get("DN");
+		if (val != null) {
+			ldapGroup.dn = val.get().toString().toLowerCase();
+		} else {
+			val = attributes.get("distinguishedName");
+			if (val != null)
+				ldapGroup.dn = val.get().toString().toLowerCase();
+		}
+
 		return ldapGroup;
 	}
 

@@ -11,6 +11,6 @@ import java.util.ArrayList;
  */
 public class LdapGroup {
 	public String name;
-	public TrimmedDistinguishedName dn;
+	public String dn;
 	public ArrayList<String> users = new ArrayList<String>();
 }
