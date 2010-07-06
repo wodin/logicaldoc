@@ -28,10 +28,15 @@ public class DashboardPanel extends VLayout {
 
 		Tab messagesTab = new Tab(I18N.message("messages"));
 		messagesTab.setPane(new MessagesPanel());
-		
+
 		tabSet.addTab(userTab);
-		tabSet.addTab(messagesTab);
-		
+
+		if (Feature.visible(Feature.MESSAGES)) {
+			tabSet.addTab(messagesTab);
+			if (!Feature.enabled(Feature.MESSAGES))
+				workflowTab.setPane(new FeatureDisabled());
+		}
+
 		if (Feature.visible(Feature.WORKFLOW_BASIC)) {
 			tabSet.addTab(workflowTab);
 			if (!Feature.enabled(Feature.WORKFLOW_BASIC))

@@ -15,6 +15,7 @@ public class Feature {
 
 	public static final int ACTIVEDIR = 11;
 	public static final int SAVED_SEARCHES = 12;
+	public static final int MESSAGES = 13;
 	public static final int PREVIEW = 51;
 	public static final int WORKFLOW_BASIC = 52;
 	public static final int BOOKMARKS = 53;
