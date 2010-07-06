@@ -1,4 +1,4 @@
-<project name="logicaldoc-i18n" default="po2prop2js" basedir="." xmlns:artifact="urn:maven-artifact-ant">
+<project name="logicaldoc-i18n" default="po2prop" basedir="." xmlns:artifact="urn:maven-artifact-ant">
 	<property file="${user.home}/logicaldoc-dev.properties" />
 	<property file="src/main/resources/i18n/i18n.properties" />
 	<import file="${logicaldoc.devroot}/build/ant/build.xml" />
@@ -16,15 +16,6 @@
 	<target name="purify" depends="init-all">
 		<echo>Purify all bundles</echo>
 		<java classname="com.logicaldoc.i18n.PurifyRB">
-			<classpath>
-				<pathelement location="target/classes" />
-			</classpath>
-		</java>
-	</target>
-
-	<target name="prop2js" depends="init-all">
-		<echo>Produce javascripts</echo>
-		<java classname="com.logicaldoc.i18n.PropertiesToJavascript">
 			<classpath>
 				<pathelement location="target/classes" />
 			</classpath>
@@ -101,8 +92,5 @@
 				</for>
 			</sequential>
 		</for>
-	</target>
-
-	<target name="po2prop2js" depends="po2prop,prop2js">
 	</target>
 </project>
