@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.panels;
 
 import com.google.gwt.user.client.ui.HTML;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -85,8 +86,11 @@ public class FooterIcons extends HLayout implements ClipboardObserver, UserObser
 		addMember(lockedCount);
 		addMember(checkoutImage);
 		addMember(checkoutCount);
-		addMember(messageImage);
-		addMember(messagesCount);
+
+		if (Feature.enabled(Feature.MESSAGES)) {
+			addMember(messageImage);
+			addMember(messagesCount);
+		}
 
 		Clipboard.getInstance().addObserver(this);
 		Session.get().getUser().addObserver(this);
