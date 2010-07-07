@@ -3,6 +3,10 @@ package com.logicaldoc.webdav.web;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavException;
@@ -18,7 +22,6 @@ import com.logicaldoc.webdav.resource.DavResourceFactory;
 import com.logicaldoc.webdav.resource.VersionControlledResourceImpl;
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.resource.service.ResourceService;
-import com.logicaldoc.webdav.resource.service.ResourceServiceImpl;
 import com.logicaldoc.webdav.session.DavSession;
 
 /**
@@ -31,7 +34,7 @@ import com.logicaldoc.webdav.session.DavSession;
 public class ResourceFactoryImpl implements DavResourceFactory {
 
 	protected static Log log = LogFactory.getLog(ResourceFactoryImpl.class);
-	
+
 	private static final Pattern versionRequestPattern = Pattern.compile("/vstore/([0-9].[0-9])/(.*)");
 
 	private final ResourceConfig resourceConfig;
@@ -67,9 +70,12 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 				resourcePath = resourcePath.replaceFirst("/vstore/" + version, "");
 			}
 
+			DavResource resource = getFromCache(session.getObject("id") + ";" + resourcePath);
+			if (resource != null)
+				return resource;
+
 			Resource repositoryResource = resourceService.getResource(resourcePath, session);
 
-			DavResource resource;
 			if (repositoryResource == null) {
 				boolean isCollection = DavMethods.isCreateCollectionRequest(request);
 				resource = createNullResource(locator, session, isCollection);
@@ -80,6 +86,7 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 				resource = new VersionControlledResourceImpl(locator, this, session, resourceConfig, repositoryResource);
 			}
 
+			putInCache(session.getObject("id") + ";" + resourcePath, resource);
 			return resource;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -89,12 +96,45 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 
 	public DavResource createResource(DavResourceLocator locator, DavSession session) throws DavException {
 		try {
-			Resource resource = resourceService.getResource(locator.getResourcePath(), session);
+			DavResource resource = getFromCache(session.getObject("id") + ";"
+					+ locator.getResourcePath());
+			Resource res = resourceService.getResource(locator.getResourcePath(), session);
+			resource = createResource(locator, session, res);
 
-			return createResource(locator, session, resource);
+			putInCache(session.getObject("id") + ";" + locator.getResourcePath(), resource);
+			return resource;
 		} catch (Exception e) {
 			throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR, e);
 		}
+	}
+
+	/**
+	 * Puts an entry in the cache
+	 * 
+	 * @param key The entry ID as <userid>;<path>
+	 * @param resource The entry to be cached
+	 */
+	private void putInCache(String key, DavResource resource) {
+		Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager")).getCache("dav-resources");
+		Element element = new Element(key, resource);
+		cache.put(element);
+	}
+
+	/**
+	 * Retrieves an entry from cache
+	 * 
+	 * @param key The entry ID as <userid>;<path>
+	 * @return The cached entry
+	 */
+	private DavResource getFromCache(String key) {
+		Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager")).getCache("dav-resources");
+		Element element = cache.get(key);
+		DavResource resource = null;
+		if (element != null) {
+			resource = (DavResource) element.getValue();
+			return resource;
+		} else
+			return null;
 	}
 
 	private DavResource createNullResource(DavResourceLocator locator, DavSession session, boolean isCollection)
@@ -105,7 +145,12 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 
 	public DavResource createResource(DavResourceLocator locator, DavSession session, Resource resource)
 			throws DavException {
+		DavResource res = getFromCache(session.getObject("id") + ";" + locator.getResourcePath());
+		if (res != null)
+			return res;
 
-		return new VersionControlledResourceImpl(locator, this, session, resourceConfig, resource);
+		res = new VersionControlledResourceImpl(locator, this, session, resourceConfig, resource);
+		putInCache(session.getObject("id") + ";" + locator.getResourcePath(), res);
+		return res;
 	}
 }
