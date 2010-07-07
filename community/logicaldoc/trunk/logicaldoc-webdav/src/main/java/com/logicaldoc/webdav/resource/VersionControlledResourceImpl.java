@@ -1,5 +1,7 @@
 package com.logicaldoc.webdav.resource;
 
+import java.io.Serializable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavException;
@@ -25,8 +27,9 @@ import com.logicaldoc.webdav.session.DavSession;
 import com.logicaldoc.webdav.version.VersionHistoryResourceImpl;
 import com.logicaldoc.webdav.web.ResourceConfig;
 
-public class VersionControlledResourceImpl extends DeltaVResourceImpl implements VersionControlledResource {
+public class VersionControlledResourceImpl extends DeltaVResourceImpl implements VersionControlledResource, Serializable {
 
+	private static final long serialVersionUID = 1L;
 	protected static Log log = LogFactory.getLog(VersionControlledResourceImpl.class);
 
 	public VersionControlledResourceImpl(DavResourceLocator locator, DavResourceFactory factory, DavSession session,

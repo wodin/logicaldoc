@@ -1,6 +1,7 @@
 package com.logicaldoc.webdav.resource;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -49,7 +50,9 @@ import com.logicaldoc.webdav.web.ResourceConfig;
  * @author Sebastian Wenzky
  * 
  */
-public class DavResourceImpl implements DavResource {
+public class DavResourceImpl implements DavResource, Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	protected static Log log = LogFactory.getLog(DavResourceImpl.class);
 
@@ -72,6 +75,8 @@ public class DavResourceImpl implements DavResource {
 	private long modificationTime = System.currentTimeMillis();
 
 	protected ResourceService resourceService;
+
+	private List<DavResource> list = null;
 
 	public DavResourceImpl(DavResourceLocator locator, DavResourceFactory factory, DavSession session,
 			ResourceConfig config, Resource resource) {
@@ -360,9 +365,11 @@ public class DavResourceImpl implements DavResource {
 	/**
 	 * @see DavResource#getMembers()
 	 */
-	@SuppressWarnings("unchecked")
 	public DavResourceIterator getMembers() {
-		ArrayList list = new ArrayList();
+		if (list != null)
+			return new DavResourceIteratorImpl(list);
+
+		list = new ArrayList<DavResource>();
 		if (exists() && isCollection()) {
 			try {
 				String path = locator.getResourcePath() == null ? "/" : locator.getResourcePath() + "/";
