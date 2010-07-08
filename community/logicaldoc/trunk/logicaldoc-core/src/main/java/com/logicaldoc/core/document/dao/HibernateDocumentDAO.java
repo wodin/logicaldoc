@@ -511,14 +511,14 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
-	public List<Document> findByFileNameAndParentFolderId(Long folderId, String fileName, Long excludeId) {
+	public List<Document> findByFileNameAndParentFolderId(Long folderId, String fileName, Long excludeId, Integer max) {
 		String query = "lower(_entity.fileName) like '" + SqlUtil.doubleQuotes(fileName.toLowerCase()) + "'";
 		if (folderId != null) {
 			query += "and _entity.folder.id = " + folderId;
 		}
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
-		return findByWhere(query, null, null);
+		return findByWhere(query, null, max);
 	}
 
 	@Override

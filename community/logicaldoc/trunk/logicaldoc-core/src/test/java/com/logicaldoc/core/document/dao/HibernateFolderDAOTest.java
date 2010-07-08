@@ -110,7 +110,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTestCase {
 
 		dao.move(menuC, menuA, transaction);
 
-		List<Menu> menuList = dao.findChildren(menuA.getId());
+		List<Menu> menuList = dao.findChildren(menuA.getId(), null);
 		Assert.assertTrue(menuList.size() == 1);
 
 		for (Menu menu : menuList) {
@@ -138,11 +138,11 @@ public class HibernateFolderDAOTest extends AbstractCoreTestCase {
 
 		dao.move(menuC, menuA, transaction);
 
-		List<Menu> menuList = dao.findChildren(menuA.getId());
+		List<Menu> menuList = dao.findChildren(menuA.getId(), null);
 		Assert.assertTrue(menuList.size() == 1);
 		Assert.assertTrue(menuList.contains(menuC));
 
-		menuList = dao.findChildren(menuB.getId());
+		menuList = dao.findChildren(menuB.getId(), null);
 		Assert.assertTrue(menuList.size() == 0);
 	}
 
@@ -176,12 +176,12 @@ public class HibernateFolderDAOTest extends AbstractCoreTestCase {
 
 		dao.move(menuC, menuA, transaction);
 
-		List<Menu> menuList = dao.findChildren(menuA.getId());
+		List<Menu> menuList = dao.findChildren(menuA.getId(), null);
 		Assert.assertTrue(menuList.size() == 1);
 
 		Assert.assertTrue(menuList.contains(menuC));
 
-		menuList = dao.findChildren(menuB.getId());
+		menuList = dao.findChildren(menuB.getId(), null);
 		Assert.assertTrue(menuList.size() == 0);
 
 		List<Document> docs = docDao.findByIndexed(0);
@@ -217,20 +217,20 @@ public class HibernateFolderDAOTest extends AbstractCoreTestCase {
 
 		dao.move(menuE, menuD, transaction);
 
-		List<Menu> menuList = dao.findChildren(menuD.getId());
+		List<Menu> menuList = dao.findChildren(menuD.getId(), null);
 		Assert.assertTrue(menuList.size() == 1);
 		Assert.assertTrue(menuList.contains(menuE));
 
-		menuList = dao.findChildren(menuC.getId());
+		menuList = dao.findChildren(menuC.getId(), null);
 		Assert.assertTrue(menuList.size() == 1);
 	}
-	
+
 	@Test
 	public void testIsInPath() throws Exception {
 		Assert.assertTrue(dao.isInPath(100, 103));
 		Assert.assertFalse(dao.isInPath(102, 1202));
 	}
-	
+
 	@Test
 	public void testFind2() {
 		List<Menu> folders = dao.find("menu.admin");

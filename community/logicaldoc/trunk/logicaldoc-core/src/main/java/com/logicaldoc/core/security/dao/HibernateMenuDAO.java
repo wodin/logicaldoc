@@ -231,18 +231,18 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	}
 
 	@Override
-	public List<Menu> findChildren(long parentId) {
+	public List<Menu> findChildren(long parentId, Integer max) {
 		return findByWhere("_entity.parentId = ? and _entity.id!=_entity.parentId", new Object[] { parentId }, null,
-				null);
+				max);
 	}
 
 	@Override
-	public List<Menu> findChildren(long parentId, long userId) {
+	public List<Menu> findChildren(long parentId, long userId, Integer max) {
 		List<Menu> coll = new ArrayList<Menu>();
 		try {
 			User user = userDAO.findById(userId);
 			if (user.isInGroup("admin"))
-				return findChildren(parentId);
+				return findChildren(parentId, max);
 
 			Set<Group> groups = user.getGroups();
 			if (groups.isEmpty())
@@ -289,7 +289,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			}
 			query2.append("))");
 
-			List<Menu> coll2 = (List<Menu>) getHibernateTemplate().find(query2.toString(), new Long[] { parentId });
+			List<Menu> coll2 = (List<Menu>) getHibernateTemplate(max).find(query2.toString(), new Long[] { parentId });
 			for (Menu menu : coll2) {
 				if (!coll.contains(menu))
 					coll.add(menu);
@@ -307,7 +307,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	 */
 	public List<Menu> findByParentId(long parentId) {
 		List<Menu> coll = new ArrayList<Menu>();
-		List<Menu> temp = findChildren(parentId);
+		List<Menu> temp = findChildren(parentId, null);
 		Iterator<Menu> iter = temp.iterator();
 
 		while (iter.hasNext()) {
@@ -997,7 +997,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				securityRef = parent.getSecurityRef();
 
 			// Iterate over all children setting the security reference
-			List<Menu> children = findChildren(id);
+			List<Menu> children = findChildren(id, null);
 			for (Menu menu : children) {
 				if (!securityRef.equals(menu.getSecurityRef())) {
 					History tr = (History) transaction.clone();

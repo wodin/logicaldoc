@@ -349,15 +349,15 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 
 	@Test
 	public void testFindByFileNameAndParentFolderId() {
-		Collection<Document> documents = dao.findByFileNameAndParentFolderId(103L, "pluto", null);
+		Collection<Document> documents = dao.findByFileNameAndParentFolderId(103L, "pluto", null, null);
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(2, documents.size());
 
-		documents = dao.findByFileNameAndParentFolderId(103L, "PLUTO", null);
+		documents = dao.findByFileNameAndParentFolderId(103L, "PLUTO", null, null);
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(2, documents.size());
 
-		documents = dao.findByFileNameAndParentFolderId(103L, "paperino", null);
+		documents = dao.findByFileNameAndParentFolderId(103L, "paperino", null, null);
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(0, documents.size());
 
@@ -370,11 +370,11 @@ public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
 		Assert.assertEquals("pluto", doc.getFileName());
 		Assert.assertEquals(99, doc.getFolder().getId());
 
-		documents = dao.findByFileNameAndParentFolderId(103L, "pluto", null);
+		documents = dao.findByFileNameAndParentFolderId(103L, "pluto", null, null);
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(2, documents.size());
 
-		documents = dao.findByFileNameAndParentFolderId(null, "pluto", null);
+		documents = dao.findByFileNameAndParentFolderId(null, "pluto", null, null);
 		Assert.assertNotNull(documents);
 		Assert.assertEquals(3, documents.size());
 	}
