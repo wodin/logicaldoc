@@ -200,7 +200,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 		menus = dao.findByUserId(4, Menu.MENUID_HOME, Menu.MENUTYPE_DIRECTORY);
 		Assert.assertNotNull(menus);
 		Assert.assertEquals(0, menus.size());
-		
+
 		menus = dao.findByUserId(4, 5, Menu.MENUTYPE_DIRECTORY);
 		Assert.assertNotNull(menus);
 		Assert.assertEquals(1, menus.size());
@@ -386,15 +386,15 @@ public class HibernateMenuDAOTest extends AbstractCoreTestCase {
 
 	@Test
 	public void testFindChildren() {
-		List<Menu> dirs = dao.findChildren(101L, 1L);
+		List<Menu> dirs = dao.findChildren(101L, 1L, null);
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(3, dirs.size());
 
-		dirs = dao.findChildren(101L, 4L);
+		dirs = dao.findChildren(101L, 4L, null);
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(2, dirs.size());
 
-		dirs = dao.findChildren(5L, 4L);
+		dirs = dao.findChildren(5L, 4L, null);
 		Assert.assertNotNull(dirs);
 		Assert.assertEquals(1, dirs.size());
 		Assert.assertTrue(dirs.contains(dao.findById(1200L)));

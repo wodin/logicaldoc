@@ -40,7 +40,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	protected static Log log = LogFactory.getLog(DocumentManagerImpl.class);
 
 	private DocumentDAO documentDAO;
-	
+
 	private DocumentTemplateDAO documentTemplateDAO;
 
 	private DocumentListenerManager listenerManager;
@@ -626,7 +626,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Long excludeId = null;
 		if (doc.getId() > 0)
 			excludeId = doc.getId();
-		while (documentDAO.findByFileNameAndParentFolderId(doc.getFolder().getId(), doc.getFileName(), excludeId)
+		while (documentDAO.findByFileNameAndParentFolderId(doc.getFolder().getId(), doc.getFileName(), excludeId, null)
 				.size() > 0) {
 			doc.setFileName(name + "(" + (counter++) + ")" + ext);
 		}
