@@ -60,7 +60,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		User user = validateSession(sid);
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null);
+		List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null, null);
 		WSDocument[] wsDocs = new WSDocument[docs.size()];
 		for (int i = 0; i < docs.size(); i++) {
 			checkReadEnable(user, docs.get(i).getFolder().getId());
