@@ -79,6 +79,10 @@ public class ResourceServiceImpl implements ResourceService {
 		resource.setSession(session);
 		resource.isFolder(true);
 
+		if (session != null && (Long) session.getObject("id") != null) {
+			resource.setRequestedPerson((Long) session.getObject("id"));
+		}
+
 		return resource;
 	}
 
@@ -98,6 +102,10 @@ public class ResourceServiceImpl implements ResourceService {
 		resource.setAuthor(document.getPublisher());
 		resource.setSession(session);
 
+		if (session != null && (Long) session.getObject("id") != null) {
+			resource.setRequestedPerson((Long) session.getObject("id"));
+		}
+
 		return resource;
 	}
 
@@ -111,18 +119,19 @@ public class ResourceServiceImpl implements ResourceService {
 
 		// Find children visible by the current user
 		MenuDAO menuDAO = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		Collection<Menu> folders = menuDAO.findChildren(folderID, parentResource.getRequestedPerson());
+		Collection<Menu> folders = menuDAO.findChildren(folderID, parentResource.getRequestedPerson(), null);
 		if (folders != null) {
 			for (Iterator<Menu> iterator = folders.iterator(); iterator.hasNext();) {
 				Menu currentMenu = iterator.next();
-				resourceList.add(marshallFolder(currentMenu, parentResource.getRequestedPerson(), null));
+				resourceList.add(marshallFolder(currentMenu, parentResource.getRequestedPerson(), parentResource
+						.getSession()));
 			}
 		}
 
 		Collection<Document> documents = documentDAO.findByFolder(folderID, null);
 		for (Iterator<Document> iterator = documents.iterator(); iterator.hasNext();) {
 			Document document = iterator.next();
-			resourceList.add(marshallDocument(document, null));
+			resourceList.add(marshallDocument(document, parentResource.getSession()));
 		}
 
 		return resourceList;
@@ -131,39 +140,47 @@ public class ResourceServiceImpl implements ResourceService {
 	public Resource getResource(String requestPath, DavSession session) throws DavException {
 		log.debug("Find DAV resource: " + requestPath);
 
-		long userId = (Long) session.getObject("id");
-		if (requestPath == null)
-			requestPath = "/";
+		long userId = 0;
+		String currentStablePath = "";
+		String name = "";
+		try {
+			userId = (Long) session.getObject("id");
+			if (requestPath == null)
+				requestPath = "/";
 
-		requestPath = requestPath.replace("/store", "");
+			requestPath = requestPath.replace("/store", "");
 
-		if (requestPath.length() > 0 && requestPath.substring(0, 1).equals("/"))
-			requestPath = requestPath.substring(1);
+			if (requestPath.length() > 0 && requestPath.substring(0, 1).equals("/"))
+				requestPath = requestPath.substring(1);
 
-		String path = "/" + requestPath;
-		String currentStablePath = path;
-		String name = null;
-		int lastidx = path.lastIndexOf("/");
-		if (lastidx > -1) {
-			name = path.substring(lastidx + 1, path.length());
-			path = path.substring(0, lastidx + 1);
+			String path = "/" + requestPath;
+			currentStablePath = path;
+			name = null;
+			int lastidx = path.lastIndexOf("/");
+			if (lastidx > -1) {
+				name = path.substring(lastidx + 1, path.length());
+				path = path.substring(0, lastidx + 1);
+			}
+
+			Menu menu = null;
+
+			if (path.equals("/") && name.equals("")) {
+				menu = folderDAO.findById(Menu.MENUID_DOCUMENTS);
+			} else
+				menu = folderDAO.find(name, path);
+
+			// if this resource request is a folder
+			if (menu != null)
+				return marshallFolder(menu, userId, session);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		Menu menu = null;
-
-		if (path.equals("/") && name.equals("")) {
-			menu = folderDAO.findById(Menu.MENUID_DOCUMENTS);
-		} else
-			menu = folderDAO.find(name, path);
-
-		// if this resource request is a folder
-		if (menu != null)
-			return marshallFolder(menu, userId, session);
-
-		Resource parentFolder = this.getParentResource(currentStablePath, userId);
+		Resource parentFolder = this.getParentResource(currentStablePath, userId, session);
 
 		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(Long.parseLong(parentFolder.getID()),
-				name, null);
+				name, null, null);
 
 		if (docs.isEmpty())
 			return null;
@@ -181,7 +198,7 @@ public class ResourceServiceImpl implements ResourceService {
 	 * @see com.logicaldoc.webdav.resource.service.ResourceService#getParentResource(java.lang.String,
 	 *      long)
 	 */
-	public Resource getParentResource(String resourcePath, long userId) {
+	public Resource getParentResource(String resourcePath, long userId, DavSession session) {
 		log.debug("Find parent DAV resource: " + resourcePath);
 
 		resourcePath = resourcePath.replaceFirst("/store", "").replaceFirst("/vstore", "");
@@ -207,7 +224,7 @@ public class ResourceServiceImpl implements ResourceService {
 		else
 			menu = folderDAO.find(name, resourcePath);
 
-		return marshallFolder(menu, userId, null);
+		return marshallFolder(menu, userId, session);
 	}
 
 	@Override
@@ -313,10 +330,10 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public Resource getChildByName(Resource parentResource, String name) {
 		Menu parentMenu = folderDAO.findById(Long.parseLong(parentResource.getID()));
-		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(parentMenu.getId(), name, null);
+		Collection<Document> docs = documentDAO.findByFileNameAndParentFolderId(parentMenu.getId(), name, null, null);
 		if (!docs.isEmpty()) {
 			Document document = docs.iterator().next();
-			return marshallDocument(document, null);
+			return marshallDocument(document, parentResource.getSession());
 		}
 		return null;
 	}
@@ -482,7 +499,7 @@ public class ResourceServiceImpl implements ResourceService {
 				// verify the write permission on the parent folder
 				Resource parent = getParentResource(resource);
 				if (!parent.isWriteEnabled())
-					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
+					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to write on parent resource.");
 				transaction.setEvent(History.EVENT_DELETED);
 
 				if (documentDAO.findById(Long.parseLong(resource.getID())).getImmutable() == 1
@@ -520,8 +537,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 				User user = userDAO.findById(resource.getRequestedPerson());
 
-				if (documentDAO.findById(Long.parseLong(resource.getID())).getImmutable() == 1
-						&& !user.isInGroup("admin"))
+				if (document.getImmutable() == 1 && !user.isInGroup("admin"))
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "The document is immutable");
 
 				// Create the document history event
@@ -550,7 +566,7 @@ public class ResourceServiceImpl implements ResourceService {
 	@Override
 	public Resource getParentResource(Resource resource) {
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
-		return this.marshallFolder(document.getFolder(), resource.getRequestedPerson(), null);
+		return this.marshallFolder(document.getFolder(), resource.getRequestedPerson(), resource.getSession());
 	}
 
 	@Override
@@ -632,7 +648,7 @@ public class ResourceServiceImpl implements ResourceService {
 		Arrays.sort(sortIt);
 
 		for (Version version : sortIt) {
-			Resource res = marshallDocument(document, null);
+			Resource res = marshallDocument(document, resource.getSession());
 			res.setVersionLabel(version.getVersion());
 			res.setVersionDate(version.getDate());
 			res.setAuthor(version.getUsername());

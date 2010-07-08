@@ -238,9 +238,14 @@ public class ResourceImpl implements Resource {
 		if (writeEnabled != null)
 			return;
 
+		if (personRequest == 0) {
+			personRequest = (Long) session.getObject("id");
+		}
+
 		MenuDAO mdao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
 		Set<Permission> permissions = mdao.getEnabledPermissions(Long.parseLong(id), personRequest);
 		writeEnabled = permissions.contains(Permission.WRITE);
+
 		deleteEnabled = permissions.contains(Permission.DELETE);
 		renameEnabled = permissions.contains(Permission.RENAME);
 		addChildEnabled = permissions.contains(Permission.ADD_CHILD);

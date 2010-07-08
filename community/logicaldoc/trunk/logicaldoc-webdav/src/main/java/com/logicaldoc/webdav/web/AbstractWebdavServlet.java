@@ -234,6 +234,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	 */
 	protected boolean execute(WebdavRequest request, WebdavResponse response, int method, DavResource resource)
 			throws ServletException, IOException, DavException {
+
 		switch (method) {
 		case DavMethods.DAV_GET:
 			doGet(request, response, resource);
@@ -320,8 +321,12 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	protected void doGet(WebdavRequest request, WebdavResponse response, DavResource resource) throws IOException {
 		log.debug("get");
 
-		getResource = resource;
-		spoolResource(request, response, resource, true);
+		try {
+			getResource = resource;
+			spoolResource(request, response, resource, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -446,29 +451,34 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 		if (log.isDebugEnabled())
 			log.debug("[ADD] Document " + resource.getDisplayName());
 
-		DavResource parentResource = resource.getCollection();
-		if (parentResource == null || !parentResource.exists()) {
-			// parent does not exist
-			response.sendError(DavServletResponse.SC_CONFLICT);
-			return;
-		}
+		try {
+			DavResource parentResource = resource.getCollection();
+			if (parentResource == null || !parentResource.exists()) {
+				// parent does not exist
+				response.sendError(DavServletResponse.SC_CONFLICT);
+				return;
+			}
 
-		int status;
-		// test if resource already exists
-		if (resource.exists()) {
-			status = DavServletResponse.SC_NO_CONTENT;
-		} else {
-			status = DavServletResponse.SC_CREATED;
-		}
+			int status;
+			// test if resource already exists
+			if (resource.exists()) {
+				status = DavServletResponse.SC_NO_CONTENT;
+			} else {
+				status = DavServletResponse.SC_CREATED;
+			}
 
-		if (getResource != null) {
-			// We must do a copy
-			getResource.copy(resource, true);
-		} else {
-			parentResource.addMember(resource, getInputContext(request, request.getInputStream()));
+			if (getResource != null) {
+				// We must do a copy
+				getResource.copy(resource, true);
+			} else {
+				parentResource.addMember(resource, getInputContext(request, request.getInputStream()));
+			}
+
+			getResource = null;
+			response.setStatus(status);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		getResource = null;
-		response.setStatus(status);
 	}
 
 	/**
@@ -486,23 +496,27 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 		log.debug("doMkCol");
 		if (log.isDebugEnabled())
 			log.debug("[ADD] Directory " + resource.getDisplayName());
-		DavResource parentResource = resource.getCollection();
-		if (parentResource == null || !parentResource.exists() || !parentResource.isCollection()) {
-			// parent does not exist or is not a collection
-			response.sendError(DavServletResponse.SC_CONFLICT);
-			return;
-		}
-		// shortcut: mkcol is only allowed on deleted/non-existing resources
-		if (resource.exists()) {
-			response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
-		}
+		try {
+			DavResource parentResource = resource.getCollection();
+			if (parentResource == null || !parentResource.exists() || !parentResource.isCollection()) {
+				// parent does not exist or is not a collection
+				response.sendError(DavServletResponse.SC_CONFLICT);
+				return;
+			}
+			// shortcut: mkcol is only allowed on deleted/non-existing resources
+			if (resource.exists()) {
+				response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
+			}
 
-		if (request.getContentLength() > 0 || request.getHeader("Transfer-Encoding") != null) {
-			parentResource.addMember(resource, getInputContext(request, request.getInputStream()));
-		} else {
-			parentResource.addMember(resource, getInputContext(request, null));
+			if (request.getContentLength() > 0 || request.getHeader("Transfer-Encoding") != null) {
+				parentResource.addMember(resource, getInputContext(request, request.getInputStream()));
+			} else {
+				parentResource.addMember(resource, getInputContext(request, null));
+			}
+			response.setStatus(DavServletResponse.SC_CREATED);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		response.setStatus(DavServletResponse.SC_CREATED);
 	}
 
 	/**
@@ -517,16 +531,19 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	protected void doDelete(WebdavRequest request, WebdavResponse response, DavResource resource) throws IOException,
 			DavException {
 		log.debug("doDelete");
-		if (log.isDebugEnabled())
-			log.debug("[DELETE]" + (resource.isCollection() ? " FOLDER" : " DOCUMENT") + " "
-					+ resource.getDisplayName());
+		try {
+			if (log.isDebugEnabled())
+				log.debug("[DELETE]" + (resource.isCollection() ? " FOLDER" : " DOCUMENT") + " "
+						+ resource.getDisplayName());
 
-		DavResource parent = resource.getCollection();
-		if (parent != null) {
-			parent.removeMember(resource);
-			response.setStatus(DavServletResponse.SC_NO_CONTENT);
-		} else {
-			response.sendError(DavServletResponse.SC_FORBIDDEN, "Cannot remove the root resource.");
+			DavResource parent = resource.getCollection();
+			if (parent != null) {
+				parent.removeMember(resource);
+				response.setStatus(DavServletResponse.SC_NO_CONTENT);
+			} else {
+				response.sendError(DavServletResponse.SC_FORBIDDEN, "Cannot remove the root resource.");
+			}
+		} catch (Exception e) {
 		}
 	}
 
@@ -549,8 +566,12 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			return;
 		}
 
-		DavResource destResource = getResourceFactory().createResource(request.getDestinationLocator(), request,
-				response);
+		DavResource destResource = null;
+		try {
+			destResource = getResourceFactory().createResource(request.getDestinationLocator(), request, response);
+		} catch (Throwable e) {
+			destResource = resource.getCollection();
+		}
 		int status = validateDestination(destResource, request);
 		if (status > DavServletResponse.SC_NO_CONTENT) {
 			response.sendError(status);
@@ -574,19 +595,27 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			DavException {
 
 		log.debug("doMove");
-		DavResource destResource = getResourceFactory().createResource(request.getDestinationLocator(), request,
-				response);
+		try {
+			DavResource destResource = null;
+			try {
+				destResource = getResourceFactory().createResource(request.getDestinationLocator(), request, response);
+			} catch (Throwable e) {
+				destResource = resource.getCollection();
+			}
 
-		int status = validateDestination(destResource, request);
-		log.debug("status = " + status);
-		if (status > DavServletResponse.SC_NO_CONTENT) {
-			log.debug("status > DavServletResponse.SC_NO_CONTENT");
-			response.sendError(status);
-			return;
+			int status = validateDestination(destResource, request);
+
+			log.debug("status = " + status);
+			if (status > DavServletResponse.SC_NO_CONTENT) {
+				log.debug("status > DavServletResponse.SC_NO_CONTENT");
+				response.sendError(status);
+				return;
+			}
+
+			resource.move(destResource);
+			response.setStatus(status);
+		} catch (Exception e) {
 		}
-
-		resource.move(destResource);
-		response.setStatus(status);
 	}
 
 	/**

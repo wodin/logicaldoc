@@ -118,10 +118,12 @@ public interface ResourceService {
 	 * @see {@link DavResourceLocator#getResourcePath()} the system tries to get
 	 *      the parent resource
 	 * 
-	 * @param resource the current resource
+	 * @param location the resource path
+	 * @param userId the user id
+	 * @param session the current session
 	 * @return the parent resource
 	 */
-	public Resource getParentResource(String location, long userId);
+	public Resource getParentResource(String location, long userId, DavSession session);
 
 	/**
 	 * Moves a resource named target to the folder dictionary destination

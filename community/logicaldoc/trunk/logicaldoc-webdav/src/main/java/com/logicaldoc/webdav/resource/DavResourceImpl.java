@@ -421,6 +421,7 @@ public class DavResourceImpl implements DavResource, Serializable {
 		if (isLocked(this) || isLocked(member)) {
 			throw new DavException(DavServletResponse.SC_LOCKED);
 		}
+
 		try {
 			String memberName = Text.getName(member.getLocator().getResourcePath());
 
@@ -431,7 +432,8 @@ public class DavResourceImpl implements DavResource, Serializable {
 				throw new DavException(DavServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
 			}
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			// log.error(e.getMessage(), e);
+			e.printStackTrace();
 		}
 	}
 
@@ -450,6 +452,7 @@ public class DavResourceImpl implements DavResource, Serializable {
 			Resource resource = resourceService.getResource(member.getLocator().getResourcePath(), session);
 			// set the requesting person
 			resource.setRequestedPerson(this.resource.getRequestedPerson());
+
 			resourceService.deleteResource(resource, session);
 		} catch (DavException de) {
 			throw de;
@@ -468,7 +471,6 @@ public class DavResourceImpl implements DavResource, Serializable {
 		if (isLocked(this)) {
 			throw new DavException(DavServletResponse.SC_LOCKED);
 		}
-
 		try {
 			Resource res = resourceService.getResource(destination.getLocator().getResourcePath(), session);
 			if (res != null) {
@@ -480,7 +482,7 @@ public class DavResourceImpl implements DavResource, Serializable {
 				name = name.substring(name.lastIndexOf("/") + 1, name.length()).replace("/default", "");
 
 				Resource parentResource = resourceService.getParentResource(destination.getLocator().getResourcePath(),
-						this.resource.getRequestedPerson());
+						this.resource.getRequestedPerson(), session);
 				this.resource.setName(name);
 
 				resourceService.move(this.resource, parentResource, session);
@@ -522,6 +524,10 @@ public class DavResourceImpl implements DavResource, Serializable {
 				log.debug("destResource.getID() = " + destResource.getID());
 				log.debug("destResource.getPath() = " + destResource.getPath());
 
+				if (destResource.getRequestedPerson() == 0) {
+					destResource.setRequestedPerson((Long.parseLong(session.getObject("id").toString())));
+				}
+
 				resourceService.copyResource(destResource, this.resource, session);
 			} else {
 				log.debug("res IS NULL");
@@ -530,14 +536,19 @@ public class DavResourceImpl implements DavResource, Serializable {
 				log.debug("name = " + name);
 
 				Resource destResource = resourceService.getParentResource(destination.getResourcePath(), this.resource
-						.getRequestedPerson());
+						.getRequestedPerson(), session);
 				this.resource.setName(name);
+
+				if (destResource.getRequestedPerson() == 0) {
+					destResource.setRequestedPerson((Long.parseLong(session.getObject("id").toString())));
+				}
 
 				log.debug("destResource.getID() = " + destResource.getID());
 				log.debug("destResource.getPath() = " + destResource.getPath());
 
 				log.debug("this.resource.getName() = " + this.resource.getName());
 				log.debug("this.resource.getPath() = " + this.resource.getPath());
+				log.debug("this.resource.getID() = " + this.resource.getID());
 
 				resourceService.copyResource(destResource, this.resource, session);
 			}
