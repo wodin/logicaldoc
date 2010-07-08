@@ -60,7 +60,7 @@ public class FoldersDataServlet extends HttpServlet {
 		/*
 		 * Get the visible children
 		 */
-		List<Menu> folders = dao.findChildren(parent, session.getUserId());
+		List<Menu> folders = dao.findChildren(parent, session.getUserId(), null);
 
 		/*
 		 * Iterste over records composing the response XML document
