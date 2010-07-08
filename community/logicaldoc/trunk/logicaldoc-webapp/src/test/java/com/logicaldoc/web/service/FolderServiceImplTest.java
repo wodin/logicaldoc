@@ -136,7 +136,7 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 
 		service.move(session.getSid(), menuC.getId(), menuA.getId());
 
-		List<Menu> menuList = folderDao.findChildren(menuA.getId());
+		List<Menu> menuList = folderDao.findChildren(menuA.getId(), null);
 		Assert.assertTrue(menuList.size() == 1);
 
 		for (Menu menu : menuList) {
@@ -157,11 +157,11 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 
 		service.move(session.getSid(), menuC.getId(), menuA.getId());
 
-		List<Menu> menuList = folderDao.findChildren(menuA.getId());
+		List<Menu> menuList = folderDao.findChildren(menuA.getId(), null);
 		Assert.assertTrue(menuList.size() == 1);
 		Assert.assertTrue(menuList.contains(menuC));
 
-		menuList = folderDao.findChildren(menuB.getId());
+		menuList = folderDao.findChildren(menuB.getId(), null);
 		Assert.assertTrue(menuList.size() == 0);
 	}
 
@@ -176,11 +176,11 @@ public class FolderServiceImplTest extends AbstractWebappTestCase {
 
 		service.move(session.getSid(), menuE.getId(), menuD.getId());
 
-		List<Menu> menuList = folderDao.findChildren(menuD.getId());
+		List<Menu> menuList = folderDao.findChildren(menuD.getId(), null);
 		Assert.assertTrue(menuList.size() == 1);
 		Assert.assertTrue(menuList.contains(menuE));
 
-		menuList = folderDao.findChildren(menuC.getId());
+		menuList = folderDao.findChildren(menuC.getId(), null);
 		Assert.assertTrue(menuList.size() == 1);
 	}
 }
