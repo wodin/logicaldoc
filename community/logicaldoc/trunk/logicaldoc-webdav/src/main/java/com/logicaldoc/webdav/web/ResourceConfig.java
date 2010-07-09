@@ -1,5 +1,7 @@
 package com.logicaldoc.webdav.web;
 
+import java.io.Serializable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.MimeResolver;
@@ -9,7 +11,6 @@ import org.apache.jackrabbit.webdav.simple.DefaultItemFilter;
 import org.apache.jackrabbit.webdav.simple.ItemFilter;
 
 import com.logicaldoc.webdav.io.manager.IOManager;
-
 /**
  * For more informations, please visit
  * {@link org.apache.jackrabbit.webdav.simple.ResourceConfig}
@@ -17,7 +18,9 @@ import com.logicaldoc.webdav.io.manager.IOManager;
  * @author Sebastian Wenzky
  * 
  */
-public class ResourceConfig {
+public class ResourceConfig implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	protected static Log log = LogFactory.getLog(ResourceConfig.class);
 
