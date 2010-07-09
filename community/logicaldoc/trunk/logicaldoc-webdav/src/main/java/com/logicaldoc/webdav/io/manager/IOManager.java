@@ -1,6 +1,7 @@
 package com.logicaldoc.webdav.io.manager;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 import org.apache.jackrabbit.webdav.DavResource;
@@ -16,7 +17,7 @@ import com.logicaldoc.webdav.io.handler.IOHandler;
  * @author Sebastian Wenzky
  * 
  */
-public interface IOManager {
+public interface IOManager extends Serializable {
 
 	public void setIOHandler(List<IOHandler> handler);
 
@@ -24,15 +25,11 @@ public interface IOManager {
 
 	public IOHandler[] getIOHandlers();
 
-	public boolean importContent(ImportContext context, boolean isCollection)
-			throws IOException;
+	public boolean importContent(ImportContext context, boolean isCollection) throws IOException;
 
-	public boolean importContent(ImportContext context, DavResource resource)
-			throws IOException;
+	public boolean importContent(ImportContext context, DavResource resource) throws IOException;
 
-	public boolean exportContent(ExportContext context, boolean isCollection)
-			throws IOException;
+	public boolean exportContent(ExportContext context, boolean isCollection) throws IOException;
 
-	public boolean exportContent(ExportContext context, DavResource resource)
-			throws IOException;
+	public boolean exportContent(ExportContext context, DavResource resource) throws IOException;
 }

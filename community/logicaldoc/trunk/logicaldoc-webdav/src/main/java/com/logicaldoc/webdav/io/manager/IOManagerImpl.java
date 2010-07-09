@@ -21,94 +21,96 @@ import com.logicaldoc.webdav.io.handler.IOHandler;
  */
 public class IOManagerImpl implements IOManager {
 
+	private static final long serialVersionUID = 1L;
+
 	protected static Log log = LogFactory.getLog(IOManagerImpl.class);
 
-    private final List<IOHandler> ioHandlers = new ArrayList<IOHandler>();
+	private final List<IOHandler> ioHandlers = new ArrayList<IOHandler>();
 
-    public IOManagerImpl() {
-    }
+	public IOManagerImpl() {
+	}
 
-    public void addIOHandler(IOHandler ioHandler) {
-        if (ioHandler == null) {
-            throw new IllegalArgumentException("'null' is not a valid IOHandler.");
-        }
-        ioHandler.setIOManager(this);
-        ioHandlers.add(ioHandler);
-    }
+	public void addIOHandler(IOHandler ioHandler) {
+		if (ioHandler == null) {
+			throw new IllegalArgumentException("'null' is not a valid IOHandler.");
+		}
+		ioHandler.setIOManager(this);
+		ioHandlers.add(ioHandler);
+	}
 
-    public IOHandler[] getIOHandlers() {
-        return (IOHandler[]) ioHandlers.toArray(new IOHandler[ioHandlers.size()]);
-    }
+	public IOHandler[] getIOHandlers() {
+		return (IOHandler[]) ioHandlers.toArray(new IOHandler[ioHandlers.size()]);
+	}
 
-    public boolean importContent(ImportContext context, boolean isCollection) throws IOException {
-        boolean success = false;
-        if (context != null) {
-           
-            IOHandler[] ioHandlers = getIOHandlers();
-            for (int i = 0; i < ioHandlers.length && !success; i++) {
-                IOHandler ioh = ioHandlers[i];
-                if (ioh.canImport(context, isCollection)) {
-                   
-                    success = ioh.importContent(context, isCollection);
-                  
-                }
-            }
-            context.informCompleted(success);
-        }
-        return success;
-    }
+	public boolean importContent(ImportContext context, boolean isCollection) throws IOException {
+		boolean success = false;
+		if (context != null) {
 
-    public boolean importContent(ImportContext context, DavResource resource) throws IOException {
-        boolean success = false;
-        if (context != null && resource != null) {
-         
-        	IOHandler[] ioHandlers = getIOHandlers();
-            for (int i = 0; i < ioHandlers.length && !success; i++) {
-                IOHandler ioh = ioHandlers[i];
-                if (ioh.canImport(context, resource)) {
-                    success = ioh.importContent(context, resource);
-                }
-            }
-            context.informCompleted(success);
-        }
-        return success;
-    }
+			IOHandler[] ioHandlers = getIOHandlers();
+			for (int i = 0; i < ioHandlers.length && !success; i++) {
+				IOHandler ioh = ioHandlers[i];
+				if (ioh.canImport(context, isCollection)) {
 
-    public boolean exportContent(ExportContext context, boolean isCollection) throws IOException {
-        boolean success = false;
-        if (context != null) {
-            
-            IOHandler[] ioHandlers = getIOHandlers();
-            for (int i = 0; i < ioHandlers.length && !success; i++) {
-                IOHandler ioh = ioHandlers[i];
-                if (ioh.canExport(context, isCollection)) {
-                   
-                    success = ioh.exportContent(context, isCollection);
-                   
-                }
-            }
-            context.informCompleted(success);
-        }
-        return success;
-    }
+					success = ioh.importContent(context, isCollection);
 
-    public boolean exportContent(ExportContext context, DavResource resource) throws IOException {
-        boolean success = false;
-        if (context != null && resource != null) {
-           
-            IOHandler[] ioHandlers = getIOHandlers();
-            for (int i = 0; i < ioHandlers.length && !success; i++) {
-                IOHandler ioh = ioHandlers[i];
-                if (ioh.canExport(context, resource)) {
-            
-                    success = ioh.exportContent(context, resource);
-                
-                }
-            }
-            context.informCompleted(success);
-        }
-        return success;
-    }
+				}
+			}
+			context.informCompleted(success);
+		}
+		return success;
+	}
+
+	public boolean importContent(ImportContext context, DavResource resource) throws IOException {
+		boolean success = false;
+		if (context != null && resource != null) {
+
+			IOHandler[] ioHandlers = getIOHandlers();
+			for (int i = 0; i < ioHandlers.length && !success; i++) {
+				IOHandler ioh = ioHandlers[i];
+				if (ioh.canImport(context, resource)) {
+					success = ioh.importContent(context, resource);
+				}
+			}
+			context.informCompleted(success);
+		}
+		return success;
+	}
+
+	public boolean exportContent(ExportContext context, boolean isCollection) throws IOException {
+		boolean success = false;
+		if (context != null) {
+
+			IOHandler[] ioHandlers = getIOHandlers();
+			for (int i = 0; i < ioHandlers.length && !success; i++) {
+				IOHandler ioh = ioHandlers[i];
+				if (ioh.canExport(context, isCollection)) {
+
+					success = ioh.exportContent(context, isCollection);
+
+				}
+			}
+			context.informCompleted(success);
+		}
+		return success;
+	}
+
+	public boolean exportContent(ExportContext context, DavResource resource) throws IOException {
+		boolean success = false;
+		if (context != null && resource != null) {
+
+			IOHandler[] ioHandlers = getIOHandlers();
+			for (int i = 0; i < ioHandlers.length && !success; i++) {
+				IOHandler ioh = ioHandlers[i];
+				if (ioh.canExport(context, resource)) {
+
+					success = ioh.exportContent(context, resource);
+
+				}
+			}
+			context.informCompleted(success);
+		}
+		return success;
+	}
 
 	@Override
 	public void setIOHandler(List<IOHandler> handler) {

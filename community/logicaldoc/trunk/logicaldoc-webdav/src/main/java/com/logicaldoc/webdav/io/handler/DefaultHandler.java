@@ -30,6 +30,8 @@ import com.logicaldoc.webdav.web.AbstractWebdavServlet;
  */
 public class DefaultHandler implements IOHandler {
 
+	private static final long serialVersionUID = 1L;
+
 	protected static Log log = LogFactory.getLog(AbstractWebdavServlet.class);
 
 	private String collectionNodetype = JcrConstants.NT_FOLDER;

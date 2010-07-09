@@ -1,6 +1,7 @@
 package com.logicaldoc.webdav.resource.service;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.List;
 
 import org.apache.jackrabbit.webdav.DavException;
@@ -22,7 +23,7 @@ import com.logicaldoc.webdav.session.DavSession;
  * @author Sebastian Wenzky
  * 
  */
-public interface ResourceService {
+public interface ResourceService extends Serializable{
 
 	/**
 	 * On passing a location as well as the current session you gettin back the
