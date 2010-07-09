@@ -327,12 +327,16 @@ public class DavResourceImpl implements DavResource, Serializable {
 	 */
 	public MultiStatusResponse alterProperties(DavPropertySet setProperties, DavPropertyNameSet removePropertyNames)
 			throws DavException {
-		throw new UnsupportedOperationException();
+		//Throwing an exception will lead to problems in downloading or moving a file
+		//throw new UnsupportedOperationException();
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	public MultiStatusResponse alterProperties(List changeList) throws DavException {
-		throw new UnsupportedOperationException();
+		//Throwing an exception will lead to problems in downloading or moving a file
+		//throw new UnsupportedOperationException();
+		return null;
 	}
 
 	/**

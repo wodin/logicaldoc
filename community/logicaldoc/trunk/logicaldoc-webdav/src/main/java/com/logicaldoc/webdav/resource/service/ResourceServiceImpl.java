@@ -296,7 +296,7 @@ public class ResourceServiceImpl implements ResourceService {
 		User user = userDAO.findById(resource.getRequestedPerson());
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 		String sid = (String) session.getObject("sid");
-
+		
 		try {
 			// verify the write permission on the parent folder
 			Resource parent = getParentResource(resource);

@@ -93,7 +93,8 @@ public class SetupWizard implements TabChangeListener {
 
 			// Create a unique installation id
 			pbean.setProperty("id", UUID.randomUUID().toString());
-
+			pbean.write();
+			
 			ServletContext servletContext = (ServletContext) ((ServletExternalContext) FacesContext
 					.getCurrentInstance().getExternalContext()).getContext();
 
