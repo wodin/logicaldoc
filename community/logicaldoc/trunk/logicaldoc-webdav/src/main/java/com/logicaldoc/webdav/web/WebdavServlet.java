@@ -23,6 +23,8 @@ import org.apache.jackrabbit.webdav.simple.LocatorFactoryImplEx;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
 import com.logicaldoc.webdav.resource.DavResourceFactory;
+import com.logicaldoc.webdav.resource.DavResourceFactoryImpl;
+import com.logicaldoc.webdav.resource.ResourceConfig;
 
 /**
  * For more informations, please visit
@@ -129,7 +131,7 @@ public class WebdavServlet extends AbstractWebdavServlet {
 
 	public DavResourceFactory getResourceFactory() {
 		if (resourceFactory == null) {
-			resourceFactory = new ResourceFactoryImpl(getLockManager(), getResourceConfig());
+			resourceFactory = new DavResourceFactoryImpl(getLockManager(), getResourceConfig());
 		}
 		return resourceFactory;
 	}

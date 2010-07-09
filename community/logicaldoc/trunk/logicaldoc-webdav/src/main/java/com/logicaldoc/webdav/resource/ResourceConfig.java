@@ -1,4 +1,4 @@
-package com.logicaldoc.webdav.web;
+package com.logicaldoc.webdav.resource;
 
 import java.io.Serializable;
 

@@ -25,7 +25,6 @@ import org.apache.jackrabbit.webdav.version.report.SupportedReportSetProperty;
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.session.DavSession;
 import com.logicaldoc.webdav.version.VersionHistoryResourceImpl;
-import com.logicaldoc.webdav.web.ResourceConfig;
 
 public class VersionControlledResourceImpl extends DeltaVResourceImpl implements VersionControlledResource, Serializable {
 
