@@ -135,7 +135,6 @@ public class DavResourceFactoryImpl implements DavResourceFactory {
 		DavResource resource = null;
 		if (element != null) {
 			resource = (DavResource) element.getValue();
-			System.out.println("** hit " + key);
 			return resource;
 		} else
 			return null;
