@@ -98,6 +98,9 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 		try {
 			DavResource resource = getFromCache(session.getObject("id") + ";"
 					+ locator.getResourcePath());
+			if (resource != null)
+				return resource;
+			
 			Resource res = resourceService.getResource(locator.getResourcePath(), session);
 			resource = createResource(locator, session, res);
 
@@ -118,6 +121,7 @@ public class ResourceFactoryImpl implements DavResourceFactory {
 		Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager")).getCache("dav-resources");
 		Element element = new Element(key, resource);
 		cache.put(element);
+		System.out.println("** put "+key);
 	}
 
 	/**
