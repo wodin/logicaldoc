@@ -112,10 +112,14 @@ public class DavResourceFactoryImpl implements DavResourceFactory {
 	 * @param resource The entry to be cached
 	 */
 	public void putInCache(DavSession session, DavResource resource) {
-		// Initialize the collection of children
-		Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager")).getCache("dav-resources");
-		Element element = new Element(session.getObject("id") + ";" + resource.getResourcePath(), resource);
-		cache.put(element);
+		try {
+			// Initialize the collection of children
+			Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager")).getCache("dav-resources");
+			Element element = new Element(session.getObject("id") + ";" + resource.getResourcePath(), resource);
+			cache.put(element);
+		} catch (Throwable t) {
+
+		}
 	}
 
 	/**
