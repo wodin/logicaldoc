@@ -61,10 +61,11 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		long[] userIdsArray = new long[0];
 		try {
-			List<Long> userIdsList = userDao.findAllIds();
-			userIdsArray = new long[userIdsList.size()];
-			for (int i = 0; i < userIdsList.size(); i++) {
-				userIdsArray[i] = userIdsList.get(i).longValue();
+			List<User> usersList = userDao.findByWhere("_entity.type = " + Integer.toString(User.TYPE_DEFAULT), null,
+					null);
+			userIdsArray = new long[usersList.size()];
+			for (int i = 0; i < usersList.size(); i++) {
+				userIdsArray[i] = usersList.get(i).getId();
 			}
 		} catch (Exception e) {
 			log.error("Some errors occurred", e);
@@ -97,8 +98,13 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 	@Override
 	public void grantUser(String sid, long folderId, long userId, int permissions, boolean recursive) throws Exception {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = userDao.findById(userId);
-		grantGroup(sid, folderId, user.getUserGroup().getId(), permissions, recursive);
+		try {
+			User user = userDao.findById(userId);
+			grantGroup(sid, folderId, user.getUserGroup().getId(), permissions, recursive);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
