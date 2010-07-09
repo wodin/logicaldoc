@@ -42,6 +42,8 @@ import com.logicaldoc.webdav.session.DavSession;
  */
 public class ResourceServiceImpl implements ResourceService {
 
+	private static final long serialVersionUID = 1L;
+
 	protected static Log log = LogFactory.getLog(ResourceServiceImpl.class);
 
 	private DocumentDAO documentDAO;
@@ -296,7 +298,7 @@ public class ResourceServiceImpl implements ResourceService {
 		User user = userDAO.findById(resource.getRequestedPerson());
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
 		String sid = (String) session.getObject("sid");
-		
+
 		try {
 			// verify the write permission on the parent folder
 			Resource parent = getParentResource(resource);

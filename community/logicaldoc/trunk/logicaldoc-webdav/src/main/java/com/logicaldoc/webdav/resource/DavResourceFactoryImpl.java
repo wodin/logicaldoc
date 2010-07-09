@@ -18,8 +18,6 @@ import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.lock.LockManager;
 
 import com.logicaldoc.util.Context;
-import com.logicaldoc.webdav.resource.DavResourceFactory;
-import com.logicaldoc.webdav.resource.VersionControlledResourceImpl;
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.resource.service.ResourceService;
 import com.logicaldoc.webdav.session.DavSession;
@@ -115,8 +113,6 @@ public class DavResourceFactoryImpl implements DavResourceFactory {
 	 */
 	public void putInCache(DavSession session, DavResource resource) {
 		// Initialize the collection of children
-		if (resource.isCollection())
-			resource.getMembers();
 		Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager")).getCache("dav-resources");
 		Element element = new Element(session.getObject("id") + ";" + resource.getResourcePath(), resource);
 		cache.put(element);

@@ -12,12 +12,14 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DefaultIOManager extends IOManagerImpl {
 
+	private static final long serialVersionUID = 1L;
+
 	protected static Log log = LogFactory.getLog(DefaultIOManager.class);
 
-    public DefaultIOManager() {
-        init();
-    }
+	public DefaultIOManager() {
+		init();
+	}
 
-    protected void init() {
-    }
+	protected void init() {
+	}
 }
