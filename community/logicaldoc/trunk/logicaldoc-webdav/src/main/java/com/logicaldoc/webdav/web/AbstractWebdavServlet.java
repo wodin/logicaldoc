@@ -192,7 +192,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 
 				// check matching if=header for lock-token relevant operations
 				DavResource resource = getResourceFactory().createResource(webdavRequest.getRequestLocator(),
-						webdavRequest, webdavResponse, davSession);
+						webdavRequest, davSession);
 
 				if (!isPreconditionValid(webdavRequest, resource)) {
 					webdavResponse.sendError(DavServletResponse.SC_PRECONDITION_FAILED);
@@ -474,6 +474,8 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 				parentResource.addMember(resource, getInputContext(request, request.getInputStream()));
 			}
 
+			getResourceFactory().putInCache((com.logicaldoc.webdav.session.DavSession)parentResource.getSession(), parentResource);
+			
 			getResource = null;
 			response.setStatus(status);
 		} catch (Exception e) {
@@ -568,7 +570,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 
 		DavResource destResource = null;
 		try {
-			destResource = getResourceFactory().createResource(request.getDestinationLocator(), request, response);
+			destResource = getResourceFactory().createResource(request.getDestinationLocator(), request);
 		} catch (Throwable e) {
 			destResource = resource.getCollection();
 		}
@@ -598,7 +600,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 		try {
 			DavResource destResource = null;
 			try {
-				destResource = getResourceFactory().createResource(request.getDestinationLocator(), request, response);
+				destResource = getResourceFactory().createResource(request.getDestinationLocator(), request);
 			} catch (Throwable e) {
 				destResource = resource.getCollection();
 			}

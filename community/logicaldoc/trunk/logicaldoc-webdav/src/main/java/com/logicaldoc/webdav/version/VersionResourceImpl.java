@@ -30,9 +30,9 @@ import org.apache.jackrabbit.webdav.version.report.ReportType;
 
 import com.logicaldoc.webdav.resource.DavResourceFactory;
 import com.logicaldoc.webdav.resource.DeltaVResourceImpl;
+import com.logicaldoc.webdav.resource.ResourceConfig;
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.session.DavSession;
-import com.logicaldoc.webdav.web.ResourceConfig;
 
 /**
  * For more informations, please visit
@@ -43,7 +43,11 @@ import com.logicaldoc.webdav.web.ResourceConfig;
  */
 public class VersionResourceImpl extends DeltaVResourceImpl implements VersionResource {
 	
-    public VersionResourceImpl(DavResourceLocator locator,
+	private static final long serialVersionUID = 1L;
+
+
+
+	public VersionResourceImpl(DavResourceLocator locator,
 			DavResourceFactory factory, DavSession session,
 			ResourceConfig config, Resource item) throws DavException {
 		super(locator, factory, session, config, item);

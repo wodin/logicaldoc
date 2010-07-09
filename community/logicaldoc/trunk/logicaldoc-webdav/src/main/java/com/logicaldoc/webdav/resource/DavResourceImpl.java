@@ -41,7 +41,6 @@ import com.logicaldoc.webdav.io.manager.IOManager;
 import com.logicaldoc.webdav.resource.model.Resource;
 import com.logicaldoc.webdav.resource.service.ResourceService;
 import com.logicaldoc.webdav.session.DavSession;
-import com.logicaldoc.webdav.web.ResourceConfig;
 
 /**
  * For more informations, please visit
@@ -328,15 +327,13 @@ public class DavResourceImpl implements DavResource, Serializable {
 	public MultiStatusResponse alterProperties(DavPropertySet setProperties, DavPropertyNameSet removePropertyNames)
 			throws DavException {
 		//Throwing an exception will lead to problems in downloading or moving a file
-		//throw new UnsupportedOperationException();
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@SuppressWarnings("unchecked")
 	public MultiStatusResponse alterProperties(List changeList) throws DavException {
 		//Throwing an exception will lead to problems in downloading or moving a file
-		//throw new UnsupportedOperationException();
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	/**
