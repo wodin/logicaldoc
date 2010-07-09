@@ -616,6 +616,10 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			}
 
 			resource.move(destResource);
+
+			getResourceFactory().putInCache((com.logicaldoc.webdav.session.DavSession) destResource.getSession(),
+					destResource);
+
 			response.setStatus(status);
 		} catch (Exception e) {
 		}
