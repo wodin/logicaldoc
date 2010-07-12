@@ -102,8 +102,6 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 			User user = userDao.findById(userId);
 			grantGroup(sid, folderId, user.getUserGroup().getId(), permissions, recursive);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
@@ -162,7 +160,6 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 					rightsList.add(new Right(group.getId(), mg.getPermissions()));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			log.error("Some errors occurred", e);
 			throw new Exception("error", e);
 		}

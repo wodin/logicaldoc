@@ -61,7 +61,6 @@ public class AbstractWebServiceTestCase extends TestCase {
 		try {
 			context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
 		} catch (Throwable e) {
-			e.printStackTrace();
 		}
 
 		createTestDirs();
@@ -141,7 +140,6 @@ public class AbstractWebServiceTestCase extends TestCase {
 					con.close();
 			} catch (Exception ex) {
 			}
-			e.printStackTrace();
 		}
 	}
 
