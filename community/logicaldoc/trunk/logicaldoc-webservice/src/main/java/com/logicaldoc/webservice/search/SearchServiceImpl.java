@@ -12,10 +12,10 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.FolderDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.dao.GenericDAO;
+import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.HitImpl;
 import com.logicaldoc.core.searchengine.Search;
-import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.Context;
@@ -34,8 +34,9 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 	public static Log log = LogFactory.getLog(SearchServiceImpl.class);
 
 	@Override
-	public WSSearchResult find(String sid, SearchOptions options) throws Exception {
+	public WSSearchResult find(String sid, FulltextSearchOptions options) throws Exception {
 		User user = validateSession(sid);
+		options.setUserId(user.getId());
 
 		WSSearchResult searchResult = new WSSearchResult();
 
@@ -63,7 +64,11 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null, null);
 		WSDocument[] wsDocs = new WSDocument[docs.size()];
 		for (int i = 0; i < docs.size(); i++) {
-			checkReadEnable(user, docs.get(i).getFolder().getId());
+			try {
+				checkReadEnable(user, docs.get(i).getFolder().getId());
+			} catch (Exception e) {
+				continue;
+			}
 			docDao.initialize(docs.get(i));
 			wsDocs[i] = WSDocument.fromDocument(docs.get(i));
 		}
@@ -94,7 +99,11 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		List<Menu> folders = folderDao.find(name);
 		WSFolder[] wsFolders = new WSFolder[folders.size()];
 		for (int i = 0; i < folders.size(); i++) {
-			checkReadEnable(user, folders.get(i).getId());
+			try {
+				checkReadEnable(user, folders.get(i).getId());
+			} catch (Exception e) {
+				continue;
+			}
 			folderDao.initialize(folders.get(i));
 			wsFolders[i] = WSFolder.fromFolder(folders.get(i));
 		}
