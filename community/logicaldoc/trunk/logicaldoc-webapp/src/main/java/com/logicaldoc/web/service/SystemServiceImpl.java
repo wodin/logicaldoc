@@ -20,6 +20,7 @@ import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.core.task.TaskManager;
+import com.logicaldoc.core.task.TaskTrigger;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
@@ -29,7 +30,6 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.util.quartz.DoubleTrigger;
 import com.logicaldoc.util.sql.SqlUtil;
 import com.logicaldoc.web.util.SessionUtil;
 
@@ -284,7 +284,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				GUIScheduling scheduling = new GUIScheduling(tsk.getName());
 				scheduling.setEnabled(tsk.getScheduling().isEnabled());
 				scheduling.setMode(tsk.getScheduling().getMode());
-				if (tsk.getScheduling().getMode().equals(DoubleTrigger.MODE_SIMPLE)) {
+				if (tsk.getScheduling().getMode().equals(TaskTrigger.MODE_SIMPLE)) {
 					scheduling.setSimple(true);
 					scheduling.setDelay(tsk.getScheduling().getDelay());
 					scheduling.setInterval(tsk.getScheduling().getIntervalSeconds());
@@ -340,13 +340,13 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				GUIScheduling scheduling = new GUIScheduling(t.getName());
 				scheduling.setEnabled(t.getScheduling().isEnabled());
 				scheduling.setMode(t.getScheduling().getMode());
-				if (t.getScheduling().getMode().equals(DoubleTrigger.MODE_SIMPLE)) {
+				if (t.getScheduling().getMode().equals(TaskTrigger.MODE_SIMPLE)) {
 					scheduling.setSimple(true);
 					scheduling.setDelay(t.getScheduling().getDelay());
 					scheduling.setInterval(t.getScheduling().getIntervalSeconds());
 					task.setSchedulingLabel(I18N.message("each") + " " + t.getScheduling().getIntervalSeconds() + " "
 							+ I18N.message("seconds").toLowerCase());
-				} else if (t.getScheduling().getMode().equals(DoubleTrigger.MODE_CRON)) {
+				} else if (t.getScheduling().getMode().equals(TaskTrigger.MODE_CRON)) {
 					scheduling.setSimple(false);
 					scheduling.setSeconds(t.getScheduling().getSeconds());
 					scheduling.setMinutes(t.getScheduling().getMinutes());
@@ -413,14 +413,14 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			if (tsk != null) {
 				tsk.getScheduling().setEnabled(task.getScheduling().isEnabled());
 				if (task.getScheduling().isSimple()) {
-					tsk.getScheduling().setMode(DoubleTrigger.MODE_SIMPLE);
+					tsk.getScheduling().setMode(TaskTrigger.MODE_SIMPLE);
 					tsk.getScheduling().setDelay(task.getScheduling().getDelay());
 					tsk.getScheduling().setInterval(task.getScheduling().getInterval() * 1000);
 					tsk.getScheduling().setIntervalSeconds(task.getScheduling().getInterval());
 					task.setSchedulingLabel(I18N.message("each") + " " + tsk.getScheduling().getIntervalSeconds() + " "
 							+ I18N.message("seconds").toLowerCase());
 				} else {
-					tsk.getScheduling().setMode(DoubleTrigger.MODE_CRON);
+					tsk.getScheduling().setMode(TaskTrigger.MODE_CRON);
 					tsk.getScheduling().setSeconds(task.getScheduling().getSeconds());
 					tsk.getScheduling().setMinutes(task.getScheduling().getMinutes());
 					tsk.getScheduling().setHours(task.getScheduling().getHours());

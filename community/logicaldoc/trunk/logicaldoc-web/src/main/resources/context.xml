@@ -60,10 +60,6 @@
 
 		<property name="hibernateProperties">
 			<props>
-				<!--
-					<prop
-					key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
-				-->
 				<prop key="hibernate.dialect">
 					${hibernate.dialect}
 				</prop>
@@ -102,11 +98,31 @@
 		</property>
 	</bean>
 
+	<bean id="GarbageCollector"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" >
+		 <bean class="com.logicaldoc.web.GarbageCollector" />  
+		</property>
+		<property name="targetMethod">
+			<value>gc</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<bean id="GarbageCollectorTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="GarbageCollector" />
+		<property name="startDelay" value="5000" />
+		<property name="repeatInterval" value="1000" />
+	</bean>
+
 	<!-- Scheduler -->
 	<bean id="Scheduler"
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
+			    <ref bean="GarbageCollectorTrigger" />
 				<ref bean="IndexOptimizerTrigger" />
 				<ref bean="TagCloudGeneratorTrigger" />
 				<ref bean="IndexerTaskTrigger" />
