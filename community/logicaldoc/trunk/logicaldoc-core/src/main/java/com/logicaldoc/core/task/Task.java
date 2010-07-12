@@ -61,7 +61,6 @@ public abstract class Task implements Runnable {
 	 * Increments the progress by one and performs a GC
 	 */
 	protected void next() {
-		System.gc();
 		setProgress(progress + 1);
 	}
 
@@ -118,7 +117,6 @@ public abstract class Task implements Runnable {
 			interruptRequested = false;
 			saveWork();
 			log.info("Task " + getName() + " finished");
-			System.gc();
 		}
 	}
 
