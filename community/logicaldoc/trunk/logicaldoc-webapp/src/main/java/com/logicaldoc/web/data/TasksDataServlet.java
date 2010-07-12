@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.core.task.TaskManager;
+import com.logicaldoc.core.task.TaskTrigger;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.quartz.DoubleTrigger;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -59,9 +59,9 @@ public class TasksDataServlet extends HttpServlet {
 				writer.print("<enabledIcon>bullet_red</enabledIcon>");
 			}
 			writer.print("<status>" + task.getStatus() + "</status>");
-			if (task.getScheduling().getMode().equals(DoubleTrigger.MODE_CRON))
+			if (task.getScheduling().getMode().equals(TaskTrigger.MODE_CRON))
 				writer.print("<scheduling>" + task.getScheduling().getCronExpression() + "</scheduling>");
-			else if (task.getScheduling().getMode().equals(DoubleTrigger.MODE_SIMPLE))
+			else if (task.getScheduling().getMode().equals(TaskTrigger.MODE_SIMPLE))
 				writer.print("<scheduling>" + I18N.getMessage("each", locale) + " "
 						+ task.getScheduling().getIntervalSeconds() + " "
 						+ I18N.getMessage("seconds", locale).toLowerCase() + "</scheduling>");

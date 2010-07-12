@@ -37,7 +37,7 @@ public class MockInfoServiceImpl extends RemoteServiceServlet implements InfoSer
 		info.setBundle(getBundle(locale));
 		info.setInstallationId("13245-u9ixcbviwhg934-13423-124t");
 
-		info.setFeatures(new String[] { "Feature_53", "Feature_56", "Feature_13" });
+		info.setFeatures(new String[] { "Feature_52", "Feature_53", "Feature_56", "Feature_13" });
 
 		return info;
 	}

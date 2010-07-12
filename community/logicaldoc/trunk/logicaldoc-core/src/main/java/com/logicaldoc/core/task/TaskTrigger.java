@@ -1,5 +1,6 @@
-package com.logicaldoc.util.quartz;
+package com.logicaldoc.core.task;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import org.quartz.Calendar;
@@ -12,26 +13,30 @@ import org.quartz.utils.Key;
 import org.springframework.scheduling.quartz.CronTriggerBean;
 import org.springframework.scheduling.quartz.SimpleTriggerBean;
 
+import com.logicaldoc.util.config.PropertiesBean;
+
 /**
- * This trigger wraps both a SimpleTrigger and a
+ * This trigger wraps both a SimpleTrigger and a CronTrigger
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 4.5
  */
-public class DoubleTrigger extends SimpleTriggerBean {
+public class TaskTrigger extends SimpleTriggerBean {
 	private static final long serialVersionUID = 1L;
 
-	private SimpleTriggerBean simpleTrigger;
+	private SimpleTriggerBean simpleTrigger = null;
 
-	private CronTriggerBean cronTrigger;
+	private CronTriggerBean cronTrigger = null;
 
 	public static String MODE_CRON = "cron";
 
 	public static String MODE_SIMPLE = "simple";
 
-	private String mode = MODE_SIMPLE;
+	private PropertiesBean config;
 
-	private DoubleTrigger() {
+	private Task task;
+
+	private TaskTrigger() {
 		super();
 	}
 
@@ -120,7 +125,7 @@ public class DoubleTrigger extends SimpleTriggerBean {
 	}
 
 	public String getName() {
-		return getWrappedTrigger().getName();
+		return task.getName();
 	}
 
 	public Date getNextFireTime() {
@@ -196,7 +201,7 @@ public class DoubleTrigger extends SimpleTriggerBean {
 	}
 
 	public void setName(String name) {
-		getWrappedTrigger().setName(name);
+		// getWrappedTrigger().setName(name);
 	}
 
 	public void setPriority(int priority) {
@@ -236,34 +241,46 @@ public class DoubleTrigger extends SimpleTriggerBean {
 	}
 
 	public Trigger getWrappedTrigger() {
-		if ("simple".equals(mode)) {
+		if ("simple".equals(config.getProperty("schedule.mode." + getName()))) {
+			if (simpleTrigger == null) {
+				simpleTrigger = new SimpleTriggerBean();
+				simpleTrigger.setName(getName());
+				simpleTrigger.setRepeatInterval(Long.parseLong(config.getProperty("schedule.interval." + getName())));
+				simpleTrigger.setStartDelay(Long.parseLong(config.getProperty("schedule.delay." + getName())));
+				simpleTrigger.setJobDetail(getJobDetail());
+			}
+			cronTrigger = null;
 			return simpleTrigger;
 		} else {
+			if (cronTrigger == null)
+				try {
+					cronTrigger = new CronTriggerBean();
+					cronTrigger.setName(getName());
+					cronTrigger.setCronExpression(config.getProperty("schedule.cron." + getName()));
+					cronTrigger.setJobDetail(getJobDetail());
+				} catch (ParseException e) {
+
+				}
+			simpleTrigger = null;
 			return cronTrigger;
 		}
 	}
 
-	public void setSimpleTrigger(SimpleTriggerBean simpleTrigger) {
-		this.simpleTrigger = simpleTrigger;
+	public void reload() {
+		this.cronTrigger = null;
+		this.simpleTrigger = null;
+		getWrappedTrigger();
 	}
 
-	public void setCronTrigger(CronTriggerBean cronTrigger) {
-		this.cronTrigger = cronTrigger;
+	public void setConfig(PropertiesBean config) {
+		this.config = config;
 	}
 
-	public String getMode() {
-		return mode;
+	public Task getTask() {
+		return task;
 	}
 
-	public void setMode(String mode) {
-		this.mode = mode;
-	}
-
-	public CronTriggerBean getCronTrigger() {
-		return cronTrigger;
-	}
-
-	public SimpleTriggerBean getSimpleTrigger() {
-		return simpleTrigger;
+	public void setTask(Task task) {
+		this.task = task;
 	}
 }

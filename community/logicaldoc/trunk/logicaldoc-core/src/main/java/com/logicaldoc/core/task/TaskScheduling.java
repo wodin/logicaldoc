@@ -5,13 +5,11 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.StringTokenizer;
 
-import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.Trigger;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.PropertiesBean;
-import com.logicaldoc.util.quartz.DoubleTrigger;
 import com.logicaldoc.util.system.CpuInfo;
 
 /**
@@ -35,7 +33,7 @@ public class TaskScheduling {
 
 	private String dayOfWeek = "?";
 
-	private String mode = DoubleTrigger.MODE_CRON;
+	private String mode = TaskTrigger.MODE_SIMPLE;
 
 	private long delay = 1000;
 
@@ -127,18 +125,17 @@ public class TaskScheduling {
 
 	public Date getNextFireTime() {
 		Trigger trigger = (Trigger) Context.getInstance().getBean(taskName + "Trigger");
-		if (!(trigger instanceof DoubleTrigger))
+		if (!(trigger instanceof TaskTrigger))
 			return null;
 
 		// The following loop 'while' is needed to update the next execution
 		// time of the task into the Task list page
-		if (DoubleTrigger.MODE_CRON.equals(getMode())) {
-			((DoubleTrigger) trigger).setNextFireTime(trigger.getFireTimeAfter(previousFireTime));
+		if (TaskTrigger.MODE_CRON.equals(getMode())) {
+			((TaskTrigger) trigger).setNextFireTime(trigger.getFireTimeAfter(previousFireTime));
 			return trigger.getFireTimeAfter(previousFireTime);
 		} else {
 			if (previousFireTime != null) {
-				long next = previousFireTime.getTime()
-						+ ((DoubleTrigger) trigger).getSimpleTrigger().getRepeatInterval();
+				long next = previousFireTime.getTime() + ((TaskTrigger) trigger).getRepeatInterval();
 				return new Date(next);
 			} else
 				return null;
@@ -151,8 +148,6 @@ public class TaskScheduling {
 	}
 
 	public void setCronExpression(String cronExpression) throws ParseException {
-		DoubleTrigger trigger = (DoubleTrigger) Context.getInstance().getBean(taskName + "Trigger");
-		trigger.getCronTrigger().setCronExpression(cronExpression);
 		StringTokenizer st = new StringTokenizer(cronExpression, " ", false);
 		seconds = st.nextToken();
 		minutes = st.nextToken();
@@ -183,7 +178,7 @@ public class TaskScheduling {
 			maxLength = Long.parseLong(config.getProperty("schedule.length." + taskName));
 			interval = Long.parseLong(config.getProperty("schedule.interval." + taskName));
 			delay = Long.parseLong(config.getProperty("schedule.delay." + taskName));
-			minCpuIdle=Integer.parseInt(config.getProperty("schedule.cpuidle." + taskName));
+			minCpuIdle = Integer.parseInt(config.getProperty("schedule.cpuidle." + taskName));
 		} catch (Exception e) {
 		}
 	}
@@ -193,12 +188,8 @@ public class TaskScheduling {
 	 */
 	public void save() throws IOException, ParseException {
 		Scheduler scheduler = (Scheduler) Context.getInstance().getBean("Scheduler");
-		DoubleTrigger trigger = (DoubleTrigger) Context.getInstance().getBean(taskName + "Trigger");
-		trigger.setMode(mode);
+		TaskTrigger trigger = (TaskTrigger) Context.getInstance().getBean(taskName + "Trigger");
 		String expression = getCronExpression();
-		trigger.getCronTrigger().setCronExpression(expression);
-		trigger.getSimpleTrigger().setStartDelay(getDelay());
-		trigger.getSimpleTrigger().setRepeatInterval(getInterval());
 
 		PropertiesBean config = (PropertiesBean) Context.getInstance().getBean("ContextProperties");
 		config.setProperty("schedule.cron." + taskName, expression);
@@ -210,15 +201,16 @@ public class TaskScheduling {
 		config.setProperty("schedule.cpuidle." + taskName, Integer.toString(minCpuIdle));
 		config.write();
 
+		trigger.reload();
+
 		try {
 			// Reschedule the job
-			JobDetail detail = scheduler.getJobDetail(taskName + "Job", "DEFAULT");
 			scheduler.deleteJob(taskName + "Job", "DEFAULT");
-			scheduler.scheduleJob(detail, trigger);
+			scheduler.scheduleJob(trigger.getJobDetail(), trigger);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		load();
 	}
 
