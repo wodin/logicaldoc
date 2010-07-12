@@ -115,7 +115,6 @@ public class AuthServiceImplTest extends AbstractWebServiceTestCase {
 			Assert.assertEquals(2, rights.length);
 			Assert.assertEquals(3, rights[0].getId());
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 

@@ -13,7 +13,7 @@ public class Main {
 		// SearchClient("http://localhost:8080/logicaldoc/services/Search");
 
 		// Open a session
-		String sid = auth.login("matteo", "matteo1982");
+		String sid = auth.login("admin", "admin");
 		System.out.println("sid: " + sid);
 
 		auth.logout(sid);
