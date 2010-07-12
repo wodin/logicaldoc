@@ -92,7 +92,11 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	@Override
 	public boolean isReadable(String sid, long folderId) throws Exception {
 		User user = validateSession(sid);
-		checkReadEnable(user, folderId);
+		try {
+			checkReadEnable(user, folderId);
+		} catch (Exception e) {
+			return false;
+		}
 
 		return true;
 	}
@@ -167,7 +171,8 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		if (menu == null)
 			throw new Exception("cannot find folder " + folderId);
 
-		if (folderDao.findByTextAndParentId(name, menu.getParentId()).size() > 0) {
+		List<Menu> folders = folderDao.findByTextAndParentId(name, menu.getParentId());
+		if (folders.size() > 0 && folders.get(0).getId() != menu.getId()) {
 			throw new Exception("duplicate folder name " + name);
 		} else {
 			menu.setText(name);

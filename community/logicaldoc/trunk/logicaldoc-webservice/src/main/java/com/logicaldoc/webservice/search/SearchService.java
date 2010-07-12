@@ -5,7 +5,7 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 
 import com.logicaldoc.core.document.TagCloud;
-import com.logicaldoc.core.searchengine.SearchOptions;
+import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.WSFolder;
 
@@ -25,8 +25,8 @@ public interface SearchService {
 	 * @return The search result
 	 */
 	@WebResult(name = "searchResult")
-	public WSSearchResult find(@WebParam(name = "sid") String sid, @WebParam(name = "options") SearchOptions options)
-			throws Exception;
+	public WSSearchResult find(@WebParam(name = "sid") String sid,
+			@WebParam(name = "options") FulltextSearchOptions options) throws Exception;
 
 	/**
 	 * Retrieves all tags in the repository.
