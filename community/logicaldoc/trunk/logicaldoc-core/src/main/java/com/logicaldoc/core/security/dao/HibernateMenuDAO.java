@@ -154,9 +154,9 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			if (user == null)
 				return coll;
 			if (user.isInGroup("admin"))
-				return findByWhere(
-						"_entity.parentId=" + parentId + (type == null ? "" : (" and _entity.type=" + type)),
-						" order by _entity.sort, _entity.text ", null);
+				return findByWhere("_entity.id!=_entity.parentId and _entity.parentId=" + parentId
+						+ (type == null ? "" : (" and _entity.type=" + type)), " order by _entity.sort, _entity.text ",
+						null);
 			/*
 			 * Search for all those menues that defines its own security
 			 * policies
@@ -864,7 +864,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				StringBuffer query1 = new StringBuffer("select distinct(A.ld_menuid) from ld_menugroup A, ld_menu B "
 						+ " where A.ld_menuid=B.ld_id and B.ld_deleted=0 ");
 				if (type != null)
-					query1.append("and B.ld_type=" + type);
+					query1.append("and (B.ld_type=" + type + " or B.ld_id=" + Menu.MENUID_DOCUMENTS + ")");
 				if (permission != Permission.READ)
 					query1.append(" and A.ld_" + permission.getName() + "=1 ");
 				query1.append(" and A.ld_groupid in (");
@@ -909,7 +909,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				StringBuffer query2 = new StringBuffer("select B.ld_id from ld_menu B where B.ld_deleted=0 ");
 				if (type != null)
 					query2.append(" and B.ld_type=" + type);
-				query2.append("and B.ld_securityref in (" + query1.toString() + ")");
+				query2.append(" and B.ld_securityref in (" + query1.toString() + ")");
 
 				con = null;
 				stmt = null;
