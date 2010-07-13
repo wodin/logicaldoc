@@ -49,7 +49,7 @@
 					
 					<ice:panelGroup styleClass="outputLabel">
 						<ice:outputLabel for="destParentId"
-							value="#{msgs['targetfolder']}" />
+							value="#{msgs['targetfolder']}: " />
 					</ice:panelGroup>
 					<ice:panelGroup style="display: inline;" styleClass="commands">
 						<ice:inputHidden id="destParentId" value="#{directoryForm.destParentId}" />
