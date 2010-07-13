@@ -23,15 +23,12 @@
 			cancelListener=void javax.faces.event.ActionEvent;">
 
 			<ice:commandButton rendered="#{useIcon!='true'}"
-				actionListener="#{openListener}"
-				value="#{msgs['brows']}..." />
-				
-			<ice:commandLink
-					rendered="#{useIcon=='true'}"
-					actionListener="#{openListener}"
-					title="#{msgs['brows']}">
-					<ice:graphicImage value="#{StyleBean.imagesPath}/folder_tree.png"
-						style="border: 0px solid;" title="#{msgs['brows']}" />
+				actionListener="#{openListener}" value="#{msgs['brows']}..." />
+
+			<ice:commandLink rendered="#{useIcon=='true'}"
+				actionListener="#{openListener}" title="#{msgs['brows']}">
+				<ice:graphicImage value="#{StyleBean.imagesPath}/folder_tree.png"
+					style="border: 0px solid;" title="#{msgs['brows']}" />
 			</ice:commandLink>
 
 			<!-- panel popup code, draggable type  -->
@@ -71,13 +68,6 @@
 													value="  #{item.userObject.displayText=='menu.documents' ? msgs['menu.documents'] : item.userObject.displayText}"
 													styleClass="#{item.userObject.selected ? 'selected-tree-node' : 'tree-node'}" />
 											</ice:commandLink>
-										</ice:panelGroup>
-									</f:facet>
-
-									<f:facet name="content">
-										<ice:panelGroup style="display: inline"
-											rendered="#{directortModel.countChildren}">
-											<ice:outputText value="(#{item.userObject.count})" />
 										</ice:panelGroup>
 									</f:facet>
 								</ice:treeNode>

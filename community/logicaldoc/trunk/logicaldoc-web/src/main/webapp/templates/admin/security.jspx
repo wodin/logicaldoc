@@ -95,11 +95,11 @@
 							<br />
 							<br />
 							<br />
-							<ice:commandButton value="&gt;&gt;"
+							<ice:commandButton value="&gt;&gt;" style="margin-left: 3px; margin-right: 3px;"
 								action="#{securityRightsRecordsManager.assignGroups}" />
 							<br />
 							<br />
-							<ice:commandButton value="&lt;&lt;"
+							<ice:commandButton value="&lt;&lt;" style="margin-left: 3px; margin-right: 3px;"
 								action="#{securityRightsRecordsManager.unassignGroups}" />
 						</ice:panelGroup>
 

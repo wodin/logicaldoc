@@ -195,12 +195,12 @@
 				<ice:panelGroup styleClass="commands">
 					<ice:panelGrid columns="1">
 						<ice:panelGroup>
-							<ice:commandButton value="&gt;&gt;"
+							<ice:commandButton value="&gt;&gt;" style="margin-left: 3px; margin-right: 3px;"
 								action="#{userForm.assignGroups}" partialSubmit="true"
 								immediate="false" />
 						</ice:panelGroup>
 						<ice:panelGroup>
-							<ice:commandButton value="&lt;&lt;"
+							<ice:commandButton value="&lt;&lt;" style="margin-left: 3px; margin-right: 3px;"
 								action="#{userForm.unassignGroups}" partialSubmit="true"
 								immediate="false" />
 						</ice:panelGroup>

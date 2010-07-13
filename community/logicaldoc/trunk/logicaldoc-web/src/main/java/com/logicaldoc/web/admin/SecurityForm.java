@@ -43,20 +43,14 @@ public class SecurityForm {
 
 	private String auditUserString = "";
 
+	private Directory currentDirectory;
+
 	public String getPath() {
 		return path;
 	}
 
 	public void setPath(String path) {
 		this.path = path;
-	}
-
-	public void openFolderSelector(ActionEvent e) {
-		showFolderSelector = true;
-	}
-
-	public void closeFolderSelector(ActionEvent e) {
-		showFolderSelector = false;
 	}
 
 	public boolean isShowFolderSelector() {
@@ -90,6 +84,7 @@ public class SecurityForm {
 		RightsRecordsManager manager = ((RightsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"securityRightsRecordsManager", FacesContext.getCurrentInstance(), log));
 		manager.selectDirectory(dir);
+		currentDirectory = dir;
 	}
 
 	public void cancelFolderSelector(ActionEvent e) {
@@ -99,6 +94,18 @@ public class SecurityForm {
 				"securityRightsRecordsManager", FacesContext.getCurrentInstance(), log));
 		manager.cleanSelection();
 		showFolderSelector = false;
+	}
+
+	public void openFolderSelector(ActionEvent e) {
+		showFolderSelector = true;
+	}
+
+	public void closeFolderSelector(ActionEvent e) {
+		showFolderSelector = false;
+		RightsRecordsManager manager = ((RightsRecordsManager) FacesUtil.accessBeanFromFacesContext(
+				"securityRightsRecordsManager", FacesContext.getCurrentInstance(), log));
+		manager.selectDirectory(currentDirectory);
+		directoryModel.selectDirectory(currentDirectory);
 	}
 
 	public int getPasswordSize() {
