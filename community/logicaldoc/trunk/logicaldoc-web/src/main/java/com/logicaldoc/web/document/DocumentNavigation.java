@@ -410,21 +410,24 @@ public class DocumentNavigation extends NavigationBean {
 			log.error(e.getMessage(), e);
 		}
 
-		Directory parent = new Directory(folderDao.findById(getSelectedDir().getMenu().getParentId()));
+		if (folderDao.findById(getSelectedDir().getMenuId()) == null) {
+			Directory parent = new Directory(folderDao.findById(getSelectedDir().getMenu().getParentId()));
 
-		if (FOLDER_VIEW_TREE.equals(getFolderView())) {
-			DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) directoryModel.getSelectedNode().getParent();
-			directoryModel.removeNodeFromParent(directoryModel.getSelectedNode());
-			if (parentNode.getChildCount() == 0) {
-				Directory dir = ((Directory) parentNode.getUserObject());
-				dir.setExpanded(false);
-				directoryModel.reloadAll();
+			if (FOLDER_VIEW_TREE.equals(getFolderView())) {
+				DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) directoryModel.getSelectedNode()
+						.getParent();
+				directoryModel.removeNodeFromParent(directoryModel.getSelectedNode());
+				if (parentNode.getChildCount() == 0) {
+					Directory dir = ((Directory) parentNode.getUserObject());
+					dir.setExpanded(false);
+					directoryModel.reloadAll();
+				}
 			}
+
+			selectDirectory(parent);
 		}
-
-		selectDirectory(parent);
+		
 		setSelectedPanel(new PageContentBean(getViewMode()));
-
 		refresh();
 		return null;
 	}

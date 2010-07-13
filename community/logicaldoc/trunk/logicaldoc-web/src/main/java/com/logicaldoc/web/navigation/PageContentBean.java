@@ -5,6 +5,7 @@ import javax.faces.event.ActionEvent;
 import com.icesoft.faces.component.tree.IceUserObject;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.web.StyleBean;
+import com.logicaldoc.web.i18n.Messages;
 
 /**
  * <p>
@@ -123,7 +124,10 @@ public class PageContentBean extends IceUserObject {
 	 * @return menu display text.
 	 */
 	public String getDisplayText() {
-		return displayText;
+		if (menu != null && menu.getType() == Menu.MENUTYPE_MENU)
+			return Messages.getMessage(displayText);
+		else
+			return displayText;
 	}
 
 	/**

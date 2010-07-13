@@ -13,7 +13,7 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
-	id="rightsForm" style="width: 100%">
+	id="rightsForm" style="width: 830px">
 
 	<ice:panelGroup styleClass="formBorderHighlight">
 		<h3>
@@ -55,12 +55,12 @@
 						<br />
 						<br />
 						<br />
-						<ice:commandButton value="&gt;&gt;"
+						<ice:commandButton value="&gt;&gt;" style="margin-left: 3px; margin-right: 3px;"
 							action="#{rightsRecordsManager.assignGroups}"
 							rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
 						<br />
 						<br />
-						<ice:commandButton value="&lt;&lt;"
+						<ice:commandButton value="&lt;&lt;" style="margin-left: 3px; margin-right: 3px;"
 							action="#{rightsRecordsManager.unassignGroups}"
 							rendered="#{!empty (rightsRecordsManager.selectedDirectory)}" />
 					</ice:panelGroup>
@@ -82,9 +82,9 @@
 		</ice:panelCollapsible>
 		<br />
 		<!-- Groups and rights -->
-		<ice:panelGroup style="width:100%">
+		<ice:panelGroup style="overflow-x: scroll;">
 			<ice:dataTable value="#{rightsRecordsManager.rules}" var="rule"
-				cellpadding="0" rows="2000">
+				cellpadding="0" rows="2000" width="95%">
 
 				<!-- group column -->
 				<ice:column styleClass="nowrap center">
@@ -229,6 +229,7 @@
 				</ice:column>
 			</ice:dataTable>
 		</ice:panelGroup>
+		<br />
 		<ice:panelGroup styleClass="commands">
 			<ice:selectBooleanCheckbox value="#{rightsRecordsManager.recursive}" />
 			<ice:outputText value="#{msgs['msg.jsp.recursive']}" />

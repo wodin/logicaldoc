@@ -322,7 +322,7 @@ public class DirectoryTreeModel extends DefaultTreeModel {
 				}
 			}
 		} else {
-            branchObject.setLeaf(menuDao.findByUserId(userId, dir.getId(), menuType).isEmpty());
+			branchObject.setLeaf(menuDao.findByUserId(userId, dir.getId(), menuType).isEmpty());
 		}
 
 		branchObject.setLoaded(true);

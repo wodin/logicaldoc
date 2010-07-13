@@ -12,6 +12,7 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.SessionManagement;
 import com.logicaldoc.web.StyleBean;
+import com.logicaldoc.web.i18n.Messages;
 import com.logicaldoc.web.navigation.PageContentBean;
 import com.logicaldoc.web.util.FacesUtil;
 
@@ -57,9 +58,14 @@ public class Directory extends PageContentBean {
 	public Directory(Menu menu) {
 		super(menu);
 		if (menu != null)
-			setDisplayText(menu.getText());
+			if (menu.getType() == Menu.MENUTYPE_DIRECTORY)
+				setDisplayText(menu.getText());
+			else {
+				setDisplayText(Messages.getMessage(menu.getText()));
+			}
 		else
 			setDisplayText("");
+
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		setIcon(style.getImagePath(menu.getIcon()));
 	}
