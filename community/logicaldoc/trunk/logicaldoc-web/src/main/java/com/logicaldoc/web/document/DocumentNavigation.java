@@ -464,6 +464,7 @@ public class DocumentNavigation extends NavigationBean {
 		Menu currMenu = getSelectedDir().getMenu();
 
 		form.setParentPathDescr(currMenu.getText());
+		form.setParentPathId(currMenu.getId());
 
 		navigation.setSelectedPanel(page);
 
