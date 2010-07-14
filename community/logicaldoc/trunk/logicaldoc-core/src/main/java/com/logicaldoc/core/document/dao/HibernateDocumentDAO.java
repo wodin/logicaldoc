@@ -248,6 +248,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				listener.afterStore(doc, transaction, dictionary);
 			}
 
+			if (StringUtils.isEmpty(doc.getCustomId()))
+				doc.setCustomId(Long.toString(doc.getId()));
+
 			// Perhaps some listener may have modified the document
 			getHibernateTemplate().saveOrUpdate(doc);
 
