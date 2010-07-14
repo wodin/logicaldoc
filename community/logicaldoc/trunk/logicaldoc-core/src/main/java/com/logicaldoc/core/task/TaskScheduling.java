@@ -203,6 +203,9 @@ public class TaskScheduling {
 
 		trigger.reload();
 
+		if ("simple".equals(getMode()))
+			trigger.setStartTime(new Date(new Date().getTime() + trigger.getRepeatInterval()));
+
 		try {
 			// Reschedule the job
 			scheduler.deleteJob(taskName + "Job", "DEFAULT");
