@@ -114,7 +114,7 @@
 	<bean id="GarbageCollectorTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="GarbageCollector" />
 		<property name="startDelay" value="5000" />
-		<property name="repeatInterval" value="60000" />
+		<property name="repeatInterval" value="5000" />
 	</bean>
 
 	<!-- Scheduler -->
