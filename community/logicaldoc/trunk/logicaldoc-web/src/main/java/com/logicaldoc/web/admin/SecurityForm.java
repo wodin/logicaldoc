@@ -104,8 +104,10 @@ public class SecurityForm {
 		showFolderSelector = false;
 		RightsRecordsManager manager = ((RightsRecordsManager) FacesUtil.accessBeanFromFacesContext(
 				"securityRightsRecordsManager", FacesContext.getCurrentInstance(), log));
-		manager.selectDirectory(currentDirectory);
-		directoryModel.selectDirectory(currentDirectory);
+		if (currentDirectory != null) {
+			manager.selectDirectory(currentDirectory);
+			directoryModel.selectDirectory(currentDirectory);
+		}
 	}
 
 	public int getPasswordSize() {
