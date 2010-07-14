@@ -32,8 +32,8 @@ import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
-import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Hit;
+import com.logicaldoc.core.searchengine.LuceneDocument;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.Menu;
@@ -127,6 +127,8 @@ public class SearchForm extends SortableList {
 	private boolean showFolderSelector = false;
 
 	private String parentPathDescr;
+
+	private Long parentPathId = null;
 
 	private Long excludeFromResult = null;
 
@@ -459,7 +461,7 @@ public class SearchForm extends SortableList {
 		page.setText(Messages.getMessage("searches"));
 		StyleBean style = (StyleBean) Context.getInstance().getBean(StyleBean.class);
 		page.setIcon(style.getImagePath("search.png"));
-		menuBar.selectItem("m-18", page);
+		menuBar.selectItem("m-15", page);
 		return null;
 	}
 
@@ -551,6 +553,11 @@ public class SearchForm extends SortableList {
 
 			if (dir != null) {
 				opt.setFolderId(dir.getMenuId());
+				if (isSearchInSubPath())
+					opt.setSearchInSubPath(true);
+			} else {
+				// Check if the user has chosen the search in folder feature
+				opt.setFolderId(parentPathId);
 				if (isSearchInSubPath())
 					opt.setSearchInSubPath(true);
 			}
@@ -1134,5 +1141,13 @@ public class SearchForm extends SortableList {
 
 	public Search getLastSearch() {
 		return lastSearch;
+	}
+
+	public Long getParentPathId() {
+		return parentPathId;
+	}
+
+	public void setParentPathId(Long parentPathId) {
+		this.parentPathId = parentPathId;
 	}
 }
