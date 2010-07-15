@@ -1,0 +1,172 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page is the group editing form
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="groupForm">
+
+	<ice:panelGroup styleClass="center formBorderHighlight"
+		style="text-align:left; width: 600px;">
+		<ice:panelGroup>
+			<!-- Group data -->
+			<ice:panelGroup>
+				<h3>
+					<ice:outputText value="#{msgs['msg.jsp.groupdata']}" />
+					<br />
+					<br />
+				</h3>
+				<ice:panelGrid columns="3">
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="name" value="#{msgs['group.name']}*" />
+					</ice:panelGroup>
+					<ice:panelGroup
+						rendered="#{groupsRecordsManager.selectedPanel == 'create'}">
+						<ice:inputText id="name" tabindex="1" style="text-align:left;"
+							maxlength="30" size="30" value="#{groupForm.group.name}"
+							binding="#{groupForm.groupName}"
+							onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+							required="true" />
+						<ice:message for="name" />
+					</ice:panelGroup>
+					<ice:panelGroup
+						rendered="#{groupsRecordsManager.selectedPanel == 'edit'}">
+						<ice:outputText value=" #{groupForm.group.name}"
+							style="font-weight:bold" />
+					</ice:panelGroup>
+					<ice:panelGroup style="width:20px" />
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="groupDesc"
+							value="#{msgs['msg.jsp.groupdesc']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="groupDesc" maxlength="70" size="30"
+							value="#{groupForm.group.description}"
+							binding="#{groupForm.groupDesc}" />
+						<ice:message for="groupDesc" />
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+		</ice:panelGroup>
+
+		<!-- Group affiliation -->
+		<ice:panelGroup>
+			<hr />
+			<h3>
+				<ice:outputText value="#{msgs['group.inheritfrom']}" />
+				<br />
+				<br />
+			</h3>
+			<ice:panelGrid columns="3">
+				<ice:panelGroup>
+					<ldoc:groupselector id="affiliateGroup" showFilter="true"
+						allowMultipleSelection="false" label="" items="#{groupForm.items}"
+						value="#{groupForm.parentGroup}" large="131"
+						filterValue="#{groupForm.groupFilter}"
+						filterListener="#{groupForm.filterGroups}" />
+				</ice:panelGroup>
+				<ice:panelGroup style="width:20px" />
+				<ice:panelGroup>
+					<ice:message for="groups" />
+				</ice:panelGroup>
+				<ice:panelGroup />
+			</ice:panelGrid>
+		</ice:panelGroup>
+
+		<ice:panelGroup
+			rendered="#{groupsRecordsManager.selectedPanel == 'edit'}">
+			<hr />
+			<ice:panelCollapsible styleClass="pnlClpsbl">
+
+				<f:facet name="header">
+					<ice:panelGroup styleClass="expandableStateIndicator">
+						<ice:outputText id="messagesHeader"
+							value="#{msgs['field.preferences']}" />
+					</ice:panelGroup>
+				</f:facet>
+				<ice:panelGroup>
+					<ice:dataTable value="#{groupForm.preferences}" var="preference"
+						cellpadding="0">
+
+						<!-- field name column -->
+						<ice:column styleClass="nowrap center">
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['field']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{preference.label}" />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- insert column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['insert']}" />
+							</f:facet>
+							<ice:panelGroup style="white-space: nowrap;">
+								<ice:selectBooleanCheckbox value="#{preference.insertHidden}" />
+								<ice:outputLabel for="insert_hidden" value="#{msgs['hidden']}" style="padding-left:3px;" />
+							</ice:panelGroup>
+							<ice:panelGroup style="white-space: nowrap;">
+								<ice:selectBooleanCheckbox value="#{preference.insertReadOnly}" />
+								<ice:outputLabel for="insert_readonly"
+									value="#{msgs['readonly']}" style="padding-left:3px;" />
+							</ice:panelGroup>
+							<ice:panelGroup style="white-space: nowrap;">
+								<ice:selectBooleanCheckbox value="#{preference.insertMandatory}" />
+								<ice:outputLabel for="insert_mandatory"
+									value="#{msgs['mandatory']}" style="padding-left:3px;" />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- edit column -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['edit']}" />
+							</f:facet>
+							<ice:panelGroup style="white-space: nowrap;">
+								<ice:selectBooleanCheckbox value="#{preference.editHidden}" />
+								<ice:outputLabel for="edit_hidden" value="#{msgs['hidden']}" style="padding-left:3px;" />
+							</ice:panelGroup>
+							<ice:panelGroup style="white-space: nowrap;">
+								<ice:selectBooleanCheckbox value="#{preference.editReadOnly}" />
+								<ice:outputLabel for="edit_readonly" value="#{msgs['readonly']}" style="padding-left:3px;" />
+							</ice:panelGroup>
+							<ice:panelGroup style="white-space: nowrap;">
+								<ice:selectBooleanCheckbox value="#{preference.editMandatory}" />
+								<ice:outputLabel for="edit_mandatory"
+									value="#{msgs['mandatory']}" style="padding-left:3px;" />
+							</ice:panelGroup>
+						</ice:column>
+					</ice:dataTable>
+				</ice:panelGroup>
+			</ice:panelCollapsible>
+		</ice:panelGroup>
+		
+		
+		
+		<hr />
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['cancel']}" partialSubmit="true"
+				immediate="true" action="#{groupsRecordsManager.list}" />
+			<ice:commandButton value="#{msgs['save']}" id="save" tabindex="1"
+				action="#{groupForm.save}" />
+		</ice:panelGroup>
+	</ice:panelGroup>
+
+	<script defer="defer" type="text/javascript" language="javascript">
+      /**
+       * Set initial focus
+       */
+      document.getElementById('w-group:groupForm:name').focus();
+    </script>
+</jsp:root>

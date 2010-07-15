@@ -1,0 +1,60 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page is the form for mark a document as immutable
+  
+ @author Matteo Caruso - Logical Objects
+ @since 4.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="immutabilityForm">
+
+	<ice:panelGroup styleClass="center formBorderHighlight"
+		style="width: 700px;">
+		<ice:panelGroup>
+
+			<ice:panelGroup>
+				<h3>
+					<ice:outputText value="#{msgs['document.immutable.advise']}" />
+					<br />
+					<br />
+				</h3>
+				<ice:panelGrid columns="2" style="text-align:left;"
+					onkeypress="return submitOnEnter('w-group:immutabilityForm:save', event);">
+					<ice:panelGroup styleClass="outputLabel">
+						<ice:outputLabel for="groupDesc"
+							value="#{msgs['document.immutable.comment']}*: " />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputTextarea id="reason" required="true" tabindex="1"
+							cols="70" rows="2"
+							value="#{documentsRecordsManager.operationComment}" />
+						<ice:message for="reason" />
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+		</ice:panelGroup>
+
+		<hr />
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['back']}" styleClass="backBtn" partialSubmit="true"
+				immediate="true" action="#{documentsRecordsManager.back}" />
+			<ice:commandButton value="#{msgs['confirm']}" id="save" tabindex="1"
+				onclick="if (!confirm(&quot;#{msgs['document.immutable.question']}&quot;)) return false;"
+				action="#{documentsRecordsManager.markSelectionAsImmutable}" />
+		</ice:panelGroup>
+	</ice:panelGroup>
+
+	<script defer="defer" type="text/javascript" language="javascript">
+      /**
+       * Set initial focus
+       */
+      document.getElementById('w-group:immutabilityForm:name').focus();
+    </script>
+</jsp:root>

@@ -1,0 +1,92 @@
+<?xml version = '1.0'?>
+<!-- 
+ Folder Selector
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf">
+	<![CDATA[<!-- tag folderselector -->]]>
+
+	<ui:composition>
+		<ldoc:compositeControl
+			methodBindings="openListener=void javax.faces.event.ActionEvent;
+			confirmListener=void javax.faces.event.ActionEvent;
+			closeListener=void javax.faces.event.ActionEvent;
+			cancelListener=void javax.faces.event.ActionEvent;">
+
+			<ice:commandButton rendered="#{useIcon!='true'}"
+				actionListener="#{openListener}" value="#{msgs['brows']}..." />
+
+			<ice:commandLink rendered="#{useIcon=='true'}"
+				actionListener="#{openListener}" title="#{msgs['brows']}">
+				<ice:graphicImage value="#{StyleBean.imagesPath}/folder_tree.png"
+					style="border: 0px solid;" title="#{msgs['brows']}" />
+			</ice:commandLink>
+
+			<!-- panel popup code, draggable type  -->
+			<ice:panelPopup id="folderselectorDraggablePP"
+				rendered="#{showSelector}" visible="#{showSelector}"
+				draggable="true" modal="true"
+				style="z-index: 10000; top: 300px; left: 300px; position: absolute; width: 440px; height: 350px;">
+
+				<f:facet name="header">
+					<ice:panelGroup id="draggablePanelGrid">
+						<ice:outputText value="#{msgs['folderselector.title']}"
+							style="font-size: 12px;" />
+					</ice:panelGroup>
+				</f:facet>
+
+				<f:facet name="body">
+					<ice:panelGrid id="dragContent" width="100%" cellpadding="0"
+						cellspacing="0" columns="1" styleClass="popupFolderSelectorBody">
+						<ice:outputText value="#{msgs['folderselector.explanation']}"
+							style="font-size: 11px;" />
+
+						<ice:panelGroup styleClass="treeContainer_folders">
+							<ice:tree id="accountTree" value="#{directoryModel}" var="item"
+								hideRootNode="false" hideNavigation="false"
+								imageDir="#{StyleBean.imageDirectory}" immediate="true"
+								actionListener="#{directoryModel.nodeClicked}">
+								<ice:treeNode>
+									<f:facet name="icon">
+										<ice:panelGroup style="display: inline">
+											<ice:graphicImage value="#{item.userObject.icon}" />
+											<ice:commandLink
+												actionListener="#{directoryModel.onSelectDirectory}"
+												immediate="true">
+												<f:param name="directoryId"
+													value="#{item.userObject.menuId}" />
+												<ice:outputText
+													value="  #{item.userObject.displayText=='menu.documents' ? msgs['menu.documents'] : item.userObject.displayText}"
+													styleClass="#{item.userObject.selected ? 'selected-tree-node' : 'tree-node'}" />
+											</ice:commandLink>
+										</ice:panelGroup>
+									</f:facet>
+								</ice:treeNode>
+							</ice:tree>
+						</ice:panelGroup>
+
+						<ice:panelGroup styleClass="commands alignRight"
+							style="margin-top: 8px;">
+							<ice:commandButton id="folderSelected"
+								actionListener="#{confirmListener}" value="#{msgs['ok']}" />
+							<ice:commandButton id="cancelFolderSelector"
+								actionListener="#{cancelListener}" value="#{msgs['remove']}" />
+							<ice:commandButton id="closeFolderSelector"
+								actionListener="#{closeListener}" value="#{msgs['close']}" />
+						</ice:panelGroup>
+					</ice:panelGrid>
+				</f:facet>
+			</ice:panelPopup>
+		</ldoc:compositeControl>
+	</ui:composition>
+	<![CDATA[<!-- end of folderselector -->]]>
+</jsp:root>

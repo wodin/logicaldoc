@@ -1,0 +1,24 @@
+<?xml version = '1.0'?>
+<!-- 
+ The navigation menu
+  
+ @author Marco Meschieri
+ @version $Id: logout.jspx,v 1.4 2006/08/29 16:33:46 marco Exp $
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+	id="logout">
+	<ice:form id="logoutForm">
+		<ice:commandLink action="#{loginForm.logout}">
+			<ice:outputText styleClass="logoutLink"
+				value="#{msgs['logout']} " />
+		</ice:commandLink>
+	</ice:form>
+</jsp:root>

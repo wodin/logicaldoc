@@ -1,0 +1,397 @@
+<?xml version = '1.0'?>
+<!-- 
+ Advanced search form
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="searchForm" styleClass="center formBorderHighlight"
+	style="width: 700px; text-align:left;">
+
+	<ice:panelGroup>
+		<ice:messages globalOnly="true" />
+	</ice:panelGroup>
+
+	<!-- Core data -->
+
+	<ice:panelGroup>
+		<h3>
+			<ice:outputText value="#{msgs['msg.jsp.searchterms']}" />
+			<br />
+			<br />
+		</h3>
+		<ice:panelGrid columns="2"
+			onkeypress="return submitOnEnter('searchForm:save', event);">
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="query" value="#{msgs['msg.jsp.baseexp']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="query" value="#{searchForm.query}" tabindex="1"
+					maxlength="255" size="50" partialSubmit="true" style="margin-right: 50px;" />
+				<ice:commandButton type="submit" styleClass="standardBtn" value="#{msgs['search']}"
+					id="save01" tabindex="1" action="#{searchForm.search}" />	
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="phrase" value="#{msgs['msg.jsp.phrase']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="phrase" value="#{searchForm.phrase}" tabindex="1"
+					maxlength="255" size="50" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="any" value="#{msgs['msg.jsp.any']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="any" value="#{searchForm.any}" maxlength="255"
+					size="50" tabindex="1" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="nots" value="#{msgs['msg.jsp.not']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="nots" value="#{searchForm.nots}" maxlength="255"
+					size="50" tabindex="1" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="language"
+					value="#{msgs['language']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectOneMenu id="language" styleClass="selectTagMenu"
+					tabindex="1" value="#{searchForm.language}">
+					<f:selectItem itemValue="all"
+						itemLabel="#{msgs['search.allLanguages']}" />
+					<f:selectItems value="#{selectionTags.languages}" />
+				</ice:selectOneMenu>
+			</ice:panelGroup>
+		</ice:panelGrid>
+	</ice:panelGroup>
+
+
+	<!-- File data -->
+	<ice:panelGroup>
+		<hr />
+		<h3>
+			<ice:outputText value="#{msgs['msg.jsp.searchdata']}" />
+			<br />
+			<br />
+		</h3>
+		<ice:panelGrid columns="5"
+			onkeypress="return submitOnEnter('searchForm:save', event);">
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="parentPath"
+					value="#{msgs['advancedSearch.searchin']}" />
+			</ice:panelGroup>
+			<ice:panelGroup style="display: inline;" styleClass="commands">
+				<ice:outputText id="parentPathDescr"
+					value="#{searchForm.parentPathDescr}  " />
+				<ldoc:folderselector style="float:right;"
+					directoryModel="#{searchForm.directoryModel}"
+					showSelector="#{searchForm.showFolderSelector}"
+					openListener="#{searchForm.openFolderSelector}"
+					confirmListener="#{searchForm.folderSelected}"
+					cancelListener="#{searchForm.cancelFolderSelector}" 
+					closeListener="#{searchForm.closeFolderSelector}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+					&amp;nbsp;
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:outputLabel for="searchSubPath"
+					value="#{msgs['search.searchsubpath']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectBooleanCheckbox id="searchSubPath"
+					value="#{searchForm.searchInSubPath}" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="sizeMin" value="#{msgs['msg.jsp.sizefrom']} " />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="sizeMin" value="#{searchForm.sizeMin}"
+					binding="#{searchForm.uiSizeMin}" tabindex="1" partialSubmit="true"
+					maxlength="255" size="12">
+					<f:convertNumber groupingUsed="false" integerOnly="true" />
+					<f:validateLongRange minimum="0" maximum="999999999999" />
+				</ice:inputText>(KB)
+				<ice:message for="sizeMin" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+                    &amp;nbsp;
+                </ice:panelGroup>
+			<ice:panelGroup style="text-align:right;">
+				<ice:outputLabel for="sizeMax" value="#{msgs['size.to']} " />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:inputText id="sizeMax" value="#{searchForm.sizeMax}"
+					binding="#{searchForm.uiSizeMax}" tabindex="1" partialSubmit="true"
+					onkeydown="if(event.keyCode == '9') {setFocus('');iceSubmitPartial(form,this,event);}"
+					validator="#{searchForm.validateSizes}" maxlength="255" size="12">
+					<f:convertNumber groupingUsed="false" integerOnly="true" />
+					<f:validateLongRange minimum="0" maximum="999999999999" />
+				</ice:inputText>(KB)
+				<ice:message for="sizeMax" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="sourceDateFrom"
+					value="#{msgs['msg.jsp.sourcedatefrom']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectInputDate id="sourceDateFrom" tabindex="1"
+					popupDateFormat="#{loc.dateFormatShort}"
+					value="#{searchForm.sourceDateFrom}"
+					binding="#{searchForm.uiSourceDateFrom}" renderAsPopup="true">
+					<f:convertDateTime pattern="#{loc.dateFormatShort}"
+						timeZone="#{timezone}" />
+				</ice:selectInputDate>
+				<ice:message for="sourceDateFrom" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+                    &amp;nbsp;
+            </ice:panelGroup>
+			<ice:panelGroup style="text-align:right;">
+				<ice:outputLabel for="sourceDateTo" value="#{msgs['date.to']} " />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectInputDate id="sourceDateTo" tabindex="1"
+					popupDateFormat="#{loc.dateFormatShort}"
+					value="#{searchForm.sourceDateTo}"
+					binding="#{searchForm.uiSourceDateTo}"
+					validator="#{searchForm.validateSourceDates}" renderAsPopup="true">
+					<f:convertDateTime pattern="#{loc.dateFormatShort}"
+						timeZone="#{timezone}" />
+				</ice:selectInputDate>
+				<ice:message for="sourceDateTo" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="creationDateFrom"
+					value="#{msgs['document.createdfrom']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectInputDate id="creationDateFrom" tabindex="1"
+					popupDateFormat="#{loc.dateFormatShort}"
+					value="#{searchForm.creationDateFrom}"
+					renderAsPopup="true">
+					<f:convertDateTime pattern="#{loc.dateFormatShort}"
+						timeZone="#{timezone}" />
+				</ice:selectInputDate>
+				<ice:message for="creationDateFrom" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+                    &amp;nbsp;
+            </ice:panelGroup>
+			<ice:panelGroup style="text-align:right;">
+				<ice:outputLabel for="creationDateTo" value="#{msgs['date.to']} " />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectInputDate id="creationDateTo" tabindex="1"
+					popupDateFormat="#{loc.dateFormatShort}"
+					value="#{searchForm.creationDateTo}"
+					validator="#{searchForm.validateCreationDates}"
+					renderAsPopup="true">
+					<f:convertDateTime pattern="#{loc.dateFormatShort}"
+						timeZone="#{timezone}" />
+				</ice:selectInputDate>
+				<ice:message for="creationDateTo" />
+			</ice:panelGroup>
+
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="publishingDateFrom"
+					value="#{msgs['document.publishedfrom']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectInputDate id="publishingDateFrom" tabindex="1"
+					popupDateFormat="#{loc.dateFormatShort}"
+					value="#{searchForm.publishingDateFrom}"
+					binding="#{searchForm.uiPublishingDateFrom}" renderAsPopup="true">
+					<f:convertDateTime pattern="#{loc.dateFormatShort}"
+						timeZone="#{timezone}" />
+				</ice:selectInputDate>
+				<ice:message for="publishingDateFrom" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+                    &amp;nbsp;
+            </ice:panelGroup>
+			<ice:panelGroup style="text-align:right;">
+				<ice:outputLabel for="publishingDateTo" value="#{msgs['date.to']} " />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectInputDate id="publishingDateTo" tabindex="1"
+					popupDateFormat="#{loc.dateFormatShort}"
+					value="#{searchForm.publishingDateTo}"
+					binding="#{searchForm.uiPublishingDateTo}"
+					validator="#{searchForm.validatePublishingDates}"
+					renderAsPopup="true">
+					<f:convertDateTime pattern="#{loc.dateFormatShort}"
+						timeZone="#{timezone}" />
+				</ice:selectInputDate>
+				<ice:message for="publishingDateTo" />
+			</ice:panelGroup>
+
+			<ice:panelGroup />
+			<ice:panelGroup />
+			<ice:panelGroup>
+                    &amp;nbsp;
+                </ice:panelGroup>
+			<ice:panelGroup styleClass="outputLabel" style="text-align:right;">
+				<ice:outputLabel for="format" value="#{msgs['format']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectOneMenu id="format" styleClass="selectTagMenu"
+					style="width:200px" tabindex="1" value="#{searchForm.format}">
+					<f:selectItem itemLabel="#{msgs['msg.jsp.allformats']}"
+						itemValue="all" />
+					<f:selectItems value="#{selectionTags.formats}" />
+				</ice:selectOneMenu>
+			</ice:panelGroup>
+		</ice:panelGrid>
+	</ice:panelGroup>
+
+
+
+	<ice:panelGroup>
+		<hr />
+		<h3>
+			<ice:outputText value="#{msgs['msg.jsp.searchfields']}" />
+			<br />
+			<br />
+		</h3>
+		<ice:panelGrid columns="5"
+			onkeypress="return submitOnEnter('searchForm:save', event);">
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="content" value="#{msgs['fulltext']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectBooleanCheckbox id="content" tabindex="1"
+					value="#{searchForm.content}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+                    &amp;nbsp;
+                </ice:panelGroup>
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="tags" value="#{msgs['tags']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectBooleanCheckbox id="tags" tabindex="1"
+					value="#{searchForm.tags}" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="source" value="#{msgs['document.source']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectBooleanCheckbox id="source" value="#{searchForm.source}"
+					tabindex="1" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+                    &amp;nbsp;
+                </ice:panelGroup>
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="sourceAuthor"
+					value="#{msgs['document.author']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectBooleanCheckbox id="sourceAuthor" tabindex="1"
+					value="#{searchForm.sourceAuthor}" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="sourcetype"
+					value="#{msgs['document.type']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectBooleanCheckbox id="sourcetype" tabindex="1"
+					value="#{searchForm.sourceType}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+                    &amp;nbsp;
+                </ice:panelGroup>
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="coverage" value="#{msgs['document.coverage']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectBooleanCheckbox id="coverage" tabindex="1"
+					value="#{searchForm.coverage}" />
+			</ice:panelGroup>
+
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="title" value="#{msgs['title']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectBooleanCheckbox id="title" tabindex="1"
+					value="#{searchForm.title}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+                &amp;nbsp;
+            </ice:panelGroup>
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="customId" value="#{msgs['document.customid']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectBooleanCheckbox id="customId" tabindex="1"
+					value="#{searchForm.customId}" />
+			</ice:panelGroup>
+		</ice:panelGrid>
+	</ice:panelGroup>
+
+	<ice:panelGroup>
+		<hr />
+		<h3>
+			<ice:outputText value="#{msgs['template']}" />
+			<br />
+			<br />
+		</h3>
+		<ice:panelGrid columns="5"
+			onkeypress="return submitOnEnter('searchForm:save', event);">
+			<ice:panelGroup styleClass="outputLabel">
+				<ice:outputLabel for="template" value="#{msgs['template']}" />
+			</ice:panelGroup>
+			<ice:panelGroup>
+				<ice:selectOneMenu styleClass="selectTagMenu" tabindex="1"
+					value="#{searchForm.template}" partialSubmit="true"
+					valueChangeListener="#{searchForm.changeTemplate}">
+					<f:selectItem itemValue="" itemLabel="" />
+					<f:selectItems value="#{selectionTags.templates}" />
+				</ice:selectOneMenu>
+			</ice:panelGroup>
+			<ice:panelGroup style="width:20px" />
+			<ice:panelGroup />
+			<ice:panelGroup />
+		</ice:panelGrid>
+	</ice:panelGroup>
+	<ice:panelGroup>
+		<ice:selectManyCheckbox value="#{searchForm.extendedAttributes}">
+			<f:selectItems value="#{searchForm.extendedAttributesItems}" />
+		</ice:selectManyCheckbox>
+	</ice:panelGroup>
+
+	<hr />
+	<ice:panelGroup styleClass="commands">
+		<ice:commandButton type="submit" value="#{msgs['search']}"
+			id="save" tabindex="1" action="#{searchForm.search}" />
+	</ice:panelGroup>
+
+	<script defer="defer" type="text/javascript" language="javascript">
+      /**
+       * Set initial focus
+       */
+      document.getElementById('searchForm:query').focus();
+    </script>
+</jsp:root>
