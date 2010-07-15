@@ -1,9 +1,6 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.util.EventHandler;
-import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.DropEvent;
 import com.smartgwt.client.widgets.events.DropHandler;
@@ -13,48 +10,29 @@ import com.smartgwt.client.widgets.events.DropOverEvent;
 import com.smartgwt.client.widgets.events.DropOverHandler;
 import com.smartgwt.client.widgets.layout.HStack;
 
-/**
- * A single workflow element.
- * 
- * @author Marco Meschieri - Logical Objects
- * @since 6.0
- */
-public class WorkflowComponent extends HStack {
-
-	private TaskBox taskBox;
-
+public class Transition extends HStack {
 	private Label dropArea;
 
-	public WorkflowComponent() {
+	public Transition() {
 		super();
-		setLayoutMargin(10);
-		setMembersMargin(5);
-		setHeight(65);
-		
-		setCanDrag(true);
-		setCanDrop(true);
-		setDragType("component");
 
-		setAnimateMembers(true);
+		setMembersMargin(3);
+		setHeight(50);
 
-		setBorder("1px dotted #4040ff");
+		// transition line
+		Label line = new Label("transition");
+		line.setHeight(12);
+		line.setStyleName("s");
+		line.setAlign(Alignment.RIGHT);
+		line.setWidth(100);
 
-		addDropOverHandler(new DropOverHandler() {
-			public void onDropOver(DropOverEvent event) {
-				setBackgroundColor("FFFF88");
-			}
-		});
+		addMember(line);
 
-		addDropOutHandler(new DropOutHandler() {
-			public void onDropOut(DropOutEvent event) {
-				setBackgroundColor("");
-			}
-		});
+		initDropArea();
+	}
 
-		taskBox = new TaskBox();
-		addMember(taskBox);
-
-		dropArea = new Label("Drop a Task");
+	private void initDropArea() {
+		dropArea = new Label("Drop an Element");
 		dropArea.setHeight(40);
 		dropArea.setWidth(100);
 		dropArea.setBackgroundColor("#cccccc");
@@ -76,12 +54,12 @@ public class WorkflowComponent extends HStack {
 
 		dropArea.addDropHandler(new DropHandler() {
 			public void onDrop(DropEvent event) {
-				Canvas target = EventHandler.getDragTarget();
-				SC.say("You dropped the " + target.getID());
-				addMember(new TransitionBox(), 1);
+				// Canvas target = EventHandler.getDragTarget();
+				// SC.say("You dropped the " + target.getID());
+				removeMember(dropArea);
+				addMember(new TransitionBox());
 			}
 		});
-
 		addMember(dropArea);
 	}
 }
