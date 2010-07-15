@@ -31,6 +31,7 @@ import com.logicaldoc.core.dbinit.PluginDbInit;
 import com.logicaldoc.core.searchengine.Indexer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.DBMSConfigurator;
+import com.logicaldoc.util.config.LoggingConfigurator;
 import com.logicaldoc.util.config.PropertiesBean;
 
 /**
@@ -101,7 +102,9 @@ public class SetupWizard implements TabChangeListener {
 			// Refresh the current logging location
 			try {
 				String log4jPath = servletContext.getRealPath("/WEB-INF/classes/ldoc-log4j.xml");
-				System.err.println("log4jPath = " + log4jPath);
+				LoggingConfigurator lconf = new LoggingConfigurator();
+				lconf.setLogsRoot(pbean.getProperty("conf.logdir"));
+				lconf.write();
 				Log4jConfigurer.initLogging(log4jPath);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
