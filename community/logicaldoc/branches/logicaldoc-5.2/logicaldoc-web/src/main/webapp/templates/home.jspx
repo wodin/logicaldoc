@@ -1,0 +1,253 @@
+<?xml version = '1.0'?>
+<!-- 
+ Page for documents browsing
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	styleClass="home">
+	<ice:panelGroup styleClass="welcomePanel">
+		<h3>
+			<ice:outputFormat value="#{messages['msg.jsp.main.welcome']}">
+				<f:param value="#{authUser}" />
+				<f:param value="#{StyleBean.productName}" />
+			</ice:outputFormat>
+		</h3>
+	</ice:panelGroup>
+
+
+	<ice:panelGrid styleClass="homeLayoutRootTable" columns="2"
+		width="100%" border="0" cellspacing="10">
+
+		<!--  First Column -->
+		<ice:panelGroup>
+
+			<!-- Messages panel -->
+			<ice:panelCollapsible id="messagesPanel"
+				expanded="#{homeBean.messagesExpanded}" styleClass="pnlClpsbl">
+				<f:facet name="header">
+					<ice:panelGroup styleClass="expandableStateIndicator">
+						<ice:outputText id="messagesHeader" value="#{msgs['messages']}" />
+					</ice:panelGroup>
+				</f:facet>
+				<ice:panelGroup style="padding-bottom: 10px;">
+					<ice:panelGroup style="padding-top: 10px">
+						<ice:graphicImage value="#{StyleBean.imagesPath}/editmessage.png" />
+						<ice:outputText value=" " />
+						<ice:commandLink action="#{messagesRecordsManager.addMessage}"
+							value="#{msgs['menu.createmessage']}" />
+					</ice:panelGroup>
+					<ice:panelGroup style="padding-top: 10px">
+						<ice:graphicImage value="#{StyleBean.imagesPath}/message.png" />
+						<ice:outputText value=" " />
+						<ice:commandLink action="#{messagesRecordsManager.listMessages}">
+							<ice:outputText value="#{msgs['menu.readmessages']}" />
+							<ice:outputText
+								value=" (#{messagesRecordsManager.toBeReadCount})" />
+						</ice:commandLink>
+					</ice:panelGroup>
+				</ice:panelGroup>
+			</ice:panelCollapsible>
+
+			<ice:panelCollapsible id="lastCommentsPanel"
+				expanded="#{homeBean.lastCommentsExpanded}" styleClass="pnlClpsbl"
+				style="padding-top: 20px;">
+				<f:facet name="header">
+					<ice:panelGroup styleClass="expandableStateIndicator">
+						<ice:outputText id="lastCommentsHeader"
+							value="#{msgs['home.last.comments']}" />
+					</ice:panelGroup>
+				</f:facet>
+				<ice:panelGroup>
+					<!-- Table with results -->
+					<ice:dataTable id="commentsList" value="#{homeBean.lastComments}"
+						var="comment" cellpadding="0" rows="10" styleClass="homePlainTbl">
+						<ice:column style="border: 0px;">
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['title']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:commandLink title="#{msgs['home.show.discussion']}"
+									action="#{documentNavigation.showDiscussion}">
+									<ice:outputText value="#{comment.subject}" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+						<ice:column style="border: 0px;">
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['date']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{comment.date}">
+									<f:convertDateTime pattern="#{loc.dateFormatHM}"
+										timeZone="#{StyleBean.timeZone}" />
+								</ice:outputText>
+							</ice:panelGroup>
+						</ice:column>
+					</ice:dataTable>
+				</ice:panelGroup>
+			</ice:panelCollapsible>
+
+
+			<ice:panelCollapsible id="lastDocumentsPanel"
+				expanded="#{homeBean.lastDocumentsExpanded}" styleClass="pnlClpsbl"
+				style="padding-top: 20px;">
+				<f:facet name="header">
+					<ice:panelGroup styleClass="expandableStateIndicator">
+						<ice:outputText id="lastDocumentsHeader"
+							value="#{msgs['home.last.documents.modified']}" />
+					</ice:panelGroup>
+				</f:facet>
+				<ice:panelGroup>
+					<!-- Table with results -->
+					<ice:dataTable id="lastDocumentList"
+						value="#{homeBean.lastModifiedDocuments}" var="entry"
+						cellpadding="0" rows="10" styleClass="homePlainTbl">
+						<ice:column style="border: 0px;">
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['document']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:commandLink action="#{documentNavigation.openInFolder}"
+									style="color: #344a6a; text-decoration: underline;">
+									<ice:outputText value="#{entry.title}" style="color: #344a6a;" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+						<ice:column style="border: 0px;">
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['date']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{entry.lastModified}">
+									<f:convertDateTime pattern="#{loc.dateFormatHM}"
+										timeZone="#{StyleBean.timeZone}" />
+								</ice:outputText>
+							</ice:panelGroup>
+						</ice:column>
+					</ice:dataTable>
+				</ice:panelGroup>
+			</ice:panelCollapsible>
+
+			<!-- End first Column -->
+		</ice:panelGroup>
+
+		<!--  Second Column -->
+		<ice:panelGroup>
+
+			<ice:panelCollapsible id="tagCloudsPanel"
+				expanded="#{homeBean.tagCloudsExpanded}" styleClass="pnlClpsbl">
+				<f:facet name="header">
+					<ice:panelGroup styleClass="expandableStateIndicator">
+						<ice:outputText id="tagCloudsHeader" value="Tag Cloud" />
+					</ice:panelGroup>
+				</f:facet>
+				<ice:panelGroup rendered="#{guiBean.tagcloudMode eq 'simple'}">
+					<ice:panelSeries var="tagCloud" value="#{homeBean.tagClouds}">
+						<ice:commandLink action="#{tagCloud.select}">
+							<ice:outputText styleClass="cloud#{tagCloud.scale}"
+								value="#{tagCloud.tag}" />&amp;nbsp;
+					    </ice:commandLink>
+					</ice:panelSeries>
+				</ice:panelGroup>
+				<ice:panelGroup rendered="#{(guiBean.tagcloudMode eq '3D') and !(empty homeBean.tagClouds)}">
+					<div align="center">
+						<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+							codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0"
+							width="300" height="300" align="middle" id="tagcloud">
+							<param name="allowScriptAccess" value="always" />
+							<param name="allowFullScreen" value="false" />
+							<param name="movie"
+								value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.requestContextPath}/templates/tagcloud.swf" />
+							<param name="quality" value="high" />
+							<param name="bgcolor" value="#ffffff" />
+							<param name="wmode" value="transparent" />
+							<param name="flashvars"
+								value="tcolor=0x111111&amp;tcolor2=0x336699&amp;hicolor=0x&amp;tspeed=100&amp;distr=true&amp;mode=both&amp;tagcloud=#{homeBean.tagCloudUrls}" />
+							<embed
+								src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.requestContextPath}/templates/tagcloud.swf"
+								quality="high" bgcolor="#ffffff" width="300" height="300"
+								name="tagcloud" allowScriptAccess="sameDomain" align="middle"
+								allowFullScreen="false" type="application/x-shockwave-flash"
+								pluginspage="http://www.macromedia.com/go/getflashplayer"
+								flashvars="tcolor=0x111111&amp;tcolor2=0x336699&amp;hicolor=0x&amp;tspeed=100&amp;distr=true&amp;mode=both&amp;tagcloud=#{homeBean.tagCloudUrls}" />
+						</object>
+					</div>
+				</ice:panelGroup>
+		        #{homeBean.selectTag}
+			</ice:panelCollapsible>
+
+			<ice:panelCollapsible id="lastDownloadsPanel"
+				expanded="#{homeBean.lastDownloadsExpanded}" styleClass="pnlClpsbl"
+				style="padding-top: 20px;">
+				<f:facet name="header">
+					<ice:panelGroup styleClass="expandableStateIndicator">
+						<ice:outputText id="lastDownloadsHeader"
+							value="#{messages['msg.jsp.lastdocs']}" />
+					</ice:panelGroup>
+				</f:facet>
+				<ice:panelGroup>
+					<!-- Table with results -->
+					<ice:dataTable id="lastDownloadList"
+						value="#{homeBean.lastDownloads}" var="entry" cellpadding="0"
+						rows="10">
+						<ice:column>
+							<ice:panelGroup>
+								<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
+									action="#{documentNavigation.openInFolder}">
+									<ice:graphicImage value="#{StyleBean.imagesPath}/#{entry.icon}"
+										styleClass="iconSmall" />
+									<ice:outputText value=" #{entry.title}" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+					</ice:dataTable>
+				</ice:panelGroup>
+			</ice:panelCollapsible>
+
+			<ice:panelCollapsible id="lastCheckoutDocsPanel"
+				expanded="#{homeBean.lastLockedExpanded}" styleClass="pnlClpsbl"
+				style="padding-top: 20px;">
+				<f:facet name="header">
+					<ice:panelGroup styleClass="expandableStateIndicator">
+						<ice:outputText id="lastCheckoutDocsHeader"
+							value="#{messages['home.your.lockeds']}" />
+					</ice:panelGroup>
+				</f:facet>
+				<ice:panelGroup>
+					<!-- Table with results -->
+					<ice:dataTable id="lockedDocumentsList"
+						value="#{homeBean.lockedDocs}" var="entry" cellpadding="0"
+						rows="10" border="0" styleClass="cntDatTblNone"
+						style="border: 0px;">
+						<ice:column>
+							<ice:panelGroup>
+								<ice:outputText value=" #{entry.title}" />
+							    |&amp;nbsp;
+								<ice:commandLink action="#{documentNavigation.openInFolder}"
+									style="color: #344a6a; text-decoration: underline;">
+									<ice:outputText value="#{msgs['msg.jsp.openinfolder']}"
+										style="color: #344a6a;" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+					</ice:dataTable>
+				</ice:panelGroup>
+			</ice:panelCollapsible>
+
+
+			<!-- End second Column -->
+		</ice:panelGroup>
+
+	</ice:panelGrid>
+
+
+</jsp:root>

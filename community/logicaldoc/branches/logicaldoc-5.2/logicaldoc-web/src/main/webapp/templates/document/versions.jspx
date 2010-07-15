@@ -1,0 +1,39 @@
+<?xml version = '1.0'?>
+<!-- 
+ Document's versions management
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup">
+	<ice:panelGroup styleClass="formBorderHighlight">
+
+		<ice:panelGroup id="listVersions"
+			rendered="#{versionsRecordsManager.showList}">
+			<f:subview id="w-listVersions">
+				<ui:include src="/templates/document/listVersions.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+
+		<ice:panelGroup id="updateVersion"
+			rendered="#{!versionsRecordsManager.showList and !versionsRecordsManager.showCompare}">
+			<f:subview id="w-updateVersion">
+				<ui:include src="/templates/document/updateVersion.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+
+		<ice:panelGroup id="compareVersions"
+			rendered="#{versionsRecordsManager.showCompare}">
+			<f:subview id="w-compareVersions">
+				<ui:include src="/templates/document/compare.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+	</ice:panelGroup>
+</jsp:root>

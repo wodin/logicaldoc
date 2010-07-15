@@ -1,0 +1,140 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page shows the list of all versions of the selected document
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup" style="width: 95%">
+
+	<h3>
+		<ice:outputText value="#{msgs['msg.jsp.versions']}" />
+		:&amp;nbsp;
+		<ice:outputText
+			value="#{versionsRecordsManager.selectedDocument.title}" />
+	</h3>
+
+	<ice:form id="versionsForm">
+		<!-- Basic table -->
+		<ice:panelGroup style="width:102%;">
+			<ice:panelGroup>
+				<ice:dataTable id="versionData"
+					value="#{versionsRecordsManager.versions}" var="versionRecord"
+					cellpadding="0" rows="2000"
+					columnClasses="dateColumn,titleColumn,numberColumn,numberColumn,dateColumn,titleColumn,titleColumn">
+
+					<!-- publisher column -->
+					<ice:column>
+						<f:facet name="header">
+							<ice:outputText value="#{msgs['user']}" />
+						</f:facet>
+						<ice:panelGroup>
+							<ice:outputText value="#{versionRecord.username}" />
+						</ice:panelGroup>
+					</ice:column>
+
+					<!-- event column -->
+					<ice:column>
+						<f:facet name="header">
+							<ice:outputText value="#{msgs['event']}" />
+						</f:facet>
+						<ice:panelGroup>
+							<ice:outputText value="#{msgs[versionRecord.event]}" />
+						</ice:panelGroup>
+					</ice:column>
+
+					<!-- version column -->
+					<ice:column>
+						<f:facet name="header">
+							<ice:outputText value="#{msgs['version']}" />
+						</f:facet>
+						<ice:panelGroup>
+							<ice:outputLink
+								value="download?docId=#{versionsRecordsManager.selectedDocument.id}&amp;versionId=#{versionRecord.fileVersion}"
+								style="color: #344a6a; text-decoration: underline;"
+								target="_blank">
+								<ice:outputText value="#{versionRecord.version}"
+									style="color: #344a6a;" />
+							</ice:outputLink>
+						</ice:panelGroup>
+					</ice:column>
+
+					<!-- fileVersion column -->
+					<ice:column>
+						<f:facet name="header">
+							<ice:outputText value="#{msgs['document.fileVersion']}" />
+						</f:facet>
+						<ice:outputLink
+							value="download?docId=#{versionsRecordsManager.selectedDocument.id}&amp;versionId=#{versionRecord.fileVersion}"
+							style="color: #344a6a; text-decoration: underline;"
+							target="_blank">
+							<ice:outputText value="#{versionRecord.fileVersion}"
+								style="color: #344a6a;" />
+						</ice:outputLink>
+					</ice:column>
+
+					<!-- date column -->
+					<ice:column>
+						<f:facet name="header">
+							<ice:outputText value="#{msgs['date']}" />
+						</f:facet>
+						<ice:panelGroup>
+							<ice:outputText value="#{versionRecord.versionDate}">
+								<f:convertDateTime pattern="#{loc.dateFormat}"
+									timeZone="#{StyleBean.timeZone}" />
+							</ice:outputText>
+						</ice:panelGroup>
+					</ice:column>
+
+					<!-- description column -->
+					<ice:column>
+						<f:facet name="header">
+							<ice:outputText value="#{msgs['comment']}" />
+						</f:facet>
+						<ice:panelGroup>
+							<ice:outputText value="#{versionRecord.comment}" />
+						</ice:panelGroup>
+					</ice:column>
+
+					<!-- edit column -->
+					<ice:column>
+						<f:facet name="header">
+							<ice:outputText value="#{msgs['edit']}" />
+						</f:facet>
+						<ice:panelGroup>
+							<ice:commandLink action="#{versionRecord.edit}">
+								<ice:graphicImage value="#{StyleBean.imagesPath}/edit.gif"
+									style="border: 0px solid;" />
+							</ice:commandLink>
+						</ice:panelGroup>
+					</ice:column>
+
+					<!-- diff column -->
+					<ice:column>
+						<f:facet name="header">
+							<ice:outputText value="#{msgs['compare']}" />
+						</f:facet>
+						<ice:panelGroup>
+							<ice:commandLink action="#{versionRecord.compare}"
+								style="color: #344a6a; text-decoration: underline;">
+								<ice:outputText value="#{msgs['compare']}"
+									style="color: #344a6a;" />
+							</ice:commandLink>
+						</ice:panelGroup>
+					</ice:column>
+				</ice:dataTable>
+			</ice:panelGroup>
+			<ice:panelGroup styleClass="commands">
+				<ice:commandButton value="#{msgs['back']}" styleClass="backBtn"
+					partialSubmit="true" action="#{documentNavigation.showDocuments}" />
+			</ice:panelGroup>
+		</ice:panelGroup>
+	</ice:form>
+</jsp:root>

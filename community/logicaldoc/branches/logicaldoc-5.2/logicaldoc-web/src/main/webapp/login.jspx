@@ -1,0 +1,128 @@
+<?xml version = '1.0'?>
+<!-- 
+ Login page
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ice="http://www.icesoft.com/icefaces/component"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions" jsfc="f:view" locale="#{language}">
+    <f:loadBundle basename="i18n.application" var="msgs" />
+    <ice:outputDeclaration doctypeRoot="html"
+        doctypePublic="-//W3C//DTD XHTML 1.0 Transitional//EN"
+        doctypeSystem="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
+    <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+            <title>#{StyleBean.productName}  #{StyleBean.productRelease}</title>
+            <link type="image/x-icon" href="#{facesContext.externalContext.requestContextPath}#{StyleBean.imagesPath}/favicon.ico" rel="shortcut icon"/>
+            <ice:outputText style="padding-top:0px; padding-bottom:0px;"
+                value="#{StyleBean.style}" escape="false" />
+            <ice:outputStyle href="#{StyleBean.cssPath}/style.css" />
+            <script type="text/javascript" language="javascript">
+  /**
+   *  Handles the default action for a form, used when the enter key is pressed
+   */ 
+  function submitOnEnter(id,e){
+     var keycode;
+     if (window.event) keycode = window.event.keyCode;
+     else if (e) keycode = e.which;
+     else return true;
+ 
+ 
+     if (keycode == 13) {
+      
+       document.getElementById(id).click();
+       return false;
+     }
+     else
+       return true;
+  }
+</script>
+        </head>
+        <body>
+            <ice:panelBorder border="0" cellpadding="0" cellspacing="0"
+                styleClass="loginBorderLayout">
+                <f:facet name="center">
+                    <ice:panelGroup>
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td align="left">
+                                    <ice:outputText value="#{StyleBean.productName}  #{StyleBean.productRelease}" escape="false" />
+                                    <br />
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="login">
+                            <ice:form id="loginForm"
+                                onkeypress="return submitOnEnter('loginForm:login', event);">
+                                <ice:panelGrid columns="1" styleClass="loginForm">
+                                    <ice:messages />
+                                    <ice:panelGrid columns="2" style="width: 100%">
+                                        <ice:graphicImage url="#{StyleBean.imagesPath}/logo.gif"
+                                            alt="LogicalDOC" />
+                                        <div class="loginStatus">
+                                            <ice:outputConnectionStatus showPopupOnDisconnect="true"/>
+                                        </div>
+                                    </ice:panelGrid>
+
+                                    <ice:panelGrid columns="2" styleClass="loginForm2"
+                                        rowClasses="textFieldNameRow">
+                                        <ice:outputText value="#{msgs['username']}:" />
+                                        <ice:inputText value="#{loginForm.j_username}" id="username" />
+
+                                        <ice:outputText value="#{msgs['password']}:" />
+                                        <ice:inputSecret value="#{loginForm.j_password}" />
+
+                                        <ice:outputText value="#{msgs['language']}:" />
+                                        <ice:selectOneMenu value="#{loginForm.language}">
+                                            <f:selectItem itemLabel="#{msgs['default']}" itemValue="default" />
+                                            <f:selectItems value="#{selectionTags.languages}" />
+                                        </ice:selectOneMenu>
+
+                                        <ice:outputText value=" " />
+                                        <ice:commandButton type="submit" value="#{msgs['login']}"
+                                            action="#{loginForm.login}" id="login" />
+                                    </ice:panelGrid>
+                                </ice:panelGrid>
+                            </ice:form>
+                        </div>
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td align="right">
+                                    <ice:outputFormat value="#{msgs['footer']}" escape="false" >
+                                        <f:param value="#{StyleBean.productYear}" />
+                                        <f:param value="#{StyleBean.productVendor}" />
+                                        <f:param value=" " />
+                                    </ice:outputFormat>
+                                    <ice:outputLink value="#{StyleBean.productUrl}" target="_blank">#{StyleBean.productUrl}</ice:outputLink>
+                                    <br />
+                                </td>
+                            </tr>
+                        </table>
+                    </ice:panelGroup>
+                </f:facet>
+            </ice:panelBorder>
+            
+            <ice:panelGroup>
+                 <ui:include src="/loginMessages.jspx" />
+            </ice:panelGroup>
+            
+            <ice:panelGroup rendered="#{'true' eq ContextProperties['stat.enabled']}">
+              <img style="visibility:hidden" src="#{ContextProperties['stat.url']}/getimg.php?name=#{ContextProperties['product.name']}&amp;release=#{ContextProperties['product.release']}&amp;vendor=#{ContextProperties['product.vendor']}&amp;id=#{ContextProperties['id']}" width="1px" height="1px" border="0"/>
+            </ice:panelGroup>
+        </body>
+    
+    <script type="text/javascript" language="javascript">
+      /**
+       * Set initial focus
+       */
+      document.getElementById('loginForm:username').focus();
+    </script>
+    </html>
+</jsp:root>

@@ -1,0 +1,214 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page is the LDAP settings form
+  
+ @author Marco Meschieri - Logical Objects
+ @since 4.5
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	id="ldapForm">
+
+	<ice:panelGroup styleClass="center formBorderHighlight"
+		style="width: 600px;">
+		<ice:messages globalOnly="true" />
+		<ice:panelGroup>
+			<ice:panelGroup>
+				<ice:panelGrid columns="2">
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="implementation"
+							value="#{msgs['implementation']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+						<ice:selectOneMenu styleClass="selectTagMenu"
+							value="#{LdapBean.contextSourceConfig.authentication}">
+							<f:selectItem itemValue="basic" />
+							<f:selectItem itemValue="md5" />
+						</ice:selectOneMenu>
+					</ice:panelGroup>
+
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="enabled" value="#{msgs['enabled']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+						<ice:selectOneMenu styleClass="selectTagMenu"
+							value="#{LdapBean.contextSourceConfig.enabled}">
+							<f:selectItem itemValue="true" itemLabel="#{msgs['yes']}" />
+							<f:selectItem itemValue="false" itemLabel="#{msgs['no']}" />
+						</ice:selectOneMenu>
+					</ice:panelGroup>
+
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="url" value="#{msgs['url']}*:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="url"
+							value="#{LdapBean.contextSourceConfig.url}" required="true"
+							size="70" />
+						<ice:message for="url" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="username" value="#{msgs['username']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="username"
+							value="#{LdapBean.contextSourceConfig.userName}" size="40" />
+						<ice:message for="username" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="password" value="#{msgs['password']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputSecret id="password" value="#{LdapBean.password}"
+							size="40" rendered="#{LdapBean.passwordEmpty}" />
+						<ice:commandLink action="#{LdapBean.changePassword}"
+							rendered="#{!LdapBean.passwordEmpty}" immediate="true"
+							partialSubmit="true">
+							<ice:outputText styleClass="iceMsgError"
+								value="#{msgs['password.change']}" />
+						</ice:commandLink>
+						<ice:message for="password" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="realm"
+							value="#{msgs['logicaldoc-external-authentication.ldap.realm']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="realm"
+							value="#{LdapBean.contextSourceConfig.realm}" size="40" />
+						<ice:message for="realm" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="currentDN"
+							value="#{msgs['logicaldoc-external-authentication.ldap.currentDN']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="currentDN"
+							value="#{LdapBean.contextSourceConfig.currentDN}" size="40" />
+						<ice:message for="currentDN" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="base" value="#{msgs['ldap.base']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="base"
+							value="#{LdapBean.contextSourceConfig.base}" size="70" />
+						<ice:message for="base" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="userIdentiferAttribute"
+							value="#{msgs['logicaldoc-external-authentication.ldap.userIdentiferAttribute']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="userIdentiferAttribute"
+							value="#{LdapBean.userGroupContext.userIdentiferAttribute}"
+							size="40" />
+						<ice:message for="userIdentiferAttribute" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="groupIdentiferAttribute"
+							value="#{msgs['logicaldoc-external-authentication.ldap.groupIdentiferAttribute']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="groupIdentiferAttribute"
+							value="#{LdapBean.userGroupContext.groupIdentiferAttribute}"
+							size="40" />
+						<ice:message for="groupIdentiferAttribute" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="logonAttribute"
+							value="#{msgs['logicaldoc-external-authentication.ldap.logonAttribute']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="logonAttribute"
+							value="#{LdapBean.userGroupContext.logonAttribute}" size="40" />
+						<ice:message for="logonAttribute" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="pattern"
+							value="#{msgs['ldap.authenticationpattern']}" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="pattern"
+							value="#{LdapBean.contextSourceConfig.userAuthenticationPattern}"
+							size="40" />
+						<ice:message for="pattern" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="userClass"
+							value="#{msgs['logicaldoc-external-authentication.ldap.userClass']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="userClass"
+							value="#{LdapBean.userGroupContext.userClass}" size="40" />
+						<ice:message for="userClass" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="groupClass"
+							value="#{msgs['logicaldoc-external-authentication.ldap.groupClass']}" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left">
+						<ice:inputText id="groupClass"
+							value="#{LdapBean.userGroupContext.groupClass}" size="40" />
+						<ice:message for="groupClass" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="userBase"
+							value="#{msgs['logicaldoc-external-authentication.ldap.userBase']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="userBase"
+							value="#{LdapBean.userGroupContext.userBaseString}" size="70" />
+						<ice:message for="userBase" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="groupBase"
+							value="#{msgs['logicaldoc-external-authentication.ldap.groupBase']}" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:inputText id="groupBase"
+							value="#{LdapBean.userGroupContext.groupBaseString}" size="70" />
+						<ice:message for="groupBase" />
+					</ice:panelGroup>
+
+					<ice:panelGroup style="text-align:right; white-space:nowrap;">
+						<ice:outputLabel for="language"
+							value="#{msgs['msg.jsp.adduser.language']}" />
+					</ice:panelGroup>
+					<ice:panelGroup style="text-align:left;">
+						<ice:selectOneMenu styleClass="selectTagMenu"
+							value="#{LdapBean.userAttributeMapper.defaultLanguage}">
+							<f:selectItems value="#{selectionTags.languages}" />
+						</ice:selectOneMenu>
+					</ice:panelGroup>
+				</ice:panelGrid>
+			</ice:panelGroup>
+			<hr />
+			<ice:panelGroup styleClass="commands">
+				<ice:commandButton value="#{msgs['save']}" tabindex="1" id="save"
+					action="#{LdapBean.save}" />
+			</ice:panelGroup>
+		</ice:panelGroup>
+	</ice:panelGroup>
+</jsp:root>

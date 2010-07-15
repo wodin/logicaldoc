@@ -1,0 +1,44 @@
+<?xml version = '1.0'?>
+<!-- 
+ Toolbar Item
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf">
+	<![CDATA[<!-- tag toolbaritem -->]]>
+	<ui:composition>
+		<ldoc:compositeControl methodBindings="action=java.lang.String;">
+			<ice:panelGroup rendered="#{(confirmation ne 'X') and ((empty link) or (link eq 'X'))}">
+				<ice:commandLink action="#{action}" title="#{title}"
+					rendered="#{rendered}"
+					onclick="if (!confirm(&quot;#{confirmation}&quot;)) return false;">
+					<ice:graphicImage value="#{StyleBean.imagesPath}/#{icon}"
+						style="border: 0px solid;" title="#{title}" />
+				</ice:commandLink>
+			</ice:panelGroup>
+			<ice:panelGroup rendered="#{(confirmation eq 'X') and ((empty link) or (link eq 'X'))}">
+				<ice:commandLink action="#{action}" title="#{title}"
+					rendered="#{rendered}">
+					<ice:graphicImage value="#{StyleBean.imagesPath}/#{icon}"
+						style="border: 0px solid;" title="#{title}" />
+				</ice:commandLink>
+			</ice:panelGroup>
+			<ice:panelGroup rendered="#{not ((empty link) or (link eq 'X'))}">
+				<ice:outputLink value="#{link}" target="#{target}" title="#{title}"
+					rendered="#{rendered}">
+					<ice:graphicImage value="#{StyleBean.imagesPath}/#{icon}"
+						style="border: 0px solid;" title="#{title}" />
+				</ice:outputLink>
+			</ice:panelGroup>
+		</ldoc:compositeControl>
+	</ui:composition>
+	<![CDATA[<!-- end of toolbaritem -->]]>
+</jsp:root>

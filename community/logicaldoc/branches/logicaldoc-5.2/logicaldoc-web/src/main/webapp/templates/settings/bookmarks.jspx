@@ -1,0 +1,144 @@
+<?xml version = '1.0'?>
+<!-- 
+ This page lists all user's bookmarks
+  
+ @author Matteo Caruso - Logical Objects
+ @since 5.2
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+	styleClass="center" style="width: 900px;">
+
+	<ice:messages globalOnly="true" />
+	<ice:panelGroup>
+		<ice:panelGroup id="list"
+			rendered="#{bookmarkBean.selectedPanel=='list'}">
+			<ice:form id="bookmarksForm" style="text-align:left;">
+				<ice:panelGrid columns="4">
+					<ice:panelGroup style="text-align:center">
+						<ice:outputLabel for="bookmarksFilter" value="#{msgs['filter']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:selectInputText width="125"
+							value="#{bookmarkBean.bookmarksFilter}"
+							valueChangeListener="#{bookmarkBean.filterBookmarks}"
+							immediate="true" />
+					</ice:panelGroup>
+				</ice:panelGrid>
+
+				<!-- Basic table -->
+				<ice:panelGroup styleClass="formBorderHighlight"
+					rendered="#{bookmarkBean.count > 0}">
+					<ice:dataTable id="bookmarksList" value="#{bookmarkBean.bookmarks}"
+						var="bookmark" cellpadding="0" styleClass="center"
+						sortColumn="#{bookmarkBean.sortColumn}"
+						sortAscending="#{bookmarkBean.ascending}"
+						rows="#{bookmarkBean.displayedRows}"
+						columnClasses="titleColumn,titleColumn">
+
+						<!-- Title -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:commandSortHeader columnName="title" arrow="true">
+									<ice:outputText value="#{msgs['name']}"
+										style="text-decoration: underline;" />
+								</ice:commandSortHeader>
+							</f:facet>
+							<ice:panelGroup>
+								<ice:panelGroup>
+									<ice:commandLink title="#{msgs['msg.jsp.openinfolder']}"
+										action="#{bookmarkBean.openInFolder}">
+										<ice:graphicImage
+											value="#{StyleBean.imagesPath}/folder_into16.png"
+											styleClass="iconSmall" alt="#{msgs['msg.jsp.openinfolder']}" />
+										<f:param name="bookmarkId" value="#{bookmark.id}" />
+									</ice:commandLink>
+									<ice:outputText value="&amp;nbsp;" escape="false" />
+									<ice:graphicImage
+										value="#{StyleBean.imagesPath}/#{bookmark.icon}"
+										style="border: 0px solid; padding-right: 3px;" />
+									<ice:outputLink value="download?docId=#{bookmark.docId}"
+										target="_blank">
+										<ice:outputText value="#{bookmark.title}" />
+									</ice:outputLink>
+								</ice:panelGroup>
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Description -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['description']}"
+									style="width: 100%;" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputLink value="download?docId=#{bookmark.docId}"
+									target="_blank">
+									<ice:outputText value="#{bookmark.description}" />
+								</ice:outputLink>
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Edit -->
+						<ice:column>
+							<ice:panelGroup>
+								<ice:commandLink action="#{bookmarkBean.edit}">
+									<ice:graphicImage value="#{StyleBean.imagesPath}/edit.png"
+										style="border: 0px solid;" title="#{msgs['edit']}" />
+									<f:param name="bookmarkId" value="#{bookmark.id}" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Delete -->
+						<ice:column>
+							<ice:panelGroup>
+								<ice:commandLink action="#{bookmarkBean.delete}"
+									onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;">
+									<ice:graphicImage value="#{StyleBean.imagesPath}/delete.png"
+										style="border: 0px solid;" title="#{msgs['delete']}" />
+									<f:param name="bookmarkId" value="#{bookmark.id}" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+					</ice:dataTable>
+					<br />
+					<ice:panelGrid columns="2" style="width: 100%;">
+						<ice:panelGroup>
+							<ldoc:paginator table="bookmarksList"
+								label="#{msgs['paginator.simple']}" />
+						</ice:panelGroup>
+
+						<ice:panelGroup style="float:right">
+							<ice:selectOneMenu id="dispRows"
+								value="#{bookmarkBean.displayedRows}" partialSubmit="true">
+								<f:selectItem itemValue="10" />
+								<f:selectItem itemValue="25" />
+								<f:selectItem itemValue="50" />
+							</ice:selectOneMenu>
+							<ice:outputLabel value="#{msgs['document.perpage']}"
+								for="dispRows" style="white-space: nowrap;" />
+						</ice:panelGroup>
+					</ice:panelGrid>
+				</ice:panelGroup>
+			</ice:form>
+		</ice:panelGroup>
+	</ice:panelGroup>
+
+	<ice:panelGroup styleClass="formBorderHighlight"
+		rendered="#{bookmarkBean.count &lt; 1 and bookmarkBean.selectedPanel=='list'}">
+		<ice:outputText value="#{msgs['noelements']}" />
+	</ice:panelGroup>
+
+	<ice:panelGroup id="edit" rendered="#{bookmarkBean.selectedPanel=='edit'}">
+		<f:subview id="w-edit">
+			<ui:include src="/templates/settings/bookmark.jspx" />
+		</f:subview>
+	</ice:panelGroup>
+</jsp:root>

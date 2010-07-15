@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Gui" default="deploy" basedir=".">
+	<!-- Arguments to gwtc and devmode targets -->
+	<property name="gwt.args" value="" />
+
+	<!-- Configure path to GWT SDK -->
+	<property name="gwt.sdk" location="C:/JavaSuite/frameworks/gwt-2.0.3" />
+
+	<property file="${user.home}/logicaldoc-dev.properties" />
+	<import file="${logicaldoc.devroot}/build/ant/build.xml" />
+
+	<target name="deploy" depends="init-all" description="Updates a deployed webapp">
+		<property environment="env" />
+		<property id="properties" file="build.properties" />
+
+		<echo message="Deploying webapp files" />
+		<copy todir="${logicaldoc.webroot}" verbose="false">
+			<fileset dir="war">
+				<include name="**" />
+				<exclude name="WEB-INF/lib/**" />
+			</fileset>
+			<!-- This one is for maven -->
+			<!--fileset dir="target/war">
+							<include name="**" />
+							<exclude name="WEB-INF/lib/**" />
+			</fileset-->
+		</copy>
+	</target>
+
+	<path id="project.class.path">
+		<pathelement location="war/WEB-INF/classes" />
+		<pathelement location="${gwt.sdk}/gwt-user.jar" />
+		<fileset dir="${gwt.sdk}" includes="gwt-dev*.jar" />
+		<!-- Add any additional non-server libs (such as JUnit) -->
+		<fileset dir="war/WEB-INF/lib" includes="**/*.jar" />
+	</path>
+
+	<target name="libs" description="Copy libs to WEB-INF/lib">
+		<mkdir dir="war/WEB-INF/lib" />
+		<copy todir="war/WEB-INF/lib" file="${gwt.sdk}/gwt-servlet.jar" />
+		<!-- Add any additional server libs that need to be copied -->
+	</target>
+
+	<target name="javac" depends="libs" description="Compile java source">
+		<mkdir dir="war/WEB-INF/classes" />
+		<javac srcdir="src" includes="**" encoding="utf-8" destdir="war/WEB-INF/classes" source="1.5" target="1.5" nowarn="true" debug="true" debuglevel="lines,vars,source">
+			<classpath refid="project.class.path" />
+		</javac>
+		<copy todir="war/WEB-INF/classes">
+			<fileset dir="src" excludes="**/*.java" />
+		</copy>
+	</target>
+
+	<!--<target name="gwtc" depends="javac" description="GWT compile to JavaScript">
+    <java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
+      <classpath>
+        <pathelement location="src"/>
+        <path refid="project.class.path"/>
+      </classpath> 
+      <jvmarg value="-Xmx256M"/>
+      <arg line="${gwt.args}"/>
+      <arg value="com.logicaldoc.gui.frontend.Frontend"/>
+    </java>
+  </target>
+	-->
+
+	<target name="devmode" description="Run development mode">
+		<java failonerror="true" fork="true" classname="com.google.gwt.dev.DevMode">
+			<classpath>
+				<pathelement location="src/main/java" />
+				<pathelement location="src/main/resources" />
+				<path refid="project.class.path" />
+			</classpath>
+			<jvmarg value="-Xmx256M" />
+			<arg value="-startupUrl" />
+			<arg value="frontend.jsp" />
+			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
+			<arg line="${gwt.args}" />
+			<arg value="com.logicaldoc.gui.frontend.Frontend" />
+		</java>
+	</target>
+</project>

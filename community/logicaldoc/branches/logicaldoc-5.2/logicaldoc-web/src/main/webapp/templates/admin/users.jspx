@@ -1,0 +1,176 @@
+<?xml version = '1.0'?>
+<!-- 
+ Users listing
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGroup"
+    styleClass="center" style="width: 70%">
+
+	<ice:messages globalOnly="true" />
+	<ice:panelGroup>
+		<ice:panelGroup id="list"
+			rendered="#{usersRecordsManager.selectedPanel=='list'}">
+			<ice:form id="usersForm" style="text-align:left;">
+				<ice:panelGrid columns="4">
+					<ice:panelGroup>
+						<ice:commandLink action="#{usersRecordsManager.addUser}"
+							title="#{msgs['msg.jsp.createuser']}">
+							<ice:graphicImage value="#{StyleBean.imagesPath}/user_add.png"
+								style="border: 0px solid;" alt="#{msgs['msg.jsp.createuser']}" />
+						</ice:commandLink>
+					</ice:panelGroup>
+					<ice:panelGroup style="width: 50px" />
+					<ice:panelGroup style="text-align:center">
+						<ice:outputLabel for="usersFilter"
+							value="#{msgs['filter']}:" />
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:selectInputText width="125"
+							value="#{usersRecordsManager.usersFilter}"
+							valueChangeListener="#{usersRecordsManager.filterUsers}"
+							immediate="true" />
+					</ice:panelGroup>
+				</ice:panelGrid>
+
+				<!-- Basic table -->
+				<ice:panelGroup styleClass="formBorderHighlight"
+					rendered="#{usersRecordsManager.count > 0}">
+					<ice:dataTable id="usersList" value="#{usersRecordsManager.users}"
+						var="user" cellpadding="0" rows="15" width="97%"
+						sortColumn="#{usersRecordsManager.sortColumn}"
+						sortAscending="#{usersRecordsManager.ascending}"
+						columnClasses="dateColumn,titleColumn,titleColumn,smallColumn,smallColumn,smallColumn,smallColumn">
+
+						<!-- Username -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:commandSortHeader columnName="userName">
+									<ice:outputText value="#{msgs['username']}"
+										style="text-decoration: underline;" />
+								</ice:commandSortHeader>
+							</f:facet>
+							<ice:panelGroup>
+								<ice:outputText value="#{user.userName}" />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Name -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:commandSortHeader columnName="name">
+									<ice:outputText value="#{msgs['msg.jsp.adduser.name']}"
+										style="text-decoration: underline;" />
+								</ice:commandSortHeader>
+							</f:facet>
+							<ice:panelGroup style="width: 150px;">
+								<ice:outputText value="#{user.firstName} " />
+								<ice:outputText value="#{user.name}" />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Current Groups -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText style="white-space: nowrap;" value="#{msgs['group.assigned']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:panelSeries style="display: inline;" var="groupName"
+									value="#{user.groupNames}">
+									<ice:outputText value="#{groupName}, "
+										rendered="#{!fn:startsWith(groupName,'_user_')}" />
+								</ice:panelSeries>
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Enabled -->
+						<ice:column>
+							<f:facet name="header">
+								<ice:outputText value="#{msgs['enabled']}" />
+							</f:facet>
+							<ice:panelGroup>
+								<ice:commandButton image="#{StyleBean.imagesPath}/bullet_red.png"
+									action="#{usersRecordsManager.enable}" styleClass=""
+									rendered="#{user.enabled==0}"
+									title="#{msgs['disabled']}: #{msgs['enable']}" />
+								<ice:commandButton image="#{StyleBean.imagesPath}/bullet_green.png"
+									action="#{usersRecordsManager.disable}" styleClass=""
+									rendered="#{user.enabled==1}"
+									title="#{msgs['enabled']}: #{msgs['disable']}" />
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Edit -->
+						<ice:column>
+							<ice:panelGroup>
+								<ice:commandLink action="#{usersRecordsManager.edit}">
+									<ice:graphicImage value="#{StyleBean.imagesPath}/edit.png"
+										style="border: 0px solid;" title="#{msgs['msg.jsp.edituser']}" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Change password -->
+						<ice:column>
+							<ice:panelGroup>
+								<ice:commandLink action="#{usersRecordsManager.password}">
+									<ice:graphicImage value="#{StyleBean.imagesPath}/password.png"
+										style="border: 0px solid;"
+										title="#{msgs['menu.changepassword']}" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+
+						<!-- Delete -->
+						<ice:column>
+							<ice:panelGroup>
+								<ice:commandLink action="#{usersRecordsManager.delete}"
+									onclick="if (!confirm(&quot;#{msgs['msg.question.deletedoc']}&quot;)) return false;"
+									rendered="#{user.userName != 'admin'}">
+									<ice:graphicImage value="#{StyleBean.imagesPath}/delete.png"
+										style="border: 0px solid;" title="#{msgs['delete']}" />
+								</ice:commandLink>
+							</ice:panelGroup>
+						</ice:column>
+					</ice:dataTable>
+
+					<ice:panelGroup>
+						<ldoc:paginator table="usersList"
+							label="#{msgs['paginator.simple']}" />
+						<br />
+					</ice:panelGroup>
+				</ice:panelGroup>
+
+				<ice:panelGroup styleClass="formBorderHighlight"
+					rendered="#{usersRecordsManager.count &lt; 1}">
+					<ice:outputText value="#{msgs['noelements']}" />
+				</ice:panelGroup>
+			</ice:form>
+		</ice:panelGroup>
+
+		<ice:panelGroup id="crudUser" styleClass="center"
+			rendered="#{usersRecordsManager.selectedPanel!='list'}">
+			<f:subview id="w-user">
+				<c:if test="#{usersRecordsManager.selectedPanel!='passwd'}">
+					<ui:include src="/templates/admin/user.jspx">
+						<ui:param name="hidePasswd"
+							value="#{usersRecordsManager.selectedPanel=='edit'}" />
+					</ui:include>
+				</c:if>
+				<c:if test="#{usersRecordsManager.selectedPanel=='passwd'}">
+					<ui:include src="/templates/admin/passwd.jspx" />
+				</c:if>
+
+			</f:subview>
+		</ice:panelGroup>
+
+	</ice:panelGroup>
+</jsp:root>

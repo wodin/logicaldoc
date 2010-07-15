@@ -1,0 +1,48 @@
+<?xml version = '1.0'?>
+<!-- 
+ Page for documents browsing
+  
+ @author Marco Meschieri - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:panelGrid"
+	columns="2" style="width: 100%;" columnClasses="browseLeft,browseRight"
+	styleClass="browseMain" cellpadding="4">
+
+	<ice:panelGrid columns="1">
+		<ice:panelGroup style="display: inline;"
+			rendered="#{documentNavigation.selectedDir != null}">
+			<ice:form id="editFolderForm"
+				style="border:none; margin:0px; padding:0px;">
+				<f:subview id="folderToolbar">
+					<ui:include src="/templates/document/folderToolbar.jspx" />
+				</f:subview>
+			</ice:form>
+		</ice:panelGroup>
+		<ice:panelGroup styleClass="folderContainer">
+			<f:subview id="scSub1">
+				<ui:include
+					src="/templates/document/folder_#{documentNavigation.folderView}.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+	</ice:panelGrid>
+
+	<ice:panelGroup styleClass="documentsPanel">
+		<ice:panelGroup>
+			<ice:messages id="browseMessages" globalOnly="true"
+				infoClass="infoMessage" warnClass="warnMessage"
+				errorClass="errorMessage" />
+			<f:subview id="w-documents">
+				<ui:include
+					src="/templates/document/#{documentNavigation.selectedPanel.contentName}.jspx" />
+			</f:subview>
+		</ice:panelGroup>
+	</ice:panelGroup>
+</jsp:root>
