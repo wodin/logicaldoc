@@ -1,0 +1,337 @@
+<!-- 
+ Setup page
+  
+ @author Alessandro Gasparini - Logical Objects
+ @since 3.0
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component" jsfc="f:view"
+	xmlns:ui="http://java.sun.com/jsf/facelets" locale="#{language}">
+
+	<ice:outputStyle href="/skins/default/css/workflow.css" />
+
+	<ice:form id="setupWizard"
+		style="border: 1px solid #DDDDDD; border-style:ridge;">
+
+
+		<ice:panelGroup
+			style="margin-left:30px; margin-bottom:8px; margin-top:4px; width:550px;">
+
+			<ice:panelTabSet id="staticTabSetPnl"
+				binding="#{StartWorkflowWizard.tabSet}" selectedIndex="0"
+				tabPlacement="top"
+				tabChangeListener="#{StartWorkflowWizard.processTabChange}">
+
+				<!-- 1st panel: Choose Workflow -->
+				<ice:panelTab id="phase1" rendered="true"
+					label="#{msgs['workflow.wizard_chooseworkflow']}">
+					<div style="height: 150px;">
+						<ice:dataTable id="workflowTemplateList" var="workflowDefinition"
+							value="#{WorkflowManager.workflowDefinitions}" rows="15"
+							columnClasses="tableCol">
+
+							<ice:column>
+
+								<ice:rowSelector id="selected"
+									value="#{StartWorkflowWizard.rowSelected}"
+									selectionListener="#{StartWorkflowWizard.rowSelectionListener}"
+									preStyleOnSelection="true" />
+
+								<f:facet name="header">
+									<ice:outputText id="column2" value="#{msgs['name']}" />
+								</f:facet>
+								<ice:outputText value="#{workflowDefinition.name}" />
+							</ice:column>
+
+							<ice:column>
+								<f:facet name="header">
+									<ice:outputText id="column3" value="#{msgs['name']}" />
+								</f:facet>
+								<ice:outputText value="#{workflowDefinition.description}" />
+							</ice:column>
+
+						</ice:dataTable>
+						<ice:panelGroup styleClass="alignRight">
+
+						</ice:panelGroup>
+					</div>
+				</ice:panelTab>
+
+
+				<ice:panelTab id="phase2" rendered="true" disabled="true"
+					label="#{msgs['workflow.wizard_tab_workflowsettings']}">
+					<div>
+						<ice:panelGroup style="width: 350px;">
+											
+											#{msgs['workflow.wizard_manage']} #{StartWorkflowWizard.workflowDefinition.name} 
+											
+											<br />
+
+							<ice:inputTextarea
+								value="#{StartWorkflowWizard.workflowDefinition.description}"
+								binding="#{StartWorkflowWizard.descriptionInput}" />
+
+							<br />
+										
+											#{msgs['workflow.priority']}
+											
+											<ice:panelGroup styleClass="selectionRadioGroup"
+								style="width: 350;">
+								<ice:selectOneMenu value="#{StartWorkflowWizard.priority}">
+									<f:selectItems value="#{StartWorkflowWizard.priorities}" />
+								</ice:selectOneMenu>
+							</ice:panelGroup>
+						</ice:panelGroup>
+						<ice:panelGroup styleClass="alignLeft">
+							<ice:dataTable id="documentsList" width="300"
+								value="#{documentsRecordsManager.selection}"
+								var="documentRecord"
+								sortColumn="#{documentsRecordsManager.sortColumn}"
+								sortAscending="#{documentsRecordsManager.ascending}"
+								cellpadding="0"
+								columnClasses="titleColumn,dateColumn">
+
+								<!-- Title -->
+								<ice:column>
+									<f:facet name="header">
+										<ice:commandSortHeader columnName="title" arrow="true">
+											<ice:outputText value="#{msgs['document.title']}"
+												style="text-decoration: underline;" />
+										</ice:commandSortHeader>
+									</f:facet>
+									<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}">
+										<ice:graphicImage
+											value="#{StyleBean.imagesPath}/#{documentRecord.icon}" />
+
+										<ice:outputText
+											rendered="#{documentRecord.document.immutable == 0}"
+											value=" #{documentRecord.displayTitle}" />
+										<ice:outputText
+											rendered="#{documentRecord.document.immutable == 1}"
+											styleClass="immutable"
+											value=" #{documentRecord.displayTitle}" />
+															&amp;nbsp;(<ice:outputText
+											value="#{documentRecord.document.fileSize}"
+											title="#{msgs['msg.jsp.popup']}" style="white-space:nowrap;">
+											<f:converter converterId="logicaldoc.FileSizeConverter" />
+										</ice:outputText>)
+													</ice:panelGroup>
+
+								</ice:column>
+
+								<!-- Last Modified -->
+								<ice:column>
+									<f:facet name="header">
+										<ice:commandSortHeader columnName="lastmodified" arrow="true">
+											<ice:outputText value="#{msgs['lastmodified']}"
+												style="text-decoration: underline;" />
+										</ice:commandSortHeader>
+									</f:facet>
+									<ice:panelGroup styleClass="#{documentRecord.rowStyleClass}">
+										<ice:outputText value="#{documentRecord.lastModified}"
+											title="#{msgs['msg.jsp.popup']}">
+											<f:convertDateTime pattern="#{loc.dateFormatHM}"
+												timeZone="#{StyleBean.timeZone}" />
+										</ice:outputText>
+									</ice:panelGroup>
+								</ice:column>
+							</ice:dataTable>
+						</ice:panelGroup>
+					</div>
+				</ice:panelTab>
+
+
+				<ice:panelTab id="phase3" rendered="true" disabled="true"
+					label="#{msgs['workflow.wizard_tab_workflowassignment']}">
+					<table>
+						<tr>
+							<td>
+								<ui:repeat
+									value="#{StartWorkflowWizard.workflowTemplate.workflowComponents}"
+									var="workflowComponent">
+
+									<ice:panelGrid columnClasses="hightAlignment" cellpadding="0"
+										cellspacing="0" columns="2">
+
+										<h:panelGrid columns="2">
+											<table>
+												<tr>
+													<td valign="top">
+														<table>
+															<tr>
+																<td valign="top">
+																	<ice:graphicImage
+																		value="/skins/default/images/workflow/#{workflowComponent.image}" />
+																</td>
+																<td>
+																	<ice:panelGroup
+																		style="background-image: url(/skins/default/images/workflow/workflowComponentGradient.png);border:1px solid #cccccc; z-index:10; width:200px; height: 30px;"
+																		hoverclass="seriesHover">
+
+																		<ice:panelGroup
+																			rendered="#{empty workflowComponent.name}">
+																			<i>No name yet specified</i>
+																		</ice:panelGroup>
+																		<ice:panelGroup
+																			rendered="#{not empty workflowComponent.name}">
+																						
+																						#{workflowComponent.name}
+																						<br />
+																			<ice:commandLink
+																				actionListener="#{StartWorkflowWizard.changeAssignments}"
+																				value="#{msgs['workflow.wizard_changeassignments']}"
+																				rendered="#{workflowComponent.type == 'task'}">
+																				<f:param name="transition"
+																					value="#{workflowComponent}" />
+																			</ice:commandLink>
+																		</ice:panelGroup>
+
+																	</ice:panelGroup>
+																	<ice:panelGroup
+																		rendered="#{workflowComponent.type=='task'}">
+
+																		<ui:repeat value="#{workflowComponent.assignees}"
+																			var="assignment">
+																			<ice:commandButton
+																				value="#{msgs['workflow.wizard_removeassignment']}"
+																				actionListener="#{workflowComponent.controller.removeAssignment}">
+																				<f:param name="assignment" value="#{assignment}" />
+																				<f:param name="workflowComponent"
+																					value="#{workflowComponent}" />
+																			</ice:commandButton>
+																			<ice:selectInputText rows="10" width="300"
+																				value="#{assignment.value}"
+																				valueChangeListener="#{workflowComponent.controller.selectInputValueChanged}">
+																				<f:selectItems
+																					value="#{workflowComponent.controller.possibleAssignments}" />
+																			</ice:selectInputText>
+
+																		</ui:repeat>
+
+																		<ice:commandLink immediate="true"
+																			value="#{msgs['workflow.wizard_addassignment']}"
+																			actionListener="#{workflowComponent.controller.addAssignment}">
+																			<f:param name="workflowTask"
+																				value="#{workflowComponent}" />
+																		</ice:commandLink>
+																	</ice:panelGroup>
+																</td>
+															</tr>
+														</table>
+													</td>
+
+
+													<td valign="top">
+														<ui:repeat value="#{workflowComponent.transitions}"
+															var="transition">
+															<ice:panelGroup
+																style="background-image:url(/skins/default/images/workflow/transition.png); background-position:right bottom; background-repeat:no-repeat; vertical-align:bottom;text-align:right; height:30px; line-height:30px; border-bottom:1px solid #cccccc; width:100px; ">
+																<h:outputText value="#{transition.name}" />
+
+
+															</ice:panelGroup>
+														</ui:repeat>
+													</td>
+
+
+													<td valign="top">
+														<!-- Task -->
+														<ice:panelGroup
+															rendered="#{workflowComponent.template == 'task'}"
+															styleClass="dropClass">
+															<ui:repeat value="#{workflowComponent.transitions}"
+																var="transition">
+																<table>
+																	<tr>
+																		<td width="100" height="30">
+																			<ice:panelGroup
+																				rendered="#{not empty transition.destination}"
+																				styleClass="dropClass">
+																					#{transition.destination.name} 
+																	
+																			
+																		</ice:panelGroup>
+																		</td>
+																	</tr>
+																</table>
+															</ui:repeat>
+
+														</ice:panelGroup>
+														<!-- Fork -->
+														<ice:panelGroup
+															rendered="#{workflowComponent.template == 'fork'}"
+															styleClass="dropClass">
+															<table>
+																<tr>
+
+																	<ui:repeat value="#{workflowComponent.workflowTasks}"
+																		var="workflowTask">
+																		<td>
+																			<ice:panelGroup styleClass="dropClass">
+																	 			
+																	 				#{workflowTask.name} <br />
+
+
+																			</ice:panelGroup>
+																		</td>
+																	</ui:repeat>
+
+
+																</tr>
+															</table>
+														</ice:panelGroup>
+														<!-- Join -->
+														<ice:panelGroup
+															rendered="#{workflowComponent.template == 'join'}">
+															<table>
+																<tr>
+																	<td>
+																		<ice:panelGroup
+																			rendered="#{empty workflowComponent.destination}"
+																			styleClass="dropClass"
+																			style="height: 30px; width:100px;  border-bottom:1px solid #cccccc;  ">
+
+																		</ice:panelGroup>
+																		<ice:panelGroup styleClass="dropClass"
+																			rendered="#{not empty workflowComponent.destination}">
+																 				#{workflowComponent.destination.name}
+																 				<br />
+
+
+																		</ice:panelGroup>
+																	</td>
+																</tr>
+															</table>
+														</ice:panelGroup>
+													</td>
+
+												</tr>
+											</table>
+										</h:panelGrid>
+									</ice:panelGrid>
+
+								</ui:repeat>
+							</td>
+						</tr>
+					</table>
+
+				</ice:panelTab>
+
+
+			</ice:panelTabSet>
+			<hr />
+			<ice:panelGroup styleClass="commands">
+				<ice:commandButton value="#{msgs['cancel']}" partialSubmit="true"
+					immediate="true" action="#{StartWorkflowWizard.cancel}" />
+				<ice:commandButton value="#{msgs['workflow.wizard_startworkflow']}"
+					id="startWorkflow" tabindex="1"
+					disabled="#{StartWorkflowWizard.workflowDefinition == null ? 'true' : 'false'}"
+					action="#{StartWorkflowWizard.startWorkflow}" />
+			</ice:panelGroup>
+		</ice:panelGroup>
+	</ice:form>
+
+
+</jsp:root>

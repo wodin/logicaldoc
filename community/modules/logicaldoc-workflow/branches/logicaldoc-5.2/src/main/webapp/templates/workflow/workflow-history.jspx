@@ -1,0 +1,229 @@
+<?xml version = '1.0'?>
+<!-- 
+ Shows the workflow histories
+ 
+ @author Matteo Caruso - Logical Objects
+ @since 5.2
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ldoc="http://www.logicaldoc.com/jsf" jsfc="ice:form"
+	styleClass="center" style="width: 900px;">
+
+	<ice:outputStyle href="/skins/default/css/workflow.css" />
+
+	<style>
+.class1 {
+	text-align: left;
+	width: 100px;
+}
+
+.class2 {
+	text-align: left;
+}
+</style>
+
+	<ice:messages />
+	<ice:panelGroup id="messages" styleClass="formBorderHighlight"
+		style="text-align: left;">
+		<h3>
+			<ice:outputText id="message" value="#{msgs['workflow.history']}" />
+			<br />
+			<br />
+		</h3>
+		<ice:panelGrid columns="2" style="text-align: left;">
+			<!-- Workflows -->
+			<ice:panelGroup styleClass="outputLabel" style="margin:10px 5px;">
+				<ice:outputLabel for="workflows" value="#{msgs['workflow']}:" />
+			</ice:panelGroup>
+			<ice:panelGroup style="text-align:left; margin:10px 2px;">
+				<ice:selectOneMenu id="workflowTemplateId"
+					value="#{WorkflowManager.selectedWorkflowTemplateId}"
+					valueChangeListener="#{WorkflowManager.templateSelected}"
+					partialSubmit="true">
+					<f:selectItems value="#{WorkflowManager.workflowTemplates}" />
+				</ice:selectOneMenu>
+				<ice:message for="workflows" />
+			</ice:panelGroup>
+		</ice:panelGrid>
+
+		<!-- Workflow Instances -->
+		<ice:panelGroup styleClass="outputLabel"
+			style="text-align:left; margin:10px 5px;">
+			<ice:outputLabel for="instances"
+				value="#{msgs['workflow.instances']}:" />
+		</ice:panelGroup>
+		<!-- Workflow Instances Table -->
+		<ice:panelGroup styleClass="formBorderHighlight"
+			rendered="#{WorkflowManager.workflowInstancesCount > 0}">
+			<ice:dataTable id="instancesList"
+				value="#{WorkflowManager.workflowInstances}" var="instance"
+				cellpadding="0" styleClass="center"
+				rows="5"
+				columnClasses="numberColumn,dateColumn,dateColumn,titleColumn">
+
+				<!-- ID column -->
+				<ice:column styleClass="nowrap center">
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['id']}" />
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:rowSelector value="#{instance.selected}"
+							multiple="#{WorkflowManager.multipleSelection}"
+							selectionListener="#{WorkflowManager.selectRow}"
+							selectedClass="rowSelSelected" mouseOverClass="rowMouseOver"
+							toggleOnInput="false">
+							<ice:outputText value="#{instance.id}" />
+						</ice:rowSelector>
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Start Date column -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['startdate']}" />
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{instance.startDate}">
+							<f:convertDateTime pattern="#{loc.dateFormatHM}"
+								timeZone="#{StyleBean.timeZone}" />
+						</ice:outputText>
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- End Date column -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['enddate']}" />
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{instance.endDate}">
+							<f:convertDateTime pattern="#{loc.dateFormatHM}"
+								timeZone="#{StyleBean.timeZone}" />
+						</ice:outputText>
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Documents column -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['menu.documents']}" />
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{instance.documents}" />
+					</ice:panelGroup>
+				</ice:column>
+			</ice:dataTable>
+			
+			<br />
+			<ice:panelGrid columns="2" style="width: 100%;">
+				<ice:panelGroup>
+					<ldoc:paginator table="instancesList"
+						label="#{msgs['paginator.simple']}" />
+				</ice:panelGroup>
+			</ice:panelGrid>
+		</ice:panelGroup>
+		<ice:panelGroup styleClass="formBorderHighlight center"
+			rendered="#{WorkflowManager.workflowInstancesCount &lt; 1}">
+			<ice:outputText value="#{msgs['noelements']}" />
+		</ice:panelGroup>
+		<br />
+		<!-- Workflow History Table -->
+		<ice:panelGroup styleClass="formBorderHighlight"
+			rendered="#{WorkflowManager.historiesCount > 0}">
+			<ice:dataTable id="historiesList"
+				value="#{WorkflowManager.histories}" var="history" cellpadding="0"
+				styleClass="center" rows="#{WorkflowManager.displayedRows}"
+				columnClasses="titleColumn,dateColumn,titleColumn,titleColumn,titleColumn">
+
+				<!-- Event column -->
+				<ice:column styleClass="nowrap center">
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['event']}" />
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{history.eventMessage}"
+							title="#{history.comment}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Date column -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['date']}" />
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{history.date}">
+							<f:convertDateTime pattern="#{loc.dateFormatHM}"
+								timeZone="#{StyleBean.timeZone}" />
+						</ice:outputText>
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- User column -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['user']}" />
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{history.userName}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Document column -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['document']}" />
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{history.document}" />
+					</ice:panelGroup>
+				</ice:column>
+
+				<!-- Session ID column -->
+				<ice:column styleClass="center">
+					<f:facet name="header">
+						<ice:outputText value="#{msgs['session.id']}" />
+					</f:facet>
+					<ice:panelGroup style="text-align:left">
+						<ice:outputText value="#{history.sessionId}" />
+					</ice:panelGroup>
+				</ice:column>
+			</ice:dataTable>
+
+			<br />
+			<ice:panelGrid columns="2" style="width: 100%;">
+				<ice:panelGroup>
+					<ldoc:paginator table="historiesList"
+						label="#{msgs['paginator.simple']}" />
+				</ice:panelGroup>
+
+				<ice:panelGroup style="float:right">
+					<ice:selectOneMenu id="dispRows"
+						value="#{WorkflowManager.displayedRows}" partialSubmit="true">
+						<f:selectItem itemValue="10" />
+						<f:selectItem itemValue="25" />
+						<f:selectItem itemValue="50" />
+					</ice:selectOneMenu>
+					<ice:outputLabel value="#{msgs['document.perpage']}" for="dispRows"
+						style="white-space: nowrap;" />
+				</ice:panelGroup>
+			</ice:panelGrid>
+		</ice:panelGroup>
+
+		<ice:panelGroup styleClass="formBorderHighlight center"
+			rendered="#{WorkflowManager.historiesCount &lt; 1}">
+			<ice:outputText value="#{msgs['noelements']}" />
+		</ice:panelGroup>
+		<hr />
+		<ice:panelGroup styleClass="commands">
+			<ice:commandButton value="#{msgs['back']}" styleClass="backBtn"
+				action="#{WorkflowManager.abort}" partialSubmit="true" />
+		</ice:panelGroup>
+	</ice:panelGroup>
+</jsp:root>

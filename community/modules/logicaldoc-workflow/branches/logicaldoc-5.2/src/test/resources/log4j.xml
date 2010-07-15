@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+	<!--
+		<!DOCTYPE log4j:configuration SYSTEM
+		"http://svn.apache.org/viewvc/logging/log4j/branches/v1_2-branch/src/java/org/apache/log4j/xml/log4j.dtd?view=co">
+	-->
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"
+	threshold="null" debug="false">
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p %c{1} - %m%n" />
+		</layout>
+	</appender>
+
+
+	<category name="com.logicaldoc"
+		additivity="false">
+		<priority value="debuf" />
+		<appender-ref ref="console" />
+	</category>
+
+</log4j:configuration>
