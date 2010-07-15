@@ -16,6 +16,7 @@ import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -388,6 +389,12 @@ public class ItemFactory {
 		}
 
 		return item;
+	}
 
+	public static LinkItem newLinkItem(String name, String title) {
+		LinkItem linkItem = new LinkItem(name);
+		linkItem.setTitle(I18N.message(title));
+		linkItem.setLinkTitle(I18N.message(title));
+		return linkItem;
 	}
 }
