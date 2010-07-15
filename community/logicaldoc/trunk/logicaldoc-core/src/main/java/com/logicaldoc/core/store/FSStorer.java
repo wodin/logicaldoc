@@ -49,7 +49,7 @@ public class FSStorer implements Storer {
 	public void delete(long docId) {
 		File docDir = getDirectory(docId);
 		try {
-			FileUtils.deleteDirectory(docDir);
+			FileUtils.forceDelete(docDir);
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
