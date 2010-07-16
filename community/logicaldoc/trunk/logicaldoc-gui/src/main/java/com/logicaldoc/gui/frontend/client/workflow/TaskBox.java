@@ -6,7 +6,6 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HLayout;
-import com.smartgwt.client.widgets.layout.HStack;
 import com.smartgwt.client.widgets.layout.VStack;
 
 /**
@@ -28,17 +27,16 @@ public class TaskBox extends VStack {
 		Label title = new Label("Task Name");
 		addMember(title);
 		title.setHeight(21);
-		title.setWrap(false);  
-		title.setIcon("icons/16/approved.png");  
+		title.setWrap(false);
+		title.setIcon("icons/16/approved.png");
 
 		HLayout commands = new HLayout();
 		commands.setHeight(12);
 		commands.setWidth(1);
 		commands.setAlign(Alignment.RIGHT);
 		addMember(commands);
-		
 
-		HTML delete = new HTML("<a href='#'>" + I18N.message("delete") + "</a>");
+		HTML delete = new HTML("<a href='#'>" + I18N.message("delete").toLowerCase() + "</a>");
 		delete.setWidth("1px");
 		delete.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
@@ -46,8 +44,17 @@ public class TaskBox extends VStack {
 				SC.say("Hello World");
 			}
 		});
-
 		commands.addMember(delete);
+
+		HTML edit = new HTML("&nbsp;&nbsp;<a href='#'>" + I18N.message("edit").toLowerCase() + "</a>");
+		edit.setWidth("1px");
+		edit.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
+			@Override
+			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
+				SC.say("Hello World");
+			}
+		});
+		commands.addMember(edit);
 	}
 
 	public void select() {

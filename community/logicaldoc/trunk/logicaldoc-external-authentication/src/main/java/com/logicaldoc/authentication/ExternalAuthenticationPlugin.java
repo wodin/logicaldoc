@@ -24,11 +24,11 @@ public class ExternalAuthenticationPlugin extends LogicalDOCPlugin {
 	protected void install() throws Exception {
 		super.install();
 
-		String webappDir = resolvePath("webapp");
-		File src = new File(webappDir);
-		File dest = new File(webappDir + "/../../../../");
-		log.info("Copy web resources from " + src.getPath() + " to " + dest.getPath());
-		FileUtils.copyDirectory(src, dest);
+//		String webappDir = resolvePath("webapp");
+//		File src = new File(webappDir);
+//		File dest = new File(webappDir + "/../../../../");
+//		log.info("Copy web resources from " + src.getPath() + " to " + dest.getPath());
+//		FileUtils.copyDirectory(src, dest);
 
 		// Add some scheduling defaults
 		PropertiesBean pbean = new PropertiesBean();
