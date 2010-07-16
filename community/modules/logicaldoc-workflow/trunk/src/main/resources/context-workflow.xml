@@ -47,10 +47,7 @@
     </property>
   </bean>
 
-  <bean id="StartWorkflowWizard" class="com.logicaldoc.workflow.wizard.StartWorkflowWizard" scope="session">
-    <property name="XStream" ref="xStream" />
-  </bean>
-
+ 
   <bean id="workflowTaskController" class="com.logicaldoc.workflow.editor.controll.TaskController">
   </bean>
 
@@ -62,20 +59,4 @@
   </bean>
 
   <bean id="xStream" class="com.thoughtworks.xstream.XStream" />
-
-
-  <!-- JSF beans -->
-
-  <!-- Home bean -->
-  <bean id="WorkflowTemplateManager" class="com.logicaldoc.workflow.editor.WorkflowTemplateManager" scope="session">
-    <property name="workflowTemplateDao" ref="WorkflowPersistenceTemplateDAO" />
-    <property name="modelConfiguration" ref="ModelConfiguration" />
-  </bean>
-
-  <bean id="WorkflowManager" class="com.logicaldoc.workflow.WorkflowManager" scope="session" />
-
-  <bean id="templateService" class=" com.logicaldoc.workflow.FreemarkerTemplateService">
-    <property name="userDAO" ref="UserDAO" />
-    <property name="workflowService" ref="workflowService" />
-  </bean>
 </beans>

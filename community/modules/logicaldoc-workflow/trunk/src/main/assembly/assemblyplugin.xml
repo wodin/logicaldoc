@@ -31,10 +31,6 @@
 			<outputDirectory>classes</outputDirectory>
 		</fileSet>
 		<fileSet>
-			<directory>src/main/webapp</directory>
-			<outputDirectory>webapp</outputDirectory>
-		</fileSet>
-		<fileSet>
 			<directory>src/main/lib</directory>
 			<outputDirectory>lib</outputDirectory>
 		</fileSet>

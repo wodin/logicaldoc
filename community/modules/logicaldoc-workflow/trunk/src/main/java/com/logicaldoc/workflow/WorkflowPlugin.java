@@ -52,13 +52,13 @@ public class WorkflowPlugin extends LogicalDOCPlugin {
 
 	protected void install() throws Exception {
 		super.install();
-		log.info("installing Workflow-Module...");
-
-		String webappDir = resolvePath("webapp");
-		File src = new File(webappDir);
-		File dest = new File(webappDir + "/../../../../");
-		log.info("Copy web resources from " + src.getPath() + " to " + dest.getPath());
-		FileUtils.copyDirectory(src, dest);
+//		log.info("installing Workflow-Module...");
+//
+//		String webappDir = resolvePath("webapp");
+//		File src = new File(webappDir);
+//		File dest = new File(webappDir + "/../../../../");
+//		log.info("Copy web resources from " + src.getPath() + " to " + dest.getPath());
+//		FileUtils.copyDirectory(src, dest);
 		
 		// Add some workflow CE defaults
 		PropertiesBean pbean = new PropertiesBean();
