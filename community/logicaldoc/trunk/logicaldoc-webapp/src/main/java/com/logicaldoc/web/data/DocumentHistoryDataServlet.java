@@ -69,7 +69,7 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 			Object[] cols = (Object[]) record;
 			writer.print("<history>");
 			writer.print("<user><![CDATA[" + cols[0] + "]]></user>");
-			writer.print("<event><![CDATA[" + I18N.getMessage((String) cols[1], locale) + "]]></event>");
+			writer.print("<event><![CDATA[" + I18N.message((String) cols[1], locale) + "]]></event>");
 			writer.print("<version>" + cols[2] + "</version>");
 			writer.print("<date>" + df.format((Date) cols[3]) + "</date>");
 			writer.print("<comment><![CDATA[" + cols[4] + "]]></comment>");

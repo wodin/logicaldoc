@@ -62,7 +62,7 @@ public class VersionsDataServlet extends HttpServlet {
 			writer.print("<version>");
 			writer.print("<id>" + cols[0] + "</id>");
 			writer.print("<user><![CDATA[" + cols[1] + "]]></user>");
-			writer.print("<event><![CDATA[" + I18N.getMessage((String) cols[2], locale) + "]]></event>");
+			writer.print("<event><![CDATA[" + I18N.message((String) cols[2], locale) + "]]></event>");
 			writer.print("<version>" + cols[3] + "</version>");
 			writer.print("<fileVersion>" + cols[4] + "</fileVersion>");
 			writer.print("<date>" + df.format((Date) cols[5]) + "</date>");

@@ -56,7 +56,7 @@ public class FolderHistoryDataServlet extends HttpServlet {
 
 			writer.print("<history>");
 			writer.print("<user><![CDATA[" + cols[0] + "]]></user>");
-			writer.print("<event><![CDATA[" + I18N.getMessage((String) cols[1], locale) + "]]></event>");
+			writer.print("<event><![CDATA[" + I18N.message((String) cols[1], locale) + "]]></event>");
 			writer.print("<date>" + df.format((Date) cols[2]) + "</date>");
 			writer.print("<comment><![CDATA[" + cols[3] + "]]></comment>");
 			writer.print("<title><![CDATA[" + cols[4] + "]]></title>");
