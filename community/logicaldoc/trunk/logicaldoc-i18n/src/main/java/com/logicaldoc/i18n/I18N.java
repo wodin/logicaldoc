@@ -15,7 +15,7 @@ public class I18N {
 	private I18N() {
 	}
 
-	public static String getMessage(String key, String lang) {
+	public static String message(String key, String lang) {
 		return message(key, new Locale(lang));
 	}
 
@@ -29,7 +29,11 @@ public class I18N {
 		return key;
 	}
 
-	public static String getMessage(String key, Locale locale, Object[] values) {
+	public static String message(String key, Locale locale, String value) {
+		return message(key, locale, new Object[] { value });
+	}
+
+	public static String message(String key, Locale locale, Object[] values) {
 		String msg = message(key, locale);
 		return MessageFormat.format(msg, values);
 	}

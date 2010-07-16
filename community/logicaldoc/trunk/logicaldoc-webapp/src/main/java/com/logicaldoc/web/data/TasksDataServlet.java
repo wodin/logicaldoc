@@ -50,7 +50,7 @@ public class TasksDataServlet extends HttpServlet {
 		for (Task task : manager.getTasks()) {
 			writer.print("<task>");
 			writer.print("<name><![CDATA[" + task.getName() + "]]></name>");
-			writer.print("<label><![CDATA[" + I18N.getMessage("task.name." + task.getName(), locale) + "]]></label>");
+			writer.print("<label><![CDATA[" + I18N.message("task.name." + task.getName(), locale) + "]]></label>");
 			if (task.getScheduling().isEnabled()) {
 				writer.print("<eenabled>true</eenabled>");
 				writer.print("<enabledIcon>bullet_green</enabledIcon>");
@@ -62,9 +62,9 @@ public class TasksDataServlet extends HttpServlet {
 			if (task.getScheduling().getMode().equals(TaskTrigger.MODE_CRON))
 				writer.print("<scheduling>" + task.getScheduling().getCronExpression() + "</scheduling>");
 			else if (task.getScheduling().getMode().equals(TaskTrigger.MODE_SIMPLE))
-				writer.print("<scheduling>" + I18N.getMessage("each", locale) + " "
+				writer.print("<scheduling>" + I18N.message("each", locale) + " "
 						+ task.getScheduling().getIntervalSeconds() + " "
-						+ I18N.getMessage("seconds", locale).toLowerCase() + "</scheduling>");
+						+ I18N.message("seconds", locale).toLowerCase() + "</scheduling>");
 			writer.print("<progress>" + task.getProgress() + "</progress>");
 			if (task.getScheduling().getPreviousFireTime() != null) {
 				writer.print("<lastStart>" + df.format(task.getScheduling().getPreviousFireTime()) + "</lastStart>");

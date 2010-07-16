@@ -2,8 +2,8 @@ package com.logicaldoc.workflow;
 
 import com.logicaldoc.core.document.AbstractHistory;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.i18n.Messages;
 
 /**
  * History entry due to an event on a workflow.
@@ -61,7 +61,7 @@ public class WorkflowHistory extends AbstractHistory {
 	public String getEventMessage() {
 		String event = getEvent();
 		if (event != null && !event.trim().isEmpty())
-			return Messages.getMessage(event);
+			return I18N.message(event);
 		else
 			return "";
 	}

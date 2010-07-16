@@ -62,7 +62,7 @@ public class GroupsDataServlet extends HttpServlet {
 				writer.print("<id>" + group.getId() + "</id>");
 				writer.print("<name><![CDATA[" + group.getName() + "]]></name>");
 				writer.print("<description><![CDATA[" + group.getDescription() + "]]></description>");
-				writer.print("<label><![CDATA[" + I18N.getMessage("group", locale) + ": " + group.getName()
+				writer.print("<label><![CDATA[" + I18N.message("group", locale) + ": " + group.getName()
 						+ "]]></label>");
 				writer.print("</group>");
 			}
@@ -82,7 +82,7 @@ public class GroupsDataServlet extends HttpServlet {
 				writer.print("<id>" + cols[0] + "</id>");
 				writer.print("<name><![CDATA[" + cols[1] + "]]></name>");
 				writer.print("<description><![CDATA[" + cols[2] + "]]></description>");
-				writer.print("<label><![CDATA[" + I18N.getMessage("group", locale) + ": " + (String) cols[1]
+				writer.print("<label><![CDATA[" + I18N.message("group", locale) + ": " + (String) cols[1]
 						+ "]]></label>");
 				writer.print("</group>");
 			}
