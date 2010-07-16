@@ -57,6 +57,7 @@
       <export prefix="*" />
     </library>
   </runtime>
+
   <extension-point id="DbInit">
     <parameter-def id="name" />
     <parameter-def id="sqlFile" />
@@ -91,78 +92,11 @@
     <parameter-def id="position" />
   </extension-point>
 
-  <extension-point id="DocumentToolbar">
-    <parameter-def id="action" />
-    <parameter-def id="link" />
-    <parameter-def id="target" />
-    <parameter-def id="title" />
-    <parameter-def id="rendered" />
-    <parameter-def id="confirm" />
-    <parameter-def id="icon" />
-    <parameter-def id="position" />
-  </extension-point>
-
-  <extension-point id="DocumentIcons">
-    <parameter-def id="action" />
-    <parameter-def id="link" />
-    <parameter-def id="target" />
-    <parameter-def id="title" />
-    <parameter-def id="rendered" />
-    <parameter-def id="confirm" />
-    <parameter-def id="icon" />
-    <parameter-def id="position" />
-  </extension-point>
-
-  <extension-point id="SearchResultToolbar">
-    <parameter-def id="action" />
-    <parameter-def id="link" />
-    <parameter-def id="target" />
-    <parameter-def id="title" />
-    <parameter-def id="rendered" />
-    <parameter-def id="confirm" />
-    <parameter-def id="icon" />
-    <parameter-def id="position" />
-  </extension-point>
-
-  <extension-point id="DocumentMenu">
-    <parameter-def id="id" />
-    <parameter-def id="action" />
-    <parameter-def id="title" />
-    <parameter-def id="icon" />
-    <parameter-def id="target" />
-    <parameter-def id="permission" />
-    <parameter-def id="readonly" />
-    <parameter-def id="position" />
-  </extension-point>
-
-  <extension-point id="FolderMenu">
-    <parameter-def id="action" />
-    <parameter-def id="link" />
-    <parameter-def id="title" />
-    <parameter-def id="rendered" />
-    <parameter-def id="position" />
-    <parameter-def id="confirm" />
-    <parameter-def id="icon" />
-    <parameter-def id="target" />
-  </extension-point>
-
   <extension-point id="ThumbnailBuilder">
     <parameter-def id="extension" />
     <parameter-def id="class" />
   </extension-point>
-
-  <extension-point id="ViewModeBrowsing">
-    <parameter-def id="id" />
-    <parameter-def id="label" />
-    <parameter-def id="position" />
-  </extension-point>
-
-  <extension-point id="ViewModeSearch">
-    <parameter-def id="id" />
-    <parameter-def id="label" />
-    <parameter-def id="position" />
-  </extension-point>
-
+  
   <extension-point id="Search">
     <parameter-def id="type" />
     <parameter-def id="class" />
@@ -198,18 +132,6 @@
     <parameter id="locale" value="fr" />
     <parameter id="analyzer" value="-" />
   </extension>
-  <extension plugin-id="logicaldoc-core" point-id="ResourceBundle" id="applicationBundle">
-    <parameter id="position" value="1" />
-    <parameter id="bundle" value="i18n.application" />
-  </extension>
-  <extension plugin-id="logicaldoc-core" point-id="ResourceBundle" id="facesBundle">
-    <parameter id="position" value="10" />
-    <parameter id="bundle" value="i18n.faces" />
-  </extension>
-  <extension plugin-id="logicaldoc-core" point-id="ResourceBundle" id="infoBundle">
-    <parameter id="position" value="20" />
-    <parameter id="bundle" value="i18n.localeInformation" />
-  </extension>
 
   <extension plugin-id="logicaldoc-core" point-id="ThumbnailBuilder" id="jpgThumb">
     <parameter id="extension" value="jpg" />
@@ -243,205 +165,6 @@
     <parameter id="extension" value="pdf" />
     <parameter id="class" value="com.logicaldoc.core.document.thumbnail.PdfThumbnailBuilder" />
   </extension>
-
-  <extension plugin-id="logicaldoc-core" point-id="ViewModeBrowsing" id="simpleBrowsing">
-    <parameter id="id" value="simple" />
-    <parameter id="label" value="viewmode.simple" />
-    <parameter id="position" value="5" />
-  </extension>
-  <extension plugin-id="logicaldoc-core" point-id="ViewModeBrowsing" id="detailsBrowsing">
-    <parameter id="id" value="details" />
-    <parameter id="label" value="viewmode.details" />
-    <parameter id="position" value="10" />
-  </extension>
-  <extension plugin-id="logicaldoc-core" point-id="ViewModeSearch" id="defaultSearch">
-    <parameter id="id" value="default" />
-    <parameter id="label" value="viewmode.default" />
-    <parameter id="position" value="5" />
-  </extension>
-
-  <!-- start  document icons -->
-  <extension plugin-id="logicaldoc-core" point-id="DocumentIcons" id="indexedIcon">
-    <parameter id="action" value="" />
-    <parameter id="link" value="#{documentRecord.downloadTextLink}" />
-    <parameter id="title" value="document.indexed" />
-    <parameter id="rendered" value="documentRecord.document.indexed==1" />
-    <parameter id="position" value="10" />
-    <parameter id="icon" value="indexed.png" />
-    <parameter id="target" value="_blank" />
-    <parameter id="confirm" value="" />
-  </extension>
-  <extension plugin-id="logicaldoc-core" point-id="DocumentIcons" id="lockIcon">
-    <parameter id="action" value="" />
-    <parameter id="link" value="" />
-    <parameter id="title" value="locked" />
-    <parameter id="rendered" value="documentRecord.locked" />
-    <parameter id="position" value="15" />
-    <parameter id="icon" value="document_lock.png" />
-    <parameter id="target" value="" />
-    <parameter id="confirm" value="" />
-  </extension>
-  <extension plugin-id="logicaldoc-core" point-id="DocumentIcons" id="immutableIcon">
-    <parameter id="action" value="" />
-    <parameter id="link" value="" />
-    <parameter id="title" value="document.immutable" />
-    <parameter id="rendered" value="documentRecord.document.immutable == 1" />
-    <parameter id="position" value="20" />
-    <parameter id="icon" value="stop.png" />
-    <parameter id="target" value="" />
-    <parameter id="confirm" value="" />
-  </extension>
-  <extension plugin-id="logicaldoc-core" point-id="DocumentIcons" id="linksIcon">
-    <parameter id="action" value="documentRecord.links" />
-    <parameter id="link" value="" />
-    <parameter id="title" value="links" />
-    <parameter id="rendered" value="documentRecord.linked" />
-    <parameter id="position" value="25" />
-    <parameter id="icon" value="link.png" />
-    <parameter id="target" value="" />
-    <parameter id="confirm" value="" />
-  </extension>
-  <extension plugin-id="logicaldoc-core" point-id="DocumentIcons" id="unindexableIcon">
-    <parameter id="action" value="" />
-    <parameter id="link" value="#{documentRecord.downloadTextLink}" />
-    <parameter id="title" value="document.unindexable" />
-    <parameter id="rendered" value="documentRecord.document.indexed==2" />
-    <parameter id="position" value="30" />
-    <parameter id="icon" value="unindexable.png" />
-    <parameter id="target" value="_blank" />
-    <parameter id="confirm" value="" />
-  </extension>
-  <!-- end document icons -->
-
-  <!-- Start FolderMenu -->
-  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderSearch">
-    <parameter id="action" value="documentNavigation.searchInFolder" />
-    <parameter id="link" value="" />
-    <parameter id="target" value="" />
-    <parameter id="title" value="search" />
-    <parameter id="rendered" value="documentNavigation.selectedDir.menuId != 5" />
-    <parameter id="position" value="10" />
-    <parameter id="icon" value="folder_search.png" />
-    <parameter id="confirm" value="" />
-  </extension>
-
-  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderHistory">
-    <parameter id="action" value="documentNavigation.history" />
-    <parameter id="link" value="" />
-    <parameter id="title" value="history" />
-    <parameter id="rendered" value="true" />
-    <parameter id="position" value="20" />
-    <parameter id="confirm" value="" />
-    <parameter id="icon" value="folder_history.png" />
-    <parameter id="target" value="" />
-  </extension>
-
-  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderAdd">
-    <parameter id="action" value="documentNavigation.newDirectory" />
-    <parameter id="link" value="" />
-    <parameter id="target" value="" />
-    <parameter id="title" value="folder.new" />
-    <parameter id="rendered" value="documentNavigation.selectedDir.addChildEnabled" />
-    <parameter id="position" value="40" />
-    <parameter id="icon" value="folder_add.png" />
-    <parameter id="confirm" value="" />
-  </extension>
-
-  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderMove">
-    <parameter id="action" value="documentNavigation.moveDirectory" />
-    <parameter id="link" value="" />
-    <parameter id="target" value="" />
-    <parameter id="title" value="move" />
-    <parameter id="rendered"
-      value="documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.deleteEnabled" />
-    <parameter id="position" value="45" />
-    <parameter id="icon" value="folder_move.png" />
-    <parameter id="confirm" value="" />
-  </extension>
-
-  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderDelete">
-    <parameter id="action" value="documentNavigation.deleteDirectory" />
-    <parameter id="link" value="" />
-    <parameter id="target" value="" />
-    <parameter id="title" value="delete" />
-    <parameter id="rendered"
-      value="documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.deleteEnabled" />
-    <parameter id="position" value="50" />
-    <parameter id="icon" value="folder_delete.png" />
-    <parameter id="confirm" value="" />
-  </extension>
-
-  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderEdit">
-    <parameter id="action" value="documentNavigation.selectedDir.edit" />
-    <parameter id="link" value="" />
-    <parameter id="target" value="" />
-    <parameter id="title" value="edit" />
-    <parameter id="rendered"
-      value="documentNavigation.selectedDir.menuId != 5 and documentNavigation.selectedDir.renameEnabled" />
-    <parameter id="position" value="60" />
-    <parameter id="icon" value="folder_edit.png" />
-    <parameter id="confirm" value="" />
-  </extension>
-
-  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderExport">
-    <parameter id="action" value="" />
-    <parameter id="link" value="#{documentNavigation.folderExportLink}" />
-    <parameter id="title" value="msg.jsp.zipalllevel" />
-    <parameter id="rendered" value="documentNavigation.selectedDir.bulkExportEnabled" />
-    <parameter id="position" value="70" />
-    <parameter id="confirm" value="" />
-    <parameter id="icon" value="folder_export.png" />
-    <parameter id="target" value="_blank" />
-  </extension>
-
-  <extension plugin-id="logicaldoc-core" point-id="FolderMenu" id="menuFolderRights">
-    <parameter id="action" value="documentNavigation.rights" />
-    <parameter id="link" value="" />
-    <parameter id="target" value="" />
-    <parameter id="title" value="rights" />
-    <parameter id="rendered" value="documentNavigation.selectedDir.manageSecurityEnabled" />
-    <parameter id="position" value="80" />
-    <parameter id="icon" value="folder_lock.png" />
-    <parameter id="confirm" value="" />
-  </extension>
-
-  <!-- End FolderMenu -->
-
-  <!-- Start Document Toolbar -->
-  <extension plugin-id="logicaldoc-core" point-id="DocumentToolbar" id="shortcutToolbar">
-    <parameter id="action" value="documentsRecordsManager.pasteAsShortcut" />
-    <parameter id="link" value="" />
-    <parameter id="target" value="" />
-    <parameter id="title" value="clipboard.pasteasshortcut" />
-    <parameter id="rendered"
-      value="documentsRecordsManager.clipboardSize gt 0 and documentNavigation.selectedDir.writeEnabled and documentsRecordsManager.guiRequest=='copy'" />
-    <parameter id="position" value="100" />
-    <parameter id="icon" value="actions_pasteasshortcut.png" />
-    <parameter id="confirm" value="" />
-  </extension>
-
-  <extension plugin-id="logicaldoc-core" point-id="DocumentToolbar" id="bookmarkToolbar">
-    <parameter id="action" value="bookmarkBean.saveBookmarks" />
-    <parameter id="link" value="" />
-    <parameter id="target" value="" />
-    <parameter id="title" value="clipboard.saveBookmark" />
-    <parameter id="rendered" value="true" />
-    <parameter id="position" value="110" />
-    <parameter id="icon" value="actions_bookmarks.png" />
-    <parameter id="confirm" value="" />
-  </extension>
-
-  <extension plugin-id="logicaldoc-core" point-id="DocumentToolbar" id="indexToolbar">
-    <parameter id="action" value="documentsRecordsManager.showIndexOptions" />
-    <parameter id="link" value="" />
-    <parameter id="target" value="" />
-    <parameter id="title" value="document.index.settings" />
-    <parameter id="rendered" value="documentNavigation.selectedDir.writeEnabled" />
-    <parameter id="position" value="120" />
-    <parameter id="icon" value="actions_index.png" />
-    <parameter id="confirm" value="" />
-  </extension>
-  <!-- end Document Toolbar -->
 
   <extension plugin-id="logicaldoc-core" point-id="Search" id="fulltextSearch">
     <parameter id="type" value="0" />
