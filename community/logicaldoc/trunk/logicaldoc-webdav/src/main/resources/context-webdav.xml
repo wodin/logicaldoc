@@ -28,11 +28,6 @@
 		<property name="IOManager" ref="IOManager" />
 	</bean>
 
-	<bean id="WebdavBean" class="com.logicaldoc.webdav.web.WebdavBean"
-		scope="request">
-		<property name="properties" ref="ContextProperties" />
-	</bean>
-
 	<bean id="DavCacheManager" class="net.sf.ehcache.CacheManager">
 		<constructor-arg index="0" type="java.net.URL"
 			value="classpath:dav-ehcache.xml" />

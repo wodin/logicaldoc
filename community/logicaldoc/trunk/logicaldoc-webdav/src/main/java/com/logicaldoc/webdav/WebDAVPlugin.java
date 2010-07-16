@@ -2,7 +2,6 @@ package com.logicaldoc.webdav;
 
 import java.io.File;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -26,12 +25,12 @@ public class WebDAVPlugin extends LogicalDOCPlugin {
 		super.install();
 		
 		String webappDir = resolvePath("webapp");
-		File src = new File(webappDir);
+//		File src = new File(webappDir);
 		File dest = new File(webappDir + "/../../../../");
 
-		log.info("Copy web resources from " + src.getPath() + " to "
-				+ dest.getPath());
-		FileUtils.copyDirectory(src, dest);
+//		log.info("Copy web resources from " + src.getPath() + " to "
+//				+ dest.getPath());
+//		FileUtils.copyDirectory(src, dest);
 			
 		WebConfigurator config = new WebConfigurator(dest.getPath() + "/WEB-INF/web.xml");
 		

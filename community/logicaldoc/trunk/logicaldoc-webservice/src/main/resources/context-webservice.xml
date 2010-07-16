@@ -39,8 +39,4 @@
       <entry key="mtom-enabled" value="true" />
     </jaxws:properties>
   </jaxws:endpoint>
-
-  <bean id="WebserviceBean" class="com.logicaldoc.webservice.WebserviceBean" scope="request">
-    <property name="properties" ref="ContextProperties" />
-  </bean>
 </beans>
