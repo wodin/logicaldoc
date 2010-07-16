@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.logicaldoc</groupId>
     <artifactId>logicaldoc</artifactId>
-    <version>5.2.0</version>
+    <version>6.0.0</version>
   </parent>
   <artifactId>logicaldoc-workflow</artifactId>
   <name>logicaldoc-workflow</name>
@@ -48,15 +48,7 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>com.logicaldoc</groupId>
-      <artifactId>logicaldoc-web</artifactId>
-      <type>jar</type>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-      <classifier>api</classifier>
-    </dependency>
-
+    
     <dependency>
       <groupId>org.freemarker</groupId>
       <artifactId>freemarker</artifactId>
@@ -159,32 +151,6 @@
       <groupId>bsh</groupId>
       <artifactId>bsh</artifactId>
       <version>2.0b1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.icefaces</groupId>
-      <artifactId>icefaces-comps</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.icefaces</groupId>
-      <artifactId>icefaces-facelets</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.icefaces</groupId>
-      <artifactId>icefaces</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.faces</groupId>
-      <artifactId>jsf-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.faces</groupId>
-      <artifactId>jsf-impl</artifactId>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
