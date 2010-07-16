@@ -255,7 +255,9 @@ public class WebConfigurator extends XMLBean {
 		for (Iterator iterator = mappings.iterator(); iterator.hasNext();) {
 			Element elem = (Element) iterator.next();
 			Element servletName = elem.getChild("servlet-name", elem.getNamespace());
-			if (servletName.getText().trim().equals(servlet)) {
+			Element urlPattern = elem.getChild("url-pattern", elem.getNamespace());
+			
+			if (servletName.getText().trim().equals(servlet)&&urlPattern.getText().trim().equals(pattern)) {
 				// The mapping already exists
 				return;
 			}
