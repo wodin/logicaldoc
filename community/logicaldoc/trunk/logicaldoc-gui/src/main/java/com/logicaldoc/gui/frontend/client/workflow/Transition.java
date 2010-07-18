@@ -57,7 +57,7 @@ public class Transition extends HStack {
 				// Canvas target = EventHandler.getDragTarget();
 				// SC.say("You dropped the " + target.getID());
 				removeMember(dropArea);
-				addMember(new WorkflowState(WorkflowState.TYPE_TASK));
+				addMember(new WorkflowDraggedState(WorkflowState.TYPE_TASK));
 			}
 		});
 		addMember(dropArea);
