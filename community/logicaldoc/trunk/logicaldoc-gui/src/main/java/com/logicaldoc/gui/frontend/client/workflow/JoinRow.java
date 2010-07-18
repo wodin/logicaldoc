@@ -1,6 +1,9 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.util.EventHandler;
+import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.DropEvent;
 import com.smartgwt.client.widgets.events.DropHandler;
@@ -8,31 +11,24 @@ import com.smartgwt.client.widgets.events.DropOutEvent;
 import com.smartgwt.client.widgets.events.DropOutHandler;
 import com.smartgwt.client.widgets.events.DropOverEvent;
 import com.smartgwt.client.widgets.events.DropOverHandler;
-import com.smartgwt.client.widgets.layout.HStack;
 
-public class Transition extends HStack {
+/**
+ * A row containing a join primitive
+ * 
+ * @author Marco Meschieri - Logical Objects
+ * @since 6.0
+ */
+public class JoinRow extends WorkflowRow {
+
 	private Label dropArea;
 
-	public Transition() {
+	public JoinRow() {
 		super();
 
-		setMembersMargin(3);
-		setHeight(50);
+		state = new JoinState(false);
+		addMember(state);
 
-		// transition line
-		Label line = new Label("transition");
-		line.setHeight(12);
-		line.setStyleName("s");
-		line.setAlign(Alignment.RIGHT);
-		line.setWidth(100);
-
-		addMember(line);
-
-		initDropArea();
-	}
-
-	private void initDropArea() {
-		dropArea = new Label("Drop an Element");
+		dropArea = new Label("Drop a Task");
 		dropArea.setHeight(40);
 		dropArea.setWidth(100);
 		dropArea.setBackgroundColor("#cccccc");
@@ -54,12 +50,13 @@ public class Transition extends HStack {
 
 		dropArea.addDropHandler(new DropHandler() {
 			public void onDrop(DropEvent event) {
-				// Canvas target = EventHandler.getDragTarget();
-				// SC.say("You dropped the " + target.getID());
+				Canvas target = EventHandler.getDragTarget();
+				SC.say("You dropped the " + target.getID());
 				removeMember(dropArea);
-				addMember(new TaskState(true));
+				addMember(new TaskState(true), 1);
 			}
 		});
+
 		addMember(dropArea);
 	}
 }
