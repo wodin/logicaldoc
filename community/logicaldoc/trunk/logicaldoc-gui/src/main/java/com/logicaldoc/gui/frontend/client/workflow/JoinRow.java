@@ -25,7 +25,7 @@ public class JoinRow extends WorkflowRow {
 	public JoinRow() {
 		super();
 
-		state = new JoinState(false);
+		state = new WorkflowState(WorkflowState.TYPE_JOIN);
 		addMember(state);
 
 		dropArea = new Label("Drop a Task");
@@ -53,7 +53,7 @@ public class JoinRow extends WorkflowRow {
 				Canvas target = EventHandler.getDragTarget();
 				SC.say("You dropped the " + target.getID());
 				removeMember(dropArea);
-				addMember(new TaskState(true), 1);
+				addMember(new WorkflowState(WorkflowState.TYPE_TASK), 1);
 			}
 		});
 
