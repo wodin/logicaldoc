@@ -12,7 +12,7 @@ public class TaskRow extends WorkflowRow {
 	public TaskRow() {
 		super();
 
-		state = new TaskState(false);
+		state = new WorkflowState(WorkflowState.TYPE_TASK);
 		addMember(state);
 
 		VStack transitionsPanel = new VStack();

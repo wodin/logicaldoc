@@ -11,7 +11,7 @@ public class EndRow extends WorkflowRow {
 	public EndRow() {
 		super();
 
-		state = new EndState(false);
+		state = new WorkflowState(WorkflowState.TYPE_END);
 		addMember(state);
 	}
 }

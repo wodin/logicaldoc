@@ -25,7 +25,7 @@ public class ForkRow extends WorkflowRow {
 	public ForkRow() {
 		super();
 
-		state = new ForkState(false);
+		state = new WorkflowState(WorkflowState.TYPE_FORK);
 		addMember(state);
 
 		dropArea = new Label("Drop a Task");
@@ -52,7 +52,8 @@ public class ForkRow extends WorkflowRow {
 			public void onDrop(DropEvent event) {
 				Canvas target = EventHandler.getDragTarget();
 				SC.say("You dropped the " + target.getID());
-				addMember(new TaskState(true), 1);
+				WorkflowState drag = new WorkflowDraggedState(WorkflowState.TYPE_TASK);
+				addMember(drag, 1);
 			}
 		});
 
