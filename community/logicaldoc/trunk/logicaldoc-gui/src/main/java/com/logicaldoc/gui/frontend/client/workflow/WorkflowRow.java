@@ -5,27 +5,26 @@ import com.smartgwt.client.widgets.events.DropOutHandler;
 import com.smartgwt.client.widgets.events.DropOverEvent;
 import com.smartgwt.client.widgets.events.DropOverHandler;
 import com.smartgwt.client.widgets.layout.HStack;
-import com.smartgwt.client.widgets.layout.VStack;
 
 /**
- * A single task element, with transitions
+ * A generic workflow row.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class TaskComponent extends HStack {
+public class WorkflowRow extends HStack {
 
-	private TaskBox taskBox;
+	protected WorkflowState state;
 
-	public TaskComponent() {
+	public WorkflowRow() {
 		super();
 		setLayoutMargin(10);
 		setMembersMargin(5);
-		setHeight(60);
+		setHeight(65);
 
 		setCanDrag(true);
 		setCanDrop(true);
-		setDragType("component");
+		setDragType("row");
 
 		setAnimateMembers(true);
 
@@ -42,14 +41,13 @@ public class TaskComponent extends HStack {
 				setBackgroundColor("");
 			}
 		});
+	}
 
-		taskBox = new TaskBox();
-		addMember(taskBox);
+	public WorkflowState getState() {
+		return state;
+	}
 
-		VStack transitionsPanel = new VStack();
-		for (int i = 0; i < 3; i++) {
-			transitionsPanel.addMember(new Transition());
-		}
-		addMember(transitionsPanel);
+	public void setState(WorkflowState state) {
+		this.state = state;
 	}
 }

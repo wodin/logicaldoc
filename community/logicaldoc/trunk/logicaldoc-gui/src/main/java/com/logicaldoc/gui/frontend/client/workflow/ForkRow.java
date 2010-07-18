@@ -11,7 +11,6 @@ import com.smartgwt.client.widgets.events.DropOutEvent;
 import com.smartgwt.client.widgets.events.DropOutHandler;
 import com.smartgwt.client.widgets.events.DropOverEvent;
 import com.smartgwt.client.widgets.events.DropOverHandler;
-import com.smartgwt.client.widgets.layout.HStack;
 
 /**
  * A single workflow element.
@@ -19,47 +18,22 @@ import com.smartgwt.client.widgets.layout.HStack;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class WorkflowComponent extends HStack {
-
-	private TaskBox taskBox;
+public class ForkRow extends WorkflowRow {
 
 	private Label dropArea;
 
-	public WorkflowComponent() {
+	public ForkRow() {
 		super();
-		setLayoutMargin(10);
-		setMembersMargin(5);
-		setHeight(65);
-		
-		setCanDrag(true);
-		setCanDrop(true);
-		setDragType("component");
 
-		setAnimateMembers(true);
-
-		setBorder("1px dotted #4040ff");
-
-		addDropOverHandler(new DropOverHandler() {
-			public void onDropOver(DropOverEvent event) {
-				setBackgroundColor("FFFF88");
-			}
-		});
-
-		addDropOutHandler(new DropOutHandler() {
-			public void onDropOut(DropOutEvent event) {
-				setBackgroundColor("");
-			}
-		});
-
-		taskBox = new TaskBox();
-		addMember(taskBox);
+		state = new ForkState(false);
+		addMember(state);
 
 		dropArea = new Label("Drop a Task");
 		dropArea.setHeight(40);
 		dropArea.setWidth(100);
 		dropArea.setBackgroundColor("#cccccc");
 		dropArea.setAlign(Alignment.CENTER);
-		dropArea.setDropTypes("task");
+		dropArea.setDropTypes("state");
 		dropArea.setCanAcceptDrop(true);
 
 		dropArea.addDropOverHandler(new DropOverHandler() {
@@ -78,7 +52,7 @@ public class WorkflowComponent extends HStack {
 			public void onDrop(DropEvent event) {
 				Canvas target = EventHandler.getDragTarget();
 				SC.say("You dropped the " + target.getID());
-				addMember(new TransitionBox(), 1);
+				addMember(new TaskState(true), 1);
 			}
 		});
 

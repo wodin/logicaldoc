@@ -15,9 +15,11 @@ public class DrawingPanel extends VStack {
 		setCanAcceptDrop(true);
 		setAnimateMembers(true);
 		setShowDragPlaceHolder(true);
-		setDropTypes("component");
+		setDropTypes("row");
 
-		addMember(new WorkflowComponent());
-		addMember(new TaskComponent());
+		addMember(new TaskRow());
+		addMember(new ForkRow());
+		addMember(new JoinRow());
+		addMember(new EndRow());
 	}
 }

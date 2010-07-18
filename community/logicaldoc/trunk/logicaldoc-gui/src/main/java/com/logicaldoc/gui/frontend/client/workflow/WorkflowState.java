@@ -9,26 +9,33 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
 /**
- * A box displaying a single task.
+ * A box displaying a single workflow primitive
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class TaskBox extends VStack {
+public class WorkflowState extends VStack {
 
-	public TaskBox() {
+	protected boolean dropped = false;
+
+	protected Label title;
+
+	public WorkflowState(boolean dropped) {
+		this.dropped = dropped;
 		setHeight(40);
 		setWidth(150);
 		setBorder("1px solid #dddddd");
-		setCanDrag(true);
-		setCanDrop(true);
-		setDragType("task");
 
-		Label title = new Label("Task Name");
+		if (!dropped) {
+			setCanDrag(true);
+			setCanDrop(true);
+			setDragType("state");
+		}
+
+		title = new Label("Task Name");
 		addMember(title);
 		title.setHeight(21);
 		title.setWrap(false);
-		title.setIcon("icons/16/approved.png");
 
 		HLayout commands = new HLayout();
 		commands.setHeight(12);
@@ -46,15 +53,17 @@ public class TaskBox extends VStack {
 		});
 		commands.addMember(delete);
 
-		HTML edit = new HTML("&nbsp;&nbsp;<a href='#'>" + I18N.message("edit").toLowerCase() + "</a>");
-		edit.setWidth("1px");
-		edit.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
-			@Override
-			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-				SC.say("Hello World");
-			}
-		});
-		commands.addMember(edit);
+		if (!dropped) {
+			HTML edit = new HTML("&nbsp;&nbsp;<a href='#'>" + I18N.message("edit").toLowerCase() + "</a>");
+			edit.setWidth("1px");
+			edit.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
+				@Override
+				public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
+					SC.say("Hello World");
+				}
+			});
+			commands.addMember(edit);
+		}
 	}
 
 	public void select() {
