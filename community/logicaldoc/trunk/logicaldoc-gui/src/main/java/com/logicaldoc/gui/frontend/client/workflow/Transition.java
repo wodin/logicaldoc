@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.util.EventHandler;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.DropEvent;
 import com.smartgwt.client.widgets.events.DropHandler;
@@ -18,6 +19,7 @@ public class Transition extends HStack {
 
 		setMembersMargin(3);
 		setHeight(50);
+		setAnimateMembers(true);
 
 		// transition line
 		Label line = new Label("transition");
@@ -54,10 +56,9 @@ public class Transition extends HStack {
 
 		dropArea.addDropHandler(new DropHandler() {
 			public void onDrop(DropEvent event) {
-				// Canvas target = EventHandler.getDragTarget();
-				// SC.say("You dropped the " + target.getID());
+				WorkflowState target = (WorkflowState) EventHandler.getDragTarget();
 				removeMember(dropArea);
-				addMember(new WorkflowDraggedState(WorkflowState.TYPE_TASK));
+				addMember(new WorkflowDraggedState(target.getType()));
 			}
 		});
 		addMember(dropArea);

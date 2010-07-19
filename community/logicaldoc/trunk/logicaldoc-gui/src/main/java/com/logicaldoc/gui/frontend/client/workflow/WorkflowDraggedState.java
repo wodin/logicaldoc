@@ -27,7 +27,7 @@ public class WorkflowDraggedState extends WorkflowState {
 		commands.setAlign(Alignment.RIGHT);
 		addMember(commands);
 
-		HTML delete = new HTML("<a href='#'>" + I18N.message("delete").toLowerCase() + "</a>");
+		HTML delete = new HTML("<a href='#'>" + I18N.message("ddelete").toLowerCase() + "</a>");
 		delete.setWidth("1px");
 		delete.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
