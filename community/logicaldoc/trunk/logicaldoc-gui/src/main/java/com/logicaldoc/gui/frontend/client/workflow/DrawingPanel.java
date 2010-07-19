@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.layout.VStack;
 
 /**
@@ -12,12 +13,14 @@ public class DrawingPanel extends VStack {
 
 	public DrawingPanel() {
 		super();
-		setHeight(50);
+		setHeight(557);
 		setMembersMargin(5);
 		setCanAcceptDrop(true);
 		setAnimateMembers(true);
 		setShowDragPlaceHolder(true);
 		setDropTypes("row");
+		setShowCustomScrollbars(true);
+		setOverflow(Overflow.SCROLL);
 
 		addMember(new TaskRow());
 		addMember(new ForkRow());
