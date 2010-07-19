@@ -3,8 +3,6 @@ package com.logicaldoc.gui.frontend.client.workflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.EventHandler;
-import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.DropEvent;
 import com.smartgwt.client.widgets.events.DropHandler;
@@ -51,7 +49,7 @@ public class JoinRow extends WorkflowRow {
 
 		dropArea.addDropHandler(new DropHandler() {
 			public void onDrop(DropEvent event) {
-				WorkflowState target = (WorkflowState)EventHandler.getDragTarget();
+				WorkflowState target = (WorkflowState) EventHandler.getDragTarget();
 				removeMember(dropArea);
 				addMember(new WorkflowDraggedState(target.getType()), 1);
 			}

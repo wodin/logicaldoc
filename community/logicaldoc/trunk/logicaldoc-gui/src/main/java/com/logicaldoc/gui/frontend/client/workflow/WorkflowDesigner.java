@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
 /**
@@ -10,11 +11,15 @@ import com.smartgwt.client.widgets.layout.VStack;
  */
 public class WorkflowDesigner extends VStack {
 	public WorkflowDesigner() {
-		setHeight(50);
 		setMembersMargin(5);
 
 		addMember(new WorkflowToolstrip());
 		addMember(new StateToolstrip());
-		addMember(new DrawingPanel());
+
+		// HStack or HLayout with Accordion e Drawing Panel
+		HLayout layout = new HLayout();
+		layout.addMember(new Accordion());
+		layout.addMember(new DrawingPanel());
+		addMember(layout);
 	}
 }
