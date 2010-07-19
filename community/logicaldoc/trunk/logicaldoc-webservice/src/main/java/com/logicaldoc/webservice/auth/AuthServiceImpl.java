@@ -102,6 +102,7 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 			User user = userDao.findById(userId);
 			grantGroup(sid, folderId, user.getUserGroup().getId(), permissions, recursive);
 		} catch (Exception e) {
+			throw new Exception("error", e);
 		}
 	}
 
