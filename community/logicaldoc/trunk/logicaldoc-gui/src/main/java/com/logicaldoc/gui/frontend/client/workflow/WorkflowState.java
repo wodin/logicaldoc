@@ -58,7 +58,7 @@ public class WorkflowState extends VStack {
 		commands.setAlign(Alignment.RIGHT);
 		addMember(commands);
 
-		HTML delete = new HTML("<a href='#'>" + I18N.message("delete").toLowerCase() + "</a>");
+		HTML delete = new HTML("<a href='#'>" + I18N.message("ddelete").toLowerCase() + "</a>");
 		delete.setWidth("1px");
 		delete.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
@@ -77,5 +77,9 @@ public class WorkflowState extends VStack {
 			}
 		});
 		commands.addMember(edit);
+	}
+
+	public int getType() {
+		return type;
 	}
 }

@@ -3,7 +3,7 @@ package com.logicaldoc.gui.frontend.client.template;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
-import com.logicaldoc.gui.frontend.client.workflow.DrawingPanel;
+import com.logicaldoc.gui.frontend.client.workflow.WorkflowDesigner;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -53,7 +53,7 @@ public class MetadataAndWorkflowMenu extends VLayout {
 		workflow.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new DrawingPanel());
+				AdminPanel.get().setContent(new WorkflowDesigner());
 			}
 		});
 	}

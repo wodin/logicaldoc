@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.workflow;
 
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.EventHandler;
 import com.smartgwt.client.util.SC;
@@ -28,7 +29,7 @@ public class JoinRow extends WorkflowRow {
 		state = new WorkflowState(WorkflowState.TYPE_JOIN);
 		addMember(state);
 
-		dropArea = new Label("Drop a Task");
+		dropArea = new Label(I18N.message("dropastate"));
 		dropArea.setHeight(40);
 		dropArea.setWidth(100);
 		dropArea.setBackgroundColor("#cccccc");
@@ -50,10 +51,9 @@ public class JoinRow extends WorkflowRow {
 
 		dropArea.addDropHandler(new DropHandler() {
 			public void onDrop(DropEvent event) {
-				Canvas target = EventHandler.getDragTarget();
-				SC.say("You dropped the " + target.getID());
+				WorkflowState target = (WorkflowState)EventHandler.getDragTarget();
 				removeMember(dropArea);
-				addMember(new WorkflowDraggedState(WorkflowState.TYPE_TASK), 1);
+				addMember(new WorkflowDraggedState(target.getType()), 1);
 			}
 		});
 

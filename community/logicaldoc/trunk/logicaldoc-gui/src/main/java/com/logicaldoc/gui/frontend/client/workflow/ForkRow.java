@@ -50,9 +50,8 @@ public class ForkRow extends WorkflowRow {
 
 		dropArea.addDropHandler(new DropHandler() {
 			public void onDrop(DropEvent event) {
-				Canvas target = EventHandler.getDragTarget();
-				SC.say("You dropped the " + target.getID());
-				WorkflowState drag = new WorkflowDraggedState(WorkflowState.TYPE_TASK);
+				WorkflowState target = (WorkflowState)EventHandler.getDragTarget();
+				WorkflowState drag = new WorkflowDraggedState(target.getType());
 				addMember(drag, 1);
 			}
 		});
