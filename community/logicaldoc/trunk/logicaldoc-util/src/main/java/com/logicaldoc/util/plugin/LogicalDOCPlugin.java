@@ -70,7 +70,7 @@ public abstract class LogicalDOCPlugin extends Plugin {
 
 	/**
 	 * Tells is the plug-in need to be installed. This default implementation
-	 * check if the file 'install' exists o the plug-in's shadow folder.
+	 * check if the file 'install' exists o the plug-in's data folder.
 	 * Concrete implementations are free to re-implement this logic.
 	 * 
 	 * @return true if the plug-in need to be reinstalled
