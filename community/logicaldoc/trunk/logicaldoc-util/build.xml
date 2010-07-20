@@ -6,13 +6,14 @@
 		<property environment="env" />
 		<property id="properties" file="build.properties" />
 
-		<echo message="Deploying webapp files" />
+		<echo message="Deploying ${pom.artifactId}" />
 
-		<copy todir="${logicaldoc.webroot}/WEB-INF/classes" verbose="true">
-			<fileset dir="target/classes">
-				<include name="**" />
-				<!--exclude name="**/context.xml"/-->
-			</fileset>
-		</copy>
+		<exec executable="mvn.bat" resolveexecutable="true" searchpath="true">
+		  <arg line="-o -Dmaven.test.skip=true install"/>
+		</exec>
+		
+		<copy file="target/${pom.artifactId}-${pom.version}.${pom.packaging}" todir="${logicaldoc.webroot}/WEB-INF/lib"/>
+		
+		<echo message="${pom.artifactId} is deployed" />
 	</target>
 </project>
