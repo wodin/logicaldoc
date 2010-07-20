@@ -5,7 +5,9 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
@@ -14,7 +16,7 @@ public class Accordion extends SectionStack {
 
 	public Accordion() {
 		setVisibilityMode(VisibilityMode.MUTEX);
-		setWidth(300);
+		setWidth(250);
 		setHeight(557);
 		setMargin(5);
 
@@ -24,33 +26,47 @@ public class Accordion extends SectionStack {
 		DynamicForm wfForm = new DynamicForm();
 		wfForm.setTitleOrientation(TitleOrientation.TOP);
 		wfForm.setNumCols(1);
-
-		// TODO Separare workflow, task assignment e reminder in tre form
-		// diversi da aggiugere al sectionstacksection
-
 		TextItem workflowName = ItemFactory.newTextItem("workflowName", "workflowname", null);
 		workflowName.setRequired(true);
-
-		TextItem workflowDescr = ItemFactory.newTextItem("workflowDescr", "workflowdescr", null);
+		TextAreaItem workflowDescr = ItemFactory.newTextAreaItem("workflowDescr", "workflowdescr", null);
 		workflowDescr.setWrapTitle(false);
+		wfForm.setFields(workflowName, workflowDescr);
 
-		StaticTextItem taskAssignment = ItemFactory.newStaticTextItem("taskAssignment", "taskassignment", null);
-		taskAssignment.setRequired(true);
+		DynamicForm taskAssignmentForm = new DynamicForm();
+		taskAssignmentForm.setTitleOrientation(TitleOrientation.TOP);
+		taskAssignmentForm.setNumCols(1);
+		StaticTextItem taskAssignment = ItemFactory.newStaticTextItem("taskAssignment", "",
+				"<b>" + I18N.message("taskassignment") + "</b>");
+		taskAssignment.setShouldSaveValue(false);
+		taskAssignment.setWrapTitle(false);
 		TextItem assignmentSubject = ItemFactory.newTextItem("assignmentSubject", "subject", null);
-		TextItem assignmentBody = ItemFactory.newTextItem("assignmentBody", "body", null);
+		TextAreaItem assignmentBody = ItemFactory.newTextAreaItem("assignmentBody", "body", null);
+		taskAssignmentForm.setFields(taskAssignment, assignmentSubject, assignmentBody);
 
-		StaticTextItem taskReminder = ItemFactory.newStaticTextItem("taskReminder", "reminder", null);
-		taskReminder.setRequired(true);
+		DynamicForm taskReminderForm = new DynamicForm();
+		taskReminderForm.setTitleOrientation(TitleOrientation.TOP);
+		taskReminderForm.setNumCols(1);
+		StaticTextItem taskReminder = ItemFactory.newStaticTextItem("taskReminder", "",
+				"<b>" + I18N.message("reminder") + "</b>");
+		taskAssignment.setShouldSaveValue(false);
+		taskAssignment.setWrapTitle(false);
 		TextItem reminderSubject = ItemFactory.newTextItem("reminderSubject", "subject", null);
-		TextItem reminderBody = ItemFactory.newTextItem("reminderBody", "body", null);
+		TextAreaItem reminderBody = ItemFactory.newTextAreaItem("reminderBody", "body", null);
+		taskReminderForm.setFields(taskReminder, reminderSubject, reminderBody);
 
-		StaticTextItem supervisor = ItemFactory.newStaticTextItem("supervisor", "supervisor", null);
-		supervisor.setRequired(true);
+		DynamicForm separatorForm = new DynamicForm();
+		separatorForm.setHeight(15);
 
-		wfForm.setFields(workflowName, workflowDescr, taskAssignment, assignmentSubject, assignmentBody, taskReminder,
-				reminderSubject, reminderBody, supervisor);
+		DynamicForm supervisorForm = new DynamicForm();
+		supervisorForm.setTitleOrientation(TitleOrientation.TOP);
+		supervisorForm.setNumCols(1);
+		ComboBoxItem supervisors = ItemFactory.newUserSelector("supervisor", "");
+		supervisors.setTitle("<b>" + I18N.message("supervisor") + "</b>");
+		supervisors.setTitleOrientation(TitleOrientation.TOP);
+		supervisorForm.setItems(supervisors);
 
-		wfsettingsSection.addItem(wfForm);
+		wfsettingsSection.setItems(wfForm, taskAssignmentForm, taskReminderForm, separatorForm, supervisorForm);
+
 		addSection(wfsettingsSection);
 
 		SectionStackSection wfdevelopSection = new SectionStackSection(I18N.message("development"));

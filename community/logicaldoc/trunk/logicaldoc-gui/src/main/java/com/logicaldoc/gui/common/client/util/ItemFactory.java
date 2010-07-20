@@ -10,8 +10,8 @@ import com.logicaldoc.gui.common.client.validators.EmailsValidator;
 import com.logicaldoc.gui.common.client.validators.SimpleTextValidator;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.MultipleAppearance;
-import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
+import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
@@ -20,6 +20,7 @@ import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -396,5 +397,25 @@ public class ItemFactory {
 		linkItem.setTitle(I18N.message(title));
 		linkItem.setLinkTitle(I18N.message(title));
 		return linkItem;
+	}
+	
+	/**
+	 * Creates a new TextAreaItem.
+	 * 
+	 * @param name The item name (mandatory)
+	 * @param title The item title (mandatory)
+	 * @param value The item value (optional)
+	 */
+	public static TextAreaItem newTextAreaItem(String name, String title, String value) {
+		TextAreaItem item = new TextAreaItem();
+		item.setName(name);
+		item.setTitle(I18N.message(title));
+		item.setWidth(200);
+		item.setHeight(50);
+		if (value != null)
+			item.setValue(value);
+		else
+			item.setValue("");
+		return item;
 	}
 }

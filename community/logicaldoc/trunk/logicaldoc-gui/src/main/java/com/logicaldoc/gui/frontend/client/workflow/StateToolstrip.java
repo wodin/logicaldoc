@@ -70,7 +70,7 @@ public class StateToolstrip extends ToolStrip {
 		addButton(newJoin);
 		addSeparator();
 
-		ComboBoxItem template = ItemFactory.newGroupSelector("template", I18N.message("startstate"));
+		ComboBoxItem template = ItemFactory.newGroupSelector("startState", I18N.message("startstate"));
 		addFormItem(template);
 		
 		addFill();
