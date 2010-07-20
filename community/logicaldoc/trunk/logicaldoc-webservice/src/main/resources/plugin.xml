@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="logicaldoc-webservice" version="6.0.0" class="com.logicaldoc.webservice.WebservicePlugin">
+	<requires>
+		<import plugin-id="logicaldoc-core" />
+	</requires>
+
+	<extension plugin-id="logicaldoc-core" point-id="DbInit" id="webserviceDbInit">
+		<parameter id="position" value="30" />
+		<parameter id="name" value="logicaldoc-webservice" />
+		<parameter id="sqlFile" value="sql/logicaldoc-webservice.sql" />
+	</extension>
+</plugin>

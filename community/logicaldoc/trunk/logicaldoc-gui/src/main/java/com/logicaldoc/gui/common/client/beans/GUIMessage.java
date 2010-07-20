@@ -16,7 +16,7 @@ public class GUIMessage implements Serializable {
 	
 	private String message;
 
-	private String url;
+	private String url=null;
 
 	private int priority;
 

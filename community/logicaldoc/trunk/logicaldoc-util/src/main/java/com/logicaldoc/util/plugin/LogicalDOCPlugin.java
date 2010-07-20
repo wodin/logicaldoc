@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -64,10 +62,10 @@ public abstract class LogicalDOCPlugin extends Plugin {
 
 	/**
 	 * Return the install mark file, that is the file called 'install' inside
-	 * the plug-in's shadow folder
+	 * the plug-in's data folder
 	 */
 	private File getInstallMark() {
-		return new File(resolvePath("install").toString());
+		return new File(resolveDataPath("install").toString());
 	}
 
 	/**
@@ -89,22 +87,11 @@ public abstract class LogicalDOCPlugin extends Plugin {
 		data.store(new FileOutputStream(resolveDataFile()), "");
 	}
 
-	/**
-	 * Resolves a relative path inside the plugin shadow folder
-	 * 
-	 * @param relativePath The relative path
-	 * @return The absolute path
-	 */
-	public String resolvePath(String relativePath) {
-		String path = getManager().getPathResolver().resolvePath(getDescriptor(), relativePath).toString();
-		if (path.startsWith("file:")) {
-			path = path.substring(5);
-			URLDecoder decoder = new URLDecoder();
-			try {
-				path = decoder.decode(path, "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-			}
-		}
+	public String getPluginPath() {
+		String path = getManager().getPathResolver().resolvePath(getDescriptor(), "/").toString();
+		if (path.startsWith("jar:file:"))
+			path = path.substring("jar:file:".length());
+		path = path.substring(0, path.lastIndexOf("!"));
 		return path;
 	}
 

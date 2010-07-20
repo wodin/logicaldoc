@@ -20,10 +20,10 @@ import org.java.plugin.JpfException;
 import org.java.plugin.ObjectFactory;
 import org.java.plugin.PluginManager;
 import org.java.plugin.registry.Extension;
+import org.java.plugin.registry.Extension.Parameter;
 import org.java.plugin.registry.ExtensionPoint;
 import org.java.plugin.registry.Identity;
 import org.java.plugin.registry.PluginDescriptor;
-import org.java.plugin.registry.Extension.Parameter;
 import org.java.plugin.util.ExtendedProperties;
 
 import com.logicaldoc.util.config.PropertiesBean;
@@ -69,9 +69,11 @@ public abstract class PluginRegistry {
 	 */
 	public void init(String pluginsDir) {
 		ExtendedProperties properties = new ExtendedProperties();
-		properties.put("org.java.plugin.PathResolver", "com.logicaldoc.util.ShadingPathResolver");
-		properties.put("com.logicaldoc.util.ShadingPathResolver.shadowFolder", pluginsDir + "/../.plugins");
-		properties.put("com.logicaldoc.util.ShadingPathResolver.unpackMode", "always");
+		// properties.put("org.java.plugin.PathResolver",
+		// "com.logicaldoc.util.ShadingPathResolver");
+		// properties.put("com.logicaldoc.util.ShadingPathResolver.shadowFolder",
+		// pluginsDir + "/../.plugins");
+		properties.put("com.logicaldoc.util.ShadingPathResolver.unpackMode", "smart");
 
 		ObjectFactory pluginObjectFactory = ObjectFactory.newInstance(properties);
 		manager = pluginObjectFactory.createManager();
@@ -111,7 +113,7 @@ public abstract class PluginRegistry {
 
 		FilenameFilter filter = new FilenameFilter() {
 			public boolean accept(File dir, String name) {
-				return (name.endsWith(".zip"));
+				return (name.endsWith(".jar") && name.contains("-plugin"));
 			}
 		};
 
@@ -180,8 +182,8 @@ public abstract class PluginRegistry {
 		try {
 			PluginRegistry registry = PluginRegistry.getInstance();
 			PluginDescriptor descriptor = registry.getManager().getRegistry().getPluginDescriptor(pluginId);
-			ExtensionPoint dbinitExtPoint = registry.getManager().getRegistry().getExtensionPoint(descriptor.getId(),
-					extensionPoint);
+			ExtensionPoint dbinitExtPoint = registry.getManager().getRegistry()
+					.getExtensionPoint(descriptor.getId(), extensionPoint);
 			exts = dbinitExtPoint.getConnectedExtensions();
 		} catch (Exception e) {
 
