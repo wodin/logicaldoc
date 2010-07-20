@@ -1,6 +1,7 @@
 package com.logicaldoc.web;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
 import javax.servlet.ServletContext;
@@ -12,6 +13,7 @@ import org.springframework.util.Log4jConfigurer;
 
 import com.logicaldoc.util.config.LoggingConfigurator;
 import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.util.io.ZipUtil;
 
 /**
  * Listener that initialises relevant system stuffs during application startup
@@ -20,6 +22,8 @@ import com.logicaldoc.util.config.PropertiesBean;
  * @since 3.0
  */
 public class ApplicationInitializer implements ServletContextListener {
+
+	public static boolean needRestart = false;
 
 	/**
 	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
@@ -50,7 +54,7 @@ public class ApplicationInitializer implements ServletContextListener {
 		}
 
 		// Prepare the plugins dir
-		String pluginsDir = context.getRealPath("/WEB-INF/plugins");
+		String pluginsDir = context.getRealPath("/WEB-INF/lib");
 
 		// Initialize plugins
 		com.logicaldoc.util.PluginRegistry.getInstance().init(pluginsDir);
@@ -72,5 +76,41 @@ public class ApplicationInitializer implements ServletContextListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		// Try to unpack new plugins
+		try {
+			unpackPlugins(context);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Unpacks the plugin that are newly installed and positioned in the plugins
+	 * folder
+	 * 
+	 * @throws IOException
+	 */
+	private void unpackPlugins(ServletContext context) throws IOException {
+		PropertiesBean config = new PropertiesBean();
+		File pluginsDir = new File(config.getProperty("conf.plugindir"));
+		File[] archives = pluginsDir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				if (name.contains("plugin"))
+					return true;
+				else
+					return false;
+			}
+		});
+		File webappDir = new File(context.getRealPath("/"));
+		for (File archive : archives) {
+			System.out.println("Unpack plugin " + archive.getName());
+			ZipUtil.unzip(archive.getPath(), webappDir.getPath());
+			FileUtils.forceDelete(archive);
+			needRestart = true;
+		}
+		if (needRestart)
+			System.out.println("The application needs to be restarted");
 	}
 }

@@ -1,62 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
 <plugin id="logicaldoc-core" version="6.0.0" class="com.logicaldoc.core.CorePlugin">
-  <runtime>
-    <library id="core" path="classes/" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="lucene-core" path="lib/lucene-core-3.0.1.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="lucene-highlighter" path="lib/lucene-highlighter-3.0.1.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="lucene-misc" path="lib/lucene-misc-3.0.1.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="lucene-snowball" path="lib/lucene-snowball-3.0.1.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="lucene-contrib" path="lib/lucene-analyzers-3.0.1.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="lucene-memory" path="lib/lucene-memory-3.0.1.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="pdfbox" path="lib/pdfbox-0.7.3.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="jempbox" path="lib/jempbox-0.2.0.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="itext" path="lib/itext-2.1.2.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="fontbox" path="lib/fontbox-0.1.0.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="bcprov" path="lib/bcprov-jdk16-139.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="bcmail" path="lib/bcmail-jdk16-139.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="poi" path="lib/poi-3.6.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="poi-scratchpad" path="lib/poi-scratchpad-3.6.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="jmimemagic" path="lib/jmimemagic-0.1.2.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="nekohtml" path="lib/nekohtml-1.9.7.jar" type="code">
-      <export prefix="*" />
-    </library>
-    <library id="icepdf" path="lib/icepdf-core-4.0.0.jar" type="code">
-      <export prefix="*" />
-    </library>
-  </runtime>
 
   <extension-point id="DbInit">
     <parameter-def id="name" />

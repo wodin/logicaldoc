@@ -90,7 +90,12 @@ public class LoginPanel extends VLayout {
 				+ info.getUrl() + "'>" + info.getUrl() + "</a>";
 		if (info.getMessages().length > 0) {
 			for (GUIMessage message : info.getMessages()) {
-				htmlString += " <br /> <br /> " + "<a href='" + message.getUrl() + "'>" + message.getMessage() + "</a>";
+				if (message.getUrl() != null && !"".equals(message.getUrl()))
+					htmlString += " <br /> <br /> " + "<a href='" + message.getUrl() + "'>" + message.getMessage()
+							+ "</a>";
+				else
+					htmlString += " <br /> <br /> " + message.getMessage();
+
 			}
 		}
 		HTML footer = new HTML(htmlString, false);

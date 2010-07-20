@@ -22,6 +22,7 @@ import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.PropertiesBean;
+import com.logicaldoc.web.ApplicationInitializer;
 
 /**
  * Implementation of the InfoService
@@ -76,15 +77,23 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			if (StringUtils.isNotEmpty(jdbcUrl)) {
 				if (jdbcUrl.equals("jdbc:hsqldb:mem:logicaldoc")) {
 					GUIMessage setupReminder = new GUIMessage();
-					setupReminder.setMessage(getKey(info, "setup.reminder"));
+					setupReminder.setMessage(getValue(info, "setup.reminder"));
 					HttpServletRequest request = this.getThreadLocalRequest();
 					String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":"
 							+ request.getServerPort() + request.getContextPath();
 					setupReminder.setUrl(urlPrefix + "/setup");
 					messages.add(setupReminder);
-					info.setMessages(messages.toArray(new GUIMessage[0]));
 				}
 			}
+			
+			//Check if the application needs to be restarted
+			if(ApplicationInitializer.needRestart){
+				GUIMessage restartReminder = new GUIMessage();
+				restartReminder.setMessage(getValue(info, "needrestart"));
+				messages.add(restartReminder);
+			}
+			
+			info.setMessages(messages.toArray(new GUIMessage[0]));
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
@@ -93,7 +102,6 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 	}
 
 	static GUIValuePair[] getBundle(String locale) {
-		// In production, use our LocaleUtil to instantiate the locale
 		Locale l = LocaleUtil.toLocale(locale);
 		ResourceBundle rb = ResourceBundle.getBundle("i18n.messages", l);
 		GUIValuePair[] buf = new GUIValuePair[rb.keySet().size()];
@@ -107,7 +115,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		return buf;
 	}
 
-	private String getKey(GUIInfo info, String message) {
+	private String getValue(GUIInfo info, String message) {
 		for (GUIValuePair valuePair : info.getBundle()) {
 			if (valuePair.getCode().equals(message)) {
 				return valuePair.getValue();
