@@ -31,8 +31,7 @@ public class WorkflowInstanceInfo extends WorkflowInstance {
 		Set<DocumentRecord> documents = new LinkedHashSet<DocumentRecord>();
 
 		for (Long documentId : documentSet)
-			documents.add(new DocumentRecord(documentId, DocumentsRecordsManager.CHILD_INDENT_STYLE_CLASS,
-					DocumentsRecordsManager.CHILD_ROW_STYLE_CLASS));
+			documents.add(new DocumentRecord(documentId));
 
 		WorkflowTemplate workflowTemplate = workflowTransformService
 				.retrieveWorkflowModels((Serializable) getProperties().get(WorkflowConstants.VAR_TEMPLATE));
