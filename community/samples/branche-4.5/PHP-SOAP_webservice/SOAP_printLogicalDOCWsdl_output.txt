@@ -1,0 +1,15 @@
+Array
+(
+    [0] => downloadDocumentInfoResponse downloadDocumentInfo(downloadDocumentInfo $parameters)
+    [1] => checkinResponse checkin(checkin $parameters)
+    [2] => createDocumentResponse createDocument(createDocument $parameters)
+    [3] => deleteFolderResponse deleteFolder(deleteFolder $parameters)
+    [4] => checkoutResponse checkout(checkout $parameters)
+    [5] => downloadFolderContentResponse downloadFolderContent(downloadFolderContent $parameters)
+    [6] => searchResponse search(search $parameters)
+    [7] => updateResponse update(update $parameters)
+    [8] => renameFolderResponse renameFolder(renameFolder $parameters)
+    [9] => downloadDocumentResponse downloadDocument(downloadDocument $parameters)
+    [10] => createFolderResponse createFolder(createFolder $parameters)
+    [11] => deleteDocumentResponse deleteDocument(deleteDocument $parameters)
+)
