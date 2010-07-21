@@ -10,7 +10,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SecurityManager;
 import com.logicaldoc.core.security.User;
@@ -23,7 +23,7 @@ import com.logicaldoc.util.io.CryptUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class HibernateUserDAOTest extends AbstractCoreTestCase {
+public class HibernateUserDAOTest extends AbstractCoreTCase {
 
 	// Instance under test
 	private UserDAO dao;

@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.generic.Generic;
 
 /**
@@ -16,7 +16,7 @@ import com.logicaldoc.core.generic.Generic;
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
-public class HibernateGenericDAOTest extends AbstractCoreTestCase {
+public class HibernateGenericDAOTest extends AbstractCoreTCase {
 
 	// Instance under test
 	private GenericDAO dao;

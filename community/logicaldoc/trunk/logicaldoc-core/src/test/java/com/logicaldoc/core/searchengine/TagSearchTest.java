@@ -8,9 +8,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 
-public class TagSearchTest extends AbstractCoreTestCase {
+public class TagSearchTest extends AbstractCoreTCase {
 
 	protected static Log log = LogFactory.getLog(TagSearchTest.class);
 

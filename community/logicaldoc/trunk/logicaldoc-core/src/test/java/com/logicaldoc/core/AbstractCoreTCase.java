@@ -30,7 +30,7 @@ import com.logicaldoc.util.io.FileUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public abstract class AbstractCoreTestCase {
+public abstract class AbstractCoreTCase {
 
 	protected ApplicationContext context;
 

@@ -11,9 +11,9 @@ import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIWebServiceSettings;
-import com.logicaldoc.web.AbstractWebappTestCase;
+import com.logicaldoc.web.AbstractWebappTCase;
 
-public class SettingServiceImplTest extends AbstractWebappTestCase {
+public class SettingServiceImplTest extends AbstractWebappTCase {
 
 	// Instance under test
 	private SettingServiceImpl service = new SettingServiceImpl();

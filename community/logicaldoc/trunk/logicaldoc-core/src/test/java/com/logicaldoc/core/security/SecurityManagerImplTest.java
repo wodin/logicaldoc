@@ -8,7 +8,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 
@@ -18,7 +18,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class SecurityManagerImplTest extends AbstractCoreTestCase {
+public class SecurityManagerImplTest extends AbstractCoreTCase {
 	// Instance under test
 	private SecurityManager manager;
 

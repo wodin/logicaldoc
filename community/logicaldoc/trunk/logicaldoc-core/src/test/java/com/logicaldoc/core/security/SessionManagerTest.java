@@ -4,7 +4,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 
 /**
  * Test case for the <code>SessionManager</code>
@@ -12,7 +12,7 @@ import com.logicaldoc.core.AbstractCoreTestCase;
  * @author Marco Meschieri - Logical Objects
  * @since 4.6
  */
-public class SessionManagerTest extends AbstractCoreTestCase {
+public class SessionManagerTest extends AbstractCoreTCase {
 
 	@Test
 	public void testNewSession() {

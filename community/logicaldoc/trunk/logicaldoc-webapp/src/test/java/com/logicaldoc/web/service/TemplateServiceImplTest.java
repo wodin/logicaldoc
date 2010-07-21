@@ -11,9 +11,9 @@ import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
-import com.logicaldoc.web.AbstractWebappTestCase;
+import com.logicaldoc.web.AbstractWebappTCase;
 
-public class TemplateServiceImplTest extends AbstractWebappTestCase {
+public class TemplateServiceImplTest extends AbstractWebappTCase {
 
 	// Instance under test
 	private TemplateServiceImpl service = new TemplateServiceImpl();

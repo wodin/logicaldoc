@@ -27,9 +27,9 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
-import com.logicaldoc.web.AbstractWebappTestCase;
+import com.logicaldoc.web.AbstractWebappTCase;
 
-public class DocumentServiceImplTest extends AbstractWebappTestCase {
+public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	// Instance under test
 	private DocumentServiceImpl service = new DocumentServiceImpl();

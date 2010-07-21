@@ -8,7 +8,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.i18n.DateBean;
 import com.logicaldoc.core.security.UserHistory;
 
@@ -18,7 +18,7 @@ import com.logicaldoc.core.security.UserHistory;
  * @author Matteo Caruso - Logical Objects
  * @since 5.0
  */
-public class HibernateUserHistoryDAOTest extends AbstractCoreTestCase {
+public class HibernateUserHistoryDAOTest extends AbstractCoreTCase {
 
 	// Instance under test
 	private UserHistoryDAO dao;

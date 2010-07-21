@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.security.User;
@@ -18,7 +18,7 @@ import com.logicaldoc.core.security.User;
  * @author Marco Meschieri - Logical Objects
  * @since 4.5
  */
-public class HibernateVersionDAOTest extends AbstractCoreTestCase {
+public class HibernateVersionDAOTest extends AbstractCoreTCase {
 
 	// Instance under test
 	private VersionDAO dao;

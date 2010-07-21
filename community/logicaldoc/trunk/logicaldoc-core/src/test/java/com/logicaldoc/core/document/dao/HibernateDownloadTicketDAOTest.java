@@ -10,7 +10,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.DownloadTicket;
 
 /**
@@ -19,7 +19,7 @@ import com.logicaldoc.core.document.DownloadTicket;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class HibernateDownloadTicketDAOTest extends AbstractCoreTestCase {
+public class HibernateDownloadTicketDAOTest extends AbstractCoreTCase {
 
 	// Instance under test
 	private DownloadTicketDAO dao;

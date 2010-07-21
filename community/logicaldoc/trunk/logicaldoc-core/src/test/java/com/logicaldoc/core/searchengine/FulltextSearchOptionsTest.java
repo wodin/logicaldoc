@@ -8,9 +8,9 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 
-public class FulltextSearchOptionsTest extends AbstractCoreTestCase {
+public class FulltextSearchOptionsTest extends AbstractCoreTCase {
 
 	@Test
 	public void testWrite() throws FileNotFoundException, IOException, ClassNotFoundException {

@@ -9,7 +9,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.i18n.DateBean;
 
@@ -19,7 +19,7 @@ import com.logicaldoc.core.i18n.DateBean;
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
-public class HibernateHistoryDAOTest extends AbstractCoreTestCase {
+public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 
 	// Instance under test
 	private HistoryDAO dao;
