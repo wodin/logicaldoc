@@ -10,7 +10,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
 
@@ -20,7 +20,7 @@ import com.logicaldoc.core.communication.SystemMessage;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class HibernateSystemMessageDAOTest extends AbstractCoreTestCase {
+public class HibernateSystemMessageDAOTest extends AbstractCoreTCase {
 	// Instance under test
 	private SystemMessageDAO dao;
 

@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.DiscussionComment;
 import com.logicaldoc.core.document.DiscussionThread;
 
@@ -17,7 +17,7 @@ import com.logicaldoc.core.document.DiscussionThread;
  * @author Marco Meschieri - Logical Objects
  * @since 4.5
  */
-public class HibernateDiscussionThreadDAOTest extends AbstractCoreTestCase {
+public class HibernateDiscussionThreadDAOTest extends AbstractCoreTCase {
 
 	private DiscussionThreadDAO dao;
 

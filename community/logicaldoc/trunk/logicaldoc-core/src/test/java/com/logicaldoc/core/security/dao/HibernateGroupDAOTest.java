@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.security.Group;
 
 /**
@@ -18,7 +18,7 @@ import com.logicaldoc.core.security.Group;
  * @author Alessandro Gasparini - Logical Objects
  * @since 3.0
  */
-public class HibernateGroupDAOTest extends AbstractCoreTestCase {
+public class HibernateGroupDAOTest extends AbstractCoreTCase {
 
 	protected static Log log = LogFactory.getLog(HibernateGroupDAOTest.class);
 

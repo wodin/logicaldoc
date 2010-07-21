@@ -9,7 +9,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Menu;
@@ -22,7 +22,7 @@ import com.logicaldoc.core.security.User;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class HibernateMenuDAOTest extends AbstractCoreTestCase {
+public class HibernateMenuDAOTest extends AbstractCoreTCase {
 
 	// Instance under test
 	private MenuDAO dao;

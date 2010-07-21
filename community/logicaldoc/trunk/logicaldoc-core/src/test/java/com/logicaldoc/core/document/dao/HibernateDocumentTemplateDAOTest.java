@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.DocumentTemplate;
 
 /**
@@ -16,7 +16,7 @@ import com.logicaldoc.core.document.DocumentTemplate;
  * @author Marco Meschieri - Logical Objects
  * @since 4.0
  */
-public class HibernateDocumentTemplateDAOTest extends AbstractCoreTestCase {
+public class HibernateDocumentTemplateDAOTest extends AbstractCoreTCase {
 
 	private DocumentTemplateDAO dao;
 

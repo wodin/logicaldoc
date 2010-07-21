@@ -8,7 +8,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Bookmark;
 
 /**
@@ -17,7 +17,7 @@ import com.logicaldoc.core.document.Bookmark;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class HibernateBookmarkDAOTest extends AbstractCoreTestCase {
+public class HibernateBookmarkDAOTest extends AbstractCoreTCase {
 
 	// Instance under test
 	private BookmarkDAO dao;

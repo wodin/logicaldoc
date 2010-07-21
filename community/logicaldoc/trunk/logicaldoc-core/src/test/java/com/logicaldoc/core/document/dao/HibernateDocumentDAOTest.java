@@ -13,7 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.AbstractCoreTestCase;
+import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
@@ -29,7 +29,7 @@ import com.logicaldoc.util.io.FileUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class HibernateDocumentDAOTest extends AbstractCoreTestCase {
+public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	// Instance under test
 	private DocumentDAO dao;

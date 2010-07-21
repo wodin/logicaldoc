@@ -3,6 +3,7 @@
 <beans default-lazy-init="false" default-autowire="no"
 	default-dependency-check="none">
 	<import resource="classpath*:context/context-core.xml" />
+    <import resource="classpath*:context/context-workflow.xml" />
 
 	<!-- This post processor ensures placeholders substitutions -->
 	<bean id="PropertyPlaceholderConfigurer"
