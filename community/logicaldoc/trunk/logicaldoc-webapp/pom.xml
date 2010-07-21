@@ -272,12 +272,6 @@
     </dependency>
     <dependency>
       <groupId>com.logicaldoc</groupId>
-      <artifactId>logicaldoc-external-authentication</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.logicaldoc</groupId>
       <artifactId>logicaldoc-core</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
@@ -351,33 +345,21 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>com.logicaldoc</groupId>
-                  <artifactId>
-                    logicaldoc-core
-									</artifactId>
-                  <version>
-                    ${project.version}
-									</version>
+                  <artifactId>logicaldoc-core</artifactId>
+                  <version>${project.version}</version>
                   <type>zip</type>
                   <classifier>plugin</classifier>
                   <overWrite>true</overWrite>
-                  <outputDirectory>
-                    ${project.build.directory}/${project.build.finalName}/WEB-INF/plugins
-									</outputDirectory>
+                  <outputDirectory>${project.build.directory}/war/</outputDirectory>
                 </artifactItem>
                 <artifactItem>
                   <groupId>com.logicaldoc</groupId>
-                  <artifactId>
-                    logicaldoc-webservice
-									</artifactId>
-                  <version>
-                    ${project.version}
-									</version>
+                  <artifactId>logicaldoc-webservice</artifactId>
+                  <version>${project.version}</version>
                   <type>zip</type>
                   <classifier>plugin</classifier>
                   <overWrite>true</overWrite>
-                  <outputDirectory>
-                    ${project.build.directory}/${project.build.finalName}/WEB-INF/plugins
-									</outputDirectory>
+                  <outputDirectory>${project.build.directory}/war/</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -401,6 +383,19 @@
                 <delete>
                   <fileset dir="target/war/WEB-INF/lib" includes="smartgwt*" />
                 </delete>
+
+                <unzip dest="target/war">
+                  <fileset dir="target/war">
+                    <include name="*-plugin.zip" />
+                  </fileset>
+                </unzip>
+
+                <delete>
+                  <fileset dir="target/war">
+                    <include name="*-plugin.zip" />
+                  </fileset>
+                </delete>
+
                 <zip destfile="target/${project.artifactId}-${project.version}.war" basedir="target/war" />
               </tasks>
             </configuration>

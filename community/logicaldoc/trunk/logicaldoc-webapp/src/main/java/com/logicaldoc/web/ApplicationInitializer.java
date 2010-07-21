@@ -104,12 +104,13 @@ public class ApplicationInitializer implements ServletContextListener {
 			}
 		});
 		File webappDir = new File(context.getRealPath("/"));
-		for (File archive : archives) {
-			System.out.println("Unpack plugin " + archive.getName());
-			ZipUtil.unzip(archive.getPath(), webappDir.getPath());
-			FileUtils.forceDelete(archive);
-			needRestart = true;
-		}
+		if (archives != null)
+			for (File archive : archives) {
+				System.out.println("Unpack plugin " + archive.getName());
+				ZipUtil.unzip(archive.getPath(), webappDir.getPath());
+				FileUtils.forceDelete(archive);
+				needRestart = true;
+			}
 		if (needRestart)
 			System.out.println("The application needs to be restarted");
 	}
