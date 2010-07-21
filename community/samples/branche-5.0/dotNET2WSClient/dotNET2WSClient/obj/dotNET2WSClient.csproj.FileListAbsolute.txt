@@ -1,0 +1,18 @@
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\dotNET2WSClient\dotNET2WSClient\bin\Debug\LogicalDOCWSClient.exe.config
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\dotNET2WSClient\dotNET2WSClient\bin\Debug\LogicalDOCWSClient.exe
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\dotNET2WSClient\dotNET2WSClient\bin\Debug\LogicalDOCWSClient.pdb
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\dotNET2WSClient\dotNET2WSClient\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\dotNET2WSClient\dotNET2WSClient\obj\Debug\LogicalDOCWSClient.Form1.resources
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\dotNET2WSClient\dotNET2WSClient\obj\Debug\LogicalDOCWSClient.Properties.Resources.resources
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\dotNET2WSClient\dotNET2WSClient\obj\Debug\dotNET2WSClient.csproj.GenerateResource.Cache
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\dotNET2WSClient\dotNET2WSClient\obj\Debug\LogicalDOCWSClient.exe
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\dotNET2WSClient\dotNET2WSClient\obj\Debug\LogicalDOCWSClient.pdb
+C:\Users\alle\Documents\Visual Studio 2005\Projects\dotNET2WSClient\dotNET2WSClient\bin\Debug\LogicalDOCWSClient.exe.config
+C:\Users\alle\Documents\Visual Studio 2005\Projects\dotNET2WSClient\dotNET2WSClient\bin\Debug\LogicalDOCWSClient.exe
+C:\Users\alle\Documents\Visual Studio 2005\Projects\dotNET2WSClient\dotNET2WSClient\bin\Debug\LogicalDOCWSClient.pdb
+C:\Users\alle\Documents\Visual Studio 2005\Projects\dotNET2WSClient\dotNET2WSClient\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\alle\Documents\Visual Studio 2005\Projects\dotNET2WSClient\dotNET2WSClient\obj\Debug\LogicalDOCWSClient.Form1.resources
+C:\Users\alle\Documents\Visual Studio 2005\Projects\dotNET2WSClient\dotNET2WSClient\obj\Debug\LogicalDOCWSClient.Properties.Resources.resources
+C:\Users\alle\Documents\Visual Studio 2005\Projects\dotNET2WSClient\dotNET2WSClient\obj\Debug\dotNET2WSClient.csproj.GenerateResource.Cache
+C:\Users\alle\Documents\Visual Studio 2005\Projects\dotNET2WSClient\dotNET2WSClient\obj\Debug\LogicalDOCWSClient.exe
+C:\Users\alle\Documents\Visual Studio 2005\Projects\dotNET2WSClient\dotNET2WSClient\obj\Debug\LogicalDOCWSClient.pdb
