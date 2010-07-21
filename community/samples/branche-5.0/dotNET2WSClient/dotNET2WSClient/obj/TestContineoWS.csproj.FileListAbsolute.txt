@@ -1,0 +1,12 @@
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\TestContineoWS\TestContineoWS\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\TestContineoWS\TestContineoWS\obj\Debug\TestContineoWS.Form1.resources
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\TestContineoWS\TestContineoWS\obj\Debug\TestContineoWS.Properties.Resources.resources
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\TestContineoWS\TestContineoWS\obj\Debug\TestContineoWS.csproj.GenerateResource.Cache
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\TestContineoWS\TestContineoWS\bin\Debug\TestContineoWS.exe.config
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\TestContineoWS\TestContineoWS\bin\Debug\TestContineoWS.exe
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\TestContineoWS\TestContineoWS\bin\Debug\TestContineoWS.pdb
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\TestContineoWS\TestContineoWS\obj\Debug\TestContineoWS.exe
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\TestContineoWS\TestContineoWS\obj\Debug\TestContineoWS.pdb
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\dotNET2WSClient\TestContineoWS\bin\Debug\TestContineoWS.exe.config
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\dotNET2WSClient\TestContineoWS\obj\Debug\TestContineoWS.exe
+C:\Documents and Settings\alle\Documenti\Visual Studio 2005\Projects\Tests\dotNET2WSClient\TestContineoWS\obj\Debug\TestContineoWS.pdb
