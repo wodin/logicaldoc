@@ -2,7 +2,6 @@ package com.logicaldoc.util.dbinit;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -14,6 +13,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hsqldb.util.SqlFile;
 import org.hsqldb.util.SqlToolError;
+
+import com.logicaldoc.util.io.FileUtil;
 
 /**
  * Database initialisation utility
@@ -39,7 +40,7 @@ public class DBInit {
 
 	// List of sql files to be executed
 	private List<String> sqlList = new ArrayList<String>();
-	
+
 	/**
 	 * A list of sql files to execute
 	 * 
@@ -75,14 +76,14 @@ public class DBInit {
 			}
 		}
 	}
-	
+
 	/**
 	 * Execute a SQL statements in the passed string
 	 * 
 	 * @param sql The SQL to execute
 	 */
-    public void executeSql(String sql){
-    	try {
+	public void executeSql(String sql) {
+		try {
 			doConnection();
 			PreparedStatement st = con.prepareStatement(sql);
 			st.execute();
@@ -97,7 +98,7 @@ public class DBInit {
 				e1.printStackTrace();
 			}
 		}
-    }
+	}
 
 	/**
 	 * Executes a single sql file
@@ -113,13 +114,9 @@ public class DBInit {
 		System.out.println("Execute " + sqlFile);
 		File file = new File(sqlFile);
 		if (!file.exists() || !file.canRead()) {
-			// Try to interpret the path as a classpath path
-			ClassLoader loader = Thread.currentThread().getContextClassLoader();
-			try {
-				file = new File(URLDecoder.decode(loader.getResource(sqlFile).getPath(), "UTF-8"));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			file = File.createTempFile(file.getName(), ".sql");
+			file.deleteOnExit();
+			FileUtil.copyResource(sqlFile, file);
 		}
 
 		SqlFile sFile = new SqlFile(file, false, null);
