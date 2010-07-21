@@ -52,14 +52,19 @@ public class WorkflowState extends VStack {
 		addMember(title);
 		title.setHeight(21);
 		title.setWrap(false);
-		if (type == TYPE_TASK)
+		if (type == TYPE_TASK) {
 			title.setIcon(Util.imageUrl("task.png"));
-		else if (type == TYPE_JOIN)
+			title.setContents(I18N.message("task") + "Name");
+		} else if (type == TYPE_JOIN) {
 			title.setIcon(Util.imageUrl("join.png"));
-		else if (type == TYPE_FORK)
+			title.setContents(I18N.message("join") + "Name");
+		} else if (type == TYPE_FORK) {
 			title.setIcon(Util.imageUrl("fork.png"));
-		else if (type == TYPE_END)
+			title.setContents(I18N.message("fork") + "Name");
+		} else if (type == TYPE_END) {
 			title.setIcon(Util.imageUrl("endState.png"));
+			title.setContents(I18N.message("endstate") + "Name");
+		}
 
 		commands.setHeight(12);
 		commands.setWidth(1);
@@ -81,38 +86,50 @@ public class WorkflowState extends VStack {
 		edit.addClickHandler(new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-				// SC.say("Hello World");
-				// final DocumentsUploader uploader = new DocumentsUploader();
-				// uploader.show();
-
-				final Window window = new Window();
-				window.setTitle("Edit");
-				window.setWidth(200);
-				window.setHeight(200);
-				window.setCanDragResize(true);
-				window.setShowFooter(true);
-
-				DynamicForm form = new DynamicForm();
-				form.setTitleOrientation(TitleOrientation.TOP);
-				form.setNumCols(1);
-				TextItem name = ItemFactory.newTextItem("name", "name", null);
-				name.setRequired(true);
-
-				SubmitItem saveButton = new SubmitItem();
-				saveButton.setTitle(I18N.message("save"));
-				saveButton.setDisabled(true);
-				saveButton.setAlign(Alignment.RIGHT);
-				saveButton.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						onSave();
+				if (getType() == TYPE_TASK) {
+//					Accordion.get().getWfSettingsSection().setExpanded(false);
+//					Accordion.get().getTaskSettingsSection().setExpanded(true);
+					Accordion.get().showTaskSection();
+				} else {
+					final Window window = new Window();
+					String type = "";
+					if (getType() == TYPE_JOIN) {
+						type = I18N.message("join");
+					} else if (getType() == TYPE_FORK) {
+						type = I18N.message("fork");
+					} else if (getType() == TYPE_END) {
+						type = I18N.message("endstate");
 					}
-				});
+					
+					window.setTitle(I18N.message("editworkflowstate", type));
+					window.setWidth(250);
+					window.setHeight(200);
+					window.setCanDragResize(true);
+					window.setIsModal(true);
+					window.setShowModalMask(true);
+					window.centerInPage();
 
-				form.setFields(name, saveButton);
+					DynamicForm form = new DynamicForm();
+					form.setTitleOrientation(TitleOrientation.TOP);
+					form.setNumCols(1);
+					TextItem name = ItemFactory.newTextItem("name", "name", null);
+					name.setRequired(true);
 
-				window.addItem(form);
-				window.show();
+					SubmitItem saveButton = new SubmitItem("save", I18N.message("save"));
+					saveButton.setAlign(Alignment.LEFT);
+					saveButton.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							// onSave();
+							window.destroy();
+						}
+					});
+
+					form.setFields(name, saveButton);
+
+					window.addItem(form);
+					window.show();
+				}
 			}
 		});
 		commands.addMember(edit);
@@ -123,6 +140,6 @@ public class WorkflowState extends VStack {
 	}
 
 	public void onSave() {
-		destroy();
+		// TODO
 	}
 }
