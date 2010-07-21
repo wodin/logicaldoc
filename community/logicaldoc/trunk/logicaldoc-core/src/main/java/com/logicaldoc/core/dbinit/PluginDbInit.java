@@ -30,7 +30,7 @@ public class PluginDbInit extends DBInit {
 	public void init() {
 		log.info("Start database initialization");
 		log.info("Database is " + getDbms());
-		
+
 		try {
 			// Acquire the 'DbInit' extensions of the core plugin
 			PluginRegistry registry = PluginRegistry.getInstance();
@@ -57,10 +57,6 @@ public class PluginDbInit extends DBInit {
 			// Acquire the ordered list of sql files
 			getSqlList().clear();
 
-			if (exists("sql/logicaldoc-core.sql." + getDbms().toLowerCase()))
-				getSqlList().add("sql/logicaldoc-core.sql." + getDbms().toLowerCase());
-			else
-				getSqlList().add("sql/logicaldoc-core.sql");
 			for (Extension ext : sortedExts) {
 				String sqlFile = ext.getParameter("sqlFile").valueAsString();
 				if (exists(sqlFile + "." + getDbms().toLowerCase()))

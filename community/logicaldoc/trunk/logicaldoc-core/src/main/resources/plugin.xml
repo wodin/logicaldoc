@@ -119,4 +119,10 @@
     <parameter id="type" value="1" />
     <parameter id="class" value="com.logicaldoc.core.searchengine.TagSearch" />
   </extension>
+  
+  <extension plugin-id="logicaldoc-core" point-id="DbInit" id="coreDbInit">
+	<parameter id="position" value="1" />
+	<parameter id="name" value="logicaldoc-core" />
+	<parameter id="sqlFile" value="sql/logicaldoc-core.sql" />
+  </extension>
 </plugin>
