@@ -3,19 +3,19 @@ package com.logicaldoc.workflow.editor;
 import java.util.Collection;
 import java.util.List;
 
-import com.logicaldoc.workflow.AbstractWorkflowTestCase;
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.logicaldoc.workflow.AbstractWorkflowTCase;
 import com.logicaldoc.workflow.WorkflowHistory;
 
-public class HibernateWorkflowHistoryDAOTest extends AbstractWorkflowTestCase {
+public class HibernateWorkflowHistoryDAOTest extends AbstractWorkflowTCase {
 
 	// Instance under test
 	private WorkflowHistoryDAO dao;
 
-	public HibernateWorkflowHistoryDAOTest(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
+	@Override
+	public void setUp() throws Exception {
 		super.setUp();
 
 		// Retrieve the instance under test from spring context.
@@ -23,46 +23,49 @@ public class HibernateWorkflowHistoryDAOTest extends AbstractWorkflowTestCase {
 		dao = (WorkflowHistoryDAO) context.getBean("WorkflowHistoryDAO");
 	}
 
+	@Test
 	public void testFindByTemplateIdAndInstanceId() {
 		List<WorkflowHistory> histories = dao.findByTemplateIdAndInstanceId(1, "1");
-		assertNotNull(histories);
-		assertEquals(2, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(2, histories.size());
 
 		histories = dao.findByTemplateIdAndInstanceId(1, "2");
-		assertNotNull(histories);
-		assertEquals(0, histories.size());
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(0, histories.size());
 	}
 
+	@Test
 	public void testFindTemplateIds() {
 		Collection<Long> ids = dao.findTemplateIds();
-		assertNotNull(ids);
-		assertEquals(1, ids.size());
-		assertTrue(ids.contains(new Long(1)));
-		assertFalse(ids.contains(new Long(2)));
+		Assert.assertNotNull(ids);
+		Assert.assertEquals(1, ids.size());
+		Assert.assertTrue(ids.contains(new Long(1)));
+		Assert.assertFalse(ids.contains(new Long(2)));
 	}
 
+	@Test
 	public void testFindInstanceIds() {
 		Collection<String> ids = dao.findInstanceIds();
-		assertNotNull(ids);
-		assertEquals(1, ids.size());
-		assertTrue(ids.contains("1"));
-		assertFalse(ids.contains("2"));
+		Assert.assertNotNull(ids);
+		Assert.assertEquals(1, ids.size());
+		Assert.assertTrue(ids.contains("1"));
+		Assert.assertFalse(ids.contains("2"));
 	}
 
-	@SuppressWarnings("unchecked")
+	@Test
 	public void testCleanOldHistories() {
 		WorkflowHistory history = dao.findById(1);
-		assertNotNull(history);
+		Assert.assertNotNull(history);
 
-		Collection histories = dao.findAll();
-		assertNotNull(histories);
-		assertEquals(2, histories.size());
+		Collection<WorkflowHistory> histories = dao.findAll();
+		Assert.assertNotNull(histories);
+		Assert.assertEquals(2, histories.size());
 
 		dao.cleanOldHistories(5);
 
 		history = dao.findById(1);
-		assertNull(history);
+		Assert.assertNull(history);
 		histories = dao.findAll();
-		assertEquals(0, histories.size());
+		Assert.assertEquals(0, histories.size());
 	}
 }
