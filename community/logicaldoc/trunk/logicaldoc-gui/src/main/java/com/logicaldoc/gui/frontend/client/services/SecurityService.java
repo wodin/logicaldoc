@@ -3,9 +3,7 @@ package com.logicaldoc.gui.frontend.client.services;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
-import com.logicaldoc.gui.common.client.beans.GUIADSettings;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
-import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -93,16 +91,6 @@ public interface SecurityService extends RemoteService {
 	 * Loads security settings
 	 */
 	public GUISecuritySettings loadSettings(String sid) throws InvalidSessionException;
-
-	/**
-	 * Saves external authentication settings
-	 */
-	public void saveExtAuthSettings(String sid, GUILdapSettings ldapSettings, GUIADSettings adSettings) throws InvalidSessionException;
-
-	/**
-	 * Loads external authentication settings
-	 */
-	public GUILdapSettings[] loadExtAuthSettings(String sid) throws InvalidSessionException;
 
 	/**
 	 * Kill the session with the given sid.

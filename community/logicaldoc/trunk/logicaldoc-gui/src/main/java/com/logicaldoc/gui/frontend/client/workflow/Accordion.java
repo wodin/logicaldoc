@@ -20,8 +20,8 @@ public class Accordion extends SectionStack {
 		setHeight(557);
 		setMargin(5);
 
-		SectionStackSection wfsettingsSection = new SectionStackSection(I18N.message("workflowsettings"));
-		wfsettingsSection.setExpanded(true);
+		SectionStackSection wfSettingsSection = new SectionStackSection(I18N.message("workflowsettings"));
+		wfSettingsSection.setExpanded(true);
 
 		DynamicForm wfForm = new DynamicForm();
 		wfForm.setTitleOrientation(TitleOrientation.TOP);
@@ -64,13 +64,17 @@ public class Accordion extends SectionStack {
 		supervisors.setTitle("<b>" + I18N.message("supervisor") + "</b>");
 		supervisors.setTitleOrientation(TitleOrientation.TOP);
 		supervisorForm.setItems(supervisors);
+		
+		wfSettingsSection.setItems(wfForm, taskAssignmentForm, taskReminderForm, separatorForm, supervisorForm);
+		addSection(wfSettingsSection);
 
-		wfsettingsSection.setItems(wfForm, taskAssignmentForm, taskReminderForm, separatorForm, supervisorForm);
+		SectionStackSection taskSettingsSection = new SectionStackSection(I18N.message("task"));
+		taskSettingsSection.setExpanded(false);
+		taskSettingsSection.setHidden(true);
+		addSection(taskSettingsSection);
 
-		addSection(wfsettingsSection);
-
-		SectionStackSection wfdevelopSection = new SectionStackSection(I18N.message("development"));
-		wfdevelopSection.setExpanded(false);
-		addSection(wfdevelopSection);
+		SectionStackSection wfDevelopSection = new SectionStackSection(I18N.message("development"));
+		wfDevelopSection.setExpanded(false);
+		addSection(wfDevelopSection);
 	}
 }

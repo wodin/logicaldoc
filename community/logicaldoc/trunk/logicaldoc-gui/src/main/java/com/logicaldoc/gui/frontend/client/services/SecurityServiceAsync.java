@@ -35,10 +35,5 @@ public interface SecurityServiceAsync {
 
 	void saveSettings(String sid, GUISecuritySettings settings, AsyncCallback<Void> callback);
 
-	void saveExtAuthSettings(String sid, GUILdapSettings ldapSettings, GUIADSettings adSettings,
-			AsyncCallback<Void> callback);
-
-	void loadExtAuthSettings(String sid, AsyncCallback<GUILdapSettings[]> callback);
-
 	void kill(String sid, AsyncCallback<Void> callback);
 }
