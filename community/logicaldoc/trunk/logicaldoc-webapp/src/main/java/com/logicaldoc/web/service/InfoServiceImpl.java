@@ -94,6 +94,8 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			}
 			
 			info.setMessages(messages.toArray(new GUIMessage[0]));
+			
+			info.setFeatures(new String[] { "Feature_52", "Feature_53", "Feature_56", "Feature_13" });
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
