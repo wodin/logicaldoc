@@ -28,6 +28,11 @@
     <servlet-name>SecurityService</servlet-name>
     <servlet-class>com.logicaldoc.gui.frontend.server.MockSecurityServiceImpl</servlet-class>
   </servlet>
+  
+  <servlet>
+    <servlet-name>LdapService</servlet-name>
+    <servlet-class>com.logicaldoc.gui.frontend.server.MockLdapServiceImpl</servlet-class>
+  </servlet>
 
   <servlet>
     <servlet-name>DocumentService</servlet-name>
@@ -217,6 +222,11 @@
   <servlet-mapping>
     <servlet-name>SecurityService</servlet-name>
     <url-pattern>/frontend/security</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>LdapService</servlet-name>
+    <url-pattern>/frontend/ldap</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

@@ -12,8 +12,8 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
-import com.logicaldoc.gui.frontend.client.services.SecurityService;
-import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.LdapService;
+import com.logicaldoc.gui.frontend.client.services.LdapServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -36,7 +36,7 @@ import com.smartgwt.client.widgets.tab.TabSet;
  * @since 6.0
  */
 public class ExtAuthPanel extends VLayout {
-	private SecurityServiceAsync service = (SecurityServiceAsync) GWT.create(SecurityService.class);
+	private LdapServiceAsync service = (LdapServiceAsync) GWT.create(LdapService.class);
 
 	private ValuesManager vm = new ValuesManager();
 
@@ -122,12 +122,12 @@ public class ExtAuthPanel extends VLayout {
 		TextItem groupClass = ItemFactory.newTextItem("grpclass", "grpclass", this.ldapSettings.getGrpClass());
 
 		// Users base node
-		TextItem usersBaseNode = ItemFactory.newTextItem("usersbasenode", "usersbasenode", this.ldapSettings
-				.getUsersBaseNode());
+		TextItem usersBaseNode = ItemFactory.newTextItem("usersbasenode", "usersbasenode",
+				this.ldapSettings.getUsersBaseNode());
 
 		// Groups base node
-		TextItem groupsBaseNode = ItemFactory.newTextItem("grpsbasenode", "grpsbasenode", this.ldapSettings
-				.getGrpsBaseNode());
+		TextItem groupsBaseNode = ItemFactory.newTextItem("grpsbasenode", "grpsbasenode",
+				this.ldapSettings.getGrpsBaseNode());
 
 		// Language
 		SelectItem language = ItemFactory.newLanguageSelector("language", false);
@@ -181,13 +181,13 @@ public class ExtAuthPanel extends VLayout {
 		adPassword.setValue(this.adSettings.getPwd());
 
 		// Users base node
-		TextItem adUsersBaseNode = ItemFactory.newTextItem("adUsersBaseNode", "usersbasenode", this.adSettings
-				.getUsersBaseNode());
+		TextItem adUsersBaseNode = ItemFactory.newTextItem("adUsersBaseNode", "usersbasenode",
+				this.adSettings.getUsersBaseNode());
 		adUsersBaseNode.setRequired(true);
 
 		// Groups base node
-		TextItem adGroupsBaseNode = ItemFactory.newTextItem("adGroupsBaseNode", "grpsbasenode", this.adSettings
-				.getGrpsBaseNode());
+		TextItem adGroupsBaseNode = ItemFactory.newTextItem("adGroupsBaseNode", "grpsbasenode",
+				this.adSettings.getGrpsBaseNode());
 
 		// Language
 		SelectItem adLanguage = ItemFactory.newLanguageSelector("language", false);

@@ -9,6 +9,8 @@ import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
+import com.logicaldoc.gui.frontend.client.services.LdapService;
+import com.logicaldoc.gui.frontend.client.services.LdapServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SecurityService;
 import com.logicaldoc.gui.frontend.client.services.SecurityServiceAsync;
 import com.smartgwt.client.widgets.Button;
@@ -24,6 +26,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class SecurityMenu extends VLayout {
 	private SecurityServiceAsync service = (SecurityServiceAsync) GWT.create(SecurityService.class);
+
+	private LdapServiceAsync ldapService = (LdapServiceAsync) GWT.create(LdapService.class);
 
 	public SecurityMenu() {
 		setMargin(10);
@@ -90,7 +94,7 @@ public class SecurityMenu extends VLayout {
 		extAuth.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				service.loadExtAuthSettings(Session.get().getSid(), new AsyncCallback<GUILdapSettings[]>() {
+				ldapService.loadExtAuthSettings(Session.get().getSid(), new AsyncCallback<GUILdapSettings[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
